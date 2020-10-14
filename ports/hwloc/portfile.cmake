@@ -1,10 +1,10 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-mpi/hwloc
-    REF hwloc-1.11.7
-    SHA512 bc3a74c60bfbed1e860c2fe2b5b49956eca5cfd9c00a262f6cd3026a42ae8b5411fa296e471a95cba657d943b8853675442e796e648034398af3015e5f59476e
+    REF 263908a2c1f21c0e221a8d1f6472daf3a1fc07b9 # hwloc-2.2.0
+    SHA512 87f3d267781fd1f8907b0c080868b56943c7c2caecae5c0fbe9a55f8c5e9453bb6b7892834ba37696c1ebadd8d7bfdd5e513ea72a075211b808a1d5803ea4b8e
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -30,8 +30,11 @@ else()
     message(WARNING "${PORT} currently requires the following tool from the system package manager:\n    libtool")
 
     vcpkg_configure_make(
-            SOURCE_PATH ${SOURCE_PATH}
-            AUTOCONFIG
+        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+        OPTIONS
+            --disable-libxml2
+            --disable-opencl
     )
     
     vcpkg_install_make()

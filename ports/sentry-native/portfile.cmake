@@ -1,9 +1,9 @@
 vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.2/sentry-native.zip"
-    FILENAME "sentry-native-0.4.2.zip"
-    SHA512 6353642ceba97b44466ee4854c44cd3649ddb3d1087ff6321848d502fd5dba809778f2f2495134cf0e7a00221e73f40cc2158e46b1604ff6e78403b852f601c5
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.3/sentry-native.zip"
+    FILENAME "sentry-native-0.4.3.zip"
+    SHA512 73f927aa27b3ff567cdbcf9f59af3f5b0e824a6e0ac4bcd70652dbe6f1c5b81d70afea90fc9f889f9f6b27e742edc975d32ccb4daa8435a3570d6a1d16fe32c3
 )
 
 vcpkg_extract_source_archive_ex(
