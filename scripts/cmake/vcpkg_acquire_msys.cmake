@@ -142,9 +142,24 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
 
   # To add new entries, use https://packages.msys2.org/package/$PACKAGE?repo=msys
   msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/guile-2.2.7-1-x86_64.pkg.tar.xz"
+    SHA512 273bbc52fbb189fe7687ee0bd393a0c702d6bdd9c5b69027ed729cc5ae7132b35d7e623cf6c2b5b4c020acc0a5540a58a5508d031d2b74c0cf07d0b48bc24113
+    DEPS info libguile
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/libguile-devel-2.2.7-1-x86_64.pkg.tar.xz"
+    SHA512 01bce974cf98d52782ab2db86ca9c4885bcbe9e32c3b6573b1c4185e48e71bd72a3f02e21dea084832825e255dfc14b2599df63343f3f2b64e694c58aaaa56df
+    DEPS libguile
+  )
+  msys_package(
     URL "https://repo.msys2.org/msys/x86_64/libguile-2.2.7-1-x86_64.pkg.tar.xz"
     SHA512 b87838f8b98e9e70faf9e8f01c69d78797b75d431abff411ed5d66280e9eec4c3cb7deaf9825cdcb2e8dfa9b8c68ebfc282cc8db08634f3ecbc65be7675547f8
     DEPS ncurses gmp libffi libltdl libunistring libgc
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/info-6.7-3-x86_64.pkg.tar.zst"
+    SHA512 222f52091d60e09caef1716adc6d205d872b17a4d417e19964cebd9c28475f065fb51e25ac34e728cbf206da41058b31dcc90d8d12e3fcc70db3af031df0c4a2
+    DEPS gzip libcrypt libintl ncurses
   )
   msys_package(
     URL "https://repo.msys2.org/msys/x86_64/libunistring-0.9.10-1-x86_64.pkg.tar.xz"
