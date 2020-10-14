@@ -10,7 +10,6 @@ vcpkg_from_github(ARCHIVE
     REF Release_1.3.7
     SHA512 5beb0909a4ddc56f5965b5f2edcfd2c8d68d473b172778ebe21bc134e1b4931cac1e6529676866d4238b41041658041a72ccd44879b9685d85f857a4e0df23ec
     HEAD_REF dev
-    PATCHES
 )
 
 vcpkg_configure_cmake(
