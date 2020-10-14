@@ -3,4 +3,3 @@ Version: 1.3.7
 Port-Version: 0
 Homepage: https://github.com/pyomeca/ezc3d
 Description: C3D reader/writer
-Build-Depends: 
