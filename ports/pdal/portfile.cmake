@@ -19,7 +19,7 @@ vcpkg_extract_source_archive_ex(
         reimplement-patch-172-in-220.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/pdal/gitsha.h")
+# file(REMOVE "${SOURCE_PATH}/pdal/gitsha.h")
 
 # Deploy custom CMake modules to enforce expected dependencies look-up
 foreach(_module IN ITEMS FindGDAL FindGeoTIFF FindCurl)  # Outdated; Supplied by CMake
@@ -44,7 +44,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/pdal/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/pdal)
 vcpkg_copy_pdbs()
 
 # Install PDAL executable
@@ -59,7 +59,13 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/lib/pdal
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
+
+    # These are intentionally? empty
+    ${CURRENT_PACKAGES_DIR}/include/pdal/filters/private/csf
+    ${CURRENT_PACKAGES_DIR}/include/pdal/filters/private/miniball
 )
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/a/dir" "${CURRENT_PACKAGES_DIR}/some/other/dir")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)

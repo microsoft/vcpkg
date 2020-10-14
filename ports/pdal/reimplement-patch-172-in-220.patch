@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1496d7f..61a18be 100644
+index 1496d7f97..61a18beca 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -185,7 +185,6 @@ if (WITH_TESTS)
@@ -60,7 +60,7 @@ index 1496d7f..61a18be 100644
          "${PDAL_BINARY_DIR}/PDALTargets.cmake")
  
 diff --git a/PDALConfig.cmake.in b/PDALConfig.cmake.in
-index af3ae2f..2413e54 100644
+index af3ae2f8e..2413e5481 100644
 --- a/PDALConfig.cmake.in
 +++ b/PDALConfig.cmake.in
 @@ -7,6 +7,10 @@ set(PDAL_VERSION_PATCH @PDAL_VERSION_PATCH@)
@@ -75,7 +75,7 @@ index af3ae2f..2413e54 100644
  
  #
 diff --git a/cmake/directories.cmake b/cmake/directories.cmake
-index f079ec7..4872b97 100644
+index f079ec725..9b738bda0 100644
 --- a/cmake/directories.cmake
 +++ b/cmake/directories.cmake
 @@ -11,4 +11,7 @@ set(PDAL_KERNELS_DIR ${ROOT_DIR}/kernels)
@@ -87,9 +87,18 @@ index f079ec7..4872b97 100644
 +set(PDAL_VENDOR_NLOHMANN_DIR ${PDAL_VENDOR_DIR}/nlohmann)
 +set(PDAL_VENDOR_KAZHDAN_DIR ${PDAL_VENDOR_DIR}/kazhdan)
 +set(PDAL_VENDOR_NANOFLANN_DIR ${PDAL_VENDOR_DIR}/nanoflann)
-\ No newline at end of file
+diff --git a/cmake/execinfo.cmake b/cmake/execinfo.cmake
+index e3067203e..f23940d16 100644
+--- a/cmake/execinfo.cmake
++++ b/cmake/execinfo.cmake
+@@ -1,4 +1,4 @@
+ #
+ # Unwind
+ #
+-find_package(Libexecinfo QUIET)
++find_package(LIBEXECINFO QUIET)
 diff --git a/cmake/modules/FindPostgreSQL.cmake b/cmake/modules/FindPostgreSQL.cmake
-index 8178418..1b91471 100644
+index 8178418cc..1b91471fe 100644
 --- a/cmake/modules/FindPostgreSQL.cmake
 +++ b/cmake/modules/FindPostgreSQL.cmake
 @@ -25,8 +25,8 @@ if(PG_CONFIG)
@@ -116,7 +125,7 @@ index 8178418..1b91471 100644
 +
  mark_as_advanced(POSTGRESQL_INCLUDE_DIR POSTGRESQL_LIBRARIES)
 diff --git a/cmake/postgres.cmake b/cmake/postgres.cmake
-index 0dad710..662820c 100644
+index 0dad71069..4d7bb8c50 100644
 --- a/cmake/postgres.cmake
 +++ b/cmake/postgres.cmake
 @@ -7,3 +7,27 @@ find_package(PostgreSQL REQUIRED)
@@ -147,9 +156,18 @@ index 0dad710..662820c 100644
 +select_library_configurations(PostgreSQLPort)
 +
 +list(APPEND POSTGRESQL_LIBRARIES ${PostgreSQLPort_LIBRARIES} ${PostgreSQLCommon_LIBRARIES})
-\ No newline at end of file
+diff --git a/cmake/unwind.cmake b/cmake/unwind.cmake
+index 460a43c15..f094b15f3 100644
+--- a/cmake/unwind.cmake
++++ b/cmake/unwind.cmake
+@@ -1,4 +1,4 @@
+ #
+ # Unwind
+ #
+-find_package(Libunwind QUIET)
++find_package(LIBUNWIND QUIET)
 diff --git a/pdal/util/CMakeLists.txt b/pdal/util/CMakeLists.txt
-index db42c7f..4988900 100644
+index db42c7f53..498890033 100644
 --- a/pdal/util/CMakeLists.txt
 +++ b/pdal/util/CMakeLists.txt
 @@ -9,6 +9,8 @@ endif()
@@ -182,7 +200,7 @@ index db42c7f..4988900 100644
  set_target_properties(${PDAL_UTIL_LIB_NAME} PROPERTIES
      VERSION "${PDAL_BUILD_VERSION}"
 diff --git a/pdal/util/FileUtils.cpp b/pdal/util/FileUtils.cpp
-index 883cb06..4bd2623 100644
+index 883cb06b2..4bd26239a 100644
 --- a/pdal/util/FileUtils.cpp
 +++ b/pdal/util/FileUtils.cpp
 @@ -151,25 +151,25 @@ std::ostream *createFile(std::string const& name, bool asBinary)
