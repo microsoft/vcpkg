@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index be72a2a..299fee5 100644
+index be72a2a..b4ab395 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -41,6 +41,9 @@ set(LIBJUICE_SOURCES
@@ -25,7 +25,18 @@ index be72a2a..299fee5 100644
  target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/juice)
  target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
  target_link_libraries(juice PUBLIC Threads::Threads)
-@@ -100,8 +103,13 @@ endif()
+@@ -77,6 +80,10 @@ endif()
+ 
+ if (USE_NETTLE)
+ 	find_package(Nettle REQUIRED)
++    find_path(NETTLE_INCLUDE_PATH "nettle/hmac.h" REQUIRED)
++	target_include_directories(juice PRIVATE ${NETTLE_INCLUDE_PATH})
++	target_include_directories(juice-static PRIVATE ${NETTLE_INCLUDE_PATH})
++
+     target_compile_definitions(juice PRIVATE USE_NETTLE=1)
+     target_link_libraries(juice PRIVATE Nettle::Nettle)
+     target_compile_definitions(juice-static PRIVATE USE_NETTLE=1)
+@@ -100,8 +107,13 @@ endif()
  add_library(LibJuice::LibJuice ALIAS juice)
  add_library(LibJuice::LibJuiceStatic ALIAS juice-static)
  
@@ -40,7 +51,7 @@ index be72a2a..299fee5 100644
  
  if(NOT MSVC)
  	target_compile_options(juice PRIVATE -Wall -Wextra)
-@@ -128,3 +136,8 @@ if(NOT NO_TESTS)
+@@ -128,3 +140,8 @@ if(NOT NO_TESTS)
  	target_link_libraries(juice-tests juice)
  endif()
  
