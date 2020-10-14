@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.2
-    SHA512 9fa56364696f91e2bf4287954d26f0c35b3f8aad241df3fbd3c9fc617235d8c83b28ddcac88436383b2eb273f690322e6f349e2f9c64d02f0058a4b76fa55035
+    REF n4.3.1
+    SHA512 9d533f6db97e8eccb77d78d0b55112ce039580b570d2a98c4204199abe5a4b0f448c44b30048329f6c912579f8ff48385d5100f9e484709b9fd8f4b3935b5031
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -467,24 +467,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
         )
     endforeach()
 
-    # Handle tools
     file(GLOB EXP_FILES ${CURRENT_PACKAGES_DIR}/lib/*.exp ${CURRENT_PACKAGES_DIR}/debug/lib/*.exp)
     file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-    file(GLOB EXE_FILES_REL ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    file(GLOB EXE_FILES_DBG ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    set(FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${DEF_FILES} ${EXE_FILES_REL} ${EXE_FILES_DBG})
-
+    list(APPEND FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${DEF_FILES})
     if(FILES_TO_REMOVE)
-        if (EXE_FILES_REL)
-            file(INSTALL ${EXE_FILES_REL} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-            vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-        endif()
-        if (EXE_FILES_DBG)
-            file(INSTALL ${EXE_FILES_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
-            vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/debug/tools/${PORT})
-        endif()
         file(REMOVE ${FILES_TO_REMOVE})
     endif()
+endif()
+
+if("ffmpeg" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES ffmpeg AUTO_CLEAN)
+endif()
+if("ffprobe" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES ffprobe AUTO_CLEAN)
+endif()
+if("ffplay" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES ffplay AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
