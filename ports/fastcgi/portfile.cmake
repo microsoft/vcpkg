@@ -79,7 +79,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   # Check build system first
   if(VCPKG_TARGET_IS_OSX)
-      message("${PORT} currently requires the following library from the system package manager:\n    gettext\n    automake\n    libtool\n    libtool-bin\n\nIt can be installed with brew install gettext automake libtool")
+      message("${PORT} currently requires the following library from the system package manager:\n    gettext\n    automake\n    libtool\n\nIt can be installed with brew install gettext automake libtool")
   else()
       message("${PORT} currently requires the following library from the system package manager:\n    gettext\n    automake\n    libtool\n    libtool-bin\n\nIt can be installed with apt-get install gettext automake libtool libtool-bin")
   endif()
