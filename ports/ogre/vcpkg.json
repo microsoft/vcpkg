@@ -16,7 +16,8 @@
     "pugixml",
     "sdl2",
     "zlib",
-    "zziplib"
+    "zziplib",
+    "assimp"
   ],
   "features": {
     "csharp": {
