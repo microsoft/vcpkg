@@ -33,7 +33,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Qt5Keychain TARGET_PATH share/Qt
 # Remove unneeded dirs
 file(REMOVE_RECURSE 
 	${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
+      ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
 # Handle copyright
