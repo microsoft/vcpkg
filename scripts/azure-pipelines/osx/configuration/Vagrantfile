@@ -18,6 +18,7 @@ brew_formulas = [
   'autoconf',
   'automake',
   'bison',
+  'guile',
   'libtool',
   'mono',
   'pkg-config',
