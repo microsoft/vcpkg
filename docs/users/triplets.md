@@ -93,7 +93,7 @@ Replaces the default computed list of triplet "Supports" terms.
 
 This option (if set) will override the default set of terms used for qualified dependency resolution and "Supports" field evaluation.
 
-See the [`Supports`](../maintainers/control-files.md#Supports) control file field documentation for more details.
+See the [`"supports"`](../maintainers/manifest-files.md#supports) manifest file field documentation for more details.
 
 > Implementers' Note: this list is extracted via the `vcpkg_get_dep_info` mechanism.
 

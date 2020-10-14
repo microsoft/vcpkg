@@ -61,6 +61,10 @@ namespace vcpkg
         {
             return CPUArchitecture::ARM64;
         }
+        if (Strings::starts_with(this->canonical_name(), "s390x-"))
+        {
+            return CPUArchitecture::S390X;
+        }
 
         return nullopt;
     }
@@ -91,6 +95,8 @@ namespace vcpkg
                 return Triplet::from_canonical_name("arm64-linux");
 #elif defined(__arm__)
                 return Triplet::from_canonical_name("arm-linux");
+#elif defined(__s390x__)
+                return Triplet::from_canonical_name("s390x-linux");
 #else
                 return Triplet::from_canonical_name("x64-linux");
 #endif

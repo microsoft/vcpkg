@@ -37,6 +37,7 @@ namespace vcpkg
     {
         struct PreBuildInfo;
         struct AbiInfo;
+        struct CompilerInfo;
     }
 
     namespace System
@@ -108,7 +109,7 @@ namespace vcpkg
         const std::string& get_tool_version(const std::string& tool) const;
 
         Optional<const Json::Object&> get_manifest() const;
-        Optional<const Json::JsonStyle&> get_manifest_style() const;
+        Optional<const fs::path&> get_manifest_path() const;
         const Configuration& get_configuration() const;
 
         /// <summary>Retrieve a toolset matching a VS version</summary>
@@ -121,6 +122,7 @@ namespace vcpkg
 
         const System::Environment& get_action_env(const Build::AbiInfo& abi_info) const;
         const std::string& get_triplet_info(const Build::AbiInfo& abi_info) const;
+        const Build::CompilerInfo& get_compiler_info(const Build::AbiInfo& abi_info) const;
         bool manifest_mode_enabled() const { return get_manifest().has_value(); }
 
         void track_feature_flag_metrics() const;

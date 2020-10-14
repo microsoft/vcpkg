@@ -1,14 +1,13 @@
-set(BOTAN_VERSION 2.12.1)
+set(BOTAN_VERSION 2.15.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF 1a6ad661ce64287ccbe26460ccc3aa4247d86ba8 # 2.12.1
-    SHA512 7a774f325c85761e2d076847f1fc8bc67592d696c4ebde839928591f7c85352e2df6032c122bdcc603adf84d76f5a1897c7118aa3859d38f79e474f27bc3b588
+    REF 3ed6eaa3c1236aed844f5475e2df8b89b3286ac4 # 2.15.0
+    SHA512 a5c76e22f1ad8455ed5dab7c1dff2dd21e8a6e720e024144fe117982fd3b8815e8200844f6fd3abf8326fa4b18d2598c724f7ad5752c517d4b8fab83fb1b5907
     HEAD_REF master
     PATCHES
         fix-generate-build-path.patch
-        fix-msvc-build.patch # Remove this patch on next update
 )
 
 if(CMAKE_HOST_WIN32)
@@ -47,6 +46,10 @@ else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    amalgamation BOTAN_AMALGAMATION
+)
+
 function(BOTAN_BUILD BOTAN_BUILD_TYPE)
 
     if(BOTAN_BUILD_TYPE STREQUAL "dbg")
@@ -78,6 +81,10 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
     endif()
 
+    if("-DBOTAN_AMALGAMATION=ON" IN_LIST FEATURE_OPTIONS)
+        list(APPEND configure_arguments --amalgamation)
+    endif()
+
     vcpkg_execute_required_process(
         COMMAND "${PYTHON3}" "${SOURCE_PATH}/configure.py" ${configure_arguments}
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
@@ -103,10 +110,6 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
             --docdir=${BOTAN_FLAG_PREFIX}/share
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND CMAKE_HOST_WIN32)
-        file(RENAME ${BOTAN_FLAG_PREFIX}/lib/botan${BOTAN_DEBUG_SUFFIX}.dll ${BOTAN_FLAG_PREFIX}/bin/botan${BOTAN_DEBUG_SUFFIX}.dll)
-    endif()
 
     message(STATUS "Package ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 endfunction()

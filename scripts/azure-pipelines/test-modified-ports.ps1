@@ -9,18 +9,20 @@ Runs the 'Test Modified Ports' part of the vcpkg CI system for all platforms.
 .PARAMETER Triplet
 The triplet to test.
 
-.PARAMETER ArchivesRoot
-The location where the binary caching archives are stored. Shared across runs of this script.
-
 .PARAMETER WorkingRoot
 The location used as scratch space for 'installed', 'packages', and 'buildtrees' vcpkg directories.
 
-.PARAMETER ArtifactsDirectory
+.PARAMETER ArtifactStagingDirectory
 The Azure Pipelines artifacts directory. If not supplied, defaults to the current directory.
 
+.PARAMETER ArchivesRoot
+The location where the binary caching archives are stored. Shared across runs of this script. If
+this parameter is not set, binary caching will not be used.
+
 .PARAMETER BuildReason
-The reason Azure Pipelines is running this script (controls whether Binary Caching is used). If not
-supplied, binary caching will be used.
+The reason Azure Pipelines is running this script (controls in which mode Binary Caching is used).
+If ArchivesRoot is not set, this parameter has no effect. If ArchivesRoot is set and this is not,
+binary caching will default to read-write mode.
 #>
 
 [CmdletBinding()]
@@ -30,12 +32,10 @@ Param(
     [string]$Triplet,
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
-    $ArchivesRoot,
-    [Parameter(Mandatory = $true)]
-    [ValidateNotNullOrEmpty()]
     $WorkingRoot,
     [ValidateNotNullOrEmpty()]
-    $ArtifactsDirectory = '.',
+    $ArtifactStagingDirectory = '.',
+    $ArchivesRoot = $null,
     $BuildReason = $null
 )
 
@@ -48,29 +48,39 @@ $env:VCPKG_DOWNLOADS = Join-Path $WorkingRoot 'downloads'
 $buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'packages'
-$commonArgs = @(
-    '--binarycaching',
+
+$usingBinaryCaching = -Not ([string]::IsNullOrWhiteSpace($ArchivesRoot))
+$commonArgs = @()
+if ($usingBinaryCaching) {
+    $commonArgs += @('--binarycaching')
+} else {
+    $commonArgs += @('--no-binarycaching')
+}
+
+$commonArgs += @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
     "--x-packages-root=$packagesRoot",
     "--overlay-ports=scripts/test_ports"
 )
 
-$binaryCachingMode = 'readwrite'
 $skipFailures = $false
-if ([string]::IsNullOrWhiteSpace($BuildReason)) {
-    Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
-}
-elseif ($BuildReason -eq 'PullRequest') {
-    Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
-    $skipFailures = $true
-}
-else {
-    Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
-    $binaryCachingMode = 'write'
-}
+if ($usingBinaryCaching) {
+    $binaryCachingMode = 'readwrite'
+    if ([string]::IsNullOrWhiteSpace($BuildReason)) {
+        Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
+    }
+    elseif ($BuildReason -eq 'PullRequest') {
+        Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
+        $skipFailures = $true
+    }
+    else {
+        Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
+        $binaryCachingMode = 'write'
+    }
 
-$commonArgs += @("--x-binarysource=clear;files,$ArchivesRoot,$binaryCachingMode")
+    $commonArgs += @("--x-binarysource=clear;files,$ArchivesRoot,$binaryCachingMode")
+}
 
 if ($Triplet -eq 'x64-linux') {
     $env:HOME = '/home/agent'
@@ -83,11 +93,11 @@ else {
     $executableExtension = '.exe'
 }
 
-$xmlResults = Join-Path $ArtifactsDirectory 'xml-results'
+$xmlResults = Join-Path $ArtifactStagingDirectory 'xml-results'
 mkdir $xmlResults
 $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 
-$failureLogs = Join-Path $ArtifactsDirectory 'failure-logs'
+$failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
 $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
