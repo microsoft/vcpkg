@@ -31,6 +31,7 @@ namespace fs
 
     path u8path(vcpkg::StringView s);
     inline path u8path(const char* first, const char* last) { return u8path(vcpkg::StringView{first, last}); }
+    inline path u8path(std::initializer_list<char> il) { return u8path(vcpkg::StringView{il.begin(), il.end()}); }
     inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
 
 #if defined(_MSC_VER)
