@@ -1,0 +1,84 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 85c1061..6bd46bd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -172,6 +172,7 @@ source_group(scripts FILES ${SQLITECPP_SCRIPT})
+ 
+ # add sources of the wrapper as a "SQLiteCpp" static library
+ add_library(SQLiteCpp ${SQLITECPP_SRC} ${SQLITECPP_INC} ${SQLITECPP_DOC} ${SQLITECPP_SCRIPT})
++SET_TARGET_PROPERTIES(SQLiteCpp PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+ 
+ # Options relative to SQLite and SQLiteC++ functions
+ 
+@@ -232,16 +233,17 @@ if (SQLITECPP_INTERNAL_SQLITE)
+     add_subdirectory(sqlite3)
+     target_link_libraries(SQLiteCpp PUBLIC sqlite3)
+ else (SQLITECPP_INTERNAL_SQLITE)
+-    find_package (SQLite3 REQUIRED)
+-    message(STATUS "Link to sqlite3 system library")
+-    target_link_libraries(SQLiteCpp PUBLIC SQLite::SQLite3)
+-    if(SQLite3_VERSION VERSION_LESS "3.19")
+-        set_target_properties(SQLiteCpp PROPERTIES COMPILE_FLAGS "-DSQLITECPP_HAS_MEM_STRUCT")
+-    endif()
++    if(NOT SQLITE_HAS_CODEC)
++		find_package(unofficial-sqlite3 CONFIG)
++		message(STATUS "Link to sqlite3 system library")
++		target_link_libraries(SQLiteCpp PRIVATE unofficial::sqlite3::sqlite3)
++		if(SQLite3_VERSION VERSION_LESS "3.19")
++			set_target_properties(SQLiteCpp PROPERTIES COMPILE_FLAGS "-DSQLITECPP_HAS_MEM_STRUCT")
++		endif()
++	else()
++		# When using the SQLite codec, we need to link against the sqlcipher lib & include <sqlcipher/sqlite3.h>
++		# So this gets the lib & header, and links/includes everything
+ 
+-    # When using the SQLite codec, we need to link against the sqlcipher lib & include <sqlcipher/sqlite3.h>
+-    # So this gets the lib & header, and links/includes everything
+-    if(SQLITE_HAS_CODEC)
+         # Make PkgConfig optional since Windows doesn't usually have it installed.
+         find_package(PkgConfig QUIET)
+         if(PKG_CONFIG_FOUND)
+@@ -300,6 +302,7 @@ target_include_directories(SQLiteCpp
+ include(GNUInstallDirs)
+ install(TARGETS SQLiteCpp
+     EXPORT ${PROJECT_NAME}Targets
++	RUNTIME DESTINATION bin
+     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+     COMPONENT libraries)
+diff --git a/include/SQLiteCpp/Database.h b/include/SQLiteCpp/Database.h
+index 3c1b4d8..5377963 100644
+--- a/include/SQLiteCpp/Database.h
++++ b/include/SQLiteCpp/Database.h
+@@ -10,6 +10,20 @@
+  */
+ #pragma once
+ 
++#if (defined _WIN32) || (defined _WIN64)
++    #define DECL_EXPORT __declspec(dllexport)
++    #define DECL_IMPORT __declspec(dllimport)
++#else
++    #define DECL_EXPORT
++    #define DECL_IMPORT
++#endif
++
++#if defined(sqlitecpp_EXPORTS)
++#  define sqlitecpp_EXPORTS DECL_EXPORT
++#else
++#  define sqlitecpp_EXPORTS DECL_IMPORT
++#endif
++
+ #include <SQLiteCpp/Column.h>
+ #include <memory>
+ #include <string.h>
+@@ -32,7 +46,7 @@ namespace SQLite
+ // Those public constants enable most usages of SQLiteCpp without including <sqlite3.h> in the client application.
+ 
+ /// The database is opened in read-only mode. If the database does not already exist, an error is returned.
+-extern const int OPEN_READONLY;     // SQLITE_OPEN_READONLY
++sqlitecpp_EXPORTS extern const int OPEN_READONLY;     // SQLITE_OPEN_READONLY
+ /// The database is opened for reading and writing if possible, or reading only if the file is write protected
+ /// by the operating system. In either case the database must already exist, otherwise an error is returned.
+ extern const int OPEN_READWRITE;    // SQLITE_OPEN_READWRITE
+-- 
+2.25.1.windows.1
+
