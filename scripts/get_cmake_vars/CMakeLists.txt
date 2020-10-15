@@ -47,10 +47,13 @@ list(REMOVE_DUPLICATES VCPKG_DEFAULT_FLAGS_TO_CHECK)
 # TODO if ever necessary: Properties to check
 
 set(VCPKG_VAR_PREFIX "VCPKG_DETECTED" CACHE STRING "Variable prefix to use for detected flags")
-set(VCPKG_OUTPUT_FILE "${CMAKE_BINARY_DIR}/../detected_flags.cmake.${VCPKG_TARGET_TRIPLET}.log" CACHE STRING "Output CMake files")
 set(VCPKG_VARS_TO_CHECK "${VCPKG_DEFAULT_VARS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
 set(VCPKG_FLAGS_TO_CHECK "${VCPKG_DEFAULT_FLAGS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
 set(VCPKG_ENV_VARS_TO_CHECK "${VCPKG_DEFAULT_ENV_VARS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
+
+if(NOT VCPKG_OUTPUT_FILE)
+    message(FATAL_ERROR "VCPKG_OUTPUT_FILE is required to be defined")
+endif()
 
 if(CMAKE_BUILD_TYPE)
     string(TOUPPER "${CMAKE_BUILD_TYPE}" VCPKG_CONFIGS)
