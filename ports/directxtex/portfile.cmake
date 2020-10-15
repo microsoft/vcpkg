@@ -3,68 +3,72 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF jul2020
-    SHA512 5e0c8b181527eb613a830f2228cf66633591c43fd4424dde9efae08d366c7957fdee02ad716a26a7b40b106b1a17f22a0728c2b57d12e12e1dc55ed297f7825c
+    REF sept2020
+    SHA512 f6b5b07817c05c64a5281b0006b182f2ebd110d79f10332801b51a185486fd7426e18c454e66995e9f88c92d7b8cf0c03ae590aa040d92314bdd3d4989784156
     HEAD_REF master
 )
 
-IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    SET(BUILD_ARCH "Win32")
-ELSE()
-    SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
-ENDIF()
+if("openexr" IN_LIST FEATURES)
+    vcpkg_download_distfile(
+        DIRECTXTEX_EXR_HEADER
+        URLS "https://raw.githubusercontent.com/wiki/Microsoft/DirectXTex/DirectXTexEXR.h"
+        FILENAME "DirectXTexEXR.h"
+        SHA512 94ec71069949c8daa616d241ade0c771c448adab3e401a935d5462e7cac382cfbef47534072fc4b9706e086f5021de78a51fd4e2a6850cd3629c932592f9a168
+    )
 
-if (VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
-    set(VS_VERSION "2015")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
-    set(VS_VERSION "2017")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
-    set(VS_VERSION "2019")
-else()
-    message(FATAL_ERROR "Unsupported platform toolset.")
+    vcpkg_download_distfile(
+        DIRECTXTEX_EXR_SOURCE
+        URLS "https://raw.githubusercontent.com/wiki/Microsoft/DirectXTex/DirectXTexEXR.cpp"
+        FILENAME "DirectXTexEXR.cpp"
+        SHA512 8bc66e102a0a163e42d428774c857271ad457a85038fd4ddfdbf083674879f9a8406a9aecd26949296b156a5c5fd08fdfba9600b71879be9affb9dabf23a497c
+    )
+
+    file(COPY ${DIRECTXTEX_EXR_HEADER} DESTINATION ${SOURCE_PATH}/DirectXTex)
+    file(COPY ${DIRECTXTEX_EXR_SOURCE} DESTINATION ${SOURCE_PATH}/DirectXTex)
+    vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES enable_openexr_support.patch)
 endif()
 
-if(VCPKG_TARGET_IS_UWP)
-    set(SLN_NAME "Windows10_${VS_VERSION}")
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES openexr ENABLE_OPENEXR_SUPPORT
+)
+
+if("dx12" IN_LIST FEATURES OR VCPKG_TARGET_IS_UWP OR TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
+    list(APPEND FEATURE_OPTIONS -DBUILD_DX12=ON)
 else()
-    if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
-        set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
-    else()
-        set(SLN_NAME "Desktop_${VS_VERSION}")
-    endif()
+    list(APPEND FEATURE_OPTIONS -DBUILD_DX12=OFF)
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/DirectXTex_${SLN_NAME}.sln
-    PLATFORM ${TRIPLET_SYSTEM_ARCH}
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        ${FEATURE_OPTIONS}
+        -DBC_USE_OPENMP=ON
+        -DBUILD_DX11=ON
 )
-
-file(INSTALL
-    ${SOURCE_PATH}/DirectXTex/DirectXTex.h
-    ${SOURCE_PATH}/DirectXTex/DirectXTex.inl
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
-file(INSTALL
-    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTex.lib
-    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTex.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL
-    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTex.lib
-    ${SOURCE_PATH}/DirectXTex/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTex.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
 if(NOT VCPKG_TARGET_IS_UWP AND NOT TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
-    set(TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtex)
-    file(MAKE_DIRECTORY ${TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/Texdiag/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/texdiag.exe
-        DESTINATION ${TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/Texconv/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Texconv.exe
-        DESTINATION ${TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/Texassemble/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/Texassemble.exe
-        DESTINATION ${TOOL_PATH})
+    vcpkg_build_cmake()
+else()
+    vcpkg_build_cmake(TARGET DirectXTex)
+endif()
+
+file(INSTALL ${SOURCE_PATH}/DirectXTex/DirectXTex.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/DirectXTex/DirectXTex.inl DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+if("openexr" IN_LIST FEATURES)
+    file(INSTALL ${SOURCE_PATH}/DirectXTex/DirectXTexEXR.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+endif()
+
+file(GLOB_RECURSE DEBUG_LIB ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/CMake/*.lib)
+file(GLOB_RECURSE RELEASE_LIB ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake/*.lib)
+file(INSTALL ${DEBUG_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+file(INSTALL ${RELEASE_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+if(NOT VCPKG_TARGET_IS_UWP AND NOT TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
+  vcpkg_copy_tools(
+        TOOL_NAMES texassemble texconv texdiag
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -551,10 +551,9 @@ namespace vcpkg::Install
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths)
     {
-        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+        auto sources_and_errors = Paragraphs::try_load_all_registry_ports(paths);
 
-        return Util::fmap(sources_and_errors.paragraphs,
-                          [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
+        return Util::fmap(sources_and_errors.paragraphs, Paragraphs::get_name_of_control_file);
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -699,9 +698,9 @@ namespace vcpkg::Install
                 {
                     auto config_it = config_files.find(library_target_pair.first);
                     if (config_it != config_files.end())
-                        Strings::append(msg, "    find_package(", config_it->second, " CONFIG REQUIRED)\n ");
+                        Strings::append(msg, "    find_package(", config_it->second, " CONFIG REQUIRED)\n");
                     else
-                        Strings::append(msg, "    find_package(", library_target_pair.first, " CONFIG REQUIRED)\n ");
+                        Strings::append(msg, "    find_package(", library_target_pair.first, " CONFIG REQUIRED)\n");
 
                     std::sort(library_target_pair.second.begin(),
                               library_target_pair.second.end(),
@@ -781,27 +780,23 @@ namespace vcpkg::Install
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
 
-        if (paths.manifest_mode_enabled())
+        if (auto manifest = paths.get_manifest().get())
         {
             Optional<fs::path> pkgsconfig;
             auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
             if (it_pkgsconfig != options.settings.end())
             {
+                Metrics::g_metrics.lock()->track_property("x-write-nuget-packages-config", "defined");
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
-
-            std::error_code ec;
-            auto manifest_path = paths.manifest_root_dir / fs::u8path("vcpkg.json");
-            auto maybe_manifest_scf = Paragraphs::try_load_manifest(fs, "manifest", manifest_path, ec);
-            if (ec)
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Failed to read manifest %s: %s", fs::u8string(manifest_path), ec.message());
-            }
-            else if (!maybe_manifest_scf)
+            auto manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
+            auto maybe_manifest_scf = SourceControlFile::parse_manifest_file(manifest_path, *manifest);
+            if (!maybe_manifest_scf)
             {
                 print_error_message(maybe_manifest_scf.error());
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to read manifest %s.", fs::u8string(manifest_path));
+                System::print2("See https://github.com/Microsoft/vcpkg/tree/master/docs/users/manifests.md for "
+                               "more information.\n");
+                Checks::exit_fail(VCPKG_LINE_INFO);
             }
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
 
@@ -929,6 +924,7 @@ namespace vcpkg::Install
         auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
         if (it_pkgsconfig != options.settings.end())
         {
+            Metrics::g_metrics.lock()->track_property("x-write-nuget-packages-config", "defined");
             Build::compute_all_abis(paths, action_plan, var_provider, status_db);
 
             auto pkgsconfig_path = Files::combine(paths.original_cwd, fs::u8path(it_pkgsconfig->second));

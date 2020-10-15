@@ -1,7 +1,7 @@
 ## # vcpkg_get_cmake_vars
 ##
+## **Only for internal use in vcpkg helpers. Behavior and arguments will change without notice.**
 ## Runs a cmake configure with a dummy project to extract certain cmake variables
-## This function is mostliy
 ##
 ## ## Usage
 ## ```cmake
@@ -16,14 +16,14 @@
 ## Additional options to pass to the test configure call 
 ##
 ## ### OUTPUT_FILE
-## Variable to hold the 
+## Variable to return the path to the generated cmake file with the detected `CMAKE_` variables set as `VCKPG_DETECTED_`
 ##
 ## ## Notes
-## This command will either alter the settings for `VCPKG_LIBRARY_LINKAGE` or fail, depending on what was requested by the user versus what the library supports.
+## If possible avoid usage in portfiles. 
 ##
 ## ## Examples
 ##
-## * [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
+## * [vcpkg_configure_make](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_configure_make.cmake)
 
 function(vcpkg_get_cmake_vars)
     cmake_parse_arguments(PARSE_ARGV 0 _gcv "" "OUTPUT_FILE" "OPTIONS")
@@ -45,20 +45,15 @@ function(vcpkg_get_cmake_vars)
         set(${_gcv_OUTPUT_FILE} "${DEFAULT_OUT}" PARENT_SCOPE)
     endif()
 
-    set(VCPKG_BUILD_TYPE release)
     vcpkg_configure_cmake(
         SOURCE_PATH "${SCRIPTS}/get_cmake_vars"
-        OPTIONS ${_gcv_OPTIONS}
+        OPTIONS ${_gcv_OPTIONS} "-DVCPKG_BUILD_TYPE=${VCPKG_BUILD_TYPE}"
+        OPTIONS_DEBUG "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log"
+        OPTIONS_RELEASE "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log"
         PREFER_NINJA
+        LOGNAME get-cmake-vars-${TARGET_TRIPLET}
     )
 
-    file(REMOVE "${CURRENT_BUILDTREES_DIR}/get-cmake-vars-${TARGET_TRIPLET}-out.log")
-    file(REMOVE "${CURRENT_BUILDTREES_DIR}/get-cmake-vars-${TARGET_TRIPLET}-err.log")
-    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-get-cmake-vars")
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-get-cmake-vars")
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        set(LOGSUFFIX -rel)
-    endif()
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}${LOGSUFFIX}-out.log" "${CURRENT_BUILDTREES_DIR}/get-cmake-vars-${TARGET_TRIPLET}-out.log")
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}${LOGSUFFIX}-err.log" "${CURRENT_BUILDTREES_DIR}/get-cmake-vars-${TARGET_TRIPLET}-err.log")
+    file(WRITE "${${_gcv_OUTPUT_FILE}}" "include(${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log)\ninclude(${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log)")
+
 endfunction()

@@ -32,22 +32,21 @@ if(VCPKG_USE_INTERNAL_Fortran)
         message(FATAL_ERROR "Unsupported target architecture ${VCPKG_TARGET_ARCHITECTURE}!" )
     endif()
 
-
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES "mingw-w64-${MSYS_TARGET}-gcc-fortran") # TODO: make x86 work
-
-    set(MINGW_BIN "${MSYS_ROOT}/mingw${MINGW_W_TARGET}/bin/")
-    set(MINGW_Fortran_DLLS "${MINGW_BIN}/libgfortran-5.dll"
-                           "${MINGW_BIN}/libquadmath-0.dll"
-                           "${MINGW_BIN}/libwinpthread-1.dll"
-                           "${MINGW_BIN}/libgcc_${GCC_LIB_SUFFIX}.dll")
-    file(INSTALL ${MINGW_Fortran_DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
-    file(INSTALL ${MINGW_Fortran_DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    set(MINGW_BIN "${vcpkg_find_fortran_MSYS_ROOT}/mingw${MINGW_W_TARGET}/bin/")
+    set(MINGW_Fortran_DLLS
+        "${MINGW_BIN}/libgfortran-5.dll"
+        "${MINGW_BIN}/libquadmath-0.dll"
+        "${MINGW_BIN}/libwinpthread-1.dll"
+        "${MINGW_BIN}/libgcc_${GCC_LIB_SUFFIX}.dll"
+    )
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(COPY ${MINGW_Fortran_DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
+    file(COPY ${MINGW_Fortran_DLLS} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(COPY "${vcpkg_find_fortran_MSYS_ROOT}/mingw${MINGW_W_TARGET}/share/licenses" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+    file(INSTALL "${vcpkg_find_fortran_MSYS_ROOT}/mingw${MINGW_W_TARGET}/share/licenses/crt/COPYING.MinGW-w64-runtime.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
     set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled) # due to outdated msvcrt
     set(VCPKG_POLICY_DLLS_WITHOUT_LIBS enabled)
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-    file(INSTALL "${MSYS_ROOT}/mingw${MINGW_W_TARGET}/share/licenses/winpthreads" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/license")
-    file(INSTALL "${MSYS_ROOT}/mingw${MINGW_W_TARGET}/share/licenses/gcc-libs" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}/license")
-    file(INSTALL "${MSYS_ROOT}/mingw${MINGW_W_TARGET}/share/licenses/crt/COPYING.MinGW-w64-runtime.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 else()
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 endif()

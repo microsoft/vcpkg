@@ -43,7 +43,7 @@
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
     include("${CMAKE_VARS_FILE}")
-    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;WORKING_SUBDIR" "")
+    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH" "")
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -74,7 +74,8 @@ function(vcpkg_build_make)
         set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} -j 1 --trace -f Makefile ${_bc_BUILD_TARGET})
 
         string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
+        # Don't know why '/cygdrive' is suddenly a requirement here. (at least for x264)
+        string(REGEX REPLACE "([a-zA-Z]):/" "/cygdrive/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
         set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f Makefile install DESTDIR=${_VCPKG_PACKAGE_PREFIX})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
     else()
@@ -84,7 +85,7 @@ function(vcpkg_build_make)
         # Set make command and install command
         set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f Makefile ${_bc_BUILD_TARGET})
         set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j 1 -f Makefile ${_bc_BUILD_TARGET})
-        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} install DESTDIR=${CURRENT_PACKAGES_DIR})
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} -f Makefile install DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
@@ -127,11 +128,11 @@ function(vcpkg_build_make)
                 set(LDFLAGS_${CMAKE_BUILDTYPE} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link ${LINKER_FLAGS_${CMAKE_BUILDTYPE}}")
             endif()
             
-                    # Setup environment
+            # Setup environment
             set(ENV{CPPFLAGS} "${CPPFLAGS_${CMAKE_BUILDTYPE}}")
             set(ENV{CFLAGS} "${CFLAGS_${CMAKE_BUILDTYPE}}")
             set(ENV{CXXFLAGS} "${CXXFLAGS_${CMAKE_BUILDTYPE}}")
-            set(ENV{RCFLAGS} "${VCPKG_DETECTED_COMBINED_RCFLAGS_${CMAKE_BUILDTYPE}}")
+            set(ENV{RCFLAGS} "${VCPKG_DETECTED_CMAKE_RC_FLAGS_${CMAKE_BUILDTYPE}}")
             set(ENV{LDFLAGS} "${LDFLAGS_${CMAKE_BUILDTYPE}}")
             set(ENV{LIB} "${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link/${LIB_PATHLIKE_CONCAT}")
             set(ENV{LIBPATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX}/lib/manual-link/${LIBPATH_PATHLIKE_CONCAT}")
@@ -156,10 +157,6 @@ function(vcpkg_build_make)
                 set(NO_PARALLEL_MAKE_CMD_LINE ${MAKE_COMMAND} ${NO_PARALLEL_MAKE_OPTS})
             endif()
 
-            # foreach(_envar IN LISTS printvars)
-                # message(STATUS "ENV{${_envar}} : '$ENV{${_envar}}'")
-            # endforeach()
-
             if (_bc_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
                         COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
@@ -182,9 +179,6 @@ function(vcpkg_build_make)
                 else()
                     set(MAKE_CMD_LINE ${MAKE_COMMAND} ${INSTALL_OPTS})
                 endif()
-                # foreach(_envar IN LISTS printvars)
-                    # message(STATUS "ENV{${_envar}} : '$ENV{${_envar}}'")
-                # endforeach()
                 vcpkg_execute_build_process(
                     COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
                     WORKING_DIRECTORY "${WORKING_DIRECTORY}"

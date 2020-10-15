@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF f9f214f34a38d5bb67441140703a681c5d299906 # pcl-1.11.0
-    SHA512 7d1bbadcd6843001895bd1faeb5ad4166f7746bf77f83573160507746d438797fbe9e283a8989f517fe1dc7195934ad59e008b4fce61e5943ce6426d49141365
+    REF d98313133b014553ab1b1b5b112f9aade837d55c # pcl-1.11.1
+    SHA512 4d60f34d4fbf0a4b4caf9cc4391af471ebd260b3bbac106d45e5ff38448894ea4dc82d5320c2e395c537a4414eb13c6a6a0eb6c13e4e1cc1d831d4bf24067966
     HEAD_REF master
     PATCHES
         pcl_utils.patch
@@ -35,6 +35,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda        BUILD_GPU
     tools       BUILD_tools
     opengl      WITH_OPENGL
+    vtk         WITH_VTK
 )
 
 vcpkg_configure_cmake(
@@ -52,7 +53,6 @@ vcpkg_configure_cmake(
         -DWITH_LIBUSB=OFF
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
-        -DWITH_VTK=OFF # disabled due to API changes in 9.0
         # FEATURES
         ${FEATURE_OPTIONS}
 )

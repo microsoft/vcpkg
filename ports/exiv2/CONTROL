@@ -12,3 +12,6 @@ Description: Compile with unicode support on windows
 Feature: xmp
 Description: Build with XMP metadata support
 Build-Depends: expat
+
+Feature: video
+Description: Build video support into library
