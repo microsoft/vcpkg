@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "windows" "uwp" "osx")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeSpacenav/libspnav
-    REF v0.2.3
-    SHA512 fe01a8e8496aa5648553ad8a769aa15a4de127e3cf0a1d2c56353bf9757fe025383d64a07709c33199f658aa00adcb1fa754891f7de2250610a56664bc107c45
+    REF libspnav-0.2.3
+    SHA512 6c06344813ddf7e2bc7981932b4a901334de2b91d8c3abb23828869070dc73ed1c19c5bf7ff9338cc673c8f0dc7394608652afd0cdae093149c0a24460f0a8fb
     HEAD_REF master
 )
 
@@ -22,8 +22,8 @@ macro(CLEANUP WHERE)
         file(REMOVE_RECURSE ${WORKDIR}/include)
     endif ()
     file(REMOVE ${WORKDIR}/lib/libspnav.so)
-    file(REMOVE ${WORKDIR}/lib/libspnav.so.)
-    file(RENAME ${WORKDIR}/lib/libspnav.so.. ${WORKDIR}/lib/libspnav.so)
+    file(REMOVE ${WORKDIR}/lib/libspnav.so.0)
+    file(RENAME ${WORKDIR}/lib/libspnav.so.0.1 ${WORKDIR}/lib/libspnav.so)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE ${WORKDIR}/lib/libspnav.so)
     else ()
