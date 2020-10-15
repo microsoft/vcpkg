@@ -229,6 +229,15 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     SHA512 1389a443e775bb255d905665dd577bef7ed71d51a8c24d118097f8119c08c4dfe67505e88ddd1e9a3764dd1d50ed8b84fa34abefa797d257e90586f0cbf54de8
   )
   msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/xz-5.2.4-1-x86_64.pkg.tar.xz"
+    SHA512 4b4daa6250d50cfd6575630803e57aaca5bdb24057456761565404a37a9224535e51ef1212f430ffa434d7b7128ad61792c59eb6bc905b8b4455fed25bff499a
+    DEPS liblzma libiconv gettext
+  )
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/liblzma-5.2.5-1-x86_64.pkg.tar.xz"
+    SHA512 8d5c04354fdc7309e73abce679a4369c0be3dc342de51cef9d2a932b7df6a961c8cb1f7e373b1b8b2be40343a95fbd57ac29ebef63d4a2074be1d865e28ca6ad
+  )
+  msys_package(
     URL "https://repo.msys2.org/msys/x86_64/libreadline-8.0.004-1-x86_64.pkg.tar.xz"
     SHA512 42760bddedccc8d93507c1e3a7a81595dc6392b5e4319d24a85275eb04c30eb79078e4247eb2cdd00ff3884d932639130c89bf1b559310a17fa4858062491f97
     DEPS ncurses
@@ -267,6 +276,11 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     URL "https://repo.msys2.org/msys/x86_64/make-4.3-1-x86_64.pkg.tar.xz"
     SHA512 7306dec7859edc27d70a24ab4b396728481484a426c5aa2f7e9fed2635b3b25548b05b7d37a161a86a8edaa5922948bee8c99b1e8a078606e69ca48a433fe321
     DEPS libintl msys2-runtime
+  )
+msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/gettext-devel-0.19.8.1-1-x86_64.pkg.tar.xz"
+    SHA512 648f74c23e4f92145cdd0d45ff5285c2df34e855a9e75e5463dd6646967f8cf34a18ce357c6f498a4680e6d7b84e2d1697ba9deee84da8ea6bb14bbdb594ee22
+    DEPS gettext
   )
   msys_package(
     URL "https://repo.msys2.org/msys/x86_64/gettext-0.19.8.1-1-x86_64.pkg.tar.xz"

@@ -34,6 +34,7 @@ vcpkg_configure_make(
         "--with-libiconv-lib=${CURRENT_INSTALLED_DIR}/lib"
         ${OPT_REL}
     ADD_BIN_TO_PATH
+    ADDITIONAL_MSYS_PACKAGES xz gettext gettext-devel # for autopoint
 )
 
 vcpkg_install_make(ADD_BIN_TO_PATH)
