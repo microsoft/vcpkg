@@ -54,7 +54,7 @@ elseif (CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
     set(VCPKG_HOST_IS_LINUX 1)
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD")
-    set(VCPKG_HOST_IS_FreeBSD 1)
+    set(VCPKG_HOST_IS_FREEBSD 1)
 endif()
 
 #Helper variable to identify the host path separator.
