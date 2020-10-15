@@ -45,20 +45,15 @@ function(vcpkg_get_cmake_vars)
         set(${_gcv_OUTPUT_FILE} "${DEFAULT_OUT}" PARENT_SCOPE)
     endif()
 
-    set(VCPKG_BUILD_TYPE release)
     vcpkg_configure_cmake(
         SOURCE_PATH "${SCRIPTS}/get_cmake_vars"
-        OPTIONS ${_gcv_OPTIONS}
+        OPTIONS ${_gcv_OPTIONS} "-DVCPKG_BUILD_TYPE=${VCPKG_BUILD_TYPE}"
+        OPTIONS_DEBUG "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log"
+        OPTIONS_RELEASE "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log"
         PREFER_NINJA
+        LOGNAME get-cmake-vars-${TARGET_TRIPLET}
     )
 
-    file(REMOVE "${CURRENT_BUILDTREES_DIR}/get-cmake-vars-${TARGET_TRIPLET}-out.log")
-    file(REMOVE "${CURRENT_BUILDTREES_DIR}/get-cmake-vars-${TARGET_TRIPLET}-err.log")
-    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-get-cmake-vars")
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-get-cmake-vars")
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        set(LOGSUFFIX -rel)
-    endif()
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}${LOGSUFFIX}-out.log" "${CURRENT_BUILDTREES_DIR}/get-cmake-vars-${TARGET_TRIPLET}-out.log")
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}${LOGSUFFIX}-err.log" "${CURRENT_BUILDTREES_DIR}/get-cmake-vars-${TARGET_TRIPLET}-err.log")
+    file(WRITE "${${_gcv_OUTPUT_FILE}}" "include(${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log)\ninclude(${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log)")
+
 endfunction()

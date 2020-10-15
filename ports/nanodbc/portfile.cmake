@@ -5,7 +5,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanodbc/nanodbc
-    REF 7404a4dd7697e188df5724ab95a7553d2fc404eb
+    REF 7404a4dd7697e188df5724ab95a7553d2fc404eb # v2.13.0
     SHA512 35ca098e783d771f3df611bce84e9b8207a6a5b72c492d2f3909977bc91a7c22bb262c34768b0d97ebfbdf12eeda0214064a8ea171e7bdda7b759f93ff346f45
     HEAD_REF master
 )
