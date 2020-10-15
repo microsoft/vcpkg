@@ -53,6 +53,15 @@ find_dependency(ZLIB)
 ${ASSIMP_CONFIG}
 ")
 
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake
+    "cmake_policy(VERSION 2.6)"
+    "cmake_policy(VERSION 2.6)\r\n\
+# Required for the evaluation of \"if(@BUILD_SHARED_LIBS@)\" below to function\r\n\
+cmake_policy(SET CMP0012 NEW)\r\n"
+)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/unistd.h ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(INSTALL ${SOURCE_PATH}/FindPthreads.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio)
 
 file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
