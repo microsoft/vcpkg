@@ -1,23 +1,23 @@
 {
   "name": "gamedev-framework",
   "version-string": "0.18.0",
-  "license": "Zlib",
-  "homepage": "https://gamedevframework.github.io/",
-  "description": "gf is a framework to build 2D games in C++14",
   "maintainers": [
     "Julien Bernard <julien.bernard@univ-fcomte.fr>",
     "Arthur Hugeat <hugeat.arthur@gmail.com>"
   ],
+  "description": "gf is a framework to build 2D games in C++14",
+  "homepage": "https://gamedevframework.github.io/",
+  "license": "Zlib",
+  "supports": "!arm",
   "dependencies": [
-    "sdl2",
-    "freetype",
-    "zlib",
     "boost-algorithm",
+    "boost-container",
     "boost-filesystem",
     "boost-heap",
-    "boost-container",
+    "freetype",
+    "pugixml",
+    "sdl2",
     "stb",
-    "pugixml"
-  ],
-  "supports": "!arm"
+    "zlib"
+  ]
 }
