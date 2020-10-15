@@ -1,16 +1,12 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "UWP is not currently supported.")
-endif()
-
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET osx linux uwp ON_CRT_LINKAGE static ON_LIBRARY_LINKAGE static)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/ChakraCore
-    REF febc6a89413df93c304064ef630cf50c5da980c9 # v1.11.15
-    SHA512 36961c0b6f8e11ec23c7489dabca5fc84750bcee770dffa6c396deae36791feab5d56cc0df59fbdf42682633462f8a026e38abb3055641045a8e9091265a51e7
+    REF 63c5099027ebb4547c802d62c2d2a6a39ee7eff6 # v1.11.22
+    SHA512 5de915db48f5a125d4e0e112671ad7447212e6c0165d6c634a855a1d334f0bd2f7c015ba8c58d55225dd75d4c6687e6807987b8354b82405eb87944b46313062
     HEAD_REF master
 )
 

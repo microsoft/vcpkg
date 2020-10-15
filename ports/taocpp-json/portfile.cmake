@@ -5,8 +5,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taocpp/json
-    REF 2ce7f742f8c47e8871f3052c56f13b237b68b18d
-    SHA512 22492cf87a008ae37fb46490ed5b688b195099a932c2dffaca029927fd9f9dff813ad21135edadf3c11bb0af75f78d00cfb92d875fe5579966e76d2039085eae
+    REF f357d7269b7503eed21d0c3b98b9075c28a98f56 # accessed on 2020-09-14
+    SHA512 4a4be970779ed0c6044c7ad40918ad6b3908ca10dbfb3738cbebb62154d437ad13ca27947119a6b1a6c8d92b22a9282477c73ddc5721ca30b8b355b77d7ce729
     HEAD_REF master
 )
 
