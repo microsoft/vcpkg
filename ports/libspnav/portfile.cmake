@@ -8,17 +8,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-	set(OPTIONS "--disable-debug")
-endif ()
-
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-	set(OPTIONS "--enable-debug")
-endif ()
-
 vcpkg_configure_make(
 	SOURCE_PATH ${SOURCE_PATH}
-	OPTIONS ${OPTIONS}
+	OPTIONS_DEBUG "--enable-debug"
+	OPTIONS_RELEASE "--disable-debug"
 )
 
 vcpkg_install_make()
