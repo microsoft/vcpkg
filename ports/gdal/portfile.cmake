@@ -19,7 +19,7 @@ set(GDAL_PATCHES 0001-Fix-debug-crt-flags.patch 0002-Fix-build.patch)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND GDAL_PATCHES 0003-Fix-static-build.patch)
 endif()
-list(APPEND GDAL_PATCHES 0004-Fix-std-fabs.patch)
+list(APPEND GDAL_PATCHES 0004-Fix-std-fabs.patch 0005-Fix-cfitsio.patch)
 
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
@@ -185,7 +185,7 @@ else()
     endif()
     
     set(CONF_OPTS --enable-shared=${BUILD_DYNAMIC} --enable-static=${BUILD_STATIC})
-    list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR})
+    list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR} --with-cfitsio=${CURRENT_INSTALLED_DIR})
     
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
