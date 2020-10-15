@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.17)
 
-set(OUTPUT_STRING)
+set(VCPKG_LANGUAGES "C;CXX" CACHE STRING "Languages to enables for this project")
 
+set(OUTPUT_STRING)
 # Build default checklists
 list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_NAME
@@ -39,13 +40,12 @@ list(REMOVE_DUPLICATES VCPKG_DEFAULT_ENV_VARS_TO_CHECK)
 #Flags to check. Flags are a bit special since they are configuration aware. 
 set(FLAGS ${VCPKG_LANGUAGES} RC SHARED_LINKER STATIC_LINKER EXE_LINKER)
 foreach(flag IN LISTS FLAGS)
-    list(APPEND VCPKG_DEFAULT_FLAGS_TO_CHECK CMAKE_${flag})
-endforeach
+    list(APPEND VCPKG_DEFAULT_FLAGS_TO_CHECK CMAKE_${flag}_FLAGS)
+endforeach()
 list(REMOVE_DUPLICATES VCPKG_DEFAULT_FLAGS_TO_CHECK)
 
 # TODO if ever necessary: Properties to check
 
-set(VCPKG_LANGUAGES "C;CXX" CACHE STRING "Languages to enables for this project")
 set(VCPKG_VAR_PREFIX "VCPKG_DETECTED" CACHE STRING "Variable prefix to use for detected flags")
 set(VCPKG_OUTPUT_FILE "${CMAKE_BINARY_DIR}/../detected_flags.cmake.${VCPKG_TARGET_TRIPLET}.log" CACHE STRING "Output CMake files")
 set(VCPKG_VARS_TO_CHECK "${VCPKG_DEFAULT_VARS_TO_CHECK}" CACHE STRING "Variables to check. If not given there is a list of defaults")
@@ -60,7 +60,30 @@ endif()
 
 project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
 
-set(FLAGS ${VCPKG_LANGUAGES} RC SHARED_LINKER STATIC_LINKER EXE_LINKER)
+# These seem to be empty.
+# set(add_props INCLUDE_DIRECTORIES COMPILE_DEFINITIONS COMPILE_OPTIONS LINK_DIRECTORIES LINK_OPTIONS)
+# foreach(prop IN LISTS add_props)
+    # get_directory_property(${prop} ${prop})
+    # string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${prop} ${${prop}})\n")
+    # foreach(config IN LISTS VCPKG_CONFIGS)
+        # get_directory_property(${prop}_${config} ${prop}_${config})
+        # string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${prop}_${config} ${${prop}_${config}})\n")
+    # endforeach()
+# endforeach()
+
+foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
+  string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
+endforeach()
+
+foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
+    IF(WIN32)
+        string(REPLACE "\\" "/" ENV_${_env} "$ENV{${_env}}")
+        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"${ENV_${_env}}\")\n")
+    else()
+        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"$ENV{${_env}}\")\n")
+    endif()
+endforeach()
+
 foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
     string(REGEX REPLACE " +" " " ${flag} "${${flag}}")
     string(REGEX REPLACE "( |^)/" "\\1-" ${flag} "${${flag}}")
@@ -77,31 +100,6 @@ foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
         string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${flag}_${config} \"${COMBINED_${flag}_${config}}\")\n")
     endforeach()
 endforeach()
-
-# These seem to be empty.
-# set(add_props INCLUDE_DIRECTORIES COMPILE_DEFINITIONS COMPILE_OPTIONS LINK_DIRECTORIES LINK_OPTIONS)
-# foreach(prop IN LISTS add_props)
-    # get_directory_property(${prop} ${prop})
-    # string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${prop} ${${prop}})\n")
-    # foreach(config IN LISTS VCPKG_CONFIGS)
-        # get_directory_property(${prop}_${config} ${prop}_${config})
-        # string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${prop}_${config} ${${prop}_${config}})\n")
-    # endforeach()
-# endforeach()
-
-foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
-  string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\"\n")
-endforeach()
-
-foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
-    IF(WIN32)
-        string(REPLACE "\\" "/" ENV_${_env} "$ENV{${_env}}")
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"${ENV_${_env}}\")\n")
-    else()
-        string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"$ENV{${_env}}\")\n")
-    endif()
-endforeach()
-
 
 
 file(WRITE "${VCPKG_OUTPUT_FILE}" "${OUTPUT_STRING}")
