@@ -5,12 +5,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO whoshuu/cpr
-    REF 1.3.0
-    SHA512 fd08f8a592a5e1fb8dc93158a4850b81575983c08527fb415f65bd9284f93c804c8680d16c548744583cd26b9353a7d4838269cfc59ccb6003da8941f620c273
+    REF v1.5.1
+    SHA512 ef97ee553cedf0fd95706574698b7e3dbb4e37b1f92dd3d5b6603daa431984a0361c2cf0ad0ab7cbe5be40376e60f7bb1a34b4687e260d58840bcb2af74d556d
     HEAD_REF master
     PATCHES
         001-cpr-config.patch
-        002_cpr_fixcase.patch
 )
 
 vcpkg_configure_cmake(
