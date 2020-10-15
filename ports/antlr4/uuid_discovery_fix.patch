@@ -25,3 +25,4 @@ diff -urN a/runtime/src/support/guid.cpp b/runtime/src/support/guid.cpp
  #include "guid.h"
 
  #ifdef GUID_LIBUUID
+ 

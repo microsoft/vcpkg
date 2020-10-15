@@ -16,11 +16,11 @@ diff -urN a/runtime/CMakeLists.txt b/runtime/CMakeLists.txt
  endif(WIN32)
 -if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 -  if(WITH_STATIC_CRT)
--    target_compile_options(antlr4_shared PRIVATE "/MT$<$<CONFIG:Debug>:d>") 
+-    target_compile_options(antlr4_shared PRIVATE "/MT$<$<CONFIG:Debug>:d>")
 -    target_compile_options(antlr4_static PRIVATE "/MT$<$<CONFIG:Debug>:d>")
 -  else()
--    target_compile_options(antlr4_shared PRIVATE "/MD$<$<CONFIG:Debug>:d>") 
--    target_compile_options(antlr4_static PRIVATE "/MD$<$<CONFIG:Debug>:d>") 
+-    target_compile_options(antlr4_shared PRIVATE "/MD$<$<CONFIG:Debug>:d>")
+-    target_compile_options(antlr4_static PRIVATE "/MD$<$<CONFIG:Debug>:d>")
 -  endif()
 -endif()
 +# if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -35,3 +35,4 @@ diff -urN a/runtime/CMakeLists.txt b/runtime/CMakeLists.txt
 
  set(static_lib_suffix "")
  if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+ 
