@@ -39,4 +39,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     cleanup("debug")
 endif ()
 
-file(INSTALL ${SOURCE_PATH}/README ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/README
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    RENAME copyright
+)
