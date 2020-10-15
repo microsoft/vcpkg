@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c66da20..14e38d2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -152,6 +152,23 @@ install(TARGETS ${LIB_NAME}
+                             ARCHIVE DESTINATION lib)
+ install(FILES ${H_FILES} DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
+ 
++set(CFITSIO_VERSION 3.49)
++include(CMakePackageConfigHelpers)
++write_basic_package_version_file(unofficial-${LIB_NAME}-version.cmake VERSION ${CFITSIO_VERSION} COMPATIBILITY ExactVersion)
++
++install(FILES ${CMAKE_BINARY_DIR}/unofficial-${LIB_NAME}-version.cmake DESTINATION share/unofficial-${LIB_NAME})
++
++install(
++    TARGETS ${LIB_NAME}
++    EXPORT unofficial-${LIB_NAME}-config
++    DESTINATION lib
++)
++
++install(
++    EXPORT unofficial-${LIB_NAME}-config
++    DESTINATION share/unofficial-${LIB_NAME}
++)
++
+ # Only build test code and executables if building a shared library:
+ IF (BUILD_SHARED_LIBS)
+ 

@@ -10,6 +10,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0001-correct-headers-for-getcwd.patch
         0002-fix-dependency-zlib.patch
+        0003-export-cmake-targets.patch
 )
 
 vcpkg_configure_cmake(
@@ -19,8 +20,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-cfitsio TARGET_PATH share/unofficial-cfitsio)
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake ASSIMP_CONFIG)
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake "
+include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
+${ASSIMP_CONFIG}")
+
 # Remove duplicate include files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/unistd.h)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/unistd.h ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # cfitsio uses very common names for its headers, so they must be moved to a subdirectory
 file(RENAME ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/cfitsio)
