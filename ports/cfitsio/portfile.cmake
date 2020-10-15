@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio3410.tar.gz"
-    FILENAME "cfitsio3410.tar.gz"
-    SHA512 b2ac31ab17e19eeeb4f1601f42f348402c0a4ab03725dbf74fe75eaabbee2f44f64f0c0ee7f0b2688bd93a9cc0dccf29f07e73b9148fff97fc78bebdbb5f6f0f
+    URLS "http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-3.49.tar.gz"
+    FILENAME "cfitsio-3.49.tar.gz"
+    SHA512 9836a4af3bbbfed1ea1b4c70b9d500ac485d7c3d8131eb8a25ee6ef6662f46ba52b5161c45c709ed9a601ff0e9ec36daa5650eaaf4f2cc7d6f4bb5640f10da15
 )
 
 vcpkg_extract_source_archive_ex(
@@ -9,6 +9,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     PATCHES
         0001-correct-headers-for-getcwd.patch
+        0002-fix-dependency-zlib.patch
 )
 
 vcpkg_configure_cmake(
