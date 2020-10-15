@@ -27,7 +27,7 @@
 ## ### DISABLE_PARALLEL
 ## The underlying buildsystem will be instructed to not parallelize
 ##
-## ### WORKING_SUBDIR
+## ### SUBPATH
 ## Additional subdir to invoke make in. Useful if only parts of a port should be built. 
 ##
 ## ## Notes:
@@ -112,7 +112,7 @@ function(vcpkg_build_make)
                 set(PATH_SUFFIX "")
             endif()
 
-            set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_bc_WORKING_SUBDIR}")
+            set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_bc_SUBPATH}")
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE})
