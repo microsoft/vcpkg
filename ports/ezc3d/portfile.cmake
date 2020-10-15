@@ -1,4 +1,3 @@
-
 vcpkg_from_github(ARCHIVE
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pyomeca/ezc3d
