@@ -77,7 +77,7 @@ else()
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=i686-pc-mingw32")
 
     # Acquire tools
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.16)
 
     # Insert msys into the path between the compiler toolset and windows system32. This prevents masking of "link.exe" but DOES mask "find.exe".
     string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
@@ -85,7 +85,7 @@ else()
     set(ENV{PATH} "${NEWPATH}")
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
-    set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.15)
+    set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.16)
     file(COPY ${AUTOMAKE_DIR}/config.guess ${AUTOMAKE_DIR}/config.sub DESTINATION ${SOURCE_PATH}/source)
 
     if(VCPKG_CRT_LINKAGE STREQUAL static)
