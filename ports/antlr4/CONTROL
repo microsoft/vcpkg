@@ -3,3 +3,4 @@ Version: 4.8
 Homepage: https://www.antlr.org
 Description: ANother Tool for Language Recognition
 Build-Depends: libuuid (!uwp&!windows&!osx)
+Supports: !uwp

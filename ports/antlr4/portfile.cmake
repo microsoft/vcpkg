@@ -1,8 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
-
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 set(VERSION 4.8)
 
@@ -88,6 +84,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/antlr4-runtime)
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/antlr4 RENAME copyright)
+file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 message(STATUS "Installing done")
