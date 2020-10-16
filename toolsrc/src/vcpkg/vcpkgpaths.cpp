@@ -1,6 +1,7 @@
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
@@ -9,6 +10,7 @@
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/configuration.h>
+#include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
@@ -78,9 +80,9 @@ namespace vcpkg
                                                    const fs::path& filepath)
     {
         Json::Reader reader;
-        auto deserializer = ConfigurationDeserializer(args);
+        ConfigurationDeserializer deserializer(args);
 
-        auto parsed_config_opt = reader.visit_value(obj, deserializer);
+        auto parsed_config_opt = reader.visit(obj, deserializer);
         if (!reader.errors().empty())
         {
             System::print2(System::Color::error, "Errors occurred while parsing ", fs::u8string(filepath), "\n");

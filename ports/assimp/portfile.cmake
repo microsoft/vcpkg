@@ -55,6 +55,7 @@ find_dependency(polyclipping CONFIG)
 find_dependency(minizip CONFIG)
 find_dependency(kubazip CONFIG)
 find_dependency(poly2tri CONFIG)
+find_dependency(utf8cpp CONFIG)
 ${ASSIMP_CONFIG}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
