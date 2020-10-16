@@ -20,6 +20,7 @@ vcpkg_from_github(
     PATCHES
         0001-fix-path-for-vcpkg.patch
         0002-fix-build-error.patch
+        0003-disable-plugin-botan.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
