@@ -108,12 +108,19 @@ else()
         HEAD_REF master # branch name
         PATCHES fix-InstallLibPath.patch
     )
+    
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(OPTIONS --disable-static)
+    else()
+        set(OPTIONS --disable-shared)
+    endif()
 
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
         OPTIONS
             --disable-documentation
+            --disable-openssl
             ${OPTIONS}
     )
 
@@ -129,5 +136,3 @@ else()
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 endif()
-
-
