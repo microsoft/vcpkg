@@ -41,7 +41,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-cfitsio TARGET_PATH share/unofficial-cfitsio)
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake ASSIMP_CONFIG)
