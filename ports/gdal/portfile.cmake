@@ -133,38 +133,38 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gdal/html)
   endif()
 
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    list(APPEND GDAL_EXES
-        gdal_contour
-        gdal_grid
-        gdal_rasterize
-        gdal_translate
-        gdal_viewshed
-        gdaladdo
-        gdalbuildvrt
-        gdaldem
-        gdalenhance
-        gdalinfo
-        gdallocationinfo
-        gdalmanage
-        gdalmdiminfo
-        gdalmdimtranslate
-        gdalserver
-        gdalsrsinfo
-        gdaltindex
-        gdaltransform
-        gdalwarp
-        gnmanalyse
-        gnmmanage
-        nearblack
-        ogr2ogr
-        ogrinfo
-        ogrlineref
-        ogrtindex
-        testepsg
-    )
-    vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
-  else()
+  list(APPEND GDAL_EXES
+      gdal_contour
+      gdal_grid
+      gdal_rasterize
+      gdal_translate
+      gdal_viewshed
+      gdaladdo
+      gdalbuildvrt
+      gdaldem
+      gdalenhance
+      gdalinfo
+      gdallocationinfo
+      gdalmanage
+      gdalmdiminfo
+      gdalmdimtranslate
+      gdalserver
+      gdalsrsinfo
+      gdaltindex
+      gdaltransform
+      gdalwarp
+      gnmanalyse
+      gnmmanage
+      nearblack
+      ogr2ogr
+      ogrinfo
+      ogrlineref
+      ogrtindex
+      testepsg
+  )
+  vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
+  
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
   endif()
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/share/gdal/html)
