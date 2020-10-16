@@ -33,7 +33,6 @@ namespace vcpkg
         virtual ~RegistryImpl() = default;
     };
 
-
     struct Registry
     {
         // requires: static_cast<bool>(implementation)

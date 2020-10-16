@@ -169,7 +169,7 @@ namespace vcpkg::Commands::Upgrade
             action.build_options = vcpkg::Build::default_build_package_options;
         }
 
-        Dependencies::print_plan(action_plan, true, paths.ports);
+        Dependencies::print_plan(action_plan, true, paths.root);
 
         if (!no_dry_run)
         {

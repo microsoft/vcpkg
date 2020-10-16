@@ -16,19 +16,16 @@ namespace
     {
         fs::path port_directory;
 
-        BuiltinEntry(fs::path&& p) : port_directory(std::move(p)) {}
+        BuiltinEntry(fs::path&& p) : port_directory(std::move(p)) { }
 
-        fs::path get_baseline_version_port_directory(const VcpkgPaths&) const override
-        {
-            return port_directory;
-        }
+        fs::path get_baseline_version_port_directory(const VcpkgPaths&) const override { return port_directory; }
     };
 
     struct BuiltinRegistry final : RegistryImpl
     {
         std::unique_ptr<RegistryEntry> get_port_entry(const VcpkgPaths& paths, StringView port_name) const override
         {
-            auto p = paths.ports / fs::u8path(port_name);
+            auto p = paths.builtin_ports_directory() / fs::u8path(port_name);
             if (paths.get_filesystem().exists(p))
             {
                 return std::make_unique<BuiltinEntry>(std::move(p));
@@ -42,13 +39,15 @@ namespace
         void get_all_port_names(std::vector<std::string>& names, const VcpkgPaths& paths) const override
         {
             const auto& fs = paths.get_filesystem();
-            auto port_dirs = fs.get_files_non_recursive(paths.ports);
+            auto port_dirs = fs.get_files_non_recursive(paths.builtin_ports_directory());
             Util::sort(port_dirs);
 
             Util::erase_remove_if(port_dirs,
-                                [&](auto&& port_dir_entry) { return port_dir_entry.filename() == ".DS_Store"; });
+                                  [&](auto&& port_dir_entry) { return port_dir_entry.filename() == ".DS_Store"; });
 
-            std::transform(port_dirs.begin(), port_dirs.end(), std::back_inserter(names), [](const fs::path& p) { return fs::u8string(p.filename()); });
+            std::transform(port_dirs.begin(), port_dirs.end(), std::back_inserter(names), [](const fs::path& p) {
+                return fs::u8string(p.filename());
+            });
         }
     };
 
@@ -57,23 +56,14 @@ namespace
         VersionT baseline_version;
         std::map<VersionT, fs::path> versions;
 
-        fs::path get_baseline_version_port_directory(const VcpkgPaths&) const override
-        {
-            return {};
-        }
+        fs::path get_baseline_version_port_directory(const VcpkgPaths&) const override { return {}; }
     };
 
     struct VersionDeserializer final : Json::IDeserializer<VersionT>
     {
-        StringView type_name() const
-        {
-            return "a version object";
-        }
+        StringView type_name() const { return "a version object"; }
 
-        Optional<VersionT> visit_object(Json::Reader&, const Json::Object&) override
-        {
-            return nullopt;
-        }
+        Optional<VersionT> visit_object(Json::Reader&, const Json::Object&) override { return nullopt; }
 
         static VersionDeserializer instance;
     };
@@ -81,15 +71,13 @@ namespace
 
     struct RegistryEntryDeserializer final : Json::IDeserializer<FilesystemEntry>
     {
-        StringView type_name() const
-        {
-            return "a registry entry object";
-        }
+        StringView type_name() const { return "a registry entry object"; }
 
         Optional<FilesystemEntry> visit_object(Json::Reader& r, const Json::Object& obj) override
         {
             FilesystemEntry res;
-            r.required_object_field(type_name(), obj, "baseline-version", res.baseline_version, VersionDeserializer::instance);
+            r.required_object_field(
+                type_name(), obj, "baseline-version", res.baseline_version, VersionDeserializer::instance);
             return nullopt;
         }
 
