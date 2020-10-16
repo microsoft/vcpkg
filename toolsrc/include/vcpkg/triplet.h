@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/system.h>
 
@@ -8,7 +10,6 @@
 namespace vcpkg
 {
     struct TripletInstance;
-    struct VcpkgCmdArguments;
 
     struct Triplet
     {
