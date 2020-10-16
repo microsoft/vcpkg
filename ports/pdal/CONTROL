@@ -1,4 +1,5 @@
 Source: pdal
 Version: 2.2.0
+Homepage: https://github.com/PDAL/PDAL
 Description: PDAL - Point Data Abstraction Library is a library for manipulating point cloud data.
 Build-Depends: gdal, libgeotiff, laszip, boost-system, boost-filesystem, openssl, nlohmann-json

@@ -11,10 +11,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
         reimplement-patch-172-in-220.patch
-        fix-CPL_DLL.patch
 )
-
-# file(REMOVE "${SOURCE_PATH}/pdal/gitsha.h")
 
 # Deploy custom CMake modules to enforce expected dependencies look-up
 foreach(_module IN ITEMS FindGDAL FindGeoTIFF FindCurl)  # Outdated; Supplied by CMake
