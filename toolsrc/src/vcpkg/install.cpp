@@ -794,9 +794,8 @@ namespace vcpkg::Install
             if (!maybe_manifest_scf)
             {
                 print_error_message(maybe_manifest_scf.error());
-                System::print2(
-                    "See https://github.com/Microsoft/vcpkg/tree/master/docs/specifications/manifests.md for "
-                    "more information.\n");
+                System::print2("See https://github.com/Microsoft/vcpkg/tree/master/docs/users/manifests.md for "
+                               "more information.\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
