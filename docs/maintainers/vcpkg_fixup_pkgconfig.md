@@ -23,11 +23,21 @@ Defaults to every *.pc file in the folder ${CURRENT_PACKAGES_DIR}/debug/
 ### SKIP_CHECK
 Skips the library checks in vcpkg_fixup_pkgconfig. Only use if the script itself has unhandled cases.
 
+### SYSTEM_PACKAGES (deprecated)
+This argument has been deprecated and has no effect.
+
+### SYSTEM_LIBRARIES (deprecated)
+This argument has been deprecated and has no effect.
+
+### IGNORE_FLAGS (deprecated)
+This argument has been deprecated and has no effect.
+
 ## Notes
 Still work in progress. If there are more cases which can be handled here feel free to add them
 
 ## Examples
-Just call vcpkg_fixup_pkgconfig() after any install step which installs *.pc files.
+
+* [brotli](https://github.com/Microsoft/vcpkg/blob/master/ports/brotli/portfile.cmake)
 
 ## Source
 [scripts/cmake/vcpkg_fixup_pkgconfig.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_fixup_pkgconfig.cmake)
