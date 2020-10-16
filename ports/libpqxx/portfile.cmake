@@ -12,16 +12,16 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/config-internal-compiler.h.in DESTINATION ${
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-	OPTIONS -DSKIP_BUILD_TEST=ON
+    OPTIONS -DSKIP_BUILD_TEST=ON
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libpqxx )
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libpqxx)
 file(REMOVE_RECURSE 
     ${CURRENT_PACKAGES_DIR}/debug/include
-	${CURRENT_PACKAGES_DIR}/debug/share
-	)
-	
+    ${CURRENT_PACKAGES_DIR}/debug/share
+    )
+
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
