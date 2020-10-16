@@ -28,6 +28,14 @@ else()
     set(ENABLE_SSL "OPENSSL")
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    set(ENABLE_SRV OFF)
+    set(ENABLE_SHM_COUNTERS OFF)
+else()
+    set(ENABLE_SRV AUTO)
+    set(ENABLE_SHM_COUNTERS AUTO)
+endif()
+
 file(READ ${CMAKE_CURRENT_LIST_DIR}/CONTROL _contents)
 string(REGEX MATCH "\nVersion:[ ]*[^ \n]+" _contents "${_contents}")
 string(REGEX REPLACE ".+Version:[ ]*([\\.0-9]+).*" "\\1" BUILD_VERSION "${_contents}")
@@ -41,6 +49,8 @@ vcpkg_configure_cmake(
         -DENABLE_BSON=SYSTEM
         -DENABLE_TESTS=OFF
         -DENABLE_EXAMPLES=OFF
+        -DENABLE_SRV=${ENABLE_SRV}
+        -DENABLE_SHM_COUNTERS=${ENABLE_SHM_COUNTERS}
         -DENABLE_SSL=${ENABLE_SSL}
         -DENABLE_ZLIB=SYSTEM
         -DENABLE_STATIC=${ENABLE_STATIC}
