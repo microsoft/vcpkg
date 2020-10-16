@@ -38,10 +38,8 @@ function(vcpkg_get_cmake_vars)
 
     if(${_gcv_OUTPUT_FILE})
         debug_message("OUTPUT_FILE ${${_gcv_OUTPUT_FILE}}")
-        list(APPEND _gcv_OPTIONS "-DVCPKG_OUTPUT_FILE=${${_gcv_OUTPUT_FILE}}")
     else()
         set(DEFAULT_OUT "${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}.cmake.log") # So that the file gets included in CI artifacts.
-        list(APPEND _gcv_OPTIONS "-DVCPKG_OUTPUT_FILE:PATH=${DEFAULT_OUT}")
         set(${_gcv_OUTPUT_FILE} "${DEFAULT_OUT}" PARENT_SCOPE)
         set(${_gcv_OUTPUT_FILE} "${DEFAULT_OUT}")
     endif()
