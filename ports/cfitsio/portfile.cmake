@@ -8,9 +8,9 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
-        0001-correct-headers-for-getcwd.patch
-        0002-fix-dependencies.patch
-        0003-export-cmake-targets.patch
+        0001-fix-dependencies.patch
+        0002-export-cmake-targets.patch
+        0003-add-Wno-error-implicit-funciton-declaration-to-cmake.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -29,8 +29,6 @@ if ("pthreads" IN_LIST FEATURES)
         message(WARNING "Feature pthreads only support Windows, disable it now.")
         set(WITH_PTHREADS OFF)
     endif()
-else()
-    
 endif()
 
 vcpkg_configure_cmake(
