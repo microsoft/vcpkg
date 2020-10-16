@@ -3,7 +3,7 @@ vcpkg_fail_port_install(ON_TARGET "windows" "uwp" "osx")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeSpacenav/libspnav
-    REF libspnav-0.2.3
+    REF libspnav-0.2.3 # v0.2.3 seems to be outdated. libspnav-0.2.3 is the same as 0.2.3 on their sourceforge
     SHA512 6c06344813ddf7e2bc7981932b4a901334de2b91d8c3abb23828869070dc73ed1c19c5bf7ff9338cc673c8f0dc7394608652afd0cdae093149c0a24460f0a8fb
     HEAD_REF master
 )
