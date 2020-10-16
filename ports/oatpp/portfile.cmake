@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp
-    REF 28b1dd934e9f98e969b96d9ef2dd4f0c218c9c08  # 1.2.0
-    SHA512 bad95e80d43b452c5091ccf468f4d3498afbca7ff660b04a3e0aec1583edb84009070fb83338525babbb14a7eb139d8fcc2d1d87b331935e2a9bfd78f0fdb7ed
+    REF 2d8711307e23e9f022cbe2758c07ce4e44e8d31f  # 1.2.0
+    SHA512 ae99467034360a4eb20a8a49e8ccd5e39ed9d71f9cd07d5b9bf2be0db7a7bff65415b0086de4ae267701c09f7b48fdf5d4d8ccb22f05fd41805232894b39b06c
     HEAD_REF master
 )
 
