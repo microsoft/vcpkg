@@ -1,0 +1,26 @@
+diff --git a/source/pdal/pdalc_pipeline.cpp b/source/pdal/pdalc_pipeline.cpp
+index 8941e14..370408e 100644
+--- a/source/pdal/pdalc_pipeline.cpp
++++ b/source/pdal/pdalc_pipeline.cpp
+@@ -34,7 +34,7 @@
+ #include <pdal/PipelineExecutor.hpp>
+ 
+ #include "pdalc_pointviewiterator.h"
+-
++#undef min
+ namespace pdal
+ {
+ namespace capi
+diff --git a/source/pdal/pdalc_pointview.cpp b/source/pdal/pdalc_pointview.cpp
+index b6b1cf7..a8f9b87 100644
+--- a/source/pdal/pdalc_pointview.cpp
++++ b/source/pdal/pdalc_pointview.cpp
+@@ -30,7 +30,7 @@
+ #include "pdalc_pointview.h"
+ 
+ #include <pdal/PointView.hpp>
+-
++#undef min
+ namespace pdal
+ {
+ namespace capi
