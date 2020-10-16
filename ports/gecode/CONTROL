@@ -1,4 +1,0 @@
-Source: gecode
-Version: 6.2.0
-Homepage: https://github.com/Gecode/gecode
-Description: Gecode is an open source C++ toolkit for developing constraint-based systems and applications. Gecode provides a constraint solver with state-of-the-art performance while being modular and extensible.

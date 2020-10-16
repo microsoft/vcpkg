@@ -1,0 +1,9 @@
+{
+  "name": "gecode",
+  "version-string": "6.2.0",
+  "port-version": 1,
+  "description": [
+    "Gecode is an open source C++ toolkit for developing constraint-based systems and applications. Gecode provides a constraint solver with state-of-the-art performance while being modular and extensible."
+  ],
+  "homepage": "https://github.com/Gecode/gecode"
+}
