@@ -11,16 +11,16 @@
         "boost-coroutine"
       ]
     },
-    "regex": {
-      "description": "Boost.Regex (optional) if you use any of the read_until() or async_read_until() overloads that take a boost::regex parameter.",
-      "dependencies": [
-        "boost-regex"
-      ]
-    },
     "openssl": {
       "description": "OpenSSL (optional) if you use Asio's SSL support.",
       "dependencies": [
         "openssl"
+      ]
+    },
+    "regex": {
+      "description": "Boost.Regex (optional) if you use any of the read_until() or async_read_until() overloads that take a boost::regex parameter.",
+      "dependencies": [
+        "boost-regex"
       ]
     }
   }
