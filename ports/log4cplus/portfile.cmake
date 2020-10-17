@@ -23,6 +23,14 @@ file(
     DESTINATION ${SOURCE_PATH}/threadpool
 )
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        unicode     UNICODE
+)
+
+# message(FATAL_ERROR "TEST FEATURES: '${FEATURE_OPTIONS}'")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -30,6 +38,7 @@ vcpkg_configure_cmake(
         -DLOG4CPLUS_BUILD_TESTING=OFF 
         -DLOG4CPLUS_BUILD_LOGGINGSERVER=OFF 
         -DWITH_UNIT_TESTS=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
