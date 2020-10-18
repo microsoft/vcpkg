@@ -2,5 +2,4 @@ Source: camport3
 Version: 1.5.3
 Description: percipio.xyz cameras SDK
 Homepage: https://github.com/percipioxyz/camport3
-Build-Depends: libusb, opencv3
 Supports: !osx
