@@ -49,8 +49,6 @@ amqpcpp:arm-uwp=fail
 amqpcpp:x64-uwp=fail
 angelscript:arm64-windows=fail
 angelscript:arm-uwp=fail
-antlr4:arm-uwp=fail
-antlr4:x64-uwp=fail
 apr:arm-uwp=fail
 apr:x64-uwp=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
