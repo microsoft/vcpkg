@@ -89,9 +89,15 @@ endforeach()
 
 foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
     string(STRIP "${${flag}}" ${flag}) # Strip leading and trailing whitespaces
+    if(MSVC) # Transform MSVC /flags to -flags due to bash scripts intepreting /flag as a path. 
+        string(REGEX REPLACE "(^| )/" "\\1-" ${flag} "${${flag}}")
+    endif()
     string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_RAW_${flag} \" ${${flag}}\")\n")
     foreach(config IN LISTS VCPKG_CONFIGS)
         string(STRIP "${${flag}_${config}}" ${flag}_${config})
+        if(MSVC)
+            string(REGEX REPLACE "(^| )/" "\\1-" ${flag}_${config} "${${flag}_${config}}")
+        endif()
         string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_RAW_${flag}_${config} \"${CMAKE_${flag}_FLAGS_${config}}\")\n")
         set(COMBINED_${flag}_${config} "${${flag}} ${${flag}_${config}}")
         string(STRIP "${COMBINED_${flag}_${config}}" COMBINED_${flag}_${config})
