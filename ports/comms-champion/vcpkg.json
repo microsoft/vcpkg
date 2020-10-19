@@ -1,0 +1,29 @@
+{
+    "name": "comms-champion",
+    "version-string": "3.1.1",
+    "description": "COMMS is the C++(11) headers only, platform independent library, which makes the implementation of a communication protocol to be an easy and relatively quick process.",
+    "homepage": "https://commschamp.github.io/",
+    "documentation": "https://github.com/commschamp/comms_champion",
+    "features": {
+        "champion": {
+            "description": "Build COMMS and CommsChampion libraries."
+        },
+        "tools": {
+            "description": "Tools, which can be used to develop, monitor and debug custom binary communication protocols.",
+            "dependencies": [
+                {
+                    "name": "qt5",
+                    "features": [
+                        "serialport"
+                    ]
+                },
+                {
+                    "name": "comms-champion",
+                    "features": [
+                        "champion"
+                    ]
+                }
+            ]
+        }
+    }
+}
