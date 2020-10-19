@@ -67,13 +67,6 @@ argtable2:arm-uwp=fail
 argtable2:x64-uwp=fail
 arrow:arm64-windows=fail
 arrow:x86-windows=fail
-ashes:arm-uwp=fail
-ashes:x64-uwp=fail
-ashes:x64-windows-static=fail
-ashes:x86-windows=fail
-# Skip x64-linux and x64-osx which build static libraries ?
-ashes:x64-osx=skip
-ashes:x64-linux=skip
 asiosdk:x64-linux=fail
 asiosdk:x64-osx=fail
 asiosdk:x64-uwp=fail
