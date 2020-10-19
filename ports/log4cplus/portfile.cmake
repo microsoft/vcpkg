@@ -26,7 +26,7 @@ file(
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        unicode     UNICODE
+    unicode     UNICODE
 )
 
 vcpkg_configure_cmake(
