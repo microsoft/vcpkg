@@ -13,24 +13,7 @@ if ($null -eq $portsDir)
 
 # Optionally clear this array when moving to a new boost version
 $port_versions = @{
-    "asio" = 1;
-    "context" = 1;
-    "coroutine" = 1;
-    "fiber" = 1;
-    "filesystem" = 1;
-    "graph-parallel" = 1;
-    "iostreams" = 1;
-    "locale" = 1;
-    "log" = 1;
-    "mpi" = 1;
-    "parameter-python" = 1;
-    "poly-collection" = 1;
-    "python" = 1;
-    "safe-numerics" = 1;
-    "stacktrace" = 1;
-    "test" = 1;
-    "wave" = 1;
-    "boost" = 1
+    #e.g.  "asio" = 1;
 }
 
 $per_port_data = @{
