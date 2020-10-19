@@ -1,0 +1,13 @@
+diff --git a/src/cxx/configure.ac b/src/cxx/configure.ac
+index 63f05d7..e284f0d 100644
+--- a/src/cxx/configure.ac
++++ b/src/cxx/configure.ac
+@@ -175,7 +175,7 @@ CXXCFLAGS_NO_C="$CXXCFLAGS $CPPFLAGS"
+ LDCCFLAGS="$LDFLAGS $CCFLAGS"
+ LDCXXFLAGS="$LDFLAGS $CXXCFLAGS"
+ 
+-AC_CHECK_LIB([cfitsio],[ffgnrwll],,AC_MSG_ERROR([could not find the cfitsio library]),[-lm])
++AC_CHECK_LIB([cfitsio -lz],[ffgnrwll],,AC_MSG_ERROR([could not find the cfitsio library]),[-lm -lz])
+ AC_CHECK_HEADERS([fitsio.h],,AC_MSG_ERROR([could not find the cfitsio header file]),)
+ 
+ AC_SUBST(SILENT_RULE)
