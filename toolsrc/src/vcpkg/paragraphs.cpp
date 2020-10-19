@@ -240,6 +240,11 @@ namespace vcpkg::Paragraphs
         return contents.error().message();
     }
 
+    ExpectedS<std::vector<Paragraph>> get_paragraphs_text(const std::string& text, const std::string& origin)
+    {
+        return parse_paragraphs(text, origin);
+    }
+
     ExpectedS<std::vector<Paragraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path)
     {
         const Expected<std::string> contents = fs.read_contents(control_path);
@@ -261,34 +266,86 @@ namespace vcpkg::Paragraphs
         return fs.exists(path / fs::u8path("CONTROL")) || fs.exists(path / fs::u8path("vcpkg.json"));
     }
 
-    static ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
-                                                              const std::string& port_name,
-                                                              const fs::path& path_to_manifest,
-                                                              std::error_code& ec)
+    static ParseExpected<SourceControlFile> try_load_manifest_object(
+        const std::string& origin,
+        const ExpectedT<std::pair<vcpkg::Json::Value, vcpkg::Json::JsonStyle>, std::unique_ptr<Parse::IParseError>>&
+            res)
     {
         auto error_info = std::make_unique<ParseControlErrorInfo>();
-        auto res = Json::parse_file(fs, path_to_manifest, ec);
-        if (ec) return error_info;
-
         if (auto val = res.get())
         {
             if (val->first.is_object())
             {
-                return SourceControlFile::parse_manifest_file(path_to_manifest, val->first.object());
+                return SourceControlFile::parse_manifest_object(origin, val->first.object());
             }
             else
             {
-                error_info->name = port_name;
+                error_info->name = origin;
                 error_info->error = "Manifest files must have a top-level object";
                 return error_info;
             }
         }
         else
         {
-            error_info->name = port_name;
+            error_info->name = origin;
             error_info->error = res.error()->format();
             return error_info;
         }
+    }
+
+    static ParseExpected<SourceControlFile> try_load_manifest_text(const std::string& text,
+                                                                   const std::string& origin,
+                                                                   std::error_code& ec)
+    {
+        auto error_info = std::make_unique<ParseControlErrorInfo>();
+        auto res = Json::parse(text);
+        if (ec) return error_info;
+        // TODO: Handle Json::parse(text) errors
+
+        return try_load_manifest_object(origin, res);
+    }
+
+    static ParseExpected<SourceControlFile> try_load_manifest(const Files::Filesystem& fs,
+                                                              const std::string& port_name,
+                                                              const fs::path& path_to_manifest,
+                                                              std::error_code& ec)
+    {
+        (void)port_name;
+
+        auto error_info = std::make_unique<ParseControlErrorInfo>();
+        auto res = Json::parse_file(fs, path_to_manifest, ec);
+        if (ec) return error_info;
+
+        return try_load_manifest_object(fs::u8string(path_to_manifest), res);
+    }
+
+    ParseExpected<SourceControlFile> try_load_port_text(const std::string& text,
+                                                        const std::string& origin,
+                                                        bool is_manifest)
+    {
+        if (is_manifest)
+        {
+            std::error_code ec;
+            auto res = try_load_manifest_text(text, origin, ec);
+            if (ec)
+            {
+                auto error_info = std::make_unique<ParseControlErrorInfo>();
+                error_info->name = fs::u8string(origin);
+                error_info->error = Strings::format("Failed to load manifest from: %s\n", origin, ec.message());
+                return error_info;
+            }
+            return res;
+        }
+
+        ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs_text(text, origin);
+        if (auto vector_pghs = pghs.get())
+        {
+            return SourceControlFile::parse_control_file(origin, std::move(*vector_pghs));
+        }
+        auto error_info = std::make_unique<ParseControlErrorInfo>();
+        error_info->name = fs::u8string(origin);
+        error_info->error = pghs.error();
+        return error_info;
     }
 
     ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path)
@@ -317,7 +374,7 @@ namespace vcpkg::Paragraphs
         ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs(fs, path_to_control);
         if (auto vector_pghs = pghs.get())
         {
-            return SourceControlFile::parse_control_file(path_to_control, std::move(*vector_pghs));
+            return SourceControlFile::parse_control_file(fs::u8string(path_to_control), std::move(*vector_pghs));
         }
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         error_info->name = fs::u8string(path.filename());

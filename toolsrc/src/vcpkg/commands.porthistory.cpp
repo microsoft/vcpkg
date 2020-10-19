@@ -5,6 +5,7 @@
 
 #include <vcpkg/commands.porthistory.h>
 #include <vcpkg/help.h>
+#include <vcpkg/paragraphs.h>
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
@@ -34,19 +35,6 @@ namespace vcpkg::Commands::PortHistory
             return vcpkg::Versions::Git::run_git_command(paths, dot_git_dir, work_dir, cmd);
         }
 
-        Json::Object parse_json_object(StringView sv)
-        {
-            auto json = Json::parse(sv);
-            if (auto r = json.get())
-            {
-                return std::move(r->first.object());
-            }
-            else
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO, json.error()->format());
-            }
-        }
-
         const Versions::Scheme guess_version_scheme(const std::string& version_string)
         {
             if (Versions::Version::is_date(version_string))
@@ -62,81 +50,62 @@ namespace vcpkg::Commands::PortHistory
             return Versions::Scheme::String;
         }
 
-        HistoryVersion parse_version_from_manifest(const std::string& text,
-                                                   const std::string& port_name,
-                                                   const std::string& commit_id,
-                                                   const std::string& commit_date)
+        std::pair<std::string, std::string> clean_version_string(const std::string& version_string,
+                                                                 int port_version,
+                                                                 bool from_manifest)
         {
-            auto object = parse_json_object(text);
+            // Manifest files and ports that use the `Port-Version` field are assumed to have a clean version string
+            // already.
+            if (from_manifest || port_version > 0)
+            {
+                return std::make_pair(version_string, std::to_string(port_version));
+            }
 
-            auto maybe_version = object.get("version-string");
-            auto maybe_port_version = object.get("port-version");
+            std::string clean_version = version_string;
+            std::string clean_port_version = "0";
 
-            auto version =
-                maybe_version && maybe_port_version->is_string() ? maybe_version->string().to_string() : "0.0.0";
-            auto port_version =
-                maybe_port_version && maybe_port_version->is_integer() ? maybe_port_version->integer() : 0;
+            const auto index = version_string.find_last_of('-');
+            if (index != std::string::npos)
+            {
+                // Very lazy check to keep date versions untouched
+                if (!Versions::Version::is_date_without_tags(version_string))
+                {
+                    clean_port_version = version_string.substr(index + 1);
+                    clean_version.resize(index);
+                }
+            }
 
-            return HistoryVersion{port_name,
-                                  commit_id,
-                                  commit_date,
-                                  version,
-                                  version,
-                                  std::to_string(port_version),
-                                  guess_version_scheme(version)};
+            return std::make_pair(clean_version, clean_port_version);
         }
 
-        HistoryVersion parse_version_from_control(const std::string& text,
-                                                  const std::string& port_name,
-                                                  const std::string& commit_id,
-                                                  const std::string& commit_date)
+        vcpkg::Optional<HistoryVersion> get_version_from_text(const std::string& text,
+                                                              const std::string& commit_id,
+                                                              const std::string& commit_date,
+                                                              const std::string& port_name,
+                                                              bool is_manifest)
         {
-            auto version_tags = Strings::find_all_enclosed(text, "\nVersion: ", "\n");
-
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               !version_tags.empty(),
-                               "Missing \"Version\" field in port %s at %s",
-                               port_name,
-                               commit_id);
-
-            auto version_string = Strings::trim(version_tags.front()).to_string();
-            auto maybe_port_version = Strings::find_at_most_one_enclosed(text, "\nPort-Version: ", "\n");
-
-            if (auto pv = maybe_port_version.get())
+            auto res = Paragraphs::try_load_port_text(text, Strings::concat(commit_id, ":", port_name), is_manifest);
+            if (const auto& maybe_scf = res.get())
             {
-                // We assume CONTROL files using the port_version field have a clean version_string
-                return HistoryVersion{port_name,
-                                      commit_id,
-                                      "",
-                                      version_string,
-                                      version_string,
-                                      Strings::trim(pv->to_string()),
-                                      guess_version_scheme(version_string)};
-            }
-            else
-            {
-                std::string clean_version = version_string;
-                std::string clean_port_version = "0";
-
-                const auto index = version_string.find_last_of('-');
-                if (index != std::string::npos)
+                if (const auto& scf = maybe_scf->get())
                 {
-                    // Very lazy check to keep date versions untouched
-                    if (!Versions::Version::is_date(version_string))
-                    {
-                        clean_port_version = version_string.substr(index + 1);
-                        clean_version.resize(index);
-                    }
-                }
+                    // TODO: Get clean version name and port version
+                    const auto version_string = scf->core_paragraph->version;
+                    const auto clean_version =
+                        clean_version_string(version_string, scf->core_paragraph->port_version, is_manifest);
 
-                return HistoryVersion{port_name,
-                                      commit_id,
-                                      commit_date,
-                                      version_string,
-                                      clean_version,
-                                      clean_port_version,
-                                      guess_version_scheme(clean_version)};
+                    // SCF to HistoryVersion
+                    return HistoryVersion{port_name,
+                                          commit_id,
+                                          commit_date,
+                                          version_string,
+                                          clean_version.first,
+                                          clean_version.second,
+                                          guess_version_scheme(clean_version.first)};
+                }
             }
+
+            return nullopt;
         }
 
         vcpkg::Optional<HistoryVersion> get_version_from_commit(const VcpkgPaths& paths,
@@ -149,17 +118,18 @@ namespace vcpkg::Commands::PortHistory
             auto manifest_output = run_git_command(paths, manifest_cmd);
             if (manifest_output.exit_code == 0)
             {
-                return parse_version_from_manifest(manifest_output.output, port_name, commit_id, commit_date);
+                return get_version_from_text(manifest_output.output, commit_id, commit_date, port_name, true);
             }
 
             const std::string cmd = Strings::format(R"(show %s:ports/%s/CONTROL)", commit_id, port_name);
             auto control_output = run_git_command(paths, cmd);
 
-            if (control_output.exit_code != 0)
+            if (control_output.exit_code == 0)
             {
-                return nullopt;
+                return get_version_from_text(control_output.output, commit_id, commit_date, port_name, false);
             }
-            return parse_version_from_control(control_output.output, port_name, commit_id, commit_date);
+
+            return nullopt;
         }
 
         std::vector<HistoryVersion> read_versions_from_log(const VcpkgPaths& paths, const std::string& port_name)
@@ -195,6 +165,13 @@ namespace vcpkg::Commands::PortHistory
                         ret.emplace_back(version);
                     }
                 }
+                // NOTE: Uncomment this code if you're looking for edge cases to patch in the generation.
+                //       Otherwise, x-history simply skips "bad" versions, which is OK behavior.
+                // else
+                //{
+                //    Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to get version from %s:%s",
+                //    commit_date_pair.first, port_name);
+                //}
             }
             return ret;
         }

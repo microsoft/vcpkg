@@ -22,6 +22,12 @@ bool Version::is_date(const std::string& version_string)
     return std::regex_match(version_string, re);
 }
 
+bool Version::is_date_without_tags(const std::string& version_string)
+{
+    std::regex re("^([0-9]{4,}[-][0-9]{2}[-][0-9]{2})$");
+    return std::regex_match(version_string, re);
+}
+
 bool Version::is_semver(const std::string& version_string)
 {
     // This is the "official" SemVer regex, taken from:

@@ -30,6 +30,7 @@ namespace vcpkg::Versions
         static bool is_semver_relaxed(const std::string& version_string);
         static bool is_semver(const std::string& version_string);
         static bool is_date(const std::string& version_string);
+        static bool is_date_without_tags(const std::string& version_string);
         static bool is_valid_string(const std::string& version_string);
     };
 
