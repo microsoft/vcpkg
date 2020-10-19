@@ -25,7 +25,7 @@
         <version>3.18.4</version>
         <exeRelativePath>cmake-3.18.4-Linux-x86_64/bin/cmake</exeRelativePath>
         <url>https://github.com/Kitware/CMake/releases/download/v3.18.4/cmake-3.18.4-Linux-x86_64.tar.gz</url>
-        <sha512>8be5c00dfb00597daae448060fcc612c5e5f0ff9483eb6786cd1c4123cadf15bf2bec1c7892c59792947188889d5a07a9df34190366636c9b8cea4bb1bc7454f </sha512>
+        <sha512>8be5c00dfb00597daae448060fcc612c5e5f0ff9483eb6786cd1c4123cadf15bf2bec1c7892c59792947188889d5a07a9df34190366636c9b8cea4bb1bc7454f</sha512>
         <archiveName>cmake-3.18.4-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
