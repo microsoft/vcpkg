@@ -3,8 +3,8 @@ include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO JuliaLang/utf8proc
-    REF v2.4.0
-    SHA512 2bbd056b488cd30faca26618389d8af84edc39ade9b705e147b676bf39eee65b40239d01c32c46dfc2a289d79e869ed1bb3c347365603dcaab2f69e34427441a
+    REF 0890a538bf8238cded9be0c81171f57e43f2c755 # v2.5.0
+    SHA512 5daca349dc9ba6575efbd93d7a4e072202a2e1c2e55233d2e52be20586bb5fb26455654a77ec53336e9cdf59806457d1c31d1a926f7ef5bdd56b0232d96190dc
 )
 
 vcpkg_configure_cmake(

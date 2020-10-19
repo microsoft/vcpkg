@@ -11,11 +11,6 @@ namespace vcpkg::Dependencies
     struct InstallPlanAction;
     struct ActionPlan;
 }
-namespace vcpkg::Build
-{
-    struct AbiTagAndFile;
-    struct BuildPackageOptions;
-}
 
 namespace vcpkg
 {
