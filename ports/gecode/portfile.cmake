@@ -6,8 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" JSONCPP_STATIC)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -16,7 +14,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/gecode)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
