@@ -4,11 +4,6 @@
 #   Output directories according to vcpkg
 #   Updated certstore. See certstore.pem in the output dirs
 #
-
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_EXE_PATH})
@@ -20,12 +15,21 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/qca
-    REF v2.2.1
-    SHA512 6b10f9bbf9ebf136655d1c6464f3849c8581b3cd5ef07b0697ddd5f32611dce301af5148e8e6fe91e763301e68994957a62a278334ee7a78559101f411f27d49
+    REF v2.3.1
+    SHA512 e04a44fb395e24fd009bb6b005282880bef84ca492b5e15903f9ce3e5e3f93beae3a386a1a381507ed5b0c6550e64c6bf434328f9d965fa7f7d638c3e5d5948b
     PATCHES
-            0001-fix-path-for-vcpkg.patch
-            0002-fix-build-error.patch
+        0001-fix-path-for-vcpkg.patch
+        0002-fix-build-error.patch
+        0003-disable-plugin-botan.patch
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/Qca)
+  set(QCA_FEATURE_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/bin/Qca)
+else()
+  set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/Qca)
+  set(QCA_FEATURE_INSTALL_DIR_RELEASE ${CURRENT_PACKAGES_DIR}/lib/Qca)
+endif()
 
 # According to:
 #   https://www.openssl.org/docs/faq.html#USER16
@@ -56,10 +60,11 @@ vcpkg_configure_cmake(
         -DBUILD_TOOLS=OFF
         -DQCA_SUFFIX=OFF
         -DQCA_FEATURE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/qca/mkspecs/features
+        -DOSX_FRAMEWORK=OFF
     OPTIONS_DEBUG
-        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/bin/Qca
+        -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_DEBUG}
     OPTIONS_RELEASE
-        -DQCA_PLUGINS_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/bin/Qca
+        -DQCA_PLUGINS_INSTALL_DIR=${QCA_FEATURE_INSTALL_DIR_RELEASE}
 )
 
 vcpkg_install_cmake()
@@ -94,5 +99,4 @@ file(REMOVE_RECURSE
 message(STATUS "Patching files done")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/qca)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/qca/COPYING ${CURRENT_PACKAGES_DIR}/share/qca/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

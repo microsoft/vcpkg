@@ -1,5 +1,5 @@
 diff --git a/similarity_search/src/method/hnsw.cc b/similarity_search/src/method/hnsw.cc
-index f5c7fca..4780746 100644
+index 2741701..7587f7f 100644
 --- a/similarity_search/src/method/hnsw.cc
 +++ b/similarity_search/src/method/hnsw.cc
 @@ -27,7 +27,7 @@
@@ -12,7 +12,7 @@ index f5c7fca..4780746 100644
  #include "portable_simd.h"
  #include "knnquery.h"
 diff --git a/similarity_search/src/method/hnsw_distfunc_opt.cc b/similarity_search/src/method/hnsw_distfunc_opt.cc
-index 168ee81..408d95d 100644
+index 4c691bd..6f1a9e6 100644
 --- a/similarity_search/src/method/hnsw_distfunc_opt.cc
 +++ b/similarity_search/src/method/hnsw_distfunc_opt.cc
 @@ -30,7 +30,7 @@
@@ -25,7 +25,7 @@ index 168ee81..408d95d 100644
  
  #include "sort_arr_bi.h"
 diff --git a/similarity_search/src/method/pivot_neighb_invindx.cc b/similarity_search/src/method/pivot_neighb_invindx.cc
-index b6473bd..6dcb00f 100644
+index c6113c7..a7d818b 100644
 --- a/similarity_search/src/method/pivot_neighb_invindx.cc
 +++ b/similarity_search/src/method/pivot_neighb_invindx.cc
 @@ -21,7 +21,7 @@
@@ -38,12 +38,12 @@ index b6473bd..6dcb00f 100644
  #include "portable_simd.h"
  #include "space.h"
 diff --git a/similarity_search/src/method/small_world_rand.cc b/similarity_search/src/method/small_world_rand.cc
-index e8280cb..6bdb0f7 100644
+index e67ea97..92fe70a 100644
 --- a/similarity_search/src/method/small_world_rand.cc
 +++ b/similarity_search/src/method/small_world_rand.cc
-@@ -16,7 +16,7 @@
- #include <memory>
+@@ -17,7 +17,7 @@
  #include <iostream>
+ #include <cstddef>
  // This is only for _mm_prefetch
 -#include <mmintrin.h>
 +#include <xmmintrin.h>
@@ -51,7 +51,7 @@ index e8280cb..6bdb0f7 100644
  #if defined(_WIN32) || defined(WIN32)
  #include <intrin.h>
 diff --git a/similarity_search/src/method/vptree.cc b/similarity_search/src/method/vptree.cc
-index 04f481e..c71eed5 100644
+index 4da3b5f..d77e419 100644
 --- a/similarity_search/src/method/vptree.cc
 +++ b/similarity_search/src/method/vptree.cc
 @@ -20,7 +20,7 @@
@@ -75,18 +75,3 @@ index 326b26b..413d66d 100644
  
  #include <logging.h>
  #include <idtype.h>
-diff --git a/similarity_search/test/test_pow.cc b/similarity_search/test/test_pow.cc
-index 1b46a68..faaa84e 100644
---- a/similarity_search/test/test_pow.cc
-+++ b/similarity_search/test/test_pow.cc
-@@ -29,8 +29,8 @@ using namespace std;
- 
- const float MAX_REL_DIFF = 1e-6f;
- 
--vector<float>   addExps = { 0, 0.125, 0.25, 0.5 };
--vector<float>   vals    = { 0.1, 0.5, 1, 1.5, 2, 4};
-+vector<float>   addExps = { 0, 0.125f, 0.25f, 0.5f };
-+vector<float>   vals    = { 0.1f, 0.5f, 1, 1.5f, 2, 4};
- vector<float>   signs   = { 1, -1};
- 
- template <typename T> bool runTest() {

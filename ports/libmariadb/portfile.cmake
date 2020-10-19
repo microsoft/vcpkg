@@ -1,20 +1,17 @@
-
 if (EXISTS "${CURRENT_INSTALLED_DIR}/share/libmysql")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MariaDB/mariadb-connector-c
-    REF 8e9c3116105d9a998a60991b7f4ba910d454d4b1 # v3.1.7
-    SHA512 b663effe7794d997c0589a9a20dab6b7359414612e60e3cb43e3fd0ddeae0391bcbc2d816cba4a7438602566ad6781cbf8e18b0062f1d37a2b2bd521af16033c
+    REF a746c3af449a8754e78ad7971e59e79af7957cdb # v3.1.9
+    SHA512 6f200b984b0642bd75dd8b1ca8f6b996c4b9236c4180255d15dee369a10b3b802c0e8e1942135aeb3c279f3087ff4b19096e5fef15935f4b76cf4fcb344d9133
     HEAD_REF master
     PATCHES
-            md.patch
-            disable-test-build.patch
-			fix-InstallPath.patch
+        md.patch
+        disable-test-build.patch
+        fix-InstallPath.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -64,6 +61,4 @@ file(RENAME
     ${CURRENT_PACKAGES_DIR}/include/mariadb
     ${CURRENT_PACKAGES_DIR}/include/mysql)
 
-# copy license file
-file(COPY ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmariadb)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libmariadb/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/libmariadb/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
