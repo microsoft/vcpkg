@@ -6,20 +6,18 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
   message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
 endif()
 
-set(OPENCV_VERSION "4.3.0")
+set(OPENCV_VERSION "4.5.0")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 ac22b41fffa3e3138701fa0df0d19900b3ce72e168f4478ecdc593c5c9fd004b4b1b26612d62c25b681db99a8720db7a11b5b224e576e595624965fa79b0f383
+    SHA512 c34100f3f3fe45f2115975350d23288a3badb32864ba0cbd32512387416d1cf10d16d3ef5f3d089d6a1c2be587d788d33997513fc015dbf7d774a622f2d3811f
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
-      0004-fix-policy-CMP0057.patch
-      0009-fix-uwp.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
