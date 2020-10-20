@@ -1,0 +1,17 @@
+diff --git a/cmake/modules/psttf.cmake b/cmake/modules/psttf.cmake
+index 950f41b..6c20af5 100644
+--- a/cmake/modules/psttf.cmake
++++ b/cmake/modules/psttf.cmake
+@@ -56,7 +56,11 @@ if(PLD_psttf)
+ endif(PLD_psttf)
+ 
+ if(PLD_psttf)
+-  pkg_check_pkgconfig("lasi;pango;pangoft2" includedir libdir linkflags cflags version _PSTTF)
++  set(PKG_LIST lasi pango pangoft2)
++  foreach (SELECTED_PKG ${PKG_LIST})
++    pkg_check_pkgconfig("${SELECTED_PKG}" includedir libdir linkflags cflags version _PSTTF)
++  endforeach()
++  
+   if(linkflags)
+     #blank-separated required.
+     string(REGEX REPLACE ";" " " psttf_COMPILE_FLAGS "${cflags}")
