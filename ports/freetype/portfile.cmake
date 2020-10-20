@@ -1,8 +1,8 @@
-set(FT_VERSION 2.10.3)
+set(FT_VERSION 2.10.4)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download-mirror.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.xz" "https://downloads.sourceforge.net/project/freetype/freetype2/${FT_VERSION}/freetype-${FT_VERSION}.tar.xz"
     FILENAME "freetype-${FT_VERSION}.tar.xz"
-    SHA512 3f9d1a44cdae51ec4b13116aba5af1730e6be46132ddd9e49486e8d681b61756baa9897daaf0f06e79f00f2db0e57e0fa66d27f44d65735da1167d5b3c170373
+    SHA512 827cda734aa6b537a8bcb247549b72bc1e082a5b32ab8d3cccb7cc26d5f6ee087c19ce34544fa388a1eb4ecaf97600dbabc3e10e950f2ba692617fee7081518f
 )
 
 vcpkg_extract_source_archive_ex(
