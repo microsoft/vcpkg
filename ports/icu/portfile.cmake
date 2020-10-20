@@ -25,7 +25,7 @@ vcpkg_extract_source_archive_ex(
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
 
-set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
+set(CONFIGURE_OPTIONS "--disable-samples --disable-tests --disable-layoutex")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --disable-static --enable-shared")

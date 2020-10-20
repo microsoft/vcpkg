@@ -1,3 +1,4 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://git.assembla.com/portaudio.git
@@ -23,6 +24,7 @@ vcpkg_configure_cmake(
         -DPA_LIBNAME_ADD_SUFFIX=OFF
         -DPA_BUILD_SHARED=${PA_BUILD_SHARED}
         -DPA_BUILD_STATIC=${PA_BUILD_STATIC}
+        -DPA_DLL_LINK_WITH_STATIC_RUNTIME=OFF
     OPTIONS_DEBUG
         -DPA_ENABLE_DEBUG_OUTPUT:BOOL=ON
 )
