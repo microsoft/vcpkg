@@ -9,7 +9,6 @@
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
-#include <vcpkg/versions.fetch.h>
 #include <vcpkg/versions.h>
 
 namespace vcpkg::Commands::PortHistory
@@ -28,22 +27,74 @@ namespace vcpkg::Commands::PortHistory
             Versions::Scheme scheme;
         };
 
+        const System::ExitCodeAndOutput run_git_command_inner(const VcpkgPaths& paths,
+                                                              const fs::path& dot_git_directory,
+                                                              const fs::path& working_directory,
+                                                              const std::string& cmd)
+        {
+            const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
+
+            System::CmdLineBuilder builder;
+            builder.path_arg(git_exe)
+                .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_directory)))
+                .string_arg(Strings::concat("--work-tree=", fs::u8string(working_directory)));
+            const std::string full_cmd = Strings::concat(builder.extract(), " ", cmd);
+
+            const auto output = System::cmd_execute_and_capture_output(full_cmd);
+            return output;
+        }
+
         const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths, const std::string& cmd)
         {
             const fs::path& work_dir = paths.root;
             const fs::path dot_git_dir = paths.root / ".git";
 
-            return vcpkg::Versions::Git::run_git_command(paths, dot_git_dir, work_dir, cmd);
+            return run_git_command_inner(paths, dot_git_dir, work_dir, cmd);
+        }
+
+        bool is_date(const std::string& version_string)
+        {
+            // The date regex is not complete, it matches strings that look like dates,
+            // e.g.: 2020-99-99.
+            //
+            // The regex has two capture groups:
+            // * Date: "^([0-9]{4,}[-][0-9]{2}[-][0-9]{2})", it matches strings that resemble YYYY-MM-DD.
+            //         It does not validate that MM <= 12, or that DD is possible with the given MM.
+            //         YYYY should be AT LEAST 4 digits, for some kind of "future proofing".
+            std::regex re("^([0-9]{4,}[-][0-9]{2}[-][0-9]{2})((?:[.|-][0-9a-zA-Z]+)*)$");
+            return std::regex_match(version_string, re);
+        }
+
+        bool is_date_without_tags(const std::string& version_string)
+        {
+            std::regex re("^([0-9]{4,}[-][0-9]{2}[-][0-9]{2})$");
+            return std::regex_match(version_string, re);
+        }
+
+        bool is_semver(const std::string& version_string)
+        {
+            // This is the "official" SemVer regex, taken from:
+            // https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+            std::regex re("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*"
+                          ")(?:\\.(?:0|["
+                          "1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$");
+            return std::regex_match(version_string, re);
+        }
+
+        bool is_semver_relaxed(const std::string& version_string)
+        {
+            std::regex re("^(?:[0-9a-zA-Z]+)\\.(?:[0-9a-zA-Z]+)\\.(?:[0-9a-zA-Z]+)(?:[\\.|-|\\+][0-9a-zA-Z]+)*$");
+            return std::regex_match(version_string, re);
         }
 
         const Versions::Scheme guess_version_scheme(const std::string& version_string)
         {
-            if (Versions::Version::is_date(version_string))
+            if (is_date(version_string))
             {
                 return Versions::Scheme::Date;
             }
 
-            if (Versions::Version::is_semver(version_string) || Versions::Version::is_semver_relaxed(version_string))
+            if (is_semver(version_string) || is_semver_relaxed(version_string))
             {
                 return Versions::Scheme::Relaxed;
             }
@@ -69,7 +120,7 @@ namespace vcpkg::Commands::PortHistory
             if (index != std::string::npos)
             {
                 // Very lazy check to keep date versions untouched
-                if (!Versions::Version::is_date_without_tags(version_string))
+                if (!is_date_without_tags(version_string))
                 {
                     clean_port_version = version_string.substr(index + 1);
                     clean_version.resize(index);
