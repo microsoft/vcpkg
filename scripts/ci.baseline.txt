@@ -1835,3 +1835,9 @@ clapack:x86-windows=skip
 clapack:x64-uwp=skip
 lapack-reference:arm64-windows=skip
 lapack-reference:arm-uwp=skip
+
+# freetds upstream is gone
+freetds:x86-windows=fail
+freetds:x64-windows=fail
+freetds:x64-windows-static=fail
+freetds:arm64-windows=fail
