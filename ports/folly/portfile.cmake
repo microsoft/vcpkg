@@ -22,6 +22,7 @@ vcpkg_from_github(
         boost-1.70.patch
         fix-addbit.patch
         folly_c3861.patch
+        fix-cmake-3.18.patch # Remove this patch on the next update
 )
 
 file(COPY

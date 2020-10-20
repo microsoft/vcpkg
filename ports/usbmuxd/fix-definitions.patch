@@ -1,0 +1,40 @@
+diff --git a/usbmuxd.vcxproj b/usbmuxd.vcxproj
+index 1500a8a..61362c3 100644
+--- a/usbmuxd.vcxproj
++++ b/usbmuxd.vcxproj
+@@ -129,7 +129,7 @@
+       </PrecompiledHeader>
+       <WarningLevel>Level3</WarningLevel>
+       <Optimization>Disabled</Optimization>
+-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;HAVE_LIBIMOBILEDEVICE</PreprocessorDefinitions>
++      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;HAVE_LIBIMOBILEDEVICE;HAVE_ENUM_IDEVICE_CONNECTION_TYPE;PACKAGE_URL="";PACKAGE_BUGREPORT=""</PreprocessorDefinitions>
+       <TreatSpecificWarningsAsErrors>4013</TreatSpecificWarningsAsErrors>
+     </ClCompile>
+     <Link>
+@@ -144,7 +144,7 @@
+       </PrecompiledHeader>
+       <WarningLevel>Level3</WarningLevel>
+       <Optimization>Disabled</Optimization>
+-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;WIN32;HAVE_LIBIMOBILEDEVICE</PreprocessorDefinitions>
++      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;WIN32;HAVE_LIBIMOBILEDEVICE;HAVE_ENUM_IDEVICE_CONNECTION_TYPE;PACKAGE_URL="";PACKAGE_BUGREPORT=""</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
+@@ -160,7 +160,7 @@
+       <Optimization>MaxSpeed</Optimization>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;HAVE_LIBIMOBILEDEVICE</PreprocessorDefinitions>
++      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;_USE_32BIT_TIME_T;HAVE_LIBIMOBILEDEVICE;HAVE_ENUM_IDEVICE_CONNECTION_TYPE;PACKAGE_URL="";PACKAGE_BUGREPORT=""</PreprocessorDefinitions>
+       <TreatSpecificWarningsAsErrors>4013</TreatSpecificWarningsAsErrors>
+     </ClCompile>
+     <Link>
+@@ -179,7 +179,7 @@
+       <Optimization>MaxSpeed</Optimization>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;WIN32;HAVE_LIBIMOBILEDEVICE</PreprocessorDefinitions>
++      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS;WIN32;HAVE_LIBIMOBILEDEVICE;HAVE_ENUM_IDEVICE_CONNECTION_TYPE;PACKAGE_URL="";PACKAGE_BUGREPORT=""</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+       <SubSystem>Console</SubSystem>
