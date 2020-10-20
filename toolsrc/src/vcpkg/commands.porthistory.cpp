@@ -231,7 +231,6 @@ namespace vcpkg::Commands::PortHistory
             }
 
             Json::Object root;
-            root.insert("port", Json::Value::string(port_name));
             root.insert("versions", versions_json);
 
             auto json_string = Json::stringify(root, vcpkg::Json::JsonStyle::with_spaces(2));
