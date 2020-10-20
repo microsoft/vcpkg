@@ -19,6 +19,7 @@ vcpkg_from_github(
       0002-install-options.patch
       0003-force-package-requirements.patch
       0004-fix-policy-CMP0057.patch
+      0006-jpeg2000_getref.patch
       0009-fix-uwp.patch
 )
 
