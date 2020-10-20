@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(cppwinrt VERSION ${VERSION} LANGUAGES C CXX ASM_MASM)
+project(cppwinrt VERSION ${VERSION} LANGUAGES)
 
 if ("${VCPKG_TARGET_ARCHITECTURE}" STREQUAL "x86")
 	set(VCPKG_TARGET_ARCHITECTURE win32)
