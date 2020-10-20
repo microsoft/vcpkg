@@ -1,6 +1,6 @@
 Source: libmariadb
-Version: 3.1.7
-Port-Version: 2
+Version: 3.1.9
+Port-Version: 1
 Homepage: https://github.com/MariaDB/mariadb-connector-c
 Description: MariaDB Connector/C is used to connect C/C++ applications to MariaDB and MySQL databases
 Default-Features: zlib, openssl
