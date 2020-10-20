@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO freetds/freetds
-    REF be39110fb1255843c18ee96d48c2aaa47f1ef2a7 # final 1.2 release
+    REF fbf3bbbbc27283b35a5a6aec9992521e684c9abf # 1.2.5
     HEAD_REF master
-    SHA512 e981666190a0fa4424048505c6746bf1b768ec870b4032755b49af5730a3dfb18ff7bf566ddd939e30f46436145e2c57792c572d7afd7040f486e7c236a863df
+    SHA512 e18dba16705db951ea52055476fac342c1bb62e90629ef82064ad9d3d4a7f2078e8f7674b1602bc21798240e005052dcbc67cdd0912b47163bd95956128c4677
     PATCHES
-        fix-encoding-h-dependency.patch
         skip-unit-tests.patch
+        fix-encoding-h-dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -17,6 +17,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_PATH})
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(GPERF)
+    get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
+    vcpkg_add_to_path(${GPERF_PATH})
+else()
+    if (NOT EXISTS /usr/bin/gperf)
+        message(FATAL_ERROR "freetds requires gperf, these can be installed on Ubuntu systems via apt-get install gperf.")
+    endif()
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

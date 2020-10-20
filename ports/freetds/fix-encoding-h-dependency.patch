@@ -1,16 +1,17 @@
 diff --git a/src/odbc/CMakeLists.txt b/src/odbc/CMakeLists.txt
-index d46d806..7fad8db 100644
+index 5d036a1..031b9a2 100644
 --- a/src/odbc/CMakeLists.txt
 +++ b/src/odbc/CMakeLists.txt
-@@ -27,6 +27,7 @@ add_library(tdsodbc SHARED
- 	native.c sql2tds.c error.c odbc_checks.c sqlwchar.c sqlwparams.h
- 	odbc_export.h error_export.h odbc_data.c ${win_SRCS}
- )
-+add_dependencies(tdsodbc generate_encodings_h)
+@@ -30,7 +30,7 @@ add_library(tdsodbc SHARED
  target_compile_definitions(tdsodbc PUBLIC DLL_EXPORT=1)
  # TODO libiconv, odbcinstlib and other dynamics
  target_link_libraries(tdsodbc tds replacements tdsutils ${libs} ${lib_NETWORK} ${lib_BASE})
-@@ -41,6 +42,7 @@ add_library(tdsodbc_static STATIC
+-
++add_dependencies(tdsodbc generate_encodings_h)
+ if(MINGW OR CYGWIN)
+ 	set_target_properties(tdsodbc PROPERTIES LINK_FLAGS "--static -Wl,--kill-at -Wl,--enable-stdcall-fixup")
+ endif(MINGW OR CYGWIN)
+@@ -41,6 +41,7 @@ add_library(tdsodbc_static STATIC
  	native.c sql2tds.c error.c odbc_checks.c sqlwchar.c sqlwparams.h
  	odbc_export.h error_export.h odbc_data.c ${win_SRCS}
  )
@@ -19,21 +20,21 @@ index d46d806..7fad8db 100644
  	set_target_properties(tdsodbc_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
  endif()
 diff --git a/src/tds/CMakeLists.txt b/src/tds/CMakeLists.txt
-index 3423b9a..fee56b3 100644
+index d8be1a0..42b6a4d 100644
 --- a/src/tds/CMakeLists.txt
 +++ b/src/tds/CMakeLists.txt
-@@ -34,7 +34,7 @@ if(WIN32)
- else(WIN32)
- 	set(add_SRCS challenge.c gssapi.c)
- endif(WIN32)
--
+@@ -29,6 +29,8 @@ if(PERL_FOUND AND NOT EXISTS "${CMAKE_SOURCE_DIR}/configure")
+ 		WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+ endif(PERL_FOUND AND NOT EXISTS "${CMAKE_SOURCE_DIR}/configure")
+ 
 +add_custom_target(generate_encodings_h DEPENDS "${CMAKE_BINARY_DIR}/include/freetds/encodings.h")
- add_library(tds STATIC
- 	mem.c token.c util.c login.c read.c
-         write.c convert.c numeric.c config.c query.c iconv.c
-@@ -44,9 +44,9 @@ add_library(tds STATIC
++
+ if(WIN32)
+ 	set(add_SRCS sspi.c)
+ else(WIN32)
+@@ -44,9 +46,9 @@ add_library(tds STATIC
          bulk.c packet.c stream.c random.c
-         sec_negotiate_gnutls.h sec_negotiate_openssl.h sec_negotiate.c
+         sec_negotiate_gnutls.h sec_negotiate_openssl.h sec_negotiate.c gssapi.c
  	tds_willconvert.h num_limits.h tds_types.h
 -	"${CMAKE_BINARY_DIR}/include/freetds/encodings.h"
  	${add_SRCS}

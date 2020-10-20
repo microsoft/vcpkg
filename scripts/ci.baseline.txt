@@ -1831,6 +1831,3 @@ clapack:x86-windows=skip
 clapack:x64-uwp=skip
 lapack-reference:arm64-windows=skip
 lapack-reference:arm-uwp=skip
-
-# freetds needs gperf.exe which fails for crosscompiling triplets
-freetds:arm64-windows=fail
