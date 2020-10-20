@@ -19,6 +19,7 @@ namespace vcpkg::Commands::PortHistory
         struct HistoryVersion
         {
             std::string port_name;
+            std::string git_tree;
             std::string commit_id;
             std::string commit_date;
             std::string version_string;
@@ -79,6 +80,7 @@ namespace vcpkg::Commands::PortHistory
         }
 
         vcpkg::Optional<HistoryVersion> get_version_from_text(const std::string& text,
+                                                              const std::string& git_tree,
                                                               const std::string& commit_id,
                                                               const std::string& commit_date,
                                                               const std::string& port_name,
@@ -96,9 +98,10 @@ namespace vcpkg::Commands::PortHistory
 
                     // SCF to HistoryVersion
                     return HistoryVersion{port_name,
+                                          git_tree,
                                           commit_id,
                                           commit_date,
-                                          version_string,
+                                          Strings::concat(clean_version.first, "#", clean_version.second),
                                           clean_version.first,
                                           clean_version.second,
                                           guess_version_scheme(clean_version.first)};
@@ -113,20 +116,30 @@ namespace vcpkg::Commands::PortHistory
                                                                 const std::string& commit_date,
                                                                 const std::string& port_name)
         {
-            // Do we have a manifest file?
-            const std::string manifest_cmd = Strings::format(R"(show %s:ports/%s/vcpkg.json)", commit_id, port_name);
-            auto manifest_output = run_git_command(paths, manifest_cmd);
-            if (manifest_output.exit_code == 0)
+            const std::string rev_parse_cmd = Strings::format("rev-parse %s:ports/%s", commit_id, port_name);
+            auto rev_parse_output = run_git_command(paths, rev_parse_cmd);
+            if (rev_parse_output.exit_code == 0)
             {
-                return get_version_from_text(manifest_output.output, commit_id, commit_date, port_name, true);
-            }
+                // Remove newline character
+                const auto git_tree = Strings::trim(std::move(rev_parse_output.output));
 
-            const std::string cmd = Strings::format(R"(show %s:ports/%s/CONTROL)", commit_id, port_name);
-            auto control_output = run_git_command(paths, cmd);
+                // Do we have a manifest file?
+                const std::string manifest_cmd = Strings::format(R"(show %s:vcpkg.json)", git_tree, port_name);
+                auto manifest_output = run_git_command(paths, manifest_cmd);
+                if (manifest_output.exit_code == 0)
+                {
+                    return get_version_from_text(
+                        manifest_output.output, git_tree, commit_id, commit_date, port_name, true);
+                }
 
-            if (control_output.exit_code == 0)
-            {
-                return get_version_from_text(control_output.output, commit_id, commit_date, port_name, false);
+                const std::string cmd = Strings::format(R"(show %s:CONTROL)", git_tree, commit_id, port_name);
+                auto control_output = run_git_command(paths, cmd);
+
+                if (control_output.exit_code == 0)
+                {
+                    return get_version_from_text(
+                        control_output.output, git_tree, commit_id, commit_date, port_name, false);
+                }
             }
 
             return nullopt;
@@ -159,6 +172,8 @@ namespace vcpkg::Commands::PortHistory
                 if (maybe_version.has_value())
                 {
                     const auto version = maybe_version.value_or_exit(VCPKG_LINE_INFO);
+
+                    // Keep latest port with the current version string
                     if (last_version != version.version_string)
                     {
                         last_version = version.version_string;
@@ -198,7 +213,7 @@ namespace vcpkg::Commands::PortHistory
             for (auto&& version : versions)
             {
                 Json::Object object;
-                object.insert("commit-id", Json::Value::string(version.commit_id));
+                object.insert("git-tree", Json::Value::string(version.git_tree));
                 switch (version.scheme)
                 {
                     case Versions::Scheme::Semver: // falls through
