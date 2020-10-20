@@ -67,7 +67,11 @@ vcpkg_extract_source_archive_ex(
 )
 unset(buildenv_contents)
 # Get paths to required programs
-foreach(program_name BISON FLEX PERL)
+set(REQUIRED_PROGRAMS PERL)
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND REQUIRED_PROGRAMS BISON FLEX)
+endif()
+foreach(program_name ${REQUIRED_PROGRAMS})
     # Need to rename win_bison and win_flex to just bison and flex
     vcpkg_find_acquire_program(${program_name})
     get_filename_component(${program_name}_EXE_PATH ${${program_name}} DIRECTORY)
@@ -248,6 +252,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")
 else()
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/Makefile DESTINATION ${SOURCE_PATH})
+
     if("${FEATURES}" MATCHES "openssl")
         list(APPEND BUILD_OPTS --with-openssl)
     endif()
@@ -270,11 +276,13 @@ else()
             --enable-debug
     )
 
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+      set(ENV{LIBPQ_LIBRARY_TYPE} shared)
+    else()
+      set(ENV{LIBPQ_LIBRARY_TYPE} static)
+    endif()
     vcpkg_install_make()
 
-    # instead?
-    #    make -C src/include install
-    #    make -C src/interfaces install
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

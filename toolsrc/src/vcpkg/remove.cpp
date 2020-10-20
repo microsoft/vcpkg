@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
@@ -8,6 +6,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/remove.h>
 #include <vcpkg/update.h>
 #include <vcpkg/vcpkglib.h>
@@ -60,7 +59,7 @@ namespace vcpkg::Remove
                 if (ec)
                 {
                     System::print2(
-                        System::Color::error, "failed: status(", target.u8string(), "): ", ec.message(), "\n");
+                        System::Color::error, "failed: status(", fs::u8string(target), "): ", ec.message(), "\n");
                     continue;
                 }
 
@@ -80,21 +79,22 @@ namespace vcpkg::Remove
                         if (ec)
                         {
                             System::printf(
-                                System::Color::error, "failed: remove(%s): %s\n", target.u8string(), ec.message());
+                                System::Color::error, "failed: remove(%s): %s\n", fs::u8string(target), ec.message());
                         }
 #else
                         System::printf(
-                            System::Color::error, "failed: remove(%s): %s\n", target.u8string(), ec.message());
+                            System::Color::error, "failed: remove(%s): %s\n", fs::u8string(target), ec.message());
 #endif
                     }
                 }
                 else if (!fs::exists(status))
                 {
-                    System::printf(System::Color::warning, "Warning: %s: file not found\n", target.u8string());
+                    System::printf(System::Color::warning, "Warning: %s: file not found\n", fs::u8string(target));
                 }
                 else
                 {
-                    System::printf(System::Color::warning, "Warning: %s: cannot handle file type\n", target.u8string());
+                    System::printf(
+                        System::Color::warning, "Warning: %s: cannot handle file type\n", fs::u8string(target));
                 }
             }
 
@@ -331,5 +331,12 @@ namespace vcpkg::Remove
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void RemoveCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                         const VcpkgPaths& paths,
+                                         Triplet default_triplet) const
+    {
+        Remove::perform_and_exit(args, paths, default_triplet);
     }
 }

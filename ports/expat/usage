@@ -1,4 +1,0 @@
-The package expat is compatible with built-in CMake targets:
-
-    find_package(EXPAT REQUIRED)
-    target_link_libraries(main PRIVATE EXPAT::EXPAT)

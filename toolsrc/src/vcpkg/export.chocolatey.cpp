@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 
@@ -7,6 +5,7 @@
 #include <vcpkg/export.chocolatey.h>
 #include <vcpkg/export.h>
 #include <vcpkg/install.h>
+#include <vcpkg/tools.h>
 
 namespace vcpkg::Export::Chocolatey
 {
@@ -220,9 +219,9 @@ if (Test-Path $installedDir)
             fs.write_contents(chocolatey_uninstall_file_path, chocolatey_uninstall_content, VCPKG_LINE_INFO);
 
             const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)",
-                                                  nuget_exe.u8string(),
-                                                  exported_dir_path.u8string(),
-                                                  nuspec_file_path.u8string());
+                                                  fs::u8string(nuget_exe),
+                                                  fs::u8string(exported_dir_path),
+                                                  fs::u8string(nuspec_file_path));
 
             const int exit_code =
                 System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;

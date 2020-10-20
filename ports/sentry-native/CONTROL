@@ -1,0 +1,6 @@
+Source: sentry-native
+Version: 0.4.3
+Homepage: https://sentry.io/
+Description: Sentry SDK for C, C++ and native applications.
+Build-Depends: curl (!windows)
+Supports: !(arm|arm64|uwp)

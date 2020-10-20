@@ -25,7 +25,7 @@ vcpkg_extract_source_archive_ex(
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
 
-set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
+set(CONFIGURE_OPTIONS "--disable-samples --disable-tests --disable-layoutex")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --disable-static --enable-shared")
@@ -77,7 +77,7 @@ else()
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=i686-pc-mingw32")
 
     # Acquire tools
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.16)
 
     # Insert msys into the path between the compiler toolset and windows system32. This prevents masking of "link.exe" but DOES mask "find.exe".
     string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
@@ -85,7 +85,7 @@ else()
     set(ENV{PATH} "${NEWPATH}")
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
-    set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.15)
+    set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.16)
     file(COPY ${AUTOMAKE_DIR}/config.guess ${AUTOMAKE_DIR}/config.sub DESTINATION ${SOURCE_PATH}/source)
 
     if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -169,8 +169,6 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/share
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
     ${CURRENT_PACKAGES_DIR}/lib/icu
     ${CURRENT_PACKAGES_DIR}/debug/lib/icud)
 
@@ -203,6 +201,15 @@ else()
                 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sicu${MODULE}d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/icu${MODULE}d.lib)
             endif()
         endforeach()
+
+        file(GLOB_RECURSE pkg_files LIST_DIRECTORIES false ${CURRENT_PACKAGES_DIR}/*.pc)
+        message(STATUS "${pkg_files}")
+        foreach(pkg_file IN LISTS pkg_files)
+            message(STATUS "${pkg_file}")
+            file(READ ${pkg_file} PKG_FILE)
+            string(REGEX REPLACE "-ls([^ \\t\\n]+)" "-l\\1" PKG_FILE "${PKG_FILE}" )
+            file(WRITE ${pkg_file} "${PKG_FILE}")
+        endforeach()        
     endif()
 
     # force U_STATIC_IMPLEMENTATION macro
@@ -226,6 +233,7 @@ endif()
 # Generates warnings about missing pdbs for icudt.dll
 # This is expected because ICU database contains no executable code
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread m)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

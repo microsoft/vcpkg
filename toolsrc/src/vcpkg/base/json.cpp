@@ -1,11 +1,12 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/json.h>
+#include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/unicode.h>
 
 #include <inttypes.h>
+
+#include <regex>
 
 namespace vcpkg::Json
 {
@@ -37,8 +38,11 @@ namespace vcpkg::Json
             ValueImpl(ValueKindConstant<VK::Integer> vk, int64_t i) : tag(vk), integer(i) { }
             ValueImpl(ValueKindConstant<VK::Number> vk, double d) : tag(vk), number(d) { }
             ValueImpl(ValueKindConstant<VK::String> vk, std::string&& s) : tag(vk), string(std::move(s)) { }
+            ValueImpl(ValueKindConstant<VK::String> vk, const std::string& s) : tag(vk), string(s) { }
             ValueImpl(ValueKindConstant<VK::Array> vk, Array&& arr) : tag(vk), array(std::move(arr)) { }
+            ValueImpl(ValueKindConstant<VK::Array> vk, const Array& arr) : tag(vk), array(arr) { }
             ValueImpl(ValueKindConstant<VK::Object> vk, Object&& obj) : tag(vk), object(std::move(obj)) { }
+            ValueImpl(ValueKindConstant<VK::Object> vk, const Object& obj) : tag(vk), object(obj) { }
 
             ValueImpl& operator=(ValueImpl&& other) noexcept
             {
@@ -140,30 +144,30 @@ namespace vcpkg::Json
     }
     StringView Value::string() const noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_string());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_string(), "json value is not string");
         return underlying_->string;
     }
 
     const Array& Value::array() const& noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array(), "json value is not array");
         return underlying_->array;
     }
     Array& Value::array() & noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array(), "json value is not array");
         return underlying_->array;
     }
     Array&& Value::array() && noexcept { return std::move(this->array()); }
 
     const Object& Value::object() const& noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object(), "json value is not object");
         return underlying_->object;
     }
     Object& Value::object() & noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object(), "json value is not object");
         return underlying_->object;
     }
     Object&& Value::object() && noexcept { return std::move(this->object()); }
@@ -171,22 +175,64 @@ namespace vcpkg::Json
     Value::Value() noexcept = default;
     Value::Value(Value&&) noexcept = default;
     Value& Value::operator=(Value&&) noexcept = default;
-    Value::~Value() = default;
 
-    Value Value::clone() const noexcept
+    Value::Value(const Value& other)
     {
-        switch (kind())
+        switch (other.kind())
         {
-            case ValueKind::Null: return Value::null(nullptr);
-            case ValueKind::Boolean: return Value::boolean(boolean());
-            case ValueKind::Integer: return Value::integer(integer());
-            case ValueKind::Number: return Value::number(number());
-            case ValueKind::String: return Value::string(string());
-            case ValueKind::Array: return Value::array(array().clone());
-            case ValueKind::Object: return Value::object(object().clone());
-            default: Checks::exit_fail(VCPKG_LINE_INFO);
+            case ValueKind::Null: return; // default construct underlying_
+            case ValueKind::Boolean:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Boolean>(), other.underlying_->boolean));
+                break;
+            case ValueKind::Integer:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Integer>(), other.underlying_->integer));
+                break;
+            case ValueKind::Number:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Number>(), other.underlying_->number));
+                break;
+            case ValueKind::String:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::String>(), other.underlying_->string));
+                break;
+            case ValueKind::Array:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Array>(), other.underlying_->array));
+                break;
+            case ValueKind::Object:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Object>(), other.underlying_->object));
+                break;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
+
+    Value& Value::operator=(const Value& other)
+    {
+        switch (other.kind())
+        {
+            case ValueKind::Null: underlying_.reset(); break;
+            case ValueKind::Boolean:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Boolean>(), other.underlying_->boolean));
+                break;
+            case ValueKind::Integer:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Integer>(), other.underlying_->integer));
+                break;
+            case ValueKind::Number:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Number>(), other.underlying_->number));
+                break;
+            case ValueKind::String:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::String>(), other.underlying_->string));
+                break;
+            case ValueKind::Array:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Array>(), other.underlying_->array));
+                break;
+            case ValueKind::Object:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Object>(), other.underlying_->object));
+                break;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+
+        return *this;
+    }
+
+    Value::~Value() = default;
 
     Value Value::null(std::nullptr_t) noexcept { return Value(); }
     Value Value::boolean(bool b) noexcept
@@ -208,15 +254,15 @@ namespace vcpkg::Json
         val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Number>(), d);
         return val;
     }
-    Value Value::string(StringView sv) noexcept
+    Value Value::string(std::string s) noexcept
     {
-        if (!Unicode::utf8_is_valid_string(sv.begin(), sv.end()))
+        if (!Unicode::utf8_is_valid_string(s.data(), s.data() + s.size()))
         {
-            Debug::print("Invalid string: ", sv, '\n');
-            vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid utf8 passed to Value::string(StringView)");
+            Debug::print("Invalid string: ", s, '\n');
+            vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid utf8 passed to Value::string(std::string)");
         }
         Value val;
-        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::String>(), sv.to_string());
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::String>(), std::move(s));
         return val;
     }
     Value Value::array(Array&& arr) noexcept
@@ -225,25 +271,43 @@ namespace vcpkg::Json
         val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Array>(), std::move(arr));
         return val;
     }
+    Value Value::array(const Array& arr) noexcept
+    {
+        Value val;
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Array>(), arr);
+        return val;
+    }
     Value Value::object(Object&& obj) noexcept
     {
         Value val;
         val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Object>(), std::move(obj));
         return val;
     }
-    // } struct Value
-    // struct Array {
-    Array Array::clone() const noexcept
+    Value Value::object(const Object& obj) noexcept
     {
-        Array arr;
-        arr.underlying_.reserve(size());
-        for (const auto& el : *this)
-        {
-            arr.underlying_.push_back(el.clone());
-        }
-        return arr;
+        Value val;
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Object>(), obj);
+        return val;
     }
 
+    bool operator==(const Value& lhs, const Value& rhs)
+    {
+        if (lhs.kind() != rhs.kind()) return false;
+
+        switch (lhs.kind())
+        {
+            case ValueKind::Null: return true;
+            case ValueKind::Boolean: return lhs.underlying_->boolean == rhs.underlying_->boolean;
+            case ValueKind::Integer: return lhs.underlying_->integer == rhs.underlying_->integer;
+            case ValueKind::Number: return lhs.underlying_->number == rhs.underlying_->number;
+            case ValueKind::String: return lhs.underlying_->string == rhs.underlying_->string;
+            case ValueKind::Array: return lhs.underlying_->string == rhs.underlying_->string;
+            case ValueKind::Object: return lhs.underlying_->string == rhs.underlying_->string;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+    // } struct Value
+    // struct Array {
     Value& Array::push_back(Value&& value)
     {
         underlying_.push_back(std::move(value));
@@ -265,6 +329,7 @@ namespace vcpkg::Json
     {
         return insert_before(it, Value::array(std::move(arr))).array();
     }
+    bool operator==(const Array& lhs, const Array& rhs) { return lhs.underlying_ == rhs.underlying_; }
     // } struct Array
     // struct Object {
     Value& Object::insert(std::string key, Value&& value)
@@ -273,14 +338,29 @@ namespace vcpkg::Json
         underlying_.push_back({std::move(key), std::move(value)});
         return underlying_.back().second;
     }
+    Value& Object::insert(std::string key, const Value& value)
+    {
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, !contains(key));
+        underlying_.push_back({std::move(key), value});
+        return underlying_.back().second;
+    }
     Array& Object::insert(std::string key, Array&& value)
     {
         return insert(std::move(key), Value::array(std::move(value))).array();
+    }
+    Array& Object::insert(std::string key, const Array& value)
+    {
+        return insert(std::move(key), Value::array(value)).array();
     }
     Object& Object::insert(std::string key, Object&& value)
     {
         return insert(std::move(key), Value::object(std::move(value))).object();
     }
+    Object& Object::insert(std::string key, const Object& value)
+    {
+        return insert(std::move(key), Value::object(value)).object();
+    }
+
     Value& Object::insert_or_replace(std::string key, Value&& value)
     {
         auto v = get(key);
@@ -295,13 +375,35 @@ namespace vcpkg::Json
             return underlying_.back().second;
         }
     }
+    Value& Object::insert_or_replace(std::string key, const Value& value)
+    {
+        auto v = get(key);
+        if (v)
+        {
+            *v = value;
+            return *v;
+        }
+        else
+        {
+            underlying_.push_back({std::move(key), std::move(value)});
+            return underlying_.back().second;
+        }
+    }
     Array& Object::insert_or_replace(std::string key, Array&& value)
     {
         return insert_or_replace(std::move(key), Value::array(std::move(value))).array();
     }
+    Array& Object::insert_or_replace(std::string key, const Array& value)
+    {
+        return insert_or_replace(std::move(key), Value::array(value)).array();
+    }
     Object& Object::insert_or_replace(std::string key, Object&& value)
     {
         return insert_or_replace(std::move(key), Value::object(std::move(value))).object();
+    }
+    Object& Object::insert_or_replace(std::string key, const Object& value)
+    {
+        return insert_or_replace(std::move(key), Value::object(value)).object();
     }
 
     auto Object::internal_find_key(StringView key) const noexcept -> underlying_t::const_iterator
@@ -350,16 +452,14 @@ namespace vcpkg::Json
         }
     }
 
-    Object Object::clone() const noexcept
+    void Object::sort_keys()
     {
-        Object obj;
-        obj.underlying_.reserve(size());
-        for (const auto& el : *this)
-        {
-            obj.insert(el.first.to_string(), el.second.clone());
-        }
-        return obj;
+        std::sort(underlying_.begin(), underlying_.end(), [](const value_type& lhs, const value_type& rhs) {
+            return lhs.first < rhs.first;
+        });
     }
+
+    bool operator==(const Object& lhs, const Object& rhs) { return lhs.underlying_ == rhs.underlying_; }
     // } struct Object
 
     // auto parse() {
@@ -390,10 +490,6 @@ namespace vcpkg::Json
             {
                 return code_point == '-' || is_digit(code_point);
             }
-            static bool is_keyword_start(char32_t code_point) noexcept
-            {
-                return code_point == 'f' || code_point == 'n' || code_point == 't';
-            }
 
             static unsigned char from_hex_digit(char32_t code_point) noexcept
             {
@@ -411,7 +507,7 @@ namespace vcpkg::Json
                 }
                 else
                 {
-                    vcpkg::Checks::exit_fail(VCPKG_LINE_INFO);
+                    vcpkg::Checks::unreachable(VCPKG_LINE_INFO);
                 }
             }
 
@@ -448,14 +544,14 @@ namespace vcpkg::Json
 
                 switch (current)
                 {
-                    case '"': return '"';
-                    case '\\': return '\\';
-                    case '/': return '/';
-                    case 'b': return '\b';
-                    case 'f': return '\f';
-                    case 'n': return '\n';
-                    case 'r': return '\r';
-                    case 't': return '\t';
+                    case '"': next(); return '"';
+                    case '\\': next(); return '\\';
+                    case '/': next(); return '/';
+                    case 'b': next(); return '\b';
+                    case 'f': next(); return '\f';
+                    case 'n': next(); return '\n';
+                    case 'r': next(); return '\r';
+                    case 't': next(); return '\t';
                     case 'u':
                     {
                         char16_t code_unit = 0;
@@ -657,7 +753,7 @@ namespace vcpkg::Json
                         rest = U"ull";
                         val = Value::null(nullptr);
                         break;
-                    default: vcpkg::Checks::exit_fail(VCPKG_LINE_INFO);
+                    default: vcpkg::Checks::unreachable(VCPKG_LINE_INFO);
                 }
 
                 for (const char32_t* rest_it = rest; *rest_it != '\0'; ++rest_it)
@@ -708,6 +804,7 @@ namespace vcpkg::Json
                     }
                     else if (current == ',')
                     {
+                        auto comma_loc = cur_loc();
                         next();
                         skip_whitespace();
                         current = cur();
@@ -718,7 +815,7 @@ namespace vcpkg::Json
                         }
                         if (current == ']')
                         {
-                            add_error("Trailing comma in array");
+                            add_error("Trailing comma in array", comma_loc);
                             return Value::array(std::move(arr));
                         }
                     }
@@ -804,6 +901,7 @@ namespace vcpkg::Json
                     }
                     else if (current == ',')
                     {
+                        auto comma_loc = cur_loc();
                         next();
                         skip_whitespace();
                         current = cur();
@@ -814,7 +912,7 @@ namespace vcpkg::Json
                         }
                         else if (current == '}')
                         {
-                            add_error("Trailing comma in an object");
+                            add_error("Trailing comma in an object", comma_loc);
                             return Value();
                         }
                     }
@@ -889,6 +987,41 @@ namespace vcpkg::Json
         };
     }
 
+    NaturalNumberDeserializer NaturalNumberDeserializer::instance;
+    BooleanDeserializer BooleanDeserializer::instance;
+    ParagraphDeserializer ParagraphDeserializer::instance;
+    IdentifierDeserializer IdentifierDeserializer::instance;
+    IdentifierArrayDeserializer IdentifierArrayDeserializer::instance;
+    PackageNameDeserializer PackageNameDeserializer::instance;
+    PathDeserializer PathDeserializer::instance;
+
+    bool IdentifierDeserializer::is_ident(StringView sv)
+    {
+        static const std::regex BASIC_IDENTIFIER = std::regex(R"([a-z0-9]+(-[a-z0-9]+)*)");
+
+        // we only check for lowercase in RESERVED since we already remove all
+        // strings with uppercase letters from the basic check
+        static const std::regex RESERVED = std::regex(R"(prn|aux|nul|con|(lpt|com)[1-9]|core|default)");
+
+        // back-compat
+        if (sv == "all_modules")
+        {
+            return true;
+        }
+
+        if (!std::regex_match(sv.begin(), sv.end(), BASIC_IDENTIFIER))
+        {
+            return false; // we're not even in the shape of an identifier
+        }
+
+        if (std::regex_match(sv.begin(), sv.end(), RESERVED))
+        {
+            return false; // we're a reserved identifier
+        }
+
+        return true;
+    }
+
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse_file(const Files::Filesystem& fs,
                                                                                            const fs::path& path,
                                                                                            std::error_code& ec) noexcept
@@ -905,10 +1038,30 @@ namespace vcpkg::Json
         }
     }
 
+    std::pair<Value, JsonStyle> parse_file(vcpkg::LineInfo linfo,
+                                           const Files::Filesystem& fs,
+                                           const fs::path& path) noexcept
+    {
+        std::error_code ec;
+        auto ret = parse_file(fs, path, ec);
+        if (ec)
+        {
+            System::print2(System::Color::error, "Failed to read ", fs::u8string(path), ": ", ec.message(), "\n");
+            Checks::exit_fail(linfo);
+        }
+        else if (!ret)
+        {
+            System::print2(System::Color::error, "Failed to parse ", fs::u8string(path), ":\n");
+            System::print2(ret.error()->format());
+            Checks::exit_fail(linfo);
+        }
+        return ret.value_or_exit(linfo);
+    }
+
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(StringView json,
                                                                                       const fs::path& filepath) noexcept
     {
-        return Parser::parse(json, filepath.generic_u8string());
+        return Parser::parse(json, fs::generic_u8string(filepath));
     }
     // } auto parse()
 
@@ -1114,4 +1267,139 @@ namespace vcpkg::Json
     }
     // } auto stringify()
 
+    static std::vector<std::string> invalid_json_fields(const Json::Object& obj,
+                                                        Span<const StringView> known_fields) noexcept
+    {
+        const auto field_is_unknown = [known_fields](StringView sv) {
+            // allow directives
+            if (sv.size() != 0 && *sv.begin() == '$')
+            {
+                return false;
+            }
+            return std::find(known_fields.begin(), known_fields.end(), sv) == known_fields.end();
+        };
+
+        std::vector<std::string> res;
+        for (const auto& kv : obj)
+        {
+            if (field_is_unknown(kv.first))
+            {
+                res.push_back(kv.first.to_string());
+            }
+        }
+
+        return res;
+    }
+
+    void Reader::add_missing_field_error(StringView type, StringView key, StringView key_type)
+    {
+        add_generic_error(type, "missing required field '", key, "' (", key_type, ")");
+    }
+    void Reader::add_expected_type_error(StringView expected_type)
+    {
+        m_errors.push_back(Strings::concat(path(), ": mismatched type: expected ", expected_type));
+    }
+    void Reader::add_extra_field_error(StringView type, StringView field, StringView suggestion)
+    {
+        if (suggestion.size() > 0)
+        {
+            add_generic_error(type, "unexpected field '", field, "\', did you mean \'", suggestion, "\'?");
+        }
+        else
+        {
+            add_generic_error(type, "unexpected field '", field, '\'');
+        }
+    }
+
+    void Reader::check_for_unexpected_fields(const Object& obj, View<StringView> valid_fields, StringView type_name)
+    {
+        if (valid_fields.size() == 0)
+        {
+            return;
+        }
+
+        auto extra_fields = invalid_json_fields(obj, valid_fields);
+        for (auto&& f : extra_fields)
+        {
+            auto best_it = valid_fields.begin();
+            auto best_value = Strings::byte_edit_distance(f, *best_it);
+            for (auto i = best_it + 1; i != valid_fields.end(); ++i)
+            {
+                auto v = Strings::byte_edit_distance(f, *i);
+                if (v < best_value)
+                {
+                    best_value = v;
+                    best_it = i;
+                }
+            }
+            add_extra_field_error(type_name.to_string(), f, *best_it);
+        }
+    }
+
+    std::string Reader::path() const noexcept
+    {
+        std::string p("$");
+        for (auto&& s : m_path)
+        {
+            if (s.index < 0)
+                Strings::append(p, '.', s.field);
+            else
+                Strings::append(p, '[', s.index, ']');
+        }
+        return p;
+    }
+
+    Optional<std::vector<std::string>> ParagraphDeserializer::visit_string(Reader&, StringView sv)
+    {
+        std::vector<std::string> out;
+        out.push_back(sv.to_string());
+        return out;
+    }
+
+    Optional<std::vector<std::string>> ParagraphDeserializer::visit_array(Reader& r, const Array& arr)
+    {
+        static StringDeserializer d{"a string"};
+        return r.array_elements(arr, d);
+    }
+
+    Optional<std::string> IdentifierDeserializer::visit_string(Json::Reader& r, StringView sv)
+    {
+        if (!is_ident(sv))
+        {
+            r.add_generic_error(type_name(), "must be lowercase alphanumeric+hyphens and not reserved");
+        }
+        return sv.to_string();
+    }
+
+    Optional<std::vector<std::string>> IdentifierArrayDeserializer::visit_array(Reader& r, const Array& arr)
+    {
+        return r.array_elements(arr, IdentifierDeserializer::instance);
+    }
+
+    bool PackageNameDeserializer::is_package_name(StringView sv)
+    {
+        if (sv.size() == 0)
+        {
+            return false;
+        }
+
+        for (const auto& ident : Strings::split(sv, '.'))
+        {
+            if (!IdentifierDeserializer::is_ident(ident))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    Optional<std::string> PackageNameDeserializer::visit_string(Json::Reader&, StringView sv)
+    {
+        if (!is_package_name(sv))
+        {
+            return nullopt;
+        }
+        return sv.to_string();
+    }
 }

@@ -1,41 +1,39 @@
 {
   "name": "ogre",
-  "version-string": "1.12.7",
+  "version-string": "1.12.9",
+  "port-version": 1,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "dependencies": [
+    "assimp",
     "freeimage",
     "freetype",
-    "zlib",
-    "zziplib",
-    "sdl2",
-    "pugixml",
     {
       "name": "imgui",
       "features": [
         "freetype"
       ]
-    }
-  ],
-  "features": [
-    {
-      "name": "d3d9",
-      "description": "Build Direct3D9 RenderSystem"
     },
-    {
-      "name": "csharp",
+    "pugixml",
+    "sdl2",
+    "zlib",
+    "zziplib"
+  ],
+  "features": {
+    "csharp": {
       "description": "Build csharp bindings"
     },
-    {
-      "name": "java",
+    "d3d9": {
+      "description": "Build Direct3D9 RenderSystem"
+    },
+    "java": {
       "description": "Build Java (JNI) bindings"
     },
-    {
-      "name": "python",
+    "python": {
       "description": "Build Python bindings",
       "dependencies": [
         "python3"
       ]
     }
-  ]
+  }
 }

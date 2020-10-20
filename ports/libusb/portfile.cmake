@@ -39,6 +39,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
       endif()
   endif()
 
+  # The README file in the archive is a symlink to README.md 
+  # which causes issues with the windows MSBUILD process
+  file(REMOVE ${SOURCE_PATH}/README)
+
   vcpkg_install_msbuild(
       SOURCE_PATH ${SOURCE_PATH}
       PROJECT_SUBPATH msvc/libusb_${LIBUSB_PROJECT_TYPE}_${MSVS_VERSION}.vcxproj
@@ -53,4 +57,6 @@ else()
     vcpkg_install_make()
 endif()
 
+configure_file(${CURRENT_PORT_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
+file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,11 +1,15 @@
 #pragma once
 
+#include <vcpkg/fwd/cmakevars.h>
+#include <vcpkg/fwd/dependencies.h>
+#include <vcpkg/fwd/portfileprovider.h>
+
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/system.process.h>
 
-#include <vcpkg/cmakevars.h>
+#include <vcpkg/commands.integrate.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/triplet.h>
@@ -20,12 +24,6 @@
 namespace vcpkg
 {
     struct IBinaryProvider;
-}
-
-namespace vcpkg::Dependencies
-{
-    struct InstallPlanAction;
-    struct ActionPlan;
 }
 
 namespace vcpkg::System
@@ -298,10 +296,11 @@ namespace vcpkg::Build
         }
     };
 
-    struct AbiTagAndFile
+    struct CompilerInfo
     {
-        std::string tag;
-        fs::path tag_file;
+        std::string id;
+        std::string version;
+        std::string hash;
     };
 
     struct AbiInfo
@@ -311,6 +310,7 @@ namespace vcpkg::Build
         Optional<const std::string&> triplet_abi;
         std::string package_abi;
         Optional<fs::path> abi_tag_file;
+        Optional<const CompilerInfo&> compiler_info;
     };
 
     void compute_all_abis(const VcpkgPaths& paths,
@@ -324,12 +324,14 @@ namespace vcpkg::Build
 
         const System::Environment& get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info);
         const std::string& get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info);
+        const CompilerInfo& get_compiler_info(const VcpkgPaths& paths, const AbiInfo& abi_info);
 
     private:
         struct TripletMapEntry
         {
             std::string hash;
             Cache<std::string, std::string> compiler_hashes;
+            Cache<std::string, CompilerInfo> compiler_info;
         };
         Cache<fs::path, TripletMapEntry> m_triplet_cache;
         Cache<fs::path, std::string> m_toolchain_cache;
@@ -345,5 +347,12 @@ namespace vcpkg::Build
 #endif
 
         bool m_compiler_tracking;
+    };
+
+    struct BuildCommand : Commands::TripletCommand
+    {
+        virtual void perform_and_exit(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
+                                      Triplet default_triplet) const override;
     };
 }

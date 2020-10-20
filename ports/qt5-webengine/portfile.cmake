@@ -10,8 +10,6 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 
-
-
 vcpkg_find_acquire_program(FLEX)
 vcpkg_find_acquire_program(BISON)
 vcpkg_find_acquire_program(GPERF)
@@ -38,7 +36,8 @@ vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
 vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 
-set(PATCHES common.pri.patch gl.patch build.patch)
+set(PATCHES common.pri.patch 
+            gl.patch)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND CORE_OPTIONS "BUILD_OPTIONS" "-webengine-system-libwebp" "-webengine-system-ffmpeg" "-webengine-system-icu")

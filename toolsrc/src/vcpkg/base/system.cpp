@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.debug.h>
@@ -47,7 +45,7 @@ namespace vcpkg
 #else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
 #if defined(__x86_64__) || defined(_M_X64)
         return CPUArchitecture::X64;
-#elif defined(__x86__) || defined(_M_X86)
+#elif defined(__x86__) || defined(_M_X86) || defined(__i386__)
         return CPUArchitecture::X86;
 #elif defined(__arm__) || defined(_M_ARM)
         return CPUArchitecture::ARM;
@@ -109,6 +107,34 @@ namespace vcpkg
 #endif // defined(_WIN32)
     }
 
+    void System::set_environment_variable(ZStringView varname, Optional<ZStringView> value) noexcept
+    {
+#if defined(_WIN32)
+        const auto w_varname = Strings::to_utf16(varname);
+        const auto w_varcstr = w_varname.c_str();
+        BOOL exit_code;
+        if (auto v = value.get())
+        {
+            exit_code = SetEnvironmentVariableW(w_varcstr, Strings::to_utf16(*v).c_str());
+        }
+        else
+        {
+            exit_code = SetEnvironmentVariableW(w_varcstr, nullptr);
+        }
+
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code != 0);
+#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
+        if (auto v = value.get())
+        {
+            Checks::check_exit(VCPKG_LINE_INFO, setenv(varname.c_str(), v->c_str(), 1) == 0);
+        }
+        else
+        {
+            Checks::check_exit(VCPKG_LINE_INFO, unsetenv(varname.c_str()) == 0);
+        }
+#endif // defined(_WIN32)
+    }
+
     const ExpectedS<fs::path>& System::get_home_dir() noexcept
     {
         static ExpectedS<fs::path> s_home = []() -> ExpectedS<fs::path> {
@@ -162,25 +188,6 @@ namespace vcpkg
         return s_home;
     }
 #else
-    static const ExpectedS<fs::path>& get_xdg_config_home() noexcept
-    {
-        static ExpectedS<fs::path> s_home = [] {
-            auto maybe_home = System::get_environment_variable("XDG_CONFIG_HOME");
-            if (auto p = maybe_home.get())
-            {
-                return ExpectedS<fs::path>(fs::u8path(*p));
-            }
-            else
-            {
-                return System::get_home_dir().map([](fs::path home) {
-                    home /= fs::u8path(".config");
-                    return home;
-                });
-            }
-        }();
-        return s_home;
-    }
-
     static const ExpectedS<fs::path>& get_xdg_cache_home() noexcept
     {
         static ExpectedS<fs::path> s_home = [] {

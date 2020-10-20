@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "OSX" "Linux")
+
 vcpkg_buildpath_length_warning(37)
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
@@ -5,8 +7,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
-    REF 1.7.12
-    SHA512 e05e0b24056c17f01784ced1f9606a269974de195f1aca8a6fce2123314e7ee609f70df77ac7fe18dc7f0c04fb883d38cc7de9b963caacf9586aaa24d4ac6210
+    REF a3ad9600f5b5299dffda3d285aeab89023d2d801 # 1.7.15
+    SHA512 db2b08c2c0426735498225e100c77871273dbf508f3791405a7fe7923714dcb708dcfbf336ae2a0419c10cac9707ccac575f9767e9396d35abcfd90c9b2b3184
     HEAD_REF master
     PATCHES
         fix-find-openexr-ilmbase.patch

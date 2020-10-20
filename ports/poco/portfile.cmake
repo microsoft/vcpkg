@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
@@ -119,8 +117,6 @@ else()
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/tec ${CURRENT_PACKAGES_DIR}/tools/tec)
 endif()
 
-
-#
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static OR VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/bin
@@ -141,7 +137,6 @@ else()
         ${CURRENT_PACKAGES_DIR}/debug/bin/tec.pdb)
 endif()
 
-#
 if(EXISTS "${CURRENT_PACKAGES_DIR}/cmake")
   vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/Poco")
@@ -152,7 +147,6 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # copy license
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
