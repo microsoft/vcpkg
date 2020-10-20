@@ -11,7 +11,7 @@ vcpkg_from_github(
     0002-only-build-one-flavor.patch
     0003-use-find-package.patch
     0004-add-config-to-findpackage.patch
-    0005-backport-msvc-fixes-pr-7439.patch
+    0005-backport-msvc-fixes-pr-7439.patch # https://github.com/facebook/rocksdb/pull/7439
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)
