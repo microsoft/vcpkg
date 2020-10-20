@@ -49,7 +49,8 @@ namespace vcpkg::PortFileProvider
 
     private:
         const vcpkg::VcpkgPaths& paths;
-        // mutable std::unordered_map<Versions::VersionSpec, SourceControlFileLocation, Versions::VersionSpecHasher> control_cache;
+        // mutable std::unordered_map<Versions::VersionSpec, SourceControlFileLocation, Versions::VersionSpecHasher>
+        // control_cache;
         mutable std::unordered_map<std::string, std::vector<Versions::VersionSpec>> versions_cache;
         mutable std::unordered_map<Versions::VersionSpec, std::string, Versions::VersionSpecHasher> git_tree_cache;
     };

@@ -244,10 +244,10 @@ namespace vcpkg::PortFileProvider
     const std::vector<vcpkg::Versions::VersionSpec>& VersionedPortfileProvider::get_port_versions(
         const std::string& package_spec) const
     {
-        auto cache_hit = versions_cache.find(package_spec);
-        if (cache_hit != versions_cache.end())
+        auto cache_it = versions_cache.find(package_spec);
+        if (cache_it != versions_cache.end())
         {
-            return cache_hit->second;
+            return cache_it->second;
         }
 
         auto db_path = paths.root / "port_versions" / Strings::concat(package_spec, ".db.json");
@@ -286,24 +286,24 @@ namespace vcpkg::PortFileProvider
         return versions_cache.at(package_spec);
     }
 
-    //ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
+    // ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
     //    const vcpkg::Versions::VersionSpec& version_spec) const
     //{
-    //    auto cache_hit = control_cache.find(version_spec);
-    //    if (cache_hit != control_cache.end())
+    //    auto cache_it = control_cache.find(version_spec);
+    //    if (cache_it != control_cache.end())
     //    {
-    //        return cache_hit->second;
+    //        return cache_it->second;
     //    }
 
     //    // 1. Load database for port
-    //    auto git_tree_cache_hit = git_tree_cache.find(version_spec);
-    //    if (git_tree_cache_hit == git_tree_cache.end())
+    //    auto git_tree_cache_it = git_tree_cache.find(version_spec);
+    //    if (git_tree_cache_it == git_tree_cache.end())
     //    {
     //        // TODO: Try to load port from database
     //        Checks::exit_fail(VCPKG_LINE_INFO);
     //    }
 
-    //    const std::string git_tree = git_tree_cache_hit->second;
+    //    const std::string git_tree = git_tree_cache_it->second;
 
     //    // 2. Checkout port version
     //    // 3. Try load port

@@ -355,6 +355,7 @@
     <ClCompile Include="..\src\vcpkg\vcpkgcmdarguments.cpp" />
     <ClCompile Include="..\src\vcpkg\vcpkglib.cpp" />
     <ClCompile Include="..\src\vcpkg\vcpkgpaths.cpp" />
+    <ClCompile Include="..\src\vcpkg\versions.cpp" />
     <ClCompile Include="..\src\vcpkg\versiont.cpp" />
     <ClCompile Include="..\src\vcpkg\visualstudio.cpp" />
     <ClCompile Include="..\src\vcpkg.cpp" />
