@@ -38,7 +38,7 @@ namespace vcpkg::PortFileProvider
         mutable std::unordered_map<std::string, SourceControlFileLocation> cache;
     };
 
-    struct VersionedPortfileProvider
+    struct VersionedPortfileProvider : Util::ResourceBase
     {
         explicit VersionedPortfileProvider(const vcpkg::VcpkgPaths& paths);
 
@@ -54,5 +54,4 @@ namespace vcpkg::PortFileProvider
         mutable std::unordered_map<std::string, std::vector<Versions::VersionSpec>> versions_cache;
         mutable std::unordered_map<Versions::VersionSpec, std::string, Versions::VersionSpecHasher> git_tree_cache;
     };
-
 }
