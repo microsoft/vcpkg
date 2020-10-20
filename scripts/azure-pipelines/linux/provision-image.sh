@@ -27,7 +27,10 @@ APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
 APT_PACKAGES="$APT_PACKAGES libkrb5-dev"
 
 # Additionally required by mesa
-APT_PACKAGES="$APT_PACKAGES python3-setuptools"
+APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
+
+# Additionally required by some packages to install additional python packages
+APT_PACKAGES="$APT_PACKAGES python3-pip"
 
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu60"

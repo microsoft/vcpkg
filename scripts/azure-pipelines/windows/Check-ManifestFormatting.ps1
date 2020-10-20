@@ -24,7 +24,7 @@ if (-not (Test-Path "$Root/vcpkg.exe"))
     }
 }
 
-& "$Root/vcpkg.exe" 'x-format-manifest' '--all'
+& "$Root/vcpkg.exe" 'format-manifest' '--all'
 if (-not $?)
 {
     Write-Error "Failed formatting manifests; are they well-formed?"
@@ -37,7 +37,7 @@ if (-not $IgnoreErrors -and $null -ne $changedFiles)
     $msg = @(
         "",
         "The formatting of the manifest files didn't match our expectation.",
-        "See https://github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#manifest for solution."
+        "See github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#manifest for solution."
     )
     $msg += ""
 

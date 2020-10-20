@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF 5a1fc8d33808d7b22f57bdf9403cda7ff07b0670 #curl-7_71_1
-    SHA512 a58d2f23c4fb82610b8d68181fd29a4007983f88950b3eb3362170f3187d86116628151c5e09c713f047aca77cad7b9900bb58e368bbddca31599b4fde0dfa22
+    REF 315ee3fe75dade912b48a21ceec9ccda0230d937 #curl-7_73_0
+    SHA512 db9385d63688256c335f08fe044c67e7c17e2fbcbb47df234d5f9a1586b259edb07a37845c2ad85d2da00738b19dc0e718d91d05b2881c2828fec2660f858444
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -17,9 +17,9 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
 
-# winssl will enable sspi, but sspi do not support uwp
-if(("winssl" IN_LIST FEATURES OR "sspi" IN_LIST FEATURES OR "tool" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
-    message(FATAL_ERROR "winssl,sspi,tool are not supported on non-Windows and uwp platforms")
+# schannel will enable sspi, but sspi do not support uwp
+if(("schannel" IN_LIST FEATURES OR "sspi" IN_LIST FEATURES OR "tool" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
+    message(FATAL_ERROR "schannel,sspi,tool are not supported on non-Windows and uwp platforms")
 endif()
 
 if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
@@ -29,15 +29,15 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
-    http2   USE_NGHTTP2
-    openssl CMAKE_USE_OPENSSL
-    mbedtls CMAKE_USE_MBEDTLS
-    ssh     CMAKE_USE_LIBSSH2
-    tool    BUILD_CURL_EXE
-    c-ares  ENABLE_ARES
-    sspi    CURL_WINDOWS_SSPI
-    brotli  CURL_BROTLI
-    winssl  CMAKE_USE_WINSSL
+    http2       USE_NGHTTP2
+    openssl     CMAKE_USE_OPENSSL
+    mbedtls     CMAKE_USE_MBEDTLS
+    ssh         CMAKE_USE_LIBSSH2
+    tool        BUILD_CURL_EXE
+    c-ares      ENABLE_ARES
+    sspi        CURL_WINDOWS_SSPI
+    brotli      CURL_BROTLI
+    schannel    CMAKE_USE_SCHANNEL
     sectransp   CMAKE_USE_SECTRANSP
     
     INVERTED_FEATURES
@@ -71,6 +71,7 @@ vcpkg_configure_cmake(
         -DCURL_STATICLIB=${CURL_STATICLIB}
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DENABLE_DEBUG=ON
+        -DCURL_CA_FALLBACK=ON
 )
 
 vcpkg_install_cmake()

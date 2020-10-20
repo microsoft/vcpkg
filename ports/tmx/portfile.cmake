@@ -1,11 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO baylej/tmx
     REF tmx_1.0.0
     HEAD_REF master
     SHA512 d045c45efd03f91a81dae471cb9ddc80d222b3ac52e13b729deeaf3e07d0a03b8e0956b30336ef410c72ddbbf33bea6811da5454b88d44b1db75683ef2a9383a
+    PATCHES fix-build-error.patch
 )
 
 vcpkg_configure_cmake(

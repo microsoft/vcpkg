@@ -1,37 +1,39 @@
 Source: ffmpeg
-Version: 4.2
-Port-Version: 21
+Version: 4.3.1
+Port-Version: 1
 Homepage: https://ffmpeg.org
 Description: a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.
   FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations.
 Default-Features: avresample, avcodec, avformat, avdevice, avfilter, postproc, swresample, swscale
 
 Feature: ffmpeg
+Build-Depends: ffmpeg[core,avcodec,avfilter,avformat]
 Description: build the ffmpeg.exe application
 
-Feature: ffserver
-Description: ffserver appplication support in ffmpeg
-
 Feature: ffplay
-Build-Depends: ffmpeg[sdl2]
-Description: ffplay appplication support in ffmpeg
+Build-Depends: ffmpeg[core,avcodec,avfilter,avformat,swscale,swresample,sdl2]
+Description: ffplay application support in ffmpeg
 
 Feature: ffprobe
-Description: ffprobe appplication support in ffmpeg
+Build-Depends: ffmpeg[core,avcodec,avformat]
+Description: ffprobe application support in ffmpeg
 
 Feature: avcodec
 Description: Codec support in ffmpeg
 
 Feature: avformat
+Build-Depends: ffmpeg[core,avcodec]
 Description: Format support in ffmpeg
 
 Feature: avdevice
+Build-Depends: ffmpeg[core,avcodec,avformat]
 Description: Device support in ffmpeg
 
 Feature: avfilter
 Description: Filter support in ffmpeg
 
 Feature: postproc
+Build-Depends: ffmpeg[core,gpl]
 Description: Postproc support in ffmpeg
 
 Feature: swresample
@@ -53,7 +55,7 @@ Feature: version3
 Description: upgrade (L)GPL to version 3
 
 Feature: avisynthplus
-Build-Depends: avisynthplus, ffmpeg[gpl]
+Build-Depends: avisynthplus, ffmpeg[core,gpl]
 Description: avisynthplus support in ffmpeg
 
 Feature: bzip2
@@ -65,7 +67,7 @@ Build-Depends: libiconv
 Description: iconv support in ffmpeg
 
 Feature: fdk-aac
-Build-Depends: fdk-aac, ffmpeg[nonfree]
+Build-Depends: fdk-aac, ffmpeg[core,nonfree]
 Description: AAC de/encoding via libfdk-aac support in ffmpeg
 
 Feature: lzma
@@ -85,7 +87,7 @@ Build-Depends: opencl
 Description: OpenCL processing support in ffmpeg
 
 Feature: openssl
-Build-Depends: openssl, ffmpeg[nonfree]
+Build-Depends: openssl, ffmpeg[core,nonfree]
 Description: openssl support in ffmpeg
 
 Feature: opus
@@ -125,11 +127,11 @@ Build-Depends: wavpack
 Description: wavpack encoding via libwavpack support in ffmpeg
 
 Feature: x264
-Build-Depends: x264, ffmpeg[gpl]
+Build-Depends: x264, ffmpeg[core,gpl]
 Description: H.264 encoding via x264 support in ffmpeg
 
 Feature: x265
-Build-Depends: x265, ffmpeg[gpl]
+Build-Depends: x265, ffmpeg[core,gpl]
 Description: HEVC encoding via x265 support in ffmpeg
 
 Feature: zlib

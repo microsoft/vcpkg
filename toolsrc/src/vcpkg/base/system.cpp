@@ -107,6 +107,34 @@ namespace vcpkg
 #endif // defined(_WIN32)
     }
 
+    void System::set_environment_variable(ZStringView varname, Optional<ZStringView> value) noexcept
+    {
+#if defined(_WIN32)
+        const auto w_varname = Strings::to_utf16(varname);
+        const auto w_varcstr = w_varname.c_str();
+        BOOL exit_code;
+        if (auto v = value.get())
+        {
+            exit_code = SetEnvironmentVariableW(w_varcstr, Strings::to_utf16(*v).c_str());
+        }
+        else
+        {
+            exit_code = SetEnvironmentVariableW(w_varcstr, nullptr);
+        }
+
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code != 0);
+#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
+        if (auto v = value.get())
+        {
+            Checks::check_exit(VCPKG_LINE_INFO, setenv(varname.c_str(), v->c_str(), 1) == 0);
+        }
+        else
+        {
+            Checks::check_exit(VCPKG_LINE_INFO, unsetenv(varname.c_str()) == 0);
+        }
+#endif // defined(_WIN32)
+    }
+
     const ExpectedS<fs::path>& System::get_home_dir() noexcept
     {
         static ExpectedS<fs::path> s_home = []() -> ExpectedS<fs::path> {

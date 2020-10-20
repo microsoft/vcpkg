@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO frankosterfeld/qtkeychain
-    REF v0.9.1
-    SHA512    c80bd25a5b72c175d0d4a985b952924c807bf67be33eeb89e2b83757727e642c10d8d737cea9744d2faad74c50c1b55d82b306135559c35c91a088c3b198b33a
+    REF 6743abd98586fbabd01da9839f53f61ccfb7f83c # v0.11.1
+    SHA512 0ad6b82b972ca1cc5f1f8318899637ce0a6786f912b7f9efc1b7eea132ccefbe9a5dc0eb82d0dc9a020bcd55cd538d9e962fc40eb5c828142a7f2186b19633b1
     HEAD_REF master
 )
 
@@ -31,13 +29,12 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Qt5Keychain TARGET_PATH share/Qt5Keychain)
 # Remove unneeded dirs
 file(REMOVE_RECURSE 
 	${CURRENT_PACKAGES_DIR}/debug/include
-	${CURRENT_PACKAGES_DIR}/debug/lib/cmake
-	${CURRENT_PACKAGES_DIR}/lib/cmake
+      ${CURRENT_PACKAGES_DIR}/debug/share
 )
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/qtkeychain)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/qtkeychain/COPYING ${CURRENT_PACKAGES_DIR}/share/qtkeychain/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

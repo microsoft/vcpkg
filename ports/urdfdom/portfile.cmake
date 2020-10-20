@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
@@ -11,6 +9,8 @@ vcpkg_from_github(
   PATCHES
     0001_use_math_defines.patch
     0002_fix_exports.patch
+    0003_import_prefix.patch
+    0004_fix-dependency-console_bridge.patch
 )
 
 vcpkg_configure_cmake(
@@ -33,7 +33,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/ ${CURRENT_PACKAGES_DIR}/tools/urdfdom/)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/ ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
 
 file(GLOB URDFDOM_DLLS_DEBUG ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
 foreach(URDFDOM_DLL_DEBUG ${URDFDOM_DLLS_DEBUG})
@@ -47,4 +47,4 @@ foreach(URDFDOM_DLL_RELEASE ${URDFDOM_DLLS_RELEASE})
   file(REMOVE ${URDFDOM_DLL_RELEASE})
 endforeach()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/urdfdom RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF v0.3.9
-    SHA512 e34da25b3aaf959ec12826ac68c81e739e453d44f2dba28b15e57d7a827edc4d5f42988e9b6d98ac07999940be7b5876246cb3a980e590ae87f77f4c2f12f40a
+    REF 63b03efc2af332c88b86d4fd8079d00f4b439adf # v0.3.10
+    SHA512 269852348e042fe32d0d400d5e6f4cf758024389d3966a9b1bc217061d4a03b3a7003a399212130ec4e783f1e1e5b423eb531e6e0948485b5d5ac9fdc58982cb
     HEAD_REF develop
     PATCHES
         uwp.patch
         fix-space-path.patch
         fix-redefinition-function.patch
-        github_2481.patch
         fix-pkg-config.patch
+        fix-uwp-build.patch
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -58,7 +58,7 @@ if(VCPKG_TARGET_IS_UWP)
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS 
+        OPTIONS
             ${COMMON_OPTIONS}
             -DCMAKE_SYSTEM_PROCESSOR=AMD64
             -DVS_WINRT_COMPONENT=TRUE
@@ -114,12 +114,8 @@ file(READ ${SOURCE_PATH}/cblas.h CBLAS_H)
 string(REPLACE "#include \"common.h\"" "#include \"openblas_common.h\"" CBLAS_H "${CBLAS_H}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/cblas.h "${CBLAS_H}")
 
-# openblas is BSD
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindBLAS.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/blas)
-
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
