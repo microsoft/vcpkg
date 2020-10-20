@@ -1,28 +1,27 @@
-include(vcpkg_common_functions)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.freetds.org/files/stable/freetds-1.1.17.tar.bz2"
-    FILENAME "freetds-1.1.17.tar.bz2"
-    SHA512 3746ea009403960950fd619ffaf6433cfc92c34a8261b15e61009f01a1446e5a5a59413cd48e5511bbf3a0224f54b40daa713187bd20ca43105c5f8c68f4b88e
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO freetds/freetds
+    REF be39110fb1255843c18ee96d48c2aaa47f1ef2a7 # final 1.2 release
+    HEAD_REF master
+    SHA512 e981666190a0fa4424048505c6746bf1b768ec870b4032755b49af5730a3dfb18ff7bf566ddd939e30f46436145e2c57792c572d7afd7040f486e7c236a863df
     PATCHES
-        crypt32.patch
+        fix-encoding-h-dependency.patch
+        skip-unit-tests.patch
 )
 
-set(BUILD_freetds_openssl OFF)
-if("openssl" IN_LIST FEATURES)
-    set(BUILD_freetds_openssl ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openssl WITH_OPENSSL
+)
+
+vcpkg_find_acquire_program(PERL)
+get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+vcpkg_add_to_path(${PERL_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DWITH_OPENSSL=${BUILD_freetds_openssl}
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -62,4 +61,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

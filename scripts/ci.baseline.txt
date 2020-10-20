@@ -423,10 +423,6 @@ freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm64-windows=fail
-freetds:arm-uwp=fail
-freetds:x64-linux=fail
-freetds:x64-osx=fail
-freetds:x64-uwp=fail
 freetype-gl:x64-uwp=fail
 freexl:arm-uwp=fail
 freexl:x64-uwp=fail
@@ -1836,8 +1832,5 @@ clapack:x64-uwp=skip
 lapack-reference:arm64-windows=skip
 lapack-reference:arm-uwp=skip
 
-# freetds upstream is gone
-freetds:x86-windows=fail
-freetds:x64-windows=fail
-freetds:x64-windows-static=fail
+# freetds needs gperf.exe which fails for crosscompiling triplets
 freetds:arm64-windows=fail
