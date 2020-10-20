@@ -1,17 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 6.3.1
-    SHA512 ec5a2b61b12d3d3ec2456b9e742cf7be98767889c4759334e60276f609054fa8eb59f13f07af38e69e9ee7b6f2b9542e2d5d7806726ce5616062af4de626c6fa
+    REF 7.1.1
+    SHA512 78e51a054bdf87a2c815b4f83452b4e0ec2ca9a8375d8ef22325550ea1ff96a0ed3efb967c98853dbdda05331b181034ef0a09632957fecd7d52ef33aebc0ff4
     HEAD_REF master
     PATCHES
         fix-sqlite3-bin.patch
-        disable-export-namespace.patch
-        disable-projdb-with-arm-uwp.patch
-        fix-win-output-name.patch
-        fix-sqlite-dependency-export.patch
-        fix-linux-build.patch
-        use-sqlite3-config.patch
+
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -59,6 +54,7 @@ vcpkg_configure_cmake(
     -DBUILD_GIE=OFF
     -DBUILD_PROJ=OFF
     -DBUILD_PROJINFO=OFF
+    -DBUILD_PROJSYNC=OFF	
     -DPROJ_TESTS=OFF
     -DEXE_SQLITE3=${SQLITE3_BIN_PATH}/sqlite3${BIN_SUFFIX}
 )

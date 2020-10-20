@@ -1,9 +1,9 @@
 Source: proj4
-Version: 6.3.1
-Port-Version: 2
+Version: 7.1.1
+Port-Version: 3
 Homepage: https://github.com/OSGeo/PROJ
 Description: PROJ.4 library for cartographic projections
-Build-Depends: sqlite3[core]
+Build-Depends: sqlite3[core],tiff[tool],curl[core,tool]
 Default-Features: database
 
 Feature: database
