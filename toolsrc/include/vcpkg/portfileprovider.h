@@ -6,6 +6,7 @@
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/sourceparagraph.h>
+#include <vcpkg/versions.h>
 
 namespace vcpkg::PortFileProvider
 {
@@ -36,4 +37,21 @@ namespace vcpkg::PortFileProvider
         std::vector<fs::path> overlay_ports;
         mutable std::unordered_map<std::string, SourceControlFileLocation> cache;
     };
+
+    struct VersionedPortfileProvider
+    {
+        explicit VersionedPortfileProvider(const vcpkg::VcpkgPaths& paths);
+
+        const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(const std::string& port_spec) const;
+
+        // ExpectedS<const SourceControlFileLocation&> get_control_file(
+        //    const vcpkg::Versions::VersionSpec& version_spec) const;
+
+    private:
+        const vcpkg::VcpkgPaths& paths;
+        // mutable std::unordered_map<Versions::VersionSpec, SourceControlFileLocation, Versions::VersionSpecHasher> control_cache;
+        mutable std::unordered_map<std::string, std::vector<Versions::VersionSpec>> versions_cache;
+        mutable std::unordered_map<Versions::VersionSpec, std::string, Versions::VersionSpecHasher> git_tree_cache;
+    };
+
 }

@@ -5,6 +5,7 @@
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
+#include <vcpkg/versions.h>
 
 namespace vcpkg::PortFileProvider
 {
@@ -215,4 +216,97 @@ namespace vcpkg::PortFileProvider
 
         return ret;
     }
+
+    VersionedPortfileProvider::VersionedPortfileProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) { }
+
+    vcpkg::Versions::VersionSpec extract_version_spec(const std::string& package_spec, const Json::Object& version_obj)
+    {
+        static const std::map<vcpkg::Versions::Scheme, std::string> version_schemes{
+            {Versions::Scheme::Relaxed, "version"},
+            {Versions::Scheme::Semver, "version-semver"},
+            {Versions::Scheme::Date, "version-date"},
+            {Versions::Scheme::String, "version-string"}};
+
+        const auto port_version = static_cast<int>(version_obj.get("port-version")->integer());
+
+        for (auto&& kv_pair : version_schemes)
+        {
+            if (const auto version_string = version_obj.get(kv_pair.second))
+            {
+                return Versions::VersionSpec(
+                    package_spec, version_string->string().to_string(), port_version, kv_pair.first);
+            }
+        }
+
+        Checks::unreachable(VCPKG_LINE_INFO);
+    }
+
+    const std::vector<vcpkg::Versions::VersionSpec>& VersionedPortfileProvider::get_port_versions(
+        const std::string& package_spec) const
+    {
+        auto cache_hit = versions_cache.find(package_spec);
+        if (cache_hit != versions_cache.end())
+        {
+            return cache_hit->second;
+        }
+
+        auto db_path = paths.root / "port_versions" / Strings::concat(package_spec, ".db.json");
+        auto& fs = paths.get_filesystem();
+        if (!fs.exists(db_path))
+        {
+            // TODO: Handle db version not existing
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        auto versions_json = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), db_path);
+
+        // NOTE: A dictionary would be the best way to store this, for now we use a vector
+        if (versions_json.first.is_object())
+        {
+            auto versions_object = std::move(versions_json.first.object());
+            auto maybe_versions_array = versions_object.get("versions");
+
+            if (maybe_versions_array && maybe_versions_array->is_array())
+            {
+                auto versions_array = std::move(maybe_versions_array->array());
+                for (auto&& version : versions_array)
+                {
+                    auto version_obj = std::move(version.object());
+                    Versions::VersionSpec spec = extract_version_spec(package_spec, version_obj);
+
+                    auto& package_versions = versions_cache[spec.package_spec];
+                    package_versions.push_back(spec);
+
+                    auto&& git_tree = version_obj.get("git-tree")->string().to_string();
+                    git_tree_cache.emplace(std::move(spec), git_tree);
+                }
+            }
+        }
+
+        return versions_cache.at(package_spec);
+    }
+
+    //ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
+    //    const vcpkg::Versions::VersionSpec& version_spec) const
+    //{
+    //    auto cache_hit = control_cache.find(version_spec);
+    //    if (cache_hit != control_cache.end())
+    //    {
+    //        return cache_hit->second;
+    //    }
+
+    //    // 1. Load database for port
+    //    auto git_tree_cache_hit = git_tree_cache.find(version_spec);
+    //    if (git_tree_cache_hit == git_tree_cache.end())
+    //    {
+    //        // TODO: Try to load port from database
+    //        Checks::exit_fail(VCPKG_LINE_INFO);
+    //    }
+
+    //    const std::string git_tree = git_tree_cache_hit->second;
+
+    //    // 2. Checkout port version
+    //    // 3. Try load port
+    //    // 4. Return
+    //}
 }
