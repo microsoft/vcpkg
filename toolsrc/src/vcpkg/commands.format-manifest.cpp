@@ -185,7 +185,7 @@ namespace vcpkg::Commands::FormatManifest
     };
 
     const CommandStructure COMMAND_STRUCTURE = {
-        create_example_string(R"###(x-format-manifest --all)###"),
+        create_example_string(R"###(format-manifest --all)###"),
         0,
         SIZE_MAX,
         {FORMAT_SWITCHES, {}, {}},
@@ -204,7 +204,7 @@ namespace vcpkg::Commands::FormatManifest
 
         if (!format_all && convert_control)
         {
-            System::print2(System::Color::warning, R"(x-format-manifest was passed '--convert-control' without '--all'.
+            System::print2(System::Color::warning, R"(format-manifest was passed '--convert-control' without '--all'.
     This doesn't do anything:
     we will automatically convert all control files passed explicitly.)");
         }
