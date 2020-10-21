@@ -36,6 +36,7 @@ namespace vcpkg
 
 namespace std
 {
+    // allows for std::map<VersionT, _>
     template <>
     struct less<::vcpkg::VersionT>
     {

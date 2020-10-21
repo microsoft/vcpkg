@@ -166,8 +166,7 @@ namespace
 
         Optional<VersionT> get_baseline_version(const VcpkgPaths&, StringView port_name) const override
         {
-            // TODO: why is this conversion necessary?
-            auto it = baseline_versions.find(port_name.to_string());
+            auto it = baseline_versions.find(port_name);
             if (it == baseline_versions.end())
             {
                 return nullopt;
@@ -193,7 +192,7 @@ namespace
         }
 
         fs::path path;
-        std::map<std::string, VersionT> baseline_versions;
+        std::map<std::string, VersionT, std::less<>> baseline_versions;
     };
 }
 
