@@ -250,7 +250,8 @@ namespace vcpkg::PortFileProvider
             return cache_it->second;
         }
 
-        auto db_path = paths.root / "port_versions" / package_spec.substr(0, 1) / Strings::concat(package_spec, ".json");
+        auto db_path =
+            paths.root / "port_versions" / package_spec.substr(0, 1) / Strings::concat(package_spec, ".json");
         auto& fs = paths.get_filesystem();
         if (!fs.exists(db_path))
         {
@@ -306,7 +307,10 @@ namespace vcpkg::PortFileProvider
     //    const std::string git_tree = git_tree_cache_it->second;
 
     //    // 2. Checkout port version
+    //    // paths.checkout_port_object(version_spec.package_spec, git_tree);
     //    // 3. Try load port
     //    // 4. Return
+
+    //    return std::string("Not yet implemented");
     //}
 }
