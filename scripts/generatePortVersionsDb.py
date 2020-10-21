@@ -33,7 +33,7 @@ def generate_port_versions_db(ports_path, db_path, revision):
         containing_dir = os.path.join(db_path, port_name[0])
         make_dir(containing_dir)
         
-        output_filepath = os.path.join(containing_dir, '{}.db.json'.format(port_name))
+        output_filepath = os.path.join(containing_dir, '{}.json'.format(port_name))
         if not os.path.exists(output_filepath):            
             try:
                 output = subprocess.run(args=['../vcpkg.exe', 'x-history', port_name, '--x-json'], capture_output=True)

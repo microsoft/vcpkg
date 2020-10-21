@@ -23,7 +23,7 @@ namespace vcpkg::Commands::PortHistory
             std::string commit_date;
             std::string version_string;
             std::string version;
-            std::string port_version;
+            int port_version;
             Versions::Scheme scheme;
         };
 
@@ -102,19 +102,19 @@ namespace vcpkg::Commands::PortHistory
             return Versions::Scheme::String;
         }
 
-        std::pair<std::string, std::string> clean_version_string(const std::string& version_string,
-                                                                 int port_version,
-                                                                 bool from_manifest)
+        std::pair<std::string, int> clean_version_string(const std::string& version_string,
+                                                         int port_version,
+                                                         bool from_manifest)
         {
             // Manifest files and ports that use the `Port-Version` field are assumed to have a clean version string
             // already.
             if (from_manifest || port_version > 0)
             {
-                return std::make_pair(version_string, std::to_string(port_version));
+                return std::make_pair(version_string, port_version);
             }
 
             std::string clean_version = version_string;
-            std::string clean_port_version = "0";
+            int clean_port_version = 0;
 
             const auto index = version_string.find_last_of('-');
             if (index != std::string::npos)
@@ -122,8 +122,18 @@ namespace vcpkg::Commands::PortHistory
                 // Very lazy check to keep date versions untouched
                 if (!is_date_without_tags(version_string))
                 {
-                    clean_port_version = version_string.substr(index + 1);
+                    auto maybe_port_version = version_string.substr(index + 1);
                     clean_version.resize(index);
+
+                    try
+                    {
+                        clean_port_version = std::stoi(maybe_port_version);
+                    }
+                    catch (std::exception&)
+                    {
+                        // If not convertible to int consider last fragment as part of version string
+                        clean_version = version_string;
+                    }
                 }
             }
 
@@ -148,14 +158,15 @@ namespace vcpkg::Commands::PortHistory
                         clean_version_string(version_string, scf->core_paragraph->port_version, is_manifest);
 
                     // SCF to HistoryVersion
-                    return HistoryVersion{port_name,
-                                          git_tree,
-                                          commit_id,
-                                          commit_date,
-                                          Strings::concat(clean_version.first, "#", clean_version.second),
-                                          clean_version.first,
-                                          clean_version.second,
-                                          guess_version_scheme(clean_version.first)};
+                    return HistoryVersion{
+                        port_name,
+                        git_tree,
+                        commit_id,
+                        commit_date,
+                        Strings::concat(clean_version.first, "#", std::to_string(clean_version.second)),
+                        clean_version.first,
+                        clean_version.second,
+                        guess_version_scheme(clean_version.first)};
                 }
             }
 
@@ -277,7 +288,7 @@ namespace vcpkg::Commands::PortHistory
                     case Versions::Scheme::String: // falls through
                     default: object.insert("version-string", Json::Value::string(version.version)); break;
                 }
-                object.insert("port-version", Json::Value::string(version.port_version));
+                object.insert("port-version", Json::Value::integer(version.port_version));
                 versions_json.push_back(std::move(object));
             }
 
