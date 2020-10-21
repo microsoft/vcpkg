@@ -423,10 +423,6 @@ freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm64-windows=fail
-freetds:arm-uwp=fail
-freetds:x64-linux=fail
-freetds:x64-osx=fail
-freetds:x64-uwp=fail
 freetype-gl:x64-uwp=fail
 freexl:arm-uwp=fail
 freexl:x64-uwp=fail
