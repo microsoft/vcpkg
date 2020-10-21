@@ -684,10 +684,15 @@ namespace vcpkg::Dependencies
         std::vector<FeatureSpec> feature_specs;
         for (const FullPackageSpec& spec : specs)
         {
-            const SourceControlFileLocation* scfl = port_provider.get_control_file(spec.package_spec.name()).get();
+            auto maybe_scfl = port_provider.get_control_file(spec.package_spec.name());
 
-            Checks::check_exit(
-                VCPKG_LINE_INFO, scfl, "Error: Cannot find definition for package `%s`.", spec.package_spec.name());
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               maybe_scfl.has_value(),
+                               "Error: while loading port `%s`: %s",
+                               spec.package_spec.name(),
+                               maybe_scfl.error());
+
+            const SourceControlFileLocation* scfl = maybe_scfl.get();
 
             const std::vector<std::string> all_features =
                 Util::fmap(scfl->source_control_file->feature_paragraphs,
