@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-sqlite3-bin.patch
-
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
