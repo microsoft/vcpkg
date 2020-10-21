@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f2e591d..51f3e8a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -119,7 +119,7 @@ endif()
+ 
+ include(CMakePackageConfigHelpers)
+ 
+-set(packageDestDir "${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME}")
++set(packageDestDir "${CMAKE_INSTALL_LIBDIR}/cmake")
+ 
+ configure_package_config_file(
+ 	${CMAKE_CURRENT_SOURCE_DIR}/efswConfig.cmake.in
