@@ -241,6 +241,25 @@ namespace vcpkg::PortFileProvider
         Checks::unreachable(VCPKG_LINE_INFO);
     }
 
+    namespace
+    {
+        Optional<fs::path> get_versions_json_path(const VcpkgPaths& paths, const std::string& port_name)
+        {
+            // TODO: Get correct `port_versions` path for the registry the port belongs to, pseudocode below:
+            // auto registry = paths.get_registry_for_port(port_name);
+            // auto port_versions_dir_path = registry.get_port_versions_path();
+            const auto port_versions_dir_path = paths.root / "port_versions";
+            const auto subpath = Strings::concat(port_name[0], "-/", port_name, ".json");
+            const auto json_path = port_versions_dir_path / subpath;
+            if (paths.get_filesystem().exists(json_path))
+            {
+                return json_path;
+            }
+            return nullopt;
+        }
+
+    }
+
     const std::vector<vcpkg::Versions::VersionSpec>& VersionedPortfileProvider::get_port_versions(
         const std::string& package_spec) const
     {
@@ -250,16 +269,15 @@ namespace vcpkg::PortFileProvider
             return cache_it->second;
         }
 
-        auto db_path =
-            paths.root / "port_versions" / package_spec.substr(0, 1) / Strings::concat(package_spec, ".json");
-        auto& fs = paths.get_filesystem();
-        if (!fs.exists(db_path))
+        auto maybe_versions_json_path = get_versions_json_path(paths, package_spec);
+        if (!maybe_versions_json_path.has_value())
         {
             // TODO: Handle db version not existing
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
+        auto versions_json_path = maybe_versions_json_path.value_or_exit(VCPKG_LINE_INFO);
 
-        auto versions_json = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), db_path);
+        auto versions_json = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), versions_json_path);
 
         // NOTE: A dictionary would be the best way to store this, for now we use a vector
         if (versions_json.first.is_object())
