@@ -3,6 +3,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://git.assembla.com/portaudio.git
     REF c5d2c51bd6fe354d0ee1119ba932bfebd3ebfacc
+    SHA512 1aed7401e0b0965647865b08459c862fb79f3d57a0c3675a8f9809b0c5234462c32c6b43888ef4f0dfbef3b7690fd1d06db8e2442333bc0d0af44335557e8ac3
     PATCHES
         fix-library-can-not-be-found.patch
         fix-include.patch
