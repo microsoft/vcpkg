@@ -6,10 +6,10 @@ namespace vcpkg::Versions
 {
     enum class Scheme
     {
+        String,
         Relaxed,
         Semver,
         Date,
-        String
     };
 
     struct VersionSpec
