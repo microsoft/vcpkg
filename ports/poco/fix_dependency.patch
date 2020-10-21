@@ -72,7 +72,7 @@ index 173eacd..589fdb6 100644
  
 +include(CMakeFindDependencyMacro)
 +find_dependency(ZLIB REQUIRED)
-+find_dependency(PCRE REQUIRED)
++find_dependency(unofficial-pcre REQUIRED)
 +if(Poco_FIND_REQUIRED_XML)
 +    find_dependency(EXPAT REQUIRED)
 +endif()
