@@ -109,6 +109,7 @@ namespace vcpkg::Test
     PackageSpec PackageSpecMap::emplace(vcpkg::SourceControlFileLocation&& scfl)
     {
         const auto& name = scfl.source_control_file->core_paragraph->name;
+        REQUIRE(map.find(name) == map.end());
         map.emplace(name, std::move(scfl));
         return {name, triplet};
     }

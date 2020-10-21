@@ -80,14 +80,15 @@ namespace vcpkg
     /// </summary>
     struct SourceControlFile
     {
-        SourceControlFile() = default;
-        SourceControlFile(const SourceControlFile& scf)
-            : core_paragraph(std::make_unique<SourceParagraph>(*scf.core_paragraph))
+        SourceControlFile clone() const
         {
-            for (const auto& feat_ptr : scf.feature_paragraphs)
+            SourceControlFile ret;
+            ret.core_paragraph = std::make_unique<SourceParagraph>(*core_paragraph);
+            for (const auto& feat_ptr : feature_paragraphs)
             {
-                feature_paragraphs.push_back(std::make_unique<FeatureParagraph>(*feat_ptr));
+                ret.feature_paragraphs.push_back(std::make_unique<FeatureParagraph>(*feat_ptr));
             }
+            return ret;
         }
 
         static Parse::ParseExpected<SourceControlFile> parse_manifest_file(const fs::path& path_to_manifest,
@@ -128,7 +129,7 @@ namespace vcpkg
 
         SourceControlFileLocation clone() const
         {
-            return {std::make_unique<SourceControlFile>(*source_control_file), source_location};
+            return {std::make_unique<SourceControlFile>(source_control_file->clone()), source_location};
         }
 
         std::unique_ptr<SourceControlFile> source_control_file;
