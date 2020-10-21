@@ -394,6 +394,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
 endif()
 
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
+option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
 function(add_executable name)
     _add_executable(${ARGV})
     list(FIND ARGV "IMPORTED" IMPORTED_IDX)
@@ -402,11 +403,16 @@ function(add_executable name)
     if(IMPORTED_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
         if(VCPKG_APPLOCAL_DEPS)
             if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
+                set(EXTRA_OPTIONS "")
+                if(X_VCPKG_APPLOCAL_DEPS_SERIALIZED)
+                    set(EXTRA_OPTIONS USES_TERMINAL)
+                endif()
                 add_custom_command(TARGET ${name} POST_BUILD
                     COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
                         -targetBinary $<TARGET_FILE:${name}>
                         -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
+                    ${EXTRA_OPTIONS}
                 )
             elseif(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if (NOT MACOSX_BUNDLE_IDX EQUAL -1)
