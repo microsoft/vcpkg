@@ -127,6 +127,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
 vcpkg_copy_pdbs()
 configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre-config.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-pcre/unofficial-pcre-config.cmake @ONLY)
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
