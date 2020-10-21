@@ -125,10 +125,11 @@ namespace vcpkg::PortFileProvider
 
         if (auto registry = paths.get_configuration().registry_set.registry_for_port(spec))
         {
+            auto baseline_version = registry->get_baseline_version(paths, spec);
             auto entry = registry->get_port_entry(paths, spec);
-            if (entry)
+            if (entry && baseline_version)
             {
-                auto port_directory = entry->get_baseline_version_port_directory(paths);
+                auto port_directory = entry->get_port_directory(paths, *baseline_version.get());
                 auto found_scf = Paragraphs::try_load_port(fs, port_directory);
                 if (auto scf = found_scf.get())
                 {

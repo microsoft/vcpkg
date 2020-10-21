@@ -377,9 +377,10 @@ namespace vcpkg::Paragraphs
             }
 
             auto port_entry = impl->get_port_entry(paths, port_name);
-            if (port_entry)
+            auto baseline_version = impl->get_baseline_version(paths, port_name);
+            if (port_entry && baseline_version)
             {
-                auto port_path = port_entry->get_baseline_version_port_directory(paths);
+                auto port_path = port_entry->get_port_directory(paths, *baseline_version.get());
                 auto maybe_spgh = try_load_port(fs, port_path);
                 if (const auto spgh = maybe_spgh.get())
                 {

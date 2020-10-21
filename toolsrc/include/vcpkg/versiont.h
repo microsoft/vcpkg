@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <functional>
 
 namespace vcpkg
 {
@@ -13,6 +14,8 @@ namespace vcpkg
 
         friend bool operator==(const VersionT& left, const VersionT& right);
         friend bool operator!=(const VersionT& left, const VersionT& right);
+
+        friend struct std::less<VersionT>;
 
     private:
         std::string value;
@@ -28,5 +31,14 @@ namespace vcpkg
         VersionDiff(const VersionT& left, const VersionT& right);
 
         std::string to_string() const;
+    };
+}
+
+namespace std
+{
+    template <>
+    struct less<::vcpkg::VersionT>
+    {
+        bool operator()(const ::vcpkg::VersionT& lhs, const ::vcpkg::VersionT& rhs) const;
     };
 }

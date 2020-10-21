@@ -18,7 +18,7 @@ namespace
 
         BuiltinEntry(fs::path&& p) : port_directory(std::move(p)) { }
 
-        fs::path get_baseline_version_port_directory(const VcpkgPaths&) const override { return port_directory; }
+        fs::path get_port_directory(const VcpkgPaths&, const VersionT&) const override { return port_directory; }
     };
 
     struct BuiltinRegistry final : RegistryImpl
@@ -49,41 +49,72 @@ namespace
                 return fs::u8string(p.filename());
             });
         }
+
+        Optional<VersionT> get_baseline_version(const VcpkgPaths&, StringView) const override {
+            return VersionT{};
+        }
     };
 
     struct FilesystemEntry final : RegistryEntry
     {
-        VersionT baseline_version;
         std::map<VersionT, fs::path> versions;
 
-        fs::path get_baseline_version_port_directory(const VcpkgPaths&) const override { return {}; }
+        fs::path get_port_directory(const VcpkgPaths&, const VersionT& version) const override {
+            auto it = versions.find(version);
+            if (it != versions.end())
+            {
+                return it->second;
+            }
+            return {};
+        }
     };
 
-    struct VersionDeserializer final : Json::IDeserializer<VersionT>
-    {
-        StringView type_name() const { return "a version object"; }
-
-        Optional<VersionT> visit_object(Json::Reader&, const Json::Object&) override { return nullopt; }
-
-        static VersionDeserializer instance;
-    };
-    VersionDeserializer VersionDeserializer::instance{};
-
-    struct RegistryEntryDeserializer final : Json::IDeserializer<FilesystemEntry>
+    struct FilesystemEntryDeserializer final : Json::IDeserializer<FilesystemEntry>
     {
         StringView type_name() const { return "a registry entry object"; }
 
-        Optional<FilesystemEntry> visit_object(Json::Reader& r, const Json::Object& obj) override
+        Optional<FilesystemEntry> visit_array(Json::Reader& r, const Json::Array& arr) override
         {
             FilesystemEntry res;
-            r.required_object_field(
-                type_name(), obj, "baseline-version", res.baseline_version, VersionDeserializer::instance);
-            return nullopt;
+            std::string version;
+            int port_version = 0;
+            fs::path registry_path;
+
+            for (const auto& el : arr)
+            {
+                Checks::check_exit(VCPKG_LINE_INFO, el.is_object());
+                const auto& obj = el.object();
+
+                version.clear();
+                r.required_object_field("version entry", obj, "version-string", version, version_deserializer);
+
+                port_version = 0;
+                r.optional_object_field(obj, "port-version", port_version, Json::NaturalNumberDeserializer::instance);
+
+                registry_path.clear();
+                r.required_object_field("version entry", obj, "registry-path", registry_path, Json::PathDeserializer::instance);
+
+                // registry_path should look like `/blah/foo`
+                Checks::check_exit(VCPKG_LINE_INFO,
+                    !registry_path.has_root_name() && registry_path.has_root_directory());
+
+                VersionT versiont{std::move(version), port_version};
+                auto it = res.versions.lower_bound(versiont);
+                Checks::check_exit(VCPKG_LINE_INFO, it == res.versions.end() || it->first != versiont);
+
+                res.versions.emplace_hint(it, std::move(versiont), registry_root / registry_path.lexically_normal().relative_path());
+            }
+
+            return res;
         }
 
-        static RegistryEntryDeserializer instance;
+        FilesystemEntryDeserializer(const fs::path& p) : registry_root(p) {}
+
+        static Json::StringDeserializer version_deserializer;
+
+        const fs::path& registry_root;
     };
-    RegistryEntryDeserializer RegistryEntryDeserializer::instance{};
+    Json::StringDeserializer FilesystemEntryDeserializer::version_deserializer{"version"};
 
     struct FilesystemRegistry final : RegistryImpl
     {
@@ -97,14 +128,54 @@ namespace
             }
             std::error_code ec;
             auto json_document = Json::parse_file(fs, entry_path, ec);
-            (void)json_document;
+
+            if (auto p = json_document.get())
+            {
+                Json::Reader r;
+                FilesystemEntryDeserializer deserializer{path};
+                auto entry = r.visit(p->first, deserializer);
+                if (auto pentry = entry.get())
+                {
+                    return std::make_unique<FilesystemEntry>(std::move(*pentry));
+                }
+            }
+
             return nullptr;
         }
 
-        void get_all_port_names(std::vector<std::string>& names, const VcpkgPaths& paths) const override
+        void get_all_port_names(std::vector<std::string>& port_names, const VcpkgPaths&) const override
         {
-            (void)names;
-            (void)paths;
+            for (const auto& super_dir : fs::directory_iterator(path))
+            {
+                auto super_dir_filename = fs::u8string(super_dir.path().filename());
+                if (Strings::ends_with(super_dir_filename, "-"))
+                {
+                    super_dir_filename.pop_back();
+                    for (const auto& database_entry : fs::directory_iterator(super_dir))
+                    {
+                        auto database_entry_filename = database_entry.path().filename();
+                        auto database_entry_filename_str = fs::u8string(database_entry_filename);
+                        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, Strings::starts_with(database_entry_filename_str, super_dir_filename));
+                        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, Strings::ends_with(database_entry_filename_str, ".json"));
+
+                        port_names.push_back(fs::u8string(database_entry_filename.replace_extension()));
+                    }
+                }
+            }
+        }
+
+        Optional<VersionT> get_baseline_version(const VcpkgPaths&, StringView port_name) const override
+        {
+            // TODO: why is this conversion necessary?
+            auto it = baseline_versions.find(port_name.to_string());
+            if (it == baseline_versions.end())
+            {
+                return nullopt;
+            }
+            else
+            {
+                return it->second;
+            }
         }
 
         FilesystemRegistry(fs::path&& path_) : path(path_) { }
@@ -122,6 +193,7 @@ namespace
         }
 
         fs::path path;
+        std::map<std::string, VersionT> baseline_versions;
     };
 }
 

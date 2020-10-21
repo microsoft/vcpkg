@@ -27,3 +27,21 @@ namespace vcpkg
         return Strings::format("%s -> %s", left.to_string(), right.to_string());
     }
 }
+
+namespace std
+{
+    bool less<::vcpkg::VersionT>::operator()(const ::vcpkg::VersionT& lhs, const ::vcpkg::VersionT& rhs) const
+    {
+        auto cmp = lhs.value.compare(rhs.value);
+        if (cmp < 0)
+        {
+            return true;
+        }
+        else if (cmp > 0)
+        {
+            return false;
+        }
+
+        return lhs.port_version < rhs.port_version;
+    }
+}
