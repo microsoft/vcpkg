@@ -293,8 +293,8 @@ vcpkg_configure_cmake(
         -DBUILD_JAVA=OFF
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
         ###### PROTOBUF
-        -DPROTOBUF_UPDATE_FILES=ON
-        -DUPDATE_PROTO_FILES=ON
+        -DPROTOBUF_UPDATE_FILES=${BUILD_opencv_flann}
+        -DUPDATE_PROTO_FILES=${BUILD_opencv_flann}
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
@@ -317,7 +317,7 @@ vcpkg_configure_cmake(
         -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=OFF
-        -DWITH_PROTOBUF=ON
+        -DWITH_PROTOBUF=${BUILD_opencv_flann}
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_TBB=${WITH_TBB}
         -DWITH_VTK=${WITH_VTK}
