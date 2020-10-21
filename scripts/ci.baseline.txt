@@ -1320,10 +1320,6 @@ protobuf-c:arm-uwp=fail
 # proxygen fails with "Target 'Windows' not supported by proxygen!"
 proxygen:x64-windows=fail
 proxygen:x64-windows-static=fail
-ptex:arm-uwp=fail
-ptex:x64-linux=fail
-ptex:x64-osx=fail
-ptex:x64-uwp=fail
 pthreads:arm64-windows=fail
 pthreads:arm-uwp=fail
 pthreads:x64-uwp=fail
