@@ -250,7 +250,7 @@ namespace vcpkg::PortFileProvider
             return cache_it->second;
         }
 
-        auto db_path = paths.root / "port_versions" / Strings::concat(package_spec, ".db.json");
+        auto db_path = paths.root / "port_versions" / package_spec.substr(0, 1) / Strings::concat(package_spec, ".json");
         auto& fs = paths.get_filesystem();
         if (!fs.exists(db_path))
         {
