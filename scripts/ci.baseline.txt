@@ -49,8 +49,6 @@ amqpcpp:arm-uwp=fail
 amqpcpp:x64-uwp=fail
 angelscript:arm64-windows=fail
 angelscript:arm-uwp=fail
-antlr4:arm-uwp=fail
-antlr4:x64-uwp=fail
 apr:arm-uwp=fail
 apr:x64-uwp=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
@@ -425,10 +423,6 @@ freeglut:x64-uwp=fail
 freeglut:x64-osx=fail
 # Needs /bigobj
 freeopcua:arm64-windows=fail
-freetds:arm-uwp=fail
-freetds:x64-linux=fail
-freetds:x64-osx=fail
-freetds:x64-uwp=fail
 freetype-gl:x64-uwp=fail
 freexl:arm-uwp=fail
 freexl:x64-uwp=fail
@@ -1326,10 +1320,6 @@ protobuf-c:arm-uwp=fail
 # proxygen fails with "Target 'Windows' not supported by proxygen!"
 proxygen:x64-windows=fail
 proxygen:x64-windows-static=fail
-ptex:arm-uwp=fail
-ptex:x64-linux=fail
-ptex:x64-osx=fail
-ptex:x64-uwp=fail
 pthreads:arm64-windows=fail
 pthreads:arm-uwp=fail
 pthreads:x64-uwp=fail
