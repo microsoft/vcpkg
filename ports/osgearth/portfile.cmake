@@ -14,7 +14,7 @@ vcpkg_from_github(
     SHA512 86c287a75946b902c05897d3952c9ff201853599d52023c7b2c850f2253b7e738c4b54ac7ae947bf0909b3aaf074bdb1472f4e92c59cd919458933a72fd13b80 
     HEAD_REF master
     PATCHES 
-  	    RocksDB.patch
+  	  RocksDB.patch
         fix-feature.patch
 )
 
