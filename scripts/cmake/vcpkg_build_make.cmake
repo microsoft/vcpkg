@@ -171,7 +171,13 @@ function(vcpkg_build_make)
                         LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
             endif()
-
+            
+            file(READ "${CURRENT_BUILDTREES_DIR}/${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}-out.log" LOGDATA) 
+            if(LOGDATA MATCHES "Warning: linker path does not have real file for library")
+                message(FATAL_ERROR "libtool could not find a file being linked against!")
+            endif()
+            
+            
             if (_bc_ENABLE_INSTALL)
                 message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
                 if(MAKE_BASH)
