@@ -221,7 +221,7 @@ namespace vcpkg
 
                 fpgh.extra_info.sort_keys();
             }
-            std::unique_ptr<ParseControlErrorInfo> operator()(SourceControlFile& scf) const
+            [[nodiscard]] std::unique_ptr<ParseControlErrorInfo> operator()(SourceControlFile& scf) const
             {
                 (*this)(*scf.core_paragraph);
                 std::for_each(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), *this);
@@ -237,7 +237,7 @@ namespace vcpkg
     This is invalid; please make certain that features have distinct names.)",
                                               scf.core_paragraph->name,
                                               (*adjacent_equal)->name);
-                    return std::move(error_info);
+                    return error_info;
                 }
                 return nullptr;
             }
@@ -390,7 +390,7 @@ namespace vcpkg
                 return std::move(maybe_feature).error();
         }
 
-        if (auto maybe_error = std::move(canonicalize(*control_file)))
+        if (auto maybe_error = canonicalize(*control_file))
         {
             return std::move(maybe_error);
         }
@@ -892,7 +892,11 @@ namespace vcpkg
             r.optional_object_field(
                 obj, FEATURES, control_file->feature_paragraphs, FeaturesFieldDeserializer::instance);
 
-            canonicalize(*control_file);
+            if (auto maybe_error = canonicalize(*control_file))
+            {
+                // return nullopt; // maybe? 
+                Checks::exit_with_message(VCPKG_LINE_INFO, maybe_error->error);
+            }
             return std::move(control_file);
         }
 
