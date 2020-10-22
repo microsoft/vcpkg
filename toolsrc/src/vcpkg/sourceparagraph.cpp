@@ -221,7 +221,7 @@ namespace vcpkg
 
                 fpgh.extra_info.sort_keys();
             }
-            void operator()(SourceControlFile& scf) const
+            std::unique_ptr<ParseControlErrorInfo> operator()(SourceControlFile& scf) const
             {
                 (*this)(*scf.core_paragraph);
                 std::for_each(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), *this);
@@ -231,12 +231,15 @@ namespace vcpkg
                     std::adjacent_find(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), FeatureEqual{});
                 if (adjacent_equal != scf.feature_paragraphs.end())
                 {
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              R"(Multiple features with the same name for port %s: %s
+                    auto error_info = std::make_unique<ParseControlErrorInfo>();
+                    error_info->name = scf.core_paragraph->name;
+                    error_info->error = Strings::format(R"(Multiple features with the same name for port %s: %s
     This is invalid; please make certain that features have distinct names.)",
                                               scf.core_paragraph->name,
                                               (*adjacent_equal)->name);
+                    return std::move(error_info);
                 }
+                return nullptr;
             }
         } canonicalize{};
     }
@@ -387,7 +390,10 @@ namespace vcpkg
                 return std::move(maybe_feature).error();
         }
 
-        canonicalize(*control_file);
+        if (auto maybe_error = std::move(canonicalize(*control_file)))
+        {
+            return std::move(maybe_error);
+        }
         return control_file;
     }
 
