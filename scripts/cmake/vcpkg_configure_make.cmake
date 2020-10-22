@@ -386,7 +386,9 @@ function(vcpkg_configure_make)
 
         # Variables not correctly detected by configure. In release builds.
         list(APPEND _csc_OPTIONS gl_cv_double_slash_root=yes
-                                 ac_cv_func_memmove=yes)
+                                 ac_cv_func_memmove=yes
+                                 lt_cv_deplibs_check_method=pass_all    # required since file.exe is not working correctly. 
+                                 )
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             list(APPEND _csc_OPTIONS gl_cv_host_cpu_c_abi=no)
         endif()
@@ -477,27 +479,20 @@ function(vcpkg_configure_make)
     convert_to_list(VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES C_LIBS_LIST)
     convert_to_list(VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES CXX_LIBS_LIST)
     set(ALL_LIBS_LIST ${C_LIBS_LIST} ${CXX_LIBS_LIST})
-
     list(REMOVE_DUPLICATES ALL_LIBS_LIST)
     list(TRANSFORM ALL_LIBS_LIST STRIP)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(TRANSFORM ALL_LIBS_LIST REPLACE "(.lib|.a|.so)$" "")
-    endif()
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(REMOVE_ITEM ALL_LIBS_LIST "uuid")
-    endif()
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(JOIN ALL_LIBS_LIST " -l" ALL_LIBS_STRING)
-    endif()
+    list(TRANSFORM ALL_LIBS_LIST REPLACE "(.lib|.a|.so)$" "")
+    list(JOIN ALL_LIBS_LIST " -l" ALL_LIBS_STRING)
+    set(ALL_LIBS_STRING "-l${ALL_LIBS_STRING}")
 
     if(ALL_LIBS_STRING)
         if(DEFINED ENV{LIBS})
-            set(ENV{LIBS} "$ENV{LIBS} -l${ALL_LIBS_STRING}")
+            set(ENV{LIBS} "$ENV{LIBS} ${ALL_LIBS_STRING}")
         else()
-            set(ENV{LIBS} "-l${ALL_LIBS_STRING}")
+            set(ENV{LIBS} "${ALL_LIBS_STRING}")
         endif()
     endif()
-    debug_message(STATUS "ENV{LIBS}:$ENV{LIBS}")
+
     vcpkg_find_acquire_program(PKGCONFIG)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT PKGCONFIG STREQUAL "--static")
         set(PKGCONFIG "${PKGCONFIG} --static") # Is this still required or was the PR changing the pc files accordingly merged?
