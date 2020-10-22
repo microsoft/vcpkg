@@ -155,16 +155,17 @@ namespace vcpkg::PortFileProvider
             }
             else
             {
-                Debug::print("Failed to find port `", spec, "` in registry:",
-                    entry ? " entry found;" : " no entry found;",
-                    baseline_version ? " baseline version found\n" : " no baseline version found\n");
+                Debug::print("Failed to find port `",
+                             spec,
+                             "` in registry:",
+                             entry ? " entry found;" : " no entry found;",
+                             baseline_version ? " baseline version found\n" : " no baseline version found\n");
             }
         }
         else
         {
             Debug::print("Failed to find registry for port: `", spec, "`.\n");
         }
-        
 
         return std::string("Port definition not found");
     }

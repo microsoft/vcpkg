@@ -51,16 +51,15 @@ namespace
             });
         }
 
-        Optional<VersionT> get_baseline_version(const VcpkgPaths&, StringView) const override {
-            return VersionT{};
-        }
+        Optional<VersionT> get_baseline_version(const VcpkgPaths&, StringView) const override { return VersionT{}; }
     };
 
     struct FilesystemEntry final : RegistryEntry
     {
         std::map<VersionT, fs::path> versions;
 
-        fs::path get_port_directory(const VcpkgPaths&, const VersionT& version) const override {
+        fs::path get_port_directory(const VcpkgPaths&, const VersionT& version) const override
+        {
             auto it = versions.find(version);
             if (it != versions.end())
             {
@@ -93,23 +92,25 @@ namespace
                 r.optional_object_field(obj, "port-version", port_version, Json::NaturalNumberDeserializer::instance);
 
                 registry_path.clear();
-                r.required_object_field("version entry", obj, "registry-path", registry_path, Json::PathDeserializer::instance);
+                r.required_object_field(
+                    "version entry", obj, "registry-path", registry_path, Json::PathDeserializer::instance);
 
                 // registry_path should look like `/blah/foo`
                 Checks::check_exit(VCPKG_LINE_INFO,
-                    !registry_path.has_root_name() && registry_path.has_root_directory());
+                                   !registry_path.has_root_name() && registry_path.has_root_directory());
 
                 VersionT versiont{std::move(version), port_version};
                 auto it = res.versions.lower_bound(versiont);
                 Checks::check_exit(VCPKG_LINE_INFO, it == res.versions.end() || it->first != versiont);
 
-                res.versions.emplace_hint(it, std::move(versiont), registry_root / registry_path.lexically_normal().relative_path());
+                res.versions.emplace_hint(
+                    it, std::move(versiont), registry_root / registry_path.lexically_normal().relative_path());
             }
 
             return res;
         }
 
-        FilesystemEntryDeserializer(const fs::path& p) : registry_root(p) {}
+        FilesystemEntryDeserializer(const fs::path& p) : registry_root(p) { }
 
         static Json::StringDeserializer version_deserializer;
 
@@ -125,7 +126,8 @@ namespace
             auto entry_path = this->path_to_port_entry(paths, port_name);
             if (!fs.exists(entry_path))
             {
-                Debug::print("Failed to find entry for port `", port_name, "` in file: ", fs::u8string(entry_path), "\n");
+                Debug::print(
+                    "Failed to find entry for port `", port_name, "` in file: ", fs::u8string(entry_path), "\n");
                 return nullptr;
             }
             std::error_code ec;
@@ -162,8 +164,10 @@ namespace
                     {
                         auto database_entry_filename = database_entry.path().filename();
                         auto database_entry_filename_str = fs::u8string(database_entry_filename);
-                        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, Strings::starts_with(database_entry_filename_str, super_dir_filename));
-                        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, Strings::ends_with(database_entry_filename_str, ".json"));
+                        vcpkg::Checks::check_exit(
+                            VCPKG_LINE_INFO, Strings::starts_with(database_entry_filename_str, super_dir_filename));
+                        vcpkg::Checks::check_exit(VCPKG_LINE_INFO,
+                                                  Strings::ends_with(database_entry_filename_str, ".json"));
 
                         port_names.push_back(fs::u8string(database_entry_filename.replace_extension()));
                     }
@@ -223,7 +227,8 @@ namespace
                 auto it = result.lower_bound(pr.first);
                 if (it != result.end() && it->first == pr.first)
                 {
-                    Checks::exit_with_message(VCPKG_LINE_INFO, "Port %s is defined multiple times in the baseline\n", pr.first);
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Port %s is defined multiple times in the baseline\n", pr.first);
                 }
 
                 const auto& version_value = pr.second;

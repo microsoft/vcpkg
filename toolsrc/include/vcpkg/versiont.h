@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include <functional>
+#include <string>
 
 namespace vcpkg
 {
@@ -37,7 +37,7 @@ namespace vcpkg
 namespace std
 {
     // allows for std::map<VersionT, _>
-    template <>
+    template<>
     struct less<::vcpkg::VersionT>
     {
         bool operator()(const ::vcpkg::VersionT& lhs, const ::vcpkg::VersionT& rhs) const;
