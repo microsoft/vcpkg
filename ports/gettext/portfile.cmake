@@ -54,9 +54,9 @@ vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/gettext-runtime # Port should pr
                     )
                     
 if(VCPKG_TARGET_IS_UWP)
-    vcpkg_install_make(WORKING_SUBDIR "/intl") # Could make a port intl or libintl or have features in Gettext
+    vcpkg_install_make(SUBPATH "/intl") # Could make a port intl or libintl or have features in Gettext
 else()
-    vcpkg_install_make(WORKING_SUBDIR "/intl")
+    vcpkg_install_make(SUBPATH "/intl")
 endif()
 
 
