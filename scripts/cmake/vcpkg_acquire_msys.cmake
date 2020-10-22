@@ -316,7 +316,11 @@ msys_package(
     URL "https://repo.msys2.org/msys/x86_64/msys2-runtime-3.1.6-3-x86_64.pkg.tar.xz"
     SHA512 f094a7f4926195ef7ba015f0c5c56587b1faa94d85530f07aaaa5557a1494c3bd75257d4687c8401cbf1328d23e5586a92b05f0a872caebb1a7e941a07829776
   )
-
+  msys_package(
+    URL "https://repo.msys2.org/msys/x86_64/findutils-4.7.0-1-x86_64.pkg.tar.xz"
+    SHA512 fd09a24562b196ff252f4b5de86ed977280306a8c628792930812f146fcf7355f9d87434bbabe25e6cc17d8bd028f6bc68fc02e5bea83137a49cf5cc6f509e10
+    #DEPS libintl libiconv # this is required but somehow errors this script. 
+  )
   if(PACKAGES)
     message(FATAL_ERROR "Unknown packages were required for vcpkg_acquire_msys(${_am_PACKAGES}): ${PACKAGES}\nThis can be resolved by explicitly passing URL/SHA pairs to DIRECT_PACKAGES.")
   endif()
