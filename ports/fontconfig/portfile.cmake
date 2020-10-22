@@ -15,7 +15,7 @@ vcpkg_from_gitlab(
 vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
-
+set(PORT_DEBUG ON)
 vcpkg_configure_make(
     AUTOCONFIG
     COPY_SOURCE
