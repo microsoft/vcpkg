@@ -14,13 +14,14 @@ SCRIPT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 
 def get_current_git_ref():
-    try: 
-        output = subprocess.run(args=['git.exe', 'rev-parse', '--verify', 'HEAD'], capture_output=True)
-        if output.returncode == 0:
-            return output.stdout.decode('utf-8').strip()
-        return ''
-    except CalledProcessError as err:
-        print(f"Failed to get git ref.\n{err}\n", file=sys.stderr)
+    output = subprocess.run(['git.exe', '-C', SCRIPT_DIRECTORY, 'rev-parse', '--verify', 'HEAD'], 
+        capture_output=True, 
+        encoding='utf-8')
+    if output.returncode == 0:
+        return output.stdout.strip()
+    print(f"Failed to get git ref:", output.stderr.strip(), file=sys.stderr)
+    return None
+
 
 
 def generate_port_versions_db(ports_path, db_path, revision):
@@ -34,16 +35,18 @@ def generate_port_versions_db(ports_path, db_path, revision):
         
         output_filepath = os.path.join(containing_dir, f'{port_name}.json')
         if not os.path.exists(output_filepath):            
-            try:
-                output = subprocess.run(args=['../vcpkg.exe', 'x-history', port_name, '--x-json'], capture_output=True)
+            output = subprocess.run(
+                [os.path.join(SCRIPT_DIRECTORY, '../vcpkg'), 'x-history', port_name, '--x-json'], 
+                capture_output=True, encoding='utf-8')
+            if output.returncode == 0:
                 try:
                     versions_object = json.loads(output.stdout)
                     with open(output_filepath, 'w') as output_file:
                         json.dump(versions_object, output_file)
-                except JSONDecodeError as json_err:
-                    print(f'Failed to load JSON for {port_name}.\n{json_err}\n', file=sys.stderr)
-            except CalledProcessError as err:
-                print(f"Failed to run.\n{err.cmd}\n", file=sys.stderr) 
+                except JSONDecodeError:
+                    print(f'Maformed JSON from vcpkg x-history {port_name}: ', output.stdout.strip(), file=sys.stderr)
+            else:
+                print(f'x-history {port_name} failed: ', output.stdout.strip(), file=sys.stderr)
 
         # This should be replaced by a progress bar
         if counter > 0 and counter % 100 == 0:
