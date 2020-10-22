@@ -387,7 +387,7 @@ function(vcpkg_configure_make)
         # Variables not correctly detected by configure. In release builds.
         list(APPEND _csc_OPTIONS gl_cv_double_slash_root=yes
                                  ac_cv_func_memmove=yes
-                                 lt_cv_deplibs_check_method=pass_all    # required since file.exe is not working correctly. 
+                                 #lt_cv_deplibs_check_method=pass_all    # required since file.exe is not working correctly. 
                                  )
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             list(APPEND _csc_OPTIONS gl_cv_host_cpu_c_abi=no)
