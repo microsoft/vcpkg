@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneTBB
-    REF 427c252e0bb9e191767a62d8a744b21950c343f6 # 2020_U1
-    SHA512 01307b689680c8d796357a65258257b0c54336aa2a5dc75746d65e169988b8cb353537ad480cc4b8970b32667ab7f965bfedee4a15186f2a3159c9f130667f26
+    REF eca91f16d7490a8abfdee652dadf457ec820cc37 # 2020_U3
+    SHA512 7144e1dc68304b5358e6ea330431b6f0c61fadb147efa353a5b242777d6fabf7b8cf99b79cffb51b49b911dd17a9f1879619d6eebdf319f23ec3235c89cffc25
     HEAD_REF tbb_2019
     PATCHES
         fix-static-build.patch

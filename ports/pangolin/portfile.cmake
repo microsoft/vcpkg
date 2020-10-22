@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "OSX" "UWP")
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -6,7 +8,7 @@ vcpkg_from_github(
     REF v0.5
     SHA512 7ebeec108f33f1aa8b1ad08e3ca128a837b22d33e3fc580021f981784043b023a1bf563bbfa8b51d46863db770b336d24fc84ee3d836b85e0da1848281b2a5b2
     HEAD_REF master
-	PATCHES
+    PATCHES
         deprecated_constants.patch # Change from upstream pangolin to address build failures from latest ffmpeg library
         fix-includepath-error.patch # include path has one more ../
         fix-dependeny-ffmpeg.patch
@@ -50,7 +52,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/pangolin/PangolinTargets-release.cmake
         "lib/pangolin.dll" "bin/pangolin.dll"
     )
-    
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
     # Copy missing header file
     file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/include/pangolin/pangolin_export.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/pangolin)
 endif()
