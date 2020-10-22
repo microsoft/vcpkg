@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f9c8f3346..248c0d2d8 100644
+index 01eea8889..14a4b1a40 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -975,7 +975,7 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
- endif()
+@@ -1015,7 +1015,7 @@ endif()
+ option(WITH_ALL_TESTS "Build all test, rather than a small subset" ON)
  
- if(WITH_TESTS)
+ if(WITH_TESTS OR WITH_BENCHMARK_TOOLS)
 -  add_subdirectory(third-party/gtest-1.8.1/fused-src/gtest)
 +  #add_subdirectory(third-party/gtest-1.8.1/fused-src/gtest)
    add_library(testharness STATIC
+   test_util/mock_time_env.cc
    test_util/testharness.cc)
-   target_link_libraries(testharness gtest)

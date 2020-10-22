@@ -51,6 +51,7 @@ namespace vcpkg
             {VcpkgCmdArguments::MANIFEST_MODE_FEATURE, args.manifest_mode},
             {VcpkgCmdArguments::COMPILER_TRACKING_FEATURE, args.compiler_tracking},
             {VcpkgCmdArguments::REGISTRIES_FEATURE, args.registries_feature},
+            {VcpkgCmdArguments::VERSIONS_FEATURE, args.versions_feature},
         };
 
         for (const auto& desc : flag_descriptions)
@@ -765,6 +766,7 @@ namespace vcpkg
             {MANIFEST_MODE_FEATURE, manifest_mode},
             {COMPILER_TRACKING_FEATURE, compiler_tracking},
             {REGISTRIES_FEATURE, registries_feature},
+            {VERSIONS_FEATURE, versions_feature},
         };
 
         for (const auto& flag : flags)
@@ -790,6 +792,7 @@ namespace vcpkg
             {BINARY_CACHING_FEATURE, binary_caching_enabled()},
             {COMPILER_TRACKING_FEATURE, compiler_tracking_enabled()},
             {REGISTRIES_FEATURE, registries_enabled()},
+            {VERSIONS_FEATURE, versions_enabled()},
         };
 
         for (const auto& flag : flags)
@@ -931,6 +934,6 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::COMPILER_TRACKING_FEATURE;
     constexpr StringLiteral VcpkgCmdArguments::MANIFEST_MODE_FEATURE;
     constexpr StringLiteral VcpkgCmdArguments::REGISTRIES_FEATURE;
-
     constexpr StringLiteral VcpkgCmdArguments::RECURSIVE_DATA_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::VERSIONS_FEATURE;
 }
