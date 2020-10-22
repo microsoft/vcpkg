@@ -15,7 +15,7 @@ vcpkg_from_gitlab(
 vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
-set(PORT_DEBUG ON)
+
 vcpkg_configure_make(
     AUTOCONFIG
     COPY_SOURCE
@@ -34,7 +34,7 @@ vcpkg_configure_make(
         "--with-libiconv-lib=${CURRENT_INSTALLED_DIR}/lib"
         ${OPT_REL}
     ADD_BIN_TO_PATH
-    ADDITIONAL_MSYS_PACKAGES xz gettext gettext-devel # for autopoint
+    ADDITIONAL_MSYS_PACKAGES xz findutils gettext gettext-devel  # for autopoint
 )
 
 vcpkg_install_make(ADD_BIN_TO_PATH)
