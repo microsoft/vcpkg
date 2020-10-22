@@ -20,6 +20,7 @@ vcpkg_from_github(
         reorder-glog-gflags.patch
         disable-non-underscore-posix-names.patch
         boost-1.70.patch
+        fix-cmake-3.18.patch # Remove this patch on the next update
 )
 
 file(COPY

@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 2ec072d..3c8b5ab 100644
+index 453fdff..3a02956 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -132,7 +132,6 @@ OPTION ( IGNORE_GIT_HASH
@@ -7,10 +7,10 @@ index 2ec072d..3c8b5ab 100644
  find_package(Stb REQUIRED)
  include_directories(${Stb_INCLUDE_DIR})
 -find_package(irrXML CONFIG REQUIRED)
- find_path(UTF8_INCLUDE_DIRS "utf8.h")
- include_directories(${UTF8_INCLUDE_DIRS})
+ find_package(utf8cpp CONFIG REQUIRED)
+ link_libraries(utf8cpp)
  find_package(RapidJSON CONFIG REQUIRED)
-@@ -389,7 +388,7 @@ ENDIF( BUILD_DOCS )
+@@ -388,7 +387,7 @@ ENDIF( BUILD_DOCS )
  
  # Look for system installed irrXML
  IF ( SYSTEM_IRRXML )
@@ -20,7 +20,7 @@ index 2ec072d..3c8b5ab 100644
  
  # Search for external dependencies, and build them from source if not found
 diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
-index 17fcea7..f08f59f 100644
+index f5553e5..5cffa0c 100644
 --- a/code/CMakeLists.txt
 +++ b/code/CMakeLists.txt
 @@ -862,7 +862,7 @@ SET( Extra_SRCS
@@ -42,7 +42,7 @@ index 17fcea7..f08f59f 100644
        ZLIB::ZLIB
        kubazip::kubazip
 diff --git a/code/X3D/FIReader.cpp b/code/X3D/FIReader.cpp
-index 31d9aba..2c96052 100644
+index 525a084..0cbca48 100644
 --- a/code/X3D/FIReader.cpp
 +++ b/code/X3D/FIReader.cpp
 @@ -654,8 +654,8 @@ public:
