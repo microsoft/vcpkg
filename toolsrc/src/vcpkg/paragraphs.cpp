@@ -293,15 +293,9 @@ namespace vcpkg::Paragraphs
         }
     }
 
-    static ParseExpected<SourceControlFile> try_load_manifest_text(const std::string& text,
-                                                                   const std::string& origin,
-                                                                   std::error_code& ec)
+    static ParseExpected<SourceControlFile> try_load_manifest_text(const std::string& text, const std::string& origin)
     {
-        auto error_info = std::make_unique<ParseControlErrorInfo>();
         auto res = Json::parse(text);
-        if (ec) return error_info;
-        // TODO: Handle Json::parse(text) errors
-
         return try_load_manifest_object(origin, res);
     }
 
@@ -325,16 +319,7 @@ namespace vcpkg::Paragraphs
     {
         if (is_manifest)
         {
-            std::error_code ec;
-            auto res = try_load_manifest_text(text, origin, ec);
-            if (ec)
-            {
-                auto error_info = std::make_unique<ParseControlErrorInfo>();
-                error_info->name = fs::u8string(origin);
-                error_info->error = Strings::format("Failed to load manifest from: %s\n", origin, ec.message());
-                return error_info;
-            }
-            return res;
+            return try_load_manifest_text(text, origin);
         }
 
         ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs_text(text, origin);

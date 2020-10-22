@@ -280,6 +280,14 @@ namespace vcpkg
         {
             spgh->dependencies = maybe_dependencies.value_or_exit(VCPKG_LINE_INFO);
         }
+        else
+        {
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = origin;
+            error_info->error = maybe_dependencies.error();
+            return error_info;
+        }
+
         buf.clear();
         parser.optional_field(SourceParagraphFields::DEFAULT_FEATURES, {buf, textrowcol});
 
@@ -287,6 +295,13 @@ namespace vcpkg
         if (maybe_default_features.has_value())
         {
             spgh->default_features = maybe_default_features.value_or_exit(VCPKG_LINE_INFO);
+        }
+        else
+        {
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = origin;
+            error_info->error = maybe_default_features.error();
+            return error_info;
         }
 
         auto supports_expr = parser.optional_field(SourceParagraphFields::SUPPORTS);
@@ -327,6 +342,13 @@ namespace vcpkg
         if (maybe_dependencies.has_value())
         {
             fpgh->dependencies = maybe_dependencies.value_or_exit(VCPKG_LINE_INFO);
+        }
+        else
+        {
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = origin;
+            error_info->error = maybe_dependencies.error();
+            return error_info;
         }
 
         auto err = parser.error_info(fpgh->name.empty() ? origin : fpgh->name);
