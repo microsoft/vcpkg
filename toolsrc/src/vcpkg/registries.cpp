@@ -1,5 +1,6 @@
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/jsonreader.h>
+#include <vcpkg/base/system.debug.h>
 
 #include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/registries.h>
@@ -121,9 +122,10 @@ namespace
         std::unique_ptr<RegistryEntry> get_port_entry(const VcpkgPaths& paths, StringView port_name) const override
         {
             const auto& fs = paths.get_filesystem();
-            auto entry_path = this->path_to_port_entry(port_name);
+            auto entry_path = this->path_to_port_entry(paths, port_name);
             if (!fs.exists(entry_path))
             {
+                Debug::print("Failed to find entry for port `", port_name, "` in file: ", fs::u8string(entry_path), "\n");
                 return nullptr;
             }
             std::error_code ec;
@@ -132,12 +134,17 @@ namespace
             if (auto p = json_document.get())
             {
                 Json::Reader r;
-                FilesystemEntryDeserializer deserializer{path};
+                auto real_path = paths.config_root_dir / path;
+                FilesystemEntryDeserializer deserializer{real_path};
                 auto entry = r.visit(p->first, deserializer);
                 if (auto pentry = entry.get())
                 {
                     return std::make_unique<FilesystemEntry>(std::move(*pentry));
                 }
+            }
+            else
+            {
+                Debug::print("Failed to parse json document: ", json_document.error()->format(), "\n");
             }
 
             return nullptr;
@@ -164,26 +171,34 @@ namespace
             }
         }
 
-        Optional<VersionT> get_baseline_version(const VcpkgPaths&, StringView port_name) const override
+        Optional<VersionT> get_baseline_version(const VcpkgPaths& paths, StringView port_name) const override
         {
-            auto it = baseline_versions.find(port_name);
-            if (it == baseline_versions.end())
+            static const std::map<std::string, VersionT, std::less<>> baseline_cache = load_baseline_versions(paths);
+            auto it = baseline_cache.find(port_name);
+            if (it != baseline_cache.end())
             {
-                return nullopt;
+                return it->second;
             }
             else
             {
-                return it->second;
+                return nullopt;
             }
         }
 
         FilesystemRegistry(fs::path&& path_) : path(path_) { }
 
     private:
-        fs::path path_to_port_entry(StringView port_name) const
+        fs::path path_to_registry_database(const VcpkgPaths& paths) const
+        {
+            fs::path path_to_db = paths.config_root_dir / path;
+            path_to_db /= fs::u8path({'\xF0', '\x9F', '\x98', '\x87'}); // utf-8 for 😇
+            return path_to_db;
+        }
+
+        fs::path path_to_port_entry(const VcpkgPaths& paths, StringView port_name) const
         {
             Checks::check_exit(VCPKG_LINE_INFO, port_name.size() != 0);
-            fs::path path_to_entry = path;
+            fs::path path_to_entry = path_to_registry_database(paths);
             path_to_entry /= fs::u8path({port_name.byte_at_index(0), '-'});
             path_to_entry /= fs::u8path(port_name);
             path_to_entry += fs::u8path(".json");
@@ -191,8 +206,43 @@ namespace
             return path_to_entry;
         }
 
+        std::map<std::string, VersionT, std::less<>> load_baseline_versions(const VcpkgPaths& paths) const
+        {
+            auto baseline_file = path_to_registry_database(paths) / fs::u8path("baseline.json");
+            auto value = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), baseline_file);
+            Checks::check_exit(VCPKG_LINE_INFO, value.first.is_object());
+            const auto& obj = value.first.object();
+            auto baseline = obj.get("default");
+            if (!baseline) Checks::exit_fail(VCPKG_LINE_INFO);
+            Checks::check_exit(VCPKG_LINE_INFO, baseline->is_object());
+
+            const auto& baseline_obj = baseline->object();
+            std::map<std::string, VersionT, std::less<>> result;
+            for (auto pr : baseline_obj)
+            {
+                auto it = result.lower_bound(pr.first);
+                if (it != result.end() && it->first == pr.first)
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO, "Port %s is defined multiple times in the baseline\n", pr.first);
+                }
+
+                const auto& version_value = pr.second;
+                Checks::check_exit(VCPKG_LINE_INFO, version_value.is_object());
+                const auto& version_obj = version_value.object();
+                auto version_string = version_obj["version-string"].string();
+                int port_version = 0;
+                if (auto baseline_port_version = version_obj.get("port-version"))
+                {
+                    port_version = static_cast<int>(baseline_port_version->integer());
+                }
+
+                result.emplace_hint(it, pr.first.to_string(), VersionT{version_string.to_string(), port_version});
+            }
+
+            return result;
+        }
+
         fs::path path;
-        std::map<std::string, VersionT, std::less<>> baseline_versions;
     };
 }
 
@@ -205,6 +255,8 @@ namespace vcpkg
     {
         Checks::check_exit(VCPKG_LINE_INFO, implementation_ != nullptr);
     }
+
+    RegistryImplDeserializer RegistryImplDeserializer::instance;
 
     StringView RegistryImplDeserializer::type_name() const { return "a registry"; }
 
@@ -248,7 +300,6 @@ namespace vcpkg
             return nullopt;
         }
     }
-    RegistryImplDeserializer RegistryImplDeserializer::instance;
 
     StringView RegistryDeserializer::type_name() const { return "a registry"; }
 
@@ -266,7 +317,7 @@ namespace vcpkg
 
     Optional<Registry> RegistryDeserializer::visit_object(Json::Reader& r, const Json::Object& obj)
     {
-        auto impl = RegistryImplDeserializer{}.visit_object(r, obj);
+        auto impl = RegistryImplDeserializer::instance.visit_object(r, obj);
 
         if (!impl.has_value())
         {

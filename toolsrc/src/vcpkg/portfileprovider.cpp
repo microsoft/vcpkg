@@ -153,7 +153,18 @@ namespace vcpkg::PortFileProvider
                         VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(port_directory));
                 }
             }
+            else
+            {
+                Debug::print("Failed to find port `", spec, "` in registry:",
+                    entry ? " entry found;" : " no entry found;",
+                    baseline_version ? " baseline version found\n" : " no baseline version found\n");
+            }
         }
+        else
+        {
+            Debug::print("Failed to find registry for port: `", spec, "`.\n");
+        }
+        
 
         return std::string("Port definition not found");
     }
