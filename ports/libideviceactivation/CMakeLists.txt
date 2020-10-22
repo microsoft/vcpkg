@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.0)
 project(libideviceactivation C)
 
 # find dependencies
-find_library(libplist plist REQUIRED)
+find_library(libplist NAMES plist plist-2.0 libplist libplist-2.0 REQUIRED)
 find_path(libimobiledevice_INCLUDES endianness.h)
-find_library(libimobiledevice libimobiledevice REQUIRED)
+find_library(libimobiledevice NAMES imobiledevice imobiledevice-1.0 libimobiledevice libimobiledevice-1.0 REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(CURL REQUIRED)
 

@@ -1,6 +1,6 @@
 Source: opencv2
 Version: 2.4.13.7
-Port-Version: 2
+Port-Version: 3
 Build-Depends: zlib
 Description: computer vision library, version 2
 Default-Features: eigen, jpeg, opengl, png, tiff
