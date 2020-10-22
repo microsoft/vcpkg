@@ -11,7 +11,7 @@ index cf3c30d..4931b93 100755
 -    message(STATUS "libpq inc path:" ${PG_INCLUDE_DIRS})
 -    message(STATUS "libpq lib:" ${PG_LIBRARIES})
 -    target_link_libraries(${PROJECT_NAME} PRIVATE pg_lib)
-+  find_package(PostgreSQL)
++  find_package(PostgreSQL REQUIRED)
 +  if(PostgreSQL_FOUND)
 +    message(STATUS "libpq inc path:" ${PostgreSQL_INCLUDE_DIRS})
 +    message(STATUS "libpq lib:" ${PostgreSQL_LIBRARIES})
