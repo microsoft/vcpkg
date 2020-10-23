@@ -19,6 +19,7 @@ file(REMOVE ${SOURCE_PATH}/cmake/Findopenssl.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DBUILD_TESTS=OFF
