@@ -62,12 +62,12 @@ To declare the package version insde a manifest, a specific field must be used d
 A manifest must contain only one version declaration. If a package changes from using one versioning scheme to another, the change must be reflected by changing the `epoch` value.
 
 **`version`**  
-Accepts version strings that follow a relaxed semver-like scheme. For example: OpenSSL uses version number `1.1.1` as the base for its latest LTS series and appends a single letter to indicate an update (`1.1.1a`, `1.1.1b`, `1.1.1h`).
+Accepts version strings that follow a relaxed, dotted scheme. For example: OpenSSL uses version number `1.1.1` as the base for its latest LTS series and appends a single letter to indicate an update (`1.1.1a`, `1.1.1b`, `1.1.1h`). The version is logically composed of dot-separated sections (`.`), each with a numeric primary and a lowercase, alphanumeric suffix.
 
-_Sorting behavior_: Strings are compared section by section and sorted lexicographically.  
+_Sorting behavior_: Each section's numeric primary is first compared, with a missing primary considered less than a present primary. If the numeric primary compares equal, then the alphanumeric suffix is compared byte-wise.
 
 E.g.: 
-`0` < `1.2` < `1.2.3` < `1.2.4` < `1.2.4a` < `2` < `four` < `three`. 
+`four` < `three` < `0` < `0.chicago` < `1.2` < `1.2.3` < `1.2.3a1` < `1.2.3aa` < `1.2.10` < `2`. 
 
 **`version-semver`**  
 Accepts version strings that follow semantic versioning conventions. 
@@ -78,13 +78,12 @@ E.g.:
 `1.0.0-alpha` < `1.0.0-beta` < `1.0.0` < `1.0.1` < `1.1.0`.
 
 **`version-date`**  
-Accepts version strings that can be parsed to a date following the ISO-8601 format `"YYYY-MM-DD"`. A disambiguator is allowed by adding a dot (`.`) followed by the disambiguation tag. E.g.: `2020-01-01.morning`, `2020-01-01.evening`.
+Accepts version strings that can be parsed to a date following the ISO-8601 format `"YYYY-MM-DD"`. A disambiguator is allowed by adding a dot (`.`) followed by the positive, nonzero disambiguation integer. E.g.: `2020-01-01.10042`, `2020-01-01.30041`.
 
-_Sorting behavior_: Strings are sorted only by their date part, disambiguator tags are ignored.
+_Sorting behavior_: Strings are sorted first by their date part, then by the disambiguator integer.
 
-`2020-01-01` < `2020-01-02` < `2020-02-01`
+`2020-01-01` < `2020-01-02` < `2020-02-01.1` < `2020-02-01.4` < `2020-02-01`
 
-(Disambiguators are only considered for exact version matching and are disallowed for minimum version matching).
 
 **`version-string`**  
 Accepts an arbitrary string as the versioning string. 
@@ -167,15 +166,9 @@ Setting a baseline is optional, when a baseline is not explicitly set, vcpkg use
 ## 4 Version requirements
 
 ### 4.1 Semver version matching
-When using semantic versioning is sometimes convenient to shorten the version string when the least significative parts are not relevant. For example, when talking about a package where only the MAJOR and MINOR versions are important, it is convenient to say `2.2` instead of `2.2.0`, `2.2.1`, `2.2.1`, and so on.
+A semantic versioning constraint must exactly match a published version of the dependee. This version is then used as a minimum and all versions with a higher precedence are considered valid.
 
-In vcpkg, when resolving version requirements, the specificity of the version string is important.
-
-Truncated parts of a SemVer string are considered as if they were filled with zeroes, e.g.:
-
-* `2` is interpreted as `2.0.0`
-* `2.1` is interpreted as `2.1.0`.
-
+_Note: In NPM, the Node package manager, this constraint would be specified as `>=X.Y.Z`._
 ### 4.2 Baseline requirements
 When a dependency declaration lacks any version requirement vcpkg will use the package registry's baseline to fill in the missing information. 
 
@@ -229,7 +222,7 @@ Accomplished by using the `"version="` field in the `"dependencies"` list.
 ## 4.4 Minimum version requirement
 A minimum version requirement puts a lower boundary on the versions that can be used to satisfy a dependency. This means that any version that is newer than the requirement is valid (including major version changes).
 
-Vcpkg will use the oldest version available that can satisfy all the version requirements in the build graph.
+Vcpkg will use the oldest identified version that can satisfy all the version requirements in the build graph.
 
 Using a minimum version approach has the following advantages:
 
@@ -237,7 +230,6 @@ Using a minimum version approach has the following advantages:
   * User controls when upgrades happen, as in, no upgrades are performed automatically when a new version is released.
   * Avoids having to solve version SAT.  
   
-  _Note: Unexpected downgrades are still possible if a lower version is retro-actively released and added to the package registries. To overcome the issue, the use of Lockfiles is necessary._
 
 Minimum version requirements are expressed by using a "version>=" property in the dependencies list. It is not allowed to use "version=" and "version>=" on the same dependency.
 
@@ -317,7 +309,7 @@ There are conflicting requirements for `C`, as package `A` requires version `1.1
 #### 5.1.2 Solution: top-level overrides
 When conflicting requirements exist, an explicit override must be specified in the top-level manifest file.
 
-Version requirement overrides are expressed using the `overrides` property in the root of the manifest. The syntax for overrides is the same as for version requirements. Overrides that are not in the top-level manifest are ignored.
+Version requirement overrides are expressed using the `overrides` property in the root of the manifest. The syntax for overrides is the same as declaring a version. Overrides that are not in the top-level manifest are ignored.
 
 By separating the overrides from the dependency requirements, the user can control whether the overrides are applied during the build graph constructiong. Using the `--no-overrides` flag, disables all of the overrides in the manifest. This is useful when changing dependency requirements, to test whether overrides are no longer required, for example, in case of a dependency upgrade.
 
@@ -334,18 +326,15 @@ The example in 5.1.1 can be solved by overriding the requirements of package `C`
     { "name": "B", "version=": "1.0" }
   ],
   "overrides": [
-    { "name": "C", "version>=": "1.2" }
+    { "name": "C", "version": "1.2" }
   ]
 }
 ```
 
-The override is equivalent to changing the version requirements for `C` on both `A`'s manifest and `B`'s manifest to:
+The override ignores all other constraints and forces the used version of `C` to be exactly `1.2` with port version `0`.
 
-```json
-{ "name": "C", "version>=": "1.2" }
-``` 
+### 5.2 Problem: block major version upgrades (WIP)
 
-### 5.2 Problem: block major version upgrades
 Under Semantic Versioning, major version changes introduce breaking changes to public API. Using minimum version requirements can result in unexpected major version upgrades of packages in the dependency list. To overcome this issue a user has two options:
 
 * 1) Override the minimum version requirements
@@ -355,7 +344,8 @@ Under Semantic Versioning, major version changes introduce breaking changes to p
 Exclusion lists have the following properties:
 
 * Accept `"version>"`, `"version>="`, and `"version="` exclusions.
-* Exclusions are un-conditional. I.e.: not in the form of "If `A:1.x` then not `B:1.Y`" or similar.
+* Exclusions are unconditional. I.e.: not in the form of "If `A:1.x` then not `B:1.Y`" or similar.
+
 * Defined in their own section in the manifest.
 * Exclusions that are not in the top-level manifest are ignored.
 
@@ -388,7 +378,8 @@ And the following manifest file
 }
 ```
 
-Using the exlusions effectively reduces the candidate set to:
+Using the exclusions effectively reduces the candidate set to:
+
 
 * `A: [1.0, 1.1]`
 * `B: [1.0.0, 2.2.0]`

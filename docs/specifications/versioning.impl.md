@@ -1,6 +1,6 @@
 # Versioning Implementation Details
 
-## Table of conentes
+## Table of contents
 
 [Port versions database](#port-versions-database)  
 [Git manipulation](#git-manipulation)  
@@ -91,4 +91,3 @@ Queries the database to find all available version of a port. This method should
 ## Versioned dependency resolution
 
 ## Lock files
-
