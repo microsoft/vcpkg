@@ -2,6 +2,8 @@
 
 #include <vcpkg/base/fwd/json.h>
 
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/system.h>
@@ -80,16 +82,7 @@ namespace vcpkg
     /// </summary>
     struct SourceControlFile
     {
-        SourceControlFile clone() const
-        {
-            SourceControlFile ret;
-            ret.core_paragraph = std::make_unique<SourceParagraph>(*core_paragraph);
-            for (const auto& feat_ptr : feature_paragraphs)
-            {
-                ret.feature_paragraphs.push_back(std::make_unique<FeatureParagraph>(*feat_ptr));
-            }
-            return ret;
-        }
+        SourceControlFile clone() const;
 
         static Parse::ParseExpected<SourceControlFile> parse_manifest_file(const fs::path& path_to_manifest,
                                                                            const Json::Object& object);
@@ -103,6 +96,9 @@ namespace vcpkg
 
         Optional<const FeatureParagraph&> find_feature(const std::string& featurename) const;
         Optional<const std::vector<Dependency>&> find_dependencies_for_feature(const std::string& featurename) const;
+
+        Optional<std::string> check_against_feature_flags(const std::string& origin,
+                                                          const FeatureFlagSettings& flags) const;
 
         friend bool operator==(const SourceControlFile& lhs, const SourceControlFile& rhs);
         friend bool operator!=(const SourceControlFile& lhs, const SourceControlFile& rhs) { return !(lhs == rhs); }

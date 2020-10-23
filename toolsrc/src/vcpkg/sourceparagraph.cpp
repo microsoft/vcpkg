@@ -10,6 +10,7 @@
 #include <vcpkg/platform-expression.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/triplet.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
 {
@@ -913,6 +914,17 @@ namespace vcpkg
     constexpr StringLiteral ManifestDeserializer::DEFAULT_FEATURES;
     constexpr StringLiteral ManifestDeserializer::SUPPORTS;
 
+    SourceControlFile SourceControlFile::clone() const
+    {
+        SourceControlFile ret;
+        ret.core_paragraph = std::make_unique<SourceParagraph>(*core_paragraph);
+        for (const auto& feat_ptr : feature_paragraphs)
+        {
+            ret.feature_paragraphs.push_back(std::make_unique<FeatureParagraph>(*feat_ptr));
+        }
+        return ret;
+    }
+
     Parse::ParseExpected<SourceControlFile> SourceControlFile::parse_manifest_file(const fs::path& path_to_manifest,
                                                                                    const Json::Object& manifest)
     {
@@ -935,6 +947,44 @@ namespace vcpkg
         {
             Checks::unreachable(VCPKG_LINE_INFO);
         }
+    }
+
+    Optional<std::string> SourceControlFile::check_against_feature_flags(const std::string& origin,
+                                                                         const FeatureFlagSettings& flags) const
+    {
+        if (!flags.versions)
+        {
+            if (core_paragraph->version_scheme != Versions::Scheme::String)
+            {
+                return Strings::concat(origin,
+                                       " was rejected because it uses a non-string version scheme and the `",
+                                       VcpkgCmdArguments::VERSIONS_FEATURE,
+                                       "` feature flag is disabled.\nThis can be fixed by using \"version-string\".");
+            }
+
+            auto check_deps = [&](View<Dependency> deps) -> Optional<std::string> {
+                for (auto&& dep : deps)
+                {
+                    if (dep.constraint.type != Versions::Constraint::Type::None)
+                    {
+                        return Strings::concat(origin,
+                                               " was rejected because it uses constraints and the `",
+                                               VcpkgCmdArguments::VERSIONS_FEATURE,
+                                               "` feature flag is disabled.\nThis can be fixed by removing uses of "
+                                               "\"version>=\" and \"version=\".");
+                    }
+                }
+                return nullopt;
+            };
+
+            if (auto r = check_deps(core_paragraph->dependencies)) return r;
+
+            for (auto&& fpgh : feature_paragraphs)
+            {
+                if (auto r = check_deps(fpgh->dependencies)) return r;
+            }
+        }
+        return nullopt;
     }
 
     void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list)
