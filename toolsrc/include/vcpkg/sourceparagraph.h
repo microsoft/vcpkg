@@ -65,6 +65,7 @@ namespace vcpkg
         std::string homepage;
         std::string documentation;
         std::vector<Dependency> dependencies;
+        std::vector<DependencyOverride> overrides;
         std::vector<std::string> default_features;
         std::string license; // SPDX license expression
 

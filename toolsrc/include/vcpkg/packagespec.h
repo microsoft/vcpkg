@@ -160,6 +160,19 @@ namespace vcpkg
         friend bool operator!=(const Dependency& lhs, const Dependency& rhs) { return !(lhs == rhs); }
     };
 
+    struct DependencyOverride
+    {
+        std::string name;
+        Versions::Scheme version_scheme = Versions::Scheme::String;
+        std::string version;
+        int port_version = 0;
+
+        Json::Object extra_info;
+
+        friend bool operator==(const DependencyOverride& lhs, const DependencyOverride& rhs);
+        friend bool operator!=(const DependencyOverride& lhs, const DependencyOverride& rhs) { return !(lhs == rhs); }
+    };
+
     struct ParsedQualifiedSpecifier
     {
         std::string name;

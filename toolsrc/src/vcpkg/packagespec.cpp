@@ -277,4 +277,14 @@ namespace vcpkg
         return true;
     }
     bool operator!=(const Dependency& lhs, const Dependency& rhs);
+
+    bool operator==(const DependencyOverride& lhs, const DependencyOverride& rhs)
+    {
+        if (lhs.version_scheme != lhs.version_scheme) return false;
+        if (lhs.port_version != lhs.port_version) return false;
+        if (lhs.name != rhs.name) return false;
+        if (lhs.version != lhs.version) return false;
+        return lhs.extra_info == rhs.extra_info;
+    }
+    bool operator!=(const DependencyOverride& lhs, const DependencyOverride& rhs);
 }
