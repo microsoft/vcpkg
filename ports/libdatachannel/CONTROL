@@ -1,6 +1,6 @@
 Source: libdatachannel
 Version: 0.9.4
-Build-Depends: libjuice, plog, usrsctp
+Build-Depends: libjuice, plog, usrsctp, openssl
 Homepage: https://github.com/paullouisageneau/libdatachannel
 Description: libdatachannel is a standalone implementation of WebRTC Data Channels, WebRTC Media Transport, and WebSockets in C++17 with C bindings for POSIX platforms (including GNU/Linux, Android, and Apple macOS) and Microsoft Windows.
 
