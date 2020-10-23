@@ -55,24 +55,14 @@ if(NOT VCPKG_OUTPUT_FILE)
     message(FATAL_ERROR "VCPKG_OUTPUT_FILE is required to be defined")
 endif()
 
-if(CMAKE_BUILD_TYPE)
-    string(TOUPPER "${CMAKE_BUILD_TYPE}" VCPKG_CONFIGS)
+if(NOT CMAKE_BUILD_TYPE)
+    message(FATAL_ERROR "CMAKE_BUILD_TYPE is required to be defined")
 else()
-    set(VCPKG_CONFIGS DEBUG RELEASE)
+    string(TOUPPER "${CMAKE_BUILD_TYPE}" VCPKG_CONFIGS)
 endif()
 
-project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
 
-# These seem to be empty.
-# set(add_props INCLUDE_DIRECTORIES COMPILE_DEFINITIONS COMPILE_OPTIONS LINK_DIRECTORIES LINK_OPTIONS)
-# foreach(prop IN LISTS add_props)
-    # get_directory_property(${prop} ${prop})
-    # string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${prop} ${${prop}})\n")
-    # foreach(config IN LISTS VCPKG_CONFIGS)
-        # get_directory_property(${prop}_${config} ${prop}_${config})
-        # string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${prop}_${config} ${${prop}_${config}})\n")
-    # endforeach()
-# endforeach()
+project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
 
 foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
   string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")

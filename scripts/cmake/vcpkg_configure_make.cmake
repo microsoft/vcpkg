@@ -6,7 +6,7 @@
 ## ```cmake
 ## vcpkg_configure_make(
 ##     SOURCE_PATH <${SOURCE_PATH}>
-##     [AUTOCONFIG] 
+##     [AUTOCONFIG]
 ##     [USE_WRAPPERS]
 ##     [DETERMINE_BUILD_TRIPLET]
 ##     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
@@ -86,7 +86,6 @@
 ## * [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
-set(printvars PATH _LINK_ _CL_ CPPFLAGS CFLAGS CXXFLAGS LDFLAGS LIBS INCLUDE LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
 macro(_vcpkg_determine_host_mingw out_var)
     if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
