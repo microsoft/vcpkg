@@ -1,6 +1,7 @@
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
@@ -9,6 +10,7 @@
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/configuration.h>
+#include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
@@ -62,22 +64,11 @@ namespace
         Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
     {
         auto result = process_output_directory_impl(filesystem, root, option, name, li);
+#if defined(_WIN32)
+        result = vcpkg::Files::win32_fix_path_case(result);
+#endif // _WIN32
         Debug::print("Using ", name, "-root: ", fs::u8string(result), '\n');
         return result;
-    }
-
-    void uppercase_win32_drive_letter(fs::path& path)
-    {
-#if defined(_WIN32)
-        const auto& nativePath = path.native();
-        if (nativePath.size() > 2 && (nativePath[0] >= L'a' && nativePath[0] <= L'z') && nativePath[1] == L':')
-        {
-            auto uppercaseFirstLetter = std::move(path).native();
-            uppercaseFirstLetter[0] = nativePath[0] - L'a' + L'A';
-            path = uppercaseFirstLetter;
-        }
-#endif
-        (void)path;
     }
 
 } // unnamed namespace
@@ -89,9 +80,9 @@ namespace vcpkg
                                                    const fs::path& filepath)
     {
         Json::Reader reader;
-        auto deserializer = ConfigurationDeserializer(args);
+        ConfigurationDeserializer deserializer(args);
 
-        auto parsed_config_opt = reader.visit_value(obj, deserializer);
+        auto parsed_config_opt = reader.visit(obj, deserializer);
         if (!reader.errors().empty())
         {
             System::print2(System::Color::error, "Errors occurred while parsing ", fs::u8string(filepath), "\n");
@@ -195,8 +186,11 @@ namespace vcpkg
     {
         struct VcpkgPathsImpl
         {
-            VcpkgPathsImpl(Files::Filesystem& fs, bool compiler_tracking)
-                : fs_ptr(&fs), m_tool_cache(get_tool_cache()), m_env_cache(compiler_tracking)
+            VcpkgPathsImpl(Files::Filesystem& fs, FeatureFlagSettings ff_settings)
+                : fs_ptr(&fs)
+                , m_tool_cache(get_tool_cache())
+                , m_env_cache(ff_settings.compiler_tracking)
+                , m_ff_settings(ff_settings)
             {
             }
 
@@ -218,13 +212,19 @@ namespace vcpkg
             Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
             fs::path m_manifest_path;
             Configuration m_config;
+
+            FeatureFlagSettings m_ff_settings;
         };
     }
 
     VcpkgPaths::VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args)
-        : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.compiler_tracking_enabled()))
+        : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.feature_flag_settings()))
     {
         original_cwd = filesystem.current_path(VCPKG_LINE_INFO);
+#if defined(_WIN32)
+        original_cwd = vcpkg::Files::win32_fix_path_case(original_cwd);
+#endif // _WIN32
+
         if (args.vcpkg_root_dir)
         {
             root = filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(*args.vcpkg_root_dir));
@@ -238,7 +238,7 @@ namespace vcpkg
                     filesystem.canonical(VCPKG_LINE_INFO, System::get_exe_path_of_current_process()), ".vcpkg-root");
             }
         }
-        uppercase_win32_drive_letter(root);
+
         Checks::check_exit(VCPKG_LINE_INFO, !root.empty(), "Error: Could not detect vcpkg-root.");
         Debug::print("Using vcpkg-root: ", fs::u8string(root), '\n');
 
@@ -252,7 +252,6 @@ namespace vcpkg
         {
             manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, fs::u8path("vcpkg.json"));
         }
-        uppercase_win32_drive_letter(manifest_root_dir);
 
         if (!manifest_root_dir.empty() && manifest_mode_on)
         {
@@ -563,7 +562,14 @@ If you wish to silence this error and use classic mode, you can:
         return m_pimpl->m_env_cache.get_triplet_info(*this, abi_info);
     }
 
+    const Build::CompilerInfo& VcpkgPaths::get_compiler_info(const Build::AbiInfo& abi_info) const
+    {
+        return m_pimpl->m_env_cache.get_compiler_info(*this, abi_info);
+    }
+
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return *m_pimpl->fs_ptr; }
+
+    const FeatureFlagSettings& VcpkgPaths::get_feature_flags() const { return m_pimpl->m_ff_settings; }
 
     void VcpkgPaths::track_feature_flag_metrics() const
     {

@@ -219,7 +219,9 @@ fetchTool()
 selectCXX()
 {
     if [ "x$CXX" = "x" ]; then
-        if which g++-9 >/dev/null 2>&1; then
+        if which g++-10 >/dev/null 2>&1; then
+            CXX=g++-10
+        elif which g++-9 >/dev/null 2>&1; then
             CXX=g++-9
         elif which g++-8 >/dev/null 2>&1; then
             CXX=g++-8
@@ -238,8 +240,8 @@ selectCXX()
 UNAME="$(uname)"
 ARCH="$(uname -m)"
 
-# Force using system utilities for building vcpkg if host arch is arm or arm64.
-if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" ]; then
+# Force using system utilities for building vcpkg if host arch is arm, arm64, or s390x.
+if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" ]; then
     vcpkgUseSystem=true
 fi
 
