@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "Windows")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/proxygen
-    REF 67fddcb6f292dbda312a5fe28ae27fbecf4e6805 #v2020.09.14.00
-    SHA512 ecac8642cdd4c871e45b96e596991000a615f8731c09ea31d612a584c6565d279a0d38e5c4807b949cc2f8632b58593642b1f6a7b420bf70be04b604faf77275
+    REF bb2b1f2b3660fa1f15bbdff14ddba2a4ff5c43fa #v2020.10.19.00
+    SHA512 8547a8c329764f8448a9f294811ef1dfcfcfa77a15fa2fdd9ab25a5f7ab8d40c9932348d3a1b16b87ba56844c13ebf918e7080f247ff7fadad7363a70e2d0fe2
     HEAD_REF master
     PATCHES
         fix-tools-path.patch

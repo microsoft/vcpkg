@@ -1,8 +1,8 @@
 diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
-index 2ccb030..0d10b57 100644
+index 92b8ce7..04589ed 100644
 --- a/CMake/folly-deps.cmake
 +++ b/CMake/folly-deps.cmake
-@@ -50,6 +50,11 @@ find_package(DoubleConversion MODULE REQUIRED)
+@@ -52,6 +52,11 @@ find_package(DoubleConversion MODULE REQUIRED)
  list(APPEND FOLLY_LINK_LIBRARIES ${DOUBLE_CONVERSION_LIBRARY})
  list(APPEND FOLLY_INCLUDE_DIRECTORIES ${DOUBLE_CONVERSION_INCLUDE_DIR})
  
@@ -14,8 +14,8 @@ index 2ccb030..0d10b57 100644
  find_package(Gflags MODULE)
  set(FOLLY_HAVE_LIBGFLAGS ${LIBGFLAGS_FOUND})
  if(LIBGFLAGS_FOUND)
-@@ -59,11 +64,6 @@ if(LIBGFLAGS_FOUND)
-   list(APPEND CMAKE_REQUIRED_INCLUDES ${LIBGFLAGS_INCLUDE_DIR})
+@@ -61,11 +66,6 @@ if(LIBGFLAGS_FOUND)
+   set(FOLLY_LIBGFLAGS_INCLUDE ${LIBGFLAGS_INCLUDE_DIR})
  endif()
  
 -find_package(Glog MODULE)
