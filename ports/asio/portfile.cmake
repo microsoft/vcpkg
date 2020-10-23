@@ -1,3 +1,5 @@
+#header-only library
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO chriskohlhoff/asio
@@ -20,7 +22,7 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/asio")
 file(INSTALL
     ${CMAKE_CURRENT_LIST_DIR}/asio-config.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 

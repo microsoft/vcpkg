@@ -15,6 +15,8 @@ vcpkg_from_github(
         asio-1-18-0-deprecations.patch
 )
 
+file(REMOVE ${SOURCE_PATH}/cmake/Findopenssl.cmake)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -28,4 +30,4 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/restbed/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

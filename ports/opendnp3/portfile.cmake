@@ -26,7 +26,7 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/opendnp3)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
