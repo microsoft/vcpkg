@@ -209,7 +209,7 @@ function(vcpkg_configure_make)
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT"
         ${ARGN}
     )
-    vcpkg_get_cmake_vars(OUTPUT_FILE CMAKE_VARS_FILE)
+    vcpkg_internal_get_cmake_vars(OUTPUT_FILE CMAKE_VARS_FILE)
     set(CMAKE_VARS_FILE "${CMAKE_VARS_FILE}" PARENT_SCOPE)
     debug_message("Including cmake vars from: ${CMAKE_VARS_FILE}")
     include("${CMAKE_VARS_FILE}")

@@ -1,11 +1,11 @@
-## # vcpkg_get_cmake_vars
+## # vcpkg_internal_get_cmake_vars
 ##
 ## **Only for internal use in vcpkg helpers. Behavior and arguments will change without notice.**
 ## Runs a cmake configure with a dummy project to extract certain cmake variables
 ##
 ## ## Usage
 ## ```cmake
-## vcpkg_get_cmake_vars(
+## vcpkg_internal_get_cmake_vars(
 ##     [OUTPUT_FILE <output_file_with_vars>]
 ##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
 ## )
@@ -25,15 +25,15 @@
 ##
 ## * [vcpkg_configure_make](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_configure_make.cmake)
 
-function(vcpkg_get_cmake_vars)
+function(vcpkg_internal_get_cmake_vars)
     cmake_parse_arguments(PARSE_ARGV 0 _gcv "" "OUTPUT_FILE" "OPTIONS")
 
     if(_gcv_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR "vcpkg_get_cmake_vars was passed unparsed arguments: '${_gcv_UNPARSED_ARGUMENTS}'")
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed unparsed arguments: '${_gcv_UNPARSED_ARGUMENTS}'")
     endif()
 
     if(NOT _gcv_OUTPUT_FILE)
-        message(FATAL_ERROR "vcpkg_get_cmake_vars requires parameter OUTPUT_FILE!")
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter OUTPUT_FILE!")
     endif()
 
     if(${_gcv_OUTPUT_FILE})
@@ -53,6 +53,6 @@ function(vcpkg_get_cmake_vars)
         LOGNAME get-cmake-vars-${TARGET_TRIPLET}
     )
 
-    file(WRITE "${${_gcv_OUTPUT_FILE}}" "include(${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log)\ninclude(${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log)")
+    file(WRITE "${${_gcv_OUTPUT_FILE}}" "include(\"${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log\")\ninclude(\"${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log\")")
 
 endfunction()
