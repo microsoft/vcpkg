@@ -21,7 +21,8 @@ brew_formulas = [
   'libtool',
   'mono',
   'pkg-config',
-  'yasm' ]
+  'yasm',
+  'gperf' ]
 
 brew_cask_formulas = [
   'powershell',
