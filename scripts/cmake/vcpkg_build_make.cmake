@@ -115,7 +115,7 @@ function(vcpkg_build_make)
             set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_bc_SUBPATH}")
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
-            extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE})
+            _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE})
             if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
                 set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_STATIC_LINKERFLAGS_${CMAKE_BUILDTYPE}}")
             else() # dynamic
