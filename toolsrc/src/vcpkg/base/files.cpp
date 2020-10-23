@@ -21,6 +21,7 @@
 #endif // ^^^ defined(__APPLE__)
 
 #include <algorithm>
+#include <list>
 #include <string>
 
 namespace
