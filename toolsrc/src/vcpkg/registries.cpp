@@ -70,6 +70,41 @@ namespace
         }
     };
 
+    struct FilesystemVersionEntryDeserializer final : Json::IDeserializer<std::pair<VersionT, fs::path>>
+    {
+        StringView type_name() const { return "a version entry object"; }
+
+        Optional<std::pair<VersionT, fs::path>> visit_object(Json::Reader& r, const Json::Object& obj) override
+        {
+            std::string version;
+            int port_version = 0;
+            fs::path registry_path;
+
+            r.required_object_field("version entry", obj, "version-string", version, version_deserializer);
+
+            port_version = 0;
+            r.optional_object_field(obj, "port-version", port_version, Json::NaturalNumberDeserializer::instance);
+
+            registry_path.clear();
+            r.required_object_field(
+                "version entry", obj, "registry-path", registry_path, Json::PathDeserializer::instance);
+
+            // registry_path should look like `/blah/foo`
+            if (registry_path.has_root_name() || !registry_path.has_root_directory())
+            {
+                r.add_generic_error(type_name(), "must be an absolute path without a drive name");
+                registry_path.clear();
+            }
+
+            return std::pair<VersionT, fs::path>{{std::move(version), port_version}, std::move(registry_path)};
+        }
+
+        static Json::StringDeserializer version_deserializer;
+        static FilesystemVersionEntryDeserializer instance;
+    };
+    Json::StringDeserializer FilesystemVersionEntryDeserializer::version_deserializer{"version"};
+    FilesystemVersionEntryDeserializer FilesystemVersionEntryDeserializer::instance;
+
     struct FilesystemEntryDeserializer final : Json::IDeserializer<FilesystemEntry>
     {
         StringView type_name() const { return "a registry entry object"; }
@@ -77,35 +112,23 @@ namespace
         Optional<FilesystemEntry> visit_array(Json::Reader& r, const Json::Array& arr) override
         {
             FilesystemEntry res;
-            std::string version;
-            int port_version = 0;
-            fs::path registry_path;
 
-            for (const auto& el : arr)
+            std::pair<VersionT, fs::path> buffer;
+            for (std::size_t idx = 0; idx < arr.size(); ++idx)
             {
-                Checks::check_exit(VCPKG_LINE_INFO, el.is_object());
-                const auto& obj = el.object();
+                r.visit_at_index(arr[idx], static_cast<int64_t>(idx), buffer, FilesystemVersionEntryDeserializer::instance);
 
-                version.clear();
-                r.required_object_field("version entry", obj, "version-string", version, version_deserializer);
-
-                port_version = 0;
-                r.optional_object_field(obj, "port-version", port_version, Json::NaturalNumberDeserializer::instance);
-
-                registry_path.clear();
-                r.required_object_field(
-                    "version entry", obj, "registry-path", registry_path, Json::PathDeserializer::instance);
-
-                // registry_path should look like `/blah/foo`
-                Checks::check_exit(VCPKG_LINE_INFO,
-                                   !registry_path.has_root_name() && registry_path.has_root_directory());
-
-                VersionT versiont{std::move(version), port_version};
-                auto it = res.versions.lower_bound(versiont);
-                Checks::check_exit(VCPKG_LINE_INFO, it == res.versions.end() || it->first != versiont);
-
-                res.versions.emplace_hint(
-                    it, std::move(versiont), registry_root / fs::lexically_normal(registry_path).relative_path());
+                auto it = res.versions.lower_bound(buffer.first);
+                if (it == res.versions.end() || it->first != buffer.first)
+                {
+                    buffer.second = registry_root / fs::lexically_normal(buffer.second).relative_path();
+                    res.versions.insert(it, std::move(buffer));
+                }
+                else if (buffer.first != VersionT{})
+                {
+                    r.add_generic_error(
+                        type_name(), "Gave multiple definitions for version: ", buffer.first.to_string());
+                }
             }
 
             return res;
@@ -113,11 +136,8 @@ namespace
 
         FilesystemEntryDeserializer(const fs::path& p) : registry_root(p) { }
 
-        static Json::StringDeserializer version_deserializer;
-
         const fs::path& registry_root;
     };
-    Json::StringDeserializer FilesystemEntryDeserializer::version_deserializer{"version"};
 
     struct FilesystemRegistry final : RegistryImpl
     {

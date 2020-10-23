@@ -112,6 +112,24 @@ namespace vcpkg::Json
             m_path.pop_back();
         }
 
+        // value should be the value at key of the currently visited object
+        template<class Type>
+        void visit_at_index(const Value& value, int64_t index, Type& place, IDeserializer<Type>& visitor)
+        {
+            m_path.push_back(index);
+            auto opt = visitor.visit(*this, value);
+
+            if (auto p_opt = opt.get())
+            {
+                place = std::move(*p_opt);
+            }
+            else
+            {
+                add_expected_type_error(visitor.type_name());
+            }
+            m_path.pop_back();
+        }
+
         // returns whether key \in obj
         template<class Type>
         bool optional_object_field(const Object& obj, StringView key, Type& place, IDeserializer<Type>& visitor)
