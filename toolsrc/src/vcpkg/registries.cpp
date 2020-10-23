@@ -229,25 +229,35 @@ namespace
             return nullptr;
         }
 
-        void get_all_port_names(std::vector<std::string>& port_names, const VcpkgPaths&) const override
+        void get_all_port_names(std::vector<std::string>& port_names, const VcpkgPaths& paths) const override
         {
+            std::error_code ec;
             for (const auto& super_dir : fs::directory_iterator(path))
             {
-                auto super_dir_filename = fs::u8string(super_dir.path().filename());
-                if (Strings::ends_with(super_dir_filename, "-"))
+                if (!fs::is_directory(paths.get_filesystem().status(super_dir, ec)))
                 {
-                    super_dir_filename.pop_back();
-                    for (const auto& database_entry : fs::directory_iterator(super_dir))
-                    {
-                        auto database_entry_filename = database_entry.path().filename();
-                        auto database_entry_filename_str = fs::u8string(database_entry_filename);
-                        vcpkg::Checks::check_exit(
-                            VCPKG_LINE_INFO, Strings::starts_with(database_entry_filename_str, super_dir_filename));
-                        vcpkg::Checks::check_exit(VCPKG_LINE_INFO,
-                                                  Strings::ends_with(database_entry_filename_str, ".json"));
+                    continue;
+                }
 
-                        port_names.push_back(fs::u8string(database_entry_filename.replace_extension()));
+                auto super_dir_filename = fs::u8string(super_dir.path().filename());
+                if (!Strings::ends_with(super_dir_filename, "-"))
+                {
+                    continue;
+                }
+
+                super_dir_filename.pop_back();
+                for (const auto& database_entry : fs::directory_iterator(super_dir))
+                {
+                    auto database_entry_filename = database_entry.path().filename();
+                    auto database_entry_filename_str = fs::u8string(database_entry_filename);
+
+                    if (!Strings::starts_with(database_entry_filename_str, super_dir_filename) || !Strings::ends_with(database_entry_filename_str, ".json"))
+                    {
+                        Debug::print("Unexpected file in database (this is not an error): ", fs::u8string(database_entry.path()), "\n");
+                        continue;
                     }
+
+                    port_names.push_back(fs::u8string(database_entry_filename.replace_extension()));
                 }
             }
         }
