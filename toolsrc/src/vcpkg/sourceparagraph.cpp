@@ -235,8 +235,8 @@ namespace vcpkg
                     error_info->name = scf.core_paragraph->name;
                     error_info->error = Strings::format(R"(Multiple features with the same name for port %s: %s
     This is invalid; please make certain that features have distinct names.)",
-                                              scf.core_paragraph->name,
-                                              (*adjacent_equal)->name);
+                                                        scf.core_paragraph->name,
+                                                        (*adjacent_equal)->name);
                     return error_info;
                 }
                 return nullptr;
@@ -894,7 +894,6 @@ namespace vcpkg
 
             if (auto maybe_error = canonicalize(*control_file))
             {
-                // return nullopt; // maybe? 
                 Checks::exit_with_message(VCPKG_LINE_INFO, maybe_error->error);
             }
             return std::move(control_file);
