@@ -1,5 +1,5 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" "iOS" "Android")
-vcpkg_fail_port_install(ON_ARCH "x86" "arm")
+vcpkg_fail_port_install(ON_TARGET "UWP" "iOS" "Android" ON_ARCH "x86" "arm")
+
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
