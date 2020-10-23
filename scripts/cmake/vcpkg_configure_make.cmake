@@ -242,7 +242,7 @@ function(vcpkg_configure_make)
     debug_message("REQUIRES_AUTOCONFIG:${REQUIRES_AUTOCONFIG}")
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
-    set(FLAGPREFIXES CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
+    set(FLAGPREFIXES AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
     foreach(_prefix IN LISTS FLAGPREFIXES)
         _vcpkg_backup_env_variable(${prefix}FLAGS)
     endforeach()
@@ -465,6 +465,7 @@ function(vcpkg_configure_make)
             # is to use the CL and LINK environment variables !!!
             # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
             string(REPLACE "\\" "/" VCToolsInstallDir "$ENV{VCToolsInstallDir}")
+
             # Can somebody please check if CMake's compiler flags for UWP are correct?
             set(ENV{_CL_} "$ENV{_CL_} /D_UNICODE /DUNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
             string(APPEND VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE " -ZW:nostdlib")
@@ -485,14 +486,14 @@ function(vcpkg_configure_make)
     if(VCPKG_TARGET_IS_WINDOWS)
         string(REPLACE "\\" "/" SDKPATH $ENV{UniversalCRTSdkDir})
         set(LIB_PATH "${SDKPATH}/lib/$ENV{UCRTVersion}/um/${VCPKG_TARGET_ARCHITECTURE}")
-        
+        set(ENV{LT_SYS_LIBRARY_PATH} "${LIB_PATH}")
+        #set(ENV{LT_SYS_LIBRARY_PATH} "$ENV{LIB}") # Probably requires extra path conversions and ; -> :
         foreach(_lib IN LISTS ALL_LIBS_LIST)
             find_library(STD_${_lib}_LIBRARY NAMES ${_lib} PATHS ENV LIB LIBPATH)
             message(STATUS "${_lib} found at: ${STD_${_lib}_LIBRARY}")
             if(_lib MATCHES "uuid")
                 # C:\Program Files (x86)\Windows Kits\10\lib\10.0.19041.0\um\x64
                 # UniversalCRTSdkDir/lib/UCRTVersion/um/VCPKG_TARGET_ARCHITECTURE
-
                 message(STATUS "Manual search for uuid at ${LIB_PATH}")
                 if(NOT EXISTS "${LIB_PATH}")
                     message(STATUS "uuid not found in ${LIB_PATH}")
@@ -505,9 +506,6 @@ function(vcpkg_configure_make)
     list(JOIN ALL_LIBS_LIST " -l" ALL_LIBS_STRING)
     if(ALL_LIBS_STRING)
         set(ALL_LIBS_STRING "-l${ALL_LIBS_STRING}")
-        if(LIB_PATH)
-            set(ALL_LIBS_STRING "-L${LIB_PATH} ${ALL_LIBS_STRING}")
-        endif()
         if(DEFINED ENV{LIBS})
             set(ENV{LIBS} "$ENV{LIBS} ${ALL_LIBS_STRING}")
         else()
@@ -678,7 +676,7 @@ function(vcpkg_configure_make)
                 WORKING_DIRECTORY "${TAR_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}
             )
-            if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT VCPKG_TARGET_IS_MINGW)
                 file(GLOB_RECURSE LIBTOOL_FILES "${TAR_DIR}*/libtool")
                 foreach(lt_file IN LISTS LIBTOOL_FILES)
                     file(READ "${lt_file}" _contents)
@@ -686,7 +684,7 @@ function(vcpkg_configure_make)
                     file(WRITE "${lt_file}" "${_contents}")
                 endforeach()
             endif()
-            
+
             file(RENAME "${TAR_DIR}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}.log")
         endif()
 
