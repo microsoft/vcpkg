@@ -801,8 +801,7 @@ namespace vcpkg::Install
 
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
 
-            if (auto maybe_error =
-                    manifest_scf.check_against_feature_flags(fs::u8string(manifest_path), paths.get_feature_flags()))
+            if (auto maybe_error = manifest_scf.check_against_feature_flags(manifest_path, paths.get_feature_flags()))
             {
                 Checks::exit_with_message(VCPKG_LINE_INFO, maybe_error.value_or_exit(VCPKG_LINE_INFO));
             }

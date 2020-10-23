@@ -97,7 +97,7 @@ namespace vcpkg
         Optional<const FeatureParagraph&> find_feature(const std::string& featurename) const;
         Optional<const std::vector<Dependency>&> find_dependencies_for_feature(const std::string& featurename) const;
 
-        Optional<std::string> check_against_feature_flags(const std::string& origin,
+        Optional<std::string> check_against_feature_flags(const fs::path& origin,
                                                           const FeatureFlagSettings& flags) const;
 
         friend bool operator==(const SourceControlFile& lhs, const SourceControlFile& rhs);

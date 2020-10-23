@@ -161,8 +161,8 @@ namespace vcpkg::PortFileProvider
             }
             if (auto p = maybe_port.get())
             {
-                auto maybe_error = p->source_control_file->check_against_feature_flags(fs::u8string(p->source_location),
-                                                                                       paths.get_feature_flags());
+                auto maybe_error =
+                    p->source_control_file->check_against_feature_flags(p->source_location, paths.get_feature_flags());
                 if (maybe_error) return std::move(*maybe_error.get());
 
                 cache_it = cache.emplace(spec, std::move(*p)).first;

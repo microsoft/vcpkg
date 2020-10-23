@@ -949,14 +949,14 @@ namespace vcpkg
         }
     }
 
-    Optional<std::string> SourceControlFile::check_against_feature_flags(const std::string& origin,
+    Optional<std::string> SourceControlFile::check_against_feature_flags(const fs::path& origin,
                                                                          const FeatureFlagSettings& flags) const
     {
         if (!flags.versions)
         {
             if (core_paragraph->version_scheme != Versions::Scheme::String)
             {
-                return Strings::concat(origin,
+                return Strings::concat(fs::u8string(origin),
                                        " was rejected because it uses a non-string version scheme and the `",
                                        VcpkgCmdArguments::VERSIONS_FEATURE,
                                        "` feature flag is disabled.\nThis can be fixed by using \"version-string\".");
@@ -967,7 +967,7 @@ namespace vcpkg
                 {
                     if (dep.constraint.type != Versions::Constraint::Type::None)
                     {
-                        return Strings::concat(origin,
+                        return Strings::concat(fs::u8string(origin),
                                                " was rejected because it uses constraints and the `",
                                                VcpkgCmdArguments::VERSIONS_FEATURE,
                                                "` feature flag is disabled.\nThis can be fixed by removing uses of "
