@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mlpack/mlpack
-    REF a8af4882af5e163ae8c8023653c66c8914ac1c22 # 3.2.2
-    SHA512 879dd24f6cface3e6e1a0990e912ca4463060725c7c105e1e7d228c90123b1f44728cbe1ae327fa20e0e4981626a5d1eb2c411257899ef849c9600891616eed4
+    REF 7ae9ddda86c1751b6509ceb48b27d182feaae439 # 3.4.1
+    SHA512 db68c16b80af7037ac562f93775b6262f1552fbc89daa0c621075e2ff70a8306523da8eb74e33ac15ba34c9ccef8f2746bd1e4efa7c280a5be77b53c69d3f9a1
     HEAD_REF master
     PATCHES
         cmakelists.patch
@@ -35,6 +35,9 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mlpack)
+
 vcpkg_copy_pdbs()
 
 if("tools" IN_LIST FEATURES)
@@ -85,6 +88,9 @@ if("tools" IN_LIST FEATURES)
         mlpack_range_search
         mlpack_softmax_regression
         mlpack_sparse_coding
+        mlpack_image_converter
+        mlpack_bayesian_linear_regression
+        mlpack_preprocess_one_hot_encoding
     )
 endif()
 
