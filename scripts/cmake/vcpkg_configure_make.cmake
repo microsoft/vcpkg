@@ -241,10 +241,10 @@ function(vcpkg_configure_make)
     debug_message("REQUIRES_AUTOCONFIG:${REQUIRES_AUTOCONFIG}")
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
-    set(FLAGPREFIXES CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
-    foreach(_prefix IN LISTS FLAGPREFIXES)
-        _vcpkg_backup_env_variable(${prefix}FLAGS)
-    endforeach()
+    set(_cm_FLAGS AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
+    list(TRANSFORM _cm_FLAGS APPEND "FLAGS")
+    _vcpkg_backup_env_variables(${_cm_FLAGS})
+
 
     # FC fotran compiler | FF Fortran 77 compiler 
     # LDFLAGS -> pass -L flags
@@ -694,11 +694,7 @@ function(vcpkg_configure_make)
     endforeach()
 
     # Restore environment
-    foreach(_prefix IN LISTS FLAGPREFIXES)
-        _vcpkg_restore_env_variable(${_prefix}FLAGS)
-    endforeach()
-
-    _vcpkg_restore_env_variables(LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    _vcpkg_restore_env_variables(${_cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${_csc_PROJECT_SUBPATH} PARENT_SCOPE)
