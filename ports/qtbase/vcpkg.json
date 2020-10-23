@@ -1,0 +1,34 @@
+{
+  "name": "qtbase",
+  "version-string": "6.0.0",
+  "port-version": 0,
+  "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    "zlib",
+    "zstd",
+    "libjpeg-turbo",
+    "libpng",
+    {
+      "name": "freetype",
+      "default-features": false
+    },
+    "double-conversion",
+    "pcre2",
+    "harfbuzz",
+    "sqlite3",
+    "libpq",
+    "openssl",
+    "egl-registry",
+    "icu"
+  ],
+  "features": {
+    "testfeature": {
+      "description": "example",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}
+
