@@ -1,19 +1,19 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sctplab/usrsctp
-    REF 35c1d97020a20014b989bba4f20225fd9429c4f4
-    SHA512 18786825ec2c8c8aeb6b0bcab97deeac40420f7a9bdb427c891b26633ff759266409381ae2545c5572a740322ae1a56f80da1a784d71e50fce97177c343d27ce
+    REF 0db969100094422d9ea74a08ae5e5d9a4cfdb06b
+    SHA512 53993d663b6899896409cb4cdbbb6d41a9eccba012b032773708be90c16e3d617b3c3256ea624dc3e984dc7099f69f3b7cd647c11e24abae4b77594e2cd64ef7
     HEAD_REF master
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -Dsctp_werror=OFF -Dsctp_build_programs=OFF
+    OPTIONS
+        -Dsctp_werror=OFF
+        -Dsctp_build_programs=OFF
 )
 
 vcpkg_install_cmake()

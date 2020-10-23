@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 086d4c5837..e556a99b47 100644
+index b8514d91a8..d0e6cbeaf9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -183,6 +183,11 @@ if (NOT DEFINED CMAKE_POSITION_INDEPENDENT_CODE)
+@@ -211,6 +211,11 @@ if (NOT DEFINED CMAKE_POSITION_INDEPENDENT_CODE)
  endif()
  list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
  

@@ -9,8 +9,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
-    REF 8ff1a4046716244fc4b3a3e44e5b6abeda755b0a #v1.12.7
-    SHA512 60c66118e35904cbabe881301f3e59026483507341450956f99b67220e1aaebd7035caac69c3e06cf45f08163254264da111b93d0c6b3402c3fba64858786b66
+    REF 7d0c8181ac43ad20bdba326abbd3deeddf310f0b #v1.12.9
+    SHA512 f223075f49a2465cd5070f5efa796aa715f3ea2fefd578e4ec0a11be2fd3330922849ed804e1df004209abafaa7b24ff42432dd79f336a56063e3cf38ae0e8c9
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
@@ -59,6 +59,7 @@ vcpkg_configure_cmake(
         -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
+        -DFREETYPE_FOUND=ON
 # Optional stuff
         ${FEATURE_OPTIONS}
 # vcpkg specific stuff

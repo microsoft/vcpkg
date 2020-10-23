@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index eebda35e9..c00e6b702 100644
+index 01eea8889..14a4b1a40 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -888,7 +888,7 @@ option(WITH_TESTS "build with tests" ON)
- # For test libraries, utilities, and exes that are build iff WITH_TESTS=ON and
- # in Debug mode. Add test only code that is not #ifdefed for Release here.
- if(WITH_TESTS AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+@@ -1015,7 +1015,7 @@ endif()
+ option(WITH_ALL_TESTS "Build all test, rather than a small subset" ON)
+ 
+ if(WITH_TESTS OR WITH_BENCHMARK_TOOLS)
 -  add_subdirectory(third-party/gtest-1.8.1/fused-src/gtest)
 +  #add_subdirectory(third-party/gtest-1.8.1/fused-src/gtest)
-   set(TESTS
-         cache/cache_test.cc
-         cache/lru_cache_test.cc
+   add_library(testharness STATIC
+   test_util/mock_time_env.cc
+   test_util/testharness.cc)
