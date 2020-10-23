@@ -665,7 +665,9 @@ function(vcpkg_configure_make)
                 endforeach()
             endif()
             
-            file(RENAME "${TAR_DIR}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}.log")
+            if(EXISTS "${TAR_DIR}/config.log")
+                file(RENAME "${TAR_DIR}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}.log")
+            endif()
         endif()
 
         if(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype})
