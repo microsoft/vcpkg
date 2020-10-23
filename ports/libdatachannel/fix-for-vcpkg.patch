@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0098760..3b333ea 100644
+index 0098760..dd85ba6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -105,30 +105,19 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+@@ -105,30 +105,20 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
  find_package(Threads REQUIRED)
  
  set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
@@ -20,6 +20,7 @@ index 0098760..3b333ea 100644
 -endif()
 -add_library(Usrsctp::Usrsctp ALIAS usrsctp)
 -add_library(Usrsctp::UsrsctpStatic ALIAS usrsctp-static)
++find_library(USRSCTP_LIBRARY usrsctp REQUIRED)
 +find_package(libjuice CONFIG REQUIRED)
 +find_path(PLOG_INCLUDE_DIRS "plog/Appenders/AndroidAppender.h")
  
@@ -37,7 +38,7 @@ index 0098760..3b333ea 100644
  		${LIBDATACHANNEL_SOURCES}
  		${LIBDATACHANNEL_WEBSOCKET_SOURCES})
  	add_library(datachannel-static STATIC EXCLUDE_FROM_ALL
-@@ -145,17 +134,18 @@ set_target_properties(datachannel-static PROPERTIES
+@@ -145,17 +135,18 @@ set_target_properties(datachannel-static PROPERTIES
  	VERSION ${PROJECT_VERSION}
  	CXX_STANDARD 17)
  
@@ -48,7 +49,7 @@ index 0098760..3b333ea 100644
 -target_link_libraries(datachannel PUBLIC Threads::Threads plog::plog)
 -target_link_libraries(datachannel PRIVATE Usrsctp::UsrsctpStatic)
 +target_include_directories(datachannel PRIVATE ${PLOG_INCLUDE_DIRS})
-+target_link_libraries(datachannel PRIVATE usrsctp)
++target_link_libraries(datachannel PRIVATE ${USRSCTP_LIBRARY})
  
  target_include_directories(datachannel-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
  target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
@@ -57,11 +58,11 @@ index 0098760..3b333ea 100644
 -target_link_libraries(datachannel-static PRIVATE Usrsctp::UsrsctpStatic)
 +target_include_directories(datachannel-static PRIVATE ${PLOG_INCLUDE_DIRS})
 +target_link_libraries(datachannel-static PUBLIC Threads::Threads)
-+target_link_libraries(datachannel-static PRIVATE usrsctp)
++target_link_libraries(datachannel-static PRIVATE ${USRSCTP_LIBRARY})
  
  if(WIN32)
  	target_link_libraries(datachannel PRIVATE wsock32 ws2_32) # winsock2
-@@ -211,11 +201,10 @@ if (USE_NICE OR NOT USE_JUICE)
+@@ -211,11 +202,10 @@ if (USE_NICE OR NOT USE_JUICE)
  	target_link_libraries(datachannel PRIVATE LibNice::LibNice)
  	target_link_libraries(datachannel-static PRIVATE LibNice::LibNice)
  else()
@@ -75,7 +76,7 @@ index 0098760..3b333ea 100644
  endif()
  
  if(CAPI_STDCALL)
-@@ -226,7 +215,11 @@ endif()
+@@ -226,7 +216,11 @@ endif()
  add_library(LibDataChannel::LibDataChannel ALIAS datachannel)
  add_library(LibDataChannel::LibDataChannelStatic ALIAS datachannel-static)
  
@@ -88,7 +89,7 @@ index 0098760..3b333ea 100644
  install(FILES ${LIBDATACHANNEL_HEADERS} DESTINATION include/rtc)
  
  if(NOT MSVC)
-@@ -283,3 +276,8 @@ if(NOT NO_EXAMPLES)
+@@ -283,3 +277,8 @@ if(NOT NO_EXAMPLES)
  	add_subdirectory(examples/copy-paste-capi)
  endif()
  
