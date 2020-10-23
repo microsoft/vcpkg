@@ -59,4 +59,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+# Handle post-build CMake instructions
 vcpkg_copy_pdbs()
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
