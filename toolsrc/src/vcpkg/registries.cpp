@@ -251,9 +251,12 @@ namespace
                     auto database_entry_filename = database_entry.path().filename();
                     auto database_entry_filename_str = fs::u8string(database_entry_filename);
 
-                    if (!Strings::starts_with(database_entry_filename_str, super_dir_filename) || !Strings::ends_with(database_entry_filename_str, ".json"))
+                    if (!Strings::starts_with(database_entry_filename_str, super_dir_filename) ||
+                        !Strings::ends_with(database_entry_filename_str, ".json"))
                     {
-                        Debug::print("Unexpected file in database (this is not an error): ", fs::u8string(database_entry.path()), "\n");
+                        Debug::print("Unexpected file in database (this is not an error): ",
+                                     fs::u8string(database_entry.path()),
+                                     "\n");
                         continue;
                     }
 
