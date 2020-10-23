@@ -52,6 +52,9 @@ namespace fs
     std::string u8string(const path& p);
     std::string generic_u8string(const path& p);
 
+    // equivalent to p.lexically_normal()
+    path lexically_normal(const path& p);
+
 #if defined(_WIN32)
     enum class file_type
     {

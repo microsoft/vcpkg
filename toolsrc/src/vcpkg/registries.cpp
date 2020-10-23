@@ -1,3 +1,4 @@
+#include <vcpkg/base/delayed_init.h>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.debug.h>
@@ -104,7 +105,7 @@ namespace
                 Checks::check_exit(VCPKG_LINE_INFO, it == res.versions.end() || it->first != versiont);
 
                 res.versions.emplace_hint(
-                    it, std::move(versiont), registry_root / registry_path.lexically_normal().relative_path());
+                    it, std::move(versiont), registry_root / fs::lexically_normal(registry_path).relative_path());
             }
 
             return res;
@@ -177,7 +178,7 @@ namespace
 
         Optional<VersionT> get_baseline_version(const VcpkgPaths& paths, StringView port_name) const override
         {
-            static const std::map<std::string, VersionT, std::less<>> baseline_cache = load_baseline_versions(paths);
+            const auto& baseline_cache = baseline.get([this, &paths] { return load_baseline_versions(paths); });
             auto it = baseline_cache.find(port_name);
             if (it != baseline_cache.end())
             {
@@ -216,11 +217,11 @@ namespace
             auto value = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), baseline_file);
             Checks::check_exit(VCPKG_LINE_INFO, value.first.is_object());
             const auto& obj = value.first.object();
-            auto baseline = obj.get("default");
-            if (!baseline) Checks::exit_fail(VCPKG_LINE_INFO);
-            Checks::check_exit(VCPKG_LINE_INFO, baseline->is_object());
+            auto baseline_value = obj.get("default");
+            if (!baseline_value) Checks::exit_fail(VCPKG_LINE_INFO);
+            Checks::check_exit(VCPKG_LINE_INFO, baseline_value->is_object());
 
-            const auto& baseline_obj = baseline->object();
+            const auto& baseline_obj = baseline_value->object();
             std::map<std::string, VersionT, std::less<>> result;
             for (auto pr : baseline_obj)
             {
@@ -248,6 +249,7 @@ namespace
         }
 
         fs::path path;
+        DelayedInit<std::map<std::string, VersionT, std::less<>>> baseline;
     };
 }
 
