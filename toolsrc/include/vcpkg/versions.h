@@ -11,4 +11,14 @@ namespace vcpkg::Versions
         Semver,
         Date
     };
+
+    struct Constraint
+    {
+        enum class Type
+        {
+            None,
+            Minimum,
+            Exact
+        };
+    };
 }

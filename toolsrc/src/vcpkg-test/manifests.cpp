@@ -111,6 +111,74 @@ TEST_CASE ("manifest versioning", "[manifests]")
                         true);
 }
 
+TEST_CASE ("manifest constraints", "[manifests]")
+{
+    std::string raw = R"json({
+    "name": "zlib",
+    "version-string": "abcd",
+    "dependencies": [
+        "a",
+        {
+            "name": "b",
+            "port-version": 12,
+            "version=": "5"
+        },
+        {
+            "$extra": null,
+            "name": "c"
+        },
+        {
+            "name": "d",
+            "version>=": "2018-09-01"
+        }
+    ]
+}
+)json";
+    auto m_pgh = test_parse_manifest(raw);
+
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
+    REQUIRE(Json::stringify(serialize_manifest(pgh), Json::JsonStyle::with_spaces(4)) == raw);
+    REQUIRE(pgh.core_paragraph->dependencies.size() == 4);
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "a");
+    REQUIRE(pgh.core_paragraph->dependencies[0].constraint ==
+            DependencyConstraint{Versions::Constraint::Type::None, "", 0});
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "b");
+    REQUIRE(pgh.core_paragraph->dependencies[1].constraint ==
+            DependencyConstraint{Versions::Constraint::Type::Exact, "5", 12});
+    REQUIRE(pgh.core_paragraph->dependencies[2].name == "c");
+    REQUIRE(pgh.core_paragraph->dependencies[2].constraint ==
+            DependencyConstraint{Versions::Constraint::Type::None, "", 0});
+    REQUIRE(pgh.core_paragraph->dependencies[3].name == "d");
+    REQUIRE(pgh.core_paragraph->dependencies[3].constraint ==
+            DependencyConstraint{Versions::Constraint::Type::Minimum, "2018-09-01", 0});
+
+    test_parse_manifest(R"json({
+        "name": "zlib",
+        "version-string": "abcd",
+        "dependencies": [
+            {
+                "name": "d",
+                "version=": "2018-09-01",
+                "version>=": "2018-09-01"
+            }
+        ]
+    })json",
+                        true);
+
+    test_parse_manifest(R"json({
+        "name": "zlib",
+        "version-string": "abcd",
+        "dependencies": [
+            {
+                "name": "d",
+                "port-version": 5
+            }
+        ]
+    })json",
+                        true);
+}
+
 TEST_CASE ("manifest construct maximum", "[manifests]")
 {
     auto m_pgh = test_parse_manifest(R"json({

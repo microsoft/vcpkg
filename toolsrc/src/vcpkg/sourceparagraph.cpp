@@ -390,6 +390,9 @@ namespace vcpkg
         constexpr static StringLiteral FEATURES = "features";
         constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
         constexpr static StringLiteral PLATFORM = "platform";
+        constexpr static StringLiteral PORT_VERSION = "port-version";
+        constexpr static StringLiteral VERSION_EQ = "version=";
+        constexpr static StringLiteral VERSION_GE = "version>=";
 
         virtual Span<const StringView> valid_fields() const override
         {
@@ -398,6 +401,9 @@ namespace vcpkg
                 FEATURES,
                 DEFAULT_FEATURES,
                 PLATFORM,
+                PORT_VERSION,
+                VERSION_EQ,
+                VERSION_GE,
             };
 
             return t;
@@ -441,6 +447,34 @@ namespace vcpkg
             }
 
             r.optional_object_field(obj, PLATFORM, dep.platform, PlatformExprDeserializer::instance);
+
+            static Json::StringDeserializer version_deserializer{"a version"};
+
+            auto has_eq_constraint =
+                r.optional_object_field(obj, VERSION_EQ, dep.constraint.value, version_deserializer);
+            auto has_ge_constraint =
+                r.optional_object_field(obj, VERSION_GE, dep.constraint.value, version_deserializer);
+            auto has_port_ver = r.optional_object_field(
+                obj, PORT_VERSION, dep.constraint.port_version, Json::NaturalNumberDeserializer::instance);
+
+            if (has_eq_constraint)
+            {
+                dep.constraint.type = Versions::Constraint::Type::Exact;
+                if (has_ge_constraint)
+                {
+                    r.add_generic_error(type_name(), "cannot have both exact and minimum constraints simultaneously");
+                }
+            }
+            else if (has_ge_constraint)
+            {
+                dep.constraint.type = Versions::Constraint::Type::Minimum;
+            }
+            else if (has_port_ver) // does not have a primary constraint
+            {
+                r.add_generic_error(
+                    type_name(),
+                    "\"port-version\" cannot be used without a primary constraint (\"version=\" or \"version>=\")");
+            }
 
             return dep;
         }
@@ -1072,7 +1106,8 @@ namespace vcpkg
             }
         };
         auto serialize_dependency = [&](Json::Array& arr, const Dependency& dep) {
-            if (dep.features.empty() && dep.platform.is_empty() && dep.extra_info.is_empty())
+            if (dep.features.empty() && dep.platform.is_empty() && dep.extra_info.is_empty() &&
+                dep.constraint.type == Versions::Constraint::Type::None)
             {
                 arr.push_back(Json::Value::string(dep.name));
             }
@@ -1096,6 +1131,20 @@ namespace vcpkg
 
                 serialize_optional_array(dep_obj, DependencyDeserializer::FEATURES, features_copy);
                 serialize_optional_string(dep_obj, DependencyDeserializer::PLATFORM, to_string(dep.platform));
+                if (dep.constraint.port_version != 0)
+                {
+                    dep_obj.insert(DependencyDeserializer::PORT_VERSION,
+                                   Json::Value::integer(dep.constraint.port_version));
+                }
+
+                if (dep.constraint.type == Versions::Constraint::Type::Exact)
+                {
+                    dep_obj.insert(DependencyDeserializer::VERSION_EQ, Json::Value::string(dep.constraint.value));
+                }
+                else if (dep.constraint.type == Versions::Constraint::Type::Minimum)
+                {
+                    dep_obj.insert(DependencyDeserializer::VERSION_GE, Json::Value::string(dep.constraint.value));
+                }
             }
         };
 

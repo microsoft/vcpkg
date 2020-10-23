@@ -259,6 +259,14 @@ namespace vcpkg
         return ret;
     }
 
+    bool operator==(const DependencyConstraint& lhs, const DependencyConstraint& rhs)
+    {
+        if (lhs.type != rhs.type) return false;
+        if (lhs.value != rhs.value) return false;
+        return lhs.port_version == rhs.port_version;
+    }
+    bool operator!=(const DependencyConstraint& lhs, const DependencyConstraint& rhs);
+
     bool operator==(const Dependency& lhs, const Dependency& rhs)
     {
         if (lhs.name != rhs.name) return false;
