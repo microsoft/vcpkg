@@ -130,6 +130,14 @@ namespace vcpkg::PortFileProvider
             if (entry && baseline_version)
             {
                 auto port_directory = entry->get_port_directory(paths, *baseline_version.get());
+                if (port_directory.empty())
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: registry is incorrect. Baseline version for port `%s` is `%s`, "
+                                              "but that version is not in the registry.\n",
+                                              spec,
+                                              baseline_version.get()->to_string());
+                }
                 auto found_scf = Paragraphs::try_load_port(fs, port_directory);
                 if (auto scf = found_scf.get())
                 {

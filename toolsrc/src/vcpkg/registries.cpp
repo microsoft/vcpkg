@@ -70,25 +70,49 @@ namespace
         }
     };
 
-    struct FilesystemVersionEntryDeserializer final : Json::IDeserializer<std::pair<VersionT, fs::path>>
+    struct VersionTDeserializer final : Json::IDeserializer<VersionT>
     {
-        StringView type_name() const { return "a version entry object"; }
+        StringView type_name() const override { return "a version object"; }
+        View<StringView> valid_fields() const override
+        {
+            static const StringView t[] = {"version-string", "port-version"};
+            return t;
+        }
 
-        Optional<std::pair<VersionT, fs::path>> visit_object(Json::Reader& r, const Json::Object& obj) override
+        Optional<VersionT> visit_object(Json::Reader& r, const Json::Object& obj) override
         {
             std::string version;
             int port_version = 0;
-            fs::path registry_path;
 
-            r.required_object_field("version entry", obj, "version-string", version, version_deserializer);
-
-            port_version = 0;
+            r.required_object_field(type_name(), obj, "version-string", version, version_deserializer);
             r.optional_object_field(obj, "port-version", port_version, Json::NaturalNumberDeserializer::instance);
 
-            registry_path.clear();
+            return VersionT{std::move(version), port_version};
+        }
+
+        static Json::StringDeserializer version_deserializer;
+        static VersionTDeserializer instance;
+    };
+    Json::StringDeserializer VersionTDeserializer::version_deserializer{"version"};
+    VersionTDeserializer VersionTDeserializer::instance;
+
+    struct FilesystemVersionEntryDeserializer final : Json::IDeserializer<std::pair<VersionT, fs::path>>
+    {
+        StringView type_name() const override { return "a version entry object"; }
+        View<StringView> valid_fields() const override
+        {
+            static const StringView t[] = {"version-string", "port-version", "registry-path"};
+            return t;
+        }
+
+        Optional<std::pair<VersionT, fs::path>> visit_object(Json::Reader& r, const Json::Object& obj) override
+        {
+            fs::path registry_path;
+
+            auto version = VersionTDeserializer::instance.visit_object(r, obj);
+
             r.required_object_field(
                 "version entry", obj, "registry-path", registry_path, Json::PathDeserializer::instance);
-
             // registry_path should look like `/blah/foo`
             if (registry_path.has_root_name() || !registry_path.has_root_directory())
             {
@@ -96,18 +120,16 @@ namespace
                 registry_path.clear();
             }
 
-            return std::pair<VersionT, fs::path>{{std::move(version), port_version}, std::move(registry_path)};
+            return std::pair<VersionT, fs::path>{std::move(version).value_or(VersionT{}), std::move(registry_path)};
         }
 
-        static Json::StringDeserializer version_deserializer;
         static FilesystemVersionEntryDeserializer instance;
     };
-    Json::StringDeserializer FilesystemVersionEntryDeserializer::version_deserializer{"version"};
     FilesystemVersionEntryDeserializer FilesystemVersionEntryDeserializer::instance;
 
     struct FilesystemEntryDeserializer final : Json::IDeserializer<FilesystemEntry>
     {
-        StringView type_name() const { return "a registry entry object"; }
+        StringView type_name() const override { return "a registry entry object"; }
 
         Optional<FilesystemEntry> visit_array(Json::Reader& r, const Json::Array& arr) override
         {
@@ -116,7 +138,8 @@ namespace
             std::pair<VersionT, fs::path> buffer;
             for (std::size_t idx = 0; idx < arr.size(); ++idx)
             {
-                r.visit_at_index(arr[idx], static_cast<int64_t>(idx), buffer, FilesystemVersionEntryDeserializer::instance);
+                r.visit_at_index(
+                    arr[idx], static_cast<int64_t>(idx), buffer, FilesystemVersionEntryDeserializer::instance);
 
                 auto it = res.versions.lower_bound(buffer.first);
                 if (it == res.versions.end() || it->first != buffer.first)
@@ -139,6 +162,30 @@ namespace
         const fs::path& registry_root;
     };
 
+    struct BaselineDeserializer final : Json::IDeserializer<std::map<std::string, VersionT, std::less<>>>
+    {
+        StringView type_name() const override { return "a baseline object"; }
+
+        Optional<type> visit_object(Json::Reader& r, const Json::Object& obj) override
+        {
+            std::map<std::string, VersionT, std::less<>> result;
+
+            for (auto pr : obj)
+            {
+                const auto& version_value = pr.second;
+                VersionT version;
+                r.visit_in_key(version_value, pr.first, version, VersionTDeserializer::instance);
+
+                result.emplace(pr.first.to_string(), std::move(version));
+            }
+
+            return std::move(result);
+        }
+
+        static BaselineDeserializer instance;
+    };
+    BaselineDeserializer BaselineDeserializer::instance;
+
     struct FilesystemRegistry final : RegistryImpl
     {
         std::unique_ptr<RegistryEntry> get_port_entry(const VcpkgPaths& paths, StringView port_name) const override
@@ -160,9 +207,18 @@ namespace
                 auto real_path = paths.config_root_dir / path;
                 FilesystemEntryDeserializer deserializer{real_path};
                 auto entry = r.visit(p->first, deserializer);
-                if (auto pentry = entry.get())
+                auto pentry = entry.get();
+                if (pentry && r.errors().empty())
                 {
                     return std::make_unique<FilesystemEntry>(std::move(*pentry));
+                }
+                else
+                {
+                    vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO,
+                                                     "Failed to parse the port entry for port `%s` at `%s`.\n%s",
+                                                     port_name,
+                                                     fs::u8string(entry_path),
+                                                     Strings::join("\n", r.errors()));
                 }
             }
             else
@@ -234,38 +290,34 @@ namespace
         std::map<std::string, VersionT, std::less<>> load_baseline_versions(const VcpkgPaths& paths) const
         {
             auto baseline_file = path_to_registry_database(paths) / fs::u8path("baseline.json");
+
             auto value = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), baseline_file);
-            Checks::check_exit(VCPKG_LINE_INFO, value.first.is_object());
-            const auto& obj = value.first.object();
-            auto baseline_value = obj.get("default");
-            if (!baseline_value) Checks::exit_fail(VCPKG_LINE_INFO);
-            Checks::check_exit(VCPKG_LINE_INFO, baseline_value->is_object());
-
-            const auto& baseline_obj = baseline_value->object();
-            std::map<std::string, VersionT, std::less<>> result;
-            for (auto pr : baseline_obj)
+            if (!value.first.is_object())
             {
-                auto it = result.lower_bound(pr.first);
-                if (it != result.end() && it->first == pr.first)
-                {
-                    Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Port %s is defined multiple times in the baseline\n", pr.first);
-                }
-
-                const auto& version_value = pr.second;
-                Checks::check_exit(VCPKG_LINE_INFO, version_value.is_object());
-                const auto& version_obj = version_value.object();
-                auto version_string = version_obj["version-string"].string();
-                int port_version = 0;
-                if (auto baseline_port_version = version_obj.get("port-version"))
-                {
-                    port_version = static_cast<int>(baseline_port_version->integer());
-                }
-
-                result.emplace_hint(it, pr.first.to_string(), VersionT{version_string.to_string(), port_version});
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Error: `baseline.json` does not have a top-level object.");
             }
 
-            return result;
+            const auto& obj = value.first.object();
+            auto baseline_value = obj.get("default");
+            if (!baseline_value)
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Error: `baseline.json` does not contain the baseline \"%s\"", "default");
+            }
+
+            Json::Reader r;
+            std::map<std::string, VersionT, std::less<>> result;
+            r.visit_in_key(*baseline_value, "default", result, BaselineDeserializer::instance);
+
+            if (r.errors().empty())
+            {
+                return std::move(result);
+            }
+            else
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Error: failed to parse `baseline.json`:\n%s", Strings::join("\n", r.errors()));
+            }
         }
 
         fs::path path;
