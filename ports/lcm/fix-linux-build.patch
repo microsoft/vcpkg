@@ -36,7 +36,7 @@ index 9aee9df..253af08 100644
 -)
 +if(WIN32)
 +  target_link_libraries(lcm-logger lcm ${lcm-winport} unofficial::glib::glib ws2_32)
-+elseif()
++else()
 +  target_link_libraries(lcm-logger lcm ${lcm-winport} unofficial::glib::glib)
 +endif()
  
@@ -56,7 +56,7 @@ index 639ec12..9da0c00 100644
 -  )
 +  if(WIN32)
 +    target_link_libraries(${lcm_lib} PRIVATE unofficial::glib::glib ${CMAKE_THREAD_LIBS_INIT} ws2_32)
-+  elseif()
++  else()
 +    target_link_libraries(${lcm_lib} PRIVATE unofficial::glib::glib ${CMAKE_THREAD_LIBS_INIT})
 +  endif()
  endforeach()
@@ -73,7 +73,7 @@ index 29354bb..d848b16 100644
 -target_link_libraries(lcm-gen PRIVATE GLib2::glib)
 +if(WIN32)
 +  target_link_libraries(lcm-gen PRIVATE unofficial::glib::glib ws2_32)
-+elseif()
++else()
 +  target_link_libraries(lcm-gen PRIVATE unofficial::glib::glib)
 +endif()
  
@@ -90,7 +90,7 @@ index bb24675..da041d9 100644
 -target_link_libraries(lcm-tester lcm GLib2::glib)
 +if(WIN32)
 +  target_link_libraries(lcm-tester lcm unofficial::glib::glib ws2_32)
-+elseif()
++else()
 +  target_link_libraries(lcm-tester lcm unofficial::glib::glib)
 +endif()
  
@@ -103,7 +103,7 @@ index bb24675..da041d9 100644
 -target_link_libraries(lcm-logfilter lcm ${lcm-winport} GLib2::glib)
 +if(WIN32)
 +  target_link_libraries(lcm-logfilter lcm ${lcm-winport} unofficial::glib::glib ws2_32)
-+elseif()
++else()
 +  target_link_libraries(lcm-logfilter lcm ${lcm-winport} unofficial::glib::glib)
 +endif()
  
@@ -111,7 +111,7 @@ index bb24675..da041d9 100644
 -target_link_libraries(lcm-buftest-receiver lcm GLib2::glib)
 +if(WIN32)
 +  target_link_libraries(lcm-buftest-receiver lcm unofficial::glib::glib ws2_32)
-+elseif()
++else()
 +  target_link_libraries(lcm-buftest-receiver lcm unofficial::glib::glib)
 +endif()
  
@@ -119,7 +119,7 @@ index bb24675..da041d9 100644
 -target_link_libraries(lcm-buftest-sender lcm GLib2::glib)
 +if(WIN32)
 +  target_link_libraries(lcm-buftest-sender lcm unofficial::glib::glib ws2_32)
-+elseif()
++else()
 +  target_link_libraries(lcm-buftest-sender lcm unofficial::glib::glib)
 +endif()
  
