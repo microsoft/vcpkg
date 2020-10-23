@@ -8,15 +8,13 @@
 namespace vcpkg
 {
     // implements the equivalent of function static initialization for an object
-    template <class T>
+    template<class T>
     struct DelayedInit
     {
-        template <class F>
+        template<class F>
         const T& get(F&& f) const
         {
-            std::call_once(underlying_->flag_, [&f, this]() {
-                underlying_->storage_ = std::forward<F>(f)();
-            });
+            std::call_once(underlying_->flag_, [&f, this]() { underlying_->storage_ = std::forward<F>(f)(); });
             return *underlying_->storage_.get();
         }
 
