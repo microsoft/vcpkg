@@ -98,6 +98,14 @@ namespace vcpkg
         std::string m_str;
     };
 
+    struct FeatureFlagSettings
+    {
+        bool registries;
+        bool compiler_tracking;
+        bool binary_caching;
+        bool versions;
+    };
+
     struct VcpkgCmdArguments
     {
         static VcpkgCmdArguments create_from_command_line(const Files::Filesystem& fs,
@@ -173,12 +181,25 @@ namespace vcpkg
         Optional<bool> manifest_mode = nullopt;
         constexpr static StringLiteral REGISTRIES_FEATURE = "registries";
         Optional<bool> registries_feature = nullopt;
+        constexpr static StringLiteral VERSIONS_FEATURE = "versions";
+        Optional<bool> versions_feature = nullopt;
 
         constexpr static StringLiteral RECURSIVE_DATA_ENV = "VCPKG_X_RECURSIVE_DATA";
 
         bool binary_caching_enabled() const { return binary_caching.value_or(true); }
         bool compiler_tracking_enabled() const { return compiler_tracking.value_or(true); }
         bool registries_enabled() const { return registries_feature.value_or(false); }
+        bool versions_enabled() const { return versions_feature.value_or(false); }
+        FeatureFlagSettings feature_flag_settings() const
+        {
+            FeatureFlagSettings f;
+            f.binary_caching = binary_caching_enabled();
+            f.compiler_tracking = compiler_tracking_enabled();
+            f.registries = registries_enabled();
+            f.versions = versions_enabled();
+            return f;
+        }
+
         bool output_json() const { return json.value_or(false); }
         bool is_recursive_invocation() const { return m_is_recursive_invocation; }
 

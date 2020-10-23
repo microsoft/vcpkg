@@ -1,0 +1,28 @@
+From 6db2b442dd14eb068bba52e4f7223139ea29a558 Mon Sep 17 00:00:00 2001
+From: Jarek Kobus <jaroslaw.kobus@qt.io>
+Date: Mon, 7 Sep 2020 14:37:33 +0200
+Subject: [PATCH] Fix static build of assistant
+
+Fixes: QTBUG-86477
+Pick-to: 5.15
+Change-Id: Ifb77fb38b4b182a996666c6b69d8357458add0c4
+Reviewed-by: Kai Koehne <kai.koehne@qt.io>
+---
+ src/src.pro | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/src.pro b/src/src.pro
+index 8c75a8cd8..24d0b9c6b 100644
+--- a/src/src.pro
++++ b/src/src.pro
+@@ -9,7 +9,7 @@ qtHaveModule(widgets) {
+             SUBDIRS = designer \
+                       pixeltool
+ 
+-            !static|contains(QT_PLUGINS, qtsqlite): SUBDIRS += assistant
++            !static|contains(QT_PLUGINS, qsqlite): SUBDIRS += assistant
+ 
+             linguist.depends = designer
+         }
+-- 
+2.16.3
