@@ -6,7 +6,7 @@
   "license": "BSD-3-Clause",
   "dependencies": [
     "asio",
-	 "fmt",
-	 "http-parser"
+    "fmt",
+    "http-parser"
   ]
 }
