@@ -146,18 +146,15 @@ diff --git a/include/igl/opengl/glfw/imgui/ImGuiMenu.cpp b/include/igl/opengl/gl
 index 47de487..6c607de 100644
 --- a/include/igl/opengl/glfw/imgui/ImGuiMenu.cpp
 +++ b/include/igl/opengl/glfw/imgui/ImGuiMenu.cpp
-@@ -9,10 +9,10 @@
+@@ -9,9 +9,9 @@
  #include "ImGuiMenu.h"
  #include "ImGuiHelpers.h"
  #include <igl/project.h>
 -#include <imgui/imgui.h>
--#include <imgui_impl_glfw.h>
--#include <imgui_impl_opengl3.h>
--#include <imgui_fonts_droid_sans.h>
 +#include <imgui.h>
-+#include <bindings/imgui_impl_glfw.h>
-+#include <bindings/imgui_impl_opengl3.h>
-+#include <bindings/imgui_fonts_droid_sans.h>
+ #include <imgui_impl_glfw.h>
+ #include <imgui_impl_opengl3.h>
+ #include <imgui_fonts_droid_sans.h>
  #include <GLFW/glfw3.h>
  #include <iostream>
  ////////////////////////////////////////////////////////////////////////////////

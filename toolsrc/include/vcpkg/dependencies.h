@@ -1,14 +1,13 @@
 #pragma once
 
+#include <vcpkg/fwd/cmakevars.h>
+#include <vcpkg/fwd/portfileprovider.h>
+
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/build.h>
-#include <vcpkg/cmakevars.h>
 #include <vcpkg/packagespec.h>
-#include <vcpkg/portfileprovider.h>
-#include <vcpkg/statusparagraphs.h>
-#include <vcpkg/vcpkgpaths.h>
 
 #include <functional>
 #include <map>
@@ -17,6 +16,11 @@
 namespace vcpkg::Graphs
 {
     struct Randomizer;
+}
+
+namespace vcpkg
+{
+    struct StatusParagraphs;
 }
 
 namespace vcpkg::Dependencies
@@ -56,6 +60,7 @@ namespace vcpkg::Dependencies
 
         std::string displayname() const;
         const std::string& public_abi() const;
+        bool has_package_abi() const;
         const Build::PreBuildInfo& pre_build_info(LineInfo linfo) const;
 
         PackageSpec spec;

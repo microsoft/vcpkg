@@ -11,7 +11,7 @@ endif()
 # config variables for ffi.h.in
 set(VERSION 3.3)
 
-set(KNOWN_PROCESSORS x86 x86_64 AMD64 ARM ARM64 i386)
+set(KNOWN_PROCESSORS x86 x86_64 AMD64 ARM ARM64 i386 armv7l aarch64)
 
 if(NOT CMAKE_SYSTEM_PROCESSOR IN_LIST KNOWN_PROCESSORS)
     message(FATAL_ERROR "Unknown processor: ${CMAKE_SYSTEM_PROCESSOR}")
@@ -19,6 +19,10 @@ endif()
 
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "ARM")
     set(TARGET ARM)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "armv7l")
+    set(TARGET ARM)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+    set(TARGET ARM64)
 elseif(CMAKE_SYSTEM_NAME MATCHES "BSD" AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(TARGET X86_FREEBSD)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
@@ -50,9 +54,9 @@ set(FFI_EXEC_TRAMPOLINE_TABLE 0)
 configure_file(include/ffi.h.in ${CMAKE_BINARY_DIR}/include/ffi.h)
 file(COPY ${FFI_CONFIG_FILE} DESTINATION ${CMAKE_BINARY_DIR})
 
-if ("${TARGET}" STREQUAL "ARM_WIN64")
+if ("${TARGET}" STREQUAL "ARM_WIN64" OR "${TARGET}" STREQUAL "ARM64")
     file(COPY src/aarch64/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
-elseif ("${TARGET}" STREQUAL "ARM_WIN32")
+elseif ("${TARGET}" STREQUAL "ARM_WIN32" OR "${TARGET}" STREQUAL "ARM")
     file(COPY src/arm/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
 else()
     file(COPY src/x86/ffitarget.h DESTINATION ${CMAKE_BINARY_DIR}/include)
@@ -72,11 +76,11 @@ set(FFI_SOURCES
     src/prep_cif.c
     src/types.c)
 
-if ("${TARGET}" STREQUAL "ARM_WIN64")
+if ("${TARGET}" STREQUAL "ARM_WIN64" OR "${TARGET}" STREQUAL "ARM64")
     set(FFI_SOURCES
         ${FFI_SOURCES}
         src/aarch64/ffi.c)
-elseif("${TARGET}" STREQUAL "ARM_WIN32")
+elseif("${TARGET}" STREQUAL "ARM_WIN32" OR "${TARGET}" STREQUAL "ARM")
     set(FFI_SOURCES
         ${FFI_SOURCES}
         src/arm/ffi.c)
@@ -162,8 +166,12 @@ elseif("${TARGET}" STREQUAL "X86_WIN64")
     add_assembly(src/x86/win64_intel.S)
 elseif("${TARGET}" STREQUAL "ARM_WIN32")
     add_assembly(src/arm/sysv_msvc_arm32.S)
+elseif("${TARGET}" STREQUAL "ARM")
+    add_assembly(src/arm/sysv.S)
 elseif("${TARGET}" STREQUAL "ARM_WIN64")
     add_assembly(src/aarch64/win64_armasm.S)
+elseif("${TARGET}" STREQUAL "ARM64")
+    add_assembly(src/aarch64/sysv.S)
 else()
     message(FATAL_ERROR "Target not implemented")
 endif()

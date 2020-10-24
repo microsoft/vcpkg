@@ -1,8 +1,9 @@
 set(GEOGRAM_VERSION 1.7.5)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://gforge.inria.fr/frs/download.php/file/38314/geogram_${GEOGRAM_VERSION}.tar.gz"
-    FILENAME "geogram_${GEOGRAM_VERSION}.tar.gz"
+    FILENAME "geogram_${GEOGRAM_VERSION}_47dcbb8.tar.gz"
     SHA512 47dcbb8a5c4e5f791feb8d9b209b04b575b0757e8b89de09c82ef2324a36d4056a1f3001537038c8a752045b0e6b6eedf5421ad49132214c0f60163ff095c36f
 )
 
@@ -26,6 +27,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(VORPALINE_BUILD_DYNAMIC FALSE)
     if (VCPKG_TARGET_IS_WINDOWS)
         set(VORPALINE_PLATFORM Win-vs-generic)
+    endif()
+    if (VCPKG_CRT_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
+        message("geogram on Windows with CRT dynamic linkage only supports dynamic library linkage. Building dynamic.")
+        set(VCPKG_LIBRARY_LINKAGE dynamic)
+        set(VORPALINE_PLATFORM Win-vs-dynamic-generic)
     endif()
     if (VCPKG_TARGET_IS_LINUX)
         message("geogram on Linux only supports dynamic library linkage. Building dynamic.")

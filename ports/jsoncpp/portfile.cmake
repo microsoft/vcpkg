@@ -1,18 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open-source-parsers/jsoncpp
-    REF 1.9.2
-    SHA512 7c7188199d62ae040d458d507ba62f0370c53f39c580760ee5485cae5c08e5ced0c9aea7c14f54dfd041999a7291e4d0f67f8ccd8b1030622c85590774688640
+    REF 9059f5cad030ba11d37818847443a53918c327b1 # 1.9.4
+    SHA512 8062c83cad9dc453f1eb4886e63e054570e0f29dcd6594330d3b3628ba994915e26e08690cd28118805a766be200ac99ad4fbc131db3af895122a8d1bd87ef31
     HEAD_REF master
-    PATCHES
-        allow-disable-examples.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(JSONCPP_STATIC ON)
-else()
-    set(JSONCPP_STATIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" JSONCPP_STATIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -28,15 +22,10 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Fix CMake files
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/jsoncpp)
 
-# Remove includes in debug
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/jsoncpp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/jsoncpp/LICENSE ${CURRENT_PACKAGES_DIR}/share/jsoncpp/copyright)
-
-# Copy pdb files
 vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -7,6 +7,7 @@
 
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.ci.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
@@ -14,7 +15,9 @@
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/paragraphs.h>
 #include <vcpkg/platform-expression.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 using namespace vcpkg;
@@ -335,7 +338,7 @@ namespace vcpkg::Commands::CI
                 ret->features.emplace(action.spec, action.feature_list);
                 if (auto scfl = p->source_control_file_location.get())
                 {
-                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
+                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), scfl->clone());
                     emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
 
                     p->build_options = vcpkg::Build::default_build_package_options;
@@ -456,9 +459,7 @@ namespace vcpkg::Commands::CI
         XunitTestResults xunitTestResults;
 
         std::vector<std::string> all_ports =
-            Util::fmap(provider.load_all_control_files(), [](const SourceControlFileLocation*& scfl) -> std::string {
-                return scfl->source_control_file.get()->core_paragraph->name;
-            });
+            Util::fmap(provider.load_all_control_files(), Paragraphs::get_name_of_control_file);
         std::vector<TripletAndSummary> results;
         auto timer = Chrono::ElapsedTimer::create_started();
         for (Triplet triplet : triplets)
