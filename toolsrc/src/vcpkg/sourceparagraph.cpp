@@ -28,6 +28,7 @@ namespace vcpkg
     {
         if (lhs.name != rhs.name) return false;
         if (lhs.version != rhs.version) return false;
+        if (lhs.version_scheme != rhs.version_scheme) return false;
         if (lhs.port_version != rhs.port_version) return false;
         if (!paragraph_equal(lhs.description, rhs.description)) return false;
         if (!paragraph_equal(lhs.maintainers, rhs.maintainers)) return false;
@@ -735,7 +736,13 @@ namespace vcpkg
         virtual StringView type_name() const override { return "a manifest"; }
 
         constexpr static StringLiteral NAME = "name";
-        constexpr static StringLiteral VERSION = "version-string";
+
+        // Default is a relaxed semver-like version
+        constexpr static StringLiteral VERSION_RELAXED = "version";
+        constexpr static StringLiteral VERSION_SEMVER = "version-semver";
+        constexpr static StringLiteral VERSION_DATE = "version-date";
+        // Legacy version string, accepts arbitrary string values.
+        constexpr static StringLiteral VERSION_STRING = "version-string";
 
         constexpr static StringLiteral PORT_VERSION = "port-version";
         constexpr static StringLiteral MAINTAINERS = "maintainers";
@@ -753,8 +760,10 @@ namespace vcpkg
         {
             static const StringView t[] = {
                 NAME,
-                VERSION,
-
+                VERSION_STRING,
+                VERSION_RELAXED,
+                VERSION_SEMVER,
+                VERSION_DATE,
                 PORT_VERSION,
                 MAINTAINERS,
                 DESCRIPTION,
@@ -788,12 +797,41 @@ namespace vcpkg
                 }
             }
 
-            static Json::StringDeserializer version_deserializer{"a version"};
+            static Json::StringDeserializer version_exact_deserializer{"an exact version string"};
+            static Json::StringDeserializer version_relaxed_deserializer{"a relaxed version string"};
+            static Json::StringDeserializer version_semver_deserializer{"a semantic version string"};
+            static Json::StringDeserializer version_date_deserializer{"a date version string"};
             static Json::StringDeserializer url_deserializer{"a url"};
 
             constexpr static StringView type_name = "vcpkg.json";
             r.required_object_field(type_name, obj, NAME, spgh->name, Json::IdentifierDeserializer::instance);
-            r.required_object_field(type_name, obj, VERSION, spgh->version, version_deserializer);
+            bool has_exact = r.optional_object_field(obj, VERSION_STRING, spgh->version, version_exact_deserializer);
+            bool has_relax = r.optional_object_field(obj, VERSION_RELAXED, spgh->version, version_relaxed_deserializer);
+            bool has_semver = r.optional_object_field(obj, VERSION_SEMVER, spgh->version, version_semver_deserializer);
+            bool has_date = r.optional_object_field(obj, VERSION_DATE, spgh->version, version_date_deserializer);
+            int num_versions = (int)has_exact + (int)has_relax + (int)has_semver + (int)has_date;
+            if (num_versions == 0)
+            {
+                r.add_generic_error(type_name, "expected a versioning field (example: ", VERSION_RELAXED, ")");
+            }
+            else if (num_versions > 1)
+            {
+                r.add_generic_error(type_name, "expected only one versioning field");
+            }
+            else
+            {
+                if (has_exact)
+                    spgh->version_scheme = Versions::Scheme::String;
+                else if (has_relax)
+                    spgh->version_scheme = Versions::Scheme::Relaxed;
+                else if (has_semver)
+                    spgh->version_scheme = Versions::Scheme::Semver;
+                else if (has_date)
+                    spgh->version_scheme = Versions::Scheme::Date;
+                else
+                    Checks::unreachable(VCPKG_LINE_INFO);
+            }
+
             r.optional_object_field(obj, PORT_VERSION, spgh->port_version, Json::NaturalNumberDeserializer::instance);
             r.optional_object_field(obj, MAINTAINERS, spgh->maintainers, Json::ParagraphDeserializer::instance);
             r.optional_object_field(obj, DESCRIPTION, spgh->description, Json::ParagraphDeserializer::instance);
@@ -825,8 +863,10 @@ namespace vcpkg
     ManifestDeserializer ManifestDeserializer::instance;
 
     constexpr StringLiteral ManifestDeserializer::NAME;
-    constexpr StringLiteral ManifestDeserializer::VERSION;
-
+    constexpr StringLiteral ManifestDeserializer::VERSION_STRING;
+    constexpr StringLiteral ManifestDeserializer::VERSION_RELAXED;
+    constexpr StringLiteral ManifestDeserializer::VERSION_SEMVER;
+    constexpr StringLiteral ManifestDeserializer::VERSION_DATE;
     constexpr StringLiteral ManifestDeserializer::PORT_VERSION;
     constexpr StringLiteral ManifestDeserializer::MAINTAINERS;
     constexpr StringLiteral ManifestDeserializer::DESCRIPTION;
@@ -1067,7 +1107,17 @@ namespace vcpkg
         }
 
         obj.insert(ManifestDeserializer::NAME, Json::Value::string(scf.core_paragraph->name));
-        obj.insert(ManifestDeserializer::VERSION, Json::Value::string(scf.core_paragraph->version));
+        auto version_field = [&] {
+            switch (scf.core_paragraph->version_scheme)
+            {
+                case Versions::Scheme::String: return ManifestDeserializer::VERSION_STRING;
+                case Versions::Scheme::Semver: return ManifestDeserializer::VERSION_SEMVER;
+                case Versions::Scheme::Relaxed: return ManifestDeserializer::VERSION_RELAXED;
+                case Versions::Scheme::Date: return ManifestDeserializer::VERSION_DATE;
+                default: Checks::unreachable(VCPKG_LINE_INFO);
+            }
+        }();
+        obj.insert(version_field, Json::Value::string(scf.core_paragraph->version));
 
         if (scf.core_paragraph->port_version != 0 || debug)
         {
