@@ -1,10 +1,8 @@
 Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e.,
-      '-ltensorflow_cc -ltensorflow_framework -lstdc++ -lm -ldl -lpthread' on Linux and
-      '-ltensorflow_cc -ltensorflow_framework -lstdc++ -framework CoreFoundation' on macOS
+      '-ltensorflow_cc -ltensorflow_framework -lstdc++ -lm -ldl -lpthread'
 
       For the static port build libtensorflow_framework.a got merged into libtensorflow_cc.a to avoid linking conflicts,
       so you only need '-ltensorflow_cc'.
 
       For some TensorFlow features (e.g. OpRegistry), it might be necessary to convince the linker to include the whole library, i.e.,
-      '-Wl,--whole-archive -ltensorflow_cc -Wl,--no-whole-archive -lstdc++ -lm -ldl -lpthread' on Linux and
-      '-Wl,-force_load,path/to/libtensorflow_cc.a -lstdc++ -framework CoreFoundation -framework Security' on macOS
+      '-Wl,--whole-archive -ltensorflow_cc -Wl,--no-whole-archive -lstdc++ -lm -ldl -lpthread'

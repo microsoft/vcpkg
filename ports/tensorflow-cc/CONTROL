@@ -1,5 +1,4 @@
 Source: tensorflow-cc
 Version: 2.3
 Description: Library for computation using data flow graphs for scalable machine learning
-Build-Depends: c-ares
-Supports: !x86
+Supports: !x86 !arm !arm64
