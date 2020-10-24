@@ -1,14 +1,27 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index debc232..2aa2d3a 100644
+index 6535632..1740841 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -60,8 +60,7 @@ if(NOT EXISTS ${PROJECT_SOURCE_DIR}/.cppan)
+@@ -70,8 +70,7 @@ if(NOT SW_BUILD)
+         pkg_check_modules(JP2K libopenjp2>=2.0 QUIET)
      endif()
      if(NOT WEBP)
-         message(STATUS "Looking for WEBP")
 -        find_path(WEBP_INCLUDE_DIR /webp/decode.h)
 -        find_library(WEBP_LIBRARY NAMES webp)
 +        find_package(WebP CONFIG REQUIRED)
          if (WEBP_INCLUDE_DIR AND WEBP_LIBRARY)
              set(WEBP 1)
              set(WEBP_FOUND TRUE)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d2b999d..019ec7b 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -52,7 +52,7 @@ if (TIFF_LIBRARIES)
+ endif()
+ if (WEBP_FOUND)
+     target_include_directories  (leptonica PUBLIC ${WEBP_INCLUDE_DIRS})
+-    target_link_libraries       (leptonica ${WEBP_LIBRARIES})
++    target_link_libraries       (leptonica WebP::webp WebP::libwebpmux)
+ endif()
+ if (ZLIB_LIBRARIES)
+     target_include_directories  (leptonica PUBLIC ${ZLIB_INCLUDE_DIRS})
