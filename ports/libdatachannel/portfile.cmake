@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
     ws NO_WEBSOCKET
+    srtp USE_SRTP
 )
 
 vcpkg_configure_cmake(
