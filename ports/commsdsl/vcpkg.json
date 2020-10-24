@@ -6,8 +6,7 @@
     "documentation": "https://github.com/commschamp/commsdsl",
     "dependencies": [
         "comms",
-        "boost-program-options",
-        "boost-filesystem",
+        "boost",
         "libxml2"
     ]
 }

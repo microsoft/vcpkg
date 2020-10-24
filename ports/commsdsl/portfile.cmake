@@ -1,5 +1,3 @@
-#header-only library
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commschamp/commsdsl
@@ -8,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         "use-FindPackage.patch"
+        "fix-libxml2.patch"
 )
 
 vcpkg_configure_cmake(
@@ -25,5 +24,6 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
