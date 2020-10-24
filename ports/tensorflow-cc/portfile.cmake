@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "x86")
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
 
 set(TF_VERSION 2.3.0)
 
