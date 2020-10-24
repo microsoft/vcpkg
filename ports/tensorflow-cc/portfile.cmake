@@ -73,11 +73,11 @@ set(ENV{TF_CONFIGURE_IOS} 0)
 
 if(VCPKG_TARGET_IS_WINDOWS)
 	set(BAZEL_LIB_NAME tensorflow_cc.dll)
-	set(SCRIPT_SUFFIX windows)
+	set(PLATFORM_SUFFIX windows)
 	set(STATIC_LINK_CMD static_link.bat)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
 	set(BAZEL_LIB_NAME libtensorflow_cc.dylib)
-	set(SCRIPT_SUFFIX macos)
+	set(PLATFORM_SUFFIX macos)
 	set(STATIC_LINK_CMD sh static_link.sh)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 		set(TF_LIB_NAME "libtensorflow_cc.dylib")
@@ -93,7 +93,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
 	endif()
 else()
 	set(BAZEL_LIB_NAME libtensorflow_cc.so)
-	set(SCRIPT_SUFFIX linux)
+	set(PLATFORM_SUFFIX linux)
 	set(STATIC_LINK_CMD sh static_link.sh)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 		set(TF_LIB_NAME "libtensorflow_cc.so")
@@ -249,13 +249,13 @@ foreach(BUILD_TYPE dbg rel)
 		endif()
 		if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
 			vcpkg_execute_build_process(
-				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${SCRIPT_SUFFIX}.py" "${N_DBG_LIB_PARTS}"
+				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" "${N_DBG_LIB_PARTS}"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
 				LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		endif()
 		vcpkg_execute_build_process(
-			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${SCRIPT_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" # for some reason stdout of bazel ends up in stderr
+			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" # for some reason stdout of bazel ends up in stderr
 			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
 			LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
 		)
@@ -318,9 +318,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		else()
 			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow_cc -ltensorflow_framework -lstdc++ -lm -ldl -lpthread'")
 		endif()
-
-		file(COPY ${CMAKE_CURRENT_LIST_DIR}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
 	endif()
+
+	configure_file(${CMAKE_CURRENT_LIST_DIR}/README-${PLATFORM_SUFFIX} ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/README COPYONLY)
 endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
