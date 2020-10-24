@@ -32,9 +32,9 @@ list(FILTER SOURCES EXCLUDE REGEX "source/tests/.*.c$")
 add_library(libmupdf ${SOURCES})
 
 if(WIN32)
-  target_compile_definitions(libmupdf PRIVATE -DSHARE_JPEG -DFZ_ENABLE_JS=0 -DFZ_ENABLE_ICC=0)
+  target_compile_definitions(libmupdf PRIVATE -DSHARE_JPEG -DFZ_ENABLE_JS=0)
 else()
-  target_compile_definitions(libmupdf PRIVATE -DSHARE_JPEG -DFZ_ENABLE_JS=0 -DFZ_ENABLE_ICC=0 -DHAVE_PTHREAD=1)
+  target_compile_definitions(libmupdf PRIVATE -DSHARE_JPEG -DFZ_ENABLE_JS=0 -DHAVE_PTHREAD=1)
 endif()
 target_include_directories(libmupdf
   PUBLIC
