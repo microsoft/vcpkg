@@ -33,7 +33,7 @@ if(CMAKE_HOST_WIN32)
 	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3")
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
 
-	string(REGEX REPLACE "/" "\\\\" PYTHON3 $ENV{PYTHON_BIN_PATH})
+	string(REPLACE "/" "\\\\" ENV{PYTHON_BIN_PATH} $PYTHON3)
 else()
 	vcpkg_find_acquire_program(PYTHON3)
 	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
