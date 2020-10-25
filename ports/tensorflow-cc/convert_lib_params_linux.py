@@ -1,6 +1,10 @@
-with open("libtensorflow_cc.a.2.3.0-2.params", "w") as f_out:
+import sys
+
+version = sys.argv[1]
+
+with open("libtensorflow_cc.a." + version + "-2.params", "w") as f_out:
     parts = []
-    with open("libtensorflow_framework.so.2.3.0-2.params", "r") as f_in:
+    with open("libtensorflow_framework.so." + version + "-2.params", "r") as f_in:
         skip_next = False
         for line in f_in:
             if skip_next:
@@ -12,7 +16,7 @@ with open("libtensorflow_cc.a.2.3.0-2.params", "w") as f_out:
                 f_out.write(line)
                 parts.append(line)
     parts = set(parts)
-    with open("libtensorflow_cc.so.2.3.0-2.params", "r") as f_in:
+    with open("libtensorflow_cc.so." + version + "-2.params", "r") as f_in:
         skip_next = False
         for line in f_in:
             if skip_next:

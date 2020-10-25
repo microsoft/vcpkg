@@ -4,8 +4,8 @@ import sys
 with open(sys.argv[1], "r") as f_in:
     with open("static_link.sh", "w") as f_out:
         p_cd = re.compile("^\\((cd .*) && \\\\$")
-        p_linker1 = re.compile("^.*cc_wrapper.sh.+-shared.+-o (bazel-out\\S+libtensorflow_cc\\.2\\.3\\.0\\.dylib)")
-        p_linker2 = re.compile("^.*cc_wrapper.sh.+-shared.+-o (bazel-out\\S+libtensorflow_framework\\.2\\.3\\.0\\.dylib)")
+        p_linker1 = re.compile("^.*cc_wrapper.sh.+-shared.+-o (bazel-out\\S+libtensorflow_cc\\.\\d\\.\\d\\.\\d\\.dylib)")
+        p_linker2 = re.compile("^.*cc_wrapper.sh.+-shared.+-o (bazel-out\\S+libtensorflow_framework\\.\\d\\.\\d\\.\\d\\.dylib)")
         f_out.write("#!/bin/bash\n# note: ar/binutils version 2.27 required to support output files > 4GB\n")
         env = []
         parts = None
