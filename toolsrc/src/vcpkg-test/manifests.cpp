@@ -6,6 +6,7 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 #include <vcpkg-test/util.h>
 
@@ -39,6 +40,7 @@ static Parse::ParseExpected<SourceControlFile> test_parse_manifest(StringView sv
     {
         print_error_message(res.error());
     }
+    REQUIRE(res.has_value() == !expect_fail);
     return res;
 }
 
@@ -57,6 +59,57 @@ TEST_CASE ("manifest construct minimum", "[manifests]")
     REQUIRE(pgh.core_paragraph->maintainers.empty());
     REQUIRE(pgh.core_paragraph->description.empty());
     REQUIRE(pgh.core_paragraph->dependencies.empty());
+}
+
+TEST_CASE ("manifest versioning", "[manifests]")
+{
+    std::tuple<StringLiteral, Versions::Scheme, StringLiteral> data[] = {
+        {R"json({
+    "name": "zlib",
+    "version-string": "abcd"
+}
+)json",
+         Versions::Scheme::String,
+         "abcd"},
+        {R"json({
+    "name": "zlib",
+    "version-date": "2020-01-01"
+}
+)json",
+         Versions::Scheme::Date,
+         "2020-01-01"},
+        {R"json({
+    "name": "zlib",
+    "version": "1.2.3.4.5"
+}
+)json",
+         Versions::Scheme::Relaxed,
+         "1.2.3.4.5"},
+        {R"json({
+    "name": "zlib",
+    "version-semver": "1.2.3-rc3"
+}
+)json",
+         Versions::Scheme::Semver,
+         "1.2.3-rc3"},
+    };
+    for (auto v : data)
+    {
+        auto m_pgh = test_parse_manifest(std::get<0>(v));
+
+        REQUIRE(m_pgh.has_value());
+        auto& pgh = **m_pgh.get();
+        REQUIRE(Json::stringify(serialize_manifest(pgh), Json::JsonStyle::with_spaces(4)) == std::get<0>(v));
+        REQUIRE(pgh.core_paragraph->version_scheme == std::get<1>(v));
+        REQUIRE(pgh.core_paragraph->version == std::get<2>(v));
+    }
+
+    test_parse_manifest(R"json({
+        "name": "zlib",
+        "version-string": "abcd",
+        "version-semver": "1.2.3-rc3"
+    })json",
+                        true);
 }
 
 TEST_CASE ("manifest construct maximum", "[manifests]")

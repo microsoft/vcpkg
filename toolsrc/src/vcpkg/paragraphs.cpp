@@ -9,6 +9,7 @@
 #include <vcpkg/paragraphparser.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/registries.h>
+#include <vcpkg/vcpkgpaths.h>
 
 using namespace vcpkg::Parse;
 using namespace vcpkg;
