@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF 7d7e4567625db7cfebf8969a225948097a3f9f89 #v1.31.1
-    SHA512 a348b8779f533c53b99c052264e0a008121087267bcf836fb2310819ab384effdc0996df031f407ee4bf8bb0cb37a81e061e65ab24ab7011ce6400de3808f5a4
+    REF 414bb8322de2411eee1f4e841ff29d887bec7884 # v1.32.0
+    SHA512 a4fb0c926622c15a878fa475ecd670b076d1238332d174a5fb0aa987789d54a1d605ea6d4a7c705addf3c429e8b3b646e0f1f611715e84196a7fb958e1ff5945
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -69,8 +69,6 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/gRPC TARGET_PATH share/gRPC)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
 if (gRPC_BUILD_CODEGEN)
     vcpkg_copy_tools(
         AUTO_CLEAN
@@ -90,3 +88,5 @@ SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
