@@ -30,10 +30,8 @@ if(CMAKE_HOST_WIN32)
 	set(ENV{BAZEL_VC} $ENV{VCInstallDir})
 	set(ENV{BAZEL_VC_FULL_VERSION} $ENV{VCToolsVersion})
 
-	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3")
+	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3.exe")
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
-
-	string(REPLACE "/" "\\" ENV{PYTHON_BIN_PATH} $PYTHON3)
 else()
 	vcpkg_find_acquire_program(PYTHON3)
 	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
@@ -41,9 +39,8 @@ else()
 
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
-
-	set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 endif()
+set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
 
 # check if numpy can be loaded
