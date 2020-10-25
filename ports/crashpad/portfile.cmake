@@ -30,6 +30,14 @@ checkout_in_path(
     "https://chromium.googlesource.com/chromium/mini_chromium"
     "c426ff98e1d9e9d59777fe8b883a5c0ceeca9ca3"
 )
+if(VCPKG_TARGET_IS_LINUX)
+    # fetch lss
+    checkout_in_path(
+        "${SOURCE_PATH}/third_party/lss/lss"
+        "https://chromium.googlesource.com/linux-syscall-support"
+        "29f7c7e018f4ce706a709f0b0afbf8bacf869480"
+    )
+endif()
 
 function(replace_gn_dependency INPUT_FILE OUTPUT_FILE LIBRARY_NAMES)
     unset(_LIBRARY_DEB CACHE)
