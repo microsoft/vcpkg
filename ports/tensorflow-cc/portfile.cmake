@@ -1,6 +1,6 @@
 vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
 
-set(TF_VERSION 2.3.0)
+set(TF_VERSION 2.3.1)
 set(TF_VERSION_SHORT 2.3)
 
 vcpkg_find_acquire_program(BAZEL)
@@ -125,7 +125,7 @@ foreach(BUILD_TYPE dbg rel)
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
 		REF "v${TF_VERSION}"
-		SHA512 86aa087ea84dac1ecc1023b23a378100d41cc6778ccd20404a4b955fc67cef11b3dc08abcc5b88020124d221e6fb172b33bd5206e9c9db6bc8fbeed399917eac
+		SHA512 e497ef4564f50abf9f918be4522cf702f4cf945cb1ebf83af1386ac4ddc7373b3ba70c7f803f8ca06faf2c6b5396e60b1e0e9b97bfbd667e733b08b6e6d70ef0
 		HEAD_REF master
 		PATCHES
 			fix-build-error.patch # Fix namespace error
