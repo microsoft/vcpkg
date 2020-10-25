@@ -1,6 +1,7 @@
 vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
 
 set(TF_VERSION 2.3.0)
+set(TF_VERSION_SHORT 2.3)
 
 vcpkg_find_acquire_program(BAZEL)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
@@ -22,6 +23,7 @@ vcpkg_add_to_path(PREPEND ${GIT_DIR})
 if(CMAKE_HOST_WIN32)
 	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
 	vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
+	vcpkg_add_to_path(${MSYS_ROOT}/mingw64/bin)
 	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
 	set(ENV{BAZEL_SH} ${MSYS_ROOT}/usr/bin/bash.exe)
@@ -30,6 +32,8 @@ if(CMAKE_HOST_WIN32)
 
 	set(PYTHON3 "${MSYS_ROOT}/mingw64/bin/python3")
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getsitepackages()[0])" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
+
+	string(REGEX REPLACE "/" "\\\\" PYTHON3 $ENV{PYTHON_BIN_PATH})
 else()
 	vcpkg_find_acquire_program(PYTHON3)
 	get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
@@ -37,8 +41,9 @@ else()
 
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
 	vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import site; print(site.getusersitepackages())" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pypath-${TARGET_TRIPLET} OUTPUT_VARIABLE PYTHON_LIB_PATH)
+
+	set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 endif()
-set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
 
 # check if numpy can be loaded
@@ -65,7 +70,7 @@ set(ENV{TF_NEED_IGNITE} 0)
 set(ENV{TF_NEED_ROCM} 0)
 set(ENV{TF_SET_ANDROID_WORKSPACE} 0)
 set(ENV{TF_DOWNLOAD_CLANG} 0)
-set(ENV{TF_NCCL_VERSION} 2.3)
+set(ENV{TF_NCCL_VERSION} ${TF_VERSION_SHORT})
 set(ENV{NCCL_INSTALL_PATH} "")
 set(ENV{CC_OPT_FLAGS} "/arch:AVX")
 set(ENV{TF_NEED_CUDA} 0)
@@ -75,7 +80,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 	set(BAZEL_LIB_NAME tensorflow_cc.dll)
 	set(PLATFORM_SUFFIX windows)
 	set(STATIC_LINK_CMD static_link.bat)
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+elseif(VCPKG_TARGET_IS_OSX)
 	set(BAZEL_LIB_NAME libtensorflow_cc.dylib)
 	set(PLATFORM_SUFFIX macos)
 	set(STATIC_LINK_CMD sh static_link.sh)
@@ -116,7 +121,7 @@ foreach(BUILD_TYPE dbg rel)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		set(STATIC_ONLY_PATCHES change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
 	endif()
-	if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+	if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX)
 		set(LINUX_ONLY_PATCHES fix-linux-build.patch)
 	endif()
 	vcpkg_from_github(
@@ -206,6 +211,12 @@ foreach(BUILD_TYPE dbg rel)
 		endforeach()
 	endif()
 
+	if (VCPKG_TARGET_IS_UWP)
+		list(APPEND COPTS "--copt=-DWINAPI_FAMILY=WINAPI_FAMILY_APP")
+		list(APPEND COPTS "--copt=-D_WIN32_WINNT=0x0A00")
+		list(APPEND LINKOPTS "--linkopt=-APPCONTAINER")
+	endif()
+
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			list(JOIN COPTS " " COPTS)
@@ -247,7 +258,7 @@ foreach(BUILD_TYPE dbg rel)
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		endif()
-		if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+		if(NOT VCPKG_TARGET_IS_OSX)
 			vcpkg_execute_build_process(
 				COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" "${N_DBG_LIB_PARTS}"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
@@ -313,7 +324,7 @@ file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/i
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 	message(STATUS "Warning: Static TensorFlow build contains several external dependancies that may cause linking conflicts (e.g. you cannot use openssl in your projects as TensorFlow contains boringssl and so on).")
 	if(NOT VCPKG_TARGET_IS_WINDOWS)
-		if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
+		if(VCPKG_TARGET_IS_OSX)
 			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow_cc -ltensorflow_framework -lstdc++ -framework CoreFoundation'")
 		else()
 			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow_cc -ltensorflow_framework -lstdc++ -lm -ldl -lpthread'")
