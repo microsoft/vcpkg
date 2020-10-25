@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0098760..dd85ba6 100644
+index 1560700..197ada2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -105,30 +105,20 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
+@@ -108,30 +108,19 @@ set(THREADS_PREFER_PTHREAD_FLAG TRUE)
  find_package(Threads REQUIRED)
  
  set(CMAKE_POLICY_DEFAULT_CMP0048 NEW)
 -add_subdirectory(deps/plog)
- 
+-
 -option(sctp_build_programs 0)
 -add_subdirectory(deps/usrsctp EXCLUDE_FROM_ALL)
 -if (MSYS OR MINGW)
@@ -26,7 +26,7 @@ index 0098760..dd85ba6 100644
  
  if (NO_WEBSOCKET)
 -	add_library(datachannel SHARED
-+	add_library(datachannel
++	add_library(datachannel 
  		${LIBDATACHANNEL_SOURCES})
  	add_library(datachannel-static STATIC EXCLUDE_FROM_ALL
  		${LIBDATACHANNEL_SOURCES})
@@ -34,11 +34,11 @@ index 0098760..dd85ba6 100644
  	target_compile_definitions(datachannel-static PUBLIC RTC_ENABLE_WEBSOCKET=0)
  else()
 -	add_library(datachannel SHARED
-+	add_library(datachannel
++	add_library(datachannel 
  		${LIBDATACHANNEL_SOURCES}
  		${LIBDATACHANNEL_WEBSOCKET_SOURCES})
  	add_library(datachannel-static STATIC EXCLUDE_FROM_ALL
-@@ -145,17 +135,18 @@ set_target_properties(datachannel-static PROPERTIES
+@@ -148,17 +137,17 @@ set_target_properties(datachannel-static PROPERTIES
  	VERSION ${PROJECT_VERSION}
  	CXX_STANDARD 17)
  
@@ -49,7 +49,7 @@ index 0098760..dd85ba6 100644
 -target_link_libraries(datachannel PUBLIC Threads::Threads plog::plog)
 -target_link_libraries(datachannel PRIVATE Usrsctp::UsrsctpStatic)
 +target_include_directories(datachannel PRIVATE ${PLOG_INCLUDE_DIRS})
-+target_link_libraries(datachannel PRIVATE ${USRSCTP_LIBRARY})
++target_link_libraries(datachannel PUBLIC Threads::Threads ${USRSCTP_LIBRARY})
  
  target_include_directories(datachannel-static PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
  target_include_directories(datachannel-static PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/rtc)
@@ -57,12 +57,11 @@ index 0098760..dd85ba6 100644
 -target_link_libraries(datachannel-static PUBLIC Threads::Threads plog::plog)
 -target_link_libraries(datachannel-static PRIVATE Usrsctp::UsrsctpStatic)
 +target_include_directories(datachannel-static PRIVATE ${PLOG_INCLUDE_DIRS})
-+target_link_libraries(datachannel-static PUBLIC Threads::Threads)
-+target_link_libraries(datachannel-static PRIVATE ${USRSCTP_LIBRARY})
++target_link_libraries(datachannel-static PUBLIC Threads::Threads ${USRSCTP_LIBRARY})
  
  if(WIN32)
- 	target_link_libraries(datachannel PRIVATE wsock32 ws2_32) # winsock2
-@@ -211,11 +202,10 @@ if (USE_NICE OR NOT USE_JUICE)
+ 	target_link_libraries(datachannel PRIVATE ws2_32) # winsock2
+@@ -222,11 +211,10 @@ if (USE_NICE OR NOT USE_JUICE)
  	target_link_libraries(datachannel PRIVATE LibNice::LibNice)
  	target_link_libraries(datachannel-static PRIVATE LibNice::LibNice)
  else()
@@ -76,7 +75,7 @@ index 0098760..dd85ba6 100644
  endif()
  
  if(CAPI_STDCALL)
-@@ -226,7 +216,11 @@ endif()
+@@ -237,7 +225,11 @@ endif()
  add_library(LibDataChannel::LibDataChannel ALIAS datachannel)
  add_library(LibDataChannel::LibDataChannelStatic ALIAS datachannel-static)
  
@@ -89,7 +88,7 @@ index 0098760..dd85ba6 100644
  install(FILES ${LIBDATACHANNEL_HEADERS} DESTINATION include/rtc)
  
  if(NOT MSVC)
-@@ -283,3 +277,8 @@ if(NOT NO_EXAMPLES)
+@@ -294,3 +286,9 @@ if(NOT NO_EXAMPLES)
  	add_subdirectory(examples/copy-paste-capi)
  endif()
  
@@ -98,6 +97,7 @@ index 0098760..dd85ba6 100644
 +  NAMESPACE LibDatachannel::
 +  DESTINATION share/cmake/libdatachannel
 +)
++
 diff --git a/src/tcptransport.hpp b/src/tcptransport.hpp
 index 1447835..1c92686 100644
 --- a/src/tcptransport.hpp

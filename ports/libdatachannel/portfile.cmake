@@ -1,17 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
-    REF v0.9.4
-    SHA512 aa4d5b0fad86ac9a323f89583508b416ad6cf5f0384458b3ba1aed9ba85093eb92dab6fbdcf915e9716d9b4fb38c57469d6ef59e05467232583556fc7652168e
+    REF d59c209c2044b74b8a60f1de68aadea28298e6b3
+    SHA512 35a01349e7038a7d1776d154ee2c111d431d29a426b4948a6288017d30a0baa71f497dc694996085811d7860e40c5e6906a3fb07150bda87f4d9ed56db9fec70
     HEAD_REF master
     PATCHES
         fix-for-vcpkg.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    srtp USE_SRTP
+
     INVERTED_FEATURES
     ws NO_WEBSOCKET
-    srtp USE_SRTP
 )
 
 vcpkg_configure_cmake(
