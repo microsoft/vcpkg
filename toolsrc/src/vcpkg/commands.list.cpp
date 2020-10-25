@@ -1,4 +1,5 @@
 #include <vcpkg/base/system.print.h>
+#include <vcpkg/base/util.h>
 
 #include <vcpkg/commands.list.h>
 #include <vcpkg/help.h>
