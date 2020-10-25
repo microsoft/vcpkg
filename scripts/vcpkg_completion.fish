@@ -18,8 +18,25 @@ complete -c vcpkg -f --arguments '(_vcpkg_completions)'
 
 set vcpkg_commands ($vcpkg_executable autocomplete)
 
+function _set_triplet_arguments
+  set triplets ($vcpkg_executable help triplet)
+  set -e triplets[(contains -i -- "Available architecture triplets" $triplets)]
+  set -e triplets[(contains -i -- "" $triplets)]
+  set triplet_from ""
+  for triplet in $triplets
+    echo (test -n "$triplet") >> temp.txt
+    if [ (string sub -l5 -- $triplet) = "VCPKG" ]
+      set -l temp (string length $triplet)
+      set triplet_from (string sub -s6 -l(math $temp - 15) -- $triplet)
+    else if [ -n "$triplet" ]
+      complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l triplet -d "$triplet_from" -a (string sub -s3 -- $triplet)
+    end
+  end
+end
+_set_triplet_arguments
+
 # options for all completions
-complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l triplet -d "Specify the target architecture triplet. See 'vcpkg help triplet' (default: \$VCPKG_DEFAULT_TRIPLET)" -a '(get_triples)'
+complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l triplet -d "Specify the target architecture triplet. See 'vcpkg help triplet' (default: \$VCPKG_DEFAULT_TRIPLET)"
 complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l overlay-ports -d "Specify directories to be used when searching for ports (also: \$VCPKG_OVERLAY_PORTS)" -a '(__fish_complete_directories)'
 complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l overlay-triplets -d "Specify directories containing triplets files (also: \$VCPKG_OVERLAY_TRIPLETS)" -a '(__fish_complete_directories)'
 complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l binarysource -d "Add sources for binary caching. See 'vcpkg help binarycaching'" -a '(__fish_complete_directories)'
