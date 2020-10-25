@@ -1,14 +1,10 @@
 set(PDAL_VERSION_STR "2.2.0")
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/PDAL/PDAL/releases/download/${PDAL_VERSION_STR}/PDAL-${PDAL_VERSION_STR}-src.tar.gz"
-    FILENAME "PDAL-${PDAL_VERSION_STR}-src.tar.gz"
-    SHA512 c54770973de714473bf6cfe6a69e2c880d516abcf71cce755495304093acb41471b4264cb84f11973a482f3de80a8922d7d8b54994fb91c6b012a6894a8bdac5
-)
-
-vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
+    REPO PDAL/PDAL
+    REF 2.2.0
+    SHA512 26acd2197df3083e1f2de705beb9a5fede1b5a10cdf3c6c0e161c5fc64ed71c70f2f487f6a28b5198959b39885a0f691bf306cdab940de8002058a23ec16982e
     PATCHES
         reimplement-patch-172-in-220.patch
 )
