@@ -57,7 +57,7 @@ Prérequis :
   - [Git][getting-started:git]
   + [Visual Studio][getting-started:visualstudio] 2015 mise à jour 3 où plus récente avec le pack de langue Anglais
 
-Premièrement, téléchargez et lancer le fichier bootstrap-vcpkg; il peut être installé n'importe où mais il est recommandé d'utiliser vcpkg pour des projets CMake, Nous recommandons ces chemins `C:\src\vcpkg` ou `C:\dev\vcpkg`, sinon vous pourriez avoir des problèmes de chemin pour certaines compilations.
+Premièrement, téléchargez et lancer le fichier bootstrap-vcpkg; il peut être installé n'importe où mais il est recommandé d'utiliser vcpkg pour des projets CMake. Nous recommandons ces chemins `C:\src\vcpkg` ou `C:\dev\vcpkg`, sinon vous pourriez avoir des problèmes de chemin pour certaines compilations.
 
 
 ```cmd
