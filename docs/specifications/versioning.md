@@ -1,6 +1,6 @@
 # Versioning Specification 
 
-## 1 Glossary
+## Glossary
 Some of the terms used in this document have similar meaning when discussed by the community, and because of that, they can cause confusion and ambiguity. To solve this issue, we will assign specific meaning to these terms and try to keep a consistent usage through the document.
 
 **Library**: A piece of software (source code, binary files, documentation, license, etc.) that is intended to be reused by other software.
@@ -11,6 +11,16 @@ Some of the terms used in this document have similar meaning when discussed by t
 
 * Metadata about a package: package version, supported features, dependencies, etc.
 * Instructions to acquire, build if necessary, and install the package.
+
+## 1 Enabling package versioning
+The versioning feature is disabled by default, a user can opt-in to this feature by using the `versions` feature flag, see our [documentation to learn more about feature flags](). Since versions will initially only support manifest mode, using the `versions` feature flag implies enabling `manifest`.
+
+Example of how to enable versions:
+```
+vcpkg --feature-flags=versions install
+```
+
+If the versions flag is disabled, using any of the following properties in a JSON manifest will cause vcpkg to fail and warn about needing the `versions` feature flag: `version`, `version-semver`, `version-date`, `version>=`, `version=`, and `overrides`. This is compatible with existing behavior where `version-string` is the accepted versioning property.
 
 ## 2 Specifying package versions
 Through the years, C++ software authors have adopted multiple versioning schemes and practices that sometimes conflict between each other. On vcpkg, the most recurrent versioning schemes found are:
@@ -31,10 +41,11 @@ This document describes:
 * How vcpkg resolves version requirements.
 
 ### 2.1 Manifest files
-Package versioning information can be divided in three sections: an epoch, a version string and a port version. Epochs and port versions are vcpkg specific fields, and can be specified using the following fields:
+Initially, package versioning will only be available in manifest mode described in:  
+https://github.com/microsoft/vcpkg/blob/master/docs/users/manifests.md  
 
-**`epoch`**  
-A decimal value. Description goes here. Defaults to `0.0` if omitted.
+Package versioning information is divided in two parts: a version string and a port version.  
+To support versioning new JSON properties need to be added to the manifest: 
 
 **`port-version`**  
 An integer value that increases each time a vcpkg-specific change is made to the port. 
@@ -54,12 +65,12 @@ To declare the package version insde a manifest, a specific field must be used d
 
 | Field            | Version scheme                |
 |------------------|-------------------------------|
-| `version`        | For SemVer-like versions      |
+| `version`        | For dot-separated versions      |
 | `version-semver` | For SemVer compliant versions |
 | `version-date`   | For dates                     |
 | `version-string` | For arbitrary strings         |
 
-A manifest must contain only one version declaration. If a package changes from using one versioning scheme to another, the change must be reflected by changing the `epoch` value.
+A manifest must contain only one version declaration.
 
 **`version`**  
 Accepts version strings that follow a relaxed, dotted scheme. For example: OpenSSL uses version number `1.1.1` as the base for its latest LTS series and appends a single letter to indicate an update (`1.1.1a`, `1.1.1b`, `1.1.1h`). The version is logically composed of dot-separated sections (`.`), each with a numeric primary and a lowercase, alphanumeric suffix.
@@ -138,8 +149,8 @@ There are two mechanisms to control which versions of your packages are installe
 #### Version Requirements
 Specifying a version requirement is the most direct way to control which version of a package is installed, in vcpkg two types of version requirements are available:
 
-* Exact version requirement (`"version": "= 1.0.0"`)
-* Minimum version requirement (`"version": ">= 1.0.0"`)
+* Exact version requirement (`"version=": "1.0.0"`)
+* Minimum version requirement (`"version>=": "1.0.0"`)
 
 Both are explained in more detail in the [Version Requirements](#5-version-requirements) section.
 
@@ -165,18 +176,26 @@ Setting a baseline is optional, when a baseline is not explicitly set, vcpkg use
 
 ## 4 Version requirements
 
-### 4.1 Semver version matching
-A semantic versioning constraint must exactly match a published version of the dependee. This version is then used as a minimum and all versions with a higher precedence are considered valid.
+### 4.1 Baseline requirements
+When a package declares a dependency but omits any kind of version constraints on said dependency, vcpkg assumes this to be a “baseline requirement”.  When a baseline requirement is found, vcpkg will fill in the missing versions constraints using a specific baseline, either declared by the user or defaulted to the latest revision of the registry containing the package. 
 
-_Note: In NPM, the Node package manager, this constraint would be specified as `>=X.Y.Z`._
-### 4.2 Baseline requirements
-When a dependency declaration lacks any version requirement vcpkg will use the package registry's baseline to fill in the missing information. 
+As described in the registries specification, registries must contain a “baseline.json” file. The contents of which are used to determine what package versions are considered baseline for any specific revision of the registry. 
 
-Before version resolution ocurrs, vcpkg will look for the current version of each package in the baseline and treat packages with no requirements as if they had declared a minimum version on it. 
 
-If the baseline versioning scheme does not support minimum version requirements, vcpkg will instead add an exact version requirement.
+Before version resolution occurs, vcpkg will look for a baseline version following these steps: 
 
-#### 4.2.1 Example
+1. Checkout the registry’s “baseline.json” at the baseline commit. 
+2. Find the version of the port declared in the baseline. 
+3. Checkout the port files. 
+4. Substitute the baseline requirement: 
+    * With an exact requirement, if the package uses a version-string scheme. 
+    * With a minimum requirement, otherwise. 
+
+A baseline is declared by the user as part of their configuration. Baselines are simply put specific revisions of a registry, for Git-based registries these are either commits or tags. For filesystem-based registries, the registries spec proposes the use of named baselines. 
+
+For the initial implementation of versioning, only commit IDs on Git-based registries will be supported and they are declared as part of a registry’s configuration using the “baseline” field. 
+
+#### 4.1.1 Example
 
 `project/vcpkg-config.json`
 ```json
@@ -202,11 +221,11 @@ If the baseline versioning scheme does not support minimum version requirements,
 In the above example, vcpkg will find the version of `zlib` that exists in baseline commit `acd2f59` to be `1.2.11`.
 During the version resolution step, vcpkg will treat `zlib` as if it had a minimum version requirement on `1.2.11`.
 
-## 4.3 Exact version requirements
+## 4.2 Exact version requirements
 The simplest form of versioning. Exact version requirements resolve to an exact version of a package.  
 Accomplished by using the `"version="` field in the `"dependencies"` list.
 
-#### 4.3.1 Example
+#### 4.2.1 Example
 
 ```json
 {
@@ -214,7 +233,7 @@ Accomplished by using the `"version="` field in the `"dependencies"` list.
   "version-semver": "1.0.0",
   "dependencies": [
     { "name": "zlib", "version=": "1.2.11" },
-    { "name": "rapidjson", "version=": "2020-02-08.nightly" }
+    { "name": "rapidjson", "version=": "2020-02-08.1" }
   ]
 }
 ```
@@ -231,9 +250,9 @@ Using a minimum version approach has the following advantages:
   * Avoids having to solve version SAT.  
   
 
-Minimum version requirements are expressed by using a "version>=" property in the dependencies list. It is not allowed to use "version=" and "version>=" on the same dependency.
+Minimum version requirements are expressed by using a `version>=` property in the dependencies list. It is not allowed to use `"version="` and `"version>="` on the same dependency.
 
-Minimum version requirements can only be used on packages using the `version`, `version-semver` and `version-date` schemes. 
+Minimum version requirements can only be used on packages using the `"version"`, `"version-semver"` and `"version-date"` schemes. 
 
 ### 4.4.1 Example
 
@@ -269,9 +288,47 @@ It is recommended to use `port-version` in combination with `version=` requireme
 
 ## 5 Design considerations
 
-### 5.1 Problem: version conflicts
+### 5.1 Problem: acquiring port versions
+Although the concept of package versions has always been present in vcpkg, the concept of version constraints has been not. For that reason, vcpkg only cared about the version of a port that you currently have checked out on disk.  
 
-#### 5.1.1 Example of a conflict
+With the introduction of versioning constraints, it is now possible that a package depends on a port version that does not match the one available on the user’s disk.  Another problem is that vcpkg has to know how to acquire the port files for the requested version. 
+
+To solve this problem a port versions database will now be part of the main repository, the registries spec has more details on how these databases will be implemented in custom registries.  
+
+The form of this database is a folder containing JSON files, one file for each port available, and each file will list all the versions available for a package and how to obtain them from a Git repository.  
+
+As part of the versioning implementation, a generator for these database files will be implemented. The generator will extract from our repository’s Git history, all the versions of each port that had been available at any moment in time and compile them into these database files.  
+
+Example of generated `zlib.json`: 
+
+```json
+{ 
+  "versions": [ 
+    { 
+      "git-tree": "2dfc991c739ab9f2605c2ad91a58a7982eb15687", 
+      "version": "1.2.11", 
+      "port-version": 9 
+    }, 
+    { “$truncated for brevity” }, 
+    { 
+      "git-tree": "a516e5ee220c8250f21821077d0e3dd517f02631", 
+      "version": "1.2.10", 
+      "port-version": 0 
+    }, 
+    { 
+      "git-tree": "3309ec82cd96d752ff890c441cb20ef49b52bf94", 
+      "version": "1.2.8", 
+      "port-version": 0 
+    } 
+  ] 
+} 
+```
+
+Vcpkg can use the `“git-tree”` objects to acquire (checkout) old versions of ports. 
+
+### 5.2 Problem: version conflicts
+
+#### 5.2.1 Example of a conflict
 
 Consider the following manifest files:
 
@@ -306,14 +363,14 @@ Consider the following manifest files:
 
 There are conflicting requirements for `C`, as package `A` requires version `1.1`, and package `B` requires version `1.2`.
 
-#### 5.1.2 Solution: top-level overrides
+#### 5.2.2 Solution: top-level overrides
 When conflicting requirements exist, an explicit override must be specified in the top-level manifest file.
 
 Version requirement overrides are expressed using the `overrides` property in the root of the manifest. The syntax for overrides is the same as declaring a version. Overrides that are not in the top-level manifest are ignored.
 
 By separating the overrides from the dependency requirements, the user can control whether the overrides are applied during the build graph constructiong. Using the `--no-overrides` flag, disables all of the overrides in the manifest. This is useful when changing dependency requirements, to test whether overrides are no longer required, for example, in case of a dependency upgrade.
 
-##### 5.1.2.1 Example
+##### 5.2.2.1 Example
 
 The example in 5.1.1 can be solved by overriding the requirements of package `C` like this:
 
@@ -332,86 +389,6 @@ The example in 5.1.1 can be solved by overriding the requirements of package `C`
 ```
 
 The override ignores all other constraints and forces the used version of `C` to be exactly `1.2` with port version `0`.
-
-### 5.2 Problem: block major version upgrades (WIP)
-
-Under Semantic Versioning, major version changes introduce breaking changes to public API. Using minimum version requirements can result in unexpected major version upgrades of packages in the dependency list. To overcome this issue a user has two options:
-
-* 1) Override the minimum version requirements
-* 2) Use exclusion lists (described below).
-
-### 5.2.1 Solution: exclusion lists (WIP)
-Exclusion lists have the following properties:
-
-* Accept `"version>"`, `"version>="`, and `"version="` exclusions.
-* Exclusions are unconditional. I.e.: not in the form of "If `A:1.x` then not `B:1.Y`" or similar.
-
-* Defined in their own section in the manifest.
-* Exclusions that are not in the top-level manifest are ignored.
-
-An exclusion takes a package version out of the candidate list when resolving version requirements. Effectively, is the same as if the versions in the exclusion list did not exist.
-
-#### 5.2.1.1 Example
-Consider that the following packages with these versions exist:
-
-* `A: [1.0, 1.1, 2.0]`
-* `B: [1.0.0, 2.0.0, 2.1.0, 2.1.1, 2.2.0]`
-* `C: [1.0, 1.1, 2.0, 2.1, 3.0]`
-* `C:3.0 depends on A:>=2.0`
-
-And the following manifest file
-
-```json
-{
-  "name": "project",
-  "dependencies": [
-    { "name": "A", "version>=": "1.0" },
-    { "name": "B", "version>=": "2.0" },
-    { "name": "C", "version>=": "3.0" }
-  ],
-  "exclude": [
-    { "name": "A", "version>=": "2.0" },
-    { "name": "B", "version=": "2.0" },
-    { "name": "B", "version=": "2.1.0" },
-    { "name": "B", "version=": "2.1.1" }
-  ]
-}
-```
-
-Using the exclusions effectively reduces the candidate set to:
-
-
-* `A: [1.0, 1.1]`
-* `B: [1.0.0, 2.2.0]`
-* `C: [1.0, 1.1, 2.0, 2.1, 3.0]`
-* `C:3.0 depends on A:>=2.0`
-
-Without exclusions this would resolve in:
-
-* `A:2.0` (upgraded by `C:3.0`'s requirement).
-* `B:2.0.0`
-* `C:3.0`
-
-With exclusions the outcome is:
-
-* `A: error` (C:3.0 requires A>=2.0, which does not exist)
-* `B: 2.2.0`
-* `C: 3.0`
-
-### 5.2.1.2 Wildcard character
-A wildcard character `*` can be used in `version=` exclusions for convenience. 
-
-The wildcard character `*` can only appear at the end of a version string, replacing the digits that would go into that part of the semver string.  
-
-E.g.: 
-* `2.*` and `2.0.*` are valid, 
-* `2.*.1` and `2.1.1*` are invalid.
-
-The exclusion in the previous example can be reduced to:
-
-```json
-  { "name": "B", "not": "2.1.*" }
-```
 
 ## 6 Algorithm
 The implementation is based on the algorithm proposed in https://research.swtch.com/vgo-mvs with some modifications to adapt it to vcpkg version requirements.
@@ -437,28 +414,17 @@ Also consider the following manifest file for the project:
 }
 ```
 
-The original algorithm constructs a build list from the dependencies following these steps:
+The algorithm constructs a build list from the dependencies following these steps:
 
 > Construct the rough build list for M by starting from an empty list, adding M, and then appending the build list for each of M's requirements. Simplify the rough build list to produce the final build list, by keeping only the newest version of any listed module.
 
-In vcpkg's case, keeping only the newest versions can result in the violation of exact version requirements. 
-
-The solution is to create two build lists, one for minimum requirements and one for exact requirements. The contents of both build lists are merged and then either a valid build list is created or a conflict is reported.
-
-To create the minimum versions list, follow the steps in the original algorithm, keeping only the greatest version of each package on the list.
-
-To create the exact versions list, keep each version of a package that is required, if a package appears more than once in the list, report a conflict.
-
-In our example, to construct a build list for the project we start with its direct requirements, selecting the minimal version that satisfies each requirement. 
+We start with the top-level requirements, selecting the minimal version that satisfies each requirement and adding it to the list.
 
 * `A >= 1.0` resolves to package `A:1.0`
 * `B >= 2.0` resolves to package `B:2.0`. 
 * `C >= 3.0` resolves to package `C:3.0`. 
 
-Resulting in: 
-
-* Minimum versions `[ A:1.0, B:2.0, C:3.0 ]` 
-* Exact versions `[]`. 
+Resulting in the package list `[ A:1.0, B:2.0, C:3.0 ]`
 
 After that we recursively resolve downstream requirements for the packages added to the lists.  
 
@@ -479,24 +445,17 @@ From `C:4.0` (added by `B:2.0`)
 
 * `E>=1.2` resolves to package `E:1.2` 
 
-Resulting in the following lists: 
+And end up with the following package list `[ A:1.0, B:2.0, C:1.0, C:3.0, C:4.0, D:1.0, E:1.1, E:1.2 ]`
 
-* Minimum versions `[ A:1.0, B:2.0, C:1.0, C:3.0, E:1.1, E:1.2 ]`
-* Exact versions `[ C:4.0, D:1.0 ]` 
+The next step is to reduce the list by taking only the greates versions of each package. A package may appear multiple times in the list if it uses non-sortable version schemes.
 
-Following the original algorithm, we take only the greatest versions of packages in the minimum versions list.
+`[ A:1.0, B:2.0, C:4.0, D:1.0, E:1.2 ]`
 
-* Minimum versions  `[ A:1.0, B:2.0, C:3.0, E:1.2 ]` (after redux)
-* Exact versions `[ C:4.0, D:1.0 ]`
+After obtaining a list of package candidates, we make a validation pass through all the version requirements. This time, we check that all the version constraints can be satisfied using only the selected versions in the package list.
 
-The last step is merging both lists, for which we follow these rules: 
+During this step, the following are causes of conflict:
 
-* If a package appears only in one list, add the version of that package to the final list. 
+* A package appears multiple times on the list. This happens when different version schemes or multiple versions of a non-sortable scheme are requested.
+* A selected version does not match an excat version requirement. This happens when a different version constraint or a minimum version constraint impose a higher requirement on the same package.
 
-* If a package appears on both lists AND the exact version is greater than or equal to the minimum version, take the exact version.
-
-* If a package appears on both lists AND the exact version is lower than the minimum version, fail the build and report the conflict. 
-
-The result of merging both lists in the example results in the final requirement list `[A:1.0, B:2.0, C:4.0, D:1.0, E:1.2]`. 
-
-After obtaining a valid build list, vcpkg will record the selected versions for each package in a **lockfile**. On future runs, if no changes to the version requirements have been made, vcpkg will use the versions in the lockfile to avoid running the algorithm. 
+If no conflicts are detected, vcpkg will install the selected packages. Otherwise, the conflicts are reported to the user, who now has the option of using overrides to solve said conflicts.
