@@ -1,10 +1,15 @@
 #pragma once
 
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/base/expected.h>
 
 #include <vcpkg/binaryparagraph.h>
-#include <vcpkg/paragraphparser.h>
-#include <vcpkg/vcpkgpaths.h>
+
+namespace vckpg::Parse
+{
+    struct ParseControlErrorInfo;
+}
 
 namespace vcpkg::Paragraphs
 {

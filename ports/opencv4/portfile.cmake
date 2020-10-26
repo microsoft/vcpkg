@@ -19,13 +19,11 @@ vcpkg_from_github(
       0002-install-options.patch
       0003-force-package-requirements.patch
       0004-fix-policy-CMP0057.patch
+      0006-jpeg2000_getref.patch
       0009-fix-uwp.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
-file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindCUDA.cmake DESTINATION ${SOURCE_PATH}/cmake/)  # backported from CMake 3.18, remove when released
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
@@ -283,7 +281,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DOPENCV_CUDA_FORCE_BUILTIN_CMAKE_MODULE=ON  #to use custom module with fixes for CUDA 11 compat, waiting for CMake support
         ###### ocv_options
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_BIN_INSTALL_PATH=bin
@@ -328,8 +325,8 @@ vcpkg_configure_cmake(
         -DBUILD_JAVA=OFF
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
         ###### PROTOBUF
-        -DPROTOBUF_UPDATE_FILES=ON
-        -DUPDATE_PROTO_FILES=ON
+        -DPROTOBUF_UPDATE_FILES=${BUILD_opencv_dnn}
+        -DUPDATE_PROTO_FILES=${BUILD_opencv_dnn}
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
@@ -351,7 +348,7 @@ vcpkg_configure_cmake(
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=${WITH_OPENMP}
-        -DWITH_PROTOBUF=ON
+        -DWITH_PROTOBUF=${BUILD_opencv_dnn}
         -DWITH_TBB=${WITH_TBB}
         -DWITH_VTK=${WITH_VTK}
         -DWITH_OPENJPEG=OFF
