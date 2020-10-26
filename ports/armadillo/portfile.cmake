@@ -4,9 +4,9 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO conradsnicta/armadillo-code
-    REF f00d3225b1c005775044369723f31cecc3cd6569
-    SHA512 ca3574edf5de8c752867403c3856ed9569fbed2ce9729585cae59be5751493c2e71121319b0a812e2ea56baada6b6f62fbc84ce6f1efb362347e5fd4141ccf1b
-    HEAD_REF 9.400.x
+    REF 24b4762cbfbd3ad14c99a4854acd3560559a3195    #v 10.1.0
+    SHA512 224a875d21168f80e00604185ef72cb559a86a350a037c9cd1660a6f4dcc68f2ebf6dbc073f234a3cb03d35d959adb44ec49af88b11e3aaca9e0017c9c3fcee6
+    HEAD_REF 10.1.x
     PATCHES
         remove_custom_modules.patch
         fix-CMakePath.patch

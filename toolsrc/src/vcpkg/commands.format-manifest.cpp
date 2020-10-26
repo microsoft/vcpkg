@@ -80,8 +80,8 @@ namespace
                            paragraphs.error());
             return {};
         }
-        auto scf_res =
-            SourceControlFile::parse_control_file(control_path, std::move(paragraphs).value_or_exit(VCPKG_LINE_INFO));
+        auto scf_res = SourceControlFile::parse_control_file(fs::u8string(control_path),
+                                                             std::move(paragraphs).value_or_exit(VCPKG_LINE_INFO));
         if (!scf_res)
         {
             System::printf(System::Color::error, "Failed to parse control file: %s\n", control_path_string);
