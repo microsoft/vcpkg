@@ -6,6 +6,7 @@
 #include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::PortFileProvider
 {

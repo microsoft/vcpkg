@@ -289,8 +289,8 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     DEPS libiconv
   )
   msys_package(
-    URL "https://repo.msys2.org/msys/x86_64/libiconv-1.16-1-x86_64.pkg.tar.xz"
-    SHA512 6f9b778d449410273a50cdd1af737cdcb8890a5536d78211477eed7382340253c7aadfb04977f1038ae4f4cef5a641f1acfda26fd06323d0b196a3e6da7fd425
+    URL "https://repo.msys2.org/msys/x86_64/libiconv-1.16-2-x86_64.pkg.tar.zst"
+    SHA512 3ab569eca9887ef85e7dd5dbca3143d8a60f7103f370a7ecc979a58a56b0c8dcf1f54ac3df4495bc306bd44bf36ee285aaebbb221c4eebfc912cf47d347d45fc
     DEPS gcc-libs
   )
   msys_package(
