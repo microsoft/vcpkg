@@ -5,15 +5,10 @@ vcpkg_from_github(
     SHA512 d0d3b5451f8d74aa0a0832fbe95cca55597ce9654765a95adaac98ecd0da9e803b98551a40a3fb3fd5b86bc5f40cd1a791127c03da5322e7f01e7fa761171a21
     HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-library-console.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile2.patch"
+        uwp-library-console.patch
+        uwp-createfile2.patch
+        fix-compile-options.patch
 )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(BUILD_SHARED_LIBS ON)
-else()
-    set(BUILD_SHARED_LIBS OFF)
-endif()
 
 if(VCPKG_TARGET_IS_MINGW)
     set(WITH_STACK_PROTECTOR OFF)
@@ -31,7 +26,6 @@ vcpkg_configure_cmake(
         -DBUILD_EXAMPLES=OFF
         -DBUILD_DOCS=OFF
         -DBUILD_TESTING=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DWITH_STACK_PROTECTOR=${WITH_STACK_PROTECTOR})
 
 vcpkg_install_cmake()
