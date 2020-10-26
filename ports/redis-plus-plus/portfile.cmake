@@ -9,7 +9,7 @@ vcpkg_from_github(
         fix-conversion.patch
 )
 
-if (VCPKG_CRT_LINKAGE STREQUAL static)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(REDIS_PLUS_PLUS_BUILD_STATIC ON)
     set(REDIS_PLUS_PLUS_BUILD_SHARED OFF)
 else()
