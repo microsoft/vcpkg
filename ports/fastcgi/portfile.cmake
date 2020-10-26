@@ -163,7 +163,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
     message(STATUS "Installing ${TARGET_TRIPLET}-dbg done")
   endif()
 else() # Other build system
-  message(STATUS "Unsupport build system.")
+  vcpkg_fail_port_install(ALWAYS)
 endif()
 
 # Handle copyright
