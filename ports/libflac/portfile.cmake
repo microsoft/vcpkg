@@ -18,10 +18,20 @@ else()
     set(WITH_STACK_PROTECTOR ON)
 endif()
 
+if("asm" IN_LIST FEATURES)
+    if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+        message(FATAL_ERROR "Feature asm only supports x86 architecture.")
+    endif()
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    asm WITH_ASM
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_PROGRAMS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_DOCS=OFF
@@ -29,6 +39,7 @@ vcpkg_configure_cmake(
         -DWITH_STACK_PROTECTOR=${WITH_STACK_PROTECTOR})
 
 vcpkg_install_cmake()
+
 vcpkg_fixup_cmake_targets(
     CONFIG_PATH share/FLAC/cmake
     TARGET_PATH share/FLAC
@@ -57,6 +68,8 @@ else()
         "#if 1"
     )
 endif()
+
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
 # This license (BSD) is relevant only for library - if someone would want to install
 # FLAC cmd line tools as well additional license (GPL) should be included
