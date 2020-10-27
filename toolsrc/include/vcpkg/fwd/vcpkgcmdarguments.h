@@ -10,4 +10,5 @@ namespace vcpkg
     struct CommandStructure;
     struct HelpTableFormatter;
     struct VcpkgCmdArguments;
+    struct FeatureFlagSettings;
 }

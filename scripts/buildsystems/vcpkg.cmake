@@ -459,10 +459,10 @@ function(x_vcpkg_install_local_dependencies)
         cmake_parse_arguments(__VCPKG_APPINSTALL "" "DESTINATION" "TARGETS" ${ARGN})
 
         foreach(TARGET ${__VCPKG_APPINSTALL_TARGETS})
-            _install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
+            install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
                 execute_process(COMMAND 
                     powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                    -targetBinary \"${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
+                    -targetBinary \"\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
                     -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
                     -OutVariable out)")
         endforeach()
