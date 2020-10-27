@@ -36,9 +36,9 @@ vcpkg_from_sourceforge(
         0004-add-arm64-uwp-config.patch
 )
 
-vcpkg_find_acquire_program(YASM)
-get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${YASM_EXE_PATH}")
+
+include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
+yasm_tool_helper(APPEND_TO_PATH)
 
 if(VCPKG_TARGET_IS_UWP)
     vcpkg_build_msbuild(

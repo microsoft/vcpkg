@@ -8,6 +8,10 @@
     {
       "name": "vs-yasm",
       "platform": "windows"
+    },
+    {
+      "name": "yasm-tool-helper",
+      "platform": "windows"
     }
   ]
 }
