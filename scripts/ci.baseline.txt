@@ -109,6 +109,7 @@ bitserializer-rapidyaml:arm64-windows=skip
 bitserializer-rapidyaml:x64-osx=skip
 bitserializer:arm-uwp=skip
 bitserializer:arm64-windows=skip
+bitserializer:x64-osx=skip
 # capnproto currently triggers an ICE
 capnproto:x86-windows=fail
 capnproto:x64-windows=fail
