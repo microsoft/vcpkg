@@ -1,18 +1,18 @@
 {
   "name": "arrayfire",
   "version-string": "3.7.1",
-  "description": "ArrayFire is a general-purpose library that simplifies the process of developing software that targets parallel and massively-parallel architectures including CPUs, GPUs, and other hardware acceleration devices.",
   "port-version": 1,
+  "description": "ArrayFire is a general-purpose library that simplifies the process of developing software that targets parallel and massively-parallel architectures including CPUs, GPUs, and other hardware acceleration devices.",
   "dependencies": [
-    "boost-stacktrace",
-    "boost-compute"
+    "boost-compute",
+    "boost-stacktrace"
   ],
   "features": {
     "cpu": {
       "description": "ArrayFire CPU backend",
       "dependencies": [
-        "intel-mkl",
-        "fftw3"
+        "fftw3",
+        "intel-mkl"
       ]
     },
     "cuda": {
