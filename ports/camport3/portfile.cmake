@@ -1,4 +1,12 @@
-vcpkg_fail_port_install(ON_TARGET "osx" )
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "static")
+    vcpkg_fail_port_install(ON_ARCH "arm" "arm64" "wasm32")
+elseif(VCPKG_TARGET_IS_LINUX)
+    vcpkg_fail_port_install(ON_ARCH "wasm32")
+else()
+    vcpkg_fail_port_install(ALWAYS)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO percipioxyz/camport3
@@ -40,17 +48,27 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 
 elseif(VCPKG_TARGET_IS_LINUX)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set (CAMPORT3_ARCH "Aarch64")
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set (CAMPORT3_ARCH "armv7hf")
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set (CAMPORT3_ARCH "i686")
+    else()
+        set (CAMPORT3_ARCH ${VCPKG_TARGET_ARCHITECTURE})
+    endif()
+    
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib)
         file(COPY
-            ${SOURCE_PATH}/lib/linux/lib_${VCPKG_TARGET_ARCHITECTURE}/libtycam.so
+            ${SOURCE_PATH}/lib/linux/lib_${CAMPORT3_ARCH}/libtycam.so
             DESTINATION ${CURRENT_PACKAGES_DIR}/lib
         )
     endif()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib)
         file(COPY
-            ${SOURCE_PATH}/lib/linux/lib_${VCPKG_TARGET_ARCHITECTURE}/libtycam.so
+            ${SOURCE_PATH}/lib/linux/lib_${CAMPORT3_ARCH}/libtycam.so
             DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
         )
     endif()
