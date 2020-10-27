@@ -1,5 +1,6 @@
 #include <catch2/catch.hpp>
 
+#include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
 

@@ -25,7 +25,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DPTEX_VER="v${PTEX_VER}"
+        -DPTEX_VER=v${PTEX_VER}
         -DPTEX_BUILD_SHARED_LIBS=${BUILD_SHARED_LIB}
         -DPTEX_BUILD_STATIC_LIBS=${BUILD_STATIC_LIB}
 )
@@ -46,4 +46,4 @@ endforeach()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/src/doc/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/src/doc/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

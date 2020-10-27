@@ -2,6 +2,7 @@
 
 #include <vcpkg/dependencies.h>
 #include <vcpkg/paragraphparser.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/sourceparagraph.h>
 
 #include <vcpkg-test/mockcmakevarprovider.h>
