@@ -93,7 +93,7 @@ endif()
 
 if(@ENABLE_LAME@)
   find_dependency(mp3lame)
-  select_library_configurations_from_targets(BASENAME mp3lame TARGETS mp3lame::mp3lame mp3lame::mpghip)
+  select_library_configurations_from_targets(BASENAME mp3lame TARGETS mp3lame::mp3lame)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${mp3lame_LIBRARIES})
 endif()
 
