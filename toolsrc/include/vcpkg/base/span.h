@@ -1,8 +1,11 @@
 #pragma once
 
+#include <vcpkg/base/fwd/span.h>
+
 #include <array>
 #include <cstddef>
 #include <initializer_list>
+#include <type_traits>
 #include <vector>
 
 namespace vcpkg
@@ -29,7 +32,7 @@ namespace vcpkg
         {
         }
 
-        template<size_t N, class = std::enable_if_t<std::is_const_v<T>>>
+        template<size_t N, class = std::enable_if_t<std::is_const<T>::value>>
         constexpr Span(std::remove_const_t<T> (&arr)[N]) noexcept : m_ptr(arr), m_count(N)
         {
         }

@@ -1,5 +1,6 @@
 Source: skia
-Version: 2020-05-18-1
+Version: 2020-05-18
+Port-Version: 4
 Homepage: https://skia.org
 Description: Skia is an open source 2D graphics library which provides common APIs that work across a variety of hardware and software platforms.
   It serves as the graphics engine for Google Chrome and Chrome OS, Android, Mozilla Firefox and Firefox OS, and many other products.

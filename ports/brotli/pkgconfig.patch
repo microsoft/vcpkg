@@ -1,0 +1,74 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b1c654b..fcd9024 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -390,7 +390,7 @@ function(generate_pkg_config_path outvar path)
+   set("${outvar}" "${${outvar}}" PARENT_SCOPE)
+ endfunction(generate_pkg_config_path)
+ 
+-function(transform_pc_file INPUT_FILE OUTPUT_FILE VERSION)
++function(transform_pc_file INPUT_FILE OUTPUT_FILE VERSION SHARED_TARGET STATIC_TARGET)
+   file(READ ${INPUT_FILE} TEXT)
+ 
+   set(PREFIX "${CMAKE_INSTALL_PREFIX}")
+@@ -404,15 +404,22 @@ function(transform_pc_file INPUT_FILE OUTPUT_FILE VERSION)
+   string(REGEX REPLACE "@includedir@" "${INCLUDEDIR}" TEXT ${TEXT})
+ 
+   string(REGEX REPLACE "@PACKAGE_VERSION@" "${VERSION}" TEXT ${TEXT})
++  
++  if(BUILD_SHARED_LIBS)
++    set(LIB_NAME "${SHARED_TARGET}")
++  else()
++    set(LIB_NAME "${STATIC_TARGET}")
++  endif()
++  string(REGEX REPLACE "@lib_name@" "${LIB_NAME}" TEXT ${TEXT})
+ 
+   file(WRITE ${OUTPUT_FILE} ${TEXT})
+ endfunction()
+ 
+-transform_pc_file("scripts/libbrotlicommon.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlicommon.pc" "${BROTLI_VERSION}")
++transform_pc_file("scripts/libbrotlicommon.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlicommon.pc" "${BROTLI_VERSION}" brotlicommon brotlicommon-static)
+ 
+-transform_pc_file("scripts/libbrotlidec.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlidec.pc" "${BROTLI_VERSION}")
++transform_pc_file("scripts/libbrotlidec.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlidec.pc" "${BROTLI_VERSION}" brotlidec brotlidec-static)
+ 
+-transform_pc_file("scripts/libbrotlienc.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlienc.pc" "${BROTLI_VERSION}")
++transform_pc_file("scripts/libbrotlienc.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/libbrotlienc.pc" "${BROTLI_VERSION}" brotlienc brotlienc-static)
+ 
+ if(NOT BROTLI_EMSCRIPTEN)
+ if(NOT BROTLI_BUNDLED_MODE)
+diff --git a/scripts/libbrotlicommon.pc.in b/scripts/libbrotlicommon.pc.in
+index 10ca969..7736344 100644
+--- a/scripts/libbrotlicommon.pc.in
++++ b/scripts/libbrotlicommon.pc.in
+@@ -7,5 +7,5 @@ Name: libbrotlicommon
+ URL: https://github.com/google/brotli
+ Description: Brotli common dictionary library
+ Version: @PACKAGE_VERSION@
+-Libs: -L${libdir} -R${libdir} -lbrotlicommon
++Libs: -L${libdir} -l@lib_name@
+ Cflags: -I${includedir}
+diff --git a/scripts/libbrotlidec.pc.in b/scripts/libbrotlidec.pc.in
+index e7c3124..a7dc8ce 100644
+--- a/scripts/libbrotlidec.pc.in
++++ b/scripts/libbrotlidec.pc.in
+@@ -7,6 +7,6 @@ Name: libbrotlidec
+ URL: https://github.com/google/brotli
+ Description: Brotli decoder library
+ Version: @PACKAGE_VERSION@
+-Libs: -L${libdir} -R${libdir} -lbrotlidec
++Libs: -L${libdir} -l@lib_name@
+ Requires.private: libbrotlicommon >= 1.0.2
+ Cflags: -I${includedir}
+diff --git a/scripts/libbrotlienc.pc.in b/scripts/libbrotlienc.pc.in
+index 4dd0811..eb2712e 100644
+--- a/scripts/libbrotlienc.pc.in
++++ b/scripts/libbrotlienc.pc.in
+@@ -7,6 +7,6 @@ Name: libbrotlienc
+ URL: https://github.com/google/brotli
+ Description: Brotli encoder library
+ Version: @PACKAGE_VERSION@
+-Libs: -L${libdir} -R${libdir} -lbrotlienc
++Libs: -L${libdir} -l@lib_name@
+ Requires.private: libbrotlicommon >= 1.0.2
+ Cflags: -I${includedir}

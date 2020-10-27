@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cf3c30d..4931b93 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -161,11 +161,11 @@ endif(NOT WIN32)
+ 
+ if(BUILD_ORM)
+   # find postgres
+-  find_package(pg)
+-  if(pg_FOUND)
+-    message(STATUS "libpq inc path:" ${PG_INCLUDE_DIRS})
+-    message(STATUS "libpq lib:" ${PG_LIBRARIES})
+-    target_link_libraries(${PROJECT_NAME} PRIVATE pg_lib)
++  find_package(PostgreSQL REQUIRED)
++  if(PostgreSQL_FOUND)
++    message(STATUS "libpq inc path:" ${PostgreSQL_INCLUDE_DIRS})
++    message(STATUS "libpq lib:" ${PostgreSQL_LIBRARIES})
++    target_link_libraries(${PROJECT_NAME} PRIVATE ${PostgreSQL_LIBRARIES})
+     set(DROGON_SOURCES ${DROGON_SOURCES}
+                        orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc)
+     if(LIBPQ_BATCH_MODE)

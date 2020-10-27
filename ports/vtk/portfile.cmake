@@ -68,6 +68,13 @@ endif()
 if("mpi" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_GROUP_ENABLE_MPI=YES
+        -DVTK_USE_MPI=YES
+    )
+endif()
+
+if("mpi" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DVTK_MODULE_USE_EXTERNAL_VTK_mpi4py=OFF
     )
 endif()
 
@@ -109,6 +116,7 @@ vcpkg_from_github(
     SHA512 0efb1845053b6143e5ee7fa081b8be98f6825262c59051e88b2be02497e23362055067b2f811eff82e93eb194e5a9afd2a12e3878a252eb4011a5dab95127a6f
     HEAD_REF master
     PATCHES
+        6811.patch
         FindLZMA.patch    # Will be fixed in 9.1?
         FindLZ4.patch
         Findproj.patch
@@ -119,6 +127,7 @@ vcpkg_from_github(
         python_debug.patch
         fix-using-hdf5.patch
         # Last patch TODO: Patch out internal loguru
+        FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
 )
 
 # =============================================================================

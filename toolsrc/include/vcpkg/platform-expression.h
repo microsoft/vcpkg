@@ -38,6 +38,31 @@ namespace vcpkg::PlatformExpression
         bool evaluate(const Context& context) const;
         bool is_empty() const { return !static_cast<bool>(underlying_); }
 
+        // returns:
+        //   - 0 for empty
+        //   - 1 for identifiers
+        //   - 1 + complexity(inner) for !
+        //   - 1 + sum(complexity(inner)) for & and |
+        int complexity() const;
+
+        // these two are friends so that they're only findable via ADL
+
+        // this does a structural equality, so, for example:
+        //   !structurally_equal((x & y) & z, x & y & z)
+        //   !structurally_equal((x & y) | z, (x | z) & (y | z))
+        // even though these expressions are equivalent
+        friend bool structurally_equal(const Expr& lhs, const Expr& rhs);
+
+        // returns 0 if and only if structurally_equal(lhs, rhs)
+        // Orders via the following:
+        //   - If complexity(a) < complexity(b) => a < b
+        //   - Otherwise, if to_string(a).size() < to_string(b).size() => a < b
+        //   - Otherwise, if to_string(a) < to_string(b) => a < b
+        //   - else, they must be structurally equal
+        friend int compare(const Expr& lhs, const Expr& rhs);
+
+        friend std::string to_string(const Expr& expr);
+
     private:
         std::unique_ptr<detail::ExprImpl> underlying_;
     };
@@ -51,24 +76,7 @@ namespace vcpkg::PlatformExpression
         Allow,
     };
 
-    // platform expression parses the following :
-    // <platform-expression>:
-    //     <platform-expression.not>
-    //     <platform-expression.and>
-    //     <platform-expression.or>
-    // <platform-expression.simple>:
-    //     ( <platform-expression> )
-    //     <platform-expression.identifier>
-    // <platform-expression.identifier>:
-    //     A lowercase alpha-numeric string
-    // <platform-expression.not>:
-    //     <platform-expression.simple>
-    //     ! <platform-expression.simple>
-    // <platform-expression.and>
-    //     <platform-expression.not>
-    //     <platform-expression.and> & <platform-expression.not>
-    // <platform-expression.or>
-    //     <platform-expression.not>
-    //     <platform-expression.or> | <platform-expression.not>
+    // platform expression parses a platform expression; the EBNF of such is defined in
+    // /docs/maintainers/manifest-files.md#supports
     ExpectedS<Expr> parse_platform_expression(StringView expression, MultipleBinaryOperators multiple_binary_operators);
 }

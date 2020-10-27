@@ -1,6 +1,7 @@
 Source: protobuf
-Version: 3.12.3
-Homepage: https://github.com/google/protobuf
+Version: 3.13.0
+Port-Version: 2
+Homepage: https://github.com/protocolbuffers/protobuf
 Description: Protocol Buffers - Google's data interchange format
 
 Feature: zlib

@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-0.17.1
-    SHA512 2a1a637d6df08e19d0c8313c51e1baf8902db677b072f8787c4f9faf8bdec94357ac8af839718d449377b508fe4f6e31b011cbdc6ccf029b6a66f567172569aa
+    REF apache-arrow-1.0.1
+    SHA512 46fedecaf7fa0ff0d8b4ac5f3d7bcbcb75ce4f65d272f775dedd61f091f975cf03fc55e91e46021df9872a82712ca9c9e4eb35414cf46c0f49a26f7a5a3dd50c
     HEAD_REF master
     PATCHES
         all.patch
@@ -26,12 +26,15 @@ vcpkg_configure_cmake(
     OPTIONS
         -DARROW_DEPENDENCY_SOURCE=SYSTEM
         -Duriparser_SOURCE=SYSTEM
-        -DARROW_BUILD_TESTS=off
+        -DARROW_BUILD_TESTS=OFF
         ${FEATURE_OPTIONS}
         -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
         -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
-        -DARROW_GFLAGS_USE_SHARED=off
-        -DARROW_JEMALLOC=off
+        -DARROW_BROTLI_USE_SHARED=${ARROW_BUILD_SHARED}
+        -DARROW_GFLAGS_USE_SHARED=${ARROW_BUILD_SHARED}
+        -DARROW_UTF8PROC_USE_SHARED=${ARROW_BUILD_SHARED}
+        -DARROW_ZSTD_USE_SHARED=${ARROW_BUILD_SHARED}
+        -DARROW_JEMALLOC=OFF
         -DARROW_BUILD_UTILITIES=OFF
         -DARROW_WITH_BZ2=ON
         -DARROW_WITH_ZLIB=ON
@@ -39,7 +42,9 @@ vcpkg_configure_cmake(
         -DARROW_WITH_LZ4=ON
         -DARROW_WITH_SNAPPY=ON
         -DARROW_WITH_BROTLI=ON
+        -DARROW_WITH_UTF8PROC=ON
         -DPARQUET_REQUIRE_ENCRYPTION=ON
+        -DBUILD_WARNING_LEVEL=PRODUCTION
 )
 
 vcpkg_install_cmake()

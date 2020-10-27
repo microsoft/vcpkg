@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
@@ -8,6 +6,7 @@
 #include <vcpkg/base/system.process.h>
 
 #include <vcpkg/commands.h>
+#include <vcpkg/commands.version.h>
 #include <vcpkg/metrics.h>
 
 #if defined(_WIN32)
@@ -39,6 +38,7 @@ namespace vcpkg::Metrics
             res.push_back(hex[(bits >> 0) & 0x0F]);
         }
     };
+    constexpr char append_hexits::hex[17];
 
     // note: this ignores the bits of these numbers that would be where format and variant go
     static std::string uuid_of_integers(uint64_t top, uint64_t bottom)
@@ -179,11 +179,11 @@ namespace vcpkg::Metrics
 
         std::string format_event_data_template() const
         {
-            auto props_plus_buildtimes = properties.clone();
+            auto props_plus_buildtimes = properties;
             if (buildtime_names.size() > 0)
             {
-                props_plus_buildtimes.insert("buildnames_1", Json::Value::array(buildtime_names.clone()));
-                props_plus_buildtimes.insert("buildtimes", Json::Value::array(buildtime_times.clone()));
+                props_plus_buildtimes.insert("buildnames_1", buildtime_names);
+                props_plus_buildtimes.insert("buildtimes", buildtime_times);
             }
 
             Json::Array arr = Json::Array();
@@ -232,9 +232,9 @@ namespace vcpkg::Metrics
 
                 base_data.insert("ver", Json::Value::integer(2));
                 base_data.insert("name", Json::Value::string("commandline_test7"));
-                base_data.insert("properties", Json::Value::object(std::move(props_plus_buildtimes)));
-                base_data.insert("measurements", Json::Value::object(measurements.clone()));
-                base_data.insert("feature-flags", Json::Value::object(feature_flags.clone()));
+                base_data.insert("properties", std::move(props_plus_buildtimes));
+                base_data.insert("measurements", measurements);
+                base_data.insert("feature-flags", feature_flags);
             }
 
             return Json::stringify(arr, vcpkg::Json::JsonStyle());
@@ -257,23 +257,6 @@ namespace vcpkg::Metrics
         false
 #endif
         ;
-
-    // for child vcpkg processes, we also want to disable metrics
-    static void set_vcpkg_disable_metrics_environment_variable(bool disabled)
-    {
-#if defined(_WIN32)
-        SetEnvironmentVariableW(L"VCPKG_DISABLE_METRICS", disabled ? L"1" : nullptr);
-#else
-        if (disabled)
-        {
-            setenv("VCPKG_DISABLE_METRICS", "1", true);
-        }
-        else
-        {
-            unsetenv("VCPKG_DISABLE_METRICS");
-        }
-#endif
-    }
 
     std::string get_MAC_user()
     {
@@ -323,11 +306,7 @@ namespace vcpkg::Metrics
 
     void Metrics::set_print_metrics(bool should_print_metrics) { g_should_print_metrics = should_print_metrics; }
 
-    void Metrics::set_disabled(bool disabled)
-    {
-        set_vcpkg_disable_metrics_environment_variable(disabled);
-        g_metrics_disabled = disabled;
-    }
+    void Metrics::set_disabled(bool disabled) { g_metrics_disabled = disabled; }
 
     bool Metrics::metrics_enabled()
     {
@@ -381,9 +360,7 @@ namespace vcpkg::Metrics
             return;
         }
 
-#if !defined(_WIN32)
-        Util::unused(payload);
-#else
+#if defined(_WIN32)
         HINTERNET connect = nullptr, request = nullptr;
         BOOL results = FALSE;
 
@@ -465,13 +442,15 @@ namespace vcpkg::Metrics
             __debugbreak();
             auto err = GetLastError();
             std::cerr << "[DEBUG] failed to connect to server: " << err << "\n";
-#endif
+#endif // NDEBUG
         }
 
         if (request) WinHttpCloseHandle(request);
         if (connect) WinHttpCloseHandle(connect);
         if (session) WinHttpCloseHandle(session);
-#endif
+#else  // ^^^ _WIN32 // !_WIN32 vvv
+        (void)payload;
+#endif // ^^^ !_WIN32
     }
 
     void Metrics::flush(Files::Filesystem& fs)
@@ -491,46 +470,33 @@ namespace vcpkg::Metrics
 
         const fs::path temp_folder_path = fs::path(temp_folder) / "vcpkg";
         const fs::path temp_folder_path_exe =
-            temp_folder_path / Strings::format("vcpkgmetricsuploader-%s.exe", Commands::Version::base_version());
+            temp_folder_path / Strings::format("vcpkg-%s.exe", Commands::Version::base_version());
 #endif
 
-#if defined(_WIN32)
-
-        const fs::path exe_path = [&fs]() -> fs::path {
-            auto vcpkgdir = System::get_exe_path_of_current_process().parent_path();
-            auto path = vcpkgdir / "vcpkgmetricsuploader.exe";
-            if (fs.exists(path)) return path;
-
-            path = vcpkgdir / "scripts" / "vcpkgmetricsuploader.exe";
-            if (fs.exists(path)) return path;
-
-            return "";
-        }();
-
         std::error_code ec;
+#if defined(_WIN32)
         fs.create_directories(temp_folder_path, ec);
         if (ec) return;
-        fs.copy_file(exe_path, temp_folder_path_exe, fs::copy_options::skip_existing, ec);
+        fs.copy_file(
+            System::get_exe_path_of_current_process(), temp_folder_path_exe, fs::copy_options::skip_existing, ec);
         if (ec) return;
 #else
         if (!fs.exists("/tmp")) return;
         const fs::path temp_folder_path = "/tmp/vcpkg";
-        std::error_code ec;
-        fs.create_directory(temp_folder_path, ec);
-        // ignore error
-        ec.clear();
+        fs.create_directory(temp_folder_path, ignore_errors);
 #endif
         const fs::path vcpkg_metrics_txt_path = temp_folder_path / ("vcpkg" + generate_random_UUID() + ".txt");
         fs.write_contents(vcpkg_metrics_txt_path, payload, ec);
         if (ec) return;
 
 #if defined(_WIN32)
-        const std::string cmd_line = Strings::format("cmd /c \"start \"vcpkgmetricsuploader.exe\" \"%s\" \"%s\"\"",
-                                                     temp_folder_path_exe.u8string(),
-                                                     vcpkg_metrics_txt_path.u8string());
-        System::cmd_execute_no_wait(cmd_line);
+        System::CmdLineBuilder builder;
+        builder.path_arg(temp_folder_path_exe);
+        builder.string_arg("x-upload-metrics");
+        builder.path_arg(vcpkg_metrics_txt_path);
+        System::cmd_execute_background(builder.extract());
 #else
-        auto escaped_path = Strings::escape_string(vcpkg_metrics_txt_path.u8string(), '\'', '\\');
+        auto escaped_path = Strings::escape_string(fs::u8string(vcpkg_metrics_txt_path), '\'', '\\');
         const std::string cmd_line = Strings::format(
             R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --tlsv1.2 --data '@%s' >/dev/null 2>&1; rm '%s') &)",
             escaped_path,

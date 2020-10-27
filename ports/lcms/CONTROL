@@ -1,5 +1,4 @@
 Source: lcms
-Version: 2.9-1
-Build-Depends:
+Version: 2.11
 Homepage: https://github.com/mm2/Little-CMS
 Description: Little CMS.

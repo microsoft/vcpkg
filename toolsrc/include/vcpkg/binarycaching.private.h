@@ -1,10 +1,11 @@
 #pragma once
 
-#include <vcpkg/dependencies.h>
-#include <vcpkg/packagespec.h>
-#include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/fwd/packagespec.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
 
-#include <string>
+#include <vcpkg/base/strings.h>
+
+#include <vcpkg/dependencies.h>
 
 namespace vcpkg
 {
@@ -31,9 +32,22 @@ namespace vcpkg
         std::string nupkg_filename() const { return Strings::concat(id, '.', version, ".nupkg"); }
     };
 
+    namespace details
+    {
+        struct NuGetRepoInfo
+        {
+            std::string repo;
+            std::string branch;
+            std::string commit;
+        };
+
+        NuGetRepoInfo get_nuget_repo_info_from_env();
+    }
+
     std::string generate_nuspec(const VcpkgPaths& paths,
                                 const Dependencies::InstallPlanAction& action,
-                                const NugetReference& ref);
+                                const NugetReference& ref,
+                                details::NuGetRepoInfo rinfo = details::get_nuget_repo_info_from_env());
 
     struct XmlSerializer
     {

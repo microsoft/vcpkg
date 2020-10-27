@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/cofffilereader.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.print.h>
@@ -159,7 +157,7 @@ namespace vcpkg::PostBuildLint
             restricted_sys_filenames, restricted_crt_filenames, restricted_general_filenames};
         const fs::path include_dir = package_dir / "include";
         auto files = fs.get_files_non_recursive(include_dir);
-        auto filenames_v = Util::fmap(files, [](const auto& file) { return file.filename().u8string(); });
+        auto filenames_v = Util::fmap(files, [](const auto& file) { return fs::u8string(file.filename()); });
         std::set<std::string> filenames_s(filenames_v.begin(), filenames_v.end());
 
         std::vector<fs::path> violations;
@@ -393,7 +391,7 @@ namespace vcpkg::PostBuildLint
         for (const fs::path& dll : dlls)
         {
             const std::string cmd_line =
-                Strings::format(R"("%s" /exports "%s")", dumpbin_exe.u8string(), dll.u8string());
+                Strings::format(R"("%s" /exports "%s")", fs::u8string(dumpbin_exe), fs::u8string(dll));
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
 
@@ -431,7 +429,7 @@ namespace vcpkg::PostBuildLint
         for (const fs::path& dll : dlls)
         {
             const std::string cmd_line =
-                Strings::format(R"("%s" /headers "%s")", dumpbin_exe.u8string(), dll.u8string());
+                Strings::format(R"("%s" /headers "%s")", fs::u8string(dumpbin_exe), fs::u8string(dll));
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
 
@@ -482,7 +480,7 @@ namespace vcpkg::PostBuildLint
         for (const FileAndArch& b : binaries_with_invalid_architecture)
         {
             System::print2("    ",
-                           b.file.u8string(),
+                           fs::u8string(b.file),
                            "\n"
                            "Expected ",
                            expected_architecture,
@@ -558,7 +556,8 @@ namespace vcpkg::PostBuildLint
             return LintStatus::ERROR_DETECTED;
         }
 #endif
-        Util::unused(expected_architecture, files);
+        (void)expected_architecture;
+        (void)files;
         return LintStatus::SUCCESS;
     }
 
@@ -618,7 +617,7 @@ namespace vcpkg::PostBuildLint
 
         if (lib_count == 0 && dll_count != 0)
         {
-            System::print2(System::Color::warning, "Import libs were not present in ", lib_dir.u8string(), "\n");
+            System::print2(System::Color::warning, "Import libs were not present in ", fs::u8string(lib_dir), "\n");
             System::printf(System::Color::warning,
                            "If this is intended, add the following line in the portfile:\n"
                            "    SET(%s enabled)\n",
@@ -645,7 +644,7 @@ namespace vcpkg::PostBuildLint
             System::printf(System::Color::warning,
                            R"(There should be no bin\ directory in a static build, but %s is present.)"
                            "\n",
-                           bin.u8string());
+                           fs::u8string(bin));
         }
 
         if (fs.exists(debug_bin))
@@ -653,7 +652,7 @@ namespace vcpkg::PostBuildLint
             System::printf(System::Color::warning,
                            R"(There should be no debug\bin\ directory in a static build, but %s is present.)"
                            "\n",
-                           debug_bin.u8string());
+                           fs::u8string(debug_bin));
         }
 
         System::print2(
@@ -681,7 +680,7 @@ namespace vcpkg::PostBuildLint
 
         if (!empty_directories.empty())
         {
-            System::print2(System::Color::warning, "There should be no empty directories in ", dir.u8string(), "\n");
+            System::print2(System::Color::warning, "There should be no empty directories in ", fs::u8string(dir), "\n");
             System::print2("The following empty directories were found:\n");
             Files::print_paths(empty_directories);
             System::print2(
@@ -719,7 +718,7 @@ namespace vcpkg::PostBuildLint
         for (const fs::path& lib : libs)
         {
             const std::string cmd_line =
-                Strings::format(R"("%s" /directives "%s")", dumpbin_exe.u8string(), lib.u8string());
+                Strings::format(R"("%s" /directives "%s")", fs::u8string(dumpbin_exe), fs::u8string(lib));
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO,
                                ec_data.exit_code == 0,
@@ -773,7 +772,8 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& dll : dlls)
         {
-            const auto cmd_line = Strings::format(R"("%s" /dependents "%s")", dumpbin_exe.u8string(), dll.u8string());
+            const auto cmd_line =
+                Strings::format(R"("%s" /dependents "%s")", fs::u8string(dumpbin_exe), fs::u8string(dll));
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
 
@@ -792,7 +792,7 @@ namespace vcpkg::PostBuildLint
             System::print2(System::Color::warning, "Detected outdated dynamic CRT in the following files:\n\n");
             for (const OutdatedDynamicCrtAndFile& btf : dlls_with_outdated_crt)
             {
-                System::print2("    ", btf.file.u8string(), ": ", btf.outdated_crt.name, "\n");
+                System::print2("    ", fs::u8string(btf.file), ": ", btf.outdated_crt.name, "\n");
             }
             System::print2("\n");
 
@@ -820,7 +820,7 @@ namespace vcpkg::PostBuildLint
 
         if (!misplaced_files.empty())
         {
-            System::print2(System::Color::warning, "The following files are placed in\n", dir.u8string(), ":\n");
+            System::print2(System::Color::warning, "The following files are placed in\n", fs::u8string(dir), ":\n");
             Files::print_paths(misplaced_files);
             System::print2(System::Color::warning, "Files cannot be present in those directories.\n\n");
             return LintStatus::ERROR_DETECTED;
@@ -967,7 +967,7 @@ namespace vcpkg::PostBuildLint
                            "Found ",
                            error_count,
                            " error(s). Please correct the portfile:\n    ",
-                           portfile.u8string(),
+                           fs::u8string(portfile),
                            "\n");
         }
 

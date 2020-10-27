@@ -9,11 +9,14 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OGRECave/ogre
-    REF 8083067c1835147de5d82015347d95c710e36bc0
-    SHA512 0690aaff0bea74c38598894939396cab8077b84bda166deb4790fba87566114bc5267660e8efc4de9babeb1b8bddf73530e1a1dbbc63c7e24b14bc012b033bc8
+    REF 7d0c8181ac43ad20bdba326abbd3deeddf310f0b #v1.12.9
+    SHA512 f223075f49a2465cd5070f5efa796aa715f3ea2fefd578e4ec0a11be2fd3330922849ed804e1df004209abafaa7b24ff42432dd79f336a56063e3cf38ae0e8c9
     HEAD_REF master
     PATCHES
         toolchain_fixes.patch
+        fix-dependency.patch
+        fix-findimgui.patch
+        disable-dependency-qt.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/CMake/Packages/FindOpenEXR.cmake")
@@ -57,6 +60,7 @@ vcpkg_configure_cmake(
         -DOGRE_BUILD_RENDERSYSTEM_GL3PLUS=ON
         -DOGRE_BUILD_RENDERSYSTEM_GLES=OFF
         -DOGRE_BUILD_RENDERSYSTEM_GLES2=OFF
+        -DFREETYPE_FOUND=ON
 # Optional stuff
         ${FEATURE_OPTIONS}
 # vcpkg specific stuff

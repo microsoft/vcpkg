@@ -15,10 +15,12 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Triplet files](users/triplets.md)
 - [Configuration and Environment](users/config-environment.md)
 - [Usage with Android](users/android.md)
+- [Using a manifest file to declare your dependencies](users/top-level-manifest.md)
 
 ### Maintainer help
 
-- [Control files](maintainers/control-files.md)
+- [Control files](maintainers/control-files.md) - in general, one should use manifest files instead
+- [Manifest files](maintainers/manifest-files.md)
 - [Portfile functions](maintainers/portfile-functions.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
 

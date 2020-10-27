@@ -4,7 +4,8 @@ set(PATCHES
         # Fix CMake Deprecation Warning concerning OLD behavior for policy CMP0026
         # Suppress MSVC compiler warnings C4703, C4146, C4308, which fixes errors
         # under x64-uwp and arm-uwp
-        pcre-8.44_suppress_cmake_and_compiler_warnings-errors.patch)
+        pcre-8.44_suppress_cmake_and_compiler_warnings-errors.patch
+        export-cmake-targets.patch)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.pcre.org/pub/pcre/pcre-${PCRE_VERSION}.zip"
@@ -53,6 +54,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
+
 foreach(FILE ${CURRENT_PACKAGES_DIR}/include/pcre.h ${CURRENT_PACKAGES_DIR}/include/pcreposix.h)
     file(READ ${FILE} PCRE_H)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -73,44 +76,46 @@ if(VCPKG_TARGET_IS_LINUX)
     # Used here in .pc.in files: Libs.private: @PTHREAD_CFLAGS@
     set(PTHREAD_CFLAGS "-pthread")
 endif()
-
-configure_file("${SOURCE_PATH}/libpcre.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcre.pc" @ONLY)
-configure_file("${SOURCE_PATH}/libpcre16.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcre16.pc" @ONLY)
-configure_file("${SOURCE_PATH}/libpcre32.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcre32.pc" @ONLY)
-configure_file("${SOURCE_PATH}/libpcrecpp.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcrecpp.pc" @ONLY)
-configure_file("${SOURCE_PATH}/libpcreposix.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcreposix.pc" @ONLY)
-
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    
+    configure_file("${SOURCE_PATH}/libpcre.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcre.pc" @ONLY)
+    configure_file("${SOURCE_PATH}/libpcre16.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcre16.pc" @ONLY)
+    configure_file("${SOURCE_PATH}/libpcre32.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcre32.pc" @ONLY)
+    configure_file("${SOURCE_PATH}/libpcrecpp.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcrecpp.pc" @ONLY)
+    configure_file("${SOURCE_PATH}/libpcreposix.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcreposix.pc" @ONLY)
+endif()
 # debug
 set(prefix "${CURRENT_INSTALLED_DIR}/debug")
 set(exec_prefix "\${prefix}")
 set(libdir "\${prefix}/lib")
 set(includedir "\${prefix}/../include")
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    configure_file("${SOURCE_PATH}/libpcre.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre.pc" @ONLY)
+    configure_file("${SOURCE_PATH}/libpcre16.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre16.pc" @ONLY)
+    configure_file("${SOURCE_PATH}/libpcre32.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre32.pc" @ONLY)
+    configure_file("${SOURCE_PATH}/libpcrecpp.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcrecpp.pc" @ONLY)
+    configure_file("${SOURCE_PATH}/libpcreposix.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcreposix.pc" @ONLY)
 
-configure_file("${SOURCE_PATH}/libpcre.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre.pc" @ONLY)
-configure_file("${SOURCE_PATH}/libpcre16.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre16.pc" @ONLY)
-configure_file("${SOURCE_PATH}/libpcre32.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre32.pc" @ONLY)
-configure_file("${SOURCE_PATH}/libpcrecpp.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcrecpp.pc" @ONLY)
-configure_file("${SOURCE_PATH}/libpcreposix.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcreposix.pc" @ONLY)
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre.pc LIBPCRE.PC)
-    string(REPLACE "-lpcre" "-lpcred" LIBPCRE.PC ${LIBPCRE.PC})
-    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre.pc ${LIBPCRE.PC})
-    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre16.pc LIBPCRE16.PC)
-    string(REPLACE "-lpcre16" "-lpcre16d" LIBPCRE16.PC ${LIBPCRE16.PC})
-    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre16.pc ${LIBPCRE16.PC})
-    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre32.pc LIBPCRE32.PC)
-    string(REPLACE "-lpcre32" "-lpcre32d" LIBPCRE32.PC ${LIBPCRE32.PC})
-    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre32.pc ${LIBPCRE32.PC})
-    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcrecpp.pc LIBPCRECPP.PC)
-    string(REPLACE "-lpcre -lpcrecpp" "-lpcred -lpcrecppd" LIBPCRECPP.PC ${LIBPCRECPP.PC})
-    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcrecpp.pc ${LIBPCRECPP.PC})
-    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcreposix.pc LIBPCREPOSIX.PC)
-    string(REPLACE "-lpcreposix" "-lpcreposixd" LIBPCREPOSIX.PC ${LIBPCREPOSIX.PC})
-    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcreposix.pc ${LIBPCREPOSIX.PC})
+    if (VCPKG_TARGET_IS_WINDOWS)
+        vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre.pc
+            "-lpcre" "-lpcred"
+        )
+        vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre16.pc
+            "-lpcre16" "-lpcre16d"
+        )
+        vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre32.pc
+            "-lpcre32" "-lpcre32d"
+        )
+        vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcrecpp.pc
+            "-lpcre -lpcrecpp" "-lpcred -lpcrecppd"
+        )
+        vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcreposix.pc
+            "-lpcreposix" "-lpcreposixd"
+        )
+    endif()
 endif()
 
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -119,6 +124,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
 
+vcpkg_copy_pdbs()
+configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre-config.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-pcre/unofficial-pcre-config.cmake @ONLY)
+
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-vcpkg_copy_pdbs()
