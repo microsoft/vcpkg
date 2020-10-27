@@ -96,7 +96,8 @@ function(vcpkg_from_sourceforge)
     set(booleanValueArgs DISABLE_SSL NO_REMOVE_ONE_LEVEL)
     set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 FILENAME WORKING_DIRECTORY)
     set(multipleValuesArgs PATCHES)
-    cmake_parse_arguments(_vdus "${booleanValueArgs}" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vdus "${booleanValueArgs}" "${oneValueArgs}" "${multipleValuesArgs}")
 
     if(NOT DEFINED _vdus_OUT_SOURCE_PATH)
         message(FATAL_ERROR "OUT_SOURCE_PATH must be specified.")
