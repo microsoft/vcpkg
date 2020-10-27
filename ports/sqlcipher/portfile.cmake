@@ -39,7 +39,7 @@ set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
 message(STATUS "Pre-building ${TARGET_TRIPLET}")
 vcpkg_execute_required_process(
 	COMMAND ${NMAKE} -f Makefile.msc /A /NOLOGO clean tcl
-	"${NMAKE_OPTIONS}"
+	${NMAKE_OPTIONS}
 	WORKING_DIRECTORY ${SOURCE_PATH}
 	LOGNAME pre-build-${TARGET_TRIPLET}
 )

@@ -91,11 +91,14 @@ namespace vcpkg
             return ret;
         }
 
+        static Parse::ParseExpected<SourceControlFile> parse_manifest_object(const std::string& origin,
+                                                                             const Json::Object& object);
+
         static Parse::ParseExpected<SourceControlFile> parse_manifest_file(const fs::path& path_to_manifest,
                                                                            const Json::Object& object);
 
         static Parse::ParseExpected<SourceControlFile> parse_control_file(
-            const fs::path& path_to_control, std::vector<Parse::Paragraph>&& control_paragraphs);
+            const std::string& origin, std::vector<Parse::Paragraph>&& control_paragraphs);
 
         // Always non-null in non-error cases
         std::unique_ptr<SourceParagraph> core_paragraph;
