@@ -1,0 +1,10 @@
+message(WARNING "Tensorflow has vendored dependencies. You may need to manually include files from tensorflow-external")
+
+set(tensorflow_cc_FOUND TRUE)
+
+add_library(tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX}-part1 STATIC IMPORTED)
+set_target_properties(tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX}-part1
+	PROPERTIES
+	IMPORTED_LOCATION "${INSTALL_PREFIX}/${TARGET_TRIPLET}/lib/tensorflow.lib"
+	INTERFACE_INCLUDE_DIRECTORIES "${TF_INCLUDE_DIRS}"
+)

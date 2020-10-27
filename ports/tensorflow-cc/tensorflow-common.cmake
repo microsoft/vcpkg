@@ -74,40 +74,40 @@ set(ENV{TF_NEED_CUDA} 0)
 set(ENV{TF_CONFIGURE_IOS} 0)
 
 if(VCPKG_TARGET_IS_WINDOWS)
-	set(BAZEL_LIB_NAME tensorflow_cc.dll)
+	set(BAZEL_LIB_NAME "tensorflow${TF_LIB_SUFFIX}.dll")
 	set(PLATFORM_SUFFIX windows)
 	set(STATIC_LINK_CMD static_link.bat)
 elseif(VCPKG_TARGET_IS_OSX)
-	set(BAZEL_LIB_NAME libtensorflow_cc.dylib)
+	set(BAZEL_LIB_NAME "libtensorflow${TF_LIB_SUFFIX}.dylib")
 	set(PLATFORM_SUFFIX macos)
 	set(STATIC_LINK_CMD sh static_link.sh)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		set(TF_LIB_NAME "libtensorflow_cc.dylib")
-		set(TF_LIB_NAME_SHORT "libtensorflow_cc.2.dylib")
-		set(TF_LIB_NAME_FULL "libtensorflow_cc.${TF_VERSION}.dylib")
+		set(TF_LIB_NAME "libtensorflow${TF_LIB_SUFFIX}.dylib")
+		set(TF_LIB_NAME_SHORT "libtensorflow${TF_LIB_SUFFIX}.2.dylib")
+		set(TF_LIB_NAME_FULL "libtensorflow${TF_LIB_SUFFIX}.${TF_VERSION}.dylib")
 		set(TF_FRAMEWORK_NAME "libtensorflow_framework.dylib")
 		set(TF_FRAMEWORK_NAME_SHORT "libtensorflow_framework.2.dylib")
 		set(TF_FRAMEWORK_NAME_FULL "libtensorflow_framework.${TF_VERSION}.dylib")
 	else()
-		set(TF_LIB_NAME "libtensorflow_cc.a")
-		set(TF_LIB_NAME_SHORT "libtensorflow_cc.2.a")
-		set(TF_LIB_NAME_FULL "libtensorflow_cc.${TF_VERSION}.a")
+		set(TF_LIB_NAME "libtensorflow${TF_LIB_SUFFIX}.a")
+		set(TF_LIB_NAME_SHORT "libtensorflow${TF_LIB_SUFFIX}.2.a")
+		set(TF_LIB_NAME_FULL "libtensorflow${TF_LIB_SUFFIX}.${TF_VERSION}.a")
 	endif()
 else()
-	set(BAZEL_LIB_NAME libtensorflow_cc.so)
+	set(BAZEL_LIB_NAME "libtensorflow${TF_LIB_SUFFIX}.so")
 	set(PLATFORM_SUFFIX linux)
 	set(STATIC_LINK_CMD sh static_link.sh)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		set(TF_LIB_NAME "libtensorflow_cc.so")
-		set(TF_LIB_NAME_SHORT "libtensorflow_cc.so.2")
-		set(TF_LIB_NAME_FULL "libtensorflow_cc.so.${TF_VERSION}")
+		set(TF_LIB_NAME "libtensorflow${TF_LIB_SUFFIX}.so")
+		set(TF_LIB_NAME_SHORT "libtensorflow${TF_LIB_SUFFIX}.so.2")
+		set(TF_LIB_NAME_FULL "libtensorflow${TF_LIB_SUFFIX}.so.${TF_VERSION}")
 		set(TF_FRAMEWORK_NAME "libtensorflow_framework.so")
 		set(TF_FRAMEWORK_NAME_SHORT "libtensorflow_framework.so.2")
 		set(TF_FRAMEWORK_NAME_FULL "libtensorflow_framework.so.${TF_VERSION}")
 	else()
-		set(TF_LIB_NAME "libtensorflow_cc.a")
-		set(TF_LIB_NAME_SHORT "libtensorflow_cc.a.2")
-		set(TF_LIB_NAME_FULL "libtensorflow_cc.a.${TF_VERSION}")
+		set(TF_LIB_NAME "libtensorflow${TF_LIB_SUFFIX}.a")
+		set(TF_LIB_NAME_SHORT "libtensorflow${TF_LIB_SUFFIX}.a.2")
+		set(TF_LIB_NAME_FULL "libtensorflow${TF_LIB_SUFFIX}.a.${TF_VERSION}")
 	endif()
 endif()
 
@@ -116,10 +116,10 @@ foreach(BUILD_TYPE dbg rel)
 	set(STATIC_ONLY_PATCHES "")
 	set(LINUX_ONLY_PATCHES "")
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-		set(STATIC_ONLY_PATCHES change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
+		set(STATIC_ONLY_PATCHES ${TF_PATCHES_PREFIX}change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
 	endif()
 	if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX)
-		set(LINUX_ONLY_PATCHES fix-linux-build.patch)
+		set(LINUX_ONLY_PATCHES ${TF_PATCHES_PREFIX}fix-linux-build.patch)
 	endif()
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
@@ -128,9 +128,9 @@ foreach(BUILD_TYPE dbg rel)
 		SHA512 e497ef4564f50abf9f918be4522cf702f4cf945cb1ebf83af1386ac4ddc7373b3ba70c7f803f8ca06faf2c6b5396e60b1e0e9b97bfbd667e733b08b6e6d70ef0
 		HEAD_REF master
 		PATCHES
-			fix-build-error.patch # Fix namespace error
-			fix-dbg-build-errors.patch # Fix no return statement
-			fix-more-build-errors.patch # Fix no return statement
+			${TF_PATCHES_PREFIX}fix-build-error.patch # Fix namespace error
+			${TF_PATCHES_PREFIX}fix-dbg-build-errors.patch # Fix no return statement
+			${TF_PATCHES_PREFIX}fix-more-build-errors.patch # Fix no return statement
 			${STATIC_ONLY_PATCHES}
 			${LINUX_ONLY_PATCHES}
 	)
@@ -214,7 +214,7 @@ foreach(BUILD_TYPE dbg rel)
 			list(JOIN CXXOPTS " " CXXOPTS)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -238,7 +238,7 @@ foreach(BUILD_TYPE dbg rel)
 			list(JOIN CXXOPTS " " CXXOPTS)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:tensorflow_cc.dll ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -252,20 +252,21 @@ foreach(BUILD_TYPE dbg rel)
 		if(NOT VCPKG_TARGET_IS_OSX)
 			if(VCPKG_TARGET_IS_WINDOWS)
 				vcpkg_execute_build_process(
-					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" "${N_DBG_LIB_PARTS}"
+					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}${TF_PORT_SUFFIX_INVERSE}/convert_lib_params_${PLATFORM_SUFFIX}.py" "${N_DBG_LIB_PARTS}" "${TF_PORT_SUFFIX}"
 					WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
 					LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
 				)
 			else()
 				vcpkg_execute_build_process(
-					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" "${TF_VERSION}"
+					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}${TF_PORT_SUFFIX_INVERSE}/convert_lib_params_${PLATFORM_SUFFIX}.py" "${TF_VERSION}" "${TF_PORT_SUFFIX}"
 					WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
 					LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
 				)
 			endif()
 		endif()
+		# for some reason stdout of bazel ends up in stderr, so use err log file in the following command
 		vcpkg_execute_build_process(
-			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" # for some reason stdout of bazel ends up in stderr
+			COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}${TF_PORT_SUFFIX_INVERSE}/generate_static_link_cmd_${PLATFORM_SUFFIX}.py" "${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-${BUILD_TYPE}-err.log" "${TF_PORT_SUFFIX}"
 			WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-${TARGET_TRIPLET}-${BUILD_TYPE}
 			LOGNAME postbuild2-${TARGET_TRIPLET}-${BUILD_TYPE}
 		)
@@ -284,21 +285,21 @@ foreach(BUILD_TYPE dbg rel)
 
 	if(VCPKG_TARGET_IS_WINDOWS)
 		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.dll DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/bin)
+			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}.dll DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/bin)
 			# rename before copy because after copy the file might be locked by anti-malware scanners for some time so that renaming fails
-			file(RENAME ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.dll.if.lib ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.lib)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			file(RENAME ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}.dll.if.lib ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}.lib)
+			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
 			if(BUILD_TYPE STREQUAL dbg)
-				file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.pdb DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/bin)
-				message(STATUS "Warning: debug information tensorflow_cc.pdb will be of limited use because only a reduced set could be produced due to the 4GB internal PDB file limit even on x64.")
+				file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}.pdb DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/bin)
+				message(STATUS "Warning: debug information tensorflow${TF_LIB_SUFFIX}.pdb will be of limited use because only a reduced set could be produced due to the 4GB internal PDB file limit even on x64.")
 			endif()
 		else()
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
 			set(TF_LIB_SUFFIXES "")
 			# library might have been split because no more than 4GB are supported even on x64 Windows
 			foreach(PART_NO RANGE 2 100)
-				if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib)
-					file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
+				if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}-part${PART_NO}.lib)
+					file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}-part${PART_NO}.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
 					set(N_DBG_LIB_PARTS ${PART_NO})
 					list(APPEND TF_LIB_SUFFIXES "-part${PART_NO}")
 				else()
@@ -318,23 +319,21 @@ foreach(BUILD_TYPE dbg rel)
 	endif()
 endforeach()
 
-file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow-external)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 	message(STATUS "Warning: Static TensorFlow build contains several external dependancies that may cause linking conflicts (e.g. you cannot use openssl in your projects as TensorFlow contains boringssl and so on).")
 	if(NOT VCPKG_TARGET_IS_WINDOWS)
 		if(VCPKG_TARGET_IS_OSX)
-			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow_cc -ltensorflow_framework -lstdc++ -framework CoreFoundation'")
+			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow${TF_LIB_SUFFIX} -ltensorflow_framework -lstdc++ -framework CoreFoundation'")
 		else()
-			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow_cc -ltensorflow_framework -lstdc++ -lm -ldl -lpthread'")
+			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow${TF_LIB_SUFFIX} -ltensorflow_framework -lstdc++ -lm -ldl -lpthread'")
 		endif()
 	endif()
 
-	configure_file(${CMAKE_CURRENT_LIST_DIR}/README-${PLATFORM_SUFFIX} ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/README COPYONLY)
+	configure_file(${CMAKE_CURRENT_LIST_DIR}${TF_PORT_SUFFIX_INVERSE}/README-${PLATFORM_SUFFIX} ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/README COPYONLY)
 endif()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/LICENSE ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/copyright)
+file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX})
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/LICENSE ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/copyright)
 
 if(VCPKG_MANIFEST_MODE)
 	set(INSTALL_PREFIX ${CMAKE_BINARY_DIR}/vcpkg_installed)
@@ -343,31 +342,31 @@ else()
 endif()
 if(VCPKG_TARGET_IS_WINDOWS)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-dll.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
+		configure_file(${CMAKE_CURRENT_LIST_DIR}${TF_PORT_SUFFIX_INVERSE}/tensorflow-config-windows-dll.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake)
 	else()
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-lib.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
-		set(ALL_PARTS "tensorflow_cc::tensorflow_cc-part1")
+		configure_file(${CMAKE_CURRENT_LIST_DIR}${TF_PORT_SUFFIX_INVERSE}/tensorflow-config-windows-lib.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake)
+		set(ALL_PARTS "tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX}-part1")
 		foreach(part ${TF_LIB_SUFFIXES})
-			file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "\n\
-add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)\n\
-set_target_properties(tensorflow_cc::tensorflow_cc${part}\n\
+			file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake "\n\
+add_library(tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX}${part} STATIC IMPORTED)\n\
+set_target_properties(tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX}${part}\n\
 	PROPERTIES\n\
 	IMPORTED_LOCATION \"${INSTALL_PREFIX}/${TARGET_TRIPLET}/lib/tensorflow${part}.lib\"\n\
-	INTERFACE_INCLUDE_DIRECTORIES \"${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external;${INSTALL_PREFIX}/${TARGET_TRIPLET}/include/tensorflow-external/src\"\n\
+	INTERFACE_INCLUDE_DIRECTORIES \"${TF_INCLUDE_DIRS}\"\n\
 )\n\
 ")
-			list(APPEND ALL_PARTS "tensorflow_cc::tensorflow_cc${part}")
+			list(APPEND ALL_PARTS "tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX}${part}")
 		endforeach()
-		file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "\n\
-add_library(tensorflow_cc::tensorflow_cc INTERFACE IMPORTED)\n\
-set_property(TARGET tensorflow_cc::tensorflow_cc PROPERTY INTERFACE_LINK_LIBRARIES ${ALL_PARTS})\n\
+		file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake "\n\
+add_library(tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX} INTERFACE IMPORTED)\n\
+set_property(TARGET tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX} PROPERTY INTERFACE_LINK_LIBRARIES ${ALL_PARTS})\n\
 ")
 	endif()
 else()
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-shared.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
+		configure_file(${CMAKE_CURRENT_LIST_DIR}${TF_PORT_SUFFIX_INVERSE}/tensorflow-config-shared.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake)
 	else()
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-static.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
+		configure_file(${CMAKE_CURRENT_LIST_DIR}${TF_PORT_SUFFIX_INVERSE}/tensorflow-config-static.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake)
 	endif()
 endif()
 
