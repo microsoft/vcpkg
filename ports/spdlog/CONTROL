@@ -1,5 +1,5 @@
 Source: spdlog
-Version: 1.7.0
+Version: 1.8.0
 Homepage: https://github.com/gabime/spdlog
 Description: Very fast, header only, C++ logging library
 Build-Depends: fmt
