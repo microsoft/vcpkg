@@ -55,12 +55,13 @@ include(vcpkg_apply_patches)
 include(vcpkg_extract_source_archive)
 
 function(vcpkg_extract_source_archive_ex)
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(
+        PARSE_ARGV 0
         _vesae
         "NO_REMOVE_ONE_LEVEL;SKIP_PATCH_CHECK"
         "OUT_SOURCE_PATH;ARCHIVE;REF;WORKING_DIRECTORY"
         "PATCHES"
-        ${ARGN}
     )
 
     if(NOT _vesae_ARCHIVE)
