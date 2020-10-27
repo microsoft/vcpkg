@@ -470,7 +470,7 @@ function(x_vcpkg_install_local_dependencies)
 endfunction()
 
 set(X_VCPKG_APPLOCAL_DEPS_INSTALL ${X_VCPKG_APPLOCAL_DEPS_INSTALL} CACHE BOOL "(experimental) Automatically copy dependencies into the install target directory for executables.")
-if(${X_VCPKG_APPLOCAL_DEPS_INSTALL})
+if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
     function(install)
         _install(${ARGV})
 
