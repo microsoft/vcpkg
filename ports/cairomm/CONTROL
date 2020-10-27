@@ -4,3 +4,4 @@ Port-Version: 5
 Homepage: https://www.cairographics.org
 Description: A C++ wrapper for the cairo graphics library
 Build-Depends: cairo, libsigcpp
+Supports: !linux
