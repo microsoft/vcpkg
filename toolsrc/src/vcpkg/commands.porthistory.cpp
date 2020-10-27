@@ -113,15 +113,14 @@ namespace vcpkg::Commands::PortHistory
                         clean_version_string(version_string, scf->core_paragraph->port_version, is_manifest);
 
                     // SCF to HistoryVersion
-                    return HistoryVersion {
+                    return HistoryVersion{
                         port_name,
                         git_tree,
                         commit_id,
                         commit_date,
                         Strings::concat(clean_version.first, "#", std::to_string(clean_version.second)),
                         clean_version.first,
-                        clean_version.second
-                    };
+                        clean_version.second};
                 }
             }
 
