@@ -4,10 +4,10 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO oatpp/oatpp-sqlite
-    REF 3dc3c141467d18f4f552a2a26c1fff5a3e28fe7d # 1.2.0
-    SHA512 65e1cea564d2c771e352cc7ba8e71360c7b30806ebffd03a398d0620a68efdd786b3eb5359b28833da556b8aad19f9604fa727df61665af6d8686a63112326f1
-    HEAD_REF master
+    REPO KaungZawHtet/oatpp-sqlite
+    REF 4b3721f1555182117dec446d3121a56d9985b434 # 1.2.0
+    SHA512 fed081c362c86689fbb751d6607059ef1f503ed64f4c695d9077e85007969e70e52dc511b21be82b741d323c4cb782f58d0c4c459040c122ac43e4fdcff50d2d
+    HEAD_REF experimental
 )
 
 
@@ -17,6 +17,7 @@ vcpkg_configure_cmake(
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
         "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
+        "-DOATPP_SQLITE_AMALGAMATION:BOOL=OFF"
         
 )
 vcpkg_install_cmake()
