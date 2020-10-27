@@ -6,9 +6,6 @@ vcpkg_from_github(
     REF bb2b1f2b3660fa1f15bbdff14ddba2a4ff5c43fa #v2020.10.19.00
     SHA512 8547a8c329764f8448a9f294811ef1dfcfcfa77a15fa2fdd9ab25a5f7ab8d40c9932348d3a1b16b87ba56844c13ebf918e7080f247ff7fadad7363a70e2d0fe2
     HEAD_REF master
-    PATCHES
-        fix-tools-path.patch
-        fix-httpclient-tools-path.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -32,6 +29,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_copy_tools(TOOL_NAMES proxygen_curl proxygen_echo proxygen_proxy proxygen_push proxygen_static AUTO_CLEAN)
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/proxygen)
 vcpkg_copy_pdbs()
