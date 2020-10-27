@@ -4,8 +4,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libeigen/eigen
-    REF 3.3.7
-    SHA512 4cc3717b9cbe78335e05f724919497214edd482d4812aeb1a9fd6da5b3f6d1b194bb93ed0dab9e734b4334a5b88e8f8c339c43c1b2044332286ef5e758f9ecf4
+    REF 3.3.8
+    SHA512  5b4b5985b0294e07b3ed1155720cbbfea322fe9ccad0fc8b0a10060b136a9169a15d5b9cb7a434470cadd45dff0a43049edc20d2e1070005481a120212edc355
     HEAD_REF master
     PATCHES fix-cuda-error.patch # issue https://gitlab.com/libeigen/eigen/-/issues/1526
 )
@@ -17,11 +17,11 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
         -DEIGEN_BUILD_PKGCONFIG=ON
     OPTIONS_RELEASE
-        -DCMAKEPACKAGE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/share/eigen3
-        -DPKGCONFIG_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/lib/pkgconfig
+        -DCMAKEPACKAGE_INSTALL_DIR=share/eigen3
+        -DPKGCONFIG_INSTALL_DIR=lib/pkgconfig
     OPTIONS_DEBUG
-        -DCMAKEPACKAGE_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/share/eigen3
-        -DPKGCONFIG_INSTALL_DIR=${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
+        -DCMAKEPACKAGE_INSTALL_DIR=share/eigen3
+        -DPKGCONFIG_INSTALL_DIR=lib/pkgconfig
 )
 
 vcpkg_install_cmake()
