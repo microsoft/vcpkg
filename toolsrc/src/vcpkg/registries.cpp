@@ -1,6 +1,9 @@
 #include <vcpkg/base/json.h>
+#include <vcpkg/base/jsonreader.h>
 
+#include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/registries.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace
 {
@@ -39,7 +42,7 @@ namespace vcpkg
     constexpr StringLiteral RegistryImplDeserializer::KIND_BUILTIN;
     constexpr StringLiteral RegistryImplDeserializer::KIND_DIRECTORY;
 
-    Span<const StringView> RegistryImplDeserializer::valid_fields() const
+    View<StringView> RegistryImplDeserializer::valid_fields() const
     {
         static const StringView t[] = {KIND, PATH};
         return t;
@@ -50,22 +53,22 @@ namespace vcpkg
     Optional<std::unique_ptr<RegistryImpl>> RegistryImplDeserializer::visit_object(Json::Reader& r,
                                                                                    const Json::Object& obj)
     {
+        static Json::StringDeserializer kind_deserializer{"a registry implementation kind"};
         std::string kind;
-        r.required_object_field(
-            type_name(), obj, KIND, kind, Json::StringDeserializer{"a registry implementation kind"});
+        r.required_object_field(type_name(), obj, KIND, kind, kind_deserializer);
 
         if (kind == KIND_BUILTIN)
         {
             if (obj.contains(PATH))
             {
-                r.add_extra_fields_error("a builtin registry", {PATH});
+                r.add_extra_field_error("a builtin registry", PATH);
             }
             return static_cast<std::unique_ptr<RegistryImpl>>(std::make_unique<BuiltinRegistry>());
         }
         else if (kind == KIND_DIRECTORY)
         {
             fs::path path;
-            r.required_object_field("a directory registry", obj, PATH, path, Json::PathDeserializer{});
+            r.required_object_field("a directory registry", obj, PATH, path, Json::PathDeserializer::instance);
 
             return static_cast<std::unique_ptr<RegistryImpl>>(std::make_unique<DirectoryRegistry>(std::move(path)));
         }
@@ -74,12 +77,13 @@ namespace vcpkg
             return nullopt;
         }
     }
+    RegistryImplDeserializer RegistryImplDeserializer::instance;
 
     StringView RegistryDeserializer::type_name() const { return "a registry"; }
 
     constexpr StringLiteral RegistryDeserializer::PACKAGES;
 
-    Span<const StringView> RegistryDeserializer::valid_fields() const
+    View<StringView> RegistryDeserializer::valid_fields() const
     {
         static const StringView t[] = {
             RegistryImplDeserializer::KIND,
@@ -98,13 +102,11 @@ namespace vcpkg
             return nullopt;
         }
 
+        static Json::ArrayDeserializer<Json::PackageNameDeserializer> package_names_deserializer{
+            "an array of package names"};
+
         std::vector<std::string> packages;
-        r.required_object_field(
-            type_name(),
-            obj,
-            PACKAGES,
-            packages,
-            Json::ArrayDeserializer<Json::PackageNameDeserializer>{"an array of registries", Json::AllowEmpty::Yes});
+        r.required_object_field(type_name(), obj, PACKAGES, packages, package_names_deserializer);
 
         return Registry{std::move(packages), std::move(impl).value_or_exit(VCPKG_LINE_INFO)};
     }
