@@ -51,7 +51,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         )
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake
+        vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-release.cmake
             "lib/fmt.dll"
             "bin/fmt.dll"
         )
@@ -59,4 +59,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+# Handle post-build CMake instructions
 vcpkg_copy_pdbs()
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         fix-dependency.patch
         fix-imgui-set-cond.patch
+        install-extra-headers.patch
 )
 
 set(LIBIGL_BUILD_STATIC OFF)

@@ -74,8 +74,8 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   # Setup geos libraries + include path
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" GEOS_INCLUDE_DIR)
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libgeos_c.lib ${CURRENT_INSTALLED_DIR}/lib/libgeos.lib" GEOS_LIBRARY_REL)
-      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libgeos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libgeosd.lib" GEOS_LIBRARY_DBG)
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib" GEOS_LIBRARY_REL)
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib" GEOS_LIBRARY_DBG)
   else()
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" GEOS_LIBRARY_REL)
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" GEOS_LIBRARY_DBG)
@@ -212,6 +212,7 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
       list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
       list(APPEND NMAKE_OPTIONS DLLBUILD=0)
+      list(APPEND NMAKE_OPTIONS "PROJ_FLAGS=-DPROJ_STATIC -DPROJ_VERSION=5")
   else()
       # Enables PDBs for release and debug builds
       list(APPEND NMAKE_OPTIONS WITH_PDB=1)
@@ -348,6 +349,8 @@ elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STRE
   if (NOT MAKE)
       message(FATAL_ERROR "MAKE not found")
   endif()
+  
+  set(ENV{CFLAGS} "$ENV{CFLAGS} -Wno-error=implicit-function-declaration")
 
   if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     ################

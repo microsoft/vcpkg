@@ -1,6 +1,6 @@
 Source: libvpx
-Version: 1.8.1
-Port-Version: 9
+Version: 1.9.0
+Port-Version: 2
 Homepage: https://github.com/webmproject/libvpx
 Description: The reference software implementation for the video coding formats VP8 and VP9.
 Supports: !(uwp&arm)

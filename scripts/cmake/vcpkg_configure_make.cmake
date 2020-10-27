@@ -7,6 +7,7 @@
 ## vcpkg_configure_make(
 ##     SOURCE_PATH <${SOURCE_PATH}>
 ##     [AUTOCONFIG]
+##     [USE_WRAPPERS]
 ##     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
 ##     [NO_ADDITIONAL_PATHS]
 ##     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
@@ -34,8 +35,14 @@
 ## ### SKIP_CONFIGURE
 ## Skip configure process
 ##
+## ### USE_WRAPPERS
+## Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
+##
 ## ### BUILD_TRIPLET
 ## Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
+##
+## ### DETERMINE_BUILD_TRIPLET
+## For ports having a configure script following the autotools rules for selecting the triplet
 ##
 ## ### NO_ADDITIONAL_PATHS
 ## Don't pass any additional paths except for --prefix to the configure call
@@ -160,7 +167,7 @@ endmacro()
 
 function(vcpkg_configure_make)
     cmake_parse_arguments(_csc
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT"
         ${ARGN}
@@ -188,7 +195,7 @@ function(vcpkg_configure_make)
     else()
         message(FATAL_ERROR "Could not determine method to configure make")
     endif()
-    
+
     debug_message("REQUIRES_AUTOGEN:${REQUIRES_AUTOGEN}")
     debug_message("REQUIRES_AUTOCONFIG:${REQUIRES_AUTOCONFIG}")
     # Backup environment variables
@@ -209,59 +216,43 @@ function(vcpkg_configure_make)
     _vcpkg_backup_env_variables(INCLUDE LIB LIBPATH)
 
     if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
-
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
         message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
     endif()
 
     # Pre-processing windows configure requirements
     if (CMAKE_HOST_WIN32)
-        _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
-
-        list(APPEND MSYS_REQUIRE_PACKAGES diffutils 
-                                          pkg-config 
-                                          binutils 
-                                          libtool 
-                                          gettext 
-                                          gettext-devel
-                                          )
-        list(APPEND MSYS_REQUIRE_PACKAGES make)
-        if (_csc_AUTOCONFIG)
-            list(APPEND MSYS_REQUIRE_PACKAGES autoconf 
-                                              autoconf-archive
-                                              automake
-                                              m4
-                )
+        list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
+        
+        if (_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET)
+            _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
+            _vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
             # --build: the machine you are building on
             # --host: the machine you are building for
             # --target: the machine that CC will produce binaries for
             # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
-            if(NOT _csc_BUILD_TRIPLET)
-                set(_csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-mingw32")  # This is required since we are running in a msys
-                                                                            # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
-                _vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
-                if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}") # we do not need to specify the additional flags if we build nativly. 
-                    string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
-                endif()
-                if(VCPKG_TARGET_IS_UWP AND NOT _csc_BUILD_TRIPLET MATCHES "--host")
-                    # Needs to be different from --build to enable cross builds.
-                    string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-unknown-mingw32")
-                endif()
+            set(_csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-mingw32")  # This is required since we are running in a msys
+                                                                        # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
+            if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}") # we don't need to specify the additional flags if we build nativly. 
+                string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+            endif()
+            if(VCPKG_TARGET_IS_UWP AND NOT _csc_BUILD_TRIPLET MATCHES "--host")
+                # Needs to be different from --build to enable cross builds.
+                string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-unknown-mingw32")
             endif()
             debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
         endif()
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
-        vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-
+        set(APPEND_ENV)
+        if(_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
+            set(APPEND_ENV ";${MSYS_ROOT}/usr/share/automake-1.16")
+        endif()
+        # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
+        string(REPLACE ";$ENV{SystemRoot}\\System32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
+        string(REPLACE ";$ENV{SystemRoot}\\system32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
+        set(ENV{PATH} "${NEWPATH}")
         set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
-
-        # This is required because PATH contains sort and find from Windows but the MSYS versions are needed
-        # ${MSYS_ROOT}/urs/bin cannot be prepended to PATH due to other conflicts
-        file(CREATE_LINK "${MSYS_ROOT}/usr/bin/sort.exe" "${SCRIPTS}/buildsystems/make_wrapper/sort.exe" COPY_ON_ERROR)
-        file(CREATE_LINK "${MSYS_ROOT}/usr/bin/find.exe" "${SCRIPTS}/buildsystems/make_wrapper/find.exe" COPY_ON_ERROR)
-        vcpkg_add_to_path(PREPEND "${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
-        vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/share/automake-1.16") # Required wrappers are located here (compile ar-lib)
 
         macro(_vcpkg_append_to_configure_environment inoutstring var defaultval)
             # Allows to overwrite settings in custom triplets via the environment
@@ -273,7 +264,7 @@ function(vcpkg_configure_make)
         endmacro()
 
         set(CONFIGURE_ENV "V=1")
-        if (_csc_AUTOCONFIG) # without autotools we assume a custom configure script which correctly handles cl and lib. Otherwise the port needs to set CC|CXX|AR and probably CPP
+        if (_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "compile cl.exe -nologo -E")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "compile cl.exe -nologo")
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CXX "compile cl.exe -nologo")
@@ -420,17 +411,9 @@ function(vcpkg_configure_make)
     # Run autoconf if necessary
     set(_GENERATED_CONFIGURE FALSE)
     if (_csc_AUTOCONFIG OR REQUIRES_AUTOCONFIG)
-        find_program(AUTORECONF autoreconf REQUIRED)
+        find_program(AUTORECONF autoreconf)
         if(NOT AUTORECONF)
-            message(STATUS "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
-        endif()
-        find_program(LIBTOOL libtool REQUIRED)
-        if(NOT LIBTOOL)
-            message(STATUS "${PORT} requires libtool from the system package manager (example: \"sudo apt-get install libtool libtool-bin\")")
-        endif()
-        find_program(AUTOPOINT autopoint REQUIRED)
-        if(NOT AUTOPOINT)
-            message(STATUS "${PORT} requires autopoint from the system package manager (example: \"sudo apt-get install autopoint\")")
+            message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
         endif()
         message(STATUS "Generating configure for ${TARGET_TRIPLET}")
         if (CMAKE_HOST_WIN32)
@@ -441,7 +424,7 @@ function(vcpkg_configure_make)
             )
         else()
             vcpkg_execute_required_process(
-                COMMAND autoreconf -vfi
+                COMMAND ${AUTORECONF} -vfi
                 WORKING_DIRECTORY "${SRC_DIR}"
                 LOGNAME autoconf-${TARGET_TRIPLET}
             )

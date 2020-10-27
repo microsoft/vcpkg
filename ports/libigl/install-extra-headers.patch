@@ -1,0 +1,60 @@
+diff --git a/cmake/libigl.cmake b/cmake/libigl.cmake
+index a33cefa..0014375 100644
+--- a/cmake/libigl.cmake
++++ b/cmake/libigl.cmake
+@@ -560,6 +560,55 @@ export(
+ # Install headers for core library
+ install_dir_files(core)
+ install_dir_files(copyleft)
++ 
++if (LIBIGL_WITH_EMBREE)
++    install_dir_files(embree)
++endif()
++ 
++if (LIBIGL_WITH_CGAL)
++    install_dir_files(copyleft/cgal)
++endif()
++ 
++if (LIBIGL_WITH_COMISO)
++    install_dir_files(copyleft/comiso)
++endif()
++ 
++if (LIBIGL_WITH_CORK)
++    install_dir_files(copyleft/cork)
++endif()
++ 
++if (LIBIGL_WITH_TETGEN)
++    install_dir_files(copyleft/tetgen)
++endif()
++
++if (LIBIGL_WITH_OPENGL OR LIBIGL_WITH_OPENGL_GLFW OR LIBIGL_WITH_OPENGL_GLFW_IMGUI)
++    install_dir_files(copyleft/opengl2)
++    install_dir_files(opengl)
++endif()
++
++if (LIBIGL_WITH_OPENGL_GLFW OR LIBIGL_WITH_OPENGL_GLFW_IMGUI)
++    install_dir_files(opengl/glfw)
++endif()
++
++if (LIBIGL_WITH_OPENGL_GLFW_IMGUI)
++    install_dir_files(opengl/glfw/imgui)
++endif()
++
++if (LIBIGL_WITH_PNG)
++    install_dir_files(png)
++endif()
++
++if (LIBIGL_WITH_PREDICATES)
++    install_dir_files(predicates)
++endif()
++
++if (LIBIGL_WITH_TRIANGLE)
++    install_dir_files(triangle)
++endif()
++
++if (LIBIGL_WITH_XML)
++    install_dir_files(xml)
++endif()
+ 
+ # Write package configuration file
+ configure_package_config_file(
