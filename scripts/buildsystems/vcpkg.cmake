@@ -474,7 +474,7 @@ if(${X_VCPKG_APPLOCAL_DEPS_INSTALL})
     function(install)
         _install(${ARGV})
 
-        if(${ARGV0} STREQUAL "TARGETS")
+        if(ARGV0 STREQUAL "TARGETS")
             # Will contain the list of targets
             set(PARSED_TARGETS "")
 
@@ -485,21 +485,21 @@ if(${X_VCPKG_APPLOCAL_DEPS_INSTALL})
             set(MODIFIER "") # Modifier for the command in the argument
             set(LAST_COMMAND "") # Last command we found to process
             foreach(ARG ${ARGN})
-                if(${ARG} MATCHES "ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE")
+                if(ARG MATCHES "ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE")
                     set(MODIFIER ${ARG})
                     continue()
                 endif()
 
-                if("${ARG}" MATCHES "TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP")
+                if(ARG MATCHES "TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP")
                     set(LAST_COMMAND ${ARG})
                     continue()
                 endif()
 
-                if("${LAST_COMMAND}" STREQUAL "TARGETS")
+                if(LAST_COMMAND STREQUAL "TARGETS")
                     list(APPEND PARSED_TARGETS "${ARG}")
                 endif()
 
-                if("${LAST_COMMAND}" STREQUAL "DESTINATION" AND ("${MODIFIER}" STREQUAL "" OR "${MODIFIER}" STREQUAL "RUNTIME"))
+                if(LAST_COMMAND STREQUAL "DESTINATION" AND (MODIFIER STREQUAL "" OR MODIFIER STREQUAL "RUNTIME"))
                     set(DESTINATION "${ARG}")
                 endif()
             endforeach()
