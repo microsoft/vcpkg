@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
+vcpkg_fail_port_install(ON_ARCH "x86" "arm")
 
 set(TF_VERSION 2.3.1)
 set(TF_VERSION_SHORT 2.3)
@@ -206,12 +206,6 @@ foreach(BUILD_TYPE dbg rel)
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE)
 			list(APPEND LINKOPTS "--linkopt=${OPT}")
 		endforeach()
-	endif()
-
-	if (VCPKG_TARGET_IS_UWP)
-		list(APPEND COPTS "--copt=-DWINAPI_FAMILY=WINAPI_FAMILY_APP")
-		list(APPEND COPTS "--copt=-D_WIN32_WINNT=0x0A00")
-		list(APPEND LINKOPTS "--linkopt=-APPCONTAINER")
 	endif()
 
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
