@@ -2,7 +2,6 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-set(ABSEIL_PATCHES fix-arm-build.patch)
 if("cxx17" IN_LIST FEATURES)
     # in C++17 mode, use std::any, std::optional, std::string_view, std::variant
     # instead of the library replacement types
