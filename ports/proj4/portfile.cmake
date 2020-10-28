@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-sqlite3-bin.patch
+	fix_default_datadir.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -39,29 +40,42 @@ if ("database" IN_LIST FEATURES)
     endif()
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+	tool BUILD_CCT
+	tool BUILD_CS2CS
+	tool BUILD_GEOD
+	tool BUILD_GIE
+	tool BUILD_PROJ
+	tool BUILD_PROJINFO
+	tool BUILD_PROJSYNC
+	)
+
+vcpkg_configure_cmake( 
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
     -DBUILD_LIBPROJ_SHARED=${VCPKG_BUILD_SHARED_LIBS}
     -DPROJ_LIB_SUBDIR=lib
     -DPROJ_INCLUDE_SUBDIR=include
-    -DPROJ_DATA_SUBDIR=share/proj4
-    -DBUILD_CCT=OFF
-    -DBUILD_CS2CS=OFF
-    -DBUILD_GEOD=OFF
-    -DBUILD_GIE=OFF
-    -DBUILD_PROJ=OFF
-    -DBUILD_PROJINFO=OFF
-    -DBUILD_PROJSYNC=OFF	
+    -DPROJ_DATA_SUBDIR=${CURRENT_INSTALLED_DIR}/share/proj4
     -DPROJ_TESTS=OFF
     -DEXE_SQLITE3=${SQLITE3_BIN_PATH}/sqlite3${BIN_SUFFIX}
 )
 
 vcpkg_install_cmake()
+
+vcpkg_copy_tools(SEARCH_DIR ${CURRENT_PACKAGES_DIR}/bin/ TOOL_NAMES cct cs2cs geod gie proj projinfo projsync AUTO_CLEAN)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/proj4)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/cct_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/cs2cs_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/geod_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/gie_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/projinfo_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/projsync_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/proj_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
