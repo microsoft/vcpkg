@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a23fdf3..df4128a 100644
+index a23fdf3dda..7eb8d5200a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1940,10 +1940,14 @@ endif()
@@ -7,7 +7,7 @@ index a23fdf3..df4128a 100644
  if(gRPC_BUILD_CSHARP_EXT)
  
 -add_library(grpc_csharp_ext SHARED
-+add_library(grpc_csharp_ext 
++add_library(grpc_csharp_ext
    src/csharp/ext/grpc_csharp_ext.c
  )
  
