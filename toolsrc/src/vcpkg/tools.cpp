@@ -467,8 +467,9 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
     struct PowerShellCoreProvider : ToolProvider
     {
         std::string m_exe = "pwsh";
+        std::string m_name = "powershell-core";
 
-        virtual const std::string& tool_data_name() const override { return m_exe; }
+        virtual const std::string& tool_data_name() const override { return m_name; }
         virtual const std::string& exe_stem() const override { return m_exe; }
         virtual std::array<int, 3> default_min_version() const override { return {7, 0, 3}; }
 
