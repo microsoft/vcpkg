@@ -234,9 +234,18 @@ namespace vcpkg::Files
 
     void print_paths(const std::vector<fs::path>& paths);
 
-    /// Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
-    /// This function exists as a workaround for TS implementations.
+    // Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
+    // This function exists as a workaround for TS implementations.
     fs::path combine(const fs::path& lhs, const fs::path& rhs);
+
+#if defined(_WIN32)
+    constexpr char preferred_separator = '\\';
+#else
+    constexpr char preferred_separator = '/';
+#endif // _WIN32
+
+    // Adds file as a new path element to the end of base, with an additional slash if necessary
+    std::string add_filename(StringView base, StringView file);
 
 #if defined(_WIN32)
     fs::path win32_fix_path_case(const fs::path& source);
