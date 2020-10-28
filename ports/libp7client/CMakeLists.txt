@@ -1,24 +1,17 @@
 project(P7)
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.18)
 
-set(SOURCES "Sources/ClBaical.cpp"
-            "Sources/ClFile.cpp"
-            "Sources/Client.cpp"
-            "Sources/ClNull.cpp"
-            "Sources/ClText.cpp"
-            "Sources/CRC32.cpp"
-            "Sources/Proxy.cpp"
-            "Sources/Telemetry.cpp"
-            "Sources/Trace.cpp"
-)
+add_library(P7
+  "Sources/ClBaical.cpp"
+  "Sources/ClFile.cpp"
+  "Sources/Client.cpp"
+  "Sources/ClNull.cpp"
+  "Sources/ClText.cpp"
+  "Sources/CRC32.cpp"
+  "Sources/Proxy.cpp"
+  "Sources/Telemetry.cpp"
+  "Sources/Trace.cpp")
 
-if(WIN32)
-  set(RESOURCES "Sources/P7Client.rc")
-else()
-  set(RESOURCES "")
-endif()
-
-add_library(P7 "${SOURCES}" "${RESOURCES}")
 target_include_directories(P7 PRIVATE "Headers/")
 target_include_directories(P7 PRIVATE "Shared/")
 if(WIN32)
@@ -30,7 +23,7 @@ endif()
 
 if(WIN32)
   set_target_properties(P7 PROPERTIES PREFIX "")
-  if(CMAKE_SIZEOF_VOID_P EQUAL 8)   
+  if(CMAKE_SIZEOF_VOID_P EQUAL 8)
     set_target_properties(P7 PROPERTIES DEBUG_POSTFIX "x64d")
     set_target_properties(P7 PROPERTIES RELEASE_POSTFIX "x64")
   else()
@@ -45,9 +38,9 @@ endif()
 
 install(TARGETS P7
         RUNTIME DESTINATION "bin"
-        ARCHIVE DESTINATION "lib" 
+        ARCHIVE DESTINATION "lib"
         LIBRARY DESTINATION "lib")
-        
-install(DIRECTORY Headers/ 
+
+install(DIRECTORY Headers/
         DESTINATION include/P7
         FILES_MATCHING PATTERN "*.h")

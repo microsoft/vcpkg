@@ -266,7 +266,7 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
       COMMAND ${NMAKE} -f makefile.vc
-      "${NMAKE_OPTIONS_REL}"
+      ${NMAKE_OPTIONS_REL}
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME nmake-build-${TARGET_TRIPLET}-release
     )
@@ -281,7 +281,7 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
       COMMAND ${NMAKE} /G -f makefile.vc
-      "${NMAKE_OPTIONS_DBG}"
+      ${NMAKE_OPTIONS_DBG}
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME nmake-build-${TARGET_TRIPLET}-debug
     )
@@ -296,9 +296,9 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
 
   vcpkg_execute_required_process(
     COMMAND ${NMAKE} -f makefile.vc
-    "${NMAKE_OPTIONS_REL}"
-    "install"
-    "devinstall"
+    ${NMAKE_OPTIONS_REL}
+    install
+    devinstall
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
     LOGNAME nmake-install-${TARGET_TRIPLET}
   )
