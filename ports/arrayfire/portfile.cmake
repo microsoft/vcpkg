@@ -15,7 +15,7 @@ vcpkg_from_github(
   SHA512 397d787cbaa2fc628e3b82279fa5dd14a2ea8ee9c1d64c418674f53ba52a36dc120feadf9e00e2a55178cc3c9a989cf082a0f10e68782eb174ef0dc2c4b35e12
   HEAD_REF master
   )
-# Copy submodule path into extern
+# Copy to expected location
 file(RENAME ${CPU_THREADS_PATH} ${SOURCE_PATH}/src/backend/cpu/threads)
 
 ################################### Build ###################################
