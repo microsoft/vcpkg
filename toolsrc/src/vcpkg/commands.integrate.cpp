@@ -537,7 +537,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         static const std::string PROJECT = "project";
         static const std::string POWERSHELL = "powershell";
         static const std::string BASH = "bash";
-        static const std::string FISH = "fish";
+        static const std::string FISH = "x-fish";
     }
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths&)

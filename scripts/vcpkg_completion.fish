@@ -42,11 +42,6 @@ complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l overlay
 complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l binarysource -d "Add sources for binary caching. See 'vcpkg help binarycaching'" -a '(__fish_complete_directories)'
 complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l downloads-root -d "Specify the downloads root directory (default: \$VCPKG_DOWNLOADS)" -a '(__fish_complete_directories)'
 complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l vcpkg-root -d "Specify the vcpkg root directory (default: \$VCPKG_ROOT)" -a '(__fish_complete_directories)'
-complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l x-buildtrees-root -d "(Experimental) Specify the buildtrees root directory" -a '(__fish_complete_directories)'
-complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l x-install-root -d "(Experimental) Specify the install root directory" -a '(__fish_complete_directories)'
-complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l x-packages-root -d "(Experimental) Specify the packages root directory" -a '(__fish_complete_directories)'
-complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l x-scripts-root -d "(Experimental) Specify the scripts root directory" -a '(__fish_complete_directories)'
-complete -c vcpkg -n "__fish_seen_subcommand_from $vcpkg_commands" -x -l x-json -d "(Experimental) Request JSON output"
 
 # options for install
 complete -c vcpkg -n "__fish_seen_subcommand_from install" -f -l dry-run -d "Do not actually build or install"
@@ -56,10 +51,7 @@ complete -c vcpkg -n "__fish_seen_subcommand_from install" -f -l only-downloads 
 complete -c vcpkg -n "__fish_seen_subcommand_from install" -f -l recurse -d "Allow removal of packages as part of installation"
 complete -c vcpkg -n "__fish_seen_subcommand_from install" -f -l keep-going -d "Continue installing packages on failure"
 complete -c vcpkg -n "__fish_seen_subcommand_from install" -f -l editable -d "Disable source re-extraction and binary caching for libraries on the command line"
-complete -c vcpkg -n "__fish_seen_subcommand_from install" -f -l x-use-aria2 -d "Use aria2 to perform download tasks"
 complete -c vcpkg -n "__fish_seen_subcommand_from install" -f -l clean-after-build -d "Clean buildtrees, packages and downloads after building each package"
-complete -c vcpkg -n "__fish_seen_subcommand_from install" -r -F -l x-xunit -d "File to output results in XUnit format (Internal use)"
-complete -c vcpkg -n "__fish_seen_subcommand_from install" -r -F -l x-write-nuget-packages-config -d "Writes out a NuGet packages.config-formatted file for use with external binary caching. See `vcpkg help binarycaching` for more information."
 
 # options for edit
 complete -c vcpkg -n "__fish_seen_subcommand_from edit" -f -l buildtrees -d "Open editor into the port-specific buildtree subfolder"
@@ -72,11 +64,9 @@ complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -l nuget -d "Export
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -l ifw -d "Export to an IFW-based installer"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -l zip -d "Export to a zip file"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -l 7zip -d "Export to a 7zip (.7z) file"
-complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -l x-chocolatey -d "Export a Chocolatey package (experimental feature)"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -l prefab -d "Export to Prefab format"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -l prefab-maven -d "Enable maven"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -l prefab-debug -d "Enable prefab debug"
-complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -l x-all-installed -d "Export all installed packages"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l output -d "Specify the output name (used to construct filename)"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l output-dir -d "Specify the output directory for produced artifacts" -a '(__fish_complete_directories)'
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l nuget-id -d "Specify the id for the exported NuGet package (overrides --output)"
@@ -86,8 +76,6 @@ complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l ifw-packages-
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l ifw-repository-directory-path -d "Specify the directory path for the exported repository"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l ifw-configuration-file-path -d "Specify the temporary file path for the installer configuration"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l ifw-installer-file-path -d "Specify the file path for the exported installer"
-complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l x-maintainer -d "Specify the maintainer for the exported Chocolatey package (experimental feature)"
-complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l x-version-suffix -d "Specify the version suffix to add for the exported Chocolatey package (experimental feature)"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l prefab-group-id -d "GroupId uniquely identifies your project according maven specifications"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l prefab-artifact-id -d "Artifact Id is the name of the project according maven specifications"
 complete -c vcpkg -n "__fish_seen_subcommand_from export" -f -r -l prefab-version -d "Version is the name of the project according maven specifications"
