@@ -22,7 +22,7 @@
 ## IF the port supports the install target use vcpkg_install_make() instead of vcpkg_build_make()
 ##
 ## ### MAKEFILE
-## Specific the name of the makefile
+## Specifies the Makefile as a relative path from the root of the sources passed to `vcpkg_configure_make()`
 ##
 ## ### BUILD_TARGET
 ## The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will

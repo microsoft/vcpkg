@@ -122,7 +122,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
   # Begin build process
   vcpkg_install_nmake(
     SOURCE_PATH ${SOURCE_PATH}
-    INSTALL_COMMAND install devinstall
+    TARGET devinstall
     OPTIONS_RELEASE
         "${NMAKE_OPTIONS_REL}"
     OPTIONS_DEBUG
