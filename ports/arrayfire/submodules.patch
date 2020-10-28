@@ -1,0 +1,185 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 463d829b..a0732504 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -100,8 +100,6 @@ mark_as_advanced(
+   CUDA_HOST_COMPILER
+   CUDA_USE_STATIC_CUDA_RUNTIME
+   CUDA_rt_LIBRARY
+-  SPDLOG_BUILD_EXAMPLES
+-  SPDLOG_BUILD_TESTING
+   ADDR2LINE_PROGRAM
+   Backtrace_LIBRARY
+   )
+@@ -109,7 +107,7 @@ mark_as_advanced(
+ #Configure forge submodule
+ #forge is included in ALL target if AF_BUILD_FORGE is ON
+ #otherwise, forge is not built at all
+-include(AFconfigure_forge_submodule)
++# include(AFconfigure_forge_submodule)
+ 
+ configure_file(
+     ${ArrayFire_SOURCE_DIR}/CMakeModules/version.hpp.in
+@@ -154,9 +152,12 @@ if(NOT LAPACK_FOUND)
+     endif()
+ endif()
+ 
+-set(SPDLOG_BUILD_TESTING OFF CACHE INTERNAL "Disable testing in spdlog")
+-add_subdirectory(extern/spdlog EXCLUDE_FROM_ALL)
++# set(SPDLOG_BUILD_TESTING OFF CACHE INTERNAL "Disable testing in spdlog")
++# add_subdirectory(extern/spdlog EXCLUDE_FROM_ALL)
++find_package(spdlog CONFIG REQUIRED)
++
+ add_subdirectory(extern/glad)
++
+ add_subdirectory(src/backend/common)
+ add_subdirectory(src/api/c)
+ add_subdirectory(src/api/cpp)
+diff --git a/assets b/assets
+index c53bfab9..cd08d749 160000
+--- a/assets
++++ b/assets
+@@ -1 +1 @@
+-Subproject commit c53bfab909adfeed626f91ed419555711e20bca5
++Subproject commit cd08d749611b324012555ad6f23fd76c5465bd6c
+diff --git a/extern/forge b/extern/forge
+--- a/extern/forge
++++ b/extern/forge
+@@ -1 +1 @@
+-Subproject commit 1a0f0cb6371a8c8053ab5eb7cbe3039c95132389
++Subproject commit 1a0f0cb6371a8c8053ab5eb7cbe3039c95132389-dirty
+diff --git a/extern/spdlog b/extern/spdlog
+index caff7296..a51b4856 160000
+--- a/extern/spdlog
++++ b/extern/spdlog
+@@ -1 +1 @@
+-Subproject commit caff7296b162d97e44d6a1cc039adf689cfc02b3
++Subproject commit a51b4856377a71f81b6d74b9af459305c4c644f8
+diff --git a/src/api/unified/CMakeLists.txt b/src/api/unified/CMakeLists.txt
+index b0489be4..a82e9f83 100644
+--- a/src/api/unified/CMakeLists.txt
++++ b/src/api/unified/CMakeLists.txt
+@@ -74,7 +74,7 @@ target_include_directories(af
+ target_link_libraries(af
+   PRIVATE
+     cpp_api_interface
+-    spdlog
++    spdlog::spdlog spdlog::spdlog_header_only
+     Threads::Threads
+     ${CMAKE_DL_LIBS}
+   )
+diff --git a/src/backend/common/CMakeLists.txt b/src/backend/common/CMakeLists.txt
+index 33aa64e6..28273730 100644
+--- a/src/backend/common/CMakeLists.txt
++++ b/src/backend/common/CMakeLists.txt
+@@ -71,14 +71,15 @@ endif()
+ 
+ target_link_libraries(afcommon_interface
+   INTERFACE
+-    spdlog
++    spdlog::spdlog spdlog::spdlog_header_only
+     Boost::boost
+     af_glad_interface
+     ${CMAKE_DL_LIBS}
+ )
+ 
+ if(AF_BUILD_FORGE)
+-  add_dependencies(afcommon_interface forge)
++  find_package(Forge CONFIG REQUIRED)
++  target_link_libraries(afcommon_interface PRIVATE Forge::forge)
+ endif()
+ 
+ target_include_directories(afcommon_interface
+@@ -87,8 +88,6 @@ target_include_directories(afcommon_interface
+     ${ArrayFire_BINARY_DIR}
+   SYSTEM INTERFACE
+     $<$<PLATFORM_ID:Darwin>:${OPENGL_INCLUDE_DIR}>
+-    ${ArrayFire_SOURCE_DIR}/extern/forge/include
+-    ${ArrayFire_BINARY_DIR}/extern/forge/include
+   )
+ 
+ if(APPLE AND NOT USE_MKL)
+diff --git a/src/backend/cpu/threads b/src/backend/cpu/threads
+index c483ad32..6a967802 160000
+--- a/src/backend/cpu/threads
++++ b/src/backend/cpu/threads
+@@ -1 +1 @@
+-Subproject commit c483ad32b68c0301d91ff5d2bfc88d02589e9a43
++Subproject commit 6a967802fc161f08c5fa1c433601e233fda3eef6
+diff --git a/src/backend/cuda/CMakeLists.txt b/src/backend/cuda/CMakeLists.txt
+index ae29c43d..2c4d67ad 100644
+--- a/src/backend/cuda/CMakeLists.txt
++++ b/src/backend/cuda/CMakeLists.txt
+@@ -51,6 +51,12 @@ mark_as_advanced(
+ 
+ get_target_property(COMMON_INTERFACE_DIRS afcommon_interface INTERFACE_INCLUDE_DIRECTORIES)
+ 
++# Cub
++find_path(CUB_INCLUDE_DIRS "cub/agent/agent_histogram.cuh")
++if (${CUB_INCLUDE_DIRS} EQUAL "CUB_INCLUDE_DIRS-NOTFOUND")
++  set(CUB_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/cub)
++endif()
++
+ cuda_include_directories(
+   ${CMAKE_CURRENT_BINARY_DIR}
+   ${CMAKE_CURRENT_SOURCE_DIR}
+@@ -58,7 +64,7 @@ cuda_include_directories(
+   ${ArrayFire_BINARY_DIR}/include
+   ${CMAKE_CURRENT_SOURCE_DIR}/kernel
+   ${CMAKE_CURRENT_SOURCE_DIR}/jit
+-  ${CMAKE_CURRENT_SOURCE_DIR}/cub
++  ${CUB_INCLUDE_DIRS}
+   ${ArrayFire_SOURCE_DIR}/src/api/c
+   ${ArrayFire_SOURCE_DIR}/src/backend
+   ${COMMON_INTERFACE_DIRS}
+diff --git a/src/backend/cuda/cub b/src/backend/cuda/cub
+index c3cceac1..4bf55eda 160000
+--- a/src/backend/cuda/cub
++++ b/src/backend/cuda/cub
+@@ -1 +1 @@
+-Subproject commit c3cceac115c072fb63df1836ff46d8c60d9eb304
++Subproject commit 4bf55edac3ceafd899cdb3617ebe61253f5788e7
+diff --git a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt b/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
+index 9a796c9e..0688500f 100644
+--- a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
++++ b/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
+@@ -40,8 +40,8 @@ foreach(SBK_BINARY_OP ${SBK_BINARY_OPS})
+         $<TARGET_PROPERTY:OpenCL::cl2hpp,INTERFACE_INCLUDE_DIRECTORIES>
+         $<TARGET_PROPERTY:Boost::boost,INTERFACE_INCLUDE_DIRECTORIES>
+         $<TARGET_PROPERTY:af_glad_interface,INTERFACE_INCLUDE_DIRECTORIES>
+-        ${ArrayFire_SOURCE_DIR}/extern/forge/include
+-        ${ArrayFire_BINARY_DIR}/extern/forge/include
++        # ${ArrayFire_SOURCE_DIR}/extern/forge/include
++        # ${ArrayFire_BINARY_DIR}/extern/forge/include
+       )
+ 
+     set_target_properties(opencl_scan_by_key_${SBK_BINARY_OP}
+diff --git a/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt b/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
+index d618ff2f..fd62e44f 100644
+--- a/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
++++ b/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
+@@ -38,8 +38,8 @@ foreach(SBK_TYPE ${SBK_TYPES})
+         $<TARGET_PROPERTY:OpenCL::cl2hpp,INTERFACE_INCLUDE_DIRECTORIES>
+         $<TARGET_PROPERTY:Boost::boost,INTERFACE_INCLUDE_DIRECTORIES>
+         $<TARGET_PROPERTY:af_glad_interface,INTERFACE_INCLUDE_DIRECTORIES>
+-        ${ArrayFire_SOURCE_DIR}/extern/forge/include
+-        ${ArrayFire_BINARY_DIR}/extern/forge/include
++        # ${ArrayFire_SOURCE_DIR}/extern/forge/include
++        # ${ArrayFire_BINARY_DIR}/extern/forge/include
+       )
+ 
+     set_target_properties(opencl_sort_by_key_${SBK_TYPE}
+diff --git a/test/data b/test/data
+index 6a48c886..3c3b8213 160000
+--- a/test/data
++++ b/test/data
+@@ -1 +1 @@
+-Subproject commit 6a48c88658bcd68392e99344714cb0dccd4ec285
++Subproject commit 3c3b8213a5bc0d158098b98abfe74f021d4ad089
+diff --git a/test/gtest b/test/gtest
+index 2fe3bd99..3005672d 160000
+--- a/test/gtest
++++ b/test/gtest
+@@ -1 +1 @@
+-Subproject commit 2fe3bd994b3189899d93f1d5a881e725e046fdc2
++Subproject commit 3005672db1d05f2378f642b61faa96f85498befe

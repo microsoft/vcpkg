@@ -4,20 +4,11 @@ vcpkg_from_github(
     REF v3.7.1
     SHA512 0a4d03ade95c6e587715865e039ba03beb5194040545c4c20f1729f0a3c953112624259e6068a6ce93d41838001fc9ffa1fbf122eabf1b08526cb9e0ba51c77e
     HEAD_REF master
+    PATCHES submodules.patch
 )
 
 ############################### Grab submodules ##############################
-# spdlog
-vcpkg_from_github(
-  OUT_SOURCE_PATH SPDLOG_PATH
-  REPO gabime/spdlog
-  REF cbe9448650176797739dbab13961ef4c07f4290f
-  SHA512 a4719fe9083c662603b4819a58c5df8558262192f16a7d4b678ed761b042660727e0f614d106125b3756da3a01d56370bb46789d4b03bb468a170ad7b90172f3
-  HEAD_REF master
-  )
-# Copy submodule path into extern
-file(RENAME ${SPDLOG_PATH} ${SOURCE_PATH}/extern/spdlog)
-
+# TODO: try to remove me
 # arrayfire glad
 vcpkg_from_github(
   OUT_SOURCE_PATH GLAD_PATH
@@ -29,17 +20,6 @@ vcpkg_from_github(
 # Copy submodule path into extern
 file(RENAME ${GLAD_PATH} ${SOURCE_PATH}/extern/glad)
 
-# arrayfire forge
-vcpkg_from_github(
-  OUT_SOURCE_PATH FORGE_PATH
-  REPO arrayfire/forge
-  REF 173ddaa199b10115abdd3c5d34287a7950f6bff3
-  SHA512 f2b5a5c2d22e9325940e334e8cf0d802feced6f22f42569f2027b7e53e4ca3bc42077fa72c88d40720599a234b71c668785db611c2663896c34d62f8b4d91ca7
-  HEAD_REF master
-  )
-# Copy submodule path into extern
-file(RENAME ${FORGE_PATH} ${SOURCE_PATH}/extern/forge)
-
 # arrayfire cpu threads
 vcpkg_from_github(
   OUT_SOURCE_PATH CPU_THREADS_PATH
@@ -50,17 +30,6 @@ vcpkg_from_github(
   )
 # Copy submodule path into extern
 file(RENAME ${CPU_THREADS_PATH} ${SOURCE_PATH}/src/backend/cpu/threads)
-
-# nvidia cub
-vcpkg_from_github(
-  OUT_SOURCE_PATH CUB_PATH
-  REPO NVlabs/cub
-  REF ea48955fe5814b2319f77a68bd7094f5fdbf1b08
-  SHA512 8131c7cc765fe1e682159da4178de7efea21d486eee66367251328f96f0e295faeb7e56a0cd48aa1313aa3319450200dc87e9dbb9ea5ba20916ccf0b8f1c0478
-  HEAD_REF master
-  )
-# Copy submodule path into extern
-file(RENAME ${CUB_PATH} ${SOURCE_PATH}/src/backend/cuda/cub)
 
 # arrayfire assets
 vcpkg_from_github(
@@ -77,8 +46,7 @@ file(RENAME ${ASSETS_PATH} ${SOURCE_PATH}/assets)
 # Default flags
 set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DBUILD_TESTING=OFF
-  -DBUILD_DOCS=OFF
-  -DAF_BUILD_FORGE=OFF     # fixme - can we use forge? we can probably build graphics things too.
+  -DAF_BUILD_DOCS=OFF
   -DAF_BUILD_EXAMPLES=OFF
   )
 
