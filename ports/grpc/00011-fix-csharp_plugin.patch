@@ -1,13 +1,13 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a23fdf3..df4128a 100644
+index ae77375eae..ad8815d2f9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1940,10 +1940,14 @@ endif()
+@@ -1960,10 +1960,14 @@ endif()
  
  if(gRPC_BUILD_CSHARP_EXT)
  
 -add_library(grpc_csharp_ext SHARED
-+add_library(grpc_csharp_ext 
++add_library(grpc_csharp_ext
    src/csharp/ext/grpc_csharp_ext.c
  )
  
@@ -18,7 +18,7 @@ index a23fdf3..df4128a 100644
  set_target_properties(grpc_csharp_ext PROPERTIES
    VERSION ${gRPC_CORE_VERSION}
    SOVERSION ${gRPC_CORE_SOVERSION}
-@@ -1957,6 +1961,12 @@ if(WIN32 AND MSVC)
+@@ -1977,6 +1981,12 @@ if(WIN32 AND MSVC)
      install(FILES ${CMAKE_CURRENT_BINARY_DIR}/grpc_csharp_ext.pdb
        DESTINATION ${gRPC_INSTALL_LIBDIR} OPTIONAL
      )

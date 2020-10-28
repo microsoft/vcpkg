@@ -1,8 +1,8 @@
 #pragma once
 
+#include <vcpkg/base/fwd/lineinfo.h>
 #include <vcpkg/base/fwd/optional.h>
 
-#include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/pragmas.h>
 
 #include <type_traits>
