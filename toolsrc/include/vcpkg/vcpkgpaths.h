@@ -124,6 +124,7 @@ namespace vcpkg
         const Build::CompilerInfo& get_compiler_info(const Build::AbiInfo& abi_info) const;
         bool manifest_mode_enabled() const { return get_manifest().has_value(); }
 
+        const FeatureFlagSettings& get_feature_flags() const;
         void track_feature_flag_metrics() const;
 
         // the directory of the builtin ports

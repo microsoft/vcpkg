@@ -17,6 +17,7 @@
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/platform-expression.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
@@ -338,7 +339,7 @@ namespace vcpkg::Commands::CI
                 ret->features.emplace(action.spec, action.feature_list);
                 if (auto scfl = p->source_control_file_location.get())
                 {
-                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
+                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), scfl->clone());
                     emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
 
                     p->build_options = vcpkg::Build::default_build_package_options;

@@ -16,7 +16,7 @@ namespace vcpkg
         friend bool operator==(const VersionT& left, const VersionT& right);
         friend bool operator!=(const VersionT& left, const VersionT& right);
 
-        friend struct VersionTLess;
+        friend struct VersionTMapLess;
 
     private:
         std::string value;
