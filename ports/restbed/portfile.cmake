@@ -13,6 +13,7 @@ vcpkg_from_github(
     PATCHES
         use-FindOpenSSL-cmake.patch
         asio-1-18-0-deprecations.patch
+        fix-ninja-duplicates.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Findopenssl.cmake)
