@@ -110,11 +110,7 @@ endif()
 
 if(@ENABLE_OPENSSL@)
   find_dependency(OpenSSL)
-  select_library_configurations_from_targets(BASENAME SSL TARGETS OpenSSL::SSL OpenSSL::Crypto)
-  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${SSL_LIBRARIES})
-  if(WIN32 AND NOT CYGWIN)
-    list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS Crypt32)
-  endif()
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${OPENSSL_LIBRARIES})
 endif()
 
 if(@ENABLE_OPUS@)
