@@ -1,0 +1,46 @@
+--- a/src/lib_proj.cmake	2020-09-01 08:28:46.000000000 +0100
++++ b/src/lib_proj.cmake	2020-10-27 16:42:22.000000000 +0100
+@@ -298,13 +298,13 @@
+ 
+ include_directories(${CMAKE_CURRENT_BINARY_DIR})
+ source_group("CMake Files" FILES CMakeLists.txt)
+ 
+ 
+ # Embed PROJ_LIB data files location
+-add_definitions(-DPROJ_LIB="${CMAKE_INSTALL_PREFIX}/${DATADIR}")
++add_definitions(-DPROJ_LIB="${DATADIR}")
+ 
+ #################################################
+ ## targets: libproj and proj_config.h
+ #################################################
+ set(ALL_LIBPROJ_SOURCES
+   ${SRC_LIBPROJ_CORE}
+
+
+--- a/cmake/ProjInstallPath.cmake	2020-09-01 08:28:46.000000000 +0100
++++ b/cmake/ProjInstallPath.cmake	2020-10-27 16:29:27.000000000 +0100
+@@ -24,21 +24,21 @@
+ 
+ string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
+ if(UNIX)
+   include(GNUInstallDirs)
+   set(DEFAULT_BIN_SUBDIR ${CMAKE_INSTALL_BINDIR})
+   set(DEFAULT_LIB_SUBDIR ${CMAKE_INSTALL_LIBDIR})
+-  set(DEFAULT_DATA_SUBDIR ${CMAKE_INSTALL_DATAROOTDIR}/proj)
++  set(DEFAULT_DATA_SUBDIR ${CMAKE_INSTALL_DATAROOTDIR}/proj4)
+   set(DEFAULT_INCLUDE_SUBDIR ${CMAKE_INSTALL_INCLUDEDIR})
+   set(DEFAULT_DOC_SUBDIR ${CMAKE_INSTALL_DOCDIR})
+   set(DEFAULT_CMAKE_SUBDIR ${CMAKE_INSTALL_LIBDIR}/cmake)
+ else()
+   # Common locations for Unix and Mac OS X
+   set(DEFAULT_BIN_SUBDIR bin)
+   set(DEFAULT_LIB_SUBDIR lib)
+-  set(DEFAULT_DATA_SUBDIR share/proj)
++  set(DEFAULT_DATA_SUBDIR share/proj4)
+   set(DEFAULT_DOC_SUBDIR doc/proj)
+   set(DEFAULT_INCLUDE_SUBDIR include)
+   set(DEFAULT_DOC_SUBDIR share/doc/proj)
+   set(DEFAULT_CMAKE_SUBDIR lib/cmake)
+ endif()
+ 
+ 
