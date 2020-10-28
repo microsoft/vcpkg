@@ -1,3 +1,5 @@
+# Header-only library
+
 vcpkg_fail_port_install(ON_TARGET "UWP" "LINUX" "OSX" "FREEBSD" "ANDROID" "MINGW")
 
 vcpkg_from_github(
