@@ -16,6 +16,7 @@ vcpkg_extract_source_archive_ex(
 set(VCPKG_C_FLAGS "-g -O2") 
 
 vcpkg_configure_make(
+    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --disable-doc
