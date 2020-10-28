@@ -61,7 +61,7 @@ vcpkg를 설치하고 작동 한 후,
 - [Git][getting-started:git]
 - [Visual Studio][getting-started:visual-studio] 영어 언어팩이 설치된 2015 Update 3 버전 이상
  
-첫번째로, vcpkg 자체를 다운로드하고 부트 스트랩합니다; 어디에나 설치할 수 있습니다,
+첫번째로, vcpkg 자체를 다운로드하고 부트스트랩합니다; 어디에나 설치할 수 있습니다,
 하지만 일반적으로 CMake 프로젝트의 하위 모듈로 vcpkg를 사용하는 것이 좋습니다.
 Visual Studio 프로젝트를 위해 전역적으로 설치합니다.
 설치 위치는 `C:\src\vcpkg` 나 `C:\dev\vcpkg`를 사용할것을 권장합니다. 
@@ -93,8 +93,7 @@ Visual Studio에서 vcpkg를 사용하려면
 
 
 그런 다음, 이제 CMake가 아닌 새 프로젝트를 만들 수 있습니다. (또는 기존 프로젝트를 열 수 있습니다)
-All installed libraries are immediately ready to be `#include`'d and used
-in your project without additional configuration.
+설치된 모든 라이브러리는 즉시`# include` 될 준비가 되어 추가 구성없이 프로젝트에서 사용할 수 있습니다.
 
 Visual Studio에서 CMake를 사용하는 경우,
 [여기를 보세요](#vcpkg-with-visual-studio-cmake-projects).
@@ -103,16 +102,17 @@ IDE 외부에서 CMake와 함께 vcpkg를 사용하려면,
 툴체인 파일을 사용할 수 있습니다:
 
 ```cmd
-> cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
+> cmake -B [build directory] -S . -DCMAKE_TOOLCH
+AIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
 > cmake --build [build directory]
 ```
 
-With CMake, you will still need to `find_package` and the like to use the libraries.
-Check out the [CMake section](#using-vcpkg-with-cmake) for more information,
-including on using CMake with an IDE.
+CMake와 라이브러리를 사용하려면`find_package` 등이 필요합니다.
+IDE에서 CMake 사용에 대한 자세한 내용은 [CMake 섹션] (# using-vcpkg-with-cmake)을 확인하세요.
 
-For any other tools, including Visual Studio Code,
-check out the [integration guide][getting-started:integration].
+
+Visual Studio Code를 포함한 다른 툴의 경우
+[통합 가이드] [getting-started:integration]을 확인하세요.
 
 ## 빠르게 시작하기: 유닉스
 
@@ -126,8 +126,8 @@ macOS에서의 필요조건:
   - [Homebrew][getting-started:macos-brew]
   - [g++][getting-started:macos-gcc] >= 6 from Homebrew
 
-First, download and bootstrap vcpkg itself; it can be installed anywhere,
-but generally we recommend using vcpkg as a submodule for CMake projects.
+첫번째로, vcpkg 자체를 다운로드하고 부트스트랩합니다; 어디에나 설치할 수 있습니다,
+하지만 일반적으로 CMake 프로젝트의 하위 모듈로 vcpkg를 사용하는 것이 좋습니다.
 
 ```sh
 $ git clone https://github.com/microsoft/vcpkg
@@ -146,20 +146,17 @@ $ ./vcpkg/vcpkg install [packages to install]
 $ ./vcpkg/vcpkg search [search term]
 ```
 
-In order to use vcpkg with CMake, you can use the toolchain file:
-
+CMake에서 vcpkg를 사용하려면 툴체인 파일을 사용할 수 있습니다
 ```sh
 $ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
 $ cmake --build [build directory]
 ```
 
-With CMake, you will still need to `find_package` and the like to use the libraries.
-Check out the [CMake section](#using-vcpkg-with-cmake)
-for more information on how best to use vcpkg with CMake,
-and CMake Tools for VSCode.
+CMake와 라이브러리를 사용하려면`find_package` 등이 필요합니다.
+CMake 및 CMake Tools for VSCode에서 vcpkg를 가장 잘 사용하는 방법에 대한 자세한 내용은 
+[CMake 섹션] (# using-vcpkg-with-cmake)을 확인하세요.
 
-For any other tools, check out the [integration guide][getting-started:integration].
-
+다른 툴에 대해서는 [통합 가이드] [getting-started:integration]을 확인하세요.
 ## 리눅스 개발자 도구 설치하기
 
 리눅스의 다양한 배포판에는 다양한 패키지가 있습니다.
@@ -181,39 +178,39 @@ $ scl enable devtoolset-7 bash
 ```
 
 다른 배포판의 경우 g ++ 6 이상의 버전을 설치해야합니다.
-If you want to add instructions for your specific distro,
-[please open a PR][contributing:submit-pr]!
+특정 배포판에 대한 지침을 추가하려면
+[PR을 열어주세요][contributing:submit-pr]!
 
 ## macOS 개발자 도구 설치하기
 
-On macOS 10.15, the only thing you should need to do is run the following in your terminal:
+macOS 10.15에서는 터미널에서 다음 명령어를 실행하시면 됩니다.
 
 ```sh
 $ xcode-select --install
 ```
 
-Then follow along with the prompts in the windows that comes up.
+그런 다음 나타나는 창에 나타나는 메시지를 따르세요.
 
-On macOS 10.14 and previous, you'll also need to install g++ from homebrew;
-follow the instructions in the following section.
+macOS 10.14 및 이전 버전에서는 homebrew에서 g ++도 설치해야합니다.
+다음 섹션의 지침을 따르세요.
 
 ### 10.15버전 이전 macOS에 GCC 설치하기
 
-This will _only_ be necessary if you're using a macOS version from before 10.15.
-Installing homebrew should be very easy; check out <brew.sh> for more information,
-but at its simplest, run the following command:
+이번 섹션은 10.15 이전의 macOS 버전을 사용하는 경우에만 필요합니다.
+homebrew를 설치하는 것은 매우 쉽습니다. 자세한 내용은 <brew.sh>를 확인하세요.
+가장 간단하게 다음 명령어을 실행합니다.
 
 ```sh
 $ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 ```
 
-Then, in order to grab an up-to-date version of gcc, run the following:
+그런 다음 최신 버전의 gcc를 설치하시려면 다음 명령어를 실행하십시오.
 
 ```sh
 $ brew install gcc
 ```
 
-You'll then be able to bootstrap vcpkg along with the [quick start guide](#quick-start-unix)
+그런다음 [빠른 시작 가이드](#빠르게-시작하기-유닉스)와 함께 vcpkg를 부트스트랩 할 수 있습니다.
 
 ## CMake와 함께 vcpkg 사용
 
@@ -221,8 +218,8 @@ CMake와 함께 vcpkg를 사용하는 경우, 다음과 같이 따라해 보세�
 
 ### Visual Studio Code와 CMake Tools
 
-Adding the following to your workspace `settings.json` will make
-CMake Tools automatically use vcpkg for libraries:
+작업 공간 `settings.json`파일에 다음을 추가하면
+CMake 도구는 라이브러리에 자동으로 vcpkg를 사용합니다.
 
 ```json
 {
@@ -234,8 +231,8 @@ CMake Tools automatically use vcpkg for libraries:
 
 ### Visual Studio CMake 프로젝트와 Vcpkg
 
-Open the CMake Settings Editor, and under `CMake toolchain file`,
-add the path to the vcpkg toolchain file:
+CMake 설정 편집기를 열고 'CMake toolchain file'에서
+vcpkg 툴체인 파일에 경로를 추가합니다.
 
 ```
 [vcpkg root]/scripts/buildsystems/vcpkg.cmake
@@ -245,29 +242,27 @@ add the path to the vcpkg toolchain file:
 
 Toolchains settings을 엽니다.
 (File > Settings on Windows and Linux, CLion > Preferences on macOS),
-and go to the CMake settings (Build, Execution, Deployment > CMake).
-마지막으로, in `CMake options`, add the following line:
+그리고 Cmake 세팅을 엽니다 (Build, Execution, Deployment > CMake).
+마지막으로 `CMake options`에서 다음 줄을 추가합니다.
 
 ```
 -DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
 ```
 
-Unfortunately, you'll have to add this to each profile.
+각 프로필에 이것을 추가해야합니다.
 
 ### 서브모듈로서의 Vcpkg
 
-When using vcpkg as a submodule of your project,
-you can add the following to your CMakeLists.txt before the first `project()` call,
-instead of passing `CMAKE_TOOLCHAIN_FILE` to the cmake invocation.
+프로젝트의 하위 모듈로 vcpkg를 사용하는 경우
+cmake 호출에`CMAKE_TOOLCHAIN_FILE`을 전달하는 대신 첫 번째`project ()`호출 전에 CMakeLists.txt에 다음을 추가 할 수 있습니다.
 
 ```cmake
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
   CACHE STRING "Vcpkg toolchain file")
 ```
 
-This will still allow people to not use vcpkg,
-by passing the `CMAKE_TOOLCHAIN_FILE` directly,
-but it will make the configure-build step slightly easier.
+이렇게하면`CMAKE_TOOLCHAIN_FILE`을 직접 전달하여 구성-빌드 단계가 약간 더 쉬워지지만 
+사람들이 vcpkg를 사용하지 못하게 됩니다.
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
 [getting-started:integration]: docs/users/integration.md
@@ -282,28 +277,27 @@ but it will make the configure-build step slightly easier.
 
 # 탭 완성/자동 완성
 
-`vcpkg` supports auto-completion of commands, package names,
-and options in both powershell and bash.
-To enable tab-completion in the shell of your choice, run:
+`vcpkg`는 powershell과 bash 모두에서 명령, 패키지 이름 및 옵션의 자동 완성을 지원합니다.
+선택한 셸에서 탭 완성을 활성화하려면 다음 명령어를 실행합니다.
 
 ```pwsh
 > .\vcpkg integrate powershell
 ```
 
-or
+혹은
 
 ```sh
 $ ./vcpkg integrate bash
 ```
 
-depending on the shell you use, then restart your console.
+사용하는 셸에 따라 콘솔을 다시 시작세요.
 
 # 예제
 
-See the [documentation](docs/index.md) for specific walkthroughs,
-including [installing and using a package](docs/examples/installing-and-using-packages.md),
-[adding a new package from a zipfile](docs/examples/packaging-zipfiles.md),
-and [adding a new package from a GitHub repo](docs/examples/packaging-github-repos.md).
+구체적인 연습은 [문서] (docs / index.md)를 참고하세요,
+including [패키지 설치 및 사용](docs/examples/installing-and-using-packages.md),
+[zip 파일에서 새 패키지 추가](docs/examples/packaging-zipfiles.md),
+및 [GitHub 저장소에서 새 패키지 추가](docs/examples/packaging-github-repos.md).
 
 이제 ReadTheDocs에서 온라인으로 문서를 사용할 수도 있습니다: <https://vcpkg.readthedocs.io/>!
 
@@ -314,7 +308,7 @@ See a 4 minute [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw).
 Vcpkg는 오픈소스 프로젝트입니다, 따라서 여러분의 기여로 만들어 졌습니다. 
 기여할 수 있는 몇 가지 방법은 다음과 같습니다:
 
-* [Submit Issues][contributing:submit-issue] vcpkg나 기존 패키지
+* vcpkg 또는 기존 패키지의 [문제 제출][contributing:submit-issue] 
 * [Submit Fixes and New Packages][contributing:submit-pr]
 
 자세한 내용은 [컨트리뷰팅 가이드](CONTRIBUTING.md)를 참고하세요.
