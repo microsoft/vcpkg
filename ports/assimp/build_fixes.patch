@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dcafb64..4b131cc 100644
+index dcafb64..453fdff 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -130,6 +130,17 @@ OPTION ( IGNORE_GIT_HASH
@@ -9,8 +9,8 @@ index dcafb64..4b131cc 100644
 +find_package(Stb REQUIRED)
 +include_directories(${Stb_INCLUDE_DIR})
 +find_package(irrXML CONFIG REQUIRED)
-+find_path(UTF8_INCLUDE_DIRS "utf8.h")
-+include_directories(${UTF8_INCLUDE_DIRS})
++find_package(utf8cpp CONFIG REQUIRED)
++link_libraries(utf8cpp)
 +find_package(RapidJSON CONFIG REQUIRED)
 +include_directories(${RAPIDJSON_INCLUDE_DIRS})
 +find_path(UNZIP_INCLUDE_DIRS "minizip/unzip.h")
@@ -31,16 +31,15 @@ index dcafb64..4b131cc 100644
  
  # Grouped compiler settings
  IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT CMAKE_COMPILER_IS_MINGW)
-@@ -253,7 +262,7 @@ ELSEIF(MSVC)
+@@ -253,7 +262,6 @@ ELSEIF(MSVC)
    IF(MSVC12)
      ADD_COMPILE_OPTIONS(/wd4351)
    ENDIF()
 -  SET(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG /MDd /Ob2 /DEBUG:FULL /Zi")
-+#  SET(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG /MDd /Ob2 /DEBUG:FULL /Zi")
  ELSEIF ( "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" )
    IF(NOT HUNTER_ENABLED)
      SET(CMAKE_CXX_FLAGS "-fPIC -std=c++11 ${CMAKE_CXX_FLAGS}")
-@@ -352,35 +361,17 @@ IF (NOT TARGET uninstall)
+@@ -352,35 +360,17 @@ IF (NOT TARGET uninstall)
    ADD_CUSTOM_TARGET(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
  ENDIF()
  
@@ -80,7 +79,7 @@ index dcafb64..4b131cc 100644
        DESTINATION "${CONFIG_INSTALL_DIR}"
    )
  
-@@ -389,30 +380,6 @@ IF(HUNTER_ENABLED)
+@@ -389,30 +379,6 @@ IF(HUNTER_ENABLED)
        NAMESPACE "${NAMESPACE}"
        DESTINATION "${CONFIG_INSTALL_DIR}"
    )
@@ -111,7 +110,7 @@ index dcafb64..4b131cc 100644
  
  FIND_PACKAGE( DirectX )
  
-@@ -422,63 +389,19 @@ ENDIF( BUILD_DOCS )
+@@ -422,63 +388,19 @@ ENDIF( BUILD_DOCS )
  
  # Look for system installed irrXML
  IF ( SYSTEM_IRRXML )
@@ -179,7 +178,7 @@ index dcafb64..4b131cc 100644
  
  IF ( ASSIMP_NO_EXPORT )
    ADD_DEFINITIONS( -DASSIMP_BUILD_NO_EXPORT)
-@@ -633,7 +556,7 @@ IF(CMAKE_CPACK_COMMAND AND UNIX AND ASSIMP_OPT_BUILD_PACKAGES)
+@@ -633,7 +555,7 @@ IF(CMAKE_CPACK_COMMAND AND UNIX AND ASSIMP_OPT_BUILD_PACKAGES)
    INCLUDE(DebSourcePPA)
  ENDIF()
  
@@ -188,7 +187,7 @@ index dcafb64..4b131cc 100644
    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
      SET(BIN_DIR "${PROJECT_SOURCE_DIR}/bin64/")
      SET(LIB_DIR "${PROJECT_SOURCE_DIR}/lib64/")
-@@ -677,4 +600,4 @@ if(WIN32)
+@@ -677,4 +599,4 @@ if(WIN32)
        ADD_CUSTOM_COMMAND(TARGET UpdateAssimpLibsDebugSymbolsAndDLLs COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/code/assimp-${ASSIMP_MSVC_VERSION}-mtd.pdb		${LIB_DIR}assimp-${ASSIMP_MSVC_VERSION}-mtd.pdb VERBATIM)
      ENDIF()
    ENDIF(MSVC12 OR MSVC14 OR MSVC15 )

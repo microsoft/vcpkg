@@ -1,0 +1,6 @@
+{
+  "name": "shaderwriter",
+  "version-string": "2020-10-15",
+  "description": "Library to write shaders directly from C++ code, supports GLSL, HLSL and SPIRV outputs.",
+  "homepage": "https://github.com/DragonJoker/ShaderWriter"
+}

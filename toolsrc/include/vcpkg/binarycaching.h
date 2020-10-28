@@ -1,16 +1,12 @@
 #pragma once
 
+#include <vcpkg/fwd/dependencies.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 
 #include <vcpkg/packagespec.h>
-#include <vcpkg/vcpkgpaths.h>
-
-namespace vcpkg::Dependencies
-{
-    struct InstallPlanAction;
-    struct ActionPlan;
-}
 
 namespace vcpkg
 {
