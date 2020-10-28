@@ -175,4 +175,16 @@ namespace vcpkg::Dependencies
     void print_plan(const ActionPlan& action_plan,
                     const bool is_recursive = true,
                     const fs::path& default_ports_dir = {});
+
+    /// <summary>Figure out which actions are required to install features specifications in `specs`.</summary>
+    /// <param name="provider">Contains the ports of the current environment.</param>
+    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
+    /// <param name="status_db">Status of installed packages in the current environment.</param>
+    ExpectedS<ActionPlan> create_versioned_install_plan(PortFileProvider::IVersionedPortfileProvider& vprovider,
+                                                        PortFileProvider::IBaselineProvider& bprovider,
+                                                        const CMakeVars::CMakeVarProvider& var_provider,
+                                                        const std::vector<Dependency>& deps,
+                                                        const std::vector<DependencyOverride>& overrides,
+                                                        Triplet triplet,
+                                                        const CreateInstallPlanOptions& options = {});
 }

@@ -1151,4 +1151,215 @@ namespace vcpkg::Dependencies
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
     }
+
+    namespace
+    {
+        struct VersionedPackageGraph
+        {
+        private:
+            using IVersionedPortfileProvider = PortFileProvider::IVersionedPortfileProvider;
+            using IBaselineProvider = PortFileProvider::IBaselineProvider;
+
+        public:
+            VersionedPackageGraph(IVersionedPortfileProvider& ver_provider, IBaselineProvider& base_provider)
+                : m_ver_provider(ver_provider), m_base_provider(base_provider)
+            {
+            }
+
+            // void add_override(const std::string& name, const Versions::Version& v);
+
+            void add_constraint(const PackageSpec& spec, const DependencyConstraint& dc, const std::string& origin);
+
+            void add_package(const PackageSpec& spec);
+
+            ExpectedS<ActionPlan> finalize_extract_plan();
+
+        private:
+            IVersionedPortfileProvider& m_ver_provider;
+            IBaselineProvider& m_base_provider;
+
+            struct PackageNode
+            {
+                /*Optional<const SourceControlFileLocation&> overridden;
+
+                struct ExactInfo
+                {
+                    const SourceControlFileLocation* m_scfl;
+                    std::vector<std::string> origins;
+                };
+
+                std::map<std::string, ExactInfo> exacts;*/
+                Optional<Versions::Version> baseline;
+                Optional<const SourceControlFileLocation&> scfl;
+                std::map<std::string, std::vector<FeatureSpec>> deps;
+            };
+
+            std::vector<PackageSpec> m_roots;
+
+            std::map<PackageSpec, PackageNode> m_graph;
+
+            std::pair<const PackageSpec, PackageNode>& emplace(const PackageSpec& spec);
+            void add_constraint(std::pair<const PackageSpec, PackageNode>& ref,
+                                const DependencyConstraint& dc,
+                                const std::string& origin);
+
+            std::vector<std::string> m_errors;
+        };
+
+        // void VersionedPackageGraph::add_override(const std::string& /*name*/, const Versions::Version& /*v*/) { }
+
+        void VersionedPackageGraph::add_constraint(const PackageSpec& spec,
+                                                   const DependencyConstraint& dc,
+                                                   const std::string& origin)
+        {
+            add_constraint(emplace(spec), dc, origin);
+        }
+
+        void VersionedPackageGraph::add_constraint(std::pair<const PackageSpec, PackageNode>& ref,
+                                                   const DependencyConstraint& dc,
+                                                   const std::string& /*origin*/)
+        {
+            if (dc.type == Versions::Constraint::Type::None) return;
+
+            auto maybe_scfl = m_ver_provider.get_control_file(
+                {ref.first.name(), {dc.value, dc.port_version, Versions::Scheme::String}});
+
+            if (!maybe_scfl)
+            {
+                m_errors.push_back(maybe_scfl.error());
+            }
+            else
+            {
+                ref.second.scfl = *maybe_scfl.get();
+                auto core_deps = ref.second.deps.emplace("core", std::vector<FeatureSpec>{}).first;
+                for (auto&& dep : maybe_scfl.get()->source_control_file->core_paragraph->dependencies)
+                {
+                    PackageSpec dep_spec(dep.name, ref.first.triplet());
+                    core_deps->second.emplace_back(dep_spec, "core");
+                    for (auto&& feature : dep.features)
+                        core_deps->second.emplace_back(dep_spec, feature);
+                    emplace(dep_spec);
+                }
+            }
+        }
+
+        std::pair<const PackageSpec, VersionedPackageGraph::PackageNode>& VersionedPackageGraph::emplace(
+            const PackageSpec& spec)
+        {
+            auto p = m_graph.emplace(spec, PackageNode{});
+            if (p.second)
+            {
+                auto& node = p.first->second;
+                node.baseline = m_base_provider.get_baseline(spec.name());
+                if (node.baseline)
+                {
+                    add_constraint(*p.first,
+                                   {Versions::Constraint::Type::Exact,
+                                    node.baseline.get()->text,
+                                    node.baseline.get()->port_version},
+                                   "baseline");
+                }
+            }
+            return *p.first;
+        }
+
+        void VersionedPackageGraph::add_package(const PackageSpec& spec)
+        {
+            m_roots.push_back(spec);
+            emplace(spec);
+        }
+
+        ExpectedS<ActionPlan> VersionedPackageGraph::finalize_extract_plan()
+        {
+            if (m_errors.size() > 0)
+            {
+                return Strings::join("\n", m_errors);
+            }
+
+            ActionPlan ret;
+
+            std::map<PackageSpec, bool> emitted;
+            std::vector<std::pair<InstallPlanAction, size_t>> stack;
+
+            auto push = [&](const PackageSpec& spec) -> Optional<std::string> {
+                auto p = emitted.emplace(spec, false);
+                if (!p.second)
+                {
+                    // spec already present in map
+                    if (p.first->second)
+                    {
+                        return nullopt;
+                    }
+                    else
+                    {
+                        return Strings::concat("Cycle detected during ",
+                                               spec,
+                                               ":\n",
+                                               Strings::join("\n", stack, [](const auto& p) -> const PackageSpec& {
+                                                   return p.first.spec;
+                                               }));
+                    }
+                }
+
+                auto&& node = m_graph[spec];
+                if (auto p_scfl = node.scfl.get())
+                {
+                    stack.emplace_back(
+                        InstallPlanAction(spec, *p_scfl, RequestType::USER_REQUESTED, std::move(node.deps)), 0);
+                    return nullopt;
+                }
+                else
+                {
+                    return Strings::concat("Missing scfl for ", spec);
+                }
+            };
+
+            for (auto&& spec : m_roots)
+            {
+                if (auto err = push(spec))
+                {
+                    return std::move(*err.get());
+                }
+
+                while (stack.size() > 0)
+                {
+                    auto& back = stack.back();
+                    if (back.second < back.first.package_dependencies.size())
+                    {
+                        auto dep = back.first.package_dependencies[back.second];
+                        ++back.second;
+                        if (auto err = push(dep))
+                        {
+                            return std::move(*err.get());
+                        }
+                    }
+                    else
+                    {
+                        emitted[back.first.spec] = true;
+                        ret.install_actions.push_back(std::move(back.first));
+                        stack.pop_back();
+                    }
+                }
+            }
+            return ret;
+        }
+    }
+
+    ExpectedS<ActionPlan> create_versioned_install_plan(PortFileProvider::IVersionedPortfileProvider& provider,
+                                                        PortFileProvider::IBaselineProvider& bprovider,
+                                                        const CMakeVars::CMakeVarProvider& /*var_provider*/,
+                                                        const std::vector<Dependency>& deps,
+                                                        const std::vector<DependencyOverride>& /* overrides */,
+                                                        Triplet triplet,
+                                                        const CreateInstallPlanOptions& /*options*/)
+    {
+        VersionedPackageGraph vpg(provider, bprovider);
+        for (auto&& dep : deps)
+        {
+            PackageSpec spec{dep.name, triplet};
+            vpg.add_package(spec);
+            vpg.add_constraint(spec, dep.constraint, spec.to_string());
+        }
+        return vpg.finalize_extract_plan();
+    }
 }
