@@ -1323,6 +1323,28 @@ namespace vcpkg::Files
             return res;
         }
 
+        static fs::path add_filename(StringView base, StringView file)
+        {
+            std::string result;
+            const auto base_size = base.size();
+            const auto file_size = file.size();
+            if (base_size != 0 && !is_slash(base.data()[base_size - 1]))
+            {
+                result.reserve(base_size + file_size + 1);
+                result.append(base.data(), base_size);
+                result.push_back(preferred_separator);
+                result.append(file.data(), file_size);
+            }
+            else
+            {
+                result.reserve(base_size + file_size);
+                result.append(base.data(), base_size);
+                result.append(file.data(), file_size);
+            }
+
+            return result;
+        }
+
         virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code& ec) override
         {
 #if defined(WIN32)
@@ -1341,20 +1363,21 @@ namespace vcpkg::Files
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
         {
 #if defined(_WIN32)
-            static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
+            static constexpr wchar_t const* EXTS[] = {L".cmd", L".exe", L".bat"};
 #else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
-            static constexpr StringLiteral EXTS[] = {""};
+            static constexpr char const* EXTS[] = {""};
 #endif // ^^^!defined(_WIN32)
             auto paths = Strings::split_paths(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO));
 
             std::vector<fs::path> ret;
             for (auto&& path : paths)
             {
-                auto base = add_filename(path, name);
+                auto base = fs::u8path(path);
+                base /= fs::u8path(name);
 
                 for (auto&& ext : EXTS)
                 {
-                    auto p = fs::u8path(base + ext.c_str());
+                    auto p = fs::path(base.native() + ext);
                     if (Util::find(ret, p) == ret.end() && this->exists(p, ignore_errors))
                     {
                         ret.push_back(p);
@@ -1539,25 +1562,4 @@ namespace vcpkg::Files
     }
 #endif // _WIN32
 
-    std::string add_filename(StringView base, StringView file)
-    {
-        std::string result;
-        const auto base_size = base.size();
-        const auto file_size = file.size();
-        if (base_size != 0 && !is_slash(base.data()[base_size - 1]))
-        {
-            result.reserve(base_size + file_size + 1);
-            result.append(base.data(), base_size);
-            result.push_back(preferred_separator);
-            result.append(file.data(), file_size);
-        }
-        else
-        {
-            result.reserve(base_size + file_size);
-            result.append(base.data(), base_size);
-            result.append(file.data(), file_size);
-        }
-
-        return result;
-    }
 }

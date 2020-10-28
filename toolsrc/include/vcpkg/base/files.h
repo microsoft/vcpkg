@@ -248,9 +248,6 @@ namespace vcpkg::Files
     constexpr char preferred_separator = '/';
 #endif // _WIN32
 
-    // Adds file as a new path element to the end of base, with an additional slash if necessary
-    std::string add_filename(StringView base, StringView file);
-
 #if defined(_WIN32)
     fs::path win32_fix_path_case(const fs::path& source);
 #endif // _WIN32
