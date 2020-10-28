@@ -26,7 +26,8 @@
 ## * [nanomsg](https://github.com/microsoft/vcpkg/blob/master/ports/nanomsg/portfile.cmake)
 ## * [uriparser](https://github.com/microsoft/vcpkg/blob/master/ports/uriparser/portfile.cmake)
 function(vcpkg_copy_tools)
-    cmake_parse_arguments(_vct "AUTO_CLEAN" "SEARCH_DIR" "TOOL_NAMES" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vct "AUTO_CLEAN" "SEARCH_DIR" "TOOL_NAMES")
 
     if(NOT DEFINED _vct_TOOL_NAMES)
         message(FATAL_ERROR "TOOL_NAMES must be specified.")
