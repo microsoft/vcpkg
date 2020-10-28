@@ -31,17 +31,6 @@ vcpkg_from_github(
 # Copy submodule path into extern
 file(RENAME ${CPU_THREADS_PATH} ${SOURCE_PATH}/src/backend/cpu/threads)
 
-# arrayfire assets
-vcpkg_from_github(
-  OUT_SOURCE_PATH ASSETS_PATH
-  REPO arrayfire/assets
-  REF cd08d749611b324012555ad6f23fd76c5465bd6c
-  SHA512 93d1e6785fbfbf22e0c7080243d29d99c7808829cb3345760cd29c06ce5d0aab7a55cae28ab9f12263de47ec3d95b30bb907b1b92ad03193662a583bd3136ce9
-  HEAD_REF master
-  )
-# Copy submodule path into extern
-file(RENAME ${ASSETS_PATH} ${SOURCE_PATH}/assets)
-
 ################################### Build ###################################
 # Default flags
 set(AF_DEFAULT_VCPKG_CMAKE_FLAGS

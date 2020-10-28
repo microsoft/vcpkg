@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 463d829b..a0732504 100644
+index 463d829b..465e9df2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -100,8 +100,6 @@ mark_as_advanced(
@@ -35,6 +35,19 @@ index 463d829b..a0732504 100644
  add_subdirectory(src/backend/common)
  add_subdirectory(src/api/c)
  add_subdirectory(src/api/cpp)
+@@ -260,9 +261,9 @@ install(DIRECTORY examples/ #NOTE The slash at the end is important
+     DESTINATION ${AF_INSTALL_EXAMPLE_DIR}
+     COMPONENT examples)
+ 
+-install(DIRECTORY assets/examples/ #NOTE The slash at the end is important
+-    DESTINATION ${AF_INSTALL_EXAMPLE_DIR}
+-    COMPONENT examples)
++# install(DIRECTORY assets/examples/ #NOTE The slash at the end is important
++#     DESTINATION ${AF_INSTALL_EXAMPLE_DIR}
++#     COMPONENT examples)
+ 
+ install(DIRECTORY "${ArrayFire_SOURCE_DIR}/LICENSES/"
+     DESTINATION LICENSES
 diff --git a/assets b/assets
 index c53bfab9..cd08d749 160000
 --- a/assets
