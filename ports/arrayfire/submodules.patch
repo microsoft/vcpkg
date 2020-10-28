@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 463d829b..465e9df2 100644
+index 463d829b..8fc9b5e4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -100,8 +100,6 @@ mark_as_advanced(
@@ -26,11 +26,12 @@ index 463d829b..465e9df2 100644
  
 -set(SPDLOG_BUILD_TESTING OFF CACHE INTERNAL "Disable testing in spdlog")
 -add_subdirectory(extern/spdlog EXCLUDE_FROM_ALL)
+-add_subdirectory(extern/glad)
 +# set(SPDLOG_BUILD_TESTING OFF CACHE INTERNAL "Disable testing in spdlog")
 +# add_subdirectory(extern/spdlog EXCLUDE_FROM_ALL)
 +find_package(spdlog CONFIG REQUIRED)
 +
- add_subdirectory(extern/glad)
++# add_subdirectory(extern/glad)
 +
  add_subdirectory(src/backend/common)
  add_subdirectory(src/api/c)
@@ -82,17 +83,22 @@ index b0489be4..a82e9f83 100644
      ${CMAKE_DL_LIBS}
    )
 diff --git a/src/backend/common/CMakeLists.txt b/src/backend/common/CMakeLists.txt
-index 33aa64e6..28273730 100644
+index 33aa64e6..2d07e4ea 100644
 --- a/src/backend/common/CMakeLists.txt
 +++ b/src/backend/common/CMakeLists.txt
-@@ -71,14 +71,15 @@ endif()
+@@ -69,16 +69,19 @@ else()
+   target_sources(afcommon_interface INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/module_loading_unix.cpp)
+ endif()
  
++find_package(glad CONFIG REQUIRED)
++
  target_link_libraries(afcommon_interface
    INTERFACE
 -    spdlog
 +    spdlog::spdlog spdlog::spdlog_header_only
      Boost::boost
-     af_glad_interface
+-    af_glad_interface
++    glad::glad
      ${CMAKE_DL_LIBS}
  )
  
@@ -103,7 +109,7 @@ index 33aa64e6..28273730 100644
  endif()
  
  target_include_directories(afcommon_interface
-@@ -87,8 +88,6 @@ target_include_directories(afcommon_interface
+@@ -87,8 +90,6 @@ target_include_directories(afcommon_interface
      ${ArrayFire_BINARY_DIR}
    SYSTEM INTERFACE
      $<$<PLATFORM_ID:Darwin>:${OPENGL_INCLUDE_DIR}>
@@ -153,30 +159,48 @@ index c3cceac1..4bf55eda 160000
 -Subproject commit c3cceac115c072fb63df1836ff46d8c60d9eb304
 +Subproject commit 4bf55edac3ceafd899cdb3617ebe61253f5788e7
 diff --git a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt b/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
-index 9a796c9e..0688500f 100644
+index 9a796c9e..f2fcdeda 100644
 --- a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
 +++ b/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
-@@ -40,8 +40,8 @@ foreach(SBK_BINARY_OP ${SBK_BINARY_OPS})
+@@ -27,6 +27,7 @@ foreach(SBK_BINARY_OP ${SBK_BINARY_OPS})
+     add_dependencies(opencl_scan_by_key_${SBK_BINARY_OP}
+                         ${cl_kernel_targets} OpenCL::cl2hpp Boost::boost)
+ 
++    find_package(glad CONFIG REQUIRED)
+     target_include_directories(opencl_scan_by_key_${SBK_BINARY_OP}
+       PRIVATE
+         .
+@@ -39,9 +40,9 @@ foreach(SBK_BINARY_OP ${SBK_BINARY_OPS})
+         $<TARGET_PROPERTY:OpenCL::OpenCL,INTERFACE_INCLUDE_DIRECTORIES>
          $<TARGET_PROPERTY:OpenCL::cl2hpp,INTERFACE_INCLUDE_DIRECTORIES>
          $<TARGET_PROPERTY:Boost::boost,INTERFACE_INCLUDE_DIRECTORIES>
-         $<TARGET_PROPERTY:af_glad_interface,INTERFACE_INCLUDE_DIRECTORIES>
+-        $<TARGET_PROPERTY:af_glad_interface,INTERFACE_INCLUDE_DIRECTORIES>
 -        ${ArrayFire_SOURCE_DIR}/extern/forge/include
 -        ${ArrayFire_BINARY_DIR}/extern/forge/include
++        $<TARGET_PROPERTY:glad::glad,INTERFACE_INCLUDE_DIRECTORIES>
 +        # ${ArrayFire_SOURCE_DIR}/extern/forge/include
 +        # ${ArrayFire_BINARY_DIR}/extern/forge/include
        )
  
      set_target_properties(opencl_scan_by_key_${SBK_BINARY_OP}
 diff --git a/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt b/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
-index d618ff2f..fd62e44f 100644
+index d618ff2f..8e5f4d8d 100644
 --- a/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
 +++ b/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
-@@ -38,8 +38,8 @@ foreach(SBK_TYPE ${SBK_TYPES})
+@@ -32,14 +32,15 @@ foreach(SBK_TYPE ${SBK_TYPES})
+         ../../../include
+         ${CMAKE_CURRENT_BINARY_DIR})
+ 
++    find_package(glad CONFIG REQUIRED)
+     target_include_directories(opencl_sort_by_key_${SBK_TYPE}
+       SYSTEM PRIVATE
+         $<TARGET_PROPERTY:OpenCL::OpenCL,INTERFACE_INCLUDE_DIRECTORIES>
          $<TARGET_PROPERTY:OpenCL::cl2hpp,INTERFACE_INCLUDE_DIRECTORIES>
          $<TARGET_PROPERTY:Boost::boost,INTERFACE_INCLUDE_DIRECTORIES>
-         $<TARGET_PROPERTY:af_glad_interface,INTERFACE_INCLUDE_DIRECTORIES>
+-        $<TARGET_PROPERTY:af_glad_interface,INTERFACE_INCLUDE_DIRECTORIES>
 -        ${ArrayFire_SOURCE_DIR}/extern/forge/include
 -        ${ArrayFire_BINARY_DIR}/extern/forge/include
++        $<TARGET_PROPERTY:glad::glad,INTERFACE_INCLUDE_DIRECTORIES>
 +        # ${ArrayFire_SOURCE_DIR}/extern/forge/include
 +        # ${ArrayFire_BINARY_DIR}/extern/forge/include
        )

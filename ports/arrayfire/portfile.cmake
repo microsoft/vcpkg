@@ -7,20 +7,7 @@ vcpkg_from_github(
     PATCHES submodules.patch
 )
 
-############################### Grab submodules ##############################
-# TODO: try to remove me
-# arrayfire glad
-vcpkg_from_github(
-  OUT_SOURCE_PATH GLAD_PATH
-  REPO arrayfire/glad
-  REF 6e58ccdfa8e65e1dc5d04a0b9c752c6508ef80b5
-  SHA512 9eb022aed98eaa18b91712053d73137b085964cea76a2d8951b7693492ee54bd508a1af5615645d018c16341bc4d8d7ae3323a328ac2a5cfc89ef0141a8dbfb7
-  HEAD_REF master
-  )
-# Copy submodule path into extern
-file(RENAME ${GLAD_PATH} ${SOURCE_PATH}/extern/glad)
-
-# arrayfire cpu threads
+# arrayfire cpu thread lib needed as a submodule for the CPU backend
 vcpkg_from_github(
   OUT_SOURCE_PATH CPU_THREADS_PATH
   REPO arrayfire/threads
