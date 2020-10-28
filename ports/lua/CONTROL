@@ -1,5 +1,6 @@
 Source: lua
-Version: 5.3.5-5
+Version: 5.3.5
+Port-Version: 6
 Homepage: https://www.lua.org
 Description: a powerful, fast, lightweight, embeddable scripting language
 

@@ -86,7 +86,8 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config)
 endfunction()
 
 function(vcpkg_fixup_pkgconfig)
-    cmake_parse_arguments(_vfpkg "SKIP_CHECK" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES;IGNORE_FLAGS" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vfpkg "SKIP_CHECK" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES;IGNORE_FLAGS")
 
     if(_vfpkg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_pkgconfig() was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")

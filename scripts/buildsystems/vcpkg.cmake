@@ -395,6 +395,20 @@ endif()
 
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
 option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
+function(_vcpkg_set_powershell_path)
+    # Attempt to use pwsh if it is present; otherwise use powershell
+    if (NOT DEFINED _VCPKG_POWERSHELL_PATH)
+        find_program(_VCPKG_PWSH_PATH pwsh)
+        if (_VCPKG_PWSH_PATH-NOTFOUND)
+            message(DEBUG "vcpkg: Could not find PowerShell Core; falling back to PowerShell")
+            find_program(_VCPKG_BUILTIN_POWERSHELL_PATH powershell REQUIRED)
+            set(_VCPKG_POWERSHELL_PATH "${_VCPKG_BUILTIN_POWERSHELL_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+        else()
+            set(_VCPKG_POWERSHELL_PATH "${_VCPKG_PWSH_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+        endif()
+    endif() # _VCPKG_POWERSHELL_PATH
+endfunction()
+
 function(add_executable name)
     _add_executable(${ARGV})
     list(FIND ARGV "IMPORTED" IMPORTED_IDX)
@@ -403,12 +417,13 @@ function(add_executable name)
     if(IMPORTED_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
         if(VCPKG_APPLOCAL_DEPS)
             if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
+                _vcpkg_set_powershell_path()
                 set(EXTRA_OPTIONS "")
                 if(X_VCPKG_APPLOCAL_DEPS_SERIALIZED)
                     set(EXTRA_OPTIONS USES_TERMINAL)
                 endif()
                 add_custom_command(TARGET ${name} POST_BUILD
-                    COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
+                    COMMAND "${_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
                         -targetBinary $<TARGET_FILE:${name}>
                         -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
@@ -437,8 +452,9 @@ function(add_library name)
     if(IMPORTED_IDX EQUAL -1 AND INTERFACE_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
         get_target_property(IS_LIBRARY_SHARED ${name} TYPE)
         if(VCPKG_APPLOCAL_DEPS AND _VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
+            _vcpkg_set_powershell_path()
             add_custom_command(TARGET ${name} POST_BUILD
-                COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
+                COMMAND "${_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
                     -targetBinary $<TARGET_FILE:${name}>
                     -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
