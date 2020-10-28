@@ -1297,9 +1297,6 @@ protobuf-c:x64-windows-static=fail
 protobuf-c:x64-uwp=fail
 protobuf-c:arm64-windows=fail
 protobuf-c:arm-uwp=fail
-# proxygen fails with "Target 'Windows' not supported by proxygen!"
-proxygen:x64-windows=fail
-proxygen:x64-windows-static=fail
 pthreads:arm64-windows=fail
 pthreads:arm-uwp=fail
 pthreads:x64-uwp=fail
