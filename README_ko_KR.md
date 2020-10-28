@@ -1,6 +1,5 @@
 # Vcpkg: 개요
 
-
 Vcpkg는 Windows, Linux 및 MacOS에서 C 및 C++ 라이브러리를 관리하는 데 도움이 됩니다.
 이 툴과 생태계는 지속적으로 진화하고 있으며 항상 기여해 주셔서 감사합니다!
 
@@ -40,15 +39,12 @@ vcpkg 사용을 시작하는 방법은 [시작하기](#getting-started) 섹션�
 # 시작하기
 
 먼저, 사용하는 운영체제에 따라 빠르게 시작하기 문서를 따라가세요.
-[원도우](#빠르게-시작하기-원도우) 또는 [macOS 그리고 Linux](#빠르게-시작하기-유닉스),
+[원도우](#빠르게-시작하기-원도우) 또는 [macOS 그리고 Linux](#빠르게-시작하기-유닉스).
 
 더 많은 정보를 얻고 싶다면, [패키지 설치 및 사용][getting-started:using-a-package] 문서를 참고하세요.
-만약 필요한 라이브러리가 vcpkg 카탈로그에 없는 경우,
+만약 필요한 라이브러리가 vcpkg 카탈로그에 없는 경우, vcpkg 팀이나 커뮤니티가 볼 수 있는
 [GitHub 저장소에서 이슈를 열 ​​수 있습니다][contributing:submit-issue]
-where the vcpkg team and community can see it,
-and potentially add the port to vcpkg.
-
-
+또한 잠재적으로 vcpkg에 포트가 추가될 것 입니다.
 
 vcpkg를 설치하고 작동 한 후, 
 셸에 [탭 완성/자동 완성](#탭-완성/자동-완성)을 추가 할 수 있습니다.
@@ -56,12 +52,12 @@ vcpkg를 설치하고 작동 한 후,
 마지막으로, vcpkg의 미래에 관심이 있다면,
 [manifest][getting-started:manifest-spec] 가이드를 확인하세요!
 이것은 실험적인 기능이며 버그가 있을 수도 있습니다.
-시도해보고 [이슈을 여세요][contributing:submit-issue]!
+시도해보고 문제가 있다면 [이슈을 여세요][contributing:submit-issue]!
 
 ## 빠르게 시작하기: 원도우
 
 필요조건:
-- Windows 7이상
+- Windows 7 이상
 - [Git][getting-started:git]
 - [Visual Studio][getting-started:visual-studio] 영어 언어팩이 설치된 2015 Update 3 버전 이상
  
@@ -88,22 +84,23 @@ Visual Studio 프로젝트를 위해 전역적으로 설치합니다.
 > .\vcpkg\vcpkg search [search term]
 ```
 
-In order to use vcpkg with Visual Studio,
-run the following command (may require administrator elevation):
+Visual Studio에서 vcpkg를 사용하려면
+다음 명령을 실행합니다 (관리자 권한이 필요할 수도 있습니다):
 
 ```cmd
 > .\vcpkg\vcpkg integrate install
 ```
 
-After this, you can now create a New non-CMake Project (or open an existing one).
+
+그런 다음, 이제 CMake가 아닌 새 프로젝트를 만들 수 있습니다. (또는 기존 프로젝트를 열 수 있습니다)
 All installed libraries are immediately ready to be `#include`'d and used
 in your project without additional configuration.
 
-If you're using CMake with Visual Studio,
-continue [here](#vcpkg-with-visual-studio-cmake-projects).
+Visual Studio에서 CMake를 사용하는 경우,
+[여기를 보세요](#vcpkg-with-visual-studio-cmake-projects).
 
-In order to use vcpkg with CMake outside of an IDE,
-you can use the toolchain file:
+IDE 외부에서 CMake와 함께 vcpkg를 사용하려면,
+툴체인 파일을 사용할 수 있습니다:
 
 ```cmd
 > cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
@@ -137,13 +134,13 @@ $ git clone https://github.com/microsoft/vcpkg
 $ ./vcpkg/bootstrap-vcpkg.sh
 ```
 
-To install the libraries for your project, run:
+당신의 프로젝트에 라이브러리를 설치, 실행 시키려면 다음과 같이 작성하세요:
 
 ```sh
 $ ./vcpkg/vcpkg install [packages to install]
 ```
 
-You can also search for the libraries you need with the `search` subcommand:
+다음과 같이 `search` 하위 명령어를 사용하여 필요한 라이브러리를 검색 할 수도 있습니다.
 
 ```sh
 $ ./vcpkg/vcpkg search [search term]
@@ -168,7 +165,7 @@ For any other tools, check out the [integration guide][getting-started:integrati
 리눅스의 다양한 배포판에는 다양한 패키지가 있습니다.
 설치 필요:
 
--Debian, Ubuntu, popOS 및 기타 Debian 기반 배포//나중에 고쳐보자 :
+-Debian, Ubuntu, popOS 및 기타 Debian 기반 배포판:
 
 ```sh
 $ sudo apt-get update
@@ -183,7 +180,7 @@ $ sudo yum install devtoolset-7
 $ scl enable devtoolset-7 bash
 ```
 
-For any other distributions, make sure you're installing g++ 6 or above.
+다른 배포판의 경우 g ++ 6 이상의 버전을 설치해야합니다.
 If you want to add instructions for your specific distro,
 [please open a PR][contributing:submit-pr]!
 
@@ -220,7 +217,7 @@ You'll then be able to bootstrap vcpkg along with the [quick start guide](#quick
 
 ## CMake와 함께 vcpkg 사용
 
-If you're using vcpkg with CMake, the following may help!
+CMake와 함께 vcpkg를 사용하는 경우, 다음과 같이 따라해 보세요
 
 ### Visual Studio Code와 CMake Tools
 
@@ -308,7 +305,7 @@ including [installing and using a package](docs/examples/installing-and-using-pa
 [adding a new package from a zipfile](docs/examples/packaging-zipfiles.md),
 and [adding a new package from a GitHub repo](docs/examples/packaging-github-repos.md).
 
-Our docs are now also available online at ReadTheDocs: <https://vcpkg.readthedocs.io/>!
+이제 ReadTheDocs에서 온라인으로 문서를 사용할 수도 있습니다: <https://vcpkg.readthedocs.io/>!
 
 See a 4 minute [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw).
 
@@ -317,13 +314,13 @@ See a 4 minute [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw).
 Vcpkg는 오픈소스 프로젝트입니다, 따라서 여러분의 기여로 만들어 졌습니다. 
 기여할 수 있는 몇 가지 방법은 다음과 같습니다:
 
-* [Submit Issues][contributing:submit-issue] in vcpkg or existing packages
+* [Submit Issues][contributing:submit-issue] vcpkg나 기존 패키지
 * [Submit Fixes and New Packages][contributing:submit-pr]
 
-Please refer to our [Contributing Guide](CONTRIBUTING.md) for more details.
+자세한 내용은 [컨트리뷰팅 가이드](CONTRIBUTING.md)를 참고하세요.
 
-This project has adopted the [Microsoft Open Source Code of Conduct][contributing:coc].
-더 많은 정보를 얻고 싶다면 [Code of Conduct FAQ][contributing:coc-faq] 문서를 참고하거나 추가 질문또는 의견은 이메일 [opencode@microsoft.com](mailto:opencode@microsoft.com)로 보내주세요.
+이 프로젝트는 [Microsoft Open Source Code of Conduct][contributing:coc]을 채택했습니다.
+더 많은 정보를 얻고 싶다면 [Code of Conduct FAQ][contributing:coc-faq] 문서를 참고하거나 추가 질문 또는 의견은 이메일 [opencode@microsoft.com](mailto:opencode@microsoft.com)로 보내주세요.
 
 [contributing:submit-issue]: https://github.com/microsoft/vcpkg/issues/new/choose
 [contributing:submit-pr]: https://github.com/microsoft/vcpkg/pulls
@@ -338,8 +335,8 @@ This project has adopted the [Microsoft Open Source Code of Conduct][contributin
 
 vcpkg는 사용자 경험을 개선하는 데 도움이 되도록 사용 데이터를 수집합니다.
 Microsoft는 이 정보를 익명으로 수집합니다.
-You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics,
-passing --disable-metrics to vcpkg on the command line,
-or by setting the VCPKG_DISABLE_METRICS environment variable.
+bootstrap-vcpkg 스크립트를 -disableMetrics를 추가해 다시 실행하여 원격 분석을 옵트아웃 할 수 있습니다.
+커맨드 라인에서 --disable-metrics를 vcpkg에 전달합니다.
+또는 VCPKG_DISABLE_METRICS 환경 변수를 설정합니다.
 
-Read more about vcpkg telemetry at docs/about/privacy.md
+docs/about/privacy.md 에 vcpkg 데이터 수집에 대해 자세히 알아보세요.
