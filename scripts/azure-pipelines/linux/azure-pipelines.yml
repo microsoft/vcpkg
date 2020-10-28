@@ -51,7 +51,7 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/failure-logs'
       ArtifactName: 'failure logs for x64-linux'
-    condition: failed()
+    condition: always()
   - bash: |
       python3 scripts/file_script.py /mnt/vcpkg-ci/installed/vcpkg/info/
     displayName: 'Build a file list for all packages'
