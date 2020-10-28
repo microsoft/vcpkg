@@ -146,6 +146,8 @@ std::string fs::generic_u8string(const fs::path& p)
 fs::path fs::lexically_normal(const fs::path& p)
 {
     // copied from microsoft/STL, stl/inc/filesystem:lexically_normal()
+    // relicensed under MIT for the vcpkg repository.
+
     // N4810 29.11.7.1 [fs.path.generic]/6:
     // "Normalization of a generic format pathname means:"
 

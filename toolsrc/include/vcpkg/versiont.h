@@ -1,4 +1,5 @@
 #pragma once
+
 #include <functional>
 #include <string>
 
@@ -15,7 +16,7 @@ namespace vcpkg
         friend bool operator==(const VersionT& left, const VersionT& right);
         friend bool operator!=(const VersionT& left, const VersionT& right);
 
-        friend struct std::less<VersionT>;
+        friend struct VersionTLess;
 
     private:
         std::string value;
@@ -32,14 +33,9 @@ namespace vcpkg
 
         std::string to_string() const;
     };
-}
 
-namespace std
-{
-    // allows for std::map<VersionT, _>
-    template<>
-    struct less<::vcpkg::VersionT>
+    struct VersionTMapLess
     {
-        bool operator()(const ::vcpkg::VersionT& lhs, const ::vcpkg::VersionT& rhs) const;
+        bool operator()(const VersionT& left, const VersionT& right) const;
     };
 }

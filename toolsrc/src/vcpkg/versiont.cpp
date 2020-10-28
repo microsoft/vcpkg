@@ -19,20 +19,9 @@ namespace vcpkg
     }
     bool operator!=(const VersionT& left, const VersionT& right) { return !(left == right); }
 
-    VersionDiff::VersionDiff() noexcept : left(), right() { }
-    VersionDiff::VersionDiff(const VersionT& left, const VersionT& right) : left(left), right(right) { }
-
-    std::string VersionDiff::to_string() const
+    bool VersionTMapLess::operator()(const VersionT& left, const VersionT& right) const
     {
-        return Strings::format("%s -> %s", left.to_string(), right.to_string());
-    }
-}
-
-namespace std
-{
-    bool less<::vcpkg::VersionT>::operator()(const ::vcpkg::VersionT& lhs, const ::vcpkg::VersionT& rhs) const
-    {
-        auto cmp = lhs.value.compare(rhs.value);
+        auto cmp = left.value.compare(right.value);
         if (cmp < 0)
         {
             return true;
@@ -42,6 +31,14 @@ namespace std
             return false;
         }
 
-        return lhs.port_version < rhs.port_version;
+        return left.port_version < right.port_version;
+    }
+
+    VersionDiff::VersionDiff() noexcept : left(), right() { }
+    VersionDiff::VersionDiff(const VersionT& left, const VersionT& right) : left(left), right(right) { }
+
+    std::string VersionDiff::to_string() const
+    {
+        return Strings::format("%s -> %s", left.to_string(), right.to_string());
     }
 }

@@ -57,7 +57,7 @@ namespace
 
     struct FilesystemEntry final : RegistryEntry
     {
-        std::map<VersionT, fs::path> versions;
+        std::map<VersionT, fs::path, VersionTMapLess> versions;
 
         fs::path get_port_directory(const VcpkgPaths&, const VersionT& version) const override
         {
@@ -324,7 +324,7 @@ namespace
 
             if (r.errors().empty())
             {
-                return std::move(result);
+                return result;
             }
             else
             {

@@ -312,10 +312,10 @@ namespace vcpkg::Dependencies
                                         const CStringView s,
                                         const Build::BuildPackageOptions& options,
                                         const fs::path& install_port_path,
-                                        const fs::path& root_dir)
+                                        const fs::path& builtin_ports_dir)
     {
-        if (!root_dir.empty() &&
-            !Strings::case_insensitive_ascii_starts_with(fs::u8string(install_port_path), fs::u8string(root_dir)))
+        if (!builtin_ports_dir.empty() && !Strings::case_insensitive_ascii_starts_with(fs::u8string(install_port_path),
+                                                                                       fs::u8string(builtin_ports_dir)))
         {
             const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
             switch (request_type)
@@ -1028,7 +1028,7 @@ namespace vcpkg::Dependencies
 
     PackageGraph::~PackageGraph() = default;
 
-    void print_plan(const ActionPlan& action_plan, const bool is_recursive, const fs::path& root_dir)
+    void print_plan(const ActionPlan& action_plan, const bool is_recursive, const fs::path& builtin_ports_dir)
     {
         if (action_plan.remove_actions.empty() && action_plan.already_installed.empty() &&
             action_plan.install_actions.empty())
@@ -1088,7 +1088,7 @@ namespace vcpkg::Dependencies
                 if (auto* pscfl = p->source_control_file_location.get())
                 {
                     return to_output_string(
-                        p->request_type, p->displayname(), p->build_options, pscfl->source_location, root_dir);
+                        p->request_type, p->displayname(), p->build_options, pscfl->source_location, builtin_ports_dir);
                 }
 
                 return to_output_string(p->request_type, p->displayname(), p->build_options);
