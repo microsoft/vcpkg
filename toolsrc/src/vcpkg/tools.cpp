@@ -464,6 +464,36 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
         }
     };
 
+    struct PowerShellCoreProvider : ToolProvider
+    {
+        std::string m_exe = "pwsh";
+
+        virtual const std::string& tool_data_name() const override { return m_exe; }
+        virtual const std::string& exe_stem() const override { return m_exe; }
+        virtual std::array<int, 3> default_min_version() const override { return {7, 0, 3}; }
+
+        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        {
+            const auto pwsh_invocation = System::cmd_execute_and_capture_output(
+                System::CmdLineBuilder().path_arg(path_to_exe).string_arg("--version").extract());
+            if (pwsh_invocation.exit_code != 0)
+            {
+                return nullopt;
+            }
+
+            // Sample output: PowerShell 7.0.3\r\n
+            auto output = std::move(pwsh_invocation.output);
+            if (!Strings::starts_with(output, "PowerShell "))
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Unexpected format of powershell-core version string: %s", output);
+            }
+
+            output.erase(0, 11);
+            return Strings::trim(std::move(output));
+        }
+    };
+
     struct ToolCacheImpl final : ToolCache
     {
         vcpkg::Cache<std::string, fs::path> path_only_cache;
@@ -510,6 +540,14 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
                         return {"ninja", "0"};
                     }
                     return get_path(paths, NinjaProvider());
+                }
+                if (tool == Tools::POWERSHELL_CORE)
+                {
+                    if (System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+                    {
+                        return {"pwsh", "0"};
+                    }
+                    return get_path(paths, PowerShellCoreProvider());
                 }
                 if (tool == Tools::NUGET) return get_path(paths, NuGetProvider());
                 if (tool == Tools::IFW_INSTALLER_BASE) return get_path(paths, IfwInstallerBaseProvider());
