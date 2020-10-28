@@ -23,7 +23,6 @@
 #include <algorithm>
 #include <string>
 
-#if defined(_WIN32)
 namespace
 {
     struct IsSlash
@@ -32,7 +31,11 @@ namespace
     };
 
     constexpr IsSlash is_slash;
+} // unnamed namespace
 
+#if defined(_WIN32)
+namespace
+{
     template<size_t N>
     bool wide_starts_with(const std::wstring& haystack, const wchar_t (&needle)[N]) noexcept
     {
@@ -1182,14 +1185,14 @@ namespace vcpkg::Files
             auto paths = Strings::split_paths(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO));
 
             std::vector<fs::path> ret;
-            std::error_code ec;
             for (auto&& path : paths)
             {
-                auto base = path + "/" + name;
+                auto base = add_filename(path, name);
+
                 for (auto&& ext : EXTS)
                 {
                     auto p = fs::u8path(base + ext.c_str());
-                    if (Util::find(ret, p) == ret.end() && this->exists(p, ec))
+                    if (Util::find(ret, p) == ret.end() && this->exists(p, ignore_errors))
                     {
                         ret.push_back(p);
                         Debug::print("Found path: ", fs::u8string(p), '\n');
@@ -1372,4 +1375,26 @@ namespace vcpkg::Files
         return fs::path(std::move(in_progress));
     }
 #endif // _WIN32
+
+    std::string add_filename(StringView base, StringView file)
+    {
+        std::string result;
+        const auto base_size = base.size();
+        const auto file_size = file.size();
+        if (base_size != 0 && !is_slash(base.data()[base_size - 1]))
+        {
+            result.reserve(base_size + file_size + 1);
+            result.append(base.data(), base_size);
+            result.push_back(preferred_separator);
+            result.append(file.data(), file_size);
+        }
+        else
+        {
+            result.reserve(base_size + file_size);
+            result.append(base.data(), base_size);
+            result.append(file.data(), file_size);
+        }
+
+        return result;
+    }
 }

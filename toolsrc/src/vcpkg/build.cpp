@@ -338,13 +338,6 @@ namespace vcpkg::Build
 
         return base_env.cmd_cache.get_lazy(build_env_cmd, [&]() {
             const fs::path& powershell_exe_path = paths.get_tool_exe("powershell-core");
-            auto& fs = paths.get_filesystem();
-            if (!fs.exists(powershell_exe_path.parent_path() / "powershell.exe"))
-            {
-                fs.copy(
-                    powershell_exe_path, powershell_exe_path.parent_path() / "powershell.exe", fs::copy_options::none);
-            }
-
             auto clean_env = System::get_modified_clean_environment(
                 base_env.env_map, fs::u8string(powershell_exe_path.parent_path()) + ";");
             if (build_env_cmd.empty())

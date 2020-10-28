@@ -250,6 +250,21 @@ TEST_CASE ("win32_fix_path_case", "[files]")
 }
 #endif // _WIN32
 
+TEST_CASE ("add_filename", "[files]")
+{
+    using vcpkg::Files::add_filename;
+    using vcpkg::Files::preferred_separator;
+
+    CHECK(add_filename("a/b", "c") == std::string("a/b") + preferred_separator + "c");
+    CHECK(add_filename("a/b/", "c") == "a/b/c");
+    CHECK(add_filename("a/b\\", "c") == "a/b\\c");
+    CHECK(add_filename("", "c") == "c");
+
+    // note that we don't special case slashes in the second argument; the caller shouldn't do that
+    CHECK(add_filename("a/b/", "\\c") == "a/b/\\c");
+    CHECK(add_filename("a/b\\", "/c") == "a/b\\/c");
+}
+
 #if defined(CATCH_CONFIG_ENABLE_BENCHMARKING)
 TEST_CASE ("remove all -- benchmarks", "[files][!benchmark]")
 {
