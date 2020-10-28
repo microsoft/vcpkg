@@ -23,16 +23,6 @@
 #include <algorithm>
 #include <string>
 
-namespace
-{
-    struct IsSlash
-    {
-        bool operator()(const wchar_t c) const noexcept { return c == L'/' || c == L'\\'; }
-    };
-
-    constexpr IsSlash is_slash;
-} // unnamed namespace
-
 #if defined(_WIN32)
 namespace
 {
@@ -1277,6 +1267,7 @@ namespace vcpkg::Files
 #ifdef _WIN32
     fs::path win32_fix_path_case(const fs::path& source)
     {
+        using fs::is_slash;
         const std::wstring& native = source.native();
         if (native.empty())
         {
@@ -1381,7 +1372,7 @@ namespace vcpkg::Files
         std::string result;
         const auto base_size = base.size();
         const auto file_size = file.size();
-        if (base_size != 0 && !is_slash(base.data()[base_size - 1]))
+        if (base_size != 0 && !fs::is_slash(base.data()[base_size - 1]))
         {
             result.reserve(base_size + file_size + 1);
             result.append(base.data(), base_size);
