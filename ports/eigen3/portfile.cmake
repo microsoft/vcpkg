@@ -8,6 +8,7 @@ vcpkg_from_gitlab(
     SHA512  5b4b5985b0294e07b3ed1155720cbbfea322fe9ccad0fc8b0a10060b136a9169a15d5b9cb7a434470cadd45dff0a43049edc20d2e1070005481a120212edc355
     HEAD_REF master
     PATCHES fix-cuda-error.patch # issue https://gitlab.com/libeigen/eigen/-/issues/1526
+    PATCHES remove-error-counting-exception.patch # issue https://gitlab.com/libeigen/eigen/-/issues/2011 Hopefully to be addressed in 3.3.9
 )
 
 vcpkg_configure_cmake(

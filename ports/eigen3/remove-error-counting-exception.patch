@@ -1,0 +1,64 @@
+From ef3cc72cb65e2d500459c178c63e349bacfa834f Mon Sep 17 00:00:00 2001
+From: Luke Peterson <hazelnusse@gmail.com>
+Date: Thu, 8 Oct 2020 12:16:53 -0700
+Subject: [PATCH] Remove error counting in OpenMP parallelize_gemm
+
+This resolves a compilation error associated with
+Eigen::eigen_assert_exception. It also eliminates the counting of
+exceptions that may occur in the OpenMP parallel section. If an
+unhandled exception occurs in this section, the behavior is non-conforming
+according to the OpenMP specification.
+---
+ Eigen/src/Core/products/Parallelizer.h | 14 +++++---------
+ test/CMakeLists.txt                    |  2 +-
+ 2 files changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/Eigen/src/Core/products/Parallelizer.h b/Eigen/src/Core/products/Parallelizer.h
+index 67b2442b5..a3cc05b77 100644
+--- a/Eigen/src/Core/products/Parallelizer.h
++++ b/Eigen/src/Core/products/Parallelizer.h
+@@ -132,8 +132,7 @@ void parallelize_gemm(const Functor& func, Index rows, Index cols, Index depth,
+ 
+   ei_declare_aligned_stack_constructed_variable(GemmParallelInfo<Index>,info,threads,0);
+ 
+-  int errorCount = 0;
+-  #pragma omp parallel num_threads(threads) reduction(+: errorCount)
++  #pragma omp parallel num_threads(threads)
+   {
+     Index i = omp_get_thread_num();
+     // Note that the actual number of threads might be lower than the number of request ones.
+@@ -152,14 +151,11 @@ void parallelize_gemm(const Functor& func, Index rows, Index cols, Index depth,
+     info[i].lhs_start = r0;
+     info[i].lhs_length = actualBlockRows;
+ 
+-    EIGEN_TRY {
+-      if(transpose) func(c0, actualBlockCols, 0, rows, info);
+-      else          func(0, rows, c0, actualBlockCols, info);
+-    } EIGEN_CATCH(...) {
+-      ++errorCount;
+-    }
++    if(transpose)
++      func(c0, actualBlockCols, 0, rows, info);
++    else
++      func(0, rows, c0, actualBlockCols, info);
+   }
+-  if (errorCount) EIGEN_THROW_X(Eigen::eigen_assert_exception());
+ #endif
+ }
+ 
+diff --git a/test/CMakeLists.txt b/test/CMakeLists.txt
+index 0747aa6cb..b02577780 100644
+--- a/test/CMakeLists.txt
++++ b/test/CMakeLists.txt
+@@ -163,7 +163,7 @@ ei_add_test(constructor)
+ ei_add_test(linearstructure)
+ ei_add_test(integer_types)
+ ei_add_test(unalignedcount)
+-if(NOT EIGEN_TEST_NO_EXCEPTIONS)
++if(NOT EIGEN_TEST_NO_EXCEPTIONS AND NOT EIGEN_TEST_OPENMP)
+   ei_add_test(exceptions)
+ endif()
+ ei_add_test(redux)
+-- 
+GitLab
+
