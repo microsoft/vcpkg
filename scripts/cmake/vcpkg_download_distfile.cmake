@@ -56,6 +56,7 @@ function(vcpkg_download_distfile VAR)
     set(options SKIP_SHA512 SILENT_EXIT QUIET)
     set(oneValueArgs FILENAME SHA512)
     set(multipleValuesArgs URLS HEADERS)
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 1 vcpkg_download_distfile "${options}" "${oneValueArgs}" "${multipleValuesArgs}")
 
     if(NOT DEFINED vcpkg_download_distfile_URLS)

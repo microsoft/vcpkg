@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dbry/WavPack
-    REF e158df5353b57ac7002d5cac4b3a040eba4c0c9f # 5.2.0
-    SHA512 a144c6a05ddef0c6f4c436b5e45fe1d56893587d983eda49067fbe93059ed7d910d98b82ee5fc8e4a935904bc2ff5596cbee59ed6a5fe81be4717e53cdfc44c0
+    REF 350b6d7737383029573ea2cce9bd94f1b6756bbd # 5.3.0
+    SHA512 42116b41b8df179193822d25ea34d2c1d9a2af3598f7d25c6665d31aca11a3a11984cdb17b05e5d0874c94562e1b471736f6a1ae67bd3a22d018cd142676634c
     HEAD_REF master
     PATCHES
         OpenSSL.patch
@@ -44,6 +44,3 @@ if(WIN32 AND (NOT MINGW))
 endif()
 
 vcpkg_fixup_pkgconfig()
-
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME wavpack)

@@ -1,4 +1,5 @@
 Source: oatpp-mbedtls
-Version: 1.0.0
+Version: 1.2.0
 Build-Depends: mbedtls, oatpp
 Description: Oat++ Mbed TLS submodule providing secure server and client connection providers
+Homepage: https://github.com/oatpp/oatpp-mbedtls
