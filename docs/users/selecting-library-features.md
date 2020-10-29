@@ -66,7 +66,11 @@ We can install "feature":
 ```
 
 ## Opting out of default feature
-When we installed llvm, we also got [clang](https://clang.llvm.org/) `.\packages\llvm_x64-windows-static\bin\clang.exe`. But what if we are not interested pre-bundled `clang`
+The llvm port includes a few default features that you as a user may not want: for example,
+the `clang` feature is default, which means that `vcpkg install llvm` will also build and install clang.
+If you are writing a compiler that uses LLVM as a backend,
+you're likely not interested in installing clang as well,
+and we can do that by disabling default features with the special `core` "feature":
 "c" language frontend (to convert c/c++ to llvm-ir)?
 We can only install llvm as:
 ```powershell
