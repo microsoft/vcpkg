@@ -118,6 +118,39 @@ index 33aa64e6..2d07e4ea 100644
    )
  
  if(APPLE AND NOT USE_MKL)
+diff --git a/src/backend/cpu/CMakeLists.txt b/src/backend/cpu/CMakeLists.txt
+index bdd205bc..36a50ca7 100644
+--- a/src/backend/cpu/CMakeLists.txt
++++ b/src/backend/cpu/CMakeLists.txt
+@@ -266,9 +266,10 @@ endif(AF_WITH_CPUID)
+ 
+ target_sources(afcpu
+   PRIVATE
+-    ${CMAKE_CURRENT_SOURCE_DIR}/threads/async_queue.hpp
+-    ${CMAKE_CURRENT_SOURCE_DIR}/threads/event.hpp
+-  )
++    ${AF_CPU_THREAD_PATH}/async_queue.hpp
++    ${AF_CPU_THREAD_PATH}/event.hpp
++    )
++target_include_directories(afcpu PRIVATE ${AF_CPU_THREAD_PATH})
+ 
+ arrayfire_set_default_cxx_flags(afcpu)
+ 
+diff --git a/src/backend/cpu/queue.hpp b/src/backend/cpu/queue.hpp
+index 213ccda8..28607b9c 100644
+--- a/src/backend/cpu/queue.hpp
++++ b/src/backend/cpu/queue.hpp
+@@ -40,8 +40,8 @@ class queue_impl {
+ 
+ #else
+ 
+-#include <threads/async_queue.hpp>
+-#include <threads/event.hpp>
++#include <async_queue.hpp>
++#include <event.hpp>
+ #define __SYNCHRONOUS_ARCH 0
+ using queue_impl = threads::async_queue;
+ using event_impl = threads::event;
 diff --git a/src/backend/cpu/threads b/src/backend/cpu/threads
 index c483ad32..6a967802 160000
 --- a/src/backend/cpu/threads
