@@ -61,10 +61,10 @@ llvm[target-arm]                      Build with ARM backend.
 ...
 ```
 
-We can install "feature":
+We can install any of these targets by using the install-feature syntax:
 
 ```powershell
-.\vcpkg install --triplet x64-windows-static llvm[target-arm]
+> .\vcpkg install llvm[target-arm] # Installs LLVM with the ARM target
 ```
 
 ## Opting out of default feature
