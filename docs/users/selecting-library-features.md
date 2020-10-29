@@ -14,7 +14,7 @@ On Windows, this will install the 32-bit x86 LLVM, since that's the default trip
 If you are building for 64-bit Windows instead, you can use the following command to change the default triplet:
 
 ```powershell
-.\vcpkg install --triplet x64-windows-static llvm
+> .\vcpkg install --triplet x64-windows llvm
 ```
 
 You can read more about [triplets](https://vcpkg.readthedocs.io/en/latest/users/triplets/) here.
