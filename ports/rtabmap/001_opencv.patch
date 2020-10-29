@@ -1,0 +1,37 @@
+diff --git a/corelib/src/CMakeLists.txt b/corelib/src/CMakeLists.txt
+index 67e9abf9d..50ade69d6 100644
+--- a/corelib/src/CMakeLists.txt
++++ b/corelib/src/CMakeLists.txt
+@@ -580,6 +580,10 @@ IF(GTSAM_FOUND)
+ 	)
+ ENDIF(GTSAM_FOUND)
+ 
++IF(NOT VTK_FOUND)
++	add_definitions("-DDISABLE_VTK")
++ENDIF(VTK_FOUND)
++
+ IF(WITH_MADGWICK)
+ 	SET(SRC_FILES
+ 		${SRC_FILES}
+diff --git a/corelib/src/Features2d.cpp b/corelib/src/Features2d.cpp
+index e4048eefb..862cdc68f 100644
+--- a/corelib/src/Features2d.cpp
++++ b/corelib/src/Features2d.cpp
+@@ -982,7 +982,7 @@ std::vector<cv::KeyPoint> SIFT::generateKeypointsImpl(const cv::Mat & image, con
+ {
+ 	UASSERT(!image.empty() && image.channels() == 1 && image.depth() == CV_8U);
+ 	std::vector<cv::KeyPoint> keypoints;
+-#if defined(RTABMAP_NONFREE) || CV_MAJOR_VERSION > 4 || (CV_MAJOR_VERSION == 4 && CV_MINOR_VERSION >= 3)
++#if defined(RTABMAP_NONFREE) && ( CV_MAJOR_VERSION > 4 || (CV_MAJOR_VERSION == 4 && CV_MINOR_VERSION >= 3) )
+ 	cv::Mat imgRoi(image, roi);
+ 	cv::Mat maskRoi;
+ 	if(!mask.empty())
+@@ -1000,7 +1000,7 @@ cv::Mat SIFT::generateDescriptorsImpl(const cv::Mat & image, std::vector<cv::Key
+ {
+ 	UASSERT(!image.empty() && image.channels() == 1 && image.depth() == CV_8U);
+ 	cv::Mat descriptors;
+-#if defined(RTABMAP_NONFREE) || CV_MAJOR_VERSION > 4 || (CV_MAJOR_VERSION == 4 && CV_MINOR_VERSION >= 3)
++#if defined(RTABMAP_NONFREE) && ( CV_MAJOR_VERSION > 4 || (CV_MAJOR_VERSION == 4 && CV_MINOR_VERSION >= 3) )
+ 	_sift->compute(image, keypoints, descriptors);
+ 
+ 	if( rootSIFT_ && !descriptors.empty())
