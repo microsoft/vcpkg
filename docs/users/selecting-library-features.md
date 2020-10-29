@@ -17,7 +17,7 @@ If you are building for 64-bit Windows instead, you can use the following comman
 > .\vcpkg install --triplet x64-windows llvm
 ```
 
-You can read more about [triplets](https://vcpkg.readthedocs.io/en/latest/users/triplets/) here.
+We have more documentation on triplets [here](triplets.md).
 Sadly currently we can't choose build type `debug` or `release` using command line switches.
 
 With llvm installed, if we try to execute:
