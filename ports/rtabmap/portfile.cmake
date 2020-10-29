@@ -19,7 +19,22 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/${PORT})
-vcpkg_copy_tools(TOOL_NAMES ${PORT})
+vcpkg_copy_tools(
+    TOOL_NAMES
+        rtabmap-camera
+        rtabmap-console
+        rtabmap-detectMoreLoopClosures
+        rtabmap-export
+        rtabmap-extractObject
+        rtabmap-info
+        rtabmap-kitti_dataset
+        rtabmap-recovery
+        rtabmap-report
+        rtabmap-reprocess
+        rtabmap-res_tool
+        rtabmap-rgbd_dataset
+    AUTO_CLEAN
+)
 
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/include"
