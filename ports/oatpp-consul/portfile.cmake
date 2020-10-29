@@ -10,8 +10,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-
-
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
@@ -20,6 +18,7 @@ vcpkg_configure_cmake(
         "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
        
 )
+
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-consul-${OATPP_VERSION})
 vcpkg_copy_pdbs()
