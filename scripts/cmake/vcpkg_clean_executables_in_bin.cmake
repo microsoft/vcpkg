@@ -19,7 +19,8 @@
 ## ## Examples
 ## * [czmq](https://github.com/microsoft/vcpkg/blob/master/ports/czmq/portfile.cmake)
 function(vcpkg_clean_executables_in_bin)
-    cmake_parse_arguments(_vct "" "" "FILE_NAMES" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vct "" "" "FILE_NAMES")
 
     if(NOT DEFINED _vct_FILE_NAMES)
         message(FATAL_ERROR "FILE_NAMES must be specified.")

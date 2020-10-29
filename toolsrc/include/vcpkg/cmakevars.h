@@ -1,11 +1,12 @@
 #pragma once
 
 #include <vcpkg/fwd/dependencies.h>
+#include <vcpkg/fwd/portfileprovider.h>
 #include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/optional.h>
 
-#include <vcpkg/portfileprovider.h>
+#include <vcpkg/packagespec.h>
 
 namespace vcpkg::CMakeVars
 {
