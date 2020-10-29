@@ -1323,28 +1323,6 @@ namespace vcpkg::Files
             return res;
         }
 
-        static fs::path add_filename(StringView base, StringView file)
-        {
-            std::string result;
-            const auto base_size = base.size();
-            const auto file_size = file.size();
-            if (base_size != 0 && !is_slash(base.data()[base_size - 1]))
-            {
-                result.reserve(base_size + file_size + 1);
-                result.append(base.data(), base_size);
-                result.push_back(preferred_separator);
-                result.append(file.data(), file_size);
-            }
-            else
-            {
-                result.reserve(base_size + file_size);
-                result.append(base.data(), base_size);
-                result.append(file.data(), file_size);
-            }
-
-            return result;
-        }
-
         virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code& ec) override
         {
 #if defined(WIN32)
