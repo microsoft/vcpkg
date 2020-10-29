@@ -17,11 +17,14 @@ vcpkg_from_github(
   )
 
 ################################### Build ###################################
+set(AF_BIN_DIR ${CURRENT_PACKAGES_DIR}/bin)
+file(MAKE_DIRECTORY ${AF_BIN_DIR})
 # Default flags
 set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DBUILD_TESTING=OFF
   -DAF_BUILD_DOCS=OFF
   -DAF_BUILD_EXAMPLES=OFF
+  -DAF_INSTALL_BIN_DIR=${AF_BIN_DIR}
   -DAF_CPU_THREAD_PATH=${CPU_THREADS_PATH} # for building the arrayfire cpu threads lib
   )
 
@@ -41,6 +44,8 @@ vcpkg_configure_cmake(
     OPTIONS ${AF_DEFAULT_VCPKG_CMAKE_FLAGS} ${AF_BACKEND_FEATURE_OPTIONS}
 )  
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
