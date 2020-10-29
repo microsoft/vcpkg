@@ -10,15 +10,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-
-
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
-        "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
-     
+        "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS" 
 )
 
 vcpkg_install_cmake()

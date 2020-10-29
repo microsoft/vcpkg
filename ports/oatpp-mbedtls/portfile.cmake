@@ -11,15 +11,13 @@ vcpkg_from_github(
     PATCHES find-mbedtls.patch
 )
 
-
-
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
-        "-DOATPP_BUILD_TESTS:BOOL=OFF"
-      
+        "-DOATPP_BUILD_TESTS:BOOL=OFF"   
 )
+
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-mbedtls-${OATPP_VERSION})
 vcpkg_copy_pdbs()
