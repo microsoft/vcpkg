@@ -104,8 +104,17 @@ using Versions::Scheme;
 template<class T>
 T unwrap(ExpectedS<T> e)
 {
-    REQUIRE(e.has_value());
+    if (!e.has_value())
+    {
+        INFO(e.error());
+        REQUIRE(false);
+    }
     return std::move(*e.get());
+}
+
+static const std::string& name(const SourceControlFileLocation& scfl)
+{
+    return scfl.source_control_file->core_paragraph->name;
 }
 
 TEST_CASE ("basic version install single", "[versionplan]")
@@ -378,6 +387,48 @@ TEST_CASE ("version install string port version 2", "[versionplan]")
 
     REQUIRE(install_plan.size() == 1);
     REQUIRE(install_plan.install_actions[0]
+                .source_control_file_location.get()
+                ->source_control_file->core_paragraph->port_version == 1);
+}
+
+TEST_CASE ("version install transitive string", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2", 0}).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Exact, "1"}},
+    };
+    vp.emplace("a", {"2", 1}).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Exact, "2"}},
+    };
+    vp.emplace("b", {"1", 0});
+    vp.emplace("b", {"2", 0});
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(
+        Dependencies::create_versioned_install_plan(vp,
+                                                    bp,
+                                                    var_provider,
+                                                    {
+                                                        Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 1}},
+                                                    },
+                                                    {},
+                                                    Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 2);
+    REQUIRE(
+        install_plan.install_actions[0].source_control_file_location.get()->source_control_file->core_paragraph->name ==
+        "b");
+    REQUIRE(install_plan.install_actions[0]
+                .source_control_file_location.get()
+                ->source_control_file->core_paragraph->version == "2");
+    REQUIRE(
+        install_plan.install_actions[1].source_control_file_location.get()->source_control_file->core_paragraph->name ==
+        "a");
+    REQUIRE(install_plan.install_actions[1]
                 .source_control_file_location.get()
                 ->source_control_file->core_paragraph->port_version == 1);
 }
