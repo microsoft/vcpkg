@@ -5,6 +5,7 @@
   "homepage": "https://introlab.github.io/rtabmap/",
   "dependencies": [
     "opencv",
+    "pcl",
     "zlib"
   ]
 }
