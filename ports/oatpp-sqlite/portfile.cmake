@@ -17,7 +17,6 @@ vcpkg_configure_cmake(
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
         "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
         "-DOATPP_SQLITE_AMALGAMATION:BOOL=OFF"
-        
 )
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-sqlite-${OATPP_VERSION})
