@@ -77,7 +77,5 @@ We can only install llvm as:
 > .\vcpkg install llvm[core,default-targets] # removing the default-feature with "core" also removes all of the default targets you get
 ```
 
-and later add targets and clang as desired.
-
 # Further reading
 - [Feature Packages](specifications/feature-packages.md)
