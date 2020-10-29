@@ -1178,22 +1178,30 @@ namespace vcpkg::Dependencies
             IVersionedPortfileProvider& m_ver_provider;
             IBaselineProvider& m_base_provider;
 
-            struct ExactInfo
+            // This object contains the current version within a given column.
+            // Each "string" scheme text is treated as a separate column
+            // "relaxed" versions all share the same column
+            struct VersionSchemeInfo
             {
                 const SourceControlFileLocation* scfl = nullptr;
                 Versions::Version version;
+                // This tracks a list of constraint sources for debugging purposes
                 std::vector<std::string> origins;
                 std::map<std::string, std::vector<FeatureSpec>> deps;
+
+                bool is_less_than(const Versions::Version& new_ver) const;
             };
 
-            struct PackageNode
+            struct PackageNode : Util::MoveOnlyBase
             {
                 /*Optional<const SourceControlFileLocation&> overridden;*/
 
-                std::map<std::string, ExactInfo> exacts;
-                Optional<Versions::Version> baseline;
+                std::map<Versions::Version, VersionSchemeInfo*> vermap;
+                std::map<std::string, VersionSchemeInfo> exacts;
+                Optional<std::unique_ptr<VersionSchemeInfo>> relaxed;
 
-                ExactInfo* get_node(const Versions::Version& ver);
+                VersionSchemeInfo* get_node(const Versions::Version& ver);
+                VersionSchemeInfo& emplace_node(Versions::Scheme scheme, const Versions::Version& ver);
             };
 
             struct Dep
@@ -1215,10 +1223,64 @@ namespace vcpkg::Dependencies
             std::vector<std::string> m_errors;
         };
 
-        VersionedPackageGraph::ExactInfo* VersionedPackageGraph::PackageNode::get_node(const Versions::Version& ver)
+        VersionedPackageGraph::VersionSchemeInfo& VersionedPackageGraph::PackageNode::emplace_node(
+            Versions::Scheme scheme, const Versions::Version& ver)
         {
-            auto it = exacts.find(ver.text);
-            return it == exacts.end() ? nullptr : &it->second;
+            auto it = vermap.find(ver);
+            if (it != vermap.end()) return *it->second;
+
+            VersionSchemeInfo* vsi = nullptr;
+            if (scheme == Versions::Scheme::String)
+            {
+                vsi = &exacts[ver.text];
+            }
+            else if (scheme == Versions::Scheme::Relaxed)
+            {
+                if (auto p = relaxed.get())
+                {
+                    vsi = p->get();
+                }
+                else
+                {
+                    relaxed = std::make_unique<VersionSchemeInfo>();
+                    vsi = relaxed.get()->get();
+                }
+            }
+            else
+            {
+                // not implemented
+                Checks::unreachable(VCPKG_LINE_INFO);
+            }
+            auto p = vermap.emplace(ver, vsi);
+            return *vsi;
+        }
+
+        VersionedPackageGraph::VersionSchemeInfo* VersionedPackageGraph::PackageNode::get_node(
+            const Versions::Version& ver)
+        {
+            auto it = vermap.find(ver);
+            return it == vermap.end() ? nullptr : it->second;
+        }
+
+        bool VersionedPackageGraph::VersionSchemeInfo::is_less_than(const Versions::Version& new_ver) const
+        {
+            Checks::check_exit(VCPKG_LINE_INFO, scfl);
+            ASSUME(scfl != nullptr);
+            switch (scfl->source_control_file->core_paragraph->version_scheme)
+            {
+                case Versions::Scheme::String:
+                {
+                    Checks::check_exit(VCPKG_LINE_INFO, version.text == new_ver.text);
+                    return version.port_version < new_ver.port_version;
+                }
+                case Versions::Scheme::Relaxed:
+                {
+                    auto i1 = atoi(version.text.c_str());
+                    auto i2 = atoi(new_ver.text.c_str());
+                    return i1 < i2 || (i1 == i2 && version.port_version < new_ver.port_version);
+                }
+                default: Checks::unreachable(VCPKG_LINE_INFO);
+            }
         }
 
         // void VersionedPackageGraph::add_override(const std::string& /*name*/, const Versions::Version& /*v*/) { }
@@ -1260,19 +1322,6 @@ namespace vcpkg::Dependencies
             };
         }
 
-        enum class VersionCompare
-        {
-            conflict,
-            greater_equal,
-            less,
-        };
-        static VersionCompare version_compare(const Versions::Version& v1, const Versions::Version& v2)
-        {
-            if (v1.text != v2.text) return VersionCompare::conflict;
-            if (v1.port_version >= v2.port_version) return VersionCompare::greater_equal;
-            return VersionCompare::less;
-        }
-
         void VersionedPackageGraph::add_constraint(std::pair<const PackageSpec, PackageNode>& ref,
                                                    const DependencyConstraint& dc,
                                                    const std::string& origin)
@@ -1285,26 +1334,27 @@ namespace vcpkg::Dependencies
 
             if (auto p_scfl = maybe_scfl.get())
             {
-                auto& exact_ref = ref.second.exacts[new_ver.text];
+                auto& exact_ref =
+                    ref.second.emplace_node(p_scfl->source_control_file->core_paragraph->version_scheme, new_ver);
                 exact_ref.origins.push_back(origin);
-                auto p_ref_scfl = exact_ref.scfl;
                 bool replace = false;
-                if (p_ref_scfl == nullptr)
+                if (exact_ref.scfl == nullptr)
                 {
                     replace = true;
                 }
-                else if (p_ref_scfl == p_scfl)
+                else if (exact_ref.scfl == p_scfl)
                 {
                     replace = false;
                 }
                 else
                 {
-                    replace = new_ver.port_version > p_ref_scfl->source_control_file->core_paragraph->port_version;
+                    replace = exact_ref.is_less_than(new_ver);
                 }
 
                 if (replace)
                 {
                     exact_ref.scfl = p_scfl;
+                    exact_ref.version = to_version(*p_scfl->source_control_file);
                     exact_ref.deps.clear();
                     auto core_deps = exact_ref.deps.emplace("core", std::vector<FeatureSpec>{}).first;
                     for (auto&& dep : maybe_scfl.get()->source_control_file->core_paragraph->dependencies)
@@ -1330,11 +1380,10 @@ namespace vcpkg::Dependencies
             auto p = m_graph.emplace(spec, PackageNode{});
             if (p.second)
             {
-                auto& node = p.first->second;
-                node.baseline = m_base_provider.get_baseline(spec.name());
-                if (node.baseline)
+                auto baseline = m_base_provider.get_baseline(spec.name());
+                if (baseline)
                 {
-                    add_constraint(*p.first, to_depconstraint(*node.baseline.get()), "baseline");
+                    add_constraint(*p.first, to_depconstraint(*baseline.get()), "baseline");
                 }
             }
             return *p.first;
@@ -1386,8 +1435,8 @@ namespace vcpkg::Dependencies
 
             ActionPlan ret;
 
-            // second == -1 means "in progress", second >= 0 is index into ret.install_actions
-            std::map<PackageSpec, int> emitted;
+            // second == nullptr means "in progress"
+            std::map<PackageSpec, VersionSchemeInfo*> emitted;
             struct Frame
             {
                 InstallPlanAction ipa;
@@ -1397,47 +1446,32 @@ namespace vcpkg::Dependencies
 
             auto push = [&ret, &emitted, this, &stack](const PackageSpec& spec,
                                                        const Versions::Version& new_ver) -> Optional<std::string> {
-                auto p = emitted.emplace(spec, -1);
-                if (!p.second)
+                auto&& node = m_graph[spec];
+                auto p_vnode = node.get_node(new_ver);
+                if (!p_vnode) return Strings::concat("Version was not found during discovery: ", spec, "@", new_ver);
+
+                auto p = emitted.emplace(spec, nullptr);
+                if (p.second)
                 {
-                    // spec already present in map
-                    if (p.first->second >= 0)
+                    // Newly inserted
+                    // -> Compare against baseline
+                    if (auto baseline = m_base_provider.get_baseline(spec.name()))
                     {
-                        // action already emitted, perform consistency check
-                        auto cur_ver = to_version(*ret.install_actions[p.first->second]
-                                                       .source_control_file_location.get()
-                                                       ->source_control_file);
-                        if (version_compare(cur_ver, new_ver) != VersionCompare::greater_equal)
+                        if (auto base_node = node.get_node(*baseline.get()))
                         {
-                            return Strings::concat(
-                                "Version conflict on ", spec.name(), "@", cur_ver, ": required ", new_ver);
+                            if (base_node != p_vnode)
+                            {
+                                return Strings::concat("Version conflict on ",
+                                                       spec.name(),
+                                                       "@",
+                                                       new_ver,
+                                                       ": baseline required ",
+                                                       *baseline.get());
+                            }
                         }
                     }
-                    else
-                    {
-                        return Strings::concat(
-                            "Cycle detected during ",
-                            spec,
-                            ":\n",
-                            Strings::join("\n", stack, [](const auto& p) -> const PackageSpec& { return p.ipa.spec; }));
-                    }
-                    return nullopt;
-                }
 
-                auto&& node = m_graph[spec];
-                if (auto p_vnode = node.get_node(new_ver))
-                {
-                    auto maybe_baseline = m_base_provider.get_baseline(spec.name());
-                    if (maybe_baseline && p_vnode != node.get_node(*maybe_baseline.get()))
-                    {
-                        return Strings::concat("Version conflict on ",
-                                               spec.name(),
-                                               "@",
-                                               new_ver,
-                                               ": baseline required ",
-                                               *maybe_baseline.get());
-                    }
-
+                    // -> Add stack frame
                     std::vector<Dep> deps;
                     for (auto&& dep : p_vnode->scfl->source_control_file->core_paragraph->dependencies)
                     {
@@ -1463,7 +1497,22 @@ namespace vcpkg::Dependencies
                 }
                 else
                 {
-                    return Strings::concat("Missing scfl for ", spec);
+                    // spec already present in map
+                    if (p.first->second == nullptr)
+                    {
+                        return Strings::concat(
+                            "Cycle detected during ",
+                            spec,
+                            ":\n",
+                            Strings::join("\n", stack, [](const auto& p) -> const PackageSpec& { return p.ipa.spec; }));
+                    }
+                    else if (p.first->second != p_vnode)
+                    {
+                        // comparable versions should retrieve the same info node
+                        return Strings::concat(
+                            "Version conflict on ", spec.name(), "@", p.first->second->version, ": required ", new_ver);
+                    }
+                    return nullopt;
                 }
             };
 
@@ -1479,7 +1528,8 @@ namespace vcpkg::Dependencies
                     auto& back = stack.back();
                     if (back.deps.empty())
                     {
-                        emitted[back.ipa.spec] = static_cast<int>(ret.install_actions.size());
+                        emitted[back.ipa.spec] = m_graph[back.ipa.spec].get_node(
+                            to_version(*back.ipa.source_control_file_location.get()->source_control_file));
                         ret.install_actions.push_back(std::move(back.ipa));
                         stack.pop_back();
                     }

@@ -414,5 +414,30 @@ TEST_CASE ("version install transitive string", "[versionplan]")
 
     REQUIRE(install_plan.size() == 2);
     check_name_and_version(install_plan.install_actions[0], "b", {"2", 0});
-    check_name_and_version(install_plan.install_actions[0], "a", {"2", 1});
+    check_name_and_version(install_plan.install_actions[1], "a", {"2", 1});
+}
+
+TEST_CASE ("version install simple relaxed", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2", 0}, Scheme::Relaxed);
+    vp.emplace("a", {"3", 0}, Scheme::Relaxed);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(
+        Dependencies::create_versioned_install_plan(vp,
+                                                    bp,
+                                                    var_provider,
+                                                    {
+                                                        Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3", 0}},
+                                                    },
+                                                    {},
+                                                    Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 1);
+    check_name_and_version(install_plan.install_actions[0], "a", {"3", 0});
 }
