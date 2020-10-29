@@ -78,4 +78,4 @@ We can only install llvm as:
 ```
 
 # Further reading
-- [Feature Packages](specifications/feature-packages.md)
+- The [Feature Packages](specifications/feature-packages.md) specification was the initial design for features.
