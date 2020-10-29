@@ -14,6 +14,13 @@ vcpkg_from_github(
 list(REMOVE_ITEM FEATURES core)
 string(REPLACE ";" "," LANGUAGES "${FEATURES}")
 
+if("python" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    set(ENV{PATH} "$ENV{PATH};${PYTHON3_DIR}")
+    vcpkg_find_acquire_program(SWIG) 
+endif()
+
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
