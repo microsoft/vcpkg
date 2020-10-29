@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.lua.org/ftp/lua-5.4.0.tar.gz"
-    FILENAME "lua-5.4.0.tar.gz"
-    SHA512 22aa0f9fcf953fc49c97bf50a4cee708b458e8a95447f881037b2c6ddd60e40368a807f2575671c6cd7497cedc2cf5716a8959c196445bf9a359fe7ebcd65465
+    URLS "https://www.lua.org/ftp/lua-5.4.1.tar.gz"
+    FILENAME "lua-5.4.1.tar.gz"
+    SHA512 49ffbe814ec41e515fc8502b6958151c6c56aa171412f0b211ad9de934be2c958c3709d49435885ddea0fa6765ed511dafb3537558950ff3b4261338214f1571
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -44,7 +44,7 @@ vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/lua)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
+    if(VCPKG_TARGET_IS_WINDOWS)
         file(READ ${CURRENT_PACKAGES_DIR}/include/luaconf.h LUA_CONF_H)
         string(REPLACE "defined(LUA_BUILD_AS_DLL)" "1" LUA_CONF_H "${LUA_CONF_H}")
         file(WRITE ${CURRENT_PACKAGES_DIR}/include/luaconf.h "${LUA_CONF_H}")
