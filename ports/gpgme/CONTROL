@@ -9,10 +9,6 @@ Supports: linux|osx
 Feature: cpp
 Description: C++ bindings
 
-Feature: qt
-Description: Qt bindings
-Build-Depends: qt5-base[core]
-
 Feature: python
 Description: Python bindings
 Build-Depends: python3
