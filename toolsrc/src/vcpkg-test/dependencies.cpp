@@ -112,9 +112,15 @@ T unwrap(ExpectedS<T> e)
     return std::move(*e.get());
 }
 
-static const std::string& name(const SourceControlFileLocation& scfl)
+static void check_name_and_version(const Dependencies::InstallPlanAction& ipa, StringLiteral name, Versions::Version v)
 {
-    return scfl.source_control_file->core_paragraph->name;
+    CHECK(ipa.spec.name() == name);
+    CHECK(ipa.source_control_file_location.has_value());
+    if (auto scfl = ipa.source_control_file_location.get())
+    {
+        CHECK(scfl->source_control_file->core_paragraph->version == v.text);
+        CHECK(scfl->source_control_file->core_paragraph->port_version == v.port_version);
+    }
 }
 
 TEST_CASE ("basic version install single", "[versionplan]")
@@ -255,11 +261,7 @@ TEST_CASE ("basic version install scheme baseline missing success", "[versionpla
                                                            Test::X86_WINDOWS));
 
     REQUIRE(install_plan.size() == 1);
-    REQUIRE(install_plan.install_actions[0].spec.name() == "a");
-    REQUIRE(install_plan.install_actions[0].source_control_file_location.has_value());
-    REQUIRE(install_plan.install_actions[0]
-                .source_control_file_location.get()
-                ->source_control_file->core_paragraph->version == "2");
+    check_name_and_version(install_plan.install_actions[0], "a", {"2", 0});
 }
 
 TEST_CASE ("basic version install scheme baseline", "[versionplan]")
@@ -278,11 +280,7 @@ TEST_CASE ("basic version install scheme baseline", "[versionplan]")
         unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, Test::X86_WINDOWS));
 
     REQUIRE(install_plan.size() == 1);
-    REQUIRE(install_plan.install_actions[0].spec.name() == "a");
-    REQUIRE(install_plan.install_actions[0].source_control_file_location.has_value());
-    REQUIRE(install_plan.install_actions[0]
-                .source_control_file_location.get()
-                ->source_control_file->core_paragraph->version == "2");
+    check_name_and_version(install_plan.install_actions[0], "a", {"2", 0});
 }
 
 TEST_CASE ("version string baseline agree", "[versionplan]")
@@ -358,9 +356,7 @@ TEST_CASE ("version install string port version", "[versionplan]")
                                                     Test::X86_WINDOWS));
 
     REQUIRE(install_plan.size() == 1);
-    REQUIRE(install_plan.install_actions[0]
-                .source_control_file_location.get()
-                ->source_control_file->core_paragraph->port_version == 1);
+    check_name_and_version(install_plan.install_actions[0], "a", {"2", 1});
 }
 
 TEST_CASE ("version install string port version 2", "[versionplan]")
@@ -386,9 +382,7 @@ TEST_CASE ("version install string port version 2", "[versionplan]")
                                                     Test::X86_WINDOWS));
 
     REQUIRE(install_plan.size() == 1);
-    REQUIRE(install_plan.install_actions[0]
-                .source_control_file_location.get()
-                ->source_control_file->core_paragraph->port_version == 1);
+    check_name_and_version(install_plan.install_actions[0], "a", {"2", 1});
 }
 
 TEST_CASE ("version install transitive string", "[versionplan]")
@@ -419,16 +413,6 @@ TEST_CASE ("version install transitive string", "[versionplan]")
                                                     Test::X86_WINDOWS));
 
     REQUIRE(install_plan.size() == 2);
-    REQUIRE(
-        install_plan.install_actions[0].source_control_file_location.get()->source_control_file->core_paragraph->name ==
-        "b");
-    REQUIRE(install_plan.install_actions[0]
-                .source_control_file_location.get()
-                ->source_control_file->core_paragraph->version == "2");
-    REQUIRE(
-        install_plan.install_actions[1].source_control_file_location.get()->source_control_file->core_paragraph->name ==
-        "a");
-    REQUIRE(install_plan.install_actions[1]
-                .source_control_file_location.get()
-                ->source_control_file->core_paragraph->port_version == 1);
+    check_name_and_version(install_plan.install_actions[0], "b", {"2", 0});
+    check_name_and_version(install_plan.install_actions[0], "a", {"2", 1});
 }
