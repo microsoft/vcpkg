@@ -43,9 +43,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PLATFORM ${PLATFORM}
         USE_VCPKG_INTEGRATION
         ALLOW_ROOT_INCLUDES)
-
+		
+	
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug)
     file(COPY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
+	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+		
+    endif()
 else()
     vcpkg_configure_make(
         COPY_SOURCE
@@ -56,9 +62,10 @@ else()
     )
 
     vcpkg_install_make()
-
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
     file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc/${PORT} ${CURRENT_PACKAGES_DIR}/share/${PORT})
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
     file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+	
 endif()
