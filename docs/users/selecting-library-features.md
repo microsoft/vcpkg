@@ -10,7 +10,8 @@ You could install it using:
 > .\vcpkg install llvm
 ```
 
-If you have 64bit Windows installed, and if you are interested in only x64 libraries, you can do:
+On Windows, this will install the 32-bit x86 LLVM, since that's the default triplet on Windows.
+If you are building for 64-bit Windows instead, you can use the following command to change the default triplet:
 
 ```powershell
 .\vcpkg install --triplet x64-windows-static llvm
