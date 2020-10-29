@@ -74,7 +74,7 @@ and we can do that by disabling default features with the special `core` "featur
 "c" language frontend (to convert c/c++ to llvm-ir)?
 We can only install llvm as:
 ```powershell
-.\vcpkg install --triplet x64-windows-static llvm[core]
+> .\vcpkg install llvm[core,default-targets] # removing the default-feature with "core" also removes all of the default targets you get
 ```
 
 and later add targets and clang as desired.
