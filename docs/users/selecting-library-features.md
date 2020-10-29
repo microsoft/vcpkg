@@ -20,7 +20,7 @@ If you are building for 64-bit Windows instead, you can use the following comman
 We have more documentation on triplets [here](triplets.md).
 Sadly currently we can't choose build type `debug` or `release` using command line switches.
 
-With llvm installed, if we try to execute:
+With llvm now installed, we can execute:
 
 ```powershell
 # llc takes llvm IR and generates machine code
