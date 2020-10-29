@@ -7,6 +7,7 @@ vcpkg_from_github(
     SHA512 b4608fd1d9a4122d8886917274e323afc9a30494c13a3dea51e17e9779f925bf8d67e584434d6a13018f274a6cbcf0a5e36f2fea794a065906bbb556b765398e
     HEAD_REF master
     PATCHES
+       b05747aea79083106b27ac7d829db3e65e192682.patch
        disable-docs.patch
 )
 
@@ -17,6 +18,7 @@ vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        --disable-gpgconf-test
         --disable-gpg-test
         --disable-gpgsm-test
         --disable-g13-test
