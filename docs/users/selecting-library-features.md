@@ -23,8 +23,8 @@ Sadly currently we can't choose build type `debug` or `release` using command li
 With llvm now installed, we can execute:
 
 ```powershell
-# llc takes llvm IR and generates machine code
-.\packages\llvm_x64-windows-static\bin\llc.exe --version
+> # llc takes llvm IR and generates machine code
+> .\installed\x86-windows\bin\llc.exe --version # or x86-windows, or replace with the actual triplet
 ```
 
 we see:
