@@ -1463,6 +1463,7 @@ namespace vcpkg::Files
 #ifdef _WIN32
     fs::path win32_fix_path_case(const fs::path& source)
     {
+        using fs::is_slash;
         const std::wstring& native = source.native();
         if (native.empty())
         {

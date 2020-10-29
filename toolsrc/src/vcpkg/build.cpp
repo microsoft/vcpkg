@@ -611,6 +611,12 @@ namespace vcpkg::Build
             {"FEATURES", Strings::join(";", action.feature_list)},
             {"ALL_FEATURES", all_features},
         };
+
+        if (action.build_options.backcompat_features == BackcompatFeatures::PROHIBIT)
+        {
+            variables.emplace_back("_VCPKG_PROHIBIT_BACKCOMPAT_FEATURES", "1");
+        }
+
         get_generic_cmake_build_args(
             paths,
             triplet,
