@@ -3,7 +3,9 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/update.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Update
@@ -80,7 +82,7 @@ namespace vcpkg::Update
 #else
             auto vcpkg_cmd = "./vcpkg";
 #endif
-            System::print2("\n"
+            System::printf("\n"
                            "To update these packages and all dependencies, run\n"
                            "    %s upgrade\n"
                            "\n"

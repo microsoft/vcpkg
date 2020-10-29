@@ -1,11 +1,19 @@
 # Usage: vcpkg_execute_required_process_repeat(COUNT <num> COMMAND <cmd> [<args>...] WORKING_DIRECTORY </path/to/dir> LOGNAME <my_log_name>)
 include(vcpkg_prettify_command)
 function(vcpkg_execute_required_process_repeat)
-    cmake_parse_arguments(vcpkg_execute_required_process_repeat "" "COUNT;WORKING_DIRECTORY;LOGNAME" "COMMAND" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_required_process_repeat "ALLOW_IN_DOWNLOAD_MODE" "COUNT;WORKING_DIRECTORY;LOGNAME" "COMMAND")
     #debug_message("vcpkg_execute_required_process_repeat(${vcpkg_execute_required_process_repeat_COMMAND})")
+    if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT vcpkg_execute_required_process_repeat_ALLOW_IN_DOWNLOAD_MODE)
+        message(FATAL_ERROR 
+[[
+This command cannot be executed in Download Mode.
+Halting portfile execution.
+]])
+    endif()
     set(SUCCESSFUL_EXECUTION FALSE)
     foreach(loop_count RANGE ${vcpkg_execute_required_process_repeat_COUNT})
-        execute_process(
+        vcpkg_execute_in_download_mode(
             COMMAND ${vcpkg_execute_required_process_repeat_COMMAND}
             OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_repeat_LOGNAME}-out-${loop_count}.log
             ERROR_FILE ${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_repeat_LOGNAME}-err-${loop_count}.log

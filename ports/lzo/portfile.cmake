@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.oberhumer.com/opensource/lzo/download/lzo-2.10.tar.gz"
     FILENAME "lzo-2.10.tar.gz"
