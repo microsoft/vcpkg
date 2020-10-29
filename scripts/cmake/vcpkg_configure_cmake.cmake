@@ -51,6 +51,9 @@
 ## ### OPTIONS_DEBUG
 ## Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
 ##
+## ### LOGNAME
+## Name of the log to write the output of the configure call to.
+##
 ## ## Notes
 ## This command supplies many common arguments to CMake. To see the full list, examine the source.
 ##
@@ -64,13 +67,17 @@ function(vcpkg_configure_cmake)
     # parse parameters such that semicolons in arguments to OPTIONS don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _csc
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG"
-        "SOURCE_PATH;GENERATOR"
+        "SOURCE_PATH;GENERATOR;LOGNAME"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
     )
 
     if(NOT VCPKG_PLATFORM_TOOLSET)
         message(FATAL_ERROR "Vcpkg has been updated with VS2017 support; "
             "however, vcpkg.exe must be rebuilt by re-running bootstrap-vcpkg.bat\n")
+    endif()
+
+    if(NOT _csc_LOGNAME)
+        set(_csc_LOGNAME config-${TARGET_TRIPLET})
     endif()
 
     if(CMAKE_HOST_WIN32)
@@ -150,7 +157,7 @@ function(vcpkg_configure_cmake)
     endif()
 
     # If we use Ninja, make sure it's on PATH
-    if(GENERATOR STREQUAL "Ninja")
+    if(GENERATOR STREQUAL "Ninja" AND NOT DEFINED ENV{VCPKG_FORCE_SYSTEM_BINARIES})
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
         vcpkg_add_to_path("${NINJA_PATH}")
@@ -259,12 +266,12 @@ function(vcpkg_configure_cmake)
     endforeach()
 
     set(rel_command
-        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
+        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
         -G ${GENERATOR}
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR})
     set(dbg_command
-        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
+        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
         -G ${GENERATOR}
         -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
@@ -305,7 +312,7 @@ function(vcpkg_configure_cmake)
         vcpkg_execute_required_process(
             COMMAND ninja -v
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure
-            LOGNAME config-${TARGET_TRIPLET}
+            LOGNAME ${_csc_LOGNAME}
         )
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -314,7 +321,7 @@ function(vcpkg_configure_cmake)
             vcpkg_execute_required_process(
                 COMMAND ${dbg_command}
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-                LOGNAME config-${TARGET_TRIPLET}-dbg
+                LOGNAME ${_csc_LOGNAME}-dbg
             )
         endif()
 
@@ -324,7 +331,7 @@ function(vcpkg_configure_cmake)
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-                LOGNAME config-${TARGET_TRIPLET}-rel
+                LOGNAME ${_csc_LOGNAME}-rel
             )
         endif()
     endif()

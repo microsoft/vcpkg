@@ -1,11 +1,13 @@
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/util.h>
 
 #include <vcpkg/commands.edit.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 #include <limits.h>
 
@@ -259,7 +261,8 @@ namespace vcpkg::Commands::Edit
 #ifdef _WIN32
         if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
-            System::cmd_execute_no_wait(Strings::concat("cmd /c \"", cmd_line, " <NUL\""));
+            // note that we are invoking cmd silently but Code.exe is relaunched from there
+            System::cmd_execute_background(Strings::concat("cmd /c \"", cmd_line, " <NUL\""));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif

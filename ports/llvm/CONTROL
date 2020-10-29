@@ -1,10 +1,10 @@
 Source: llvm
 Version: 10.0.0
-Port-Version: 5
+Port-Version: 6
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
 Supports: !uwp
-Default-Features: tools, enable-rtti, disable-assertions, disable-abi-breaking-checks, clang, disable-clang-static-analyzer, lld
+Default-Features: tools, enable-rtti, disable-assertions, disable-abi-breaking-checks, clang, disable-clang-static-analyzer, lld, default-targets
 
 Feature: tools
 Description: Build LLVM tools.
@@ -12,8 +12,13 @@ Description: Build LLVM tools.
 Feature: utils
 Description: Build LLVM utils.
 
+Feature: default-targets
+Description: Build with platform-specific default targets
+Build-Depends: llvm[core,target-x86] (x86|x64), llvm[core,target-arm] (arm&!arm64), llvm[core,target-aarch64] (arm64), llvm[core,target-all] (!x86&!x64&!arm&!arm64)
+
 Feature: target-all
 Description: Build with all backends.
+Build-Depends: llvm[core,target-aarch64,target-amdgpu,target-arm,target-bpf,target-hexagon,target-lanai,target-mips,target-msp430,target-nvptx,target-powerpc,target-riscv,target-sparc,target-systemz,target-webassembly,target-x86,target-xcore]
 
 Feature: target-aarch64
 Description: Build with AArch64 backend.
