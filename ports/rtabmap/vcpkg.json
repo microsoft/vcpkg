@@ -6,8 +6,5 @@
   "dependencies": [
     "opencv",
     "zlib"
-  ],
-
-  "default-features": [],
-  "features": []
+  ]
 }
