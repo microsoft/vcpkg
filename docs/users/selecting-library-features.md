@@ -71,8 +71,6 @@ the `clang` feature is default, which means that `vcpkg install llvm` will also 
 If you are writing a compiler that uses LLVM as a backend,
 you're likely not interested in installing clang as well,
 and we can do that by disabling default features with the special `core` "feature":
-"c" language frontend (to convert c/c++ to llvm-ir)?
-We can only install llvm as:
 ```powershell
 > .\vcpkg install llvm[core,default-targets] # removing the default-feature with "core" also removes all of the default targets you get
 ```
