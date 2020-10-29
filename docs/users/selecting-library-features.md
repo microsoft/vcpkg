@@ -37,7 +37,7 @@ we see:
 
 ## Installing additional features
 
-But [llvm (10) supports many more targets](https://llvm.org/docs/GettingStarted.html#local-llvm-configuration), `AArch64, AMDGPU, ARM, BPF, Hexagon, Mips, MSP430, NVPTX, PowerPC, Sparc, SystemZ, X86, XCore`.
+But [llvm supports many more targets](https://llvm.org/docs/GettingStarted.html#local-llvm-configuration), from ARM to SPARC to SystemZ.
 How can we have arm target?
 
 If we do:
