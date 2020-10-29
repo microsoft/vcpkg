@@ -8,9 +8,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     if("iconv" IN_LIST FEATURES)
         set(ICONV_PATCH "fix_find_iconv.patch")
-    else()
-        # prevent picking up libiconv if it happens to already be installed
-        set(ICONV_PATCH "no_use_iconv.patch")
     endif()
 
     if(VCPKG_CRT_LINKAGE STREQUAL "static")
@@ -39,14 +36,31 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arvidn/libtorrent
-    REF libtorrent-1.2.10
-    SHA512 e6de939fb6527783695e0b6623ddbe27f85842a36c0899b93ea0284cb3c6f3d14b8c39e29316adb3bf9acac7804f38385cc06854a32df28e7f4f6839af9f382d
+    REF 0f0afec8c8025cb55dfd2f36612d4bf61a29ff8a #v 2.0.0
+    SHA512 251ee5a2c555103a127b8b08995914639a2b9d448a87708edb08a2a11444ef999cd8a3abcf223acfc66ca6371f0e1b076589343ade73974aa87f50814431a875
     HEAD_REF RC_1_2
     PATCHES
-        add-datetime-to-boost-libs.patch
-        fix_python_cmake.patch
         ${ICONV_PATCH}
 )
+
+set(COMMIT_HASH 2a99893f92b29a5948569cba1e16fd259dbc2016)
+
+# Get try_signal for libtorrent
+vcpkg_from_github(
+    OUT_SOURCE_PATH TRY_SIGNAL_SOURCE_PATH
+    REPO arvidn/try_signal
+    REF 2a99893f92b29a5948569cba1e16fd259dbc2016 
+    SHA512 b62b3176980c31c9faa0c5cdd14832e9864a6d86af02ae6d5ef510fade2daf649819bc928c12037fa0ef551813745b347d4927cb4b67b34beb822a707c03d870
+)
+
+# Copy try_signal sources
+foreach(SOURCE_FILE ${SOURCE_PATH})
+    file(COPY ${TRY_SIGNAL_SOURCE_PATH} DESTINATION "${SOURCE_PATH}/deps")
+endforeach()
+
+file(REMOVE_RECURSE ${SOURCE_PATH}/deps/try_signal)
+file(RENAME ${SOURCE_PATH}/deps/259dbc2016-bb7f150248.clean ${SOURCE_PATH}/deps/try_signal)
+file(REMOVE_RECURSE ${TRY_SIGNAL_SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
