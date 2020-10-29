@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(ARCHIVE_NAME "sundials-3.1.1")
 
 vcpkg_download_distfile(ARCHIVE
