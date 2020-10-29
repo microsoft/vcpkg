@@ -12,7 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-FindOpenSSL-cmake.patch
-        asio-1-18-0-deprecations.patch
+        asio-1-18-0-deprecations.patch #https://github.com/Corvusoft/restbed/pull/444/files
         fix-ninja-duplicates.patch
 )
 
