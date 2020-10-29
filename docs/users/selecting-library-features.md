@@ -18,7 +18,7 @@ If you are building for 64-bit Windows instead, you can use the following comman
 ```
 
 We have more documentation on triplets [here](triplets.md).
-Sadly currently we can't choose build type `debug` or `release` using command line switches.
+Currently we can't choose build type `debug` or `release` using command line switches.
 
 With llvm now installed, we can execute:
 
