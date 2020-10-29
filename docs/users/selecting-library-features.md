@@ -7,7 +7,7 @@ LLVM is a compiler infrasture. It supports optimizing llvm-ir and generating mac
 You could install it using:
 
 ```powershell
-.\vcpkg install llvm
+> .\vcpkg install llvm
 ```
 
 If you have 64bit Windows installed, and if you are interested in only x64 libraries, you can do:
