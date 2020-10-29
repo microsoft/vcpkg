@@ -38,7 +38,9 @@ we see:
 ## Installing additional features
 
 But [llvm supports many more targets](https://llvm.org/docs/GettingStarted.html#local-llvm-configuration), from ARM to SPARC to SystemZ.
-How can we have arm target?
+However, clearly our current installation doesn't include ARM as a target;
+thus, we need to learn how vcpkg allows us to install other LLVM targets.
+The llvm port allows this via the "target-*" features.
 
 If we do:
 
