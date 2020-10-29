@@ -144,7 +144,8 @@
 ## * [rocksdb](https://github.com/microsoft/vcpkg/blob/master/ports/rocksdb/portfile.cmake)
 ## 
 function(vcpkg_check_features)
-    cmake_parse_arguments(_vcf "" "OUT_FEATURE_OPTIONS" "FEATURES;INVERTED_FEATURES" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vcf "" "OUT_FEATURE_OPTIONS" "FEATURES;INVERTED_FEATURES")
 
     if (NOT DEFINED _vcf_OUT_FEATURE_OPTIONS)
         message(FATAL_ERROR "OUT_FEATURE_OPTIONS must be specified.")
