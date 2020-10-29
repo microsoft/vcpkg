@@ -17,8 +17,15 @@ vcpkg_from_github(
   )
 
 ################################### Build ###################################
-set(AF_BIN_DIR ${CURRENT_PACKAGES_DIR}/bin)
+# bin/dll directory
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  set(AF_BIN_DIR ${CURRENT_PACKAGES_DIR}/bin)
+endif()
+if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  set(AF_BIN_DIR ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
 file(MAKE_DIRECTORY ${AF_BIN_DIR})
+
 # Default flags
 set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DBUILD_TESTING=OFF
