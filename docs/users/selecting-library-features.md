@@ -2,7 +2,7 @@
 
 ## Installing a library
 
-By now you have tried out installing some library with `vcpkg`. We will look at [llvm](https://llvm.org/) as an example.
+We will look at [llvm](https://llvm.org/) as an example.
 LLVM is a compiler infrasture. It supports optimizing llvm-ir and generating machine code.
 You could install it using:
 
