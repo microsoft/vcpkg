@@ -8,5 +8,6 @@
     "boost",
     "comms",
     "libxml2"
-  ]
+  ],
+  "supports": "!uwp" 
 }
