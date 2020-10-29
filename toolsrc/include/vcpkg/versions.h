@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/base/strings.h>
+
 namespace vcpkg::Versions
 {
     enum class Scheme
@@ -14,15 +16,16 @@ namespace vcpkg::Versions
     {
         std::string text;
         int port_version;
-        Scheme scheme;
 
-        bool operator==(const Version& rhs) const
+        void to_string(std::string& out) const
         {
-            return text == rhs.text && port_version == rhs.port_version && scheme == rhs.scheme;
+            Strings::append(out, text);
+            if (port_version != 0) Strings::append(out, '#', port_version);
         }
+
+        bool operator==(const Version& rhs) const { return text == rhs.text && port_version == rhs.port_version; }
         bool operator<(const Version& rhs) const
         {
-            if (scheme != rhs.scheme) return scheme < rhs.scheme;
             if (text != rhs.text) return text < rhs.text;
             if (port_version != rhs.port_version) return port_version < rhs.port_version;
             return false;

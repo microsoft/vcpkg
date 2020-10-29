@@ -1178,17 +1178,17 @@ namespace vcpkg::Dependencies
             IVersionedPortfileProvider& m_ver_provider;
             IBaselineProvider& m_base_provider;
 
+            struct ExactInfo
+            {
+                const SourceControlFileLocation* m_scfl;
+                std::vector<std::string> origins;
+            };
+
             struct PackageNode
             {
-                /*Optional<const SourceControlFileLocation&> overridden;
+                /*Optional<const SourceControlFileLocation&> overridden;*/
 
-                struct ExactInfo
-                {
-                    const SourceControlFileLocation* m_scfl;
-                    std::vector<std::string> origins;
-                };
-
-                std::map<std::string, ExactInfo> exacts;*/
+                std::map<std::string, ExactInfo> exacts;
                 Optional<Versions::Version> baseline;
                 Optional<const SourceControlFileLocation&> scfl;
                 std::map<std::string, std::vector<FeatureSpec>> deps;
@@ -1199,6 +1199,7 @@ namespace vcpkg::Dependencies
             std::map<PackageSpec, PackageNode> m_graph;
 
             std::pair<const PackageSpec, PackageNode>& emplace(const PackageSpec& spec);
+
             void add_constraint(std::pair<const PackageSpec, PackageNode>& ref,
                                 const DependencyConstraint& dc,
                                 const std::string& origin);
@@ -1215,31 +1216,95 @@ namespace vcpkg::Dependencies
             add_constraint(emplace(spec), dc, origin);
         }
 
+        Versions::Version to_version(const SourceControlFile& scf)
+        {
+            return {
+                scf.core_paragraph->version,
+                scf.core_paragraph->port_version,
+            };
+        }
+        Versions::Version to_version(const DependencyConstraint& dc)
+        {
+            return {
+                dc.value,
+                dc.port_version,
+            };
+        }
+        DependencyConstraint to_depconstraint(const Versions::Version& version)
+        {
+            return {
+                Versions::Constraint::Type::Exact,
+                version.text,
+                version.port_version,
+            };
+        }
+
+        enum class VersionCompare
+        {
+            conflict,
+            greater_equal,
+            less,
+        };
+        static VersionCompare version_compare(const Versions::Version& v1, const Versions::Version& v2)
+        {
+            if (v1.text != v2.text) return VersionCompare::conflict;
+            if (v1.port_version >= v2.port_version) return VersionCompare::greater_equal;
+            return VersionCompare::less;
+        }
+
         void VersionedPackageGraph::add_constraint(std::pair<const PackageSpec, PackageNode>& ref,
                                                    const DependencyConstraint& dc,
-                                                   const std::string& /*origin*/)
+                                                   const std::string& origin)
         {
             if (dc.type == Versions::Constraint::Type::None) return;
 
-            auto maybe_scfl = m_ver_provider.get_control_file(
-                {ref.first.name(), {dc.value, dc.port_version, Versions::Scheme::String}});
+            auto maybe_scfl = m_ver_provider.get_control_file({ref.first.name(), to_version(dc)});
 
-            if (!maybe_scfl)
+            if (auto p_scfl = maybe_scfl.get())
             {
-                m_errors.push_back(maybe_scfl.error());
+                auto p_ref_scfl = ref.second.scfl.get();
+                bool replace = false;
+                if (p_ref_scfl == nullptr)
+                {
+                    replace = true;
+                }
+                else if (p_ref_scfl == p_scfl)
+                {
+                }
+                else
+                {
+                    auto cur_ver = to_version(*p_ref_scfl->source_control_file);
+                    auto new_ver = to_version(*p_scfl->source_control_file);
+                    auto cmp = version_compare(cur_ver, new_ver);
+                    if (cmp == VersionCompare::conflict)
+                    {
+                        m_errors.push_back(Strings::concat(
+                            "Version conflict on ", ref.first, " from ", origin, ": ", cur_ver, " -> ", new_ver));
+                    }
+                    else if (cmp == VersionCompare::less)
+                    {
+                        replace = true;
+                    }
+                }
+
+                if (replace)
+                {
+                    ref.second.scfl = *maybe_scfl.get();
+                    ref.second.deps.clear();
+                    auto core_deps = ref.second.deps.emplace("core", std::vector<FeatureSpec>{}).first;
+                    for (auto&& dep : maybe_scfl.get()->source_control_file->core_paragraph->dependencies)
+                    {
+                        PackageSpec dep_spec(dep.name, ref.first.triplet());
+                        core_deps->second.emplace_back(dep_spec, "core");
+                        for (auto&& feature : dep.features)
+                            core_deps->second.emplace_back(dep_spec, feature);
+                        emplace(dep_spec);
+                    }
+                }
             }
             else
             {
-                ref.second.scfl = *maybe_scfl.get();
-                auto core_deps = ref.second.deps.emplace("core", std::vector<FeatureSpec>{}).first;
-                for (auto&& dep : maybe_scfl.get()->source_control_file->core_paragraph->dependencies)
-                {
-                    PackageSpec dep_spec(dep.name, ref.first.triplet());
-                    core_deps->second.emplace_back(dep_spec, "core");
-                    for (auto&& feature : dep.features)
-                        core_deps->second.emplace_back(dep_spec, feature);
-                    emplace(dep_spec);
-                }
+                m_errors.push_back(maybe_scfl.error());
             }
         }
 
@@ -1253,11 +1318,7 @@ namespace vcpkg::Dependencies
                 node.baseline = m_base_provider.get_baseline(spec.name());
                 if (node.baseline)
                 {
-                    add_constraint(*p.first,
-                                   {Versions::Constraint::Type::Exact,
-                                    node.baseline.get()->text,
-                                    node.baseline.get()->port_version},
-                                   "baseline");
+                    add_constraint(*p.first, to_depconstraint(*node.baseline.get()), "baseline");
                 }
             }
             return *p.first;
