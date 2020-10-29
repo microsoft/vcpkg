@@ -1,6 +1,7 @@
 # Vcpkg: Overview
 
 [中文总览](README_zh_CN.md)
+[Español](README_es.md)
 
 Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS.
 This tool and ecosystem are constantly evolving, and we always appreciate contributions!
@@ -33,7 +34,6 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
     - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
     - [Vcpkg with CLion](#vcpkg-with-clion)
     - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
-  - [Quick Start: Manifests](#quick-start-manifests)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
 - [Examples](#examples)
 - [Contributing](#contributing)
@@ -56,7 +56,7 @@ After you've gotten vcpkg installed and working,
 you may wish to add [tab completion](#tab-completionauto-completion) to your shell.
 
 Finally, if you're interested in the future of vcpkg,
-check out the [manifest](#quick-start-manifest) guide!
+check out the [manifest][getting-started:manifest-spec] guide!
 This is an experimental feature and will likely have bugs,
 so try it out and [open all the issues][contributing:submit-issue]!
 
@@ -283,6 +283,7 @@ but it will make the configure-build step slightly easier.
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
+[getting-started:manifest-spec]: docs/specifications/manifests.md
 
 # Tab-Completion/Auto-Completion
 

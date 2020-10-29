@@ -28,20 +28,21 @@ In this document, we have basic information on [Writing a Manifest](#writing-a-m
 the [vcpkg Command Line Interface](#command-line-interface),
 and a little more information on [CMake](#cmake-integration) integration.
 
-Check out the [manifest cmake example](../examples/manifest-mode-cmake.md) for an example project using CMake and manifest mode.
+Check out the [manifest cmake example](../examples/manifest-mode-cmake.md) for an example project using CMake and
+manifest mode.
 
 ## Writing a Manifest
 
-A manifest is a JSON-formatted file which lies at the root of your project.
+A manifest is a JSON-formatted file named `vcpkg.json` which lies at the root of your project.
 It contains all the information a person needs to know to get dependencies for your project,
 as well as all the metadata about your project that a person who depends on you might be interested in.
 
-Every manifest is named `vcpkg.json`, and has a top level object. It is a strict JSON file,
-and can't contain things like comments or trailing commas - however,
-you can use field names that start with `$` to write your comments.
+Manifests follow strict JSON: they can't contain C++-style comments (`//`) nor trailing commas. However
+you can use field names that start with `$` to write your comments in any object that has a well-defined set of keys.
+These comment fields are not allowed in any objects which permit user-defined keys (such as `"features"`).
 
-All of the fields that `vcpkg.json` supports are as follows; the most important ones are [`"name"`](#name),
-the [version fields](#version-fields), and [`"dependencies"`](#dependencies):
+Each manifest contains a top level object with the fields documented below; the most important ones are
+[`"name"`](#name), the [version fields](#version-fields), and [`"dependencies"`](#dependencies):
 
 ### `"name"`
 
@@ -225,7 +226,7 @@ although `vcpkg search` is still useful.
 Since manifest mode is still in beta, you'll need to pass a feature flag: `manifests`.
 There are a few ways to pass this feature flag:
 
-* `--feature-flag` option: On any vcpkg command, you can pass `--feature-flag=manifests`
+* `--feature-flags` option: On any vcpkg command, you can pass `--feature-flags=manifests`
 * `VCPKG_FEATURE_FLAGS` environment variable: one can set the environment variable `VCPKG_FEATURE_FLAGS` to
   `manifests`.
 

@@ -1,10 +1,17 @@
 #pragma once
 
+#include <vcpkg/fwd/portfileprovider.h>
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/commands.interface.h>
-#include <vcpkg/dependencies.h>
 #include <vcpkg/packagespec.h>
-#include <vcpkg/statusparagraphs.h>
 #include <vcpkg/versiont.h>
+
+namespace vcpkg
+{
+    struct StatusParagraphs;
+}
 
 namespace vcpkg::Update
 {

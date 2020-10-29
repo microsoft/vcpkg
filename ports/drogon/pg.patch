@@ -1,27 +1,21 @@
-diff --git a/cmake_modules/Findpg.cmake b/cmake_modules/Findpg.cmake
-index 53037f2..d13f384 100644
---- a/cmake_modules/Findpg.cmake
-+++ b/cmake_modules/Findpg.cmake
-@@ -4,20 +4,14 @@
- #
- # This module defines PG_INCLUDE_DIRS, where to find header, etc. PG_LIBRARIES,
- # the libraries needed to use PostgreSQL. pg_FOUND, If false, do not try to use
--# PostgreSQL.
--# pg_lib - The imported target library.
-+# PostgreSQL. pg_lib - The imported target library.
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cf3c30d..4931b93 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -161,11 +161,11 @@ endif(NOT WIN32)
  
- find_package(PostgreSQL)
- if(PostgreSQL_FOUND)
-   set(PG_LIBRARIES ${PostgreSQL_LIBRARIES})
-   set(PG_INCLUDE_DIRS ${PostgreSQL_INCLUDE_DIRS})
--  message(STATUS "pg inc: " ${PostgreSQL_INCLUDE_DIRS})
-   add_library(pg_lib INTERFACE IMPORTED)
--  set_target_properties(pg_lib
--                        PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
--                                   "${PostgreSQL_INCLUDE_DIRS}"
--                                   INTERFACE_LINK_LIBRARIES
--                                   "${PostgreSQL_LIBRARIES}")
-+  target_link_libraries(pg_lib INTERFACE PostgreSQL::PostgreSQL)
-   mark_as_advanced(PG_INCLUDE_DIRS PG_LIBRARIES)
- endif(PostgreSQL_FOUND)
- include(FindPackageHandleStandardArgs)
+ if(BUILD_ORM)
+   # find postgres
+-  find_package(pg)
+-  if(pg_FOUND)
+-    message(STATUS "libpq inc path:" ${PG_INCLUDE_DIRS})
+-    message(STATUS "libpq lib:" ${PG_LIBRARIES})
+-    target_link_libraries(${PROJECT_NAME} PRIVATE pg_lib)
++  find_package(PostgreSQL REQUIRED)
++  if(PostgreSQL_FOUND)
++    message(STATUS "libpq inc path:" ${PostgreSQL_INCLUDE_DIRS})
++    message(STATUS "libpq lib:" ${PostgreSQL_LIBRARIES})
++    target_link_libraries(${PROJECT_NAME} PRIVATE ${PostgreSQL_LIBRARIES})
+     set(DROGON_SOURCES ${DROGON_SOURCES}
+                        orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc)
+     if(LIBPQ_BATCH_MODE)

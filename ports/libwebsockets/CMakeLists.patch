@@ -1,22 +1,13 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7772ed0..656e5a0 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -1767,7 +1767,7 @@ endif(LWS_WITH_LIBEV)
- if (LWS_WITH_LIBUV)
+diff --git a/lib/event-libs/libuv/CMakeLists.txt b/lib/event-libs/libuv/CMakeLists.txt
+index fb810a8..2258ade 100644
+--- a/lib/event-libs/libuv/CMakeLists.txt
++++ b/lib/event-libs/libuv/CMakeLists.txt
+@@ -36,7 +36,7 @@ set(LWS_LIBUV_INCLUDE_DIRS CACHE PATH "Path to the libuv include directory")
+ if ("${LWS_LIBUV_LIBRARIES}" STREQUAL "" OR "${LWS_LIBUV_INCLUDE_DIRS}" STREQUAL "")
  	if (NOT LIBUV_FOUND)
  		find_path(LIBUV_INCLUDE_DIRS NAMES uv.h)
 -		find_library(LIBUV_LIBRARIES NAMES uv)
 +		find_library(LIBUV_LIBRARIES NAMES uv libuv)
- 		if(LIBUV_INCLUDE_DIRS AND LIBUV_LIBRARIES)
- 			set(LIBUV_FOUND 1)
- 		endif()
-@@ -1826,7 +1826,7 @@ endif()
- if (WINCE)
- 	list(APPEND LIB_LIST ws2.lib)
- elseif (WIN32)
--	list(APPEND LIB_LIST ws2_32.lib userenv.lib psapi.lib iphlpapi.lib)
-+	list(APPEND LIB_LIST ws2_32.lib userenv.lib psapi.lib iphlpapi.lib crypt32.lib)
- endif()
- 
- if (${CMAKE_SYSTEM_NAME} MATCHES "QNX")
+ 	endif()
+ else()
+ 	set(LIBUV_LIBRARIES ${LWS_LIBUV_LIBRARIES})
