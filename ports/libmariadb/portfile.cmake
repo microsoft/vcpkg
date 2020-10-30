@@ -17,9 +17,14 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     zlib WITH_EXTERNAL_ZLIB
-    openssl WITH_SSL
     iconv WITH_ICONV
 )
+
+if("openssl" IN_LIST FEATURES)
+	set(WITH_SSL OPENSSL)
+else()
+	set(WITH_SSL OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -28,6 +33,7 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DWITH_UNITTEST=OFF
         -DWITH_CURL=OFF
+        -DWITH_SSL=${WITH_SSL}
 )
 
 vcpkg_install_cmake()

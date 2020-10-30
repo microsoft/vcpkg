@@ -1,6 +1,4 @@
 #header-only library
-include(vcpkg_common_functions)
-
 set(USE_UPSTREAM OFF)
 if("upstream" IN_LIST FEATURES)
     set(USE_UPSTREAM ON)
