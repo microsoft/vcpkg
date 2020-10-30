@@ -6,8 +6,6 @@ vcpkg_from_github(
     REF 8573bce60d4aa4ac421445149003424fc7a69e6d v4.7.1
     SHA512 862c2df2f8e356bfafda32bba2c4564464104afea047b6297241a5ec2da9e1d73f3cd33f55e5bcd0018fb1b3625e756c22baf6821ab51c789359266f989137c8
     HEAD_REF master
-    PATCHES
-        #out_of_source_build_version_file_configure.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -43,14 +41,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PLATFORM ${PLATFORM}
         USE_VCPKG_INTEGRATION
         ALLOW_ROOT_INCLUDES)
-		
-	
+
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug)
     file(COPY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
-	if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-		
     endif()
 else()
     vcpkg_configure_make(
@@ -62,10 +58,9 @@ else()
     )
 
     vcpkg_install_make()
+
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
     file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc/${PORT} ${CURRENT_PACKAGES_DIR}/share/${PORT})
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
     file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-	
 endif()
