@@ -67,7 +67,8 @@ include(vcpkg_execute_in_download_mode)
 function(vcpkg_from_gitlab)
     set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF)
     set(multipleValuesArgs PATCHES)
-    cmake_parse_arguments(_vdud "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vdud "" "${oneValueArgs}" "${multipleValuesArgs}")
 
     if(NOT DEFINED _vdud_GITLAB_URL)
         message(FATAL_ERROR "GITLAB_URL must be specified.")

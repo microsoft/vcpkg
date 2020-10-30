@@ -1,6 +1,8 @@
+#include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/configuration.h>
+#include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
@@ -13,7 +15,7 @@ namespace vcpkg
 
         {
             std::unique_ptr<RegistryImpl> default_registry;
-            if (r.optional_object_field(obj, DEFAULT_REGISTRY, default_registry, RegistryImplDeserializer{}))
+            if (r.optional_object_field(obj, DEFAULT_REGISTRY, default_registry, RegistryImplDeserializer::instance))
             {
                 if (!registries_enabled)
                 {
@@ -26,12 +28,10 @@ namespace vcpkg
             }
         }
 
+        static Json::ArrayDeserializer<RegistryDeserializer> array_of_registries{"an array of registries"};
+
         std::vector<Registry> regs;
-        r.optional_object_field(
-            obj,
-            REGISTRIES,
-            regs,
-            Json::ArrayDeserializer<RegistryDeserializer>{"an array of registries", Json::AllowEmpty::Yes});
+        r.optional_object_field(obj, REGISTRIES, regs, array_of_registries);
 
         if (!regs.empty() && !registries_enabled)
         {
