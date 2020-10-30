@@ -14,6 +14,8 @@ for more information.
 This script assumes you have installed Azure tools into PowerShell by following the instructions
 at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6.1
 or are running from Azure Cloud Shell.
+
+This script assumes you have installed the OpenSSH Client optional Windows component.
 #>
 
 $Location = 'westus2'
@@ -24,113 +26,24 @@ $LiveVMPrefix = 'BUILD'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
-$TotalProgress = 10
+$TotalProgress = 11
 $CurrentProgress = 1
 
-<#
-.SYNOPSIS
-Returns whether there's a name collision in the resource group.
+Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
 
-.DESCRIPTION
-Find-ResourceGroupNameCollision takes a list of resources, and checks if $Test
-collides names with any of the resources.
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Creating SSH key' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-.PARAMETER Test
-The name to test.
-
-.PARAMETER Resources
-The list of resources.
-#>
-function Find-ResourceGroupNameCollision {
-  [CmdletBinding()]
-  Param([string]$Test, $Resources)
-
-  foreach ($resource in $Resources) {
-    if ($resource.ResourceGroupName -eq $Test) {
-      return $true
-    }
-  }
-
-  return $false
-}
-
-<#
-.SYNOPSIS
-Attempts to find a name that does not collide with any resources in the resource group.
-
-.DESCRIPTION
-Find-ResourceGroupName takes a set of resources from Get-AzResourceGroup, and finds the
-first name in {$Prefix, $Prefix-1, $Prefix-2, ...} such that the name doesn't collide with
-any of the resources in the resource group.
-
-.PARAMETER Prefix
-The prefix of the final name; the returned name will be of the form "$Prefix(-[1-9][0-9]*)?"
-#>
-function Find-ResourceGroupName {
-  [CmdletBinding()]
-  Param([string] $Prefix)
-
-  $resources = Get-AzResourceGroup
-  $result = $Prefix
-  $suffix = 0
-  while (Find-ResourceGroupNameCollision -Test $result -Resources $resources) {
-    $suffix++
-    $result = "$Prefix-$suffix"
-  }
-
-  return $result
-}
-
-<#
-.SYNOPSIS
-Creates a randomly generated password.
-
-.DESCRIPTION
-New-Password generates a password, randomly, of length $Length, containing
-only alphanumeric characters (both uppercase and lowercase).
-
-.PARAMETER Length
-The length of the returned password.
-#>
-function New-Password {
-  Param ([int] $Length = 32)
-
-  $Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-  $result = ''
-  for ($idx = 0; $idx -lt $Length; $idx++) {
-    # NOTE: this should probably use RNGCryptoServiceProvider
-    $result += $Chars[(Get-Random -Minimum 0 -Maximum $Chars.Length)]
-  }
-
-  return $result
-}
-
-<#
-.SYNOPSIS
-Sanitizes a name to be used in a storage account.
-
-.DESCRIPTION
-Sanitize-Name takes a string, and removes all of the '-'s and
-lowercases the string, since storage account names must have no
-'-'s and must be completely lowercase alphanumeric. It then makes
-certain that the length of the string is not greater than 24,
-since that is invalid.
-
-.PARAMETER RawName
-The name to sanitize.
-#>
-function Sanitize-Name {
-  [CmdletBinding()]
-  Param(
-    [string]$RawName
-  )
-
-  $result = $RawName.Replace('-', '').ToLowerInvariant()
-  if ($result.Length -gt 24) {
-    Write-Error 'Sanitized name for storage account $result was too long.'
-  }
-
-  return $result
+$sshDir = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName()
+mkdir $sshDir
+try {
+  ssh-keygen.exe -q -b 2048 -t rsa -f "$sshDir/key" -P [string]::Empty
+  $sshPublicKey = Get-Content "$sshDir/key.pub"
+} finally {
+  Remove-Item $sshDir -Recurse -Force
 }
 
 ####################################################################################################
@@ -262,7 +175,8 @@ Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 10
 
 ####################################################################################################
 Write-Progress `
-  -Activity 'Creating prototype VM' `
+  -Activity $ProgressActivity `
+  -Status 'Creating prototype VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 $NicName = $ResourceGroupName + 'NIC'
@@ -277,7 +191,8 @@ $VM = Set-AzVMOperatingSystem `
   -VM $VM `
   -Linux `
   -ComputerName $ProtoVMName `
-  -Credential $Credential
+  -Credential $Credential `
+  -DisablePasswordAuthentication
 
 $VM = Add-AzVMNetworkInterface -VM $VM -Id $Nic.Id
 $VM = Set-AzVMSourceImage `
@@ -288,6 +203,12 @@ $VM = Set-AzVMSourceImage `
   -Version latest
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
+
+$VM = Add-AzVMSshPublicKey `
+  -VM $VM `
+  -KeyData $sshPublicKey `
+  -Path "/home/AdminUser/.ssh/authorized_keys"
+
 New-AzVm `
   -ResourceGroupName $ResourceGroupName `
   -Location $Location `
@@ -299,13 +220,15 @@ Write-Progress `
   -Status 'Running provisioning script provision-image.sh in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-Invoke-AzVMRunCommand `
+$ProvisionImageResult = Invoke-AzVMRunCommand `
   -ResourceGroupName $ResourceGroupName `
   -VMName $ProtoVMName `
   -CommandId 'RunShellScript' `
   -ScriptPath "$PSScriptRoot\provision-image.sh" `
   -Parameter @{StorageAccountName=$StorageAccountName; `
     StorageAccountKey=$StorageAccountKey;}
+
+Write-Host "provision-image.sh output: $($ProvisionImageResult.value.Message)"
 
 ####################################################################################################
 Write-Progress `
@@ -372,11 +295,16 @@ $Vmss = Add-AzVmssNetworkInterfaceConfiguration `
   -NetworkSecurityGroupId $NetworkSecurityGroup.Id `
   -Name $NicName
 
+$VmssPublicKey = New-Object -TypeName 'Microsoft.Azure.Management.Compute.Models.SshPublicKey' `
+  -ArgumentList @('/home/AdminUser/.ssh/authorized_keys', $sshPublicKey)
+
 $Vmss = Set-AzVmssOsProfile `
   -VirtualMachineScaleSet $Vmss `
   -ComputerNamePrefix $LiveVMPrefix `
   -AdminUsername AdminUser `
-  -AdminPassword $AdminPW
+  -AdminPassword $AdminPW `
+  -LinuxConfigurationDisablePasswordAuthentication $true `
+  -PublicKey @($VmssPublicKey)
 
 $Vmss = Set-AzVmssStorageProfile `
   -VirtualMachineScaleSet $Vmss `

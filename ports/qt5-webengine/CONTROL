@@ -1,5 +1,6 @@
 Source: qt5-webengine
-Version: 5.12.8
+Version: 5.15.1
+Port-Version: 1
 Description: Qt5 webengine Module; 
-Build-Depends:  qt5-base, qt5-declarative, qt5-location, qt5-quickcontrols, qt5-quickcontrols2, qt5-tools, qt5-webchannel, atlmfc (windows), ffmpeg[core] (!windows)
+Build-Depends:  qt5-base[core], qt5-declarative, qt5-location, qt5-quickcontrols, qt5-quickcontrols2, qt5-tools, qt5-webchannel, atlmfc (windows), ffmpeg[core] (!windows)
 Supports: !static

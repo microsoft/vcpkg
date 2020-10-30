@@ -1,39 +1,24 @@
-if (NOT VCPKG_TARGET_IS_UWP)
-    message(FATAL_ERROR "${PORT} only supports UWP")
-endif()
+vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Universal Platform" ON_TARGET "Linux" "OSX")
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
-  message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
-  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-  return()
+  message(FATAL_ERROR "Can't build openssl if libressl/boringssl is installed. Please remove libressl/boringssl, and try install openssl again if you need it.")
 endif()
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    set(UWP_PLATFORM  "arm")
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    set(UWP_PLATFORM  "arm64")
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(UWP_PLATFORM  "x64")
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(UWP_PLATFORM  "Win32")
-else ()
-    message(FATAL_ERROR "Unsupported architecture")
-endif()
 
 vcpkg_find_acquire_program(PERL)
 vcpkg_find_acquire_program(JOM)
 get_filename_component(JOM_EXE_PATH ${JOM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH};${JOM_EXE_PATH}")
+vcpkg_add_to_path("${PERL_EXE_PATH}")
+vcpkg_add_to_path("${JOM_EXE_PATH}")
 
-set(OPENSSL_VERSION 1.1.1d)
+set(OPENSSL_VERSION 1.1.1h)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.1.1/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 2bc9f528c27fe644308eb7603c992bac8740e9f0c3601a130af30c9ffebbf7e0f5c28b76a00bbb478bad40fbe89b4223a58d604001e1713da71ff4b7fe6a08a7
+    SHA512 da50fd99325841ed7a4367d9251c771ce505a443a73b327d8a46b2c6a7d2ea99e43551a164efc86f8743b22c2bdb0020bf24a9cbd445e9d68868b2dc1d34033a
 )
 
 vcpkg_extract_source_archive_ex(
@@ -45,7 +30,7 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
+vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 
 vcpkg_find_acquire_program(JOM)
 
@@ -56,6 +41,7 @@ set(CONFIGURE_COMMAND ${PERL} Configure
     no-ssl2
     no-asm
     no-uplink
+    no-tests
     -utf-8
     shared
 )
@@ -189,5 +175,3 @@ vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)

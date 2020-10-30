@@ -1,9 +1,7 @@
-include(vcpkg_common_functions)
-
 message(WARNING "This tensorflow port currently is experimental on Windows and Linux platforms.")
 
 if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-    message(FATAL_ERROR "TensorFlow does not support 32bit system.")
+    message(FATAL_ERROR "TensorFlow does not support 32bit systems.")
 endif()
 
 vcpkg_from_github(
@@ -28,28 +26,33 @@ get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${PYTHON3_DIR})
 set(ENV{PYTHON_BIN_PATH} "${PYTHON3}")
 
+vcpkg_find_acquire_program(GIT)
+get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
+vcpkg_add_to_path(PREPEND ${GIT_DIR})
+
 function(tensorflow_try_remove_recurse_wait PATH_TO_REMOVE)
     file(REMOVE_RECURSE ${PATH_TO_REMOVE})
     if (EXISTS "${PATH_TO_REMOVE}")
-        execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 5)
+        _execute_process(COMMAND ${CMAKE_COMMAND} -E sleep 5)
         file(REMOVE_RECURSE ${PATH_TO_REMOVE})
     endif()
 endfunction()
 
-# we currently only support the release version
-tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-file(GLOB SOURCES ${SOURCE_PATH}/*)
-file(COPY ${SOURCES} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-
 if(CMAKE_HOST_WIN32)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES unzip patch diffutils git)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils)
+    vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     set(ENV{BAZEL_SH} ${MSYS_ROOT}/usr/bin/bash.exe)
 
     set(ENV{BAZEL_VS} $ENV{VSInstallDir})
     set(ENV{BAZEL_VC} $ENV{VCInstallDir})
+    set(ENV{BAZEL_VC_FULL_VERSION} $ENV{VCToolsVersion})
 endif()
+
+# we currently only support the release version
+tensorflow_try_remove_recurse_wait(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+file(RENAME ${SOURCE_PATH} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
 # tensorflow has long file names, which will not work on windows
 set(ENV{TEST_TMPDIR} ${CURRENT_BUILDTREES_DIR}/../.bzl)
@@ -76,11 +79,12 @@ set(ENV{TF_NCCL_VERSION} 2.3)
 set(ENV{NCCL_INSTALL_PATH} "")
 set(ENV{CC_OPT_FLAGS} "/arch:AVX")
 set(ENV{TF_NEED_CUDA} 0)
+set(ENV{TF_CONFIGURE_IOS} 0)
 
 message(STATUS "Configuring TensorFlow")
 
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py
+    COMMAND ${PYTHON3} ${SOURCE_PATH}/configure.py --workspace "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
     LOGNAME config-${TARGET_TRIPLET}-rel
 )

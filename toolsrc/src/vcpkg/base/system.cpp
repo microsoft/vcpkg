@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.debug.h>
@@ -19,6 +17,7 @@ namespace vcpkg
         if (Strings::case_insensitive_ascii_equals(arch, "amd64")) return CPUArchitecture::X64;
         if (Strings::case_insensitive_ascii_equals(arch, "arm")) return CPUArchitecture::ARM;
         if (Strings::case_insensitive_ascii_equals(arch, "arm64")) return CPUArchitecture::ARM64;
+        if (Strings::case_insensitive_ascii_equals(arch, "s390x")) return CPUArchitecture::S390X;
         return nullopt;
     }
 
@@ -30,6 +29,7 @@ namespace vcpkg
             case CPUArchitecture::X64: return "x64";
             case CPUArchitecture::ARM: return "arm";
             case CPUArchitecture::ARM64: return "arm64";
+            case CPUArchitecture::S390X: return "s390x";
             default: Checks::exit_with_message(VCPKG_LINE_INFO, "unexpected vcpkg::System::CPUArchitecture");
         }
     }
@@ -45,12 +45,14 @@ namespace vcpkg
 #else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
 #if defined(__x86_64__) || defined(_M_X64)
         return CPUArchitecture::X64;
-#elif defined(__x86__) || defined(_M_X86)
+#elif defined(__x86__) || defined(_M_X86) || defined(__i386__)
         return CPUArchitecture::X86;
 #elif defined(__arm__) || defined(_M_ARM)
         return CPUArchitecture::ARM;
 #elif defined(__aarch64__) || defined(_M_ARM64)
         return CPUArchitecture::ARM64;
+#elif defined(__s390x__)
+        return CPUArchitecture::S390X;
 #else // choose architecture
 #error "Unknown host architecture"
 #endif // choose architecture
@@ -105,17 +107,114 @@ namespace vcpkg
 #endif // defined(_WIN32)
     }
 
-    ExpectedS<std::string> System::get_home_dir() noexcept
+    void System::set_environment_variable(ZStringView varname, Optional<ZStringView> value) noexcept
+    {
+#if defined(_WIN32)
+        const auto w_varname = Strings::to_utf16(varname);
+        const auto w_varcstr = w_varname.c_str();
+        BOOL exit_code;
+        if (auto v = value.get())
+        {
+            exit_code = SetEnvironmentVariableW(w_varcstr, Strings::to_utf16(*v).c_str());
+        }
+        else
+        {
+            exit_code = SetEnvironmentVariableW(w_varcstr, nullptr);
+        }
+
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code != 0);
+#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
+        if (auto v = value.get())
+        {
+            Checks::check_exit(VCPKG_LINE_INFO, setenv(varname.c_str(), v->c_str(), 1) == 0);
+        }
+        else
+        {
+            Checks::check_exit(VCPKG_LINE_INFO, unsetenv(varname.c_str()) == 0);
+        }
+#endif // defined(_WIN32)
+    }
+
+    const ExpectedS<fs::path>& System::get_home_dir() noexcept
+    {
+        static ExpectedS<fs::path> s_home = []() -> ExpectedS<fs::path> {
+#ifdef _WIN32
+#define HOMEVAR "%USERPROFILE%"
+            auto maybe_home = System::get_environment_variable("USERPROFILE");
+            if (!maybe_home.has_value() || maybe_home.get()->empty())
+                return {"unable to read " HOMEVAR, ExpectedRightTag{}};
+#else
+#define HOMEVAR "$HOME"
+            auto maybe_home = System::get_environment_variable("HOME");
+            if (!maybe_home.has_value() || maybe_home.get()->empty())
+                return {"unable to read " HOMEVAR, ExpectedRightTag{}};
+#endif
+
+            auto p = fs::u8path(*maybe_home.get());
+            if (!p.is_absolute()) return {HOMEVAR " was not an absolute path", ExpectedRightTag{}};
+
+            return {std::move(p), ExpectedLeftTag{}};
+        }();
+        return s_home;
+#undef HOMEVAR
+    }
+
+#ifdef _WIN32
+    const ExpectedS<fs::path>& System::get_appdata_local() noexcept
+    {
+        static ExpectedS<fs::path> s_home = []() -> ExpectedS<fs::path> {
+            auto maybe_home = System::get_environment_variable("LOCALAPPDATA");
+            if (!maybe_home.has_value() || maybe_home.get()->empty())
+            {
+                // Consult %APPDATA% as a workaround for Service accounts
+                // Microsoft/vcpkg#12285
+                maybe_home = System::get_environment_variable("APPDATA");
+                if (!maybe_home.has_value() || maybe_home.get()->empty())
+                {
+                    return {"unable to read %LOCALAPPDATA% or %APPDATA%", ExpectedRightTag{}};
+                }
+
+                auto p = fs::u8path(*maybe_home.get()).parent_path();
+                p /= "Local";
+                if (!p.is_absolute()) return {"%APPDATA% was not an absolute path", ExpectedRightTag{}};
+                return {std::move(p), ExpectedLeftTag{}};
+            }
+
+            auto p = fs::u8path(*maybe_home.get());
+            if (!p.is_absolute()) return {"%LOCALAPPDATA% was not an absolute path", ExpectedRightTag{}};
+
+            return {std::move(p), ExpectedLeftTag{}};
+        }();
+        return s_home;
+    }
+#else
+    static const ExpectedS<fs::path>& get_xdg_cache_home() noexcept
+    {
+        static ExpectedS<fs::path> s_home = [] {
+            auto maybe_home = System::get_environment_variable("XDG_CACHE_HOME");
+            if (auto p = maybe_home.get())
+            {
+                return ExpectedS<fs::path>(fs::u8path(*p));
+            }
+            else
+            {
+                return System::get_home_dir().map([](fs::path home) {
+                    home /= fs::u8path(".cache");
+                    return home;
+                });
+            }
+        }();
+        return s_home;
+    }
+#endif
+
+    const ExpectedS<fs::path>& System::get_platform_cache_home() noexcept
     {
 #ifdef _WIN32
-        auto maybe_home = System::get_environment_variable("USERPROFILE");
-        if (!maybe_home.has_value() || maybe_home.get()->empty())
-            return {"unable to read %USERPROFILE%", ExpectedRightTag{}};
+        return System::get_appdata_local();
 #else
-        auto maybe_home = System::get_environment_variable("HOME");
-        if (!maybe_home.has_value() || maybe_home.get()->empty()) return {"unable to read $HOME", ExpectedRightTag{}};
+        return get_xdg_cache_home();
 #endif
-        return {std::move(*maybe_home.get()), ExpectedLeftTag{}};
     }
 
 #if defined(_WIN32)
@@ -150,7 +249,7 @@ namespace vcpkg
         ret.pop_back(); // remove extra trailing null byte
         return Strings::to_utf8(ret);
     }
-#else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
+#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
     Optional<std::string> System::get_registry_string(void*, StringView, StringView) { return nullopt; }
 #endif // defined(_WIN32)
 
@@ -200,10 +299,10 @@ namespace vcpkg
     Optional<CPUArchitecture> System::guess_visual_studio_prompt_target_architecture()
     {
         // Check for the "vsdevcmd" infrastructure used by Visual Studio 2017 and later
-        const auto VSCMD_ARG_TGT_ARCH = System::get_environment_variable("VSCMD_ARG_TGT_ARCH");
-        if (VSCMD_ARG_TGT_ARCH)
+        const auto vscmd_arg_tgt_arch_env = System::get_environment_variable("VSCMD_ARG_TGT_ARCH");
+        if (vscmd_arg_tgt_arch_env)
         {
-            return to_cpu_architecture(VSCMD_ARG_TGT_ARCH.value_or_exit(VCPKG_LINE_INFO));
+            return to_cpu_architecture(vscmd_arg_tgt_arch_env.value_or_exit(VCPKG_LINE_INFO));
         }
 
         // Check for the "vcvarsall" infrastructure used by Visual Studio 2015

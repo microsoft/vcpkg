@@ -1,10 +1,10 @@
-set(OSG_VER 3.6.4)
+set(OSG_VER 3.6.5)
 
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO openscenegraph/OpenSceneGraph
 	REF OpenSceneGraph-${OSG_VER}
-	SHA512 7cb34fc279ba62a7d7177d3f065f845c28255688bd29026ffb305346e1bb2e515a22144df233e8a7246ed392044ee3e8b74e51bf655282d33ab27dcaf12f4b19
+	SHA512 7002fa30a3bcf6551d2e1050b4ca75a3736013fd190e4f50953717406864da1952deb09f530bc8c5ddf6e4b90204baec7dbc283f497829846d46d561f66feb4b
 	HEAD_REF master
     PATCHES
         collada.patch
@@ -16,6 +16,8 @@ vcpkg_from_github(
         remove-prefix.patch # Remove this patch when cmake fix Findosg_functions.cmake
         fix-liblas.patch
         fix-nvtt.patch
+        use-boost-asio.patch
+        fix-dependency-coin.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

@@ -1,14 +1,16 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
-
-set(VERSION v1.0.1)
+set(VERSION v1.1)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO open62541/open62541
-    REF e4309754fc2f6ea6508b59ca82e08c27b0118d74 # v1.0.1
-    SHA512 bfff9e722c5ee70b93abc54fe0b3267c531bbe039d3344376069175b5d5d95324cd9471ad45674c50393fb0259faacfa94eac1814de11dde4538d76f3e74b2bb
+    REF 8ad84962e67987af91d7f746425d7b26be47a0cb # v1.1.2
+    SHA512 7cca9458cdfbc386c0a7012373c91e9ab3a4876303db95a513f62cf26e751446bd73c0fa1f76e0821d2a47747bfb4612e8822389bc9002775636db8f8093f94c
     HEAD_REF master
-    PATCHES fix-install-bindir.patch
+)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    openssl UA_ENABLE_ENCRYPTION_OPENSSL
+    mbedtls UA_ENABLE_ENCRYPTION_MBEDTLS
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -19,6 +21,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DOPEN62541_VERSION=${VERSION}
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d

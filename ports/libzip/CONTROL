@@ -1,5 +1,5 @@
 Source: libzip
-Version: rel-1-6-1
+Version: 1.7.3
 Homepage: https://github.com/nih-at/libzip
 Build-Depends: zlib
 Default-Features: bzip2,default-aes

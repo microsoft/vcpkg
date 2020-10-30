@@ -1,13 +1,13 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v0.21.0
-    SHA512 744c7a14c31966df1f1383ad5804428807babf53079ed96514367f145eb38b4b90be3e0f9c6f16deb9269c754fd5a44e898e5afb77f6f749ba968605d79b8397
+    REF v1.19.0
+    SHA512 41a4784bde3f9390494d3f9d48748db463f5239e14995d91e4396e85737a5970863b52afedf0b279c3aaf7958736c783bc258b4001eeb84152a9a1ec5d97b8de
     HEAD_REF master
-    PATCHES
-        0001-fix-x86-build.patch
 )
 
 vcpkg_configure_cmake(
@@ -15,8 +15,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DGOOGLE_CLOUD_CPP_DEPENDENCY_PROVIDER=package
         -DGOOGLE_CLOUD_CPP_ENABLE_MACOS_OPENSSL_CHECK=OFF
+        -DGOOGLE_CLOUD_CPP_ENABLE_WERROR=OFF
         -DBUILD_TESTING=OFF
 )
 

@@ -79,6 +79,16 @@ vcpkgCheckRepoTool()
     fi
 }
 
+vcpkgCheckBuildTool()
+{
+    __tool=$1
+    if ! command -v "$__tool" >/dev/null 2>&1 ; then
+	echo "Could not find $__tool. Please install it (and other dependencies) with:"
+	echo "sudo apt-get install cmake ninja-build"
+	exit 1
+    fi
+}
+
 vcpkgCheckEqualFileHash()
 {
     url=$1; filePath=$2; expectedHash=$3
@@ -209,7 +219,9 @@ fetchTool()
 selectCXX()
 {
     if [ "x$CXX" = "x" ]; then
-        if which g++-9 >/dev/null 2>&1; then
+        if which g++-10 >/dev/null 2>&1; then
+            CXX=g++-10
+        elif which g++-9 >/dev/null 2>&1; then
             CXX=g++-9
         elif which g++-8 >/dev/null 2>&1; then
             CXX=g++-8
@@ -226,10 +238,18 @@ selectCXX()
 
 # Preparation
 UNAME="$(uname)"
+ARCH="$(uname -m)"
+
+# Force using system utilities for building vcpkg if host arch is arm, arm64, or s390x.
+if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" ]; then
+    vcpkgUseSystem=true
+fi
 
 if $vcpkgUseSystem; then
     cmakeExe="cmake"
     ninjaExe="ninja"
+    vcpkgCheckBuildTool "$cmakeExe"
+    vcpkgCheckBuildTool "$ninjaExe"
 else
     fetchTool "cmake" "$UNAME" cmakeExe || exit 1
     fetchTool "ninja" "$UNAME" ninjaExe || exit 1
@@ -256,9 +276,15 @@ rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"
 
 if ! [ "$vcpkgDisableMetrics" = "ON" ]; then
-    echo "Telemetry"
-    echo "---------"
-    echo "vcpkg collects usage data in order to help us improve your experience. The data collected by Microsoft is anonymous. You can opt-out of telemetry by re-running bootstrap-vcpkg.sh with -disableMetrics"
-    echo "Read more about vcpkg telemetry at docs/about/privacy.md"
-    echo ""
+    cat <<EOF
+Telemetry
+---------
+vcpkg collects usage data in order to help us improve your experience.
+The data collected by Microsoft is anonymous.
+You can opt-out of telemetry by re-running the bootstrap-vcpkg script with -disableMetrics,
+passing --disable-metrics to vcpkg on the command line,
+or by setting the VCPKG_DISABLE_METRICS environment variable.
+
+Read more about vcpkg telemetry at docs/about/privacy.md
+EOF
 fi

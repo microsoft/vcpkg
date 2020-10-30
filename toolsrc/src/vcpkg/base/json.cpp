@@ -1,9 +1,12 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/json.h>
+#include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/unicode.h>
+
+#include <inttypes.h>
+
+#include <regex>
 
 namespace vcpkg::Json
 {
@@ -23,7 +26,8 @@ namespace vcpkg::Json
             {
                 std::nullptr_t null;
                 bool boolean;
-                int64_t number;
+                int64_t integer;
+                double number;
                 std::string string;
                 Array array;
                 Object object;
@@ -31,10 +35,14 @@ namespace vcpkg::Json
 
             ValueImpl(ValueKindConstant<VK::Null> vk, std::nullptr_t) : tag(vk), null() { }
             ValueImpl(ValueKindConstant<VK::Boolean> vk, bool b) : tag(vk), boolean(b) { }
-            ValueImpl(ValueKindConstant<VK::Number> vk, int64_t i) : tag(vk), number(i) { }
+            ValueImpl(ValueKindConstant<VK::Integer> vk, int64_t i) : tag(vk), integer(i) { }
+            ValueImpl(ValueKindConstant<VK::Number> vk, double d) : tag(vk), number(d) { }
             ValueImpl(ValueKindConstant<VK::String> vk, std::string&& s) : tag(vk), string(std::move(s)) { }
+            ValueImpl(ValueKindConstant<VK::String> vk, const std::string& s) : tag(vk), string(s) { }
             ValueImpl(ValueKindConstant<VK::Array> vk, Array&& arr) : tag(vk), array(std::move(arr)) { }
+            ValueImpl(ValueKindConstant<VK::Array> vk, const Array& arr) : tag(vk), array(arr) { }
             ValueImpl(ValueKindConstant<VK::Object> vk, Object&& obj) : tag(vk), object(std::move(obj)) { }
+            ValueImpl(ValueKindConstant<VK::Object> vk, const Object& obj) : tag(vk), object(obj) { }
 
             ValueImpl& operator=(ValueImpl&& other) noexcept
             {
@@ -42,6 +50,7 @@ namespace vcpkg::Json
                 {
                     case VK::Null: return internal_assign(VK::Null, &ValueImpl::null, other);
                     case VK::Boolean: return internal_assign(VK::Boolean, &ValueImpl::boolean, other);
+                    case VK::Integer: return internal_assign(VK::Integer, &ValueImpl::integer, other);
                     case VK::Number: return internal_assign(VK::Number, &ValueImpl::number, other);
                     case VK::String: return internal_assign(VK::String, &ValueImpl::string, other);
                     case VK::Array: return internal_assign(VK::Array, &ValueImpl::array, other);
@@ -101,7 +110,12 @@ namespace vcpkg::Json
 
     bool Value::is_null() const noexcept { return kind() == VK::Null; }
     bool Value::is_boolean() const noexcept { return kind() == VK::Boolean; }
-    bool Value::is_number() const noexcept { return kind() == VK::Number; }
+    bool Value::is_integer() const noexcept { return kind() == VK::Integer; }
+    bool Value::is_number() const noexcept
+    {
+        auto k = kind();
+        return k == VK::Integer || k == VK::Number;
+    }
     bool Value::is_string() const noexcept { return kind() == VK::String; }
     bool Value::is_array() const noexcept { return kind() == VK::Array; }
     bool Value::is_object() const noexcept { return kind() == VK::Object; }
@@ -111,57 +125,114 @@ namespace vcpkg::Json
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_boolean());
         return underlying_->boolean;
     }
-    int64_t Value::number() const noexcept
+    int64_t Value::integer() const noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_number());
-        return underlying_->number;
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_integer());
+        return underlying_->integer;
+    }
+    double Value::number() const noexcept
+    {
+        auto k = kind();
+        if (k == VK::Number)
+        {
+            return underlying_->number;
+        }
+        else
+        {
+            return static_cast<double>(integer());
+        }
     }
     StringView Value::string() const noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_string());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_string(), "json value is not string");
         return underlying_->string;
     }
 
-    const Array& Value::array() const noexcept
+    const Array& Value::array() const& noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array(), "json value is not array");
         return underlying_->array;
     }
-    Array& Value::array() noexcept
+    Array& Value::array() & noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_array(), "json value is not array");
         return underlying_->array;
     }
+    Array&& Value::array() && noexcept { return std::move(this->array()); }
 
-    const Object& Value::object() const noexcept
+    const Object& Value::object() const& noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object(), "json value is not object");
         return underlying_->object;
     }
-    Object& Value::object() noexcept
+    Object& Value::object() & noexcept
     {
-        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object());
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, is_object(), "json value is not object");
         return underlying_->object;
     }
+    Object&& Value::object() && noexcept { return std::move(this->object()); }
 
     Value::Value() noexcept = default;
     Value::Value(Value&&) noexcept = default;
     Value& Value::operator=(Value&&) noexcept = default;
-    Value::~Value() = default;
 
-    Value Value::clone() const noexcept
+    Value::Value(const Value& other)
     {
-        switch (kind())
+        switch (other.kind())
         {
-            case ValueKind::Null: return Value::null(nullptr);
-            case ValueKind::Boolean: return Value::boolean(boolean());
-            case ValueKind::Number: return Value::number(number());
-            case ValueKind::String: return Value::string(string());
-            case ValueKind::Array: return Value::array(array().clone());
-            case ValueKind::Object: return Value::object(object().clone());
-            default: Checks::exit_fail(VCPKG_LINE_INFO);
+            case ValueKind::Null: return; // default construct underlying_
+            case ValueKind::Boolean:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Boolean>(), other.underlying_->boolean));
+                break;
+            case ValueKind::Integer:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Integer>(), other.underlying_->integer));
+                break;
+            case ValueKind::Number:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Number>(), other.underlying_->number));
+                break;
+            case ValueKind::String:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::String>(), other.underlying_->string));
+                break;
+            case ValueKind::Array:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Array>(), other.underlying_->array));
+                break;
+            case ValueKind::Object:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Object>(), other.underlying_->object));
+                break;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
+
+    Value& Value::operator=(const Value& other)
+    {
+        switch (other.kind())
+        {
+            case ValueKind::Null: underlying_.reset(); break;
+            case ValueKind::Boolean:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Boolean>(), other.underlying_->boolean));
+                break;
+            case ValueKind::Integer:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Integer>(), other.underlying_->integer));
+                break;
+            case ValueKind::Number:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Number>(), other.underlying_->number));
+                break;
+            case ValueKind::String:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::String>(), other.underlying_->string));
+                break;
+            case ValueKind::Array:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Array>(), other.underlying_->array));
+                break;
+            case ValueKind::Object:
+                underlying_.reset(new ValueImpl(ValueKindConstant<VK::Object>(), other.underlying_->object));
+                break;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+
+        return *this;
+    }
+
+    Value::~Value() = default;
 
     Value Value::null(std::nullptr_t) noexcept { return Value(); }
     Value Value::boolean(bool b) noexcept
@@ -170,21 +241,28 @@ namespace vcpkg::Json
         val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Boolean>(), b);
         return val;
     }
-    Value Value::number(int64_t i) noexcept
+    Value Value::integer(int64_t i) noexcept
     {
         Value val;
-        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Number>(), i);
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Integer>(), i);
         return val;
     }
-    Value Value::string(StringView sv) noexcept
+    Value Value::number(double d) noexcept
     {
-        if (!Unicode::utf8_is_valid_string(sv.begin(), sv.end()))
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, isfinite(d));
+        Value val;
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Number>(), d);
+        return val;
+    }
+    Value Value::string(std::string s) noexcept
+    {
+        if (!Unicode::utf8_is_valid_string(s.data(), s.data() + s.size()))
         {
-            Debug::print("Invalid string: ", sv, '\n');
-            vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid utf8 passed to Value::string(StringView)");
+            Debug::print("Invalid string: ", s, '\n');
+            vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid utf8 passed to Value::string(std::string)");
         }
         Value val;
-        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::String>(), sv.to_string());
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::String>(), std::move(s));
         return val;
     }
     Value Value::array(Array&& arr) noexcept
@@ -193,42 +271,139 @@ namespace vcpkg::Json
         val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Array>(), std::move(arr));
         return val;
     }
+    Value Value::array(const Array& arr) noexcept
+    {
+        Value val;
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Array>(), arr);
+        return val;
+    }
     Value Value::object(Object&& obj) noexcept
     {
         Value val;
         val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Object>(), std::move(obj));
         return val;
     }
+    Value Value::object(const Object& obj) noexcept
+    {
+        Value val;
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Object>(), obj);
+        return val;
+    }
+
+    bool operator==(const Value& lhs, const Value& rhs)
+    {
+        if (lhs.kind() != rhs.kind()) return false;
+
+        switch (lhs.kind())
+        {
+            case ValueKind::Null: return true;
+            case ValueKind::Boolean: return lhs.underlying_->boolean == rhs.underlying_->boolean;
+            case ValueKind::Integer: return lhs.underlying_->integer == rhs.underlying_->integer;
+            case ValueKind::Number: return lhs.underlying_->number == rhs.underlying_->number;
+            case ValueKind::String: return lhs.underlying_->string == rhs.underlying_->string;
+            case ValueKind::Array: return lhs.underlying_->string == rhs.underlying_->string;
+            case ValueKind::Object: return lhs.underlying_->string == rhs.underlying_->string;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
     // } struct Value
     // struct Array {
-    Array Array::clone() const noexcept
+    Value& Array::push_back(Value&& value)
     {
-        Array arr;
-        arr.underlying_.reserve(size());
-        for (const auto& el : *this)
-        {
-            arr.underlying_.push_back(el.clone());
-        }
-        return arr;
+        underlying_.push_back(std::move(value));
+        return underlying_.back();
     }
+    Object& Array::push_back(Object&& obj) { return push_back(Value::object(std::move(obj))).object(); }
+    Array& Array::push_back(Array&& arr) { return push_back(Value::array(std::move(arr))).array(); }
+    Value& Array::insert_before(iterator it, Value&& value)
+    {
+        size_t index = it - underlying_.begin();
+        underlying_.insert(it, std::move(value));
+        return underlying_[index];
+    }
+    Object& Array::insert_before(iterator it, Object&& obj)
+    {
+        return insert_before(it, Value::object(std::move(obj))).object();
+    }
+    Array& Array::insert_before(iterator it, Array&& arr)
+    {
+        return insert_before(it, Value::array(std::move(arr))).array();
+    }
+    bool operator==(const Array& lhs, const Array& rhs) { return lhs.underlying_ == rhs.underlying_; }
     // } struct Array
     // struct Object {
-    void Object::insert(std::string key, Value value) noexcept
+    Value& Object::insert(std::string key, Value&& value)
     {
         vcpkg::Checks::check_exit(VCPKG_LINE_INFO, !contains(key));
-        underlying_.push_back(std::make_pair(std::move(key), std::move(value)));
+        underlying_.push_back({std::move(key), std::move(value)});
+        return underlying_.back().second;
     }
-    void Object::insert_or_replace(std::string key, Value value) noexcept
+    Value& Object::insert(std::string key, const Value& value)
+    {
+        vcpkg::Checks::check_exit(VCPKG_LINE_INFO, !contains(key));
+        underlying_.push_back({std::move(key), value});
+        return underlying_.back().second;
+    }
+    Array& Object::insert(std::string key, Array&& value)
+    {
+        return insert(std::move(key), Value::array(std::move(value))).array();
+    }
+    Array& Object::insert(std::string key, const Array& value)
+    {
+        return insert(std::move(key), Value::array(value)).array();
+    }
+    Object& Object::insert(std::string key, Object&& value)
+    {
+        return insert(std::move(key), Value::object(std::move(value))).object();
+    }
+    Object& Object::insert(std::string key, const Object& value)
+    {
+        return insert(std::move(key), Value::object(value)).object();
+    }
+
+    Value& Object::insert_or_replace(std::string key, Value&& value)
     {
         auto v = get(key);
         if (v)
         {
             *v = std::move(value);
+            return *v;
         }
         else
         {
-            underlying_.push_back(std::make_pair(std::move(key), std::move(value)));
+            underlying_.push_back({std::move(key), std::move(value)});
+            return underlying_.back().second;
         }
+    }
+    Value& Object::insert_or_replace(std::string key, const Value& value)
+    {
+        auto v = get(key);
+        if (v)
+        {
+            *v = value;
+            return *v;
+        }
+        else
+        {
+            underlying_.push_back({std::move(key), std::move(value)});
+            return underlying_.back().second;
+        }
+    }
+    Array& Object::insert_or_replace(std::string key, Array&& value)
+    {
+        return insert_or_replace(std::move(key), Value::array(std::move(value))).array();
+    }
+    Array& Object::insert_or_replace(std::string key, const Array& value)
+    {
+        return insert_or_replace(std::move(key), Value::array(value)).array();
+    }
+    Object& Object::insert_or_replace(std::string key, Object&& value)
+    {
+        return insert_or_replace(std::move(key), Value::object(std::move(value))).object();
+    }
+    Object& Object::insert_or_replace(std::string key, const Object& value)
+    {
+        return insert_or_replace(std::move(key), Value::object(value)).object();
     }
 
     auto Object::internal_find_key(StringView key) const noexcept -> underlying_t::const_iterator
@@ -277,16 +452,14 @@ namespace vcpkg::Json
         }
     }
 
-    Object Object::clone() const noexcept
+    void Object::sort_keys()
     {
-        Object obj;
-        obj.underlying_.reserve(size());
-        for (const auto& el : *this)
-        {
-            obj.insert(el.first.to_string(), el.second.clone());
-        }
-        return obj;
+        std::sort(underlying_.begin(), underlying_.end(), [](const value_type& lhs, const value_type& rhs) {
+            return lhs.first < rhs.first;
+        });
     }
+
+    bool operator==(const Object& lhs, const Object& rhs) { return lhs.underlying_ == rhs.underlying_; }
     // } struct Object
 
     // auto parse() {
@@ -317,10 +490,6 @@ namespace vcpkg::Json
             {
                 return code_point == '-' || is_digit(code_point);
             }
-            static bool is_keyword_start(char32_t code_point) noexcept
-            {
-                return code_point == 'f' || code_point == 'n' || code_point == 't';
-            }
 
             static unsigned char from_hex_digit(char32_t code_point) noexcept
             {
@@ -338,7 +507,7 @@ namespace vcpkg::Json
                 }
                 else
                 {
-                    vcpkg::Checks::exit_fail(VCPKG_LINE_INFO);
+                    vcpkg::Checks::unreachable(VCPKG_LINE_INFO);
                 }
             }
 
@@ -375,14 +544,14 @@ namespace vcpkg::Json
 
                 switch (current)
                 {
-                    case '"': return '"';
-                    case '\\': return '\\';
-                    case '/': return '/';
-                    case 'b': return '\b';
-                    case 'f': return '\f';
-                    case 'n': return '\n';
-                    case 'r': return '\r';
-                    case 't': return '\t';
+                    case '"': next(); return '"';
+                    case '\\': next(); return '\\';
+                    case '/': next(); return '/';
+                    case 'b': next(); return '\b';
+                    case 'f': next(); return '\f';
+                    case 'n': next(); return '\n';
+                    case 'r': next(); return '\r';
+                    case 't': next(); return '\t';
                     case 'u':
                     {
                         char16_t code_unit = 0;
@@ -463,11 +632,15 @@ namespace vcpkg::Json
             Value parse_number() noexcept
             {
                 Checks::check_exit(VCPKG_LINE_INFO, is_number_start(cur()));
-                bool negative = false;
+
+                bool floating = false;
+                bool negative = false; // negative & 0 -> floating, so keep track of it
+                std::string number_to_parse;
 
                 char32_t current = cur();
                 if (cur() == '-')
                 {
+                    number_to_parse.push_back('-');
                     negative = true;
                     current = next();
                     if (current == Unicode::end_of_file)
@@ -480,54 +653,85 @@ namespace vcpkg::Json
                 if (current == '0')
                 {
                     current = next();
-                    if (current != Unicode::end_of_file)
+                    if (current == '.')
                     {
-                        if (is_digit(current))
-                        {
-                            add_error("Unexpected digits after a leading zero");
-                        }
-                        if (current == '.')
-                        {
-                            add_error("Found a `.` -- this JSON implementation does not support floating point");
-                        }
+                        number_to_parse.append("0.");
+                        floating = true;
+                        current = next();
                     }
-                    return Value::number(0);
-                }
-
-                // parse as negative so that someone can write INT64_MIN; otherwise, they'd only be able to get
-                // -INT64_MAX = INT64_MIN + 1
-                constexpr auto min_value = std::numeric_limits<int64_t>::min();
-                int64_t result = 0;
-                while (current != Unicode::end_of_file && is_digit(current))
-                {
-                    const int digit = current - '0';
-                    // result * 10 - digit < min_value : remember that result < 0
-                    if (result < (min_value + digit) / 10)
+                    else if (is_digit(current))
                     {
-                        add_error("Number is too big for an int64_t");
+                        add_error("Unexpected digits after a leading zero");
                         return Value();
                     }
-                    result *= 10;
-                    result -= digit;
+                    else
+                    {
+                        if (negative)
+                        {
+                            return Value::number(-0.0);
+                        }
+                        else
+                        {
+                            return Value::integer(0);
+                        }
+                    }
+                }
+
+                while (is_digit(current))
+                {
+                    number_to_parse.push_back(static_cast<char>(current));
                     current = next();
                 }
-                if (current == '.')
+                if (!floating && current == '.')
                 {
-                    add_error("Found a `.` -- this JSON implementation doesn't support floating point");
-                    return Value();
-                }
-
-                if (!negative)
-                {
-                    if (result == min_value)
+                    floating = true;
+                    number_to_parse.push_back('.');
+                    current = next();
+                    if (!is_digit(current))
                     {
-                        add_error("Number is too big for a uint64_t");
+                        add_error("Expected digits after the decimal point");
                         return Value();
                     }
-                    result = -result;
+                    while (is_digit(current))
+                    {
+                        number_to_parse.push_back(static_cast<char>(current));
+                        current = next();
+                    }
                 }
 
-                return Value::number(result);
+                if (floating)
+                {
+                    auto opt = Strings::strto<double>(number_to_parse);
+                    if (auto res = opt.get())
+                    {
+                        if (std::abs(*res) < INFINITY)
+                        {
+                            return Value::number(*res);
+                        }
+                        else
+                        {
+                            add_error(Strings::format("Floating point constant too big: %s", number_to_parse));
+                        }
+                    }
+                    else
+                    {
+                        add_error(Strings::format("Invalid floating point constant: %s", number_to_parse));
+                    }
+                }
+                else
+                {
+                    auto opt = Strings::strto<int64_t>(number_to_parse);
+                    if (auto res = opt.get())
+                    {
+                        return Value::integer(*res);
+                    }
+                    else
+                    {
+                        add_error(Strings::format("Invalid integer constant: %s", number_to_parse));
+                    }
+                }
+
+                return Value();
             }
 
             Value parse_keyword() noexcept
@@ -549,7 +753,7 @@ namespace vcpkg::Json
                         rest = U"ull";
                         val = Value::null(nullptr);
                         break;
-                    default: vcpkg::Checks::exit_fail(VCPKG_LINE_INFO);
+                    default: vcpkg::Checks::unreachable(VCPKG_LINE_INFO);
                 }
 
                 for (const char32_t* rest_it = rest; *rest_it != '\0'; ++rest_it)
@@ -600,6 +804,7 @@ namespace vcpkg::Json
                     }
                     else if (current == ',')
                     {
+                        auto comma_loc = cur_loc();
                         next();
                         skip_whitespace();
                         current = cur();
@@ -610,7 +815,7 @@ namespace vcpkg::Json
                         }
                         if (current == ']')
                         {
-                            add_error("Trailing comma in array");
+                            add_error("Trailing comma in array", comma_loc);
                             return Value::array(std::move(arr));
                         }
                     }
@@ -630,7 +835,7 @@ namespace vcpkg::Json
 
                 auto current = cur();
 
-                auto res = std::make_pair(std::string(""), Value());
+                std::pair<std::string, Value> res = {std::string(""), Value()};
 
                 if (current == Unicode::end_of_file)
                 {
@@ -696,6 +901,7 @@ namespace vcpkg::Json
                     }
                     else if (current == ',')
                     {
+                        auto comma_loc = cur_loc();
                         next();
                         skip_whitespace();
                         current = cur();
@@ -706,7 +912,7 @@ namespace vcpkg::Json
                         }
                         else if (current == '}')
                         {
-                            add_error("Trailing comma in an object");
+                            add_error("Trailing comma in an object", comma_loc);
                             return Value();
                         }
                     }
@@ -781,6 +987,41 @@ namespace vcpkg::Json
         };
     }
 
+    NaturalNumberDeserializer NaturalNumberDeserializer::instance;
+    BooleanDeserializer BooleanDeserializer::instance;
+    ParagraphDeserializer ParagraphDeserializer::instance;
+    IdentifierDeserializer IdentifierDeserializer::instance;
+    IdentifierArrayDeserializer IdentifierArrayDeserializer::instance;
+    PackageNameDeserializer PackageNameDeserializer::instance;
+    PathDeserializer PathDeserializer::instance;
+
+    bool IdentifierDeserializer::is_ident(StringView sv)
+    {
+        static const std::regex BASIC_IDENTIFIER = std::regex(R"([a-z0-9]+(-[a-z0-9]+)*)");
+
+        // we only check for lowercase in RESERVED since we already remove all
+        // strings with uppercase letters from the basic check
+        static const std::regex RESERVED = std::regex(R"(prn|aux|nul|con|(lpt|com)[1-9]|core|default)");
+
+        // back-compat
+        if (sv == "all_modules")
+        {
+            return true;
+        }
+
+        if (!std::regex_match(sv.begin(), sv.end(), BASIC_IDENTIFIER))
+        {
+            return false; // we're not even in the shape of an identifier
+        }
+
+        if (std::regex_match(sv.begin(), sv.end(), RESERVED))
+        {
+            return false; // we're a reserved identifier
+        }
+
+        return true;
+    }
+
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse_file(const Files::Filesystem& fs,
                                                                                            const fs::path& path,
                                                                                            std::error_code& ec) noexcept
@@ -797,125 +1038,150 @@ namespace vcpkg::Json
         }
     }
 
+    std::pair<Value, JsonStyle> parse_file(vcpkg::LineInfo linfo,
+                                           const Files::Filesystem& fs,
+                                           const fs::path& path) noexcept
+    {
+        std::error_code ec;
+        auto ret = parse_file(fs, path, ec);
+        if (ec)
+        {
+            System::print2(System::Color::error, "Failed to read ", fs::u8string(path), ": ", ec.message(), "\n");
+            Checks::exit_fail(linfo);
+        }
+        else if (!ret)
+        {
+            System::print2(System::Color::error, "Failed to parse ", fs::u8string(path), ":\n");
+            System::print2(ret.error()->format());
+            Checks::exit_fail(linfo);
+        }
+        return ret.value_or_exit(linfo);
+    }
+
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(StringView json,
                                                                                       const fs::path& filepath) noexcept
     {
-        return Parser::parse(json, filepath.generic_u8string());
+        return Parser::parse(json, fs::generic_u8string(filepath));
     }
     // } auto parse()
 
-    // auto stringify() {
-    static std::string& append_unicode_escape(std::string& s, char16_t code_unit)
+    namespace
     {
-        s.append("\\u");
-
-        // AFAIK, there's no standard way of doing this?
-        constexpr const char hex_digit[16] = {
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
-
-        s.push_back(hex_digit[(code_unit >> 12) & 0x0F]);
-        s.push_back(hex_digit[(code_unit >> 8) & 0x0F]);
-        s.push_back(hex_digit[(code_unit >> 4) & 0x0F]);
-        s.push_back(hex_digit[(code_unit >> 0) & 0x0F]);
-
-        return s;
-    }
-
-    // taken from the ECMAScript 2020 standard, 24.5.2.2: Runtime Semantics: QuoteJSONString
-    static std::string& append_quoted_json_string(std::string& product, StringView sv)
-    {
-        // Table 66: JSON Single Character Escape Sequences
-        constexpr static std::array<std::pair<char32_t, const char*>, 7> escape_sequences = {
-            std::make_pair(0x0008, R"(\b)"), // BACKSPACE
-            std::make_pair(0x0009, R"(\t)"), // CHARACTER TABULATION
-            std::make_pair(0x000A, R"(\n)"), // LINE FEED (LF)
-            std::make_pair(0x000C, R"(\f)"), // FORM FEED (FF)
-            std::make_pair(0x000D, R"(\r)"), // CARRIAGE RETURN (CR)
-            std::make_pair(0x0022, R"(\")"), // QUOTATION MARK
-            std::make_pair(0x005C, R"(\\)")  // REVERSE SOLIDUS
-        };
-        // 1. Let product be the String value consisting solely of the code unit 0x0022 (QUOTATION MARK).
-        product.push_back('"');
-
-        // 2. For each code point C in ! UTF16DecodeString(value), do
-        // (note that we use utf8 instead of utf16)
-        for (auto code_point : Unicode::Utf8Decoder(sv.begin(), sv.end()))
+        struct Stringifier
         {
-            bool matched = false; // early exit boolean
-            // a. If C is listed in the "Code Point" column of Table 66, then
-            for (auto pr : escape_sequences)
+            JsonStyle style;
+            std::string& buffer;
+
+            void append_indent(int indent)
             {
-                // i. Set product to the string-concatenation of product and the escape sequence for C as specified in
-                // the "Escape Sequence" column of the corresponding row.
-                if (code_point == pr.first)
+                if (style.use_tabs())
                 {
-                    product.append(pr.second);
-                    matched = true;
-                    break;
+                    buffer.append(indent, '\t');
                 }
-            }
-            if (matched) break;
+                else
+                {
+                    buffer.append(indent * style.spaces(), ' ');
+                }
+            };
 
-            // b. Else if C has a numeric value less than 0x0020 (SPACE), or if C has the same numeric value as a
-            // leading surrogate or trailing surrogate, then
-            if (code_point < 0x0020 || Unicode::utf16_is_surrogate_code_point(code_point))
+            void append_unicode_escape(char16_t code_unit)
             {
-                // i. Let unit be the code unit whose numeric value is that of C.
-                // ii. Set product to the string-concatenation of product and UnicodeEscape(unit).
-                append_unicode_escape(product, static_cast<char16_t>(code_point));
-                break;
+                buffer.append("\\u");
+
+                // AFAIK, there's no standard way of doing this?
+                constexpr const char hex_digit[16] = {
+                    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
+                buffer.push_back(hex_digit[(code_unit >> 12) & 0x0F]);
+                buffer.push_back(hex_digit[(code_unit >> 8) & 0x0F]);
+                buffer.push_back(hex_digit[(code_unit >> 4) & 0x0F]);
+                buffer.push_back(hex_digit[(code_unit >> 0) & 0x0F]);
             }
 
-            // c. Else,
-            // i. Set product to the string-concatenation of product and the UTF16Encoding of C.
-            // (again, we use utf-8 here instead)
-            Unicode::utf8_append_code_point(product, code_point);
-        }
+            // taken from the ECMAScript 2020 standard, 24.5.2.2: Runtime Semantics: QuoteJSONString
+            void append_quoted_json_string(StringView sv)
+            {
+                // Table 66: JSON Single Character Escape Sequences
+                constexpr static std::array<std::pair<char32_t, const char*>, 7> escape_sequences = {{
+                    {0x0008, R"(\b)"}, // BACKSPACE
+                    {0x0009, R"(\t)"}, // CHARACTER TABULATION
+                    {0x000A, R"(\n)"}, // LINE FEED (LF)
+                    {0x000C, R"(\f)"}, // FORM FEED (FF)
+                    {0x000D, R"(\r)"}, // CARRIAGE RETURN (CR)
+                    {0x0022, R"(\")"}, // QUOTATION MARK
+                    {0x005C, R"(\\)"}  // REVERSE SOLIDUS
+                }};
+                // 1. Let product be the String value consisting solely of the code unit 0x0022 (QUOTATION MARK).
+                buffer.push_back('"');
 
-        // 3. Set product to the string-concatenation of product and the code unit 0x0022 (QUOTATION MARK).
-        product.push_back('"');
+                // 2. For each code point C in ! UTF16DecodeString(value), do
+                // (note that we use utf8 instead of utf16)
+                for (auto code_point : Unicode::Utf8Decoder(sv.begin(), sv.end()))
+                {
+                    // a. If C is listed in the "Code Point" column of Table 66, then
+                    const auto match = std::find_if(begin(escape_sequences),
+                                                    end(escape_sequences),
+                                                    [code_point](const std::pair<char32_t, const char*>& attempt) {
+                                                        return attempt.first == code_point;
+                                                    });
+                    // i. Set product to the string-concatenation of product and the escape sequence for C as
+                    // specified in the "Escape Sequence" column of the corresponding row.
+                    if (match != end(escape_sequences))
+                    {
+                        buffer.append(match->second);
+                        continue;
+                    }
 
-        // 4. Return product.
-        return product;
-    }
+                    // b. Else if C has a numeric value less than 0x0020 (SPACE), or if C has the same numeric value as
+                    // a leading surrogate or trailing surrogate, then
+                    if (code_point < 0x0020 || Unicode::utf16_is_surrogate_code_point(code_point))
+                    {
+                        // i. Let unit be the code unit whose numeric value is that of C.
+                        // ii. Set product to the string-concatenation of product and UnicodeEscape(unit).
+                        append_unicode_escape(static_cast<char16_t>(code_point));
+                        break;
+                    }
 
-    static std::string quote_json_string(StringView sv)
-    {
-        std::string product;
-        append_quoted_json_string(product, sv);
-        return product;
-    }
+                    // c. Else,
+                    // i. Set product to the string-concatenation of product and the UTF16Encoding of C.
+                    // (again, we use utf-8 here instead)
+                    Unicode::utf8_append_code_point(buffer, code_point);
+                }
 
-    static void internal_stringify(const Value& value, JsonStyle style, std::string& buffer, int current_indent)
-    {
-        const auto append_indent = [&](int indent) {
-            if (style.use_tabs())
-            {
-                buffer.append(indent, '\t');
+                // 3. Set product to the string-concatenation of product and the code unit 0x0022 (QUOTATION MARK).
+                buffer.push_back('"');
             }
-            else
+
+            void stringify_object(const Object& obj, int current_indent)
             {
-                buffer.append(indent * style.spaces(), ' ');
+                buffer.push_back('{');
+                if (obj.size() != 0)
+                {
+                    bool first = true;
+
+                    for (const auto& el : obj)
+                    {
+                        if (!first)
+                        {
+                            buffer.push_back(',');
+                        }
+                        first = false;
+
+                        buffer.append(style.newline());
+                        append_indent(current_indent + 1);
+
+                        append_quoted_json_string(el.first);
+                        buffer.append(": ");
+                        stringify(el.second, current_indent + 1);
+                    }
+                    buffer.append(style.newline());
+                    append_indent(current_indent);
+                }
+                buffer.push_back('}');
             }
-        };
-        switch (value.kind())
-        {
-            case VK::Null: buffer.append("null"); break;
-            case VK::Boolean:
+
+            void stringify_array(const Array& arr, int current_indent)
             {
-                auto v = value.boolean();
-                buffer.append(v ? "true" : "false");
-                break;
-            }
-            case VK::Number: buffer.append(std::to_string(value.number())); break;
-            case VK::String:
-            {
-                append_quoted_json_string(buffer, value.string());
-                break;
-            }
-            case VK::Array:
-            {
-                const auto& arr = value.array();
                 buffer.push_back('[');
                 if (arr.size() == 0)
                 {
@@ -936,53 +1202,204 @@ namespace vcpkg::Json
                         buffer.append(style.newline());
                         append_indent(current_indent + 1);
 
-                        internal_stringify(el, style, buffer, current_indent + 1);
+                        stringify(el, current_indent + 1);
                     }
                     buffer.append(style.newline());
                     append_indent(current_indent);
                     buffer.push_back(']');
                 }
-                break;
             }
-            case VK::Object:
+
+            void stringify(const Value& value, int current_indent)
             {
-                const auto& obj = value.object();
-                buffer.push_back('{');
-                if (obj.size() != 0)
+                switch (value.kind())
                 {
-                    bool first = true;
-
-                    for (const auto& el : obj)
+                    case VK::Null: buffer.append("null"); break;
+                    case VK::Boolean:
                     {
-                        if (!first)
-                        {
-                            buffer.push_back(',');
-                        }
-                        first = false;
-
-                        buffer.append(style.newline());
-                        append_indent(current_indent + 1);
-
-                        auto key = quote_json_string(el.first);
-                        buffer.append(key.begin(), key.end());
-                        buffer.append(": ");
-                        internal_stringify(el.second, style, buffer, current_indent + 1);
+                        auto v = value.boolean();
+                        buffer.append(v ? "true" : "false");
+                        break;
                     }
-                    buffer.append(style.newline());
-                    append_indent(current_indent);
+                    // TODO: switch to `to_chars` once we are able to remove support for old compilers
+                    case VK::Integer: buffer.append(std::to_string(value.integer())); break;
+                    case VK::Number: buffer.append(std::to_string(value.number())); break;
+                    case VK::String:
+                    {
+                        append_quoted_json_string(value.string());
+                        break;
+                    }
+                    case VK::Array:
+                    {
+                        stringify_array(value.array(), current_indent);
+                        break;
+                    }
+                    case VK::Object:
+                    {
+                        stringify_object(value.object(), current_indent);
+                        break;
+                    }
                 }
-                buffer.push_back('}');
-                break;
             }
-        }
+        };
     }
 
-    std::string stringify(const Value& value, JsonStyle style) noexcept
+    std::string stringify(const Value& value, JsonStyle style)
     {
         std::string res;
-        internal_stringify(value, style, res, 0);
+        Stringifier{style, res}.stringify(value, 0);
+        res.push_back('\n');
+        return res;
+    }
+    std::string stringify(const Object& obj, JsonStyle style)
+    {
+        std::string res;
+        Stringifier{style, res}.stringify_object(obj, 0);
+        res.push_back('\n');
+        return res;
+    }
+    std::string stringify(const Array& arr, JsonStyle style)
+    {
+        std::string res;
+        Stringifier{style, res}.stringify_array(arr, 0);
+        res.push_back('\n');
         return res;
     }
     // } auto stringify()
 
+    static std::vector<std::string> invalid_json_fields(const Json::Object& obj,
+                                                        Span<const StringView> known_fields) noexcept
+    {
+        const auto field_is_unknown = [known_fields](StringView sv) {
+            // allow directives
+            if (sv.size() != 0 && *sv.begin() == '$')
+            {
+                return false;
+            }
+            return std::find(known_fields.begin(), known_fields.end(), sv) == known_fields.end();
+        };
+
+        std::vector<std::string> res;
+        for (const auto& kv : obj)
+        {
+            if (field_is_unknown(kv.first))
+            {
+                res.push_back(kv.first.to_string());
+            }
+        }
+
+        return res;
+    }
+
+    void Reader::add_missing_field_error(StringView type, StringView key, StringView key_type)
+    {
+        add_generic_error(type, "missing required field '", key, "' (", key_type, ")");
+    }
+    void Reader::add_expected_type_error(StringView expected_type)
+    {
+        m_errors.push_back(Strings::concat(path(), ": mismatched type: expected ", expected_type));
+    }
+    void Reader::add_extra_field_error(StringView type, StringView field, StringView suggestion)
+    {
+        if (suggestion.size() > 0)
+        {
+            add_generic_error(type, "unexpected field '", field, "\', did you mean \'", suggestion, "\'?");
+        }
+        else
+        {
+            add_generic_error(type, "unexpected field '", field, '\'');
+        }
+    }
+
+    void Reader::check_for_unexpected_fields(const Object& obj, View<StringView> valid_fields, StringView type_name)
+    {
+        if (valid_fields.size() == 0)
+        {
+            return;
+        }
+
+        auto extra_fields = invalid_json_fields(obj, valid_fields);
+        for (auto&& f : extra_fields)
+        {
+            auto best_it = valid_fields.begin();
+            auto best_value = Strings::byte_edit_distance(f, *best_it);
+            for (auto i = best_it + 1; i != valid_fields.end(); ++i)
+            {
+                auto v = Strings::byte_edit_distance(f, *i);
+                if (v < best_value)
+                {
+                    best_value = v;
+                    best_it = i;
+                }
+            }
+            add_extra_field_error(type_name.to_string(), f, *best_it);
+        }
+    }
+
+    std::string Reader::path() const noexcept
+    {
+        std::string p("$");
+        for (auto&& s : m_path)
+        {
+            if (s.index < 0)
+                Strings::append(p, '.', s.field);
+            else
+                Strings::append(p, '[', s.index, ']');
+        }
+        return p;
+    }
+
+    Optional<std::vector<std::string>> ParagraphDeserializer::visit_string(Reader&, StringView sv)
+    {
+        std::vector<std::string> out;
+        out.push_back(sv.to_string());
+        return out;
+    }
+
+    Optional<std::vector<std::string>> ParagraphDeserializer::visit_array(Reader& r, const Array& arr)
+    {
+        static StringDeserializer d{"a string"};
+        return r.array_elements(arr, d);
+    }
+
+    Optional<std::string> IdentifierDeserializer::visit_string(Json::Reader& r, StringView sv)
+    {
+        if (!is_ident(sv))
+        {
+            r.add_generic_error(type_name(), "must be lowercase alphanumeric+hyphens and not reserved");
+        }
+        return sv.to_string();
+    }
+
+    Optional<std::vector<std::string>> IdentifierArrayDeserializer::visit_array(Reader& r, const Array& arr)
+    {
+        return r.array_elements(arr, IdentifierDeserializer::instance);
+    }
+
+    bool PackageNameDeserializer::is_package_name(StringView sv)
+    {
+        if (sv.size() == 0)
+        {
+            return false;
+        }
+
+        for (const auto& ident : Strings::split(sv, '.'))
+        {
+            if (!IdentifierDeserializer::is_ident(ident))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    Optional<std::string> PackageNameDeserializer::visit_string(Json::Reader&, StringView sv)
+    {
+        if (!is_package_name(sv))
+        {
+            return nullopt;
+        }
+        return sv.to_string();
+    }
 }

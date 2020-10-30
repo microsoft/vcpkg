@@ -8,9 +8,11 @@ vcpkg_from_github(
         HEAD_REF master
 )
 
+set(ENV{CFLAGS} "$ENV{CFLAGS} -Wno-error=implicit-function-declaration")
 vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
+        COPY_SOURCE
 )
 
 vcpkg_install_make()

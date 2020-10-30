@@ -8,30 +8,18 @@ Sets up the environment to run other vcpkg CI steps in an Azure Pipelines job.
 .DESCRIPTION
 This script maps network drives from infrastructure and cleans out anything that
 might have been leftover from a previous run.
-
-.PARAMETER ForceAllPortsToRebuildKey
-A subdirectory / key to use to force a build without any previous run caching,
-if necessary.
 #>
 
-[CmdletBinding()]
-Param(
-    [string]$ForceAllPortsToRebuildKey = ''
-)
+if ([string]::IsNullOrWhiteSpace($env:StorageAccountName) -or  [string]::IsNullOrWhiteSpace($env:StorageAccountKey)) {
+    Write-Host 'No storage account and/or key set, skipping mount of W:\'
+} else {
+    $StorageAccountName = $env:StorageAccountName
+    $StorageAccountKey = $env:StorageAccountKey
 
-$StorageAccountName = $env:StorageAccountName
-$StorageAccountKey = $env:StorageAccountKey
-
-function Remove-DirectorySymlink {
-    Param([string]$Path)
-    if (Test-Path $Path) {
-        [System.IO.Directory]::Delete($Path, $true)
+    Write-Host 'Setting up archives mount'
+    if (-Not (Test-Path W:)) {
+        net use W: "\\$StorageAccountName.file.core.windows.net\archives" /u:"AZURE\$StorageAccountName" $StorageAccountKey
     }
-}
-
-Write-Host 'Setting up archives mount'
-if (-Not (Test-Path W:)) {
-    net use W: "\\$StorageAccountName.file.core.windows.net\archives" /u:"AZURE\$StorageAccountName" $StorageAccountKey
 }
 
 Write-Host 'Creating downloads directory'
@@ -51,41 +39,4 @@ if( Test-Path D:\downloads\tools\msys2 )
 {
     Write-Host "removing previously installed msys2"
     Remove-Item D:\downloads\tools\msys2 -Recurse -Force
-}
-
-Write-Host 'Setting up archives path...'
-if ([string]::IsNullOrWhiteSpace($ForceAllPortsToRebuildKey))
-{
-    $archivesPath = 'W:\'
-}
-else
-{
-    $archivesPath = "W:\force\$ForceAllPortsToRebuildKey"
-    if (-Not (Test-Path $fullPath)) {
-        Write-Host 'Creating $archivesPath'
-        mkdir $archivesPath
-    }
-}
-
-Write-Host "Linking archives => $archivesPath"
-if (-Not (Test-Path archives)) {
-    cmd /c "mklink /D archives $archivesPath"
-}
-
-Write-Host 'Linking installed => E:\installed'
-if (-Not (Test-Path E:\installed)) {
-    mkdir E:\installed
-}
-
-if (-Not (Test-Path installed)) {
-    cmd /c "mklink /D installed E:\installed"
-}
-
-Write-Host 'Linking downloads => D:\downloads'
-if (-Not (Test-Path D:\downloads)) {
-    mkdir D:\downloads
-}
-
-if (-Not (Test-Path downloads)) {
-    cmd /c "mklink /D downloads D:\downloads"
 }

@@ -62,12 +62,13 @@
 ## * [cppunit](https://github.com/Microsoft/vcpkg/blob/master/ports/cppunit/portfile.cmake)
 
 function(vcpkg_build_msbuild)
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(
+        PARSE_ARGV 0
         _csc
         "USE_VCPKG_INTEGRATION"
         "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
-        ${ARGN}
     )
 
     if(NOT DEFINED _csc_RELEASE_CONFIGURATION)
@@ -96,6 +97,7 @@ function(vcpkg_build_msbuild)
         /p:VCPkgLocalAppDataDisabled=true
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
+        /p:VcpkgManifestInstall=false
         /m
     )
 
@@ -110,6 +112,7 @@ function(vcpkg_build_msbuild)
             APPEND _csc_OPTIONS
             /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets
             "/p:VcpkgTriplet=${TARGET_TRIPLET}"
+            "/p:VcpkgCurrentInstalledDir=${CURRENT_INSTALLED_DIR}"
         )
     endif()
 

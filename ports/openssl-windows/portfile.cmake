@@ -1,47 +1,52 @@
 vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Desktop" ON_TARGET "UWP" "Linux" "OSX")
 
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
-  message(WARNING "Can't build openssl if libressl is installed. Please remove libressl, and try install openssl again if you need it. Build will continue but there might be problems since libressl is only a subset of openssl")
-  set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-  return()
+  message(FATAL_ERROR "Can't build openssl if libressl/boringssl is installed. Please remove libressl/boringssl, and try install openssl again if you need it.")
 endif()
 
 vcpkg_find_acquire_program(PERL)
 
-set(OPENSSL_VERSION 1.1.1d)
+set(OPENSSL_VERSION 1.1.1h)
 
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PERL_EXE_PATH}")
+vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" "https://www.openssl.org/source/old/1.1.1/openssl-${OPENSSL_VERSION}.tar.gz"
     FILENAME "openssl-${OPENSSL_VERSION}.tar.gz"
-    SHA512 2bc9f528c27fe644308eb7603c992bac8740e9f0c3601a130af30c9ffebbf7e0f5c28b76a00bbb478bad40fbe89b4223a58d604001e1713da71ff4b7fe6a08a7
+    SHA512 da50fd99325841ed7a4367d9251c771ce505a443a73b327d8a46b2c6a7d2ea99e43551a164efc86f8743b22c2bdb0020bf24a9cbd445e9d68868b2dc1d34033a
 )
 
 vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
 )
 
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-set(ENV{PATH} "${NASM_EXE_PATH};$ENV{PATH}")
+vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 
 vcpkg_find_acquire_program(JOM)
 
 set(OPENSSL_SHARED no-shared)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(OPENSSL_SHARED shared)
+    set(OPENSSL_SHARED shared)
 endif()
 
-set(CONFIGURE_COMMAND ${PERL} Configure
+set(CONFIGURE_OPTIONS 
     enable-static-engine
     enable-capieng
     no-ssl2
+    no-tests
     -utf-8
     ${OPENSSL_SHARED}
 )
+
+if(DEFINED OPENSSL_USE_NOPINSHARED)
+    set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-pinshared)
+endif()
+
+set(CONFIGURE_COMMAND ${PERL} Configure ${CONFIGURE_OPTIONS})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(OPENSSL_ARCH VC-WIN32)
@@ -169,17 +174,17 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
 endif()
 
-file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" _contents)
-string(REPLACE "<winsock.h>" "<winsock2.h>" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h" "${_contents}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h"
+    "<winsock.h>"
+    "<winsock2.h>"
+)
 
-file(READ "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" _contents)
-string(REPLACE "#  include <windows.h>" "#ifndef _WINSOCKAPI_\n#define _WINSOCKAPI_\n#endif\n#  include <windows.h>" _contents "${_contents}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/include/openssl/rand.h" "${_contents}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/rand.h"
+    "#  include <windows.h>"
+    "#ifndef _WINSOCKAPI_\n#define _WINSOCKAPI_\n#endif\n#  include <windows.h>"
+)
 
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME OpenSSL MODULE)

@@ -1,4 +1,4 @@
 Source: qt5-script
-Version: 5.12.8
-Build-Depends: qt5-base, qt5-tools
+Version: 5.15.1
+Build-Depends: qt5-base[core], qt5-tools
 Description:Qt5 Script Module.

@@ -1,3 +1,7 @@
+if(EXISTS "${CURRENT_INSTALLED_DIR}/include/gmp.h" OR "${CURRENT_INSTALLED_DIR}/include/gmpxx.h")
+    message(FATAL_ERROR "Can't build ${PORT} if mpir is installed. Please remove mpir, and try install ${PORT} again if you need it.")
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -5,14 +9,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
         REF e140dfc8668e96d7e56cbd46467945adcc6b3cc4 #v6.2.0
         SHA512 3b646c142447946bb4556db01214ff130da917bc149946b8cf086f3b01e1cc3d664b941a30a42608799c14461b2f29e4b894b72915d723bd736513c8914729b7
         HEAD_REF master
-        PATCHES vs.build.patch
-                runtime.patch
-                prefix.patch
+        PATCHES
+            vs.build.patch
+            runtime.patch
+            prefix.patch
     )
-    vcpkg_find_acquire_program(YASM)
-    get_filename_component(YASM_DIR "${YASM}" DIRECTORY)
-    vcpkg_add_to_path(${YASM_DIR})
-    set(ENV{YASMPATH} ${YASM_DIR}/)
+
+    include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
+    yasm_tool_helper(OUT_VAR YASM)
+    file(TO_NATIVE_PATH "${YASM}" YASM)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(CONFIGURATION_RELEASE ReleaseDLL)
@@ -45,7 +50,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         STRING(REPLACE ">MultiThreaded<" ">MultiThreadedDLL<" _contents "${_contents}")
     endif()
     file(WRITE "${_file}" "${_contents}")
-    
+
     vcpkg_install_msbuild(
         USE_VCPKG_INTEGRATION
         SOURCE_PATH ${SOURCE_PATH}
@@ -56,6 +61,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
         SKIP_CLEAN
+        OPTIONS "/p:YasmPath=${YASM}"
     )
     get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
     file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
@@ -79,7 +85,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
     vcpkg_download_distfile(
         ARCHIVE
-        URLS https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz 
+        URLS https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
         FILENAME gmp-6.2.0.tar.xz
         SHA512 a066f0456f0314a1359f553c49fc2587e484ff8ac390ff88537266a146ea373f97a1c0ba24608bf6756f4eab11c9056f103c8deb99e5b57741b4f7f0ec44b90c)
 
@@ -103,5 +109,3 @@ else()
     # # Handle copyright
     file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
-
-

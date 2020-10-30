@@ -1,7 +1,5 @@
 set(MODPLUG_HASH 5a39f5913d07ba3e61d8d5afdba00b70165da81d)
 
-include(vcpkg_common_functions)
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_from_github(ARCHIVE
         OUT_SOURCE_PATH SOURCE_PATH
@@ -31,11 +29,16 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_MINGW)
+        set(BIN_NAME libmodplug.dll)
+    else()
+        set(BIN_NAME modplug.dll)
+    endif()
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/modplug.dll ${CURRENT_PACKAGES_DIR}/bin/modplug.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/${BIN_NAME} ${CURRENT_PACKAGES_DIR}/bin/${BIN_NAME})
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/modplug.dll ${CURRENT_PACKAGES_DIR}/debug/bin/modplug.dll)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/${BIN_NAME} ${CURRENT_PACKAGES_DIR}/debug/bin/${BIN_NAME})
     vcpkg_copy_pdbs()
 endif()
 

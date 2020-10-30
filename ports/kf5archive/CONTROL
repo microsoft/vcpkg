@@ -1,4 +1,5 @@
 Source: kf5archive
-Version: 5.64.0
+Version: 5.74.0
+Homepage: https://api.kde.org/frameworks/karchive/html/index.html
 Description: File compression
-Build-Depends: ecm, qt5-base, zlib, bzip2
+Build-Depends: ecm, qt5-base[core], zlib, bzip2

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxslt
@@ -23,8 +21,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         prefix=@INSTALL_DIR@
         include=@INCLUDE_DIR@
         lib=@LIB_DIR@
-        bindir=$(PREFIX)\\tools\\
-        sodir=$(PREFIX)\\bin\\
+        bindir=$(PREFIX)\\tools
+        sodir=$(PREFIX)\\bin
     )
     # Debug params
     if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
@@ -105,6 +103,7 @@ else()
     )
     
     vcpkg_install_make()
+    #vcpkg_fixup_pkgconfig()?
     
     if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
         file(COPY ${CURRENT_PACKAGES_DIR}/bin/xslt-config DESTINATION ${CURRENT_PACKAGES_DIR}/tools)

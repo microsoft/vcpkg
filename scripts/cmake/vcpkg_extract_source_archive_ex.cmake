@@ -55,12 +55,13 @@ include(vcpkg_apply_patches)
 include(vcpkg_extract_source_archive)
 
 function(vcpkg_extract_source_archive_ex)
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(
+        PARSE_ARGV 0
         _vesae
         "NO_REMOVE_ONE_LEVEL;SKIP_PATCH_CHECK"
         "OUT_SOURCE_PATH;ARCHIVE;REF;WORKING_DIRECTORY"
         "PATCHES"
-        ${ARGN}
     )
 
     if(NOT _vesae_ARCHIVE)
@@ -101,9 +102,16 @@ function(vcpkg_extract_source_archive_ex)
     string(SHA512 PATCHSET_HASH ${PATCHSET_HASH})
     string(SUBSTRING ${PATCHSET_HASH} 0 10 PATCHSET_HASH)
     set(SOURCE_PATH "${_vesae_WORKING_DIRECTORY}/${SHORTENED_SANITIZED_REF}-${PATCHSET_HASH}")
+    if (NOT _VCPKG_EDITABLE)
+        string(APPEND SOURCE_PATH ".clean")
+        if(EXISTS ${SOURCE_PATH})
+            message(STATUS "Cleaning sources at ${SOURCE_PATH}. Use --editable to skip cleaning for the packages you specify.")
+            file(REMOVE_RECURSE ${SOURCE_PATH})
+        endif()
+    endif()
 
     if(NOT EXISTS ${SOURCE_PATH})
-        set(TEMP_DIR "${_vesae_WORKING_DIRECTORY}/TEMP")
+        set(TEMP_DIR "${_vesae_WORKING_DIRECTORY}/${SHORTENED_SANITIZED_REF}-${PATCHSET_HASH}.tmp")
         file(REMOVE_RECURSE ${TEMP_DIR})
         vcpkg_extract_source_archive("${_vesae_ARCHIVE}" "${TEMP_DIR}")
 

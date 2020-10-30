@@ -1,12 +1,12 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/remove.h>
 #include <vcpkg/update.h>
 #include <vcpkg/vcpkglib.h>
@@ -59,7 +59,7 @@ namespace vcpkg::Remove
                 if (ec)
                 {
                     System::print2(
-                        System::Color::error, "failed: status(", target.u8string(), "): ", ec.message(), "\n");
+                        System::Color::error, "failed: status(", fs::u8string(target), "): ", ec.message(), "\n");
                     continue;
                 }
 
@@ -79,21 +79,22 @@ namespace vcpkg::Remove
                         if (ec)
                         {
                             System::printf(
-                                System::Color::error, "failed: remove(%s): %s\n", target.u8string(), ec.message());
+                                System::Color::error, "failed: remove(%s): %s\n", fs::u8string(target), ec.message());
                         }
 #else
                         System::printf(
-                            System::Color::error, "failed: remove(%s): %s\n", target.u8string(), ec.message());
+                            System::Color::error, "failed: remove(%s): %s\n", fs::u8string(target), ec.message());
 #endif
                     }
                 }
                 else if (!fs::exists(status))
                 {
-                    System::printf(System::Color::warning, "Warning: %s: file not found\n", target.u8string());
+                    System::printf(System::Color::warning, "Warning: %s: file not found\n", fs::u8string(target));
                 }
                 else
                 {
-                    System::printf(System::Color::warning, "Warning: %s: cannot handle file type\n", target.u8string());
+                    System::printf(
+                        System::Color::warning, "Warning: %s: cannot handle file type\n", fs::u8string(target));
                 }
             }
 
@@ -183,11 +184,11 @@ namespace vcpkg::Remove
         }
     }
 
-    static constexpr StringLiteral OPTION_PURGE = "--purge";
-    static constexpr StringLiteral OPTION_NO_PURGE = "--no-purge";
-    static constexpr StringLiteral OPTION_RECURSE = "--recurse";
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_OUTDATED = "--outdated";
+    static constexpr StringLiteral OPTION_PURGE = "purge";
+    static constexpr StringLiteral OPTION_NO_PURGE = "no-purge";
+    static constexpr StringLiteral OPTION_RECURSE = "recurse";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_OUTDATED = "outdated";
 
     static constexpr std::array<CommandSwitch, 5> SWITCHES = {{
         {OPTION_PURGE, "Remove the cached copy of the package (default)"},
@@ -206,7 +207,7 @@ namespace vcpkg::Remove
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("remove zlib zlib:x64-windows curl boost"),
+        create_example_string("remove zlib zlib:x64-windows curl boost"),
         0,
         SIZE_MAX,
         {SWITCHES, {}},
@@ -215,6 +216,12 @@ namespace vcpkg::Remove
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
+        if (paths.manifest_mode_enabled())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "vcpkg remove does not support manifest mode. In order to remove dependencies, "
+                                      "you will need to edit your manifest (vcpkg.json).");
+        }
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
         StatusParagraphs status_db = database_load_check(paths);
@@ -228,7 +235,7 @@ namespace vcpkg::Remove
             }
 
             // Load ports from ports dirs
-            PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports.get());
+            PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
 
             specs = Util::fmap(Update::find_outdated_packages(provider, status_db),
                                [](auto&& outdated) { return outdated.spec; });
@@ -324,5 +331,12 @@ namespace vcpkg::Remove
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void RemoveCommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                         const VcpkgPaths& paths,
+                                         Triplet default_triplet) const
+    {
+        Remove::perform_and_exit(args, paths, default_triplet);
     }
 }

@@ -1,3 +1,8 @@
 Source: libpmemobj-cpp
-Version: 1.8
+Version: 1.11
+Homepage: https://github.com/pmem/libpmemobj-cpp
 Description: C++ bindings for libpmemobj (https://github.com/pmem/pmdk).
+
+Feature: benchmark
+Build-Depends: pmdk
+Description: build benchmarks

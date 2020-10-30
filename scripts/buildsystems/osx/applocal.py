@@ -84,7 +84,7 @@ def get_dependencies(filename):
     deps = []
     if proc_out.retcode == 0:
         # some string splitting
-        deps = [s.strip().split(' ')[0] for s in proc_out.stdout.splitlines()[1:] if s]
+        deps = [s.strip().split(b' ')[0].decode('utf-8') for s in proc_out.stdout.splitlines()[1:] if s]
         # prevent infinite recursion when a binary depends on itself (seen with QtWidgets)...
         deps = [s for s in deps if os.path.basename(filename) not in s]
     return deps
