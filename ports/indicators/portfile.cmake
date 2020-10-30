@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO p-ranav/indicators
-    REF 755900d
-    SHA512 2d553ab80cf862645a7256de2c9abca724ce786e2f30f06ceafd8c4e7dc93ede9fab646e7a36f7d106dfc60ba5e5feaee076c9a5f49193dedc5299f7d60b7d7b
+    REF af7c004832cb23de824fe4acf78bfa0dd9fe0758
+    SHA512 8ff80ddcde15163f311173679051febd69231a8eb3e56e0f83a513cc5384bca673ebc80692a42386b15159b95c9124aef79bd9da0ce273c70bce7c62c175aa51
     HEAD_REF master
 )
 

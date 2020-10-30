@@ -1,6 +1,6 @@
 {
   "name": "indicators",
-  "version-string": "1.9",
+  "version-string": "af7c004832cb23de824fe4acf78bfa0dd9fe0758",
   "description": "Activity indicators for modern C++",
   "homepage": "https://github.com/p-ranav/indicators"
 }
