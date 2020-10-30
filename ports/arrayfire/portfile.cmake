@@ -17,28 +17,34 @@ vcpkg_from_github(
   )
 
 ################################### Build ###################################
-# bin/dll directory
-if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-  set(AF_BIN_DIR ${CURRENT_PACKAGES_DIR}/bin)
-endif()
-if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-  set(AF_BIN_DIR ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
-file(MAKE_DIRECTORY ${AF_BIN_DIR})
 
 # Default flags
 set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DBUILD_TESTING=OFF
   -DAF_BUILD_DOCS=OFF
   -DAF_BUILD_EXAMPLES=OFF
-  -DAF_INSTALL_BIN_DIR=${AF_BIN_DIR}
   -DAF_CPU_THREAD_PATH=${CPU_THREADS_PATH} # for building the arrayfire cpu threads lib
   )
+
+# bin/dll directory
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    set(AF_BIN_DIR ${CURRENT_PACKAGES_DIR}/bin)
+  endif()
+  if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    set(AF_BIN_DIR ${CURRENT_PACKAGES_DIR}/debug/bin)
+  endif()
+  
+  file(MAKE_DIRECTORY ${AF_BIN_DIR})
+  set(AF_DEFAULT_VCPKG_CMAKE_FLAGS ${AF_DEFAULT_VCPKG_CMAKE_FLAGS} -DAF_INSTALL_BIN_DIR=${AF_BIN_DIR})
+endif()
+
 
 # Determine which backend to build via specified feature
 vcpkg_check_features(
   OUT_FEATURE_OPTIONS AF_BACKEND_FEATURE_OPTIONS
   FEATURES
+    unified AF_BUILD_UNIFIED
     cpu AF_BUILD_CPU
     cuda AF_BUILD_CUDA
     opencl AF_BUILD_OPENCL
@@ -52,7 +58,13 @@ vcpkg_configure_cmake(
 )  
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+if (VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+else()
+  vcpkg_fixup_cmake_targets(CONFIG_PATH share/ArrayFire TARGET_PATH share/${PORT})
+endif()
+
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
