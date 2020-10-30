@@ -510,3 +510,57 @@ TEST_CASE ("version install diamond relaxed", "[versionplan]")
     check_name_and_version(install_plan.install_actions[1], "b", {"3", 0});
     check_name_and_version(install_plan.install_actions[2], "a", {"3", 0});
 }
+
+TEST_CASE ("version install scheme change in port version", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2", 0}).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Exact, "1"}},
+    };
+    vp.emplace("a", {"2", 1}).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "1", 1}},
+    };
+    vp.emplace("b", {"1", 0}, Scheme::String);
+    vp.emplace("b", {"1", 1}, Scheme::Relaxed);
+
+    MockCMakeVarProvider var_provider;
+
+    SECTION ("lower baseline")
+    {
+        MockBaselineProvider bp;
+        bp.v["a"] = {"2", 0};
+
+        auto install_plan = unwrap(
+            Dependencies::create_versioned_install_plan(vp,
+                                                        bp,
+                                                        var_provider,
+                                                        {
+                                                            Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 1}},
+                                                        },
+                                                        {},
+                                                        Test::X86_WINDOWS));
+
+        REQUIRE(install_plan.size() == 2);
+        check_name_and_version(install_plan.install_actions[0], "b", {"1", 1});
+        check_name_and_version(install_plan.install_actions[1], "a", {"2", 1});
+    }
+    SECTION ("higher baseline")
+    {
+        MockBaselineProvider bp;
+        bp.v["a"] = {"2", 1};
+
+        auto install_plan = unwrap(
+            Dependencies::create_versioned_install_plan(vp,
+                                                        bp,
+                                                        var_provider,
+                                                        {
+                                                            Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 0}},
+                                                        },
+                                                        {},
+                                                        Test::X86_WINDOWS));
+
+        REQUIRE(install_plan.size() == 2);
+        check_name_and_version(install_plan.install_actions[0], "b", {"1", 1});
+        check_name_and_version(install_plan.install_actions[1], "a", {"2", 1});
+    }
+}
