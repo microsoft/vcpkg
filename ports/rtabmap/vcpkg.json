@@ -6,7 +6,12 @@
   "supports": "!linux & !osx & !static",
   "dependencies": [
     "opencv",
-    "pcl",
+    {
+      "name": "pcl",
+      "features": [
+        "vtk"
+      ]
+    },
     {
       "name": "vtk",
       "features": [
