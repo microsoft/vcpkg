@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcompletion
-    REF v5.73.0
-    SHA512 db5f5c50ede00b1357154792fda164d56004f2f0413db7be69be19312e179c41eaf73ec062cdfdfefaeb3b10a316203329dab4aaba4af14f632ee2c8fbe64b12
+    REF v5.75.0
+    SHA512 f4ff54b518f51b399392ee8f4be27bcc15a45be993b6a76305a16c84d6a85629017b8c4c27f19ff2c37699eeb3a455b9b6e5c7551716a55f0f7ecce2f2a2240b
     HEAD_REF master
     # reported issue, just a manual workaround until the issue is fixed upstream
     PATCHES 
@@ -30,4 +30,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)

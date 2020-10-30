@@ -1,5 +1,5 @@
 Source: kf5crash
-Version: 5.73.0
+Version: 5.75.0
 Homepage: https://api.kde.org/frameworks/kcrash/html/index.html
 Description: KCrash provides support for intercepting and handling application crashes.
 Supports: linux
