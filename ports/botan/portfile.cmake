@@ -76,6 +76,7 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             ${BOTAN_FLAG_DEBUGMODE}
                             "--distribution-info=vcpkg ${TARGET_TRIPLET}"
                             --prefix=${BOTAN_FLAG_PREFIX}
+                            --with-pkg-config
                             --link-method=copy)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
