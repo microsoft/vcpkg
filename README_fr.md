@@ -6,7 +6,7 @@
 Vcpkg vous aide à gérer vos bibliothèques C et C++ sur Windows, Linux et MacOS.
 L'outil et l'écosystème sont en évolution constante, et nous apprécions vos contributions!
 
-Si vous n'avez jamais utilisé vcpkg, ou si vous essayez d'utiliser vcpkg, regardez notre [introduction](#introduction) pour comprendre comment l'utiliser.
+Si vous n'avez jamais utilisé vcpkg, ou si vous essayez d'utiliser vcpkg, lisez notre [introduction](#introduction) pour comprendre comment l'utiliser.
 
 Pour une description des commandes disponibles, quand vous avez installé vcpkg, vous pouvez lancer `vcpkg help` ou `vcpkg help [commande]` pour de l'aide spécifique à une commande.
 
@@ -44,7 +44,7 @@ Pour une description des commandes disponibles, quand vous avez installé vcpkg,
 Premièrement, suivez le guide d'introduction [Windows](#Introduction:-Windows), ou [macOS et Linux](#Unix), en fonction de vos besoins.
 
 Pour plus d'information, regardez [utiliser des paquets][getting-started:utiliser-un-paquet].  
-Si la bibliothèque dont vous avez besoin n'est pas présente dans la liste, vous pouvez [ouvrir une issue sur le repo github](contribuer:faire-une-issue) où l'équipe de vcpkg et la communauté peut le voir, et possiblement ajouter le port de vcpkg.
+Si la bibliothèque dont vous avez besoin n'est pas présente dans la liste, vous pouvez [ouvrir une issue sur le repo github](contribuer:faire-une-issue) où l'équipe de vcpkg et la communauté peuvent le voir, et possiblement ajouter le port de vcpkg.
  
 Après avoir installé et lancé vcpkg vous pourriez vouloir ajouter [l'auto-complétion](auto-completion) à votre shell.
 
@@ -78,13 +78,13 @@ Vous pouvez aussi chercher la bibliothèque dont vous avez besoin avec l'argumen
 ```
 
 
-Pour utiliser vcpkg avec Visual Studio, lancez cette commande (pourrait nécessiter une élévation en administrateur)
+Pour utiliser vcpkg avec Visual Studio, lancez cette commande (pourrait nécessiter d'être lancée avec les droits administrateur)
 
 ```cmd
 > .\vcpkg\vcpkg integrate install
 ```
 
-Après ça, vous pouvez créer un nouveau projet n'utilisant pas CMake (ou en ouvrir un préexistant). 
+Ensuite, vous pouvez créer un nouveau projet n'utilisant pas CMake (ou en ouvrir un préexistant). 
 Toutes les bibliothèques installées sont directement prêtes à être `#include` et utilisées sans davantage de configuration.
 
 Si vous utilisez CMake avec Visual Studio continuez [ici](#vcpkg-avec-cmake-et-visual-studio).
@@ -144,9 +144,9 @@ Pour utiliser vcpkg en dehors d'un IDE, vous pouvez utiliser le fichier de toolc
 
 Avec CMake, vous devrez utiliser `find_package` notamment, et autres, pour compiler.
 
-Regardez la [section CMake](#utiliser-vcpkg-avec-cmake) pour plus d'information, notamment utiliser CMake avec un IDE.
+Lisez la [section CMake](#utiliser-vcpkg-avec-cmake) pour plus d'information, notamment utiliser CMake avec un IDE.
 
-Pour les autres éditeurs, y compris Visual Studio Code regardez le [guide d'intégration][getting-started:integration].
+Pour les autres éditeurs, y compris Visual Studio Code lisez le [guide d'intégration][getting-started:integration].
 
 ## Installation des prérequis linux
 
@@ -215,7 +215,7 @@ Si vous utilisez vcpkg avec CMake, la suite pourrait vous aider !
 ```
 ### Vcpkg avec des projets CMake Visual Studio
 
-Ouvrez les paramètres CMake, et ajouter le chemin ci-dessous à `CMake toolchain file` :
+Ouvrez les paramètres CMake, et ajoutez le chemin ci-dessous à `CMake toolchain file` :
 
 ```
 [vcpkg root]/scripts/buildsystems/vcpkg.cmake
@@ -274,13 +274,13 @@ selon le shell que vous utilisez, puis redémarrez la console.
 
 # Exemples
 
-Regardez la [documentation](doc/index.md) pour des instructions plus spécifiques ainsi que [l'installation et l'utilisation des paquets](docs/examples/installing-and-using-packages.md),
+Lisez la [documentation](doc/index.md) pour des instructions plus spécifiques ainsi que [l'installation et l'utilisation des paquets](docs/examples/installing-and-using-packages.md),
 [ajouter un nouveau paquet depuis un fichier zip](docs/examples/packaging-zipfiles.md),
 et [ajouter un nouveau paquet depuis un dépôt GitHub](docs/examples/packaging-github-repos.md).
 
 La documentation est aussi disponible en ligne sur ReadTheDocs : <https://vcpkg.readthedocs.io/> !
 
-Voir une [démo vidéo]((https://www.youtube.com/watch?v=y41WFKbQFTw) de 4 minutes en anglais.
+Regardez une [démo vidéo]((https://www.youtube.com/watch?v=y41WFKbQFTw) de 4 minutes en anglais.
 
 # Contribuer
 
