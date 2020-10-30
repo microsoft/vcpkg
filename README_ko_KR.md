@@ -4,9 +4,9 @@ Vcpkg는 Windows, Linux 및 MacOS에서 C 및 C++ 라이브러리를 관리하�
 이 툴과 생태계는 지속적으로 진화하고 있으며 항상 기여해 주셔서 감사합니다!
 
 이전에 vcpkg를 사용한 적이 없거나 vcpkg를 사용하는 방법을 알고 싶을 경우,
-vcpkg 사용을 시작하는 방법은 [시작하기](#getting-started) 섹션을 확인하세요.
+vcpkg 사용을 시작하는 방법은 [시작하기](#시작하기) 섹션을 확인하세요.
 
-사용 가능한 명령어에 대한 간단한 설명을 보려면 vcpkg를 설치 한 후 `vcpkg help` 또는`vcpkg help [command]` 명령어로 명령어 별 도움말을 볼 수 있습니다.
+사용 가능한 명령어에 대한 간단한 설명을 보려면 vcpkg를 설치 한 후 `vcpkg help` 또는 `vcpkg help [command]` 명령어로 명령어 별 도움말을 볼 수 있습니다.
 
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), #vcpkg 채널
@@ -25,7 +25,7 @@ vcpkg 사용을 시작하는 방법은 [시작하기](#getting-started) 섹션�
   - [리눅스 개발자 도구 설치하기](#리눅스-개발자-도구-설치하기)
   - [macOS 개발자 도구 설치하기](#macos-개발자-도구-설치하기)
     - [10.15버전 이전 macOS에 GCC 설치하기](#1015버전-이전-macos에-gcc-설치하기)
-  - [CMake와 함께 vcpkg 사용](#CMake와-함께-vcpkg-사용)
+  - [CMake와 함께 vcpkg 사용](#cmake와-함께-vcpkg-사용)
     - [Visual Studio Code와 CMake Tools](#visual-studio-code와-cmake-tools)
     - [Visual Studio CMake 프로젝트와 Vcpkg](#visual-studio-cmake-프로젝트와-vcpkg)
     - [Vcpkg와 CLion](#vcpkg와-clion)
@@ -93,10 +93,10 @@ Visual Studio에서 vcpkg를 사용하려면
 
 
 그런 다음, 이제 CMake가 아닌 새 프로젝트를 만들 수 있습니다. (또는 기존 프로젝트를 열 수 있습니다)
-설치된 모든 라이브러리는 즉시`# include` 될 준비가 되어 추가 구성없이 프로젝트에서 사용할 수 있습니다.
+설치된 모든 라이브러리는 즉시 `# include` 될 준비가 되어 추가 구성없이 프로젝트에서 사용할 수 있습니다.
 
 Visual Studio에서 CMake를 사용하는 경우,
-[여기를 보세요](#vcpkg-with-visual-studio-cmake-projects).
+[여기를 보세요](#visual-studio-code와-cmake-tools).
 
 IDE 외부에서 CMake와 함께 vcpkg를 사용하려면,
 툴체인 파일을 사용할 수 있습니다:
@@ -107,12 +107,12 @@ AIN_FILE=[path to vcpkg]/scripts/buildsystems/vcpkg.cmake
 > cmake --build [build directory]
 ```
 
-CMake와 라이브러리를 사용하려면`find_package` 등이 필요합니다.
-IDE에서 CMake 사용에 대한 자세한 내용은 [CMake 섹션] (# using-vcpkg-with-cmake)을 확인하세요.
+CMake와 라이브러리를 사용하려면 `find_package` 등이 필요합니다.
+IDE에서 CMake 사용에 대한 자세한 내용은 [CMake 섹션](#cmake와-함께-vcpkg-사용)을 확인하세요.
 
 
 Visual Studio Code를 포함한 다른 툴의 경우
-[통합 가이드] [getting-started:integration]을 확인하세요.
+[통합 가이드][getting-started:integration]을 확인하세요.
 
 ## 빠르게 시작하기: 유닉스
 
@@ -122,7 +122,7 @@ Linux에서의 필요조건:
 
 macOS에서의 필요조건:
 - [Apple Developer Tools][getting-started:macos-dev-tools]
-- macOS 10.14이나 아래버전에서는 다음 도구들도 필요합니다:
+- macOS 10.14이나 아래 버전에서는 다음 도구들도 필요합니다:
   - [Homebrew][getting-started:macos-brew]
   - [g++][getting-started:macos-gcc] >= 6 from Homebrew
 
@@ -152,11 +152,11 @@ $ cmake -B [build directory] -S . -DCMAKE_TOOLCHAIN_FILE=[path to vcpkg]/scripts
 $ cmake --build [build directory]
 ```
 
-CMake와 라이브러리를 사용하려면`find_package` 등이 필요합니다.
+CMake와 라이브러리를 사용하려면 `find_package` 등이 필요합니다.
 CMake 및 CMake Tools for VSCode에서 vcpkg를 가장 잘 사용하는 방법에 대한 자세한 내용은 
-[CMake 섹션] (# using-vcpkg-with-cmake)을 확인하세요.
+[CMake 섹션](#cmake와-함께-vcpkg-사용)을 확인하세요.
 
-다른 툴에 대해서는 [통합 가이드] [getting-started:integration]을 확인하세요.
+다른 툴에 대해서는 [통합 가이드][getting-started:integration]을 확인하세요.
 ## 리눅스 개발자 도구 설치하기
 
 리눅스의 다양한 배포판에는 다양한 패키지가 있습니다.
@@ -177,7 +177,7 @@ $ sudo yum install devtoolset-7
 $ scl enable devtoolset-7 bash
 ```
 
-다른 배포판의 경우 g ++ 6 이상의 버전을 설치해야합니다.
+다른 배포판의 경우 g++ 6 이상의 버전을 설치해야합니다.
 특정 배포판에 대한 지침을 추가하려면
 [PR을 열어주세요][contributing:submit-pr]!
 
@@ -191,7 +191,7 @@ $ xcode-select --install
 
 그런 다음 나타나는 창에 나타나는 메시지를 따르세요.
 
-macOS 10.14 및 이전 버전에서는 homebrew에서 g ++도 설치해야합니다.
+macOS 10.14 및 이전 버전에서는 homebrew에서 g++도 설치해야합니다.
 다음 섹션의 지침을 따르세요.
 
 ### 10.15버전 이전 macOS에 GCC 설치하기
@@ -218,7 +218,7 @@ CMake와 함께 vcpkg를 사용하는 경우, 다음과 같이 따라해 보세�
 
 ### Visual Studio Code와 CMake Tools
 
-작업 공간 `settings.json`파일에 다음을 추가하면
+작업 공간 `settings.json` 파일에 다음을 추가하면
 CMake 도구는 라이브러리에 자동으로 vcpkg를 사용합니다.
 
 ```json
@@ -254,14 +254,14 @@ Toolchains settings을 엽니다.
 ### 서브모듈로서의 Vcpkg
 
 프로젝트의 하위 모듈로 vcpkg를 사용하는 경우
-cmake 호출에`CMAKE_TOOLCHAIN_FILE`을 전달하는 대신 첫 번째`project ()`호출 전에 CMakeLists.txt에 다음을 추가 할 수 있습니다.
+cmake 호출에`CMAKE_TOOLCHAIN_FILE`을 전달하는 대신 첫 번째 `project ()` 호출 전에 CMakeLists.txt에 다음을 추가 할 수 있습니다.
 
 ```cmake
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake
   CACHE STRING "Vcpkg toolchain file")
 ```
 
-이렇게하면`CMAKE_TOOLCHAIN_FILE`을 직접 전달하여 구성-빌드 단계가 약간 더 쉬워지지만 
+이렇게 하면 `CMAKE_TOOLCHAIN_FILE`을 직접 전달하여 구성-빌드 단계가 약간 더 쉬워지지만 
 사람들이 vcpkg를 사용하지 못하게 됩니다.
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
@@ -294,14 +294,14 @@ $ ./vcpkg integrate bash
 
 # 예제
 
-구체적인 연습은 [문서] (docs / index.md)를 참고하세요,
+구체적인 연습은 [문서](docs/index.md)를 참고하세요,
 including [패키지 설치 및 사용](docs/examples/installing-and-using-packages.md),
 [zip 파일에서 새 패키지 추가](docs/examples/packaging-zipfiles.md),
 및 [GitHub 저장소에서 새 패키지 추가](docs/examples/packaging-github-repos.md).
 
 이제 ReadTheDocs에서 온라인으로 문서를 사용할 수도 있습니다: <https://vcpkg.readthedocs.io/>!
 
-See a 4 minute [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw).
+[4분짜리 데모 영상을 보세요](https://www.youtube.com/watch?v=y41WFKbQFTw).
 
 # 기여
 
