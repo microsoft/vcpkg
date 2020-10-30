@@ -625,6 +625,11 @@ namespace vcpkg::Install
                     auto path = paths.installed / suffix;
                     auto maybe_contents = fs.read_contents(path);
                     auto find_package_name = fs::u8string(path.parent_path().filename());
+                    if (Strings::case_insensitive_ascii_equals("cmake", find_package_name) &&
+                        path.parent_path().has_parent_path())
+                    {
+                        find_package_name = fs::u8string(path.parent_path().parent_path().filename());
+                    }
                     if (auto p_contents = maybe_contents.get())
                     {
                         std::sregex_iterator next(p_contents->begin(), p_contents->end(), cmake_library_regex);
