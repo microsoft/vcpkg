@@ -1,9 +1,5 @@
 vcpkg_fail_port_install(MESSAGE "${PORT} is only for Windows Universal Platform" ON_TARGET "Linux" "OSX")
 
-if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
-  message(FATAL_ERROR "Can't build openssl if libressl/boringssl is installed. Please remove libressl/boringssl, and try install openssl again if you need it.")
-endif()
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_find_acquire_program(JOM)
@@ -14,7 +10,7 @@ vcpkg_extract_source_archive_ex(
   OUT_SOURCE_PATH SOURCE_PATH
   ARCHIVE ${ARCHIVE}
   PATCHES
-    EnableUWPSupport.patch
+    uwp/EnableUWPSupport.patch
 )
 
 vcpkg_find_acquire_program(NASM)

@@ -14,11 +14,11 @@ get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 if(VCPKG_TARGET_IS_UWP)
-    include(${CMAKE_CURRENT_LIST_DIR}/uwp/portfile.cmake)
+    include("${CMAKE_CURRENT_LIST_DIR}/uwp/portfile.cmake")
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    include(${CMAKE_CURRENT_LIST_DIR}/windows/portfile.cmake)
+    include("${CMAKE_CURRENT_LIST_DIR}/windows/portfile.cmake")
 else()
-    include(${CMAKE_CURRENT_LIST_DIR}/unix/portfile.cmake)
+    include("${CMAKE_CURRENT_LIST_DIR}/unix/portfile.cmake")
 endif()
 
 

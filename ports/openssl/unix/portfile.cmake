@@ -2,13 +2,9 @@ if (NOT VCPKG_TARGET_IS_MINGW)
     vcpkg_fail_port_install(MESSAGE "${PORT} is only for openssl on Unix-like systems" ON_TARGET "UWP" "Windows")
 endif()
 
-if(EXISTS "${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h")
-  message(FATAL_ERROR "Can't build openssl if libressl/boringssl is installed. Please remove libressl/boringssl, and try install openssl again if you need it.")
-endif()
-
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH MASTER_COPY_SOURCE_PATH
-    ARCHIVE ${OPENSSL_SOURCE_ARCHIVE}
+    ARCHIVE ${ARCHIVE}
     REF ${OPENSSL_VERSION}
 )
 
