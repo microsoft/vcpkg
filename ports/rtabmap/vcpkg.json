@@ -7,7 +7,12 @@
   "dependencies": [
     "opencv",
     "pcl",
-    "vtk[qt]",
+    {
+      "name": "vtk",
+      "features": [
+        "qt"
+      ]
+    }
     "zlib"
   ]
 }
