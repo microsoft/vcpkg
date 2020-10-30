@@ -1,5 +1,7 @@
 vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86")
 
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
     message(FATAL_ERROR "FATAL ERROR: ${PORT} and libmariadb are incompatible.")
 endif()
@@ -18,6 +20,7 @@ vcpkg_from_github(
         ignore-boost-version.patch
         system-libs.patch
         rename-version.patch
+        export-cmake-targets.patch
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/include/boost_1_70_0)
@@ -52,6 +55,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
+# Here the cmake file directory is temporarily renamed, because the "share" directory will be cleaned up below.
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-libmysql TARGET_PATH cmake/unofficial-libmysql)
+
 # delete debug headers
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -65,12 +71,22 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/include2 ${CURRENT_PACKAGES_DIR}/include/mys
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/share
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/bin
-    ${CURRENT_PACKAGES_DIR}/debug/bin
     ${CURRENT_PACKAGES_DIR}/docs
     ${CURRENT_PACKAGES_DIR}/debug/docs
     ${CURRENT_PACKAGES_DIR}/lib/debug
     ${CURRENT_PACKAGES_DIR}/lib/plugin/debug)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    foreach(BIN_DIR "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(GLOB_RECURSE LIBMYSQL_BINARIES ${BIN_DIR}/*)
+        list(REMOVE_ITEM LIBMYSQL_BINARIES ${BIN_DIR}/libmysql${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
+        if (VCPKG_TARGET_IS_WINDOWS)
+            list(REMOVE_ITEM LIBMYSQL_BINARIES ${BIN_DIR}/libmysql.pdb)
+        endif()
+        file(REMOVE ${LIBMYSQL_BINARIES})
+    endforeach()
+endif()
+
 
 ## remove misc files
 file(REMOVE
@@ -79,38 +95,14 @@ file(REMOVE
     ${CURRENT_PACKAGES_DIR}/debug/LICENSE
     ${CURRENT_PACKAGES_DIR}/debug/README)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/lib/libmysql.lib
-        ${CURRENT_PACKAGES_DIR}/lib/libmysql.dll
-        ${CURRENT_PACKAGES_DIR}/lib/libmysql.pdb
-        ${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.dll
-        ${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.pdb)
-else()
-    file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/lib/mysqlclient.lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib/mysqlclient.lib)
-
-    # correct the dll directory
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-        file (RENAME ${CURRENT_PACKAGES_DIR}/lib/libmysql.dll ${CURRENT_PACKAGES_DIR}/bin/libmysql.dll)
-        file (RENAME ${CURRENT_PACKAGES_DIR}/lib/libmysql.pdb ${CURRENT_PACKAGES_DIR}/bin/libmysql.pdb)
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file (RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.dll ${CURRENT_PACKAGES_DIR}/debug/bin/libmysql.dll)
-        file (RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libmysql.pdb ${CURRENT_PACKAGES_DIR}/debug/bin/libmysql.pdb)
-    endif()
-endif()
+# Restore the cmake files path
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
+file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/unofficial-libmysql ${CURRENT_PACKAGES_DIR}/share/unofficial-libmysql)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/debug/cmake)
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h _contents)
 string(REPLACE "#include <mysql/udf_registration_types.h>" "#include \"mysql/udf_registration_types.h\"" _contents "${_contents}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h "${_contents}")
 
-file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 # copy license
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

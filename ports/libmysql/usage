@@ -1,5 +1,0 @@
-The package libmysql provides CMake targets:
-
-    find_package(libmysql REQUIRED)
-    target_link_libraries(main PRIVATE ${MYSQL_LIBRARIES})
-    target_include_directories(main PRIVATE ${MYSQL_INCLUDE_DIRS})
