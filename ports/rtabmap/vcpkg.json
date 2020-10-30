@@ -5,9 +5,9 @@
   "homepage": "https://introlab.github.io/rtabmap/",
   "supports": "!linux & !osx & !static",
   "dependencies": [
-    "vtk",
     "opencv",
     "pcl",
+    "vtk",
     "zlib"
   ]
 }
