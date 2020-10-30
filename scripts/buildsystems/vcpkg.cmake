@@ -106,11 +106,11 @@ endif()
 if(VCPKG_TARGET_TRIPLET)
     # This is required since a user might do: 'set(VCPKG_TARGET_TRIPLET somevalue)' [no CACHE] before the first project() call
     # Latter within the toolchain file we do: 'set(VCPKG_TARGET_TRIPLET somevalue CACHE STRING "")' which
-    # will otherwise override the user setting of VCPKG_TARGET_TRIPLET in the current scope of the toolchain since the CACHE value 
-    # did not exist previously. Since the value is newly created CMake will use the CACHE value within this scope since it is the more 
+    # will otherwise override the user setting of VCPKG_TARGET_TRIPLET in the current scope of the toolchain since the CACHE value
+    # did not exist previously. Since the value is newly created CMake will use the CACHE value within this scope since it is the more
     # recently created value in directory scope. This 'strange' behaviour only happens on the very first configure call since subsequent
     # configure call will see the user value as the more recent value. The same logic must be applied to all cache values within this file!
-    # The FORCE keyword is required to ALWAYS lift the user provided/previously set value into a CACHE value. 
+    # The FORCE keyword is required to ALWAYS lift the user provided/previously set value into a CACHE value.
     set(VCPKG_TARGET_TRIPLET ${VCPKG_TARGET_TRIPLET} CACHE STRING "Vcpkg target triplet (ex. x86-windows)" FORCE)
 elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Ww][Ii][Nn]32$")
     set(_VCPKG_TARGET_TRIPLET_ARCH x86)
@@ -399,12 +399,17 @@ function(_vcpkg_set_powershell_path)
     # Attempt to use pwsh if it is present; otherwise use powershell
     if (NOT DEFINED _VCPKG_POWERSHELL_PATH)
         find_program(_VCPKG_PWSH_PATH pwsh)
-        if (_VCPKG_PWSH_PATH-NOTFOUND)
+        if (_VCPKG_PWSH_PATH)
+            set(_VCPKG_POWERSHELL_PATH "${_VCPKG_PWSH_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+        else()
             message(DEBUG "vcpkg: Could not find PowerShell Core; falling back to PowerShell")
             find_program(_VCPKG_BUILTIN_POWERSHELL_PATH powershell REQUIRED)
-            set(_VCPKG_POWERSHELL_PATH "${_VCPKG_BUILTIN_POWERSHELL_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
-        else()
-            set(_VCPKG_POWERSHELL_PATH "${_VCPKG_PWSH_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+            if (_VCPKG_BUILTIN_POWERSHELL_PATH)
+                set(_VCPKG_POWERSHELL_PATH "${_VCPKG_BUILTIN_POWERSHELL_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+            else()
+                message(WARNING "vcpkg: Could not find PowerShell; using static string 'powershell.exe'")
+                set(_VCPKG_POWERSHELL_PATH "powershell.exe" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+            endif()
         endif()
     endif() # _VCPKG_POWERSHELL_PATH
 endfunction()
@@ -476,7 +481,7 @@ function(x_vcpkg_install_local_dependencies)
 
         foreach(TARGET ${__VCPKG_APPINSTALL_TARGETS})
             install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
-                execute_process(COMMAND 
+                execute_process(COMMAND
                     powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
                     -targetBinary \"\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
                     -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
