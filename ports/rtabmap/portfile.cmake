@@ -1,13 +1,10 @@
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/introlab/rtabmap/archive/0.20.3.tar.gz"
-    FILENAME "rtabmap"
-    SHA512 2f8837e00f89210b270dbd863e1088d9786774a8fcf3db593efe35384251c2bb92bd97b261f823e4aee90312e30c886b42241ed22042a540091a218a2d1819f7
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
+    REPO introlab/rtabmap
+    REF 0a9d237ac2968463d36c4c9b4436871a6c3ea0ca # 0.20.3
+    SHA512 47438eb07e4687855e89664479644b93f826da722c3556c30ed4b1a51cecb41494582d3ae3337ff4e0925f6db7ebf74fe29871bf930bb2eb51f5198090ac8554
+    HEAD_REF master
+    PATCHES 
         001_opencv.patch
 )
 
