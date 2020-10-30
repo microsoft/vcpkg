@@ -51,6 +51,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 	tool BUILD_PROJSYNC
 	)
 
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL  "static")
+	string(APPEND VCPKG_LINKER_FLAGS "ws2_32.lib wldap32.lib crypt32.lib")
+endif()
+
 vcpkg_configure_cmake( 
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -63,19 +67,25 @@ vcpkg_configure_cmake(
     -DEXE_SQLITE3=${SQLITE3_BIN_PATH}/sqlite3${BIN_SUFFIX}
 )
 
-vcpkg_install_cmake()
+if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+	#	Fix for arm/arm64 native builds on SBC boards with little RAM...
+	vcpkg_install_cmake(DISABLE_PARALLEL)
+else()
+	vcpkg_install_cmake()
+endif()
 
-vcpkg_copy_tools(SEARCH_DIR ${CURRENT_PACKAGES_DIR}/bin/ TOOL_NAMES cct cs2cs geod gie proj projinfo projsync AUTO_CLEAN)
+if ("tool" IN_LIST FEATURES)
+	vcpkg_copy_tools(SEARCH_DIR ${CURRENT_PACKAGES_DIR}/bin/ TOOL_NAMES cct cs2cs geod gie proj projinfo projsync AUTO_CLEAN)
+	file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+endif()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/proj4)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/cct_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/cs2cs_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/geod_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/gie_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/projinfo_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/projsync_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/proj_d${VCPKG_HOST_EXECUTABLE_SUFFIX})
+
+if ("tool" IN_LIST FEATURES)
+	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
