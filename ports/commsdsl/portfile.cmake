@@ -18,6 +18,7 @@ vcpkg_configure_cmake(
         -DCOMMSDSL_TEST_BUILD_CC_PLUGIN=OFF
         -DCOMMSDSL_NO_TESTS=ON
         -DBUILD_TESTING=OFF
+        -DCOMMSDSL_NO_WARN_AS_ERR=ON
 )
 vcpkg_install_cmake()
 
