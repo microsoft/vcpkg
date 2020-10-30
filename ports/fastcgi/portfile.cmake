@@ -45,15 +45,6 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
       message("${PORT} currently requires the following library from the system package manager:\n    gettext\n    automake\n    libtool\n    libtool-bin\n\nIt can be installed with apt-get install gettext automake libtool libtool-bin")
   endif()
 
-  find_program(AUTOMAKE automake)
-  if(VCPKG_TARGET_IS_LINUX)
-      find_program(LIBTOOL libtool)
-  endif()
-  
-  find_program(MAKE make)
-  if (NOT MAKE)
-      message(FATAL_ERROR "MAKE not found")
-  endif()
 
   vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
