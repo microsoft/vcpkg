@@ -5,28 +5,117 @@
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "zlib",
+    "zlib"
+  ],
+  "default-features" : [ 
+    "default-features",
     "zstd",
-    "libjpeg-turbo",
-    "libpng",
-    {
-      "name": "freetype",
-      "default-features": false
-    },
-    "double-conversion",
+    "icu",
     "pcre2",
-    "harfbuzz",
-    "sqlite3",
-    "libpq",
+    "doubleconversion",
     "openssl",
-    "egl-registry",
-    "icu"
+    "brotli",
+    "freetype",
+    "harfbuzz",
+    "jpeg",
+    "png",
+    "sql-psql",
+    "sql-sqlite"
   ],
   "features": {
-    "testfeature": {
-      "description": "example",
+    "default-features": {
+      "description": "Platform-dependent default features",
       "dependencies": [
-        "zlib"
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "fontconfig" ],
+          "platform": "linux"
+        }
+      ]
+    },
+    "appstore-compliant": {
+      "description": "Disable code that is not allowed in platform app stores. This is on by default for platforms which require distribution through an app store by default, in particular Android, iOS, tvOS, and watchOS."
+    },
+    "zstd": {
+      "description": "Zstandard support",
+      "dependencies": [
+        "zstd"
+      ]
+    },
+    "doubleconversion": {
+      "description": "Enable double conversion support",
+      "dependencies": [
+        "double-conversion"
+      ]
+    },
+    "icu": {
+      "description": "Enable ICU support",
+      "dependencies": [
+        "icu"
+      ]
+    },
+    "pcre2": {
+      "description": "Enable PCRE2 support",
+      "dependencies": [
+        "pcre2"
+      ]
+    },
+    "openssl": {
+      "description": "Enable OpenSSL",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "brotli": {
+      "description": "Support for downloading and decompressing resources compressed with Brotli through QNetworkAccessManager.",
+      "dependencies": [
+        "brotli"
+      ]
+    },
+    "freetype": {
+      "description": "Supports the FreeType 2 font engine (and its supported font formats).",
+      "dependencies": [
+        {
+          "name": "freetype",
+          "default-features": false
+        }
+      ]
+    },
+    "harfbuzz": {
+      "description": "Use harfbuzz",
+      "dependencies": [
+        "harfbuzz"
+      ]
+    },
+    "fontconfig": {
+      "description": "Use fontconfig",
+      "dependencies": [
+        "fontconfig"
+      ]
+    },
+    "jpeg": {
+      "description": "Enable JPEG",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "png": {
+      "description": "Enable PNG",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "sql-psql": {
+      "description": "Enable SQL Driver psql",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "sql-sqlite": {
+      "description": "Enable SQL Driver sqlite",
+      "dependencies": [
+        "sqlite3"
       ]
     }
   }

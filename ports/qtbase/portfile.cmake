@@ -1,19 +1,154 @@
+set(${PORT}_REF v6.0.0-beta1)
+set(${PORT}_HASH 85a662990f014dd1c6c9bba3b541199c5e7e4535c6454cd3e78fbd4cfae977dc8ff370ae30fdd8068097b5a88ae069103546f54fb5f6b9c4597ed48e62fc1449)
+set(${PORT}_PATCHES jpeg.patch findzstd.patch config_install.patch allow_outside_prefix.patch)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO qt/qtbase
-    REF v6.0.0-beta1
-    SHA512 85a662990f014dd1c6c9bba3b541199c5e7e4535c6454cd3e78fbd4cfae977dc8ff370ae30fdd8068097b5a88ae069103546f54fb5f6b9c4597ed48e62fc1449
+    REPO qt/${PORT}
+    REF ${${PORT}_REF}
+    SHA512 ${${PORT}_HASH}
     HEAD_REF master
-    PATCHES
+    PATCHES ${${PORT}_PATCHES}
 )
 vcpkg_find_acquire_program(PERL)
 get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_PATH})
 
+# Features can be found via searching here: 
+# qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/configure.cmake")
+# qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/corelib/configure.cmake")
+# qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/network/configure.cmake")
+# qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/gui/configure.cmake")
+# The files also contain information about the Platform for which it is searched
+# Always use QT_FEATURE_<feature> in vcpkg_configure_cmake
+
+# General features:
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
+    "appstore-compliant"  QT_FEATURE_appstore-compliant
+    "zstd"                QT_FEATURE_zstd
+    )
+
+# Corelib features:
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
+    "doubleconversion"    QT_FEATURE_doubleconversion
+    "doubleconversion"    QT_FEATURE_system-doubleconversion
+    # "glib"                QT_FEATURE_glib
+    "icu"                 QT_FEATURE_icu
+    "pcre2"               QT_FEATURE_pcre2
+    "pcre2"               QT_FEATURE_system-pcre2
+    # "libb2"               QT_FEATURE_system-libb2
+    )
+
+# Network features:
+ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_NET_OPTIONS
+    "openssl"             QT_FEATURE_openssl
+    "openssl"             QT_FEATURE_openssl-linked
+    "brotli"              QT_FEATURE_brotli
+    )
+
+# Gui features:
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
+    "freetype"            QT_FEATURE_freetype
+    "freetype"            QT_FEATURE_system-freetype
+    "harfbuzz"            QT_FEATURE_harfbuzz # Currently requires pkg-config
+    "harfbuzz"            QT_FEATURE_system-harfbuzz
+    "fontconfig"          QT_FEATURE_fontconfig # NOT WINDOWS
+    # "gif"                 QT_FEATURE_gif
+    # "ico"                 QT_FEATURE_ico
+    "jpeg"                QT_FEATURE_jpeg
+    "jpeg"                QT_FEATURE_system-jpeg
+    "png"                 QT_FEATURE_png
+    "png"                 QT_FEATURE_system-png
+    # "opengl"              QT_FEATURE_opengl
+    # "egl"                 QT_FEATURE_egl
+     )
+
+# sql-drivers features:
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
+    "sql-psql"            QT_FEATURE_sql-psql
+    "sql-sqlite"          QT_FEATURE_sql-sqlite
+    "sql-sqlite"          QT_FEATURE_system-sqlite
+    # "sql-db2"             QT_FEATURE_sql-db2
+    # "sql-ibase"           QT_FEATURE_sql-ibase
+    # "sql-mysql"           QT_FEATURE_sql-mysql
+    # "sql-oci"             QT_FEATURE_sql-oci
+    # "sql-odbc"            QT_FEATURE_sql-odbc
+    )
+
+# printsupport features:
+# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_PRINTSUPPORT_OPTIONS
+    # )
+
+# widgets features:
+# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
+    # "gtk3"             QT_FEATURE_gtk3
+    # There are a lot of additional features here to deactivate parts of widgets. 
+    # )
+
+
+# QT_ FEATURE_appstore_compliant
+# FEATURE_bortli
+# FEATURE_cross_compile
+# FEATURE_cups
+# FEATURE_dbus
+# FEATURE_dbus_linked
+# FEATURE_doubleconversion
+# FEATURE_ egl egl_x11 eglfs eglfs _brcm _egldevice _gbm _mali _openwfd _rcar _viv _viv_wl _vsp2 _x11
+# FEATURE_etw
+# FEATURE_evdev
+# FEATURE_eventfd
+# FEATURE_fontconfig
+# FEATURE_freetype
+# FEATURE_gif
+# FEATURE_glib
+# FEATURE_glibc
+# FEATURE_gssapi
+# FEATURE_gtk3
+# FEATURE_harfbuzz
+# FEATURE_icu
+# FEATURE_jpeg
+# FEATURE_ltcg
+# FEATURE_opengl _dynamic _desktop 
+# FEATURE_opengles2 3 31 32
+# FEATURE_openssl _linked _runtime
+# FEATURE_optimize_debug
+# FEATURE_optimize_full _size
+# FEATURE_pcre2
+# FEATURE_pkg_config
+# FEATURE_png
+# FEATURE_reduce_exports
+# FEATURE_reduce_relocations
+# FEATURE_sql   _db2 _ibase _mysql _oci _odbc _psql _sqlite
+# FEATURE_vulkan
+# FEATURE_win32_system_libs?
+# FEAUTRE_xcb _xlib
+# FEATURE_xkbcommon _x11
+# FEATURE_xlib
+# FEATURE_xml
+# FEATURE_zstd
+
+# INPUT_doubleconversion
+# INPUT_freetype
+# INPUT_harfbuzz
+# 
+# INPUT_libjpeg
+# INPUT_libmd4c
+# INPUT_libpng
+# INPUT_sqlite
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS 
+        ${FEATURE_CORE_OPTIONS}
+        ${FEATURE_NET_OPTIONS}
+        ${FEATURE_GUI_OPTIONS}
+        ${FEATURE_SQLDRIVERS_OPTIONS}
+        ${FEATURE_PRINTSUPPORT_OPTIONS}
+        ${FEATURE_WIDGETS_OPTIONS}
+        #-DQT_HOST_PATH=<somepath> # For crosscompiling
+        #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
+        #-DQT_QMAKE_TARGET_MKSPEC=win32-msvc
+        #-DQT_USE_CCACHE
         -DQT_NO_MAKE_EXAMPLES:BOOL=TRUE
         -DQT_NO_MAKE_TESTS:BOOL=TRUE
         #-DQT_NO_MAKE_TOOLS:BOOL=TRUE
@@ -21,331 +156,106 @@ vcpkg_configure_cmake(
         -DQT_USE_BUNDLED_BundledHarfbuzz:BOOL=FALSE
         -DQT_USE_BUNDLED_BundledLibpng:BOOL=FALSE
         -DQT_USE_BUNDLED_BundledPcre2:BOOL=FALSE
-        -DFEATURE_zstd:BOOL=ON
+        -DQT_FEATURE_system_doubleconversion:BOOL=ON
+        -DQT_FEATURE_system_freetype:BOOL=ON
+        #-DQT_FEATURE_system_harfbuzz:BOOL=OFF
+        -DQT_FEATURE_harfbuzz:BOOL=OFF
+        -DQT_FEATURE_libb2:BOOL=OFF
+        #-DQT_FEATURE_system_libb2:BOOL=OFF
+        -DQT_FEATURE_system_pcre2:BOOL=ON
+        -DQT_FEATURE_system_png:BOOL=ON
+        -DQT_FEATURE_system_zlib:BOOL=ON
+        -DQT_FEATURE_system_sqlite:BOOL=ON
+        -DQT_FEATURE_zstd:BOOL=ON
+        -DQT_FEATURE_force_debug_info:BOOL=ON
+        -DQT_FEATURE_relocatable:BOOL=ON
+        -DQT_FEATURE_icu:BOOL=ON
 # Setup Qt syncqt (required for headers)
         -DHOST_PERL:PATH="${PERL}"
-#        -DQT_SYNCQT:STRING="NO"
+    OPTIONS_DEBUG
+        -DQT_NO_MAKE_TOOLS:BOOL=ON
+        -DQT_FEATURE_debug:BOOL=ON
+        -DINSTALL_DOCDIR:STRING="../doc"
+        -DINSTALL_INCLUDEDIR:STRING="../include"
+        #-DINSTALL_MKSPECSDIR:STRING="../mkspecs" leaks into of buildtree/port
 )
-# if(NOT VCPKG_TARGET_IS_WINDOWS)
-    # message(WARNING "You will need to install Xorg dependencies to build vtk:\napt-get install libxt-dev\n")
-# endif()
+vcpkg_install_cmake()
+vcpkg_copy_pdbs()
 
-# # TODO:
-# # - add loguru as a dependency requires #8682
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Qt6 TARGET_PATH share/cmake/Qt6)
+set(COMPONENTS BuildInternals BundledHarfbuzz Concurrent Core CoreTools Core_qobject DBus DBusTools DeviceDiscoverySupport FbSupport Gui GuiTools HostInfo Network OpenGL OpenGLWidgets PrintSupport Sql Test Widgets WidgetsTools WinMain Xml)
+foreach(_comp IN LISTS COMPONENTS)
+    if(EXISTS "${CURRENT_PACKAGES_DIR}/share/cmake/Qt6${_comp}")
+        vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Qt6${_comp} TARGET_PATH share/cmake/Qt6${_comp})
+    else()
+        message(STATUS "WARNING: Qt component ${_comp} not found/built!")
+    endif()
+endforeach()
 
-# # =============================================================================
-# # Options:
-# # Collect CMake options for optional components
-# if("qt" IN_LIST FEATURES)
-    # list(APPEND ADDITIONAL_OPTIONS
-        # -DVTK_GROUP_ENABLE_Qt=YES
-        # -DVTK_MODULE_ENABLE_VTK_GUISupportQt=YES
-        # -DVTK_MODULE_ENABLE_VTK_GUISupportQtSQL=YES
-        # -DVTK_MODULE_ENABLE_VTK_RenderingQt=YES
-        # -DVTK_MODULE_ENABLE_VTK_ViewsQt=YES
-    # )
+set(TOOL_NAMES androiddeployqt androidtestrunner cmake_automoc_parser moc qdbuscpp2xml qdbusxml2cpp qlalr qmake qvkgen rcc tracegen uic)
+vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 
-# endif()
-# if("atlmfc" IN_LIST FEATURES)
-    # list(APPEND ADDITIONAL_OPTIONS
-        # -DVTK_MODULE_ENABLE_VTK_GUISupportMFC=YES
-    # )
-# endif()
-# if("vtkm" IN_LIST FEATURES)
-    # list(APPEND ADDITIONAL_OPTIONS
-        # -DVTK_MODULE_ENABLE_VTK_AcceleratorsVTKm=YES
-        # -DVTK_MODULE_ENABLE_VTK_vtkm=YES
-    # )
-# endif()
-
-# if("python" IN_LIST FEATURES)
-    # vcpkg_find_acquire_program(PYTHON3)
-    # list(APPEND ADDITIONAL_OPTIONS
-        # -DVTK_WRAP_PYTHON=ON
-        # -DVTK_PYTHON_VERSION=3
-        # -DPython3_FIND_REGISTRY=NEVER
-        # "-DPython3_EXECUTABLE:PATH=${PYTHON3}"
-    # )
-
-    # #VTK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages
-# endif()
-
-# if("paraview" IN_LIST FEATURES)
-    # list(APPEND ADDITIONAL_OPTIONS
-        # -DVTK_MODULE_ENABLE_VTK_FiltersParallelStatistics=YES
-        # -DVTK_MODULE_ENABLE_VTK_IOParallelExodus=YES
-        # -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
-        # -DVTK_MODULE_ENABLE_VTK_RenderingParallel=YES
-        # -DVTK_MODULE_ENABLE_VTK_RenderingVolumeAMR=YES
-        # -DVTK_MODULE_ENABLE_VTK_IOXdmf2=YES
-        # -DVTK_MODULE_ENABLE_VTK_IOH5part=YES
-        # -DVTK_MODULE_ENABLE_VTK_IOParallelLSDyna=YES
-        # -DVTK_MODULE_ENABLE_VTK_IOTRUCHAS=YES
-        # -DVTK_MODULE_ENABLE_VTK_IOVPIC=YES
-        # -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
-        # -DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES
-        # -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
-    # )
-    # if("python" IN_LIST FEATURES)
-        # list(APPEND ADDITIONAL_OPTIONS
-            # -DVTK_MODULE_ENABLE_VTK_RenderingMatplotlib=YES
-        # )
-    # endif()
-# endif()
-
-# if("mpi" IN_LIST FEATURES)
-    # list(APPEND ADDITIONAL_OPTIONS
-        # -DVTK_GROUP_ENABLE_MPI=YES
-        # -DVTK_USE_MPI=YES
-    # )
-# endif()
-
-# if("mpi" IN_LIST FEATURES AND "python" IN_LIST FEATURES)
-    # list(APPEND ADDITIONAL_OPTIONS
-        # -DVTK_MODULE_USE_EXTERNAL_VTK_mpi4py=OFF
-    # )
-# endif()
-
-# if("opengl" IN_LIST FEATURES)
-    # list(APPEND ADDITIONAL_OPTIONS
-        # -DVTK_MODULE_ENABLE_VTK_DomainsChemestryOpenGL2=YES
-        # -DVTK_MODULE_ENABLE_VTK_ImagingOpenGL2=YES
-        # -DVTK_MODULE_ENABLE_VTK_RenderingContextOpenGL2=YES
-        # -DVTK_MODULE_ENABLE_VTK_RenderingGL2PSOpenGL2=YES
-        # -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
-        # -DVTK_MODULE_ENABLE_VTK_RenderingOpenGL2=YES
-        # -DVTK_MODULE_ENABLE_VTK_RenderingVolumeOpenGL2=YES
-        # -DVTK_MODULE_ENABLE_VTK_opengl=YES
-        # )
-# endif()
-
-# if("cuda" IN_LIST FEATURES AND CMAKE_HOST_WIN32)
-    # vcpkg_add_to_path("$ENV{CUDA_PATH}/bin")
-# endif()
-
-# if("all" IN_LIST FEATURES)
-    # list(APPEND ADDITIONAL_OPTIONS
-        # -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
-    # )
-# endif()
-
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    # "cuda"         VTK_USE_CUDA
-    # "all"          VTK_BUILD_ALL_MODULES
-# )
+set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module)
+set(script_suffix .bat)
+set(other_files qt-cmake-private-install.cmake syncqt.pl)
+foreach(_config debug release)
+    if(_config MATCHES "debug")
+        set(path_suffix debug/)
+    endif()
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${path_suffix}")
+    foreach(script IN LISTS script_files)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}")
+            set(target_script "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${path_suffix}/${script}${script_suffix}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}" "${target_script}")
+            file(READ "${target_script}" _contents)
+            if(_config MATCHES "debug")
+                string(REPLACE "\\..\\share\\" "\\..\\..\\..\\share\\" _contents "${_contents}")
+            else()
+                string(REPLACE "\\..\\share\\" "\\..\\..\\share\\" _contents "${_contents}")
+            endif()
+            file(WRITE "${target_script}" "${_contents}")
+        endif()
+    endforeach()
+    foreach(other IN LISTS other_files)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${path_suffix}/${other}")
+        endif()
+    endforeach()
+endforeach()
 
 
-# # =============================================================================
-# # Clone & patch
-# vcpkg_from_github(
-    # OUT_SOURCE_PATH SOURCE_PATH
-    # REPO Kitware/VTK
-    # REF 96e6fa9b3ff245e4d51d49f23d40e9ad8774e85e # v9.0.1
-    # SHA512 0efb1845053b6143e5ee7fa081b8be98f6825262c59051e88b2be02497e23362055067b2f811eff82e93eb194e5a9afd2a12e3878a252eb4011a5dab95127a6f
-    # HEAD_REF master
-    # PATCHES
-        # 6811.patch
-        # FindLZMA.patch    # Will be fixed in 9.1?
-        # FindLZ4.patch
-        # Findproj.patch
-        # vtkm.patch # To include an external VTKm build (v.1.5 required)
-        # pegtl.patch
-        # pythonwrapper.patch # Required by ParaView to Wrap required classes
-        # NoUndefDebug.patch # Required to link against correct Python library depending on build type. 
-        # python_debug.patch
-        # fix-using-hdf5.patch
-        # # Last patch TODO: Patch out internal loguru
-        # FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
-# )
-
-# # =============================================================================
-# #Overwrite outdated modules if they have not been patched:
-# file(COPY "${CURRENT_PORT_DIR}/FindPostgreSQL.cmake" DESTINATION "${SOURCE_PATH}/CMake") # will be backported from CMake in VTK in a future release
-# file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
-# # =============================================================================
-
-# # =============================================================================
-# # Configure & Install
-
-# # We set all libraries to "system" and explicitly list the ones that should use embedded copies
-# vcpkg_configure_cmake(
-    # SOURCE_PATH ${SOURCE_PATH}
-    # PREFER_NINJA
-    # OPTIONS ${FEATURE_OPTIONS}
-        # -DBUILD_TESTING=OFF
-        # -DVTK_BUILD_TESTING=OFF
-        # -DVTK_BUILD_EXAMPLES=OFF
-        # -DVTK_INSTALL_INCLUDE_DIR=include
-        # -DVTK_INSTALL_DATA_DIR=share/vtk/data
-        # -DVTK_INSTALL_DOC_DIR=share/vtk/doc
-        # -DVTK_INSTALL_PACKAGE_DIR=share/vtk
-        # -DVTK_INSTALL_RUNTIME_DIR=bin
-        # -DVTK_FORBID_DOWNLOADS=ON
-        # -DVTK_ENABLE_REMOTE_MODULES=OFF
-        # # VTK groups to enable
-        # -DVTK_GROUP_ENABLE_StandAlone=YES
-        # -DVTK_GROUP_ENABLE_Rendering=YES
-        # -DVTK_GROUP_ENABLE_Views=YES
-        # # Disable deps not in VCPKG
-        # -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
-        # # Select modules / groups to install
-        # -DVTK_USE_EXTERNAL:BOOL=ON
-        # -DVTK_MODULE_USE_EXTERNAL_VTK_gl2ps:BOOL=OFF # Not yet in VCPKG
-        # ${ADDITIONAL_OPTIONS}
-# )
-
-# vcpkg_install_cmake()
-# vcpkg_copy_pdbs()
-
-# # =============================================================================
-# # Fixup target files
-# vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/vtk-9.0)
-
-# # TODO: Check if the following is still required
-# # For some reason the references to the XDMF libraries in the target files do not end up
-# # correctly, so we fix them here.
-# # if(VTK_WITH_ALL_MODULES)
-    # # file(READ ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake VTK_TARGETS_RELEASE_CONTENT)
-    # # string(REPLACE "lib/../XdmfCore.lib" "lib/XdmfCore.lib" VTK_TARGETS_RELEASE_CONTENT "${VTK_TARGETS_RELEASE_CONTENT}")
-    # # string(REPLACE "bin/../XdmfCore.dll" "bin/XdmfCore.dll" VTK_TARGETS_RELEASE_CONTENT "${VTK_TARGETS_RELEASE_CONTENT}")
-    # # string(REPLACE "lib/../vtkxdmf3.lib" "lib/vtkxdmf3.lib" VTK_TARGETS_RELEASE_CONTENT "${VTK_TARGETS_RELEASE_CONTENT}")
-    # # string(REPLACE "bin/../vtkxdmf3.dll" "bin/vtkxdmf3.dll" VTK_TARGETS_RELEASE_CONTENT "${VTK_TARGETS_RELEASE_CONTENT}")
-    # # file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-release.cmake "${VTK_TARGETS_RELEASE_CONTENT}")
-
-    # # file(READ ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake VTK_TARGETS_DEBUG_CONTENT)
-    # # string(REPLACE "lib/../XdmfCore.lib" "lib/XdmfCore.lib" VTK_TARGETS_DEBUG_CONTENT "${VTK_TARGETS_DEBUG_CONTENT}")
-    # # string(REPLACE "bin/../XdmfCore.dll" "bin/XdmfCore.dll" VTK_TARGETS_DEBUG_CONTENT "${VTK_TARGETS_DEBUG_CONTENT}")
-    # # string(REPLACE "lib/../vtkxdmf3.lib" "lib/vtkxdmf3.lib" VTK_TARGETS_DEBUG_CONTENT "${VTK_TARGETS_DEBUG_CONTENT}")
-    # # string(REPLACE "bin/../vtkxdmf3.dll" "bin/vtkxdmf3.dll" VTK_TARGETS_DEBUG_CONTENT "${VTK_TARGETS_DEBUG_CONTENT}")
-    # # file(WRITE ${CURRENT_PACKAGES_DIR}/share/vtk/VTKTargets-debug.cmake "${VTK_TARGETS_DEBUG_CONTENT}")
-# # endif()
-# # =============================================================================
-# # Remove other files and directories that are not valid for vcpkg
-# # if(VTK_WITH_ALL_MODULES)
-    # # file(REMOVE ${CURRENT_PACKAGES_DIR}/XdmfConfig.cmake)
-    # # file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/XdmfConfig.cmake)
-# # endif()
-
-# # =============================================================================
-# # Clean-up other directories
+#TODO. move qtmain(d).lib into manual link
 
 
-# # Delete the debug binary TOOL_NAME that is not required
-# function(_vtk_remove_debug_tool TOOL_NAME)
-    # set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    # if(EXISTS ${filename})
-        # file(REMOVE ${filename})
-    # endif()
-    # set(filename ${CURRENT_PACKAGES_DIR}/debug/bin/${TOOL_NAME}d${VCPKG_TARGET_EXECUTABLE_SUFFIX})
-    # if(EXISTS ${filename})
-        # file(REMOVE ${filename})
-    # endif()
-    # if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
-        # # we also have to bend the lines referencing the tools in VTKTargets-debug.cmake
-        # # to make them point to the release version of the tools
-        # file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-debug.cmake" VTK_TARGETS_CONTENT_DEBUG)
-        # string(REPLACE "debug/bin/${TOOL_NAME}" "tools/vtk/${TOOL_NAME}" VTK_TARGETS_CONTENT_DEBUG "${VTK_TARGETS_CONTENT_DEBUG}")
-        # string(REPLACE "tools/vtk/${TOOL_NAME}d" "tools/vtk/${TOOL_NAME}" VTK_TARGETS_CONTENT_DEBUG "${VTK_TARGETS_CONTENT_DEBUG}")
-        # file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-debug.cmake" "${VTK_TARGETS_CONTENT_DEBUG}")
-    # endif()
-# endfunction()
 
-# # Move the release binary TOOL_NAME from bin to tools
-# function(_vtk_move_release_tool TOOL_NAME)
-    # set(old_filename "${CURRENT_PACKAGES_DIR}/bin/${TOOL_NAME}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-    # if(EXISTS ${old_filename})
-        # file(INSTALL ${old_filename} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/vtk" USE_SOURCE_PERMISSIONS)
-        # file(REMOVE ${old_filename})
-    # endif()
 
-    # if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
-        # # we also have to bend the lines referencing the tools in VTKTargets-release.cmake
-        # # to make them point to the tool folder
-        # file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-release.cmake" VTK_TARGETS_CONTENT_RELEASE)
-        # string(REPLACE "bin/${TOOL_NAME}" "tools/vtk/${TOOL_NAME}" VTK_TARGETS_CONTENT_RELEASE "${VTK_TARGETS_CONTENT_RELEASE}")
-        # file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/VTK-targets-release.cmake" "${VTK_TARGETS_CONTENT_RELEASE}")
-    # endif()
-# endfunction()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/mkspecs"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
+                    "${CURRENT_PACKAGES_DIR}/debug/share"
+                    "${CURRENT_PACKAGES_DIR}/lib/cmake/"
+                    "${CURRENT_PACKAGES_DIR}/share/cmake/Qt6/QtBuildInternals"
+                    )
 
-# set(VTK_SHORT_VERSION 9.0)
-# set(VTK_TOOLS
-    # vtkEncodeString-${VTK_SHORT_VERSION}
-    # vtkHashSource-${VTK_SHORT_VERSION}
-    # vtkWrapTclInit-${VTK_SHORT_VERSION}
-    # vtkWrapTcl-${VTK_SHORT_VERSION}
-    # vtkWrapPythonInit-${VTK_SHORT_VERSION}
-    # vtkWrapPython-${VTK_SHORT_VERSION}
-    # vtkWrapJava-${VTK_SHORT_VERSION}
-    # vtkWrapHierarchy-${VTK_SHORT_VERSION}
-    # vtkParseJava-${VTK_SHORT_VERSION}
-    # vtkParseOGLExt-${VTK_SHORT_VERSION}
-    # vtkProbeOpenGLVersion-${VTK_SHORT_VERSION}
-    # vtkTestOpenGLVersion-${VTK_SHORT_VERSION}
-    # vtkpython
-    # pvtkpython
-# )
-# # TODO: Replace with vcpkg_copy_tools if known which tools are built with which feature
-# # or add and option to vcpkg_copy_tools which does not require the tool to be present
-# foreach(TOOL_NAME IN LISTS VTK_TOOLS)
-    # _vtk_remove_debug_tool("${TOOL_NAME}")
-    # _vtk_move_release_tool("${TOOL_NAME}")
-# endforeach()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
+endif()
 
-# if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    # file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    # file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-# endif()
+if(NOT VCPKG_TARGET_IS_OSX)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/cmake/Qt6/macos"
+                        )
+endif()
 
-# file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-# file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# # =============================================================================
-# # Handle copyright
-# file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-# vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/vtk")
-
-# ## Files Modules needed by ParaView
-# if("paraview" IN_LIST FEATURES)
-    # set(VTK_CMAKE_NEEDED vtkCompilerChecks vtkCompilerPlatformFlags vtkCompilerExtraFlags vtkInitializeBuildType 
-                         # vtkSupportMacros vtkDirectories vtkVersion FindPythonModules vtkModuleDebugging vtkExternalData)
-    # foreach(module ${VTK_CMAKE_NEEDED})
-        # file(INSTALL "${SOURCE_PATH}/CMake/${module}.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
-    # endforeach()
-        
-    # ## Check List on UPDATE !!
-    # file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
-
-    # file(INSTALL "${SOURCE_PATH}/GUISupport/Qt/QVTKOpenGLWidget.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # Legacy header
-    
-    # file(INSTALL "${SOURCE_PATH}/Common/Core/vtkRange.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
-    # file(INSTALL "${SOURCE_PATH}/Common/Core/vtkRangeIterableTraits.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
-    # file(INSTALL "${SOURCE_PATH}/Common/DataModel/vtkCompositeDataSetNodeReference.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
-    # #ParaView requires some internal headers 
-    # file(INSTALL "${SOURCE_PATH}/Rendering/Annotation/vtkScalarBarActorInternal.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-    # file(INSTALL "${SOURCE_PATH}/Filters/Statistics/vtkStatisticsAlgorithmPrivate.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-    # file(INSTALL "${SOURCE_PATH}/Rendering/OpenGL2/vtkCompositePolyDataMapper2Internal.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-    # file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-# endif()
-
-# if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    # if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/vtkpythonmodules/static_python) #python headers
-        # file(GLOB_RECURSE STATIC_PYTHON_FILES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/CMakeFiles/*/static_python/*.h")
-        # file(INSTALL ${STATIC_PYTHON_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION})
-    # endif()
-# endif()
-    
-# #remove one get_filename_component(_vtk_module_import_prefix "${_vtk_module_import_prefix}" DIRECTORY) from vtk-prefix.cmake and VTK-vtk-module-properties and vtk-python.cmake
-# set(filenames_fix_prefix vtk-prefix VTK-vtk-module-properties vtk-python)
-# foreach(name IN LISTS filenames_fix_prefix)
-# if(EXISTS "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake")
-    # file(READ "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake" _contents)
-    # string(REPLACE 
-# [[set(_vtk_module_import_prefix "${CMAKE_CURRENT_LIST_DIR}")
-# get_filename_component(_vtk_module_import_prefix "${_vtk_module_import_prefix}" DIRECTORY)]]
-# [[set(_vtk_module_import_prefix "${CMAKE_CURRENT_LIST_DIR}")]] _contents "${_contents}")
-    # file(WRITE "${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake" "${_contents}")
-# else()
-    # debug_message("FILE:${CURRENT_PACKAGES_DIR}/share/vtk/${name}.cmake does not exist! No prefix correction!")
-# endif()
-# endforeach()
+if(EXISTS "${SOURCE_PATH}/LICENSE.LGPLv3")
+    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.LGPLv3")
+elseif(EXISTS "${SOURCE_PATH}/LICENSE.LGPL3")
+    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.LGPL3")
+elseif(EXISTS "${SOURCE_PATH}/LICENSE.GPLv3")
+    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.GPLv3")
+elseif(EXISTS "${SOURCE_PATH}/LICENSE.GPL3")
+    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.GPL3")
+elseif(EXISTS "${SOURCE_PATH}/LICENSE.GPL3-EXCEPT")
+    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.GPL3-EXCEPT")
+elseif(EXISTS "${SOURCE_PATH}/LICENSE.FDL")
+    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.FDL")
+endif()
+file(INSTALL ${LICENSE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
