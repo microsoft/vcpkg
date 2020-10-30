@@ -1,9 +1,5 @@
 vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86")
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
-
 if (EXISTS "${CURRENT_INSTALLED_DIR}/include/mysql/mysql.h")
     message(FATAL_ERROR "FATAL ERROR: ${PORT} and libmariadb are incompatible.")
 endif()
@@ -90,6 +86,15 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     endforeach()
 else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    # Remove dynmaic symbols on lib folder
+    if (VCPKG_TARGET_IS_WINDOWS)
+        file(REMOVE
+            ${CURRENT_PACKAGES_DIR}/libmysql.lib
+            ${CURRENT_PACKAGES_DIR}/libmysql.pdb
+            ${CURRENT_PACKAGES_DIR}/debug/libmysql.lib
+            ${CURRENT_PACKAGES_DIR}/debug/libmysql.pdb
+        )
+    endif()
 endif()
 
 
