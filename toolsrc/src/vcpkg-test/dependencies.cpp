@@ -441,3 +441,72 @@ TEST_CASE ("version install simple relaxed", "[versionplan]")
     REQUIRE(install_plan.size() == 1);
     check_name_and_version(install_plan.install_actions[0], "a", {"3", 0});
 }
+
+TEST_CASE ("version install transitive relaxed", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2", 0};
+    bp.v["b"] = {"2", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2", 0}, Scheme::Relaxed);
+    vp.emplace("a", {"3", 0}, Scheme::Relaxed).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "3"}},
+    };
+    vp.emplace("b", {"2", 0}, Scheme::Relaxed);
+    vp.emplace("b", {"3", 0}, Scheme::Relaxed);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(
+        Dependencies::create_versioned_install_plan(vp,
+                                                    bp,
+                                                    var_provider,
+                                                    {
+                                                        Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3", 0}},
+                                                    },
+                                                    {},
+                                                    Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 2);
+    check_name_and_version(install_plan.install_actions[0], "b", {"3", 0});
+    check_name_and_version(install_plan.install_actions[1], "a", {"3", 0});
+}
+
+TEST_CASE ("version install diamond relaxed", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2", 0};
+    bp.v["b"] = {"3", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2", 0}, Scheme::Relaxed);
+    vp.emplace("a", {"3", 0}, Scheme::Relaxed).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2", 1}},
+        Dependency{"c", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "5", 1}},
+    };
+    vp.emplace("b", {"2", 1}, Scheme::Relaxed);
+    vp.emplace("b", {"3", 0}, Scheme::Relaxed).source_control_file->core_paragraph->dependencies = {
+        Dependency{"c", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "9", 2}},
+    };
+    vp.emplace("c", {"5", 1}, Scheme::Relaxed);
+    vp.emplace("c", {"9", 2}, Scheme::Relaxed);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(
+        Dependencies::create_versioned_install_plan(vp,
+                                                    bp,
+                                                    var_provider,
+                                                    {
+                                                        Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3", 0}},
+                                                        Dependency{"b", {}, {}, {Constraint::Type::Minimum, "2", 1}},
+                                                    },
+                                                    {},
+                                                    Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 3);
+    check_name_and_version(install_plan.install_actions[0], "c", {"9", 2});
+    check_name_and_version(install_plan.install_actions[1], "b", {"3", 0});
+    check_name_and_version(install_plan.install_actions[2], "a", {"3", 0});
+}
