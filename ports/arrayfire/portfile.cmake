@@ -26,7 +26,7 @@ set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DAF_CPU_THREAD_PATH=${CPU_THREADS_PATH} # for building the arrayfire cpu threads lib
   )
 
-# bin/dll directory
+# bin/dll directory for Windows non-static builds for the unified backend dll
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   if (NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     set(AF_BIN_DIR ${CURRENT_PACKAGES_DIR}/bin)
@@ -39,6 +39,9 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   set(AF_DEFAULT_VCPKG_CMAKE_FLAGS ${AF_DEFAULT_VCPKG_CMAKE_FLAGS} -DAF_INSTALL_BIN_DIR=${AF_BIN_DIR})
 endif()
 
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  message(WARNING "NOTE: Windows support with static linkeage is still experimental.")
+endif()
 
 # Determine which backend to build via specified feature
 vcpkg_check_features(
