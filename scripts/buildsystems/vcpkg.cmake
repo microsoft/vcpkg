@@ -306,9 +306,9 @@ set(CMAKE_SYSTEM_IGNORE_PATH
 
 list(APPEND CMAKE_PROGRAM_PATH ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools)
 file(GLOB _VCPKG_TOOLS_DIRS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/*)
-foreach(_VCPKG_TOOLS_DIR ${_VCPKG_TOOLS_DIRS})
-    if(IS_DIRECTORY ${_VCPKG_TOOLS_DIR})
-        list(APPEND CMAKE_PROGRAM_PATH ${_VCPKG_TOOLS_DIR})
+foreach(_VCPKG_TOOLS_DIR IN LISTS _VCPKG_TOOLS_DIRS)
+    if(IS_DIRECTORY "${_VCPKG_TOOLS_DIR}")
+        list(APPEND CMAKE_PROGRAM_PATH "${_VCPKG_TOOLS_DIR}")
     endif()
 endforeach()
 
@@ -361,7 +361,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
         endforeach()
     endif()
 
-    foreach(feature ${VCPKG_MANIFEST_FEATURES})
+    foreach(feature IN LISTS VCPKG_MANIFEST_FEATURES)
         list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-feature=${feature}")
     endforeach()
 
@@ -476,16 +476,15 @@ endfunction()
 #   DESTINATION - the runtime directory for those targets (usually `bin`)
 function(x_vcpkg_install_local_dependencies)
     if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
-        # Parse command line
-        cmake_parse_arguments(__VCPKG_APPINSTALL "" "DESTINATION" "TARGETS" ${ARGN})
-
-        foreach(TARGET ${__VCPKG_APPINSTALL_TARGETS})
+        cmake_parse_arguments(PARSE_ARGV __VCPKG_APPINSTALL "" "DESTINATION" "TARGETS")
+        _vcpkg_set_powershell_path()
+        foreach(TARGET IN LISTS __VCPKG_APPINSTALL_TARGETS)
             install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
-                execute_process(COMMAND
-                    powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                    -targetBinary \"\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
-                    -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                    -OutVariable out)")
+            execute_process(COMMAND
+                "${_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
+                -targetBinary \"\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
+                -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
+                -OutVariable out)")
         endforeach()
     endif()
 endfunction()

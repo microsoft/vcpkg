@@ -23,7 +23,7 @@ function(vcpkg_copy_tool_dependencies TOOL_DIR)
     endif()
     macro(search_for_dependencies PATH_TO_SEARCH)
         file(GLOB TOOLS "${TOOL_DIR}/*.exe" "${TOOL_DIR}/*.dll")
-        foreach(TOOL IN_LISTS TOOLS)
+        foreach(TOOL IN LISTS TOOLS)
             vcpkg_execute_required_process(
                 COMMAND "${PWSH_EXE}" -noprofile -executionpolicy Bypass -nologo
                     -file "${SCRIPTS}/buildsystems/msbuild/applocal.ps1"
