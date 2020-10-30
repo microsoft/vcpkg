@@ -64,7 +64,7 @@ vcpkg_install_cmake()
 if (VCPKG_TARGET_IS_WINDOWS)
   vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else()
-  vcpkg_fixup_cmake_targets(CONFIG_PATH share/ArrayFire TARGET_PATH share/${PORT})
+  vcpkg_fixup_cmake_targets(CONFIG_PATH share/ArrayFire/cmake)
 endif()
 
 vcpkg_copy_pdbs()
