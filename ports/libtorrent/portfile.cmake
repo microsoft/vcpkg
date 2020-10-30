@@ -6,10 +6,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "The python feature is currently broken on Windows")
     endif()
 
-    if("iconv" IN_LIST FEATURES)
-        set(ICONV_PATCH "fix_find_iconv.patch")
-    endif()
-
     if(VCPKG_CRT_LINKAGE STREQUAL "static")
         set(_static_runtime ON)
     endif()
@@ -39,8 +35,6 @@ vcpkg_from_github(
     REF 0f0afec8c8025cb55dfd2f36612d4bf61a29ff8a #v 2.0.0
     SHA512 251ee5a2c555103a127b8b08995914639a2b9d448a87708edb08a2a11444ef999cd8a3abcf223acfc66ca6371f0e1b076589343ade73974aa87f50814431a875
     HEAD_REF RC_1_2
-    PATCHES
-        ${ICONV_PATCH}
 )
 
 set(COMMIT_HASH 2a99893f92b29a5948569cba1e16fd259dbc2016)
