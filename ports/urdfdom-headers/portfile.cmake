@@ -26,12 +26,12 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
     vcpkg_fixup_pkgconfig()
 endif()
 
-
 # The config files for this project use underscore
 if(EXISTS ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers)
     file(RENAME ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers ${CURRENT_PACKAGES_DIR}/share/urdfdom_headers)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
