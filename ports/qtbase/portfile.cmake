@@ -198,11 +198,12 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Qt6 TARGET_PATH share/cmake/Qt6)
-set(COMPONENTS BuildInternals Concurrent Core CoreTools Core_qobject DBus DBusTools DeviceDiscoverySupport FbSupport Gui GuiTools HostInfo Network OpenGL OpenGLWidgets PrintSupport Sql Test Widgets WidgetsTools WinMain Xml)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Qt6 TARGET_PATH share/Qt6)
+set(COMPONENTS BuildInternals Concurrent Core CoreTools Core_qobject DBus DBusTools DeviceDiscoverySupport EntryPoints FbSupport Gui GuiTools HostInfo Network OpenGL OpenGLWidgets PrintSupport Sql Test Widgets WidgetsTools WinMain Xml)
 foreach(_comp IN LISTS COMPONENTS)
     if(EXISTS "${CURRENT_PACKAGES_DIR}/share/cmake/Qt6${_comp}")
-        vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Qt6${_comp} TARGET_PATH share/cmake/Qt6${_comp})
+        vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Qt6${_comp} TARGET_PATH share/Qt6${_comp}) 
+        # Would rather put it into share/cmake as before but the import_prefix correction in vcpkg_fixup_cmake_targets is working against that. 
     else()
         message(STATUS "WARNING: Qt component ${_comp} not found/built!")
     endif()
