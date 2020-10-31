@@ -198,6 +198,11 @@ vcpkg_configure_cmake(
         -DQT_FEATURE_relocatable:BOOL=ON
 # Setup Qt syncqt (required for headers)
         -DHOST_PERL:PATH="${PERL}"
+        -DINSTALL_DESCRIPTIONSDIR:STRING="modules"
+        -DINSTALL_LIBEXECDIR:STRING="bin"
+        -DINSTALL_PLUGINSDIR:STRING="plugins"
+        -DINSTALL_QMLDIR:STRING="qml"
+        -DINSTALL_TRANSLATIONSDIR:STRING="translations"
     OPTIONS_DEBUG
         -DQT_NO_MAKE_TOOLS:BOOL=ON
         -DQT_FEATURE_debug:BOOL=ON
@@ -258,7 +263,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/mkspecs"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
                     "${CURRENT_PACKAGES_DIR}/debug/share"
                     "${CURRENT_PACKAGES_DIR}/lib/cmake/"
-                    "${CURRENT_PACKAGES_DIR}/share/cmake/Qt6/QtBuildInternals"
+                    "${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuildInternals"
                     )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -266,17 +271,21 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 if(NOT VCPKG_TARGET_IS_OSX)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/cmake/Qt6/macos"
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/macos"
                         )
 endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake")
 qt_install_copyright("${SOURCE_PATH}")
 
-# Instal Scripts
+# Install Scripts
 file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes.cmake
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake
     DESTINATION
         ${CURRENT_PACKAGES_DIR}/share/qt
 )
+
+#TODO:
+# QtBuild.cmake remove "unset(QT_SYNCQT CACHE )"
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuild.cmake" "unset\\\(QT_SYNCQT CACHE\\\)" "")
