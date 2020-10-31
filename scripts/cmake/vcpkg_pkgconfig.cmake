@@ -5,10 +5,17 @@
 ##
 ## ## Usage
 ## ```cmake
-## vcpkg_pkgconfig(SYSTEM_LIBS_REL <slr> PACKAGE_LIBS_REL <plr> SYSTEM_LIBS_DBG <sld> PACKAGE_LIBS_DBG <pld>
+## vcpkg_pkgconfig([APPEND] [AS_STRING] SYSTEM_LIBS_REL <slr> PACKAGE_LIBS_REL <plr> SYSTEM_LIBS_DBG <sld> PACKAGE_LIBS_DBG <pld>
 ##     PACKAGES <packages>...
 ## )
 ## ```
+##
+## ## Options
+## ### APPEND
+## libraries are added to the provided "output variables" otherwise (default) those variables are erased first
+##
+## ### AS_STRING
+## libraries are provided as a space separated string otherwise (default) they are provided as a list (semicolon separated)
 ##
 ## ## Parameters
 ## ### SYSTEM_LIBS_REL
@@ -31,14 +38,19 @@
 
 
 function(vcpkg_pkgconfig)
-	cmake_parse_arguments(_pkc "" "SYSTEM_LIBS_REL;PACKAGE_LIBS_REL;SYSTEM_LIBS_DBG;PACKAGE_LIBS_DBG" "PACKAGES" ${ARGN})
+	cmake_parse_arguments(_pkc "APPEND;AS_STRING" "SYSTEM_LIBS_REL;PACKAGE_LIBS_REL;SYSTEM_LIBS_DBG;PACKAGE_LIBS_DBG" "PACKAGES" ${ARGN})
 
-	#TODO : test if output requested for a given flavour
-
-	set(PACKAGE_LIBS_REL ${${_pkc_PACKAGE_LIBS_REL}})
-	set(SYSTEM_LIBS_REL ${${_pkc_SYSTEM_LIBS_REL}})
-	set(PACKAGE_LIBS_DBG ${${_pkc_PACKAGE_LIBS_DBG}})
-	set(SYSTEM_LIBS_DBG ${${_pkc_SYSTEM_LIBS_DBG}})
+	if (_pkc_APPEND)
+		set(PACKAGE_LIBS_REL ${${_pkc_PACKAGE_LIBS_REL}})
+		set(SYSTEM_LIBS_REL ${${_pkc_SYSTEM_LIBS_REL}})
+		set(PACKAGE_LIBS_DBG ${${_pkc_PACKAGE_LIBS_DBG}})
+		set(SYSTEM_LIBS_DBG ${${_pkc_SYSTEM_LIBS_DBG}})
+	else()
+		set(PACKAGE_LIBS_REL "")
+		set(SYSTEM_LIBS_REL "")
+		set(PACKAGE_LIBS_DBG "")
+		set(SYSTEM_LIBS_DBG "")	
+	endif()
 	
 	#Search for pkg-config executable
 	if (VCPKG_TARGET_IS_WINDOWS)
@@ -205,8 +217,13 @@ function(vcpkg_pkgconfig)
 	endforeach()
 	
 	#Output for calling function
-	#TODO : handle cases where only one flavor is required
-	#TODO : handle formatting outputs as a list or as a string
+	if (_pkc_AS_STRING)
+		string(REPLACE ";" " " PACKAGE_LIBS_REL "${PACKAGE_LIBS_REL}")
+		string(REPLACE ";" " " SYSTEM_LIBS_REL "${SYSTEM_LIBS_REL}")
+		string(REPLACE ";" " " PACKAGE_LIBS_DBG "${PACKAGE_LIBS_DBG}")
+		string(REPLACE ";" " " SYSTEM_LIBS_DBG "${SYSTEM_LIBS_DBG}")		
+	endif()
+	
 	set(${_pkc_PACKAGE_LIBS_REL} "${PACKAGE_LIBS_REL}" PARENT_SCOPE)
 	set(${_pkc_SYSTEM_LIBS_REL} "${SYSTEM_LIBS_REL}" PARENT_SCOPE)
 	set(${_pkc_PACKAGE_LIBS_DBG} "${PACKAGE_LIBS_DBG}" PARENT_SCOPE)
