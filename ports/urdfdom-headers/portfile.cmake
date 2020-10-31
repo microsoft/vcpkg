@@ -22,6 +22,11 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom_headers)
 endif()
 
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+    vcpkg_fixup_pkgconfig()
+endif()
+
+
 # The config files for this project use underscore
 if(EXISTS ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers)
     file(RENAME ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers ${CURRENT_PACKAGES_DIR}/share/urdfdom_headers)
