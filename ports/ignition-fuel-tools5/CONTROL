@@ -1,4 +1,0 @@
-Source: ignition-fuel-tools5
-Version: 5.0.0
-Build-Depends: curl, ignition-cmake2, ignition-common3, libyaml, libzip, jsoncpp
-Description: Tools for using fuel API to download robot models
