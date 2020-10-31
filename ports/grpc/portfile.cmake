@@ -17,6 +17,7 @@ vcpkg_from_github(
         00009-use-system-upb.patch
         00010-add-feature-absl-sync.patch
         00011-fix-csharp_plugin.patch
+        00012-vcpkg-cross-compile.patch
         snprintf.patch
 )
 

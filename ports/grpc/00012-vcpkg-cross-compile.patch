@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ad15a31..1529acd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -284,6 +284,16 @@ if(WIN32)
+   set(_gRPC_BASELIB_LIBRARIES wsock32 ws2_32 crypt32 gdi32)
+ endif()
+ 
++# VCPKG cross compile support
++if(VCPKG_HOST_TRIPLET AND NOT VCPKG_HOST_TRIPLET STREQUAL VCPKG_TARGET_TRIPLET)
++    set(CMAKE_CROSSCOMPILING ON)
++    set(_gRPC_CPP_PLUGIN "${_VCPKG_INSTALLED_DIR}/${VCPKG_HOST_TRIPLET}/tools/grpc/grpc_cpp_plugin")
++    if(NOT EXISTS "${_gRPC_CPP_PLUGIN}")
++        message(WARNING "${_gRPC_CPP_PLUGIN} is not installed. Cross compile might fail. Try to install grpc:${VCPKG_HOST_TRIPLET}")
++        unset(_gRPC_CPP_PLUGIN)
++    endif()
++endif()
++
+ # Create directory for generated .proto files
+ set(_gRPC_PROTO_GENS_DIR ${CMAKE_BINARY_DIR}/gens)
+ file(MAKE_DIRECTORY ${_gRPC_PROTO_GENS_DIR})
