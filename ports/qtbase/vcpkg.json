@@ -1,98 +1,41 @@
 {
   "name": "qtbase",
   "version-string": "6.0.0",
-  "port-version": 0,
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "zlib",
     {
       "name": "libb2",
       "platform": "!windows"
-    }
+    },
+    "zlib"
   ],
-  "default-features" : [ 
-    "default-features",
+  "default-features": [
+    "brotli",
     "concurrent",
     "dbus",
-    "xml",
-    "testlib",
-    "zstd",
-    "icu",
-    "pcre2",
+    "default-features",
     "doubleconversion",
+    "freetype",
+    "gui",
+    "harfbuzz",
+    "icu",
+    "jpeg",
     "network",
     "openssl",
-    "brotli",
-    "gui",
-    "widgets",
-    "freetype",
-    "harfbuzz",
-    "jpeg",
+    "pcre2",
     "png",
     "sql",
     "sql-psql",
-    "sql-sqlite"
+    "sql-sqlite",
+    "testlib",
+    "widgets",
+    "xml",
+    "zstd"
   ],
   "features": {
-    "default-features": {
-      "description": "Platform-dependent default features",
-      "dependencies": [
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [ "fontconfig" ],
-          "platform": "linux"
-        },
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [ "appstore-compliant" ],
-          "platform": "uwp"
-        }
-      ]
-    },
     "appstore-compliant": {
       "description": "Disable code that is not allowed in platform app stores. This is on by default for platforms which require distribution through an app store by default, in particular Android, iOS, tvOS, and watchOS."
-    },
-    "framework": {
-      "description": "MAC framework build",
-      "$platform": "osx"
-    },
-    "zstd": {
-      "description": "Zstandard support",
-      "dependencies": [
-        "zstd"
-      ]
-    },
-    "doubleconversion": {
-      "description": "Enable double conversion support",
-      "dependencies": [
-        "double-conversion"
-      ]
-    },
-    "icu": {
-      "description": "Enable ICU support",
-      "dependencies": [
-        "icu"
-      ]
-    },
-    "pcre2": {
-      "description": "Enable PCRE2 support",
-      "dependencies": [
-        "pcre2"
-      ]
-    },
-    "openssl": {
-      "description": "Enable OpenSSL",
-      "dependencies": [
-        "openssl",
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [ "network" ]
-        }
-      ]
     },
     "brotli": {
       "description": "Support for downloading and decompressing resources compressed with Brotli through QNetworkAccessManager.",
@@ -101,9 +44,61 @@
         {
           "name": "qtbase",
           "default-features": false,
-          "features": [ "network" ]
+          "features": [
+            "network"
+          ]
         }
       ]
+    },
+    "concurrent": {
+      "description": "Provides a high-level multi-threading API. Qt Concurrent"
+    },
+    "dbus": {
+      "description": "Qt D-Bus"
+    },
+    "default-features": {
+      "description": "Platform-dependent default features",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "appstore-compliant"
+          ],
+          "platform": "uwp"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ],
+          "platform": "linux"
+        }
+      ]
+    },
+    "doubleconversion": {
+      "description": "Enable double conversion support",
+      "dependencies": [
+        "double-conversion"
+      ]
+    },
+    "fontconfig": {
+      "description": "Use fontconfig",
+      "dependencies": [
+        "fontconfig",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        }
+      ]
+    },
+    "framework": {
+      "$platform": "osx",
+      "description": "MAC framework build"
     },
     "freetype": {
       "description": "Supports the FreeType 2 font engine (and its supported font formats).",
@@ -115,9 +110,14 @@
         {
           "name": "qtbase",
           "default-features": false,
-          "features": [ "gui" ]
+          "features": [
+            "gui"
+          ]
         }
       ]
+    },
+    "gui": {
+      "description": "Qt Gui"
     },
     "harfbuzz": {
       "description": "Use harfbuzz",
@@ -126,19 +126,16 @@
         {
           "name": "qtbase",
           "default-features": false,
-          "features": [ "gui" ]
+          "features": [
+            "gui"
+          ]
         }
       ]
     },
-    "fontconfig": {
-      "description": "Use fontconfig",
+    "icu": {
+      "description": "Enable ICU support",
       "dependencies": [
-        "fontconfig",
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [ "gui" ]
-        }
+        "icu"
       ]
     },
     "jpeg": {
@@ -148,8 +145,32 @@
         {
           "name": "qtbase",
           "default-features": false,
-          "features": [ "gui" ]
+          "features": [
+            "gui"
+          ]
         }
+      ]
+    },
+    "network": {
+      "description": "Qt Network"
+    },
+    "openssl": {
+      "description": "Enable OpenSSL",
+      "dependencies": [
+        "openssl",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
+        }
+      ]
+    },
+    "pcre2": {
+      "description": "Enable PCRE2 support",
+      "dependencies": [
+        "pcre2"
       ]
     },
     "png": {
@@ -159,9 +180,14 @@
         {
           "name": "qtbase",
           "default-features": false,
-          "features": [ "gui" ]
+          "features": [
+            "gui"
+          ]
         }
       ]
+    },
+    "sql": {
+      "description": "Qt Sql"
     },
     "sql-psql": {
       "description": "Enable SQL Driver psql",
@@ -170,35 +196,30 @@
         {
           "name": "qtbase",
           "default-features": false,
-          "features": [ "sql" ]
+          "features": [
+            "sql"
+          ]
         }
       ]
     },
     "sql-sqlite": {
       "description": "Enable SQL Driver sqlite",
       "dependencies": [
-        "sqlite3",
         {
           "name": "qtbase",
           "default-features": false,
-          "features": [ "sql" ]
-        }
+          "features": [
+            "sql"
+          ]
+        },
+        "sqlite3"
       ]
     },
-    "concurrent": {
-      "description": "Provides a high-level multi-threading API. Qt Concurrent"
+    "testlib": {
+      "description": "Qt Testlib"
     },
-    "dbus": {
-      "description": "Qt D-Bus"
-    },
-    "gui": {
-      "description": "Qt Gui"
-    },
-    "network": {
-      "description": "Qt Network"
-    },
-    "sql": {
-      "description": "Qt Sql"
+    "vulkan": {
+      "description": "Enable Vulkan support"
     },
     "widgets": {
       "description": "Qt Widgets",
@@ -206,19 +227,20 @@
         {
           "name": "qtbase",
           "default-features": false,
-          "features": [ "gui" ]
+          "features": [
+            "gui"
+          ]
         }
       ]
     },
     "xml": {
       "description": "Qt XML"
     },
-    "testlib": {
-      "description": "Qt Testlib"
-    },
-    "vulkan": {
-      "description": "Enable Vulkan support"
+    "zstd": {
+      "description": "Zstandard support",
+      "dependencies": [
+        "zstd"
+      ]
     }
   }
 }
-

@@ -1,15 +1,12 @@
 {
   "name": "qtdeclarative",
   "version-string": "6.0.0",
-  "port-version": 0,
   "description": "Qt Declarative (Quick 2)",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    {
-      "name": "qtbase"
-    }
+    "qtbase"
   ],
-  "default-features" : [ 
+  "default-features": [
     "default-features"
   ],
   "features": {
@@ -18,4 +15,3 @@
     }
   }
 }
-
