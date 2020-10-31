@@ -6,7 +6,7 @@
   "supports": "!linux & !uwp",
   "dependencies": [
     "ignition-math6",
-    "urdfdom",
-    "tinyxml2"
+    "tinyxml2",
+    "urdfdom"
   ]
 }
