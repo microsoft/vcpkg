@@ -1,0 +1,21 @@
+{
+  "name": "qttools",
+  "version-string": "6.0.0",
+  "port-version": 0,
+  "description": "Qt Tools",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase"
+    }
+  ],
+  "default-features" : [ 
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    }
+  }
+}
+

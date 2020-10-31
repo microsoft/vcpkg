@@ -261,3 +261,11 @@ endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake")
 qt_install_copyright("${SOURCE_PATH}")
+
+# Instal Scripts
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/share/qt
+)
