@@ -52,6 +52,12 @@ vcpkg_configure_cmake(
         -DQT_FEATURE_relocatable:BOOL=ON
 # Setup Qt syncqt (required for headers)
         -DHOST_PERL:PATH="${PERL}"
+        -DQT_SYNCQT:PATH="${CURRENT_INSTALLED_DIR}/tools/qtbase/syncqt.pl"
+        -DINSTALL_DESCRIPTIONSDIR:STRING="modules"
+        -DINSTALL_LIBEXECDIR:STRING="bin"
+        -DINSTALL_PLUGINSDIR:STRING="plugins"
+        -DINSTALL_QMLDIR:STRING="qml"
+        -DINSTALL_TRANSLATIONSDIR:STRING="translations"
     OPTIONS_DEBUG
         -DQT_NO_MAKE_TOOLS:BOOL=ON
         -DQT_FEATURE_debug:BOOL=ON
