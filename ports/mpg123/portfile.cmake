@@ -1,5 +1,5 @@
-set(MPG123_VERSION 1.25.8)
-set(MPG123_HASH f226317dddb07841a13753603fa13c0a867605a5a051626cb30d45cfba266d3d4296f5b8254f65b403bb5eef6addce1784ae8829b671a746854785cda1bad203)
+set(MPG123_VERSION 1.26.3)
+set(MPG123_HASH 7574331afaecf3f867455df4b7012e90686ad6ac8c5b5e820244204ea7088bf2b02c3e75f53fe71c205f9eca81fef93f1d969c8d0d1ee9775dc05482290f7b2d)
 
 #architecture detection
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -18,104 +18,38 @@ else()
    message(FATAL_ERROR "unsupported architecture")
 endif()
 
-#linking
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(MPG123_CONFIGURATION_SUFFIX _Dll)
-endif()
-
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mpg123/mpg123
     REF ${MPG123_VERSION}
     FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
     SHA512 ${MPG123_HASH}
-    PATCHES
-        0001-fix-crt-linking.patch
-        0002-fix-x86-build.patch
-        0003-add-arm-configs.patch
-        0004-add-arm64-uwp-config.patch
 )
-
 
 include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
 yasm_tool_helper(APPEND_TO_PATH)
 
-if(VCPKG_TARGET_IS_UWP)
-    vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/libmpg123.vcxproj
-        OPTIONS /p:UseEnv=True
+if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}/ports/cmake
+        OPTIONS -DNO_LFS_ALIAS=ON
     )
 
-    message(STATUS "Installing")
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Debug/libmpg123/libmpg123.dll
-        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Debug/libmpg123/libmpg123.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Debug/libmpg123/libmpg123.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    )
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Release/libmpg123/libmpg123.dll
-        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Release/libmpg123/libmpg123.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-    )
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/uwp/libmpg123/${MPG123_ARCH}/Release/libmpg123/libmpg123.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    )
+    vcpkg_install_cmake()
     file(INSTALL
         ${SOURCE_PATH}/ports/MSVC++/mpg123.h
         ${SOURCE_PATH}/src/libmpg123/fmt123.h
         ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
         DESTINATION ${CURRENT_PACKAGES_DIR}/include
     )
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_build_msbuild(
-        PROJECT_PATH ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
-        OPTIONS /p:UseEnv=True
-        RELEASE_CONFIGURATION Release${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
-        DEBUG_CONFIGURATION Debug${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
-    )
 
-    message(STATUS "Installing")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        file(INSTALL
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.dll
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-        )
-        file(INSTALL
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.dll
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-        )
-    else()
-        file(INSTALL
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug_x86/libmpg123.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-        )
-        file(INSTALL
-            ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release_x86/libmpg123.pdb
-            DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-        )
-    endif()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT} TARGET_PATH share/${PORT})
 
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Debug/libmpg123.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    )
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/2015/win32/libmpg123/${MPG123_ARCH}/Release/libmpg123.lib
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    )
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/mpg123.h
-        ${SOURCE_PATH}/src/libmpg123/fmt123.h
-        ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
-        DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    )
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+    vcpkg_copy_pdbs()
+    # vcpkg_fixup_pkgconfig()
 elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     set(MPG123_OPTIONS
         --disable-dependency-tracking
