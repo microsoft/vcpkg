@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS -DWITH_QT=OFF
 )
 
 vcpkg_install_cmake()

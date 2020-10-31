@@ -6,18 +6,7 @@
   "supports": "!linux & !osx & !static",
   "dependencies": [
     "opencv",
-    {
-      "name": "pcl",
-      "features": [
-        "vtk"
-      ]
-    },
-    {
-      "name": "vtk",
-      "features": [
-        "qt"
-      ]
-    },
+    "pcl",
     "zlib"
   ]
 }
