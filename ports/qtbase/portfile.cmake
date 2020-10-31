@@ -149,6 +149,16 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
 # FEATURE_xkbcommon _x11
 # FEATURE_xlib
 
+#TODO:
+  # Manually-specified variables were not used by the project:
+
+    # CMAKE_INSTALL_BINDIR
+    # CMAKE_INSTALL_LIBDIR
+    # INPUT_sqlite
+    # QT_FEATURE_openssl-linked
+    # QT_FEATURE_sql-psql
+    # QT_FEATURE_sql-sqlite
+    # QT_FEATURE_system-sqlite
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
