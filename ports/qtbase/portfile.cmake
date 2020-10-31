@@ -1,6 +1,15 @@
-set(${PORT}_REF v6.0.0-beta1)
-set(${PORT}_HASH 85a662990f014dd1c6c9bba3b541199c5e7e4535c6454cd3e78fbd4cfae977dc8ff370ae30fdd8068097b5a88ae069103546f54fb5f6b9c4597ed48e62fc1449)
-set(${PORT}_PATCHES jpeg.patch findzstd.patch config_install.patch allow_outside_prefix.patch)
+set(${PORT}_REF v6.0.0-beta2)
+set(${PORT}_HASH 271c4ca2baa12b111837b36f2f2aed51ef84a62e2a3b8f9185a004330cb0a4c9398cf17468b134664de70ad175f104e77fa2a848466d33004739cdcb82d339ea)
+
+## All above goes into the qt_port_hashes in the future
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes.cmake")
+
+vcpkg_find_acquire_program(PERL) # Perl is probably required by all qt ports for syncqt
+get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+vcpkg_add_to_path(${PERL_PATH})
+
+
+set(${PORT}_PATCHES jpeg.patch findzstd.patch config_install.patch allow_outside_prefix.patch harfbuzz.patch)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,64 +19,93 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES ${${PORT}_PATCHES}
 )
-vcpkg_find_acquire_program(PERL)
-get_filename_component(PERL_PATH ${PERL} DIRECTORY)
-vcpkg_add_to_path(${PERL_PATH})
 
-# Features can be found via searching here: 
-# qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/configure.cmake")
-# qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/corelib/configure.cmake")
-# qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/network/configure.cmake")
-# qt_feature_evaluate_features("${CMAKE_CURRENT_SOURCE_DIR}/gui/configure.cmake")
+# Features can be found via searching for qt_feature in all configure.cmake files in the source: 
 # The files also contain information about the Platform for which it is searched
 # Always use QT_FEATURE_<feature> in vcpkg_configure_cmake
+# Theoretically there is a feature for every widget to enable/disable it but that is way to much for vcpkg
+
+set(input_vars doubleconversion freetype harfbuzz libb2 jpeg libmd4c png sql-sqlite)
+set(INPUT_OPTIONS)
+foreach(_input IN LISTS input_vars)
+    if(_input MATCHES "(png|jpeg)" )
+        list(APPEND INPUT_OPTIONS -DINPUT_lib${_input}:STRING=)
+    elseif(_input MATCHES "(sql-sqlite)")
+        list(APPEND INPUT_OPTIONS -DINPUT_sqlite:STRING=)
+    else()
+        list(APPEND INPUT_OPTIONS -DINPUT_${_input}:STRING=)
+    endif()
+    if("${_input}" IN_LIST FEATURES)
+        string(APPEND INPUT_OPTIONS system)
+    elseif(_input STREQUAL "libb2" AND NOT VCPKG_TARGET_IS_WINDOWS)
+        string(APPEND INPUT_OPTIONS system)
+    else()
+        string(APPEND INPUT_OPTIONS no)
+    endif()
+endforeach()
 
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
     "appstore-compliant"  QT_FEATURE_appstore-compliant
     "zstd"                QT_FEATURE_zstd
+    "framework"           QT_FEAUTRE_framework
+    "concurrent"          QT_FEAUTRE_concurrent
+    "dbus"                QT_FEAUTRE_dbus
+    "gui"                 QT_FEAUTRE_gui
+    "network"             QT_FEAUTRE_network
+    "sql"                 QT_FEAUTRE_sql
+    "widgets"             QT_FEAUTRE_widgets
+    "xml"                 QT_FEAUTRE_xml
+    "testlib"             QT_FEAUTRE_testlib
     )
 
 # Corelib features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
     "doubleconversion"    QT_FEATURE_doubleconversion
-    "doubleconversion"    QT_FEATURE_system-doubleconversion
+    #"doubleconversion"    QT_FEATURE_system-doubleconversion
     # "glib"                QT_FEATURE_glib
     "icu"                 QT_FEATURE_icu
     "pcre2"               QT_FEATURE_pcre2
-    "pcre2"               QT_FEATURE_system-pcre2
-    # "libb2"               QT_FEATURE_system-libb2
+    #"pcre2"               QT_FEATURE_system-pcre2
     )
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_CORE_OPTIONS QT_FEATURE_system-libb2:BOOL=ON)
+endif()
 
 # Network features:
  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_NET_OPTIONS
     "openssl"             QT_FEATURE_openssl
-    "openssl"             QT_FEATURE_openssl-linked
+    "openssl"             QT_FEATURE_openssl-linked #'*
     "brotli"              QT_FEATURE_brotli
     )
 
 # Gui features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "freetype"            QT_FEATURE_freetype
-    "freetype"            QT_FEATURE_system-freetype
+    #"freetype"            QT_FEATURE_system-freetype
     "harfbuzz"            QT_FEATURE_harfbuzz # Currently requires pkg-config
-    "harfbuzz"            QT_FEATURE_system-harfbuzz
+    #"harfbuzz"            QT_FEATURE_system-harfbuzz
     "fontconfig"          QT_FEATURE_fontconfig # NOT WINDOWS
     # "gif"                 QT_FEATURE_gif
     # "ico"                 QT_FEATURE_ico
     "jpeg"                QT_FEATURE_jpeg
-    "jpeg"                QT_FEATURE_system-jpeg
+    #"jpeg"                QT_FEATURE_system-jpeg
     "png"                 QT_FEATURE_png
-    "png"                 QT_FEATURE_system-png
+    #"png"                 QT_FEATURE_system-png
     # "opengl"              QT_FEATURE_opengl
     # "egl"                 QT_FEATURE_egl
+    #"xlib"                QT_FEATURE_xlib
+    #"xcb"                 QT_FEATURE_xcb
+    #"xcb-xlib"            QT_FEATURE_xcb-xlib
+    "vulkan"              QT_FEATURE_vulkan
      )
 
 # sql-drivers features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
-    "sql-psql"            QT_FEATURE_sql-psql
-    "sql-sqlite"          QT_FEATURE_sql-sqlite
-    "sql-sqlite"          QT_FEATURE_system-sqlite
+    "sql-psql"            QT_FEATURE_sql-psql       #'*
+    "sql-sqlite"          QT_FEATURE_sql-sqlite     #'*
+    "sql-sqlite"          QT_FEATURE_system-sqlite  #'*
     # "sql-db2"             QT_FEATURE_sql-db2
     # "sql-ibase"           QT_FEATURE_sql-ibase
     # "sql-mysql"           QT_FEATURE_sql-mysql
@@ -86,57 +124,34 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     # )
 
 
-# QT_ FEATURE_appstore_compliant
-# FEATURE_bortli
-# FEATURE_cross_compile
+# QT_
 # FEATURE_cups
-# FEATURE_dbus
 # FEATURE_dbus_linked
-# FEATURE_doubleconversion
 # FEATURE_ egl egl_x11 eglfs eglfs _brcm _egldevice _gbm _mali _openwfd _rcar _viv _viv_wl _vsp2 _x11
 # FEATURE_etw
 # FEATURE_evdev
 # FEATURE_eventfd
-# FEATURE_fontconfig
-# FEATURE_freetype
-# FEATURE_gif
 # FEATURE_glib
 # FEATURE_glibc
 # FEATURE_gssapi
 # FEATURE_gtk3
-# FEATURE_harfbuzz
-# FEATURE_icu
-# FEATURE_jpeg
 # FEATURE_ltcg
 # FEATURE_opengl _dynamic _desktop 
 # FEATURE_opengles2 3 31 32
 # FEATURE_openssl _linked _runtime
-# FEATURE_optimize_debug
 # FEATURE_optimize_full _size
-# FEATURE_pcre2
 # FEATURE_pkg_config
-# FEATURE_png
 # FEATURE_reduce_exports
 # FEATURE_reduce_relocations
-# FEATURE_sql   _db2 _ibase _mysql _oci _odbc _psql _sqlite
 # FEATURE_vulkan
 # FEATURE_win32_system_libs?
 # FEAUTRE_xcb _xlib
 # FEATURE_xkbcommon _x11
 # FEATURE_xlib
-# FEATURE_xml
-# FEATURE_zstd
 
-# INPUT_doubleconversion
-# INPUT_freetype
-# INPUT_harfbuzz
-# 
-# INPUT_libjpeg
-# INPUT_libmd4c
-# INPUT_libpng
-# INPUT_sqlite
+
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS 
         ${FEATURE_CORE_OPTIONS}
@@ -145,6 +160,7 @@ vcpkg_configure_cmake(
         ${FEATURE_SQLDRIVERS_OPTIONS}
         ${FEATURE_PRINTSUPPORT_OPTIONS}
         ${FEATURE_WIDGETS_OPTIONS}
+        ${INPUT_OPTIONS}
         #-DQT_HOST_PATH=<somepath> # For crosscompiling
         #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
         #-DQT_QMAKE_TARGET_MKSPEC=win32-msvc
@@ -156,20 +172,20 @@ vcpkg_configure_cmake(
         -DQT_USE_BUNDLED_BundledHarfbuzz:BOOL=FALSE
         -DQT_USE_BUNDLED_BundledLibpng:BOOL=FALSE
         -DQT_USE_BUNDLED_BundledPcre2:BOOL=FALSE
-        -DQT_FEATURE_system_doubleconversion:BOOL=ON
-        -DQT_FEATURE_system_freetype:BOOL=ON
+        #-DQT_FEATURE_icu:BOOL=ON
+        #-DQT_FEATURE_system_doubleconversion:BOOL=ON
+        #-DQT_FEATURE_system_freetype:BOOL=ON
         #-DQT_FEATURE_system_harfbuzz:BOOL=OFF
-        -DQT_FEATURE_harfbuzz:BOOL=OFF
-        -DQT_FEATURE_libb2:BOOL=OFF
+        #-DQT_FEATURE_harfbuzz:BOOL=OFF
+        #-DQT_FEATURE_libb2:BOOL=OFF
         #-DQT_FEATURE_system_libb2:BOOL=OFF
-        -DQT_FEATURE_system_pcre2:BOOL=ON
-        -DQT_FEATURE_system_png:BOOL=ON
-        -DQT_FEATURE_system_zlib:BOOL=ON
-        -DQT_FEATURE_system_sqlite:BOOL=ON
-        -DQT_FEATURE_zstd:BOOL=ON
+        #-DQT_FEATURE_system_pcre2:BOOL=ON
+        #-DQT_FEATURE_system_png:BOOL=ON
+        #-DQT_FEATURE_system_zlib:BOOL=ON
+        #-DQT_FEATURE_system_sqlite:BOOL=ON
+        #-DQT_FEATURE_zstd:BOOL=ON
         -DQT_FEATURE_force_debug_info:BOOL=ON
         -DQT_FEATURE_relocatable:BOOL=ON
-        -DQT_FEATURE_icu:BOOL=ON
 # Setup Qt syncqt (required for headers)
         -DHOST_PERL:PATH="${PERL}"
     OPTIONS_DEBUG
@@ -183,7 +199,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Qt6 TARGET_PATH share/cmake/Qt6)
-set(COMPONENTS BuildInternals BundledHarfbuzz Concurrent Core CoreTools Core_qobject DBus DBusTools DeviceDiscoverySupport FbSupport Gui GuiTools HostInfo Network OpenGL OpenGLWidgets PrintSupport Sql Test Widgets WidgetsTools WinMain Xml)
+set(COMPONENTS BuildInternals Concurrent Core CoreTools Core_qobject DBus DBusTools DeviceDiscoverySupport FbSupport Gui GuiTools HostInfo Network OpenGL OpenGLWidgets PrintSupport Sql Test Widgets WidgetsTools WinMain Xml)
 foreach(_comp IN LISTS COMPONENTS)
     if(EXISTS "${CURRENT_PACKAGES_DIR}/share/cmake/Qt6${_comp}")
         vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Qt6${_comp} TARGET_PATH share/cmake/Qt6${_comp})
@@ -201,6 +217,8 @@ set(other_files qt-cmake-private-install.cmake syncqt.pl)
 foreach(_config debug release)
     if(_config MATCHES "debug")
         set(path_suffix debug/)
+    else()
+        set(path_suffix)
     endif()
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${path_suffix}")
     foreach(script IN LISTS script_files)
@@ -223,11 +241,7 @@ foreach(_config debug release)
     endforeach()
 endforeach()
 
-
-#TODO. move qtmain(d).lib into manual link
-
-
-
+#TODO. move qtmain(d).lib into manual link (removed in beta2?)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/mkspecs"
                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
@@ -245,17 +259,5 @@ if(NOT VCPKG_TARGET_IS_OSX)
                         )
 endif()
 
-if(EXISTS "${SOURCE_PATH}/LICENSE.LGPLv3")
-    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.LGPLv3")
-elseif(EXISTS "${SOURCE_PATH}/LICENSE.LGPL3")
-    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.LGPL3")
-elseif(EXISTS "${SOURCE_PATH}/LICENSE.GPLv3")
-    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.GPLv3")
-elseif(EXISTS "${SOURCE_PATH}/LICENSE.GPL3")
-    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.GPL3")
-elseif(EXISTS "${SOURCE_PATH}/LICENSE.GPL3-EXCEPT")
-    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.GPL3-EXCEPT")
-elseif(EXISTS "${SOURCE_PATH}/LICENSE.FDL")
-    set(LICENSE_PATH "${SOURCE_PATH}/LICENSE.FDL")
-endif()
-file(INSTALL ${LICENSE_PATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake")
+qt_install_copyright("${SOURCE_PATH}")

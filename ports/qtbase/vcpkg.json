@@ -5,20 +5,32 @@
   "description": "Qt Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "zlib"
+    "zlib",
+    {
+      "name": "libb2",
+      "platform": "!windows"
+    }
   ],
   "default-features" : [ 
     "default-features",
+    "concurrent",
+    "dbus",
+    "xml",
+    "testlib",
     "zstd",
     "icu",
     "pcre2",
     "doubleconversion",
+    "network",
     "openssl",
     "brotli",
+    "gui",
+    "widgets",
     "freetype",
     "harfbuzz",
     "jpeg",
     "png",
+    "sql",
     "sql-psql",
     "sql-sqlite"
   ],
@@ -31,11 +43,21 @@
           "default-features": false,
           "features": [ "fontconfig" ],
           "platform": "linux"
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "appstore-compliant" ],
+          "platform": "uwp"
         }
       ]
     },
     "appstore-compliant": {
       "description": "Disable code that is not allowed in platform app stores. This is on by default for platforms which require distribution through an app store by default, in particular Android, iOS, tvOS, and watchOS."
+    },
+    "framework": {
+      "description": "MAC framework build",
+      "$platform": "osx"
     },
     "zstd": {
       "description": "Zstandard support",
@@ -64,13 +86,23 @@
     "openssl": {
       "description": "Enable OpenSSL",
       "dependencies": [
-        "openssl"
+        "openssl",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "network" ]
+        }
       ]
     },
     "brotli": {
       "description": "Support for downloading and decompressing resources compressed with Brotli through QNetworkAccessManager.",
       "dependencies": [
-        "brotli"
+        "brotli",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "network" ]
+        }
       ]
     },
     "freetype": {
@@ -79,44 +111,113 @@
         {
           "name": "freetype",
           "default-features": false
+        },
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "gui" ]
         }
       ]
     },
     "harfbuzz": {
       "description": "Use harfbuzz",
       "dependencies": [
-        "harfbuzz"
+        "harfbuzz",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "gui" ]
+        }
       ]
     },
     "fontconfig": {
       "description": "Use fontconfig",
       "dependencies": [
-        "fontconfig"
+        "fontconfig",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "gui" ]
+        }
       ]
     },
     "jpeg": {
       "description": "Enable JPEG",
       "dependencies": [
-        "libjpeg-turbo"
+        "libjpeg-turbo",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "gui" ]
+        }
       ]
     },
     "png": {
       "description": "Enable PNG",
       "dependencies": [
-        "libpng"
+        "libpng",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "gui" ]
+        }
       ]
     },
     "sql-psql": {
       "description": "Enable SQL Driver psql",
       "dependencies": [
-        "libpq"
+        "libpq",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "sql" ]
+        }
       ]
     },
     "sql-sqlite": {
       "description": "Enable SQL Driver sqlite",
       "dependencies": [
-        "sqlite3"
+        "sqlite3",
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "sql" ]
+        }
       ]
+    },
+    "concurrent": {
+      "description": "Provides a high-level multi-threading API. Qt Concurrent"
+    },
+    "dbus": {
+      "description": "Qt D-Bus"
+    },
+    "gui": {
+      "description": "Qt Gui"
+    },
+    "network": {
+      "description": "Qt Network"
+    },
+    "sql": {
+      "description": "Qt Sql"
+    },
+    "widgets": {
+      "description": "Qt Widgets",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [ "gui" ]
+        }
+      ]
+    },
+    "xml": {
+      "description": "Qt XML"
+    },
+    "testlib": {
+      "description": "Qt Testlib"
+    },
+    "vulkan": {
+      "description": "Enable Vulkan support"
     }
   }
 }
