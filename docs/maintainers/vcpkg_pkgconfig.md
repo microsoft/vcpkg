@@ -1,7 +1,9 @@
 # vcpkg_pkgconfig
 
 Uses pkg-config executable in order to retrieve usefull linkage info.
-This is may be usefull in order to build tools for static build versions
+One use case is to retrieve link libraries in order to build tools for static build (that fails for some ports).
+
+Some ${INSTALLED_DIR}/lib/pkgconfig/${package}.pc files should be fixed (especially some debug versions are not referencing proper files) for proper use. One example of package demonstrating how to fix the .pc file is zlib
 
 ## Usage
 ```cmake
