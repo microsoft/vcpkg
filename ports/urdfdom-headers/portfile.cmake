@@ -31,7 +31,7 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers)
     file(RENAME ${CURRENT_PACKAGES_DIR}/share/urdfdom-headers ${CURRENT_PACKAGES_DIR}/share/urdfdom_headers)
 endif()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 else()
