@@ -209,7 +209,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/Qt6 TARGET_PATH share/Qt6)
-set(COMPONENTS BuildInternals Concurrent Core CoreTools Core_qobject DBus DBusTools DeviceDiscoverySupport EntryPoints FbSupport Gui GuiTools HostInfo Network OpenGL OpenGLWidgets PrintSupport Sql Test Widgets WidgetsTools WinMain Xml)
+set(COMPONENTS BuildInternals Concurrent Core CoreTools Core_qobject DBus DBusTools DeviceDiscoverySupport EntryPoint FbSupport Gui GuiTools HostInfo Network OpenGL OpenGLWidgets PrintSupport Sql Test Widgets WidgetsTools Xml)
 foreach(_comp IN LISTS COMPONENTS)
     if(EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6${_comp}")
         vcpkg_fixup_cmake_targets(CONFIG_PATH share/Qt6${_comp} TARGET_PATH share/Qt6${_comp})
