@@ -20,6 +20,9 @@ file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SO
 
 file(COPY "${SOURCE_PATH}/test/check_lfs_support.cpp" "${SOURCE_PATH}/test/check_movable_fstreams.cpp" DESTINATION "${SOURCE_PATH}/build/config")
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
+boost_modular_build(
+    SOURCE_PATH ${SOURCE_PATH}
+    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+)
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
