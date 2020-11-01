@@ -91,6 +91,8 @@ function(qt_install_submodule)
     endforeach()
     if(_qis_TOOL_NAMES)
         vcpkg_copy_tools(TOOL_NAMES ${_qis_TOOL_NAMES} AUTO_CLEAN)
+        file(COPY "${CURRENT_INSTALLED_DIR}/plugins" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        file(COPY "${CURRENT_PACKAGES_DIR}/plugins" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
     endif()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/mkspecs"
