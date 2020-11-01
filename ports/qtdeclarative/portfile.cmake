@@ -20,24 +20,9 @@ vcpkg_from_github(
     PATCHES ${${PORT}_PATCHES}
 )
 
-# Features can be found via searching for qt_feature in all configure.cmake files in the source: 
-# The files also contain information about the Platform for which it is searched
-# Always use QT_FEATURE_<feature> in vcpkg_configure_cmake
-# Theoretically there is a feature for every widget to enable/disable it but that is way to much for vcpkg
-
 # General features:
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     # "appstore-compliant"  QT_FEATURE_appstore-compliant
-    # "zstd"                QT_FEATURE_zstd
-    # "framework"           QT_FEAUTRE_framework
-    # "concurrent"          QT_FEAUTRE_concurrent
-    # "dbus"                QT_FEAUTRE_dbus
-    # "gui"                 QT_FEAUTRE_gui
-    # "network"             QT_FEAUTRE_network
-    # "sql"                 QT_FEAUTRE_sql
-    # "widgets"             QT_FEAUTRE_widgets
-    # "xml"                 QT_FEAUTRE_xml
-    # "testlib"             QT_FEAUTRE_testlib
     # )
 
 vcpkg_configure_cmake(
@@ -59,7 +44,6 @@ vcpkg_configure_cmake(
         -DINPUT_debug:BOOL=ON
         -DINSTALL_DOCDIR:STRING="../doc"
         -DINSTALL_INCLUDEDIR:STRING="../include"
-        #-DINSTALL_MKSPECSDIR:STRING="../mkspecs" leaks into of buildtree/port
 )
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
@@ -108,44 +92,13 @@ endforeach()
     )
 vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 
-# set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module)
-# set(script_suffix .bat)
-# set(other_files qt-cmake-private-install.cmake syncqt.pl)
-# foreach(_config debug release)
-    # if(_config MATCHES "debug")
-        # set(path_suffix debug/)
-    # else()
-        # set(path_suffix)
-    # endif()
-    # file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${path_suffix}")
-    # foreach(script IN LISTS script_files)
-        # if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}")
-            # set(target_script "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${path_suffix}/${script}${script_suffix}")
-            # file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}" "${target_script}")
-            # file(READ "${target_script}" _contents)
-            # if(_config MATCHES "debug")
-                # string(REPLACE "\\..\\share\\" "\\..\\..\\..\\share\\" _contents "${_contents}")
-            # else()
-                # string(REPLACE "\\..\\share\\" "\\..\\..\\share\\" _contents "${_contents}")
-            # endif()
-            # file(WRITE "${target_script}" "${_contents}")
-        # endif()
-    # endforeach()
-    # foreach(other IN LISTS other_files)
-        # if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}")
-            # file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${path_suffix}/${other}")
-        # endif()
-    # endforeach()
-# endforeach()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/mkspecs"
+                    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
+                    "${CURRENT_PACKAGES_DIR}/debug/share"
+                    "${CURRENT_PACKAGES_DIR}/lib/cmake/"
+                    )
 
-
- file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/mkspecs"
-                     "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
-                     "${CURRENT_PACKAGES_DIR}/debug/share"
-                     "${CURRENT_PACKAGES_DIR}/lib/cmake/"
-                     )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
 endif()
 
