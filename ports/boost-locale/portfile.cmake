@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-Fix-boost-ICU-support.patch allow-force-finding-iconv.patch
+        0001-Fix-boost-ICU-support.patch allow-force-finding-iconv.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
