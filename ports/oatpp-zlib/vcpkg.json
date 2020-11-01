@@ -3,6 +3,8 @@
   "version-string": "1.2.0",
   "port-version": 1,
   "description": "Oat++ functionality for automatically compressing/decompressing content with deflate and gzip.",
-  "dependencies": ["oatpp"],
-  "homepage": "https://github.com/oatpp/oatpp-zlib"
+  "homepage": "https://github.com/oatpp/oatpp-zlib",
+  "dependencies": [
+    "oatpp"
+  ]
 }
