@@ -139,7 +139,7 @@ function Generate()
         $portfileLines += @("    PATCHES")
         foreach ($patch in $patches)
         {
-            $portfileLines += @("        $($patches.name)")
+            $portfileLines += @("        $($patch.name)")
         }
     }
     $portfileLines += @(
