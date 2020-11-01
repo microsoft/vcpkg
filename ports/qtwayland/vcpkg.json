@@ -3,10 +3,10 @@
   "version-string": "6.0.0",
   "description": "A toolbox for making Qt based Wayland compositors",
   "homepage": "https://www.qt.io/",
+  "supports": "!windows",
   "dependencies": [
     "qtbase"
   ],
-  "supports" : "!windows",
   "default-features": [
     "default-features"
   ],

@@ -4,16 +4,16 @@
   "description": "Qt",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase",
-    "qttools",
-    "qtdeclarative",
-    "qtsvg",
     "qt5compat",
-    "qtshadertools",
-    "qtquicktimeline",
+    "qtbase",
+    "qtdeclarative",
+    "qtdoc",
     "qtquick3d",
-    "qttranslations",
-    "qtdoc"
+    "qtquicktimeline",
+    "qtshadertools",
+    "qtsvg",
+    "qttools",
+    "qttranslations"
   ],
   "default-features": [
     "default-features"
@@ -22,10 +22,10 @@
     "default-features": {
       "description": "Platform-dependent default features",
       "dependencies": [
-      {
-        "name": "qtwayland",
-        "platform": "!windows"
-      }
+        {
+          "name": "qtwayland",
+          "platform": "!windows"
+        }
       ]
     }
   }
