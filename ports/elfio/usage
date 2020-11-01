@@ -1,4 +1,0 @@
-The package elfio:x64-linux provides CMake targets:
-
-    find_package(elfio CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE elfio::elfio)
