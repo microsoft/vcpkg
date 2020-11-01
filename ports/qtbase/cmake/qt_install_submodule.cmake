@@ -34,7 +34,6 @@ function(qt_install_submodule)
             #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
             #-DQT_QMAKE_TARGET_MKSPEC=win32-msvc
             #-DQT_USE_CCACHE
-            ${_qis_CONFIGURE_OPTIONS}
             -DQT_NO_MAKE_EXAMPLES:BOOL=TRUE
             -DQT_NO_MAKE_TESTS:BOOL=TRUE
             -DHOST_PERL:PATH="${PERL}"
@@ -43,13 +42,15 @@ function(qt_install_submodule)
             -DINSTALL_PLUGINSDIR:STRING="plugins"
             -DINSTALL_QMLDIR:STRING="qml"
             -DINSTALL_TRANSLATIONSDIR:STRING="translations"
+            ${_qis_CONFIGURE_OPTIONS}
         OPTIONS_RELEASE
             ${_qis_CONFIGURE_OPTIONS_RELEASE}
         OPTIONS_DEBUG
-            ${_qis_CONFIGURE_OPTIONS_DEBUG}
             -DINPUT_debug:BOOL=ON
             -DINSTALL_DOCDIR:STRING="../doc"
             -DINSTALL_INCLUDEDIR:STRING="../include"
+            -DINSTALL_TRANSLATIONSDIR:STRING="../translations"
+            ${_qis_CONFIGURE_OPTIONS_DEBUG}
     )
 
     vcpkg_install_cmake(ADD_BIN_TO_PATH)
