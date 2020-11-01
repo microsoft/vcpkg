@@ -6,7 +6,7 @@
   "dependencies": [
     "qtbase"
   ],
-  "platform" : "!windows",
+  "supports" : "!windows",
   "default-features": [
     "default-features"
   ],
