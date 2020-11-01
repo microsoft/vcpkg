@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.colm.net/files/ragel/ragel-6.10.tar.gz"
     FILENAME "ragel-6.10.tar.gz"

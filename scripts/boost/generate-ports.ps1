@@ -17,15 +17,18 @@ $port_versions = @{
 }
 
 $per_port_data = @{
-    "fiber" = @{ "supports" = "windows&!uwp&!arm" };
+    "asio" =  @{ "supports" = "!emscripten" };
+    "beast" =  @{ "supports" = "!emscripten" };
+    "fiber" = @{ "supports" = "!osx&!uwp&!arm&!emscripten" };
     "filesystem" = @{ "supports" = "!uwp" };
     "iostreams" = @{ "supports" = "!uwp" };
-    "context" = @{ "supports" = "!uwp" };
+    "context" = @{ "supports" = "!uwp&!emscripten" };
     "stacktrace" = @{ "supports" = "!uwp" };
-    "coroutine" = @{ "supports" = "!arm&!uwp" };
+    "coroutine" = @{ "supports" = "!arm&!uwp&!emscripten" };
+    "coroutine2" = @{ "supports" = "!emscripten" };
     "test" = @{ "supports" = "!uwp" };
     "wave" = @{ "supports" = "!uwp" };
-    "log" = @{ "supports" = "!uwp" };
+    "log" = @{ "supports" = "!uwp&!emscripten" };
     "locale" = @{
         "supports" = "!uwp";
         "features" = @(
@@ -33,8 +36,10 @@ $per_port_data = @{
             "Build-Depends: icu"
             "Description: ICU backend for Boost.Locale"
         )};
+    "parameter-python" =  @{ "supports" = "!emscripten" };
+    "process" =  @{ "supports" = "!emscripten" };
     "python" = @{
-        "supports" = "!uwp&!(arm&windows)";
+        "supports" = "!uwp&!(arm&windows)&!emscripten";
         "features" = @(
             "Feature: python2"
             "Build-Depends: python2 (windows)"

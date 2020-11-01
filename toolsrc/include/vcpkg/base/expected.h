@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/checks.h>
+#include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/stringliteral.h>
 
 #include <system_error>
