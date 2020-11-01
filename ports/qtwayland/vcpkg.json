@@ -1,0 +1,17 @@
+{
+  "name": "qtwayland",
+  "version-string": "6.0.0",
+  "description": "A toolbox for making Qt based Wayland compositors",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    "qtbase"
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    }
+  }
+}

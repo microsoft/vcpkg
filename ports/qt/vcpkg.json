@@ -1,0 +1,27 @@
+{
+  "name": "qt",
+  "version-string": "6.0.0",
+  "description": "Qt",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    "qtbase",
+    "qttools",
+    "qtdeclarative",
+    "qtsvg",
+    "qt5compat",
+    "qtshadertools",
+    "qtquicktimeline",
+    "qtquick3d",
+    "qttranslations",
+    "qtwayland",
+    "qtdoc"
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    }
+  }
+}
