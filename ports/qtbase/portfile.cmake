@@ -1,13 +1,5 @@
-set(${PORT}_REF v6.0.0-beta2)
-set(${PORT}_HASH 271c4ca2baa12b111837b36f2f2aed51ef84a62e2a3b8f9185a004330cb0a4c9398cf17468b134664de70ad175f104e77fa2a848466d33004739cdcb82d339ea)
-
 ## All above goes into the qt_port_hashes in the future
-include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes.cmake")
-
-vcpkg_find_acquire_program(PERL) # Perl is probably required by all qt ports for syncqt
-get_filename_component(PERL_PATH ${PERL} DIRECTORY)
-vcpkg_add_to_path(${PERL_PATH})
-
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
         jpeg.patch
@@ -19,15 +11,6 @@ set(${PORT}_PATCHES
         buildcmake.patch
         dont_force_cmakecache.patch
         )
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO qt/${PORT}
-    REF ${${PORT}_REF}
-    SHA512 ${${PORT}_HASH}
-    HEAD_REF master
-    PATCHES ${${PORT}_PATCHES}
-)
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source: 
 # The files also contain information about the Platform for which it is searched
@@ -221,65 +204,42 @@ list(APPEND FEATURE_WIDGETS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GTK3:BOOL=ON)
     # CMAKE_INSTALL_BINDIR
     # CMAKE_INSTALL_LIBDIR
     # INPUT_sqlite
+set(TOOL_NAMES 
+        androiddeployqt 
+        androidtestrunner 
+        cmake_automoc_parser 
+        moc 
+        qdbuscpp2xml 
+        qdbusxml2cpp 
+        qlalr 
+        qmake 
+        qvkgen 
+        rcc 
+        tracegen 
+        uic
+    )
 
-vcpkg_configure_cmake(
-    SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
-    OPTIONS 
-        ${FEATURE_CORE_OPTIONS}
-        ${FEATURE_NET_OPTIONS}
-        ${FEATURE_GUI_OPTIONS}
-        ${FEATURE_SQLDRIVERS_OPTIONS}
-        ${FEATURE_PRINTSUPPORT_OPTIONS}
-        ${FEATURE_WIDGETS_OPTIONS}
-        ${INPUT_OPTIONS}
-        #-DQT_HOST_PATH=<somepath> # For crosscompiling
-        #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
-        #-DQT_QMAKE_TARGET_MKSPEC=win32-msvc
-        #-DQT_USE_CCACHE
-        -DQT_NO_MAKE_EXAMPLES:BOOL=TRUE
-        -DQT_NO_MAKE_TESTS:BOOL=TRUE
-        #-DQT_NO_MAKE_TOOLS:BOOL=TRUE
-        -DQT_USE_BUNDLED_BundledFreetype:BOOL=FALSE
-        -DQT_USE_BUNDLED_BundledHarfbuzz:BOOL=FALSE
-        -DQT_USE_BUNDLED_BundledLibpng:BOOL=FALSE
-        -DQT_USE_BUNDLED_BundledPcre2:BOOL=FALSE
-        -DQT_FEATURE_force_debug_info:BOOL=ON
-        -DQT_FEATURE_relocatable:BOOL=ON
-# Setup Qt syncqt (required for headers)
-        -DHOST_PERL:PATH="${PERL}"
-        -DINSTALL_DESCRIPTIONSDIR:STRING="modules"
-        -DINSTALL_LIBEXECDIR:STRING="bin"
-        -DINSTALL_PLUGINSDIR:STRING="plugins"
-        -DINSTALL_QMLDIR:STRING="qml"
-        -DINSTALL_TRANSLATIONSDIR:STRING="translations"
-        -DINPUT_reduce-exports:BOOL=ON
-    OPTIONS_RELEASE
-        -DINPUT_release:BOOL=ON
-    OPTIONS_DEBUG
-        -DINPUT_debug:BOOL=ON
-        -DQT_NO_MAKE_TOOLS:BOOL=ON
-        -DQT_FEATURE_debug:BOOL=ON
-        -DINSTALL_DOCDIR:STRING="../doc"
-        -DINSTALL_INCLUDEDIR:STRING="../include"
-        #-DINSTALL_MKSPECSDIR:STRING="../mkspecs" leaks into of buildtree/port
-)
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
-vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/Qt6 TARGET_PATH share/Qt6)
-set(COMPONENTS BuildInternals Concurrent Core CoreTools Core_qobject DBus DBusTools DeviceDiscoverySupport EntryPoint FbSupport Gui GuiTools HostInfo Network OpenGL OpenGLWidgets PrintSupport Sql Test Widgets WidgetsTools Xml)
-foreach(_comp IN LISTS COMPONENTS)
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6${_comp}")
-        vcpkg_fixup_cmake_targets(CONFIG_PATH share/Qt6${_comp} TARGET_PATH share/Qt6${_comp})
-        # Would rather put it into share/cmake as before but the import_prefix correction in vcpkg_fixup_cmake_targets is working against that. 
-    else()
-        message(STATUS "WARNING: Qt component ${_comp} not found/built!")
-    endif()
-endforeach()
-
-set(TOOL_NAMES androiddeployqt androidtestrunner cmake_automoc_parser moc qdbuscpp2xml qdbusxml2cpp qlalr qmake qvkgen rcc tracegen uic)
-vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
+qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
+                     TOOL_NAMES ${TOOL_NAMES}
+                     CONFIGURE_OPTIONS
+                        ${FEATURE_CORE_OPTIONS}
+                        ${FEATURE_NET_OPTIONS}
+                        ${FEATURE_GUI_OPTIONS}
+                        ${FEATURE_SQLDRIVERS_OPTIONS}
+                        ${FEATURE_PRINTSUPPORT_OPTIONS}
+                        ${FEATURE_WIDGETS_OPTIONS}
+                        ${INPUT_OPTIONS}
+                        -DQT_USE_BUNDLED_BundledFreetype:BOOL=FALSE
+                        -DQT_USE_BUNDLED_BundledHarfbuzz:BOOL=FALSE
+                        -DQT_USE_BUNDLED_BundledLibpng:BOOL=FALSE
+                        -DQT_USE_BUNDLED_BundledPcre2:BOOL=FALSE
+                        -DQT_FEATURE_force_debug_info:BOOL=ON
+                        -DQT_FEATURE_relocatable:BOOL=ON
+                     CONFIGURE_OPTIONS_RELEASE
+                     CONFIGURE_OPTIONS_DEBUG
+                        -DQT_NO_MAKE_TOOLS:BOOL=ON
+                        -DQT_FEATURE_debug:BOOL=ON)
 
 set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module)
 set(script_suffix .bat)
@@ -311,38 +271,27 @@ foreach(_config debug release)
     endforeach()
 endforeach()
 
-#TODO. move qtmain(d).lib into manual link (removed in beta2?)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/mkspecs"
-                    "${CURRENT_PACKAGES_DIR}/debug/lib/cmake/"
-                    "${CURRENT_PACKAGES_DIR}/debug/share"
-                    "${CURRENT_PACKAGES_DIR}/lib/cmake/"
-                    "${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuildInternals"
-                    )
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS)
+    file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
+    if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error. 
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
+    endif()
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuildInternals")
 
 if(NOT VCPKG_TARGET_IS_OSX)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/macos"
-                        )
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/macos")
 endif()
-
-include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake")
-qt_install_copyright("${SOURCE_PATH}")
 
 # Install Scripts
 file(COPY
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes.cmake
     ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/share/qt
+        ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
-#fix debug plugin paths (should probably be fixed in vcpkg_fixup_pkgconfig)
-file(GLOB_RECURSE DEBUG_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/**/*Targets-debug.cmake")
-message(STATUS "DEBUG_CMAKE_TARGETS:${DEBUG_CMAKE_TARGETS}")
-foreach(_debug_target IN LISTS DEBUG_CMAKE_TARGETS)
-    vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/plugins" "{_IMPORT_PREFIX}/debug/plugins")
-endforeach()
+#TODO. create qt.conf for vcpkg_configure_qmake
