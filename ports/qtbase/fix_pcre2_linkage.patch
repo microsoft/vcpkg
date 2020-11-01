@@ -1,0 +1,21 @@
+diff --git a/cmake/FindWrapSystemPCRE2.cmake b/cmake/FindWrapSystemPCRE2.cmake
+index 6d8b471f8..a5bef1103 100644
+--- a/cmake/FindWrapSystemPCRE2.cmake
++++ b/cmake/FindWrapSystemPCRE2.cmake
+@@ -24,9 +24,15 @@ if(NOT __pcre2_found)
+   find_path(PCRE2_INCLUDE_DIRS
+             NAMES pcre2.h
+             HINTS ${PC_PCRE2_INCLUDEDIR})
+-  find_library(PCRE2_LIBRARIES
++  find_library(PCRE2_LIBRARY_RELEASE
+               NAMES pcre2-16
+               HINTS ${PC_PCRE2_LIBDIR})
++  find_library(PCRE2_LIBRARY_DEBUG
++              NAMES pcre2-16d pcre2-16
++              HINTS ${PC_PCRE2_LIBDIR})
++  include(SelectLibraryConfigurations)
++  select_library_configurations(PCRE2)
++  
+   if(PC_PCRE2_VERSION)
+       set(WrapSystemPCRE2_VERSION "${PC_PCRE2_VERSION}")
+   endif()

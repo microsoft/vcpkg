@@ -9,7 +9,16 @@ get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_PATH})
 
 
-set(${PORT}_PATCHES jpeg.patch findzstd.patch config_install.patch allow_outside_prefix.patch harfbuzz.patch)
+set(${PORT}_PATCHES 
+        jpeg.patch
+        findzstd.patch
+        fix_pcre2_linkage.patch
+        harfbuzz.patch
+        config_install.patch 
+        allow_outside_prefix.patch 
+        buildcmake.patch
+        dont_force_cmakecache.patch
+        )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -39,6 +48,8 @@ foreach(_input IN LISTS input_vars)
         string(APPEND INPUT_OPTIONS system)
     elseif(_input STREQUAL "libb2" AND NOT VCPKG_TARGET_IS_WINDOWS)
         string(APPEND INPUT_OPTIONS system)
+    elseif(_input STREQUAL "libmd4c")
+        string(APPEND INPUT_OPTIONS qt) # libmd4c is not yet in VCPKG (but required by qtdeclarative)
     else()
         string(APPEND INPUT_OPTIONS no)
     endif()
@@ -46,6 +57,7 @@ endforeach()
 
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
+FEATURES
     "appstore-compliant"  QT_FEATURE_appstore-compliant
     "zstd"                QT_FEATURE_zstd
     "framework"           QT_FEAUTRE_framework
@@ -57,31 +69,56 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
     "widgets"             QT_FEAUTRE_widgets
     "xml"                 QT_FEAUTRE_xml
     "testlib"             QT_FEAUTRE_testlib
+INVERTED_FEATURES
+    "zstd"              CMAKE_DISABLE_FIND_PACKAGE_ZSTD
+    "dbus"              CMAKE_DISABLE_FIND_PACKAGE_WrapDBus1
     )
+
+list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libudev:BOOL=ON)
 
 # Corelib features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
+FEATURES
     "doubleconversion"    QT_FEATURE_doubleconversion
-    #"doubleconversion"    QT_FEATURE_system-doubleconversion
     # "glib"                QT_FEATURE_glib
     "icu"                 QT_FEATURE_icu
     "pcre2"               QT_FEATURE_pcre2
-    #"pcre2"               QT_FEATURE_system-pcre2
+INVERTED_FEATURES
+    "doubleconversion"      CMAKE_DISABLE_FIND_PACKAGE_WrapDoubleConversion
+    "icu"                   CMAKE_DISABLE_FIND_PACKAGE_ICU
+    "pcre2"                 CMAKE_DISABLE_FIND_PACKAGE_WrapSystemPCRE2
+    #"glib"                 CMAKE_DISABLE_FIND_PACKAGE_GLIB2
     )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     list(APPEND FEATURE_CORE_OPTIONS QT_FEATURE_system-libb2:BOOL=ON)
 endif()
 
+list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_LTTngUST:BOOL=ON)
+list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
+list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
+list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON)
+
 # Network features:
  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_NET_OPTIONS
+ FEATURES
     "openssl"             QT_FEATURE_openssl
-    "openssl"             QT_FEATURE_openssl-linked #'*
     "brotli"              QT_FEATURE_brotli
+ INVERTED_FEATURES
+    "brotli"              CMAKE_DISABLE_FIND_PACKAGE_WrapBrotli
+    "openssl"             CMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL
     )
+
+if("openssl" IN_LIST FEATURES)
+    list(APPEND FEATURE_NET_OPTIONS -DINPUT_openssl=linked)
+endif()
+
+list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libproxy:BOOL=ON)
+list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON)
 
 # Gui features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
+    FEATURES
     "freetype"            QT_FEATURE_freetype
     #"freetype"            QT_FEATURE_system-freetype
     "harfbuzz"            QT_FEATURE_harfbuzz # Currently requires pkg-config
@@ -98,14 +135,38 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     #"xlib"                QT_FEATURE_xlib
     #"xcb"                 QT_FEATURE_xcb
     #"xcb-xlib"            QT_FEATURE_xcb-xlib
-    "vulkan"              QT_FEATURE_vulkan
+    INVERTED_FEATURES
+    "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
+    "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
+    "freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype
+    "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
+    "jpeg"                CMAKE_DISABLE_FIND_PACKAGE_JPEG
+    "png"                 CMAKE_DISABLE_FIND_PACKAGE_JPEG
      )
 
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_ATSPI2:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_DirectFB:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libdrm:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_EGL:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_gbm:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libinput:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Mtdev:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GLESv2:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Tslib:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Wayland:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_X11:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_XCB:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_X11_XCB:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_XKB:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_XKB_COMMON_X11:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_XRender:BOOL=ON)
 # sql-drivers features:
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
-    "sql-psql"            QT_FEATURE_sql-psql       #'*
-    "sql-sqlite"          QT_FEATURE_sql-sqlite     #'*
-    "sql-sqlite"          QT_FEATURE_system-sqlite  #'*
+    FEATURES
+    INVERTED_FEATURES
+    "sql-psql"            CMAKE_DISABLE_FIND_PACKAGE_PostgreSQL
+    "sql-sqlite"          CMAKE_DISABLE_FIND_PACKAGE_SQLite3
     # "sql-db2"             QT_FEATURE_sql-db2
     # "sql-ibase"           QT_FEATURE_sql-ibase
     # "sql-mysql"           QT_FEATURE_sql-mysql
@@ -113,16 +174,22 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     # "sql-odbc"            QT_FEATURE_sql-odbc
     )
 
+set(DB_LIST DB2 MySQL Oracle ODBC)
+foreach(_db IN LISTS DB_LIST)
+    list(APPEND FEATURE_SQLDRIVERS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_${_db}:BOOL=ON)
+endforeach()
+
 # printsupport features:
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_PRINTSUPPORT_OPTIONS
     # )
+list(APPEND FEATURE_PRINTSUPPORT_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_CUPS:BOOL=ON)
 
 # widgets features:
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
     # "gtk3"             QT_FEATURE_gtk3
     # There are a lot of additional features here to deactivate parts of widgets. 
     # )
-
+list(APPEND FEATURE_WIDGETS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GTK3:BOOL=ON)
 
 # QT_
 # FEATURE_cups
@@ -143,7 +210,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
 # FEATURE_pkg_config
 # FEATURE_reduce_exports
 # FEATURE_reduce_relocations
-# FEATURE_vulkan
 # FEATURE_win32_system_libs?
 # FEAUTRE_xcb _xlib
 # FEATURE_xkbcommon _x11
@@ -155,10 +221,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     # CMAKE_INSTALL_BINDIR
     # CMAKE_INSTALL_LIBDIR
     # INPUT_sqlite
-    # QT_FEATURE_openssl-linked
-    # QT_FEATURE_sql-psql
-    # QT_FEATURE_sql-sqlite
-    # QT_FEATURE_system-sqlite
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -182,18 +244,6 @@ vcpkg_configure_cmake(
         -DQT_USE_BUNDLED_BundledHarfbuzz:BOOL=FALSE
         -DQT_USE_BUNDLED_BundledLibpng:BOOL=FALSE
         -DQT_USE_BUNDLED_BundledPcre2:BOOL=FALSE
-        #-DQT_FEATURE_icu:BOOL=ON
-        #-DQT_FEATURE_system_doubleconversion:BOOL=ON
-        #-DQT_FEATURE_system_freetype:BOOL=ON
-        #-DQT_FEATURE_system_harfbuzz:BOOL=OFF
-        #-DQT_FEATURE_harfbuzz:BOOL=OFF
-        #-DQT_FEATURE_libb2:BOOL=OFF
-        #-DQT_FEATURE_system_libb2:BOOL=OFF
-        #-DQT_FEATURE_system_pcre2:BOOL=ON
-        #-DQT_FEATURE_system_png:BOOL=ON
-        #-DQT_FEATURE_system_zlib:BOOL=ON
-        #-DQT_FEATURE_system_sqlite:BOOL=ON
-        #-DQT_FEATURE_zstd:BOOL=ON
         -DQT_FEATURE_force_debug_info:BOOL=ON
         -DQT_FEATURE_relocatable:BOOL=ON
 # Setup Qt syncqt (required for headers)
@@ -203,14 +253,18 @@ vcpkg_configure_cmake(
         -DINSTALL_PLUGINSDIR:STRING="plugins"
         -DINSTALL_QMLDIR:STRING="qml"
         -DINSTALL_TRANSLATIONSDIR:STRING="translations"
+        -DINPUT_reduce-exports:BOOL=ON
+    OPTIONS_RELEASE
+        -DINPUT_release:BOOL=ON
     OPTIONS_DEBUG
+        -DINPUT_debug:BOOL=ON
         -DQT_NO_MAKE_TOOLS:BOOL=ON
         -DQT_FEATURE_debug:BOOL=ON
         -DINSTALL_DOCDIR:STRING="../doc"
         -DINSTALL_INCLUDEDIR:STRING="../include"
         #-DINSTALL_MKSPECSDIR:STRING="../mkspecs" leaks into of buildtree/port
 )
-vcpkg_install_cmake()
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/Qt6 TARGET_PATH share/Qt6)
@@ -286,6 +340,9 @@ file(COPY
         ${CURRENT_PACKAGES_DIR}/share/qt
 )
 
-#TODO:
-# QtBuild.cmake remove "unset(QT_SYNCQT CACHE )"
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuild.cmake" "unset\\\(QT_SYNCQT CACHE\\\)" "")
+#fix debug plugin paths (should probably be fixed in vcpkg_fixup_pkgconfig)
+file(GLOB_RECURSE DEBUG_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/**/*Targets-debug.cmake")
+message(STATUS "DEBUG_CMAKE_TARGETS:${DEBUG_CMAKE_TARGETS}")
+foreach(_debug_target IN LISTS DEBUG_CMAKE_TARGETS)
+    vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/plugins" "{_IMPORT_PREFIX}/debug/plugins")
+endforeach()

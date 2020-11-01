@@ -1,0 +1,28 @@
+diff --git a/cmake/QtBuild.cmake b/cmake/QtBuild.cmake
+index 86bf24172..60dbc5d85 100644
+--- a/cmake/QtBuild.cmake
++++ b/cmake/QtBuild.cmake
+@@ -383,7 +383,7 @@ set(QT_KNOWN_MODULES_WITH_TOOLS "" CACHE INTERNAL "Known Qt modules with tools"
+ 
+ # Reset syncqt cache variable, to make sure it gets recomputed on reconfiguration, otherwise
+ # it might not get installed.
+-unset(QT_SYNCQT CACHE)
++# unset(QT_SYNCQT CACHE)
+ 
+ # For adjusting variables when running tests, we need to know what
+ # the correct variable is for separating entries in PATH-alike
+diff --git a/cmake/QtBuildInternalsExtra.cmake.in b/cmake/QtBuildInternalsExtra.cmake.in
+index 5f58d4e79..8ae530f48 100644
+--- a/cmake/QtBuildInternalsExtra.cmake.in
++++ b/cmake/QtBuildInternalsExtra.cmake.in
+@@ -35,8 +35,8 @@ endif()
+ set(QT_WILL_INSTALL @QT_WILL_INSTALL@ CACHE BOOL
+     "Boolean indicating if doing a Qt prefix build (vs non-prefix build)." FORCE)
+ 
+-set(QT_SOURCE_TREE "@QT_SOURCE_TREE@" CACHE PATH
+-"A path to the source tree of the previously configured QtBase project." FORCE)
++# set(QT_SOURCE_TREE "@QT_SOURCE_TREE@" CACHE PATH
++# "A path to the source tree of the previously configured QtBase project." FORCE)
+ 
+ # Propagate decision of building tests and examples to other repositories.
+ set(BUILD_TESTING @BUILD_TESTING@ CACHE BOOL "Build the testing tree.")
