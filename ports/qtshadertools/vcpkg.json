@@ -5,13 +5,5 @@
   "homepage": "https://www.qt.io/",
   "dependencies": [
     "qtbase"
-  ],
-  "default-features": [
-    "default-features"
-  ],
-  "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
-    }
-  }
+  ]
 }

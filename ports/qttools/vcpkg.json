@@ -13,6 +13,12 @@
   "features": {
     "default-features": {
       "description": "Platform-dependent default features"
+    },
+    "QDoc" : {
+      "description": "Build QDoc.",
+      "dependencies": [
+            "llvm"
+        ]
     }
   }
 }

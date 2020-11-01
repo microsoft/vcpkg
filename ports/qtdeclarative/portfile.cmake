@@ -30,3 +30,22 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
+                    
+#TODO: 
+# qt_feature("qml-network" PUBLIC
+    # SECTION "QML"
+    # LABEL "QML network support"
+    # PURPOSE "Provides network transparency."
+    # CONDITION QT_FEATURE_network
+# )
+# qt_feature("qml-debug" PUBLIC
+    # SECTION "QML"
+    # LABEL "QML debugging and profiling support"
+    # PURPOSE "Provides infrastructure and plugins for debugging and profiling."
+# )
+# qt_feature("quick-draganddrop" PUBLIC
+    # SECTION "Qt Quick"
+    # LABEL "Drag & Drop"
+    # PURPOSE "Drag and drop support for Qt Quick"
+    # CONDITION ( QT_FEATURE_draganddrop ) AND ( QT_FEATURE_regularexpression )
+# )

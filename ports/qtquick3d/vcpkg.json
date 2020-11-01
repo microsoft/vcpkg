@@ -6,7 +6,8 @@
   "dependencies": [
     "qtbase",
     "qtdeclarative",
-    "qtshadertools"
+    "qtshadertools",
+    "assimp"
   ],
   "default-features": [
     "default-features"
