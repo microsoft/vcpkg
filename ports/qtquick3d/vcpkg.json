@@ -1,11 +1,12 @@
 {
   "name": "qtquick3d",
   "version-string": "6.0.0",
-  "description": "A new module and API for defining 3D content in Qt Quick. ",
+  "description": "A new module and API for defining 3D content in Qt Quick.",
   "homepage": "https://www.qt.io/",
   "dependencies": [
     "qtbase",
-    "qtdeclarative"
+    "qtdeclarative",
+    "qtshadertools"
   ],
   "default-features": [
     "default-features"

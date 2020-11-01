@@ -4,7 +4,8 @@
   "description": "Qt Documentation",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase"
+    "qtbase",
+    "qtdeclarative"
   ],
   "default-features": [
     "default-features"

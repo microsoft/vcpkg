@@ -8,7 +8,7 @@ set(${PORT}_PATCHES)
     # "appstore-compliant"  QT_FEATURE_appstore-compliant
     # )
 
- set(TOOL_NAMES)
+ set(TOOL_NAMES qsb)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
