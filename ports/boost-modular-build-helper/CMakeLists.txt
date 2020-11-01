@@ -114,7 +114,7 @@ endforeach()
 
 if(APPLE)
   set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE <compileflags>-std=c++11 <compileflags>-stdlib=libc++")
-  set(LDFLAGS "${LDFLAGS} <linkflags>-stdlib=libc++"
+  set(LDFLAGS "${LDFLAGS} <linkflags>-stdlib=libc++")
 endif()
 
 find_library(ZLIB_LIBPATH z)
