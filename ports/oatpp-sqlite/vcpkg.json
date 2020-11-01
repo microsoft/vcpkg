@@ -3,6 +3,9 @@
   "version-string": "1.2.0",
   "port-version": 1,
   "description": "Oat++ SQLite adapter for Oat++ ORM.",
-  "dependencies": ["oatpp", "sqlite3" ],
-  "homepage": "https://github.com/oatpp/oatpp-sqlite"
+  "homepage": "https://github.com/oatpp/oatpp-sqlite",
+  "dependencies": [
+    "oatpp",
+    "sqlite3"
+  ]
 }
