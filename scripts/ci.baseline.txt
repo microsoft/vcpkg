@@ -1088,7 +1088,6 @@ nvtt:x64-uwp=fail
 ocilib:arm64-windows=fail
 ocilib:arm-uwp=fail
 ocilib:x64-uwp=fail
-ocilib:x64-windows-static=fail
 octomap:arm-uwp=fail
 octomap:x64-uwp=fail
 ode:arm64-windows=fail
