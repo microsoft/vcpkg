@@ -6,17 +6,12 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA)
+    PREFER_NINJA
+)
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(
-    CONFIG_PATH
-        share/${PORT}/cmake
-    TARGET_PATH
-        share/${PORT})
-
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT}/cmake TARGET_PATH share/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
