@@ -26,6 +26,12 @@ function(qt_install_submodule)
         list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH="${CURRENT_INSTALLED_DIR}/tools/qtbase/syncqt.pl")
     endif()
 
+    if(VCPKG_TARGET_IS_WINDOWS)
+	set(PERL_OPTION -DHOST_PERL:PATH="${PERL}")
+    else()
+        set(PERL_OPTION -DHOST_PERL:PATH=${PERL})
+    endif()
+
     vcpkg_configure_cmake(
         SOURCE_PATH "${SOURCE_PATH}"
         PREFER_NINJA
@@ -36,7 +42,7 @@ function(qt_install_submodule)
             #-DQT_USE_CCACHE
             -DQT_NO_MAKE_EXAMPLES:BOOL=TRUE
             -DQT_NO_MAKE_TESTS:BOOL=TRUE
-            -DHOST_PERL:PATH="${PERL}"
+            ${PERL_OPTION}
             -DINSTALL_DESCRIPTIONSDIR:STRING="modules"
             -DINSTALL_LIBEXECDIR:STRING="bin"
             -DINSTALL_PLUGINSDIR:STRING="plugins"
