@@ -71,7 +71,11 @@
           "name": "qtbase",
           "default-features": false,
           "features": [
-            "fontconfig"
+            "egl",
+            "fontconfig",
+            "xcb",
+            "xcb-xlib",
+            "xrender"
           ],
           "platform": "linux"
         }
@@ -81,6 +85,12 @@
       "description": "Enable double conversion support",
       "dependencies": [
         "double-conversion"
+      ]
+    },
+    "egl": {
+      "description": "EGL",
+      "dependencies": [
+        "egl-registry"
       ]
     },
     "fontconfig": {
@@ -114,6 +124,12 @@
             "gui"
           ]
         }
+      ]
+    },
+    "glib": {
+      "description": "GLib",
+      "dependencies": [
+        "glib"
       ]
     },
     "gui": {
@@ -233,8 +249,63 @@
         }
       ]
     },
+    "xcb": {
+      "description": "XCB",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "xkbcommon-x11",
+            "xlib"
+          ]
+        }
+      ]
+    },
+    "xcb-xlib": {
+      "description": "xcb-xlib",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "xlib"
+          ]
+        }
+      ]
+    },
+    "xkb": {
+      "description": "XKB"
+    },
+    "xkbcommon-x11": {
+      "description": "xkbcommon_x11",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "xkb"
+          ]
+        }
+      ]
+    },
+    "xlib": {
+      "description": "XLib"
+    },
     "xml": {
       "description": "Qt XML"
+    },
+    "xrender": {
+      "description": "XRender for native painting",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "xcb"
+          ]
+        }
+      ]
     },
     "zstd": {
       "description": "Zstandard support",

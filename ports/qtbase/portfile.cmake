@@ -23,7 +23,7 @@ foreach(_input IN LISTS input_vars)
     if(_input MATCHES "(png|jpeg)" )
         list(APPEND INPUT_OPTIONS -DINPUT_lib${_input}:STRING=)
     elseif(_input MATCHES "(sql-sqlite)")
-        list(APPEND INPUT_OPTIONS -DINPUT_sqlite:STRING=)
+        list(APPEND INPUT_OPTIONS -DINPUT_sqlite:STRING=) # Not yet used be the cmake build
     else()
         list(APPEND INPUT_OPTIONS -DINPUT_${_input}:STRING=)
     endif()
@@ -63,24 +63,21 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libudev:BOOL=ON)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
 FEATURES
     "doubleconversion"    QT_FEATURE_doubleconversion
-    # "glib"                QT_FEATURE_glib
+    "glib"                QT_FEATURE_glib
     "icu"                 QT_FEATURE_icu
     "pcre2"               QT_FEATURE_pcre2
 INVERTED_FEATURES
     "doubleconversion"      CMAKE_DISABLE_FIND_PACKAGE_WrapDoubleConversion
     "icu"                   CMAKE_DISABLE_FIND_PACKAGE_ICU
     "pcre2"                 CMAKE_DISABLE_FIND_PACKAGE_WrapSystemPCRE2
-    #"glib"                 CMAKE_DISABLE_FIND_PACKAGE_GLIB2
+    "glib"                 CMAKE_DISABLE_FIND_PACKAGE_GLIB2
     )
-
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND FEATURE_CORE_OPTIONS -DQT_FEATURE_system-libb2:BOOL=ON)
-endif()
 
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_LTTngUST:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON)
+
 
 # Network features:
  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_NET_OPTIONS
@@ -94,56 +91,67 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON
 
 if("openssl" IN_LIST FEATURES)
     list(APPEND FEATURE_NET_OPTIONS -DINPUT_openssl=linked)
+else()
+    list(APPEND FEATURE_NET_OPTIONS -DINPUT_openssl=no)
 endif()
 
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libproxy:BOOL=ON)
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON)
 
+#INPUT_securetransport #Apple
+#INPUT_schannel #Windows
+#AUTODETECTED features
+#QT_FEATURE_getifaddrs
+#ipv6ifname
+
 # Gui features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     FEATURES
     "freetype"            QT_FEATURE_freetype
-    #"freetype"            QT_FEATURE_system-freetype
-    "harfbuzz"            QT_FEATURE_harfbuzz # Currently requires pkg-config
-    #"harfbuzz"            QT_FEATURE_system-harfbuzz
+    "harfbuzz"            QT_FEATURE_harfbuzz
     "fontconfig"          QT_FEATURE_fontconfig # NOT WINDOWS
-    # "gif"                 QT_FEATURE_gif
-    # "ico"                 QT_FEATURE_ico
     "jpeg"                QT_FEATURE_jpeg
-    #"jpeg"                QT_FEATURE_system-jpeg
     "png"                 QT_FEATURE_png
-    #"png"                 QT_FEATURE_system-png
-    # "opengl"              QT_FEATURE_opengl
-    # "egl"                 QT_FEATURE_egl
-    #"xlib"                QT_FEATURE_xlib
-    #"xcb"                 QT_FEATURE_xcb
-    #"xcb-xlib"            QT_FEATURE_xcb-xlib
+    #"opengl"              INPUT_opengl=something
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
+    "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
     "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
     "freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
     "jpeg"                CMAKE_DISABLE_FIND_PACKAGE_JPEG
-    "png"                 CMAKE_DISABLE_FIND_PACKAGE_JPEG
+    "png"                 CMAKE_DISABLE_FIND_PACKAGE_PNG
+    "xlib"                CMAKE_DISABLE_FIND_PACKAGE_X11
+    "xkb"                 CMAKE_DISABLE_FIND_PACKAGE_XKB
+    "xcb"                 CMAKE_DISABLE_FIND_PACKAGE_XCB
+    "xcb-xlib"            CMAKE_DISABLE_FIND_PACKAGE_X11_XCB
+    "xkbcommon-x11"       CMAKE_DISABLE_FIND_PACKAGE_XKB_COMMON_X11
+    "xrender"             CMAKE_DISABLE_FIND_PACKAGE_XRender
+    # There are more X features but I am unsure how to safely disable them! Most of them seem to be found automaticall with find_package(X11)
      )
+
+if("xcb" IN_LIST FEATURES)
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xcb=yes)
+else()
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xcb=no)
+endif()
+if("xkb" IN_LIST FEATURES)
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xkbcommon=yes)
+else()
+    list(APPEND FEATURE_GUI_OPTIONS -DINPUT_xkbcommon=no)
+endif()
+list(APPEND FEATURE_GUI_OPTIONS )
 
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_ATSPI2:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_DirectFB:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libdrm:BOOL=ON)
-list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_EGL:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_gbm:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libinput:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Mtdev:BOOL=ON)
-list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GLESv2:BOOL=ON)
+list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GLESv2:BOOL=ON) # only used if INPUT_opengl is correctly set
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Tslib:BOOL=ON)
 if(VCPKG_TARGET_IS_LINUX)
-    list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Wayland:BOOL=ON)
-    list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_X11:BOOL=ON)
-    list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_XCB:BOOL=ON)
-    list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_X11_XCB:BOOL=ON)
-    list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_XKB:BOOL=ON)
-    list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_XKB_COMMON_X11:BOOL=ON)
-    list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_XRender:BOOL=ON)
+    #list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Wayland:BOOL=ON) Does not seem necessary
 endif()
 # sql-drivers features:
 
@@ -183,10 +191,8 @@ list(APPEND FEATURE_WIDGETS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GTK3:BOOL=ON)
 # FEATURE_etw
 # FEATURE_evdev
 # FEATURE_eventfd
-# FEATURE_glib
 # FEATURE_glibc
 # FEATURE_gssapi
-# FEATURE_gtk3
 # FEATURE_ltcg
 # FEATURE_opengl _dynamic _desktop 
 # FEATURE_opengles2 3 31 32
@@ -196,16 +202,8 @@ list(APPEND FEATURE_WIDGETS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GTK3:BOOL=ON)
 # FEATURE_reduce_exports
 # FEATURE_reduce_relocations
 # FEATURE_win32_system_libs?
-# FEAUTRE_xcb _xlib
-# FEATURE_xkbcommon _x11
-# FEATURE_xlib
 
-#TODO:
-  # Manually-specified variables were not used by the project:
 
-    # CMAKE_INSTALL_BINDIR
-    # CMAKE_INSTALL_LIBDIR
-    # INPUT_sqlite
 set(TOOL_NAMES 
         androiddeployqt 
         androidtestrunner 
@@ -221,7 +219,6 @@ set(TOOL_NAMES
         uic
     )
 
-
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
@@ -236,6 +233,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DQT_USE_BUNDLED_BundledHarfbuzz:BOOL=FALSE
                         -DQT_USE_BUNDLED_BundledLibpng:BOOL=FALSE
                         -DQT_USE_BUNDLED_BundledPcre2:BOOL=FALSE
+                        -DINPUT_bundled_xcb_xinput:STRING=no
                         -DQT_FEATURE_force_debug_info:BOOL=ON
                         -DQT_FEATURE_relocatable:BOOL=ON
                      CONFIGURE_OPTIONS_RELEASE
