@@ -4,7 +4,6 @@
   "description": "A new module and API for defining 3D content in Qt Quick.",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "assimp",
     "qtbase",
     "qtdeclarative",
     "qtshadertools"
@@ -15,6 +14,12 @@
   "features": {
     "default-features": {
       "description": "Platform-dependent default features"
-    }
+    },
+    "assimp": {
+      "description": "assimp",
+      "dependencies": [
+        "assimp"
+      ]
+    },
   }
 }
