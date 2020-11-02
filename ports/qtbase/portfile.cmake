@@ -222,6 +222,7 @@ set(TOOL_NAMES
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
+                        --trace-expand
                         ${FEATURE_CORE_OPTIONS}
                         ${FEATURE_NET_OPTIONS}
                         ${FEATURE_GUI_OPTIONS}
