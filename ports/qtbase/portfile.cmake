@@ -242,7 +242,11 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DQT_FEATURE_debug:BOOL=ON)
 
 set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module)
-set(script_suffix .bat)
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(script_suffix .bat)
+else()
+    set(script_suffix)
+endif()
 set(other_files qt-cmake-private-install.cmake syncqt.pl)
 foreach(_config debug release)
     if(_config MATCHES "debug")
