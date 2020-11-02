@@ -116,7 +116,7 @@ function(qt_install_submodule)
                         "${CURRENT_PACKAGES_DIR}/lib/cmake/"
                         )
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
         if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error. 
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
