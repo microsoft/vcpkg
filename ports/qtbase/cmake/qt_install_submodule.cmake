@@ -43,21 +43,26 @@ function(qt_install_submodule)
             -DQT_NO_MAKE_EXAMPLES:BOOL=TRUE
             -DQT_NO_MAKE_TESTS:BOOL=TRUE
             ${PERL_OPTION}
-            -DINSTALL_DESCRIPTIONSDIR:STRING="modules"
-            -DINSTALL_LIBEXECDIR:STRING="bin"
-            -DINSTALL_PLUGINSDIR:STRING="plugins"
-            -DINSTALL_QMLDIR:STRING="qml"
-            -DINSTALL_TRANSLATIONSDIR:STRING="translations"
+            -DINSTALL_DESCRIPTIONSDIR:STRING=modules
+            -DINSTALL_LIBEXECDIR:STRING=bin
+            -DINSTALL_PLUGINSDIR:STRING=plugins
+            -DINSTALL_QMLDIR:STRING=qml
+            -DINSTALL_TRANSLATIONSDIR:STRING=translations
             ${_qis_CONFIGURE_OPTIONS}
         OPTIONS_RELEASE
             ${_qis_CONFIGURE_OPTIONS_RELEASE}
         OPTIONS_DEBUG
             -DINPUT_debug:BOOL=ON
-            -DINSTALL_DOCDIR:STRING="../doc"
-            -DINSTALL_INCLUDEDIR:STRING="../include"
-            -DINSTALL_TRANSLATIONSDIR:STRING="../translations"
+            -DINSTALL_DOCDIR:STRING=../doc
+            -DINSTALL_INCLUDEDIR:STRING=../include
+            -DINSTALL_TRANSLATIONSDIR:STRING=../translations
             ${_qis_CONFIGURE_OPTIONS_DEBUG}
     )
+
+    #Check QtQmakeHelpers.cmake for changes in:
+    #qt_add_string_to_qconfig_cpp("${INSTALL_BINDIR}") # TODO: Host-specific
+    #qt_add_string_to_qconfig_cpp("${INSTALL_LIBDIR}") # TODO: Host-specific
+    #qt_add_string_to_qconfig_cpp("${INSTALL_DATADIR}") # TODO: Host-specific
 
     vcpkg_install_cmake(ADD_BIN_TO_PATH)
     vcpkg_copy_pdbs()
