@@ -22,13 +22,15 @@ function(qt_install_submodule)
         PATCHES ${_qis_PATCHES}
     )
 
-    if(NOT ${PORT} MATCHES "qtbase")
-        list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH="${CURRENT_INSTALLED_DIR}/tools/qtbase/syncqt.pl")
-    endif()
-
     if(VCPKG_TARGET_IS_WINDOWS)
-	set(PERL_OPTION -DHOST_PERL:PATH="${PERL}")
+        if(NOT ${PORT} MATCHES "qtbase")
+            list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH="${CURRENT_INSTALLED_DIR}/tools/qtbase/syncqt.pl")
+        endif()
+        set(PERL_OPTION -DHOST_PERL:PATH="${PERL}")
     else()
+        if(NOT ${PORT} MATCHES "qtbase")
+            list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH=${CURRENT_INSTALLED_DIR}/tools/qtbase/syncqt.pl)
+        endif()
         set(PERL_OPTION -DHOST_PERL:PATH=${PERL})
     endif()
 
