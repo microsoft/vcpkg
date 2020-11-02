@@ -202,11 +202,11 @@ macro(_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags _SUFFIX)
 endmacro()
 
 function(vcpkg_configure_make)
-    cmake_parse_arguments(_csc
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _csc
         "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT"
-        ${ARGN}
     )
     vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
     set(_VCPKG_CMAKE_VARS_FILE "${_VCPKG_CMAKE_VARS_FILE}" PARENT_SCOPE)
