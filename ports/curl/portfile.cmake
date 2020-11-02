@@ -22,6 +22,10 @@ if(("schannel" IN_LIST FEATURES OR "sspi" IN_LIST FEATURES) AND (NOT VCPKG_TARGE
     message(FATAL_ERROR "schannel,sspi are not supported on non-Windows and uwp platforms")
 endif()
 
+if(("tool" IN_LIST FEATURES) AND (VCPKG_TARGET_IS_UWP))
+    message(FATAL_ERROR "tool not supported on uwp platforms")
+endif()
+
 if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
 endif()

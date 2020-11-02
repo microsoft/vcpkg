@@ -6,7 +6,7 @@ Homepage: https://github.com/curl/curl
 Description: A library for transferring data with URLs
 Default-Features: ssl, non-http
 
-Feature: tool (!uwp)
+Feature: tool
 Description: Builds curl executable
 
 Feature: non-http
