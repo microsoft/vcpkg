@@ -12,14 +12,14 @@
     "default-features"
   ],
   "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
-    },
     "assimp": {
       "description": "assimp",
       "dependencies": [
         "assimp"
       ]
     },
+    "default-features": {
+      "description": "Platform-dependent default features"
+    }
   }
 }
