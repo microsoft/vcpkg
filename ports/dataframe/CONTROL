@@ -1,0 +1,3 @@
+Source: dataframe
+Version: 1.12.0
+Description: This is a C++ statistical library that provides an interface similar to Pandas package in Python
