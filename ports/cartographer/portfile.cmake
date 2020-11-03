@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -11,6 +9,7 @@ vcpkg_from_github(
 	PATCHES
         fix-find-packages.patch
         fix-build-error.patch
+        fix-cmake-location.patch
 )
 
 vcpkg_configure_cmake(

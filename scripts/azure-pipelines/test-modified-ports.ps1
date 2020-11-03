@@ -108,7 +108,9 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
 # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
 # Install them so the CI succeeds:
 if ($Triplet -in @('x64-uwp', 'arm64-windows', 'arm-uwp')) {
-    .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows @commonArgs
+    .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows yasm-tool:x86-windows @commonArgs
+} elseif ($Triplet -in @('x64-windows', 'x64-windows-static')) {
+    .\vcpkg.exe install yasm-tool:x86-windows @commonArgs
 }
 
 & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs

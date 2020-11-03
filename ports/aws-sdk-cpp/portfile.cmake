@@ -14,7 +14,7 @@ set(BUILD_ONLY core)
 
 include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
-string(REPLACE ";" "\\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
+string(REPLACE ";" "\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -25,7 +25,7 @@ vcpkg_configure_cmake(
         -DENABLE_TESTING=OFF
         -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
-        "-DBUILD_ONLY=${BUILD_ONLY}"
+        -DBUILD_ONLY=${BUILD_ONLY}
         -DBUILD_DEPS=OFF
 )
 
