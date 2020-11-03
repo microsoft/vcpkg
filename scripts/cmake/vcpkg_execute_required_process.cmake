@@ -49,8 +49,8 @@ include(vcpkg_prettify_command)
 include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_execute_required_process)
-    # parse parameters such that semicolons in arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME;TIMEOUT" "COMMAND")
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE" "COMMAND")
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
 
