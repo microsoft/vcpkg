@@ -5,7 +5,7 @@ set(${PORT}_PATCHES)
 
 # General features:
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    # "appstore-compliant"  QT_FEATURE_appstore-compliant
+    # "appstore-compliant"  FEATURE_appstore-compliant
     # )
 
  set(TOOL_NAMES 

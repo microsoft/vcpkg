@@ -21,7 +21,8 @@ endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source: 
 # The files also contain information about the Platform for which it is searched
-# Always use QT_FEATURE_<feature> in vcpkg_configure_cmake
+# Always use FEATURE_<feature> in vcpkg_configure_cmake
+# (using QT_FEATURE_X overrides Qts condition check for the feature.)
 # Theoretically there is a feature for every widget to enable/disable it but that is way to much for vcpkg
 
 set(input_vars doubleconversion freetype harfbuzz libb2 jpeg libmd4c png sql-sqlite)
@@ -48,17 +49,17 @@ endforeach()
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
 FEATURES
-    "appstore-compliant"  QT_FEATURE_appstore-compliant
-    "zstd"                QT_FEATURE_zstd
-    "framework"           QT_FEATURE_framework
-    "concurrent"          QT_FEATURE_concurrent
-    "dbus"                QT_FEATURE_dbus
-    "gui"                 QT_FEATURE_gui
-    "network"             QT_FEATURE_network
-    "sql"                 QT_FEATURE_sql
-    "widgets"             QT_FEATURE_widgets
-    "xml"                 QT_FEATURE_xml
-    "testlib"             QT_FEATURE_testlib
+    "appstore-compliant"  FEATURE_appstore-compliant
+    "zstd"                FEATURE_zstd
+    "framework"           FEATURE_framework
+    "concurrent"          FEATURE_concurrent
+    "dbus"                FEATURE_dbus
+    "gui"                 FEATURE_gui
+    "network"             FEATURE_network
+    "sql"                 FEATURE_sql
+    "widgets"             FEATURE_widgets
+    "xml"                 FEATURE_xml
+    "testlib"             FEATURE_testlib
 INVERTED_FEATURES
     "zstd"              CMAKE_DISABLE_FIND_PACKAGE_ZSTD
     "dbus"              CMAKE_DISABLE_FIND_PACKAGE_WrapDBus1
@@ -69,10 +70,10 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libudev:BOOL=ON)
 # Corelib features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
 FEATURES
-    "doubleconversion"    QT_FEATURE_doubleconversion
-    "glib"                QT_FEATURE_glib
-    "icu"                 QT_FEATURE_icu
-    "pcre2"               QT_FEATURE_pcre2
+    "doubleconversion"    FEATURE_doubleconversion
+    "glib"                FEATURE_glib
+    "icu"                 FEATURE_icu
+    "pcre2"               FEATURE_pcre2
 INVERTED_FEATURES
     "doubleconversion"      CMAKE_DISABLE_FIND_PACKAGE_WrapDoubleConversion
     "icu"                   CMAKE_DISABLE_FIND_PACKAGE_ICU
@@ -89,8 +90,8 @@ list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libsystemd:BOOL=ON
 # Network features:
  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_NET_OPTIONS
  FEATURES
-    "openssl"             QT_FEATURE_openssl
-    "brotli"              QT_FEATURE_brotli
+    "openssl"             FEATURE_openssl
+    "brotli"              FEATURE_brotli
  INVERTED_FEATURES
     "brotli"              CMAKE_DISABLE_FIND_PACKAGE_WrapBrotli
     "openssl"             CMAKE_DISABLE_FIND_PACKAGE_WrapOpenSSL
@@ -108,17 +109,17 @@ list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON)
 #INPUT_securetransport #Apple
 #INPUT_schannel #Windows
 #AUTODETECTED features
-#QT_FEATURE_getifaddrs
+#FEATURE_getifaddrs
 #ipv6ifname
 
 # Gui features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     FEATURES
-    "freetype"            QT_FEATURE_freetype
-    "harfbuzz"            QT_FEATURE_harfbuzz
-    "fontconfig"          QT_FEATURE_fontconfig # NOT WINDOWS
-    "jpeg"                QT_FEATURE_jpeg
-    "png"                 QT_FEATURE_png
+    "freetype"            FEATURE_freetype
+    "harfbuzz"            FEATURE_harfbuzz
+    "fontconfig"          FEATURE_fontconfig # NOT WINDOWS
+    "jpeg"                FEATURE_jpeg
+    "png"                 FEATURE_png
     #"opengl"              INPUT_opengl=something
     INVERTED_FEATURES
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
@@ -164,16 +165,16 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     FEATURES
-    "sql-sqlite"          QT_FEATURE_system_sqlite
+    "sql-sqlite"          FEATURE_system_sqlite
     INVERTED_FEATURES
     "sql-psql"            CMAKE_DISABLE_FIND_PACKAGE_PostgreSQL
     "sql-sqlite"          CMAKE_DISABLE_FIND_PACKAGE_SQLite3
     
-    # "sql-db2"             QT_FEATURE_sql-db2
-    # "sql-ibase"           QT_FEATURE_sql-ibase
-    # "sql-mysql"           QT_FEATURE_sql-mysql
-    # "sql-oci"             QT_FEATURE_sql-oci
-    # "sql-odbc"            QT_FEATURE_sql-odbc
+    # "sql-db2"             FEATURE_sql-db2
+    # "sql-ibase"           FEATURE_sql-ibase
+    # "sql-mysql"           FEATURE_sql-mysql
+    # "sql-oci"             FEATURE_sql-oci
+    # "sql-odbc"            FEATURE_sql-odbc
     )
 
 set(DB_LIST DB2 MySQL Oracle ODBC)
@@ -188,7 +189,7 @@ list(APPEND FEATURE_PRINTSUPPORT_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_CUPS:BOOL=
 
 # widgets features:
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_WIDGETS_OPTIONS
-    # "gtk3"             QT_FEATURE_gtk3
+    # "gtk3"             FEATURE_gtk3
     # There are a lot of additional features here to deactivate parts of widgets. 
     # )
 list(APPEND FEATURE_WIDGETS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GTK3:BOOL=ON)
@@ -231,7 +232,7 @@ set(TOOL_NAMES
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
-                        --trace-expand
+                        #--trace-expand
                         ${FEATURE_CORE_OPTIONS}
                         ${FEATURE_NET_OPTIONS}
                         ${FEATURE_GUI_OPTIONS}
@@ -244,12 +245,12 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DQT_USE_BUNDLED_BundledLibpng:BOOL=FALSE
                         -DQT_USE_BUNDLED_BundledPcre2:BOOL=FALSE
                         -DINPUT_bundled_xcb_xinput:STRING=no
-                        -DQT_FEATURE_force_debug_info:BOOL=ON
-                        -DQT_FEATURE_relocatable:BOOL=ON
+                        -DFEATURE_force_debug_info:BOOL=ON
+                        -DFEATURE_relocatable:BOOL=ON
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                         -DQT_NO_MAKE_TOOLS:BOOL=ON
-                        -DQT_FEATURE_debug:BOOL=ON)
+                        -DFEATURE_debug:BOOL=ON)
 
 set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module qt-internal-configure-tests)
 if(VCPKG_TARGET_IS_WINDOWS)

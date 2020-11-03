@@ -5,7 +5,7 @@ set(${PORT}_PATCHES)
 
 # General features:
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    # "appstore-compliant"  QT_FEATURE_appstore-compliant
+    # "appstore-compliant"  FEATURE_appstore-compliant
     # )
 
  set(TOOL_NAMES 
@@ -36,7 +36,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
     # SECTION "QML"
     # LABEL "QML network support"
     # PURPOSE "Provides network transparency."
-    # CONDITION QT_FEATURE_network
+    # CONDITION FEATURE_network
 # )
 # qt_feature("qml-debug" PUBLIC
     # SECTION "QML"
@@ -47,5 +47,5 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
     # SECTION "Qt Quick"
     # LABEL "Drag & Drop"
     # PURPOSE "Drag and drop support for Qt Quick"
-    # CONDITION ( QT_FEATURE_draganddrop ) AND ( QT_FEATURE_regularexpression )
+    # CONDITION ( FEATURE_draganddrop ) AND ( FEATURE_regularexpression )
 # )

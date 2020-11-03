@@ -6,7 +6,7 @@ set(${PORT}_PATCHES)
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
-    "assimp"  QT_FEATURE_assimp
+    "assimp"  FEATURE_assimp
 INVERTED_FEATURES
     "assimp"  CMAKE_DISABLE_FIND_PACKAGE_WrapAssimp
     )
