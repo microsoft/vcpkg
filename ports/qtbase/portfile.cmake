@@ -50,15 +50,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
 FEATURES
     "appstore-compliant"  QT_FEATURE_appstore-compliant
     "zstd"                QT_FEATURE_zstd
-    "framework"           QT_FEAUTRE_framework
-    "concurrent"          QT_FEAUTRE_concurrent
-    "dbus"                QT_FEAUTRE_dbus
-    "gui"                 QT_FEAUTRE_gui
-    "network"             QT_FEAUTRE_network
-    "sql"                 QT_FEAUTRE_sql
-    "widgets"             QT_FEAUTRE_widgets
-    "xml"                 QT_FEAUTRE_xml
-    "testlib"             QT_FEAUTRE_testlib
+    "framework"           QT_FEATURE_framework
+    "concurrent"          QT_FEATURE_concurrent
+    "dbus"                QT_FEATURE_dbus
+    "gui"                 QT_FEATURE_gui
+    "network"             QT_FEATURE_network
+    "sql"                 QT_FEATURE_sql
+    "widgets"             QT_FEATURE_widgets
+    "xml"                 QT_FEATURE_xml
+    "testlib"             QT_FEATURE_testlib
 INVERTED_FEATURES
     "zstd"              CMAKE_DISABLE_FIND_PACKAGE_ZSTD
     "dbus"              CMAKE_DISABLE_FIND_PACKAGE_WrapDBus1
