@@ -24,12 +24,7 @@ set(CMAKE_DEBUG_POSTFIX d)
 option(BUILD_TOOLS "Build and install tools" ON)
 set(TOOLS_INSTALLDIR "bin" CACHE STRING "Target directory for installed tools")
 
-find_library(AVCODEC_LIB avcodec)
-find_library(AVUTIL_LIB avutil)
-find_library(AVDEVICE_LIB avdevice)
-find_library(AVFILTER_LIB avfilter)
-find_library(AVFORMAT_LIB avformat)
-find_library(SWRESAMPLE_LIB swresample)
+find_package(FFmpeg COMPONENTS avcodec avutil avdevice avfilter avformat swresample REQUIRED)
 find_package(BZip2 REQUIRED)
 find_package(LibLZMA REQUIRED)
 find_package(SndFile REQUIRED)
@@ -42,17 +37,9 @@ set_source_files_properties(src/io/sink_wavwrite.c PROPERTIES COMPILE_FLAGS /FIW
 add_library(aubio ${SOURCES})
 target_link_libraries(aubio PUBLIC
     SndFile::sndfile
-    ${AVCODEC_LIB}
-    ${AVUTIL_LIB}
-    ${AVDEVICE_LIB}
-    ${AVFILTER_LIB}
-    ${AVFORMAT_LIB}
-    ${SWRESAMPLE_LIB}
+    ${FFMPEG_LIBRARIES}
     BZip2::BZip2
     ${LIBLZMA_LIBRARIES}
-    ws2_32.lib
-    Secur32.lib
-	bcrypt.lib
 )
 
 if(BUILD_TOOLS)

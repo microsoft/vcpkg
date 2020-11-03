@@ -7,7 +7,8 @@
 #  vcpkg_build_qmake()
 #
 function(vcpkg_build_qmake)
-    cmake_parse_arguments(_csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS")
 
     if(CMAKE_HOST_WIN32)
         vcpkg_find_acquire_program(JOM)

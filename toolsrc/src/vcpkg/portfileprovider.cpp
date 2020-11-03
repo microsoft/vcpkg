@@ -5,6 +5,8 @@
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::PortFileProvider
 {
@@ -59,16 +61,10 @@ namespace vcpkg::PortFileProvider
         }
     }
 
-    ExpectedS<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const
+    static Optional<SourceControlFileLocation> try_load_overlay_port(const Files::Filesystem& fs,
+                                                                     View<fs::path> overlay_ports,
+                                                                     const std::string& spec)
     {
-        auto cache_it = cache.find(spec);
-        if (cache_it != cache.end())
-        {
-            return cache_it->second;
-        }
-
-        const auto& fs = paths.get_filesystem();
-
         for (auto&& ports_dir : overlay_ports)
         {
             // Try loading individual port
@@ -79,10 +75,7 @@ namespace vcpkg::PortFileProvider
                 {
                     if (scf->get()->core_paragraph->name == spec)
                     {
-                        auto it = cache.emplace(std::piecewise_construct,
-                                                std::forward_as_tuple(spec),
-                                                std::forward_as_tuple(std::move(*scf), ports_dir));
-                        return it.first->second;
+                        return SourceControlFileLocation{std::move(*scf), ports_dir};
                     }
                 }
                 else
@@ -103,10 +96,7 @@ namespace vcpkg::PortFileProvider
                 {
                     if (scf->get()->core_paragraph->name == spec)
                     {
-                        auto it = cache.emplace(std::piecewise_construct,
-                                                std::forward_as_tuple(std::move(spec)),
-                                                std::forward_as_tuple(std::move(*scf), std::move(ports_spec)));
-                        return it.first->second;
+                        return SourceControlFileLocation{std::move(*scf), std::move(ports_spec)};
                     }
                     Checks::exit_with_message(VCPKG_LINE_INFO,
                                               "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
@@ -122,7 +112,12 @@ namespace vcpkg::PortFileProvider
                 }
             }
         }
+        return nullopt;
+    }
 
+    static Optional<SourceControlFileLocation> try_load_registry_port(const VcpkgPaths& paths, const std::string& spec)
+    {
+        const auto& fs = paths.get_filesystem();
         if (auto registry = paths.get_configuration().registry_set.registry_for_port(spec))
         {
             auto registry_root = registry->get_registry_root(paths);
@@ -135,10 +130,7 @@ namespace vcpkg::PortFileProvider
                 {
                     if (scf->get()->core_paragraph->name == spec)
                     {
-                        auto it = cache.emplace(std::piecewise_construct,
-                                                std::forward_as_tuple(spec),
-                                                std::forward_as_tuple(std::move(*scf), std::move(port_directory)));
-                        return it.first->second;
+                        return SourceControlFileLocation{std::move(*scf), std::move(port_directory)};
                     }
                     Checks::exit_with_message(VCPKG_LINE_INFO,
                                               "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
@@ -154,8 +146,44 @@ namespace vcpkg::PortFileProvider
                 }
             }
         }
+        return nullopt;
+    }
 
-        return std::string("Port definition not found");
+    ExpectedS<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const
+    {
+        auto cache_it = cache.find(spec);
+        if (cache_it == cache.end())
+        {
+            const auto& fs = paths.get_filesystem();
+            auto maybe_port = try_load_overlay_port(fs, overlay_ports, spec);
+            if (!maybe_port)
+            {
+                maybe_port = try_load_registry_port(paths, spec);
+            }
+            if (auto p = maybe_port.get())
+            {
+                cache_it = cache.emplace(spec, std::move(*p)).first;
+            }
+        }
+
+        if (cache_it == cache.end())
+        {
+            return std::string("Port definition not found");
+        }
+        else
+        {
+            if (!paths.get_feature_flags().versions)
+            {
+                if (cache_it->second.source_control_file->core_paragraph->version_scheme != Versions::Scheme::String)
+                {
+                    return Strings::concat(
+                        "Port definition rejected because the `",
+                        VcpkgCmdArguments::VERSIONS_FEATURE,
+                        "` feature flag is disabled.\nThis can be fixed by using the \"version-string\" field.");
+                }
+            }
+            return cache_it->second;
+        }
     }
 
     std::vector<const SourceControlFileLocation*> PathsPortFileProvider::load_all_control_files() const
