@@ -1,6 +1,6 @@
 Source: libmupdf
-Version: 1.17.0
-Build-Depends: freetype, libjpeg-turbo, harfbuzz, zlib, curl, glfw3, openjpeg, jbig2dec
+Version: 1.18.0
+Build-Depends: freetype, libjpeg-turbo, harfbuzz, zlib, curl, glfw3, openjpeg, jbig2dec, gumbo
 Homepage: https://github.com/ArtifexSoftware/mupdf
 Description: a lightweight PDF, XPS, and E-book library
 Supports: !osx

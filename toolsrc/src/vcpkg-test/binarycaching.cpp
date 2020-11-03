@@ -75,7 +75,7 @@ Build-Depends: bzip
 )",
                                              "<testdata>");
     REQUIRE(pghs.has_value());
-    auto maybe_scf = SourceControlFile::parse_control_file(fs::path(), std::move(*pghs.get()));
+    auto maybe_scf = SourceControlFile::parse_control_file(fs::u8string(fs::path()), std::move(*pghs.get()));
     REQUIRE(maybe_scf.has_value());
     SourceControlFileLocation scfl{std::move(*maybe_scf.get()), fs::path()};
 
@@ -255,7 +255,7 @@ Description: a spiffy compression library wrapper
 )",
                                              "<testdata>");
     REQUIRE(pghs.has_value());
-    auto maybe_scf = SourceControlFile::parse_control_file(fs::path(), std::move(*pghs.get()));
+    auto maybe_scf = SourceControlFile::parse_control_file(fs::u8string(fs::path()), std::move(*pghs.get()));
     REQUIRE(maybe_scf.has_value());
     SourceControlFileLocation scfl{std::move(*maybe_scf.get()), fs::path()};
     plan.install_actions.push_back(Dependencies::InstallPlanAction());
@@ -278,7 +278,7 @@ Description: a spiffy compression library wrapper
 )",
                                               "<testdata>");
     REQUIRE(pghs2.has_value());
-    auto maybe_scf2 = SourceControlFile::parse_control_file(fs::path(), std::move(*pghs2.get()));
+    auto maybe_scf2 = SourceControlFile::parse_control_file(fs::u8string(fs::path()), std::move(*pghs2.get()));
     REQUIRE(maybe_scf2.has_value());
     SourceControlFileLocation scfl2{std::move(*maybe_scf2.get()), fs::path()};
     plan.install_actions.push_back(Dependencies::InstallPlanAction());
