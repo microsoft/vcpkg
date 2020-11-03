@@ -54,7 +54,7 @@ index d478f42b0f..e0fb70daca 100644
 +my $UWP_info = {};
 +sub UWP_info {
 +    unless (%$UWP_info) {
-+        my $SDKver = `powershell -Command  \"& {\$(Get-Item \\\"hklm:\\SOFTWARE\\WOW6432Node\\Microsoft\\Microsoft SDKs\\Windows\\\").GetValue(\\\"CurrentVersion\\\")}\"`;
++        my $SDKver = `pwsh.exe -Command  \"& {\$(Get-Item \\\"hklm:\\SOFTWARE\\WOW6432Node\\Microsoft\\Microsoft SDKs\\Windows\\\").GetValue(\\\"CurrentVersion\\\")}\"`;
 +        $SDKver =~ s|\R$||;
 +        my @SDKver_split = split(/\./, $SDKver);
 +        # SDK version older than 10.0.17763 don't support our ASM builds

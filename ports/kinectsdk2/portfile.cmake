@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_buildpath_length_warning(37)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
