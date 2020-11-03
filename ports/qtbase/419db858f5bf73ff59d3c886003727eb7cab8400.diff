@@ -1,0 +1,39 @@
+diff --git a/cmake/QtFlagHandlingHelpers.cmake b/cmake/QtFlagHandlingHelpers.cmake
+index 8b2677aa3df..685c1616b71 100644
+--- a/cmake/QtFlagHandlingHelpers.cmake
++++ b/cmake/QtFlagHandlingHelpers.cmake
+@@ -142,7 +142,7 @@ function(qt_internal_library_deprecation_level result)
+         list(APPEND deprecations "QT_DISABLE_DEPRECATED_BEFORE=0x050000")
+     endif()
+     list(APPEND deprecations "QT_DEPRECATED_WARNINGS_SINCE=0x060000")
+-    set("${result}" deprecations PARENT_SCOPE)
++    set("${result}" "${deprecations}" PARENT_SCOPE)
+ endfunction()
+ 
+ # Sets the exceptions flags for the given target
+diff --git a/cmake/QtModuleHelpers.cmake b/cmake/QtModuleHelpers.cmake
+index 9f32a1309a6..6431bba5891 100644
+--- a/cmake/QtModuleHelpers.cmake
++++ b/cmake/QtModuleHelpers.cmake
+@@ -331,7 +331,7 @@ function(qt_internal_add_module target)
+             QT_DEPRECATED_WARNINGS
+             QT_BUILDING_QT
+             QT_BUILD_${module_define}_LIB ### FIXME: use QT_BUILD_ADDON for Add-ons or remove if we don't have add-ons anymore
+-            "${deprecation_define}"
++            ${deprecation_define}
+             )
+     endif()
+ 
+diff --git a/cmake/QtPluginHelpers.cmake b/cmake/QtPluginHelpers.cmake
+index 2591705a9ec..6b362b5017b 100644
+--- a/cmake/QtPluginHelpers.cmake
++++ b/cmake/QtPluginHelpers.cmake
+@@ -174,7 +174,7 @@ function(qt_internal_add_plugin target)
+         DEFINES
+             ${arg_DEFINES}
+             QT_DEPRECATED_WARNINGS
+-            "${deprecation_define}"
++            ${deprecation_define}
+             "${static_plugin_define}"
+             QT_PLUGIN
+         PUBLIC_DEFINES

@@ -18,7 +18,7 @@ function(qt_install_submodule)
         REPO qt/${PORT}
         REF ${${PORT}_REF}
         SHA512 ${${PORT}_HASH}
-        HEAD_REF master
+        HEAD_REF dev
         PATCHES ${_qis_PATCHES}
     )
 

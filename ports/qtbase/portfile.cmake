@@ -12,6 +12,13 @@ set(${PORT}_PATCHES
         dont_force_cmakecache.patch
         )
 
+if(NOT VCPKG_USE_HEAD_VERSION)
+    list(APPEND ${PORT}_PATCHES
+                419db858f5bf73ff59d3c886003727eb7cab8400.diff
+                df9c7456d11dfcf74c7399ba0981a3ba3d3f5117.diff
+                1b4ea4a.diff)
+endif()
+
 # Features can be found via searching for qt_feature in all configure.cmake files in the source: 
 # The files also contain information about the Platform for which it is searched
 # Always use QT_FEATURE_<feature> in vcpkg_configure_cmake
@@ -157,9 +164,11 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     FEATURES
+    "sql-sqlite"          QT_FEATURE_system_sqlite
     INVERTED_FEATURES
     "sql-psql"            CMAKE_DISABLE_FIND_PACKAGE_PostgreSQL
     "sql-sqlite"          CMAKE_DISABLE_FIND_PACKAGE_SQLite3
+    
     # "sql-db2"             QT_FEATURE_sql-db2
     # "sql-ibase"           QT_FEATURE_sql-ibase
     # "sql-mysql"           QT_FEATURE_sql-mysql
@@ -242,7 +251,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                         -DQT_NO_MAKE_TOOLS:BOOL=ON
                         -DQT_FEATURE_debug:BOOL=ON)
 
-set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module)
+set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module qt-internal-configure-tests)
 if(VCPKG_TARGET_IS_WINDOWS)
     set(script_suffix .bat)
 else()
@@ -254,6 +263,9 @@ foreach(_config debug release)
         set(path_suffix debug/)
     else()
         set(path_suffix)
+    endif()
+    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin")
+        continue()
     endif()
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${path_suffix}")
     foreach(script IN LISTS script_files)
