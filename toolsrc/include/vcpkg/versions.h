@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vcpkg/versiont.h>
-
 namespace vcpkg::Versions
 {
     enum class Scheme
