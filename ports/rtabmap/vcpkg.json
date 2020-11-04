@@ -1,0 +1,12 @@
+{
+  "name": "rtabmap",
+  "version-string": "0.20.3",
+  "description": "Real-Time Appearance-Based Mapping",
+  "homepage": "https://introlab.github.io/rtabmap/",
+  "supports": "windows & !static",
+  "dependencies": [
+    "opencv",
+    "pcl",
+    "zlib"
+  ]
+}
