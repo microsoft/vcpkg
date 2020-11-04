@@ -113,8 +113,8 @@ endif()
 
 set(N_DBG_LIB_PARTS 0)
 foreach(BUILD_TYPE dbg rel)
-	set(STATIC_ONLY_PATCHES "")
-	set(LINUX_ONLY_PATCHES "")
+	set(STATIC_ONLY_PATCHES)
+	set(LINUX_ONLY_PATCHES)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		set(STATIC_ONLY_PATCHES change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
 	endif()
