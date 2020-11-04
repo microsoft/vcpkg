@@ -163,9 +163,9 @@ foreach(BUILD_TYPE dbg rel)
 	endif()
 
 	message(STATUS "Warning: Building TensorFlow can take an hour or more.")
-	set(COPTS "")
-	set(CXXOPTS "")
-	set(LINKOPTS "")
+	set(COPTS)
+	set(CXXOPTS)
+	set(LINKOPTS)
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
