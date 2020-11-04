@@ -1,8 +1,11 @@
 Warning: Static TensorFlow build contains several external dependencies that may cause linking conflicts
     (for example, one cannot use both openssl and TensorFlow in the same project, since TensorFlow contains boringssl).
 
-Notes: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e.,
-       '-ltensorflow_cc -lstdc++ -lm -ldl -lpthread'
+Note: Beside TensorFlow itself, you'll need to also pass its dependencies to the linker:
+    * libm
+    * libdl
+    * libpthread
+for example, '-ltensorflow_cc -lm -ldl -lpthread'.
 
        There is no separate libtensorflow_framework.a as it got merged into libtensorflow_cc.a to avoid linking conflicts.
 
