@@ -9,5 +9,5 @@ for example, '-ltensorflow_cc -lm -ldl -lpthread'.
 
 Note: There is no separate libtensorflow_framework.a as it got merged into libtensorflow_cc.a to avoid linking conflicts.
 
-       For some TensorFlow features (e.g. OpRegistry), it might be necessary to convince the linker to include the whole library, i.e.,
-       '-Wl,--whole-archive -ltensorflow_cc -Wl,--no-whole-archive -lstdc++ -lm -ldl -lpthread'
+Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to tell the linker to include the whole library:
+    '-Wl,--whole-archive -ltensorflow_cc -Wl,--no-whole-archive [rest of linker arguments]'
