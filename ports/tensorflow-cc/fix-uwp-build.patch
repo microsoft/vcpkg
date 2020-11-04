@@ -1,0 +1,69 @@
+diff --git a/third_party/curl.BUILD b/third_party/curl.BUILD
+--- a/third_party/curl.BUILD
++++ b/third_party/curl.BUILD
+@@ -472,9 +472,7 @@
+         "#  define CURL_DISABLE_TELNET 1",
+         "#  define CURL_DISABLE_TFTP 1",
+         "#  define CURL_PULL_WS2TCPIP_H 1",
+-        "#  define USE_WINDOWS_SSPI 1",
+         "#  define USE_WIN32_IDN 1",
+-        "#  define USE_SCHANNEL 1",
+         "#  define WANT_IDN_PROTOTYPES 1",
+         "#elif defined(__APPLE__)",
+         "#  define HAVE_FSETXATTR_6 1",
+
+
+diff --git a/third_party/sqlite.BUILD b/third_party/sqlite.BUILD
+--- a/third_party/sqlite.BUILD
++++ b/third_party/sqlite.BUILD
+@@ -13,6 +13,7 @@
+ ] + select({
+     "@org_tensorflow//tensorflow:windows": [
+         "-DSQLITE_MAX_TRIGGER_DEPTH=100",
++        "-DSQLITE_OS_WINRT=1",
+     ],
+     "@org_tensorflow//tensorflow:macos": [
+         "-Os",
+
+
+diff --git a/third_party/aws/workspace.bazel b/third_party/aws/workspace.bazel
+--- a/third_party/aws/workspace.bazel
++++ b/third_party/aws/workspace.bazel
+@@ -15,6 +15,7 @@
+         sha256 = "758174f9788fed6cc1e266bcecb20bf738bd5ef1c3d646131c9ed15c2d6c5720",
+         strip_prefix = "aws-sdk-cpp-1.7.336",
+         build_file = "//third_party/aws:BUILD.bazel",
++        patch_file = clean_dep("//third_party/aws:FileSystem.patch"),
+     )
+
+     third_party_http_archive(
+
+
+diff --git a/third_party/aws/workspace.bazel b/third_party/aws/workspace.bazel
+--- a/third_party/aws/FileSystem.patch
++++ b/third_party/aws/FileSystem.patch
+@@ -0,0 +1,10 @@
++diff --git a/aws-cpp-sdk-core/source/platform/windows/FileSystem.cpp b/aws-cpp-sdk-core/source/platform/windows/FileSystem.cpp
++--- a/aws-cpp-sdk-core/source/platform/windows/FileSystem.cpp
+++++ b/aws-cpp-sdk-core/source/platform/windows/FileSystem.cpp
++@@ -20,6 +20,7 @@
++ #include <cassert>
++ #include <iostream>
++ #include <Userenv.h>
+++#include <Windows.h>
++
++ #pragma warning( disable : 4996)
++
+
+
+diff --git a/third_party/icu/BUILD.bazel b/third_party/icu/BUILD.bazel
+--- a/third_party/icu/BUILD.bazel
++++ b/third_party/icu/BUILD.bazel
+@@ -45,6 +45,7 @@
+     copts = [
+         "-DU_COMMON_IMPLEMENTATION",
+         "-DU_HAVE_STD_ATOMICS",  # TODO(gunan): Remove when TF is on ICU 64+.
++        "-DU_PLATFORM_HAS_WINUWP_API=1",
+     ] + select({
+         ":android": [
+             "-fdata-sections",
