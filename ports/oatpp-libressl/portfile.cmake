@@ -12,20 +12,13 @@ vcpkg_from_github(
     PATCHES "libress-submodule-downgrade-required-libressl-version.patch"
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "ON")
-else()
-    set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "OFF")
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
         "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
-        "-DLIBRESSL_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
-        "-DBUILD_SHARED_LIBS:BOOL=${OATPP_BUILD_SHARED_LIBRARIES_OPTION}"
+        "-DLIBRESSL_ROOT_DIR=${CURRENT_INSTALLED_DIR}"       
 )
 
 vcpkg_install_cmake()

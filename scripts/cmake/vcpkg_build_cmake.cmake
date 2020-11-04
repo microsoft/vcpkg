@@ -30,7 +30,8 @@
 ## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
 ## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 function(vcpkg_build_cmake)
-    cmake_parse_arguments(_bc "DISABLE_PARALLEL;ADD_BIN_TO_PATH" "TARGET;LOGFILE_ROOT" "" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _bc "DISABLE_PARALLEL;ADD_BIN_TO_PATH" "TARGET;LOGFILE_ROOT" "")
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")

@@ -267,6 +267,7 @@
     <ClInclude Include="..\include\vcpkg\vcpkgcmdarguments.h" />
     <ClInclude Include="..\include\vcpkg\vcpkglib.h" />
     <ClInclude Include="..\include\vcpkg\vcpkgpaths.h" />
+    <ClInclude Include="..\include\vcpkg\versions.h" />
     <ClInclude Include="..\include\vcpkg\versiont.h" />
     <ClInclude Include="..\include\vcpkg\visualstudio.h" />
   </ItemGroup>
