@@ -131,7 +131,7 @@ SET(HEADERS
 	)
 add_library(libnice ${SRCS} ${HEADERS})
 if (MSVC)
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4244 /wd4005 /wd4391 /wd4142 /wd4267")
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4244 /wd4005 /wd4391 /wd4142 /wd4267")
 endif()
 if (WIN32)
 target_link_libraries(libnice ${IPHLPAPI_LIBRARY} ${WS2_32_LIB} ${ADVAPI32_LIB} ${GLIB_LIBRARY} ${GOBJECT_LIBRARY} ${GIO_LIBRARY} OpenSSL::SSL)
