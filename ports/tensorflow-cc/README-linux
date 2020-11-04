@@ -1,8 +1,10 @@
-Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e.,
-      '-ltensorflow_cc -ltensorflow_framework -lstdc++ -lm -ldl -lpthread'
+Warning: Static TensorFlow build contains several external dependancies that may cause linking conflicts
+         (e.g. you cannot use openssl in your projects as TensorFlow contains boringssl and so on).
 
-      For the static port build libtensorflow_framework.a got merged into libtensorflow_cc.a to avoid linking conflicts,
-      so you only need '-ltensorflow_cc'.
+Notes: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e.,
+       '-ltensorflow_cc -lstdc++ -lm -ldl -lpthread'
 
-      For some TensorFlow features (e.g. OpRegistry), it might be necessary to convince the linker to include the whole library, i.e.,
-      '-Wl,--whole-archive -ltensorflow_cc -Wl,--no-whole-archive -lstdc++ -lm -ldl -lpthread'
+       There is no separate libtensorflow_framework.a as it got merged into libtensorflow_cc.a to avoid linking conflicts.
+
+       For some TensorFlow features (e.g. OpRegistry), it might be necessary to convince the linker to include the whole library, i.e.,
+       '-Wl,--whole-archive -ltensorflow_cc -Wl,--no-whole-archive -lstdc++ -lm -ldl -lpthread'
