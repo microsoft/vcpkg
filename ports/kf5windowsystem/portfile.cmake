@@ -5,6 +5,10 @@ vcpkg_from_github(
     SHA512 5c88ed9749d9cc5bb4cb1a8ec5f2da7359cb8c8f7c04c4fd63a59d88ddfee1533ed1ce686f12182d14fb7a7e1bd92f82cc416fff60bcdef73510f596217301cb
 )
 
+if (VCPKG_TARGET_IS_LINUX)
+    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libxcb-res0-dev\n\nThese can be installed on Ubuntu systems via apt-get install libxcb-res0-dev")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
