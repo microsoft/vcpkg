@@ -71,7 +71,6 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 list(APPEND MYSQL_TOOLS
     comp_err
-    echo
     my_print_defaults
     mysql
     mysql_config_editor
@@ -89,6 +88,13 @@ list(APPEND MYSQL_TOOLS
     perror
     zlib_decompress
 )
+
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND MYSQL_TOOLS
+        echo
+        mysql_config
+    )
+endif()
 
 vcpkg_copy_tools(TOOL_NAMES ${MYSQL_TOOLS} AUTO_CLEAN)
 
