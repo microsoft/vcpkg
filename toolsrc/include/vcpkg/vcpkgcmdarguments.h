@@ -163,6 +163,10 @@ namespace vcpkg
         constexpr static StringLiteral WAIT_FOR_LOCK_SWITCH = "x-wait-for-lock";
         Optional<bool> wait_for_lock = nullopt;
 
+        constexpr static StringLiteral DISABLE_LOCK_SWITCH = "x-disable-lock";
+        constexpr static StringLiteral DISABLE_LOCK_ENV = "X_VCPKG_DISABLE_LOCK";
+        Optional<bool> disable_lock = nullopt;
+
         constexpr static StringLiteral JSON_SWITCH = "x-json";
         Optional<bool> json = nullopt;
 

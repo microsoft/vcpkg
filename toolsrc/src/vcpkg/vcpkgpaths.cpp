@@ -259,21 +259,24 @@ namespace vcpkg
 
             installed = process_output_directory(
                 filesystem, manifest_root_dir, args.install_root_dir.get(), "vcpkg_installed", VCPKG_LINE_INFO);
-            const auto vcpkg_lock = root / ".vcpkg-root";
-            if (args.wait_for_lock.value_or(false))
+            if (args.disable_lock.value_or(false))
             {
-                m_pimpl->file_lock_handle = filesystem.take_exclusive_file_lock(vcpkg_lock, ec);
-            }
-            else
-            {
-                m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
-            }
-            if (ec)
-            {
-                System::printf(
-                    System::Color::error, "Failed to take the filesystem lock on %s:\n", fs::u8string(vcpkg_lock));
-                System::printf(System::Color::error, "    %s\n", ec.message());
-                Checks::exit_fail(VCPKG_LINE_INFO);
+                const auto vcpkg_lock = root / ".vcpkg-root";
+                if (args.wait_for_lock.value_or(false))
+                {
+                    m_pimpl->file_lock_handle = filesystem.take_exclusive_file_lock(vcpkg_lock, ec);
+                }
+                else
+                {
+                    m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
+                }
+                if (ec)
+                {
+                    System::printf(
+                        System::Color::error, "Failed to take the filesystem lock on %s:\n", fs::u8string(vcpkg_lock));
+                    System::printf(System::Color::error, "    %s\n", ec.message());
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
             }
 
             m_pimpl->m_manifest_doc = load_manifest(filesystem, manifest_root_dir);

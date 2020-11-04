@@ -293,6 +293,7 @@ namespace vcpkg
                 {FEATURE_PACKAGES_SWITCH, &VcpkgCmdArguments::feature_packages},
                 {BINARY_CACHING_SWITCH, &VcpkgCmdArguments::binary_caching},
                 {WAIT_FOR_LOCK_SWITCH, &VcpkgCmdArguments::wait_for_lock},
+                {DISABLE_LOCK_SWITCH, &VcpkgCmdArguments::disable_lock},
                 {JSON_SWITCH, &VcpkgCmdArguments::json},
             };
 
@@ -663,6 +664,14 @@ namespace vcpkg
         from_env(DEFAULT_VISUAL_STUDIO_PATH_ENV, default_visual_studio_path);
 
         {
+            const auto vcpkg_disable_lock = System::get_environment_variable(DISABLE_LOCK_ENV);
+            if (vcpkg_disable_lock.has_value() && !disable_lock.has_value())
+            {
+                disable_lock = true;
+            }
+        }
+
+        {
             const auto vcpkg_overlay_ports_env = System::get_environment_variable(OVERLAY_PORTS_ENV);
             if (const auto unpacked = vcpkg_overlay_ports_env.get())
             {
@@ -922,6 +931,8 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::PRINT_METRICS_SWITCH;
 
     constexpr StringLiteral VcpkgCmdArguments::WAIT_FOR_LOCK_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::DISABLE_LOCK_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::DISABLE_LOCK_ENV;
 
     constexpr StringLiteral VcpkgCmdArguments::JSON_SWITCH;
 
