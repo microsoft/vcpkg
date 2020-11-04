@@ -30,8 +30,8 @@ index b664afd..0f72521 100644
 -	option(ENABLE_DATA "Enable Data" OFF)
 -	option(ENABLE_DATA_MYSQL "Enable Data MySQL or MariaDB" OFF)
 +if(ENABLE_DATA_MYSQL)
-+    find_package(unofficial-libmysql CONFIG)
-+    if (NOT unofficial-libmysql_FOUND)
++    find_package(libmysql)
++    if (NOT libmysql_FOUND)
 +        find_package(unofficial-libmariadb CONFIG REQUIRED)
 +    endif()
  endif()
@@ -92,7 +92,7 @@ index f71b145..c3eaf9e 100644
  )
  
 -target_link_libraries(DataMySQL PUBLIC Poco::Data MySQL::client)
-+target_link_libraries(DataMySQL PUBLIC Poco::Data unofficial-libmysql)
++target_link_libraries(DataMySQL PUBLIC Poco::Data ${MYSQL_LIBRARIES})
  target_include_directories(DataMySQL
  	PUBLIC
  		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
