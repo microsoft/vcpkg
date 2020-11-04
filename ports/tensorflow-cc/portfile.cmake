@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "x86" "arm")
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" ON_TARGET "UWP")
 
 set(TF_VERSION 2.3.1)
 set(TF_VERSION_SHORT 2.3)
