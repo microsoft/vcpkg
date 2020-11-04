@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     message(FATAL_ERROR "\n${PORT} does not support your system, only Windows for now. Please open a ticket issue on github.com/microsoft/vcpkg if necessary\n")
 endif()

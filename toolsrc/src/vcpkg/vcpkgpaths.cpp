@@ -416,15 +416,10 @@ If you wish to silence this error and use classic mode, you can:
             auto& fs = this->get_filesystem();
             std::map<std::string, std::string> helpers;
             auto files = fs.get_files_non_recursive(this->scripts / fs::u8path("cmake"));
-            auto common_functions = fs::u8path("vcpkg_common_functions");
             for (auto&& file : files)
             {
-                auto stem = file.stem();
-                if (stem != common_functions)
-                {
-                    helpers.emplace(fs::u8string(stem),
-                                    Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
-                }
+                helpers.emplace(fs::u8string(file.stem()),
+                                Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
             }
             return helpers;
         });

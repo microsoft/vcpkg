@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(PIXMAN_VERSION 0.38.4)
@@ -43,5 +41,3 @@ file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/pixma
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/pixman/COPYING ${CURRENT_PACKAGES_DIR}/share/pixman/copyright)
 
 vcpkg_copy_pdbs()
-
-vcpkg_test_cmake(PACKAGE_NAME unofficial-pixman)
