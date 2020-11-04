@@ -1,4 +1,4 @@
-Warning: Static TensorFlow build contains several external dependancies that may cause linking conflicts
+Warning: Static TensorFlow build contains several external dependencies that may cause linking conflicts
          (e.g. you cannot use openssl in your projects as TensorFlow contains boringssl and so on).
 
 Notes: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e.,
