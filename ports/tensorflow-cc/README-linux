@@ -1,5 +1,5 @@
 Warning: Static TensorFlow build contains several external dependencies that may cause linking conflicts
-         (e.g. you cannot use openssl in your projects as TensorFlow contains boringssl and so on).
+    (for example, one cannot use both openssl and TensorFlow in the same project, since TensorFlow contains boringssl).
 
 Notes: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e.,
        '-ltensorflow_cc -lstdc++ -lm -ldl -lpthread'
