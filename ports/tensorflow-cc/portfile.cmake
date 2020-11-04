@@ -118,7 +118,7 @@ foreach(BUILD_TYPE dbg rel)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		set(STATIC_ONLY_PATCHES change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
 	endif()
-	if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX)
+	if(VCPKG_TARGET_IS_LINUX)
 		set(LINUX_ONLY_PATCHES fix-linux-build.patch)
 	endif()
 	vcpkg_from_github(
