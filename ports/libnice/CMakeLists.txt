@@ -12,8 +12,6 @@ if (WIN32)
         -DPACKAGE_STRING="${PROJECT_VERSION}")
 else()
     add_definitions(
-        -D_CRT_SECURE_NO_WARNINGS
-        -D_SCL_SECURE_NO_WARNINGS
         -DHAVE_OPENSSL
         -DPACKAGE_STRING="${PROJECT_VERSION}"
         -DHAVE_NETDB_H=1)
