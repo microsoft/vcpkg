@@ -33,6 +33,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(FORCE_UNSUPPORTED_COMPILER 1)
 endif()
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static"  BUILD_STATIC_LIBS)
+string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static"  STATIC_CRT_LINKAGE)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -40,25 +43,67 @@ vcpkg_configure_cmake(
         -DWITHOUT_SERVER=ON
         -DWITH_UNIT_TESTS=OFF
         -DENABLED_PROFILING=OFF
+        -DENABLE_TESTING=OFF
         -DWIX_DIR=OFF
         ${STACK_DIRECTION}
         -DIGNORE_BOOST_VERSION=ON
+        -DWITH_SYSTEMD=OFF
+        -DWITH_TEST_TRACE_PLUGIN=OFF
+        -DMYSQL_MAINTAINER_MODE=OFF
+        -DBUNDLE_RUNTIME_LIBRARIES=OFF
+        -DDOWNLOAD_BOOST=OFF
+        -DENABLE_DOWNLOADS=OFF
+        -DWITH_NDB_TEST=OFF
+        -DWITH_NDB_NODEJS_DEFAULT=OFF
+        -DWITH_NDBAPI_EXAMPLES=OFF
+        -DMYSQLX_ADDITIONAL_TESTS_ENABLE=OFF
         -DWITH_SSL=system
         -DWITH_ICU=system
         -DWITH_LIBEVENT=system
         -DWITH_LZ4=system
         -DWITH_ZLIB=system
         -DFORCE_UNSUPPORTED_COMPILER=${FORCE_UNSUPPORTED_COMPILER}
+        -DINSTALL_STATIC_LIBRARIES=${BUILD_STATIC_LIBS}
+        -DLINK_STATIC_RUNTIME_LIBRARIES=${STATIC_CRT_LINKAGE}
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
-# Here the cmake file directory is temporarily renamed, because the "share" directory will be cleaned up below.
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-libmysql TARGET_PATH cmake/unofficial-libmysql)
+list(APPEND MYSQL_TOOLS
+    comp_err
+    echo
+    my_print_defaults
+    mysql
+    mysql_config_editor
+    mysql_secure_installation
+    mysql_ssl_rsa_setup
+    mysqladmin
+    mysqlbinlog
+    mysqlcheck
+    mysqldump
+    mysqlimport
+    mysqlpump
+    mysqlshow
+    mysqlslap
+    mysqltest
+    perror
+    zlib_decompress
+)
 
-# delete debug headers
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_copy_tools(TOOL_NAMES ${MYSQL_TOOLS} AUTO_CLEAN)
+
+file(RENAME ${CURRENT_PACKAGES_DIR}/share ${CURRENT_PACKAGES_DIR}/libmysql)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/debug/libmysql)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/share)
+file(RENAME ${CURRENT_PACKAGES_DIR}/libmysql ${CURRENT_PACKAGES_DIR}/share/libmysql)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/libmysql ${CURRENT_PACKAGES_DIR}/debug/share/libmysql)
+
+if (BUILD_STATIC_LIBS)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/libmysql/unofficial-mysqlclient TARGET_PATH share/unofficial-mysqlclient)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/libmysql/unofficial-libmysql TARGET_PATH share/unofficial-libmysql)
+endif()
 
 # switch mysql into /mysql
 file(RENAME ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/include2)
@@ -67,52 +112,29 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/include2 ${CURRENT_PACKAGES_DIR}/include/mys
 
 ## delete useless vcruntime/scripts/bin/msg file
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/share
+    ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
     ${CURRENT_PACKAGES_DIR}/docs
     ${CURRENT_PACKAGES_DIR}/debug/docs
     ${CURRENT_PACKAGES_DIR}/lib/debug
     ${CURRENT_PACKAGES_DIR}/lib/plugin
-    ${CURRENT_PACKAGES_DIR}/lib/plugin/debug)
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    foreach(BIN_DIR "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-        file(GLOB_RECURSE LIBMYSQL_BINARIES ${BIN_DIR}/*)
-        list(REMOVE_ITEM LIBMYSQL_BINARIES ${BIN_DIR}/libmysql${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
-        if (VCPKG_TARGET_IS_WINDOWS)
-            list(REMOVE_ITEM LIBMYSQL_BINARIES ${BIN_DIR}/libmysql.pdb)
-        endif()
-        file(REMOVE ${LIBMYSQL_BINARIES})
-    endforeach()
-else()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-    # Remove dynmaic symbols on lib folder
-    if (VCPKG_TARGET_IS_WINDOWS)
-        file(REMOVE
-            ${CURRENT_PACKAGES_DIR}/libmysql.lib
-            ${CURRENT_PACKAGES_DIR}/libmysql.pdb
-            ${CURRENT_PACKAGES_DIR}/debug/libmysql.lib
-            ${CURRENT_PACKAGES_DIR}/debug/libmysql.pdb
-        )
-    endif()
-endif()
-
+    ${CURRENT_PACKAGES_DIR}/lib/plugin/debug
+)
 
 ## remove misc files
 file(REMOVE
     ${CURRENT_PACKAGES_DIR}/LICENSE
     ${CURRENT_PACKAGES_DIR}/README
     ${CURRENT_PACKAGES_DIR}/debug/LICENSE
-    ${CURRENT_PACKAGES_DIR}/debug/README)
-
-# Restore the cmake files path
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/unofficial-libmysql ${CURRENT_PACKAGES_DIR}/share/unofficial-libmysql)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/debug/cmake)
+    ${CURRENT_PACKAGES_DIR}/debug/README
+)
 
 file(READ ${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h _contents)
 string(REPLACE "#include <mysql/udf_registration_types.h>" "#include \"mysql/udf_registration_types.h\"" _contents "${_contents}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h "${_contents}")
+
+configure_file(${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
+file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # copy license
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

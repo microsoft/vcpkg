@@ -1,0 +1,9 @@
+if (@BUILD_STATIC_LIBS@)
+    find_package(unofficial-mysqlclient CONFIG REQUIRED)
+    set(MYSQL_LIBRARY mysqlclient)
+else()
+    find_package(unofficial-libmysql CONFIG REQUIRED)
+    set(MYSQL_LIBRARY libmysql)
+endif()
+
+set(MYSQL_LIBRARIES ${MYSQL_LIBRARY})
