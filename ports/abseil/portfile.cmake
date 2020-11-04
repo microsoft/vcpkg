@@ -7,7 +7,8 @@ if("cxx17" IN_LIST FEATURES)
     # instead of the library replacement types
     list(APPEND ABSEIL_PATCHES fix-use-cxx17-stdlib-types.patch)
 else()
-    # fore use of library replacement types, otherwise the automaticc
+    # force use of library replacement types, otherwise the automatic
+
     # detection can cause ABI issues depending on which compiler options
     # are enabled for consuming user code
     list(APPEND ABSEIL_PATCHES fix-lnk2019-error.patch)
