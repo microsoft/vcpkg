@@ -136,7 +136,7 @@ endif()
 if (WIN32)
     target_link_libraries(libnice ${IPHLPAPI_LIBRARY} ${WS2_32_LIB} ${ADVAPI32_LIB} ${GLIB_LIBRARY} ${GOBJECT_LIBRARY} ${GIO_LIBRARY} OpenSSL::SSL)
 else()
-target_link_libraries(libnice ${GLIB_LIBRARY} ${GOBJECT_LIBRARY} ${GIO_LIBRARY} OpenSSL::SSL)
+    target_link_libraries(libnice ${GLIB_LIBRARY} ${GOBJECT_LIBRARY} ${GIO_LIBRARY} OpenSSL::SSL)
 endif()
 install(TARGETS libnice
 RUNTIME DESTINATION bin
