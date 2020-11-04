@@ -1,11 +1,13 @@
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/util.h>
 
 #include <vcpkg/commands.edit.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 #include <limits.h>
 
@@ -85,10 +87,9 @@ namespace vcpkg::Commands::Edit
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths& paths)
     {
-        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+        auto sources_and_errors = Paragraphs::try_load_all_registry_ports(paths);
 
-        return Util::fmap(sources_and_errors.paragraphs,
-                          [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
+        return Util::fmap(sources_and_errors.paragraphs, Paragraphs::get_name_of_control_file);
     }
 
     static constexpr std::array<CommandSwitch, 2> EDIT_SWITCHES = {
@@ -260,7 +261,8 @@ namespace vcpkg::Commands::Edit
 #ifdef _WIN32
         if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
-            System::cmd_execute_no_wait(Strings::concat("cmd /c \"", cmd_line, " <NUL\""));
+            // note that we are invoking cmd silently but Code.exe is relaunched from there
+            System::cmd_execute_background(Strings::concat("cmd /c \"", cmd_line, " <NUL\""));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif

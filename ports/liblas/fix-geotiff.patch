@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d246a88..d0bba6f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -248,7 +248,7 @@ endif()
+ # GeoTIFF support - required, default=ON
+ set(WITH_GEOTIFF TRUE CACHE BOOL "Choose if GeoTIFF support should be built")
+ 
+-find_package (GeoTIFF 1.3.0 )
++find_package (GeoTIFF CONFIG 1.3.0 )
+ if(GEOTIFF_FOUND)
+     set(WITH_GEOTIFF TRUE)
+     # Confirm required API is available
+diff --git a/apps/CMakeLists.txt b/apps/CMakeLists.txt
+index beb83e2..650bc0c 100644
+--- a/apps/CMakeLists.txt
++++ b/apps/CMakeLists.txt
+@@ -168,7 +168,6 @@ if(UNIX)
+     set (LIBLAS_UTILS_RPATH ${LIBLAS_UTILS_RPATH} ${LASZIP_LIBRARY_DIRS})
+   endif()
+   if(GEOTIFF_FOUND)
+-    get_filename_component(GEOTIFF_LIBRARY_DIRS ${GEOTIFF_LIBRARY} PATH)
+     set (LIBLAS_UTILS_RPATH ${LIBLAS_UTILS_RPATH} ${GEOTIFF_LIBRARY_DIRS})
+   endif()
+   if(GDAL_FOUND)

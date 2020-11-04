@@ -18,6 +18,13 @@
 
 namespace fs
 {
+    struct IsSlash
+    {
+        bool operator()(const wchar_t c) const noexcept { return c == L'/' || c == L'\\'; }
+    };
+
+    constexpr IsSlash is_slash;
+
 #if VCPKG_USE_STD_FILESYSTEM
     namespace stdfs = std::filesystem;
 #else
@@ -157,7 +164,7 @@ namespace vcpkg::Files
         /// <summary>Read text lines from a file</summary>
         /// <remarks>Lines will have up to one trailing carriage-return character stripped (CRLF)</remarks>
         virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const = 0;
-        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename) const = 0;
+        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const fs::path& filename) const = 0;
         virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const = 0;
         virtual std::vector<fs::path> get_files_non_recursive(const fs::path& dir) const = 0;
         void write_lines(const fs::path& file_path, const std::vector<std::string>& lines, LineInfo linfo);
@@ -234,7 +241,20 @@ namespace vcpkg::Files
 
     void print_paths(const std::vector<fs::path>& paths);
 
-    /// Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
-    /// This function exists as a workaround for TS implementations.
+    // Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
+    // This function exists as a workaround for TS implementations.
     fs::path combine(const fs::path& lhs, const fs::path& rhs);
+
+#if defined(_WIN32)
+    constexpr char preferred_separator = '\\';
+#else
+    constexpr char preferred_separator = '/';
+#endif // _WIN32
+
+    // Adds file as a new path element to the end of base, with an additional slash if necessary
+    std::string add_filename(StringView base, StringView file);
+
+#if defined(_WIN32)
+    fs::path win32_fix_path_case(const fs::path& source);
+#endif // _WIN32
 }
