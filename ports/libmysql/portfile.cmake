@@ -89,9 +89,12 @@ list(APPEND MYSQL_TOOLS
     zlib_decompress
 )
 
-if (NOT VCPKG_TARGET_IS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MYSQL_TOOLS
         echo
+    )
+else()
+    list(APPEND MYSQL_TOOLS
         mysql_config
     )
 endif()
