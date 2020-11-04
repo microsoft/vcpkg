@@ -1,14 +1,13 @@
-set(BOTAN_VERSION 2.12.1)
+set(BOTAN_VERSION 2.16.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF 1a6ad661ce64287ccbe26460ccc3aa4247d86ba8 # 2.12.1
-    SHA512 7a774f325c85761e2d076847f1fc8bc67592d696c4ebde839928591f7c85352e2df6032c122bdcc603adf84d76f5a1897c7118aa3859d38f79e474f27bc3b588
+    REF 82a20c67bd54b8c6c75f32bd31dea5b12f3d7e67 # 2.16.0
+    SHA512 42b8dac0a6b44afee14e8ba928b323790b8d90395ba70b4919b3d033e5b9073706355c2263c2a9e66357fa6d4af4c85430c93a65cfdaa79f1c83c89940619a66
     HEAD_REF master
     PATCHES
         fix-generate-build-path.patch
-        fix-msvc-build.patch # Remove this patch on next update
 )
 
 if(CMAKE_HOST_WIN32)
@@ -47,6 +46,10 @@ else()
     message(FATAL_ERROR "Unsupported architecture")
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    amalgamation BOTAN_AMALGAMATION
+)
+
 function(BOTAN_BUILD BOTAN_BUILD_TYPE)
 
     if(BOTAN_BUILD_TYPE STREQUAL "dbg")
@@ -73,9 +76,14 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             ${BOTAN_FLAG_DEBUGMODE}
                             "--distribution-info=vcpkg ${TARGET_TRIPLET}"
                             --prefix=${BOTAN_FLAG_PREFIX}
+                            --with-pkg-config
                             --link-method=copy)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})
+    endif()
+
+    if("-DBOTAN_AMALGAMATION=ON" IN_LIST FEATURE_OPTIONS)
+        list(APPEND configure_arguments --amalgamation)
     endif()
 
     vcpkg_execute_required_process(
@@ -103,10 +111,6 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
             --docdir=${BOTAN_FLAG_PREFIX}/share
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE}"
         LOGNAME install-${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE})
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND CMAKE_HOST_WIN32)
-        file(RENAME ${BOTAN_FLAG_PREFIX}/lib/botan${BOTAN_DEBUG_SUFFIX}.dll ${BOTAN_FLAG_PREFIX}/bin/botan${BOTAN_DEBUG_SUFFIX}.dll)
-    endif()
 
     message(STATUS "Package ${TARGET_TRIPLET}-${BOTAN_BUILD_TYPE} done")
 endfunction()

@@ -75,7 +75,7 @@ Build-Depends: bzip
 )",
                                              "<testdata>");
     REQUIRE(pghs.has_value());
-    auto maybe_scf = SourceControlFile::parse_control_file(fs::path(), std::move(*pghs.get()));
+    auto maybe_scf = SourceControlFile::parse_control_file(fs::u8string(fs::path()), std::move(*pghs.get()));
     REQUIRE(maybe_scf.has_value());
     SourceControlFileLocation scfl{std::move(*maybe_scf.get()), fs::path()};
 
@@ -88,6 +88,11 @@ Build-Depends: bzip
     ipa.abi_info.get()->package_abi = "packageabi";
     std::string tripletabi("tripletabi");
     ipa.abi_info.get()->triplet_abi = tripletabi;
+    Build::CompilerInfo compiler_info;
+    compiler_info.hash = "compilerhash";
+    compiler_info.id = "compilerid";
+    compiler_info.version = "compilerversion";
+    ipa.abi_info.get()->compiler_info = compiler_info;
 
     NugetReference ref(ipa);
 
@@ -110,6 +115,9 @@ Build-Depends: bzip
 a spiffy compression library wrapper
 
 Version: 1.5
+Triplet: x64-windows
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
 Triplet/Compiler hash: tripletabi
 Features: a, b
 Dependencies:
@@ -139,6 +147,9 @@ Dependencies:
 a spiffy compression library wrapper
 
 Version: 1.5
+Triplet: x64-windows
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
 Triplet/Compiler hash: tripletabi
 Features: a, b
 Dependencies:
@@ -168,6 +179,9 @@ Dependencies:
 a spiffy compression library wrapper
 
 Version: 1.5
+Triplet: x64-windows
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
 Triplet/Compiler hash: tripletabi
 Features: a, b
 Dependencies:
@@ -241,7 +255,7 @@ Description: a spiffy compression library wrapper
 )",
                                              "<testdata>");
     REQUIRE(pghs.has_value());
-    auto maybe_scf = SourceControlFile::parse_control_file(fs::path(), std::move(*pghs.get()));
+    auto maybe_scf = SourceControlFile::parse_control_file(fs::u8string(fs::path()), std::move(*pghs.get()));
     REQUIRE(maybe_scf.has_value());
     SourceControlFileLocation scfl{std::move(*maybe_scf.get()), fs::path()};
     plan.install_actions.push_back(Dependencies::InstallPlanAction());
@@ -264,7 +278,7 @@ Description: a spiffy compression library wrapper
 )",
                                               "<testdata>");
     REQUIRE(pghs2.has_value());
-    auto maybe_scf2 = SourceControlFile::parse_control_file(fs::path(), std::move(*pghs2.get()));
+    auto maybe_scf2 = SourceControlFile::parse_control_file(fs::u8string(fs::path()), std::move(*pghs2.get()));
     REQUIRE(maybe_scf2.has_value());
     SourceControlFileLocation scfl2{std::move(*maybe_scf2.get()), fs::path()};
     plan.install_actions.push_back(Dependencies::InstallPlanAction());

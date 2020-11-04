@@ -8,25 +8,25 @@
         <archiveName>python-3.8.3-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.17.2</version>
-        <exeRelativePath>cmake-3.17.2-win32-x86\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-win32-x86.zip</url>
-        <sha512>63bb3dc5a8683ed193025450620a70b8dd675eccba4a83882c96f21eda8994dd5b21854036a0c17f978bf31f67d1d1b33b416c7f6ffb0470c9f48c2e495d44c1</sha512>
-        <archiveName>cmake-3.17.2-win32-x86.zip</archiveName>
+        <version>3.18.4</version>
+        <exeRelativePath>cmake-3.18.4-win32-x86\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.18.4/cmake-3.18.4-win32-x86.zip</url>
+        <sha512>77ab5b4720c5212cf477100588a20002f7f99a609ad5d5ffef4c163345d366ce9be98280c4f02ecb583d070668a8eb8a2b0baabd266f10c53589aac250f67f28</sha512>
+        <archiveName>cmake-3.18.4-win32-x86.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.17.2</version>
-        <exeRelativePath>cmake-3.17.2-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Darwin-x86_64.tar.gz</url>
-        <sha512>804b06439c05b9cf36a988223b7dc47b06b8613cb4653989eff52aad5ab0fa312b8da1ac0c760ad101e74b2c9edaf5b119bd48617a5efb57dff9380ca74e54a9</sha512>
-        <archiveName>cmake-3.17.2-Darwin-x86_64.tar.gz</archiveName>
+        <version>3.18.4</version>
+        <exeRelativePath>cmake-3.18.4-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.18.4/cmake-3.18.4-Darwin-x86_64.tar.gz</url>
+        <sha512>76efc2fc3562ae4087cb9f169dff5b18253402ec4afdfcf8b818f724efaab2c4aacb1baa5fe77db268413964b4272c91eed789991951ea11eeb67332be5a4c5b</sha512>
+        <archiveName>cmake-3.18.4-Darwin-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.17.2</version>
-        <exeRelativePath>cmake-3.17.2-Linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.17.2/cmake-3.17.2-Linux-x86_64.tar.gz</url>
-        <sha512>2afc023363c40b110d97d871fb9a8917643bba308ca0c029ee8fe1164db1c168e32b2c9d7647475d84efa290c1242357f7cf260ea4d1f92f5a829cf418955490</sha512>
-        <archiveName>cmake-3.17.2-Linux-x86_64.tar.gz</archiveName>
+        <version>3.18.4</version>
+        <exeRelativePath>cmake-3.18.4-Linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.18.4/cmake-3.18.4-Linux-x86_64.tar.gz</url>
+        <sha512>8be5c00dfb00597daae448060fcc612c5e5f0ff9483eb6786cd1c4123cadf15bf2bec1c7892c59792947188889d5a07a9df34190366636c9b8cea4bb1bc7454f</sha512>
+        <archiveName>cmake-3.18.4-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.12.4</version>
@@ -106,25 +106,25 @@
         <archiveName>aria2-1.33.1-win-32bit-build1.zip</archiveName>
     </tool>
     <tool name="ninja" os="windows">
-        <version>1.10.0</version>
+        <version>1.10.1</version>
         <exeRelativePath>ninja.exe</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-win.zip</url>
-        <sha512>a196e243c53daa1df9d287af658d6d38d6b830b614f2d5704e8c88ffc61f179a533ae71cdb6d0d383d1559d65dacccbaaab270fb2a33aa211e5dba42ff046f97</sha512>
-        <archiveName>ninja-win-1.10.0.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip</url>
+        <sha512>0120054f0fea6eea4035866201f69fba1c039f681f680cfcbbefcaee97419815d092a6e2f3823ea6c3928ad296395f36029e337127ee977270000b35df5f9c40</sha512>
+        <archiveName>ninja-win-1.10.1.zip</archiveName>
     </tool>
     <tool name="ninja" os="linux">
-        <version>1.10.0</version>
+        <version>1.10.1</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-linux.zip</url>
-        <sha512>ffb179ab8ea315167fcc99a8f13286e1363590185b18cf819cc73e09f2a7553790e9dc45fd1ccd0bd1d2dbf543aee3f6c0951cf9ce453a7168ffd2ac873cdd29</sha512>
-        <archiveName>ninja-linux-1.10.0.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-linux.zip</url>
+        <sha512>9820c76fde6fac398743766e7ea0fe8a7d6e4191a77512a2d2f51c2ddcc947fcd91ac08522742281a285418c114e760b0158a968305f8dc854bb9693883b7f1e</sha512>
+        <archiveName>ninja-linux-1.10.1.zip</archiveName>
     </tool>
     <tool name="ninja" os="osx">
-        <version>1.10.0</version>
+        <version>1.10.1</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.0/ninja-mac.zip</url>
-        <sha512>619a1924067a0b30fc5f8887f868d3ee5481838d2f0f158d031f7614a2a10b95a73d4a56b658d5d560283ebf809e2e536b968c6c01ff0108075c3f393f5780ba</sha512>
-        <archiveName>ninja-mac-1.10.0.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-mac.zip</url>
+        <sha512>99f5ccca2461a4d340f4528a8eef6d81180757da78313f1f9412ed13a7bbaf6df537a342536fd053db00524bcb734d205af5f6fde419a1eb2e6f77ee8b7860fe</sha512>
+        <archiveName>ninja-mac-1.10.1.zip</archiveName>
     </tool>
     <tool name="ninja" os="freebsd">
         <version>1.8.2</version>
