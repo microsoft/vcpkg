@@ -53,7 +53,7 @@ function(vcpkg_copy_tools)
     endforeach()
 
     if(_vct_AUTO_CLEAN)
-        vcpkg_clean_executables_in_bin(FILE_NAMES "${_vct_TOOL_NAMES}")
+        vcpkg_clean_executables_in_bin(FILE_NAMES ${_vct_TOOL_NAMES})
     endif()
 
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
