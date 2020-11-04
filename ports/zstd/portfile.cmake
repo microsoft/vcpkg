@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-export-zstd-config.patch
         0002-fix-c4146.patch
+        0002-crosscompile-windows.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

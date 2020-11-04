@@ -4,7 +4,8 @@ set(PATCHES
         # Fix CMake Deprecation Warning concerning OLD behavior for policy CMP0026
         # Suppress MSVC compiler warnings C4703, C4146, C4308, which fixes errors
         # under x64-uwp and arm-uwp
-        pcre-8.44_suppress_cmake_and_compiler_warnings-errors.patch)
+        pcre-8.44_suppress_cmake_and_compiler_warnings-errors.patch
+        export-cmake-targets.patch)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.pcre.org/pub/pcre/pcre-${PCRE_VERSION}.zip"
@@ -52,6 +53,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
 
 foreach(FILE ${CURRENT_PACKAGES_DIR}/include/pcre.h ${CURRENT_PACKAGES_DIR}/include/pcreposix.h)
     file(READ ${FILE} PCRE_H)
@@ -121,6 +124,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/doc)
 
+vcpkg_copy_pdbs()
+configure_file(${CMAKE_CURRENT_LIST_DIR}/unofficial-pcre-config.cmake ${CURRENT_PACKAGES_DIR}/share/unofficial-pcre/unofficial-pcre-config.cmake @ONLY)
+
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-vcpkg_copy_pdbs()

@@ -1,14 +1,10 @@
-include(vcpkg_common_functions)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.mega-nerd.com/SRC/libsamplerate-0.1.9.tar.gz"
-    FILENAME "libsamplerate-0.1.9.tar.gz"
-    SHA512 78596657963cbf06785e3e6e1190b093df71da52ca340e75bd8246a962cd79dd1c90fa5527c607cebcb296e2c1ee605015278b274e3b768f2f3fbeb0eadfb728
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO libsndfile/libsamplerate
+    REF f6730d03c3e7660bb6ecad8816f1b09c5825142a # v0.1.9
+    SHA512 6a349c9144d024212fc78dc0d9e39bdc1a43abaf590fcfbf84396af22834545962d5ef10176b48b21fcae2ce62d12277b682059383805d059f4dd2b9f6708478
+    HEAD_REF master
+    PATCHES Use-the-lrintf-intrinsic.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)

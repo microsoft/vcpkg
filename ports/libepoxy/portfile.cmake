@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         # https://github.com/anholt/libepoxy/pull/220
         libepoxy-1.5.4_Add_call_convention_to_mock_function.patch
+        libepoxy-1.5.4_meson_c_std.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_OSX)

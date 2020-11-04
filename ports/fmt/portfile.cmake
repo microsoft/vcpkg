@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
-    REF cd4af11efc9c622896a3e4cb599fa28668ca3d05#version 7.0.3
-    SHA512 24b42288be97849533dc82282fc08833d74642ad2afeb511e65c6389d88c709cf25345dec5b550c18af3705f4c0847fa0d4066308b51cd41ccfdda1a2c3babd0
+    REF 5f7f7b954d0e958f3d94f3d906177c6a1090f079 # v7.1.1
+    SHA512 d0453e96a9c09641a1931b8fce15ac8544252f72373159809c9a5227ac1408d8e00a0de33dfa007afa586adbc06ab6a9c8f3bd20dc6911927fab1d4cc6fc7c03
     HEAD_REF master
     PATCHES fix-warning4189.patch
 )
@@ -59,4 +59,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+# Handle post-build CMake instructions
 vcpkg_copy_pdbs()
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
