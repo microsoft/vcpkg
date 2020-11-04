@@ -1,4 +1,4 @@
 Source: openssl-windows
 Version: 1.1.1h
-Description: deprecated OpenSSL port
+Description: Deprecated OpenSSL port
 Supports: windows

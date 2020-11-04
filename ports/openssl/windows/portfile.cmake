@@ -6,7 +6,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_find_acquire_program(NASM)
-get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+get_filename_component(NASM_EXE_PATH "${NASM}" DIRECTORY)
 vcpkg_add_to_path(PREPEND "${NASM_EXE_PATH}")
 
 vcpkg_find_acquire_program(JOM)
@@ -29,7 +29,7 @@ if(DEFINED OPENSSL_USE_NOPINSHARED)
     set(CONFIGURE_OPTIONS ${CONFIGURE_OPTIONS} no-pinshared)
 endif()
 
-set(CONFIGURE_COMMAND ${PERL} Configure ${CONFIGURE_OPTIONS})
+set(CONFIGURE_COMMAND "${PERL}" Configure ${CONFIGURE_OPTIONS})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(OPENSSL_ARCH VC-WIN32)
@@ -45,7 +45,8 @@ endif()
 
 set(OPENSSL_MAKEFILE "makefile")
 
-file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
+                    "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 
@@ -110,48 +111,48 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Build ${TARGET_TRIPLET}-dbg")
     make_directory(${SOURCE_PATH_DEBUG}/inc32/openssl)
     execute_process(
-        COMMAND ${JOM} -k -j $ENV{NUMBER_OF_PROCESSORS} -f ${OPENSSL_MAKEFILE}
+        COMMAND "${JOM}" -k -j ${VCPKG_CONCURRENCY} -f "${OPENSSL_MAKEFILE}"
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
         OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-out.log
         ERROR_FILE ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-dbg-0-err.log
     )
     vcpkg_execute_required_process(
-        COMMAND nmake -f ${OPENSSL_MAKEFILE} install_sw install_ssldirs
+        COMMAND nmake -f "${OPENSSL_MAKEFILE}" install_sw install_ssldirs
         WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
         LOGNAME build-${TARGET_TRIPLET}-dbg-1)
 
     message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/certs)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/private)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/engines-1_1)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/certs)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/engines-1_1)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/private)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/certs")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/private")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/engines-1_1")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/certs")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/engines-1_1")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/private")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(REMOVE
-    ${CURRENT_PACKAGES_DIR}/ct_log_list.cnf
-    ${CURRENT_PACKAGES_DIR}/ct_log_list.cnf.dist
-    ${CURRENT_PACKAGES_DIR}/openssl.cnf.dist
-    ${CURRENT_PACKAGES_DIR}/debug/bin/openssl.exe
-    ${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf
-    ${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf.dist
-    ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf
-    ${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist
+    "${CURRENT_PACKAGES_DIR}/ct_log_list.cnf"
+    "${CURRENT_PACKAGES_DIR}/ct_log_list.cnf.dist"
+    "${CURRENT_PACKAGES_DIR}/openssl.cnf.dist"
+    "${CURRENT_PACKAGES_DIR}/debug/bin/openssl.exe"
+    "${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf"
+    "${CURRENT_PACKAGES_DIR}/debug/ct_log_list.cnf.dist"
+    "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf"
+    "${CURRENT_PACKAGES_DIR}/debug/openssl.cnf.dist"
 )
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/openssl/)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/openssl.exe ${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.exe)
-file(RENAME ${CURRENT_PACKAGES_DIR}/openssl.cnf ${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.cnf)
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/openssl/")
+file(RENAME "${CURRENT_PACKAGES_DIR}/bin/openssl.exe" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.exe")
+file(RENAME "${CURRENT_PACKAGES_DIR}/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.cnf")
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openssl)
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/openssl")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     # They should be empty, only the exes deleted above were in these directories
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/")
 endif()
 
 vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/dtls1.h"
@@ -166,7 +167,7 @@ vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/openssl/rand.h"
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/openssl)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/openssl")
 endif()

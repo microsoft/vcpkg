@@ -4,13 +4,12 @@ endif()
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH MASTER_COPY_SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     REF ${OPENSSL_VERSION}
 )
 
 if(CMAKE_HOST_WIN32)
     vcpkg_acquire_msys(MSYS_ROOT PACKAGES make perl)
-    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
     set(MAKE ${MSYS_ROOT}/usr/bin/make.exe)
     set(PERL ${MSYS_ROOT}/usr/bin/perl.exe)
 else()
