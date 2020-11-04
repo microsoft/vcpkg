@@ -113,6 +113,7 @@ endif()
 
 set(N_DBG_LIB_PARTS 0)
 foreach(BUILD_TYPE dbg rel)
+	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks 
 	set(STATIC_ONLY_PATCHES)
 	set(LINUX_ONLY_PATCHES)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
