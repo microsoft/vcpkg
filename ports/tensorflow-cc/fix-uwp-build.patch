@@ -1,3 +1,19 @@
+diff --git a/.bazelrc b/.bazelrc
+--- a/.bazelrc
++++ b/.bazelrc
+@@ -318,7 +318,9 @@
+ build:windows --verbose_failures
+
+ # On windows, we never cross compile
+-build:windows --distinct_host_configuration=false
++build:windows --distinct_host_configuration=true
++build:windows --host_copt=-UWINAPI_FAMILY
++build:windows --host_linkopt=/APPCONTAINER:NO
+
+ # Suppress all warning messages.
+ build:short_logs --output_filter=DONT_MATCH_ANYTHING
+
+
 diff --git a/third_party/curl.BUILD b/third_party/curl.BUILD
 --- a/third_party/curl.BUILD
 +++ b/third_party/curl.BUILD
