@@ -33,7 +33,7 @@ diff --git a/third_party/aws/workspace.bzl b/third_party/aws/workspace.bzl
          sha256 = "758174f9788fed6cc1e266bcecb20bf738bd5ef1c3d646131c9ed15c2d6c5720",
          strip_prefix = "aws-sdk-cpp-1.7.336",
          build_file = "//third_party/aws:BUILD.bazel",
-+        patch_file = clean_dep("//third_party/aws:FileSystem.patch"),
++        patch_file = "//third_party/aws:FileSystem.patch",
      )
 
      third_party_http_archive(
