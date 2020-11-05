@@ -10,7 +10,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DENABLE_TESTING:BOOL=OFF
-    
 )
 
 vcpkg_install_cmake()
