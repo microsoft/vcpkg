@@ -313,3 +313,8 @@ inline BOOLEAN RtlGenRandom(
 }
 
 #endif
+
+
+#ifndef _CRT_USE_WINAPI_FAMILY_DESKTOP_APP
+inline char* getenv(const char* env_var) { return nullptr; }
+#endif
