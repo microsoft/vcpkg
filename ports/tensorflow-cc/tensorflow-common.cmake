@@ -223,12 +223,47 @@ foreach(BUILD_TYPE dbg rel)
 		# TODO better patch than overwrite
 		file(COPY ${CMAKE_CURRENT_LIST_DIR}/Windows.h DESTINATION ${CURRENT_BUILDTREES_DIR}/sdk_clone)
 
+		file(APPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/WORKSPACE "\n\
+new_local_repository(\n\
+    name = \"headers_tools\",\n\
+    path = \"${CURRENT_BUILDTREES_DIR}/tools_clone\",\n\
+    build_file_content = \"\"\"\n\
+package(default_visibility = [\"//visibility:public\"])\n\
+cc_library(\n\
+    name = \"headers\",\n\
+    hdrs = glob([\"**/*.h\"])\n\
+)\n\
+\"\"\"\n\
+)\n\
+new_local_repository(\n\
+    name = \"headers_sdk_um\",\n\
+    path = \"${CURRENT_BUILDTREES_DIR}/sdk_clone\",\n\
+    build_file_content = \"\"\"\n\
+package(default_visibility = [\"//visibility:public\"])\n\
+cc_library(\n\
+    name = \"headers\",\n\
+    hdrs = glob([\"**/*.h\"])\n\
+)\n\
+\"\"\"\n\
+)\n\
+new_local_repository(\n\
+    name = \"headers_sdk_ucrt\",\n\
+    path = \"$ENV{WindowsSdkDir}/include/$ENV{WindowsSDKVersion}/ucrt\",\n\
+    build_file_content = \"\"\"\n\
+package(default_visibility = [\"//visibility:public\"])\n\
+cc_library(\n\
+    name = \"headers\",\n\
+    hdrs = glob([\"**/*.h\"])\n\
+)\n\
+\"\"\"\n\
+)")
+
 		list(APPEND COPTS "--copt=-DWINAPI_FAMILY=WINAPI_FAMILY_APP")
 		list(APPEND COPTS "--copt=-D_WIN32_WINNT=0x0A00")
 		list(APPEND COPTS "--copt=-X")
-		list(APPEND COPTS "--copt='-I${CURRENT_BUILDTREES_DIR}/tools_clone'")
-		list(APPEND COPTS "--copt='-I${CURRENT_BUILDTREES_DIR}/sdk_clone'")
-		list(APPEND COPTS "--copt='-I$ENV{WindowsSdkDir}/include/$ENV{WindowsSDKVersion}/ucrt'")
+		list(APPEND COPTS "--copt=-Iexternal/headers_tools")
+		list(APPEND COPTS "--copt=-Iexternal/headers_sdk_um")
+		list(APPEND COPTS "--copt=-Iexternal/headers_sdk_ucrt")
 		list(APPEND LINKOPTS "--linkopt=-APPCONTAINER")
 		list(APPEND LINKOPTS "--linkopt=WindowsApp.lib")
 		list(APPEND LINKOPTS "--linkopt='-LIBPATH:$ENV{VCToolsInstallDir}/lib/${VCPKG_TARGET_ARCHITECTURE}/store'")
