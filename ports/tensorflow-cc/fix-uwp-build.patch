@@ -39,7 +39,8 @@ diff --git a/third_party/aws/workspace.bzl b/third_party/aws/workspace.bzl
      third_party_http_archive(
 
 
-diff --git /dev/null b/third_party/aws/FileSystem.patch
+diff --git a/third_party/aws/FileSystem.patch b/third_party/aws/FileSystem.patch
+new file mode 100644
 --- /dev/null
 +++ b/third_party/aws/FileSystem.patch
 @@ -0,0 +1,10 @@
