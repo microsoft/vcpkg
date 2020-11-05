@@ -13,6 +13,7 @@ vcpkg_from_github(
         0002-fix-install-paths.patch
         0003-fix-vs2019-v16.6.patch
         0004-fix-dr-1734.patch
+        0005-fix-tools-path.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -145,8 +146,18 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT})
 if("clang" IN_LIST FEATURES)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
+
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+endif()
+
+#[==[
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(GLOB_RECURSE _llvm_release_targets
         "${CURRENT_PACKAGES_DIR}/share/llvm/*-release.cmake"
@@ -160,8 +171,8 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     foreach(_target IN LISTS _llvm_release_targets _clang_release_targets)
         file(READ ${_target} _contents)
         # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
-        # Rename `/tools/${PORT}` to `/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
-        string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/bin" _contents "${_contents}")
+        # Rename `/tools/${PORT}` to `/tools/${PORT}/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
+        string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/tools/${PORT}/bin" _contents "${_contents}")
         file(WRITE ${_target} "${_contents}")
     endforeach()
 endif()
@@ -179,8 +190,8 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     foreach(_target IN LISTS _llvm_debug_targets _clang_debug_targets)
         file(READ ${_target} _contents)
         # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
-        # Rename `/tools/${PORT}` to `/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
-        string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/bin" _contents "${_contents}")
+        # Rename `/tools/${PORT}` to `/tools/${PORT}/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
+        string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/tools/${PORT}/bin" _contents "${_contents}")
         # Debug shared libraries should have `d` suffix and should be installed in the `/bin` directory.
         # Rename `/debug/bin/` to `/bin`
         string(REPLACE "{_IMPORT_PREFIX}/debug/bin/" "{_IMPORT_PREFIX}/bin/" _contents "${_contents}")
@@ -197,6 +208,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         ${CURRENT_PACKAGES_DIR}/debug/share
     )
 endif()
+]==]
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
@@ -205,4 +217,4 @@ if("clang" IN_LIST FEATURES)
 endif()
 
 # Don't fail if the bin folder exists.
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+#set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
