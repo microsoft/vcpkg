@@ -1,7 +1,7 @@
 Warning: Static TensorFlow build contains several external dependencies that may cause linking conflicts
     (for example, one cannot use both openssl and TensorFlow in the same project, since TensorFlow contains boringssl).
 
-Note: Beside TensorFlow itself, you'll need to also pass its dependencies to the linker:
+Note: Besides TensorFlow itself, you'll also need to pass its dependencies to the linker:
     * CoreFoundation
 for example, '-ltensorflow_cc -framework CoreFoundation'.
 
