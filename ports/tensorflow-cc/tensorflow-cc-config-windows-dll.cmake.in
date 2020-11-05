@@ -1,10 +1,10 @@
-message(WARNING "Tensorflow has vendored dependencies. You may need to manually include files from tensorflow-external")
-
 add_library(tensorflow_cc::tensorflow_cc SHARED IMPORTED)
 set_target_properties(tensorflow_cc::tensorflow_cc
 	PROPERTIES
 	IMPORTED_LOCATION "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/bin/tensorflow.dll"
 	IMPORTED_IMPLIB "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/bin/tensorflow.lib"
-	INTERFACE_INCLUDE_DIRECTORIES "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external;${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external/src"
+	INTERFACE_INCLUDE_DIRECTORIES
+		"${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external"
+		"${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external/src"
 )
 set(tensorflow_cc_FOUND TRUE)

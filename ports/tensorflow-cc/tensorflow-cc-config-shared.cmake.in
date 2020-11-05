@@ -1,5 +1,3 @@
-message(WARNING "Tensorflow has vendored dependencies. You may need to manually include files from tensorflow-external")
-
 add_library(tensorflow_cc::tensorflow_cc SHARED IMPORTED)
 set_target_properties(tensorflow_cc::tensorflow_cc
 	PROPERTIES

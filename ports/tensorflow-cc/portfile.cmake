@@ -359,7 +359,9 @@ add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)\n\
 set_target_properties(tensorflow_cc::tensorflow_cc${part}\n\
 	PROPERTIES\n\
 	IMPORTED_LOCATION \"${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/lib/tensorflow${part}.lib\"\n\
-	INTERFACE_INCLUDE_DIRECTORIES \"${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external;${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external/src\"\n\
+	INTERFACE_INCLUDE_DIRECTORIES\n\
+		\"${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external\"\n\
+		\"${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external/src\"\n\
 )\n\
 ")
 			list(APPEND ALL_PARTS "tensorflow_cc::tensorflow_cc${part}")
