@@ -1,11 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c4057b3..a6a0f23 100644
+index e09f8fcc1e..ec1714687e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -220,7 +220,7 @@ elseif(UNIX)
+@@ -278,7 +278,7 @@ elseif(UNIX)
  endif()
  
- if(WIN32 AND MSVC)
+ if(WIN32)
 -  set(_gRPC_BASELIB_LIBRARIES wsock32 ws2_32 crypt32)
 +  set(_gRPC_BASELIB_LIBRARIES wsock32 ws2_32 crypt32 gdi32)
  endif()

@@ -1,4 +1,4 @@
 Source: lapack
-Version: 0
+Version: 3
 Description: Metapackage for packages which provide LAPACK
-Build-Depends: clapack (!osx)
+Build-Depends: clapack(arm&windows), lapack-reference(!arm|!windows)

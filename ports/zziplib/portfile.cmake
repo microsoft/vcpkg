@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gdraheim/zziplib
-    REF v0.13.69
-    SHA512 ade026289737f43ca92a8746818d87dd7618d473dbce159546ce9071c9e4cbe164a6b1c9efff16efb7aa0327b2ec6b34f3256c6bda19cd6e325703fffc810ef0
+    REF 24a6c6de1956189bffcd8dffd2ef3197c6f3df29 # v0.13.71
+    SHA512 246ee1d93f3f8a6889e9ab362e04e6814813844f2cdea0a782910bf07ca55ecd6d8b1c456b4180935464cebf291e7849af27ac0ed5cc080de5fb158f9f3aeffb
 )
 
 # Run configure

@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/commands.h>
@@ -7,6 +5,7 @@
 #include <vcpkg/input.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg
 {

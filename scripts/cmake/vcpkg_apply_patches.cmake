@@ -29,8 +29,12 @@
 ##
 ## * [libbson](https://github.com/Microsoft/vcpkg/blob/master/ports/libbson/portfile.cmake)
 ## * [gdal](https://github.com/Microsoft/vcpkg/blob/master/ports/gdal/portfile.cmake)
+
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_apply_patches)
-    cmake_parse_arguments(_ap "QUIET" "SOURCE_PATH" "PATCHES" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _ap "QUIET" "SOURCE_PATH" "PATCHES")
 
     find_program(GIT NAMES git git.cmd)
     set(PATCHNUM 0)
@@ -38,7 +42,7 @@ function(vcpkg_apply_patches)
         get_filename_component(ABSOLUTE_PATCH "${PATCH}" ABSOLUTE BASE_DIR "${CURRENT_PORT_DIR}")
         message(STATUS "Applying patch ${PATCH}")
         set(LOGNAME patch-${TARGET_TRIPLET}-${PATCHNUM})
-        _execute_process(
+        vcpkg_execute_in_download_mode(
             COMMAND ${GIT} --work-tree=. --git-dir=.git apply "${ABSOLUTE_PATCH}" --ignore-whitespace --whitespace=nowarn --verbose
             OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/${LOGNAME}-out.log
             ERROR_VARIABLE error

@@ -1,13 +1,6 @@
 #pragma once
 
-#include <vcpkg/build.h>
 #include <vcpkg/commands.interface.h>
-#include <vcpkg/dependencies.h>
-#include <vcpkg/statusparagraphs.h>
-
-#include <array>
-#include <map>
-#include <vector>
 
 namespace vcpkg::Commands
 {

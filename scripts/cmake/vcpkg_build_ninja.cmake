@@ -14,7 +14,8 @@
 ## Only build the specified targets.
 
 function(vcpkg_build_ninja)
-    cmake_parse_arguments(_vbn "" "" "TARGETS" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vbn "" "" "TARGETS")
 
     vcpkg_find_acquire_program(NINJA)
 

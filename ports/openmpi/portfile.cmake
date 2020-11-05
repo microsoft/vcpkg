@@ -21,6 +21,7 @@ get_filename_component(PERL_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path(${PERL_PATH})
 
 vcpkg_configure_make(
+        COPY_SOURCE
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             --with-hwloc=internal
@@ -29,7 +30,7 @@ vcpkg_configure_make(
             --enable-debug
 )
 
-vcpkg_install_make()
+vcpkg_install_make(DISABLE_PARALLEL)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

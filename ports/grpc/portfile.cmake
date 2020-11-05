@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF 7d89dbb311f049b43bda7bbf6f7d7bf1b4c24419 #v1.29.1
-    SHA512 403fa5e3f012786bb17ca32c760b6dfb22c5a5cfb473ba7fad657e26ab3986eb0203f7cbb501a8647fd5ef2571e5f4ee08c2c97d1dfda18ec5ab6a92c9fc3263
+    REF 054ff69350dfea1876f388e7cf05f19d5d76bc12 # v1.33.1
+    SHA512 d81c26e996f8a4386a432fc98ba0982c9a15e8cb470eb544f82dc81df5a8f79401343d209f3aa75598fbb8b99cc05dcd2a0e616967d5e0464bed4a4464d7fdc1
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -20,7 +20,7 @@ vcpkg_from_github(
         snprintf.patch
 )
 
-if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+if((NOT VCPKG_TARGET_IS_LINUX) AND (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
     set(gRPC_BUILD_CODEGEN OFF)
 else()
     set(gRPC_BUILD_CODEGEN ON)
@@ -52,12 +52,13 @@ vcpkg_configure_cmake(
         -DgRPC_PROTOBUF_PROVIDER=package
         -DgRPC_ABSL_PROVIDER=package
         -DgRPC_UPB_PROVIDER=package
+        -DgRPC_RE2_PROVIDER=package
         -DgRPC_PROTOBUF_PACKAGE_TYPE=CONFIG
         -DgRPC_CARES_PROVIDER=${cares_CARES_PROVIDER}
         -DgRPC_GFLAGS_PROVIDER=none
         -DgRPC_BENCHMARK_PROVIDER=none
         -DgRPC_INSTALL_CSHARP_EXT=OFF
-        -DgRPC_INSTALL_BINDIR:STRING=tools/grpc
+        -DgRPC_INSTALL_BINDIR:STRING=bin
         -DgRPC_INSTALL_LIBDIR:STRING=lib
         -DgRPC_INSTALL_INCLUDEDIR:STRING=include
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/gRPC
@@ -68,13 +69,24 @@ vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/gRPC TARGET_PATH share/gRPC)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/grpc RENAME copyright)
-
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/grpc)
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/tools")
+if (gRPC_BUILD_CODEGEN)
+    vcpkg_copy_tools(
+        AUTO_CLEAN
+        TOOL_NAMES
+            grpc_php_plugin
+            grpc_python_plugin
+            grpc_node_plugin
+            grpc_objective_c_plugin
+            grpc_csharp_plugin
+            grpc_cpp_plugin
+            grpc_ruby_plugin
+    )
+endif()
 
 # Ignore the C# extension DLL in bin/
 SET(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

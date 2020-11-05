@@ -77,7 +77,7 @@ int main() {}
             _VCPKG_STANDARD_LIBRARY_LIBCXX)
         check_cxx_source_compiles([[
 #include <ciso646>
-#if !defined(_MSVC_STL_VERSION)
+#if !defined(_MSVC_STL_VERSION) && !(defined(_MSC_VER) && _MSC_VER <= 1900)
 #error "not MSVC stl"
 #endif
 int main() {}
@@ -101,7 +101,7 @@ int main() {}
     endif()
 endfunction()
 
-# Outputs to Cache: VCPKG_USE_STD_FILESYSTEM, VCPKG_REQUIRE_LINK_CXXFS
+# Outputs to Cache: VCPKG_USE_STD_FILESYSTEM, VCPKG_CXXFS_LIBRARY
 function(vcpkg_detect_std_filesystem)
     vcpkg_detect_standard_library()
 
@@ -129,10 +129,14 @@ int main() {}
 int main() {}
 ]]
                 _VCPKG_USE_STD_FILESYSTEM)
+
+            if(_VCPKG_REQUIRE_LINK_CXXFS)
+                set(_VCPKG_CXXFS_LIBRARY "stdc++fs")
+            endif()
         elseif(VCPKG_STANDARD_LIBRARY STREQUAL "libc++")
             if(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
                 # AppleClang never requires (or allows) -lc++fs, even with libc++ version 8.0.0
-                set(_VCPKG_REQUIRE_LINK_CXXFS OFF)
+                set(_VCPKG_CXXFS_LIBRARY OFF)
             else()
                 check_cxx_source_compiles([[
 #include <ciso646>
@@ -142,6 +146,10 @@ int main() {}
 int main() {}
 ]]
                     _VCPKG_REQUIRE_LINK_CXXFS)
+
+                if(_VCPKG_REQUIRE_LINK_CXXFS)
+                    set(_VCPKG_CXXFS_LIBRARY "c++fs")
+                endif()
             endif()
 
             # We don't support versions of libc++ < 7.0.0, and libc++ 7.0.0 has <filesystem>
@@ -155,16 +163,16 @@ int main() {}
                 int main() {}"
                 _VCPKG_USE_STD_FILESYSTEM)
 
-            set(_VCPKG_REQUIRE_LINK_CXXFS OFF)
+            set(_VCPKG_CXXFS_LIBRARY OFF)
         endif()
 
         set(VCPKG_USE_STD_FILESYSTEM ${_VCPKG_USE_STD_FILESYSTEM}
             CACHE BOOL
             "Whether to use <filesystem>, as opposed to <experimental/filesystem>"
             FORCE)
-        set(VCPKG_REQUIRE_LINK_CXXFS ${_VCPKG_REQUIRE_LINK_CXXFS}
-            CACHE BOOL
-            "Whether it's required to pass -l[std]c++fs in order to use <filesystem>"
+        set(VCPKG_CXXFS_LIBRARY ${_VCPKG_CXXFS_LIBRARY}
+            CACHE STRING
+            "Library to link (if any) in order to use <filesystem>"
             FORCE)
 
         if(VCPKG_USE_STD_FILESYSTEM)
@@ -172,10 +180,54 @@ int main() {}
         else()
             set(msg "<experimental/filesystem>")
         endif()
-        if(VCPKG_REQUIRE_LINK_CXXFS)
-            set(msg "${msg} with -l[std]c++fs")
+        if(VCPKG_CXXFS_LIBRARY)
+            set(msg "${msg} with -l${VCPKG_CXXFS_LIBRARY}")
         endif()
 
         message(STATUS "Detecting how to use the C++ filesystem library - ${msg}")
+    endif()
+endfunction()
+
+function(vcpkg_target_add_warning_options TARGET)
+    if(MSVC)
+        # either MSVC, or clang-cl
+        target_compile_options(${TARGET} PRIVATE -FC)
+
+        if (MSVC_VERSION GREATER 1900)
+            # Visual Studio 2017 or later
+            target_compile_options(${TARGET} PRIVATE -permissive- -utf-8)
+        endif()
+
+        if(VCPKG_DEVELOPMENT_WARNINGS)
+            target_compile_options(${TARGET} PRIVATE -W4)
+            if(VCPKG_COMPILER STREQUAL "clang")
+                target_compile_options(${TARGET} PRIVATE -Wmissing-prototypes -Wno-missing-field-initializers)
+            else()
+                target_compile_options(${TARGET} PRIVATE -analyze)
+            endif()
+        else()
+            target_compile_options(${TARGET} PRIVATE -W3)
+        endif()
+
+        if(VCPKG_WARNINGS_AS_ERRORS)
+            target_compile_options(${TARGET} PRIVATE -WX)
+        endif()
+    else()
+        if(VCPKG_DEVELOPMENT_WARNINGS)
+            target_compile_options(${TARGET} PRIVATE
+                -Wall -Wextra -Wpedantic
+                -Wno-unknown-pragmas -Wno-missing-field-initializers -Wno-redundant-move)
+
+            # GCC and clang have different names for the same warning
+            if(VCPKG_COMPILER STREQUAL "gcc")
+                target_compile_options(${TARGET} PRIVATE -Wmissing-declarations)
+            elseif(VCPKG_COMPILER STREQUAL "clang")
+                target_compile_options(${TARGET} PRIVATE -Wmissing-prototypes)
+            endif()
+        endif()
+
+        if(VCPKG_WARNINGS_AS_ERRORS)
+            target_compile_options(${TARGET} PRIVATE -Werror)
+        endif()
     endif()
 endfunction()

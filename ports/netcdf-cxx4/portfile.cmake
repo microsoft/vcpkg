@@ -1,6 +1,6 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" HDF5_USE_STATIC_LIBRARIES)
 
-set(HDF5_USE_STATIC_LIBRARIES ON)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

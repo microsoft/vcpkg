@@ -10,8 +10,8 @@ string(REPLACE "${CURRENT_INSTALLED_DIR}/tools/osg/" "" OSG_PLUGINS_SUBDIR "${OS
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gwaldron/osgearth
-    REF 90ad04f281cbc87ffc45bed847ebaaecb188e593     #version 3.0
-    SHA512 d1d59ae65cb4ef8a71e01b42411029e61bef20e2fd6d95b81c091d7d32b8c30f96d3156d7fd28e177ca83fd74ed113b9e31bf5ef360757524beb7cec7ced4996
+    REF dc73ac92b19fff1427414cfb981b6018c0ed88a1     #version 3.0
+    SHA512 86c287a75946b902c05897d3952c9ff201853599d52023c7b2c850f2253b7e738c4b54ac7ae947bf0909b3aaf074bdb1472f4e92c59cd919458933a72fd13b80 
     HEAD_REF master
     PATCHES 
   	  RocksDB.patch
