@@ -33,8 +33,6 @@ function(vcpkg_copy_tools)
         message(FATAL_ERROR "TOOL_NAMES must be specified.")
     endif()
 
-    string(REPLACE "\\" "" _vct_TOOL_NAMES "${_vct_TOOL_NAMES}")
-
     if(NOT DEFINED _vct_SEARCH_DIR)
         set(_vct_SEARCH_DIR ${CURRENT_PACKAGES_DIR}/bin)
     elseif(NOT IS_DIRECTORY ${_vct_SEARCH_DIR})
