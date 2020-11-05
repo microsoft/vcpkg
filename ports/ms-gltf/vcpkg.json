@@ -1,0 +1,9 @@
+{
+  "name": "ms-gltf",
+  "version-string": "r1.9.5.0",
+  "homepage": "https://github.com/microsoft/ms-gltf",
+  "description": "glTF-SDK is a C++ Software Development Kit for glTF",
+  "dependencies": [
+    "rapidjson"
+  ]
+}
