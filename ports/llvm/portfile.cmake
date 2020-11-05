@@ -164,4 +164,3 @@ if("clang" IN_LIST FEATURES)
 endif()
 
 # Don't fail if the bin folder exists.
-#set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
