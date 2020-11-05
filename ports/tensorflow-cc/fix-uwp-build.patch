@@ -26,9 +26,9 @@ diff --git a/third_party/sqlite.BUILD b/third_party/sqlite.BUILD
          "-Os",
 
 
-diff --git a/third_party/aws/workspace.bazel b/third_party/aws/workspace.bazel
---- a/third_party/aws/workspace.bazel
-+++ b/third_party/aws/workspace.bazel
+diff --git a/third_party/aws/workspace.bzl b/third_party/aws/workspace.bzl
+--- a/third_party/aws/workspace.bzl
++++ b/third_party/aws/workspace.bzl
 @@ -15,6 +15,7 @@
          sha256 = "758174f9788fed6cc1e266bcecb20bf738bd5ef1c3d646131c9ed15c2d6c5720",
          strip_prefix = "aws-sdk-cpp-1.7.336",
@@ -39,7 +39,7 @@ diff --git a/third_party/aws/workspace.bazel b/third_party/aws/workspace.bazel
      third_party_http_archive(
 
 
-diff --git a/third_party/aws/workspace.bazel b/third_party/aws/workspace.bazel
+diff --git a/third_party/aws/FileSystem.patch b/third_party/aws/FileSystem.patch
 --- a/third_party/aws/FileSystem.patch
 +++ b/third_party/aws/FileSystem.patch
 @@ -0,0 +1,10 @@
