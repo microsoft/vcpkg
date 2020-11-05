@@ -11,10 +11,9 @@ vcpkg_from_github(
 vcpkg_from_github(
   OUT_SOURCE_PATH CPU_THREADS_PATH
   REPO arrayfire/threads
-  REF 6a967802fc161f08c5fa1c433601e233fda3eef6
-  SHA512 397d787cbaa2fc628e3b82279fa5dd14a2ea8ee9c1d64c418674f53ba52a36dc120feadf9e00e2a55178cc3c9a989cf082a0f10e68782eb174ef0dc2c4b35e12
+  REF b666773940269179f19ef11c8f1eb77005e85d9a
+  SHA512 b3e8b54acf3a588b1f821c2774d5da2d8f8441962c6d99808d513f7117278b9066eb050b8b501bddbd3882e68eb5cc5da0b2fca54e15ab1923fe068a3fe834f5
   HEAD_REF master
-  PATCHES threads.patch
   )
 
 ################################### Build ###################################

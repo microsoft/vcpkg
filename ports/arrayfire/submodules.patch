@@ -49,26 +49,6 @@ index 463d829b..8fc9b5e4 100644
  
  install(DIRECTORY "${ArrayFire_SOURCE_DIR}/LICENSES/"
      DESTINATION LICENSES
-diff --git a/assets b/assets
-index c53bfab9..cd08d749 160000
---- a/assets
-+++ b/assets
-@@ -1 +1 @@
--Subproject commit c53bfab909adfeed626f91ed419555711e20bca5
-+Subproject commit cd08d749611b324012555ad6f23fd76c5465bd6c
-diff --git a/extern/forge b/extern/forge
---- a/extern/forge
-+++ b/extern/forge
-@@ -1 +1 @@
--Subproject commit 1a0f0cb6371a8c8053ab5eb7cbe3039c95132389
-+Subproject commit 1a0f0cb6371a8c8053ab5eb7cbe3039c95132389-dirty
-diff --git a/extern/spdlog b/extern/spdlog
-index caff7296..a51b4856 160000
---- a/extern/spdlog
-+++ b/extern/spdlog
-@@ -1 +1 @@
--Subproject commit caff7296b162d97e44d6a1cc039adf689cfc02b3
-+Subproject commit a51b4856377a71f81b6d74b9af459305c4c644f8
 diff --git a/src/api/unified/CMakeLists.txt b/src/api/unified/CMakeLists.txt
 index b0489be4..a82e9f83 100644
 --- a/src/api/unified/CMakeLists.txt
@@ -119,7 +99,7 @@ index 33aa64e6..2d07e4ea 100644
  
  if(APPLE AND NOT USE_MKL)
 diff --git a/src/backend/cpu/CMakeLists.txt b/src/backend/cpu/CMakeLists.txt
-index bdd205bc..36a50ca7 100644
+index bdd205bc..1d7fe462 100644
 --- a/src/backend/cpu/CMakeLists.txt
 +++ b/src/backend/cpu/CMakeLists.txt
 @@ -266,9 +266,10 @@ endif(AF_WITH_CPUID)
@@ -129,35 +109,13 @@ index bdd205bc..36a50ca7 100644
 -    ${CMAKE_CURRENT_SOURCE_DIR}/threads/async_queue.hpp
 -    ${CMAKE_CURRENT_SOURCE_DIR}/threads/event.hpp
 -  )
-+    ${AF_CPU_THREAD_PATH}/async_queue.hpp
-+    ${AF_CPU_THREAD_PATH}/event.hpp
++    ${AF_CPU_THREAD_PATH}/include/threads/async_queue.hpp
++    ${AF_CPU_THREAD_PATH}/include/threads/event.hpp
 +    )
-+target_include_directories(afcpu PRIVATE ${AF_CPU_THREAD_PATH})
++target_include_directories(afcpu PRIVATE ${AF_CPU_THREAD_PATH}/include)
  
  arrayfire_set_default_cxx_flags(afcpu)
  
-diff --git a/src/backend/cpu/queue.hpp b/src/backend/cpu/queue.hpp
-index 213ccda8..28607b9c 100644
---- a/src/backend/cpu/queue.hpp
-+++ b/src/backend/cpu/queue.hpp
-@@ -40,8 +40,8 @@ class queue_impl {
- 
- #else
- 
--#include <threads/async_queue.hpp>
--#include <threads/event.hpp>
-+#include <async_queue.hpp>
-+#include <event.hpp>
- #define __SYNCHRONOUS_ARCH 0
- using queue_impl = threads::async_queue;
- using event_impl = threads::event;
-diff --git a/src/backend/cpu/threads b/src/backend/cpu/threads
-index c483ad32..6a967802 160000
---- a/src/backend/cpu/threads
-+++ b/src/backend/cpu/threads
-@@ -1 +1 @@
--Subproject commit c483ad32b68c0301d91ff5d2bfc88d02589e9a43
-+Subproject commit 6a967802fc161f08c5fa1c433601e233fda3eef6
 diff --git a/src/backend/cuda/CMakeLists.txt b/src/backend/cuda/CMakeLists.txt
 index ae29c43d..2c4d67ad 100644
 --- a/src/backend/cuda/CMakeLists.txt
@@ -184,13 +142,6 @@ index ae29c43d..2c4d67ad 100644
    ${ArrayFire_SOURCE_DIR}/src/api/c
    ${ArrayFire_SOURCE_DIR}/src/backend
    ${COMMON_INTERFACE_DIRS}
-diff --git a/src/backend/cuda/cub b/src/backend/cuda/cub
-index c3cceac1..4bf55eda 160000
---- a/src/backend/cuda/cub
-+++ b/src/backend/cuda/cub
-@@ -1 +1 @@
--Subproject commit c3cceac115c072fb63df1836ff46d8c60d9eb304
-+Subproject commit 4bf55edac3ceafd899cdb3617ebe61253f5788e7
 diff --git a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt b/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
 index 9a796c9e..f2fcdeda 100644
 --- a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
@@ -239,17 +190,3 @@ index d618ff2f..8e5f4d8d 100644
        )
  
      set_target_properties(opencl_sort_by_key_${SBK_TYPE}
-diff --git a/test/data b/test/data
-index 6a48c886..3c3b8213 160000
---- a/test/data
-+++ b/test/data
-@@ -1 +1 @@
--Subproject commit 6a48c88658bcd68392e99344714cb0dccd4ec285
-+Subproject commit 3c3b8213a5bc0d158098b98abfe74f021d4ad089
-diff --git a/test/gtest b/test/gtest
-index 2fe3bd99..3005672d 160000
---- a/test/gtest
-+++ b/test/gtest
-@@ -1 +1 @@
--Subproject commit 2fe3bd994b3189899d93f1d5a881e725e046fdc2
-+Subproject commit 3005672db1d05f2378f642b61faa96f85498befe
