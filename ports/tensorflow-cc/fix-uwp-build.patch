@@ -39,8 +39,8 @@ diff --git a/third_party/aws/workspace.bzl b/third_party/aws/workspace.bzl
      third_party_http_archive(
 
 
-diff --git a/third_party/aws/FileSystem.patch b/third_party/aws/FileSystem.patch
---- a/third_party/aws/FileSystem.patch
+diff --git /dev/null b/third_party/aws/FileSystem.patch
+--- /dev/null
 +++ b/third_party/aws/FileSystem.patch
 @@ -0,0 +1,10 @@
 +diff --git a/aws-cpp-sdk-core/source/platform/windows/FileSystem.cpp b/aws-cpp-sdk-core/source/platform/windows/FileSystem.cpp
