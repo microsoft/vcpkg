@@ -21,8 +21,6 @@ else()
 endif()
 
 file( REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/cmake
-    ${CURRENT_PACKAGES_DIR}/debug/cmake
     ${CURRENT_PACKAGES_DIR}/debug/include
 )
 
