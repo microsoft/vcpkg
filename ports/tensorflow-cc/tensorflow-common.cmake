@@ -214,11 +214,11 @@ foreach(BUILD_TYPE dbg rel)
 	endif()
 
 	if(VCPKG_TARGET_IS_UWP)
-		file(COPY ${CMAKE_CURRENT_LIST_DIR}/uwppatch.h DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patched_includes)
+		file(COPY ${CMAKE_CURRENT_LIST_DIR}/uwppatch.h DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/tensorflow/patched_includes)
 
 		list(APPEND COPTS "--copt=-DWINAPI_FAMILY=WINAPI_FAMILY_APP")
 		list(APPEND COPTS "--copt=-D_WIN32_WINNT=0x0A00")
-		list(APPEND COPTS "--copt=-Ipatched_includes")
+		list(APPEND COPTS "--copt=-Itensorflow/patched_includes")
 		list(APPEND COPTS "--copt=-FIuwppatch.h")
 		list(APPEND LINKOPTS "--linkopt=-APPCONTAINER")
 		list(APPEND LINKOPTS "--linkopt=WindowsApp.lib")
