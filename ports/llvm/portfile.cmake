@@ -157,59 +157,6 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 endif()
 
-#[==[
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(GLOB_RECURSE _llvm_release_targets
-        "${CURRENT_PACKAGES_DIR}/share/llvm/*-release.cmake"
-    )
-    set(_clang_release_targets)
-    if("clang" IN_LIST FEATURES)
-        file(GLOB_RECURSE _clang_release_targets
-            "${CURRENT_PACKAGES_DIR}/share/clang/*-release.cmake"
-        )
-    endif()
-    foreach(_target IN LISTS _llvm_release_targets _clang_release_targets)
-        file(READ ${_target} _contents)
-        # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
-        # Rename `/tools/${PORT}` to `/tools/${PORT}/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
-        string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/tools/${PORT}/bin" _contents "${_contents}")
-        file(WRITE ${_target} "${_contents}")
-    endforeach()
-endif()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(GLOB_RECURSE _llvm_debug_targets
-        "${CURRENT_PACKAGES_DIR}/share/llvm/*-debug.cmake"
-    )
-    set(_clang_debug_targets)
-    if("clang" IN_LIST FEATURES)
-        file(GLOB_RECURSE _clang_debug_targets
-            "${CURRENT_PACKAGES_DIR}/share/clang/*-debug.cmake"
-        )
-    endif()
-    foreach(_target IN LISTS _llvm_debug_targets _clang_debug_targets)
-        file(READ ${_target} _contents)
-        # LLVM tools should be located in the bin folder because llvm-config expects to be inside a bin dir.
-        # Rename `/tools/${PORT}` to `/tools/${PORT}/bin` back because there is no way to avoid this in vcpkg_fixup_cmake_targets.
-        string(REPLACE "{_IMPORT_PREFIX}/tools/${PORT}" "{_IMPORT_PREFIX}/tools/${PORT}/bin" _contents "${_contents}")
-        # Debug shared libraries should have `d` suffix and should be installed in the `/bin` directory.
-        # Rename `/debug/bin/` to `/bin`
-        string(REPLACE "{_IMPORT_PREFIX}/debug/bin/" "{_IMPORT_PREFIX}/bin/" _contents "${_contents}")
-        file(WRITE ${_target} "${_contents}")
-    endforeach()
-
-    # Install debug shared libraries in the `/bin` directory
-    file(GLOB _debug_shared_libs ${CURRENT_PACKAGES_DIR}/debug/bin/*${CMAKE_SHARED_LIBRARY_SUFFIX})
-    file(INSTALL ${_debug_shared_libs} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-
-    file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/debug/bin
-        ${CURRENT_PACKAGES_DIR}/debug/include
-        ${CURRENT_PACKAGES_DIR}/debug/share
-    )
-endif()
-]==]
-
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 if("clang" IN_LIST FEATURES)
