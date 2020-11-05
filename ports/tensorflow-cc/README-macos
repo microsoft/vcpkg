@@ -8,4 +8,4 @@ for example, '-ltensorflow_cc -framework CoreFoundation'.
 Note: There is no separate libtensorflow_framework.a as it got merged into libtensorflow_cc.a to avoid linking conflicts.
 
 Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to tell the linker to include the whole library:
-    '-Wl,-force_load,path/to/libtensorflow_cc.a -framework CoreFoundation -framework Security [rest of linker arguments]'
+    '-Wl,-force_load,path/to/libtensorflow_cc.a [rest of linker arguments]'
