@@ -12,7 +12,9 @@ add_library(tensorflow_cc::tensorflow_framework SHARED IMPORTED)
 set_target_properties(tensorflow_cc::tensorflow_framework
 	PROPERTIES
 	IMPORTED_LOCATION "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/lib/${TF_FRAMEWORK_NAME}"
-	INTERFACE_INCLUDE_DIRECTORIES "${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external;${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external/src"
+	INTERFACE_INCLUDE_DIRECTORIES
+		"${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external"
+		"${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external/src"
 )
 set(tensorflow_cc_FOUND TRUE)
 set(tensorflow_framework_FOUND TRUE)
