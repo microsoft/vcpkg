@@ -79,25 +79,7 @@ else()
 endif()
 
 # Replicate PhysX's CXX Flags here so we don't have to patch out /WX and -Wall
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-    set(PHYSX_CXX_FLAGS "/fp:fast /GF /GS- /GR- /Oy")
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(PHYSX_CXX_FLAGS "${PHYSX_CXX_FLAGS} /arch:sse2")
-    endif()
-elseif(VCPKG_TARGET_IS_ANDROID AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    set(PHYSX_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -funwind-tables -fomit-frame-pointer -funswitch-loops -finline-limit=300 -fno-strict-aliasing -fstack-protector")
-elseif(VCPKG_TARGET_IS_ANDROID AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    set(PHYSX_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections")
-elseif(VCPKG_TARGET_IS_ANDROID AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(PHYSX_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -fpack-struct=8 -malign-double")
-elseif(VCPKG_TARGET_IS_ANDROID AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(PHYSX_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -mstackrealign -msse3")
-elseif(VCPKG_TARGET_IS_IOS)
-    set(PHYSX_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -fstrict-aliasing -Wstrict-aliasing=2")
-else()
-    set(PHYSX_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -fno-strict-aliasing")
-endif()
-list(APPEND OPTIONS "-DPHYSX_CXX_FLAGS:INTERNAL=${PHYSX_CXX_FLAGS}")
+list(APPEND OPTIONS "-DPHYSX_CXX_FLAGS:INTERNAL=${VCPKG_CXX_FLAGS}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
