@@ -25,7 +25,13 @@ function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
     set(${OUT} ${_vcpkg_get_dir_out} CACHE INTERNAL "_vcpkg_get_directory_name_of_file_above: ${OUT}")
 endfunction()
 
-# Note: for any part of the toolchain that modifies the filesystem, make sure to check for this variable being set
+#[===[
+We use this system, instead of `message(FATAL_ERROR)`,
+since cmake prints a lot of nonsense if the toolchain errors out before it's found the build tools.
+
+This `_VCPKG_HAS_FATAL_ERROR` must be checked before any filesystem operations are done,
+since otherwise you might be doing something with bad variables set up.
+#]===]
 set(_VCPKG_FATAL_ERROR)
 set(_VCPKG_HAS_FATAL_ERROR OFF)
 function(_vcpkg_add_fatal_error ERROR)
@@ -348,11 +354,11 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
             ERROR_FILE "${_VCPKG_BOOTSTRAP_LOG}"
             RESULT_VARIABLE _VCPKG_BOOTSTRAP_RESULT)
 
-        if (NOT _VCPKG_BOOTSTRAP_RESULT EQUAL 0)
+        if (_VCPKG_BOOTSTRAP_RESULT EQUAL 0)
+            message(STATUS "Bootstrapping vcpkg before install - done")
+        else()
             message(STATUS "Bootstrapping vcpkg before install - failed")
             _vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${_VCPKG_BOOTSTRAP_LOG}")
-        else()
-            message(STATUS "Bootstrapping vcpkg before install - done")
         endif()
     endif()
 
@@ -400,15 +406,15 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
             RESULT_VARIABLE _VCPKG_INSTALL_RESULT
         )
 
-        if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
-            message(STATUS "Running vcpkg install - failed")
-            _vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${_VCPKG_MANIFEST_INSTALL_LOG}")
-        else()
+        if (_VCPKG_INSTALL_RESULT EQUAL 0)
             message(STATUS "Running vcpkg install - done")
 
             set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
                 "${_VCPKG_MANIFEST_DIR}/vcpkg.json"
                 "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
+        else()
+            message(STATUS "Running vcpkg install - failed")
+            _vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${_VCPKG_MANIFEST_INSTALL_LOG}")
         endif()
     endif()
 endif()
