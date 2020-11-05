@@ -5,15 +5,17 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-cxx4
-    REF f8882188267488ef801691e69ad072e3eb217ad8 # v4.3.1
-    SHA512 9816acf221d196e21af19d4c3d85484934916e7c018e9b2c96aab9f5660b2f08c5db9cd8254ba3fa5f0aa5f5c5ad7bd3a3aaba559e5e640c5349d44e07a20ed3
+    REF c244f2de7818d9562eeadee548811872d4ac2975
+    SHA512 59cdc56731316eebb5d33b142e8537a0b10e4ef4c00692a2329e29d2776a50ef031dd6c889e48a61cb43f4c8add3aabbdcee1209a7b81aeb959949b9634d9f58
     HEAD_REF master
-    PATCHES fix-dependecy-hdf5.patch
+    PATCHES 
+        fix-dependecy-hdf5.patch
+        fix-build-error.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS
         -DNCXX_ENABLE_TESTS=OFF
         -DCMAKE_INSTALL_CMAKECONFIGDIR=share/netCDFCxx
@@ -23,7 +25,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/netCDFCxx TARGET_PATH share/netCDFCxx)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/netCDF TARGET_PATH share/netCDFCxx)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
