@@ -8,7 +8,7 @@ vcpkg_from_github(
     REF b7c0507e286fbc55ccbbb4a2604f6c46d3a86525 # 1.2.0
     SHA512 274aaf34733ab70b148182332db493157ed8c87e093d09bf7dcbd9c89034dab9a97f05ba0887459a8a0ed80b2c2248c253b1ff8c933e196a6ecee11546a4488b
     HEAD_REF master
-    PATCHES "curl-submodule-no-pkg-config-in-vcpkg.patch"
+    PATCHES "fix-find-curl.patch"
 )
 
 vcpkg_configure_cmake(
