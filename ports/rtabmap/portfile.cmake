@@ -13,7 +13,41 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DWITH_QT=OFF
+    OPTIONS
+        -DWITH_QT=OFF
+        -DWITH_SUPERPOINT_TORCH=OFF
+        -DWITH_PYMATCHER=OFF
+        -DWITH_FREENECT=OFF
+        -DWITH_FREENECT2=OFF
+        -DWITH_K4W2=OFF
+        -DWITH_K4A=OFF
+        -DWITH_OPENNI2=OFF
+        -DWITH_DC1394=OFF
+        -DWITH_G2O=OFF
+        -DWITH_GTSAM=OFF
+        -DWITH_CERES=OFF
+        -DWITH_VERTIGO=OFF
+        -DWITH_CVSBA=OFF
+        -DWITH_POINTMATCHER=OFF
+        -DWITH_LOAM=OFF
+        -DWITH_FLYCAPTURE2=OFF
+        -DWITH_ZED=OFF
+        -DWITH_REALSENSE=OFF
+        -DWITH_REALSENSE_SLAM=OFF
+        -DWITH_REALSENSE2=OFF
+        -DWITH_MYNTEYE=OFF
+        -DWITH_OCTOMAP=OFF
+        -DWITH_CPUTSDF=OFF
+        -DWITH_OPENCHISEL=OFF
+        -DWITH_ALICE_VISION=OFF
+        -DWITH_FOVIS=OFF
+        -DWITH_VISO2=OFF
+        -DWITH_DVO=OFF
+        -DWITH_ORB_SLAM2=OFF
+        -DWITH_OKVIS=OFF
+        -DWITH_MSCKF_VIO=OFF
+        -DWITH_VINS=OFF
+        -DWITH_FASTCV=OFF
 )
 
 vcpkg_install_cmake()
@@ -41,6 +75,4 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
 )
 
-configure_file(${SOURCE_PATH}/LICENSE
-    ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY
-)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
