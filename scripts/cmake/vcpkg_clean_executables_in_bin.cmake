@@ -33,12 +33,6 @@ function(vcpkg_clean_executables_in_bin)
             "${CURRENT_PACKAGES_DIR}/bin/${file_name}.pdb"
             "${CURRENT_PACKAGES_DIR}/debug/bin/${file_name}.pdb"
         )
-        if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/${file_name}.pdb)
-            file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/${file_name}.pdb)
-        endif()
-        if (EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/${file_name}.pdb)
-            file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${file_name}.pdb)
-        endif()
     endforeach()
 
     function(try_remove_empty_directory directory)
