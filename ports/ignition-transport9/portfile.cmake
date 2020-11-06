@@ -1,7 +1,7 @@
 include(${CURRENT_INSTALLED_DIR}/share/ignitionmodularscripts/ignition_modular_library.cmake)
 
 ignition_modular_library(NAME transport
-                         VERSION "8.1.0"
-                         SHA512 eb64f18721190fcb79a5b45746fd44fa24274c6fe6c5021dd9306c15a327873377d07d4aa770633982038b84da650d3d0c8a56169222c0c88fa1318314fc4529
+                         VERSION "9.0.0"
+                         SHA512 c3edb7a8a063b4aa5826838ae08c8ec2b3d14563492022df632a719409c95272f4f6a43d91f0c317e44b85921b5aedc1685670b81a7baa949f01af3b3534d76e
                          # This can be removed when the pc file of sqlite3 is available ( https://github.com/microsoft/vcpkg/issues/14327 )
                          DISABLE_PKGCONFIG_INSTALL)
