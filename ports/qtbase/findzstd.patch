@@ -31,11 +31,11 @@ index 11515c8a3..44d107f8d 100644
 -endif()
 +find_package(ZSTD CONFIG)
 +
-+if(TARGET zstd::libzstd_static OR TARGET zstd::libzstd)
++if(TARGET zstd::libzstd_static OR TARGET zstd::libzstd_shared)
 +    include(FindPackageHandleStandardArgs)
 +    find_package_handle_standard_args(ZSTD CONFIG_MODE)
 +
-+    set(zstdtargetsuffix "")
++    set(zstdtargetsuffix "_shared")
 +    if(TARGET zstd::libzstd_static)
 +        set(zstdtargetsuffix "_static")
 +    endif()
