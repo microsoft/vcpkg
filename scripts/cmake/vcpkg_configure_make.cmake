@@ -192,7 +192,7 @@ function(vcpkg_configure_make)
         set(_csc_AUTOCONFIG ON)
     elseif(EXISTS "${SRC_DIR}/autogen.sh") # Run autogen
         set(REQUIRES_AUTOGEN TRUE)
-    elseif (csc_SKIP_CONFIGURE AND NOT EXISTS "${SRC_DIR}/configure")
+    elseif (csc_SKIP_CONFIGURE AND NOT EXISTS "${SRC_DIR}/configure") # Must use configure when it exists; When SKIP_CONFIGURE is not used and configure does not exist, report error
         message(STATUS "Skip the configuration step")
     else()
         message(FATAL_ERROR "Could not determine method to configure make")
