@@ -20,6 +20,7 @@ else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/DataFrame TARGET_PATH share/dataframe)
 
 endif()
+vcpkg_fixup_pkgconfig()
 
 file( REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
