@@ -1,35 +1,47 @@
-From a3a8d50f3bdcb4df630f7126718c21f23efd7832 Mon Sep 17 00:00:00 2001
-From: Alexander Kaspar <alexander.kaspar@gmail.com>
-Date: Wed, 30 Nov 2016 15:45:12 +0100
-Subject: [PATCH] fix path for vcpkg
-
----
- CMakeLists.txt | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 605621b..3b5a9be 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -277,7 +277,7 @@ if(DEVELOPER_MODE)
+diff --git "a/CMakeLists.txt" "b/CMakeLists.txt"
+index 1f84c2c9e..f72ee9d8d 100644
+--- "a/CMakeLists.txt"
++++ "b/CMakeLists.txt"
+@@ -58,6 +58,7 @@ set(QCA_SUFFIX "qt5")
+ if(NOT BUILD_SHARED_LIBS OR QT_IS_STATIC)
+   set(STATIC_PLUGINS ON)
+   add_definitions(-DQT_STATICPLUGIN)
++  add_definitions(-DQCA_STATIC)
+   set(PLUGIN_TYPE "STATIC")
+ else()
+   set(PLUGIN_TYPE "MODULE")
+@@ -266,10 +267,17 @@ if(DEVELOPER_MODE)
+   add_definitions(-DDEVELOPER_MODE)
+ 
  # To prefer plugins from build tree when run qca from build tree
-   file(WRITE ${CMAKE_BINARY_DIR}/bin/qt.conf
- "[Paths]
+-  file(WRITE ${CMAKE_BINARY_DIR}/bin/qt.conf
+-"[Paths]
 -Plugins=${CMAKE_BINARY_DIR}/lib/${QCA_LIB_NAME}
-+Plugins=${CMAKE_BINARY_DIR}/bin/${QCA_LIB_NAME}
- ")
+-")
++  if(NOT BUILD_SHARED_LIBS OR QT_IS_STATIC)
++      file(WRITE ${CMAKE_BINARY_DIR}/bin/qt.conf
++    "[Paths]
++    Plugins=${CMAKE_BINARY_DIR}/lib/${QCA_LIB_NAME}
++    ")
++  else()
++      file(WRITE ${CMAKE_BINARY_DIR}/bin/qt.conf
++    "[Paths]
++    Plugins=${CMAKE_BINARY_DIR}/bin/${QCA_LIB_NAME}
++    ")
++  endif()
  endif()
  
-@@ -320,7 +320,7 @@ else (qca_CERTSTORE)
+ if (APPLE)
+@@ -309,7 +317,7 @@ else()
    set( qca_CERTSTORE "${CMAKE_CURRENT_SOURCE_DIR}/certs/rootcerts.pem")
    # note that INSTALL_FILES targets are relative to the current installation prefix...
    if(NOT DEVELOPER_MODE)
 -    install(FILES "${qca_CERTSTORE}" DESTINATION "${QCA_PREFIX_INSTALL_DIR}/certs")
 +    install(FILES "${qca_CERTSTORE}" DESTINATION "${QCA_PREFIX_INSTALL_DIR}/share/qca/certs")
    endif()
- endif (qca_CERTSTORE)
+ endif()
  message(STATUS "certstore path: " ${qca_CERTSTORE})
-@@ -401,10 +401,10 @@ endif(DOXYGEN_FOUND)
+@@ -390,10 +398,10 @@ endif()
  include(CMakePackageConfigHelpers)
  configure_package_config_file(
    "${CMAKE_CURRENT_SOURCE_DIR}/QcaConfig.cmake.in"
@@ -43,7 +55,7 @@ index 605621b..3b5a9be 100644
  
  if(NOT DEVELOPER_MODE)
  
-@@ -472,10 +472,10 @@ if(NOT DEVELOPER_MODE)
+@@ -461,10 +469,10 @@ if(NOT DEVELOPER_MODE)
      endif()
    endif()
  
@@ -58,6 +70,3 @@ index 605621b..3b5a9be 100644
 +    DESTINATION ${QCA_PREFIX_INSTALL_DIR}/share/qca/cmake
      )
  endif()
--- 
-2.8.1.windows.1
-

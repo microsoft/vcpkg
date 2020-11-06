@@ -1,11 +1,10 @@
 #pragma once
 
-#include <vcpkg/base/fwd/json.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/optional.h>
-
-#include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/base/stringview.h>
+#include <vcpkg/base/view.h>
 
 #include <memory>
 #include <string>
@@ -29,7 +28,7 @@ namespace vcpkg
         Registry(std::vector<std::string>&&, std::nullptr_t) = delete;
 
         // always ordered lexicographically
-        Span<const std::string> packages() const { return packages_; }
+        View<std::string> packages() const { return packages_; }
         const RegistryImpl& implementation() const { return *implementation_; }
 
         static std::unique_ptr<RegistryImpl> builtin_registry();
@@ -37,31 +36,6 @@ namespace vcpkg
     private:
         std::vector<std::string> packages_;
         std::unique_ptr<RegistryImpl> implementation_;
-    };
-
-    struct RegistryImplDeserializer : Json::IDeserializer<std::unique_ptr<RegistryImpl>>
-    {
-        constexpr static StringLiteral KIND = "kind";
-        constexpr static StringLiteral PATH = "path";
-
-        constexpr static StringLiteral KIND_BUILTIN = "builtin";
-        constexpr static StringLiteral KIND_DIRECTORY = "directory";
-
-        virtual StringView type_name() const override;
-        virtual Span<const StringView> valid_fields() const override;
-
-        virtual Optional<std::unique_ptr<RegistryImpl>> visit_null(Json::Reader&) override;
-        virtual Optional<std::unique_ptr<RegistryImpl>> visit_object(Json::Reader&, const Json::Object&) override;
-    };
-
-    struct RegistryDeserializer final : Json::IDeserializer<Registry>
-    {
-        constexpr static StringLiteral PACKAGES = "packages";
-
-        virtual StringView type_name() const override;
-        virtual Span<const StringView> valid_fields() const override;
-
-        virtual Optional<Registry> visit_object(Json::Reader&, const Json::Object&) override;
     };
 
     // this type implements the registry fall back logic from the registries RFC:
@@ -78,7 +52,7 @@ namespace vcpkg
         // Returns the null pointer if there is no registry set up for that name
         const RegistryImpl* registry_for_port(StringView port_name) const;
 
-        Span<const Registry> registries() const { return registries_; }
+        View<Registry> registries() const { return registries_; }
 
         const RegistryImpl* default_registry() const { return default_registry_.get(); }
 

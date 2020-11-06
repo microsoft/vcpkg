@@ -8,6 +8,16 @@
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 
+namespace
+{
+    std::string remove_trailing_slashes(std::string argument)
+    {
+        using fs::is_slash;
+        argument.erase(std::find_if_not(argument.rbegin(), argument.rend(), is_slash).base(), argument.end());
+        return argument;
+    }
+}
+
 namespace vcpkg::Commands::Create
 {
     const CommandStructure COMMAND_STRUCTURE = {
@@ -22,7 +32,7 @@ namespace vcpkg::Commands::Create
     {
         (void)args.parse_arguments(COMMAND_STRUCTURE);
         const std::string port_name = args.command_arguments.at(0);
-        const std::string url = args.command_arguments.at(1);
+        const std::string url = remove_trailing_slashes(args.command_arguments.at(1));
 
         std::vector<System::CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}};
 

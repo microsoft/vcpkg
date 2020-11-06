@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} does not currently support UWP")
 endif()
@@ -7,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO aliyun/aliyun-oss-c-sdk
-    REF 703ea9a0dee0ddf4eacc7f9782ba970adccc58e8 # 3.9.1
-    SHA512 01f33d73031039d64433823c6b7b540071d18560ee0df762ef58b30898bde520c8cfb8bcf631a62cbd709d8c996b9dfc8c31c2286ceb9d1925161c39dbbe97fc
+    REF f9e441137620d712c7d89587c951bed459ebc843 # 3.10.0
+    SHA512 6621d105706fb69b3f1998d7c83c94ff93747946040f0c45ec52986c0e8d8db3d48237d1e3f0959e09536ca43bcbe3bcdb32f90622ce51de6ea7132be6dd7cf7
     HEAD_REF master
 	PATCHES
 	patch.patch

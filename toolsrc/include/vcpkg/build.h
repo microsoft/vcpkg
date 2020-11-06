@@ -1,11 +1,14 @@
 #pragma once
 
+#include <vcpkg/fwd/cmakevars.h>
+#include <vcpkg/fwd/dependencies.h>
+#include <vcpkg/fwd/portfileprovider.h>
+
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/system.process.h>
 
-#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.integrate.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
@@ -21,12 +24,6 @@
 namespace vcpkg
 {
     struct IBinaryProvider;
-}
-
-namespace vcpkg::Dependencies
-{
-    struct InstallPlanAction;
-    struct ActionPlan;
 }
 
 namespace vcpkg::System
@@ -136,6 +133,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class BackcompatFeatures
+    {
+        ALLOW = 0,
+        PROHIBIT
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -147,6 +150,7 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         PurgeDecompressFailure purge_decompress_failure;
         Editable editable;
+        BackcompatFeatures backcompat_features;
     };
 
     static constexpr BuildPackageOptions default_build_package_options{
@@ -159,6 +163,20 @@ namespace vcpkg::Build
         Build::DownloadTool::BUILT_IN,
         Build::PurgeDecompressFailure::YES,
         Build::Editable::NO,
+        Build::BackcompatFeatures::ALLOW,
+    };
+
+    static constexpr BuildPackageOptions backcompat_prohibiting_package_options{
+        Build::UseHeadVersion::NO,
+        Build::AllowDownloads::YES,
+        Build::OnlyDownloads::NO,
+        Build::CleanBuildtrees::YES,
+        Build::CleanPackages::YES,
+        Build::CleanDownloads::NO,
+        Build::DownloadTool::BUILT_IN,
+        Build::PurgeDecompressFailure::YES,
+        Build::Editable::NO,
+        Build::BackcompatFeatures::PROHIBIT,
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
@@ -297,12 +315,6 @@ namespace vcpkg::Build
         {
             return key < other.key || (key == other.key && value < other.value);
         }
-    };
-
-    struct AbiTagAndFile
-    {
-        std::string tag;
-        fs::path tag_file;
     };
 
     struct CompilerInfo

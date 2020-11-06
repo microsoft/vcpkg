@@ -246,7 +246,7 @@ function(vcpkg_find_acquire_program VAR)
     set(NOEXTRACT ON)
     set(HASH 22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619)
   elseif(VAR MATCHES "MESON")
-    set(MESON_VERSION 0.55.3)
+    set(MESON_VERSION 0.56.0)
     set(PROGNAME meson)
     set(REQUIRED_INTERPRETER PYTHON3)
     set(APT_PACKAGE_NAME "meson")
@@ -255,7 +255,7 @@ function(vcpkg_find_acquire_program VAR)
     set(PATHS ${DOWNLOADS}/tools/meson/meson-${MESON_VERSION})
     set(URL "https://github.com/mesonbuild/meson/releases/download/${MESON_VERSION}/meson-${MESON_VERSION}.tar.gz")
     set(ARCHIVE "meson-${MESON_VERSION}.tar.gz")
-    set(HASH afb0bb25b367e681131d920995124df4b06f6d144ae1a95ebec27be13e06fefbd95840e0287cd1d84bdbb8d9c115b589a833d847c60926f55e0f15749cf66bae)
+    set(HASH da426e2ac0f657da5672d66143b8f4f45513c269a9a544e8b4c48b4a702743a50d35cbaa37ef4c4fbd7e18b8784c788314927a54faba6a14bb2d468eeaa87607)
     set(_vfa_SUPPORTED ON)
     set(VERSION_CMD --version)
   elseif(VAR MATCHES "FLEX" OR VAR MATCHES "BISON")
@@ -354,32 +354,23 @@ function(vcpkg_find_acquire_program VAR)
     set(ARCHIVE "scons-local-${SCONS_VERSION}.zip")
     set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727) 
   elseif(VAR MATCHES "SWIG")
-    set(VERSION 4.0.2)
+    set(SWIG_VERSION 4.0.2)
     set(PROGNAME swig)
     if(CMAKE_HOST_WIN32)
-        #set(URL "https://sourceforge.net/projects/swig/files/swigwin/swigwin-${VERSION}/swigwin-${VERSION}.zip/download")
-        set(ARCHIVE "swigwin-${VERSION}.zip")
-        set(HASH b8f105f9b9db6acc1f6e3741990915b533cd1bc206eb9645fd6836457fd30789b7229d2e3219d8e35f2390605ade0fbca493ae162ec3b4bc4e428b57155db03d) 
-        set(SUBDIR b8f105f9b9-f0518bc3b7/swigwin-${VERSION})
-        #set(SUBDIR "swigwin-${VERSION}")
-        #set(PATHS "${DOWNLOADS}/tools/swig/swigwin-${VERSION}")
-    else()
-        #Not used
-        set(_vfa_SUPPORTED TRUE)
-        set(URL https://sourceforge.net/projects/swig/files/swig/swig-${VERSION}/swig-${VERSION}.tar.gz/download)
-        set(ARCHIVE "swig-${VERSION}.tar.gz")
-        set(HASH 05e7da70ce6d9a733b96c0bcfa3c1b82765bd859f48c74759bbf4bb1467acb1809caa310cba5e2b3280cd704fca249eaa0624821dffae1d2a75097c7f55d14ed) 
-        set(SUBDIR "swig-${VERSION}")
-        set(PATHS "${DOWNLOADS}/tools/swig/${SUBDIR}")
-    endif()
-    set(SOURCEFORGE_ARGS
+      set(SOURCEFORGE_ARGS
         REPO swig/swigwin
-        REF swigwin-${VERSION}
-        FILENAME "${ARCHIVE}"
-        SHA512 "${HASH}"
+        REF swigwin-${SWIG_VERSION}
+        FILENAME "swigwin-${SWIG_VERSION}.zip"
+        SHA512 b8f105f9b9db6acc1f6e3741990915b533cd1bc206eb9645fd6836457fd30789b7229d2e3219d8e35f2390605ade0fbca493ae162ec3b4bc4e428b57155db03d
         NO_REMOVE_ONE_LEVEL
         WORKING_DIRECTORY "${DOWNLOADS}/tools/swig"
-     )
+      )
+      set(SUBDIR b8f105f9b9-f0518bc3b7/swigwin-${SWIG_VERSION})
+    else()
+      set(APT_PACKAGE_NAME "swig")
+      set(BREW_PACKAGE_NAME "swig")
+    endif()
+
   elseif(VAR MATCHES "DOXYGEN")
     set(PROGNAME doxygen)
     set(DOXYGEN_VERSION 1.8.17)
@@ -425,41 +416,25 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH 2a5480d503ac6e8203040c7e516a3395028520da05d0ebf3a2d56d5d24ba5d17630e8f318dd4e3cc2094cc4668b90108fb58e8b986b1ffebd429995058063c27)
   elseif(VAR MATCHES "PKGCONFIG")
     set(PROGNAME pkg-config)
-    set(VERSION 0.29.2-1)
-    set(LIBWINPTHREAD_VERSION git-8.0.0.5906.c9a21571-1)
     if(ENV{PKG_CONFIG})
       debug_message(STATUS "PKG_CONFIG found in ENV! Using $ENV{PKG_CONFIG}")
       set(PKGCONFIG $ENV{PKG_CONFIG} PARENT_SCOPE)
       return()
     elseif(CMAKE_HOST_WIN32)
-      set(PROG_PATH_SUBDIR "${DOWNLOADS}/tools/${PROGNAME}/${VERSION}")
-      set(PKGCONFIG "${PROG_PATH_SUBDIR}/mingw32/bin/pkg-config.exe")
       if(NOT EXISTS "${PKGCONFIG}")
-        vcpkg_download_distfile(PKGCONFIG_ARCHIVE
-          URLS "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz"
-          SHA512 3b1b706a24d9aef7bbdf3ce4427aaa813ba6fbd292ed9dda181b4300e117c3d59a159ddcca8b013fd01ce76da2d95d590314ff9628c0d68a6966bac4842540f0
-          FILENAME mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz
+        set(VERSION 0.29.2-1)
+        set(LIBWINPTHREAD_VERSION git-8.0.0.5906.c9a21571-1)
+        vcpkg_acquire_msys(
+          PKGCONFIG_ROOT
+          NO_DEFAULT_PACKAGES
+          DIRECT_PACKAGES
+            "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz"
+            3b1b706a24d9aef7bbdf3ce4427aaa813ba6fbd292ed9dda181b4300e117c3d59a159ddcca8b013fd01ce76da2d95d590314ff9628c0d68a6966bac4842540f0
+            "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${LIBWINPTHREAD_VERSION}-any.pkg.tar.zst"
+            2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c
         )
-        vcpkg_download_distfile(LIBWINPTHREAD_ARCHIVE
-          URLS "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${LIBWINPTHREAD_VERSION}-any.pkg.tar.zst"
-          SHA512 2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c
-          FILENAME mingw-w64-i686-libwinpthread-${LIBWINPTHREAD_VERSION}-any.pkg.tar.zst
-        )
-        file(REMOVE_RECURSE ${PROG_PATH_SUBDIR} ${PROG_PATH_SUBDIR}.tmp)
-        file(MAKE_DIRECTORY ${PROG_PATH_SUBDIR}.tmp)
-        vcpkg_execute_required_process(
-          ALLOW_IN_DOWNLOAD_MODE
-          COMMAND ${CMAKE_COMMAND} -E tar xzf ${LIBWINPTHREAD_ARCHIVE}
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}.tmp
-        )
-        vcpkg_execute_required_process(
-          ALLOW_IN_DOWNLOAD_MODE
-          COMMAND ${CMAKE_COMMAND} -E tar xzf ${PKGCONFIG_ARCHIVE}
-          WORKING_DIRECTORY ${PROG_PATH_SUBDIR}.tmp
-        )
-        file(RENAME ${PROG_PATH_SUBDIR}.tmp ${PROG_PATH_SUBDIR})
       endif()
-      set(${VAR} "${${VAR}}" PARENT_SCOPE)
+      set(${VAR} "${PKGCONFIG_ROOT}/mingw32/bin/pkg-config.exe" PARENT_SCOPE)
       return()
     else()
       set(BREW_PACKAGE_NAME pkg-config)

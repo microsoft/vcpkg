@@ -1,0 +1,82 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b664afd..0d4670e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -457,15 +457,6 @@ install(
+ 		Devel
+ )
+ 
+-if(POCO_UNBUNDLED)
+-	install(FILES cmake/FindPCRE.cmake
+-			DESTINATION "${PocoConfigPackageLocation}")
+-	install(FILES cmake/V39/FindEXPAT.cmake
+-			DESTINATION "${PocoConfigPackageLocation}/V39")
+-	install(FILES cmake/V313/FindSQLite3.cmake
+-			DESTINATION "${PocoConfigPackageLocation}/V313")
+-endif()
+-
+ message(STATUS "CMake ${CMAKE_VERSION} successfully configured ${PROJECT_NAME} using ${CMAKE_GENERATOR} generator")
+ message(STATUS "${PROJECT_NAME} package version: ${PROJECT_VERSION}")
+ if(BUILD_SHARED_LIBS)
+diff --git a/Data/SQLite/CMakeLists.txt b/Data/SQLite/CMakeLists.txt
+index b52e2c5..0dcfae2 100644
+--- a/Data/SQLite/CMakeLists.txt
++++ b/Data/SQLite/CMakeLists.txt
+@@ -7,7 +7,7 @@ file(GLOB_RECURSE HDRS_G "include/*.h")
+ POCO_HEADERS_AUTO(SQLITE_SRCS ${HDRS_G})
+ 
+ if(POCO_UNBUNDLED)
+-	find_package(SQLite3 REQUIRED)
++	find_package(unofficial-sqlite3 CONFIG REQUIRED)
+ else()
+ 	# sqlite3
+ 	POCO_SOURCES(SQLITE_SRCS sqlite3
+@@ -43,7 +43,7 @@ target_include_directories(DataSQLite
+ )
+ 
+ if(POCO_UNBUNDLED)
+-		target_link_libraries(DataSQLite PUBLIC SQLite::SQLite3)
++		target_link_libraries(DataSQLite PUBLIC unofficial::sqlite3::sqlite3)
+ 	target_compile_definitions(DataSQLite PUBLIC
+ 		POCO_UNBUNDLED
+ 		SQLITE_THREADSAFE=1
+diff --git a/XML/CMakeLists.txt b/XML/CMakeLists.txt
+index 4fbf06f..793285a 100644
+--- a/XML/CMakeLists.txt
++++ b/XML/CMakeLists.txt
+@@ -20,7 +20,7 @@ endif()
+ # If POCO_UNBUNDLED is enabled we try to find the required packages
+ # The configuration will fail if the packages are not found
+ if(POCO_UNBUNDLED)
+-	find_package(EXPAT REQUIRED)
++	find_package(expat CONFIG REQUIRED)
+ else()
+ 	POCO_SOURCES(SRCS expat
+ 		src/xmlparse.cpp
+@@ -50,7 +50,7 @@ target_include_directories(XML
+ )
+ 
+ if(POCO_UNBUNDLED)
+-	target_link_libraries(XML PUBLIC EXPAT::EXPAT)
++	target_link_libraries(XML PUBLIC expat::expat)
+ 	target_compile_definitions(XML PUBLIC POCO_UNBUNDLED)
+ else()
+ 	if(WIN32)
+diff --git a/cmake/PocoConfig.cmake.in b/cmake/PocoConfig.cmake.in
+index 173eacd..589fdb6 100644
+--- a/cmake/PocoConfig.cmake.in
++++ b/cmake/PocoConfig.cmake.in
+@@ -8,6 +8,13 @@ if (NOT Poco_FIND_COMPONENTS)
+     return()
+ endif()
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(ZLIB REQUIRED)
++find_dependency(unofficial-pcre REQUIRED)
++if(Poco_FIND_REQUIRED_XML)
++    find_dependency(EXPAT REQUIRED)
++endif()
++
+ set(_Poco_FIND_PARTS_REQUIRED)
+ if (Poco_FIND_REQUIRED)
+     set(_Poco_FIND_PARTS_REQUIRED REQUIRED)
