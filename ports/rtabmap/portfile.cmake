@@ -10,10 +10,17 @@ vcpkg_from_github(
         001_opencv.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tools BUILD_TOOLS
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
+        -DBUILD_APP=OFF
+        -DBUILD_EXAMPLES=OFF
         -DWITH_QT=OFF
         -DWITH_SUPERPOINT_TORCH=OFF
         -DWITH_PYMATCHER=OFF
@@ -53,7 +60,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-vcpkg_copy_tools(
+vcpkg_copy_tools(TOOL_NAMES rtabmap-res_tool AUTO_CLEAN)
+
+if("tools" IN_LIST FEATURES)
+  vcpkg_copy_tools(
     TOOL_NAMES
         rtabmap-camera
         rtabmap-console
@@ -65,10 +75,11 @@ vcpkg_copy_tools(
         rtabmap-recovery
         rtabmap-report
         rtabmap-reprocess
-        rtabmap-res_tool
         rtabmap-rgbd_dataset
+        rtabmap-euroc_dataset
     AUTO_CLEAN
-)
+  )
+endif()
 
 file(REMOVE_RECURSE 
     "${CURRENT_PACKAGES_DIR}/debug/include"
