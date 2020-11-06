@@ -1,5 +1,0 @@
-Source: oatpp-sqlite
-Version: 1.2.0
-Description: OAT++ Modern web framework sqlite module
-Build-Depends: oatpp,sqlite3
-Homepage: https://github.com/oatpp/oatpp-sqlite
