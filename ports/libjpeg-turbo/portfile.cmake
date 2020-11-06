@@ -37,6 +37,8 @@ vcpkg_configure_cmake(
         -DENABLE_EXECUTABLES=OFF
         -DINSTALL_DOCS=OFF
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
+        -DWITH_JPEG8=ON
+        -DWITH_JPEG7=ON
         ${LIBJPEGTURBO_SIMD}
     OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
 )
