@@ -1,5 +1,4 @@
 #header-only library
-include(vcpkg_common_functions)
 include(CMakePackageConfigHelpers)
 
 vcpkg_from_github(

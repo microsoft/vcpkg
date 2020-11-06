@@ -60,7 +60,7 @@ namespace
             System::get_clean_environment());
 #else
         System::cmd_execute_clean(
-            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
+            Strings::format(R"(cd '%s' && zip --quiet -y -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
 #endif
     }
 
@@ -669,7 +669,8 @@ namespace
             if (auto p_str = maybe_cachepath.get())
             {
                 Metrics::g_metrics.lock()->track_property("VCPKG_DEFAULT_BINARY_CACHE", "defined");
-                const auto path = fs::u8path(*p_str);
+                auto path = fs::u8path(*p_str);
+                path.make_preferred();
                 const auto status = fs::stdfs::status(path);
                 if (!fs::stdfs::exists(status))
                     return {"Path to VCPKG_DEFAULT_BINARY_CACHE does not exist: " + fs::u8string(path),
@@ -682,9 +683,10 @@ namespace
                     return {"Value of environment variable VCPKG_DEFAULT_BINARY_CACHE is not absolute: " +
                                 fs::u8string(path),
                             expected_right_tag};
-                return ExpectedS<fs::path>(path);
+                return {std::move(path), expected_left_tag};
             }
             p /= fs::u8path("vcpkg/archives");
+            p.make_preferred();
             if (p.is_absolute())
             {
                 return {std::move(p), expected_left_tag};
@@ -1014,13 +1016,21 @@ std::string vcpkg::generate_nuspec(const VcpkgPaths& paths,
     auto& spec = action.spec;
     auto& scf = *action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO).source_control_file;
     auto& version = scf.core_paragraph->version;
+    const auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
+    const auto& compiler_info = abi_info.compiler_info.value_or_exit(VCPKG_LINE_INFO);
     std::string description =
         Strings::concat("NOT FOR DIRECT USE. Automatically generated cache package.\n\n",
                         Strings::join("\n    ", scf.core_paragraph->description),
                         "\n\nVersion: ",
                         version,
+                        "\nTriplet: ",
+                        spec.triplet().to_string(),
+                        "\nCXX Compiler id: ",
+                        compiler_info.id,
+                        "\nCXX Compiler version: ",
+                        compiler_info.version,
                         "\nTriplet/Compiler hash: ",
-                        action.abi_info.value_or_exit(VCPKG_LINE_INFO).triplet_abi.value_or_exit(VCPKG_LINE_INFO),
+                        abi_info.triplet_abi.value_or_exit(VCPKG_LINE_INFO),
                         "\nFeatures:",
                         Strings::join(",", action.feature_list, [](const std::string& s) { return " " + s; }),
                         "\nDependencies:\n");
@@ -1104,12 +1114,13 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
     const auto& maybe_cachepath = default_cache_path();
     if (auto p = maybe_cachepath.get())
     {
-        auto p_preferred = *p;
         System::print2(
             "\nBased on your system settings, the default path to store binaries is\n    ",
-            fs::u8string(p_preferred.make_preferred()),
-            "\n\nThis consults %LOCALAPPDATA%/%APPDATA% on Windows and $XDG_CACHE_HOME or $HOME on other platforms.");
+            fs::u8string(*p),
+            "\nThis consults %LOCALAPPDATA%/%APPDATA% on Windows and $XDG_CACHE_HOME or $HOME on other platforms.\n");
     }
+    System::print2("\nExtended documentation is available at "
+                   "https://github.com/Microsoft/vcpkg/tree/master/docs/users/binarycaching.md \n");
 }
 
 std::string vcpkg::generate_nuget_packages_config(const Dependencies::ActionPlan& action)

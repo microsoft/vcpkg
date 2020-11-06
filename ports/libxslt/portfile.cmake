@@ -21,8 +21,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         prefix=@INSTALL_DIR@
         include=@INCLUDE_DIR@
         lib=@LIB_DIR@
-        bindir=$(PREFIX)\\tools\\
-        sodir=$(PREFIX)\\bin\\
+        bindir=$(PREFIX)\\tools
+        sodir=$(PREFIX)\\bin
     )
     # Debug params
     if(VCPKG_CRT_LINKAGE STREQUAL dynamic)

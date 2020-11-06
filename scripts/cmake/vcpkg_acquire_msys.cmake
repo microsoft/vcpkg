@@ -55,7 +55,8 @@
 ## * [libvpx](https://github.com/Microsoft/vcpkg/blob/master/ports/libvpx/portfile.cmake)
 
 function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
-  cmake_parse_arguments(_am "NO_DEFAULT_PACKAGES" "" "PACKAGES;DIRECT_PACKAGES" ${ARGN})
+  # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+  cmake_parse_arguments(PARSE_ARGV 0 _am "NO_DEFAULT_PACKAGES" "" "PACKAGES;DIRECT_PACKAGES")
 
   set(TOTAL_HASH 0)
   set(ARCHIVES)
@@ -65,6 +66,34 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
   if(NOT _am_NO_DEFAULT_PACKAGES)
     list(APPEND PACKAGES bash coreutils sed grep gawk diffutils make pkg-config)
   endif()
+
+  macro(msys_package_download URL SHA FILENAME)
+    set(URLS "${URL}")
+    # Mirror list from https://github.com/msys2/MSYS2-packages/blob/master/pacman-mirrors/mirrorlist.msys
+    # Sourceforge is not used because it does not keep older package versions
+    set(MIRRORS
+      "https://www2.futureware.at/~nickoe/msys2-mirror/"
+      "https://mirror.yandex.ru/mirrors/msys2/"
+      "https://mirrors.tuna.tsinghua.edu.cn/msys2/"
+      "https://mirrors.ustc.edu.cn/msys2/"
+      "https://mirror.bit.edu.cn/msys2/"
+      "https://mirror.selfnet.de/msys2/"
+      "https://mirrors.sjtug.sjtu.edu.cn/msys2/"
+    )
+
+    foreach(MIRROR IN LISTS MIRRORS)
+      string(REPLACE "https://repo.msys2.org/" "${MIRROR}" MIRROR_URL "${URL}")
+      list(APPEND URLS "${MIRROR_URL}")
+    endforeach()
+    vcpkg_download_distfile(MSYS_ARCHIVE
+      URLS ${URLS}
+      SHA512 "${SHA}"
+      FILENAME "msys-${FILENAME}"
+      QUIET
+    )
+    string(APPEND TOTAL_HASH "${SHA}")
+    list(APPEND ARCHIVES "${MSYS_ARCHIVE}")
+  endmacro()
 
   macro(msys_package)
     cmake_parse_arguments(p "ZST;ANY" "URL;NAME;SHA512;VERSION;REPO" "DEPS" ${ARGN})
@@ -94,14 +123,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     if("${p_NAME}" IN_LIST PACKAGES)
       list(REMOVE_ITEM PACKAGES "${p_NAME}")
       list(APPEND PACKAGES ${p_DEPS})
-      vcpkg_download_distfile(MSYS_ARCHIVE
-        URLS "${p_URL}"
-        SHA512 "${p_SHA512}"
-        FILENAME "msys-${FILENAME}"
-        QUIET
-      )
-      string(APPEND TOTAL_HASH "${p_SHA512}")
-      list(APPEND ARCHIVES "${MSYS_ARCHIVE}")
+      msys_package_download("${p_URL}" "${p_SHA512}" "${FILENAME}")
     endif()
   endmacro()
 
@@ -111,14 +133,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
       set(N "${P}")
     else()
       get_filename_component(FILENAME "${N}" NAME)
-      vcpkg_download_distfile(MSYS_ARCHIVE
-        URLS "${N}"
-        SHA512 "${P}"
-        FILENAME "msys-${FILENAME}"
-        QUIET
-      )
-      string(APPEND TOTAL_HASH "${P}")
-      list(APPEND ARCHIVES "${MSYS_ARCHIVE}")
+      msys_package_download("${N}" "${P}" "${FILENAME}")
       unset(N)
     endif()
   endforeach()
@@ -275,8 +290,8 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     DEPS libiconv
   )
   msys_package(
-    URL "https://repo.msys2.org/msys/x86_64/libiconv-1.16-1-x86_64.pkg.tar.xz"
-    SHA512 6f9b778d449410273a50cdd1af737cdcb8890a5536d78211477eed7382340253c7aadfb04977f1038ae4f4cef5a641f1acfda26fd06323d0b196a3e6da7fd425
+    URL "https://repo.msys2.org/msys/x86_64/libiconv-1.16-2-x86_64.pkg.tar.zst"
+    SHA512 3ab569eca9887ef85e7dd5dbca3143d8a60f7103f370a7ecc979a58a56b0c8dcf1f54ac3df4495bc306bd44bf36ee285aaebbb221c4eebfc912cf47d347d45fc
     DEPS gcc-libs
   )
   msys_package(

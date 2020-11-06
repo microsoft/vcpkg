@@ -4,7 +4,7 @@ project(libusbmuxd C)
 # find dependencies
 find_path(libplist_INCLUDES plist.h PATH_SUFFIXES plist)
 set(libplist_INCLUDES ${libplist_INCLUDES}/../)
-find_library(libplist plist REQUIRED)
+find_library(libplist NAMES plist libplist plist-2.0 libplist-2.0 REQUIRED)
 
 # ready to create library
 file(GLOB_RECURSE IDVCACTV_TOOLS_HDR common/*.h)
@@ -29,13 +29,21 @@ install(
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
 )
+
+set(LIBPLIST_VERSION 2.0)
+set(PACKAGE_NAME libusbmuxd)
+set(PACKAGE_VERSION 2.0)
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix \${prefix})
+set(libdir \${prefix}/lib)
+set(includedir \${prefix}/../include)
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/libusbmuxd.pc.in
-    ${CMAKE_CURRENT_BINARY_DIR}/libusbmuxd.pc
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/libusbmuxd-2.0.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/libusbmuxd-2.0.pc
     @ONLY
 )
 install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/libusbmuxd.pc
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/libusbmuxd-2.0.pc
     DESTINATION lib/pkgconfig
 )
 

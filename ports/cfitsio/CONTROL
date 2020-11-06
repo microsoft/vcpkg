@@ -1,4 +1,13 @@
 Source: cfitsio
-Version: 3.410-3
-Homepage: https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c
+Version: 3.49
+Homepage: https://heasarc.gsfc.nasa.gov/fitsio/
 Description: Library of C and Fortran subroutines for reading and writing data files in FITS (Flexible Image Transport System) data format
+Build-Depends: zlib
+
+Feature: curl
+Description: UseCurl
+Build-Depends: curl
+
+Feature: pthreads
+Description: Thread-safe build (using pthreads)
+Build-Depends: pthreads (windows)

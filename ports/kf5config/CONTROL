@@ -1,5 +1,5 @@
 Source: kf5config
-Version: 5.73.0
+Version: 5.75.0
 Homepage: https://api.kde.org/frameworks/kconfig/html/index.html
 Description: Configuration system
 Build-Depends: ecm, qt5-base, qt5-tools
