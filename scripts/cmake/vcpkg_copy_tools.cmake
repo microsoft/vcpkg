@@ -35,7 +35,7 @@ function(vcpkg_copy_tools)
 
     if(NOT DEFINED _vct_SEARCH_DIR)
         set(_vct_SEARCH_DIR "${CURRENT_PACKAGES_DIR}/bin")
-    elseif(NOT IS_DIRECTORY "${_vct_SEARCH_DIR}")
+    elseif(NOT IS_DIRECTORY ${_vct_SEARCH_DIR})
         message(FATAL_ERROR "SEARCH_DIR ${_vct_SEARCH_DIR} is supposed to be a directory.")
     endif()
 
