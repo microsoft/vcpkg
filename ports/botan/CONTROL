@@ -1,6 +1,6 @@
 Source: botan
-Version: 2.15.0
-Port-Version: 1
+Version: 2.16.0
+Port-Version: 0
 Homepage: https://botan.randombit.net
 Description: A cryptography library written in C++11
 
