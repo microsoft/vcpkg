@@ -147,8 +147,26 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT})
 if("clang" IN_LIST FEATURES)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
 
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(LLVM_REMOVE_EXTENSION_REGEX [[^([^.]*|[^.]*\.lld)\.exe$|^([^.]*)\.exe$]])
+    else()
+        set(LLVM_REMOVE_EXTENSION_REGEX [[^([^.]*|[^.]*\.lld)$]])
+    endif()
+
+    file(GLOB LLVM_TOOL_FILES "${CURRENT_PACKAGES_DIR}/bin/*")
+    set(LLVM_TOOLS)
+    foreach(tool_file IN LISTS LLVM_TOOL_FILES)
+        get_filename_component(tool_file "${tool_file}" NAME)
+        string(REGEX MATCH "${LLVM_REMOVE_EXTENSION_REGEX}" valid_tool_name "${tool_file}")
+        string(REGEX REPLACE "${LLVM_REMOVE_EXTENSION_REGEX}" "\\1" tool_name "${tool_file}")
+        if(NOT valid_tool_name STREQUAL "")
+            list(APPEND LLVM_TOOLS "${tool_name}")
+        endif()
+    endforeach()
+
+    vcpkg_copy_tools(
+        TOOL_NAMES ${LLVM_TOOLS}
+        AUTO_CLEAN)
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -163,4 +181,8 @@ if("clang" IN_LIST FEATURES)
     file(INSTALL ${SOURCE_PATH}/clang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME copyright)
 endif()
 
-# Don't fail if the bin folder exists.
+# LLVM still generates a few DLLs in the static build:
+# * libclang.dll
+# * LTO.dll
+# * Remarks.dll
+set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled)
