@@ -487,7 +487,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         table.format("vcpkg integrate remove", "Remove user-wide integration");
         table.format("vcpkg integrate project", "Generate a referencing nuget package for individual VS project use");
         table.format("vcpkg integrate powershell", "Enable PowerShell tab-completion");
-#else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
         table.format("vcpkg integrate install", "Make installed packages available user-wide");
         table.format("vcpkg integrate remove", "Remove user-wide integration");
         table.format("vcpkg integrate bash", "Enable bash tab-completion");

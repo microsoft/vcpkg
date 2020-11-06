@@ -628,8 +628,8 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
-    static LintStatus check_bin_folders_are_not_present_in_static_build(
-        const Build::BuildPolicies& policies, const Files::Filesystem& fs,
+    static LintStatus check_bin_folders_are_not_present_in_static_build(const Build::BuildPolicies& policies,
+                                                                        const Files::Filesystem& fs,
                                                                         const fs::path& package_dir)
     {
         if (policies.is_enabled(BuildPolicy::DLLS_IN_STATIC_LIBRARY)) return LintStatus::SUCCESS;

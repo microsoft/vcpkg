@@ -448,7 +448,7 @@ namespace vcpkg::Metrics
         if (request) WinHttpCloseHandle(request);
         if (connect) WinHttpCloseHandle(connect);
         if (session) WinHttpCloseHandle(session);
-#else  // ^^^ _WIN32 // !_WIN32 vvv
+#else // ^^^ _WIN32 // !_WIN32 vvv
         (void)payload;
 #endif // ^^^ !_WIN32
     }

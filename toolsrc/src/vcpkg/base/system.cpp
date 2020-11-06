@@ -100,7 +100,7 @@ namespace vcpkg
         Checks::check_exit(VCPKG_LINE_INFO, sz2 + 1 == sz);
         ret.pop_back();
         return Strings::to_utf8(ret.c_str());
-#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
+#else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
         auto v = getenv(varname.c_str());
         if (!v) return nullopt;
         return std::string(v);
@@ -123,7 +123,7 @@ namespace vcpkg
         }
 
         Checks::check_exit(VCPKG_LINE_INFO, exit_code != 0);
-#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
+#else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
         if (auto v = value.get())
         {
             Checks::check_exit(VCPKG_LINE_INFO, setenv(varname.c_str(), v->c_str(), 1) == 0);
@@ -249,7 +249,7 @@ namespace vcpkg
         ret.pop_back(); // remove extra trailing null byte
         return Strings::to_utf8(ret);
     }
-#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
+#else // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
     Optional<std::string> System::get_registry_string(void*, StringView, StringView) { return nullopt; }
 #endif // defined(_WIN32)
 
