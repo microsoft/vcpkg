@@ -302,7 +302,7 @@ foreach(BUILD_TYPE dbg rel)
 			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
 			set(TF_LIB_SUFFIXES "")
 			# library might have been split because no more than 4GB are supported even on x64 Windows
-			foreach(PART_NO RANGE 2 100)
+			foreach(PART_NO RANGE 1 100)
 				if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib)
 					file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
 					set(N_DBG_LIB_PARTS ${PART_NO})
@@ -341,41 +341,83 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		endif()
 	endif()
 
-	configure_file(${CMAKE_CURRENT_LIST_DIR}/README-${PLATFORM_SUFFIX} ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/README COPYONLY)
+	configure_file(
+		${CMAKE_CURRENT_LIST_DIR}/README-${PLATFORM_SUFFIX}
+		${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/README
+		COPYONLY)
 endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/LICENSE ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/copyright)
 
+
+# NOTE: if this port ever supports VCPKG_BUILD_TYPE, use that to set these.
+set(TENSORFLOW_HAS_RELEASE ON)
+set(TENSORFLOW_HAS_DEBUG ON)
+
 if(VCPKG_TARGET_IS_WINDOWS)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-dll.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
+		configure_file(
+			${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-dll.cmake.in
+			${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake
+			@ONLY)
 	else()
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-lib.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
-		set(ALL_PARTS "tensorflow_cc::tensorflow_cc-part1")
+		configure_file(
+			${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-lib.cmake.in
+			${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake
+			@ONLY)
+
+		set(ALL_PARTS)
 		foreach(part ${TF_LIB_SUFFIXES})
-			file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "\n\
-add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)\n\
-set_target_properties(tensorflow_cc::tensorflow_cc${part}\n\
-	PROPERTIES\n\
-	IMPORTED_LOCATION \"${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/lib/tensorflow${part}.lib\"\n\
-	INTERFACE_INCLUDE_DIRECTORIES\n\
-		\"${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external\"\n\
-		\"${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET}/include/tensorflow-external/src\"\n\
-)\n\
-")
+			file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "
+add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)"
+			)
+
+			set(prefix_RELEASE [[${TENSORFLOW_INSTALL_PREFIX}]])
+			set(prefix_DEBUG [[${TENSORFLOW_INSTALL_PREFIX}/debug]])
+			foreach(cfg RELEASE DEBUG)
+				if(TENSORFLOW_HAS_${cfg})
+					file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "
+set_property(TARGET tensorflow_cc::tensorflow_cc${part}
+	APPEND PROPERTY IMPORTED_CONFIGURATIONS
+		${cfg}
+)
+set_property(TARGET tensorflow_cc::tensorflow_cc${part}
+	PROPERTY IMPORTED_LOCATION_${cfg}
+		${prefix_${cfg}}/lib/tensorflow${part}.lib
+)"
+					)
+				endif()
+			endforeach()
+
 			list(APPEND ALL_PARTS "tensorflow_cc::tensorflow_cc${part}")
 		endforeach()
-		file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "\n\
-add_library(tensorflow_cc::tensorflow_cc INTERFACE IMPORTED)\n\
-set_property(TARGET tensorflow_cc::tensorflow_cc PROPERTY INTERFACE_LINK_LIBRARIES ${ALL_PARTS})\n\
+
+		file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake
+"
+set_property(TARGET tensorflow_cc::tensorflow_cc
+	PROPERTY INTERFACE_LINK_LIBRARIES
+		${ALL_PARTS}
+)
+set_property(TARGET tensorflow_cc::tensorflow_cc
+	PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+		\"\${TENSORFLOW_INSTALL_PREFIX}/include\"
+		\"\${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external\"
+		\"\${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src\"
+)
 ")
 	endif()
 else()
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-shared.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
+		configure_file(
+			${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-shared.cmake.in
+			${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake
+			@ONLY)
 	else()
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-static.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake)
+		configure_file(
+			${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-static.cmake.in
+			${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake
+			@ONLY)
 	endif()
 endif()
 
