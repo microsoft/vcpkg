@@ -2,3 +2,4 @@ Source: openssl-unix
 Version: 1.1.1h
 Description: Deprecated OpenSSL port
 Supports: !(windows|uwp)
+Build-Depends: openssl

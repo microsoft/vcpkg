@@ -2,3 +2,4 @@ Source: openssl-windows
 Version: 1.1.1h
 Description: Deprecated OpenSSL port
 Supports: windows
+Build-Depends: openssl
