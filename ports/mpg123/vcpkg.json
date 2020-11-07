@@ -1,0 +1,9 @@
+{
+  "name": "mpg123",
+  "version-string": "1.26.3",
+  "description": "mpg123 is a real time MPEG 1.0/2.0/2.5 audio player/decoder for layers 1, 2 and 3 (MPEG 1.0 layer 3 also known as MP3).",
+  "homepage": "https://sourceforge.net/projects/mpg123/",
+  "dependencies": [
+    "yasm-tool-helper"
+  ]
+}
