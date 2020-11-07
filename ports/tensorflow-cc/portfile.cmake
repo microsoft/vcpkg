@@ -367,14 +367,27 @@ if(VCPKG_TARGET_IS_WINDOWS)
 			${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake
 			@ONLY)
 
+		set(prefix_RELEASE [[${TENSORFLOW_INSTALL_PREFIX}]])
+		set(prefix_DEBUG [[${TENSORFLOW_INSTALL_PREFIX}/debug]])
+
 		set(ALL_PARTS)
 		foreach(part ${TF_LIB_SUFFIXES})
 			file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "
-add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)"
+if(TARGET tensorflow_cc::tensorflow_cc${part})
+	message(FATAL_ERROR \"Some (but not all) targets in this config.cmake file were already defined.
+	tensorflow_cc::tensorflow_cc was not defined, but
+	tensorflow_cc::tensorflow_cc${part} was.\"
+)
+endif()
+
+add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)
+set_property(TARGET tensorflow_cc::tensorflow_cc${part}
+	PROPERTY IMPORTED_LOCATION
+		${prefix_RELEASE}/lib/tensorflow${part}.lib
+)
+"
 			)
 
-			set(prefix_RELEASE [[${TENSORFLOW_INSTALL_PREFIX}]])
-			set(prefix_DEBUG [[${TENSORFLOW_INSTALL_PREFIX}/debug]])
 			foreach(cfg RELEASE DEBUG)
 				if(TENSORFLOW_HAS_${cfg})
 					file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "

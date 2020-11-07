@@ -1,3 +1,7 @@
+if(TARGET tensorflow_cc::tensorflow_cc)
+	return()
+endif()
+
 set(tensorflow_cc_FOUND TRUE)
 
 # Compute the installation prefix from this tensorflow-cc-config.cmake file location.

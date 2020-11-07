@@ -1,3 +1,7 @@
+if(TARGET tensorflow_cc::tensorflow_cc)
+	return()
+endif()
+
 add_library(tensorflow_cc::tensorflow_cc STATIC IMPORTED)
 
 # Compute the installation prefix from this tensorflow-cc-config.cmake file location.
@@ -12,6 +16,12 @@ set_property(TARGET tensorflow_cc::tensorflow_cc
 		"${TENSORFLOW_INSTALL_PREFIX}/include"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src"
+)
+
+# default location, if building in non-RELEASE or DEBUG
+set_property(TARGET tensorflow_cc::tensorflow_cc
+	PROPERTY IMPORTED_LOCATION
+		"${TENSORFLOW_INSTALL_PREFIX}/lib/@TF_LIB_NAME@"
 )
 
 if(@TENSORFLOW_HAS_RELEASE@)

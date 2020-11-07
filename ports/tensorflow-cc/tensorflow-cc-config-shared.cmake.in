@@ -1,3 +1,11 @@
+if(TARGET tensorflow_cc::tensorflow_cc OR TARGET tensorflow_cc::tensorflow_framework)
+	if(NOT (TARGET tensorflow_cc::tensorflow_cc AND TARGET tensorflow_cc::tensorflow_framework))
+		message(FATAL_ERROR "Some (but not all) targets in this config.cmake were already defined.")
+	endif()
+
+	return()
+endif()
+
 add_library(tensorflow_cc::tensorflow_cc SHARED IMPORTED)
 add_library(tensorflow_cc::tensorflow_framework SHARED IMPORTED)
 
@@ -19,6 +27,16 @@ set_property(TARGET tensorflow_cc::tensorflow_framework
 		"${TENSORFLOW_INSTALL_PREFIX}/include"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src"
+)
+
+# default location, if building in non-RELEASE or DEBUG
+set_property(TARGET tensorflow_cc::tensorflow_cc
+	PROPERTY IMPORTED_LOCATION
+		"${TENSORFLOW_INSTALL_PREFIX}/lib/@TF_LIB_NAME@"
+)
+set_property(TARGET tensorflow_cc::tensorflow_framework
+	PROPERTY IMPORTED_LOCATION
+		"${TENSORFLOW_INSTALL_PREFIX}/lib/@TF_FRAMEWORK_NAME@"
 )
 
 if(@TENSORFLOW_HAS_RELEASE@)
