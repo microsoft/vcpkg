@@ -299,7 +299,6 @@ foreach(BUILD_TYPE dbg rel)
 				message(STATUS "Warning: debug information tensorflow_cc.pdb will be of limited use because only a reduced set could be produced due to the 4GB internal PDB file limit even on x64.")
 			endif()
 		else()
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
 			set(TF_LIB_SUFFIXES "")
 			# library might have been split because no more than 4GB are supported even on x64 Windows
 			foreach(PART_NO RANGE 1 100)

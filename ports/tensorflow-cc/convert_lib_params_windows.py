@@ -7,7 +7,7 @@ file_no = 1
 with open("tensorflow_cc.dll-2.params", "r") as f_in:
     lib_name = None
     acc_size = 0
-    f_out = open("tensorflow_cc.lib-2.params", "w")
+    f_out = open("tensorflow_cc.lib-2.params-part1", "w")
     for line in f_in:
         if line.startswith("/OUT:"):
             lib_name = line
