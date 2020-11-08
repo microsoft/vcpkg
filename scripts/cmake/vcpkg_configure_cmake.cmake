@@ -220,6 +220,12 @@ function(vcpkg_configure_cmake)
         endif()
     endif()
 
+    # Specify VCPKG_APPLOCAL_DEPS option unless the port set it explicitly
+    if(NOT (_csc_options MATCHES -DVCPKG_APPLOCAL_DEPS))
+        list(APPEND _csc_options
+            "-DVCPKG_APPLOCAL_DEPS=OFF"
+        )
+    endif()
 
     list(APPEND _csc_OPTIONS
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
@@ -231,7 +237,6 @@ function(vcpkg_configure_cmake)
         "-DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON"
         "-DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=TRUE"
         "-DCMAKE_VERBOSE_MAKEFILE=ON"
-        "-DVCPKG_APPLOCAL_DEPS=OFF"
         "-DCMAKE_TOOLCHAIN_FILE=${SCRIPTS}/buildsystems/vcpkg.cmake"
         "-DCMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION=ON"
         "-DVCPKG_CXX_FLAGS=${VCPKG_CXX_FLAGS}"
