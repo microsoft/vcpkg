@@ -1,10 +1,9 @@
 set(SEAL_VERSION_MAJOR 3)
-set(SEAL_VERSION_MINOR 4)
-set(SEAL_VERSION_MICRO 5)
+set(SEAL_VERSION_MINOR 5)
+set(SEAL_VERSION_MICRO 9)
 
 vcpkg_fail_port_install(ON_TARGET "uwp")
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SEAL_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SEAL_BUILD_STATIC)
 
 
@@ -35,7 +34,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DALLOW_COMMAND_LINE_BUILD=ON
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DSEAL_USE_MSGSL=OFF # issue https://github.com/microsoft/SEAL/issues/159
 )
 
