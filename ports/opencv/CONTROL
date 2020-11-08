@@ -1,102 +1,102 @@
 Source: opencv
-Version: 4.1.1-1
+Version: 4.3.0
 Homepage: https://github.com/opencv/opencv
 Description: Computer vision library
 Build-Depends: opencv4[core]
 Default-Features: dnn, jpeg, opengl, png, tiff, webp
 
 Feature: nonfree
-Build-Depends: opencv4[nonfree]
+Build-Depends: opencv4[core,nonfree]
 Description: opencv nonfree module
 
 Feature: ade
-Build-Depends: opencv4[ade]
+Build-Depends: opencv4[core,ade]
 Description: graph api
 
 Feature: contrib
-Build-Depends: opencv4[contrib]
+Build-Depends: opencv4[core,contrib]
 Description: opencv_contrib module
 
 Feature: cuda
-Build-Depends: opencv4[cuda]
+Build-Depends: opencv4[core,cuda]
 Description: CUDA support for opencv
 
 Feature: dnn
-Build-Depends: opencv4[dnn]
+Build-Depends: opencv4[core,dnn]
 Description: Enable dnn module
 
 Feature: eigen
-Build-Depends: opencv4[eigen]
+Build-Depends: opencv4[core,eigen]
 Description: Eigen support for opencv
 
 Feature: ffmpeg
-Build-Depends: opencv4[ffmpeg]
+Build-Depends: opencv4[core,ffmpeg]
 Description: ffmpeg support for opencv
 
 Feature: gdcm
-Build-Depends: opencv4[gdcm]
+Build-Depends: opencv4[core,gdcm]
 Description: GDCM support for opencv
 
+Feature: halide
+Build-Depends: opencv4[core,halide]
+Description: Halide support for opencv
+
 Feature: ipp
-Build-Depends: opencv4[ipp]
+Build-Depends: opencv4[core,ipp]
 Description: Enable Intel Integrated Performance Primitives
 
 Feature: jasper
-Build-Depends: opencv4[jasper]
+Build-Depends: opencv4[core,jasper]
 Description: JPEG 2000 support for opencv
 
 Feature: jpeg
-Build-Depends: opencv4[jpeg]
+Build-Depends: opencv4[core,jpeg]
 Description: JPEG support for opencv
 
 Feature: openexr
-Build-Depends: opencv4[openexr]
+Build-Depends: opencv4[core,openexr]
 Description: OpenEXR support for opencv
 
 Feature: opengl
-Build-Depends: opencv4[opengl]
+Build-Depends: opencv4[core,opengl]
 Description: opengl support for opencv
 
 Feature: openmp
-Build-Depends: opencv4[openmp]
+Build-Depends: opencv4[core,openmp]
 Description: Enable openmp support for opencv
 
 Feature: ovis
-Build-Depends: opencv4[ovis]
+Build-Depends: opencv4[core,ovis]
 Description: opencv_ovis module
 
 Feature: png
-Build-Depends: opencv4[png]
+Build-Depends: opencv4[core,png]
 Description: PNG support for opencv
 
 Feature: qt
-Build-Depends: opencv4[qt]
+Build-Depends: opencv4[core,qt]
 Description: Qt GUI support for opencv
 
 Feature: sfm
-Build-Depends: opencv4[sfm]
+Build-Depends: opencv4[core,sfm]
 Description: opencv_sfm module
 
 Feature: tbb
-Build-Depends: opencv4[tbb]
+Build-Depends: opencv4[core,tbb]
 Description: Enable Intel Threading Building Blocks
 
 Feature: tiff
-Build-Depends: opencv4[tiff]
+Build-Depends: opencv4[core,tiff]
 Description: TIFF support for opencv
 
 Feature: vtk
-Build-Depends: opencv4[vtk]
+Build-Depends: opencv4[core,vtk]
 Description: vtk support for opencv
 
 Feature: webp
-Build-Depends: opencv4[webp]
+Build-Depends: opencv4[core,webp]
 Description: WebP support for opencv
 
-Feature: halide
-Build-Depends: opencv4[halide]
-Description: Halide support for opencv
-
 Feature: world
-Build-Depends: opencv4[world]
+Build-Depends: opencv4[core,world]
 Description: Compile to a single package support for opencv

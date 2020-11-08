@@ -1,64 +1,41 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO embree/embree
-    REF 539d4eec716085484f957d7b0d697b1891dafec4 # v3.8.0
-    SHA512 77ab07cc7283f1a0c50d7cec07d1cbe4a24a41482b8b043f79a045953fccfa41a854bbc29a76beb67385d1bbb6d43097287ccfd3e1d2c84c1a5d55a2696d0815
+    REF v3.11.0
+    SHA512 a20acb07103d322eebc85d41152210466f8d9b97e7a332589c692f649ee02079465f89561748ddc8448fb40bc63f2595d728cc31a927f7b95bea13446c5c775d
     HEAD_REF master
     PATCHES
-        fix-InstallPath.patch
-        fix-cmake-path.patch
-        fix-embree-path.patch
+        fix-path.patch
+        fix-static-usage.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/common/cmake/FindTBB.cmake)
-
-if(VCPKG_CRT_LINKAGE STREQUAL static)
-    set(EMBREE_STATIC_RUNTIME ON)
-else()
-    set(EMBREE_STATIC_RUNTIME OFF)
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(EMBREE_STATIC_LIB ON)
-else()
-    set(EMBREE_STATIC_LIB OFF)
-endif()
+string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)
+string(COMPARE EQUAL ${VCPKG_CRT_LINKAGE} static EMBREE_STATIC_RUNTIME)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS
         -DEMBREE_ISPC_SUPPORT=OFF
         -DEMBREE_TUTORIALS=OFF
         -DEMBREE_STATIC_RUNTIME=${EMBREE_STATIC_RUNTIME}
         -DEMBREE_STATIC_LIB=${EMBREE_STATIC_LIB}
-        "-DTBB_LIBRARIES=TBB::tbb"
-        "-DTBB_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include"
 )
 
-# just wait, the release build of embree is insanely slow in MSVC
-# a single file will took about 2-10 min
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/embree3 TARGET_PATH share/embree)
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
-if (EXISTS ${CURRENT_PACKAGES_DIR}/uninstall.command)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/uninstall.command)
+if(APPLE)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/uninstall.command ${CURRENT_PACKAGES_DIR}/debug/uninstall.command)
 endif()
-if (EXISTS ${CURRENT_PACKAGES_DIR}/debug/uninstall.command)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/uninstall.command)
-endif()
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/${PORT}/doc)
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/embree/doc)
-
-# Handle copyright
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

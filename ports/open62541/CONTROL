@@ -1,4 +1,14 @@
 Source: open62541
-Version: 1.0.1
+Version: 1.1.2
 Homepage: https://open62541.org
 Description: open62541 is an open source C (C99) implementation of OPC UA licensed under the Mozilla Public License v2.0.
+Supports: !uwp
+Default-Features: openssl
+
+Feature: openssl
+Description: Enable encryption support (uses OpenSSL)
+Build-Depends: openssl
+
+Feature: mbedtls
+Description: Enable encryption support (uses MbedTLS)
+Build-Depends: mbedtls

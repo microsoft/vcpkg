@@ -1,20 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
-    REF 2.0.0
-    SHA512 efdaa1b018e5166c0f2469663bdd0dc788de0577d0c0cb8b98048a535f8cb07de1078f86aaacc9445d42078d2e02fd7bc7f1ed700ca96032976f6bd84c68ee8f
+    REF d2ba84a6885f57674098fe8e76c5f99d880e580d #2.2.0
+    SHA512 3f166213039358dc0cab09b8895e6cff8a7a9c7e7711ea5652604fc6070b1524aba9fec3b860f4deb1f54ea1f17709ab25ffb108116e2914800e892efb9fb9ae
     HEAD_REF master
     PATCHES
         DontInstallSystemRuntimeLibs.patch
         fix-linux-build.patch
         openssl_threads.patch
-        fix-include-install-path.patch
         fix-include-path.patch
         fix-libusb.patch
 )
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libxfixes-dev\n")
+endif()
+if (VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
+    set(FREERDP_WITH_CLIENT -DWITH_CLIENT=OFF)
 endif()
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
@@ -35,6 +37,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FREERDP_CRT_LINKAGE}
+        ${FREERDP_WITH_CLIENT}
         ${FEATURE_OPTIONS}
 )
 

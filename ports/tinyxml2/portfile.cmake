@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-symbol-exports.patch
+        fix-debug-postfix.patch
 )
 
 vcpkg_configure_cmake(
@@ -16,6 +17,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/tinyxml2)
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 

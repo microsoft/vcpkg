@@ -18,13 +18,13 @@ endmacro()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # on windows libpq seems to only depend on openssl gss(kerberos) and ldap on the soruce site_name
-    # the configuration header depends on zlib, nls, ldap, uuid, xml, xlst,gss,openssl,icu
-    feature_unsupported(readline bonjour libedit kerberos bsd systemd llvm pam)
-    feature_not_implemented_yet(perl uuid)
+    # the configuration header depends on zlib, nls, uuid, xml, xlst,gss,openssl,icu
+    feature_unsupported(readline bonjour libedit systemd llvm)
+    feature_not_implemented_yet(uuid)
 elseif(VCPKG_TARGET_IS_OSX)
-    feature_not_implemented_yet(readline libedit kerberos bsd systemd llvm pam perl python tcl uuid)
+    feature_not_implemented_yet(readline libedit systemd llvm python tcl uuid)
 else()
-    feature_not_implemented_yet(readline bonjour libedit kerberos bsd systemd llvm pam perl python tcl uuid)
+    feature_not_implemented_yet(readline bonjour libedit systemd llvm python tcl uuid)
 endif()
 
 ## Download and extract sources
@@ -67,7 +67,11 @@ vcpkg_extract_source_archive_ex(
 )
 unset(buildenv_contents)
 # Get paths to required programs
-foreach(program_name BISON FLEX PERL)
+set(REQUIRED_PROGRAMS PERL)
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND REQUIRED_PROGRAMS BISON FLEX)
+endif()
+foreach(program_name ${REQUIRED_PROGRAMS})
     # Need to rename win_bison and win_flex to just bison and flex
     vcpkg_find_acquire_program(${program_name})
     get_filename_component(${program_name}_EXE_PATH ${${program_name}} DIRECTORY)
@@ -128,14 +132,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(CONFIG_FILE "${BUILDPATH_${_buildtype}}/src/tools/msvc/config.pl")
         file(READ "${CONFIG_FILE}" _contents)
 
-        ##	ldap      => undef,    # --with-ldap                            ##done
+        ##	ldap      => undef,    # --with-ldap
         ##	extraver  => undef,    # --with-extra-version=<string>
         ##	gss       => undef,    # --with-gssapi=<path>
         ##	icu       => undef,    # --with-icu=<path>                      ##done
         ##	nls       => undef,    # --enable-nls=<path>                    ##done
         ##	tap_tests => undef,    # --enable-tap-tests
         ##	tcl       => undef,    # --with-tcl=<path>                      #done
-        ##	perl      => undef,    # --with-perl                            # requires a patch to the lib path and a port for it
+        ##	perl      => undef,    # --with-perl
         ##	python    => undef,    # --with-python=<path>                   ##done
         ##	openssl   => undef,    # --with-openssl=<path>                  ##done
         ##	uuid      => undef,    # --with-ossp-uuid
@@ -145,10 +149,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ##	zlib      => undef     # --with-zlib=<path>                     ##done
 
         ## Setup external dependencies
-        ##"-DFEATURES=core;openssl;zlib" "-DALL_FEATURES=openssl;zlib;readline;libedit;perl;python;tcl;nls;kerberos;systemd;ldap;bsd;pam;llvm;icu;bonjour;uuid;xml;xslt;"
-        if("${FEATURES}" MATCHES "ldap")
-            string(REPLACE "ldap      => undef" "ldap      => 1" _contents "${_contents}")
-        endif()
+        ##"-DFEATURES=core;openssl;zlib" "-DALL_FEATURES=openssl;zlib;readline;libedit;python;tcl;nls;systemd;llvm;icu;bonjour;uuid;xml;xslt;"
         if("${FEATURES}" MATCHES "icu")
            string(REPLACE "icu       => undef" "icu      => \"${CURRENT_INSTALLED_DIR}\"" _contents "${_contents}")
         endif()
@@ -239,7 +240,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/symbols)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/symbols)
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
 
@@ -250,14 +251,23 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 
     message(STATUS "Cleanup libpq ${TARGET_TRIPLET}... - done")
+    set(USE_DL OFF)
 else()
-    if("${FEATURES}" MATCHES "openssl")
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/Makefile DESTINATION ${SOURCE_PATH})
+
+    if("openssl" IN_LIST FEATURES)
         list(APPEND BUILD_OPTS --with-openssl)
+    else()
+        list(APPEND BUILD_OPTS --without-openssl)
     endif()
-    if(NOT "${FEATURES}" MATCHES "zlib")
+    if("zlib" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --with-zlib)
+    else()
         list(APPEND BUILD_OPTS --without-zlib)
     endif()
-    if(NOT "${FEATURES}" MATCHES "readline")
+    if("readline" IN_LIST FEATURES)
+        list(APPEND BUILD_OPTS --with-readline)
+    else()
         list(APPEND BUILD_OPTS --without-readline)
     endif()
     vcpkg_configure_make(
@@ -273,11 +283,13 @@ else()
             --enable-debug
     )
 
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+      set(ENV{LIBPQ_LIBRARY_TYPE} shared)
+    else()
+      set(ENV{LIBPQ_LIBRARY_TYPE} static)
+    endif()
     vcpkg_install_make()
 
-    # instead?
-    #    make -C src/include install
-    #    make -C src/interfaces install
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -287,15 +299,8 @@ else()
         file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
         file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
     endif()
+    set(USE_DL ON)
 endif()
-#vcpkg_copy_pdbs()
 
-#if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.lib")
-    #RENAME debug library due to CMake. In general that is a bad idea but it will have consquences for the generated cmake targets
-    # of other ports if not renamed. Maybe a vcpkg_cmake_wrapper is required here to correct the target information if the rename is removed?
-#    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/libpq.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/libpqd.lib")
-#endif()
-
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/postgresql)
-file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/postgresql)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/postgresql/vcpkg-cmake-wrapper.cmake @ONLY)
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

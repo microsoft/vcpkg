@@ -1,9 +1,8 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/corrade
-    REF v2019.10
-    SHA512 5d161f78844b06e1a9979c7e244968a691012e7212e05df3ee3572f5df9aa69e86309f426a89f356f483f6de3871366a8e11b1701a578f865ea738cc8eee515b
+    REF v2020.06
+    SHA512 94cc8959b0ee43ecd8d13a25307e7829d53dc6601628d97c32288d1704e2c0835b755bffc06b2105e6aa5a612f119a60e83cb475860b51e6a35999215c100227
     HEAD_REF master
 )
 
@@ -31,7 +30,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DUTILITY_USE_ANSI_COLORS=ON
         -DBUILD_STATIC=${BUILD_STATIC}
-        ${_CUSTOM_BUILD_FLAGS}
         ${_COMPONENT_FLAGS}
 )
 
@@ -43,21 +41,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Install tools
 if("utility" IN_LIST FEATURES)
-    file(GLOB EXES
-        ${CURRENT_PACKAGES_DIR}/bin/corrade-rc
-        ${CURRENT_PACKAGES_DIR}/bin/corrade-rc.exe
-    )
-
     # Drop a copy of tools
-    file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/corrade)
-
-    # Tools require dlls
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/corrade)
-
-    file(GLOB TO_REMOVE
-        ${CURRENT_PACKAGES_DIR}/bin/corrade-rc*
-        ${CURRENT_PACKAGES_DIR}/debug/bin/corrade-rc*)
-    file(REMOVE ${TO_REMOVE})
+    vcpkg_copy_tools(TOOL_NAMES "corrade-rc" AUTO_CLEAN)
 endif()
 
 # Ensure no empty folders are left behind
@@ -78,10 +63,9 @@ elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/corrade)
-file(RENAME
-    ${CURRENT_PACKAGES_DIR}/share/corrade/COPYING
-    ${CURRENT_PACKAGES_DIR}/share/corrade/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    RENAME copyright)
+
 
 vcpkg_copy_pdbs()

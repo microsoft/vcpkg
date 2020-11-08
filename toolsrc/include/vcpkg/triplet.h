@@ -1,8 +1,11 @@
 #pragma once
 
-#include <string>
-#include <vcpkg/base/system.h>
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/system.h>
+
+#include <string>
 
 namespace vcpkg
 {
@@ -11,23 +14,9 @@ namespace vcpkg
     struct Triplet
     {
     public:
-        constexpr Triplet() noexcept : m_instance(&DEFAULT_INSTANCE) {}
+        constexpr Triplet() noexcept : m_instance(&DEFAULT_INSTANCE) { }
 
         static Triplet from_canonical_name(std::string&& triplet_as_string);
-
-        static const Triplet X86_WINDOWS;
-        static const Triplet X64_WINDOWS;
-        static const Triplet ARM_WINDOWS;
-        static const Triplet ARM64_WINDOWS;
-        static const Triplet X86_UWP;
-        static const Triplet X64_UWP;
-        static const Triplet ARM_UWP;
-        static const Triplet ARM64_UWP;
-        
-        static const Triplet ARM_ANDROID;
-        static const Triplet ARM64_ANDROID;
-        static const Triplet X86_ANDROID;
-        static const Triplet X64_ANDROID;
 
         const std::string& canonical_name() const;
         const std::string& to_string() const;
@@ -41,12 +30,14 @@ namespace vcpkg
     private:
         static const TripletInstance DEFAULT_INSTANCE;
 
-        constexpr Triplet(const TripletInstance* ptr) : m_instance(ptr) {}
+        constexpr Triplet(const TripletInstance* ptr) : m_instance(ptr) { }
 
         const TripletInstance* m_instance;
     };
 
     inline bool operator!=(Triplet left, Triplet right) { return !(left == right); }
+
+    Triplet default_triplet(const VcpkgCmdArguments& args);
 }
 
 namespace std

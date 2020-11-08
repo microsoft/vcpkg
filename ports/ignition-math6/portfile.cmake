@@ -1,5 +1,5 @@
 include(${CURRENT_INSTALLED_DIR}/share/ignitionmodularscripts/ignition_modular_library.cmake)
 
 ignition_modular_library(NAME math
-                         VERSION "6.4.0"
-                         SHA512 8a6e672ef6de591d25200f288deaaa16cc43e3c90804ee5ead0f06345036afbfa40acb531eb5b6a1fa80bd34c0c5964662cc0659d8bed2c811ad7c776d6f77cb)
+                         VERSION "6.6.0"
+                         SHA512 1b5f59b45256daa81cbfb7da4727200d0d6cb4a75fbc3b83b512c18ec6307b5bd78b8ee7a84f0f8a8c334717a1480766f62658bd213e9021c09c0ed22caa921d)

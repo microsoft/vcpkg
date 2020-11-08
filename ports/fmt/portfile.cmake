@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
-    REF 19bd751020a1f3c3363b2eb67a039852f139a8d3#version 6.2.1
-    SHA512 5d03445c64c3b7973bdf4e445238c63fa41bf0fa8c2d5b32cd56f0a6b3036b039d9c303a06300f3af87795a07f80f2ed28b90ddbf9c3f7398796d77906c21f40
+    REF cc09f1a6798c085c325569ef466bcdcffdc266d4 # v7.1.2
+    SHA512 a7bdd62ec98e3098182bc5080938b37284ced83f007ea3ef45e27407c04fc13a9e5852ab959b3d02088286480924c71e9fd23492c20d8752cf7e890b2a1ec52e
     HEAD_REF master
     PATCHES fix-warning4189.patch
 )
@@ -33,10 +33,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         endif()
     endif()
 
-    # Force FMT_SHARED to 1
-    file(READ ${CURRENT_PACKAGES_DIR}/include/fmt/core.h FMT_CORE_H)
-    string(REPLACE "defined(FMT_SHARED)" "1" FMT_CORE_H "${FMT_CORE_H}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/fmt/core.h "${FMT_CORE_H}")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/fmt/core.h
+        "defined(FMT_SHARED)"
+        "1"
+    )
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
@@ -45,16 +45,20 @@ vcpkg_fixup_pkgconfig()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(READ ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake FMT_DEBUG_MODULE)
-        string(REPLACE "lib/fmtd.dll" "bin/fmtd.dll" FMT_DEBUG_MODULE ${FMT_DEBUG_MODULE})
-        file(WRITE ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake "${FMT_DEBUG_MODULE}")
+        vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-debug.cmake
+            "lib/fmtd.dll"
+            "bin/fmtd.dll"
+        )
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(READ ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-release.cmake FMT_RELEASE_MODULE)
-        string(REPLACE "lib/fmt.dll" "bin/fmt.dll" FMT_RELEASE_MODULE ${FMT_RELEASE_MODULE})
-        file(WRITE ${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-release.cmake "${FMT_RELEASE_MODULE}")
+        vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/fmt/fmt-targets-release.cmake
+            "lib/fmt.dll"
+            "bin/fmt.dll"
+        )
     endif()
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+# Handle post-build CMake instructions
 vcpkg_copy_pdbs()
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

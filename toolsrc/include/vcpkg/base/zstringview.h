@@ -1,11 +1,11 @@
 #pragma once
 
+#include <vcpkg/base/stringview.h>
+
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
 #include <string>
-
-#include <vcpkg/base/stringview.h>
 
 namespace vcpkg
 {
@@ -14,7 +14,7 @@ namespace vcpkg
     {
         using value_type = char;
 
-        constexpr ZStringView() : m_size(0), m_cstr("") {}
+        constexpr ZStringView() : m_size(0), m_cstr("") { }
 
         template<int N>
         constexpr ZStringView(const char (&str)[N])
@@ -22,8 +22,8 @@ namespace vcpkg
         {
         }
 
-        ZStringView(const std::string& s) : m_size(s.size()), m_cstr(s.c_str()) {}
-        constexpr ZStringView(const char* str, size_t sz) : m_size(sz), m_cstr(str) {}
+        ZStringView(const std::string& s) : m_size(s.size()), m_cstr(s.c_str()) { }
+        constexpr ZStringView(const char* str, size_t sz) : m_size(sz), m_cstr(str) { }
 
         constexpr const char* data() const { return m_cstr; }
         constexpr size_t size() const { return m_size; }

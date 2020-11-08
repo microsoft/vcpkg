@@ -1,23 +1,115 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
-#include <vcpkg/base/work_queue.h>
 
-#if !defined(_WIN32)
+#if defined(_WIN32)
+#include <vcpkg/base/system_headers.h>
+#else // ^^^ _WIN32 // !_WIN32 vvv
 #include <fcntl.h>
+
+#include <sys/file.h>
 #include <sys/stat.h>
-#endif
+#endif // _WIN32
 
 #if defined(__linux__)
 #include <sys/sendfile.h>
 #elif defined(__APPLE__)
 #include <copyfile.h>
 #endif // ^^^ defined(__APPLE__)
+
+#include <algorithm>
+#include <string>
+
+#if defined(_WIN32)
+namespace
+{
+    template<size_t N>
+    bool wide_starts_with(const std::wstring& haystack, const wchar_t (&needle)[N]) noexcept
+    {
+        const size_t without_null = N - 1;
+        return haystack.size() >= without_null && std::equal(needle, needle + without_null, haystack.begin());
+    }
+
+    bool starts_with_drive_letter(std::wstring::const_iterator first, const std::wstring::const_iterator last) noexcept
+    {
+        if (last - first < 2)
+        {
+            return false;
+        }
+
+        if (!(first[0] >= L'a' && first[0] <= L'z') && !(first[0] >= L'A' && first[0] <= L'Z'))
+        {
+            return false;
+        }
+
+        if (first[1] != L':')
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    struct FindFirstOp
+    {
+        HANDLE h_find = INVALID_HANDLE_VALUE;
+        WIN32_FIND_DATAW find_data;
+
+        unsigned long find_first(const wchar_t* const path) noexcept
+        {
+            assert(h_find == INVALID_HANDLE_VALUE);
+            h_find = FindFirstFileW(path, &find_data);
+            if (h_find == INVALID_HANDLE_VALUE)
+            {
+                return GetLastError();
+            }
+
+            return ERROR_SUCCESS;
+        }
+
+        FindFirstOp() = default;
+        FindFirstOp(const FindFirstOp&) = delete;
+        FindFirstOp& operator=(const FindFirstOp&) = delete;
+
+        ~FindFirstOp()
+        {
+            if (h_find != INVALID_HANDLE_VALUE)
+            {
+                (void)FindClose(h_find);
+            }
+        }
+    };
+} // unnamed namespace
+#endif // _WIN32
+
+fs::path fs::u8path(vcpkg::StringView s)
+{
+#if defined(_WIN32)
+    return fs::path(vcpkg::Strings::to_utf16(s));
+#else
+    return fs::path(s.begin(), s.end());
+#endif
+}
+
+std::string fs::u8string(const fs::path& p)
+{
+#if defined(_WIN32)
+    return vcpkg::Strings::to_utf8(p.native());
+#else
+    return p.native();
+#endif
+}
+std::string fs::generic_u8string(const fs::path& p)
+{
+#if defined(_WIN32)
+    return vcpkg::Strings::to_utf8(p.generic_wstring());
+#else
+    return p.generic_string();
+#endif
+}
 
 namespace vcpkg::Files
 {
@@ -33,6 +125,7 @@ namespace vcpkg::Files
             WIN32_FILE_ATTRIBUTE_DATA file_attributes;
             auto ft = file_type::unknown;
             auto permissions = perms::unknown;
+            ec.clear();
             if (!GetFileAttributesExW(p.c_str(), GetFileExInfoStandard, &file_attributes))
             {
                 const auto err = GetLastError();
@@ -100,6 +193,64 @@ namespace vcpkg::Files
             return status_implementation(false, p, ec);
         }
 
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+        fs::path read_symlink_implementation(const fs::path& oldpath, std::error_code& ec)
+        {
+            ec.clear();
+            auto handle = CreateFileW(oldpath.c_str(),
+                                      0, // open just the metadata
+                                      FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+                                      nullptr /* no security attributes */,
+                                      OPEN_EXISTING,
+                                      FILE_ATTRIBUTE_NORMAL,
+                                      nullptr /* no template file */);
+            if (handle == INVALID_HANDLE_VALUE)
+            {
+                ec.assign(GetLastError(), std::system_category());
+                return oldpath;
+            }
+            fs::path target;
+            const DWORD maxsize = 32768;
+            const std::unique_ptr<wchar_t[]> buffer(new wchar_t[maxsize]);
+            const auto rc = GetFinalPathNameByHandleW(handle, buffer.get(), maxsize, 0);
+            if (rc > 0 && rc < maxsize)
+            {
+                target = buffer.get();
+            }
+            else
+            {
+                ec.assign(GetLastError(), std::system_category());
+            }
+            CloseHandle(handle);
+            return target;
+        }
+#endif // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+
+        void copy_symlink_implementation(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec)
+        {
+#if defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM
+            const auto target = read_symlink_implementation(oldpath, ec);
+            if (ec) return;
+
+            const DWORD flags =
+#if defined(SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE)
+                SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE;
+#else
+                0;
+#endif
+            if (!CreateSymbolicLinkW(newpath.c_str(), target.c_str(), flags))
+            {
+                const auto err = GetLastError();
+                ec.assign(err, std::system_category());
+                return;
+            }
+            ec.clear();
+            return;
+#else  // ^^^ defined(_WIN32) && !VCPKG_USE_STD_FILESYSTEM // !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM vvv
+            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+#endif // ^^^ !defined(_WIN32) || VCPKG_USE_STD_FILESYSTEM
+        }
+
         // does _not_ follow symlinks
         void set_writeable(const fs::path& path, std::error_code& ec) noexcept
         {
@@ -147,13 +298,13 @@ namespace vcpkg::Files
             return std::move(*p);
         else
             Checks::exit_with_message(
-                linfo, "error reading file: %s: %s", path.u8string(), maybe_contents.error().message());
+                linfo, "error reading file: %s: %s", fs::u8string(path), maybe_contents.error().message());
     }
     void Filesystem::write_contents(const fs::path& path, const std::string& data, LineInfo linfo)
     {
         std::error_code ec;
         this->write_contents(path, data, ec);
-        if (ec) Checks::exit_with_message(linfo, "error writing file: %s: %s", path.u8string(), ec.message());
+        if (ec) Checks::exit_with_message(linfo, "error writing file: %s: %s", fs::u8string(path), ec.message());
     }
     void Filesystem::rename(const fs::path& oldpath, const fs::path& newpath, LineInfo linfo)
     {
@@ -161,14 +312,14 @@ namespace vcpkg::Files
         this->rename(oldpath, newpath, ec);
         if (ec)
             Checks::exit_with_message(
-                linfo, "error renaming file: %s: %s: %s", oldpath.u8string(), newpath.u8string(), ec.message());
+                linfo, "error renaming file: %s: %s: %s", fs::u8string(oldpath), fs::u8string(newpath), ec.message());
     }
 
     bool Filesystem::remove(const fs::path& path, LineInfo linfo)
     {
         std::error_code ec;
         auto r = this->remove(path, ec);
-        if (ec) Checks::exit_with_message(linfo, "error removing file: %s: %s", path.u8string(), ec.message());
+        if (ec) Checks::exit_with_message(linfo, "error removing file: %s: %s", fs::u8string(path), ec.message());
         return r;
     }
 
@@ -187,7 +338,8 @@ namespace vcpkg::Files
     {
         std::error_code ec;
         auto result = this->exists(path, ec);
-        if (ec) Checks::exit_with_message(li, "error checking existence of file %s: %s", path.u8string(), ec.message());
+        if (ec)
+            Checks::exit_with_message(li, "error checking existence of file %s: %s", fs::u8string(path), ec.message());
         return result;
     }
 
@@ -203,10 +355,43 @@ namespace vcpkg::Files
         return this->create_directory(path, ec);
     }
 
+    bool Filesystem::create_directory(const fs::path& path, LineInfo li)
+    {
+        std::error_code ec;
+        bool result = this->create_directory(path, ec);
+        if (ec)
+        {
+            vcpkg::Checks::exit_with_message(li, "error creating directory %s", fs::u8string(path), ec.message());
+        }
+
+        return result;
+    }
+
     bool Filesystem::create_directories(const fs::path& path, ignore_errors_t)
     {
         std::error_code ec;
         return this->create_directories(path, ec);
+    }
+
+    bool Filesystem::create_directories(const fs::path& path, LineInfo li)
+    {
+        std::error_code ec;
+        bool result = this->create_directories(path, ec);
+        if (ec)
+        {
+            vcpkg::Checks::exit_with_message(li, "error creating directories %s", fs::u8string(path), ec.message());
+        }
+
+        return result;
+    }
+
+    void Filesystem::copy_file(const fs::path& oldpath, const fs::path& newpath, fs::copy_options opts, LineInfo li)
+    {
+        std::error_code ec;
+        this->copy_file(oldpath, newpath, opts, ec);
+        if (ec)
+            vcpkg::Checks::exit_with_message(
+                li, "error copying file from %s to %s: %s", fs::u8string(oldpath), fs::u8string(newpath), ec.message());
     }
 
     fs::file_status Filesystem::status(vcpkg::LineInfo li, const fs::path& p) const noexcept
@@ -243,7 +428,7 @@ namespace vcpkg::Files
     {
         std::error_code ec;
         this->write_lines(path, lines, ec);
-        if (ec) Checks::exit_with_message(linfo, "error writing lines: %s: %s", path.u8string(), ec.message());
+        if (ec) Checks::exit_with_message(linfo, "error writing lines: %s: %s", fs::u8string(path), ec.message());
     }
 
     void Filesystem::remove_all(const fs::path& path, LineInfo li)
@@ -364,6 +549,7 @@ namespace vcpkg::Files
             std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
             if (file_stream.fail())
             {
+                Debug::print("Missing path: ", fs::u8string(file_path), '\n');
                 return std::make_error_code(std::errc::no_such_file_or_directory);
             }
 
@@ -380,8 +566,7 @@ namespace vcpkg::Files
 
             return output;
         }
-        virtual fs::path find_file_recursively_up(const fs::path& starting_dir,
-                                                  const std::string& filename) const override
+        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const fs::path& filename) const override
         {
             fs::path current_dir = starting_dir;
             if (exists(VCPKG_LINE_INFO, current_dir / filename))
@@ -483,7 +668,7 @@ namespace vcpkg::Files
                                     std::error_code& ec) override
         {
             this->rename(oldpath, newpath, ec);
-            Util::unused(temp_suffix);
+            (void)temp_suffix;
 #if !defined(_WIN32)
             if (ec)
             {
@@ -617,7 +802,7 @@ namespace vcpkg::Files
                         fs::stdfs::remove(current_path, ec);
                         if (check_ec(ec, current_path, err)) return;
                     }
-#else // ^^^ VCPKG_USE_STD_FILESYSTEM // !VCPKG_USE_STD_FILESYSTEM vvv
+#else // ^^^  VCPKG_USE_STD_FILESYSTEM // !VCPKG_USE_STD_FILESYSTEM vvv
 #if defined(_WIN32)
                     else if (path_type == fs::file_type::directory_symlink)
                     {
@@ -765,7 +950,7 @@ namespace vcpkg::Files
         }
         virtual void copy_symlink(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
         {
-            return fs::stdfs::copy_symlink(oldpath, newpath, ec);
+            return Files::copy_symlink_implementation(oldpath, newpath, ec);
         }
 
         virtual fs::file_status status(const fs::path& path, std::error_code& ec) const override
@@ -809,7 +994,7 @@ namespace vcpkg::Files
         {
 #if VCPKG_USE_STD_FILESYSTEM
             return fs::stdfs::absolute(path, ec);
-#else // ^^^ VCPKG_USE_STD_FILESYSTEM  / !VCPKG_USE_STD_FILESYSTEM  vvv
+#else // ^^^ VCPKG_USE_STD_FILESYSTEM  /  !VCPKG_USE_STD_FILESYSTEM  vvv
 #if defined(_WIN32)
             // absolute was called system_complete in experimental filesystem
             return fs::stdfs::system_complete(path, ec);
@@ -839,28 +1024,168 @@ namespace vcpkg::Files
             fs::stdfs::current_path(path, ec);
         }
 
+        struct TakeExclusiveFileLockHelper
+        {
+            fs::SystemHandle& res;
+            const fs::path::string_type& native;
+            TakeExclusiveFileLockHelper(fs::SystemHandle& res, const fs::path::string_type& native)
+                : res(res), native(native)
+            {
+            }
+
+#if defined(WIN32)
+            void assign_busy_error(std::error_code& ec) { ec.assign(ERROR_BUSY, std::system_category()); }
+
+            bool operator()(std::error_code& ec)
+            {
+                ec.clear();
+                auto handle = CreateFileW(native.c_str(),
+                                          GENERIC_READ,
+                                          0 /* no sharing */,
+                                          nullptr /* no security attributes */,
+                                          OPEN_ALWAYS,
+                                          FILE_ATTRIBUTE_NORMAL,
+                                          nullptr /* no template file */);
+                if (handle == INVALID_HANDLE_VALUE)
+                {
+                    const auto err = GetLastError();
+                    if (err != ERROR_SHARING_VIOLATION)
+                    {
+                        ec.assign(err, std::system_category());
+                    }
+                    return false;
+                }
+
+                res.system_handle = reinterpret_cast<intptr_t>(handle);
+                return true;
+            }
+#else // ^^^ WIN32 / !WIN32 vvv
+            int fd = -1;
+
+            void assign_busy_error(std::error_code& ec) { ec.assign(EBUSY, std::generic_category()); }
+
+            bool operator()(std::error_code& ec)
+            {
+                ec.clear();
+                if (fd == -1)
+                {
+                    fd = ::open(native.c_str(), 0);
+                    if (fd < 0)
+                    {
+                        ec.assign(errno, std::generic_category());
+                        return false;
+                    }
+                }
+
+                if (::flock(fd, LOCK_EX | LOCK_NB) != 0)
+                {
+                    if (errno != EWOULDBLOCK)
+                    {
+                        ec.assign(errno, std::generic_category());
+                    }
+                    return false;
+                }
+
+                res.system_handle = fd;
+                fd = -1;
+                return true;
+            };
+
+            ~TakeExclusiveFileLockHelper()
+            {
+                if (fd != -1)
+                {
+                    ::close(fd);
+                }
+            }
+#endif
+        };
+
+        virtual fs::SystemHandle take_exclusive_file_lock(const fs::path& path, std::error_code& ec) override
+        {
+            fs::SystemHandle res;
+            TakeExclusiveFileLockHelper helper(res, path.native());
+
+            if (helper(ec) || ec)
+            {
+                return res;
+            }
+
+            System::printf("Waiting to take filesystem lock on %s...\n", fs::u8string(path));
+            const auto wait = std::chrono::milliseconds(1000);
+            for (;;)
+            {
+                std::this_thread::sleep_for(wait);
+                if (helper(ec) || ec)
+                {
+                    return res;
+                }
+            }
+        }
+
+        virtual fs::SystemHandle try_take_exclusive_file_lock(const fs::path& path, std::error_code& ec) override
+        {
+            fs::SystemHandle res;
+            TakeExclusiveFileLockHelper helper(res, path.native());
+
+            if (helper(ec) || ec)
+            {
+                return res;
+            }
+
+            Debug::print("Waiting to take filesystem lock on ", fs::u8string(path), "...\n");
+            auto wait = std::chrono::milliseconds(100);
+            // waits, at most, a second and a half.
+            while (wait < std::chrono::milliseconds(1000))
+            {
+                std::this_thread::sleep_for(wait);
+                if (helper(ec) || ec)
+                {
+                    return res;
+                }
+                wait *= 2;
+            }
+
+            helper.assign_busy_error(ec);
+            return res;
+        }
+
+        virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code& ec) override
+        {
+#if defined(WIN32)
+            if (CloseHandle(reinterpret_cast<HANDLE>(handle.system_handle)) == 0)
+            {
+                ec.assign(GetLastError(), std::system_category());
+            }
+#else
+            if (flock(handle.system_handle, LOCK_UN) != 0 || close(handle.system_handle) != 0)
+            {
+                ec.assign(errno, std::generic_category());
+            }
+#endif
+        }
+
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
         {
 #if defined(_WIN32)
             static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
-            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ';');
 #else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
             static constexpr StringLiteral EXTS[] = {""};
-            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ':');
-#endif // ^^^ !defined(_WIN32)
+#endif // ^^^!defined(_WIN32)
+            auto paths = Strings::split_paths(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO));
 
             std::vector<fs::path> ret;
-            std::error_code ec;
             for (auto&& path : paths)
             {
-                auto base = path + "/" + name;
+                auto base = add_filename(path, name);
+
                 for (auto&& ext : EXTS)
                 {
                     auto p = fs::u8path(base + ext.c_str());
-                    if (Util::find(ret, p) == ret.end() && this->exists(p, ec))
+                    if (Util::find(ret, p) == ret.end() && this->exists(p, ignore_errors))
                     {
                         ret.push_back(p);
-                        Debug::print("Found path: ", p.u8string(), '\n');
+                        Debug::print("Found path: ", fs::u8string(p), '\n');
                     }
                 }
             }
@@ -889,5 +1214,178 @@ namespace vcpkg::Files
         }
         message.push_back('\n');
         System::print2(message);
+    }
+
+    fs::path combine(const fs::path& lhs, const fs::path& rhs)
+    {
+#if VCPKG_USE_STD_FILESYSTEM
+        return lhs / rhs;
+#else // ^^^ std::filesystem // std::experimental::filesystem vvv
+#if !defined(_WIN32)
+        if (rhs.is_absolute())
+        {
+            return rhs;
+        }
+        else
+        {
+            return lhs / rhs;
+        }
+#else  // ^^^ unix // windows vvv
+        auto rhs_root_directory = rhs.root_directory();
+        auto rhs_root_name = rhs.root_name();
+
+        if (rhs_root_directory.empty() && rhs_root_name.empty())
+        {
+            return lhs / rhs;
+        }
+        else if (rhs_root_directory.empty())
+        {
+            // !rhs_root_name.empty()
+            if (rhs_root_name == lhs.root_name())
+            {
+                return lhs / rhs.relative_path();
+            }
+            else
+            {
+                return rhs;
+            }
+        }
+        else if (rhs_root_name.empty())
+        {
+            // !rhs_root_directory.empty()
+            return lhs.root_name() / rhs;
+        }
+        else
+        {
+            // rhs.absolute()
+            return rhs;
+        }
+#endif // ^^^ windows
+#endif // ^^^ std::experimental::filesystem
+    }
+
+#ifdef _WIN32
+    fs::path win32_fix_path_case(const fs::path& source)
+    {
+        using fs::is_slash;
+        const std::wstring& native = source.native();
+        if (native.empty())
+        {
+            return fs::path{};
+        }
+
+        if (wide_starts_with(native, L"\\\\?\\") || wide_starts_with(native, L"\\??\\") ||
+            wide_starts_with(native, L"\\\\.\\"))
+        {
+            // no support to attempt to fix paths in the NT, \\GLOBAL??, or device namespaces at this time
+            return source;
+        }
+
+        const auto last = native.end();
+        auto first = native.begin();
+        auto is_wildcard = [](wchar_t c) { return c == L'?' || c == L'*'; };
+        if (std::any_of(first, last, is_wildcard))
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "Attempt to fix case of a path containing wildcards: %s", fs::u8string(source));
+        }
+
+        std::wstring in_progress;
+        in_progress.reserve(native.size());
+        if (last - first >= 3 && is_slash(first[0]) && is_slash(first[1]) && !is_slash(first[2]))
+        {
+            // path with UNC prefix \\server\share; this will be rejected by FindFirstFile so we skip over that
+            in_progress.push_back(L'\\');
+            in_progress.push_back(L'\\');
+            first += 2;
+            auto next_slash = std::find_if(first, last, is_slash);
+            in_progress.append(first, next_slash);
+            in_progress.push_back(L'\\');
+            first = std::find_if_not(next_slash, last, is_slash);
+            next_slash = std::find_if(first, last, is_slash);
+            in_progress.append(first, next_slash);
+            first = std::find_if_not(next_slash, last, is_slash);
+            if (first != next_slash)
+            {
+                in_progress.push_back(L'\\');
+            }
+        }
+        else if (last - first >= 1 && is_slash(first[0]))
+        {
+            // root relative path
+            in_progress.push_back(L'\\');
+            first = std::find_if_not(first, last, is_slash);
+        }
+        else if (starts_with_drive_letter(first, last))
+        {
+            // path with drive letter root
+            auto letter = first[0];
+            if (letter >= L'a' && letter <= L'z')
+            {
+                letter = letter - L'a' + L'A';
+            }
+
+            in_progress.push_back(letter);
+            in_progress.push_back(L':');
+            first += 2;
+            if (first != last && is_slash(*first))
+            {
+                // absolute path
+                in_progress.push_back(L'\\');
+                first = std::find_if_not(first, last, is_slash);
+            }
+        }
+
+        assert(!fs::path(first, last).has_root_path());
+
+        while (first != last)
+        {
+            auto next_slash = std::find_if(first, last, is_slash);
+            auto original_size = in_progress.size();
+            in_progress.append(first, next_slash);
+            FindFirstOp this_find;
+            unsigned long last_error = this_find.find_first(in_progress.c_str());
+            if (last_error == ERROR_SUCCESS)
+            {
+                in_progress.resize(original_size);
+                in_progress.append(this_find.find_data.cFileName);
+            }
+            else
+            {
+                // we might not have access to this intermediate part of the path;
+                // just guess that the case of that element is correct and move on
+            }
+
+            first = std::find_if_not(next_slash, last, is_slash);
+            if (first != next_slash)
+            {
+                in_progress.push_back(L'\\');
+            }
+        }
+
+        return fs::path(std::move(in_progress));
+    }
+#endif // _WIN32
+
+    std::string add_filename(StringView base, StringView file)
+    {
+        std::string result;
+        const auto base_size = base.size();
+        const auto file_size = file.size();
+        if (base_size != 0 && !fs::is_slash(base.data()[base_size - 1]))
+        {
+            result.reserve(base_size + file_size + 1);
+            result.append(base.data(), base_size);
+            result.push_back(preferred_separator);
+            result.append(file.data(), file_size);
+        }
+        else
+        {
+            result.reserve(base_size + file_size);
+            result.append(base.data(), base_size);
+            result.append(file.data(), file_size);
+        }
+
+        return result;
     }
 }

@@ -3,18 +3,16 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
-    REF c0bafd67140e8c6f4f585c1077f2fd89102e4582 # v2020.02.03.00
-    SHA512 7db706ffdd79f6d753c5530eb67646747d1e7b8b380387f34bd1fc7a06b289a68a6bb4c13faa74e108d4dede72bb2d993d7ad8f60fabcfb3b48abbf4326291c2
+    REF 1c40fde31b5eff8a05f928497429bffe7425b4fd # v2020.10.19.00
+    SHA512 9e0de756855941c377f2a52d9b751e6ae066c8d8ae4e7a06211b2537a039e533cbc782cbce947cb703d7bd4c5cb5fb4420e71eeafdcb5f1264d788ca3eb0b76d
     HEAD_REF master
     PATCHES
         find-zlib.patch
-        fix-build_error.patch
 )
 
 # Prefer installed config files
 file(REMOVE
     ${SOURCE_PATH}/fizz/cmake/FindGflags.cmake
-    ${SOURCE_PATH}/fizz/cmake/FindLibevent.cmake
     ${SOURCE_PATH}/fizz/cmake/FindGlog.cmake
 )
 
@@ -43,5 +41,6 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
 )
 
-# Handle copyright
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/fizz/tool/test" "${CURRENT_PACKAGES_DIR}/include/fizz/util/test")
+
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

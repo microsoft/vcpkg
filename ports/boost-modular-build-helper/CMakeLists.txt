@@ -35,6 +35,14 @@ else()
     list(APPEND B2_OPTIONS address-model=32)
 endif()
 
+if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
+    list(APPEND B2_OPTIONS architecture=s390x)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    list(APPEND B2_OPTIONS architecture=arm)
+else()
+    list(APPEND B2_OPTIONS architecture=x86)
+endif()
+
 if(APPLE)
     list(APPEND B2_OPTIONS target-os=darwin toolset=clang)
 elseif(WIN32)
@@ -78,7 +86,7 @@ endif()
 if(NOT CFLAGS STREQUAL "")
     string(REPLACE " " " <cflags>" CFLAGS "<cflags>${CFLAGS}")
 endif()
-if(NOT LDLAGS STREQUAL "")
+if(NOT LDFLAGS STREQUAL "")
     string(REPLACE " " " <linkflags>" LDFLAGS "<linkflags>${LDFLAGS}")
 endif()
 
@@ -91,7 +99,11 @@ if(CMAKE_CXX_COMPILER_TARGET AND CMAKE_CXX_COMPILE_OPTIONS_TARGET)
     endif()
 endif()
 if(CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN)
-    set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN} <compileflags>${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
+    if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+        set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN}${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
+    else()
+        set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN} <compileflags>${CMAKE_CXX_COMPILER_EXTERNAL_TOOLCHAIN}")
+    endif()
 endif()
 if(CMAKE_SYSROOT AND CMAKE_CXX_COMPILE_OPTIONS_SYSROOT)
     set(CXXFLAGS "${CXXFLAGS} <compileflags>${CMAKE_CXX_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}")
@@ -101,7 +113,8 @@ foreach(INCDIR ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES})
 endforeach()
 
 if(APPLE)
-  set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE")
+  set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE <compileflags>-std=c++11 <compileflags>-stdlib=libc++")
+  set(LDFLAGS "${LDFLAGS} <linkflags>-stdlib=libc++")
 endif()
 
 find_library(ZLIB_LIBPATH z)
@@ -158,7 +171,6 @@ add_custom_target(boost ALL
         --hash
         -q
 
-        architecture=x86
         threading=multi
         debug-symbols=on
 

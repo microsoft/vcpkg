@@ -1,14 +1,9 @@
-# https://github.com/Microsoft/vcpkg/issues/5418#issuecomment-470519894
-vcpkg_fail_port_install(ON_ARCH "x86")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO lemire/simdjson
-    REF ac0c3093f4935fd266656abc9311a63fad98e99e
-    SHA512 69bc9ce45839d5e42aefcf5a96f82f3049b05591f4d463b788365123ba06c36f0f784ede02e5015bd96bf8d0e631ccaac285ed5a63048113f2ea01d91d51b395
+    REPO simdjson/simdjson
+    REF 5d355f1a8b584519ed39256c3be949ef7f8b0dbd # v0.5.0
     HEAD_REF master
-    PATCHES
-        no_benchmark.patch # `_pclose` is not available on UWP
+    SHA512 ad92e4bafa596baf878c0c4945828b00cdb431e719dd6aaa1752dcb4b12c9ce13061105a7ca206b160865b3d1c724d675cd3c347691c81972d64804846dfa2a9
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
@@ -20,6 +15,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSIMDJSON_BUILD_STATIC=${SIMDJSON_BUILD_STATIC}
         -DSIMDJSON_IMPLEMENTATION_ARM64=${SIMDJSON_IMPLEMENTATION_ARM64}
+        -DSIMDJSON_JUST_LIBRARY=ON
         -DSIMDJSON_GOOGLE_BENCHMARKS=OFF
         -DSIMDJSON_COMPETITION=OFF
         -DSIMDJSON_SANITIZE=OFF # issue 10145, pr 11495
