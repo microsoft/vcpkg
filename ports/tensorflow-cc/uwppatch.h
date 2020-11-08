@@ -1,22 +1,15 @@
 #pragma once
 
-#include<Windows.h>
+#include <Windows.h>
 
 #if defined(WINAPI_FAMILY) && WINAPI_FAMILY == WINAPI_FAMILY_APP
 
 #define STARTF_USESTDHANDLES 0x00000100
 #define HANDLE_FLAG_INHERIT 0x00000001
 
-
 #define LOAD_WITH_ALTERED_SEARCH_PATH 0x00000008
 
-
 #define MAX_SYM_NAME 512
-
-
-#define INVALID_HANDLE_VALUE ((HANDLE)-1)
-#define MAX_PATH 256
-#define FILE_ATTRIBUTE_DIRECTORY 16
 
 
 #ifndef _FILE_DEFINED

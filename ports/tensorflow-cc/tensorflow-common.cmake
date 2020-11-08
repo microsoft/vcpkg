@@ -229,10 +229,16 @@ cc_library(\n\
 \"\"\"\n\
 )")
 
+		if(BUILD_TYPE STREQUAL dbg)
+			set(BAZEL_BUILD_CONFIG_NAME ${VCPKG_TARGET_ARCHITECTURE}_windows-dbg)
+		else()
+			set(BAZEL_BUILD_CONFIG_NAME ${VCPKG_TARGET_ARCHITECTURE}_windows-opt)
+		endif()
+
 		list(APPEND COPTS "--copt=-DWINAPI_FAMILY=WINAPI_FAMILY_APP")
 		list(APPEND COPTS "--copt=-D_WIN32_WINNT=0x0A00")
 		list(APPEND COPTS "--copt=-Iexternal/patched_includes")
-		list(APPEND COPTS "--copt=-Ibazel-out/${TARGET_TRIPLET}-${BUILD_TYPE}/bin/external/patched_includes")
+		list(APPEND COPTS "--copt=-Ibazel-out/${BAZEL_BUILD_CONFIG_NAME}/bin/external/patched_includes")
 		list(APPEND COPTS "--copt=-FIuwppatch.h")
 		list(APPEND LINKOPTS "--linkopt=-APPCONTAINER")
 		list(APPEND LINKOPTS "--linkopt=WindowsApp.lib")
