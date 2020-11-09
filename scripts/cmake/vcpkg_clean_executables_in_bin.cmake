@@ -26,10 +26,12 @@ function(vcpkg_clean_executables_in_bin)
         message(FATAL_ERROR "FILE_NAMES must be specified.")
     endif()
 
-    foreach(file_name ${_vct_FILE_NAMES})
+    foreach(file_name IN LISTS _vct_FILE_NAMES)
         file(REMOVE
             "${CURRENT_PACKAGES_DIR}/bin/${file_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
             "${CURRENT_PACKAGES_DIR}/debug/bin/${file_name}${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+            "${CURRENT_PACKAGES_DIR}/bin/${file_name}.pdb"
+            "${CURRENT_PACKAGES_DIR}/debug/bin/${file_name}.pdb"
         )
     endforeach()
 
