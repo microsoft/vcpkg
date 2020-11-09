@@ -35,7 +35,7 @@ with open(sys.argv[1], "r") as f_in:
                         f_out.write(line + "\n")
                         # check for more parts if library needs to be split
                         file_no = 2
-                        while os.path.isfile(params_file + "-part%d" % file_no):
-                            f_out.write(line.replace("lib-2.params-part1", "lib-2.params-part%d" % file_no) + "\n")
+                        while os.path.isfile(f"{params_file}-part{file_no}"):
+                            f_out.write(line.replace("lib-2.params-part1", f"lib-2.params-part{file_no}) + "\n")
                             file_no += 1
                         break
