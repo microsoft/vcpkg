@@ -111,7 +111,6 @@ else()
 	endif()
 endif()
 
-set(N_DBG_LIB_PARTS 0)
 foreach(BUILD_TYPE dbg rel)
 	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks 
 	set(STATIC_ONLY_PATCHES)
@@ -258,7 +257,7 @@ foreach(BUILD_TYPE dbg rel)
 		if(NOT VCPKG_TARGET_IS_OSX)
 			if(VCPKG_TARGET_IS_WINDOWS)
 				vcpkg_execute_build_process(
-					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" "${N_DBG_LIB_PARTS}"
+					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py"
 					WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
 					LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
 				)
@@ -304,7 +303,6 @@ foreach(BUILD_TYPE dbg rel)
 			foreach(PART_NO RANGE 1 100)
 				if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib)
 					file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-					set(N_DBG_LIB_PARTS ${PART_NO})
 					list(APPEND TF_LIB_SUFFIXES "-part${PART_NO}")
 				else()
 					break()
@@ -365,6 +363,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
 			${CMAKE_CURRENT_LIST_DIR}/tensorflow-cc-config-windows-lib.cmake.in
 			${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake
 			@ONLY)
+
+		set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
 		set(prefix_RELEASE [[${TENSORFLOW_INSTALL_PREFIX}]])
 		set(prefix_DEBUG [[${TENSORFLOW_INSTALL_PREFIX}/debug]])
