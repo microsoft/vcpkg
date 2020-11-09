@@ -17,15 +17,6 @@ diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 index 20b578a..75dc833 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -142,7 +142,7 @@ IF (PAHO_BUILD_SHARED)
- 		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
- 		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-     INSTALL(TARGETS MQTTVersion
--        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-+        RUNTIME DESTINATION tools/paho-mqtt)
- ENDIF()
- 
- IF (PAHO_BUILD_STATIC)
 @@ -183,7 +183,7 @@ IF (PAHO_BUILD_STATIC)
  ENDIF()
  
