@@ -35,21 +35,3 @@ index 20b578a..75dc833 100644
  
  IF (PAHO_WITH_SSL)
      SET(OPENSSL_ROOT_DIR "" CACHE PATH "Directory containing OpenSSL libraries and includes")
-@@ -306,7 +306,7 @@ ENDIF()
- INSTALL(EXPORT eclipse-paho-mqtt-cTargets
-     FILE eclipse-paho-mqtt-cConfig.cmake
-     NAMESPACE eclipse-paho-mqtt-c::
--    DESTINATION lib/cmake/eclipse-paho-mqtt-c)
-+    DESTINATION share/eclipse-paho-mqtt-c)
- 
- INCLUDE(CMakePackageConfigHelpers)
- WRITE_BASIC_PACKAGE_VERSION_FILE("eclipse-paho-mqtt-cConfigVersion.cmake"
-@@ -314,7 +314,7 @@ WRITE_BASIC_PACKAGE_VERSION_FILE("eclipse-paho-mqtt-cConfigVersion.cmake"
-     COMPATIBILITY SameMajorVersion)
- INSTALL(FILES
-     "${CMAKE_CURRENT_BINARY_DIR}/eclipse-paho-mqtt-cConfigVersion.cmake"
--    DESTINATION lib/cmake/eclipse-paho-mqtt-c)
-+    DESTINATION share/eclipse-paho-mqtt-c)
- 
- # Base64 test
- ADD_EXECUTABLE( Base64Test EXCLUDE_FROM_ALL Base64.c Base64.h )
