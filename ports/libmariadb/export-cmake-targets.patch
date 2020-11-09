@@ -14,11 +14,11 @@ index 083a863..7bc32b4 100644
 +install(EXPORT unofficial-libmariadb-targets DESTINATION share/unofficial-libmariadb)
 +
 +file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmariadb-config.cmake"
-+"include(CMakeFindDependencyMacro)
++[[include(CMakeFindDependencyMacro)
 +find_dependency(ZLIB)
 +find_dependency(OpenSSL)
-+include(\"\${CMAKE_CURRENT_LIST_DIR}/unofficial-libmariadb-targets.cmake\")
-+")
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-libmariadb-targets.cmake")
++]])
 +
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmariadb-config.cmake DESTINATION share/unofficial-libmariadb)
  
