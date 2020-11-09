@@ -1,6 +1,5 @@
 Source: magnum
 Version: 2020.06
-Port-Version: 1
 Build-Depends: corrade[utility]
 Description: C++11/C++14 graphics middleware for games and data visualization
 Homepage: https://magnum.graphics/
@@ -9,10 +8,6 @@ Default-Features: anyaudioimporter, anyimageimporter, anyimageconverter, anyscen
 Feature: al-info
 Description: magnum-al-info utility
 Build-Depends: magnum[audio]
-
-Feature: angle
-Description: use GLES3 on desktop with ANGLE
-Build-Depends: angle
 
 Feature: anyimageimporter
 Description: AnyImageImporter plugin

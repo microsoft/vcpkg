@@ -64,11 +64,6 @@ endforeach()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS ${_COMPONENTS})
 
-if("angle" IN_LIST FEATURES)
-    set(GLES_OPTION "-DTARGET_GLES=ON")
-    set(GLES2_OPTION "-DTARGET_GLES2=OFF")
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
