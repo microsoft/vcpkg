@@ -26,7 +26,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/eclipse-paho-mqtt-c TARGET_PATH share/eclipse-paho-mqtt-c)
 vcpkg_copy_pdbs()
-vcpkg_copy_tools(TOOL_NAMES MQTTVersion AUTO_CLEAN)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_copy_tools(TOOL_NAMES MQTTVersion AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
