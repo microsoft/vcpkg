@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 463d829b..8fc9b5e4 100644
+index 463d829b..7f8cd6ee 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -100,8 +100,6 @@ mark_as_advanced(
@@ -20,37 +20,49 @@ index 463d829b..8fc9b5e4 100644
  
  configure_file(
      ${ArrayFire_SOURCE_DIR}/CMakeModules/version.hpp.in
-@@ -154,9 +152,12 @@ if(NOT LAPACK_FOUND)
+@@ -154,9 +152,7 @@ if(NOT LAPACK_FOUND)
      endif()
  endif()
  
 -set(SPDLOG_BUILD_TESTING OFF CACHE INTERNAL "Disable testing in spdlog")
 -add_subdirectory(extern/spdlog EXCLUDE_FROM_ALL)
 -add_subdirectory(extern/glad)
-+# set(SPDLOG_BUILD_TESTING OFF CACHE INTERNAL "Disable testing in spdlog")
-+# add_subdirectory(extern/spdlog EXCLUDE_FROM_ALL)
 +find_package(spdlog CONFIG REQUIRED)
-+
-+# add_subdirectory(extern/glad)
-+
  add_subdirectory(src/backend/common)
  add_subdirectory(src/api/c)
  add_subdirectory(src/api/cpp)
-@@ -260,9 +261,9 @@ install(DIRECTORY examples/ #NOTE The slash at the end is important
+@@ -260,10 +256,6 @@ install(DIRECTORY examples/ #NOTE The slash at the end is important
      DESTINATION ${AF_INSTALL_EXAMPLE_DIR}
      COMPONENT examples)
  
 -install(DIRECTORY assets/examples/ #NOTE The slash at the end is important
 -    DESTINATION ${AF_INSTALL_EXAMPLE_DIR}
 -    COMPONENT examples)
-+# install(DIRECTORY assets/examples/ #NOTE The slash at the end is important
-+#     DESTINATION ${AF_INSTALL_EXAMPLE_DIR}
-+#     COMPONENT examples)
- 
+-
  install(DIRECTORY "${ArrayFire_SOURCE_DIR}/LICENSES/"
      DESTINATION LICENSES
+     COMPONENT licenses)
+diff --git a/CMakeModules/AFInstallDirs.cmake b/CMakeModules/AFInstallDirs.cmake
+index 2c7b96ea..b5006ee0 100644
+--- a/CMakeModules/AFInstallDirs.cmake
++++ b/CMakeModules/AFInstallDirs.cmake
+@@ -7,8 +7,12 @@ include(GNUInstallDirs)
+ # NOTE: These paths are all relative to the project installation prefix.
+ 
+ # Executables
+-if(NOT DEFINED AF_INSTALL_BIN_DIR)
+-  set(AF_INSTALL_BIN_DIR "lib" CACHE PATH "Installation path for executables")
++if(CMAKE_BUILD_TYPE MATCHES Debug)
++    set(AF_INSTALL_BIN_DIR "${AF_BIN_DIR}/debug/bin")
++    message(STATUS " Setting install to debug path ${AF_INSTALL_BIN_DIR}")
++else()
++    set(AF_INSTALL_BIN_DIR "${AF_BIN_DIR}/bin")
++    message(STATUS " Setting install to release path ${AF_INSTALL_BIN_DIR}")
+ endif()
+ 
+ # Libraries
 diff --git a/src/api/unified/CMakeLists.txt b/src/api/unified/CMakeLists.txt
-index b0489be4..a82e9f83 100644
+index b0489be4..de8b8520 100644
 --- a/src/api/unified/CMakeLists.txt
 +++ b/src/api/unified/CMakeLists.txt
 @@ -74,7 +74,7 @@ target_include_directories(af
@@ -62,6 +74,14 @@ index b0489be4..a82e9f83 100644
      Threads::Threads
      ${CMAKE_DL_LIBS}
    )
+@@ -94,7 +94,6 @@ if((USE_CPU_MKL OR USE_OPENCL_MKL) AND TARGET MKL::Shared)
+       MKL::Shared)
+ endif()
+ 
+-
+ install(TARGETS af
+   EXPORT ArrayFireUnifiedTargets
+   COMPONENT unified
 diff --git a/src/backend/common/CMakeLists.txt b/src/backend/common/CMakeLists.txt
 index 33aa64e6..2d07e4ea 100644
 --- a/src/backend/common/CMakeLists.txt
@@ -143,7 +163,7 @@ index ae29c43d..2c4d67ad 100644
    ${ArrayFire_SOURCE_DIR}/src/backend
    ${COMMON_INTERFACE_DIRS}
 diff --git a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt b/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
-index 9a796c9e..f2fcdeda 100644
+index 9a796c9e..d9864b00 100644
 --- a/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
 +++ b/src/backend/opencl/kernel/scan_by_key/CMakeLists.txt
 @@ -27,6 +27,7 @@ foreach(SBK_BINARY_OP ${SBK_BINARY_OPS})
@@ -154,7 +174,7 @@ index 9a796c9e..f2fcdeda 100644
      target_include_directories(opencl_scan_by_key_${SBK_BINARY_OP}
        PRIVATE
          .
-@@ -39,9 +40,9 @@ foreach(SBK_BINARY_OP ${SBK_BINARY_OPS})
+@@ -39,9 +40,7 @@ foreach(SBK_BINARY_OP ${SBK_BINARY_OPS})
          $<TARGET_PROPERTY:OpenCL::OpenCL,INTERFACE_INCLUDE_DIRECTORIES>
          $<TARGET_PROPERTY:OpenCL::cl2hpp,INTERFACE_INCLUDE_DIRECTORIES>
          $<TARGET_PROPERTY:Boost::boost,INTERFACE_INCLUDE_DIRECTORIES>
@@ -162,16 +182,14 @@ index 9a796c9e..f2fcdeda 100644
 -        ${ArrayFire_SOURCE_DIR}/extern/forge/include
 -        ${ArrayFire_BINARY_DIR}/extern/forge/include
 +        $<TARGET_PROPERTY:glad::glad,INTERFACE_INCLUDE_DIRECTORIES>
-+        # ${ArrayFire_SOURCE_DIR}/extern/forge/include
-+        # ${ArrayFire_BINARY_DIR}/extern/forge/include
        )
  
      set_target_properties(opencl_scan_by_key_${SBK_BINARY_OP}
 diff --git a/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt b/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
-index d618ff2f..8e5f4d8d 100644
+index d618ff2f..9f517398 100644
 --- a/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
 +++ b/src/backend/opencl/kernel/sort_by_key/CMakeLists.txt
-@@ -32,14 +32,15 @@ foreach(SBK_TYPE ${SBK_TYPES})
+@@ -32,14 +32,13 @@ foreach(SBK_TYPE ${SBK_TYPES})
          ../../../include
          ${CMAKE_CURRENT_BINARY_DIR})
  
@@ -185,8 +203,6 @@ index d618ff2f..8e5f4d8d 100644
 -        ${ArrayFire_SOURCE_DIR}/extern/forge/include
 -        ${ArrayFire_BINARY_DIR}/extern/forge/include
 +        $<TARGET_PROPERTY:glad::glad,INTERFACE_INCLUDE_DIRECTORIES>
-+        # ${ArrayFire_SOURCE_DIR}/extern/forge/include
-+        # ${ArrayFire_BINARY_DIR}/extern/forge/include
        )
  
      set_target_properties(opencl_sort_by_key_${SBK_TYPE}
