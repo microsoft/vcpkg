@@ -12,8 +12,8 @@ get_filename_component(TENSORFLOW_INSTALL_PREFIX "${TENSORFLOW_INSTALL_PREFIX}" 
 # TENSORFLOW_INSTALL_PREFIX = [vcpkg_installed_dir]/[target_triplet]
 
 add_library(tensorflow_cc::tensorflow_cc INTERFACE IMPORTED)
-set_property(TARGET tensorflow_cc::tensorflow_cc
-	PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+target_include_directories(tensorflow_cc::tensorflow_cc
+	INTERFACE
 		"${TENSORFLOW_INSTALL_PREFIX}/include"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src"

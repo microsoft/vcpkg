@@ -16,14 +16,14 @@ get_filename_component(TENSORFLOW_INSTALL_PREFIX "${CMAKE_CURRENT_LIST_DIR}" DIR
 get_filename_component(TENSORFLOW_INSTALL_PREFIX "${TENSORFLOW_INSTALL_PREFIX}" DIRECTORY)
 # TENSORFLOW_INSTALL_PREFIX = [vcpkg_installed_dir]/[target_triplet]
 
-set_property(TARGET tensorflow_cc::tensorflow_cc
-	PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+target_include_directories(tensorflow_cc::tensorflow_cc
+	INTERFACE
 		"${TENSORFLOW_INSTALL_PREFIX}/include"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src"
 )
-set_property(TARGET tensorflow_cc::tensorflow_framework
-	PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+target_include_directories(tensorflow_cc::tensorflow_framework
+	INTERFACE
 		"${TENSORFLOW_INSTALL_PREFIX}/include"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src"
