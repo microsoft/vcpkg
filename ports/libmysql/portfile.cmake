@@ -108,11 +108,7 @@ file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/share)
 file(RENAME ${CURRENT_PACKAGES_DIR}/libmysql ${CURRENT_PACKAGES_DIR}/share/libmysql)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/libmysql ${CURRENT_PACKAGES_DIR}/debug/share/libmysql)
 
-if (BUILD_STATIC_LIBS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/libmysql/unofficial-mysqlclient TARGET_PATH share/unofficial-mysqlclient)
-else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/libmysql/unofficial-libmysql TARGET_PATH share/unofficial-libmysql)
-endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/libmysql/unofficial-libmysql TARGET_PATH share/unofficial-libmysql)
 
 # switch mysql into /mysql
 file(RENAME ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/include2)
@@ -142,7 +138,7 @@ file(READ ${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h _contents)
 string(REPLACE "#include <mysql/udf_registration_types.h>" "#include \"mysql/udf_registration_types.h\"" _contents "${_contents}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/mysql/mysql_com.h "${_contents}")
 
-configure_file(${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
+file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # copy license
