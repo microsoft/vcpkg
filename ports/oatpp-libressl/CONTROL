@@ -1,5 +1,0 @@
-Source: oatpp-libressl
-Version: 1.2.0
-Build-Depends: libressl, oatpp
-Description: Oat++ libressl module providing secure server and client connection providers
-Homepage: https://github.com/oatpp/oatpp-libressl
