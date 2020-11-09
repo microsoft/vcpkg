@@ -1,42 +1,45 @@
 {
   "name": "libosmscout",
   "version-string": "1.1.1",
-  "homepage": "http://libosmscout.sourceforge.net/",
   "description": "libosmscout offers applications simple, high-level interfaces for offline location and POI lokup, rendering and routing functionalities based on OpenStreetMap (OSM) data.",
+  "homepage": "http://libosmscout.sourceforge.net/",
   "dependencies": [
-    "zlib",
     "libiconv",
+    "liblzma",
     "libxml2",
     "protobuf",
-    "liblzma"
+    "zlib"
   ],
-
-  "default-features": [],
-  "features": [
-    {
-      "name": "cairo",
+  "features": {
+    "cairo": {
       "description": "Cairo backend renderer",
-      "dependencies": ["cairo", "harfbuzz", "pango","freetype","libpng"]
+      "dependencies": [
+        "cairo",
+        "freetype",
+        "harfbuzz",
+        "libpng",
+        "pango"
+      ]
     },
-    {
-      "name": "directx",
-      "description": "Direct2D backend renderer",
-      "dependencies": []
+    "directx": {
+      "description": "Direct2D backend renderer"
     },
-    {
-      "name": "gdi",
-      "description": "GDI+ backend renderer",
-      "dependencies": []
+    "gdi": {
+      "description": "GDI+ backend renderer"
     },
-    {
-      "name": "svg",
-      "description": "SVG backend renderer",
-      "dependencies": ["harfbuzz", "pango","freetype"]
-    },
-    {
-      "name": "qt",
+    "qt": {
       "description": "Qt backend renderer",
-      "dependencies": ["qt5"]
+      "dependencies": [
+        "qt5"
+      ]
+    },
+    "svg": {
+      "description": "SVG backend renderer",
+      "dependencies": [
+        "freetype",
+        "harfbuzz",
+        "pango"
+      ]
     }
-  ]
+  }
 }
