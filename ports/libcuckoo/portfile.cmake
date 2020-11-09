@@ -5,7 +5,7 @@ vcpkg_from_github(
     REPO efficient/libcuckoo
     REF 8785773896d74f72b6224e59d37f5f8c3c1e022a
     SHA512 e47f8fd132ee2acf347ee375759f96235cd090fdb825792f994ff5eb4d8fed55b8e8bea8d293ec96c1a5f1b46d19c6648eaf2482e482b7b9c0d6dc734bc2121d
-    HEAD_REF v0.3
+    HEAD_REF master
 )
 
 vcpkg_configure_cmake(
