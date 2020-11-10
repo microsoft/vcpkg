@@ -6,7 +6,6 @@
 #include <vcpkg/commands.porthistory.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
-#include <vcpkg/portfileprovider.h>
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
@@ -220,14 +219,6 @@ namespace vcpkg::Commands::PortHistory
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
-
-        vcpkg::PortFileProvider::VersionedPortfileProvider provider(paths);
-        auto port_versions = provider.get_port_versions("rapidjson");
-        if (!port_versions.empty())
-        {
-            Versions::VersionSpec version = port_versions.front();
-            auto maybe_scf = provider.get_control_file(version);
-        }
 
         std::string port_name = args.command_arguments.at(0);
         std::vector<HistoryVersion> versions = read_versions_from_log(paths, port_name);
