@@ -1,0 +1,70 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 04ce73a..cda36a5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -454,31 +454,31 @@ endif ()
+ set(PKG_CONFIG_REQUIRED_PRIVATE "")
+ 
+ if (ZLIB_FOUND)
+-  target_link_libraries(freetype PRIVATE ${ZLIB_LIBRARIES})
+-  target_include_directories(freetype PRIVATE ${ZLIB_INCLUDE_DIRS})
+-  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "zlib")
++  target_link_libraries(freetype PUBLIC ZLIB::ZLIB)
++  target_include_directories(freetype PUBLIC ${ZLIB_INCLUDE_DIRS})
++  list(APPEND PKG_CONFIG_REQUIRED_PUBLIC "zlib")
+ endif ()
+ if (BZIP2_FOUND)
+-  target_link_libraries(freetype PRIVATE ${BZIP2_LIBRARIES})
+-  target_include_directories(freetype PRIVATE ${BZIP2_INCLUDE_DIR}) # not BZIP2_INCLUDE_DIRS
+-  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "bzip2")
++  target_link_libraries(freetype PUBLIC ${BZIP2_LIBRARIES})
++  target_include_directories(freetype PUBLIC ${BZIP2_INCLUDE_DIR}) # not BZIP2_INCLUDE_DIRS
++  list(APPEND PKG_CONFIG_REQUIRED_PUBLIC "bzip2")
+ endif ()
+ if (PNG_FOUND)
+-  target_link_libraries(freetype PRIVATE ${PNG_LIBRARIES})
+-  target_compile_definitions(freetype PRIVATE ${PNG_DEFINITIONS})
+-  target_include_directories(freetype PRIVATE ${PNG_INCLUDE_DIRS})
+-  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "libpng")
++  target_link_libraries(freetype PUBLIC ${PNG_LIBRARIES})
++  target_compile_definitions(freetype PUBLIC ${PNG_DEFINITIONS})
++  target_include_directories(freetype PUBLIC ${PNG_INCLUDE_DIRS})
++  list(APPEND PKG_CONFIG_REQUIRED_PUBLIC "libpng")
+ endif ()
+ if (HARFBUZZ_FOUND)
+-  target_link_libraries(freetype PRIVATE ${HARFBUZZ_LIBRARIES})
+-  target_include_directories(freetype PRIVATE ${HARFBUZZ_INCLUDE_DIRS})
+-  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "harfbuzz >= ${HARFBUZZ_MIN_VERSION}")
++  target_link_libraries(freetype PUBLIC ${HARFBUZZ_LIBRARIES})
++  target_include_directories(freetype PUBLIC ${HARFBUZZ_INCLUDE_DIRS})
++  list(APPEND PKG_CONFIG_REQUIRED_PUBLIC "harfbuzz >= ${HARFBUZZ_MIN_VERSION}")
+ endif ()
+ if (BROTLIDEC_FOUND)
+-  target_link_libraries(freetype PRIVATE ${BROTLIDEC_LIBRARIES})
+-  target_compile_definitions(freetype PRIVATE ${BROTLIDEC_DEFINITIONS})
+-  target_include_directories(freetype PRIVATE ${BROTLIDEC_INCLUDE_DIRS})
+-  list(APPEND PKG_CONFIG_REQUIRED_PRIVATE "libbrotlidec")
++  target_link_libraries(freetype PUBLIC ${BROTLIDEC_LIBRARIES})
++  target_compile_definitions(freetype PUBLIC ${BROTLIDEC_DEFINITIONS})
++  target_include_directories(freetype PUBLIC ${BROTLIDEC_INCLUDE_DIRS})
++  list(APPEND PKG_CONFIG_REQUIRED_PUBLIC "libbrotlidec")
+ endif ()
+ 
+ 
+@@ -562,8 +562,15 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+   install(
+     EXPORT freetype-targets
+       DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/freetype
+-      FILE freetype-config.cmake
+       COMPONENT headers)
++
++  file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/freetype-config.cmake"
++ [[include(CMakeFindDependencyMacro)
++find_dependency(ZLIB)
++include("${CMAKE_CURRENT_LIST_DIR}/freetype-targets.cmake")
++ ]])
++
++  install(FILES ${CMAKE_CURRENT_BINARY_DIR}/freetype-config.cmake DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/freetype)
+ endif ()
+ 
+ 
