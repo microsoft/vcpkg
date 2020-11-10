@@ -29,52 +29,44 @@ target_include_directories(tensorflow_cc::tensorflow_framework
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src"
 )
 
-# default location, if building in non-RELEASE or DEBUG
-set_property(TARGET tensorflow_cc::tensorflow_cc
-	PROPERTY IMPORTED_LOCATION
-		"${TENSORFLOW_INSTALL_PREFIX}/lib/@TF_LIB_NAME@"
-)
-set_property(TARGET tensorflow_cc::tensorflow_framework
-	PROPERTY IMPORTED_LOCATION
-		"${TENSORFLOW_INSTALL_PREFIX}/lib/@TF_FRAMEWORK_NAME@"
-)
-
 if(@TENSORFLOW_HAS_RELEASE@)
 	set_property(TARGET tensorflow_cc::tensorflow_cc
-		APPEND PROPERTY IMPORTED_CONFIGURATIONS
-			RELEASE
-	)
-	set_property(TARGET tensorflow_cc::tensorflow_framework
-		APPEND PROPERTY IMPORTED_CONFIGURATIONS
-			RELEASE
-	)
-
-	set_property(TARGET tensorflow_cc::tensorflow_cc
-		PROPERTY IMPORTED_LOCATION_RELEASE
+		PROPERTY IMPORTED_LOCATION
 			"${TENSORFLOW_INSTALL_PREFIX}/lib/@TF_LIB_NAME@"
 	)
 	set_property(TARGET tensorflow_cc::tensorflow_framework
-		PROPERTY IMPORTED_LOCATION_RELEASE
+		PROPERTY IMPORTED_LOCATION
 			"${TENSORFLOW_INSTALL_PREFIX}/lib/@TF_FRAMEWORK_NAME@"
 	)
 endif()
 
 if(@TENSORFLOW_HAS_DEBUG@)
-	set_property(TARGET tensorflow_cc::tensorflow_cc
-		APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG
-	)
-	set_property(TARGET tensorflow_cc::tensorflow_framework
-		APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG
-	)
+	if(@TENSORFLOW_HAS_RELEASE@)
+		set_property(TARGET tensorflow_cc::tensorflow_cc
+			APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG
+		)
+		set_property(TARGET tensorflow_cc::tensorflow_framework
+			APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG
+		)
 
-	set_property(TARGET tensorflow_cc::tensorflow_cc
-		PROPERTY IMPORTED_LOCATION_DEBUG
-			"${TENSORFLOW_INSTALL_PREFIX}/debug/lib/@TF_LIB_NAME@"
-	)
-	set_property(TARGET tensorflow_cc::tensorflow_framework
-		PROPERTY IMPORTED_LOCATION_DEBUG
-			"${TENSORFLOW_INSTALL_PREFIX}/debug/lib/@TF_FRAMEWORK_NAME@"
-	)
+		set_property(TARGET tensorflow_cc::tensorflow_cc
+			PROPERTY IMPORTED_LOCATION_DEBUG
+				"${TENSORFLOW_INSTALL_PREFIX}/debug/lib/@TF_LIB_NAME@"
+		)
+		set_property(TARGET tensorflow_cc::tensorflow_framework
+			PROPERTY IMPORTED_LOCATION_DEBUG
+				"${TENSORFLOW_INSTALL_PREFIX}/debug/lib/@TF_FRAMEWORK_NAME@"
+		)
+	else()
+		set_property(TARGET tensorflow_cc::tensorflow_cc
+			PROPERTY IMPORTED_LOCATION
+				"${TENSORFLOW_INSTALL_PREFIX}/debug/lib/@TF_LIB_NAME@"
+		)
+		set_property(TARGET tensorflow_cc::tensorflow_framework
+			PROPERTY IMPORTED_LOCATION
+				"${TENSORFLOW_INSTALL_PREFIX}/debug/lib/@TF_FRAMEWORK_NAME@"
+		)
+	endif()
 endif()
 
 set(tensorflow_cc_FOUND TRUE)

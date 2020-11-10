@@ -380,27 +380,36 @@ if(TARGET tensorflow_cc::tensorflow_cc${part})
 endif()
 
 add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)
-set_property(TARGET tensorflow_cc::tensorflow_cc${part}
-	PROPERTY IMPORTED_LOCATION
-		${prefix_RELEASE}/lib/tensorflow${part}.lib
-)
 "
 			)
 
-			foreach(cfg RELEASE DEBUG)
-				if(TENSORFLOW_HAS_${cfg})
+			if(TENSORFLOW_HAS_RELEASE)
+				file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "
+set_property(TARGET tensorflow_cc::tensorflow_cc${part}
+	PROPERTY IMPORTED_LOCATION
+		${prefix_RELEASE}/lib/tensorflow${part}.lib
+)"
+				)
+				if(TENSORFLOW_HAS_DEBUG)
 					file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "
 set_property(TARGET tensorflow_cc::tensorflow_cc${part}
 	APPEND PROPERTY IMPORTED_CONFIGURATIONS
-		${cfg}
+		DEBUG
 )
 set_property(TARGET tensorflow_cc::tensorflow_cc${part}
-	PROPERTY IMPORTED_LOCATION_${cfg}
-		${prefix_${cfg}}/lib/tensorflow${part}.lib
+	PROPERTY IMPORTED_LOCATION_DEBUG
+		${prefix_DEBUG}/lib/tensorflow${part}.lib
 )"
 					)
 				endif()
-			endforeach()
+			elseif(TENSORFLOW_HAS_DEBUG)
+				file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "
+set_property(TARGET tensorflow_cc::tensorflow_cc${part}
+	PROPERTY IMPORTED_LOCATION
+		${prefix_DEBUG}/lib/tensorflow${part}.lib
+)"
+				)
+			endif()
 
 			list(APPEND ALL_PARTS "tensorflow_cc::tensorflow_cc${part}")
 		endforeach()
@@ -410,12 +419,6 @@ set_property(TARGET tensorflow_cc::tensorflow_cc${part}
 set_property(TARGET tensorflow_cc::tensorflow_cc
 	PROPERTY INTERFACE_LINK_LIBRARIES
 		${ALL_PARTS}
-)
-set_property(TARGET tensorflow_cc::tensorflow_cc
-	PROPERTY INTERFACE_INCLUDE_DIRECTORIES
-		\"\${TENSORFLOW_INSTALL_PREFIX}/include\"
-		\"\${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external\"
-		\"\${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src\"
 )
 ")
 	endif()
