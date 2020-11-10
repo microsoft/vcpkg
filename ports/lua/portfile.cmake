@@ -36,6 +36,7 @@ if("cpp" IN_LIST FEATURES)
             -DSKIP_INSTALL_TOOLS=ON
     )
     vcpkg_install_cmake()
+
 endif()
 
 vcpkg_copy_pdbs()
