@@ -120,11 +120,19 @@ namespace vcpkg::PortFileProvider
         const auto& fs = paths.get_filesystem();
         if (auto registry = paths.get_configuration().registry_set.registry_for_port(spec))
         {
-            auto registry_root = registry->get_registry_root(paths);
-            auto port_directory = registry_root / fs::u8path(spec);
-
-            if (fs.exists(port_directory))
+            auto baseline_version = registry->get_baseline_version(paths, spec);
+            auto entry = registry->get_port_entry(paths, spec);
+            if (entry && baseline_version)
             {
+                auto port_directory = entry->get_port_directory(paths, *baseline_version.get());
+                if (port_directory.empty())
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: registry is incorrect. Baseline version for port `%s` is `%s`, "
+                                              "but that version is not in the registry.\n",
+                                              spec,
+                                              baseline_version.get()->to_string());
+                }
                 auto found_scf = Paragraphs::try_load_port(fs, port_directory);
                 if (auto scf = found_scf.get())
                 {
@@ -145,6 +153,18 @@ namespace vcpkg::PortFileProvider
                         VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(port_directory));
                 }
             }
+            else
+            {
+                Debug::print("Failed to find port `",
+                             spec,
+                             "` in registry:",
+                             entry ? " entry found;" : " no entry found;",
+                             baseline_version ? " baseline version found\n" : " no baseline version found\n");
+            }
+        }
+        else
+        {
+            Debug::print("Failed to find registry for port: `", spec, "`.\n");
         }
         return nullopt;
     }

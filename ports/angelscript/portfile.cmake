@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://angelcode.com/angelscript/sdk/files/angelscript_2.34.0.zip"
     FILENAME "angelscript_2.34.0.zip"
