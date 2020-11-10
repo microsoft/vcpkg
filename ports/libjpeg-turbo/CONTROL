@@ -2,3 +2,9 @@ Source: libjpeg-turbo
 Version: 2.0.5
 Homepage: https://github.com/libjpeg-turbo/libjpeg-turbo
 Description: libjpeg-turbo is a JPEG image codec that uses SIMD instructions (MMX, SSE2, NEON, AltiVec) to accelerate baseline JPEG compression and decompression on x86, x86-64, ARM, and PowerPC systems.
+
+Feature: jpeg7
+Description: Enable libjpeg7 API
+
+Feature: jpeg8
+Description: Enable libjpeg8 API
