@@ -1,0 +1,11 @@
+{
+  "name": "catch2",
+  "version-string": "3.0.0",
+  "description": "A modern, header-only test framework for unit testing.",
+  "homepage": "https://github.com/catchorg/Catch2",
+  "features": {
+    "v2": {
+      "description": "An older version of Catch2 (v2.13.3)"
+    }
+  }
+}
