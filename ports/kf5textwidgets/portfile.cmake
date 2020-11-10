@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ktextwidgets
-    REF v5.73.0
-    SHA512 47fb5a4294bbf8538b46bae5abead2e83e985d5ad8785f4152d1a796c5fde78015b39c9f2bf53a3f1d1c3e0ebacc380098a92abc9bcb7e834ff6af37bc4e2cd6
+    REF v5.75.0
+    SHA512 1a56858698ad8e1bbaf59eb9e0b5de471299d83acce6cf8f55e33fbea834686562eb999ae0e5edab7001cf2435ba8556ff69ad18da363cbcb78677dfb8ce58fc
     HEAD_REF master
     PATCHES
         "add-missing-dependencies.patch"
@@ -32,4 +32,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
