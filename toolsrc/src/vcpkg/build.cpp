@@ -611,6 +611,12 @@ namespace vcpkg::Build
             {"FEATURES", Strings::join(";", action.feature_list)},
             {"ALL_FEATURES", all_features},
         };
+
+        if (action.build_options.backcompat_features == BackcompatFeatures::PROHIBIT)
+        {
+            variables.emplace_back("_VCPKG_PROHIBIT_BACKCOMPAT_FEATURES", "1");
+        }
+
         get_generic_cmake_build_args(
             paths,
             triplet,
@@ -717,7 +723,7 @@ namespace vcpkg::Build
         }
 
         auto u8portdir = fs::u8string(scfl.source_location);
-        if (!Strings::case_insensitive_ascii_starts_with(u8portdir, fs::u8string(paths.ports)))
+        if (!Strings::case_insensitive_ascii_starts_with(u8portdir, fs::u8string(paths.builtin_ports_directory())))
         {
             System::printf("-- Installing port from location: %s\n", u8portdir);
         }
