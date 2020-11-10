@@ -1,5 +1,5 @@
 Source: kf5kcmutils
-Version: 5.73.0
+Version: 5.75.0
 Homepage: https://api.kde.org/frameworks/kcmutils/html/index.html
 Description: Utilities for KDE System Settings modules
 Build-Depends: ecm, qt5-base, qt5-tools, kf5itemviews, kf5configwidgets, kf5coreaddons, kf5declarative, kf5guiaddons, kf5i18n, kf5itemviews, kf5service, kf5xmlgui
