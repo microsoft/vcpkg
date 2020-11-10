@@ -1,6 +1,6 @@
-vcpkg_fail_port_install(MESSAGE "onnxruntime currently only supports Windows platforms" ON_TARGET "UWP" "LINUX" "ANDROID" "FREEBSD" "OSX")
-vcpkg_fail_port_install(MESSAGE "onnxruntime currently only supports x64 architecture" ON_ARCH "x86" "arm" "arm64")
-vcpkg_fail_port_install(MESSAGE "onnxruntime currently does not support static libraries" ON_LIBRARY_LINKAGE "static")
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" ON_TARGET "UWP" "LINUX" "ANDROID" "FREEBSD" "OSX")
+
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 set(VERSION 1.5.1)
 
