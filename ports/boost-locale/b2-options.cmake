@@ -1,4 +1,5 @@
-if(VCPKG_TARGET_IS_WINDOWS)
+# When we get into unix_build, VCPKG_TARGET_IS_WINDOWS doesn't work, fall back onto CMAKE_SYSTEM_NAME
+if(VCPKG_TARGET_IS_WINDOWS OR CMAKE_SYSTEM_NAME STREQUAL "Windows")
     if("icu" IN_LIST FEATURES)
         set(BOOST_LOCALE_ICU on)
     else()
