@@ -148,7 +148,7 @@ if("clang" IN_LIST FEATURES)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
 
     if(VCPKG_TARGET_IS_WINDOWS)
-        set(LLVM_REMOVE_EXTENSION_REGEX [[^([^.]*|[^.]*\.lld)\.exe$|^([^.]*)\.exe$]])
+        set(LLVM_REMOVE_EXTENSION_REGEX [[^([^.]*|[^.]*\.lld)\.exe$]])
     else()
         set(LLVM_REMOVE_EXTENSION_REGEX [[^([^.]*|[^.]*\.lld)$]])
     endif()
