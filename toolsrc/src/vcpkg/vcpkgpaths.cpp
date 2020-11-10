@@ -259,18 +259,20 @@ namespace vcpkg
 
             installed = process_output_directory(
                 filesystem, manifest_root_dir, args.install_root_dir.get(), "vcpkg_installed", VCPKG_LINE_INFO);
-            if (args.disable_lock.value_or(false))
+
+            const auto vcpkg_lock = root / ".vcpkg-root";
+            if (args.wait_for_lock.value_or(false))
             {
-                const auto vcpkg_lock = root / ".vcpkg-root";
-                if (args.wait_for_lock.value_or(false))
-                {
-                    m_pimpl->file_lock_handle = filesystem.take_exclusive_file_lock(vcpkg_lock, ec);
-                }
-                else
-                {
-                    m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
-                }
-                if (ec)
+                m_pimpl->file_lock_handle = filesystem.take_exclusive_file_lock(vcpkg_lock, ec);
+            }
+            else
+            {
+                m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
+            }
+
+            if (ec)
+            {
+                if (ec == std::errc::device_or_resource_busy || args.allow_spurious_lock_failures.value_or(false))
                 {
                     System::printf(
                         System::Color::error, "Failed to take the filesystem lock on %s:\n", fs::u8string(vcpkg_lock));
