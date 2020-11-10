@@ -38,7 +38,7 @@ jobs:
         :: TRANSITION, get these tools on the VMs next time we roll them
         .\vcpkg.exe fetch cmake
         .\vcpkg.exe fetch ninja
-        set PATH=${{ variables.VCPKG_DOWNLOADS }}\tools\cmake-3.17.2-windows\cmake-3.17.2-win32-x86\bin;${{ variables.VCPKG_DOWNLOADS }}\tools\ninja-1.10.1-windows;%PATH%
+        set PATH=${{ variables.VCPKG_DOWNLOADS }}\tools\cmake-3.18.4-windows\cmake-3.18.4-win32-x86\bin;${{ variables.VCPKG_DOWNLOADS }}\tools\ninja-1.10.1-windows;%PATH%
         call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x86
         rmdir /s /q build.x86.debug > nul 2> nul
         cmake.exe -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=ON -B build.x86.debug -S toolsrc
@@ -70,7 +70,7 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
       ArtifactName: 'failure logs for ${{ parameters.triplet }}'
-    condition: failed()
+    condition: always()
   - task: PowerShell@2
     displayName: 'Build a file list for all packages'
     condition: always()

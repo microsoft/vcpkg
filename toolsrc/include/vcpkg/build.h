@@ -133,6 +133,12 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class BackcompatFeatures
+    {
+        ALLOW = 0,
+        PROHIBIT
+    };
+
     struct BuildPackageOptions
     {
         UseHeadVersion use_head_version;
@@ -144,6 +150,7 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         PurgeDecompressFailure purge_decompress_failure;
         Editable editable;
+        BackcompatFeatures backcompat_features;
     };
 
     static constexpr BuildPackageOptions default_build_package_options{
@@ -156,6 +163,20 @@ namespace vcpkg::Build
         Build::DownloadTool::BUILT_IN,
         Build::PurgeDecompressFailure::YES,
         Build::Editable::NO,
+        Build::BackcompatFeatures::ALLOW,
+    };
+
+    static constexpr BuildPackageOptions backcompat_prohibiting_package_options{
+        Build::UseHeadVersion::NO,
+        Build::AllowDownloads::YES,
+        Build::OnlyDownloads::NO,
+        Build::CleanBuildtrees::YES,
+        Build::CleanPackages::YES,
+        Build::CleanDownloads::NO,
+        Build::DownloadTool::BUILT_IN,
+        Build::PurgeDecompressFailure::YES,
+        Build::Editable::NO,
+        Build::BackcompatFeatures::PROHIBIT,
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinmoene/span-lite
-    REF v0.7.0
-    SHA512 af1a47e10a3c061e6476845e54fe22341a353c0326dbbc35922edc248dbd55c3e62e5e0d1de5b5509a391515d792a5b35c8265bc1bcbbfb39a2e60c30a2fabcf
+    REF v0.8.1
+    SHA512 c0bee9cea29f477ec93f706a455cc900cbb6048e40417ade0878cea3e3591657bb17dcd5f82621da0365477c1a0e0947f8dccef95761323674235adfdaf25c9a
 )
 
 vcpkg_configure_cmake(
