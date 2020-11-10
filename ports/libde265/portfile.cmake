@@ -3,14 +3,19 @@ vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO strukturag/libde265
-    REF v1.0.5
-    SHA512 3ff7310fc4621cac0ef1cb9bbc4df61724f8943d57f5263a3663a77f4d90d84716b2a708ee9fec306e909dc8b5e7fe645a641b6a6db795a89a01799be910831e
+    REF 8aed7472df0af25b811828fa14f2f169dc34d35a # v1.0.8
+    SHA512 e2da1436e5b0d8a3841087e879fbbff5a92de4ebb69d097959972ec8c9407305bc2a17020cb46139fbacc84f91ff8cfb4d9547308074ba213e002ee36bb2e006
     HEAD_REF master
+    PATCHES
+        remove-de265-version.patch
+        remove-examples.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DUSE_HDF5=ON
 )
 
 vcpkg_install_cmake()

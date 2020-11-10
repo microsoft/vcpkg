@@ -1,0 +1,12 @@
+diff --git a/libde265/CMakeLists.txt b/libde265/CMakeLists.txt
+index 749c7fb..4915227 100644
+--- a/libde265/CMakeLists.txt
++++ b/libde265/CMakeLists.txt
+@@ -43,7 +43,6 @@ set (libde265_headers
+   bitstream.h
+   cabac.h
+   configparam.h
+-  de265-version.h
+   contextmodel.h
+   de265.h
+   deblock.h
