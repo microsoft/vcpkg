@@ -1,5 +1,5 @@
 Source: kf5newstuff
-Version: 5.73.0
+Version: 5.75.0
 Homepage: https://api.kde.org/frameworks/knewstuff/html/index.html
 Description: Framework for downloading and sharing additional application data
 Build-Depends: ecm, qt5-base, qt5-tools, kf5archive, kf5completion, kf5config, kf5coreaddons, kf5i18n, kf5iconthemes, kf5kio, kf5itemviews, kf5package, kf5service, kf5textwidgets, kf5widgetsaddons, kf5xmlgui, kf5attica

@@ -1,5 +1,5 @@
 Source: kf5configwidgets
-Version: 5.73.0
+Version: 5.75.0
 Homepage: https://api.kde.org/frameworks/kconfigwidgets/html/index.html
 Description: Widgets for configuration dialogs
 Build-Depends: ecm, qt5-base, qt5-tools, kf5auth, kf5codecs, kf5config, kf5guiaddons, kf5i18n, kf5widgetsaddons
