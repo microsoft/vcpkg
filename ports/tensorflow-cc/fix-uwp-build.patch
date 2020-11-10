@@ -84,3 +84,40 @@ diff --git a/third_party/icu/BUILD.bazel b/third_party/icu/BUILD.bazel
      ] + select({
          ":android": [
              "-fdata-sections",
+
+
+diff --git a/third_party/nasm/BUILD.bazel b/third_party/nasm/BUILD.bazel
+--- a/third_party/nasm/BUILD.bazel
++++ b/third_party/nasm/BUILD.bazel
+@@ -158,7 +158,6 @@
+         "x86",
+     ],
+     visibility = ["@libjpeg_turbo//:__pkg__"],
++    deps = ["@patched_includes//:headers"],
+ )
+
+ config_setting(
+
+
+diff --git a/third_party/protobuf/protobuf.patch b/third_party/protobuf/protobuf.patch
+--- a/third_party/protobuf/protobuf.patch
++++ b/third_party/protobuf/protobuf.patch
+@@ -11,14 +11,16 @@
+
+  ################################################################################
+  # Protobuf Runtime Library
+-@@ -143,6 +143,7 @@ cc_library(
++@@ -143,7 +143,9 @@ cc_library(
+      copts = COPTS,
+      includes = ["src/"],
+      linkopts = LINK_OPTS,
+ +    alwayslink = 1,
+      visibility = ["//visibility:public"],
+++    deps = ["@patched_includes//:headers"],
+  )
+-
++
++ PROTOBUF_DEPS = select({
+ @@ -213,6 +214,7 @@ cc_library(
+      copts = COPTS,
+      includes = ["src/"],
