@@ -28,6 +28,7 @@ namespace vcpkg
     {
         if (lhs.name != rhs.name) return false;
         if (lhs.version != rhs.version) return false;
+        if (lhs.version_scheme != rhs.version_scheme) return false;
         if (lhs.port_version != rhs.port_version) return false;
         if (!paragraph_equal(lhs.description, rhs.description)) return false;
         if (!paragraph_equal(lhs.maintainers, rhs.maintainers)) return false;
@@ -220,7 +221,7 @@ namespace vcpkg
 
                 fpgh.extra_info.sort_keys();
             }
-            void operator()(SourceControlFile& scf) const
+            [[nodiscard]] std::unique_ptr<ParseControlErrorInfo> operator()(SourceControlFile& scf) const
             {
                 (*this)(*scf.core_paragraph);
                 std::for_each(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), *this);
@@ -230,20 +231,21 @@ namespace vcpkg
                     std::adjacent_find(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), FeatureEqual{});
                 if (adjacent_equal != scf.feature_paragraphs.end())
                 {
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              R"(Multiple features with the same name for port %s: %s
+                    auto error_info = std::make_unique<ParseControlErrorInfo>();
+                    error_info->name = scf.core_paragraph->name;
+                    error_info->error = Strings::format(R"(Multiple features with the same name for port %s: %s
     This is invalid; please make certain that features have distinct names.)",
-                                              scf.core_paragraph->name,
-                                              (*adjacent_equal)->name);
+                                                        scf.core_paragraph->name,
+                                                        (*adjacent_equal)->name);
+                    return error_info;
                 }
+                return nullptr;
             }
         } canonicalize{};
     }
 
-    static ParseExpected<SourceParagraph> parse_source_paragraph(const fs::path& path_to_control, Paragraph&& fields)
+    static ParseExpected<SourceParagraph> parse_source_paragraph(const std::string& origin, Paragraph&& fields)
     {
-        auto origin = fs::u8string(path_to_control);
-
         ParagraphParser parser(std::move(fields));
 
         auto spgh = std::make_unique<SourceParagraph>();
@@ -275,10 +277,35 @@ namespace vcpkg
         TextRowCol textrowcol;
         std::string buf;
         parser.optional_field(SourceParagraphFields::BUILD_DEPENDS, {buf, textrowcol});
-        spgh->dependencies = parse_dependencies_list(buf, origin, textrowcol).value_or_exit(VCPKG_LINE_INFO);
+
+        auto maybe_dependencies = parse_dependencies_list(buf, origin, textrowcol);
+        if (maybe_dependencies.has_value())
+        {
+            spgh->dependencies = maybe_dependencies.value_or_exit(VCPKG_LINE_INFO);
+        }
+        else
+        {
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = origin;
+            error_info->error = maybe_dependencies.error();
+            return error_info;
+        }
+
         buf.clear();
         parser.optional_field(SourceParagraphFields::DEFAULT_FEATURES, {buf, textrowcol});
-        spgh->default_features = parse_default_features_list(buf, origin, textrowcol).value_or_exit(VCPKG_LINE_INFO);
+
+        auto maybe_default_features = parse_default_features_list(buf, origin, textrowcol);
+        if (maybe_default_features.has_value())
+        {
+            spgh->default_features = maybe_default_features.value_or_exit(VCPKG_LINE_INFO);
+        }
+        else
+        {
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = origin;
+            error_info->error = maybe_default_features.error();
+            return error_info;
+        }
 
         auto supports_expr = parser.optional_field(SourceParagraphFields::SUPPORTS);
         if (!supports_expr.empty())
@@ -303,9 +330,8 @@ namespace vcpkg
             return spgh;
     }
 
-    static ParseExpected<FeatureParagraph> parse_feature_paragraph(const fs::path& path_to_control, Paragraph&& fields)
+    static ParseExpected<FeatureParagraph> parse_feature_paragraph(const std::string& origin, Paragraph&& fields)
     {
-        auto origin = fs::u8string(path_to_control);
         ParagraphParser parser(std::move(fields));
 
         auto fpgh = std::make_unique<FeatureParagraph>();
@@ -314,9 +340,19 @@ namespace vcpkg
         fpgh->description = Strings::split(parser.required_field(SourceParagraphFields::DESCRIPTION), '\n');
         trim_all(fpgh->description);
 
-        fpgh->dependencies =
-            parse_dependencies_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS), origin)
-                .value_or_exit(VCPKG_LINE_INFO);
+        auto maybe_dependencies =
+            parse_dependencies_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS), origin);
+        if (maybe_dependencies.has_value())
+        {
+            fpgh->dependencies = maybe_dependencies.value_or_exit(VCPKG_LINE_INFO);
+        }
+        else
+        {
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = origin;
+            error_info->error = maybe_dependencies.error();
+            return error_info;
+        }
 
         auto err = parser.error_info(fpgh->name.empty() ? origin : fpgh->name);
         if (err)
@@ -326,18 +362,18 @@ namespace vcpkg
     }
 
     ParseExpected<SourceControlFile> SourceControlFile::parse_control_file(
-        const fs::path& path_to_control, std::vector<Parse::Paragraph>&& control_paragraphs)
+        const std::string& origin, std::vector<Parse::Paragraph>&& control_paragraphs)
     {
         if (control_paragraphs.size() == 0)
         {
             auto ret = std::make_unique<Parse::ParseControlErrorInfo>();
-            ret->name = fs::u8string(path_to_control);
+            ret->name = origin;
             return ret;
         }
 
         auto control_file = std::make_unique<SourceControlFile>();
 
-        auto maybe_source = parse_source_paragraph(path_to_control, std::move(control_paragraphs.front()));
+        auto maybe_source = parse_source_paragraph(origin, std::move(control_paragraphs.front()));
         if (const auto source = maybe_source.get())
             control_file->core_paragraph = std::move(*source);
         else
@@ -347,14 +383,17 @@ namespace vcpkg
 
         for (auto&& feature_pgh : control_paragraphs)
         {
-            auto maybe_feature = parse_feature_paragraph(path_to_control, std::move(feature_pgh));
+            auto maybe_feature = parse_feature_paragraph(origin, std::move(feature_pgh));
             if (const auto feature = maybe_feature.get())
                 control_file->feature_paragraphs.emplace_back(std::move(*feature));
             else
                 return std::move(maybe_feature).error();
         }
 
-        canonicalize(*control_file);
+        if (auto maybe_error = canonicalize(*control_file))
+        {
+            return std::move(maybe_error);
+        }
         return control_file;
     }
 
@@ -735,7 +774,13 @@ namespace vcpkg
         virtual StringView type_name() const override { return "a manifest"; }
 
         constexpr static StringLiteral NAME = "name";
-        constexpr static StringLiteral VERSION = "version-string";
+
+        // Default is a relaxed semver-like version
+        constexpr static StringLiteral VERSION_RELAXED = "version";
+        constexpr static StringLiteral VERSION_SEMVER = "version-semver";
+        constexpr static StringLiteral VERSION_DATE = "version-date";
+        // Legacy version string, accepts arbitrary string values.
+        constexpr static StringLiteral VERSION_STRING = "version-string";
 
         constexpr static StringLiteral PORT_VERSION = "port-version";
         constexpr static StringLiteral MAINTAINERS = "maintainers";
@@ -753,8 +798,10 @@ namespace vcpkg
         {
             static const StringView t[] = {
                 NAME,
-                VERSION,
-
+                VERSION_STRING,
+                VERSION_RELAXED,
+                VERSION_SEMVER,
+                VERSION_DATE,
                 PORT_VERSION,
                 MAINTAINERS,
                 DESCRIPTION,
@@ -788,12 +835,41 @@ namespace vcpkg
                 }
             }
 
-            static Json::StringDeserializer version_deserializer{"a version"};
+            static Json::StringDeserializer version_exact_deserializer{"an exact version string"};
+            static Json::StringDeserializer version_relaxed_deserializer{"a relaxed version string"};
+            static Json::StringDeserializer version_semver_deserializer{"a semantic version string"};
+            static Json::StringDeserializer version_date_deserializer{"a date version string"};
             static Json::StringDeserializer url_deserializer{"a url"};
 
             constexpr static StringView type_name = "vcpkg.json";
             r.required_object_field(type_name, obj, NAME, spgh->name, Json::IdentifierDeserializer::instance);
-            r.required_object_field(type_name, obj, VERSION, spgh->version, version_deserializer);
+            bool has_exact = r.optional_object_field(obj, VERSION_STRING, spgh->version, version_exact_deserializer);
+            bool has_relax = r.optional_object_field(obj, VERSION_RELAXED, spgh->version, version_relaxed_deserializer);
+            bool has_semver = r.optional_object_field(obj, VERSION_SEMVER, spgh->version, version_semver_deserializer);
+            bool has_date = r.optional_object_field(obj, VERSION_DATE, spgh->version, version_date_deserializer);
+            int num_versions = (int)has_exact + (int)has_relax + (int)has_semver + (int)has_date;
+            if (num_versions == 0)
+            {
+                r.add_generic_error(type_name, "expected a versioning field (example: ", VERSION_RELAXED, ")");
+            }
+            else if (num_versions > 1)
+            {
+                r.add_generic_error(type_name, "expected only one versioning field");
+            }
+            else
+            {
+                if (has_exact)
+                    spgh->version_scheme = Versions::Scheme::String;
+                else if (has_relax)
+                    spgh->version_scheme = Versions::Scheme::Relaxed;
+                else if (has_semver)
+                    spgh->version_scheme = Versions::Scheme::Semver;
+                else if (has_date)
+                    spgh->version_scheme = Versions::Scheme::Date;
+                else
+                    Checks::unreachable(VCPKG_LINE_INFO);
+            }
+
             r.optional_object_field(obj, PORT_VERSION, spgh->port_version, Json::NaturalNumberDeserializer::instance);
             r.optional_object_field(obj, MAINTAINERS, spgh->maintainers, Json::ParagraphDeserializer::instance);
             r.optional_object_field(obj, DESCRIPTION, spgh->description, Json::ParagraphDeserializer::instance);
@@ -816,7 +892,10 @@ namespace vcpkg
             r.optional_object_field(
                 obj, FEATURES, control_file->feature_paragraphs, FeaturesFieldDeserializer::instance);
 
-            canonicalize(*control_file);
+            if (auto maybe_error = canonicalize(*control_file))
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, maybe_error->error);
+            }
             return std::move(control_file);
         }
 
@@ -825,8 +904,10 @@ namespace vcpkg
     ManifestDeserializer ManifestDeserializer::instance;
 
     constexpr StringLiteral ManifestDeserializer::NAME;
-    constexpr StringLiteral ManifestDeserializer::VERSION;
-
+    constexpr StringLiteral ManifestDeserializer::VERSION_STRING;
+    constexpr StringLiteral ManifestDeserializer::VERSION_RELAXED;
+    constexpr StringLiteral ManifestDeserializer::VERSION_SEMVER;
+    constexpr StringLiteral ManifestDeserializer::VERSION_DATE;
     constexpr StringLiteral ManifestDeserializer::PORT_VERSION;
     constexpr StringLiteral ManifestDeserializer::MAINTAINERS;
     constexpr StringLiteral ManifestDeserializer::DESCRIPTION;
@@ -839,8 +920,8 @@ namespace vcpkg
     constexpr StringLiteral ManifestDeserializer::DEFAULT_FEATURES;
     constexpr StringLiteral ManifestDeserializer::SUPPORTS;
 
-    Parse::ParseExpected<SourceControlFile> SourceControlFile::parse_manifest_file(const fs::path& path_to_manifest,
-                                                                                   const Json::Object& manifest)
+    Parse::ParseExpected<SourceControlFile> SourceControlFile::parse_manifest_object(const std::string& origin,
+                                                                                     const Json::Object& manifest)
     {
         Json::Reader reader;
 
@@ -849,7 +930,7 @@ namespace vcpkg
         if (!reader.errors().empty())
         {
             auto err = std::make_unique<ParseControlErrorInfo>();
-            err->name = fs::u8string(path_to_manifest);
+            err->name = origin;
             err->other_errors = std::move(reader.errors());
             return std::move(err);
         }
@@ -861,6 +942,12 @@ namespace vcpkg
         {
             Checks::unreachable(VCPKG_LINE_INFO);
         }
+    }
+
+    Parse::ParseExpected<SourceControlFile> SourceControlFile::parse_manifest_file(const fs::path& path_to_manifest,
+                                                                                   const Json::Object& manifest)
+    {
+        return parse_manifest_object(fs::u8string(path_to_manifest), manifest);
     }
 
     void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list)
@@ -1067,7 +1154,17 @@ namespace vcpkg
         }
 
         obj.insert(ManifestDeserializer::NAME, Json::Value::string(scf.core_paragraph->name));
-        obj.insert(ManifestDeserializer::VERSION, Json::Value::string(scf.core_paragraph->version));
+        auto version_field = [&] {
+            switch (scf.core_paragraph->version_scheme)
+            {
+                case Versions::Scheme::String: return ManifestDeserializer::VERSION_STRING;
+                case Versions::Scheme::Semver: return ManifestDeserializer::VERSION_SEMVER;
+                case Versions::Scheme::Relaxed: return ManifestDeserializer::VERSION_RELAXED;
+                case Versions::Scheme::Date: return ManifestDeserializer::VERSION_DATE;
+                default: Checks::unreachable(VCPKG_LINE_INFO);
+            }
+        }();
+        obj.insert(version_field, Json::Value::string(scf.core_paragraph->version));
 
         if (scf.core_paragraph->port_version != 0 || debug)
         {

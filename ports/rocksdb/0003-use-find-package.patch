@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f9c8f3346..59747a684 100644
+index 36eddb32b..97a93601b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -91,7 +91,7 @@ include(CMakeDependentOption)
@@ -11,3 +11,28 @@ index f9c8f3346..59747a684 100644
    option(WITH_XPRESS "build with windows built in compression" OFF)
    include(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty.inc)
  else()
+@@ -130,10 +130,7 @@ else()
+   endif()
+ 
+   if(WITH_SNAPPY)
+-    find_package(Snappy CONFIG)
+-    if(NOT Snappy_FOUND)
+-      find_package(Snappy REQUIRED)
+-    endif()
++    find_package(Snappy CONFIG REQUIRED)
+     add_definitions(-DSNAPPY)
+     list(APPEND THIRDPARTY_LIBS Snappy::snappy)
+   endif()
+@@ -163,10 +160,9 @@ else()
+   endif()
+ 
+   if(WITH_ZSTD)
+-    find_package(zstd REQUIRED)
++    find_package(zstd CONFIG REQUIRED)
+     add_definitions(-DZSTD)
+-    include_directories(${ZSTD_INCLUDE_DIR})
+-    list(APPEND THIRDPARTY_LIBS zstd::zstd)
++    list(APPEND THIRDPARTY_LIBS libzstd)
+   endif()
+ endif()
+ 

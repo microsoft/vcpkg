@@ -42,7 +42,9 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
-    include("${CMAKE_VARS_FILE}")
+
+    include("${_VCPKG_CMAKE_VARS_FILE}")
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH" "")
 
     if(NOT _bc_LOGFILE_ROOT)
@@ -115,7 +117,8 @@ function(vcpkg_build_make)
             set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_bc_SUBPATH}")
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
-            extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE})
+            _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE})
+
             if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
                 set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_STATIC_LINKERFLAGS_${CMAKE_BUILDTYPE}}")
             else() # dynamic
@@ -171,13 +174,12 @@ function(vcpkg_build_make)
                         LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
             endif()
-            
+
             file(READ "${CURRENT_BUILDTREES_DIR}/${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}-out.log" LOGDATA) 
             if(LOGDATA MATCHES "Warning: linker path does not have real file for library")
                 message(FATAL_ERROR "libtool could not find a file being linked against!")
             endif()
-            
-            
+
             if (_bc_ENABLE_INSTALL)
                 message(STATUS "Installing ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
                 if(MAKE_BASH)

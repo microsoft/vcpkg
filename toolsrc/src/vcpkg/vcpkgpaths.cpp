@@ -186,8 +186,11 @@ namespace vcpkg
     {
         struct VcpkgPathsImpl
         {
-            VcpkgPathsImpl(Files::Filesystem& fs, bool compiler_tracking)
-                : fs_ptr(&fs), m_tool_cache(get_tool_cache()), m_env_cache(compiler_tracking)
+            VcpkgPathsImpl(Files::Filesystem& fs, FeatureFlagSettings ff_settings)
+                : fs_ptr(&fs)
+                , m_tool_cache(get_tool_cache())
+                , m_env_cache(ff_settings.compiler_tracking)
+                , m_ff_settings(ff_settings)
             {
             }
 
@@ -209,11 +212,13 @@ namespace vcpkg
             Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
             fs::path m_manifest_path;
             Configuration m_config;
+
+            FeatureFlagSettings m_ff_settings;
         };
     }
 
     VcpkgPaths::VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args)
-        : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.compiler_tracking_enabled()))
+        : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.feature_flag_settings()))
     {
         original_cwd = filesystem.current_path(VCPKG_LINE_INFO);
 #if defined(_WIN32)
@@ -320,7 +325,6 @@ If you wish to silence this error and use classic mode, you can:
             process_output_directory(filesystem, root, args.downloads_root_dir.get(), "downloads", VCPKG_LINE_INFO);
         packages =
             process_output_directory(filesystem, root, args.packages_root_dir.get(), "packages", VCPKG_LINE_INFO);
-        ports = filesystem.canonical(VCPKG_LINE_INFO, root / fs::u8path("ports"));
         scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
         prefab = root / fs::u8path("prefab");
 
@@ -411,15 +415,10 @@ If you wish to silence this error and use classic mode, you can:
             auto& fs = this->get_filesystem();
             std::map<std::string, std::string> helpers;
             auto files = fs.get_files_non_recursive(this->scripts / fs::u8path("cmake"));
-            auto common_functions = fs::u8path("vcpkg_common_functions");
             for (auto&& file : files)
             {
-                auto stem = file.stem();
-                if (stem != common_functions)
-                {
-                    helpers.emplace(fs::u8string(stem),
-                                    Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
-                }
+                helpers.emplace(fs::u8string(file.stem()),
+                                Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
             }
             return helpers;
         });
@@ -563,6 +562,8 @@ If you wish to silence this error and use classic mode, you can:
     }
 
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return *m_pimpl->fs_ptr; }
+
+    const FeatureFlagSettings& VcpkgPaths::get_feature_flags() const { return m_pimpl->m_ff_settings; }
 
     void VcpkgPaths::track_feature_flag_metrics() const
     {

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1ec4f07..2fb74b3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -55,7 +55,7 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake" )
+ find_package( asio REQUIRED )
+ 
+ if ( BUILD_SSL )
+-    find_package( openssl REQUIRED )
++    find_package( OpenSSL REQUIRED )
+ endif ( )
+ 
+ include_directories( ${INCLUDE_DIR} SYSTEM ${asio_INCLUDE} ${ssl_INCLUDE} )

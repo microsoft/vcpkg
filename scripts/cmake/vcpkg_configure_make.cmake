@@ -6,7 +6,7 @@
 ## ```cmake
 ## vcpkg_configure_make(
 ##     SOURCE_PATH <${SOURCE_PATH}>
-##     [AUTOCONFIG] 
+##     [AUTOCONFIG]
 ##     [USE_WRAPPERS]
 ##     [DETERMINE_BUILD_TRIPLET]
 ##     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
@@ -86,8 +86,6 @@
 ## * [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
-set(printvars PATH _LINK_ _CL_ CPPFLAGS CFLAGS CXXFLAGS LDFLAGS LIBS INCLUDE LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
-
 macro(_vcpkg_determine_host_mingw out_var)
     if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
         set(HOST_ARCH $ENV{PROCESSOR_ARCHITEW6432})
@@ -168,7 +166,7 @@ macro(_vcpkg_restore_env_variables)
     endforeach()
 endmacro()
 
-macro(extract_cpp_flags_and_set_cflags_and_cxxflags _SUFFIX)
+macro(_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags _SUFFIX)
     string(REGEX MATCHALL "( |^)-D[^ ]+" CPPFLAGS_${_SUFFIX} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_SUFFIX}}")
     string(REGEX MATCHALL "( |^)-D[^ ]+" CXXPPFLAGS_${_SUFFIX} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_SUFFIX}}")
     list(JOIN CXXPPFLAGS_${_SUFFIX} "|" CXXREGEX)
@@ -204,16 +202,16 @@ macro(extract_cpp_flags_and_set_cflags_and_cxxflags _SUFFIX)
 endmacro()
 
 function(vcpkg_configure_make)
-    cmake_parse_arguments(_csc
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _csc
         "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
-        ${ARGN}
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT"
     )
-    vcpkg_get_cmake_vars(OUTPUT_FILE CMAKE_VARS_FILE)
-    set(CMAKE_VARS_FILE "${CMAKE_VARS_FILE}" PARENT_SCOPE)
-    debug_message("Including cmake vars from: ${CMAKE_VARS_FILE}")
-    include("${CMAKE_VARS_FILE}")
+    vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
+    set(_VCPKG_CMAKE_VARS_FILE "${_VCPKG_CMAKE_VARS_FILE}" PARENT_SCOPE)
+    debug_message("Including cmake vars from: ${_VCPKG_CMAKE_VARS_FILE}")
+    include("${_VCPKG_CMAKE_VARS_FILE}")
     if(DEFINED VCPKG_MAKE_BUILD_TRIPLET)
         set(_csc_BUILD_TRIPLET ${VCPKG_MAKE_BUILD_TRIPLET}) # Triplet overwrite for crosscompiling
     endif()
@@ -242,10 +240,10 @@ function(vcpkg_configure_make)
     debug_message("REQUIRES_AUTOCONFIG:${REQUIRES_AUTOCONFIG}")
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
-    set(FLAGPREFIXES AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
-    foreach(_prefix IN LISTS FLAGPREFIXES)
-        _vcpkg_backup_env_variable(${prefix}FLAGS)
-    endforeach()
+    set(_cm_FLAGS AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
+    list(TRANSFORM _cm_FLAGS APPEND "FLAGS")
+    _vcpkg_backup_env_variables(${_cm_FLAGS})
+
 
     # FC fotran compiler | FF Fortran 77 compiler 
     # LDFLAGS -> pass -L flags
@@ -257,14 +255,16 @@ function(vcpkg_configure_make)
     #Used by cl
     _vcpkg_backup_env_variables(INCLUDE LIB LIBPATH)
 
+    set(_vcm_paths_with_spaces FALSE)
     if(CURRENT_PACKAGES_DIR MATCHES " " OR CURRENT_INSTALLED_DIR MATCHES " ")
         # Don't bother with whitespace. The tools will probably fail and I tried very hard trying to make it work (no success so far)!
         message(WARNING "Detected whitespace in root directory. Please move the path to one without whitespaces! The required tools do not handle whitespaces correctly and the build will most likely fail")
+        set(_vcm_paths_with_spaces TRUE)
     endif()
 
     # Pre-processing windows configure requirements
     if (CMAKE_HOST_WIN32)
-        list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4 ${_csc_ADDITIONAL_MSYS_PACKAGES})
+        list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
         vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
         if (_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET)
             _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
@@ -367,7 +367,8 @@ function(vcpkg_configure_make)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV DLLTOOL "link.exe -verbose -dll")
         endif()
         _vcpkg_append_to_configure_environment(CONFIGURE_ENV CCAS ":")   # If required set the ENV variable CCAS in the portfile correctly
-        _vcpkg_append_to_configure_environment(CONFIGURE_ENV AS ":")   # If required set the ENV variable CCAS in the portfile correctly
+        _vcpkg_append_to_configure_environment(CONFIGURE_ENV AS ":")   # If required set the ENV variable AS in the portfile correctly
+
         foreach(_env IN LISTS _csc_CONFIGURE_ENVIRONMENT_VARIABLES)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV ${_env} "${${_env}}")
         endforeach()
@@ -386,9 +387,7 @@ function(vcpkg_configure_make)
 
         # Variables not correctly detected by configure. In release builds.
         list(APPEND _csc_OPTIONS gl_cv_double_slash_root=yes
-                                 ac_cv_func_memmove=yes
-                                 #lt_cv_deplibs_check_method=pass_all    # required since file.exe is not working correctly. 
-                                 )
+                                 ac_cv_func_memmove=yes)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             list(APPEND _csc_OPTIONS gl_cv_host_cpu_c_abi=no)
         endif()
@@ -465,7 +464,6 @@ function(vcpkg_configure_make)
             # is to use the CL and LINK environment variables !!!
             # (This is due to libtool and compiler wrapper using the same set of options to pass those variables around)
             string(REPLACE "\\" "/" VCToolsInstallDir "$ENV{VCToolsInstallDir}")
-
             # Can somebody please check if CMake's compiler flags for UWP are correct?
             set(ENV{_CL_} "$ENV{_CL_} /D_UNICODE /DUNICODE /DWINAPI_FAMILY=WINAPI_FAMILY_APP /D__WRL_NO_DEFAULT_LIB_ -FU\"${VCToolsInstallDir}/lib/x86/store/references/platform.winmd\"")
             string(APPEND VCPKG_DETECTED_CMAKE_CXX_FLAGS_RELEASE " -ZW:nostdlib")
@@ -480,43 +478,23 @@ function(vcpkg_configure_make)
     convert_to_list(VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES C_LIBS_LIST)
     convert_to_list(VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES CXX_LIBS_LIST)
     set(ALL_LIBS_LIST ${C_LIBS_LIST} ${CXX_LIBS_LIST})
+
     list(REMOVE_DUPLICATES ALL_LIBS_LIST)
     list(TRANSFORM ALL_LIBS_LIST STRIP)
-    list(TRANSFORM ALL_LIBS_LIST REPLACE "(.dll.lib|.lib|.a|.so)$" "")
+    list(TRANSFORM ALL_LIBS_LIST REPLACE "(.lib|.a|.so)$" "")
     if(VCPKG_TARGET_IS_WINDOWS)
-        string(REPLACE "\\" "/" SDKPATH $ENV{UniversalCRTSdkDir})
-        string(REGEX REPLACE "([a-zA-Z]):/" "cygdrive/\\1/" SDKPATH "${SDKPATH}")
-        string(REGEX REPLACE "\\? " "\\\\\\\\ " SDKPATH "${SDKPATH}")
-        string(REGEX REPLACE " " "\\\\ " SDKPATH "${SDKPATH}")
-        message(STATUS "${SDKPATH}")
-        set(LIB_PATH "${SDKPATH}lib/$ENV{UCRTVersion}/um/${VCPKG_TARGET_ARCHITECTURE}/")
-        set(ENV{LT_SYS_LIBRARY_PATH} "${LIB_PATH}")
-        #set(ENV{LT_SYS_LIBRARY_PATH} "$ENV{LIB}") # Probably requires extra path conversions and ; -> :
-        foreach(_lib IN LISTS ALL_LIBS_LIST)
-            find_library(STD_${_lib}_LIBRARY NAMES ${_lib} PATHS ENV LIB LIBPATH)
-            message(STATUS "${_lib} found at: ${STD_${_lib}_LIBRARY}")
-            if(_lib MATCHES "uuid")
-                # C:\Program Files (x86)\Windows Kits\10\lib\10.0.19041.0\um\x64
-                # UniversalCRTSdkDir/lib/UCRTVersion/um/VCPKG_TARGET_ARCHITECTURE
-                message(STATUS "Manual search for uuid at ${LIB_PATH}")
-                if(NOT EXISTS "${LIB_PATH}")
-                    message(STATUS "uuid not found in ${LIB_PATH}")
-                else()
-                    message(STATUS "uuid found in ${LIB_PATH}")
-                endif()
-            endif()
-        endforeach()
+        list(REMOVE_ITEM ALL_LIBS_LIST "uuid")
     endif()
     list(JOIN ALL_LIBS_LIST " -l" ALL_LIBS_STRING)
+
     if(ALL_LIBS_STRING)
-        set(ALL_LIBS_STRING "-l${ALL_LIBS_STRING}")
         if(DEFINED ENV{LIBS})
-            set(ENV{LIBS} "$ENV{LIBS} ${ALL_LIBS_STRING}")
+            set(ENV{LIBS} "$ENV{LIBS} -l${ALL_LIBS_STRING}")
         else()
-            set(ENV{LIBS} "${ALL_LIBS_STRING}")
+            set(ENV{LIBS} "-l${ALL_LIBS_STRING}")
         endif()
     endif()
-
+    debug_message(STATUS "ENV{LIBS}:$ENV{LIBS}")
     vcpkg_find_acquire_program(PKGCONFIG)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT PKGCONFIG STREQUAL "--static")
         set(PKGCONFIG "${PKGCONFIG} --static") # Is this still required or was the PR changing the pc files accordingly merged?
@@ -582,9 +560,11 @@ function(vcpkg_configure_make)
         else() # dynamic
             set(LINKER_FLAGS_${_VAR_SUFFIX} "${VCPKG_DETECTED_CMAKE_SHARED_LINKERFLAGS_${_VAR_SUFFIX}}")
         endif()
-        extract_cpp_flags_and_set_cflags_and_cxxflags(${_VAR_SUFFIX})
+        _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${_VAR_SUFFIX})
         if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
-            set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
+            if(NOT _vcm_paths_with_spaces)
+                set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
+            endif()
             if(DEFINED ENV{_LINK_})
                 set(LINK_ENV_${_VAR_SUFFIX} "$ENV{_LINK_} ${LINKER_FLAGS_${_VAR_SUFFIX}}")
             else()
@@ -605,9 +585,11 @@ function(vcpkg_configure_make)
         else() # dynamic
             set(LINKER_FLAGS_${_VAR_SUFFIX} "${VCPKG_DETECTED_CMAKE_SHARED_LINKERFLAGS_${_VAR_SUFFIX}}")
         endif()
-        extract_cpp_flags_and_set_cflags_and_cxxflags(${_VAR_SUFFIX})
+        _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${_VAR_SUFFIX})
         if (CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
-            set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
+            if(NOT _vcm_paths_with_spaces)
+                set(LDFLAGS_${_VAR_SUFFIX} "-L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib -L${_VCPKG_INSTALLED}${PATH_SUFFIX_${_VAR_SUFFIX}}/lib/manual-link")
+            endif()
             if(DEFINED ENV{_LINK_})
                 set(LINK_ENV_${_VAR_SUFFIX} "$ENV{_LINK_} ${LINKER_FLAGS_${_VAR_SUFFIX}}")
             else()
@@ -680,7 +662,7 @@ function(vcpkg_configure_make)
                 WORKING_DIRECTORY "${TAR_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}
             )
-            if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT VCPKG_TARGET_IS_MINGW)
+            if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
                 file(GLOB_RECURSE LIBTOOL_FILES "${TAR_DIR}*/libtool")
                 foreach(lt_file IN LISTS LIBTOOL_FILES)
                     file(READ "${lt_file}" _contents)
@@ -688,8 +670,10 @@ function(vcpkg_configure_make)
                     file(WRITE "${lt_file}" "${_contents}")
                 endforeach()
             endif()
-
-            file(RENAME "${TAR_DIR}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}.log")
+            
+            if(EXISTS "${TAR_DIR}/config.log")
+                file(RENAME "${TAR_DIR}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}.log")
+            endif()
         endif()
 
         if(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype})
@@ -718,11 +702,7 @@ function(vcpkg_configure_make)
     endforeach()
 
     # Restore environment
-    foreach(_prefix IN LISTS FLAGPREFIXES)
-        _vcpkg_restore_env_variable(${_prefix}FLAGS)
-    endforeach()
-
-    _vcpkg_restore_env_variables(LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    _vcpkg_restore_env_variables(${_cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${_csc_PROJECT_SUBPATH} PARENT_SCOPE)
