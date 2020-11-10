@@ -8,7 +8,3 @@ Supports: linux|osx
 
 Feature: cpp
 Description: C++ bindings
-
-Feature: python
-Description: Python bindings
-Build-Depends: python3
