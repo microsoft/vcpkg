@@ -396,23 +396,25 @@ index bdd205bc..1d7fe462 100644
  arrayfire_set_default_cxx_flags(afcpu)
  
 diff --git a/src/backend/cuda/CMakeLists.txt b/src/backend/cuda/CMakeLists.txt
-index ae29c43d..2c4d67ad 100644
+index ae29c43d..48993570 100644
 --- a/src/backend/cuda/CMakeLists.txt
 +++ b/src/backend/cuda/CMakeLists.txt
-@@ -51,6 +51,12 @@ mark_as_advanced(
+@@ -51,6 +51,14 @@ mark_as_advanced(
  
  get_target_property(COMMON_INTERFACE_DIRS afcommon_interface INTERFACE_INCLUDE_DIRECTORIES)
  
-+# Cub
-+find_path(CUB_INCLUDE_DIRS "cub/agent/agent_histogram.cuh")
-+if (${CUB_INCLUDE_DIRS} EQUAL "CUB_INCLUDE_DIRS-NOTFOUND")
-+  set(CUB_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/cub)
++# Cub, only if using CUDA < 11.0
++if (CUDA_VERSION VERSION_LESS "11.0")
++  find_path(CUB_INCLUDE_DIRS "cub/agent/agent_histogram.cuh")
++  if (${CUB_INCLUDE_DIRS} EQUAL "CUB_INCLUDE_DIRS-NOTFOUND")
++    set(CUB_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/cub)
++  endif()
 +endif()
 +
  cuda_include_directories(
    ${CMAKE_CURRENT_BINARY_DIR}
    ${CMAKE_CURRENT_SOURCE_DIR}
-@@ -58,7 +64,7 @@ cuda_include_directories(
+@@ -58,7 +66,7 @@ cuda_include_directories(
    ${ArrayFire_BINARY_DIR}/include
    ${CMAKE_CURRENT_SOURCE_DIR}/kernel
    ${CMAKE_CURRENT_SOURCE_DIR}/jit
