@@ -211,7 +211,8 @@ namespace vcpkg::Build
     static const std::string NAME_SKIP_DUMPBIN_CHECKS = "PolicySkipDumpbinChecks";
     static const std::string NAME_SKIP_ARCHITECTURE_CHECK = "PolicySkipArchitectureCheck";
 
-    static std::remove_const_t<decltype(ALL_POLICIES)> generate_all_policies() {
+    static std::remove_const_t<decltype(ALL_POLICIES)> generate_all_policies()
+    {
         std::remove_const_t<decltype(ALL_POLICIES)> res;
         for (size_t i = 0; i < res.size(); ++i)
         {

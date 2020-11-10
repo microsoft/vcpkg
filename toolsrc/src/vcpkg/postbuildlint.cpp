@@ -892,7 +892,8 @@ namespace vcpkg::PostBuildLint
         {
             case Build::LinkageType::DYNAMIC:
             {
-                if (!pre_build_info.build_type && !build_info.policies.is_enabled(BuildPolicy::MISMATCHED_NUMBER_OF_BINARIES))
+                if (!pre_build_info.build_type &&
+                    !build_info.policies.is_enabled(BuildPolicy::MISMATCHED_NUMBER_OF_BINARIES))
                     error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
 
                 error_count += check_lib_files_are_available_if_dlls_are_available(
