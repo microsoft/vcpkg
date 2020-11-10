@@ -372,21 +372,21 @@ namespace vcpkg::PortFileProvider
         // NOTE: A dictionary would be the best way to store this, for now we use a vector
         if (versions_json.first.is_object())
         {
-            auto versions_object = std::move(versions_json.first.object());
+            const auto& versions_object = versions_json.first.object();
             auto maybe_versions_array = versions_object.get("versions");
 
             if (maybe_versions_array && maybe_versions_array->is_array())
             {
-                auto versions_array = std::move(maybe_versions_array->array());
-                for (auto&& version : versions_array)
+                const auto& versions_array = maybe_versions_array->array();
+                for (const auto& version : versions_array)
                 {
-                    auto version_obj = std::move(version.object());
+                    const auto& version_obj = version.object();
                     Versions::VersionSpec spec = extract_version_spec(package_spec, version_obj);
 
                     auto& package_versions = versions_cache[spec.package_spec];
                     package_versions.push_back(spec);
 
-                    auto&& git_tree = version_obj.get("git-tree")->string().to_string();
+                    auto git_tree = version_obj.get("git-tree")->string().to_string();
                     git_tree_cache.emplace(std::move(spec), git_tree);
                 }
             }
