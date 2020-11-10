@@ -1,4 +1,6 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
+if (NOT VCPKG_TARGET_IS_LINUX)
+    vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

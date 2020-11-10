@@ -1,3 +1,4 @@
 Source: libcuckoo
-Version: 2018-12-24-1
+Version: 0.3
 Description: A high-performance, concurrent hash table
+Homepage: https://github.com/efficient/libcuckoo

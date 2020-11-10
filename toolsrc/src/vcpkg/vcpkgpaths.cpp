@@ -325,7 +325,6 @@ If you wish to silence this error and use classic mode, you can:
             process_output_directory(filesystem, root, args.downloads_root_dir.get(), "downloads", VCPKG_LINE_INFO);
         packages =
             process_output_directory(filesystem, root, args.packages_root_dir.get(), "packages", VCPKG_LINE_INFO);
-        ports = filesystem.canonical(VCPKG_LINE_INFO, root / fs::u8path("ports"));
         scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
         prefab = root / fs::u8path("prefab");
 
