@@ -14,7 +14,7 @@ SCRIPT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 
 def get_current_git_ref():
-    output = subprocess.run(['git.exe', '-C', SCRIPT_DIRECTORY, 'rev-parse', '--verify', 'HEAD'], 
+    output = subprocess.run(['git', '-C', SCRIPT_DIRECTORY, 'rev-parse', '--verify', 'HEAD'], 
         capture_output=True, 
         encoding='utf-8')
     if output.returncode == 0:

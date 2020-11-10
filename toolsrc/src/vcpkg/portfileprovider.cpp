@@ -1,12 +1,116 @@
 #include <vcpkg/base/system.debug.h>
+#include <vcpkg/base/system.process.h>
 
 #include <vcpkg/configuration.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
+
+using namespace vcpkg;
+
+namespace
+{
+    const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths,
+                                                    const fs::path& dot_git_directory,
+                                                    const fs::path& working_directory,
+                                                    const std::string& cmd)
+    {
+        const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
+
+        System::CmdLineBuilder builder;
+        builder.path_arg(git_exe)
+            .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_directory)))
+            .string_arg(Strings::concat("--work-tree=", fs::u8string(working_directory)));
+        const std::string full_cmd = Strings::concat(builder.extract(), " ", cmd);
+
+        const auto output = System::cmd_execute_and_capture_output(full_cmd);
+        return output;
+    }
+
+    fs::path fetch_port(const VcpkgPaths& paths, const std::string& port_name, const std::string& git_tree)
+    {
+        (void)port_name;
+        const auto local_repo = paths.root;
+        const auto dot_git_dir = paths.buildtrees / "versioning_tmp" / ".git";
+        const auto working_dir = paths.buildtrees / "versioning_tmp" / "versions" / git_tree;
+
+        auto& fs = paths.get_filesystem();
+
+        if (!fs.exists(working_dir / "CONTROL") && !fs.exists(working_dir / "vcpkg.json"))
+        {
+            if (fs.exists(working_dir))
+            {
+                fs.remove_all(working_dir, VCPKG_LINE_INFO);
+            }
+
+            if (fs.exists(dot_git_dir))
+            {
+                fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
+            }
+
+            // git --git-dir={dot_git_dir} --work-tree={working_dir} clone --no-checkout --local {vcpkg_root}
+            // {dot_git_dir} {working_dir}
+            System::CmdLineBuilder clone_cmd_builder;
+            clone_cmd_builder.string_arg("clone")
+                .string_arg("--no-checkout")
+                .string_arg("--local")
+                .path_arg(local_repo)
+                .path_arg(dot_git_dir);
+            const auto output = run_git_command(paths, dot_git_dir, working_dir, clone_cmd_builder.extract());
+            Checks::check_exit(VCPKG_LINE_INFO, output.exit_code == 0, "Failed to clone temporary vcpkg instance");
+
+            // git checkout {tree_object} .
+            System::CmdLineBuilder checkout_cmd_builder;
+            checkout_cmd_builder.string_arg("checkout").string_arg(git_tree).string_arg(".");
+            const auto git_cmd = checkout_cmd_builder.extract();
+            const auto checkout_output = run_git_command(paths, dot_git_dir, working_dir, git_cmd);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, checkout_output.exit_code == 0, "Failed to checkout %s:%s", port_name, git_tree);
+        }
+        return working_dir;
+    }
+
+    vcpkg::Versions::VersionSpec extract_version_spec(const std::string& package_spec, const Json::Object& version_obj)
+    {
+        static const std::map<vcpkg::Versions::Scheme, std::string> version_schemes{
+            {Versions::Scheme::Relaxed, "version"},
+            {Versions::Scheme::Semver, "version-semver"},
+            {Versions::Scheme::Date, "version-date"},
+            {Versions::Scheme::String, "version-string"}};
+
+        const auto port_version = static_cast<int>(version_obj.get("port-version")->integer());
+
+        for (auto&& kv_pair : version_schemes)
+        {
+            if (const auto version_string = version_obj.get(kv_pair.second))
+            {
+                return Versions::VersionSpec(
+                    package_spec, version_string->string().to_string(), port_version, kv_pair.first);
+            }
+        }
+
+        Checks::unreachable(VCPKG_LINE_INFO);
+    }
+
+    Optional<fs::path> get_versions_json_path(const VcpkgPaths& paths, const std::string& port_name)
+    {
+        // TODO: Get correct `port_versions` path for the registry the port belongs to, pseudocode below:
+        // auto registry = paths.get_registry_for_port(port_name);
+        // auto port_versions_dir_path = registry.get_port_versions_path();
+        const auto port_versions_dir_path = paths.root / "port_versions";
+        const auto subpath = Strings::concat(port_name[0], "-/", port_name, ".json");
+        const auto json_path = port_versions_dir_path / subpath;
+        if (paths.get_filesystem().exists(json_path))
+        {
+            return json_path;
+        }
+        return nullopt;
+    }
+}
 
 namespace vcpkg::PortFileProvider
 {
@@ -246,47 +350,6 @@ namespace vcpkg::PortFileProvider
 
     VersionedPortfileProvider::VersionedPortfileProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) { }
 
-    vcpkg::Versions::VersionSpec extract_version_spec(const std::string& package_spec, const Json::Object& version_obj)
-    {
-        static const std::map<vcpkg::Versions::Scheme, std::string> version_schemes{
-            {Versions::Scheme::Relaxed, "version"},
-            {Versions::Scheme::Semver, "version-semver"},
-            {Versions::Scheme::Date, "version-date"},
-            {Versions::Scheme::String, "version-string"}};
-
-        const auto port_version = static_cast<int>(version_obj.get("port-version")->integer());
-
-        for (auto&& kv_pair : version_schemes)
-        {
-            if (const auto version_string = version_obj.get(kv_pair.second))
-            {
-                return Versions::VersionSpec(
-                    package_spec, version_string->string().to_string(), port_version, kv_pair.first);
-            }
-        }
-
-        Checks::unreachable(VCPKG_LINE_INFO);
-    }
-
-    namespace
-    {
-        Optional<fs::path> get_versions_json_path(const VcpkgPaths& paths, const std::string& port_name)
-        {
-            // TODO: Get correct `port_versions` path for the registry the port belongs to, pseudocode below:
-            // auto registry = paths.get_registry_for_port(port_name);
-            // auto port_versions_dir_path = registry.get_port_versions_path();
-            const auto port_versions_dir_path = paths.root / "port_versions";
-            const auto subpath = Strings::concat(port_name[0], "-/", port_name, ".json");
-            const auto json_path = port_versions_dir_path / subpath;
-            if (paths.get_filesystem().exists(json_path))
-            {
-                return json_path;
-            }
-            return nullopt;
-        }
-
-    }
-
     const std::vector<vcpkg::Versions::VersionSpec>& VersionedPortfileProvider::get_port_versions(
         const std::string& package_spec) const
     {
@@ -332,30 +395,60 @@ namespace vcpkg::PortFileProvider
         return versions_cache.at(package_spec);
     }
 
-    // ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
-    //    const vcpkg::Versions::VersionSpec& version_spec) const
-    //{
-    //    auto cache_it = control_cache.find(version_spec);
-    //    if (cache_it != control_cache.end())
-    //    {
-    //        return cache_it->second;
-    //    }
+    ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
+        const vcpkg::Versions::VersionSpec& version_spec) const
+    {
+        auto cache_it = control_cache.find(version_spec);
+        if (cache_it != control_cache.end())
+        {
+            return cache_it->second;
+        }
 
-    //    // 1. Load database for port
-    //    auto git_tree_cache_it = git_tree_cache.find(version_spec);
-    //    if (git_tree_cache_it == git_tree_cache.end())
-    //    {
-    //        // TODO: Try to load port from database
-    //        Checks::exit_fail(VCPKG_LINE_INFO);
-    //    }
+        // 1. Load database for port
+        auto git_tree_cache_it = git_tree_cache.find(version_spec);
+        if (git_tree_cache_it == git_tree_cache.end())
+        {
+            // TODO: Try to load port from database
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
 
-    //    const std::string git_tree = git_tree_cache_it->second;
+        const std::string git_tree = git_tree_cache_it->second;
+        const auto port_directory = fetch_port(paths, version_spec.package_spec, git_tree);
 
-    //    // 2. Checkout port version
-    //    // paths.checkout_port_object(version_spec.package_spec, git_tree);
-    //    // 3. Try load port
-    //    // 4. Return
+        auto maybe_control_file = Paragraphs::try_load_port(paths.get_filesystem(), port_directory);
+        if (auto scf = maybe_control_file.get())
+        {
+            if (scf->get()->core_paragraph->name == version_spec.package_spec)
+            {
+                return SourceControlFileLocation{std::move(*scf), std::move(port_directory)};
+            }
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
+                                      fs::u8string(port_directory),
+                                      version_spec.package_spec,
+                                      scf->get()->core_paragraph->name);
+        }
 
-    //    return std::string("Not yet implemented");
-    //}
+        vcpkg::print_error_message(maybe_control_file.error());
+        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                  "Error: Failed to load port %s from %s",
+                                  version_spec.package_spec,
+                                  fs::u8string(port_directory));
+    }
+
+    // BaselineProvider::BaselineProvider(const VcpkgPaths& paths) : paths(paths) { }
+
+    // Versions::VersionSpec BaselineProvider::get_baseline_version(const std::string& baseline,
+    //                                                              const std::string& port_name) const
+    // {
+    //     const auto key = Strings::concat(port_name, "@", baseline);
+    //     auto it = baseline_versions.find(key);
+    //     if (it != baseline_versions.end())
+    //     {
+    //         return it->second;
+    //     }
+
+    //     // Search in DB
+    //     auto fetch_baseline_file = [](const std::string& baseline) -> fs::path { paths.checkout_file() };
+    // }
 }

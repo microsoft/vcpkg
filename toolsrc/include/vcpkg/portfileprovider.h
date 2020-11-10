@@ -44,14 +44,26 @@ namespace vcpkg::PortFileProvider
 
         const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(const std::string& port_spec) const;
 
-        /*ExpectedS<const SourceControlFileLocation&> get_control_file(
-            const vcpkg::Versions::VersionSpec& version_spec) const;*/
+        ExpectedS<const SourceControlFileLocation&> get_control_file(
+            const vcpkg::Versions::VersionSpec& version_spec) const;
 
     private:
         const vcpkg::VcpkgPaths& paths;
-        /*mutable std::unordered_map<Versions::VersionSpec, SourceControlFileLocation, Versions::VersionSpecHasher>
-            control_cache;*/
+        mutable std::unordered_map<Versions::VersionSpec, SourceControlFileLocation, Versions::VersionSpecHasher>
+            control_cache;
         mutable std::unordered_map<std::string, std::vector<Versions::VersionSpec>> versions_cache;
         mutable std::unordered_map<Versions::VersionSpec, std::string, Versions::VersionSpecHasher> git_tree_cache;
     };
+
+    // struct BaselineProvider : Util::ResourceBase
+    // {
+    //     explicit BaselineProvider(const vcpkg::VcpkgPaths& paths);
+
+    //     vcpkg::Versions::VersionSpec get_baseline_version(const std::string& baseline,
+    //                                                       const std::string& port_name) const;
+
+    // private:
+    //     const vcpkg::VcpkgPaths& paths;
+    //     mutable std::map<std::string, vcpkg::Versions::VersionSpec> baseline_versions;
+    // };
 }
