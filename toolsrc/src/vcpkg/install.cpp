@@ -927,7 +927,7 @@ namespace vcpkg::Install
 
         Metrics::g_metrics.lock()->track_property("installplan_1", specs_string);
 
-        Dependencies::print_plan(action_plan, is_recursive, paths.ports);
+        Dependencies::print_plan(action_plan, is_recursive, paths.builtin_ports_directory());
 
         auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
         if (it_pkgsconfig != options.settings.end())

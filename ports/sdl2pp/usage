@@ -1,0 +1,4 @@
+The package sdl2pp provides CMake targets:
+
+    find_package(SDL2PP REQUIRED)
+    target_include_directories(main PRIVATE ${SDL2PP_INCLUDE_DIRS})
