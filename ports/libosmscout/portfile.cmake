@@ -46,7 +46,8 @@ vcpkg_install_cmake()
 vcpkg_copy_tools(TOOL_NAMES Import AUTO_CLEAN)
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libosmscout)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libosmscout RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
