@@ -321,7 +321,7 @@ TEST_CASE ("Serialize all the ports", "[manifests]")
 
     std::vector<SourceControlFile> scfs;
 
-    for (auto dir : fs::directory_iterator(paths.ports))
+    for (auto dir : fs::directory_iterator(paths.builtin_ports_directory()))
     {
         const auto control = dir / fs::u8path("CONTROL");
         const auto manifest = dir / fs::u8path("vcpkg.json");

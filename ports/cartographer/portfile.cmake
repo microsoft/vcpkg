@@ -9,6 +9,7 @@ vcpkg_from_github(
 	PATCHES
         fix-find-packages.patch
         fix-build-error.patch
+        fix-cmake-location.patch
 )
 
 vcpkg_configure_cmake(
