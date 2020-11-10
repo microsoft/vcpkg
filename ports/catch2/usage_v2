@@ -1,0 +1,8 @@
+The package catch2 provides CMake targets:
+
+    find_package(Catch2 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE Catch2::Catch2)
+
+Note: it is recommended that you follow the migration guide and 
+update to Catch2 v3.
+https://github.com/catchorg/Catch2/blob/devel/docs/migrate-v2-to-v3.md

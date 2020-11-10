@@ -33,6 +33,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Catch2)
 
 if(USE_V2)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
+    file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage_v2 DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME usage)
 else()
     file(REMOVE_RECURSE
         ${CURRENT_PACKAGES_DIR}/debug/include
