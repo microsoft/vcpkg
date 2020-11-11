@@ -18,11 +18,16 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nuspell)
+vcpkg_fixup_pkgconfig(
+    # nuspell.pc depends on icu-uc.pc which has -lm specified as private
+    # library. Ignore this -lm, otherwise this function shows error
+    # because it can't find this. -lm is part of glibc on Linux.
+    SYSTEM_LIBRARIES m
+)
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+)
 file(
     INSTALL ${SOURCE_PATH}/COPYING.LESSER
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
