@@ -38,12 +38,12 @@ struct MockVersionedPortfileProvider : PortFileProvider::IVersionedPortfileProvi
 {
     std::map<std::string, std::map<Versions::Version, SourceControlFileLocation>> v;
 
-    ExpectedS<const SourceControlFileLocation&> get_control_file(
-        const vcpkg::Versions::VersionSpec& version_spec) override
+    ExpectedS<const SourceControlFileLocation&> get_control_file(const std::string& name,
+                                                                 const vcpkg::Versions::Version& version) override
     {
-        auto it = v.find(version_spec.name);
+        auto it = v.find(name);
         if (it == v.end()) return std::string("Unknown port name");
-        auto it2 = it->second.find(version_spec.version);
+        auto it2 = it->second.find(version);
         if (it2 == it->second.end()) return std::string("Unknown port version");
         return it2->second;
     }
@@ -674,4 +674,77 @@ TEST_CASE ("version install transitive feature versioned", "[versionplan]")
     check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
     check_name_and_version(install_plan.install_actions[1], "b", {"2", 0}, {"y"});
     check_name_and_version(install_plan.install_actions[2], "a", {"1", 0}, {"x"});
+}
+
+TEST_CASE ("version install constraint-reduction", "[versionplan]")
+{
+    MockCMakeVarProvider var_provider;
+
+    SECTION ("higher baseline")
+    {
+        MockVersionedPortfileProvider vp;
+
+        vp.emplace("b", {"1", 0}, Scheme::Relaxed).source_control_file->core_paragraph->dependencies = {
+            Dependency{"c", {}, {}, {Constraint::Type::Minimum, "2"}},
+        };
+        vp.emplace("b", {"2", 0}, Scheme::Relaxed).source_control_file->core_paragraph->dependencies = {
+            Dependency{"c", {}, {}, {Constraint::Type::Minimum, "1"}},
+        };
+
+        vp.emplace("c", {"1", 0}, Scheme::Relaxed);
+        // c@2 is used to detect if certain constraints were evaluated
+        vp.emplace("c", {"2", 0}, Scheme::Relaxed);
+
+        MockBaselineProvider bp;
+        bp.v["b"] = {"2", 0};
+        bp.v["c"] = {"1", 0};
+
+        auto install_plan = unwrap(
+            Dependencies::create_versioned_install_plan(vp,
+                                                        bp,
+                                                        var_provider,
+                                                        {
+                                                            Dependency{"b", {}, {}, {Constraint::Type::Minimum, "1"}},
+                                                        },
+                                                        {},
+                                                        Test::X86_WINDOWS));
+
+        REQUIRE(install_plan.size() == 2);
+        check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
+        check_name_and_version(install_plan.install_actions[1], "b", {"2", 0});
+    }
+
+    SECTION ("higher toplevel")
+    {
+        MockVersionedPortfileProvider vp;
+
+        vp.emplace("b", {"1", 0}, Scheme::Relaxed).source_control_file->core_paragraph->dependencies = {
+            Dependency{"c", {}, {}, {Constraint::Type::Minimum, "2"}},
+        };
+        vp.emplace("b", {"2", 0}, Scheme::Relaxed).source_control_file->core_paragraph->dependencies = {
+            Dependency{"c", {}, {}, {Constraint::Type::Minimum, "1"}},
+        };
+
+        vp.emplace("c", {"1", 0}, Scheme::Relaxed);
+        // c@2 is used to detect if certain constraints were evaluated
+        vp.emplace("c", {"2", 0}, Scheme::Relaxed);
+
+        MockBaselineProvider bp;
+        bp.v["b"] = {"1", 0};
+        bp.v["c"] = {"1", 0};
+
+        auto install_plan = unwrap(
+            Dependencies::create_versioned_install_plan(vp,
+                                                        bp,
+                                                        var_provider,
+                                                        {
+                                                            Dependency{"b", {}, {}, {Constraint::Type::Minimum, "2"}},
+                                                        },
+                                                        {},
+                                                        Test::X86_WINDOWS));
+
+        REQUIRE(install_plan.size() == 2);
+        check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
+        check_name_and_version(install_plan.install_actions[1], "b", {"2", 0});
+    }
 }

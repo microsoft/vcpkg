@@ -41,7 +41,7 @@ namespace vcpkg::PortFileProvider
     struct IVersionedPortfileProvider
     {
         virtual ExpectedS<const SourceControlFileLocation&> get_control_file(
-            const vcpkg::Versions::VersionSpec& version_spec) = 0;
+            const std::string& name, const vcpkg::Versions::Version& version) = 0;
     };
 
     struct IBaselineProvider

@@ -1361,7 +1361,7 @@ namespace vcpkg::Dependencies
                 // constraint is not removed via upgrades.
                 return;
             }
-            auto p = vsi.deps.emplace(std::move(feature), std::vector<FeatureSpec>{});
+            auto p = vsi.deps.emplace(feature, std::vector<FeatureSpec>{});
             if (!p.second)
             {
                 // This feature has already been handled
@@ -1411,7 +1411,7 @@ namespace vcpkg::Dependencies
                                                    const Versions::Version& version,
                                                    const std::string& origin)
         {
-            auto maybe_scfl = m_ver_provider.get_control_file({ref.first.name(), version});
+            auto maybe_scfl = m_ver_provider.get_control_file(ref.first.name(), version);
 
             if (auto p_scfl = maybe_scfl.get())
             {
@@ -1497,38 +1497,64 @@ namespace vcpkg::Dependencies
         {
             for (auto&& dep : deps)
             {
-                auto base_ver = m_base_provider.get_baseline(dep.name);
-                auto dep_ver = to_version(dep.constraint);
+                PackageSpec spec(dep.name, t);
+                auto& node = emplace_package(spec);
+                const std::string toplevel = "toplevel";
 
-                if (!dep_ver && !base_ver)
+                auto dep_ver = to_version(dep.constraint);
+                auto base_ver = m_base_provider.get_baseline(dep.name);
+                if (auto p_dep_ver = dep_ver.get())
                 {
-                    m_errors.push_back(Strings::concat("Cannot resolve unconstrained dependency from top-level to ",
-                                                       dep.name,
-                                                       " without a baseline entry or override."));
+                    m_roots.push_back(DepSpec{spec, *p_dep_ver, dep.features});
+                    if (auto p_base_ver = base_ver.get())
+                    {
+                        // Compare version constraint with baseline to only evaluate the "tighter" constraint
+                        auto dep_scfl = m_ver_provider.get_control_file(dep.name, *p_dep_ver);
+                        auto base_scfl = m_ver_provider.get_control_file(dep.name, *p_base_ver);
+                        if (dep_scfl && base_scfl)
+                        {
+                            auto r =
+                                compare_versions(dep_scfl.get()->source_control_file->core_paragraph->version_scheme,
+                                                 *p_dep_ver,
+                                                 base_scfl.get()->source_control_file->core_paragraph->version_scheme,
+                                                 *p_base_ver);
+                            if (r == VerComp::lt)
+                            {
+                                add_constraint(node, *p_base_ver, "baseline");
+                                add_constraint(node, *p_dep_ver, toplevel);
+                            }
+                            else
+                            {
+                                add_constraint(node, *p_dep_ver, toplevel);
+                                add_constraint(node, *p_base_ver, "baseline");
+                            }
+                        }
+                        else
+                        {
+                            if (!dep_scfl) m_errors.push_back(dep_scfl.error());
+                            if (!base_scfl) m_errors.push_back(base_scfl.error());
+                        }
+                    }
+                    else
+                    {
+                        add_constraint(node, *p_dep_ver, toplevel);
+                    }
+                }
+                else if (auto p_base_ver = base_ver.get())
+                {
+                    m_roots.push_back(DepSpec{spec, *p_base_ver, dep.features});
+                    add_constraint(node, *p_base_ver, toplevel);
                 }
                 else
                 {
-                    PackageSpec spec(dep.name, t);
-                    auto& node = emplace_package(spec);
-                    const std::string toplevel = "toplevel";
+                    m_errors.push_back(Strings::concat("Cannot resolve unversioned dependency from top-level to ",
+                                                       dep.name,
+                                                       " without a baseline entry or override."));
+                }
 
-                    if (auto dv = dep_ver.get())
-                    {
-                        m_roots.push_back(DepSpec{spec, *dv, dep.features});
-                        add_constraint(node, *dv, toplevel);
-                    }
-                    else if (auto bv = base_ver.get())
-                    {
-                        m_roots.push_back(DepSpec{spec, *bv, dep.features});
-                    }
-
-                    if (auto bv = base_ver.get())
-                    {
-                        add_constraint(node, *bv, toplevel);
-                    }
-
-                    for (auto&& f : dep.features)
-                        add_constraint(node, f, toplevel);
+                for (auto&& f : dep.features)
+                {
+                    add_constraint(node, f, toplevel);
                 }
             }
         }
