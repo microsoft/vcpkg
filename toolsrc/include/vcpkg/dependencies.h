@@ -184,3 +184,4 @@ namespace vcpkg::Dependencies
                                                         const CreateInstallPlanOptions& options = {});
 
     void print_plan(const ActionPlan& action_plan, const bool is_recursive = true, const fs::path& vcpkg_root_dir = {});
+}

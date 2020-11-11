@@ -22,33 +22,6 @@ using Test::make_status_pgh;
 using Test::MockCMakeVarProvider;
 using Test::PackageSpecMap;
 
-///// <summary>
-///// Assert that the given action an install of given features from given package.
-///// </summary>
-// static void features_check(Dependencies::InstallPlanAction& plan,
-//                           std::string pkg_name,
-//                           std::vector<std::string> expected_features,
-//                           Triplet triplet = Test::X86_WINDOWS)
-//{
-//    const auto& feature_list = plan.feature_list;
-//
-//    REQUIRE(plan.spec.triplet().to_string() == triplet.to_string());
-//    REQUIRE(pkg_name == plan.spec.name());
-//    REQUIRE(feature_list.size() == expected_features.size());
-//
-//    for (auto&& feature_name : expected_features)
-//    {
-//        // TODO: see if this can be simplified
-//        if (feature_name == "core" || feature_name.empty())
-//        {
-//            REQUIRE((Util::find(feature_list, "core") != feature_list.end() ||
-//                     Util::find(feature_list, "") != feature_list.end()));
-//            continue;
-//        }
-//        REQUIRE(Util::find(feature_list, feature_name) != feature_list.end());
-//    }
-//}
-
 struct MockBaselineProvider : PortFileProvider::IBaselineProvider
 {
     std::map<std::string, Versions::Version> v;
@@ -112,10 +85,23 @@ T unwrap(ExpectedS<T> e)
     return std::move(*e.get());
 }
 
-static void check_name_and_version(const Dependencies::InstallPlanAction& ipa, StringLiteral name, Versions::Version v)
+static void check_name_and_version(const Dependencies::InstallPlanAction& ipa,
+                                   StringLiteral name,
+                                   Versions::Version v,
+                                   View<StringLiteral> features = {})
 {
     CHECK(ipa.spec.name() == name);
     CHECK(ipa.source_control_file_location.has_value());
+    CHECK(ipa.feature_list.size() == features.size() + 1);
+    {
+        INFO("ipa.feature_list = [" << Strings::join(", ", ipa.feature_list) << "]");
+        for (auto&& f : features)
+        {
+            INFO("f = \"" << f.c_str() << "\"");
+            CHECK(Util::find(ipa.feature_list, f) != ipa.feature_list.end());
+        }
+        CHECK(Util::find(ipa.feature_list, "core") != ipa.feature_list.end());
+    }
     if (auto scfl = ipa.source_control_file_location.get())
     {
         CHECK(scfl->source_control_file->core_paragraph->version == v.text);
@@ -563,4 +549,83 @@ TEST_CASE ("version install scheme change in port version", "[versionplan]")
         check_name_and_version(install_plan.install_actions[0], "b", {"1", 1});
         check_name_and_version(install_plan.install_actions[1], "a", {"2", 1});
     }
+}
+
+TEST_CASE ("version install simple feature", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+    auto a_x = std::make_unique<FeatureParagraph>();
+    a_x->name = "x";
+    vp.emplace("a", {"1", 0}, Scheme::Relaxed).source_control_file->feature_paragraphs.push_back(std::move(a_x));
+
+    MockCMakeVarProvider var_provider;
+
+    SECTION ("with baseline")
+    {
+        MockBaselineProvider bp;
+        bp.v["a"] = {"1", 0};
+
+        auto install_plan = unwrap(Dependencies::create_versioned_install_plan(vp,
+                                                                               bp,
+                                                                               var_provider,
+                                                                               {
+                                                                                   Dependency{"a", {"x"}},
+                                                                               },
+                                                                               {},
+                                                                               Test::X86_WINDOWS));
+
+        REQUIRE(install_plan.size() == 1);
+        check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x"});
+    }
+
+    SECTION ("without baseline")
+    {
+        MockBaselineProvider bp;
+
+        auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+            vp,
+            bp,
+            var_provider,
+            {
+                Dependency{"a", {"x"}, {}, {Constraint::Type::Minimum, "1", 0}},
+            },
+            {},
+            Test::X86_WINDOWS));
+
+        REQUIRE(install_plan.size() == 1);
+        check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x"});
+    }
+}
+
+TEST_CASE ("version install transitive features", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+
+    auto a_x = std::make_unique<FeatureParagraph>();
+    a_x->name = "x";
+    a_x->dependencies.push_back(Dependency{"b", {"y"}});
+    vp.emplace("a", {"1", 0}, Scheme::Relaxed).source_control_file->feature_paragraphs.push_back(std::move(a_x));
+
+    auto b_y = std::make_unique<FeatureParagraph>();
+    b_y->name = "y";
+    vp.emplace("b", {"1", 0}, Scheme::Relaxed).source_control_file->feature_paragraphs.push_back(std::move(b_y));
+
+    MockCMakeVarProvider var_provider;
+
+    MockBaselineProvider bp;
+    bp.v["a"] = {"1", 0};
+    bp.v["b"] = {"1", 0};
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(vp,
+                                                                           bp,
+                                                                           var_provider,
+                                                                           {
+                                                                               Dependency{"a", {"x"}},
+                                                                           },
+                                                                           {},
+                                                                           Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 2);
+    check_name_and_version(install_plan.install_actions[0], "b", {"1", 0}, {"y"});
+    check_name_and_version(install_plan.install_actions[1], "a", {"1", 0}, {"x"});
 }
