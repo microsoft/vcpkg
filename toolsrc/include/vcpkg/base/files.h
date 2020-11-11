@@ -38,6 +38,7 @@ namespace fs
 
     path u8path(vcpkg::StringView s);
     inline path u8path(const char* first, const char* last) { return u8path(vcpkg::StringView{first, last}); }
+    inline path u8path(std::initializer_list<char> il) { return u8path(vcpkg::StringView{il.begin(), il.end()}); }
     inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
 
 #if defined(_MSC_VER)
@@ -57,6 +58,9 @@ namespace fs
 
     std::string u8string(const path& p);
     std::string generic_u8string(const path& p);
+
+    // equivalent to p.lexically_normal()
+    path lexically_normal(const path& p);
 
 #if defined(_WIN32)
     enum class file_type
@@ -250,9 +254,6 @@ namespace vcpkg::Files
 #else
     constexpr char preferred_separator = '/';
 #endif // _WIN32
-
-    // Adds file as a new path element to the end of base, with an additional slash if necessary
-    std::string add_filename(StringView base, StringView file);
 
 #if defined(_WIN32)
     fs::path win32_fix_path_case(const fs::path& source);
