@@ -184,9 +184,6 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     URL "https://repo.msys2.org/msys/x86_64/libtool-2.4.6-9-x86_64.pkg.tar.xz"
     SHA512 b309799e5a9d248ef66eaf11a0bd21bf4e8b9bd5c677c627ec83fa760ce9f0b54ddf1b62cbb436e641fbbde71e3b61cb71ff541d866f8ca7717a3a0dbeb00ebf
     DEPS grep sed coreutils file 
-    # file.exe is required so that libtool is not using a wrong fallback regex to find the correct libraries.
-    # alternativly lt_cv_deplibs_check_method=pass_all could be passed via configure and the objdump check skipped.
-    # Update. file.exe seems not be able to run with in bash. 
   )
   msys_package(
     URL "https://repo.msys2.org/msys/x86_64/file-5.39-1-x86_64.pkg.tar.zst"

@@ -489,7 +489,7 @@ function(vcpkg_configure_make)
     list(JOIN ALL_LIBS_LIST " -l" ALL_LIBS_STRING)
 
     if(ALL_LIBS_STRING)
-        set(ALL_LIBS_LIST "-l${ALL_LIBS_STRING}")
+        set(ALL_LIBS_STRING "-l${ALL_LIBS_STRING}")
         if(DEFINED ENV{LIBS})
             set(ENV{LIBS} "$ENV{LIBS} ${ALL_LIBS_STRING}")
         else()
