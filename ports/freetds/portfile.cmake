@@ -1,12 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO freetds/freetds
-    REF fbf3bbbbc27283b35a5a6aec9992521e684c9abf # 1.2.5
+    REF d33674659aa7d70cf713c8920850c4d6751dbd95 # See https://github.com/microsoft/vcpkg/pull/14120#issuecomment-715896755
     HEAD_REF master
-    SHA512 e18dba16705db951ea52055476fac342c1bb62e90629ef82064ad9d3d4a7f2078e8f7674b1602bc21798240e005052dcbc67cdd0912b47163bd95956128c4677
-    PATCHES
-        skip-unit-tests.patch
-        fix-encoding-h-dependency.patch
+    SHA512 a01f3bb0b61459e97e50e0ed6ac0f7b2f17efa18
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
