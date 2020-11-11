@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v5.75.0
     SHA512 8498fbd6bb2ed2fc37feab2e248f9d56800dafda27d993e6eefc66e383e74f58aa237c8813f92f03f5aec0afe03c4e0ca76d1dc71e9f0c9d69e0a08627b5ecd2
     HEAD_REF master
+    PATCHES
+        "fix_libiconv.patch"
 )
 
 vcpkg_find_acquire_program(GETTEXT_MSGMERGE)
