@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         "add-missing-dependencies.patch"
+        "fix_dbusmetatypes.patch"
 )
 
 vcpkg_find_acquire_program(GETTEXT_MSGMERGE)
