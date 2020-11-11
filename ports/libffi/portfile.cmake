@@ -47,6 +47,12 @@ endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
+if(VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc
+        "-lffi" "-llibffi")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc
+        "-lffi" "-llibffi")
+endif()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
