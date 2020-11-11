@@ -110,17 +110,17 @@ if("python" IN_LIST FEATURES)
         )
     # Due to ITKs internal shenanigans with the variables ......
     if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python38.lib"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python38_d.lib"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.8")
-        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python38_d.lib")
-        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python38.lib")
+        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python39.lib"
+                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python39_d.lib"
+                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.9")
+        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python39_d.lib")
+        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python39.lib")
     elseif(VCPKG_TARGET_IS_LINUX)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython38m.a"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython38md.a"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.8m")
-        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/libpython38md.a")
-        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/libpython38m.a")
+        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython39m.a"
+                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython39md.a"
+                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.9m")
+        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/libpython39md.a")
+        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/libpython39m.a")
     elseif(VCPKG_TARGET_IS_OSX)
         #Need Python3 information on OSX within VCPKG
     endif()
