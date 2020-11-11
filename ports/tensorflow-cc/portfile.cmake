@@ -281,7 +281,7 @@ foreach(BUILD_TYPE dbg rel)
 		)
 	endif()
 
-	if(BUILD_TYPE STREQUAL dbg)
+	if(BUILD_TYPE STREQUAL "dbg")
 		set(DIR_PREFIX "/debug")
 	else()
 		set(DIR_PREFIX "")
@@ -298,12 +298,19 @@ foreach(BUILD_TYPE dbg rel)
 				message(STATUS "Warning: debug information tensorflow_cc.pdb will be of limited use because only a reduced set could be produced due to the 4GB internal PDB file limit even on x64.")
 			endif()
 		else()
-			set(TF_LIB_SUFFIXES "")
+			if(BUILD_TYPE STREQUAL dbg)
+				set(library_parts_variable TF_LIB_PARTS_DEBUG)
+			else()
+				set(library_parts_variable TF_LIB_PARTS_RELEASE)
+			endif()
+			set(${library_parts_variable})
+
 			# library might have been split because no more than 4GB are supported even on x64 Windows
 			foreach(PART_NO RANGE 1 100)
-				if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib)
-					file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-					list(APPEND TF_LIB_SUFFIXES "-part${PART_NO}")
+				set(source "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow_cc-part${PART_NO}.lib")
+				if(EXISTS "${source}")
+					file(COPY "${source}" DESTINATION "${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib")
+					list(APPEND ${library_parts_variable} "tensorflow_cc-part${PART_NO}.lib")
 				else()
 					break()
 				endif()
@@ -366,61 +373,33 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
 		set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
 
-		set(prefix_RELEASE [[${TENSORFLOW_INSTALL_PREFIX}]])
-		set(prefix_DEBUG [[${TENSORFLOW_INSTALL_PREFIX}/debug]])
+		set(prefix [[${TENSORFLOW_INSTALL_PREFIX}]])
 
-		set(ALL_PARTS)
-		foreach(part ${TF_LIB_SUFFIXES})
-			file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "
-if(TARGET tensorflow_cc::tensorflow_cc${part})
-	message(FATAL_ERROR \"Some (but not all) targets in this config.cmake file were already defined.
-	tensorflow_cc::tensorflow_cc was not defined, but
-	tensorflow_cc::tensorflow_cc${part} was.\"
-)
-endif()
+		set(libs_to_link)
+		foreach(lib IN LISTS TF_LIB_PARTS_RELEASE)
+			list(APPEND libs_to_link "$<$<CONFIG:Release>:${prefix}/lib/${lib}>")
+		endforeach()
+		foreach(lib IN LISTS TF_LIB_PARTS_DEBUG)
+			list(APPEND libs_to_link "$<$<CONFIG:Debug>:${prefix}/debug/lib/${lib}>")
+		endforeach()
+		if(TENSORFLOW_HAS_RELEASE)
+			set(TF_LIB_PARTS_DEFAULT ${TF_LIB_PARTS_RELEASE})
+		elseif(TENSORFLOW_HAS_DEBUG)
+			set(TF_LIB_PARTS_DEFAULT ${TF_LIB_PARTS_DEBUG})
+		endif()
 
-add_library(tensorflow_cc::tensorflow_cc${part} STATIC IMPORTED)
-"
-			)
-
-			if(TENSORFLOW_HAS_RELEASE)
-				file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "
-set_property(TARGET tensorflow_cc::tensorflow_cc${part}
-	PROPERTY IMPORTED_LOCATION
-		${prefix_RELEASE}/lib/tensorflow${part}.lib
-)"
-				)
-				if(TENSORFLOW_HAS_DEBUG)
-					file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "
-set_property(TARGET tensorflow_cc::tensorflow_cc${part}
-	APPEND PROPERTY IMPORTED_CONFIGURATIONS
-		DEBUG
-)
-set_property(TARGET tensorflow_cc::tensorflow_cc${part}
-	PROPERTY IMPORTED_LOCATION_DEBUG
-		${prefix_DEBUG}/lib/tensorflow${part}.lib
-)"
-					)
-				endif()
-			elseif(TENSORFLOW_HAS_DEBUG)
-				file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "
-set_property(TARGET tensorflow_cc::tensorflow_cc${part}
-	PROPERTY IMPORTED_LOCATION
-		${prefix_DEBUG}/lib/tensorflow${part}.lib
-)"
-				)
-			endif()
-
-			list(APPEND ALL_PARTS "tensorflow_cc::tensorflow_cc${part}")
+		foreach(lib IN LISTS TF_LIB_PARTS_DEFAULT)
+			list(APPEND libs_to_link
+				"$<$<NOT:$<OR:$<CONFIG:Release>,$<CONFIG:Debug>>>:${lib}>")
 		endforeach()
 
-		file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake
-"
-set_property(TARGET tensorflow_cc::tensorflow_cc
-	PROPERTY INTERFACE_LINK_LIBRARIES
-		${ALL_PARTS}
-)
-")
+		string(REPLACE ";" "\n\t\t" libs_to_link "${libs_to_link}")
+		file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow-cc/tensorflow-cc-config.cmake "
+target_link_libraries(tensorflow_cc::tensorflow_cc
+	INTERFACE
+		${libs_to_link}
+)"
+		)
 	endif()
 else()
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

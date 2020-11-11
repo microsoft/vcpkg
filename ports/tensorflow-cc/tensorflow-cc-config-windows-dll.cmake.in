@@ -2,7 +2,7 @@ if(TARGET tensorflow_cc::tensorflow_cc)
 	return()
 endif()
 
-add_library(tensorflow_cc::tensorflow_cc SHARED IMPORTED)
+add_library(tensorflow_cc::tensorflow_cc SHARED IMPORTED GLOBAL)
 
 # Compute the installation prefix from this tensorflow-cc-config.cmake file location.
 # CMAKE_CURRENT_LIST_DIR = [vcpkg_installed_dir]/[target_triplet]/share/tensorflow-cc
@@ -19,40 +19,39 @@ target_include_directories(tensorflow_cc::tensorflow_cc
 )
 
 if(@TENSORFLOW_HAS_RELEASE@)
-	set_property(TARGET tensorflow_cc::tensorflow_cc
-		PROPERTY IMPORTED_LOCATION
-			"${TENSORFLOW_INSTALL_PREFIX}/bin/tensorflow_cc.dll"
+	set_target_properties(tensorflow_cc::tensorflow_cc
+		PROPERTIES
+			IMPORTED_LOCATION "${TENSORFLOW_INSTALL_PREFIX}/bin/tensorflow_cc.dll"
+			IMPORTED_IMPLIB "${TENSORFLOW_INSTALL_PREFIX}/lib/tensorflow_cc.lib"
 	)
+
 	set_property(TARGET tensorflow_cc::tensorflow_cc
-		PROPERTY IMPORTED_IMPLIB
-			"${TENSORFLOW_INSTALL_PREFIX}/lib/tensorflow_cc.lib"
+		APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE
+	)
+	set_target_properties(tensorflow_cc::tensorflow_cc
+		PROPERTIES
+			IMPORTED_LOCATION_RELEASE "${TENSORFLOW_INSTALL_PREFIX}/bin/tensorflow_cc.dll"
+			IMPORTED_IMPLIB_RELEASE "${TENSORFLOW_INSTALL_PREFIX}/lib/tensorflow_cc.lib"
 	)
 endif()
 
 if(@TENSORFLOW_HAS_DEBUG@)
-	if(@TENSORFLOW_HAS_RELEASE@)
-		set_property(TARGET tensorflow_cc::tensorflow_cc
-			APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG
-		)
-
-		set_property(TARGET tensorflow_cc::tensorflow_cc
-			PROPERTY IMPORTED_LOCATION_DEBUG
-				"${TENSORFLOW_INSTALL_PREFIX}/debug/bin/tensorflow_cc.dll"
-		)
-		set_property(TARGET tensorflow_cc::tensorflow_cc
-			PROPERTY IMPORTED_IMPLIB_DEBUG
-				"${TENSORFLOW_INSTALL_PREFIX}/debug/lib/tensorflow_cc.lib"
-		)
-	else()
-		set_property(TARGET tensorflow_cc::tensorflow_cc
-			PROPERTY IMPORTED_LOCATION
-				"${TENSORFLOW_INSTALL_PREFIX}/debug/bin/tensorflow_cc.dll"
-		)
-		set_property(TARGET tensorflow_cc::tensorflow_cc
-			PROPERTY IMPORTED_IMPLIB
-				"${TENSORFLOW_INSTALL_PREFIX}/debug/lib/tensorflow_cc.lib"
+	if(NOT @TENSORFLOW_HAS_RELEASE@)
+		set_target_properties(tensorflow_cc::tensorflow_cc
+			PROPERTIES
+				IMPORTED_LOCATION "${TENSORFLOW_INSTALL_PREFIX}/debug/bin/tensorflow_cc.dll"
+				IMPORTED_IMPLIB "${TENSORFLOW_INSTALL_PREFIX}/debug/lib/tensorflow_cc.lib"
 		)
 	endif()
+
+	set_property(TARGET tensorflow_cc::tensorflow_cc
+		APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG
+	)
+	set_target_properties(tensorflow_cc::tensorflow_cc
+		PROPERTIES
+			IMPORTED_LOCATION_DEBUG "${TENSORFLOW_INSTALL_PREFIX}/debug/bin/tensorflow_cc.dll"
+			IMPORTED_IMPLIB_DEBUG "${TENSORFLOW_INSTALL_PREFIX}/debug/lib/tensorflow_cc.lib"	
+	)
 endif()
 
 set(tensorflow_cc_FOUND TRUE)
