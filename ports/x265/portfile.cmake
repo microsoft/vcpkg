@@ -40,7 +40,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-if(WIN32 AND (NOT MINGW))
+if(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_MINGW))
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
@@ -50,7 +50,7 @@ endif()
 if(UNIX)
     vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES numa)
 else()
-    vcpkg_fixup_pkgconfig()
+    vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES c++ stdc++)
 endif()
 
 # Handle copyright
