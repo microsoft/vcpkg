@@ -158,7 +158,7 @@ if("clang" IN_LIST FEATURES)
     foreach(tool_file IN LISTS LLVM_TOOL_FILES)
         get_filename_component(tool_file "${tool_file}" NAME)
         if(tool_file MATCHES "${LLVM_EXECUTABLE_REGEX}")
-            list(APPEND LLVM_TOOLS "${CMAKE_MATCH_0}")
+            list(APPEND LLVM_TOOLS "${CMAKE_MATCH_1}")
         endif()
     endforeach()
 
