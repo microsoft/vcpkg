@@ -272,7 +272,7 @@ namespace vcpkg
 
             if (ec)
             {
-                if (ec == std::errc::device_or_resource_busy || args.allow_spurious_lock_failures.value_or(false))
+                if (ec == std::errc::device_or_resource_busy || args.ignore_lock_failures.value_or(false))
                 {
                     System::printf(
                         System::Color::error, "Failed to take the filesystem lock on %s:\n", fs::u8string(vcpkg_lock));

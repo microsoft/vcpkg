@@ -293,7 +293,7 @@ namespace vcpkg
                 {FEATURE_PACKAGES_SWITCH, &VcpkgCmdArguments::feature_packages},
                 {BINARY_CACHING_SWITCH, &VcpkgCmdArguments::binary_caching},
                 {WAIT_FOR_LOCK_SWITCH, &VcpkgCmdArguments::wait_for_lock},
-                {ALLOW_SPURIOUS_LOCK_FAILURES_SWITCH, &VcpkgCmdArguments::allow_spurious_lock_failures},
+                {IGNORE_LOCK_FAILURES_SWITCH, &VcpkgCmdArguments::ignore_lock_failures},
                 {JSON_SWITCH, &VcpkgCmdArguments::json},
             };
 
@@ -664,10 +664,10 @@ namespace vcpkg
         from_env(DEFAULT_VISUAL_STUDIO_PATH_ENV, default_visual_studio_path);
 
         {
-            const auto vcpkg_disable_lock = System::get_environment_variable(ALLOW_SPURIOUS_LOCK_FAILURES_ENV);
-            if (vcpkg_disable_lock.has_value() && !allow_spurious_lock_failures.has_value())
+            const auto vcpkg_disable_lock = System::get_environment_variable(IGNORE_LOCK_FAILURES_ENV);
+            if (vcpkg_disable_lock.has_value() && !ignore_lock_failures.has_value())
             {
-                allow_spurious_lock_failures = true;
+                ignore_lock_failures = true;
             }
         }
 
@@ -932,8 +932,8 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::PRINT_METRICS_SWITCH;
 
     constexpr StringLiteral VcpkgCmdArguments::WAIT_FOR_LOCK_SWITCH;
-    constexpr StringLiteral VcpkgCmdArguments::ALLOW_SPURIOUS_LOCK_FAILURES_SWITCH;
-    constexpr StringLiteral VcpkgCmdArguments::ALLOW_SPURIOUS_LOCK_FAILURES_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::IGNORE_LOCK_FAILURES_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::IGNORE_LOCK_FAILURES_ENV;
 
     constexpr StringLiteral VcpkgCmdArguments::JSON_SWITCH;
 
