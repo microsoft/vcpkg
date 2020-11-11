@@ -1,0 +1,22 @@
+diff --git a/build/make/gen_msvs_vcxproj.sh b/build/make/gen_msvs_vcxproj.sh
+index bb1c31d23..b634b0609 100755
+--- a/build/make/gen_msvs_vcxproj.sh
++++ b/build/make/gen_msvs_vcxproj.sh
+@@ -247,13 +247,13 @@ libs=${libs// /;}
+ case "$target" in
+     x86_64*)
+         platforms[0]="x64"
+-        asm_Debug_cmdline="yasm -Xvc -g cv8 -f win64 ${yasmincs} &quot;%(FullPath)&quot;"
+-        asm_Release_cmdline="yasm -Xvc -f win64 ${yasmincs} &quot;%(FullPath)&quot;"
++        asm_Debug_cmdline="nasm -Xvc -gcv8 -f win64 ${yasmincs} &quot;%(FullPath)&quot;"
++        asm_Release_cmdline="nasm -Xvc -f win64 ${yasmincs} &quot;%(FullPath)&quot;"
+     ;;
+     x86*)
+         platforms[0]="Win32"
+-        asm_Debug_cmdline="yasm -Xvc -g cv8 -f win32 ${yasmincs} &quot;%(FullPath)&quot;"
+-        asm_Release_cmdline="yasm -Xvc -f win32 ${yasmincs} &quot;%(FullPath)&quot;"
++        asm_Debug_cmdline="nasm -Xvc -gcv8 -f win32 ${yasmincs} &quot;%(FullPath)&quot;"
++        asm_Release_cmdline="nasm -Xvc -f win32 ${yasmincs} &quot;%(FullPath)&quot;"
+     ;;
+     arm64*)
+         platforms[0]="ARM64"
