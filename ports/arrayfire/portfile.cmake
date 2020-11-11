@@ -1,10 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arrayfire/arrayfire
-    REF v3.7.1
-    SHA512 0a4d03ade95c6e587715865e039ba03beb5194040545c4c20f1729f0a3c953112624259e6068a6ce93d41838001fc9ffa1fbf122eabf1b08526cb9e0ba51c77e
+    REF 11148d7e27be07775a5bd32ee58ef22ba6e889b0 # v3.7.2
+    SHA512 bb6bfe213bf9787e89099b94d4bbbdf444565ddc32be1ea49b69a1951268b23423c14c3082f5da1412bb7077a0b7faa95b0f5dcc4ac2887a15d9285e9fc31545
     HEAD_REF master
-    PATCHES submodules.patch
+    PATCHES build.patch
 )
 
 # arrayfire cpu thread lib needed as a submodule for the CPU backend
