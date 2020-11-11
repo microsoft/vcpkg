@@ -662,7 +662,7 @@ function(vcpkg_configure_make)
                 WORKING_DIRECTORY "${TAR_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}
             )
-            if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
                 file(GLOB_RECURSE LIBTOOL_FILES "${TAR_DIR}*/libtool")
                 foreach(lt_file IN LISTS LIBTOOL_FILES)
                     file(READ "${lt_file}" _contents)
