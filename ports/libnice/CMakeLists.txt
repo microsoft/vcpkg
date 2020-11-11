@@ -4,11 +4,18 @@ project(libnice
 	VERSION 0.1.15)
 SET (this_target libnice)
 
-add_definitions(
-	-D_CRT_SECURE_NO_WARNINGS
-	-D_SCL_SECURE_NO_WARNINGS
-	-DHAVE_OPENSSL
-	-DPACKAGE_STRING="${PROJECT_VERSION}")
+if (WIN32)
+    add_definitions(
+        -D_CRT_SECURE_NO_WARNINGS
+        -D_SCL_SECURE_NO_WARNINGS
+        -DHAVE_OPENSSL
+        -DPACKAGE_STRING="${PROJECT_VERSION}")
+else()
+    add_definitions(
+        -DHAVE_OPENSSL
+        -DPACKAGE_STRING="${PROJECT_VERSION}"
+        -DHAVE_NETDB_H=1)
+endif()
 
 configure_file(${CMAKE_SOURCE_DIR}/win32/vs9/config.h ${CMAKE_SOURCE_DIR}/config.h COPYONLY)
 configure_file(${CMAKE_SOURCE_DIR}/win32/vs9/libnice.def ${CMAKE_SOURCE_DIR}/libnice.def COPYONLY)
@@ -121,8 +128,14 @@ SET(HEADERS
 	./win32/vs9/config.h
 	)
 add_library(libnice ${SRCS} ${HEADERS})
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4244 /wd4005 /wd4391 /wd4142 /wd4267")
-target_link_libraries(libnice ${IPHLPAPI_LIBRARY} ${WS2_32_LIB} ${ADVAPI32_LIB} ${GLIB_LIBRARY} ${GOBJECT_LIBRARY} ${GIO_LIBRARY} OpenSSL::SSL)
+if (MSVC)
+    set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_FLAGS "/wd4244 /wd4005 /wd4391 /wd4142 /wd4267")
+endif()
+if (WIN32)
+    target_link_libraries(libnice ${IPHLPAPI_LIBRARY} ${WS2_32_LIB} ${ADVAPI32_LIB} ${GLIB_LIBRARY} ${GOBJECT_LIBRARY} ${GIO_LIBRARY} OpenSSL::SSL)
+else()
+    target_link_libraries(libnice ${GLIB_LIBRARY} ${GOBJECT_LIBRARY} ${GIO_LIBRARY} OpenSSL::SSL)
+endif()
 install(TARGETS libnice
 RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib

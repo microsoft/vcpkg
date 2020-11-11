@@ -1,6 +1,5 @@
 Source: boost-build
-Version: 1.73.0
-Port-Version: 4
+Version: 1.74.0
 Homepage: https://github.com/boostorg/build
 Description: Boost.Build
 Build-Depends: boost-uninstall

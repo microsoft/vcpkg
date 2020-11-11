@@ -912,6 +912,7 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ENV;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ARG;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ENV;
 
     constexpr StringLiteral VcpkgCmdArguments::BINARY_SOURCES_ARG;
 

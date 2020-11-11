@@ -1,0 +1,11 @@
+--- a/meson.build	2019-11-06 00:08:06.000000000 +0100
++++ b/meson.build	2020-11-03 20:02:08.201459200 +0100
+@@ -1,7 +1,7 @@
+ project('libepoxy', 'c', version: '1.5.4',
+         default_options: [
+           'buildtype=debugoptimized',
+-          'c_std=gnu99',
++          'c_std=c99',
+           'warning_level=1',
+         ],
+         license: 'MIT',
