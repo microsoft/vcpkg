@@ -89,7 +89,7 @@ diff --git a/third_party/icu/BUILD.bazel b/third_party/icu/BUILD.bazel
 diff --git a/third_party/nasm/BUILD.bazel b/third_party/nasm/BUILD.bazel
 --- a/third_party/nasm/BUILD.bazel
 +++ b/third_party/nasm/BUILD.bazel
-@@ -158,7 +158,6 @@
+@@ -158,6 +158,7 @@
          "x86",
      ],
      visibility = ["@libjpeg_turbo//:__pkg__"],
