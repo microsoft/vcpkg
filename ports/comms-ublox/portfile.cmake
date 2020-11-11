@@ -16,8 +16,8 @@ vcpkg_configure_cmake(
     OPTIONS
         -DOPT_BUILD_TEST=OFF
         -DOPT_BUILD_PLUGIN=OFF
-        -OPT_NO_COMMS=ON
-        -OPT_EXTERNALS_UPDATE_DISCONNECTED=ON
+        -DOPT_NO_COMMS=ON
+        -DOPT_EXTERNALS_UPDATE_DISCONNECTED=ON
 )
 vcpkg_install_cmake()
 
