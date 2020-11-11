@@ -42,8 +42,12 @@
 ## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 ## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 function(vcpkg_build_make)
-
+    if(NOT _VCPKG_CMAKE_VARS_FILE)
+        # vcpkg_build_make called without using vcpkg_configure_make before
+        vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
+    endif()
     include("${_VCPKG_CMAKE_VARS_FILE}")
+
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH" "")
 
