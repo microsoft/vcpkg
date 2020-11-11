@@ -13,7 +13,6 @@ get_filename_component(TENSORFLOW_INSTALL_PREFIX "${TENSORFLOW_INSTALL_PREFIX}" 
 
 target_include_directories(tensorflow_cc::tensorflow_cc
 	INTERFACE
-		"${TENSORFLOW_INSTALL_PREFIX}/include"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src"
 )

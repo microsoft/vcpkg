@@ -317,23 +317,48 @@ foreach(BUILD_TYPE dbg rel)
 			endforeach()
 		endif()
 	else()
-		file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/${TF_LIB_NAME_FULL} DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-		file(CREATE_LINK ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME_FULL} ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME_SHORT} SYMBOLIC)
-		file(CREATE_LINK ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME_FULL} ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME} SYMBOLIC)
+		file(COPY
+			${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/${TF_LIB_NAME_FULL}
+			DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib
+		)
+
+		# Note: these use relative links
+		file(CREATE_LINK ${TF_LIB_NAME_FULL}
+			${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME_SHORT}
+			SYMBOLIC
+		)
+		file(CREATE_LINK ${TF_LIB_NAME_FULL}
+			${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME}
+			SYMBOLIC
+		)
 		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/${TF_FRAMEWORK_NAME_FULL} DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			file(CREATE_LINK ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME_FULL} ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME_SHORT} SYMBOLIC)
-			file(CREATE_LINK ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME_FULL} ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME} SYMBOLIC)
+			file(COPY
+				${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/${TF_FRAMEWORK_NAME_FULL}
+				DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib
+			)
+			file(CREATE_LINK
+				${TF_FRAMEWORK_NAME_FULL}
+				${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME_SHORT}
+				SYMBOLIC
+			)
+			file(CREATE_LINK
+				${TF_FRAMEWORK_NAME_FULL}
+				${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME}
+				SYMBOLIC
+			)
 		endif()
 	endif()
 endforeach()
 
-file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow-external)
+file(COPY
+	${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/
+	DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow-external
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 	message(STATUS "Warning: Static TensorFlow build contains several external dependencies that may cause linking conflicts (for example, one cannot use both openssl and TensorFlow in the same project, since TensorFlow contains boringssl).")
 	if(VCPKG_TARGET_IS_WINDOWS)
-		message(STATUS "Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to tell the linker to include the whole library, i.e., link using options '/WHOLEARCHIVE:tensorflow_cc.lib /WHOLEARCHIVE:tensorflow_cc-part2.lib /WHOLEARCHIVE:tensorflow_cc-part3.lib ...'")
+		message(STATUS "Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to tell the linker to include the whole library, i.e., link using options '/WHOLEARCHIVE:tensorflow_cc-part1.lib /WHOLEARCHIVE:tensorflow_cc-part2.lib ...'")
 	else()
 		message(STATUS "Note: There is no separate libtensorflow_framework.a as it got merged into libtensorflow_cc.a to avoid linking conflicts.")
 		if(VCPKG_TARGET_IS_OSX)
@@ -384,13 +409,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
 		endforeach()
 		if(TENSORFLOW_HAS_RELEASE)
 			set(TF_LIB_PARTS_DEFAULT ${TF_LIB_PARTS_RELEASE})
+			set(prefix_DEFAULT "${prefix}")
 		elseif(TENSORFLOW_HAS_DEBUG)
 			set(TF_LIB_PARTS_DEFAULT ${TF_LIB_PARTS_DEBUG})
+			set(prefix_DEFAULT "${prefix}/debug")
 		endif()
 
 		foreach(lib IN LISTS TF_LIB_PARTS_DEFAULT)
 			list(APPEND libs_to_link
-				"$<$<NOT:$<OR:$<CONFIG:Release>,$<CONFIG:Debug>>>:${lib}>")
+				"$<$<NOT:$<OR:$<CONFIG:Release>,$<CONFIG:Debug>>>:${prefix}/lib/${lib}>")
 		endforeach()
 
 		string(REPLACE ";" "\n\t\t" libs_to_link "${libs_to_link}")

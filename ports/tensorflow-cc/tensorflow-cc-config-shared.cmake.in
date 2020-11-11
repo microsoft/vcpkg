@@ -24,7 +24,6 @@ target_include_directories(tensorflow_cc::tensorflow_cc
 )
 target_include_directories(tensorflow_cc::tensorflow_framework
 	INTERFACE
-		"${TENSORFLOW_INSTALL_PREFIX}/include"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src"
 )

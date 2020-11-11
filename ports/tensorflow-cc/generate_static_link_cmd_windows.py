@@ -30,7 +30,7 @@ with open(sys.argv[1], "r") as f_in:
                                 continue
                             elif t[0] == '@' and t.endswith("tensorflow_cc.dll-2.params"):
                                 t = t[:-len("dll-2.params")] + "lib-2.params-part1"
-                                params_file = t[1:-length("-part1")]
+                                params_file = t[1:-len("-part1")]
                             line += t + " "
                         f_out.write(line + "\n")
                         # check for more parts if library needs to be split

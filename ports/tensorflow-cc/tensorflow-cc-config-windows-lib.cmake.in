@@ -14,7 +14,6 @@ get_filename_component(TENSORFLOW_INSTALL_PREFIX "${TENSORFLOW_INSTALL_PREFIX}" 
 add_library(tensorflow_cc::tensorflow_cc INTERFACE IMPORTED GLOBAL)
 target_include_directories(tensorflow_cc::tensorflow_cc
 	INTERFACE
-		"${TENSORFLOW_INSTALL_PREFIX}/include"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external"
 		"${TENSORFLOW_INSTALL_PREFIX}/include/tensorflow-external/src"
 )

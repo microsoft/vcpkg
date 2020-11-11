@@ -9,7 +9,7 @@ with open("tensorflow_cc.dll-2.params", "r") as f_in:
     for line in f_in:
         if line.startswith("/OUT:"):
             lib_name = line
-            line = line.replace(".dll", ".lib")
+            line = line.replace(".dll", "-part1.lib")
             f_out.write(line)
         elif line.startswith("/WHOLEARCHIVE:"):
             line = line[len("/WHOLEARCHIVE:"):]
