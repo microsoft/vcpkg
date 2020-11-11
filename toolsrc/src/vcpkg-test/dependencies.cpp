@@ -597,17 +597,22 @@ TEST_CASE ("version install simple feature", "[versionplan]")
     }
 }
 
+static std::unique_ptr<FeatureParagraph> make_fpgh(std::string name)
+{
+    auto f = std::make_unique<FeatureParagraph>();
+    f->name = std::move(name);
+    return f;
+}
+
 TEST_CASE ("version install transitive features", "[versionplan]")
 {
     MockVersionedPortfileProvider vp;
 
-    auto a_x = std::make_unique<FeatureParagraph>();
-    a_x->name = "x";
+    auto a_x = make_fpgh("x");
     a_x->dependencies.push_back(Dependency{"b", {"y"}});
     vp.emplace("a", {"1", 0}, Scheme::Relaxed).source_control_file->feature_paragraphs.push_back(std::move(a_x));
 
-    auto b_y = std::make_unique<FeatureParagraph>();
-    b_y->name = "y";
+    auto b_y = make_fpgh("y");
     vp.emplace("b", {"1", 0}, Scheme::Relaxed).source_control_file->feature_paragraphs.push_back(std::move(b_y));
 
     MockCMakeVarProvider var_provider;
@@ -628,4 +633,45 @@ TEST_CASE ("version install transitive features", "[versionplan]")
     REQUIRE(install_plan.size() == 2);
     check_name_and_version(install_plan.install_actions[0], "b", {"1", 0}, {"y"});
     check_name_and_version(install_plan.install_actions[1], "a", {"1", 0}, {"x"});
+}
+
+TEST_CASE ("version install transitive feature versioned", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+
+    auto a_x = make_fpgh("x");
+    a_x->dependencies.push_back(Dependency{"b", {"y"}, {}, {Constraint::Type::Minimum, "2", 0}});
+    vp.emplace("a", {"1", 0}, Scheme::Relaxed).source_control_file->feature_paragraphs.push_back(std::move(a_x));
+
+    {
+        auto b_y = make_fpgh("y");
+        vp.emplace("b", {"1", 0}, Scheme::Relaxed).source_control_file->feature_paragraphs.push_back(std::move(b_y));
+    }
+    {
+        auto b_y = make_fpgh("y");
+        b_y->dependencies.push_back(Dependency{"c"});
+        vp.emplace("b", {"2", 0}, Scheme::Relaxed).source_control_file->feature_paragraphs.push_back(std::move(b_y));
+    }
+
+    vp.emplace("c", {"1", 0}, Scheme::Relaxed);
+
+    MockCMakeVarProvider var_provider;
+
+    MockBaselineProvider bp;
+    bp.v["a"] = {"1", 0};
+    bp.v["c"] = {"1", 0};
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(vp,
+                                                                           bp,
+                                                                           var_provider,
+                                                                           {
+                                                                               Dependency{"a", {"x"}},
+                                                                           },
+                                                                           {},
+                                                                           Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 3);
+    check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
+    check_name_and_version(install_plan.install_actions[1], "b", {"2", 0}, {"y"});
+    check_name_and_version(install_plan.install_actions[2], "a", {"1", 0}, {"x"});
 }
