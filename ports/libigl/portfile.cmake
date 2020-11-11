@@ -1,7 +1,5 @@
 vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 
-#vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libigl/libigl
