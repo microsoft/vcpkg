@@ -479,17 +479,30 @@ function(vcpkg_configure_make)
     convert_to_list(VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES C_LIBS_LIST)
     convert_to_list(VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES CXX_LIBS_LIST)
     set(ALL_LIBS_LIST ${C_LIBS_LIST} ${CXX_LIBS_LIST})
-
     list(REMOVE_DUPLICATES ALL_LIBS_LIST)
     list(TRANSFORM ALL_LIBS_LIST STRIP)
-    list(TRANSFORM ALL_LIBS_LIST REPLACE "(.dll.lib|.lib|.a|.so)$" "")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(REMOVE_ITEM ALL_LIBS_LIST "uuid")
+
+    #Do lib list transformation from name.lib to -lname if necessary
+    set(_VCPKG_TRANSFORM_LIBS TRUE)
+    if(VCPKG_TARGET_IS_UWP)
+        set(_VCPKG_TRANSFORM_LIBS FALSE)
+        # Avoid libtool choke: "Warning: linker path does not have real file for library -lWindowsApp."
+        # The problem with the choke is that libtool always falls back to built a static library even if a dynamic was requested. 
+        # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows. 
+        # It even does unix/dos-short/unix transformation with the path to get rid of spaces. 
     endif()
-    list(JOIN ALL_LIBS_LIST " -l" ALL_LIBS_STRING)
+    set(_lprefix)
+    if(_VCPKG_TRANSFORM_LIBS)
+        set(_lprefix "-l")
+        list(TRANSFORM ALL_LIBS_LIST REPLACE "(.dll.lib|.lib|.a|.so)$" "")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            list(REMOVE_ITEM ALL_LIBS_LIST "uuid")
+        endif()
+    endif()
+    list(JOIN ALL_LIBS_LIST " ${_lprefix}" ALL_LIBS_STRING)
 
     if(ALL_LIBS_STRING)
-        set(ALL_LIBS_STRING "-l${ALL_LIBS_STRING}")
+        set(ALL_LIBS_STRING "${_lprefix}${ALL_LIBS_STRING}")
         if(DEFINED ENV{LIBS})
             set(ENV{LIBS} "$ENV{LIBS} ${ALL_LIBS_STRING}")
         else()
