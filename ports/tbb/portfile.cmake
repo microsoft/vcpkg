@@ -107,6 +107,13 @@ configure_file(
     ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake
     @ONLY
 )
+
+configure_file(
+    ${SOURCE_PATH}/cmake/templates/TBBConfigVersion.cmake.in
+    ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfigVersion.cmake
+    @ONLY
+)
+
 file(READ ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake _contents)
 string(REPLACE
     "get_filename_component(_tbb_root \"\${_tbb_root}\" PATH)"
@@ -126,6 +133,7 @@ string(REPLACE
     _contents
     "${_contents}"
 )
+
 string(REPLACE "SHARED IMPORTED)" "UNKNOWN IMPORTED)" _contents "${_contents}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake "${_contents}")
 
