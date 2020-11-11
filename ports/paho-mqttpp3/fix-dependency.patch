@@ -23,7 +23,7 @@ index aff9472..275655c 100644
  
  include("${CMAKE_CURRENT_LIST_DIR}/@package_name@Targets.cmake")
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 4e9b7c4..bd1e0a5 100644
+index 4e9b7c4..93eaae9 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -23,7 +23,7 @@
@@ -35,16 +35,13 @@ index 4e9b7c4..bd1e0a5 100644
  
  # --- The headers ---
  
-@@ -76,17 +76,23 @@ target_include_directories(paho-cpp-objs
-         src
- )
- 
--
+@@ -80,13 +80,21 @@ target_include_directories(paho-cpp-objs
  ## --- Build the shared library, if requested ---
  
  if(PAHO_BUILD_SHARED)
 +    ## set PAHO_C_LIB
 +    if(PAHO_WITH_SSL)
++        find_package(OpenSSL REQUIRED)
 +        set(_PAHO_MQTT_C_LIB_NAME eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs)
 +    else()
 +        set(_PAHO_MQTT_C_LIB_NAME eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c)
@@ -61,13 +58,14 @@ index 4e9b7c4..bd1e0a5 100644
  
      # It would be nice to exort the include paths from the obj lib, but we
      # get an export error. Perhaps in a future version?
-@@ -118,13 +124,21 @@ endif()
+@@ -118,13 +126,22 @@ endif()
  ## --- Build static version of the library, if requested ---
  
  if(PAHO_BUILD_STATIC)
 +
 +    ## set PAHO_C_LIB
 +    if(PAHO_WITH_SSL)
++        find_package(OpenSSL REQUIRED)
 +        set(_PAHO_MQTT_C_LIB_NAME eclipse-paho-mqtt-c::paho-mqtt3as-static eclipse-paho-mqtt-c::paho-mqtt3cs-static)
 +    else()
 +        set(_PAHO_MQTT_C_LIB_NAME  eclipse-paho-mqtt-c::paho-mqtt3a-static eclipse-paho-mqtt-c::paho-mqtt3c-static)
