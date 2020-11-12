@@ -8,6 +8,7 @@ vcpkg_from_github(
       0002-crosscompile-windows.patch
       fix_assert.patch
       install_pkgpc.patch
+      install_dll.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
