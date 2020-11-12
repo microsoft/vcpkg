@@ -1,5 +1,6 @@
 Source: msix
-Version: 1.7-2
+Version: 1.7
+Port-Version: 3
 Build-Depends: xerces-c, zlib, openssl (!uwp&!windows), catch2[v2]
 Homepage: https://github.com/microsoft/msix-packaging
 Description: The MSIX Packaging SDK project is an effort to enable developers on a variety of platforms to pack and unpack packages for the purposes of distribution from either the Microsoft Store, or their own content distribution networks.
