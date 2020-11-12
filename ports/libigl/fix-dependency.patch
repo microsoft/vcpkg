@@ -34,15 +34,17 @@ index d07bbb3..a33cefa 100644
      igl_download_embree()
  
      set(EMBREE_TESTING_INTENSITY 0 CACHE STRING "")
-@@ -315,8 +316,8 @@ if(LIBIGL_WITH_EMBREE)
+@@ -315,8 +315,11 @@ if(LIBIGL_WITH_EMBREE)
    endif()
  
    compile_igl_module("embree")
--  target_link_libraries(igl_embree ${IGL_SCOPE} embree)
+   target_link_libraries(igl_embree ${IGL_SCOPE} embree)
 -  target_include_directories(igl_embree ${IGL_SCOPE} ${EMBREE_DIR}/include)
-+  target_link_libraries(igl_embree ${IGL_SCOPE} ${EMBREE_LIBRARIES})
-+  target_include_directories(igl_embree ${IGL_SCOPE} ${EMBREE_INCLUDE_DIRS})
++  if(LIBIGL_USE_STATIC_LIBRARY)
++  find_package(TBB CONFIG REQUIRED)
++  target_link_libraries(igl_embree ${IGL_SCOPE} TBB::tbb)
    target_compile_definitions(igl_embree ${IGL_SCOPE} -DEMBREE_STATIC_LIB)
++  endif()
  endif()
  
 @@ -358,11 +359,12 @@ if(LIBIGL_WITH_OPENGL)
@@ -126,7 +128,8 @@ index d07bbb3..a33cefa 100644
    compile_igl_module("xml")
 -  target_link_libraries(igl_xml ${IGL_SCOPE} tinyxml2)
 +  target_link_libraries(igl_xml ${IGL_SCOPE} tinyxml2::tinyxml2)
-   target_include_directories(igl_xml ${IGL_SCOPE} ${TINYXML2_DIR})
+-   target_include_directories(igl_xml ${IGL_SCOPE} ${TINYXML2_DIR})
++
  endif()
  
 diff --git a/include/igl/opengl/glfw/imgui/ImGuiHelpers.h b/include/igl/opengl/glfw/imgui/ImGuiHelpers.h
