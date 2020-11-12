@@ -249,9 +249,9 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     URL "https://repo.msys2.org/msys/x86_64/gmp-6.2.0-1-x86_64.pkg.tar.xz"
     SHA512 1389a443e775bb255d905665dd577bef7ed71d51a8c24d118097f8119c08c4dfe67505e88ddd1e9a3764dd1d50ed8b84fa34abefa797d257e90586f0cbf54de8
   )
-  msys_package(
-    URL "https://repo.msys2.org/msys/x86_64/xz-5.2.4-1-x86_64.pkg.tar.xz"
-    SHA512 4b4daa6250d50cfd6575630803e57aaca5bdb24057456761565404a37a9224535e51ef1212f430ffa434d7b7128ad61792c59eb6bc905b8b4455fed25bff499a
+  msys_package( 
+    URL "https://repo.msys2.org/msys/x86_64/xz-5.2.5-1-x86_64.pkg.tar.xz" # this seems to require immediate updating on version bumps. 
+    SHA512 99d092c3398277e47586cead103b41e023e9432911fb7bdeafb967b826f6a57d32e58afc94c8230dad5b5ec2aef4f10d61362a6d9e410a6645cf23f076736bba
     DEPS liblzma libiconv gettext
   )
   msys_package(
