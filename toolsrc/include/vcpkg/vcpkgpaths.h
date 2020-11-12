@@ -4,6 +4,7 @@
 
 #include <vcpkg/fwd/configuration.h>
 #include <vcpkg/fwd/registries.h>
+#include <vcpkg/fwd/system.process.h>
 #include <vcpkg/fwd/vcpkgcmdarguments.h>
 #include <vcpkg/fwd/vcpkgpaths.h>
 
@@ -107,6 +108,9 @@ namespace vcpkg
         const fs::path& get_tool_exe(const std::string& tool) const;
         const std::string& get_tool_version(const std::string& tool) const;
 
+        // Git manipulation
+        fs::path git_checkout_port(const std::string& port_name, const std::string& git_tree) const;
+
         Optional<const Json::Object&> get_manifest() const;
         Optional<const fs::path&> get_manifest_path() const;
         const Configuration& get_configuration() const;
@@ -133,5 +137,9 @@ namespace vcpkg
 
     private:
         std::unique_ptr<details::VcpkgPathsImpl> m_pimpl;
+
+        System::ExitCodeAndOutput run_git_command(const std::string& dot_git_dir,
+                                                  const std::string& work_tree,
+                                                  const std::string& cmd_line) const;
     };
 }

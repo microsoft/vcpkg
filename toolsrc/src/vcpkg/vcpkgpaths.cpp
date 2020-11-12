@@ -451,6 +451,70 @@ If you wish to silence this error and use classic mode, you can:
         return m_pimpl->m_tool_cache->get_tool_version(*this, tool);
     }
 
+    System::ExitCodeAndOutput VcpkgPaths::run_git_command(const std::string& dot_git_dir,
+                                                          const std::string& work_tree,
+                                                          const std::string& cmd_line) const
+    {
+        const fs::path& git_exe = get_tool_exe(Tools::GIT);
+
+        System::CmdLineBuilder builder;
+        builder.path_arg(git_exe)
+            .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_dir)))
+            .string_arg(Strings::concat("--work-tree=", fs::u8string(work_tree)));
+        const std::string full_cmd = Strings::concat(builder.extract(), " ", cmd_line);
+        return System::cmd_execute_and_capture_output(full_cmd);
+    }
+
+    fs::path VcpkgPaths::git_checkout_port(const std::string& port_name, const std::string& git_tree) const
+    {
+        /* Clone a new vcpkg repository instance using the local instance as base.
+         *
+         * The `--git-dir` directory will store all the Git files,
+         * and the  `--work-tree` is the directory where checked out files will be stored.
+         *
+         * Since we are checking a git tree object, all files will be checked out to the root of `work-tree`.
+         * Because of that, it makes sense to use the git hash as the name for the directory.
+         */
+        const auto local_repo = this->root;
+        // TODO: Decide final location for these two
+        const auto dot_git_dir = this->buildtrees / "versioning_tmp" / ".git";
+        const auto working_dir = this->buildtrees / "versioning_tmp" / "versions" / port_name / git_tree;
+
+        auto& fs = get_filesystem();
+        if (!fs.exists(working_dir / "CONTROL") && !fs.exists(working_dir / "vcpkg.json"))
+        {
+            if (fs.exists(working_dir))
+            {
+                fs.remove_all(working_dir, VCPKG_LINE_INFO);
+            }
+
+            if (fs.exists(dot_git_dir))
+            {
+                fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
+            }
+
+            // All git commands are run with: --git-dir={dot_git_dir} --work-tree={working_dir}
+            // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
+            System::CmdLineBuilder clone_cmd_builder;
+            clone_cmd_builder.string_arg("clone")
+                .string_arg("--no-checkout")
+                .string_arg("--local")
+                .path_arg(local_repo)
+                .path_arg(dot_git_dir);
+            const auto output = run_git_command(dot_git_dir, working_dir, clone_cmd_builder.extract());
+            Checks::check_exit(VCPKG_LINE_INFO, output.exit_code == 0, "Failed to clone temporary vcpkg instance");
+
+            // git checkout {tree_object} .
+            System::CmdLineBuilder checkout_cmd_builder;
+            checkout_cmd_builder.string_arg("checkout").string_arg(git_tree).string_arg(".");
+            const auto git_cmd = checkout_cmd_builder.extract();
+            const auto checkout_output = run_git_command(dot_git_dir, working_dir, git_cmd);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, checkout_output.exit_code == 0, "Failed to checkout %s:%s", port_name, git_tree);
+        }
+        return working_dir;
+    }
+
     Optional<const Json::Object&> VcpkgPaths::get_manifest() const
     {
         if (auto p = m_pimpl->m_manifest_doc.get())
