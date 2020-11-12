@@ -6,10 +6,16 @@ vcpkg_from_github(
     HEAD_REF libzippp-v4.0-1.7.3
 )
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    encryption LIBZIPPP_ENABLE_ENCRYPTION
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DLIBZIPPP_BUILD_TESTS=OFF
     OPTIONS_DEBUG
         -DLIBZIPPP_INSTALL_HEADERS=OFF

@@ -194,6 +194,96 @@ TEST_CASE ("remove all", "[files]")
     CHECK_EC_ON_FILE(temp_dir, ec);
 }
 
+TEST_CASE ("lexically_normal", "[files]")
+{
+    const auto lexically_normal = [](const char* s) { return fs::lexically_normal(fs::u8path(s)); };
+    const auto native = [](const char* s) { return std::move(fs::u8path(s).make_preferred()); };
+    CHECK(fs::lexically_normal(fs::path()).native() == fs::path().native());
+
+    // these test cases are taken from the MS STL tests
+    CHECK(lexically_normal("cat/./dog/..").native() == native("cat/").native());
+    CHECK(lexically_normal("cat/.///dog/../").native() == native("cat/").native());
+
+    CHECK(lexically_normal("cat/./dog/..").native() == native("cat/").native());
+    CHECK(lexically_normal("cat/.///dog/../").native() == native("cat/").native());
+
+    CHECK(lexically_normal(".").native() == native(".").native());
+    CHECK(lexically_normal("./").native() == native(".").native());
+    CHECK(lexically_normal("./.").native() == native(".").native());
+    CHECK(lexically_normal("././").native() == native(".").native());
+
+    CHECK(lexically_normal("../../..").native() == native("../../..").native());
+    CHECK(lexically_normal("../../../").native() == native("../../..").native());
+
+    CHECK(lexically_normal("../../../a/b/c").native() == native("../../../a/b/c").native());
+
+    CHECK(lexically_normal("/../../..").native() == native("/").native());
+    CHECK(lexically_normal("/../../../").native() == native("/").native());
+
+    CHECK(lexically_normal("/../../../a/b/c").native() == native("/a/b/c").native());
+
+    CHECK(lexically_normal("a/..").native() == native(".").native());
+    CHECK(lexically_normal("a/../").native() == native(".").native());
+
+#if defined(_WIN32)
+    CHECK(lexically_normal(R"(X:)").native() == LR"(X:)");
+
+    CHECK(lexically_normal(R"(X:DriveRelative)").native() == LR"(X:DriveRelative)");
+
+    CHECK(lexically_normal(R"(X:\)").native() == LR"(X:\)");
+    CHECK(lexically_normal(R"(X:/)").native() == LR"(X:\)");
+    CHECK(lexically_normal(R"(X:\\\)").native() == LR"(X:\)");
+    CHECK(lexically_normal(R"(X:///)").native() == LR"(X:\)");
+
+    CHECK(lexically_normal(R"(X:\DosAbsolute)").native() == LR"(X:\DosAbsolute)");
+    CHECK(lexically_normal(R"(X:/DosAbsolute)").native() == LR"(X:\DosAbsolute)");
+    CHECK(lexically_normal(R"(X:\\\DosAbsolute)").native() == LR"(X:\DosAbsolute)");
+    CHECK(lexically_normal(R"(X:///DosAbsolute)").native() == LR"(X:\DosAbsolute)");
+
+    CHECK(lexically_normal(R"(\RootRelative)").native() == LR"(\RootRelative)");
+    CHECK(lexically_normal(R"(/RootRelative)").native() == LR"(\RootRelative)");
+    CHECK(lexically_normal(R"(\\\RootRelative)").native() == LR"(\RootRelative)");
+    CHECK(lexically_normal(R"(///RootRelative)").native() == LR"(\RootRelative)");
+
+    CHECK(lexically_normal(R"(\\server\share)").native() == LR"(\\server\share)");
+    CHECK(lexically_normal(R"(//server/share)").native() == LR"(\\server\share)");
+    CHECK(lexically_normal(R"(\\server\\\share)").native() == LR"(\\server\share)");
+    CHECK(lexically_normal(R"(//server///share)").native() == LR"(\\server\share)");
+
+    CHECK(lexically_normal(R"(\\?\device)").native() == LR"(\\?\device)");
+    CHECK(lexically_normal(R"(//?/device)").native() == LR"(\\?\device)");
+
+    CHECK(lexically_normal(R"(\??\device)").native() == LR"(\??\device)");
+    CHECK(lexically_normal(R"(/??/device)").native() == LR"(\??\device)");
+
+    CHECK(lexically_normal(R"(\\.\device)").native() == LR"(\\.\device)");
+    CHECK(lexically_normal(R"(//./device)").native() == LR"(\\.\device)");
+
+    CHECK(lexically_normal(R"(\\?\UNC\server\share)").native() == LR"(\\?\UNC\server\share)");
+    CHECK(lexically_normal(R"(//?/UNC/server/share)").native() == LR"(\\?\UNC\server\share)");
+
+    CHECK(lexically_normal(R"(C:\a/b\\c\/d/\e//f)").native() == LR"(C:\a\b\c\d\e\f)");
+
+    CHECK(lexically_normal(R"(C:\meow\)").native() == LR"(C:\meow\)");
+    CHECK(lexically_normal(R"(C:\meow/)").native() == LR"(C:\meow\)");
+    CHECK(lexically_normal(R"(C:\meow\\)").native() == LR"(C:\meow\)");
+    CHECK(lexically_normal(R"(C:\meow\/)").native() == LR"(C:\meow\)");
+    CHECK(lexically_normal(R"(C:\meow/\)").native() == LR"(C:\meow\)");
+    CHECK(lexically_normal(R"(C:\meow//)").native() == LR"(C:\meow\)");
+
+    CHECK(lexically_normal(R"(C:\a\.\b\.\.\c\.\.\.)").native() == LR"(C:\a\b\c\)");
+    CHECK(lexically_normal(R"(C:\a\.\b\.\.\c\.\.\.\)").native() == LR"(C:\a\b\c\)");
+
+    CHECK(lexically_normal(R"(C:\a\b\c\d\e\..\f\..\..\..\g\h)").native() == LR"(C:\a\b\g\h)");
+
+    CHECK(lexically_normal(R"(C:\a\b\c\d\e\..\f\..\..\..\g\h\..)").native() == LR"(C:\a\b\g\)");
+    CHECK(lexically_normal(R"(C:\a\b\c\d\e\..\f\..\..\..\g\h\..\)").native() == LR"(C:\a\b\g\)");
+    CHECK(lexically_normal(
+              R"(/\server/\share/\a/\b/\c/\./\./\d/\../\../\../\../\../\../\../\other/x/y/z/.././..\meow.txt)")
+              .native() == LR"(\\server\other\x\meow.txt)");
+#endif
+}
+
 #if defined(_WIN32)
 TEST_CASE ("win32_fix_path_case", "[files]")
 {
