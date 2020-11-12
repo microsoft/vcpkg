@@ -24,7 +24,7 @@ else()
 endif()
 
 include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
-yasm_tool_helper(PREPEND_TO_PATH)
+yasm_tool_helper(PREPEND_TO_PATH OUT_VAR ENV{AS})
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
