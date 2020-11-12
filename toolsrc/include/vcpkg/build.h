@@ -243,6 +243,7 @@ namespace vcpkg::Build
         EMPTY_PACKAGE,
         DLLS_WITHOUT_LIBS,
         DLLS_WITHOUT_EXPORTS,
+        MISMATCHED_NUMBER_OF_BINARIES,
         ONLY_RELEASE_CRT,
         EMPTY_INCLUDE_FOLDER,
         ALLOW_OBSOLETE_MSVCRT,
@@ -253,16 +254,8 @@ namespace vcpkg::Build
         COUNT,
     };
 
-    constexpr std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> G_ALL_POLICIES = {
-        BuildPolicy::EMPTY_PACKAGE,
-        BuildPolicy::DLLS_WITHOUT_LIBS,
-        BuildPolicy::DLLS_WITHOUT_EXPORTS,
-        BuildPolicy::ONLY_RELEASE_CRT,
-        BuildPolicy::EMPTY_INCLUDE_FOLDER,
-        BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
-        BuildPolicy::ALLOW_RESTRICTED_HEADERS,
-        BuildPolicy::SKIP_DUMPBIN_CHECKS,
-        BuildPolicy::SKIP_ARCHITECTURE_CHECK};
+    // could be constexpr, but we want to generate this and that's not constexpr
+    extern const std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> ALL_POLICIES;
 
     const std::string& to_string(BuildPolicy policy);
     CStringView to_cmake_variable(BuildPolicy policy);

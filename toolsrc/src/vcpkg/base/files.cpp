@@ -26,20 +26,6 @@
 
 namespace
 {
-#if defined(_WIN32)
-    struct IsSlash
-    {
-        bool operator()(const wchar_t c) const noexcept { return c == L'/' || c == L'\\'; }
-    };
-#else
-    struct IsSlash
-    {
-        bool operator()(const char c) const noexcept { return c == '/'; }
-    };
-#endif
-
-    constexpr IsSlash is_slash;
-
     struct NativeStringView
     {
         const fs::path::value_type* first;
