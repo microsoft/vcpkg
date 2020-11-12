@@ -22,7 +22,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Phonon4Qt5)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/phonon4qt5 TARGET_PATH share/phonon4qt5)
 
 vcpkg_copy_pdbs()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
