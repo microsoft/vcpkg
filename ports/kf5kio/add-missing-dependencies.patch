@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1e4e867..2863214 100644
+index 975d8b1..363c0f1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -63,6 +63,8 @@ find_package(KF5I18n ${KF5_DEP_VERSION} REQUIRED)
@@ -11,3 +11,23 @@ index 1e4e867..2863214 100644
  
  if (NOT KIOCORE_ONLY)
  find_package(KF5Bookmarks ${KF5_DEP_VERSION} REQUIRED)
+diff --git a/src/kpac/CMakeLists.txt b/src/kpac/CMakeLists.txt
+index d46d895..6e90e16 100644
+--- a/src/kpac/CMakeLists.txt
++++ b/src/kpac/CMakeLists.txt
+@@ -41,7 +41,14 @@ if (Qt5Qml_FOUND)
+        KF5::I18n
+     )
+     if (KF5Notifications_FOUND)
+-        target_link_libraries(kded_proxyscout KF5::Notifications)
++      if (NOT ANDROID OR (WIN32 AND NOT ${WITH_SNORETOAST}))
++        find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED DBus)
++        find_package(Canberra)
++      endif()
++      if(APPLE)
++        find_package(Qt5MacExtras ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE)
++      endif()
++      target_link_libraries(kded_proxyscout KF5::Notifications)
+     endif()
+ 
+     # this needs -lresolv e.g on Slackware, but not on FreeBSD
