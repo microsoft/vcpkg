@@ -1,5 +1,3 @@
-# Bootstrap using
-#  CC=/usr/bin/clang CXX=/usr/bin/clang++ ./bootstrap-vcpkg.sh
 # Use with
 #  VCPKG_FORCE_SYSTEM_BINARIES=1 ./vcpkg install brotli
 

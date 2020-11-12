@@ -247,6 +247,13 @@ fi
 
 if [ "$UNAME" = "OpenBSD" ]; then
     vcpkgUseSystem=true
+
+    if [ -z "$CXX" ]; then
+        CXX=/usr/bin/clang++
+    fi
+    if [ -z "$CC" ]; then
+        CC=/usr/bin/clang
+    fi
 fi
 
 if $vcpkgUseSystem; then
