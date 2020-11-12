@@ -2,4 +2,4 @@ Source: camport3
 Version: 1.5.3
 Description: percipio.xyz cameras SDK
 Homepage: https://github.com/percipioxyz/camport3
-Supports: !(osx|uwp|android|wasm32|emscripten|(windows&(static|arm|arm64)))
+Supports: ((windows & !arm & !arm64 & !static) | linux) !wasm32 
