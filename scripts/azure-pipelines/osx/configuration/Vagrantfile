@@ -20,7 +20,6 @@ brew_formulas = [
   'bison',
   'libtool',
   'mono',
-  'nasm',
   'pkg-config',
   'yasm' ]
 
