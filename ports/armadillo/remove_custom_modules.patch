@@ -1,17 +1,21 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0959127..9fea721 100755
+index 0fb228f..2275734 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -176,10 +176,9 @@ else()
+@@ -321,14 +321,13 @@ else()
+   set(ARMA_OS unix)
+   
    include(ARMA_FindMKL)
-   include(ARMA_FindACMLMP)
-   include(ARMA_FindACML)
 -  include(ARMA_FindOpenBLAS)
    include(ARMA_FindATLAS)
 -  include(ARMA_FindBLAS)
 -  include(ARMA_FindLAPACK)
-+  find_package(BLAS)
-+  find_package(LAPACK)
    
-   message(STATUS "     MKL_FOUND = ${MKL_FOUND}"     )
-   message(STATUS "  ACMLMP_FOUND = ${ACMLMP_FOUND}"  )
+   if(ALLOW_FLEXIBLAS_LINUX AND (${CMAKE_SYSTEM_NAME} MATCHES "Linux"))
+     include(ARMA_FindFlexiBLAS)
+   endif()
++  find_package(BLAS)
++  find_package(LAPACK)  
+   
+   message(STATUS "      MKL_FOUND = ${MKL_FOUND}"       )
+   message(STATUS " OpenBLAS_FOUND = ${OpenBLAS_FOUND}"  )

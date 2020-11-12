@@ -1,0 +1,27 @@
+{
+  "name": "asio",
+  "version-string": "1.18.0",
+  "description": "Asio is a cross-platform C++ library for network and low-level I/O programming that provides developers with a consistent asynchronous model using a modern C++ approach.",
+  "homepage": "https://github.com/chriskohlhoff/asio",
+  "documentation": "https://think-async.com/Asio/asio-1.18.0/doc/",
+  "features": {
+    "coroutine": {
+      "description": "Boost.Coroutine (optional) if you use spawn() to launch coroutines",
+      "dependencies": [
+        "boost-coroutine"
+      ]
+    },
+    "openssl": {
+      "description": "OpenSSL (optional) if you use Asio's SSL support.",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "regex": {
+      "description": "Boost.Regex (optional) if you use any of the read_until() or async_read_until() overloads that take a boost::regex parameter.",
+      "dependencies": [
+        "boost-regex"
+      ]
+    }
+  }
+}

@@ -872,7 +872,7 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> release_libs = fs.get_files_recursive(release_lib_dir);
         Util::erase_remove_if(release_libs, not_extension_pred(fs, ".lib"));
 
-        if (!pre_build_info.build_type)
+        if (!pre_build_info.build_type && !build_info.policies.is_enabled(BuildPolicy::MISMATCHED_NUMBER_OF_BINARIES))
             error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
 
         if (!build_info.policies.is_enabled(BuildPolicy::SKIP_ARCHITECTURE_CHECK))
@@ -892,7 +892,8 @@ namespace vcpkg::PostBuildLint
         {
             case Build::LinkageType::DYNAMIC:
             {
-                if (!pre_build_info.build_type)
+                if (!pre_build_info.build_type &&
+                    !build_info.policies.is_enabled(BuildPolicy::MISMATCHED_NUMBER_OF_BINARIES))
                     error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
 
                 error_count += check_lib_files_are_available_if_dlls_are_available(

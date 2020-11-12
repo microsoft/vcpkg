@@ -92,12 +92,13 @@
 include(vcpkg_clean_msbuild)
 
 function(vcpkg_install_msbuild)
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(
+        PARSE_ARGV 0
         _csc
         "USE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES;SKIP_CLEAN"
         "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
-        ${ARGN}
     )
 
     if(NOT DEFINED _csc_RELEASE_CONFIGURATION)
