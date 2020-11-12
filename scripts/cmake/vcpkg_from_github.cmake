@@ -22,6 +22,10 @@
 ##
 ## This should be set to `SOURCE_PATH` by convention.
 ##
+## ### OUT_DOWNLOADED_FILE_NAME
+## Specifies the out-variable that will contain the location of the downloaded github archive
+## Should only be used to automatically update SHA512 hashes.
+##
 ## ### REPO
 ## The organization or user and repository on GitHub.
 ##
@@ -58,6 +62,9 @@
 ## ### FILE_DISAMBIGUATOR
 ## A token to uniquely identify the resulting filename if the SHA512 changes even though a git ref does not, to avoid stepping on the same file name.
 ##
+## ### NO_EXTRACT
+## Don't extract the downloaded github archive
+##
 ## ## Notes:
 ## At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.
 ##
@@ -69,10 +76,10 @@
 ## * [ms-gsl](https://github.com/Microsoft/vcpkg/blob/master/ports/ms-gsl/portfile.cmake)
 ## * [beast](https://github.com/Microsoft/vcpkg/blob/master/ports/beast/portfile.cmake)
 function(vcpkg_from_github)
-    set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 HEAD_REF GITHUB_HOST AUTHORIZATION_TOKEN FILE_DISAMBIGUATOR)
+    set(oneValueArgs OUT_SOURCE_PATH OUT_DOWNLOADED_FILE_NAME REPO REF SHA512 HEAD_REF GITHUB_HOST AUTHORIZATION_TOKEN FILE_DISAMBIGUATOR)
     set(multipleValuesArgs PATCHES)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vdud "" "${oneValueArgs}" "${multipleValuesArgs}")
+    cmake_parse_arguments(PARSE_ARGV 0 _vdud "NO_EXTRACT" "${oneValueArgs}" "${multipleValuesArgs}")
 
     if(NOT DEFINED _vdud_OUT_SOURCE_PATH)
         message(FATAL_ERROR "OUT_SOURCE_PATH must be specified.")
@@ -139,6 +146,7 @@ function(vcpkg_from_github)
         endif()
 
         set(downloaded_file_name "${downloaded_file_name}.tar.gz")
+        set(${_vdud_OUT_DOWNLOADED_FILE_NAME} "${downloaded_file_name}" PARENT_SCOPE)
 
         vcpkg_download_distfile(ARCHIVE
             URLS "${GITHUB_HOST}/${ORG_NAME}/${REPO_NAME}/archive/${_vdud_REF}.tar.gz"
@@ -146,14 +154,14 @@ function(vcpkg_from_github)
             FILENAME "${downloaded_file_name}"
             ${HEADERS}
         )
-
-        vcpkg_extract_source_archive_ex(
-            OUT_SOURCE_PATH SOURCE_PATH
-            ARCHIVE "${ARCHIVE}"
-            REF "${SANITIZED_REF}"
-            PATCHES ${_vdud_PATCHES}
-        )
-
+        if(NOT _vdud_NO_EXTRACT)
+            vcpkg_extract_source_archive_ex(
+                OUT_SOURCE_PATH SOURCE_PATH
+                ARCHIVE "${ARCHIVE}"
+                REF "${SANITIZED_REF}"
+                PATCHES ${_vdud_PATCHES}
+            )
+        endif()
         set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
         return()
     endif()
@@ -195,12 +203,14 @@ function(vcpkg_from_github)
             ${HEADERS}
         )
 
+        set(${_vdud_OUT_DOWNLOADED_FILE_NAME} "${downloaded_file_name}" PARENT_SCOPE)
         vcpkg_download_distfile(ARCHIVE
             URLS ${URL}
             FILENAME "${downloaded_file_name}"
             SKIP_SHA512
             ${HEADERS}
         )
+
     endif()
 
     # Parse the github refs response with regex.
@@ -215,13 +225,16 @@ function(vcpkg_from_github)
         set(VCPKG_HEAD_VERSION "${_version}" PARENT_SCOPE)
     endif()
 
-    vcpkg_extract_source_archive_ex(
-        SKIP_PATCH_CHECK
-        OUT_SOURCE_PATH SOURCE_PATH
-        ARCHIVE "${downloaded_file_path}"
-        REF "${SANITIZED_HEAD_REF}"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/head"
-        PATCHES ${_vdud_PATCHES}
-    )
+    if(NOT _vdud_NO_EXTRACT)
+        vcpkg_extract_source_archive_ex(
+            SKIP_PATCH_CHECK
+            OUT_SOURCE_PATH SOURCE_PATH
+            ARCHIVE "${downloaded_file_path}"
+            REF "${SANITIZED_HEAD_REF}"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/src/head"
+            PATCHES ${_vdud_PATCHES}
+        )
+    endif()
+
     set(${_vdud_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
