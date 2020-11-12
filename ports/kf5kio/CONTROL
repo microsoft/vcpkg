@@ -2,4 +2,8 @@ Source: kf5kio
 Version: 5.75.0
 Homepage: https://api.kde.org/frameworks/kio/html/index.html
 Description: Network transparent access to files and data
-Build-Depends: ecm, qt5-base, qt5-tools, kf5archive, kf5config, kf5coreaddons, kf5crash, kf5dbusaddons, kf5i18n, kf5service, kf5solid, kf5bookmarks, kf5completion, kf5configwidgets, kf5iconthemes, kf5itemviews, kf5jobwidgets, kf5widgetsaddons, kf5windowsystem, kf5textwidgets, kf5auth
+Build-Depends: ecm, qt5-base, kf5archive, kf5config, kf5coreaddons, kf5crash, kf5dbusaddons, kf5i18n, kf5service, kf5solid, kf5guiaddons, kf5xmlgui, kf5bookmarks, kf5completion, kf5configwidgets, kf5iconthemes, kf5itemviews, kf5jobwidgets, kf5widgetsaddons, kf5windowsystem, kf5textwidgets, kf5auth (!windows), qt5-x11extras (linux), qt5-macextras (osx)
+
+Feature: kf5notifications
+Description: Enable KF5Notifications support
+Build-Depends: kf5notifications
