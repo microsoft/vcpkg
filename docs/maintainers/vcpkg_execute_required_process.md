@@ -8,6 +8,9 @@ vcpkg_execute_required_process(
     COMMAND <${PERL}> [<arguments>...]
     WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg>
     LOGNAME <build-${TARGET_TRIPLET}-dbg>
+    [TIMEOUT <seconds>]
+    [OUTPUT_VARIABLE <var>]
+    [ERROR_VARIABLE <var>]
 )
 ```
 ## Parameters
@@ -23,6 +26,15 @@ The directory to execute the command in.
 
 ### LOGNAME
 The prefix to use for the log files.
+
+### TIMEOUT
+Optional timeout after which to terminate the command.
+
+### OUTPUT_VARIABLE
+Optional variable to receive stdout of the command.
+
+### ERROR_VARIABLE
+Optional variable to receive stderr of the command.
 
 This should be a unique name for different triplets so that the logs don't conflict when building multiple at once.
 
