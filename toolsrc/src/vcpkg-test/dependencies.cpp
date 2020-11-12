@@ -848,3 +848,50 @@ TEST_CASE ("version install default features", "[versionplan]")
     REQUIRE(install_plan.size() == 1);
     check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x"});
 }
+
+TEST_CASE ("version dont install default features", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+
+    auto a_x = make_fpgh("x");
+    auto& a_scf = vp.emplace("a", {"1", 0}, Scheme::Relaxed).source_control_file;
+    a_scf->core_paragraph->default_features.push_back("x");
+    a_scf->feature_paragraphs.push_back(std::move(a_x));
+
+    MockCMakeVarProvider var_provider;
+
+    MockBaselineProvider bp;
+    bp.v["a"] = {"1", 0};
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp, bp, var_provider, {Dependency{"a", {"core"}}}, {}, Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 1);
+    check_name_and_version(install_plan.install_actions[0], "a", {"1", 0});
+}
+
+TEST_CASE ("version install transitive default features", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+
+    auto a_x = make_fpgh("x");
+    auto& a_scf = vp.emplace("a", {"1", 0}, Scheme::Relaxed).source_control_file;
+    a_scf->core_paragraph->default_features.push_back("x");
+    a_scf->feature_paragraphs.push_back(std::move(a_x));
+
+    auto& b_scf = vp.emplace("b", {"1", 0}, Scheme::Relaxed).source_control_file;
+    b_scf->core_paragraph->dependencies.push_back({"a", {"core"}});
+
+    MockCMakeVarProvider var_provider;
+
+    MockBaselineProvider bp;
+    bp.v["a"] = {"1", 0};
+    bp.v["b"] = {"1", 0};
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp, bp, var_provider, {Dependency{"b"}}, {}, Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 2);
+    check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x"});
+    check_name_and_version(install_plan.install_actions[1], "b", {"1", 0});
+}
