@@ -6,7 +6,9 @@
   "documentation": "https://github.com/commschamp/commsdsl",
   "supports": "!uwp",
   "dependencies": [
-    "boost",
+    "boost-algorithm",
+    "boost-filesystem", 
+    "boost-program-options",
     "comms",
     "libxml2"
   ]
