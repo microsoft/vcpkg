@@ -33,4 +33,5 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-asl TARGET_PATH share/uno
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+# from ampl-mp license
 file(INSTALL ${CURRENT_PORT_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
