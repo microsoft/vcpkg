@@ -17,6 +17,7 @@
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/platform-expression.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
@@ -338,10 +339,10 @@ namespace vcpkg::Commands::CI
                 ret->features.emplace(action.spec, action.feature_list);
                 if (auto scfl = p->source_control_file_location.get())
                 {
-                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
+                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), scfl->clone());
                     emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
 
-                    p->build_options = vcpkg::Build::default_build_package_options;
+                    p->build_options = vcpkg::Build::backcompat_prohibiting_package_options;
                 }
 
                 auto precheck_result = binaryprovider.precheck(paths, action);
@@ -511,13 +512,13 @@ namespace vcpkg::Commands::CI
                 }
                 else
                 {
-                    action.build_options = vcpkg::Build::default_build_package_options;
+                    action.build_options = vcpkg::Build::backcompat_prohibiting_package_options;
                 }
             }
 
             if (is_dry_run)
             {
-                Dependencies::print_plan(action_plan, true, paths.ports);
+                Dependencies::print_plan(action_plan, true, paths.builtin_ports_directory());
             }
             else
             {

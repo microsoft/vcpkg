@@ -1,11 +1,12 @@
 #pragma once
 
-#include <vcpkg/base/fwd/json.h>
-
 #include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/optional.h>
+#include <vcpkg/base/stringview.h>
+#include <vcpkg/base/view.h>
+
+#include <vcpkg/versiont.h>
 
 #include <memory>
 #include <string>
@@ -14,9 +15,22 @@
 
 namespace vcpkg
 {
+    struct RegistryEntry
+    {
+        // returns fs::path() if version doesn't exist
+        virtual fs::path get_port_directory(const VcpkgPaths& paths, const VersionT& version) const = 0;
+
+        virtual ~RegistryEntry() = default;
+    };
+
     struct RegistryImpl
     {
-        virtual fs::path get_registry_root(const VcpkgPaths& paths) const = 0;
+        // returns nullptr if the port doesn't exist
+        virtual std::unique_ptr<RegistryEntry> get_port_entry(const VcpkgPaths& paths, StringView port_name) const = 0;
+        // appends the names of the ports to the out parameter
+        virtual void get_all_port_names(std::vector<std::string>& port_names, const VcpkgPaths& paths) const = 0;
+
+        virtual Optional<VersionT> get_baseline_version(const VcpkgPaths& paths, StringView port_name) const = 0;
 
         virtual ~RegistryImpl() = default;
     };
@@ -29,7 +43,7 @@ namespace vcpkg
         Registry(std::vector<std::string>&&, std::nullptr_t) = delete;
 
         // always ordered lexicographically
-        Span<const std::string> packages() const { return packages_; }
+        View<std::string> packages() const { return packages_; }
         const RegistryImpl& implementation() const { return *implementation_; }
 
         static std::unique_ptr<RegistryImpl> builtin_registry();
@@ -37,31 +51,6 @@ namespace vcpkg
     private:
         std::vector<std::string> packages_;
         std::unique_ptr<RegistryImpl> implementation_;
-    };
-
-    struct RegistryImplDeserializer : Json::IDeserializer<std::unique_ptr<RegistryImpl>>
-    {
-        constexpr static StringLiteral KIND = "kind";
-        constexpr static StringLiteral PATH = "path";
-
-        constexpr static StringLiteral KIND_BUILTIN = "builtin";
-        constexpr static StringLiteral KIND_DIRECTORY = "directory";
-
-        virtual StringView type_name() const override;
-        virtual Span<const StringView> valid_fields() const override;
-
-        virtual Optional<std::unique_ptr<RegistryImpl>> visit_null(Json::Reader&) override;
-        virtual Optional<std::unique_ptr<RegistryImpl>> visit_object(Json::Reader&, const Json::Object&) override;
-    };
-
-    struct RegistryDeserializer final : Json::IDeserializer<Registry>
-    {
-        constexpr static StringLiteral PACKAGES = "packages";
-
-        virtual StringView type_name() const override;
-        virtual Span<const StringView> valid_fields() const override;
-
-        virtual Optional<Registry> visit_object(Json::Reader&, const Json::Object&) override;
     };
 
     // this type implements the registry fall back logic from the registries RFC:
@@ -78,7 +67,7 @@ namespace vcpkg
         // Returns the null pointer if there is no registry set up for that name
         const RegistryImpl* registry_for_port(StringView port_name) const;
 
-        Span<const Registry> registries() const { return registries_; }
+        View<Registry> registries() const { return registries_; }
 
         const RegistryImpl* default_registry() const { return default_registry_.get(); }
 

@@ -86,7 +86,7 @@ endif()
 if(NOT CFLAGS STREQUAL "")
     string(REPLACE " " " <cflags>" CFLAGS "<cflags>${CFLAGS}")
 endif()
-if(NOT LDLAGS STREQUAL "")
+if(NOT LDFLAGS STREQUAL "")
     string(REPLACE " " " <linkflags>" LDFLAGS "<linkflags>${LDFLAGS}")
 endif()
 
@@ -113,7 +113,8 @@ foreach(INCDIR ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES})
 endforeach()
 
 if(APPLE)
-  set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE")
+  set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE <compileflags>-std=c++11 <compileflags>-stdlib=libc++")
+  set(LDFLAGS "${LDFLAGS} <linkflags>-stdlib=libc++")
 endif()
 
 find_library(ZLIB_LIBPATH z)

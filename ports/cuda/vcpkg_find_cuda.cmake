@@ -80,7 +80,7 @@ function(vcpkg_find_cuda)
     set(CUDA_VERSION_MINOR ${CMAKE_MATCH_2})
     set(CUDA_VERSION_PATCH ${CMAKE_MATCH_3})
 
-    if (CUDA_VERSION_MAJOR LESS 10 AND CUDA_VERSION_MINOR LESS 1)
+    if ("${CUDA_VERSION_MAJOR}.${CUDA_VERSION_MINOR}." VERSION_LESS ${CUDA_REQUIRED_VERSION})
         message(FATAL_ERROR "CUDA ${CUDA_VERSION} found, but v${CUDA_REQUIRED_VERSION} is required. Please download and install a more recent version of CUDA from:"
                             "\n    https://developer.nvidia.com/cuda-downloads\n")
     endif()

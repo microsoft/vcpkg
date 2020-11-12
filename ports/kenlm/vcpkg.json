@@ -1,0 +1,33 @@
+{
+  "name": "kenlm",
+  "version-string": "20200924",
+  "port-version": 1,
+  "description": "KenLM: Faster and Smaller Language Model Queries",
+  "supports": "!(arm64 & windows)",
+  "dependencies": [
+    "boost-interprocess",
+    "boost-program-options",
+    "boost-ptr-container",
+    "boost-system",
+    "boost-test",
+    "boost-thread",
+    "bzip2",
+    {
+      "name": "eigen3",
+      "platform": "!windows"
+    },
+    "liblzma",
+    "zlib"
+  ],
+  "features": {
+    "interpolate": {
+      "description": "Build interpolation program",
+      "dependencies": [
+        {
+          "name": "eigen3",
+          "platform": "!windows"
+        }
+      ]
+    }
+  }
+}

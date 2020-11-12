@@ -3,11 +3,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/context
-    REF boost-1.73.0
-    SHA512 cb460e9d7f5b2782164e49820b097402f6a443718d689b2f793f5ab7030012a80418dfc51154f299c9f987d6864d87f7536476ffa97da1089bf6b70f2990ebea
+    REF boost-1.74.0
+    SHA512 23a4a7fa9c993f0d88ebc4fdad765c63ba96d66a07e553e3d304725c2c38d70d2083a65eec7940522f8b61f6deddea18081cd3aca5bcf080fbc448768b44a6ee
     HEAD_REF master
-    PATCHES
-        fix_exports_for_32bit_GNU_asm_for_windows.patch
+    PATCHES fix_exports_for_32bit_GNU_asm_for_windows.patch
 )
 
 file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)

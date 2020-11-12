@@ -80,8 +80,8 @@ namespace
                            paragraphs.error());
             return {};
         }
-        auto scf_res =
-            SourceControlFile::parse_control_file(control_path, std::move(paragraphs).value_or_exit(VCPKG_LINE_INFO));
+        auto scf_res = SourceControlFile::parse_control_file(fs::u8string(control_path),
+                                                             std::move(paragraphs).value_or_exit(VCPKG_LINE_INFO));
         if (!scf_res)
         {
             System::printf(System::Color::error, "Failed to parse control file: %s\n", control_path_string);
@@ -245,7 +245,7 @@ namespace vcpkg::Commands::FormatManifest
 
         if (format_all)
         {
-            for (const auto& dir : fs::directory_iterator(paths.ports))
+            for (const auto& dir : fs::directory_iterator(paths.builtin_ports_directory()))
             {
                 auto control_path = dir.path() / fs::u8path("CONTROL");
                 auto manifest_path = dir.path() / fs::u8path("vcpkg.json");
