@@ -7,20 +7,22 @@ vcpkg_from_github(
     SHA512 e2da1436e5b0d8a3841087e879fbbff5a92de4ebb69d097959972ec8c9407305bc2a17020cb46139fbacc84f91ff8cfb4d9547308074ba213e002ee36bb2e006
     HEAD_REF master
     PATCHES
-        remove-de265-version.patch
-        remove-examples.patch
+        fix-libde265-headFile.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DUSE_HDF5=ON
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libde265/)
 
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/libde265)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/dec265.exe ${CURRENT_PACKAGES_DIR}/tools/libde265/dec265)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/enc265.exe ${CURRENT_PACKAGES_DIR}/tools/libde265/enc265)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/dec265.exe ${CURRENT_PACKAGES_DIR}/tools/libde265/dec265)
+file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/enc265.exe ${CURRENT_PACKAGES_DIR}/tools/libde265/enc265)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()

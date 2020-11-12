@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b339f89..0b58b32 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -42,6 +42,7 @@ if (HAVE_POSIX_MEMALIGN)
+ endif()
+ 
+ configure_file (libde265/de265-version.h.in libde265/de265-version.h)
++file(COPY extra/libde265/de265-version.h DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/libde265)
+ 
+ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES Clang)
+   add_definitions(-Wall)
