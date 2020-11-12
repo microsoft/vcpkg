@@ -1,6 +1,6 @@
 {
   "name": "qtdoc",
-  "version-string": "6.0.0",
+  "version-string": "6.0.0-beta4",
   "description": "Qt Documentation",
   "homepage": "https://www.qt.io/",
   "dependencies": [

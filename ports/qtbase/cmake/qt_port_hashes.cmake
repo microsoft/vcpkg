@@ -1,4 +1,6 @@
-set(QT_GIT_REF v6.0.0-beta2)
+set(QT_VERSION 6.0.0-beta4)
+set(QT_GIT_REF v${QT_VERSION})
+set(QT_UPDATE_VERSION FALSE)
 
 set(QT_PORTS qtbase 
              qttools 
@@ -16,15 +18,36 @@ foreach(_port IN LISTS QT_PORTS)
     set(${_port}_REF ${QT_GIT_REF})
 endforeach()
 
-set(qtbase_HASH             271c4ca2baa12b111837b36f2f2aed51ef84a62e2a3b8f9185a004330cb0a4c9398cf17468b134664de70ad175f104e77fa2a848466d33004739cdcb82d339ea)
-set(qttools_HASH            d999603ce70b46864ca5597323c5ce71b58b5021c9e19948b4043aa712b99edcb91edabe122bc8d7792b4cccd53f3c5d70d966fd9d5f7205551803af8303e410)
-set(qtdeclarative_HASH      9678a3c352896450ef49ede3eda6a7fe8cffdbf28dc91f9b5b2122dea69a070370f9ff6af31358398d5f058b530c7ae20a7df46a3905cd8dfe3deab66789b32c)
+set(qtbase_HASH             01e4389ed00f44e8c9bdd61fb004a6c233e3b55fc60b6baa1937d5bf9a939689534a3ab0225c049ddb2c9d3243b501b264dcd4f978396f806164e36e8eac23f2)
+set(qttools_HASH            1118c275861106c8a9a93f3c806c94bc43f88974e88a7518efae80e453d1f2778fc571d18ff885f51aa4a05748460bea49ad2eca042b0693adc4eaede5727004)
+set(qtdeclarative_HASH      c769699042148b60915edf85ba402e0f942e86c83844a259506c936488e2d48a3e6aa41d25d508b20ecc26c14c40390213b078982b5cc870963b3fccdf5fa320)
+set(qtsvg_HASH              268885ca5bf32dba4cd727ec0bd43d463c2f028d10858b96ce18ff8173773009e9ae41bad5643ee0f536731d4663af3c7c94d557fb6acc9fbc6d851fdb724d11)
+set(qt5compat_HASH          0bf03271a89349a24889f4db8409de554b1a3748ff5070528f571c20c4469454bfc13a3014669eb3a2cff0ea315597416f3d3a3a0274f1eb6ef0b2c8694b66e1)
+set(qtshadertools_HASH      91d4a0f36b541c742a99e26a2ecd9a28a59e3ca0bf6e388e4e3c8b4eda3db452563561b665c0cc90540758cf140ff765e0a6ad087d4f30fced830c4fd65af5eb)
+set(qtquicktimeline_HASH    0019991b14c848599d46e84216956143d1735d5b91009793a932c936baadee8202db89f0fe510badc14e3a58218f17ba0b79715edd474e941f7ca5687f01640b)
+set(qtquick3d_HASH          c558b09b7742047266d54cac13310f46d37a7d0262731786e402b10aafaa0b2ce8630ea7f1b8258db4e0e00426cb1fc4dddb1b9bdfed44a0238ee739020cbf23)
+set(qttranslations_HASH     3fc3cd33e3c94937c582c5a0888c534dfb45ab5962b1e027f80a494726930c846e9749359fdea676bf41b8bfe9d3fef6abd8e95b4cabedeb1b236f511a9c9bcf)
+set(qtwayland_HASH          fb938f80ff4487674c944df942e5c2a61960b889a0e241c91053d6a8f110d05bc09271d0618fcac6eb3e2f8ee9e83f15ff66d99de68b95d96938be8a0a84a96e)
+set(qtdoc_HASH              124aa3a028ff05b029cc3400c1bdb4154dee4c66b62eed76709269d4ee82a042aaada29f89673cd807a446746091882ab1b5de6c9cfc7681467122377bcd6d27)
 
-set(qtsvg_HASH              105ee59cfc16a3e3a1658253d0731dfeb5506bfe98378d7a402a4e54a403c2c95d35b336fd91b6ac8bad4fa548b1f0d794fb7186dfa43d615522f9f68c4a6da9)
-set(qt5compat_HASH          dba33c315686d107c7e8854a628308e6c4a1f4127593e7bdeb8ece4e4fbf59aee3c218271c462374c138cecbb5ddbfbfaf63dc544789736d47e834da95200791)
-set(qtshadertools_HASH      ecaa7d7574a97774d62f06939691fb892b1125b334879f9f9362789f2c6db1002214cb58f21035b72b9d2bd1f6bee5b855a39e997ffd4d0aee1217adf5ee778c)
-set(qtquicktimeline_HASH    d02e85d2ee47b75537f526da00735149e8a9a83276bcbebc6cf3699607a51857493d719fa1fdf9f4df2c370da0b3bf1c0b507ddf7693ab55a0b7c24c5c49a85f)
-set(qtquick3d_HASH          f7bae3e6057dbefb906e65bc2d38e20975dd7c19b9df599bc95fa8c178d39aeb15cc1ecaca711daadefcf24da47c58fd879f9fa819b87d6b13aba2e3fb856862)
-set(qttranslations_HASH     78beb0ad5e1eb1992765fa44388115016bef5ef4e7e3864c389db5f639f5a3ac7b11c6e7792f07c015b7ecb2164015093a9d982e99feece4a54343c4290f28b7)
-set(qtwayland_HASH          62431c4d048d8793e6295bfe5bae0804ca5800b5d62b26f5513d6bf7ac2189eee40c58821b1544b0fea667adfe7c74ce999fdaff3d0877479b84dd02e29c0a33)
-set(qtdoc_HASH              2877026c663b696976ccc91dee578289bab457929f60fe5768d402647bc1d705321caa7ba44bdcf6f64c7d1481a5b0c95b14218de588c472414e332a14a61ef6)
+
+#TODO: qtquickcontrols2 
+#      (qtimageformats ? no tag yet)
+#      (qtgamepad ?)
+#      (qtcharts ?)
+
+# List of added an removed modules https://doc-snapshots.qt.io/qt6-dev/whatsnew60.html#changes-to-supported-modules
+
+if(QT_UPDATE_VERSION)
+    message(STATUS "Running Qt in automatic version port update mode!")
+    set(_VCPKG_INTERNAL_NO_HASH_CHECK 1)
+    if("${PORT}" MATCHES "qtbase")
+        foreach(_current_qt_port IN LISTS QT_PORTS)
+            set(_current_control "${VCPKG_ROOT_DIR}/ports/${_current_qt_port}/vcpkg.json")
+            file(READ "${_current_control}" _control_contents)
+            string(REGEX REPLACE "\"version-string\": [^\n]+\n" "\"version-string\": \"${QT_VERSION}\",\n" _control_contents "${_control_contents}")
+            file(WRITE "${_current_control}" "${_control_contents}")
+            #need to run a vcpkg format-manifest --all after update once 
+        endforeach()
+    endif()
+endif()

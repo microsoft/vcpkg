@@ -3,8 +3,8 @@ include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
         jpeg.patch
-        findzstd.patch
-        fix_pcre2_linkage.patch
+        #findzstd.patch
+        #fix_pcre2_linkage.patch
         harfbuzz.patch
         config_install.patch 
         allow_outside_prefix.patch 
@@ -14,9 +14,10 @@ set(${PORT}_PATCHES
 
 if(NOT VCPKG_USE_HEAD_VERSION)
     list(APPEND ${PORT}_PATCHES
-                419db858f5bf73ff59d3c886003727eb7cab8400.diff
-                df9c7456d11dfcf74c7399ba0981a3ba3d3f5117.diff
-                1b4ea4a.diff)
+                #419db858f5bf73ff59d3c886003727eb7cab8400.diff
+                #df9c7456d11dfcf74c7399ba0981a3ba3d3f5117.diff
+                #1b4ea4a.diff
+                )
 endif()
 
 # Features can be found via searching for qt_feature in all configure.cmake files in the source: 
@@ -250,7 +251,19 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                         -DQT_NO_MAKE_TOOLS:BOOL=ON
-                        -DFEATURE_debug:BOOL=ON)
+                        -DFEATURE_debug:BOOL=ON
+                    )
+
+# Install CMake helper scripts
+file(COPY
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake
+    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake
+    DESTINATION
+        ${CURRENT_PACKAGES_DIR}/share/${PORT}
+)
+
+qt_stop_on_update()
 
 set(script_files qt-cmake qt-cmake-private qt-cmake-standalone-test qt-configure-module qt-internal-configure-tests)
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -302,14 +315,5 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuildInternals")
 if(NOT VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/macos")
 endif()
-
-# Install Scripts
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes.cmake
-    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake
-    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/share/${PORT}
-)
 
 #TODO. create qt.conf for vcpkg_configure_qmake

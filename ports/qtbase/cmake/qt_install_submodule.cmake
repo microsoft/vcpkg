@@ -1,6 +1,14 @@
 include("${CMAKE_CURRENT_LIST_DIR}/qt_install_copyright.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/qt_port_hashes.cmake")
 set(PORT_DEBUG ON)
+
+macro(qt_stop_on_update)
+    if(QT_UPDATE_VERSION)
+        set(VCPKG_POLICY_EMPTY_PACKAGE enabled CACHE INTERNAL "")
+        return()
+    endif()
+endmacro()
+
 function(qt_install_submodule)
     cmake_parse_arguments(PARSE_ARGV 0 "_qis" ""
                           ""
@@ -13,14 +21,30 @@ function(qt_install_submodule)
     get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
     vcpkg_add_to_path(${PYTHON3_PATH})
 
+    if(QT_UPDATE_VERSION)
+        set(ADDITIONAL_FROM_GITHUB_OPTIONS 
+                    OUT_DOWNLOADED_FILE_NAME DOWNLOADED_FILE_NAME
+                    NO_EXTRACT)
+    endif()
+
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
+        ${ADDITIONAL_FROM_GITHUB_OPTIONS}
         REPO qt/${PORT}
         REF ${${PORT}_REF}
         SHA512 ${${PORT}_HASH}
         HEAD_REF dev
         PATCHES ${_qis_PATCHES}
     )
+
+    if(QT_UPDATE_VERSION)
+        set(VCPKG_POLICY_EMPTY_PACKAGE enabled CACHE INTERNAL "")
+        set(DOWNLOAD_FILE_PATH "${DOWNLOADS}/${DOWNLOADED_FILE_NAME}")
+        file(SHA512 ${DOWNLOAD_FILE_PATH} FILE_HASH)
+        message(STATUS "${PORT} new hash is ${FILE_HASH}")
+        file(APPEND "${VCPKG_ROOT_DIR}/ports/qtbase/cmake/qt_new_hashes.cmake" "set(${PORT}_HASH ${FILE_HASH})\n")
+        return()
+    endif()
 
     if(VCPKG_TARGET_IS_WINDOWS)
         if(NOT ${PORT} MATCHES "qtbase")
