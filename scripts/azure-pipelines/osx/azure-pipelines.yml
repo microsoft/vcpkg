@@ -50,7 +50,7 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/failure-logs'
       ArtifactName: 'failure logs for x64-osx'
-    condition: failed()
+    condition: always()
   - bash: |
       python3 scripts/file_script.py /Users/vagrant/Data/installed/vcpkg/info/
     displayName: 'Build a file list for all packages'

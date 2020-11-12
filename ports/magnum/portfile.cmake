@@ -79,13 +79,6 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-# Drop a copy of tools
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-    set(EXE_SUFFIX .exe)
-else()
-    set(EXE_SUFFIX)
-endif()
-
 # Copy tools into vcpkg's tools directory
 set(_TOOL_EXEC_NAMES "")
 set(_TOOLS
@@ -102,7 +95,7 @@ foreach(_tool IN LISTS _TOOLS)
 endforeach()
 message(STATUS ${_TOOL_EXEC_NAMES})
 if(_TOOL_EXEC_NAMES)
-    vcpkg_copy_tools(TOOL_NAMES "${_TOOL_EXEC_NAMES}" AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES ${_TOOL_EXEC_NAMES} AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -123,6 +116,4 @@ else()
    file(COPY ${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/magnum-d)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-    RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
