@@ -50,7 +50,7 @@ endif()
 if(UNIX)
     vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES numa)
 else()
-    vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES c++ stdc++)
+    vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES c\\+\\+ stdc\\+\\+)
 endif()
 
 # Handle copyright
