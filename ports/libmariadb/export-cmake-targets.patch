@@ -1,0 +1,26 @@
+diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
+index 083a863..7bc32b4 100644
+--- a/libmariadb/CMakeLists.txt
++++ b/libmariadb/CMakeLists.txt
+@@ -460,10 +460,21 @@ INSTALL(TARGETS mariadbclient
+           LIBRARY DESTINATION lib)
+ INSTALL(TARGETS libmariadb
+           COMPONENT SharedLibraries
++        EXPORT unofficial-libmariadb-targets
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib
+         ARCHIVE DESTINATION lib)
+ 
++install(EXPORT unofficial-libmariadb-targets DESTINATION share/unofficial-libmariadb)
++
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmariadb-config.cmake"
++[[include(CMakeFindDependencyMacro)
++find_dependency(ZLIB)
++find_dependency(OpenSSL)
++include("${CMAKE_CURRENT_LIST_DIR}/unofficial-libmariadb-targets.cmake")
++]])
++
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libmariadb-config.cmake DESTINATION share/unofficial-libmariadb)
+ 
+ IF(0)
+    # On Windows, install PDB
