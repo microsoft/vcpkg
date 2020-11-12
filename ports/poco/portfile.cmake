@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_TARGET "UWP")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pocoproject/poco
@@ -96,7 +98,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/include/Poco/SQL/SQLite")
     file(COPY ${SOURCE_PATH}/Data/SQLite/include DESTINATION ${CURRENT_PACKAGES_DIR})
 endif()
 
-if(1)
+if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 else()
   vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Poco)
