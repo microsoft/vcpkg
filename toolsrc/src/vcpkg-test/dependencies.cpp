@@ -748,3 +748,51 @@ TEST_CASE ("version install constraint-reduction", "[versionplan]")
         check_name_and_version(install_plan.install_actions[1], "b", {"2", 0});
     }
 }
+
+TEST_CASE ("version install overrides", "[versionplan]")
+{
+    MockCMakeVarProvider var_provider;
+
+    MockVersionedPortfileProvider vp;
+
+    vp.emplace("b", {"1", 0}, Scheme::Relaxed);
+    vp.emplace("b", {"2", 0}, Scheme::Relaxed);
+    vp.emplace("c", {"1", 0}, Scheme::String);
+    vp.emplace("c", {"2", 0}, Scheme::String);
+
+    MockBaselineProvider bp;
+    bp.v["b"] = {"2", 0};
+    bp.v["c"] = {"2", 0};
+
+    SECTION ("string")
+    {
+        auto install_plan = unwrap(Dependencies::create_versioned_install_plan(vp,
+                                                                               bp,
+                                                                               var_provider,
+                                                                               {Dependency{"c"}},
+                                                                               {
+                                                                                   DependencyOverride{"b", "1"},
+                                                                                   DependencyOverride{"c", "1"},
+                                                                               },
+                                                                               Test::X86_WINDOWS));
+
+        REQUIRE(install_plan.size() == 1);
+        check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
+    }
+
+    SECTION ("relaxed")
+    {
+        auto install_plan = unwrap(Dependencies::create_versioned_install_plan(vp,
+                                                                               bp,
+                                                                               var_provider,
+                                                                               {Dependency{"b"}},
+                                                                               {
+                                                                                   DependencyOverride{"b", "1"},
+                                                                                   DependencyOverride{"c", "1"},
+                                                                               },
+                                                                               Test::X86_WINDOWS));
+
+        REQUIRE(install_plan.size() == 1);
+        check_name_and_version(install_plan.install_actions[0], "b", {"1", 0});
+    }
+}

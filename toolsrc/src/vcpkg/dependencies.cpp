@@ -1166,7 +1166,7 @@ namespace vcpkg::Dependencies
             {
             }
 
-            // void add_override(const std::string& name, const Versions::Version& v);
+            void add_override(const std::string& name, const Versions::Version& v);
 
             void add_roots(View<Dependency> dep, Triplet t);
 
@@ -1204,6 +1204,7 @@ namespace vcpkg::Dependencies
                 std::map<Versions::Version, VersionSchemeInfo*> vermap;
                 std::map<std::string, VersionSchemeInfo> exacts;
                 Optional<std::unique_ptr<VersionSchemeInfo>> relaxed;
+                Optional<std::unique_ptr<VersionSchemeInfo>> overriden;
                 std::set<std::string> features;
 
                 VersionSchemeInfo* get_node(const Versions::Version& ver);
@@ -1211,7 +1212,7 @@ namespace vcpkg::Dependencies
             };
 
             std::vector<DepSpec> m_roots;
-
+            std::map<std::string, Versions::Version> m_overrides;
             std::map<PackageSpec, PackageNode> m_graph;
 
             std::pair<const PackageSpec, PackageNode>& emplace_package(const PackageSpec& spec);
@@ -1318,8 +1319,6 @@ namespace vcpkg::Dependencies
             return r == VerComp::lt;
         }
 
-        // void VersionedPackageGraph::add_override(const std::string& /*name*/, const Versions::Version& /*v*/) { }
-
         Versions::Version to_version(const SourceControlFile& scf)
         {
             return {
@@ -1411,6 +1410,11 @@ namespace vcpkg::Dependencies
                                                    const Versions::Version& version,
                                                    const std::string& origin)
         {
+            auto over_it = m_overrides.find(ref.first.name());
+            if (over_it != m_overrides.end() && over_it->second != version)
+            {
+                return add_constraint(ref, over_it->second, origin);
+            }
             auto maybe_scfl = m_ver_provider.get_control_file(ref.first.name(), version);
 
             if (auto p_scfl = maybe_scfl.get())
@@ -1493,6 +1497,11 @@ namespace vcpkg::Dependencies
             }
         }
 
+        void VersionedPackageGraph::add_override(const std::string& name, const Versions::Version& v)
+        {
+            m_overrides.emplace(name, v);
+        }
+
         void VersionedPackageGraph::add_roots(View<Dependency> deps, Triplet t)
         {
             for (auto&& dep : deps)
@@ -1500,6 +1509,14 @@ namespace vcpkg::Dependencies
                 PackageSpec spec(dep.name, t);
                 auto& node = emplace_package(spec);
                 const std::string toplevel = "toplevel";
+
+                auto over_it = m_overrides.find(dep.name);
+                if (over_it != m_overrides.end())
+                {
+                    m_roots.push_back(DepSpec{spec, over_it->second, dep.features});
+                    add_constraint(node, over_it->second, toplevel);
+                    continue;
+                }
 
                 auto dep_ver = to_version(dep.constraint);
                 auto base_ver = m_base_provider.get_baseline(dep.name);
@@ -1691,11 +1708,13 @@ namespace vcpkg::Dependencies
                                                         PortFileProvider::IBaselineProvider& bprovider,
                                                         const CMakeVars::CMakeVarProvider& /*var_provider*/,
                                                         const std::vector<Dependency>& deps,
-                                                        const std::vector<DependencyOverride>& /* overrides */,
+                                                        const std::vector<DependencyOverride>& overrides,
                                                         Triplet triplet,
                                                         const CreateInstallPlanOptions& /*options*/)
     {
         VersionedPackageGraph vpg(provider, bprovider);
+        for (auto&& o : overrides)
+            vpg.add_override(o.name, {o.version, o.port_version});
         vpg.add_roots(deps, triplet);
         return vpg.finalize_extract_plan();
     }
