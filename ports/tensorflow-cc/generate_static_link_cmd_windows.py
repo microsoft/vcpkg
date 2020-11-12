@@ -29,14 +29,14 @@ with open(sys.argv[1], "r") as f_in:
                                 t = t[:-len("link.exe")] + "lib.exe\""
                             elif t == "/DLL" or t.lower()[1:].startswith("defaultlib:") or t.lower()[1:].startswith("ignore") or t.startswith("/OPT:") or t.startswith("/DEF:") or t.startswith("/DEBUG:") or t.startswith("/INCREMENTAL:"):
                                 continue
-                            elif t[0] == '@' and t.endswith("tensorflow" + lib_suffix + ".dll-2.params"):
-                                t = t[:-len("dll-2.params")] + "lib-2.params"
-                                params_file = t[1:]
+                            elif t[0] == '@' and t.endswith(f"tensorflow{lib_suffix}.dll-2.params"):
+                                t = t[:-len("dll-2.params")] + "lib-2.params-part1"
+                                params_file = t[1:-len("-part1")]
                             line += t + " "
                         f_out.write(line + "\n")
                         # check for more parts if library needs to be split
                         file_no = 2
-                        while os.path.isfile(params_file + "-part%d" % file_no):
-                            f_out.write(line.replace("lib-2.params", "lib-2.params-part%d" % file_no) + "\n")
+                        while os.path.isfile(f"{params_file}-part{file_no}"):
+                            f_out.write(line.replace("lib-2.params-part1", f"lib-2.params-part{file_no}") + "\n")
                             file_no += 1
                         break

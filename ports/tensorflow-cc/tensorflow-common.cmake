@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "x86" "arm")
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" ON_TARGET "UWP")
 
 set(TF_VERSION 2.3.1)
 set(TF_VERSION_SHORT 2.3)
@@ -74,11 +74,11 @@ set(ENV{TF_NEED_CUDA} 0)
 set(ENV{TF_CONFIGURE_IOS} 0)
 
 if(VCPKG_TARGET_IS_WINDOWS)
-	set(BAZEL_LIB_NAME "tensorflow${TF_LIB_SUFFIX}.dll")
+	set(BAZEL_LIB_NAME tensorflow${TF_LIB_SUFFIX}.dll)
 	set(PLATFORM_SUFFIX windows)
 	set(STATIC_LINK_CMD static_link.bat)
 elseif(VCPKG_TARGET_IS_OSX)
-	set(BAZEL_LIB_NAME "libtensorflow${TF_LIB_SUFFIX}.dylib")
+	set(BAZEL_LIB_NAME libtensorflow${TF_LIB_SUFFIX}.dylib)
 	set(PLATFORM_SUFFIX macos)
 	set(STATIC_LINK_CMD sh static_link.sh)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -94,7 +94,7 @@ elseif(VCPKG_TARGET_IS_OSX)
 		set(TF_LIB_NAME_FULL "libtensorflow${TF_LIB_SUFFIX}.${TF_VERSION}.a")
 	endif()
 else()
-	set(BAZEL_LIB_NAME "libtensorflow${TF_LIB_SUFFIX}.so")
+	set(BAZEL_LIB_NAME libtensorflow${TF_LIB_SUFFIX}.so)
 	set(PLATFORM_SUFFIX linux)
 	set(STATIC_LINK_CMD sh static_link.sh)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -111,14 +111,14 @@ else()
 	endif()
 endif()
 
-set(N_DBG_LIB_PARTS 0)
 foreach(BUILD_TYPE dbg rel)
-	set(STATIC_ONLY_PATCHES "")
-	set(LINUX_ONLY_PATCHES "")
+	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks 
+	set(STATIC_ONLY_PATCHES)
+	set(LINUX_ONLY_PATCHES)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		set(STATIC_ONLY_PATCHES ${TF_PATCHES_PREFIX}change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
 	endif()
-	if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_OSX)
+	if(VCPKG_TARGET_IS_LINUX)
 		set(LINUX_ONLY_PATCHES ${TF_PATCHES_PREFIX}fix-linux-build.patch)
 	endif()
 	vcpkg_from_github(
@@ -163,9 +163,14 @@ foreach(BUILD_TYPE dbg rel)
 	endif()
 
 	message(STATUS "Warning: Building TensorFlow can take an hour or more.")
-	set(COPTS "")
-	set(CXXOPTS "")
-	set(LINKOPTS "")
+	set(COPTS)
+	set(CXXOPTS)
+	set(LINKOPTS)
+	if(VCPKG_TARGET_IS_WINDOWS)
+		set(PLATFORM_COMMAND WINDOWS_COMMAND)
+	else()
+		set(PLATFORM_COMMAND UNIX_COMMAND)
+	endif()
 	if(BUILD_TYPE STREQUAL dbg)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			set(BUILD_OPTS "--compilation_mode=dbg --features=fastbuild") # link with /DEBUG:FASTLINK instead of /DEBUG:FULL to avoid .pdb >4GB error
@@ -173,38 +178,38 @@ foreach(BUILD_TYPE dbg rel)
 			set(BUILD_OPTS "--compilation_mode=dbg")
 		endif()
 
-		separate_arguments(VCPKG_C_FLAGS)
-		separate_arguments(VCPKG_C_FLAGS_DEBUG)
+		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
+		separate_arguments(VCPKG_C_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_C_FLAGS VCPKG_C_FLAGS_DEBUG)
-			list(APPEND COPTS "--copt=${OPT}")
+			list(APPEND COPTS "--copt='${OPT}'")
 		endforeach()
-		separate_arguments(VCPKG_CXX_FLAGS)
-		separate_arguments(VCPKG_CXX_FLAGS_DEBUG)
+		separate_arguments(VCPKG_CXX_FLAGS ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS})
+		separate_arguments(VCPKG_CXX_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_DEBUG)
-			list(APPEND CXXOPTS "--copt=${OPT}")
+			list(APPEND CXXOPTS "--cxxopt='${OPT}'")
 		endforeach()
-		separate_arguments(VCPKG_LINKER_FLAGS)
-		separate_arguments(VCPKG_LINKER_FLAGS_DEBUG)
+		separate_arguments(VCPKG_LINKER_FLAGS ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS})
+		separate_arguments(VCPKG_LINKER_FLAGS_DEBUG ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS_DEBUG})
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_DEBUG)
-			list(APPEND LINKOPTS "--linkopt=${OPT}")
+			list(APPEND LINKOPTS "--linkopt='${OPT}'")
 		endforeach()
 	else()
 		set(BUILD_OPTS "--compilation_mode=opt")
 
-		separate_arguments(VCPKG_C_FLAGS)
-		separate_arguments(VCPKG_C_FLAGS_RELEASE)
+		separate_arguments(VCPKG_C_FLAGS ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS})
+		separate_arguments(VCPKG_C_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_C_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_C_FLAGS VCPKG_C_FLAGS_RELEASE)
-			list(APPEND COPTS "--copt=${OPT}")
+			list(APPEND COPTS "--copt='${OPT}'")
 		endforeach()
-		separate_arguments(VCPKG_CXX_FLAGS)
-		separate_arguments(VCPKG_CXX_FLAGS_RELEASE)
+		separate_arguments(VCPKG_CXX_FLAGS ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS})
+		separate_arguments(VCPKG_CXX_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_CXX_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_CXX_FLAGS VCPKG_CXX_FLAGS_RELEASE)
-			list(APPEND CXXOPTS "--copt=${OPT}")
+			list(APPEND CXXOPTS "--cxxopt='${OPT}'")
 		endforeach()
-		separate_arguments(VCPKG_LINKER_FLAGS)
-		separate_arguments(VCPKG_LINKER_FLAGS_RELEASE)
+		separate_arguments(VCPKG_LINKER_FLAGS ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS})
+		separate_arguments(VCPKG_LINKER_FLAGS_RELEASE ${PLATFORM_COMMAND} ${VCPKG_LINKER_FLAGS_RELEASE})
 		foreach(OPT IN LISTS VCPKG_LINKER_FLAGS VCPKG_LINKER_FLAGS_RELEASE)
-			list(APPEND LINKOPTS "--linkopt=${OPT}")
+			list(APPEND LINKOPTS "--linkopt='${OPT}'")
 		endforeach()
 	endif()
 
@@ -214,7 +219,7 @@ foreach(BUILD_TYPE dbg rel)
 			list(JOIN CXXOPTS " " CXXOPTS)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "'${BAZEL}' build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -252,7 +257,7 @@ foreach(BUILD_TYPE dbg rel)
 		if(NOT VCPKG_TARGET_IS_OSX)
 			if(VCPKG_TARGET_IS_WINDOWS)
 				vcpkg_execute_build_process(
-					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" "${N_DBG_LIB_PARTS}" "${TF_PORT_SUFFIX}"
+					COMMAND ${PYTHON3} "${CMAKE_CURRENT_LIST_DIR}/convert_lib_params_${PLATFORM_SUFFIX}.py" "${TF_PORT_SUFFIX}"
 					WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow
 					LOGNAME postbuild1-${TARGET_TRIPLET}-${BUILD_TYPE}
 				)
@@ -277,7 +282,7 @@ foreach(BUILD_TYPE dbg rel)
 		)
 	endif()
 
-	if(BUILD_TYPE STREQUAL dbg)
+	if(BUILD_TYPE STREQUAL "dbg")
 		set(DIR_PREFIX "/debug")
 	else()
 		set(DIR_PREFIX "")
@@ -294,84 +299,142 @@ foreach(BUILD_TYPE dbg rel)
 				message(STATUS "Warning: debug information tensorflow${TF_LIB_SUFFIX}.pdb will be of limited use because only a reduced set could be produced due to the 4GB internal PDB file limit even on x64.")
 			endif()
 		else()
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			set(TF_LIB_SUFFIXES "")
+			if(BUILD_TYPE STREQUAL dbg)
+				set(library_parts_variable TF_LIB_PARTS_DEBUG)
+			else()
+				set(library_parts_variable TF_LIB_PARTS_RELEASE)
+			endif()
+			set(${library_parts_variable})
+
 			# library might have been split because no more than 4GB are supported even on x64 Windows
-			foreach(PART_NO RANGE 2 100)
-				if(EXISTS ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}-part${PART_NO}.lib)
-					file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}-part${PART_NO}.lib DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-					set(N_DBG_LIB_PARTS ${PART_NO})
-					list(APPEND TF_LIB_SUFFIXES "-part${PART_NO}")
+			foreach(PART_NO RANGE 1 100)
+				set(source "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/tensorflow${TF_LIB_SUFFIX}-part${PART_NO}.lib")
+				if(EXISTS "${source}")
+					file(COPY "${source}" DESTINATION "${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib")
+					list(APPEND ${library_parts_variable} "tensorflow${TF_LIB_SUFFIX}-part${PART_NO}.lib")
 				else()
 					break()
 				endif()
 			endforeach()
 		endif()
 	else()
-		file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/${TF_LIB_NAME_FULL} DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-		file(CREATE_LINK ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME_FULL} ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME_SHORT} SYMBOLIC)
-		file(CREATE_LINK ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME_FULL} ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME} SYMBOLIC)
+		file(COPY
+			${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/${TF_LIB_NAME_FULL}
+			DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib
+		)
+
+		# Note: these use relative links
+		file(CREATE_LINK ${TF_LIB_NAME_FULL}
+			${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME_SHORT}
+			SYMBOLIC
+		)
+		file(CREATE_LINK ${TF_LIB_NAME_FULL}
+			${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_LIB_NAME}
+			SYMBOLIC
+		)
 		if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-			file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/${TF_FRAMEWORK_NAME_FULL} DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib)
-			file(CREATE_LINK ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME_FULL} ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME_SHORT} SYMBOLIC)
-			file(CREATE_LINK ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME_FULL} ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME} SYMBOLIC)
+			file(COPY
+				${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/bazel-bin/tensorflow/${TF_FRAMEWORK_NAME_FULL}
+				DESTINATION ${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib
+			)
+			file(CREATE_LINK
+				${TF_FRAMEWORK_NAME_FULL}
+				${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME_SHORT}
+				SYMBOLIC
+			)
+			file(CREATE_LINK
+				${TF_FRAMEWORK_NAME_FULL}
+				${CURRENT_PACKAGES_DIR}${DIR_PREFIX}/lib/${TF_FRAMEWORK_NAME}
+				SYMBOLIC
+			)
 		endif()
 	endif()
 endforeach()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-	message(STATUS "Warning: Static TensorFlow build contains several external dependancies that may cause linking conflicts (e.g. you cannot use openssl in your projects as TensorFlow contains boringssl and so on).")
+	message(STATUS "Warning: Static TensorFlow build contains several external dependencies that may cause linking conflicts (for example, one cannot use both openssl and TensorFlow in the same project, since TensorFlow contains boringssl).")
 	if(VCPKG_TARGET_IS_WINDOWS)
-		message(STATUS "Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to convince the linker to include the whole library, i.e., link using options '/WHOLEARCHIVE:tensorflow${TF_LIB_SUFFIX}.lib /WHOLEARCHIVE:tensorflow${TF_LIB_SUFFIX}-part2.lib /WHOLEARCHIVE:tensorflow${TF_LIB_SUFFIX}-part3.lib ...'")
+		message(STATUS "Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to tell the linker to include the whole library, i.e., link using options '/WHOLEARCHIVE:tensorflow${TF_LIB_SUFFIX}-part1.lib /WHOLEARCHIVE:tensorflow${TF_LIB_SUFFIX}-part2.lib ...'")
 	else()
 		message(STATUS "Note: There is no separate libtensorflow_framework.a as it got merged into libtensorflow${TF_LIB_SUFFIX}.a to avoid linking conflicts.")
 		if(VCPKG_TARGET_IS_OSX)
-			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow${TF_LIB_SUFFIX} -lstdc++ -framework CoreFoundation'")
-			message(STATUS "Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to convince the linker to include the whole library, i.e., '-Wl,-force_load,path/to/libtensorflow${TF_LIB_SUFFIX}.a -lstdc++ -framework CoreFoundation -framework Security'")
+			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies to the linker, for example '-ltensorflow${TF_LIB_SUFFIX} -framework CoreFoundation'")
+			message(STATUS "Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to tell the linker to include the whole library: '-Wl,-force_load,path/to/libtensorflow${TF_LIB_SUFFIX}.a -framework CoreFoundation -framework Security [rest of linker arguments]'")
 		else()
-			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies on the linker commandline, i.e., '-ltensorflow${TF_LIB_SUFFIX} -lstdc++ -lm -ldl -lpthread'")
-			message(STATUS "Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to convince the linker to include the whole library, i.e., '-Wl,--whole-archive -ltensorflow${TF_LIB_SUFFIX} -Wl,--no-whole-archive -lstdc++ -lm -ldl -lpthread'")
+			message(STATUS "Note: Beside TensorFlow itself, you'll need to also pass its dependancies to the linker, for example '-ltensorflow${TF_LIB_SUFFIX} -lm -ldl -lpthread'")
+			message(STATUS "Note: For some TensorFlow features (e.g. OpRegistry), it might be necessary to tell the linker to include the whole library: '-Wl,--whole-archive -ltensorflow${TF_LIB_SUFFIX} -Wl,--no-whole-archive [rest of linker arguments]'")
 		endif()
 	endif()
 
-	configure_file(${CMAKE_CURRENT_LIST_DIR}/README-${PLATFORM_SUFFIX} ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/README COPYONLY)
+	configure_file(
+		${CMAKE_CURRENT_LIST_DIR}/README-${PLATFORM_SUFFIX}
+		${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/README
+		COPYONLY)
 endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX})
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/LICENSE ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/copyright)
 
-if(VCPKG_MANIFEST_MODE)
-	set(INSTALL_PREFIX ${CMAKE_BINARY_DIR}/vcpkg_installed)
-else()
-	set(INSTALL_PREFIX ${VCPKG_ROOT_DIR}/installed)
-endif()
+
+# NOTE: if this port ever supports VCPKG_BUILD_TYPE, use that to set these.
+set(TENSORFLOW_HAS_RELEASE ON)
+set(TENSORFLOW_HAS_DEBUG ON)
+
 if(VCPKG_TARGET_IS_WINDOWS)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-windows-dll.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake)
+		configure_file(
+			${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-windows-dll.cmake.in
+			${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake
+			@ONLY)
 	else()
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-windows-lib.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake)
-		set(ALL_PARTS "tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX}-part1")
-		foreach(part ${TF_LIB_SUFFIXES})
-			file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake "\n\
-add_library(tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX}${part} STATIC IMPORTED)\n\
-set_target_properties(tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX}${part}\n\
-	PROPERTIES\n\
-	IMPORTED_LOCATION \"${INSTALL_PREFIX}/${TARGET_TRIPLET}/lib/tensorflow${part}.lib\"\n\
-	INTERFACE_INCLUDE_DIRECTORIES \"${TF_INCLUDE_DIRS}\"\n\
-)\n\
-")
-			list(APPEND ALL_PARTS "tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX}${part}")
+		configure_file(
+			${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-windows-lib.cmake.in
+			${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake
+			@ONLY)
+
+		set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled)
+
+		set(prefix [[${TENSORFLOW_INSTALL_PREFIX}]])
+
+		set(libs_to_link)
+		foreach(lib IN LISTS TF_LIB_PARTS_RELEASE)
+			list(APPEND libs_to_link "$<$<CONFIG:Release>:${prefix}/lib/${lib}>")
 		endforeach()
-		file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake "\n\
-add_library(tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX} INTERFACE IMPORTED)\n\
-set_property(TARGET tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX} PROPERTY INTERFACE_LINK_LIBRARIES ${ALL_PARTS})\n\
-")
+		foreach(lib IN LISTS TF_LIB_PARTS_DEBUG)
+			list(APPEND libs_to_link "$<$<CONFIG:Debug>:${prefix}/debug/lib/${lib}>")
+		endforeach()
+		if(TENSORFLOW_HAS_RELEASE)
+			set(TF_LIB_PARTS_DEFAULT ${TF_LIB_PARTS_RELEASE})
+			set(prefix_DEFAULT "${prefix}")
+		elseif(TENSORFLOW_HAS_DEBUG)
+			set(TF_LIB_PARTS_DEFAULT ${TF_LIB_PARTS_DEBUG})
+			set(prefix_DEFAULT "${prefix}/debug")
+		endif()
+
+		foreach(lib IN LISTS TF_LIB_PARTS_DEFAULT)
+			list(APPEND libs_to_link
+				"$<$<NOT:$<OR:$<CONFIG:Release>,$<CONFIG:Debug>>>:${prefix}/lib/${lib}>")
+		endforeach()
+
+		string(REPLACE ";" "\n\t\t" libs_to_link "${libs_to_link}")
+		file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake "
+target_link_libraries(tensorflow${TF_LIB_SUFFIX}::tensorflow${TF_LIB_SUFFIX}
+	INTERFACE
+		${libs_to_link}
+)"
+		)
 	endif()
 else()
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-shared.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake)
+		configure_file(
+			${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-shared.cmake.in
+			${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake
+			@ONLY)
 	else()
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-static.cmake.in ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake)
+		configure_file(
+			${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-static.cmake.in
+			${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/tensorflow${TF_PORT_SUFFIX}-config.cmake
+			@ONLY)
 	endif()
 endif()
 

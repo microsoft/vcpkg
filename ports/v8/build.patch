@@ -1,61 +1,65 @@
 diff --git a/config/compiler/BUILD.gn b/config/compiler/BUILD.gn
-index 5a0984f54..4f301517b 100644
+index 82474eee8..4b22319e3 100644
 --- a/config/compiler/BUILD.gn
 +++ b/config/compiler/BUILD.gn
-@@ -1473,6 +1473,8 @@ config("default_warnings") {
+@@ -12,7 +12,6 @@ import("//build/config/clang/clang.gni")
+ import("//build/config/compiler/compiler.gni")
+ import("//build/config/coverage/coverage.gni")
+ import("//build/config/dcheck_always_on.gni")
+-import("//build/config/gclient_args.gni")
+ import("//build/config/host_byteorder.gni")
+ import("//build/config/sanitizers/sanitizers.gni")
+ import("//build/config/ui.gni")
+@@ -1501,6 +1500,7 @@ config("default_warnings") {
        # Disables.
        "-Wno-missing-field-initializers",  # "struct foo f = {0};"
        "-Wno-unused-parameter",  # Unused function parameters.
 +      "-Wno-invalid-offsetof", # Use of "conditionally-supported" offsetof in c++17
-+      "-Wno-range-loop-construct",
      ]
    }
 
-@@ -1887,11 +1889,21 @@ config("no_incompatible_pointer_warnings") {
+@@ -1924,8 +1924,17 @@ config("no_incompatible_pointer_warnings") {
  # Shared settings for both "optimize" and "optimize_max" configs.
  # IMPORTANT: On Windows "/O1" and "/O2" must go before the common flags.
  if (is_win) {
 -  common_optimize_on_cflags = [
+-    "/Ob2",  # Both explicit and auto inlining.
 +  common_optimize_on_cflags = []
 +  if(is_clang) {
 +    common_optimize_on_cflags += [
-     "/Ob2",  # Both explicit and auto inlining.
++     "/Ob2",  # Both explicit and auto inlining.
 +    ]
 +  } else {
-+  common_optimize_on_cflags += [
-+    "/Ob3",  # Both explicit and auto inlining.
++    common_optimize_on_cflags += [
++      "/Ob3",  # Both explicit and auto inlining.
 +    ]
 +  }
 +  common_optimize_on_cflags += [
      "/Oy-",  # Disable omitting frame pointers, must be after /O2.
      "/Zc:inline",  # Remove unreferenced COMDAT (faster links).
    ]
-+
-   if (!is_asan) {
-     common_optimize_on_cflags += [
-       # Put data in separate COMDATs. This allows the linker
 diff --git a/config/linux/pkg-config.py b/config/linux/pkg-config.py
-index 5adf70cc3..1438c365b 100644
+index 5adf70cc3..dab159f98 100644
 --- a/config/linux/pkg-config.py
 +++ b/config/linux/pkg-config.py
-@@ -41,7 +41,11 @@ from optparse import OptionParser
+@@ -41,6 +41,11 @@ from optparse import OptionParser
  # Additionally, you can specify the option --atleast-version. This will skip
  # the normal outputting of a dictionary and instead print true or false,
  # depending on the return value of pkg-config for the given package.
--
 +#
 +# --pkg_config_libdir=<path> allows direct override
 +# of the PKG_CONFIG_LIBDIR environment library.
 +#
 +# --full-path-libs causes lib names to include their full path.
 
+
  def SetConfigPath(options):
-   """Set the PKG_CONFIG_LIBDIR environment variable.
-@@ -105,11 +109,29 @@ def RewritePath(path, strip_prefix, sysroot):
+@@ -105,11 +110,32 @@ def RewritePath(path, strip_prefix, sysroot):
      return path
 
 
 +flag_regex = re.compile("(-.)(.+)")
++
 +
 +def FlagReplace(matchobj):
 +  if matchobj.group(1) == '-I':
@@ -66,9 +70,11 @@ index 5adf70cc3..1438c365b 100644
 +     return matchobj.group(1) + matchobj.group(2) + '.lib'
 +  return matchobj.group(0)
 +
++
 +def ConvertGCCToMSVC(flags):
 +  """Rewrites GCC flags into MSVC flags."""
-+  if 'win32' not in sys.platform:
++  # need a better way to determine mingw vs msvc build
++  if 'win32' not in sys.platform or "GCC" in sys.version:
 +    return flags
 +  return [ flag_regex.sub(FlagReplace,flag) for flag in flags]
 +
@@ -82,23 +88,17 @@ index 5adf70cc3..1438c365b 100644
      print("[[],[],[],[],[]]")
      return 0
 
-@@ -122,12 +144,15 @@ def main():
-   parser.add_option('-a', action='store', dest='arch', type='string')
-   parser.add_option('--system_libdir', action='store', dest='system_libdir',
-                     type='string', default='lib')
-+  parser.add_option('--pkg_config_libdir', action='store', dest='pkg_config_libdir',
-+                    type='string')
-   parser.add_option('--atleast-version', action='store',
-                     dest='atleast_version', type='string')
-   parser.add_option('--libdir', action='store_true', dest='libdir')
+@@ -128,6 +154,9 @@ def main():
    parser.add_option('--dridriverdir', action='store_true', dest='dridriverdir')
    parser.add_option('--version-as-components', action='store_true',
                      dest='version_as_components')
++  parser.add_option('--pkg_config_libdir', action='store', dest='pkg_config_libdir',
++                    type='string')
 +  parser.add_option('--full-path-libs', action='store_true', dest='full_path_libs')
    (options, args) = parser.parse_args()
 
    # Make a list of regular expressions to strip out.
-@@ -144,6 +169,10 @@ def main():
+@@ -144,6 +173,10 @@ def main():
    else:
      prefix = ''
 
@@ -109,7 +109,7 @@ index 5adf70cc3..1438c365b 100644
    if options.atleast_version:
      # When asking for the return value, just run pkg-config and print the return
      # value, no need to do other work.
-@@ -203,7 +232,7 @@ def main():
+@@ -203,7 +236,7 @@ def main():
    # For now just split on spaces to get the args out. This will break if
    # pkgconfig returns quoted things with spaces in them, but that doesn't seem
    # to happen in practice.
@@ -118,7 +118,7 @@ index 5adf70cc3..1438c365b 100644
 
 
    sysroot = options.sysroot
-@@ -220,7 +249,10 @@ def main():
+@@ -220,7 +253,10 @@ def main():
        continue;
 
      if flag[:2] == '-l':
@@ -130,7 +130,7 @@ index 5adf70cc3..1438c365b 100644
      elif flag[:2] == '-L':
        lib_dirs.append(RewritePath(flag[2:], prefix, sysroot))
      elif flag[:2] == '-I':
-@@ -237,6 +269,14 @@ def main():
+@@ -237,6 +273,14 @@ def main():
      else:
        cflags.append(flag)
 
@@ -177,3 +177,45 @@ index 428e44ac0..a0d2175ee 100644
  template("pkg_config") {
    assert(defined(invoker.packages),
           "Variable |packages| must be defined to be a list in pkg_config.")
+diff --git a/toolchain/win/tool_wrapper.py b/toolchain/win/tool_wrapper.py
+index 18986986c..cf409216c 100644
+--- a/toolchain/win/tool_wrapper.py
++++ b/toolchain/win/tool_wrapper.py
+@@ -141,9 +141,9 @@ class WinTool(object):
+     # Read output one line at a time as it shows up to avoid OOM failures when
+     # GBs of output is produced.
+     for line in link.stdout:
+-      if (not line.startswith('   Creating library ') and
+-          not line.startswith('Generating code') and
+-          not line.startswith('Finished generating code')):
++      if (not line.startswith(b'   Creating library ') and
++          not line.startswith(b'Generating code') and
++          not line.startswith(b'Finished generating code')):
+         print(line)
+     return link.wait()
+
+@@ -159,7 +159,7 @@ class WinTool(object):
+                              stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+     out, _ = popen.communicate()
+     for line in out.splitlines():
+-      if not line.startswith(' Assembling: '):
++      if not line.startswith(b' Assembling: '):
+         print(line)
+     return popen.returncode
+
+diff --git a/util/lastchange.py b/util/lastchange.py
+index 874870ad5..a4fc0be8d 100644
+--- a/util/lastchange.py
++++ b/util/lastchange.py
+@@ -191,7 +191,10 @@ def GetGitTopDirectory(source_dir):
+   Returns:
+     The output of "git rev-parse --show-toplevel" as a string
+   """
+-  return _RunGitCommand(source_dir, ['rev-parse', '--show-toplevel'])
++  directory = _RunGitCommand(source_dir, ['rev-parse', '--show-toplevel'])
++  if "GCC" in sys.version and sys.platform=='win32':
++    return subprocess.check_output(["cygpath", "-w", directory]).strip(b"\n").decode()
++  return directory
+
+
+ def WriteIfChanged(file_name, contents):

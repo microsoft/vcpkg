@@ -27,8 +27,8 @@ with open(sys.argv[1], "r") as f_in:
                         tmp = [t[16:] for t in tokens if t.startswith("-Wl,-force_load,")]
                         old = set(parts)
                         parts += [t for t in tmp if t not in old]
-                        line = "libtool -static -o " + m1.group(1).replace(".dylib", ".a")  + " " + " ".join(parts)
-                        f_out.write(line + "\n")
+                        line = f"libtool -static -o {m1.group(1).replace('.dylib', '.a')} {' '.join(parts)}\n"
+                        f_out.write(line)
                         break
                 elif m2 and len(env) > 6:
                     tokens = line.split()
@@ -40,8 +40,8 @@ with open(sys.argv[1], "r") as f_in:
                         tmp = [t[16:] for t in tokens if t.startswith("-Wl,-force_load,")]
                         old = set(parts)
                         parts += [t for t in tmp if t not in old]
-                        line = "libtool -static -o " + m2.group(1).replace("_framework", lib_suffix).replace(".dylib", ".a")  + " " + " ".join(parts)
-                        f_out.write(line + "\n")
+                        line = f"libtool -static -o {m2.group(1).replace('_framework', lib_suffix).replace('.dylib', '.a')} {' '.join(parts)}\n"
+                        f_out.write(line)
                         break
                 else:
                     env.append(line)
