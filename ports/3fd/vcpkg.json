@@ -2,7 +2,7 @@
   "name": "3fd",
   "version-string": "2.6.3",
   "description": "C++ Framework For Fast Development",
-  "supports": "windows",
+  "supports": "windows & !static & !arm64",
   "dependencies": [
     {
       "name": "boost-lockfree",

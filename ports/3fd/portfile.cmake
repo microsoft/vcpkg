@@ -65,34 +65,6 @@ file(INSTALL
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/3FD
 )
 
-#[[
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") # Visual C++, UWP app:
-    file(INSTALL
-        ${SOURCE_PATH}/3FD/${BUILD_ARCH}/Debug/3FD.WinRT.UWP/3FD.WinRT.UWP.lib
-        ${SOURCE_PATH}/3FD/${BUILD_ARCH}/Debug/3FD.WinRT.UWP/_3FD_WinRT_UWP.pri
-        ${SOURCE_PATH}/3FD/${BUILD_ARCH}/Debug/WinRT.UWP/3FD.WinRT.UWP.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    )
-    file(INSTALL
-        ${SOURCE_PATH}/3FD/${BUILD_ARCH}/Release/3FD.WinRT.UWP/3FD.WinRT.UWP.lib
-        ${SOURCE_PATH}/3FD/${BUILD_ARCH}/Release/3FD.WinRT.UWP/_3FD_WinRT_UWP.pri
-        ${SOURCE_PATH}/3FD/${BUILD_ARCH}/Release/WinRT.UWP/3FD.WinRT.UWP.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    )
-else() # Visual C++, Win32 app:
-    file(INSTALL
-        ${SOURCE_PATH}/3FD/${BUILD_ARCH}/Debug/3FD.lib
-        ${SOURCE_PATH}/3FD/${BUILD_ARCH}/Debug/3FD.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-    )
-    file(INSTALL
-        ${SOURCE_PATH}/3FD/${BUILD_ARCH}/Release/3FD.lib
-        ${SOURCE_PATH}/3FD/${BUILD_ARCH}/Release/3FD.pdb
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-    )
-endif()
-#]]
-
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/3fd RENAME copyright)
 file(INSTALL ${SOURCE_PATH}/Acknowledgements.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/3fd)
