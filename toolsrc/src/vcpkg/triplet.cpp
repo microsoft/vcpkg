@@ -90,6 +90,8 @@ namespace vcpkg
                 return Triplet::from_canonical_name("x64-osx");
 #elif defined(__FreeBSD__)
                 return Triplet::from_canonical_name("x64-freebsd");
+#elif defined(__OpenBSD__)
+                return Triplet::from_canonical_name("x64-openbsd");
 #elif defined(__GLIBC__)
 #if defined(__aarch64__)
                 return Triplet::from_canonical_name("arm64-linux");

@@ -137,6 +137,9 @@ int main() {}
             if(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
                 # AppleClang never requires (or allows) -lc++fs, even with libc++ version 8.0.0
                 set(_VCPKG_CXXFS_LIBRARY OFF)
+            elseif(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+                # As above, not required on this platform (tested at least on 6.8)
+                set(_VCPKG_CXXFS_LIBRARY OFF)
             else()
                 check_cxx_source_compiles([[
 #include <ciso646>
