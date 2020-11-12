@@ -36,7 +36,6 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${YASM_EXE_PATH}")
 set(OPTIONS "--enable-asm --enable-x86asm --disable-doc --enable-debug --enable-runtime-cpudetect")
 
 if(VCPKG_TARGET_IS_WINDOWS)
