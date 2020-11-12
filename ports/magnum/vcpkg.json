@@ -41,6 +41,12 @@
         }
       ]
     },
+    "angle": {
+      "description": "use ANGLE as rendering backend",
+      "dependencies": [
+        "angle"
+      ]
+    },
     "anyaudioimporter": {
       "description": "AnyAudioImporter plugin",
       "dependencies": [
