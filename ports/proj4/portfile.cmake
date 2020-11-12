@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-linux-build.patch
         use-sqlite3-config.patch
 		fix-lib_proj.patch
+        fixFind-Tiff.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

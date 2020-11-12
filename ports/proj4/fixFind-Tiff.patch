@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 323a74c..dda9de7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -164,6 +164,8 @@ option(ENABLE_TIFF "Enable TIFF support to read some grids" ON)
+ mark_as_advanced(ENABLE_TIFF)
+ set(TIFF_ENABLED FALSE)
+ if(ENABLE_TIFF)
++  SET(CMAKE_REQUIRED_LIBRARIES ${TIFF_LIBRARIES})
++  INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIR})
+   find_package(TIFF REQUIRED)
+   if(TIFF_FOUND)
+     set(TIFF_ENABLED TRUE)
