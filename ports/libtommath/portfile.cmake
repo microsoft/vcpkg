@@ -15,6 +15,44 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(CRTFLAG "/MT")
     endif()
 
+    set(LIBTOMMATH_RAND_PLATFORM ${SOURCE_PATH}/bn_s_mp_rand_platform.c)
+
+    file(READ ${LIBTOMMATH_RAND_PLATFORM} _contents)
+
+    string(
+        REPLACE
+        "if ((err != MP_OKAY) && MP_HAS(S_READ_ARC4RANDOM))"
+        "// if ((err != MP_OKAY) && MP_HAS(S_READ_ARC4RANDOM))"
+        _contents
+        "${_contents}"
+    )
+
+    string(
+        REPLACE
+        "if ((err != MP_OKAY) && MP_HAS(S_READ_GETRANDOM))"
+        "// if ((err != MP_OKAY) && MP_HAS(S_READ_GETRANDOM))"
+        _contents
+        "${_contents}"
+    )
+
+    string(
+        REPLACE
+        "if ((err != MP_OKAY) && MP_HAS(S_READ_URANDOM))"
+        "// if ((err != MP_OKAY) && MP_HAS(S_READ_URANDOM))"
+        _contents
+        "${_contents}"
+    )
+
+    string(
+        REPLACE
+        "if ((err != MP_OKAY) && MP_HAS(S_READ_LTM_RNG))"
+        "// if ((err != MP_OKAY) && MP_HAS(S_READ_LTM_RNG))"
+        _contents
+        "${_contents}"
+    )
+
+    file(WRITE ${LIBTOMMATH_RAND_PLATFORM} "${_contents}")
+
     # Make sure we start from a clean slate
     vcpkg_execute_build_process(
         COMMAND nmake -f ${SOURCE_PATH}/makefile.msvc clean
