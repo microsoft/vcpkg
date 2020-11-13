@@ -1,5 +1,5 @@
 diff --git a/src/core/lib/slice/slice.cc b/src/core/lib/slice/slice.cc
-index 0dacbfe..0743a1b 100644
+index 0dacbfef3e..0743a1b003 100644
 --- a/src/core/lib/slice/slice.cc
 +++ b/src/core/lib/slice/slice.cc
 @@ -234,6 +234,7 @@ grpc_slice grpc_slice_from_moved_buffer(grpc_core::UniquePtr<char> p,
@@ -20,7 +20,7 @@ index 0dacbfe..0743a1b 100644
      slice.refcount = nullptr;
      slice.data.inlined.length = str.size();
 diff --git a/src/core/lib/surface/server.cc b/src/core/lib/surface/server.cc
-index c945515..3fd9797 100644
+index c94551545d..3fd9797316 100644
 --- a/src/core/lib/surface/server.cc
 +++ b/src/core/lib/surface/server.cc
 @@ -878,7 +878,7 @@ grpc_call_error Server::QueueRequestedCall(size_t cq_idx, RequestedCall* rc) {

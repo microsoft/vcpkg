@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3a7663b..3e554d6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -171,7 +171,7 @@ target_link_libraries(spdlog_header_only INTERFACE Threads::Threads)
+ # ---------------------------------------------------------------------------------------
+ if (SPDLOG_FMT_EXTERNAL OR SPDLOG_FMT_EXTERNAL_HO)
+     if (NOT TARGET fmt::fmt)
+-        find_package(fmt 5.3.0 REQUIRED)
++        find_package(fmt CONFIG REQUIRED)
+     endif ()
+     target_compile_definitions(spdlog PUBLIC SPDLOG_FMT_EXTERNAL)
+     target_compile_definitions(spdlog_header_only INTERFACE SPDLOG_FMT_EXTERNAL)
+diff --git a/bench/async_bench.cpp b/bench/async_bench.cpp
+index d4167a4..ccb5406 100644
+--- a/bench/async_bench.cpp
++++ b/bench/async_bench.cpp
+@@ -9,7 +9,7 @@
+ #include "spdlog/spdlog.h"
+ #include "spdlog/async.h"
+ #include "spdlog/sinks/basic_file_sink.h"
+-#include "spdlog/fmt/bundled/locale.h"
++#include <fmt/locale.h>
+ 
+ #include "utils.h"
+ #include <atomic>
+diff --git a/bench/bench.cpp b/bench/bench.cpp
+index b7d2fc7..e2f8109 100644
+--- a/bench/bench.cpp
++++ b/bench/bench.cpp
+@@ -11,7 +11,7 @@
+ #include "spdlog/sinks/daily_file_sink.h"
+ #include "spdlog/sinks/null_sink.h"
+ #include "spdlog/sinks/rotating_file_sink.h"
+-#include "spdlog/fmt/bundled/locale.h"
++#include <fmt/locale.h>
+ 
+ #include "utils.h"
+ #include <atomic>

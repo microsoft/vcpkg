@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xtensor-stack/xtensor
-    REF 9733efcfd4bd76115c822a03dd79fbea3bda6589 # 0.21.6
-    SHA512 966b397b5b77acdf79215f455007f7fa08376dab3fa3641e69d2f0f23e9bbedcff245e96ba5cd010ce51dee8b8c03fc0fe5dd1fa552f99b5cbedeaea400ab0c1
+    REF a377fb84c29624e91b6b2451018f3aa3abec1c4f # 0.21.9
+    SHA512 627eaefef3526b59e9fdc6b0aebca1a47bac2adf382bc8381115c7f9fbf04a1496a46490985b16b5855166f03a873a7b00ea1f062131fd49d5adb545e5c8ecf5
     HEAD_REF master
 )
 
