@@ -1,10 +1,12 @@
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.17.1
-    SHA512 1cad4c679f3dc5438e39b91d432756d33c1f4c470c7a2a6d08086c805813e0ed31411d9167e7f6f1a39255f8a64b67e17159d072461938e5dc256867f03c54be
+    REF v1.20.0
+    SHA512 47af82c1d34a6e2981f627c89994fd832d2cea33d196439db0605c40efaf8db4ba074d556ece3a80a7404cceab09a0f216cc2dc0a8fac7eb2ff9674545f47fa9
     HEAD_REF master
 )
 

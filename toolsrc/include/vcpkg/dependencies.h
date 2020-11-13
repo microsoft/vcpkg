@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vcpkg/fwd/cmakevars.h>
+#include <vcpkg/fwd/portfileprovider.h>
+
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
 
@@ -13,16 +16,6 @@
 namespace vcpkg::Graphs
 {
     struct Randomizer;
-}
-
-namespace vcpkg::CMakeVars
-{
-    struct CMakeVarProvider;
-}
-
-namespace vcpkg::PortFileProvider
-{
-    struct PortFileProvider;
 }
 
 namespace vcpkg
@@ -179,7 +172,5 @@ namespace vcpkg::Dependencies
                                                            std::vector<std::string> features,
                                                            CMakeVars::CMakeVarProvider& var_provider);
 
-    void print_plan(const ActionPlan& action_plan,
-                    const bool is_recursive = true,
-                    const fs::path& default_ports_dir = {});
+    void print_plan(const ActionPlan& action_plan, const bool is_recursive = true, const fs::path& vcpkg_root_dir = {});
 }

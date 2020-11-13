@@ -20,7 +20,8 @@
 ## Note: includes must be handled separately
 
 function(vcpkg_install_gn)
-    cmake_parse_arguments(_vig "" "SOURCE_PATH" "TARGETS" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vig "" "SOURCE_PATH" "TARGETS")
     
     if(NOT DEFINED _vig_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH must be specified.")

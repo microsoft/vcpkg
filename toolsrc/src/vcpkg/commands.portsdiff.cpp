@@ -8,6 +8,7 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::PortsDiff
@@ -83,7 +84,7 @@ namespace vcpkg::Commands::PortsDiff
         auto& fs = paths.get_filesystem();
         const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
         const fs::path dot_git_dir = paths.root / ".git";
-        const std::string ports_dir_name_as_string = fs::u8string(paths.ports.filename());
+        const std::string ports_dir_name_as_string = fs::u8string(paths.builtin_ports_directory().filename());
         const fs::path temp_checkout_path =
             paths.root / Strings::format("%s-%s", ports_dir_name_as_string, git_commit_id);
         fs.create_directory(temp_checkout_path, ec);

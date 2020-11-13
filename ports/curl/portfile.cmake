@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF 9d954e49bce3706a9a2efb119ecd05767f0f2a9e #curl-7_72_0
-    SHA512 c6af3d772571d4c12ac797c0f5a29db4081ebb964693f2c1d93527f103afb29744f4ed2dde6832f63b28afc402166be2f1336dc868a46eb9a6a296c95d61ab71
+    REF 315ee3fe75dade912b48a21ceec9ccda0230d937 #curl-7_73_0
+    SHA512 db9385d63688256c335f08fe044c67e7c17e2fbcbb47df234d5f9a1586b259edb07a37845c2ad85d2da00738b19dc0e718d91d05b2881c2828fec2660f858444
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -18,9 +18,11 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
 
 # schannel will enable sspi, but sspi do not support uwp
-if(("schannel" IN_LIST FEATURES OR "sspi" IN_LIST FEATURES OR "tool" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
-    message(FATAL_ERROR "schannel,sspi,tool are not supported on non-Windows and uwp platforms")
-endif()
+foreach(feature "schannel" "sspi" "tool")
+    if(feature IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature ${feature} is not supported on UWP.")
+    endif()
+endforeach()
 
 if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
@@ -86,15 +88,15 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CURL)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/curl-config DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
+#Fix install path
+file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config CURL_CONFIG)
+string(REPLACE "${CURRENT_PACKAGES_DIR}" "${CURRENT_INSTALLED_DIR}" CURL_CONFIG "${CURL_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config "${CURL_CONFIG}")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/curl-config DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
-    #Fix install path
-    file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config CURL_CONFIG)
-    string(REPLACE "${CURRENT_PACKAGES_DIR}" "${CURRENT_INSTALLED_DIR}" CURL_CONFIG "${CURL_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config "${CURL_CONFIG}")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

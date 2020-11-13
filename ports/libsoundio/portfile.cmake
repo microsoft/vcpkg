@@ -39,5 +39,3 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libsoundio RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME libsoundio)
