@@ -1170,7 +1170,7 @@ namespace vcpkg::Dependencies
 
             void add_override(const std::string& name, const Versions::Version& v);
 
-            void add_roots(View<Dependency> dep, Triplet t);
+            void add_roots(View<Dependency> dep, const PackageSpec& toplevel);
 
             ExpectedS<ActionPlan> finalize_extract_plan();
 
@@ -1545,16 +1545,20 @@ namespace vcpkg::Dependencies
             m_overrides.emplace(name, v);
         }
 
-        void VersionedPackageGraph::add_roots(View<Dependency> deps, Triplet t)
+        void VersionedPackageGraph::add_roots(View<Dependency> deps, const PackageSpec& toplevel)
         {
-            auto specs = Util::fmap(deps, [&t](const Dependency& d) { return PackageSpec{d.name, t}; });
+            auto specs = Util::fmap(deps, [&toplevel](const Dependency& d) {
+                return PackageSpec{d.name, toplevel.triplet()};
+            });
+            specs.push_back(toplevel);
+            Util::sort_unique_erase(specs);
             m_var_provider.load_dep_info_vars(specs);
+            const auto& vars = m_var_provider.get_dep_info_vars(toplevel).value_or_exit(VCPKG_LINE_INFO);
             std::vector<const Dependency*> active_deps;
 
             for (auto&& dep : deps)
             {
-                PackageSpec spec(dep.name, t);
-                const auto& vars = m_var_provider.get_dep_info_vars(spec).value_or_exit(VCPKG_LINE_INFO);
+                PackageSpec spec(dep.name, toplevel.triplet());
                 if (!dep.platform.evaluate(vars)) continue;
 
                 active_deps.push_back(&dep);
@@ -1571,7 +1575,7 @@ namespace vcpkg::Dependencies
             for (auto pdep : active_deps)
             {
                 const auto& dep = *pdep;
-                PackageSpec spec(dep.name, t);
+                PackageSpec spec(dep.name, toplevel.triplet());
 
                 auto& node = emplace_package(spec);
                 const std::string toplevel = "toplevel";
@@ -1798,13 +1802,13 @@ namespace vcpkg::Dependencies
                                                         const CMakeVars::CMakeVarProvider& var_provider,
                                                         const std::vector<Dependency>& deps,
                                                         const std::vector<DependencyOverride>& overrides,
-                                                        Triplet triplet,
+                                                        const PackageSpec& toplevel,
                                                         const CreateInstallPlanOptions& /*options*/)
     {
         VersionedPackageGraph vpg(provider, bprovider, var_provider);
         for (auto&& o : overrides)
             vpg.add_override(o.name, {o.version, o.port_version});
-        vpg.add_roots(deps, triplet);
+        vpg.add_roots(deps, toplevel);
         return vpg.finalize_extract_plan();
     }
 }

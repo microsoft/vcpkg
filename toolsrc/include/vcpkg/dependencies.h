@@ -180,7 +180,7 @@ namespace vcpkg::Dependencies
                                                         const CMakeVars::CMakeVarProvider& var_provider,
                                                         const std::vector<Dependency>& deps,
                                                         const std::vector<DependencyOverride>& overrides,
-                                                        Triplet triplet,
+                                                        const PackageSpec& toplevel,
                                                         const CreateInstallPlanOptions& options = {});
 
     void print_plan(const ActionPlan& action_plan, const bool is_recursive = true, const fs::path& vcpkg_root_dir = {});

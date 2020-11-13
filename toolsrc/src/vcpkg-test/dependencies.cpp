@@ -109,6 +109,12 @@ static void check_name_and_version(const Dependencies::InstallPlanAction& ipa,
     }
 }
 
+static const PackageSpec& toplevel_spec()
+{
+    static const PackageSpec ret("toplevel-spec", Test::X86_WINDOWS);
+    return ret;
+}
+
 TEST_CASE ("basic version install single", "[versionplan]")
 {
     MockBaselineProvider bp;
@@ -120,7 +126,7 @@ TEST_CASE ("basic version install single", "[versionplan]")
     MockCMakeVarProvider var_provider;
 
     auto install_plan =
-        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, Test::X86_WINDOWS));
+        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, toplevel_spec()));
 
     REQUIRE(install_plan.size() == 1);
     REQUIRE(install_plan.install_actions.at(0).spec.name() == "a");
@@ -142,8 +148,7 @@ TEST_CASE ("basic version install detect cycle", "[versionplan]")
 
     MockCMakeVarProvider var_provider;
 
-    auto install_plan =
-        Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, Test::X86_WINDOWS);
+    auto install_plan = Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, toplevel_spec());
 
     REQUIRE(!install_plan.has_value());
 }
@@ -163,7 +168,7 @@ TEST_CASE ("basic version install scheme", "[versionplan]")
     MockCMakeVarProvider var_provider;
 
     auto install_plan =
-        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, Test::X86_WINDOWS));
+        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, toplevel_spec()));
 
     CHECK(install_plan.size() == 2);
 
@@ -199,7 +204,7 @@ TEST_CASE ("basic version install scheme diamond", "[versionplan]")
     MockCMakeVarProvider var_provider;
 
     auto install_plan =
-        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, Test::X86_WINDOWS));
+        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, toplevel_spec()));
 
     CHECK(install_plan.size() == 4);
 
@@ -219,8 +224,7 @@ TEST_CASE ("basic version install scheme baseline missing", "[versionplan]")
 
     MockCMakeVarProvider var_provider;
 
-    auto install_plan =
-        Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, Test::X86_WINDOWS);
+    auto install_plan = Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, toplevel_spec());
 
     REQUIRE(!install_plan.has_value());
 }
@@ -244,7 +248,7 @@ TEST_CASE ("basic version install scheme baseline missing success", "[versionpla
                                                                Dependency{"a", {}, {}, {Constraint::Type::Exact, "2"}},
                                                            },
                                                            {},
-                                                           Test::X86_WINDOWS));
+                                                           toplevel_spec()));
 
     REQUIRE(install_plan.size() == 1);
     check_name_and_version(install_plan.install_actions[0], "a", {"2", 0});
@@ -263,7 +267,7 @@ TEST_CASE ("basic version install scheme baseline", "[versionplan]")
     MockCMakeVarProvider var_provider;
 
     auto install_plan =
-        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, Test::X86_WINDOWS));
+        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a"}}, {}, toplevel_spec()));
 
     REQUIRE(install_plan.size() == 1);
     check_name_and_version(install_plan.install_actions[0], "a", {"2", 0});
@@ -281,15 +285,8 @@ TEST_CASE ("version string baseline agree", "[versionplan]")
 
     MockCMakeVarProvider var_provider;
 
-    auto install_plan =
-        Dependencies::create_versioned_install_plan(vp,
-                                                    bp,
-                                                    var_provider,
-                                                    {
-                                                        Dependency{"a", {}, {}, {Constraint::Type::Exact, "2"}},
-                                                    },
-                                                    {},
-                                                    Test::X86_WINDOWS);
+    auto install_plan = Dependencies::create_versioned_install_plan(
+        vp, bp, var_provider, {Dependency{"a", {}, {}, {Constraint::Type::Exact, "2"}}}, {}, toplevel_spec());
 
     REQUIRE(install_plan.has_value());
 }
@@ -314,7 +311,7 @@ TEST_CASE ("version install scheme baseline conflict", "[versionplan]")
                                                         Dependency{"a", {}, {}, {Constraint::Type::Exact, "3"}},
                                                     },
                                                     {},
-                                                    Test::X86_WINDOWS);
+                                                    toplevel_spec());
 
     REQUIRE(!install_plan.has_value());
 }
@@ -339,7 +336,7 @@ TEST_CASE ("version install string port version", "[versionplan]")
                                                         Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 1}},
                                                     },
                                                     {},
-                                                    Test::X86_WINDOWS));
+                                                    toplevel_spec()));
 
     REQUIRE(install_plan.size() == 1);
     check_name_and_version(install_plan.install_actions[0], "a", {"2", 1});
@@ -365,7 +362,7 @@ TEST_CASE ("version install string port version 2", "[versionplan]")
                                                         Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 0}},
                                                     },
                                                     {},
-                                                    Test::X86_WINDOWS));
+                                                    toplevel_spec()));
 
     REQUIRE(install_plan.size() == 1);
     check_name_and_version(install_plan.install_actions[0], "a", {"2", 1});
@@ -396,7 +393,7 @@ TEST_CASE ("version install transitive string", "[versionplan]")
                                                         Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 1}},
                                                     },
                                                     {},
-                                                    Test::X86_WINDOWS));
+                                                    toplevel_spec()));
 
     REQUIRE(install_plan.size() == 2);
     check_name_and_version(install_plan.install_actions[0], "b", {"2", 0});
@@ -422,7 +419,7 @@ TEST_CASE ("version install simple relaxed", "[versionplan]")
                                                         Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3", 0}},
                                                     },
                                                     {},
-                                                    Test::X86_WINDOWS));
+                                                    toplevel_spec()));
 
     REQUIRE(install_plan.size() == 1);
     check_name_and_version(install_plan.install_actions[0], "a", {"3", 0});
@@ -452,7 +449,7 @@ TEST_CASE ("version install transitive relaxed", "[versionplan]")
                                                         Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3", 0}},
                                                     },
                                                     {},
-                                                    Test::X86_WINDOWS));
+                                                    toplevel_spec()));
 
     REQUIRE(install_plan.size() == 2);
     check_name_and_version(install_plan.install_actions[0], "b", {"3", 0});
@@ -489,7 +486,7 @@ TEST_CASE ("version install diamond relaxed", "[versionplan]")
                                                         Dependency{"b", {}, {}, {Constraint::Type::Minimum, "2", 1}},
                                                     },
                                                     {},
-                                                    Test::X86_WINDOWS));
+                                                    toplevel_spec()));
 
     REQUIRE(install_plan.size() == 3);
     check_name_and_version(install_plan.install_actions[0], "c", {"9", 2});
@@ -524,7 +521,7 @@ TEST_CASE ("version install scheme change in port version", "[versionplan]")
                                                             Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 1}},
                                                         },
                                                         {},
-                                                        Test::X86_WINDOWS));
+                                                        toplevel_spec()));
 
         REQUIRE(install_plan.size() == 2);
         check_name_and_version(install_plan.install_actions[0], "b", {"1", 1});
@@ -543,7 +540,7 @@ TEST_CASE ("version install scheme change in port version", "[versionplan]")
                                                             Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 0}},
                                                         },
                                                         {},
-                                                        Test::X86_WINDOWS));
+                                                        toplevel_spec()));
 
         REQUIRE(install_plan.size() == 2);
         check_name_and_version(install_plan.install_actions[0], "b", {"1", 1});
@@ -572,7 +569,7 @@ TEST_CASE ("version install simple feature", "[versionplan]")
                                                                                    Dependency{"a", {"x"}},
                                                                                },
                                                                                {},
-                                                                               Test::X86_WINDOWS));
+                                                                               toplevel_spec()));
 
         REQUIRE(install_plan.size() == 1);
         check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x"});
@@ -590,7 +587,7 @@ TEST_CASE ("version install simple feature", "[versionplan]")
                 Dependency{"a", {"x"}, {}, {Constraint::Type::Minimum, "1", 0}},
             },
             {},
-            Test::X86_WINDOWS));
+            toplevel_spec()));
 
         REQUIRE(install_plan.size() == 1);
         check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x"});
@@ -628,7 +625,7 @@ TEST_CASE ("version install transitive features", "[versionplan]")
                                                                                Dependency{"a", {"x"}},
                                                                            },
                                                                            {},
-                                                                           Test::X86_WINDOWS));
+                                                                           toplevel_spec()));
 
     REQUIRE(install_plan.size() == 2);
     check_name_and_version(install_plan.install_actions[0], "b", {"1", 0}, {"y"});
@@ -668,7 +665,7 @@ TEST_CASE ("version install transitive feature versioned", "[versionplan]")
                                                                                Dependency{"a", {"x"}},
                                                                            },
                                                                            {},
-                                                                           Test::X86_WINDOWS));
+                                                                           toplevel_spec()));
 
     REQUIRE(install_plan.size() == 3);
     check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
@@ -707,7 +704,7 @@ TEST_CASE ("version install constraint-reduction", "[versionplan]")
                                                             Dependency{"b", {}, {}, {Constraint::Type::Minimum, "1"}},
                                                         },
                                                         {},
-                                                        Test::X86_WINDOWS));
+                                                        toplevel_spec()));
 
         REQUIRE(install_plan.size() == 2);
         check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
@@ -741,7 +738,7 @@ TEST_CASE ("version install constraint-reduction", "[versionplan]")
                                                             Dependency{"b", {}, {}, {Constraint::Type::Minimum, "2"}},
                                                         },
                                                         {},
-                                                        Test::X86_WINDOWS));
+                                                        toplevel_spec()));
 
         REQUIRE(install_plan.size() == 2);
         check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
@@ -766,15 +763,13 @@ TEST_CASE ("version install overrides", "[versionplan]")
 
     SECTION ("string")
     {
-        auto install_plan = unwrap(Dependencies::create_versioned_install_plan(vp,
-                                                                               bp,
-                                                                               var_provider,
-                                                                               {Dependency{"c"}},
-                                                                               {
-                                                                                   DependencyOverride{"b", "1"},
-                                                                                   DependencyOverride{"c", "1"},
-                                                                               },
-                                                                               Test::X86_WINDOWS));
+        auto install_plan = unwrap(
+            Dependencies::create_versioned_install_plan(vp,
+                                                        bp,
+                                                        var_provider,
+                                                        {Dependency{"c"}},
+                                                        {DependencyOverride{"b", "1"}, DependencyOverride{"c", "1"}},
+                                                        toplevel_spec()));
 
         REQUIRE(install_plan.size() == 1);
         check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
@@ -782,15 +777,13 @@ TEST_CASE ("version install overrides", "[versionplan]")
 
     SECTION ("relaxed")
     {
-        auto install_plan = unwrap(Dependencies::create_versioned_install_plan(vp,
-                                                                               bp,
-                                                                               var_provider,
-                                                                               {Dependency{"b"}},
-                                                                               {
-                                                                                   DependencyOverride{"b", "1"},
-                                                                                   DependencyOverride{"c", "1"},
-                                                                               },
-                                                                               Test::X86_WINDOWS));
+        auto install_plan = unwrap(
+            Dependencies::create_versioned_install_plan(vp,
+                                                        bp,
+                                                        var_provider,
+                                                        {Dependency{"b"}},
+                                                        {DependencyOverride{"b", "1"}, DependencyOverride{"c", "1"}},
+                                                        toplevel_spec()));
 
         REQUIRE(install_plan.size() == 1);
         check_name_and_version(install_plan.install_actions[0], "b", {"1", 0});
@@ -813,15 +806,13 @@ TEST_CASE ("version install transitive overrides", "[versionplan]")
     bp.v["b"] = {"2", 0};
     bp.v["c"] = {"2", 1};
 
-    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(vp,
-                                                                           bp,
-                                                                           var_provider,
-                                                                           {Dependency{"b"}},
-                                                                           {
-                                                                               DependencyOverride{"b", "1"},
-                                                                               DependencyOverride{"c", "1"},
-                                                                           },
-                                                                           Test::X86_WINDOWS));
+    auto install_plan =
+        unwrap(Dependencies::create_versioned_install_plan(vp,
+                                                           bp,
+                                                           var_provider,
+                                                           {Dependency{"b"}},
+                                                           {DependencyOverride{"b", "1"}, DependencyOverride{"c", "1"}},
+                                                           toplevel_spec()));
 
     REQUIRE(install_plan.size() == 2);
     check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
@@ -843,7 +834,7 @@ TEST_CASE ("version install default features", "[versionplan]")
     bp.v["a"] = {"1", 0};
 
     auto install_plan = unwrap(
-        Dependencies::create_versioned_install_plan(vp, bp, var_provider, {Dependency{"a"}}, {}, Test::X86_WINDOWS));
+        Dependencies::create_versioned_install_plan(vp, bp, var_provider, {Dependency{"a"}}, {}, toplevel_spec()));
 
     REQUIRE(install_plan.size() == 1);
     check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x"});
@@ -864,7 +855,7 @@ TEST_CASE ("version dont install default features", "[versionplan]")
     bp.v["a"] = {"1", 0};
 
     auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
-        vp, bp, var_provider, {Dependency{"a", {"core"}}}, {}, Test::X86_WINDOWS));
+        vp, bp, var_provider, {Dependency{"a", {"core"}}}, {}, toplevel_spec()));
 
     REQUIRE(install_plan.size() == 1);
     check_name_and_version(install_plan.install_actions[0], "a", {"1", 0});
@@ -889,7 +880,7 @@ TEST_CASE ("version install transitive default features", "[versionplan]")
     bp.v["b"] = {"1", 0};
 
     auto install_plan = unwrap(
-        Dependencies::create_versioned_install_plan(vp, bp, var_provider, {Dependency{"b"}}, {}, Test::X86_WINDOWS));
+        Dependencies::create_versioned_install_plan(vp, bp, var_provider, {Dependency{"b"}}, {}, toplevel_spec()));
 
     REQUIRE(install_plan.size() == 2);
     check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x"});
@@ -908,22 +899,43 @@ TEST_CASE ("version install qualified dependencies", "[versionplan]")
     vp.emplace("b", {"1", 0}, Scheme::Relaxed);
     vp.emplace("c", {"1", 0}, Scheme::Relaxed);
 
-    MockCMakeVarProvider var_provider;
-
     MockBaselineProvider bp;
     bp.v["b"] = {"1", 0};
     bp.v["c"] = {"1", 0};
 
-    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
-        vp,
-        bp,
-        var_provider,
-        {{"b", {}, parse_platform("!linux")}, {"c", {}, parse_platform("linux")}},
-        {},
-        Test::X86_WINDOWS));
+    SECTION ("windows")
+    {
+        MockCMakeVarProvider var_provider;
+        var_provider.dep_info_vars[toplevel_spec()] = {{"VCPKG_CMAKE_SYSTEM_NAME", "Windows"}};
 
-    REQUIRE(install_plan.size() == 1);
-    check_name_and_version(install_plan.install_actions[0], "b", {"1", 0});
+        auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+            vp,
+            bp,
+            var_provider,
+            {{"b", {}, parse_platform("!linux")}, {"c", {}, parse_platform("linux")}},
+            {},
+            toplevel_spec()));
+
+        REQUIRE(install_plan.size() == 1);
+        check_name_and_version(install_plan.install_actions[0], "b", {"1", 0});
+    }
+
+    SECTION ("linux")
+    {
+        MockCMakeVarProvider var_provider;
+        var_provider.dep_info_vars[toplevel_spec()] = {{"VCPKG_CMAKE_SYSTEM_NAME", "Linux"}};
+
+        auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+            vp,
+            bp,
+            var_provider,
+            {{"b", {}, parse_platform("!linux")}, {"c", {}, parse_platform("linux")}},
+            {},
+            toplevel_spec()));
+
+        REQUIRE(install_plan.size() == 1);
+        check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
+    }
 }
 
 TEST_CASE ("version install qualified default suppression", "[versionplan]")
@@ -949,7 +961,7 @@ TEST_CASE ("version install qualified default suppression", "[versionplan]")
         var_provider,
         {{"b", {}, parse_platform("!linux")}, {"a", {"core"}, parse_platform("linux")}},
         {},
-        Test::X86_WINDOWS));
+        toplevel_spec()));
 
     REQUIRE(install_plan.size() == 2);
     check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x"});
@@ -975,7 +987,7 @@ TEST_CASE ("version install qualified transitive", "[versionplan]")
     bp.v["c"] = {"1", 0};
 
     auto install_plan =
-        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"b"}}, {}, Test::X86_WINDOWS));
+        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"b"}}, {}, toplevel_spec()));
 
     REQUIRE(install_plan.size() == 2);
     check_name_and_version(install_plan.install_actions[0], "a", {"1", 0});
@@ -1003,7 +1015,7 @@ TEST_CASE ("version install different vars", "[versionplan]")
     bp.v["c"] = {"1", 0};
 
     auto install_plan =
-        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"b"}}, {}, Test::X86_WINDOWS));
+        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"b"}}, {}, toplevel_spec()));
 
     REQUIRE(install_plan.size() == 3);
     check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
@@ -1042,7 +1054,7 @@ TEST_CASE ("version install qualified features", "[versionplan]")
     bp.v["d"] = {"1", 0};
 
     auto install_plan =
-        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"b"}}, {}, Test::X86_WINDOWS));
+        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"b"}}, {}, toplevel_spec()));
 
     REQUIRE(install_plan.size() == 3);
     check_name_and_version(install_plan.install_actions[0], "c", {"1", 0}, {"z"});
@@ -1064,8 +1076,8 @@ TEST_CASE ("version install self features", "[versionplan]")
 
     MockCMakeVarProvider var_provider;
 
-    auto install_plan = unwrap(
-        Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a", {"x"}}}, {}, Test::X86_WINDOWS));
+    auto install_plan =
+        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a", {"x"}}}, {}, toplevel_spec()));
 
     REQUIRE(install_plan.size() == 1);
     check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x", "y"});
