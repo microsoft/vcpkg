@@ -86,7 +86,7 @@ else()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(OPTIONS --enable-static=yes --enable-shared=no)
-        set(MP3LAME_LIB "libmp3lame.{VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+        set(MP3LAME_LIB "libmp3lame.${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
     else()
         set(OPTIONS --enable-shared=yes --enable-static=no)
         if(VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX)
