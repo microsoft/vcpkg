@@ -8,6 +8,7 @@ set(${PORT}_PATCHES
         allow_outside_prefix.patch 
         buildcmake.patch
         dont_force_cmakecache.patch
+        print_condition.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION)
