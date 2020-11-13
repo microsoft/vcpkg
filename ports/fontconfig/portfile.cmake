@@ -68,9 +68,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         set(DEFINE_FC_PUBLIC "#define FcPublic __declspec(dllimport)")
     else()
         set(DEFINE_FC_PUBLIC "#define FcPublic __attribute__((visibility(\"default\")))")
-    endif(
+    endif()
     foreach(HEADER fcfreetype.h fontconfig.h)
-        vcpkg_replace_strings("${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER}"
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER}"
             "#define FcPublic"
             "${DEFINE_FC_PUBLIC}"
         )
