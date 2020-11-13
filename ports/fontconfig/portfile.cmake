@@ -64,18 +64,20 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/var"
                     "${CURRENT_PACKAGES_DIR}/debug/etc")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    if(VCPKG_TARGET_IS_WINDOWS)
+        set(DEFINE_FC_PUBLIC "#define FcPublic __declspec(dllimport)")
+    else()
+        set(DEFINE_FC_PUBLIC "#define FcPublic __attribute__((visibility(\"default\")))")
+    endif(
     foreach(HEADER fcfreetype.h fontconfig.h)
-        file(READ ${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER} FC_HEADER)
-        if(VCPKG_TARGET_IS_WINDOWS)
-            string(REPLACE "#define FcPublic" "#define FcPublic __declspec(dllimport)" FC_HEADER "${FC_HEADER}")
-        else()
-            string(REPLACE "#define FcPublic" "#define FcPublic __attribute__((visibility(\"default\")))" FC_HEADER "${FC_HEADER}")
-        endif()
-        file(WRITE ${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER} "${FC_HEADER}")
+        vcpkg_replace_strings("${CURRENT_PACKAGES_DIR}/include/fontconfig/${HEADER}"
+            "#define FcPublic"
+            "${DEFINE_FC_PUBLIC}"
+        )
     endforeach()
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 
 ## Build the fontconfig cache
