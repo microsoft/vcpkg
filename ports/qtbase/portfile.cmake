@@ -3,8 +3,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
         jpeg.patch
-        #findzstd.patch
-        #fix_pcre2_linkage.patch
         harfbuzz.patch
         config_install.patch 
         allow_outside_prefix.patch 
@@ -14,9 +12,6 @@ set(${PORT}_PATCHES
 
 if(NOT VCPKG_USE_HEAD_VERSION)
     list(APPEND ${PORT}_PATCHES
-                #419db858f5bf73ff59d3c886003727eb7cab8400.diff
-                #df9c7456d11dfcf74c7399ba0981a3ba3d3f5117.diff
-                #1b4ea4a.diff
                 )
 endif()
 
