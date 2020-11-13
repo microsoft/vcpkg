@@ -1049,3 +1049,24 @@ TEST_CASE ("version install qualified features", "[versionplan]")
     check_name_and_version(install_plan.install_actions[1], "a", {"1", 0}, {"y"});
     check_name_and_version(install_plan.install_actions[2], "b", {"1", 0}, {"x"});
 }
+
+TEST_CASE ("version install self features", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"1", 0};
+
+    MockVersionedPortfileProvider vp;
+    auto& a_scf = vp.emplace("a", {"1", 0}).source_control_file;
+    a_scf->feature_paragraphs.push_back(make_fpgh("x"));
+    a_scf->feature_paragraphs.back()->dependencies.push_back({"a", {"core", "y"}});
+    a_scf->feature_paragraphs.push_back(make_fpgh("y"));
+    a_scf->feature_paragraphs.push_back(make_fpgh("z"));
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(
+        Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"a", {"x"}}}, {}, Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 1);
+    check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x", "y"});
+}

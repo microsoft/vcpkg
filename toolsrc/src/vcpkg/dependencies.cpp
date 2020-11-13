@@ -1713,6 +1713,8 @@ namespace vcpkg::Dependencies
                         {
                             for (auto&& dep : *maybe_deps)
                             {
+                                if (dep.name == spec.name()) continue;
+
                                 if (!dep.platform.is_empty() &&
                                     !dep.platform.evaluate(maybe_vars.value_or_exit(VCPKG_LINE_INFO)))
                                 {
