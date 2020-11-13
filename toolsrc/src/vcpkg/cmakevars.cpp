@@ -88,12 +88,28 @@ namespace vcpkg::CMakeVars
         Strings::append(extraction_file, "macro(vcpkg_triplet_file VCPKG_TRIPLET_ID)\n");
         for (auto& p : emitted_triplets)
         {
-            Strings::append(extraction_file,
-                            "if(VCPKG_TRIPLET_ID EQUAL ",
-                            p.second,
-                            ")\n",
-                            fs.read_contents(paths.get_triplet_file_path(p.first), VCPKG_LINE_INFO),
-                            "\nendif()\n");
+            const auto path_to_triplet = paths.get_triplet_file_path(p.first).string();
+            auto triplet_contents = fs.read_contents(path_to_triplet, VCPKG_LINE_INFO);
+
+            const std::string cmake_current_list_dir{"${CMAKE_CURRENT_LIST_DIR}"};
+
+            auto cmake_current_list_dir_pos = triplet_contents.find(cmake_current_list_dir, 0);
+            while (cmake_current_list_dir_pos != std::string::npos)
+            {
+                if (cmake_current_list_dir_pos != 0)
+                {
+                    if (triplet_contents.compare(cmake_current_list_dir_pos - 1, std::string::npos, R"(\)"))
+                    {
+                        cmake_current_list_dir_pos += cmake_current_list_dir.length();
+                        continue;
+                    }
+                }
+                triplet_contents.replace(cmake_current_list_dir_pos, cmake_current_list_dir.length(), path_to_triplet);
+                cmake_current_list_dir_pos = triplet_contents.find(cmake_current_list_dir, cmake_current_list_dir_pos);
+            }
+
+            Strings::append(
+                extraction_file, "if(VCPKG_TRIPLET_ID EQUAL ", p.second, ")\n", triplet_contents, "\nendif()\n");
         }
         Strings::append(extraction_file, "endmacro()\n");
         for (const auto& spec_abi_setting : spec_abi_settings)
