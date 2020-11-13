@@ -11,18 +11,3 @@ index 9cfbc45..e3447e6 100644
  #include <windows.h>
  #endif
  
-diff --git a/fftools/ffmpeg.c b/fftools/ffmpeg.c
-index 01f0410..dbb0736 100644
---- a/fftools/ffmpeg.c
-+++ b/fftools/ffmpeg.c
-@@ -23,6 +23,10 @@
-  * multimedia converter based on the FFmpeg libraries
-  */
- 
-+#define _WIN32_WINNT 0x0502	// Must be less than 0x0600, because otherwise WinSock2.h defines "pollfd" which then gets redefined in "os_support.h".
-+#define WIN32_LEAN_AND_MEAN
-+
-+
- #include "config.h"
- #include <ctype.h>
- #include <string.h>
