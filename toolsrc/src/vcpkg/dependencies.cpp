@@ -622,7 +622,7 @@ namespace vcpkg::Dependencies
         auto ctx = [&]() -> const PlatformExpression::Context& {
             if (!ctx_storage)
             {
-                var_provider.load_dep_info_vars({{spec}});
+                var_provider.load_dep_info_vars({&spec, 1});
                 ctx_storage = var_provider.get_dep_info_vars(spec);
             }
             return ctx_storage.value_or_exit(VCPKG_LINE_INFO);
@@ -1199,13 +1199,11 @@ namespace vcpkg::Dependencies
 
             struct PackageNode : Util::MoveOnlyBase
             {
-                /*Optional<const SourceControlFileLocation&> overridden;*/
-
                 std::map<Versions::Version, VersionSchemeInfo*> vermap;
                 std::map<std::string, VersionSchemeInfo> exacts;
                 Optional<std::unique_ptr<VersionSchemeInfo>> relaxed;
-                Optional<std::unique_ptr<VersionSchemeInfo>> overriden;
                 std::set<std::string> features;
+                bool default_features = true;
 
                 VersionSchemeInfo* get_node(const Versions::Version& ver);
                 VersionSchemeInfo& emplace_node(Versions::Scheme scheme, const Versions::Version& ver);
@@ -1226,6 +1224,9 @@ namespace vcpkg::Dependencies
             void add_constraint(std::pair<const PackageSpec, PackageNode>& ref,
                                 const std::string& feature,
                                 const std::string& origin);
+
+            void add_constraint_default_features(std::pair<const PackageSpec, PackageNode>& ref,
+                                                 const std::string& origin);
 
             void add_feature_to(std::pair<const PackageSpec, PackageNode>& ref,
                                 VersionSchemeInfo& vsi,
@@ -1262,7 +1263,7 @@ namespace vcpkg::Dependencies
                 // not implemented
                 Checks::unreachable(VCPKG_LINE_INFO);
             }
-            auto p = vermap.emplace(ver, vsi);
+            vermap.emplace(ver, vsi);
             return *vsi;
         }
 
@@ -1340,14 +1341,6 @@ namespace vcpkg::Dependencies
                 };
             }
         }
-        DependencyConstraint to_depconstraint(const Versions::Version& version)
-        {
-            return {
-                Versions::Constraint::Type::Exact,
-                version.text,
-                version.port_version,
-            };
-        }
 
         void VersionedPackageGraph::add_feature_to(std::pair<const PackageSpec, PackageNode>& ref,
                                                    VersionSchemeInfo& vsi,
@@ -1381,6 +1374,32 @@ namespace vcpkg::Dependencies
                 }
             }
         }
+
+        void VersionedPackageGraph::add_constraint_default_features(std::pair<const PackageSpec, PackageNode>& ref,
+                                                                    const std::string& origin)
+        {
+            (void)origin;
+            if (!ref.second.default_features)
+            {
+                ref.second.default_features = true;
+
+                if (auto relaxed = ref.second.relaxed.get())
+                {
+                    for (auto&& f : relaxed->get()->scfl->source_control_file->core_paragraph->default_features)
+                    {
+                        add_feature_to(ref, **relaxed, f);
+                    }
+                }
+                for (auto&& vsi : ref.second.exacts)
+                {
+                    for (auto&& f : vsi.second.scfl->source_control_file->core_paragraph->default_features)
+                    {
+                        add_feature_to(ref, vsi.second, f);
+                    }
+                }
+            }
+        }
+
         void VersionedPackageGraph::add_constraint(std::pair<const PackageSpec, PackageNode>& ref,
                                                    const Dependency& dep,
                                                    const std::string& origin)
@@ -1449,6 +1468,14 @@ namespace vcpkg::Dependencies
                     {
                         add_feature_to(ref, exact_ref, f);
                     }
+
+                    if (ref.second.default_features)
+                    {
+                        for (auto&& f : p_scfl->source_control_file->core_paragraph->default_features)
+                        {
+                            add_feature_to(ref, exact_ref, f);
+                        }
+                    }
                 }
             }
             else
@@ -1504,6 +1531,18 @@ namespace vcpkg::Dependencies
 
         void VersionedPackageGraph::add_roots(View<Dependency> deps, Triplet t)
         {
+            for (auto&& dep : deps)
+            {
+                // Disable default features for deps with [core] as a dependency
+                // Note: x[core], x[y] will still eventually depend on defaults due to the second x[y]
+                if (Util::find(dep.features, "core") != dep.features.end())
+                {
+                    PackageSpec spec(dep.name, t);
+                    auto& node = emplace_package(spec);
+                    node.second.default_features = false;
+                }
+            }
+
             for (auto&& dep : deps)
             {
                 PackageSpec spec(dep.name, t);
@@ -1573,6 +1612,10 @@ namespace vcpkg::Dependencies
                 {
                     add_constraint(node, f, toplevel);
                 }
+                if (Util::find(dep.features, "core") == dep.features.end())
+                {
+                    add_constraint_default_features(node, toplevel);
+                }
             }
         }
 
@@ -1594,29 +1637,39 @@ namespace vcpkg::Dependencies
             };
             std::vector<Frame> stack;
 
-            auto push = [&ret, &emitted, this, &stack](const PackageSpec& spec,
-                                                       const Versions::Version& new_ver) -> Optional<std::string> {
+            auto push = [&emitted, this, &stack](const PackageSpec& spec,
+                                                 const Versions::Version& new_ver) -> Optional<std::string> {
                 auto&& node = m_graph[spec];
-                auto p_vnode = node.get_node(new_ver);
+                auto over_it = m_overrides.find(spec.name());
+
+                VersionedPackageGraph::VersionSchemeInfo* p_vnode;
+                if (over_it != m_overrides.end())
+                    p_vnode = node.get_node(over_it->second);
+                else
+                    p_vnode = node.get_node(new_ver);
+
                 if (!p_vnode) return Strings::concat("Version was not found during discovery: ", spec, "@", new_ver);
 
                 auto p = emitted.emplace(spec, nullptr);
                 if (p.second)
                 {
                     // Newly inserted
-                    // -> Compare against baseline
-                    if (auto baseline = m_base_provider.get_baseline(spec.name()))
+                    if (over_it == m_overrides.end())
                     {
-                        if (auto base_node = node.get_node(*baseline.get()))
+                        // Not overridden -- Compare against baseline
+                        if (auto baseline = m_base_provider.get_baseline(spec.name()))
                         {
-                            if (base_node != p_vnode)
+                            if (auto base_node = node.get_node(*baseline.get()))
                             {
-                                return Strings::concat("Version conflict on ",
-                                                       spec.name(),
-                                                       "@",
-                                                       new_ver,
-                                                       ": baseline required ",
-                                                       *baseline.get());
+                                if (base_node != p_vnode)
+                                {
+                                    return Strings::concat("Version conflict on ",
+                                                           spec.name(),
+                                                           "@",
+                                                           new_ver,
+                                                           ": baseline required ",
+                                                           *baseline.get());
+                                }
                             }
                         }
                     }
