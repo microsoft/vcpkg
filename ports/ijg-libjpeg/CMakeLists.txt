@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
-project (libjpeg LANGUAGES C)
+project(libjpeg LANGUAGES C)
 
 option(BUILD_EXECUTABLES OFF)
 
@@ -17,12 +17,22 @@ add_library(jpeg
     jdct.h 
       jfdctflt.c jfdctfst.c jfdctint.c
 )
+set_target_properties(jpeg
+PROPERTIES
+    WINDOWS_EXPORT_ALL_SYMBOLS true
+)
+if(WIN32)
+    target_compile_definitions(jpeg
+    PRIVATE
+        _CRT_SECURE_NO_WARNINGS
+    )
+endif()
 
 install(FILES       ${PUBLIC_HEADERS}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/include
 )
 install(FILES       README install.txt usage.txt libjpeg.txt change.log
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}
 )
 install(TARGETS jpeg
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
@@ -43,7 +53,7 @@ if(BUILD_EXECUTABLES)
     add_executable(rdjpgcom   rdjpgcom.c)
     add_executable(wrjpgcom   wrjpgcom.c)
 
-    install(TARGETS cjpeg djpeg jpegtran rdjpgcom wrjpgcom
-            DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
+    install(TARGETS     cjpeg djpeg jpegtran rdjpgcom wrjpgcom
+            DESTINATION ${CMAKE_INSTALL_PREFIX}/tools
     )
-endif ()
+endif()

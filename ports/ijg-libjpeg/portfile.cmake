@@ -10,16 +10,17 @@ vcpkg_extract_source_archive_ex(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-# todo: jconfig.h must be genrated
+# todo: jconfig.h should be genrated when `configure` is available
 file(RENAME ${SOURCE_PATH}/jconfig.txt ${SOURCE_PATH}/jconfig.h)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_EXECUTABLES=ON
+        -DBUILD_EXECUTABLES=OFF
 )
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
 
 # There is no LICENSE file, but README containes some legal text.
 file(INSTALL ${SOURCE_PATH}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

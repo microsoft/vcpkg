@@ -3,5 +3,6 @@
   "version-string": "2020-01-12",
   "homepage": "http://www.ijg.org/",
   "description": "Independent JPEG Group's JPEG software",
+  "supports": "!emscripten & !wasm32",
   "dependencies": []
 }
