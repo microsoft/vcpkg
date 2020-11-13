@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 e2da1436e5b0d8a3841087e879fbbff5a92de4ebb69d097959972ec8c9407305bc2a17020cb46139fbacc84f91ff8cfb4d9547308074ba213e002ee36bb2e006
     HEAD_REF master
     PATCHES
-        fix-libde265-headers
+        fix-libde265-headers.patch
 )
 
 vcpkg_configure_cmake(
