@@ -21,7 +21,7 @@ index 2ae0b66..e6c55cd 100644
  
  # Assimp
 -find_package(ASSIMP QUIET)
-+find_package(Assimp CONFIG REQUIRED)
++find_package(assimp CONFIG REQUIRED)
  macro_log_feature(ASSIMP_FOUND "Assimp" "Needed for the AssimpLoader Plugin" "https://www.assimp.org/" FALSE "" "")
  
  if(ASSIMP_FOUND)
