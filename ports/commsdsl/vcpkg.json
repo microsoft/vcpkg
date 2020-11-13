@@ -1,12 +1,14 @@
 {
   "name": "commsdsl",
-  "version-string": "3.5.2",
+  "version-string": "3.5.3",
   "description": "DSL schemas parser and code generator for CommsChampion Ecosystem",
   "homepage": "https://commschamp.github.io/",
   "documentation": "https://github.com/commschamp/commsdsl",
   "supports": "!uwp",
   "dependencies": [
-    "boost",
+    "boost-algorithm",
+    "boost-filesystem",
+    "boost-program-options",
     "comms",
     "libxml2"
   ]

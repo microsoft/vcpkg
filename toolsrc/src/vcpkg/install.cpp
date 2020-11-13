@@ -797,7 +797,7 @@ namespace vcpkg::Install
                 Metrics::g_metrics.lock()->track_property("x-write-nuget-packages-config", "defined");
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
-            auto manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
+            const auto& manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
             auto maybe_manifest_scf = SourceControlFile::parse_manifest_file(manifest_path, *manifest);
             if (!maybe_manifest_scf)
             {
@@ -806,7 +806,13 @@ namespace vcpkg::Install
                                "more information.\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
+
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
+
+            if (auto maybe_error = manifest_scf.check_against_feature_flags(manifest_path, paths.get_feature_flags()))
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, maybe_error.value_or_exit(VCPKG_LINE_INFO));
+            }
 
             std::vector<std::string> features;
             auto manifest_feature_it = options.multisettings.find(OPTION_MANIFEST_FEATURE);

@@ -1,8 +1,73 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b664afd..0d4670e 100644
+index b664afd..0f72521 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -457,15 +457,6 @@ install(
+@@ -82,8 +82,6 @@ option(FORCE_OPENSSL "Force usage of OpenSSL even under windows" OFF)
+ 
+ if(ENABLE_CRYPTO OR ENABLE_NETSSL OR ENABLE_JWT)
+ 	find_package(OpenSSL REQUIRED)
+-else()
+-	find_package(OpenSSL)
+ endif()
+ 
+ if(OPENSSL_FOUND)
+@@ -113,24 +111,18 @@ else()
+ 	option(ENABLE_APACHECONNECTOR "Enable ApacheConnector" OFF)
+ endif()
+ 
+-if(ENABLE_DATA_MYSQL)
+-	find_package(MySQL REQUIRED)
+-else()
+-	find_package(MySQL)
+-endif()
++option(ENABLE_DATA "Enable Data" OFF)
++option(ENABLE_DATA_MYSQL "Enable Data MySQL or MariaDB" OFF)
+ 
+-if(MYSQL_FOUND)
+-	option(ENABLE_DATA "Enable Data" ON)
+-	option(ENABLE_DATA_MYSQL "Enable Data MySQL or MariaDB" ON)
+-else()
+-	option(ENABLE_DATA "Enable Data" OFF)
+-	option(ENABLE_DATA_MYSQL "Enable Data MySQL or MariaDB" OFF)
++if(ENABLE_DATA_MYSQL)
++    find_package(libmysql)
++    if (NOT libmysql_FOUND)
++        find_package(unofficial-libmariadb CONFIG REQUIRED)
++    endif()
+ endif()
+ 
+ if(ENABLE_DATA_POSTGRESQL)
+ 	find_package(PostgreSQL REQUIRED)
+-else()
+-	find_package(PostgreSQL)
+ endif()
+ 
+ if(PostgreSQL_FOUND)
+@@ -200,6 +192,9 @@ include(DefinePlatformSpecifc)
+ # Collect the built libraries and include dirs, the will be used to create the PocoConfig.cmake file
+ set(Poco_COMPONENTS "")
+ 
++# Do not declare the link library in the code!
++add_definitions(-DPOCO_NO_AUTOMATIC_LIBS)
++
+ if(ENABLE_TESTS)
+ 	add_subdirectory(CppUnit)
+ 	set(ENABLE_XML ON CACHE BOOL "Enable XML" FORCE)
+@@ -327,8 +322,11 @@ if(EXISTS ${PROJECT_SOURCE_DIR}/Redis AND ENABLE_REDIS)
+ 	list(APPEND Poco_COMPONENTS "Redis")
+ endif()
+ 
+-if(EXISTS ${PROJECT_SOURCE_DIR}/PDF AND ENABLE_PDF)
+-	add_subdirectory(PDF)
++if(ENABLE_PDF)
++	include(SelectLibraryConfigurations)
++	find_library(PocoPDF_LIBRARY_RELEASE NAMES libhpdf)
++	find_library(PocoPDF_LIBRARY_DEBUG NAMES libhpdfd)
++	select_library_configurations(PocoPDF)
+ 	list(APPEND Poco_COMPONENTS "PDF")
+ endif()
+ 
+@@ -457,15 +455,6 @@ install(
  		Devel
  )
  
@@ -18,6 +83,19 @@ index b664afd..0d4670e 100644
  message(STATUS "CMake ${CMAKE_VERSION} successfully configured ${PROJECT_NAME} using ${CMAKE_GENERATOR} generator")
  message(STATUS "${PROJECT_NAME} package version: ${PROJECT_VERSION}")
  if(BUILD_SHARED_LIBS)
+diff --git a/Data/MySQL/CMakeLists.txt b/Data/MySQL/CMakeLists.txt
+index f71b145..c3eaf9e 100644
+--- a/Data/MySQL/CMakeLists.txt
++++ b/Data/MySQL/CMakeLists.txt
+@@ -21,7 +21,7 @@ set_target_properties(DataMySQL
+ 	DEFINE_SYMBOL MySQL_EXPORTS
+ )
+ 
+-target_link_libraries(DataMySQL PUBLIC Poco::Data MySQL::client)
++target_link_libraries(DataMySQL PUBLIC Poco::Data ${MYSQL_LIBRARIES})
+ target_include_directories(DataMySQL
+ 	PUBLIC
+ 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 diff --git a/Data/SQLite/CMakeLists.txt b/Data/SQLite/CMakeLists.txt
 index b52e2c5..0dcfae2 100644
 --- a/Data/SQLite/CMakeLists.txt
@@ -40,6 +118,28 @@ index b52e2c5..0dcfae2 100644
  	target_compile_definitions(DataSQLite PUBLIC
  		POCO_UNBUNDLED
  		SQLITE_THREADSAFE=1
+diff --git a/Foundation/CMakeLists.txt b/Foundation/CMakeLists.txt
+index 6f5100f..c9fa2e5 100644
+--- a/Foundation/CMakeLists.txt
++++ b/Foundation/CMakeLists.txt
+@@ -35,7 +35,7 @@ POCO_MESSAGES(SRCS Logging src/pocomsg.mc)
+ # If POCO_UNBUNDLED is enabled we try to find the required packages
+ # The configuration will fail if the packages are not found
+ if(POCO_UNBUNDLED)
+-	find_package(PCRE REQUIRED)
++	find_package(unofficial-pcre CONFIG REQUIRED)
+ 	find_package(ZLIB REQUIRED)
+ 
+ 	#HACK: Unicode.cpp requires functions from these files. The can't be taken from the library
+@@ -101,7 +101,7 @@ set_target_properties(Foundation
+ )
+ 
+ if(POCO_UNBUNDLED)
+-	target_link_libraries(Foundation PUBLIC Pcre::Pcre ZLIB::ZLIB)
++	target_link_libraries(Foundation PUBLIC unofficial::pcre::pcre ZLIB::ZLIB)
+ 	target_compile_definitions(Foundation PUBLIC POCO_UNBUNDLED)
+     add_definitions(
+         -D_pcre_utf8_table1=_poco_pcre_utf8_table1
 diff --git a/XML/CMakeLists.txt b/XML/CMakeLists.txt
 index 4fbf06f..793285a 100644
 --- a/XML/CMakeLists.txt
@@ -63,7 +163,7 @@ index 4fbf06f..793285a 100644
  else()
  	if(WIN32)
 diff --git a/cmake/PocoConfig.cmake.in b/cmake/PocoConfig.cmake.in
-index 173eacd..589fdb6 100644
+index 173eacd..9a375cd 100644
 --- a/cmake/PocoConfig.cmake.in
 +++ b/cmake/PocoConfig.cmake.in
 @@ -8,6 +8,13 @@ if (NOT Poco_FIND_COMPONENTS)

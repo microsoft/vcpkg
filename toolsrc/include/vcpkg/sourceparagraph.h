@@ -2,6 +2,8 @@
 
 #include <vcpkg/base/fwd/json.h>
 
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/system.h>
@@ -63,6 +65,7 @@ namespace vcpkg
         std::string homepage;
         std::string documentation;
         std::vector<Dependency> dependencies;
+        std::vector<DependencyOverride> overrides;
         std::vector<std::string> default_features;
         std::string license; // SPDX license expression
 
@@ -80,16 +83,7 @@ namespace vcpkg
     /// </summary>
     struct SourceControlFile
     {
-        SourceControlFile clone() const
-        {
-            SourceControlFile ret;
-            ret.core_paragraph = std::make_unique<SourceParagraph>(*core_paragraph);
-            for (const auto& feat_ptr : feature_paragraphs)
-            {
-                ret.feature_paragraphs.push_back(std::make_unique<FeatureParagraph>(*feat_ptr));
-            }
-            return ret;
-        }
+        SourceControlFile clone() const;
 
         static Parse::ParseExpected<SourceControlFile> parse_manifest_object(const std::string& origin,
                                                                              const Json::Object& object);
@@ -106,6 +100,9 @@ namespace vcpkg
 
         Optional<const FeatureParagraph&> find_feature(const std::string& featurename) const;
         Optional<const std::vector<Dependency>&> find_dependencies_for_feature(const std::string& featurename) const;
+
+        Optional<std::string> check_against_feature_flags(const fs::path& origin,
+                                                          const FeatureFlagSettings& flags) const;
 
         friend bool operator==(const SourceControlFile& lhs, const SourceControlFile& rhs);
         friend bool operator!=(const SourceControlFile& lhs, const SourceControlFile& rhs) { return !(lhs == rhs); }
