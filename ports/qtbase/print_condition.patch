@@ -2,7 +2,7 @@ diff --git a/cmake/QtFeature.cmake b/cmake/QtFeature.cmake
 index 85d3f6d51..aeaed03ed 100644
 --- a/cmake/QtFeature.cmake
 +++ b/cmake/QtFeature.cmake
-@@ -207,11 +207,25 @@ function(qt_feature_set_cache_value resultVar feature emit_if calculated label)
+@@ -207,11 +207,27 @@ function(qt_feature_set_cache_value resultVar feature emit_if calculated label)
      set("${resultVar}" "${result}" PARENT_SCOPE)
  endfunction()
  
@@ -14,10 +14,12 @@ index 85d3f6d51..aeaed03ed 100644
 -        message(SEND_ERROR "Feature \"${feature}\": Forcing to \"${cache}\" breaks its condition.")
 +        message(SEND_ERROR "Feature \"${feature}\": Forcing to \"${cache}\" breaks its condition. '${conditionstring}'")
 +        set(_qt_fsv_prefix)
-+        foreach(_cond IN LISTS conditionstring)
-+            IF("${_cond}" MATCHES "(AND|OR|NOT|TARGET|EXISTS)")
++        foreach(_cond ${conditionstring})
++            IF("${_cond}" MATCHES "(NOT|TARGET|EXISTS)")
 +                list(APPEND _qt_fsv_prefix ${_cond})
 +                continue()
++            elseif("${_cond}" MATCHES "(AND|OR)")
++                continue() # eat
 +            endif()
 +            if(${_qt_fsv_prefix} ${_cond})
 +                message(STATUS "${_qt_fsv_prefix} ${_cond} is TRUE")
