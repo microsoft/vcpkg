@@ -29,13 +29,6 @@
 
 # Add new items alphabetically
 
-3fd:arm64-windows=fail
-3fd:arm-uwp=fail
-3fd:x64-linux=fail
-3fd:x64-osx=fail
-3fd:x64-windows=fail
-3fd:x64-windows-static=fail
-3fd:x86-windows=fail
 activemq-cpp:x64-linux=fail
 activemq-cpp:x64-osx=fail
 alac:arm-uwp=fail
