@@ -1161,8 +1161,10 @@ namespace vcpkg::Dependencies
             using IBaselineProvider = PortFileProvider::IBaselineProvider;
 
         public:
-            VersionedPackageGraph(IVersionedPortfileProvider& ver_provider, IBaselineProvider& base_provider)
-                : m_ver_provider(ver_provider), m_base_provider(base_provider)
+            VersionedPackageGraph(IVersionedPortfileProvider& ver_provider,
+                                  IBaselineProvider& base_provider,
+                                  const CMakeVars::CMakeVarProvider& var_provider)
+                : m_ver_provider(ver_provider), m_base_provider(base_provider), m_var_provider(var_provider)
             {
             }
 
@@ -1175,6 +1177,7 @@ namespace vcpkg::Dependencies
         private:
             IVersionedPortfileProvider& m_ver_provider;
             IBaselineProvider& m_base_provider;
+            const CMakeVars::CMakeVarProvider& m_var_provider;
 
             struct DepSpec
             {
@@ -1363,6 +1366,22 @@ namespace vcpkg::Dependencies
             for (auto&& dep : *deps.get())
             {
                 PackageSpec dep_spec(dep.name, ref.first.triplet());
+
+                if (!dep.platform.is_empty())
+                {
+                    auto maybe_vars = m_var_provider.get_dep_info_vars(ref.first);
+                    if (!maybe_vars)
+                    {
+                        m_var_provider.load_dep_info_vars({&ref.first, 1});
+                        maybe_vars = m_var_provider.get_dep_info_vars(ref.first);
+                    }
+
+                    if (!dep.platform.evaluate(maybe_vars.value_or_exit(VCPKG_LINE_INFO)))
+                    {
+                        continue;
+                    }
+                }
+
                 auto& dep_node = emplace_package(dep_spec);
                 // Todo: cycle detection
                 add_constraint(dep_node, dep, ref.first.name());
@@ -1407,22 +1426,19 @@ namespace vcpkg::Dependencies
             auto base_ver = m_base_provider.get_baseline(dep.name);
             auto dep_ver = to_version(dep.constraint);
 
-            PackageSpec spec(dep.name, ref.first.triplet());
-            auto& node = emplace_package(spec);
-
             if (auto dv = dep_ver.get())
             {
-                add_constraint(node, *dv, origin);
+                add_constraint(ref, *dv, origin);
             }
 
             if (auto bv = base_ver.get())
             {
-                add_constraint(node, *bv, origin);
+                add_constraint(ref, *bv, origin);
             }
 
             for (auto&& f : dep.features)
             {
-                add_constraint(node, f, origin);
+                add_constraint(ref, f, origin);
             }
         }
         void VersionedPackageGraph::add_constraint(std::pair<const PackageSpec, PackageNode>& ref,
@@ -1531,21 +1547,32 @@ namespace vcpkg::Dependencies
 
         void VersionedPackageGraph::add_roots(View<Dependency> deps, Triplet t)
         {
+            auto specs = Util::fmap(deps, [&t](const Dependency& d) { return PackageSpec{d.name, t}; });
+            m_var_provider.load_dep_info_vars(specs);
+            std::vector<const Dependency*> active_deps;
+
             for (auto&& dep : deps)
             {
+                PackageSpec spec(dep.name, t);
+                const auto& vars = m_var_provider.get_dep_info_vars(spec).value_or_exit(VCPKG_LINE_INFO);
+                if (!dep.platform.evaluate(vars)) continue;
+
+                active_deps.push_back(&dep);
+
                 // Disable default features for deps with [core] as a dependency
                 // Note: x[core], x[y] will still eventually depend on defaults due to the second x[y]
                 if (Util::find(dep.features, "core") != dep.features.end())
                 {
-                    PackageSpec spec(dep.name, t);
                     auto& node = emplace_package(spec);
                     node.second.default_features = false;
                 }
             }
 
-            for (auto&& dep : deps)
+            for (auto pdep : active_deps)
             {
+                const auto& dep = *pdep;
                 PackageSpec spec(dep.name, t);
+
                 auto& node = emplace_package(spec);
                 const std::string toplevel = "toplevel";
 
@@ -1675,6 +1702,8 @@ namespace vcpkg::Dependencies
                     }
 
                     // -> Add stack frame
+                    auto maybe_vars = m_var_provider.get_dep_info_vars(spec);
+
                     InstallPlanAction ipa(spec, *p_vnode->scfl, RequestType::USER_REQUESTED, std::move(p_vnode->deps));
                     std::vector<DepSpec> deps;
                     for (auto&& f : ipa.feature_list)
@@ -1684,6 +1713,11 @@ namespace vcpkg::Dependencies
                         {
                             for (auto&& dep : *maybe_deps)
                             {
+                                if (!dep.platform.is_empty() &&
+                                    !dep.platform.evaluate(maybe_vars.value_or_exit(VCPKG_LINE_INFO)))
+                                {
+                                    continue;
+                                }
                                 auto maybe_cons = dep_to_version(dep.name, dep.constraint, m_base_provider);
 
                                 if (auto cons = maybe_cons.get())
@@ -1759,13 +1793,13 @@ namespace vcpkg::Dependencies
 
     ExpectedS<ActionPlan> create_versioned_install_plan(PortFileProvider::IVersionedPortfileProvider& provider,
                                                         PortFileProvider::IBaselineProvider& bprovider,
-                                                        const CMakeVars::CMakeVarProvider& /*var_provider*/,
+                                                        const CMakeVars::CMakeVarProvider& var_provider,
                                                         const std::vector<Dependency>& deps,
                                                         const std::vector<DependencyOverride>& overrides,
                                                         Triplet triplet,
                                                         const CreateInstallPlanOptions& /*options*/)
     {
-        VersionedPackageGraph vpg(provider, bprovider);
+        VersionedPackageGraph vpg(provider, bprovider, var_provider);
         for (auto&& o : overrides)
             vpg.add_override(o.name, {o.version, o.port_version});
         vpg.add_roots(deps, triplet);

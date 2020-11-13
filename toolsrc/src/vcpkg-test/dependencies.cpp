@@ -888,10 +888,164 @@ TEST_CASE ("version install transitive default features", "[versionplan]")
     bp.v["a"] = {"1", 0};
     bp.v["b"] = {"1", 0};
 
-    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
-        vp, bp, var_provider, {Dependency{"b"}}, {}, Test::X86_WINDOWS));
+    auto install_plan = unwrap(
+        Dependencies::create_versioned_install_plan(vp, bp, var_provider, {Dependency{"b"}}, {}, Test::X86_WINDOWS));
 
     REQUIRE(install_plan.size() == 2);
     check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x"});
     check_name_and_version(install_plan.install_actions[1], "b", {"1", 0});
+}
+
+static PlatformExpression::Expr parse_platform(StringView l)
+{
+    return unwrap(PlatformExpression::parse_platform_expression(l, PlatformExpression::MultipleBinaryOperators::Deny));
+}
+
+TEST_CASE ("version install qualified dependencies", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+
+    vp.emplace("b", {"1", 0}, Scheme::Relaxed);
+    vp.emplace("c", {"1", 0}, Scheme::Relaxed);
+
+    MockCMakeVarProvider var_provider;
+
+    MockBaselineProvider bp;
+    bp.v["b"] = {"1", 0};
+    bp.v["c"] = {"1", 0};
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {{"b", {}, parse_platform("!linux")}, {"c", {}, parse_platform("linux")}},
+        {},
+        Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 1);
+    check_name_and_version(install_plan.install_actions[0], "b", {"1", 0});
+}
+
+TEST_CASE ("version install qualified default suppression", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+
+    auto& a_scf = vp.emplace("a", {"1", 0}, Scheme::Relaxed).source_control_file;
+    a_scf->core_paragraph->default_features.push_back("x");
+    a_scf->feature_paragraphs.push_back(make_fpgh("x"));
+
+    vp.emplace("b", {"1", 0}, Scheme::Relaxed)
+        .source_control_file->core_paragraph->dependencies.push_back({"a", {"core"}});
+
+    MockCMakeVarProvider var_provider;
+
+    MockBaselineProvider bp;
+    bp.v["a"] = {"1", 0};
+    bp.v["b"] = {"1", 0};
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {{"b", {}, parse_platform("!linux")}, {"a", {"core"}, parse_platform("linux")}},
+        {},
+        Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 2);
+    check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x"});
+    check_name_and_version(install_plan.install_actions[1], "b", {"1", 0});
+}
+
+TEST_CASE ("version install qualified transitive", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+
+    vp.emplace("a", {"1", 0}, Scheme::Relaxed);
+    vp.emplace("c", {"1", 0}, Scheme::Relaxed);
+
+    auto& b_scf = vp.emplace("b", {"1", 0}, Scheme::Relaxed).source_control_file;
+    b_scf->core_paragraph->dependencies.push_back({"a", {}, parse_platform("!linux")});
+    b_scf->core_paragraph->dependencies.push_back({"c", {}, parse_platform("linux")});
+
+    MockCMakeVarProvider var_provider;
+
+    MockBaselineProvider bp;
+    bp.v["a"] = {"1", 0};
+    bp.v["b"] = {"1", 0};
+    bp.v["c"] = {"1", 0};
+
+    auto install_plan =
+        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"b"}}, {}, Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 2);
+    check_name_and_version(install_plan.install_actions[0], "a", {"1", 0});
+    check_name_and_version(install_plan.install_actions[1], "b", {"1", 0});
+}
+
+TEST_CASE ("version install different vars", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+
+    auto& b_scf = vp.emplace("b", {"1", 0}, Scheme::Relaxed).source_control_file;
+    b_scf->core_paragraph->dependencies.push_back({"a", {}, parse_platform("!linux")});
+
+    auto& a_scf = vp.emplace("a", {"1", 0}, Scheme::Relaxed).source_control_file;
+    a_scf->core_paragraph->dependencies.push_back({"c", {}, parse_platform("linux")});
+
+    vp.emplace("c", {"1", 0}, Scheme::Relaxed);
+
+    MockCMakeVarProvider var_provider;
+    var_provider.dep_info_vars[PackageSpec{"a", Test::X86_WINDOWS}] = {{"VCPKG_CMAKE_SYSTEM_NAME", "Linux"}};
+
+    MockBaselineProvider bp;
+    bp.v["a"] = {"1", 0};
+    bp.v["b"] = {"1", 0};
+    bp.v["c"] = {"1", 0};
+
+    auto install_plan =
+        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"b"}}, {}, Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 3);
+    check_name_and_version(install_plan.install_actions[0], "c", {"1", 0});
+    check_name_and_version(install_plan.install_actions[1], "a", {"1", 0});
+    check_name_and_version(install_plan.install_actions[2], "b", {"1", 0});
+}
+
+TEST_CASE ("version install qualified features", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+
+    auto& b_scf = vp.emplace("b", {"1", 0}, Scheme::Relaxed).source_control_file;
+    b_scf->core_paragraph->default_features.push_back("x");
+    b_scf->feature_paragraphs.push_back(make_fpgh("x"));
+    b_scf->feature_paragraphs.back()->dependencies.push_back({"a", {}, parse_platform("!linux")});
+
+    auto& a_scf = vp.emplace("a", {"1", 0}, Scheme::Relaxed).source_control_file;
+    a_scf->core_paragraph->default_features.push_back("y");
+    a_scf->feature_paragraphs.push_back(make_fpgh("y"));
+    a_scf->feature_paragraphs.back()->dependencies.push_back({"c", {}, parse_platform("linux")});
+
+    auto& c_scf = vp.emplace("c", {"1", 0}, Scheme::Relaxed).source_control_file;
+    c_scf->core_paragraph->default_features.push_back("z");
+    c_scf->feature_paragraphs.push_back(make_fpgh("z"));
+    c_scf->feature_paragraphs.back()->dependencies.push_back({"d", {}, parse_platform("linux")});
+
+    vp.emplace("d", {"1", 0}, Scheme::Relaxed);
+
+    MockCMakeVarProvider var_provider;
+    var_provider.dep_info_vars[PackageSpec{"a", Test::X86_WINDOWS}] = {{"VCPKG_CMAKE_SYSTEM_NAME", "Linux"}};
+
+    MockBaselineProvider bp;
+    bp.v["a"] = {"1", 0};
+    bp.v["b"] = {"1", 0};
+    bp.v["c"] = {"1", 0};
+    bp.v["d"] = {"1", 0};
+
+    auto install_plan =
+        unwrap(Dependencies::create_versioned_install_plan(vp, bp, var_provider, {{"b"}}, {}, Test::X86_WINDOWS));
+
+    REQUIRE(install_plan.size() == 3);
+    check_name_and_version(install_plan.install_actions[0], "c", {"1", 0}, {"z"});
+    check_name_and_version(install_plan.install_actions[1], "a", {"1", 0}, {"y"});
+    check_name_and_version(install_plan.install_actions[2], "b", {"1", 0}, {"x"});
 }
