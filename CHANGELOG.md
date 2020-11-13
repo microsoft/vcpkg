@@ -1,3 +1,43 @@
+vcpkg (2020.11.03)
+---
+#### Total port count: 1519
+#### Total port count per triplet (tested): 
+|triplet|ports available|
+|---|---|
+|**x64-windows**|1374|
+|x86-windows|1346|
+|**x64-linux**|1269|
+|x64-windows-static|1266|
+|**x64-osx**|1202|
+|arm64-windows|985|
+|x64-uwp|753|
+|arm-uwp|711|
+
+##### The following documentation has been updated:
+- [Selecting Library Features](docs/users/selecting-library-features.md) ***[NEW]***
+    - [(#14189)](https://github.com/microsoft/vcpkg/pull/14189) [vcpkg] User help: selecting-library-features.md (by @vmiheer)
+
+#### The following *additional* changes have been made to vcpkg's infrastructure:
+- [(#14317)](https://github.com/microsoft/vcpkg/pull/14317) [vcpkg] Fix incorrect determination of PowerShell not found (by @BillyONeal)
+- [(#14206)](https://github.com/microsoft/vcpkg/pull/14206) [vcpkg] Add tab completion for Fish (by @Link1J)
+- [(#14367)](https://github.com/microsoft/vcpkg/pull/14367) Add CHANGELOG up to 2020.11.01 (by @vicroms)
+- [(#14366)](https://github.com/microsoft/vcpkg/pull/14366) [vcpkg] Disable vcpkg_copy_tool_dependencies on non-Windows (by @BillyONeal)
+
+<details>
+<summary><b>The following 1 ports have been added:</b></summary>
+
+|port|version|
+|---|---|
+|[elfio](https://github.com/microsoft/vcpkg/pull/14314)| 3.8#0
+</details>
+
+<details>
+<summary><b>The following 0 ports have been updated:</b></summary>
+
+</details>
+
+-- vcpkg team vcpkg@microsoft.com TUE, 03 Nov 14:35:00 -0800
+
 vcpkg (2020.11.01)
 ---
 #### Total port count: 1519

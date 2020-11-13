@@ -50,6 +50,23 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/debug/libd ${CURRENT_PACKAGES_DIR}/debug/lib
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+# fix paths in target files
+list(APPEND TARGET_FILES 
+    ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEApplicationFrameworkTargets-debug.cmake
+    ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADECompileDefinitionsAndFlags-debug.cmake
+    ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEDataExchangeTargets-debug.cmake
+    ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEFoundationClassesTargets-debug.cmake
+    ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingAlgorithmsTargets-debug.cmake
+    ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingDataTargets-debug.cmake
+    ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEVisualizationTargets-debug.cmake
+)
+foreach(TARGET_FILE ${TARGET_FILES})
+    file(READ ${TARGET_FILE} filedata)
+    string(REGEX REPLACE "libd" "lib" filedata "${filedata}")
+    string(REGEX REPLACE "bind" "bin" filedata "${filedata}")
+    file(WRITE ${TARGET_FILE} ${filedata})
+endforeach()
+
 # the bin directory ends up with bat files that are noise, let's clean that up
 file(GLOB BATS ${CURRENT_PACKAGES_DIR}/bin/*.bat)
 file(REMOVE_RECURSE ${BATS})
