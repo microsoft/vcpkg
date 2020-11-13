@@ -88,7 +88,7 @@ T unwrap(ExpectedS<T> e)
 static void check_name_and_version(const Dependencies::InstallPlanAction& ipa,
                                    StringLiteral name,
                                    Versions::Version v,
-                                   View<StringLiteral> features = {})
+                                   std::initializer_list<StringLiteral> features = {})
 {
     CHECK(ipa.spec.name() == name);
     CHECK(ipa.source_control_file_location.has_value());
