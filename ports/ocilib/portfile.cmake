@@ -31,7 +31,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     
     # There is no debug configuration
     # As it is a C library, build the release configuration and copy its output to the debug folder
-    set(VCPKG_BUILD_TYPE release)
+    set(VCPKG_BUILD_LIST RELEASE)
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH proj/dll/ocilib_dll_${SOLUTION_TYPE}.sln
