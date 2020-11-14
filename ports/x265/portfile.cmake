@@ -47,6 +47,11 @@ if(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_MINGW))
     endif()
 endif()
 
+if(VCPKG_TARGET_IS_MINGW AND ENABLE_SHARED)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libx265.a)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libx265.a)
+endif()
+
 if(UNIX)
     vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES numa)
 else()
