@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" ON_TARGET "UWP")
+
 set(TF_LIB_SUFFIX "_cc")
 set(TF_PORT_SUFFIX "-cc")
 set(TF_PATCHES_PREFIX "")
