@@ -9,6 +9,8 @@ vcpkg_from_github(
     PATCHES
         fix-buildsystem.patch
         fix-dependencies.patch
+        fix-lz4.patch
+        fix-zstd.patch
         fix-cpu-set.patch
         disable-warnings.patch
 )
