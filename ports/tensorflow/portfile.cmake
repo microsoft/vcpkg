@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" ON_TARGET "uwp")
+
 set(TF_LIB_SUFFIX "")
 set(TF_PORT_SUFFIX "")
 set(TF_PATCHES_PREFIX "../tensorflow-cc/")
