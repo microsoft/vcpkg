@@ -22,6 +22,10 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/console_bridge)
 endif()
 
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+    vcpkg_fixup_pkgconfig()
+endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(READ ${SOURCE_PATH}/src/console.cpp _contents)

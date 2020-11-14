@@ -25,6 +25,7 @@
 #define ASSUME(expr)
 #endif
 
+// the static_assert(true, "")s are to avoid the extra ';' warning
 #ifdef _MSC_VER
 #define VCPKG_MSVC_WARNING(...) __pragma(warning(__VA_ARGS__))
 #define GCC_DIAGNOSTIC(...)

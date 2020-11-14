@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.73.0",
+    $version = "1.74.0",
     $portsDir = $null
 )
 
@@ -13,27 +13,7 @@ if ($null -eq $portsDir)
 
 # Optionally clear this array when moving to a new boost version
 $port_versions = @{
-    "asio" = 2;
-    "beast" = 2;
-    "context" = 2;
-    "coroutine" = 2;
-    "coroutine2" = 2;
-    "fiber" = 2;
-    "filesystem" = 1;
-    "graph-parallel" = 1;
-    "iostreams" = 1;
-    "locale" = 2;
-    "log" = 2;
-    "mpi" = 1;
-    "parameter-python" = 2;
-    "poly-collection" = 1;
-    "process" = 2;
-    "python" = 2;
-    "safe-numerics" = 1;
-    "stacktrace" = 1;
-    "test" = 1;
-    "wave" = 1;
-    "boost" = 4
+    #e.g.  "asio" = 1;
 }
 
 $per_port_data = @{
@@ -159,7 +139,7 @@ function Generate()
         $portfileLines += @("    PATCHES")
         foreach ($patch in $patches)
         {
-            $portfileLines += @("        $($patches.name)")
+            $portfileLines += @("        $($patch.name)")
         }
     }
     $portfileLines += @(

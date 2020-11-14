@@ -6,6 +6,7 @@
 
 #include <vcpkg/platform-expression.h>
 #include <vcpkg/triplet.h>
+#include <vcpkg/versions.h>
 
 namespace vcpkg::Parse
 {
@@ -133,16 +134,43 @@ namespace vcpkg
         static ExpectedS<Features> from_string(const std::string& input);
     };
 
+    struct DependencyConstraint
+    {
+        Versions::Constraint::Type type = Versions::Constraint::Type::None;
+        std::string value;
+        int port_version = 0;
+
+        friend bool operator==(const DependencyConstraint& lhs, const DependencyConstraint& rhs);
+        friend bool operator!=(const DependencyConstraint& lhs, const DependencyConstraint& rhs)
+        {
+            return !(lhs == rhs);
+        }
+    };
+
     struct Dependency
     {
         std::string name;
         std::vector<std::string> features;
         PlatformExpression::Expr platform;
+        DependencyConstraint constraint;
 
         Json::Object extra_info;
 
         friend bool operator==(const Dependency& lhs, const Dependency& rhs);
         friend bool operator!=(const Dependency& lhs, const Dependency& rhs) { return !(lhs == rhs); }
+    };
+
+    struct DependencyOverride
+    {
+        std::string name;
+        Versions::Scheme version_scheme = Versions::Scheme::String;
+        std::string version;
+        int port_version = 0;
+
+        Json::Object extra_info;
+
+        friend bool operator==(const DependencyOverride& lhs, const DependencyOverride& rhs);
+        friend bool operator!=(const DependencyOverride& lhs, const DependencyOverride& rhs) { return !(lhs == rhs); }
     };
 
     struct ParsedQualifiedSpecifier

@@ -148,6 +148,8 @@ function(boost_modular_build)
         if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib)
             message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
         endif()
+
+        file(INSTALL ${CURRENT_INSTALLED_DIR}/share/boost-build/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
         return()
     endif()
 
@@ -319,7 +321,9 @@ function(boost_modular_build)
     configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
     configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam @ONLY)
 
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v14.")
+    if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
+        list(APPEND _bm_OPTIONS toolset=msvc)
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v14.")
         list(APPEND _bm_OPTIONS toolset=msvc)
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
         list(APPEND _bm_OPTIONS toolset=msvc)
@@ -425,7 +429,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_73" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-1_74" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
         elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
@@ -444,4 +448,5 @@ function(boost_modular_build)
     endif()
 
     vcpkg_copy_pdbs()
+    file(INSTALL ${CURRENT_INSTALLED_DIR}/share/boost-build/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 endfunction()
