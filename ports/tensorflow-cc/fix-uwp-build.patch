@@ -121,3 +121,14 @@ diff --git a/third_party/protobuf/protobuf.patch b/third_party/protobuf/protobuf
  @@ -213,6 +214,7 @@ cc_library(
       copts = COPTS,
       includes = ["src/"],
+
+
+diff --git a/third_party/systemlibs/nsync.BUILD b/third_party/systemlibs/nsync.BUILD
+--- a/third_party/systemlibs/nsync.BUILD
++++ b/third_party/systemlibs/nsync.BUILD
+@@ -20,4 +20,5 @@
+     name = "nsync_cpp",
+     linkopts = ["-lnsync_cpp"],
+     visibility = ["//visibility:public"],
++    deps = ["@patched_includes//:headers"],
+ )
