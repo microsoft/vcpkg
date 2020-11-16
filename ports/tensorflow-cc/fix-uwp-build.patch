@@ -132,3 +132,41 @@ diff --git a/third_party/systemlibs/nsync.BUILD b/third_party/systemlibs/nsync.B
      visibility = ["//visibility:public"],
 +    deps = ["@patched_includes//:headers"],
  )
+
+
+diff --git a/third_party/grpc/BUILD b/third_party/grpc/BUILD
+--- a/third_party/grpc/BUILD
++++ b/third_party/grpc/BUILD
+@@ -0,0 +1,4 @@
++cc_library(
++    name = "grpc++",
++    deps = ["@patched_includes//:headers"],
++)
+
+
+diff --git a/tensorflow/BUILD b/tensorflow/BUILD
+--- a/tensorflow/BUILD
++++ b/tensorflow/BUILD
+@@ -688,6 +688,7 @@
+         "//tensorflow/core/profiler:profiler_impl",
+         "//tensorflow/stream_executor:stream_executor_impl",
+         "//tensorflow:tf_framework_version_script.lds",
++        "@patched_includes//:headers",
+     ] + tf_additional_binary_deps(),
+ )
+
+@@ -748,6 +749,7 @@
+         "//tensorflow/c/eager:c_api_experimental",
+         "//tensorflow/core:distributed_tensorflow_dependencies",
+         "//tensorflow/core:tensorflow",
++        "@patched_includes//:headers",
+     ],
+ )
+
+@@ -782,6 +784,7 @@
+         "//tensorflow/cc:scope",
+         "//tensorflow/cc/profiler",
+         "//tensorflow/core:tensorflow",
++        "@patched_includes//:headers",
+     ] + if_ngraph(["@ngraph_tf//:ngraph_tf"]),
+ )
