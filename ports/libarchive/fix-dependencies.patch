@@ -42,7 +42,7 @@ index 39b5333..8164d8f 100644
  ELSE(LIBLZMA_FOUND)
  # LZMA not found and will not be used.
  ENDIF(LIBLZMA_FOUND)
-@@ -555,22 +543,14 @@ IF(ENABLE_LZ4)
+@@ -555,22 +543,15 @@ IF(ENABLE_LZ4)
      SET(LZ4_FIND_QUIETLY TRUE)
    ENDIF (LZ4_INCLUDE_DIR)
  
@@ -56,6 +56,7 @@ index 39b5333..8164d8f 100644
  ENDIF(ENABLE_LZ4)
 -IF(LZ4_FOUND)
 +IF(lz4_FOUND)
++  SET(HAVE_LZ4HC_H 1)
    SET(HAVE_LIBLZ4 1)
    SET(HAVE_LZ4_H 1)
 -  CMAKE_PUSH_CHECK_STATE()	# Save the state of the variables
@@ -68,7 +69,7 @@ index 39b5333..8164d8f 100644
    #
    # TODO: test for static library.
    #
-@@ -586,25 +566,14 @@ IF(ENABLE_ZSTD)
+@@ -586,25 +566,20 @@ IF(ENABLE_ZSTD)
      SET(ZSTD_FIND_QUIETLY TRUE)
    ENDIF (ZSTD_INCLUDE_DIR)
  
@@ -93,8 +94,14 @@ index 39b5333..8164d8f 100644
 -  # TODO: test for static library.
 -  #
 -  CMAKE_POP_CHECK_STATE()
-+  LIST(APPEND ADDITIONAL_LIBS libzstd)
-+  SET(CMAKE_REQUIRED_LIBRARIES libzstd)
++  SET(HAVE_LIBZSTD 1)
++  IF(TARGET zstd::libzstd_shared)
++  LIST(APPEND ADDITIONAL_LIBS zstd::libzstd_shared)
++  SET(CMAKE_REQUIRED_LIBRARIES zstd::libzstd_shared)
++  ELSE(TARGET zstd::libzstd_shared)
++  LIST(APPEND ADDITIONAL_LIBS zstd::libzstd_static)
++  SET(CMAKE_REQUIRED_LIBRARIES zstd::libzstd_static)  
++  ENDIF(TARGET zstd::libzstd_shared)
  ENDIF(ZSTD_FOUND)
  MARK_AS_ADVANCED(CLEAR ZSTD_INCLUDE_DIR)
  MARK_AS_ADVANCED(CLEAR ZSTD_LIBRARY)
