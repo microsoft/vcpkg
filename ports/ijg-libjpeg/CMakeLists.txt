@@ -17,10 +17,7 @@ add_library(jpeg
     jdct.h 
       jfdctflt.c jfdctfst.c jfdctint.c
 )
-set_target_properties(jpeg
-PROPERTIES
-    WINDOWS_EXPORT_ALL_SYMBOLS true
-)
+
 if(WIN32)
     target_compile_definitions(jpeg
     PRIVATE

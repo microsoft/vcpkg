@@ -1,4 +1,6 @@
 
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_download_distfile(ARCHIVE
     URLS        "http://www.ijg.org/files/jpegsr9d.zip"
     FILENAME    "jpegsr9d.zip"
