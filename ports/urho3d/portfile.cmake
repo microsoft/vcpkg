@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO urho3d/Urho3D
-    REF 1.7.1
-    SHA512 a82b85bc763d823bfa953eeb8aa5e388df5b0bf0c1dfe8fd317c74443367b771ad5b8de09ca64adf610dadbf5444c2d51df8215d0765a6076489b5cae47a2cf0
+    REF f909775ca7d61e6291342b33921a22d837ac6b18
+    SHA512 c20d2d9ad7f003e1d7cb923badb9695578271a62c45b2b37a26a0db7337304c95cf5d08ebf984f963c3e178968888beef158e32f7eebb6a96dda4dbac25f3998
     HEAD_REF master
     PATCHES
         asm_files.patch
-        ik_memory_backtrace.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -56,5 +55,6 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/share/Resources)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/Urho3D/LuaScript/pkgs)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/Urho3D/ThirdParty/LuaJIT/jit)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
