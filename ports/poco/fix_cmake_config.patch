@@ -1,0 +1,39 @@
+diff --git a/Foundation/cmake/PocoFoundationConfig.cmake b/Foundation/cmake/PocoFoundationConfig.cmake
+index 46c2d3f..af2e78c 100644
+--- a/Foundation/cmake/PocoFoundationConfig.cmake
++++ b/Foundation/cmake/PocoFoundationConfig.cmake
+@@ -2,7 +2,7 @@ if(@POCO_UNBUNDLED@)
+ 	include(CMakeFindDependencyMacro)
+ 	list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+ 	find_dependency(ZLIB REQUIRED)
+-	find_dependency(PCRE REQUIRED)
++	find_dependency(unofficial-pcre REQUIRED)
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/PocoFoundationTargets.cmake")
+diff --git a/XML/cmake/PocoXMLConfig.cmake b/XML/cmake/PocoXMLConfig.cmake
+index ef58207..4ed94ec 100644
+--- a/XML/cmake/PocoXMLConfig.cmake
++++ b/XML/cmake/PocoXMLConfig.cmake
+@@ -4,7 +4,7 @@ if(@POCO_UNBUNDLED@)
+ 	if(CMAKE_VERSION VERSION_LESS "3.10")
+ 		list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/V39")
+ 	endif()
+-	find_dependency(EXPAT REQUIRED)
++	find_dependency(expat CONFIG REQUIRED)
+ endif()
+ 
+ include("${CMAKE_CURRENT_LIST_DIR}/PocoXMLTargets.cmake")
+diff --git a/cmake/PocoConfig.cmake.in b/cmake/PocoConfig.cmake.in
+index 0687fe4..936edf4 100644
+--- a/cmake/PocoConfig.cmake.in
++++ b/cmake/PocoConfig.cmake.in
+@@ -30,7 +30,7 @@ set(_Poco_NOTFOUND_MESSAGE)
+ 
+ # Let components find each other, but don't overwrite CMAKE_PREFIX_PATH
+ set(_Poco_CMAKE_PREFIX_PATH_old ${CMAKE_PREFIX_PATH})
+-set(CMAKE_PREFIX_PATH ${_Poco_install_prefix})
++set(CMAKE_PREFIX_PATH ${_Poco_install_prefix} ${CMAKE_PREFIX_PATH})
+ 
+ foreach(module ${Poco_FIND_COMPONENTS})
+     find_package(Poco${module}

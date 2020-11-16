@@ -174,7 +174,7 @@ index 173eacd..9a375cd 100644
 +find_dependency(ZLIB REQUIRED)
 +find_dependency(unofficial-pcre REQUIRED)
 +if(Poco_FIND_REQUIRED_XML)
-+    find_dependency(EXPAT REQUIRED)
++    find_dependency(expat CONFIG REQUIRED)
 +endif()
 +
  set(_Poco_FIND_PARTS_REQUIRED)
