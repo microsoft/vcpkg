@@ -111,7 +111,7 @@ function(generate_native_file_config _config) #https://mesonbuild.com/Native-env
     set(LIBPATH_${_config} "'${L_FLAG}${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib'")
     
     set(NATIVE_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CFLAGS_${_config}}")
+    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
     list(TRANSFORM MESON_CFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CFLAGS_${_config} PREPEND "'")
     #list(APPEND MESON_CFLAGS_${_config} "${LIBPATH_${_config}}")
@@ -119,7 +119,7 @@ function(generate_native_file_config _config) #https://mesonbuild.com/Native-env
     list(JOIN MESON_CFLAGS_${_config} ", " MESON_CFLAGS_${_config})
     string(REPLACE "'', " "" MESON_CFLAGS_${_config} "${MESON_CFLAGS_${_config}}")
     string(APPEND NATIVE_${_config} "c_args = [${MESON_CFLAGS_${_config}}]\n")
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXXFLAGS_${_config}}")
+    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
     list(TRANSFORM MESON_CXXFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CXXFLAGS_${_config} PREPEND "'")
     #list(APPEND MESON_CXXFLAGS_${_config} "${LIBPATH_${_config}}")
@@ -129,9 +129,9 @@ function(generate_native_file_config _config) #https://mesonbuild.com/Native-env
     string(APPEND NATIVE_${_config} "cpp_args = [${MESON_CXXFLAGS_${_config}}]\n")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_SHARED_LINKERFLAGS_${_config}}")
+        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${_config}}")
     else()
-        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKERFLAGS_${_config}}")
+        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${_config}}")
     endif()
     string(REGEX REPLACE "( |^)(-|/)" ";\\2" LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
     list(TRANSFORM LINKER_FLAGS_${_config} APPEND "'")
@@ -294,14 +294,14 @@ function(generate_cross_file_config _config) #https://mesonbuild.com/Native-envi
 
 
     set(NATIVE_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CFLAGS_${_config}}")
+    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
     list(TRANSFORM MESON_CFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CFLAGS_${_config} PREPEND "'")
     list(APPEND MESON_CFLAGS_${_config} "'-I\"${CURRENT_INSTALLED_DIR}/include\"'")
     list(JOIN MESON_CFLAGS_${_config} ", " MESON_CFLAGS_${_config})
     string(REPLACE "'', " "" MESON_CFLAGS_${_config} "${MESON_CFLAGS_${_config}}")
     string(APPEND NATIVE_${_config} "c_args = [${MESON_CFLAGS_${_config}}]\n")
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXXFLAGS_${_config}}")
+    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
     list(TRANSFORM MESON_CXXFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CXXFLAGS_${_config} PREPEND "'")
     list(APPEND MESON_CXXFLAGS_${_config} "'-I\"${CURRENT_INSTALLED_DIR}/include\"'")
@@ -310,9 +310,9 @@ function(generate_cross_file_config _config) #https://mesonbuild.com/Native-envi
     string(APPEND NATIVE_${_config} "cpp_args = [${MESON_CXXFLAGS_${_config}}]\n")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_SHARED_LINKERFLAGS_${_config}}")
+        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${_config}}")
     else()
-        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKERFLAGS_${_config}}")
+        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${_config}}")
     endif()
     string(REGEX REPLACE "( |^)(-|/)" ";\\2" LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
     list(TRANSFORM LINKER_FLAGS_${_config} APPEND "'")
