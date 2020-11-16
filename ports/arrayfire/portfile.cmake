@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arrayfire/arrayfire
-    REF 40f0283c1738e645f4ea8c4c6f4dd393ed38dd63 # v3.7.3
-    SHA512 6aa006ce57291d65b2458ed72e42529e047ece4c345c620aa34e44c8cf58b37920c1dd653e971063593f46890f97897cf4ecbc14af79f933144031508b85e0fa
+    REF 646bdeed1557abfdfe6735b9d20377c5b08a12da # v3.7.3
+    SHA512 8af15c25bc46235c0554dad963d94c36ae078e2ad7e65ccbbe101e9f06c33618b52207c0a26b8dd56b3d7c9e0032ea75d08f18a5644eadbf56fefe5952aff699
     HEAD_REF master
     PATCHES build.patch
 )
@@ -58,6 +58,9 @@ vcpkg_install_cmake()
 
 if (VCPKG_TARGET_IS_WINDOWS)
   vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/share/ArrayFire/cmake)
+  vcpkg_fixup_cmake_targets(CONFIG_PATH share/ArrayFire/cmake)
 endif()
 
 vcpkg_copy_pdbs()
