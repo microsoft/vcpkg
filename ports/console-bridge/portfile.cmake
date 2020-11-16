@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/console_bridge
@@ -22,6 +20,10 @@ else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/console_bridge/cmake TARGET_PATH share/console_bridge)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/console_bridge)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/console_bridge)
+endif()
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+    vcpkg_fixup_pkgconfig()
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
