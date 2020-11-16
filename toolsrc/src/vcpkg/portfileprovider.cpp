@@ -398,19 +398,21 @@ namespace vcpkg::PortFileProvider
                                   fs::u8string(port_directory));
     }
 
-    // BaselineProvider::BaselineProvider(const VcpkgPaths& paths) : paths(paths) { }
-
-    // Versions::VersionSpec BaselineProvider::get_baseline_version(const std::string& baseline,
-    //                                                              const std::string& port_name) const
+    // BaselineProvider::BaselineProvider(const VcpkgPaths& paths, const std::string& baseline)
+    //     : paths(paths), baseline(baseline)
     // {
-    //     const auto key = Strings::concat(port_name, "@", baseline);
-    //     auto it = baseline_versions.find(key);
+    // }
+
+    // Optional<Versions::VersionSpec> BaselineProvider::get_baseline_version(const std::string& port_name) const
+    // {
+    //     auto it = baseline_versions.find(port_name);
     //     if (it != baseline_versions.end())
     //     {
     //         return it->second;
     //     }
+    // }
 
-    //     // Search in DB
-    //     auto fetch_baseline_file = [](const std::string& baseline) -> fs::path { paths.checkout_file() };
+    // void BaselineProvider::load_baseline_file() const
+    // {
     // }
 }

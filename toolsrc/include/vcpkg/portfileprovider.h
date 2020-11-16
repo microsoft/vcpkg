@@ -38,14 +38,28 @@ namespace vcpkg::PortFileProvider
         mutable std::unordered_map<std::string, SourceControlFileLocation> cache;
     };
 
-    struct VersionedPortfileProvider : Util::ResourceBase
+    struct IVersionedPortfileProvider
+    {
+        virtual const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(
+            const std::string& port_spec) const = 0;
+
+        virtual ExpectedS<const SourceControlFileLocation&> get_control_file(
+            const vcpkg::Versions::VersionSpec& version_spec) const = 0;
+    };
+
+    struct IBaselineProvider
+    {
+        virtual Optional<Versions::VersionSpec> get_baseline_version(const std::string& port_name) const = 0;
+    };
+
+    struct VersionedPortfileProvider : IVersionedPortfileProvider, Util::ResourceBase
     {
         explicit VersionedPortfileProvider(const vcpkg::VcpkgPaths& paths);
 
-        const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(const std::string& port_spec) const;
+        const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(const std::string& port_spec) const override;
 
         ExpectedS<const SourceControlFileLocation&> get_control_file(
-            const vcpkg::Versions::VersionSpec& version_spec) const;
+            const vcpkg::Versions::VersionSpec& version_spec) const override;
 
     private:
         const vcpkg::VcpkgPaths& paths;
@@ -55,15 +69,18 @@ namespace vcpkg::PortFileProvider
         mutable std::unordered_map<Versions::VersionSpec, std::string, Versions::VersionSpecHasher> git_tree_cache;
     };
 
-    // struct BaselineProvider : Util::ResourceBase
+    // struct BaselineProvider : IBaselineProvider, Util::ResourceBase
     // {
-    //     explicit BaselineProvider(const vcpkg::VcpkgPaths& paths);
+    //     explicit BaselineProvider(const vcpkg::VcpkgPaths& paths, const std::string& baseline);
 
-    //     vcpkg::Versions::VersionSpec get_baseline_version(const std::string& baseline,
-    //                                                       const std::string& port_name) const;
+    //     Optional<Versions::VersionSpec> get_baseline_version(const std::string& port_name) const override;
 
     // private:
+    //     void load_baseline_file() const;
+
     //     const vcpkg::VcpkgPaths& paths;
-    //     mutable std::map<std::string, vcpkg::Versions::VersionSpec> baseline_versions;
+    //     const std::string& baseline;
+
+    //     mutable std::map<std::string, Versions::VersionSpec> baseline_versions;
     // };
 }

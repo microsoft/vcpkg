@@ -4,7 +4,6 @@
 
 #include <vcpkg/fwd/configuration.h>
 #include <vcpkg/fwd/registries.h>
-#include <vcpkg/fwd/system.process.h>
 #include <vcpkg/fwd/vcpkgcmdarguments.h>
 #include <vcpkg/fwd/vcpkgpaths.h>
 
@@ -137,9 +136,5 @@ namespace vcpkg
 
     private:
         std::unique_ptr<details::VcpkgPathsImpl> m_pimpl;
-
-        System::ExitCodeAndOutput run_git_command(const std::string& dot_git_dir,
-                                                  const std::string& work_tree,
-                                                  const std::string& cmd_line) const;
     };
 }
