@@ -1,12 +1,10 @@
 #include <vcpkg/base/system.debug.h>
-#include <vcpkg/base/system.process.h>
 
 #include <vcpkg/configuration.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
-#include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 
@@ -14,7 +12,7 @@ using namespace vcpkg;
 
 namespace
 {
-    vcpkg::Versions::VersionSpec extract_version_spec(const std::string& package_spec, const Json::Object& version_obj)
+    vcpkg::Versions::VersionSpec extract_version_spec(const std::string& port_name, const Json::Object& version_obj)
     {
         static const std::map<vcpkg::Versions::Scheme, std::string> version_schemes{
             {Versions::Scheme::Relaxed, "version"},
@@ -29,7 +27,7 @@ namespace
             if (const auto version_string = version_obj.get(kv_pair.second))
             {
                 return Versions::VersionSpec(
-                    package_spec, version_string->string().to_string(), port_version, kv_pair.first);
+                    port_name, version_string->string().to_string(), port_version, kv_pair.first);
             }
         }
 
@@ -311,15 +309,15 @@ namespace vcpkg::PortFileProvider
     VersionedPortfileProvider::VersionedPortfileProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) { }
 
     const std::vector<vcpkg::Versions::VersionSpec>& VersionedPortfileProvider::get_port_versions(
-        const std::string& package_spec) const
+        const std::string& port_name) const
     {
-        auto cache_it = versions_cache.find(package_spec);
+        auto cache_it = versions_cache.find(port_name);
         if (cache_it != versions_cache.end())
         {
             return cache_it->second;
         }
 
-        auto maybe_versions_json_path = get_versions_json_path(paths, package_spec);
+        auto maybe_versions_json_path = get_versions_json_path(paths, port_name);
         if (!maybe_versions_json_path.has_value())
         {
             // TODO: Handle db version not existing
@@ -341,18 +339,24 @@ namespace vcpkg::PortFileProvider
                 for (const auto& version : versions_array)
                 {
                     const auto& version_obj = version.object();
-                    Versions::VersionSpec spec = extract_version_spec(package_spec, version_obj);
+                    Versions::VersionSpec spec = extract_version_spec(port_name, version_obj);
 
-                    auto& package_versions = versions_cache[spec.package_spec];
+                    auto& package_versions = versions_cache[spec.port_name];
                     package_versions.push_back(spec);
 
                     auto git_tree = version_obj.get("git-tree")->string().to_string();
                     git_tree_cache.emplace(std::move(spec), git_tree);
                 }
             }
+            else
+            {
+                // TODO: Message error
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+            
         }
 
-        return versions_cache.at(package_spec);
+        return versions_cache.at(port_name);
     }
 
     ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
@@ -365,7 +369,7 @@ namespace vcpkg::PortFileProvider
         }
 
         // Pre-populate cache.
-        get_port_versions(version_spec.package_spec);
+        get_port_versions(version_spec.port_name);
 
         auto git_tree_cache_it = git_tree_cache.find(version_spec);
         if (git_tree_cache_it == git_tree_cache.end())
@@ -375,26 +379,26 @@ namespace vcpkg::PortFileProvider
         }
 
         const std::string git_tree = git_tree_cache_it->second;
-        const auto port_directory = paths.git_checkout_port(version_spec.package_spec, git_tree);
+        const auto port_directory = paths.git_checkout_port(version_spec.port_name, git_tree);
 
         auto maybe_control_file = Paragraphs::try_load_port(paths.get_filesystem(), port_directory);
         if (auto scf = maybe_control_file.get())
         {
-            if (scf->get()->core_paragraph->name == version_spec.package_spec)
+            if (scf->get()->core_paragraph->name == version_spec.port_name)
             {
                 return SourceControlFileLocation{std::move(*scf), std::move(port_directory)};
             }
             Checks::exit_with_message(VCPKG_LINE_INFO,
                                       "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
                                       fs::u8string(port_directory),
-                                      version_spec.package_spec,
+                                      version_spec.port_name,
                                       scf->get()->core_paragraph->name);
         }
 
         vcpkg::print_error_message(maybe_control_file.error());
         Checks::exit_with_message(VCPKG_LINE_INFO,
                                   "Error: Failed to load port %s from %s",
-                                  version_spec.package_spec,
+                                  version_spec.port_name,
                                   fs::u8string(port_directory));
     }
 

@@ -14,13 +14,13 @@ namespace vcpkg::Versions
 
     struct VersionSpec
     {
-        const std::string package_spec;
+        const std::string port_name;
         const VersionT version;
         const Scheme scheme;
 
-        VersionSpec(const std::string& package_spec, const VersionT& version, Scheme scheme);
+        VersionSpec(const std::string& port_name, const VersionT& version, Scheme scheme);
 
-        VersionSpec(const std::string& package_spec,
+        VersionSpec(const std::string& port_name,
                     const std::string& version_string,
                     int port_version,
                     Scheme scheme);
@@ -32,21 +32,5 @@ namespace vcpkg::Versions
     struct VersionSpecHasher
     {
         std::size_t operator()(const VersionSpec& key) const;
-    };
-
-    struct Constraint
-    {
-        enum class Type
-        {
-            None,
-            Minimum,
-            Exact
-        };
-
-        const VersionSpec version_spec;
-        const Type type;
-
-        Constraint(const VersionSpec& version_spec, Type type);
-        Constraint(const std::string& package_spec, const VersionT& version, Scheme scheme, Type type);
     };
 }
