@@ -1,7 +1,8 @@
 Source: coin
 Version: 4.0.0
+Port-Version: 1
 Description: A high-level 3D visualization library with Open Inventor 2.1 API
-Build-Depends: boost-assert, boost-config, boost-lexical-cast, boost-math, boost-smart-ptr, boost-static-assert
+Build-Depends: boost-assert, boost-config, boost-lexical-cast, boost-math, boost-smart-ptr, boost-static-assert, opengl-registry
 Homepage: https://github.com/coin3d/coin
 Default-Features: simage, zlib
 Supports: !(arm|arm64|uwp)

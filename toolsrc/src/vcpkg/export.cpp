@@ -13,6 +13,7 @@
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkglib.h>
 

@@ -1,5 +1,5 @@
 Source: civetweb
-Version: 1.12
+Version: 1.13
 Homepage: https://github.com/civetweb/civetweb
 Description: Easy to use, powerful, C/C++ embeddable web server.
 Supports: !uwp

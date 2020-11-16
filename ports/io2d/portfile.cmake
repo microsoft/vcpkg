@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cpp-io2d/P0267_RefImpl
-    REF add3c9792dcd3f08c497ae3adafb2a3b5b5fc338
-    SHA512 2727342fbb31523583374ab6df6ff7542e80b4f94319cf0f293e8c085711fa10ed312b4fc4b91391112b5e27eaaae519cb4141ea9d4108ffb5b7383a043b38b8
+    REF caa0ba0cb5a421a38bc26afaf3505bee206c44dd # accessed on 2020-09-14
+    SHA512 f8e5a708f6cbda913a0492a843e1502b8d3cc615a6abda50e850be944e1484ec9087b787c54cc25d513172a7d5ab789be41a761c97df94266df4d1bcf14db17c
     HEAD_REF master
     PATCHES
         fix-linux-build.patch

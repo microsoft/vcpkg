@@ -41,6 +41,4 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURR
 
 file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-vcpkg_test_cmake(PACKAGE_NAME unofficial-iconv)
-
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)

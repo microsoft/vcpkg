@@ -8,23 +8,18 @@ Sets up the environment to run other vcpkg CI steps in an Azure Pipelines job.
 .DESCRIPTION
 This script maps network drives from infrastructure and cleans out anything that
 might have been leftover from a previous run.
-
-.PARAMETER ForceAllPortsToRebuildKey
-A subdirectory / key to use to force a build without any previous run caching,
-if necessary.
 #>
 
-[CmdletBinding()]
-Param(
-    [string]$ForceAllPortsToRebuildKey = ''
-)
+if ([string]::IsNullOrWhiteSpace($env:StorageAccountName) -or  [string]::IsNullOrWhiteSpace($env:StorageAccountKey)) {
+    Write-Host 'No storage account and/or key set, skipping mount of W:\'
+} else {
+    $StorageAccountName = $env:StorageAccountName
+    $StorageAccountKey = $env:StorageAccountKey
 
-$StorageAccountName = $env:StorageAccountName
-$StorageAccountKey = $env:StorageAccountKey
-
-Write-Host 'Setting up archives mount'
-if (-Not (Test-Path W:)) {
-    net use W: "\\$StorageAccountName.file.core.windows.net\archives" /u:"AZURE\$StorageAccountName" $StorageAccountKey
+    Write-Host 'Setting up archives mount'
+    if (-Not (Test-Path W:)) {
+        net use W: "\\$StorageAccountName.file.core.windows.net\archives" /u:"AZURE\$StorageAccountName" $StorageAccountKey
+    }
 }
 
 Write-Host 'Creating downloads directory'

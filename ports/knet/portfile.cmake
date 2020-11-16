@@ -13,6 +13,7 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DKNET_BUILD_EXAMPLE:BOOL=OFF
         -DKNET_BUILD_TEST:BOOL=OFF

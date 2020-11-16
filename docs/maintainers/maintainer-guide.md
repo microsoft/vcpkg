@@ -128,25 +128,32 @@ A lib is considered conflicting if it does any of the following:
 
 Conflicting libs are typically by design and not considered a defect.  Because some build systems link against everything in the lib directory, these should be moved into a subdirectory named `manual-link`.
 
+## Manifests and CONTROL files
+
+When adding a new port, use the new manifest syntax for defining a port;
+you may also change over to manifests when modifying an existing port.
+You may do so easily by running the `vcpkg format-manifest` command, which will convert existing CONTROL
+files into manifest files. Do not convert CONTROL files that have not been modified.
+
 ## Versioning
 
-### Follow common conventions for the `Version:` field
+### Follow common conventions for the `"version"` field
 
-See our [CONTROL files document](control-files.md#version) for a full explanation of our conventions.
+See our [manifest files document](manifest-files.md#version-fields) for a full explanation of our conventions.
 
-### Update the `Version:` field in the `CONTROL` file of any modified ports
+### Update the `"port-version"` field in the manifest file of any modified ports
 
 Vcpkg uses this field to determine whether a given port is out-of-date and should be changed whenever the port's behavior changes.
 
-Our convention for this field is to append a `-N` to the upstream version when changes need to be made.
+Our convention is to use the `"port-version"` field for changes to the port that don't change the upstream version, and to reset the `"port-version"` back to zero when an update to the upstream version is made.
 
 For Example:
 
-- Zlib's package version is currently `1.2.1`.
+- Zlib's package version is currently `1.2.1`, with no explicit `"port-version"` (equivalent to a `"port-version"` of `0`).
 - You've discovered that the wrong copyright file has been deployed, and fixed that in the portfile.
-- You should update the `Version:` field in the control file to `1.2.1-1`.
+- You should update the `"port-version"` field in the manifest file to `1`.
 
-See our [CONTROL files document](control-files.md#version) for a full explanation of our conventions.
+See our [manifest files document](manifest-files.md#port-version) for a full explanation of our conventions.
 
 ## Patching
 
@@ -212,7 +219,7 @@ Finally, DLL files on Windows should never be renamed post-build because it brea
 
 ### Vcpkg internal code
 
-We require the c/c++ code inside vcpkg to follow the clang-format, if you change them. Please perform the following steps after modification:
+We require the C++ code inside vcpkg to follow the clang-format, if you change them. Please perform the following steps after modification:
 
 - Use Visual Studio:
 1. Configure your [clang-format tools](https://devblogs.microsoft.com/cppblog/clangformat-support-in-visual-studio-2017-15-7-preview-1/).
@@ -226,15 +233,13 @@ We require the c/c++ code inside vcpkg to follow the clang-format, if you change
 > LLVM_PATH/bin/clang-format.exe -style=file -i changed_file.cpp
 ```
 
-### Manifest
+### Manifests
 
-We require that the manifest file needs to be formatted, perform the following steps to solve this issue:
+We require that the manifest file be formatted. Use the following command to format all manifest files:
 
-1. Format all changed manifest files.
 ```cmd
-> vcpkg x-format-manifest --all
+> vcpkg format-manifest --all
 ```
-2. Commit changes to your branch.
 
 ## Useful implementation notes
 

@@ -1,5 +1,5 @@
 Source: libpmemobj-cpp
-Version: 1.10
+Version: 1.11
 Homepage: https://github.com/pmem/libpmemobj-cpp
 Description: C++ bindings for libpmemobj (https://github.com/pmem/pmdk).
 

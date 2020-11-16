@@ -12,6 +12,7 @@ vcpkg_from_sourceforge(
       install-interface-include-directories.patch
       use-math-h-nan.patch
       fix_utils.patch
+      fix-pkg-config.patch
 )
 
 set(BUILD_with_wxwidgets OFF)

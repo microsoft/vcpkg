@@ -1,0 +1,107 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 53b41a3..84867f3 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -20,6 +20,9 @@ option(BC_USE_OPENMP "Build with OpenMP support" ON)
+ 
+ option(ENABLE_CODE_ANALYSIS "Use Static Code Analysis on build" OFF)
+ 
++# Includes the functions for loading/saving OpenEXR files at runtime
++option(ENABLE_OPENEXR_SUPPORT "Build with OpenEXR support" OFF)
++
+ set(CMAKE_CXX_STANDARD 14)
+ set(CMAKE_CXX_STANDARD_REQUIRED ON)
+ set(CMAKE_CXX_EXTENSIONS OFF)
+@@ -67,6 +70,12 @@ endif()
+ if(BUILD_DX12)
+    set(LIBRARY_SOURCES ${LIBRARY_SOURCES} DirectXTex/DirectXTexD3D12.cpp)
+ endif()
++if(ENABLE_OPENEXR_SUPPORT)
++    set(LIBRARY_SOURCES
++        ${LIBRARY_SOURCES}
++        DirectXTex/DirectXTexEXR.h
++        DirectXTex/DirectXTexEXR.cpp)
++endif()
+ 
+ add_library(${PROJECT_NAME} STATIC ${LIBRARY_SOURCES} DirectXTex/Shaders/Compiled/BC6HEncode_EncodeBlockCS.inc)
+ 
+@@ -82,6 +91,10 @@ add_custom_command(
+ source_group(${PROJECT_NAME} REGULAR_EXPRESSION DirectXTex/*.*)
+ 
+ target_include_directories(${PROJECT_NAME} PUBLIC DirectXTex)
++if(ENABLE_OPENEXR_SUPPORT)
++    find_package(openexr REQUIRED)
++    target_include_directories(${PROJECT_NAME} PRIVATE ${OPENEXR_INCLUDE_DIRS}/OpenEXR)
++endif()
+ 
+ if (${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.16")
+     target_precompile_headers(${PROJECT_NAME} PRIVATE DirectXTex/DirectXTexP.h)
+@@ -116,6 +129,13 @@ add_executable(texdiag Texdiag/texdiag.cpp)
+ target_link_libraries(texdiag ${PROJECT_NAME} version.lib)
+ source_group(texdiag REGULAR_EXPRESSION Texdiag/*.*)
+ 
++if(ENABLE_OPENEXR_SUPPORT)
++    target_link_libraries(${PROJECT_NAME} ${OPENEXR_ILMIMF_LIBRARY})
++    target_link_libraries(texassemble ${OPENEXR_ILMIMF_LIBRARY})
++    target_link_libraries(texconv ${OPENEXR_ILMIMF_LIBRARY})
++    target_link_libraries(texdiag ${OPENEXR_ILMIMF_LIBRARY})
++endif()
++
+ if(MSVC)
+     target_compile_options(${PROJECT_NAME} PRIVATE /fp:fast)
+     target_compile_options(texassemble PRIVATE /fp:fast)
+@@ -140,6 +160,12 @@ if ( CMAKE_CXX_COMPILER_ID MATCHES "Clang" )
+     target_compile_options(texassemble PRIVATE ${WarningsEXE})
+     target_compile_options(texconv PRIVATE ${WarningsEXE})
+     target_compile_options(texdiag PRIVATE ${WarningsEXE} "-Wno-double-promotion" )
++
++    if(ENABLE_OPENEXR_SUPPORT)
++        target_compile_options(texassemble PRIVATE -DUSE_OPENEXR)
++        target_compile_options(texconv PRIVATE -DUSE_OPENEXR)
++        target_compile_options(texdiag PRIVATE -DUSE_OPENEXR)
++    endif()
+ endif()
+ if ( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
+     target_compile_options(${PROJECT_NAME} PRIVATE /permissive- /JMC- /Zc:__cplusplus)
+@@ -167,6 +193,12 @@ if ( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
+         target_compile_options(texconv PRIVATE /openmp /Zc:twoPhase-)
+     endif()
+ 
++    if(ENABLE_OPENEXR_SUPPORT)
++        target_compile_options(texassemble PRIVATE /D "USE_OPENEXR")
++        target_compile_options(texconv PRIVATE /D "USE_OPENEXR")
++        target_compile_options(texdiag PRIVATE /D "USE_OPENEXR")
++    endif()
++
+     set(WarningsEXE "/wd4061" "/wd4062" "/wd4365" "/wd4668" "/wd4710" "/wd4820" "/wd5039" "/wd5045" "/wd5219")
+     target_compile_options(texassemble PRIVATE ${WarningsEXE})
+     target_compile_options(texconv PRIVATE ${WarningsEXE})
+diff --git a/DirectXTex/DirectXTexEXR.cpp b/DirectXTex/DirectXTexEXR.cpp
+index 0cfd4db..7a6e70c 100644
+--- a/DirectXTex/DirectXTexEXR.cpp
++++ b/DirectXTex/DirectXTexEXR.cpp
+@@ -8,7 +8,7 @@
+ //--------------------------------------------------------------------------------------
+ 
+ //Uncomment if you add DirectXTexEXR to your copy of the DirectXTex library
+-//#include "DirectXTexP.h"
++#include "DirectXTexP.h"
+ 
+ #include "DirectXTexEXR.h"
+ 
+@@ -38,6 +38,7 @@
+ using PackedVector::XMHALF4;
+ 
+ // Comment out this first anonymous namespace if you add the include of DirectXTexP.h above
++#if 0
+ namespace
+ {
+     struct handle_closer { void operator()(HANDLE h) { assert(h != INVALID_HANDLE_VALUE); if (h) CloseHandle(h); } };
+@@ -70,6 +76,7 @@
+         HANDLE m_handle;
+     };
+ }
++#endif
+ 
+ namespace
+ {

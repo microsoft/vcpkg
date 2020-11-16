@@ -1,0 +1,11 @@
+diff --git a/tensorflow/core/distributed_runtime/remote_device.cc b/tensorflow/core/distributed_runtime/remote_device.cc
+--- a/tensorflow/core/distributed_runtime/remote_device.cc
++++ b/tensorflow/core/distributed_runtime/remote_device.cc
+@@ -45,6 +45,7 @@
+   ResourceMgr* resource_manager() override {
+     LOG(FATAL) << "Accessing the resource manager of a remote device is not "
+                << "supported.";
++    std::abort();
+   }
+ 
+   bool IsLocal() const override { return false; }
