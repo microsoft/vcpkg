@@ -1,19 +1,17 @@
-set(VERSION "10.0.0")
+set(VERSION "11.0.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO llvm/llvm-project
-    REF llvmorg-10.0.0
-    SHA512 baa182d62fef1851836013ae8a1a00861ea89769778d67fb97b407a9de664e6c85da2af9c5b3f75d2bf34ff6b00004e531ca7e4b3115a26c0e61c575cf2303a0
+    REF 176249bd6732a8044d457092ed932768724a6f06
+    SHA512 f42d2418a6d62a864d6c376ad572746679ff06f728d9b5e59a7c274ba90e88442424302bfca0f8371cee60f5cb146c0f974c81c8c592ad3b7aa006bf4609a7b3
     HEAD_REF master
     PATCHES
-        0001-allow-to-use-commas.patch
-        0002-fix-install-paths.patch
-        0003-fix-vs2019-v16.6.patch
-        0004-fix-dr-1734.patch
-        0005-fix-tools-path.patch
+        0001-fix-install-paths.patch
+        0002-fix-dr-1734.patch
+        0003-fix-tools-path.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -106,11 +104,6 @@ foreach(llvm_target IN LISTS known_llvm_targets)
     endif()
 endforeach()
 
-# Use comma-separated string instead of semicolon-separated string.
-# See https://github.com/microsoft/vcpkg/issues/4320
-string(REPLACE ";" "," LLVM_ENABLE_PROJECTS "${LLVM_ENABLE_PROJECTS}")
-string(REPLACE ";" "," LLVM_TARGETS_TO_BUILD "${LLVM_TARGETS_TO_BUILD}")
-
 vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_configure_cmake(
@@ -131,8 +124,8 @@ vcpkg_configure_cmake(
         # LLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON disables this error.
         # See https://developercommunity.visualstudio.com/content/problem/845933/miscompile-boolean-condition-deduced-to-be-always.html
         -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON
-        -DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}
-        -DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}
+        "-DLLVM_ENABLE_PROJECTS=${LLVM_ENABLE_PROJECTS}"
+        "-DLLVM_TARGETS_TO_BUILD=${LLVM_TARGETS_TO_BUILD}"
         -DPACKAGE_VERSION=${VERSION}
         -DPYTHON_EXECUTABLE=${PYTHON3}
         # Limit the maximum number of concurrent link jobs to 1. This should fix low amount of memory issue for link.
