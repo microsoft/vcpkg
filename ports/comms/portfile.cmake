@@ -2,9 +2,9 @@
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO mathisloge/comms_champion
-    REF v3.1.1
-    SHA512 167838aec1d42ce60e373aaa1c3b3f0093735e54b80c12229624fa5617b713462609b46585dbe9a1637404e88bd051eda2e619d21bff60056693e79dd9e53878
+    REPO commschamp/comms_champion
+    REF v3.1.2
+    SHA512 0610997fde77f3b244693a676323fbb63a411504e6cc9bd6faa03bfe7a8a17882a55c6114637d34f4dd88c55e07a1ca71b19a86042e7167ae15684c14260fa54
     HEAD_REF master
 )
 

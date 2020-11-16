@@ -561,9 +561,9 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
-    static LintStatus check_no_dlls_present(const std::vector<fs::path>& dlls)
+    static LintStatus check_no_dlls_present(const Build::BuildPolicies& policies, const std::vector<fs::path>& dlls)
     {
-        if (dlls.empty())
+        if (dlls.empty() || policies.is_enabled(BuildPolicy::DLLS_IN_STATIC_LIBRARY))
         {
             return LintStatus::SUCCESS;
         }
@@ -628,9 +628,12 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
-    static LintStatus check_bin_folders_are_not_present_in_static_build(const Files::Filesystem& fs,
+    static LintStatus check_bin_folders_are_not_present_in_static_build(const Build::BuildPolicies& policies,
+                                                                        const Files::Filesystem& fs,
                                                                         const fs::path& package_dir)
     {
+        if (policies.is_enabled(BuildPolicy::DLLS_IN_STATIC_LIBRARY)) return LintStatus::SUCCESS;
+
         const fs::path bin = package_dir / "bin";
         const fs::path debug_bin = package_dir / "debug" / "bin";
 
@@ -922,9 +925,9 @@ namespace vcpkg::PostBuildLint
             {
                 auto dlls = release_dlls;
                 dlls.insert(dlls.end(), debug_dlls.begin(), debug_dlls.end());
-                error_count += check_no_dlls_present(dlls);
+                error_count += check_no_dlls_present(build_info.policies, dlls);
 
-                error_count += check_bin_folders_are_not_present_in_static_build(fs, package_dir);
+                error_count += check_bin_folders_are_not_present_in_static_build(build_info.policies, fs, package_dir);
 
                 if (!toolset.dumpbin.empty() && !build_info.policies.is_enabled(BuildPolicy::SKIP_DUMPBIN_CHECKS))
                 {

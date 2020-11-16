@@ -33,4 +33,14 @@ namespace vcpkg::Versions
     {
         std::size_t operator()(const VersionSpec& key) const;
     };
+    
+    struct Constraint
+    {
+        enum class Type
+        {
+            None,
+            Minimum,
+            Exact
+        };
+    };
 }
