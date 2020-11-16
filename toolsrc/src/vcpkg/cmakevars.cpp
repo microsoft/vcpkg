@@ -100,11 +100,11 @@ namespace vcpkg::CMakeVars
                 {
                     if (triplet_contents.compare(cmake_current_list_dir_pos - 1, std::string::npos, R"(\)"))
                     {
-                        cmake_current_list_dir_pos += cmake_current_list_dir.length();
+                        cmake_current_list_dir_pos += cmake_current_list_dir.size();
                         continue;
                     }
                 }
-                triplet_contents.replace(cmake_current_list_dir_pos, cmake_current_list_dir.length(), path_to_triplet);
+                triplet_contents.replace(cmake_current_list_dir_pos, cmake_current_list_dir.size(), path_to_triplet);
                 cmake_current_list_dir_pos = triplet_contents.find(cmake_current_list_dir, cmake_current_list_dir_pos);
             }
 
