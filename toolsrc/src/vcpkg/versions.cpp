@@ -17,8 +17,7 @@ namespace vcpkg::Versions
 
     bool operator==(const VersionSpec& lhs, const VersionSpec& rhs)
     {
-        return std::tie(lhs.port_name, lhs.version, lhs.scheme) ==
-               std::tie(rhs.port_name, rhs.version, rhs.scheme);
+        return std::tie(lhs.port_name, lhs.version, lhs.scheme) == std::tie(rhs.port_name, rhs.version, rhs.scheme);
     }
 
     bool operator!=(const VersionSpec& lhs, const VersionSpec& rhs) { return !(lhs == rhs); }

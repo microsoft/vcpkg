@@ -20,10 +20,7 @@ namespace vcpkg::Versions
 
         VersionSpec(const std::string& port_name, const VersionT& version, Scheme scheme);
 
-        VersionSpec(const std::string& port_name,
-                    const std::string& version_string,
-                    int port_version,
-                    Scheme scheme);
+        VersionSpec(const std::string& port_name, const std::string& version_string, int port_version, Scheme scheme);
 
         friend bool operator==(const VersionSpec& lhs, const VersionSpec& rhs);
         friend bool operator!=(const VersionSpec& lhs, const VersionSpec& rhs);
@@ -33,7 +30,7 @@ namespace vcpkg::Versions
     {
         std::size_t operator()(const VersionSpec& key) const;
     };
-    
+
     struct Constraint
     {
         enum class Type
