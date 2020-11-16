@@ -182,6 +182,10 @@ namespace vcpkg::PortFileProvider
             }
             if (auto p = maybe_port.get())
             {
+                auto maybe_error =
+                    p->source_control_file->check_against_feature_flags(p->source_location, paths.get_feature_flags());
+                if (maybe_error) return std::move(*maybe_error.get());
+
                 cache_it = cache.emplace(spec, std::move(*p)).first;
             }
         }
@@ -192,16 +196,6 @@ namespace vcpkg::PortFileProvider
         }
         else
         {
-            if (!paths.get_feature_flags().versions)
-            {
-                if (cache_it->second.source_control_file->core_paragraph->version_scheme != Versions::Scheme::String)
-                {
-                    return Strings::concat(
-                        "Port definition rejected because the `",
-                        VcpkgCmdArguments::VERSIONS_FEATURE,
-                        "` feature flag is disabled.\nThis can be fixed by using the \"version-string\" field.");
-                }
-            }
             return cache_it->second;
         }
     }
