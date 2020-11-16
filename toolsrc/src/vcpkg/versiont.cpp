@@ -19,6 +19,21 @@ namespace vcpkg
     }
     bool operator!=(const VersionT& left, const VersionT& right) { return !(left == right); }
 
+    bool VersionTMapLess::operator()(const VersionT& left, const VersionT& right) const
+    {
+        auto cmp = left.value.compare(right.value);
+        if (cmp < 0)
+        {
+            return true;
+        }
+        else if (cmp > 0)
+        {
+            return false;
+        }
+
+        return left.port_version < right.port_version;
+    }
+
     VersionDiff::VersionDiff() noexcept : left(), right() { }
     VersionDiff::VersionDiff(const VersionT& left, const VersionT& right) : left(left), right(right) { }
 
