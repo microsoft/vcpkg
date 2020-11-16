@@ -181,3 +181,17 @@ diff --git a/tensorflow/BUILD b/tensorflow/BUILD
      ] + if_ngraph(["@ngraph_tf//:ngraph_tf"]),
  )
  
+
+
+diff --git a/third_party/com_google_absl.BUILD b/third_party/com_google_absl.BUILD
+--- a/third_party/com_google_absl.BUILD
++++ b/third_party/com_google_absl.BUILD
+@@ -3,3 +3,8 @@
+ licenses(["notice"])  # Apache
+
+ exports_files(["LICENSE"])
++
++cc_library(
++    name = "strings",
++    deps = ["@patched_includes//:headers"],
++)
