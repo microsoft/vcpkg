@@ -13,19 +13,21 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
-    OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
+    OPTIONS
+        -DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
+    OPTIONS_DEBUG
+        -DINSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-libxml2 TARGET_PATH share/unofficial-libxml2)
 
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-endif()
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

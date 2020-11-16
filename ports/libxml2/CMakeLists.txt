@@ -107,15 +107,21 @@ if(INSTALL_HEADERS)
 
     set_target_properties(libxml2 PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 endif()
-target_include_directories(libxml2 PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/include include ${LIBLZMA_INCLUDE_DIRS})
-target_link_libraries(libxml2 PRIVATE
+target_include_directories(libxml2 PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>;
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>;
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>;
+    $<BUILD_INTERFACE:${LIBLZMA_INCLUDE_DIRS}>
+    $<INSTALL_INTERFACE:include>
+)
+target_link_libraries(libxml2 PUBLIC
     unofficial::iconv::libcharset unofficial::iconv::libiconv
     ZLIB::ZLIB
     ${LIBLZMA_LIBRARIES}
 )
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     target_include_directories(libxml2 PRIVATE win32/vc10)
-    target_link_libraries(libxml2 PRIVATE
+    target_link_libraries(libxml2 PUBLIC
         wsock32.lib
         ws2_32.lib
     )
@@ -145,11 +151,24 @@ if(INSTALL_HEADERS)
 endif()
 
 install(TARGETS libxml2
+    EXPORT unofficial-libxml2-targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     ${TARGET_INSTALL_OPTIONS}
 )
+
+install(EXPORT unofficial-libxml2-targets DESTINATION share/unofficial-libxml2)
+
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libxml2-config.cmake"
+[[include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
+find_dependency(unofficial-iconv)
+find_dependency(LibLZMA)
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-libxml2-targets.cmake")
+]])
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libxml2-config.cmake DESTINATION share/unofficial-libxml2)
 
 # pkgconfig
 set(prefix ${CMAKE_INSTALL_PREFIX})
