@@ -137,9 +137,14 @@ diff --git a/third_party/systemlibs/nsync.BUILD b/third_party/systemlibs/nsync.B
 diff --git a/third_party/grpc/BUILD b/third_party/grpc/BUILD
 --- a/third_party/grpc/BUILD
 +++ b/third_party/grpc/BUILD
-@@ -0,0 +1,4 @@
+@@ -0,0 +1,9 @@
 +cc_library(
 +    name = "grpc++",
++    deps = ["@patched_includes//:headers"],
++)
++
++grpc_cc_library(
++    name = "alts_util",
 +    deps = ["@patched_includes//:headers"],
 +)
 
