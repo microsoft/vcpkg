@@ -154,7 +154,7 @@ diff --git a/tensorflow/BUILD b/tensorflow/BUILD
 +        "@patched_includes//:headers",
      ] + tf_additional_binary_deps(),
  )
-
+ 
 @@ -748,6 +749,7 @@
          "//tensorflow/c/eager:c_api_experimental",
          "//tensorflow/core:distributed_tensorflow_dependencies",
@@ -162,7 +162,7 @@ diff --git a/tensorflow/BUILD b/tensorflow/BUILD
 +        "@patched_includes//:headers",
      ],
  )
-
+ 
 @@ -782,6 +784,7 @@
          "//tensorflow/cc:scope",
          "//tensorflow/cc/profiler",
@@ -170,3 +170,4 @@ diff --git a/tensorflow/BUILD b/tensorflow/BUILD
 +        "@patched_includes//:headers",
      ] + if_ngraph(["@ngraph_tf//:ngraph_tf"]),
  )
+ 
