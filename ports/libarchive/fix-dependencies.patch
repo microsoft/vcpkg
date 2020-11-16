@@ -68,7 +68,7 @@ index 39b5333..8164d8f 100644
    #
    # TODO: test for static library.
    #
-@@ -586,25 +566,19 @@ IF(ENABLE_ZSTD)
+@@ -586,25 +566,20 @@ IF(ENABLE_ZSTD)
      SET(ZSTD_FIND_QUIETLY TRUE)
    ENDIF (ZSTD_INCLUDE_DIR)
  
@@ -93,13 +93,14 @@ index 39b5333..8164d8f 100644
 -  # TODO: test for static library.
 -  #
 -  CMAKE_POP_CHECK_STATE()
-+  IF(BUILD_SHARED_LIBS)
++  SET(HAVE_LIBZSTD 1)
++  IF(TARGET zstd::libzstd_shared)
 +  LIST(APPEND ADDITIONAL_LIBS zstd::libzstd_shared)
 +  SET(CMAKE_REQUIRED_LIBRARIES zstd::libzstd_shared)
-+  ELSE(BUILD_SHARED_LIBS)
++  ELSE(TARGET zstd::libzstd_shared)
 +  LIST(APPEND ADDITIONAL_LIBS zstd::libzstd_static)
 +  SET(CMAKE_REQUIRED_LIBRARIES zstd::libzstd_static)  
-+  ENDIF(BUILD_SHARED_LIBS)
++  ENDIF(TARGET zstd::libzstd_shared)
  ENDIF(ZSTD_FOUND)
  MARK_AS_ADVANCED(CLEAR ZSTD_INCLUDE_DIR)
  MARK_AS_ADVANCED(CLEAR ZSTD_LIBRARY)
