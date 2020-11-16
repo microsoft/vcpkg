@@ -1,4 +1,0 @@
-The package libxml2 is compatible with built-in CMake targets:
-
-    find_package(libxml2 REQUIRED)
-    target_link_libraries(main PRIVATE ${LIBXML2_LIBRARIES})

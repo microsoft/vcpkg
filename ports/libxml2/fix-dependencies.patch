@@ -1,0 +1,159 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c918125..763590b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -21,12 +21,24 @@ set(LIBXML_VERSION_STRING "${LIBXML_VERSION}")
+ set(LIBXML_VERSION_EXTRA "")
+ set(LIBXML_VERSION_NUMBER ${LIBXML_VERSION})
+ 
+-find_package(Iconv)
+-find_package(ICU)
+-find_package(LibLZMA)
+-find_package(Python COMPONENTS Interpreter Development)
+-find_package(Threads)
+-find_package(ZLIB)
++if (LIBXML2_WITH_ICONV)
++find_package(unofficial-iconv CONFIG REQUIRED)
++endif()
++if (LIBXML2_WITH_ICU)
++find_package(ICU REQUIRED)
++endif()
++if (LIBXML2_WITH_LZMA)
++find_package(LibLZMA CONFIG REQUIRED)
++endif()
++if (LIBXML2_WITH_PYTHON)
++find_package(Python COMPONENTS Interpreter Development REQUIRED)
++endif()
++if (LIBXML2_WITH_THREADS)
++find_package(Threads REQUIRED)
++endif()
++if (LIBXML2_WITH_ZLIB)
++find_package(ZLIB REQUIRED)
++endif()
+ 
+ option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+ set(LIBXML2_WITH_AUTOMATA ON)
+@@ -39,27 +51,9 @@ option(LIBXML2_WITH_FTP "Add the FTP support" ON)
+ option(LIBXML2_WITH_HTML "Add the HTML support" ON)
+ option(LIBXML2_WITH_HTTP "Add the HTTP support" ON)
+ 
+-if(Iconv_FOUND)
+-	option(LIBXML2_WITH_ICONV "Add ICONV support" ON)
+-else()
+-	set(LIBXML2_WITH_ICONV OFF)
+-endif()
+-
+-if(ICU_FOUND)
+-	option(LIBXML2_WITH_ICU "Add ICU support" OFF)
+-else()
+-	set(LIBXML2_WITH_ICU OFF)
+-endif()
+-
+ option(LIBXML2_WITH_ISO8859X "Add ISO8859X support if no iconv" ON)
+ option(LIBXML2_WITH_LEGACY "Add deprecated APIs for compatibility" ON)
+ 
+-if(LIBLZMA_FOUND)
+-	option(LIBXML2_WITH_LZMA "Use liblzma" ON)
+-else()
+-	set(LIBXML2_WITH_LZMA OFF)
+-endif()
+-
+ option(LIBXML2_WITH_MEM_DEBUG "Add the memory debugging module" OFF)
+ option(LIBXML2_WITH_MODULES "Add the dynamic modules support" ON)
+ option(LIBXML2_WITH_OUTPUT "Add the serialization support" ON)
+@@ -82,12 +76,6 @@ option(LIBXML2_WITH_SCHEMAS "Add Relax-NG and Schemas support" ON)
+ option(LIBXML2_WITH_SCHEMATRON "Add Schematron support" ON)
+ option(LIBXML2_WITH_TESTS "Build tests" ON)
+ 
+-if(Threads_FOUND)
+-	option(LIBXML2_WITH_THREADS "Add multithread support" ON)
+-else()
+-	set(LIBXML2_WITH_THREADS OFF)
+-endif()
+-
+ option(LIBXML2_WITH_THREAD_ALLOC "Add per-thread memory" OFF)
+ option(LIBXML2_WITH_TREE "Add the DOM like tree manipulation APIs" ON)
+ set(LIBXML2_WITH_TRIO OFF)
+@@ -98,12 +86,6 @@ option(LIBXML2_WITH_XINCLUDE "Add the XInclude support" ON)
+ option(LIBXML2_WITH_XPATH "Add the XPATH support" ON)
+ option(LIBXML2_WITH_XPTR "Add the XPointer support" ON)
+ 
+-if(ZLIB_FOUND)
+-	option(LIBXML2_WITH_ZLIB "Use libz" ON)
+-else()
+-	set(LIBXML2_WITH_ZLIB OFF)
+-endif()
+-
+ set(LIBXML2_XMLCONF_WORKING_DIR ${CMAKE_CURRENT_BINARY_DIR} CACHE PATH "Working directory for XML Conformance Test Suite")
+ 
+ foreach(VARIABLE IN ITEMS WITH_AUTOMATA WITH_C14N WITH_CATALOG WITH_DEBUG WITH_DOCB WITH_EXPR WITH_FTP WITH_HTML WITH_HTTP WITH_ICONV WITH_ICU WITH_ISO8859X WITH_LEGACY WITH_LZMA WITH_MEM_DEBUG WITH_MODULES WITH_OUTPUT WITH_PATTERN WITH_PUSH WITH_READER WITH_REGEXPS WITH_RUN_DEBUG WITH_SAX1 WITH_SCHEMAS WITH_SCHEMATRON WITH_THREADS WITH_THREAD_ALLOC WITH_TREE WITH_TRIO WITH_UNICODE WITH_VALID WITH_WRITER WITH_XINCLUDE WITH_XPATH WITH_XPTR WITH_ZLIB)
+@@ -456,7 +438,7 @@ if(WIN32)
+ endif()
+ 
+ if(LIBXML2_WITH_ICONV)
+-	target_link_libraries(LibXml2 PUBLIC Iconv::Iconv)
++	target_link_libraries(LibXml2 PUBLIC unofficial::iconv::libiconv)
+ endif()
+ 
+ if(LIBXML2_WITH_ICU)
+@@ -655,10 +637,10 @@ if(LIBXML2_WITH_PYTHON)
+ 	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2.py DESTINATION ${LIBXML2_PYTHON_INSTALL_DIR} COMPONENT runtime)
+ endif()
+ 
+-install(FILES libxml.3 DESTINATION ${CMAKE_INSTALL_MANDIR}/man3 COMPONENT documentation)
+-install(FILES doc/xmlcatalog.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
+-install(FILES doc/xmllint.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
+-install(DIRECTORY doc/ DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/libxml2 COMPONENT documentation PATTERN Makefile.* EXCLUDE)
++install(FILES libxml.3 DESTINATION ${CMAKE_INSTALL_MANDIR}/libxml2/man3 COMPONENT documentation)
++install(FILES doc/xmlcatalog.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/libxml2/man1 COMPONENT documentation)
++install(FILES doc/xmllint.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/libxml2/man1 COMPONENT documentation)
++install(DIRECTORY doc/ DESTINATION ${CMAKE_INSTALL_DATADIR}/libxml2/doc/libxml2 COMPONENT documentation PATTERN Makefile.* EXCLUDE)
+ 
+ configure_package_config_file(
+ 	libxml2-config.cmake.cmake.in libxml2-config.cmake
+diff --git a/libxml2-config.cmake.cmake.in b/libxml2-config.cmake.cmake.in
+index 6e6fc7a..9bbe87f 100644
+--- a/libxml2-config.cmake.cmake.in
++++ b/libxml2-config.cmake.cmake.in
+@@ -56,33 +56,30 @@ select_library_location(LibXml2::LibXml2 LIBXML2)
+ include(CMakeFindDependencyMacro)
+ 
+ if(@LIBXML2_WITH_ICONV@)
+-  find_dependency(Iconv)
+-  list(APPEND LIBXML2_LIBRARIES    ${Iconv_LIBRARIES})
+-  list(APPEND LIBXML2_INCLUDE_DIRS ${Iconv_INCLUDE_DIRS})
++  find_dependency(unofficial-iconv CONFIG REQUIRED)
++  list(APPEND LIBXML2_LIBRARIES    unofficial::iconv::libiconv)
+ endif()
+ 
+ if(NOT @BUILD_SHARED_LIBS@)
+   if(@LIBXML2_WITH_THREADS@)
+-    find_dependency(Threads)
++    find_dependency(Threads REQUIRED)
+     list(APPEND LIBXML2_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
+   endif()
+ 
+   if(@LIBXML2_WITH_ICU@)
+-    find_dependency(ICU)
++    find_dependency(ICU REQUIRED)
+     list(APPEND LIBXML2_LIBRARIES    ${ICU_LIBRARIES})
+     list(APPEND LIBXML2_INCLUDE_DIRS ${ICU_INCLUDE_DIRS})
+   endif()
+ 
+   if(@LIBXML2_WITH_LZMA@)
+-    find_dependency(LibLZMA)
+-    list(APPEND LIBXML2_LIBRARIES    ${LIBLZMA_LIBRARIES})
+-    list(APPEND LIBXML2_INCLUDE_DIRS ${LIBLZMA_INCLUDE_DIRS})
++    find_dependency(LibLZMA CONFIG REQUIRED)
++    list(APPEND LIBXML2_LIBRARIES    LibLZMA::LibLZMA)
+   endif()
+ 
+   if(@LIBXML2_WITH_ZLIB@)
+-    find_dependency(ZLIB)
+-    list(APPEND LIBXML2_LIBRARIES    ${ZLIB_LIBRARIES})
+-    list(APPEND LIBXML2_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS})
++    find_dependency(ZLIB REQUIRED)
++    list(APPEND LIBXML2_LIBRARIES    ZLIB::ZLIB)
+   endif()
+ 
+   if(UNIX)
