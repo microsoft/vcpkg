@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         enable-uwp-builds.patch
+        fix_config_include.patch
 )
 
 vcpkg_configure_cmake(
@@ -108,5 +109,21 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+set(TOOLS xz xzdec)
+foreach(_tool IN LISTS TOOLS)
+    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        list(REMOVE_ITEM TOOLS ${_tool})
+    endif()
+endforeach()
+if(TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 file(INSTALL  ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
