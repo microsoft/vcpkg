@@ -137,7 +137,7 @@ diff --git a/third_party/systemlibs/nsync.BUILD b/third_party/systemlibs/nsync.B
 diff --git a/third_party/grpc/BUILD b/third_party/grpc/BUILD
 --- a/third_party/grpc/BUILD
 +++ b/third_party/grpc/BUILD
-@@ -0,0 +1,14 @@
+@@ -0,0 +1,19 @@
 +cc_library(
 +    name = "grpc++",
 +    deps = ["@patched_includes//:headers"],
@@ -150,6 +150,11 @@ diff --git a/third_party/grpc/BUILD b/third_party/grpc/BUILD
 +
 +grpc_cc_library(
 +    name = "alts_frame_protector",
++    deps = ["@patched_includes//:headers"],
++)
++
++grpc_cc_library(
++    name = "grpc_server_backward_compatibility",
 +    deps = ["@patched_includes//:headers"],
 +)
 
