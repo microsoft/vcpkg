@@ -64,6 +64,7 @@ namespace
             .string_arg("-o" + fs::u8string(dst))
             .string_arg("-y");
 #else
+        (void)paths;
         cmd.string_arg("unzip").string_arg("-qq").path_arg(archive_path).string_arg("-d" + fs::u8string(dst));
 #endif
         return System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
