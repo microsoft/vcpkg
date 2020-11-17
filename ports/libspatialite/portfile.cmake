@@ -15,10 +15,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
             fix-makefiles.patch
             fix-sources.patch
             fix-latin-literals.patch
+            fix-dependency-libxml2.patch
     )
 
     # fix most of the problems when spacebar is in the path
     set(CURRENT_INSTALLED_DIR "\"${CURRENT_INSTALLED_DIR}\"")
+    set(LIBXML2_INCLUDE_DIR "\"${CURRENT_INSTALLED_DIR}\"\\include\\libxml2")
 
     if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
         set(CL_FLAGS_DBG "/MDd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
@@ -26,14 +28,14 @@ if (VCPKG_TARGET_IS_WINDOWS)
         set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
         set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
         set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib")
-        set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib")
+        set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2d.lib")
     else()
         set(CL_FLAGS_DBG "/MTd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
         set(CL_FLAGS_REL "/MT /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
         set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib")
         set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib")
-        set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
-        set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
+        set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2s.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
+        set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2ds.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
     endif()
 
     set(LIBS_ALL_DBG
@@ -67,7 +69,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
         vcpkg_execute_required_process(
             COMMAND ${NMAKE} -f makefile.vc clean install
-            "INST_DIR=\"${INST_DIR_DBG}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
+            "INST_DIR=\"${INST_DIR_DBG}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} LIBXML2_INCLUDES=${LIBXML2_INCLUDE_DIR} "LINK_FLAGS=/debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
             WORKING_DIRECTORY ${SOURCE_PATH}
             LOGNAME nmake-build-${TARGET_TRIPLET}-debug
         )
@@ -147,7 +149,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
       LOGNAME config-${TARGET_TRIPLET}-rel
     )
     vcpkg_execute_required_process(
-      COMMAND "${SOURCE_PATH_RELEASE}/configure" --prefix=${OUT_PATH_RELEASE} "CFLAGS=-I${includedir} ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE} -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H" "LDFLAGS=-L${libdir}" "LIBS=-lpthread -ldl -lproj" "--with-geosconfig=${SOURCE_PATH_RELEASE}/geos-config" "LIBXML2_LIBS=-lxml2 -llzma" "LIBXML2_CFLAGS=${includedir}"
+      COMMAND "${SOURCE_PATH_RELEASE}/configure" --prefix=${OUT_PATH_RELEASE} "CFLAGS=-I${includedir} -I${includedir}\libxml2 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE} -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H" "LDFLAGS=-L${libdir}" "LIBS=-lpthread -ldl -lproj" "--with-geosconfig=${SOURCE_PATH_RELEASE}/geos-config" "LIBXML2_LIBS=-lxml2 -llzma" "LIBXML2_CFLAGS=${includedir}"
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME config-${TARGET_TRIPLET}-rel
     )
@@ -206,7 +208,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
       LOGNAME config-${TARGET_TRIPLET}-debug
     )
     vcpkg_execute_required_process(
-      COMMAND "${SOURCE_PATH_DEBUG}/configure" --prefix=${OUT_PATH_DEBUG}  "CFLAGS=-I${includedir} ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG} -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H" "LDFLAGS=-L${libdir}" "LIBS=-lpthread -ldl -lproj" "--with-geosconfig=${SOURCE_PATH_DEBUG}/geos-config" "LIBXML2_LIBS=-lxml2 -llzmad" "LIBXML2_CFLAGS=${includedir}"
+      COMMAND "${SOURCE_PATH_DEBUG}/configure" --prefix=${OUT_PATH_DEBUG}  "CFLAGS=-I${includedir} -I${includedir}\libxml2 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG} -DACCEPT_USE_OF_DEPRECATED_PROJ_API_H" "LDFLAGS=-L${libdir}" "LIBS=-lpthread -ldl -lproj" "--with-geosconfig=${SOURCE_PATH_DEBUG}/geos-config" "LIBXML2_LIBS=-lxml2 -llzmad" "LIBXML2_CFLAGS=${includedir}"
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME config-${TARGET_TRIPLET}-debug
     )
