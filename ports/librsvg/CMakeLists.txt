@@ -4,7 +4,7 @@ project(librsvg C)
 find_package(unofficial-cairo CONFIG REQUIRED)
 find_package(unofficial-libcroco CONFIG REQUIRED)
 find_package(unofficial-glib CONFIG REQUIRED)
-find_package(LibXml2 REQUIRED)
+find_package(libxml2 CONFIG REQUIRED)
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
   find_library(PANGO_LIB pango-1.0)
   find_library(PANGO_CAIRO_LIB pangocairo-1.0)
@@ -100,6 +100,7 @@ add_library(rsvg-2.40 ${LIBRSVG_SOURCES})
 add_library(pixbufloader-svg ${PIXBUFLOADERSVG_SOURCES})
 
 target_compile_definitions(rsvg-2.40 PRIVATE -DRSVG_COMPILATION -D_CRT_SECURE_NO_WARNINGS -DSRCDIR="${CMAKE_CURRENT_SOURCE_DIR}")
+target_include_directories(rsvg-2.40 PRIVATE ${LIBXML2_INCLUDE_DIRS})
 
 target_include_directories(pixbufloader-svg PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_compile_definitions(pixbufloader-svg PRIVATE 
