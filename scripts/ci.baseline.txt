@@ -1018,6 +1018,13 @@ mozjpeg:x64-uwp            = skip
 mozjpeg:x64-windows        = skip
 mozjpeg:x64-windows-static = skip
 mozjpeg:x86-windows        = skip
+ijg-libjpeg:x64-linux          = skip
+ijg-libjpeg:x64-osx            = skip
+ijg-libjpeg:x64-uwp            = skip
+ijg-libjpeg:x64-windows        = skip
+ijg-libjpeg:x64-windows-static = skip
+ijg-libjpeg:x86-windows        = skip
+
 # mpir conflicts with gmp
 # see https://github.com/microsoft/vcpkg/issues/11756
 mpir:x86-windows=skip

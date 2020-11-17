@@ -1,4 +1,7 @@
 
+#
+# The port conflicts with 'libjpeg-turbo', 'mozjpeg'
+#
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
