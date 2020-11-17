@@ -6,9 +6,9 @@ Download and prepare an MSYS2 instance.
 ## Usage
 ```cmake
 vcpkg_acquire_msys(<MSYS_ROOT_VAR>
-    PACKAGES <package>...
-    [NO_DEFAULT_PACKAGES]
-    [DIRECT_PACKAGES <URL> <SHA512> <URL> <SHA512> ...]
+        PACKAGES <package>...
+        [NO_DEFAULT_PACKAGES]
+        [DIRECT_PACKAGES <URL> <SHA512> <URL> <SHA512> ...]
 )
 ```
 
@@ -30,13 +30,11 @@ The list of base packages includes: bash, coreutils, sed, grep, gawk, diffutils,
 A list of URL/SHA512 pairs to acquire in msys.
 
 This parameter can be used by a port to privately extend the list of msys packages to be acquired.
-The URLs can be found on the [msys2 website] and should be a direct archive link:
+The URLs can be found on the msys2 website[1] and should be a direct archive link:
 
-```
-    https://repo.msys2.org/mingw/i686/mingw-w64-i686-gettext-0.19.8.1-9-any.pkg.tar.zst
-```
+        https://repo.msys2.org/mingw/i686/mingw-w64-i686-gettext-0.19.8.1-9-any.pkg.tar.zst
 
-[msys2 website]: https://packages.msys2.org/search
+[1] https://packages.msys2.org/search
 
 ## Notes
 A call to `vcpkg_acquire_msys` will usually be followed by a call to `bash.exe`:
@@ -45,9 +43,9 @@ vcpkg_acquire_msys(MSYS_ROOT)
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
 vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    LOGNAME build-${TARGET_TRIPLET}-rel
+        COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        LOGNAME build-${TARGET_TRIPLET}-rel
 )
 ```
 
@@ -187,7 +185,27 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     msys_package(
         URL "https://repo.msys2.org/msys/x86_64/libtool-2.4.6-9-x86_64.pkg.tar.xz"
         SHA512 b309799e5a9d248ef66eaf11a0bd21bf4e8b9bd5c677c627ec83fa760ce9f0b54ddf1b62cbb436e641fbbde71e3b61cb71ff541d866f8ca7717a3a0dbeb00ebf
-        DEPS grep sed coreutils
+        DEPS grep sed coreutils file 
+    )
+    msys_package(
+        URL "https://repo.msys2.org/msys/x86_64/file-5.39-1-x86_64.pkg.tar.zst"
+        SHA512 be51dd0f6143a2f34f2a3e7d412866eb12511f25daaf3a5478240537733a67d7797a3a55a8893e5638589c06bca5af20aed5ded7db0bf19fbf52b30fae08cadd
+        DEPS gcc-libs zlib libbz2
+    )
+    msys_package(
+        URL "https://repo.msys2.org/msys/x86_64/zlib-1.2.11-1-x86_64.pkg.tar.xz"
+        SHA512 b607da40d3388b440f2a09e154f21966cd55ad77e02d47805f78a9dee5de40226225bf0b8335fdfd4b83f25ead3098e9cb974d4f202f28827f8468e30e3b790d
+        DEPS gcc-libs
+    )
+    msys_package(
+        URL "https://repo.msys2.org/msys/x86_64/bzip2-1.0.8-2-x86_64.pkg.tar.xz"
+        SHA512 336f5b59eb9cf4e93b537a212509d84f72cd9b8a97bf8ac0596eff298f3c0979bdea6c605244d5913670b9d20b017e5ee327f1e606f546a88e177a03c589a636
+        DEPS gcc-libs
+    )
+    msys_package(
+        URL "https://repo.msys2.org/msys/x86_64/libbz2-1.0.8-2-x86_64.pkg.tar.xz"
+        SHA512 d128bd1792d0f5750e6a63a24db86a791e7ee457db8c0bef68d217099be4a6eef27c85caf6ad09b0bcd5b3cdac6fc0a2b9842cc58d381a4035505906cc4803ec
+        DEPS gcc-libs
     )
     msys_package(
         URL "https://repo.msys2.org/msys/x86_64/coreutils-8.32-1-x86_64.pkg.tar.xz"
@@ -233,6 +251,15 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
         URL "https://repo.msys2.org/msys/x86_64/gmp-6.2.0-1-x86_64.pkg.tar.xz"
         SHA512 1389a443e775bb255d905665dd577bef7ed71d51a8c24d118097f8119c08c4dfe67505e88ddd1e9a3764dd1d50ed8b84fa34abefa797d257e90586f0cbf54de8
     )
+    msys_package( 
+        URL "https://repo.msys2.org/msys/x86_64/xz-5.2.5-1-x86_64.pkg.tar.xz" # this seems to require immediate updating on version bumps. 
+        SHA512 99d092c3398277e47586cead103b41e023e9432911fb7bdeafb967b826f6a57d32e58afc94c8230dad5b5ec2aef4f10d61362a6d9e410a6645cf23f076736bba
+        DEPS liblzma libiconv gettext
+    )
+    msys_package(
+        URL "https://repo.msys2.org/msys/x86_64/liblzma-5.2.5-1-x86_64.pkg.tar.xz"
+        SHA512 8d5c04354fdc7309e73abce679a4369c0be3dc342de51cef9d2a932b7df6a961c8cb1f7e373b1b8b2be40343a95fbd57ac29ebef63d4a2074be1d865e28ca6ad
+    )
     msys_package(
         URL "https://repo.msys2.org/msys/x86_64/libreadline-8.0.004-1-x86_64.pkg.tar.xz"
         SHA512 42760bddedccc8d93507c1e3a7a81595dc6392b5e4319d24a85275eb04c30eb79078e4247eb2cdd00ff3884d932639130c89bf1b559310a17fa4858062491f97
@@ -273,6 +300,11 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
         SHA512 7306dec7859edc27d70a24ab4b396728481484a426c5aa2f7e9fed2635b3b25548b05b7d37a161a86a8edaa5922948bee8c99b1e8a078606e69ca48a433fe321
         DEPS libintl msys2-runtime
     )
+msys_package(
+        URL "https://repo.msys2.org/msys/x86_64/gettext-devel-0.19.8.1-1-x86_64.pkg.tar.xz"
+        SHA512 648f74c23e4f92145cdd0d45ff5285c2df34e855a9e75e5463dd6646967f8cf34a18ce357c6f498a4680e6d7b84e2d1697ba9deee84da8ea6bb14bbdb594ee22
+        DEPS gettext
+    )
     msys_package(
         URL "https://repo.msys2.org/msys/x86_64/gettext-0.19.8.1-1-x86_64.pkg.tar.xz"
         SHA512 c8c42d084c297746548963f7ec7a7df46241886f3e637e779811ee4a8fee6058f892082bb2658f6777cbffba2de4bcdfd68e846ba63c6a6552c9efb0c8c1de50
@@ -287,6 +319,11 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
         URL "https://repo.msys2.org/msys/x86_64/libasprintf-0.19.8.1-1-x86_64.pkg.tar.xz"
         SHA512 a2e8027b9bbee20f8cf60851130ca2af436641b1fb66054f8deba118da7ebecb1cd188224dcf08e4c5b7cde85b412efab058afef2358e843c9de8eb128ca448c
         DEPS gcc-libs
+    )
+    msys_package(
+        URL "https://repo.msys2.org/msys/x86_64/findutils-4.7.0-1-x86_64.pkg.tar.xz"
+        SHA512 fd09a24562b196ff252f4b5de86ed977280306a8c628792930812f146fcf7355f9d87434bbabe25e6cc17d8bd028f6bc68fc02e5bea83137a49cf5cc6f509e10
+        DEPS libintl libiconv
     )
     msys_package(
         URL "https://repo.msys2.org/msys/x86_64/libintl-0.19.8.1-1-x86_64.pkg.tar.xz"

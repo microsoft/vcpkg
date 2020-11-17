@@ -45,7 +45,12 @@ You can use the alias [`vcpkg_install_make()`](vcpkg_configure_make.md) function
 #]===]
 
 function(vcpkg_build_make)
+    if(NOT _VCPKG_CMAKE_VARS_FILE)
+        # vcpkg_build_make called without using vcpkg_configure_make before
+        vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
+    endif()
     include("${_VCPKG_CMAKE_VARS_FILE}")
+
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH" "")
 
@@ -120,6 +125,7 @@ function(vcpkg_build_make)
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE})
+
             if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
                 set(LINKER_FLAGS_${CMAKE_BUILDTYPE} "${VCPKG_DETECTED_STATIC_LINKERFLAGS_${CMAKE_BUILDTYPE}}")
             else() # dynamic
@@ -174,6 +180,11 @@ function(vcpkg_build_make)
                         WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                         LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
+            endif()
+
+            file(READ "${CURRENT_BUILDTREES_DIR}/${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}-out.log" LOGDATA) 
+            if(LOGDATA MATCHES "Warning: linker path does not have real file for library")
+                message(FATAL_ERROR "libtool could not find a file being linked against!")
             endif()
 
             if (_bc_ENABLE_INSTALL)
