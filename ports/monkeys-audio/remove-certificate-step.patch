@@ -1,0 +1,26 @@
+diff --git a/Source/Projects/VS2019/Console/Console.vcxproj b/Source/Projects/VS2019/Console/Console.vcxproj
+index 164608f..feeb163 100644
+--- a/Source/Projects/VS2019/Console/Console.vcxproj
++++ b/Source/Projects/VS2019/Console/Console.vcxproj
+@@ -180,10 +180,6 @@
+       <DataExecutionPrevention />
+       <TargetMachine>MachineX86</TargetMachine>
+     </Link>
+-    <PostBuildEvent>
+-      <Command>C:\MAC\Current\Source\Certificate\signtool.exe sign /t http://timestamp.digicert.com /f C:\MAC\Current\Source\Certificate\MAC2.crt /v "$(TargetPath)"
+-C:\MAC\Current\Source\Certificate\signtool.exe sign /f C:\MAC\Current\Source\Certificate\MAC2.crt /tr http://timestamp.comodoca.com /td sha256 /fd sha256 /a /as "$(TargetPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <Midl>
+@@ -273,10 +269,6 @@ C:\MAC\Current\Source\Certificate\signtool.exe sign /f C:\MAC\Current\Source\Cer
+       <DataExecutionPrevention />
+       <TargetMachine>MachineX64</TargetMachine>
+     </Link>
+-    <PostBuildEvent>
+-      <Command>C:\MAC\Current\Source\Certificate\signtool.exe sign /t http://timestamp.digicert.com /f C:\MAC\Current\Source\Certificate\MAC2.crt /v "$(TargetPath)"
+-C:\MAC\Current\Source\Certificate\signtool.exe sign /f C:\MAC\Current\Source\Certificate\MAC2.crt /tr http://timestamp.comodoca.com /td sha256 /fd sha256 /a /as "$(TargetPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\..\..\Console\Console.cpp">
