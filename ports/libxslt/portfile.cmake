@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-Fix-makefile.patch
         0002-Fix-lzma.patch
+        0003-Fix-libxml2.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -32,7 +33,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
     set(DEBUGMODE no)
     set(LIB_DIR ${CURRENT_INSTALLED_DIR}/lib)
-    set(INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include)
+    set(INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include/libxml2)
     set(INSTALL_DIR ${CURRENT_PACKAGES_DIR})
     file(TO_NATIVE_PATH "${LIB_DIR}" LIB_DIR)
     file(TO_NATIVE_PATH "${INCLUDE_DIR}" INCLUDE_DIR)
@@ -89,7 +90,7 @@ else()
         OPTIONS
             --with-crypto
             --with-plugins
-            --with-libxml-include-prefix=${CURRENT_INSTALLED_DIR}/include
+            --with-libxml-include-prefix=${CURRENT_INSTALLED_DIR}/include/libxml2
             --with-python=${PYTHON2_DIR}
         OPTIONS_DEBUG
             --with-mem-debug

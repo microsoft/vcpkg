@@ -1,0 +1,41 @@
+diff --git a/win32/Makefile.msvc b/win32/Makefile.msvc
+index 0bb2d8a..1bf3e70 100644
+--- a/win32/Makefile.msvc
++++ b/win32/Makefile.msvc
+@@ -63,7 +63,9 @@ LDFLAGS = $(LDFLAGS) /LIBPATH:$(BINDIR) /LIBPATH:$(LIBPREFIX)
+ LIBS = wsock32.lib libiconv.lib libcharset.lib
+ !if "$(DEBUG)" == "1"
+ LIBS = $(LIBS) zlibd.lib lzmad.lib
++XML2LIB = libxml2d.lib
+ !else
++XML2LIB = libxml2.lib
+ LIBS = $(LIBS) zlib.lib lzma.lib
+ !endif
+ 
+@@ -249,7 +251,7 @@ $(BINDIR)\$(XSLT_SO) : $(BINDIR) $(XSLT_OBJS) $(XSLT_INTDIR)\$(XSLT_DEF)
+ 	$(LD) $(LDFLAGS) /DLL \
+ 		/VERSION:$(LIBXSLT_MAJOR_VERSION).$(LIBXSLT_MINOR_VERSION) \
+ 		/IMPLIB:$(BINDIR)\$(XSLT_IMP) /OUT:$(BINDIR)\$(XSLT_SO) \
+-		$(XSLT_OBJS) $(LIBS) libxml2.lib
++		$(XSLT_OBJS) $(LIBS) $(XML2LIB)
+ 			@$(_VC_MANIFEST_EMBED_DLL)
+ 
+ #$(BINDIR)\$(XSLT_SO) : $(BINDIR) $(XSLT_OBJS) $(XSLT_INTDIR)\$(XSLT_DEF)
+@@ -295,7 +297,7 @@ $(BINDIR)\$(EXSLT_SO) : $(BINDIR) $(EXSLT_OBJS) $(EXSLT_INTDIR)\$(EXSLT_DEF) lib
+ 	$(LD) $(LDFLAGS) /DLL \
+ 		/VERSION:$(LIBEXSLT_MAJOR_VERSION).$(LIBEXSLT_MINOR_VERSION) \
+ 		/IMPLIB:$(BINDIR)\$(EXSLT_IMP) /OUT:$(BINDIR)\$(EXSLT_SO) \
+-		$(EXSLT_OBJS) $(XSLT_IMP) $(LIBS) libxml2.lib
++		$(EXSLT_OBJS) $(XSLT_IMP) $(LIBS) $(XML2LIB)
+ 			@$(_VC_MANIFEST_EMBED_DLL)
+ 
+ #$(BINDIR)\$(EXSLT_SO) : $(BINDIR) $(EXSLT_OBJS) $(EXSLT_INTDIR)\$(EXSLT_DEF) libxslt
+@@ -323,7 +325,7 @@ APPLIBS = $(LIBS) libxml2.lib
+ 	$(LD) $(LDFLAGS) /OUT:$@ $(XSLT_A) $(EXSLT_A) $(APPLIBS) $(UTILS_INTDIR)\$(<B).obj
+ 	@$(_VC_MANIFEST_EMBED_EXE)
+ !else
+-APPLIBS = $(LIBS) libxml2.lib
++APPLIBS = $(LIBS) $(XML2LIB)
+ {$(UTILS_SRCDIR)}.c{$(BINDIR)}.exe:
+ 	$(CC) $(CFLAGS) /Fo$(UTILS_INTDIR)\ /c $< 
+ 	$(LD) $(LDFLAGS) /OUT:$@ $(XSLT_IMP) $(EXSLT_IMP) $(APPLIBS) $(UTILS_INTDIR)\$(<B).obj
