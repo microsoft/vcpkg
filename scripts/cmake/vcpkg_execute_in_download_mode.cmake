@@ -27,9 +27,9 @@
 function(vcpkg_execute_in_download_mode)
   # parse parameters such that semicolons in options arguments to COMMAND don't get erased
   cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_in_download_mode
-                        "OUTPUT_QUIET;ERROR_QUIET;OUTPUT_STRIP_TRAILING_WHITESPACE;ERROR_STRIP_TRAILING_WHITESPACE"
-                        "WORKING_DIRECTORY;TIMEOUT;RESULT_VARIABLE;RESULTS_VARIABLE;OUTPUT_VARIABLE;ERROR_VARIABLE;INPUT_FILE;OUTPUT_FILE;ERROR_FILE;ENCODING"
-                        "COMMAND")
+    "OUTPUT_QUIET;ERROR_QUIET;OUTPUT_STRIP_TRAILING_WHITESPACE;ERROR_STRIP_TRAILING_WHITESPACE"
+    "WORKING_DIRECTORY;TIMEOUT;RESULT_VARIABLE;RESULTS_VARIABLE;OUTPUT_VARIABLE;ERROR_VARIABLE;INPUT_FILE;OUTPUT_FILE;ERROR_FILE;ENCODING"
+    "COMMAND")
 
   # collect all other present parameters
   set(other_args "")

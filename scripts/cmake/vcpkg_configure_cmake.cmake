@@ -319,7 +319,7 @@ function(vcpkg_configure_cmake)
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
             file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
             vcpkg_execute_required_process(
-                COMMAND "${dbg_command}"
+                COMMAND ${dbg_command}
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
                 LOGNAME ${_csc_LOGNAME}-dbg
             )
@@ -329,7 +329,7 @@ function(vcpkg_configure_cmake)
             message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
             file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
             vcpkg_execute_required_process(
-                COMMAND "${rel_command}"
+                COMMAND ${rel_command}
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
                 LOGNAME ${_csc_LOGNAME}-rel
             )

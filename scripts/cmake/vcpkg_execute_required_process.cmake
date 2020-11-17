@@ -50,7 +50,11 @@ include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_execute_required_process)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE" "COMMAND")
+    cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_required_process
+        "ALLOW_IN_DOWNLOAD_MODE"
+        "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE"
+        "COMMAND"
+    )
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
 
@@ -80,13 +84,13 @@ Halting portfile execution.
 
     vcpkg_execute_in_download_mode(
         COMMAND ${vcpkg_execute_required_process_COMMAND}
-        OUTPUT_FILE ${LOG_OUT}
-        ERROR_FILE ${LOG_ERR}
+        OUTPUT_FILE "${LOG_OUT}"
+        ERROR_FILE "${LOG_ERR}"
         RESULT_VARIABLE error_code
-        WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY}
-        ${TIMEOUT_PARAM}
-        ${OUTPUT_VARIABLE_PARAM}
-        ${ERROR_VARIABLE_PARAM})
+        WORKING_DIRECTORY "${vcpkg_execute_required_process_WORKING_DIRECTORY}"
+        "${TIMEOUT_PARAM}"
+        "${OUTPUT_VARIABLE_PARAM}"
+        "${ERROR_VARIABLE_PARAM}")
     if(error_code)
         set(LOGS)
         file(READ "${LOG_OUT}" out_contents)
