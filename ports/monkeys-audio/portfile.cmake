@@ -16,7 +16,7 @@ vcpkg_extract_source_archive_ex(
     NO_REMOVE_ONE_LEVEL
     PATCHES 
 	    fix-project-config.patch
-	    remove-ceretificate-step.patch
+	    remove-certificate-step.patch
 )
 
 file(REMOVE_RECURSE
