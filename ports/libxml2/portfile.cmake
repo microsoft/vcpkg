@@ -4,7 +4,10 @@ vcpkg_from_github(
     REF 7c06d99e1f4f853e3c5b307c0dc79c8a32a09855
     SHA512 8879649231ab5288497b9ed56cfed3ffb288a689c739acfd7094ddefdd0e4c140c34ebc821d0ebf70322bddb8fb34b04af87ebae87ae2b235bf318945dcf9dc2
     HEAD_REF master
-    PATCHES fix-dependencies.patch
+    PATCHES
+        fix-uwp-build.patch
+        fix-docs-path.patch
+        fix-dependencies.patch
 )
 
 vcpkg_configure_cmake(

@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c918125..db46dc6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -422,6 +422,10 @@ if(LIBXML2_WITH_TRIO)
+ 	list(APPEND LIBXML2_SRCS trio.c triostr.c)
+ endif()
+ 
++if (MSVC)
++    add_definitions(-D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS -D_WINSOCK_DEPRECATED_NO_WARNINGS)
++endif()
++
+ add_library(LibXml2 ${LIBXML2_HDRS} ${LIBXML2_SRCS})
+ 
+ if(LIBXML2_WITH_THREADS)

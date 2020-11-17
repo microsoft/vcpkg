@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c918125..763590b 100644
+index 1686344..f59c98a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -21,12 +21,24 @@ set(LIBXML_VERSION_STRING "${LIBXML_VERSION}")
@@ -13,7 +13,7 @@ index c918125..763590b 100644
 -find_package(Threads)
 -find_package(ZLIB)
 +if (LIBXML2_WITH_ICONV)
-+find_package(unofficial-iconv CONFIG REQUIRED)
++find_package(Iconv REQUIRED)
 +endif()
 +if (LIBXML2_WITH_ICU)
 +find_package(ICU REQUIRED)
@@ -87,72 +87,35 @@ index c918125..763590b 100644
  set(LIBXML2_XMLCONF_WORKING_DIR ${CMAKE_CURRENT_BINARY_DIR} CACHE PATH "Working directory for XML Conformance Test Suite")
  
  foreach(VARIABLE IN ITEMS WITH_AUTOMATA WITH_C14N WITH_CATALOG WITH_DEBUG WITH_DOCB WITH_EXPR WITH_FTP WITH_HTML WITH_HTTP WITH_ICONV WITH_ICU WITH_ISO8859X WITH_LEGACY WITH_LZMA WITH_MEM_DEBUG WITH_MODULES WITH_OUTPUT WITH_PATTERN WITH_PUSH WITH_READER WITH_REGEXPS WITH_RUN_DEBUG WITH_SAX1 WITH_SCHEMAS WITH_SCHEMATRON WITH_THREADS WITH_THREAD_ALLOC WITH_TREE WITH_TRIO WITH_UNICODE WITH_VALID WITH_WRITER WITH_XINCLUDE WITH_XPATH WITH_XPTR WITH_ZLIB)
-@@ -456,7 +438,7 @@ if(WIN32)
- endif()
- 
- if(LIBXML2_WITH_ICONV)
--	target_link_libraries(LibXml2 PUBLIC Iconv::Iconv)
-+	target_link_libraries(LibXml2 PUBLIC unofficial::iconv::libiconv)
- endif()
- 
- if(LIBXML2_WITH_ICU)
-@@ -655,10 +637,10 @@ if(LIBXML2_WITH_PYTHON)
- 	install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libxml2.py DESTINATION ${LIBXML2_PYTHON_INSTALL_DIR} COMPONENT runtime)
- endif()
- 
--install(FILES libxml.3 DESTINATION ${CMAKE_INSTALL_MANDIR}/man3 COMPONENT documentation)
--install(FILES doc/xmlcatalog.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
--install(FILES doc/xmllint.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/man1 COMPONENT documentation)
--install(DIRECTORY doc/ DESTINATION ${CMAKE_INSTALL_DATADIR}/doc/libxml2 COMPONENT documentation PATTERN Makefile.* EXCLUDE)
-+install(FILES libxml.3 DESTINATION ${CMAKE_INSTALL_MANDIR}/libxml2/man3 COMPONENT documentation)
-+install(FILES doc/xmlcatalog.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/libxml2/man1 COMPONENT documentation)
-+install(FILES doc/xmllint.1 DESTINATION ${CMAKE_INSTALL_MANDIR}/libxml2/man1 COMPONENT documentation)
-+install(DIRECTORY doc/ DESTINATION ${CMAKE_INSTALL_DATADIR}/libxml2/doc/libxml2 COMPONENT documentation PATTERN Makefile.* EXCLUDE)
- 
- configure_package_config_file(
- 	libxml2-config.cmake.cmake.in libxml2-config.cmake
 diff --git a/libxml2-config.cmake.cmake.in b/libxml2-config.cmake.cmake.in
-index 6e6fc7a..9bbe87f 100644
+index 6e6fc7a..b8f4579 100644
 --- a/libxml2-config.cmake.cmake.in
 +++ b/libxml2-config.cmake.cmake.in
-@@ -56,33 +56,30 @@ select_library_location(LibXml2::LibXml2 LIBXML2)
- include(CMakeFindDependencyMacro)
+@@ -57,8 +57,7 @@ include(CMakeFindDependencyMacro)
  
  if(@LIBXML2_WITH_ICONV@)
--  find_dependency(Iconv)
+   find_dependency(Iconv)
 -  list(APPEND LIBXML2_LIBRARIES    ${Iconv_LIBRARIES})
 -  list(APPEND LIBXML2_INCLUDE_DIRS ${Iconv_INCLUDE_DIRS})
-+  find_dependency(unofficial-iconv CONFIG REQUIRED)
-+  list(APPEND LIBXML2_LIBRARIES    unofficial::iconv::libiconv)
++  list(APPEND LIBXML2_LIBRARIES    Iconv::Iconv)
  endif()
  
  if(NOT @BUILD_SHARED_LIBS@)
-   if(@LIBXML2_WITH_THREADS@)
--    find_dependency(Threads)
-+    find_dependency(Threads REQUIRED)
-     list(APPEND LIBXML2_LIBRARIES ${CMAKE_THREAD_LIBS_INIT})
-   endif()
- 
-   if(@LIBXML2_WITH_ICU@)
--    find_dependency(ICU)
-+    find_dependency(ICU REQUIRED)
-     list(APPEND LIBXML2_LIBRARIES    ${ICU_LIBRARIES})
-     list(APPEND LIBXML2_INCLUDE_DIRS ${ICU_INCLUDE_DIRS})
+@@ -74,15 +73,13 @@ if(NOT @BUILD_SHARED_LIBS@)
    endif()
  
    if(@LIBXML2_WITH_LZMA@)
 -    find_dependency(LibLZMA)
 -    list(APPEND LIBXML2_LIBRARIES    ${LIBLZMA_LIBRARIES})
 -    list(APPEND LIBXML2_INCLUDE_DIRS ${LIBLZMA_INCLUDE_DIRS})
-+    find_dependency(LibLZMA CONFIG REQUIRED)
++    find_dependency(LibLZMA CONFIG)
 +    list(APPEND LIBXML2_LIBRARIES    LibLZMA::LibLZMA)
    endif()
  
    if(@LIBXML2_WITH_ZLIB@)
--    find_dependency(ZLIB)
+     find_dependency(ZLIB)
 -    list(APPEND LIBXML2_LIBRARIES    ${ZLIB_LIBRARIES})
 -    list(APPEND LIBXML2_INCLUDE_DIRS ${ZLIB_INCLUDE_DIRS})
-+    find_dependency(ZLIB REQUIRED)
 +    list(APPEND LIBXML2_LIBRARIES    ZLIB::ZLIB)
    endif()
  
