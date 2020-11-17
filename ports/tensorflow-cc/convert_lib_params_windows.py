@@ -1,7 +1,7 @@
 import os
 import sys
 
-lib_suffix = sys.argv[1]
+lib_suffix = "" if len(sys.argv) < 2 else sys.argv[1]
 
 file_no = 1
 with open(f"tensorflow{lib_suffix}.dll-2.params", "r") as f_in:

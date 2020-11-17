@@ -1,7 +1,7 @@
 import sys
 
 version = sys.argv[1]
-lib_suffix = sys.argv[2]
+lib_suffix = "" if len(sys.argv) < 3 else sys.argv[2]
 
 with open(f"libtensorflow{lib_suffix}.a.{version}-2.params", "w") as f_out:
     parts = []
