@@ -28,32 +28,9 @@
 
 
 # Add new items alphabetically
-
-activemq-cpp:x64-linux=fail
-activemq-cpp:x64-osx=fail
-alac:arm-uwp=fail
-alac:x64-uwp=fail
-aliyun-oss-c-sdk:x64-linux=fail
-aliyun-oss-c-sdk:x64-osx=fail
-amqpcpp:arm-uwp=fail
-amqpcpp:x64-uwp=fail
-angelscript:arm64-windows=fail
-angelscript:arm-uwp=fail
-apr:arm-uwp=fail
-apr:x64-uwp=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
-argtable2:arm-uwp=fail
-argtable2:x64-uwp=fail
-arrow:arm64-windows=fail
-arrow:x86-windows=fail
-asiosdk:x64-linux=fail
-asiosdk:x64-osx=fail
-asiosdk:x64-uwp=fail
-asiosdk:arm64-windows=fail
-asiosdk:arm-uwp=fail
-asyncplusplus:arm-uwp=fail
-asyncplusplus:x64-uwp=fail
+
 atk:x64-osx=fail
 atk:arm64-windows=fail
 atlmfc:x64-linux=fail
