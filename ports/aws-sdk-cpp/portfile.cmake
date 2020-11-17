@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF e98e5732ec7319051f162f7314ae361c85d0a8c9 # 1.8.83
     SHA512 da540db60551be833ea0315dd93241f9740ab953ed5657c1c7a8c401ae52a4e75b116758420b0a8a4ebb79358dff8377f5e052b180b36f0af27a36003f28bd56
     HEAD_REF master
+    PATCHES patch-relocatable-rpath.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -16,6 +17,11 @@ include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
 string(REPLACE ";" "\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
 
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    set(rpath "@loader_path")
+else()
+    set(rpath "\$ORIGIN")
+endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
@@ -27,6 +33,7 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
         -DBUILD_ONLY=${BUILD_ONLY}
         -DBUILD_DEPS=OFF
+        -DCMAKE_INSTALL_RPATH=${rpath}
 )
 
 vcpkg_install_cmake()
