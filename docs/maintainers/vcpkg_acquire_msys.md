@@ -5,9 +5,9 @@ Download and prepare an MSYS2 instance.
 ## Usage
 ```cmake
 vcpkg_acquire_msys(<MSYS_ROOT_VAR>
-    PACKAGES <package>...
-    [NO_DEFAULT_PACKAGES]
-    [DIRECT_PACKAGES <URL> <SHA512> <URL> <SHA512> ...]
+        PACKAGES <package>...
+        [NO_DEFAULT_PACKAGES]
+        [DIRECT_PACKAGES <URL> <SHA512> <URL> <SHA512> ...]
 )
 ```
 
@@ -29,13 +29,11 @@ The list of base packages includes: bash, coreutils, sed, grep, gawk, diffutils,
 A list of URL/SHA512 pairs to acquire in msys.
 
 This parameter can be used by a port to privately extend the list of msys packages to be acquired.
-The URLs can be found on the [msys2 website] and should be a direct archive link:
+The URLs can be found on the msys2 website[1] and should be a direct archive link:
 
-```
-    https://repo.msys2.org/mingw/i686/mingw-w64-i686-gettext-0.19.8.1-9-any.pkg.tar.zst
-```
+        https://repo.msys2.org/mingw/i686/mingw-w64-i686-gettext-0.19.8.1-9-any.pkg.tar.zst
 
-[msys2 website]: https://packages.msys2.org/search
+[1] https://packages.msys2.org/search
 
 ## Notes
 A call to `vcpkg_acquire_msys` will usually be followed by a call to `bash.exe`:
@@ -44,9 +42,9 @@ vcpkg_acquire_msys(MSYS_ROOT)
 set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
 vcpkg_execute_required_process(
-    COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-    LOGNAME build-${TARGET_TRIPLET}-rel
+        COMMAND ${BASH} --noprofile --norc "${CMAKE_CURRENT_LIST_DIR}\\build.sh"
+        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        LOGNAME build-${TARGET_TRIPLET}-rel
 )
 ```
 
