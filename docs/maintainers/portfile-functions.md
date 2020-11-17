@@ -1,4 +1,4 @@
-<!-- Run regenerate.ps1 to extract documentation from scripts\cmake\*.cmake -->
+<!-- Run regenerate.ps1 to extract documentation from scripts/cmake/*.cmake -->
 
 # Portfile helper functions
 - [execute\_process](execute_process.md)
