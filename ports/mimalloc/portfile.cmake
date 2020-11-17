@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/mimalloc
-    REF 82684042be1be44d34caecc915fb51755278d843 # v1.6.1
-    SHA512 82477501a5fafa4df22c911039b74943275d0932404526692419b5c49d6ccfdd95c1c5a3689211db5cc2a845af039fda4892262b538ac7cdfb5bb35787dd355c
+    REF a9686d6ecf00e4467e772f7c0b4ef76a15f325f6  # v1.6.4
+    SHA512 a1bda1b31d1bb3a4680fec91f180a988cf5ff486dcb8848fefd9245907f7986e4c4f10ce33133a3d796a7409ba38328bd156c47eba4f19368a2226a43b1ad298
     HEAD_REF master
     PATCHES
         fix-cmake.patch
@@ -15,7 +15,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     secure      MI_SECURE
     override    MI_OVERRIDE
 )
-
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MI_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MI_BUILD_SHARED)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -28,6 +29,8 @@ vcpkg_configure_cmake(
         -DMI_USE_CXX=OFF
         -DMI_BUILD_TESTS=OFF
         ${FEATURE_OPTIONS}
+        -DMI_BUILD_STATIC=${MI_BUILD_STATIC}
+        -DMI_BUILD_SHARED=${MI_BUILD_SHARED}
 )
 
 vcpkg_install_cmake()

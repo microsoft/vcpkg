@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vcpkg/base/optional.h>
+
 #include <algorithm>
 #include <functional>
 #include <map>
@@ -63,7 +65,10 @@ namespace vcpkg::Util
     }
 
     template<class Range, class Func>
-    using FmapOut = std::remove_reference_t<decltype(std::declval<Func&>()(*std::declval<Range>().begin()))>;
+    using FmapRefOut = decltype(std::declval<Func&>()(*std::declval<Range>().begin()));
+
+    template<class Range, class Func>
+    using FmapOut = std::decay_t<FmapRefOut<Range, Func>>;
 
     template<class Range, class Func, class Out = FmapOut<Range, Func>>
     std::vector<Out> fmap(Range&& xs, Func&& f)
@@ -75,6 +80,28 @@ namespace vcpkg::Util
             ret.push_back(f(x));
 
         return ret;
+    }
+
+    template<class Range, class Proj, class Out = FmapRefOut<Range, Proj>>
+    Optional<Out> common_projection(Range&& input, Proj&& proj)
+    {
+        const auto last = input.end();
+        auto first = input.begin();
+        if (first == last)
+        {
+            return nullopt;
+        }
+
+        Out prototype = proj(*first);
+        while (++first != last)
+        {
+            if (prototype != proj(*first))
+            {
+                return nullopt;
+            }
+        }
+
+        return prototype;
     }
 
     template<class Cont, class Func>

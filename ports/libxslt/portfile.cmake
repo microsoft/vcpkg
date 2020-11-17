@@ -21,8 +21,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         prefix=@INSTALL_DIR@
         include=@INCLUDE_DIR@
         lib=@LIB_DIR@
-        bindir=$(PREFIX)\\tools\\${PORT}
-        sodir=$(PREFIX)\\bin\\
+        bindir=$(PREFIX)\\bin
+        sodir=$(PREFIX)\\bin
     )
     # Debug params
     if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
@@ -60,6 +60,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         OPTIONS rebuild
     )
     
+    vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
+    
     # The makefile builds both static and dynamic libraries, so remove the ones we don't want
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
@@ -75,8 +77,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/lib/libexslt${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
     endif()
 else()
-    vcpkg_find_acquire_program(PYTHON3)
-    get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
+    vcpkg_find_acquire_program(PYTHON2)
+    get_filename_component(PYTHON2_DIR ${PYTHON2} DIRECTORY)
     
     find_library(LibXml2_DEBUG_LIBRARIES libxml2 PATHS ${CURRENT_INSTALLED_DIR}/debug/lib REQUIRED)
     find_library(LibXml2_RELEASE_LIBRARIES libxml2 PATHS ${CURRENT_INSTALLED_DIR}/lib REQUIRED)
@@ -88,7 +90,7 @@ else()
             --with-crypto
             --with-plugins
             --with-libxml-include-prefix=${CURRENT_INSTALLED_DIR}/include
-            --with-python=${PYTHON3_DIR}
+            --with-python=${PYTHON2_DIR}
         OPTIONS_DEBUG
             --with-mem-debug
             --with-debug
@@ -103,16 +105,8 @@ else()
     )
     
     vcpkg_install_make()
-    #vcpkg_fixup_pkgconfig()?
+    vcpkg_fixup_pkgconfig()
     
-    if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
-        file(COPY ${CURRENT_PACKAGES_DIR}/bin/xslt-config DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
-    endif()
-    if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/xsltproc)
-        file(COPY ${CURRENT_PACKAGES_DIR}/bin/xsltproc DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
-    endif()
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(COPY ${CURRENT_PACKAGES_DIR}/lib/libxslt.so ${CURRENT_PACKAGES_DIR}/bin/)
     else()
@@ -143,9 +137,6 @@ endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h "${EXSLTEXPORTS_H}")
 
 # Remove tools and debug include directories
-#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 

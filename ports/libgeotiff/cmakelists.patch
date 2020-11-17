@@ -1,31 +1,24 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0c70973..617978c 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -190,22 +190,6 @@ IF(WITH_TIFF)
+diff --git a/libgeotiff/CMakeLists.txt b/libgeotiff/CMakeLists.txt
+index 43113fa..46331ad 100644
+--- a/libgeotiff/CMakeLists.txt
++++ b/libgeotiff/CMakeLists.txt
+@@ -172,6 +172,7 @@ IF(WITH_TIFF)
      endif ()
  
      IF(TIFF_FOUND)
--        # Confirm required API is available
--        INCLUDE(CheckFunctionExists)
--        SET(CMAKE_REQUIRED_LIBRARIES ${TIFF_LIBRARIES})
--
--        CHECK_FUNCTION_EXISTS(TIFFOpen HAVE_TIFFOPEN)
--        IF(NOT HAVE_TIFFOPEN)
--            SET(TIFF_FOUND) # ReSET to NOT found for TIFF library
--            MESSAGE(FATAL_ERROR "Failed to link with libtiff - TIFFOpen function not found")
--        ENDIF()
--
--        CHECK_FUNCTION_EXISTS(TIFFMergeFieldInfo HAVE_TIFFMERGEFIELDINFO)
--        IF(NOT HAVE_TIFFMERGEFIELDINFO)
--            SET(TIFF_FOUND) # ReSET to NOT found for TIFF library
--            MESSAGE(FATAL_ERROR "Failed to link with libtiff - TIFFMergeFieldInfo function not found. libtiff 3.6.0 Beta or later required. Please upgrade or use an older version of libgeotiff")
--        ENDIF()
--
++        IF (0)
+         # Confirm required API is available
+         INCLUDE(CheckFunctionExists)
+         SET(CMAKE_REQUIRED_LIBRARIES ${TIFF_LIBRARIES})
+@@ -187,6 +188,7 @@ IF(WITH_TIFF)
+             SET(TIFF_FOUND) # ReSET to NOT found for TIFF library
+             MESSAGE(FATAL_ERROR "Failed to link with libtiff - TIFFMergeFieldInfo function not found. libtiff 3.6.0 Beta or later required. Please upgrade or use an older version of libgeotiff")
+         ENDIF()
++        ENDIF()
+ 
          INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIR})
          ADD_DEFINITIONS(-DHAVE_TIFF=1)
-     ENDIF(TIFF_FOUND)
-@@ -354,11 +338,6 @@ INSTALL(FILES ${GEOTIFF_MAN_PAGES} DESTINATION share/man/man1)
+@@ -298,11 +300,6 @@ INSTALL(FILES ${GEOTIFF_MAN_PAGES} DESTINATION share/man/man1)
  # INSTALL(FILES ${GEOTIFF_LIB_HEADERS} DESTINATION ${GEOTIFF_INCLUDE_DIR})
  INSTALL(FILES ${GEOTIFF_LIB_HEADERS} DESTINATION include)
  
@@ -37,34 +30,10 @@ index 0c70973..617978c 100644
  ###############################################################################
  # Build libgeotiff library
  
-@@ -427,13 +406,9 @@ if (MSVC OR CMAKE_CONFIGURATION_TYPES)
-   set (CMAKE_DEBUG_POSTFIX _d)
- endif ()
- 
--ADD_LIBRARY(${GEOTIFF_ARCHIVE_TARGET} STATIC
--    ${GEOTIFF_LIB_SOURCES} ${GEOTIFF_LIB_CSV_SOURCES})
--SET_TARGET_PROPERTIES(${GEOTIFF_ARCHIVE_TARGET} PROPERTIES
--    OUTPUT_NAME ${GEOTIFF_LIB_NAME})
- 
- # Shared libgeotiff library
--ADD_LIBRARY(${GEOTIFF_LIBRARY_TARGET} SHARED
-+ADD_LIBRARY(${GEOTIFF_LIBRARY_TARGET}
-     ${GEOTIFF_LIB_SOURCES} ${GEOTIFF_LIB_CSV_SOURCES} ${XTIFF_SOURCES})
- 
- # Windows:
-@@ -478,7 +453,7 @@ TARGET_LINK_LIBRARIES(${GEOTIFF_LIBRARY_TARGET}
- #   LIBRARY DESTINATION ${GEOTIFF_LIB_DIR}
- #   ARCHIVE DESTINATION ${GEOTIFF_LIB_DIR})
- 
--INSTALL( TARGETS ${GEOTIFF_ARCHIVE_TARGET} ${GEOTIFF_LIBRARY_TARGET}
-+INSTALL( TARGETS ${GEOTIFF_LIBRARY_TARGET}
- 	 EXPORT depends
- 	 RUNTIME DESTINATION bin
-          LIBRARY DESTINATION lib
-diff --git a/bin/CMakeLists.txt b/bin/CMakeLists.txt
+diff --git a/libgeotiff/bin/CMakeLists.txt b/libgeotiff/bin/CMakeLists.txt
 index 7b12341..b6b1d0c 100644
---- a/bin/CMakeLists.txt
-+++ b/bin/CMakeLists.txt
+--- a/libgeotiff/bin/CMakeLists.txt
++++ b/libgeotiff/bin/CMakeLists.txt
 @@ -6,9 +6,6 @@
  #
  ###############################################################################
@@ -89,36 +58,26 @@ index 7b12341..b6b1d0c 100644
      ${GEOTIFF_LIBRARY_TARGET}
      ${JPEG_LIBRARIES}
      ${ZLIB_LIBRARIES})
-diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 47a2b00..ffbd004 100644
---- a/cmake/CMakeLists.txt
-+++ b/cmake/CMakeLists.txt
-@@ -6,13 +6,8 @@
+diff --git a/libgeotiff/cmake/CMakeLists.txt b/libgeotiff/cmake/CMakeLists.txt
+index 47a2b00..3809ba3 100644
+--- a/libgeotiff/cmake/CMakeLists.txt
++++ b/libgeotiff/cmake/CMakeLists.txt
+@@ -6,6 +6,7 @@
  # ${INSTALL_CMAKE_DIR} and @PROJECT_ROOT_DIR@ is the relative
  # path to the root from there.  (Note that the whole install tree can
  # be relocated.)
--if (NOT WIN32)
--  set (INSTALL_CMAKE_DIR "share/cmake/${PROJECT_NAME}")
--  set (PROJECT_ROOT_DIR "../../..")
--else ()
--  set (INSTALL_CMAKE_DIR "cmake")
--  set (PROJECT_ROOT_DIR "..")
--endif ()
++if (0)
+ if (NOT WIN32)
+   set (INSTALL_CMAKE_DIR "share/cmake/${PROJECT_NAME}")
+   set (PROJECT_ROOT_DIR "../../..")
+@@ -13,6 +14,10 @@ else ()
+   set (INSTALL_CMAKE_DIR "cmake")
+   set (PROJECT_ROOT_DIR "..")
+ endif ()
++else()
 +  set (INSTALL_CMAKE_DIR "share/${PROJECT_NAME}")
 +  set (PROJECT_ROOT_DIR "../..")
++endif()
  
  configure_file (project-config.cmake.in project-config.cmake @ONLY)
  configure_file (project-config-version.cmake.in
-diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
-index 6b5499f..e4ddd11 100644
---- a/cmake/project-config.cmake.in
-+++ b/cmake/project-config.cmake.in
-@@ -33,7 +33,7 @@ set (@PROJECT_NAME@_BINARY_DIRS "${_ROOT}/bin")
- message (STATUS "  include directory: \${@PROJECT_NAME@_INCLUDE_DIRS}")
- 
- set (@PROJECT_NAME@_SHARED_LIBRARIES @GEOTIFF_LIBRARY_TARGET@)
--set (@PROJECT_NAME@_STATIC_LIBRARIES @GEOTIFF_ARCHIVE_TARGET@)
-+set (@PROJECT_NAME@_STATIC_LIBRARIES @GEOTIFF_LIBRARY_TARGET@)
- # Read in the exported definition of the library
- include ("${_DIR}/@PROJECT_NAME_LOWER@-depends.cmake")
- 

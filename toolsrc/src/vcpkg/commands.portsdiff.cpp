@@ -8,6 +8,7 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::PortsDiff
@@ -83,7 +84,7 @@ namespace vcpkg::Commands::PortsDiff
         auto& fs = paths.get_filesystem();
         const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
         const fs::path dot_git_dir = paths.root / ".git";
-        const std::string ports_dir_name_as_string = fs::u8string(paths.ports.filename());
+        const std::string ports_dir_name_as_string = fs::u8string(paths.builtin_ports_directory().filename());
         const fs::path temp_checkout_path =
             paths.root / Strings::format("%s-%s", ports_dir_name_as_string, git_commit_id);
         fs.create_directory(temp_checkout_path, ec);
@@ -100,13 +101,13 @@ namespace vcpkg::Commands::PortsDiff
         System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
         System::cmd_execute_and_capture_output(Strings::format(R"("%s" reset)", fs::u8string(git_exe)),
                                                System::get_clean_environment());
-        const auto all_ports =
-            Paragraphs::load_all_ports(paths.get_filesystem(), temp_checkout_path / ports_dir_name_as_string);
+        const auto ports_at_commit =
+            Paragraphs::load_overlay_ports(paths, temp_checkout_path / ports_dir_name_as_string);
         std::map<std::string, VersionT> names_and_versions;
-        for (auto&& port : all_ports)
+        for (auto&& port : ports_at_commit)
         {
-            const auto& core_pgh = *port->core_paragraph;
-            names_and_versions.emplace(port->core_paragraph->name, VersionT(core_pgh.version, core_pgh.port_version));
+            const auto& core_pgh = *port.source_control_file->core_paragraph;
+            names_and_versions.emplace(core_pgh.name, VersionT(core_pgh.version, core_pgh.port_version));
         }
         fs.remove_all(temp_checkout_path, VCPKG_LINE_INFO);
         return names_and_versions;

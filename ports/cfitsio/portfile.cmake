@@ -1,38 +1,65 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio3410.tar.gz"
-    FILENAME "cfitsio3410.tar.gz"
-    SHA512 b2ac31ab17e19eeeb4f1601f42f348402c0a4ab03725dbf74fe75eaabbee2f44f64f0c0ee7f0b2688bd93a9cc0dccf29f07e73b9148fff97fc78bebdbb5f6f0f
+    URLS "http://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio-3.49.tar.gz"
+    FILENAME "cfitsio-3.49.tar.gz"
+    SHA512 9836a4af3bbbfed1ea1b4c70b9d500ac485d7c3d8131eb8a25ee6ef6662f46ba52b5161c45c709ed9a601ff0e9ec36daa5650eaaf4f2cc7d6f4bb5640f10da15
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES
+        0001-fix-dependencies.patch
+        0002-export-cmake-targets.patch
+        0003-add-Wno-error-implicit-funciton-declaration-to-cmake.patch
 )
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    curl        UseCurl
+)
+
+if ("curl" IN_LIST FEATURES)
+    set(FIND_CURL_DEPENDENCY "find_dependency(CURL CONFIG)")
+endif()
+
+if ("pthreads" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_WINDOWS)
+        set(WITH_PTHREADS ON)
+        set(FIND_PTHREADS_DEPENDENCY "find_dependency(pthreads)")
+    else()
+        message(WARNING "Feature pthreads only support Windows, disable it now.")
+        set(WITH_PTHREADS OFF)
+    endif()
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
+        -DUSE_PTHREADS=${WITH_PTHREADS}
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-cfitsio TARGET_PATH share/unofficial-cfitsio)
 
-# Remove duplicate include files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/unistd.h)
+file(READ ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake ASSIMP_CONFIG)
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake "
+include(CMakeFindDependencyMacro)
+${FIND_CURL_DEPENDENCY}
+${FIND_PTHREADS_DEPENDENCY}
+find_dependency(ZLIB)
+${ASSIMP_CONFIG}
+")
 
-# cfitsio uses very common names for its headers, so they must be moved to a subdirectory
-file(RENAME ${CURRENT_PACKAGES_DIR}/include ${CURRENT_PACKAGES_DIR}/cfitsio)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
-file(RENAME ${CURRENT_PACKAGES_DIR}/cfitsio ${CURRENT_PACKAGES_DIR}/include/cfitsio)
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio/unofficial-cfitsio-config.cmake
+    "cmake_policy(VERSION 2.6)"
+    "cmake_policy(VERSION 2.6)\r\n\
+# Required for the evaluation of \"if(@BUILD_SHARED_LIBS@)\" below to function\r\n\
+cmake_policy(SET CMP0012 NEW)\r\n"
+)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    # move DLLs to bin directories for dynamic builds
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    file(RENAME  ${CURRENT_PACKAGES_DIR}/lib/cfitsio.dll ${CURRENT_PACKAGES_DIR}/bin/cfitsio.dll)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME  ${CURRENT_PACKAGES_DIR}/debug/lib/cfitsio.dll ${CURRENT_PACKAGES_DIR}/debug/bin/cfitsio.dll)
-endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/unistd.h ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/cfitsio RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/FindPthreads.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-cfitsio)
+
+file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

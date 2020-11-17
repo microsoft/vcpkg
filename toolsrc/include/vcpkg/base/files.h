@@ -18,6 +18,20 @@
 
 namespace fs
 {
+#if defined(_WIN32)
+    struct IsSlash
+    {
+        bool operator()(const wchar_t c) const noexcept { return c == L'/' || c == L'\\'; }
+    };
+#else
+    struct IsSlash
+    {
+        bool operator()(const char c) const noexcept { return c == '/'; }
+    };
+#endif
+
+    constexpr IsSlash is_slash;
+
 #if VCPKG_USE_STD_FILESYSTEM
     namespace stdfs = std::filesystem;
 #else
@@ -31,6 +45,7 @@ namespace fs
 
     path u8path(vcpkg::StringView s);
     inline path u8path(const char* first, const char* last) { return u8path(vcpkg::StringView{first, last}); }
+    inline path u8path(std::initializer_list<char> il) { return u8path(vcpkg::StringView{il.begin(), il.end()}); }
     inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
 
 #if defined(_MSC_VER)
@@ -50,6 +65,9 @@ namespace fs
 
     std::string u8string(const path& p);
     std::string generic_u8string(const path& p);
+
+    // equivalent to p.lexically_normal()
+    path lexically_normal(const path& p);
 
 #if defined(_WIN32)
     enum class file_type
@@ -157,7 +175,7 @@ namespace vcpkg::Files
         /// <summary>Read text lines from a file</summary>
         /// <remarks>Lines will have up to one trailing carriage-return character stripped (CRLF)</remarks>
         virtual Expected<std::vector<std::string>> read_lines(const fs::path& file_path) const = 0;
-        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const std::string& filename) const = 0;
+        virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const fs::path& filename) const = 0;
         virtual std::vector<fs::path> get_files_recursive(const fs::path& dir) const = 0;
         virtual std::vector<fs::path> get_files_non_recursive(const fs::path& dir) const = 0;
         void write_lines(const fs::path& file_path, const std::vector<std::string>& lines, LineInfo linfo);
@@ -234,7 +252,17 @@ namespace vcpkg::Files
 
     void print_paths(const std::vector<fs::path>& paths);
 
-    /// Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
-    /// This function exists as a workaround for TS implementations.
+    // Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
+    // This function exists as a workaround for TS implementations.
     fs::path combine(const fs::path& lhs, const fs::path& rhs);
+
+#if defined(_WIN32)
+    constexpr char preferred_separator = '\\';
+#else
+    constexpr char preferred_separator = '/';
+#endif // _WIN32
+
+#if defined(_WIN32)
+    fs::path win32_fix_path_case(const fs::path& source);
+#endif // _WIN32
 }

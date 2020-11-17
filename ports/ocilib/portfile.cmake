@@ -3,11 +3,9 @@ vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vrogier/ocilib
-    REF v4.6.4
-    SHA512 83f5614a23c8fb4ab02517dec95d8b490c5ef472302735d5cc4cf483cc51513cc81ae2e1b4618c7c73fb5b071efe422e463b46fa79492ccb4775b511a943295a
+    REF 8573bce60d4aa4ac421445149003424fc7a69e6d v4.7.1
+    SHA512 862c2df2f8e356bfafda32bba2c4564464104afea047b6297241a5ec2da9e1d73f3cd33f55e5bcd0018fb1b3625e756c22baf6821ab51c789359266f989137c8
     HEAD_REF master
-    PATCHES
-        out_of_source_build_version_file_configure.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -46,6 +44,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
 
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug)
     file(COPY ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    endif()
 else()
     vcpkg_configure_make(
         COPY_SOURCE

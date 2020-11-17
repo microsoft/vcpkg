@@ -1,4 +1,4 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
@@ -32,34 +32,19 @@ vcpkg_build_msbuild(
 # Handle headers
 file(COPY ${SOURCE_PATH}/MSVC_Net2013/atkmm/atkmmconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(COPY ${SOURCE_PATH}/atk/atkmm.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(
-    COPY
-    ${SOURCE_PATH}/atk/atkmm
+file(COPY ${SOURCE_PATH}/atk/atkmm
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    FILES_MATCHING PATTERN *.h
-)
+    FILES_MATCHING PATTERN *.h)
 
 # Handle libraries
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Release/${VS_PLATFORM}/bin/atkmm.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Release/${VS_PLATFORM}/bin/atkmm.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Debug/${VS_PLATFORM}/bin/atkmm.dll
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-)
-file(
-    COPY
-    ${SOURCE_PATH}/MSVC_Net2013/Debug/${VS_PLATFORM}/bin/atkmm.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-)
+file(COPY ${SOURCE_PATH}/MSVC_Net2013/Release/${VS_PLATFORM}/bin/atkmm.dll
+    DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+file(COPY ${SOURCE_PATH}/MSVC_Net2013/Release/${VS_PLATFORM}/bin/atkmm.lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+file(COPY ${SOURCE_PATH}/MSVC_Net2013/Debug/${VS_PLATFORM}/bin/atkmm.dll
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(COPY ${SOURCE_PATH}/MSVC_Net2013/Debug/${VS_PLATFORM}/bin/atkmm.lib
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 vcpkg_copy_pdbs()
 

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(LIB_NAME gmime)
 set(LIB_VERSION 3.2.6)
 

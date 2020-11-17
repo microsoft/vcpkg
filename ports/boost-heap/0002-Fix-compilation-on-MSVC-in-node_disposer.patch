@@ -1,0 +1,38 @@
+From ed015c3b21c10166321f7565e038b690ad8e04df Mon Sep 17 00:00:00 2001
+From: Glen Fernandes <glen.fernandes@gmail.com>
+Date: Mon, 17 Aug 2020 19:00:58 -0400
+Subject: [PATCH 2/3] Fix compilation on MSVC in node_disposer
+
+---
+ include/boost/heap/detail/heap_node.hpp | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/include/boost/heap/detail/heap_node.hpp b/include/boost/heap/detail/heap_node.hpp
+index 04ed7ae..755eac3 100644
+--- a/include/boost/heap/detail/heap_node.hpp
++++ b/include/boost/heap/detail/heap_node.hpp
+@@ -83,6 +83,12 @@ std::size_t count_nodes(const Node * n)
+     return 1 + count_list_nodes<Node, typename Node::child_list>(n->children);
+ }
+ 
++template<class Node>
++void destroy_node(Node& node)
++{
++    node.~Node();
++}
++
+ 
+ /* node cloner
+  *
+@@ -142,7 +148,7 @@ struct node_disposer
+     {
+         node_pointer n = static_cast<node_pointer>(base);
+         n->clear_subtree(alloc_);
+-        n->~Node();
++        boost::heap::detail::destroy_node(*n);
+         alloc_.deallocate(n, 1);
+     }
+ 
+-- 
+2.22.0.windows.1
+

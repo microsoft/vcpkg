@@ -18,6 +18,7 @@ namespace vcpkg
         static const std::string GIT = "git";
         static const std::string MONO = "mono";
         static const std::string NINJA = "ninja";
+        static const std::string POWERSHELL_CORE = "powershell-core";
         static const std::string NUGET = "nuget";
         static const std::string IFW_INSTALLER_BASE = "ifw_installerbase";
         static const std::string IFW_BINARYCREATOR = "ifw_binarycreator";

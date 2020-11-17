@@ -94,6 +94,13 @@ namespace vcpkg::Strings
         return ret;
     }
 
+    template<class... Args>
+    [[nodiscard]] std::string concat(std::string&& first, const Args&... args)
+    {
+        append(first, args...);
+        return std::move(first);
+    }
+
     template<class... Args, class = void>
     std::string concat_or_view(const Args&... args)
     {
@@ -191,6 +198,8 @@ namespace vcpkg::Strings
 
     std::vector<std::string> split(StringView s, const char delimiter);
 
+    std::vector<std::string> split_paths(StringView s);
+
     const char* find_first_of(StringView searched, StringView candidates);
 
     std::vector<StringView> find_all_enclosed(StringView input, StringView left_delim, StringView right_delim);
@@ -286,4 +295,8 @@ namespace vcpkg::Strings
 
     // base 32 encoding, following IETC RFC 4648
     std::string b32_encode(std::uint64_t x) noexcept;
+
+    // Implements https://en.wikipedia.org/wiki/Levenshtein_distance with a "give-up" clause for large strings
+    // Guarantees 0 for equal strings and nonzero for inequal strings.
+    size_t byte_edit_distance(StringView a, StringView b);
 }

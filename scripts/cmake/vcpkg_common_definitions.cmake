@@ -5,6 +5,7 @@
 ## ## The following variables are available:
 ## ```cmake
 ## VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD. only defined if <target>
+## VCPKG_HOST_IS_<target>                   with <host> being one of the following: WINDOWS, LINUX, OSX, FREEBSD. only defined if <host>
 ## VCPKG_HOST_PATH_SEPARATOR                Host specific path separator (USAGE: "<something>${VCPKG_HOST_PATH_SEPARATOR}<something>"; only use and pass variables with VCPKG_HOST_PATH_SEPARATOR within "")
 ## VCPKG_HOST_EXECUTABLE_SUFFIX             executable suffix of the host
 ## VCPKG_TARGET_EXECUTABLE_SUFFIX           executable suffix of the target
@@ -43,6 +44,17 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
     set(VCPKG_TARGET_IS_WINDOWS 1)
     set(VCPKG_TARGET_IS_MINGW 1)
+endif()
+
+#Helper variables to identify the host system name
+if (CMAKE_HOST_WIN32)
+    set(VCPKG_HOST_IS_WINDOWS 1)
+elseif (CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+    set(VCPKG_HOST_IS_OSX 1)
+elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
+    set(VCPKG_HOST_IS_LINUX 1)
+elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD")
+    set(VCPKG_HOST_IS_FREEBSD 1)
 endif()
 
 #Helper variable to identify the host path separator.
@@ -124,7 +136,7 @@ if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_OSX)
 endif()
 
 # Platforms with libm
-if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OSX)
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_MINGW)
     list(APPEND VCPKG_SYSTEM_LIBRARIES m)
 endif()
 

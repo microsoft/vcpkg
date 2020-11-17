@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10.2 FATAL_ERROR)
-project(nana VERSION 1.7.2 LANGUAGES CXX)
+project(nana VERSION 1.7.4 LANGUAGES CXX)
 
 option(NANA_ENABLE_PNG "Enable PNG support" OFF)
 option(NANA_ENABLE_JPEG "Enable JPEG support" OFF)

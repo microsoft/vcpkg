@@ -1,9 +1,12 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/json.h>
+#include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/unicode.h>
 
 #include <inttypes.h>
+
+#include <regex>
 
 namespace vcpkg::Json
 {
@@ -251,15 +254,15 @@ namespace vcpkg::Json
         val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::Number>(), d);
         return val;
     }
-    Value Value::string(StringView sv) noexcept
+    Value Value::string(std::string s) noexcept
     {
-        if (!Unicode::utf8_is_valid_string(sv.begin(), sv.end()))
+        if (!Unicode::utf8_is_valid_string(s.data(), s.data() + s.size()))
         {
-            Debug::print("Invalid string: ", sv, '\n');
-            vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid utf8 passed to Value::string(StringView)");
+            Debug::print("Invalid string: ", s, '\n');
+            vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, "Invalid utf8 passed to Value::string(std::string)");
         }
         Value val;
-        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::String>(), sv.to_string());
+        val.underlying_ = std::make_unique<ValueImpl>(ValueKindConstant<VK::String>(), std::move(s));
         return val;
     }
     Value Value::array(Array&& arr) noexcept
@@ -486,10 +489,6 @@ namespace vcpkg::Json
             static bool is_number_start(char32_t code_point) noexcept
             {
                 return code_point == '-' || is_digit(code_point);
-            }
-            static bool is_keyword_start(char32_t code_point) noexcept
-            {
-                return code_point == 'f' || code_point == 'n' || code_point == 't';
             }
 
             static unsigned char from_hex_digit(char32_t code_point) noexcept
@@ -805,6 +804,7 @@ namespace vcpkg::Json
                     }
                     else if (current == ',')
                     {
+                        auto comma_loc = cur_loc();
                         next();
                         skip_whitespace();
                         current = cur();
@@ -815,7 +815,7 @@ namespace vcpkg::Json
                         }
                         if (current == ']')
                         {
-                            add_error("Trailing comma in array");
+                            add_error("Trailing comma in array", comma_loc);
                             return Value::array(std::move(arr));
                         }
                     }
@@ -901,6 +901,7 @@ namespace vcpkg::Json
                     }
                     else if (current == ',')
                     {
+                        auto comma_loc = cur_loc();
                         next();
                         skip_whitespace();
                         current = cur();
@@ -911,7 +912,7 @@ namespace vcpkg::Json
                         }
                         else if (current == '}')
                         {
-                            add_error("Trailing comma in an object");
+                            add_error("Trailing comma in an object", comma_loc);
                             return Value();
                         }
                     }
@@ -986,6 +987,41 @@ namespace vcpkg::Json
         };
     }
 
+    NaturalNumberDeserializer NaturalNumberDeserializer::instance;
+    BooleanDeserializer BooleanDeserializer::instance;
+    ParagraphDeserializer ParagraphDeserializer::instance;
+    IdentifierDeserializer IdentifierDeserializer::instance;
+    IdentifierArrayDeserializer IdentifierArrayDeserializer::instance;
+    PackageNameDeserializer PackageNameDeserializer::instance;
+    PathDeserializer PathDeserializer::instance;
+
+    bool IdentifierDeserializer::is_ident(StringView sv)
+    {
+        static const std::regex BASIC_IDENTIFIER = std::regex(R"([a-z0-9]+(-[a-z0-9]+)*)");
+
+        // we only check for lowercase in RESERVED since we already remove all
+        // strings with uppercase letters from the basic check
+        static const std::regex RESERVED = std::regex(R"(prn|aux|nul|con|(lpt|com)[1-9]|core|default)");
+
+        // back-compat
+        if (sv == "all_modules")
+        {
+            return true;
+        }
+
+        if (!std::regex_match(sv.begin(), sv.end(), BASIC_IDENTIFIER))
+        {
+            return false; // we're not even in the shape of an identifier
+        }
+
+        if (std::regex_match(sv.begin(), sv.end(), RESERVED))
+        {
+            return false; // we're a reserved identifier
+        }
+
+        return true;
+    }
+
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse_file(const Files::Filesystem& fs,
                                                                                            const fs::path& path,
                                                                                            std::error_code& ec) noexcept
@@ -1000,6 +1036,26 @@ namespace vcpkg::Json
             ec = res.error();
             return std::unique_ptr<Parse::IParseError>();
         }
+    }
+
+    std::pair<Value, JsonStyle> parse_file(vcpkg::LineInfo linfo,
+                                           const Files::Filesystem& fs,
+                                           const fs::path& path) noexcept
+    {
+        std::error_code ec;
+        auto ret = parse_file(fs, path, ec);
+        if (ec)
+        {
+            System::print2(System::Color::error, "Failed to read ", fs::u8string(path), ": ", ec.message(), "\n");
+            Checks::exit_fail(linfo);
+        }
+        else if (!ret)
+        {
+            System::print2(System::Color::error, "Failed to parse ", fs::u8string(path), ":\n");
+            System::print2(ret.error()->format());
+            Checks::exit_fail(linfo);
+        }
+        return ret.value_or_exit(linfo);
     }
 
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(StringView json,
@@ -1211,4 +1267,139 @@ namespace vcpkg::Json
     }
     // } auto stringify()
 
+    static std::vector<std::string> invalid_json_fields(const Json::Object& obj,
+                                                        Span<const StringView> known_fields) noexcept
+    {
+        const auto field_is_unknown = [known_fields](StringView sv) {
+            // allow directives
+            if (sv.size() != 0 && *sv.begin() == '$')
+            {
+                return false;
+            }
+            return std::find(known_fields.begin(), known_fields.end(), sv) == known_fields.end();
+        };
+
+        std::vector<std::string> res;
+        for (const auto& kv : obj)
+        {
+            if (field_is_unknown(kv.first))
+            {
+                res.push_back(kv.first.to_string());
+            }
+        }
+
+        return res;
+    }
+
+    void Reader::add_missing_field_error(StringView type, StringView key, StringView key_type)
+    {
+        add_generic_error(type, "missing required field '", key, "' (", key_type, ")");
+    }
+    void Reader::add_expected_type_error(StringView expected_type)
+    {
+        m_errors.push_back(Strings::concat(path(), ": mismatched type: expected ", expected_type));
+    }
+    void Reader::add_extra_field_error(StringView type, StringView field, StringView suggestion)
+    {
+        if (suggestion.size() > 0)
+        {
+            add_generic_error(type, "unexpected field '", field, "\', did you mean \'", suggestion, "\'?");
+        }
+        else
+        {
+            add_generic_error(type, "unexpected field '", field, '\'');
+        }
+    }
+
+    void Reader::check_for_unexpected_fields(const Object& obj, View<StringView> valid_fields, StringView type_name)
+    {
+        if (valid_fields.size() == 0)
+        {
+            return;
+        }
+
+        auto extra_fields = invalid_json_fields(obj, valid_fields);
+        for (auto&& f : extra_fields)
+        {
+            auto best_it = valid_fields.begin();
+            auto best_value = Strings::byte_edit_distance(f, *best_it);
+            for (auto i = best_it + 1; i != valid_fields.end(); ++i)
+            {
+                auto v = Strings::byte_edit_distance(f, *i);
+                if (v < best_value)
+                {
+                    best_value = v;
+                    best_it = i;
+                }
+            }
+            add_extra_field_error(type_name.to_string(), f, *best_it);
+        }
+    }
+
+    std::string Reader::path() const noexcept
+    {
+        std::string p("$");
+        for (auto&& s : m_path)
+        {
+            if (s.index < 0)
+                Strings::append(p, '.', s.field);
+            else
+                Strings::append(p, '[', s.index, ']');
+        }
+        return p;
+    }
+
+    Optional<std::vector<std::string>> ParagraphDeserializer::visit_string(Reader&, StringView sv)
+    {
+        std::vector<std::string> out;
+        out.push_back(sv.to_string());
+        return out;
+    }
+
+    Optional<std::vector<std::string>> ParagraphDeserializer::visit_array(Reader& r, const Array& arr)
+    {
+        static StringDeserializer d{"a string"};
+        return r.array_elements(arr, d);
+    }
+
+    Optional<std::string> IdentifierDeserializer::visit_string(Json::Reader& r, StringView sv)
+    {
+        if (!is_ident(sv))
+        {
+            r.add_generic_error(type_name(), "must be lowercase alphanumeric+hyphens and not reserved");
+        }
+        return sv.to_string();
+    }
+
+    Optional<std::vector<std::string>> IdentifierArrayDeserializer::visit_array(Reader& r, const Array& arr)
+    {
+        return r.array_elements(arr, IdentifierDeserializer::instance);
+    }
+
+    bool PackageNameDeserializer::is_package_name(StringView sv)
+    {
+        if (sv.size() == 0)
+        {
+            return false;
+        }
+
+        for (const auto& ident : Strings::split(sv, '.'))
+        {
+            if (!IdentifierDeserializer::is_ident(ident))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    Optional<std::string> PackageNameDeserializer::visit_string(Json::Reader&, StringView sv)
+    {
+        if (!is_package_name(sv))
+        {
+            return nullopt;
+        }
+        return sv.to_string();
+    }
 }

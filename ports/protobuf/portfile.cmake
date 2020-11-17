@@ -38,6 +38,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 	zlib	protobuf_WITH_ZLIB
 )
 
+if (VCPKG_DOWNLOAD_MODE)
+    # download PKGCONFIG in download mode which is used in `vcpkg_fixup_pkgconfig()` at the end of this script.
+    # download it here because `vcpkg_configure_cmake()` halts execution in download mode when running configure process.
+    vcpkg_find_acquire_program(PKGCONFIG)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
@@ -119,7 +124,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 )
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 vcpkg_copy_pdbs()
 set(packages protobuf protobuf-lite)
 foreach(_package IN LISTS packages)
@@ -133,3 +137,6 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(SYSTEM_LIBRARIES SYSTEM_LIBRARIES pthread)
 endif()
 vcpkg_fixup_pkgconfig(${SYSTEM_LIBRARIES})
+
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
