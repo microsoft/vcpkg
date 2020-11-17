@@ -63,7 +63,7 @@ add_library(pixman-1 ${SOURCES})
 target_include_directories(pixman-1 PUBLIC $<INSTALL_INTERFACE:include>)
 target_compile_definitions(pixman-1 ${PIXMAN_DEFS})
 
-if(UNIX AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+if(USE_SSE2 AND UNIX AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     target_compile_options(pixman-1 PRIVATE -msse2)
 endif()
 

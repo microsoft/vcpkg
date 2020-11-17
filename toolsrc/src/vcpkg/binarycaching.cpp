@@ -576,8 +576,6 @@ namespace
                     cmd.path_arg(nuget_exe)
                         .string_arg("push")
                         .path_arg(nupkg_path)
-                        .string_arg("-ApiKey")
-                        .string_arg("AzureDevOps")
                         .string_arg("-ForceEnglishOutput")
                         .string_arg("-Source")
                         .string_arg(write_src);
@@ -609,8 +607,6 @@ namespace
                     cmd.path_arg(nuget_exe)
                         .string_arg("push")
                         .path_arg(nupkg_path)
-                        .string_arg("-ApiKey")
-                        .string_arg("AzureDevOps")
                         .string_arg("-ForceEnglishOutput")
                         .string_arg("-ConfigFile")
                         .path_arg(write_cfg);

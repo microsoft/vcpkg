@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libdmusic/riffcpp
@@ -23,4 +21,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/riffcpp)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/riffcpp/LICENSE ${CURRENT_PACKAGES_DIR}/share/riffcpp/copyright)
-vcpkg_test_cmake(PACKAGE_NAME riffcpp)

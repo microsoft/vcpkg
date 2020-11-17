@@ -3,9 +3,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/heap
-    REF boost-1.73.0
-    SHA512 5607f3b9601f08e52fd03d04fe7b78604af96641d48d48ddd9b78443065f700f3317efcb0c0ff600e13a08ea6292938993f71964c2c6ec87589c1f27bac5c0d7
+    REF boost-1.74.0
+    SHA512 239d49d34c7d8300569b67fd979ac81cf5cefdd573787094b46b587384afc6881bd67bb9ffbc99da330b2ff45427a50782cc45c7b83c2a316936abed07bd4db3
     HEAD_REF master
+    PATCHES 0002-Fix-compilation-on-MSVC-in-node_disposer.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

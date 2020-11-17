@@ -17,6 +17,7 @@ vcpkg_extract_source_archive_ex(
         fix-dependency.patch
         libpq.patch
         fix-CPL_DLL.patch
+        0004-fix-const-overloaded.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")

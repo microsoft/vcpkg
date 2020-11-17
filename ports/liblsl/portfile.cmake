@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(VCPKG_LIBRARY_LINKAGE dynamic)
 
 vcpkg_from_github(

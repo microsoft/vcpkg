@@ -344,7 +344,7 @@ namespace vcpkg::Commands::CI
                     auto emp = ret->default_feature_provider.emplace(p->spec.name(), scfl->clone());
                     emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
 
-                    p->build_options = vcpkg::Build::default_build_package_options;
+                    p->build_options = vcpkg::Build::backcompat_prohibiting_package_options;
                 }
 
                 auto precheck_result = precheck_results.at(&action);
@@ -514,13 +514,13 @@ namespace vcpkg::Commands::CI
                 }
                 else
                 {
-                    action.build_options = vcpkg::Build::default_build_package_options;
+                    action.build_options = vcpkg::Build::backcompat_prohibiting_package_options;
                 }
             }
 
             if (is_dry_run)
             {
-                Dependencies::print_plan(action_plan, true, paths.ports);
+                Dependencies::print_plan(action_plan, true, paths.builtin_ports_directory());
             }
             else
             {
