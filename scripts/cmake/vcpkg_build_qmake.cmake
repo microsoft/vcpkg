@@ -1,11 +1,13 @@
-#.rst:
-# .. command:: vcpkg_build_qmake
-#
-#  Build a qmake-based project, previously configured using vcpkg_configure_qmake.
-#
-#  ::
-#  vcpkg_build_qmake()
-#
+#[===[.md:
+# vcpkg_build_qmake
+
+Build a qmake-based project, previously configured using vcpkg_configure_qmake.
+
+```cmake
+vcpkg_build_qmake()
+```
+#]===]
+
 function(vcpkg_build_qmake)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS")
