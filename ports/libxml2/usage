@@ -1,0 +1,5 @@
+The package libxml2:@TARGET_TRIPLET@ provides CMake targets:
+
+    find_package(libxml2 CONFIG REQUIRED)
+    target_include_directories(main PRIVATE ${LIBXML2_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${LIBXML2_LIBRARIES})
