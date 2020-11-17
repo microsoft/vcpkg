@@ -69,18 +69,18 @@ namespace vcpkg::PortFileProvider
         mutable std::unordered_map<Versions::VersionSpec, std::string, Versions::VersionSpecHasher> git_tree_cache;
     };
 
-    // struct BaselineProvider : IBaselineProvider, Util::ResourceBase
-    // {
-    //     explicit BaselineProvider(const vcpkg::VcpkgPaths& paths, const std::string& baseline);
+    struct BaselineProvider : IBaselineProvider, Util::ResourceBase
+    {
+        explicit BaselineProvider(const vcpkg::VcpkgPaths& paths, const std::string& baseline);
 
-    //     Optional<Versions::VersionSpec> get_baseline_version(const std::string& port_name) const override;
+        Optional<Versions::VersionSpec> get_baseline_version(const std::string& port_name) const override;
 
-    // private:
-    //     void load_baseline_file() const;
+    private:
+        void load_baseline_file() const;
 
-    //     const vcpkg::VcpkgPaths& paths;
-    //     const std::string& baseline;
+        const vcpkg::VcpkgPaths& paths;
+        const std::string& baseline;
 
-    //     mutable std::map<std::string, Versions::VersionSpec> baseline_versions;
-    // };
+        mutable std::map<std::string, Versions::VersionSpec> baselines_cache;
+    };
 }

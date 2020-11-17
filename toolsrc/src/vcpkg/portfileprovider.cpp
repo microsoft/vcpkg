@@ -1,3 +1,4 @@
+#include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
 
 #include <vcpkg/configuration.h>
@@ -7,6 +8,7 @@
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/versiondeserializers.h>
 
 using namespace vcpkg;
 
@@ -39,6 +41,7 @@ namespace
         // TODO: Get correct `port_versions` path for the registry the port belongs to, pseudocode below:
         // auto registry = paths.get_registry_for_port(port_name);
         // auto port_versions_dir_path = registry.get_port_versions_path();
+
         const auto port_versions_dir_path = paths.root / "port_versions";
         const auto subpath = Strings::concat(port_name[0], "-/", port_name, ".json");
         const auto json_path = port_versions_dir_path / subpath;
@@ -47,6 +50,12 @@ namespace
             return json_path;
         }
         return nullopt;
+    }
+
+    Optional<fs::path> get_baseline_json_path(const VcpkgPaths& paths)
+    {
+        const auto baseline_json_path = paths.root / "port_versions" / "baseline.json";
+        return paths.get_filesystem().exists(baseline_json_path) ? vcpkg::make_optional(baseline_json_path) : nullopt;
     }
 }
 
@@ -347,7 +356,6 @@ namespace vcpkg::PortFileProvider
                 // TODO: Message error
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
-            
         }
 
         return versions_cache.at(port_name);
@@ -396,21 +404,58 @@ namespace vcpkg::PortFileProvider
                                   fs::u8string(port_directory));
     }
 
-    // BaselineProvider::BaselineProvider(const VcpkgPaths& paths, const std::string& baseline)
-    //     : paths(paths), baseline(baseline)
-    // {
-    // }
+    BaselineProvider::BaselineProvider(const VcpkgPaths& paths, const std::string& baseline)
+        : paths(paths), baseline(baseline)
+    {
+        load_baseline_file();
+    }
 
-    // Optional<Versions::VersionSpec> BaselineProvider::get_baseline_version(const std::string& port_name) const
-    // {
-    //     auto it = baseline_versions.find(port_name);
-    //     if (it != baseline_versions.end())
-    //     {
-    //         return it->second;
-    //     }
-    // }
+    Optional<Versions::VersionSpec> BaselineProvider::get_baseline_version(const std::string& port_name) const
+    {
+        auto it = baselines_cache.find(port_name);
+        if (it != baselines_cache.end())
+        {
+            return it->second;
+        }
+        return nullopt;
+    }
 
-    // void BaselineProvider::load_baseline_file() const
-    // {
-    // }
+    void BaselineProvider::load_baseline_file() const
+    {
+        auto maybe_baseline_file = get_baseline_json_path(paths);
+        Checks::check_exit(VCPKG_LINE_INFO, maybe_baseline_file.has_value(), "Couldn't find baseline.json");
+        auto baseline_file = maybe_baseline_file.value_or_exit(VCPKG_LINE_INFO);
+
+        auto value = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), baseline_file);
+        if (!value.first.is_object())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Error: `baseline.json` does not have a top-level object.");
+        }
+
+        const auto& obj = value.first.object();
+        auto baseline_value = obj.get("default");
+        if (!baseline_value)
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "Error: `baseline.json` does not contain the baseline \"%s\"", "default");
+        }
+
+        Json::Reader r;
+        std::map<std::string, VersionT, std::less<>> result;
+        r.visit_in_key(*baseline_value, "default", result, BaselineDeserializer::instance);
+
+        if (r.errors().empty())
+        {
+            for (auto&& kv_pair : result)
+            {
+                baselines_cache.emplace(kv_pair.first,
+                                        Versions::VersionSpec(kv_pair.first, kv_pair.second, Versions::Scheme::String));
+            }
+        }
+        else
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "Error: failed to parse `baseline.json`:\n%s", Strings::join("\n", r.errors()));
+        }
+    }
 }
