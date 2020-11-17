@@ -152,7 +152,7 @@ diff --git a/third_party/grpc/BUILD b/third_party/grpc/BUILD
 --- a/third_party/grpc/BUILD
 +++ b/third_party/grpc/BUILD
 @@ -0,0 +1,19 @@
-+cc_library(
++grpc_cc_library(
 +    name = "grpc++",
 +    deps = ["@patched_includes//:headers"],
 +)
@@ -215,6 +215,19 @@ diff --git a/tensorflow/compiler/jit/BUILD b/tensorflow/compiler/jit/BUILD
  # Internal targets below this point.
 
 
+diff --git a/tensorflow/core/util/BUILD b/tensorflow/core/util/BUILD
+--- a/tensorflow/core/util/BUILD
++++ b/tensorflow/core/util/BUILD
+@@ -404,6 +404,7 @@
+         "//tensorflow/python:__pkg__",
+     ],
+     alwayslink = 1,
++    deps = ["@patched_includes//:headers"],
+ )
+
+ tf_cuda_library(
+
+
 diff --git a/third_party/com_google_absl.BUILD b/third_party/com_google_absl.BUILD
 --- a/third_party/com_google_absl.BUILD
 +++ b/third_party/com_google_absl.BUILD
@@ -227,3 +240,14 @@ diff --git a/third_party/com_google_absl.BUILD b/third_party/com_google_absl.BUI
 +    name = "strings",
 +    deps = ["@patched_includes//:headers"],
 +)
+
+
+diff --git a/third_party/systemlibs/png.BUILD b/third_party/systemlibs/png.BUILD
+--- a/third_party/systemlibs/png.BUILD
++++ b/third_party/systemlibs/png.BUILD
+@@ -9,4 +9,5 @@
+     name = "png",
+     linkopts = ["-lpng"],
+     visibility = ["//visibility:public"],
++    deps = ["@patched_includes//:headers"],
+ )
