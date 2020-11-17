@@ -73,6 +73,20 @@ new file mode 100644
 +
 
 
+diff --git a/third_party/aws/BUILD.bazel b/third_party/aws/BUILD.bazel
+--- a/third_party/aws/BUILD.bazel
++++ b/third_party/aws/BUILD.bazel
+@@ -137,3 +137,8 @@
+         "cmakedefine": "define",
+     },
+ )
++
++cc_library(
++    name = "aws-checksums",
++    deps = ["@patched_includes//:headers"],
++)
+
+
 diff --git a/third_party/icu/BUILD.bazel b/third_party/icu/BUILD.bazel
 --- a/third_party/icu/BUILD.bazel
 +++ b/third_party/icu/BUILD.bazel
@@ -186,6 +200,19 @@ diff --git a/tensorflow/BUILD b/tensorflow/BUILD
      ] + if_ngraph(["@ngraph_tf//:ngraph_tf"]),
  )
  
+
+
+diff --git a/tensorflow/compiler/jit/BUILD b/tensorflow/compiler/jit/BUILD
+--- a/tensorflow/compiler/jit/BUILD
++++ b/tensorflow/compiler/jit/BUILD
+@@ -296,6 +296,7 @@
+         "defs.h",
+     ],
+     visibility = [":friends"],
++    deps = ["@patched_includes//:headers"],
+ )
+
+ # Internal targets below this point.
 
 
 diff --git a/third_party/com_google_absl.BUILD b/third_party/com_google_absl.BUILD
