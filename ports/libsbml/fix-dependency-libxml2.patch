@@ -1,0 +1,34 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ceb8f18..a8bc6c8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -464,6 +464,7 @@ endif(WITH_EXPAT)
+ #
+ set(USE_LIBXML OFF)
+ if(WITH_LIBXML)
++  if (0)
+   if (NOT LIBXML_LIBRARY)
+     find_library(LIBXML_LIBRARY
+         NAMES libxml2.lib xml2
+@@ -485,7 +486,11 @@ if(WITH_LIBXML)
+         DOC "The directory containing the libxml2 include files."
+               )
+   endif()
+-
++  else()
++  find_package(libxml2 CONFIG REQUIRED)
++  set(LIBXML_INCLUDE_DIR ${LIBXML2_INCLUDE_DIRS})
++  set(LIBXML_LIBRARY ${LIBXML2_LIBRARIES})
++  endif()
+   add_definitions( -DUSE_LIBXML )
+   list(APPEND SWIG_EXTRA_ARGS -DUSE_LIBXML)
+   set(USE_LIBXML ON)
+@@ -494,7 +499,7 @@ if(WITH_LIBXML)
+   set(LIBSBML_XML_LIBRARY_INCLUDE ${LIBXML_INCLUDE_DIR})
+   set(LIBSBML_XML_LIBRARY_LIBS ${LIBXML_LIBRARY})
+ 
+-  if(NOT EXISTS "${LIBXML_INCLUDE_DIR}/libxml/parser.h")
++  if(0)
+         message(FATAL_ERROR
+ "The include directory specified for libxml appears to be invalid.
+ It should contain the file libxml/parser.h, but it does not.")

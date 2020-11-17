@@ -1,5 +1,6 @@
 Source: libsbml
 Version: 5.18.0
+Port-Version: 1
 Description: A library for reading / writing SBML files
 Default-Features: expat,comp,fbc,groups,layout,render,libxml2
 Supports: !uwp
