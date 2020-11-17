@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_OSX)
   message(FATAL_ERROR "This port is only for Windows Desktop or Linux")
 endif()

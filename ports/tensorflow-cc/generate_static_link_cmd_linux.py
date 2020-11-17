@@ -1,7 +1,7 @@
 import re
 import sys
 
-lib_suffix = sys.argv[2]
+lib_suffix = "" if len(sys.argv) < 3 else sys.argv[2]
 with open(sys.argv[1], "r") as f_in:
     with open("static_link.sh", "w") as f_out:
         p_cd = re.compile("^\\((cd .*) && \\\\$")
@@ -17,7 +17,7 @@ with open(sys.argv[1], "r") as f_in:
                 if m1:
                     m2 = p_cd.match(env[0])
                     f_out.write(m2.group(1) + "\n")
-                    line = "\"" + m1.group(1) + "ar\" rcs " + m1.group(2)[1:-9].replace(".so", ".a")  + " " + m1.group(2).replace(".so", ".a")
-                    f_out.write(line + "\n")
+                    line = f'"{m1.group(1)}ar" rcs {m1.group(2)[1:-9].replace(".so", ".a")} {m1.group(2).replace(".so", ".a")}\n'
+                    f_out.write(line)
                 else:
                     env.append(line)

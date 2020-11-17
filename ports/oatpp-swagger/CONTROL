@@ -1,5 +1,0 @@
-Source: oatpp-swagger
-Version: 1.2.0
-Description: Oat++ OpenApi (Swagger) UI submodule
-Build-Depends: oatpp
-Homepage: https://github.com/oatpp/oatpp-swagger

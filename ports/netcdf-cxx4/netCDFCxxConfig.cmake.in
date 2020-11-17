@@ -1,0 +1,29 @@
+# NetCDF CXX Configuration Summary
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+if (@netCDF_FOUND@)
+  if(EXISTS "@netCDF_ROOT@")
+    set(netCDF_ROOT "@netCDF_ROOT@")
+  endif()
+  if(EXISTS "@netCDF_DIR@")
+    set(netCDF_DIR "@netCDF_DIR@")
+  endif()
+  find_dependency(netCDF)
+  set(NETCDF_C_LIBRARY ${netCDF_LIBRARIES})
+  set(NETCDF_C_INCLUDE_DIR ${netCDF_INCLUDE_DIR})
+else()
+  set(NETCDF_C_LIBRARY "@NETCDF_C_LIBRARY@")
+  set(NETCDF_C_INCLUDE_DIR "@NETCDF_C_INCLUDE_DIR@")
+endif()
+
+if (NOT TARGET netCDF::netcdf)
+  add_library(netCDF::netcdf UNKNOWN IMPORTED)
+  set_target_properties(netCDF::netcdf PROPERTIES
+    IMPORTED_LOCATION "${NETCDF_C_LIBRARY}"
+    INTERFACE_INCLUDE_DIRECTORIES "${NETCDF_C_INCLUDE_DIR}"
+  )
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/netcdf-cxx4Targets.cmake")

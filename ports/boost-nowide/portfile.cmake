@@ -3,12 +3,26 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/nowide
-    REF boost-1.73.0
-    SHA512 2ef89ee386dbce7c88d78dba15b8301601cd83660acf1f5841e2297df92fd6b3d83999c7ae6d1d19cc06bc6ad721df1d206f7473b70c3ba6dc26aa1507ca5b5a
+    REF boost-1.74.0
+    SHA512 bee853b992635be4f5937bd6b0abd36c541e6483482e4e31b3be9fb63af8ba04e0afea10b2b9d392fbea714dcb27d105275650e4889ebb726d2603e28fad839b
     HEAD_REF master
 )
 
+file(READ "${SOURCE_PATH}/build/Jamfile.v2" _contents)
+
+string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
+
+string(REPLACE "check-target-builds cxx11_moveable_fstreams" "check-target-builds ../check_movable_fstreams.cpp" _contents "${_contents}")
+string(REPLACE "check-target-builds lfs_support" "check-target-builds ../check_lfs_support.cpp" _contents "${_contents}")
+
+file(WRITE "${SOURCE_PATH}/build/Jamfile.v2" "${_contents}")
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
+
+file(COPY "${SOURCE_PATH}/test/check_lfs_support.cpp" "${SOURCE_PATH}/test/check_movable_fstreams.cpp" DESTINATION "${SOURCE_PATH}/build/config")
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
+boost_modular_build(
+    SOURCE_PATH ${SOURCE_PATH}
+    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+)
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

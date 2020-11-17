@@ -24,7 +24,6 @@ namespace vcpkg::Commands::PortHistory
             std::string version_string;
             std::string version;
             int port_version;
-            Versions::Scheme scheme;
         };
 
         const System::ExitCodeAndOutput run_git_command_inner(const VcpkgPaths& paths,
@@ -54,52 +53,8 @@ namespace vcpkg::Commands::PortHistory
 
         bool is_date(const std::string& version_string)
         {
-            // The date regex is not complete, it matches strings that look like dates,
-            // e.g.: 2020-99-99.
-            //
-            // The regex has two capture groups:
-            // * Date: "^([0-9]{4,}[-][0-9]{2}[-][0-9]{2})", it matches strings that resemble YYYY-MM-DD.
-            //         It does not validate that MM <= 12, or that DD is possible with the given MM.
-            //         YYYY should be AT LEAST 4 digits, for some kind of "future proofing".
-            std::regex re("^([0-9]{4,}[-][0-9]{2}[-][0-9]{2})((?:[.|-][0-9a-zA-Z]+)*)$");
-            return std::regex_match(version_string, re);
-        }
-
-        bool is_date_without_tags(const std::string& version_string)
-        {
             std::regex re("^([0-9]{4,}[-][0-9]{2}[-][0-9]{2})$");
             return std::regex_match(version_string, re);
-        }
-
-        bool is_semver(const std::string& version_string)
-        {
-            // This is the "official" SemVer regex, taken from:
-            // https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
-            std::regex re("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*"
-                          ")(?:\\.(?:0|["
-                          "1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$");
-            return std::regex_match(version_string, re);
-        }
-
-        bool is_semver_relaxed(const std::string& version_string)
-        {
-            std::regex re("^(?:[0-9a-zA-Z]+)\\.(?:[0-9a-zA-Z]+)\\.(?:[0-9a-zA-Z]+)(?:[\\.|-|\\+][0-9a-zA-Z]+)*$");
-            return std::regex_match(version_string, re);
-        }
-
-        const Versions::Scheme guess_version_scheme(const std::string& version_string)
-        {
-            if (is_date(version_string))
-            {
-                return Versions::Scheme::Date;
-            }
-
-            if (is_semver(version_string) || is_semver_relaxed(version_string))
-            {
-                return Versions::Scheme::Relaxed;
-            }
-
-            return Versions::Scheme::String;
         }
 
         std::pair<std::string, int> clean_version_string(const std::string& version_string,
@@ -120,7 +75,7 @@ namespace vcpkg::Commands::PortHistory
             if (index != std::string::npos)
             {
                 // Very lazy check to keep date versions untouched
-                if (!is_date_without_tags(version_string))
+                if (!is_date(version_string))
                 {
                     auto maybe_port_version = version_string.substr(index + 1);
                     clean_version.resize(index);
@@ -165,8 +120,7 @@ namespace vcpkg::Commands::PortHistory
                         commit_date,
                         Strings::concat(clean_version.first, "#", std::to_string(clean_version.second)),
                         clean_version.first,
-                        clean_version.second,
-                        guess_version_scheme(clean_version.first)};
+                        clean_version.second};
                 }
             }
 
@@ -276,18 +230,7 @@ namespace vcpkg::Commands::PortHistory
             {
                 Json::Object object;
                 object.insert("git-tree", Json::Value::string(version.git_tree));
-                switch (version.scheme)
-                {
-                    case Versions::Scheme::Semver: // falls through
-                    case Versions::Scheme::Relaxed:
-                        object.insert("version", Json::Value::string(version.version));
-                        break;
-                    case Versions::Scheme::Date:
-                        object.insert("version-date", Json::Value::string(version.version));
-                        break;
-                    case Versions::Scheme::String: // falls through
-                    default: object.insert("version-string", Json::Value::string(version.version)); break;
-                }
+                object.insert("version-string", Json::Value::string(version.version));
                 object.insert("port-version", Json::Value::integer(version.port_version));
                 versions_json.push_back(std::move(object));
             }

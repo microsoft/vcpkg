@@ -1,10 +1,10 @@
-set(BOTAN_VERSION 2.15.0)
+set(BOTAN_VERSION 2.16.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO randombit/botan
-    REF 3ed6eaa3c1236aed844f5475e2df8b89b3286ac4 # 2.15.0
-    SHA512 a5c76e22f1ad8455ed5dab7c1dff2dd21e8a6e720e024144fe117982fd3b8815e8200844f6fd3abf8326fa4b18d2598c724f7ad5752c517d4b8fab83fb1b5907
+    REF 82a20c67bd54b8c6c75f32bd31dea5b12f3d7e67 # 2.16.0
+    SHA512 42b8dac0a6b44afee14e8ba928b323790b8d90395ba70b4919b3d033e5b9073706355c2263c2a9e66357fa6d4af4c85430c93a65cfdaa79f1c83c89940619a66
     HEAD_REF master
     PATCHES
         fix-generate-build-path.patch
@@ -76,6 +76,7 @@ function(BOTAN_BUILD BOTAN_BUILD_TYPE)
                             ${BOTAN_FLAG_DEBUGMODE}
                             "--distribution-info=vcpkg ${TARGET_TRIPLET}"
                             --prefix=${BOTAN_FLAG_PREFIX}
+                            --with-pkg-config
                             --link-method=copy)
     if(CMAKE_HOST_WIN32)
         list(APPEND configure_arguments ${BOTAN_MSVC_RUNTIME}${BOTAN_MSVC_RUNTIME_SUFFIX})

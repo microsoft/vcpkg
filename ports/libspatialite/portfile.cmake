@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(LIBSPATIALITE_VERSION_STR "4.3.0a")
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
