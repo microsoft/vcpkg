@@ -1,27 +1,20 @@
-if(NOT VCPKG_CMAKE_SYSTEM_NAME AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic") # Win32 and dynamic
-    message(FATAL_ERROR "Only static linking is supported on Windows. Choose '*-windows-static' triplets.")
+if(VCPKG_TARGET_IS_WINDOWS) # Win32 and dynamic
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
-    REF b1ad0bcb745609741dccee1de96bb5bec69e4424
-    SHA512 e80d0970f640f168252ec14dc33e7c88bd36220d5618dec45680b86114e7ce5af869628e95363ebfce9b07ea341ac7ef82493117a698d1065ac7f94baa9d3142
+    REF e517482a6e51d7b2745479d2565d85b3e6f61391
+    SHA512 245fdd90d3aa5b578cffabf00ad2b81456555f812c8b442b532c911492840f8f3b2855529ec972f9c45f13142393313f4c8b93b6fc2b2ce4118bcc06b861e061
     HEAD_REF master
 )
 
-set(USE_MSGSL OFF)
-set(USE_ZLIB OFF)
-set(USE_ZSTD OFF)
-if("ms-gsl" IN_LIST FEATURES)
-    set(USE_MSGSL ON)
-endif()
-if("zlib" IN_LIST FEATURES)
-    set(USE_ZLIB ON)
-endif()
-if("zstd" IN_LIST FEATURES)
-    set(USE_ZSTD ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    ms-gsl SEAL_USE_MSGSL
+    zlib SEAL_USE_ZLIB
+    zstd SEAL_USE_ZSTD
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -32,9 +25,7 @@ vcpkg_configure_cmake(
         -DSEAL_BUILD_EXAMPLES=OFF
         -DSEAL_BUILD_TESTS=OFF
         -DSEAL_BUILD_SEAL_C=OFF
-        -DSEAL_USE_MSGSL=${USE_MSGSL}
-        -DSEAL_USE_ZLIB=${USE_ZLIB}
-        -DSEAL_USE_ZSTD=${USE_ZSTD}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_build_cmake(TARGET seal LOGFILE_ROOT build)
