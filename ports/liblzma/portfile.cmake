@@ -8,18 +8,35 @@ vcpkg_from_github(
         enable-uwp-builds.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 )
-
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
 
-file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(includedir "\${prefix}/include")
+set(PACKAGE_URL https://tukaani.org/xz/)
+set(PACKAGE_VERSION 5.2.5)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(PTHREAD_CFLAGS -pthread)
+endif()
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  set(prefix "${CURRENT_INSTALLED_DIR}")
+  configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/liblzma.pc" @ONLY)
+endif()
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  set(prefix "${CURRENT_INSTALLED_DIR}/debug")
+  configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblzma.pc" @ONLY)
+endif()
+vcpkg_fixup_pkgconfig()
+
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+
+file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/liblzmaConfig.cmake
 "
 include(\${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
 find_path(LibLZMA_INCLUDE_DIR
@@ -27,8 +44,8 @@ find_path(LibLZMA_INCLUDE_DIR
     PATH_SUFFIXES lzma
 )
 if(NOT LibLZMA_LIBRARY)
-    find_library(LibLZMA_LIBRARY_RELEASE NAMES lzma LZMA LibLZMA PATHS \${_IMPORT_PREFIX}/lib/)
-    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad LZMAd LibLZMAd PATHS \${_IMPORT_PREFIX}/debug/lib/)
+    find_library(LibLZMA_LIBRARY_RELEASE NAMES lzma LZMA LibLZMA liblzma PATHS \${_IMPORT_PREFIX}/lib/)
+    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad LZMAd LibLZMAd lzma LZMA LibLZMA liblzma PATHS \${_IMPORT_PREFIX}/debug/lib/)
     select_library_configurations(LibLZMA)
 endif()
 set(LibLZMA_INCLUDE_DIRS \${LibLZMA_INCLUDE_DIR} CACHE PATH \"\")
