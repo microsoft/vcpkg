@@ -35,7 +35,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib")
         set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib")
         set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2s.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
-        set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2ds.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
+        set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2sd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
     endif()
 
     set(LIBS_ALL_DBG
@@ -86,7 +86,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR_REL)
         vcpkg_execute_required_process(
             COMMAND ${NMAKE} -f makefile.vc clean install
-            "INST_DIR=\"${INST_DIR_REL}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
+            "INST_DIR=\"${INST_DIR_REL}\"" INSTALLED_ROOT=${CURRENT_INSTALLED_DIR} LIBXML2_INCLUDES=${LIBXML2_INCLUDE_DIR} "LINK_FLAGS=" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
             WORKING_DIRECTORY ${SOURCE_PATH}
             LOGNAME nmake-build-${TARGET_TRIPLET}-release
         )
