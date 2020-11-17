@@ -7,7 +7,8 @@ vcpkg_from_github(
     SHA512 f9e908f42e11e30aefe07f1b37d65545be2074758f054fb0d519e1a01f0b7060b309d2667459a5a6918a9ad9f535d0c0a0cc2cd0d4a281e78c2c48a6b8ae4a5d
     HEAD_REF master
     PATCHES
-        "fix-cmake-cmakedir-path.patch"
+        fix-cmake-cmakedir-path.patch
+        fix-dependency-libxml2.patch
 )
 
 vcpkg_configure_cmake(
