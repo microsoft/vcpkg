@@ -26,10 +26,11 @@ set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DUSE_CPU_MKL=ON
   -DUSE_OPENCL_MKL=ON
   -DAF_CPU_THREAD_PATH=${CPU_THREADS_PATH} # for building the arrayfire cpu threads lib
+  -DAF_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT} # for CMake configs/targets
   )
 
 # bin/dll directory for Windows non-static builds for the unified backend dll
-if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   set(AF_BIN_DIR ${CURRENT_PACKAGES_DIR})
   list(APPEND AF_DEFAULT_VCPKG_CMAKE_FLAGS "-DAF_BIN_DIR=${AF_BIN_DIR}")
 endif()
@@ -57,12 +58,6 @@ vcpkg_configure_cmake(
     ${AF_BACKEND_FEATURE_OPTIONS}
   )
 vcpkg_install_cmake()
-
-if (VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/ArrayFire/cmake)
-  vcpkg_fixup_cmake_targets(CONFIG_PATH share/ArrayFire/cmake)
-endif()
 
 vcpkg_copy_pdbs()
 
