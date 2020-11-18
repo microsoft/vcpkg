@@ -54,6 +54,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(COPY ${SOURCE_PATH}/include/mapnik DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/deps/agg/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # copy plugins into tool path, if any plugin is installed
 if(IS_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin/plugins)
