@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         enable-uwp-builds.patch
         fix_config_include.patch
+        win_output_name.patch # Fix output name on Windows. Autotool build does not generate lib prefixed libraries on windows. 
 )
 
 vcpkg_configure_cmake(
@@ -29,18 +30,11 @@ endif()
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   set(prefix "${CURRENT_INSTALLED_DIR}")
   configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/liblzma.pc" @ONLY)
-  if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/liblzma.pc" "-llzma" "-lliblzma")
-  endif()
 endif()
 if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   set(prefix "${CURRENT_INSTALLED_DIR}/debug")
   configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblzma.pc" @ONLY)
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblzma.pc" "-llzma" "-lliblzmad")
-  else()
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblzma.pc" "-llzma" "-llzmad")
-  endif()
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblzma.pc" "-llzma" "-llzmad")
 endif()
 vcpkg_fixup_pkgconfig()
 
