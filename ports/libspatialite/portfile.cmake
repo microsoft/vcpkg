@@ -19,11 +19,11 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
 
     # fix most of the problems when spacebar is in the path
+    find_library(LIBXML2_LIBS_REL NAMES libxml2 libxml2s PATHS ${CURRENT_INSTALLED_DIR}/lib NO_DEFAULT_PATH)
+    find_library(LIBXML2_LIBS_DBG NAMES libxml2d libxml2sd PATHS ${CURRENT_INSTALLED_DIR}/debug/lib NO_DEFAULT_PATH)
+    
     set(CURRENT_INSTALLED_DIR "\"${CURRENT_INSTALLED_DIR}\"")
     set(LIBXML2_INCLUDE_DIR "\"${CURRENT_INSTALLED_DIR}\"\\include\\libxml2")
-    
-    find_library(LIBXML2_LIBS_REL NAMES libxml2 libxml2s PATHS ${CURRENT_INSTALLED_DIR}/lib)
-    find_library(LIBXML2_LIBS_DBG NAMES libxml2d libxml2sd PATHS ${CURRENT_INSTALLED_DIR}/debug/lib)
 
     if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
         set(CL_FLAGS_DBG "/MDd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
@@ -40,8 +40,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
 
     set(LIBS_ALL_DBG
-        "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib \
-        ${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib \
+        "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib \
+        ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib \
         ${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib \
         ${CURRENT_INSTALLED_DIR}/debug/lib/freexl.lib \
         ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
@@ -50,8 +50,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib"
        )
     set(LIBS_ALL_REL
-        "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib \
-        ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib \
+        "${CURRENT_INSTALLED_DIR}/lib/iconv.lib \
+        ${CURRENT_INSTALLED_DIR}/lib/charset.lib \
         ${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib \
         ${CURRENT_INSTALLED_DIR}/lib/freexl.lib \
         ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
