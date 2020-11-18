@@ -454,7 +454,6 @@ hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
 hpx:x64-linux=fail
 libhsplasma:x64-windows-static=fail
-icu:arm64-windows=fail
 icu:arm-uwp=fail
 icu:x64-uwp=fail
 idevicerestore:x64-linux=fail
