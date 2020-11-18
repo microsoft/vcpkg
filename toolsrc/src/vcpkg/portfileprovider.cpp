@@ -387,57 +387,67 @@ namespace vcpkg::PortFileProvider
             "Error: Failed to load port %s from %s", version_spec.port_name, fs::u8string(port_directory));
     }
 
-    BaselineProvider::BaselineProvider(const VcpkgPaths& paths, const std::string& baseline)
-        : paths(paths), baseline(baseline)
+    namespace details
     {
-        load_baseline_file();
+        struct BaselineProviderImpl
+        {
+            Lazy<std::map<std::string, VersionSpec>> baseline_cache;
+        };
     }
+
+    BaselineProvider::BaselineProvider(const VcpkgPaths& paths, const std::string& baseline)
+        : paths(paths), baseline(baseline), m_impl(std::make_unique<details::BaselineProviderImpl>())
+    {
+    }
+    BaselineProvider::~BaselineProvider() { }
 
     Optional<VersionSpec> BaselineProvider::get_baseline_version(const std::string& port_name) const
     {
-        auto it = baselines_cache.find(port_name);
-        if (it != baselines_cache.end())
+        const auto& cache = get_baseline_cache();
+        auto it = cache.find(port_name);
+        if (it != cache.end())
         {
             return it->second;
         }
         return nullopt;
     }
 
-    void BaselineProvider::load_baseline_file() const
+    const std::map<std::string, VersionSpec>& BaselineProvider::get_baseline_cache() const
     {
-        auto maybe_baseline_file = get_baseline_json_path(paths);
-        Checks::check_exit(VCPKG_LINE_INFO, maybe_baseline_file.has_value(), "Couldn't find baseline.json");
-        auto baseline_file = maybe_baseline_file.value_or_exit(VCPKG_LINE_INFO);
+        return m_impl->baseline_cache.get_lazy([&]() -> auto {
+            auto maybe_baseline_file = get_baseline_json_path(paths);
+            Checks::check_exit(VCPKG_LINE_INFO, maybe_baseline_file.has_value(), "Couldn't find baseline.json");
+            auto baseline_file = maybe_baseline_file.value_or_exit(VCPKG_LINE_INFO);
 
-        auto value = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), baseline_file);
-        if (!value.first.is_object())
-        {
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Error: `baseline.json` does not have a top-level object.");
-        }
+            auto value = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), baseline_file);
+            if (!value.first.is_object())
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, "Error: `baseline.json` does not have a top-level object.");
+            }
 
-        const auto& obj = value.first.object();
-        auto baseline_value = obj.get("default");
-        if (!baseline_value)
-        {
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO, "Error: `baseline.json` does not contain the baseline \"%s\"", "default");
-        }
+            const auto& obj = value.first.object();
+            auto baseline_value = obj.get("default");
+            if (!baseline_value)
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Error: `baseline.json` does not contain the baseline \"%s\"", "default");
+            }
 
-        Json::Reader r;
-        std::map<std::string, VersionT, std::less<>> result;
-        r.visit_in_key(*baseline_value, "default", result, BaselineDeserializer::instance);
+            Json::Reader r;
+            std::map<std::string, VersionT, std::less<>> result;
+            r.visit_in_key(*baseline_value, "default", result, BaselineDeserializer::instance);
+            if (!r.errors().empty())
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Error: failed to parse `baseline.json`:\n%s", Strings::join("\n", r.errors()));
+            }
 
-        if (r.errors().empty())
-        {
+            std::map<std::string, VersionSpec> cache;
             for (auto&& kv_pair : result)
             {
-                baselines_cache.emplace(kv_pair.first, VersionSpec(kv_pair.first, kv_pair.second, Scheme::String));
+                cache.emplace(kv_pair.first, VersionSpec(kv_pair.first, kv_pair.second, Scheme::String));
             }
-        }
-        else
-        {
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO, "Error: failed to parse `baseline.json`:\n%s", Strings::join("\n", r.errors()));
-        }
+            return cache;
+        });
     }
 }
