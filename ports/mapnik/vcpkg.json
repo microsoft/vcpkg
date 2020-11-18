@@ -13,7 +13,12 @@
       "name": "boost-locale",
       "features": [
         "icu"
-      ]
+      ],
+      "platform": "windows"
+    },
+    {
+      "name": "boost-locale",
+      "platform": "!windows"
     },
     "boost-msm",
     "boost-program-options",
