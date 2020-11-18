@@ -73,18 +73,16 @@ new file mode 100644
 +
 
 
-diff --git a/third_party/aws/BUILD.bazel b/third_party/aws/BUILD.bazel
---- a/third_party/aws/BUILD.bazel
-+++ b/third_party/aws/BUILD.bazel
-@@ -137,3 +137,8 @@
-         "cmakedefine": "define",
-     },
+diff --git a/third_party/aws/aws-checksums.bazel b/third_party/aws/aws-checksums.bazel
+--- a/third_party/aws/aws-checksums.bazel
++++ b/third_party/aws/aws-checksums.bazel
+@@ -26,5 +26,6 @@
+     ],
+     deps = [
+         "@aws-c-common",
++        "@patched_includes//:headers",
+     ],
  )
-+
-+cc_library(
-+    name = "aws-checksums",
-+    deps = ["@patched_includes//:headers"],
-+)
 
 
 diff --git a/third_party/icu/BUILD.bazel b/third_party/icu/BUILD.bazel
@@ -250,4 +248,15 @@ diff --git a/third_party/systemlibs/png.BUILD b/third_party/systemlibs/png.BUILD
      linkopts = ["-lpng"],
      visibility = ["//visibility:public"],
 +    deps = ["@patched_includes//:headers"],
+ )
+
+
+diff --git a/third_party/systemlibs/double_conversion.BUILD b/third_party/systemlibs/double_conversion.BUILD
+--- a/third_party/systemlibs/double_conversion.BUILD
++++ b/third_party/systemlibs/double_conversion.BUILD
+@@ -9,4 +9,5 @@
+     name = "double-conversion",
+     linkopts = ["-ldouble-conversion"],
+     visibility = ["//visibility:public"],
+++    deps = ["@patched_includes//:headers"],
  )
