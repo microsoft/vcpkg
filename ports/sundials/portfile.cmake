@@ -17,9 +17,10 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SUN_BUILD_SHARED)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DEXAMPLES_ENABLE=OFF
-    -DBUILD_STATIC_LIBS=${SUN_BUILD_STATIC}
-    -DBUILD_SHARED_LIBS=${SUN_BUILD_SHARED}
+    OPTIONS 
+        -DEXAMPLES_ENABLE=OFF
+        -DBUILD_STATIC_LIBS=${SUN_BUILD_STATIC}
+        -DBUILD_SHARED_LIBS=${SUN_BUILD_SHARED}
 )
 
 vcpkg_install_cmake(DISABLE_PARALLEL)
@@ -56,5 +57,4 @@ if(REMOVE_DLLS)
 endif()
 
 vcpkg_copy_pdbs()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
