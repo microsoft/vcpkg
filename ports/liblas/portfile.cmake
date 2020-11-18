@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(VERSION 1.8.1)
                                               
 vcpkg_download_distfile(ARCHIVE
@@ -13,8 +11,8 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
-        fix-BuildError.patch
         fix-boost-headers.patch
+        fix-geotiff.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindPROJ4.cmake)
@@ -43,7 +41,11 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/share/cmake/libLAS/liblas-depends.cmake)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libLAS)
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+else()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/libLAS)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 

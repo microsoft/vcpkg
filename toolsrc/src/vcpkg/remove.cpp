@@ -6,6 +6,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/remove.h>
 #include <vcpkg/update.h>
 #include <vcpkg/vcpkglib.h>

@@ -4,6 +4,8 @@ vcpkg_from_github(
   REF ecad770071eb776208a46977347e6d2410d4f50e
   SHA512 1de0dc3f4842c68f5c12addf100996f7176ffb50dcd89a0b57446ba996d9199e31531f64c32eedbc2ea6a449459573811444dd35f1a50ece3880f58717c795ab
   HEAD_REF master
+  PATCHES
+    0001-rename-_castu32_f32-to-gemm_castu32_f32.patch
 )
 
 # enable CUDA inside DARKNET

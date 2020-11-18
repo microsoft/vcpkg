@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(TARGET_BUILD_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
@@ -26,7 +24,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(INSTALL ${TARGET_BUILD_PATH}-dbg/platform_folders.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/)
 endif()
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
 	vcpkg_fixup_cmake_targets(CONFIG_PATH cmake/ TARGET_PATH /share/platform_folders)
 else()
 	vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ TARGET_PATH /share/)

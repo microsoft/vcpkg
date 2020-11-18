@@ -1,4 +1,4 @@
-set(OATPP_VERSION "1.0.0")
+set(OATPP_VERSION "1.2.0")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,17 +6,11 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-libressl
-    REF 2cf02b6fd08bb9be29bdbe5188f35f2155c0c843 # 1.0.0
-    SHA512 053d017690d318edeeda63f782ee4845280b0f405e02249b18c30ac3d88cbfb1d3090bb6b60c0c8742f73357d60fa1695c369bef56a5ab7985d9773ea1fd52a2
+    REF cd2e9a515131e5e7dc043c591e952e12cd63db2c # 1.2.0
+    SHA512 e6d208edddff5373c07887b76fc808733bd363c340e740047ae90317874b73a5ef71e5cbbb0f9b1b48632c7a78709858a5ff0de81bc39207961e3642c0104010
     HEAD_REF master
     PATCHES "libress-submodule-downgrade-required-libressl-version.patch"
 )
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "ON")
-else()
-    set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "OFF")
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -24,8 +18,7 @@ vcpkg_configure_cmake(
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
         "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
-        "-DLIBRESSL_ROOT_DIR=${CURRENT_INSTALLED_DIR}"
-        "-DBUILD_SHARED_LIBS:BOOL=${OATPP_BUILD_SHARED_LIBRARIES_OPTION}"
+        "-DLIBRESSL_ROOT_DIR=${CURRENT_INSTALLED_DIR}"       
 )
 
 vcpkg_install_cmake()

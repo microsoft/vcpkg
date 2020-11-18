@@ -106,10 +106,10 @@ namespace vcpkg::PlatformExpression
                 return multiple_binary_operators == MultipleBinaryOperators::Allow;
             }
 
+            // top-level-platform-expression = optional-whitespace, platform-expression
             PlatformExpression::Expr parse()
             {
                 skip_whitespace();
-
                 auto res = expr();
 
                 if (!at_eof())
@@ -121,64 +121,71 @@ namespace vcpkg::PlatformExpression
             }
 
         private:
-            // <platform-expression.and>
-            //     <platform-expression.not>
-            //     <platform-expression.and> & <platform-expression.not>
-            // <platform-expression.or>
-            //     <platform-expression.not>
-            //     <platform-expression.or> | <platform-expression.not>
-
+            // identifier-character =
+            // | lowercase-alpha
+            // | digit ;
             static bool is_identifier_char(char32_t ch) { return is_lower_alpha(ch) || is_ascii_digit(ch); }
 
-            // <platform-expression>:
-            //     <platform-expression.not>
-            //     <platform-expression.and>
-            //     <platform-expression.or>
+            // platform-expression =
+            // | platform-expression-not
+            // | platform-expression-and
+            // | platform-expression-or ;
             std::unique_ptr<ExprImpl> expr()
             {
+                // this is the common prefix of all the variants
+                // platform-expression-not,
                 auto result = expr_not();
 
                 switch (cur())
                 {
                     case '|':
                     {
+                        // { "|", optional-whitespace, platform-expression-not }
                         return expr_binary<'|', '&'>(std::make_unique<ExprImpl>(ExprKind::op_or, std::move(result)));
                     }
                     case '&':
                     {
+                        // { "&", optional-whitespace, platform-expression-not }
                         return expr_binary<'&', '|'>(std::make_unique<ExprImpl>(ExprKind::op_and, std::move(result)));
                     }
                     default: return result;
                 }
             }
 
-            // <platform-expression.simple>:
-            //     ( <platform-expression> )
-            //     <platform-expression.identifier>
+            // platform-expression-simple =
+            // | platform-expression-identifier
+            // | "(", optional-whitespace, platform-expression, ")", optional-whitespace ;
             std::unique_ptr<ExprImpl> expr_simple()
             {
                 if (cur() == '(')
                 {
+                    // "(",
                     next();
+                    // optional-whitespace,
                     skip_whitespace();
+                    // platform-expression,
                     auto result = expr();
                     if (cur() != ')')
                     {
                         add_error("missing closing )");
                         return result;
                     }
+                    // ")",
                     next();
+                    // optional-whitespace
                     skip_whitespace();
                     return result;
                 }
 
+                // platform-expression-identifier
                 return expr_identifier();
             }
 
-            // <platform-expression.identifier>:
-            //     A lowercase alpha-numeric string
+            // platform-expression-identifier =
+            // | identifier-character, { identifier-character }, optional-whitespace ;
             std::unique_ptr<ExprImpl> expr_identifier()
             {
+                // identifier-character, { identifier-character },
                 std::string name = match_zero_or_more(is_identifier_char).to_string();
 
                 if (name.empty())
@@ -186,25 +193,39 @@ namespace vcpkg::PlatformExpression
                     add_error("unexpected character in logic expression");
                 }
 
+                // optional-whitespace
                 skip_whitespace();
+
                 return std::make_unique<ExprImpl>(ExprKind::identifier, std::move(name));
             }
 
-            // <platform-expression.not>:
-            //     <platform-expression.simple>
-            //     ! <platform-expression.simple>
+            // platform-expression-not =
+            // | platform-expression-simple
+            // | "!", optional-whitespace, platform-expression-simple ;
             std::unique_ptr<ExprImpl> expr_not()
             {
                 if (cur() == '!')
                 {
+                    // "!",
                     next();
+                    // optional-whitespace,
                     skip_whitespace();
+                    // platform-expression-simple
                     return std::make_unique<ExprImpl>(ExprKind::op_not, expr_simple());
                 }
 
+                // platform-expression-simple
                 return expr_simple();
             }
 
+            // platform-expression-and =
+            // | platform-expression-not, { "&", optional-whitespace, platform-expression-not } ;
+            //
+            // platform-expression-or =
+            // | platform-expression-not, { "|", optional-whitespace, platform-expression-not } ;
+            //
+            // already taken care of by the caller: platform-expression-not
+            // so we start at either "&" or "|"
             template<char oper, char other>
             std::unique_ptr<ExprImpl> expr_binary(std::unique_ptr<ExprImpl>&& seed)
             {
@@ -213,10 +234,13 @@ namespace vcpkg::PlatformExpression
                     // Support chains of the operator to avoid breaking backwards compatibility
                     do
                     {
+                        // "&" or "|",
                         next();
                     } while (allow_multiple_binary_operators() && cur() == oper);
 
+                    // optional-whitespace,
                     skip_whitespace();
+                    // platform-expression-not, (go back to start of repetition)
                     seed->exprs.push_back(expr_not());
                 } while (cur() == oper);
 
@@ -225,7 +249,6 @@ namespace vcpkg::PlatformExpression
                     add_error("mixing & and | is not allowed; use () to specify order of operations");
                 }
 
-                skip_whitespace();
                 return std::move(seed);
             }
         };
@@ -438,7 +461,7 @@ namespace vcpkg::PlatformExpression
 
     ExpectedS<Expr> parse_platform_expression(StringView expression, MultipleBinaryOperators multiple_binary_operators)
     {
-        auto parser = ExpressionParser(expression, multiple_binary_operators);
+        ExpressionParser parser(expression, multiple_binary_operators);
         auto res = parser.parse();
 
         if (auto p = parser.extract_error())

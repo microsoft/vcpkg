@@ -57,7 +57,8 @@
 function(vcpkg_from_bitbucket)
     set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 HEAD_REF)
     set(multipleValuesArgs PATCHES)
-    cmake_parse_arguments(_vdud "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vdud "" "${oneValueArgs}" "${multipleValuesArgs}")
 
     if(NOT _vdud_OUT_SOURCE_PATH)
         message(FATAL_ERROR "OUT_SOURCE_PATH must be specified.")

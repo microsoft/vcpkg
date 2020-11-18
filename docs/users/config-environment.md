@@ -46,6 +46,12 @@ the platform dependent PATH seperator (Windows `;` | others `:`)
 
 Example (Windows): `C:\custom-ports\boost;C:\custom-ports\sqlite3`
 
+#### VCPKG_OVERLAY_TRIPLETS
+
+This environment variable allows users to add directories to search for triplets.
+[Example: overlay triplets](../examples/overlay-triplets-linux-dynamic.md).
+List paths to overlays using the platform dependent PATH seperator (Windows `;`, others `:`) 
+
 #### VCPKG_FORCE_SYSTEM_BINARIES
 
 This environment variable, if set, suppresses the downloading of CMake and Ninja and forces the use of the system binaries.

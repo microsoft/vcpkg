@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # On Windows, we can get a cpuinfo.dll, but it exports no symbols.
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -55,6 +53,3 @@ endif()
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

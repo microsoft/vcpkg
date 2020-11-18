@@ -2,15 +2,14 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 54071bd..0edd0e9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -44,6 +44,12 @@ if(WIN32)
+@@ -44,6 +44,11 @@ if(WIN32)
      set(CMAKE_DEBUG_POSTFIX -debug)
  endif()
  
 +# Bigint
 +find_package(bigint CONFIG REQUIRED)
 +
-+include_directories(${BIGINT_INCLUDE_DIRS})
-+link_libraries(${BIGINT_LIBRARIES})
++link_libraries(bigint::bigint)
 +
  # OpenCV classes
  if(WITH_OPENCV)

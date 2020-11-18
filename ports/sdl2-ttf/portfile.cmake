@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(VERSION 2.0.15)
 
 vcpkg_download_distfile(ARCHIVE

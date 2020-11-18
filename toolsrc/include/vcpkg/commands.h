@@ -1,6 +1,5 @@
 #pragma once
 
-#include <vcpkg/build.h>
 #include <vcpkg/commands.interface.h>
 
 namespace vcpkg::Commands

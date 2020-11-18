@@ -2,7 +2,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     message(FATAL_ERROR "UWP builds not supported")
 endif()
 
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/libopusenc
