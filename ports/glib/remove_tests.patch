@@ -1,0 +1,34 @@
+diff --git a/gio/meson.build b/gio/meson.build
+index 40a9ca6d0..538652e61 100644
+--- a/gio/meson.build
++++ b/gio/meson.build
+@@ -1002,9 +1002,9 @@ if enable_systemtap
+ endif
+ 
+ subdir('fam')
+-if build_tests
+-    subdir('tests')
+-endif
++#if build_tests
++#    subdir('tests')
++#endif
+ 
+ # The following is an example for building internal marshallers that are used
+ # by GIO. We cannot guarantee glib-genmarshal availability while building GLib
+diff --git a/meson.build b/meson.build
+index 947a4058c..ad4f5793e 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2295,9 +2295,9 @@ subdir('gthread')
+ subdir('gmodule')
+ subdir('gio')
+ subdir('fuzzing')
+-if build_tests
+-  subdir('tests')
+-endif
++#if build_tests
++#  subdir('tests')
++#endif
+ 
+ # xgettext is optional (on Windows for instance)
+ if find_program('xgettext', required : get_option('nls')).found()
