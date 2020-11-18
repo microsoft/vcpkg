@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.13.4)
 project(mapnik)
-set(CMAKE_CXX_STANDARD 14)
+
+set(MAPNIK_MAJOR_VERSION 3)
+set(MAPNIK_MINOR_VERSION 0)
+set(MAPNIK_PATCH_VERSION 23)
+set(MAPNIK_VERSION ${MAPNIK_MAJOR_VERSION}.${MAPNIK_MINOR_VERSION}.${MAPNIK_PATCH_VERSION})
+
 include(CMakeDependentOption)
 
 
@@ -48,15 +53,15 @@ endif()
 find_package(Boost REQUIRED
              COMPONENTS filesystem system regex program_options)
 
-find_package(FreeType REQUIRED)
+find_package(freetype CONFIG REQUIRED)
 
-find_library(HARFBUZZ_LIB harfbuzz.lib)
+find_package(harfbuzz CONFIG REQUIRED)
 find_package(ICU REQUIRED COMPONENTS uc)
 
 find_package(PNG     REQUIRED)
-find_package(jpeg    REQUIRED)
-find_package(tiff    REQUIRED)
-find_package(WebP    REQUIRED)
+find_package(JPEG    REQUIRED)
+find_package(TIFF    REQUIRED)
+find_package(WebP CONFIG REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(ZLIB    REQUIRED)
 
@@ -66,26 +71,12 @@ set (MAPNIK_DEFS
     -DHAVE_TIFF
     -DHAVE_WEBP)
 
-set(thirdparty_include_paths ${thirdparty_include_paths}
-    ${JPEG_INCLUDE_DIR} ${WEBP_INCLUDE_DIRS} ${LIBXML2_INCLUDE_DIR})
-    
-set(thirdparty_libraries ${thirdparty_libraries}
-    ${JPEG_LIBRARIES} ${WEBP_LIBRARIES} ${LIBXML2_LIBRARIES} ${HARFBUZZ_LIB})
-
 # AGG
-
 include(files.cmake)
 
 if (WITH_CAIRO)
-    find_library(CAIRO_LIB_DEBUG cairod)
-    find_library(CAIRO_LIB_RELEASE cairo)
-    find_library(CAIRO_GOBJECT_LIB_DEBUG cairo-gobjectd)
-    find_library(CAIRO_GOBJECT_LIB_RELEASE cairo-gobject)
-    find_path(CAIRO_INCLUDE_DIR cairo/cairo.h)
+    find_package(unofficial-cairo CONFIG REQUIRED)
 
-    set(thirdparty_include_paths ${thirdparty_include_paths} ${CAIRO_INCLUDE_DIR})
-    set(thirdparty_libraries ${thirdparty_libraries} $<$<CONFIG:Debug>:${CAIRO_LIB_DEBUG}> $<$<CONFIG:Release>:${CAIRO_LIB_RELEASE}>)
-    
     set(MAPNIK_SOURCES ${MAPNIK_SOURCES}
         src/cairo/process_markers_symbolizer.cpp
         src/cairo/process_group_symbolizer.cpp
@@ -104,14 +95,14 @@ if (WITH_CAIRO)
         src/cairo/process_text_symbolizer.cpp)
         
     set(MAPNIK_DEFS ${MAPNIK_DEFS} -DHAVE_CAIRO)
+
+    set(OPTIONAL_LIBRARIES ${OPTIONAL_LIBRARIES} unofficial::cairo::cairo)
 endif()
 message(STATUS "Cairo renderer " ${WITH_CAIRO})
 
 if (WITH_PROJ4)
-    find_package(PROJ4 REQUIRED)
-    set(thirdparty_include_paths ${thirdparty_include_paths} ${PROJ4_INCLUDE_DIRS})
-    set(thirdparty_libraries ${thirdparty_libraries} ${PROJ4_LIBRARIES})
-
+    find_package(PROJ4 CONFIG REQUIRED)
+    set(OPTIONAL_LIBRARIES ${OPTIONAL_LIBRARIES} proj)
     set(MAPNIK_DEFS ${MAPNIK_DEFS} -DMAPNIK_USE_PROJ4)
 endif()
 
@@ -129,7 +120,7 @@ if (WITH_GRID)
         src/grid/process_shield_symbolizer.cpp
         src/grid/process_text_symbolizer.cpp)
     set(MAPNIK_DEFS ${MAPNIK_DEFS} -DGRID_RENDERER)
-ENDIF()
+endif()
 message(STATUS "Grid renderer: " ${WITH_GRID})
     
 set(MAPNIK_SOURCES ${MAPNIK_SOURCES}
@@ -149,59 +140,84 @@ set(MAPNIK_SOURCES ${MAPNIK_SOURCES}
     src/png_reader.cpp
     src/tiff_reader.cpp
     src/webp_reader.cpp
-    )
+)
     
 #set(MAPNIK_SOURCES ${MAPNIK_SOURCES} src/rapidxml_loader.cpp)
 
-set(MAPNIK_DEFS ${MAPNIK_DEFS} -DHAVE_LIBXML2 -DBOOST_REGEX_HAS_ICU)
+#vcpkg only supports icu on windows
+if(WIN32)
+    set(MAPNIK_DEFS ${MAPNIK_DEFS} -DHAVE_LIBXML2 -DBOOST_REGEX_HAS_ICU)
+endif()
 
 find_path(MAPBOX_POLYLABEL_INCLUDE_DIRS "mapbox/polylabel.hpp")
 find_path(MAPBOX_GEOMETRY_INCLUDE_DIRS "mapbox/feature.hpp")
 find_path(MAPBOX_VARIANT_INCLUDE_DIRS "mapbox/optional.hpp")
 
+
+set(MAPNIK_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/include)
+
 set(mapnik_include_paths
-    include
-    deps
-    deps/agg/include)
-    
+    ${PROJECT_SOURCE_DIR}/deps
+    ${PROJECT_SOURCE_DIR}/deps/agg/include)
 
-    
-include_directories(
-    ${mapnik_include_paths} 
-    ${MAPBOX_POLYLABEL_INCLUDE_DIRS} 
-    ${MAPBOX_GEOMETRY_INCLUDE_DIRS}
-    ${MAPBOX_VARIANT_INCLUDE_DIRS}
-    ${thirdparty_include_paths})
-
+add_library(mapnik ${MAPNIK_SOURCES} ${MAPNIK_AGG_SOURCES} ${AGG_SOURCES})
 if (MAPNIK_STATIC_LIB)
     message(STATUS "Building static library")
-    add_library(mapnik STATIC ${MAPNIK_SOURCES} ${MAPNIK_AGG_SOURCES} ${AGG_SOURCES})
     set_target_properties(mapnik PROPERTIES DEFINE_SYMBOL MAPNIK_STATICLIB)
     set(MAPNIK_LIB_DEFINITION -DMAPNIK_STATICLIB)
 else ()
     message(STATUS "Building shared library")
-    add_library(mapnik SHARED ${MAPNIK_SOURCES} ${MAPNIK_AGG_SOURCES} ${AGG_SOURCES})
     set_target_properties(mapnik PROPERTIES DEFINE_SYMBOL MAPNIK_EXPORTS)
-    set(MAPNIK_LIB_DEFINITION )
+    set(MAPNIK_LIB_DEFINITION -DMAPNIK_EXPORTS)
 endif ()
 
-target_compile_definitions(mapnik PUBLIC  ${MAPNIK_DEFS})
 
-target_include_directories(mapnik INTERFACE ${mapnik_include_paths}  ${thirdparty_include_paths} )
+target_compile_definitions(mapnik PUBLIC ${MAPNIK_DEFS})
+target_include_directories(mapnik PUBLIC  
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>  
+    $<INSTALL_INTERFACE:include>
+)
+target_include_directories(mapnik PRIVATE 
+    ${mapnik_include_paths}
+    ${JPEG_INCLUDE_DIR}
+    ${LIBXML2_INCLUDE_DIR}
+    ${MAPBOX_POLYLABEL_INCLUDE_DIRS} 
+    ${MAPBOX_GEOMETRY_INCLUDE_DIRS}
+    ${MAPBOX_VARIANT_INCLUDE_DIRS}
+)
 target_link_libraries(mapnik PUBLIC
-    ${thirdparty_libraries}
     Boost::boost Boost::filesystem Boost::system Boost::regex Boost::program_options Boost::system
-    Freetype::Freetype
+    WebP::webp WebP::webpdemux WebP::libwebpmux WebP::webpdecoder
+    freetype
     ICU::uc
     PNG::PNG
     TIFF::TIFF
-    ZLIB::ZLIB)
+    ZLIB::ZLIB
+    harfbuzz::harfbuzz
+    JPEG::JPEG
+    ${LIBXML2_LIBRARIES}
+    ${OPTIONAL_LIBRARIES}
+)
 
 
-install(TARGETS mapnik)
+install(TARGETS mapnik 
+    EXPORT MapnikTargets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+    INCLUDES DESTINATION include
+)
 
 add_subdirectory(src/json)
 add_subdirectory(src/wkt)
+
+
+install(EXPORT MapnikTargets
+        FILE MapnikTargets.cmake
+        NAMESPACE mapnik::
+        DESTINATION lib/cmake/mapnik
+)
+
 
 # ideally we should also generate mapnik-config
 
@@ -245,7 +261,7 @@ if (WITH_INPUT_SHAPE)
 endif()
 
 if (WITH_INPUT_SQLITE)
-    find_package(sqlite3 REQUIRED)
+    find_package(SQLite3 REQUIRED)
     add_subdirectory(plugins/input/sqlite)
 endif()
 
@@ -305,3 +321,24 @@ if(WITH_UTILS)
     add_subdirectory(utils/mapnik-render)
     add_subdirectory(utils/shapeindex)
 endif()
+
+
+
+
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/MapnikConfigVersion.cmake"
+  VERSION ${MAPNIK_VERSION}
+  COMPATIBILITY SameMajorVersion
+)
+
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/MapnikConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/MapnikConfig.cmake"
+  INSTALL_DESTINATION lib/cmake/mapnik
+)
+
+install(FILES
+          "${CMAKE_CURRENT_BINARY_DIR}/MapnikConfig.cmake"
+          "${CMAKE_CURRENT_BINARY_DIR}/MapnikConfigVersion.cmake"
+        DESTINATION lib/cmake/mapnik
+)

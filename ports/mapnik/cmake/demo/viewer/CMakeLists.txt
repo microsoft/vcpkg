@@ -23,5 +23,8 @@ set_target_properties(mapnik-viewer PROPERTIES
     AUTOMOC ON)
     
 add_dependencies(mapnik-viewer mapnik)
+target_include_directories(mapnik-viewer PRIVATE 
+    ${mapnik_include_paths}
+)
 target_link_libraries(mapnik-viewer PRIVATE mapnik Qt5::Widgets)
 install(TARGETS mapnik-viewer DESTINATION bin)

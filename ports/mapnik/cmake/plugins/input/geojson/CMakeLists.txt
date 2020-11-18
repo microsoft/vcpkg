@@ -3,8 +3,11 @@ add_library(mapnik-input-geojson SHARED
     geojson_featureset.cpp 
     geojson_index_featureset.cpp 
     geojson_memory_index_featureset.cpp)
-    
-target_link_libraries(mapnik-input-geojson PUBLIC mapnik mapnik-json)
+ 
+target_include_directories(mapnik-input-geojson PRIVATE 
+    ${mapnik_include_paths}
+)
+target_link_libraries(mapnik-input-geojson PRIVATE mapnik mapnik-json)
 set_target_properties(mapnik-input-geojson PROPERTIES PREFIX "")
 set_target_properties(mapnik-input-geojson PROPERTIES OUTPUT_NAME "geojson")
 set_target_properties(mapnik-input-geojson PROPERTIES SUFFIX ".input")
