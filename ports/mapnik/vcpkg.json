@@ -1,0 +1,139 @@
+{
+  "name": "mapnik",
+  "version-string": "3.0.23",
+  "description": "Mapnik is an open source toolkit for developing mapping applications.",
+  "homepage": "https://github.com/mapnik/mapnik",
+  "dependencies": [
+    "mapbox-geometry",
+    "mapbox-polylabel",
+    "mapbox-variant",
+    "boost-assign",
+    "boost-bimap",
+    "boost-filesystem",
+    "boost-geometry",
+    "boost-gil",
+    "boost-msm",
+    {
+      "name": "boost-locale",
+      "features": [
+        "icu"
+      ]
+    },
+    "boost-program-options",
+    "boost-property-tree",
+    {
+      "name": "boost-regex",
+      "features": [
+        "icu"
+      ]
+    },
+    "boost-spirit",
+    "boost-system",
+    {
+      "name": "freetype",
+      "features": [
+        "bzip2",
+        "png"
+      ]
+    },
+    {
+      "name": "harfbuzz",
+      "features": [
+        "icu"
+      ]
+    },
+    "icu",
+    "libjpeg-turbo",
+    "libpng",
+    "libwebp",
+    "libxml2",
+    "mapbox-variant",
+    "tiff",
+    "zlib"
+  ],
+  "features": {
+    "cairo": {
+      "description": "Cairo renderer",
+      "dependencies": [
+        "cairo",
+        "cairomm"
+      ]
+    },
+    "demo": {
+      "description": "Make demo application"
+    },
+    "viewer": {
+      "description": "Make demo viewer application",
+      "dependencies": [
+        "qt5-base"
+      ]
+    },
+    "input-csv": {
+      "description": "CSV input plugin"
+    },
+    "input-gdal": {
+      "description": "GDAL input plugin",
+      "dependencies": [
+        "gdal"
+      ]
+    },
+    "input-geobuf": {
+      "description": "GEOBUF input plugin",
+      "dependencies": [
+        "protozero"
+      ]
+    },
+    "input-geojson": {
+      "description": "GEOJSON input plugin"
+    },
+    "input-ogr": {
+      "description": "OGR input plugin",
+      "dependencies": [
+        "gdal"
+      ]
+    },
+    "input-pgraster": {
+      "description": "PGRASTER input plugin",
+      "dependencies": [
+        "libodb-pgsql",
+        "libpq"
+      ]
+    },
+    "input-postgis": {
+      "description": "POSTGIS input plugin",
+      "dependencies": [
+        "libodb-pgsql",
+        "libpq"
+      ]
+    },
+    "input-raster": {
+      "description": "RASTER input plugin"
+    },
+    "input-shape": {
+      "description": "SHAPE input plugin"
+    },
+    "input-sqlite": {
+      "description": "SQLITE input plugin",
+      "dependencies": [
+        "sqlite3"
+      ]
+    },
+    "input-topojson": {
+      "description": "TOPOJSON input plugin"
+    },
+    "proj4": {
+      "description": "PROJ4 Functionalities",
+      "dependencies": [
+        {
+          "name": "proj4",
+          "features": [
+            "database"
+          ]
+        }
+      ]
+    },
+    "utils": {
+      "description": "Make utilities Application including mapnik-rendrer and shapeindex"
+    }
+  }
+}

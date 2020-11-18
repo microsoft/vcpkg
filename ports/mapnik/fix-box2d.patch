@@ -1,0 +1,12 @@
+diff --git a/include/mapnik/geometry/box2d.hpp b/include/mapnik/geometry/box2d.hpp
+index 1894978..7dc8d57 100644
+--- a/include/mapnik/geometry/box2d.hpp
++++ b/include/mapnik/geometry/box2d.hpp
+@@ -23,6 +23,7 @@
+ #ifndef MAPNIK_BOX2D_HPP
+ #define MAPNIK_BOX2D_HPP
+ 
++#include <string>
+ // mapnik
+ #include <mapnik/config.hpp>
+ #include <mapnik/coord.hpp>
