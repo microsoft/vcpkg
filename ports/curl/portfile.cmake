@@ -18,9 +18,11 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
 
 # schannel will enable sspi, but sspi do not support uwp
-if(("schannel" IN_LIST FEATURES OR "sspi" IN_LIST FEATURES OR "tool" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
-    message(FATAL_ERROR "schannel,sspi,tool are not supported on non-Windows and uwp platforms")
-endif()
+foreach(feature "schannel" "sspi" "tool")
+    if(feature IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature ${feature} is not supported on UWP.")
+    endif()
+endforeach()
 
 if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
@@ -86,15 +88,15 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CURL)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/curl-config DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
+#Fix install path
+file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config CURL_CONFIG)
+string(REPLACE "${CURRENT_PACKAGES_DIR}" "${CURRENT_INSTALLED_DIR}" CURL_CONFIG "${CURL_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config "${CURL_CONFIG}")
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/curl-config DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
-    #Fix install path
-    file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config CURL_CONFIG)
-    string(REPLACE "${CURRENT_PACKAGES_DIR}" "${CURRENT_INSTALLED_DIR}" CURL_CONFIG "${CURL_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config "${CURL_CONFIG}")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

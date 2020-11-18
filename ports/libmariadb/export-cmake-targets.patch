@@ -1,8 +1,12 @@
 diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
-index 083a863..7bc32b4 100644
+index 083a863..d911fa7 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
-@@ -460,10 +460,21 @@ INSTALL(TARGETS mariadbclient
+@@ -457,13 +457,25 @@ ENDIF()
+ 
+ INSTALL(TARGETS mariadbclient
+           COMPONENT Development
++          EXPORT unofficial-libmariadb-targets
            LIBRARY DESTINATION lib)
  INSTALL(TARGETS libmariadb
            COMPONENT SharedLibraries

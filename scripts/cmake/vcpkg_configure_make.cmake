@@ -206,7 +206,7 @@ function(vcpkg_configure_make)
     cmake_parse_arguments(PARSE_ARGV 0 _csc
         "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
     vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
     set(_VCPKG_CMAKE_VARS_FILE "${_VCPKG_CMAKE_VARS_FILE}" PARENT_SCOPE)
@@ -265,7 +265,7 @@ function(vcpkg_configure_make)
     # Pre-processing windows configure requirements
     if (CMAKE_HOST_WIN32)
         list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES} ${_csc_ADDITIONAL_MSYS_PACKAGES})
         if (_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET)
             _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
             _vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
@@ -388,6 +388,7 @@ function(vcpkg_configure_make)
         # Variables not correctly detected by configure. In release builds.
         list(APPEND _csc_OPTIONS gl_cv_double_slash_root=yes
                                  ac_cv_func_memmove=yes)
+        #list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all) # Just ignore libtool checks 
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             list(APPEND _csc_OPTIONS gl_cv_host_cpu_c_abi=no)
         endif()
@@ -478,20 +479,34 @@ function(vcpkg_configure_make)
     convert_to_list(VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES C_LIBS_LIST)
     convert_to_list(VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES CXX_LIBS_LIST)
     set(ALL_LIBS_LIST ${C_LIBS_LIST} ${CXX_LIBS_LIST})
-
     list(REMOVE_DUPLICATES ALL_LIBS_LIST)
     list(TRANSFORM ALL_LIBS_LIST STRIP)
-    list(TRANSFORM ALL_LIBS_LIST REPLACE "(.lib|.a|.so)$" "")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(REMOVE_ITEM ALL_LIBS_LIST "uuid")
+
+    #Do lib list transformation from name.lib to -lname if necessary
+    set(_VCPKG_TRANSFORM_LIBS TRUE)
+    if(VCPKG_TARGET_IS_UWP)
+        set(_VCPKG_TRANSFORM_LIBS FALSE)
+        # Avoid libtool choke: "Warning: linker path does not have real file for library -lWindowsApp."
+        # The problem with the choke is that libtool always falls back to built a static library even if a dynamic was requested. 
+        # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows. 
+        # It even does unix/dos-short/unix transformation with the path to get rid of spaces. 
     endif()
-    list(JOIN ALL_LIBS_LIST " -l" ALL_LIBS_STRING)
+    set(_lprefix)
+    if(_VCPKG_TRANSFORM_LIBS)
+        set(_lprefix "-l")
+        list(TRANSFORM ALL_LIBS_LIST REPLACE "(.dll.lib|.lib|.a|.so)$" "")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            list(REMOVE_ITEM ALL_LIBS_LIST "uuid")
+        endif()
+    endif()
+    list(JOIN ALL_LIBS_LIST " ${_lprefix}" ALL_LIBS_STRING)
 
     if(ALL_LIBS_STRING)
+        set(ALL_LIBS_STRING "${_lprefix}${ALL_LIBS_STRING}")
         if(DEFINED ENV{LIBS})
-            set(ENV{LIBS} "$ENV{LIBS} -l${ALL_LIBS_STRING}")
+            set(ENV{LIBS} "$ENV{LIBS} ${ALL_LIBS_STRING}")
         else()
-            set(ENV{LIBS} "-l${ALL_LIBS_STRING}")
+            set(ENV{LIBS} "${ALL_LIBS_STRING}")
         endif()
     endif()
     debug_message(STATUS "ENV{LIBS}:$ENV{LIBS}")
