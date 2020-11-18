@@ -6,7 +6,7 @@ option(INSTALL_HEADERS_TOOLS "Install public header files and tools" ON)
 set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
 
-find_package(LibXml2 REQUIRED)
+find_package(libxml2 CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(Iconv REQUIRED)
 
