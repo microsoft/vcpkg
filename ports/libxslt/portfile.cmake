@@ -13,7 +13,7 @@ vcpkg_from_github(
 if (VCPKG_TARGET_IS_WINDOWS)
     find_library(XML2_LIB_REL NAMES libxml2 libxml2s PATHS ${CURRENT_INSTALLED_DIR}/lib)
     get_filename_component(XML2_LIB_REL ${XML2_LIB_REL} NAME)
-    find_library(XML2_LIB_DBG NAMES libxml2d libxml2sd xml2 PATHS ${CURRENT_INSTALLED_DIR}/debug/lib)
+    find_library(XML2_LIB_DBG NAMES libxml2d libxml2sd PATHS ${CURRENT_INSTALLED_DIR}/debug/lib)
     get_filename_component(XML2_LIB_DBG ${XML2_LIB_DBG} NAME)
     
     # Create some directories ourselves, because the makefile doesn't
@@ -45,6 +45,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(TO_NATIVE_PATH "${LIB_DIR}" LIB_DIR)
     file(TO_NATIVE_PATH "${INCLUDE_DIR}" INCLUDE_DIR)
     file(TO_NATIVE_PATH "${INSTALL_DIR}" INSTALL_DIR)
+    
     string(CONFIGURE "${CONFIGURE_COMMAND_TEMPLATE}" CONFIGURE_COMMAND_REL)
     # Debug params
     if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
@@ -57,6 +58,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     set(INSTALL_DIR ${CURRENT_PACKAGES_DIR}/debug)
     file(TO_NATIVE_PATH "${LIB_DIR}" LIB_DIR)
     file(TO_NATIVE_PATH "${INSTALL_DIR}" INSTALL_DIR)
+    
     string(CONFIGURE "${CONFIGURE_COMMAND_TEMPLATE}" CONFIGURE_COMMAND_DBG)
     
     vcpkg_install_nmake(

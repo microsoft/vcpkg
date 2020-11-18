@@ -1,9 +1,9 @@
 diff --git a/win32/Makefile.msvc b/win32/Makefile.msvc
-index 0bb2d8a..2696d8b 100644
+index d4eed51..2817156 100644
 --- a/win32/Makefile.msvc
 +++ b/win32/Makefile.msvc
 @@ -63,8 +63,10 @@ LDFLAGS = $(LDFLAGS) /LIBPATH:$(BINDIR) /LIBPATH:$(LIBPREFIX)
- LIBS = wsock32.lib libiconv.lib libcharset.lib
+ LIBS = wsock32.lib iconv.lib charset.lib
  !if "$(DEBUG)" == "1"
  LIBS = $(LIBS) zlibd.lib lzmad.lib
 +XML2LIB = $(XML2_LIB_DBG)
