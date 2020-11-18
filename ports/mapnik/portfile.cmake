@@ -55,16 +55,22 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(COPY ${SOURCE_PATH}/include/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(COPY ${SOURCE_PATH}/include/mapnik DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
+# copy plugins into tool path, if any plugin is installed
+if(IS_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin/plugins)
+  file(COPY ${CURRENT_PACKAGES_DIR}/bin/plugins DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+endif()
 vcpkg_copy_pdbs()
 
 if("demo" IN_LIST FEATURES)
-  file(COPY ${SOURCE_PATH}/demo/data DESTINATION ${CURRENT_PACKAGES_DIR}/tools/mapnik/demo)
+  file(COPY ${SOURCE_PATH}/demo/data DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/demo)
   vcpkg_copy_tools(TOOL_NAMES mapnik-demo AUTO_CLEAN)
 endif()
 
 if("viewer" IN_LIST FEATURES)
+  # copy the ini file to reference the plugins correctly
+  file(COPY $${CMAKE_CURRENT_LIST_DIR}/viewer.ini DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   vcpkg_copy_tools(TOOL_NAMES mapnik-viewer AUTO_CLEAN)
 endif()
 
@@ -73,8 +79,7 @@ if ("utils" IN_LIST FEATURES)
     TOOL_NAMES mapnik-render shapeindex
     AUTO_CLEAN
   )
-  file(COPY ${SOURCE_PATH}/fonts DESTINATION ${CURRENT_PACKAGES_DIR}/tools/mapnik)
-  #file(COPY ${CURRENT_PACKAGES_DIR}/bin/plugins DESTINATION ${CURRENT_PACKAGES_DIR}/tools/mapnik)
+  file(COPY ${SOURCE_PATH}/fonts DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
