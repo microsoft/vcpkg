@@ -18,11 +18,33 @@ vcpkg_extract_source_archive_ex(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-# jconfig.h should be genrated when `configure` is available
-if(true)# 
+if(VCPKG_TARGET_IS_LINUX)
+    # The deflated files are using CRLF. change them to LF before generating jconfig.h
+    find_program(DOS2UNIX dos2unix REQUIRED)
+    message(STATUS "Using dos2unix: ${DOS2UNIX}")
+
     vcpkg_execute_required_process(
-        COMMAND configure
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+        COMMAND ${DOS2UNIX} --force -n configure configure
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+    )
+    vcpkg_execute_required_process(
+        COMMAND ${DOS2UNIX} -n config.sub config.sub
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+    )
+    vcpkg_execute_required_process(
+        COMMAND ${DOS2UNIX} -n config.guess config.guess
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+    )
+
+    # Allow execution for 'configure' and generate jconfig.h
+    vcpkg_execute_required_process(
+        COMMAND chmod +x configure config.sub config.guess
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+    )
+    vcpkg_execute_required_process(
+        COMMAND bash configure
+        WORKING_DIRECTORY "${SOURCE_PATH}"
+        LOGNAME "pre-config-${TARGET_TRIPLET}"
     )
 else()
     file(RENAME ${SOURCE_PATH}/jconfig.txt ${SOURCE_PATH}/jconfig.h)
