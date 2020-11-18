@@ -1,0 +1,26 @@
+diff --git a/CMake/FindLibXml2.cmake b/CMake/FindLibXml2.cmake
+index 4b1b5ca..c4f2271 100644
+--- a/CMake/FindLibXml2.cmake
++++ b/CMake/FindLibXml2.cmake
+@@ -46,7 +46,7 @@ The following cache variables may also be set:
+ ``LIBXML2_LIBRARY``
+   path to the LibXml2 library
+ #]=======================================================================]
+-
++if (0)
+ # use pkg-config to get the directories and then use these values
+ # in the find_path() and find_library() calls
+ find_package(PkgConfig QUIET)
+@@ -72,7 +72,11 @@ find_library(LIBXML2_LIBRARY NAMES xml2 libxml2
+    ${PC_LIBXML_LIBDIR}
+    ${PC_LIBXML_LIBRARY_DIRS}
+    )
+-
++else()
++find_package(libxml2 CONFIG REQUIRED)
++set(LIBXML2_INCLUDE_DIR ${LIBXML2_INCLUDE_DIRS})
++SET(LibXml2_FOUND 1)
++endif()
+ find_program(LIBXML2_XMLLINT_EXECUTABLE xmllint)
+ # for backwards compat. with KDE 4.0.x:
+ set(XMLLINT_EXECUTABLE "${LIBXML2_XMLLINT_EXECUTABLE}")

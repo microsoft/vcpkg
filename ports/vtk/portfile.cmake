@@ -128,6 +128,7 @@ vcpkg_from_github(
         fix-using-hdf5.patch
         # Last patch TODO: Patch out internal loguru
         FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
+        FindLibXml2.patch # Use libxml2 exported cmake configure
 )
 
 # =============================================================================
