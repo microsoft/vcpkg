@@ -21,26 +21,27 @@ if (VCPKG_TARGET_IS_WINDOWS)
     # fix most of the problems when spacebar is in the path
     set(CURRENT_INSTALLED_DIR "\"${CURRENT_INSTALLED_DIR}\"")
     set(LIBXML2_INCLUDE_DIR "\"${CURRENT_INSTALLED_DIR}\"\\include\\libxml2")
+    
+    find_library(LIBXML2_LIBS_REL NAMES libxml2 libxml2s PATHS ${CURRENT_INSTALLED_DIR}/lib)
+    find_library(LIBXML2_LIBS_DBG NAMES libxml2d libxml2sd PATHS ${CURRENT_INSTALLED_DIR}/debug/lib)
 
     if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
         set(CL_FLAGS_DBG "/MDd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
         set(CL_FLAGS_REL "/MD /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
         set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
         set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
-        set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib")
-        set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2d.lib")
     else()
         set(CL_FLAGS_DBG "/MTd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
         set(CL_FLAGS_REL "/MT /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
         set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib")
         set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib")
-        set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2s.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
-        set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2sd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
+        set(LIBXML2_LIBS_REL "${LIBXML2_LIBS_REL} ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
+        set(LIBXML2_LIBS_DBG "${LIBXML2_LIBS_DBG} ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
     endif()
 
     set(LIBS_ALL_DBG
-        "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib \
-        ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib \
+        "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib \
+        ${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib \
         ${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib \
         ${CURRENT_INSTALLED_DIR}/debug/lib/freexl.lib \
         ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
@@ -49,8 +50,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib"
        )
     set(LIBS_ALL_REL
-        "${CURRENT_INSTALLED_DIR}/lib/iconv.lib \
-        ${CURRENT_INSTALLED_DIR}/lib/charset.lib \
+        "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib \
+        ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib \
         ${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib \
         ${CURRENT_INSTALLED_DIR}/lib/freexl.lib \
         ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
