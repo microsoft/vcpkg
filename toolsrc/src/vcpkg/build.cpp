@@ -203,12 +203,27 @@ namespace vcpkg::Build
     static const std::string NAME_EMPTY_PACKAGE = "PolicyEmptyPackage";
     static const std::string NAME_DLLS_WITHOUT_LIBS = "PolicyDLLsWithoutLIBs";
     static const std::string NAME_DLLS_WITHOUT_EXPORTS = "PolicyDLLsWithoutExports";
+    static const std::string NAME_DLLS_IN_STATIC_LIBRARY = "PolicyDLLsInStaticLibrary";
+    static const std::string NAME_MISMATCHED_NUMBER_OF_BINARIES = "PolicyMismatchedNumberOfBinaries";
     static const std::string NAME_ONLY_RELEASE_CRT = "PolicyOnlyReleaseCRT";
     static const std::string NAME_EMPTY_INCLUDE_FOLDER = "PolicyEmptyIncludeFolder";
     static const std::string NAME_ALLOW_OBSOLETE_MSVCRT = "PolicyAllowObsoleteMsvcrt";
     static const std::string NAME_ALLOW_RESTRICTED_HEADERS = "PolicyAllowRestrictedHeaders";
     static const std::string NAME_SKIP_DUMPBIN_CHECKS = "PolicySkipDumpbinChecks";
     static const std::string NAME_SKIP_ARCHITECTURE_CHECK = "PolicySkipArchitectureCheck";
+
+    static std::remove_const_t<decltype(ALL_POLICIES)> generate_all_policies()
+    {
+        std::remove_const_t<decltype(ALL_POLICIES)> res;
+        for (size_t i = 0; i < res.size(); ++i)
+        {
+            res[i] = static_cast<BuildPolicy>(i);
+        }
+
+        return res;
+    }
+
+    decltype(ALL_POLICIES) ALL_POLICIES = generate_all_policies();
 
     const std::string& to_string(BuildPolicy policy)
     {
@@ -217,6 +232,8 @@ namespace vcpkg::Build
             case BuildPolicy::EMPTY_PACKAGE: return NAME_EMPTY_PACKAGE;
             case BuildPolicy::DLLS_WITHOUT_LIBS: return NAME_DLLS_WITHOUT_LIBS;
             case BuildPolicy::DLLS_WITHOUT_EXPORTS: return NAME_DLLS_WITHOUT_EXPORTS;
+            case BuildPolicy::DLLS_IN_STATIC_LIBRARY: return NAME_DLLS_IN_STATIC_LIBRARY;
+            case BuildPolicy::MISMATCHED_NUMBER_OF_BINARIES: return NAME_MISMATCHED_NUMBER_OF_BINARIES;
             case BuildPolicy::ONLY_RELEASE_CRT: return NAME_ONLY_RELEASE_CRT;
             case BuildPolicy::EMPTY_INCLUDE_FOLDER: return NAME_EMPTY_INCLUDE_FOLDER;
             case BuildPolicy::ALLOW_OBSOLETE_MSVCRT: return NAME_ALLOW_OBSOLETE_MSVCRT;
@@ -234,6 +251,8 @@ namespace vcpkg::Build
             case BuildPolicy::EMPTY_PACKAGE: return "VCPKG_POLICY_EMPTY_PACKAGE";
             case BuildPolicy::DLLS_WITHOUT_LIBS: return "VCPKG_POLICY_DLLS_WITHOUT_LIBS";
             case BuildPolicy::DLLS_WITHOUT_EXPORTS: return "VCPKG_POLICY_DLLS_WITHOUT_EXPORTS";
+            case BuildPolicy::DLLS_IN_STATIC_LIBRARY: return "VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY";
+            case BuildPolicy::MISMATCHED_NUMBER_OF_BINARIES: return "VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES";
             case BuildPolicy::ONLY_RELEASE_CRT: return "VCPKG_POLICY_ONLY_RELEASE_CRT";
             case BuildPolicy::EMPTY_INCLUDE_FOLDER: return "VCPKG_POLICY_EMPTY_INCLUDE_FOLDER";
             case BuildPolicy::ALLOW_OBSOLETE_MSVCRT: return "VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT";
@@ -1221,7 +1240,7 @@ namespace vcpkg::Build
         if (!version.empty()) build_info.version = std::move(version);
 
         std::map<BuildPolicy, bool> policies;
-        for (auto policy : G_ALL_POLICIES)
+        for (auto policy : ALL_POLICIES)
         {
             const auto setting = parser.optional_field(to_string(policy));
             if (setting.empty()) continue;

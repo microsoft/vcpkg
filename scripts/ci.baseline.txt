@@ -28,42 +28,9 @@
 
 
 # Add new items alphabetically
-
-3fd:arm64-windows=fail
-3fd:arm-uwp=fail
-3fd:x64-linux=fail
-3fd:x64-osx=fail
-3fd:x64-windows=fail
-3fd:x64-windows-static=fail
-3fd:x86-windows=fail
-activemq-cpp:x64-linux=fail
-activemq-cpp:x64-osx=fail
-alac:arm-uwp=fail
-alac:x64-uwp=fail
-aliyun-oss-c-sdk:x64-linux=fail
-aliyun-oss-c-sdk:x64-osx=fail
-ampl-mp:arm64-windows=fail
-ampl-mp:arm-uwp=fail
-ampl-mp:x64-uwp=fail
-amqpcpp:arm-uwp=fail
-amqpcpp:x64-uwp=fail
-angelscript:arm64-windows=fail
-angelscript:arm-uwp=fail
-apr:arm-uwp=fail
-apr:x64-uwp=fail
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
-argtable2:arm-uwp=fail
-argtable2:x64-uwp=fail
-arrow:arm64-windows=fail
-arrow:x86-windows=fail
-asiosdk:x64-linux=fail
-asiosdk:x64-osx=fail
-asiosdk:x64-uwp=fail
-asiosdk:arm64-windows=fail
-asiosdk:arm-uwp=fail
-asyncplusplus:arm-uwp=fail
-asyncplusplus:x64-uwp=fail
+
 atk:x64-osx=fail
 atk:arm64-windows=fail
 atlmfc:x64-linux=fail
@@ -1390,10 +1357,6 @@ readline-win32:x64-uwp=fail
 realsense2:arm64-windows=fail
 realsense2:arm-uwp=fail
 realsense2:x64-uwp=fail
-redis-plus-plus:x86-windows=fail
-redis-plus-plus:x64-windows=fail
-redis-plus-plus:x64-windows-static=fail
-redis-plus-plus:arm64-windows=fail
 replxx:arm-uwp=fail
 replxx:x64-uwp=fail
 reproc:arm-uwp=fail
@@ -1574,12 +1537,6 @@ teemo:arm64-windows=fail
 teemo:x64-osx=fail
 telnetpp:arm-uwp=fail
 telnetpp:x64-uwp=fail
-tensorflow-cc:arm64-windows=fail
-tensorflow-cc:x64-linux=skip
-tensorflow-cc:x64-osx=skip
-tensorflow-cc:x64-windows=fail
-tensorflow-cc:x64-windows-static=fail
-tensorflow-cc:x86-windows=fail
 tesseract:x64-windows=fail
 tesseract:x64-windows-static=fail
 tesseract:x86-windows=fail
