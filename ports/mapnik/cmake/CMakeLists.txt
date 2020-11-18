@@ -146,8 +146,9 @@ set(MAPNIK_SOURCES ${MAPNIK_SOURCES}
 
 #vcpkg only supports icu on windows
 if(WIN32)
-    set(MAPNIK_DEFS ${MAPNIK_DEFS} -DHAVE_LIBXML2 -DBOOST_REGEX_HAS_ICU)
+    set(MAPNIK_DEFS ${MAPNIK_DEFS} -DBOOST_REGEX_HAS_ICU)
 endif()
+set(MAPNIK_DEFS ${MAPNIK_DEFS} -DHAVE_LIBXML2)
 
 find_path(MAPBOX_POLYLABEL_INCLUDE_DIRS "mapbox/polylabel.hpp")
 find_path(MAPBOX_GEOMETRY_INCLUDE_DIRS "mapbox/feature.hpp")
