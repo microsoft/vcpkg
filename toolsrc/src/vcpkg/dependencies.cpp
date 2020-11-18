@@ -1578,13 +1578,12 @@ namespace vcpkg::Dependencies
                 PackageSpec spec(dep.name, toplevel.triplet());
 
                 auto& node = emplace_package(spec);
-                const std::string toplevel = "toplevel";
 
                 auto over_it = m_overrides.find(dep.name);
                 if (over_it != m_overrides.end())
                 {
                     m_roots.push_back(DepSpec{spec, over_it->second, dep.features});
-                    add_constraint(node, over_it->second, toplevel);
+                    add_constraint(node, over_it->second, toplevel.name());
                     continue;
                 }
 
@@ -1608,11 +1607,11 @@ namespace vcpkg::Dependencies
                             if (r == VerComp::lt)
                             {
                                 add_constraint(node, *p_base_ver, "baseline");
-                                add_constraint(node, *p_dep_ver, toplevel);
+                                add_constraint(node, *p_dep_ver, toplevel.name());
                             }
                             else
                             {
-                                add_constraint(node, *p_dep_ver, toplevel);
+                                add_constraint(node, *p_dep_ver, toplevel.name());
                                 add_constraint(node, *p_base_ver, "baseline");
                             }
                         }
@@ -1624,13 +1623,13 @@ namespace vcpkg::Dependencies
                     }
                     else
                     {
-                        add_constraint(node, *p_dep_ver, toplevel);
+                        add_constraint(node, *p_dep_ver, toplevel.name());
                     }
                 }
                 else if (auto p_base_ver = base_ver.get())
                 {
                     m_roots.push_back(DepSpec{spec, *p_base_ver, dep.features});
-                    add_constraint(node, *p_base_ver, toplevel);
+                    add_constraint(node, *p_base_ver, toplevel.name());
                 }
                 else
                 {
@@ -1641,11 +1640,11 @@ namespace vcpkg::Dependencies
 
                 for (auto&& f : dep.features)
                 {
-                    add_constraint(node, f, toplevel);
+                    add_constraint(node, f, toplevel.name());
                 }
                 if (Util::find(dep.features, "core") == dep.features.end())
                 {
-                    add_constraint_default_features(node, toplevel);
+                    add_constraint_default_features(node, toplevel.name());
                 }
             }
         }
