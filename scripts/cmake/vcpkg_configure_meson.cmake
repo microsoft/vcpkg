@@ -33,7 +33,7 @@
 ##
 ## * [fribidi](https://github.com/Microsoft/vcpkg/blob/master/ports/fribidi/portfile.cmake)
 ## * [libepoxy](https://github.com/Microsoft/vcpkg/blob/master/ports/libepoxy/portfile.cmake)
-function(_vcpkg_generate_native_file) #https://mesonbuild.com/Native-environments.html
+function(vcpkg_generate_native_file) #https://mesonbuild.com/Native-environments.html
     set(NATIVE "[binaries]\n")
     #set(proglist AR RANLIB STRIP NM OBJDUMP DLLTOOL MT)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -85,7 +85,7 @@ function(_vcpkg_generate_native_file) #https://mesonbuild.com/Native-environment
     file(WRITE "${_file}" "${NATIVE}")
 endfunction()
 
-function(_vcpkg_generate_native_file_config _config) #https://mesonbuild.com/Native-environments.html
+function(vcpkg_generate_native_file_config _config) #https://mesonbuild.com/Native-environments.html
     if(VCPKG_TARGET_IS_WINDOWS)
         set(L_FLAG /LIBPATH:)
     else()
@@ -169,7 +169,7 @@ function(_vcpkg_generate_native_file_config _config) #https://mesonbuild.com/Nat
     file(WRITE "${_file}" "${NATIVE_${_config}}")
 endfunction()
 
-function(_vcpkg_generate_cross_file) #https://mesonbuild.com/Cross-compilation.html
+function(vcpkg_generate_cross_file) #https://mesonbuild.com/Cross-compilation.html
     if(CMAKE_HOST_WIN32)
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
             set(BUILD_ARCH $ENV{PROCESSOR_ARCHITEW6432})
@@ -267,7 +267,7 @@ function(_vcpkg_generate_cross_file) #https://mesonbuild.com/Cross-compilation.h
     endif()
 endfunction()
 
-function(_vcpkg_generate_cross_file_config _config) #https://mesonbuild.com/Native-environments.html
+function(vcpkg_generate_cross_file_config _config) #https://mesonbuild.com/Native-environments.html
     if(VCPKG_TARGET_IS_WINDOWS)
         set(L_FLAG /LIBPATH:)
     else()
@@ -342,26 +342,26 @@ function(vcpkg_configure_meson)
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
 
     if(NOT VCPKG_MESON_NATIVE_FILE)
-        _vcpkg_generate_native_file()
+        vcpkg_generate_native_file()
     endif()
     if(NOT VCPKG_MESON_NATIVE_FILE_DEBUG)
-        _vcpkg_generate_native_file_config(DEBUG)
+        vcpkg_generate_native_file_config(DEBUG)
     endif()
     if(NOT VCPKG_MESON_NATIVE_FILE_RELEASE)
-        _vcpkg_generate_native_file_config(RELEASE)
+        vcpkg_generate_native_file_config(RELEASE)
     endif()
     list(APPEND _vcm_OPTIONS --native "${VCPKG_MESON_NATIVE_FILE}")
     list(APPEND _vcm_OPTIONS_DEBUG --native "${VCPKG_MESON_NATIVE_FILE_DEBUG}")
     list(APPEND _vcm_OPTIONS_RELEASE --native "${VCPKG_MESON_NATIVE_FILE_RELEASE}")
 
     if(NOT VCPKG_MESON_CROSS_FILE)
-        _vcpkg_generate_cross_file()
+        vcpkg_generate_cross_file()
     endif()
     if(NOT VCPKG_MESON_CROSS_FILE_DEBUG AND VCPKG_MESON_CROSS_FILE)
-        _vcpkg_generate_cross_file_config(DEBUG)
+        vcpkg_generate_cross_file_config(DEBUG)
     endif()
     if(NOT VCPKG_MESON_CROSS_FILE_RELEASE AND VCPKG_MESON_CROSS_FILE)
-        _vcpkg_generate_cross_file_config(RELEASE)
+        vcpkg_generate_cross_file_config(RELEASE)
     endif()
     if(VCPKG_MESON_CROSS_FILE)
         list(APPEND _vcm_OPTIONS --cross "${VCPKG_MESON_CROSS_FILE}")
