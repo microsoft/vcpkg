@@ -1,3 +1,5 @@
+vcpkg_fail_port_ibnstall(ON_TARGET "uwp" "linux" "osx")
+
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 
 find_program(NMAKE nmake)
