@@ -41,7 +41,8 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/liblzma)
 
-file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/liblzmaConfig.cmake
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/liblzma/liblzma-config.cmake" "include(\"\${CMAKE_CURRENT_LIST_DIR}/liblzmaConfig.cmake\")")
+file(APPEND "${CURRENT_PACKAGES_DIR}/share/liblzma/liblzmaConfig.cmake"
 "
 include(\${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
 find_path(LibLZMA_INCLUDE_DIR
@@ -130,3 +131,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 file(INSTALL  ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
