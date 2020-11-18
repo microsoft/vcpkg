@@ -8,6 +8,7 @@ vcpkg_from_github(
         fix-uwp-build.patch
         fix-docs-path.patch
         fix-dependencies.patch
+        fix-pkgconfig.patch
 )
 
 vcpkg_configure_cmake(
@@ -31,6 +32,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libxml2-2.9.10 TARGET_PATH share/libxml2)
+
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
