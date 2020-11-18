@@ -1,3 +1,4 @@
+
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
 
@@ -10,32 +11,13 @@
 #include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/versiondeserializers.h>
 
+#include <regex>
+
 using namespace vcpkg;
+using namespace Versions;
 
 namespace
 {
-    vcpkg::Versions::VersionSpec extract_version_spec(const std::string& port_name, const Json::Object& version_obj)
-    {
-        static const std::map<vcpkg::Versions::Scheme, std::string> version_schemes{
-            {Versions::Scheme::Relaxed, "version"},
-            {Versions::Scheme::Semver, "version-semver"},
-            {Versions::Scheme::Date, "version-date"},
-            {Versions::Scheme::String, "version-string"}};
-
-        const auto port_version = static_cast<int>(version_obj.get("port-version")->integer());
-
-        for (auto&& kv_pair : version_schemes)
-        {
-            if (const auto version_string = version_obj.get(kv_pair.second))
-            {
-                return Versions::VersionSpec(
-                    port_name, version_string->string().to_string(), port_version, kv_pair.first);
-            }
-        }
-
-        Checks::unreachable(VCPKG_LINE_INFO);
-    }
-
     Optional<fs::path> get_versions_json_path(const VcpkgPaths& paths, const std::string& port_name)
     {
         // TODO: Get correct `port_versions` path for the registry the port belongs to, pseudocode below:
@@ -55,7 +37,7 @@ namespace
     Optional<fs::path> get_baseline_json_path(const VcpkgPaths& paths)
     {
         const auto baseline_json_path = paths.root / "port_versions" / "baseline.json";
-        return paths.get_filesystem().exists(baseline_json_path) ? vcpkg::make_optional(baseline_json_path) : nullopt;
+        return paths.get_filesystem().exists(baseline_json_path) ? make_optional(baseline_json_path) : nullopt;
     }
 }
 
@@ -78,7 +60,7 @@ namespace vcpkg::PortFileProvider
         return Util::fmap(ports, [](auto&& kvpair) -> const SourceControlFileLocation* { return &kvpair.second; });
     }
 
-    PathsPortFileProvider::PathsPortFileProvider(const vcpkg::VcpkgPaths& paths_,
+    PathsPortFileProvider::PathsPortFileProvider(const VcpkgPaths& paths_,
                                                  const std::vector<std::string>& overlay_ports_)
         : paths(paths_)
     {
@@ -131,7 +113,7 @@ namespace vcpkg::PortFileProvider
                 }
                 else
                 {
-                    vcpkg::print_error_message(maybe_scf.error());
+                    print_error_message(maybe_scf.error());
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(ports_dir));
                 }
@@ -157,7 +139,7 @@ namespace vcpkg::PortFileProvider
                 }
                 else
                 {
-                    vcpkg::print_error_message(found_scf.error());
+                    print_error_message(found_scf.error());
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(ports_dir));
                 }
@@ -199,7 +181,7 @@ namespace vcpkg::PortFileProvider
                 }
                 else
                 {
-                    vcpkg::print_error_message(found_scf.error());
+                    print_error_message(found_scf.error());
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(port_directory));
                 }
@@ -275,7 +257,7 @@ namespace vcpkg::PortFileProvider
                 }
                 else
                 {
-                    vcpkg::print_error_message(maybe_scf.error());
+                    print_error_message(maybe_scf.error());
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO, "Error: Failed to load port from %s", fs::u8string(ports_dir));
                 }
@@ -309,10 +291,9 @@ namespace vcpkg::PortFileProvider
         return ret;
     }
 
-    VersionedPortfileProvider::VersionedPortfileProvider(const vcpkg::VcpkgPaths& paths) : paths(paths) { }
+    VersionedPortfileProvider::VersionedPortfileProvider(const VcpkgPaths& paths) : paths(paths) { }
 
-    const std::vector<vcpkg::Versions::VersionSpec>& VersionedPortfileProvider::get_port_versions(
-        const std::string& port_name) const
+    const std::vector<VersionSpec>& VersionedPortfileProvider::get_port_versions(const std::string& port_name) const
     {
         auto cache_it = versions_cache.find(port_name);
         if (cache_it != versions_cache.end())
@@ -321,48 +302,52 @@ namespace vcpkg::PortFileProvider
         }
 
         auto maybe_versions_json_path = get_versions_json_path(paths, port_name);
-        if (!maybe_versions_json_path.has_value())
-        {
-            // TODO: Handle db version not existing
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           maybe_versions_json_path.has_value(),
+                           "Couldn't find a versions database file: %s.json.",
+                           port_name);
         auto versions_json_path = maybe_versions_json_path.value_or_exit(VCPKG_LINE_INFO);
 
         auto versions_json = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), versions_json_path);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           versions_json.first.is_object(),
+                           "Error: `%s.json` does not have a top level object.",
+                           port_name);
 
-        // NOTE: A dictionary would be the best way to store this, for now we use a vector
-        if (versions_json.first.is_object())
+        const auto& versions_object = versions_json.first.object();
+        auto maybe_versions_array = versions_object.get("versions");
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           maybe_versions_array != nullptr && maybe_versions_array->is_array(),
+                           "Error: `%s.json` does not contain a versions array.",
+                           port_name);
+
+        // Avoid warning treated as error.
+        if (maybe_versions_array != nullptr)
         {
-            const auto& versions_object = versions_json.first.object();
-            auto maybe_versions_array = versions_object.get("versions");
+            Json::Reader r;
+            std::vector<VersionDbEntry> db_entries;
+            r.visit_in_key(*maybe_versions_array, "versions", db_entries, VersionDbEntryArrayDeserializer::instance);
 
-            if (maybe_versions_array && maybe_versions_array->is_array())
+            for (const auto& version : db_entries)
             {
-                const auto& versions_array = maybe_versions_array->array();
-                for (const auto& version : versions_array)
-                {
-                    const auto& version_obj = version.object();
-                    Versions::VersionSpec spec = extract_version_spec(port_name, version_obj);
+                std::regex is_commit_sha("^[\\da-f]{40}$");
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   std::regex_match(version.git_tree, is_commit_sha),
+                                   "Invalid commit SHA in `git-tree` for %s %s: %s",
+                                   port_name,
+                                   version.version.to_string(),
+                                   version.git_tree);
 
-                    auto& package_versions = versions_cache[spec.port_name];
-                    package_versions.push_back(spec);
-
-                    auto git_tree = version_obj.get("git-tree")->string().to_string();
-                    git_tree_cache.emplace(std::move(spec), git_tree);
-                }
-            }
-            else
-            {
-                // TODO: Message error
-                Checks::exit_fail(VCPKG_LINE_INFO);
+                VersionSpec spec(port_name, version.version, version.scheme);
+                versions_cache[port_name].push_back(spec);
+                git_tree_cache[spec] = version.git_tree;
             }
         }
-
         return versions_cache.at(port_name);
     }
 
     ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
-        const vcpkg::Versions::VersionSpec& version_spec) const
+        const VersionSpec& version_spec) const
     {
         auto cache_it = control_cache.find(version_spec);
         if (cache_it != control_cache.end())
@@ -370,18 +355,19 @@ namespace vcpkg::PortFileProvider
             return cache_it->second;
         }
 
-        // Pre-populate cache.
+        // Pre-populate versions cache.
         get_port_versions(version_spec.port_name);
 
         auto git_tree_cache_it = git_tree_cache.find(version_spec);
         if (git_tree_cache_it == git_tree_cache.end())
         {
-            // TODO: Try to load port from database
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            return Strings::concat("No git object SHA for entry %s at version %s.",
+                                   version_spec.port_name,
+                                   version_spec.version.to_string());
         }
 
         const std::string git_tree = git_tree_cache_it->second;
-        const auto port_directory = paths.git_checkout_port(version_spec.port_name, git_tree);
+        auto port_directory = paths.git_checkout_port(version_spec.port_name, git_tree);
 
         auto maybe_control_file = Paragraphs::try_load_port(paths.get_filesystem(), port_directory);
         if (auto scf = maybe_control_file.get())
@@ -390,18 +376,15 @@ namespace vcpkg::PortFileProvider
             {
                 return SourceControlFileLocation{std::move(*scf), std::move(port_directory)};
             }
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
-                                      fs::u8string(port_directory),
-                                      version_spec.port_name,
-                                      scf->get()->core_paragraph->name);
+            return Strings::format("Error: Failed to load port from %s: names did not match: '%s' != '%s'",
+                                   fs::u8string(port_directory),
+                                   version_spec.port_name,
+                                   scf->get()->core_paragraph->name);
         }
 
-        vcpkg::print_error_message(maybe_control_file.error());
-        Checks::exit_with_message(VCPKG_LINE_INFO,
-                                  "Error: Failed to load port %s from %s",
-                                  version_spec.port_name,
-                                  fs::u8string(port_directory));
+        print_error_message(maybe_control_file.error());
+        return Strings::format(
+            "Error: Failed to load port %s from %s", version_spec.port_name, fs::u8string(port_directory));
     }
 
     BaselineProvider::BaselineProvider(const VcpkgPaths& paths, const std::string& baseline)
@@ -410,7 +393,7 @@ namespace vcpkg::PortFileProvider
         load_baseline_file();
     }
 
-    Optional<Versions::VersionSpec> BaselineProvider::get_baseline_version(const std::string& port_name) const
+    Optional<VersionSpec> BaselineProvider::get_baseline_version(const std::string& port_name) const
     {
         auto it = baselines_cache.find(port_name);
         if (it != baselines_cache.end())
@@ -448,8 +431,7 @@ namespace vcpkg::PortFileProvider
         {
             for (auto&& kv_pair : result)
             {
-                baselines_cache.emplace(kv_pair.first,
-                                        Versions::VersionSpec(kv_pair.first, kv_pair.second, Versions::Scheme::String));
+                baselines_cache.emplace(kv_pair.first, VersionSpec(kv_pair.first, kv_pair.second, Scheme::String));
             }
         }
         else
