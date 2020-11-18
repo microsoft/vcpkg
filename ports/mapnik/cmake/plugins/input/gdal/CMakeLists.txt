@@ -2,6 +2,9 @@ add_library(mapnik-input-gdal SHARED
     gdal_datasource.cpp
     gdal_featureset.cpp)
 
+target_include_directories(mapnik-input-gdal PRIVATE 
+    ${mapnik_include_paths}
+)
 target_link_libraries(mapnik-input-gdal PUBLIC mapnik ${GDAL_LIBRARIES})
 set_target_properties(mapnik-input-gdal PROPERTIES PREFIX "")
 set_target_properties(mapnik-input-gdal PROPERTIES OUTPUT_NAME "gdal")

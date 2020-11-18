@@ -13,7 +13,19 @@ add_library(mapnik-json STATIC
     topojson_grammar_x3.cpp
     unicode_string_grammar_x3.cpp)
 
-target_link_libraries(mapnik-json INTERFACE ${ICUU_LIB})
+target_include_directories(mapnik-json PRIVATE
+    ${JPEG_INCLUDE_DIR}
+    ${LIBXML2_INCLUDE_DIR}
+    ${MAPBOX_POLYLABEL_INCLUDE_DIRS} 
+    ${MAPBOX_GEOMETRY_INCLUDE_DIRS}
+    ${MAPBOX_VARIANT_INCLUDE_DIRS}
+)
+target_link_libraries(mapnik-json PRIVATE mapnik ${ICUU_LIB})
+#target_compile_definitions(mapnik-json PRIVATE ${MAPNIK_LIB_DEFINITION})
 
-install(TARGETS mapnik-json LIBRARY DESTINATION lib)
-target_compile_definitions(mapnik-json PRIVATE ${MAPNIK_LIB_DEFINITION})
+install(TARGETS mapnik-json
+    EXPORT MapnikTargets
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+)
