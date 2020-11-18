@@ -149,7 +149,7 @@ diff --git a/third_party/systemlibs/nsync.BUILD b/third_party/systemlibs/nsync.B
 diff --git a/third_party/grpc/BUILD b/third_party/grpc/BUILD
 --- a/third_party/grpc/BUILD
 +++ b/third_party/grpc/BUILD
-@@ -0,0 +1,19 @@
+@@ -0,0 +1,24 @@
 +grpc_cc_library(
 +    name = "grpc++",
 +    deps = ["@patched_includes//:headers"],
@@ -167,6 +167,11 @@ diff --git a/third_party/grpc/BUILD b/third_party/grpc/BUILD
 +
 +grpc_cc_library(
 +    name = "grpc_server_backward_compatibility",
++    deps = ["@patched_includes//:headers"],
++)
++
++grpc_cc_library(
++    name = "grpc_lb_policy_grpclb_secure",
 +    deps = ["@patched_includes//:headers"],
 +)
 
@@ -229,13 +234,18 @@ diff --git a/tensorflow/core/util/BUILD b/tensorflow/core/util/BUILD
 diff --git a/third_party/com_google_absl.BUILD b/third_party/com_google_absl.BUILD
 --- a/third_party/com_google_absl.BUILD
 +++ b/third_party/com_google_absl.BUILD
-@@ -3,3 +3,8 @@
+@@ -3,3 +3,13 @@
  licenses(["notice"])  # Apache
 
  exports_files(["LICENSE"])
 +
 +cc_library(
 +    name = "strings",
++    deps = ["@patched_includes//:headers"],
++)
++
++cc_library(
++    name = "stacktrace",
 +    deps = ["@patched_includes//:headers"],
 +)
 
