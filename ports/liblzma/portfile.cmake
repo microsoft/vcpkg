@@ -45,7 +45,7 @@ endif()
 vcpkg_fixup_pkgconfig()
 
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/liblzma)
 
 file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/liblzmaConfig.cmake
 "
