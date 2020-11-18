@@ -60,6 +60,8 @@ set(LIBHUNSPELL_HDRS
 
 #hunspell/libhunspell
 add_library(libhunspell ${LIBHUNSPELL_HDRS} ${LIBHUNSPELL_SRCS})
+set_target_properties(libhunspell PROPERTIES PREFIX "")
+
 target_compile_definitions(libhunspell PRIVATE -DBUILDING_LIBHUNSPELL)
 install(TARGETS libhunspell
     ARCHIVE DESTINATION lib
