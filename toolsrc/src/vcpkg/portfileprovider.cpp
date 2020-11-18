@@ -1,4 +1,5 @@
 
+
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
 
@@ -34,10 +35,11 @@ namespace
         return nullopt;
     }
 
-    Optional<fs::path> get_baseline_json_path(const VcpkgPaths& paths)
+    Optional<fs::path> get_baseline_json_path(const VcpkgPaths& paths, const std::string& baseline_commit_sha)
     {
-        const auto baseline_json_path = paths.root / "port_versions" / "baseline.json";
-        return paths.get_filesystem().exists(baseline_json_path) ? make_optional(baseline_json_path) : nullopt;
+        // TODO: Get correct `baseline.json` path for the registry.
+        const auto baseline_json = paths.git_checkout_baseline(baseline_commit_sha);
+        return paths.get_filesystem().exists(baseline_json) ? make_optional(baseline_json) : nullopt;
     }
 }
 
@@ -415,7 +417,7 @@ namespace vcpkg::PortFileProvider
     const std::map<std::string, VersionSpec>& BaselineProvider::get_baseline_cache() const
     {
         return m_impl->baseline_cache.get_lazy([&]() -> auto {
-            auto maybe_baseline_file = get_baseline_json_path(paths);
+            auto maybe_baseline_file = get_baseline_json_path(paths, baseline);
             Checks::check_exit(VCPKG_LINE_INFO, maybe_baseline_file.has_value(), "Couldn't find baseline.json");
             auto baseline_file = maybe_baseline_file.value_or_exit(VCPKG_LINE_INFO);
 
