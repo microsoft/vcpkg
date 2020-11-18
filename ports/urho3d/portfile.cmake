@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         asm_files.patch
+        macosx.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
