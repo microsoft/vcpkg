@@ -33,23 +33,7 @@
 ##
 ## * [fribidi](https://github.com/Microsoft/vcpkg/blob/master/ports/fribidi/portfile.cmake)
 ## * [libepoxy](https://github.com/Microsoft/vcpkg/blob/master/ports/libepoxy/portfile.cmake)
-function(add_to_env envvar value)
-    if(DEFINED ENV{${envvar}})
-        set(${envvar}_BACKUP "$ENV{${envvar}}" PARENT_SCOPE)
-        set(ENV{${envvar}} "$ENV{${envvar}}${VCPKG_HOST_PATH_SEPARATOR}${value}")
-    else()
-        set(ENV{${envvar}} "${value}")
-    endif()
-endfunction()
-function(restore_env envvar)
-    if(${envvar}_BACKUP)
-        set(ENV{${envvar}} "${${envvar}_BACKUP}")
-    else()
-        unset(ENV{${envvar}})
-    endif()
-endfunction()
-
-function(generate_native_file) #https://mesonbuild.com/Native-environments.html
+function(_vcpkg_generate_native_file) #https://mesonbuild.com/Native-environments.html
     set(NATIVE "[binaries]\n")
     #set(proglist AR RANLIB STRIP NM OBJDUMP DLLTOOL MT)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -101,7 +85,7 @@ function(generate_native_file) #https://mesonbuild.com/Native-environments.html
     file(WRITE "${_file}" "${NATIVE}")
 endfunction()
 
-function(generate_native_file_config _config) #https://mesonbuild.com/Native-environments.html
+function(_vcpkg_generate_native_file_config _config) #https://mesonbuild.com/Native-environments.html
     if(VCPKG_TARGET_IS_WINDOWS)
         set(L_FLAG /LIBPATH:)
     else()
@@ -155,9 +139,9 @@ function(generate_native_file_config _config) #https://mesonbuild.com/Native-env
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/android.cmake")
         elseif(VCPKG_TARGET_IS_OSX)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
-        elseif(VVCPKG_TARGET_IS_FREEBSD)
+        elseif(VCPKG_TARGET_IS_IOS)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
+        elseif(VCPKG_TARGET_IS_FREEBSD)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
         elseif(VCPKG_TARGET_IS_MINGW)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
@@ -185,7 +169,7 @@ function(generate_native_file_config _config) #https://mesonbuild.com/Native-env
     file(WRITE "${_file}" "${NATIVE_${_config}}")
 endfunction()
 
-function(generate_cross_file) #https://mesonbuild.com/Cross-compilation.html
+function(_vcpkg_generate_cross_file) #https://mesonbuild.com/Cross-compilation.html
     if(CMAKE_HOST_WIN32)
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
             set(BUILD_ARCH $ENV{PROCESSOR_ARCHITEW6432})
@@ -283,7 +267,7 @@ function(generate_cross_file) #https://mesonbuild.com/Cross-compilation.html
     endif()
 endfunction()
 
-function(generate_cross_file_config _config) #https://mesonbuild.com/Native-environments.html
+function(_vcpkg_generate_cross_file_config _config) #https://mesonbuild.com/Native-environments.html
     if(VCPKG_TARGET_IS_WINDOWS)
         set(L_FLAG /LIBPATH:)
     else()
@@ -358,26 +342,26 @@ function(vcpkg_configure_meson)
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
 
     if(NOT VCPKG_MESON_NATIVE_FILE)
-        generate_native_file()
+        _vcpkg_generate_native_file()
     endif()
     if(NOT VCPKG_MESON_NATIVE_FILE_DEBUG)
-        generate_native_file_config(DEBUG)
+        _vcpkg_generate_native_file_config(DEBUG)
     endif()
     if(NOT VCPKG_MESON_NATIVE_FILE_RELEASE)
-        generate_native_file_config(RELEASE)
+        _vcpkg_generate_native_file_config(RELEASE)
     endif()
     list(APPEND _vcm_OPTIONS --native "${VCPKG_MESON_NATIVE_FILE}")
     list(APPEND _vcm_OPTIONS_DEBUG --native "${VCPKG_MESON_NATIVE_FILE_DEBUG}")
     list(APPEND _vcm_OPTIONS_RELEASE --native "${VCPKG_MESON_NATIVE_FILE_RELEASE}")
 
     if(NOT VCPKG_MESON_CROSS_FILE)
-        generate_cross_file()
+        _vcpkg_generate_cross_file()
     endif()
     if(NOT VCPKG_MESON_CROSS_FILE_DEBUG AND VCPKG_MESON_CROSS_FILE)
-        generate_cross_file_config(DEBUG)
+        _vcpkg_generate_cross_file_config(DEBUG)
     endif()
     if(NOT VCPKG_MESON_CROSS_FILE_RELEASE AND VCPKG_MESON_CROSS_FILE)
-        generate_cross_file_config(RELEASE)
+        _vcpkg_generate_cross_file_config(RELEASE)
     endif()
     if(VCPKG_MESON_CROSS_FILE)
         list(APPEND _vcm_OPTIONS --cross "${VCPKG_MESON_CROSS_FILE}")
