@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 48d0553..45e2cba 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -47,9 +47,8 @@ else(WANT_ZLIB)
+     message("Zlib not wanted")
+ endif(WANT_ZLIB)
+ 
+-include(FindLibXml2)
+-find_package(LibXml2 REQUIRED)
+-include_directories(${LIBXML2_INCLUDE_DIR})
++find_package(libxml2 CONFIG REQUIRED)
++include_directories(${LIBXML2_INCLUDE_DIRS})
+ list(APPEND libs ${LIBXML2_LIBRARIES})
+ 
+ if(MSVC)
