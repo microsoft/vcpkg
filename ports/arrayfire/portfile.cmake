@@ -60,8 +60,7 @@ vcpkg_install_cmake()
 
 if (VCPKG_TARGET_IS_WINDOWS)
   vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/share/ArrayFire/cmake)
+elseif(EXISTS ${CURRENT_PACKAGES_DIR}/share/ArrayFire/cmake)
   vcpkg_fixup_cmake_targets(CONFIG_PATH share/ArrayFire/cmake)
 endif()
 
