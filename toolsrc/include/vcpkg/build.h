@@ -243,6 +243,7 @@ namespace vcpkg::Build
         EMPTY_PACKAGE,
         DLLS_WITHOUT_LIBS,
         DLLS_WITHOUT_EXPORTS,
+        DLLS_IN_STATIC_LIBRARY,
         MISMATCHED_NUMBER_OF_BINARIES,
         ONLY_RELEASE_CRT,
         EMPTY_INCLUDE_FOLDER,
@@ -254,7 +255,7 @@ namespace vcpkg::Build
         COUNT,
     };
 
-    // could be constexpr, but we want to generate this and that's not constexpr
+    // could be constexpr, but we want to generate this and that's not constexpr in C++14
     extern const std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> ALL_POLICIES;
 
     const std::string& to_string(BuildPolicy policy);

@@ -148,6 +148,8 @@ function(boost_modular_build)
         if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib)
             message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
         endif()
+
+        file(INSTALL ${CURRENT_INSTALLED_DIR}/share/boost-build/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
         return()
     endif()
 
@@ -446,4 +448,5 @@ function(boost_modular_build)
     endif()
 
     vcpkg_copy_pdbs()
+    file(INSTALL ${CURRENT_INSTALLED_DIR}/share/boost-build/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 endfunction()

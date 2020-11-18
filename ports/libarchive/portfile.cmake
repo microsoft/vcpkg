@@ -9,8 +9,6 @@ vcpkg_from_github(
     PATCHES
         fix-buildsystem.patch
         fix-dependencies.patch
-        fix-lz4.patch
-        fix-zstd.patch
         fix-cpu-set.patch
         disable-warnings.patch
 )
@@ -85,4 +83,5 @@ foreach(HEADER ${CURRENT_PACKAGES_DIR}/include/archive.h ${CURRENT_PACKAGES_DIR}
     file(WRITE ${HEADER} "${CONTENTS}")
 endforeach()
 
+file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

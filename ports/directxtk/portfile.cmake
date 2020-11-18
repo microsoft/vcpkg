@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF sept2020
-    SHA512 fcb98ffee960494f4ba9a3edd802dce7eacf8e0d9a17f712ea971cdf6c13d9ee4e403deecbcd2c8a4555301316334e6f987d6b051b7cb87e2ae76e41f213e91e
+    REF nov2020
+    SHA512 9d10a851f37deb428c16166cdecf38ffba28a4ab836f9753f071bccc570fcb22ce98271c6bbad9fa1380dddd1fa6602156a7aa1607d347139bda1860fc2210ce
     HEAD_REF master
 )
 
