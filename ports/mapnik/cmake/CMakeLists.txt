@@ -64,12 +64,22 @@ find_package(TIFF    REQUIRED)
 find_package(WebP CONFIG REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(ZLIB    REQUIRED)
-
+find_path(MAPBOX_POLYLABEL_INCLUDE_DIRS "mapbox/polylabel.hpp")
+find_path(MAPBOX_GEOMETRY_INCLUDE_DIRS "mapbox/feature.hpp")
+find_path(MAPBOX_VARIANT_INCLUDE_DIRS "mapbox/optional.hpp")
 set (MAPNIK_DEFS 
     -DHAVE_PNG
     -DHAVE_JPEG
     -DHAVE_TIFF
     -DHAVE_WEBP)
+
+    
+#vcpkg only supports icu on windows
+if(WIN32)
+    set(MAPNIK_DEFS ${MAPNIK_DEFS} -DBOOST_REGEX_HAS_ICU)
+endif()
+set(MAPNIK_DEFS ${MAPNIK_DEFS} -DHAVE_LIBXML2)
+
 
 # AGG
 include(files.cmake)
@@ -143,17 +153,6 @@ set(MAPNIK_SOURCES ${MAPNIK_SOURCES}
 )
     
 #set(MAPNIK_SOURCES ${MAPNIK_SOURCES} src/rapidxml_loader.cpp)
-
-#vcpkg only supports icu on windows
-if(WIN32)
-    set(MAPNIK_DEFS ${MAPNIK_DEFS} -DBOOST_REGEX_HAS_ICU)
-endif()
-set(MAPNIK_DEFS ${MAPNIK_DEFS} -DHAVE_LIBXML2)
-
-find_path(MAPBOX_POLYLABEL_INCLUDE_DIRS "mapbox/polylabel.hpp")
-find_path(MAPBOX_GEOMETRY_INCLUDE_DIRS "mapbox/feature.hpp")
-find_path(MAPBOX_VARIANT_INCLUDE_DIRS "mapbox/optional.hpp")
-
 
 set(MAPNIK_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/include)
 
