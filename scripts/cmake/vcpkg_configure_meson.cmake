@@ -33,7 +33,7 @@
 ##
 ## * [fribidi](https://github.com/Microsoft/vcpkg/blob/master/ports/fribidi/portfile.cmake)
 ## * [libepoxy](https://github.com/Microsoft/vcpkg/blob/master/ports/libepoxy/portfile.cmake)
-function(vcpkg_internal_meson_generate_native_file) #https://mesonbuild.com/Native-environments.html
+function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https://mesonbuild.com/Native-environments.html
     set(NATIVE "[binaries]\n")
     #set(proglist AR RANLIB STRIP NM OBJDUMP DLLTOOL MT)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -60,7 +60,10 @@ function(vcpkg_internal_meson_generate_native_file) #https://mesonbuild.com/Nati
         string(APPEND NATIVE "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
     endif()
     string(APPEND NATIVE "cmake = '${CMAKE_COMMAND}'\n")
-    
+    foreach(_binary IN LISTS ${_additional_binaries})
+        string(APPEND NATIVE "${_binary}\n")
+    endforeach()
+
     string(APPEND NATIVE "[built-in options]\n") #https://mesonbuild.com/Builtin-options.html
     if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
         string(APPEND NATIVE "cpp_eh='none'\n") # To make sure meson is not adding eh flags by itself using msvc
@@ -150,6 +153,7 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
 
     string(APPEND NATIVE_${_config} "VCPKG_TARGET_TRIPLET = '${TARGET_TRIPLET}'\n")
     string(APPEND NATIVE_${_config} "VCPKG_CHAINLOAD_TOOLCHAIN_FILE = '${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}'\n")
+    string(APPEND NATIVE_${_config} "VCPKG_CRT_LINKAGE = '${VCPKG_CRT_LINKAGE}'\n")
 
     string(APPEND NATIVE_${_config} "[built-in options]\n")
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -329,7 +333,7 @@ endfunction()
 
 function(vcpkg_configure_meson)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE")
+    cmake_parse_arguments(PARSE_ARGV 0 _vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;ADDITIONAL_BINARIES_NATIVE")
 
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -342,7 +346,7 @@ function(vcpkg_configure_meson)
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
 
     if(NOT VCPKG_MESON_NATIVE_FILE)
-        vcpkg_internal_meson_generate_native_file()
+        vcpkg_internal_meson_generate_native_file("_vcm_ADDITIONAL_BINARIES_NATIVE")
     endif()
     if(NOT VCPKG_MESON_NATIVE_FILE_DEBUG)
         vcpkg_internal_meson_generate_native_file_config(DEBUG)
