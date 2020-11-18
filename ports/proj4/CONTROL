@@ -9,3 +9,7 @@ Default-Features: database
 Feature: database
 Build-Depends: sqlite3[tool] (!uwp&!arm)
 Description: generate database
+
+Feature: tools
+Build-Depends:
+Description: generate tools
