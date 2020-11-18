@@ -9,6 +9,7 @@ vcpkg_from_github(
       fix-box2d.patch
       fix-constructor-inheritance.patch
       fix-csv.patch
+      fix-geojson-plugin.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake/ DESTINATION ${SOURCE_PATH})
