@@ -1027,7 +1027,6 @@ mozjpeg:x64-uwp            = skip
 mozjpeg:x64-windows        = skip
 mozjpeg:x64-windows-static = skip
 mozjpeg:x86-windows        = skip
-
 # mpir conflicts with gmp
 # see https://github.com/microsoft/vcpkg/issues/11756
 mpir:x86-windows=skip

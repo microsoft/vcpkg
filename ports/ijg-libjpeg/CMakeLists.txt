@@ -3,7 +3,7 @@ project(libjpeg LANGUAGES C)
 
 option(BUILD_EXECUTABLES OFF)
 
-# todo: jconfig.h must be genrated
+# note: jconfig.h must be genrated. Please reference the install.txt in jpegsr9d.zip
 list(APPEND PUBLIC_HEADERS jpeglib.h jerror.h jmorecfg.h jconfig.h)
 
 add_library(jpeg

@@ -17,7 +17,6 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 if(VCPKG_TARGET_IS_LINUX)
     # The deflated files are using CRLF. change them to LF before generating jconfig.h
     find_program(DOS2UNIX dos2unix REQUIRED)
@@ -49,6 +48,7 @@ if(VCPKG_TARGET_IS_LINUX)
 else()
     file(RENAME ${SOURCE_PATH}/jconfig.txt ${SOURCE_PATH}/jconfig.h)
 endif()
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
