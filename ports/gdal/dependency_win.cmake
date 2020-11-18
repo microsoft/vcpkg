@@ -92,8 +92,8 @@ macro(find_dependency_win)
   set(OPENSSL_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.lib" )
 
   # Setup libiconv libraries path
-  set(ICONV_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib" )
-  set(ICONV_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib" )
+  set(ICONV_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/iconv.lib ${CURRENT_INSTALLED_DIR}/lib/charset.lib" )
+  set(ICONV_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib" )
 
   if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
       # Setup MySQL libraries + include path
