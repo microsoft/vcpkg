@@ -1,5 +1,5 @@
 Source: v8
-Version: 8.3.110.13
+Version: 8.6.395.17
 Homepage: https://v8.dev
 Description: Google Chrome's JavaScript engine
 Build-Depends: icu, zlib, glib (linux), pthread (linux)
