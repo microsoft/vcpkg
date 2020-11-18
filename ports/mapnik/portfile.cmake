@@ -2,12 +2,13 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
     REF c6fc956a779123e3735c16ba28aa85922b924cac
-    SHA512 004429defd3047601b63c28bedd57d701ff88cdfb910a9958f4a10a1ac032d4d13316372122aef06eda60f2e4f67600b8842577db455f8c970009a0e86c5c1cf
+    SHA512 a30d8d82e5f0f9f344036858d248ee88872b6f9314e59206e7f127449fb7b9e6af62f624a8e81e1db79723c0dc7324ca8ec970d15646b253a1a28992160c7a3a
     HEAD_REF master
     PATCHES
       fix-config.patch
       fix-box2d.patch
       fix-constructor-inheritance.patch
+      fix-csv.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake/ DESTINATION ${SOURCE_PATH})
