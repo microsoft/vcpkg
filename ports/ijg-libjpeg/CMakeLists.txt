@@ -28,9 +28,6 @@ endif()
 install(FILES       ${PUBLIC_HEADERS}
         DESTINATION ${CMAKE_INSTALL_PREFIX}/include
 )
-install(FILES       README install.txt usage.txt libjpeg.txt change.log
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}
-)
 install(TARGETS jpeg
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin
         LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib

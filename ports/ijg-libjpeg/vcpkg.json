@@ -3,6 +3,5 @@
   "version-string": "9d",
   "homepage": "http://www.ijg.org/",
   "description": "Independent JPEG Group's JPEG software",
-  "supports": "!emscripten & !wasm32",
-  "dependencies": []
+  "supports": "!emscripten & !wasm32"
 }

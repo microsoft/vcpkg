@@ -1,7 +1,10 @@
 
-#
-# The port conflicts with 'libjpeg-turbo', 'mozjpeg'
-#
+if(EXISTS ${CURRENT_INSTALLED_DIR}/share/libturbo-jpeg/copyright)
+    message(FATAL_ERROR "'${PORT}' conflicts with 'libturbo-jpeg'. Please remove libturbo-jpeg:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
+if(EXISTS ${CURRENT_INSTALLED_DIR}/share/mozjpeg/copyright)
+    message(FATAL_ERROR "'${PORT}' conflicts with 'mozjpeg'. Please remove mozjpeg:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
@@ -15,8 +18,15 @@ vcpkg_extract_source_archive_ex(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-# todo: jconfig.h should be genrated when `configure` is available
-file(RENAME ${SOURCE_PATH}/jconfig.txt ${SOURCE_PATH}/jconfig.h)
+# jconfig.h should be genrated when `configure` is available
+if(true)# 
+    vcpkg_execute_required_process(
+        COMMAND configure
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}"
+    )
+else()
+    file(RENAME ${SOURCE_PATH}/jconfig.txt ${SOURCE_PATH}/jconfig.h)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
