@@ -1,5 +1,6 @@
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "static")
+    vcpkg_fail_port_install(ON_TARGET "uwp")
     vcpkg_fail_port_install(ON_ARCH "arm" "arm64" "wasm32")
 elseif(VCPKG_TARGET_IS_LINUX)
     vcpkg_fail_port_install(ON_ARCH "wasm32")
