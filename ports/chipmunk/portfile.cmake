@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 #architecture detection
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
    set(CHIPMUNK_ARCH Win32)

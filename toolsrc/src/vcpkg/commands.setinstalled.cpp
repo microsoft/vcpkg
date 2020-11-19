@@ -86,7 +86,7 @@ namespace vcpkg::Commands::SetInstalled
             return Util::Sets::contains(specs_installed, ipa.spec);
         });
 
-        Dependencies::print_plan(action_plan, true, paths.ports);
+        Dependencies::print_plan(action_plan, true, paths.builtin_ports_directory());
 
         if (auto p_pkgsconfig = maybe_pkgsconfig.get())
         {

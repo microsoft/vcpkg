@@ -1,9 +1,10 @@
 Source: poco
-Version: 1.9.2
-Port-Version: 4
-Build-Depends: expat, libpq, pcre, sqlite3, zlib, libpng
+Version: 1.10.1
+Port-Version: 2
+Build-Depends: expat, pcre, zlib
 Description: Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.
 Homepage: https://github.com/pocoproject/poco
+Supports: !uwp
 
 Feature: mysql
 Build-Depends: libmysql
@@ -16,6 +17,14 @@ Description: MariaDB support for POCO
 Feature: postgresql
 Build-Depends: libpqxx
 Description: PostgreSQL support for POCO
+
+Feature: sqlite3
+Build-Depends: sqlite3
+Description: Sqlite3 support for POCO
+
+Feature: netssl
+Build-Depends: openssl
+Description: NetSSL support for POCO
 
 Feature: pdf
 Build-Depends: libharu

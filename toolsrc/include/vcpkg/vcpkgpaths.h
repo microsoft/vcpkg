@@ -86,7 +86,6 @@ namespace vcpkg
         fs::path buildtrees;
         fs::path downloads;
         fs::path packages;
-        fs::path ports;
         fs::path installed;
         fs::path triplets;
         fs::path community_triplets;
@@ -125,7 +124,12 @@ namespace vcpkg
         const Build::CompilerInfo& get_compiler_info(const Build::AbiInfo& abi_info) const;
         bool manifest_mode_enabled() const { return get_manifest().has_value(); }
 
+        const FeatureFlagSettings& get_feature_flags() const;
         void track_feature_flag_metrics() const;
+
+        // the directory of the builtin ports
+        // this should be used only for helper commands, not core commands like `install`.
+        fs::path builtin_ports_directory() const { return root / fs::u8path("ports"); }
 
     private:
         std::unique_ptr<details::VcpkgPathsImpl> m_pimpl;

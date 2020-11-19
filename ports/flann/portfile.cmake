@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 #the port uses inside the CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS, which is discouraged by vcpkg.
 #Since it's its author choice, we should not disallow it, but unfortunately looks like it's broken, so we block it anyway...
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)

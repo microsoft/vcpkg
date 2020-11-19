@@ -61,6 +61,7 @@ namespace vcpkg::Dependencies
         std::string displayname() const;
         const std::string& public_abi() const;
         bool has_package_abi() const;
+        Optional<const std::string&> package_abi() const;
         const Build::PreBuildInfo& pre_build_info(LineInfo linfo) const;
 
         PackageSpec spec;
@@ -172,7 +173,5 @@ namespace vcpkg::Dependencies
                                                            std::vector<std::string> features,
                                                            CMakeVars::CMakeVarProvider& var_provider);
 
-    void print_plan(const ActionPlan& action_plan,
-                    const bool is_recursive = true,
-                    const fs::path& default_ports_dir = {});
+    void print_plan(const ActionPlan& action_plan, const bool is_recursive = true, const fs::path& vcpkg_root_dir = {});
 }
