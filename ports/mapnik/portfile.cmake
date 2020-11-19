@@ -1,4 +1,6 @@
-vcpkg_fail_port_install(ON_TARGET Windows ON_LIBRARY_LINKAGE "static")
+vcpkg_fail_port_install(ON_TARGET "Windows")
+
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
