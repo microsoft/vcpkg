@@ -9,11 +9,9 @@ add_executable(mapnik-viewer
     mainwindow.cpp
     mapwidget.cpp
     styles_model.cpp
-    
     forms/about.ui
     forms/info.ui
     forms/layer_info.ui    
-    
     mapnik_viewer.qrc)
 
 set_target_properties(mapnik-viewer PROPERTIES

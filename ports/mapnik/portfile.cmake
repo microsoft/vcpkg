@@ -6,8 +6,8 @@ vcpkg_from_github(
     SHA512 913e725a05e315b8630928fec7635ccddac833428800cd3f1b5c25226952f00883dbe9b007eb36bfd0330eac001608596fb53d08aa3df2fce297a3aab3bbf935
     HEAD_REF master
     PATCHES
-      fix-box2d.patch
-      fix-constructor-inheritance.patch
+        fix-box2d.patch
+        fix-constructor-inheritance.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake/ DESTINATION ${SOURCE_PATH})
@@ -83,7 +83,6 @@ endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mapnik)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${SOURCE_PATH}/fonts/unifont_license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME fonts_copyright)

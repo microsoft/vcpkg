@@ -8,12 +8,10 @@ set(MAPNIK_VERSION ${MAPNIK_MAJOR_VERSION}.${MAPNIK_MINOR_VERSION}.${MAPNIK_PATC
 
 include(CMakeDependentOption)
 
-
 option(MAPNIK_STATIC_LIB   "Build a static library" ON)
 
 option(WITH_DEMO   "Build demo" ON)
 option(WITH_VIEWER "Build viewer"  OFF)
-
 
 option(WITH_INPUTS "Build input plugins" ON)
 
@@ -46,8 +44,6 @@ if(MSVC)
   add_compile_options(/MP)
   add_compile_options(-bigobj) #added by @am2222
   add_compile_definitions(ACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1) #added by @am2222 for proj4 compile
-
-
 endif()
 
 find_package(Boost REQUIRED
@@ -73,13 +69,11 @@ set (MAPNIK_DEFS
     -DHAVE_TIFF
     -DHAVE_WEBP)
 
-    
 #vcpkg only supports icu on windows
 if(WIN32)
     set(MAPNIK_DEFS ${MAPNIK_DEFS} -DBOOST_REGEX_HAS_ICU)
 endif()
 set(MAPNIK_DEFS ${MAPNIK_DEFS} -DHAVE_LIBXML2)
-
 
 # AGG
 include(files.cmake)
@@ -90,7 +84,6 @@ if (WITH_CAIRO)
     set(MAPNIK_SOURCES ${MAPNIK_SOURCES}
         src/cairo/process_markers_symbolizer.cpp
         src/cairo/process_group_symbolizer.cpp
-        
         src/cairo/cairo_context.cpp
         src/cairo/cairo_render_vector.cpp
         src/cairo/cairo_renderer.cpp
@@ -143,7 +136,6 @@ set(MAPNIK_SOURCES ${MAPNIK_SOURCES}
     src/svg/output/process_polygon_symbolizer.cpp)
 set(MAPNIK_DEFS ${MAPNIK_DEFS} -DSVG_RENDERER)
 
-    
 set(MAPNIK_SOURCES ${MAPNIK_SOURCES}
     src/jpeg_reader.cpp
     src/libxml2_loader.cpp
@@ -152,7 +144,6 @@ set(MAPNIK_SOURCES ${MAPNIK_SOURCES}
     src/webp_reader.cpp
 )
     
-#set(MAPNIK_SOURCES ${MAPNIK_SOURCES} src/rapidxml_loader.cpp)
 
 set(MAPNIK_INCLUDE_PATH ${PROJECT_SOURCE_DIR}/include)
 
@@ -167,7 +158,6 @@ else ()
     set_target_properties(mapnik PROPERTIES DEFINE_SYMBOL MAPNIK_EXPORTS)
     set(MAPNIK_LIB_DEFINITION -DMAPNIK_EXPORTS)
 endif ()
-
 
 target_compile_definitions(mapnik PUBLIC ${MAPNIK_DEFS})
 target_include_directories(mapnik PUBLIC  
@@ -196,7 +186,6 @@ target_link_libraries(mapnik PUBLIC
     ${OPTIONAL_LIBRARIES}
 )
 
-
 install(TARGETS mapnik 
     EXPORT MapnikTargets
     LIBRARY DESTINATION lib
@@ -208,13 +197,11 @@ install(TARGETS mapnik
 add_subdirectory(src/json)
 add_subdirectory(src/wkt)
 
-
 install(EXPORT MapnikTargets
         FILE MapnikTargets.cmake
         NAMESPACE mapnik::
         DESTINATION lib/cmake/mapnik
 )
-
 
 # ideally we should also generate mapnik-config
 
@@ -318,9 +305,6 @@ if(WITH_UTILS)
     add_subdirectory(utils/mapnik-render)
     add_subdirectory(utils/shapeindex)
 endif()
-
-
-
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
