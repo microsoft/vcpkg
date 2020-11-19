@@ -1,4 +1,4 @@
-vcpkg_fail_port_ibnstall(ON_TARGET "uwp" "linux" "osx")
+vcpkg_fail_port_install(ON_TARGET "uwp" "linux" "osx")
 
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 
