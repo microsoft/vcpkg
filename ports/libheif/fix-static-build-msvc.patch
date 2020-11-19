@@ -1,0 +1,27 @@
+diff --git a/libheif/CMakeLists.txt b/libheif/CMakeLists.txt
+index 59b4719..38d6b35 100644
+--- a/libheif/CMakeLists.txt
++++ b/libheif/CMakeLists.txt
+@@ -54,10 +54,18 @@ set_target_properties(heif
+                           VERSION ${PROJECT_VERSION}
+                           SOVERSION ${PROJECT_VERSION_MAJOR})
+ 
+-target_compile_definitions(heif
+-                           PUBLIC
+-                               LIBHEIF_EXPORTS
+-                               HAVE_VISIBILITY)
++# Enable static linking when building from vcpkg
++if(NOT BUILD_SHARED_LIBS)
++    target_compile_definitions(heif
++                               PUBLIC
++                                LIBHEIF_STATIC_BUILD
++                                HAVE_VISIBILITY)
++else()
++    target_compile_definitions(heif
++                               PUBLIC
++                                LIBHEIF_EXPORTS
++                                HAVE_VISIBILITY)
++endif()
+ 
+ if(LIBDE265_FOUND)
+     target_compile_definitions(heif PRIVATE HAVE_LIBDE265=1)

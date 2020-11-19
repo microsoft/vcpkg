@@ -8,6 +8,7 @@ vcpkg_from_github(
         dont_build_examples_and_gdk_pixbuf.patch
         remove_finding_pkgconfig.patch
         install-extra-headers.patch
+        fix-static-build-msvc.patch
 )
 
 vcpkg_configure_cmake(
