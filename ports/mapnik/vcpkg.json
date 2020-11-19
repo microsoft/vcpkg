@@ -57,7 +57,6 @@
     "mapbox-geometry",
     "mapbox-polylabel",
     "mapbox-variant",
-    "mapbox-variant",
     "tiff",
     "zlib"
   ],
