@@ -2,9 +2,14 @@
 # Required LLVM modules: LLVM (modules: bitwriter, core, coroutines, engine, executionengine, instcombine, mcdisassembler, mcjit, scalaropts, transformutils) found: YES 
 
 #patches are from https://github.com/pal1000/mesa-dist-win/tree/master/patches
+set(PATCHES dual-osmesa.patch
+            dual-osmesa-part2.patch
+            swravx512.patch
+            )
+
 
 IF(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY) # will built drop in replacement for opengl32.dll
+    set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # some parts of this port can only build as a shared library.
 endif()
 
 vcpkg_from_gitlab(
@@ -77,40 +82,47 @@ list(APPEND MESA_OPTIONS -Dshared-llvm=auto)
 list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
 list(APPEND MESA_OPTIONS -Dlmsensors=disabled)
 list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
-list(APPEND MESA_OPTIONS -Dosmesa=gallium)
+list(APPEND MESA_OPTIONS -Dglvnd=false)
+list(APPEND MESA_OPTIONS -Dglx=disabled)
+list(APPEND MESA_OPTIONS -Dgbm=disabled)
+#list(APPEND MESA_OPTIONS -Dosmesa=['gallium','classic']) # classic has compiler errors. 
+list(APPEND MESA_OPTIONS -Dosmesa=['gallium'])
+
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND MESA_OPTIONS -Dshared-swr=false)
+    list(APPEND MESA_OPTIONS "-Dswr-arches=['avx']")
 else()
     list(APPEND MESA_OPTIONS -Dshared-swr=true)
+    list(APPEND MESA_OPTIONS "-Dswr-arches=['avx','avx2','knl','skx']")
 endif()
 
 string(APPEND GALLIUM_DRIVERS 'swrast')
 if("llvm" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dllvm=enabled)
-    string(APPEND GALLIUM_DRIVERS ",'swr'")
+    string(APPEND GALLIUM_DRIVERS ",'swr'") # SWR always requires llvm
 else()
     list(APPEND MESA_OPTIONS -Dllvm=disabled)
 endif()
 if("shared-glapi" IN_LIST FEATURES)
-    list(APPEND MESA_OPTIONS -Dshared-glapi=enabled) #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
+    list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
 else()
-    list(APPEND MESA_OPTIONS -Dshared-glapi=disabled) #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
+    list(APPEND MESA_OPTIONS -Dshared-glapi=disabled)
 endif()
 
 list(APPEND MESA_OPTIONS -Dgallium-drivers=[${GALLIUM_DRIVERS}])
 
-if("gles1" IN_LIST FEATURES) # Only works for !windows?
+if("gles1" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dgles1=enabled)
 else()
     list(APPEND MESA_OPTIONS -Dgles1=disabled)
 endif()
-if("gles2" IN_LIST FEATURES) # Only works for !windows?
+if("gles2" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dgles2=enabled)
 else()
     list(APPEND MESA_OPTIONS -Dgles2=disabled)
 endif()
-if("egl" IN_LIST FEATURES) # Only works for !windows?
+if("egl" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Degl=enabled)
 else()
     list(APPEND MESA_OPTIONS -Degl=disabled)

@@ -3,15 +3,14 @@ Version: 20.2.2
 Homepage: https://www.mesa3d.org/
 Description: Mesa - The 3D Graphics Library
 Build-Depends: zlib, zstd, tool-meson
-Default-Features: llvm, shared-glapi
-Supports: !(windows&static)
+Default-Features: llvm, shared-glapi, gles1, gles2
 
 Feature: llvm
 Description: Build with llvmpipe
 Build-Depends: llvm[core]
 
 Feature: shared-glapi
-Description: Building with shared glapi (Required if more than one GL Api is slected)
+Description: Building with shared glapi (Required if more than one GL API is selected)
 
 Feature: gles1
 Description: Build support for OpenGL ES 1.x
