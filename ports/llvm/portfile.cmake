@@ -9,7 +9,6 @@ vcpkg_from_github(
     SHA512 b6d38871ccce0e086e27d35e42887618d68e57d8274735c59e3eabc42dee352412489296293f8d5169fe0044936345915ee7da61ebdc64ec10f7737f6ecd90f2
     HEAD_REF master
     PATCHES
-        0002-fix-install-paths.patch
         0003-fix-openmp-debug.patch
         0004-fix-dr-1734.patch
         0005-fix-tools-path.patch
@@ -163,7 +162,9 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT})
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/llvm" TARGET_PATH "share/llvm")
+
 if("clang" IN_LIST FEATURES)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
 
