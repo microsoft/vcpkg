@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-sqlite-dependency-export.patch
         fix-linux-build.patch
         use-sqlite3-config.patch
+        tools-cmake.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -67,8 +68,6 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/proj4)
 if ("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES cct cs2cs geod gie proj projinfo AUTO_CLEAN)
-    file(GLOB debug_tools ${CURRENT_PACKAGES_DIR}/debug/bin/*_d${BIN_SUFFIX})
-    file(REMOVE ${debug_tools})
 endif ()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
