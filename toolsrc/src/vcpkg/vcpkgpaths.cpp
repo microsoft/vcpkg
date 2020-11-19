@@ -543,11 +543,68 @@ If you wish to silence this error and use classic mode, you can:
 
         std::error_code ec;
         fs.rename_or_copy(checked_out_path, destination, ".tmp", ec);
+        fs.remove_all(work_tree, VCPKG_LINE_INFO);
+        fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
         if (ec)
         {
             System::printf(System::Color::error,
                            "Error: Couldn't move checked out files from %s to destination %s",
                            fs::u8string(checked_out_path),
+                           fs::u8string(destination));
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+    }
+
+    void VcpkgPaths::git_checkout_object(const VcpkgPaths& paths,
+                                         const std::string& git_object,
+                                         const fs::path& local_repo,
+                                         const fs::path& destination,
+                                         const fs::path& dot_git_dir,
+                                         const fs::path& work_tree)
+    {
+        Files::Filesystem& fs = paths.get_filesystem();
+        fs.remove_all(work_tree, VCPKG_LINE_INFO);
+        fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
+        fs.remove_all(destination, VCPKG_LINE_INFO);
+
+        // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
+        // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
+        System::CmdLineBuilder clone_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
+                                                       .string_arg("clone")
+                                                       .string_arg("--no-checkout")
+                                                       .string_arg("--local")
+                                                       .path_arg(local_repo)
+                                                       .path_arg(dot_git_dir);
+        const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           clone_output.exit_code == 0,
+                           "Failed to clone temporary vcpkg instance.\n%s\n",
+                           clone_output.output);
+
+        // git checkout {tree_object} .
+        System::CmdLineBuilder checkout_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
+                                                          .string_arg("checkout")
+                                                          .string_arg(git_object)
+                                                          .string_arg(".");
+        const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder.extract());
+        Checks::check_exit(VCPKG_LINE_INFO, checkout_output.exit_code == 0, "Failed to checkout %s", git_object);
+
+        // TODO: Move checked out file(s) to destination.
+        const auto& containing_folder = destination.parent_path();
+        if (!fs.exists(containing_folder))
+        {
+            fs.create_directories(containing_folder, VCPKG_LINE_INFO);
+        }
+
+        std::error_code ec;
+        fs.rename_or_copy(work_tree, destination, ".tmp", ec);
+        fs.remove_all(work_tree, VCPKG_LINE_INFO);
+        fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
+        if (ec)
+        {
+            System::printf(System::Color::error,
+                           "Error: Couldn't move checked out files from %s to destination %s",
+                           fs::u8string(work_tree),
                            fs::u8string(destination));
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
@@ -572,62 +629,23 @@ If you wish to silence this error and use classic mode, you can:
     {
         /* Clone a new vcpkg repository instance using the local instance as base.
          *
-         * The `--git-dir` directory will store all the Git files,
-         * and the  `--work-tree` is the directory where checked out files will be stored.
+         * The `--git-dir` directory will store all the Git metadata files,
+         * and the  `--work-tree` is the directory where files will be checked out.
          *
          * Since we are checking a git tree object, all files will be checked out to the root of `work-tree`.
          * Because of that, it makes sense to use the git hash as the name for the directory.
          */
         const fs::path local_repo = this->root;
-        // TODO: Decide final location for these two
         const fs::path dot_git_dir = this->buildtrees / "versioning_tmp" / ".git";
-        const fs::path work_tree_prefix = this->buildtrees / "versioning_tmp" / "versions" / port_name;
-        const fs::path work_tree_temp = work_tree_prefix / git_tree;
-        const fs::path work_tree_done = work_tree_prefix / Strings::concat(git_tree, ".done");
+        const fs::path work_tree = this->buildtrees / "versioning_tmp" / git_tree;
+        const fs::path destination = this->buildtrees / "versioning_tmp" / "versions" / port_name / git_tree;
 
         Files::Filesystem& fs = get_filesystem();
-        if (!fs.exists(work_tree_done / "CONTROL") && !fs.exists(work_tree_done / "vcpkg.json"))
+        if (!fs.exists(destination / "CONTROL") && !fs.exists(destination / "vcpkg.json"))
         {
-            fs.remove_all(work_tree_temp, VCPKG_LINE_INFO);
-            fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
-
-            // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
-            // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
-            System::CmdLineBuilder clone_cmd_builder = git_cmd_builder(*this, dot_git_dir, work_tree_temp)
-                                                           .string_arg("clone")
-                                                           .string_arg("--no-checkout")
-                                                           .string_arg("--local")
-                                                           .path_arg(local_repo)
-                                                           .path_arg(dot_git_dir);
-            const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
-            Checks::check_exit(
-                VCPKG_LINE_INFO, clone_output.exit_code == 0, "Failed to clone temporary vcpkg instance");
-
-            // git checkout {tree_object} .
-            System::CmdLineBuilder checkout_cmd_builder = git_cmd_builder(*this, dot_git_dir, work_tree_temp)
-                                                              .string_arg("checkout")
-                                                              .string_arg(git_tree)
-                                                              .string_arg(".");
-            const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder.extract());
-            Checks::check_exit(
-                VCPKG_LINE_INFO, checkout_output.exit_code == 0, "Failed to checkout %s:%s", port_name, git_tree);
-
-            // Post-checkout cleanup
-            std::error_code ec;
-            fs.rename_or_copy(work_tree_temp, work_tree_done, ".tmp", ec);
-            fs.remove_all(work_tree_temp, VCPKG_LINE_INFO);
-            fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
-            if (ec)
-            {
-                System::printf(System::Color::error,
-                               "Failed to move portfiles for %s:%s\n%s\n",
-                               port_name,
-                               git_tree,
-                               ec.message());
-                Checks::exit_fail(VCPKG_LINE_INFO);
-            }
+            git_checkout_object(*this, git_tree, local_repo, destination, dot_git_dir, work_tree);
         }
-        return work_tree_done;
+        return destination;
     }
 
     Optional<const Json::Object&> VcpkgPaths::get_manifest() const
