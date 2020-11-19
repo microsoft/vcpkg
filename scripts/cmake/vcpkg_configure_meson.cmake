@@ -333,7 +333,7 @@ endfunction()
 
 function(vcpkg_configure_meson)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;ADDITIONAL_BINARIES_NATIVE")
+    cmake_parse_arguments(PARSE_ARGV 0 _vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;ADDITIONAL_NATIVE_BINARIES")
 
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -343,10 +343,25 @@ function(vcpkg_configure_meson)
     debug_message("Including cmake vars from: ${_VCPKG_CMAKE_VARS_FILE}")
     include("${_VCPKG_CMAKE_VARS_FILE}")
 
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    vcpkg_add_to_path("${PYTHON3_DIR}")
+    list(APPEND _vcm_ADDITIONAL_NATIVE_BINARIES "python = '${PYTHON3}'")
+
+    vcpkg_find_acquire_program(MESON)
+
+    get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
+    vcpkg_add_to_path("${CMAKE_PATH}") # Make CMake invokeable for Meson
+
+    vcpkg_find_acquire_program(NINJA)
+    get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
+    vcpkg_add_to_path(PREPEND "${NINJA_PATH}") # Need to prepend so that meson picks up the correct ninja from vcpkg ....
+    # list(APPEND _vcm_ADDITIONAL_NATIVE_BINARIES "ninja = '${NINJA}'") # This does not work due to meson issues ......
+
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
 
     if(NOT VCPKG_MESON_NATIVE_FILE)
-        vcpkg_internal_meson_generate_native_file("_vcm_ADDITIONAL_BINARIES_NATIVE")
+        vcpkg_internal_meson_generate_native_file("_vcm_ADDITIONAL_NATIVE_BINARIES")
     endif()
     if(NOT VCPKG_MESON_NATIVE_FILE_DEBUG)
         vcpkg_internal_meson_generate_native_file_config(DEBUG)
@@ -396,19 +411,6 @@ function(vcpkg_configure_meson)
         list(APPEND _vcm_OPTIONS_DEBUG "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}/debug','${CURRENT_INSTALLED_DIR}']")
         list(APPEND _vcm_OPTIONS_RELEASE "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/debug']")
     endif()
-
-    vcpkg_find_acquire_program(PYTHON3)
-    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-    vcpkg_add_to_path("${PYTHON3_DIR}")
-
-    vcpkg_find_acquire_program(MESON)
-
-    get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
-    vcpkg_add_to_path("${CMAKE_PATH}") # Make CMake invokeable for Meson
-
-    vcpkg_find_acquire_program(NINJA)
-    get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-    vcpkg_add_to_path("${NINJA_PATH}")
 
     vcpkg_find_acquire_program(PKGCONFIG)
     get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)

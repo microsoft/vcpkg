@@ -1,13 +1,10 @@
-# zstd, drm (!windows), elfutils (!windows), wayland (!windows), wayland-protocols (!windows), xdamage, xshmfence (!windows), x11, xcb, xfixes, xext, xxf86vm, xrandr, xv, xvmc (!windows), egl-registry, opengl-registry, tool-meson
-#LLVM (modules: bitwriter, core, coroutines, engine, executionengine, instcombine, mcdisassembler, mcjit, scalaropts, transformutils) found: YES 
+# Build-Depends: From X Window PR: zstd, drm (!windows), elfutils (!windows), wayland (!windows), wayland-protocols (!windows), xdamage, xshmfence (!windows), x11, xcb, xfixes, xext, xxf86vm, xrandr, xv, xvmc (!windows), egl-registry, opengl-registry, tool-meson
+# Required LLVM modules: LLVM (modules: bitwriter, core, coroutines, engine, executionengine, instcombine, mcdisassembler, mcjit, scalaropts, transformutils) found: YES 
+
+#patches are from https://github.com/pal1000/mesa-dist-win/tree/master/patches
+
 IF(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY) # will built drop in replacement for opengl32.dll
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    list(APPEND MESA_OPTIONS -D default_library='static')
-else()
-    list(APPEND MESA_OPTIONS -D default_library='shared')
 endif()
 
 vcpkg_from_gitlab(
@@ -72,37 +69,55 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     endif()
 endif()
 
-list(APPEND MESA_OPTIONS -D shared-llvm='auto')
-if("llvm" IN_LIST FEATURES)
-    list(APPEND MESA_OPTIONS -D llvm='enabled')
+# For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more. 
+#string(APPEND GALLIUM_DRIVERS 'auto')
+list(APPEND MESA_OPTIONS -Dopengl=true)
+list(APPEND MESA_OPTIONS -Dzstd=enabled)
+list(APPEND MESA_OPTIONS -Dshared-llvm=auto)
+list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
+list(APPEND MESA_OPTIONS -Dlmsensors=disabled)
+list(APPEND MESA_OPTIONS -Dvalgrind=disabled)
+list(APPEND MESA_OPTIONS -Dosmesa=gallium)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND MESA_OPTIONS -Dshared-swr=false)
 else()
-    list(APPEND MESA_OPTIONS -D llvm='disabled')
+    list(APPEND MESA_OPTIONS -Dshared-swr=true)
 endif()
 
-list(APPEND MESA_OPTIONS -D zstd='enabled')
+string(APPEND GALLIUM_DRIVERS 'swrast')
+if("llvm" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dllvm=enabled)
+    string(APPEND GALLIUM_DRIVERS ",'swr'")
+else()
+    list(APPEND MESA_OPTIONS -Dllvm=disabled)
+endif()
+if("shared-glapi" IN_LIST FEATURES)
+    list(APPEND MESA_OPTIONS -Dshared-glapi=enabled) #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
+else()
+    list(APPEND MESA_OPTIONS -Dshared-glapi=disabled) #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
+endif()
+
+list(APPEND MESA_OPTIONS -Dgallium-drivers=[${GALLIUM_DRIVERS}])
+
+if("gles1" IN_LIST FEATURES) # Only works for !windows?
+    list(APPEND MESA_OPTIONS -Dgles1=enabled)
+else()
+    list(APPEND MESA_OPTIONS -Dgles1=disabled)
+endif()
+if("gles2" IN_LIST FEATURES) # Only works for !windows?
+    list(APPEND MESA_OPTIONS -Dgles2=enabled)
+else()
+    list(APPEND MESA_OPTIONS -Dgles2=disabled)
+endif()
+if("egl" IN_LIST FEATURES) # Only works for !windows?
+    list(APPEND MESA_OPTIONS -Degl=enabled)
+else()
+    list(APPEND MESA_OPTIONS -Degl=disabled)
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND MESA_OPTIONS -D shared-glapi='disabled'
-                             -D opengl='enabled'
-                             
-                             -D platforms=['windows']
-                             #-D egl=true # not available on windows
-                             #-D gles1=false
-                             #-D gles2=false
-                             #-D glvnd=false
-                             #-D glx=gallium-xlib
-                             -D gallium-drivers=['swr','swrast']
-                             #-D osmesa=gallium
-                             #-D dri-drivers=nouveau
-                             #-D llvm=true
-                             )
-else()
-    list(APPEND MESA_OPTIONS -D shared-glapi='disabled'
-                             -D opengl='enabled'
-                             #-D egl=true
-                             #-D gles1=true
-                             #-D gles2=true
-    )
+    list(APPEND MESA_OPTIONS -Dplatforms=['windows'])
 endif()
 
 vcpkg_configure_meson(
@@ -110,10 +125,9 @@ vcpkg_configure_meson(
     OPTIONS 
         #-D gles-lib-suffix=_mesa
         #-D egl-lib-suffix=_mesa
-        -D build-tests=false
-        "${MESA_OPTIONS}"
-    ADDITIONAL_BINARIES_NATIVE "python = '${PYTHON3}'"
-)
+        -Dbuild-tests=false
+        ${MESA_OPTIONS}
+    )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
