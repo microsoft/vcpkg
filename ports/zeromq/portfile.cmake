@@ -13,6 +13,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         sodium WITH_LIBSODIUM
+        draft ENABLE_DRAFTS
     INVERTED_FEATURES
         websockets-sha1 DISABLE_WS
 )
