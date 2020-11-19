@@ -1,7 +1,7 @@
 vcpkg_download_distfile(
     PATCH
-    URLS "https://codereview.qt-project.org/gitweb?p=qt%2Fqtlocation.git;a=commitdiff_plain;h=6b2cf7e9d150b7be709fcd688c5045949cedc3d9;hp=7769ea903f87efc4ad55530a2749f104eddff2e4"
-    SHA512 99d16fb0e88a2250de3896815abbb22ff5aa4d3920397610cf37be701fe03a7241e0586aae5b85755aeb958926183c96a0482a8837335d20a2171ebb2a66e640
+    URLS "https://github.com/qt/qtlocation/commit/6b2cf7e9d150b7be709fcd688c5045949cedc3d9.diff"
+    SHA512 7ca02812957969f26919b1566469d4187b0dc7e16091544b1b4583d05337ed7c8983d6dbc22f8d61ce54dd56ab4a5662fea7017fbdc802e4e0bc6e4bc511fabe
     FILENAME qt5-location-rename-99d16fb0.patch
 )
 
