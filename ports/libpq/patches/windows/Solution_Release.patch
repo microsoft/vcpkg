@@ -93,7 +93,7 @@ index 51711c2bf..d33fdc3b0 100644
  	{
  		$proj->AddIncludeDir($self->{options}->{nls} . '\include');
 -		$proj->AddLibrary($self->{options}->{nls} . '\lib\libintl.lib');
-+		$proj->AddLibrary($self->{options}->{nls} . '\lib\libintl.lib'); # This must be updated
++		$proj->AddLibrary($self->{options}->{nls} . '\lib\intl.lib'); # This must be updated
  	}
  	if ($self->{options}->{gss})
  	{
@@ -110,7 +110,7 @@ index 51711c2bf..d33fdc3b0 100644
  	{
  		$proj->AddIncludeDir($self->{options}->{iconv} . '\include');
 -		$proj->AddLibrary($self->{options}->{iconv} . '\lib\iconv.lib');
-+		$proj->AddLibrary($self->{options}->{iconv} . '\lib\libiconv.lib'); # This must be updated
++		$proj->AddLibrary($self->{options}->{iconv} . '\lib\iconv.lib'); # This must be updated
  	}
  	if ($self->{options}->{icu})
  	{
