@@ -162,9 +162,7 @@ set(mapnik_include_paths
 
 add_library(mapnik ${MAPNIK_SOURCES} ${MAPNIK_AGG_SOURCES} ${AGG_SOURCES})
 if (MAPNIK_STATIC_LIB)
-    message(STATUS "Building static library")
-    set_target_properties(mapnik PROPERTIES DEFINE_SYMBOL MAPNIK_STATICLIB)
-    set(MAPNIK_LIB_DEFINITION -DMAPNIK_STATICLIB)
+    message(FATAL_ERROR "Dont support static library")
 else ()
     message(STATUS "Building shared library")
     set_target_properties(mapnik PROPERTIES DEFINE_SYMBOL MAPNIK_EXPORTS)
