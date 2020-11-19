@@ -73,7 +73,7 @@ namespace vcpkg
             std::string git_tree;
             Versions::Scheme version_scheme = Versions::Scheme::String;
 
-            // Code shamelessly stolen from sourceparagraph.cpp
+            // Code copy-and-paste'd from sourceparagraph.cpp
             static Json::StringDeserializer version_exact_deserializer{"an exact version string"};
             static Json::StringDeserializer version_relaxed_deserializer{"a relaxed version string"};
             static Json::StringDeserializer version_semver_deserializer{"a semantic version string"};

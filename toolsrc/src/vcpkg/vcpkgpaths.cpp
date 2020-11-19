@@ -364,6 +364,15 @@ If you wish to silence this error and use classic mode, you can:
 
         ports_cmake = filesystem.canonical(VCPKG_LINE_INFO, scripts / fs::u8path("ports.cmake"));
 
+        // TODO: Spec out the final locations for these.
+        // Should these be user configurable?  
+        versioning_tmp = buildtrees / fs::u8path("versioning.tmp");
+        versioning_tmp_dot_git_dir = versioning_tmp / fs::u8path(".git");
+        versioning_tmp_work_tree_prefix = versioning_tmp / fs::u8path("work_trees");
+        versioning_output = buildtrees / fs::u8path("versioning");
+        versioning_output_baselines = versioning_output / fs::u8path("baselines");
+        versioning_output_versions = versioning_output / fs::u8path("versions");
+
         for (auto&& overlay_triplets_dir : args.overlay_triplets)
         {
             m_pimpl->triplets_dirs.emplace_back(
@@ -587,14 +596,18 @@ If you wish to silence this error and use classic mode, you can:
     fs::path VcpkgPaths::git_checkout_baseline(const std::string& commit_sha) const
     {
         const fs::path local_repo = this->root;
-        const fs::path destination = this->buildtrees / "versioning_tmp" / "baselines" / commit_sha / "baseline.json";
-        const fs::path dot_git_dir = this->buildtrees / "versioning_tmp" / ".git";
-        const fs::path work_tree = this->buildtrees / "versioning_tmp" / commit_sha;
-        const fs::path baseline_subpath = fs::path("port_versions") / fs::path("baseline.json");
+        const fs::path destination = this->versioning_output_baselines / commit_sha / fs::u8path("baseline.json");
+        const fs::path baseline_subpath = fs::u8path("port_versions") / fs::u8path("baseline.json");
 
         if (!get_filesystem().exists(destination))
         {
-            git_checkout_subpath(*this, commit_sha, baseline_subpath, local_repo, destination, dot_git_dir, work_tree);
+            git_checkout_subpath(*this,
+                                 commit_sha,
+                                 baseline_subpath,
+                                 local_repo,
+                                 destination,
+                                 this->versioning_tmp_dot_git_dir,
+                                 this->versioning_tmp_work_tree_prefix / fs::u8path(commit_sha));
         }
         return destination;
     }
@@ -610,14 +623,17 @@ If you wish to silence this error and use classic mode, you can:
          * Because of that, it makes sense to use the git hash as the name for the directory.
          */
         const fs::path local_repo = this->root;
-        const fs::path dot_git_dir = this->buildtrees / "versioning_tmp" / ".git";
-        const fs::path work_tree = this->buildtrees / "versioning_tmp" / git_tree;
-        const fs::path destination = this->buildtrees / "versioning_tmp" / "versions" / port_name / git_tree;
+        const fs::path destination = this->versioning_output_versions / fs::u8path(git_tree) / fs::u8path(port_name);
 
         Files::Filesystem& fs = get_filesystem();
         if (!fs.exists(destination / "CONTROL") && !fs.exists(destination / "vcpkg.json"))
         {
-            git_checkout_object(*this, git_tree, local_repo, destination, dot_git_dir, work_tree);
+            git_checkout_object(*this,
+                                git_tree,
+                                local_repo,
+                                destination,
+                                this->versioning_tmp_dot_git_dir,
+                                this->versioning_tmp_work_tree_prefix / fs::u8path(git_tree));
         }
         return destination;
     }
