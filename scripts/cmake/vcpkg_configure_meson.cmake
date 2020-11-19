@@ -150,6 +150,7 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
 
     string(APPEND NATIVE_${_config} "VCPKG_TARGET_TRIPLET = '${TARGET_TRIPLET}'\n")
     string(APPEND NATIVE_${_config} "VCPKG_CHAINLOAD_TOOLCHAIN_FILE = '${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}'\n")
+    string(APPEND NATIVE_${_config} "VCPKG_CRT_LINKAGE = '${VCPKG_CRT_LINKAGE}'\n")
 
     string(APPEND NATIVE_${_config} "[built-in options]\n")
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -404,7 +405,7 @@ function(vcpkg_configure_meson)
 
     vcpkg_find_acquire_program(NINJA)
     get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-    vcpkg_add_to_path("${NINJA_PATH}")
+    vcpkg_add_to_path(PREPEND "${NINJA_PATH}")
 
     vcpkg_find_acquire_program(PKGCONFIG)
     get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)
