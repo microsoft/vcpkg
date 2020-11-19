@@ -15,6 +15,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
 	if (VCPKG_CRT_LINKAGE STREQUAL static)
 		list(APPEND PATCHES ${CMAKE_CURRENT_LIST_DIR}/0002-static-crt.patch)
 	endif()
+else()
+	list(APPEND PATCHES ${CMAKE_CURRENT_LIST_DIR}/0003-big-sur.patch)
 endif()
 
 vcpkg_from_github(
