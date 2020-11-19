@@ -465,32 +465,6 @@ If you wish to silence this error and use classic mode, you can:
         return m_pimpl->m_tool_cache->get_tool_version(*this, tool);
     }
 
-    void VcpkgPaths::git_clone_local(const VcpkgPaths& paths,
-                                     const fs::path& local_repo,
-                                     const fs::path& dot_git_dir,
-                                     const fs::path& work_tree)
-    {
-        (void)paths;
-        (void)local_repo;
-        (void)dot_git_dir;
-        (void)work_tree;
-        // TODO: Implement
-        Checks::exit_fail(VCPKG_LINE_INFO);
-    }
-
-    void VcpkgPaths::git_clone_remote(const VcpkgPaths& paths,
-                                      const std::string& remote,
-                                      const fs::path& dot_git_dir,
-                                      const fs::path& work_tree)
-    {
-        (void)paths;
-        (void)remote;
-        (void)dot_git_dir;
-        (void)work_tree;
-        // TODO: Implement
-        Checks::exit_fail(VCPKG_LINE_INFO);
-    }
-
     void VcpkgPaths::git_checkout_subpath(const VcpkgPaths& paths,
                                           const std::string& commit_sha,
                                           const fs::path& subpath,

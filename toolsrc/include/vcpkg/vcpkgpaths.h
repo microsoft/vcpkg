@@ -108,31 +108,6 @@ namespace vcpkg
         const std::string& get_tool_version(const std::string& tool) const;
 
         // Git manipulation
-        static void git_clone_local(const VcpkgPaths& paths,
-                                    const fs::path& local_repo,
-                                    const fs::path& dot_git_dir,
-                                    const fs::path& work_tree);
-
-        static void git_clone_remote(const VcpkgPaths& paths,
-                                     const std::string& remote,
-                                     const fs::path& dot_git_dir,
-                                     const fs::path& work_tree);
-
-        static void git_checkout_subpath(const VcpkgPaths& paths,
-                                         const std::string& commit_sha,
-                                         const fs::path& subpath,
-                                         const fs::path& local_repo,
-                                         const fs::path& destination,
-                                         const fs::path& dot_git_dir,
-                                         const fs::path& work_tree);
-
-        static void git_checkout_object(const VcpkgPaths& paths,
-                                        const std::string& git_object,
-                                        const fs::path& local_repo,
-                                        const fs::path& destination,
-                                        const fs::path& dot_git_dir,
-                                        const fs::path& work_tree);
-
         fs::path git_checkout_baseline(const std::string& commit_sha) const;
         fs::path git_checkout_port(const std::string& port_name, const std::string& git_tree) const;
 
@@ -162,5 +137,20 @@ namespace vcpkg
 
     private:
         std::unique_ptr<details::VcpkgPathsImpl> m_pimpl;
+
+        static void git_checkout_subpath(const VcpkgPaths& paths,
+                                         const std::string& commit_sha,
+                                         const fs::path& subpath,
+                                         const fs::path& local_repo,
+                                         const fs::path& destination,
+                                         const fs::path& dot_git_dir,
+                                         const fs::path& work_tree);
+
+        static void git_checkout_object(const VcpkgPaths& paths,
+                                        const std::string& git_object,
+                                        const fs::path& local_repo,
+                                        const fs::path& destination,
+                                        const fs::path& dot_git_dir,
+                                        const fs::path& work_tree);
     };
 }
