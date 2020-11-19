@@ -1,6 +1,6 @@
 Source: glib
-Version: 2.52.3
-Port-Version: 23
+Version: 2.66.3
+Port-Version: 0
 Homepage: https://developer.gnome.org/glib/
 Description: Portable, general-purpose utility library.
 Build-Depends: zlib, pcre, libffi, gettext, libiconv, dirent

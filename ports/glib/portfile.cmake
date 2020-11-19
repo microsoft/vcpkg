@@ -6,11 +6,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 endif()
 
-set(GLIB_VERSION 2.65.2)
+set(GLIB_MAJOR_MINOR 2.66)
+set(GLIB_PATCH 3)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.65/glib-${GLIB_VERSION}.tar.xz"
-    FILENAME "glib-${GLIB_VERSION}.tar.xz"
-    SHA512 9a2ebd226b2d0bcd7fbfeeff7a0dd48f7a604636a19672dae5c0547dd8abe5f2bf3bd505e48797095f740775bac5e8eeb1230e754b9d03171d7d04c2363432fc)
+    URLS "https://ftp.gnome.org/pub/gnome/sources/glib/${GLIB_MAJOR_MINOR}/glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
+    FILENAME "glib-${GLIB_MAJOR_MINOR}.${GLIB_PATCH}.tar.xz"
+    SHA512 ab2670ae4eeb3b561c0e71ff9153908f450e430cd43771bfee09233a65826dc16462537ec64bdfcced867f4c8663341b6b9d17af5ba0fab8564b8f21b04a45d7)
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -42,7 +43,7 @@ vcpkg_configure_meson(
     OPTIONS
         -Dbuild_tests=false
         ${OPTIONS}
-        
+        -Dinternal_pcre=false
 )
 
 vcpkg_install_meson()
