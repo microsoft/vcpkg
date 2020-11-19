@@ -14,7 +14,7 @@ find_package(PNG      REQUIRED)
 find_package(JPEG     REQUIRED)
 find_package(TIFF     REQUIRED)
 find_package(OpenJPEG REQUIRED)
-find_package(WebP     REQUIRED)
+find_package(WebP  CONFIG   REQUIRED)
 find_package(JXR      REQUIRED)
 find_package(LibRaw   REQUIRED)
 find_package(OpenEXR  REQUIRED)
@@ -93,7 +93,6 @@ target_include_directories(FreeImage PRIVATE ${REAL_SOURCE_DIR}
                                              ${TIFF_INCLUDE_DIRS}
                                              ${PNG_INCLUDE_DIRS}
                                              ${OPENJPEG_INCLUDE_DIRS}
-                                             ${WEBP_INCLUDE_DIRS}
                                              ${JXR_INCLUDE_DIRS}
                                              ${LibRaw_INCLUDE_DIRS}
                                              ${CMAKE_CURRENT_BINARY_DIR}
@@ -105,7 +104,7 @@ target_link_libraries(FreeImage ${ZLIB_LIBRARIES}
                                 ${TIFF_LIBRARIES}
                                 ${PNG_LIBRARIES}
                                 ${OPENJPEG_LIBRARIES}
-                                ${WEBP_LIBRARIES}
+                                WebP::webp WebP::libwebpmux
                                 ${JXR_LIBRARIES}
                                 ${LibRaw_LIBRARIES}
                                 OpenEXR::IlmImf)
