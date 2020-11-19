@@ -1,3 +1,4 @@
+vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "static")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mapnik/mapnik
@@ -5,7 +6,6 @@ vcpkg_from_github(
     SHA512 913e725a05e315b8630928fec7635ccddac833428800cd3f1b5c25226952f00883dbe9b007eb36bfd0330eac001608596fb53d08aa3df2fce297a3aab3bbf935
     HEAD_REF master
     PATCHES
-      fix-config.patch
       fix-box2d.patch
       fix-constructor-inheritance.patch
 )
