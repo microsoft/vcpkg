@@ -42,8 +42,6 @@ vcpkg_install_cmake()
 
 vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-
 file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
 if(DLLS)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
@@ -64,35 +62,24 @@ endif()
 # do the copy pdbs now after the dlls got moved to the expected /bin folder above
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/mswud ${CURRENT_PACKAGES_DIR}/lib/mswud)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/msvc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(GLOB_RECURSE INCLUDES ${CURRENT_PACKAGESDIR}/include/*)
+file(GLOB_RECURSE INCLUDES ${CURRENT_PACKAGES_DIR}/include/*)
 foreach(INC IN LISTS INCLUDES)
+    file(READ "${INC}" _contents)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        vcpkg_replace_string("${INC}" "defined(WXUSINGDLL)" "0")
+        string(REPLACE "defined(WXUSINGDLL)" "0" _contents "${_contents}")
     else()
-        vcpkg_replace_string("${INC}" "defined(WXUSINGDLL)" "1")
+        string(REPLACE "defined(WXUSINGDLL)" "1" _contents "${_contents}")
     endif()
-endif()
-
-file(GLOB RELEASE_LIBS LIST_DIRECTORIES false RELATIVE "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/lib/*")
-file(GLOB DEBUG_LIBS LIST_DIRECTORIES false RELATIVE "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}/debug/lib/*")
-
-set(wxWidgets_LIBRARIES)
-foreach(LIB IN LISTS RELEASE_LIBS)
-    list(APPEND wxWidgets_LIBRARIES optimized "\${CMAKE_CURRENT_LIST_DIR}/../../${LIB}")
-endforeach()
-foreach(LIB IN LISTS DEBUG_LIBS)
-    list(APPEND wxWidgets_LIBRARIES debug "\${CMAKE_CURRENT_LIST_DIR}/../../${LIB}")
+    # Remove install prefix from setup.h to ensure package is relocatable
+    string(REGEX REPLACE "\n#define wxINSTALL_PREFIX [^\n]*" "\n#define wxINSTALL_PREFIX \"\"" _contents "${_contents}")
+    file(WRITE "${INC}" "${_contents}")
 endforeach()
 
-configure_file(${CMAKE_CURRENT_LIST_DIR}/wxWidgets-config.cmake ${CURRENT_PACKAGES_DIR}/share/wxwidgets/wxWidgets-config.cmake @ONLY)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/wxwidgets)
-file(WRITE "include_directories(\${wxWidgets_INCLUDE_DIRS})" ${CURRENT_PACKAGES_DIR}/share/wxwidgets/empty.cmake)
 file(INSTALL ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
