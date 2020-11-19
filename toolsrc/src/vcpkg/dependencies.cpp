@@ -312,10 +312,10 @@ namespace vcpkg::Dependencies
                                         const CStringView s,
                                         const Build::BuildPackageOptions& options,
                                         const fs::path& install_port_path,
-                                        const fs::path& default_port_path)
+                                        const fs::path& builtin_ports_dir)
     {
-        if (!default_port_path.empty() && !Strings::case_insensitive_ascii_starts_with(fs::u8string(install_port_path),
-                                                                                       fs::u8string(default_port_path)))
+        if (!builtin_ports_dir.empty() && !Strings::case_insensitive_ascii_starts_with(fs::u8string(install_port_path),
+                                                                                       fs::u8string(builtin_ports_dir)))
         {
             const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
             switch (request_type)
@@ -432,6 +432,12 @@ namespace vcpkg::Dependencies
     {
         if (!abi_info) return false;
         return !abi_info.get()->package_abi.empty();
+    }
+    Optional<const std::string&> InstallPlanAction::package_abi() const
+    {
+        if (!abi_info) return nullopt;
+        if (abi_info.get()->package_abi.empty()) return nullopt;
+        return abi_info.get()->package_abi;
     }
     const Build::PreBuildInfo& InstallPlanAction::pre_build_info(LineInfo linfo) const
     {
@@ -684,10 +690,15 @@ namespace vcpkg::Dependencies
         std::vector<FeatureSpec> feature_specs;
         for (const FullPackageSpec& spec : specs)
         {
-            const SourceControlFileLocation* scfl = port_provider.get_control_file(spec.package_spec.name()).get();
+            auto maybe_scfl = port_provider.get_control_file(spec.package_spec.name());
 
-            Checks::check_exit(
-                VCPKG_LINE_INFO, scfl, "Error: Cannot find definition for package `%s`.", spec.package_spec.name());
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               maybe_scfl.has_value(),
+                               "Error: while loading port `%s`: %s",
+                               spec.package_spec.name(),
+                               maybe_scfl.error());
+
+            const SourceControlFileLocation* scfl = maybe_scfl.get();
 
             const std::vector<std::string> all_features =
                 Util::fmap(scfl->source_control_file->feature_paragraphs,
@@ -1028,7 +1039,7 @@ namespace vcpkg::Dependencies
 
     PackageGraph::~PackageGraph() = default;
 
-    void print_plan(const ActionPlan& action_plan, const bool is_recursive, const fs::path& default_ports_dir)
+    void print_plan(const ActionPlan& action_plan, const bool is_recursive, const fs::path& builtin_ports_dir)
     {
         if (action_plan.remove_actions.empty() && action_plan.already_installed.empty() &&
             action_plan.install_actions.empty())
@@ -1088,7 +1099,7 @@ namespace vcpkg::Dependencies
                 if (auto* pscfl = p->source_control_file_location.get())
                 {
                     return to_output_string(
-                        p->request_type, p->displayname(), p->build_options, pscfl->source_location, default_ports_dir);
+                        p->request_type, p->displayname(), p->build_options, pscfl->source_location, builtin_ports_dir);
                 }
 
                 return to_output_string(p->request_type, p->displayname(), p->build_options);

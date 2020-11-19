@@ -19,6 +19,7 @@
 #include <vcpkg/userconfig.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/vcpkgpaths.h>
 
 #include <cassert>
 #include <fstream>

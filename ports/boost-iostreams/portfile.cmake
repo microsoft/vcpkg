@@ -3,10 +3,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/iostreams
-    REF boost-1.73.0
-    SHA512 0bfafdf0bd202a958b353c2b575957061427cd0e6c66ab7e826c2a7958ed57d89dc8a49b0e01e63689703404f335f964f390241fdc1982f374f10c4583fd89a2
+    REF boost-1.74.0
+    SHA512 3d1899ed258dff8cc20c7b725159f3fd40550f8e47b450dc6009a49499e209c07ee71598803eff1f7daca30629a288af4b286f629dfbb72677dc5d23eb2c6efb
     HEAD_REF master
-    PATCHES Removeseekpos.patch
+    PATCHES
+        0001-Fix-build-on-windows-with-libc-106.patch
+        Removeseekpos.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)

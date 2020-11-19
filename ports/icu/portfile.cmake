@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 set(ICU_VERSION_MAJOR 67)
 set(ICU_VERSION_MINOR 1)
@@ -25,7 +25,7 @@ vcpkg_extract_source_archive_ex(
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
 
-set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
+set(CONFIGURE_OPTIONS "--disable-samples --disable-tests --disable-layoutex")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --disable-static --enable-shared")
@@ -77,7 +77,7 @@ else()
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=i686-pc-mingw32")
 
     # Acquire tools
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.16)
 
     # Insert msys into the path between the compiler toolset and windows system32. This prevents masking of "link.exe" but DOES mask "find.exe".
     string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
@@ -85,13 +85,25 @@ else()
     set(ENV{PATH} "${NEWPATH}")
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
-    set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.15)
+    set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.16)
     file(COPY ${AUTOMAKE_DIR}/config.guess ${AUTOMAKE_DIR}/config.sub DESTINATION ${SOURCE_PATH}/source)
 
     if(VCPKG_CRT_LINKAGE STREQUAL static)
         set(ICU_RUNTIME "-MT")
     else()
         set(ICU_RUNTIME "-MD")
+    endif()
+
+    if(CMAKE_HOST_WIN32 AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+        set(ICU_MSVC_CROSS_COMPILE_TO_ARM ON)
+        # Need the buildtrees dir, as the required files (e.g. icucross.mk) are not part of the installed package
+        get_filename_component(ICU_HOST_PATH "${BUILDTREES_DIR}/icu/x86-windows-rel" ABSOLUTE)
+        if(NOT EXISTS "${ICU_HOST_PATH}")
+            message(FATAL_ERROR "The x86 icu must be be built locally to build for non-x86/x64 platforms. Please run `vcpkg install icu:x86-windows`.")
+        endif()
+
+        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-cross-build=${ICU_HOST_PATH}")
+        set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${ICU_HOST_PATH}/lib")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -209,7 +221,7 @@ else()
             file(READ ${pkg_file} PKG_FILE)
             string(REGEX REPLACE "-ls([^ \\t\\n]+)" "-l\\1" PKG_FILE "${PKG_FILE}" )
             file(WRITE ${pkg_file} "${PKG_FILE}")
-        endforeach()        
+        endforeach()
     endif()
 
     # force U_STATIC_IMPLEMENTATION macro

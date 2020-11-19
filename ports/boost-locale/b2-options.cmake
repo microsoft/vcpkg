@@ -22,4 +22,9 @@ else()
         boost.locale.icu=off
         -sICONV_PATH=${LIBICONV_DIR}
     )
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+        list(APPEND B2_OPTIONS
+            boost.locale.force-found-iconv=on
+        )
+    endif()
 endif()
