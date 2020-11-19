@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Rule Name="VcpkgOptions" DisplayName="Vcpkg" PageTemplate="generic" Description="Vcpkg"
+<Rule Name="VcpkgOptions" DisplayName="vcpkg" PageTemplate="generic" Description="Vcpkg"
       xmlns="http://schemas.microsoft.com/build/2009/properties">
 
   <Rule.Categories>
