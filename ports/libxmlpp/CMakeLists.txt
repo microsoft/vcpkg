@@ -21,8 +21,8 @@ if(APPLE)
   find_library(LIBINTL_LIBRARY NAMES intl)
 endif()
 
-find_package(unofficial-iconv REQUIRED)
-link_libraries(${LIBINTL_LIBRARY} unofficial::iconv::libiconv)
+find_package(Iconv REQUIRED)
+link_libraries(${LIBINTL_LIBRARY} Iconv::Iconv)
 
 if(APPLE)
   find_library(COREFOUNDATION_LIBRARY CoreFoundation)

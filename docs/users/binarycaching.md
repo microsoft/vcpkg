@@ -108,7 +108,8 @@ By default, zip-based archives will be cached at the first valid location of:
 | `default[,<rw>]`            | Adds the default file-based location
 | `files,<path>[,<rw>]`       | Adds a custom file-based location
 | `nuget,<uri>[,<rw>]`        | Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI
-| `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter <br>of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
+| `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
+| `x-azblob,<baseuri>,<sas>[,<rw>]`    | **Experimental: will change or be removed without warning**<br> Adds an Azure Blob Storage source. Uses Shared Access Signature validation. URL should include the container path.
 | `interactive`               | Enables interactive credential management for NuGet (for debugging; requires `--debug` on the command line)
 
 The `<rw>` optional parameter for certain sources controls whether they will be consulted for

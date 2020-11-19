@@ -320,3 +320,8 @@ archives
 .DS_Store
 prefab/
 *.swp
+
+###################
+# Codespaces
+###################
+pythonenv3.8/

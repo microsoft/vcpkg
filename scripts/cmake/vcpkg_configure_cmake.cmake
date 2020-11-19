@@ -170,6 +170,8 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
         if(_TARGETTING_UWP AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android" AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+            set(VCPKG_CMAKE_SYSTEM_VERSION 21)
         endif()
     endif()
 
@@ -266,12 +268,12 @@ function(vcpkg_configure_cmake)
     endforeach()
 
     set(rel_command
-        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
+        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_RELEASE}
         -G ${GENERATOR}
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR})
     set(dbg_command
-        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
+        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_DEBUG}
         -G ${GENERATOR}
         -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)

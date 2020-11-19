@@ -2,7 +2,6 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
     message(FATAL_ERROR "ARM build not supported")
 endif()
 
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lzfse/lzfse

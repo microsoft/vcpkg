@@ -1,6 +1,6 @@
 Source: opencv4
 Version: 4.3.0
-Port-Version: 3
+Port-Version: 4
 Build-Depends: zlib
 Homepage: https://github.com/opencv/opencv
 Description: computer vision library

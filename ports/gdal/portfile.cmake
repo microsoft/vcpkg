@@ -149,8 +149,8 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libssl.lib" OPENSSL_LIBRARY_DBG)
 
   # Setup libiconv libraries path
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib" ICONV_LIBRARY_REL)
-  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib" ICONV_LIBRARY_DBG)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/iconv.lib ${CURRENT_INSTALLED_DIR}/lib/charset.lib" ICONV_LIBRARY_REL)
+  file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib" ICONV_LIBRARY_DBG)
 
   if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
       # Setup MySQL libraries + include path
@@ -266,7 +266,7 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     message(STATUS "Building ${TARGET_TRIPLET}-rel")
     vcpkg_execute_required_process(
       COMMAND ${NMAKE} -f makefile.vc
-      "${NMAKE_OPTIONS_REL}"
+      ${NMAKE_OPTIONS_REL}
       WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
       LOGNAME nmake-build-${TARGET_TRIPLET}-release
     )
@@ -281,7 +281,7 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     message(STATUS "Building ${TARGET_TRIPLET}-dbg")
     vcpkg_execute_required_process(
       COMMAND ${NMAKE} /G -f makefile.vc
-      "${NMAKE_OPTIONS_DBG}"
+      ${NMAKE_OPTIONS_DBG}
       WORKING_DIRECTORY ${SOURCE_PATH_DEBUG}
       LOGNAME nmake-build-${TARGET_TRIPLET}-debug
     )
@@ -296,9 +296,9 @@ if (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
 
   vcpkg_execute_required_process(
     COMMAND ${NMAKE} -f makefile.vc
-    "${NMAKE_OPTIONS_REL}"
-    "install"
-    "devinstall"
+    ${NMAKE_OPTIONS_REL}
+    install
+    devinstall
     WORKING_DIRECTORY ${SOURCE_PATH_RELEASE}
     LOGNAME nmake-install-${TARGET_TRIPLET}
   )
