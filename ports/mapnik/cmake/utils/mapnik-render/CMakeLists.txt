@@ -1,4 +1,3 @@
-
 add_executable(mapnik-render mapnik-render.cpp)
 target_include_directories(mapnik-render PRIVATE 
     ${mapnik_include_paths}

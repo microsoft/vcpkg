@@ -1,4 +1,3 @@
-
 add_library(mapnik-input-geobuf SHARED
 geobuf_datasource.cpp
 geobuf_featureset.cpp)
