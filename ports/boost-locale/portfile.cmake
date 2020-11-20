@@ -11,10 +11,21 @@ vcpkg_from_github(
         allow-force-finding-iconv.patch
 )
 
+if("icu" IN_LIST FEATURES)
+    set(BOOST_LOCALE_ICU_FEATURE on)
+else()
+    set(BOOST_LOCALE_ICU_FEATURE off)
+endif()
+
+configure_file(
+    "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"
+    "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
+    @ONLY)
+
 include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 boost_modular_build(
     SOURCE_PATH ${SOURCE_PATH}
-    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+    BOOST_CMAKE_FRAGMENT "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
 )
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})

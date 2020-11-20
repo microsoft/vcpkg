@@ -1,16 +1,10 @@
 # When we get into unix_build, VCPKG_TARGET_IS_WINDOWS doesn't work, fall back onto CMAKE_SYSTEM_NAME
-if(VCPKG_TARGET_IS_WINDOWS OR CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    if("icu" IN_LIST FEATURES)
-        set(BOOST_LOCALE_ICU on)
-    else()
-        set(BOOST_LOCALE_ICU off)
-    endif()
-
+if(@VCPKG_TARGET_IS_WINDOWS@)
     list(APPEND B2_OPTIONS
         boost.locale.iconv=off
         boost.locale.posix=off
         /boost/locale//boost_locale
-        boost.locale.icu=${BOOST_LOCALE_ICU}
+        boost.locale.icu=@BOOST_LOCALE_ICU_FEATURE@
     )
 else()
     find_library(LIBICONV_LIBRARY iconv)
@@ -20,7 +14,7 @@ else()
         boost.locale.iconv=on
         boost.locale.posix=on
         /boost/locale//boost_locale
-        boost.locale.icu=off
+        boost.locale.icu=@BOOST_LOCALE_ICU_FEATURE@
         -sICONV_PATH=${LIBICONV_DIR}
     )
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
