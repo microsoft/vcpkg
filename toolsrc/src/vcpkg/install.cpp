@@ -762,7 +762,7 @@ namespace vcpkg::Install
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
         const bool only_downloads = Util::Sets::contains(options.switches, (OPTION_ONLY_DOWNLOADS));
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
-        const bool is_editable = Util::Sets::contains(options.switches, (OPTION_EDITABLE));
+        const bool is_editable = Util::Sets::contains(options.switches, (OPTION_EDITABLE)) | !args.cmake_args.empty();
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going =
