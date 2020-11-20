@@ -70,6 +70,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/curses.h "${_contents}")
 endif()
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pdcurses RENAME copyright)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
