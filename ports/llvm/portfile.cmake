@@ -169,7 +169,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/llvm" TARGET_PATH "share/llvm")
 file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 if("clang" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/clang" TARGET_PATH "share/clang")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/clang" TARGET_PATH "share/clang")
     file(INSTALL ${SOURCE_PATH}/clang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME copyright)
 endif()
 
