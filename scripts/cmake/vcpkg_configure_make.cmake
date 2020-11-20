@@ -629,8 +629,9 @@ function(vcpkg_configure_make)
         file(RELATIVE_PATH RELATIVE_BUILD_PATH "${TAR_DIR}" "${SRC_DIR}")
 
         if(_csc_COPY_SOURCE)
-            file(COPY "${SRC_DIR}/" DESTINATION "${TAR_DIR}")
-            set(RELATIVE_BUILD_PATH .)
+            file(COPY "${_csc_SOURCE_PATH}/" DESTINATION "${TAR_DIR}")
+            set(RELATIVE_BUILD_PATH ./)
+            set(TAR_DIR ${TAR_DIR}/${_csc_PROJECT_SUBPATH})
         endif()
 
         # Setup PKG_CONFIG_PATH
@@ -661,9 +662,9 @@ function(vcpkg_configure_make)
         set(ENV{LD_LIBRARY_PATH} "${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}/lib/manual-link/${LD_LIBRARY_PATH_PATHLIKE_CONCAT}")
 
         if (CMAKE_HOST_WIN32)
-            set(command ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
+            set(command ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}configure ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
         else()
-            set(command /bin/bash "./${RELATIVE_BUILD_PATH}/configure" ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}})
+            set(command /bin/bash "./${RELATIVE_BUILD_PATH}configure" ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}})
         endif()
         if(_csc_ADD_BIN_TO_PATH)
             set(PATH_BACKUP $ENV{PATH})
