@@ -166,6 +166,8 @@ function(vcpkg_configure_cmake)
         if(VCPKG_TARGET_IS_UWP AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             message(WARNING "UWP triplet is missing VCPKG_CMAKE_SYSTEM_VERSION. Setting it to 10.0")
             set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android" AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+            set(VCPKG_CMAKE_SYSTEM_VERSION 21)
         endif()
     endif()
 

@@ -332,6 +332,8 @@ namespace vcpkg::Commands::CI
 
         {
             vcpkg::System::BufferedPrint stdout_print;
+            auto precheck_results = binary_provider_precheck(paths, action_plan, binaryprovider);
+
             for (auto&& action : action_plan.install_actions)
             {
                 auto p = &action;
@@ -345,7 +347,7 @@ namespace vcpkg::Commands::CI
                     p->build_options = vcpkg::Build::backcompat_prohibiting_package_options;
                 }
 
-                auto precheck_result = binaryprovider.precheck(paths, action);
+                auto precheck_result = precheck_results.at(&action);
                 bool b_will_build = false;
 
                 std::string state;

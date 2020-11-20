@@ -44,6 +44,9 @@ static Parse::ParseExpected<SourceControlFile> test_parse_manifest(StringView sv
     return res;
 }
 
+static const FeatureFlagSettings feature_flags_with_versioning{false, false, false, true};
+static const FeatureFlagSettings feature_flags_without_versioning{false, false, false, false};
+
 TEST_CASE ("manifest construct minimum", "[manifests]")
 {
     auto m_pgh = test_parse_manifest(R"json({
@@ -59,6 +62,8 @@ TEST_CASE ("manifest construct minimum", "[manifests]")
     REQUIRE(pgh.core_paragraph->maintainers.empty());
     REQUIRE(pgh.core_paragraph->description.empty());
     REQUIRE(pgh.core_paragraph->dependencies.empty());
+
+    REQUIRE(!pgh.check_against_feature_flags({}, feature_flags_without_versioning));
 }
 
 TEST_CASE ("manifest versioning", "[manifests]")
@@ -110,6 +115,201 @@ TEST_CASE ("manifest versioning", "[manifests]")
         "version-semver": "1.2.3-rc3"
     })json",
                         true);
+}
+
+TEST_CASE ("manifest constraints", "[manifests]")
+{
+    std::string raw = R"json({
+    "name": "zlib",
+    "version-string": "abcd",
+    "dependencies": [
+        "a",
+        {
+            "name": "b",
+            "port-version": 12,
+            "version=": "5"
+        },
+        {
+            "$extra": null,
+            "name": "c"
+        },
+        {
+            "name": "d",
+            "version>=": "2018-09-01"
+        }
+    ]
+}
+)json";
+    auto m_pgh = test_parse_manifest(raw);
+
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
+    REQUIRE(pgh.check_against_feature_flags({}, feature_flags_without_versioning));
+    REQUIRE(!pgh.check_against_feature_flags({}, feature_flags_with_versioning));
+    REQUIRE(Json::stringify(serialize_manifest(pgh), Json::JsonStyle::with_spaces(4)) == raw);
+    REQUIRE(pgh.core_paragraph->dependencies.size() == 4);
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "a");
+    REQUIRE(pgh.core_paragraph->dependencies[0].constraint ==
+            DependencyConstraint{Versions::Constraint::Type::None, "", 0});
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "b");
+    REQUIRE(pgh.core_paragraph->dependencies[1].constraint ==
+            DependencyConstraint{Versions::Constraint::Type::Exact, "5", 12});
+    REQUIRE(pgh.core_paragraph->dependencies[2].name == "c");
+    REQUIRE(pgh.core_paragraph->dependencies[2].constraint ==
+            DependencyConstraint{Versions::Constraint::Type::None, "", 0});
+    REQUIRE(pgh.core_paragraph->dependencies[3].name == "d");
+    REQUIRE(pgh.core_paragraph->dependencies[3].constraint ==
+            DependencyConstraint{Versions::Constraint::Type::Minimum, "2018-09-01", 0});
+
+    test_parse_manifest(R"json({
+        "name": "zlib",
+        "version-string": "abcd",
+        "dependencies": [
+            {
+                "name": "d",
+                "version=": "2018-09-01",
+                "version>=": "2018-09-01"
+            }
+        ]
+    })json",
+                        true);
+
+    test_parse_manifest(R"json({
+        "name": "zlib",
+        "version-string": "abcd",
+        "dependencies": [
+            {
+                "name": "d",
+                "port-version": 5
+            }
+        ]
+    })json",
+                        true);
+}
+
+TEST_CASE ("manifest overrides", "[manifests]")
+{
+    std::tuple<StringLiteral, Versions::Scheme, StringLiteral> data[] = {
+        {R"json({
+    "name": "zlib",
+    "version-date": "2020-01-01",
+    "overrides": [
+        {
+            "name": "abc",
+            "version-string": "abcd"
+        }
+    ]
+}
+)json",
+         Versions::Scheme::String,
+         "abcd"},
+        {R"json({
+    "name": "zlib",
+    "version": "1.2.3.4.5",
+    "overrides": [
+        {
+            "name": "abc",
+            "version-date": "2020-01-01"
+        }
+    ]
+}
+)json",
+         Versions::Scheme::Date,
+         "2020-01-01"},
+        {R"json({
+    "name": "zlib",
+    "version-date": "2020-01-01",
+    "overrides": [
+        {
+            "name": "abc",
+            "version": "1.2.3.4.5"
+        }
+    ]
+}
+)json",
+         Versions::Scheme::Relaxed,
+         "1.2.3.4.5"},
+        {R"json({
+    "name": "zlib",
+    "version-date": "2020-01-01",
+    "overrides": [
+        {
+            "name": "abc",
+            "version-semver": "1.2.3-rc3"
+        }
+    ]
+}
+)json",
+         Versions::Scheme::Semver,
+         "1.2.3-rc3"},
+    };
+    for (auto v : data)
+    {
+        auto m_pgh = test_parse_manifest(std::get<0>(v));
+
+        REQUIRE(m_pgh.has_value());
+        auto& pgh = **m_pgh.get();
+        REQUIRE(Json::stringify(serialize_manifest(pgh), Json::JsonStyle::with_spaces(4)) == std::get<0>(v));
+        REQUIRE(pgh.core_paragraph->overrides.size() == 1);
+        REQUIRE(pgh.core_paragraph->overrides[0].version_scheme == std::get<1>(v));
+        REQUIRE(pgh.core_paragraph->overrides[0].version == std::get<2>(v));
+        REQUIRE(pgh.check_against_feature_flags({}, feature_flags_without_versioning));
+        REQUIRE(!pgh.check_against_feature_flags({}, feature_flags_with_versioning));
+    }
+
+    test_parse_manifest(R"json({
+        "name": "zlib",
+        "version-string": "abcd",
+        "overrides": [
+        {
+            "name": "abc",
+            "version-semver": "1.2.3-rc3",
+            "version-string": "1.2.3-rc3"
+        }
+    ]})json",
+                        true);
+
+    test_parse_manifest(R"json({
+        "name": "zlib",
+        "version-string": "abcd",
+        "overrides": [
+        {
+            "name": "abc",
+            "port-version": 5
+        }
+    ]})json",
+                        true);
+
+    std::string raw = R"json({
+    "name": "zlib",
+    "version-string": "abcd",
+    "overrides": [
+        {
+            "name": "abc",
+            "port-version": 5,
+            "version-string": "hello"
+        },
+        {
+            "name": "abcd",
+            "port-version": 7,
+            "version-string": "hello"
+        }
+    ]
+}
+)json";
+    auto m_pgh = test_parse_manifest(raw);
+
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
+    REQUIRE(Json::stringify(serialize_manifest(pgh), Json::JsonStyle::with_spaces(4)) == raw);
+    REQUIRE(pgh.core_paragraph->overrides.size() == 2);
+    REQUIRE(pgh.core_paragraph->overrides[0].name == "abc");
+    REQUIRE(pgh.core_paragraph->overrides[0].port_version == 5);
+    REQUIRE(pgh.core_paragraph->overrides[1].name == "abcd");
+    REQUIRE(pgh.core_paragraph->overrides[1].port_version == 7);
+
+    REQUIRE(pgh.check_against_feature_flags({}, feature_flags_without_versioning));
+    REQUIRE(!pgh.check_against_feature_flags({}, feature_flags_with_versioning));
 }
 
 TEST_CASE ("manifest construct maximum", "[manifests]")
@@ -181,6 +381,8 @@ TEST_CASE ("manifest construct maximum", "[manifests]")
     REQUIRE(pgh.feature_paragraphs[1]->description.size() == 2);
     REQUIRE(pgh.feature_paragraphs[1]->description[0] == "son of the fire lord");
     REQUIRE(pgh.feature_paragraphs[1]->description[1] == "firebending 師父");
+
+    REQUIRE(!pgh.check_against_feature_flags({}, feature_flags_without_versioning));
 }
 
 TEST_CASE ("SourceParagraph manifest two dependencies", "[manifests]")
