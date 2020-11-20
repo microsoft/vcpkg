@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.78
-    SHA512 2410df5b39d5ca14ea7181ef4f3b501ad8879e10895ed540f079f213dcc528b50e57cc16fce6f50a67e8a7be00b03c5833cabfd5db4ba210cafce6d95da389c6
+    REF v1.79
+    SHA512 35ed7af89123e09989ef81085f19ed15f97f4798e2b35834fd8b4ae918889b51132d85901f867ab2f379711a734bc7b2edd309d74f3f7527eaaaebfd766d3737
     HEAD_REF master
 )
 

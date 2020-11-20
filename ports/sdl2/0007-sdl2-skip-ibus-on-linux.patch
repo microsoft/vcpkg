@@ -1,0 +1,16 @@
+--- CMakeLists.orig.txt 2020-10-28 09:08:51.925900284 +0100
++++ CMakeLists.txt      2020-10-28 09:09:10.034165780 +0100
+@@ -1197,13 +1197,6 @@
+         list(APPEND EXTRA_LIBS ${DBUS_LIBRARIES})
+       endif()
+ 
+-      pkg_search_module(IBUS ibus-1.0 ibus)
+-      if(IBUS_FOUND)
+-        set(HAVE_IBUS_IBUS_H TRUE)
+-        include_directories(${IBUS_INCLUDE_DIRS})
+-        list(APPEND EXTRA_LIBS ${IBUS_LIBRARIES})
+-        add_definitions(-DSDL_USE_IME)
+-      endif()
+       if(HAVE_LIBUNWIND_H)
+         # We've already found the header, so REQUIRE the lib to be present
+         pkg_search_module(UNWIND REQUIRED libunwind)

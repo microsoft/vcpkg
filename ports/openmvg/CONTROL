@@ -1,6 +1,5 @@
 Source: openmvg
-Version: 1.5
-Port-Version: 1
+Version: 1.6
 Description: open Multiple View Geometry library. Basis for 3D computer vision and Structure from Motion.
 Build-Depends: coinutils, clp, osi, liblemon, flann, eigen3, ceres[suitesparse,cxsparse], cereal, libjpeg-turbo, tiff, libpng, zlib, vlfeat
 

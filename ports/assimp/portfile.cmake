@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         build_fixes.patch
+        irrlicht.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake-modules/FindZLIB.cmake)
@@ -42,18 +43,45 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(VCVER vc140 vc141 vc142 )
+    set(CRT mt md)
+    set(DBG_NAMES)
+    set(REL_NAMES)
+    foreach(_ver IN LISTS VCVER)
+        foreach(_crt IN LISTS CRT)
+            list(APPEND DBG_NAMES assimp-${_ver}-${_crt}d)
+            list(APPEND REL_NAMES assimp-${_ver}-${_crt})
+        endforeach()
+    endforeach()
+endif()
+
+find_library(ASSIMP_REL NAMES assimp ${REL_NAMES} PATHS "${CURRENT_PACKAGES_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(ASSIMP_DBG NAMES assimp assimpd ${DBG_NAMES} PATHS "${CURRENT_PACKAGES_DIR}/debug/lib" NO_DEFAULT_PATH)
+if(ASSIMP_REL)
+    get_filename_component(ASSIMP_NAME_REL "${ASSIMP_REL}" NAME_WLE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/assimp.pc" "-lassimp" "-l${ASSIMP_NAME_REL}")
+endif()
+if(ASSIMP_DBG)
+    get_filename_component(ASSIMP_NAME_DBG "${ASSIMP_DBG}" NAME_WLE)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/assimp.pc" "-lassimp" "-l${ASSIMP_NAME_DBG}")
+endif()
+
 vcpkg_fixup_cmake_targets()
+vcpkg_fixup_pkgconfig() # Probably requires more fixing for static builds. See qt5-3d and the config changes below
 vcpkg_copy_pdbs()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/assimp/AssimpConfig.cmake ASSIMP_CONFIG)
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/assimp/AssimpConfig.cmake "
+file(READ ${CURRENT_PACKAGES_DIR}/share/assimp/assimpConfig.cmake ASSIMP_CONFIG)
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/assimp/assimpConfig.cmake "
 include(CMakeFindDependencyMacro)
 find_dependency(ZLIB)
-find_dependency(irrXML CONFIG)
+find_dependency(irrlicht CONFIG)
 find_dependency(polyclipping CONFIG)
 find_dependency(minizip CONFIG)
 find_dependency(kubazip CONFIG)
 find_dependency(poly2tri CONFIG)
+find_dependency(utf8cpp CONFIG)
 ${ASSIMP_CONFIG}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

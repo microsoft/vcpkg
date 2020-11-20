@@ -56,3 +56,18 @@ TEST_CASE ("find_first_of", "[strings]")
     REQUIRE(find_first_of("abcdefg", "bg") == std::string("bcdefg"));
     REQUIRE(find_first_of("abcdefg", "gb") == std::string("bcdefg"));
 }
+
+TEST_CASE ("edit distance", "[strings]")
+{
+    using vcpkg::Strings::byte_edit_distance;
+    REQUIRE(byte_edit_distance("", "") == 0);
+    REQUIRE(byte_edit_distance("a", "a") == 0);
+    REQUIRE(byte_edit_distance("abcd", "abcd") == 0);
+    REQUIRE(byte_edit_distance("aaa", "aa") == 1);
+    REQUIRE(byte_edit_distance("aa", "aaa") == 1);
+    REQUIRE(byte_edit_distance("abcdef", "bcdefa") == 2);
+    REQUIRE(byte_edit_distance("hello", "world") == 4);
+    REQUIRE(byte_edit_distance("CAPITAL", "capital") == 7);
+    REQUIRE(byte_edit_distance("", "hello") == 5);
+    REQUIRE(byte_edit_distance("world", "") == 5);
+}

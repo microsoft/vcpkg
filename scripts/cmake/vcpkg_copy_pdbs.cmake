@@ -21,7 +21,8 @@
 ## * [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
 ## * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
 function(vcpkg_copy_pdbs)
-    cmake_parse_arguments(_vcp "" "" "BUILD_PATHS" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vcp "" "" "BUILD_PATHS")
     
     if(NOT _vcp_BUILD_PATHS)
         set(

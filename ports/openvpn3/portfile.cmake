@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(VCPKG_LIBRARY_LINKAGE static)
 
 vcpkg_from_github(

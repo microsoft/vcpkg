@@ -32,24 +32,21 @@
     "qt5-base",
     "suitesparse"
   ],
-  "features": [
-    {
-      "name": "cuda",
+  "features": {
+    "cuda": {
       "description": "CUDA support for current compute architecture of this machine.",
       "dependencies": [
         "cuda"
       ]
     },
-    {
-      "name": "cuda-redist",
+    "cuda-redist": {
       "description": "Redistributable CUDA support for common supported compute architectures.",
       "dependencies": [
         "cuda"
       ]
     },
-    {
-      "name": "tests",
+    "tests": {
       "description": "Enable TESTS."
     }
-  ]
+  }
 }

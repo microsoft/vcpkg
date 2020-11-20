@@ -23,39 +23,11 @@ using vcpkg::Checks::check_exit;
 using vcpkg::System::CPUArchitecture;
 using vcpkg::System::get_environment_variable;
 using vcpkg::System::guess_visual_studio_prompt_target_architecture;
+using vcpkg::System::set_environment_variable;
 using vcpkg::System::to_cpu_architecture;
 
 namespace
 {
-    void set_environment_variable(ZStringView varname, Optional<std::string> value)
-    {
-#if defined(_WIN32)
-        const auto w_varname = vcpkg::Strings::to_utf16(varname);
-        const auto w_varcstr = w_varname.c_str();
-        BOOL exit_code;
-        if (value)
-        {
-            const auto w_value = vcpkg::Strings::to_utf16(value.value_or_exit(VCPKG_LINE_INFO));
-            exit_code = SetEnvironmentVariableW(w_varcstr, w_value.c_str());
-        }
-        else
-        {
-            exit_code = SetEnvironmentVariableW(w_varcstr, nullptr);
-        }
-
-        check_exit(VCPKG_LINE_INFO, exit_code != 0);
-#else  // ^^^ defined(_WIN32) / !defined(_WIN32) vvv
-        if (auto v = value.get())
-        {
-            check_exit(VCPKG_LINE_INFO, setenv(varname.c_str(), v->c_str(), 1) == 0);
-        }
-        else
-        {
-            check_exit(VCPKG_LINE_INFO, unsetenv(varname.c_str()) == 0);
-        }
-#endif // defined(_WIN32)
-    }
-
     struct environment_variable_resetter
     {
         explicit environment_variable_resetter(ZStringView varname_)

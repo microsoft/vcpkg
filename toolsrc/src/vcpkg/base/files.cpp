@@ -5,18 +5,102 @@
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
-#if !defined(_WIN32)
+#if defined(_WIN32)
+#include <vcpkg/base/system_headers.h>
+#else // ^^^ _WIN32 // !_WIN32 vvv
 #include <fcntl.h>
 
 #include <sys/file.h>
 #include <sys/stat.h>
-#endif
+#endif // _WIN32
 
 #if defined(__linux__)
 #include <sys/sendfile.h>
 #elif defined(__APPLE__)
 #include <copyfile.h>
 #endif // ^^^ defined(__APPLE__)
+
+#include <algorithm>
+#include <list>
+#include <string>
+
+namespace
+{
+    struct NativeStringView
+    {
+        const fs::path::value_type* first;
+        const fs::path::value_type* last;
+        NativeStringView() = default;
+        NativeStringView(const fs::path::value_type* first, const fs::path::value_type* last) : first(first), last(last)
+        {
+        }
+        bool empty() const { return first == last; }
+        bool is_dot() const { return (last - first) == 1 && *first == '.'; }
+        bool is_dot_dot() const { return (last - first) == 2 && *first == '.' && *(first + 1) == '.'; }
+    };
+}
+
+#if defined(_WIN32)
+namespace
+{
+    template<size_t N>
+    bool wide_starts_with(const std::wstring& haystack, const wchar_t (&needle)[N]) noexcept
+    {
+        const size_t without_null = N - 1;
+        return haystack.size() >= without_null && std::equal(needle, needle + without_null, haystack.begin());
+    }
+
+    bool starts_with_drive_letter(std::wstring::const_iterator first, const std::wstring::const_iterator last) noexcept
+    {
+        if (last - first < 2)
+        {
+            return false;
+        }
+
+        if (!(first[0] >= L'a' && first[0] <= L'z') && !(first[0] >= L'A' && first[0] <= L'Z'))
+        {
+            return false;
+        }
+
+        if (first[1] != L':')
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    struct FindFirstOp
+    {
+        HANDLE h_find = INVALID_HANDLE_VALUE;
+        WIN32_FIND_DATAW find_data;
+
+        unsigned long find_first(const wchar_t* const path) noexcept
+        {
+            assert(h_find == INVALID_HANDLE_VALUE);
+            h_find = FindFirstFileW(path, &find_data);
+            if (h_find == INVALID_HANDLE_VALUE)
+            {
+                return GetLastError();
+            }
+
+            return ERROR_SUCCESS;
+        }
+
+        FindFirstOp() = default;
+        FindFirstOp(const FindFirstOp&) = delete;
+        FindFirstOp& operator=(const FindFirstOp&) = delete;
+
+        ~FindFirstOp()
+        {
+            if (h_find != INVALID_HANDLE_VALUE)
+            {
+                (void)FindClose(h_find);
+            }
+        }
+    };
+} // unnamed namespace
+#endif // _WIN32
 
 fs::path fs::u8path(vcpkg::StringView s)
 {
@@ -42,6 +126,148 @@ std::string fs::generic_u8string(const fs::path& p)
 #else
     return p.generic_string();
 #endif
+}
+
+fs::path fs::lexically_normal(const fs::path& p)
+{
+    // copied from microsoft/STL, stl/inc/filesystem:lexically_normal()
+    // relicensed under MIT for the vcpkg repository.
+
+    // N4810 29.11.7.1 [fs.path.generic]/6:
+    // "Normalization of a generic format pathname means:"
+
+    // "1. If the path is empty, stop."
+    if (p.empty())
+    {
+        return {};
+    }
+
+    // "2. Replace each slash character in the root-name with a preferred-separator."
+    const auto first = p.native().data();
+    const auto last = first + p.native().size();
+    const auto root_name_end = first + p.root_name().native().size();
+
+    fs::path::string_type normalized(first, root_name_end);
+
+#if defined(_WIN32)
+    std::replace(normalized.begin(), normalized.end(), L'/', L'\\');
+#endif
+
+    // "3. Replace each directory-separator with a preferred-separator.
+    // [ Note: The generic pathname grammar (29.11.7.1) defines directory-separator
+    // as one or more slashes and preferred-separators. -end note ]"
+    std::list<NativeStringView> lst; // Empty string_view means directory-separator
+                                     // that will be normalized to a preferred-separator.
+                                     // Non-empty string_view means filename.
+    for (auto next = root_name_end; next != last;)
+    {
+        if (is_slash(*next))
+        {
+            if (lst.empty() || !lst.back().empty())
+            {
+                // collapse one or more slashes and preferred-separators to one empty wstring_view
+                lst.emplace_back();
+            }
+
+            ++next;
+        }
+        else
+        {
+            const auto filename_end = std::find_if(next + 1, last, is_slash);
+            lst.emplace_back(next, filename_end);
+            next = filename_end;
+        }
+    }
+
+    // "4. Remove each dot filename and any immediately following directory-separator."
+    for (auto next = lst.begin(); next != lst.end();)
+    {
+        if (next->is_dot())
+        {
+            next = lst.erase(next); // erase dot filename
+
+            if (next != lst.end())
+            {
+                next = lst.erase(next); // erase immediately following directory-separator
+            }
+        }
+        else
+        {
+            ++next;
+        }
+    }
+
+    // "5. As long as any appear, remove a non-dot-dot filename immediately followed by a
+    // directory-separator and a dot-dot filename, along with any immediately following directory-separator."
+    for (auto next = lst.begin(); next != lst.end();)
+    {
+        auto prev = next;
+
+        // If we aren't going to erase, keep advancing.
+        // If we're going to erase, next now points past the dot-dot filename.
+        ++next;
+
+        if (prev->is_dot_dot() && prev != lst.begin() && --prev != lst.begin() && !(--prev)->is_dot_dot())
+        {
+            if (next != lst.end())
+            { // dot-dot filename has an immediately following directory-separator
+                ++next;
+            }
+
+            lst.erase(prev, next); // next remains valid
+        }
+    }
+
+    // "6. If there is a root-directory, remove all dot-dot filenames
+    // and any directory-separators immediately following them.
+    // [ Note: These dot-dot filenames attempt to refer to nonexistent parent directories. -end note ]"
+    if (!lst.empty() && lst.front().empty())
+    { // we have a root-directory
+        for (auto next = lst.begin(); next != lst.end();)
+        {
+            if (next->is_dot_dot())
+            {
+                next = lst.erase(next); // erase dot-dot filename
+
+                if (next != lst.end())
+                {
+                    next = lst.erase(next); // erase immediately following directory-separator
+                }
+            }
+            else
+            {
+                ++next;
+            }
+        }
+    }
+
+    // "7. If the last filename is dot-dot, remove any trailing directory-separator."
+    if (lst.size() >= 2 && lst.back().empty() && std::prev(lst.end(), 2)->is_dot_dot())
+    {
+        lst.pop_back();
+    }
+
+    // Build up normalized by flattening lst.
+    for (const auto& elem : lst)
+    {
+        if (elem.empty())
+        {
+            normalized += fs::path::preferred_separator;
+        }
+        else
+        {
+            normalized.append(elem.first, elem.last);
+        }
+    }
+
+    // "8. If the path is empty, add a dot."
+    if (normalized.empty())
+    {
+        normalized.push_back('.');
+    }
+
+    // "The result of normalization is a path in normal form, which is said to be normalized."
+    return std::move(normalized);
 }
 
 namespace vcpkg::Files
@@ -482,6 +708,7 @@ namespace vcpkg::Files
             std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
             if (file_stream.fail())
             {
+                Debug::print("Missing path: ", fs::u8string(file_path), '\n');
                 return std::make_error_code(std::errc::no_such_file_or_directory);
             }
 
@@ -1100,22 +1327,22 @@ namespace vcpkg::Files
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
         {
 #if defined(_WIN32)
-            static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
-            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ';');
+            static constexpr wchar_t const* EXTS[] = {L".cmd", L".exe", L".bat"};
 #else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
-            static constexpr StringLiteral EXTS[] = {""};
-            auto paths = Strings::split(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO), ':');
-#endif // ^^^ !defined(_WIN32)
+            static constexpr char const* EXTS[] = {""};
+#endif // ^^^!defined(_WIN32)
+            auto paths = Strings::split_paths(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO));
 
             std::vector<fs::path> ret;
-            std::error_code ec;
             for (auto&& path : paths)
             {
-                auto base = path + "/" + name;
+                auto base = fs::u8path(path);
+                base /= fs::u8path(name);
+
                 for (auto&& ext : EXTS)
                 {
-                    auto p = fs::u8path(base + ext.c_str());
-                    if (Util::find(ret, p) == ret.end() && this->exists(p, ec))
+                    auto p = fs::path(base.native() + ext);
+                    if (Util::find(ret, p) == ret.end() && this->exists(p, ignore_errors))
                     {
                         ret.push_back(p);
                         Debug::print("Found path: ", fs::u8string(p), '\n');
@@ -1196,4 +1423,108 @@ namespace vcpkg::Files
 #endif // ^^^ windows
 #endif // ^^^ std::experimental::filesystem
     }
+
+#ifdef _WIN32
+    fs::path win32_fix_path_case(const fs::path& source)
+    {
+        using fs::is_slash;
+        const std::wstring& native = source.native();
+        if (native.empty())
+        {
+            return fs::path{};
+        }
+
+        if (wide_starts_with(native, L"\\\\?\\") || wide_starts_with(native, L"\\??\\") ||
+            wide_starts_with(native, L"\\\\.\\"))
+        {
+            // no support to attempt to fix paths in the NT, \\GLOBAL??, or device namespaces at this time
+            return source;
+        }
+
+        const auto last = native.end();
+        auto first = native.begin();
+        auto is_wildcard = [](wchar_t c) { return c == L'?' || c == L'*'; };
+        if (std::any_of(first, last, is_wildcard))
+        {
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO, "Attempt to fix case of a path containing wildcards: %s", fs::u8string(source));
+        }
+
+        std::wstring in_progress;
+        in_progress.reserve(native.size());
+        if (last - first >= 3 && is_slash(first[0]) && is_slash(first[1]) && !is_slash(first[2]))
+        {
+            // path with UNC prefix \\server\share; this will be rejected by FindFirstFile so we skip over that
+            in_progress.push_back(L'\\');
+            in_progress.push_back(L'\\');
+            first += 2;
+            auto next_slash = std::find_if(first, last, is_slash);
+            in_progress.append(first, next_slash);
+            in_progress.push_back(L'\\');
+            first = std::find_if_not(next_slash, last, is_slash);
+            next_slash = std::find_if(first, last, is_slash);
+            in_progress.append(first, next_slash);
+            first = std::find_if_not(next_slash, last, is_slash);
+            if (first != next_slash)
+            {
+                in_progress.push_back(L'\\');
+            }
+        }
+        else if (last - first >= 1 && is_slash(first[0]))
+        {
+            // root relative path
+            in_progress.push_back(L'\\');
+            first = std::find_if_not(first, last, is_slash);
+        }
+        else if (starts_with_drive_letter(first, last))
+        {
+            // path with drive letter root
+            auto letter = first[0];
+            if (letter >= L'a' && letter <= L'z')
+            {
+                letter = letter - L'a' + L'A';
+            }
+
+            in_progress.push_back(letter);
+            in_progress.push_back(L':');
+            first += 2;
+            if (first != last && is_slash(*first))
+            {
+                // absolute path
+                in_progress.push_back(L'\\');
+                first = std::find_if_not(first, last, is_slash);
+            }
+        }
+
+        assert(!fs::path(first, last).has_root_path());
+
+        while (first != last)
+        {
+            auto next_slash = std::find_if(first, last, is_slash);
+            auto original_size = in_progress.size();
+            in_progress.append(first, next_slash);
+            FindFirstOp this_find;
+            unsigned long last_error = this_find.find_first(in_progress.c_str());
+            if (last_error == ERROR_SUCCESS)
+            {
+                in_progress.resize(original_size);
+                in_progress.append(this_find.find_data.cFileName);
+            }
+            else
+            {
+                // we might not have access to this intermediate part of the path;
+                // just guess that the case of that element is correct and move on
+            }
+
+            first = std::find_if_not(next_slash, last, is_slash);
+            if (first != next_slash)
+            {
+                in_progress.push_back(L'\\');
+            }
+        }
+
+        return fs::path(std::move(in_progress));
+    }
+#endif // _WIN32
+
 }

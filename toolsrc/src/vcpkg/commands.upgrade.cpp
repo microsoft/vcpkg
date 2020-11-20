@@ -2,12 +2,14 @@
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/binarycaching.h>
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.upgrade.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/statusparagraphs.h>
 #include <vcpkg/update.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -167,7 +169,7 @@ namespace vcpkg::Commands::Upgrade
             action.build_options = vcpkg::Build::default_build_package_options;
         }
 
-        Dependencies::print_plan(action_plan, true, paths.ports);
+        Dependencies::print_plan(action_plan, true, paths.builtin_ports_directory());
 
         if (!no_dry_run)
         {
