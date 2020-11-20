@@ -365,7 +365,7 @@ If you wish to silence this error and use classic mode, you can:
         ports_cmake = filesystem.canonical(VCPKG_LINE_INFO, scripts / fs::u8path("ports.cmake"));
 
         // TODO: Spec out the final locations for these.
-        // Should these be user configurable?  
+        // Should these be user configurable?
         versioning_tmp = buildtrees / fs::u8path("versioning.tmp");
         versioning_tmp_dot_git_dir = versioning_tmp / fs::u8path(".git");
         versioning_tmp_work_tree_prefix = versioning_tmp / fs::u8path("work_trees");
