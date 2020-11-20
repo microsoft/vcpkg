@@ -10,7 +10,7 @@ Feature: tool
 Description: Builds curl executable
 
 Feature: non-http
-Description: Enables protocols beyond HTTP/HTTPS/HTTP2
+Description: Enable all protocols except HTTP
 
 Feature: http2
 Build-Depends: nghttp2, curl[core,ssl]

@@ -15,6 +15,10 @@ vcpkg_from_github(
         0011_fix_static_build.patch
 )
 
+if ("non-http" IN_LIST FEATURES)
+    message(WARNING "Using feature \"non-http\", if you wish to enable http, please install curl using command `./vcpkg install curl[core]:${TARGET_TRIPLET}`")
+endif()
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
 
 # schannel will enable sspi, but sspi do not support uwp
