@@ -173,7 +173,7 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
     file(WRITE "${_file}" "${NATIVE_${_config}}")
 endfunction()
 
-function(vcpkg_internal_meson_generate_cross_file) #https://mesonbuild.com/Cross-compilation.html
+function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https://mesonbuild.com/Cross-compilation.html
     if(CMAKE_HOST_WIN32)
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
             set(BUILD_ARCH $ENV{PROCESSOR_ARCHITEW6432})
@@ -239,6 +239,10 @@ function(vcpkg_internal_meson_generate_cross_file) #https://mesonbuild.com/Cross
         string(APPEND CROSS "c_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
         string(APPEND CROSS "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
     endif()
+    foreach(_binary IN LISTS ${_additional_binaries})
+        string(APPEND CROSS "${_binary}\n")
+    endforeach()
+
     string(APPEND CROSS "[properties]\n")
     string(APPEND CROSS "skip_sanity_check = true\n")
     string(APPEND CROSS "[host_machine]\n")
@@ -333,7 +337,7 @@ endfunction()
 
 function(vcpkg_configure_meson)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;ADDITIONAL_NATIVE_BINARIES")
+    cmake_parse_arguments(PARSE_ARGV 0 _vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES")
 
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -347,7 +351,8 @@ function(vcpkg_configure_meson)
     get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
     vcpkg_add_to_path("${PYTHON3_DIR}")
     list(APPEND _vcm_ADDITIONAL_NATIVE_BINARIES "python = '${PYTHON3}'")
-
+    list(APPEND _vcm_ADDITIONAL_CROSS_BINARIES "python = '${PYTHON3}'")
+    
     vcpkg_find_acquire_program(MESON)
 
     get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
@@ -374,7 +379,7 @@ function(vcpkg_configure_meson)
     list(APPEND _vcm_OPTIONS_RELEASE --native "${VCPKG_MESON_NATIVE_FILE_RELEASE}")
 
     if(NOT VCPKG_MESON_CROSS_FILE)
-        vcpkg_internal_meson_generate_cross_file()
+        vcpkg_internal_meson_generate_cross_file("_vcm_ADDITIONAL_CROSS_BINARIES")
     endif()
     if(NOT VCPKG_MESON_CROSS_FILE_DEBUG AND VCPKG_MESON_CROSS_FILE)
         vcpkg_internal_meson_generate_cross_file_config(DEBUG)

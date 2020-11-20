@@ -3,7 +3,12 @@ Version: 20.2.2
 Homepage: https://www.mesa3d.org/
 Description: Mesa - The 3D Graphics Library
 Build-Depends: zlib, zstd, tool-meson
-Default-Features: llvm, shared-glapi, gles1, gles2
+Default-Features: default-features
+
+Feature: default-features
+Description: Platform dependent default features
+Build-Depends: mesa[core,llvm](x64), mesa[core,shared-glapi], mesa[core,gles1], mesa[core,gles2]
+
 
 Feature: llvm
 Description: Build with llvmpipe
