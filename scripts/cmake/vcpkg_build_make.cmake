@@ -7,6 +7,7 @@
 ## vcpkg_build_make([BUILD_TARGET <target>]
 ##                  [ADD_BIN_TO_PATH]
 ##                  [ENABLE_INSTALL])
+##                  [MAKEFILE <makefileName>]
 ##                  [LOGFILE_ROOT <logfileroot>])
 ## ```
 ##
@@ -19,6 +20,9 @@
 ##
 ## ### ENABLE_INSTALL
 ## IF the port supports the install target use vcpkg_install_make() instead of vcpkg_build_make()
+##
+## ### MAKEFILE
+## Specifies the Makefile as a relative path from the root of the sources passed to `vcpkg_configure_make()`
 ##
 ## ### BUILD_TARGET
 ## The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
@@ -49,7 +53,7 @@ function(vcpkg_build_make)
     include("${_VCPKG_CMAKE_VARS_FILE}")
 
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH" "")
+    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE" "")
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -57,6 +61,10 @@ function(vcpkg_build_make)
 
     if(NOT _bc_BUILD_TARGET)
         set(_bc_BUILD_TARGET "all")
+    endif()
+
+    if (NOT _bc_MAKEFILE)
+        set(_bc_MAKEFILE Makefile)
     endif()
 
     if(WIN32)
@@ -76,22 +84,22 @@ function(vcpkg_build_make)
         vcpkg_acquire_msys(MSYS_ROOT)
         find_program(MAKE make REQUIRED)
         set(MAKE_COMMAND "${MAKE}")
-        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f Makefile ${_bc_BUILD_TARGET})
-        set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} -j 1 --trace -f Makefile ${_bc_BUILD_TARGET})
+        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} -j ${VCPKG_CONCURRENCY} --trace -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
+        set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} -j 1 --trace -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
 
         string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
         # Don't know why '/cygdrive' is suddenly a requirement here. (at least for x264)
         string(REGEX REPLACE "([a-zA-Z]):/" "/cygdrive/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
-        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f Makefile install DESTDIR=${_VCPKG_PACKAGE_PREFIX})
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f ${_bc_MAKEFILE} install DESTDIR=${_VCPKG_PACKAGE_PREFIX})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
     else()
         # Compiler requriements
         find_program(MAKE make REQUIRED)
         set(MAKE_COMMAND "${MAKE}")
         # Set make command and install command
-        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f Makefile ${_bc_BUILD_TARGET})
-        set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j 1 -f Makefile ${_bc_BUILD_TARGET})
-        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} -f Makefile install DESTDIR=${CURRENT_PACKAGES_DIR})
+        set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
+        set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j 1 -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} -f ${_bc_MAKEFILE} install DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
