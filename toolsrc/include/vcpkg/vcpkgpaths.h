@@ -104,13 +104,6 @@ namespace vcpkg
 
         fs::path ports_cmake;
 
-        fs::path versioning_tmp;
-        fs::path versioning_tmp_dot_git_dir;
-        fs::path versioning_tmp_work_tree_prefix;
-        fs::path versioning_output;
-        fs::path versioning_output_baselines;
-        fs::path versioning_output_versions;
-
         const fs::path& get_tool_exe(const std::string& tool) const;
         const std::string& get_tool_version(const std::string& tool) const;
 

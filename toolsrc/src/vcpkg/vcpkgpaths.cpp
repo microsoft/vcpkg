@@ -223,6 +223,37 @@ namespace vcpkg
             Configuration m_config;
 
             FeatureFlagSettings m_ff_settings;
+
+            // Versioning paths
+            fs::path baselines_dot_git_dir(const VcpkgPaths& paths)
+            {
+                return versioning_tmp(paths) / fs::u8path(".baselines.git");
+            }
+            fs::path baselines_worktree(const VcpkgPaths& paths)
+            {
+                return versioning_tmp(paths) / fs::u8path("baselines-worktree");
+            }
+            fs::path baselines_output(const VcpkgPaths& paths)
+            {
+                return versioning_output(paths) / fs::u8path("baselines");
+            }
+
+            fs::path versions_dot_git_dir(const VcpkgPaths& paths)
+            {
+                return versioning_tmp(paths) / fs::u8path(".versions.git");
+            }
+            fs::path versions_worktree(const VcpkgPaths& paths)
+            {
+                return versioning_tmp(paths) / fs::u8path("versions-worktree");
+            }
+            fs::path versions_output(const VcpkgPaths& paths)
+            {
+                return versioning_output(paths) / fs::u8path("versions");
+            }
+
+        private:
+            fs::path versioning_tmp(const VcpkgPaths& paths) { return paths.buildtrees / fs::u8path("versioning_tmp"); }
+            fs::path versioning_output(const VcpkgPaths& paths) { return paths.buildtrees / fs::u8path("versioning"); }
         };
     }
 
@@ -364,15 +395,6 @@ If you wish to silence this error and use classic mode, you can:
 
         ports_cmake = filesystem.canonical(VCPKG_LINE_INFO, scripts / fs::u8path("ports.cmake"));
 
-        // TODO: Spec out the final locations for these.
-        // Should these be user configurable?
-        versioning_tmp = buildtrees / fs::u8path("versioning.tmp");
-        versioning_tmp_dot_git_dir = versioning_tmp / fs::u8path(".git");
-        versioning_tmp_work_tree_prefix = versioning_tmp / fs::u8path("work_trees");
-        versioning_output = buildtrees / fs::u8path("versioning");
-        versioning_output_baselines = versioning_output / fs::u8path("baselines");
-        versioning_output_versions = versioning_output / fs::u8path("versions");
-
         for (auto&& overlay_triplets_dir : args.overlay_triplets)
         {
             m_pimpl->triplets_dirs.emplace_back(
@@ -484,8 +506,8 @@ If you wish to silence this error and use classic mode, you can:
     {
         Files::Filesystem& fs = paths.get_filesystem();
         fs.remove_all(work_tree, VCPKG_LINE_INFO);
-        fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
         fs.remove_all(destination, VCPKG_LINE_INFO);
+        fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
 
         // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
         // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
@@ -547,22 +569,38 @@ If you wish to silence this error and use classic mode, you can:
     {
         Files::Filesystem& fs = paths.get_filesystem();
         fs.remove_all(work_tree, VCPKG_LINE_INFO);
-        fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
         fs.remove_all(destination, VCPKG_LINE_INFO);
 
-        // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
-        // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
-        System::CmdLineBuilder clone_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
-                                                       .string_arg("clone")
-                                                       .string_arg("--no-checkout")
-                                                       .string_arg("--local")
-                                                       .path_arg(local_repo)
-                                                       .path_arg(dot_git_dir);
-        const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           clone_output.exit_code == 0,
-                           "Failed to clone temporary vcpkg instance.\n%s\n",
-                           clone_output.output);
+        if (!fs.exists(dot_git_dir))
+        {
+            // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
+            // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
+            System::CmdLineBuilder clone_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
+                                                           .string_arg("clone")
+                                                           .string_arg("--no-checkout")
+                                                           .string_arg("--local")
+                                                           .path_arg(local_repo)
+                                                           .path_arg(dot_git_dir);
+            const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               clone_output.exit_code == 0,
+                               "Failed to clone temporary vcpkg instance.\n%s\n",
+                               clone_output.output);
+        }
+        else
+        {
+            System::CmdLineBuilder fetch_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree).string_arg("fetch");
+            const auto fetch_output = System::cmd_execute_and_capture_output(fetch_cmd_builder.extract());
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               fetch_output.exit_code == 0,
+                               "Failed to update refs on temporary vcpkg repository.\n%s\n",
+                               fetch_output.output);
+        }
+
+        if (!fs.exists(work_tree))
+        {
+            fs.create_directories(work_tree, VCPKG_LINE_INFO);
+        }
 
         // git checkout {tree_object} .
         System::CmdLineBuilder checkout_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
@@ -582,7 +620,6 @@ If you wish to silence this error and use classic mode, you can:
         std::error_code ec;
         fs.rename_or_copy(work_tree, destination, ".tmp", ec);
         fs.remove_all(work_tree, VCPKG_LINE_INFO);
-        fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
         if (ec)
         {
             System::printf(System::Color::error,
@@ -596,7 +633,7 @@ If you wish to silence this error and use classic mode, you can:
     fs::path VcpkgPaths::git_checkout_baseline(const std::string& commit_sha) const
     {
         const fs::path local_repo = this->root;
-        const fs::path destination = this->versioning_output_baselines / commit_sha / fs::u8path("baseline.json");
+        const fs::path destination = m_pimpl->baselines_output(*this) / commit_sha / fs::u8path("baseline.json");
         const fs::path baseline_subpath = fs::u8path("port_versions") / fs::u8path("baseline.json");
 
         if (!get_filesystem().exists(destination))
@@ -606,8 +643,8 @@ If you wish to silence this error and use classic mode, you can:
                                  baseline_subpath,
                                  local_repo,
                                  destination,
-                                 this->versioning_tmp_dot_git_dir,
-                                 this->versioning_tmp_work_tree_prefix / fs::u8path(commit_sha));
+                                 m_pimpl->baselines_dot_git_dir(*this),
+                                 m_pimpl->baselines_worktree(*this));
         }
         return destination;
     }
@@ -623,7 +660,7 @@ If you wish to silence this error and use classic mode, you can:
          * Because of that, it makes sense to use the git hash as the name for the directory.
          */
         const fs::path local_repo = this->root;
-        const fs::path destination = this->versioning_output_versions / fs::u8path(git_tree) / fs::u8path(port_name);
+        const fs::path destination = m_pimpl->versions_output(*this) / fs::u8path(git_tree) / fs::u8path(port_name);
 
         Files::Filesystem& fs = get_filesystem();
         if (!fs.exists(destination / "CONTROL") && !fs.exists(destination / "vcpkg.json"))
@@ -632,8 +669,8 @@ If you wish to silence this error and use classic mode, you can:
                                 git_tree,
                                 local_repo,
                                 destination,
-                                this->versioning_tmp_dot_git_dir,
-                                this->versioning_tmp_work_tree_prefix / fs::u8path(git_tree));
+                                m_pimpl->versions_dot_git_dir(*this),
+                                m_pimpl->versions_worktree(*this));
         }
         return destination;
     }
