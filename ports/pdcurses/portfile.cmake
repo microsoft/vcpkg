@@ -1,8 +1,6 @@
-vcpkg_fail_port_install(ON_TARGET "uwp" "linux" "osx")
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
-
-find_program(NMAKE nmake)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -12,64 +10,55 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-set(PDC_NMAKE_CMD ${NMAKE} /A -f ${SOURCE_PATH}/wincon/Makefile.vc WIDE=Y UTF8=Y)
-
-set(PDC_NMAKE_CWD ${SOURCE_PATH}/wincon)
-set(PDC_PDCLIB ${SOURCE_PATH}/wincon/pdcurses)
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)
-endif()
-
-message(STATUS "Build ${TARGET_TRIPLET}-rel")
-vcpkg_execute_required_process(
-    COMMAND ${PDC_NMAKE_CMD}
-    WORKING_DIRECTORY ${PDC_NMAKE_CWD}
-    LOGNAME build-${TARGET_TRIPLET}-rel
-)
-message(STATUS "Build ${TARGET_TRIPLET}-rel done")
-
-file (
-    COPY ${PDC_PDCLIB}.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file (
-        COPY ${PDC_PDCLIB}.dll
-        DESTINATION ${CURRENT_PACKAGES_DIR}/bin
+if (VCPKG_TARGET_IS_WINDOWS)
+    set(PDC_NMAKE_CMD WIDE=Y UTF8=Y)
+    
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        set(PDC_NMAKE_CMD ${PDC_NMAKE_CMD} DLL=Y)
+    endif()
+    
+    # Doesn't support install command
+    vcpkg_build_nmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PROJECT_SUBPATH wincon
+        OPTIONS ${PDC_NMAKE_CMD}
+        OPTIONS_DEBUG DEBUG=Y
     )
-endif()
+    
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(PDCURSES_BINARY_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/wincon)
+        file (COPY ${PDCURSES_BINARY_DIR}/pdcurses.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+        if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            file (COPY ${PDCURSES_BINARY_DIR}/pdcurses.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        endif()
+    endif()
+    
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        set(PDCURSES_BINARY_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/wincon)
+        file (INSTALL ${PDCURSES_BINARY_DIR}/pdcurses.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+        if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            file (INSTALL ${PDCURSES_BINARY_DIR}/pdcurses.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+        endif()
+    endif()
+    
+    vcpkg_copy_pdbs()
+    
+    file(INSTALL ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+    
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        file(READ ${CURRENT_PACKAGES_DIR}/include/curses.h _contents)
+        string(REPLACE "#ifdef PDC_DLL_BUILD" "#if 1" _contents "${_contents}")
+        file(WRITE ${CURRENT_PACKAGES_DIR}/include/curses.h "${_contents}")
+    endif()
 
-message(STATUS "Build ${TARGET_TRIPLET}-dbg")
-vcpkg_execute_required_process(
-    COMMAND ${PDC_NMAKE_CMD} DEBUG=Y
-    WORKING_DIRECTORY ${PDC_NMAKE_CWD}
-    LOGNAME build-${TARGET_TRIPLET}-dbg
-)
-message(STATUS "Build ${TARGET_TRIPLET}-dbg done")
-
-file (
-    INSTALL ${PDC_PDCLIB}.lib
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file (
-        INSTALL ${PDC_PDCLIB}.dll
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
+else()
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        PROJECT_SUBPATH x11
+        COPY_SOURCE
     )
-endif()
-
-file(
-    INSTALL ${SOURCE_PATH}/curses.h ${SOURCE_PATH}/panel.h
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-)
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(READ ${CURRENT_PACKAGES_DIR}/include/curses.h _contents)
-    string(REPLACE "#ifdef PDC_DLL_BUILD" "#if 1" _contents "${_contents}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/include/curses.h "${_contents}")
+    
+    vcpkg_install_make()
 endif()
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_copy_pdbs()
