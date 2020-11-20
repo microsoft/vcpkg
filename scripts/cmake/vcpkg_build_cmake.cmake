@@ -62,7 +62,7 @@ function(vcpkg_build_cmake)
         set(TARGET_PARAM)
     endif()
 
-    foreach(BUILDTYPE ${VCPKG_BUILD_LIST})
+    foreach(BUILDTYPE IN LISTS VCPKG_BUILD_TYPES)
         set(CONFIG "${VCPKG_BUILD_CMAKE_TYPE_${BUILDTYPE}}")
 
         message(STATUS "Building ${VCPKG_BUILD_TRIPLET_${BUILDTYPE}}")

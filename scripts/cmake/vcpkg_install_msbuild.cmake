@@ -154,7 +154,7 @@ function(vcpkg_install_msbuild)
     endif()
 
     get_filename_component(SOURCE_PATH_SUFFIX "${_csc_SOURCE_PATH}" NAME)
-    foreach(_buildname ${VCPKG_BUILD_LIST})
+    foreach(_buildname IN LISTS VCPKG_BUILD_TYPES)
         message(STATUS "Building ${_csc_PROJECT_SUBPATH} for ${_csc_${_buildname}_CONFIGURATION}")
         file(REMOVE_RECURSE ${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}})
         file(MAKE_DIRECTORY ${VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname}})

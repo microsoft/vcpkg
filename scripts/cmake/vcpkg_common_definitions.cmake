@@ -17,7 +17,7 @@
 ## VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX       import library suffix for target (same as CMAKE_IMPORT_LIBRARY_SUFFIX)
 ## VCPKG_FIND_LIBRARY_PREFIXES              target dependent prefixes used for find_library calls in portfiles
 ## VCPKG_FIND_LIBRARY_SUFFIXES              target dependent suffixes used for find_library calls in portfiles
-## VCPKG_BUILD_LIST                         List of VCPKG_BUILD_TYPE which the current port will build (uppercase)
+## VCPKG_BUILD_TYPES                         List of VCPKG_BUILD_TYPE which the current port will build (uppercase)
 ## VCPKG_BUILD_SHORT_NAME_<BUILDTYPE>       Short name of the buildtype (e.g. DEBUG=dbg; RELEASE=rel)
 ## VCPKG_BUILD_CMAKE_TYPE_<BUILDTYPE>       CMAKE_BUILD_TYPE used for buildtype
 ## VCPKG_BUILD_QMAKE_CONFIG_<BUILDTYPE>     Required QMAKE CONFIG flags for buildtype
@@ -137,8 +137,8 @@ set(CMAKE_FIND_LIBRARY_PREFIXES "${VCPKG_FIND_LIBRARY_PREFIXES}" CACHE INTERNAL 
 # Script helpers for looping over the different buildtypes
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     set(_buildname "RELEASE")
-    list(APPEND VCPKG_BUILD_LIST ${_buildname})
-    #Might also be needed: set(VCPKG_BUILD_OPTION_MAPPING_${_buildname} "RELEASE") currently the value of VCPKG_BUILD_LIST is used 
+    list(APPEND VCPKG_BUILD_TYPES ${_buildname})
+    #Might also be needed: set(VCPKG_BUILD_OPTION_MAPPING_${_buildname} "RELEASE") currently the value of VCPKG_BUILD_TYPES is used 
     set(VCPKG_BUILD_SHORT_NAME_${_buildname} "rel")
     set(VCPKG_BUILD_CMAKE_TYPE_${_buildname} "Release")
     set(VCPKG_BUILD_QMAKE_CONFIG_${_buildname} "CONFIG+=release;CONFIG-=debug")
@@ -150,12 +150,13 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
 endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     set(_buildname "DEBUG")
-    list(APPEND VCPKG_BUILD_LIST ${_buildname})
-    #Might also be needed: set(VCPKG_BUILD_OPTION_MAPPING_${_buildname} "DEBUG") currently the value of VCPKG_BUILD_LIST is used 
+    list(APPEND VCPKG_BUILD_TYPES ${_buildname})
+    #Might also be needed: set(VCPKG_BUILD_OPTION_MAPPING_${_buildname} "DEBUG") currently the value of VCPKG_BUILD_TYPES is used 
     set(VCPKG_BUILD_SHORT_NAME_${_buildname} "dbg")
     set(VCPKG_BUILD_CMAKE_TYPE_${_buildname} "Debug")
     set(VCPKG_BUILD_QMAKE_CONFIG_${_buildname} "CONFIG-=release;CONFIG+=debug")
     set(VCPKG_PATH_SUFFIX_${_buildname} "/debug")
+    set(VCPKG_COPY_EXE_${_buildname} 0)
     set(VCPKG_BUILD_TRIPLET_${_buildname} "${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_${_buildname}}")
     set(VCPKG_BUILDTREE_TRIPLET_DIR_${_buildname} "${CURRENT_BUILDTREES_DIR}/${VCPKG_BUILD_TRIPLET_${_buildname}}")
     unset(_buildname)

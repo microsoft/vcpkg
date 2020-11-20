@@ -264,7 +264,7 @@ function(vcpkg_configure_cmake)
         endif()
     endforeach()
 
-    foreach(buildtype IN LISTS VCPKG_BUILD_LIST)
+    foreach(buildtype IN LISTS VCPKG_BUILD_TYPES)
         set(${VCPKG_BUILD_SHORT_NAME_${buildtype}}_command
             ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_${buildtype}}
             -G ${GENERATOR}
@@ -283,7 +283,7 @@ function(vcpkg_configure_cmake)
         set(_contents
             "rule CreateProcess\n  command = $process\n\n"
         )
-        foreach(buildtype IN LISTS VCPKG_BUILD_LIST)
+        foreach(buildtype IN LISTS VCPKG_BUILD_TYPES)
             set(buildshort ${VCPKG_BUILD_SHORT_NAME_${buildtype}})
             set(${buildtype}_line "build ../${TARGET_TRIPLET}-${buildshort}/CMakeCache.txt: CreateProcess\n  process = cmd /c \"cd ../${TARGET_TRIPLET}-${buildshort} && ")
             foreach(arg ${${buildshort}_command})
@@ -301,7 +301,7 @@ function(vcpkg_configure_cmake)
             LOGNAME ${_csc_LOGNAME}
         )
     else()
-        foreach(buildtype IN LISTS VCPKG_BUILD_LIST)
+        foreach(buildtype IN LISTS VCPKG_BUILD_TYPES)
             message(STATUS "Configuring ${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_${buildtype}}")
             file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_${buildtype}})
             vcpkg_execute_required_process(

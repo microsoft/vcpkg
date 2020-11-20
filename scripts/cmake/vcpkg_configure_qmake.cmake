@@ -58,7 +58,7 @@ function(vcpkg_configure_qmake)
     set(PKGCONFIG_INSTALLED_SHARE_DIR "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
     set(PKGCONFIG_PACKAGES_SHARE_DIR "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
-    foreach(buildtype IN LISTS VCPKG_BUILD_LIST)
+    foreach(buildtype IN LISTS VCPKG_BUILD_TYPES)
         #Cleanup
         file(REMOVE_RECURSE "${VCPKG_BUILDTREE_TRIPLET_DIR_${buildtype}}")
         #Pkgconfig
