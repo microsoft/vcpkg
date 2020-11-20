@@ -6,4 +6,4 @@ Description: Qt5 Application Framework Base Module. Includes Core, GUI, Widgets,
 Build-Depends: zlib, zstd, libjpeg-turbo, libpng, freetype, pcre2, harfbuzz, sqlite3, libpq, double-conversion, openssl, angle (!windows), egl-registry, icu (!uwp), fontconfig (!windows)
 
 Feature: latest
-Description: Build latest qt version (5.15.1) instead of LTS (latest and LTS are currently the same)
+Description: Build latest qt version (5.15.2) instead of LTS (latest and LTS are currently the same)
