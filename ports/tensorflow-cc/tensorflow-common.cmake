@@ -217,23 +217,21 @@ foreach(BUILD_TYPE dbg rel)
 	endif()
 
 	if(VCPKG_TARGET_IS_UWP)
-		file(COPY ${CMAKE_CURRENT_LIST_DIR}/uwppatch.h DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/tensorflow/patched_includes)
-		file(APPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/WORKSPACE "
-new_local_repository(
-    name = \"patched_includes\",
-    path = \"tensorflow/patched_includes\",
-    build_file_content = \"\"\"
-package(default_visibility = [\"//visibility:public\"])
-cc_library(
-    name = \"headers\",
-    hdrs = glob([\"**/*.h\"])
-)
-\"\"\"
-)")
+		file(COPY ${CMAKE_CURRENT_LIST_DIR}/uwppatch.h DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patched_includes)
+
+		configure_file(${CMAKE_CURRENT_LIST_DIR}/uwp_toolchain.BUILD ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/toolchain/BUILD COPYONLY)
+		file(APPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/toolchain/builtin_include_directory_paths_msvc "
+\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patched_includes\"
+")
+
+		file(APPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/.bazelrc "
+build:uwp_config --crosstool_top=//toolchain:uwp_suite
+build:uwp_config --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
+")
+		set(BUILD_OPTS "${BUILD_OPTS} --config=uwp_config")
 
 		list(APPEND COPTS "--copt=-DWINAPI_FAMILY=WINAPI_FAMILY_APP")
 		list(APPEND COPTS "--copt=-D_WIN32_WINNT=0x0A00")
-		list(APPEND COPTS "--copt=-Iexternal/patched_includes")
 		list(APPEND COPTS "--copt=-FIuwppatch.h")
 		list(APPEND LINKOPTS "--linkopt=-APPCONTAINER")
 		list(APPEND LINKOPTS "--linkopt=WindowsApp.lib")
