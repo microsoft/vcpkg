@@ -84,8 +84,6 @@ namespace vcpkg::PortFileProvider
     private:
         const std::map<std::string, Versions::VersionSpec>& get_baseline_cache() const;
 
-        const vcpkg::VcpkgPaths& paths;
-        const std::string baseline;
         std::unique_ptr<details::BaselineProviderImpl> m_impl;
     };
 }

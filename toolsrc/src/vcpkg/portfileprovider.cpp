@@ -393,12 +393,21 @@ namespace vcpkg::PortFileProvider
     {
         struct BaselineProviderImpl
         {
+            const VcpkgPaths& paths;
+            const std::string baseline;
+
             Lazy<std::map<std::string, VersionSpec>> baseline_cache;
+
+            BaselineProviderImpl(const VcpkgPaths& paths, const std::string& baseline)
+                : paths(paths), baseline(baseline)
+            {
+            }
+            ~BaselineProviderImpl() { }
         };
     }
 
     BaselineProvider::BaselineProvider(const VcpkgPaths& paths, const std::string& baseline)
-        : paths(paths), baseline(baseline), m_impl(std::make_unique<details::BaselineProviderImpl>())
+        : m_impl(std::make_unique<details::BaselineProviderImpl>(paths, baseline))
     {
     }
     BaselineProvider::~BaselineProvider() { }
@@ -417,11 +426,11 @@ namespace vcpkg::PortFileProvider
     const std::map<std::string, VersionSpec>& BaselineProvider::get_baseline_cache() const
     {
         return m_impl->baseline_cache.get_lazy([&]() -> auto {
-            auto maybe_baseline_file = get_baseline_json_path(paths, baseline);
+            auto maybe_baseline_file = get_baseline_json_path(m_impl->paths, m_impl->baseline);
             Checks::check_exit(VCPKG_LINE_INFO, maybe_baseline_file.has_value(), "Couldn't find baseline.json");
             auto baseline_file = maybe_baseline_file.value_or_exit(VCPKG_LINE_INFO);
 
-            auto value = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), baseline_file);
+            auto value = Json::parse_file(VCPKG_LINE_INFO, m_impl->paths.get_filesystem(), baseline_file);
             if (!value.first.is_object())
             {
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Error: `baseline.json` does not have a top-level object.");
