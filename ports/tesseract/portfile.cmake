@@ -6,6 +6,7 @@ vcpkg_from_github(
     PATCHES
         fix-tiff-linkage.patch
         fix-text2image.patch
+        fix-training-tools.patch
 )
 
 # The built-in cmake FindICU is better
@@ -41,9 +42,10 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)
 
-if("training_tools" IN_LIST FEATURES)
-    list(APPEND TRAINING_TOOLS ambiguous_words classifier_tester
-        combine_tessdata cntraining dawg2wordlistmftraining shapeclustering
+if("training-tools" IN_LIST FEATURES)
+    list(APPEND TRAINING_TOOLS
+        ambiguous_words classifier_tester combine_tessdata
+        cntraining dawg2wordlist mftraining shapeclustering
         wordlist2dawg combine_lang_model lstmeval lstmtraining
         set_unicharset_properties unicharset_extractor text2image
     )
