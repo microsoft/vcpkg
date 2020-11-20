@@ -12,10 +12,6 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake/ DESTINATION ${SOURCE_PATH})
 
-vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path(${PYTHON2_DIR})
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(MAPNIK_STATIC_LIB OFF)
 elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -49,12 +45,10 @@ vcpkg_configure_cmake(
         -DMAPNIK_STATIC_LIB=${MAPNIK_STATIC_LIB}
         -DBOOST_PREFIX=${CURRENT_INSTALLED_DIR}/include
         -DFREE_TYPE_INCLUDE=${CURRENT_INSTALLED_DIR}/include/freetype2
+        -DCMAKE_INSTALL_INCLUDEDIR=${CURRENT_PACKAGES_DIR}/include
 )
 
 vcpkg_install_cmake()
-
-file(COPY ${SOURCE_PATH}/include/mapnik DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(COPY ${SOURCE_PATH}/deps/agg/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # copy plugins into tool path, if any plugin is installed
 if(IS_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin/plugins)

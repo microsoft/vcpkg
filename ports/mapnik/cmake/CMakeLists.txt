@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.13.4)
 project(mapnik)
 
+set(CXX_STANDARD 17)
 set(MAPNIK_MAJOR_VERSION 3)
 set(MAPNIK_MINOR_VERSION 0)
 set(MAPNIK_PATCH_VERSION 23)
@@ -191,8 +192,11 @@ install(TARGETS mapnik
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
     RUNTIME DESTINATION bin
-    INCLUDES DESTINATION include
+    INCLUDES DESTINATION include/
+    PUBLIC_HEADER DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/include/
 )
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+install(DIRECTORY deps/agg/include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
 add_subdirectory(src/json)
 add_subdirectory(src/wkt)
