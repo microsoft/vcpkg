@@ -135,7 +135,7 @@ namespace vcpkg
         {
             std::map<std::string, VersionT, std::less<>> result;
 
-            for (auto pr : obj)
+            for (auto&& pr : obj)
             {
                 const auto& version_value = pr.second;
                 VersionT version;

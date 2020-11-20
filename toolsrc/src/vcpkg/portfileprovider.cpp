@@ -403,7 +403,9 @@ namespace vcpkg::PortFileProvider
         {
             if (scf->get()->core_paragraph->name == version_spec.port_name)
             {
-                return SourceControlFileLocation{std::move(*scf), std::move(port_directory)};
+                return m_impl->control_cache
+                    .emplace(version_spec, SourceControlFileLocation{std::move(*scf), std::move(port_directory)})
+                    .first->second;
             }
             return Strings::format("Error: Failed to load port from %s: names did not match: '%s' != '%s'",
                                    fs::u8string(port_directory),
