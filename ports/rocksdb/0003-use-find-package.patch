@@ -1,13 +1,38 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index eebda35e9..cf48c7ad5 100644
+index 36eddb32b..97a93601b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -67,7 +67,7 @@ if(CMAKE_SYSTEM_NAME MATCHES "Linux" OR CMAKE_SYSTEM_NAME MATCHES "Windows")
- else()
-   option(WITH_FOLLY_DISTRIBUTED_MUTEX "build with folly::DistributedMutex" OFF)
- endif()
+@@ -91,7 +91,7 @@ include(CMakeDependentOption)
+ CMAKE_DEPENDENT_OPTION(WITH_GFLAGS "build with GFlags" ON
+   "NOT MSVC;NOT MINGW" OFF)
+ 
 -if(MSVC)
 +if(MSVC AND NOT VCPKG_TOOLCHAIN)
-   # Defaults currently different for GFLAGS.
-   #  We will address find_package work a little later
-   option(WITH_GFLAGS "build with GFlags" OFF)
+   option(WITH_XPRESS "build with windows built in compression" OFF)
+   include(${CMAKE_CURRENT_SOURCE_DIR}/thirdparty.inc)
+ else()
+@@ -130,10 +130,7 @@ else()
+   endif()
+ 
+   if(WITH_SNAPPY)
+-    find_package(Snappy CONFIG)
+-    if(NOT Snappy_FOUND)
+-      find_package(Snappy REQUIRED)
+-    endif()
++    find_package(Snappy CONFIG REQUIRED)
+     add_definitions(-DSNAPPY)
+     list(APPEND THIRDPARTY_LIBS Snappy::snappy)
+   endif()
+@@ -163,10 +160,9 @@ else()
+   endif()
+ 
+   if(WITH_ZSTD)
+-    find_package(zstd REQUIRED)
++    find_package(zstd CONFIG REQUIRED)
+     add_definitions(-DZSTD)
+-    include_directories(${ZSTD_INCLUDE_DIR})
+-    list(APPEND THIRDPARTY_LIBS zstd::zstd)
++    list(APPEND THIRDPARTY_LIBS libzstd)
+   endif()
+ endif()
+ 

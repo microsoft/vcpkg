@@ -37,6 +37,7 @@
 ##
 ## * [aws-lambda-cpp](https://github.com/Microsoft/vcpkg/blob/master/ports/aws-lambda-cpp/portfile.cmake)
 function(vcpkg_fail_port_install)
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _csc "ALWAYS" "MESSAGE" "ON_TARGET;ON_ARCH;ON_CRT_LINKAGE;ON_LIBRARY_LINKAGE")
     if(DEFINED _csc_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Unknown arguments passed to vcpkg_fail_port_install. Please correct the portfile!")

@@ -1,5 +1,5 @@
 Source: usockets
-Version: 0.3.5-1
+Version: 0.6.0
 Build-Depends:libuv
 Description: Miniscule cross-platform eventing, networking & crypto for async applications
 

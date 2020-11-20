@@ -31,19 +31,10 @@ index 02c72b5..62d8c59 100644
  endif (MINIGLOG)
  
  if (NOT SCHUR_SPECIALIZATIONS)
-@@ -582,7 +562,7 @@ include_directories(
- # Note that this is *not* propagated to clients, ie CERES_INCLUDE_DIRS
- # used by clients after find_package(Ceres) does not identify Eigen as
- # as system headers.
--include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS})
-+include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS} ${EIGEN_INCLUDE_DIRS}/Eigen)
- 
- if (SUITESPARSE)
-   include_directories(${SUITESPARSE_INCLUDE_DIRS})
-@@ -917,8 +897,6 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
+@@ -917,8 +897,5 @@ install(FILES "${Ceres_BINARY_DIR}/CeresConfig-install.cmake"
          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})
  install(FILES "${Ceres_BINARY_DIR}/CeresConfigVersion.cmake"
-               "${Ceres_SOURCE_DIR}/cmake/FindEigen.cmake"
+-              "${Ceres_SOURCE_DIR}/cmake/FindEigen.cmake"
 -              "${Ceres_SOURCE_DIR}/cmake/FindGlog.cmake"
 -              "${Ceres_SOURCE_DIR}/cmake/FindGflags.cmake"
          DESTINATION ${RELATIVE_CMAKECONFIG_INSTALL_DIR})

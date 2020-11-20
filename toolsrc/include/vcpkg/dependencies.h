@@ -1,14 +1,13 @@
 #pragma once
 
+#include <vcpkg/fwd/cmakevars.h>
+#include <vcpkg/fwd/portfileprovider.h>
+
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/build.h>
-#include <vcpkg/cmakevars.h>
 #include <vcpkg/packagespec.h>
-#include <vcpkg/portfileprovider.h>
-#include <vcpkg/statusparagraphs.h>
-#include <vcpkg/vcpkgpaths.h>
 
 #include <functional>
 #include <map>
@@ -17,6 +16,11 @@
 namespace vcpkg::Graphs
 {
     struct Randomizer;
+}
+
+namespace vcpkg
+{
+    struct StatusParagraphs;
 }
 
 namespace vcpkg::Dependencies
@@ -56,6 +60,8 @@ namespace vcpkg::Dependencies
 
         std::string displayname() const;
         const std::string& public_abi() const;
+        bool has_package_abi() const;
+        Optional<const std::string&> package_abi() const;
         const Build::PreBuildInfo& pre_build_info(LineInfo linfo) const;
 
         PackageSpec spec;
@@ -167,7 +173,5 @@ namespace vcpkg::Dependencies
                                                            std::vector<std::string> features,
                                                            CMakeVars::CMakeVarProvider& var_provider);
 
-    void print_plan(const ActionPlan& action_plan,
-                    const bool is_recursive = true,
-                    const fs::path& default_ports_dir = {});
+    void print_plan(const ActionPlan& action_plan, const bool is_recursive = true, const fs::path& vcpkg_root_dir = {});
 }

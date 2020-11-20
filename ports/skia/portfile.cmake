@@ -6,6 +6,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://skia.googlesource.com/skia.git
     REF fb0b35fed5580d49392df7ce9374551b348fffbf
+    PATCHES add-missing-tuple.patch
 )
 
 function(checkout_in_path PATH URL REF)
@@ -95,7 +96,7 @@ endfunction()
 
 set(_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include")
 
-replace_skia_dep(expat "/include" "expat" "expat" "")
+replace_skia_dep(expat "/include" "libexpat,libexpatd,libexpatdMD" "libexpat,libexpatMD" "")
 replace_skia_dep(freetype2 "/include" "freetype,freetyped" "freetype" "")
 replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz-icu" "harfbuzz-icu" "")
 replace_skia_dep(icu "/include" "icuuc,icuucd" "icuuc" "U_USING_ICU_NAMESPACE=0")

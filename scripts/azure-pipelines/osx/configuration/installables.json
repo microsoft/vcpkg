@@ -17,6 +17,15 @@
       "InstallerPath": "vagrant.pkg"
     }
   ],
+  "Brew": [
+    {
+      "Name": "osxfuse",
+      "Kind": "cask"
+    },
+    {
+      "Name": "sshfs"
+    }
+  ],
   "VBoxExtensions": [
     {
       "Name": "Extension Pack",

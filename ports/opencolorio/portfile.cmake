@@ -9,9 +9,9 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO imageworks/OpenColorIO
-    REF v1.1.1
-    SHA512 bed722f9ddce1887d28aacef2882debccd7c3f3c0c708d2723fea58a097de9f02721af9e85453e089ffda5406aef593ab6536c6886307823c132aa787e492e33
+    REPO AcademySoftwareFoundation/OpenColorIO
+    REF ebdec4111f449bea995d01ecd9693b7e704498fe # v1.1.1
+    SHA512 b93796541f8b086f137eaebeef102e29a4aabac6dba5b1696c9ab23d62af39b233ca52ce97b04ea432d85ae0a1fe186939c52aab0cd2c4cd5d2775ac5c021eef
     HEAD_REF master
     PATCHES
         0001-lcms-dependency-search.patch

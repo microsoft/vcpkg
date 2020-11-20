@@ -29,6 +29,8 @@ This should be specified unless the port is known to not work under Ninja.
 Disables running the CMake configure step in parallel.
 This is needed for libraries which write back into their source directory during configure.
 
+This also disables CMAKE_DISABLE_SOURCE_CHANGES.
+
 ### NO_CHARSET_FLAG
 Disables passing `utf-8` as the default character set to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`.
 

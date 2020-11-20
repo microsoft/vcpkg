@@ -30,7 +30,7 @@ vcpkg_configure_make(
             --enable-debug
 )
 
-vcpkg_install_make()
+vcpkg_install_make(DISABLE_PARALLEL)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

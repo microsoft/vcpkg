@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b29edce..48d0553 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -66,8 +66,9 @@ write_basic_package_version_file("tmxConfigVersion.cmake" COMPATIBILITY SameMajo
+ #   Build
+ #-----------#
+ 
+-list(APPEND targets tmx)
++set(targets tmx)
+ 
++if (NOT BUILD_SHARED_LIBS)
+ add_library(tmx STATIC ${SOURCES})
+ set_target_properties(tmx PROPERTIES VERSION ${BUILD_VERSION})
+ 
+@@ -75,8 +76,8 @@ set_property(TARGET tmx
+              APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES
+              $<INSTALL_INTERFACE:include>)
+ 
+-if(BUILD_SHARED_LIBS)
+-    list(APPEND targets tmx_shared)
++else()
++    set(targets tmx_shared)
+ 
+     add_library(tmx_shared SHARED ${SOURCES})
+     target_link_libraries(tmx_shared PRIVATE ${libs})

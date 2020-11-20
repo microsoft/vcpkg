@@ -19,13 +19,12 @@ vcpkg_from_github(
       0002-install-options.patch
       0003-force-package-requirements.patch
       0004-fix-policy-CMP0057.patch
+      0006-jpeg2000_getref.patch
       0009-fix-uwp.patch
+      0010-fix-interface_link_libraries.patch # Remove this patch when the next update
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
-file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
-file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindCUDA.cmake DESTINATION ${SOURCE_PATH}/cmake/)  # backported from CMake 3.18, remove when released
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
@@ -283,7 +282,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DOPENCV_CUDA_FORCE_BUILTIN_CMAKE_MODULE=ON  #to use custom module with fixes for CUDA 11 compat, waiting for CMake support
         ###### ocv_options
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_BIN_INSTALL_PATH=bin
@@ -328,8 +326,8 @@ vcpkg_configure_cmake(
         -DBUILD_JAVA=OFF
         -DCURRENT_INSTALLED_DIR=${CURRENT_INSTALLED_DIR}
         ###### PROTOBUF
-        -DPROTOBUF_UPDATE_FILES=ON
-        -DUPDATE_PROTO_FILES=ON
+        -DPROTOBUF_UPDATE_FILES=${BUILD_opencv_dnn}
+        -DUPDATE_PROTO_FILES=${BUILD_opencv_dnn}
         ###### PYLINT/FLAKE8
         -DENABLE_PYLINT=OFF
         -DENABLE_FLAKE8=OFF
@@ -351,7 +349,7 @@ vcpkg_configure_cmake(
         -DWITH_IPP=${WITH_IPP}
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=${WITH_OPENMP}
-        -DWITH_PROTOBUF=ON
+        -DWITH_PROTOBUF=${BUILD_opencv_dnn}
         -DWITH_TBB=${WITH_TBB}
         -DWITH_VTK=${WITH_VTK}
         -DWITH_OPENJPEG=OFF
@@ -374,17 +372,16 @@ vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
-  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
-                 "set(CMAKE_IMPORT_FILE_VERSION 1)
-find_package(Protobuf REQUIRED)
-if(Protobuf_FOUND)
+  set(DEPS_STRING "include(CMakeFindDependencyMacro)
+find_dependency(protobuf CONFIG)
+if(protobuf_FOUND)
   if(TARGET protobuf::libprotobuf)
-    add_library(libprotobuf INTERFACE IMPORTED)
+    add_library (libprotobuf INTERFACE IMPORTED)
     set_target_properties(libprotobuf PROPERTIES
       INTERFACE_LINK_LIBRARIES protobuf::libprotobuf
     )
   else()
-    add_library(libprotobuf UNKNOWN IMPORTED)
+    add_library (libprotobuf UNKNOWN IMPORTED)
     set_target_properties(libprotobuf PROPERTIES
       IMPORTED_LOCATION \"${Protobuf_LIBRARY}\"
       INTERFACE_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"
@@ -392,24 +389,57 @@ if(Protobuf_FOUND)
     )
   endif()
 endif()
-find_package(CUDA QUIET)
-find_package(Threads QUIET)
-find_package(TIFF QUIET)
-find_package(HDF5 QUIET)
-find_package(Freetype QUIET)
-find_package(Ogre QUIET)
-find_package(gflags QUIET)
-find_package(Ceres QUIET)
-find_package(ade QUIET)
-find_package(VTK QUIET)
-find_package(OpenMP QUIET)
-find_package(Tesseract QUIET)
-find_package(OpenEXR QUIET)
+find_dependency(Threads)")
+  if("tiff" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
+  endif()
+  if("cuda" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
+  endif()
+  if(BUILD_opencv_quality)
+    string(APPEND DEPS_STRING "
+# C language is required for try_compile tests in FindHDF5
+enable_language(C)
+find_dependency(HDF5)
+find_dependency(Tesseract)")
+  endif()
+  if(WITH_TBB)
+    string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
+  endif()
+  if(WITH_VTK)
+    string(APPEND DEPS_STRING "\nfind_dependency(VTK)")
+  endif()
+  if("sfm" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(gflags CONFIG)\nfind_dependency(Ceres CONFIG)")
+  endif()
+  if("eigen" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
+  endif()
+  if("openexr" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
+  endif()
+  if(WITH_OPENMP)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenMP CONFIG)")
+  endif()
+  if(BUILD_opencv_ovis)
+    string(APPEND DEPS_STRING "\nfind_dependency(Ogre)\nfind_dependency(Freetype)")
+  endif()
+  if("qt" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
-find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
+find_dependency(Qt5 COMPONENTS OpenGL Concurrent Test)")
+  endif()
+  if("ade" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(ade)")
+  endif()
+  if("gdcm" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")
+  endif()
+
+  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
+                 "set(CMAKE_IMPORT_FILE_VERSION 1)\n${DEPS_STRING}" OPENCV_MODULES "${OPENCV_MODULES}")
 
   if(WITH_OPENMP)
     string(REPLACE "set_target_properties(opencv_core PROPERTIES

@@ -7,6 +7,8 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/sourceparagraph.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace
 {
@@ -22,7 +24,7 @@ namespace
 
     Optional<ToWrite> read_manifest(Files::Filesystem& fs, fs::path&& manifest_path)
     {
-        auto path_string = manifest_path.u8string();
+        auto path_string = fs::u8string(manifest_path);
         Debug::print("Reading ", path_string, "\n");
         auto contents = fs.read_contents(manifest_path, VCPKG_LINE_INFO);
         auto parsed_json_opt = Json::parse(contents, manifest_path);
@@ -40,7 +42,9 @@ namespace
             return nullopt;
         }
 
-        auto scf = SourceControlFile::parse_manifest_file(manifest_path, parsed_json.object());
+        auto parsed_json_obj = parsed_json.object();
+
+        auto scf = SourceControlFile::parse_manifest_file(manifest_path, parsed_json_obj);
         if (!scf.has_value())
         {
             System::printf(System::Color::error, "Failed to parse manifest file: %s\n", path_string);
@@ -59,7 +63,7 @@ namespace
     Optional<ToWrite> read_control_file(Files::Filesystem& fs, fs::path&& control_path)
     {
         std::error_code ec;
-        auto control_path_string = control_path.u8string();
+        auto control_path_string = fs::u8string(control_path);
         Debug::print("Reading ", control_path_string, "\n");
 
         auto manifest_path = control_path.parent_path();
@@ -76,8 +80,8 @@ namespace
                            paragraphs.error());
             return {};
         }
-        auto scf_res =
-            SourceControlFile::parse_control_file(control_path, std::move(paragraphs).value_or_exit(VCPKG_LINE_INFO));
+        auto scf_res = SourceControlFile::parse_control_file(fs::u8string(control_path),
+                                                             std::move(paragraphs).value_or_exit(VCPKG_LINE_INFO));
         if (!scf_res)
         {
             System::printf(System::Color::error, "Failed to parse control file: %s\n", control_path_string);
@@ -95,8 +99,8 @@ namespace
 
     void write_file(Files::Filesystem& fs, const ToWrite& data)
     {
-        auto original_path_string = data.original_path.u8string();
-        auto file_to_write_string = data.file_to_write.u8string();
+        auto original_path_string = fs::u8string(data.original_path);
+        auto file_to_write_string = fs::u8string(data.file_to_write);
         if (data.file_to_write == data.original_path)
         {
             Debug::print("Formatting ", file_to_write_string, "\n");
@@ -181,7 +185,7 @@ namespace vcpkg::Commands::FormatManifest
     };
 
     const CommandStructure COMMAND_STRUCTURE = {
-        create_example_string(R"###(x-format-manifest --all)###"),
+        create_example_string(R"###(format-manifest --all)###"),
         0,
         SIZE_MAX,
         {FORMAT_SWITCHES, {}, {}},
@@ -200,7 +204,7 @@ namespace vcpkg::Commands::FormatManifest
 
         if (!format_all && convert_control)
         {
-            System::print2(System::Color::warning, R"(x-format-manifest was passed '--convert-control' without '--all'.
+            System::print2(System::Color::warning, R"(format-manifest was passed '--convert-control' without '--all'.
     This doesn't do anything:
     we will automatically convert all control files passed explicitly.)");
         }
@@ -241,7 +245,7 @@ namespace vcpkg::Commands::FormatManifest
 
         if (format_all)
         {
-            for (const auto& dir : fs::directory_iterator(paths.ports))
+            for (const auto& dir : fs::directory_iterator(paths.builtin_ports_directory()))
             {
                 auto control_path = dir.path() / fs::u8path("CONTROL");
                 auto manifest_path = dir.path() / fs::u8path("vcpkg.json");
@@ -251,7 +255,7 @@ namespace vcpkg::Commands::FormatManifest
                 Checks::check_exit(VCPKG_LINE_INFO,
                                    !manifest_exists || !control_exists,
                                    "Both a manifest file and a CONTROL file exist in port directory: %s",
-                                   dir.path().u8string());
+                                   fs::u8string(dir.path()));
 
                 if (manifest_exists)
                 {

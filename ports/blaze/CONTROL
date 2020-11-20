@@ -1,5 +1,5 @@
 Source: blaze
-Version: 3.7
+Version: 3.8
 Port-Version: 1
 Build-Depends: lapack, boost-exception
 Homepage: https://bitbucket.org/blaze-lib/blaze

@@ -6,7 +6,7 @@ vcpkg_from_sourceforge(
     REF 1.8/1.8.4
     FILENAME "irrlicht-1.8.4.zip"
     SHA512 de69ddd2c6bc80a1b27b9a620e3697b1baa552f24c7d624076d471f3aecd9b15f71dce3b640811e6ece20f49b57688d428e3503936a7926b3e3b0cc696af98d1
-    PATCHES fix-encoding.patch
+    PATCHES fix-encoding.patch fix-sysctl.patch
 )
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt ${SOURCE_PATH}/CMakeLists.txt COPYONLY)

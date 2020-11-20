@@ -23,6 +23,7 @@ target_sources(
 	${PROJECT_NAME}
 	PRIVATE
 		${CMAKE_CURRENT_SOURCE_DIR}/implot.cpp
+		${CMAKE_CURRENT_SOURCE_DIR}/implot_items.cpp
 		${CMAKE_CURRENT_SOURCE_DIR}/implot_demo.cpp
 )
 
@@ -37,6 +38,7 @@ install(
 if(NOT IMPLOT_SKIP_HEADERS)
     install(FILES
         ${CMAKE_CURRENT_SOURCE_DIR}/implot.h
+		${CMAKE_CURRENT_SOURCE_DIR}/implot_internal.h
         DESTINATION include
     )
 endif()

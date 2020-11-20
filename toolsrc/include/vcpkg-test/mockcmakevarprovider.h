@@ -19,7 +19,7 @@ namespace vcpkg::Test
         {
             for (auto&& spec : specs)
                 tag_vars[spec.package_spec] = {};
-            Util::unused(port_provider);
+            (void)(port_provider);
         }
 
         Optional<const std::unordered_map<std::string, std::string>&> get_generic_triplet_vars(

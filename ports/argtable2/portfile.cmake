@@ -6,7 +6,9 @@ vcpkg_from_sourceforge(
     REF argtable-2.13
     FILENAME "argtable2-13.tar.gz"
     SHA512 3d8303f3ba529e3241d918c0127a16402ece951efb964d14a06a3a7d29a252812ad3c44e96da28798871e9923e73a2cfe7ebc84139c1397817d632cae25c4585
-    PATCHES fix-install-dirs.patch
+    PATCHES
+        0001-fix-install-dirs.patch
+        0002-include-correct-headers.patch
 )
 
 vcpkg_configure_cmake(

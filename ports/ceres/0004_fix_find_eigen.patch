@@ -1,0 +1,122 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7033de0..5235baa 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -209,40 +209,40 @@ endif (IOS)
+ unset(CERES_COMPILE_OPTIONS)
+ 
+ # Eigen.
+-find_package(Eigen REQUIRED)
+-if (EIGEN_FOUND)
+-  message("-- Found Eigen version ${EIGEN_VERSION}: ${EIGEN_INCLUDE_DIRS}")
+-  if (EIGEN_VERSION VERSION_LESS 3.1.0)
++find_package(Eigen3 REQUIRED)
++if (EIGEN3_FOUND)
++  message(STATUS "Found Eigen version ${EIGEN3_VERSION_STRING}: ${EIGEN3_INCLUDE_DIRS}")
++  if (EIGEN3_VERSION_STRING VERSION_LESS 3.1.0)
+     message(FATAL_ERROR "-- Ceres requires Eigen version >= 3.1.0 in order "
+       "that Eigen/SparseCore be available, detected version of Eigen is: "
+-      "${EIGEN_VERSION}")
+-  endif (EIGEN_VERSION VERSION_LESS 3.1.0)
++      "${EIGEN3_VERSION_STRING}")
++  endif (EIGEN3_VERSION_STRING VERSION_LESS 3.1.0)
+ 
+   if (CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64.*|AARCH64.*)" AND
+-      EIGEN_VERSION VERSION_LESS 3.3.4)
++      EIGEN3_VERSION_STRING VERSION_LESS 3.3.4)
+     # As per issue #289: https://github.com/ceres-solver/ceres-solver/issues/289
+     # the bundle_adjustment_test will fail for Eigen < 3.3.4 on aarch64.
+     message(FATAL_ERROR "-- Ceres requires Eigen version >= 3.3.4 on aarch64. "
+-      "Detected version of Eigen is: ${EIGEN_VERSION}.")
++      "Detected version of Eigen is: ${EIGEN3_VERSION_STRING}.")
+   endif()
+ 
+   if (EIGENSPARSE)
+-    message("-- Enabling use of Eigen as a sparse linear algebra library.")
++    message(STATUS "Enabling use of Eigen as a sparse linear algebra library.")
+     list(APPEND CERES_COMPILE_OPTIONS CERES_USE_EIGEN_SPARSE)
+-    if (EIGEN_VERSION VERSION_LESS 3.2.2)
++    if (EIGEN3_VERSION_STRING VERSION_LESS 3.2.2)
+       message("   WARNING:")
+       message("")
+-      message("   Your version of Eigen (${EIGEN_VERSION}) is older than ")
++      message("   Your version of Eigen (${EIGEN3_VERSION_STRING}) is older than ")
+       message("   version 3.2.2.  The performance of SPARSE_NORMAL_CHOLESKY ")
+       message("   and SPARSE_SCHUR linear solvers will suffer.")
+-    endif (EIGEN_VERSION VERSION_LESS 3.2.2)
++    endif (EIGEN3_VERSION_STRING VERSION_LESS 3.2.2)
+   else (EIGENSPARSE)
+     message("-- Disabling use of Eigen as a sparse linear algebra library.")
+     message("   This does not affect the covariance estimation algorithm ")
+     message("   which can still use the EIGEN_SPARSE_QR algorithm.")
+     add_definitions(-DEIGEN_MPL2_ONLY)
+   endif (EIGENSPARSE)
+-endif (EIGEN_FOUND)
++endif (EIGEN3_FOUND)
+ 
+ if (LAPACK)
+   find_package(LAPACK QUIET)
+@@ -562,7 +562,7 @@ include_directories(
+ # Note that this is *not* propagated to clients, ie CERES_INCLUDE_DIRS
+ # used by clients after find_package(Ceres) does not identify Eigen as
+ # as system headers.
+-include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS})
++include_directories(${EIGEN3_INCLUDE_DIRS})
+ 
+ if (SUITESPARSE)
+   include_directories(${SUITESPARSE_INCLUDE_DIRS})
+diff --git a/cmake/CeresConfig.cmake.in b/cmake/CeresConfig.cmake.in
+index c4ed71f..b3d6a17 100644
+--- a/cmake/CeresConfig.cmake.in
++++ b/cmake/CeresConfig.cmake.in
+@@ -202,39 +202,39 @@ set(CERES_VERSION @CERES_VERSION@ )
+ 
+ # Eigen.
+ # Flag set during configuration and build of Ceres.
+-set(CERES_EIGEN_VERSION @EIGEN_VERSION@)
++set(CERES_EIGEN_VERSION @EIGEN3_VERSION_STRING@)
+ set(EIGEN_WAS_BUILT_WITH_CMAKE @FOUND_INSTALLED_EIGEN_CMAKE_CONFIGURATION@)
+ # Append the locations of Eigen when Ceres was built to the search path hints.
+ if (EIGEN_WAS_BUILT_WITH_CMAKE)
+   set(Eigen3_DIR @Eigen3_DIR@)
+   set(EIGEN_PREFER_EXPORTED_EIGEN_CMAKE_CONFIGURATION TRUE)
+ else()
+-  list(APPEND EIGEN_INCLUDE_DIR_HINTS @EIGEN_INCLUDE_DIR@)
++  list(APPEND EIGEN_INCLUDE_DIR_HINTS @EIGEN3_INCLUDE_DIR@)
+ endif()
+ # Search quietly to control the timing of the error message if not found. The
+ # search should be for an exact match, but for usability reasons do a soft
+ # match and reject with an explanation below.
+-find_package(Eigen ${CERES_EIGEN_VERSION} QUIET)
+-if (EIGEN_FOUND)
+-  if (NOT EIGEN_VERSION VERSION_EQUAL CERES_EIGEN_VERSION)
++find_package(Eigen3 ${CERES_EIGEN_VERSION} QUIET)
++if (EIGEN3_FOUND)
++  if (NOT EIGEN3_VERSION_STRING VERSION_EQUAL CERES_EIGEN_VERSION)
+     # CMake's VERSION check in FIND_PACKAGE() will accept any version >= the
+     # specified version. However, only version = is supported. Improve
+     # usability by explaining why we don't accept non-exact version matching.
+     ceres_report_not_found("Found Eigen dependency, but the version of Eigen "
+-      "found (${EIGEN_VERSION}) does not exactly match the version of Eigen "
++      "found (${EIGEN3_VERSION_STRING}) does not exactly match the version of Eigen "
+       "Ceres was compiled with (${CERES_EIGEN_VERSION}). This can cause subtle "
+       "bugs by triggering violations of the One Definition Rule. See the "
+       "Wikipedia article http://en.wikipedia.org/wiki/One_Definition_Rule "
+       "for more details")
+   endif ()
+   message(STATUS "Found required Ceres dependency: "
+-    "Eigen version ${CERES_EIGEN_VERSION} in ${EIGEN_INCLUDE_DIRS}")
+-else (EIGEN_FOUND)
++    "Eigen version ${CERES_EIGEN_VERSION} in ${EIGEN3_INCLUDE_DIRS}")
++else (EIGEN3_FOUND)
+   ceres_report_not_found("Missing required Ceres "
+     "dependency: Eigen version ${CERES_EIGEN_VERSION}, please set "
+-    "EIGEN_INCLUDE_DIR.")
+-endif (EIGEN_FOUND)
+-list(APPEND CERES_INCLUDE_DIRS ${EIGEN_INCLUDE_DIRS})
++    "EIGEN3_INCLUDE_DIR.")
++endif (EIGEN3_FOUND)
++list(APPEND CERES_INCLUDE_DIRS ${EIGEN3_INCLUDE_DIRS})
+ 
+ # Glog.
+ include (CMakeFindDependencyMacro)

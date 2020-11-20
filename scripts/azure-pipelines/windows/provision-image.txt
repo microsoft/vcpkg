@@ -7,7 +7,7 @@ Sets up a machine to be an image for a scale set.
 
 .DESCRIPTION
 provision-image.ps1 runs on an existing, freshly provisioned virtual machine,
-and sets that virtual machine up as a vcpkg build machine. After this is done,
+and sets up that virtual machine as a build machine. After this is done,
 (outside of this script), we take that machine and make it an image to be copied
 for setting up new VMs in the scale set.
 
@@ -60,10 +60,14 @@ Function Get-TempFilePath {
   return Join-Path $tempPath $tempName
 }
 
-if (-not [string]::IsNullOrEmpty($AdminUserPassword)) {
-  Write-Host "AdminUser password supplied; switching to AdminUser"
+$TranscriptPath = 'C:\provision-image-transcript.txt'
+
+if ([string]::IsNullOrEmpty($AdminUserPassword)) {
+  Start-Transcript -Path $TranscriptPath
+} else {
+  Write-Host 'AdminUser password supplied; switching to AdminUser.'
   $PsExecPath = Get-TempFilePath -Extension 'exe'
-  Write-Host "Downloading psexec to $PsExecPath"
+  Write-Host "Downloading psexec to: $PsExecPath"
   & curl.exe -L -o $PsExecPath -s -S https://live.sysinternals.com/PsExec64.exe
   $PsExecArgs = @(
     '-u',
@@ -89,8 +93,11 @@ if (-not [string]::IsNullOrEmpty($AdminUserPassword)) {
     $PsExecArgs += $StorageAccountKey
   }
 
-  Write-Host "Executing $PsExecPath " + @PsExecArgs
-  & $PsExecPath @PsExecArgs > C:\ProvisionLog.txt
+  Write-Host "Executing: $PsExecPath $PsExecArgs"
+
+  $proc = Start-Process -FilePath $PsExecPath -ArgumentList $PsExecArgs -Wait -PassThru
+  Write-Host 'Reading transcript...'
+  Get-Content -Path $TranscriptPath
   Write-Host 'Cleaning up...'
   Remove-Item $PsExecPath
   exit $proc.ExitCode
@@ -118,7 +125,6 @@ $WindowsSDKUrl = 'https://download.microsoft.com/download/1/c/3/1c3d5161-d9e9-4e
 $WindowsWDKUrl = 'https://download.microsoft.com/download/1/a/7/1a730121-7aa7-46f7-8978-7db729aa413d/wdk/wdksetup.exe'
 
 $MpiUrl = 'https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe'
-$LlvmUrl = 'https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe'
 
 $CudaUrl = 'https://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_426.00_win10.exe'
 $CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_advisor_10.1 memcheck_10.1 ' + `
@@ -127,7 +133,7 @@ $CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_ad
   'cusparse_dev_10.1 nvgraph_10.1 nvgraph_dev_10.1 npp_10.1 npp_dev_10.1 nvrtc_10.1 nvrtc_dev_10.1 nvml_dev_10.1 ' + `
   'occupancy_calculator_10.1 fortran_examples_10.1'
 
-$BinSkimUrl = 'https://www.nuget.org/api/v2/package/Microsoft.CodeAnalysis.BinSkim/1.6.0'
+$PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.0.3/PowerShell-7.0.3-win-x64.msi'
 
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
@@ -191,7 +197,7 @@ Function InstallVisualStudio {
     Write-Host 'Downloading Visual Studio...'
     [string]$bootstrapperExe = Get-TempFilePath -Extension 'exe'
     curl.exe -L -o $bootstrapperExe -s -S $BootstrapperUrl
-    Write-Host "Installing Visual Studio..."
+    Write-Host 'Installing Visual Studio...'
     $args = @('/c', $bootstrapperExe, '--quiet', '--norestart', '--wait', '--nocache')
     foreach ($workload in $Workloads) {
       $args += '--add'
@@ -364,59 +370,6 @@ Function InstallWindowsWDK {
 
 <#
 .SYNOPSIS
-Installs LLVM.
-
-.DESCRIPTION
-InstallLLVM installs LLVM from the supplied URL.
-
-.PARAMETER Url
-The URL of the LLVM installer.
-#>
-Function InstallLLVM {
-  Param(
-    [String]$Url
-  )
-
-  try {
-    Write-Host 'Downloading LLVM...'
-    [string]$installerPath = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $installerPath -s -S $Url
-    Write-Host 'Installing LLVM...'
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/S') -NoNewWindow -Wait -PassThru
-    PrintMsiExitCodeMessage $proc.ExitCode
-  }
-  catch {
-    Write-Error "Failed to install LLVM! $($_.Exception.Message)"
-    throw
-  }
-}
-
-<#
-.SYNOPSIS
-Installs LLVM.
-
-.DESCRIPTION
-InstallLLVM installs LLVM from the supplied URL.
-
-.PARAMETER Url
-The URL of the LLVM installer.
-#>
-Function InstallLLVM {
-  try {
-    Write-Host 'Downloading LLVM...'
-    [string]$installerPath = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $installerPath -s -S $Url
-    Write-Host 'Installing LLVM...'
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/S') -NoNewWindow -Wait -PassThru
-    PrintMsiExitCodeMessage $proc.ExitCode
-  }
-  catch {
-    Write-Error "Failed to install LLVM! $($_.Exception.Message)"
-  }
-}
-
-<#
-.SYNOPSIS
 Installs MPI
 
 .DESCRIPTION
@@ -458,7 +411,7 @@ Installs NVIDIA's CUDA Toolkit.
 
 .DESCRIPTION
 InstallCuda installs the CUDA Toolkit with the features specified as a
-space separated list of strings in $Features.
+space-separated list of strings in $Features.
 
 .PARAMETER Url
 The URL of the CUDA installer.
@@ -504,6 +457,7 @@ if ($null -eq $av) {
   Write-Host 'AntiVirus not installed, skipping exclusions.'
 } else {
   Write-Host 'Configuring AntiVirus exclusions...'
+  Add-MpPreference -ExclusionPath C:\agent
   Add-MPPreference -ExclusionPath D:\
   Add-MPPreference -ExclusionProcess ninja.exe
   Add-MPPreference -ExclusionProcess clang-cl.exe
@@ -515,10 +469,9 @@ if ($null -eq $av) {
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
 InstallWindowsSDK -Url $WindowsSDKUrl
 InstallWindowsWDK -Url $WindowsWDKUrl
-InstallLLVM -Url $LlvmUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
-InstallZip -Url $BinSkimUrl -Name 'BinSkim' -Dir 'C:\BinSkim'
+InstallMSI -Url $PwshUrl -Name 'PowerShell Core'
 if ([string]::IsNullOrWhiteSpace($StorageAccountName)) {
   Write-Host 'No storage account name configured.'
 } else {

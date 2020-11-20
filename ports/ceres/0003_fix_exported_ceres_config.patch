@@ -89,7 +89,7 @@ index d0380de..55760a8 100644
 -endif (CERES_USES_MINIGLOG)
 +#SuiteSparse
 +if (@SUITESPARSE@)
-+    find_dependency(suitesparse CONFIG REQUIRED)
++    find_dependency(suitesparse CONFIG)
 +endif()
  
  # Import exported Ceres targets, if they have not already been imported.

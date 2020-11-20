@@ -48,7 +48,7 @@ namespace vcpkg::Install
         auto& fs = paths.get_filesystem();
         auto source_dir = paths.package_dir(spec);
         Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", source_dir.u8string());
+            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", fs::u8string(source_dir));
         auto files = fs.get_files_recursive(source_dir);
         install_files_and_write_listfile(fs, source_dir, files, destination_dir);
     }
@@ -60,16 +60,17 @@ namespace vcpkg::Install
         std::vector<std::string> output;
         std::error_code ec;
 
-        const size_t prefix_length = source_dir.generic_u8string().size();
+        const size_t prefix_length = fs::generic_u8string(source_dir).size();
         const fs::path& destination = destination_dir.destination();
         const std::string& destination_subdirectory = destination_dir.destination_subdirectory();
         const fs::path& listfile = destination_dir.listfile();
 
         fs.create_directories(destination, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", destination.u8string());
+        Checks::check_exit(
+            VCPKG_LINE_INFO, !ec, "Could not create destination directory %s", fs::u8string(destination));
         const fs::path listfile_parent = listfile.parent_path();
         fs.create_directories(listfile_parent, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", listfile.u8string());
+        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not create directory for listfile %s", fs::u8string(listfile));
 
         output.push_back(Strings::format(R"(%s/)", destination_subdirectory));
         for (auto&& file : files)
@@ -77,11 +78,11 @@ namespace vcpkg::Install
             const auto status = fs.symlink_status(file, ec);
             if (ec)
             {
-                System::print2(System::Color::error, "failed: ", file.u8string(), ": ", ec.message(), "\n");
+                System::print2(System::Color::error, "failed: ", fs::u8string(file), ": ", ec.message(), "\n");
                 continue;
             }
 
-            const std::string filename = file.filename().generic_u8string();
+            const std::string filename = fs::generic_u8string(file.filename());
             if (fs::is_regular_file(status) && (Strings::case_insensitive_ascii_equals(filename, "CONTROL") ||
                                                 Strings::case_insensitive_ascii_equals(filename, "vcpkg.json") ||
                                                 Strings::case_insensitive_ascii_equals(filename, "BUILD_INFO")))
@@ -90,7 +91,7 @@ namespace vcpkg::Install
                 continue;
             }
 
-            const std::string suffix = file.generic_u8string().substr(prefix_length + 1);
+            const std::string suffix = fs::generic_u8string(file).substr(prefix_length + 1);
             const fs::path target = destination / suffix;
 
             switch (status.type())
@@ -100,7 +101,7 @@ namespace vcpkg::Install
                     fs.create_directory(target, ec);
                     if (ec)
                     {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
+                        System::printf(System::Color::error, "failed: %s: %s\n", fs::u8string(target), ec.message());
                     }
 
                     // Trailing backslash for directories
@@ -113,13 +114,13 @@ namespace vcpkg::Install
                     {
                         System::print2(System::Color::warning,
                                        "File ",
-                                       target.u8string(),
+                                       fs::u8string(target),
                                        " was already present and will be overwritten\n");
                     }
                     fs.copy_file(file, target, fs::copy_options::overwrite_existing, ec);
                     if (ec)
                     {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
+                        System::printf(System::Color::error, "failed: %s: %s\n", fs::u8string(target), ec.message());
                     }
                     output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
                     break;
@@ -130,19 +131,19 @@ namespace vcpkg::Install
                     {
                         System::print2(System::Color::warning,
                                        "File ",
-                                       target.u8string(),
+                                       fs::u8string(target),
                                        " was already present and will be overwritten\n");
                     }
                     fs.copy_symlink(file, target, ec);
                     if (ec)
                     {
-                        System::printf(System::Color::error, "failed: %s: %s\n", target.u8string(), ec.message());
+                        System::printf(System::Color::error, "failed: %s: %s\n", fs::u8string(target), ec.message());
                     }
                     output.push_back(Strings::format(R"(%s/%s)", destination_subdirectory, suffix));
                     break;
                 }
                 default:
-                    System::printf(System::Color::error, "failed: %s: cannot handle file type\n", file.u8string());
+                    System::printf(System::Color::error, "failed: %s: cannot handle file type\n", fs::u8string(file));
                     break;
             }
         }
@@ -482,7 +483,8 @@ namespace vcpkg::Install
 
         Build::compute_all_abis(paths, action_plan, var_provider, status_db);
 
-        binaryprovider.prefetch(paths, action_plan);
+        auto to_prefetch = Util::fmap(action_plan.install_actions, [](const auto& x) { return &x; });
+        binaryprovider.prefetch(paths, to_prefetch);
 
         for (auto&& action : action_plan.install_actions)
         {
@@ -515,8 +517,9 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "x-write-nuget-packages-config";
     static constexpr StringLiteral OPTION_MANIFEST_NO_DEFAULT_FEATURES = "x-no-default-features";
     static constexpr StringLiteral OPTION_MANIFEST_FEATURE = "x-feature";
+    static constexpr StringLiteral OPTION_PROHIBIT_BACKCOMPAT_FEATURES = "x-prohibit-backcompat-features";
 
-    static constexpr std::array<CommandSwitch, 9> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 10> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
@@ -524,9 +527,13 @@ namespace vcpkg::Install
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_EDITABLE, "Disable source re-extraction and binary caching for libraries on the command line"},
+
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
         {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
+        {OPTION_PROHIBIT_BACKCOMPAT_FEATURES,
+         "(experimental) Fail install if a package attempts to use a deprecated feature"},
     }};
+
     static constexpr std::array<CommandSwitch, 10> MANIFEST_INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
@@ -553,10 +560,9 @@ namespace vcpkg::Install
 
     std::vector<std::string> get_all_port_names(const VcpkgPaths& paths)
     {
-        auto sources_and_errors = Paragraphs::try_load_all_ports(paths.get_filesystem(), paths.ports);
+        auto sources_and_errors = Paragraphs::try_load_all_registry_ports(paths);
 
-        return Util::fmap(sources_and_errors.paragraphs,
-                          [](auto&& pgh) -> std::string { return pgh->core_paragraph->name; });
+        return Util::fmap(sources_and_errors.paragraphs, Paragraphs::get_name_of_control_file);
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -622,7 +628,7 @@ namespace vcpkg::Install
                     // CMake file is inside the share folder
                     auto path = paths.installed / suffix;
                     auto maybe_contents = fs.read_contents(path);
-                    auto find_package_name = path.parent_path().filename().u8string();
+                    auto find_package_name = fs::u8string(path.parent_path().filename());
                     if (auto p_contents = maybe_contents.get())
                     {
                         std::sregex_iterator next(p_contents->begin(), p_contents->end(), cmake_library_regex);
@@ -638,7 +644,7 @@ namespace vcpkg::Install
                         }
                     }
 
-                    auto filename = fs::u8path(suffix).filename().u8string();
+                    auto filename = fs::u8string(fs::u8path(suffix).filename());
 
                     if (Strings::ends_with(filename, "Config.cmake"))
                     {
@@ -701,9 +707,9 @@ namespace vcpkg::Install
                 {
                     auto config_it = config_files.find(library_target_pair.first);
                     if (config_it != config_files.end())
-                        Strings::append(msg, "    find_package(", config_it->second, " CONFIG REQUIRED)\n ");
+                        Strings::append(msg, "    find_package(", config_it->second, " CONFIG REQUIRED)\n");
                     else
-                        Strings::append(msg, "    find_package(", library_target_pair.first, " CONFIG REQUIRED)\n ");
+                        Strings::append(msg, "    find_package(", library_target_pair.first, " CONFIG REQUIRED)\n");
 
                     std::sort(library_target_pair.second.begin(),
                               library_target_pair.second.end(),
@@ -761,6 +767,8 @@ namespace vcpkg::Install
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going =
             to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING) || only_downloads);
+        const bool prohibit_backcompat_features =
+            Util::Sets::contains(options.switches, (OPTION_PROHIBIT_BACKCOMPAT_FEATURES));
 
         auto& fs = paths.get_filesystem();
 
@@ -777,35 +785,38 @@ namespace vcpkg::Install
             download_tool,
             Build::PurgeDecompressFailure::NO,
             Util::Enum::to_enum<Build::Editable>(is_editable),
+            prohibit_backcompat_features ? Build::BackcompatFeatures::PROHIBIT : Build::BackcompatFeatures::ALLOW,
         };
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
         auto var_provider_storage = CMakeVars::make_triplet_cmake_var_provider(paths);
         auto& var_provider = *var_provider_storage;
 
-        if (paths.manifest_mode_enabled())
+        if (auto manifest = paths.get_manifest().get())
         {
             Optional<fs::path> pkgsconfig;
             auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
             if (it_pkgsconfig != options.settings.end())
             {
+                Metrics::g_metrics.lock()->track_property("x-write-nuget-packages-config", "defined");
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
-
-            std::error_code ec;
-            auto manifest_path = paths.manifest_root_dir / fs::u8path("vcpkg.json");
-            auto maybe_manifest_scf = Paragraphs::try_load_manifest(fs, "manifest", manifest_path, ec);
-            if (ec)
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Failed to read manifest %s: %s", manifest_path.u8string(), ec.message());
-            }
-            else if (!maybe_manifest_scf)
+            const auto& manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
+            auto maybe_manifest_scf = SourceControlFile::parse_manifest_file(manifest_path, *manifest);
+            if (!maybe_manifest_scf)
             {
                 print_error_message(maybe_manifest_scf.error());
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to read manifest %s.", manifest_path.u8string());
+                System::print2("See https://github.com/Microsoft/vcpkg/tree/master/docs/users/manifests.md for "
+                               "more information.\n");
+                Checks::exit_fail(VCPKG_LINE_INFO);
             }
+
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
+
+            if (auto maybe_error = manifest_scf.check_against_feature_flags(manifest_path, paths.get_feature_flags()))
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, maybe_error.value_or_exit(VCPKG_LINE_INFO));
+            }
 
             std::vector<std::string> features;
             auto manifest_feature_it = options.multisettings.find(OPTION_MANIFEST_FEATURE);
@@ -926,17 +937,18 @@ namespace vcpkg::Install
 
         Metrics::g_metrics.lock()->track_property("installplan_1", specs_string);
 
-        Dependencies::print_plan(action_plan, is_recursive, paths.ports);
+        Dependencies::print_plan(action_plan, is_recursive, paths.builtin_ports_directory());
 
         auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
         if (it_pkgsconfig != options.settings.end())
         {
+            Metrics::g_metrics.lock()->track_property("x-write-nuget-packages-config", "defined");
             Build::compute_all_abis(paths, action_plan, var_provider, status_db);
 
             auto pkgsconfig_path = Files::combine(paths.original_cwd, fs::u8path(it_pkgsconfig->second));
             auto pkgsconfig_contents = generate_nuget_packages_config(action_plan);
             fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
-            System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
+            System::print2("Wrote NuGet packages config information to ", fs::u8string(pkgsconfig_path), "\n");
         }
 
         if (dry_run)

@@ -27,7 +27,8 @@
 ## Options to be passed to the release target.
 
 function(vcpkg_configure_gn)
-    cmake_parse_arguments(_vcg "" "SOURCE_PATH;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" "" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vcg "" "SOURCE_PATH;OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE" "")
 
     if(NOT DEFINED _vcg_SOURCE_PATH)
         message(FATAL_ERROR "SOURCE_PATH must be specified.")
@@ -42,7 +43,7 @@ function(vcpkg_configure_gn)
     function(generate CONFIG ARGS)
         message(STATUS "Generating build (${CONFIG})...")
         vcpkg_execute_required_process(
-            COMMAND "${GN}" gen "${CURRENT_BUILDTREES_DIR}/${CONFIG}" "${ARGS}"
+            COMMAND "${GN}" gen "${CURRENT_BUILDTREES_DIR}/${CONFIG}" ${ARGS}
             WORKING_DIRECTORY "${SOURCE_PATH}"
             LOGNAME generate-${CONFIG}
         )

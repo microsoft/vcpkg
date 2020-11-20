@@ -1,3 +1,12 @@
+From 04bb359c724308e30268840c64932ea1d05b9077 Mon Sep 17 00:00:00 2001
+From: Nicole Mazzuca <mazzucan@outlook.com>
+Date: Wed, 23 Sep 2020 10:00:23 -0700
+Subject: [PATCH 1/2] remove install prefix
+
+---
+ CMakeLists.txt | 4 ----
+ 1 file changed, 4 deletions(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 index f7372bf..f3c11f1 100644
 --- a/CMakeLists.txt
@@ -34,3 +43,6 @@ index f7372bf..f3c11f1 100644
  
  	set(DOXYFILE_STRIP_FROM_PATH "${FMILIBRARYHOME}")
  
+-- 
+2.24.3 (Apple Git-128)
+
