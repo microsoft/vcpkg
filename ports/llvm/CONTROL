@@ -116,3 +116,4 @@ Build-Depends: llvm[core,utils]
 
 Feature: polly
 Description: Build polyhedral optimizations for LLVM.
+Build-Depends: llvm[core,utils]

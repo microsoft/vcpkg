@@ -9,10 +9,11 @@ vcpkg_from_github(
     SHA512 b6d38871ccce0e086e27d35e42887618d68e57d8274735c59e3eabc42dee352412489296293f8d5169fe0044936345915ee7da61ebdc64ec10f7737f6ecd90f2
     HEAD_REF master
     PATCHES
+        0001-add-bigobj-option.patch
         0003-fix-openmp-debug.patch
         0004-fix-dr-1734.patch
         0005-fix-tools-path.patch
-        0005-workaround-msvc-bug.patch
+        0006-workaround-msvc-bug.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -158,45 +159,58 @@ vcpkg_configure_cmake(
         -DLLVM_PARALLEL_LINK_JOBS=1
         # Disable build LLVM-C.dll (Windows only) due to doesn't compile with CMAKE_DEBUG_POSTFIX
         -DLLVM_BUILD_LLVM_C_DYLIB=OFF
+    OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/llvm" TARGET_PATH "share/llvm")
+file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 if("clang" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/clang TARGET_PATH share/clang)
-
-    if(VCPKG_TARGET_IS_WINDOWS)
-        set(LLVM_EXECUTABLE_REGEX [[^([^.]*|[^.]*\.lld)\.exe$]])
-    else()
-        set(LLVM_EXECUTABLE_REGEX [[^([^.]*|[^.]*\.lld)$]])
-    endif()
-
-    file(GLOB LLVM_TOOL_FILES "${CURRENT_PACKAGES_DIR}/bin/*")
-    set(LLVM_TOOLS)
-    foreach(tool_file IN LISTS LLVM_TOOL_FILES)
-        get_filename_component(tool_file "${tool_file}" NAME)
-        if(tool_file MATCHES "${LLVM_EXECUTABLE_REGEX}")
-            list(APPEND LLVM_TOOLS "${CMAKE_MATCH_1}")
-        endif()
-    endforeach()
-
-    vcpkg_copy_tools(
-        TOOL_NAMES ${LLVM_TOOLS}
-        AUTO_CLEAN)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/clang" TARGET_PATH "share/clang")
+    file(INSTALL ${SOURCE_PATH}/clang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME copyright)
 endif()
+
+if("flang" IN_LIST FEATURES)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/flang" TARGET_PATH "share/flang")
+    file(INSTALL ${SOURCE_PATH}/flang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/flang RENAME copyright)
+endif()
+
+if("lld" IN_LIST FEATURES)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/lld" TARGET_PATH "share/lld")
+    file(INSTALL ${SOURCE_PATH}/lld/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lld RENAME copyright)
+endif()
+
+if("mlir" IN_LIST FEATURES)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/mlir" TARGET_PATH "share/mlir")
+    file(INSTALL ${SOURCE_PATH}/mlir/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/mlir RENAME copyright)
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(LLVM_EXECUTABLE_REGEX [[^([^.]*|[^.]*\.lld)\.exe$]])
+else()
+    set(LLVM_EXECUTABLE_REGEX [[^([^.]*|[^.]*\.lld)$]])
+endif()
+
+file(GLOB LLVM_TOOL_FILES "${CURRENT_PACKAGES_DIR}/bin/*")
+set(LLVM_TOOLS)
+foreach(tool_file IN LISTS LLVM_TOOL_FILES)
+    get_filename_component(tool_file "${tool_file}" NAME)
+    if(tool_file MATCHES "${LLVM_EXECUTABLE_REGEX}")
+        list(APPEND LLVM_TOOLS "${CMAKE_MATCH_1}")
+    endif()
+endforeach()
+
+vcpkg_copy_tools(
+    TOOL_NAMES ${LLVM_TOOLS}
+    AUTO_CLEAN
+)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-endif()
-
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-if("clang" IN_LIST FEATURES)
-    file(INSTALL ${SOURCE_PATH}/clang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME copyright)
 endif()
 
 # LLVM still generates a few DLLs in the static build:
