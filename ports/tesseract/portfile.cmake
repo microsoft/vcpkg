@@ -39,8 +39,10 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
+vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)
+
 if("training_tools" IN_LIST FEATURES)
-    list(APPEND TRAINING_TOOLS tesseract ambiguous_words classifier_tester
+    list(APPEND TRAINING_TOOLS ambiguous_words classifier_tester
         combine_tessdata cntraining dawg2wordlistmftraining shapeclustering
         wordlist2dawg combine_lang_model lstmeval lstmtraining
         set_unicharset_properties unicharset_extractor text2image
@@ -50,10 +52,7 @@ endif()
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/bin
-                    ${CURRENT_PACKAGES_DIR}/debug/bin
-)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
