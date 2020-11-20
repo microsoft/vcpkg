@@ -293,24 +293,56 @@ namespace vcpkg::PortFileProvider
         return ret;
     }
 
-    VersionedPortfileProvider::VersionedPortfileProvider(const VcpkgPaths& paths) : paths(paths) { }
+    namespace details
+    {
+        struct BaselineProviderImpl
+        {
+            const VcpkgPaths& paths;
+            const std::string baseline;
+
+            Lazy<std::map<std::string, VersionSpec>> baseline_cache;
+
+            BaselineProviderImpl(const VcpkgPaths& paths, const std::string& baseline)
+                : paths(paths), baseline(baseline)
+            {
+            }
+            ~BaselineProviderImpl() { }
+        };
+
+        struct VersionedPortfileProviderImpl
+        {
+            const VcpkgPaths& paths;
+            std::map<std::string, std::vector<VersionSpec>> versions_cache;
+            std::unordered_map<VersionSpec, std::string, VersionSpecHasher> git_tree_cache;
+            std::unordered_map<VersionSpec, SourceControlFileLocation, VersionSpecHasher> control_cache;
+
+            VersionedPortfileProviderImpl(const VcpkgPaths& paths) : paths(paths) { }
+            ~VersionedPortfileProviderImpl() { }
+        };
+    }
+
+    VersionedPortfileProvider::VersionedPortfileProvider(const VcpkgPaths& paths)
+        : m_impl(std::make_unique<details::VersionedPortfileProviderImpl>(paths))
+    {
+    }
+    VersionedPortfileProvider::~VersionedPortfileProvider() { }
 
     const std::vector<VersionSpec>& VersionedPortfileProvider::get_port_versions(const std::string& port_name) const
     {
-        auto cache_it = versions_cache.find(port_name);
-        if (cache_it != versions_cache.end())
+        auto cache_it = m_impl->versions_cache.find(port_name);
+        if (cache_it != m_impl->versions_cache.end())
         {
             return cache_it->second;
         }
 
-        auto maybe_versions_json_path = get_versions_json_path(paths, port_name);
+        auto maybe_versions_json_path = get_versions_json_path(m_impl->paths, port_name);
         Checks::check_exit(VCPKG_LINE_INFO,
                            maybe_versions_json_path.has_value(),
                            "Couldn't find a versions database file: %s.json.",
                            port_name);
         auto versions_json_path = maybe_versions_json_path.value_or_exit(VCPKG_LINE_INFO);
 
-        auto versions_json = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), versions_json_path);
+        auto versions_json = Json::parse_file(VCPKG_LINE_INFO, m_impl->paths.get_filesystem(), versions_json_path);
         Checks::check_exit(VCPKG_LINE_INFO,
                            versions_json.first.is_object(),
                            "Error: `%s.json` does not have a top level object.",
@@ -341,18 +373,18 @@ namespace vcpkg::PortFileProvider
                                    version.git_tree);
 
                 VersionSpec spec(port_name, version.version, version.scheme);
-                versions_cache[port_name].push_back(spec);
-                git_tree_cache[spec] = version.git_tree;
+                m_impl->versions_cache[port_name].push_back(spec);
+                m_impl->git_tree_cache[spec] = version.git_tree;
             }
         }
-        return versions_cache.at(port_name);
+        return m_impl->versions_cache.at(port_name);
     }
 
     ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
         const VersionSpec& version_spec) const
     {
-        auto cache_it = control_cache.find(version_spec);
-        if (cache_it != control_cache.end())
+        auto cache_it = m_impl->control_cache.find(version_spec);
+        if (cache_it != m_impl->control_cache.end())
         {
             return cache_it->second;
         }
@@ -360,8 +392,8 @@ namespace vcpkg::PortFileProvider
         // Pre-populate versions cache.
         get_port_versions(version_spec.port_name);
 
-        auto git_tree_cache_it = git_tree_cache.find(version_spec);
-        if (git_tree_cache_it == git_tree_cache.end())
+        auto git_tree_cache_it = m_impl->git_tree_cache.find(version_spec);
+        if (git_tree_cache_it == m_impl->git_tree_cache.end())
         {
             return Strings::concat("No git object SHA for entry %s at version %s.",
                                    version_spec.port_name,
@@ -369,9 +401,9 @@ namespace vcpkg::PortFileProvider
         }
 
         const std::string git_tree = git_tree_cache_it->second;
-        auto port_directory = paths.git_checkout_port(version_spec.port_name, git_tree);
+        auto port_directory = m_impl->paths.git_checkout_port(version_spec.port_name, git_tree);
 
-        auto maybe_control_file = Paragraphs::try_load_port(paths.get_filesystem(), port_directory);
+        auto maybe_control_file = Paragraphs::try_load_port(m_impl->paths.get_filesystem(), port_directory);
         if (auto scf = maybe_control_file.get())
         {
             if (scf->get()->core_paragraph->name == version_spec.port_name)
@@ -387,23 +419,6 @@ namespace vcpkg::PortFileProvider
         print_error_message(maybe_control_file.error());
         return Strings::format(
             "Error: Failed to load port %s from %s", version_spec.port_name, fs::u8string(port_directory));
-    }
-
-    namespace details
-    {
-        struct BaselineProviderImpl
-        {
-            const VcpkgPaths& paths;
-            const std::string baseline;
-
-            Lazy<std::map<std::string, VersionSpec>> baseline_cache;
-
-            BaselineProviderImpl(const VcpkgPaths& paths, const std::string& baseline)
-                : paths(paths), baseline(baseline)
-            {
-            }
-            ~BaselineProviderImpl() { }
-        };
     }
 
     BaselineProvider::BaselineProvider(const VcpkgPaths& paths, const std::string& baseline)

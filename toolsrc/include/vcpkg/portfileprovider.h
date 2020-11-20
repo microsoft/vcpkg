@@ -54,12 +54,15 @@ namespace vcpkg::PortFileProvider
 
     namespace details
     {
+        using PortVersionsDictionary = std::map<std::string, std::map<Versions::VersionSpec, std::string>>;
         struct BaselineProviderImpl;
+        struct VersionedPortfileProviderImpl;
     }
 
     struct VersionedPortfileProvider : IVersionedPortfileProvider, Util::ResourceBase
     {
         explicit VersionedPortfileProvider(const vcpkg::VcpkgPaths& paths);
+        ~VersionedPortfileProvider();
 
         const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(const std::string& port_spec) const override;
 
@@ -67,11 +70,7 @@ namespace vcpkg::PortFileProvider
             const vcpkg::Versions::VersionSpec& version_spec) const override;
 
     private:
-        const vcpkg::VcpkgPaths& paths;
-        mutable std::unordered_map<Versions::VersionSpec, SourceControlFileLocation, Versions::VersionSpecHasher>
-            control_cache;
-        mutable std::unordered_map<std::string, std::vector<Versions::VersionSpec>> versions_cache;
-        mutable std::unordered_map<Versions::VersionSpec, std::string, Versions::VersionSpecHasher> git_tree_cache;
+        std::unique_ptr<details::VersionedPortfileProviderImpl> m_impl;
     };
 
     struct BaselineProvider : IBaselineProvider, Util::ResourceBase
