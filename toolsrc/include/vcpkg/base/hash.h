@@ -44,7 +44,7 @@ namespace vcpkg::Hash
         if (ec)
         {
             Checks::exit_with_message(
-                li, "Failure to read file '%s' for hashing: %s", fs::generic_u8string(path), ec.message());
+                li, "Failure to read file '%s' for hashing: %s", fs::u8string(path), ec.message());
         }
 
         return result;
