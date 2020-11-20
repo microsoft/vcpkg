@@ -214,7 +214,7 @@ namespace vcpkg::Build
 
     static std::remove_const_t<decltype(ALL_POLICIES)> generate_all_policies()
     {
-        std::remove_const_t<decltype(ALL_POLICIES)> res;
+        std::remove_const_t<decltype(ALL_POLICIES)> res{};
         for (size_t i = 0; i < res.size(); ++i)
         {
             res[i] = static_cast<BuildPolicy>(i);
