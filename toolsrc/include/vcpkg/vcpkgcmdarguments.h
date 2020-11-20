@@ -149,7 +149,7 @@ namespace vcpkg
         constexpr static StringLiteral BINARY_SOURCES_ARG = "binarysource";
         std::vector<std::string> binary_sources;
 
-        constexpr static StringLiteral CMAKE_SCRIPT_ARG = "cmake-args";
+        constexpr static StringLiteral CMAKE_SCRIPT_ARG = "x-cmake-args";
         std::vector<std::string> cmake_args;
 
         constexpr static StringLiteral DEBUG_SWITCH = "debug";
