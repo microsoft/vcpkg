@@ -54,7 +54,6 @@ namespace vcpkg::PortFileProvider
 
     namespace details
     {
-        using PortVersionsDictionary = std::map<std::string, std::map<Versions::VersionSpec, std::string>>;
         struct BaselineProviderImpl;
         struct VersionedPortfileProviderImpl;
     }

@@ -21,10 +21,6 @@ namespace
 {
     Optional<fs::path> get_versions_json_path(const VcpkgPaths& paths, const std::string& port_name)
     {
-        // TODO: Get correct `port_versions` path for the registry the port belongs to, pseudocode below:
-        // auto registry = paths.get_registry_for_port(port_name);
-        // auto port_versions_dir_path = registry.get_port_versions_path();
-
         const auto port_versions_dir_path = paths.root / "port_versions";
         const auto subpath = Strings::concat(port_name[0], "-/", port_name, ".json");
         const auto json_path = port_versions_dir_path / subpath;
@@ -37,7 +33,6 @@ namespace
 
     Optional<fs::path> get_baseline_json_path(const VcpkgPaths& paths, const std::string& baseline_commit_sha)
     {
-        // TODO: Get correct `baseline.json` path for the registry.
         const auto baseline_json = paths.git_checkout_baseline(baseline_commit_sha);
         return paths.get_filesystem().exists(baseline_json) ? make_optional(baseline_json) : nullopt;
     }

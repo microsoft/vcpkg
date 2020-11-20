@@ -537,9 +537,7 @@ If you wish to silence this error and use classic mode, you can:
                            fs::u8string(subpath),
                            checkout_output.output);
 
-        // TODO: Move checked out file(s) to destination.
         const fs::path checked_out_path = work_tree / subpath;
-
         const auto& containing_folder = destination.parent_path();
         if (!fs.exists(containing_folder))
         {
@@ -589,7 +587,8 @@ If you wish to silence this error and use classic mode, you can:
         }
         else
         {
-            System::CmdLineBuilder fetch_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree).string_arg("fetch");
+            System::CmdLineBuilder fetch_cmd_builder =
+                git_cmd_builder(paths, dot_git_dir, work_tree).string_arg("fetch");
             const auto fetch_output = System::cmd_execute_and_capture_output(fetch_cmd_builder.extract());
             Checks::check_exit(VCPKG_LINE_INFO,
                                fetch_output.exit_code == 0,
@@ -610,7 +609,6 @@ If you wish to silence this error and use classic mode, you can:
         const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder.extract());
         Checks::check_exit(VCPKG_LINE_INFO, checkout_output.exit_code == 0, "Failed to checkout %s", git_object);
 
-        // TODO: Move checked out file(s) to destination.
         const auto& containing_folder = destination.parent_path();
         if (!fs.exists(containing_folder))
         {
