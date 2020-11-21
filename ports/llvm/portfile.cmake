@@ -79,6 +79,10 @@ if("compiler-rt" IN_LIST FEATURES)
 endif()
 if("flang" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "flang")
+    list(APPEND FEATURE_OPTIONS
+        # Flang requires C++17
+        -DCMAKE_CXX_STANDARD=17
+    )
 endif()
 if("lld" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "lld")
