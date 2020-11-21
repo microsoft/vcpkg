@@ -21,6 +21,7 @@
       "platform": "!windows"
     },
     "boost-msm",
+    "boost-program-options",
     "boost-property-tree",
     {
       "name": "boost-regex",
