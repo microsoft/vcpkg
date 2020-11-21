@@ -44,7 +44,7 @@ set(QT_HASH_qt5-xmlpatterns         5cdf51878f8bb42db57110acc0c3985a95af098da44e
 set(QT_HASH_qt5-doc                 ce2c003b37829da102f243ca271548cff0597b4b667109ca9533971a490b8b20eb3183af6e0b209ad58964f2be2e757f83933a3f8c484dd0814750e24d1a244e)
 set(QT_HASH_qt5-x11extras           beaefc865299f4e7c637baa96eb3a69adbe1a41fc7735b46cfec0768c9243391600e69078630fffb4aceba106b7512fd802e745abc38ddab5253233301c93ed9)
 set(QT_HASH_qt5-androidextras       cacd9252f313595d21eb6a94ffabbd5fff476af82aa619b4edfc77a9f405f52bd1b89da97c8f7dadf8c403035a243205a25a2f85250ebc0590bf68f914cdbf3a)
-#set(QT_HASH_qt5-canvas3d            0) deprectaed
+#set(QT_HASH_qt5-canvas3d            0) deprecated
 set(QT_HASH_qt5-translations        483b5d919f43c96a032e610cf6316989e7b859ab177cb2f7cb9bb10ebcddf8c9be8e04ff12db38a317c618d13f88455a4d434c7a1133f453882da4e026dd8cbe)
 set(QT_HASH_qt5-serialbus           c4793f5425ca0191435d75a8fd95a623cc847d41b8722421c0bf0fdfddda1a158fd2a00f5d997f00de4fcb271a158f3273d636ef2553ccd6b90b4d072b1eb55b)
 set(QT_HASH_qt5-webengine           de64c30819f5e2f8620c853ff22b2f9717641477aef4432a552a72d1d67ed62ed61572afee6de3f2c9f32dee28f4f786ffd63fc465aa42c0ae1e87ea28341756)
