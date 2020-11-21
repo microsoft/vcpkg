@@ -66,7 +66,7 @@ endif()
 
 if("viewer" IN_LIST FEATURES)
   # copy the ini file to reference the plugins correctly
-  file(COPY ${CMAKE_CURRENT_LIST_DIR}/viewer.ini DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+  file(COPY ${CURRENT_PACKAGES_DIR}/bin/viewer.ini DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
   vcpkg_copy_tools(TOOL_NAMES mapnik-viewer AUTO_CLEAN)
 endif()
 
