@@ -55,58 +55,11 @@
     "zlib"
   ],
   "features": {
-    "jpeg": {
-      "description": "add jpeg support",
-      "dependencies": [
-        "libjpeg-turbo"
-      ]
-    },
-    "png": {
-      "description": "add png support",
-      "dependencies": [
-        "libpng"
-      ]
-    },
-    "tiff": {
-      "description": "add tiff support",
-      "dependencies": [
-        "tiff"
-      ]
-    },
-    "webp": {
-      "description": "add webp support",
-      "dependencies": [
-        "libwebp"
-      ]
-    },
-    "libxml2": {
-      "description": "use libxml2 instead of rapidxml",
-      "dependencies": [
-        "libxml2"
-      ]
-    },
     "cairo": {
       "description": "Cairo renderer",
       "dependencies": [
         "cairo",
         "cairomm"
-      ]
-    },
-    "proj4": {
-      "description": "PROJ4 Functionalities",
-      "dependencies": [
-        {
-          "name": "proj4",
-          "features": [
-            "database"
-          ]
-        }
-      ]
-    },
-    "viewer": {
-      "description": "Make demo viewer application",
-      "dependencies": [
-        "qt5-base"
       ]
     },
     "demo": {
@@ -165,6 +118,41 @@
     "input-topojson": {
       "description": "TOPOJSON input plugin"
     },
+    "jpeg": {
+      "description": "add jpeg support",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "libxml2": {
+      "description": "use libxml2 instead of rapidxml",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
+    "png": {
+      "description": "add png support",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "proj4": {
+      "description": "PROJ4 Functionalities",
+      "dependencies": [
+        {
+          "name": "proj4",
+          "features": [
+            "database"
+          ]
+        }
+      ]
+    },
+    "tiff": {
+      "description": "add tiff support",
+      "dependencies": [
+        "tiff"
+      ]
+    },
     "utility-geometry-to-wkb": {
       "description": "utility application geometry-to-wkb",
       "dependencies": [
@@ -190,9 +178,9 @@
       "description": "utility application pgsql2sqlite",
       "dependencies": [
         "boost-program-options",
-        "sqlite3",
         "libodb-pgsql",
-        "libpq"
+        "libpq",
+        "sqlite3"
       ]
     },
     "utility-shapeindex": {
@@ -205,6 +193,18 @@
       "description": "utility application svg2png",
       "dependencies": [
         "boost-program-options"
+      ]
+    },
+    "viewer": {
+      "description": "Make demo viewer application",
+      "dependencies": [
+        "qt5-base"
+      ]
+    },
+    "webp": {
+      "description": "add webp support",
+      "dependencies": [
+        "libwebp"
       ]
     }
   }
