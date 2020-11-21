@@ -3,6 +3,7 @@
   "version-string": "3.0.23",
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
+  "supports": "!(static & windows)",
   "dependencies": [
     "boost-assign",
     "boost-bimap",
@@ -66,6 +67,9 @@
     },
     "demo": {
       "description": "Make demo application"
+    },
+    "grid-renderer": {
+      "description": "Grid renderer"
     },
     "input-csv": {
       "description": "CSV input plugin"
@@ -148,6 +152,9 @@
           ]
         }
       ]
+    },
+    "svg-renderer": {
+      "description": "SVG renderer"
     },
     "tiff": {
       "description": "add tiff support",
