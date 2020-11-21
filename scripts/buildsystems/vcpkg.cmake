@@ -515,6 +515,46 @@ function(x_vcpkg_install_local_dependencies)
     endif()
 endfunction()
 
+set(X_VCPKG_APPLOCAL_DEPS_INSTALL ${X_VCPKG_APPLOCAL_DEPS_INSTALL} CACHE BOOL "(experimental) Automatically copy dependencies into the install target directory for executables.")
+if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
+    function(install)
+        _install(${ARGV})
+
+        if(ARGV0 STREQUAL "TARGETS")
+            # Will contain the list of targets
+            set(PARSED_TARGETS "")
+
+            # Destination - [RUNTIME] DESTINATION argument overrides this
+            set(DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+
+            # Parse arguments given to the install function to find targets and (runtime) destination
+            set(MODIFIER "") # Modifier for the command in the argument
+            set(LAST_COMMAND "") # Last command we found to process
+            foreach(ARG ${ARGN})
+                if(ARG MATCHES "ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE")
+                    set(MODIFIER ${ARG})
+                    continue()
+                endif()
+
+                if(ARG MATCHES "TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP")
+                    set(LAST_COMMAND ${ARG})
+                    continue()
+                endif()
+
+                if(LAST_COMMAND STREQUAL "TARGETS")
+                    list(APPEND PARSED_TARGETS "${ARG}")
+                endif()
+
+                if(LAST_COMMAND STREQUAL "DESTINATION" AND (MODIFIER STREQUAL "" OR MODIFIER STREQUAL "RUNTIME"))
+                    set(DESTINATION "${ARG}")
+                endif()
+            endforeach()
+
+            x_vcpkg_install_local_dependencies(TARGETS ${PARSED_TARGETS} DESTINATION ${DESTINATION})
+        endif()
+    endfunction()
+endif()
+
 if(NOT DEFINED VCPKG_OVERRIDE_FIND_PACKAGE_NAME)
     set(VCPKG_OVERRIDE_FIND_PACKAGE_NAME find_package)
 endif()
