@@ -53,6 +53,7 @@
     "mapbox-geometry",
     "mapbox-polylabel",
     "mapbox-variant",
+    "protozero",
     "zlib"
   ],
   "features": {
