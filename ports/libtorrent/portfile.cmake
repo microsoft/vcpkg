@@ -6,9 +6,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "The python feature is currently broken on Windows")
     endif()
 
-    if("iconv" IN_LIST FEATURES)
-        set(ICONV_PATCH "fix_find_iconv.patch")
-    else()
+    if(NOT "iconv" IN_LIST FEATURES)
         # prevent picking up libiconv if it happens to already be installed
         set(ICONV_PATCH "no_use_iconv.patch")
     endif()
