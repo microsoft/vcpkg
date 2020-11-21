@@ -165,28 +165,33 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/llvm" TARGET_PATH "share/llvm")
-file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
 if("clang" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/clang" TARGET_PATH "share/clang")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/clang" TARGET_PATH "share/clang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/clang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME copyright)
 endif()
 
 if("flang" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/flang" TARGET_PATH "share/flang")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/flang" TARGET_PATH "share/flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/flang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/flang RENAME copyright)
 endif()
 
 if("lld" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/lld" TARGET_PATH "share/lld")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/lld" TARGET_PATH "share/lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/lld/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lld RENAME copyright)
 endif()
 
 if("mlir" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/mlir" TARGET_PATH "share/mlir")
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/mlir" TARGET_PATH "share/mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/mlir/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/mlir RENAME copyright)
 endif()
+
+if("polly" IN_LIST FEATURES)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/polly" TARGET_PATH "share/polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    file(INSTALL ${SOURCE_PATH}/polly/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/polly RENAME copyright)
+endif()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/llvm" TARGET_PATH "share/llvm")
+file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME copyright)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     set(LLVM_EXECUTABLE_REGEX [[^([^.]*|[^.]*\.lld)\.exe$]])
@@ -203,10 +208,7 @@ foreach(tool_file IN LISTS LLVM_TOOL_FILES)
     endif()
 endforeach()
 
-vcpkg_copy_tools(
-    TOOL_NAMES ${LLVM_TOOLS}
-    AUTO_CLEAN
-)
+vcpkg_copy_tools(TOOL_NAMES ${LLVM_TOOLS} AUTO_CLEAN)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
