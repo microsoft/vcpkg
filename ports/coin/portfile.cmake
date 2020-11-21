@@ -18,6 +18,12 @@ else()
     set(COIN_BUILD_SHARED_LIBS ON)
 endif()
 
+if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    set(COIN_BUILD_MSVC_STATIC_RUNTIME OFF)
+elseif(VCPKG_CRT_LINKAGE STREQUAL static)
+    set(COIN_BUILD_MSVC_STATIC_RUNTIME ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
