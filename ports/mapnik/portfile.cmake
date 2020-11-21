@@ -2,8 +2,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mathisloge/mapnik
-    REF 07546fe0987e7062fdd2daadeb48c412d8f176d9
-    SHA512 0e73c6bfe0321afc8fd5e590d0355d63ed4ced9ee1d654fcd0d1fdfaf117f868c34b180ed51fc4587d04b14b15f3ffc0e6be198fb52a8c2f216ebde1598bd827
+    REF 0084628d61ebdb6ece5460c22601e5bf5a03644d
+    SHA512 a53ce3cfae731d31376ae65515eaf2c00341529f4afbe64d1bec27f62b64580de0384cfe28c77bb9bfaa5ee7fe9aa1fa6ad8f1a2e24bbdeb769825876035cfcf
     HEAD_REF master
 )
 
