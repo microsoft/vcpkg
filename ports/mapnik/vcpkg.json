@@ -21,7 +21,6 @@
       "platform": "!windows"
     },
     "boost-msm",
-    "boost-program-options",
     "boost-property-tree",
     {
       "name": "boost-regex",
@@ -50,22 +49,64 @@
       ]
     },
     "icu",
-    "libjpeg-turbo",
-    "libpng",
-    "libwebp",
-    "libxml2",
     "mapbox-geometry",
     "mapbox-polylabel",
     "mapbox-variant",
-    "tiff",
     "zlib"
   ],
   "features": {
+    "jpeg": {
+      "description": "add jpeg support",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "png": {
+      "description": "add png support",
+      "dependencies": [
+        "libpng"
+      ]
+    },
+    "tiff": {
+      "description": "add tiff support",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "webp": {
+      "description": "add webp support",
+      "dependencies": [
+        "libwebp"
+      ]
+    },
+    "libxml2": {
+      "description": "use libxml2 instead of rapidxml",
+      "dependencies": [
+        "libxml2"
+      ]
+    },
     "cairo": {
       "description": "Cairo renderer",
       "dependencies": [
         "cairo",
         "cairomm"
+      ]
+    },
+    "proj4": {
+      "description": "PROJ4 Functionalities",
+      "dependencies": [
+        {
+          "name": "proj4",
+          "features": [
+            "database"
+          ]
+        }
+      ]
+    },
+    "viewer": {
+      "description": "Make demo viewer application",
+      "dependencies": [
+        "qt5-base"
       ]
     },
     "demo": {
@@ -124,24 +165,46 @@
     "input-topojson": {
       "description": "TOPOJSON input plugin"
     },
-    "proj4": {
-      "description": "PROJ4 Functionalities",
+    "utility-geometry-to-wkb": {
+      "description": "utility application geometry-to-wkb",
       "dependencies": [
-        {
-          "name": "proj4",
-          "features": [
-            "database"
-          ]
-        }
+        "boost-program-options"
       ]
     },
-    "utils": {
-      "description": "Make utilities Application including mapnik-rendrer and shapeindex"
-    },
-    "viewer": {
-      "description": "Make demo viewer application",
+    "utility-mapnik-index": {
+      "description": "utility application mapnik-index",
       "dependencies": [
-        "qt5-base"
+        "boost-program-options"
+      ]
+    },
+    "utility-mapnik-render": {
+      "description": "utility application mapnik-render",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
+    "utility-ogrindex": {
+      "description": "utility application ogrindex"
+    },
+    "utility-pgsql2sqlite": {
+      "description": "utility application pgsql2sqlite",
+      "dependencies": [
+        "boost-program-options",
+        "sqlite3",
+        "libodb-pgsql",
+        "libpq"
+      ]
+    },
+    "utility-shapeindex": {
+      "description": "utility application shapeindex",
+      "dependencies": [
+        "boost-program-options"
+      ]
+    },
+    "utility-svg2png": {
+      "description": "utility application svg2png",
+      "dependencies": [
+        "boost-program-options"
       ]
     }
   }
