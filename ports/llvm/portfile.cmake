@@ -174,6 +174,14 @@ if("clang" IN_LIST FEATURES)
     file(INSTALL ${SOURCE_PATH}/clang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME copyright)
 endif()
 
+if("clang-tools-extra" IN_LIST FEATURES)
+    # Remove empty include directory include/clang-tidy/plugin
+    file(GLOB_RECURSE INCLUDE_CLANG_TIDY_PLUGIN_FILES "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin/*")
+    if(NOT INCLUDE_CLANG_TIDY_PLUGIN_FILES)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/clang-tidy/plugin")
+    endif()
+endif()
+
 if("flang" IN_LIST FEATURES)
     vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/flang" TARGET_PATH "share/flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/flang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/flang RENAME copyright)
