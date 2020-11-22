@@ -2,8 +2,8 @@ vcpkg_from_sourceforge (
     OUT_SOURCE_PATH SOURCE_PATH
     REPO geographiclib
     REF distrib
-    FILENAME "GeographicLib-1.50.1.tar.gz"
-    SHA512 1db874f30957a0edb8a1df3eee6db73cc993629e3005fe912e317a4ba908e7d7580ce483bb0054c4b46370b8edaec989609fb7e4eb6ba00c80182db43db436f1
+    FILENAME "GeographicLib-1.51.tar.gz"
+    SHA512 34487a09fa94a34d24179cfe9fd2e5fdda28675966703ca137cbfe6cc88760c2fbde55f76c464de060b58bfe0a516e22c0f59318cf85ae7cc01c5c6a73dd6ead
     PATCHES cxx-library-only.patch
 )
 
