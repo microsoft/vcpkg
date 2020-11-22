@@ -1,5 +1,5 @@
 diff --git a/cmake/templates/LeptonicaConfig.cmake.in b/cmake/templates/LeptonicaConfig.cmake.in
-index 4f7527a..c6759d1 100644
+index 342c37d..b358b7b 100644
 --- a/cmake/templates/LeptonicaConfig.cmake.in
 +++ b/cmake/templates/LeptonicaConfig.cmake.in
 @@ -20,6 +20,14 @@

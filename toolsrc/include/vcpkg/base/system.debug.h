@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/chrono.h>
+#include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/system.print.h>
 
 #include <atomic>

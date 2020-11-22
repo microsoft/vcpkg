@@ -1,5 +1,5 @@
 Source: rocksdb
-Version: 6.6.4-1
+Version: 6.13.3
 Homepage: https://github.com/facebook/rocksdb
 Description: A library that provides an embeddable, persistent key-value store for fast storage
 Default-Features: zlib
@@ -23,3 +23,7 @@ Description: tbb support in rocksdb
 Feature: zstd
 Build-Depends: zstd
 Description: zstd support in rocksdb
+
+Feature: bzip2
+Build-Depends: bzip2
+Description: bzip2 support in rocksdb

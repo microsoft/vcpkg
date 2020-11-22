@@ -33,7 +33,8 @@
 ## * [icu](https://github.com/Microsoft/vcpkg/blob/master/ports/icu/portfile.cmake)
 include(vcpkg_prettify_command)
 function(vcpkg_execute_build_process)
-    cmake_parse_arguments(_ebp "" "WORKING_DIRECTORY;LOGNAME" "COMMAND;NO_PARALLEL_COMMAND" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _ebp "" "WORKING_DIRECTORY;LOGNAME" "COMMAND;NO_PARALLEL_COMMAND")
 
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err.log")
