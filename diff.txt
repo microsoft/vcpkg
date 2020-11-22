@@ -1,0 +1,73 @@
+diff --git a/toolsrc/src/vcpkg/archives.cpp b/toolsrc/src/vcpkg/archives.cpp
+index 4c97a7b5a..f2ad6100f 100644
+--- a/toolsrc/src/vcpkg/archives.cpp
++++ b/toolsrc/src/vcpkg/archives.cpp
+@@ -99,10 +99,12 @@ namespace vcpkg::Archives
+ 
+         for (int i = 0; i < 5 && ec; i++)
+         {
+-            i++;
+             using namespace std::chrono_literals;
+-            std::this_thread::sleep_for(i * 100ms);
++            std::this_thread::sleep_for(i * 1s);
+             fs.rename(to_path_partial, to_path, ec);
++            System::printf("fs.rename(%s, %s)\n",
++                           fs::u8string(to_path_partial),
++                           fs::u8string(to_path));
+         }
+ 
+         Checks::check_exit(VCPKG_LINE_INFO,
+diff --git a/toolsrc/windows-bootstrap/vcpkg.vcxproj b/toolsrc/windows-bootstrap/vcpkg.vcxproj
+index 259d1a330..1a9b8724e 100644
+--- a/toolsrc/windows-bootstrap/vcpkg.vcxproj
++++ b/toolsrc/windows-bootstrap/vcpkg.vcxproj
+@@ -29,12 +29,12 @@
+   <Choose>
+     <When Condition="'$(PlatformToolset)' == 'v140'">
+       <PropertyGroup>
+-          <VcpkgUseStdFilesystem>0</VcpkgUseStdFilesystem>
++        <VcpkgUseStdFilesystem>0</VcpkgUseStdFilesystem>
+       </PropertyGroup>
+     </When>
+     <Otherwise>
+       <PropertyGroup>
+-          <VcpkgUseStdFilesystem>1</VcpkgUseStdFilesystem>
++        <VcpkgUseStdFilesystem>1</VcpkgUseStdFilesystem>
+       </PropertyGroup>
+     </Otherwise>
+   </Choose>
+@@ -47,23 +47,27 @@
+     <ConfigurationType>Application</ConfigurationType>
+     <UseDebugLibraries>true</UseDebugLibraries>
+     <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset>v142</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+     <WholeProgramOptimization>true</WholeProgramOptimization>
+     <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset>v142</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+     <UseDebugLibraries>true</UseDebugLibraries>
+     <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset>v142</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+     <ConfigurationType>Application</ConfigurationType>
+     <UseDebugLibraries>false</UseDebugLibraries>
+     <WholeProgramOptimization>true</WholeProgramOptimization>
+     <CharacterSet>MultiByte</CharacterSet>
++    <PlatformToolset>v142</PlatformToolset>
+   </PropertyGroup>
+   <PropertyGroup>
+     <DISABLE_METRICS Condition="'$(DISABLE_METRICS)' == ''">0</DISABLE_METRICS>
+@@ -364,4 +368,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
++</Project>
+\ No newline at end of file

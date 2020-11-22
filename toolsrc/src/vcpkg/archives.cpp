@@ -1,3 +1,4 @@
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 
 #include <vcpkg/archives.h>
@@ -97,12 +98,17 @@ namespace vcpkg::Archives
 
         fs.rename(to_path_partial, to_path, ec);
 
-        for (int i = 0; i < 5 && ec; i++)
+        using namespace std::chrono_literals;
+
+        auto retry_delay = 8ms;
+
+        for (int i = 0; i < 10 && ec; i++)
         {
             using namespace std::chrono_literals;
-            std::this_thread::sleep_for(i * 1s);
+            std::this_thread::sleep_for(retry_delay);
             fs.rename(to_path_partial, to_path, ec);
             System::printf("fs.rename(%s, %s)\n", fs::u8string(to_path_partial), fs::u8string(to_path));
+            retry_delay *= 2;
         }
 
         Checks::check_exit(VCPKG_LINE_INFO,
