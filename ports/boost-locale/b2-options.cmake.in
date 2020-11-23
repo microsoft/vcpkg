@@ -1,4 +1,3 @@
-# When we get into unix_build, VCPKG_TARGET_IS_WINDOWS doesn't work, fall back onto CMAKE_SYSTEM_NAME
 if(@VCPKG_TARGET_IS_WINDOWS@)
     list(APPEND B2_OPTIONS
         boost.locale.iconv=off
