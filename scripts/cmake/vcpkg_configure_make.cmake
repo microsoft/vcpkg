@@ -627,6 +627,7 @@ function(vcpkg_configure_make)
         set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}")
         file(MAKE_DIRECTORY "${TAR_DIR}")
         file(RELATIVE_PATH RELATIVE_BUILD_PATH "${TAR_DIR}" "${SRC_DIR}")
+        set(RELATIVE_BUILD_PATH ${RELATIVE_BUILD_PATH}/)
 
         if(_csc_COPY_SOURCE)
             file(COPY "${_csc_SOURCE_PATH}/" DESTINATION "${TAR_DIR}")
