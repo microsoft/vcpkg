@@ -2,11 +2,9 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eidheim/tiny-process-library
-    REF 273270d0f9d0cf4a8282fadd589060a7b0eab425
-    SHA512 f99e586ee6fa9b7c0a3633b59e0e099becba48e2ef375268eeecd9099a233e3b528ba373edc74983d49934ff10f99884fdeb594ff546054fc91d1341d0e86c0a
+    REF v2.0.3
+    SHA512 fce2fd220be6fafd207ccb7c4b5be4b6345f4b51644a24c24ff6273e427f7bb2d65c2c0cfefd7f800be136ec8f8244a1ad0c118eb0f20a5d9216a32f06db5c09
     HEAD_REF master
-    PATCHES
-        fix-cmake.patch
 )
 
 vcpkg_configure_cmake(
@@ -21,8 +19,8 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(
-    CONFIG_PATH lib/cmake/unofficial-${PORT}
-    TARGET_PATH share/unofficial-${PORT}
+    CONFIG_PATH lib/cmake/${PORT}
+    TARGET_PATH share/${PORT}
 )
 
 file(REMOVE_RECURSE
