@@ -51,4 +51,5 @@ Feature: sspi
 Description: SSPI support 
 
 Feature: brotli
+Build-Depends: brotli
 Description: brotli support (brotli)
