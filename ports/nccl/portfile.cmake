@@ -1,10 +1,4 @@
-if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_WINDOWS)
-  message(FATAL_ERROR "This port is only for Linux")
-endif()
-
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-  message(FATAL_ERROR "This port is only for x64 architectures")
-endif()
+vcpkg_fail_port_install(ON_TARGET "Windows" "OSX" ON_ARCH "x86" "arm")
 
 # note: this port must be kept in sync with CUDA port: every time one is upgraded, the other must be too
 set(NCCL_VERSION "2.4.6.1")
