@@ -245,6 +245,17 @@ if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" ]; then
     vcpkgUseSystem=true
 fi
 
+if [ "$UNAME" = "OpenBSD" ]; then
+    vcpkgUseSystem=true
+
+    if [ -z "$CXX" ]; then
+        CXX=/usr/bin/clang++
+    fi
+    if [ -z "$CC" ]; then
+        CC=/usr/bin/clang
+    fi
+fi
+
 if $vcpkgUseSystem; then
     cmakeExe="cmake"
     ninjaExe="ninja"
