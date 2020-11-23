@@ -1,6 +1,6 @@
 #only supports windows
 if (VCPKG_CMAKE_SYSTEM_NAME)
-    vcpkg_fail_port_install(ON_ARCH "arm" ON_TAREGT "linux" "osx")
+    vcpkg_fail_port_install(ON_ARCH "arm" "uwp" ON_TAREGT "linux" "osx")
 endif()
 
 if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
