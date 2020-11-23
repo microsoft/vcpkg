@@ -296,7 +296,7 @@ __pycache__/
 /toolsrc/windows-bootstrap/msbuild.x64.debug/
 /toolsrc/windows-bootstrap/msbuild.x64.release/
 #ignore db
-/port_versions/
+#/port_versions/
 #ignore custom triplets
 /triplets/*
 #add vcpkg-designed triplets back in
