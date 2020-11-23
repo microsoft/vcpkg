@@ -31,6 +31,9 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_fixup_cmake_targets()
+if("ssl" IN_LIST FEATURES)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/hiredis_ssl TARGET_PATH share/hiredis_ssl)
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
