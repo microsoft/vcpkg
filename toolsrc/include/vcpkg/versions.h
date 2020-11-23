@@ -14,9 +14,9 @@ namespace vcpkg::Versions
 
     struct VersionSpec
     {
-        const std::string port_name;
-        const VersionT version;
-        const Scheme scheme;
+        std::string port_name;
+        VersionT version;
+        Scheme scheme;
 
         VersionSpec(const std::string& port_name, const VersionT& version, Scheme scheme);
 

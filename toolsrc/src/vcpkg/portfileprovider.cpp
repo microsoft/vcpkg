@@ -33,7 +33,7 @@ namespace
 
     Optional<fs::path> get_baseline_json_path(const VcpkgPaths& paths, const std::string& baseline_commit_sha)
     {
-        const auto baseline_json = paths.git_checkout_baseline(baseline_commit_sha);
+        const auto baseline_json = paths.git_checkout_baseline(paths.get_filesystem(), baseline_commit_sha);
         return paths.get_filesystem().exists(baseline_json) ? make_optional(baseline_json) : nullopt;
     }
 }
@@ -359,7 +359,7 @@ namespace vcpkg::PortFileProvider
 
             for (const auto& version : db_entries)
             {
-                std::regex is_commit_sha("^[\\da-f]{40}$");
+                std::regex is_commit_sha("^[\\da-fA-F]{40}$");
                 Checks::check_exit(VCPKG_LINE_INFO,
                                    std::regex_match(version.git_tree, is_commit_sha),
                                    "Invalid commit SHA in `git-tree` for %s %s: %s",
@@ -396,7 +396,8 @@ namespace vcpkg::PortFileProvider
         }
 
         const std::string git_tree = git_tree_cache_it->second;
-        auto port_directory = m_impl->paths.git_checkout_port(version_spec.port_name, git_tree);
+        auto port_directory =
+            m_impl->paths.git_checkout_port(m_impl->paths.get_filesystem(), version_spec.port_name, git_tree);
 
         auto maybe_control_file = Paragraphs::try_load_port(m_impl->paths.get_filesystem(), port_directory);
         if (auto scf = maybe_control_file.get())

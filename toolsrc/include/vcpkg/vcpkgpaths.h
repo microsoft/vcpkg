@@ -102,14 +102,24 @@ namespace vcpkg
         fs::path vcpkg_dir_info;
         fs::path vcpkg_dir_updates;
 
+        fs::path baselines_dot_git_dir;
+        fs::path baselines_work_tree;
+        fs::path baselines_output;
+
+        fs::path versions_dot_git_dir;
+        fs::path versions_work_tree;
+        fs::path versions_output;
+
         fs::path ports_cmake;
 
         const fs::path& get_tool_exe(const std::string& tool) const;
         const std::string& get_tool_version(const std::string& tool) const;
 
         // Git manipulation
-        fs::path git_checkout_baseline(const std::string& commit_sha) const;
-        fs::path git_checkout_port(const std::string& port_name, const std::string& git_tree) const;
+        fs::path git_checkout_baseline(Files::Filesystem& filesystem, const std::string& commit_sha) const;
+        fs::path git_checkout_port(Files::Filesystem& filesystem,
+                                   const std::string& port_name,
+                                   const std::string& git_tree) const;
 
         Optional<const Json::Object&> get_manifest() const;
         Optional<const fs::path&> get_manifest_path() const;
