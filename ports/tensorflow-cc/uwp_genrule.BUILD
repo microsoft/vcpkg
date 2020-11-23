@@ -4,7 +4,7 @@ genrule(
 mkdir $@
 parent=`dirname $@`
 parent=`dirname $${parent}`
-cp -r $${parent}/* $@
+cp -r $${parent}/patched_includes/* $@
 echo \\\"$@\\\" >> $(location @local_config_cc//:builtin_include_directory_paths_msvc)
 """,
     srcs = [
