@@ -1,8 +1,29 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 345df69b..aba8cff7 100644
+index 345df69b..cb891034 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -434,12 +434,12 @@ endif ()
+@@ -196,6 +196,11 @@ else ()
+   set (DEVELOPER OFF)
+ endif ()
+ 
++set (INSTALL_TOOL_DIR "tools/geographiclib")
++file (RELATIVE_PATH PROJECT_LIB_DIR
++  "${CMAKE_INSTALL_PREFIX}/${INSTALL_TOOL_DIR}"
++  "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
++
+ if (NOT MSVC)
+   # Set the run time path for shared libraries for non-Windows machines.
+   # (1) include link path for external packages (not needed with
+@@ -207,7 +212,7 @@ if (NOT MSVC)
+   # (2) include installed path for GeographicLib.
+   if (NOT APPLE)
+     # Use relative path so that package is relocatable
+-    set (CMAKE_INSTALL_RPATH "\$ORIGIN/../lib${LIB_SUFFIX}")
++    set (CMAKE_INSTALL_RPATH "\$ORIGIN/${PROJECT_LIB_DIR}")
+   else ()
+     # cmake 2.8.12 introduced a way to make the package relocatable.
+     # See also INSTALL_RPATH property on the tools.
+@@ -434,12 +439,12 @@ endif ()
  # documentation files into the source tree.  Skip Apple here because
  # man/makeusage.sh uses "head --lines -4" to drop the last 4 lines of a
  # file and there's no simple equivalent for MacOSX
@@ -17,7 +38,7 @@ index 345df69b..aba8cff7 100644
    set (MAINTAINER ON)
  else ()
    set (MAINTAINER OFF)
-@@ -466,25 +466,34 @@ if (WIN32)
+@@ -466,25 +471,34 @@ if (WIN32)
    set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
  endif ()
  
@@ -85,7 +106,7 @@ index cbc21961..69c923bc 100644
  file (RELATIVE_PATH PROJECT_ROOT_DIR
    "${CMAKE_INSTALL_PREFIX}/${INSTALL_CMAKE_DIR}" "${CMAKE_INSTALL_PREFIX}")
 diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
-index 3fa8ec6a..f772b77c 100644
+index 3fa8ec6a..92c73946 100644
 --- a/tools/CMakeLists.txt
 +++ b/tools/CMakeLists.txt
 @@ -1,7 +1,7 @@
@@ -106,12 +127,17 @@ index 3fa8ec6a..f772b77c 100644
  
    target_link_libraries (${TOOL} ${PROJECT_LIBRARIES} ${HIGHPREC_LIBRARIES})
  
-@@ -35,7 +35,7 @@ if (APPLE)
+@@ -31,11 +31,11 @@ endif ()
+ if (APPLE)
+   # Ensure that the package is relocatable
+   set_target_properties (${TOOLS} PROPERTIES
+-    INSTALL_RPATH "@loader_path/../lib${LIB_SUFFIX}")
++    INSTALL_RPATH "@loader_path/${PROJECT_LIB_DIR}")
  endif ()
  
  # Specify where the tools are installed, adding them to the export targets
 -install (TARGETS ${TOOLS} EXPORT targets DESTINATION bin)
-+install (TARGETS ${TOOLS} DESTINATION tools)
++install (TARGETS ${TOOLS} DESTINATION "${INSTALL_TOOL_DIR}")
  
  if (MSVC AND PACKAGE_DEBUG_LIBS)
    # Possibly don't EXPORT the debug versions of the tools and then this
