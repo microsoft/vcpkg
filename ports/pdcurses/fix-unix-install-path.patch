@@ -1,0 +1,13 @@
+diff --git a/x11/Makefile.in b/x11/Makefile.in
+index 6cda749..dfc77a5 100644
+--- a/x11/Makefile.in
++++ b/x11/Makefile.in
+@@ -11,7 +11,7 @@ osdir		= .
+ srcdir		= $(PDCURSES_SRCDIR)/pdcurses
+ demodir		= $(PDCURSES_SRCDIR)/demos
+ 
+-prefix		= @prefix@
++prefix		= $(DESTDIR)/@prefix@
+ exec_prefix	= @exec_prefix@
+ libdir		= @libdir@
+ bindir		= @bindir@

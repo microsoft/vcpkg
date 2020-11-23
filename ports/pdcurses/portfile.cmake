@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF 6c1f95c4fa9f9f105879c2d99dd72a5bf335c046 # 3.9
     SHA512 2d682a3516baaa58a97854aca64d985768b7af76d998240b54afc57ddf2a44894835a1748888f8dd7c1cc8045ede77488284f8adf1b73878879b4b4d3391218d
     HEAD_REF master
+    PATCHES fix-unix-install-path.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
