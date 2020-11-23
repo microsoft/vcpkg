@@ -216,19 +216,12 @@ foreach(BUILD_TYPE dbg rel)
 		endforeach()
 	endif()
 
+	set(ADDITIONAL_TARGETS_PRE)
 	if(VCPKG_TARGET_IS_UWP)
 		file(COPY ${CMAKE_CURRENT_LIST_DIR}/uwppatch.h DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patched_includes)
 
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/uwp_toolchain.BUILD ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/toolchain/BUILD COPYONLY)
-		file(APPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/toolchain/builtin_include_directory_paths_msvc "
-\"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patched_includes\"
-")
-
-		file(APPEND ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/.bazelrc "
-build:uwp_config --crosstool_top=//toolchain:uwp_suite
-build:uwp_config --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
-")
-		set(BUILD_OPTS "${BUILD_OPTS} --config=uwp_config")
+		configure_file(${CMAKE_CURRENT_LIST_DIR}/uwp_genrule.BUILD ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patching_target/BUILD COPYONLY)
+		set(ADDITIONAL_TARGETS_PRE "///patching_target:patch_include_dirs")
 
 		list(APPEND COPTS "--copt=-DWINAPI_FAMILY=WINAPI_FAMILY_APP")
 		list(APPEND COPTS "--copt=-D_WIN32_WINNT=0x0A00")
@@ -246,13 +239,13 @@ build:uwp_config --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
 			list(JOIN CXXOPTS " " CXXOPTS)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "'${BAZEL}' build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "'${BAZEL}' build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ${ADDITIONAL_TARGETS_PRE} ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} ${LINKOPTS} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} ${LINKOPTS} --define=no_tensorflow_py_deps=true ${ADDITIONAL_TARGETS_PRE} //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -270,13 +263,13 @@ build:uwp_config --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
 			list(JOIN CXXOPTS " " CXXOPTS)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ${ADDITIONAL_TARGETS_PRE} ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ${ADDITIONAL_TARGETS_PRE} //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
