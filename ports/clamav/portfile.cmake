@@ -6,10 +6,9 @@ vcpkg_from_github(
   REF clamav-0.103.0 
   SHA512 488381202bdcea812c39d611e0a31eaf8f55c9c5d0a6400fd53dfa0da674a95672fdc9b290dc6157cb8f628d9f81846b5cc108eb1e44f6207d3c6f2659ba63c6
   HEAD_REF master
-  PATCHES 
+  PATCHES
       "build.patch"
       "cmakefiles.patch"
-
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
