@@ -218,9 +218,7 @@ foreach(BUILD_TYPE dbg rel)
 
 	set(ADDITIONAL_TARGETS_PRE)
 	if(VCPKG_TARGET_IS_UWP)
-		file(COPY ${CMAKE_CURRENT_LIST_DIR}/uwppatch.h DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patched_includes)
-
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/uwp_genrule.BUILD ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patching_target/BUILD COPYONLY)
+		configure_file(${CMAKE_CURRENT_LIST_DIR}/uwp_genrule.BUILD ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patching_target/BUILD @ONLY)
 		set(ADDITIONAL_TARGETS_PRE "///patching_target:patch_include_dirs")
 
 		list(APPEND COPTS "--copt=-DWINAPI_FAMILY=WINAPI_FAMILY_APP")
