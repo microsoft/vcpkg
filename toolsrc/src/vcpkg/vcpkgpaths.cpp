@@ -478,7 +478,7 @@ If you wish to silence this error and use classic mode, you can:
     }
 
     void VcpkgPaths::git_checkout_subpath(const VcpkgPaths& paths,
-                                          const std::string& commit_sha,
+                                          StringView commit_sha,
                                           const fs::path& subpath,
                                           const fs::path& local_repo,
                                           const fs::path& destination,
@@ -540,7 +540,7 @@ If you wish to silence this error and use classic mode, you can:
     }
 
     void VcpkgPaths::git_checkout_object(const VcpkgPaths& paths,
-                                         const std::string& git_object,
+                                         StringView git_object,
                                          const fs::path& local_repo,
                                          const fs::path& destination,
                                          const fs::path& dot_git_dir,
@@ -609,10 +609,10 @@ If you wish to silence this error and use classic mode, you can:
         }
     }
 
-    fs::path VcpkgPaths::git_checkout_baseline(Files::Filesystem& fs, const std::string& commit_sha) const
+    fs::path VcpkgPaths::git_checkout_baseline(Files::Filesystem& fs, StringView commit_sha) const
     {
         const fs::path local_repo = this->root;
-        const fs::path destination = this->baselines_output / commit_sha / fs::u8path("baseline.json");
+        const fs::path destination = this->baselines_output / fs::u8path(commit_sha) / fs::u8path("baseline.json");
         const fs::path baseline_subpath = fs::u8path("port_versions") / fs::u8path("baseline.json");
 
         if (!fs.exists(destination))
@@ -628,9 +628,7 @@ If you wish to silence this error and use classic mode, you can:
         return destination;
     }
 
-    fs::path VcpkgPaths::git_checkout_port(Files::Filesystem& fs,
-                                           const std::string& port_name,
-                                           const std::string& git_tree) const
+    fs::path VcpkgPaths::git_checkout_port(Files::Filesystem& fs, StringView port_name, StringView git_tree) const
     {
         /* Clone a new vcpkg repository instance using the local instance as base.
          *
