@@ -1,18 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  strukturag/libheif 
-    REF v1.7.0
-    SHA512 7da6ab9daf253c2493e0c3960c6f817e0234dfbd0463467cd1e5f11f7d6804735e401b73fb1038b8f81cfc6527fafb6ac7f4668c3de9400a0131c1292bdbe660 
+    REF 2e218ef40440e258b5da1e513f72c7f3b1611c7c #v1.9.1
+    SHA512 78fc62813f088133dfc12799d8e1989580630e80865e33e43450ae4bba0d9ef03fe250dcc734f7905ea1d02dcb7ae77a9b461b25da27fcb2ef98562c69ab0b87 
     HEAD_REF master
-    PATCHES
-        dont_build_examples_and_gdk_pixbuf.patch
-        remove_finding_pkgconfig.patch
-        install-extra-headers.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DWITH_EXAMPLES=OFF
 )
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libheif/)
