@@ -19,10 +19,10 @@ using namespace Versions;
 
 namespace
 {
-    Optional<fs::path> get_versions_json_path(const VcpkgPaths& paths, const std::string& port_name)
+    Optional<fs::path> get_versions_json_path(const VcpkgPaths& paths, StringView port_name)
     {
-        const auto port_versions_dir_path = paths.root / "port_versions";
-        const auto subpath = Strings::concat(port_name[0], "-/", port_name, ".json");
+        const auto port_versions_dir_path = paths.root / fs::u8path("port_versions");
+        const auto subpath = Strings::concat(port_name.substr(0, 1), "-/", port_name, ".json");
         const auto json_path = port_versions_dir_path / subpath;
         if (paths.get_filesystem().exists(json_path))
         {
@@ -31,7 +31,7 @@ namespace
         return nullopt;
     }
 
-    Optional<fs::path> get_baseline_json_path(const VcpkgPaths& paths, const std::string& baseline_commit_sha)
+    Optional<fs::path> get_baseline_json_path(const VcpkgPaths& paths, StringView baseline_commit_sha)
     {
         const auto baseline_json = paths.git_checkout_baseline(paths.get_filesystem(), baseline_commit_sha);
         return paths.get_filesystem().exists(baseline_json) ? make_optional(baseline_json) : nullopt;
@@ -322,9 +322,9 @@ namespace vcpkg::PortFileProvider
     }
     VersionedPortfileProvider::~VersionedPortfileProvider() { }
 
-    const std::vector<VersionSpec>& VersionedPortfileProvider::get_port_versions(const std::string& port_name) const
+    const std::vector<VersionSpec>& VersionedPortfileProvider::get_port_versions(StringView port_name) const
     {
-        auto cache_it = m_impl->versions_cache.find(port_name);
+        auto cache_it = m_impl->versions_cache.find(port_name.to_string());
         if (cache_it != m_impl->versions_cache.end())
         {
             return cache_it->second;
@@ -367,12 +367,12 @@ namespace vcpkg::PortFileProvider
                                    version.version.to_string(),
                                    version.git_tree);
 
-                VersionSpec spec(port_name, version.version, version.scheme);
-                m_impl->versions_cache[port_name].push_back(spec);
+                VersionSpec spec(port_name.to_string(), version.version, version.scheme);
+                m_impl->versions_cache[port_name.to_string()].push_back(spec);
                 m_impl->git_tree_cache[spec] = version.git_tree;
             }
         }
-        return m_impl->versions_cache.at(port_name);
+        return m_impl->versions_cache.at(port_name.to_string());
     }
 
     ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
@@ -425,10 +425,10 @@ namespace vcpkg::PortFileProvider
     }
     BaselineProvider::~BaselineProvider() { }
 
-    Optional<VersionSpec> BaselineProvider::get_baseline_version(const std::string& port_name) const
+    Optional<VersionSpec> BaselineProvider::get_baseline_version(StringView port_name) const
     {
         const auto& cache = get_baseline_cache();
-        auto it = cache.find(port_name);
+        auto it = cache.find(port_name.to_string());
         if (it != cache.end())
         {
             return it->second;
