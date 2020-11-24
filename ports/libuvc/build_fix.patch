@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f3c8116..0da84a7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -39,7 +39,7 @@ set(SOURCES
+   src/misc.c
+ )
+ 
+-find_package(LibUSB)
++find_package(libusb CONFIG REQUIRED)
+ 
+ # JpegPkg name to differ from shipped with CMake
+ find_package(JpegPkg QUIET)
+@@ -107,9 +107,10 @@ foreach(target_name IN LISTS UVC_TARGETS)
+       $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
+       $<INSTALL_INTERFACE:include>
+   )
++  target_include_directories(${target_name} PRIVATE ${LIBUSB_INCLUDE_DIRS})
+   target_link_libraries(${target_name}
+     # libusb-1.0 used internally so we link to it privately.
+-    PRIVATE LibUSB::LibUSB
++    PRIVATE ${LIBUSB_LIBRARIES}
+   )
+   if(JPEG_FOUND)
+     target_link_libraries(${target_name}
