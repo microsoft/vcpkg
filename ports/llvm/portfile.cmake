@@ -9,11 +9,12 @@ vcpkg_from_github(
     SHA512 b6d38871ccce0e086e27d35e42887618d68e57d8274735c59e3eabc42dee352412489296293f8d5169fe0044936345915ee7da61ebdc64ec10f7737f6ecd90f2
     HEAD_REF master
     PATCHES
-        0001-add-msvc-options.patch     # fixed in master
+        0001-add-msvc-options.patch     # Fixed in LLVM 12.0.0
+        0002-fix-install-paths.patch    # This patch fixes paths in ClangConfig.cmake, LLVMConfig.cmake, LLDConfig.cmake etc.
         0003-fix-openmp-debug.patch
         0004-fix-dr-1734.patch
         0005-fix-tools-path.patch
-        0006-workaround-msvc-bug.patch  # fixed in master
+        0006-workaround-msvc-bug.patch  # Fixed in LLVM 12.0.0
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -170,7 +171,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if("clang" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/clang" TARGET_PATH "share/clang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/clang" TARGET_PATH "share/clang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/clang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/clang RENAME copyright)
 endif()
 
@@ -183,7 +184,7 @@ if("clang-tools-extra" IN_LIST FEATURES)
 endif()
 
 if("flang" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/flang" TARGET_PATH "share/flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/flang" TARGET_PATH "share/flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/flang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/flang RENAME copyright)
     # Remove empty include directory /include/flang/Config
     file(GLOB_RECURSE INCLUDE_FLANG_CONFIG_FILES "${CURRENT_PACKAGES_DIR}/include/flang/Config/*")
@@ -193,21 +194,21 @@ if("flang" IN_LIST FEATURES)
 endif()
 
 if("lld" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/lld" TARGET_PATH "share/lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/lld" TARGET_PATH "share/lld" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/lld/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/lld RENAME copyright)
 endif()
 
 if("mlir" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/mlir" TARGET_PATH "share/mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/mlir" TARGET_PATH "share/mlir" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/mlir/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/mlir RENAME copyright)
 endif()
 
 if("polly" IN_LIST FEATURES)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/polly" TARGET_PATH "share/polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/polly" TARGET_PATH "share/polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
     file(INSTALL ${SOURCE_PATH}/polly/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/polly RENAME copyright)
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/llvm" TARGET_PATH "share/llvm")
+vcpkg_fixup_cmake_targets(CONFIG_PATH "share/llvm" TARGET_PATH "share/llvm")
 file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME copyright)
 
 if(VCPKG_TARGET_IS_WINDOWS)
