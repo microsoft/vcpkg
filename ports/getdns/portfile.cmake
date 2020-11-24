@@ -1,26 +1,19 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
 
-set(GETDNS_VERSION 1.6.0)
-set(GETDNS_HASH 4d3a67cd76e7ce53a31c9b92607d7768381a1f916e7950fe4e69368fa585d38dbfc04975630fbe8d8bd14f4bebf83a3516e063b5b54e0922548edc0952ee7b4e)
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" GETDNS_ENABLE_STATIC)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" GETDNS_ENABLE_SHARED)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://getdnsapi.net/dist/getdns-${GETDNS_VERSION}.tar.gz"
-    FILENAME "getdns-${GETDNS_VERSION}.tar.gz"
-    SHA512 ${GETDNS_HASH}
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${GETDNS_VERSION}
+    REPO getdnsapi/getdns
+    REF  1b3f57079297f7dead1723f0f6d567e77ae60d83
+    SHA512 9a75624b0da46fed1b00e950a6501a4c21c5c74b7ecfbd8f58633805a26dfcaa8eed05f0795303bbe0c4fc55023b0f870bb5d429f161124bc66e3bddd57ca29b
+    HEAD_REF master
     PATCHES
         "openssl_depend_libs.patch"
         "ignore_copying.patch"
         "install_dlls.patch"
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" GETDNS_ENABLE_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" GETDNS_ENABLE_SHARED)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
