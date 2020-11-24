@@ -302,6 +302,47 @@ namespace vcpkg::PortFileProvider
             {
             }
             ~BaselineProviderImpl() { }
+
+            const std::map<std::string, VersionSpec>& get_baseline_cache() const
+            {
+                return baseline_cache.get_lazy([&]() -> auto {
+                    auto maybe_baseline_file = get_baseline_json_path(paths, baseline);
+                    Checks::check_exit(VCPKG_LINE_INFO, maybe_baseline_file.has_value(), "Couldn't find baseline.json");
+                    auto baseline_file = maybe_baseline_file.value_or_exit(VCPKG_LINE_INFO);
+
+                    auto value = Json::parse_file(VCPKG_LINE_INFO, paths.get_filesystem(), baseline_file);
+                    if (!value.first.is_object())
+                    {
+                        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                                  "Error: `baseline.json` does not have a top-level object.");
+                    }
+
+                    const auto& obj = value.first.object();
+                    auto baseline_value = obj.get("default");
+                    if (!baseline_value)
+                    {
+                        Checks::exit_with_message(
+                            VCPKG_LINE_INFO, "Error: `baseline.json` does not contain the baseline \"%s\"", "default");
+                    }
+
+                    Json::Reader r;
+                    std::map<std::string, VersionT, std::less<>> result;
+                    r.visit_in_key(*baseline_value, "default", result, BaselineDeserializer::instance);
+                    if (!r.errors().empty())
+                    {
+                        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                                  "Error: failed to parse `baseline.json`:\n%s",
+                                                  Strings::join("\n", r.errors()));
+                    }
+
+                    std::map<std::string, VersionSpec> cache;
+                    for (auto&& kv_pair : result)
+                    {
+                        cache.emplace(kv_pair.first, VersionSpec(kv_pair.first, kv_pair.second, Scheme::String));
+                    }
+                    return cache;
+                });
+            }
         };
 
         struct VersionedPortfileProviderImpl
@@ -349,6 +390,7 @@ namespace vcpkg::PortFileProvider
                            maybe_versions_array != nullptr && maybe_versions_array->is_array(),
                            "Error: `%s.json` does not contain a versions array.",
                            port_name);
+        const auto port = port_name.to_string();
 
         // Avoid warning treated as error.
         if (maybe_versions_array != nullptr)
@@ -367,12 +409,12 @@ namespace vcpkg::PortFileProvider
                                    version.version.to_string(),
                                    version.git_tree);
 
-                VersionSpec spec(port_name.to_string(), version.version, version.scheme);
-                m_impl->versions_cache[port_name.to_string()].push_back(spec);
+                VersionSpec spec(port, version.version, version.scheme);
+                m_impl->versions_cache[port].push_back(spec);
                 m_impl->git_tree_cache[spec] = version.git_tree;
             }
         }
-        return m_impl->versions_cache.at(port_name.to_string());
+        return m_impl->versions_cache.at(port);
     }
 
     ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
@@ -427,51 +469,12 @@ namespace vcpkg::PortFileProvider
 
     Optional<VersionSpec> BaselineProvider::get_baseline_version(StringView port_name) const
     {
-        const auto& cache = get_baseline_cache();
+        const auto& cache = m_impl->get_baseline_cache();
         auto it = cache.find(port_name.to_string());
         if (it != cache.end())
         {
             return it->second;
         }
         return nullopt;
-    }
-
-    const std::map<std::string, VersionSpec>& BaselineProvider::get_baseline_cache() const
-    {
-        return m_impl->baseline_cache.get_lazy([&]() -> auto {
-            auto maybe_baseline_file = get_baseline_json_path(m_impl->paths, m_impl->baseline);
-            Checks::check_exit(VCPKG_LINE_INFO, maybe_baseline_file.has_value(), "Couldn't find baseline.json");
-            auto baseline_file = maybe_baseline_file.value_or_exit(VCPKG_LINE_INFO);
-
-            auto value = Json::parse_file(VCPKG_LINE_INFO, m_impl->paths.get_filesystem(), baseline_file);
-            if (!value.first.is_object())
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Error: `baseline.json` does not have a top-level object.");
-            }
-
-            const auto& obj = value.first.object();
-            auto baseline_value = obj.get("default");
-            if (!baseline_value)
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Error: `baseline.json` does not contain the baseline \"%s\"", "default");
-            }
-
-            Json::Reader r;
-            std::map<std::string, VersionT, std::less<>> result;
-            r.visit_in_key(*baseline_value, "default", result, BaselineDeserializer::instance);
-            if (!r.errors().empty())
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Error: failed to parse `baseline.json`:\n%s", Strings::join("\n", r.errors()));
-            }
-
-            std::map<std::string, VersionSpec> cache;
-            for (auto&& kv_pair : result)
-            {
-                cache.emplace(kv_pair.first, VersionSpec(kv_pair.first, kv_pair.second, Scheme::String));
-            }
-            return cache;
-        });
     }
 }
