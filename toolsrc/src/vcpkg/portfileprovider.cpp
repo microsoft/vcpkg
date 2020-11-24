@@ -292,11 +292,6 @@ namespace vcpkg::PortFileProvider
     {
         struct BaselineProviderImpl
         {
-            const VcpkgPaths& paths;
-            const std::string baseline;
-
-            Lazy<std::map<std::string, VersionSpec>> baseline_cache;
-
             BaselineProviderImpl(const VcpkgPaths& paths, const std::string& baseline)
                 : paths(paths), baseline(baseline)
             {
@@ -343,17 +338,27 @@ namespace vcpkg::PortFileProvider
                     return cache;
                 });
             }
+
+        private:
+            const VcpkgPaths& paths;
+            const std::string baseline;
+            Lazy<std::map<std::string, VersionSpec>> baseline_cache;
         };
 
         struct VersionedPortfileProviderImpl
         {
-            const VcpkgPaths& paths;
             std::map<std::string, std::vector<VersionSpec>> versions_cache;
             std::unordered_map<VersionSpec, std::string, VersionSpecHasher> git_tree_cache;
             std::unordered_map<VersionSpec, SourceControlFileLocation, VersionSpecHasher> control_cache;
 
             VersionedPortfileProviderImpl(const VcpkgPaths& paths) : paths(paths) { }
             ~VersionedPortfileProviderImpl() { }
+
+            const VcpkgPaths& get_paths() const { return paths; }
+            Files::Filesystem& get_filesystem() const { return paths.get_filesystem(); }
+
+        private:
+            const VcpkgPaths& paths;
         };
     }
 
@@ -371,14 +376,14 @@ namespace vcpkg::PortFileProvider
             return cache_it->second;
         }
 
-        auto maybe_versions_json_path = get_versions_json_path(m_impl->paths, port_name);
+        auto maybe_versions_json_path = get_versions_json_path(m_impl->get_paths(), port_name);
         Checks::check_exit(VCPKG_LINE_INFO,
                            maybe_versions_json_path.has_value(),
                            "Couldn't find a versions database file: %s.json.",
                            port_name);
         auto versions_json_path = maybe_versions_json_path.value_or_exit(VCPKG_LINE_INFO);
 
-        auto versions_json = Json::parse_file(VCPKG_LINE_INFO, m_impl->paths.get_filesystem(), versions_json_path);
+        auto versions_json = Json::parse_file(VCPKG_LINE_INFO, m_impl->get_filesystem(), versions_json_path);
         Checks::check_exit(VCPKG_LINE_INFO,
                            versions_json.first.is_object(),
                            "Error: `%s.json` does not have a top level object.",
@@ -439,9 +444,9 @@ namespace vcpkg::PortFileProvider
 
         const std::string git_tree = git_tree_cache_it->second;
         auto port_directory =
-            m_impl->paths.git_checkout_port(m_impl->paths.get_filesystem(), version_spec.port_name, git_tree);
+            m_impl->get_paths().git_checkout_port(m_impl->get_filesystem(), version_spec.port_name, git_tree);
 
-        auto maybe_control_file = Paragraphs::try_load_port(m_impl->paths.get_filesystem(), port_directory);
+        auto maybe_control_file = Paragraphs::try_load_port(m_impl->get_filesystem(), port_directory);
         if (auto scf = maybe_control_file.get())
         {
             if (scf->get()->core_paragraph->name == version_spec.port_name)
