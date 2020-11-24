@@ -115,10 +115,10 @@ foreach(BUILD_TYPE dbg rel)
 	set(LINUX_ONLY_PATCHES)
 	set(UWP_ONLY_PATCHES)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-		set(STATIC_ONLY_PATCHES ${TF_PATCHES_PREFIX}change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
+		set(STATIC_ONLY_PATCHES ../tensorflow-common/change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
 	endif()
 	if(VCPKG_TARGET_IS_LINUX)
-		set(LINUX_ONLY_PATCHES ${TF_PATCHES_PREFIX}fix-linux-build.patch)
+		set(LINUX_ONLY_PATCHES ../tensorflow-common/fix-linux-build.patch)
 	endif()
 	if(VCPKG_TARGET_IS_UWP)
 		set(UWP_ONLY_PATCHES ${TF_PATCHES_PREFIX}fix-uwp-build.patch)
@@ -130,9 +130,9 @@ foreach(BUILD_TYPE dbg rel)
 		SHA512 e497ef4564f50abf9f918be4522cf702f4cf945cb1ebf83af1386ac4ddc7373b3ba70c7f803f8ca06faf2c6b5396e60b1e0e9b97bfbd667e733b08b6e6d70ef0
 		HEAD_REF master
 		PATCHES
-			${TF_PATCHES_PREFIX}fix-build-error.patch # Fix namespace error
-			${TF_PATCHES_PREFIX}fix-dbg-build-errors.patch # Fix no return statement
-			${TF_PATCHES_PREFIX}fix-more-build-errors.patch # Fix no return statement
+			../tensorflow-common/fix-build-error.patch # Fix namespace error
+			../tensorflow-common/fix-dbg-build-errors.patch # Fix no return statement
+			../tensorflow-common/fix-more-build-errors.patch # Fix no return statement
 			${STATIC_ONLY_PATCHES}
 			${LINUX_ONLY_PATCHES}
 			${UWP_ONLY_PATCHES}

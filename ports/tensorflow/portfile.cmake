@@ -2,9 +2,8 @@ vcpkg_fail_port_install(ON_ARCH "x86" "arm")
 
 set(TF_LIB_SUFFIX "")
 set(TF_PORT_SUFFIX "")
-set(TF_PATCHES_PREFIX "../tensorflow-cc/")
 set(TF_INCLUDE_DIRS "${INSTALL_PREFIX}/${TARGET_TRIPLET}/include")
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}-cc)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../tensorflow-common")
 include(tensorflow-common)
 
 file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bazel-bin/tensorflow/include/tensorflow/c/c_api.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/tensorflow/c)
