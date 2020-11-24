@@ -5,7 +5,11 @@ endif()
 if(EXISTS ${CURRENT_INSTALLED_DIR}/share/mozjpeg/copyright)
     message(FATAL_ERROR "'${PORT}' conflicts with 'mozjpeg'. Please remove mozjpeg:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
 endif()
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    # the release doesn't have `__declspec(dllexport)`.
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 
 vcpkg_download_distfile(ARCHIVE
     URLS        "http://www.ijg.org/files/jpegsr9d.zip"
