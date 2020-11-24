@@ -370,7 +370,7 @@ gdcm:x64-linux               = skip
 geos:arm-uwp=fail
 geos:x64-uwp=fail
 
-# Webset cannot be reached temporary
+# Website cannot be reached temporary
 getdns:arm64-windows=skip
 getdns:arm-uwp=skip
 getdns:x64-linux=skip
