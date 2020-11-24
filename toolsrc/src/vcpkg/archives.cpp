@@ -107,7 +107,6 @@ namespace vcpkg::Archives
             using namespace std::chrono_literals;
             std::this_thread::sleep_for(retry_delay);
             fs.rename(to_path_partial, to_path, ec);
-            System::printf("fs.rename(%s, %s)\n", fs::u8string(to_path_partial), fs::u8string(to_path));
             retry_delay *= 2;
         }
 
