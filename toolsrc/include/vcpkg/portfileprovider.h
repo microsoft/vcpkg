@@ -41,11 +41,11 @@ namespace vcpkg::PortFileProvider
     struct IVersionedPortfileProvider
     {
         virtual ExpectedS<const SourceControlFileLocation&> get_control_file(
-            const std::string& name, const vcpkg::Versions::Version& version) = 0;
+            const std::string& name, const vcpkg::Versions::Version& version) const = 0;
     };
 
     struct IBaselineProvider
     {
-        virtual Optional<Versions::Version> get_baseline(const std::string& name) = 0;
+        virtual Optional<Versions::Version> get_baseline(const std::string& name) const = 0;
     };
 }

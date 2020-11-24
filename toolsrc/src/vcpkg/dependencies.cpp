@@ -1161,8 +1161,8 @@ namespace vcpkg::Dependencies
             using IBaselineProvider = PortFileProvider::IBaselineProvider;
 
         public:
-            VersionedPackageGraph(IVersionedPortfileProvider& ver_provider,
-                                  IBaselineProvider& base_provider,
+            VersionedPackageGraph(const IVersionedPortfileProvider& ver_provider,
+                                  const IBaselineProvider& base_provider,
                                   const CMakeVars::CMakeVarProvider& var_provider)
                 : m_ver_provider(ver_provider), m_base_provider(base_provider), m_var_provider(var_provider)
             {
@@ -1175,8 +1175,8 @@ namespace vcpkg::Dependencies
             ExpectedS<ActionPlan> finalize_extract_plan();
 
         private:
-            IVersionedPortfileProvider& m_ver_provider;
-            IBaselineProvider& m_base_provider;
+            const IVersionedPortfileProvider& m_ver_provider;
+            const IBaselineProvider& m_base_provider;
             const CMakeVars::CMakeVarProvider& m_var_provider;
 
             struct DepSpec
@@ -1527,7 +1527,7 @@ namespace vcpkg::Dependencies
 
         static Optional<Versions::Version> dep_to_version(const std::string& name,
                                                           const DependencyConstraint& dc,
-                                                          PortFileProvider::IBaselineProvider& base_provider)
+                                                          const PortFileProvider::IBaselineProvider& base_provider)
         {
             auto maybe_cons = to_version(dc);
             if (maybe_cons)
@@ -1796,13 +1796,12 @@ namespace vcpkg::Dependencies
         }
     }
 
-    ExpectedS<ActionPlan> create_versioned_install_plan(PortFileProvider::IVersionedPortfileProvider& provider,
-                                                        PortFileProvider::IBaselineProvider& bprovider,
+    ExpectedS<ActionPlan> create_versioned_install_plan(const PortFileProvider::IVersionedPortfileProvider& provider,
+                                                        const PortFileProvider::IBaselineProvider& bprovider,
                                                         const CMakeVars::CMakeVarProvider& var_provider,
                                                         const std::vector<Dependency>& deps,
                                                         const std::vector<DependencyOverride>& overrides,
-                                                        const PackageSpec& toplevel,
-                                                        const CreateInstallPlanOptions& /*options*/)
+                                                        const PackageSpec& toplevel)
     {
         VersionedPackageGraph vpg(provider, bprovider, var_provider);
         for (auto&& o : overrides)

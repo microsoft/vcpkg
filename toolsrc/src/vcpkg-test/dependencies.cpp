@@ -24,9 +24,9 @@ using Test::PackageSpecMap;
 
 struct MockBaselineProvider : PortFileProvider::IBaselineProvider
 {
-    std::map<std::string, Versions::Version> v;
+    mutable std::map<std::string, Versions::Version> v;
 
-    Optional<Versions::Version> get_baseline(const std::string& name) override
+    Optional<Versions::Version> get_baseline(const std::string& name) const override
     {
         auto it = v.find(name);
         if (it == v.end()) return nullopt;
@@ -36,10 +36,10 @@ struct MockBaselineProvider : PortFileProvider::IBaselineProvider
 
 struct MockVersionedPortfileProvider : PortFileProvider::IVersionedPortfileProvider
 {
-    std::map<std::string, std::map<Versions::Version, SourceControlFileLocation>> v;
+    mutable std::map<std::string, std::map<Versions::Version, SourceControlFileLocation>> v;
 
     ExpectedS<const SourceControlFileLocation&> get_control_file(const std::string& name,
-                                                                 const vcpkg::Versions::Version& version) override
+                                                                 const vcpkg::Versions::Version& version) const override
     {
         auto it = v.find(name);
         if (it == v.end()) return std::string("Unknown port name");
