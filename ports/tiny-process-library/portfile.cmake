@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.com
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eidheim/tiny-process-library
-    REF v2.0.3
-    SHA512 fce2fd220be6fafd207ccb7c4b5be4b6345f4b51644a24c24ff6273e427f7bb2d65c2c0cfefd7f800be136ec8f8244a1ad0c118eb0f20a5d9216a32f06db5c09
+    REF v2.0.4
+    SHA512 bbdd268361159b7c64cb60f29afa780ee5e57fa696f0683a55cb9824ec5985c8229a9a8217d2b9ecdd194b9a3acbbd75a1a821392361fbc85b1f6841f40c95db
     HEAD_REF master
 )
 
