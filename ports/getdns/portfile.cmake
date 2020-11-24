@@ -3,7 +3,7 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO getdnsapi/getdns
-    REF  1b3f57079297f7dead1723f0f6d567e77ae60d83
+    REF  1b3f57079297f7dead1723f0f6d567e77ae60d83 # 1.6.0
     SHA512 9a75624b0da46fed1b00e950a6501a4c21c5c74b7ecfbd8f58633805a26dfcaa8eed05f0795303bbe0c4fc55023b0f870bb5d429f161124bc66e3bddd57ca29b
     HEAD_REF master
     PATCHES
