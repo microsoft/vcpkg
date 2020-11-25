@@ -1,8 +1,9 @@
 import sys
 
 version = sys.argv[1]
+lib_suffix = "" if len(sys.argv) < 3 else sys.argv[2]
 
-with open(f"libtensorflow_cc.a.{version}-2.params", "w") as f_out:
+with open(f"libtensorflow{lib_suffix}.a.{version}-2.params", "w") as f_out:
     parts = []
     with open(f"libtensorflow_framework.so.{version}-2.params", "r") as f_in:
         skip_next = False
@@ -16,7 +17,7 @@ with open(f"libtensorflow_cc.a.{version}-2.params", "w") as f_out:
                 f_out.write(line)
                 parts.append(line)
     parts = set(parts)
-    with open(f"libtensorflow_cc.so.{version}-2.params", "r") as f_in:
+    with open(f"libtensorflow{lib_suffix}.so.{version}-2.params", "r") as f_in:
         skip_next = False
         for line in f_in:
             if skip_next:
