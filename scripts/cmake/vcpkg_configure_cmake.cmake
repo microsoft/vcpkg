@@ -213,7 +213,7 @@ function(vcpkg_configure_cmake)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/osx.cmake")
         elseif(VCPKG_TARGET_IS_FREEBSD)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
-        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
+        elseif(VCPKG_TARGET_IS_IOS)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
         else()
             message(STATUS "Unknown VCPKG target. No VCPKG_CHAINLOAD_TOOLCHAIN_FILE set!")
@@ -264,8 +264,11 @@ function(vcpkg_configure_cmake)
         endif()
     endforeach()
 
+    set(VCPKG_BUILD_CMAKE_TYPE_debug "Debug")
+    set(VCPKG_BUILD_CMAKE_TYPE_release "Release")
+
     foreach(buildtype IN LISTS VCPKG_BUILD_TYPES)
-        set(${VCPKG_BUILD_SHORT_NAME_${buildtype}}_command
+        set(${VCPKG_BUILD_TYPE_SHORT_NAME_${buildtype}}_command
             ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} ${_csc_OPTIONS} ${_csc_OPTIONS_${buildtype}}
             -G ${GENERATOR}
             -DCMAKE_BUILD_TYPE=${VCPKG_BUILD_CMAKE_TYPE_${buildtype}}
@@ -284,7 +287,7 @@ function(vcpkg_configure_cmake)
             "rule CreateProcess\n  command = $process\n\n"
         )
         foreach(buildtype IN LISTS VCPKG_BUILD_TYPES)
-            set(buildshort ${VCPKG_BUILD_SHORT_NAME_${buildtype}})
+            set(buildshort ${VCPKG_BUILD_TYPE_SHORT_NAME_${buildtype}})
             set(${buildtype}_line "build ../${TARGET_TRIPLET}-${buildshort}/CMakeCache.txt: CreateProcess\n  process = cmd /c \"cd ../${TARGET_TRIPLET}-${buildshort} && ")
             foreach(arg ${${buildshort}_command})
                 string(APPEND ${buildtype}_line "\"${arg}\" ")
@@ -302,12 +305,12 @@ function(vcpkg_configure_cmake)
         )
     else()
         foreach(buildtype IN LISTS VCPKG_BUILD_TYPES)
-            message(STATUS "Configuring ${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_${buildtype}}")
-            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_${buildtype}})
+            message(STATUS "Configuring ${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE_SHORT_NAME_${buildtype}}")
+            file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE_SHORT_NAME_${buildtype}})
             vcpkg_execute_required_process(
-                COMMAND ${${VCPKG_BUILD_SHORT_NAME_${buildtype}}_command}
-                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${VCPKG_BUILD_SHORT_NAME_${buildtype}}
-                LOGNAME ${_csc_LOGNAME}-${VCPKG_BUILD_SHORT_NAME_${buildtype}}
+                COMMAND ${${VCPKG_BUILD_TYPE_SHORT_NAME_${buildtype}}_command}
+                WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${VCPKG_BUILD_TYPE_SHORT_NAME_${buildtype}}
+                LOGNAME ${_csc_LOGNAME}-${VCPKG_BUILD_TYPE_SHORT_NAME_${buildtype}}
             )
         endforeach()
     endif()

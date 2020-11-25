@@ -58,6 +58,9 @@ function(vcpkg_configure_qmake)
     set(PKGCONFIG_INSTALLED_SHARE_DIR "${CURRENT_INSTALLED_DIR}/share/pkgconfig")
     set(PKGCONFIG_PACKAGES_SHARE_DIR "${CURRENT_PACKAGES_DIR}/share/pkgconfig")
 
+    list(APPEND VCPKG_BUILD_QMAKE_CONFIG_release "CONFIG+=release;CONFIG-=debug")
+    list(APPEND VCPKG_BUILD_QMAKE_CONFIG_debug "CONFIG-=release;CONFIG+=debug")
+
     foreach(buildtype IN LISTS VCPKG_BUILD_TYPES)
         #Cleanup
         file(REMOVE_RECURSE "${VCPKG_BUILDTREE_TRIPLET_DIR_${buildtype}}")
