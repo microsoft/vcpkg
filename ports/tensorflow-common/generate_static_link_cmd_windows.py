@@ -2,10 +2,11 @@ import os.path
 import re
 import sys
 
+lib_suffix = "" if len(sys.argv) < 3 else sys.argv[2]
 with open(sys.argv[1], "r") as f_in:
     with open("static_link.bat", "w") as f_out:
         p_setenv = re.compile("^\s*(SET .+=.*)$")
-        p_linker = re.compile(".+link\\.exe.+tensorflow_cc\\.dll-2\\.params.*")
+        p_linker = re.compile(fr".+link\.exe.+tensorflow{lib_suffix}\.dll-2\.params.*")
         env = []
         for line in f_in:
             if line.startswith("cd"):
@@ -28,7 +29,7 @@ with open(sys.argv[1], "r") as f_in:
                                 t = t[:-len("link.exe")] + "lib.exe\""
                             elif t == "/DLL" or t.lower()[1:].startswith("defaultlib:") or t.lower()[1:].startswith("ignore") or t.startswith("/OPT:") or t.startswith("/DEF:") or t.startswith("/DEBUG:") or t.startswith("/INCREMENTAL:"):
                                 continue
-                            elif t[0] == '@' and t.endswith("tensorflow_cc.dll-2.params"):
+                            elif t[0] == '@' and t.endswith(f"tensorflow{lib_suffix}.dll-2.params"):
                                 t = t[:-len("dll-2.params")] + "lib-2.params-part1"
                                 params_file = t[1:-len("-part1")]
                             line += t + " "
