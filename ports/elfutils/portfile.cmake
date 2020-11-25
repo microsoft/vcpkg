@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://sourceware.org/git/elfutils
-    REF 839342ce705d1d614585c10f736a7e4ce35543d0 #elfutils-0.180
+    REF b503c358dde835d8a1ae3ebd4968755ff396f814 #elfutils-0.182
     PATCHES configure.ac.patch
 )
 
@@ -16,10 +16,14 @@ vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
     OPTIONS --disable-debuginfod 
+            --enable-libdebuginfod=dummy
             --with-zlib
             --with-bzlib
             --with-lzma
+            --with-zstd
             --enable-maintainer-mode
+    OPTIONS_RELEASE
+            ac_cv_null_dereference=no # deactivating Werror due to null dereferences since NDEBUG is passed and asserts thus disabled/removed
 )
 
 vcpkg_install_make()
@@ -28,7 +32,17 @@ vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/locale)
 
+# Remove files with wrong linkage
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(_lib_suffix "${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
+else()
+    set(_lib_suffix "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+endif()
+file(GLOB_RECURSE TO_REMOVE "${CURRENT_PACKAGES_DIR}/lib/*${_lib_suffix}" "${CURRENT_PACKAGES_DIR}/debug/lib/*${_lib_suffix}")
+file(REMOVE ${TO_REMOVE})
+ 
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
