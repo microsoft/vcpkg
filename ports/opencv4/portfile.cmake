@@ -21,6 +21,7 @@ vcpkg_from_github(
       0004-fix-policy-CMP0057.patch
       0006-jpeg2000_getref.patch
       0009-fix-uwp.patch
+      0010-fix-interface_link_libraries.patch # Remove this patch when the next update
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")

@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/parameter_python
-    REF boost-1.73.0
-    SHA512 a2c05d5840465ed042dc2144d18b917cd68d1f89d0f616203663abbdf0d28c075b5bd2615384202e2584a4fbb663aa7fdee05d534a04c5c08f9a98fd901affbf
+    REF boost-1.74.0
+    SHA512 a8661adbb4f89e41e1676574e15582135a5fdae3be303cee93c2ce55cc01a6fe18a8b5040c4328cae69e188195f94e0821e47f59a0ca0b3641b2cd58563ef5eb
     HEAD_REF master
 )
 

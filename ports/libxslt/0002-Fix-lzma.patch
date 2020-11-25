@@ -4,7 +4,7 @@ index 0d1953d..0e538ef 100644
 +++ b/win32/Makefile.msvc
 @@ -62,9 +62,9 @@ LDFLAGS = $(LDFLAGS) /LIBPATH:$(BINDIR) /LIBPATH:$(LIBPREFIX)
  # The libraries are needed for static builds (the makefile builds all tools and dlls)
- LIBS = wsock32.lib libiconv.lib libcharset.lib
+ LIBS = wsock32.lib iconv.lib charset.lib
  !if "$(DEBUG)" == "1"
 -LIBS = $(LIBS) zlibd.lib
 +LIBS = $(LIBS) zlibd.lib lzmad.lib

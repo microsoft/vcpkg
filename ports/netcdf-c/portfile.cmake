@@ -9,6 +9,7 @@ vcpkg_from_github(
         config-pkg-location.patch
         use_targets.patch
         fix-dependency-libmath.patch
+        fix-linkage-error.patch
 )
 
 #Remove outdated find modules

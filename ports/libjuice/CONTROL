@@ -1,5 +1,5 @@
 Source: libjuice
-Version: 0.5.2
+Version: 0.6.0
 Homepage: https://github.com/paullouisageneau/libjuice
 Description: The library is a simplified implementation of the Interactive Connectivity Establishment (ICE) protocol in C for POSIX platforms (including Linux and Apple macOS) and Microsoft Windows.
 

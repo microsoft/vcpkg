@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(LIBSPATIALITE_VERSION_STR "4.3.0a")
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.gaia-gis.it/gaia-sins/libspatialite-sources/libspatialite-${LIBSPATIALITE_VERSION_STR}.tar.gz"
@@ -38,8 +37,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
 
     set(LIBS_ALL_DBG
-        "${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib \
-        ${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib \
+        "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib \
+        ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib \
         ${CURRENT_INSTALLED_DIR}/debug/lib/sqlite3.lib \
         ${CURRENT_INSTALLED_DIR}/debug/lib/freexl.lib \
         ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
@@ -48,8 +47,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib"
        )
     set(LIBS_ALL_REL
-        "${CURRENT_INSTALLED_DIR}/lib/libiconv.lib \
-        ${CURRENT_INSTALLED_DIR}/lib/libcharset.lib \
+        "${CURRENT_INSTALLED_DIR}/lib/iconv.lib \
+        ${CURRENT_INSTALLED_DIR}/lib/charset.lib \
         ${CURRENT_INSTALLED_DIR}/lib/sqlite3.lib \
         ${CURRENT_INSTALLED_DIR}/lib/freexl.lib \
         ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \

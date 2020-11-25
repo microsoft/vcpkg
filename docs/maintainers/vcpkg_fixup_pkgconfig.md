@@ -32,11 +32,13 @@ This argument has been deprecated and has no effect.
 ### IGNORE_FLAGS (deprecated)
 This argument has been deprecated and has no effect.
 
+### SKIP_CHECK
+Skips the library checks in vcpkg_fixup_pkgconfig. Only use if the script itself has unhandled cases. 
+
 ## Notes
 Still work in progress. If there are more cases which can be handled here feel free to add them
 
 ## Examples
-
 * [brotli](https://github.com/Microsoft/vcpkg/blob/master/ports/brotli/portfile.cmake)
 
 ## Source

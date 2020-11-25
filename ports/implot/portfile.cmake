@@ -3,10 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO epezent/implot
-    REF v0.7
-    SHA512 b4b1c8ab8d031c884626cf2b31d30baa786b5a1942aabf0856cdb8f2fa091c8117d165c4789a5f9b58ae7a01e89e43e7145a308cfe64af6e28da776d1707c125
+    REF v0.8
+    SHA512 7c26ddc3e5e00cf3d18c201ec71f62461bed6816abbf72a0a227a8c21a0b674dfb8903e2afc053c9e60f25e7d3ef6e0818b439a4d697a2da1dd2abdcf43c052b
     HEAD_REF master
-    PATCHES mac_os_build_fix.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
