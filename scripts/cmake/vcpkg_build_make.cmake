@@ -94,7 +94,11 @@ function(vcpkg_build_make)
         #TODO: optimize for install-data (release) and install-exec (release/debug)
     else()
         # Compiler requriements
-        find_program(MAKE make REQUIRED)
+        if(VCPKG_HOST_IS_OPENBSD)
+            find_program(MAKE gmake REQUIRED)
+        else()
+            find_program(MAKE make REQUIRED)
+        endif()
         set(MAKE_COMMAND "${MAKE}")
         # Set make command and install command
         set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})

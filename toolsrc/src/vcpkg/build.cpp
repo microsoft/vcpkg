@@ -694,6 +694,10 @@ namespace vcpkg::Build
         {
             return m_paths.scripts / fs::u8path("toolchains/freebsd.cmake");
         }
+        else if (cmake_system_name == "OpenBSD")
+        {
+            return m_paths.scripts / fs::u8path("toolchains/openbsd.cmake");
+        }
         else if (cmake_system_name == "Android")
         {
             return m_paths.scripts / fs::u8path("toolchains/android.cmake");
