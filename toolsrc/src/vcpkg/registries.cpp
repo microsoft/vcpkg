@@ -84,7 +84,7 @@ namespace
         {
             fs::path registry_path;
 
-            auto version = VersionTDeserializer::instance.visit_object(r, obj);
+            auto version = get_versiont_deserializer_instance().visit_object(r, obj);
 
             r.required_object_field(
                 "version entry", obj, "registry-path", registry_path, Json::PathDeserializer::instance);
@@ -261,26 +261,17 @@ namespace
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Error: `baseline.json` does not have a top-level object.");
             }
 
-            const auto& obj = value.first.object();
-            auto baseline_value = obj.get("default");
-            if (!baseline_value)
+            auto maybe_baseline_versions = parse_baseline_file(paths.get_filesystem(), "default", baseline_file);
+            if (auto baseline_versions = maybe_baseline_versions.get())
             {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Error: `baseline.json` does not contain the baseline \"%s\"", "default");
-            }
-
-            Json::Reader r;
-            std::map<std::string, VersionT, std::less<>> result;
-            r.visit_in_key(*baseline_value, "default", result, BaselineDeserializer::instance);
-
-            if (r.errors().empty())
-            {
-                return result;
+                return std::move(*baseline_versions);
             }
             else
             {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Error: failed to parse `baseline.json`:\n%s", Strings::join("\n", r.errors()));
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                                          "Error: failed to parse `%s`:\n%s",
+                                          fs::u8string(baseline_file),
+                                          maybe_baseline_versions.error());
             }
         }
 

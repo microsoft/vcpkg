@@ -298,7 +298,7 @@ namespace vcpkg::PortFileProvider
             }
             ~BaselineProviderImpl() { }
 
-            const std::map<std::string, VersionSpec>& get_baseline_cache() const
+            const std::map<std::string, VersionT, std::less<>>& get_baseline_cache() const
             {
                 return baseline_cache.get_lazy([&]() -> auto {
                     auto maybe_baseline_file = get_baseline_json_path(paths, baseline);
@@ -312,7 +312,6 @@ namespace vcpkg::PortFileProvider
                                        "default",
                                        fs::u8string(baseline_file));
                     auto baselines_map = *maybe_baselines_map.get();
-
                     return std::move(baselines_map);
                 });
             }
@@ -320,7 +319,7 @@ namespace vcpkg::PortFileProvider
         private:
             const VcpkgPaths& paths;
             const std::string baseline;
-            Lazy<std::map<std::string, VersionSpec>> baseline_cache;
+            Lazy<std::map<std::string, VersionT, std::less<>>> baseline_cache;
         };
 
         struct VersionedPortfileProviderImpl
@@ -428,7 +427,7 @@ namespace vcpkg::PortFileProvider
     }
     BaselineProvider::~BaselineProvider() { }
 
-    Optional<VersionSpec> BaselineProvider::get_baseline_version(StringView port_name) const
+    Optional<VersionT> BaselineProvider::get_baseline_version(StringView port_name) const
     {
         const auto& cache = m_impl->get_baseline_cache();
         auto it = cache.find(port_name.to_string());

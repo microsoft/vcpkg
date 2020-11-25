@@ -48,7 +48,7 @@ namespace vcpkg::PortFileProvider
 
     struct IBaselineProvider
     {
-        virtual Optional<Versions::VersionSpec> get_baseline_version(StringView port_name) const = 0;
+        virtual Optional<VersionT> get_baseline_version(StringView port_name) const = 0;
     };
 
     namespace details
@@ -76,11 +76,9 @@ namespace vcpkg::PortFileProvider
         explicit BaselineProvider(const vcpkg::VcpkgPaths& paths, const std::string& baseline);
         ~BaselineProvider();
 
-        Optional<Versions::VersionSpec> get_baseline_version(StringView port_name) const override;
+        Optional<VersionT> get_baseline_version(StringView port_name) const override;
 
     private:
-        const std::map<std::string, Versions::VersionSpec>& get_baseline_cache() const;
-
         std::unique_ptr<details::BaselineProviderImpl> m_impl;
     };
 }
