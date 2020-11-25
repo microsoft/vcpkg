@@ -6,8 +6,10 @@
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
+#include <vcpkg/metrics.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/remove.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Commands::SetInstalled
@@ -84,7 +86,7 @@ namespace vcpkg::Commands::SetInstalled
             return Util::Sets::contains(specs_installed, ipa.spec);
         });
 
-        Dependencies::print_plan(action_plan, true, paths.ports);
+        Dependencies::print_plan(action_plan, true, paths.builtin_ports_directory());
 
         if (auto p_pkgsconfig = maybe_pkgsconfig.get())
         {
@@ -93,7 +95,7 @@ namespace vcpkg::Commands::SetInstalled
             auto pkgsconfig_path = Files::combine(paths.original_cwd, *p_pkgsconfig);
             auto pkgsconfig_contents = generate_nuget_packages_config(action_plan);
             fs.write_contents(pkgsconfig_path, pkgsconfig_contents, VCPKG_LINE_INFO);
-            System::print2("Wrote NuGet packages config information to ", pkgsconfig_path.u8string(), "\n");
+            System::print2("Wrote NuGet packages config information to ", fs::u8string(pkgsconfig_path), "\n");
         }
 
         if (dry_run == DryRun::Yes)
@@ -140,6 +142,7 @@ namespace vcpkg::Commands::SetInstalled
         auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
         if (it_pkgsconfig != options.settings.end())
         {
+            Metrics::g_metrics.lock()->track_property("x-write-nuget-packages-config", "defined");
             pkgsconfig = it_pkgsconfig->second;
         }
 

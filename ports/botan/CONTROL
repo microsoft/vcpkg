@@ -1,4 +1,8 @@
 Source: botan
-Version: 2.12.1-1
+Version: 2.16.0
+Port-Version: 0
 Homepage: https://botan.randombit.net
 Description: A cryptography library written in C++11
+
+Feature: amalgamation
+Description: Do an amalgamation build of the library

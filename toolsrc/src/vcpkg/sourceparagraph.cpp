@@ -1,5 +1,6 @@
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/expected.h>
+#include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
@@ -9,6 +10,7 @@
 #include <vcpkg/platform-expression.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/triplet.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
 {
@@ -27,6 +29,7 @@ namespace vcpkg
     {
         if (lhs.name != rhs.name) return false;
         if (lhs.version != rhs.version) return false;
+        if (lhs.version_scheme != rhs.version_scheme) return false;
         if (lhs.port_version != rhs.port_version) return false;
         if (!paragraph_equal(lhs.description, rhs.description)) return false;
         if (!paragraph_equal(lhs.maintainers, rhs.maintainers)) return false;
@@ -80,24 +83,6 @@ namespace vcpkg
         static const std::string SUPPORTS = "Supports";
     }
 
-    namespace ManifestFields
-    {
-        constexpr static StringLiteral NAME = "name";
-        constexpr static StringLiteral VERSION = "version-string";
-
-        constexpr static StringLiteral PORT_VERSION = "port-version";
-        constexpr static StringLiteral MAINTAINERS = "maintainers";
-        constexpr static StringLiteral DESCRIPTION = "description";
-        constexpr static StringLiteral HOMEPAGE = "homepage";
-        constexpr static StringLiteral DOCUMENTATION = "documentation";
-        constexpr static StringLiteral LICENSE = "license";
-        constexpr static StringLiteral DEPENDENCIES = "dependencies";
-        constexpr static StringLiteral DEV_DEPENDENCIES = "dev-dependencies";
-        constexpr static StringLiteral FEATURES = "features";
-        constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
-        constexpr static StringLiteral SUPPORTS = "supports";
-    }
-
     static Span<const StringView> get_list_of_valid_fields()
     {
         static const StringView valid_fields[] = {
@@ -116,107 +101,7 @@ namespace vcpkg
         return valid_fields;
     }
 
-    static Span<const StringView> get_list_of_manifest_fields()
-    {
-        constexpr static StringView valid_fields[] = {
-            ManifestFields::NAME,
-            ManifestFields::VERSION,
-
-            ManifestFields::PORT_VERSION,
-            ManifestFields::MAINTAINERS,
-            ManifestFields::DESCRIPTION,
-            ManifestFields::HOMEPAGE,
-            ManifestFields::DOCUMENTATION,
-            ManifestFields::LICENSE,
-            ManifestFields::DEPENDENCIES,
-            ManifestFields::DEV_DEPENDENCIES,
-            ManifestFields::FEATURES,
-            ManifestFields::DEFAULT_FEATURES,
-            ManifestFields::SUPPORTS,
-        };
-
-        return valid_fields;
-    }
-
-    void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list)
-    {
-        Checks::check_exit(VCPKG_LINE_INFO, error_info_list.size() > 0);
-
-        for (auto&& error_info : error_info_list)
-        {
-            Checks::check_exit(VCPKG_LINE_INFO, error_info != nullptr);
-            if (!error_info->error.empty())
-            {
-                System::print2(
-                    System::Color::error, "Error: while loading ", error_info->name, ":\n", error_info->error, '\n');
-            }
-        }
-
-        bool have_remaining_fields = false;
-        for (auto&& error_info : error_info_list)
-        {
-            if (!error_info->extra_fields.empty())
-            {
-                System::print2(System::Color::error,
-                               "Error: There are invalid fields in the control or manifest file of ",
-                               error_info->name,
-                               '\n');
-                System::print2("The following fields were not expected:\n");
-
-                for (const auto& pr : error_info->extra_fields)
-                {
-                    System::print2("    In ", pr.first, ": ", Strings::join(", ", pr.second), "\n");
-                }
-                have_remaining_fields = true;
-            }
-        }
-
-        if (have_remaining_fields)
-        {
-            System::print2("This is the list of valid fields for CONTROL files (case-sensitive): \n\n    ",
-                           Strings::join("\n    ", get_list_of_valid_fields()),
-                           "\n\n");
-            System::print2("And this is the list of valid fields for manifest files: \n\n    ",
-                           Strings::join("\n    ", get_list_of_manifest_fields()),
-                           "\n\n");
-            System::print2("You may need to update the vcpkg binary; try running bootstrap-vcpkg.bat or "
-                           "bootstrap-vcpkg.sh to update.\n\n");
-        }
-
-        for (auto&& error_info : error_info_list)
-        {
-            if (!error_info->missing_fields.empty())
-            {
-                System::print2(System::Color::error,
-                               "Error: There are missing fields in the control file of ",
-                               error_info->name,
-                               '\n');
-                System::print2("The following fields were missing:\n");
-                for (const auto& pr : error_info->missing_fields)
-                {
-                    System::print2("    In ", pr.first, ": ", Strings::join(", ", pr.second), "\n");
-                }
-            }
-        }
-
-        for (auto&& error_info : error_info_list)
-        {
-            if (!error_info->expected_types.empty())
-            {
-                System::print2(System::Color::error,
-                               "Error: There are invalid field types in the CONTROL or manifest file of ",
-                               error_info->name,
-                               '\n');
-                System::print2("The following fields had the wrong types:\n\n");
-
-                for (const auto& pr : error_info->expected_types)
-                {
-                    System::printf("    %s was expected to be %s\n", pr.first, pr.second);
-                }
-                System::print2("\n");
-            }
-        }
-    }
+    void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list);
 
     std::string Type::to_string(const Type& t)
     {
@@ -337,7 +222,7 @@ namespace vcpkg
 
                 fpgh.extra_info.sort_keys();
             }
-            void operator()(SourceControlFile& scf) const
+            [[nodiscard]] std::unique_ptr<ParseControlErrorInfo> operator()(SourceControlFile& scf) const
             {
                 (*this)(*scf.core_paragraph);
                 std::for_each(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), *this);
@@ -347,20 +232,21 @@ namespace vcpkg
                     std::adjacent_find(scf.feature_paragraphs.begin(), scf.feature_paragraphs.end(), FeatureEqual{});
                 if (adjacent_equal != scf.feature_paragraphs.end())
                 {
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              R"(Multiple features with the same name for port %s: %s
+                    auto error_info = std::make_unique<ParseControlErrorInfo>();
+                    error_info->name = scf.core_paragraph->name;
+                    error_info->error = Strings::format(R"(Multiple features with the same name for port %s: %s
     This is invalid; please make certain that features have distinct names.)",
-                                              scf.core_paragraph->name,
-                                              (*adjacent_equal)->name);
+                                                        scf.core_paragraph->name,
+                                                        (*adjacent_equal)->name);
+                    return error_info;
                 }
+                return nullptr;
             }
         } canonicalize{};
     }
 
-    static ParseExpected<SourceParagraph> parse_source_paragraph(const fs::path& path_to_control, Paragraph&& fields)
+    static ParseExpected<SourceParagraph> parse_source_paragraph(const std::string& origin, Paragraph&& fields)
     {
-        auto origin = path_to_control.u8string();
-
         ParagraphParser parser(std::move(fields));
 
         auto spgh = std::make_unique<SourceParagraph>();
@@ -392,10 +278,35 @@ namespace vcpkg
         TextRowCol textrowcol;
         std::string buf;
         parser.optional_field(SourceParagraphFields::BUILD_DEPENDS, {buf, textrowcol});
-        spgh->dependencies = parse_dependencies_list(buf, origin, textrowcol).value_or_exit(VCPKG_LINE_INFO);
+
+        auto maybe_dependencies = parse_dependencies_list(buf, origin, textrowcol);
+        if (maybe_dependencies.has_value())
+        {
+            spgh->dependencies = maybe_dependencies.value_or_exit(VCPKG_LINE_INFO);
+        }
+        else
+        {
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = origin;
+            error_info->error = maybe_dependencies.error();
+            return error_info;
+        }
+
         buf.clear();
         parser.optional_field(SourceParagraphFields::DEFAULT_FEATURES, {buf, textrowcol});
-        spgh->default_features = parse_default_features_list(buf, origin, textrowcol).value_or_exit(VCPKG_LINE_INFO);
+
+        auto maybe_default_features = parse_default_features_list(buf, origin, textrowcol);
+        if (maybe_default_features.has_value())
+        {
+            spgh->default_features = maybe_default_features.value_or_exit(VCPKG_LINE_INFO);
+        }
+        else
+        {
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = origin;
+            error_info->error = maybe_default_features.error();
+            return error_info;
+        }
 
         auto supports_expr = parser.optional_field(SourceParagraphFields::SUPPORTS);
         if (!supports_expr.empty())
@@ -420,9 +331,8 @@ namespace vcpkg
             return spgh;
     }
 
-    static ParseExpected<FeatureParagraph> parse_feature_paragraph(const fs::path& path_to_control, Paragraph&& fields)
+    static ParseExpected<FeatureParagraph> parse_feature_paragraph(const std::string& origin, Paragraph&& fields)
     {
-        auto origin = path_to_control.u8string();
         ParagraphParser parser(std::move(fields));
 
         auto fpgh = std::make_unique<FeatureParagraph>();
@@ -431,9 +341,19 @@ namespace vcpkg
         fpgh->description = Strings::split(parser.required_field(SourceParagraphFields::DESCRIPTION), '\n');
         trim_all(fpgh->description);
 
-        fpgh->dependencies =
-            parse_dependencies_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS), origin)
-                .value_or_exit(VCPKG_LINE_INFO);
+        auto maybe_dependencies =
+            parse_dependencies_list(parser.optional_field(SourceParagraphFields::BUILD_DEPENDS), origin);
+        if (maybe_dependencies.has_value())
+        {
+            fpgh->dependencies = maybe_dependencies.value_or_exit(VCPKG_LINE_INFO);
+        }
+        else
+        {
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = origin;
+            error_info->error = maybe_dependencies.error();
+            return error_info;
+        }
 
         auto err = parser.error_info(fpgh->name.empty() ? origin : fpgh->name);
         if (err)
@@ -443,18 +363,18 @@ namespace vcpkg
     }
 
     ParseExpected<SourceControlFile> SourceControlFile::parse_control_file(
-        const fs::path& path_to_control, std::vector<Parse::Paragraph>&& control_paragraphs)
+        const std::string& origin, std::vector<Parse::Paragraph>&& control_paragraphs)
     {
         if (control_paragraphs.size() == 0)
         {
             auto ret = std::make_unique<Parse::ParseControlErrorInfo>();
-            ret->name = path_to_control.u8string();
+            ret->name = origin;
             return ret;
         }
 
         auto control_file = std::make_unique<SourceControlFile>();
 
-        auto maybe_source = parse_source_paragraph(path_to_control, std::move(control_paragraphs.front()));
+        auto maybe_source = parse_source_paragraph(origin, std::move(control_paragraphs.front()));
         if (const auto source = maybe_source.get())
             control_file->core_paragraph = std::move(*source);
         else
@@ -464,213 +384,400 @@ namespace vcpkg
 
         for (auto&& feature_pgh : control_paragraphs)
         {
-            auto maybe_feature = parse_feature_paragraph(path_to_control, std::move(feature_pgh));
+            auto maybe_feature = parse_feature_paragraph(origin, std::move(feature_pgh));
             if (const auto feature = maybe_feature.get())
                 control_file->feature_paragraphs.emplace_back(std::move(*feature));
             else
                 return std::move(maybe_feature).error();
         }
 
-        canonicalize(*control_file);
+        if (auto maybe_error = canonicalize(*control_file))
+        {
+            return std::move(maybe_error);
+        }
         return control_file;
     }
 
-    static std::vector<std::string> invalid_json_fields(const Json::Object& obj,
-                                                        Span<const StringView> known_fields) noexcept
+    struct PlatformExprDeserializer : Json::IDeserializer<PlatformExpression::Expr>
     {
-        const auto field_is_unknown = [known_fields](StringView sv) {
-            // allow directives
-            if (sv.size() != 0 && *sv.begin() == '$')
-            {
-                return false;
-            }
-            return std::find(known_fields.begin(), known_fields.end(), sv) == known_fields.end();
-        };
+        virtual StringView type_name() const override { return "a platform expression"; }
 
-        std::vector<std::string> res;
-        for (const auto& kv : obj)
+        virtual Optional<PlatformExpression::Expr> visit_string(Json::Reader& r, StringView sv) override
         {
-            if (field_is_unknown(kv.first))
+            auto opt =
+                PlatformExpression::parse_platform_expression(sv, PlatformExpression::MultipleBinaryOperators::Deny);
+            if (auto res = opt.get())
             {
-                res.push_back(kv.first.to_string());
-            }
-        }
-
-        return res;
-    }
-
-    struct StringField : Json::VisitorCrtpBase<StringField>
-    {
-        using type = std::string;
-        StringView type_name() { return type_name_; }
-
-        Optional<std::string> visit_string(Json::Reader&, StringView, StringView sv) { return sv.to_string(); }
-
-        explicit StringField(StringView type_name_) : type_name_(type_name_) { }
-
-    private:
-        StringView type_name_;
-    };
-
-    struct NaturalNumberField : Json::VisitorCrtpBase<NaturalNumberField>
-    {
-        using type = int;
-        StringView type_name() { return "a natural number"; }
-
-        Optional<int> visit_integer(Json::Reader&, StringView, int64_t value)
-        {
-            if (value > std::numeric_limits<int>::max() || value < 0)
-            {
-                return nullopt;
-            }
-            return static_cast<int>(value);
-        }
-    };
-
-    struct BooleanField : Json::VisitorCrtpBase<BooleanField>
-    {
-        using type = bool;
-        StringView type_name() { return "a boolean"; }
-
-        Optional<bool> visit_boolean(Json::Reader&, StringView, bool b) { return b; }
-    };
-
-    enum class AllowEmpty : bool
-    {
-        No,
-        Yes,
-    };
-
-    template<class T>
-    struct ArrayField : Json::VisitorCrtpBase<ArrayField<T>>
-    {
-        using type = std::vector<typename T::type>;
-
-        StringView type_name() { return type_name_; }
-
-        ArrayField(StringView type_name_, AllowEmpty allow_empty, T&& t = {})
-            : type_name_(type_name_), underlying_visitor_(static_cast<T&&>(t)), allow_empty_(allow_empty)
-        {
-        }
-
-        Optional<type> visit_array(Json::Reader& r, StringView key, const Json::Array& arr)
-        {
-            if (allow_empty_ == AllowEmpty::No && arr.size() == 0)
-            {
-                return nullopt;
-            }
-            return r.array_elements(arr, key, underlying_visitor_);
-        }
-
-    private:
-        StringView type_name_;
-        T underlying_visitor_;
-        AllowEmpty allow_empty_;
-    };
-
-    struct ParagraphField : Json::VisitorCrtpBase<ParagraphField>
-    {
-        using type = std::vector<std::string>;
-        StringView type_name() { return "a string or array of strings"; }
-
-        Optional<std::vector<std::string>> visit_string(Json::Reader&, StringView, StringView sv)
-        {
-            std::vector<std::string> out;
-            out.push_back(sv.to_string());
-            return out;
-        }
-
-        Optional<std::vector<std::string>> visit_array(Json::Reader& r, StringView key, const Json::Array& arr)
-        {
-            return r.array_elements(arr, key, StringField{"a string"});
-        }
-    };
-
-    struct IdentifierField : Json::VisitorCrtpBase<IdentifierField>
-    {
-        using type = std::string;
-        StringView type_name() { return "an identifier"; }
-
-        // [a-z0-9]+(-[a-z0-9]+)*, plus not any of {prn, aux, nul, con, lpt[1-9], com[1-9], core, default}
-        static bool is_ident(StringView sv)
-        {
-            static const std::regex BASIC_IDENTIFIER = std::regex(R"([a-z0-9]+(-[a-z0-9]+)*)");
-
-            // we only check for lowercase in RESERVED since we already remove all
-            // strings with uppercase letters from the basic check
-            static const std::regex RESERVED = std::regex(R"(prn|aux|nul|con|(lpt|com)[1-9]|core|default)");
-
-            // back-compat
-            if (sv == "all_modules")
-            {
-                return true;
-            }
-
-            if (!std::regex_match(sv.begin(), sv.end(), BASIC_IDENTIFIER))
-            {
-                return false; // we're not even in the shape of an identifier
-            }
-
-            if (std::regex_match(sv.begin(), sv.end(), RESERVED))
-            {
-                return false; // we're a reserved identifier
-            }
-
-            return true;
-        }
-
-        Optional<std::string> visit_string(Json::Reader&, StringView, StringView sv)
-        {
-            if (is_ident(sv))
-            {
-                return sv.to_string();
+                return std::move(*res);
             }
             else
             {
-                return nullopt;
+                r.add_generic_error(type_name(), opt.error());
+                return PlatformExpression::Expr::Empty();
             }
         }
+
+        static PlatformExprDeserializer instance;
     };
+    PlatformExprDeserializer PlatformExprDeserializer::instance;
 
-    struct PackageNameField : Json::VisitorCrtpBase<PackageNameField>
+    struct DependencyDeserializer : Json::IDeserializer<Dependency>
     {
-        using type = std::string;
-        StringView type_name() { return "a package name"; }
+        virtual StringView type_name() const override { return "a dependency"; }
 
-        static bool is_package_name(StringView sv)
+        constexpr static StringLiteral NAME = "name";
+        constexpr static StringLiteral FEATURES = "features";
+        constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
+        constexpr static StringLiteral PLATFORM = "platform";
+        constexpr static StringLiteral PORT_VERSION = "port-version";
+        constexpr static StringLiteral VERSION_EQ = "version=";
+        constexpr static StringLiteral VERSION_GE = "version>=";
+
+        virtual Span<const StringView> valid_fields() const override
         {
-            if (sv.size() == 0)
+            static const StringView t[] = {
+                NAME,
+                FEATURES,
+                DEFAULT_FEATURES,
+                PLATFORM,
+                PORT_VERSION,
+                VERSION_EQ,
+                VERSION_GE,
+            };
+
+            return t;
+        }
+
+        virtual Optional<Dependency> visit_string(Json::Reader& r, StringView sv) override
+        {
+            if (!Json::PackageNameDeserializer::is_package_name(sv))
             {
-                return false;
+                r.add_generic_error(type_name(),
+                                    "must be lowercase alphanumeric+hyphens, split with periods, and not reserved");
             }
 
-            for (const auto& ident : Strings::split(sv, '.'))
+            Dependency dep;
+            dep.name = sv.to_string();
+            return dep;
+        }
+
+        virtual Optional<Dependency> visit_object(Json::Reader& r, const Json::Object& obj) override
+        {
+            Dependency dep;
+
+            for (const auto& el : obj)
             {
-                if (!IdentifierField::is_ident(ident))
+                if (Strings::starts_with(el.first, "$"))
                 {
-                    return false;
+                    dep.extra_info.insert_or_replace(el.first.to_string(), el.second);
                 }
             }
 
-            return true;
+            static Json::ArrayDeserializer<Json::IdentifierDeserializer> arr_id_d{"an array of identifiers"};
+
+            r.required_object_field(type_name(), obj, NAME, dep.name, Json::PackageNameDeserializer::instance);
+            r.optional_object_field(obj, FEATURES, dep.features, arr_id_d);
+
+            bool default_features = true;
+            r.optional_object_field(obj, DEFAULT_FEATURES, default_features, Json::BooleanDeserializer::instance);
+            if (!default_features)
+            {
+                dep.features.push_back("core");
+            }
+
+            r.optional_object_field(obj, PLATFORM, dep.platform, PlatformExprDeserializer::instance);
+
+            static Json::StringDeserializer version_deserializer{"a version"};
+
+            auto has_eq_constraint =
+                r.optional_object_field(obj, VERSION_EQ, dep.constraint.value, version_deserializer);
+            auto has_ge_constraint =
+                r.optional_object_field(obj, VERSION_GE, dep.constraint.value, version_deserializer);
+            auto has_port_ver = r.optional_object_field(
+                obj, PORT_VERSION, dep.constraint.port_version, Json::NaturalNumberDeserializer::instance);
+
+            if (has_eq_constraint)
+            {
+                dep.constraint.type = Versions::Constraint::Type::Exact;
+                if (has_ge_constraint)
+                {
+                    r.add_generic_error(type_name(), "cannot have both exact and minimum constraints simultaneously");
+                }
+            }
+            else if (has_ge_constraint)
+            {
+                dep.constraint.type = Versions::Constraint::Type::Minimum;
+            }
+            else if (has_port_ver) // does not have a primary constraint
+            {
+                r.add_generic_error(
+                    type_name(),
+                    "\"port-version\" cannot be used without a primary constraint (\"version=\" or \"version>=\")");
+            }
+
+            return dep;
         }
 
-        Optional<std::string> visit_string(Json::Reader&, StringView, StringView sv)
-        {
-            if (!is_package_name(sv))
-            {
-                return nullopt;
-            }
-            return sv.to_string();
-        }
+        static DependencyDeserializer instance;
     };
+    DependencyDeserializer DependencyDeserializer::instance;
+
+    struct DependencyArrayDeserializer final : Json::IDeserializer<std::vector<Dependency>>
+    {
+        virtual StringView type_name() const override { return "an array of dependencies"; }
+
+        virtual Optional<std::vector<Dependency>> visit_array(Json::Reader& r, const Json::Array& arr) override
+        {
+            return r.array_elements(arr, DependencyDeserializer::instance);
+        }
+
+        static DependencyArrayDeserializer instance;
+    };
+    DependencyArrayDeserializer DependencyArrayDeserializer::instance;
+
+    constexpr StringLiteral DependencyDeserializer::NAME;
+    constexpr StringLiteral DependencyDeserializer::FEATURES;
+    constexpr StringLiteral DependencyDeserializer::DEFAULT_FEATURES;
+    constexpr StringLiteral DependencyDeserializer::PLATFORM;
+    constexpr StringLiteral DependencyDeserializer::VERSION_EQ;
+    constexpr StringLiteral DependencyDeserializer::VERSION_GE;
+    constexpr StringLiteral DependencyDeserializer::PORT_VERSION;
+
+    struct DependencyOverrideDeserializer : Json::IDeserializer<DependencyOverride>
+    {
+        virtual StringView type_name() const override { return "an override"; }
+
+        constexpr static StringLiteral NAME = "name";
+        constexpr static StringLiteral PORT_VERSION = "port-version";
+        constexpr static StringLiteral VERSION_RELAXED = "version";
+        constexpr static StringLiteral VERSION_SEMVER = "version-semver";
+        constexpr static StringLiteral VERSION_DATE = "version-date";
+        constexpr static StringLiteral VERSION_STRING = "version-string";
+
+        virtual Span<const StringView> valid_fields() const override
+        {
+            static const StringView t[] = {
+                NAME,
+                PORT_VERSION,
+                VERSION_RELAXED,
+                VERSION_SEMVER,
+                VERSION_DATE,
+                VERSION_STRING,
+            };
+
+            return t;
+        }
+
+        static void visit_impl(StringView type_name,
+                               Json::Reader& r,
+                               const Json::Object& obj,
+                               std::string& name,
+                               std::string& version,
+                               Versions::Scheme& version_scheme,
+                               int& port_version)
+        {
+            static Json::StringDeserializer version_exact_deserializer{"an exact version string"};
+            static Json::StringDeserializer version_relaxed_deserializer{"a relaxed version string"};
+            static Json::StringDeserializer version_semver_deserializer{"a semantic version string"};
+            static Json::StringDeserializer version_date_deserializer{"a date version string"};
+
+            r.required_object_field(type_name, obj, NAME, name, Json::IdentifierDeserializer::instance);
+            bool has_exact = r.optional_object_field(obj, VERSION_STRING, version, version_exact_deserializer);
+            bool has_relax = r.optional_object_field(obj, VERSION_RELAXED, version, version_relaxed_deserializer);
+            bool has_semver = r.optional_object_field(obj, VERSION_SEMVER, version, version_semver_deserializer);
+            bool has_date = r.optional_object_field(obj, VERSION_DATE, version, version_date_deserializer);
+            int num_versions = (int)has_exact + (int)has_relax + (int)has_semver + (int)has_date;
+            if (num_versions == 0)
+            {
+                r.add_generic_error(type_name, "expected a versioning field (example: ", VERSION_STRING, ")");
+            }
+            else if (num_versions > 1)
+            {
+                r.add_generic_error(type_name, "expected only one versioning field");
+            }
+            else
+            {
+                if (has_exact)
+                    version_scheme = Versions::Scheme::String;
+                else if (has_relax)
+                    version_scheme = Versions::Scheme::Relaxed;
+                else if (has_semver)
+                    version_scheme = Versions::Scheme::Semver;
+                else if (has_date)
+                    version_scheme = Versions::Scheme::Date;
+                else
+                    Checks::unreachable(VCPKG_LINE_INFO);
+            }
+
+            r.optional_object_field(obj, PORT_VERSION, port_version, Json::NaturalNumberDeserializer::instance);
+        }
+
+        virtual Optional<DependencyOverride> visit_object(Json::Reader& r, const Json::Object& obj) override
+        {
+            DependencyOverride dep;
+
+            for (const auto& el : obj)
+            {
+                if (Strings::starts_with(el.first, "$"))
+                {
+                    dep.extra_info.insert_or_replace(el.first.to_string(), el.second);
+                }
+            }
+
+            visit_impl(type_name(), r, obj, dep.name, dep.version, dep.version_scheme, dep.port_version);
+
+            return dep;
+        }
+
+        static DependencyOverrideDeserializer instance;
+    };
+    DependencyOverrideDeserializer DependencyOverrideDeserializer::instance;
+
+    constexpr StringLiteral DependencyOverrideDeserializer::NAME;
+    constexpr StringLiteral DependencyOverrideDeserializer::VERSION_STRING;
+    constexpr StringLiteral DependencyOverrideDeserializer::VERSION_RELAXED;
+    constexpr StringLiteral DependencyOverrideDeserializer::VERSION_SEMVER;
+    constexpr StringLiteral DependencyOverrideDeserializer::VERSION_DATE;
+    constexpr StringLiteral DependencyOverrideDeserializer::PORT_VERSION;
+
+    // reasoning for these two distinct types -- FeatureDeserializer and ArrayFeatureDeserializer:
+    // `"features"` may be defined in one of two ways:
+    // - An array of feature objects, which contains the `"name"` field
+    // - An object mapping feature names to feature objects, which do not contain the `"name"` field
+    // `ArrayFeatureDeserializer` is used for the former, `FeatureDeserializer` is used for the latter.
+    struct FeatureDeserializer : Json::IDeserializer<std::unique_ptr<FeatureParagraph>>
+    {
+        virtual StringView type_name() const override { return "a feature"; }
+
+        constexpr static StringLiteral NAME = "name";
+        constexpr static StringLiteral DESCRIPTION = "description";
+        constexpr static StringLiteral DEPENDENCIES = "dependencies";
+
+        virtual Span<const StringView> valid_fields() const override
+        {
+            static const StringView t[] = {DESCRIPTION, DEPENDENCIES};
+            return t;
+        }
+
+        virtual Optional<std::unique_ptr<FeatureParagraph>> visit_object(Json::Reader& r,
+                                                                         const Json::Object& obj) override
+        {
+            auto feature = std::make_unique<FeatureParagraph>();
+            for (const auto& el : obj)
+            {
+                if (Strings::starts_with(el.first, "$"))
+                {
+                    feature->extra_info.insert_or_replace(el.first.to_string(), el.second);
+                }
+            }
+
+            r.required_object_field(
+                type_name(), obj, DESCRIPTION, feature->description, Json::ParagraphDeserializer::instance);
+            r.optional_object_field(obj, DEPENDENCIES, feature->dependencies, DependencyArrayDeserializer::instance);
+
+            return std::move(feature);
+        }
+        static FeatureDeserializer instance;
+    };
+    FeatureDeserializer FeatureDeserializer::instance;
+    constexpr StringLiteral FeatureDeserializer::NAME;
+    constexpr StringLiteral FeatureDeserializer::DESCRIPTION;
+    constexpr StringLiteral FeatureDeserializer::DEPENDENCIES;
+
+    struct ArrayFeatureDeserializer : Json::IDeserializer<std::unique_ptr<FeatureParagraph>>
+    {
+        virtual StringView type_name() const override { return "a feature"; }
+
+        virtual Span<const StringView> valid_fields() const override
+        {
+            static const StringView t[] = {
+                FeatureDeserializer::NAME,
+                FeatureDeserializer::DESCRIPTION,
+                FeatureDeserializer::DEPENDENCIES,
+            };
+            return t;
+        }
+
+        virtual Optional<std::unique_ptr<FeatureParagraph>> visit_object(Json::Reader& r,
+                                                                         const Json::Object& obj) override
+        {
+            std::string name;
+            r.required_object_field(
+                type_name(), obj, FeatureDeserializer::NAME, name, Json::IdentifierDeserializer::instance);
+            auto opt = FeatureDeserializer::instance.visit_object(r, obj);
+            if (auto p = opt.get())
+            {
+                p->get()->name = std::move(name);
+            }
+            return opt;
+        }
+
+        static Json::ArrayDeserializer<ArrayFeatureDeserializer> array_instance;
+    };
+    Json::ArrayDeserializer<ArrayFeatureDeserializer> ArrayFeatureDeserializer::array_instance{
+        "an array of feature objects"};
+
+    struct FeaturesFieldDeserializer : Json::IDeserializer<std::vector<std::unique_ptr<FeatureParagraph>>>
+    {
+        virtual StringView type_name() const override { return "a set of features"; }
+
+        virtual Span<const StringView> valid_fields() const override { return {}; }
+
+        virtual Optional<std::vector<std::unique_ptr<FeatureParagraph>>> visit_array(Json::Reader& r,
+                                                                                     const Json::Array& arr) override
+        {
+            return ArrayFeatureDeserializer::array_instance.visit_array(r, arr);
+        }
+
+        virtual Optional<std::vector<std::unique_ptr<FeatureParagraph>>> visit_object(Json::Reader& r,
+                                                                                      const Json::Object& obj) override
+        {
+            std::vector<std::unique_ptr<FeatureParagraph>> res;
+            std::vector<std::string> extra_fields;
+
+            for (const auto& pr : obj)
+            {
+                if (!Json::IdentifierDeserializer::is_ident(pr.first))
+                {
+                    r.add_generic_error(type_name(),
+                                        "unexpected field '",
+                                        pr.first,
+                                        "': must be lowercase alphanumeric+hyphens and not reserved");
+                    continue;
+                }
+                std::unique_ptr<FeatureParagraph> v;
+                r.visit_in_key(pr.second, pr.first, v, FeatureDeserializer::instance);
+                if (v)
+                {
+                    v->name = pr.first.to_string();
+                    res.push_back(std::move(v));
+                }
+            }
+
+            return std::move(res);
+        }
+
+        static FeaturesFieldDeserializer instance;
+    };
+    FeaturesFieldDeserializer FeaturesFieldDeserializer::instance;
+
+    static constexpr StringView EXPRESSION_WORDS[] = {
+        "WITH",
+        "AND",
+        "OR",
+    };
+    static constexpr StringView VALID_LICENSES[] =
+#include "spdx-licenses.inc"
+        ;
+    static constexpr StringView VALID_EXCEPTIONS[] =
+#include "spdx-licenses.inc"
+        ;
 
     // We "parse" this so that we can add actual license parsing at some point in the future
     // without breaking anyone
-    struct LicenseExpressionField : Json::VisitorCrtpBase<LicenseExpressionField>
+    struct LicenseExpressionDeserializer : Json::IDeserializer<std::string>
     {
-        using type = std::string;
-        StringView type_name() { return "an SPDX license expression"; }
+        virtual StringView type_name() const override { return "an SPDX license expression"; }
 
         enum class Mode
         {
@@ -679,20 +786,7 @@ namespace vcpkg
             ExpectException,
         };
 
-        constexpr static StringView EXPRESSION_WORDS[] = {
-            "WITH",
-            "AND",
-            "OR",
-        };
-        constexpr static StringView VALID_LICENSES[] =
-#include "spdx-licenses.inc"
-            ;
-
-        constexpr static StringView VALID_EXCEPTIONS[] =
-#include "spdx-exceptions.inc"
-            ;
-
-        Optional<std::string> visit_string(Json::Reader&, StringView, StringView sv)
+        virtual Optional<std::string> visit_string(Json::Reader&, StringView sv) override
         {
             Mode mode = Mode::ExpectExpression;
             size_t open_parens = 0;
@@ -805,229 +899,311 @@ namespace vcpkg
                 return sv.to_string();
             }
         }
+
+        static LicenseExpressionDeserializer instance;
     };
+    LicenseExpressionDeserializer LicenseExpressionDeserializer::instance;
 
-    struct PlatformExprField : Json::VisitorCrtpBase<PlatformExprField>
+    struct ManifestDeserializer : Json::IDeserializer<std::unique_ptr<SourceControlFile>>
     {
-        using type = PlatformExpression::Expr;
-        StringView type_name() { return "a platform expression"; }
-
-        Optional<PlatformExpression::Expr> visit_string(Json::Reader&, StringView, StringView sv)
-        {
-            auto opt =
-                PlatformExpression::parse_platform_expression(sv, PlatformExpression::MultipleBinaryOperators::Deny);
-            if (auto res = opt.get())
-            {
-                return std::move(*res);
-            }
-            else
-            {
-                Debug::print("Failed to parse platform expression: ", opt.error(), "\n");
-                return nullopt;
-            }
-        }
-    };
-
-    struct DependencyField : Json::VisitorCrtpBase<DependencyField>
-    {
-        using type = Dependency;
-        StringView type_name() { return "a dependency"; }
+        virtual StringView type_name() const override { return "a manifest"; }
 
         constexpr static StringLiteral NAME = "name";
+
+        // Default is a relaxed semver-like version
+        constexpr static StringLiteral VERSION_RELAXED = "version";
+        constexpr static StringLiteral VERSION_SEMVER = "version-semver";
+        constexpr static StringLiteral VERSION_DATE = "version-date";
+        // Legacy version string, accepts arbitrary string values.
+        constexpr static StringLiteral VERSION_STRING = "version-string";
+
+        constexpr static StringLiteral PORT_VERSION = "port-version";
+        constexpr static StringLiteral MAINTAINERS = "maintainers";
+        constexpr static StringLiteral DESCRIPTION = "description";
+        constexpr static StringLiteral HOMEPAGE = "homepage";
+        constexpr static StringLiteral DOCUMENTATION = "documentation";
+        constexpr static StringLiteral LICENSE = "license";
+        constexpr static StringLiteral DEPENDENCIES = "dependencies";
+        constexpr static StringLiteral DEV_DEPENDENCIES = "dev-dependencies";
         constexpr static StringLiteral FEATURES = "features";
         constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
-        constexpr static StringLiteral PLATFORM = "platform";
-        const static StringView KNOWN_FIELDS[4]; // not constexpr in MSVC 2015
+        constexpr static StringLiteral SUPPORTS = "supports";
+        constexpr static StringLiteral OVERRIDES = "overrides";
 
-        Optional<Dependency> visit_string(Json::Reader&, StringView, StringView sv)
+        virtual Span<const StringView> valid_fields() const override
         {
-            if (!PackageNameField::is_package_name(sv))
-            {
-                return nullopt;
-            }
+            static const StringView t[] = {
+                NAME,
+                VERSION_STRING,
+                VERSION_RELAXED,
+                VERSION_SEMVER,
+                VERSION_DATE,
+                PORT_VERSION,
+                MAINTAINERS,
+                DESCRIPTION,
+                HOMEPAGE,
+                DOCUMENTATION,
+                LICENSE,
+                DEPENDENCIES,
+                DEV_DEPENDENCIES,
+                FEATURES,
+                DEFAULT_FEATURES,
+                SUPPORTS,
+                OVERRIDES,
+            };
 
-            Dependency dep;
-            dep.name = sv.to_string();
-            return dep;
+            return t;
         }
 
-        Optional<Dependency> visit_object(Json::Reader& r, StringView, const Json::Object& obj)
+        virtual Optional<std::unique_ptr<SourceControlFile>> visit_object(Json::Reader& r,
+                                                                          const Json::Object& obj) override
         {
-            {
-                auto extra_fields = invalid_json_fields(obj, KNOWN_FIELDS);
-                if (!extra_fields.empty())
-                {
-                    r.error().add_extra_fields(type_name().to_string(), std::move(extra_fields));
-                }
-            }
+            auto control_file = std::make_unique<SourceControlFile>();
+            control_file->core_paragraph = std::make_unique<SourceParagraph>();
 
-            Dependency dep;
+            auto& spgh = control_file->core_paragraph;
+            spgh->type = Type{Type::PORT};
 
             for (const auto& el : obj)
             {
                 if (Strings::starts_with(el.first, "$"))
                 {
-                    dep.extra_info.insert_or_replace(el.first.to_string(), el.second);
+                    spgh->extra_info.insert_or_replace(el.first.to_string(), el.second);
                 }
             }
 
-            r.required_object_field(type_name(), obj, NAME, dep.name, PackageNameField{});
+            static Json::StringDeserializer url_deserializer{"a url"};
+
+            constexpr static StringView type_name = "vcpkg.json";
+            DependencyOverrideDeserializer::visit_impl(
+                type_name, r, obj, spgh->name, spgh->version, spgh->version_scheme, spgh->port_version);
+
+            r.optional_object_field(obj, MAINTAINERS, spgh->maintainers, Json::ParagraphDeserializer::instance);
+            r.optional_object_field(obj, DESCRIPTION, spgh->description, Json::ParagraphDeserializer::instance);
+            r.optional_object_field(obj, HOMEPAGE, spgh->homepage, url_deserializer);
+            r.optional_object_field(obj, DOCUMENTATION, spgh->documentation, url_deserializer);
+            r.optional_object_field(obj, LICENSE, spgh->license, LicenseExpressionDeserializer::instance);
+            r.optional_object_field(obj, DEPENDENCIES, spgh->dependencies, DependencyArrayDeserializer::instance);
+            static Json::ArrayDeserializer<DependencyOverrideDeserializer> overrides_deserializer{
+                "an array of overrides"};
+            r.optional_object_field(obj, OVERRIDES, spgh->overrides, overrides_deserializer);
+
+            if (obj.contains(DEV_DEPENDENCIES))
+            {
+                System::print2(System::Color::error, DEV_DEPENDENCIES, " are not yet supported");
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
+            r.optional_object_field(obj, SUPPORTS, spgh->supports_expression, PlatformExprDeserializer::instance);
+
             r.optional_object_field(
-                obj, FEATURES, dep.features, ArrayField<IdentifierField>{"an array of identifiers", AllowEmpty::Yes});
+                obj, DEFAULT_FEATURES, spgh->default_features, Json::IdentifierArrayDeserializer::instance);
 
-            bool default_features = true;
-            r.optional_object_field(obj, DEFAULT_FEATURES, default_features, BooleanField{});
-            if (!default_features)
+            r.optional_object_field(
+                obj, FEATURES, control_file->feature_paragraphs, FeaturesFieldDeserializer::instance);
+
+            if (auto maybe_error = canonicalize(*control_file))
             {
-                dep.features.push_back("core");
+                Checks::exit_with_message(VCPKG_LINE_INFO, maybe_error->error);
             }
-
-            r.optional_object_field(obj, PLATFORM, dep.platform, PlatformExprField{});
-
-            return dep;
+            return std::move(control_file);
         }
-    };
-    const StringView DependencyField::KNOWN_FIELDS[] = {NAME, FEATURES, DEFAULT_FEATURES, PLATFORM};
 
-    struct FeatureField : Json::VisitorCrtpBase<FeatureField>
+        static ManifestDeserializer instance;
+    };
+    ManifestDeserializer ManifestDeserializer::instance;
+
+    constexpr StringLiteral ManifestDeserializer::NAME;
+    constexpr StringLiteral ManifestDeserializer::VERSION_STRING;
+    constexpr StringLiteral ManifestDeserializer::VERSION_RELAXED;
+    constexpr StringLiteral ManifestDeserializer::VERSION_SEMVER;
+    constexpr StringLiteral ManifestDeserializer::VERSION_DATE;
+    constexpr StringLiteral ManifestDeserializer::PORT_VERSION;
+    constexpr StringLiteral ManifestDeserializer::MAINTAINERS;
+    constexpr StringLiteral ManifestDeserializer::DESCRIPTION;
+    constexpr StringLiteral ManifestDeserializer::HOMEPAGE;
+    constexpr StringLiteral ManifestDeserializer::DOCUMENTATION;
+    constexpr StringLiteral ManifestDeserializer::LICENSE;
+    constexpr StringLiteral ManifestDeserializer::DEPENDENCIES;
+    constexpr StringLiteral ManifestDeserializer::DEV_DEPENDENCIES;
+    constexpr StringLiteral ManifestDeserializer::FEATURES;
+    constexpr StringLiteral ManifestDeserializer::DEFAULT_FEATURES;
+    constexpr StringLiteral ManifestDeserializer::SUPPORTS;
+    constexpr StringLiteral ManifestDeserializer::OVERRIDES;
+
+    SourceControlFile SourceControlFile::clone() const
     {
-        using type = std::unique_ptr<FeatureParagraph>;
-        StringView type_name() { return "a feature"; }
-
-        constexpr static StringLiteral NAME = "name";
-        constexpr static StringLiteral DESCRIPTION = "description";
-        constexpr static StringLiteral DEPENDENCIES = "dependencies";
-        const static StringView KNOWN_FIELDS[3]; // Not constexpr in MSVC 2015
-
-        Optional<std::unique_ptr<FeatureParagraph>> visit_object(Json::Reader& r, StringView, const Json::Object& obj)
+        SourceControlFile ret;
+        ret.core_paragraph = std::make_unique<SourceParagraph>(*core_paragraph);
+        for (const auto& feat_ptr : feature_paragraphs)
         {
-            {
-                auto extra_fields = invalid_json_fields(obj, KNOWN_FIELDS);
-                if (!extra_fields.empty())
-                {
-                    r.error().add_extra_fields(type_name().to_string(), std::move(extra_fields));
-                }
-            }
-
-            auto feature = std::make_unique<FeatureParagraph>();
-
-            for (const auto& el : obj)
-            {
-                if (Strings::starts_with(el.first, "$"))
-                {
-                    feature->extra_info.insert_or_replace(el.first.to_string(), el.second);
-                }
-            }
-
-            r.required_object_field(type_name(), obj, NAME, feature->name, IdentifierField{});
-            r.required_object_field(type_name(), obj, DESCRIPTION, feature->description, ParagraphField{});
-            r.optional_object_field(obj,
-                                    DEPENDENCIES,
-                                    feature->dependencies,
-                                    ArrayField<DependencyField>{"an array of dependencies", AllowEmpty::Yes});
-
-            return std::move(feature);
+            ret.feature_paragraphs.push_back(std::make_unique<FeatureParagraph>(*feat_ptr));
         }
-    };
-    const StringView FeatureField::KNOWN_FIELDS[] = {NAME, DESCRIPTION, DEPENDENCIES};
+        return ret;
+    }
+
+    Parse::ParseExpected<SourceControlFile> SourceControlFile::parse_manifest_object(const std::string& origin,
+                                                                                     const Json::Object& manifest)
+    {
+        Json::Reader reader;
+
+        auto res = reader.visit(manifest, ManifestDeserializer::instance);
+
+        if (!reader.errors().empty())
+        {
+            auto err = std::make_unique<ParseControlErrorInfo>();
+            err->name = origin;
+            err->other_errors = std::move(reader.errors());
+            return std::move(err);
+        }
+        else if (auto p = res.get())
+        {
+            return std::move(*p);
+        }
+        else
+        {
+            Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
+
+    Optional<std::string> SourceControlFile::check_against_feature_flags(const fs::path& origin,
+                                                                         const FeatureFlagSettings& flags) const
+    {
+        if (!flags.versions)
+        {
+            if (core_paragraph->version_scheme != Versions::Scheme::String)
+            {
+                return Strings::concat(fs::u8string(origin),
+                                       " was rejected because it uses a non-string version scheme and the `",
+                                       VcpkgCmdArguments::VERSIONS_FEATURE,
+                                       "` feature flag is disabled.\nThis can be fixed by using \"version-string\".");
+            }
+
+            auto check_deps = [&](View<Dependency> deps) -> Optional<std::string> {
+                for (auto&& dep : deps)
+                {
+                    if (dep.constraint.type != Versions::Constraint::Type::None)
+                    {
+                        return Strings::concat(fs::u8string(origin),
+                                               " was rejected because it uses constraints and the `",
+                                               VcpkgCmdArguments::VERSIONS_FEATURE,
+                                               "` feature flag is disabled.\nThis can be fixed by removing uses of "
+                                               "\"version>=\" and \"version=\".");
+                    }
+                }
+                return nullopt;
+            };
+
+            if (auto r = check_deps(core_paragraph->dependencies)) return r;
+
+            for (auto&& fpgh : feature_paragraphs)
+            {
+                if (auto r = check_deps(fpgh->dependencies)) return r;
+            }
+
+            if (core_paragraph->overrides.size() != 0)
+            {
+                return Strings::concat(fs::u8string(origin),
+                                       " was rejected because it uses overrides and the `",
+                                       VcpkgCmdArguments::VERSIONS_FEATURE,
+                                       "` feature flag is disabled.\nThis can be fixed by removing \"overrides\".");
+            }
+        }
+        return nullopt;
+    }
 
     Parse::ParseExpected<SourceControlFile> SourceControlFile::parse_manifest_file(const fs::path& path_to_manifest,
                                                                                    const Json::Object& manifest)
     {
-        struct JsonErr final : Json::ReaderError
-        {
-            ParseControlErrorInfo pcei;
+        return parse_manifest_object(fs::u8string(path_to_manifest), manifest);
+    }
 
-            void add_missing_field(std::string&& type, std::string&& key) override
+    void print_error_message(Span<const std::unique_ptr<Parse::ParseControlErrorInfo>> error_info_list)
+    {
+        Checks::check_exit(VCPKG_LINE_INFO, error_info_list.size() > 0);
+
+        for (auto&& error_info : error_info_list)
+        {
+            Checks::check_exit(VCPKG_LINE_INFO, error_info != nullptr);
+            if (!error_info->error.empty())
             {
-                pcei.missing_fields[std::move(type)].push_back(std::move(key));
+                System::print2(
+                    System::Color::error, "Error: while loading ", error_info->name, ":\n", error_info->error, '\n');
             }
-            void add_expected_type(std::string&& key, std::string&& expected_type) override
+
+            if (!error_info->other_errors.empty())
             {
-                pcei.expected_types.emplace(std::move(key), std::move(expected_type));
+                System::print2(System::Color::error, "Errors occurred while parsing ", error_info->name, "\n");
+                for (auto&& msg : error_info->other_errors)
+                    System::print2("    ", msg, '\n');
             }
-            void add_extra_fields(std::string&& type, std::vector<std::string>&& fields) override
+        }
+
+        bool have_remaining_fields = false;
+        for (auto&& error_info : error_info_list)
+        {
+            if (!error_info->extra_fields.empty())
             {
-                if (!fields.empty())
+                System::print2(System::Color::error,
+                               "Error: There are invalid fields in the control or manifest file of ",
+                               error_info->name,
+                               '\n');
+                System::print2("The following fields were not expected:\n");
+
+                for (const auto& pr : error_info->extra_fields)
                 {
-                    auto& fields_for_type = pcei.extra_fields[std::move(type)];
-                    fields_for_type.insert(fields_for_type.end(), fields.begin(), fields.end());
+                    System::print2("    In ", pr.first, ": ", Strings::join(", ", pr.second), "\n");
+                }
+                have_remaining_fields = true;
+            }
+        }
+
+        if (have_remaining_fields)
+        {
+            System::print2("This is the list of valid fields for CONTROL files (case-sensitive): \n\n    ",
+                           Strings::join("\n    ", get_list_of_valid_fields()),
+                           "\n\n");
+#if defined(_WIN32)
+            auto bootstrap = ".\\bootstrap-vcpkg.bat";
+#else
+            auto bootstrap = "./bootstrap-vcpkg.sh";
+#endif
+            System::printf("You may need to update the vcpkg binary; try running %s to update.\n\n", bootstrap);
+        }
+
+        for (auto&& error_info : error_info_list)
+        {
+            if (!error_info->missing_fields.empty())
+            {
+                System::print2(System::Color::error,
+                               "Error: There are missing fields in the control file of ",
+                               error_info->name,
+                               '\n');
+                System::print2("The following fields were missing:\n");
+                for (const auto& pr : error_info->missing_fields)
+                {
+                    System::print2("    In ", pr.first, ": ", Strings::join(", ", pr.second), "\n");
                 }
             }
-            void add_mutually_exclusive_fields(std::string&& type, std::vector<std::string>&& fields) override
+        }
+
+        for (auto&& error_info : error_info_list)
+        {
+            if (!error_info->expected_types.empty())
             {
-                if (!fields.empty())
+                System::print2(System::Color::error,
+                               "Error: There are invalid field types in the CONTROL or manifest file of ",
+                               error_info->name,
+                               '\n');
+                System::print2("The following fields had the wrong types:\n\n");
+
+                for (const auto& pr : error_info->expected_types)
                 {
-                    auto& fields_for_type = pcei.mutually_exclusive_fields[std::move(type)];
-                    fields_for_type.insert(fields_for_type.end(), fields.begin(), fields.end());
+                    System::printf("    %s was expected to be %s\n", pr.first, pr.second);
                 }
-            }
-        } err = {};
-        auto visit = Json::Reader{&err};
-
-        err.pcei.name = path_to_manifest.u8string();
-        {
-            auto extra_fields = invalid_json_fields(manifest, get_list_of_manifest_fields());
-            if (!extra_fields.empty())
-            {
-                err.pcei.extra_fields["manifest"] = std::move(extra_fields);
+                System::print2("\n");
             }
         }
-
-        auto control_file = std::make_unique<SourceControlFile>();
-        control_file->core_paragraph = std::make_unique<SourceParagraph>();
-
-        auto& spgh = control_file->core_paragraph;
-        spgh->type = Type{Type::PORT};
-
-        for (const auto& el : manifest)
-        {
-            if (Strings::starts_with(el.first, "$"))
-            {
-                spgh->extra_info.insert_or_replace(el.first.to_string(), el.second);
-            }
-        }
-
-        constexpr static StringView type_name = "vcpkg.json";
-        visit.required_object_field(type_name, manifest, ManifestFields::NAME, spgh->name, IdentifierField{});
-        visit.required_object_field(
-            type_name, manifest, ManifestFields::VERSION, spgh->version, StringField{"a version"});
-        visit.optional_object_field(manifest, ManifestFields::PORT_VERSION, spgh->port_version, NaturalNumberField{});
-        visit.optional_object_field(manifest, ManifestFields::MAINTAINERS, spgh->maintainers, ParagraphField{});
-        visit.optional_object_field(manifest, ManifestFields::DESCRIPTION, spgh->description, ParagraphField{});
-        visit.optional_object_field(manifest, ManifestFields::HOMEPAGE, spgh->homepage, StringField{"a url"});
-        visit.optional_object_field(manifest, ManifestFields::DOCUMENTATION, spgh->documentation, StringField{"a url"});
-        visit.optional_object_field(manifest, ManifestFields::LICENSE, spgh->license, LicenseExpressionField{});
-        visit.optional_object_field(manifest,
-                                    ManifestFields::DEPENDENCIES,
-                                    spgh->dependencies,
-                                    ArrayField<DependencyField>{"an array of dependencies", AllowEmpty::Yes});
-
-        if (manifest.contains(ManifestFields::DEV_DEPENDENCIES))
-        {
-            System::print2(System::Color::error, "dev_dependencies are not yet supported");
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-
-        visit.optional_object_field(manifest, ManifestFields::SUPPORTS, spgh->supports_expression, PlatformExprField{});
-
-        visit.optional_object_field(manifest,
-                                    ManifestFields::DEFAULT_FEATURES,
-                                    spgh->default_features,
-                                    ArrayField<IdentifierField>{"an array of identifiers", AllowEmpty::Yes});
-
-        visit.optional_object_field(manifest,
-                                    ManifestFields::FEATURES,
-                                    control_file->feature_paragraphs,
-                                    ArrayField<FeatureField>{"an array of feature definitions", AllowEmpty::Yes});
-
-        if (err.pcei.has_error())
-        {
-            return std::make_unique<ParseControlErrorInfo>(std::move(err.pcei));
-        }
-
-        canonicalize(*control_file);
-        return std::move(control_file);
     }
 
     Optional<const FeatureParagraph&> SourceControlFile::find_feature(const std::string& featurename) const
@@ -1111,7 +1287,8 @@ namespace vcpkg
             }
         };
         auto serialize_dependency = [&](Json::Array& arr, const Dependency& dep) {
-            if (dep.features.empty() && dep.platform.is_empty() && dep.extra_info.is_empty())
+            if (dep.features.empty() && dep.platform.is_empty() && dep.extra_info.is_empty() &&
+                dep.constraint.type == Versions::Constraint::Type::None)
             {
                 arr.push_back(Json::Value::string(dep.name));
             }
@@ -1123,19 +1300,61 @@ namespace vcpkg
                     dep_obj.insert(el.first.to_string(), el.second);
                 }
 
-                dep_obj.insert(DependencyField::NAME, Json::Value::string(dep.name));
+                dep_obj.insert(DependencyDeserializer::NAME, Json::Value::string(dep.name));
 
                 auto features_copy = dep.features;
                 auto core_it = std::find(features_copy.begin(), features_copy.end(), "core");
                 if (core_it != features_copy.end())
                 {
-                    dep_obj.insert(DependencyField::DEFAULT_FEATURES, Json::Value::boolean(false));
+                    dep_obj.insert(DependencyDeserializer::DEFAULT_FEATURES, Json::Value::boolean(false));
                     features_copy.erase(core_it);
                 }
 
-                serialize_optional_array(dep_obj, DependencyField::FEATURES, features_copy);
-                serialize_optional_string(dep_obj, DependencyField::PLATFORM, to_string(dep.platform));
+                serialize_optional_array(dep_obj, DependencyDeserializer::FEATURES, features_copy);
+                serialize_optional_string(dep_obj, DependencyDeserializer::PLATFORM, to_string(dep.platform));
+                if (dep.constraint.port_version != 0)
+                {
+                    dep_obj.insert(DependencyDeserializer::PORT_VERSION,
+                                   Json::Value::integer(dep.constraint.port_version));
+                }
+
+                if (dep.constraint.type == Versions::Constraint::Type::Exact)
+                {
+                    dep_obj.insert(DependencyDeserializer::VERSION_EQ, Json::Value::string(dep.constraint.value));
+                }
+                else if (dep.constraint.type == Versions::Constraint::Type::Minimum)
+                {
+                    dep_obj.insert(DependencyDeserializer::VERSION_GE, Json::Value::string(dep.constraint.value));
+                }
             }
+        };
+
+        auto version_field = [](Versions::Scheme version_scheme) {
+            switch (version_scheme)
+            {
+                case Versions::Scheme::String: return ManifestDeserializer::VERSION_STRING;
+                case Versions::Scheme::Semver: return ManifestDeserializer::VERSION_SEMVER;
+                case Versions::Scheme::Relaxed: return ManifestDeserializer::VERSION_RELAXED;
+                case Versions::Scheme::Date: return ManifestDeserializer::VERSION_DATE;
+                default: Checks::unreachable(VCPKG_LINE_INFO);
+            }
+        };
+
+        auto serialize_override = [&](Json::Array& arr, const DependencyOverride& dep) {
+            auto& dep_obj = arr.push_back(Json::Object());
+            for (const auto& el : dep.extra_info)
+            {
+                dep_obj.insert(el.first.to_string(), el.second);
+            }
+
+            dep_obj.insert(DependencyOverrideDeserializer::NAME, Json::Value::string(dep.name));
+
+            if (dep.port_version != 0)
+            {
+                dep_obj.insert(DependencyDeserializer::PORT_VERSION, Json::Value::integer(dep.port_version));
+            }
+
+            dep_obj.insert(version_field(dep.version_scheme), Json::Value::string(dep.version));
         };
 
         Json::Object obj;
@@ -1145,25 +1364,26 @@ namespace vcpkg
             obj.insert(el.first.to_string(), el.second);
         }
 
-        obj.insert(ManifestFields::NAME, Json::Value::string(scf.core_paragraph->name));
-        obj.insert(ManifestFields::VERSION, Json::Value::string(scf.core_paragraph->version));
+        obj.insert(ManifestDeserializer::NAME, Json::Value::string(scf.core_paragraph->name));
+        obj.insert(version_field(scf.core_paragraph->version_scheme), Json::Value::string(scf.core_paragraph->version));
 
         if (scf.core_paragraph->port_version != 0 || debug)
         {
-            obj.insert(ManifestFields::PORT_VERSION, Json::Value::integer(scf.core_paragraph->port_version));
+            obj.insert(ManifestDeserializer::PORT_VERSION, Json::Value::integer(scf.core_paragraph->port_version));
         }
 
-        serialize_paragraph(obj, ManifestFields::MAINTAINERS, scf.core_paragraph->maintainers);
-        serialize_paragraph(obj, ManifestFields::DESCRIPTION, scf.core_paragraph->description);
+        serialize_paragraph(obj, ManifestDeserializer::MAINTAINERS, scf.core_paragraph->maintainers);
+        serialize_paragraph(obj, ManifestDeserializer::DESCRIPTION, scf.core_paragraph->description);
 
-        serialize_optional_string(obj, ManifestFields::HOMEPAGE, scf.core_paragraph->homepage);
-        serialize_optional_string(obj, ManifestFields::DOCUMENTATION, scf.core_paragraph->documentation);
-        serialize_optional_string(obj, ManifestFields::LICENSE, scf.core_paragraph->license);
-        serialize_optional_string(obj, ManifestFields::SUPPORTS, to_string(scf.core_paragraph->supports_expression));
+        serialize_optional_string(obj, ManifestDeserializer::HOMEPAGE, scf.core_paragraph->homepage);
+        serialize_optional_string(obj, ManifestDeserializer::DOCUMENTATION, scf.core_paragraph->documentation);
+        serialize_optional_string(obj, ManifestDeserializer::LICENSE, scf.core_paragraph->license);
+        serialize_optional_string(
+            obj, ManifestDeserializer::SUPPORTS, to_string(scf.core_paragraph->supports_expression));
 
         if (!scf.core_paragraph->dependencies.empty() || debug)
         {
-            auto& deps = obj.insert(ManifestFields::DEPENDENCIES, Json::Array());
+            auto& deps = obj.insert(ManifestDeserializer::DEPENDENCIES, Json::Array());
 
             for (const auto& dep : scf.core_paragraph->dependencies)
             {
@@ -1171,30 +1391,39 @@ namespace vcpkg
             }
         }
 
-        serialize_optional_array(obj, ManifestFields::DEFAULT_FEATURES, scf.core_paragraph->default_features);
+        serialize_optional_array(obj, ManifestDeserializer::DEFAULT_FEATURES, scf.core_paragraph->default_features);
 
         if (!scf.feature_paragraphs.empty() || debug)
         {
-            auto& arr = obj.insert(ManifestFields::FEATURES, Json::Array());
+            auto& map = obj.insert(ManifestDeserializer::FEATURES, Json::Object());
             for (const auto& feature : scf.feature_paragraphs)
             {
-                auto& feature_obj = arr.push_back(Json::Object());
+                auto& feature_obj = map.insert(feature->name, Json::Object());
                 for (const auto& el : feature->extra_info)
                 {
                     feature_obj.insert(el.first.to_string(), el.second);
                 }
 
-                feature_obj.insert(FeatureField::NAME, Json::Value::string(feature->name));
-                serialize_paragraph(feature_obj, FeatureField::DESCRIPTION, feature->description, true);
+                serialize_paragraph(feature_obj, FeatureDeserializer::DESCRIPTION, feature->description, true);
 
                 if (!feature->dependencies.empty() || debug)
                 {
-                    auto& deps = feature_obj.insert(FeatureField::DEPENDENCIES, Json::Array());
+                    auto& deps = feature_obj.insert(FeatureDeserializer::DEPENDENCIES, Json::Array());
                     for (const auto& dep : feature->dependencies)
                     {
                         serialize_dependency(deps, dep);
                     }
                 }
+            }
+        }
+
+        if (!scf.core_paragraph->overrides.empty() || debug)
+        {
+            auto& overrides = obj.insert(ManifestDeserializer::OVERRIDES, Json::Array());
+
+            for (const auto& over : scf.core_paragraph->overrides)
+            {
+                serialize_override(overrides, over);
             }
         }
 

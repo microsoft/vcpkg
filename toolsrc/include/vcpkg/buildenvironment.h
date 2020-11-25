@@ -1,6 +1,8 @@
-#include <vcpkg/base/system.process.h>
+#pragma once
 
-#include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
+
+#include <vcpkg/base/system.process.h>
 
 #include <string>
 #include <vector>

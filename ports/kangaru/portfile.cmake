@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gracicot/kangaru
-    REF 8b62cede3d66803ae7df5663eb52ff3f2a1f8bf5 # v4.2.2
-    SHA512 ae6730d5e7c59c4eec08d72e3bd311042c57e0a23cf5c26348cc21f4e08c1a4f58721cfcfaf81ec3f19db3540d49acc2a0816f5ba34d09cfb1f853de92481327
+    REF 8da8f0d5a434a6fb2f317022221ea0809914d4a6 # v4.2.4
+    SHA512 e5cfdad793db3b3d5ff093e4120a5131000677504eed09c02817c9a49699c044a88183413ad7b09946abb0258df34fe444078c375a5bf70589345d2aa2c2283b
     HEAD_REF master
 )
 

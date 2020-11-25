@@ -1,15 +1,23 @@
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/binaryparagraph.h>
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/configuration.h>
+#include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/registries.h>
+#include <vcpkg/sourceparagraph.h>
+#include <vcpkg/tools.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/visualstudio.h>
 
@@ -34,7 +42,7 @@ namespace
         Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
     {
         auto result = process_input_directory_impl(filesystem, root, option, name, li);
-        Debug::print("Using ", name, "-root: ", result.u8string(), '\n');
+        Debug::print("Using ", name, "-root: ", fs::u8string(result), '\n');
         return result;
     }
 
@@ -56,34 +64,133 @@ namespace
         Files::Filesystem& filesystem, const fs::path& root, std::string* option, StringLiteral name, LineInfo li)
     {
         auto result = process_output_directory_impl(filesystem, root, option, name, li);
-        Debug::print("Using ", name, "-root: ", result.u8string(), '\n');
-        return result;
-    }
-
-    void uppercase_win32_drive_letter(fs::path& path)
-    {
 #if defined(_WIN32)
-        const auto& nativePath = path.native();
-        if (nativePath.size() > 2 && (nativePath[0] >= L'a' && nativePath[0] <= L'z') && nativePath[1] == L':')
-        {
-            auto uppercaseFirstLetter = std::move(path).native();
-            uppercaseFirstLetter[0] = nativePath[0] - L'a' + L'A';
-            path = uppercaseFirstLetter;
-        }
-#endif
-        (void)path;
+        result = vcpkg::Files::win32_fix_path_case(result);
+#endif // _WIN32
+        Debug::print("Using ", name, "-root: ", fs::u8string(result), '\n');
+        return result;
     }
 
 } // unnamed namespace
 
 namespace vcpkg
 {
+    static Configuration deserialize_configuration(const Json::Object& obj,
+                                                   const VcpkgCmdArguments& args,
+                                                   const fs::path& filepath)
+    {
+        Json::Reader reader;
+        ConfigurationDeserializer deserializer(args);
+
+        auto parsed_config_opt = reader.visit(obj, deserializer);
+        if (!reader.errors().empty())
+        {
+            System::print2(System::Color::error, "Errors occurred while parsing ", fs::u8string(filepath), "\n");
+            for (auto&& msg : reader.errors())
+                System::print2("    ", msg, '\n');
+
+            System::print2("See https://github.com/Microsoft/vcpkg/tree/master/docs/specifications/registries.md for "
+                           "more information.\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+
+        return std::move(parsed_config_opt).value_or_exit(VCPKG_LINE_INFO);
+    }
+
+    struct ManifestAndConfig
+    {
+        fs::path config_directory;
+        Configuration config;
+    };
+
+    static std::pair<Json::Object, Json::JsonStyle> load_manifest(const Files::Filesystem& fs,
+                                                                  const fs::path& manifest_dir)
+    {
+        std::error_code ec;
+        auto manifest_path = manifest_dir / fs::u8path("vcpkg.json");
+        auto manifest_opt = Json::parse_file(fs, manifest_path, ec);
+        if (ec)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Failed to load manifest from directory %s: %s",
+                                      fs::u8string(manifest_dir),
+                                      ec.message());
+        }
+
+        if (!manifest_opt.has_value())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Failed to parse manifest at %s:\n%s",
+                                      fs::u8string(manifest_path),
+                                      manifest_opt.error()->format());
+        }
+        auto manifest_value = std::move(manifest_opt).value_or_exit(VCPKG_LINE_INFO);
+
+        if (!manifest_value.first.is_object())
+        {
+            System::print2(System::Color::error,
+                           "Failed to parse manifest at ",
+                           fs::u8string(manifest_path),
+                           ": Manifest files must have a top-level object\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        return {std::move(manifest_value.first.object()), std::move(manifest_value.second)};
+    }
+
+    struct ConfigAndPath
+    {
+        fs::path config_directory;
+        Configuration config;
+    };
+
+    // doesn't yet implement searching upwards for configurations, nor inheritance of configurations
+    static ConfigAndPath load_configuration(const Files::Filesystem& fs,
+                                            const VcpkgCmdArguments& args,
+                                            const fs::path& vcpkg_root,
+                                            const fs::path& manifest_dir)
+    {
+        fs::path config_dir;
+
+        if (!manifest_dir.empty())
+        {
+            // manifest mode
+            config_dir = manifest_dir;
+        }
+        else
+        {
+            // classic mode
+            config_dir = vcpkg_root;
+        }
+
+        auto path_to_config = config_dir / fs::u8path("vcpkg-configuration.json");
+        if (!fs.exists(path_to_config))
+        {
+            return {};
+        }
+
+        auto parsed_config = Json::parse_file(VCPKG_LINE_INFO, fs, path_to_config);
+        if (!parsed_config.first.is_object())
+        {
+            System::print2(System::Color::error,
+                           "Failed to parse ",
+                           fs::u8string(path_to_config),
+                           ": configuration files must have a top-level object\n");
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        auto config_obj = std::move(parsed_config.first.object());
+
+        return {std::move(config_dir), deserialize_configuration(config_obj, args, path_to_config)};
+    }
+
     namespace details
     {
         struct VcpkgPathsImpl
         {
-            VcpkgPathsImpl(Files::Filesystem& fs, bool compiler_tracking)
-                : fs_ptr(&fs), m_tool_cache(get_tool_cache()), m_env_cache(compiler_tracking)
+            VcpkgPathsImpl(Files::Filesystem& fs, FeatureFlagSettings ff_settings)
+                : fs_ptr(&fs)
+                , m_tool_cache(get_tool_cache())
+                , m_env_cache(ff_settings.compiler_tracking)
+                , m_ff_settings(ff_settings)
             {
             }
 
@@ -101,13 +208,23 @@ namespace vcpkg
             Build::EnvCache m_env_cache;
 
             fs::SystemHandle file_lock_handle;
+
+            Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
+            fs::path m_manifest_path;
+            Configuration m_config;
+
+            FeatureFlagSettings m_ff_settings;
         };
     }
 
     VcpkgPaths::VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args)
-        : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.compiler_tracking_enabled()))
+        : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.feature_flag_settings()))
     {
         original_cwd = filesystem.current_path(VCPKG_LINE_INFO);
+#if defined(_WIN32)
+        original_cwd = vcpkg::Files::win32_fix_path_case(original_cwd);
+#endif // _WIN32
+
         if (args.vcpkg_root_dir)
         {
             root = filesystem.canonical(VCPKG_LINE_INFO, fs::u8path(*args.vcpkg_root_dir));
@@ -121,9 +238,9 @@ namespace vcpkg
                     filesystem.canonical(VCPKG_LINE_INFO, System::get_exe_path_of_current_process()), ".vcpkg-root");
             }
         }
-        uppercase_win32_drive_letter(root);
+
         Checks::check_exit(VCPKG_LINE_INFO, !root.empty(), "Error: Could not detect vcpkg-root.");
-        Debug::print("Using vcpkg-root: ", root.u8string(), '\n');
+        Debug::print("Using vcpkg-root: ", fs::u8string(root), '\n');
 
         std::error_code ec;
         bool manifest_mode_on = args.manifest_mode.value_or(args.manifest_root_dir != nullptr);
@@ -133,16 +250,16 @@ namespace vcpkg
         }
         else
         {
-            manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, "vcpkg.json");
+            manifest_root_dir = filesystem.find_file_recursively_up(original_cwd, fs::u8path("vcpkg.json"));
         }
-        uppercase_win32_drive_letter(manifest_root_dir);
 
         if (!manifest_root_dir.empty() && manifest_mode_on)
         {
-            Debug::print("Using manifest-root: ", manifest_root_dir.u8string(), '\n');
+            Debug::print("Using manifest-root: ", fs::u8string(manifest_root_dir), '\n');
 
             installed = process_output_directory(
                 filesystem, manifest_root_dir, args.install_root_dir.get(), "vcpkg_installed", VCPKG_LINE_INFO);
+
             const auto vcpkg_lock = root / ".vcpkg-root";
             if (args.wait_for_lock.value_or(false))
             {
@@ -152,22 +269,29 @@ namespace vcpkg
             {
                 m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
             }
+
             if (ec)
             {
-                System::printf(
-                    System::Color::error, "Failed to take the filesystem lock on %s:\n", vcpkg_lock.u8string());
-                System::printf(System::Color::error, "    %s\n", ec.message());
-                Checks::exit_fail(VCPKG_LINE_INFO);
+                if (ec == std::errc::device_or_resource_busy || args.ignore_lock_failures.value_or(false))
+                {
+                    System::printf(
+                        System::Color::error, "Failed to take the filesystem lock on %s:\n", fs::u8string(vcpkg_lock));
+                    System::printf(System::Color::error, "    %s\n", ec.message());
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
             }
+
+            m_pimpl->m_manifest_doc = load_manifest(filesystem, manifest_root_dir);
+            m_pimpl->m_manifest_path = manifest_root_dir / fs::u8path("vcpkg.json");
         }
         else
         {
             // we ignore the manifest root dir if the user requests -manifest
-            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value())
+            if (!manifest_root_dir.empty() && !args.manifest_mode.has_value() && !args.output_json())
             {
                 System::print2(System::Color::warning,
                                "Warning: manifest-root detected at ",
-                               manifest_root_dir.generic_u8string(),
+                               fs::generic_u8string(manifest_root_dir),
                                ", but manifests are not enabled.\n");
                 System::printf(System::Color::warning,
                                R"(If you wish to use manifest mode, you may do one of the following:
@@ -195,13 +319,17 @@ If you wish to silence this error and use classic mode, you can:
                 process_output_directory(filesystem, root, args.install_root_dir.get(), "installed", VCPKG_LINE_INFO);
         }
 
+        auto config_file = load_configuration(filesystem, args, root, manifest_root_dir);
+
+        config_root_dir = std::move(config_file.config_directory);
+        m_pimpl->m_config = std::move(config_file.config);
+
         buildtrees =
             process_output_directory(filesystem, root, args.buildtrees_root_dir.get(), "buildtrees", VCPKG_LINE_INFO);
         downloads =
             process_output_directory(filesystem, root, args.downloads_root_dir.get(), "downloads", VCPKG_LINE_INFO);
         packages =
             process_output_directory(filesystem, root, args.packages_root_dir.get(), "packages", VCPKG_LINE_INFO);
-        ports = filesystem.canonical(VCPKG_LINE_INFO, root / fs::u8path("ports"));
         scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
         prefab = root / fs::u8path("prefab");
 
@@ -278,7 +406,7 @@ If you wish to silence this error and use classic mode, you can:
                 {
                     if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, path)))
                     {
-                        output.emplace_back(TripletFile(path.stem().filename().u8string(), triplets_dir));
+                        output.emplace_back(TripletFile(fs::u8string(path.stem().filename()), triplets_dir));
                     }
                 }
             }
@@ -292,15 +420,10 @@ If you wish to silence this error and use classic mode, you can:
             auto& fs = this->get_filesystem();
             std::map<std::string, std::string> helpers;
             auto files = fs.get_files_non_recursive(this->scripts / fs::u8path("cmake"));
-            auto common_functions = fs::u8path("vcpkg_common_functions");
             for (auto&& file : files)
             {
-                auto stem = file.stem();
-                if (stem != common_functions)
-                {
-                    helpers.emplace(stem.u8string(),
-                                    Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
-                }
+                helpers.emplace(fs::u8string(file.stem()),
+                                Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
             }
             return helpers;
         });
@@ -332,6 +455,31 @@ If you wish to silence this error and use classic mode, you can:
     {
         return m_pimpl->m_tool_cache->get_tool_version(*this, tool);
     }
+
+    Optional<const Json::Object&> VcpkgPaths::get_manifest() const
+    {
+        if (auto p = m_pimpl->m_manifest_doc.get())
+        {
+            return p->first;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+    Optional<const fs::path&> VcpkgPaths::get_manifest_path() const
+    {
+        if (m_pimpl->m_manifest_doc)
+        {
+            return m_pimpl->m_manifest_path;
+        }
+        else
+        {
+            return nullopt;
+        }
+    }
+
+    const Configuration& VcpkgPaths::get_configuration() const { return m_pimpl->m_config; }
 
     const Toolset& VcpkgPaths::get_toolset(const Build::PreBuildInfo& prebuildinfo) const
     {
@@ -372,7 +520,7 @@ If you wish to silence this error and use classic mode, you can:
             Checks::check_exit(VCPKG_LINE_INFO,
                                !candidates.empty(),
                                "Could not find Visual Studio instance at %s with %s toolset.",
-                               vsp->u8string(),
+                               fs::u8string(*vsp),
                                *tsv);
 
             Checks::check_exit(VCPKG_LINE_INFO, candidates.size() == 1);
@@ -413,7 +561,14 @@ If you wish to silence this error and use classic mode, you can:
         return m_pimpl->m_env_cache.get_triplet_info(*this, abi_info);
     }
 
+    const Build::CompilerInfo& VcpkgPaths::get_compiler_info(const Build::AbiInfo& abi_info) const
+    {
+        return m_pimpl->m_env_cache.get_compiler_info(*this, abi_info);
+    }
+
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return *m_pimpl->fs_ptr; }
+
+    const FeatureFlagSettings& VcpkgPaths::get_feature_flags() const { return m_pimpl->m_ff_settings; }
 
     void VcpkgPaths::track_feature_flag_metrics() const
     {

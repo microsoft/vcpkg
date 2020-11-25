@@ -1,9 +1,8 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO keystone-engine/keystone
-    REF 0.9.1
-    SHA512 3bd9c3793d5862a0a8628b52da381625e62445f661dbd5ed715723e7d9db01ce3f9586e5ca0a5cc71e8ceb6c912050f5c28e3ccd540e72c8abcfd2f0d1bbae17
+    REF dc7932ef2b2c4a793836caec6ecab485005139d6 # 0.9.2
+    SHA512 ebcdb1cca6dfdf76e0ad2a42a667044806e5c083c07357908298c6ef23d15960f887efa05c1cb3dee90ebdcd5af819bcf8af0fa1aa068aa9a0c6703dee29514e
     HEAD_REF master
 )
 

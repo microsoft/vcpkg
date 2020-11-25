@@ -25,7 +25,7 @@ namespace vcpkg::System
 
     struct CmdLineBuilder
     {
-        CmdLineBuilder& path_arg(const fs::path& p) { return string_arg(p.u8string()); }
+        CmdLineBuilder& path_arg(const fs::path& p) { return string_arg(fs::u8string(p)); }
         CmdLineBuilder& string_arg(StringView s);
         CmdLineBuilder& ampersand()
         {
@@ -66,7 +66,7 @@ namespace vcpkg::System
 #if defined(_WIN32)
     Environment cmd_execute_modify_env(const ZStringView cmd_line, const Environment& env = {});
 
-    void cmd_execute_no_wait(const StringView cmd_line);
+    void cmd_execute_background(const StringView cmd_line);
 #endif
 
     ExitCodeAndOutput cmd_execute_and_capture_output(const ZStringView cmd_line, const Environment& env = {});

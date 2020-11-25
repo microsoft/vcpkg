@@ -129,13 +129,16 @@ int main() {}
 int main() {}
 ]]
                 _VCPKG_USE_STD_FILESYSTEM)
-            
+
             if(_VCPKG_REQUIRE_LINK_CXXFS)
                 set(_VCPKG_CXXFS_LIBRARY "stdc++fs")
             endif()
         elseif(VCPKG_STANDARD_LIBRARY STREQUAL "libc++")
             if(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
                 # AppleClang never requires (or allows) -lc++fs, even with libc++ version 8.0.0
+                set(_VCPKG_CXXFS_LIBRARY OFF)
+            elseif(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+                # As above, not required on this platform (tested at least on 6.8)
                 set(_VCPKG_CXXFS_LIBRARY OFF)
             else()
                 check_cxx_source_compiles([[

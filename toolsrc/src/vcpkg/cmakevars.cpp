@@ -7,6 +7,7 @@
 #include <vcpkg/buildenvironment.h>
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/portfileprovider.h>
 
 using namespace vcpkg;
 using vcpkg::Optional;
@@ -76,7 +77,7 @@ namespace vcpkg::CMakeVars
         Files::Filesystem& fs = paths.get_filesystem();
         static int tag_extract_id = 0;
 
-        std::string extraction_file("include(\"" + get_tags_path.generic_u8string() + "\")\n\n");
+        std::string extraction_file("include(\"" + fs::generic_u8string(get_tags_path) + "\")\n\n");
 
         std::map<Triplet, int> emitted_triplets;
         int emitted_triplet_id = 0;
@@ -84,17 +85,29 @@ namespace vcpkg::CMakeVars
         {
             emitted_triplets[spec_abi_setting.first->package_spec.triplet()] = emitted_triplet_id++;
         }
+
         Strings::append(extraction_file, "macro(vcpkg_triplet_file VCPKG_TRIPLET_ID)\n");
+        Strings::append(extraction_file,
+                        "set(_vcpkg_triplet_file_BACKUP_CURRENT_LIST_FILE \"${CMAKE_CURRENT_LIST_FILE}\")\n");
+
         for (auto& p : emitted_triplets)
         {
-            Strings::append(extraction_file,
-                            "if(VCPKG_TRIPLET_ID EQUAL ",
-                            p.second,
-                            ")\n",
-                            fs.read_contents(paths.get_triplet_file_path(p.first), VCPKG_LINE_INFO),
-                            "\nendif()\n");
+            auto path_to_triplet = paths.get_triplet_file_path(p.first);
+            Strings::append(extraction_file, "if(VCPKG_TRIPLET_ID EQUAL ", p.second, ")\n");
+            Strings::append(
+                extraction_file, "set(CMAKE_CURRENT_LIST_FILE \"", fs::generic_u8string(path_to_triplet), "\")\n");
+            Strings::append(
+                extraction_file,
+                "get_filename_component(CMAKE_CURRENT_LIST_DIR \"${CMAKE_CURRENT_LIST_FILE}\" DIRECTORY)\n");
+            Strings::append(extraction_file, fs.read_contents(paths.get_triplet_file_path(p.first), VCPKG_LINE_INFO));
+            Strings::append(extraction_file, "\nendif()\n");
         }
+        Strings::append(extraction_file,
+                        "set(CMAKE_CURRENT_LIST_FILE \"${_vcpkg_triplet_file_BACKUP_CURRENT_LIST_FILE}\")\n");
+        Strings::append(extraction_file,
+                        "get_filename_component(CMAKE_CURRENT_LIST_DIR \"${CMAKE_CURRENT_LIST_FILE}\" DIRECTORY)\n");
         Strings::append(extraction_file, "endmacro()\n");
+
         for (const auto& spec_abi_setting : spec_abi_settings)
         {
             const FullPackageSpec& spec = *spec_abi_setting.first;
@@ -124,7 +137,7 @@ namespace vcpkg::CMakeVars
         static int dep_info_id = 0;
         Files::Filesystem& fs = paths.get_filesystem();
 
-        std::string extraction_file("include(\"" + get_dep_info_path.generic_u8string() + "\")\n\n");
+        std::string extraction_file("include(\"" + fs::generic_u8string(get_dep_info_path) + "\")\n\n");
 
         std::map<Triplet, int> emitted_triplets;
         int emitted_triplet_id = 0;
@@ -258,7 +271,7 @@ namespace vcpkg::CMakeVars
         {
             auto& scfl = port_provider.get_control_file(spec.package_spec.name()).value_or_exit(VCPKG_LINE_INFO);
             const fs::path override_path = scfl.source_location / "vcpkg-abi-settings.cmake";
-            spec_abi_settings.emplace_back(&spec, override_path.generic_u8string());
+            spec_abi_settings.emplace_back(&spec, fs::generic_u8string(override_path));
         }
 
         std::vector<std::vector<std::pair<std::string, std::string>>> vars(spec_abi_settings.size());

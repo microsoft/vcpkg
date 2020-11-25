@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
     REF ${VERSION}
     PATCHES
         "cmake_dont_build_more_than_needed.patch"
+        "0001-Prevent-invalid-inclusions-when-HAVE_-is-set-to-0.patch"
         "add_debug_postfix_on_mingw.patch"
 )
 
@@ -51,5 +52,3 @@ file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/LICENSE DESTINATION ${CURRENT_PACKAGES_DI
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-
-# vcpkg_test_cmake(PACKAGE_NAME ZLIB MODULE)

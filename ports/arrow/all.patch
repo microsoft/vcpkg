@@ -26,7 +26,7 @@ index bf47915c4..053e605a0 100644
  
      # Some systems (e.g. Fedora) don't fill Brotli_LIBRARY_DIRS, so add the other dirs here.
 diff --git a/cpp/cmake_modules/FindLz4.cmake b/cpp/cmake_modules/FindLz4.cmake
-index 841091643..a196b251d 100644
+index 841091643..bb5a00a50 100644
 --- a/cpp/cmake_modules/FindLz4.cmake
 +++ b/cpp/cmake_modules/FindLz4.cmake
 @@ -19,14 +19,16 @@ if(MSVC AND NOT DEFINED LZ4_MSVC_STATIC_LIB_SUFFIX)
@@ -49,7 +49,14 @@ index 841091643..a196b251d 100644
            "${CMAKE_SHARED_LIBRARY_PREFIX}lz4_static${CMAKE_SHARED_LIBRARY_SUFFIX}"
      PATHS ${LZ4_ROOT}
      PATH_SUFFIXES ${LIB_PATH_SUFFIXES}
-@@ -43,14 +45,14 @@ else()
+@@ -38,19 +40,19 @@ if(LZ4_ROOT)
+             PATH_SUFFIXES ${INCLUDE_PATH_SUFFIXES})
+ 
+ else()
+-  pkg_check_modules(LZ4_PC liblz4)
+-  if(LZ4_PC_FOUND)
++  #pkg_check_modules(LZ4_PC liblz4)
++  if(0) #if(LZ4_PC_FOUND)  # Disabled as sometimes incompatible with vcpkg on Linux and OSX
      set(LZ4_INCLUDE_DIR "${LZ4_PC_INCLUDEDIR}")
  
      list(APPEND LZ4_PC_LIBRARY_DIRS "${LZ4_PC_LIBDIR}")

@@ -1,84 +1,47 @@
-include(vcpkg_common_functions)
-
 vcpkg_find_acquire_program(FLEX)
-vcpkg_find_acquire_program(SCONS)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMAMA/OpenMAMA
-    REF abd490e1e1ffae4c643454102b57dc587a338737 # OpenMAMA-6.3.0-release
-    SHA512 fd53c9a01075be414b13636b6f3bfbeeb43512d950625826fe133ba108972d71b170a20ce01175ca3e9ed263fd11e108f3902c6d404d43dd812e6a4748c032e1
+    REF c4925ee103add1a51c1d27be45b46d97af347f36 # https://github.com/OpenMAMA/OpenMAMA/tree/OpenMAMA-6.3.1-release
+    SHA512 e2773d082dd28e073fe81223fc113b1a5db7cd0d95e150e9f3f02c8c9483b9219b5d10682a125dd792c3a7877e15b90fd908084a4c89af4ec8d8c0389c282de2
     HEAD_REF next
 )
 
-set(OPENMAMA_TARGET_ARCH ${TRIPLET_SYSTEM_ARCH})
-if(${TRIPLET_SYSTEM_ARCH} STREQUAL x64)
-    set(OPENMAMA_TARGET_ARCH x86_64)
-endif()
-
-# Clean from any previous builds
-vcpkg_execute_required_process(
-    COMMAND ${SCONS}
-        -c
-        target_arch=${OPENMAMA_TARGET_ARCH}
-        libevent_home=${CURRENT_INSTALLED_DIR}
-        apr_home=${CURRENT_INSTALLED_DIR}
-        qpid_home=${CURRENT_INSTALLED_DIR}
-        vcpkg_build=y
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME clean-${TARGET_TRIPLET}.log
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DPROTON_ROOT=${CURRENT_INSTALLED_DIR}
+        -DAPR_ROOT=${CURRENT_INSTALLED_DIR}
+        -DINSTALL_RUNTIME_DEPENDENCIES=OFF
+        -DFLEX_EXECUTABLE=${FLEX}
+        -DWITH_EXAMPLES=OFF
+        -DWITH_TESTTOOLS=OFF
 )
 
-# This build
-vcpkg_execute_required_process(
-    COMMAND ${SCONS}
-        with_unittest=False
-        with_examples=False
-        product=mamda
-        lex=${FLEX}
-        middleware=qpid
-        buildtype=dynamic,dynamic-debug
-        prefix=\#install
-        with_dependency_runtimes=False
-        target_arch=${OPENMAMA_TARGET_ARCH}
-        libevent_home=${CURRENT_INSTALLED_DIR}
-        apr_home=${CURRENT_INSTALLED_DIR}
-        qpid_home=${CURRENT_INSTALLED_DIR}
-        vcpkg_build=y
-    WORKING_DIRECTORY ${SOURCE_PATH}
-    LOGNAME build-${TARGET_TRIPLET}.log
-)
-
-# Remove dependency files which build system creates for convenience
-file(REMOVE ${SOURCE_PATH}/install/bin/dynamic/libapr-1.dll)
-file(REMOVE ${SOURCE_PATH}/install/bin/dynamic/libapr-1.pdb)
-file(REMOVE ${SOURCE_PATH}/install/bin/dynamic-debug/libapr-1.dll)
-file(REMOVE ${SOURCE_PATH}/install/bin/dynamic-debug/libapr-1.pdb)
-file(REMOVE ${SOURCE_PATH}/install/bin/dynamic/qpid-proton.dll)
-file(REMOVE ${SOURCE_PATH}/install/bin/dynamic-debug/qpid-protond.dll)
-
-# Custom install target - the build system doesn't really
-# do prefixes properly and it has a different directory
-# structure than vcpkg expects so reorganizing here
-file(COPY ${SOURCE_PATH}/install/include
-     DESTINATION ${CURRENT_PACKAGES_DIR})
-file(COPY ${SOURCE_PATH}/install/lib/dynamic/
-     DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(COPY ${SOURCE_PATH}/install/lib/dynamic-debug/
-     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(COPY ${SOURCE_PATH}/install/bin/dynamic/
-     DESTINATION ${CURRENT_PACKAGES_DIR}/bin
-     FILES_MATCHING PATTERN "*.dll")
-file(COPY ${SOURCE_PATH}/install/bin/dynamic-debug/
-     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin
-     FILES_MATCHING PATTERN "*.dll")
+vcpkg_install_cmake()
 
 # Copy across license files and copyright
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/openmama)
-file(COPY ${SOURCE_PATH}/install/LICENSE.md
-          ${SOURCE_PATH}/install/LICENSE-3RD-PARTY.txt
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/openmama/)
-file(COPY ${SOURCE_PATH}/install/LICENSE.md
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/openmama/copyright)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${SOURCE_PATH}/LICENSE-3RD-PARTY.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+# Clean up LICENSE file - vcpkg doesn't expect it to be there
+file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE.MD ${CURRENT_PACKAGES_DIR}/debug/LICENSE.MD)
+
+# Temporary workaround until upstream project puts dll in right place
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/libmamaplugindqstrategymd.dll")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libmamaplugindqstrategymd.dll ${CURRENT_PACKAGES_DIR}/bin/libmamaplugindqstrategymd.dll)
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/libmamaplugindqstrategymd.dll")
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libmamaplugindqstrategymd.dll ${CURRENT_PACKAGES_DIR}/debug/bin/libmamaplugindqstrategymd.dll)
+endif()
+
+# Vcpkg does not expect include files to be in the debug directory
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+# Vcpkg does not like this header name and shouldn't be required anyway, so remove it
+file(REMOVE "${CURRENT_PACKAGES_DIR}/include/platform.h")
 
 vcpkg_copy_pdbs()

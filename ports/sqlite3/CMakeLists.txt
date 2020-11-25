@@ -24,6 +24,15 @@ target_compile_definitions(
         -DSQLITE_ENABLE_UNLOCK_NOTIFY
         -DSQLITE_ENABLE_COLUMN_METADATA
 )
+
+if(WITH_GEOPOLY)
+    add_compile_definitions(SQLITE_ENABLE_GEOPOLY)
+endif()
+
+if(WITH_JSON1)
+    add_compile_definitions(SQLITE_ENABLE_JSON1)
+endif()
+
 target_include_directories(sqlite3 INTERFACE $<INSTALL_INTERFACE:include>)
 if(NOT WIN32)
     find_package(Threads REQUIRED)

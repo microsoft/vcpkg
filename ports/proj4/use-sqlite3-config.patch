@@ -1,0 +1,57 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c617912..bed0428 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -122,7 +122,23 @@ if(NOT EXE_SQLITE3)
+   message(SEND_ERROR "sqlite3 binary not found!")
+ endif()
+ 
+-find_package(Sqlite3 REQUIRED)
++#find_package(Sqlite3 REQUIRED)
++find_package(unofficial-sqlite3 CONFIG REQUIRED)
++if(unofficial-sqlite3_FOUND)
++  set(SQLITE3_FOUND true)
++  get_target_property(SQLITE3_INCLUDE_DIR unofficial::sqlite3::sqlite3 INTERFACE_INCLUDE_DIRECTORIES)
++  set(SQLITE3_LIBRARY unofficial::sqlite3::sqlite3)
++  # Extract version information from the header file
++  if(SQLITE3_INCLUDE_DIR)
++    file(STRINGS ${SQLITE3_INCLUDE_DIR}/sqlite3.h _ver_line
++         REGEX "^#define SQLITE_VERSION  *\"[0-9]+\\.[0-9]+\\.[0-9]+\""
++         LIMIT_COUNT 1)
++    string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+"
++           SQLITE3_VERSION "${_ver_line}")
++    unset(_ver_line)
++  endif()
++endif()
++
+ if(NOT SQLITE3_FOUND)
+   message(SEND_ERROR "sqlite3 dependency not found!")
+ endif()
+diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
+index 92197c8..ab65de7 100644
+--- a/cmake/CMakeLists.txt
++++ b/cmake/CMakeLists.txt
+@@ -25,6 +25,10 @@ else ()
+ endif ()
+ 
+ string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
++set(FIND_DEPENDENCY_SQLITE3 "")
++if(NOT BUILD_LIBPROJ_SHARED)
++	set(FIND_DEPENDENCY_SQLITE3 "find_package(unofficial-sqlite3 CONFIG REQUIRED)")
++endif()
+ configure_file(project-config.cmake.in project-config.cmake @ONLY)
+ configure_file(project-config-version.cmake.in
+   project-config-version.cmake @ONLY)
+diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
+index 9a52b3b..295d95d 100644
+--- a/cmake/project-config.cmake.in
++++ b/cmake/project-config.cmake.in
+@@ -13,6 +13,8 @@ message (STATUS "Reading ${CMAKE_CURRENT_LIST_FILE}")
+ message (STATUS
+   "@PROJECT_NAME@ configuration, version ${@PROJECT_NAME@_VERSION}")
+ 
++@FIND_DEPENDENCY_SQLITE3@
++
+ # Tell the user project where to find our headers and libraries
+ get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
+ get_filename_component (_ROOT "${_DIR}/@PROJECT_ROOT_DIR@" ABSOLUTE)
