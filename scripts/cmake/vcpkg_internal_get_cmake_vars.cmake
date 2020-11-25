@@ -53,6 +53,13 @@ function(vcpkg_internal_get_cmake_vars)
         LOGNAME get-cmake-vars-${TARGET_TRIPLET}
     )
 
-    file(WRITE "${${_gcv_OUTPUT_FILE}}" "include(\"${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log\")\ninclude(\"${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log\")")
+    set(_include_string)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        string(APPEND _include_string "include(\"${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log\")\n")
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        string(APPEND _include_string "include(\"${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-dbg.cmake.log\")\n")
+    endif()
+    file(WRITE "${${_gcv_OUTPUT_FILE}}" "${_include_string}")
 
 endfunction()

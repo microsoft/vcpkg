@@ -121,7 +121,7 @@ foreach(BUILD_TYPE dbg rel)
 		set(LINUX_ONLY_PATCHES ../tensorflow-common/fix-linux-build.patch)
 	endif()
 	if(VCPKG_TARGET_IS_UWP)
-		set(UWP_ONLY_PATCHES ${TF_PATCHES_PREFIX}fix-uwp-build.patch)
+		set(UWP_ONLY_PATCHES ../tensorflow-common/fix-uwp-build.patch)
 	endif()
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH

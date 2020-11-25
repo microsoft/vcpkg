@@ -20,10 +20,10 @@ vcpkg_configure_cmake(
         -DPYTHON_MODULE_EXTENSION=.dll
     OPTIONS_RELEASE
         -DPYTHON_IS_DEBUG=OFF
-        -DPYTHON_LIBRARIES=${CURRENT_INSTALLED_DIR}/lib/python36.lib
+        -DPYTHON_LIBRARIES=${CURRENT_INSTALLED_DIR}/lib/python39.lib
     OPTIONS_DEBUG
         -DPYTHON_IS_DEBUG=ON
-        -DPYTHON_LIBRARIES=${CURRENT_INSTALLED_DIR}/debug/lib/python36_d.lib
+        -DPYTHON_LIBRARIES=${CURRENT_INSTALLED_DIR}/debug/lib/python39_d.lib
 )
 
 vcpkg_install_cmake()
