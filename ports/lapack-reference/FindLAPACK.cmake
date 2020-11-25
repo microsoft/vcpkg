@@ -86,6 +86,12 @@ This module defines the following variables:
     find_package(LAPACK)
 #]=======================================================================]
 
+include(${CMAKE_ROOT}/Modules/CheckLanguage.cmake)
+check_language(Fortran)
+if (CMAKE_Fortran_COMPILER)
+    enable_language(Fortran)
+endif()
+
 enable_language(C)
 # Check the language being used
 if(NOT (CMAKE_C_COMPILER_LOADED OR CMAKE_CXX_COMPILER_LOADED OR CMAKE_Fortran_COMPILER_LOADED))
