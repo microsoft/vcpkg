@@ -1,10 +1,6 @@
 #only supports windows
 vcpkg_fail_port_install(ON_ARCH "arm" ON_TAREGT "uwp" "linux" "osx")
 
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    message(FATAL_ERROR "networkDirect-sdk only supports windows x64 and x86")
-endif()
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
