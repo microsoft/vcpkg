@@ -25,6 +25,14 @@ namespace vcpkg
         }
     };
 
+    ExpectedS<std::map<std::string, Versions::VersionSpec>> parse_baseline_file(Files::Filesystem& fs,
+                                                                                StringView baseline_name,
+                                                                                const fs::path& baseline_file_path);
+
+    ExpectedS<std::vector<VersionDbEntry>> parse_versions_file(Files::Filesystem& fs,
+                                                               StringView port_name,
+                                                               const fs::path& versions_file_path);
+
     struct VersionTDeserializer final : Json::IDeserializer<VersionT>
     {
         StringView type_name() const override { return "a version object"; }
