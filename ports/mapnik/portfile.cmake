@@ -2,8 +2,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mathisloge/mapnik
-    REF f027667daa51c93a3aeb40a6fa47219ce039b0c2
-    SHA512 c43f8ba767a7c0a5ea0a56fcdeb85dfda845c8284dd7fd2941e17553691a69ab6244cf0cd22dbac2a3823d3573dbd7fdc53c11996a5a5f53afa7e53a50cf51fc
+    REF 410393fefabf2c9d25f6ed3f823868139cbd7467
+    SHA512 3452a113946339aae3818d10d4d202ea16a24c4690feadad2cf6c6bba5c5806eb563cc6ab7f2ef4d4fba1c6029a9c15376fd23de8e359f2d2577ac724626a317
     HEAD_REF master
 )
 
@@ -50,6 +50,7 @@ vcpkg_configure_cmake(
         -DUSE_EXTERNAL_MAPBOX_POLYLABEL=ON
         -DUSE_EXTERNAL_MAPBOX_PROTOZERO=ON
         -DUSE_EXTERNAL_MAPBOX_VARIANT=ON
+        -DINSTALL_CMAKE_DIR=share/mapnik/cmake
 )
 
 vcpkg_install_cmake()
@@ -96,7 +97,7 @@ if("utility-svg2png" IN_LIST FEATURES)
   vcpkg_copy_tools(TOOL_NAMES svg2png AUTO_CLEAN)
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mapnik)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/mapnik/cmake)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
