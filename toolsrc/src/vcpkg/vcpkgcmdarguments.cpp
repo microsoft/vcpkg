@@ -950,4 +950,6 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::REGISTRIES_FEATURE;
     constexpr StringLiteral VcpkgCmdArguments::RECURSIVE_DATA_ENV;
     constexpr StringLiteral VcpkgCmdArguments::VERSIONS_FEATURE;
+
+    constexpr StringLiteral VcpkgCmdArguments::CMAKE_SCRIPT_ARG;
 }
