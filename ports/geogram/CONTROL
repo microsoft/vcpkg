@@ -3,7 +3,7 @@ Version: 1.7.5
 Port-Version: 2
 Homepage: https://gforge.inria.fr/projects/geogram/
 Description: Geogram is a programming library of geometric algorithms.
-Build-Depends: openblas, lapack
+Build-Depends: blas, lapack
 Supports: !uwp
 
 Feature: graphics

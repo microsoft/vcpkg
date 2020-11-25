@@ -6,20 +6,20 @@ Execute a process even in download mode.
 ## Usage
 ```cmake
 vcpkg_execute_in_download_mode(
-        COMMAND <cmd1> [<arguments>]
-        [WORKING_DIRECTORY <dir>]
-        [TIMEOUT <seconds>]
-        [RESULT_VARIABLE <variable>]
-        [OUTPUT_VARIABLE <variable>]
-        [ERROR_VARIABLE <variable>]
-        [INPUT_FILE <file>]
-        [OUTPUT_FILE <file>]
-        [ERROR_FILE <file>]
-        [OUTPUT_QUIET]
-        [ERROR_QUIET]
-        [OUTPUT_STRIP_TRAILING_WHITESPACE]
-        [ERROR_STRIP_TRAILING_WHITESPACE]
-        [ENCODING <name>]
+    COMMAND <cmd> [<arguments>]
+    [WORKING_DIRECTORY <dir>]
+    [TIMEOUT <seconds>]
+    [RESULT_VARIABLE <variable>]
+    [OUTPUT_VARIABLE <variable>]
+    [ERROR_VARIABLE <variable>]
+    [INPUT_FILE <file>]
+    [OUTPUT_FILE <file>]
+    [ERROR_FILE <file>]
+    [OUTPUT_QUIET]
+    [ERROR_QUIET]
+    [OUTPUT_STRIP_TRAILING_WHITESPACE]
+    [ERROR_STRIP_TRAILING_WHITESPACE]
+    [ENCODING <name>]
 )
 ```
 

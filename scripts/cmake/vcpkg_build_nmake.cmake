@@ -8,6 +8,7 @@ Build a msvc makefile project.
 vcpkg_build_nmake(
     SOURCE_PATH <${SOURCE_PATH}>
     [NO_DEBUG]
+    [TARGET <all>]
     [PROJECT_SUBPATH <${SUBPATH}>]
     [PROJECT_NAME <${MAKEFILE_NAME}>]
     [PRERUN_SHELL <${SHELL_PATH}>]
@@ -64,7 +65,7 @@ Adds the appropriate Release and Debug `bin\` directories to the path during the
 
 ## Notes:
 This command should be preceeded by a call to [`vcpkg_configure_nmake()`](vcpkg_configure_nmake.md).
-You can use the alias [`vcpkg_install_nmake()`](vcpkg_configure_nmake.md) function if your CMake script supports the
+You can use the alias [`vcpkg_install_nmake()`](vcpkg_install_nmake.md) function if your CMake script supports the
 "install" target
 
 ## Examples
@@ -78,7 +79,7 @@ function(vcpkg_build_nmake)
     cmake_parse_arguments(PARSE_ARGV 0 _bn
         "ADD_BIN_TO_PATH;ENABLE_INSTALL;NO_DEBUG"
         "SOURCE_PATH;PROJECT_SUBPATH;PROJECT_NAME;LOGFILE_ROOT"
-        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE"
+        "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;PRERUN_SHELL;PRERUN_SHELL_DEBUG;PRERUN_SHELL_RELEASE;TARGET"
     )
     
     if (NOT CMAKE_HOST_WIN32)
@@ -101,7 +102,6 @@ function(vcpkg_build_nmake)
     
     set(MAKE )
     set(MAKE_OPTS_BASE )
-    set(INSTALL_OPTS_BASE )
     
     find_program(NMAKE nmake REQUIRED)
     get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
@@ -115,8 +115,15 @@ function(vcpkg_build_nmake)
     set(ENV{INCLUDE} "${CURRENT_INSTALLED_DIR}/include;$ENV{INCLUDE}")
     # Set make command and install command
     set(MAKE ${NMAKE} /NOLOGO /G /U)
-    set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME} all)
-    set(INSTALL_OPTS_BASE install)
+    set(MAKE_OPTS_BASE -f ${MAKEFILE_NAME})
+    if (_bn_ENABLE_INSTALL)
+        set(INSTALL_COMMAND install)
+    endif()
+    if (_bn_TARGET)
+        set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} ${_bn_TARGET} ${INSTALL_COMMAND})
+    else()
+        set(MAKE_OPTS_BASE ${MAKE_OPTS_BASE} all ${INSTALL_COMMAND})
+    endif()
     # Add subpath to work directory
     if (_bn_PROJECT_SUBPATH)
         set(_bn_PROJECT_SUBPATH /${_bn_PROJECT_SUBPATH})
@@ -137,7 +144,7 @@ function(vcpkg_build_nmake)
                 # Add install command and arguments
                 set(MAKE_OPTS ${MAKE_OPTS_BASE})
                 if (_bn_ENABLE_INSTALL)
-                    set(INSTALL_OPTS ${INSTALL_OPTS_BASE} INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug)
+                    set(INSTALL_OPTS INSTALLDIR=${CURRENT_PACKAGES_DIR}/debug)
                     set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
                 endif()
                 set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS} ${_bn_OPTIONS_DEBUG})
@@ -157,7 +164,7 @@ function(vcpkg_build_nmake)
                 # Add install command and arguments
                 set(MAKE_OPTS ${MAKE_OPTS_BASE})
                 if (_bn_ENABLE_INSTALL)
-                    set(INSTALL_OPTS ${INSTALL_OPTS_BASE} INSTALLDIR=${CURRENT_PACKAGES_DIR})
+                    set(INSTALL_OPTS INSTALLDIR=${CURRENT_PACKAGES_DIR})
                     set(MAKE_OPTS ${MAKE_OPTS} ${INSTALL_OPTS})
                 endif()
                 set(MAKE_OPTS ${MAKE_OPTS} ${_bn_OPTIONS} ${_bn_OPTIONS_RELEASE})
