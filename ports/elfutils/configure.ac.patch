@@ -44,6 +44,6 @@ index 5a2dc373e..b1928831e 100644
  AS_IF([test "x$with_zstd" = xyes], [LIBZSTD="libzstd"], [LIBLZSTD=""])
  AC_SUBST([LIBZSTD])
 -zip_LIBS="$LIBS"
-+zip_LIBS="$LIBS $ac_cv_search_lzma_auto_decoder $ac_cv_search_BZ2_bzdopen $ac_cv_search_gzdirect"
++zip_LIBS="$LIBS $ac_cv_search_lzma_auto_decoder $ac_cv_search_BZ2_bzdopen $ac_cv_search_gzdirect $ac_cv_search_ZSTD_decompress"
  LIBS="$save_LIBS"
  AC_SUBST([zip_LIBS])
