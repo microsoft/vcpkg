@@ -1,5 +1,5 @@
 
-set(pkgver "8.3.110.13")
+set(pkgver "8.6.395.17")
 
 set(ENV{DEPOT_TOOLS_WIN_TOOLCHAIN} 0)
 
@@ -46,7 +46,7 @@ function(checkout_in_path PATH URL REF SHA512)
 endfunction()
 
 function(v8_fetch)
-  set(oneValueArgs DESTINATION URL REF SOURCE)
+  set(oneValueArgs DESTINATION URL REF SOURCE SHA512)
   set(multipleValuesArgs PATCHES)
   cmake_parse_arguments(V8 "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
 
@@ -58,82 +58,70 @@ function(v8_fetch)
     message(FATAL_ERROR "The git url must be specified")
   endif()
 
+  if(NOT DEFINED V8_SHA512)
+    message(FATAL_ERROR "The sha512 of the git archive must be specified")
+  endif()
+
   if(NOT DEFINED V8_REF)
     message(FATAL_ERROR "The git ref must be specified.")
   endif()
 
-  if(EXISTS ${V8_SOURCE}/${V8_DESTINATION})
-        vcpkg_execute_required_process(
-                COMMAND ${GIT} reset --hard
-                WORKING_DIRECTORY ${V8_SOURCE}/${V8_DESTINATION}
-                LOGNAME build-${TARGET_TRIPLET})
-  else()
-        vcpkg_execute_required_process(
-                COMMAND ${GIT} clone --depth 1 ${V8_URL} ${V8_DESTINATION}
-                WORKING_DIRECTORY ${V8_SOURCE}
-                LOGNAME build-${TARGET_TRIPLET})
-        vcpkg_execute_required_process(
-                COMMAND ${GIT} fetch --depth 1 origin ${V8_REF}
-                WORKING_DIRECTORY ${V8_SOURCE}/${V8_DESTINATION}
-                LOGNAME build-${TARGET_TRIPLET})
-        vcpkg_execute_required_process(
-                COMMAND ${GIT} checkout FETCH_HEAD
-                WORKING_DIRECTORY ${V8_SOURCE}/${V8_DESTINATION}
-                LOGNAME build-${TARGET_TRIPLET})
-  endif()
-  foreach(PATCH ${V8_PATCHES})
-        vcpkg_execute_required_process(
-                        COMMAND ${GIT} apply ${PATCH}
-                        WORKING_DIRECTORY ${V8_SOURCE}/${V8_DESTINATION}
-                        LOGNAME build-${TARGET_TRIPLET})
-  endforeach()
+  file(REMOVE_RECURSE ${V8_SOURCE}/${V8_DESTINATION})
+  checkout_in_path(
+    "${V8_SOURCE}/${V8_DESTINATION}"
+    "${V8_URL}"
+    "${V8_REF}"
+    "${V8_SHA512}"
+    ${V8_PATCHES}
+  )
 endfunction()
 
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/v8/v8.git
-    REF 90904eb48b16b32f7edbf1f8a92ece561d05e738
-    SHA512 3e506ee73bab6d21c8004c97a350a6bc9c685bd8f0e3ee937962767af1b3f3bb7cf6effa937618ca9033bf23e366691a7b97ff7f37c9b8e0e962b93a999cf156
-    PATCHES ${CURRENT_PORT_DIR}/v8.patch ${CURRENT_PORT_DIR}/3f8dc4b.patch
+    REF 7565e93eb72cea4268028fc20186d415c22b1cff
+    SHA512 3488f43d11a705461dbe75f2aebf89b35489d7034110e1d4c258023e3ee3185daaf88ea096fa4591cc73a2d687c65504ea48a7f609b57013b79f54eb989ddf9f
+    PATCHES ${CURRENT_PORT_DIR}/v8.patch
 )
 
-checkout_in_path(
-  "${SOURCE_PATH}/build"
-  "https://chromium.googlesource.com/chromium/src/build.git"
-  "26e9d485d01d6e0eb9dadd21df767a63494c8fea"
-  "8e7593cbc0b02fb29ebc435504c2231d4ea2feb2549369e4066e5e7015e5a4568da098c096a6251bb42d6ad1f6ff785e9fa65239f4ebc53bc69fc25321441338"
-  "build.patch"
-)
-checkout_in_path(
-    ${SOURCE_PATH}/third_party/zlib
-    https://chromium.googlesource.com/chromium/src/third_party/zlib.git
-    156be8c52f80cde343088b4a69a80579101b6e67
-    34ec2f1fd12b9fa729f39857af7719d4813bd492eee494744dd63e1209ba7c3c54819f0c17d727fe190ade888362b6c737ff26b9aed6d11333e20f85c51f9658
-)
-checkout_in_path(
-    ${SOURCE_PATH}/base/trace_event/common
-    https://chromium.googlesource.com/chromium/src/base/trace_event/common.git
-    dab187b372fc17e51f5b9fad8201813d0aed5129
-    17e761223152176eff23684b15c1708e13603418c0ae95cd0cbff902d149e9643e3c3692f368b061fa9d68036250c20433862302c276472c632bb8a5cb866aee
-)
-checkout_in_path(
-    ${SOURCE_PATH}/third_party/googletest/src
-    https://chromium.googlesource.com/external/github.com/google/googletest.git
-    10b1902d893ea8cc43c69541d70868f91af3646b
-    28dab959ed95ff53948e8aec64aed3248394bec89a78fc096d1f3898af57f140995ddaf0a01ea0510cc99be6c6401f29481b5f29af5103c655a4e7430ab061bb
-)
-checkout_in_path(
-    ${SOURCE_PATH}/third_party/jinja2
-    https://chromium.googlesource.com/chromium/src/third_party/jinja2.git
-    b41863e42637544c2941b574c7877d3e1f663e25
-    d9997654756c1bae53cd60d8275b9333ed759f8f820e09e8d2632d7c0f96cfa02ca8a32b3a545ea660ee0083127fca0ceb2698c87e2d2f1dbdb7001517f473e2
-)
-checkout_in_path(
-    ${SOURCE_PATH}/third_party/markupsafe
-    https://chromium.googlesource.com/chromium/src/third_party/markupsafe.git
-    8f45f5cfa0009d2a70589bcda0349b8cb2b72783
-    9bc7bcf5b25ef5e793e5cebdf132dd0e6a1e8ac54c7401d8b821ddbe533babbf19d719636b7f74abb30a7a9f94e7d5680b4490f7ec84ca54f6e3d67327362ceb
-)
+message(STATUS "Fetching submodules")
+v8_fetch(
+        DESTINATION build
+        URL https://chromium.googlesource.com/chromium/src/build.git
+        REF b6be94885f567b15bcb0961298b32cdb737ae2d6
+        SHA512 3725ab01e4b0f3110453f0589c9bc2dd917e8862a740686f2016f1ca8c6ec61f13c05aa9220511e0e2c1f7513b0367941df85a1367e848a1125c5d2e08649591
+        SOURCE ${SOURCE_PATH}
+        PATCHES ${CURRENT_PORT_DIR}/build.patch)
+v8_fetch(
+        DESTINATION third_party/zlib
+        URL https://chromium.googlesource.com/chromium/src/third_party/zlib.git
+        REF 156be8c52f80cde343088b4a69a80579101b6e67
+        SHA512 34ec2f1fd12b9fa729f39857af7719d4813bd492eee494744dd63e1209ba7c3c54819f0c17d727fe190ade888362b6c737ff26b9aed6d11333e20f85c51f9658
+        SOURCE ${SOURCE_PATH})
+v8_fetch(
+        DESTINATION base/trace_event/common
+        URL https://chromium.googlesource.com/chromium/src/base/trace_event/common.git
+        REF dab187b372fc17e51f5b9fad8201813d0aed5129
+        SHA512 17e761223152176eff23684b15c1708e13603418c0ae95cd0cbff902d149e9643e3c3692f368b061fa9d68036250c20433862302c276472c632bb8a5cb866aee
+        SOURCE ${SOURCE_PATH})
+v8_fetch(
+        DESTINATION third_party/googletest/src
+        URL https://chromium.googlesource.com/external/github.com/google/googletest.git
+        REF 10b1902d893ea8cc43c69541d70868f91af3646b
+        SHA512 28dab959ed95ff53948e8aec64aed3248394bec89a78fc096d1f3898af57f140995ddaf0a01ea0510cc99be6c6401f29481b5f29af5103c655a4e7430ab061bb
+        SOURCE ${SOURCE_PATH})
+v8_fetch(
+        DESTINATION third_party/jinja2
+        URL https://chromium.googlesource.com/chromium/src/third_party/jinja2.git
+        REF b41863e42637544c2941b574c7877d3e1f663e25
+        SHA512 d9997654756c1bae53cd60d8275b9333ed759f8f820e09e8d2632d7c0f96cfa02ca8a32b3a545ea660ee0083127fca0ceb2698c87e2d2f1dbdb7001517f473e2
+        SOURCE ${SOURCE_PATH})
+v8_fetch(
+        DESTINATION third_party/markupsafe
+        URL https://chromium.googlesource.com/chromium/src/third_party/markupsafe.git
+        REF 8f45f5cfa0009d2a70589bcda0349b8cb2b72783
+        SHA512 9bc7bcf5b25ef5e793e5cebdf132dd0e6a1e8ac54c7401d8b821ddbe533babbf19d719636b7f74abb30a7a9f94e7d5680b4490f7ec84ca54f6e3d67327362ceb
+        SOURCE ${SOURCE_PATH})
 
 file(WRITE "${SOURCE_PATH}/build/util/LASTCHANGE" "LASTCHANGE=0")
 file(WRITE "${SOURCE_PATH}/build/util/LASTCHANGE.committime" "0")
@@ -176,26 +164,33 @@ vcpkg_install_gn(
     TARGETS ${targets}
 )
 
-set(CFLAGS "-DV8_COMPRESS_POINTERS")
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(CFLAGS "${CFLAGS} -DV8_31BIT_SMIS_ON_64BIT_ARCH")
+    set(CFLAGS "-DV8_COMPRESS_POINTERS -DV8_31BIT_SMIS_ON_64BIT_ARCH")
 endif()
+
 file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.h")
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PREFIX ${CURRENT_PACKAGES_DIR})
     configure_file(${CURRENT_PORT_DIR}/v8.pc.in ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8.pc @ONLY)
     configure_file(${CURRENT_PORT_DIR}/v8_libbase.pc.in ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libbase.pc @ONLY)
     configure_file(${CURRENT_PORT_DIR}/v8_libplatform.pc.in ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libplatform.pc @ONLY)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/snapshot_blob.bin DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+
     set(PREFIX ${CURRENT_PACKAGES_DIR}/debug)
     configure_file(${CURRENT_PORT_DIR}/v8.pc.in ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/v8.pc @ONLY)
     configure_file(${CURRENT_PORT_DIR}/v8_libbase.pc.in ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/v8_libbase.pc @ONLY)
     configure_file(${CURRENT_PORT_DIR}/v8_libplatform.pc.in ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/v8_libplatform.pc @ONLY)
+    configure_file(${CURRENT_PORT_DIR}/V8Config-shared.cmake ${CURRENT_PACKAGES_DIR}/share/v8/V8Config.cmake @ONLY)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/snapshot_blob.bin DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
     set(PREFIX ${CURRENT_PACKAGES_DIR})
     configure_file(${CURRENT_PORT_DIR}/v8_monolith.pc.in ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_monolith.pc @ONLY)
     set(PREFIX ${CURRENT_PACKAGES_DIR}/debug)
     configure_file(${CURRENT_PORT_DIR}/v8_monolith.pc.in ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/v8_monolith.pc @ONLY)
+    configure_file(${CURRENT_PORT_DIR}/V8Config-static.cmake ${CURRENT_PACKAGES_DIR}/share/v8/V8Config.cmake @ONLY)
 endif()
+
 
 vcpkg_copy_pdbs()
 

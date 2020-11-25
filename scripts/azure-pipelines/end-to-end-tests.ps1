@@ -193,7 +193,7 @@ if ((Get-ChildItem $NuGetRoot -Filter '*.nupkg' | Measure-Object).Count -ne 1) {
 }
 
 # Test that prohibiting backcompat features actually prohibits
-$backcompatFeaturePorts = @('vcpkg-uses-git-without-sha')
+$backcompatFeaturePorts = @('vcpkg-uses-test-cmake', 'vcpkg-uses-vcpkg-common-functions', 'vcpkg-uses-git-without-sha')
 foreach ($backcompatFeaturePort in $backcompatFeaturePorts) {
     $succeedArgs = $commonArgs + @('install',$backcompatFeaturePort,'--no-binarycaching')
     $failArgs = $succeedArgs + @('--x-prohibit-backcompat-features')

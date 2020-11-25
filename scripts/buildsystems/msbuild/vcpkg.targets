@@ -1,76 +1,41 @@
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="VcpkgRoot;VcpkgCurrentInstalledDir">
-  <!-- Setting reasonable defaults if vcpkg.props was not loaded-->
-  <PropertyGroup Condition="'$(VcpkgHasProps)'!='true'" >
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgAutoLink Condition="'$(VcpkgAutoLink)' == ''">true</VcpkgAutoLink>
-    <VcpkgUseStatic Condition="'$(VcpkgUseStatic)' == ''">false</VcpkgUseStatic>
-    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgRoot>
-    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
-    <VcpkgPageSchema Condition="'$(VcpkgPageSchema)' == ''">$(VcpkgRoot)\scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
-    <VcpkgEnableManifest Condition="'$(VcpkgEnableManifest)' == ''">false</VcpkgEnableManifest>
-    <VcpkgManifestInstall Condition="'$(VcpkgManifestInstall)' == ''">true</VcpkgManifestInstall>
-    <VcpkgManifestRoot>$([MSbuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), vcpkg.json))</VcpkgManifestRoot>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="VcpkgConfigSubdir;VcpkgCurrentInstalledDir;VcpkgInstalledDir;VcpkgNormalizedConfiguration">
+
+  <!-- Import default properties if not done yet. This does not overwrite any previously defined properties. -->
+  <Import Condition="'$(VcpkgPropsImported)' != 'true'" Project="vcpkg.props" />
+
+  <!-- Define properties derived from those defined in vcpkg.props, in the project file or specified on the command line. -->
+  <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
+    <!-- Triplet defining platform, OS, and linkage -->
+    <VcpkgLinkage />
+    <VcpkgLinkage Condition="'$(VcpkgUseStatic)' == 'true'">-static</VcpkgLinkage>
+    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)$(VcpkgLinkage)</VcpkgTriplet>
+
+    <!-- Note: Overwrite VcpkgPageSchema with a non-existing path to disable the VcPkg property sheet in your projects -->
+    <VcpkgPageSchema Condition="'$(VcpkgPageSchema)' == ''">$([System.IO.Path]::Combine($(VcpkgRoot), 'scripts\buildsystems\msbuild\vcpkg-general.xml'))</VcpkgPageSchema>
+
+    <VcpkgRoot Condition="'$(VcpkgRoot)' != '' and !$(VcpkgRoot.EndsWith('\'))">$(VcpkgRoot)\</VcpkgRoot>
+    <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' != '' and !$(VcpkgManifestRoot.EndsWith('\'))">$(VcpkgManifestRoot)\</VcpkgManifestRoot>
+
+    <VcpkgInstalledDir>$([System.IO.Path]::Combine($(VcpkgRoot), 'installed'))</VcpkgInstalledDir>
+    <VcpkgInstalledDir Condition="'$(VcpkgEnableManifest)' == 'true'">$([System.IO.Path]::Combine($(VcpkgManifestRoot), 'vcpkg_installed'))</VcpkgInstalledDir>
+    <VcpkgInstalledDir Condition="!$(VcpkgInstalledDir.EndsWith('\'))">$(VcpkgInstalledDir)\</VcpkgInstalledDir>
+
+    <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$([System.IO.Path]::Combine($(VcpkgInstalledDir), $(VcpkgTriplet)))</VcpkgCurrentInstalledDir>
+    <VcpkgCurrentInstalledDir Condition="!$(VcpkgCurrentInstalledDir.EndsWith('\'))">$(VcpkgCurrentInstalledDir)\</VcpkgCurrentInstalledDir>
+
+    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
+    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
+
+    <VcpkgConfigSubdir Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">debug\</VcpkgConfigSubdir>
+    <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
   </PropertyGroup>
 
-  <!-- Set default OS Target-->
-  <PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' == 'Windows Store|10.0' And '$(VcpkgHasProps)'!='true'">
-    <VcpkgOSTarget Condition="'$(VcpkgOSTarget)' == ''">uwp</VcpkgOSTarget>
-  </PropertyGroup>
-  <PropertyGroup  Condition="'$(VcpkgHasProps)'!='true'" >
-    <VcpkgOSTarget Condition="'$(VcpkgOSTarget)' == ''">windows</VcpkgOSTarget>
-  </PropertyGroup>
-
-  <!-- Set default Platform Target-->
-  <PropertyGroup Condition="'$(Platform)' == 'Win32'">
-    <VcpkgPlatformTarget Condition="'$(VcpkgPlatformTarget)' == ''">x86</VcpkgPlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup>
-    <VcpkgPlatformTarget Condition="'$(VcpkgPlatformTarget)' == ''">$(Platform)</VcpkgPlatformTarget>
-  </PropertyGroup>
-
-  <!-- Set other defaults-->
-  <PropertyGroup Condition="'$(VcpkgHasProps)'!='true'" >
-    <VcpkgUserTriplet Condition="'$(VcpkgUserTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)</VcpkgUserTriplet>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgUserTriplet)</VcpkgTriplet>
-    <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$(VcpkgRoot)\installed\$(VcpkgTriplet)\</VcpkgCurrentInstalledDir>
-  </PropertyGroup>
-
-  <!--Import property page for vcpkg -->
-  <ItemGroup Condition="'$(VcpkgPageSchema)' != '' ">
+  <!-- Import property page 'Vcpkg' -->
+  <ItemGroup Condition="'$(VcpkgPageSchema)' != '' and exists('$(VcpkgPageSchema)')">
     <PropertyPageSchema Include="$(VcpkgPageSchema)">
       <Context>Project</Context>
     </PropertyPageSchema>
   </ItemGroup>
-
-  <!-- Update properties if manifests are enabled or disabled -->
-  <PropertyGroup Condition="'$(VcpkgEnableManifest)' == 'true'">
-    <VcpkgInstalledDir>$(VcpkgManifestRoot)\vcpkg_installed\</VcpkgInstalledDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(VcpkgEnableManifest)' != 'true'">
-    <VcpkgInstalledDir>$(VcpkgRoot)\installed\</VcpkgInstalledDir>
-  </PropertyGroup>
-
-  <!-- Update properties if using static libs-->
-  <PropertyGroup Condition="'$(VcpkgUseStatic)' == 'true'">
-    <VcpkgTriplet>$(VcpkgUserTriplet)-static</VcpkgTriplet>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(VcpkgCurrentInstalledDir)' == ''">
-    <VcpkgCurrentInstalledDir>$(VcpkgInstalledDir)$(VcpkgTriplet)</VcpkgCurrentInstalledDir>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
-    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
-    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
-    <VcpkgConfigSubdir Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">debug\</VcpkgConfigSubdir>
-    <VcpkgRoot Condition="!$(VcpkgRoot.EndsWith('\'))">$(VcpkgRoot)\</VcpkgRoot>
-    <VcpkgCurrentInstalledDir Condition="!$(VcpkgCurrentInstalledDir.EndsWith('\'))">$(VcpkgCurrentInstalledDir)\</VcpkgCurrentInstalledDir>
-    <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' != '' and !$(VcpkgManifestRoot.EndsWith('\'))">$(VcpkgManifestRoot)\</VcpkgManifestRoot>
-    <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
-    <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!).
-    Tried to add /lib as a parameter to the linker call but was unable to find a way to pass it as the first parameter. -->
-    <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true'">false</VcpkgAutoLink>
-  </PropertyGroup>
 
   <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <Link>
@@ -85,36 +50,67 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
 
-  <Target Name="VcpkgCheckManifestRoot" Condition="'$(VcpkgEnabled)' == 'true'" BeforeTargets="VcpkgInstallManifestDependencies">
-    <Error Text="The Vcpkg manifest was enabled, but we couldn't find a manifest file (vcpkg.json) in any directories above $(MSBuildProjectDirectory). Please add a manifest, disable manifests in your properties page, or pass /p:VcpkgEnableManifest=false." Condition="'$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestRoot)' == ''" />
-    <Message Text="The Vcpkg manifest was disabled, but we found a manifest file in $(VcpkgManifestRoot). You may want to enable vcpkg manifests in your properties page or pass /p:VcpkgEnableManifest=true to the msbuild invocation." Importance="High" Condition="'$(VcpkgEnableManifest)' != 'true' and '$(VcpkgManifestRoot)' != ''" />
+  <Target Name="VcpkgCheckManifestRoot" BeforeTargets="VcpkgInstallManifestDependencies" Condition="'$(VcpkgEnabled)' == 'true'">
+    <Error Text="The vcpkg manifest was enabled, but we couldn't find a manifest file (vcpkg.json) in any directories above $(MSBuildProjectDirectory). Please add a manifest, disable manifests in your properties page, or pass /p:VcpkgEnableManifest=false."
+           Condition="'$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestRoot)' == ''" />
+    <Message Text="The vcpkg manifest was disabled, but we found a manifest file in $(VcpkgManifestRoot). You may want to enable vcpkg manifests in your properties page or pass /p:VcpkgEnableManifest=true to the msbuild invocation."
+             Importance="High" Condition="'$(VcpkgEnableManifest)' != 'true' and '$(VcpkgManifestRoot)' != ''" />
   </Target>
 
   <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
-    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgCurrentInstalledDir)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
-    <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;" Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
+    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgCurrentInstalledDir)&quot;"
+             Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
+    <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;"
+             Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
     <Message Text="Vcpkg is unable to link because we cannot decide between Release and Debug libraries. Please define the property VcpkgConfiguration to be 'Release' or 'Debug' (currently '$(VcpkgConfiguration)')."
              Importance="High" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgNormalizedConfiguration)' == ''"/>
   </Target>
 
-  <Target Name="VcpkgInstallManifestDependencies" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'" BeforeTargets="ClCompile">
+  <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'">
     <Message Text="Installing vcpkg dependencies" Importance="High" />
-    <Exec Command="%22$(VcpkgRoot)vcpkg.exe%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22" StandardOutputImportance="High" />
+    <Exec Command="%22$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22"
+          StandardOutputImportance="High" />
   </Target>
 
-  <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgApplocalDeps)' == 'true'">
-    <WriteLinesToFile
-    File="$(TLogLocation)$(ProjectName).write.1u.tlog"
-    Lines="^$(TargetPath);$([System.IO.Path]::Combine($(ProjectDir),$(IntDir)))vcpkg.applocal.log" Encoding="Unicode"/>
+  <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput"
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgApplocalDeps)' == 'true'">
+    <Message Text="[vcpkg] Starting VcpkgApplocalDeps" Importance="low" />
+    <PropertyGroup>
+      <_VcpkgAppLocalPowerShellCommonArguments>-ExecutionPolicy Bypass -noprofile -File "$(MSBuildThisFileDirectory)applocal.ps1" "$(TargetPath)" "$(VcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)bin" "$(TLogLocation)$(ProjectName).write.1u.tlog" "$(IntDir)vcpkg.applocal.log"</_VcpkgAppLocalPowerShellCommonArguments>
+    </PropertyGroup>
+    <!-- Search %PATH% for pwsh.exe if it is available. -->
     <Exec
-      Command="$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -noprofile -File %22$(MSBuildThisFileDirectory)applocal.ps1%22 %22$(TargetPath)%22 %22$(VcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)bin%22 %22$(TLogLocation)$(ProjectName).write.1u.tlog%22 %22$(IntDir)vcpkg.applocal.log%22"
-      StandardOutputImportance="Normal">
+      Command="pwsh.exe $(_VcpkgAppLocalPowerShellCommonArguments)"
+      StandardOutputImportance="Normal"
+      StandardErrorImportance="Normal"
+      IgnoreExitCode="true"
+      UseCommandProcessor="false">
+      <Output TaskParameter="ExitCode"
+              PropertyName="_VcpkgAppLocalExitCode" />
     </Exec>
-    <ReadLinesFromFile File="$(IntDir)vcpkg.applocal.log">
+    <!-- Fall back to well known system PowerShell location otherwise. -->
+    <Message Text="[vcpkg] Failed to run applocal.ps1 using pwsh, falling back to system PowerShell." Importance="low"
+             Condition="$(_VcpkgAppLocalExitCode) == 9009" />
+    <Exec
+      Command="%22$(SystemRoot)\System32\WindowsPowerShell\v1.0\powershell.exe%22 $(_VcpkgAppLocalPowerShellCommonArguments)"
+      StandardOutputImportance="Normal"
+      StandardErrorImportance="Normal"
+      IgnoreExitCode="true"
+      UseCommandProcessor="false"
+      Condition="$(_VcpkgAppLocalExitCode) == 9009">
+      <Output TaskParameter="ExitCode"
+              PropertyName="_VcpkgAppLocalExitCode" />
+    </Exec>
+    <!-- We're ignoring the above exit codes, so translate into a warning if both failed. -->
+    <Warning Text="[vcpkg] Failed to gather app local DLL dependencies, program may not run. Set VcpkgApplocalDeps to false in your project file to suppress this warning. PowerShell arguments: $(_VcpkgAppLocalPowerShellCommonArguments)"
+      Condition="$(_VcpkgAppLocalExitCode) != 0"/>
+    <ReadLinesFromFile File="$(IntDir)vcpkg.applocal.log"
+      Condition="$(_VcpkgAppLocalExitCode) == 0">
       <Output TaskParameter="Lines" ItemName="VcpkgAppLocalDLLs" />
     </ReadLinesFromFile>
-    <Message Text="@(VcpkgAppLocalDLLs,'%0A')" Importance="Normal" />
-    <ItemGroup>
+    <Message Text="@(VcpkgAppLocalDLLs,'%0A')" Importance="Normal" Condition="$(_VcpkgAppLocalExitCode) == 0" />
+    <ItemGroup Condition="$(_VcpkgAppLocalExitCode) == 0">
       <ReferenceCopyLocalPaths Include="@(VcpkgAppLocalDLLs)" />
     </ItemGroup>
   </Target>

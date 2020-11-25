@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-sqlite-dependency-export.patch
         fix-linux-build.patch
         use-sqlite3-config.patch
+        tools-cmake.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -22,6 +23,12 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     database BUILD_PROJ_DATABASE
+    tools BUILD_CCT
+    tools BUILD_CS2CS
+    tools BUILD_GEOD
+    tools BUILD_GIE
+    tools BUILD_PROJ
+    tools BUILD_PROJINFO
 )
 if ("database" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
@@ -53,18 +60,15 @@ vcpkg_configure_cmake(
     -DPROJ_LIB_SUBDIR=lib
     -DPROJ_INCLUDE_SUBDIR=include
     -DPROJ_DATA_SUBDIR=share/proj4
-    -DBUILD_CCT=OFF
-    -DBUILD_CS2CS=OFF
-    -DBUILD_GEOD=OFF
-    -DBUILD_GIE=OFF
-    -DBUILD_PROJ=OFF
-    -DBUILD_PROJINFO=OFF
     -DPROJ_TESTS=OFF
     -DEXE_SQLITE3=${SQLITE3_BIN_PATH}/sqlite3${BIN_SUFFIX}
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/proj4)
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES cct cs2cs geod gie proj projinfo AUTO_CLEAN)
+endif ()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

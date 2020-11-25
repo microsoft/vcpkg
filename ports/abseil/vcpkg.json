@@ -1,7 +1,7 @@
 {
   "name": "abseil",
-  "version-string": "2020-03-03",
-  "port-version": 8,
+  "version-string": "2020-09-23",
+  "port-version": 1,
   "description": [
     "an open-source collection designed to augment the C++ standard library.",
     "Abseil is an open-source collection of C++ library code designed to augment the C++ standard library. The Abseil library code is collected from Google's own C++ code base, has been extensively tested and used in production, and is the same code we depend on in our daily coding lives.",
@@ -9,6 +9,7 @@
     "Abseil is not meant to be a competitor to the standard library; we've just found that many of these utilities serve a purpose within our code base, and we now want to provide those resources to the C++ community as a whole."
   ],
   "homepage": "https://github.com/abseil/abseil-cpp",
+  "supports": "(x64 | arm64) & (linux | osx | windows)",
   "features": {
     "cxx17": {
       "description": "Enable compiler C++17."

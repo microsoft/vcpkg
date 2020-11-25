@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 #only supports windows
 if (VCPKG_CMAKE_SYSTEM_NAME)
     message(FATAL_ERROR "networkDirect-sdk only supports windows")

@@ -481,7 +481,8 @@ namespace vcpkg::Install
 
         Build::compute_all_abis(paths, action_plan, var_provider, status_db);
 
-        binaryprovider.prefetch(paths, action_plan);
+        auto to_prefetch = Util::fmap(action_plan.install_actions, [](const auto& x) { return &x; });
+        binaryprovider.prefetch(paths, to_prefetch);
 
         for (auto&& action : action_plan.install_actions)
         {
@@ -797,7 +798,7 @@ namespace vcpkg::Install
                 Metrics::g_metrics.lock()->track_property("x-write-nuget-packages-config", "defined");
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
-            auto manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
+            const auto& manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
             auto maybe_manifest_scf = SourceControlFile::parse_manifest_file(manifest_path, *manifest);
             if (!maybe_manifest_scf)
             {
@@ -806,7 +807,13 @@ namespace vcpkg::Install
                                "more information.\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
+
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
+
+            if (auto maybe_error = manifest_scf.check_against_feature_flags(manifest_path, paths.get_feature_flags()))
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, maybe_error.value_or_exit(VCPKG_LINE_INFO));
+            }
 
             std::vector<std::string> features;
             auto manifest_feature_it = options.multisettings.find(OPTION_MANIFEST_FEATURE);
@@ -927,7 +934,7 @@ namespace vcpkg::Install
 
         Metrics::g_metrics.lock()->track_property("installplan_1", specs_string);
 
-        Dependencies::print_plan(action_plan, is_recursive, paths.ports);
+        Dependencies::print_plan(action_plan, is_recursive, paths.builtin_ports_directory());
 
         auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
         if (it_pkgsconfig != options.settings.end())

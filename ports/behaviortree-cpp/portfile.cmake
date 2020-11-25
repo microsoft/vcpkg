@@ -38,5 +38,3 @@ file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/lib/BehaviorTreeV3"
     "${CURRENT_PACKAGES_DIR}/debug/lib/BehaviorTreeV3"
 )
-
-vcpkg_test_cmake(PACKAGE_NAME BehaviorTreeV3)

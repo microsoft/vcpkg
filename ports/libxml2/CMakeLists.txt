@@ -8,7 +8,7 @@ set(CMAKE_STATIC_LIBRARY_PREFIX)
 
 find_package(ZLIB REQUIRED)
 find_package(LibLZMA REQUIRED)
-find_package(unofficial-iconv REQUIRED)
+find_package(Iconv REQUIRED)
 
 file(GLOB SOURCES *.c)
 list(FILTER SOURCES EXCLUDE REGEX "/(run|test|trio)[^/]*$")
@@ -109,7 +109,7 @@ if(INSTALL_HEADERS)
 endif()
 target_include_directories(libxml2 PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/include include ${LIBLZMA_INCLUDE_DIRS})
 target_link_libraries(libxml2 PRIVATE
-    unofficial::iconv::libcharset unofficial::iconv::libiconv
+    Iconv::Iconv
     ZLIB::ZLIB
     ${LIBLZMA_LIBRARIES}
 )
@@ -150,3 +150,12 @@ install(TARGETS libxml2
     ARCHIVE DESTINATION lib
     ${TARGET_INSTALL_OPTIONS}
 )
+
+# pkgconfig
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix "\${prefix}")
+set(libdir ${prefix}/${CMAKE_INSTALL_LIBDIR})
+set(includedir ${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
+
+configure_file(libxml-2.0.pc.in libxml-2.0.pc @ONLY)
+install(FILES ${CMAKE_BINARY_DIR}/libxml-2.0.pc DESTINATION lib/pkgconfig)

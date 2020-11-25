@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(RAQM_VERSION_MAJOR 0)
@@ -33,6 +31,3 @@ vcpkg_copy_pdbs()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libraqm RENAME copyright)
-
-# Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME raqm)

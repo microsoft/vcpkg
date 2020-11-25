@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REF 9b4128ee1153e78288a1b5433e2c06a0d47a4c4e

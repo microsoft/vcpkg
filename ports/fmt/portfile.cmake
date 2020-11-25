@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
-    REF 4fe0b11195b7cd71f39253c44db2c9dddf6b82d4#version 7.1.0
-    SHA512 1cb2eac5abcec0a002c505a3de04284f89a6b31923edb6868cf9e9ac2803c3985ab62e2bff55da49a30def8476bfed205cf6a5b40a03a1d3df1292feb5352e86
+    REF cc09f1a6798c085c325569ef466bcdcffdc266d4 # v7.1.2
+    SHA512 a7bdd62ec98e3098182bc5080938b37284ced83f007ea3ef45e27407c04fc13a9e5852ab959b3d02088286480924c71e9fd23492c20d8752cf7e890b2a1ec52e
     HEAD_REF master
     PATCHES fix-warning4189.patch
 )
