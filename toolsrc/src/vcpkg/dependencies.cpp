@@ -433,6 +433,12 @@ namespace vcpkg::Dependencies
         if (!abi_info) return false;
         return !abi_info.get()->package_abi.empty();
     }
+    Optional<const std::string&> InstallPlanAction::package_abi() const
+    {
+        if (!abi_info) return nullopt;
+        if (abi_info.get()->package_abi.empty()) return nullopt;
+        return abi_info.get()->package_abi;
+    }
     const Build::PreBuildInfo& InstallPlanAction::pre_build_info(LineInfo linfo) const
     {
         return *abi_info.value_or_exit(linfo).pre_build_info.get();

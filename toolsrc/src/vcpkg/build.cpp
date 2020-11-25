@@ -214,7 +214,7 @@ namespace vcpkg::Build
 
     static std::remove_const_t<decltype(ALL_POLICIES)> generate_all_policies()
     {
-        std::remove_const_t<decltype(ALL_POLICIES)> res;
+        std::remove_const_t<decltype(ALL_POLICIES)> res{};
         for (size_t i = 0; i < res.size(); ++i)
         {
             res[i] = static_cast<BuildPolicy>(i);
@@ -693,6 +693,10 @@ namespace vcpkg::Build
         else if (cmake_system_name == "FreeBSD")
         {
             return m_paths.scripts / fs::u8path("toolchains/freebsd.cmake");
+        }
+        else if (cmake_system_name == "OpenBSD")
+        {
+            return m_paths.scripts / fs::u8path("toolchains/openbsd.cmake");
         }
         else if (cmake_system_name == "Android")
         {
