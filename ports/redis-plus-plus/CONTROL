@@ -6,4 +6,4 @@ Description: This is a C++ client for Redis. It's based on hiredis, and written 
 Build-Depends: hiredis
 
 Feature: cxx17
-Description: Build redis-plus-plus using define flag REDIS_PLUS_PLUS_CXX_STANDARD=17
+Description: Build redis-plus-plus with cxx 17 standard
