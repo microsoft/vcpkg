@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         disable-examples.patch
         potentially-uninitialized-local-pointer-variable.patch
+        fix-export.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -26,14 +27,16 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/solid3)
 
-file(COPY ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/solid3)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/solid3/README.md ${CURRENT_PACKAGES_DIR}/share/solid3/copyright)
-file(COPY ${SOURCE_PATH}/LICENSE_GPL.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/solid3)
-file(COPY ${SOURCE_PATH}/LICENSE_QPL.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/solid3)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/SOLID/SOLID_types.h
+        "#   if defined(SOLID_STATIC)" "#   if 1"
+    )
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(COPY ${SOURCE_PATH}/LICENSE_GPL.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/solid3)
+file(COPY ${SOURCE_PATH}/LICENSE_QPL.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/solid3)
+file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/solid3 RENAME copyright)
