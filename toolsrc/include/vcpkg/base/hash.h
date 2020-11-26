@@ -43,7 +43,8 @@ namespace vcpkg::Hash
         const auto result = get_file_hash(fs, path, algo, ec);
         if (ec)
         {
-            Checks::exit_with_message(li, "Failure to read file for hashing: %s", ec.message());
+            Checks::exit_with_message(
+                li, "Failure to read file '%s' for hashing: %s", fs::u8string(path), ec.message());
         }
 
         return result;
