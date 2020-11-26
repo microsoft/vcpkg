@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-sqlite3-bin.patch
-        disable-export-namespace.patch
         disable-projdb-with-arm-uwp.patch
         fix-win-output-name.patch
         use-sqlite3-config.patch
