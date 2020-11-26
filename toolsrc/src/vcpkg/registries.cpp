@@ -5,6 +5,7 @@
 
 #include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/registries.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/versiondeserializers.h>
 #include <vcpkg/versiont.h>
@@ -218,6 +219,12 @@ namespace
 
         Optional<VersionT> get_baseline_version(const VcpkgPaths& paths, StringView port_name) const override
         {
+            if (!paths.get_feature_flags().versions)
+            {
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   "This invocation failed because the `versions` feature flag is not enabled.");
+            }
+
             const auto& baseline_cache = baseline.get([this, &paths] { return load_baseline_versions(paths); });
             auto it = baseline_cache.find(port_name);
             if (it != baseline_cache.end())
