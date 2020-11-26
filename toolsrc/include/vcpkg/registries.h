@@ -6,6 +6,8 @@
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/view.h>
 
+#include <vcpkg/versiont.h>
+
 #include <memory>
 #include <string>
 #include <system_error>
@@ -13,9 +15,22 @@
 
 namespace vcpkg
 {
+    struct RegistryEntry
+    {
+        // returns fs::path() if version doesn't exist
+        virtual fs::path get_port_directory(const VcpkgPaths& paths, const VersionT& version) const = 0;
+
+        virtual ~RegistryEntry() = default;
+    };
+
     struct RegistryImpl
     {
-        virtual fs::path get_registry_root(const VcpkgPaths& paths) const = 0;
+        // returns nullptr if the port doesn't exist
+        virtual std::unique_ptr<RegistryEntry> get_port_entry(const VcpkgPaths& paths, StringView port_name) const = 0;
+        // appends the names of the ports to the out parameter
+        virtual void get_all_port_names(std::vector<std::string>& port_names, const VcpkgPaths& paths) const = 0;
+
+        virtual Optional<VersionT> get_baseline_version(const VcpkgPaths& paths, StringView port_name) const = 0;
 
         virtual ~RegistryImpl() = default;
     };

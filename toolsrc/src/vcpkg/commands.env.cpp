@@ -5,6 +5,7 @@
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.env.h>
 #include <vcpkg/help.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::Env

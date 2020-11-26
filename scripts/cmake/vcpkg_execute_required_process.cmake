@@ -9,6 +9,8 @@
 ##     WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg>
 ##     LOGNAME <build-${TARGET_TRIPLET}-dbg>
 ##     [TIMEOUT <seconds>]
+##     [OUTPUT_VARIABLE <var>]
+##     [ERROR_VARIABLE <var>]
 ## )
 ## ```
 ## ## Parameters
@@ -28,6 +30,12 @@
 ## ### TIMEOUT
 ## Optional timeout after which to terminate the command.
 ##
+## ### OUTPUT_VARIABLE
+## Optional variable to receive stdout of the command.
+##
+## ### ERROR_VARIABLE
+## Optional variable to receive stderr of the command.
+##
 ## This should be a unique name for different triplets so that the logs don't conflict when building multiple at once.
 ##
 ## ## Examples
@@ -41,14 +49,25 @@ include(vcpkg_prettify_command)
 include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_execute_required_process)
-    cmake_parse_arguments(vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME;TIMEOUT" "COMMAND" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE" "COMMAND")
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${vcpkg_execute_required_process_LOGNAME}-err.log")
 
     if(vcpkg_execute_required_process_TIMEOUT)
-      set(TIMEOUT_PARAM "TIMEOUT;${vcpkg_execute_required_process_TIMEOUT}")
+        set(TIMEOUT_PARAM "TIMEOUT;${vcpkg_execute_required_process_TIMEOUT}")
     else()
-      set(TIMEOUT_PARAM "")
+        set(TIMEOUT_PARAM "")
+    endif()
+    if(vcpkg_execute_required_process_OUTPUT_VARIABLE)
+        set(OUTPUT_VARIABLE_PARAM "OUTPUT_VARIABLE;${vcpkg_execute_required_process_OUTPUT_VARIABLE}")
+    else()
+        set(OUTPUT_VARIABLE_PARAM "")
+    endif()
+    if(vcpkg_execute_required_process_ERROR_VARIABLE)
+        set(ERROR_VARIABLE_PARAM "ERROR_VARIABLE;${vcpkg_execute_required_process_ERROR_VARIABLE}")
+    else()
+        set(ERROR_VARIABLE_PARAM "")
     endif()
 
     if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT vcpkg_execute_required_process_ALLOW_IN_DOWNLOAD_MODE)
@@ -65,7 +84,9 @@ Halting portfile execution.
         ERROR_FILE ${LOG_ERR}
         RESULT_VARIABLE error_code
         WORKING_DIRECTORY ${vcpkg_execute_required_process_WORKING_DIRECTORY}
-        ${TIMEOUT_PARAM})
+        ${TIMEOUT_PARAM}
+        ${OUTPUT_VARIABLE_PARAM}
+        ${ERROR_VARIABLE_PARAM})
     if(error_code)
         set(LOGS)
         file(READ "${LOG_OUT}" out_contents)
@@ -90,4 +111,10 @@ Halting portfile execution.
             ${STRINGIFIED_LOGS}
         )
     endif()
+    # pass output parameters back to caller's scope
+    foreach(arg OUTPUT_VARIABLE ERROR_VARIABLE)
+        if(vcpkg_execute_required_process_${arg})
+            set(${vcpkg_execute_required_process_${arg}} ${${vcpkg_execute_required_process_${arg}}} PARENT_SCOPE)
+        endif()
+    endforeach()
 endfunction()

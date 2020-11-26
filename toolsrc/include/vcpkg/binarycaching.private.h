@@ -1,10 +1,11 @@
 #pragma once
 
-#include <vcpkg/dependencies.h>
-#include <vcpkg/packagespec.h>
-#include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/fwd/packagespec.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
 
-#include <string>
+#include <vcpkg/base/strings.h>
+
+#include <vcpkg/dependencies.h>
 
 namespace vcpkg
 {

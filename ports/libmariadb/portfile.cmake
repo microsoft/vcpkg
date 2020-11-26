@@ -5,19 +5,27 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MariaDB/mariadb-connector-c
-    REF a746c3af449a8754e78ad7971e59e79af7957cdb # v3.1.9
-    SHA512 6f200b984b0642bd75dd8b1ca8f6b996c4b9236c4180255d15dee369a10b3b802c0e8e1942135aeb3c279f3087ff4b19096e5fef15935f4b76cf4fcb344d9133
-    HEAD_REF master
+    REF 159540fe8c8f30b281748fe8a1b79e8b17993a67 # v3.1.10
+    SHA512 3e154f5dc4b5051607c7ebc0691a50c0699d60e4414660cf8f65689081ff78ef6b135667761ba8ac4163b469a3b55158c6b48c6fc0a0cc09381452aad157e4ad
+    HEAD_REF 3.1
     PATCHES
         md.patch
         disable-test-build.patch
         fix-InstallPath.patch
+        fix-iconv.patch
+        export-cmake-targets.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     zlib WITH_EXTERNAL_ZLIB
-    openssl WITH_SSL
+    iconv WITH_ICONV
 )
+
+if("openssl" IN_LIST FEATURES)
+	set(WITH_SSL OPENSSL)
+else()
+	set(WITH_SSL OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -26,9 +34,12 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DWITH_UNITTEST=OFF
         -DWITH_CURL=OFF
+        -DWITH_SSL=${WITH_SSL}
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-libmariadb TARGET_PATH share/unofficial-libmariadb)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # remove debug header
@@ -61,4 +72,5 @@ file(RENAME
     ${CURRENT_PACKAGES_DIR}/include/mariadb
     ${CURRENT_PACKAGES_DIR}/include/mysql)
 
+# copy license file
 file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
