@@ -164,6 +164,8 @@ vcpkg_configure_cmake(
         -DLLVM_PARALLEL_LINK_JOBS=1
         # Disable build LLVM-C.dll (Windows only) due to doesn't compile with CMAKE_DEBUG_POSTFIX
         -DLLVM_BUILD_LLVM_C_DYLIB=OFF
+        # Path for binary subdirectory (defaults to 'bin')
+        -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )
@@ -231,6 +233,7 @@ vcpkg_copy_tools(TOOL_NAMES ${LLVM_TOOLS} AUTO_CLEAN)
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
 endif()
 
 # LLVM still generates a few DLLs in the static build:
