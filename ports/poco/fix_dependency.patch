@@ -229,3 +229,15 @@ index 173eacd..936edf4 100644
  
  foreach(module ${Poco_FIND_COMPONENTS})
      find_package(Poco${module}
+diff --git a/Data/MySQL/include/Poco/Data/MySQL/MySQL.h b/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
+index b533c9f..e2bb2d3 100644
+--- a/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
++++ b/Data/MySQL/include/Poco/Data/MySQL/MySQL.h
+@@ -54,7 +54,6 @@
+ 	#if !defined(MySQL_EXPORTS)
+ 		#pragma comment(lib, "PocoDataMySQL" POCO_LIB_SUFFIX)
+ 	#endif
+-	#pragma comment(lib, "libmysql")
+ #endif
+ 
+ 
