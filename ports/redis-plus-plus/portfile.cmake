@@ -10,7 +10,7 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    cxx17 ENABLE_DRAFTS
+    cxx17 ENABLE_CXX17
 )
 
 
