@@ -1,16 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OSGeo/PROJ
-    REF 6.3.1
-    SHA512 ec5a2b61b12d3d3ec2456b9e742cf7be98767889c4759334e60276f609054fa8eb59f13f07af38e69e9ee7b6f2b9542e2d5d7806726ce5616062af4de626c6fa
+    REF 7.2.0
+    SHA512 65dfca92b7890a9ffa78f48da443045069a250e2974dcf564fa23ffc297f87235b669983b39906352bd8eb702714b98fd89a4c7beaad4ad70834993a6de85128
     HEAD_REF master
     PATCHES
         fix-sqlite3-bin.patch
         disable-export-namespace.patch
         disable-projdb-with-arm-uwp.patch
         fix-win-output-name.patch
-        fix-sqlite-dependency-export.patch
-        fix-linux-build.patch
         use-sqlite3-config.patch
         tools-cmake.patch
 )
@@ -29,6 +27,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools BUILD_GIE
     tools BUILD_PROJ
     tools BUILD_PROJINFO
+    tools BUILD_PROJSYNC
 )
 if ("database" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
@@ -56,18 +55,18 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
-    -DBUILD_LIBPROJ_SHARED=${VCPKG_BUILD_SHARED_LIBS}
+    -DBUILD_SHARED_LIBS=${VCPKG_BUILD_SHARED_LIBS}
     -DPROJ_LIB_SUBDIR=lib
     -DPROJ_INCLUDE_SUBDIR=include
-    -DPROJ_DATA_SUBDIR=share/proj4
-    -DPROJ_TESTS=OFF
+    -DPROJ_DATA_SUBDIR=share/${PORT}
+    -DBUILD_TESTING=OFF
     -DEXE_SQLITE3=${SQLITE3_BIN_PATH}/sqlite3${BIN_SUFFIX}
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/proj4)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES cct cs2cs geod gie proj projinfo AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES cct cs2cs geod gie proj projinfo projsync AUTO_CLEAN)
 endif ()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
