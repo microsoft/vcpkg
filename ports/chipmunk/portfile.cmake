@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO slembcke/Chipmunk2D
@@ -74,9 +72,9 @@ else()
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
         OPTIONS -DBUILD_DEMOS=OFF
-                -DBUILD_SHARED=KEYSTONE_BUILD_SHARED
-                -DBUILD_STATIC=KEYSTONE_BUILD_STATIC
-                -DINSTALL_STATIC=KEYSTONE_BUILD_STATIC
+                -DBUILD_SHARED=${KEYSTONE_BUILD_SHARED}
+                -DBUILD_STATIC=${KEYSTONE_BUILD_STATIC}
+                -DINSTALL_STATIC=${KEYSTONE_BUILD_STATIC}
     )
 
     vcpkg_install_cmake()
@@ -84,25 +82,27 @@ else()
     if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/libchipmunk.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/libchipmunk.dll")
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/src/libchipmunk.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/libchipmunk.dll")
+        endif()
     endif()
 
-    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release) 
-        file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/libchipmunk.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/libchipmunk.dll")
-    endif()
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+            file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/src/libchipmunk.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+            file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/libchipmunk.dll")
+        endif()
     endif()
 endif()
 
 file(INSTALL
-    ${SOURCE_PATH}/include/chipmunk
+    ${SOURCE_PATH}/include/${PORT}
     DESTINATION ${CURRENT_PACKAGES_DIR}/include
 )
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/chipmunk RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-message(STATUS "Installing done")
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    message(STATUS "Installing done")
+endif()
