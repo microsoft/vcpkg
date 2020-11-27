@@ -1,7 +1,8 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://sourceware.org/git/elfutils
-    REF b503c358dde835d8a1ae3ebd4968755ff396f814 #elfutils-0.182
+    REF 25d048684a82f9ba701c6939b7f28c3543bb7991 #elfutils-0.182
+
     PATCHES configure.ac.patch
 )
 
