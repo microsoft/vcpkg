@@ -12,6 +12,7 @@ vcpkg_from_github(
       "curl.patch"
       "static_unrar.patch"
       "static_libclammspack.patch"
+      "static_iconv.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
@@ -22,6 +23,7 @@ vcpkg_configure_cmake(
   PREFER_NINJA
   OPTIONS
       -DENABLE_LIBCLAMAV_ONLY=ON
+      -DENABLE_DOCS=OFF
       -DENABLE_SHARED_LIB=${ENABLE_SHARED}
       -DENABLE_STATIC_LIB=${ENABLE_STATIC}
 )
@@ -32,5 +34,10 @@ vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+# On Linux, clamav will still build and install clamav-config
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 vcpkg_copy_pdbs()
