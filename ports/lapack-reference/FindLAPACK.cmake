@@ -110,6 +110,10 @@ set(CMAKE_REQUIRED_QUIET ${LAPACK_FIND_QUIETLY})
 set(LAPACK_FOUND FALSE)
 set(LAPACK95_FOUND FALSE)
 
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES .so.3gfs .so.3 .so.4 .so.5)
+endif()
+
 # TODO: move this stuff to a separate module
 
 macro(CHECK_LAPACK_LIBRARIES LIBRARIES _prefix _name _flags _list _threadlibs _addlibdir _subdirs _blas)
