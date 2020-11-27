@@ -10,6 +10,8 @@ vcpkg_from_github(
       "build.patch"
       "cmakefiles.patch"
       "curl.patch"
+      "static_unrar.patch"
+      "static_libclammspack.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
