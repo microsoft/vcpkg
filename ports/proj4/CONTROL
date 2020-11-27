@@ -18,5 +18,5 @@ Build-Depends: sqlite3[tool] (!uwp&!arm)
 Description: generate database
 
 Feature: tools
-Build-Depends:
+Build-Depends: curl
 Description: generate tools

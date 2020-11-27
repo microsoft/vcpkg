@@ -8,7 +8,7 @@ vcpkg_from_github(
         fix-sqlite3-bin.patch
         disable-projdb-with-arm-uwp.patch
         fix-win-output-name.patch
-        use-sqlite3-config.patch
+        fix-proj4-targets-cmake.patch
         tools-cmake.patch
 )
 
@@ -20,6 +20,8 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     database BUILD_PROJ_DATABASE
+    tiff ENABLE_TIFF
+    curl ENABLE_CURL
     tools BUILD_CCT
     tools BUILD_CS2CS
     tools BUILD_GEOD
@@ -27,6 +29,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools BUILD_PROJ
     tools BUILD_PROJINFO
     tools BUILD_PROJSYNC
+    tools ENABLE_CURL
 )
 if ("database" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
