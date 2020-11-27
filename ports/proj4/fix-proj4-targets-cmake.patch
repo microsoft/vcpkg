@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7d736d129..e0735f5cc 100644
+index 7d736d129..2be8f8be9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -129,7 +129,22 @@ if(NOT EXE_SQLITE3)
@@ -26,18 +26,29 @@ index 7d736d129..e0735f5cc 100644
  if(NOT SQLITE3_FOUND)
    message(SEND_ERROR "sqlite3 dependency not found!")
  endif()
+@@ -171,6 +186,7 @@ if(ENABLE_CURL)
+   find_package(CURL REQUIRED)
+   if(CURL_FOUND)
+     set(CURL_ENABLED TRUE)
++    set(CURL_LIBRARY CURL::libcurl)
+   else()
+     message(SEND_ERROR "curl dependency not found!")
+   endif()
 
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index c790fa4a8..42af32cf1 100644
+index c790fa4a8..a65c588cf 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -95,6 +95,10 @@ endif ()
+@@ -95,6 +95,13 @@ endif ()
  
  foreach (PROJECT_VARIANT_NAME ${PROJECT_NAME} ${PROJECT_LEGACY_NAME})
    string (TOLOWER "${PROJECT_VARIANT_NAME}" PROJECT_VARIANT_LOWER)
 +  set(FIND_DEPENDENCY_SQLITE3 "")
 +  if(NOT BUILD_LIBPROJ_SHARED)
 +    set(FIND_DEPENDENCY_SQLITE3 "find_package(unofficial-sqlite3 CONFIG REQUIRED)")
++    if(CURL_ENABLED)
++      set(FIND_DEPENDENCY_CURL "find_package(curl CONFIG REQUIRED)")
++    endif()
 +  endif()
    set (CMAKECONFIGSUBDIR "${CMAKECONFIGDIR}/${PROJECT_VARIANT_LOWER}")
    # proj-config.cmake for the install tree.  It's installed in
@@ -52,7 +63,7 @@ index 23f997abd..fcace40c1 100644
  #  @PROJECT_VARIANT_NAME@_VERSION = 4.9.1 (for example)
  
 +@FIND_DEPENDENCY_SQLITE3@
-+
++@FIND_DEPENDENCY_CURL@
  # Tell the user project where to find our headers and libraries
  get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
  get_filename_component (_ROOT "${_DIR}/@PROJECT_ROOT_DIR@" ABSOLUTE)
