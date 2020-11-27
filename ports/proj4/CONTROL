@@ -10,7 +10,7 @@ Build-Depends: tiff
 Description: Enable TIFF support to read some grids
 
 Feature: curl
-Build-Depends: libtiff
+Build-Depends: curl
 Description: Enable Curl support
 
 Feature: database
