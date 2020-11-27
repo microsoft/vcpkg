@@ -15,8 +15,6 @@ set(BUILD_ONLY core)
 
 include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
-string(REPLACE ";" "\\\\\\\\\\;" BUILD_ONLY "${BUILD_ONLY}")
-
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")
 else()
@@ -31,7 +29,7 @@ vcpkg_configure_cmake(
         -DENABLE_TESTING=OFF
         -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
-        -DBUILD_ONLY=${BUILD_ONLY}
+        "-DBUILD_ONLY=${BUILD_ONLY}"
         -DBUILD_DEPS=OFF
         -DCMAKE_INSTALL_RPATH=${rpath}
 )
