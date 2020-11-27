@@ -8,6 +8,9 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DENABLE_TESTS=OFF
 )
 
 vcpkg_install_cmake()
@@ -17,4 +20,3 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/cwalk)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
