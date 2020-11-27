@@ -9,6 +9,7 @@ vcpkg_from_github(
   PATCHES
       "build.patch"
       "cmakefiles.patch"
+      "curl.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
@@ -18,7 +19,7 @@ vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS
-      -DENABLE_APP=OFF
+      -DENABLE_LIBCLAMAV_ONLY=ON
       -DENABLE_SHARED_LIB=${ENABLE_SHARED}
       -DENABLE_STATIC_LIB=${ENABLE_STATIC}
 )
