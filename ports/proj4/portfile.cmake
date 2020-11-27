@@ -14,14 +14,9 @@ vcpkg_from_github(
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(VCPKG_BUILD_SHARED_LIBS ON)
-else()
-  set(VCPKG_BUILD_SHARED_LIBS OFF)
-endif()
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     database BUILD_PROJ_DATABASE
     tiff ENABLE_TIFF
-    curl ENABLE_CURL
     tools BUILD_CCT
     tools BUILD_CS2CS
     tools BUILD_GEOD
@@ -30,7 +25,23 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools BUILD_PROJINFO
     tools BUILD_PROJSYNC
     tools ENABLE_CURL
-)
+  )
+  set(TOOL_NAMES cct cs2cs geod gie proj projinfo projsync)
+else()
+  set(VCPKG_BUILD_SHARED_LIBS OFF)
+  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    database BUILD_PROJ_DATABASE
+    tools BUILD_CCT
+    tools BUILD_CS2CS
+    tools BUILD_GEOD
+    tools BUILD_GIE
+    tools BUILD_PROJ
+    tools BUILD_PROJINFO
+  )
+  set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DENABLE_TIFF=OFF -DENABLE_CURL=OFF -DBUILD_PROJSYNC=OFF)
+  set(TOOL_NAMES cct cs2cs geod gie proj projinfo)
+endif()
+
 if ("database" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         set(BIN_SUFFIX .exe)
@@ -68,7 +79,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tools(TOOL_NAMES cct cs2cs geod gie proj projinfo projsync AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 endif ()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
