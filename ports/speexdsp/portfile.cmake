@@ -6,7 +6,7 @@ if(VCPKG_USE_HEAD_VERSION)
         HEAD_REF master
     )
 else()
-    # Use official download URL for release builds to reduce traffic to the Gitlab host
+    # Since the github repo is out-dated, use official download URL for release builds to reduce traffic to the Gitlab host
     vcpkg_download_distfile(ARCHIVE
         URLS "http://downloads.xiph.org/releases/speex/speexdsp-1.2.0.tar.gz"
         FILENAME "speexdsp-1.2.0.tar.gz"
