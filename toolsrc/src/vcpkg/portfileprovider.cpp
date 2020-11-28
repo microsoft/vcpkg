@@ -370,7 +370,7 @@ namespace vcpkg::PortFileProvider
         auto port = port_name.to_string();
         for (auto&& version_entry : version_entries)
         {
-            VersionSpec spec(port, version_entry.version, version_entry.scheme);
+            VersionSpec spec(port, version_entry.version);
             m_impl->versions_cache[port].push_back(spec);
             m_impl->git_tree_cache.emplace(std::move(spec), std::move(version_entry.git_tree));
         }
