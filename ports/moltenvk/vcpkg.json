@@ -1,0 +1,8 @@
+{
+  "name": "moltenvk",
+  "version-string": "1.1.1",
+  "homepage": "https://github.com/KhronosGroup/MoltenVK",
+  "description": "MoltenVK is a Vulkan Portability implementation. It layers a subset of the high-performance, industry-standard Vulkan graphics and compute API over Apple's Metal graphics framework, enabling Vulkan applications to run on iOS and macOS.",
+  "supports": "osx",
+  "dependencies": ["vulkan-headers"]
+}
