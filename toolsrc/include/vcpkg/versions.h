@@ -4,6 +4,8 @@
 
 namespace vcpkg::Versions
 {
+    using Version = VersionT;
+
     enum class Scheme
     {
         Relaxed,
@@ -16,11 +18,10 @@ namespace vcpkg::Versions
     {
         std::string port_name;
         VersionT version;
-        Scheme scheme;
 
-        VersionSpec(const std::string& port_name, const VersionT& version, Scheme scheme);
+        VersionSpec(const std::string& port_name, const VersionT& version);
 
-        VersionSpec(const std::string& port_name, const std::string& version_string, int port_version, Scheme scheme);
+        VersionSpec(const std::string& port_name, const std::string& version_string, int port_version);
 
         friend bool operator==(const VersionSpec& lhs, const VersionSpec& rhs);
         friend bool operator!=(const VersionSpec& lhs, const VersionSpec& rhs);
