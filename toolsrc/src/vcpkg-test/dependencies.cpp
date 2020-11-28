@@ -24,9 +24,9 @@ using Test::PackageSpecMap;
 
 struct MockBaselineProvider : PortFileProvider::IBaselineProvider
 {
-    mutable std::map<std::string, Versions::Version> v;
+    mutable std::map<std::string, Versions::Version, std::less<>> v;
 
-    Optional<Versions::Version> get_baseline(const std::string& name) const override
+    Optional<Versions::Version> get_baseline_version(StringView name) const override
     {
         auto it = v.find(name);
         if (it == v.end()) return nullopt;
@@ -36,10 +36,16 @@ struct MockBaselineProvider : PortFileProvider::IBaselineProvider
 
 struct MockVersionedPortfileProvider : PortFileProvider::IVersionedPortfileProvider
 {
-    mutable std::map<std::string, std::map<Versions::Version, SourceControlFileLocation>> v;
+    mutable std::map<std::string, std::map<Versions::Version, SourceControlFileLocation, VersionTMapLess>> v;
+
+    ExpectedS<const SourceControlFileLocation&> get_control_file(
+        const vcpkg::Versions::VersionSpec& versionspec) const override
+    {
+        return get_control_file(versionspec.port_name, versionspec.version);
+    }
 
     ExpectedS<const SourceControlFileLocation&> get_control_file(const std::string& name,
-                                                                 const vcpkg::Versions::Version& version) const override
+                                                                 const vcpkg::Versions::Version& version) const
     {
         auto it = v.find(name);
         if (it == v.end()) return std::string("Unknown port name");
@@ -48,12 +54,18 @@ struct MockVersionedPortfileProvider : PortFileProvider::IVersionedPortfileProvi
         return it2->second;
     }
 
+    virtual const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(StringView) const override
+    {
+        Checks::unreachable(VCPKG_LINE_INFO);
+    }
+
     SourceControlFileLocation& emplace(std::string&& name,
                                        Versions::Version&& version,
                                        Versions::Scheme scheme = Versions::Scheme::String)
     {
         auto it = v.find(name);
-        if (it == v.end()) it = v.emplace(name, std::map<Versions::Version, SourceControlFileLocation>{}).first;
+        if (it == v.end())
+            it = v.emplace(name, std::map<Versions::Version, SourceControlFileLocation, VersionTMapLess>{}).first;
 
         auto it2 = it->second.find(version);
         if (it2 == it->second.end())
@@ -61,8 +73,8 @@ struct MockVersionedPortfileProvider : PortFileProvider::IVersionedPortfileProvi
             auto scf = std::make_unique<SourceControlFile>();
             auto core = std::make_unique<SourceParagraph>();
             core->name = name;
-            core->version = version.text;
-            core->port_version = version.port_version;
+            core->version = version.text();
+            core->port_version = version.port_version();
             core->version_scheme = scheme;
             scf->core_paragraph = std::move(core);
             it2 = it->second.emplace(version, SourceControlFileLocation{std::move(scf), fs::u8path(name)}).first;
@@ -104,8 +116,8 @@ static void check_name_and_version(const Dependencies::InstallPlanAction& ipa,
     }
     if (auto scfl = ipa.source_control_file_location.get())
     {
-        CHECK(scfl->source_control_file->core_paragraph->version == v.text);
-        CHECK(scfl->source_control_file->core_paragraph->port_version == v.port_version);
+        CHECK(scfl->source_control_file->core_paragraph->version == v.text());
+        CHECK(scfl->source_control_file->core_paragraph->port_version == v.port_version());
     }
 }
 

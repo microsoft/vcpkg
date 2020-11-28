@@ -1208,7 +1208,7 @@ namespace vcpkg::Dependencies
 
             struct PackageNode : Util::MoveOnlyBase
             {
-                std::map<Versions::Version, VersionSchemeInfo*> vermap;
+                std::map<Versions::Version, VersionSchemeInfo*, VersionTMapLess> vermap;
                 std::map<std::string, VersionSchemeInfo> exacts;
                 Optional<std::unique_ptr<VersionSchemeInfo>> relaxed;
                 std::set<std::string> features;
@@ -1253,7 +1253,7 @@ namespace vcpkg::Dependencies
             VersionSchemeInfo* vsi = nullptr;
             if (scheme == Versions::Scheme::String)
             {
-                vsi = &exacts[ver.text];
+                vsi = &exacts[ver.text()];
             }
             else if (scheme == Versions::Scheme::Relaxed)
             {
@@ -1300,19 +1300,19 @@ namespace vcpkg::Dependencies
             {
                 case Versions::Scheme::String:
                 {
-                    if (a.text != b.text) return VerComp::unk;
-                    if (a.port_version < b.port_version) return VerComp::lt;
-                    if (a.port_version > b.port_version) return VerComp::gt;
+                    if (a.text() != b.text()) return VerComp::unk;
+                    if (a.port_version() < b.port_version()) return VerComp::lt;
+                    if (a.port_version() > b.port_version()) return VerComp::gt;
                     return VerComp::eq;
                 }
                 case Versions::Scheme::Relaxed:
                 {
-                    auto i1 = atoi(a.text.c_str());
-                    auto i2 = atoi(b.text.c_str());
+                    auto i1 = atoi(a.text().c_str());
+                    auto i2 = atoi(b.text().c_str());
                     if (i1 < i2) return VerComp::lt;
                     if (i1 > i2) return VerComp::gt;
-                    if (a.port_version < b.port_version) return VerComp::lt;
-                    if (a.port_version > b.port_version) return VerComp::gt;
+                    if (a.port_version() < b.port_version()) return VerComp::lt;
+                    if (a.port_version() > b.port_version()) return VerComp::gt;
                     return VerComp::eq;
                 }
                 default: Checks::unreachable(VCPKG_LINE_INFO);
@@ -1429,7 +1429,7 @@ namespace vcpkg::Dependencies
                                                    const Dependency& dep,
                                                    const std::string& origin)
         {
-            auto base_ver = m_base_provider.get_baseline(dep.name);
+            auto base_ver = m_base_provider.get_baseline_version(dep.name);
             auto dep_ver = to_version(dep.constraint);
 
             if (auto dv = dep_ver.get())
@@ -1456,7 +1456,7 @@ namespace vcpkg::Dependencies
             {
                 return add_constraint(ref, over_it->second, origin);
             }
-            auto maybe_scfl = m_ver_provider.get_control_file(ref.first.name(), version);
+            auto maybe_scfl = m_ver_provider.get_control_file({ref.first.name(), version});
 
             if (auto p_scfl = maybe_scfl.get())
             {
@@ -1542,7 +1542,7 @@ namespace vcpkg::Dependencies
             }
             else
             {
-                return base_provider.get_baseline(name);
+                return base_provider.get_baseline_version(name);
             }
         }
 
@@ -1594,15 +1594,15 @@ namespace vcpkg::Dependencies
                 }
 
                 auto dep_ver = to_version(dep.constraint);
-                auto base_ver = m_base_provider.get_baseline(dep.name);
+                auto base_ver = m_base_provider.get_baseline_version(dep.name);
                 if (auto p_dep_ver = dep_ver.get())
                 {
                     m_roots.push_back(DepSpec{spec, *p_dep_ver, dep.features});
                     if (auto p_base_ver = base_ver.get())
                     {
                         // Compare version constraint with baseline to only evaluate the "tighter" constraint
-                        auto dep_scfl = m_ver_provider.get_control_file(dep.name, *p_dep_ver);
-                        auto base_scfl = m_ver_provider.get_control_file(dep.name, *p_base_ver);
+                        auto dep_scfl = m_ver_provider.get_control_file({dep.name, *p_dep_ver});
+                        auto base_scfl = m_ver_provider.get_control_file({dep.name, *p_base_ver});
                         if (dep_scfl && base_scfl)
                         {
                             auto r =
@@ -1693,7 +1693,7 @@ namespace vcpkg::Dependencies
                     if (over_it == m_overrides.end())
                     {
                         // Not overridden -- Compare against baseline
-                        if (auto baseline = m_base_provider.get_baseline(spec.name()))
+                        if (auto baseline = m_base_provider.get_baseline_version(spec.name()))
                         {
                             if (auto base_node = node.get_node(*baseline.get()))
                             {

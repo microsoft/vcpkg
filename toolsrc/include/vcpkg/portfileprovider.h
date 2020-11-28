@@ -40,12 +40,45 @@ namespace vcpkg::PortFileProvider
 
     struct IVersionedPortfileProvider
     {
+        virtual const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(StringView port_name) const = 0;
+
         virtual ExpectedS<const SourceControlFileLocation&> get_control_file(
-            const std::string& name, const vcpkg::Versions::Version& version) const = 0;
+            const vcpkg::Versions::VersionSpec& version_spec) const = 0;
     };
 
     struct IBaselineProvider
     {
-        virtual Optional<Versions::Version> get_baseline(const std::string& name) const = 0;
+        virtual Optional<VersionT> get_baseline_version(StringView port_name) const = 0;
+    };
+
+    namespace details
+    {
+        struct BaselineProviderImpl;
+        struct VersionedPortfileProviderImpl;
+    }
+
+    struct VersionedPortfileProvider : IVersionedPortfileProvider, Util::ResourceBase
+    {
+        explicit VersionedPortfileProvider(const vcpkg::VcpkgPaths& paths);
+        ~VersionedPortfileProvider();
+
+        const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(StringView port_name) const override;
+
+        ExpectedS<const SourceControlFileLocation&> get_control_file(
+            const vcpkg::Versions::VersionSpec& version_spec) const override;
+
+    private:
+        std::unique_ptr<details::VersionedPortfileProviderImpl> m_impl;
+    };
+
+    struct BaselineProvider : IBaselineProvider, Util::ResourceBase
+    {
+        explicit BaselineProvider(const vcpkg::VcpkgPaths& paths, const std::string& baseline);
+        ~BaselineProvider();
+
+        Optional<VersionT> get_baseline_version(StringView port_name) const override;
+
+    private:
+        std::unique_ptr<details::BaselineProviderImpl> m_impl;
     };
 }
