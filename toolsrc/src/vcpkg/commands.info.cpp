@@ -17,10 +17,12 @@ namespace vcpkg::Commands::Info
 {
     static constexpr StringLiteral OPTION_TRANSITIVE = "x-transitive";
     static constexpr StringLiteral OPTION_INSTALLED = "x-installed";
+    static constexpr StringLiteral OPTION_VERSIONS = "x-versions";
 
     static constexpr CommandSwitch INFO_SWITCHES[] = {
         {OPTION_INSTALLED, "(experimental) Report on installed packages instead of available"},
         {OPTION_TRANSITIVE, "(experimental) Also report on dependencies of installed packages"},
+        {OPTION_VERSIONS, "(experimental) Report on available versions"},
     };
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -43,6 +45,15 @@ namespace vcpkg::Commands::Info
 
         const bool installed = Util::Sets::contains(options.switches, OPTION_INSTALLED);
         const bool transitive = Util::Sets::contains(options.switches, OPTION_TRANSITIVE);
+        const bool versions = Util::Sets::contains(options.switches, OPTION_VERSIONS);
+        if (versions && (transitive || installed))
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "--%s conflicts with --%s and --%s",
+                                      OPTION_VERSIONS,
+                                      OPTION_INSTALLED,
+                                      OPTION_TRANSITIVE);
+        }
 
         if (transitive && !installed)
         {
@@ -112,34 +123,68 @@ namespace vcpkg::Commands::Info
         {
             Json::Object response;
             Json::Object results;
-            PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
+            auto foreach_arg = [&](auto&& cb) {
+                for (auto&& arg : args.command_arguments)
+                {
+                    Parse::ParserBase parser(arg, "<command>");
+                    auto maybe_pkg = parse_package_name(parser);
+                    if (!parser.at_eof() || !maybe_pkg)
+                    {
+                        parser.add_error("expected only a package identifier");
+                    }
+                    if (auto err = parser.get_error())
+                    {
+                        System::print2(err->format(), "\n");
+                        Checks::exit_fail(VCPKG_LINE_INFO);
+                    }
 
-            for (auto&& arg : args.command_arguments)
+                    auto& pkg = *maybe_pkg.get();
+
+                    if (results.contains(pkg)) continue;
+
+                    auto maybe_insert = cb(pkg);
+                    if (auto p_insert = maybe_insert.get())
+                    {
+                        results.insert(pkg, std::move(*p_insert));
+                    }
+                }
+            };
+            if (versions)
             {
-                Parse::ParserBase parser(arg, "<command>");
-                auto maybe_pkg = parse_package_name(parser);
-                if (!parser.at_eof() || !maybe_pkg)
-                {
-                    parser.add_error("expected only a package identifier");
-                }
-                if (auto err = parser.get_error())
-                {
-                    System::print2(err->format(), "\n");
-                    Checks::exit_fail(VCPKG_LINE_INFO);
-                }
+                PortFileProvider::VersionedPortfileProvider verprovider(paths);
 
-                auto& pkg = *maybe_pkg.get();
+                foreach_arg([&](const std::string& pkg) -> Optional<Json::Array> {
+                    const auto& vers = verprovider.get_port_versions(pkg);
 
-                if (results.contains(pkg)) continue;
-
-                auto maybe_scfl = provider.get_control_file(pkg);
-
-                Json::Object obj;
-                if (auto pscfl = maybe_scfl.get())
-                {
-                    results.insert(pkg, serialize_manifest(*pscfl->source_control_file));
-                }
+                    Json::Array arr;
+                    for (auto&& v : vers)
+                    {
+                        Json::Object obj;
+                        obj.insert("version", Json::Value::string(v.version.text()));
+                        obj.insert("port-version", Json::Value::integer(v.version.port_version()));
+                        arr.push_back(std::move(obj));
+                    }
+                    return std::move(arr);
+                });
             }
+            else
+            {
+                PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
+
+                foreach_arg([&](const std::string& pkg) -> Optional<Json::Object> {
+                    auto maybe_scfl = provider.get_control_file(pkg);
+
+                    if (auto pscfl = maybe_scfl.get())
+                    {
+                        return serialize_manifest(*pscfl->source_control_file);
+                    }
+                    else
+                    {
+                        return nullopt;
+                    }
+                });
+            }
+
             response.insert("results", std::move(results));
             System::print2(Json::stringify(response, {}));
         }
