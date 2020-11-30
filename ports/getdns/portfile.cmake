@@ -17,10 +17,13 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${GETDNS_VERSION}
     PATCHES
-        "openssl_depend_libs.patch"
-        "ignore_copying.patch"
-        "install_dlls.patch"
+        openssl_depend_libs.patch
+        ignore_copying.patch
+        install_dlls.patch
+        fix-dependency-idn2.patch
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake/modules/FindLibidn2.cmake)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
