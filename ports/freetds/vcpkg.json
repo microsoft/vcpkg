@@ -1,6 +1,6 @@
 {
   "name": "freetds",
-  "version-string": "1.2.5",
+  "version-string": "1.2.11",
   "description": "Implementation of the Tabular Data Stream protocol",
   "homepage": "https://www.freetds.org",
   "supports": "windows & !uwp",
