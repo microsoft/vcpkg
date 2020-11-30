@@ -79,6 +79,10 @@ if("compiler-rt" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "compiler-rt")
 endif()
 if("flang" IN_LIST FEATURES)
+    # Disable Flang on Windows (see http://lists.llvm.org/pipermail/flang-dev/2020-July/000448.html).
+    if(VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "Building Flang with MSVC is not supported.")
+    endif()
     list(APPEND LLVM_ENABLE_PROJECTS "flang")
     list(APPEND FEATURE_OPTIONS
         # Flang requires C++17
@@ -95,6 +99,10 @@ if("mlir" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "mlir")
 endif()
 if("openmp" IN_LIST FEATURES)
+    # Disable OpenMP on Windows (see https://bugs.llvm.org/show_bug.cgi?id=45074).
+    if(VCPKG_TARGET_IS_WINDOWS)
+        message(FATAL_ERROR "Building OpenMP with MSVC is not supported.")
+    endif()
     list(APPEND LLVM_ENABLE_PROJECTS "openmp")
     # Perl is required for the OpenMP run-time
     vcpkg_find_acquire_program(PERL)
