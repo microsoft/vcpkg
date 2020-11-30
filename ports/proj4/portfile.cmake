@@ -14,32 +14,27 @@ vcpkg_from_github(
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(VCPKG_BUILD_SHARED_LIBS ON)
-  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    database BUILD_PROJ_DATABASE
-    tiff ENABLE_TIFF
-    tools BUILD_CCT
-    tools BUILD_CS2CS
-    tools BUILD_GEOD
-    tools BUILD_GIE
-    tools BUILD_PROJ
-    tools BUILD_PROJINFO
-    tools BUILD_PROJSYNC
-    tools ENABLE_CURL
-  )
+  set(EXTRA_FEATURES tiff ENABLE_TIFF tools BUILD_PROJSYNC tools ENABLE_CURL)
   set(TOOL_NAMES cct cs2cs geod gie proj projinfo projsync)
 else()
   set(VCPKG_BUILD_SHARED_LIBS OFF)
-  vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    database BUILD_PROJ_DATABASE
-    tools BUILD_CCT
-    tools BUILD_CS2CS
-    tools BUILD_GEOD
-    tools BUILD_GIE
-    tools BUILD_PROJ
-    tools BUILD_PROJINFO
-  )
-  set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DENABLE_TIFF=OFF -DENABLE_CURL=OFF -DBUILD_PROJSYNC=OFF)
   set(TOOL_NAMES cct cs2cs geod gie proj projinfo)
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  database BUILD_PROJ_DATABASE
+  tools BUILD_CCT
+  tools BUILD_CS2CS
+  tools BUILD_GEOD
+  tools BUILD_GIE
+  tools BUILD_PROJ
+  tools BUILD_PROJINFO
+  ${EXTRA_FEATURES}
+)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  message(WARNING "ENABLE_TIFF ENABLE_CURL and BUILD_PROJSYNC will be off when building static")
+  set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DENABLE_TIFF=OFF -DENABLE_CURL=OFF -DBUILD_PROJSYNC=OFF)
 endif()
 
 if ("database" IN_LIST FEATURES)

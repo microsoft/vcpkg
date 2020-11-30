@@ -36,18 +36,23 @@ index 7d736d129..2be8f8be9 100644
    endif()
 
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index c790fa4a8..a65c588cf 100644
+index c790fa4a8..8e544a9dd 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -95,6 +95,13 @@ endif ()
+@@ -95,6 +95,18 @@ endif ()
  
  foreach (PROJECT_VARIANT_NAME ${PROJECT_NAME} ${PROJECT_LEGACY_NAME})
    string (TOLOWER "${PROJECT_VARIANT_NAME}" PROJECT_VARIANT_LOWER)
 +  set(FIND_DEPENDENCY_SQLITE3 "")
++  set(FIND_DEPENDENCY_TIFF "")
++  set(FIND_DEPENDENCY_CURL "")
 +  if(NOT BUILD_LIBPROJ_SHARED)
-+    set(FIND_DEPENDENCY_SQLITE3 "find_package(unofficial-sqlite3 CONFIG REQUIRED)")
++    set(FIND_DEPENDENCY_SQLITE3 "find_dependency(unofficial-sqlite3 CONFIG REQUIRED)")
++    if(TIFF_ENABLED)
++      set(FIND_DEPENDENCY_TIFF "find_dependency(TIFF CONFIG REQUIRED)")
++    endif()
 +    if(CURL_ENABLED)
-+      set(FIND_DEPENDENCY_CURL "find_package(curl CONFIG REQUIRED)")
++      set(FIND_DEPENDENCY_CURL "find_dependency(CURL CONFIG REQUIRED)")
 +    endif()
 +  endif()
    set (CMAKECONFIGSUBDIR "${CMAKECONFIGDIR}/${PROJECT_VARIANT_LOWER}")
@@ -55,15 +60,18 @@ index c790fa4a8..a65c588cf 100644
    # ${CMAKECONFIGSUBDIR} and @PROJECT_ROOT_DIR@ is the relative
 
 diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
-index 23f997abd..fcace40c1 100644
+index 23f997abd..8bab3ad88 100644
 --- a/cmake/project-config.cmake.in
 +++ b/cmake/project-config.cmake.in
-@@ -8,6 +8,8 @@
+@@ -7,6 +7,11 @@
+ #  @PROJECT_VARIANT_NAME@_LIBRARY_DIRS = /usr/local/lib
  #  @PROJECT_VARIANT_NAME@_BINARY_DIRS = /usr/local/bin
  #  @PROJECT_VARIANT_NAME@_VERSION = 4.9.1 (for example)
- 
++include(CMakeFindDependencyMacro)
++
 +@FIND_DEPENDENCY_SQLITE3@
++@FIND_DEPENDENCY_TIFF@
 +@FIND_DEPENDENCY_CURL@
+ 
  # Tell the user project where to find our headers and libraries
  get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
- get_filename_component (_ROOT "${_DIR}/@PROJECT_ROOT_DIR@" ABSOLUTE)
