@@ -9,12 +9,12 @@
       "name": "dirent",
       "platform": "windows"
     },
-    "freetype",
-    "fribidi",
-    "harfbuzz",
     {
       "name": "fontconfig",
       "platform": "linux"
-    }
+    },
+    "freetype",
+    "fribidi",
+    "harfbuzz"
   ]
 }
