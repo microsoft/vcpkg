@@ -1,5 +1,6 @@
 include(FindPackageHandleStandardArgs)
 include(SelectLibraryConfigurations)
+include(CMakeFindDependencyMacro)
 
 find_path(LIBIDN2_INCLUDE_DIR NAMES idn2.h PATHS ${CURRENT_INSTALLED_DIR}/include NO_DEFAULT_PATH)
 
@@ -8,5 +9,7 @@ find_library(LIBIDN2_LIBRARY_RELEASE NAMES libidn2 idn2 NAMES_PER_DIR PATH_SUFFI
 
 select_library_configurations(LIBIDN2)
 
-set(LIBIDN2_INCLUDE_DIRS ${LIBIDN2_INCLUDE_DIR})
-set(LIBIDN2_LIBRARIES ${LIBIDN2_LIBRARY})
+find_dependency(Iconv)
+
+set(LIBIDN2_INCLUDE_DIRS ${LIBIDN2_INCLUDE_DIR} ${Iconv_INCLUDE_DIRS})
+set(LIBIDN2_LIBRARIES ${LIBIDN2_LIBRARY} ${Iconv_LIBRARIES})
