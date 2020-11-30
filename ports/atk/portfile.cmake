@@ -1,18 +1,11 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-set(ATK_VERSION 2.24.0)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://ftp.gnome.org/pub/GNOME/sources/atk/2.24/atk-${ATK_VERSION}.tar.xz"
-    FILENAME "atk-${ATK_VERSION}.tar.xz"
-    SHA512 3ae0a4d5f28d5619d465135c685161f690732053bcb70a47669c951fbf389b5d2ccc5c7c73d4ee8c5a3b2df14e2f5b082e812a215f10a79b27b412d077f5e962
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
-        fix-linux-config.patch
+    REPO GNOME/atk
+    REF 7d1f9a6fcf4654c41e64707d3684645ac037c239 # ATK_2_24_0
+    SHA512 f10ec7c315912eee35773815f5c331892565eff5d961e96cf624eea959a74cbf36e88170c4b4f6d60b7ca66bcc354cd13fbe691a1d18ebf673e7a0359ff494aa
+    PATCHES fix-linux-config.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
