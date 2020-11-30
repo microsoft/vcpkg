@@ -4,6 +4,9 @@
   "port-version": 1,
   "description": "A C++ standalone library for machine learning. CUDA backend.",
   "supports": "!(windows | osx)",
+  "default-features": [
+    "fl"
+  ],
   "features": {
     "asr": {
       "description": "flashlight asr app",
