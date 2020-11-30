@@ -7,6 +7,7 @@ if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 endif()
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+set(VCPKG_POLICY_MISMATCHED_NUMBER_OF_BINARIES enabled) # only release bits are provided
 
 #note: this port must be kept in sync with CUDA port: every time one is upgraded, the other must be too
 set(CUDNN_VERSION "7.6.0")
