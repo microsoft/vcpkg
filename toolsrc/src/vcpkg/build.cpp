@@ -57,7 +57,8 @@ namespace vcpkg::Build
     using Dependencies::InstallPlanAction;
     using Dependencies::InstallPlanType;
 
-    void Command::perform_and_exit_ex(const FullPackageSpec& full_spec,
+    void Command::perform_and_exit_ex(const VcpkgCmdArguments& args,
+                                      const FullPackageSpec& full_spec,
                                       const SourceControlFileLocation& scfl,
                                       const PathsPortFileProvider& provider,
                                       IBinaryProvider& binaryprovider,
@@ -65,7 +66,7 @@ namespace vcpkg::Build
                                       const VcpkgPaths& paths)
     {
         Checks::exit_with_code(VCPKG_LINE_INFO,
-                               perform_ex(full_spec, scfl, provider, binaryprovider, build_logs_recorder, paths));
+                               perform_ex(args, full_spec, scfl, provider, binaryprovider, build_logs_recorder, paths));
     }
 
     const CommandStructure COMMAND_STRUCTURE = {
@@ -81,7 +82,8 @@ namespace vcpkg::Build
         Checks::exit_with_code(VCPKG_LINE_INFO, perform(args, paths, default_triplet));
     }
 
-    int Command::perform_ex(const FullPackageSpec& full_spec,
+    int Command::perform_ex(const VcpkgCmdArguments& args,
+                            const FullPackageSpec& full_spec,
                             const SourceControlFileLocation& scfl,
                             const PathsPortFileProvider& provider,
                             IBinaryProvider& binaryprovider,
@@ -134,7 +136,7 @@ namespace vcpkg::Build
         action->build_options.clean_packages = CleanPackages::NO;
 
         const auto build_timer = Chrono::ElapsedTimer::create_started();
-        const auto result = Build::build_package(paths, *action, binaryprovider, build_logs_recorder, status_db);
+        const auto result = Build::build_package(args, paths, *action, binaryprovider, build_logs_recorder, status_db);
         System::print2("Elapsed time for package ", spec, ": ", build_timer, '\n');
 
         if (result.code == BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES)
@@ -182,7 +184,8 @@ namespace vcpkg::Build
         Checks::check_exit(VCPKG_LINE_INFO, scfl != nullptr, "Error: Couldn't find port '%s'", port_name);
         ASSUME(scfl != nullptr);
 
-        return perform_ex(spec,
+        return perform_ex(args,
+                          spec,
                           *scfl,
                           provider,
                           args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
@@ -602,7 +605,8 @@ namespace vcpkg::Build
         return compiler_info;
     }
 
-    static std::vector<System::CMakeVariable> get_cmake_build_args(const VcpkgPaths& paths,
+    static std::vector<System::CMakeVariable> get_cmake_build_args(const VcpkgCmdArguments& args,
+                                                                   const VcpkgPaths& paths,
                                                                    const Dependencies::InstallPlanAction& action,
                                                                    Triplet triplet)
     {
@@ -630,6 +634,11 @@ namespace vcpkg::Build
             {"FEATURES", Strings::join(";", action.feature_list)},
             {"ALL_FEATURES", all_features},
         };
+
+        for (auto cmake_arg : args.cmake_args)
+        {
+            variables.push_back(System::CMakeVariable{cmake_arg});
+        }
 
         if (action.build_options.backcompat_features == BackcompatFeatures::PROHIBIT)
         {
@@ -723,7 +732,9 @@ namespace vcpkg::Build
         }
     }
 
-    static ExtendedBuildResult do_build_package(const VcpkgPaths& paths, const Dependencies::InstallPlanAction& action)
+    static ExtendedBuildResult do_build_package(const VcpkgCmdArguments& args,
+                                                const VcpkgPaths& paths,
+                                                const Dependencies::InstallPlanAction& action)
     {
         const auto& pre_build_info = action.pre_build_info(VCPKG_LINE_INFO);
 
@@ -753,7 +764,8 @@ namespace vcpkg::Build
 
         const auto timer = Chrono::ElapsedTimer::create_started();
 
-        auto command = vcpkg::make_cmake_cmd(paths, paths.ports_cmake, get_cmake_build_args(paths, action, triplet));
+        auto command =
+            vcpkg::make_cmake_cmd(paths, paths.ports_cmake, get_cmake_build_args(args, paths, action, triplet));
 
         const auto& env = paths.get_action_env(action.abi_info.value_or_exit(VCPKG_LINE_INFO));
 
@@ -849,10 +861,11 @@ namespace vcpkg::Build
         return {BuildResult::SUCCEEDED, std::move(bcf)};
     }
 
-    static ExtendedBuildResult do_build_package_and_clean_buildtrees(const VcpkgPaths& paths,
+    static ExtendedBuildResult do_build_package_and_clean_buildtrees(const VcpkgCmdArguments& args,
+                                                                     const VcpkgPaths& paths,
                                                                      const Dependencies::InstallPlanAction& action)
     {
-        auto result = do_build_package(paths, action);
+        auto result = do_build_package(args, paths, action);
 
         if (action.build_options.clean_buildtrees == CleanBuildtrees::YES)
         {
@@ -1078,7 +1091,8 @@ namespace vcpkg::Build
         }
     }
 
-    ExtendedBuildResult build_package(const VcpkgPaths& paths,
+    ExtendedBuildResult build_package(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& action,
                                       IBinaryProvider& binaries_provider,
                                       const IBuildLogsRecorder& build_logs_recorder,
@@ -1122,7 +1136,7 @@ namespace vcpkg::Build
         auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
         if (!abi_info.abi_tag_file)
         {
-            return do_build_package_and_clean_buildtrees(paths, action);
+            return do_build_package_and_clean_buildtrees(args, paths, action);
         }
 
         auto& abi_file = *abi_info.abi_tag_file.get();
@@ -1149,7 +1163,7 @@ namespace vcpkg::Build
             }
         }
 
-        ExtendedBuildResult result = do_build_package_and_clean_buildtrees(paths, action);
+        ExtendedBuildResult result = do_build_package_and_clean_buildtrees(args, paths, action);
 
         fs.create_directories(abi_package_dir, ec);
         fs.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
