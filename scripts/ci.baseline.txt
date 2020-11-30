@@ -431,9 +431,6 @@ h3:arm64-windows=fail
 h3:arm-uwp=fail
 h3:x64-uwp=fail
 halide:x64-windows-static=fail
-# Halide depends on LLVM, which is mis-compiled by MSVC in x86-windows-dbg.
-# See https://developercommunity.visualstudio.com/content/problem/1179643/msvc-copies-overaligned-non-trivially-copyable-par.html
-halide:x86-windows=skip
 hdf5:arm64-windows=fail
 hdf5:arm-uwp=fail
 hdf5:x64-uwp=fail
