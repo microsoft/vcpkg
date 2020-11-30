@@ -23,7 +23,7 @@ namespace vcpkg::Json
         Optional<Type> visit(Reader&, const Value&);
         Optional<Type> visit(Reader&, const Object&);
 
-    protected:
+    public:
         virtual Optional<Type> visit_null(Reader&);
         virtual Optional<Type> visit_boolean(Reader&, bool);
         virtual Optional<Type> visit_integer(Reader& r, int64_t i);
@@ -33,6 +33,7 @@ namespace vcpkg::Json
         virtual Optional<Type> visit_object(Reader&, const Object&);
         virtual View<StringView> valid_fields() const;
 
+    protected:
         IDeserializer() = default;
         IDeserializer(const IDeserializer&) = default;
         IDeserializer& operator=(const IDeserializer&) = default;
