@@ -185,6 +185,7 @@ namespace vcpkg::Metrics
                 props_plus_buildtimes.insert("buildnames_1", buildtime_names);
                 props_plus_buildtimes.insert("buildtimes", buildtime_times);
             }
+            props_plus_buildtimes.insert("feature-flags", feature_flags);
 
             Json::Array arr = Json::Array();
             Json::Object& obj = arr.push_back(Json::Object());
@@ -234,7 +235,6 @@ namespace vcpkg::Metrics
                 base_data.insert("name", Json::Value::string("commandline_test7"));
                 base_data.insert("properties", std::move(props_plus_buildtimes));
                 base_data.insert("measurements", measurements);
-                base_data.insert("feature-flags", feature_flags);
             }
 
             return Json::stringify(arr, vcpkg::Json::JsonStyle());
