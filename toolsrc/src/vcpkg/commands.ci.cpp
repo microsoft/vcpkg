@@ -525,7 +525,8 @@ namespace vcpkg::Commands::CI
             else
             {
                 auto collection_timer = Chrono::ElapsedTimer::create_started();
-                auto summary = Install::perform(action_plan,
+                auto summary = Install::perform(args,
+                                                action_plan,
                                                 Install::KeepGoing::YES,
                                                 paths,
                                                 status_db,

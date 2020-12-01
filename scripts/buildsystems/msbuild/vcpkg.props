@@ -28,7 +28,7 @@
     <!-- Manifest files -->
     <VcpkgEnableManifest Condition="'$(VcpkgEnableManifest)' == ''">false</VcpkgEnableManifest>
     <VcpkgManifestInstall Condition="'$(VcpkgManifestInstall)' == ''">true</VcpkgManifestInstall>
-    <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' != ''">$([MSbuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), vcpkg.json))</VcpkgManifestRoot>
+    <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' == ''">$([MSbuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), vcpkg.json))</VcpkgManifestRoot>
   </PropertyGroup>
 
 </Project>

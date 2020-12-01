@@ -59,7 +59,8 @@ namespace vcpkg::Install
         const fs::path& listfile() const;
     };
 
-    Build::ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+    Build::ExtendedBuildResult perform_install_plan_action(const VcpkgCmdArguments& args,
+                                                           const VcpkgPaths& paths,
                                                            Dependencies::InstallPlanAction& action,
                                                            StatusParagraphs& status_db,
                                                            const CMakeVars::CMakeVarProvider& var_provider);
@@ -83,7 +84,8 @@ namespace vcpkg::Install
                                   const BinaryControlFile& binary_paragraph,
                                   StatusParagraphs* status_db);
 
-    InstallSummary perform(Dependencies::ActionPlan& action_plan,
+    InstallSummary perform(const VcpkgCmdArguments& args,
+                           Dependencies::ActionPlan& action_plan,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db,

@@ -1,0 +1,72 @@
+{
+  "name": "flashlight-cuda",
+  "version-string": "20201120",
+  "port-version": 1,
+  "description": "A C++ standalone library for machine learning. CUDA backend.",
+  "supports": "!(windows | osx)",
+  "default-features": [
+    "fl"
+  ],
+  "features": {
+    "asr": {
+      "description": "flashlight asr app",
+      "dependencies": [
+        {
+          "name": "flashlight-cuda",
+          "default-features": false,
+          "features": [
+            "fl"
+          ]
+        },
+        "gflags",
+        "libsndfile"
+      ]
+    },
+    "fl": {
+      "description": "flashlight core autograd and neural net library",
+      "dependencies": [
+        {
+          "name": "arrayfire",
+          "default-features": false,
+          "features": [
+            "cuda"
+          ]
+        },
+        "cereal",
+        "cuda",
+        "cudnn",
+        {
+          "name": "flashlight-cuda",
+          "default-features": false,
+          "features": [
+            "lib"
+          ]
+        },
+        "nccl",
+        "openmpi"
+      ]
+    },
+    "imgclass": {
+      "description": "flashlight image classification app",
+      "dependencies": [
+        {
+          "name": "flashlight-cuda",
+          "default-features": false,
+          "features": [
+            "fl"
+          ]
+        },
+        "gflags"
+      ]
+    },
+    "lib": {
+      "description": "flashlight libraries",
+      "dependencies": [
+        "cub",
+        "fftw3",
+        "intel-mkl",
+        "kenlm"
+      ]
+    }
+  }
+}
