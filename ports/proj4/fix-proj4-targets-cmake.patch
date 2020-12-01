@@ -36,19 +36,16 @@ index 7d736d129..2be8f8be9 100644
    endif()
 
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index c790fa4a8..a65c588cf 100644
+index c790fa4a8..6653a28b9 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -95,6 +95,13 @@ endif ()
+@@ -95,6 +95,10 @@ endif ()
  
  foreach (PROJECT_VARIANT_NAME ${PROJECT_NAME} ${PROJECT_LEGACY_NAME})
    string (TOLOWER "${PROJECT_VARIANT_NAME}" PROJECT_VARIANT_LOWER)
-+  set(FIND_DEPENDENCY_SQLITE3 "")
-+  if(NOT BUILD_SHARED_LIBS)
-+    set(FIND_DEPENDENCY_SQLITE3 "find_package(unofficial-sqlite3 CONFIG)")
-+    if(CURL_ENABLED)
-+      set(FIND_DEPENDENCY_CURL "find_package(curl CONFIG)")
-+    endif()
++  set(FIND_DEPENDENCY_SQLITE3 "find_dependency(unofficial-sqlite3 CONFIG)")
++  if(CURL_ENABLED)
++    set(FIND_DEPENDENCY_CURL "find_dependency(CURL CONFIG)")
 +  endif()
    set (CMAKECONFIGSUBDIR "${CMAKECONFIGDIR}/${PROJECT_VARIANT_LOWER}")
    # proj-config.cmake for the install tree.  It's installed in
