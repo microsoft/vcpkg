@@ -42,7 +42,7 @@ file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Package/Latest/Molt
 file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Package/Latest/MoltenVKShaderConverter/Tools/MoltenVKShaderConverter DESTINATION ${CURRENT_PACKAGES_DIR}/tools/moltenvk)
 
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     # copy release dynamic
     file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Package/Latest/MoltenVK/dylib/macOS/libMoltenVK.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
     # copy debug dynamic
