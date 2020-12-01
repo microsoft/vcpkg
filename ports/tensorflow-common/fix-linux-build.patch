@@ -62,3 +62,16 @@ diff --git a/tensorflow/core/kernels/data/experimental/snapshot_dataset_op.cc b/
  // ==== Snapshot Implementation ====
 
  /* The current snapshot on-disk layout is as follows:
+
+diff --git a/tensorflow/core/kernels/data/experimental/data_service_dataset_op.cc b/tensorflow/core/kernels/data/experimental/data_service_dataset_op.cc
+--- a/tensorflow/core/kernels/data/experimental/data_service_dataset_op.cc
++++ b/tensorflow/core/kernels/data/experimental/data_service_dataset_op.cc
+@@ -52,6 +52,8 @@
+ /* static */ constexpr const char* const
+     DataServiceDatasetOp::kMaxOutstandingRequests;
+ /* static */ constexpr const char* const
++    DataServiceDatasetOp::kTaskRefreshIntervalHintMs;
++/* static */ constexpr const char* const
+     DataServiceDatasetOp::kIterationCounter;
+ /* static */ constexpr const char* const DataServiceDatasetOp::kOutputTypes;
+ /* static */ constexpr const char* const DataServiceDatasetOp::kOutputShapes;

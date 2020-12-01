@@ -4,21 +4,30 @@
   <Import Condition="'$(VcpkgPropsImported)' != 'true'" Project="vcpkg.props" />
 
   <!-- Define properties derived from those defined in vcpkg.props, in the project file or specified on the command line. -->
+   <PropertyGroup>
+    <!-- Note: Overwrite VcpkgPageSchema with a non-existing path to disable the VcPkg property sheet in your projects -->
+    <VcpkgPageSchema Condition="'$(VcpkgPageSchema)' == ''">$([System.IO.Path]::Combine($(VcpkgRoot), 'scripts\buildsystems\msbuild\vcpkg-general.xml'))</VcpkgPageSchema>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <!-- Triplet defining platform, OS, and linkage -->
     <VcpkgLinkage />
     <VcpkgLinkage Condition="'$(VcpkgUseStatic)' == 'true'">-static</VcpkgLinkage>
     <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)$(VcpkgLinkage)</VcpkgTriplet>
 
-    <!-- Note: Overwrite VcpkgPageSchema with a non-existing path to disable the VcPkg property sheet in your projects -->
-    <VcpkgPageSchema Condition="'$(VcpkgPageSchema)' == ''">$([System.IO.Path]::Combine($(VcpkgRoot), 'scripts\buildsystems\msbuild\vcpkg-general.xml'))</VcpkgPageSchema>
+    <VcpkgRoot Condition="'$(VcpkgRoot)' != '' and !$(VcpkgRoot.EndsWith('\'))">$(VcpkgRoot)\</VcpkgRoot>
+    <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' != '' and !$(VcpkgManifestRoot.EndsWith('\'))">$(VcpkgManifestRoot)\</VcpkgManifestRoot>
 
     <VcpkgInstalledDir>$([System.IO.Path]::Combine($(VcpkgRoot), 'installed'))</VcpkgInstalledDir>
     <VcpkgInstalledDir Condition="'$(VcpkgEnableManifest)' == 'true'">$([System.IO.Path]::Combine($(VcpkgManifestRoot), 'vcpkg_installed'))</VcpkgInstalledDir>
+    <VcpkgInstalledDir Condition="!$(VcpkgInstalledDir.EndsWith('\'))">$(VcpkgInstalledDir)\</VcpkgInstalledDir>
+
     <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$([System.IO.Path]::Combine($(VcpkgInstalledDir), $(VcpkgTriplet)))</VcpkgCurrentInstalledDir>
     <VcpkgCurrentInstalledDir Condition="!$(VcpkgCurrentInstalledDir.EndsWith('\'))">$(VcpkgCurrentInstalledDir)\</VcpkgCurrentInstalledDir>
+
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
+
     <VcpkgConfigSubdir Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">debug\</VcpkgConfigSubdir>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
   </PropertyGroup>
@@ -44,9 +53,9 @@
   </ItemDefinitionGroup>
 
   <Target Name="VcpkgCheckManifestRoot" BeforeTargets="VcpkgInstallManifestDependencies" Condition="'$(VcpkgEnabled)' == 'true'">
-    <Error Text="The Vcpkg manifest was enabled, but we couldn't find a manifest file (vcpkg.json) in any directories above $(MSBuildProjectDirectory). Please add a manifest, disable manifests in your properties page, or pass /p:VcpkgEnableManifest=false."
+    <Error Text="The vcpkg manifest was enabled, but we couldn't find a manifest file (vcpkg.json) in any directories above $(MSBuildProjectDirectory). Please add a manifest, disable manifests in your properties page, or pass /p:VcpkgEnableManifest=false."
            Condition="'$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestRoot)' == ''" />
-    <Message Text="The Vcpkg manifest was disabled, but we found a manifest file in $(VcpkgManifestRoot). You may want to enable vcpkg manifests in your properties page or pass /p:VcpkgEnableManifest=true to the msbuild invocation."
+    <Message Text="The vcpkg manifest was disabled, but we found a manifest file in $(VcpkgManifestRoot). You may want to enable vcpkg manifests in your properties page or pass /p:VcpkgEnableManifest=true to the msbuild invocation."
              Importance="High" Condition="'$(VcpkgEnableManifest)' != 'true' and '$(VcpkgManifestRoot)' != ''" />
   </Target>
 
