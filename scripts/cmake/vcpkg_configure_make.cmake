@@ -484,7 +484,6 @@ function(vcpkg_configure_make)
     set(ALL_LIBS_LIST ${C_LIBS_LIST} ${CXX_LIBS_LIST})
     list(REMOVE_DUPLICATES ALL_LIBS_LIST)
     list(TRANSFORM ALL_LIBS_LIST STRIP)
-
     #Do lib list transformation from name.lib to -lname if necessary
     set(_VCPKG_TRANSFORM_LIBS TRUE)
     if(VCPKG_TARGET_IS_UWP)
@@ -501,6 +500,7 @@ function(vcpkg_configure_make)
         if(VCPKG_TARGET_IS_WINDOWS)
             list(REMOVE_ITEM ALL_LIBS_LIST "uuid")
         endif()
+        list(TRANSFORM ALL_LIBS_LIST REPLACE "^(${_lprefix})" "")
     endif()
     list(JOIN ALL_LIBS_LIST " ${_lprefix}" ALL_LIBS_STRING)
 
@@ -681,7 +681,7 @@ function(vcpkg_configure_make)
                 WORKING_DIRECTORY "${TAR_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}
             )
-            if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
                 file(GLOB_RECURSE LIBTOOL_FILES "${TAR_DIR}*/libtool")
                 foreach(lt_file IN LISTS LIBTOOL_FILES)
                     file(READ "${lt_file}" _contents)
