@@ -835,25 +835,67 @@ namespace vcpkg::Install
                 // remove "core" because resolve_deps_as_top_level uses default-inversion
                 features.erase(core_it);
             }
-            auto specs = resolve_deps_as_top_level(manifest_scf, default_triplet, features, var_provider);
 
-            auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
-
-            for (InstallPlanAction& action : install_plan.install_actions)
+            if (args.versions_enabled())
             {
-                action.build_options = install_plan_options;
-                action.build_options.use_head_version = Build::UseHeadVersion::NO;
-                action.build_options.editable = Build::Editable::NO;
-            }
+                PortFileProvider::VersionedPortfileProvider verprovider(paths);
+                auto baseprovider = [&]() -> PortFileProvider::BaselineProvider {
+                    if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
+                    {
+                        return PortFileProvider::BaselineProvider(paths, p_baseline->string().to_string());
+                    }
+                    else
+                    {
+                        return PortFileProvider::BaselineProvider(paths);
+                    }
+                }();
 
-            Commands::SetInstalled::perform_and_exit_ex(args,
-                                                        paths,
-                                                        provider,
-                                                        *binaryprovider,
-                                                        var_provider,
-                                                        std::move(install_plan),
-                                                        dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
-                                                        pkgsconfig);
+                auto install_plan =
+                    Dependencies::create_versioned_install_plan(verprovider,
+                                                                baseprovider,
+                                                                var_provider,
+                                                                manifest_scf.core_paragraph->dependencies,
+                                                                manifest_scf.core_paragraph->overrides,
+                                                                {manifest_scf.core_paragraph->name, default_triplet})
+                        .value_or_exit(VCPKG_LINE_INFO);
+
+                for (InstallPlanAction& action : install_plan.install_actions)
+                {
+                    action.build_options = install_plan_options;
+                    action.build_options.use_head_version = Build::UseHeadVersion::NO;
+                    action.build_options.editable = Build::Editable::NO;
+                }
+
+                Commands::SetInstalled::perform_and_exit_ex(args,
+                                                            paths,
+                                                            provider,
+                                                            *binaryprovider,
+                                                            var_provider,
+                                                            std::move(install_plan),
+                                                            dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
+                                                            pkgsconfig);
+            }
+            else
+            {
+                auto specs = resolve_deps_as_top_level(manifest_scf, default_triplet, features, var_provider);
+                auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
+
+                for (InstallPlanAction& action : install_plan.install_actions)
+                {
+                    action.build_options = install_plan_options;
+                    action.build_options.use_head_version = Build::UseHeadVersion::NO;
+                    action.build_options.editable = Build::Editable::NO;
+                }
+
+                Commands::SetInstalled::perform_and_exit_ex(args,
+                                                            paths,
+                                                            provider,
+                                                            *binaryprovider,
+                                                            var_provider,
+                                                            std::move(install_plan),
+                                                            dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
+                                                            pkgsconfig);
+            }
         }
 
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {

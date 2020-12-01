@@ -1,5 +1,6 @@
 Source: speexdsp
-Version: 1.2.0-2
+Version: 1.2.0
+Port-Version: 3
 Homepage: https://speex.org/
 Description: A patent-free, Open Source/Free Software DSP library.
 Build-Depends:

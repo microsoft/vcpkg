@@ -1,5 +1,3 @@
-
-
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
 
@@ -19,22 +17,28 @@ using namespace Versions;
 
 namespace
 {
-    Optional<fs::path> get_versions_json_path(const VcpkgPaths& paths, StringView port_name)
+    ExpectedS<fs::path> get_versions_json_path(const VcpkgPaths& paths, StringView port_name)
     {
-        const auto port_versions_dir_path = paths.root / fs::u8path("port_versions");
-        const auto subpath = Strings::concat(port_name.substr(0, 1), "-/", port_name, ".json");
-        const auto json_path = port_versions_dir_path / subpath;
+        auto json_path = paths.root / fs::u8path("port_versions") /
+                         fs::u8path(Strings::concat(port_name.substr(0, 1), "-")) /
+                         fs::u8path(Strings::concat(port_name, ".json"));
         if (paths.get_filesystem().exists(json_path))
         {
-            return json_path;
+            return std::move(json_path);
         }
-        return nullopt;
+        return {Strings::concat("Error: Versions database file does not exist: ", fs::u8string(json_path)),
+                expected_right_tag};
     }
 
-    Optional<fs::path> get_baseline_json_path(const VcpkgPaths& paths, StringView baseline_commit_sha)
+    ExpectedS<fs::path> get_baseline_json_path(const VcpkgPaths& paths, StringView baseline_commit_sha)
     {
-        const auto baseline_json = paths.git_checkout_baseline(paths.get_filesystem(), baseline_commit_sha);
-        return paths.get_filesystem().exists(baseline_json) ? make_optional(baseline_json) : nullopt;
+        auto baseline_path = paths.git_checkout_baseline(paths.get_filesystem(), baseline_commit_sha);
+        if (paths.get_filesystem().exists(baseline_path))
+        {
+            return std::move(baseline_path);
+        }
+        return {Strings::concat("Error: Baseline database file does not exist: ", fs::u8string(baseline_path)),
+                expected_right_tag};
     }
 }
 
@@ -292,34 +296,90 @@ namespace vcpkg::PortFileProvider
     {
         struct BaselineProviderImpl
         {
+            BaselineProviderImpl(const VcpkgPaths& paths) : paths(paths) { }
             BaselineProviderImpl(const VcpkgPaths& paths, const std::string& baseline)
-                : paths(paths), baseline(baseline)
+                : paths(paths), m_baseline(baseline)
             {
             }
             ~BaselineProviderImpl() { }
 
-            const std::map<std::string, VersionT, std::less<>>& get_baseline_cache() const
+            const Optional<std::map<std::string, VersionT, std::less<>>>& get_baseline_cache() const
             {
-                return baseline_cache.get_lazy([&]() -> auto {
-                    auto maybe_baseline_file = get_baseline_json_path(paths, baseline);
-                    Checks::check_exit(VCPKG_LINE_INFO, maybe_baseline_file.has_value(), "Couldn't find baseline.json");
-                    auto baseline_file = maybe_baseline_file.value_or_exit(VCPKG_LINE_INFO);
+                return baseline_cache.get_lazy([&]() -> Optional<std::map<std::string, VersionT, std::less<>>> {
+                    if (auto baseline = m_baseline.get())
+                    {
+                        auto baseline_file = get_baseline_json_path(paths, *baseline).value_or_exit(VCPKG_LINE_INFO);
 
-                    auto maybe_baselines_map = parse_baseline_file(paths.get_filesystem(), "default", baseline_file);
-                    Checks::check_exit(VCPKG_LINE_INFO,
-                                       maybe_baselines_map.has_value(),
-                                       "Error: Couldn't parse baseline `%s` from `%s`",
-                                       "default",
-                                       fs::u8string(baseline_file));
-                    auto baselines_map = *maybe_baselines_map.get();
-                    return std::move(baselines_map);
+                        auto maybe_baselines_map =
+                            parse_baseline_file(paths.get_filesystem(), "default", baseline_file);
+                        Checks::check_exit(VCPKG_LINE_INFO,
+                                           maybe_baselines_map.has_value(),
+                                           "Error: Couldn't parse baseline `%s` from `%s`",
+                                           "default",
+                                           fs::u8string(baseline_file));
+                        auto baselines_map = *maybe_baselines_map.get();
+                        return std::move(baselines_map);
+                    }
+                    else
+                    {
+                        // No baseline was provided, so use current repo
+                        const auto& fs = paths.get_filesystem();
+                        auto baseline_file = paths.root / fs::u8path("port_versions") / fs::u8path("baseline.json");
+                        if (fs.exists(baseline_file))
+                        {
+                            auto maybe_baselines_map =
+                                parse_baseline_file(paths.get_filesystem(), "default", baseline_file);
+                            Checks::check_exit(VCPKG_LINE_INFO,
+                                               maybe_baselines_map.has_value(),
+                                               "Error: Couldn't parse baseline `%s` from `%s`",
+                                               "default",
+                                               fs::u8string(baseline_file));
+                            auto baselines_map = *maybe_baselines_map.get();
+                            return std::move(baselines_map);
+                        }
+                        else
+                        {
+                            // No baseline file in current repo -- use current port versions.
+                            m_portfile_provider =
+                                std::make_unique<PathsPortFileProvider>(paths, std::vector<std::string>{});
+                            return nullopt;
+                        }
+                    }
                 });
+            }
+
+            Optional<VersionT> get_baseline_version(StringView port_name) const
+            {
+                const auto& cache = get_baseline_cache();
+                if (auto p_cache = cache.get())
+                {
+                    auto it = p_cache->find(port_name.to_string());
+                    if (it != p_cache->end())
+                    {
+                        return it->second;
+                    }
+                    return nullopt;
+                }
+                else
+                {
+                    auto maybe_scfl = m_portfile_provider->get_control_file(port_name.to_string());
+                    if (auto p_scfl = maybe_scfl.get())
+                    {
+                        auto cpgh = p_scfl->source_control_file->core_paragraph.get();
+                        return VersionT{cpgh->version, cpgh->port_version};
+                    }
+                    else
+                    {
+                        return nullopt;
+                    }
+                }
             }
 
         private:
             const VcpkgPaths& paths;
-            const std::string baseline;
-            Lazy<std::map<std::string, VersionT, std::less<>>> baseline_cache;
+            const Optional<std::string> m_baseline;
+            Lazy<Optional<std::map<std::string, VersionT, std::less<>>>> baseline_cache;
+            mutable std::unique_ptr<PathsPortFileProvider> m_portfile_provider;
         };
 
         struct VersionedPortfileProviderImpl
@@ -354,47 +414,70 @@ namespace vcpkg::PortFileProvider
         }
 
         auto maybe_versions_file_path = get_versions_json_path(m_impl->get_paths(), port_name);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           maybe_versions_file_path.has_value(),
-                           "Error: Couldn't find a versions database file: %s.json.",
-                           port_name);
-        auto versions_file_path = maybe_versions_file_path.value_or_exit(VCPKG_LINE_INFO);
-
-        auto maybe_version_entries = parse_versions_file(m_impl->get_filesystem(), port_name, versions_file_path);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           maybe_version_entries.has_value(),
-                           "Error: Couldn't parse versions from file: %s",
-                           fs::u8string(versions_file_path));
-        auto version_entries = maybe_version_entries.value_or_exit(VCPKG_LINE_INFO);
-
-        auto port = port_name.to_string();
-        for (auto&& version_entry : version_entries)
+        if (auto versions_file_path = maybe_versions_file_path.get())
         {
-            VersionSpec spec(port, version_entry.version);
-            m_impl->versions_cache[port].push_back(spec);
-            m_impl->git_tree_cache.emplace(std::move(spec), std::move(version_entry.git_tree));
+            auto maybe_version_entries = parse_versions_file(m_impl->get_filesystem(), port_name, *versions_file_path);
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               maybe_version_entries.has_value(),
+                               "Error: Couldn't parse versions from file: %s",
+                               fs::u8string(*versions_file_path));
+            auto version_entries = maybe_version_entries.value_or_exit(VCPKG_LINE_INFO);
+
+            auto port = port_name.to_string();
+            for (auto&& version_entry : version_entries)
+            {
+                VersionSpec spec(port, version_entry.version);
+                m_impl->versions_cache[port].push_back(spec);
+                m_impl->git_tree_cache.emplace(std::move(spec), std::move(version_entry.git_tree));
+            }
+            return m_impl->versions_cache.at(port);
         }
-        return m_impl->versions_cache.at(port);
+        else
+        {
+            // Fall back to current available version
+            const auto& paths = m_impl->get_paths();
+            auto maybe_port = try_load_registry_port(paths, port_name.to_string());
+            if (auto p = maybe_port.get())
+            {
+                auto maybe_error =
+                    p->source_control_file->check_against_feature_flags(p->source_location, paths.get_feature_flags());
+
+                if (auto error = maybe_error.get())
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO, "Error: %s", *error);
+                }
+
+                VersionSpec vspec(port_name.to_string(),
+                                  VersionT(p->source_control_file->core_paragraph->version,
+                                           p->source_control_file->core_paragraph->port_version));
+                m_impl->control_cache.emplace(vspec, std::move(*p));
+                return m_impl->versions_cache.emplace(port_name.to_string(), std::vector<VersionSpec>{vspec})
+                    .first->second;
+            }
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Error: Could not find a definition for port %s", port_name);
+        }
     }
 
     ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
         const VersionSpec& version_spec) const
     {
+        // Pre-populate versions cache.
+        get_port_versions(version_spec.port_name);
+
         auto cache_it = m_impl->control_cache.find(version_spec);
         if (cache_it != m_impl->control_cache.end())
         {
             return cache_it->second;
         }
 
-        // Pre-populate versions cache.
-        get_port_versions(version_spec.port_name);
-
         auto git_tree_cache_it = m_impl->git_tree_cache.find(version_spec);
         if (git_tree_cache_it == m_impl->git_tree_cache.end())
         {
-            return Strings::concat("No git object SHA for entry %s at version %s.",
+            return Strings::concat("Error: No git object SHA for entry ",
                                    version_spec.port_name,
-                                   version_spec.version.to_string());
+                                   " at version ",
+                                   version_spec.version,
+                                   ".");
         }
 
         const std::string git_tree = git_tree_cache_it->second;
@@ -421,6 +504,11 @@ namespace vcpkg::PortFileProvider
             "Error: Failed to load port %s from %s", version_spec.port_name, fs::u8string(port_directory));
     }
 
+    BaselineProvider::BaselineProvider(const VcpkgPaths& paths)
+        : m_impl(std::make_unique<details::BaselineProviderImpl>(paths))
+    {
+    }
+
     BaselineProvider::BaselineProvider(const VcpkgPaths& paths, const std::string& baseline)
         : m_impl(std::make_unique<details::BaselineProviderImpl>(paths, baseline))
     {
@@ -429,12 +517,6 @@ namespace vcpkg::PortFileProvider
 
     Optional<VersionT> BaselineProvider::get_baseline_version(StringView port_name) const
     {
-        const auto& cache = m_impl->get_baseline_cache();
-        auto it = cache.find(port_name.to_string());
-        if (it != cache.end())
-        {
-            return it->second;
-        }
-        return nullopt;
+        return m_impl->get_baseline_version(port_name);
     }
 }

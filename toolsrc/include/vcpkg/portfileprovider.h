@@ -73,7 +73,8 @@ namespace vcpkg::PortFileProvider
 
     struct BaselineProvider : IBaselineProvider, Util::ResourceBase
     {
-        explicit BaselineProvider(const vcpkg::VcpkgPaths& paths, const std::string& baseline);
+        explicit BaselineProvider(const vcpkg::VcpkgPaths& paths);
+        BaselineProvider(const vcpkg::VcpkgPaths& paths, const std::string& baseline);
         ~BaselineProvider();
 
         Optional<VersionT> get_baseline_version(StringView port_name) const override;
