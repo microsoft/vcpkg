@@ -19,12 +19,14 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(
-    GLOB DEBUG_CRT_FILES
-        ${CURRENT_PACKAGES_DIR}/debug/bin/concrt*.dll
-        ${CURRENT_PACKAGES_DIR}/debug/bin/msvcp*.dll
-        ${CURRENT_PACKAGES_DIR}/debug/bin/vcruntime*.dll)
-file(REMOVE ${DEBUG_CRT_FILES})
+if(VCPKG_TARGET_IS_WINDOWS)
+    file(
+        GLOB DEBUG_CRT_FILES
+            ${CURRENT_PACKAGES_DIR}/debug/bin/concrt*.dll
+            ${CURRENT_PACKAGES_DIR}/debug/bin/msvcp*.dll
+            ${CURRENT_PACKAGES_DIR}/debug/bin/vcruntime*.dll)
+    file(REMOVE ${DEBUG_CRT_FILES})
+endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/clrng)
 
