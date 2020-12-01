@@ -8,6 +8,7 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(CLANG)
+vcpkg_find_acquire_program(CLANG++)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
@@ -15,7 +16,7 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DCMAKE_CXX_COMPILER=${CLANG}++ -DCMAKE_C_COMPILER=${CLANG}
+    OPTIONS -DCMAKE_CXX_COMPILER=${CLANG++} -DCMAKE_C_COMPILER=${CLANG}
 )
 vcpkg_install_cmake()
 
