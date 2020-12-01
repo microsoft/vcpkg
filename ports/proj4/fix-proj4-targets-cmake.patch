@@ -1,13 +1,12 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index c617912..bed0428 100644
+index 7d736d129..2be8f8be9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -122,7 +122,23 @@ if(NOT EXE_SQLITE3)
+@@ -129,7 +129,22 @@ if(NOT EXE_SQLITE3)
    message(SEND_ERROR "sqlite3 binary not found!")
  endif()
  
 -find_package(Sqlite3 REQUIRED)
-+#find_package(Sqlite3 REQUIRED)
 +find_package(unofficial-sqlite3 CONFIG REQUIRED)
 +if(unofficial-sqlite3_FOUND)
 +  set(SQLITE3_FOUND true)
@@ -27,31 +26,43 @@ index c617912..bed0428 100644
  if(NOT SQLITE3_FOUND)
    message(SEND_ERROR "sqlite3 dependency not found!")
  endif()
+@@ -171,6 +186,7 @@ if(ENABLE_CURL)
+   find_package(CURL REQUIRED)
+   if(CURL_FOUND)
+     set(CURL_ENABLED TRUE)
++    set(CURL_LIBRARY CURL::libcurl)
+   else()
+     message(SEND_ERROR "curl dependency not found!")
+   endif()
+
 diff --git a/cmake/CMakeLists.txt b/cmake/CMakeLists.txt
-index 92197c8..ab65de7 100644
+index c790fa4a8..6653a28b9 100644
 --- a/cmake/CMakeLists.txt
 +++ b/cmake/CMakeLists.txt
-@@ -25,6 +25,10 @@ else ()
- endif ()
+@@ -95,6 +95,10 @@ endif ()
  
- string(TOLOWER "${PROJECT_NAME}" PROJECT_NAME_LOWER)
-+set(FIND_DEPENDENCY_SQLITE3 "")
-+if(NOT BUILD_LIBPROJ_SHARED)
-+	set(FIND_DEPENDENCY_SQLITE3 "find_package(unofficial-sqlite3 CONFIG REQUIRED)")
-+endif()
- configure_file(project-config.cmake.in project-config.cmake @ONLY)
- configure_file(project-config-version.cmake.in
-   project-config-version.cmake @ONLY)
+ foreach (PROJECT_VARIANT_NAME ${PROJECT_NAME} ${PROJECT_LEGACY_NAME})
+   string (TOLOWER "${PROJECT_VARIANT_NAME}" PROJECT_VARIANT_LOWER)
++  set(FIND_DEPENDENCY_SQLITE3 "find_dependency(unofficial-sqlite3 CONFIG)")
++  if(CURL_ENABLED)
++    set(FIND_DEPENDENCY_CURL "find_dependency(CURL CONFIG)")
++  endif()
+   set (CMAKECONFIGSUBDIR "${CMAKECONFIGDIR}/${PROJECT_VARIANT_LOWER}")
+   # proj-config.cmake for the install tree.  It's installed in
+   # ${CMAKECONFIGSUBDIR} and @PROJECT_ROOT_DIR@ is the relative
+
 diff --git a/cmake/project-config.cmake.in b/cmake/project-config.cmake.in
-index 9a52b3b..295d95d 100644
+index 23f997abd..8baef00f0 100644
 --- a/cmake/project-config.cmake.in
 +++ b/cmake/project-config.cmake.in
-@@ -13,6 +13,8 @@ message (STATUS "Reading ${CMAKE_CURRENT_LIST_FILE}")
- message (STATUS
-   "@PROJECT_NAME@ configuration, version ${@PROJECT_NAME@_VERSION}")
- 
-+@FIND_DEPENDENCY_SQLITE3@
+@@ -7,6 +7,10 @@
+ #  @PROJECT_VARIANT_NAME@_LIBRARY_DIRS = /usr/local/lib
+ #  @PROJECT_VARIANT_NAME@_BINARY_DIRS = /usr/local/bin
+ #  @PROJECT_VARIANT_NAME@_VERSION = 4.9.1 (for example)
++include(CMakeFindDependencyMacro)
 +
++@FIND_DEPENDENCY_SQLITE3@
++@FIND_DEPENDENCY_CURL@
+ 
  # Tell the user project where to find our headers and libraries
  get_filename_component (_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
- get_filename_component (_ROOT "${_DIR}/@PROJECT_ROOT_DIR@" ABSOLUTE)
