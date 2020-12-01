@@ -312,6 +312,7 @@ namespace vcpkg::Dependencies
                                         const CStringView s,
                                         const Build::BuildPackageOptions& options,
                                         const SourceControlFileLocation* scfl,
+                                        const InstalledPackageView* ipv,
                                         const fs::path& builtin_ports_dir)
     {
         std::string ret;
@@ -325,6 +326,10 @@ namespace vcpkg::Dependencies
         if (scfl)
         {
             Strings::append(ret, " -> ", scfl->to_versiont());
+        }
+        else if (ipv)
+        {
+            Strings::append(ret, " -> ", VersionT{ipv->core->package.version, ipv->core->package.port_version});
         }
         if (options.use_head_version == Build::UseHeadVersion::YES)
         {
@@ -346,12 +351,12 @@ namespace vcpkg::Dependencies
                                  const CStringView s,
                                  const Build::BuildPackageOptions& options)
     {
-        return to_output_string(request_type, s, options, {}, {});
+        return to_output_string(request_type, s, options, {}, {}, {});
     }
 
     std::string to_output_string(RequestType request_type, const CStringView s)
     {
-        return to_output_string(request_type, s, {Build::UseHeadVersion::NO}, {}, {});
+        return to_output_string(request_type, s, {Build::UseHeadVersion::NO}, {}, {}, {});
     }
 
     InstallPlanAction::InstallPlanAction() noexcept
@@ -1100,6 +1105,7 @@ namespace vcpkg::Dependencies
                                         p->displayname(),
                                         p->build_options,
                                         p->source_control_file_location.get(),
+                                        p->installed_package.get(),
                                         builtin_ports_dir);
             });
         };
