@@ -122,7 +122,7 @@ if("gles2" IN_LIST FEATURES)
 else()
     list(APPEND MESA_OPTIONS -Dgles2=disabled)
 endif()
-if("egl" IN_LIST FEATURES)
+if("egl" IN_LIST FEATURES) # EGL feature only works on Linux
     list(APPEND MESA_OPTIONS -Degl=enabled)
 else()
     list(APPEND MESA_OPTIONS -Degl=disabled)
