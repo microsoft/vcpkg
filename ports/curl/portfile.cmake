@@ -182,7 +182,7 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS)	
     vcpkg_fixup_pkgconfig()
 elseif(VCPKG_TARGET_IS_LINUX)
-    vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread dl c)
+    # vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread dl c)
 endif()
 
 file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
