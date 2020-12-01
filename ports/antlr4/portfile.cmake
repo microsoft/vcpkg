@@ -1,11 +1,11 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
 
-set(VERSION 4.8)
+set(VERSION 4.9)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
     FILENAME "antlr4-cpp-runtime-${VERSION}-source.zip"
-    SHA512 df76a724e8acf29018ad122d909e1d43e7c8842e1c0df8022a3e8c840cb2b99de49cc148f75fef519b65ece9bd27b92cf0067c9099b664c127e80559c6492322
+    SHA512 b9c62d88ca5a9a2b313f64e53275c21c08e3d2d97f61a42c678d67d981a76704b00f3abad6ac55ef8c2af256c9e35cae770a94bfe1ef70d5438df43601362c99
 )
 
 # license not exist in antlr folder.
@@ -20,9 +20,10 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
     REF ${VERSION}
-    PATCHES fixed_build.patch
-            uuid_discovery_fix.patch
-            export_guid.patch
+    PATCHES 
+        fixed_build.patch
+        uuid_discovery_fix.patch
+        export_guid.patch
 )
 
 vcpkg_configure_cmake(
