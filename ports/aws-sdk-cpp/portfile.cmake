@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF e98e5732ec7319051f162f7314ae361c85d0a8c9 # 1.8.83
     SHA512 da540db60551be833ea0315dd93241f9740ab953ed5657c1c7a8c401ae52a4e75b116758420b0a8a4ebb79358dff8377f5e052b180b36f0af27a36003f28bd56
     HEAD_REF master
-    PATCHES patch-relocatable-rpath.patch
+    PATCHES
+        patch-relocatable-rpath.patch
+        fix-AWSSDKCONFIG.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -60,7 +62,6 @@ endforeach()
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/share/AWSSDK
     ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
     ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
     ${CURRENT_PACKAGES_DIR}/nuget
@@ -81,6 +82,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 
     file(APPEND ${CURRENT_PACKAGES_DIR}/include/aws/core/SDKConfig.h "#ifndef USE_IMPORT_EXPORT\n#define USE_IMPORT_EXPORT\n#endif")
 endif()
+
+configure_file(${CURRENT_PORT_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
