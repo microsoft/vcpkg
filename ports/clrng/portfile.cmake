@@ -8,12 +8,17 @@ vcpkg_from_github(
         001-build-fixup.patch
 )
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_CMAKE_SYSTEM_NAME)
+    set(R123_SSE_FLAG [[-DCMAKE_C_FLAGS="/DR123_USE_SSE=0"]])
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/src
     PREFER_NINJA
     OPTIONS
         -DBUILD_TEST=OFF
         -DBUILD_CLIENT=OFF
+        ${R123_SSE_FLAG}
 )
 
 vcpkg_install_cmake()
