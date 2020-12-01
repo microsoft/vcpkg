@@ -1326,6 +1326,7 @@ rpclib:arm-uwp=fail
 rpclib:x64-uwp=fail
 rsocket:x64-windows=fail
 rsocket:x64-windows-static=fail
+rtaudio:x64-linux=fail
 rtlsdr:x64-uwp=fail
 rtlsdr:arm64-windows=fail
 rtlsdr:arm-uwp=fail
