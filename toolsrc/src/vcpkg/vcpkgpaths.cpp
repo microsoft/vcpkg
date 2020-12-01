@@ -539,6 +539,24 @@ If you wish to silence this error and use classic mode, you can:
         }
     }
 
+    ExpectedS<std::string> VcpkgPaths::git_show(const std::string& treeish, const fs::path& dot_git_dir) const
+    {
+        // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
+        // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
+        System::CmdLineBuilder showcmd =
+            git_cmd_builder(*this, dot_git_dir, dot_git_dir).string_arg("show").string_arg(treeish);
+
+        auto output = System::cmd_execute_and_capture_output(showcmd.extract());
+        if (output.exit_code == 0)
+        {
+            return {std::move(output.output), expected_left_tag};
+        }
+        else
+        {
+            return {std::move(output.output), expected_right_tag};
+        }
+    }
+
     void VcpkgPaths::git_checkout_object(const VcpkgPaths& paths,
                                          StringView git_object,
                                          const fs::path& local_repo,
@@ -611,19 +629,23 @@ If you wish to silence this error and use classic mode, you can:
 
     fs::path VcpkgPaths::git_checkout_baseline(Files::Filesystem& fs, StringView commit_sha) const
     {
-        const fs::path local_repo = this->root;
-        const fs::path destination = this->baselines_output / fs::u8path(commit_sha) / fs::u8path("baseline.json");
-        const fs::path baseline_subpath = fs::u8path("port_versions") / fs::u8path("baseline.json");
+        const fs::path destination_parent = this->baselines_output / fs::u8path(commit_sha);
+        const fs::path destination = destination_parent / fs::u8path("baseline.json");
 
         if (!fs.exists(destination))
         {
-            git_checkout_subpath(*this,
-                                 commit_sha,
-                                 baseline_subpath,
-                                 local_repo,
-                                 destination,
-                                 this->baselines_dot_git_dir,
-                                 this->baselines_work_tree);
+            auto treeish = Strings::concat(commit_sha, ":port_versions/baseline.json");
+            auto maybe_contents = git_show(treeish, this->root / fs::u8path(".git"));
+            if (auto contents = maybe_contents.get())
+            {
+                fs.create_directories(destination_parent, VCPKG_LINE_INFO);
+                fs.write_contents(destination, *contents, VCPKG_LINE_INFO);
+            }
+            else
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Error: while checking out baseline '%s':\n%s", treeish, maybe_contents.error());
+            }
         }
         return destination;
     }
