@@ -50,8 +50,10 @@ if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 endif()
 
 # copy release static
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Package/Latest/MoltenVK/MoltenVK.xcframework/macos-x86_64/libMoltenVK.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Package/Latest/MoltenVKShaderConverter/MoltenVKShaderConverter.xcframework/macos-x86_64/libMoltenVKShaderConverter.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-# copy debug static
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Package/Latest/MoltenVK/MoltenVK.xcframework/macos-x86_64/libMoltenVK.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Package/Latest/MoltenVKShaderConverter/MoltenVKShaderConverter.xcframework/macos-x86_64/libMoltenVKShaderConverter.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Package/Latest/MoltenVK/MoltenVK.xcframework/macos-x86_64/libMoltenVK.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Package/Latest/MoltenVKShaderConverter/MoltenVKShaderConverter.xcframework/macos-x86_64/libMoltenVKShaderConverter.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    # copy debug static
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Package/Latest/MoltenVK/MoltenVK.xcframework/macos-x86_64/libMoltenVK.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/Package/Latest/MoltenVKShaderConverter/MoltenVKShaderConverter.xcframework/macos-x86_64/libMoltenVKShaderConverter.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+endif()
