@@ -1287,100 +1287,7 @@ namespace vcpkg::Dependencies
             return it == vermap.end() ? nullptr : it->second;
         }
 
-        enum class VerComp
-        {
-            unk,
-            lt,
-            eq,
-            gt,
-        };
-
-        static Optional<long> as_numeric(const std::string& str)
-        {
-            try
-            {
-                return std::stol(str);
-            }
-            catch (std::exception&)
-            {
-                return nullopt;
-            }
-        }
-
-        static VerComp compare_semver(const Versions::SemanticVersion& a, const Versions::SemanticVersion& b)
-        {
-            // Shortcut: Compare version strings
-            if (a.version_string == b.version_string)
-            {
-                return VerComp::eq;
-            }
-
-            // Compare version elements left-to-right.
-            if (a.version < b.version)
-            {
-                return VerComp::lt;
-            }
-            if (a.version > b.version)
-            {
-                return VerComp::gt;
-            }
-
-            // Compare identifiers left-to-right.
-            auto count = std::min(a.identifiers.size(), b.identifiers.size());
-            for (size_t i = 0; i < count; ++i)
-            {
-                const auto& iden_a = a.identifiers[i];
-                const auto& iden_b = b.identifiers[i];
-
-                auto a_numeric = as_numeric(iden_a);
-                auto b_numeric = as_numeric(iden_b);
-
-                if (a_numeric.has_value() && !b_numeric.has_value())
-                {
-                    return VerComp::lt;
-                }
-                if (!a_numeric.has_value() && b_numeric.has_value())
-                {
-                    return VerComp::gt;
-                }
-                if (a_numeric.has_value() && b_numeric.has_value())
-                {
-                    auto a_value = a_numeric.value_or_exit(VCPKG_LINE_INFO);
-                    auto b_value = b_numeric.value_or_exit(VCPKG_LINE_INFO);
-
-                    if (a_value < b_value)
-                    {
-                        return VerComp::lt;
-                    }
-                    if (a_value > b_value)
-                    {
-                        return VerComp::gt;
-                    }
-                    continue;
-                }
-                if (iden_a < iden_b)
-                {
-                    return VerComp::lt;
-                }
-                if (iden_b > iden_a)
-                {
-                    return VerComp::gt;
-                }
-            }
-            if (a.identifiers.size() < b.identifiers.size())
-            {
-                return VerComp::lt;
-            }
-            if (a.identifiers.size() > b.identifiers.size())
-            {
-                return VerComp::gt;
-            }
-
-            // This should be unreachable since direct version_string comparison should have handled this case.
-            // If we ever land here, then there's a bug in the version_string parsing.
-            Checks::unreachable(VCPKG_LINE_INFO);
-            // return VerComp::eq;
-        }
+        using Versions::VerComp;
 
         static VerComp compare_versions(Versions::Scheme sa,
                                         const Versions::Version& a,
@@ -1409,15 +1316,15 @@ namespace vcpkg::Dependencies
                 }
                 case Versions::Scheme::Semver:
                 {
-                    auto comp = compare_semver(Versions::SemanticVersion::from_string(a.text()),
-                                               Versions::SemanticVersion::from_string(b.text()));
-                    if (comp == VerComp::eq)
+                    auto result = Versions::compare(Versions::SemanticVersion::from_string(a.text()),
+                                                    Versions::SemanticVersion::from_string(b.text()));
+                    if (result == VerComp::eq)
                     {
                         if (a.port_version() < b.port_version()) return VerComp::lt;
                         if (b.port_version() > b.port_version()) return VerComp::gt;
                         return VerComp::eq;
                     }
-                    return comp;
+                    return result;
                 }
                 default: Checks::unreachable(VCPKG_LINE_INFO);
             }

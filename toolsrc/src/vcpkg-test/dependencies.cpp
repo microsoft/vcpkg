@@ -524,7 +524,7 @@ TEST_CASE ("version install diamond relaxed", "[versionplan]")
     check_name_and_version(install_plan.install_actions[2], "a", {"3", 0});
 }
 
-TEST_CASE ("version parse semver", "[versionplan]")
+TEST_CASE ("version semver parse", "[versionplan]")
 {
     auto version_basic = Versions::SemanticVersion::from_string("1.2.3");
     check_semver_version(version_basic, "1.2.3", "", 1, 2, 3, {});
@@ -558,6 +558,44 @@ TEST_CASE ("version parse semver", "[versionplan]")
 
     auto version_prerelease_build_tag = Versions::SemanticVersion::from_string("1.0.0-alpha+build");
     check_semver_version(version_prerelease_build_tag, "1.0.0", "alpha", 1, 0, 0, {"alpha"});
+}
+
+TEST_CASE ("version semver sort", "[versionplan]")
+{
+    std::vector<Versions::SemanticVersion> versions{Versions::SemanticVersion::from_string("1.0.0"),
+                                                    Versions::SemanticVersion::from_string("0.0.0"),
+                                                    Versions::SemanticVersion::from_string("1.1.0"),
+                                                    Versions::SemanticVersion::from_string("2.0.0"),
+                                                    Versions::SemanticVersion::from_string("1.1.1"),
+                                                    Versions::SemanticVersion::from_string("1.0.1"),
+                                                    Versions::SemanticVersion::from_string("1.0.0-alpha.1"),
+                                                    Versions::SemanticVersion::from_string("1.0.0-beta"),
+                                                    Versions::SemanticVersion::from_string("1.0.0-alpha"),
+                                                    Versions::SemanticVersion::from_string("1.0.0-alpha.beta"),
+                                                    Versions::SemanticVersion::from_string("1.0.0-rc"),
+                                                    Versions::SemanticVersion::from_string("1.0.0-beta.2"),
+                                                    Versions::SemanticVersion::from_string("1.0.0-beta.20"),
+                                                    Versions::SemanticVersion::from_string("1.0.0-beta.3")};
+
+    std::sort(std::begin(versions), std::end(versions), [](const auto& lhs, const auto& rhs) -> bool {
+        const auto result = Versions::compare(lhs, rhs);
+        return result == Versions::VerComp::lt;
+    });
+
+    CHECK(versions[0].original_string == "0.0.0");
+    CHECK(versions[1].original_string == "1.0.0-alpha");
+    CHECK(versions[2].original_string == "1.0.0-alpha.1");
+    CHECK(versions[3].original_string == "1.0.0-alpha.beta");
+    CHECK(versions[4].original_string == "1.0.0-beta");
+    CHECK(versions[5].original_string == "1.0.0-beta.2");
+    CHECK(versions[6].original_string == "1.0.0-beta.3");
+    CHECK(versions[7].original_string == "1.0.0-beta.20");
+    CHECK(versions[8].original_string == "1.0.0-rc");
+    CHECK(versions[9].original_string == "1.0.0");
+    CHECK(versions[10].original_string == "1.0.1");
+    CHECK(versions[11].original_string == "1.1.0");
+    CHECK(versions[12].original_string == "1.1.1");
+    CHECK(versions[13].original_string == "2.0.0");
 }
 
 TEST_CASE ("version install simple semver", "[versionplan]")

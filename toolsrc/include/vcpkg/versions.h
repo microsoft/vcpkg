@@ -6,6 +6,14 @@ namespace vcpkg::Versions
 {
     using Version = VersionT;
 
+    enum class VerComp
+    {
+        unk,
+        lt,
+        eq,
+        gt,
+    };
+
     enum class Scheme
     {
         Relaxed,
@@ -34,6 +42,7 @@ namespace vcpkg::Versions
 
     struct SemanticVersion
     {
+        std::string original_string;
         std::string version_string;
         std::string prerelease_string;
         std::vector<long> version;
@@ -41,6 +50,7 @@ namespace vcpkg::Versions
 
         static SemanticVersion from_string(const std::string& str);
     };
+    VerComp compare(const SemanticVersion& a, const SemanticVersion& b);
 
     struct Constraint
     {
