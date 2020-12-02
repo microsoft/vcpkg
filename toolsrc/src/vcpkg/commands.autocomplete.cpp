@@ -76,7 +76,6 @@ namespace vcpkg::Commands::Autocomplete
                 "ci",
                 "depend-info",
                 "env",
-                "import",
                 "portsdiff",
             };
 

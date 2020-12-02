@@ -1,38 +1,41 @@
-## # vcpkg_configure_meson
-##
-## Configure Meson for Debug and Release builds of a project.
-##
-## ## Usage
-## ```cmake
-## vcpkg_configure_meson(
-##     SOURCE_PATH <${SOURCE_PATH}>
-##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-## )
-## ```
-##
-## ## Parameters
-## ### SOURCE_PATH
-## Specifies the directory containing the `meson.build`.
-## By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-##
-## ### OPTIONS
-## Additional options passed to Meson during the configuration.
-##
-## ### OPTIONS_RELEASE
-## Additional options passed to Meson during the Release configuration. These are in addition to `OPTIONS`.
-##
-## ### OPTIONS_DEBUG
-## Additional options passed to Meson during the Debug configuration. These are in addition to `OPTIONS`.
-##
-## ## Notes
-## This command supplies many common arguments to Meson. To see the full list, examine the source.
-##
-## ## Examples
-##
-## * [fribidi](https://github.com/Microsoft/vcpkg/blob/master/ports/fribidi/portfile.cmake)
-## * [libepoxy](https://github.com/Microsoft/vcpkg/blob/master/ports/libepoxy/portfile.cmake)
+#[===[.md:
+# vcpkg_configure_meson
+
+Configure Meson for Debug and Release builds of a project.
+
+## Usage
+```cmake
+vcpkg_configure_meson(
+    SOURCE_PATH <${SOURCE_PATH}>
+    [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
+    [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
+    [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+)
+```
+
+## Parameters
+### SOURCE_PATH
+Specifies the directory containing the `meson.build`.
+By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+
+### OPTIONS
+Additional options passed to Meson during the configuration.
+
+### OPTIONS_RELEASE
+Additional options passed to Meson during the Release configuration. These are in addition to `OPTIONS`.
+
+### OPTIONS_DEBUG
+Additional options passed to Meson during the Debug configuration. These are in addition to `OPTIONS`.
+
+## Notes
+This command supplies many common arguments to Meson. To see the full list, examine the source.
+
+## Examples
+
+* [fribidi](https://github.com/Microsoft/vcpkg/blob/master/ports/fribidi/portfile.cmake)
+* [libepoxy](https://github.com/Microsoft/vcpkg/blob/master/ports/libepoxy/portfile.cmake)
+#]===]
+
 function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https://mesonbuild.com/Native-environments.html
     set(NATIVE "[binaries]\n")
     #set(proglist AR RANLIB STRIP NM OBJDUMP DLLTOOL MT)
@@ -146,6 +149,8 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
         elseif(VCPKG_TARGET_IS_FREEBSD)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
+        elseif(VCPKG_TARGET_IS_OPENBSD)
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/openbsd.cmake")
         elseif(VCPKG_TARGET_IS_MINGW)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
         endif()

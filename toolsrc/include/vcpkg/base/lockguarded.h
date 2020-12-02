@@ -29,7 +29,7 @@ namespace vcpkg::Util
         LockGuardPtr(LockGuarded<T>& sync) : m_lock(sync.m_mutex), m_ptr(sync.m_t) { }
 
     private:
-        std::lock_guard<std::mutex> m_lock;
+        std::unique_lock<std::mutex> m_lock;
         T& m_ptr;
     };
 }
