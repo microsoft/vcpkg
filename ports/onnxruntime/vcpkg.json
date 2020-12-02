@@ -1,0 +1,5 @@
+{
+  "name": "onnxruntime",
+  "version-string": "v1.5.3",
+  "description": "ONNX Runtime is a cross-platform inferencing and training accelerator compatible with many popular ML/DNN frameworks, including PyTorch, TensorFlow/Keras, scikit-learn."
+}
