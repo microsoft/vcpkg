@@ -19,7 +19,7 @@ Set-Content `
 
 Get-ChildItem "$VcpkgRoot/scripts/cmake" -Filter '*.cmake' | ForEach-Object {
     $filename = $_
-    [String[]]$contents = Get-Content "$VcpkgRoot/scripts/cmake/$filename"
+    [String[]]$contents = Get-Content $filename
 
     if ($contents[0] -eq '# DEPRECATED') {
         return
