@@ -842,7 +842,8 @@ namespace vcpkg::Install
                 auto baseprovider = [&]() -> std::unique_ptr<PortFileProvider::BaselineProvider> {
                     if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
                     {
-                        return std::make_unique<PortFileProvider::BaselineProvider>(paths, p_baseline->string().to_string());
+                        return std::make_unique<PortFileProvider::BaselineProvider>(paths,
+                                                                                    p_baseline->string().to_string());
                     }
                     else
                     {
