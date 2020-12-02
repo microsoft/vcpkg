@@ -1,49 +1,51 @@
-## # vcpkg_find_acquire_program
-##
-## Download or find a well-known tool.
-##
-## ## Usage
-## ```cmake
-## vcpkg_find_acquire_program(<VAR>)
-## ```
-## ## Parameters
-## ### VAR
-## This variable specifies both the program to be acquired as well as the out parameter that will be set to the path of the program executable.
-##
-## ## Notes
-## The current list of programs includes:
-##
-## - 7Z
-## - ARIA2 (Downloader)
-## - BISON
-## - CLANG
-## - DARK
-## - DOXYGEN
-## - FLEX
-## - GASPREPROCESSOR
-## - GPERF
-## - PERL
-## - PYTHON2
-## - PYTHON3
-## - GIT
-## - GN
-## - GO
-## - JOM
-## - MESON
-## - NASM
-## - NINJA
-## - NUGET
-## - SCONS
-## - SWIG
-## - YASM
-##
-## Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
-##
-## ## Examples
-##
-## * [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
-## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
-## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+#[===[.md:
+# vcpkg_find_acquire_program
+
+Download or find a well-known tool.
+
+## Usage
+```cmake
+vcpkg_find_acquire_program(<VAR>)
+```
+## Parameters
+### VAR
+This variable specifies both the program to be acquired as well as the out parameter that will be set to the path of the program executable.
+
+## Notes
+The current list of programs includes:
+
+* 7Z
+* ARIA2 (Downloader)
+* BISON
+* CLANG
+* DARK
+* DOXYGEN
+* FLEX
+* GASPREPROCESSOR
+* GPERF
+* PERL
+* PYTHON2
+* PYTHON3
+* GIT
+* GN
+* GO
+* JOM
+* MESON
+* NASM
+* NINJA
+* NUGET
+* SCONS
+* SWIG
+* YASM
+
+Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
+
+## Examples
+
+* [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
+* [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
+* [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+#]===]
 
 include(vcpkg_execute_in_download_mode)
 
@@ -147,20 +149,20 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "PYTHON3")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME python)
-      set(PYTHON_VERSION 3.8.3)
+      set(PYTHON_VERSION 3.9.0)
       if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
         set(SUBDIR "python-${PYTHON_VERSION}-x86")
         set(URL "https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-embed-win32.zip")
         set(ARCHIVE "python-${PYTHON_VERSION}-embed-win32.zip")
-        set(HASH 8c9078f55b1b5d694e0e809eee6ccf8a6e15810dd4649e8ae1209bff30e102d49546ce970a5d519349ca7759d93146f459c316dc440737171f018600255dcd0a)
+        set(HASH 1501ad0b3ed1053466bef303e639c4d5cd9c270beacd07d70fb631db15503ea9e1f9de054cafe8759403e77aa898cd8b8878bf9024add4c081b28a4c5a9947ed)
       else()
         set(SUBDIR "python-${PYTHON_VERSION}-x64")
         set(URL "https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-embed-amd64.zip")
         set(ARCHIVE "python-${PYTHON_VERSION}-embed-amd64.zip")
-        set(HASH a322fc925167edb1897764297cf47e294ad3f52c109a05f8911412807eb83e104f780e9fe783b17fe0d9b18b7838797c15e9b0805dab759829f77a9bc0159424)
+        set(HASH e969622b74ea79a6adcf41b4d628bd80c9320df2f3d797905872610172838f1ab70d9bb0c70fcf7da396e03c3a73de96fa69a4b212b26f97de0e4f3366accf51)
       endif()
       set(PATHS ${DOWNLOADS}/tools/python/${SUBDIR})
-      set(POST_INSTALL_COMMAND ${CMAKE_COMMAND} -E remove python38._pth)
+      set(POST_INSTALL_COMMAND ${CMAKE_COMMAND} -E rm python39._pth)
     else()
       set(PROGNAME python3)
       set(BREW_PACKAGE_NAME "python")
@@ -182,9 +184,12 @@ function(vcpkg_find_acquire_program VAR)
         set(HASH 47c1518d1da939e3ba6722c54747778b93a44c525bcb358b253c23b2510374a49a43739c8d0454cedade858f54efa6319763ba33316fdc721305bc457efe4ffb)
       endif()
       set(PATHS ${DOWNLOADS}/tools/python/${SUBDIR})
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+      # macOS includes Python 2.7 built-in as `python`
+      set(PROGNAME python)
+      set(BREW_PACKAGE_NAME "python2")
     else()
       set(PROGNAME python2)
-      set(BREW_PACKAGE_NAME "python2")
       set(APT_PACKAGE_NAME "python")
     endif()
   elseif(VAR MATCHES "RUBY")
@@ -423,6 +428,17 @@ function(vcpkg_find_acquire_program VAR)
       debug_message(STATUS "PKG_CONFIG found in ENV! Using $ENV{PKG_CONFIG}")
       set(PKGCONFIG $ENV{PKG_CONFIG} PARENT_SCOPE)
       return()
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD")
+      # As of 6.8, the OpenBSD specific pkg-config doesn't support {pcfiledir}
+      set(_vfa_SUPPORTED ON)
+      set(_vfa_RENAME "pkg-config")
+      set(PKGCONFIG_VERSION 0.29.2.1)
+      set(NOEXTRACT ON)
+      set(ARCHIVE "pkg-config.openbsd")
+      set(SUBDIR "openbsd")
+      set(URL "https://raw.githubusercontent.com/jgilje/pkg-config-openbsd/master/pkg-config")
+      set(HASH b7ec9017b445e00ae1377e36e774cf3f5194ab262595840b449832707d11e443a102675f66d8b7e8b2e2f28cebd6e256835507b1e0c69644cc9febab8285080b)
+      set(VERSION_CMD --version)
     elseif(CMAKE_HOST_WIN32)
       if(NOT EXISTS "${PKGCONFIG}")
         set(VERSION 0.29.2-1)
@@ -450,7 +466,7 @@ function(vcpkg_find_acquire_program VAR)
 
   macro(do_version_check)
     if(VERSION_CMD)
-        _execute_process(
+        vcpkg_execute_in_download_mode(
             COMMAND ${${VAR}} ${VERSION_CMD}
             WORKING_DIRECTORY ${DOWNLOADS}
             OUTPUT_VARIABLE ${VAR}_VERSION_OUTPUT

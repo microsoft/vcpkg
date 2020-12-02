@@ -4,24 +4,28 @@
 
 namespace vcpkg
 {
-    VersionT::VersionT() noexcept : value("0.0.0"), port_version(0) { }
-    VersionT::VersionT(std::string&& value, int port_version) : value(std::move(value)), port_version(port_version) { }
-    VersionT::VersionT(const std::string& value, int port_version) : value(value), port_version(port_version) { }
-
-    std::string VersionT::to_string() const
+    VersionT::VersionT() noexcept : m_text("0.0.0"), m_port_version(0) { }
+    VersionT::VersionT(std::string&& value, int port_version) : m_text(std::move(value)), m_port_version(port_version)
     {
-        return port_version == 0 ? value : Strings::format("%s#%d", value, port_version);
+    }
+    VersionT::VersionT(const std::string& value, int port_version) : m_text(value), m_port_version(port_version) { }
+
+    std::string VersionT::to_string() const { return Strings::concat(*this); }
+    void VersionT::to_string(std::string& out) const
+    {
+        out.append(m_text);
+        if (m_port_version) Strings::append(out, '#', m_port_version);
     }
 
     bool operator==(const VersionT& left, const VersionT& right)
     {
-        return left.port_version == right.port_version && left.value == right.value;
+        return left.m_port_version == right.m_port_version && left.m_text == right.m_text;
     }
     bool operator!=(const VersionT& left, const VersionT& right) { return !(left == right); }
 
     bool VersionTMapLess::operator()(const VersionT& left, const VersionT& right) const
     {
-        auto cmp = left.value.compare(right.value);
+        auto cmp = left.m_text.compare(right.m_text);
         if (cmp < 0)
         {
             return true;
@@ -31,7 +35,7 @@ namespace vcpkg
             return false;
         }
 
-        return left.port_version < right.port_version;
+        return left.m_port_version < right.m_port_version;
     }
 
     VersionDiff::VersionDiff() noexcept : left(), right() { }

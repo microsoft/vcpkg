@@ -53,11 +53,13 @@ namespace vcpkg
         static constexpr StringLiteral OS_STRING = "linux";
 #elif defined(__FreeBSD__)
         static constexpr StringLiteral OS_STRING = "freebsd";
+#elif defined(__OpenBSD__)
+        static constexpr StringLiteral OS_STRING = "openbsd";
 #else
         return std::string("operating system is unknown");
 #endif
 
-#if defined(_WIN32) || defined(__APPLE__) || defined(__linux__) || defined(__FreeBSD__)
+#if defined(_WIN32) || defined(__APPLE__) || defined(__linux__) || defined(__FreeBSD__) || defined(__OpenBSD__)
         static const std::string XML_VERSION = "2";
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
         static const std::regex XML_VERSION_REGEX{R"###(<tools[\s]+version="([^"]+)">)###"};

@@ -182,7 +182,8 @@ namespace vcpkg::Commands::Upgrade
         var_provider.load_tag_vars(action_plan, provider);
 
         const Install::InstallSummary summary =
-            Install::perform(action_plan,
+            Install::perform(args,
+                             action_plan,
                              keep_going,
                              paths,
                              status_db,
