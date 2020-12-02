@@ -31,7 +31,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_LIBRARY_TYPE=${BUILD_TYPE}
         -DBUILD_MODULE_Draw=OFF
         -DINSTALL_DIR_LAYOUT=Unix
@@ -40,8 +40,6 @@ vcpkg_configure_cmake(
         -DBUILD_DOC_Overview=OFF
         -DINSTALL_TEST_CASES=OFF
         -DINSTALL_SAMPLES=OFF
-        ## Options from vcpkg_check_features()
-        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -79,6 +77,5 @@ endforeach()
 # the bin directory ends up with bat files that are noise, let's clean that up
 file(GLOB BATS ${CURRENT_PACKAGES_DIR}/bin/*.bat)
 file(REMOVE_RECURSE ${BATS})
-
 
 file(INSTALL ${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
