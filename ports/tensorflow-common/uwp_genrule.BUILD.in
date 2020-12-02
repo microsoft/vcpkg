@@ -10,7 +10,9 @@ fi
 mkdir -p "$${dest_path}"
 cp '@CMAKE_CURRENT_LIST_DIR@/uwppatch.h' "$${dest_path}"
 windows_path=`cygpath -w "$${dest_path}"`
-echo \\\"$${windows_path}\\\" >> $(location @AT_CHAR_FOR_CONFIGURE_FILE@local_config_cc//:builtin_include_directory_paths_msvc)
+# use forward slashes
+windows_path=`echo $${windows_path} | sed -e s'|\\\\\\\\\\\\\\\\|/|'g`
+echo \\\"$${windows_path}/\\\", >> $(location @AT_CHAR_FOR_CONFIGURE_FILE@local_config_cc//:builtin_include_directory_paths_msvc)
 """,
     srcs = [
         "@AT_CHAR_FOR_CONFIGURE_FILE@local_config_cc//:toolchain",
