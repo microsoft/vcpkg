@@ -123,11 +123,17 @@ function(vcpkg_from_gitlab)
         endif()
 
         string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
+        set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_REF}")
+        if (_vdud_FILE_DISAMBIGUATOR)
+            set(downloaded_file_name "${downloaded_file_name}-${_vdud_FILE_DISAMBIGUATOR}")
+        endif()
+
+        set(downloaded_file_name "${downloaded_file_name}.tar.gz")
 
         vcpkg_download_distfile(ARCHIVE
             URLS "${GITLAB_LINK}/-/archive/${_vdud_REF}/${REPO_NAME}-${_vdud_REF}.tar.gz"
             SHA512 "${_vdud_SHA512}"
-            FILENAME "${ORG_NAME}-${REPO_NAME}-${SANITIZED_REF}.tar.gz"
+            FILENAME "${downloaded_file_name}"
         )
 
         vcpkg_extract_source_archive_ex(
