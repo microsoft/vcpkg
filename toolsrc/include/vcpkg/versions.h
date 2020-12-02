@@ -32,6 +32,16 @@ namespace vcpkg::Versions
         std::size_t operator()(const VersionSpec& key) const;
     };
 
+    struct SemanticVersion
+    {
+        std::string version_string;
+        std::string prerelease_string;
+        std::vector<long> version;
+        std::vector<std::string> identifiers;
+
+        static SemanticVersion from_string(const std::string& str);
+    };
+
     struct Constraint
     {
         enum class Type

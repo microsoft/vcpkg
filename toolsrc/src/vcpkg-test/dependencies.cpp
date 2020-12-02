@@ -121,6 +121,24 @@ static void check_name_and_version(const Dependencies::InstallPlanAction& ipa,
     }
 }
 
+static void check_semver_version(const Versions::SemanticVersion& actual_version,
+                                 const std::string& version_string,
+                                 const std::string& prerelease_string,
+                                 long major,
+                                 long minor,
+                                 long patch,
+                                 const std::vector<std::string>& identifiers)
+{
+    CHECK(actual_version.version_string == version_string);
+    CHECK(actual_version.prerelease_string == prerelease_string);
+    REQUIRE(actual_version.version.size() == 3);
+    CHECK(actual_version.version[0] == major);
+    CHECK(actual_version.version[1] == minor);
+    CHECK(actual_version.version[2] == patch);
+    CHECK(actual_version.identifiers.size() == identifiers.size());
+    CHECK(actual_version.identifiers == identifiers);
+}
+
 static const PackageSpec& toplevel_spec()
 {
     static const PackageSpec ret("toplevel-spec", Test::X86_WINDOWS);
@@ -504,6 +522,136 @@ TEST_CASE ("version install diamond relaxed", "[versionplan]")
     check_name_and_version(install_plan.install_actions[0], "c", {"9", 2});
     check_name_and_version(install_plan.install_actions[1], "b", {"3", 0});
     check_name_and_version(install_plan.install_actions[2], "a", {"3", 0});
+}
+
+TEST_CASE ("version parse semver", "[versionplan]")
+{
+    auto version_basic = Versions::SemanticVersion::from_string("1.2.3");
+    check_semver_version(version_basic, "1.2.3", "", 1, 2, 3, {});
+
+    auto version_simple_tag = Versions::SemanticVersion::from_string("1.0.0-alpha");
+    check_semver_version(version_simple_tag, "1.0.0", "alpha", 1, 0, 0, {"alpha"});
+
+    auto version_complex_tag = Versions::SemanticVersion::from_string("1.0.0-alpha.1.0.0");
+    check_semver_version(version_complex_tag, "1.0.0", "alpha.1.0.0", 1, 0, 0, {"alpha", "1", "0", "0"});
+
+    auto version_complexer_tag = Versions::SemanticVersion::from_string("1.0.0-alpha.1.x.y.z.0-alpha.0-beta.l-a-s-t");
+    check_semver_version(version_complexer_tag,
+                         "1.0.0",
+                         "alpha.1.x.y.z.0-alpha.0-beta.l-a-s-t",
+                         1,
+                         0,
+                         0,
+                         {"alpha", "1", "x", "y", "z", "0-alpha", "0-beta", "l-a-s-t"});
+
+    auto version_ridiculous_tag = Versions::SemanticVersion::from_string("1.0.0----------------------------------");
+    check_semver_version(version_ridiculous_tag,
+                         "1.0.0",
+                         "---------------------------------",
+                         1,
+                         0,
+                         0,
+                         {"---------------------------------"});
+
+    auto version_build_tag = Versions::SemanticVersion::from_string("1.0.0+build");
+    check_semver_version(version_build_tag, "1.0.0", "", 1, 0, 0, {});
+
+    auto version_prerelease_build_tag = Versions::SemanticVersion::from_string("1.0.0-alpha+build");
+    check_semver_version(version_prerelease_build_tag, "1.0.0", "alpha", 1, 0, 0, {"alpha"});
+}
+
+TEST_CASE ("version install simple semver", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2.0.0", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2.0.0", 0}, Scheme::Semver);
+    vp.emplace("a", {"3.0.0", 0}, Scheme::Semver);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3.0.0", 0}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 1);
+    check_name_and_version(install_plan.install_actions[0], "a", {"3.0.0", 0});
+}
+
+TEST_CASE ("version install transitive semver", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2.0.0", 0};
+    bp.v["b"] = {"2.0.0", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2.0.0", 0}, Scheme::Semver);
+    vp.emplace("a", {"3.0.0", 0}, Scheme::Semver).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "3.0.0"}},
+    };
+    vp.emplace("b", {"2.0.0", 0}, Scheme::Semver);
+    vp.emplace("b", {"3.0.0", 0}, Scheme::Semver);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3.0.0", 0}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 2);
+    check_name_and_version(install_plan.install_actions[0], "b", {"3.0.0", 0});
+    check_name_and_version(install_plan.install_actions[1], "a", {"3.0.0", 0});
+}
+
+TEST_CASE ("version install diamond semver", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2.0.0", 0};
+    bp.v["b"] = {"3.0.0", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2.0.0", 0}, Scheme::Semver);
+    vp.emplace("a", {"3.0.0", 0}, Scheme::Semver).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2.0.0", 1}},
+        Dependency{"c", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "5.0.0", 1}},
+    };
+    vp.emplace("b", {"2.0.0", 1}, Scheme::Semver);
+    vp.emplace("b", {"3.0.0", 0}, Scheme::Semver).source_control_file->core_paragraph->dependencies = {
+        Dependency{"c", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "9.0.0", 2}},
+    };
+    vp.emplace("c", {"5.0.0", 1}, Scheme::Semver);
+    vp.emplace("c", {"9.0.0", 2}, Scheme::Semver);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3.0.0", 0}},
+            Dependency{"b", {}, {}, {Constraint::Type::Minimum, "2.0.0", 1}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 3);
+    check_name_and_version(install_plan.install_actions[0], "c", {"9.0.0", 2});
+    check_name_and_version(install_plan.install_actions[1], "b", {"3.0.0", 0});
+    check_name_and_version(install_plan.install_actions[2], "a", {"3.0.0", 0});
 }
 
 TEST_CASE ("version install scheme change in port version", "[versionplan]")
