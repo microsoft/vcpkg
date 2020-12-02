@@ -1,8 +1,0 @@
-diff --git a/configure b/configure
-new file mode 100644
-index 000000000..b87cb74
---- /dev/null
-+++ b/configure
-@@ -0,0 +1 @@
-+# This file needs to exist for vcpkg_configure_make to work
-\ No newline at end of file
