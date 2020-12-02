@@ -1,19 +1,19 @@
 genrule(
     name = "patch_include_dirs",
     cmd = """
-dest_path=`dirname "$@"`
+dest_path=`dirname "$@AT_CHAR_FOR_CONFIGURE_FILE@"`
 # calc absolute path
 if [ "$${dest_path:0:1}" != "/" ] ; then
     current_dir=`pwd`
     dest_path="$${current_dir}/$${dest_path}"
 fi
 mkdir "$${dest_path}"
-cp '${CMAKE_CURRENT_LIST_DIR}/uwppatch.h' "$${dest_path}"
-echo \\\"$${dest_path}\\\" >> $(location @local_config_cc//:builtin_include_directory_paths_msvc)
+cp '@CMAKE_CURRENT_LIST_DIR@/uwppatch.h' "$${dest_path}"
+echo \\\"$${dest_path}\\\" >> $(location @AT_CHAR_FOR_CONFIGURE_FILE@local_config_cc//:builtin_include_directory_paths_msvc)
 """,
     srcs = [
-        "@local_config_cc//:toolchain",
-        "@local_config_cc//:builtin_include_directory_paths_msvc",
+        "@AT_CHAR_FOR_CONFIGURE_FILE@local_config_cc//:toolchain",
+        "@AT_CHAR_FOR_CONFIGURE_FILE@local_config_cc//:builtin_include_directory_paths_msvc",
     ],
     outs = [
         "patched_includes/uwppatch.h"
