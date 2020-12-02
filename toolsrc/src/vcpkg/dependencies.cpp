@@ -1325,12 +1325,6 @@ namespace vcpkg::Dependencies
                 return VerComp::gt;
             }
 
-            // Shortcut: Compare identifiers as string
-            if (a.prerelease_string == b.prerelease_string)
-            {
-                return VerComp::eq;
-            }
-
             // Compare identifiers left-to-right.
             auto count = std::min(a.identifiers.size(), b.identifiers.size());
             for (size_t i = 0; i < count; ++i)
