@@ -13,9 +13,7 @@ if (-not (Test-Path "$VcpkgRoot/.vcpkg-root")) {
     throw "Invalid vcpkg instance, did you forget -VcpkgRoot?"
 }
 
-Set-Content `
-    -Path "$PSScriptRoot/maintainers/portfile-functions.md" `
-    -Value "<!-- Run regenerate.ps1 to extract documentation from scripts/cmake/*.cmake -->`n`n# Portfile helper functions"
+$tableOfContents = @()
 
 Get-ChildItem "$VcpkgRoot/scripts/cmake" -Filter '*.cmake' | ForEach-Object {
     $filename = $_
@@ -72,10 +70,23 @@ Get-ChildItem "$VcpkgRoot/scripts/cmake" -Filter '*.cmake' | ForEach-Object {
 
     if ($contents) {
         Set-Content -Path "$PSScriptRoot/maintainers/$($filename.BaseName).md" -Value "$($contents -join "`n")`n`n## Source`n[scripts/cmake/$($filename.Name)](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/$($filename.Name))"
-        "- [$($filename.BaseName -replace "_","\_")]($($filename.BaseName).md)" `
-        | Out-File -Enc Ascii -Append -FilePath "$PSScriptRoot/maintainers/portfile-functions.md"
+
+        $tableOfContents += $filename.BaseName
     } elseif (-not $filename.Name.StartsWith("vcpkg_internal")) {
         # don't worry about undocumented internal functions
         Write-Warning "The cmake function in file $filename doesn't seem to have any documentation. Make sure the documentation comments are correctly written."
     }
 }
+
+$portfileFunctionsContent = @(
+    '<!-- Run regenerate.ps1 to extract documentation from scripts/cmake/*.cmake -->',
+    '',
+    '# Portfile helper functions')
+
+$tableOfContents | Sort-Object -Culture '' | ForEach-Object {
+    $portfileFunctionsContent += "- [$($_ -replace '_','\_')]($_.md)"
+}
+
+Set-Content `
+    -Path "$PSScriptRoot/maintainers/portfile-functions.md" `
+    -Value ($portfileFunctionsContent -join "`n")
