@@ -10,12 +10,6 @@ vcpkg_from_github(
     	added_configure.patch
 )
 
-# TODO: The dependencies are manually pulled by this script. This step should be ommited and dependencies integrated by vcpkg.
-vcpkg_execute_required_process(
-    COMMAND ./fetchDependencies --macos
-    WORKING_DIRECTORY ${SOURCE_PATH}
-)
-
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
  	#SKIP_CONFIGURE this doesn't work. We therefore patch in an empty configure file

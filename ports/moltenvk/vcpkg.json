@@ -5,6 +5,10 @@
   "homepage": "https://github.com/KhronosGroup/MoltenVK",
   "supports": "osx",
   "dependencies": [
+    "cereal",
+    "glslang",
+    "spirv-cross",
+    "vulkan",
     "vulkan-headers"
   ]
 }
