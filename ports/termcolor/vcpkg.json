@@ -1,0 +1,5 @@
+{
+  "name": "termcolor",
+  "version-string": "1.0.1",
+  "description": "Termcolor is a header-only C++ library for printing colored messages to the terminal."
+}
