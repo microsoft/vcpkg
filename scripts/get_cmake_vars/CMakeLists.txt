@@ -9,6 +9,10 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_SYSTEM_PROCESSOR
                                         CMAKE_HOST_SYSTEM_PROCESSOR)
+if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
+                                            CMAKE_OSX_SYSROOT)
+endif()
 # Programs to check
 set(PROGLIST AR RANLIB STRIP NM OBJDUMP DLLTOOL MT LINKER)
 foreach(prog IN LISTS PROGLIST)

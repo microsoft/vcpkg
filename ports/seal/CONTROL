@@ -1,7 +1,17 @@
 Source: seal
-Version: 3.5.9
+Version: 3.6.0
 Homepage: https://github.com/microsoft/SEAL
 Description: Microsoft SEAL is an easy-to-use and powerful homomorphic encryption library.
+Default-Features: ms-gsl, zlib, zstd
+
+Feature: ms-gsl
+Build-Depends: ms-gsl
+Description: Use ms-gsl for span view
 
 Feature: zlib
-Description: (Not currently implemented) Use zlib for compressed serialization
+Build-Depends: zlib
+Description: Use zlib for compressed serialization
+
+Feature: zstd
+Build-Depends: zstd
+Description: Use zstd for compressed serialization

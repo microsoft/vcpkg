@@ -149,6 +149,9 @@ namespace vcpkg
         constexpr static StringLiteral BINARY_SOURCES_ARG = "binarysource";
         std::vector<std::string> binary_sources;
 
+        constexpr static StringLiteral CMAKE_SCRIPT_ARG = "x-cmake-args";
+        std::vector<std::string> cmake_args;
+
         constexpr static StringLiteral DEBUG_SWITCH = "debug";
         Optional<bool> debug = nullopt;
         constexpr static StringLiteral SEND_METRICS_SWITCH = "sendmetrics";
@@ -162,6 +165,10 @@ namespace vcpkg
 
         constexpr static StringLiteral WAIT_FOR_LOCK_SWITCH = "x-wait-for-lock";
         Optional<bool> wait_for_lock = nullopt;
+
+        constexpr static StringLiteral IGNORE_LOCK_FAILURES_SWITCH = "x-ignore-lock-failures";
+        constexpr static StringLiteral IGNORE_LOCK_FAILURES_ENV = "X_VCPKG_IGNORE_LOCK_FAILURES";
+        Optional<bool> ignore_lock_failures = nullopt;
 
         constexpr static StringLiteral JSON_SWITCH = "x-json";
         Optional<bool> json = nullopt;

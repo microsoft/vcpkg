@@ -155,8 +155,6 @@ namespace vcpkg::Metrics
         Json::Array buildtime_names;
         Json::Array buildtime_times;
 
-        Json::Object feature_flags;
-
         void track_property(const std::string& name, const std::string& value)
         {
             properties.insert_or_replace(name, Json::Value::string(value));
@@ -174,7 +172,7 @@ namespace vcpkg::Metrics
         }
         void track_feature(const std::string& name, bool value)
         {
-            feature_flags.insert(name, Json::Value::boolean(value));
+            properties.insert("feature-flag-" + name, Json::Value::boolean(value));
         }
 
         std::string format_event_data_template() const
@@ -234,7 +232,6 @@ namespace vcpkg::Metrics
                 base_data.insert("name", Json::Value::string("commandline_test7"));
                 base_data.insert("properties", std::move(props_plus_buildtimes));
                 base_data.insert("measurements", measurements);
-                base_data.insert("feature-flags", feature_flags);
             }
 
             return Json::stringify(arr, vcpkg::Json::JsonStyle());
