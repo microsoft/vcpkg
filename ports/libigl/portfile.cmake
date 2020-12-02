@@ -14,7 +14,7 @@ vcpkg_from_github(
 )
 
 set(LIBIGL_BUILD_STATIC OFF)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if (NOT "header-only" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(LIBIGL_BUILD_STATIC ON)
 endif()
 
