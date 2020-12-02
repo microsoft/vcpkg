@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookresearch/flashlight
-    REF b4b8f4a506210dd63fbf4eaf9e2b49b89a8762b6
-    SHA512 47b97dedab4aaf7367f723dc9f66adec02f4de878371b31ece2c8727454f9cc90450abb8142edeaa734c1cf610d15b6d573a3140ee4479c9de29fecd45ca78ec
+    REF 0f274369b1228809213af8c43ddf7521b9e77366
+    SHA512 abc81fe8a52a5a46aa86730208285cd7a05ff98cdcbd89358a83b04bafb2c5852f0bdd095cb8a321c81cb870aff33700d63f65dff2befe18d417aaa162a81963
     HEAD_REF master
 )
 
