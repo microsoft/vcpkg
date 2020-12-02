@@ -1,24 +1,32 @@
 diff --git a/adm/cmake/freetype.cmake b/adm/cmake/freetype.cmake
-index 7f6f950..b524ce4 100644
+index 7f6f950..4e5108f 100644
 --- a/adm/cmake/freetype.cmake
 +++ b/adm/cmake/freetype.cmake
 @@ -111,6 +111,7 @@ if (IS_BUILTIN_SEARCH_REQUIRED)
    endif()
  
    find_package(Freetype)
-+  find_package(freetype CONFIG)
++  find_package(freetype CONFIG REQUIRED)
  
    # restore ENV{FREETYPE_DIR}
    if (3RDPARTY_FREETYPE_DIR AND EXISTS "${3RDPARTY_FREETYPE_DIR}")
-@@ -230,6 +231,15 @@ endif()
+@@ -230,6 +231,23 @@ endif()
      # set 3RDPARTY_FREETYPE_LIBRARY as notfound, otherwise find_library can't assign a new value to 3RDPARTY_FREETYPE_LIBRARY
      set (3RDPARTY_FREETYPE_LIBRARY "3RDPARTY_FREETYPE_LIBRARY-NOTFOUND" CACHE FILEPATH "The path to freetype library" FORCE)
  
 +    set(3RDPARTY_FREETYPE_LIBRARY freetype)
-+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-+        get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_IMPLIB_RELEASE)
++    if (BUILD_SHARED_LIBS)
++        if (CMAKE_BUILD_TYPE STREQUAL "Debug")
++            get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_IMPLIB_RELEASE)
++        else()
++            get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_IMPLIB_DEBUG)
++        endif()
 +    else()
-+        get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_IMPLIB_DEBUG)
++        if (CMAKE_BUILD_TYPE STREQUAL "Debug")
++            get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_LOCATION_RELEASE)
++        else()
++            get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_LOCATION_DEBUG)
++        endif()
 +    endif()
 +    get_filename_component(3RDPARTY_FREETYPE_LIBRARY_DIR ${3RDPARTY_FREETYPE_LIBRARY_DIR} DIRECTORY)
 +    
@@ -26,7 +34,7 @@ index 7f6f950..b524ce4 100644
      if (3RDPARTY_FREETYPE_DIR AND EXISTS "${3RDPARTY_FREETYPE_DIR}")
        find_library (3RDPARTY_FREETYPE_LIBRARY ${CSF_FREETYPE}
                                                PATHS "${3RDPARTY_FREETYPE_LIBRARY_DIR}" "${3RDPARTY_FREETYPE_DIR}"
-@@ -257,9 +267,10 @@ endif()
+@@ -257,9 +275,10 @@ endif()
  
      set (3RDPARTY_FREETYPE_LIBRARY "" CACHE FILEPATH "The path to freetype library" FORCE)
    endif()

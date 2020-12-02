@@ -67,15 +67,18 @@ list(APPEND TARGET_FILES
     ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingDataTargets-debug.cmake
     ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEVisualizationTargets-debug.cmake
 )
-foreach(TARGET_FILE ${TARGET_FILES})
-    file(READ ${TARGET_FILE} filedata)
-    string(REGEX REPLACE "libd" "lib" filedata "${filedata}")
-    string(REGEX REPLACE "bind" "bin" filedata "${filedata}")
-    file(WRITE ${TARGET_FILE} ${filedata})
-endforeach()
 
-# the bin directory ends up with bat files that are noise, let's clean that up
-file(GLOB BATS ${CURRENT_PACKAGES_DIR}/bin/*.bat)
-file(REMOVE_RECURSE ${BATS})
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    foreach(TARGET_FILE ${TARGET_FILES})
+        file(READ ${TARGET_FILE} filedata)
+        string(REGEX REPLACE "libd" "lib" filedata "${filedata}")
+        string(REGEX REPLACE "bind" "bin" filedata "${filedata}")
+        file(WRITE ${TARGET_FILE} ${filedata})
+    endforeach()
+
+    # the bin directory ends up with bat files that are noise, let's clean that up
+    file(GLOB BATS ${CURRENT_PACKAGES_DIR}/bin/*.bat)
+    file(REMOVE_RECURSE ${BATS})
+endif()
 
 file(INSTALL ${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
