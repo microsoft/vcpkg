@@ -36,7 +36,7 @@ Skips the library checks in vcpkg_fixup_pkgconfig. Only use if the script itself
 Still work in progress. If there are more cases which can be handled here feel free to add them
 
 ## Examples
-Just call vcpkg_fixup_pkgconfig() after any install step which installs *.pc files.
+Just call `vcpkg_fixup_pkgconfig()` after any install step which installs *.pc files.
 
 ## Source
 [scripts/cmake/vcpkg_fixup_pkgconfig.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_fixup_pkgconfig.cmake)

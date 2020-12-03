@@ -39,11 +39,27 @@ stages:
         filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
         arguments: '-Root .'
         pwsh: true
+- stage: check_documentation_generation
+  displayName: Check if the documentation has been regenerated correctly
+  pool: $(windows-pool)
+  dependsOn: []
+  jobs:
+  - job:
+    workspace:
+      clean: resources
+    steps:
+    - task: Powershell@2
+      displayName: 'Check documentation generation'
+      inputs:
+        filePath: 'scripts/azure-pipelines/windows/Check-CMakeFunctionDocumentation.ps1'
+        arguments: '-Root .'
+        pwsh: true
 - stage: run_port_ci
   displayName: 'Run the Port CI'
   dependsOn:
   - check_cxx_formatting
   - check_manifest_formatting
+  - check_documentation_generation
   jobs:
   - template: windows/azure-pipelines.yml
     parameters:

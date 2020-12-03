@@ -278,6 +278,8 @@ ecsutil:arm-uwp=fail
 ecsutil:x64-linux=fail
 ecsutil:x64-osx=fail
 ecsutil:x64-uwp=fail
+# Checks for gnu extension so only works with gcc.
+elfutils:x64-osx=fail
 embree2:x64-linux=fail
 embree2:x64-osx=fail
 embree2:x64-windows-static=fail

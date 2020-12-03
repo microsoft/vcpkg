@@ -44,7 +44,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
         ${LIBXML2_LIBS_DBG} \
         ${GEOS_LIBS_DBG} \
-        ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib"
+        ${CURRENT_INSTALLED_DIR}/debug/lib/proj_d.lib ole32.lib shell32.lib"
        )
     set(LIBS_ALL_REL
         "${CURRENT_INSTALLED_DIR}/lib/iconv.lib \
@@ -54,7 +54,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
         ${LIBXML2_LIBS_REL} \
         ${GEOS_LIBS_REL} \
-        ${CURRENT_INSTALLED_DIR}/lib/proj.lib"
+        ${CURRENT_INSTALLED_DIR}/lib/proj.lib ole32.lib shell32.lib"
        )
 
     ################
