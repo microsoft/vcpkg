@@ -311,47 +311,52 @@ namespace vcpkg::Dependencies
     static std::string to_output_string(RequestType request_type,
                                         const CStringView s,
                                         const Build::BuildPackageOptions& options,
-                                        const fs::path& install_port_path,
+                                        const SourceControlFileLocation* scfl,
+                                        const InstalledPackageView* ipv,
                                         const fs::path& builtin_ports_dir)
     {
-        if (!builtin_ports_dir.empty() && !Strings::case_insensitive_ascii_starts_with(fs::u8string(install_port_path),
-                                                                                       fs::u8string(builtin_ports_dir)))
+        std::string ret;
+        switch (request_type)
         {
-            const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
-            switch (request_type)
+            case RequestType::AUTO_SELECTED: Strings::append(ret, "  * "); break;
+            case RequestType::USER_REQUESTED: Strings::append(ret, "    "); break;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+        Strings::append(ret, s);
+        if (scfl)
+        {
+            Strings::append(ret, " -> ", scfl->to_versiont());
+        }
+        else if (ipv)
+        {
+            Strings::append(ret, " -> ", VersionT{ipv->core->package.version, ipv->core->package.port_version});
+        }
+        if (options.use_head_version == Build::UseHeadVersion::YES)
+        {
+            Strings::append(ret, " (+HEAD)");
+        }
+        if (scfl)
+        {
+            const auto s_install_port_path = fs::u8string(scfl->source_location);
+            if (!builtin_ports_dir.empty() &&
+                !Strings::case_insensitive_ascii_starts_with(s_install_port_path, fs::u8string(builtin_ports_dir)))
             {
-                case RequestType::AUTO_SELECTED:
-                    return Strings::format("  * %s%s -- %s", s, from_head, fs::u8string(install_port_path));
-                case RequestType::USER_REQUESTED:
-                    return Strings::format("    %s%s -- %s", s, from_head, fs::u8string(install_port_path));
-                default: Checks::unreachable(VCPKG_LINE_INFO);
+                Strings::append(ret, " -- ", s_install_port_path);
             }
         }
-        return to_output_string(request_type, s, options);
+        return ret;
     }
 
     std::string to_output_string(RequestType request_type,
                                  const CStringView s,
                                  const Build::BuildPackageOptions& options)
     {
-        const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
-
-        switch (request_type)
-        {
-            case RequestType::AUTO_SELECTED: return Strings::format("  * %s%s", s, from_head);
-            case RequestType::USER_REQUESTED: return Strings::format("    %s%s", s, from_head);
-            default: Checks::unreachable(VCPKG_LINE_INFO);
-        }
+        return to_output_string(request_type, s, options, {}, {}, {});
     }
 
     std::string to_output_string(RequestType request_type, const CStringView s)
     {
-        switch (request_type)
-        {
-            case RequestType::AUTO_SELECTED: return Strings::format("  * %s", s);
-            case RequestType::USER_REQUESTED: return Strings::format("    %s", s);
-            default: Checks::unreachable(VCPKG_LINE_INFO);
-        }
+        return to_output_string(request_type, s, {Build::UseHeadVersion::NO}, {}, {}, {});
     }
 
     InstallPlanAction::InstallPlanAction() noexcept
@@ -1096,13 +1101,12 @@ namespace vcpkg::Dependencies
 
         static auto actions_to_output_string = [&](const std::vector<const InstallPlanAction*>& v) {
             return Strings::join("\n", v, [&](const InstallPlanAction* p) {
-                if (auto* pscfl = p->source_control_file_location.get())
-                {
-                    return to_output_string(
-                        p->request_type, p->displayname(), p->build_options, pscfl->source_location, builtin_ports_dir);
-                }
-
-                return to_output_string(p->request_type, p->displayname(), p->build_options);
+                return to_output_string(p->request_type,
+                                        p->displayname(),
+                                        p->build_options,
+                                        p->source_control_file_location.get(),
+                                        p->installed_package.get(),
+                                        builtin_ports_dir);
             });
         };
 

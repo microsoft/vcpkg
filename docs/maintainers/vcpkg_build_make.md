@@ -6,7 +6,7 @@ Build a linux makefile project.
 ```cmake
 vcpkg_build_make([BUILD_TARGET <target>]
                  [ADD_BIN_TO_PATH]
-                 [ENABLE_INSTALL])
+                 [ENABLE_INSTALL]
                  [MAKEFILE <makefileName>]
                  [LOGFILE_ROOT <logfileroot>])
 ```
@@ -36,7 +36,7 @@ Additional subdir to invoke make in. Useful if only parts of a port should be bu
 
 ## Notes:
 This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
-You can use the alias [`vcpkg_install_make()`](vcpkg_configure_make.md) function if your CMake script supports the
+You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your CMake script supports the
 "install" target
 
 ## Examples
