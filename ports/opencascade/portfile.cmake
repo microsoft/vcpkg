@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-msvc-32bit-builds.patch
+        fix-build-with-vs2017.patch
         fix-static-build.patch
 )
 
@@ -80,6 +81,9 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     # the bin directory ends up with bat files that are noise, let's clean that up
     file(GLOB BATS ${CURRENT_PACKAGES_DIR}/bin/*.bat)
     file(REMOVE_RECURSE ${BATS})
+else()
+    # remove scripts in bin dir
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
