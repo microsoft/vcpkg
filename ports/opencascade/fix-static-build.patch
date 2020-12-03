@@ -1,5 +1,5 @@
 diff --git a/adm/cmake/freetype.cmake b/adm/cmake/freetype.cmake
-index 7f6f950..4e5108f 100644
+index 7f6f950..be6251f 100644
 --- a/adm/cmake/freetype.cmake
 +++ b/adm/cmake/freetype.cmake
 @@ -111,6 +111,7 @@ if (IS_BUILTIN_SEARCH_REQUIRED)
@@ -17,15 +17,15 @@ index 7f6f950..4e5108f 100644
 +    set(3RDPARTY_FREETYPE_LIBRARY freetype)
 +    if (BUILD_SHARED_LIBS)
 +        if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-+            get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_IMPLIB_RELEASE)
-+        else()
 +            get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_IMPLIB_DEBUG)
++        else()
++            get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_IMPLIB_RELEASE)
 +        endif()
 +    else()
 +        if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-+            get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_LOCATION_RELEASE)
-+        else()
 +            get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_LOCATION_DEBUG)
++        else()
++            get_target_property(3RDPARTY_FREETYPE_LIBRARY_DIR freetype IMPORTED_LOCATION_RELEASE)
 +        endif()
 +    endif()
 +    get_filename_component(3RDPARTY_FREETYPE_LIBRARY_DIR ${3RDPARTY_FREETYPE_LIBRARY_DIR} DIRECTORY)
