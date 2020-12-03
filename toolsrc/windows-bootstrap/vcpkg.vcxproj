@@ -267,6 +267,8 @@
     <ClInclude Include="..\include\vcpkg\vcpkgcmdarguments.h" />
     <ClInclude Include="..\include\vcpkg\vcpkglib.h" />
     <ClInclude Include="..\include\vcpkg\vcpkgpaths.h" />
+    <ClInclude Include="..\include\vcpkg\versiondeserializers.h" />
+    <ClInclude Include="..\include\vcpkg\versions.h" />
     <ClInclude Include="..\include\vcpkg\versiont.h" />
     <ClInclude Include="..\include\vcpkg\visualstudio.h" />
   </ItemGroup>
@@ -354,6 +356,8 @@
     <ClCompile Include="..\src\vcpkg\vcpkgcmdarguments.cpp" />
     <ClCompile Include="..\src\vcpkg\vcpkglib.cpp" />
     <ClCompile Include="..\src\vcpkg\vcpkgpaths.cpp" />
+    <ClCompile Include="..\src\vcpkg\versiondeserializers.cpp" />
+    <ClCompile Include="..\src\vcpkg\versions.cpp" />
     <ClCompile Include="..\src\vcpkg\versiont.cpp" />
     <ClCompile Include="..\src\vcpkg\visualstudio.cpp" />
     <ClCompile Include="..\src\vcpkg.cpp" />

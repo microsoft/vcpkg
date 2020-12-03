@@ -16,8 +16,11 @@ The location used as scratch space for 'installed', 'packages', and 'buildtrees'
 The Azure Pipelines artifacts directory. If not supplied, defaults to the current directory.
 
 .PARAMETER ArchivesRoot
-The location where the binary caching archives are stored. Shared across runs of this script. If
-this parameter is not set, binary caching will not be used.
+Equivalent to '-BinarySourceStub "files,$ArchivesRoot"'
+
+.PARAMETER BinarySourceStub
+The type and parameters of the binary source. Shared across runs of this script. If
+this parameter is not set, binary caching will not be used. Example: "files,W:\"
 
 .PARAMETER BuildReason
 The reason Azure Pipelines is running this script (controls in which mode Binary Caching is used).
@@ -25,7 +28,7 @@ If ArchivesRoot is not set, this parameter has no effect. If ArchivesRoot is set
 binary caching will default to read-write mode.
 #>
 
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName="ArchivesRoot")]
 Param(
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
@@ -35,7 +38,10 @@ Param(
     $WorkingRoot,
     [ValidateNotNullOrEmpty()]
     $ArtifactStagingDirectory = '.',
+    [Parameter(ParameterSetName='ArchivesRoot')]
     $ArchivesRoot = $null,
+    [Parameter(ParameterSetName='BinarySourceStub')]
+    $BinarySourceStub = $null,
     $BuildReason = $null
 )
 
@@ -49,7 +55,7 @@ $buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'packages'
 
-$usingBinaryCaching = -Not ([string]::IsNullOrWhiteSpace($ArchivesRoot))
+$usingBinaryCaching = -Not ([string]::IsNullOrWhiteSpace($ArchivesRoot)) -Or -Not ([string]::IsNullOrWhiteSpace($BinarySourceStub))
 $commonArgs = @()
 if ($usingBinaryCaching) {
     $commonArgs += @('--binarycaching')
@@ -78,8 +84,12 @@ if ($usingBinaryCaching) {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
         $binaryCachingMode = 'write'
     }
-
-    $commonArgs += @("--x-binarysource=clear;files,$ArchivesRoot,$binaryCachingMode")
+    if ([string]::IsNullOrWhiteSpace($ArchivesRoot)) {
+        $commonArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
+    }
+    else {
+        $commonArgs += @("--binarysource=clear;files,$ArchivesRoot,$binaryCachingMode")
+    }
 }
 
 if ($Triplet -eq 'x64-linux') {
@@ -108,7 +118,9 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
 # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
 # Install them so the CI succeeds:
 if ($Triplet -in @('x64-uwp', 'arm64-windows', 'arm-uwp')) {
-    .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows @commonArgs
+    .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows yasm-tool:x86-windows ampl-mp:x86-windows @commonArgs
+} elseif ($Triplet -in @('x64-windows', 'x64-windows-static')) {
+    .\vcpkg.exe install yasm-tool:x86-windows @commonArgs
 }
 
 & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs

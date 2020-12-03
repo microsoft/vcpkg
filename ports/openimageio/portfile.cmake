@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-tools-path.patch
         fix-config-cmake.patch
         fix-dependfmt.patch
+        fix-libheif.patch # Remove this patch on the next update
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")

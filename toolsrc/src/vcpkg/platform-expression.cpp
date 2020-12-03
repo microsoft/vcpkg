@@ -461,7 +461,7 @@ namespace vcpkg::PlatformExpression
 
     ExpectedS<Expr> parse_platform_expression(StringView expression, MultipleBinaryOperators multiple_binary_operators)
     {
-        auto parser = ExpressionParser(expression, multiple_binary_operators);
+        ExpressionParser parser(expression, multiple_binary_operators);
         auto res = parser.parse();
 
         if (auto p = parser.extract_error())

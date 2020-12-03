@@ -51,6 +51,7 @@ namespace vcpkg
             {VcpkgCmdArguments::MANIFEST_MODE_FEATURE, args.manifest_mode},
             {VcpkgCmdArguments::COMPILER_TRACKING_FEATURE, args.compiler_tracking},
             {VcpkgCmdArguments::REGISTRIES_FEATURE, args.registries_feature},
+            {VcpkgCmdArguments::VERSIONS_FEATURE, args.versions_feature},
         };
 
         for (const auto& desc : flag_descriptions)
@@ -282,6 +283,7 @@ namespace vcpkg
                     {OVERLAY_PORTS_ARG, &VcpkgCmdArguments::overlay_ports},
                     {OVERLAY_TRIPLETS_ARG, &VcpkgCmdArguments::overlay_triplets},
                     {BINARY_SOURCES_ARG, &VcpkgCmdArguments::binary_sources},
+                    {CMAKE_SCRIPT_ARG, &VcpkgCmdArguments::cmake_args},
                 };
 
             constexpr static std::pair<StringView, Optional<bool> VcpkgCmdArguments::*> switches[] = {
@@ -292,6 +294,7 @@ namespace vcpkg
                 {FEATURE_PACKAGES_SWITCH, &VcpkgCmdArguments::feature_packages},
                 {BINARY_CACHING_SWITCH, &VcpkgCmdArguments::binary_caching},
                 {WAIT_FOR_LOCK_SWITCH, &VcpkgCmdArguments::wait_for_lock},
+                {IGNORE_LOCK_FAILURES_SWITCH, &VcpkgCmdArguments::ignore_lock_failures},
                 {JSON_SWITCH, &VcpkgCmdArguments::json},
             };
 
@@ -558,7 +561,6 @@ namespace vcpkg
         table.format("vcpkg export <pkg>... [opt]...", "Exports a package");
         table.format("vcpkg edit <pkg>",
                      "Open up a port for editing (uses " + format_environment_variable("EDITOR") + ", default 'code')");
-        table.format("vcpkg import <pkg>", "Import a pre-built library");
         table.format("vcpkg create <pkg> <url> [archivename]", "Create a new package");
         table.format("vcpkg owns <pat>", "Search for files in installed packages");
         table.format("vcpkg depend-info <pkg>...", "Display a list of dependencies for packages");
@@ -660,6 +662,14 @@ namespace vcpkg
         from_env(VCPKG_ROOT_DIR_ENV, vcpkg_root_dir);
         from_env(DOWNLOADS_ROOT_DIR_ENV, downloads_root_dir);
         from_env(DEFAULT_VISUAL_STUDIO_PATH_ENV, default_visual_studio_path);
+
+        {
+            const auto vcpkg_disable_lock = System::get_environment_variable(IGNORE_LOCK_FAILURES_ENV);
+            if (vcpkg_disable_lock.has_value() && !ignore_lock_failures.has_value())
+            {
+                ignore_lock_failures = true;
+            }
+        }
 
         {
             const auto vcpkg_overlay_ports_env = System::get_environment_variable(OVERLAY_PORTS_ENV);
@@ -765,6 +775,7 @@ namespace vcpkg
             {MANIFEST_MODE_FEATURE, manifest_mode},
             {COMPILER_TRACKING_FEATURE, compiler_tracking},
             {REGISTRIES_FEATURE, registries_feature},
+            {VERSIONS_FEATURE, versions_feature},
         };
 
         for (const auto& flag : flags)
@@ -790,6 +801,7 @@ namespace vcpkg
             {BINARY_CACHING_FEATURE, binary_caching_enabled()},
             {COMPILER_TRACKING_FEATURE, compiler_tracking_enabled()},
             {REGISTRIES_FEATURE, registries_enabled()},
+            {VERSIONS_FEATURE, versions_enabled()},
         };
 
         for (const auto& flag : flags)
@@ -908,6 +920,7 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::TRIPLET_ARG;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ENV;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ENV;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ARG;
 
     constexpr StringLiteral VcpkgCmdArguments::BINARY_SOURCES_ARG;
@@ -919,6 +932,8 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::PRINT_METRICS_SWITCH;
 
     constexpr StringLiteral VcpkgCmdArguments::WAIT_FOR_LOCK_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::IGNORE_LOCK_FAILURES_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::IGNORE_LOCK_FAILURES_ENV;
 
     constexpr StringLiteral VcpkgCmdArguments::JSON_SWITCH;
 
@@ -931,6 +946,8 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::COMPILER_TRACKING_FEATURE;
     constexpr StringLiteral VcpkgCmdArguments::MANIFEST_MODE_FEATURE;
     constexpr StringLiteral VcpkgCmdArguments::REGISTRIES_FEATURE;
-
     constexpr StringLiteral VcpkgCmdArguments::RECURSIVE_DATA_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::VERSIONS_FEATURE;
+
+    constexpr StringLiteral VcpkgCmdArguments::CMAKE_SCRIPT_ARG;
 }

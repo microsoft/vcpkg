@@ -40,11 +40,26 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-if(WIN32 AND (NOT MINGW))
+if(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_MINGW))
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
         vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
     endif()
+endif()
+
+# maybe create vcpkg_regex_replace_string?
+
+file(READ ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc _contents)
+string(REGEX REPLACE "-l(std)?c\\+\\+" "" _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc "${_contents}")
+
+file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc _contents)
+string(REGEX REPLACE "-l(std)?c\\+\\+" "" _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc "${_contents}")
+
+if(VCPKG_TARGET_IS_MINGW AND ENABLE_SHARED)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libx265.a)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libx265.a)
 endif()
 
 if(UNIX)

@@ -305,7 +305,8 @@ namespace vcpkg::Install
     using Build::BuildResult;
     using Build::ExtendedBuildResult;
 
-    static ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+    static ExtendedBuildResult perform_install_plan_action(const VcpkgCmdArguments& args,
+                                                           const VcpkgPaths& paths,
                                                            InstallPlanAction& action,
                                                            StatusParagraphs& status_db,
                                                            IBinaryProvider& binaries_provider,
@@ -336,7 +337,7 @@ namespace vcpkg::Install
             else
                 System::printf("Building package %s...\n", display_name_with_features);
 
-            auto result = Build::build_package(paths, action, binaries_provider, build_logs_recorder, status_db);
+            auto result = Build::build_package(args, paths, action, binaries_provider, build_logs_recorder, status_db);
 
             if (BuildResult::DOWNLOADED == result.code)
             {
@@ -454,7 +455,8 @@ namespace vcpkg::Install
         TrackedPackageInstallGuard& operator=(const TrackedPackageInstallGuard&) = delete;
     };
 
-    InstallSummary perform(ActionPlan& action_plan,
+    InstallSummary perform(const VcpkgCmdArguments& args,
+                           ActionPlan& action_plan,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db,
@@ -476,17 +478,19 @@ namespace vcpkg::Install
         {
             results.emplace_back(action.spec, &action);
             results.back().build_result =
-                perform_install_plan_action(paths, action, status_db, binaryprovider, build_logs_recorder);
+                perform_install_plan_action(args, paths, action, status_db, binaryprovider, build_logs_recorder);
         }
 
         Build::compute_all_abis(paths, action_plan, var_provider, status_db);
 
-        binaryprovider.prefetch(paths, action_plan);
+        auto to_prefetch = Util::fmap(action_plan.install_actions, [](const auto& x) { return &x; });
+        binaryprovider.prefetch(paths, to_prefetch);
 
         for (auto&& action : action_plan.install_actions)
         {
             TrackedPackageInstallGuard this_install(package_count, results, action.spec);
-            auto result = perform_install_plan_action(paths, action, status_db, binaryprovider, build_logs_recorder);
+            auto result =
+                perform_install_plan_action(args, paths, action, status_db, binaryprovider, build_logs_recorder);
             if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
             {
                 System::print2(Build::create_user_troubleshooting_message(action.spec), '\n');
@@ -513,8 +517,9 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_WRITE_PACKAGES_CONFIG = "x-write-nuget-packages-config";
     static constexpr StringLiteral OPTION_MANIFEST_NO_DEFAULT_FEATURES = "x-no-default-features";
     static constexpr StringLiteral OPTION_MANIFEST_FEATURE = "x-feature";
+    static constexpr StringLiteral OPTION_PROHIBIT_BACKCOMPAT_FEATURES = "x-prohibit-backcompat-features";
 
-    static constexpr std::array<CommandSwitch, 9> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 10> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
@@ -522,9 +527,13 @@ namespace vcpkg::Install
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_EDITABLE, "Disable source re-extraction and binary caching for libraries on the command line"},
+
         {OPTION_USE_ARIA2, "Use aria2 to perform download tasks"},
         {OPTION_CLEAN_AFTER_BUILD, "Clean buildtrees, packages and downloads after building each package"},
+        {OPTION_PROHIBIT_BACKCOMPAT_FEATURES,
+         "(experimental) Fail install if a package attempts to use a deprecated feature"},
     }};
+
     static constexpr std::array<CommandSwitch, 10> MANIFEST_INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
@@ -753,11 +762,13 @@ namespace vcpkg::Install
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
         const bool only_downloads = Util::Sets::contains(options.switches, (OPTION_ONLY_DOWNLOADS));
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
-        const bool is_editable = Util::Sets::contains(options.switches, (OPTION_EDITABLE));
+        const bool is_editable = Util::Sets::contains(options.switches, (OPTION_EDITABLE)) || !args.cmake_args.empty();
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going =
             to_keep_going(Util::Sets::contains(options.switches, OPTION_KEEP_GOING) || only_downloads);
+        const bool prohibit_backcompat_features =
+            Util::Sets::contains(options.switches, (OPTION_PROHIBIT_BACKCOMPAT_FEATURES));
 
         auto& fs = paths.get_filesystem();
 
@@ -774,6 +785,7 @@ namespace vcpkg::Install
             download_tool,
             Build::PurgeDecompressFailure::NO,
             Util::Enum::to_enum<Build::Editable>(is_editable),
+            prohibit_backcompat_features ? Build::BackcompatFeatures::PROHIBIT : Build::BackcompatFeatures::ALLOW,
         };
 
         PortFileProvider::PathsPortFileProvider provider(paths, args.overlay_ports);
@@ -789,17 +801,22 @@ namespace vcpkg::Install
                 Metrics::g_metrics.lock()->track_property("x-write-nuget-packages-config", "defined");
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
-            auto manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
+            const auto& manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
             auto maybe_manifest_scf = SourceControlFile::parse_manifest_file(manifest_path, *manifest);
             if (!maybe_manifest_scf)
             {
                 print_error_message(maybe_manifest_scf.error());
-                System::print2(
-                    "See https://github.com/Microsoft/vcpkg/tree/master/docs/specifications/manifests.md for "
-                    "more information.\n");
+                System::print2("See https://github.com/Microsoft/vcpkg/tree/master/docs/users/manifests.md for "
+                               "more information.\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
+
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
+
+            if (auto maybe_error = manifest_scf.check_against_feature_flags(manifest_path, paths.get_feature_flags()))
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, maybe_error.value_or_exit(VCPKG_LINE_INFO));
+            }
 
             std::vector<std::string> features;
             auto manifest_feature_it = options.multisettings.find(OPTION_MANIFEST_FEATURE);
@@ -818,25 +835,68 @@ namespace vcpkg::Install
                 // remove "core" because resolve_deps_as_top_level uses default-inversion
                 features.erase(core_it);
             }
-            auto specs = resolve_deps_as_top_level(manifest_scf, default_triplet, features, var_provider);
 
-            auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
-
-            for (InstallPlanAction& action : install_plan.install_actions)
+            if (args.versions_enabled())
             {
-                action.build_options = install_plan_options;
-                action.build_options.use_head_version = Build::UseHeadVersion::NO;
-                action.build_options.editable = Build::Editable::NO;
-            }
+                PortFileProvider::VersionedPortfileProvider verprovider(paths);
+                auto baseprovider = [&]() -> std::unique_ptr<PortFileProvider::BaselineProvider> {
+                    if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
+                    {
+                        return std::make_unique<PortFileProvider::BaselineProvider>(paths,
+                                                                                    p_baseline->string().to_string());
+                    }
+                    else
+                    {
+                        return std::make_unique<PortFileProvider::BaselineProvider>(paths);
+                    }
+                }();
 
-            Commands::SetInstalled::perform_and_exit_ex(args,
-                                                        paths,
-                                                        provider,
-                                                        *binaryprovider,
-                                                        var_provider,
-                                                        std::move(install_plan),
-                                                        dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
-                                                        pkgsconfig);
+                auto install_plan =
+                    Dependencies::create_versioned_install_plan(verprovider,
+                                                                *baseprovider,
+                                                                var_provider,
+                                                                manifest_scf.core_paragraph->dependencies,
+                                                                manifest_scf.core_paragraph->overrides,
+                                                                {manifest_scf.core_paragraph->name, default_triplet})
+                        .value_or_exit(VCPKG_LINE_INFO);
+
+                for (InstallPlanAction& action : install_plan.install_actions)
+                {
+                    action.build_options = install_plan_options;
+                    action.build_options.use_head_version = Build::UseHeadVersion::NO;
+                    action.build_options.editable = Build::Editable::NO;
+                }
+
+                Commands::SetInstalled::perform_and_exit_ex(args,
+                                                            paths,
+                                                            provider,
+                                                            *binaryprovider,
+                                                            var_provider,
+                                                            std::move(install_plan),
+                                                            dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
+                                                            pkgsconfig);
+            }
+            else
+            {
+                auto specs = resolve_deps_as_top_level(manifest_scf, default_triplet, features, var_provider);
+                auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
+
+                for (InstallPlanAction& action : install_plan.install_actions)
+                {
+                    action.build_options = install_plan_options;
+                    action.build_options.use_head_version = Build::UseHeadVersion::NO;
+                    action.build_options.editable = Build::Editable::NO;
+                }
+
+                Commands::SetInstalled::perform_and_exit_ex(args,
+                                                            paths,
+                                                            provider,
+                                                            *binaryprovider,
+                                                            var_provider,
+                                                            std::move(install_plan),
+                                                            dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
+                                                            pkgsconfig);
+            }
         }
 
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
@@ -920,7 +980,7 @@ namespace vcpkg::Install
 
         Metrics::g_metrics.lock()->track_property("installplan_1", specs_string);
 
-        Dependencies::print_plan(action_plan, is_recursive, paths.ports);
+        Dependencies::print_plan(action_plan, is_recursive, paths.builtin_ports_directory());
 
         auto it_pkgsconfig = options.settings.find(OPTION_WRITE_PACKAGES_CONFIG);
         if (it_pkgsconfig != options.settings.end())
@@ -940,7 +1000,8 @@ namespace vcpkg::Install
         }
 
         const InstallSummary summary =
-            perform(action_plan,
+            perform(args,
+                    action_plan,
                     keep_going,
                     paths,
                     status_db,
