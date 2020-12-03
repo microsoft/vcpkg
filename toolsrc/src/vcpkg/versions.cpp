@@ -80,6 +80,32 @@ namespace vcpkg::Versions
         return std::move(ret);
     }
 
+    DateVersion DateVersion::from_string(const std::string& str)
+    {
+        std::regex date_scheme_match("(\\d{4}-\\d{2}-\\d{2})(\\.(0|[1-9]\\d*))*");
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           std::regex_match(str, date_scheme_match),
+                           "Error: String `%s` is not a valid date version string.",
+                           str);
+
+        DateVersion ret;
+        ret.original_string = str;
+        ret.version_string = str;
+
+        auto identifiers_found = ret.version_string.find('.');
+        if (identifiers_found != std::string::npos)
+        {
+            ret.identifiers_string = ret.version_string.substr(identifiers_found + 1);
+            ret.identifiers =
+                std::move(Util::fmap(Strings::split(ret.identifiers_string, '.'), [](auto&& strval) -> long {
+                    return as_numeric(strval).value_or_exit(VCPKG_LINE_INFO);
+                }));
+            ret.version_string.resize(identifiers_found);
+        }
+
+        return std::move(ret);
+    }
+
     VerComp compare(const Versions::SemanticVersion& a, const Versions::SemanticVersion& b)
     {
         if (a.version_string == b.version_string)
@@ -134,5 +160,24 @@ namespace vcpkg::Versions
         // SemanticVersion::from_string().
         Checks::unreachable(VCPKG_LINE_INFO);
         /// return VerComp::eq;
+    }
+
+    VerComp compare(const Versions::DateVersion& a, const Versions::DateVersion& b)
+    {
+        if (a.version_string == b.version_string)
+        {
+            if (a.identifiers_string == b.identifiers_string) return VerComp::eq;
+            if (a.identifiers_string.empty() && !b.identifiers_string.empty()) return VerComp::lt;
+            if (!a.identifiers_string.empty() && b.identifiers_string.empty()) return VerComp::gt;
+        }
+
+        // The date parts in our scheme should be lexicographically sortable.
+        if (a.version_string < b.version_string) return VerComp::lt;
+        if (a.version_string > b.version_string) return VerComp::gt;
+        if (a.identifiers < b.identifiers) return VerComp::lt;
+        if (a.identifiers > b.identifiers) return VerComp::gt;
+
+        Checks::unreachable(VCPKG_LINE_INFO);
+        // return VerComp::eq;
     }
 }

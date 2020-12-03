@@ -578,8 +578,7 @@ TEST_CASE ("version semver sort", "[versionplan]")
                                                     Versions::SemanticVersion::from_string("1.0.0-beta.3")};
 
     std::sort(std::begin(versions), std::end(versions), [](const auto& lhs, const auto& rhs) -> bool {
-        const auto result = Versions::compare(lhs, rhs);
-        return result == Versions::VerComp::lt;
+        return Versions::compare(lhs, rhs) == Versions::VerComp::lt;
     });
 
     CHECK(versions[0].original_string == "0.0.0");
@@ -690,6 +689,127 @@ TEST_CASE ("version install diamond semver", "[versionplan]")
     check_name_and_version(install_plan.install_actions[0], "c", {"9.0.0", 2});
     check_name_and_version(install_plan.install_actions[1], "b", {"3.0.0", 0});
     check_name_and_version(install_plan.install_actions[2], "a", {"3.0.0", 0});
+}
+
+TEST_CASE ("version date sort", "[versionplan]")
+{
+    std::vector<Versions::DateVersion> versions{Versions::DateVersion::from_string("2021-01-01.2"),
+                                                Versions::DateVersion::from_string("2021-01-01.1"),
+                                                Versions::DateVersion::from_string("2021-01-01.1.1"),
+                                                Versions::DateVersion::from_string("2021-01-01.1.0"),
+                                                Versions::DateVersion::from_string("2021-01-01"),
+                                                Versions::DateVersion::from_string("2021-01-01"),
+                                                Versions::DateVersion::from_string("2020-12-25"),
+                                                Versions::DateVersion::from_string("2020-12-31"),
+                                                Versions::DateVersion::from_string("2021-01-01.10")};
+
+    std::sort(std::begin(versions), std::end(versions), [](const auto& lhs, const auto& rhs) -> bool {
+        return Versions::compare(lhs, rhs) == Versions::VerComp::lt;
+    });
+
+    CHECK(versions[0].original_string == "2020-12-25");
+    CHECK(versions[1].original_string == "2020-12-31");
+    CHECK(versions[2].original_string == "2021-01-01");
+    CHECK(versions[3].original_string == "2021-01-01");
+    CHECK(versions[4].original_string == "2021-01-01.1");
+    CHECK(versions[5].original_string == "2021-01-01.1.0");
+    CHECK(versions[6].original_string == "2021-01-01.1.1");
+    CHECK(versions[7].original_string == "2021-01-01.2");
+    CHECK(versions[8].original_string == "2021-01-01.10");
+}
+
+TEST_CASE ("version install simple date", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2020-02-01", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2020-02-01", 0}, Scheme::Date);
+    vp.emplace("a", {"2020-03-01", 0}, Scheme::Date);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2020-03-01", 0}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 1);
+    check_name_and_version(install_plan.install_actions[0], "a", {"2020-03-01", 0});
+}
+
+TEST_CASE ("version install transitive date", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2020-01-01.2", 0};
+    bp.v["b"] = {"2020-01-01.3", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2020-01-01.2", 0}, Scheme::Date);
+    vp.emplace("a", {"2020-01-01.3", 0}, Scheme::Date).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2020-01-01.3"}},
+    };
+    vp.emplace("b", {"2020-01-01.2", 0}, Scheme::Date);
+    vp.emplace("b", {"2020-01-01.3", 0}, Scheme::Date);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2020-01-01.3", 0}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 2);
+    check_name_and_version(install_plan.install_actions[0], "b", {"2020-01-01.3", 0});
+    check_name_and_version(install_plan.install_actions[1], "a", {"2020-01-01.3", 0});
+}
+
+TEST_CASE ("version install diamond date", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2020-01-02", 0};
+    bp.v["b"] = {"2020-01-03", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2020-01-02", 0}, Scheme::Date);
+    vp.emplace("a", {"2020-01-03", 0}, Scheme::Date).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2020-01-02", 1}},
+        Dependency{"c", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2020-01-05", 1}},
+    };
+    vp.emplace("b", {"2020-01-02", 1}, Scheme::Date);
+    vp.emplace("b", {"2020-01-03", 0}, Scheme::Date).source_control_file->core_paragraph->dependencies = {
+        Dependency{"c", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2020-01-09", 2}},
+    };
+    vp.emplace("c", {"2020-01-05", 1}, Scheme::Date);
+    vp.emplace("c", {"2020-01-09", 2}, Scheme::Date);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2020-01-03", 0}},
+            Dependency{"b", {}, {}, {Constraint::Type::Minimum, "2020-01-02", 1}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 3);
+    check_name_and_version(install_plan.install_actions[0], "c", {"2020-01-09", 2});
+    check_name_and_version(install_plan.install_actions[1], "b", {"2020-01-03", 0});
+    check_name_and_version(install_plan.install_actions[2], "a", {"2020-01-03", 0});
 }
 
 TEST_CASE ("version install scheme change in port version", "[versionplan]")

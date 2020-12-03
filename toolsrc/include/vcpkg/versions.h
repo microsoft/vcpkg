@@ -45,12 +45,26 @@ namespace vcpkg::Versions
         std::string original_string;
         std::string version_string;
         std::string prerelease_string;
+
         std::vector<long> version;
         std::vector<std::string> identifiers;
 
         static SemanticVersion from_string(const std::string& str);
     };
+
+    struct DateVersion
+    {
+        std::string original_string;
+        std::string version_string;
+        std::string identifiers_string;
+
+        std::vector<long> identifiers;
+
+        static DateVersion from_string(const std::string& str);
+    };
+
     VerComp compare(const SemanticVersion& a, const SemanticVersion& b);
+    VerComp compare(const DateVersion& a, const DateVersion& b);
 
     struct Constraint
     {

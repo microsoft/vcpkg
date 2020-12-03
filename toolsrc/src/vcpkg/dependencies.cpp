@@ -1259,7 +1259,8 @@ namespace vcpkg::Dependencies
             {
                 vsi = &exacts[ver.text()];
             }
-            else if (scheme == Versions::Scheme::Relaxed || scheme == Versions::Scheme::Semver)
+            else if (scheme == Versions::Scheme::Relaxed || scheme == Versions::Scheme::Semver ||
+                     scheme == Versions::Scheme::Date)
             {
                 if (auto p = relaxed.get())
                 {
@@ -1306,18 +1307,37 @@ namespace vcpkg::Dependencies
                 }
                 case Versions::Scheme::Relaxed:
                 {
-                    auto i1 = atoi(a.text().c_str());
-                    auto i2 = atoi(b.text().c_str());
-                    if (i1 < i2) return VerComp::lt;
-                    if (i1 > i2) return VerComp::gt;
-                    if (a.port_version() < b.port_version()) return VerComp::lt;
-                    if (a.port_version() > b.port_version()) return VerComp::gt;
-                    return VerComp::eq;
+                    if (a.text() == b.text())
+                    {
+                        if (a.port_version() == b.port_version()) return Versions::VerComp::eq;
+                        if (a.port_version() < b.port_version()) return Versions::VerComp::lt;
+                        if (a.port_version() > b.port_version()) return Versions::VerComp::gt;
+                    }
+
+                    auto a_parts = Strings::split(a.text(), '.');
+                    auto b_parts = Strings::split(b.text(), '.');
+
+                    if (a_parts < b_parts) return Versions::VerComp::lt;
+                    if (a_parts > b_parts) return Versions::VerComp::gt;
+
+                    return Versions::VerComp::eq;
                 }
                 case Versions::Scheme::Semver:
                 {
                     auto result = Versions::compare(Versions::SemanticVersion::from_string(a.text()),
                                                     Versions::SemanticVersion::from_string(b.text()));
+                    if (result == VerComp::eq)
+                    {
+                        if (a.port_version() < b.port_version()) return VerComp::lt;
+                        if (b.port_version() > b.port_version()) return VerComp::gt;
+                        return VerComp::eq;
+                    }
+                    return result;
+                }
+                case Versions::Scheme::Date:
+                {
+                    auto result = Versions::compare(Versions::DateVersion::from_string(a.text()),
+                                                    Versions::DateVersion::from_string(b.text()));
                     if (result == VerComp::eq)
                     {
                         if (a.port_version() < b.port_version()) return VerComp::lt;
