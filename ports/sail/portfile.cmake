@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP" "OSX" "Linux")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO smoked-herring/sail
-    REF 3cc129c
-    SHA512 079c1753e096b1dc01c3b43794f9f34290fb8c844b939683ca0c9ab86f6a4b0cf09370b4adc0ef1e26929fbd9c4ca25856b9393c42fba9d9b823d916596db2e2
+    REF 3672fd1
+    SHA512 a02dfcd8eeedd6400c6041542579149a95d9933ec70e2fdfad71de847af3eb3f268b37529be14faefe6c71bf96ed11f6405399c64eac7a154582d86195fa361d
     HEAD_REF feature/vcpkg
 )
 
