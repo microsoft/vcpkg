@@ -110,12 +110,19 @@ install(TARGETS SDL2_image
 
 install(FILES SDL_image.h DESTINATION include/SDL2 CONFIGURATIONS Release)
 
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/sdl2-image-config.cmake"
+[[include(CMakeFindDependencyMacro)
+find_dependency(SDL2 CONFIG)
+include("${CMAKE_CURRENT_LIST_DIR}/sdl2-image-targets.cmake")
+]])
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/sdl2-image-config.cmake DESTINATION share/sdl2-image)
+
 install(EXPORT SDL2_image
     DESTINATION share/sdl2-image/
-    FILE sdl2-image-config.cmake
+    FILE sdl2-image-targets.cmake
     NAMESPACE SDL2::
 )
-
 
 message(STATUS "Link-time dependencies:")
 message(STATUS "  " SDL2::SDL2)

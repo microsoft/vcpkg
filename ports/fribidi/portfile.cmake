@@ -4,7 +4,6 @@ vcpkg_from_github(
     REF 5464c284034da9c058269377b7f5013bb089f553 # v1.0.10
     SHA512 82e42b022f23d6ecebac5071f997c9f46db6aa41c36f87a7f1a28a79b4ccaada10d68b233bbf687c552fc94d91f4b47161e0ef4909fd1de0b483089f1d1377f9
     HEAD_REF master
-    PATCHES fix-win-static-suffix.patch
 )
 
 vcpkg_configure_meson(
@@ -13,10 +12,10 @@ vcpkg_configure_meson(
         -Ddocs=false
         -Dbin=false
         -Dtests=false
-        --backend=ninja
 )
 
 vcpkg_install_meson()
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 # Define static macro
