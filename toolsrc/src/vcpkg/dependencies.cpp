@@ -1,3 +1,4 @@
+
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
 #include <vcpkg/base/strings.h>
@@ -1215,6 +1216,8 @@ namespace vcpkg::Dependencies
                 std::map<Versions::Version, VersionSchemeInfo*, VersionTMapLess> vermap;
                 std::map<std::string, VersionSchemeInfo> exacts;
                 Optional<std::unique_ptr<VersionSchemeInfo>> relaxed;
+                Optional<std::unique_ptr<VersionSchemeInfo>> semver;
+                Optional<std::unique_ptr<VersionSchemeInfo>> date;
                 std::set<std::string> features;
                 bool default_features = true;
 
@@ -1259,8 +1262,7 @@ namespace vcpkg::Dependencies
             {
                 vsi = &exacts[ver.text()];
             }
-            else if (scheme == Versions::Scheme::Relaxed || scheme == Versions::Scheme::Semver ||
-                     scheme == Versions::Scheme::Date)
+            else if (scheme == Versions::Scheme::Relaxed)
             {
                 if (auto p = relaxed.get())
                 {
@@ -1270,6 +1272,30 @@ namespace vcpkg::Dependencies
                 {
                     relaxed = std::make_unique<VersionSchemeInfo>();
                     vsi = relaxed.get()->get();
+                }
+            }
+            else if (scheme == Versions::Scheme::Semver)
+            {
+                if (auto p = semver.get())
+                {
+                    vsi = p->get();
+                }
+                else
+                {
+                    semver = std::make_unique<VersionSchemeInfo>();
+                    vsi = semver.get()->get();
+                }
+            }
+            else if (scheme == Versions::Scheme::Date)
+            {
+                if (auto p = date.get())
+                {
+                    vsi = p->get();
+                }
+                else
+                {
+                    date = std::make_unique<VersionSchemeInfo>();
+                    vsi = date.get()->get();
                 }
             }
             else
