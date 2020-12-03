@@ -176,7 +176,7 @@ need to install:
 
 ```sh
 $ sudo apt-get update
-$ sudo apt-get install build-essential tar curl zip unzip
+$ sudo apt-get install build-essential tar curl zip unzip libtool
 ```
 
 - CentOS
