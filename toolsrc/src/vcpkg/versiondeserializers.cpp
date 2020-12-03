@@ -11,8 +11,32 @@ static constexpr StringLiteral VERSION_STRING = "version-string";
 static constexpr StringLiteral VERSION_DATE = "version-date";
 static constexpr StringLiteral PORT_VERSION = "port-version";
 
+namespace
+{
+    struct VersionDeserializer final : Json::IDeserializer<std::string>
+    {
+        VersionDeserializer(StringLiteral type) : m_type(type) { }
+        StringView type_name() const override { return m_type; }
+
+        Optional<std::string> visit_string(Json::Reader& r, StringView sv) override
+        {
+            if (std::find(sv.begin(), sv.end(), '#') != sv.end())
+            {
+                r.add_generic_error(type_name(), "invalid character in version text: '#'");
+            }
+            return sv.to_string();
+        }
+        StringLiteral m_type;
+    };
+}
+
 namespace vcpkg
 {
+    std::unique_ptr<Json::IDeserializer<std::string>> make_version_deserializer(StringLiteral type_name)
+    {
+        return std::make_unique<VersionDeserializer>(type_name);
+    }
+
     SchemedVersion visit_required_schemed_deserializer(StringView parent_type, Json::Reader& r, const Json::Object& obj)
     {
         auto maybe_schemed_version = visit_optional_schemed_deserializer(parent_type, r, obj);
@@ -34,10 +58,10 @@ namespace vcpkg
         std::string version;
         int port_version = 0;
 
-        static Json::StringDeserializer version_exact_deserializer{"an exact version string"};
-        static Json::StringDeserializer version_relaxed_deserializer{"a relaxed version string"};
-        static Json::StringDeserializer version_semver_deserializer{"a semantic version string"};
-        static Json::StringDeserializer version_date_deserializer{"a date version string"};
+        static VersionDeserializer version_exact_deserializer{"an exact version string"};
+        static VersionDeserializer version_relaxed_deserializer{"a relaxed version string"};
+        static VersionDeserializer version_semver_deserializer{"a semantic version string"};
+        static VersionDeserializer version_date_deserializer{"a date version string"};
 
         bool has_exact = r.optional_object_field(obj, VERSION_STRING, version, version_exact_deserializer);
         bool has_relax = r.optional_object_field(obj, VERSION_RELAXED, version, version_relaxed_deserializer);
@@ -197,16 +221,16 @@ namespace
             std::string version;
             int port_version = 0;
 
+            static VersionDeserializer version_deserializer{"version"};
+
             r.required_object_field(type_name(), obj, VERSION_STRING, version, version_deserializer);
             r.optional_object_field(obj, PORT_VERSION, port_version, Json::NaturalNumberDeserializer::instance);
 
             return VersionT{std::move(version), port_version};
         }
-
-        static Json::StringDeserializer version_deserializer;
         static VersionTDeserializer instance;
     };
-    Json::StringDeserializer VersionTDeserializer::version_deserializer{"version"};
+
     VersionTDeserializer VersionTDeserializer::instance;
 }
 

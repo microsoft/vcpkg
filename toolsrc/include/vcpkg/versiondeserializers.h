@@ -18,6 +18,7 @@ namespace vcpkg
     };
 
     Json::IDeserializer<VersionT>& get_versiont_deserializer_instance();
+    std::unique_ptr<Json::IDeserializer<std::string>> make_version_deserializer(StringLiteral type_name);
 
     struct SchemedVersion
     {

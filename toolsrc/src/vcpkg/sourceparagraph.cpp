@@ -488,12 +488,12 @@ namespace vcpkg
 
             r.optional_object_field(obj, PLATFORM, dep.platform, PlatformExprDeserializer::instance);
 
-            static Json::StringDeserializer version_deserializer{"a version"};
+            static auto version_deserializer = make_version_deserializer("a version");
 
             auto has_eq_constraint =
-                r.optional_object_field(obj, VERSION_EQ, dep.constraint.value, version_deserializer);
+                r.optional_object_field(obj, VERSION_EQ, dep.constraint.value, *version_deserializer);
             auto has_ge_constraint =
-                r.optional_object_field(obj, VERSION_GE, dep.constraint.value, version_deserializer);
+                r.optional_object_field(obj, VERSION_GE, dep.constraint.value, *version_deserializer);
             auto has_port_ver = r.optional_object_field(
                 obj, PORT_VERSION, dep.constraint.port_version, Json::NaturalNumberDeserializer::instance);
 
