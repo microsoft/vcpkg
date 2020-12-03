@@ -10,10 +10,14 @@ namespace vcpkg::Versions
     {
         Optional<long> as_numeric(StringView str)
         {
-            auto is_numeric =
-                std::all_of(std::begin(str), std::end(str), [](unsigned char ch) { return std::isdigit(ch); });
-            if (!is_numeric) return nullopt;
-            return atol(str.to_string().c_str());
+            long res = 0;
+            for (auto&& ch : str)
+            {
+                if (res > LONG_MAX / 100) return nullopt;
+                if (ch < '0' || ch > '9') return nullopt;
+                res = res * 10 + (ch - '0');
+            }
+            return res;
         }
     }
 
