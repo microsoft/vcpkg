@@ -16,19 +16,21 @@ vcpkg_from_sourceforge(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        zlib        FT_WITH_ZLIB
         bzip2       FT_WITH_BZIP2
         png         FT_WITH_PNG
+        brotli      FT_WITH_BROTLI
     INVERTED_FEATURES
+        zlib        CMAKE_DISABLE_FIND_PACKAGE_ZLIB
         bzip2       CMAKE_DISABLE_FIND_PACKAGE_BZip2
         png         CMAKE_DISABLE_FIND_PACKAGE_PNG
+        brotli      CMAKE_DISABLE_FIND_PACKAGE_BrotliDec
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DFT_WITH_ZLIB=ON # Force system zlib.
-        -DFT_WITH_BROTLI=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=ON
         ${FEATURE_OPTIONS}
 )
