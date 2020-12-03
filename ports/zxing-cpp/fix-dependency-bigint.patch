@@ -1,0 +1,60 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 738f4e1..6ff8955 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -44,6 +44,11 @@ else()
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+ endif()
+ 
++# Bigint
++find_package(bigint CONFIG REQUIRED)
++
++link_libraries(bigint::bigint)
++
+ # OpenCV classes
+ find_package(OpenCV)
+ if(OpenCV_FOUND)
+@@ -62,8 +67,8 @@ set_target_properties(libzxing PROPERTIES PREFIX "")
+ 
+ find_package(Iconv)
+ if(ICONV_FOUND)
+-    include_directories(${ICONV_INCLUDE_DIR})
+-    target_link_libraries(libzxing ${ICONV_LIBRARIES})
++    include_directories(${Iconv_INCLUDE_DIRS})
++    target_link_libraries(libzxing ${Iconv_LIBRARIES})
+ else()
+     add_definitions(-DNO_ICONV=1)
+ endif()
+diff --git a/source_files.cmake b/source_files.cmake
+index db3d8d4..39abe82 100644
+--- a/source_files.cmake
++++ b/source_files.cmake
+@@ -1,28 +1,4 @@
+ set(LIBZXING_FILES
+-    core/src/bigint/BigInteger.cc
+-    core/src/bigint/BigInteger.cc
+-    core/src/bigint/BigInteger.hh
+-    core/src/bigint/BigInteger.hh
+-    core/src/bigint/BigIntegerAlgorithms.cc
+-    core/src/bigint/BigIntegerAlgorithms.cc
+-    core/src/bigint/BigIntegerAlgorithms.hh
+-    core/src/bigint/BigIntegerAlgorithms.hh
+-    core/src/bigint/BigIntegerLibrary.hh
+-    core/src/bigint/BigIntegerLibrary.hh
+-    core/src/bigint/BigIntegerUtils.cc
+-    core/src/bigint/BigIntegerUtils.cc
+-    core/src/bigint/BigIntegerUtils.hh
+-    core/src/bigint/BigIntegerUtils.hh
+-    core/src/bigint/BigUnsigned.cc
+-    core/src/bigint/BigUnsigned.cc
+-    core/src/bigint/BigUnsigned.hh
+-    core/src/bigint/BigUnsigned.hh
+-    core/src/bigint/BigUnsignedInABase.cc
+-    core/src/bigint/BigUnsignedInABase.cc
+-    core/src/bigint/BigUnsignedInABase.hh
+-    core/src/bigint/BigUnsignedInABase.hh
+-    core/src/bigint/NumberlikeArray.hh
+-    core/src/bigint/NumberlikeArray.hh
+     core/src/zxing/aztec/AztecDetectorResult.cpp
+     core/src/zxing/aztec/AztecDetectorResult.h
+     core/src/zxing/aztec/AztecReader.cpp
