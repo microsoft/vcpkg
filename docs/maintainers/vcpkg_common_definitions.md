@@ -24,6 +24,5 @@ CMAKE_STATIC_LIBRARY_(PREFIX|SUFFIX), CMAKE_SHARED_LIBRARY_(PREFIX|SUFFIX) and C
 Furthermore the variables CMAKE_FIND_LIBRARY_(PREFIXES|SUFFIXES) are also defined for the target so that
 portfiles are able to use find_library calls to discover dependent libraries within the current triplet for ports.
 
-
 ## Source
 [scripts/cmake/vcpkg_common_definitions.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_common_definitions.cmake)

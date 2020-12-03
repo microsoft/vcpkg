@@ -839,20 +839,21 @@ namespace vcpkg::Install
             if (args.versions_enabled())
             {
                 PortFileProvider::VersionedPortfileProvider verprovider(paths);
-                auto baseprovider = [&]() -> PortFileProvider::BaselineProvider {
+                auto baseprovider = [&]() -> std::unique_ptr<PortFileProvider::BaselineProvider> {
                     if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
                     {
-                        return PortFileProvider::BaselineProvider(paths, p_baseline->string().to_string());
+                        return std::make_unique<PortFileProvider::BaselineProvider>(paths,
+                                                                                    p_baseline->string().to_string());
                     }
                     else
                     {
-                        return PortFileProvider::BaselineProvider(paths);
+                        return std::make_unique<PortFileProvider::BaselineProvider>(paths);
                     }
                 }();
 
                 auto install_plan =
                     Dependencies::create_versioned_install_plan(verprovider,
-                                                                baseprovider,
+                                                                *baseprovider,
                                                                 var_provider,
                                                                 manifest_scf.core_paragraph->dependencies,
                                                                 manifest_scf.core_paragraph->overrides,
