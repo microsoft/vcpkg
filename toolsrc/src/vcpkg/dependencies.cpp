@@ -1296,58 +1296,44 @@ namespace vcpkg::Dependencies
                                         const Versions::Version& b)
         {
             if (sa != sb) return VerComp::unk;
-            switch (sa)
+
+            if (a.text() != b.text())
             {
-                case Versions::Scheme::String:
+                switch (sa)
                 {
-                    if (a.text() != b.text()) return VerComp::unk;
-                    if (a.port_version() < b.port_version()) return VerComp::lt;
-                    if (a.port_version() > b.port_version()) return VerComp::gt;
-                    return VerComp::eq;
-                }
-                case Versions::Scheme::Relaxed:
-                {
-                    if (a.text() == b.text())
+                    case Versions::Scheme::String: return VerComp::unk;
+                    case Versions::Scheme::Relaxed:
                     {
-                        if (a.port_version() == b.port_version()) return Versions::VerComp::eq;
-                        if (a.port_version() < b.port_version()) return Versions::VerComp::lt;
-                        if (a.port_version() > b.port_version()) return Versions::VerComp::gt;
+                        auto a_parts = Util::fmap(Strings::split(a.text(), '.'),
+                                                  [](auto&& strval) { return atoi(strval.c_str()); });
+                        auto b_parts = Util::fmap(Strings::split(b.text(), '.'),
+                                                  [](auto&& strval) { return atoi(strval.c_str()); });
+
+                        if (a_parts < b_parts) return Versions::VerComp::lt;
+                        if (a_parts > b_parts) return Versions::VerComp::gt;
+                        Checks::unreachable(VCPKG_LINE_INFO);
                     }
-
-                    auto a_parts = Strings::split(a.text(), '.');
-                    auto b_parts = Strings::split(b.text(), '.');
-
-                    if (a_parts < b_parts) return Versions::VerComp::lt;
-                    if (a_parts > b_parts) return Versions::VerComp::gt;
-
-                    return Versions::VerComp::eq;
-                }
-                case Versions::Scheme::Semver:
-                {
-                    auto result = Versions::compare(Versions::SemanticVersion::from_string(a.text()),
-                                                    Versions::SemanticVersion::from_string(b.text()));
-                    if (result == VerComp::eq)
+                    case Versions::Scheme::Semver:
                     {
-                        if (a.port_version() < b.port_version()) return VerComp::lt;
-                        if (b.port_version() > b.port_version()) return VerComp::gt;
-                        return VerComp::eq;
+                        // Because build tags are ignored, two different strings can still compare to equal.
+                        auto result = Versions::compare(Versions::SemanticVersion::from_string(a.text()),
+                                                        Versions::SemanticVersion::from_string(b.text()));
+                        if (result != VerComp::eq) return result;
                     }
-                    return result;
-                }
-                case Versions::Scheme::Date:
-                {
-                    auto result = Versions::compare(Versions::DateVersion::from_string(a.text()),
-                                                    Versions::DateVersion::from_string(b.text()));
-                    if (result == VerComp::eq)
+                    break;
+                    case Versions::Scheme::Date:
                     {
-                        if (a.port_version() < b.port_version()) return VerComp::lt;
-                        if (b.port_version() > b.port_version()) return VerComp::gt;
-                        return VerComp::eq;
+                        return Versions::compare(Versions::DateVersion::from_string(a.text()),
+                                                 Versions::DateVersion::from_string(b.text()));
                     }
-                    return result;
+                    break;
+                    default: Checks::unreachable(VCPKG_LINE_INFO);
                 }
-                default: Checks::unreachable(VCPKG_LINE_INFO);
             }
+
+            if (a.port_version() < b.port_version()) return VerComp::lt;
+            if (a.port_version() > b.port_version()) return VerComp::gt;
+            return VerComp::eq;
         }
 
         bool VersionedPackageGraph::VersionSchemeInfo::is_less_than(const Versions::Version& new_ver) const

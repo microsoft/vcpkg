@@ -8,16 +8,12 @@ namespace vcpkg::Versions
 {
     namespace
     {
-        Optional<long> as_numeric(const std::string& str)
+        Optional<long> as_numeric(StringView str)
         {
-            try
-            {
-                return std::stol(str);
-            }
-            catch (std::exception&)
-            {
-                return nullopt;
-            }
+            auto is_numeric =
+                std::all_of(std::begin(str), std::end(str), [](unsigned char ch) { return std::isdigit(ch); });
+            if (!is_numeric) return nullopt;
+            return atol(str.to_string().c_str());
         }
     }
 
@@ -63,7 +59,7 @@ namespace vcpkg::Versions
         if (prerelease_found != std::string::npos)
         {
             ret.prerelease_string = ret.version_string.substr(prerelease_found + 1);
-            ret.identifiers = std::move(Strings::split(ret.prerelease_string, '.'));
+            ret.identifiers = Strings::split(ret.prerelease_string, '.');
             ret.version_string.resize(prerelease_found);
         }
 
@@ -74,15 +70,14 @@ namespace vcpkg::Versions
                            str);
 
         auto parts = Strings::split(ret.version_string, '.');
-        ret.version = std::move(
-            Util::fmap(parts, [](auto&& strval) -> long { return as_numeric(strval).value_or_exit(VCPKG_LINE_INFO); }));
+        ret.version = Util::fmap(parts, [](auto&& strval) -> long { return atol(strval.c_str()); });
 
-        return std::move(ret);
+        return ret;
     }
 
     DateVersion DateVersion::from_string(const std::string& str)
     {
-        std::regex date_scheme_match("(\\d{4}-\\d{2}-\\d{2})(\\.(0|[1-9]\\d*))*");
+        std::regex date_scheme_match("(\\d{4}-\\d{2}-\\d{2})(\\.(0|[1-9][0-9]*))*");
         Checks::check_exit(VCPKG_LINE_INFO,
                            std::regex_match(str, date_scheme_match),
                            "Error: String `%s` is not a valid date version string.",
@@ -96,14 +91,12 @@ namespace vcpkg::Versions
         if (identifiers_found != std::string::npos)
         {
             ret.identifiers_string = ret.version_string.substr(identifiers_found + 1);
-            ret.identifiers =
-                std::move(Util::fmap(Strings::split(ret.identifiers_string, '.'), [](auto&& strval) -> long {
-                    return as_numeric(strval).value_or_exit(VCPKG_LINE_INFO);
-                }));
+            ret.identifiers = Util::fmap(Strings::split(ret.identifiers_string, '.'),
+                                         [](auto&& strval) -> long { return atol(strval.c_str()); });
             ret.version_string.resize(identifiers_found);
         }
 
-        return std::move(ret);
+        return ret;
     }
 
     VerComp compare(const Versions::SemanticVersion& a, const Versions::SemanticVersion& b)
@@ -171,7 +164,7 @@ namespace vcpkg::Versions
             if (!a.identifiers_string.empty() && b.identifiers_string.empty()) return VerComp::gt;
         }
 
-        // The date parts in our scheme should be lexicographically sortable.
+        // The date parts in our scheme is lexicographically sortable.
         if (a.version_string < b.version_string) return VerComp::lt;
         if (a.version_string > b.version_string) return VerComp::gt;
         if (a.identifiers < b.identifiers) return VerComp::lt;
