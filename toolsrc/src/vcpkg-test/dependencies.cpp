@@ -812,6 +812,49 @@ TEST_CASE ("version install diamond date", "[versionplan]")
     check_name_and_version(install_plan.install_actions[2], "a", {"2020-01-03", 0});
 }
 
+TEST_CASE ("version install scheme failure", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"1.0.0", 0}, Scheme::Semver);
+    vp.emplace("a", {"1.0.1", 0}, Scheme::Relaxed);
+    vp.emplace("a", {"1.0.2", 0}, Scheme::Semver);
+
+    MockCMakeVarProvider var_provider;
+
+    SECTION ("lower baseline")
+    {
+        MockBaselineProvider bp;
+        bp.v["a"] = {"1.0.0", 0};
+
+        auto install_plan = Dependencies::create_versioned_install_plan(
+            vp,
+            bp,
+            var_provider,
+            {Dependency{"a", {}, {}, {Constraint::Type::Minimum, "1.0.1", 0}}},
+            {},
+            toplevel_spec());
+
+        REQUIRE(!install_plan.error().empty());
+        CHECK(install_plan.error() == "Version conflict on a@1.0.1: baseline required 1.0.0");
+    }
+    SECTION ("higher baseline")
+    {
+        MockBaselineProvider bp;
+        bp.v["a"] = {"1.0.2", 0};
+
+        auto install_plan = Dependencies::create_versioned_install_plan(
+            vp,
+            bp,
+            var_provider,
+            {Dependency{"a", {}, {}, {Constraint::Type::Minimum, "1.0.1", 0}}},
+            {},
+            toplevel_spec());
+
+        REQUIRE(!install_plan.error().empty());
+        CHECK(install_plan.error() == "Version conflict on a@1.0.1: baseline required 1.0.2");
+    }
+}
+
 TEST_CASE ("version install scheme change in port version", "[versionplan]")
 {
     MockVersionedPortfileProvider vp;
