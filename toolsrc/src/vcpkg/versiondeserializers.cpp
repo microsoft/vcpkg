@@ -20,9 +20,17 @@ namespace
 
         Optional<std::string> visit_string(Json::Reader& r, StringView sv) override
         {
-            if (std::find(sv.begin(), sv.end(), '#') != sv.end())
+            StringView pv(std::find(sv.begin(), sv.end(), '#'), sv.end());
+            if (pv.size() == 1)
             {
-                r.add_generic_error(type_name(), "invalid character in version text: '#'");
+                r.add_generic_error(type_name(), "invalid character '#' in version text");
+            }
+            else if (pv.size() > 1)
+            {
+                r.add_generic_error(type_name(),
+                                    "invalid character '#' in version text. Did you mean \"port-version\": ",
+                                    pv.substr(1),
+                                    "?");
             }
             return sv.to_string();
         }
