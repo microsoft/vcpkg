@@ -9,7 +9,10 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DSAIL_VCPKG_PORT=ON -DSAIL_BUILD_EXAMPLES=OFF -DSAIL_BUILD_TESTS=OFF
+    OPTIONS
+        -DSAIL_VCPKG_PORT=ON
+        -DSAIL_BUILD_EXAMPLES=OFF
+        -DSAIL_BUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()
