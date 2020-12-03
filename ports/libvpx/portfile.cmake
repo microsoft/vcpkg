@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-vcxproj-nasm.patch
+        0002-Fix-nasm-debug-format-flag.patch
 )
 
 vcpkg_find_acquire_program(PERL)
