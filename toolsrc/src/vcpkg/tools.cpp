@@ -361,11 +361,13 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
             if (rc.exit_code != 0)
             {
 #ifndef _WIN32
-                return {Strings::concat(std::move(rc.output),
-                                        "\n\nFailed to get version of ",
-                                        fs::u8string(path_to_exe),
-                                        "\nThis may be caused by an incomplete mono installation. Full mono is "
-                                        "available on some systems via `sudo apt install mono-complete`."),
+                return {Strings::concat(
+                            std::move(rc.output),
+                            "\n\nFailed to get version of ",
+                            fs::u8string(path_to_exe),
+                            "\nThis may be caused by an incomplete mono installation. Full mono is "
+                            "available on some systems via `sudo apt install mono-complete`. Ubuntu 18.04 users may "
+                            "need a newer version of mono, available at https://www.mono-project.com/download/stable/"),
                         expected_right_tag};
 #else
                 return {Strings::concat(
