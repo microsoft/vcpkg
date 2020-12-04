@@ -5,15 +5,15 @@ using namespace vcpkg::Versions;
 
 namespace
 {
+    constexpr StringLiteral VERSION_RELAXED = "version";
+    constexpr StringLiteral VERSION_SEMVER = "version-semver";
+    constexpr StringLiteral VERSION_STRING = "version-string";
+    constexpr StringLiteral VERSION_DATE = "version-date";
+    constexpr StringLiteral PORT_VERSION = "port-version";
+    constexpr StringLiteral GIT_TREE = "git-tree";
+
     struct VersionDbEntryDeserializer final : Json::IDeserializer<VersionDbEntry>
     {
-        static constexpr StringLiteral VERSION_RELAXED = "version";
-        static constexpr StringLiteral VERSION_SEMVER = "version-semver";
-        static constexpr StringLiteral VERSION_STRING = "version-string";
-        static constexpr StringLiteral VERSION_DATE = "version-date";
-        static constexpr StringLiteral PORT_VERSION = "port-version";
-        static constexpr StringLiteral GIT_TREE = "git-tree";
-
         StringView type_name() const override { return "a version database entry"; }
         View<StringView> valid_fields() const override
         {
