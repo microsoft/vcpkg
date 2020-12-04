@@ -36,4 +36,4 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sail)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/sail RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
