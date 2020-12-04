@@ -23,7 +23,7 @@ namespace vcpkg
 
     private:
         std::string m_text;
-        int m_port_version;
+        int m_port_version = 0;
     };
 
     struct VersionDiff
