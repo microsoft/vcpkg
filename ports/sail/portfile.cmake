@@ -26,11 +26,8 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
                     ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Move codecs
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sail ${CURRENT_PACKAGES_DIR}/bin/sail)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/lib)
-
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sail       ${CURRENT_PACKAGES_DIR}/bin/sail)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sail ${CURRENT_PACKAGES_DIR}/debug/bin/sail)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 # Move cmake configs
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sail)
