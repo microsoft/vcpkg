@@ -10,6 +10,7 @@ vcpkg_from_gitlab(
     PATCHES remove_tests.patch
             build.patch
             build2.patch
+            fix_def_dll_name.patch
 )
 
 vcpkg_find_acquire_program(GPERF)
