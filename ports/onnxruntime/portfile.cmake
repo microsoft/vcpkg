@@ -1,5 +1,5 @@
 if(NOT TARGET_TRIPLET MATCHES "(x|X)64-(windows|linux)-static-md")
-    message(FATAL_ERROR "onnxruntime doesn't support ${TARGET_TRIPLET} currently.")
+  vcpkg_fail_port_install(MESSAGE "${PORT} doesn't support ${TARGET_TRIPLET} currently" ALWAYS)
 endif()
 
 set(ORT_REVISION "v1.5.3")
@@ -59,9 +59,7 @@ else()
     LOGNAME build-${TARGET_TRIPLET})
 endif()
 
-#set(FEATURE_OPTIONS -A)
-#list(APPEND FEATURE_OPTIONS -T)
-#list(APPEND FEATURE_OPTIONS -G)
+
 
 if(VCPKG_TARGET_IS_WINDOWS)
 #  list(APPEND FEATURE_OPTIONS  "Visual Studio 16 2019")
