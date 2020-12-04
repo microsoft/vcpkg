@@ -5,14 +5,15 @@
 using namespace vcpkg;
 using namespace vcpkg::Versions;
 
-static constexpr StringLiteral VERSION_RELAXED = "version";
-static constexpr StringLiteral VERSION_SEMVER = "version-semver";
-static constexpr StringLiteral VERSION_STRING = "version-string";
-static constexpr StringLiteral VERSION_DATE = "version-date";
-static constexpr StringLiteral PORT_VERSION = "port-version";
-
 namespace
 {
+    constexpr StringLiteral VERSION_RELAXED = "version";
+    constexpr StringLiteral VERSION_SEMVER = "version-semver";
+    constexpr StringLiteral VERSION_STRING = "version-string";
+    constexpr StringLiteral VERSION_DATE = "version-date";
+    constexpr StringLiteral PORT_VERSION = "port-version";
+    constexpr StringLiteral GIT_TREE = "git-tree";
+
     struct VersionDeserializer final : Json::IDeserializer<std::string>
     {
         VersionDeserializer(StringLiteral type) : m_type(type) { }
