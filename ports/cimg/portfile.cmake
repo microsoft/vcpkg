@@ -13,6 +13,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets()
+
 # Move cmake files, ensuring they will be 3 directories up the import prefix
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
