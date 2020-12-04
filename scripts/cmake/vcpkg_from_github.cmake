@@ -14,6 +14,7 @@ vcpkg_from_github(
     [PATCHES <patch1.patch> <patch2.patch>...]
     [GITHUB_HOST <https://github.com>]
     [AUTHORIZATION_TOKEN <${SECRET_FROM_FILE}>]
+    [FILE_DISAMBIGUATOR <N>]
 )
 ```
 

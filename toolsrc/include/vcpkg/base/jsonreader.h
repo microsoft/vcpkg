@@ -33,13 +33,14 @@ namespace vcpkg::Json
         virtual Optional<Type> visit_object(Reader&, const Object&);
         virtual View<StringView> valid_fields() const;
 
+        virtual ~IDeserializer() = default;
+
     protected:
         IDeserializer() = default;
         IDeserializer(const IDeserializer&) = default;
         IDeserializer& operator=(const IDeserializer&) = default;
         IDeserializer(IDeserializer&&) = default;
         IDeserializer& operator=(IDeserializer&&) = default;
-        virtual ~IDeserializer() = default;
     };
 
     struct Reader
