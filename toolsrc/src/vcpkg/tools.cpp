@@ -89,7 +89,8 @@ namespace vcpkg
 #if defined(__APPLE__)
                 add_info = " (brew install mono)";
 #else
-                add_info = " (sudo apt install mono-complete)";
+                add_info = " (e.g. sudo apt install mono-complete). Ubuntu 18.04 users may "
+                           "need a newer version of mono, available at https://www.mono-project.com/download/stable/";
 #endif
             }
             return Strings::format("Could not automatically acquire %s because there is no entry in %s for os=%s. You "
