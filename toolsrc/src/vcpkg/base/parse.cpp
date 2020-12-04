@@ -50,10 +50,7 @@ namespace vcpkg::Parse
                                "^\n");
     }
 
-    const std::string& ParseError::get_message() const
-    {
-        return this->message;
-    }
+    const std::string& ParseError::get_message() const { return this->message; }
 
     ParserBase::ParserBase(StringView text, StringView origin, TextRowCol init_rowcol)
         : m_it(text.begin(), text.end())
