@@ -24,6 +24,7 @@ set(USOCKETS_EXT_INCLUDE_DIR )
 set(USOCKETS_EXT_LIBS )
 
 if (CMAKE_USE_OPENSSL)
+    # It requires C++17 or later, see https://github.com/uNetworking/uSockets/blob/master/Makefile#L43
     set(CMAKE_CXX_STANDARD 17)
     find_package(OpenSSL REQUIRED)
     file(GLOB SSL_SOURCES src/crypto/*.c*)
