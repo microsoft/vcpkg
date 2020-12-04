@@ -1346,13 +1346,6 @@ ryu:x64-uwp=fail
 ryu:x64-windows-static=fail
 ryu:x86-windows=fail
 ryu::arm64-windows=fail
-# SAIL doesn't support static compilation yet
-sail:x64-windows-static=skip
-# SAIL VCPKG support is limited to Windows
-sail:x64-linux=skip
-sail:x64-osx=skip
-sail:arm-uwp=skip
-sail:x64-uwp=skip
 sciter:arm64-windows=fail
 sciter:arm-uwp=fail
 sciter:x64-uwp=fail
