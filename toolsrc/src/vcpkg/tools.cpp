@@ -310,7 +310,8 @@ cmake version 3.10.2
 
 CMake suite maintained and supported by Kitware (kitware.com/cmake).
                 */
-            return StringView::find_exactly_one_enclosed(rc.output, "cmake version ", "\n").to_string();
+            return {StringView::find_exactly_one_enclosed(rc.output, "cmake version ", "\n").to_string(),
+                    expected_left_tag};
         }
     };
 
