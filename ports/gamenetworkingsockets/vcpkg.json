@@ -11,20 +11,18 @@
   "default-features": [
     "openssl"
   ],
-  "features": [
-    {
-      "name": "libsodium",
+  "features": {
+    "libsodium": {
       "description": "Use libsodium as the crypto backend",
       "dependencies": [
         "libsodium"
       ]
     },
-    {
-      "name": "openssl",
+    "openssl": {
       "description": "Use OpenSSL as the crypto backend",
       "dependencies": [
         "openssl"
       ]
     }
-  ]
+  }
 }
