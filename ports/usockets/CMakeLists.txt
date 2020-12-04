@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 project(uSockets C CXX)
 
-set(CMAKE_CXX_STANDARD 17)
-
 option(INSTALL_HEADERS "Install header files" ON)
 
 # To enable this feature, OpenSSL 1.1+ is required and is currently disabled due to issue 4267
@@ -26,6 +24,7 @@ set(USOCKETS_EXT_INCLUDE_DIR )
 set(USOCKETS_EXT_LIBS )
 
 if (CMAKE_USE_OPENSSL)
+    set(CMAKE_CXX_STANDARD 17)
     find_package(OpenSSL REQUIRED)
     file(GLOB SSL_SOURCES src/crypto/*.c*)
     list(APPEND SOURCES ${SSL_SOURCES})
