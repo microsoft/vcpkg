@@ -1180,7 +1180,7 @@ std::string vcpkg::reformat_version(const std::string& version, const std::strin
         auto major = trim_leading_zeroes(sm.str(1));
         auto minor = sm.size() > 2 && !sm.str(2).empty() ? trim_leading_zeroes(sm.str(2).substr(1)) : "0";
         auto patch = sm.size() > 3 && !sm.str(3).empty() ? trim_leading_zeroes(sm.str(3).substr(1)) : "0";
-        return Strings::concat(major, '.', minor, '.', patch, "-", abi_tag);
+        return Strings::concat(major, '.', minor, '.', patch, "-vcpkg", abi_tag);
     }
 
     static const std::regex date_matcher(R"((\d\d\d\d)-(\d\d)-(\d\d).*)");
@@ -1191,11 +1191,11 @@ std::string vcpkg::reformat_version(const std::string& version, const std::strin
                                trim_leading_zeroes(sm.str(2)),
                                '.',
                                trim_leading_zeroes(sm.str(3)),
-                               "-",
+                               "-vcpkg",
                                abi_tag);
     }
 
-    return Strings::concat("0.0.0-", abi_tag);
+    return Strings::concat("0.0.0-vcpkg", abi_tag);
 }
 
 details::NuGetRepoInfo details::get_nuget_repo_info_from_env()
