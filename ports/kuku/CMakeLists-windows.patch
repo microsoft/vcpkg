@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c4a87db..10d3eb2 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -13,10 +13,6 @@ cmake_minimum_required(VERSION 3.12)
+ 
+ project(Kuku VERSION 2.0.0 LANGUAGES CXX C)
+ 
+-if(${MSVC})
+-    message(FATAL_ERROR "Please build using the attached Visual Studio solution/project files.")
+-endif()
+-
+ ########################
+ # Global configuration #
+ ########################
