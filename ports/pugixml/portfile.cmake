@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/pugixml
-    REF v1.11
-    SHA512 9b902d158ef044b49638e42e769045f42559f42963fdca50151143e6857fa58040e6be0e449b643bfd00fb267ab443fbc5af5e3fc9925274cedd4f586b12ae85
+    REF v1.11.1
+    SHA512 94a79a28d96e763cdd8951c4d0b20aefb43cd1b32cbf5a5354b09f2636710e960e2dbfa56534b61c8d6ddecb2126a006e5f485c1465a97376e1cc077df25f16e
     HEAD_REF master
-    PATCHES older_versions_target.patch
 )
 
 vcpkg_configure_cmake(
