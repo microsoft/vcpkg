@@ -596,13 +596,13 @@ TEST_CASE ("version parse semver", "[versionplan]")
 TEST_CASE ("version parse relaxed", "[versionplan]")
 {
     auto version_basic = Versions::RelaxedVersion::from_string("1.2.3");
-    check_relaxed_version(version_basic, {1l, 2l, 3l});
+    check_relaxed_version(version_basic, {1, 2, 3});
 
     auto version_short = Versions::RelaxedVersion::from_string("1");
-    check_relaxed_version(version_short, {1l});
+    check_relaxed_version(version_short, {1});
 
     auto version_long = Versions::RelaxedVersion::from_string("1.20.300.4000.50000.6000000.70000000.80000000");
-    check_relaxed_version(version_long, {1l, 20l, 300l, 4000l, 50000l, 6000000l, 70000000l, 80000000l});
+    check_relaxed_version(version_long, {1, 20, 300, 4000, 50000, 6000000, 70000000, 80000000});
 
     auto version_invalid_characters = Versions::RelaxedVersion::from_string("1.a.0");
     CHECK(!version_invalid_characters.has_value());
