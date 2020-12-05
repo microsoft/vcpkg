@@ -129,8 +129,7 @@ static void check_semver_version(const ExpectedS<Versions::SemanticVersion>& may
                                  long patch,
                                  const std::vector<std::string>& identifiers)
 {
-    REQUIRE(maybe_version.has_value());
-    auto actual_version = maybe_version.value_or_exit(VCPKG_LINE_INFO);
+    auto actual_version = unwrap(maybe_version);
     CHECK(actual_version.version_string == version_string);
     CHECK(actual_version.prerelease_string == prerelease_string);
     REQUIRE(actual_version.version.size() == 3);
@@ -143,8 +142,7 @@ static void check_semver_version(const ExpectedS<Versions::SemanticVersion>& may
 static void check_relaxed_version(const ExpectedS<Versions::RelaxedVersion>& maybe_version,
                                   const std::vector<long>& version)
 {
-    REQUIRE(maybe_version.has_value());
-    auto actual_version = maybe_version.value_or_exit(VCPKG_LINE_INFO);
+    auto actual_version = unwrap(maybe_version);
     CHECK(actual_version.version == version);
 }
 
@@ -153,8 +151,7 @@ static void check_date_version(const ExpectedS<Versions::DateVersion>& maybe_ver
                                const std::string& identifiers_string,
                                const std::vector<long>& identifiers)
 {
-    REQUIRE(maybe_version.has_value());
-    auto actual_version = maybe_version.value_or_exit(VCPKG_LINE_INFO);
+    auto actual_version = unwrap(maybe_version);
     CHECK(actual_version.version_string == version_string);
     CHECK(actual_version.identifiers_string == identifiers_string);
     CHECK(actual_version.identifiers == identifiers);
@@ -631,20 +628,20 @@ TEST_CASE ("version parse date", "[versionplan]")
 
 TEST_CASE ("version sort semver", "[versionplan]")
 {
-    std::vector<Versions::SemanticVersion> versions{Versions::SemanticVersion::try_from_string("1.0.0"),
-                                                    Versions::SemanticVersion::try_from_string("0.0.0"),
-                                                    Versions::SemanticVersion::try_from_string("1.1.0"),
-                                                    Versions::SemanticVersion::try_from_string("2.0.0"),
-                                                    Versions::SemanticVersion::try_from_string("1.1.1"),
-                                                    Versions::SemanticVersion::try_from_string("1.0.1"),
-                                                    Versions::SemanticVersion::try_from_string("1.0.0-alpha.1"),
-                                                    Versions::SemanticVersion::try_from_string("1.0.0-beta"),
-                                                    Versions::SemanticVersion::try_from_string("1.0.0-alpha"),
-                                                    Versions::SemanticVersion::try_from_string("1.0.0-alpha.beta"),
-                                                    Versions::SemanticVersion::try_from_string("1.0.0-rc"),
-                                                    Versions::SemanticVersion::try_from_string("1.0.0-beta.2"),
-                                                    Versions::SemanticVersion::try_from_string("1.0.0-beta.20"),
-                                                    Versions::SemanticVersion::try_from_string("1.0.0-beta.3")};
+    std::vector<Versions::SemanticVersion> versions{unwrap(Versions::SemanticVersion::from_string("1.0.0")),
+                                                    unwrap(Versions::SemanticVersion::from_string("0.0.0")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.1.0")),
+                                                    unwrap(Versions::SemanticVersion::from_string("2.0.0")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.1.1")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.1")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-alpha.1")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-beta")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-alpha")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-alpha.beta")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-rc")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-beta.2")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-beta.20")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-beta.3"))};
 
     std::sort(std::begin(versions), std::end(versions), [](const auto& lhs, const auto& rhs) -> bool {
         return Versions::compare(lhs, rhs) == Versions::VerComp::lt;
@@ -668,15 +665,15 @@ TEST_CASE ("version sort semver", "[versionplan]")
 
 TEST_CASE ("version sort relaxed", "[versionplan]")
 {
-    std::vector<Versions::RelaxedVersion> versions{Versions::RelaxedVersion::try_from_string("1.0.0"),
-                                                   Versions::RelaxedVersion::try_from_string("1.0"),
-                                                   Versions::RelaxedVersion::try_from_string("1"),
-                                                   Versions::RelaxedVersion::try_from_string("2"),
-                                                   Versions::RelaxedVersion::try_from_string("1.1"),
-                                                   Versions::RelaxedVersion::try_from_string("1.10.1"),
-                                                   Versions::RelaxedVersion::try_from_string("1.0.1"),
-                                                   Versions::RelaxedVersion::try_from_string("1.0.0.1"),
-                                                   Versions::RelaxedVersion::try_from_string("1.0.0.2")};
+    std::vector<Versions::RelaxedVersion> versions{unwrap(Versions::RelaxedVersion::from_string("1.0.0")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.0")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("2")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.1")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.10.1")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.0.1")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.0.0.1")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.0.0.2"))};
 
     std::sort(std::begin(versions), std::end(versions), [](const auto& lhs, const auto& rhs) -> bool {
         return Versions::compare(lhs, rhs) == Versions::VerComp::lt;
@@ -695,15 +692,15 @@ TEST_CASE ("version sort relaxed", "[versionplan]")
 
 TEST_CASE ("version sort date", "[versionplan]")
 {
-    std::vector<Versions::DateVersion> versions{Versions::DateVersion::try_from_string("2021-01-01.2"),
-                                                Versions::DateVersion::try_from_string("2021-01-01.1"),
-                                                Versions::DateVersion::try_from_string("2021-01-01.1.1"),
-                                                Versions::DateVersion::try_from_string("2021-01-01.1.0"),
-                                                Versions::DateVersion::try_from_string("2021-01-01"),
-                                                Versions::DateVersion::try_from_string("2021-01-01"),
-                                                Versions::DateVersion::try_from_string("2020-12-25"),
-                                                Versions::DateVersion::try_from_string("2020-12-31"),
-                                                Versions::DateVersion::try_from_string("2021-01-01.10")};
+    std::vector<Versions::DateVersion> versions{unwrap(Versions::DateVersion::from_string("2021-01-01.2")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01.1")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01.1.1")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01.1.0")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01")),
+                                                unwrap(Versions::DateVersion::from_string("2020-12-25")),
+                                                unwrap(Versions::DateVersion::from_string("2020-12-31")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01.10"))};
 
     std::sort(std::begin(versions), std::end(versions), [](const auto& lhs, const auto& rhs) -> bool {
         return Versions::compare(lhs, rhs) == Versions::VerComp::lt;

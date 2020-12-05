@@ -19,16 +19,6 @@ namespace vcpkg::Versions
             }
             return res;
         }
-
-        template<typename T>
-        T unwrap(const ExpectedS<T>& t)
-        {
-            if (auto pt = t.get())
-            {
-                return *pt;
-            }
-            Checks::exit_with_message(VCPKG_LINE_INFO, t.error());
-        }
     }
 
     VersionSpec::VersionSpec(const std::string& port_name, const VersionT& version)
@@ -70,11 +60,6 @@ namespace vcpkg::Versions
         return RelaxedVersion{str, Util::fmap(Strings::split(str, '.'), [](auto&& strval) -> long {
                                   return as_numeric(strval).value_or_exit(VCPKG_LINE_INFO);
                               })};
-    }
-
-    RelaxedVersion RelaxedVersion::try_from_string(const std::string& str)
-    {
-        return unwrap(RelaxedVersion::from_string(str));
     }
 
     ExpectedS<SemanticVersion> SemanticVersion::from_string(const std::string& str)
@@ -123,11 +108,6 @@ namespace vcpkg::Versions
         return ret;
     }
 
-    SemanticVersion SemanticVersion::try_from_string(const std::string& str)
-    {
-        return unwrap(SemanticVersion::from_string(str));
-    }
-
     ExpectedS<DateVersion> DateVersion::from_string(const std::string& str)
     {
         std::regex date_scheme_match("(\\d{4}-\\d{2}-\\d{2})(\\.(0|[1-9][0-9]*))*");
@@ -156,8 +136,6 @@ namespace vcpkg::Versions
         return ret;
     }
 
-    DateVersion DateVersion::try_from_string(const std::string& str) { return unwrap(DateVersion::from_string(str)); }
-
     VerComp compare(const std::string& a, const std::string& b, Scheme scheme)
     {
         if (scheme == Scheme::String)
@@ -166,15 +144,18 @@ namespace vcpkg::Versions
         }
         if (scheme == Scheme::Semver)
         {
-            return compare(SemanticVersion::try_from_string(a), SemanticVersion::try_from_string(b));
+            return compare(SemanticVersion::from_string(a).value_or_exit(VCPKG_LINE_INFO),
+                           SemanticVersion::from_string(b).value_or_exit(VCPKG_LINE_INFO));
         }
         if (scheme == Scheme::Relaxed)
         {
-            return compare(RelaxedVersion::try_from_string(a), RelaxedVersion::try_from_string(b));
+            return compare(RelaxedVersion::from_string(a).value_or_exit(VCPKG_LINE_INFO),
+                           RelaxedVersion::from_string(b).value_or_exit(VCPKG_LINE_INFO));
         }
         if (scheme == Scheme::Date)
         {
-            return compare(DateVersion::try_from_string(a), DateVersion::try_from_string(b));
+            return compare(DateVersion::from_string(a).value_or_exit(VCPKG_LINE_INFO),
+                           DateVersion::from_string(b).value_or_exit(VCPKG_LINE_INFO));
         }
         Checks::unreachable(VCPKG_LINE_INFO);
     }
