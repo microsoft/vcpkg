@@ -15,3 +15,7 @@ Description: Use zlib for compressed serialization
 Feature: zstd
 Build-Depends: zstd
 Description: Use zstd for compressed serialization
+
+Feature: no-throw-tran
+Build-Depends:
+Description: Do not throw if operating on a transparent ciphertext
