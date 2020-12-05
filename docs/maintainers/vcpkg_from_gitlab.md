@@ -12,6 +12,7 @@ vcpkg_from_gitlab(
     [SHA512 <45d0d7f8cc350...>]
     [HEAD_REF <master>]
     [PATCHES <patch1.patch> <patch2.patch>...]
+    [FILE_DISAMBIGUATOR <N>]
 )
 ```
 
@@ -50,6 +51,9 @@ For most projects, this should be `master`. The chosen branch should be one that
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
+
+### FILE_DISAMBIGUATOR
+A token to uniquely identify the resulting filename if the SHA512 changes even though a git ref does not, to avoid stepping on the same file name.
 
 ## Notes:
 At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.

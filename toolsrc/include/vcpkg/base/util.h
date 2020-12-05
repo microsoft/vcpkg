@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/optional.h>
+#include <vcpkg/base/view.h>
 
 #include <algorithm>
 #include <functional>
@@ -27,6 +28,15 @@ namespace vcpkg::Util
         bool contains(const Vec& container, const Key& item)
         {
             return std::find(container.begin(), container.end(), item) != container.end();
+        }
+        template<class T>
+        std::vector<T> concat(View<T> r1, View<T> r2)
+        {
+            std::vector<T> v;
+            v.reserve(r1.size() + r2.size());
+            v.insert(v.end(), r1.begin(), r1.end());
+            v.insert(v.end(), r2.begin(), r2.end());
+            return v;
         }
     }
 
