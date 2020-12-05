@@ -64,7 +64,7 @@ namespace vcpkg::Versions
         if (!std::regex_match(str, relaxed_scheme_match))
         {
             return Strings::format(
-                "Error: String `%s` must only contain dot-separated numeric values without trailing zeroes.", str);
+                "Error: String `%s` must only contain dot-separated numeric values without leading zeroes.", str);
         }
 
         return RelaxedVersion{str, Util::fmap(Strings::split(str, '.'), [](auto&& strval) -> long {
@@ -87,7 +87,8 @@ namespace vcpkg::Versions
 
         if (!std::regex_match(str, semver_scheme_match))
         {
-            return Strings::format("Error: String `%s` is not a valid Semantic Version string", str);
+            return Strings::format(
+                "Error: String `%s` is not a valid Semantic Version string, consult https://semver.org", str);
         }
 
         SemanticVersion ret;
@@ -132,7 +133,10 @@ namespace vcpkg::Versions
         std::regex date_scheme_match("(\\d{4}-\\d{2}-\\d{2})(\\.(0|[1-9][0-9]*))*");
         if (!std::regex_match(str, date_scheme_match))
         {
-            return Strings::format("Error: String `%s` is not a valid date version.", str);
+            return Strings::format("Error: String `%s` is not a valid date version."
+                                   "Date section must follow the format YYYY-MM-DD and disambiguators must be "
+                                   "dot-separated positive integer values without leading zeroes.",
+                                   str);
         }
 
         DateVersion ret;
