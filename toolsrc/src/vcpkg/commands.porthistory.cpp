@@ -9,6 +9,7 @@
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/versiondeserializers.h>
 #include <vcpkg/versions.h>
 
 namespace vcpkg::Commands::PortHistory
@@ -230,8 +231,9 @@ namespace vcpkg::Commands::PortHistory
             {
                 Json::Object object;
                 object.insert("git-tree", Json::Value::string(version.git_tree));
-                object.insert("version-string", Json::Value::string(version.version));
-                object.insert("port-version", Json::Value::integer(version.port_version));
+
+                serialize_schemed_version(
+                    object, Versions::Scheme::String, version.version, version.port_version, true);
                 versions_json.push_back(std::move(object));
             }
 
