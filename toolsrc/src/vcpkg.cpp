@@ -84,6 +84,7 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
         !args.output_json())
     {
         Commands::Version::warn_if_vcpkg_version_mismatch(paths);
+#if 0
         std::string surveydate = *GlobalState::g_surveydate.lock();
         auto maybe_surveydate = Chrono::CTime::parse(surveydate);
         if (auto p_surveydate = maybe_surveydate.get())
@@ -106,6 +107,7 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
                 }
             }
         }
+#endif
     }
 
     if (const auto command_function = find_command(Commands::get_available_paths_commands()))
