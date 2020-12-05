@@ -1,4 +1,3 @@
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
 #include <vcpkg/base/strings.h>
@@ -1325,36 +1324,8 @@ namespace vcpkg::Dependencies
 
             if (a.text() != b.text())
             {
-                switch (sa)
-                {
-                    case Versions::Scheme::String: return VerComp::unk;
-                    case Versions::Scheme::Relaxed:
-                    {
-                        auto a_parts = Util::fmap(Strings::split(a.text(), '.'),
-                                                  [](auto&& strval) { return atoi(strval.c_str()); });
-                        auto b_parts = Util::fmap(Strings::split(b.text(), '.'),
-                                                  [](auto&& strval) { return atoi(strval.c_str()); });
-
-                        if (a_parts < b_parts) return Versions::VerComp::lt;
-                        if (a_parts > b_parts) return Versions::VerComp::gt;
-                        Checks::unreachable(VCPKG_LINE_INFO);
-                    }
-                    case Versions::Scheme::Semver:
-                    {
-                        // Because build tags are ignored, two different strings can still compare to equal.
-                        auto result = Versions::compare(Versions::SemanticVersion::from_string(a.text()),
-                                                        Versions::SemanticVersion::from_string(b.text()));
-                        if (result != VerComp::eq) return result;
-                    }
-                    break;
-                    case Versions::Scheme::Date:
-                    {
-                        return Versions::compare(Versions::DateVersion::from_string(a.text()),
-                                                 Versions::DateVersion::from_string(b.text()));
-                    }
-                    break;
-                    default: Checks::unreachable(VCPKG_LINE_INFO);
-                }
+                auto result = Versions::compare(a.text(), b.text(), sa);
+                if (result != VerComp::eq) return result;
             }
 
             if (a.port_version() < b.port_version()) return VerComp::lt;

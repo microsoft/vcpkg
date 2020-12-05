@@ -40,6 +40,15 @@ namespace vcpkg::Versions
         std::size_t operator()(const VersionSpec& key) const;
     };
 
+    struct RelaxedVersion
+    {
+        std::string original_string;
+        std::vector<long> version;
+
+        static ExpectedS<RelaxedVersion> from_string(const std::string& str);
+        static RelaxedVersion try_from_string(const std::string& str);
+    };
+
     struct SemanticVersion
     {
         std::string original_string;
@@ -49,7 +58,8 @@ namespace vcpkg::Versions
         std::vector<long> version;
         std::vector<std::string> identifiers;
 
-        static SemanticVersion from_string(const std::string& str);
+        static ExpectedS<SemanticVersion> from_string(const std::string& str);
+        static SemanticVersion try_from_string(const std::string& str);
     };
 
     struct DateVersion
@@ -60,9 +70,12 @@ namespace vcpkg::Versions
 
         std::vector<long> identifiers;
 
-        static DateVersion from_string(const std::string& str);
+        static ExpectedS<DateVersion> from_string(const std::string& str);
+        static DateVersion try_from_string(const std::string& str);
     };
 
+    VerComp compare(const std::string& a, const std::string& b, Scheme scheme);
+    VerComp compare(const RelaxedVersion& a, const RelaxedVersion& b);
     VerComp compare(const SemanticVersion& a, const SemanticVersion& b);
     VerComp compare(const DateVersion& a, const DateVersion& b);
 
