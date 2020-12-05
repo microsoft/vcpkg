@@ -397,7 +397,8 @@ namespace
                                    "source 'interactive' to allow interactivity.\n");
                 }
                 else if (res.output.find("Response status code does not indicate success: 401 (Unauthorized)") !=
-                         std::string::npos && res.exit_code != 0)
+                             std::string::npos &&
+                         res.exit_code != 0)
                 {
                     System::print2(System::Color::warning,
                                    "One or more NuGet credential providers failed to authenticate. See "
