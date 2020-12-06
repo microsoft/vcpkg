@@ -3,7 +3,17 @@ project(libjpeg LANGUAGES C)
 
 option(BUILD_EXECUTABLES OFF)
 
-# note: jconfig.h must be genrated. Please reference the install.txt in jpegsr9d.zip
+#
+# jconfig.h is a public header, so it must be genrated. Please reference the install.txt in jpegsr9d.zip
+#
+# jconfig.txt should contain #cmakedefine which is modified by porfile.cmake of ijg-libjpeg port in VcPkg
+# By doing this we can skip 'configure' step. Visit https://github.com/LuaDist/libjpeg
+#
+include(CheckIncludeFile)
+check_include_file(stddef.h HAVE_STDDEF_H)
+check_include_file(stdlib.h HAVE_STDLIB_H)
+configure_file(jconfig.txt ${CMAKE_CURRENT_SOURCE_DIR}/jconfig.h)
+
 list(APPEND PUBLIC_HEADERS jpeglib.h jerror.h jmorecfg.h jconfig.h)
 
 add_library(jpeg

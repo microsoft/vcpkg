@@ -7,7 +7,7 @@ if(EXISTS ${CURRENT_INSTALLED_DIR}/share/mozjpeg/copyright)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    # the release doesn't have `__declspec(dllexport)`.
+    # The release doesn't have `__declspec(dllexport)`.
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
@@ -21,44 +21,24 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-if(VCPKG_TARGET_IS_LINUX)
-    # The deflated files are using CRLF. change them to LF before generating jconfig.h
-    find_program(DOS2UNIX dos2unix REQUIRED)
-    message(STATUS "Using dos2unix: ${DOS2UNIX}")
+# Replace some #define in jconfig.txt to #cmakedefine so the CMakeLists.txt can run `configure_file` command.
+# See https://github.com/LuaDist/libjpeg
+vcpkg_replace_string(${SOURCE_PATH}/jconfig.txt
+    "#define HAVE_STDDEF_H"
+    "#cmakedefine HAVE_STDDEF_H"
+)
+vcpkg_replace_string(${SOURCE_PATH}/jconfig.txt
+    "#define HAVE_STDLIB_H"
+    "#cmakedefine HAVE_STDLIB_H"
+)
 
-    vcpkg_execute_required_process(
-        COMMAND ${DOS2UNIX} --force -n configure configure
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-    )
-    vcpkg_execute_required_process(
-        COMMAND ${DOS2UNIX} -n config.sub config.sub
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-    )
-    vcpkg_execute_required_process(
-        COMMAND ${DOS2UNIX} -n config.guess config.guess
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-    )
-
-    # Allow execution for 'configure' and generate jconfig.h
-    vcpkg_execute_required_process(
-        COMMAND chmod +x configure config.sub config.guess
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-    )
-    vcpkg_execute_required_process(
-        COMMAND bash configure
-        WORKING_DIRECTORY "${SOURCE_PATH}"
-        LOGNAME "pre-config-${TARGET_TRIPLET}"
-    )
-else()
-    file(RENAME ${SOURCE_PATH}/jconfig.txt ${SOURCE_PATH}/jconfig.h)
-endif()
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_EXECUTABLES=OFF
+        -DBUILD_EXECUTABLES=OFF # supports [tools] feature to enable this option?
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
