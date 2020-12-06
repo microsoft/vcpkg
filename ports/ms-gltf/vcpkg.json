@@ -5,5 +5,18 @@
   "description": "glTF-SDK is a C++ Software Development Kit for glTF",
   "dependencies": [
     "rapidjson"
+  ],
+  "features": [
+    {
+      "name": "tests",
+      "description": "Build with test programs",
+      "dependencies": [
+        "gtest"
+      ]
+    },
+    {
+      "name": "samples",
+      "description": "Build with GLTF samples"
+    }
   ]
 }

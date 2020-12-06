@@ -1,6 +1,4 @@
-
-# todo: support uwp/ios triplets
-vcpkg_fail_port_install(MESSAGE "ms-gltf currently only supports Windows and Mac platforms" ON_TARGET "uwp" "linux" "ios")
+vcpkg_fail_port_install(MESSAGE "ms-gltf currently only supports Windows and Mac platforms" ON_TARGET "linux")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     # The release doesn't have `__declspec(dllexport)`.
@@ -17,11 +15,19 @@ vcpkg_from_github(
         fix-install.patch
 )
 
+# This part will configure build options with tests/samples
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tests   ENABLE_UNIT_TESTS
+        samples ENABLE_SAMPLES
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    # note: Platform-native buildsystem will be more helpful to launch/debug the tests/samples.
+    PREFER_NINJA
     OPTIONS
-        -DENABLE_UNIT_TESTS=OFF
-        -DENABLE_SAMPLES=OFF
+        ${FEATURE_OPTIONS} # ENABLE_UNIT_TESTS:BOOL=ON|OFF ENABLE_SAMPLES:BOOL=ON|OFF
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
