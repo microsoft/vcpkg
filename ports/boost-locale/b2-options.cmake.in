@@ -1,0 +1,31 @@
+set(_B2_OPTIONS_FEATURES "@FEATURES@")
+if("icu" IN_LIST _B2_OPTIONS_FEATURES)
+    set(BOOST_LOCALE_ICU_FEATURE on)
+else()
+    set(BOOST_LOCALE_ICU_FEATURE off)
+endif()
+
+if(@VCPKG_TARGET_IS_WINDOWS@)
+    list(APPEND B2_OPTIONS
+        boost.locale.iconv=off
+        boost.locale.posix=off
+        /boost/locale//boost_locale
+        boost.locale.icu=${BOOST_LOCALE_ICU_FEATURE}
+    )
+else()
+    find_library(LIBICONV_LIBRARY iconv)
+    get_filename_component(LIBICONV_DIR "${LIBICONV_LIBRARY}" DIRECTORY)
+
+    list(APPEND B2_OPTIONS
+        boost.locale.iconv=on
+        boost.locale.posix=on
+        /boost/locale//boost_locale
+        boost.locale.icu=${BOOST_LOCALE_ICU_FEATURE}
+        -sICONV_PATH=${LIBICONV_DIR}
+    )
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
+        list(APPEND B2_OPTIONS
+            boost.locale.force-found-iconv=on
+        )
+    endif()
+endif()

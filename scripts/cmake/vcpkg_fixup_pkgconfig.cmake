@@ -1,44 +1,46 @@
-## # vcpkg_fixup_pkgconfig
-##
-## Fix common paths in *.pc files and make everything relativ to $(prefix)
-##
-## ## Usage
-## ```cmake
-## vcpkg_fixup_pkgconfig(
-##     [RELEASE_FILES <PATHS>...]
-##     [DEBUG_FILES <PATHS>...]
-##     [SYSTEM_LIBRARIES <NAMES>...]
-##     [IGNORE_FLAGS <FLAGS>]
-##     [SKIP_CHECK]
-## )
-## ```
-##
-## ## Parameters
-## ### RELEASE_FILES
-## Specifies a list of files to apply the fixes for release paths.
-## Defaults to every *.pc file in the folder ${CURRENT_PACKAGES_DIR} without ${CURRENT_PACKAGES_DIR}/debug/
-##
-## ### DEBUG_FILES
-## Specifies a list of files to apply the fixes for debug paths.
-## Defaults to every *.pc file in the folder ${CURRENT_PACKAGES_DIR}/debug/
-##
-## ### SYSTEM_LIBRARIES
-## If the *.pc file contains system libraries outside vcpkg these need to be listed here.
-## VCPKG checks every -l flag for the existence of the required library within vcpkg.
-##
-## ### IGNORE_FLAGS
-## If the *.pc file contains flags in the lib field which are not libraries. These can be listed here
-##
-## ### SKIP_CHECK
-## Skips the library checks in vcpkg_fixup_pkgconfig. Only use if the script itself has unhandled cases. 
-##
-## ## Notes
-## Still work in progress. If there are more cases which can be handled here feel free to add them
-##
-## ## Examples
-## Just call vcpkg_fixup_pkgconfig() after any install step which installs *.pc files.
+#[===[.md:
+# vcpkg_fixup_pkgconfig
 
-include(vcpkg_escape_regex_control_characters)
+Fix common paths in *.pc files and make everything relativ to $(prefix)
+
+## Usage
+```cmake
+vcpkg_fixup_pkgconfig(
+    [RELEASE_FILES <PATHS>...]
+    [DEBUG_FILES <PATHS>...]
+    [SYSTEM_LIBRARIES <NAMES>...]
+    [IGNORE_FLAGS <FLAGS>]
+    [SKIP_CHECK]
+)
+```
+
+## Parameters
+### RELEASE_FILES
+Specifies a list of files to apply the fixes for release paths.
+Defaults to every *.pc file in the folder ${CURRENT_PACKAGES_DIR} without ${CURRENT_PACKAGES_DIR}/debug/
+
+### DEBUG_FILES
+Specifies a list of files to apply the fixes for debug paths.
+Defaults to every *.pc file in the folder ${CURRENT_PACKAGES_DIR}/debug/
+
+### SYSTEM_LIBRARIES
+If the *.pc file contains system libraries outside vcpkg these need to be listed here.
+VCPKG checks every -l flag for the existence of the required library within vcpkg.
+
+### IGNORE_FLAGS
+If the *.pc file contains flags in the lib field which are not libraries. These can be listed here
+
+### SKIP_CHECK
+Skips the library checks in vcpkg_fixup_pkgconfig. Only use if the script itself has unhandled cases. 
+
+## Notes
+Still work in progress. If there are more cases which can be handled here feel free to add them
+
+## Examples
+Just call `vcpkg_fixup_pkgconfig()` after any install step which installs *.pc files.
+#]===]
+
+include(vcpkg_internal_escape_regex_control_characters)
 function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_libs _ignore_flags)
     # Setup pkg-config paths
     set(_VCPKG_INSTALLED_PKGCONF "${CURRENT_INSTALLED_DIR}")
@@ -136,7 +138,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     foreach(_search_path IN LISTS _pkg_lib_paths_output)
         debug_message("REMOVING:'${_search_path}'")
         debug_message("FROM:'${_pkg_libs_output}'")
-        vcpkg_escape_regex_control_characters(_search_path "${_search_path}")
+        vcpkg_internal_escape_regex_control_characters(_search_path "${_search_path}")
         string(REGEX REPLACE "(^[\t ]*|[\t ]+|;[\t ]*)-L${_search_path}([\t ]+|[\t ]*$)" ";" _pkg_libs_output "${_pkg_libs_output}") # Remove search paths from libs
     endforeach()
     debug_message("LIBS AFTER -L<path> REMOVAL:'${_pkg_libs_output}'")
@@ -169,6 +171,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     debug_message("BEFORE IGNORE FLAGS REMOVAL: ${_pkg_libs_output}")
     foreach(_ignore IN LISTS _ignore_flags)  # Remove ignore with whitespace
         debug_message("REMOVING FLAG:'${_ignore}'")
+        vcpkg_internal_escape_regex_control_characters(_ignore "${_ignore}")
         string(REGEX REPLACE "(^[\t ]*|;[\t ]*|[\t ]+)${_ignore}([\t ]+|[\t ]*;|[\t ]*$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
         debug_message("AFTER REMOVAL: ${_pkg_libs_output}")
     endforeach()
@@ -239,7 +242,8 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
 endfunction()
 
 function(vcpkg_fixup_pkgconfig)
-    cmake_parse_arguments(_vfpkg "SKIP_CHECK;NOT_STATIC_PKGCONFIG" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES;IGNORE_FLAGS" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vfpkg "SKIP_CHECK;NOT_STATIC_PKGCONFIG" "" "RELEASE_FILES;DEBUG_FILES;SYSTEM_LIBRARIES;SYSTEM_PACKAGES;IGNORE_FLAGS")
 
     # Note about SYSTEM_PACKAGES: pkg-config requires all packages mentioned in pc files to exists. Otherwise pkg-config will fail to find the pkg.
     # As such naming any SYSTEM_PACKAGES is damned to fail which is why it is not mentioned in the docs at the beginning.
@@ -257,7 +261,7 @@ function(vcpkg_fixup_pkgconfig)
         message(FATAL_ERROR "vcpkg_fixup_pkgconfig was passed extra arguments: ${_vfct_UNPARSED_ARGUMENTS}")
     endif()
 
-    vcpkg_escape_regex_control_characters(_vfpkg_ESCAPED_CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
+    vcpkg_internal_escape_regex_control_characters(_vfpkg_ESCAPED_CURRENT_PACKAGES_DIR "${CURRENT_PACKAGES_DIR}")
     if(NOT _vfpkg_RELEASE_FILES)
         file(GLOB_RECURSE _vfpkg_RELEASE_FILES "${CURRENT_PACKAGES_DIR}/**/*.pc")
         list(FILTER _vfpkg_RELEASE_FILES EXCLUDE REGEX "${_vfpkg_ESCAPED_CURRENT_PACKAGES_DIR}/debug/")

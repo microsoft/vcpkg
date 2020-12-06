@@ -42,6 +42,11 @@ foreach(CMAKE_FILE IN LISTS CMAKE_FILES)
 endforeach()
 
 vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/HPXConfig.cmake"
+    "set(HPX_BUILD_TYPE \"Release\")"
+    "set(HPX_BUILD_TYPE \"\${CMAKE_BUILD_TYPE}\")")
+
+vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/HPXMacros.cmake"
     "set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \"\${CMAKE_CURRENT_LIST_DIR}\")"
     "list(APPEND CMAKE_MODULE_PATH \"\${CMAKE_CURRENT_LIST_DIR}\")")

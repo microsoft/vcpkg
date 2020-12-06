@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a337149f1f..6baab5d37b 100644
+index ec1714687e..e15d25097f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -84,6 +84,9 @@ set_property(CACHE gRPC_SSL_PROVIDER PROPERTY STRINGS "module" "package")
@@ -12,15 +12,15 @@ index a337149f1f..6baab5d37b 100644
  set(gRPC_PROTOBUF_PACKAGE_TYPE "" CACHE STRING "Algorithm for searching protobuf package")
  set_property(CACHE gRPC_PROTOBUF_PACKAGE_TYPE PROPERTY STRINGS "CONFIG" "MODULE")
  
-@@ -1807,7 +1810,6 @@ target_link_libraries(grpc
+@@ -1911,7 +1914,6 @@ target_link_libraries(grpc
    ${_gRPC_ALLTARGETS_LIBRARIES}
    gpr
    address_sorting
 -  upb
    absl::optional
    absl::strings
-   absl::inlined_vector
-@@ -1887,7 +1889,6 @@ target_link_libraries(grpc_csharp_ext
+   absl::status
+@@ -1993,7 +1995,6 @@ target_link_libraries(grpc_csharp_ext
    grpc
    gpr
    address_sorting
@@ -28,15 +28,15 @@ index a337149f1f..6baab5d37b 100644
  )
  
  
-@@ -2409,7 +2410,6 @@ target_link_libraries(grpc_unsecure
+@@ -2463,7 +2464,6 @@ target_link_libraries(grpc_unsecure
    ${_gRPC_ALLTARGETS_LIBRARIES}
    gpr
    address_sorting
 -  upb
    absl::optional
    absl::strings
-   absl::inlined_vector
-@@ -2606,7 +2606,6 @@ target_link_libraries(grpc++
+   absl::status
+@@ -2661,7 +2661,6 @@ target_link_libraries(grpc++
    grpc
    gpr
    address_sorting
@@ -44,7 +44,7 @@ index a337149f1f..6baab5d37b 100644
  )
  
  foreach(_hdr
-@@ -2876,7 +2875,6 @@ target_link_libraries(grpc++_alts
+@@ -2907,7 +2906,6 @@ target_link_libraries(grpc++_alts
    grpc
    gpr
    address_sorting
@@ -52,7 +52,7 @@ index a337149f1f..6baab5d37b 100644
  )
  
  foreach(_hdr
-@@ -2945,7 +2943,6 @@ target_link_libraries(grpc++_error_details
+@@ -2976,7 +2974,6 @@ target_link_libraries(grpc++_error_details
    grpc
    gpr
    address_sorting
@@ -60,7 +60,7 @@ index a337149f1f..6baab5d37b 100644
  )
  
  foreach(_hdr
-@@ -3019,7 +3016,6 @@ target_link_libraries(grpc++_reflection
+@@ -3049,7 +3046,6 @@ target_link_libraries(grpc++_reflection
    grpc
    gpr
    address_sorting
@@ -68,7 +68,7 @@ index a337149f1f..6baab5d37b 100644
  )
  
  foreach(_hdr
-@@ -3300,7 +3296,6 @@ target_link_libraries(grpc++_unsecure
+@@ -3330,7 +3326,6 @@ target_link_libraries(grpc++_unsecure
    grpc_unsecure
    gpr
    address_sorting
@@ -76,7 +76,7 @@ index a337149f1f..6baab5d37b 100644
  )
  
  foreach(_hdr
-@@ -3642,7 +3637,6 @@ target_link_libraries(grpcpp_channelz
+@@ -3648,7 +3643,6 @@ target_link_libraries(grpcpp_channelz
    grpc
    gpr
    address_sorting
@@ -84,7 +84,7 @@ index a337149f1f..6baab5d37b 100644
  )
  
  foreach(_hdr
-@@ -3669,6 +3663,7 @@ endif()
+@@ -3675,6 +3669,7 @@ endif()
  
  endif()
  
@@ -92,15 +92,15 @@ index a337149f1f..6baab5d37b 100644
  add_library(upb
    third_party/upb/upb/decode.c
    third_party/upb/upb/encode.c
-@@ -3719,7 +3714,7 @@ if(gRPC_INSTALL)
-     ARCHIVE DESTINATION ${gRPC_INSTALL_LIBDIR}
+@@ -3726,7 +3721,7 @@ if(gRPC_INSTALL)
    )
  endif()
+ 
 -
 +endif()
  
- 
  add_executable(check_epollexclusive
+   test/build/check_epollexclusive.c
 diff --git a/cmake/gRPCConfig.cmake.in b/cmake/gRPCConfig.cmake.in
 index 3623f4aa5e..df6ced560e 100644
 --- a/cmake/gRPCConfig.cmake.in
@@ -114,19 +114,20 @@ index 3623f4aa5e..df6ced560e 100644
  # Targets
  include(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets.cmake)
 diff --git a/cmake/upb.cmake b/cmake/upb.cmake
-index 2c0ab84e67..07dd613a78 100644
+index f2a0e508c3..ecce7ba300 100644
 --- a/cmake/upb.cmake
 +++ b/cmake/upb.cmake
-@@ -12,9 +12,18 @@
+@@ -12,9 +12,20 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
  
 +set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated")
 +if (gRPC_UPB_PROVIDER STREQUAL "module")
++
  set(UPB_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/upb)
  
  set(_gRPC_UPB_INCLUDE_DIR "${UPB_ROOT_DIR}")
--set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated")
+ set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated" "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upbdefs-generated")
  
  set(_gRPC_UPB_LIBRARIES upb)
 +

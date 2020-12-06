@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -26,5 +24,3 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-vcpkg_test_cmake(PACKAGE_NAME unofficial-${PORT})

@@ -1,3 +1,4 @@
+#include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
 
 #include <vcpkg/configuration.h>
@@ -5,6 +6,41 @@
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/versiondeserializers.h>
+
+#include <regex>
+
+using namespace vcpkg;
+using namespace Versions;
+
+namespace
+{
+    ExpectedS<fs::path> get_versions_json_path(const VcpkgPaths& paths, StringView port_name)
+    {
+        auto json_path = paths.root / fs::u8path("port_versions") /
+                         fs::u8path(Strings::concat(port_name.substr(0, 1), "-")) /
+                         fs::u8path(Strings::concat(port_name, ".json"));
+        if (paths.get_filesystem().exists(json_path))
+        {
+            return std::move(json_path);
+        }
+        return {Strings::concat("Error: Versions database file does not exist: ", fs::u8string(json_path)),
+                expected_right_tag};
+    }
+
+    ExpectedS<fs::path> get_baseline_json_path(const VcpkgPaths& paths, StringView baseline_commit_sha)
+    {
+        auto baseline_path = paths.git_checkout_baseline(paths.get_filesystem(), baseline_commit_sha);
+        if (paths.get_filesystem().exists(baseline_path))
+        {
+            return std::move(baseline_path);
+        }
+        return {Strings::concat("Error: Baseline database file does not exist: ", fs::u8string(baseline_path)),
+                expected_right_tag};
+    }
+}
 
 namespace vcpkg::PortFileProvider
 {
@@ -25,7 +61,7 @@ namespace vcpkg::PortFileProvider
         return Util::fmap(ports, [](auto&& kvpair) -> const SourceControlFileLocation* { return &kvpair.second; });
     }
 
-    PathsPortFileProvider::PathsPortFileProvider(const vcpkg::VcpkgPaths& paths_,
+    PathsPortFileProvider::PathsPortFileProvider(const VcpkgPaths& paths_,
                                                  const std::vector<std::string>& overlay_ports_)
         : paths(paths_)
     {
@@ -59,16 +95,10 @@ namespace vcpkg::PortFileProvider
         }
     }
 
-    ExpectedS<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const
+    static Optional<SourceControlFileLocation> try_load_overlay_port(const Files::Filesystem& fs,
+                                                                     View<fs::path> overlay_ports,
+                                                                     const std::string& spec)
     {
-        auto cache_it = cache.find(spec);
-        if (cache_it != cache.end())
-        {
-            return cache_it->second;
-        }
-
-        const auto& fs = paths.get_filesystem();
-
         for (auto&& ports_dir : overlay_ports)
         {
             // Try loading individual port
@@ -79,15 +109,12 @@ namespace vcpkg::PortFileProvider
                 {
                     if (scf->get()->core_paragraph->name == spec)
                     {
-                        auto it = cache.emplace(std::piecewise_construct,
-                                                std::forward_as_tuple(spec),
-                                                std::forward_as_tuple(std::move(*scf), ports_dir));
-                        return it.first->second;
+                        return SourceControlFileLocation{std::move(*scf), ports_dir};
                     }
                 }
                 else
                 {
-                    vcpkg::print_error_message(maybe_scf.error());
+                    print_error_message(maybe_scf.error());
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(ports_dir));
                 }
@@ -103,10 +130,7 @@ namespace vcpkg::PortFileProvider
                 {
                     if (scf->get()->core_paragraph->name == spec)
                     {
-                        auto it = cache.emplace(std::piecewise_construct,
-                                                std::forward_as_tuple(std::move(spec)),
-                                                std::forward_as_tuple(std::move(*scf), std::move(ports_spec)));
-                        return it.first->second;
+                        return SourceControlFileLocation{std::move(*scf), std::move(ports_spec)};
                     }
                     Checks::exit_with_message(VCPKG_LINE_INFO,
                                               "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
@@ -116,29 +140,39 @@ namespace vcpkg::PortFileProvider
                 }
                 else
                 {
-                    vcpkg::print_error_message(found_scf.error());
+                    print_error_message(found_scf.error());
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(ports_dir));
                 }
             }
         }
+        return nullopt;
+    }
 
+    static Optional<SourceControlFileLocation> try_load_registry_port(const VcpkgPaths& paths, const std::string& spec)
+    {
+        const auto& fs = paths.get_filesystem();
         if (auto registry = paths.get_configuration().registry_set.registry_for_port(spec))
         {
-            auto registry_root = registry->get_registry_root(paths);
-            auto port_directory = registry_root / fs::u8path(spec);
-
-            if (fs.exists(port_directory))
+            auto baseline_version = registry->get_baseline_version(paths, spec);
+            auto entry = registry->get_port_entry(paths, spec);
+            if (entry && baseline_version)
             {
+                auto port_directory = entry->get_port_directory(paths, *baseline_version.get());
+                if (port_directory.empty())
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: registry is incorrect. Baseline version for port `%s` is `%s`, "
+                                              "but that version is not in the registry.\n",
+                                              spec,
+                                              baseline_version.get()->to_string());
+                }
                 auto found_scf = Paragraphs::try_load_port(fs, port_directory);
                 if (auto scf = found_scf.get())
                 {
                     if (scf->get()->core_paragraph->name == spec)
                     {
-                        auto it = cache.emplace(std::piecewise_construct,
-                                                std::forward_as_tuple(spec),
-                                                std::forward_as_tuple(std::move(*scf), std::move(port_directory)));
-                        return it.first->second;
+                        return SourceControlFileLocation{std::move(*scf), std::move(port_directory)};
                     }
                     Checks::exit_with_message(VCPKG_LINE_INFO,
                                               "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
@@ -148,14 +182,56 @@ namespace vcpkg::PortFileProvider
                 }
                 else
                 {
-                    vcpkg::print_error_message(found_scf.error());
+                    print_error_message(found_scf.error());
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(port_directory));
                 }
             }
+            else
+            {
+                Debug::print("Failed to find port `",
+                             spec,
+                             "` in registry:",
+                             entry ? " entry found;" : " no entry found;",
+                             baseline_version ? " baseline version found\n" : " no baseline version found\n");
+            }
+        }
+        else
+        {
+            Debug::print("Failed to find registry for port: `", spec, "`.\n");
+        }
+        return nullopt;
+    }
+
+    ExpectedS<const SourceControlFileLocation&> PathsPortFileProvider::get_control_file(const std::string& spec) const
+    {
+        auto cache_it = cache.find(spec);
+        if (cache_it == cache.end())
+        {
+            const auto& fs = paths.get_filesystem();
+            auto maybe_port = try_load_overlay_port(fs, overlay_ports, spec);
+            if (!maybe_port)
+            {
+                maybe_port = try_load_registry_port(paths, spec);
+            }
+            if (auto p = maybe_port.get())
+            {
+                auto maybe_error =
+                    p->source_control_file->check_against_feature_flags(p->source_location, paths.get_feature_flags());
+                if (maybe_error) return std::move(*maybe_error.get());
+
+                cache_it = cache.emplace(spec, std::move(*p)).first;
+            }
         }
 
-        return std::string("Port definition not found");
+        if (cache_it == cache.end())
+        {
+            return std::string("Port definition not found");
+        }
+        else
+        {
+            return cache_it->second;
+        }
     }
 
     std::vector<const SourceControlFileLocation*> PathsPortFileProvider::load_all_control_files() const
@@ -182,7 +258,7 @@ namespace vcpkg::PortFileProvider
                 }
                 else
                 {
-                    vcpkg::print_error_message(maybe_scf.error());
+                    print_error_message(maybe_scf.error());
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO, "Error: Failed to load port from %s", fs::u8string(ports_dir));
                 }
@@ -214,5 +290,233 @@ namespace vcpkg::PortFileProvider
         }
 
         return ret;
+    }
+
+    namespace details
+    {
+        struct BaselineProviderImpl
+        {
+            BaselineProviderImpl(const VcpkgPaths& paths) : paths(paths) { }
+            BaselineProviderImpl(const VcpkgPaths& paths, const std::string& baseline)
+                : paths(paths), m_baseline(baseline)
+            {
+            }
+            ~BaselineProviderImpl() { }
+
+            const Optional<std::map<std::string, VersionT, std::less<>>>& get_baseline_cache() const
+            {
+                return baseline_cache.get_lazy([&]() -> Optional<std::map<std::string, VersionT, std::less<>>> {
+                    if (auto baseline = m_baseline.get())
+                    {
+                        auto baseline_file = get_baseline_json_path(paths, *baseline).value_or_exit(VCPKG_LINE_INFO);
+
+                        auto maybe_baselines_map =
+                            parse_baseline_file(paths.get_filesystem(), "default", baseline_file);
+                        Checks::check_exit(VCPKG_LINE_INFO,
+                                           maybe_baselines_map.has_value(),
+                                           "Error: Couldn't parse baseline `%s` from `%s`",
+                                           "default",
+                                           fs::u8string(baseline_file));
+                        auto baselines_map = *maybe_baselines_map.get();
+                        return std::move(baselines_map);
+                    }
+                    else
+                    {
+                        // No baseline was provided, so use current repo
+                        const auto& fs = paths.get_filesystem();
+                        auto baseline_file = paths.root / fs::u8path("port_versions") / fs::u8path("baseline.json");
+                        if (fs.exists(baseline_file))
+                        {
+                            auto maybe_baselines_map =
+                                parse_baseline_file(paths.get_filesystem(), "default", baseline_file);
+                            Checks::check_exit(VCPKG_LINE_INFO,
+                                               maybe_baselines_map.has_value(),
+                                               "Error: Couldn't parse baseline `%s` from `%s`",
+                                               "default",
+                                               fs::u8string(baseline_file));
+                            auto baselines_map = *maybe_baselines_map.get();
+                            return std::move(baselines_map);
+                        }
+                        else
+                        {
+                            // No baseline file in current repo -- use current port versions.
+                            m_portfile_provider =
+                                std::make_unique<PathsPortFileProvider>(paths, std::vector<std::string>{});
+                            return nullopt;
+                        }
+                    }
+                });
+            }
+
+            Optional<VersionT> get_baseline_version(StringView port_name) const
+            {
+                const auto& cache = get_baseline_cache();
+                if (auto p_cache = cache.get())
+                {
+                    auto it = p_cache->find(port_name.to_string());
+                    if (it != p_cache->end())
+                    {
+                        return it->second;
+                    }
+                    return nullopt;
+                }
+                else
+                {
+                    auto maybe_scfl = m_portfile_provider->get_control_file(port_name.to_string());
+                    if (auto p_scfl = maybe_scfl.get())
+                    {
+                        auto cpgh = p_scfl->source_control_file->core_paragraph.get();
+                        return VersionT{cpgh->version, cpgh->port_version};
+                    }
+                    else
+                    {
+                        return nullopt;
+                    }
+                }
+            }
+
+        private:
+            const VcpkgPaths& paths;
+            const Optional<std::string> m_baseline;
+            Lazy<Optional<std::map<std::string, VersionT, std::less<>>>> baseline_cache;
+            mutable std::unique_ptr<PathsPortFileProvider> m_portfile_provider;
+        };
+
+        struct VersionedPortfileProviderImpl
+        {
+            std::map<std::string, std::vector<VersionSpec>> versions_cache;
+            std::unordered_map<VersionSpec, std::string, VersionSpecHasher> git_tree_cache;
+            std::unordered_map<VersionSpec, SourceControlFileLocation, VersionSpecHasher> control_cache;
+
+            VersionedPortfileProviderImpl(const VcpkgPaths& paths) : paths(paths) { }
+            ~VersionedPortfileProviderImpl() { }
+
+            const VcpkgPaths& get_paths() const { return paths; }
+            Files::Filesystem& get_filesystem() const { return paths.get_filesystem(); }
+
+        private:
+            const VcpkgPaths& paths;
+        };
+    }
+
+    VersionedPortfileProvider::VersionedPortfileProvider(const VcpkgPaths& paths)
+        : m_impl(std::make_unique<details::VersionedPortfileProviderImpl>(paths))
+    {
+    }
+    VersionedPortfileProvider::~VersionedPortfileProvider() { }
+
+    const std::vector<VersionSpec>& VersionedPortfileProvider::get_port_versions(StringView port_name) const
+    {
+        auto cache_it = m_impl->versions_cache.find(port_name.to_string());
+        if (cache_it != m_impl->versions_cache.end())
+        {
+            return cache_it->second;
+        }
+
+        auto maybe_versions_file_path = get_versions_json_path(m_impl->get_paths(), port_name);
+        if (auto versions_file_path = maybe_versions_file_path.get())
+        {
+            auto maybe_version_entries = parse_versions_file(m_impl->get_filesystem(), port_name, *versions_file_path);
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               maybe_version_entries.has_value(),
+                               "Error: Couldn't parse versions from file: %s",
+                               fs::u8string(*versions_file_path));
+            auto version_entries = maybe_version_entries.value_or_exit(VCPKG_LINE_INFO);
+
+            auto port = port_name.to_string();
+            for (auto&& version_entry : version_entries)
+            {
+                VersionSpec spec(port, version_entry.version);
+                m_impl->versions_cache[port].push_back(spec);
+                m_impl->git_tree_cache.emplace(std::move(spec), std::move(version_entry.git_tree));
+            }
+            return m_impl->versions_cache.at(port);
+        }
+        else
+        {
+            // Fall back to current available version
+            const auto& paths = m_impl->get_paths();
+            auto maybe_port = try_load_registry_port(paths, port_name.to_string());
+            if (auto p = maybe_port.get())
+            {
+                auto maybe_error =
+                    p->source_control_file->check_against_feature_flags(p->source_location, paths.get_feature_flags());
+
+                if (auto error = maybe_error.get())
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO, "Error: %s", *error);
+                }
+
+                VersionSpec vspec(port_name.to_string(),
+                                  VersionT(p->source_control_file->core_paragraph->version,
+                                           p->source_control_file->core_paragraph->port_version));
+                m_impl->control_cache.emplace(vspec, std::move(*p));
+                return m_impl->versions_cache.emplace(port_name.to_string(), std::vector<VersionSpec>{vspec})
+                    .first->second;
+            }
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Error: Could not find a definition for port %s", port_name);
+        }
+    }
+
+    ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
+        const VersionSpec& version_spec) const
+    {
+        // Pre-populate versions cache.
+        get_port_versions(version_spec.port_name);
+
+        auto cache_it = m_impl->control_cache.find(version_spec);
+        if (cache_it != m_impl->control_cache.end())
+        {
+            return cache_it->second;
+        }
+
+        auto git_tree_cache_it = m_impl->git_tree_cache.find(version_spec);
+        if (git_tree_cache_it == m_impl->git_tree_cache.end())
+        {
+            return Strings::concat("Error: No git object SHA for entry ",
+                                   version_spec.port_name,
+                                   " at version ",
+                                   version_spec.version,
+                                   ".");
+        }
+
+        const std::string git_tree = git_tree_cache_it->second;
+        auto port_directory =
+            m_impl->get_paths().git_checkout_port(m_impl->get_filesystem(), version_spec.port_name, git_tree);
+
+        auto maybe_control_file = Paragraphs::try_load_port(m_impl->get_filesystem(), port_directory);
+        if (auto scf = maybe_control_file.get())
+        {
+            if (scf->get()->core_paragraph->name == version_spec.port_name)
+            {
+                return m_impl->control_cache
+                    .emplace(version_spec, SourceControlFileLocation{std::move(*scf), std::move(port_directory)})
+                    .first->second;
+            }
+            return Strings::format("Error: Failed to load port from %s: names did not match: '%s' != '%s'",
+                                   fs::u8string(port_directory),
+                                   version_spec.port_name,
+                                   scf->get()->core_paragraph->name);
+        }
+
+        print_error_message(maybe_control_file.error());
+        return Strings::format(
+            "Error: Failed to load port %s from %s", version_spec.port_name, fs::u8string(port_directory));
+    }
+
+    BaselineProvider::BaselineProvider(const VcpkgPaths& paths)
+        : m_impl(std::make_unique<details::BaselineProviderImpl>(paths))
+    {
+    }
+
+    BaselineProvider::BaselineProvider(const VcpkgPaths& paths, const std::string& baseline)
+        : m_impl(std::make_unique<details::BaselineProviderImpl>(paths, baseline))
+    {
+    }
+    BaselineProvider::~BaselineProvider() { }
+
+    Optional<VersionT> BaselineProvider::get_baseline_version(StringView port_name) const
+    {
+        return m_impl->get_baseline_version(port_name);
     }
 }

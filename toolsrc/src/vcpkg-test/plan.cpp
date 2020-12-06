@@ -389,9 +389,9 @@ TEST_CASE ("basic feature test 8", "[plan]")
     auto spec_c_64 = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
 
     spec_map.triplet = Test::X86_WINDOWS;
-    auto spec_a_86 = FullPackageSpec{spec_map.emplace("a", "b", {{"a1", ""}}), {"core"}};
-    auto spec_b_86 = FullPackageSpec{spec_map.emplace("b")};
-    auto spec_c_86 = FullPackageSpec{spec_map.emplace("c", "a[a1]"), {"core"}};
+    auto spec_a_86 = FullPackageSpec{PackageSpec{"a", Test::X86_WINDOWS}};
+    auto spec_b_86 = FullPackageSpec{PackageSpec{"b", Test::X86_WINDOWS}};
+    auto spec_c_86 = FullPackageSpec{PackageSpec{"c", Test::X86_WINDOWS}};
 
     PortFileProvider::MapPortFileProvider map_port{spec_map.map};
     MockCMakeVarProvider var_provider;

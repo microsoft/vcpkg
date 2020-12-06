@@ -25,6 +25,24 @@ function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
     set(${OUT} ${_vcpkg_get_dir_out} CACHE INTERNAL "_vcpkg_get_directory_name_of_file_above: ${OUT}")
 endfunction()
 
+#[===[
+We use this system, instead of `message(FATAL_ERROR)`,
+since cmake prints a lot of nonsense if the toolchain errors out before it's found the build tools.
+
+This `_VCPKG_HAS_FATAL_ERROR` must be checked before any filesystem operations are done,
+since otherwise you might be doing something with bad variables set up.
+#]===]
+set(_VCPKG_FATAL_ERROR)
+set(_VCPKG_HAS_FATAL_ERROR OFF)
+function(_vcpkg_add_fatal_error ERROR)
+    if(NOT _VCPKG_HAS_FATAL_ERROR)
+        set(_VCPKG_HAS_FATAL_ERROR ON PARENT_SCOPE)
+        set(_VCPKG_FATAL_ERROR "${ERROR}" PARENT_SCOPE)
+    else()
+        string(APPEND _VCPKG_FATAL_ERROR "\n${ERROR}")
+    endif()
+endfunction()
+
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
     if(EXISTS "${CMAKE_SOURCE_DIR}/vcpkg.json")
         set(_VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}")
@@ -39,7 +57,7 @@ if(NOT DEFINED VCPKG_MANIFEST_MODE)
         set(VCPKG_MANIFEST_MODE OFF)
     endif()
 elseif(VCPKG_MANIFEST_MODE AND NOT _VCPKG_MANIFEST_DIR)
-    message(FATAL_ERROR
+    _vcpkg_add_fatal_error(
         "vcpkg manifest mode was enabled, but we couldn't find a manifest file (vcpkg.json) "
         "in any directories above ${CMAKE_CURRENT_SOURCE_DIR}. Please add a manifest, or "
         "disable manifests by turning off VCPKG_MANIFEST_MODE.")
@@ -51,7 +69,7 @@ if(NOT DEFINED _INTERNAL_CHECK_VCPKG_MANIFEST_MODE)
 endif()
 
 if(NOT VCPKG_MANIFEST_MODE STREQUAL _INTERNAL_CHECK_VCPKG_MANIFEST_MODE)
-    message(FATAL_ERROR [[
+    _vcpkg_add_fatal_error([[
 vcpkg manifest mode was enabled for a build directory where it was initially disabled.
 This is not supported. Please delete the build directory and reconfigure.
 ]])
@@ -106,11 +124,11 @@ endif()
 if(VCPKG_TARGET_TRIPLET)
     # This is required since a user might do: 'set(VCPKG_TARGET_TRIPLET somevalue)' [no CACHE] before the first project() call
     # Latter within the toolchain file we do: 'set(VCPKG_TARGET_TRIPLET somevalue CACHE STRING "")' which
-    # will otherwise override the user setting of VCPKG_TARGET_TRIPLET in the current scope of the toolchain since the CACHE value 
-    # did not exist previously. Since the value is newly created CMake will use the CACHE value within this scope since it is the more 
+    # will otherwise override the user setting of VCPKG_TARGET_TRIPLET in the current scope of the toolchain since the CACHE value
+    # did not exist previously. Since the value is newly created CMake will use the CACHE value within this scope since it is the more
     # recently created value in directory scope. This 'strange' behaviour only happens on the very first configure call since subsequent
     # configure call will see the user value as the more recent value. The same logic must be applied to all cache values within this file!
-    # The FORCE keyword is required to ALWAYS lift the user provided/previously set value into a CACHE value. 
+    # The FORCE keyword is required to ALWAYS lift the user provided/previously set value into a CACHE value.
     set(VCPKG_TARGET_TRIPLET ${VCPKG_TARGET_TRIPLET} CACHE STRING "Vcpkg target triplet (ex. x86-windows)" FORCE)
 elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Ww][Ii][Nn]32$")
     set(_VCPKG_TARGET_TRIPLET_ARCH x86)
@@ -228,7 +246,7 @@ endif()
 
 _vcpkg_get_directory_name_of_file_above(_VCPKG_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR} ".vcpkg-root")
 if(NOT _VCPKG_ROOT_DIR)
-    message(FATAL_ERROR "Could not find .vcpkg-root")
+    _vcpkg_add_fatal_error("Could not find .vcpkg-root")
 endif()
 
 if (NOT DEFINED _VCPKG_INSTALLED_DIR)
@@ -306,9 +324,9 @@ set(CMAKE_SYSTEM_IGNORE_PATH
 
 list(APPEND CMAKE_PROGRAM_PATH ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools)
 file(GLOB _VCPKG_TOOLS_DIRS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/*)
-foreach(_VCPKG_TOOLS_DIR ${_VCPKG_TOOLS_DIRS})
-    if(IS_DIRECTORY ${_VCPKG_TOOLS_DIR})
-        list(APPEND CMAKE_PROGRAM_PATH ${_VCPKG_TOOLS_DIR})
+foreach(_VCPKG_TOOLS_DIR IN LISTS _VCPKG_TOOLS_DIRS)
+    if(IS_DIRECTORY "${_VCPKG_TOOLS_DIR}")
+        list(APPEND CMAKE_PROGRAM_PATH "${_VCPKG_TOOLS_DIR}")
     endif()
 endforeach()
 
@@ -322,78 +340,107 @@ else()
     set(_VCPKG_BOOTSTRAP_SCRIPT "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg.sh")
 endif()
 
-if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
+if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE AND NOT _VCPKG_HAS_FATAL_ERROR)
     set(VCPKG_BOOTSTRAP_OPTIONS "${VCPKG_BOOTSTRAP_OPTIONS}" CACHE STRING "Additional options to bootstrap vcpkg" FORCE)
     mark_as_advanced(VCPKG_BOOTSTRAP_OPTIONS)
 
     if(NOT EXISTS "${_VCPKG_EXECUTABLE}")
         message(STATUS "Bootstrapping vcpkg before install")
 
+        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-bootstrap.log" _VCPKG_BOOTSTRAP_LOG)
         execute_process(
             COMMAND "${_VCPKG_BOOTSTRAP_SCRIPT}" ${VCPKG_BOOTSTRAP_OPTIONS}
+            OUTPUT_FILE "${_VCPKG_BOOTSTRAP_LOG}"
+            ERROR_FILE "${_VCPKG_BOOTSTRAP_LOG}"
             RESULT_VARIABLE _VCPKG_BOOTSTRAP_RESULT)
 
-        if (NOT _VCPKG_BOOTSTRAP_RESULT EQUAL 0)
-            message(FATAL_ERROR "Bootstrapping vcpkg before install - failed")
+        if (_VCPKG_BOOTSTRAP_RESULT EQUAL 0)
+            message(STATUS "Bootstrapping vcpkg before install - done")
+        else()
+            message(STATUS "Bootstrapping vcpkg before install - failed")
+            _vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${_VCPKG_BOOTSTRAP_LOG}")
+        endif()
+    endif()
+
+    if (NOT _VCPKG_HAS_FATAL_ERROR)
+        set(VCPKG_OVERLAY_PORTS "${VCPKG_OVERLAY_PORTS}" CACHE STRING "Overlay ports to use for vcpkg install in manifest mode" FORCE)
+        mark_as_advanced(VCPKG_OVERLAY_PORTS)
+        set(VCPKG_OVERLAY_TRIPLETS "${VCPKG_OVERLAY_TRIPLETS}" CACHE STRING "Overlay triplets to use for vcpkg install in manifest mode" FORCE)
+        mark_as_advanced(VCPKG_OVERLAY_TRIPLETS)
+        set(VCPKG_INSTALL_OPTIONS "${VCPKG_INSTALL_OPTIONS}" CACHE STRING "Additional install options to pass to vcpkg" FORCE)
+        mark_as_advanced(VCPKG_INSTALL_OPTIONS)
+
+        message(STATUS "Running vcpkg install")
+
+        set(_VCPKG_ADDITIONAL_MANIFEST_PARAMS)
+        if(VCPKG_OVERLAY_PORTS)
+            foreach(_overlay_port IN LISTS VCPKG_OVERLAY_PORTS)
+                list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-ports=${_overlay_port}")
+            endforeach()
+        endif()
+        if(VCPKG_OVERLAY_TRIPLETS)
+            foreach(_overlay_triplet IN LISTS VCPKG_OVERLAY_TRIPLETS)
+                list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-triplets=${_overlay_triplet}")
+            endforeach()
         endif()
 
-        message(STATUS "Bootstrapping vcpkg before install - done")
-    endif()
-
-    set(VCPKG_OVERLAY_PORTS "${VCPKG_OVERLAY_PORTS}" CACHE STRING "Overlay ports to use for vcpkg install in manifest mode" FORCE)
-    mark_as_advanced(VCPKG_OVERLAY_PORTS)
-    set(VCPKG_OVERLAY_TRIPLETS "${VCPKG_OVERLAY_TRIPLETS}" CACHE STRING "Overlay triplets to use for vcpkg install in manifest mode" FORCE)
-    mark_as_advanced(VCPKG_OVERLAY_TRIPLETS)
-    set(VCPKG_INSTALL_OPTIONS "${VCPKG_INSTALL_OPTIONS}" CACHE STRING "Additional install options to pass to vcpkg" FORCE)
-    mark_as_advanced(VCPKG_INSTALL_OPTIONS)
-
-    message(STATUS "Running vcpkg install")
-
-    set(_VCPKG_ADDITIONAL_MANIFEST_PARAMS)
-    if(VCPKG_OVERLAY_PORTS)
-        foreach(_overlay_port IN LISTS VCPKG_OVERLAY_PORTS)
-            list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-ports=${_overlay_port}")
+        foreach(feature IN LISTS VCPKG_MANIFEST_FEATURES)
+            list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-feature=${feature}")
         endforeach()
+
+        if(VCPKG_MANIFEST_NO_DEFAULT_FEATURES)
+            list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
+        endif()
+
+        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log" _VCPKG_MANIFEST_INSTALL_LOG)
+        execute_process(
+            COMMAND "${_VCPKG_EXECUTABLE}" install
+                --triplet "${VCPKG_TARGET_TRIPLET}"
+                --vcpkg-root "${_VCPKG_ROOT_DIR}"
+                "--x-wait-for-lock"
+                "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
+                "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+                ${_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
+                ${VCPKG_INSTALL_OPTIONS}
+            OUTPUT_FILE "${_VCPKG_MANIFEST_INSTALL_LOG}"
+            ERROR_FILE "${_VCPKG_MANIFEST_INSTALL_LOG}"
+            RESULT_VARIABLE _VCPKG_INSTALL_RESULT
+        )
+
+        if (_VCPKG_INSTALL_RESULT EQUAL 0)
+            message(STATUS "Running vcpkg install - done")
+
+            set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+                "${_VCPKG_MANIFEST_DIR}/vcpkg.json"
+                "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
+        else()
+            message(STATUS "Running vcpkg install - failed")
+            _vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${_VCPKG_MANIFEST_INSTALL_LOG}")
+        endif()
     endif()
-    if(VCPKG_OVERLAY_TRIPLETS)
-        foreach(_overlay_triplet IN LISTS VCPKG_OVERLAY_TRIPLETS)
-            list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-triplets=${_overlay_triplet}")
-        endforeach()
-    endif()
-
-    foreach(feature ${VCPKG_MANIFEST_FEATURES})
-        list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-feature=${feature}")
-    endforeach()
-
-    if(VCPKG_MANIFEST_NO_DEFAULT_FEATURES)
-        list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
-    endif()
-
-    execute_process(
-        COMMAND "${_VCPKG_EXECUTABLE}" install
-            --triplet "${VCPKG_TARGET_TRIPLET}"
-            --vcpkg-root "${_VCPKG_ROOT_DIR}"
-            "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
-            "--x-install-root=${_VCPKG_INSTALLED_DIR}"
-            ${_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
-            ${VCPKG_INSTALL_OPTIONS}
-        OUTPUT_FILE "${CMAKE_BINARY_DIR}/vcpkg-manifest-install-out.log"
-        ERROR_FILE "${CMAKE_BINARY_DIR}/vcpkg-manifest-install-err.log"
-        RESULT_VARIABLE _VCPKG_INSTALL_RESULT
-    )
-
-    if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
-        message(FATAL_ERROR "Running vcpkg install - failed")
-    endif()
-
-    message(STATUS "Running vcpkg install - done")
-
-    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
-        "${_VCPKG_MANIFEST_DIR}/vcpkg.json"
-        "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
 endif()
 
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
+option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
+function(_vcpkg_set_powershell_path)
+    # Attempt to use pwsh if it is present; otherwise use powershell
+    if (NOT DEFINED _VCPKG_POWERSHELL_PATH)
+        find_program(_VCPKG_PWSH_PATH pwsh)
+        if (_VCPKG_PWSH_PATH)
+            set(_VCPKG_POWERSHELL_PATH "${_VCPKG_PWSH_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+        else()
+            message(DEBUG "vcpkg: Could not find PowerShell Core; falling back to PowerShell")
+            find_program(_VCPKG_BUILTIN_POWERSHELL_PATH powershell REQUIRED)
+            if (_VCPKG_BUILTIN_POWERSHELL_PATH)
+                set(_VCPKG_POWERSHELL_PATH "${_VCPKG_BUILTIN_POWERSHELL_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+            else()
+                message(WARNING "vcpkg: Could not find PowerShell; using static string 'powershell.exe'")
+                set(_VCPKG_POWERSHELL_PATH "powershell.exe" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+            endif()
+        endif()
+    endif() # _VCPKG_POWERSHELL_PATH
+endfunction()
+
 function(add_executable name)
     _add_executable(${ARGV})
     list(FIND ARGV "IMPORTED" IMPORTED_IDX)
@@ -402,11 +449,17 @@ function(add_executable name)
     if(IMPORTED_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
         if(VCPKG_APPLOCAL_DEPS)
             if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
+                _vcpkg_set_powershell_path()
+                set(EXTRA_OPTIONS "")
+                if(X_VCPKG_APPLOCAL_DEPS_SERIALIZED)
+                    set(EXTRA_OPTIONS USES_TERMINAL)
+                endif()
                 add_custom_command(TARGET ${name} POST_BUILD
-                    COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
+                    COMMAND "${_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
                         -targetBinary $<TARGET_FILE:${name}>
                         -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                         -OutVariable out
+                    ${EXTRA_OPTIONS}
                 )
             elseif(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
                 if (NOT MACOSX_BUNDLE_IDX EQUAL -1)
@@ -431,8 +484,9 @@ function(add_library name)
     if(IMPORTED_IDX EQUAL -1 AND INTERFACE_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
         get_target_property(IS_LIBRARY_SHARED ${name} TYPE)
         if(VCPKG_APPLOCAL_DEPS AND _VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
+            _vcpkg_set_powershell_path()
             add_custom_command(TARGET ${name} POST_BUILD
-                COMMAND powershell -noprofile -executionpolicy Bypass -file ${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1
+                COMMAND "${_VCPKG_POWERSHELL_PATH}" -noprofile -executionpolicy Bypass -file "${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1"
                     -targetBinary $<TARGET_FILE:${name}>
                     -installedDir "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin"
                     -OutVariable out
@@ -449,19 +503,57 @@ endfunction()
 #   DESTINATION - the runtime directory for those targets (usually `bin`)
 function(x_vcpkg_install_local_dependencies)
     if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
-        # Parse command line
-        cmake_parse_arguments(__VCPKG_APPINSTALL "" "DESTINATION" "TARGETS" ${ARGN})
-
-        foreach(TARGET ${__VCPKG_APPINSTALL_TARGETS})
-            _install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
-                execute_process(COMMAND 
-                    powershell -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                    -targetBinary \"${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
+        cmake_parse_arguments(PARSE_ARGV __VCPKG_APPINSTALL "" "DESTINATION" "TARGETS")
+        _vcpkg_set_powershell_path()
+        foreach(TARGET IN LISTS __VCPKG_APPINSTALL_TARGETS)
+            install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
+                execute_process(COMMAND \"${_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
+                    -targetBinary \"\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
                     -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
                     -OutVariable out)")
         endforeach()
     endif()
 endfunction()
+
+set(X_VCPKG_APPLOCAL_DEPS_INSTALL ${X_VCPKG_APPLOCAL_DEPS_INSTALL} CACHE BOOL "(experimental) Automatically copy dependencies into the install target directory for executables.")
+if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
+    function(install)
+        _install(${ARGV})
+
+        if(ARGV0 STREQUAL "TARGETS")
+            # Will contain the list of targets
+            set(PARSED_TARGETS "")
+
+            # Destination - [RUNTIME] DESTINATION argument overrides this
+            set(DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+
+            # Parse arguments given to the install function to find targets and (runtime) destination
+            set(MODIFIER "") # Modifier for the command in the argument
+            set(LAST_COMMAND "") # Last command we found to process
+            foreach(ARG ${ARGN})
+                if(ARG MATCHES "ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE")
+                    set(MODIFIER ${ARG})
+                    continue()
+                endif()
+
+                if(ARG MATCHES "TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP")
+                    set(LAST_COMMAND ${ARG})
+                    continue()
+                endif()
+
+                if(LAST_COMMAND STREQUAL "TARGETS")
+                    list(APPEND PARSED_TARGETS "${ARG}")
+                endif()
+
+                if(LAST_COMMAND STREQUAL "DESTINATION" AND (MODIFIER STREQUAL "" OR MODIFIER STREQUAL "RUNTIME"))
+                    set(DESTINATION "${ARG}")
+                endif()
+            endforeach()
+
+            x_vcpkg_install_local_dependencies(TARGETS ${PARSED_TARGETS} DESTINATION ${DESTINATION})
+        endif()
+    endfunction()
+endif()
 
 if(NOT DEFINED VCPKG_OVERRIDE_FIND_PACKAGE_NAME)
     set(VCPKG_OVERRIDE_FIND_PACKAGE_NAME find_package)
@@ -562,4 +654,8 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
             _VCPKG_ROOT_DIR
         )
     endif()
+endif()
+
+if(_VCPKG_HAS_FATAL_ERROR)
+    message(FATAL_ERROR "${_VCPKG_FATAL_ERROR}")
 endif()
