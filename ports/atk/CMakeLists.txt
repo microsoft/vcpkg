@@ -142,3 +142,12 @@ message(STATUS "  " ${LIBINTL_LIBRARY})
 foreach(GL ${GLIB_LIBRARIES})
     message(STATUS "  " ${GL})
 endforeach()
+
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+set(ATK_API_VERSION 1)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/atk.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/atk.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/atk.pc" DESTINATION lib/pkgconfig)
