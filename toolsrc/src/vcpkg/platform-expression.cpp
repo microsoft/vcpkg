@@ -384,8 +384,7 @@ namespace vcpkg::PlatformExpression
                         case Identifier::windows:
                             return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "") ||
                                    true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
-                        case Identifier::mingw:
-                            return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "MinGW");
+                        case Identifier::mingw: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "MinGW");
                         case Identifier::linux: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Linux");
                         case Identifier::osx: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Darwin");
                         case Identifier::uwp:
