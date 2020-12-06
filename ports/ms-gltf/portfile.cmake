@@ -25,7 +25,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     # note: Platform-native buildsystem will be more helpful to launch/debug the tests/samples.
-    PREFER_NINJA
+    # note: The PDB file path is making Ninja fails to install. 
+    #       There is an /MP option, simply disable PREFER_NINJA. The other platforms should be able to build with this.
+    # PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS} # ENABLE_UNIT_TESTS:BOOL=ON|OFF ENABLE_SAMPLES:BOOL=ON|OFF
 )
