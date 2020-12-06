@@ -71,6 +71,15 @@ namespace
         return result;
     }
 
+    System::CmdLineBuilder git_cmd_builder(const VcpkgPaths& paths,
+                                           const fs::path& dot_git_dir,
+                                           const fs::path& work_tree)
+    {
+        return System::CmdLineBuilder()
+            .path_arg(paths.get_tool_exe(Tools::GIT))
+            .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_dir)))
+            .string_arg(Strings::concat("--work-tree=", fs::u8string(work_tree)));
+    }
 } // unnamed namespace
 
 namespace vcpkg
@@ -186,8 +195,11 @@ namespace vcpkg
     {
         struct VcpkgPathsImpl
         {
-            VcpkgPathsImpl(Files::Filesystem& fs, bool compiler_tracking)
-                : fs_ptr(&fs), m_tool_cache(get_tool_cache()), m_env_cache(compiler_tracking)
+            VcpkgPathsImpl(Files::Filesystem& fs, FeatureFlagSettings ff_settings)
+                : fs_ptr(&fs)
+                , m_tool_cache(get_tool_cache())
+                , m_env_cache(ff_settings.compiler_tracking)
+                , m_ff_settings(ff_settings)
             {
             }
 
@@ -209,11 +221,13 @@ namespace vcpkg
             Optional<std::pair<Json::Object, Json::JsonStyle>> m_manifest_doc;
             fs::path m_manifest_path;
             Configuration m_config;
+
+            FeatureFlagSettings m_ff_settings;
         };
     }
 
     VcpkgPaths::VcpkgPaths(Files::Filesystem& filesystem, const VcpkgCmdArguments& args)
-        : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.compiler_tracking_enabled()))
+        : m_pimpl(std::make_unique<details::VcpkgPathsImpl>(filesystem, args.feature_flag_settings()))
     {
         original_cwd = filesystem.current_path(VCPKG_LINE_INFO);
 #if defined(_WIN32)
@@ -254,6 +268,7 @@ namespace vcpkg
 
             installed = process_output_directory(
                 filesystem, manifest_root_dir, args.install_root_dir.get(), "vcpkg_installed", VCPKG_LINE_INFO);
+
             const auto vcpkg_lock = root / ".vcpkg-root";
             if (args.wait_for_lock.value_or(false))
             {
@@ -263,12 +278,16 @@ namespace vcpkg
             {
                 m_pimpl->file_lock_handle = filesystem.try_take_exclusive_file_lock(vcpkg_lock, ec);
             }
+
             if (ec)
             {
-                System::printf(
-                    System::Color::error, "Failed to take the filesystem lock on %s:\n", fs::u8string(vcpkg_lock));
-                System::printf(System::Color::error, "    %s\n", ec.message());
-                Checks::exit_fail(VCPKG_LINE_INFO);
+                if (ec == std::errc::device_or_resource_busy || args.ignore_lock_failures.value_or(false))
+                {
+                    System::printf(
+                        System::Color::error, "Failed to take the filesystem lock on %s:\n", fs::u8string(vcpkg_lock));
+                    System::printf(System::Color::error, "    %s\n", ec.message());
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
             }
 
             m_pimpl->m_manifest_doc = load_manifest(filesystem, manifest_root_dir);
@@ -320,7 +339,6 @@ If you wish to silence this error and use classic mode, you can:
             process_output_directory(filesystem, root, args.downloads_root_dir.get(), "downloads", VCPKG_LINE_INFO);
         packages =
             process_output_directory(filesystem, root, args.packages_root_dir.get(), "packages", VCPKG_LINE_INFO);
-        ports = filesystem.canonical(VCPKG_LINE_INFO, root / fs::u8path("ports"));
         scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
         prefab = root / fs::u8path("prefab");
 
@@ -343,6 +361,18 @@ If you wish to silence this error and use classic mode, you can:
         vcpkg_dir_status_file = vcpkg_dir / fs::u8path("status");
         vcpkg_dir_info = vcpkg_dir / fs::u8path("info");
         vcpkg_dir_updates = vcpkg_dir / fs::u8path("updates");
+
+        // Versioning paths
+        const auto versioning_tmp = buildtrees / fs::u8path("versioning_tmp");
+        const auto versioning_output = buildtrees / fs::u8path("versioning");
+
+        baselines_dot_git_dir = versioning_tmp / fs::u8path(".baselines.git");
+        baselines_work_tree = versioning_tmp / fs::u8path("baselines-worktree");
+        baselines_output = versioning_output / fs::u8path("baselines");
+
+        versions_dot_git_dir = versioning_tmp / fs::u8path(".versions.git");
+        versions_work_tree = versioning_tmp / fs::u8path("versions-worktree");
+        versions_output = versioning_output / fs::u8path("versions");
 
         ports_cmake = filesystem.canonical(VCPKG_LINE_INFO, scripts / fs::u8path("ports.cmake"));
 
@@ -411,15 +441,10 @@ If you wish to silence this error and use classic mode, you can:
             auto& fs = this->get_filesystem();
             std::map<std::string, std::string> helpers;
             auto files = fs.get_files_non_recursive(this->scripts / fs::u8path("cmake"));
-            auto common_functions = fs::u8path("vcpkg_common_functions");
             for (auto&& file : files)
             {
-                auto stem = file.stem();
-                if (stem != common_functions)
-                {
-                    helpers.emplace(fs::u8string(stem),
-                                    Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
-                }
+                helpers.emplace(fs::u8string(file.stem()),
+                                Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
             }
             return helpers;
         });
@@ -450,6 +475,200 @@ If you wish to silence this error and use classic mode, you can:
     const std::string& VcpkgPaths::get_tool_version(const std::string& tool) const
     {
         return m_pimpl->m_tool_cache->get_tool_version(*this, tool);
+    }
+
+    void VcpkgPaths::git_checkout_subpath(const VcpkgPaths& paths,
+                                          StringView commit_sha,
+                                          const fs::path& subpath,
+                                          const fs::path& local_repo,
+                                          const fs::path& destination,
+                                          const fs::path& dot_git_dir,
+                                          const fs::path& work_tree)
+    {
+        Files::Filesystem& fs = paths.get_filesystem();
+        fs.remove_all(work_tree, VCPKG_LINE_INFO);
+        fs.remove_all(destination, VCPKG_LINE_INFO);
+        fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
+
+        // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
+        // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
+        System::CmdLineBuilder clone_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
+                                                       .string_arg("clone")
+                                                       .string_arg("--no-checkout")
+                                                       .string_arg("--local")
+                                                       .path_arg(local_repo)
+                                                       .path_arg(dot_git_dir);
+        const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           clone_output.exit_code == 0,
+                           "Failed to clone temporary vcpkg instance.\n%s\n",
+                           clone_output.output);
+
+        // git checkout {commit-sha} -- {subpath}
+        System::CmdLineBuilder checkout_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
+                                                          .string_arg("checkout")
+                                                          .string_arg(commit_sha)
+                                                          .string_arg("--")
+                                                          .path_arg(subpath);
+        const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder.extract());
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           checkout_output.exit_code == 0,
+                           "Error: Failed to checkout %s:%s\n%s\n",
+                           commit_sha,
+                           fs::u8string(subpath),
+                           checkout_output.output);
+
+        const fs::path checked_out_path = work_tree / subpath;
+        const auto& containing_folder = destination.parent_path();
+        if (!fs.exists(containing_folder))
+        {
+            fs.create_directories(containing_folder, VCPKG_LINE_INFO);
+        }
+
+        std::error_code ec;
+        fs.rename_or_copy(checked_out_path, destination, ".tmp", ec);
+        fs.remove_all(work_tree, VCPKG_LINE_INFO);
+        fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
+        if (ec)
+        {
+            System::printf(System::Color::error,
+                           "Error: Couldn't move checked out files from %s to destination %s",
+                           fs::u8string(checked_out_path),
+                           fs::u8string(destination));
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+    }
+
+    ExpectedS<std::string> VcpkgPaths::git_show(const std::string& treeish, const fs::path& dot_git_dir) const
+    {
+        // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
+        // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
+        System::CmdLineBuilder showcmd =
+            git_cmd_builder(*this, dot_git_dir, dot_git_dir).string_arg("show").string_arg(treeish);
+
+        auto output = System::cmd_execute_and_capture_output(showcmd.extract());
+        if (output.exit_code == 0)
+        {
+            return {std::move(output.output), expected_left_tag};
+        }
+        else
+        {
+            return {std::move(output.output), expected_right_tag};
+        }
+    }
+
+    void VcpkgPaths::git_checkout_object(const VcpkgPaths& paths,
+                                         StringView git_object,
+                                         const fs::path& local_repo,
+                                         const fs::path& destination,
+                                         const fs::path& dot_git_dir,
+                                         const fs::path& work_tree)
+    {
+        Files::Filesystem& fs = paths.get_filesystem();
+        fs.remove_all(work_tree, VCPKG_LINE_INFO);
+        fs.remove_all(destination, VCPKG_LINE_INFO);
+
+        if (!fs.exists(dot_git_dir))
+        {
+            // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
+            // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
+            System::CmdLineBuilder clone_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
+                                                           .string_arg("clone")
+                                                           .string_arg("--no-checkout")
+                                                           .string_arg("--local")
+                                                           .path_arg(local_repo)
+                                                           .path_arg(dot_git_dir);
+            const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               clone_output.exit_code == 0,
+                               "Failed to clone temporary vcpkg instance.\n%s\n",
+                               clone_output.output);
+        }
+        else
+        {
+            System::CmdLineBuilder fetch_cmd_builder =
+                git_cmd_builder(paths, dot_git_dir, work_tree).string_arg("fetch");
+            const auto fetch_output = System::cmd_execute_and_capture_output(fetch_cmd_builder.extract());
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               fetch_output.exit_code == 0,
+                               "Failed to update refs on temporary vcpkg repository.\n%s\n",
+                               fetch_output.output);
+        }
+
+        if (!fs.exists(work_tree))
+        {
+            fs.create_directories(work_tree, VCPKG_LINE_INFO);
+        }
+
+        // git checkout {tree_object} .
+        System::CmdLineBuilder checkout_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
+                                                          .string_arg("checkout")
+                                                          .string_arg(git_object)
+                                                          .string_arg(".");
+        const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder.extract());
+        Checks::check_exit(VCPKG_LINE_INFO, checkout_output.exit_code == 0, "Failed to checkout %s", git_object);
+
+        const auto& containing_folder = destination.parent_path();
+        if (!fs.exists(containing_folder))
+        {
+            fs.create_directories(containing_folder, VCPKG_LINE_INFO);
+        }
+
+        std::error_code ec;
+        fs.rename_or_copy(work_tree, destination, ".tmp", ec);
+        fs.remove_all(work_tree, VCPKG_LINE_INFO);
+        if (ec)
+        {
+            System::printf(System::Color::error,
+                           "Error: Couldn't move checked out files from %s to destination %s",
+                           fs::u8string(work_tree),
+                           fs::u8string(destination));
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+    }
+
+    fs::path VcpkgPaths::git_checkout_baseline(Files::Filesystem& fs, StringView commit_sha) const
+    {
+        const fs::path destination_parent = this->baselines_output / fs::u8path(commit_sha);
+        const fs::path destination = destination_parent / fs::u8path("baseline.json");
+
+        if (!fs.exists(destination))
+        {
+            auto treeish = Strings::concat(commit_sha, ":port_versions/baseline.json");
+            auto maybe_contents = git_show(treeish, this->root / fs::u8path(".git"));
+            if (auto contents = maybe_contents.get())
+            {
+                fs.create_directories(destination_parent, VCPKG_LINE_INFO);
+                fs.write_contents(destination, *contents, VCPKG_LINE_INFO);
+            }
+            else
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Error: while checking out baseline '%s':\n%s", treeish, maybe_contents.error());
+            }
+        }
+        return destination;
+    }
+
+    fs::path VcpkgPaths::git_checkout_port(Files::Filesystem& fs, StringView port_name, StringView git_tree) const
+    {
+        /* Clone a new vcpkg repository instance using the local instance as base.
+         *
+         * The `--git-dir` directory will store all the Git metadata files,
+         * and the  `--work-tree` is the directory where files will be checked out.
+         *
+         * Since we are checking a git tree object, all files will be checked out to the root of `work-tree`.
+         * Because of that, it makes sense to use the git hash as the name for the directory.
+         */
+        const fs::path local_repo = this->root;
+        const fs::path destination = this->versions_output / fs::u8path(git_tree) / fs::u8path(port_name);
+
+        if (!fs.exists(destination / "CONTROL") && !fs.exists(destination / "vcpkg.json"))
+        {
+            git_checkout_object(
+                *this, git_tree, local_repo, destination, this->versions_dot_git_dir, this->versions_work_tree);
+        }
+        return destination;
     }
 
     Optional<const Json::Object&> VcpkgPaths::get_manifest() const
@@ -563,6 +782,8 @@ If you wish to silence this error and use classic mode, you can:
     }
 
     Files::Filesystem& VcpkgPaths::get_filesystem() const { return *m_pimpl->fs_ptr; }
+
+    const FeatureFlagSettings& VcpkgPaths::get_feature_flags() const { return m_pimpl->m_ff_settings; }
 
     void VcpkgPaths::track_feature_flag_metrics() const
     {

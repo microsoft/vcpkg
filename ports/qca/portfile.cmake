@@ -20,8 +20,25 @@ vcpkg_from_github(
     PATCHES
         0001-fix-path-for-vcpkg.patch
         0002-fix-build-error.patch
-        0003-disable-plugin-botan.patch
 )
+
+# Remove these files on the cmake next update
+vcpkg_download_distfile(ARCHIVE_PKGCONFIG
+    URLS "https://gitlab.kitware.com/cmake/cmake/-/raw/ab8bd48352df060c4ead210fe30dc4736646206b/Modules/FindPkgConfig.cmake?inline=false"
+    FILENAME "FindPkgConfig.cmake"
+    SHA512 d9aada8107eac9ada197d0b1e9040cd3707de7f5838c90bca80321e8eb35931f520635800bea0e2aafeca7fafb08b8e4752d5c6c2d6b1a5d5b4e3225d7818aa6
+)
+vcpkg_download_distfile(ARCHIVE_PKGHSA
+    URLS "https://gitlab.kitware.com/cmake/cmake/-/raw/ab8bd48352df060c4ead210fe30dc4736646206b/Modules/FindPackageHandleStandardArgs.cmake?inline=false"
+    FILENAME "FindPackageHandleStandardArgs.cmake"
+    SHA512 61a459a9e0797f976fae36ce4fd5a18a30bd13e8bc9d65d165ca760e13ddc27a8c8ad371ad4b41cc36fe227425424fe9bc6e4dfa5cfdc68bd59a3c10005cf3b4
+)
+vcpkg_download_distfile(ARCHIVE_PKGMSG
+    URLS "https://gitlab.kitware.com/cmake/cmake/-/raw/ab8bd48352df060c4ead210fe30dc4736646206b/Modules/FindPackageMessage.cmake?inline=false"
+    FILENAME "FindPackageMessage.cmake"
+    SHA512 44af652038ecd98c1e54f440e67994759345290530b36f687b7e6d5c310caa55597f3718901fe7a3f8816b560f03b8f238d90aab6ce9b1b24391ab0bb2aa44a8
+)
+file(COPY ${ARCHIVE_PKGCONFIG} ${ARCHIVE_PKGHSA} ${ARCHIVE_PKGMSG} DESTINATION ${SOURCE_PATH}/cmake/modules)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(QCA_FEATURE_INSTALL_DIR_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/Qca)

@@ -1,17 +1,29 @@
-#.rst:
-# .. command:: vcpkg_build_qmake
-#
-#  Build a qmake-based project, previously configured using vcpkg_configure_qmake.
-#
-#  ::
-#  vcpkg_build_qmake()
-#
+#[===[.md:
+# vcpkg_build_qmake
+
+Build a qmake-based project, previously configured using vcpkg_configure_qmake.
+
+```cmake
+vcpkg_build_qmake()
+```
+#]===]
+
 function(vcpkg_build_qmake)
-    cmake_parse_arguments(_csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS")
 
     if(CMAKE_HOST_WIN32)
-        vcpkg_find_acquire_program(JOM)
-        set(INVOKE "${JOM}")
+        if (VCPKG_QMAKE_USE_NMAKE)
+            find_program(NMAKE nmake)
+            set(INVOKE "${NMAKE}")
+            get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
+            set(PATH_GLOBAL "$ENV{PATH}")
+            set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
+            set(ENV{CL} "$ENV{CL} /MP${VCPKG_CONCURRENCY}")
+        else()
+            vcpkg_find_acquire_program(JOM)
+            set(INVOKE "${JOM}")
+        endif()
     else()
         find_program(MAKE make)
         set(INVOKE "${MAKE}")

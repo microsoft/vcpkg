@@ -1,7 +1,7 @@
 Source: libpq
 Version: 12.2
-Port-Version: 7
-Build-Depends: libpq[bonjour] (osx)
+Port-Version: 9
+Build-Depends: libpq[core,bonjour] (osx)
 Supports: !uwp
 Homepage: https://www.postgresql.org/
 Description: The official database access API of postgresql

@@ -1,28 +1,36 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp" "linux" "osx")
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.freetds.org/files/stable/freetds-1.1.17.tar.bz2"
-    FILENAME "freetds-1.1.17.tar.bz2"
-    SHA512 3746ea009403960950fd619ffaf6433cfc92c34a8261b15e61009f01a1446e5a5a59413cd48e5511bbf3a0224f54b40daa713187bd20ca43105c5f8c68f4b88e
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
-        crypt32.patch
+    REPO freetds/freetds
+    REF 16f7a6280c7a19bfe5c60e5d61cc08e3f2dff991 # See https://github.com/microsoft/vcpkg/pull/14120#issuecomment-715896755
+    HEAD_REF master
+    SHA512 34ff10764156bac24444a74b636fafa56adc0097a62a3f3249d4bc09a0cdcaa88aa0c4f26761260c56dd47edf738ff68f647e045f32cac28e0be7f6760f7f90b
 )
 
-set(BUILD_freetds_openssl OFF)
-if("openssl" IN_LIST FEATURES)
-    set(BUILD_freetds_openssl ON)
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openssl WITH_OPENSSL
+)
+
+vcpkg_find_acquire_program(PERL)
+get_filename_component(PERL_PATH ${PERL} DIRECTORY)
+vcpkg_add_to_path(${PERL_PATH})
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_find_acquire_program(GPERF)
+    get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
+    vcpkg_add_to_path(${GPERF_PATH})
+else()
+    if (NOT EXISTS /usr/bin/gperf)
+        message(FATAL_ERROR "freetds requires gperf, these can be installed on Ubuntu systems via apt-get install gperf.")
+    endif()
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DWITH_OPENSSL=${BUILD_freetds_openssl}
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -62,4 +70,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

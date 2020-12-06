@@ -21,7 +21,7 @@ namespace vcpkg
         constexpr static StringLiteral PATH = "path";
 
         constexpr static StringLiteral KIND_BUILTIN = "builtin";
-        constexpr static StringLiteral KIND_DIRECTORY = "directory";
+        constexpr static StringLiteral KIND_FILESYSTEM = "filesystem";
 
         virtual StringView type_name() const override;
         virtual View<StringView> valid_fields() const override;
