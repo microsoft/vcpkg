@@ -1,0 +1,63 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 98f9ad49..50b4297f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1193,6 +1193,7 @@ SET_TARGET_PROPERTIES(common PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+ UNSET(HAS_ROUTER)
+ SET(IMPL_TARGET OpenAL) # Either OpenAL or soft_oal.
+ SET(SUBSYS_FLAG )
++SET(COMMON_LIB )
+
+ # Build main library
+ IF(LIBTYPE STREQUAL "STATIC")
+@@ -1203,12 +1204,15 @@ IF(LIBTYPE STREQUAL "STATIC")
+     ADD_LIBRARY(${IMPL_TARGET} STATIC ${COMMON_OBJS} ${OPENAL_OBJS} ${ALC_OBJS})
+     TARGET_LINK_LIBRARIES(${IMPL_TARGET} PRIVATE ${LINKER_FLAGS} ${EXTRA_LIBS} ${MATH_LIB})
+ ELSE()
++    SET(COMMON_LIB common)
++
+     IF(WIN32)
+         IF(MSVC)
+             SET(SUBSYS_FLAG ${SUBSYS_FLAG} "/SUBSYSTEM:WINDOWS")
+         ELSEIF(CMAKE_COMPILER_IS_GNUCC)
+             SET(SUBSYS_FLAG ${SUBSYS_FLAG} "-mwindows")
+         ENDIF()
++        set(COMMON_LIB ${COMMON_LIB} shell32 ole32)
+     ENDIF()
+
+     SET(RC_CONFIG resources/openal32.rc)
+@@ -1223,7 +1227,7 @@ ELSE()
+         TARGET_COMPILE_DEFINITIONS(OpenAL
+             PRIVATE AL_BUILD_LIBRARY AL_ALEXT_PROTOTYPES ${CPP_DEFS})
+         TARGET_COMPILE_OPTIONS(OpenAL PRIVATE ${C_FLAGS})
+-        TARGET_LINK_LIBRARIES(OpenAL PRIVATE common ${LINKER_FLAGS})
++        TARGET_LINK_LIBRARIES(OpenAL PRIVATE ${COMMON_LIB} ${LINKER_FLAGS})
+         TARGET_INCLUDE_DIRECTORIES(OpenAL
+           PUBLIC
+             $<BUILD_INTERFACE:${OpenAL_SOURCE_DIR}/include>
+@@ -1248,7 +1252,7 @@ ELSE()
+     IF(WIN32)
+         SET_TARGET_PROPERTIES(${IMPL_TARGET} PROPERTIES PREFIX "")
+     ENDIF()
+-    TARGET_LINK_LIBRARIES(${IMPL_TARGET} PRIVATE common ${LINKER_FLAGS} ${EXTRA_LIBS} ${MATH_LIB})
++    TARGET_LINK_LIBRARIES(${IMPL_TARGET} PRIVATE ${COMMON_LIB} ${LINKER_FLAGS} ${EXTRA_LIBS} ${MATH_LIB})
+ ENDIF()
+
+ TARGET_INCLUDE_DIRECTORIES(${IMPL_TARGET}
+diff --git a/native-tools/CMakeLists.txt b/native-tools/CMakeLists.txt
+index 5e816bba..5d7919f6 100644
+--- a/native-tools/CMakeLists.txt
++++ b/native-tools/CMakeLists.txt
+@@ -24,6 +24,11 @@ set_target_properties(bsincgen PROPERTIES OUTPUT_NAME bsincgen)
+ set_target_properties(bsincgen PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG "${CMAKE_BINARY_DIR}")
+ set_target_properties(bsincgen PROPERTIES RUNTIME_OUTPUT_DIRECTORY_RELEASE "${CMAKE_BINARY_DIR}")
+ target_compile_definitions(bsincgen PRIVATE ${CPP_DEFS})
++set(BSINCGEN_LIB )
+ if(HAVE_LIBM)
+-    target_link_libraries(bsincgen m)
++    set(BSINCGEN_LIB ${BSINCGEN_LIB} m)
+ endif(HAVE_LIBM)
++if(WIN32)
++    set(BSINCGEN_LIB ${BSINCGEN_LIB} shell32)
++endif()
++target_link_libraries(bsincgen ${BSINCGEN_LIB})

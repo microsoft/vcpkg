@@ -1,0 +1,55 @@
+diff --git a/CMake/CMakeLists.txt b/CMake/CMakeLists.txt
+index b0fc12a82..6e545edea 100644
+--- a/CMake/CMakeLists.txt
++++ b/CMake/CMakeLists.txt
+@@ -5,7 +5,7 @@
+ #############################################################
+ 
+ if(WIN32)
+-	set(MYGUI_CMAKE_DIR "CMake")
++	set(MYGUI_CMAKE_DIR "share")
+ else(WIN32)
+ 	set(MYGUI_CMAKE_DIR "lib/MYGUI/cmake")
+ endif(WIN32)
+diff --git a/CMake/Utils/MyGUIConfigTargets.cmake b/CMake/Utils/MyGUIConfigTargets.cmake
+index d1dbd016d..25c8bbac6 100644
+--- a/CMake/Utils/MyGUIConfigTargets.cmake
++++ b/CMake/Utils/MyGUIConfigTargets.cmake
+@@ -6,10 +6,10 @@ if (WIN32)
+ 	set(MYGUI_RELWDBG_PATH "/RelWithDebInfo")
+ 	set(MYGUI_MINSIZE_PATH "/MinSizeRel")
+ 	set(MYGUI_DEBUG_PATH "/Debug")
+-	set(MYGUI_LIB_RELEASE_PATH "/Release")
++	set(MYGUI_LIB_RELEASE_PATH "")
+ 	set(MYGUI_LIB_RELWDBG_PATH "/RelWithDebInfo")
+ 	set(MYGUI_LIB_MINSIZE_PATH "/MinSizeRel")
+-	set(MYGUI_LIB_DEBUG_PATH "/Debug")
++	set(MYGUI_LIB_DEBUG_PATH "")
+ 	set(MYGUI_PLUGIN_PATH "/opt")
+ elseif (UNIX)
+ 	set(MYGUI_RELEASE_PATH "")
+diff --git a/CMake/Utils/PrecompiledHeader.cmake b/CMake/Utils/PrecompiledHeader.cmake
+index a8bf3ce49..104703282 100644
+--- a/CMake/Utils/PrecompiledHeader.cmake
++++ b/CMake/Utils/PrecompiledHeader.cmake
+@@ -16,7 +16,7 @@
+ macro(use_precompiled_header TARGET HEADER_FILE SRC_FILE)
+   get_filename_component(HEADER ${HEADER_FILE} NAME)
+ 
+-  if (MSVC AND NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL "Clang")
++  if (FALSE)
+     add_definitions(/Yu"${HEADER}")
+     set_source_files_properties(${SRC_FILE}
+       PROPERTIES COMPILE_FLAGS /Yc"${HEADER}"
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index fea0bff8b..5831dfa8a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -9,6 +9,7 @@ cmake_minimum_required(VERSION 2.6)
+ set(CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE)
+ cmake_policy(SET CMP0003 NEW)
+ cmake_policy(SET CMP0011 NEW)
++cmake_policy(SET CMP0021 OLD)
+ 
+ project(MYGUI)
+ 

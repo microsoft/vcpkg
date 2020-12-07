@@ -1,4 +1,4 @@
-#include "pch.h"
+#include <vcpkg/base/lockguarded.h>
 
 #include <vcpkg/globalstate.h>
 

@@ -1,25 +1,48 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xz-mirror/xz
-    REF v5.2.4
-    SHA512 fce7dc65e77a9b89dbdd6192cb37efc39e3f2cf343f79b54d2dfcd845025dab0e1d5b0f59c264eab04e5cbaf914eeb4818d14cdaac3ae0c1c5de24418656a4b7
+    REF v5.2.5
+    SHA512 686f01cfe33e2194766a856c48668c661b25eee194a443524f87ce3f866e0eb54914075b4e00185921516c5211db8cd5d2658f4b91f4a3580508656f776f468e
     HEAD_REF master
     PATCHES
         enable-uwp-builds.patch
+        fix_config_include.patch
+        win_output_name.patch # Fix output name on Windows. Autotool build does not generate lib prefixed libraries on windows. 
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        "-DCMAKE_DEBUG_POSTFIX=d" # This was in the old vcpkg CMakeLists.txt and I don't intend to fix it all over vcpkg 
 )
-
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
 
-file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake
+set(exec_prefix "\${prefix}")
+set(libdir "\${prefix}/lib")
+set(includedir "\${prefix}/include")
+set(PACKAGE_URL https://tukaani.org/xz/)
+set(PACKAGE_VERSION 5.2.5)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    set(PTHREAD_CFLAGS -pthread)
+endif()
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  set(prefix "${CURRENT_INSTALLED_DIR}")
+  configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/liblzma.pc" @ONLY)
+endif()
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  set(prefix "${CURRENT_INSTALLED_DIR}/debug")
+  configure_file("${SOURCE_PATH}/src/liblzma/liblzma.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblzma.pc" @ONLY)
+  vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/liblzma.pc" "-llzma" "-llzmad")
+endif()
+vcpkg_fixup_pkgconfig()
+
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/liblzma)
+
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/liblzma/liblzma-config.cmake" "include(\"\${CMAKE_CURRENT_LIST_DIR}/liblzmaConfig.cmake\")")
+file(APPEND "${CURRENT_PACKAGES_DIR}/share/liblzma/liblzmaConfig.cmake"
 "
 include(\${CMAKE_ROOT}/Modules/SelectLibraryConfigurations.cmake)
 find_path(LibLZMA_INCLUDE_DIR
@@ -27,8 +50,8 @@ find_path(LibLZMA_INCLUDE_DIR
     PATH_SUFFIXES lzma
 )
 if(NOT LibLZMA_LIBRARY)
-    find_library(LibLZMA_LIBRARY_RELEASE NAMES lzma LZMA LibLZMA PATHS \${_IMPORT_PREFIX}/lib/)
-    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad LZMAd LibLZMAd PATHS \${_IMPORT_PREFIX}/debug/lib/)
+    find_library(LibLZMA_LIBRARY_RELEASE NAMES lzma LZMA LibLZMA liblzma PATHS \${_IMPORT_PREFIX}/lib/)
+    find_library(LibLZMA_LIBRARY_DEBUG NAMES lzmad LZMAd LibLZMAd lzma LZMA LibLZMA liblzma PATHS \${_IMPORT_PREFIX}/debug/lib/)
     select_library_configurations(LibLZMA)
 endif()
 set(LibLZMA_INCLUDE_DIRS \${LibLZMA_INCLUDE_DIR} CACHE PATH \"\")
@@ -68,9 +91,13 @@ set(LZMA_FOUND TRUE CACHE BOOL \"\")
 set(LIBLZMA_FOUND TRUE CACHE BOOL \"\")
 ")
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  file(APPEND ${CURRENT_PACKAGES_DIR}/share/liblzma/LibLZMAConfig.cmake "add_definitions(-DLZMA_API_STATIC)")
+file(READ ${CURRENT_PACKAGES_DIR}/include/lzma.h _contents)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "defined(LZMA_API_STATIC)" "1" _contents "${_contents}")
+else()
+    string(REPLACE "defined(LZMA_API_STATIC)" "0" _contents "${_contents}")
 endif()
+file(WRITE ${CURRENT_PACKAGES_DIR}/include/lzma.h "${_contents}")
 
 if (VCPKG_BUILD_TYPE STREQUAL debug)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include)
@@ -86,6 +113,22 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     )
 endif()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL  ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblzma RENAME copyright)
+set(TOOLS xz xzdec)
+foreach(_tool IN LISTS TOOLS)
+    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        list(REMOVE_ITEM TOOLS ${_tool})
+    endif()
+endforeach()
+if(TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(INSTALL  ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

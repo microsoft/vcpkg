@@ -1,0 +1,27 @@
+diff --git a/configure b/configure
+index e7162dbc56..0f04af2a81 100755
+--- a/configure
++++ b/configure
+@@ -6391,7 +6391,7 @@ enabled libvpx            && {
+     fi
+ }
+ 
+-enabled libwavpack        && require libwavpack wavpack/wavpack.h WavpackOpenFileOutput  -lwavpack
++enabled libwavpack        && { check_pkg_config libwavpack wavpack wavpack.h WavpackOpenFileOutput || check_lib libwavpack wavpack.h WavpackOpenFileOutput -lwavpack || check_lib libwavpack wavpack.h WavpackOpenFileOutput -llibwavpack || require libwavpack wavpack.h WavpackOpenFileOutput -lwavpackdll; }
+ enabled libwebp           && {
+     enabled libwebp_encoder      && require_pkg_config libwebp "libwebp >= 0.2.0" webp/encode.h WebPGetEncoderVersion
+     enabled libwebp_anim_encoder && check_pkg_config libwebp_anim_encoder "libwebpmux >= 0.4.0" webp/mux.h WebPAnimEncoderOptionsInit; }
+diff --git a/libavcodec/libwavpackenc.c b/libavcodec/libwavpackenc.c
+index e84b074893..9adf39861b 100644
+--- a/libavcodec/libwavpackenc.c
++++ b/libavcodec/libwavpackenc.c
+@@ -16,7 +16,7 @@
+  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+  */
+ 
+-#include <wavpack/wavpack.h>
++#include <wavpack.h>
+ #include <string.h>
+ 
+ #include "libavutil/attributes.h"
+

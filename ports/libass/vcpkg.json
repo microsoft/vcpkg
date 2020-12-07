@@ -1,0 +1,20 @@
+{
+  "name": "libass",
+  "version-string": "0.14.0",
+  "port-version": 4,
+  "description": "libass is a portable subtitle renderer for the ASS/SSA (Advanced Substation Alpha/Substation Alpha) subtitle format",
+  "homepage": "https://github.com/libass/libass",
+  "dependencies": [
+    {
+      "name": "dirent",
+      "platform": "windows"
+    },
+    {
+      "name": "fontconfig",
+      "platform": "linux"
+    },
+    "freetype",
+    "fribidi",
+    "harfbuzz"
+  ]
+}

@@ -3,8 +3,6 @@ Param(
     [Parameter(Mandatory=$True)]
     [string]$Root,
     [Parameter()]
-    [string]$DownloadsDirectory,
-    [Parameter()]
     [switch]$IgnoreErrors # allows one to just format
 )
 
@@ -14,11 +12,6 @@ if (-not (Test-Path "$Root/.vcpkg-root"))
 {
     Write-Error "The vcpkg root was not at $Root"
     throw
-}
-
-if (-not [string]::IsNullOrEmpty($DownloadsDirectory))
-{
-    $env:VCPKG_DOWNLOADS = $DownloadsDirectory
 }
 
 if (-not (Test-Path "$Root/vcpkg.exe"))
@@ -31,16 +24,21 @@ if (-not (Test-Path "$Root/vcpkg.exe"))
     }
 }
 
-& "$Root/vcpkg.exe" 'x-format-manifest' '--all'
+& "$Root/vcpkg.exe" 'format-manifest' '--all'
+if (-not $?)
+{
+    Write-Error "Failed formatting manifests; are they well-formed?"
+    throw
+}
+
 $changedFiles = & "$PSScriptRoot/Get-ChangedFiles.ps1" -Directory $portsTree
 if (-not $IgnoreErrors -and $null -ne $changedFiles)
 {
     $msg = @(
         "",
         "The formatting of the manifest files didn't match our expectation.",
-        "If your build fails here, you need to run:"
+        "See github.com/microsoft/vcpkg/blob/master/docs/maintainers/maintainer-guide.md#manifest for solution."
     )
-    $msg += "    vcpkg x-format-manifest --all"
     $msg += ""
 
     $msg += "vcpkg should produce the following diff:"

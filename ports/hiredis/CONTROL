@@ -1,5 +1,6 @@
 Source: hiredis
-Version: 2019-11-2-1
+Version: 1.0.0
+Port-Version: 0
 Homepage: https://github.com/redis/hiredis
 Description: Hiredis is a minimalistic C client library for the Redis database.
 
@@ -9,4 +10,4 @@ Build-Depends: openssl
 
 Feature: example
 Description: Build example
-Build-Depends: libevent, pthread
+Build-Depends: libevent, pthread, libuv

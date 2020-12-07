@@ -7,10 +7,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO tfussell/xlnt
-    REF 85e6878cc41d4c5ad002e961dc1fe35e41f936b6 # v1.4.0
-    SHA512 335198fbcc1b3028e38bced4ee26047047b02372b6c52727a64c0cab6db19cc31be8ac6c08e96f415875a181d6f717082220b0f63f08ef6ac194927e2184a9df
+    REF 568ac85346bc37757b0cd16464e7e1ea7656df91 # v1.5.0
+    SHA512 414d691b372934326dc0da134eb7752c27c3223b6e92b433494d0758ca657f43b66894ad54ac97a8410387a2531a573c81572daa6a0434fa023e8e29ca74331c
     HEAD_REF master
     PATCHES
+        "fix-not-found-include.patch"
         ${win_patch}
 )
 

@@ -1,11 +1,11 @@
 #include <catch2/catch.hpp>
 
+#include <vcpkg/base/hash.h>
+
 #include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <map>
-
-#include <vcpkg/base/hash.h>
 
 namespace Hash = vcpkg::Hash;
 using vcpkg::StringView;

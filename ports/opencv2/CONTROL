@@ -1,5 +1,6 @@
 Source: opencv2
-Version: 2.4.13.7-1
+Version: 2.4.13.7
+Port-Version: 3
 Build-Depends: zlib
 Description: computer vision library, version 2
 Default-Features: eigen, jpeg, opengl, png, tiff
@@ -37,7 +38,7 @@ Build-Depends: libpng
 Description: PNG support for opencv
 
 Feature: qt
-Build-Depends: qt5-base
+Build-Depends: qt5-base[core]
 Description: Qt GUI support for opencv
 
 Feature: tiff

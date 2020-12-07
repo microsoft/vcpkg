@@ -1,14 +1,15 @@
 #pragma once
 
+#include <vcpkg/base/expected.h>
+
+#include <vcpkg/packagespec.h>
+#include <vcpkg/textrowcol.h>
+
 #include <map>
 #include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>
-
-#include <vcpkg/base/expected.h>
-#include <vcpkg/packagespec.h>
-#include <vcpkg/textrowcol.h>
 
 namespace vcpkg::Parse
 {
@@ -19,11 +20,13 @@ namespace vcpkg::Parse
         std::map<std::string, std::vector<std::string>> extra_fields;
         std::map<std::string, std::string> expected_types;
         std::map<std::string, std::vector<std::string>> mutually_exclusive_fields;
+        std::vector<std::string> other_errors;
         std::string error;
 
         bool has_error() const
         {
-            return !missing_fields.empty() || !extra_fields.empty() || !expected_types.empty() || !error.empty();
+            return !missing_fields.empty() || !extra_fields.empty() || !expected_types.empty() ||
+                   !other_errors.empty() || !error.empty();
         }
     };
 

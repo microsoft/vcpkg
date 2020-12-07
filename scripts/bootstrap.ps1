@@ -57,11 +57,11 @@ while (!($vcpkgRootDir -eq "") -and !(Test-Path "$vcpkgRootDir\.vcpkg-root"))
 }
 Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 
-$vcpkgSourcesPath = "$vcpkgRootDir\toolsrc"
+$vcpkgBootstrapPath = "$vcpkgRootDir\toolsrc\windows-bootstrap"
 
-if (!(Test-Path $vcpkgSourcesPath))
+if (-not (Test-Path $vcpkgBootstrapPath))
 {
-    Write-Error "Unable to determine vcpkg sources directory. '$vcpkgSourcesPath' does not exist."
+    Write-Error "Unable to determine vcpkg build directory. '$vcpkgBootstrapPath' does not exist."
     throw
 }
 
@@ -339,7 +339,7 @@ if ($disableMetrics)
 }
 
 $platform = "x86"
-$vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x86.release"
+$vcpkgReleaseDir = "$vcpkgBootstrapPath\msbuild.x86.release"
 if($PSVersionTable.PSVersion.Major -le 2)
 {
     $architecture=(Get-WmiObject win32_operatingsystem | Select-Object osarchitecture).osarchitecture
@@ -356,7 +356,7 @@ if ($win64)
     }
 
     $platform = "x64"
-    $vcpkgReleaseDir = "$vcpkgSourcesPath\msbuild.x64.release"
+    $vcpkgReleaseDir = "$vcpkgBootstrapPath\msbuild.x64.release"
 }
 
 if ($architecture -like "*64*")
@@ -379,7 +379,7 @@ $arguments = (
 "/verbosity:minimal",
 "/m",
 "/nologo",
-"`"$vcpkgSourcesPath\dirs.proj`"") -join " "
+"`"$vcpkgBootstrapPath\vcpkg.vcxproj`"") -join " "
 
 function vcpkgInvokeCommandClean()
 {
@@ -431,10 +431,5 @@ Read more about vcpkg telemetry at docs/about/privacy.md
 Write-Verbose "Placing vcpkg.exe in the correct location"
 
 Copy-Item "$vcpkgReleaseDir\vcpkg.exe" "$vcpkgRootDir\vcpkg.exe"
-
-if (-not $disableMetrics)
-{
-    Copy-Item "$vcpkgReleaseDir\vcpkgmetricsuploader.exe" "$vcpkgRootDir\scripts\vcpkgmetricsuploader.exe"
-}
 
 Remove-Item "$vcpkgReleaseDir" -Force -Recurse -ErrorAction SilentlyContinue

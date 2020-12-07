@@ -1,0 +1,49 @@
+diff --git a/physx/source/lowlevelaabb/src/BpBroadPhaseMBP.cpp b/physx/source/lowlevelaabb/src/BpBroadPhaseMBP.cpp
+index f19ba271..51580049 100644
+--- a/physx/source/lowlevelaabb/src/BpBroadPhaseMBP.cpp
++++ b/physx/source/lowlevelaabb/src/BpBroadPhaseMBP.cpp
+@@ -90,6 +90,8 @@ using namespace Cm;
+ 		return ir;
+ 	}*/
+ 
++namespace internalMBP {
++
+ struct RegionHandle : public Ps::UserAllocated
+ {
+ 	PxU16	mHandle;			// Handle from region
+@@ -582,6 +584,10 @@ struct RegionData : public Ps::UserAllocated
+ 	#endif
+ #endif
+ 
++}
++
++using namespace internalMBP;
++
+ ///////////////////////////////////////////////////////////////////////////////
+ 
+ MBP_PairManager::MBP_PairManager() :
+diff --git a/physx/source/lowlevelaabb/src/BpBroadPhaseMBP.h b/physx/source/lowlevelaabb/src/BpBroadPhaseMBP.h
+index cf15f6d3..90f43e47 100644
+--- a/physx/source/lowlevelaabb/src/BpBroadPhaseMBP.h
++++ b/physx/source/lowlevelaabb/src/BpBroadPhaseMBP.h
+@@ -35,8 +35,10 @@
+ #include "BpBroadPhaseMBPCommon.h"
+ #include "BpMBPTasks.h"
+ 
++namespace internalMBP {
+ 	class MBP;
+-	
++}
++
+ namespace physx
+ {
+ namespace Bp
+@@ -84,7 +86,7 @@ namespace Bp
+ 				MBPUpdateWorkTask			mMBPUpdateWorkTask;
+ 				MBPPostUpdateWorkTask		mMBPPostUpdateWorkTask;
+ 
+-				MBP*						mMBP;		// PT: TODO: aggregate
++				internalMBP::MBP*			mMBP;		// PT: TODO: aggregate
+ 
+ 				MBP_Handle*					mMapping;
+ 				PxU32						mCapacity;

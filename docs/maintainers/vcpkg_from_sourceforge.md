@@ -42,6 +42,11 @@ The REPO is `soxr`, REF is not exist, and the FILENAME is `soxr-0.1.3-Source.tar
 ### SHA512
 The SHA512 hash that should match the archive.
 
+### WORKING_DIRECTORY
+If specified, the archive will be extracted into the working directory instead of `${CURRENT_BUILDTREES_DIR}/src/`.
+
+Note that the archive will still be extracted into a subfolder underneath that directory (`${WORKING_DIRECTORY}/${REF}-${HASH}/`).
+
 ### PATCHES
 A list of patches to be applied to the extracted sources.
 

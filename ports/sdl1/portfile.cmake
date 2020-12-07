@@ -54,11 +54,13 @@ else()
     message("libgles2-mesa-dev must be installed before sdl1 can build. Install it with \"apt install libgles2-mesa-dev\".")
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}     
+        SOURCE_PATH ${SOURCE_PATH}
     )
     
     vcpkg_install_make()
-    vcpkg_fixup_pkgconfig(IGNORE_FLAGS -Wl,-rpath,\${libdir} SYSTEM_LIBRARIES -lm -ldl -lpthread)
+    vcpkg_fixup_pkgconfig(IGNORE_FLAGS -Wl,-rpath,${CURRENT_PACKAGES_DIR}/lib/pkgconfig/../../lib 
+                                       -Wl,-rpath,${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/../../lib
+                          SYSTEM_LIBRARIES pthread)
     
     file(GLOB SDL1_TOOLS "${CURRENT_PACKAGES_DIR}/bin/*")
     foreach (SDL1_TOOL ${SDL1_TOOLS})

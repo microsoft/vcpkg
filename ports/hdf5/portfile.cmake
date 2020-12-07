@@ -1,3 +1,5 @@
+# highfive should be updated together with hdf5
+
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(

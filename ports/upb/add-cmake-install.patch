@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 836c5ff..6eb8bb5 100644
+index 4dd6454..eda6a72 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -8,7 +8,7 @@ else()
@@ -11,27 +11,25 @@ index 836c5ff..6eb8bb5 100644
  cmake_policy(SET CMP0048 NEW)
  
  project(upb)
-@@ -59,7 +59,7 @@ elseif(UNIX)
- endif()
+@@ -62,6 +62,7 @@ enable_testing()
  
- enable_testing()
--
+ add_library(port
+   upb/port.c)
 +add_library(descriptor_upbproto INTERFACE)
  add_library(upb
    upb/decode.c
    upb/encode.c
-@@ -136,12 +136,35 @@ target_link_libraries(upb_cc_bindings INTERFACE
-   descriptor_upbproto
+@@ -154,6 +155,7 @@ target_link_libraries(upb_cc_bindings INTERFACE
    handlers
+   port
    upb)
--add_library(upb_test
 +if(ENABLE_TESTING)
-+add_executable(upb_test
+ add_library(upb_test
    tests/testmain.cc
    tests/test_util.h
-   tests/upb_test.h)
- target_link_libraries(upb_test
+@@ -162,5 +164,28 @@ target_link_libraries(upb_test
    handlers
+   port
    upb)
 +endif()
  
@@ -41,8 +39,9 @@ index 836c5ff..6eb8bb5 100644
 +  DESTINATION include
 +  FILES_MATCHING
 +  PATTERN "*.h"
++  PATTERN "*.hpp"
 +  PATTERN "*.inc"
-+  PATTERN "*.int.h" EXCLUDE
++  PATTERN "*.int.h"
 +)
 +target_include_directories(upb PUBLIC $<INSTALL_INTERFACE:include>)
 +install(TARGETS
@@ -50,10 +49,10 @@ index 836c5ff..6eb8bb5 100644
 +  upb_cc_bindings
 +  upb_json
 +  upb_pb
++  port
 +  table
 +  descriptor_upbproto
 +  handlers
-+  legacy_msg_reflection
 +  reflection
 +  EXPORT upb-config
 +)

@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #if defined(_WIN32)
 
 #include <vcpkg/base/sortedvector.h>
@@ -7,6 +5,7 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/visualstudio.h>
 
 namespace vcpkg::VisualStudio
@@ -67,7 +66,8 @@ namespace vcpkg::VisualStudio
 
         std::string to_string() const
         {
-            return Strings::format("%s, %s, %s", root_path.u8string(), version, release_type_to_string(release_type));
+            return Strings::format(
+                "%s, %s, %s", fs::u8string(root_path), version, release_type_to_string(release_type));
         }
 
         std::string major_version() const { return version.substr(0, 2); }
@@ -85,7 +85,7 @@ namespace vcpkg::VisualStudio
         if (fs.exists(vswhere_exe))
         {
             const auto code_and_output = System::cmd_execute_and_capture_output(
-                Strings::format(R"("%s" -all -prerelease -legacy -products * -format xml)", vswhere_exe.u8string()));
+                Strings::format(R"("%s" -all -prerelease -legacy -products * -format xml)", fs::u8string(vswhere_exe)));
             Checks::check_exit(VCPKG_LINE_INFO,
                                code_and_output.exit_code == 0,
                                "Running vswhere.exe failed with message:\n%s",
@@ -234,7 +234,7 @@ namespace vcpkg::VisualStudio
 
                 for (const fs::path& subdir : msvc_subdirectories)
                 {
-                    auto toolset_version_full = subdir.filename().u8string();
+                    auto toolset_version_full = fs::u8string(subdir.filename());
                     auto toolset_version_prefix = toolset_version_full.substr(0, 4);
                     CStringView toolset_version;
                     std::string vcvars_option;
@@ -351,7 +351,7 @@ namespace vcpkg::VisualStudio
                 "Warning: The following VS instances are excluded because the English language pack is unavailable.\n");
             for (const Toolset& toolset : excluded_toolsets)
             {
-                System::print2("    ", toolset.visual_studio_root_path.u8string(), '\n');
+                System::print2("    ", fs::u8string(toolset.visual_studio_root_path), '\n');
             }
             System::print2(System::Color::warning, "Please install the English language pack.\n");
         }
@@ -362,7 +362,7 @@ namespace vcpkg::VisualStudio
             System::print2("The following paths were examined:\n");
             for (const fs::path& path : paths_examined)
             {
-                System::print2("    ", path.u8string(), '\n');
+                System::print2("    ", fs::u8string(path), '\n');
             }
             Checks::exit_fail(VCPKG_LINE_INFO);
         }

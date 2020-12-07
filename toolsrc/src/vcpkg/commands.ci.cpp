@@ -1,21 +1,24 @@
-#include "pch.h"
-
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/build.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/cmakevars.h>
+#include <vcpkg/commands.ci.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/paragraphs.h>
 #include <vcpkg/platform-expression.h>
+#include <vcpkg/portfileprovider.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 using namespace vcpkg;
@@ -81,11 +84,11 @@ namespace vcpkg::Commands::CI
         Install::InstallSummary summary;
     };
 
-    static constexpr StringLiteral OPTION_DRY_RUN = "--dry-run";
-    static constexpr StringLiteral OPTION_EXCLUDE = "--exclude";
-    static constexpr StringLiteral OPTION_FAILURE_LOGS = "--failure-logs";
-    static constexpr StringLiteral OPTION_XUNIT = "--x-xunit";
-    static constexpr StringLiteral OPTION_RANDOMIZE = "--x-randomize";
+    static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
+    static constexpr StringLiteral OPTION_EXCLUDE = "exclude";
+    static constexpr StringLiteral OPTION_FAILURE_LOGS = "failure-logs";
+    static constexpr StringLiteral OPTION_XUNIT = "x-xunit";
+    static constexpr StringLiteral OPTION_RANDOMIZE = "x-randomize";
 
     static constexpr std::array<CommandSetting, 3> CI_SETTINGS = {
         {{OPTION_EXCLUDE, "Comma separated list of ports to skip"},
@@ -329,6 +332,8 @@ namespace vcpkg::Commands::CI
 
         {
             vcpkg::System::BufferedPrint stdout_print;
+            auto precheck_results = binary_provider_precheck(paths, action_plan, binaryprovider);
+
             for (auto&& action : action_plan.install_actions)
             {
                 auto p = &action;
@@ -336,13 +341,13 @@ namespace vcpkg::Commands::CI
                 ret->features.emplace(action.spec, action.feature_list);
                 if (auto scfl = p->source_control_file_location.get())
                 {
-                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), *scfl);
+                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), scfl->clone());
                     emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
 
-                    p->build_options = vcpkg::Build::default_build_package_options;
+                    p->build_options = vcpkg::Build::backcompat_prohibiting_package_options;
                 }
 
-                auto precheck_result = binaryprovider.precheck(paths, action);
+                auto precheck_result = precheck_results.at(&action);
                 bool b_will_build = false;
 
                 std::string state;
@@ -404,7 +409,7 @@ namespace vcpkg::Commands::CI
         if (args.binary_caching_enabled())
         {
             binaryproviderStorage =
-                create_binary_provider_from_configs(paths, args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
+                create_binary_provider_from_configs(args.binary_sources).value_or_exit(VCPKG_LINE_INFO);
         }
 
         IBinaryProvider& binaryprovider = binaryproviderStorage ? *binaryproviderStorage : null_binary_provider();
@@ -457,9 +462,7 @@ namespace vcpkg::Commands::CI
         XunitTestResults xunitTestResults;
 
         std::vector<std::string> all_ports =
-            Util::fmap(provider.load_all_control_files(), [](const SourceControlFileLocation*& scfl) -> std::string {
-                return scfl->source_control_file.get()->core_paragraph->name;
-            });
+            Util::fmap(provider.load_all_control_files(), Paragraphs::get_name_of_control_file);
         std::vector<TripletAndSummary> results;
         auto timer = Chrono::ElapsedTimer::create_started();
         for (Triplet triplet : triplets)
@@ -511,18 +514,19 @@ namespace vcpkg::Commands::CI
                 }
                 else
                 {
-                    action.build_options = vcpkg::Build::default_build_package_options;
+                    action.build_options = vcpkg::Build::backcompat_prohibiting_package_options;
                 }
             }
 
             if (is_dry_run)
             {
-                Dependencies::print_plan(action_plan, true, paths.ports);
+                Dependencies::print_plan(action_plan, true, paths.builtin_ports_directory());
             }
             else
             {
                 auto collection_timer = Chrono::ElapsedTimer::create_started();
-                auto summary = Install::perform(action_plan,
+                auto summary = Install::perform(args,
+                                                action_plan,
                                                 Install::KeepGoing::YES,
                                                 paths,
                                                 status_db,
@@ -577,5 +581,12 @@ namespace vcpkg::Commands::CI
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void CICommand::perform_and_exit(const VcpkgCmdArguments& args,
+                                     const VcpkgPaths& paths,
+                                     Triplet default_triplet) const
+    {
+        CI::perform_and_exit(args, paths, default_triplet);
     }
 }

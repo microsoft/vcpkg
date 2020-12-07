@@ -6,20 +6,24 @@ namespace vcpkg::Test
 {
     struct MockCMakeVarProvider : CMakeVars::CMakeVarProvider
     {
-        void load_generic_triplet_vars(Triplet triplet) const override { generic_triplet_vars[triplet] = {}; }
+        using SMap = std::unordered_map<std::string, std::string>;
+        void load_generic_triplet_vars(Triplet triplet) const override
+        {
+            generic_triplet_vars.emplace(triplet, SMap{});
+        }
 
         void load_dep_info_vars(Span<const PackageSpec> specs) const override
         {
             for (auto&& spec : specs)
-                dep_info_vars[spec] = {};
+                dep_info_vars.emplace(spec, SMap{});
         }
 
         void load_tag_vars(Span<const FullPackageSpec> specs,
                            const PortFileProvider::PortFileProvider& port_provider) const override
         {
             for (auto&& spec : specs)
-                tag_vars[spec.package_spec] = {};
-            Util::unused(port_provider);
+                tag_vars.emplace(spec.package_spec, SMap{});
+            (void)(port_provider);
         }
 
         Optional<const std::unordered_map<std::string, std::string>&> get_generic_triplet_vars(

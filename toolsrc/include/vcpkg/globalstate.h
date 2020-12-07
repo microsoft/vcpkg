@@ -1,10 +1,11 @@
 #pragma once
 
-#include <atomic>
-#include <string>
+#include <vcpkg/base/fwd/lockguarded.h>
 
 #include <vcpkg/base/chrono.h>
-#include <vcpkg/base/util.h>
+
+#include <atomic>
+#include <string>
 
 namespace vcpkg
 {

@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO martinus/robin-hood-hashing
-    REF 3.7.0
-    SHA512 3dd7c7ace50bd16579ef9db8f9a89e1b2fd8406d7f3af6a4cedb674ea14303bd70332da403b87b2f0fb3c7f415dd93e9a7b330cb86ca2f58d5916ca42666a8e5
+    REF 3.9.1
+    SHA512 dbd614b772171d3e1d47e01513b3aa56d086a0530bad80931dbee4c3674e08c31cb023ac2cd3e9cadd86db76856ccc4c7a0fa9f7cd653044cd68c82e1a4c9c9c
     HEAD_REF master
 )
 

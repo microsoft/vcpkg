@@ -8,6 +8,6 @@ index d54583e8b..1921185f8 100644
  class GLContext;
 -
 +typedef void *GLeglImageOES;
+ typedef void(GL_BINDING_CALL* glActiveShaderProgramProc)(GLuint pipeline,
+                                                          GLuint program);
  typedef void(GL_BINDING_CALL* glActiveTextureProc)(GLenum texture);
- typedef void(GL_BINDING_CALL* glApplyFramebufferAttachmentCMAAINTELProc)(void);
- typedef void(GL_BINDING_CALL* glAttachShaderProc)(GLuint program,

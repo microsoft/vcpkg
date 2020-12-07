@@ -2,8 +2,19 @@ include(qt_fix_makefile_install)
 
 function(install_qt)
     if(CMAKE_HOST_WIN32)
-        vcpkg_find_acquire_program(JOM)
-        set(INVOKE "${JOM}" /J ${VCPKG_CONCURRENCY})
+        if (VCPKG_QMAKE_USE_NMAKE)
+            find_program(NMAKE nmake REQUIRED)
+            set(INVOKE "${NMAKE}")
+            set(INVOKE_SINGLE "${NMAKE}")
+            get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
+            set(PATH_GLOBAL "$ENV{PATH}")
+            set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
+            set(ENV{CL} "$ENV{CL} /MP${VCPKG_CONCURRENCY}")
+        else()
+            vcpkg_find_acquire_program(JOM)
+            set(INVOKE "${JOM}" /J ${VCPKG_CONCURRENCY})
+            set(INVOKE_SINGLE "${JOM}" /J 1)
+        endif()
     else()
         find_program(MAKE make)
         set(INVOKE "${MAKE}" -j${VCPKG_CONCURRENCY})
@@ -62,8 +73,9 @@ function(install_qt)
         endif()
 
         message(STATUS "Building ${_build_triplet}")
-        vcpkg_execute_required_process(
+        vcpkg_execute_build_process(
             COMMAND ${INVOKE}
+            NO_PARALLEL_COMMAND ${INVOKE_SINGLE}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${_build_triplet}
             LOGNAME build-${_build_triplet}
         )

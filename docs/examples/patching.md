@@ -163,9 +163,9 @@ To be completely sure this works from scratch, we need to remove the package and
 PS D:\src\vcpkg> vcpkg remove libpng:x64-uwp
 Package libpng:x64-uwp was successfully removed
 ```
-and complete delete the building directory: D:\src\vcpkg\buildtrees\libpng
 
 Now we try a fresh, from scratch install.
+
 ```no-highlight
 PS D:\src\vcpkg> vcpkg install libpng:x64-uwp
 Computing installation plan...
@@ -173,36 +173,48 @@ The following packages will be built and installed:
     libpng[core]:x64-uwp
 Starting package 1/1: libpng:x64-uwp
 Building package libpng[core]:x64-uwp...
--- Using cached C:/src/vcpkg/downloads/glennrp-libpng-v1.6.37.tar.gz
--- Cleaning sources at C:/src/vcpkg/buildtrees/libpng/src/v1.6.37-c993153cdf.clean. Pass --editable to vcpkg to reuse sources.
--- Extracting source C:/src/vcpkg/downloads/glennrp-libpng-v1.6.37.tar.gz
--- Applying patch use-abort-on-all-platforms.patch
--- Using source at C:/src/vcpkg/buildtrees/libpng/src/v1.6.37-c993153cdf.clean
+Could not locate cached archive: C:\Users\me\AppData\Local\vcpkg/archives\f4\f44b54f818f78b9a4ccd34b3666f566f94286850.zip
+-- Using cached D:/src/vcpkg/downloads/glennrp-libpng-v1.6.37.tar.gz
+-- Extracting source D:/src/vcpkg/downloads/glennrp-libpng-v1.6.37.tar.gz
+-- Applying patch use_abort.patch
+-- Applying patch cmake.patch
+-- Applying patch pkgconfig.patch
+-- Applying patch pkgconfig.2.patch
+-- Using source at D:/src/vcpkg/buildtrees/libpng/src/v1.6.37-10db9f58e4.clean
 -- Configuring x64-uwp
 -- Building x64-uwp-dbg
 -- Building x64-uwp-rel
--- Installing: C:/src/vcpkg/packages/libpng_x64-uwp/share/libpng/copyright
+-- Fixing pkgconfig file: D:/src/vcpkg/packages/libpng_x64-uwp/lib/pkgconfig/libpng.pc
+-- Fixing pkgconfig file: D:/src/vcpkg/packages/libpng_x64-uwp/lib/pkgconfig/libpng16.pc
+-- Fixing pkgconfig file: D:/src/vcpkg/packages/libpng_x64-uwp/debug/lib/pkgconfig/libpng.pc
+-- Fixing pkgconfig file: D:/src/vcpkg/packages/libpng_x64-uwp/debug/lib/pkgconfig/libpng16.pc
+-- Installing: D:/src/vcpkg/packages/libpng_x64-uwp/share/libpng/copyright
 -- Performing post-build validation
 -- Performing post-build validation done
+Stored binary cache: C:\Users\me\AppData\Local\vcpkg/archives\f4\f44b54f818f78b9a4ccd34b3666f566f94286850.zip
 Building package libpng[core]:x64-uwp... done
 Installing package libpng[core]:x64-uwp...
 Installing package libpng[core]:x64-uwp... done
-Elapsed time for package libpng:x64-uwp: 15.31 s
+Elapsed time for package libpng:x64-uwp: 11.94 s
 
-Total elapsed time: 15.35 s
+Total elapsed time: 11.95 s
 
 The package libpng:x64-uwp provides CMake targets:
 
     find_package(libpng CONFIG REQUIRED)
     target_link_libraries(main PRIVATE png)
-
 ```
 
-Finally, to fully commit and publish the changes, we need to bump the internal release number and add the patch file to source control, then make a Pull Request!
+Finally, to fully commit and publish the changes, we need to bump the port version in `vcpkg.json`,
+and add the patch file to source control, then make a Pull Request!
 
-```no-highlight
-# ports\libpng\CONTROL
-Source: libpng
-Version: 1.6.37-1
-Build-Depends: zlib
+```json
+{
+  "name": "libpng",
+  "version": "1.6.37",
+  "port-version": 1,
+  "dependencies": [
+    "zlib"
+  ]
+}
 ```

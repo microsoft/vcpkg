@@ -14,8 +14,8 @@ index 4aa5dad46..cee6d2882 100644
  
          isEmpty(CMAKE_STATIC_TYPE) {
              CMAKE_PLUGIN_LOCATION_RELEASE = $$PLUGIN_TYPE/$${CMAKE_QT_STEM}.dll
-@@ -294,6 +294,7 @@ CMAKE_INTERFACE_QT5_MODULE_DEPS = $$join(aux_lib_deps, ";")
- CMAKE_MODULE_PLUGIN_TYPES = $$join(QT.$${MODULE}.plugin_types, ";")
+@@ -295,6 +295,7 @@ CMAKE_INTERFACE_QT5_MODULE_DEPS = $$join(aux_lib_deps, ";")
+ equals(TEMPLATE, aux): CMAKE_FEATURE_PROPERTY_PREFIX = "INTERFACE_"
  
  mac {
 +    CMAKE_FIND_OTHER_LIBRARY_BUILD = "true"
@@ -31,7 +31,7 @@ index 4aa5dad46..cee6d2882 100644
  
      CMAKE_LIB_FILE_LOCATION_DEBUG = $${CMAKE_QT_STEM}$${debug_suffix}.dll
      CMAKE_LIB_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.dll
-@@ -340,6 +340,7 @@ mac {
+@@ -342,6 +342,7 @@ mac {
          CMAKE_IMPLIB_FILE_LOCATION_RELEASE = $${CMAKE_QT_STEM}.lib
      }
  } else {

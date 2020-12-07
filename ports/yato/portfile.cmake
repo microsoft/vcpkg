@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_bitbucket(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alexey_gruzdev/yato

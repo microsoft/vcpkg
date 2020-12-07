@@ -1,11 +1,11 @@
 Source: ceres
-Version: 1.14.0-7
+Version: 2.0.0
 Build-Depends: glog, eigen3
 Homepage: https://github.com/ceres-solver/ceres-solver
 Description: non-linear optimization package
 
 Feature: lapack
-Build-Depends: clapack (!osx)
+Build-Depends: lapack
 Description: Use Lapack in Ceres
 
 Feature: suitesparse

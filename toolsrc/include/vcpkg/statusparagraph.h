@@ -1,8 +1,10 @@
 #pragma once
 
-#include <map>
+#include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/binaryparagraph.h>
+
+#include <map>
 
 namespace vcpkg
 {
@@ -61,4 +63,6 @@ namespace vcpkg
         const StatusParagraph* core;
         std::vector<const StatusParagraph*> features;
     };
+
+    Json::Value serialize_ipv(const InstalledPackageView& ipv, const VcpkgPaths& paths);
 }

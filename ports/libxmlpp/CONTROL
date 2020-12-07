@@ -1,4 +1,5 @@
 Source: libxmlpp
-Version: 2.40.1-5
+Version: 2.40.1
+Port-Version: 6
 Description: a C++ wrapper for the libxml XML parser library.
 Build-Depends: libxml2, glibmm

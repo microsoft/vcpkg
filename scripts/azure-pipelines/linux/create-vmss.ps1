@@ -220,13 +220,15 @@ Write-Progress `
   -Status 'Running provisioning script provision-image.sh in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-Invoke-AzVMRunCommand `
+$ProvisionImageResult = Invoke-AzVMRunCommand `
   -ResourceGroupName $ResourceGroupName `
   -VMName $ProtoVMName `
   -CommandId 'RunShellScript' `
   -ScriptPath "$PSScriptRoot\provision-image.sh" `
   -Parameter @{StorageAccountName=$StorageAccountName; `
     StorageAccountKey=$StorageAccountKey;}
+
+Write-Host "provision-image.sh output: $($ProvisionImageResult.value.Message)"
 
 ####################################################################################################
 Write-Progress `

@@ -1,11 +1,11 @@
 #pragma once
 
+#include <vcpkg/base/stringview.h>
+
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
 #include <string>
-
-#include <vcpkg/base/stringview.h>
 
 namespace vcpkg
 {

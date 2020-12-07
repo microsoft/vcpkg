@@ -1,8 +1,11 @@
-#include <string>
-#include <vector>
+#pragma once
+
+#include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/system.process.h>
-#include <vcpkg/vcpkgpaths.h>
+
+#include <string>
+#include <vector>
 
 namespace vcpkg
 {

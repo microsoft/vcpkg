@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -7,8 +5,8 @@ vcpkg_find_acquire_program(PYTHON3)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/qpid-proton
-    REF 77947c047f24fc7d0ddd6ba41fa14d3e8ccb3f49 # 0.30.0
-    SHA512 21711081ae6fe5f791039a6295f652370e1762587b16be4fa12f5a3b4a29f6b5aee62ff25e96303ac82ba360a0682c7e92aae4419e81f9a3cf14c98fcd34b489 
+    REF dc244b1f7e886883a2bb416407f42ba55d0f5f42 # 0.32.0
+    SHA512 19f191dd206fd43a8f5b8db95f6ada57bd60b93eb907cf32f463c23cfe8c5f4914c6f4750ebde50c970387fb62baf4451279803eeb000bc8bb5c200692e5d1d7 
     HEAD_REF next
 )
 

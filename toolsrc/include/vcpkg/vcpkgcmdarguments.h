@@ -1,14 +1,17 @@
 #pragma once
 
-#include <memory>
-#include <unordered_map>
-#include <unordered_set>
-#include <vector>
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/stringliteral.h>
+
+#include <memory>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
 
 namespace vcpkg
 {
@@ -18,8 +21,6 @@ namespace vcpkg
         std::unordered_map<std::string, std::string> settings;
         std::unordered_map<std::string, std::vector<std::string>> multisettings;
     };
-
-    struct VcpkgPaths;
 
     struct CommandSwitch
     {
@@ -97,6 +98,14 @@ namespace vcpkg
         std::string m_str;
     };
 
+    struct FeatureFlagSettings
+    {
+        bool registries;
+        bool compiler_tracking;
+        bool binary_caching;
+        bool versions;
+    };
+
     struct VcpkgCmdArguments
     {
         static VcpkgCmdArguments create_from_command_line(const Files::Filesystem& fs,
@@ -130,13 +139,18 @@ namespace vcpkg
         constexpr static StringLiteral TRIPLET_ENV = "VCPKG_DEFAULT_TRIPLET";
         constexpr static StringLiteral TRIPLET_ARG = "triplet";
         std::unique_ptr<std::string> triplet;
+        constexpr static StringLiteral OVERLAY_PORTS_ENV = "VCPKG_OVERLAY_PORTS";
         constexpr static StringLiteral OVERLAY_PORTS_ARG = "overlay-ports";
         std::vector<std::string> overlay_ports;
+        constexpr static StringLiteral OVERLAY_TRIPLETS_ENV = "VCPKG_OVERLAY_TRIPLETS";
         constexpr static StringLiteral OVERLAY_TRIPLETS_ARG = "overlay-triplets";
         std::vector<std::string> overlay_triplets;
 
-        constexpr static StringLiteral BINARY_SOURCES_ARG = "x-binarysource";
+        constexpr static StringLiteral BINARY_SOURCES_ARG = "binarysource";
         std::vector<std::string> binary_sources;
+
+        constexpr static StringLiteral CMAKE_SCRIPT_ARG = "x-cmake-args";
+        std::vector<std::string> cmake_args;
 
         constexpr static StringLiteral DEBUG_SWITCH = "debug";
         Optional<bool> debug = nullopt;
@@ -148,6 +162,16 @@ namespace vcpkg
         Optional<bool> disable_metrics = nullopt;
         constexpr static StringLiteral PRINT_METRICS_SWITCH = "printmetrics";
         Optional<bool> print_metrics = nullopt;
+
+        constexpr static StringLiteral WAIT_FOR_LOCK_SWITCH = "x-wait-for-lock";
+        Optional<bool> wait_for_lock = nullopt;
+
+        constexpr static StringLiteral IGNORE_LOCK_FAILURES_SWITCH = "x-ignore-lock-failures";
+        constexpr static StringLiteral IGNORE_LOCK_FAILURES_ENV = "X_VCPKG_IGNORE_LOCK_FAILURES";
+        Optional<bool> ignore_lock_failures = nullopt;
+
+        constexpr static StringLiteral JSON_SWITCH = "x-json";
+        Optional<bool> json = nullopt;
 
         // feature flags
         constexpr static StringLiteral FEATURE_FLAGS_ENV = "VCPKG_FEATURE_FLAGS";
@@ -162,9 +186,29 @@ namespace vcpkg
         Optional<bool> compiler_tracking = nullopt;
         constexpr static StringLiteral MANIFEST_MODE_FEATURE = "manifests";
         Optional<bool> manifest_mode = nullopt;
+        constexpr static StringLiteral REGISTRIES_FEATURE = "registries";
+        Optional<bool> registries_feature = nullopt;
+        constexpr static StringLiteral VERSIONS_FEATURE = "versions";
+        Optional<bool> versions_feature = nullopt;
 
-        bool binary_caching_enabled() const { return binary_caching.value_or(false); }
-        bool compiler_tracking_enabled() const { return compiler_tracking.value_or(false); }
+        constexpr static StringLiteral RECURSIVE_DATA_ENV = "VCPKG_X_RECURSIVE_DATA";
+
+        bool binary_caching_enabled() const { return binary_caching.value_or(true); }
+        bool compiler_tracking_enabled() const { return compiler_tracking.value_or(true); }
+        bool registries_enabled() const { return registries_feature.value_or(false); }
+        bool versions_enabled() const { return versions_feature.value_or(false); }
+        FeatureFlagSettings feature_flag_settings() const
+        {
+            FeatureFlagSettings f;
+            f.binary_caching = binary_caching_enabled();
+            f.compiler_tracking = compiler_tracking_enabled();
+            f.registries = registries_enabled();
+            f.versions = versions_enabled();
+            return f;
+        }
+
+        bool output_json() const { return json.value_or(false); }
+        bool is_recursive_invocation() const { return m_is_recursive_invocation; }
 
         std::string command;
         std::vector<std::string> command_arguments;
@@ -175,9 +219,12 @@ namespace vcpkg
 
         void check_feature_flag_consistency() const;
 
+        void debug_print_feature_flags() const;
         void track_feature_flag_metrics() const;
 
     private:
-        std::unordered_map<std::string, Optional<std::vector<std::string>>> optional_command_arguments;
+        bool m_is_recursive_invocation = false;
+        std::unordered_set<std::string> command_switches;
+        std::unordered_map<std::string, std::vector<std::string>> command_options;
     };
 }

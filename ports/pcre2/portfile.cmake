@@ -4,6 +4,7 @@ set(PATCHES
         pcre2-10.35_fix-space.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2588
         pcre2-10.35_fix-uwp.patch
         pcre2-10.35_fix_postfix_for_debug_Windows_builds.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2600
+        pcre2-10.35_add_check_for_Intel_CET.patch # Upstream: https://bugs.exim.org/show_bug.cgi?id=2578
 )
 
 vcpkg_download_distfile(ARCHIVE
@@ -57,12 +58,6 @@ else()
     string(REPLACE "defined(PCRE2_STATIC)" "0" PCRE2_H "${PCRE2_H}")
 endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/pcre2.h "${PCRE2_H}")
-
-# don't install POSIX wrapper
-file(REMOVE ${CURRENT_PACKAGES_DIR}/include/pcre2posix.h)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/pcre2-posix.lib ${CURRENT_PACKAGES_DIR}/debug/lib/pcre2-posixd.lib)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/pcre2-posix.dll ${CURRENT_PACKAGES_DIR}/debug/bin/pcre2-posixd.dll)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libpcre2-posix.pc ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libpcre2-posix.pc)
 
 vcpkg_fixup_pkgconfig()
 
