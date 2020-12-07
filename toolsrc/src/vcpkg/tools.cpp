@@ -4,6 +4,7 @@
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/stringview.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
@@ -383,8 +384,27 @@ Type 'NuGet help <command>' for help on a specific command.
 #endif
         }
 
-        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        virtual Optional<std::string> get_version(const VcpkgPaths& paths, const fs::path& path_to_exe) const override
         {
+#if defined(_WIN32)
+            // Require gzip.exe available within the git distribution
+            const auto& fs = paths.get_filesystem();
+            const auto gzip = fs::u8path("usr/bin/gzip.exe");
+            if (!fs.exists(path_to_exe.parent_path() / gzip))
+            {
+                if (!fs.exists(path_to_exe.parent_path().parent_path() / gzip))
+                {
+                    if (!fs.exists(path_to_exe.parent_path().parent_path().parent_path() / gzip))
+                    {
+                        Debug::print("Rejecting ", fs::u8string(path_to_exe), " due to missing gzip.exe\n");
+                        return nullopt;
+                    }
+                }
+            }
+#else
+            (void)paths;
+#endif
+
             const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
             const auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
