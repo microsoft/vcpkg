@@ -1100,6 +1100,11 @@ namespace vcpkg::Build
     {
         auto& fs = paths.get_filesystem();
         auto& spec = action.spec;
+        if (action.installed_package.has_value() && !action.source_control_file_location.has_value())
+        {
+            System::print2("Package ", spec, " is already installed.\n");
+            return {BuildResult::EXCLUDED};
+        }
         const std::string& name = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
                                       .source_control_file->core_paragraph->name;
 
