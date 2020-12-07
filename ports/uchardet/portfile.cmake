@@ -2,7 +2,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://gitlab.freedesktop.org/uchardet/uchardet
     REF 8681fc060ea07f646434cd2d324e4a5aa7c495c4
-    SHA512 611de937f7f5542979e0c95f23a7e641db533613a1df71b059cadacd517197c9428d53f6b0aedc3d07b44e290b05b73152c35d535c85f6b3a3b0d358d5c18bc2
+    SHA512 4fe974b8ec2ffe27050cbf39a0abe2aed0ebb97a2df75680f385014137aad24a29c899e5ea3e8168004978c571e8b375ea02908b0b0de0e59cf9fbb83c397792
 )
 
 vcpkg_check_features(

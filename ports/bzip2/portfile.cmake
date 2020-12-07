@@ -2,7 +2,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://sourceware.org/git/bzip2.git
     REF 75a94bea3918e612b879d6a11ca64b8689526147 # REFERENCE BZIP2 VERSION 1.0.8
-    SHA512 dd5dadbfc2c03f3ec8452ebda5bdafc901be4ccf182449cbcad64317d550586b088fb0bf287ab18df313ddb91fdc67d3075fd52afc54927a194695b93cddf6fd
+    SHA512 5cba9ad952dfe1010261ec424b471e046548244287c95721dc6040396dbc5b64060c0d81c2508fa88cd6998e564ce03698ade4b6d8db61398a6722e26c32af97
     PATCHES
         fix-import-export-macros.patch
 )

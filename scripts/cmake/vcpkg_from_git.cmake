@@ -74,7 +74,7 @@ to the call to determine the correct actual hash.")
   # using .tar.gz instead of .zip because the hash of the latter is affected by timezone.
   string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
   set(TEMP_ARCHIVE "${DOWNLOADS}/temp/${PORT}-${SANITIZED_REF}-git.tar.gz")
-  set(ARCHIVE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}-git.tar.gz")
+  set(ARCHIVE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}-git2.tar.gz")
 
   function(test_hash FILE_PATH)
     if(_VCPKG_INTERNAL_NO_HASH_CHECK)
@@ -134,7 +134,12 @@ to the call to determine the correct actual hash.")
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${GIT} archive "${REV_PARSE_HEAD}" -o "${TEMP_ARCHIVE}"
+      # The gzip command must not match "gzip -cn" in order to prevent Git for Windows from using the built-in compress
+      # library. This is necessary because the built-in compress library will embed a "TOS/20" OS target into the
+      # produced archive, which won't hash-match with the "Unix" OS target produced on other systems.
+      #
+      # This behavior was introduced in git-for-windows/git#2077
+      COMMAND ${GIT} -c "tar.tar.gz.command=gzip  -cn" archive "${REV_PARSE_HEAD}" -o "${TEMP_ARCHIVE}"
       WORKING_DIRECTORY ${DOWNLOADS}/${PORT}-${SANITIZED_REF}
       LOGNAME git-archive
     )
