@@ -18,7 +18,11 @@ vcpkg_extract_source_archive_ex(
 set(ATK_LIB_SUFFIX 2.0)
 set(ATK_DLL_SUFFIX 2)
 set(GLIB_LIB_VERSION 2.0)
-set(ATK_API_VERSION 2)
+if (WIN32)
+    set(ATK_API_VERSION ${ATK_LIB_SUFFIX})
+else()
+    set(ATK_API_VERSION ${ATK_DLL_SUFFIX})
+endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in" "${SOURCE_PATH}/CMakeLists.txt" @ONLY)
 
 vcpkg_configure_cmake(
