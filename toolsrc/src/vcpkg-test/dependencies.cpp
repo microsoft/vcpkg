@@ -124,9 +124,9 @@ static void check_name_and_version(const Dependencies::InstallPlanAction& ipa,
 static void check_semver_version(const ExpectedS<Versions::SemanticVersion>& maybe_version,
                                  const std::string& version_string,
                                  const std::string& prerelease_string,
-                                 long major,
-                                 long minor,
-                                 long patch,
+                                 uint64_t major,
+                                 uint64_t minor,
+                                 uint64_t patch,
                                  const std::vector<std::string>& identifiers)
 {
     auto actual_version = unwrap(maybe_version);
@@ -140,7 +140,7 @@ static void check_semver_version(const ExpectedS<Versions::SemanticVersion>& may
 }
 
 static void check_relaxed_version(const ExpectedS<Versions::RelaxedVersion>& maybe_version,
-                                  const std::vector<long>& version)
+                                  const std::vector<uint64_t>& version)
 {
     auto actual_version = unwrap(maybe_version);
     CHECK(actual_version.version == version);
@@ -149,7 +149,7 @@ static void check_relaxed_version(const ExpectedS<Versions::RelaxedVersion>& may
 static void check_date_version(const ExpectedS<Versions::DateVersion>& maybe_version,
                                const std::string& version_string,
                                const std::string& identifiers_string,
-                               const std::vector<long>& identifiers)
+                               const std::vector<uint64_t>& identifiers)
 {
     auto actual_version = unwrap(maybe_version);
     CHECK(actual_version.version_string == version_string);
@@ -550,6 +550,9 @@ TEST_CASE ("version parse semver", "[versionplan]")
     auto version_simple_tag = Versions::SemanticVersion::from_string("1.0.0-alpha");
     check_semver_version(version_simple_tag, "1.0.0", "alpha", 1, 0, 0, {"alpha"});
 
+    auto version_alphanumeric_tag = Versions::SemanticVersion::from_string("1.0.0-0alpha0");
+    check_semver_version(version_alphanumeric_tag, "1.0.0", "0alpha0", 1, 0, 0, {"0alpha0"});
+
     auto version_complex_tag = Versions::SemanticVersion::from_string("1.0.0-alpha.1.0.0");
     check_semver_version(version_complex_tag, "1.0.0", "alpha.1.0.0", 1, 0, 0, {"alpha", "1", "0", "0"});
 
@@ -598,11 +601,15 @@ TEST_CASE ("version parse relaxed", "[versionplan]")
     auto version_short = Versions::RelaxedVersion::from_string("1");
     check_relaxed_version(version_short, {1});
 
-    auto version_long = Versions::RelaxedVersion::from_string("1.20.300.4000.50000.6000000.70000000.80000000");
-    check_relaxed_version(version_long, {1, 20, 300, 4000, 50000, 6000000, 70000000, 80000000});
+    auto version_long =
+        Versions::RelaxedVersion::from_string("1.20.300.4000.50000.6000000.70000000.80000000.18446744073709551610");
+    check_relaxed_version(version_long, {1, 20, 300, 4000, 50000, 6000000, 70000000, 80000000, 18446744073709551610});
 
     auto version_invalid_characters = Versions::RelaxedVersion::from_string("1.a.0");
     CHECK(!version_invalid_characters.has_value());
+
+    auto version_invalid_identifiers_2 = Versions::RelaxedVersion::from_string("1.1a.2");
+    CHECK(!version_invalid_identifiers_2.has_value());
 
     auto version_invalid_leading_zeroes = Versions::RelaxedVersion::from_string("01.002.003");
     CHECK(!version_invalid_leading_zeroes.has_value());
@@ -621,6 +628,9 @@ TEST_CASE ("version parse date", "[versionplan]")
 
     auto version_invalid_identifiers = Versions::DateVersion::from_string("2020-01-01.alpha");
     CHECK(!version_invalid_identifiers.has_value());
+
+    auto version_invalid_identifiers_2 = Versions::DateVersion::from_string("2020-01-01.2a");
+    CHECK(!version_invalid_identifiers_2.has_value());
 
     auto version_invalid_leading_zeroes = Versions::DateVersion::from_string("2020-01-01.01");
     CHECK(!version_invalid_leading_zeroes.has_value());
@@ -641,26 +651,30 @@ TEST_CASE ("version sort semver", "[versionplan]")
                                                     unwrap(Versions::SemanticVersion::from_string("1.0.0-rc")),
                                                     unwrap(Versions::SemanticVersion::from_string("1.0.0-beta.2")),
                                                     unwrap(Versions::SemanticVersion::from_string("1.0.0-beta.20")),
-                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-beta.3"))};
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-beta.3")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-1")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-0alpha"))};
 
     std::sort(std::begin(versions), std::end(versions), [](const auto& lhs, const auto& rhs) -> bool {
         return Versions::compare(lhs, rhs) == Versions::VerComp::lt;
     });
 
     CHECK(versions[0].original_string == "0.0.0");
-    CHECK(versions[1].original_string == "1.0.0-alpha");
-    CHECK(versions[2].original_string == "1.0.0-alpha.1");
-    CHECK(versions[3].original_string == "1.0.0-alpha.beta");
-    CHECK(versions[4].original_string == "1.0.0-beta");
-    CHECK(versions[5].original_string == "1.0.0-beta.2");
-    CHECK(versions[6].original_string == "1.0.0-beta.3");
-    CHECK(versions[7].original_string == "1.0.0-beta.20");
-    CHECK(versions[8].original_string == "1.0.0-rc");
-    CHECK(versions[9].original_string == "1.0.0");
-    CHECK(versions[10].original_string == "1.0.1");
-    CHECK(versions[11].original_string == "1.1.0");
-    CHECK(versions[12].original_string == "1.1.1");
-    CHECK(versions[13].original_string == "2.0.0");
+    CHECK(versions[1].original_string == "1.0.0-1");
+    CHECK(versions[2].original_string == "1.0.0-0alpha");
+    CHECK(versions[3].original_string == "1.0.0-alpha");
+    CHECK(versions[4].original_string == "1.0.0-alpha.1");
+    CHECK(versions[5].original_string == "1.0.0-alpha.beta");
+    CHECK(versions[6].original_string == "1.0.0-beta");
+    CHECK(versions[7].original_string == "1.0.0-beta.2");
+    CHECK(versions[8].original_string == "1.0.0-beta.3");
+    CHECK(versions[9].original_string == "1.0.0-beta.20");
+    CHECK(versions[10].original_string == "1.0.0-rc");
+    CHECK(versions[11].original_string == "1.0.0");
+    CHECK(versions[12].original_string == "1.0.1");
+    CHECK(versions[13].original_string == "1.1.0");
+    CHECK(versions[14].original_string == "1.1.1");
+    CHECK(versions[15].original_string == "2.0.0");
 }
 
 TEST_CASE ("version sort relaxed", "[versionplan]")

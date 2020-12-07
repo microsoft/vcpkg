@@ -8,14 +8,17 @@ namespace vcpkg::Versions
 {
     namespace
     {
-        Optional<long> as_numeric(StringView str)
+        Optional<uint64_t> as_numeric(StringView str)
         {
-            long res = 0;
+            uint64_t res = 0;
+            size_t digits = 0;
             for (auto&& ch : str)
             {
-                if (res > LONG_MAX / 100) return nullopt;
-                if (ch < '0' || ch > '9') return nullopt;
-                res = res * 10 + (ch - '0');
+                uint64_t digit_value = static_cast<unsigned char>(ch) - static_cast<unsigned char>('0');
+                if (digit_value > 9) return nullopt;
+                if (res > std::numeric_limits<uint64_t>::max() / 10 - digit_value) return nullopt;
+                ++digits;
+                res = res * 10 + digit_value;
             }
             return res;
         }
@@ -49,7 +52,7 @@ namespace vcpkg::Versions
 
     ExpectedS<RelaxedVersion> RelaxedVersion::from_string(const std::string& str)
     {
-        std::regex relaxed_scheme_match("^(0|[1-9]\\d*)(\\.(0|[1-9]\\d*))*");
+        std::regex relaxed_scheme_match("^(0|[1-9][0-9]*)(\\.(0|[1-9][0-9]*))*");
 
         if (!std::regex_match(str, relaxed_scheme_match))
         {
@@ -57,7 +60,7 @@ namespace vcpkg::Versions
                 "Error: String `%s` must only contain dot-separated numeric values without leading zeroes.", str);
         }
 
-        return RelaxedVersion{str, Util::fmap(Strings::split(str, '.'), [](auto&& strval) -> long {
+        return RelaxedVersion{str, Util::fmap(Strings::split(str, '.'), [](auto&& strval) -> uint64_t {
                                   return as_numeric(strval).value_or_exit(VCPKG_LINE_INFO);
                               })};
     }
@@ -65,10 +68,10 @@ namespace vcpkg::Versions
     ExpectedS<SemanticVersion> SemanticVersion::from_string(const std::string& str)
     {
         // Suggested regex by semver.org
-        std::regex semver_scheme_match(
-            "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)"
-            "(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?"
-            "(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$");
+        std::regex semver_scheme_match("^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)"
+                                       "(?:-((?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9][0-9]*|[0-9]"
+                                       "*[a-zA-Z-][0-9a-zA-Z-]*))*))?"
+                                       "(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$");
 
         if (!std::regex_match(str, semver_scheme_match))
         {
@@ -102,15 +105,15 @@ namespace vcpkg::Versions
         }
 
         auto parts = Strings::split(ret.version_string, '.');
-        ret.version =
-            Util::fmap(parts, [](auto&& strval) -> long { return as_numeric(strval).value_or_exit(VCPKG_LINE_INFO); });
+        ret.version = Util::fmap(
+            parts, [](auto&& strval) -> uint64_t { return as_numeric(strval).value_or_exit(VCPKG_LINE_INFO); });
 
         return ret;
     }
 
     ExpectedS<DateVersion> DateVersion::from_string(const std::string& str)
     {
-        std::regex date_scheme_match("(\\d{4}-\\d{2}-\\d{2})(\\.(0|[1-9][0-9]*))*");
+        std::regex date_scheme_match("([0-9]{4}-[0-9]{2}-[0-9]{2})(\\.(0|[1-9][0-9]*))*");
         if (!std::regex_match(str, date_scheme_match))
         {
             return Strings::format("Error: String `%s` is not a valid date version."
@@ -127,7 +130,7 @@ namespace vcpkg::Versions
         if (identifiers_found != std::string::npos)
         {
             ret.identifiers_string = ret.version_string.substr(identifiers_found + 1);
-            ret.identifiers = Util::fmap(Strings::split(ret.identifiers_string, '.'), [](auto&& strval) -> long {
+            ret.identifiers = Util::fmap(Strings::split(ret.identifiers_string, '.'), [](auto&& strval) -> uint64_t {
                 return as_numeric(strval).value_or_exit(VCPKG_LINE_INFO);
             });
             ret.version_string.resize(identifiers_found);

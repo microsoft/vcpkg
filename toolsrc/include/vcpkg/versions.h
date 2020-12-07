@@ -43,7 +43,7 @@ namespace vcpkg::Versions
     struct RelaxedVersion
     {
         std::string original_string;
-        std::vector<long> version;
+        std::vector<uint64_t> version;
 
         static ExpectedS<RelaxedVersion> from_string(const std::string& str);
     };
@@ -54,7 +54,7 @@ namespace vcpkg::Versions
         std::string version_string;
         std::string prerelease_string;
 
-        std::vector<long> version;
+        std::vector<uint64_t> version;
         std::vector<std::string> identifiers;
 
         static ExpectedS<SemanticVersion> from_string(const std::string& str);
@@ -66,7 +66,7 @@ namespace vcpkg::Versions
         std::string version_string;
         std::string identifiers_string;
 
-        std::vector<long> identifiers;
+        std::vector<uint64_t> identifiers;
 
         static ExpectedS<DateVersion> from_string(const std::string& str);
     };
