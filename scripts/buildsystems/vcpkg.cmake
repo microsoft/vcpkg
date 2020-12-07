@@ -479,11 +479,14 @@ function(x_vcpkg_install_local_dependencies)
         cmake_parse_arguments(PARSE_ARGV 0 __VCPKG_APPINSTALL "" "DESTINATION" "TARGETS")
         _vcpkg_set_powershell_path()
         foreach(TARGET IN LISTS __VCPKG_APPINSTALL_TARGETS)
-            install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
-                execute_process(COMMAND \"${_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                    -targetBinary \"\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
-                    -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                    -OutVariable out)")
+            get_target_property(TARGETTYPE ${TARGET} TYPE)
+            if(NOT TARGETTYPE STREQUAL "INTERFACE_LIBRARY")
+                install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
+                    execute_process(COMMAND \"${_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
+                        -targetBinary \"\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
+                        -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
+                        -OutVariable out)")
+            endif()
         endforeach()
     endif()
 endfunction()
