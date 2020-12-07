@@ -1215,6 +1215,8 @@ namespace vcpkg::Dependencies
                 std::map<Versions::Version, VersionSchemeInfo*, VersionTMapLess> vermap;
                 std::map<std::string, VersionSchemeInfo> exacts;
                 Optional<std::unique_ptr<VersionSchemeInfo>> relaxed;
+                Optional<std::unique_ptr<VersionSchemeInfo>> semver;
+                Optional<std::unique_ptr<VersionSchemeInfo>> date;
                 std::set<std::string> features;
                 bool default_features = true;
 
@@ -1271,6 +1273,30 @@ namespace vcpkg::Dependencies
                     vsi = relaxed.get()->get();
                 }
             }
+            else if (scheme == Versions::Scheme::Semver)
+            {
+                if (auto p = semver.get())
+                {
+                    vsi = p->get();
+                }
+                else
+                {
+                    semver = std::make_unique<VersionSchemeInfo>();
+                    vsi = semver.get()->get();
+                }
+            }
+            else if (scheme == Versions::Scheme::Date)
+            {
+                if (auto p = date.get())
+                {
+                    vsi = p->get();
+                }
+                else
+                {
+                    date = std::make_unique<VersionSchemeInfo>();
+                    vsi = date.get()->get();
+                }
+            }
             else
             {
                 // not implemented
@@ -1287,40 +1313,24 @@ namespace vcpkg::Dependencies
             return it == vermap.end() ? nullptr : it->second;
         }
 
-        enum class VerComp
-        {
-            unk,
-            lt,
-            eq,
-            gt,
-        };
+        using Versions::VerComp;
+
         static VerComp compare_versions(Versions::Scheme sa,
                                         const Versions::Version& a,
                                         Versions::Scheme sb,
                                         const Versions::Version& b)
         {
             if (sa != sb) return VerComp::unk;
-            switch (sa)
+
+            if (a.text() != b.text())
             {
-                case Versions::Scheme::String:
-                {
-                    if (a.text() != b.text()) return VerComp::unk;
-                    if (a.port_version() < b.port_version()) return VerComp::lt;
-                    if (a.port_version() > b.port_version()) return VerComp::gt;
-                    return VerComp::eq;
-                }
-                case Versions::Scheme::Relaxed:
-                {
-                    auto i1 = atoi(a.text().c_str());
-                    auto i2 = atoi(b.text().c_str());
-                    if (i1 < i2) return VerComp::lt;
-                    if (i1 > i2) return VerComp::gt;
-                    if (a.port_version() < b.port_version()) return VerComp::lt;
-                    if (a.port_version() > b.port_version()) return VerComp::gt;
-                    return VerComp::eq;
-                }
-                default: Checks::unreachable(VCPKG_LINE_INFO);
+                auto result = Versions::compare(a.text(), b.text(), sa);
+                if (result != VerComp::eq) return result;
             }
+
+            if (a.port_version() < b.port_version()) return VerComp::lt;
+            if (a.port_version() > b.port_version()) return VerComp::gt;
+            return VerComp::eq;
         }
 
         bool VersionedPackageGraph::VersionSchemeInfo::is_less_than(const Versions::Version& new_ver) const

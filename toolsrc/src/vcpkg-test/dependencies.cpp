@@ -121,6 +121,42 @@ static void check_name_and_version(const Dependencies::InstallPlanAction& ipa,
     }
 }
 
+static void check_semver_version(const ExpectedS<Versions::SemanticVersion>& maybe_version,
+                                 const std::string& version_string,
+                                 const std::string& prerelease_string,
+                                 uint64_t major,
+                                 uint64_t minor,
+                                 uint64_t patch,
+                                 const std::vector<std::string>& identifiers)
+{
+    auto actual_version = unwrap(maybe_version);
+    CHECK(actual_version.version_string == version_string);
+    CHECK(actual_version.prerelease_string == prerelease_string);
+    REQUIRE(actual_version.version.size() == 3);
+    CHECK(actual_version.version[0] == major);
+    CHECK(actual_version.version[1] == minor);
+    CHECK(actual_version.version[2] == patch);
+    CHECK(actual_version.identifiers == identifiers);
+}
+
+static void check_relaxed_version(const ExpectedS<Versions::RelaxedVersion>& maybe_version,
+                                  const std::vector<uint64_t>& version)
+{
+    auto actual_version = unwrap(maybe_version);
+    CHECK(actual_version.version == version);
+}
+
+static void check_date_version(const ExpectedS<Versions::DateVersion>& maybe_version,
+                               const std::string& version_string,
+                               const std::string& identifiers_string,
+                               const std::vector<uint64_t>& identifiers)
+{
+    auto actual_version = unwrap(maybe_version);
+    CHECK(actual_version.version_string == version_string);
+    CHECK(actual_version.identifiers_string == identifiers_string);
+    CHECK(actual_version.identifiers == identifiers);
+}
+
 static const PackageSpec& toplevel_spec()
 {
     static const PackageSpec ret("toplevel-spec", Test::X86_WINDOWS);
@@ -504,6 +540,426 @@ TEST_CASE ("version install diamond relaxed", "[versionplan]")
     check_name_and_version(install_plan.install_actions[0], "c", {"9", 2});
     check_name_and_version(install_plan.install_actions[1], "b", {"3", 0});
     check_name_and_version(install_plan.install_actions[2], "a", {"3", 0});
+}
+
+TEST_CASE ("version parse semver", "[versionplan]")
+{
+    auto version_basic = Versions::SemanticVersion::from_string("1.2.3");
+    check_semver_version(version_basic, "1.2.3", "", 1, 2, 3, {});
+
+    auto version_simple_tag = Versions::SemanticVersion::from_string("1.0.0-alpha");
+    check_semver_version(version_simple_tag, "1.0.0", "alpha", 1, 0, 0, {"alpha"});
+
+    auto version_alphanumeric_tag = Versions::SemanticVersion::from_string("1.0.0-0alpha0");
+    check_semver_version(version_alphanumeric_tag, "1.0.0", "0alpha0", 1, 0, 0, {"0alpha0"});
+
+    auto version_complex_tag = Versions::SemanticVersion::from_string("1.0.0-alpha.1.0.0");
+    check_semver_version(version_complex_tag, "1.0.0", "alpha.1.0.0", 1, 0, 0, {"alpha", "1", "0", "0"});
+
+    auto version_complexer_tag = Versions::SemanticVersion::from_string("1.0.0-alpha.1.x.y.z.0-alpha.0-beta.l-a-s-t");
+    check_semver_version(version_complexer_tag,
+                         "1.0.0",
+                         "alpha.1.x.y.z.0-alpha.0-beta.l-a-s-t",
+                         1,
+                         0,
+                         0,
+                         {"alpha", "1", "x", "y", "z", "0-alpha", "0-beta", "l-a-s-t"});
+
+    auto version_ridiculous_tag = Versions::SemanticVersion::from_string("1.0.0----------------------------------");
+    check_semver_version(version_ridiculous_tag,
+                         "1.0.0",
+                         "---------------------------------",
+                         1,
+                         0,
+                         0,
+                         {"---------------------------------"});
+
+    auto version_build_tag = Versions::SemanticVersion::from_string("1.0.0+build");
+    check_semver_version(version_build_tag, "1.0.0", "", 1, 0, 0, {});
+
+    auto version_prerelease_build_tag = Versions::SemanticVersion::from_string("1.0.0-alpha+build");
+    check_semver_version(version_prerelease_build_tag, "1.0.0", "alpha", 1, 0, 0, {"alpha"});
+
+    auto version_invalid_incomplete = Versions::SemanticVersion::from_string("1.0-alpha");
+    CHECK(!version_invalid_incomplete.has_value());
+
+    auto version_invalid_leading_zeroes = Versions::SemanticVersion::from_string("1.02.03-alpha+build");
+    CHECK(!version_invalid_leading_zeroes.has_value());
+
+    auto version_invalid_leading_zeroes_in_tag = Versions::SemanticVersion::from_string("1.0.0-01");
+    CHECK(!version_invalid_leading_zeroes_in_tag.has_value());
+
+    auto version_invalid_characters = Versions::SemanticVersion::from_string("1.0.0-alpha#2");
+    CHECK(!version_invalid_characters.has_value());
+}
+
+TEST_CASE ("version parse relaxed", "[versionplan]")
+{
+    auto version_basic = Versions::RelaxedVersion::from_string("1.2.3");
+    check_relaxed_version(version_basic, {1, 2, 3});
+
+    auto version_short = Versions::RelaxedVersion::from_string("1");
+    check_relaxed_version(version_short, {1});
+
+    auto version_long =
+        Versions::RelaxedVersion::from_string("1.20.300.4000.50000.6000000.70000000.80000000.18446744073709551610");
+    check_relaxed_version(version_long, {1, 20, 300, 4000, 50000, 6000000, 70000000, 80000000, 18446744073709551610});
+
+    auto version_invalid_characters = Versions::RelaxedVersion::from_string("1.a.0");
+    CHECK(!version_invalid_characters.has_value());
+
+    auto version_invalid_identifiers_2 = Versions::RelaxedVersion::from_string("1.1a.2");
+    CHECK(!version_invalid_identifiers_2.has_value());
+
+    auto version_invalid_leading_zeroes = Versions::RelaxedVersion::from_string("01.002.003");
+    CHECK(!version_invalid_leading_zeroes.has_value());
+}
+
+TEST_CASE ("version parse date", "[versionplan]")
+{
+    auto version_basic = Versions::DateVersion::from_string("2020-12-25");
+    check_date_version(version_basic, "2020-12-25", "", {});
+
+    auto version_identifiers = Versions::DateVersion::from_string("2020-12-25.1.2.3");
+    check_date_version(version_identifiers, "2020-12-25", "1.2.3", {1, 2, 3});
+
+    auto version_invalid_date = Versions::DateVersion::from_string("2020-1-1");
+    CHECK(!version_invalid_date.has_value());
+
+    auto version_invalid_identifiers = Versions::DateVersion::from_string("2020-01-01.alpha");
+    CHECK(!version_invalid_identifiers.has_value());
+
+    auto version_invalid_identifiers_2 = Versions::DateVersion::from_string("2020-01-01.2a");
+    CHECK(!version_invalid_identifiers_2.has_value());
+
+    auto version_invalid_leading_zeroes = Versions::DateVersion::from_string("2020-01-01.01");
+    CHECK(!version_invalid_leading_zeroes.has_value());
+}
+
+TEST_CASE ("version sort semver", "[versionplan]")
+{
+    std::vector<Versions::SemanticVersion> versions{unwrap(Versions::SemanticVersion::from_string("1.0.0")),
+                                                    unwrap(Versions::SemanticVersion::from_string("0.0.0")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.1.0")),
+                                                    unwrap(Versions::SemanticVersion::from_string("2.0.0")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.1.1")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.1")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-alpha.1")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-beta")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-alpha")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-alpha.beta")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-rc")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-beta.2")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-beta.20")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-beta.3")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-1")),
+                                                    unwrap(Versions::SemanticVersion::from_string("1.0.0-0alpha"))};
+
+    std::sort(std::begin(versions), std::end(versions), [](const auto& lhs, const auto& rhs) -> bool {
+        return Versions::compare(lhs, rhs) == Versions::VerComp::lt;
+    });
+
+    CHECK(versions[0].original_string == "0.0.0");
+    CHECK(versions[1].original_string == "1.0.0-1");
+    CHECK(versions[2].original_string == "1.0.0-0alpha");
+    CHECK(versions[3].original_string == "1.0.0-alpha");
+    CHECK(versions[4].original_string == "1.0.0-alpha.1");
+    CHECK(versions[5].original_string == "1.0.0-alpha.beta");
+    CHECK(versions[6].original_string == "1.0.0-beta");
+    CHECK(versions[7].original_string == "1.0.0-beta.2");
+    CHECK(versions[8].original_string == "1.0.0-beta.3");
+    CHECK(versions[9].original_string == "1.0.0-beta.20");
+    CHECK(versions[10].original_string == "1.0.0-rc");
+    CHECK(versions[11].original_string == "1.0.0");
+    CHECK(versions[12].original_string == "1.0.1");
+    CHECK(versions[13].original_string == "1.1.0");
+    CHECK(versions[14].original_string == "1.1.1");
+    CHECK(versions[15].original_string == "2.0.0");
+}
+
+TEST_CASE ("version sort relaxed", "[versionplan]")
+{
+    std::vector<Versions::RelaxedVersion> versions{unwrap(Versions::RelaxedVersion::from_string("1.0.0")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.0")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("2")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.1")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.10.1")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.0.1")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.0.0.1")),
+                                                   unwrap(Versions::RelaxedVersion::from_string("1.0.0.2"))};
+
+    std::sort(std::begin(versions), std::end(versions), [](const auto& lhs, const auto& rhs) -> bool {
+        return Versions::compare(lhs, rhs) == Versions::VerComp::lt;
+    });
+
+    CHECK(versions[0].original_string == "1");
+    CHECK(versions[1].original_string == "1.0");
+    CHECK(versions[2].original_string == "1.0.0");
+    CHECK(versions[3].original_string == "1.0.0.1");
+    CHECK(versions[4].original_string == "1.0.0.2");
+    CHECK(versions[5].original_string == "1.0.1");
+    CHECK(versions[6].original_string == "1.1");
+    CHECK(versions[7].original_string == "1.10.1");
+    CHECK(versions[8].original_string == "2");
+}
+
+TEST_CASE ("version sort date", "[versionplan]")
+{
+    std::vector<Versions::DateVersion> versions{unwrap(Versions::DateVersion::from_string("2021-01-01.2")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01.1")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01.1.1")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01.1.0")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01")),
+                                                unwrap(Versions::DateVersion::from_string("2020-12-25")),
+                                                unwrap(Versions::DateVersion::from_string("2020-12-31")),
+                                                unwrap(Versions::DateVersion::from_string("2021-01-01.10"))};
+
+    std::sort(std::begin(versions), std::end(versions), [](const auto& lhs, const auto& rhs) -> bool {
+        return Versions::compare(lhs, rhs) == Versions::VerComp::lt;
+    });
+
+    CHECK(versions[0].original_string == "2020-12-25");
+    CHECK(versions[1].original_string == "2020-12-31");
+    CHECK(versions[2].original_string == "2021-01-01");
+    CHECK(versions[3].original_string == "2021-01-01");
+    CHECK(versions[4].original_string == "2021-01-01.1");
+    CHECK(versions[5].original_string == "2021-01-01.1.0");
+    CHECK(versions[6].original_string == "2021-01-01.1.1");
+    CHECK(versions[7].original_string == "2021-01-01.2");
+    CHECK(versions[8].original_string == "2021-01-01.10");
+}
+
+TEST_CASE ("version install simple semver", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2.0.0", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2.0.0", 0}, Scheme::Semver);
+    vp.emplace("a", {"3.0.0", 0}, Scheme::Semver);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3.0.0", 0}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 1);
+    check_name_and_version(install_plan.install_actions[0], "a", {"3.0.0", 0});
+}
+
+TEST_CASE ("version install transitive semver", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2.0.0", 0};
+    bp.v["b"] = {"2.0.0", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2.0.0", 0}, Scheme::Semver);
+    vp.emplace("a", {"3.0.0", 0}, Scheme::Semver).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "3.0.0"}},
+    };
+    vp.emplace("b", {"2.0.0", 0}, Scheme::Semver);
+    vp.emplace("b", {"3.0.0", 0}, Scheme::Semver);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3.0.0", 0}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 2);
+    check_name_and_version(install_plan.install_actions[0], "b", {"3.0.0", 0});
+    check_name_and_version(install_plan.install_actions[1], "a", {"3.0.0", 0});
+}
+
+TEST_CASE ("version install diamond semver", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2.0.0", 0};
+    bp.v["b"] = {"3.0.0", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2.0.0", 0}, Scheme::Semver);
+    vp.emplace("a", {"3.0.0", 0}, Scheme::Semver).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2.0.0", 1}},
+        Dependency{"c", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "5.0.0", 1}},
+    };
+    vp.emplace("b", {"2.0.0", 1}, Scheme::Semver);
+    vp.emplace("b", {"3.0.0", 0}, Scheme::Semver).source_control_file->core_paragraph->dependencies = {
+        Dependency{"c", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "9.0.0", 2}},
+    };
+    vp.emplace("c", {"5.0.0", 1}, Scheme::Semver);
+    vp.emplace("c", {"9.0.0", 2}, Scheme::Semver);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3.0.0", 0}},
+            Dependency{"b", {}, {}, {Constraint::Type::Minimum, "2.0.0", 1}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 3);
+    check_name_and_version(install_plan.install_actions[0], "c", {"9.0.0", 2});
+    check_name_and_version(install_plan.install_actions[1], "b", {"3.0.0", 0});
+    check_name_and_version(install_plan.install_actions[2], "a", {"3.0.0", 0});
+}
+
+TEST_CASE ("version install simple date", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2020-02-01", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2020-02-01", 0}, Scheme::Date);
+    vp.emplace("a", {"2020-03-01", 0}, Scheme::Date);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2020-03-01", 0}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 1);
+    check_name_and_version(install_plan.install_actions[0], "a", {"2020-03-01", 0});
+}
+
+TEST_CASE ("version install transitive date", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2020-01-01.2", 0};
+    bp.v["b"] = {"2020-01-01.3", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2020-01-01.2", 0}, Scheme::Date);
+    vp.emplace("a", {"2020-01-01.3", 0}, Scheme::Date).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2020-01-01.3"}},
+    };
+    vp.emplace("b", {"2020-01-01.2", 0}, Scheme::Date);
+    vp.emplace("b", {"2020-01-01.3", 0}, Scheme::Date);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2020-01-01.3", 0}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 2);
+    check_name_and_version(install_plan.install_actions[0], "b", {"2020-01-01.3", 0});
+    check_name_and_version(install_plan.install_actions[1], "a", {"2020-01-01.3", 0});
+}
+
+TEST_CASE ("version install diamond date", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"2020-01-02", 0};
+    bp.v["b"] = {"2020-01-03", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"2020-01-02", 0}, Scheme::Date);
+    vp.emplace("a", {"2020-01-03", 0}, Scheme::Date).source_control_file->core_paragraph->dependencies = {
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2020-01-02", 1}},
+        Dependency{"c", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2020-01-05", 1}},
+    };
+    vp.emplace("b", {"2020-01-02", 1}, Scheme::Date);
+    vp.emplace("b", {"2020-01-03", 0}, Scheme::Date).source_control_file->core_paragraph->dependencies = {
+        Dependency{"c", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2020-01-09", 2}},
+    };
+    vp.emplace("c", {"2020-01-05", 1}, Scheme::Date);
+    vp.emplace("c", {"2020-01-09", 2}, Scheme::Date);
+
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = unwrap(Dependencies::create_versioned_install_plan(
+        vp,
+        bp,
+        var_provider,
+        {
+            Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2020-01-03", 0}},
+            Dependency{"b", {}, {}, {Constraint::Type::Minimum, "2020-01-02", 1}},
+        },
+        {},
+        toplevel_spec()));
+
+    REQUIRE(install_plan.size() == 3);
+    check_name_and_version(install_plan.install_actions[0], "c", {"2020-01-09", 2});
+    check_name_and_version(install_plan.install_actions[1], "b", {"2020-01-03", 0});
+    check_name_and_version(install_plan.install_actions[2], "a", {"2020-01-03", 0});
+}
+
+TEST_CASE ("version install scheme failure", "[versionplan]")
+{
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"1.0.0", 0}, Scheme::Semver);
+    vp.emplace("a", {"1.0.1", 0}, Scheme::Relaxed);
+    vp.emplace("a", {"1.0.2", 0}, Scheme::Semver);
+
+    MockCMakeVarProvider var_provider;
+
+    SECTION ("lower baseline")
+    {
+        MockBaselineProvider bp;
+        bp.v["a"] = {"1.0.0", 0};
+
+        auto install_plan = Dependencies::create_versioned_install_plan(
+            vp,
+            bp,
+            var_provider,
+            {Dependency{"a", {}, {}, {Constraint::Type::Minimum, "1.0.1", 0}}},
+            {},
+            toplevel_spec());
+
+        REQUIRE(!install_plan.error().empty());
+        CHECK(install_plan.error() == "Version conflict on a@1.0.1: baseline required 1.0.0");
+    }
+    SECTION ("higher baseline")
+    {
+        MockBaselineProvider bp;
+        bp.v["a"] = {"1.0.2", 0};
+
+        auto install_plan = Dependencies::create_versioned_install_plan(
+            vp,
+            bp,
+            var_provider,
+            {Dependency{"a", {}, {}, {Constraint::Type::Minimum, "1.0.1", 0}}},
+            {},
+            toplevel_spec());
+
+        REQUIRE(!install_plan.error().empty());
+        CHECK(install_plan.error() == "Version conflict on a@1.0.1: baseline required 1.0.2");
+    }
 }
 
 TEST_CASE ("version install scheme change in port version", "[versionplan]")
