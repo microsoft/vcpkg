@@ -1,6 +1,5 @@
 Source: getdns
 Version: 1.6.0
-Port-Version: 1
 Build-Depends: libidn2, openssl
 Description: GetDNS is a modern asynchronous DNS API
 Homepage: https://getdnsapi.net/
