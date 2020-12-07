@@ -15,8 +15,10 @@ vcpkg_extract_source_archive_ex(
         fix-linux-config.patch
 )
 
-set(ATK_LIB_SUFFIX 2.0)
-set(ATK_DLL_SUFFIX 2)
+# Here are used API version of library, not the version of library itself
+set(ATK_LIB_SUFFIX 1.0)
+set(ATK_DLL_SUFFIX 1)
+
 set(GLIB_LIB_VERSION 2.0)
 if (WIN32)
     set(ATK_API_VERSION ${ATK_LIB_SUFFIX})
