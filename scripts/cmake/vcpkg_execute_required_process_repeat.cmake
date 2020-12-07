@@ -1,4 +1,19 @@
-# Usage: vcpkg_execute_required_process_repeat(COUNT <num> COMMAND <cmd> [<args>...] WORKING_DIRECTORY </path/to/dir> LOGNAME <my_log_name>)
+#[===[.md:
+# vcpkg_execute_required_process_repeat
+
+Execute a process until the command succeeds, or until the COUNT is reached.
+
+## Usage
+```cmake
+vcpkg_execute_required_process_repeat(
+    COUNT <num>
+    COMMAND <cmd> [<arguments>]
+    WORKING_DIRECTORY <directory>
+    LOGNAME <name>
+)
+```
+#]===]
+
 include(vcpkg_prettify_command)
 function(vcpkg_execute_required_process_repeat)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased

@@ -11,6 +11,7 @@
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/triplet.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/versiondeserializers.h>
 
 namespace vcpkg
 {
@@ -487,12 +488,12 @@ namespace vcpkg
 
             r.optional_object_field(obj, PLATFORM, dep.platform, PlatformExprDeserializer::instance);
 
-            static Json::StringDeserializer version_deserializer{"a version"};
+            static auto version_deserializer = make_version_deserializer("a version");
 
             auto has_eq_constraint =
-                r.optional_object_field(obj, VERSION_EQ, dep.constraint.value, version_deserializer);
+                r.optional_object_field(obj, VERSION_EQ, dep.constraint.value, *version_deserializer);
             auto has_ge_constraint =
-                r.optional_object_field(obj, VERSION_GE, dep.constraint.value, version_deserializer);
+                r.optional_object_field(obj, VERSION_GE, dep.constraint.value, *version_deserializer);
             auto has_port_ver = r.optional_object_field(
                 obj, PORT_VERSION, dep.constraint.port_version, Json::NaturalNumberDeserializer::instance);
 
@@ -548,23 +549,11 @@ namespace vcpkg
         virtual StringView type_name() const override { return "an override"; }
 
         constexpr static StringLiteral NAME = "name";
-        constexpr static StringLiteral PORT_VERSION = "port-version";
-        constexpr static StringLiteral VERSION_RELAXED = "version";
-        constexpr static StringLiteral VERSION_SEMVER = "version-semver";
-        constexpr static StringLiteral VERSION_DATE = "version-date";
-        constexpr static StringLiteral VERSION_STRING = "version-string";
 
         virtual Span<const StringView> valid_fields() const override
         {
-            static const StringView t[] = {
-                NAME,
-                PORT_VERSION,
-                VERSION_RELAXED,
-                VERSION_SEMVER,
-                VERSION_DATE,
-                VERSION_STRING,
-            };
-
+            static const StringView u[] = {NAME};
+            static const auto t = Util::Vectors::concat<StringView>(schemed_deserializer_fields(), u);
             return t;
         }
 
@@ -576,40 +565,12 @@ namespace vcpkg
                                Versions::Scheme& version_scheme,
                                int& port_version)
         {
-            static Json::StringDeserializer version_exact_deserializer{"an exact version string"};
-            static Json::StringDeserializer version_relaxed_deserializer{"a relaxed version string"};
-            static Json::StringDeserializer version_semver_deserializer{"a semantic version string"};
-            static Json::StringDeserializer version_date_deserializer{"a date version string"};
-
             r.required_object_field(type_name, obj, NAME, name, Json::IdentifierDeserializer::instance);
-            bool has_exact = r.optional_object_field(obj, VERSION_STRING, version, version_exact_deserializer);
-            bool has_relax = r.optional_object_field(obj, VERSION_RELAXED, version, version_relaxed_deserializer);
-            bool has_semver = r.optional_object_field(obj, VERSION_SEMVER, version, version_semver_deserializer);
-            bool has_date = r.optional_object_field(obj, VERSION_DATE, version, version_date_deserializer);
-            int num_versions = (int)has_exact + (int)has_relax + (int)has_semver + (int)has_date;
-            if (num_versions == 0)
-            {
-                r.add_generic_error(type_name, "expected a versioning field (example: ", VERSION_STRING, ")");
-            }
-            else if (num_versions > 1)
-            {
-                r.add_generic_error(type_name, "expected only one versioning field");
-            }
-            else
-            {
-                if (has_exact)
-                    version_scheme = Versions::Scheme::String;
-                else if (has_relax)
-                    version_scheme = Versions::Scheme::Relaxed;
-                else if (has_semver)
-                    version_scheme = Versions::Scheme::Semver;
-                else if (has_date)
-                    version_scheme = Versions::Scheme::Date;
-                else
-                    Checks::unreachable(VCPKG_LINE_INFO);
-            }
 
-            r.optional_object_field(obj, PORT_VERSION, port_version, Json::NaturalNumberDeserializer::instance);
+            auto schemed_version = visit_required_schemed_deserializer(type_name, r, obj);
+            version = schemed_version.versiont.text();
+            version_scheme = schemed_version.scheme;
+            port_version = schemed_version.versiont.port_version();
         }
 
         virtual Optional<DependencyOverride> visit_object(Json::Reader& r, const Json::Object& obj) override
@@ -634,11 +595,6 @@ namespace vcpkg
     DependencyOverrideDeserializer DependencyOverrideDeserializer::instance;
 
     constexpr StringLiteral DependencyOverrideDeserializer::NAME;
-    constexpr StringLiteral DependencyOverrideDeserializer::VERSION_STRING;
-    constexpr StringLiteral DependencyOverrideDeserializer::VERSION_RELAXED;
-    constexpr StringLiteral DependencyOverrideDeserializer::VERSION_SEMVER;
-    constexpr StringLiteral DependencyOverrideDeserializer::VERSION_DATE;
-    constexpr StringLiteral DependencyOverrideDeserializer::PORT_VERSION;
 
     // reasoning for these two distinct types -- FeatureDeserializer and ArrayFeatureDeserializer:
     // `"features"` may be defined in one of two ways:
@@ -909,15 +865,6 @@ namespace vcpkg
         virtual StringView type_name() const override { return "a manifest"; }
 
         constexpr static StringLiteral NAME = "name";
-
-        // Default is a relaxed semver-like version
-        constexpr static StringLiteral VERSION_RELAXED = "version";
-        constexpr static StringLiteral VERSION_SEMVER = "version-semver";
-        constexpr static StringLiteral VERSION_DATE = "version-date";
-        // Legacy version string, accepts arbitrary string values.
-        constexpr static StringLiteral VERSION_STRING = "version-string";
-
-        constexpr static StringLiteral PORT_VERSION = "port-version";
         constexpr static StringLiteral MAINTAINERS = "maintainers";
         constexpr static StringLiteral DESCRIPTION = "description";
         constexpr static StringLiteral HOMEPAGE = "homepage";
@@ -932,13 +879,8 @@ namespace vcpkg
 
         virtual Span<const StringView> valid_fields() const override
         {
-            static const StringView t[] = {
+            static const StringView u[] = {
                 NAME,
-                VERSION_STRING,
-                VERSION_RELAXED,
-                VERSION_SEMVER,
-                VERSION_DATE,
-                PORT_VERSION,
                 MAINTAINERS,
                 DESCRIPTION,
                 HOMEPAGE,
@@ -951,6 +893,7 @@ namespace vcpkg
                 SUPPORTS,
                 OVERRIDES,
             };
+            static const auto t = Util::Vectors::concat<StringView>(schemed_deserializer_fields(), u);
 
             return t;
         }
@@ -1014,11 +957,6 @@ namespace vcpkg
     ManifestDeserializer ManifestDeserializer::instance;
 
     constexpr StringLiteral ManifestDeserializer::NAME;
-    constexpr StringLiteral ManifestDeserializer::VERSION_STRING;
-    constexpr StringLiteral ManifestDeserializer::VERSION_RELAXED;
-    constexpr StringLiteral ManifestDeserializer::VERSION_SEMVER;
-    constexpr StringLiteral ManifestDeserializer::VERSION_DATE;
-    constexpr StringLiteral ManifestDeserializer::PORT_VERSION;
     constexpr StringLiteral ManifestDeserializer::MAINTAINERS;
     constexpr StringLiteral ManifestDeserializer::DESCRIPTION;
     constexpr StringLiteral ManifestDeserializer::HOMEPAGE;
@@ -1329,17 +1267,6 @@ namespace vcpkg
             }
         };
 
-        auto version_field = [](Versions::Scheme version_scheme) {
-            switch (version_scheme)
-            {
-                case Versions::Scheme::String: return ManifestDeserializer::VERSION_STRING;
-                case Versions::Scheme::Semver: return ManifestDeserializer::VERSION_SEMVER;
-                case Versions::Scheme::Relaxed: return ManifestDeserializer::VERSION_RELAXED;
-                case Versions::Scheme::Date: return ManifestDeserializer::VERSION_DATE;
-                default: Checks::unreachable(VCPKG_LINE_INFO);
-            }
-        };
-
         auto serialize_override = [&](Json::Array& arr, const DependencyOverride& dep) {
             auto& dep_obj = arr.push_back(Json::Object());
             for (const auto& el : dep.extra_info)
@@ -1349,12 +1276,7 @@ namespace vcpkg
 
             dep_obj.insert(DependencyOverrideDeserializer::NAME, Json::Value::string(dep.name));
 
-            if (dep.port_version != 0)
-            {
-                dep_obj.insert(DependencyDeserializer::PORT_VERSION, Json::Value::integer(dep.port_version));
-            }
-
-            dep_obj.insert(version_field(dep.version_scheme), Json::Value::string(dep.version));
+            serialize_schemed_version(dep_obj, dep.version_scheme, dep.version, dep.port_version);
         };
 
         Json::Object obj;
@@ -1365,12 +1287,12 @@ namespace vcpkg
         }
 
         obj.insert(ManifestDeserializer::NAME, Json::Value::string(scf.core_paragraph->name));
-        obj.insert(version_field(scf.core_paragraph->version_scheme), Json::Value::string(scf.core_paragraph->version));
 
-        if (scf.core_paragraph->port_version != 0 || debug)
-        {
-            obj.insert(ManifestDeserializer::PORT_VERSION, Json::Value::integer(scf.core_paragraph->port_version));
-        }
+        serialize_schemed_version(obj,
+                                  scf.core_paragraph->version_scheme,
+                                  scf.core_paragraph->version,
+                                  scf.core_paragraph->port_version,
+                                  debug);
 
         serialize_paragraph(obj, ManifestDeserializer::MAINTAINERS, scf.core_paragraph->maintainers);
         serialize_paragraph(obj, ManifestDeserializer::DESCRIPTION, scf.core_paragraph->description);

@@ -1,22 +1,26 @@
-set(ARCHIVE_NAME "sundials-3.1.1")
+set(ARCHIVE_NAME "sundials-5.5.0")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://computation.llnl.gov/projects/sundials/download/${ARCHIVE_NAME}.tar.gz"
     FILENAME "${ARCHIVE_NAME}.tar.gz"
-    SHA512 3e8fc7183c5503943f1ba00c73b04c1614a48b6e6cb90559ec5481f9acffaa19acd97bd961611b251ebdc032f1a13f0919b0ab0cdfe9d9b4ddc99d40bef5719f
+    SHA512 e8cba7341f6b8d647151fe5543e62a13adda363d4c96bdaba7a70925b2c58ec4f4f089a0d6c9c5a57c50fb32fa1285bd09b450697056bc3da24cf882c6c7c427
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES
-        uwp-c4703-warning.patch
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SUN_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SUN_BUILD_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DEXAMPLES_ENABLE=OFF
+    OPTIONS 
+        -DEXAMPLES_ENABLE=OFF
+        -DBUILD_STATIC_LIBS=${SUN_BUILD_STATIC}
+        -DBUILD_SHARED_LIBS=${SUN_BUILD_SHARED}
 )
 
 vcpkg_install_cmake(DISABLE_PARALLEL)
@@ -53,3 +57,4 @@ if(REMOVE_DLLS)
 endif()
 
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
