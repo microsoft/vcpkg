@@ -13,7 +13,7 @@ vcpkg_from_github(
         0009_fix_openssl_config.patch
         0010_fix_othertests_cmake.patch
         0011_fix_static_build.patch
-        0012-fix-dependency-idn2-lber.patch
+        0012-fix-dependency-idn2.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -59,6 +59,7 @@ if(VCPKG_TARGET_IS_UWP)
     set(UWP_OPTIONS
         -DUSE_WIN32_LDAP=OFF
         -DCURL_DISABLE_TELNET=ON
+        -DCURL_DISABLE_LDAP=ON
         -DENABLE_IPV6=OFF
         -DENABLE_UNIX_SOCKETS=OFF
     )
