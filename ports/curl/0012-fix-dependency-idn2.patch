@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dc7223b..26c53b7 100644
+index dc7223b..a661cb8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -620,9 +620,6 @@ if(NOT CURL_DISABLE_LDAPS)
@@ -21,8 +21,8 @@ index dc7223b..26c53b7 100644
 +    include(SelectLibraryConfigurations)
 +    
 +    find_path(LIBIDN2_INCLUDE_DIRS idn2.h)
-+    find_library(LIBIDN2_LIBRARY_DEBUG NAMES libidn2 idn2 PATH_SUFFIXES lib Release)
-+    find_library(LIBIDN2_LIBRARY_RELEASE NAMES libidn2 idn2 PATH_SUFFIXES debug/lib Debug)
++    find_library(LIBIDN2_LIBRARY_DEBUG NAMES libidn2 idn2 PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib NO_DEFAULT_PATH Release RelWithDebInfo MinSizeRel)
++    find_library(LIBIDN2_LIBRARY_RELEASE NAMES libidn2 idn2 PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib NO_DEFAULT_PATH Debug)
 +    select_library_configurations(LIBIDN2)
 +    
 +    add_definitions(-DHAVE_IDN2_H -DHAVE_LIBIDN2)
