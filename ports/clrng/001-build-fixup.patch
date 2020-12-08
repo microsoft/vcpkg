@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 65f51db..f5ff9e5 100644
+index 65f51db..283fbd6 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -31,7 +31,7 @@
@@ -11,21 +11,7 @@ index 65f51db..f5ff9e5 100644
  
  if( CMAKE_GENERATOR MATCHES "NMake" )
  	option( NMAKE_COMPILE_VERBOSE "Print compile and link strings to the console" OFF )
-@@ -81,13 +81,6 @@ option( BUILD_RUNTIME "Build the RNG runtime library" ON )
- option( BUILD_CLIENT "Build a command line clRNG client program with a variety of configurable parameters" ON )
- option( BUILD_TEST "Build library tests" ON )
- #option( BUILD_LOADLIBRARIES "Build the optional dynamic load libraries that the RNG runtime will search for" ON )
--option( BUILD_SHARED_LIBRARY "Build shared libraries." ON)
--SET (LIB_TYPE STATIC)
--# If BOOST_ROOT is defined as an environment value, use that value and cache it so it's visible in the cmake-gui.  
--# Otherwise, create a sensible default that the user can change
--#if( DEFINED ENV{BOOST_ROOT} )
--#	set( BOOST_ROOT $ENV{BOOST_ROOT} CACHE PATH "Environment variable defining the root of the Boost installation" )
--#endif( )
- 
- # Currently, linux has a problem outputing both narrow and wide characters,
- # which happens in our client because openCL only supports narrow characters
-@@ -116,23 +109,6 @@ else()
+@@ -116,23 +116,6 @@ else()
  	endif()
  endif()
  
@@ -49,7 +35,7 @@ index 65f51db..f5ff9e5 100644
  set( SUFFIX_LIB ${SUFFIX_LIB_DEFAULT} CACHE STRING "String to append to 'lib' install path" )
  set( SUFFIX_BIN ${SUFFIX_BIN_DEFAULT} CACHE STRING "String to append to 'bin' install path" )
  
-@@ -160,19 +136,11 @@ set( SUFFIX_BIN ${SUFFIX_BIN_DEFAULT} CACHE STRING "String to append to 'bin' in
+@@ -160,19 +143,11 @@ set( SUFFIX_BIN ${SUFFIX_BIN_DEFAULT} CACHE STRING "String to append to 'bin' in
  #   message( WARNING "Try setting Boost_DEBUG and Boost_DETAILED_FAILURE_MSG for more information" )
  #endif( )
  
@@ -73,7 +59,7 @@ index 65f51db..f5ff9e5 100644
  endif()
  
  # Enable building of the clACML client if both requested and all dependencies are found
-@@ -190,41 +158,7 @@ endif( )
+@@ -190,41 +165,7 @@ endif( )
  #	set( UNIT_TEST OFF )
  #endif( )
  
@@ -116,7 +102,7 @@ index 65f51db..f5ff9e5 100644
      if( CODE_COVERAGE )
          set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
          set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
-@@ -296,13 +230,6 @@ else( )
+@@ -296,13 +237,6 @@ else( )
    message( "RNG clients will NOT be built" )
  endif( )
  
