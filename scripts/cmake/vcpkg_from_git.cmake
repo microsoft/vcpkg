@@ -25,10 +25,17 @@ The url of the git repository.
 ### REF
 The git sha of the commit to download.
 
+### TAG
+The git tag to download.
+
 ### PATCHES
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
+
+### OUT_REF
+Maintainers only. Used for automatic REF updates for ports using a versioned TAG.
+Will return early!
 
 ## Notes:
 `OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
@@ -41,7 +48,7 @@ Relative paths are based on the port directory.
 include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_from_git)
-  set(oneValueArgs OUT_SOURCE_PATH URL REF)
+  set(oneValueArgs OUT_SOURCE_PATH URL REF TAG OUT_REF)
   set(multipleValuesArgs PATCHES)
   # parse parameters such that semicolons in options arguments to COMMAND don't get erased
   cmake_parse_arguments(PARSE_ARGV 0 _vdud "" "${oneValueArgs}" "${multipleValuesArgs}")
@@ -58,8 +65,12 @@ function(vcpkg_from_git)
     message(FATAL_ERROR "The git ref must be specified.")
   endif()
 
+  if(NOT DEFINED _vdud_TAG)
+    set(_vdud_TAG ${_vdud_REF})
+  endif()
+  
   # using .tar.gz instead of .zip because the hash of the latter is affected by timezone.
-  string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
+  string(REPLACE "/" "-" SANITIZED_REF "${_vdud_TAG}")
   set(TEMP_ARCHIVE "${DOWNLOADS}/temp/${PORT}-${SANITIZED_REF}.tar.gz")
   set(ARCHIVE "${DOWNLOADS}/${PORT}-${SANITIZED_REF}.tar.gz")
   set(TEMP_SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/src/${SANITIZED_REF}")
@@ -79,7 +90,7 @@ function(vcpkg_from_git)
     )
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${GIT} fetch ${_vdud_URL} ${_vdud_REF} --depth 1 -n
+      COMMAND ${GIT} fetch ${_vdud_URL} ${_vdud_TAG} --depth 1 -n
       WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
       LOGNAME git-fetch-${TARGET_TRIPLET}
     )
@@ -94,8 +105,11 @@ function(vcpkg_from_git)
         message(FATAL_ERROR "unable to determine FETCH_HEAD after fetching git repository")
     endif()
     string(REGEX REPLACE "\n$" "" REV_PARSE_HEAD "${REV_PARSE_HEAD}")
-    if(NOT REV_PARSE_HEAD STREQUAL _vdud_REF)
+    if(NOT REV_PARSE_HEAD STREQUAL _vdud_REF AND NOT DEFINED _vdud_OUT_REF)
         message(FATAL_ERROR "REF (${_vdud_REF}) does not match FETCH_HEAD (${REV_PARSE_HEAD})")
+    elseif(DEFINED _vdud_OUT_REF)
+        set(${_vdud_OUT_REF} ${REV_PARSE_HEAD} PARENT_SCOPE)
+        return()
     endif()
 
     file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
