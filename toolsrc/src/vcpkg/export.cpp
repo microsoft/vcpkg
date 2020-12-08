@@ -2,6 +2,7 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+#include <vcpkg/base/xmlserializer.h>
 
 #include <vcpkg/commands.h>
 #include <vcpkg/dependencies.h>
@@ -28,37 +29,47 @@ namespace vcpkg::Export
                                                    const fs::path& targets_redirect_path,
                                                    const fs::path& props_redirect_path,
                                                    const std::string& nuget_id,
-                                                   const std::string& nupkg_version)
+                                                   const std::string& nupkg_version,
+                                                   const std::string& nuget_description)
     {
-        static constexpr auto CONTENT_TEMPLATE = R"(
-<package>
-    <metadata>
-        <id>@NUGET_ID@</id>
-        <version>@VERSION@</version>
-        <authors>vcpkg</authors>
-        <description>
-            Vcpkg NuGet export
-        </description>
-    </metadata>
-    <files>
-        <file src="@RAW_EXPORTED_DIR@\installed\**" target="installed" />
-        <file src="@RAW_EXPORTED_DIR@\scripts\**" target="scripts" />
-        <file src="@RAW_EXPORTED_DIR@\.vcpkg-root" target="" />
-        <file src="@TARGETS_REDIRECT_PATH@" target="build\native\@NUGET_ID@.targets" />
-        <file src="@PROPS_REDIRECT_PATH@" target="build\native\@NUGET_ID@.props" />
-    </files>
-</package>
-)";
+        XmlSerializer xml;
+        xml.open_tag("package").line_break();
+        xml.open_tag("metadata").line_break();
+        xml.simple_tag("id", nuget_id).line_break();
+        xml.simple_tag("version", nupkg_version).line_break();
+        xml.simple_tag("authors", "vcpkg").line_break();
+        xml.simple_tag("description", nuget_description).line_break();
+        xml.close_tag("metadata").line_break();
+        xml.open_tag("files").line_break();
+        xml.start_complex_open_tag("file")
+            .text_attr("src", raw_exported_dir + "\\installed\\**")
+            .text_attr("target", "installed")
+            .finish_self_closing_complex_tag();
 
-        std::string nuspec_file_content = Strings::replace_all(CONTENT_TEMPLATE, "@NUGET_ID@", nuget_id);
-        nuspec_file_content = Strings::replace_all(std::move(nuspec_file_content), "@VERSION@", nupkg_version);
-        nuspec_file_content =
-            Strings::replace_all(std::move(nuspec_file_content), "@RAW_EXPORTED_DIR@", raw_exported_dir);
-        nuspec_file_content = Strings::replace_all(
-            std::move(nuspec_file_content), "@TARGETS_REDIRECT_PATH@", fs::u8string(targets_redirect_path));
-        nuspec_file_content = Strings::replace_all(
-            std::move(nuspec_file_content), "@PROPS_REDIRECT_PATH@", fs::u8string(props_redirect_path));
-        return nuspec_file_content;
+        xml.start_complex_open_tag("file")
+            .text_attr("src", raw_exported_dir + "\\scripts\\**")
+            .text_attr("target", "scripts")
+            .finish_self_closing_complex_tag();
+
+        xml.start_complex_open_tag("file")
+            .text_attr("src", raw_exported_dir + "\\.vcpkg-root")
+            .text_attr("target", "")
+            .finish_self_closing_complex_tag();
+
+        xml.start_complex_open_tag("file")
+            .text_attr("src", fs::u8string(targets_redirect_path))
+            .text_attr("target", Strings::concat("build\\native\\", nuget_id, ".targets"))
+            .finish_self_closing_complex_tag();
+
+        xml.start_complex_open_tag("file")
+            .text_attr("src", fs::u8string(props_redirect_path))
+            .text_attr("target", Strings::concat("build\\native\\", nuget_id, ".props"))
+            .finish_self_closing_complex_tag();
+
+        xml.close_tag("files").line_break();
+        xml.close_tag("package").line_break();
+
+        return std::move(xml.buf);
     }
 
     static std::string create_targets_redirect(const std::string& target_path) noexcept
@@ -123,6 +134,7 @@ namespace vcpkg::Export
     static fs::path do_nuget_export(const VcpkgPaths& paths,
                                     const std::string& nuget_id,
                                     const std::string& nuget_version,
+                                    const std::string& nuget_description,
                                     const fs::path& raw_exported_dir,
                                     const fs::path& output_dir)
     {
@@ -145,7 +157,7 @@ namespace vcpkg::Export
         fs.write_contents(props_redirect, props_redirect_content, VCPKG_LINE_INFO);
 
         const std::string nuspec_file_content = create_nuspec_file_contents(
-            raw_exported_dir.string(), targets_redirect, props_redirect, nuget_id, nuget_version);
+            raw_exported_dir.string(), targets_redirect, props_redirect, nuget_id, nuget_version, nuget_description);
         const fs::path nuspec_file_path = paths.buildsystems / "tmp" / "vcpkg.export.nuspec";
         fs.write_contents(nuspec_file_path, nuspec_file_content, VCPKG_LINE_INFO);
 
@@ -284,6 +296,7 @@ namespace vcpkg::Export
 
         Optional<std::string> maybe_nuget_id;
         Optional<std::string> maybe_nuget_version;
+        Optional<std::string> maybe_nuget_description;
 
         IFW::Options ifw_options;
         Prefab::Options prefab_options;
@@ -300,6 +313,7 @@ namespace vcpkg::Export
     static constexpr StringLiteral OPTION_ZIP = "zip";
     static constexpr StringLiteral OPTION_SEVEN_ZIP = "7zip";
     static constexpr StringLiteral OPTION_NUGET_ID = "nuget-id";
+    static constexpr StringLiteral OPTION_NUGET_DESCRIPTION = "nuget-description";
     static constexpr StringLiteral OPTION_NUGET_VERSION = "nuget-version";
     static constexpr StringLiteral OPTION_IFW_REPOSITORY_URL = "ifw-repository-url";
     static constexpr StringLiteral OPTION_IFW_PACKAGES_DIR_PATH = "ifw-packages-directory-path";
@@ -334,10 +348,11 @@ namespace vcpkg::Export
         {OPTION_ALL_INSTALLED, "Export all installed packages"},
     }};
 
-    static constexpr std::array<CommandSetting, 16> EXPORT_SETTINGS = {{
+    static constexpr std::array<CommandSetting, 17> EXPORT_SETTINGS = {{
         {OPTION_OUTPUT, "Specify the output name (used to construct filename)"},
         {OPTION_OUTPUT_DIR, "Specify the output directory for produced artifacts"},
         {OPTION_NUGET_ID, "Specify the id for the exported NuGet package (overrides --output)"},
+        {OPTION_NUGET_DESCRIPTION, "Specify a description for the exported NuGet package"},
         {OPTION_NUGET_VERSION, "Specify the version for the exported NuGet package"},
         {OPTION_IFW_REPOSITORY_URL, "Specify the remote repository URL for the online installer"},
         {OPTION_IFW_PACKAGES_DIR_PATH, "Specify the temporary directory path for the repacked packages"},
@@ -456,6 +471,7 @@ namespace vcpkg::Export
                         {
                             {OPTION_NUGET_ID, ret.maybe_nuget_id},
                             {OPTION_NUGET_VERSION, ret.maybe_nuget_version},
+                            {OPTION_NUGET_DESCRIPTION, ret.maybe_nuget_description},
                         });
 
         options_implies(OPTION_IFW,
@@ -567,8 +583,9 @@ namespace vcpkg::Export
 
             const std::string nuget_id = opts.maybe_nuget_id.value_or(raw_exported_dir_path.filename().string());
             const std::string nuget_version = opts.maybe_nuget_version.value_or("1.0.0");
-            const fs::path output_path =
-                do_nuget_export(paths, nuget_id, nuget_version, raw_exported_dir_path, opts.output_dir);
+            const std::string nuget_description = opts.maybe_nuget_description.value_or("Vcpkg NuGet export");
+            const fs::path output_path = do_nuget_export(
+                paths, nuget_id, nuget_version, nuget_description, raw_exported_dir_path, opts.output_dir);
             System::print2(System::Color::success, "NuGet package exported at: ", fs::u8string(output_path), "\n");
 
             System::printf(R"(

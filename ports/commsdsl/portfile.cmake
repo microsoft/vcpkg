@@ -3,21 +3,17 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commschamp/commsdsl
-    REF v3.5.2
-    SHA512 cc763420e84faa7f0c6bf6c7e89e21cbf4e61eeed9916273a5117786a4d54ccc58356904266b6f8e1643fdb7715deabcea868e6a7af574a44ca0363574602aa2
+    REF v3.5.4
+    SHA512 d2bbb5332606d86200645f628507da966b385c2d8f0010e8cb83e0cdb3f3384272021db24ccb9418c69b4bd61a38edc18149cd0f7adbbbbc30168d0a15abef58
     HEAD_REF master
-    PATCHES 
-        "use-FindPackage.patch"
-        "fix-libxml2.patch"
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DCOMMSDSL_TEST_BUILD_CC_PLUGIN=OFF
+        -DCOMMSDSL_NO_COMMS_CHAMPION=ON
         -DCOMMSDSL_NO_TESTS=ON
-        -DBUILD_TESTING=OFF
         -DCOMMSDSL_NO_WARN_AS_ERR=ON # remove on next version or on next version of boost
 )
 vcpkg_install_cmake()
