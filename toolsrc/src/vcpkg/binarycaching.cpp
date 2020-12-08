@@ -383,39 +383,37 @@ namespace
             {
                 return System::cmd_execute(cmdline);
             }
-            else
+
+            auto res = System::cmd_execute_and_capture_output(cmdline);
+            if (Debug::g_debugging)
             {
-                auto res = System::cmd_execute_and_capture_output(cmdline);
+                System::print2(res.output);
+            }
+            if (res.output.find("Authentication may require manual action.") != std::string::npos)
+            {
+                System::print2(System::Color::warning,
+                               "One or more NuGet credential providers requested manual action. Add the binary "
+                               "source 'interactive' to allow interactivity.\n");
+            }
+            else if (res.output.find("Response status code does not indicate success: 401 (Unauthorized)") !=
+                         std::string::npos &&
+                     res.exit_code != 0)
+            {
+                System::print2(System::Color::warning,
+                               "One or more NuGet credential providers failed to authenticate. See "
+                               "https://github.com/Microsoft/vcpkg/tree/master/docs/users/binarycaching.md for "
+                               "more details on how to provide credentials.\n");
+            }
+            else if (res.output.find("for example \"-ApiKey AzureDevOps\"") != std::string::npos)
+            {
+                auto res2 = System::cmd_execute_and_capture_output(cmdline + " -ApiKey AzureDevOps");
                 if (Debug::g_debugging)
                 {
-                    System::print2(res.output);
+                    System::print2(res2.output);
                 }
-                if (res.output.find("Authentication may require manual action.") != std::string::npos)
-                {
-                    System::print2(System::Color::warning,
-                                   "One or more NuGet credential providers requested manual action. Add the binary "
-                                   "source 'interactive' to allow interactivity.\n");
-                }
-                else if (res.output.find("Response status code does not indicate success: 401 (Unauthorized)") !=
-                             std::string::npos &&
-                         res.exit_code != 0)
-                {
-                    System::print2(System::Color::warning,
-                                   "One or more NuGet credential providers failed to authenticate. See "
-                                   "https://github.com/Microsoft/vcpkg/tree/master/docs/users/binarycaching.md for "
-                                   "more details on how to provide credentials.\n");
-                }
-                else if (res.output.find("for example \"-ApiKey AzureDevOps\"") != std::string::npos)
-                {
-                    auto res2 = System::cmd_execute_and_capture_output(cmdline + " -ApiKey AzureDevOps");
-                    if (Debug::g_debugging)
-                    {
-                        System::print2(res2.output);
-                    }
-                    return res2.exit_code;
-                }
-                return res.exit_code;
+                return res2.exit_code;
             }
+            return res.exit_code;
         }
 
         void prefetch(const VcpkgPaths& paths, std::vector<const Dependencies::InstallPlanAction*>& actions) override
@@ -1296,13 +1294,12 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
 {
     HelpTableFormatter tbl;
     tbl.text("Vcpkg can cache compiled packages to accelerate restoration on a single machine or across the network."
-             " This functionality is currently enabled by default and can be disabled by either passing "
-             "`--no-binarycaching` to every vcpkg command line or setting the environment variable "
-             "`VCPKG_FEATURE_FLAGS` to `-binarycaching`.");
+             " By default, vcpkg will save builds to a local machine cache. This can be disabled by passing "
+             "`--binarysource=clear` as the last option on the command line.");
     tbl.blank();
     tbl.blank();
     tbl.text(
-        "Once caching is enabled, it can be further configured by either passing `--binarysource=<source>` options "
+        "Binary caching can be further configured by either passing `--binarysource=<source>` options "
         "to every command line or setting the `VCPKG_BINARY_SOURCES` environment variable to a set of sources (Ex: "
         "\"<source>;<source>;...\"). Command line sources are interpreted after environment sources.");
     tbl.blank();
