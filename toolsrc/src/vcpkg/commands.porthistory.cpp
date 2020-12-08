@@ -168,17 +168,32 @@ namespace vcpkg::Commands::PortHistory
         }
     }
 
+    static constexpr StringLiteral OPTION_OUTPUT_FILE = "output";
+
+    static const CommandSetting HISTORY_SETTINGS[] = {
+        {OPTION_OUTPUT_FILE, "Write output to a file"},
+    };
+
     const CommandStructure COMMAND_STRUCTURE = {
         create_example_string("history <port>"),
         1,
         1,
-        {},
+        {{}, {HISTORY_SETTINGS}, {}},
         nullptr,
     };
 
+    static Optional<std::string> maybe_lookup(std::unordered_map<std::string, std::string> const& m,
+                                              std::string const& key)
+    {
+        const auto it = m.find(key);
+        if (it != m.end()) return it->second;
+        return nullopt;
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
+        const ParsedArguments parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
+        auto maybe_output_file = maybe_lookup(parsed_args.settings, OPTION_OUTPUT_FILE);
 
         std::string port_name = args.command_arguments.at(0);
         std::vector<HistoryVersion> versions = read_versions_from_log(paths, port_name);
@@ -200,7 +215,24 @@ namespace vcpkg::Commands::PortHistory
             root.insert("versions", versions_json);
 
             auto json_string = Json::stringify(root, vcpkg::Json::JsonStyle::with_spaces(2));
-            System::printf("%s\n", json_string);
+
+            if (maybe_output_file.has_value())
+            {
+                auto output_file_path = fs::u8path(maybe_output_file.value_or_exit(VCPKG_LINE_INFO));
+                auto& fs = paths.get_filesystem();
+                std::error_code ec;
+                fs.write_contents(output_file_path, json_string, ec);
+                if (ec)
+                {
+                    System::printf(
+                        System::Color::error, "Error: Couldn't write output file `%s`", fs::u8string(output_file_path));
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+            }
+            else
+            {
+                System::printf("%s\n", json_string);
+            }
         }
         else
         {
