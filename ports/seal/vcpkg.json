@@ -1,0 +1,35 @@
+{
+    "name": "seal",
+    "version-string": "3.6.0",
+    "port-version": 1,
+    "description": "Microsoft SEAL is an easy-to-use and powerful homomorphic encryption library.",
+    "default-features": [
+        "ms-gsl",
+        "zlib",
+        "zstd"
+    ],
+    "features": {
+        "ms-gsl": {
+            "description": "Use ms-gsl for span view",
+            "dependencies": [
+                "ms-gsl"
+            ]
+        },
+        "zlib": {
+            "description": "Use zlib for compressed serialization",
+            "dependencies": [
+                "zlib"
+            ]
+        },
+        "zstd": {
+            "description": "Use zstd for compressed serialization",
+            "dependencies": [
+                "zstd"
+            ]
+        },
+        "no-throw-tran": {
+            "description": "Do not throw if operating on a transparent ciphertext"
+        }
+    },
+    "supports": "!(windows & static)"
+}
