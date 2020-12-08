@@ -30,7 +30,7 @@ Build-Depends: eigen3
 Description: Eigen support for opencv
 
 Feature: ffmpeg
-Build-Depends: ffmpeg
+Build-Depends: ffmpeg[x264,x265]
 Description: ffmpeg support for opencv
 
 Feature: gdcm
