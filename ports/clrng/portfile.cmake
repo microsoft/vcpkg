@@ -5,8 +5,10 @@ vcpkg_from_github(
     SHA512 28bda5d2a156e7394917f8c40bd1e8e7b52cf680abc0ef50c2650b1d546c0a1d0bd47ceeccce3cd7c79c90a15494c3d27829e153613a7d8e18267ce7262eeb6e
     HEAD_REF master
     PATCHES
-        002-build-fixup.patch
+        001-build-fixup.patch
 )
+
+file(REMOVE ${SOURCE_PATH}/src/FindOpenCL.cmake)
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_CMAKE_SYSTEM_NAME)
     set(R123_SSE_FLAG [[-DCMAKE_C_FLAGS="/DR123_USE_SSE=0"]])
