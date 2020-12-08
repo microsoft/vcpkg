@@ -116,8 +116,7 @@ clblas:arm64-windows=fail
 clblast:x64-linux=fail
 clblast:x64-windows-static=fail
 # clRNG headers are hardcoded to fail on non-x86 archs
-clrng:arm64-windows        = skip
-clrng:arm64-windows-static = skip
+clrng:arm64-windows        = fail
 clockutils:x64-linux=fail
 clockutils:x64-osx=fail
 cmark:x64-windows-static=fail
