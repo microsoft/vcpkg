@@ -363,6 +363,9 @@ If you wish to silence this error and use classic mode, you can:
         vcpkg_dir_updates = vcpkg_dir / fs::u8path("updates");
 
         // Versioning paths
+        version_files = root / fs::u8path("port_versions");
+        local_baseline_filepath = version_files / fs::u8path("baseline.json");
+
         const auto versioning_tmp = buildtrees / fs::u8path("versioning_tmp");
         const auto versioning_output = buildtrees / fs::u8path("versioning");
 

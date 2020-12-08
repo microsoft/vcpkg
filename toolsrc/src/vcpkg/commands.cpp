@@ -6,6 +6,7 @@
 #include <vcpkg/commands.cache.h>
 #include <vcpkg/commands.ci.h>
 #include <vcpkg/commands.ciclean.h>
+#include <vcpkg/commands.civerifyversions.h>
 #include <vcpkg/commands.contact.h>
 #include <vcpkg/commands.create.h>
 #include <vcpkg/commands.dependinfo.h>
@@ -73,6 +74,7 @@ namespace vcpkg::Commands
         static const PortHistory::PortHistoryCommand porthistory{};
         static const X_VSInstances::VSInstancesCommand vsinstances{};
         static const FormatManifest::FormatManifestCommand format_manifest{};
+        static const CIVerifyVersions::CIVerifyVersionsCommand ci_verify_versions{};
 
         static std::vector<PackageNameAndFunction<const PathsCommand*>> t = {
             {"/?", &help},
@@ -94,6 +96,7 @@ namespace vcpkg::Commands
             {"x-history", &porthistory},
             {"x-vsinstances", &vsinstances},
             {"format-manifest", &format_manifest},
+            {"x-ci-verify-versions", &ci_verify_versions},
         };
         return t;
     }

@@ -97,6 +97,9 @@ namespace vcpkg
         fs::path buildsystems_msbuild_targets;
         fs::path buildsystems_msbuild_props;
 
+        fs::path version_files;
+        fs::path local_baseline_filepath;
+
         fs::path vcpkg_dir;
         fs::path vcpkg_dir_status_file;
         fs::path vcpkg_dir_info;

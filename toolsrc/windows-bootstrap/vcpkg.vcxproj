@@ -218,6 +218,7 @@
     <ClInclude Include="..\include\vcpkg\commands.cache.h" />
     <ClInclude Include="..\include\vcpkg\commands.ci.h" />
     <ClInclude Include="..\include\vcpkg\commands.ciclean.h" />
+    <ClInclude Include="..\include\vcpkg\commands.civerifyversions.h" />
     <ClInclude Include="..\include\vcpkg\commands.contact.h" />
     <ClInclude Include="..\include\vcpkg\commands.create.h" />
     <ClInclude Include="..\include\vcpkg\commands.dependinfo.h" />
@@ -308,6 +309,7 @@
     <ClCompile Include="..\src\vcpkg\commands.cache.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.ci.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.ciclean.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.civerifyversions.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.contact.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.create.cpp" />
