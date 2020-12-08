@@ -493,6 +493,33 @@ namespace vcpkg::PortFileProvider
             mutable std::unordered_map<VersionSpec, std::string, VersionSpecHasher> git_tree_cache;
             mutable std::unordered_map<VersionSpec, SourceControlFileLocation, VersionSpecHasher> control_cache;
         };
+
+        struct OverlayProviderImpl : IOverlayProvider, Util::ResourceBase
+        {
+            OverlayProviderImpl(const VcpkgPaths& paths, View<std::string> overlay_ports)
+                : paths(paths), m_overlay_ports(Util::fmap(overlay_ports, [&paths](const std::string& s) -> fs::path {
+                    return Files::combine(paths.original_cwd, fs::u8path(s));
+                }))
+            {
+            }
+
+            virtual Optional<const SourceControlFileLocation&> get_control_file(StringView port_name) const override
+            {
+                auto it = m_overlay_cache.find(port_name);
+                if (it == m_overlay_cache.end())
+                {
+                    auto s_port_name = port_name.to_string();
+                    auto maybe_overlay = try_load_overlay_port(paths.get_filesystem(), m_overlay_ports, s_port_name);
+                    it = m_overlay_cache.emplace(std::move(s_port_name), std::move(maybe_overlay)).first;
+                }
+                return it->second;
+            }
+
+        private:
+            const VcpkgPaths& paths;
+            const std::vector<fs::path> m_overlay_ports;
+            mutable std::map<std::string, Optional<SourceControlFileLocation>, std::less<>> m_overlay_cache;
+        };
     }
 
     std::unique_ptr<IBaselineProvider> make_baseline_provider(const vcpkg::VcpkgPaths& paths)
@@ -508,5 +535,11 @@ namespace vcpkg::PortFileProvider
     std::unique_ptr<IVersionedPortfileProvider> make_versioned_portfile_provider(const vcpkg::VcpkgPaths& paths)
     {
         return std::make_unique<VersionedPortfileProviderImpl>(paths);
+    }
+
+    std::unique_ptr<IOverlayProvider> make_overlay_provider(const vcpkg::VcpkgPaths& paths,
+                                                            View<std::string> overlay_ports)
+    {
+        return std::make_unique<OverlayProviderImpl>(paths, std::move(overlay_ports));
     }
 }

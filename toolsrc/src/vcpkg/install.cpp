@@ -851,10 +851,12 @@ namespace vcpkg::Install
                         return PortFileProvider::make_baseline_provider(paths);
                     }
                 }();
+                auto oprovider = PortFileProvider::make_overlay_provider(paths, args.overlay_ports);
 
                 auto install_plan =
                     Dependencies::create_versioned_install_plan(*verprovider,
                                                                 *baseprovider,
+                                                                *oprovider,
                                                                 var_provider,
                                                                 manifest_scf.core_paragraph->dependencies,
                                                                 manifest_scf.core_paragraph->overrides,
