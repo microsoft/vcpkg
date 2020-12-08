@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.0)
 project(atk C)
 
-set(ATK_LIB_SUFFIX 1.0)
-set(ATK_DLL_SUFFIX 1)
-set(GLIB_LIB_VERSION 2.0)
+set(ATK_LIB_SUFFIX @ATK_LIB_SUFFIX@)
+set(ATK_DLL_SUFFIX @ATK_DLL_SUFFIX@)
+set(GLIB_LIB_VERSION @GLIB_LIB_VERSION@)
 
 if(BUILD_SHARED_LIBS)
     set(ATK_EXPORT_MACRO DLL_EXPORT)
@@ -142,3 +142,14 @@ message(STATUS "  " ${LIBINTL_LIBRARY})
 foreach(GL ${GLIB_LIBRARIES})
     message(STATUS "  " ${GL})
 endforeach()
+
+set(prefix ${CMAKE_INSTALL_PREFIX})
+set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+set(ATK_API_VERSION @ATK_API_VERSION@)
+set(VERSION @ATK_VERSION@)
+set(GLIB_PACKAGES "glib-${GLIB_LIB_VERSION} gobject-${GLIB_LIB_VERSION} gmodule-${GLIB_LIB_VERSION}")
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/atk.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/atk.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/atk.pc" DESTINATION lib/pkgconfig)

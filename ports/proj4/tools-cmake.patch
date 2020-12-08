@@ -1,12 +1,11 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 48c785a..e2b5485 100644
+index 534bc311b..f9fb0f1bb 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -69,11 +69,3 @@ if(BUILD_GIE)
-   include(bin_gie.cmake)
-   set(BIN_TARGETS ${BIN_TARGETS} gie)
+@@ -83,10 +83,3 @@ if(BUILD_PROJSYNC)
  endif()
--
+ 
+ 
 -if(MSVC OR CMAKE_CONFIGURATION_TYPES)
 -  if(BIN_TARGETS)
 -    # Add _d suffix for your debug versions of the tools

@@ -1,7 +1,6 @@
 {
   "name": "flashlight-cuda",
-  "version-string": "20201120",
-  "port-version": 1,
+  "version-string": "20201201",
   "description": "A C++ standalone library for machine learning. CUDA backend.",
   "supports": "!(windows | osx)",
   "default-features": [
@@ -43,7 +42,8 @@
           ]
         },
         "nccl",
-        "openmpi"
+        "openmpi",
+        "stb"
       ]
     },
     "imgclass": {

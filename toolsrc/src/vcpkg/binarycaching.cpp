@@ -5,6 +5,7 @@
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/xmlserializer.h>
 
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/binarycaching.private.h>
@@ -699,113 +700,6 @@ namespace vcpkg
     };
 }
 
-XmlSerializer& XmlSerializer::emit_declaration()
-{
-    buf.append(R"(<?xml version="1.0" encoding="utf-8"?>)");
-    return *this;
-}
-XmlSerializer& XmlSerializer::open_tag(StringLiteral sl)
-{
-    emit_pending_indent();
-    Strings::append(buf, '<', sl, '>');
-    m_indent += 2;
-    return *this;
-}
-XmlSerializer& XmlSerializer::start_complex_open_tag(StringLiteral sl)
-{
-    emit_pending_indent();
-    Strings::append(buf, '<', sl);
-    m_indent += 2;
-    return *this;
-}
-XmlSerializer& XmlSerializer::text_attr(StringLiteral name, StringView content)
-{
-    if (m_pending_indent)
-    {
-        m_pending_indent = false;
-        buf.append(m_indent, ' ');
-    }
-    else
-    {
-        buf.push_back(' ');
-    }
-    Strings::append(buf, name, "=\"");
-    text(content);
-    Strings::append(buf, '"');
-    return *this;
-}
-XmlSerializer& XmlSerializer::finish_complex_open_tag()
-{
-    emit_pending_indent();
-    Strings::append(buf, '>');
-    return *this;
-}
-XmlSerializer& XmlSerializer::finish_self_closing_complex_tag()
-{
-    emit_pending_indent();
-    Strings::append(buf, "/>");
-    m_indent -= 2;
-    return *this;
-}
-XmlSerializer& XmlSerializer::close_tag(StringLiteral sl)
-{
-    m_indent -= 2;
-    emit_pending_indent();
-    Strings::append(buf, "</", sl, '>');
-    return *this;
-}
-XmlSerializer& XmlSerializer::text(StringView sv)
-{
-    emit_pending_indent();
-    for (auto ch : sv)
-    {
-        if (ch == '&')
-        {
-            buf.append("&amp;");
-        }
-        else if (ch == '<')
-        {
-            buf.append("&lt;");
-        }
-        else if (ch == '>')
-        {
-            buf.append("&gt;");
-        }
-        else if (ch == '"')
-        {
-            buf.append("&quot;");
-        }
-        else if (ch == '\'')
-        {
-            buf.append("&apos;");
-        }
-        else
-        {
-            buf.push_back(ch);
-        }
-    }
-    return *this;
-}
-XmlSerializer& XmlSerializer::simple_tag(StringLiteral tag, StringView content)
-{
-    return emit_pending_indent().open_tag(tag).text(content).close_tag(tag);
-}
-XmlSerializer& XmlSerializer::line_break()
-{
-    buf.push_back('\n');
-    m_pending_indent = true;
-    return *this;
-}
-XmlSerializer& XmlSerializer::emit_pending_indent()
-{
-    if (m_pending_indent)
-    {
-        m_pending_indent = false;
-        buf.append(m_indent, ' ');
-    }
-    return *this;
-}
-
 IBinaryProvider& vcpkg::null_binary_provider()
 {
     static NullBinaryProvider p;
@@ -1131,6 +1025,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
 
     BinaryConfigParser default_parser("default,readwrite", "<defaults>", &s);
     default_parser.parse();
+    if (auto err = default_parser.get_error()) return err->get_message();
 
     BinaryConfigParser env_parser(env_string, "VCPKG_BINARY_SOURCES", &s);
     env_parser.parse();
@@ -1179,7 +1074,7 @@ std::string vcpkg::reformat_version(const std::string& version, const std::strin
         auto major = trim_leading_zeroes(sm.str(1));
         auto minor = sm.size() > 2 && !sm.str(2).empty() ? trim_leading_zeroes(sm.str(2).substr(1)) : "0";
         auto patch = sm.size() > 3 && !sm.str(3).empty() ? trim_leading_zeroes(sm.str(3).substr(1)) : "0";
-        return Strings::concat(major, '.', minor, '.', patch, "-", abi_tag);
+        return Strings::concat(major, '.', minor, '.', patch, "-vcpkg", abi_tag);
     }
 
     static const std::regex date_matcher(R"((\d\d\d\d)-(\d\d)-(\d\d).*)");
@@ -1190,11 +1085,11 @@ std::string vcpkg::reformat_version(const std::string& version, const std::strin
                                trim_leading_zeroes(sm.str(2)),
                                '.',
                                trim_leading_zeroes(sm.str(3)),
-                               "-",
+                               "-vcpkg",
                                abi_tag);
     }
 
-    return Strings::concat("0.0.0-", abi_tag);
+    return Strings::concat("0.0.0-vcpkg", abi_tag);
 }
 
 details::NuGetRepoInfo details::get_nuget_repo_info_from_env()

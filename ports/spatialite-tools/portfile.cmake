@@ -54,7 +54,7 @@ set(LIBS_ALL_DBG
     ${EXPAT_LIBS_DBG} \
     ${LDIR}/debug/lib/readosm.lib \
     ${LDIR}/debug/lib/zlibd.lib \
-    ${LDIR}/debug/lib/proj_d.lib"
+    ${LDIR}/debug/lib/proj_d.lib ole32.lib shell32.lib"
    )
 set(LIBS_ALL_REL
     "${ICONV_LIBS_REL} \
@@ -65,7 +65,7 @@ set(LIBS_ALL_REL
     ${EXPAT_LIBS_REL} \
     ${LDIR}/lib/readosm.lib \
     ${LDIR}/lib/zlib.lib \
-    ${LDIR}/lib/proj.lib"
+    ${LDIR}/lib/proj.lib ole32.lib shell32.lib"
    )
 
 if(BUILD_DEBUG_TOOLS)
