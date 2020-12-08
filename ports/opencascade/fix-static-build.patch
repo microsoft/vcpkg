@@ -1,0 +1,76 @@
+diff --git a/adm/cmake/freetype.cmake b/adm/cmake/freetype.cmake
+index 7f6f950..ca0c525 100644
+--- a/adm/cmake/freetype.cmake
++++ b/adm/cmake/freetype.cmake
+@@ -111,6 +111,8 @@ if (IS_BUILTIN_SEARCH_REQUIRED)
+   endif()
+ 
+   find_package(Freetype)
++  find_package(freetype CONFIG REQUIRED)
++  set(FREETYPE_LIBRARY freetype)
+ 
+   # restore ENV{FREETYPE_DIR}
+   if (3RDPARTY_FREETYPE_DIR AND EXISTS "${3RDPARTY_FREETYPE_DIR}")
+@@ -230,6 +232,22 @@ endif()
+     # set 3RDPARTY_FREETYPE_LIBRARY as notfound, otherwise find_library can't assign a new value to 3RDPARTY_FREETYPE_LIBRARY
+     set (3RDPARTY_FREETYPE_LIBRARY "3RDPARTY_FREETYPE_LIBRARY-NOTFOUND" CACHE FILEPATH "The path to freetype library" FORCE)
+ 
++    if (BUILD_SHARED_LIBS)
++        if (CMAKE_BUILD_TYPE STREQUAL "Debug")
++            get_target_property(3RDPARTY_FREETYPE_LIBRARY freetype IMPORTED_IMPLIB_DEBUG)
++        else()
++            get_target_property(3RDPARTY_FREETYPE_LIBRARY freetype IMPORTED_IMPLIB_RELEASE)
++        endif()
++    else()
++        if (CMAKE_BUILD_TYPE STREQUAL "Debug")
++            get_target_property(3RDPARTY_FREETYPE_LIBRARY freetype IMPORTED_LOCATION_DEBUG)
++        else()
++            get_target_property(3RDPARTY_FREETYPE_LIBRARY freetype IMPORTED_LOCATION_RELEASE)
++        endif()
++    endif()
++    get_filename_component(3RDPARTY_FREETYPE_LIBRARY_DIR ${3RDPARTY_FREETYPE_LIBRARY} DIRECTORY)
++    
++    if(0)
+     if (3RDPARTY_FREETYPE_DIR AND EXISTS "${3RDPARTY_FREETYPE_DIR}")
+       find_library (3RDPARTY_FREETYPE_LIBRARY ${CSF_FREETYPE}
+                                               PATHS "${3RDPARTY_FREETYPE_LIBRARY_DIR}" "${3RDPARTY_FREETYPE_DIR}"
+@@ -257,9 +275,10 @@ endif()
+ 
+     set (3RDPARTY_FREETYPE_LIBRARY "" CACHE FILEPATH "The path to freetype library" FORCE)
+   endif()
++  endif()
+ 
+   # freetype shared library
+-  if (WIN32)
++  if (0)
+     if (NOT 3RDPARTY_FREETYPE_DLL OR NOT EXISTS "${3RDPARTY_FREETYPE_DLL}")
+ 
+       set (CMAKE_FIND_LIBRARY_SUFFIXES .dll)
+diff --git a/adm/cmake/occt_toolkit.cmake b/adm/cmake/occt_toolkit.cmake
+index f59b163..92175e4 100644
+--- a/adm/cmake/occt_toolkit.cmake
++++ b/adm/cmake/occt_toolkit.cmake
+@@ -208,7 +208,7 @@ if (EXECUTABLE_PROJECT)
+ else()
+   add_library (${PROJECT_NAME} ${USED_SRCFILES} ${USED_INCFILES} ${USED_RCFILE} ${RESOURCE_FILES} ${${PROJECT_NAME}_MOC_FILES})
+ 
+-  if (MSVC)
++  if (MSVC AND BUILD_SHARED_LIBS)
+     install (FILES  ${CMAKE_BINARY_DIR}/${OS_WITH_BIT}/${COMPILER}/bin\${OCCT_INSTALL_BIN_LETTER}/${PROJECT_NAME}.pdb
+              CONFIGURATIONS Debug RelWithDebInfo
+              DESTINATION "${INSTALL_DIR_BIN}\${OCCT_INSTALL_BIN_LETTER}")
+diff --git a/src/Font/Font_FontMgr.cxx b/src/Font/Font_FontMgr.cxx
+index 4fad2f6..ba64b51 100644
+--- a/src/Font/Font_FontMgr.cxx
++++ b/src/Font/Font_FontMgr.cxx
+@@ -36,10 +36,6 @@ IMPLEMENT_STANDARD_RTTIEXT(Font_FontMgr,Standard_Transient)
+   #include <windows.h>
+   #include <stdlib.h>
+ 
+-  #ifdef _MSC_VER
+-    #pragma comment (lib, "freetype.lib")
+-  #endif
+-
+   namespace
+   {
+ 

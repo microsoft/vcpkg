@@ -245,7 +245,7 @@ namespace vcpkg::Commands::FormatManifest
 
         if (format_all)
         {
-            for (const auto& dir : fs::directory_iterator(paths.ports))
+            for (const auto& dir : fs::directory_iterator(paths.builtin_ports_directory()))
             {
                 auto control_path = dir.path() / fs::u8path("CONTROL");
                 auto manifest_path = dir.path() / fs::u8path("vcpkg.json");
