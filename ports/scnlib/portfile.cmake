@@ -30,5 +30,3 @@ file(REMOVE_RECURSE
 file(INSTALL ${SOURCE_PATH}/LICENSE 
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
     RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME scn)

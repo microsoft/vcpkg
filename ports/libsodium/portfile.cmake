@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jedisct1/libsodium
@@ -55,5 +53,3 @@ configure_file(
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright
     COPYONLY
 )
-
-#vcpkg_test_cmake(PACKAGE_NAME unofficial-sodium)

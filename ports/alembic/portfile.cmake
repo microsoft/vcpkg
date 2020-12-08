@@ -7,8 +7,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alembic/alembic
-    REF a3ad9600f5b5299dffda3d285aeab89023d2d801 # 1.7.15
-    SHA512 db2b08c2c0426735498225e100c77871273dbf508f3791405a7fe7923714dcb708dcfbf336ae2a0419c10cac9707ccac575f9767e9396d35abcfd90c9b2b3184
+    REF 7e5cf9b896f4299117457f36a7bf47d962cd0ebf # 1.7.16
+    SHA512 aeb449890874fa3a89a72245f3e63a3370332d6becdf20bc77bd9c216bbe1e4578018bbe559c06df69db199799d071399f925a91c8fa816e0eec2d2420f091e9
     HEAD_REF master
     PATCHES
         fix-find-openexr-ilmbase.patch

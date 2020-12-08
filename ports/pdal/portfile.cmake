@@ -13,10 +13,10 @@ vcpkg_extract_source_archive_ex(
         0001-win32_compiler_options.cmake.patch
         0002-no-source-dir-writes.patch
         0003-fix-copy-vendor.patch
-        PDALConfig.patch
         fix-dependency.patch
         libpq.patch
         fix-CPL_DLL.patch
+        0004-fix-const-overloaded.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
