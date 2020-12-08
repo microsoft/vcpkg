@@ -1,8 +1,10 @@
 set(QT_VERSION 6.0.0)
 set(QT_GIT_TAG v${QT_VERSION})
-set(QT_UPDATE_VERSION TRUE)
+# set(QT_UPDATE_VERSION TRUE)
 
 # List of added an removed modules https://doc-snapshots.qt.io/qt6-dev/whatsnew60.html#changes-to-supported-modules
+#https://wiki.qt.io/Get_the_Source
+#TODO:qtknx?
 
 set(QT_PORTS qtbase 
              qttools 
@@ -15,15 +17,13 @@ set(QT_PORTS qtbase
              qttranslations
              qtwayland
              qtdoc
-# TODO
              qtcoap
              qtopcua
              qtimageformats
              qtmqtt
              qtnetworkauth
              qtquickcontrols2
-             qtquicktimeline
-            )
+    )
 
 foreach(_port IN LISTS QT_PORTS)
     set(${_port}_TAG ${QT_GIT_TAG})
@@ -40,10 +40,13 @@ set(qtquick3d_REF          351fd4154e5391d353f7a324f9547ca0dfd42503)
 set(qttranslations_REF     cdc41518a3ac6559fa27879529205dc9f464dde7)
 set(qtwayland_REF          82d41dc9770de885af67e21f9091917f33094e19)
 set(qtdoc_REF              0107165399487b0ccf4a13e35772dfcaab1a5712)
+set(qtimageformats_REF     4f2aa66b2166412b75fc7348de3ffb32f6f116c9))
+set(qtmqtt_REF             56ebef00b775a5342aa6a11d54fe9039e97585e5)
+set(qtquickcontrols2_REF   fcddb4711d72c9be16aae3135520b60fd4c2ea4b)
+set(qtnetworkauth_REF      7e2bb8225078a728a49ef66601f3f56b1ab62db7)
+set(qtcoap_REF             98b614e7c8de52491929bc24506602dbe95897c3)
+set(qtopcua_REF            5fa0b1e3a314238768a4a38634fef170665501ea)
 
-#https://wiki.qt.io/Get_the_Source
-
-#TODO: qtcoap qtimageformats qtknx? qtmqtt qtnetworkauth qtopcua qtquickcontrols2 qtquicktimeline
 
 # set(qtbase_HASH             0)
 # set(qttools_HASH            0)
