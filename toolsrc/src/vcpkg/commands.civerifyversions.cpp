@@ -28,7 +28,7 @@ namespace vcpkg::Commands::CIVerifyVersions
         bool empty() const
         {
             return portfiles_errors.empty() && missing_version_file_errors.empty() &&
-                   unparseable_version_file_errors.empty() && !missing_version_errors.empty() &&
+                   unparseable_version_file_errors.empty() && missing_version_errors.empty() &&
                    not_top_version_errors.empty();
         }
     };
