@@ -1,5 +1,5 @@
 Source: clrng
-Version: 2016.04
+Version: 2020.12.01
 Build-Depends: opencl
 Homepage: https://github.com/clMathLibraries/clRNG
 Description: clRNG is a library for uniform random number generation in OpenCL.
