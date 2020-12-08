@@ -252,11 +252,11 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
 
 # Install CMake helper scripts
 file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_hashes.cmake
-    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake
-    ${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake
+    "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake"
     DESTINATION
-        ${CURRENT_PACKAGES_DIR}/share/${PORT}
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
 qt_stop_on_update()
