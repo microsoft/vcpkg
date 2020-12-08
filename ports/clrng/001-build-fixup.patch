@@ -131,23 +131,22 @@ index 65f51db..f5ff9e5 100644
  	# enable_testing( )
  	add_subdirectory( tests )
 diff --git a/src/library/CMakeLists.txt b/src/library/CMakeLists.txt
-index dbe479d..6342772 100644
+index dbe479d..fa525d6 100644
 --- a/src/library/CMakeLists.txt
 +++ b/src/library/CMakeLists.txt
-@@ -62,15 +62,16 @@ set( clRNG.Headers  private.h
+@@ -62,8 +62,6 @@ set( clRNG.Headers  private.h
  
  set( clRNG.Files ${clRNG.Source} ${clRNG.Headers} )
  
 -# Include standard OpenCL headers
 -include_directories( ${OPENCL_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/include ../include )
-+add_library( clRNG ${clRNG.Files} )
  
--if(BUILD_SHARED_LIBRARY)
--  add_library( clRNG SHARED ${clRNG.Files} )
--else()
--  add_library( clRNG STATIC ${clRNG.Files} )
--endif()
--target_link_libraries( clRNG ${OPENCL_LIBRARIES} )
+ if(BUILD_SHARED_LIBRARY)
+   add_library( clRNG SHARED ${clRNG.Files} )
+@@ -72,6 +70,15 @@ else()
+ endif()
+ target_link_libraries( clRNG ${OPENCL_LIBRARIES} )
+ 
 +target_link_libraries( clRNG PUBLIC
 +  OpenCL::OpenCL
 +  Threads::Threads
@@ -156,10 +155,11 @@ index dbe479d..6342772 100644
 +  $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
 +  $<INSTALL_INTERFACE:include>
 +)
- 
++
  set_target_properties( clRNG PROPERTIES VERSION ${CLRNG_VERSION} )
  set_target_properties( clRNG PROPERTIES SOVERSION ${CLRNG_SOVERSION} )
-@@ -89,7 +90,7 @@ install( TARGETS clRNG
+ set_target_properties( clRNG PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/staging" )
+@@ -89,7 +96,7 @@ install( TARGETS clRNG
          EXPORT clRNG-Targets
          RUNTIME DESTINATION bin${SUFFIX_BIN}
          LIBRARY DESTINATION lib${SUFFIX_LIB}
@@ -168,7 +168,7 @@ index dbe479d..6342772 100644
          )
          
  # CMake config files for clRNG
-@@ -152,6 +153,6 @@ install(    DIRECTORY ${PROJECT_BINARY_DIR}/staging/
+@@ -152,6 +159,6 @@ install(    DIRECTORY ${PROJECT_BINARY_DIR}/staging/
  
  # Install a snapshot of the source as it was for this build; useful for the .pdb's
  install(    DIRECTORY ${PROJECT_SOURCE_DIR}
