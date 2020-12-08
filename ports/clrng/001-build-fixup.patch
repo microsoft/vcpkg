@@ -252,7 +252,7 @@ index 1028024..0000000
 -    message( STATUS "FindOpenCL looked for libraries named: OpenCL" )
 -endif()
 diff --git a/src/library/CMakeLists.txt b/src/library/CMakeLists.txt
-index dbe479d..b1b47a7 100644
+index dbe479d..6342772 100644
 --- a/src/library/CMakeLists.txt
 +++ b/src/library/CMakeLists.txt
 @@ -62,15 +62,16 @@ set( clRNG.Headers  private.h
@@ -289,15 +289,6 @@ index dbe479d..b1b47a7 100644
          )
          
  # CMake config files for clRNG
-@@ -97,7 +98,7 @@ include( CMakePackageConfigHelpers )
- 
- set( LIB_INSTALL_DIR lib${SUFFIX_LIB} )
- set( INCLUDE_INSTALL_DIR include )
--set( ConfigPackageLocation ${LIB_INSTALL_DIR}/cmake/clRNG )
-+set( ConfigPackageLocation share/clrng )
- 
- configure_package_config_file(
-   clRNGConfig.cmake.in
 @@ -152,6 +153,6 @@ install(    DIRECTORY ${PROJECT_BINARY_DIR}/staging/
  
  # Install a snapshot of the source as it was for this build; useful for the .pdb's

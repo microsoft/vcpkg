@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 28bda5d2a156e7394917f8c40bd1e8e7b52cf680abc0ef50c2650b1d546c0a1d0bd47ceeccce3cd7c79c90a15494c3d27829e153613a7d8e18267ce7262eeb6e
     HEAD_REF master
     PATCHES
-        001-build-fixup.patch
+        002-build-fixup.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_CMAKE_SYSTEM_NAME)
@@ -39,7 +39,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(REMOVE ${DEBUG_CRT_FILES})
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/clrng)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/clRNG)
 
 vcpkg_copy_pdbs()
 
