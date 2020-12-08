@@ -58,44 +58,6 @@ namespace vcpkg::Commands::PortHistory
             return std::regex_match(version_string, re);
         }
 
-        std::pair<std::string, int> clean_version_string(const std::string& version_string,
-                                                         int port_version,
-                                                         bool from_manifest)
-        {
-            // Manifest files and ports that use the `Port-Version` field are assumed to have a clean version string
-            // already.
-            if (from_manifest || port_version > 0)
-            {
-                return std::make_pair(version_string, port_version);
-            }
-
-            std::string clean_version = version_string;
-            int clean_port_version = 0;
-
-            const auto index = version_string.find_last_of('-');
-            if (index != std::string::npos)
-            {
-                // Very lazy check to keep date versions untouched
-                if (!is_date(version_string))
-                {
-                    auto maybe_port_version = version_string.substr(index + 1);
-                    clean_version.resize(index);
-
-                    try
-                    {
-                        clean_port_version = std::stoi(maybe_port_version);
-                    }
-                    catch (std::exception&)
-                    {
-                        // If not convertible to int consider last fragment as part of version string
-                        clean_version = version_string;
-                    }
-                }
-            }
-
-            return std::make_pair(clean_version, clean_port_version);
-        }
-
         vcpkg::Optional<HistoryVersion> get_version_from_text(const std::string& text,
                                                               const std::string& git_tree,
                                                               const std::string& commit_id,
@@ -108,20 +70,17 @@ namespace vcpkg::Commands::PortHistory
             {
                 if (const auto& scf = maybe_scf->get())
                 {
-                    // TODO: Get clean version name and port version
-                    const auto version_string = scf->core_paragraph->version;
-                    const auto clean_version =
-                        clean_version_string(version_string, scf->core_paragraph->port_version, is_manifest);
-
-                    // SCF to HistoryVersion
+                    auto version = scf->core_paragraph->version;
+                    auto port_version = scf->core_paragraph->port_version;
                     return HistoryVersion{
                         port_name,
                         git_tree,
                         commit_id,
                         commit_date,
-                        Strings::concat(clean_version.first, "#", std::to_string(clean_version.second)),
-                        clean_version.first,
-                        clean_version.second};
+                        Strings::concat(version, "#", port_version),
+                        version,
+                        port_version,
+                    };
                 }
             }
 
