@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 65f51db..283fbd6 100644
+index 65f51db..b1f252c 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -31,7 +31,7 @@
@@ -11,45 +11,29 @@ index 65f51db..283fbd6 100644
  
  if( CMAKE_GENERATOR MATCHES "NMake" )
  	option( NMAKE_COMPILE_VERBOSE "Print compile and link strings to the console" OFF )
-@@ -116,23 +116,6 @@ else()
- 	endif()
- endif()
+@@ -127,7 +127,6 @@ if( BUILD64 )
+ 	set_property( GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS TRUE )
+ 	message( STATUS "64bit build - FIND_LIBRARY_USE_LIB64_PATHS TRUE" )
  
--# These variables are meant to contain string which should be appended to the installation paths 
--# of library and executable binaries, respectively.  They are meant to be user configurable/overridable.  
--set( SUFFIX_LIB_DEFAULT "" )
--set( SUFFIX_BIN_DEFAULT "" )
--
--# Modify the global find property to help us find libraries like Boost in the correct paths for 64-bit
--# Essentially, find_library calls will look for /lib64 instead of /lib; works for windows and linux
--if( BUILD64 )
--	set_property( GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS TRUE )
--	message( STATUS "64bit build - FIND_LIBRARY_USE_LIB64_PATHS TRUE" )
--
 -    set( SUFFIX_LIB_DEFAULT "64" )
--else( )
--	set_property( GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS FALSE )
--	message( STATUS "32bit build - FIND_LIBRARY_USE_LIB64_PATHS FALSE" )
--endif( )
--
- set( SUFFIX_LIB ${SUFFIX_LIB_DEFAULT} CACHE STRING "String to append to 'lib' install path" )
- set( SUFFIX_BIN ${SUFFIX_BIN_DEFAULT} CACHE STRING "String to append to 'bin' install path" )
- 
-@@ -160,19 +143,11 @@ set( SUFFIX_BIN ${SUFFIX_BIN_DEFAULT} CACHE STRING "String to append to 'bin' in
+ else( )
+ 	set_property( GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS FALSE )
+ 	message( STATUS "32bit build - FIND_LIBRARY_USE_LIB64_PATHS FALSE" )
+@@ -160,19 +159,11 @@ set( SUFFIX_BIN ${SUFFIX_BIN_DEFAULT} CACHE STRING "String to append to 'bin' in
  #   message( WARNING "Try setting Boost_DEBUG and Boost_DETAILED_FAILURE_MSG for more information" )
  #endif( )
  
 -# This will define OPENCL_FOUND
 -find_package( OpenCL )
--
++find_package( OpenCL REQUIRED )
++find_package( Threads REQUIRED )
+ 
 -if( (${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION} VERSION_LESS 2.8) ) 
 -	message( STATUS "Cmake version 2.8 or greater needed to use GTest" )
 -else()
 -	# This will define GTEST_FOUND
 -	find_package( GTest )
-+find_package( OpenCL REQUIRED )
-+find_package( Threads REQUIRED )
- 
+-
 -	# Hack to get googletest v1.6 to work with vs2012
 -	if( MSVC11 )
 -		add_definitions( "/D_VARIADIC_MAX=10" )
@@ -59,7 +43,7 @@ index 65f51db..283fbd6 100644
  endif()
  
  # Enable building of the clACML client if both requested and all dependencies are found
-@@ -190,41 +165,7 @@ endif( )
+@@ -190,33 +181,7 @@ endif( )
  #	set( UNIT_TEST OFF )
  #endif( )
  
@@ -90,32 +74,10 @@ index 65f51db..283fbd6 100644
 -	set( CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}" )
 -	set( CMAKE_C_FLAGS "-std=c11 -Wall -pedantic-errors -pthread ${CMAKE_C_FLAGS}" )
 -	
--	if( BUILD64 )
--		set( CMAKE_CXX_FLAGS "-m64 ${CMAKE_CXX_FLAGS}" )
--		set( CMAKE_C_FLAGS "-m64 ${CMAKE_C_FLAGS}" )
--	else( )
--		set( CMAKE_CXX_FLAGS "-m32 ${CMAKE_CXX_FLAGS}" )
--		set( CMAKE_C_FLAGS "-m32 ${CMAKE_C_FLAGS}" )
--	endif( )
--
 +if( CMAKE_COMPILER_IS_GNUCXX )
-     if( CODE_COVERAGE )
-         set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage")
-         set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
-@@ -296,13 +237,6 @@ else( )
-   message( "RNG clients will NOT be built" )
- endif( )
- 
--# Recurse into subdirectory and start building files there
--#if( BUILD_LOADLIBRARIES AND IS_DIRECTORY "${PROJECT_SOURCE_DIR}/statTimer" )
--#	add_subdirectory( statTimer )
--#else()
--#	message( "LoadLibraries will NOT be built" )
--#endif( )
--
- if( BUILD_TEST AND IS_DIRECTORY "${PROJECT_SOURCE_DIR}/tests" )
- 	# enable_testing( )
- 	add_subdirectory( tests )
+ 	if( BUILD64 )
+ 		set( CMAKE_CXX_FLAGS "-m64 ${CMAKE_CXX_FLAGS}" )
+ 		set( CMAKE_C_FLAGS "-m64 ${CMAKE_C_FLAGS}" )
 diff --git a/src/library/CMakeLists.txt b/src/library/CMakeLists.txt
 index dbe479d..fa525d6 100644
 --- a/src/library/CMakeLists.txt
