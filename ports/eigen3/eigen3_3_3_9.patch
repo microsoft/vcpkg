@@ -1,0 +1,23 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dbb9bcf22..50e148732 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -406,12 +406,12 @@ set(PKGCONFIG_INSTALL_DIR
+     "${CMAKE_INSTALL_DATADIR}/pkgconfig"
+     CACHE STRING "The directory relative to CMAKE_PREFIX_PATH where eigen3.pc is installed"
+     )
+-
+-foreach(var INCLUDE_INSTALL_DIR CMAKEPACKAGE_INSTALL_DIR PKGCONFIG_INSTALL_DIR)
+-  if(IS_ABSOLUTE "${${var}}")
+-    message(FATAL_ERROR "${var} must be relative to CMAKE_PREFIX_PATH. Got: ${${var}}")
+-  endif()
+-endforeach()
++#vcpkg patch
++#foreach(var INCLUDE_INSTALL_DIR CMAKEPACKAGE_INSTALL_DIR PKGCONFIG_INSTALL_DIR)
++#  if(IS_ABSOLUTE "${${var}}")
++#    message(FATAL_ERROR "${var} must be relative to CMAKE_PREFIX_PATH. Got: ${${var}}")
++#  endif()
++#endforeach()
+ 
+ # similar to set_target_properties but append the property instead of overwriting it
+ macro(ei_add_target_property target prop value)
