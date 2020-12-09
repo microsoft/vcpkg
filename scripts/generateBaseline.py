@@ -54,6 +54,8 @@ def generate_port_versions_db():
 
 
 def main():
+    if not os.path.exists(VERSIONS_DB_DIRECTORY):
+        print(f'Version DB files must exist before generating a baseline.\nRun: `python generatePortVersionsDB`\n')
     generate_port_versions_db()
 
 

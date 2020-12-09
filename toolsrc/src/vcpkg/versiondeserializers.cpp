@@ -192,20 +192,17 @@ namespace
     VersionDbEntryDeserializer VersionDbEntryDeserializer::instance;
     VersionDbEntryArrayDeserializer VersionDbEntryArrayDeserializer::instance;
 
-    struct BaselineDeserializer final : Json::IDeserializer<std::map<std::string, VersionT, std::less<>>>
+    struct BaselineDeserializer final : Json::IDeserializer<std::map<std::string, SchemedVersion, std::less<>>>
     {
         StringView type_name() const override { return "a baseline object"; }
 
         Optional<type> visit_object(Json::Reader& r, const Json::Object& obj) override
         {
-            std::map<std::string, VersionT, std::less<>> result;
+            std::map<std::string, SchemedVersion, std::less<>> result;
 
             for (auto&& pr : obj)
             {
-                const auto& version_value = pr.second;
-                VersionT version;
-                r.visit_in_key(version_value, pr.first, version, get_versiont_deserializer_instance());
-
+                auto version = visit_required_schemed_deserializer(type_name(), r, pr.second.object());
                 result.emplace(pr.first.to_string(), std::move(version));
             }
 
@@ -247,9 +244,8 @@ namespace vcpkg
 {
     Json::IDeserializer<VersionT>& get_versiont_deserializer_instance() { return VersionTDeserializer::instance; }
 
-    ExpectedS<std::map<std::string, VersionT, std::less<>>> parse_baseline_file(Files::Filesystem& fs,
-                                                                                StringView baseline_name,
-                                                                                const fs::path& baseline_file_path)
+    ExpectedS<std::map<std::string, SchemedVersion, std::less<>>> parse_baseline_file(
+        Files::Filesystem& fs, StringView baseline_name, const fs::path& baseline_file_path)
     {
         if (!fs.exists(baseline_file_path))
         {
@@ -271,7 +267,7 @@ namespace vcpkg
         }
 
         Json::Reader r;
-        std::map<std::string, VersionT, std::less<>> result;
+        std::map<std::string, SchemedVersion, std::less<>> result;
         r.visit_in_key(*baseline_value, baseline_name, result, BaselineDeserializer::instance);
         if (!r.errors().empty())
         {

@@ -229,7 +229,7 @@ namespace
             auto it = baseline_cache.find(port_name);
             if (it != baseline_cache.end())
             {
-                return it->second;
+                return it->second.versiont;
             }
             else
             {
@@ -258,7 +258,7 @@ namespace
             return path_to_entry;
         }
 
-        std::map<std::string, VersionT, std::less<>> load_baseline_versions(const VcpkgPaths& paths) const
+        std::map<std::string, SchemedVersion, std::less<>> load_baseline_versions(const VcpkgPaths& paths) const
         {
             auto baseline_file = path_to_registry_database(paths) / fs::u8path("baseline.json");
 
@@ -283,7 +283,7 @@ namespace
         }
 
         fs::path path;
-        DelayedInit<std::map<std::string, VersionT, std::less<>>> baseline;
+        DelayedInit<std::map<std::string, SchemedVersion, std::less<>>> baseline;
     };
 }
 

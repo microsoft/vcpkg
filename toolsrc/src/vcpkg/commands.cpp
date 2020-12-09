@@ -1,6 +1,7 @@
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/build.h>
+#include <vcpkg/commands.add-version.h>
 #include <vcpkg/commands.autocomplete.h>
 #include <vcpkg/commands.buildexternal.h>
 #include <vcpkg/commands.cache.h>
@@ -75,6 +76,7 @@ namespace vcpkg::Commands
         static const X_VSInstances::VSInstancesCommand vsinstances{};
         static const FormatManifest::FormatManifestCommand format_manifest{};
         static const CIVerifyVersions::CIVerifyVersionsCommand ci_verify_versions{};
+        static const AddVersion::AddVersionCommand add_version{};
 
         static std::vector<PackageNameAndFunction<const PathsCommand*>> t = {
             {"/?", &help},
@@ -97,6 +99,7 @@ namespace vcpkg::Commands
             {"x-vsinstances", &vsinstances},
             {"format-manifest", &format_manifest},
             {"x-ci-verify-versions", &ci_verify_versions},
+            {"x-add-version", &add_version},
         };
         return t;
     }

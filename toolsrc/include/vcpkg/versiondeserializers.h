@@ -40,9 +40,8 @@ namespace vcpkg
                                    int port_version,
                                    bool always_emit_port_version = false);
 
-    ExpectedS<std::map<std::string, VersionT, std::less<>>> parse_baseline_file(Files::Filesystem& fs,
-                                                                                StringView baseline_name,
-                                                                                const fs::path& baseline_file_path);
+    ExpectedS<std::map<std::string, SchemedVersion, std::less<>>> parse_baseline_file(
+        Files::Filesystem& fs, StringView baseline_name, const fs::path& baseline_file_path);
 
     ExpectedS<std::vector<VersionDbEntry>> parse_versions_file(Files::Filesystem& fs,
                                                                StringView port_name,
