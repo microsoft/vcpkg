@@ -400,7 +400,7 @@ foreach ($library in $libraries)
         }
         elseif ($library -eq "locale")
         {
-            $deps += @("libiconv (!uwp&!windows)", "boost-system")
+            $deps += @("libiconv (!uwp&!windows&!mingw)", "boost-system")
         }
         elseif ($library -eq "asio")
         {
