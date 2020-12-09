@@ -27,6 +27,9 @@ APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
 # Additionally required by libhdfs3
 APT_PACKAGES="$APT_PACKAGES libkrb5-dev"
 
+# Additionally required by kf5windowsystem
+APT_PACKAGES="$APT_PACKAGES libxcb-res0-dev"
+
 # Additionally required by mesa
 APT_PACKAGES="$APT_PACKAGES python3-setuptools python3-mako"
 
