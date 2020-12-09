@@ -128,7 +128,18 @@ function(qt_install_submodule)
     message(STATUS "DEBUG_CMAKE_TARGETS:${DEBUG_CMAKE_TARGETS}")
     foreach(_debug_target IN LISTS DEBUG_CMAKE_TARGETS)
         vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/plugins" "{_IMPORT_PREFIX}/debug/plugins")
+        vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/qml/" "{_IMPORT_PREFIX}/debug/qml/")
+        #vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/modules" "{_IMPORT_PREFIX}/debug/modules")
     endforeach()
+
+    #file(GLOB_RECURSE DEBUG_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/**/*Targets.cmake")
+    # TODO fix metatypes ? INTERFACE_SOURCES "\$<\$<BOOL:\$<TARGET_PROPERTY:QT_CONSUMES_METATYPES>>:${_IMPORT_PREFIX}/lib/metatypes/qt6([^.]+).json>
+    #foreach(_debug_target IN LISTS DEBUG_CMAKE_TARGETS)
+        #vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/plugins" "{_IMPORT_PREFIX}/debug/plugins")
+        #vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/qml/" "{_IMPORT_PREFIX}/debug/qml/")
+        #INTERFACE_SOURCES "\$<\$<BOOL:\$<TARGET_PROPERTY:QT_CONSUMES_METATYPES>>:${_IMPORT_PREFIX}/lib/metatypes/qt6([^.]+).json>\"
+        #vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/modules" "{_IMPORT_PREFIX}/debug/modules")
+    #endforeach()
 
     ## Handle Tools
     foreach(_tool IN LISTS _qis_TOOL_NAMES)

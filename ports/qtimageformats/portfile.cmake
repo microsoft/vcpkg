@@ -31,7 +31,7 @@ list(APPEND FEATURE_OPTIONS -DINPUT_mng=no) # marked as FIXME
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      #TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
-                        --trace
+                        #--trace
                         ${FEATURE_OPTIONS}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG

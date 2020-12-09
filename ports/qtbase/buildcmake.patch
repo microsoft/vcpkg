@@ -26,3 +26,16 @@ index 9eb913f4d..286f3287e 100644
  
  # Propagate decision of building tests and examples to other repositories.
  set(QT_BUILD_TESTS @QT_BUILD_TESTS@ CACHE BOOL "Build the testing tree.")
+diff --git a/cmake/QtPrlHelpers.cmake b/cmake/QtPrlHelpers.cmake
+index 30d3bd6d3..80bb2bf46 100644
+--- a/cmake/QtPrlHelpers.cmake
++++ b/cmake/QtPrlHelpers.cmake
+@@ -222,7 +222,7 @@ function(qt_internal_walk_libs
+                     qt_internal_should_not_promote_package_target_to_global(
+                         "${lib_target_unaliased}" should_not_promote)
+                     if(NOT is_global AND is_imported AND NOT should_not_promote)
+-                        set_property(TARGET ${lib_target_unaliased} PROPERTY IMPORTED_GLOBAL TRUE)
++                        #set_property(TARGET ${lib_target_unaliased} PROPERTY IMPORTED_GLOBAL TRUE)
+                     endif()
+                 endif()
+             else()
