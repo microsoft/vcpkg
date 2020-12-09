@@ -3,15 +3,15 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO facebook/rocksdb
-  REF v6.13.3
-  SHA512 9c1a9de2321d86a454e4fddc72965c55352902d4f55fc2e5bdc8cc5f081e8a2251a431c29c7a6108504456b148c4244a18bab2b261aaad9afcf290ae9cd5d724
+  REF ed4316166f67ec892603014634840d29f460f611 # v6.14.6
+  SHA512 a880a760f6f5a0a591c14fe942914a3ea85c387a901a922955bb2373ae903f96c6035cac8732d3000a3cbe6313016bfb21168bd3d8a7debf5a28c6e5c0aefb3f
   HEAD_REF master
   PATCHES
     0001-disable-gtest.patch
     0002-only-build-one-flavor.patch
     0003-use-find-package.patch
-    0004-add-config-to-findpackage.patch
-    0005-backport-msvc-fixes-pr-7439.patch # https://github.com/facebook/rocksdb/pull/7439
+    0004-fix-dependency-in-config.patch
+    0005-do-not-install-cmake-modules.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WITH_MD_LIBRARY)
@@ -58,6 +58,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/rocksdb)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.Apache DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE.leveldb DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_copy_pdbs()

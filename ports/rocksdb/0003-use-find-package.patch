@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 36eddb32b..97a93601b 100644
+index 6761929..68da6ea 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -91,7 +91,7 @@ include(CMakeDependentOption)
@@ -23,7 +23,14 @@ index 36eddb32b..97a93601b 100644
      add_definitions(-DSNAPPY)
      list(APPEND THIRDPARTY_LIBS Snappy::snappy)
    endif()
-@@ -163,10 +160,9 @@ else()
+@@ -157,16 +154,15 @@ else()
+   endif()
+ 
+   if(WITH_LZ4)
+-    find_package(lz4 REQUIRED)
++    find_package(lz4 CONFIG REQUIRED)
+     add_definitions(-DLZ4)
+     list(APPEND THIRDPARTY_LIBS lz4::lz4)
    endif()
  
    if(WITH_ZSTD)
@@ -36,3 +43,15 @@ index 36eddb32b..97a93601b 100644
    endif()
  endif()
  
+@@ -375,9 +371,9 @@ endif()
+ 
+ option(WITH_TBB "build with Threading Building Blocks (TBB)" OFF)
+ if(WITH_TBB)
+-  find_package(TBB REQUIRED)
++  find_package(TBB CONFIG REQUIRED)
+   add_definitions(-DTBB)
+-  list(APPEND THIRDPARTY_LIBS TBB::TBB)
++  list(APPEND THIRDPARTY_LIBS TBB::tbb)
+ endif()
+ 
+ # Stall notifications eat some performance from inserts
