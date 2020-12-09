@@ -1,0 +1,6 @@
+Source: tensorflow
+Version: 2.3.1
+Port-Version: 0
+Homepage: https://github.com/tensorflow/tensorflow
+Description: Library for computation using data flow graphs for scalable machine learning (C API version)
+Supports: !(x86|arm|uwp)
