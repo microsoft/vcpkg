@@ -17,7 +17,7 @@ namespace vcpkg::Commands::AddVersion
     static constexpr StringLiteral OPTION_OVERWRITE_VERSION = "overwrite-version";
 
     const CommandSwitch COMMAND_SWITCHES[] = {
-        {OPTION_OVERWRITE_VERSION, "Overwrite `git-tree` in versions file without requiring to change the version."},
+        {OPTION_OVERWRITE_VERSION, "Overwrite `git-tree` of an existing version."},
     };
 
     const CommandStructure COMMAND_STRUCTURE{
@@ -133,17 +133,25 @@ namespace vcpkg::Commands::AddVersion
         auto maybe_baseline_map = vcpkg::parse_baseline_file(fs, "default", baseline_path);
         if (auto pbaseline = maybe_baseline_map.get())
         {
-            auto baseline_version = (*pbaseline)[port_name];
-            if (baseline_version.versiont == version.versiont && baseline_version.scheme == version.scheme)
+            auto it = pbaseline->find(port_name);
+            if (it != pbaseline->end())
             {
-                System::printf(System::Color::warning,
-                               "Warning: Version in baseline file already matches local version (%s).\n"
-                               "-- Did you remember to update the version or port version?\n"
-                               "-- No files were updated.\n",
-                               baseline_version.versiont);
-                Checks::exit_fail(VCPKG_LINE_INFO);
+                auto& baseline_version = it->second;
+                if (baseline_version.versiont == version.versiont && baseline_version.scheme == version.scheme)
+                {
+                    System::printf(System::Color::warning,
+                                   "Warning: Version in baseline file already matches local version (%s).\n"
+                                   "-- Did you remember to update the version or port version?\n"
+                                   "-- No files were updated.\n",
+                                   baseline_version.versiont);
+                    Checks::exit_fail(VCPKG_LINE_INFO);
+                }
+                baseline_version = version;
             }
-            (*pbaseline)[port_name] = version;
+            else
+            {
+                pbaseline->emplace(port_name, version);
+            }
             write_baseline_file(fs, *pbaseline, baseline_path);
             System::printf(
                 System::Color::success, "Added version `%s` to `%s`.\n", version.versiont, fs::u8string(baseline_path));
@@ -254,7 +262,18 @@ namespace vcpkg::Commands::AddVersion
 
         // Get tree-ish from local repository state.
         auto maybe_git_tree_map = paths.git_get_local_port_treeish_map();
-        const auto git_tree = maybe_git_tree_map.value_or_exit(VCPKG_LINE_INFO).at(port_name);
+        auto git_tree_map = maybe_git_tree_map.value_or_exit(VCPKG_LINE_INFO);
+        auto git_tree_it = git_tree_map.find(port_name);
+        if (git_tree_it == git_tree_map.end())
+        {
+            System::printf(System::Color::warning,
+                           "Warning: No local Git SHA was found for port `%s`.\n"
+                           "-- Did you remember to commit your changes?\n"
+                           "No files were updated.\n",
+                           port_name);
+            Checks::exit_fail(VCPKG_LINE_INFO);
+        }
+        const auto& git_tree = git_tree_it->second;
 
         auto port_versions_path =
             paths.version_files / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");

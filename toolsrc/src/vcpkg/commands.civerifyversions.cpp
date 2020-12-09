@@ -143,8 +143,8 @@ namespace vcpkg::Commands::CIVerifyVersions
                            maybe_port_git_tree_map.has_value(),
                            "Error: Failed to obtain git treeish objects for local ports.\n%s",
                            maybe_port_git_tree_map.error());
-
         auto port_git_tree_map = maybe_port_git_tree_map.value_or_exit(VCPKG_LINE_INFO);
+
         auto& fs = paths.get_filesystem();
 
         // Without a revision, baseline will use local baseline.json file.
@@ -167,6 +167,13 @@ namespace vcpkg::Commands::CIVerifyVersions
                 if (verbose) System::printf("SKIP: %s\n", port_name);
                 continue;
             }
+            auto git_tree_it = port_git_tree_map.find(port_name);
+            if (git_tree_it == port_git_tree_map.end())
+            {
+                errors.emplace(
+                    std::move(Strings::format("Error: Missing local git tree object for port `%s`.\n", port_name)));
+            }
+            auto git_tree = git_tree_it->second;
 
             auto control_path = port_path / fs::u8path("CONTROL");
             auto manifest_path = port_path / fs::u8path("vcpkg.json");
@@ -198,8 +205,8 @@ namespace vcpkg::Commands::CIVerifyVersions
                 continue;
             }
 
-            auto maybe_ok = verify_version_in_db(
-                fs, paths_provider, baseline_provider, port_name, versions_file_path, port_git_tree_map[port_name]);
+            auto maybe_ok =
+                verify_version_in_db(fs, paths_provider, baseline_provider, port_name, versions_file_path, git_tree);
 
             if (!maybe_ok.has_value())
             {
