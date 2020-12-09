@@ -90,8 +90,11 @@ namespace vcpkg::Commands::AddVersion
                              const fs::path& output_path)
     {
         auto backup_path = fs::u8path(Strings::concat(fs::u8string(output_path), ".backup"));
-        fs.rename(output_path, backup_path, VCPKG_LINE_INFO);
-        fs.remove(output_path, VCPKG_LINE_INFO);
+        if (fs.exists(output_path))
+        {
+            fs.rename(output_path, backup_path, VCPKG_LINE_INFO);
+            fs.remove(output_path, VCPKG_LINE_INFO);
+        }
 
         std::error_code ec;
         fs.write_contents(output_path, Json::stringify(serialize_baseline(baseline_map), {}), ec);
@@ -99,10 +102,16 @@ namespace vcpkg::Commands::AddVersion
         {
             System::printf(
                 System::Color::error, "Error: Couldn't write baseline file to %s.", fs::u8string(output_path));
-            fs.rename(backup_path, output_path, VCPKG_LINE_INFO);
+            if (fs.exists(backup_path))
+            {
+                fs.rename(backup_path, output_path, VCPKG_LINE_INFO);
+            }
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        fs.remove(backup_path, VCPKG_LINE_INFO);
+        if (fs.exists(backup_path))
+        {
+            fs.remove(backup_path, VCPKG_LINE_INFO);
+        }
     }
 
     void write_versions_file(Files::Filesystem& fs,
@@ -110,8 +119,11 @@ namespace vcpkg::Commands::AddVersion
                              const fs::path& output_path)
     {
         auto backup_path = fs::u8path(Strings::concat(fs::u8string(output_path), ".backup"));
-        fs.rename(output_path, backup_path, VCPKG_LINE_INFO);
-        fs.remove(output_path, VCPKG_LINE_INFO);
+        if (fs.exists(output_path))
+        {
+            fs.rename(output_path, backup_path, VCPKG_LINE_INFO);
+            fs.remove(output_path, VCPKG_LINE_INFO);
+        }
 
         std::error_code ec;
         fs.write_contents(output_path, Json::stringify(serialize_versions(versions), {}), ec);
@@ -119,10 +131,16 @@ namespace vcpkg::Commands::AddVersion
         {
             System::printf(
                 System::Color::error, "Error: Couldn't write versions file to %s.", fs::u8string(output_path));
-            fs.rename(backup_path, output_path, VCPKG_LINE_INFO);
+            if (fs.exists(backup_path))
+            {
+                fs.rename(backup_path, output_path, VCPKG_LINE_INFO);
+            }
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
-        fs.remove(backup_path, VCPKG_LINE_INFO);
+        if (fs.exists(backup_path))
+        {
+            fs.remove(backup_path, VCPKG_LINE_INFO);
+        }
     }
 
     void update_baseline_version(Files::Filesystem& fs,
@@ -139,12 +157,11 @@ namespace vcpkg::Commands::AddVersion
                 auto& baseline_version = it->second;
                 if (baseline_version.versiont == version.versiont && baseline_version.scheme == version.scheme)
                 {
-                    System::printf(System::Color::warning,
-                                   "Warning: Version in baseline file already matches local version (%s).\n"
-                                   "-- Did you remember to update the version or port version?\n"
-                                   "-- No files were updated.\n",
-                                   baseline_version.versiont);
-                    Checks::exit_fail(VCPKG_LINE_INFO);
+                    System::printf(System::Color::success,
+                                   "Version `%s` is already in `%s`\n",
+                                   version.versiont,
+                                   fs::u8string(baseline_path));
+                    return;
                 }
                 baseline_version = version;
             }
@@ -169,6 +186,17 @@ namespace vcpkg::Commands::AddVersion
                                 const fs::path& version_db_file_path,
                                 bool overwrite_version)
     {
+        if (!fs.exists(version_db_file_path))
+        {
+            std::vector<VersionDbEntry> new_entry{VersionDbEntry{version.versiont, version.scheme, git_tree}};
+            write_versions_file(fs, new_entry, version_db_file_path);
+            System::printf(System::Color::success,
+                           "Added version `%s` to `%s` (new file).\n",
+                           version.versiont,
+                           fs::u8string(version_db_file_path));
+            return;
+        }
+
         auto maybe_versions = parse_versions_file(fs, port_name, version_db_file_path);
         if (auto versions = maybe_versions.get())
         {
@@ -180,12 +208,21 @@ namespace vcpkg::Commands::AddVersion
                 });
             if (found_same_sha != versions_end)
             {
+                if (found_same_sha->version == version.versiont && found_same_sha->scheme == version.scheme)
+                {
+                    System::printf(System::Color::success,
+                                   "Version `%s` is already in `%s`\n",
+                                   version.versiont,
+                                   fs::u8string(version_db_file_path));
+                    return;
+                }
                 System::printf(System::Color::warning,
-                               "Warning: Local port files SHA is the same as version `%s` in file.\n"
+                               "Warning: Local port files SHA is the same as version `%s` in `%s`.\n"
                                "-- SHA: %s\n"
                                "-- Did you remember to commit your changes?\n"
                                "No files were updated.\n",
                                found_same_sha->version,
+                               fs::u8string(version_db_file_path),
                                git_tree);
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
@@ -227,8 +264,6 @@ namespace vcpkg::Commands::AddVersion
                            fs::u8string(version_db_file_path));
             return;
         }
-
-        // TODO: Handle file creation
 
         System::printf(System::Color::error,
                        "Error: Unable to parse versions file %s.\n%s\n",

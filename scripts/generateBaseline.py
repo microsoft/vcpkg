@@ -34,11 +34,19 @@ def generate_port_versions_db():
         with open(port_file_path, 'r') as db_file:
             try:
                 versions_object = json.load(db_file)
-                last_version = versions_object['versions'][0]
-                baseline_entries[port_name] = {
-                    'version-string': last_version['version-string'],
-                    'port-version': last_version['port-version']
-                }
+                if len(versions_object['versions']) > 0:
+                    last_version = versions_object['versions'][0] 
+                    version_obj = {}
+                    if 'version' in last_version:
+                        version_obj['version'] = last_version['version']
+                    elif 'version-date' in last_version:
+                        version_obj['version-date'] = last_version['version-date']
+                    elif 'version-semver' in last_version:
+                        version_obj['version-semver'] - last_version['version-semver']
+                    else:
+                        version_obj['version-string'] = last_version['version-string']
+                    version_obj['port-version'] = last_version['port-version']
+                    baseline_entries[port_name] = version_obj
             except json.JSONDecodeError as e:
                 print(f'Error: Decoding {port_file_path}\n{e}\n')
     baseline_object = {}
