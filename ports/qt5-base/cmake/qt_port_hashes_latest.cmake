@@ -20,7 +20,7 @@ set(QT_HASH_qt5-graphicaleffects    1620a4daa6f2afc13b84752fa92f6d603aea1f7c796a
 set(QT_HASH_qt5-imageformats        3c821fac83b8d6177af256dc1d68aca14ae6d5cbdedb8d8665158ebcec0f6e6fb790b5d210a1aa8b0679ecff60fafd4e5d1387c6954498b41409ea44177e0d7e)
 set(QT_HASH_qt5-location            6192922506b3ea354e85431df83c19d7cc9aebb17549c6a1de48f625bf8365ff3db3161080dde254a5fb9199d99c3c5dc8e1533429150be55df96ddb7d6ce16f)
 set(QT_HASH_qt5-macextras           21e807a587da716615a447207abda2c3eb409111a0eb6f844c8f1281ccc842a7c2e8759c1d7ce62cc3bad3325b4570a0bae1fbe4e5592e905788dde8898c6cb0)
-set(QT_HASH_qt5-mqtt                0) # no tag yet
+set(QT_HASH_qt5-mqtt                91efd3b1ebef3c95473c018bcacd0772e613b38c) # Git commit ID
 set(QT_HASH_qt5-multimedia          be58e6934976b04707399f8525dd5d50f73e0539efd1a76c2f9868e35e6f136e0991652df5d46350a9ac39d24313353e4aa826131f268a95e458e57279f448bd)
 set(QT_HASH_qt5-networkauth         94843a74ae188eb0eff9559be6b246f61f87104479f6f52fe943b31a9263461a7051d967072d9061124b2bd056d7265645892104653c93dfcf68b11521f1c33d)
 set(QT_HASH_qt5-purchasing          1a40fd3ca149f9c8fc98a45562b37fc97c7addc513d40f50997576648d441d379179370c6491a003982feafe96736047a8faf09caf36eaeea5a97553f75d1255)
