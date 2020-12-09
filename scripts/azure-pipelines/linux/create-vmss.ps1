@@ -64,7 +64,9 @@ Write-Progress `
   -Status 'Creating virtual network' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-$allowHttp = New-AzNetworkSecurityRuleConfig `
+$allFirewallRules = @()
+
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
   -Name AllowHTTP `
   -Description 'Allow HTTP(S)' `
   -Access Allow `
@@ -76,49 +78,61 @@ $allowHttp = New-AzNetworkSecurityRuleConfig `
   -DestinationAddressPrefix * `
   -DestinationPortRange @(80, 443)
 
-$allowDns = New-AzNetworkSecurityRuleConfig `
-  -Name AllowDNS `
-  -Description 'Allow DNS' `
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
+  -Name AllowSFTP `
+  -Description 'Allow (S)FTP' `
   -Access Allow `
-  -Protocol * `
+  -Protocol Tcp `
   -Direction Outbound `
   -Priority 1009 `
   -SourceAddressPrefix * `
   -SourcePortRange * `
   -DestinationAddressPrefix * `
-  -DestinationPortRange 53
+  -DestinationPortRange @(21, 22)
 
-$allowGit = New-AzNetworkSecurityRuleConfig `
-  -Name AllowGit `
-  -Description 'Allow git' `
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
+  -Name AllowDNS `
+  -Description 'Allow DNS' `
   -Access Allow `
-  -Protocol Tcp `
+  -Protocol * `
   -Direction Outbound `
   -Priority 1010 `
   -SourceAddressPrefix * `
   -SourcePortRange * `
   -DestinationAddressPrefix * `
+  -DestinationPortRange 53
+
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
+  -Name AllowGit `
+  -Description 'Allow git' `
+  -Access Allow `
+  -Protocol Tcp `
+  -Direction Outbound `
+  -Priority 1011 `
+  -SourceAddressPrefix * `
+  -SourcePortRange * `
+  -DestinationAddressPrefix * `
   -DestinationPortRange 9418
 
-$allowStorage = New-AzNetworkSecurityRuleConfig `
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
   -Name AllowStorage `
   -Description 'Allow Storage' `
   -Access Allow `
   -Protocol * `
   -Direction Outbound `
-  -Priority 1011 `
+  -Priority 1012 `
   -SourceAddressPrefix VirtualNetwork `
   -SourcePortRange * `
   -DestinationAddressPrefix Storage `
   -DestinationPortRange *
 
-$denyEverythingElse = New-AzNetworkSecurityRuleConfig `
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
   -Name DenyElse `
   -Description 'Deny everything else' `
   -Access Deny `
   -Protocol * `
   -Direction Outbound `
-  -Priority 1012 `
+  -Priority 1013 `
   -SourceAddressPrefix * `
   -SourcePortRange * `
   -DestinationAddressPrefix * `
@@ -129,7 +143,7 @@ $NetworkSecurityGroup = New-AzNetworkSecurityGroup `
   -Name $NetworkSecurityGroupName `
   -ResourceGroupName $ResourceGroupName `
   -Location $Location `
-  -SecurityRules @($allowHttp, $allowDns, $allowGit, $allowStorage, $denyEverythingElse)
+  -SecurityRules $allFirewallRules
 
 $SubnetName = $ResourceGroupName + 'Subnet'
 $Subnet = New-AzVirtualNetworkSubnetConfig `
