@@ -24,10 +24,17 @@ The url of the git repository.
 ### REF
 The git sha of the commit to download.
 
+### TAG
+The git tag to download.
+
 ### PATCHES
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
+
+### OUT_REF
+Maintainers only. Used for automatic REF updates for ports using a versioned TAG.
+Will return early!
 
 ## Notes:
 `OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
