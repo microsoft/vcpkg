@@ -1464,7 +1464,6 @@ tbb:x64-uwp=fail
 tcl:arm-uwp=fail
 tcl:arm64-windows=fail
 tcl:x64-uwp=fail
-tcl:x64-osx=fail
 teemo:x64-uwp=fail
 teemo:arm-uwp=fail
 teemo:arm64-windows=fail
