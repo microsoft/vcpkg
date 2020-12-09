@@ -560,6 +560,39 @@ If you wish to silence this error and use classic mode, you can:
         }
     }
 
+    ExpectedS<std::map<std::string, std::string, std::less<>>> VcpkgPaths::git_get_local_port_treeish_map() const
+    {
+        auto local_repo = this->root / fs::u8path(".git");
+        auto git_cmd =
+            git_cmd_builder(*this, local_repo, this->root).string_arg("ls-tree").string_arg("HEAD:ports/").extract();
+
+        auto output = System::cmd_execute_and_capture_output(git_cmd);
+        if (output.exit_code != 0)
+            return std::move(
+                Strings::format("Error: Couldn't get local treeish objects for ports.\n%s", output.output));
+
+        std::map<std::string, std::string, std::less<>> ret;
+        for (auto&& line : Strings::split(output.output, '\n'))
+        {
+            // The default output comes in the format:
+            // <mode> SP <type> SP <object> TAB <file>
+            auto split_line = Strings::split(line, '\t');
+            if (split_line.size() != 2)
+                return std::move(Strings::format(
+                    "Error: Unexepcted output from command `%s`. Couldn't split `\\t`.\n%s", git_cmd, line));
+
+            auto first_section = Strings::split(split_line[0], ' ');
+            if (first_section.size() != 3)
+                return std::move(Strings::format(
+                    "Error: Unexepcted output from command `%s`. Couldn't split ` `.\n%s", git_cmd, line));
+
+            auto port_name = Strings::split(split_line[1], '/').back();
+            auto&& git_tree = first_section.back();
+            ret.emplace(port_name, git_tree);
+        }
+        return ret;
+    }
+
     void VcpkgPaths::git_checkout_object(const VcpkgPaths& paths,
                                          StringView git_object,
                                          const fs::path& local_repo,

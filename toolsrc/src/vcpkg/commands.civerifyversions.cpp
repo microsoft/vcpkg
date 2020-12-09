@@ -17,22 +17,6 @@ namespace
 
 namespace vcpkg::Commands::CIVerifyVersions
 {
-    struct VersionErrors
-    {
-        std::set<std::string> portfiles_errors;
-        std::set<std::string> missing_version_file_errors;
-        std::set<std::string> unparseable_version_file_errors;
-        std::set<std::string> missing_version_errors;
-        std::set<std::string> not_top_version_errors;
-
-        bool empty() const
-        {
-            return portfiles_errors.empty() && missing_version_file_errors.empty() &&
-                   unparseable_version_file_errors.empty() && missing_version_errors.empty() &&
-                   not_top_version_errors.empty();
-        }
-    };
-
     static constexpr StringLiteral OPTION_EXCLUDE = "exclude";
 
     static constexpr CommandSetting VERIFY_VERSIONS_SETTINGS[] = {
@@ -46,6 +30,72 @@ namespace vcpkg::Commands::CIVerifyVersions
         {{}, {VERIFY_VERSIONS_SETTINGS}, {}},
         nullptr,
     };
+
+    ExpectedS<std::string> verify_version_in_db(Files::Filesystem& fs,
+                                                const PortFileProvider::PathsPortFileProvider& paths_provider,
+                                                const std::string& port_name,
+                                                const fs::path& versions_file_path,
+                                                const std::string& local_git_tree)
+    {
+        auto maybe_versions = vcpkg::parse_versions_file(fs, port_name, versions_file_path);
+        if (!maybe_versions.has_value())
+        {
+            return {std::move(Strings::format("Error: Cannot parse `%s`.\n\t%s",
+                                              fs::u8string(versions_file_path),
+                                              port_name,
+                                              maybe_versions.error())),
+                    expected_right_tag};
+        }
+
+        auto versions = maybe_versions.value_or_exit(VCPKG_LINE_INFO);
+
+        auto top_entry = versions.front();
+
+        auto maybe_scf = paths_provider.get_control_file(port_name);
+        if (!maybe_scf.has_value())
+        {
+            return {std::move(Strings::format("Error: Cannot load port `%s`.\n\t%s", port_name, maybe_scf.error())),
+                    expected_right_tag};
+        }
+        auto& scf = maybe_scf.value_or_exit(VCPKG_LINE_INFO);
+        auto found_version = scf.to_versiont();
+
+        if (top_entry.version != found_version)
+        {
+            auto versions_end = versions.end();
+            auto it = std::find_if(
+                versions.begin(), versions_end, [&](auto&& version) { return version.version == found_version; });
+            if (it != versions_end)
+            {
+                return {std::move(Strings::format("Error: Version `%s` found but is not the top entry in `%s`.",
+                                                  found_version,
+                                                  fs::u8string(versions_file_path))),
+                        expected_right_tag};
+            }
+            else
+            {
+                return {std::move(Strings::format(
+                            "Error: Version `%s` not found in `%s`.", found_version, fs::u8string(versions_file_path))),
+                        expected_right_tag};
+            }
+        }
+
+        if (local_git_tree != top_entry.git_tree)
+        {
+            return {std::move(Strings::format(
+                        "Error: Git tree-ish object for version `%s` in `%s` does not match local port files.\n"
+                        "\tLocal SHA: %s\n"
+                        "\t File SHA: %s",
+                        found_version,
+                        fs::u8string(versions_file_path),
+                        local_git_tree,
+                        top_entry.git_tree)),
+                    expected_right_tag};
+        }
+
+        return {std::move(Strings::format("OK: %s\t%s -> %s\n", top_entry.git_tree, port_name, top_entry.version)),
+                expected_left_tag};
+    }
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
@@ -61,16 +111,26 @@ namespace vcpkg::Commands::CIVerifyVersions
         }
 
         PortFileProvider::PathsPortFileProvider paths_provider(paths, {});
+        auto maybe_port_git_tree_map = paths.git_get_local_port_treeish_map();
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           maybe_port_git_tree_map.has_value(),
+                           "Error: Failed to obtain git treeish objects for local ports.\n%s",
+                           maybe_port_git_tree_map.error());
 
+        auto port_git_tree_map = maybe_port_git_tree_map.value_or_exit(VCPKG_LINE_INFO);
         auto& fs = paths.get_filesystem();
 
-        VersionErrors errors;
+        std::set<std::string> errors;
         for (const auto& dir : fs::directory_iterator(paths.builtin_ports_directory()))
         {
             const auto& port_path = dir.path();
 
             auto&& port_name = fs::u8string(port_path.stem());
-            if (Util::Sets::contains(exclusion_set, port_name)) continue;
+            if (Util::Sets::contains(exclusion_set, port_name))
+            {
+                System::printf("SKIP: %s\n", port_name);
+                continue;
+            }
 
             auto control_path = port_path / fs::u8path("CONTROL");
             auto manifest_path = port_path / fs::u8path("vcpkg.json");
@@ -79,112 +139,48 @@ namespace vcpkg::Commands::CIVerifyVersions
 
             if (manifest_exists && control_exists)
             {
-                errors.portfiles_errors.emplace(
+                errors.emplace(
                     Strings::format("Error: Both a manifest file and a CONTROL file exist in port directory: %s",
                                     fs::u8string(port_path)));
                 continue;
             }
-            else if (!manifest_exists && !control_exists)
+
+            if (!manifest_exists && !control_exists)
             {
-                errors.portfiles_errors.emplace(Strings::format(
-                    "Warning: No manifest file or CONTROL file exist in port directory: %s", fs::u8string(port_path)));
+                errors.emplace(Strings::format("Error: No manifest file or CONTROL file exist in port directory: %s",
+                                               fs::u8string(port_path)));
                 continue;
             }
 
             auto versions_file_path =
                 paths.version_files / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
-
             if (!fs.exists(versions_file_path))
             {
-                errors.missing_version_file_errors.emplace(
-                    Strings::format("Error: Missing versions file for `%s`. Expected at `%s`.",
-                                    port_name,
-                                    fs::u8string(versions_file_path)));
+                errors.emplace(Strings::format("Error: Missing versions file for `%s`. Expected at `%s`.",
+                                               port_name,
+                                               fs::u8string(versions_file_path)));
                 continue;
             }
 
-            auto maybe_versions = vcpkg::parse_versions_file(fs, port_name, versions_file_path);
+            auto maybe_ok =
+                verify_version_in_db(fs, paths_provider, port_name, versions_file_path, port_git_tree_map[port_name]);
 
-            if (auto versions = maybe_versions.get())
+            if (!maybe_ok.has_value())
             {
-                if (versions->empty())
-                {
-                    errors.unparseable_version_file_errors.emplace(
-                        Strings::format("Error: Versions file `%s` exists but does not contain versions.",
-                                        fs::u8string(versions_file_path)));
-                    continue;
-                }
-                auto top_entry = versions->front();
-
-                auto maybe_scf = paths_provider.get_control_file(port_name);
-                if (auto scf = maybe_scf.get())
-                {
-                    auto found_version = scf->to_versiont();
-                    if (top_entry.version == found_version)
-                    {
-                        System::printf("OK: %s -> %s\n", port_name, found_version);
-                    }
-                    else
-                    {
-                        System::printf("FAIL: %s -> %s\n", port_name, found_version);
-                        auto it = std::find_if(versions->begin(), versions->end(), [&](auto&& version) {
-                            return version.version == found_version;
-                        });
-
-                        if (it != versions->end())
-                        {
-                            errors.not_top_version_errors.emplace(
-                                Strings::format("Error: Found version `%s` in `%s` but it is not the top entry.",
-                                                found_version,
-                                                fs::u8string(versions_file_path)));
-                        }
-                        else
-                        {
-                            errors.missing_version_errors.emplace(
-                                Strings::format("Error: Versions file `%s` does not contain an entry for version `%s`.",
-                                                fs::u8string(versions_file_path),
-                                                found_version));
-                        }
-                    }
-                }
-                else
-                {
-                    errors.portfiles_errors.emplace(
-                        Strings::format("Error: Couldn't load port `%s`.\n%s", port_name, maybe_scf.error()));
-                }
+                System::printf(System::Color::error, "FAIL: %s\n", port_name);
+                errors.emplace(maybe_ok.error());
+                continue;
             }
-            else
-            {
-                errors.unparseable_version_file_errors.emplace(
-                    Strings::format("Error: Couldn't parse versions file `%s` for port `%s`.\n%s",
-                                    fs::u8string(versions_file_path),
-                                    port_name,
-                                    maybe_versions.error()));
-            }
+
+            System::printf("%s", maybe_ok.value_or_exit(VCPKG_LINE_INFO));
         }
 
         if (!errors.empty())
         {
             System::print2(System::Color::error, "Found the following errors:\n");
-            for (auto&& error : errors.portfiles_errors)
+            for (auto&& error : errors)
             {
-                System::printf(System::Color::error, "\t%s\n", error);
-            }
-            for (auto&& error : errors.missing_version_file_errors)
-            {
-                System::printf(System::Color::error, "\t%s\n", error);
-            }
-            for (auto&& error : errors.unparseable_version_file_errors)
-            {
-                System::printf(System::Color::error, "\t%s\n", error);
-            }
-            for (auto&& error : errors.not_top_version_errors)
-            {
-                System::printf(System::Color::error, "\t%s\n", error);
-            }
-            for (auto&& error : errors.missing_version_errors)
-            {
-                System::printf(System::Color::error, "\t%s\n", error);
+                System::printf(System::Color::error, "%s\n", error);
             }
         }
         Checks::exit_success(VCPKG_LINE_INFO);
