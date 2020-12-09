@@ -1,50 +1,61 @@
 import os
-import json
-import subprocess
 import sys
+import json
+import time
+
+from pathlib import Path
+
 
 SCRIPT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+PORTS_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../ports')
+VERSIONS_DB_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../port_versions')
 
 
-def generate_baseline(ports_path, output_filepath):
+def generate_port_versions_db():
+    start_time = time.time()
+
+    # Assume each directory in ${VCPKG_ROOT}/ports is a different port
     port_names = [item for item in os.listdir(
-        ports_path) if os.path.isdir(os.path.join(ports_path, item))]
+        PORTS_DIRECTORY) if os.path.isdir(os.path.join(PORTS_DIRECTORY, item))]
     port_names.sort()
 
-    total = len(port_names)
-    baseline_versions = {}
-    for counter, port_name in enumerate(port_names):
-        vcpkg_exe = os.path.join(SCRIPT_DIRECTORY, '../vcpkg')
-        print(f'[{counter + 1}/{total}] Getting package info for {port_name}')
-        output = subprocess.run(
-            [vcpkg_exe, 'x-package-info', '--x-json', port_name],
-            capture_output=True,
-            encoding='utf-8')
+    baseline_entries = {}
+    total_count = len(port_names)
+    for i, port_name in enumerate(port_names, 1):
+        port_file_path = os.path.join(
+            VERSIONS_DB_DIRECTORY, f'{port_name[0]}-', f'{port_name}.json')
 
-        if output.returncode == 0:
-            package_info = json.loads(output.stdout)
-            port_info = package_info['results'][port_name]
+        if not os.path.exists(port_file_path):
+            print(
+                f'Error: No version file for {port_name}.\n', file=sys.stderr)
+            continue
+        sys.stderr.write(
+            f'\rProcessed {i}/{total_count} ({i/total_count:.2%})')
+        with open(port_file_path, 'r') as db_file:
+            try:
+                versions_object = json.load(db_file)
+                last_version = versions_object['versions'][0]
+                baseline_entries[port_name] = {
+                    'version-string': last_version['version-string'],
+                    'port-version': last_version['port-version']
+                }
+            except json.JSONDecodeError as e:
+                print(f'Error: Decoding {port_file_path}\n{e}\n')
+    baseline_object = {}
+    baseline_object['default'] = baseline_entries
 
-            version = {}
-            for scheme in ['version-string', 'version-semver', 'version-date', 'version']:
-                if scheme in port_info:
-                    version[scheme] = package_info['results'][port_name][scheme]
-                    break
-            version['port-version'] = 0
-            if 'port-version' in port_info:
-                version['port-version'] = port_info['port-version']
-            baseline_versions[port_name] = version
-        else:
-            print(f'x-package-info --x-json {port_name} failed: ', output.stdout.strip(), file=sys.stderr)
+    os.makedirs(VERSIONS_DB_DIRECTORY, exist_ok=True)
+    baseline_path = os.path.join(VERSIONS_DB_DIRECTORY, 'baseline.json')
+    with open(baseline_path, 'w') as baseline_file:
+        json.dump(baseline_object, baseline_file)
 
-    output = {}
-    output['default'] = baseline_versions
-
-    with open(output_filepath, 'r') as output_file:
-        json.dump(baseline_versions, output_file)
-    sys.exit(0)
+    elapsed_time = time.time() - start_time
+    print(f'\nElapsed time: {elapsed_time:.2f} seconds')
 
 
-if __name__ == '__main__':
-    generate_baseline(
-        ports_path=f'{SCRIPT_DIRECTORY}/../ports', output_filepath='baseline.json')
+def main():
+    generate_port_versions_db()
+
+
+if __name__ == "__main__":
+    main()

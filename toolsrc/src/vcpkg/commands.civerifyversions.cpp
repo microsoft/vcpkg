@@ -33,6 +33,7 @@ namespace vcpkg::Commands::CIVerifyVersions
 
     ExpectedS<std::string> verify_version_in_db(Files::Filesystem& fs,
                                                 const PortFileProvider::PathsPortFileProvider& paths_provider,
+                                                const PortFileProvider::BaselineProvider& baseline_provider,
                                                 const std::string& port_name,
                                                 const fs::path& versions_file_path,
                                                 const std::string& local_git_tree)
@@ -48,7 +49,6 @@ namespace vcpkg::Commands::CIVerifyVersions
         }
 
         auto versions = maybe_versions.value_or_exit(VCPKG_LINE_INFO);
-
         auto top_entry = versions.front();
 
         auto maybe_scf = paths_provider.get_control_file(port_name);
@@ -78,6 +78,27 @@ namespace vcpkg::Commands::CIVerifyVersions
                             "Error: Version `%s` not found in `%s`.", found_version, fs::u8string(versions_file_path))),
                         expected_right_tag};
             }
+        }
+
+        auto maybe_baseline_version = baseline_provider.get_baseline_version(port_name);
+        if (!maybe_baseline_version.has_value())
+        {
+            return {std::move(Strings::format("Error: Couldn't find baseline version for port `%s`.", port_name)),
+                    expected_right_tag};
+        }
+
+        const auto& baseline_version = maybe_baseline_version.value_or_exit(VCPKG_LINE_INFO);
+        if (baseline_version != top_entry.version)
+        {
+            return {std::move(
+                        Strings::format("Error: The baseline version for port `%s` doesn't match the latest version.\n"
+                                        "\tBaseline version: %s\n"
+                                        "\t  Latest version: %s (%s)",
+                                        port_name,
+                                        baseline_version,
+                                        top_entry.version,
+                                        fs::u8string(versions_file_path))),
+                    expected_right_tag};
         }
 
         if (local_git_tree != top_entry.git_tree)
@@ -110,7 +131,6 @@ namespace vcpkg::Commands::CIVerifyVersions
             exclusion_set.insert(exclusions.begin(), exclusions.end());
         }
 
-        PortFileProvider::PathsPortFileProvider paths_provider(paths, {});
         auto maybe_port_git_tree_map = paths.git_get_local_port_treeish_map();
         Checks::check_exit(VCPKG_LINE_INFO,
                            maybe_port_git_tree_map.has_value(),
@@ -119,6 +139,15 @@ namespace vcpkg::Commands::CIVerifyVersions
 
         auto port_git_tree_map = maybe_port_git_tree_map.value_or_exit(VCPKG_LINE_INFO);
         auto& fs = paths.get_filesystem();
+
+        // Without a revision, baseline will use local baseline.json file.
+        auto baseline_file_path = paths.version_files / fs::u8path("baseline.json");
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           fs.exists(baseline_file_path),
+                           "Error: Couldn't find required file `%s`.",
+                           fs::u8string(baseline_file_path));
+        PortFileProvider::BaselineProvider baseline_provider(paths);
+        PortFileProvider::PathsPortFileProvider paths_provider(paths, {});
 
         std::set<std::string> errors;
         for (const auto& dir : fs::directory_iterator(paths.builtin_ports_directory()))
@@ -162,8 +191,8 @@ namespace vcpkg::Commands::CIVerifyVersions
                 continue;
             }
 
-            auto maybe_ok =
-                verify_version_in_db(fs, paths_provider, port_name, versions_file_path, port_git_tree_map[port_name]);
+            auto maybe_ok = verify_version_in_db(
+                fs, paths_provider, baseline_provider, port_name, versions_file_path, port_git_tree_map[port_name]);
 
             if (!maybe_ok.has_value())
             {
