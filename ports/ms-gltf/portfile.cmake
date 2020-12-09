@@ -18,7 +18,7 @@ vcpkg_from_github(
 # This part will configure build options with tests/samples
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tests   ENABLE_UNIT_TESTS
+        test    ENABLE_UNIT_TESTS
         samples ENABLE_SAMPLES
 )
 

@@ -10,7 +10,7 @@
     "samples": {
       "description": "Build with GLTF samples"
     },
-    "tests": {
+    "test": {
       "description": "Build with test programs",
       "dependencies": [
         "gtest"
