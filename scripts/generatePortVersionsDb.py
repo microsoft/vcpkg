@@ -10,6 +10,7 @@ import multiprocessing
 from pathlib import Path
 
 
+MAX_PROCESSES = multiprocessing.cpu_count()
 SCRIPT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 PORTS_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../ports')
 VERSIONS_DB_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../port_versions')
@@ -48,9 +49,11 @@ def generate_port_versions_db(revision):
         PORTS_DIRECTORY) if os.path.isdir(os.path.join(PORTS_DIRECTORY, item))]
     total_count = len(port_names)
 
-    process_pool = multiprocessing.Pool()
+    concurrency = MAX_PROCESSES / 2
+    print(f'Running on {concurrency:.0f} parallel processes')
+    process_pool = multiprocessing.Pool(MAX_PROCESSES)
     for i, _ in enumerate(process_pool.imap_unordered(generate_port_versions_file, port_names), 1):
-        sys.stderr.write(f'\rProcessed: {i}/{total_count} ({(i / total_count):.0%})')
+        sys.stderr.write(f'\rProcessed: {i}/{total_count} ({(i / total_count):.2%})')
     process_pool.close()
     process_pool.join()
 
@@ -73,13 +76,6 @@ def main():
     if os.path.exists(rev_file):
         print(f'Database files already exist for commit {revision}')
         sys.exit(0)
-
-    if (os.path.exists(VERSIONS_DB_DIRECTORY)):
-        try:
-            shutil.rmtree(VERSIONS_DB_DIRECTORY)
-        except OSError as e:
-            print(
-                f'Could not delete folder: {VERSIONS_DB_DIRECTORY}.\nError: {e.strerror}')
 
     generate_port_versions_db(revision)
 
