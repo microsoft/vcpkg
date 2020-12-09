@@ -1,0 +1,3 @@
+Source: ghc-filesystem
+Version: 1.3.8
+Description: An implementation of C++17 std::filesystem for C++11 /C++14/C++17 on Windows, macOS, Linux and FreeBSD. 
