@@ -18,6 +18,11 @@ namespace
 namespace vcpkg::Commands::CIVerifyVersions
 {
     static constexpr StringLiteral OPTION_EXCLUDE = "exclude";
+    static constexpr StringLiteral OPTION_VERBOSE = "verbose";
+
+    static constexpr CommandSwitch VERIFY_VERSIONS_SWITCHES[]{
+        {OPTION_VERBOSE, "Print result for each port instead of just errors."},
+    };
 
     static constexpr CommandSetting VERIFY_VERSIONS_SETTINGS[] = {
         {OPTION_EXCLUDE, "Comma-separated list of ports to skip"},
@@ -27,7 +32,7 @@ namespace vcpkg::Commands::CIVerifyVersions
         create_example_string(R"###(x-ci-verify-versions)###"),
         0,
         SIZE_MAX,
-        {{}, {VERIFY_VERSIONS_SETTINGS}, {}},
+        {{VERIFY_VERSIONS_SWITCHES}, {VERIFY_VERSIONS_SETTINGS}, {}},
         nullptr,
     };
 
@@ -122,6 +127,8 @@ namespace vcpkg::Commands::CIVerifyVersions
     {
         auto parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
 
+        bool verbose = Util::Sets::contains(parsed_args.switches, OPTION_VERBOSE);
+
         std::set<std::string> exclusion_set;
         auto settings = parsed_args.settings;
         auto it_exclusions = settings.find(OPTION_EXCLUDE);
@@ -157,7 +164,7 @@ namespace vcpkg::Commands::CIVerifyVersions
             auto&& port_name = fs::u8string(port_path.stem());
             if (Util::Sets::contains(exclusion_set, port_name))
             {
-                System::printf("SKIP: %s\n", port_name);
+                if (verbose) System::printf("SKIP: %s\n", port_name);
                 continue;
             }
 
@@ -201,7 +208,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                 continue;
             }
 
-            System::printf("%s", maybe_ok.value_or_exit(VCPKG_LINE_INFO));
+            if (verbose) System::printf("%s", maybe_ok.value_or_exit(VCPKG_LINE_INFO));
         }
 
         if (!errors.empty())

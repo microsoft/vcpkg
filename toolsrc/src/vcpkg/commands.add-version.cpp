@@ -1,3 +1,4 @@
+
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/json.h>
@@ -164,32 +165,39 @@ namespace vcpkg::Commands::AddVersion
         if (auto versions = maybe_versions.get())
         {
             const auto& versions_end = versions->end();
+
+            auto found_same_sha =
+                std::find_if(versions->begin(), versions_end, [&](const VersionDbEntry& db_entry) -> bool {
+                    return db_entry.git_tree == git_tree;
+                });
+            if (found_same_sha != versions_end)
+            {
+                System::printf(System::Color::warning,
+                               "Warning: Local port files SHA is the same as version `%s` in file.\n"
+                               "-- SHA: %s\n"
+                               "-- Did you remember to commit your changes?\n"
+                               "No files were updated.\n",
+                               found_same_sha->version,
+                               git_tree);
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
             auto it = std::find_if(versions->begin(), versions_end, [&](const VersionDbEntry& db_entry) -> bool {
                 return db_entry.version == version.versiont;
             });
 
             if (it != versions_end)
             {
-                if (it->git_tree == git_tree)
-                {
-                    System::printf(System::Color::warning,
-                                   "Warning: Local port files SHA is same as versions file.\n"
-                                   "-- SHA: %s\n"
-                                   "-- Did you remember to commit your changes?\n",
-                                   "No files were updated.\n",
-                                   git_tree);
-                    Checks::exit_fail(VCPKG_LINE_INFO);
-                }
-                else if (!overwrite_version)
+                if (!overwrite_version)
                 {
                     System::printf(System::Color::error,
                                    "Error: Local changes detected but no changes to version or port version.\n"
                                    "-- Version: %s\n"
-                                   "-- Old SHA: %s\n",
-                                   "-- New SHA: %s\n",
+                                   "-- Old SHA: %s\n"
+                                   "-- New SHA: %s\n"
                                    "-- Did you remember to update the version or port version?\n"
-                                   "No files were updated.\n",
-                                   "Pass `--overwrite-version` to bypass this check.",
+                                   "No files were updated.\n"
+                                   "Pass `--overwrite-version` to bypass this check.\n",
                                    version.versiont,
                                    it->git_tree,
                                    git_tree);
