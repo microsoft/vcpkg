@@ -1,0 +1,48 @@
+diff --git a/makefile.vc b/makefile.vc
+index 1f790f0de..90db6efc2 100644
+--- a/makefile.vc
++++ b/makefile.vc
+@@ -17,11 +17,11 @@ LIBOBJ	 = src\box2d.obj src\bytebuffer.obj src\g_box.obj \
+ 	src\rtout_kml.obj src\rtout_svg.obj src\rtout_twkb.obj src\rtout_wkb.obj \
+ 	src\rtout_wkt.obj src\rtout_x3d.obj src\rtpoint.obj src\rtpoly.obj src\rtprint.obj \
+ 	src\rtpsurface.obj src\rtspheroid.obj src\rtstroke.obj src\rttin.obj src\rttree.obj \
+-	src\rttriangle.obj src\rtutil.obj src\stringbuffer.obj src\varint.obj
++	src\rttriangle.obj src\rtutil.obj src\stringbuffer.obj src\varint.obj src\rtt_tpsnap.obj
+ 
+ LIBRTTOPO_DLL	 	       =	librttopo$(VERSION).dll
+ 
+-CFLAGS	=	/nologo -IC:\OSGeo4W\include -I. -Iheaders $(OPTFLAGS)
++CFLAGS	=	/nologo -I. -Iheaders $(OPTFLAGS)
+ 
+ default:	all
+ 
+@@ -34,9 +34,9 @@ librttopo.lib:	$(LIBOBJ)
+ $(LIBRTTOPO_DLL):	librttopo_i.lib
+ 
+ librttopo_i.lib:	$(LIBOBJ)
+-	link /debug /dll /out:$(LIBRTTOPO_DLL) \
+-		/implib:librrttopo_i.lib $(LIBOBJ) \
+-		C:\OSGeo4W\lib\geos_c.lib
++	link $(LINK_FLAGS) /dll /def:librttopo.def /out:$(LIBRTTOPO_DLL) \
++		/implib:librttopo_i.lib $(LIBOBJ) \
++		$(LIBS_ALL)
+ 	if exist $(LIBRTTOPO_DLL).manifest mt -manifest \
+ 		$(LIBRTTOPO_DLL).manifest -outputresource:$(LIBRTTOPO_DLL);2
+ 
+
+diff --git a/nmake.opt b/nmake.opt
+index 938979df1..979bf1c4d 100644
+--- a/nmake.opt
++++ b/nmake.opt
+@@ -1,9 +1,8 @@
+ # Directory tree where RTTOPO will be installed.
+-INSTDIR=C:\OSGeo4W
++INSTDIR=$(INST_DIR)
+ 
+ # Uncomment the first for an optimized build, or the second for debug.
+-OPTFLAGS=	/nologo /Ox /fp:precise /W4 /MD /D_CRT_SECURE_NO_WARNINGS \
+-			/DDLL_EXPORT
++OPTFLAGS=	/nologo /fp:precise /W4 $(CL_FLAGS) /D_CRT_SECURE_NO_WARNINGS
+ #OPTFLAGS=	/nologo /Zi /MD /Fdlibrttopo.pdb /DDLL_EXPORT
+ 
+ # Set the version number for the DLL.  Normally we leave this blank since

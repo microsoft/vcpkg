@@ -1,0 +1,5 @@
+The package RTTOPO provides CMake targets:
+
+    find_package(RTTOPO REQUIRED)
+    target_include_directories(main PRIVATE ${RTTOPO_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${RTTOPO_LIBRARIES})

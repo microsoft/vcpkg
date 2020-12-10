@@ -1,0 +1,76 @@
+diff --git a/configure.ac b/configure.ac
+index a9561069c..0c2e45f60 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -87,31 +87,31 @@ AC_CONFIG_FILES([Makefile \
+ #-----------------------------------------------------------------------
+ #   --with-geosconfig
+ #
+-AC_ARG_WITH([geosconfig],
+-    [AS_HELP_STRING([--with-geosconfig=FILE], [specify an alternative geos-config file])],
+-	[GEOSCONFIG="$withval"], [GEOSCONFIG=""])
+-if test "x$GEOSCONFIG" = "x"; then
+-    # GEOSCONFIG was not specified, so search within the current path
+-    AC_PATH_PROG([GEOSCONFIG], [geos-config])
+-    # If we couldn't find geos-config, display an error
+-    if test "x$GEOSCONFIG" = "x"; then
+-            AC_MSG_ERROR([could not find geos-config within the current path. You may need to try re-running configure with a --with-geosconfig parameter.])
+-    fi
+-else
+-    # GEOSCONFIG was specified; display a message to the user
+-    if test "x$GEOSCONFIG" = "xyes"; then
+-            AC_MSG_ERROR([you must specify a parameter to --with-geosconfig, e.g. --with-geosconfig=/path/to/geos-config])
+-    else
+-            if test -f $GEOSCONFIG; then
+-                    AC_MSG_RESULT([Using user-specified geos-config file: $GEOSCONFIG])
+-            else
+-                    AC_MSG_ERROR([the user-specified geos-config file $GEOSCONFIG does not exist])
+-            fi
+-    fi
+-fi
++#AC_ARG_WITH([geosconfig],
++#    [AS_HELP_STRING([--with-geosconfig=FILE], [specify an alternative geos-config file])],
++#	[GEOSCONFIG="$withval"], [GEOSCONFIG=""])
++#if test "x$GEOSCONFIG" = "x"; then
++#    # GEOSCONFIG was not specified, so search within the current path
++#    AC_PATH_PROG([GEOSCONFIG], [geos-config])
++#    # If we couldn't find geos-config, display an error
++#    if test "x$GEOSCONFIG" = "x"; then
++#            AC_MSG_ERROR([could not find geos-config within the current path. You may need to try re-running configure with a --with-geosconfig parameter.])
++#    fi
++#else
++#    # GEOSCONFIG was specified; display a message to the user
++#    if test "x$GEOSCONFIG" = "xyes"; then
++#            AC_MSG_ERROR([you must specify a parameter to --with-geosconfig, e.g. --with-geosconfig=/path/to/geos-config])
++#    else
++#            if test -f $GEOSCONFIG; then
++#                    AC_MSG_RESULT([Using user-specified geos-config file: $GEOSCONFIG])
++#            else
++#                    AC_MSG_ERROR([the user-specified geos-config file $GEOSCONFIG does not exist])
++#            fi
++#    fi
++#fi
+ # Extract the linker and include flags
+-GEOS_LDFLAGS=`$GEOSCONFIG --ldflags`
+-GEOS_CFLAGS=-I`$GEOSCONFIG --includes`
++#GEOS_LDFLAGS=`$GEOSCONFIG --ldflags`
++#GEOS_CFLAGS=-I`$GEOSCONFIG --includes`
+ AC_SUBST([GEOS_LDFLAGS])
+ AC_SUBST([GEOS_CFLAGS])
+ # Ensure that we can parse geos_c.h
+@@ -122,11 +122,11 @@ CPPFLAGS="$CPPFLAGS_SAVE"
+ # Ensure we can link against libgeos_c
+ LIBS_SAVE="$LIBS"
+ LIBS="$GEOS_LDFLAGS"
+-AC_SEARCH_LIBS(GEOSContext_setErrorMessageHandler_r,geos_c,,AC_MSG_ERROR([could not find libgeos_c (or obsolete 'libgeos_c' < v.3.5.0 found) - you may need to specify the directory of a geos-config file using --with-geosconfig]))
++#AC_SEARCH_LIBS(GEOSContext_setErrorMessageHandler_r,geos_c,,AC_MSG_ERROR([could not find libgeos_c (or obsolete 'libgeos_c' < v.3.5.0 found) - you may need to specify the directory of a geos-config file using --with-geosconfig]))
+ LIBS="$LIBS_SAVE"
+-LIBS="$LIBS $GEOS_LDFLAGS -lgeos_c"
+-GEOS_MAJOR_VERSION=`$GEOSCONFIG --version | cut -d. -f1 | sed 's/[[^0-9]]//g'`
+-GEOS_MINOR_VERSION=`$GEOSCONFIG --version | cut -d. -f2 | sed 's/[[^0-9]]//g'`
++LIBS="$LIBS $GEOS_LDFLAGS"
++#GEOS_MAJOR_VERSION=`$GEOSCONFIG --version | cut -d. -f1 | sed 's/[[^0-9]]//g'`
++#GEOS_MINOR_VERSION=`$GEOSCONFIG --version | cut -d. -f2 | sed 's/[[^0-9]]//g'`
+ RTGEOM_GEOS_VERSION="$GEOS_MAJOR_VERSION$GEOS_MINOR_VERSION"
+ AC_DEFINE_UNQUOTED([RTGEOM_GEOS_VERSION], [$RTGEOM_GEOS_VERSION], [GEOS library version])
+ AC_SUBST([RTGEOM_GEOS_VERSION])
