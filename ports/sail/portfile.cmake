@@ -32,5 +32,8 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sail ${CURRENT_PACKAGES_DIR}/debug
 # Move cmake configs
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sail)
 
+# Fix pkg-config files
+vcpkg_fixup_pkgconfig()
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
