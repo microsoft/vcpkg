@@ -1446,7 +1446,6 @@ spdk-isal:x64-uwp=fail
 spdk-isal:x64-windows=fail
 spdk-isal:x64-windows-static=fail
 spdk-isal:x86-windows=fail
-speexdsp:x64-linux=fail
 spirv-tools:arm-uwp=fail
 spirv-tools:x64-uwp=fail
 stormlib:arm-uwp=fail
