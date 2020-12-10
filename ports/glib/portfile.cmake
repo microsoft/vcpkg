@@ -1,11 +1,6 @@
 # Glib uses winapi functions not available in WindowsStore
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
-# Glib relies on DllMain on Windows
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-endif()
-
 set(GLIB_VERSION 2.52.3)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/gnome/sources/glib/2.52/glib-${GLIB_VERSION}.tar.xz"
@@ -36,11 +31,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     selinux HAVE_SELINUX
 )
 
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(WARNING "Since dllmain is decleared to glib and gobject, tools is disabled on static build")
+    set(EXTRA_OPTS -DGLIB_SKIP_TOOLS=ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DGLIB_VERSION=${GLIB_VERSION}
+        ${EXTRA_OPTS}
     OPTIONS_DEBUG
         -DGLIB_SKIP_HEADERS=ON
         -DGLIB_SKIP_TOOLS=ON

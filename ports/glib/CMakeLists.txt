@@ -18,6 +18,10 @@ if(BUILD_SHARED_LIBS)
     add_definitions(-DDLL_EXPORT)
 endif()
 
+if (WIN32)
+    add_definitions(-DG_PLATFORM_WIN32 -DG_OS_WIN32)
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 # find dependencies
@@ -146,7 +150,7 @@ else()
 endif()
 target_include_directories(glib PRIVATE ${PCRE_INCLUDE_DIR} ${ICONV_INCLUDE_DIR})
 target_include_directories(glib PUBLIC $<BUILD_INTERFACE:${Intl_INCLUDE_DIRS}> $<INSTALL_INTERFACE:include>)
-list(APPEND GLIB_TARGETS glib)
+list(APPEND GLIB_MANUAL_TARGETS glib)
 if(NOT GLIB_SKIP_HEADERS)
     install(FILES glib/glib.h glib/glib-object.h ${CMAKE_BINARY_DIR}/config/glib/glibconfig.h DESTINATION include)
 
@@ -171,7 +175,7 @@ add_library(gobject ${GOBJECT_SOURCES})
 target_compile_definitions(gobject PRIVATE GOBJECT_COMPILATION G_LOG_DOMAIN="GLib-GObject")
 target_link_libraries(gobject PRIVATE gthread glib ${FFI_LIBRARY})
 target_include_directories(gobject PRIVATE ${FFI_INCLUDE_DIR} PUBLIC $<INSTALL_INTERFACE:include>)
-list(APPEND GLIB_TARGETS gobject)
+list(APPEND GLIB_MANUAL_TARGETS gobject)
 if(NOT GLIB_SKIP_HEADERS)
     file(GLOB GOBJECT_HEADERS gobject/*.h gobject/gobjectnotifyqueue.c)
     list(FILTER GOBJECT_HEADERS EXCLUDE REGEX "private.h\$")
@@ -267,7 +271,7 @@ else()
 endif()
 list(APPEND GLIB_TARGETS gio)
 
-foreach(GTARGET ${GLIB_TARGETS})
+foreach(GTARGET ${GLIB_TARGETS} ${GLIB_MANUAL_TARGETS})
     set_target_properties(${GTARGET} PROPERTIES
         OUTPUT_NAME ${GTARGET}-${GLIB_DLL_SUFFIX}
         ARCHIVE_OUTPUT_NAME ${GTARGET}-${GLIB_LIB_SUFFIX})
@@ -332,6 +336,13 @@ install(
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
+)
+install(
+    TARGETS ${GLIB_MANUAL_TARGETS}
+    EXPORT glib
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib/manual-link
+    LIBRARY DESTINATION lib/manual-link
 )
 install(
     EXPORT glib
