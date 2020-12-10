@@ -18,7 +18,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                     )
                     
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled) # only translation files. 
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 #TODO
 
 # CMake Warning at translations/CMakeLists.txt:36 (message):

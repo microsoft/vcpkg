@@ -6,14 +6,14 @@ set(${PORT}_PATCHES)
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
-    "assimp"  FEATURE_assimp
+    "assimp"  FEATURE_quick3d_assimp
 INVERTED_FEATURES
-    "assimp"  CMAKE_DISABLE_FIND_PACKAGE_WrapAssimp
+    "assimp"  CMAKE_DISABLE_FIND_PACKAGE_WrapQuick3DAssimp
     )
 if("assimp" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DINPUT_assimp=system)
+    list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=system)
 else()
-    list(APPEND FEATURE_OPTIONS -DINPUT_assimp=no)
+    list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=no)
 endif()
  set(TOOL_NAMES balsam meshdebug shadergen)
 

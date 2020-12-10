@@ -26,6 +26,8 @@ set(${PORT}_PATCHES)
         qtdiag
         qtpaths
         qtplugininfo
+        qdbus
+        qdbusviewer
     )
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND TOOL_NAMES windeployqt)
