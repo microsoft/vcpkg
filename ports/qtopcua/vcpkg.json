@@ -8,37 +8,37 @@
   ],
   "default-features": [
     "default-features",
-    "open62541",
+    "gds",
     "ns0idnames",
-    "gds"
+    "open62541"
   ],
   "features": {
     "default-features": {
       "description": "Platform-dependent default features"
     },
+    "gds": {
+      "description": "Support for global discovery server"
+    },
+    "ns0idgenerator": {
+      "description": "Namespace 0 NodeIds generator from the NodeIds.csv file."
+    },
+    "ns0idnames": {
+      "description": "Support for namespace 0 NodeId names"
+    },
     "open62541": {
       "description": "Open62541 with plugin to connect to servers with signing and encryption",
       "dependencies": [
         {
-            "name": "open62541",
-            "default-features": false,
-            "features": [ 
-              "openssl"
-            ]
+          "name": "open62541",
+          "default-features": false,
+          "features": [
+            "openssl"
+          ]
         }
       ]
     },
     "uacpp": {
       "description": "Unified Automation C++ SDK"
-    },
-    "gds": {
-      "description": "Support for global discovery server"
-    },
-    "ns0idnames": {
-      "description": "Support for namespace 0 NodeId names"
-    },
-    "ns0idgenerator": {
-      "description": "Namespace 0 NodeIds generator from the NodeIds.csv file."
     }
   }
 }
