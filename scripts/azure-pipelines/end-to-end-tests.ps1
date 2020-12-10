@@ -44,6 +44,10 @@ $commonArgs = @(
     "--x-packages-root=$packagesRoot",
     "--overlay-ports=scripts/e2e_ports"
 )
+$portsRedirectArgs = @(
+    "--x-builtin-ports-root=$TestingRoot/version-files/ports",
+    "--x-builtin-port-versions-root=$packagesRoot/version-files/port_version"
+)
 $CurrentTest = 'unassigned'
 
 function Refresh-TestRoot {
@@ -130,6 +134,15 @@ if (-not $IsLinux -and -not $IsMacOS) {
         Remove-Item -Recurse -Force $TestingRoot\out
     }
 }
+
+# Test verify versions
+Refresh-TestRoot
+Run-Vcpkg -TestArgs ($commonArgs )
+$CurrentTest = "x-verify-ci-versions"
+Write-Host $CurrentTest
+./vcpkg $commonArgs $portsRedirectArgs x-ci-verify-versions
+Throw-IfFailed
+
 
 Refresh-TestRoot
 
