@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 find_path(GLIBMM_INCLUDE_DIR NAMES glibmm.h)
 find_library(GLIBMM_LIBRARY NAMES glibmm)
 find_library(GIOMM_LIBRARY NAMES giomm)
-find_library(GLIB_LIBRARY NAMES glib glib-2.0)
+find_package(unofficial-glib CONFIG REQUIRED)
 find_library(GIO_LIBRARY NAMES gio gio-2.0)
 find_library(GMODULE_LIBRARY NAMES gmodule gmodule-2.0)
 find_library(GOBJECT_LIBRARY NAMES gobject gobject-2.0)
@@ -37,7 +37,7 @@ link_libraries(
     ${GMODULE_LIBRARY}
     ${GOBJECT_LIBRARY}
     ${GIO_LIBRARY}
-    ${GLIB_LIBRARY}
+    unofficial::glib::glib
     ${SIGCPP_LIBRARY}
     ${FFI_LIBRARY}
     ${LIBXML2_LIBRARIES}
