@@ -170,8 +170,10 @@ namespace vcpkg::Commands::CIVerifyVersions
             auto git_tree_it = port_git_tree_map.find(port_name);
             if (git_tree_it == port_git_tree_map.end())
             {
+                System::printf(System::Color::error, "FAIL: %s\n", port_name);
                 errors.emplace(
-                    std::move(Strings::format("Error: Missing local git tree object for port `%s`.\n", port_name)));
+                    std::move(Strings::format("Error: Missing local git tree object for port `%s`.", port_name)));
+                continue;
             }
             auto git_tree = git_tree_it->second;
 
@@ -182,6 +184,7 @@ namespace vcpkg::Commands::CIVerifyVersions
 
             if (manifest_exists && control_exists)
             {
+                System::printf(System::Color::error, "FAIL: %s\n", port_name);
                 errors.emplace(
                     Strings::format("Error: Both a manifest file and a CONTROL file exist in port directory: %s",
                                     fs::u8string(port_path)));
@@ -190,6 +193,7 @@ namespace vcpkg::Commands::CIVerifyVersions
 
             if (!manifest_exists && !control_exists)
             {
+                System::printf(System::Color::error, "FAIL: %s\n", port_name);
                 errors.emplace(Strings::format("Error: No manifest file or CONTROL file exist in port directory: %s",
                                                fs::u8string(port_path)));
                 continue;
@@ -199,6 +203,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                 paths.builtin_port_versions / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
             if (!fs.exists(versions_file_path))
             {
+                System::printf(System::Color::error, "FAIL: %s\n", port_name);
                 errors.emplace(Strings::format("Error: Missing versions file for `%s`. Expected at `%s`.",
                                                port_name,
                                                fs::u8string(versions_file_path)));

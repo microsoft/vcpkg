@@ -44,17 +44,6 @@ $commonArgs = @(
     "--x-packages-root=$packagesRoot",
     "--overlay-ports=scripts/e2e_ports"
 )
-$portsRedirectArgs = @(
-    "--feature-flags=versions",
-    "--triplet",
-    $Triplet,
-    "--x-buildtrees-root=$buildtreesRoot",
-    "--x-install-root=$installRoot",
-    "--x-packages-root=$packagesRoot",
-    "--overlay-ports=scripts/e2e_ports",
-    "--x-builtin-ports-root=scripts/testing/version-files/ports",
-    "--x-builtin-port-versions-root=scripts/testing/version-files/port_versions"
-)
 $CurrentTest = 'unassigned'
 
 function Refresh-TestRoot {
@@ -141,15 +130,6 @@ if (-not $IsLinux -and -not $IsMacOS) {
         Remove-Item -Recurse -Force $TestingRoot\out
     }
 }
-
-# Test verify versions
-Refresh-TestRoot
-Run-Vcpkg -TestArgs ($commonArgs )
-$CurrentTest = "x-verify-ci-versions"
-Write-Host $CurrentTest
-./vcpkg $portsRedirectArgs x-ci-verify-versions --verbose
-Throw-IfFailed
-
 
 Refresh-TestRoot
 
@@ -268,5 +248,44 @@ Throw-IfNotFailed
 
 Run-Vcpkg -TestArgs ($commonArgs + @("install", "zlib", "--fast")) # NB: --fast is not a switch
 Throw-IfNotFailed
+
+# Test verify versions
+Refresh-TestRoot
+$portsRedirectArgsOK = @(
+    "--feature-flags=versions",
+    "--x-builtin-ports-root=scripts/testing/version-files/ports",
+    "--x-builtin-port-versions-root=scripts/testing/version-files/port_versions"
+)
+$portsRedirectArgsIncomplete = @(
+    "--feature-flags=versions",
+    "--x-builtin-ports-root=scripts/testing/version-files/ports",
+    "--x-builtin-port-versions-root=scripts/testing/version-files/port_versions_incomplete"
+)
+$CurrentTest = "x-verify-ci-versions (All files OK)"
+Write-Host $CurrentTest
+./vcpkg $portsRedirectArgsOK x-ci-verify-versions --verbose
+Throw-IfFailed
+
+$CurrentTest = "x-verify-ci-versions (Incomplete)"
+./vcpkg $portsRedirectArgsIncomplete x-ci-verify-versions --verbose 
+Throw-IfNotFailed
+# Do not fail if there's nothing to update
+./vcpkg $portsRedirectArgsIncomplete x-add-version cat 
+Throw-IfFailed
+# Local version is not in baseline and versions file
+./vcpkg $portsRedirectArgsIncomplete x-add-version dog 
+Throw-IfFailed
+# Missing versions file
+./vcpkg $portsRedirectArgsIncomplete x-add-version duck
+Throw-IfFailed
+# Missing versions file and missing baseline entry
+./vcpkg $portsRedirectArgsIncomplete x-add-version ferret
+Throw-IfFailed
+# Missing baseline entry
+./vcpkg $portsRedirectArgsIncomplete x-add-version mouse
+Throw-IfFailed
+# Validate changes
+./vcpkg $portsRedirectArgsIncomplete x-ci-verify-versions --verbose
+Throw-IfFailed
 
 $LASTEXITCODE = 0
