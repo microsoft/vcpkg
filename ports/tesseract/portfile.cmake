@@ -48,7 +48,6 @@ find_package(BZip2 REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(zstd REQUIRED)
 find_package(LibLZMA REQUIRED)" TESSERACT_CONFIG "${TESSERACT_CONFIG}")
-
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake "${TESSERACT_CONFIG}")
 
 vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)

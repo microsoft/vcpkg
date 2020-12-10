@@ -1,5 +1,6 @@
 Source: ceres
 Version: 2.0.0
+Port-Version: 1
 Build-Depends: glog, eigen3
 Homepage: https://github.com/ceres-solver/ceres-solver
 Description: non-linear optimization package
