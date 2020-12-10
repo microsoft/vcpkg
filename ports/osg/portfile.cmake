@@ -18,6 +18,7 @@ vcpkg_from_github(
         fix-nvtt.patch
         use-boost-asio.patch
         fix-dependency-coin.patch
+        fix-iconv-notfound.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

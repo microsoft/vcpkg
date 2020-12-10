@@ -1,0 +1,13 @@
+diff --git a/applications/present3D/CMakeLists.txt b/applications/present3D/CMakeLists.txt
+index 8bf91e3..6195485 100644
+--- a/applications/present3D/CMakeLists.txt
++++ b/applications/present3D/CMakeLists.txt
+@@ -105,7 +105,7 @@ IF   (WIN32)
+     SET(TARGET_EXTERNAL_LIBRARIES ${TARGET_EXTERNAL_LIBRARIES} ws2_32)
+     
+     find_package(EXPAT REQUIRED)
+-    find_package(Iconv CONFIG REQUIRED)
++    find_package(Iconv REQUIRED)
+     
+     list(APPEND TARGET_EXTERNAL_LIBRARIES EXPAT::EXPAT Iconv::Iconv)
+ ELSE()
