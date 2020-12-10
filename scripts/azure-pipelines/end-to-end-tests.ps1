@@ -45,8 +45,8 @@ $commonArgs = @(
     "--overlay-ports=scripts/e2e_ports"
 )
 $portsRedirectArgs = @(
-    "--x-builtin-ports-root=$TestingRoot/version-files/ports",
-    "--x-builtin-port-versions-root=$packagesRoot/version-files/port_version"
+    "--x-builtin-ports-root=./scripts/testing/version-files/ports",
+    "--x-builtin-port-versions-root=./scripts/testing/version-files/port_version"
 )
 $CurrentTest = 'unassigned'
 
