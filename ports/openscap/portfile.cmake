@@ -1,3 +1,6 @@
+# Force to set SHARED to add_library on its CMakeLists.txt
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenSCAP/openscap
