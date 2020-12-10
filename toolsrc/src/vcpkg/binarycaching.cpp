@@ -5,6 +5,7 @@
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/xmlserializer.h>
 
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/binarycaching.private.h>
@@ -377,6 +378,45 @@ namespace
         {
         }
 
+        int run_nuget_commandline(const std::string& cmdline)
+        {
+            if (m_interactive)
+            {
+                return System::cmd_execute(cmdline);
+            }
+
+            auto res = System::cmd_execute_and_capture_output(cmdline);
+            if (Debug::g_debugging)
+            {
+                System::print2(res.output);
+            }
+            if (res.output.find("Authentication may require manual action.") != std::string::npos)
+            {
+                System::print2(System::Color::warning,
+                               "One or more NuGet credential providers requested manual action. Add the binary "
+                               "source 'interactive' to allow interactivity.\n");
+            }
+            else if (res.output.find("Response status code does not indicate success: 401 (Unauthorized)") !=
+                         std::string::npos &&
+                     res.exit_code != 0)
+            {
+                System::print2(System::Color::warning,
+                               "One or more NuGet credential providers failed to authenticate. See "
+                               "https://github.com/Microsoft/vcpkg/tree/master/docs/users/binarycaching.md for "
+                               "more details on how to provide credentials.\n");
+            }
+            else if (res.output.find("for example \"-ApiKey AzureDevOps\"") != std::string::npos)
+            {
+                auto res2 = System::cmd_execute_and_capture_output(cmdline + " -ApiKey AzureDevOps");
+                if (Debug::g_debugging)
+                {
+                    System::print2(res2.output);
+                }
+                return res2.exit_code;
+            }
+            return res.exit_code;
+        }
+
         void prefetch(const VcpkgPaths& paths, std::vector<const Dependencies::InstallPlanAction*>& actions) override
         {
             if (m_read_sources.empty() && m_read_configs.empty()) return;
@@ -481,19 +521,7 @@ namespace
 
                 [&] {
                     generate_packages_config();
-                    if (Debug::g_debugging)
-                        System::cmd_execute(cmdline);
-                    else
-                    {
-                        auto res = System::cmd_execute_and_capture_output(cmdline);
-                        if (res.output.find("Authentication may require manual action.") != std::string::npos)
-                        {
-                            System::print2(
-                                System::Color::warning,
-                                "One or more NuGet credential providers requested manual action. Add the binary "
-                                "source 'interactive' to allow interactivity.\n");
-                        }
-                    }
+                    run_nuget_commandline(cmdline);
                 }();
 
                 Util::erase_remove_if(nuget_refs, [&](const std::pair<PackageSpec, NugetReference>& nuget_ref) -> bool {
@@ -554,12 +582,7 @@ namespace
                 .string_arg("-ForceEnglishOutput");
             if (!m_interactive) cmdline.string_arg("-NonInteractive");
 
-            auto pack_rc = [&] {
-                if (Debug::g_debugging)
-                    return System::cmd_execute(cmdline);
-                else
-                    return System::cmd_execute_and_capture_output(cmdline).exit_code;
-            }();
+            auto pack_rc = run_nuget_commandline(cmdline.extract());
 
             if (pack_rc != 0)
             {
@@ -584,12 +607,7 @@ namespace
 
                     System::print2("Uploading binaries for ", spec, " to NuGet source ", write_src, ".\n");
 
-                    auto rc = [&] {
-                        if (Debug::g_debugging)
-                            return System::cmd_execute(cmd);
-                        else
-                            return System::cmd_execute_and_capture_output(cmd).exit_code;
-                    }();
+                    auto rc = run_nuget_commandline(cmd.extract());
 
                     if (rc != 0)
                     {
@@ -616,12 +634,7 @@ namespace
                     System::print2(
                         "Uploading binaries for ", spec, " using NuGet config ", fs::u8string(write_cfg), ".\n");
 
-                    auto rc = [&] {
-                        if (Debug::g_debugging)
-                            return System::cmd_execute(cmd);
-                        else
-                            return System::cmd_execute_and_capture_output(cmd).exit_code;
-                    }();
+                    auto rc = run_nuget_commandline(cmd.extract());
 
                     if (rc != 0)
                     {
@@ -697,113 +710,6 @@ namespace vcpkg
     private:
         std::vector<std::unique_ptr<IBinaryProvider>> m_providers;
     };
-}
-
-XmlSerializer& XmlSerializer::emit_declaration()
-{
-    buf.append(R"(<?xml version="1.0" encoding="utf-8"?>)");
-    return *this;
-}
-XmlSerializer& XmlSerializer::open_tag(StringLiteral sl)
-{
-    emit_pending_indent();
-    Strings::append(buf, '<', sl, '>');
-    m_indent += 2;
-    return *this;
-}
-XmlSerializer& XmlSerializer::start_complex_open_tag(StringLiteral sl)
-{
-    emit_pending_indent();
-    Strings::append(buf, '<', sl);
-    m_indent += 2;
-    return *this;
-}
-XmlSerializer& XmlSerializer::text_attr(StringLiteral name, StringView content)
-{
-    if (m_pending_indent)
-    {
-        m_pending_indent = false;
-        buf.append(m_indent, ' ');
-    }
-    else
-    {
-        buf.push_back(' ');
-    }
-    Strings::append(buf, name, "=\"");
-    text(content);
-    Strings::append(buf, '"');
-    return *this;
-}
-XmlSerializer& XmlSerializer::finish_complex_open_tag()
-{
-    emit_pending_indent();
-    Strings::append(buf, '>');
-    return *this;
-}
-XmlSerializer& XmlSerializer::finish_self_closing_complex_tag()
-{
-    emit_pending_indent();
-    Strings::append(buf, "/>");
-    m_indent -= 2;
-    return *this;
-}
-XmlSerializer& XmlSerializer::close_tag(StringLiteral sl)
-{
-    m_indent -= 2;
-    emit_pending_indent();
-    Strings::append(buf, "</", sl, '>');
-    return *this;
-}
-XmlSerializer& XmlSerializer::text(StringView sv)
-{
-    emit_pending_indent();
-    for (auto ch : sv)
-    {
-        if (ch == '&')
-        {
-            buf.append("&amp;");
-        }
-        else if (ch == '<')
-        {
-            buf.append("&lt;");
-        }
-        else if (ch == '>')
-        {
-            buf.append("&gt;");
-        }
-        else if (ch == '"')
-        {
-            buf.append("&quot;");
-        }
-        else if (ch == '\'')
-        {
-            buf.append("&apos;");
-        }
-        else
-        {
-            buf.push_back(ch);
-        }
-    }
-    return *this;
-}
-XmlSerializer& XmlSerializer::simple_tag(StringLiteral tag, StringView content)
-{
-    return emit_pending_indent().open_tag(tag).text(content).close_tag(tag);
-}
-XmlSerializer& XmlSerializer::line_break()
-{
-    buf.push_back('\n');
-    m_pending_indent = true;
-    return *this;
-}
-XmlSerializer& XmlSerializer::emit_pending_indent()
-{
-    if (m_pending_indent)
-    {
-        m_pending_indent = false;
-        buf.append(m_indent, ' ');
-    }
-    return *this;
 }
 
 IBinaryProvider& vcpkg::null_binary_provider()
@@ -1131,6 +1037,7 @@ ExpectedS<std::unique_ptr<IBinaryProvider>> vcpkg::create_binary_provider_from_c
 
     BinaryConfigParser default_parser("default,readwrite", "<defaults>", &s);
     default_parser.parse();
+    if (auto err = default_parser.get_error()) return err->get_message();
 
     BinaryConfigParser env_parser(env_string, "VCPKG_BINARY_SOURCES", &s);
     env_parser.parse();
@@ -1179,7 +1086,7 @@ std::string vcpkg::reformat_version(const std::string& version, const std::strin
         auto major = trim_leading_zeroes(sm.str(1));
         auto minor = sm.size() > 2 && !sm.str(2).empty() ? trim_leading_zeroes(sm.str(2).substr(1)) : "0";
         auto patch = sm.size() > 3 && !sm.str(3).empty() ? trim_leading_zeroes(sm.str(3).substr(1)) : "0";
-        return Strings::concat(major, '.', minor, '.', patch, "-", abi_tag);
+        return Strings::concat(major, '.', minor, '.', patch, "-vcpkg", abi_tag);
     }
 
     static const std::regex date_matcher(R"((\d\d\d\d)-(\d\d)-(\d\d).*)");
@@ -1190,11 +1097,11 @@ std::string vcpkg::reformat_version(const std::string& version, const std::strin
                                trim_leading_zeroes(sm.str(2)),
                                '.',
                                trim_leading_zeroes(sm.str(3)),
-                               "-",
+                               "-vcpkg",
                                abi_tag);
     }
 
-    return Strings::concat("0.0.0-", abi_tag);
+    return Strings::concat("0.0.0-vcpkg", abi_tag);
 }
 
 details::NuGetRepoInfo details::get_nuget_repo_info_from_env()
@@ -1281,13 +1188,12 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
 {
     HelpTableFormatter tbl;
     tbl.text("Vcpkg can cache compiled packages to accelerate restoration on a single machine or across the network."
-             " This functionality is currently enabled by default and can be disabled by either passing "
-             "`--no-binarycaching` to every vcpkg command line or setting the environment variable "
-             "`VCPKG_FEATURE_FLAGS` to `-binarycaching`.");
+             " By default, vcpkg will save builds to a local machine cache. This can be disabled by passing "
+             "`--binarysource=clear` as the last option on the command line.");
     tbl.blank();
     tbl.blank();
     tbl.text(
-        "Once caching is enabled, it can be further configured by either passing `--binarysource=<source>` options "
+        "Binary caching can be further configured by either passing `--binarysource=<source>` options "
         "to every command line or setting the `VCPKG_BINARY_SOURCES` environment variable to a set of sources (Ex: "
         "\"<source>;<source>;...\"). Command line sources are interpreted after environment sources.");
     tbl.blank();
