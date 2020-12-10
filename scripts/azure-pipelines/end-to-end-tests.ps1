@@ -45,8 +45,14 @@ $commonArgs = @(
     "--overlay-ports=scripts/e2e_ports"
 )
 $portsRedirectArgs = @(
-    "--x-builtin-ports-root=./scripts/testing/version-files/ports",
-    "--x-builtin-port-versions-root=./scripts/testing/version-files/port_version"
+    "--triplet",
+    $Triplet,
+    "--x-buildtrees-root=$buildtreesRoot",
+    "--x-install-root=$installRoot",
+    "--x-packages-root=$packagesRoot",
+    "--overlay-ports=scripts/e2e_ports",
+    "--x-builtin-ports-root=scripts/testing/version-files/ports",
+    "--x-builtin-port-versions-root=scripts/testing/version-files/port_versions"
 )
 $CurrentTest = 'unassigned'
 
@@ -140,7 +146,7 @@ Refresh-TestRoot
 Run-Vcpkg -TestArgs ($commonArgs )
 $CurrentTest = "x-verify-ci-versions"
 Write-Host $CurrentTest
-./vcpkg $commonArgs $portsRedirectArgs x-ci-verify-versions
+./vcpkg $portsRedirectArgs x-ci-verify-versions -verbose
 Throw-IfFailed
 
 
