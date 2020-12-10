@@ -146,7 +146,7 @@ Refresh-TestRoot
 Run-Vcpkg -TestArgs ($commonArgs )
 $CurrentTest = "x-verify-ci-versions"
 Write-Host $CurrentTest
-./vcpkg $portsRedirectArgs x-ci-verify-versions -verbose
+./vcpkg $portsRedirectArgs x-ci-verify-versions --verbose
 Throw-IfFailed
 
 
