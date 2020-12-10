@@ -126,6 +126,7 @@ namespace vcpkg::Commands::AddVersion
         }
 
         std::error_code ec;
+        fs.create_directories(output_path.parent_path(), VCPKG_LINE_INFO);
         fs.write_contents(output_path, Json::stringify(serialize_versions(versions), {}), ec);
         if (ec)
         {
@@ -278,7 +279,7 @@ namespace vcpkg::Commands::AddVersion
         const auto port_name = args.command_arguments[0];
         bool overwrite_version = Util::Sets::contains(parsed_args.switches, OPTION_OVERWRITE_VERSION);
 
-        auto baseline_path = paths.version_files / fs::u8path("baseline.json");
+        auto baseline_path = paths.builtin_port_versions / fs::u8path("baseline.json");
         auto& fs = paths.get_filesystem();
         if (!fs.exists(baseline_path))
         {
@@ -311,7 +312,7 @@ namespace vcpkg::Commands::AddVersion
         const auto& git_tree = git_tree_it->second;
 
         auto port_versions_path =
-            paths.version_files / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
+            paths.builtin_port_versions / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
         update_version_db_file(
             fs, port_name, SchemedVersion{scheme, versiont}, git_tree, port_versions_path, overwrite_version);
 

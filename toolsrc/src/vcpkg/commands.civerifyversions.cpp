@@ -148,7 +148,7 @@ namespace vcpkg::Commands::CIVerifyVersions
         auto& fs = paths.get_filesystem();
 
         // Without a revision, baseline will use local baseline.json file.
-        auto baseline_file_path = paths.version_files / fs::u8path("baseline.json");
+        auto baseline_file_path = paths.builtin_port_versions / fs::u8path("baseline.json");
         Checks::check_exit(VCPKG_LINE_INFO,
                            fs.exists(baseline_file_path),
                            "Error: Couldn't find required file `%s`.",
@@ -196,7 +196,7 @@ namespace vcpkg::Commands::CIVerifyVersions
             }
 
             auto versions_file_path =
-                paths.version_files / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
+                paths.builtin_port_versions / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
             if (!fs.exists(versions_file_path))
             {
                 errors.emplace(Strings::format("Error: Missing versions file for `%s`. Expected at `%s`.",

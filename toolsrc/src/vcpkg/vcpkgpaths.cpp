@@ -340,6 +340,11 @@ If you wish to silence this error and use classic mode, you can:
         packages =
             process_output_directory(filesystem, root, args.packages_root_dir.get(), "packages", VCPKG_LINE_INFO);
         scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
+        builtin_ports =
+            process_output_directory(filesystem, root, args.builtin_ports_root_dir.get(), "ports", VCPKG_LINE_INFO);
+        builtin_port_versions = process_output_directory(
+            filesystem, root, args.builtin_port_versions_root_dir.get(), "port_versions", VCPKG_LINE_INFO);
+
         prefab = root / fs::u8path("prefab");
 
         if (args.default_visual_studio_path)
@@ -361,10 +366,6 @@ If you wish to silence this error and use classic mode, you can:
         vcpkg_dir_status_file = vcpkg_dir / fs::u8path("status");
         vcpkg_dir_info = vcpkg_dir / fs::u8path("info");
         vcpkg_dir_updates = vcpkg_dir / fs::u8path("updates");
-
-        // Versioning paths
-        version_files = root / fs::u8path("port_versions");
-        local_baseline_filepath = version_files / fs::u8path("baseline.json");
 
         const auto versioning_tmp = buildtrees / fs::u8path("versioning_tmp");
         const auto versioning_output = buildtrees / fs::u8path("versioning");
@@ -563,8 +564,14 @@ If you wish to silence this error and use classic mode, you can:
     ExpectedS<std::map<std::string, std::string, std::less<>>> VcpkgPaths::git_get_local_port_treeish_map() const
     {
         auto local_repo = this->root / fs::u8path(".git");
-        auto git_cmd =
-            git_cmd_builder(*this, local_repo, this->root).string_arg("ls-tree").string_arg("HEAD:ports/").extract();
+        auto git_cmd = git_cmd_builder(*this, local_repo, this->root)
+                           .string_arg("ls-tree")
+                           .string_arg("-r")
+                           .string_arg("-d")
+                           .string_arg("HEAD")
+                           .string_arg("--")
+                           .path_arg(this->builtin_ports_directory())
+                           .extract();
 
         auto output = System::cmd_execute_and_capture_output(git_cmd);
         if (output.exit_code != 0)
@@ -572,19 +579,21 @@ If you wish to silence this error and use classic mode, you can:
                 Strings::format("Error: Couldn't get local treeish objects for ports.\n%s", output.output));
 
         std::map<std::string, std::string, std::less<>> ret;
-        for (auto&& line : Strings::split(output.output, '\n'))
+        auto lines = Strings::split(output.output, '\n');
+        // The first line of the output is always the parent directory itself.
+        for (auto line_it = lines.begin() + 1; line_it != lines.end(); ++line_it)
         {
             // The default output comes in the format:
             // <mode> SP <type> SP <object> TAB <file>
-            auto split_line = Strings::split(line, '\t');
+            auto split_line = Strings::split(*line_it, '\t');
             if (split_line.size() != 2)
                 return std::move(Strings::format(
-                    "Error: Unexepcted output from command `%s`. Couldn't split `\\t`.\n%s", git_cmd, line));
+                    "Error: Unexpected output from command `%s`. Couldn't split `\\t`.\n%s", git_cmd, *line_it));
 
             auto first_section = Strings::split(split_line[0], ' ');
             if (first_section.size() != 3)
                 return std::move(Strings::format(
-                    "Error: Unexepcted output from command `%s`. Couldn't split ` `.\n%s", git_cmd, line));
+                    "Error: Unexepcted output from command `%s`. Couldn't split ` `.\n%s", git_cmd, *line_it));
 
             auto port_name = Strings::split(split_line[1], '/').back();
             auto&& git_tree = first_section.back();

@@ -19,8 +19,7 @@ namespace
 {
     ExpectedS<fs::path> get_versions_json_path(const VcpkgPaths& paths, StringView port_name)
     {
-        auto json_path = paths.root / fs::u8path("port_versions") /
-                         fs::u8path(Strings::concat(port_name.substr(0, 1), "-")) /
+        auto json_path = paths.builtin_port_versions / fs::u8path(Strings::concat(port_name.substr(0, 1), "-")) /
                          fs::u8path(Strings::concat(port_name, ".json"));
         if (paths.get_filesystem().exists(json_path))
         {
@@ -324,7 +323,7 @@ namespace vcpkg::PortFileProvider
                     {
                         // No baseline was provided, so use current repo
                         const auto& fs = paths.get_filesystem();
-                        auto baseline_file = paths.root / fs::u8path("port_versions") / fs::u8path("baseline.json");
+                        auto baseline_file = paths.builtin_port_versions / fs::u8path("baseline.json");
                         if (fs.exists(baseline_file))
                         {
                             auto maybe_baselines_map =

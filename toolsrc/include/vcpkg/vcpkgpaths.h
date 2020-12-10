@@ -91,14 +91,13 @@ namespace vcpkg
         fs::path community_triplets;
         fs::path scripts;
         fs::path prefab;
+        fs::path builtin_ports;
+        fs::path builtin_port_versions;
 
         fs::path tools;
         fs::path buildsystems;
         fs::path buildsystems_msbuild_targets;
         fs::path buildsystems_msbuild_props;
-
-        fs::path version_files;
-        fs::path local_baseline_filepath;
 
         fs::path vcpkg_dir;
         fs::path vcpkg_dir_status_file;
@@ -147,7 +146,7 @@ namespace vcpkg
 
         // the directory of the builtin ports
         // this should be used only for helper commands, not core commands like `install`.
-        fs::path builtin_ports_directory() const { return root / fs::u8path("ports"); }
+        fs::path builtin_ports_directory() const { return this->builtin_ports; }
 
     private:
         std::unique_ptr<details::VcpkgPathsImpl> m_pimpl;
