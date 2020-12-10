@@ -35,5 +35,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sail)
 # Fix pkg-config files
 vcpkg_fixup_pkgconfig()
 
+# Handle usage
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
