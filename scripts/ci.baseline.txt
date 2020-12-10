@@ -30,6 +30,8 @@
 # Add new items alphabetically
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
+# Only support dynamic CRT
+atk:x64-windows-static=fail
 # Requires ATL for ARM64 to be installed in CI
 azure-storage-cpp:arm64-windows=fail
 
@@ -364,6 +366,8 @@ gasol:arm-uwp=fail
 gasol:x64-uwp=fail
 gdcm:arm64-windows=fail
 gdcm:x64-linux               = skip
+# Only support dynamic CRT
+gdk-pixbuf:x64-windows-static=fail
 geos:arm-uwp=fail
 geos:x64-uwp=fail
 getopt:arm-uwp=fail
@@ -421,6 +425,8 @@ gsl:arm-uwp=fail
 gsl:x64-uwp=fail
 # https://github.com/microsoft/vcpkg/pull/11048
 gtk:x64-linux=fail
+# Only support dynamic CRT
+gts:x64-windows-static=fail
 guetzli:x64-osx=fail
 h3:arm64-windows=fail
 h3:arm-uwp=fail
