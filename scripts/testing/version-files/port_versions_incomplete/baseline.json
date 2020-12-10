@@ -1,0 +1,16 @@
+{
+  "default": {
+    "cat": {
+      "version": "1.0",
+      "port-version": 0
+    },
+    "dog": {
+      "version-date": "2001-01-01",
+      "port-version": 0
+    }, 
+    "duck": {
+      "version-string": "mallard",
+      "port-version": 0
+    }
+  }
+}
