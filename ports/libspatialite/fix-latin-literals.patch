@@ -1,5 +1,5 @@
 diff --git a/src/srsinit/epsg_inlined_prussian.c b/src/srsinit/epsg_inlined_prussian.c
-index a5c8334..dd75dde 100644
+index b9a371239..d5be67ca2 100644
 --- a/src/srsinit/epsg_inlined_prussian.c
 +++ b/src/srsinit/epsg_inlined_prussian.c
 @@ -282,10 +282,10 @@ initialize_epsg_prussian(int filter,struct epsg_defs **first, struct epsg_defs *
@@ -20,7 +20,7 @@ index a5c8334..dd75dde 100644
      add_srs_wkt(p,11,"PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],");
      add_srs_wkt(p,12,"AUTHORITY[\"mj10777.de\",\"187916\"],AXIS[\"x\",NORTH],AXIS[\"y\",EAST]]");
 -    p = add_epsg_def(filter,first,last,187918,"mj10777.de",187918,"DHDN / Soldner 18 Müggelberg 600");
-+    p = add_epsg_def(filter,first,last,187918,u8"mj10777.de",187918,"DHDN / Soldner 18 M\u00fcggelberg 600");
++    p = add_epsg_def(filter,first,last,187918,"mj10777.de",187918,u8"DHDN / Soldner 18 M\u00fcggelberg 600");
      add_proj4text(p,0,"+proj=cass +lat_0=52.41864827777778 +lon_0=13.62720366666667 ");
      add_proj4text(p,1,"+x_0=0 +y_0=0 +ellps=bessel +datum=potsdam +units=m +no_defs");
 -    add_srs_wkt(p,0,"PROJCS[\"DHDN / Soldner 18 Müggelberg 600\",");
@@ -98,7 +98,7 @@ index a5c8334..dd75dde 100644
      add_srs_wkt(p,11,"PARAMETER[\"false_easting\",0],PARAMETER[\"false_northing\",0],");
      add_srs_wkt(p,12,"AUTHORITY[\"mj10777.de\",\"187938\"],AXIS[\"x\",NORTH],AXIS[\"y\",EAST]]");
 -    p = add_epsg_def(filter,first,last,187939,"mj10777.de",187939,"DHDN / Soldner 39 Langschoß");
-+    p = add_epsg_def(filter,first,last,187939,u8"mj10777.de",187939,"DHDN / Soldner 39 Langscho\u00df");
++    p = add_epsg_def(filter,first,last,187939,"mj10777.de",187939,u8"DHDN / Soldner 39 Langscho\u00df");
      add_proj4text(p,0,"+proj=cass +lat_0=50.66738711 +lon_0=6.28935703 ");
      add_proj4text(p,1,"+x_0=0 +y_0=0 +ellps=bessel +datum=potsdam +units=m +no_defs");
 -    add_srs_wkt(p,0,"PROJCS[\"DHDN / Soldner 39 Langschoß\",");
