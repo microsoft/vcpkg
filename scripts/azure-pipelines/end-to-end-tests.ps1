@@ -45,6 +45,7 @@ $commonArgs = @(
     "--overlay-ports=scripts/e2e_ports"
 )
 $portsRedirectArgs = @(
+    "--feature-flags=versions",
     "--triplet",
     $Triplet,
     "--x-buildtrees-root=$buildtreesRoot",
