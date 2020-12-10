@@ -258,7 +258,7 @@ $portsRedirectArgsOK = @(
 )
 $portsRedirectArgsIncomplete = @(
     "--feature-flags=versions",
-    "--x-builtin-ports-root=scripts/testing/version-files/ports",
+    "--x-builtin-ports-root=scripts/testing/version-files/ports_incomplete",
     "--x-builtin-port-versions-root=scripts/testing/version-files/port_versions_incomplete"
 )
 $CurrentTest = "x-verify-ci-versions (All files OK)"
