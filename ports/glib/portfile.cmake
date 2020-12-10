@@ -15,6 +15,7 @@ vcpkg_extract_source_archive_ex(
         use-libiconv-on-windows.patch
         arm64-defines.patch
         fix-arm-builds.patch
+        disable-export-dllmain-on-static.patch
 )
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt  ${SOURCE_PATH}/CMakeLists.txt COPYONLY)
@@ -32,7 +33,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(WARNING "Since dllmain is decleared to glib and gobject, tools is disabled on static build")
+    message(WARNING "Since dllmain is decleared to glib and gobject, tools are disabled to build on static build")
     set(EXTRA_OPTS -DGLIB_SKIP_TOOLS=ON)
 endif()
 

@@ -1,0 +1,39 @@
+diff --git a/glib/glib-init.c b/glib/glib-init.c
+index 30a9654..38f404a 100644
+--- a/glib/glib-init.c
++++ b/glib/glib-init.c
+@@ -273,7 +273,7 @@ glib_init (void)
+   g_quark_init ();
+ }
+ 
+-#if defined (G_OS_WIN32)
++#if defined (G_OS_WIN32) && defined (DLL_EXPORT)
+ 
+ BOOL WINAPI DllMain (HINSTANCE hinstDLL,
+                      DWORD     fdwReason,
+diff --git a/glib/gutils.h b/glib/gutils.h
+index f84fbcb..94c893e 100644
+--- a/glib/gutils.h
++++ b/glib/gutils.h
+@@ -330,7 +330,7 @@ void g_abort (void) G_GNUC_NORETURN G_ANALYZER_NORETURN;
+ 
+ #ifndef G_PLATFORM_WIN32
+ # define G_WIN32_DLLMAIN_FOR_DLL_NAME(static, dll_name)
+-#else
++#elif defined (DLL_EXPORT)
+ # define G_WIN32_DLLMAIN_FOR_DLL_NAME(static, dll_name)			\
+ static char *dll_name;							\
+ 									\
+diff --git a/gobject/gtype.c b/gobject/gtype.c
+index f381a78..95b6dbd 100644
+--- a/gobject/gtype.c
++++ b/gobject/gtype.c
+@@ -4451,7 +4451,7 @@ gobject_init (void)
+   _g_signal_init ();
+ }
+ 
+-#if defined (G_OS_WIN32)
++#if defined (G_OS_WIN32) && defined (DLL_EXPORT)
+ 
+ BOOL WINAPI DllMain (HINSTANCE hinstDLL,
+                      DWORD     fdwReason,
