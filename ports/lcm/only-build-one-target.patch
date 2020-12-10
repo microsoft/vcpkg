@@ -1,0 +1,83 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index da3bfc5..d95c5a0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,6 +14,10 @@ include(lcm-cmake/config.cmake NO_POLICY_SCOPE)
+ include(lcm-cmake/functions.cmake)
+ include(lcm-cmake/version.cmake)
+ 
++if (NOT BUILD_SHARED_LIBS)
++    add_definitions(-DLCM_PYTHON)
++endif()
++
+ set(CMAKE_INCLUDE_CURRENT_DIR ON)
+ if (WIN32)
+   add_definitions(-DWIN32 -D_CRT_SECURE_NO_WARNINGS)
+diff --git a/lcm-python/CMakeLists.txt b/lcm-python/CMakeLists.txt
+index 9246575..aedf4f4 100644
+--- a/lcm-python/CMakeLists.txt
++++ b/lcm-python/CMakeLists.txt
+@@ -29,7 +29,7 @@ target_include_directories(lcm-python PRIVATE
+ )
+ 
+ target_link_libraries(lcm-python PRIVATE
+-  lcm-static
++  lcm
+ )
+ 
+ if(APPLE)
+diff --git a/lcm/CMakeLists.txt b/lcm/CMakeLists.txt
+index 414a90d..d92de46 100644
+--- a/lcm/CMakeLists.txt
++++ b/lcm/CMakeLists.txt
+@@ -23,8 +23,10 @@ set(lcm_install_headers
+   lcm_version.h
+   lcm-cpp.hpp
+   lcm-cpp-impl.hpp
+-  ${CMAKE_CURRENT_BINARY_DIR}/lcm_export.h
+ )
++if (BUILD_SHARED_LIBS)
++    list(APPEND lcm_install_headers ${CMAKE_CURRENT_BINARY_DIR}/lcm_export.h)
++endif()
+ 
+ if(WIN32)
+   list(APPEND lcm_sources
+@@ -39,10 +41,9 @@ endif()
+ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+ 
+ add_library(lcm-coretypes INTERFACE)
+-add_library(lcm-static STATIC ${lcm_sources})
+-add_library(lcm SHARED ${lcm_sources})
++add_library(lcm ${lcm_sources})
+ 
+-foreach(lcm_lib lcm lcm-static)
++foreach(lcm_lib lcm)
+   target_compile_definitions(${lcm_lib} PRIVATE
+     _FILE_OFFSET_BITS=64
+     _LARGEFILE_SOURCE
+@@ -67,21 +68,16 @@ foreach(lcm_lib lcm lcm-static)
+   endif()
+ endforeach()
+ 
++if (BUILD_SHARED_LIBS)
+ generate_export_header(lcm STATIC_DEFINE LCM_STATIC)
+-
+-target_compile_definitions(lcm-static PUBLIC LCM_STATIC)
+-if(NOT WIN32)
+-  set_target_properties(lcm-static PROPERTIES OUTPUT_NAME lcm)
++else()
++target_compile_definitions(lcm PUBLIC LCM_STATIC)
+ endif()
+ 
+ target_include_directories(lcm-coretypes INTERFACE
+   $<BUILD_INTERFACE:${lcm_SOURCE_DIR}>
+ )
+-if(BUILD_SHARED_LIBS)
+-  set(INSTALL_TARGETS lcm)
+-else()
+-  set(INSTALL_TARGETS lcm-static)
+-endif()
++set(INSTALL_TARGETS lcm)
+ install(TARGETS lcm-coretypes ${INSTALL_TARGETS}
+   EXPORT lcmTargets
+   RUNTIME DESTINATION bin

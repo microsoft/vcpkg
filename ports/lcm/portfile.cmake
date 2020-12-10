@@ -8,6 +8,7 @@ vcpkg_from_github(
         only-install-one-flavor.patch
         fix-build-error.patch
         fix-linux-build.patch
+        only-build-one-target.patch
 )
 
 vcpkg_configure_cmake(
