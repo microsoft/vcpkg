@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index c933c8e..b5c29ad 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -437,20 +437,14 @@ endif(ASTYLE)
+ 
+ if(NOT enable-pkgconfig)
+ 
+-    FIND_LIBRARY( GLIB_LIB NAMES glib glib-2.0 PATH GLIB_LIBRARY_DIR )
+-    FIND_LIBRARY( GTHREAD_LIB NAMES gthread gthread-2.0 PATH GTHREAD_LIBRARY_DIR )
+-    FIND_PATH( GLIBH_DIR glib.h PATH GLIB_INCLUDE_DIR )
+-    FIND_PATH( GLIBCONF_DIR glibconfig.h PATH GLIBCONF_INCLUDE_DIR )
+-
+-    IF( GLIB_LIB MATCHES "GLIB_LIB-NOTFOUND" OR
+-            GTHREAD_LIB MATCHES "GTHREAD_LIB-NOTFOUND" OR
+-            GLIBH_DIR MATCHES "GLIBH_DIR-NOTFOUND" OR
+-            GLIBCONF_DIR MATCHES "GLIBCONF_DIR-NOTFOUND")
++    find_package(unofficial-glib CONFIG REQUIRED)
++
++    IF(0)
+             message( WARNING "Not sure if I found GLIB, continuing anyway.")
+     ENDIF()
+ 
+-    SET( GLIB_INCLUDE_DIRS ${GLIBH_DIR} ${GLIBCONF_DIR} )
+-    SET( GLIB_LIBRARIES ${GLIB_LIB} ${GTHREAD_LIB} )
++    get_target_property(GLIB_INCLUDE_DIRS unofficial::glib::glib INTERFACE_INCLUDE_DIRECTORIES)
++    SET( GLIB_LIBRARIES unofficial::glib::glib unofficial::glib::gthread unofficial::glib::gmodule)
+ 
+     message( STATUS "GLIB_INCLUDE_DIRS: " ${GLIB_INCLUDE_DIRS} )
+     message( STATUS "GLIB_LIBRARIES: " ${GLIB_LIBRARIES} )
