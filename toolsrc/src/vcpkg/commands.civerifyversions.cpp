@@ -225,6 +225,7 @@ namespace vcpkg::Commands::CIVerifyVersions
             {
                 System::printf(System::Color::error, "%s\n", error);
             }
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
         Checks::exit_success(VCPKG_LINE_INFO);
     }
