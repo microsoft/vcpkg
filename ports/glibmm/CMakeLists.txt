@@ -128,6 +128,11 @@ if(NOT DISABLE_INSTALL_HEADERS)
         DESTINATION include
         FILES_MATCHING PATTERN *.h
     )
+    install(
+        DIRECTORY tools/extra_defs_gen/
+        DESTINATION include/glibmm_generate_extra_defs/
+        FILES_MATCHING PATTERN *.h
+    )
 endif()
 
 if(NOT DISABLE_EXAMPLES)
