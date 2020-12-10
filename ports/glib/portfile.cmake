@@ -32,17 +32,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     selinux HAVE_SELINUX
 )
 
-if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    message(WARNING "Since dllmain is decleared to glib and gobject, tools are disabled to build on static build")
-    set(EXTRA_OPTS -DGLIB_SKIP_TOOLS=ON)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DGLIB_VERSION=${GLIB_VERSION}
-        ${EXTRA_OPTS}
     OPTIONS_DEBUG
         -DGLIB_SKIP_HEADERS=ON
         -DGLIB_SKIP_TOOLS=ON

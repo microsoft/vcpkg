@@ -1,16 +1,32 @@
 diff --git a/glib/glib-init.c b/glib/glib-init.c
-index 30a9654..38f404a 100644
+index 30a9654..31723d7 100644
 --- a/glib/glib-init.c
 +++ b/glib/glib-init.c
-@@ -273,7 +273,7 @@ glib_init (void)
-   g_quark_init ();
- }
+@@ -275,12 +275,14 @@ glib_init (void)
  
--#if defined (G_OS_WIN32)
-+#if defined (G_OS_WIN32) && defined (DLL_EXPORT)
+ #if defined (G_OS_WIN32)
  
++HMODULE glib_dll;
++
++#if defined (DLL_EXPORT)
++
  BOOL WINAPI DllMain (HINSTANCE hinstDLL,
                       DWORD     fdwReason,
+                      LPVOID    lpvReserved);
+ 
+-HMODULE glib_dll;
+-
+ BOOL WINAPI
+ DllMain (HINSTANCE hinstDLL,
+          DWORD     fdwReason,
+@@ -317,6 +319,7 @@ DllMain (HINSTANCE hinstDLL,
+ 
+   return TRUE;
+ }
++#endif
+ 
+ #elif defined (G_HAS_CONSTRUCTORS)
+ 
 diff --git a/glib/gutils.h b/glib/gutils.h
 index f84fbcb..94c893e 100644
 --- a/glib/gutils.h
