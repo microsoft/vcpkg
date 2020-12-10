@@ -205,6 +205,7 @@
     <ClInclude Include="..\include\vcpkg\base\unicode.h" />
     <ClInclude Include="..\include\vcpkg\base\util.h" />
     <ClInclude Include="..\include\vcpkg\base\view.h" />
+    <ClInclude Include="..\include\vcpkg\base\xmlserializer.h" />
     <ClInclude Include="..\include\vcpkg\base\zstringview.h" />
     <ClInclude Include="..\include\vcpkg\binarycaching.h" />
     <ClInclude Include="..\include\vcpkg\binaryparagraph.h" />
@@ -267,6 +268,7 @@
     <ClInclude Include="..\include\vcpkg\vcpkgcmdarguments.h" />
     <ClInclude Include="..\include\vcpkg\vcpkglib.h" />
     <ClInclude Include="..\include\vcpkg\vcpkgpaths.h" />
+    <ClInclude Include="..\include\vcpkg\versiondeserializers.h" />
     <ClInclude Include="..\include\vcpkg\versions.h" />
     <ClInclude Include="..\include\vcpkg\versiont.h" />
     <ClInclude Include="..\include\vcpkg\visualstudio.h" />
@@ -295,6 +297,7 @@
     <ClCompile Include="..\src\vcpkg\base\system.print.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.process.cpp" />
     <ClCompile Include="..\src\vcpkg\base\unicode.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\xmlserializer.cpp" />
     <ClCompile Include="..\src\vcpkg\binarycaching.cpp" />
     <ClCompile Include="..\src\vcpkg\binaryparagraph.cpp" />
     <ClCompile Include="..\src\vcpkg\build.cpp" />
@@ -355,6 +358,8 @@
     <ClCompile Include="..\src\vcpkg\vcpkgcmdarguments.cpp" />
     <ClCompile Include="..\src\vcpkg\vcpkglib.cpp" />
     <ClCompile Include="..\src\vcpkg\vcpkgpaths.cpp" />
+    <ClCompile Include="..\src\vcpkg\versiondeserializers.cpp" />
+    <ClCompile Include="..\src\vcpkg\versions.cpp" />
     <ClCompile Include="..\src\vcpkg\versiont.cpp" />
     <ClCompile Include="..\src\vcpkg\visualstudio.cpp" />
     <ClCompile Include="..\src\vcpkg.cpp" />

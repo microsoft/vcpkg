@@ -1,6 +1,7 @@
 #include <catch2/catch.hpp>
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/xmlserializer.h>
 
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/binarycaching.private.h>
@@ -29,28 +30,28 @@ using namespace vcpkg;
 
 TEST_CASE ("reformat_version semver-ish", "[reformat_version]")
 {
-    REQUIRE(reformat_version("0.0.0", "abitag") == "0.0.0-abitag");
-    REQUIRE(reformat_version("1.0.1", "abitag") == "1.0.1-abitag");
-    REQUIRE(reformat_version("1.01.000", "abitag") == "1.1.0-abitag");
-    REQUIRE(reformat_version("1.2", "abitag") == "1.2.0-abitag");
-    REQUIRE(reformat_version("v52", "abitag") == "52.0.0-abitag");
-    REQUIRE(reformat_version("v09.01.02", "abitag") == "9.1.2-abitag");
-    REQUIRE(reformat_version("1.1.1q", "abitag") == "1.1.1-abitag");
-    REQUIRE(reformat_version("1", "abitag") == "1.0.0-abitag");
+    REQUIRE(reformat_version("0.0.0", "abitag") == "0.0.0-vcpkgabitag");
+    REQUIRE(reformat_version("1.0.1", "abitag") == "1.0.1-vcpkgabitag");
+    REQUIRE(reformat_version("1.01.000", "abitag") == "1.1.0-vcpkgabitag");
+    REQUIRE(reformat_version("1.2", "abitag") == "1.2.0-vcpkgabitag");
+    REQUIRE(reformat_version("v52", "abitag") == "52.0.0-vcpkgabitag");
+    REQUIRE(reformat_version("v09.01.02", "abitag") == "9.1.2-vcpkgabitag");
+    REQUIRE(reformat_version("1.1.1q", "abitag") == "1.1.1-vcpkgabitag");
+    REQUIRE(reformat_version("1", "abitag") == "1.0.0-vcpkgabitag");
 }
 
 TEST_CASE ("reformat_version date", "[reformat_version]")
 {
-    REQUIRE(reformat_version("2020-06-26", "abitag") == "2020.6.26-abitag");
-    REQUIRE(reformat_version("20-06-26", "abitag") == "0.0.0-abitag");
-    REQUIRE(reformat_version("2020-06-26-release", "abitag") == "2020.6.26-abitag");
-    REQUIRE(reformat_version("2020-06-26000", "abitag") == "2020.6.26-abitag");
+    REQUIRE(reformat_version("2020-06-26", "abitag") == "2020.6.26-vcpkgabitag");
+    REQUIRE(reformat_version("20-06-26", "abitag") == "0.0.0-vcpkgabitag");
+    REQUIRE(reformat_version("2020-06-26-release", "abitag") == "2020.6.26-vcpkgabitag");
+    REQUIRE(reformat_version("2020-06-26000", "abitag") == "2020.6.26-vcpkgabitag");
 }
 
 TEST_CASE ("reformat_version generic", "[reformat_version]")
 {
-    REQUIRE(reformat_version("apr", "abitag") == "0.0.0-abitag");
-    REQUIRE(reformat_version("", "abitag") == "0.0.0-abitag");
+    REQUIRE(reformat_version("apr", "abitag") == "0.0.0-vcpkgabitag");
+    REQUIRE(reformat_version("", "abitag") == "0.0.0-vcpkgabitag");
 }
 
 TEST_CASE ("generate_nuspec", "[generate_nuspec]")
@@ -96,7 +97,7 @@ Build-Depends: bzip
 
     NugetReference ref(ipa);
 
-    REQUIRE(ref.nupkg_filename() == "zlib2_x64-windows.1.5.0-packageabi.nupkg");
+    REQUIRE(ref.nupkg_filename() == "zlib2_x64-windows.1.5.0-vcpkgpackageabi.nupkg");
 
     {
         auto nuspec = generate_nuspec(paths, ipa, ref, {});
@@ -108,7 +109,7 @@ Build-Depends: bzip
         std::string expected = R"(<package>
   <metadata>
     <id>zlib2_x64-windows</id>
-    <version>1.5.0-packageabi</version>
+    <version>1.5.0-vcpkgpackageabi</version>
     <authors>vcpkg</authors>
     <description>NOT FOR DIRECT USE. Automatically generated cache package.
 
@@ -140,7 +141,7 @@ Dependencies:
         std::string expected = R"(<package>
   <metadata>
     <id>zlib2_x64-windows</id>
-    <version>1.5.0-packageabi</version>
+    <version>1.5.0-vcpkgpackageabi</version>
     <authors>vcpkg</authors>
     <description>NOT FOR DIRECT USE. Automatically generated cache package.
 
@@ -172,7 +173,7 @@ Dependencies:
         std::string expected = R"(<package>
   <metadata>
     <id>zlib2_x64-windows</id>
-    <version>1.5.0-packageabi</version>
+    <version>1.5.0-vcpkgpackageabi</version>
     <authors>vcpkg</authors>
     <description>NOT FOR DIRECT USE. Automatically generated cache package.
 
@@ -267,7 +268,7 @@ Description: a spiffy compression library wrapper
     packageconfig = generate_nuget_packages_config(plan);
     REQUIRE(packageconfig == R"(<?xml version="1.0" encoding="utf-8"?>
 <packages>
-  <package id="zlib_x64-android" version="1.5.0-packageabi"/>
+  <package id="zlib_x64-android" version="1.5.0-vcpkgpackageabi"/>
 </packages>
 )");
 
@@ -290,8 +291,8 @@ Description: a spiffy compression library wrapper
     packageconfig = generate_nuget_packages_config(plan);
     REQUIRE(packageconfig == R"(<?xml version="1.0" encoding="utf-8"?>
 <packages>
-  <package id="zlib_x64-android" version="1.5.0-packageabi"/>
-  <package id="zlib2_x64-android" version="1.52.0-packageabi2"/>
+  <package id="zlib_x64-android" version="1.5.0-vcpkgpackageabi"/>
+  <package id="zlib2_x64-android" version="1.52.0-vcpkgpackageabi2"/>
 </packages>
 )");
 }
