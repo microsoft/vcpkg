@@ -1,7 +1,35 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES)
+set(${PORT}_PATCHES fix_static_build.patch)
+
+#TODO check features and setup: (means force features!)
+
+# -- The following OPTIONAL packages have not been found:
+
+ # * Qt6AxContainer
+ # * Clang
+ # * WrapLibClang (required version >= 8)
+
+# Configure summary:
+
+# Qt Tools:
+  # Qt Assistant ........................... yes
+  # QDoc ................................... no
+  # Clang-based lupdate parser ............. no
+  # Qt Designer ............................ yes
+  # Qt Distance Field Generator ............ yes
+  # kmap2qmap .............................. yes
+  # Qt Linguist ............................ yes
+  # Mac Deployment Tool .................... no
+  # pixeltool .............................. yes
+  # qdbus .................................. yes
+  # qev .................................... yes
+  # Qt Attributions Scanner ................ yes
+  # qtdiag ................................. yes
+  # qtpaths ................................ yes
+  # qtplugininfo ........................... yes
+  # Windows deployment tool ................ yes
 
 # General features:
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -35,7 +63,7 @@ endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
-                     CONFIGURE_OPTIONS
+                     CONFIGURE_OPTIONS 
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
