@@ -1,0 +1,27 @@
+From 516820ea6d3e0c96f212a9b27c2b6e6f4f0d6701 Mon Sep 17 00:00:00 2001
+From: Jeong YunWon <jeong@youknowone.org>
+Date: Sat, 12 Dec 2020 05:44:23 +0900
+Subject: [PATCH 3/3] Fix tmplate
+
+---
+ include/flatbuffers/grpc.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/include/flatbuffers/grpc.h b/include/flatbuffers/grpc.h
+index f831cae1..a13be187 100644
+--- a/include/flatbuffers/grpc.h
++++ b/include/flatbuffers/grpc.h
+@@ -287,8 +287,9 @@ template<class T> class SerializationTraits<flatbuffers::grpc::Message<T>> {
+   }
+ 
+   // Deserialize by pulling the
+-  static grpc::Status Deserialize(grpc_byte_buffer *buffer,
++  static grpc::Status Deserialize(ByteBuffer *buf,
+                                   flatbuffers::grpc::Message<T> *msg) {
++    grpc_byte_buffer *buffer = *reinterpret_cast<grpc_byte_buffer**>(buf);
+     if (!buffer) {
+       return ::grpc::Status(::grpc::StatusCode::INTERNAL, "No payload");
+     }
+-- 
+2.24.3 (Apple Git-128)
+

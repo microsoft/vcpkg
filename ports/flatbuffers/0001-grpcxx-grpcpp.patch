@@ -1,0 +1,189 @@
+From 717f6b10440408e07e726ee2ceb15d48a74b7254 Mon Sep 17 00:00:00 2001
+From: Jeong YunWon <jeong@youknowone.org>
+Date: Sat, 12 Dec 2020 05:34:59 +0900
+Subject: [PATCH 1/3] grpcxx -> grpcpp
+
+---
+ grpc/samples/greeter/client.cpp    |  2 +-
+ grpc/samples/greeter/server.cpp    |  2 +-
+ grpc/src/compiler/cpp_generator.cc | 38 +++++++++++++++---------------
+ grpc/tests/grpctest.cpp            |  2 +-
+ include/flatbuffers/grpc.h         |  2 +-
+ tests/monster_test.grpc.fb.cc      | 16 ++++++-------
+ tests/monster_test.grpc.fb.h       | 18 +++++++-------
+ 7 files changed, 40 insertions(+), 40 deletions(-)
+
+diff --git a/grpc/samples/greeter/client.cpp b/grpc/samples/greeter/client.cpp
+index 2e42f8fd..f15c9938 100644
+--- a/grpc/samples/greeter/client.cpp
++++ b/grpc/samples/greeter/client.cpp
+@@ -1,7 +1,7 @@
+ #include "greeter.grpc.fb.h"
+ #include "greeter_generated.h"
+ 
+-#include <grpc++/grpc++.h>
++#include <grpcpp/grpc++.h>
+ 
+ #include <iostream>
+ #include <memory>
+diff --git a/grpc/samples/greeter/server.cpp b/grpc/samples/greeter/server.cpp
+index db442593..9f4fc47c 100644
+--- a/grpc/samples/greeter/server.cpp
++++ b/grpc/samples/greeter/server.cpp
+@@ -1,7 +1,7 @@
+ #include "greeter.grpc.fb.h"
+ #include "greeter_generated.h"
+ 
+-#include <grpc++/grpc++.h>
++#include <grpcpp/grpc++.h>
+ 
+ #include <iostream>
+ #include <memory>
+diff --git a/grpc/src/compiler/cpp_generator.cc b/grpc/src/compiler/cpp_generator.cc
+index 6cfd22e3..d630d09b 100644
+--- a/grpc/src/compiler/cpp_generator.cc
++++ b/grpc/src/compiler/cpp_generator.cc
+@@ -144,15 +144,15 @@ grpc::string GetHeaderIncludes(grpc_generator::File *file,
+     std::map<grpc::string, grpc::string> vars;
+ 
+     static const char *headers_strs[] = {
+-        "grpc++/impl/codegen/async_stream.h",
+-        "grpc++/impl/codegen/async_unary_call.h",
+-        "grpc++/impl/codegen/method_handler_impl.h",
+-        "grpc++/impl/codegen/proto_utils.h",
+-        "grpc++/impl/codegen/rpc_method.h",
+-        "grpc++/impl/codegen/service_type.h",
+-        "grpc++/impl/codegen/status.h",
+-        "grpc++/impl/codegen/stub_options.h",
+-        "grpc++/impl/codegen/sync_stream.h"};
++        "grpcpp/impl/codegen/async_stream.h",
++        "grpcpp/impl/codegen/async_unary_call.h",
++        "grpcpp/impl/codegen/method_handler_impl.h",
++        "grpcpp/impl/codegen/proto_utils.h",
++        "grpcpp/impl/codegen/rpc_method.h",
++        "grpcpp/impl/codegen/service_type.h",
++        "grpcpp/impl/codegen/status.h",
++        "grpcpp/impl/codegen/stub_options.h",
++        "grpcpp/impl/codegen/sync_stream.h"};
+     std::vector<grpc::string> headers(headers_strs, array_end(headers_strs));
+     PrintIncludes(printer.get(), headers, params);
+     printer->Print(vars, "\n");
+@@ -1179,14 +1179,14 @@ grpc::string GetSourceIncludes(grpc_generator::File *file,
+     std::map<grpc::string, grpc::string> vars;
+ 
+     static const char *headers_strs[] = {
+-        "grpc++/impl/codegen/async_stream.h",
+-        "grpc++/impl/codegen/async_unary_call.h",
+-        "grpc++/impl/codegen/channel_interface.h",
+-        "grpc++/impl/codegen/client_unary_call.h",
+-        "grpc++/impl/codegen/method_handler_impl.h",
+-        "grpc++/impl/codegen/rpc_service_method.h",
+-        "grpc++/impl/codegen/service_type.h",
+-        "grpc++/impl/codegen/sync_stream.h"};
++        "grpcpp/impl/codegen/async_stream.h",
++        "grpcpp/impl/codegen/async_unary_call.h",
++        "grpcpp/impl/codegen/channel_interface.h",
++        "grpcpp/impl/codegen/client_unary_call.h",
++        "grpcpp/impl/codegen/method_handler_impl.h",
++        "grpcpp/impl/codegen/rpc_service_method.h",
++        "grpcpp/impl/codegen/service_type.h",
++        "grpcpp/impl/codegen/sync_stream.h"};
+     std::vector<grpc::string> headers(headers_strs, array_end(headers_strs));
+     PrintIncludes(printer.get(), headers, params);
+ 
+@@ -1604,8 +1604,8 @@ grpc::string GetMockIncludes(grpc_generator::File *file,
+     std::map<grpc::string, grpc::string> vars;
+ 
+     static const char *headers_strs[] = {
+-        "grpc++/impl/codegen/async_stream.h",
+-        "grpc++/impl/codegen/sync_stream.h",
++        "grpcpp/impl/codegen/async_stream.h",
++        "grpcpp/impl/codegen/sync_stream.h",
+         "gmock/gmock.h",
+     };
+     std::vector<grpc::string> headers(headers_strs, array_end(headers_strs));
+diff --git a/grpc/tests/grpctest.cpp b/grpc/tests/grpctest.cpp
+index decf5e51..a90af23c 100644
+--- a/grpc/tests/grpctest.cpp
++++ b/grpc/tests/grpctest.cpp
+@@ -14,7 +14,7 @@
+  * limitations under the License.
+  */
+ 
+-#include <grpc++/grpc++.h>
++#include <grpcpp/grpc++.h>
+ 
+ #include <thread>
+ 
+diff --git a/include/flatbuffers/grpc.h b/include/flatbuffers/grpc.h
+index bd24c501..f831cae1 100644
+--- a/include/flatbuffers/grpc.h
++++ b/include/flatbuffers/grpc.h
+@@ -20,7 +20,7 @@
+ // Helper functionality to glue FlatBuffers and GRPC.
+ 
+ #include "flatbuffers/flatbuffers.h"
+-#include "grpc++/support/byte_buffer.h"
++#include "grpcpp/support/byte_buffer.h"
+ #include "grpc/byte_buffer_reader.h"
+ 
+ namespace flatbuffers {
+diff --git a/tests/monster_test.grpc.fb.cc b/tests/monster_test.grpc.fb.cc
+index f83e6048..c8775577 100644
+--- a/tests/monster_test.grpc.fb.cc
++++ b/tests/monster_test.grpc.fb.cc
+@@ -5,14 +5,14 @@
+ #include "monster_test_generated.h"
+ #include "monster_test.grpc.fb.h"
+ 
+-#include <grpc++/impl/codegen/async_stream.h>
+-#include <grpc++/impl/codegen/async_unary_call.h>
+-#include <grpc++/impl/codegen/channel_interface.h>
+-#include <grpc++/impl/codegen/client_unary_call.h>
+-#include <grpc++/impl/codegen/method_handler_impl.h>
+-#include <grpc++/impl/codegen/rpc_service_method.h>
+-#include <grpc++/impl/codegen/service_type.h>
+-#include <grpc++/impl/codegen/sync_stream.h>
++#include <grpcpp/impl/codegen/async_stream.h>
++#include <grpcpp/impl/codegen/async_unary_call.h>
++#include <grpcpp/impl/codegen/channel_interface.h>
++#include <grpcpp/impl/codegen/client_unary_call.h>
++#include <grpcpp/impl/codegen/method_handler_impl.h>
++#include <grpcpp/impl/codegen/rpc_service_method.h>
++#include <grpcpp/impl/codegen/service_type.h>
++#include <grpcpp/impl/codegen/sync_stream.h>
+ namespace MyGame {
+ namespace Example {
+ 
+diff --git a/tests/monster_test.grpc.fb.h b/tests/monster_test.grpc.fb.h
+index 72402ecc..94c8ea6b 100644
+--- a/tests/monster_test.grpc.fb.h
++++ b/tests/monster_test.grpc.fb.h
+@@ -7,15 +7,15 @@
+ #include "monster_test_generated.h"
+ #include "flatbuffers/grpc.h"
+ 
+-#include <grpc++/impl/codegen/async_stream.h>
+-#include <grpc++/impl/codegen/async_unary_call.h>
+-#include <grpc++/impl/codegen/method_handler_impl.h>
+-#include <grpc++/impl/codegen/proto_utils.h>
+-#include <grpc++/impl/codegen/rpc_method.h>
+-#include <grpc++/impl/codegen/service_type.h>
+-#include <grpc++/impl/codegen/status.h>
+-#include <grpc++/impl/codegen/stub_options.h>
+-#include <grpc++/impl/codegen/sync_stream.h>
++#include <grpcpp/impl/codegen/async_stream.h>
++#include <grpcpp/impl/codegen/async_unary_call.h>
++#include <grpcpp/impl/codegen/method_handler_impl.h>
++#include <grpcpp/impl/codegen/proto_utils.h>
++#include <grpcpp/impl/codegen/rpc_method.h>
++#include <grpcpp/impl/codegen/service_type.h>
++#include <grpcpp/impl/codegen/status.h>
++#include <grpcpp/impl/codegen/stub_options.h>
++#include <grpcpp/impl/codegen/sync_stream.h>
+ 
+ namespace grpc {
+ class CompletionQueue;
+-- 
+2.24.3 (Apple Git-128)
+

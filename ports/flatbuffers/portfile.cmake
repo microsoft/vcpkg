@@ -10,6 +10,9 @@ vcpkg_from_github(
         ignore_use_of_cmake_toolchain_file.patch
         no-werror.patch
 		fix-uwp-build.patch
+        0001-grpcxx-grpcpp.patch
+        0002-fix-codegen-header.patch
+        0003-fix-grpc-buffer.patch
 )
 
 set(OPTIONS)

@@ -1,0 +1,34 @@
+From 5b6601731caa401498e38656c0009b231eea3410 Mon Sep 17 00:00:00 2001
+From: Jeong YunWon <jeong@youknowone.org>
+Date: Sat, 12 Dec 2020 06:08:33 +0900
+Subject: [PATCH 2/3] Fix wrong impl
+
+---
+ grpc/src/compiler/cpp_generator.cc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/grpc/src/compiler/cpp_generator.cc b/grpc/src/compiler/cpp_generator.cc
+index d630d09b..8dd40883 100644
+--- a/grpc/src/compiler/cpp_generator.cc
++++ b/grpc/src/compiler/cpp_generator.cc
+@@ -146,7 +146,7 @@ grpc::string GetHeaderIncludes(grpc_generator::File *file,
+     static const char *headers_strs[] = {
+         "grpcpp/impl/codegen/async_stream.h",
+         "grpcpp/impl/codegen/async_unary_call.h",
+-        "grpcpp/impl/codegen/method_handler_impl.h",
++        "grpcpp/impl/codegen/method_handler.h",
+         "grpcpp/impl/codegen/proto_utils.h",
+         "grpcpp/impl/codegen/rpc_method.h",
+         "grpcpp/impl/codegen/service_type.h",
+@@ -1183,7 +1183,7 @@ grpc::string GetSourceIncludes(grpc_generator::File *file,
+         "grpcpp/impl/codegen/async_unary_call.h",
+         "grpcpp/impl/codegen/channel_interface.h",
+         "grpcpp/impl/codegen/client_unary_call.h",
+-        "grpcpp/impl/codegen/method_handler_impl.h",
++        "grpcpp/impl/codegen/method_handler.h",
+         "grpcpp/impl/codegen/rpc_service_method.h",
+         "grpcpp/impl/codegen/service_type.h",
+         "grpcpp/impl/codegen/sync_stream.h"};
+-- 
+2.24.3 (Apple Git-128)
+
