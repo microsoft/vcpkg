@@ -1,0 +1,15 @@
+{
+  "name": "onednn",
+  "version-string": "2.0",
+  "port-version": 0,
+  "description": "oneAPI Deep Neural Network Library (oneDNN)",
+  "supports": "x64",
+  "features": {
+    "mkl": {
+      "description": "Build with the MKL BLAS vendor lib",
+      "dependencies": [
+        "intel-mkl"
+      ]
+    }
+  }
+}
