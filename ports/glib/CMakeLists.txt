@@ -30,8 +30,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
     set(PCRE_SUFFIX d)
 endif()
 find_library(PCRE_LIBRARY NAMES pcre${PCRE_SUFFIX} pcre)
-# libiconv
-find_package(Iconv REQUIRED)
+
 # libffi
 find_path(FFI_INCLUDE_DIR ffi.h)
 find_library(FFI_LIBRARY NAMES ffi libffi)
@@ -132,7 +131,7 @@ if(NOT WIN32)
 endif()
 add_library(glib ${GLIB_SOURCES})
 target_compile_definitions(glib PRIVATE GLIB_COMPILATION G_LOG_DOMAIN="GLib" LIBDIR="")
-target_link_libraries(glib PRIVATE ${PCRE_LIBRARY} Iconv::Iconv ${Intl_LIBRARIES})
+target_link_libraries(glib PRIVATE ${PCRE_LIBRARY} ${Intl_LIBRARIES})
 
 if(WIN32)
     target_compile_definitions(glib PRIVATE USE_SYSTEM_PCRE)
