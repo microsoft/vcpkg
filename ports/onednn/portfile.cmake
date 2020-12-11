@@ -6,12 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# BLAS vendor
-if ("mkl" IN_LIST FEATURES)
-  list(APPEND DNNL_OPTIONS "-DDNNL_BLAS_VENDOR=MKL")
-endif()
-
-# Linkeage (oneDNN default is shared)
+# Linkeage (default in oneDNN is shared)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
 if (ENABLE_STATIC)
   list(APPEND DNNL_OPTIONS "-DDNNL_LIBRARY_TYPE=STATIC")
