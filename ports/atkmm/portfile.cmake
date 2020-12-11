@@ -56,7 +56,7 @@ else()
     else()
         set(ATKMM_OPTIONS --enable-shared=no --enable-static=yes)
     endif()
-
+    set(ENV{CONFIG_SHELL} /bin/bash)
     vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH} OPTIONS ${ATKMM_OPTIONS})
     
     vcpkg_install_make()
