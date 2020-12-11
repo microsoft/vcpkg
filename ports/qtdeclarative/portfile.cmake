@@ -49,14 +49,14 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
     # PURPOSE "Drag and drop support for Qt Quick"
     # CONDITION ( FEATURE_draganddrop ) AND ( FEATURE_regularexpression )
 # )
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
-    message(STATUS "PLUGIN_CMAKE_TARGETS:${PLUGIN_CMAKE_TARGETS}")
-    foreach(_plugin_target IN LISTS PLUGIN_CMAKE_TARGETS)
-        # restore a single get_filename_component which was remove by vcpkg_fixup_pkgconfig
-        vcpkg_replace_string("${_plugin_target}" 
-                             [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)]]
-                             [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
-get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]])
-    endforeach()
-endif()
+# if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
+    # message(STATUS "PLUGIN_CMAKE_TARGETS:${PLUGIN_CMAKE_TARGETS}")
+    # foreach(_plugin_target IN LISTS PLUGIN_CMAKE_TARGETS)
+        # # restore a single get_filename_component which was remove by vcpkg_fixup_pkgconfig
+        # vcpkg_replace_string("${_plugin_target}" 
+                             # [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)]]
+                             # [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)
+# get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]])
+    # endforeach()
+# endif()

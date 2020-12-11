@@ -132,14 +132,16 @@ function(qt_install_submodule)
         #vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/modules" "{_IMPORT_PREFIX}/debug/modules")
     endforeach()
 
-    #file(GLOB_RECURSE DEBUG_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/**/*Targets.cmake")
-    # TODO fix metatypes ? INTERFACE_SOURCES "\$<\$<BOOL:\$<TARGET_PROPERTY:QT_CONSUMES_METATYPES>>:${_IMPORT_PREFIX}/lib/metatypes/qt6([^.]+).json>
-    #foreach(_debug_target IN LISTS DEBUG_CMAKE_TARGETS)
-        #vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/plugins" "{_IMPORT_PREFIX}/debug/plugins")
-        #vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/qml/" "{_IMPORT_PREFIX}/debug/qml/")
-        #INTERFACE_SOURCES "\$<\$<BOOL:\$<TARGET_PROPERTY:QT_CONSUMES_METATYPES>>:${_IMPORT_PREFIX}/lib/metatypes/qt6([^.]+).json>\"
-        #vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/modules" "{_IMPORT_PREFIX}/debug/modules")
-    #endforeach()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
+        message(STATUS "PLUGIN_CMAKE_TARGETS:${PLUGIN_CMAKE_TARGETS}")
+        foreach(_plugin_target IN LISTS PLUGIN_CMAKE_TARGETS)
+            # restore a single get_filename_component which was remove by vcpkg_fixup_pkgconfig
+            vcpkg_replace_string("${_plugin_target}" 
+                                 [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)]]
+                                 "get_filename_component(_IMPORT_PREFIX \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)")
+        endforeach()
+    endif()
 
     ## Handle Tools
     foreach(_tool IN LISTS _qis_TOOL_NAMES)
