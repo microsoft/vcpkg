@@ -6,7 +6,7 @@ index a9561069c..7adef1bf5 100644
  #-----------------------------------------------------------------------
  #   --with-geosconfig
  #
-+if test 0; then
++if 0; then
  AC_ARG_WITH([geosconfig],
      [AS_HELP_STRING([--with-geosconfig=FILE], [specify an alternative geos-config file])],
  	[GEOSCONFIG="$withval"], [GEOSCONFIG=""])
@@ -22,7 +22,7 @@ index a9561069c..7adef1bf5 100644
  AC_CHECK_HEADERS([geos_c.h],, [AC_MSG_ERROR([could not find geos_c.h - you may need to specify the directory of a geos-config file using --with-geosconfig])])
  CPPFLAGS="$CPPFLAGS_SAVE"
  # Ensure we can link against libgeos_c
-+if test 0; then
++if 0; then
  LIBS_SAVE="$LIBS"
  LIBS="$GEOS_LDFLAGS"
  AC_SEARCH_LIBS(GEOSContext_setErrorMessageHandler_r,geos_c,,AC_MSG_ERROR([could not find libgeos_c (or obsolete 'libgeos_c' < v.3.5.0 found) - you may need to specify the directory of a geos-config file using --with-geosconfig]))
