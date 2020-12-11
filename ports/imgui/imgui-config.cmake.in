@@ -1,0 +1,37 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+if (@IMGUI_INSTALL_GLFW_BINDING@)
+    find_dependency(glfw3 CONFIG)
+endif()
+
+if (@IMGUI_INSTALL_OPENGL3_GLEW_BINDING@)
+    find_dependency(GLEW)
+endif()
+
+if (@IMGUI_INSTALL_OPENGL3_GLAD_BINDING@)
+    find_dependency(glad)
+endif()
+
+if (@IMGUI_INSTALL_OPENGL3_GL3W_BINDING@)
+    find_dependency(gl3w)
+endif()
+
+if (@IMGUI_INSTALL_OPENGL3_GLBINDING_BINDING@)
+    find_dependency(glbinding)
+endif()
+
+if (@IMGUI_INSTALL_SDL2_BINDING@)
+    find_dependency(SDL2 CONFIG)
+endif()
+
+if (@IMGUI_INSTALL_VULKAN_BINDING@)
+    find_dependency(Vulkan)
+endif()
+
+if (@IMGUI_FREETYPE@)
+    find_dependency(Freetype)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/imgui-targets.cmake")
