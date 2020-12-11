@@ -18,6 +18,10 @@ if (@IMGUI_INSTALL_OPENGL3_GL3W_BINDING@)
     find_dependency(gl3w)
 endif()
 
+if (@IMGUI_INSTALL_GLUT_BINDING@)
+    find_dependency(GLUT)
+endif()
+
 if (@IMGUI_INSTALL_OPENGL3_GLBINDING_BINDING@)
     find_dependency(glbinding)
 endif()
