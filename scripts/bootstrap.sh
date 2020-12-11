@@ -74,7 +74,7 @@ vcpkgCheckRepoTool()
     __tool=$1
     if ! command -v "$__tool" >/dev/null 2>&1 ; then
         echo "Could not find $__tool. Please install it (and other dependencies) with:"
-        echo "sudo apt-get install curl unzip tar"
+        echo "sudo apt-get install curl zip unzip tar"
         exit 1
     fi
 }
@@ -243,6 +243,17 @@ ARCH="$(uname -m)"
 # Force using system utilities for building vcpkg if host arch is arm, arm64, or s390x.
 if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" ]; then
     vcpkgUseSystem=true
+fi
+
+if [ "$UNAME" = "OpenBSD" ]; then
+    vcpkgUseSystem=true
+
+    if [ -z "$CXX" ]; then
+        CXX=/usr/bin/clang++
+    fi
+    if [ -z "$CC" ]; then
+        CC=/usr/bin/clang
+    fi
 fi
 
 if $vcpkgUseSystem; then

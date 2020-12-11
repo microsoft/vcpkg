@@ -21,18 +21,28 @@
 #endif // ^^^ defined(__APPLE__)
 
 #include <algorithm>
+#include <list>
 #include <string>
+
+namespace
+{
+    struct NativeStringView
+    {
+        const fs::path::value_type* first;
+        const fs::path::value_type* last;
+        NativeStringView() = default;
+        NativeStringView(const fs::path::value_type* first, const fs::path::value_type* last) : first(first), last(last)
+        {
+        }
+        bool empty() const { return first == last; }
+        bool is_dot() const { return (last - first) == 1 && *first == '.'; }
+        bool is_dot_dot() const { return (last - first) == 2 && *first == '.' && *(first + 1) == '.'; }
+    };
+}
 
 #if defined(_WIN32)
 namespace
 {
-    struct IsSlash
-    {
-        bool operator()(const wchar_t c) const noexcept { return c == L'/' || c == L'\\'; }
-    };
-
-    constexpr IsSlash is_slash;
-
     template<size_t N>
     bool wide_starts_with(const std::wstring& haystack, const wchar_t (&needle)[N]) noexcept
     {
@@ -116,6 +126,148 @@ std::string fs::generic_u8string(const fs::path& p)
 #else
     return p.generic_string();
 #endif
+}
+
+fs::path fs::lexically_normal(const fs::path& p)
+{
+    // copied from microsoft/STL, stl/inc/filesystem:lexically_normal()
+    // relicensed under MIT for the vcpkg repository.
+
+    // N4810 29.11.7.1 [fs.path.generic]/6:
+    // "Normalization of a generic format pathname means:"
+
+    // "1. If the path is empty, stop."
+    if (p.empty())
+    {
+        return {};
+    }
+
+    // "2. Replace each slash character in the root-name with a preferred-separator."
+    const auto first = p.native().data();
+    const auto last = first + p.native().size();
+    const auto root_name_end = first + p.root_name().native().size();
+
+    fs::path::string_type normalized(first, root_name_end);
+
+#if defined(_WIN32)
+    std::replace(normalized.begin(), normalized.end(), L'/', L'\\');
+#endif
+
+    // "3. Replace each directory-separator with a preferred-separator.
+    // [ Note: The generic pathname grammar (29.11.7.1) defines directory-separator
+    // as one or more slashes and preferred-separators. -end note ]"
+    std::list<NativeStringView> lst; // Empty string_view means directory-separator
+                                     // that will be normalized to a preferred-separator.
+                                     // Non-empty string_view means filename.
+    for (auto next = root_name_end; next != last;)
+    {
+        if (is_slash(*next))
+        {
+            if (lst.empty() || !lst.back().empty())
+            {
+                // collapse one or more slashes and preferred-separators to one empty wstring_view
+                lst.emplace_back();
+            }
+
+            ++next;
+        }
+        else
+        {
+            const auto filename_end = std::find_if(next + 1, last, is_slash);
+            lst.emplace_back(next, filename_end);
+            next = filename_end;
+        }
+    }
+
+    // "4. Remove each dot filename and any immediately following directory-separator."
+    for (auto next = lst.begin(); next != lst.end();)
+    {
+        if (next->is_dot())
+        {
+            next = lst.erase(next); // erase dot filename
+
+            if (next != lst.end())
+            {
+                next = lst.erase(next); // erase immediately following directory-separator
+            }
+        }
+        else
+        {
+            ++next;
+        }
+    }
+
+    // "5. As long as any appear, remove a non-dot-dot filename immediately followed by a
+    // directory-separator and a dot-dot filename, along with any immediately following directory-separator."
+    for (auto next = lst.begin(); next != lst.end();)
+    {
+        auto prev = next;
+
+        // If we aren't going to erase, keep advancing.
+        // If we're going to erase, next now points past the dot-dot filename.
+        ++next;
+
+        if (prev->is_dot_dot() && prev != lst.begin() && --prev != lst.begin() && !(--prev)->is_dot_dot())
+        {
+            if (next != lst.end())
+            { // dot-dot filename has an immediately following directory-separator
+                ++next;
+            }
+
+            lst.erase(prev, next); // next remains valid
+        }
+    }
+
+    // "6. If there is a root-directory, remove all dot-dot filenames
+    // and any directory-separators immediately following them.
+    // [ Note: These dot-dot filenames attempt to refer to nonexistent parent directories. -end note ]"
+    if (!lst.empty() && lst.front().empty())
+    { // we have a root-directory
+        for (auto next = lst.begin(); next != lst.end();)
+        {
+            if (next->is_dot_dot())
+            {
+                next = lst.erase(next); // erase dot-dot filename
+
+                if (next != lst.end())
+                {
+                    next = lst.erase(next); // erase immediately following directory-separator
+                }
+            }
+            else
+            {
+                ++next;
+            }
+        }
+    }
+
+    // "7. If the last filename is dot-dot, remove any trailing directory-separator."
+    if (lst.size() >= 2 && lst.back().empty() && std::prev(lst.end(), 2)->is_dot_dot())
+    {
+        lst.pop_back();
+    }
+
+    // Build up normalized by flattening lst.
+    for (const auto& elem : lst)
+    {
+        if (elem.empty())
+        {
+            normalized += fs::path::preferred_separator;
+        }
+        else
+        {
+            normalized.append(elem.first, elem.last);
+        }
+    }
+
+    // "8. If the path is empty, add a dot."
+    if (normalized.empty())
+    {
+        normalized.push_back('.');
+    }
+
+    // "The result of normalization is a path in normal form, which is said to be normalized."
+    return std::move(normalized);
 }
 
 namespace vcpkg::Files
@@ -1175,21 +1327,22 @@ namespace vcpkg::Files
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
         {
 #if defined(_WIN32)
-            static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
+            static constexpr wchar_t const* EXTS[] = {L".cmd", L".exe", L".bat"};
 #else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
-            static constexpr StringLiteral EXTS[] = {""};
+            static constexpr char const* EXTS[] = {""};
 #endif // ^^^!defined(_WIN32)
             auto paths = Strings::split_paths(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO));
 
             std::vector<fs::path> ret;
-            std::error_code ec;
             for (auto&& path : paths)
             {
-                auto base = path + "/" + name;
+                auto base = fs::u8path(path);
+                base /= fs::u8path(name);
+
                 for (auto&& ext : EXTS)
                 {
-                    auto p = fs::u8path(base + ext.c_str());
-                    if (Util::find(ret, p) == ret.end() && this->exists(p, ec))
+                    auto p = fs::path(base.native() + ext);
+                    if (Util::find(ret, p) == ret.end() && this->exists(p, ignore_errors))
                     {
                         ret.push_back(p);
                         Debug::print("Found path: ", fs::u8string(p), '\n');
@@ -1274,6 +1427,7 @@ namespace vcpkg::Files
 #ifdef _WIN32
     fs::path win32_fix_path_case(const fs::path& source)
     {
+        using fs::is_slash;
         const std::wstring& native = source.native();
         if (native.empty())
         {
@@ -1372,4 +1526,5 @@ namespace vcpkg::Files
         return fs::path(std::move(in_progress));
     }
 #endif // _WIN32
+
 }

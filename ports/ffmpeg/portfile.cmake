@@ -16,6 +16,7 @@ vcpkg_from_github(
         0010-Fix-x264-detection.patch
         0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
+        0013-define-WINVER.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -25,7 +26,7 @@ endif()
 vcpkg_find_acquire_program(YASM)
 get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     #We're assuming that if we're building for Windows we're using MSVC
     set(INCLUDE_VAR "INCLUDE")
     set(LIB_PATH_VAR "LIB")
@@ -60,7 +61,15 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 
     set(SHELL ${MSYS_ROOT}/usr/bin/bash.exe)
-    set(OPTIONS "--toolchain=msvc ${OPTIONS}")
+    if(VCPKG_TARGET_IS_MINGW)
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            set(OPTIONS "--target-os=mingw32 ${OPTIONS}")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(OPTIONS "--target-os=mingw64 ${OPTIONS}")
+        endif()
+    else()
+        set(OPTIONS "--toolchain=msvc ${OPTIONS}")
+    endif()
 else()
     set(SHELL /bin/sh)
 endif()
@@ -214,8 +223,10 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libmp3lame")
 endif()
 
+set(ENABLE_NVCODEC OFF)
 if("nvcodec" IN_LIST FEATURES)
     #Note: the --enable-cuda option does not actually require the cuda sdk or toolset port dependency as ffmpeg uses runtime detection and dynamic loading
+    set(ENABLE_NVCODEC ON)
     set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-nvdec --enable-cuvid")
 else()
     set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-nvdec  --disable-cuvid")
@@ -373,7 +384,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     endif()
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_MINGW)
+    set(OPTIONS "${OPTIONS} --extra_cflags=-D_WIN32_WINNT=0x0601")
+elseif(VCPKG_TARGET_IS_WINDOWS)
     set(OPTIONS "${OPTIONS} --extra-cflags=-DHAVE_UNISTD_H=0")
     if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
         set(OPTIONS_DEBUG "${OPTIONS_DEBUG} --extra-cflags=-MDd --extra-cxxflags=-MDd")
@@ -440,36 +453,41 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/debug/lib/*.def)
+    
+    if(NOT VCPKG_TARGET_IS_MINGW)
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+            set(LIB_MACHINE_ARG /machine:ARM)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            set(LIB_MACHINE_ARG /machine:ARM64)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            set(LIB_MACHINE_ARG /machine:x86)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(LIB_MACHINE_ARG /machine:x64)
+        else()
+            message(FATAL_ERROR "Unsupported target architecture")
+        endif()
 
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        set(LIB_MACHINE_ARG /machine:ARM)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(LIB_MACHINE_ARG /machine:ARM64)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(LIB_MACHINE_ARG /machine:x86)
-    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(LIB_MACHINE_ARG /machine:x64)
-    else()
-        message(FATAL_ERROR "Unsupported target architecture")
+        foreach(DEF_FILE ${DEF_FILES})
+            get_filename_component(DEF_FILE_DIR "${DEF_FILE}" DIRECTORY)
+            get_filename_component(DEF_FILE_NAME "${DEF_FILE}" NAME)
+            string(REGEX REPLACE "-[0-9]*\\.def" "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" OUT_FILE_NAME "${DEF_FILE_NAME}")
+            file(TO_NATIVE_PATH "${DEF_FILE}" DEF_FILE_NATIVE)
+            file(TO_NATIVE_PATH "${DEF_FILE_DIR}/${OUT_FILE_NAME}" OUT_FILE_NATIVE)
+            message(STATUS "Generating ${OUT_FILE_NATIVE}")
+            vcpkg_execute_required_process(
+                COMMAND lib.exe /def:${DEF_FILE_NATIVE} /out:${OUT_FILE_NATIVE} ${LIB_MACHINE_ARG}
+                WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}
+                LOGNAME libconvert-${TARGET_TRIPLET}
+            )
+        endforeach()
     endif()
-
-    foreach(DEF_FILE ${DEF_FILES})
-        get_filename_component(DEF_FILE_DIR "${DEF_FILE}" DIRECTORY)
-        get_filename_component(DEF_FILE_NAME "${DEF_FILE}" NAME)
-        string(REGEX REPLACE "-[0-9]*\\.def" "${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}" OUT_FILE_NAME "${DEF_FILE_NAME}")
-        file(TO_NATIVE_PATH "${DEF_FILE}" DEF_FILE_NATIVE)
-        file(TO_NATIVE_PATH "${DEF_FILE_DIR}/${OUT_FILE_NAME}" OUT_FILE_NATIVE)
-        message(STATUS "Generating ${OUT_FILE_NATIVE}")
-        vcpkg_execute_required_process(
-            COMMAND lib.exe /def:${DEF_FILE_NATIVE} /out:${OUT_FILE_NATIVE} ${LIB_MACHINE_ARG}
-            WORKING_DIRECTORY ${CURRENT_PACKAGES_DIR}
-            LOGNAME libconvert-${TARGET_TRIPLET}
-        )
-    endforeach()
-
+    
     file(GLOB EXP_FILES ${CURRENT_PACKAGES_DIR}/lib/*.exp ${CURRENT_PACKAGES_DIR}/debug/lib/*.exp)
     file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-    list(APPEND FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${DEF_FILES})
+    if(VCPKG_TARGET_IS_MINGW)
+        file(GLOB LIB_FILES_2 ${CURRENT_PACKAGES_DIR}/bin/*.lib ${CURRENT_PACKAGES_DIR}/debug/bin/*.lib)
+    endif()
+    list(APPEND FILES_TO_REMOVE ${EXP_FILES} ${LIB_FILES} ${LIB_FILES_2} ${DEF_FILES})
     if(FILES_TO_REMOVE)
         file(REMOVE ${FILES_TO_REMOVE})
     endif()
