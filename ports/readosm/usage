@@ -1,5 +1,0 @@
-The package READOSM provides CMake targets:
-
-    find_package(READOSM REQUIRED)
-    target_include_directories(main PRIVATE ${READOSM_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${READOSM_LIBRARIES})
