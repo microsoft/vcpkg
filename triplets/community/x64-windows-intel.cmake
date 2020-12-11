@@ -11,6 +11,10 @@ if(NOT PORT MATCHES "(boost|hwloc)")
     endif()
 endif()
 
+if(NOT PORT MATCHES "(lapack)")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
+
 set(VCPKG_POLICY_SKIP_ARCHITECTURE_CHECK enabled)
 set(VCPKG_POLICY_SKIP_DUMPBIN_CHECKS enabled)
 set(VCPKG_LOAD_VCVARS_ENV ON)
