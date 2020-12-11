@@ -6,8 +6,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+# BLAS vendor
 if ("mkl" IN_LIST FEATURES)
-  set(DNNL_OPTIONS "-DDNNL_BLAS_VENDOR=MKL")
+  list(APPEND DNNL_OPTIONS "-DDNNL_BLAS_VENDOR=MKL")
+endif()
+
+# Linkeage (oneDNN default is shared)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
+if (ENABLE_STATIC)
+  list(APPEND DNNL_OPTIONS "-DDNNL_LIBRARY_TYPE=STATIC")
 endif()
 
 vcpkg_configure_cmake(
@@ -20,6 +27,10 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 # Copyright and license
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/onednn RENAME copyright)
