@@ -2,6 +2,7 @@
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
+        2548438.diff
         jpeg.patch
         harfbuzz.patch
         config_install.patch 
