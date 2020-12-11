@@ -1089,6 +1089,8 @@ openmpi:x64-windows-static=fail
 openmpi:x86-windows=fail
 openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
+# Only support dynamic CRT
+openscap:x64-windows-static=fail
 openscap:x64-linux=fail
 openssl-unix:arm64-windows=fail
 openssl-unix:arm-uwp=fail
