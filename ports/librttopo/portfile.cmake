@@ -51,6 +51,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
       ${OPTIONS_DEBUG}
   )
 
+  vcpkg_copy_pdbs()
   if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/librttopo.lib)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/librttopo.lib)
