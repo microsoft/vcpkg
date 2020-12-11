@@ -1135,6 +1135,7 @@ paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
 pangomm:x64-osx=fail
 pangomm:arm64-windows=fail
+pangomm:x64-windows-static=fail
 parmetis:x64-linux=fail
 parmetis:x64-osx=fail
 pdal:x64-linux=fail
@@ -1218,6 +1219,7 @@ qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
 qt5-activeqt:x64-linux=fail
 qt5-activeqt:x64-osx=fail
+qt5-base:x64-windows-static=fail
 # Skip deprecated Qt module
 # (remnove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
