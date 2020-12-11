@@ -84,8 +84,6 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
 
   vcpkg_install_make()
   vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
-else() # Other build system
-  vcpkg_fail_port_install(ALWAYS)
 endif()
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
