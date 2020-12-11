@@ -198,16 +198,16 @@ file(COPY ${SOURCE_PATH}/orttraining/orttraining/core DESTINATION ${CURRENT_PACK
 
 # 2. copy headers from external modules
 file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/onnx/onnx/*.h)
-file(COPY ${EXT_HEADERS} DESTINATION ) ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/onnx/onnx)
+file(COPY ${EXT_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/onnx/onnx)
 
 file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/SafeInt/*.h)
-file(COPY ${EXT_HEADERS} DESTINATION ) ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/SafeInt)
+file(COPY ${EXT_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/SafeInt)
 
 file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/protobuf/src/*.h)
-file(COPY ${EXT_HEADERS} DESTINATION ) ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/protobuf/src)
+file(COPY ${EXT_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/protobuf/src)
 
 file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/nsync/public/*.h)
-file(COPY ${EXT_HEADERS} DESTINATION ) ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/nsync/public)
+file(COPY ${EXT_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/nsync/public)
 
 # Copy onnxruntime_config.h file
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug") 
@@ -218,7 +218,7 @@ endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
   file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/onnxruntime_config.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnxruntime)
   file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/onnxruntime_config.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/orttraining)
-endif
+endif()
 
 # Copy the license file
 file(INSTALL
