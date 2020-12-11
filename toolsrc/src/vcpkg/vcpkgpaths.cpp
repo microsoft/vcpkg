@@ -590,13 +590,18 @@ If you wish to silence this error and use classic mode, you can:
                 return std::move(Strings::format(
                     "Error: Unexpected output from command `%s`. Couldn't split `\\t`.\n%s", git_cmd, *line_it));
 
-            auto first_section = Strings::split(split_line[0], ' ');
-            if (first_section.size() != 3)
+            auto file_info_section = Strings::split(split_line[0], ' ');
+            if (file_info_section.size() != 3)
                 return std::move(Strings::format(
                     "Error: Unexepcted output from command `%s`. Couldn't split ` `.\n%s", git_cmd, *line_it));
 
-            auto port_name = Strings::split(split_line[1], '/').back();
-            auto&& git_tree = first_section.back();
+            auto path_section = Strings::split(split_line[1], '/');
+
+            // Ignore subfolders of ports
+            if (path_section.size() != 2) continue;
+
+            auto port_name = path_section.back();
+            auto&& git_tree = file_info_section.back();
             ret.emplace(port_name, git_tree);
         }
         return ret;
