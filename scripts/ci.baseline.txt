@@ -1040,6 +1040,13 @@ ois:x64-uwp=fail
 # /usr/bin/ld: cannot find -lode
 ompl:x64-osx=fail
 ompl:x64-linux=fail
+onnxruntime:arm64-windows=fail
+onnxruntime:arm-uwp=fail
+onnxruntime:x64-osx=fail
+onnxruntime:x64-uwp=fail
+onnxruntime:x64-windows=fail
+onnxruntime:x64-windows-static=fail
+onnxruntime:x86-windows=fail
 open62541:arm-uwp=fail
 open62541:x64-uwp=fail
 openal-soft:arm-uwp=fail

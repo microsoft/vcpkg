@@ -1,3 +1,7 @@
+# Only limited triplets supported
+# x64-windows: x64-windows-static-md
+# x64-linux
+# No support for osx and uwp OS
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "dynamic")
     vcpkg_fail_port_install(ON_TARGET "uwp")
@@ -106,6 +110,8 @@ vcpkg_configure_cmake(
     -Donnxruntime_PYBIND_EXPORT_OPSCHEMA=OFF
     -Donnxruntime_ENABLE_MEMLEAK_CHECKER=OFF
     -DCMAKE_BUILD_TYPE=RelWithDebInfo
+    -DONNX_ML=1
+    -DONNX_NAMESPACE=onnx
     ${FEATURE_OPTIONS}
 )
 
@@ -189,6 +195,30 @@ message(STATUS "Copy libs done, copying additional header files!")
 file(GLOB_RECURSE TRAINING_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/orttraining/*.h)
 file(COPY ${SOURCE_PATH}/orttraining/orttraining/core DESTINATION ${CURRENT_PACKAGES_DIR}/include/orttraining FOLLOW_SYMLINK_CHAIN FILES_MATCHING PATTERN "*.h")
 # file(INSTALL ${SOURCE_PATH}/orttraining/orttraining/models DESTINATION ${CURRENT_PACKAGES_DIR}/include/orttraining FOLLOW_SYMLINK_CHAIN PATTERN "*.h")
+
+# 2. copy headers from external modules
+file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/onnx/onnx/*.h)
+file(COPY ${EXT_HEADERS} DESTINATION ) ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/onnx/onnx)
+
+file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/SafeInt/*.h)
+file(COPY ${EXT_HEADERS} DESTINATION ) ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/SafeInt)
+
+file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/protobuf/src/*.h)
+file(COPY ${EXT_HEADERS} DESTINATION ) ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/protobuf/src)
+
+file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/nsync/public/*.h)
+file(COPY ${EXT_HEADERS} DESTINATION ) ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/nsync/public)
+
+# Copy onnxruntime_config.h file
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug") 
+  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/onnxruntime_config.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnxruntime)
+  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/onnxruntime_config.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/orttraining)
+endif()
+
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/onnxruntime_config.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnxruntime)
+  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/onnxruntime_config.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/orttraining)
+endif
 
 # Copy the license file
 file(INSTALL
