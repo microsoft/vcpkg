@@ -1,4 +1,7 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND VCPKG_CRT_LINKAGE STREQUAL static)
+    message(STATUS "Warning: Dynamic library with static CRT is not supported. Building static library.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
 
 set(PYTHON_VERSION_MAJOR  3)
 set(PYTHON_VERSION_MINOR  9)
