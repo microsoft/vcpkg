@@ -16,8 +16,6 @@ vcpkg_extract_source_archive_ex(
         fix_charset.patch
 )
 
-set(ENV{PKG_CONFIG_PATH} ${PKGCONFIG_INSTALLED_DIR})
-
 if (VCPKG_TARGET_IS_WINDOWS)
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/msvc_recommended_pragmas.h DESTINATION ${SOURCE_PATH}/MSVC_Net2013)
     

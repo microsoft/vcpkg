@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 set(GLIBMM_DLL_SUFFIX 2)
 set(GLIBMM_LIB_SUFFIX 2.0)
+set(GLIBMM_EXTRA_LIB_SUFFIX 2.4)
 
 find_path(GLIB_INCLUDE_DIR NAMES glib.h)
 find_library(GLIB_LIBRARY NAMES glib-2.0)
@@ -87,6 +88,13 @@ target_compile_definitions(glibmm PRIVATE -DGLIBMM_BUILD)
 target_include_directories(glibmm PUBLIC glib ${CMAKE_BINARY_DIR}/config/glib)
 set_target_properties(glibmm PROPERTIES OUTPUT_NAME glibmm-${GLIBMM_DLL_SUFFIX} ARCHIVE_OUTPUT_NAME glibmm-${GLIBMM_LIB_SUFFIX})
 
+set(GLIBMM_EXTRA_SOURCES tools/extra_defs_gen/generate_extra_defs.cc)
+add_library(glibmm_generate_extra_defs ${GLIBMM_EXTRA_SOURCES})
+target_include_directories(glibmm_generate_extra_defs PUBLIC glib ${CMAKE_BINARY_DIR}/config/glib)
+set_target_properties(glibmm_generate_extra_defs PROPERTIES 
+    OUTPUT_NAME glibmm_generate_extra_defs-${GLIBMM_EXTRA_LIB_SUFFIX}
+    ARCHIVE_OUTPUT_NAME glibmm_generate_extra_defs-${GLIBMM_EXTRA_LIB_SUFFIX})
+
 set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix ${CMAKE_INSTALL_PREFIX})
 set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
@@ -108,7 +116,7 @@ target_link_libraries(giomm PUBLIC glibmm)
 target_include_directories(giomm PUBLIC gio ${CMAKE_BINARY_DIR}/config/gio)
 
 install(
-    TARGETS glibmm giomm
+    TARGETS glibmm giomm glibmm_generate_extra_defs
     RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
