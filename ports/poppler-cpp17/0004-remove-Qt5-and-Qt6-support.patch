@@ -1,0 +1,27 @@
+From e2b112859671d57f71a2c7da1f13207ab4db6f72 Mon Sep 17 00:00:00 2001
+From: abc <a@b.com>
+Date: Sun, 13 Dec 2020 22:32:35 +0800
+Subject: [PATCH 4/4] remove Qt5 and Qt6 support
+
+---
+ CMakeLists.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 49158f26..39946b05 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -57,8 +57,8 @@ option(ENABLE_CPP "Compile poppler cpp wrapper." ON)
+ option(ENABLE_GLIB "Compile poppler glib wrapper." OFF)
+ option(ENABLE_GOBJECT_INTROSPECTION "Whether to generate GObject introspection." OFF)
+ option(ENABLE_GTK_DOC "Whether to generate glib API documentation." OFF)
+-option(ENABLE_QT5 "Compile poppler qt5 wrapper." ON)
+-option(ENABLE_QT6 "Compile poppler qt6 wrapper." ON)
++option(ENABLE_QT5 "Compile poppler qt5 wrapper." OFF)
++option(ENABLE_QT6 "Compile poppler qt6 wrapper." OFF)
+ set(ENABLE_LIBOPENJPEG "openjpeg2" CACHE STRING "Use libopenjpeg for JPX streams. Possible values: openjpeg2, unmaintained, none. 'unmaintained' gives you the internal unmaintained decoder. Use at your own risk. 'none' compiles no JPX decoder at all. Default: openjpeg2")
+ set(ENABLE_CMS "lcms2" CACHE STRING "Use color management system. Possible values: lcms2, none. 'none' disables color management system.")
+ set(ENABLE_DCTDECODER "libjpeg" CACHE STRING "Use libjpeg for DCT streams. Possible values: libjpeg, unmaintained, none. will use libjpeg if available or fail if not. 'unmaintained' gives you the internal unmaintained decoder. Use at your own risk. 'none' compiles no DCT decoder at all. Default: libjpeg")
+-- 
+2.29.2.windows.2
+

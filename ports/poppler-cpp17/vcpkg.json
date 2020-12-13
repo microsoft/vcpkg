@@ -1,0 +1,14 @@
+{
+  "name": "poppler-cpp17",
+  "version-string": "20.12.1",
+  "port-version": 1,
+  "description": "a PDF rendering library",
+  "homepage": "https://poppler.freedesktop.org/",
+  "dependencies": [
+    "devil",
+    "freetype",
+    "libiconv",
+    "openjpeg",
+    "zlib"
+  ]
+}

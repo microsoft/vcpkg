@@ -1,0 +1,31 @@
+From 92037dd090ca7271c12840064552eb7a6d2be312 Mon Sep 17 00:00:00 2001
+From: abc <a@b.com>
+Date: Sun, 13 Dec 2020 22:29:49 +0800
+Subject: [PATCH 1/4] remove tests
+
+---
+ CMakeLists.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1573249a..a814aa71 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -47,10 +47,10 @@ set(CMAKE_LINK_DEPENDS_NO_SHARED TRUE)
+ 
+ # command line switches
+ option(ENABLE_UNSTABLE_API_ABI_HEADERS "Install API/ABI unstable xpdf headers." OFF)
+-option(BUILD_GTK_TESTS "Whether to compile the GTK+ test programs." ON)
+-option(BUILD_QT5_TESTS "Whether to compile the Qt5 test programs." ON)
+-option(BUILD_QT6_TESTS "Whether to compile the Qt6 test programs." ON)
+-option(BUILD_CPP_TESTS "Whether to compile the CPP test programs." ON)
++option(BUILD_GTK_TESTS "Whether to compile the GTK+ test programs." OFF)
++option(BUILD_QT5_TESTS "Whether to compile the Qt5 test programs." OFF)
++option(BUILD_QT6_TESTS "Whether to compile the Qt6 test programs." OFF)
++option(BUILD_CPP_TESTS "Whether to compile the CPP test programs." OFF)
+ option(ENABLE_SPLASH "Build the Splash graphics backend." ON)
+ option(ENABLE_UTILS "Compile poppler command line utils." ON)
+ option(ENABLE_CPP "Compile poppler cpp wrapper." ON)
+-- 
+2.29.2.windows.2
+
