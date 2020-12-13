@@ -41,7 +41,7 @@ $m = $AllTests.Count
 
 $AllTests | % {
     Write-Host "[end-to-end-tests.ps1] [$n/$m] Running suite $_"
-    . $_
+    & $_
     $n += 1
 }
 
