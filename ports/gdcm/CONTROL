@@ -3,4 +3,4 @@ Version: 3.0.7
 Homepage: https://github.com/malaterre/GDCM
 Description: Grassroots DICOM library
 Build-Depends: zlib, expat, openjpeg
-Supports: !uwp
+Supports: !uwp&!(arm64&windows)&!(arm&windows)
