@@ -19,6 +19,9 @@ be passed.
 ### ADD_BIN_TO_PATH
 Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
 
+### ADD_LIB_TO_LD_LIBRARY_PATH
+Adds the appropriate Release and Debug `lib\` directories to the LD_LIBRARY_PATH on Unix during the build such that executables can run against the in-tree .so.
+
 ## Notes:
 This command should be preceeded by a call to [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
 You can use the alias [`vcpkg_install_cmake()`](vcpkg_configure_cmake.md) function if your CMake script supports the
@@ -34,7 +37,7 @@ You can use the alias [`vcpkg_install_cmake()`](vcpkg_configure_cmake.md) functi
 
 function(vcpkg_build_cmake)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _bc "DISABLE_PARALLEL;ADD_BIN_TO_PATH" "TARGET;LOGFILE_ROOT" "")
+    cmake_parse_arguments(PARSE_ARGV 0 _bc "DISABLE_PARALLEL;ADD_BIN_TO_PATH;ADD_LIB_TO_LD_LIBRARY_PATH" "TARGET;LOGFILE_ROOT" "")
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -86,6 +89,29 @@ function(vcpkg_build_cmake)
                 endif()
             endif()
 
+            # We set LD_LIBRARY_PATH ENV variable to allow executing tools (protobuf, rcc,...) even with dynamic linking
+            if(_bc_ADD_LIB_TO_LD_LIBRARY_PATH AND CMAKE_HOST_UNIX)
+                set(_debug_installed_libpath_ "${CURRENT_INSTALLED_DIR}/debug/lib")
+                set(_release_installed_libpath_ "${CURRENT_INSTALLED_DIR}/lib")
+                
+                if(BUILDTYPE STREQUAL "debug")
+                    # For debug build, debug lib should be used, but since most tools are only installed in release, we also append release lib path
+                    set(_installed_libpath_ "${_debug_installed_libpath_}${VCPKG_HOST_PATH_SEPARATOR}${_release_installed_libpath_}")
+                else()
+                    # For release build, we use only release lib
+                    set(_installed_libpath_ "${CURRENT_INSTALLED_DIR}/lib")
+                endif()
+
+                if(DEFINED ENV{LD_LIBRARY_PATH})
+                    set(_ld_library_path_defined_ TRUE)
+                    set(_ld_library_path_backup_ $ENV{LD_LIBRARY_PATH})
+                    set(ENV{LD_LIBRARY_PATH} "${_installed_libpath_}${VCPKG_HOST_PATH_SEPARATOR}${_ld_library_path_backup_}")
+                else()
+                    set(_ld_library_path_defined_ FALSE)
+                    set(ENV{LD_LIBRARY_PATH} "${_installed_libpath_}")
+                endif()
+            endif()
+
             if (_bc_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
                     COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
@@ -103,6 +129,15 @@ function(vcpkg_build_cmake)
 
             if(_bc_ADD_BIN_TO_PATH)
                 set(ENV{PATH} "${_BACKUP_ENV_PATH}")
+            endif()
+
+            # Restore backup LD_LIBRARY_PATH backup
+            if(_bc_ADD_LIB_TO_LD_LIBRARY_PATH AND CMAKE_HOST_UNIX)
+                if(_ld_library_path_defined_)
+                    set(ENV{LD_LIBRARY_PATH} "${_ld_library_path_backup_}")                
+                else()
+                    unset(ENV{LD_LIBRARY_PATH})
+                endif()
             endif()
         endif()
     endforeach()

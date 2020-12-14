@@ -359,7 +359,7 @@ vcpkg_configure_cmake(
         ${ADDITIONAL_BUILD_FLAGS}
 )
 
-vcpkg_install_cmake()
+vcpkg_install_cmake(ADD_LIB_TO_LD_LIBRARY_PATH)
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/opencv" TARGET_PATH "share/opencv")
 vcpkg_copy_pdbs()
 

@@ -18,6 +18,9 @@ be passed.
 ### ADD_BIN_TO_PATH
 Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
 
+### ADD_LIB_TO_LD_LIBRARY_PATH
+Adds the appropriate Release and Debug `lib\` directories to the LD_LIBRARY_PATH on Unix during the build such that executables can run against the in-tree .so.
+
 ## Notes:
 This command should be preceeded by a call to [`vcpkg_configure_cmake()`](vcpkg_configure_cmake.md).
 You can use the alias [`vcpkg_install_cmake()`](vcpkg_configure_cmake.md) function if your CMake script supports the
