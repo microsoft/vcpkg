@@ -13,9 +13,11 @@ namespace vcpkg
 
         bool registries_feature_flags_warning = false;
 
+        auto impl_des = get_registry_implementation_deserializer(configuration_directory);
+
         {
-            std::unique_ptr<RegistryImpl> default_registry;
-            if (r.optional_object_field(obj, DEFAULT_REGISTRY, default_registry, RegistryImplDeserializer::instance))
+            std::unique_ptr<RegistryImplementation> default_registry;
+            if (r.optional_object_field(obj, DEFAULT_REGISTRY, default_registry, *impl_des))
             {
                 if (!registries_enabled)
                 {
@@ -28,15 +30,22 @@ namespace vcpkg
             }
         }
 
-        static Json::ArrayDeserializer<RegistryDeserializer> array_of_registries{"an array of registries"};
-
+        auto reg_des = get_registry_array_deserializer(configuration_directory);
         std::vector<Registry> regs;
-        r.optional_object_field(obj, REGISTRIES, regs, array_of_registries);
+        r.optional_object_field(obj, REGISTRIES, regs, *reg_des);
 
         if (!regs.empty() && !registries_enabled)
         {
             registries_feature_flags_warning = true;
             regs.clear();
+        }
+
+        if (!r.errors().empty())
+        {
+            System::print2(System::Color::error, "Errors occurred while parsing configuration.\n");
+            for (auto&& msg : r.errors())
+                System::print2("    ", msg, '\n');
+            Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
         for (Registry& reg : regs)
@@ -58,7 +67,9 @@ namespace vcpkg
     constexpr StringLiteral ConfigurationDeserializer::DEFAULT_REGISTRY;
     constexpr StringLiteral ConfigurationDeserializer::REGISTRIES;
 
-    ConfigurationDeserializer::ConfigurationDeserializer(const VcpkgCmdArguments& args)
+    ConfigurationDeserializer::ConfigurationDeserializer(const VcpkgCmdArguments& args,
+                                                         const fs::path& configuration_directory)
+        : configuration_directory(configuration_directory)
     {
         registries_enabled = args.registries_enabled();
         print_json = args.output_json();

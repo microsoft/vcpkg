@@ -117,7 +117,7 @@ namespace vcpkg
 
     /// <summary>
     /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was
-    /// loaded from.
+    /// loaded from (the port directory, not the actual CONTROL/vcpkg.json file).
     /// </summary>
     struct SourceControlFileLocation
     {

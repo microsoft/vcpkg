@@ -5,6 +5,7 @@
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/versions.h>
 
@@ -40,10 +41,10 @@ namespace vcpkg::PortFileProvider
 
     struct IVersionedPortfileProvider
     {
-        virtual const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(StringView port_name) const = 0;
+        virtual View<VersionT> get_port_versions(StringView port_name) const = 0;
 
         virtual ExpectedS<const SourceControlFileLocation&> get_control_file(
-            const vcpkg::Versions::VersionSpec& version_spec) const = 0;
+            const Versions::VersionSpec& version_spec) const = 0;
     };
 
     struct IBaselineProvider
@@ -62,19 +63,18 @@ namespace vcpkg::PortFileProvider
         explicit VersionedPortfileProvider(const vcpkg::VcpkgPaths& paths);
         ~VersionedPortfileProvider();
 
-        const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(StringView port_name) const override;
+        View<VersionT> get_port_versions(StringView port_name) const override;
 
         ExpectedS<const SourceControlFileLocation&> get_control_file(
-            const vcpkg::Versions::VersionSpec& version_spec) const override;
+            const Versions::VersionSpec& version) const override;
 
     private:
         std::unique_ptr<details::VersionedPortfileProviderImpl> m_impl;
     };
 
-    struct BaselineProvider : IBaselineProvider, Util::ResourceBase
+    struct BaselineProvider final : IBaselineProvider, Util::ResourceBase
     {
         explicit BaselineProvider(const vcpkg::VcpkgPaths& paths);
-        BaselineProvider(const vcpkg::VcpkgPaths& paths, const std::string& baseline);
         ~BaselineProvider();
 
         Optional<VersionT> get_baseline_version(StringView port_name) const override;

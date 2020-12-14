@@ -15,32 +15,11 @@
 
 namespace vcpkg
 {
-    struct RegistryImplDeserializer : Json::IDeserializer<std::unique_ptr<RegistryImpl>>
-    {
-        constexpr static StringLiteral KIND = "kind";
-        constexpr static StringLiteral PATH = "path";
+    std::unique_ptr<Json::IDeserializer<std::unique_ptr<RegistryImplementation>>>
+    get_registry_implementation_deserializer(const fs::path& configuration_directory);
 
-        constexpr static StringLiteral KIND_BUILTIN = "builtin";
-        constexpr static StringLiteral KIND_FILESYSTEM = "filesystem";
-
-        virtual StringView type_name() const override;
-        virtual View<StringView> valid_fields() const override;
-
-        virtual Optional<std::unique_ptr<RegistryImpl>> visit_null(Json::Reader&) override;
-        virtual Optional<std::unique_ptr<RegistryImpl>> visit_object(Json::Reader&, const Json::Object&) override;
-
-        static RegistryImplDeserializer instance;
-    };
-
-    struct RegistryDeserializer final : Json::IDeserializer<Registry>
-    {
-        constexpr static StringLiteral PACKAGES = "packages";
-
-        virtual StringView type_name() const override;
-        virtual View<StringView> valid_fields() const override;
-
-        virtual Optional<Registry> visit_object(Json::Reader&, const Json::Object&) override;
-    };
+    std::unique_ptr<Json::IDeserializer<std::vector<Registry>>> get_registry_array_deserializer(
+        const fs::path& configuration_directory);
 
     struct ConfigurationDeserializer final : Json::IDeserializer<Configuration>
     {
@@ -56,11 +35,13 @@ namespace vcpkg
 
         virtual Optional<Configuration> visit_object(Json::Reader& r, const Json::Object& obj) override;
 
-        ConfigurationDeserializer(const VcpkgCmdArguments& args);
+        ConfigurationDeserializer(const VcpkgCmdArguments& args, const fs::path& configuration_directory);
 
     private:
         bool print_json;
 
         bool registries_enabled;
+
+        fs::path configuration_directory;
     };
 }

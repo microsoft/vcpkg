@@ -89,7 +89,7 @@ namespace vcpkg
                                                    const fs::path& filepath)
     {
         Json::Reader reader;
-        ConfigurationDeserializer deserializer(args);
+        ConfigurationDeserializer deserializer(args, filepath.parent_path());
 
         auto parsed_config_opt = reader.visit(obj, deserializer);
         if (!reader.errors().empty())
@@ -201,6 +201,17 @@ namespace vcpkg
                 , m_env_cache(ff_settings.compiler_tracking)
                 , m_ff_settings(ff_settings)
             {
+                auto platform_cache_home = System::get_platform_cache_home();
+                if (auto cache_home = platform_cache_home.get())
+                {
+                    m_registries_path = std::move(*cache_home) / fs::u8path("vcpkg") / fs::u8path("registries");
+                }
+                else
+                {
+                    Debug::print(
+                        "Failed to find platform cache home; the features depending on that will be unavailable. ",
+                        platform_cache_home.error());
+                }
             }
 
             Lazy<std::vector<VcpkgPaths::TripletFile>> available_triplets;
@@ -222,7 +233,12 @@ namespace vcpkg
             fs::path m_manifest_path;
             Configuration m_config;
 
+            fs::path m_registries_path;
+
             FeatureFlagSettings m_ff_settings;
+
+            fs::path registries_work_tree_dir() const { return m_registries_path / fs::u8path("git"); }
+            fs::path registries_dot_git_dir() const { return registries_work_tree_dir() / fs::u8path(".git"); }
         };
     }
 

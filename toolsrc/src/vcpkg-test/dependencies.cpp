@@ -54,10 +54,7 @@ struct MockVersionedPortfileProvider : PortFileProvider::IVersionedPortfileProvi
         return it2->second;
     }
 
-    virtual const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(StringView) const override
-    {
-        Checks::unreachable(VCPKG_LINE_INFO);
-    }
+    virtual View<vcpkg::VersionT> get_port_versions(StringView) const override { Checks::unreachable(VCPKG_LINE_INFO); }
 
     SourceControlFileLocation& emplace(std::string&& name,
                                        Versions::Version&& version,

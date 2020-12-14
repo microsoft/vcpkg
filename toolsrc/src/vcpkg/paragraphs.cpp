@@ -423,15 +423,8 @@ namespace vcpkg::Paragraphs
             auto baseline_version = impl->get_baseline_version(paths, port_name);
             if (port_entry && baseline_version)
             {
-                auto port_path = port_entry->get_port_directory(paths, *baseline_version.get());
-                if (port_path.empty())
-                {
-                    Debug::print("Registry for port `",
-                                 port_name,
-                                 "` is incorrect - baseline port version `",
-                                 baseline_version.get()->to_string(),
-                                 "` not found.");
-                }
+                auto port_path =
+                    port_entry->get_path_to_version(paths, *baseline_version.get()).value_or_exit(VCPKG_LINE_INFO);
                 auto maybe_spgh = try_load_port(fs, port_path);
                 if (const auto spgh = maybe_spgh.get())
                 {
