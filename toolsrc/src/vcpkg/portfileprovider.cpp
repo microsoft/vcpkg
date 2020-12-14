@@ -499,6 +499,7 @@ namespace vcpkg::PortFileProvider
     {
         return std::make_unique<BaselineProviderImpl>(paths);
     }
+
     std::unique_ptr<IBaselineProvider> make_baseline_provider(const vcpkg::VcpkgPaths& paths, StringView baseline)
     {
         return std::make_unique<BaselineProviderImpl>(paths, baseline);
@@ -508,5 +509,4 @@ namespace vcpkg::PortFileProvider
     {
         return std::make_unique<VersionedPortfileProviderImpl>(paths);
     }
-
 }
