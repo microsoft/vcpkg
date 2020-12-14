@@ -9,7 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-unique_ptr.patch
 )
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Linux)
+if(VCPKG_HOST_IS_LINUX)
     vcpkg_from_git(
         OUT_SOURCE_PATH LSS_SOURCE_PATH
         URL https://chromium.googlesource.com/linux-syscall-support
