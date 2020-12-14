@@ -29,10 +29,6 @@ if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
 endif()
 
-if (NOT VCPKG_HOST_IS_WINDOWS)
-    message(WARNING "Feature ldap and ldaps may need to use the system package manager to install libldap2-dev and libsasl2-dev.")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     # Support HTTP2 TLS Download https://curl.haxx.se/ca/cacert.pem rename to curl-ca-bundle.crt, copy it to libcurl.dll location.
