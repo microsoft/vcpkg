@@ -9,17 +9,15 @@ vcpkg_from_github(
     PATCHES
         fix-unique_ptr.patch
 )
+
 if(VCPKG_HOST_IS_LINUX)
     vcpkg_from_git(
         OUT_SOURCE_PATH LSS_SOURCE_PATH
         URL https://chromium.googlesource.com/linux-syscall-support
         REF 7bde79cc274d06451bf65ae82c012a5d3e476b5a
     )
-    # create symbolic link required third_party for linux
-    execute_process(
-        COMMAND rm -rf ${SOURCE_PATH}/src/third_party/lss
-        COMMAND cp -r ${LSS_SOURCE_PATH} ${SOURCE_PATH}/src/third_party/lss
-    )
+    
+    file(RENAME ${LSS_SOURCE_PATH} ${SOURCE_PATH}/src/third_party/lss)
 endif()
 
 file(
