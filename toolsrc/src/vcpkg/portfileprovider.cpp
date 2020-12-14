@@ -127,7 +127,7 @@ namespace vcpkg::PortFileProvider
                     if (scf->core_paragraph->name == spec)
                     {
                         auto res = std::make_unique<OverlayRegistryEntry>();
-                        res->path = std::move(ports_dir);
+                        res->path = std::move(ports_spec);
                         res->version = VersionT{scf->core_paragraph->version, scf->core_paragraph->port_version};
                         return res;
                     }
