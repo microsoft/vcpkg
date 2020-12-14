@@ -125,6 +125,9 @@ namespace fs
 
 #endif
 
+    inline bool operator==(SystemHandle lhs, SystemHandle rhs) { return lhs.system_handle == rhs.system_handle; }
+    inline bool operator!=(SystemHandle lhs, SystemHandle rhs) { return !(lhs == rhs); }
+
     inline bool is_symlink(file_status s) noexcept
     {
 #if defined(_WIN32)
