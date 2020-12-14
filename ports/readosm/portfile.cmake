@@ -25,21 +25,28 @@ if (VCPKG_TARGET_IS_WINDOWS)
     set(EXPAT_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libexpatdMD.lib")
   endif()
 
+  if(VCPKG_TARGET_IS_UWP)
+    set(UWP_LIBS windowsapp.lib)
+    set(UWP_LINK_FLAGS /APPCONTAINER)
+  endif()
+
   set(LIBS_ALL_DBG
-    "${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib kernel32.lib windowsapp.lib \
+    "${CURRENT_INSTALLED_DIR}/debug/lib/zlibd.lib \
+    ${UWP_LIBS} \
     ${EXPAT_LIBS_DBG}"
   )
   set(LIBS_ALL_REL
-    "${CURRENT_INSTALLED_DIR}/lib/zlib.lib kernel32.lib windowsapp.lib \
+    "${CURRENT_INSTALLED_DIR}/lib/zlib.lib \
+    ${UWP_LIBS} \
     ${EXPAT_LIBS_REL}"
   )
 
   string(REPLACE "/" "\\\\" INST_DIR ${CURRENT_PACKAGES_DIR})
   list(APPEND OPTIONS_RELEASE
-    "LINK_FLAGS=/APPCONTAINER" "INST_DIR=${INST_DIR}" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
+    "LINK_FLAGS=${UWP_LINK_FLAGS}" "INST_DIR=${INST_DIR}" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${LIBS_ALL_REL}"
   )
   list(APPEND OPTIONS_DEBUG
-    "LINK_FLAGS=/APPCONTAINER /debug" "INST_DIR=${INST_DIR}\\debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
+    "LINK_FLAGS=${UWP_LINK_FLAGS} /debug" "INST_DIR=${INST_DIR}\\debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${LIBS_ALL_DBG}"
    )
 
   vcpkg_install_nmake(
