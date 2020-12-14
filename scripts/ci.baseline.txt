@@ -1065,6 +1065,7 @@ opencv3:x64-uwp            = skip
 opencv3:x64-windows        = skip
 opencv3:x64-windows-static = skip
 opencv3:x86-windows        = skip
+opencv4:arm64-windows      = fail
 opendnp3:x64-uwp=fail
 opendnp3:arm-uwp=fail
 openexr:arm64-windows=fail

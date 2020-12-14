@@ -66,6 +66,19 @@ if("dnn" IN_LIST FEATURES)
   endif()
 endif()
 
+#OpenCV on arm on windows platform (non UWP) has serious problems right now. Disabling this module is not enough (remember to put the definition in vcpkg_configure_cmake)
+#set(BUILD_opencv_surface_matching ON)
+#if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+#  set(BUILD_opencv_surface_matching OFF)
+#  message(WARNING "The surface_matching module cannot be enabled on ARM architectures")
+#endif()
+
+set(BUILD_opencv_gapi ON)
+if(VCPKG_TARGET_IS_UWP)
+  set(BUILD_opencv_gapi OFF)
+  message(WARNING "The gapi module cannot be enabled on UWP platform")
+endif()
+
 set(WITH_IPP OFF)
 if("ipp" IN_LIST FEATURES)
   set(WITH_IPP ON)
@@ -352,6 +365,7 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
         ###### The following modules are disabled for UWP
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
+        -DBUILD_opencv_gapi=${DBUILD_opencv_gapi}
         ###### The following module is disabled because it's broken #https://github.com/opencv/opencv_contrib/issues/2307
         -DBUILD_opencv_rgbd=OFF
         ###### Additional build flags
