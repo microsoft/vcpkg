@@ -8,14 +8,15 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ${LIBRTTOPO_PACKAGE_SUM}
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
-  vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
-    OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES
-      fix-makefiles.patch
-  )
+vcpkg_extract_source_archive_ex(
+  ARCHIVE ${ARCHIVE}
+  OUT_SOURCE_PATH SOURCE_PATH
+  PATCHES
+    fix-makefiles.patch
+    fix-geoconfig.patch
+)
 
+if (VCPKG_TARGET_IS_WINDOWS)
   # def symbols are modified from debian/librttopo1.symbols file
   file(COPY ${CMAKE_CURRENT_LIST_DIR}/librttopo.def DESTINATION ${SOURCE_PATH})
   set(SRID_MAX 999999)
@@ -24,23 +25,20 @@ if (VCPKG_TARGET_IS_WINDOWS)
   configure_file(${SOURCE_PATH}/headers/librttopo_geom.h.in ${SOURCE_PATH}/headers/librttopo_geom.h @ONLY)
 
   if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(CL_FLAGS_DBG "/MDd /Zi /DDLL_EXPORT")
-    set(CL_FLAGS_REL "/MD /Ox /DDLL_EXPORT")
+    set(CL_FLAGS "/DDLL_EXPORT")
     set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
     set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
   else()
-    set(CL_FLAGS_DBG "/MTd /Zi")
-    set(CL_FLAGS_REL "/MT /Ox")
     set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib")
     set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib")
   endif()
 
   file(TO_NATIVE_PATH ${CURRENT_PACKAGES_DIR} INST_DIR)
   list(APPEND OPTIONS_RELEASE
-    "LINK_FLAGS=" "INST_DIR=${INST_DIR}" "CL_FLAGS=${CL_FLAGS_REL}" "LIBS_ALL=${GEOS_LIBS_REL}"
+    "INST_DIR=${INST_DIR}" "CL_FLAGS=${CL_FLAGS}" "LIBS_ALL=${GEOS_LIBS_REL}"
   )
   list(APPEND OPTIONS_DEBUG
-    "LINK_FLAGS=/debug" "INST_DIR=${INST_DIR}\\debug" "CL_FLAGS=${CL_FLAGS_DBG}" "LIBS_ALL=${GEOS_LIBS_DBG}"
+    "LINK_FLAGS=/debug" "INST_DIR=${INST_DIR}\\debug" "CL_FLAGS=${CL_FLAGS}" "LIBS_ALL=${GEOS_LIBS_DBG}"
   )
 
   vcpkg_install_nmake(
@@ -64,13 +62,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
   endif()
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
-  vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
-    OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES
-      fix-geoconfig.patch
-  )
-
   vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
