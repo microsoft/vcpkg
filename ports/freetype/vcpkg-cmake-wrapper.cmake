@@ -28,7 +28,7 @@ if(TARGET Freetype::Freetype)
     if(@USE_PNG@)
         set_property(TARGET Freetype::Freetype APPEND PROPERTY INTERFACE_LINK_LIBRARIES PNG::PNG)
     endif()
-    target_link_libraries(Freetype::Freetype INTERFACE ${BROTLIDEC_LIBRARIES} ${BROTLICOMMON_LIBRARIES})
+    set_property(TARGET Freetype::Freetype APPEND PROPERTY INTERFACE_LINK_LIBRARIES ${BROTLIDEC_LIBRARIES} ${BROTLICOMMON_LIBRARIES})
 endif()
 
 if(FREETYPE_LIBRARIES)
