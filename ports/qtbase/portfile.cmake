@@ -10,7 +10,8 @@ set(${PORT}_PATCHES
         buildcmake.patch
         dont_force_cmakecache.patch
         #print_condition.patch
-        no-promotion.patch
+        no-promotion.patch 
+        #fix_find_dep.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION)
