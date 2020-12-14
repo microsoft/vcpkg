@@ -591,7 +591,6 @@ namespace
         constexpr static StringLiteral KIND = "kind";
         constexpr static StringLiteral BASELINE = "baseline";
         constexpr static StringLiteral PATH = "path";
-        constexpr static StringLiteral REPO = "repository";
 
         constexpr static StringLiteral KIND_BUILTIN = "builtin";
         constexpr static StringLiteral KIND_FILESYSTEM = "filesystem";
@@ -611,7 +610,6 @@ namespace
     constexpr StringLiteral RegistryImplDeserializer::KIND;
     constexpr StringLiteral RegistryImplDeserializer::BASELINE;
     constexpr StringLiteral RegistryImplDeserializer::PATH;
-    constexpr StringLiteral RegistryImplDeserializer::REPO;
     constexpr StringLiteral RegistryImplDeserializer::KIND_BUILTIN;
     constexpr StringLiteral RegistryImplDeserializer::KIND_FILESYSTEM;
 
@@ -632,7 +630,7 @@ namespace
 
     View<StringView> RegistryImplDeserializer::valid_fields() const
     {
-        static const StringView t[] = {KIND, BASELINE, PATH, REPO};
+        static const StringView t[] = {KIND, BASELINE, PATH};
         return t;
     }
     View<StringView> valid_builtin_fields()
@@ -650,16 +648,6 @@ namespace
             RegistryImplDeserializer::KIND,
             RegistryImplDeserializer::BASELINE,
             RegistryImplDeserializer::PATH,
-            RegistryDeserializer::PACKAGES,
-        };
-        return t;
-    }
-    View<StringView> valid_git_fields()
-    {
-        static const StringView t[] = {
-            RegistryImplDeserializer::KIND,
-            RegistryImplDeserializer::BASELINE,
-            RegistryImplDeserializer::REPO,
             RegistryDeserializer::PACKAGES,
         };
         return t;
@@ -718,7 +706,6 @@ namespace
             RegistryImplDeserializer::KIND,
             RegistryImplDeserializer::BASELINE,
             RegistryImplDeserializer::PATH,
-            RegistryImplDeserializer::REPO,
             PACKAGES,
         };
         return t;

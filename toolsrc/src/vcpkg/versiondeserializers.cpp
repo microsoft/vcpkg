@@ -21,7 +21,6 @@ namespace
 
         Optional<std::string> visit_string(Json::Reader& r, StringView sv) override
         {
-            (void)GIT_TREE;
             StringView pv(std::find(sv.begin(), sv.end(), '#'), sv.end());
             if (pv.size() == 1)
             {
