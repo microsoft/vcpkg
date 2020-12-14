@@ -14,6 +14,7 @@ vcpkg_from_gitlab(
     PATCHES remove_tests.patch
             build.patch
             build2.patch
+            disable-install-data.patch
             ${PATCHES}
 )
 
