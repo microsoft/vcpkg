@@ -376,24 +376,24 @@ namespace vcpkg::PortFileProvider
             return cache_it->second;
         }
 
-        auto entry_it = m_impl->entry_cache.find(version_spec.port_name);
-        if (entry_it == m_impl->entry_cache.end())
-        {
-            auto reg_for_port =
-                m_impl->get_paths().get_configuration().registry_set.registry_for_port(version_spec.port_name);
-
-            if (!reg_for_port)
-            {
-                return Strings::format("Error: no registry set up for port %s", version_spec.port_name);
-            }
-
-            auto entry = reg_for_port->get_port_entry(m_impl->get_paths(), version_spec.port_name);
-            entry_it = m_impl->entry_cache.emplace(version_spec.port_name, std::move(entry)).first;
-        }
-
         auto path_cache_it = m_impl->path_cache.find(version_spec);
         if (path_cache_it == m_impl->path_cache.end())
         {
+            auto entry_it = m_impl->entry_cache.find(version_spec.port_name);
+            if (entry_it == m_impl->entry_cache.end())
+            {
+                auto reg_for_port =
+                    m_impl->get_paths().get_configuration().registry_set.registry_for_port(version_spec.port_name);
+
+                if (!reg_for_port)
+                {
+                    return Strings::format("Error: no registry set up for port %s", version_spec.port_name);
+                }
+
+                auto entry = reg_for_port->get_port_entry(m_impl->get_paths(), version_spec.port_name);
+                entry_it = m_impl->entry_cache.emplace(version_spec.port_name, std::move(entry)).first;
+            }
+
             auto maybe_path = entry_it->second->get_path_to_version(m_impl->get_paths(), version_spec.version);
             if (auto p = maybe_path.get())
             {

@@ -42,10 +42,7 @@ namespace vcpkg
 
         if (!r.errors().empty())
         {
-            System::print2(System::Color::error, "Errors occurred while parsing configuration.\n");
-            for (auto&& msg : r.errors())
-                System::print2("    ", msg, '\n');
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            return nullopt;
         }
 
         for (Registry& reg : regs)
