@@ -1,22 +1,25 @@
-## # vcpkg_write_sourcelink_file
-##
-## Write a Source Link file (if enabled). Internal function not for direct use by ports.
-##
-## ## Usage:
-## ```cmake
-## vcpkg_write_sourcelink_file(
-##      SOURCE_PATH <path>
-##      SERVER_PATH <URL>
-## )
-## ```
-##
-## ## Parameters:
-## ### SOURCE_PATH
-## Specifies the local location of the sources used for build.
-##
-## ### SERVER_PATH
-## Specified the permanent location of the corresponding sources.
-##
+#[===[.md:
+# vcpkg_write_sourcelink_file
+
+Write a Source Link file (if enabled). Internal function not for direct use by ports.
+
+## Usage:
+```cmake
+vcpkg_write_sourcelink_file(
+     SOURCE_PATH <path>
+     SERVER_PATH <URL>
+)
+```
+
+## Parameters:
+### SOURCE_PATH
+Specifies the local location of the sources used for build.
+
+### SERVER_PATH
+Specified the permanent location of the corresponding sources.
+#]===]
+
+
 function(vcpkg_write_sourcelink_file)
     cmake_parse_arguments(_vwsf "" "SOURCE_PATH;SERVER_PATH" "" ${ARGN})
 
