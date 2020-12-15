@@ -54,6 +54,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
   vcpkg_fixup_cmake_targets(CONFIG_PATH lib${LIB_SUFFIX}/cmake/Ceres)
 endif()
+file(READ ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake CERES_CONFIG)
+string(REPLACE "set_target_properties(ceres PROPERTIES INTERFACE_LINK_LIBRARIES Ceres::ceres)"
+               "set_target_properties(ceres PROPERTIES INTERFACE_LINK_LIBRARIES Ceres::ceres)
+  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)" CERES_CONFIG "${CERES_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake "${CERES_CONFIG}")
 
 vcpkg_copy_pdbs()
 
