@@ -149,7 +149,8 @@ $SubnetName = $ResourceGroupName + 'Subnet'
 $Subnet = New-AzVirtualNetworkSubnetConfig `
   -Name $SubnetName `
   -AddressPrefix "10.0.0.0/16" `
-  -NetworkSecurityGroup $NetworkSecurityGroup
+  -NetworkSecurityGroup $NetworkSecurityGroup `
+  -ServiceEndpoint "Microsoft.Storage"
 
 $VirtualNetworkName = $ResourceGroupName + 'Network'
 $VirtualNetwork = New-AzVirtualNetwork `
@@ -184,8 +185,31 @@ $StorageContext = New-AzStorageContext `
   -StorageAccountName $StorageAccountName `
   -StorageAccountKey $StorageAccountKey
 
-New-AzStorageShare -Name 'archives' -Context $StorageContext
-Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 1024
+New-AzStorageContainer -Name archives -Context $StorageContext -Permission Off
+$StartTime = [DateTime]::Now
+$ExpiryTime = $StartTime.AddMonths(6)
+
+$SasToken = New-AzStorageAccountSASToken `
+  -Service Blob `
+  -Permission "racwdlup" `
+  -Context $StorageContext `
+  -StartTime $StartTime `
+  -ExpiryTime $ExpiryTime `
+  -ResourceType Service,Container,Object `
+  -Protocol HttpsOnly
+
+$SasToken = $SasToken.Substring(1) # strip leading ?
+
+# Note that we put the storage account into the firewall after creating the above SAS token or we
+# would be denied since the person running this script isn't one of the VMs we're creating here.
+Set-AzStorageAccount `
+  -ResourceGroupName $ResourceGroupName `
+  -AccountName $StorageAccountName `
+  -NetworkRuleSet ( `
+    @{bypass="AzureServices"; `
+    virtualNetworkRules=( `
+      @{VirtualNetworkResourceId=$VirtualNetwork.Subnets[0].Id;Action="allow"}); `
+    defaultAction="Deny"})
 
 ####################################################################################################
 Write-Progress `
@@ -234,15 +258,23 @@ Write-Progress `
   -Status 'Running provisioning script provision-image.sh in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-$ProvisionImageResult = Invoke-AzVMRunCommand `
-  -ResourceGroupName $ResourceGroupName `
-  -VMName $ProtoVMName `
-  -CommandId 'RunShellScript' `
-  -ScriptPath "$PSScriptRoot\provision-image.sh" `
-  -Parameter @{StorageAccountName=$StorageAccountName; `
-    StorageAccountKey=$StorageAccountKey;}
+$tempScript = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName() + ".sh"
+try {
+  $script = Get-Content "$PSScriptRoot\provision-image.sh" -Encoding utf8NoBOM
+  $script += "echo `"PROVISIONED_AZURE_STORAGE_NAME=\`"$StorageAccountName\`"`" | sudo tee -a /etc/environment"
+  $script += "echo `"PROVISIONED_AZURE_STORAGE_SAS_TOKEN=\`"$SasToken\`"`" | sudo tee -a /etc/environment"
+  Set-Content -Path $tempScript -Value $script -Encoding utf8NoBOM
 
-Write-Host "provision-image.sh output: $($ProvisionImageResult.value.Message)"
+  $ProvisionImageResult = Invoke-AzVMRunCommand `
+    -ResourceGroupName $ResourceGroupName `
+    -VMName $ProtoVMName `
+    -CommandId 'RunShellScript' `
+    -ScriptPath $tempScript
+
+  Write-Host "provision-image.sh output: $($ProvisionImageResult.value.Message)"
+} finally {
+  Remove-Item $tempScript -Recurse -Force
+}
 
 ####################################################################################################
 Write-Progress `

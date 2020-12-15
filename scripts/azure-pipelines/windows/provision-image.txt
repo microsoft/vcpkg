@@ -20,17 +20,18 @@ The administrator user's password; if this is $null, or not passed, then the
 script assumes it's running on an administrator account.
 
 .PARAMETER StorageAccountName
-The name of the storage account. Stored in the environment variable %StorageAccountName%.
+The name of the storage account. Stored in the environment variable %PROVISIONED_AZURE_STORAGE_NAME%.
 Used by the CI system to access the global storage.
 
-.PARAMETER StorageAccountKey
-The key of the storage account. Stored in the environment variable %StorageAccountKey%.
+.PARAMETER StorageAccountSasToken
+The SAS token to access the storage account. Stored in the environment variable
+%PROVISIONED_AZURE_STORAGE_SAS_TOKEN%.
 Used by the CI system to access the global storage.
 #>
 param(
   [string]$AdminUserPassword = $null,
   [string]$StorageAccountName = $null,
-  [string]$StorageAccountKey = $null
+  [string]$StorageAccountSasToken = $null
 )
 
 $ErrorActionPreference = 'Stop'
@@ -88,9 +89,9 @@ if ([string]::IsNullOrEmpty($AdminUserPassword)) {
     $PsExecArgs += $StorageAccountName
   }
 
-  if (-Not ([string]::IsNullOrWhiteSpace($StorageAccountKey))) {
-    $PsExecArgs += '-StorageAccountKey'
-    $PsExecArgs += $StorageAccountKey
+  if (-Not ([string]::IsNullOrWhiteSpace($StorageAccountSasToken))) {
+    $PsExecArgs += '-StorageAccountSasToken'
+    $PsExecArgs += $StorageAccountSasToken
   }
 
   Write-Host "Executing: $PsExecPath $PsExecArgs"
@@ -477,14 +478,14 @@ if ([string]::IsNullOrWhiteSpace($StorageAccountName)) {
 } else {
   Write-Host 'Storing storage account name to environment'
   Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' `
-    -Name StorageAccountName `
+    -Name PROVISIONED_AZURE_STORAGE_NAME `
     -Value $StorageAccountName
 }
-if ([string]::IsNullOrWhiteSpace($StorageAccountKey)) {
+if ([string]::IsNullOrWhiteSpace($StorageAccountSasToken)) {
   Write-Host 'No storage account key configured.'
 } else {
   Write-Host 'Storing storage account key to environment'
   Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' `
-    -Name StorageAccountKey `
-    -Value $StorageAccountKey
+    -Name PROVISIONED_AZURE_STORAGE_SAS_TOKEN `
+    -Value $StorageAccountSasToken
 }

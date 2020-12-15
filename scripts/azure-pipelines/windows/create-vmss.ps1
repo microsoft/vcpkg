@@ -157,7 +157,8 @@ $SubnetName = $ResourceGroupName + 'Subnet'
 $Subnet = New-AzVirtualNetworkSubnetConfig `
   -Name $SubnetName `
   -AddressPrefix "10.0.0.0/16" `
-  -NetworkSecurityGroup $NetworkSecurityGroup
+  -NetworkSecurityGroup $NetworkSecurityGroup `
+  -ServiceEndpoint "Microsoft.Storage"
 
 $VirtualNetworkName = $ResourceGroupName + 'Network'
 $VirtualNetwork = New-AzVirtualNetwork `
@@ -193,8 +194,31 @@ if (-Not $Unstable) {
     -StorageAccountName $StorageAccountName `
     -StorageAccountKey $StorageAccountKey
 
-  New-AzStorageShare -Name 'archives' -Context $StorageContext
-  Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 2048
+  New-AzStorageContainer -Name archives -Context $StorageContext -Permission Off
+  $StartTime = [DateTime]::Now
+  $ExpiryTime = $StartTime.AddMonths(6)
+
+  $SasToken = New-AzStorageAccountSASToken `
+    -Service Blob `
+    -Permission "racwdlup" `
+    -Context $StorageContext `
+    -StartTime $StartTime `
+    -ExpiryTime $ExpiryTime `
+    -ResourceType Service,Container,Object `
+    -Protocol HttpsOnly
+
+  $SasToken = $SasToken.Substring(1) # strip leading ?
+
+  # Note that we put the storage account into the firewall after creating the above SAS token or we
+  # would be denied since the person running this script isn't one of the VMs we're creating here.
+  Set-AzStorageAccount `
+    -ResourceGroupName $ResourceGroupName `
+    -AccountName $StorageAccountName `
+    -NetworkRuleSet ( `
+      @{bypass="AzureServices"; `
+      virtualNetworkRules=( `
+        @{VirtualNetworkResourceId=$VirtualNetwork.Subnets[0].Id;Action="allow"}); `
+      defaultAction="Deny"})
 }
 
 ####################################################################################################
@@ -241,7 +265,7 @@ Write-Progress `
 $provisionParameters = @{AdminUserPassword = $AdminPW;}
 if (-Not $Unstable) {
   $provisionParameters['StorageAccountName'] = $StorageAccountName
-  $provisionParameters['StorageAccountKey'] = $StorageAccountKey
+  $provisionParameters['StorageAccountSasToken'] = $SasToken
 }
 
 $ProvisionImageResult = Invoke-AzVMRunCommand `

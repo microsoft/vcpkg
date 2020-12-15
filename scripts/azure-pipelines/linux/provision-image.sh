@@ -74,19 +74,4 @@ sudo apt update
 sudo add-apt-repository universe
 sudo apt install -y powershell
 
-if [ -z "$StorageAccountName" ]; then
-echo "No storage account supplied, skipping."
-else
-echo "Mapping storage account"
-
-# Write SMB credentials
-sudo mkdir /etc/smbcredentials
-smbCredentialFile=/etc/smbcredentials/$StorageAccountName.cred
-echo "username=$StorageAccountName" | sudo tee $smbCredentialFile > /dev/null
-echo "password=$StorageAccountKey" | sudo tee -a $smbCredentialFile > /dev/null
-sudo chmod 600 $smbCredentialFile
-
-# Mount the archives SMB share to /archives
-sudo mkdir /archives -m=777
-echo "//$StorageAccountName.file.core.windows.net/archives /archives cifs nofail,vers=3.0,credentials=$smbCredentialFile,serverino,dir_mode=0777,file_mode=0777 0 0" | sudo tee -a /etc/fstab
-fi
+# provision-image.ps1 will append installation of the SAS token here
