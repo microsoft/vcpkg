@@ -1,5 +1,5 @@
 diff --git a/makefile.vc b/makefile.vc
-index 1f790f0de..90db6efc2 100644
+index 1f790f0de..2f7e00f7b 100644
 --- a/makefile.vc
 +++ b/makefile.vc
 @@ -17,11 +17,11 @@ LIBOBJ	 = src\box2d.obj src\bytebuffer.obj src\g_box.obj \
@@ -16,28 +16,15 @@ index 1f790f0de..90db6efc2 100644
  
  default:	all
  
-@@ -34,9 +34,9 @@ librttopo.lib:	$(LIBOBJ)
- $(LIBRTTOPO_DLL):	librttopo_i.lib
- 
- librttopo_i.lib:	$(LIBOBJ)
--	link /debug /dll /out:$(LIBRTTOPO_DLL) \
--		/implib:librrttopo_i.lib $(LIBOBJ) \
--		C:\OSGeo4W\lib\geos_c.lib
-+	link $(LINK_FLAGS) /dll /def:librttopo.def /out:$(LIBRTTOPO_DLL) \
-+		/implib:librttopo_i.lib $(LIBOBJ) \
-+		$(LIBS_ALL)
- 	if exist $(LIBRTTOPO_DLL).manifest mt -manifest \
- 		$(LIBRTTOPO_DLL).manifest -outputresource:$(LIBRTTOPO_DLL);2
- 
 
 diff --git a/nmake.opt b/nmake.opt
-index 938979df1..979bf1c4d 100644
+index 938979df1..ea80dab00 100644
 --- a/nmake.opt
 +++ b/nmake.opt
 @@ -1,9 +1,8 @@
  # Directory tree where RTTOPO will be installed.
 -INSTDIR=C:\OSGeo4W
-+INSTDIR=$(INST_DIR)
++INSTDIR=$(INSTALLDIR)
  
  # Uncomment the first for an optimized build, or the second for debug.
 -OPTFLAGS=	/nologo /Ox /fp:precise /W4 /MD /D_CRT_SECURE_NO_WARNINGS \
