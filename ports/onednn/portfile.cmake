@@ -6,10 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-# Linkeage (default in oneDNN is shared)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
-if (ENABLE_STATIC)
-  list(APPEND DNNL_OPTIONS "-DDNNL_LIBRARY_TYPE=STATIC")
+if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  set(DNNL_OPTIONS "-DDNNL_LIBRARY_TYPE=STATIC")
 endif()
 
 vcpkg_configure_cmake(
@@ -24,5 +22,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Copyright and license
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/onednn RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/onednn RENAME license)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
