@@ -63,11 +63,14 @@ try
         $msg += "    $changedFiles"
         $msg += ""
 
-        $msg += "You can access the diff from clang-format.diff in the build artifacts"
-
         if (-not [String]::IsNullOrEmpty($DiffOutput))
         {
-            git diff >$DiffOutput
+            $msg += "You can access the diff from clang-format.diff in the build artifacts,"
+            $msg += 'and apply the patch with `git apply`'
+            # in order to avoid mangling diff output with `r`n
+            Start-Process -FilePath 'git' -ArgumentList 'diff' `
+                -NoNewWindow -Wait `
+                -RedirectStandardOutput $DiffOutput
         }
 
         Write-Error ($msg -join "`n")
