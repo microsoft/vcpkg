@@ -8,11 +8,11 @@ variables:
 
 stages:
 - stage: FormatChecks
-  displayName: 'Formatting Checks'
+  displayName: 'Formatting Checks:'
   pool: $(windows-pool)
   jobs:
   - job: ClangFormat
-    displayName: 'Check C++'
+    displayName: 'C++'
     workspace:
       clean: resources
     steps:
@@ -22,7 +22,7 @@ stages:
         arguments: '-Root . -DiffOutput $(Build.ArtifactStagingDirectory)\clang-format.diff'
         pwsh: true
   - job: Manifests
-    displayName: 'Check Port Manifests'
+    displayName: 'Port Manifests'
     workspace:
       clean: resources
     variables:
@@ -30,13 +30,12 @@ stages:
       value: D:\downloads
     steps:
     - task: Powershell@2
-      displayName: 'Check port manifest Formatting'
       inputs:
         filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
         arguments: '-Root .'
         pwsh: true
   - job: DocumentationGeneration
-    displayName: 'Check Documentation Generation'
+    displayName: 'Documentation Generation'
     workspace:
       clean: resources
     steps:
