@@ -12,17 +12,18 @@ stages:
   pool: $(windows-pool)
   jobs:
   - job:
+    displayName: 'Check C++ Formatting'
     workspace:
       clean: resources
     steps:
     - task: Powershell@2
-      displayName: 'Check C++ Formatting'
       inputs:
         filePath: 'scripts/azure-pipelines/windows/Check-CxxFormatting.ps1'
         arguments: '-Root . -DiffOutput $(Build.ArtifactStagingDirectory)\clang-format.diff'
         pwsh: true
   - job:
     condition: failed()
+    displayName: 'Publish Artifact: diff from clang-format'
     steps:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: diff from clang-format'
