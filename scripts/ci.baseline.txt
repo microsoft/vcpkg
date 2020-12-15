@@ -1469,6 +1469,7 @@ teemo:arm64-windows=fail
 teemo:x64-osx=fail
 telnetpp:arm-uwp=fail
 telnetpp:x64-uwp=fail
+tesseract:arm64-windows=fail
 tfhe:x86-windows=fail
 tfhe:x64-windows=fail
 tfhe:x64-windows-static=fail
