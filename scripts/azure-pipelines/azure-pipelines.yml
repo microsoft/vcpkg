@@ -23,35 +23,28 @@ stages:
         pwsh: true
   - job: Manifests
     displayName: 'Check Port Manifests'
-    pool: $(windows-pool)
+    workspace:
+      clean: resources
     variables:
     - name: VCPKG_DOWNLOADS
       value: D:\downloads
-    jobs:
-    - job:
-      workspace:
-        clean: resources
-      steps:
-      - task: Powershell@2
-        displayName: 'Check port manifest Formatting'
-        inputs:
-          filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
-          arguments: '-Root .'
-          pwsh: true
+    steps:
+    - task: Powershell@2
+      displayName: 'Check port manifest Formatting'
+      inputs:
+        filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
+        arguments: '-Root .'
+        pwsh: true
   - job: DocumentationGeneration
     displayName: 'Check Documentation Generation'
-    pool: $(windows-pool)
-    jobs:
-    - job:
-      workspace:
-        clean: resources
-      steps:
-      - task: Powershell@2
-        displayName: 'Check documentation generation'
-        inputs:
-          filePath: 'scripts/azure-pipelines/windows/Check-CMakeFunctionDocumentation.ps1'
-          arguments: '-Root .'
-          pwsh: true
+    workspace:
+      clean: resources
+    steps:
+    - task: Powershell@2
+      inputs:
+        filePath: 'scripts/azure-pipelines/windows/Check-CMakeFunctionDocumentation.ps1'
+        arguments: '-Root .'
+        pwsh: true
   - job:
     dependsOn: ClangFormat
     condition: failed()
@@ -63,10 +56,7 @@ stages:
         ArtifactName: 'clang-format.diff'
 - stage: run_port_ci
   displayName: 'Run the Port CI'
-  dependsOn:
-  - check_cxx_formatting
-  - check_manifest_formatting
-  - check_documentation_generation
+  dependsOn: FormatChecks
   jobs:
   - template: windows/azure-pipelines.yml
     parameters:
