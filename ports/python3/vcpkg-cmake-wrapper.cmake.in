@@ -1,0 +1,56 @@
+if(@PythonFinder_NEW_FINDER@)
+    if(NOT DEFINED @PythonFinder_PREFIX@_FIND_REGISTRY)
+        set(@PythonFinder_PREFIX@_FIND_REGISTRY "NEVER")
+    endif()
+endif()
+
+if(@PythonFinder_INTERP@)
+    find_program(
+        @PythonFinder_PREFIX@_EXECUTABLE
+        NAMES "python" "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@"
+        PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/python3"
+        NO_DEFAULT_PATH
+    )
+endif()
+
+if(@PythonFinder_LIBS@)
+    find_path(
+        @PythonFinder_PREFIX@_INCLUDE_DIR
+        NAMES "Python.h"
+        PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include"
+        PATH_SUFFIXES "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@"
+        NO_DEFAULT_PATH
+    )
+
+    set(_PYTHON_LIB_RELEASE_VARNAME @PythonFinder_PREFIX@_LIBRARY_RELEASE)
+    set(_PYTHON_LIB_DEBUG_VARNAME @PythonFinder_PREFIX@_LIBRARY_DEBUG)
+    if(@PythonFinder_NEW_FINDER@)
+        # Don't set the public facing hint or the finder will be unable to detect the debug library.
+        # Internally, it uses the same value with an underscore prepended.
+        string(PREPEND _PYTHON_LIB_RELEASE_VARNAME "_")
+        string(PREPEND _PYTHON_LIB_DEBUG_VARNAME "_")
+    endif()
+
+    find_library(
+        ${_PYTHON_LIB_RELEASE_VARNAME}
+        NAMES
+        "python@PYTHON_VERSION_MAJOR@@PYTHON_VERSION_MINOR@"
+        "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@"
+        PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib"
+        NO_DEFAULT_PATH
+    )
+    find_library(
+        ${_PYTHON_LIB_DEBUG_VARNAME}
+        NAMES
+        "python@PYTHON_VERSION_MAJOR@@PYTHON_VERSION_MINOR@_d"
+        "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@d"
+        PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib"
+        NO_DEFAULT_PATH
+    )
+
+    # Don't leak this mess out.
+    unset(_PYTHON_LIB_RELEASE_VARNAME)
+    unset(_PYTHON_LIB_DEBUG_VARNAME)
+endif()
+
+_find_package(${ARGS})
