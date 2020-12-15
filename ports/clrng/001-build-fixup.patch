@@ -79,7 +79,7 @@ index 65f51db..b1f252c 100644
  		set( CMAKE_CXX_FLAGS "-m64 ${CMAKE_CXX_FLAGS}" )
  		set( CMAKE_C_FLAGS "-m64 ${CMAKE_C_FLAGS}" )
 diff --git a/src/library/CMakeLists.txt b/src/library/CMakeLists.txt
-index dbe479d..fa525d6 100644
+index dbe479d..8717e58 100644
 --- a/src/library/CMakeLists.txt
 +++ b/src/library/CMakeLists.txt
 @@ -62,8 +62,6 @@ set( clRNG.Headers  private.h
@@ -116,6 +116,19 @@ index dbe479d..fa525d6 100644
          )
          
  # CMake config files for clRNG
+@@ -139,9 +146,9 @@ endif( )
+ include( InstallRequiredSystemLibraries )
+ 
+ # Install necessary runtime files for debug builds
+-install(    PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+-            CONFIGURATIONS Debug
+-	    DESTINATION ${CLRNG_RUNTIME_DESTINATION} )
++#install(    PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
++#            CONFIGURATIONS Debug
++#	    DESTINATION ${CLRNG_RUNTIME_DESTINATION} )
+ 
+ # Install all *.pdb files for debug builds
+ install(    DIRECTORY ${PROJECT_BINARY_DIR}/staging/
 @@ -152,6 +159,6 @@ install(    DIRECTORY ${PROJECT_BINARY_DIR}/staging/
  
  # Install a snapshot of the source as it was for this build; useful for the .pdb's
