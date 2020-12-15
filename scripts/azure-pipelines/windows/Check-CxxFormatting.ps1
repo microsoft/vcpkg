@@ -3,18 +3,30 @@ Param(
     [Parameter(Mandatory=$True)]
     [string]$Root,
     [Parameter()]
+    [string]$DiffOutput,
+    [Parameter()]
     [switch]$IgnoreErrors # allows one to just format
 )
 
-$clangFormat = 'C:\Program Files\LLVM\bin\clang-format.exe'
-if (-not (Test-Path $clangFormat))
+$Root = Resolve-Path -LiteralPath $Root
+
+# it is very frustrating that this method is not an existing cmdlet
+# This is like Resolve-Path, but it also allows DiffOutput to not exist
+$DiffOutput = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($DiffOutput)
+
+$clangFormat = (Get-Command 'clang-format').Source
+if (-not (Test-Path $clangFormat) -and $IsWindows)
+{
+    $clangFormat = 'C:\Program Files\LLVM\bin\clang-format.exe'
+}
+if (-not (Test-Path $clangFormat) -and $IsWindows)
 {
     $clangFormat = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\Llvm\x64\bin\clang-format.exe'
-    if (-not (Test-Path $clangFormat))
-    {
-        Write-Error 'clang-format not found; is it installed in the CI machines?'
-        throw
-    }
+}
+if (-not (Test-Path $clangFormat))
+{
+    Write-Error 'clang-format not found; is it installed?'
+    throw
 }
 
 $toolsrc = Get-Item "$Root/toolsrc"
@@ -42,8 +54,12 @@ try
         $msg += "    $changedFiles"
         $msg += ""
 
-        $msg += "clang-format should produce the following diff:"
-        $msg += git diff $toolsrc
+        $msg += "You can access the diff from clang-format.diff in the build artifacts"
+
+        if (-not [String]::IsNullOrEmpty($DiffOutput))
+        {
+            git diff >$DiffOutput
+        }
 
         Write-Error ($msg -join "`n")
         throw
