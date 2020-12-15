@@ -20,7 +20,11 @@ namespace
 
     using Baseline = std::map<std::string, VersionT, std::less<>>;
 
-    struct GitRegistryEntry final
+    // this class is an implementation detail of `BuiltinRegistryEntry`;
+    // when `BuiltinRegistryEntry` is using a port versions file for a port,
+    // it uses this as it's underlying type;
+    // when `BuiltinRegistryEntry` is using a port tree, it uses the scfl
+    struct GitRegistryEntry
     {
         explicit GitRegistryEntry(std::string&& port_name) : port_name(port_name) { }
 
@@ -66,22 +70,6 @@ namespace
         VersionT scfl_version; // this exists so that we can return a pointer to it
     };
 
-    struct BuiltinRegistry final : RegistryImplementation
-    {
-        BuiltinRegistry(std::string&& baseline) : m_baseline_identifier(std::move(baseline)) { }
-
-        std::unique_ptr<RegistryEntry> get_port_entry(const VcpkgPaths& paths, StringView port_name) const override;
-
-        void get_all_port_names(std::vector<std::string>&, const VcpkgPaths&) const override;
-
-        Optional<VersionT> get_baseline_version(const VcpkgPaths& paths, StringView port_name) const override;
-
-        ~BuiltinRegistry() = default;
-
-        std::string m_baseline_identifier;
-        DelayedInit<Baseline> m_baseline;
-    };
-
     struct FilesystemRegistryEntry final : RegistryEntry
     {
         explicit FilesystemRegistryEntry(std::string&& port_name) : port_name(port_name) { }
@@ -96,6 +84,22 @@ namespace
         // these shall have the same size, and paths[i] shall be the path for port_versions[i]
         std::vector<VersionT> port_versions;
         std::vector<fs::path> version_paths;
+    };
+
+    struct BuiltinRegistry final : RegistryImplementation
+    {
+        BuiltinRegistry(std::string&& baseline) : m_baseline_identifier(std::move(baseline)) { }
+
+        std::unique_ptr<RegistryEntry> get_port_entry(const VcpkgPaths& paths, StringView port_name) const override;
+
+        void get_all_port_names(std::vector<std::string>&, const VcpkgPaths&) const override;
+
+        Optional<VersionT> get_baseline_version(const VcpkgPaths& paths, StringView port_name) const override;
+
+        ~BuiltinRegistry() = default;
+
+        std::string m_baseline_identifier;
+        DelayedInit<Baseline> m_baseline;
     };
 
     struct FilesystemRegistry final : RegistryImplementation
