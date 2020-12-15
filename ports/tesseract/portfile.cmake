@@ -39,6 +39,16 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+file(READ ${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake TESSERACT_CONFIG)
+string(REPLACE "find_package(Leptonica REQUIRED)"
+               "find_package(Leptonica REQUIRED)
+find_package(OpenSSL REQUIRED)
+find_package(ZLIB REQUIRED)
+find_package(BZip2 REQUIRED)
+find_package(LibXml2 REQUIRED)
+find_package(zstd REQUIRED)
+find_package(LibLZMA REQUIRED)" TESSERACT_CONFIG "${TESSERACT_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake "${TESSERACT_CONFIG}")
 
 vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)
 
