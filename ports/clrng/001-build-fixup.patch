@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 65f51db..d9fd118 100644
+index 65f51db..f010bb8 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -31,7 +31,7 @@
@@ -55,14 +55,14 @@ index 65f51db..d9fd118 100644
  	message( STATUS "Detected GNU fortran compiler." )
  	EXEC_PROGRAM( ${CMAKE_CXX_COMPILER} ARGS --version OUTPUT_VARIABLE vnum )
  	STRING(REGEX REPLACE ".*([0-9])\\.([0-9])\\.([0-9]).*" "\\1\\2\\3" vnum ${vnum})
-@@ -213,6 +214,7 @@ elseif( CMAKE_COMPILER_IS_GNUCXX )
- 		# we only want c++0x if we're using gcc 4.5.2
- 		set( CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}" )
- 	endif()
-+	endif()
+@@ -216,6 +217,7 @@ elseif( CMAKE_COMPILER_IS_GNUCXX )
  	
  	set( CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}" )
  	set( CMAKE_C_FLAGS "-std=c11 -Wall -pedantic-errors -pthread ${CMAKE_C_FLAGS}" )
++	endif()
+ 	
+ 	if( BUILD64 )
+ 		set( CMAKE_CXX_FLAGS "-m64 ${CMAKE_CXX_FLAGS}" )
 diff --git a/src/library/CMakeLists.txt b/src/library/CMakeLists.txt
 index dbe479d..8717e58 100644
 --- a/src/library/CMakeLists.txt
