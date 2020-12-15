@@ -526,23 +526,24 @@ if (VCPKG_TARGET_IS_WINDOWS)
                 set(${PATH_NAME}_cygpath ${PATH_VALUE})
             endforeach()
             execute_process(
-                COMMAND ${CYGPATH_CMD} "${prefix_dir}"
+                COMMAND ${CYGPATH_CMD} "${prefix_cygpath}"
                 OUTPUT_VARIABLE FIXED_PREFIX_PATH
             )
             string(REPLACE "\n" "" FIXED_PREFIX_PATH ${FIXED_PREFIX_PATH})
-			file(TO_CMAKE_PATH ${FIXED_PREFIX_PATH} FIXED_PREFIX_PATH)
+            file(TO_CMAKE_PATH ${FIXED_PREFIX_PATH} FIXED_PREFIX_PATH)
             execute_process(
-                COMMAND ${CYGPATH_CMD} "${libdir_dir}"
+                COMMAND ${CYGPATH_CMD} "${libdir_cygpath}"
                 OUTPUT_VARIABLE FIXED_LIBDIR_PATH
             )
             string(REPLACE "\n" "" FIXED_LIBDIR_PATH ${FIXED_LIBDIR_PATH})
-			file(TO_CMAKE_PATH ${FIXED_LIBDIR_PATH} FIXED_LIBDIR_PATH)
+            file(TO_CMAKE_PATH ${FIXED_LIBDIR_PATH} FIXED_LIBDIR_PATH)
             execute_process(
-                COMMAND ${CYGPATH_CMD} "${includedir_dir}"
+                COMMAND ${CYGPATH_CMD} "${includedir_cygpath}"
                 OUTPUT_VARIABLE FIXED_INCLUDE_PATH
             )
             string(REPLACE "\n" "" FIXED_INCLUDE_PATH ${FIXED_INCLUDE_PATH})
-			file(TO_CMAKE_PATH ${FIXED_INCLUDE_PATH} FIXED_INCLUDE_PATH)
+            file(TO_CMAKE_PATH ${FIXED_INCLUDE_PATH} FIXED_INCLUDE_PATH)
+            
             vcpkg_replace_string(${PKGCONFIG_FILE} "${prefix_cygpath}" "${FIXED_PREFIX_PATH}")
             vcpkg_replace_string(${PKGCONFIG_FILE} "${libdir_cygpath}" "${FIXED_LIBDIR_PATH}")
             vcpkg_replace_string(${PKGCONFIG_FILE} "${includedir_cygpath}" "${FIXED_INCLUDE_PATH}")
