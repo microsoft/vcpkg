@@ -11,7 +11,7 @@ vcpkg_from_github(
         static_pcre.patch
         # Add the support of arm64-windows
         arm64_pcre.patch
-        #
+        # Fix various poco dependencies (database, pdf, pcre, expat)
         fix_dependency.patch
         # Required for static build on windows 
         fix_foundation_link.patch
