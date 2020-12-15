@@ -21,12 +21,14 @@ stages:
         filePath: 'scripts/azure-pipelines/windows/Check-CxxFormatting.ps1'
         arguments: '-Root . -DiffOutput $(Build.ArtifactStagingDirectory)\clang-format.diff'
         pwsh: true
+  - job:
+    condition: failed()
+    steps:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish Artifact: diff from clang-format'
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)\clang-format.diff'
         ArtifactName: 'clang-format.diff'
-      condition: always()
 - stage: check_manifest_formatting
   displayName: Check the formatting of port manifests
   pool: $(windows-pool)
