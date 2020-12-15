@@ -1,76 +1,86 @@
-## # vcpkg_configure_cmake
-##
-## Configure CMake for Debug and Release builds of a project.
-##
-## ## Usage
-## ```cmake
-## vcpkg_configure_cmake(
-##     SOURCE_PATH <${SOURCE_PATH}>
-##     [PREFER_NINJA]
-##     [DISABLE_PARALLEL_CONFIGURE]
-##     [NO_CHARSET_FLAG]
-##     [GENERATOR <"NMake Makefiles">]
-##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-## )
-## ```
-##
-## ## Parameters
-## ### SOURCE_PATH
-## Specifies the directory containing the `CMakeLists.txt`.
-## By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-##
-## ### PREFER_NINJA
-## Indicates that, when available, Vcpkg should use Ninja to perform the build.
-## This should be specified unless the port is known to not work under Ninja.
-##
-## ### DISABLE_PARALLEL_CONFIGURE
-## Disables running the CMake configure step in parallel.
-## This is needed for libraries which write back into their source directory during configure.
-##
-## This also disables CMAKE_DISABLE_SOURCE_CHANGES.
-##
-## ### NO_CHARSET_FLAG
-## Disables passing `utf-8` as the default character set to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`.
-##
-## This is needed for libraries that set their own source code's character set.
-##
-## ### GENERATOR
-## Specifies the precise generator to use.
-##
-## This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build.
-## If used for this purpose, it should be set to `"NMake Makefiles"`.
-##
-## ### OPTIONS
-## Additional options passed to CMake during the configuration.
-##
-## ### OPTIONS_RELEASE
-## Additional options passed to CMake during the Release configuration. These are in addition to `OPTIONS`.
-##
-## ### OPTIONS_DEBUG
-## Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
-##
-## ## Notes
-## This command supplies many common arguments to CMake. To see the full list, examine the source.
-##
-## ## Examples
-##
-## * [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
-## * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
-## * [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
-## * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
+#[===[.md:
+# vcpkg_configure_cmake
+
+Configure CMake for Debug and Release builds of a project.
+
+## Usage
+```cmake
+vcpkg_configure_cmake(
+    SOURCE_PATH <${SOURCE_PATH}>
+    [PREFER_NINJA]
+    [DISABLE_PARALLEL_CONFIGURE]
+    [NO_CHARSET_FLAG]
+    [GENERATOR <"NMake Makefiles">]
+    [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
+    [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
+    [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+)
+```
+
+## Parameters
+### SOURCE_PATH
+Specifies the directory containing the `CMakeLists.txt`.
+By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+
+### PREFER_NINJA
+Indicates that, when available, Vcpkg should use Ninja to perform the build.
+This should be specified unless the port is known to not work under Ninja.
+
+### DISABLE_PARALLEL_CONFIGURE
+Disables running the CMake configure step in parallel.
+This is needed for libraries which write back into their source directory during configure.
+
+This also disables CMAKE_DISABLE_SOURCE_CHANGES.
+
+### NO_CHARSET_FLAG
+Disables passing `utf-8` as the default character set to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`.
+
+This is needed for libraries that set their own source code's character set.
+
+### GENERATOR
+Specifies the precise generator to use.
+
+This is useful if some project-specific buildsystem has been wrapped in a cmake script that won't perform an actual build.
+If used for this purpose, it should be set to `"NMake Makefiles"`.
+
+### OPTIONS
+Additional options passed to CMake during the configuration.
+
+### OPTIONS_RELEASE
+Additional options passed to CMake during the Release configuration. These are in addition to `OPTIONS`.
+
+### OPTIONS_DEBUG
+Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
+
+### LOGNAME
+Name of the log to write the output of the configure call to.
+
+## Notes
+This command supplies many common arguments to CMake. To see the full list, examine the source.
+
+## Examples
+
+* [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
+* [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
+* [poco](https://github.com/Microsoft/vcpkg/blob/master/ports/poco/portfile.cmake)
+* [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
+#]===]
+
 function(vcpkg_configure_cmake)
     # parse parameters such that semicolons in arguments to OPTIONS don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _csc
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG"
-        "SOURCE_PATH;GENERATOR"
+        "SOURCE_PATH;GENERATOR;LOGNAME"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
     )
 
     if(NOT VCPKG_PLATFORM_TOOLSET)
         message(FATAL_ERROR "Vcpkg has been updated with VS2017 support; "
             "however, vcpkg.exe must be rebuilt by re-running bootstrap-vcpkg.bat\n")
+    endif()
+
+    if(NOT _csc_LOGNAME)
+        set(_csc_LOGNAME config-${TARGET_TRIPLET})
     endif()
 
     if(CMAKE_HOST_WIN32)
@@ -163,6 +173,8 @@ function(vcpkg_configure_cmake)
         list(APPEND _csc_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
         if(_TARGETTING_UWP AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android" AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
+            set(VCPKG_CMAKE_SYSTEM_VERSION 21)
         endif()
     endif()
 
@@ -208,6 +220,8 @@ function(vcpkg_configure_cmake)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/ios.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/freebsd.cmake")
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+            set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/openbsd.cmake")
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/mingw.cmake")
         endif()
@@ -305,7 +319,7 @@ function(vcpkg_configure_cmake)
         vcpkg_execute_required_process(
             COMMAND ninja -v
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure
-            LOGNAME config-${TARGET_TRIPLET}
+            LOGNAME ${_csc_LOGNAME}
         )
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -314,7 +328,7 @@ function(vcpkg_configure_cmake)
             vcpkg_execute_required_process(
                 COMMAND ${dbg_command}
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-                LOGNAME config-${TARGET_TRIPLET}-dbg
+                LOGNAME ${_csc_LOGNAME}-dbg
             )
         endif()
 
@@ -324,7 +338,7 @@ function(vcpkg_configure_cmake)
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-                LOGNAME config-${TARGET_TRIPLET}-rel
+                LOGNAME ${_csc_LOGNAME}-rel
             )
         endif()
     endif()

@@ -7,6 +7,7 @@
 #include <vcpkg/buildenvironment.h>
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/dependencies.h>
+#include <vcpkg/portfileprovider.h>
 
 using namespace vcpkg;
 using vcpkg::Optional;
@@ -84,17 +85,29 @@ namespace vcpkg::CMakeVars
         {
             emitted_triplets[spec_abi_setting.first->package_spec.triplet()] = emitted_triplet_id++;
         }
+
         Strings::append(extraction_file, "macro(vcpkg_triplet_file VCPKG_TRIPLET_ID)\n");
+        Strings::append(extraction_file,
+                        "set(_vcpkg_triplet_file_BACKUP_CURRENT_LIST_FILE \"${CMAKE_CURRENT_LIST_FILE}\")\n");
+
         for (auto& p : emitted_triplets)
         {
-            Strings::append(extraction_file,
-                            "if(VCPKG_TRIPLET_ID EQUAL ",
-                            p.second,
-                            ")\n",
-                            fs.read_contents(paths.get_triplet_file_path(p.first), VCPKG_LINE_INFO),
-                            "\nendif()\n");
+            auto path_to_triplet = paths.get_triplet_file_path(p.first);
+            Strings::append(extraction_file, "if(VCPKG_TRIPLET_ID EQUAL ", p.second, ")\n");
+            Strings::append(
+                extraction_file, "set(CMAKE_CURRENT_LIST_FILE \"", fs::generic_u8string(path_to_triplet), "\")\n");
+            Strings::append(
+                extraction_file,
+                "get_filename_component(CMAKE_CURRENT_LIST_DIR \"${CMAKE_CURRENT_LIST_FILE}\" DIRECTORY)\n");
+            Strings::append(extraction_file, fs.read_contents(paths.get_triplet_file_path(p.first), VCPKG_LINE_INFO));
+            Strings::append(extraction_file, "\nendif()\n");
         }
+        Strings::append(extraction_file,
+                        "set(CMAKE_CURRENT_LIST_FILE \"${_vcpkg_triplet_file_BACKUP_CURRENT_LIST_FILE}\")\n");
+        Strings::append(extraction_file,
+                        "get_filename_component(CMAKE_CURRENT_LIST_DIR \"${CMAKE_CURRENT_LIST_FILE}\" DIRECTORY)\n");
         Strings::append(extraction_file, "endmacro()\n");
+
         for (const auto& spec_abi_setting : spec_abi_settings)
         {
             const FullPackageSpec& spec = *spec_abi_setting.first;

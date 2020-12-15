@@ -87,4 +87,4 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
       ArtifactName: 'failure logs for ${{ parameters.triplet }}'
-    condition: failed()
+    condition: always()

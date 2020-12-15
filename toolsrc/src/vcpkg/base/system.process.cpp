@@ -156,6 +156,12 @@ namespace vcpkg
         Checks::check_exit(VCPKG_LINE_INFO, rcode == 0, "Could not determine current executable path.");
         Checks::check_exit(VCPKG_LINE_INFO, len > 0, "Could not determine current executable path.");
         return fs::path(exePath, exePath + len - 1);
+#elif defined(__OpenBSD__)
+        const char* progname = getprogname();
+        char resolved_path[PATH_MAX];
+        auto ret = realpath(progname, resolved_path);
+        Checks::check_exit(VCPKG_LINE_INFO, ret != nullptr, "Could not determine current executable path.");
+        return fs::u8path(resolved_path);
 #else /* LINUX */
         std::array<char, 1024 * 4> buf;
         auto written = readlink("/proc/self/exe", buf.data(), buf.size());
@@ -176,6 +182,7 @@ namespace vcpkg
         : CMakeVariable(varname, fs::generic_u8string(path))
     {
     }
+    System::CMakeVariable::CMakeVariable(std::string var) : s(std::move(var)) { }
 
     std::string System::make_basic_cmake_cmd(const fs::path& cmake_tool_path,
                                              const fs::path& cmake_script,
@@ -289,7 +296,6 @@ namespace vcpkg
             L"USERDOMAIN_ROAMINGPROFILE",
             L"USERNAME",
             L"USERPROFILE",
-            L"VCPKG_DISABLE_METRICS",
             L"windir",
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
             L"http_proxy",

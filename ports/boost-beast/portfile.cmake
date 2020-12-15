@@ -3,10 +3,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/beast
-    REF boost-1.73.0
-    SHA512 b1f0d2b1a8576d8bea953ce92aa9970590f91451f19d059818eb1c7a2b21c39fe384526c65b324c6c6142f4eac9bb649bdc6b2b9eff946c7f348f11332b9753c
+    REF boost-1.74.0
+    SHA512 d4112479adb1d2f2c9a6fcd8cddb70a05a404bc25b2127ffa1ab90b0498c5fd1f17965a8e1a741f162c205d28573864240248ca94fa6d9e201b98d90ad6e890e
     HEAD_REF master
-    PATCHES 0002-beast-coroutines.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

@@ -1,0 +1,135 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6b1e8c0f2..b0ef5518d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -97,7 +97,7 @@ message("## ${OATPP_THIS_MODULE_NAME} module. Resolving dependencies...\n")
+ include(FindPkgConfig)
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/module")
+ 
+-find_package(mbedtls 2.16.0 REQUIRED)
++find_package(mbedtls 2.16.3 REQUIRED)
+ 
+ message("MBEDTLS_INCLUDE_DIR=${MBEDTLS_INCLUDE_DIR}")
+ message("MBEDTLS_TLS_LIBRARY=${MBEDTLS_TLS_LIBRARY}")
+diff --git a/cmake/module/Findmbedtls.cmake b/cmake/module/Findmbedtls.cmake
+index 8c76d0a73..5c223a615 100644
+--- a/cmake/module/Findmbedtls.cmake
++++ b/cmake/module/Findmbedtls.cmake
+@@ -14,10 +14,10 @@ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ 
+-FindmbedTLS
++Findmbedtls
+ ------------
+ 
+-Find the mbedTLS encryption library.
++Find the mbedtls encryption library.
+ 
+ Optional Components
+ ^^^^^^^^^^^^^^^^^^^
+@@ -31,16 +31,16 @@ Imported Targets
+ This module defines the following imported targets:
+ 
+ mbedtls::Crypto
+-    The mbedTLS crypto library, if found.
++    The mbedtls crypto library, if found.
+ 
+ mbedtls::X509
+-    The mbedTLS x509 library, if found.
++    The mbedtls x509 library, if found.
+ 
+ mbedtls::SSL
+-    The mbedTLS ssl library, if found. Requires and includes mbedtls::Crypto automatically.
++    The mbedtls ssl library, if found. Requires and includes mbedtls::Crypto automatically.
+ 
+ mbedtls::TLS
+-    The mbedTLS tls library, if found. Requires and includes mbedtls::SSL and mbedtls::Crypto automatically.
++    The mbedtls tls library, if found. Requires and includes mbedtls::SSL and mbedtls::Crypto automatically.
+ 
+ Result Variables
+ ^^^^^^^^^^^^^^^^
+@@ -48,26 +48,26 @@ Result Variables
+ This module will set the following variables in your project:
+ 
+ MBEDTLS_FOUND
+-    System has the mbedTLS library. If no components are requested it only requires the crypto library.
++    System has the mbedtls library. If no components are requested it only requires the crypto library.
+ MBEDTLS_INCLUDE_DIR
+-    The mbedTLS include directory.
++    The mbedtls include directory.
+ MBEDTLS_X509_LIBRARY
+-    The mbedTLS crypto library.
++    The mbedtls crypto library.
+ MBEDTLS_CRYPTO_LIBRARY
+-    The mbedTLS crypto library.
++    The mbedtls crypto library.
+ MBEDTLS_SSL_LIBRARY
+-    The mbedTLS SSL library.
++    The mbedtls SSL library.
+ MBEDTLS_TLS_LIBRARY
+-    The mbedTLS TLS library.
++    The mbedtls TLS library.
+ MBEDTLS_LIBRARIES
+-    All mbedTLS libraries.
++    All mbedtls libraries.
+ MBEDTLS_VERSION
+     This is set to $major.$minor.$revision (e.g. 2.6.8).
+ 
+ Hints
+ ^^^^^
+ 
+-Set MBEDTLS_ROOT_DIR to the root directory of an mbedTLS installation.
++Set MBEDTLS_ROOT_DIR to the root directory of an mbedtls installation.
+ 
+ ]=======================================================================]
+ 
+@@ -175,7 +175,7 @@ if(MBEDTLS_INCLUDE_DIR AND EXISTS "${MBEDTLS_INCLUDE_DIR}/mbedtls/version.h")
+ endif()
+ 
+ # Set Find Package Arguments
+-find_package_handle_standard_args(mbedTLS
++find_package_handle_standard_args(mbedtls
+         REQUIRED_VARS
+         MBEDTLS_X509_LIBRARY
+         MBEDTLS_TLS_LIBRARY
+@@ -185,12 +185,12 @@ find_package_handle_standard_args(mbedTLS
+         MBEDTLS_VERSION
+         HANDLE_COMPONENTS
+         FAIL_MESSAGE
+-        "Could NOT find mbedTLS, try setting the path to mbedTLS using the MBEDTLS_ROOT_DIR environment variable"
++        "Could NOT find mbedtls, try setting the path to mbedtls using the MBEDTLS_ROOT_DIR environment variable"
+         )
+ 
+-# mbedTLS Found
+-if(MBEDTLS_FOUND)
+-
++# mbedtls Found
++if(mbedtls_FOUND)
++    set(MBEDTLS_FOUND ${mbedtls_FOUND})
+     # Set mbedtls::Crypto
+     if(NOT TARGET mbedtls::Crypto AND EXISTS "${MBEDTLS_CRYPTO_LIBRARY}")
+ 
+@@ -257,4 +257,4 @@ if(MBEDTLS_FOUND)
+ 
+     endif() # mbedtls::TLS
+ 
+-endif(MBEDTLS_FOUND)
++endif(mbedtls_FOUND)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 6811f05ea..d80430c3e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -31,9 +31,9 @@ target_include_directories(${OATPP_THIS_MODULE_NAME}
+ )
+ 
+ target_link_libraries(${OATPP_THIS_MODULE_NAME}
+-        PRIVATE mbedtls::TLS
+-        PRIVATE mbedtls::X509
+-        PRIVATE mbedtls::Crypto
++        PRIVATE ${MBEDTLS_TLS_LIBRARY}
++        PRIVATE ${MBEDTLS_X509_LIBRARY}
++        PRIVATE ${MBEDTLS_CRYPTO_LIBRARY}
+ )
+ 
+ if(${OATPP_MBEDTLS_DEBUG} GREATER 0)

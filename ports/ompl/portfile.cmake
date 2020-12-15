@@ -2,12 +2,15 @@ vcpkg_buildpath_length_warning(37)
 
 set(OMPL_VERSION 1.5.0)
 
+set(FEATURE_PATCHES)
+
 if("app" IN_LIST FEATURES)
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/ompl/omplapp/releases/download/1.5.0/omplapp-1.5.0-Source.tar.gz"
         FILENAME "omplapp-${OMPL_VERSION}.tar.gz"
         SHA512 ad221b67146915cb63be6731ca2fa7d827d85b7fd175d87ee64c799311dfe4878935881b1ae6447357fdd178f70c9aa01b178e857261a8d8769affa1e58ed72b
     )
+    list(APPEND FEATURE_PATCHES fix_dependency.patch)
 else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/ompl/ompl/archive/1.5.0.tar.gz"
@@ -20,6 +23,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${OMPL_VERSION}
+    PATCHES ${FEATURE_PATCHES}
 )
 
 # Based on selected features different files get downloaded, so use the following command instead of patch.

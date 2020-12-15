@@ -267,6 +267,55 @@ bool Strings::contains(StringView haystack, StringView needle)
     return Strings::search(haystack, needle) != haystack.end();
 }
 
+size_t Strings::byte_edit_distance(StringView a, StringView b)
+{
+    static constexpr size_t max_string_size = 100;
+    // For large strings, give up early to avoid performance problems
+    if (a.size() > max_string_size || b.size() > max_string_size)
+    {
+        if (a == b)
+            return 0;
+        else
+            return std::max(a.size(), b.size());
+    }
+    if (a.size() == 0 || b.size() == 0) return std::max(a.size(), b.size());
+
+    auto pa = a.data();
+    auto pb = b.data();
+    size_t sa = a.size();
+    size_t sb = b.size();
+
+    // Levenshtein distance (https://en.wikipedia.org/wiki/Levenshtein_distance)
+    // The first row of the edit distance matrix has been omitted because it's trivial (counting from 0)
+    // Because each subsequent row only depends on the row above, we never need to store the entire matrix
+    char d[max_string_size];
+
+    // Useful invariants:
+    //   `sa` is sizeof `pa` using iterator `ia`
+    //   `sb` is sizeof `pb` using iterator `ib`
+    //   `sa` and `sb` are in (0, `max_string_size`]
+
+    // To avoid dealing with edge effects, `ia` == 0 and `ib` == 0 have been unrolled.
+    // Comparisons are used as the cost for the diagonal action (substitute/leave unchanged)
+    d[0] = pa[0] != pb[0];
+    for (size_t ia = 1; ia < sa; ++ia)
+        d[ia] = std::min<char>(d[ia - 1] + 1, static_cast<char>(ia + (pa[ia] != pb[0])));
+
+    for (size_t ib = 1; ib < sb; ++ib)
+    {
+        // The diagonal information (d[ib-1][ia-1]) is used to compute substitution cost and so must be preserved
+        char diag = d[0];
+        d[0] = std::min<char>(d[0] + 1, static_cast<char>(ib + (pa[0] != pb[ib])));
+        for (size_t ia = 1; ia < sa; ++ia)
+        {
+            auto subst_or_add = std::min<char>(d[ia - 1] + 1, static_cast<char>(diag + (pa[ia] != pb[ib])));
+            diag = d[ia];
+            d[ia] = std::min<char>(d[ia] + 1, subst_or_add);
+        }
+    }
+    return d[sa - 1];
+}
+
 namespace vcpkg::Strings
 {
     namespace
