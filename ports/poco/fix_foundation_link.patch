@@ -1,0 +1,24 @@
+diff --git a/Foundation/src/Environment_WIN32U.cpp b/Foundation/src/Environment_WIN32U.cpp
+index 624ff83c8..2a6ad7328 100644
+--- a/Foundation/src/Environment_WIN32U.cpp
++++ b/Foundation/src/Environment_WIN32U.cpp
+@@ -24,6 +24,7 @@
+ #include <ws2ipdef.h>
+ #include <iphlpapi.h>
+ 
++#pragma comment(lib, "iphlpapi.lib")
+ 
+ namespace Poco {
+ 
+diff --git a/Foundation/src/Environment_WINCE.cpp b/Foundation/src/Environment_WINCE.cpp
+index afa59b68d..c003d1f18 100644
+--- a/Foundation/src/Environment_WINCE.cpp
++++ b/Foundation/src/Environment_WINCE.cpp
+@@ -23,6 +23,7 @@
+ #include <windows.h>
+ #include <iphlpapi.h>
+ 
++#pragma comment(lib, "iphlpapi.lib")
+ 
+ namespace Poco {
+ 
