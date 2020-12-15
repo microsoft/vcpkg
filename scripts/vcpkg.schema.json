@@ -1,6 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
   "title": "Vcpkg manifest",
   "description": "Vcpkg manifest file. See https://github.com/microsoft/vcpkg/blob/master/docs/specifications/manifests.md.",
   "definitions": {
