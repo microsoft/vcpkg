@@ -2,7 +2,7 @@ import toolset ;
 
 if "@VCPKG_PLATFORM_TOOLSET@" != "external"
 {
-    using msvc : : cl.exe
+    using msvc : @MSVC_VERSION@ : cl.exe
         :
         <setup>"@NOTHING_BAT@"
         @TOOLSET_OPTIONS@
