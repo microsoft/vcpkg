@@ -47,7 +47,7 @@ stages:
   - job:
     dependsOn: ClangFormat
     condition: failed()
-    displayName: 'Publish Artifact: C++ Formatting diff'
+    displayName: 'Publish C++ Diff'
     steps:
     - task: PublishBuildArtifacts@1
       inputs:
