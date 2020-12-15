@@ -1,18 +1,22 @@
-vcpkg_fail_port_install(ON_TARGET "UWP" "OSX" "Linux")
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO smoked-herring/sail
-    REF v0.9.0-pre10
-    SHA512 d38a3c7d33495c84d7ada91a4131d32ce61f3fdf32a7e0631b28e7d8492fa4cb672eea09ef8cf0272dabd57f640b090749e3ecd863be577af2b98763873dc57d
-    HEAD_REF master
+    REF 593269c5cd
+    SHA512 fba2c7cde47952a7c0474ef23f1e6f05f5c1f50e533ea6d7e3778126987d114b386ff79000148439c7dc318f8a6133175efbe308ee6ce03fa9d80847bbf78023
+    HEAD_REF feature/static
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SAIL_STATIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DSAIL_VCPKG_PORT=ON
+        -DSAIL_STATIC=${SAIL_STATIC}
+        -DSAIL_COMBINE_CODECS=ON
         -DSAIL_BUILD_EXAMPLES=OFF
         -DSAIL_BUILD_TESTS=OFF
 )
@@ -24,10 +28,6 @@ vcpkg_copy_pdbs()
 # Remove duplicate files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
                     ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# Move codecs
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sail       ${CURRENT_PACKAGES_DIR}/bin/sail)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sail ${CURRENT_PACKAGES_DIR}/debug/bin/sail)
 
 # Move cmake configs
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sail)
