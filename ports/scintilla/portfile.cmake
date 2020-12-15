@@ -24,7 +24,8 @@ vcpkg_extract_source_archive_ex(
 vcpkg_install_msbuild(
   SOURCE_PATH ${SOURCE_PATH}
   PROJECT_SUBPATH Win32/SciLexer.vcxproj
-  INCLUDES_SUBPATH include
   LICENSE_SUBPATH License.txt
-  ALLOW_ROOT_INCLUDES
 )
+
+file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include/scintilla)
+
