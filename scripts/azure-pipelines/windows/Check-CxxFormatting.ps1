@@ -14,16 +14,25 @@ $Root = Resolve-Path -LiteralPath $Root
 # This is like Resolve-Path, but it also allows DiffOutput to not exist
 $DiffOutput = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($DiffOutput)
 
-$clangFormat = (Get-Command 'clang-format').Source
-if (-not (Test-Path $clangFormat) -and $IsWindows)
+$clangFormat = Get-Command 'clang-format' -ErrorAction 'SilentlyContinue'
+if ($null -ne $clangFormat)
 {
-    $clangFormat = 'C:\Program Files\LLVM\bin\clang-format.exe'
+    $clangFormat = $clangFormat.Source
 }
-if (-not (Test-Path $clangFormat) -and $IsWindows)
+
+if ($IsWindows)
 {
-    $clangFormat = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\Llvm\x64\bin\clang-format.exe'
+    if ([String]::IsNullOrEmpty($clangFormat) -or -not (Test-Path $clangFormat))
+    {
+        $clangFormat = 'C:\Program Files\LLVM\bin\clang-format.exe'
+    }
+    if (-not (Test-Path $clangFormat))
+    {
+        $clangFormat = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\Llvm\x64\bin\clang-format.exe'
+    }
 }
-if (-not (Test-Path $clangFormat))
+
+if ([String]::IsNullOrEmpty($clangFormat) -or -not (Test-Path $clangFormat))
 {
     Write-Error 'clang-format not found; is it installed?'
     throw
