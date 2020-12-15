@@ -7,7 +7,9 @@ vcpkg_from_gitlab(
     REF 3.3.9
     SHA512 16244cc89f2e1879543232b965cbf653b3ccf10e967c8c437a41e27d8320392bdf584d8c24b8a97406ab7d1481d5154da74e0702ec1334ae6a46de83f4573a46
     HEAD_REF master
-    PATCHES eigen3_3_3_9.patch fix-cuda-error.patch # issue https://gitlab.com/libeigen/eigen/-/issues/1526
+    PATCHES
+        disable_pkgconfig_absolute_path_check.patch
+        fix-cuda-error.patch # issue https://gitlab.com/libeigen/eigen/-/issues/1526
 )
 
 vcpkg_configure_cmake(
