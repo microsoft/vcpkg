@@ -25,7 +25,7 @@ else
 # Optionally clear this array when moving to a new boost version
 $port_versions = @{
     #e.g.  "asio" = 1;
-    "locale" = 1;
+    "locale" = 3;
 }
 
 $per_port_data = @{
@@ -328,7 +328,7 @@ foreach ($library in $libraries)
             elseif ($_ -match "none|none_t") { "optional" }
             elseif ($_ -eq "limits") { "compatibility" }
             elseif ($_ -match "cstdfloat|math_fwd") { "math" }
-            elseif ($_ -eq "cast") { "conversion"; "numeric_conversion" } # DEPRECATED header file, includes <boost/polymorphic_cast.hpp> and <boost/numeric/conversion/cast.hpp> 
+            elseif ($_ -eq "cast") { "conversion"; "numeric_conversion" } # DEPRECATED header file, includes <boost/polymorphic_cast.hpp> and <boost/numeric/conversion/cast.hpp>
             elseif ($_ -match "polymorphic_cast|implicit_cast") { "conversion" }
             elseif ($_ -eq "nondet_random") { "random" }
             elseif ($_ -eq "memory_order") { "atomic" }
@@ -400,7 +400,7 @@ foreach ($library in $libraries)
         }
         elseif ($library -eq "locale")
         {
-            $deps += @("libiconv (!uwp&!windows)", "boost-system")
+            $deps += @("libiconv (!uwp&!windows&!mingw)", "boost-system")
         }
         elseif ($library -eq "asio")
         {
