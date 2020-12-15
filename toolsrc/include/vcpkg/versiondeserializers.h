@@ -22,6 +22,9 @@ namespace vcpkg
 
     struct SchemedVersion
     {
+        SchemedVersion() = default;
+        SchemedVersion(Versions::Scheme scheme_, VersionT versiont_) : scheme(scheme_), versiont(versiont_) {}
+
         Versions::Scheme scheme = Versions::Scheme::String;
         VersionT versiont;
     };
