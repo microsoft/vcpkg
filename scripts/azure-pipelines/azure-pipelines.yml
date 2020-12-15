@@ -7,12 +7,12 @@ variables:
   osx-pool: 'PrOsx-2020-09-28'
 
 stages:
-- stage: check_cxx_formatting
-  displayName: 'Check the formatting of the C++'
+- stage: FormatChecks
+  displayName: 'Formatting Checks'
   pool: $(windows-pool)
   jobs:
-  - job:
-    displayName: 'Check C++ Formatting'
+  - job: ClangFormat
+    displayName: 'Check C++'
     workspace:
       clean: resources
     steps:
@@ -21,48 +21,46 @@ stages:
         filePath: 'scripts/azure-pipelines/windows/Check-CxxFormatting.ps1'
         arguments: '-Root . -DiffOutput $(Build.ArtifactStagingDirectory)\clang-format.diff'
         pwsh: true
+  - job: Manifests
+    displayName: 'Check Port Manifests'
+    pool: $(windows-pool)
+    variables:
+    - name: VCPKG_DOWNLOADS
+      value: D:\downloads
+    jobs:
+    - job:
+      workspace:
+        clean: resources
+      steps:
+      - task: Powershell@2
+        displayName: 'Check port manifest Formatting'
+        inputs:
+          filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
+          arguments: '-Root .'
+          pwsh: true
+  - job: DocumentationGeneration
+    displayName: 'Check Documentation Generation'
+    pool: $(windows-pool)
+    jobs:
+    - job:
+      workspace:
+        clean: resources
+      steps:
+      - task: Powershell@2
+        displayName: 'Check documentation generation'
+        inputs:
+          filePath: 'scripts/azure-pipelines/windows/Check-CMakeFunctionDocumentation.ps1'
+          arguments: '-Root .'
+          pwsh: true
   - job:
+    dependsOn: ClangFormat
     condition: failed()
-    displayName: 'Publish Artifact: diff from clang-format'
+    displayName: 'Publish Artifact: C++ Formatting diff'
     steps:
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: diff from clang-format'
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)\clang-format.diff'
         ArtifactName: 'clang-format.diff'
-- stage: check_manifest_formatting
-  displayName: Check the formatting of port manifests
-  pool: $(windows-pool)
-  dependsOn: []
-  variables:
-  - name: VCPKG_DOWNLOADS
-    value: D:\downloads
-  jobs:
-  - job:
-    workspace:
-      clean: resources
-    steps:
-    - task: Powershell@2
-      displayName: 'Check port manifest Formatting'
-      inputs:
-        filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
-        arguments: '-Root .'
-        pwsh: true
-- stage: check_documentation_generation
-  displayName: Check if the documentation has been regenerated correctly
-  pool: $(windows-pool)
-  dependsOn: []
-  jobs:
-  - job:
-    workspace:
-      clean: resources
-    steps:
-    - task: Powershell@2
-      displayName: 'Check documentation generation'
-      inputs:
-        filePath: 'scripts/azure-pipelines/windows/Check-CMakeFunctionDocumentation.ps1'
-        arguments: '-Root .'
-        pwsh: true
 - stage: run_port_ci
   displayName: 'Run the Port CI'
   dependsOn:
