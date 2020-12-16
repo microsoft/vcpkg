@@ -21,6 +21,12 @@ stages:
         filePath: 'scripts/azure-pipelines/windows/Check-CxxFormatting.ps1'
         arguments: '-Root . -DiffOutput $(Build.ArtifactStagingDirectory)\clang-format.diff'
         pwsh: true
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish C++ Diff'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\clang-format.diff'
+        ArtifactName: 'clang-format.diff'
+      condition: failed()
   - job: Manifests
     displayName: 'Port Manifests'
     workspace:
@@ -44,15 +50,6 @@ stages:
         filePath: 'scripts/azure-pipelines/windows/Check-CMakeFunctionDocumentation.ps1'
         arguments: '-Root .'
         pwsh: true
-  - job:
-    dependsOn: ClangFormat
-    condition: failed()
-    displayName: 'Publish C++ Diff'
-    steps:
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\clang-format.diff'
-        ArtifactName: 'clang-format.diff'
 - stage: run_port_ci
   displayName: 'Run the Port CI'
   dependsOn: FormatChecks

@@ -68,7 +68,6 @@ try
             $msg += "You can access the diff from clang-format.diff in the build artifacts,"
             $msg += 'and apply the patch with `git apply`'
             # in order to avoid mangling diff output with `r`n
-            $msg += "(debug): Writing git diff to $DiffOutput"
             Start-Process -FilePath 'git' -ArgumentList 'diff' `
                 -NoNewWindow -Wait `
                 -RedirectStandardOutput $DiffOutput
