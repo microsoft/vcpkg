@@ -6,23 +6,23 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
   message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
 endif()
 
-set(OPENCV_VERSION "4.3.0")
+set(OPENCV_VERSION "4.5.0")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 ac22b41fffa3e3138701fa0df0d19900b3ce72e168f4478ecdc593c5c9fd004b4b1b26612d62c25b681db99a8720db7a11b5b224e576e595624965fa79b0f383
+    SHA512 c34100f3f3fe45f2115975350d23288a3badb32864ba0cbd32512387416d1cf10d16d3ef5f3d089d6a1c2be587d788d33997513fc015dbf7d774a622f2d3811f
     HEAD_REF master
     PATCHES
-      0001-disable-downloading.patch
-      0002-install-options.patch
-      0003-force-package-requirements.patch
-      0004-fix-policy-CMP0057.patch
-      0006-jpeg2000_getref.patch
-      0008-fix-vtk9.patch
-      0009-fix-uwp.patch
-      0010-fix-interface_link_libraries.patch # Remove this patch when the next update
+      #0001-disable-downloading.patch
+      #0002-install-options.patch
+      #0003-force-package-requirements.patch
+      #0004-fix-policy-CMP0057.patch
+      #0006-jpeg2000_getref.patch
+      #0008-fix-vtk9.patch
+      #0009-fix-uwp.patch
+      #0010-fix-interface_link_libraries.patch # Remove this patch when the next update
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
@@ -135,11 +135,11 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF ${OPENCV_VERSION}
-    SHA512 cfeda06a9f86ccaedbca9521c35bf685c3d8d3a182fb943f9378a7ecd1949d6e2e9df1673f0e3e9686840ca4c9e5a8e8cf2ac962a33b6e1f88f8278abd8c37e5
+    SHA512 b2ae72e920c78472fd677281b8dd6f25872399d8ade97b0d3b0fc50bbabea8c00ea849d87bfb311ac148cef663481d0c89c0f6875578c052c1cc7ddcd70e6e17
     HEAD_REF master
     PATCHES
-      0005-add-missing-stdexcept-include.patch
-      0007-fix-vtk9-contrib.patch
+      #0005-add-missing-stdexcept-include.patch
+      #0007-fix-vtk9-contrib.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
