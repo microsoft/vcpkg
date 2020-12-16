@@ -109,7 +109,7 @@ namespace vcpkg
                 Checks::unreachable(VCPKG_LINE_INFO);
         }
 
-        return SchemedVersion{version_scheme, {version, port_version}};
+        return SchemedVersion(version_scheme, VersionT{version, port_version});
     }
 
     View<StringView> schemed_deserializer_fields()

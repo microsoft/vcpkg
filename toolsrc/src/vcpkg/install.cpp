@@ -437,13 +437,14 @@ namespace vcpkg::Install
         SpecSummary* current_summary = nullptr;
         Chrono::ElapsedTimer build_timer = Chrono::ElapsedTimer::create_started();
 
-        TrackedPackageInstallGuard(const size_t package_count,
+        TrackedPackageInstallGuard(const size_t action_index,
+                                   const size_t action_count,
                                    std::vector<SpecSummary>& results,
                                    const PackageSpec& spec)
         {
             results.emplace_back(spec, nullptr);
             current_summary = &results.back();
-            System::printf("Starting package %zd/%zd: %s\n", results.size(), package_count, spec.to_string());
+            System::printf("Starting package %zd/%zd: %s\n", action_index, action_count, spec.to_string());
         }
 
         ~TrackedPackageInstallGuard()
@@ -467,12 +468,13 @@ namespace vcpkg::Install
                            const CMakeVars::CMakeVarProvider& var_provider)
     {
         std::vector<SpecSummary> results;
-        const size_t package_count = action_plan.remove_actions.size() + action_plan.install_actions.size();
+        const size_t action_count = action_plan.remove_actions.size() + action_plan.install_actions.size();
+        size_t action_index = 1;
 
         const auto timer = Chrono::ElapsedTimer::create_started();
         for (auto&& action : action_plan.remove_actions)
         {
-            TrackedPackageInstallGuard this_install(package_count, results, action.spec);
+            TrackedPackageInstallGuard this_install(action_index++, action_count, results, action.spec);
             Remove::perform_remove_plan_action(paths, action, Remove::Purge::YES, &status_db);
         }
 
@@ -490,7 +492,7 @@ namespace vcpkg::Install
 
         for (auto&& action : action_plan.install_actions)
         {
-            TrackedPackageInstallGuard this_install(package_count, results, action.spec);
+            TrackedPackageInstallGuard this_install(action_index++, action_count, results, action.spec);
             auto result =
                 perform_install_plan_action(args, paths, action, status_db, binaryprovider, build_logs_recorder);
             if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
@@ -840,8 +842,8 @@ namespace vcpkg::Install
 
             if (args.versions_enabled())
             {
-                PortFileProvider::VersionedPortfileProvider verprovider(paths);
-                auto baseprovider = std::make_unique<PortFileProvider::BaselineProvider>(paths);
+                auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
+                auto baseprovider = PortFileProvider::make_baseline_provider(paths);
                 if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
                 {
                     paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(
@@ -849,7 +851,7 @@ namespace vcpkg::Install
                 }
 
                 auto install_plan =
-                    Dependencies::create_versioned_install_plan(verprovider,
+                    Dependencies::create_versioned_install_plan(*verprovider,
                                                                 *baseprovider,
                                                                 var_provider,
                                                                 manifest_scf.core_paragraph->dependencies,

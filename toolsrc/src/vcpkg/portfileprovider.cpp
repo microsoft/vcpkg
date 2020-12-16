@@ -297,145 +297,122 @@ namespace vcpkg::PortFileProvider
         return ret;
     }
 
-    namespace details
+    namespace
     {
-        struct VersionedPortfileProviderImpl
+        struct BaselineProviderImpl : IBaselineProvider, Util::ResourceBase
         {
-            std::map<std::string, std::unique_ptr<RegistryEntry>, std::less<void>> entry_cache;
-            std::unordered_map<VersionSpec, fs::path, Versions::VersionSpecHasher> path_cache;
-            std::unordered_map<VersionSpec, SourceControlFileLocation, Versions::VersionSpecHasher> control_cache;
+            BaselineProviderImpl(const VcpkgPaths& paths_) : paths(paths_) {}
 
-            VersionedPortfileProviderImpl(const VcpkgPaths& paths) : paths(paths) { }
-            ~VersionedPortfileProviderImpl() { }
-
-            const VcpkgPaths& get_paths() const { return paths; }
-            Files::Filesystem& get_filesystem() const { return paths.get_filesystem(); }
-
-        private:
-            const VcpkgPaths& paths;
-        };
-
-        struct BaselineProviderImpl
-        {
-            BaselineProviderImpl(const VcpkgPaths& paths) : paths(paths) { }
-            ~BaselineProviderImpl() = default;
-
-            Optional<VersionT> get_baseline_version(StringView port_name) const
+            virtual Optional<VersionT> get_baseline_version(StringView port_name) const override
             {
-                auto it = baseline_cache.find(port_name);
-                if (it != baseline_cache.end())
+                auto it = m_baseline_cache.find(port_name);
+                if (it != m_baseline_cache.end())
                 {
                     return it->second;
                 }
                 else
                 {
                     auto version = paths.get_configuration().registry_set.baseline_for_port(paths, port_name);
-                    baseline_cache.emplace(port_name.to_string(), version);
+                    m_baseline_cache.emplace(port_name.to_string(), version);
                     return version;
                 }
             }
 
         private:
-            const VcpkgPaths& paths;
-            mutable std::map<std::string, Optional<VersionT>, std::less<>> baseline_cache;
+            const VcpkgPaths& paths; // TODO: remove this data member
+            mutable std::map<std::string, Optional<VersionT>, std::less<>> m_baseline_cache;
+        };
+
+        struct VersionedPortfileProviderImpl : IVersionedPortfileProvider, Util::ResourceBase
+        {
+            VersionedPortfileProviderImpl(const VcpkgPaths& paths_) : paths(paths_) { }
+
+            virtual View<VersionT> get_port_versions(StringView port_name) const override
+            {
+                auto entry_it = m_entry_cache.find(port_name.to_string());
+                if (entry_it != m_entry_cache.end())
+                {
+                    return entry_it->second->get_port_versions();
+                }
+
+                auto entry = try_load_registry_port_and_baseline(paths, port_name.to_string());
+                if (entry.first)
+                {
+                    auto it = m_entry_cache.emplace(port_name.to_string(), std::move(entry.first));
+                    return it.first->second->get_port_versions();
+                }
+                else
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO, "Error: Could not find a definition for port %s", port_name);
+                }
+            }
+
+            ExpectedS<const SourceControlFileLocation&> get_control_file(
+                const VersionSpec& version_spec) const override
+            {
+                auto cache_it = m_control_cache.find(version_spec);
+                if (cache_it != m_control_cache.end())
+                {
+                    return cache_it->second;
+                }
+
+                auto entry_it = m_entry_cache.find(version_spec.port_name);
+                if (entry_it == m_entry_cache.end())
+                {
+                    auto reg_for_port =
+                        paths.get_configuration().registry_set.registry_for_port(version_spec.port_name);
+
+                    if (!reg_for_port)
+                    {
+                        return Strings::format("Error: no registry set up for port %s", version_spec.port_name);
+                    }
+
+                    auto entry = reg_for_port->get_port_entry(paths, version_spec.port_name);
+                    entry_it = m_entry_cache.emplace(version_spec.port_name, std::move(entry)).first;
+                }
+
+                auto maybe_path = entry_it->second->get_path_to_version(paths, version_spec.version);
+                if (!maybe_path.has_value())
+                {
+                    return std::move(maybe_path).error();
+                }
+                auto& port_directory = *maybe_path.get();
+
+                auto maybe_control_file = Paragraphs::try_load_port(paths.get_filesystem(), port_directory);
+                if (auto scf = maybe_control_file.get())
+                {
+                    if (scf->get()->core_paragraph->name == version_spec.port_name)
+                    {
+                        return m_control_cache
+                            .emplace(version_spec,
+                                    SourceControlFileLocation{std::move(*scf), std::move(port_directory)})
+                            .first->second;
+                    }
+                    return Strings::format("Error: Failed to load port from %s: names did not match: '%s' != '%s'",
+                                        fs::u8string(port_directory),
+                                        version_spec.port_name,
+                                        scf->get()->core_paragraph->name);
+                }
+
+                print_error_message(maybe_control_file.error());
+                return Strings::format(
+                    "Error: Failed to load port %s from %s", version_spec.port_name, fs::u8string(port_directory));
+            }
+
+        private:
+            const VcpkgPaths& paths; // TODO: remove this data member
+            mutable std::unordered_map<VersionSpec, SourceControlFileLocation, VersionSpecHasher> m_control_cache;
+            mutable std::map<std::string, std::unique_ptr<RegistryEntry>, std::less<>> m_entry_cache;
         };
     }
 
-    VersionedPortfileProvider::VersionedPortfileProvider(const VcpkgPaths& paths)
-        : m_impl(std::make_unique<details::VersionedPortfileProviderImpl>(paths))
+    std::unique_ptr<IBaselineProvider> make_baseline_provider(const vcpkg::VcpkgPaths& paths)
     {
-    }
-    VersionedPortfileProvider::~VersionedPortfileProvider() { }
-
-    View<VersionT> VersionedPortfileProvider::get_port_versions(StringView port_name) const
-    {
-        auto cache_it = m_impl->entry_cache.find(port_name);
-        if (cache_it != m_impl->entry_cache.end())
-        {
-            return cache_it->second->get_port_versions();
-        }
-
-        auto entry = try_load_registry_port_and_baseline(m_impl->get_paths(), port_name.to_string());
-        if (entry.first)
-        {
-            auto it = m_impl->entry_cache.emplace(port_name.to_string(), std::move(entry.first));
-            return it.first->second->get_port_versions();
-        }
-        else
-        {
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Error: Could not find a definition for port %s", port_name);
-        }
+        return std::make_unique<BaselineProviderImpl>(paths);
     }
 
-    ExpectedS<const SourceControlFileLocation&> VersionedPortfileProvider::get_control_file(
-        const VersionSpec& version_spec) const
+    std::unique_ptr<IVersionedPortfileProvider> make_versioned_portfile_provider(const vcpkg::VcpkgPaths& paths)
     {
-        auto cache_it = m_impl->control_cache.find(version_spec);
-        if (cache_it != m_impl->control_cache.end())
-        {
-            return cache_it->second;
-        }
-
-        auto path_cache_it = m_impl->path_cache.find(version_spec);
-        if (path_cache_it == m_impl->path_cache.end())
-        {
-            auto entry_it = m_impl->entry_cache.find(version_spec.port_name);
-            if (entry_it == m_impl->entry_cache.end())
-            {
-                auto reg_for_port =
-                    m_impl->get_paths().get_configuration().registry_set.registry_for_port(version_spec.port_name);
-
-                if (!reg_for_port)
-                {
-                    return Strings::format("Error: no registry set up for port %s", version_spec.port_name);
-                }
-
-                auto entry = reg_for_port->get_port_entry(m_impl->get_paths(), version_spec.port_name);
-                entry_it = m_impl->entry_cache.emplace(version_spec.port_name, std::move(entry)).first;
-            }
-
-            auto maybe_path = entry_it->second->get_path_to_version(m_impl->get_paths(), version_spec.version);
-            if (auto p = maybe_path.get())
-            {
-                path_cache_it = m_impl->path_cache.emplace(version_spec, std::move(*p)).first;
-            }
-            else
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO, maybe_path.error());
-            }
-        }
-
-        const auto& port_directory = path_cache_it->second;
-
-        auto maybe_control_file = Paragraphs::try_load_port(m_impl->get_filesystem(), port_directory);
-        if (auto scf = maybe_control_file.get())
-        {
-            if (scf->get()->core_paragraph->name == version_spec.port_name)
-            {
-                return m_impl->control_cache
-                    .emplace(version_spec, SourceControlFileLocation{std::move(*scf), std::move(port_directory)})
-                    .first->second;
-            }
-            return Strings::format("Error: Failed to load port from %s: names did not match: '%s' != '%s'",
-                                   fs::u8string(port_directory),
-                                   version_spec.port_name,
-                                   scf->get()->core_paragraph->name);
-        }
-
-        print_error_message(maybe_control_file.error());
-        return Strings::format(
-            "Error: Failed to load port %s from %s", version_spec.port_name, fs::u8string(port_directory));
-    }
-
-    BaselineProvider::BaselineProvider(const VcpkgPaths& paths)
-        : m_impl(std::make_unique<details::BaselineProviderImpl>(paths))
-    {
-    }
-
-    BaselineProvider::~BaselineProvider() = default;
-
-    Optional<VersionT> BaselineProvider::get_baseline_version(StringView port_name) const
-    {
-        return m_impl->get_baseline_version(port_name);
+        return std::make_unique<VersionedPortfileProviderImpl>(paths);
     }
 }

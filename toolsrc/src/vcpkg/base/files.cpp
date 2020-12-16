@@ -465,6 +465,14 @@ namespace vcpkg::Files
         this->write_contents(path, data, ec);
         if (ec) Checks::exit_with_message(linfo, "error writing file: %s: %s", fs::u8string(path), ec.message());
     }
+    void Filesystem::write_contents_and_dirs(const fs::path& path, const std::string& data, LineInfo linfo)
+    {
+        std::error_code ec;
+        this->write_contents_and_dirs(path, data, ec);
+        if (ec)
+            Checks::exit_with_message(
+                linfo, "error writing file and creating directories: %s: %s", fs::u8string(path), ec.message());
+    }
     void Filesystem::rename(const fs::path& oldpath, const fs::path& newpath, LineInfo linfo)
     {
         std::error_code ec;
@@ -1146,6 +1154,22 @@ namespace vcpkg::Files
                 {
                     ec = std::make_error_code(std::errc::no_space_on_device);
                 }
+            }
+        }
+
+        virtual void write_contents_and_dirs(const fs::path& file_path,
+                                             const std::string& data,
+                                             std::error_code& ec) override
+        {
+            write_contents(file_path, data, ec);
+            if (ec)
+            {
+                create_directories(file_path.parent_path(), ec);
+                if (ec)
+                {
+                    return;
+                }
+                write_contents(file_path, data, ec);
             }
         }
 
