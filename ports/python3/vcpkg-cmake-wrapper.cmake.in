@@ -54,3 +54,20 @@ if(@PythonFinder_LIBS@)
 endif()
 
 _find_package(${ARGS})
+
+if(@PythonFinder_LIBS@)
+    # Python for Windows embeds the zlib module into the core, so we have to link against it.
+    # This is a separate extension module on Unix-like platforms.
+    if(@VCPKG_TARGET_IS_WINDOWS@)
+        find_package(ZLIB)
+        if(@PythonFinder_PREFIX@_LIBRARIES)
+            list(APPEND @PythonFinder_PREFIX@_LIBRARIES ${ZLIB_LIBRARIES})
+        endif()
+        if(TARGET @PythonFinder_PREFIX@::Python)
+            set_property(TARGET @PythonFinder_PREFIX@::Python APPEND PROPERTY INTERFACE_LINK_LIBRARIES ZLIB::ZLIB)
+        endif()
+        if(TARGET @PythonFinder_PREFIX@::Module)
+            set_property(TARGET @PythonFinder_PREFIX@::Module APPEND PROPERTY INTERFACE_LINK_LIBRARIES ZLIB::ZLIB)
+        endif()
+    endif()
+endif()
