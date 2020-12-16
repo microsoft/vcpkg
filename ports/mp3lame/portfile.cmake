@@ -1,21 +1,17 @@
-include(vcpkg_common_functions)
-
 set(VERSION 3.100)
 
-vcpkg_download_distfile(ARCHIVE_FILE
-    URLS "https://downloads.sourceforge.net/project/lame/lame/${VERSION}/lame-${VERSION}.tar.gz"
-    FILENAME "lame-3.100.tar.gz"
-    SHA512 0844b9eadb4aacf8000444621451277de365041cc1d97b7f7a589da0b7a23899310afd4e4d81114b9912aa97832621d20588034715573d417b2923948c08634b
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE_FILE}
+    REPO lame/lame
     REF ${VERSION}
-    PATCHES 00001-msvc-upgrade-solution-up-to-vc11.patch
+    FILENAME "lame-${VERSION}.tar.gz"
+    SHA512 0844b9eadb4aacf8000444621451277de365041cc1d97b7f7a589da0b7a23899310afd4e4d81114b9912aa97832621d20588034715573d417b2923948c08634b
+    PATCHES
+        00001-msvc-upgrade-solution-up-to-vc11.patch
+        remove_lame_init_old_from_symbol_list.patch # deprecated https://github.com/zlargon/lame/blob/master/include/lame.h#L169
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
 	if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
 		set(platform "ARM64")
@@ -41,7 +37,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     foreach(vcxproj ${vcxprojs})
         file(READ "${SOURCE_PATH}/vc_solution/${vcxproj}" vcxproj_con)
         
-        if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        if(NOT VCPKG_CRT_LINKAGE STREQUAL dynamic)
             string(REPLACE "DLL</RuntimeLibrary>" "</RuntimeLibrary>" vcxproj_con "${vcxproj_con}")
         endif()
 
@@ -90,63 +86,35 @@ else()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(OPTIONS --enable-static=yes --enable-shared=no)
-        set(MP3LAME_LIB "libmp3lame.a")
+        set(MP3LAME_LIB "libmp3lame${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
     else()
         set(OPTIONS --enable-shared=yes --enable-static=no)
-        set(MP3LAME_LIB "libmp3lame.so")
+        if(VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX)
+            set(MP3LAME_LIB "libmp3lame${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}")
+        else()
+            set(MP3LAME_LIB "libmp3lame${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}")
+        endif()
     endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    if(NOT VCPKG_TARGET_IS_MINGW)
+        string(APPEND OPTIONS --with-pic=yes)
+    endif()
 
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        vcpkg_execute_required_process(
-            COMMAND ${SOURCE_PATH}/configure ${OPTIONS} --with-pic=yes --prefix=${CURRENT_PACKAGES_DIR}/debug
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-            LOGNAME configure-${TARGET_TRIPLET}-dbg
-        )
-        message(STATUS "Building ${TARGET_TRIPLET}-dbg")
-        vcpkg_execute_required_process(
-            COMMAND make -j install "CFLAGS=${CFLAGS}" "LDFLAGS=${LDFLAGS}"
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-            LOGNAME install-${TARGET_TRIPLET}-dbg
-        )
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        DETERMINE_BUILD_TRIPLET
+        OPTIONS ${OPTIONS}
+    )
 
-        file(REMOVE_RECURSE 
-            ${CURRENT_PACKAGES_DIR}/debug/bin
+    vcpkg_install_make()
+    file(REMOVE_RECURSE
             ${CURRENT_PACKAGES_DIR}/debug/include 
             ${CURRENT_PACKAGES_DIR}/debug/share
         )
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        vcpkg_execute_required_process(
-            COMMAND ${SOURCE_PATH}/configure ${OPTIONS} --with-pic=yes --prefix=${CURRENT_PACKAGES_DIR}
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-            LOGNAME configure-${TARGET_TRIPLET}-rel
-        )
-
-        message(STATUS "Building ${TARGET_TRIPLET}-rel")
-        vcpkg_execute_required_process(
-            COMMAND make -j install "CFLAGS=${CFLAGS}" "LDFLAGS=${LDFLAGS}"
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-            LOGNAME install-${TARGET_TRIPLET}-rel
-        )
-
-        if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-            file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-        endif()
-
-    endif()
 
 endif()
 
 file(COPY ${SOURCE_PATH}/include/lame.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/lame)
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/mp3lame/copyright COPYONLY)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in ${CURRENT_PACKAGES_DIR}/share/mp3lame/mp3lame-config.cmake @ONLY)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/mp3lame)
+configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/Config.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/mp3lame-config.cmake @ONLY)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

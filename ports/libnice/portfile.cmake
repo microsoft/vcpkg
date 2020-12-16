@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(
     ARCHIVE
     URLS "https://nice.freedesktop.org/releases/libnice-0.1.15.tar.gz"
@@ -16,6 +14,7 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS_RELEASE -DOPTIMIZE=1
     OPTIONS_DEBUG -DDEBUGGABLE=1
 )
@@ -24,7 +23,6 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libnice)
-file(COPY ${SOURCE_PATH}/COPYING.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/libnice)
-file(COPY ${SOURCE_PATH}/COPYING.MPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/libnice)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libnice/COPYING ${CURRENT_PACKAGES_DIR}/share/libnice/copyright)
+file(COPY ${SOURCE_PATH}/COPYING.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${SOURCE_PATH}/COPYING.MPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

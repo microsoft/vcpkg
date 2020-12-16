@@ -1,8 +1,12 @@
 #pragma once
 
 #include <vcpkg/base/expected.h>
+#include <vcpkg/base/json.h>
 #include <vcpkg/base/optional.h>
+
+#include <vcpkg/platform-expression.h>
 #include <vcpkg/triplet.h>
+#include <vcpkg/versions.h>
 
 namespace vcpkg::Parse
 {
@@ -19,8 +23,8 @@ namespace vcpkg
     ///
     struct PackageSpec
     {
-        PackageSpec() noexcept = default;
-        PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) {}
+        PackageSpec() = default;
+        PackageSpec(std::string name, Triplet triplet) : m_name(std::move(name)), m_triplet(triplet) { }
 
         static std::vector<PackageSpec> to_package_specs(const std::vector<std::string>& ports, Triplet triplet);
 
@@ -45,6 +49,9 @@ namespace vcpkg
         Triplet m_triplet;
     };
 
+    bool operator==(const PackageSpec& left, const PackageSpec& right);
+    inline bool operator!=(const PackageSpec& left, const PackageSpec& right) { return !(left == right); }
+
     ///
     /// <summary>
     /// Full specification of a feature. Contains all information to reference
@@ -53,7 +60,7 @@ namespace vcpkg
     ///
     struct FeatureSpec
     {
-        FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) {}
+        FeatureSpec(const PackageSpec& spec, const std::string& feature) : m_spec(spec), m_feature(feature) { }
 
         const std::string& name() const { return m_spec.name(); }
         const std::string& feature() const { return m_feature; }
@@ -96,7 +103,7 @@ namespace vcpkg
         PackageSpec package_spec;
         std::vector<std::string> features;
 
-        FullPackageSpec() noexcept = default;
+        FullPackageSpec() = default;
         explicit FullPackageSpec(PackageSpec spec, std::vector<std::string> features = {})
             : package_spec(std::move(spec)), features(std::move(features))
         {
@@ -106,6 +113,12 @@ namespace vcpkg
                                                   const std::vector<std::string>& all_features) const;
 
         static ExpectedS<FullPackageSpec> from_string(const std::string& spec_as_string, Triplet default_triplet);
+
+        bool operator==(const FullPackageSpec& o) const
+        {
+            return package_spec == o.package_spec && features == o.features;
+        }
+        bool operator!=(const FullPackageSpec& o) const { return !(*this == o); }
     };
 
     ///
@@ -121,12 +134,43 @@ namespace vcpkg
         static ExpectedS<Features> from_string(const std::string& input);
     };
 
+    struct DependencyConstraint
+    {
+        Versions::Constraint::Type type = Versions::Constraint::Type::None;
+        std::string value;
+        int port_version = 0;
+
+        friend bool operator==(const DependencyConstraint& lhs, const DependencyConstraint& rhs);
+        friend bool operator!=(const DependencyConstraint& lhs, const DependencyConstraint& rhs)
+        {
+            return !(lhs == rhs);
+        }
+    };
+
     struct Dependency
     {
-        Features depend;
-        std::string qualifier;
+        std::string name;
+        std::vector<std::string> features;
+        PlatformExpression::Expr platform;
+        DependencyConstraint constraint;
 
-        static ExpectedS<Dependency> from_string(const std::string& input);
+        Json::Object extra_info;
+
+        friend bool operator==(const Dependency& lhs, const Dependency& rhs);
+        friend bool operator!=(const Dependency& lhs, const Dependency& rhs) { return !(lhs == rhs); }
+    };
+
+    struct DependencyOverride
+    {
+        std::string name;
+        std::string version;
+        int port_version = 0;
+        Versions::Scheme version_scheme = Versions::Scheme::String;
+
+        Json::Object extra_info;
+
+        friend bool operator==(const DependencyOverride& lhs, const DependencyOverride& rhs);
+        friend bool operator!=(const DependencyOverride& lhs, const DependencyOverride& rhs) { return !(lhs == rhs); }
     };
 
     struct ParsedQualifiedSpecifier
@@ -134,16 +178,13 @@ namespace vcpkg
         std::string name;
         Optional<std::vector<std::string>> features;
         Optional<std::string> triplet;
-        Optional<std::string> qualifier;
+        Optional<PlatformExpression::Expr> platform;
     };
 
     Optional<std::string> parse_feature_name(Parse::ParserBase& parser);
     Optional<std::string> parse_package_name(Parse::ParserBase& parser);
-    ExpectedS<ParsedQualifiedSpecifier> parse_qualified_specifier(CStringView input);
+    ExpectedS<ParsedQualifiedSpecifier> parse_qualified_specifier(StringView input);
     Optional<ParsedQualifiedSpecifier> parse_qualified_specifier(Parse::ParserBase& parser);
-
-    bool operator==(const PackageSpec& left, const PackageSpec& right);
-    bool operator!=(const PackageSpec& left, const PackageSpec& right);
 }
 
 namespace std

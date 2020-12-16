@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/system.debug.h>

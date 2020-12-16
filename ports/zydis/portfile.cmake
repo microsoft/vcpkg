@@ -30,6 +30,13 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_configure_cmake(
+    SOURCE_PATH ${ZYCORE_SOURCE_PATH}
+    PREFER_NINJA
+)
+
+vcpkg_install_cmake()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(GLOB EXES ${CURRENT_PACKAGES_DIR}/bin/*.exe ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
 if(EXES)

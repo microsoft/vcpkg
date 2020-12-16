@@ -1,4 +1,5 @@
 Source: libraqm
-Version: 0.7.0-1
+Version: 0.7.0
+Port-Version: 2
 Description:  A library for complex text layout 
 Build-Depends: freetype, harfbuzz, fribidi

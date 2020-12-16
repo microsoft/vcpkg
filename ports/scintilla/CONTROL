@@ -1,4 +1,5 @@
 Source: scintilla
-Version: 4.2.3
+Version: 4.4.5
 Homepage: https://www.scintilla.org/
 Description: A free source code editing component for Win32, GTK+, and OS X
+Supports: !(uwp|linux|osx)

@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f458c35..8035507 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -124,3 +124,11 @@ INSTALL(FILES
+   src/gtsconfig.h
+   DESTINATION include COMPONENT Development
+   )
++
++set(prefix ${CMAKE_INSTALL_PREFIX})
++set(exec_prefix ${CMAKE_INSTALL_PREFIX})
++set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
++set(includedir ${CMAKE_INSTALL_PREFIX}/include)
++
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gts.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gts.pc" @ONLY)
++install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gts.pc" DESTINATION lib/pkgconfig)
+\ No newline at end of file
+diff --git a/gts.pc.in b/gts.pc.in
+index 39626d7..bcd4014 100644
+--- a/gts.pc.in
++++ b/gts.pc.in
+@@ -7,5 +7,5 @@ Name: GTS
+ Description: GNU Triangulated Surface Library
+ Version: @VERSION@
+ Requires: glib-2.0,gthread-2.0,gmodule-2.0
+-Libs: -L${libdir} @LIBS@ -lgts -lm
++Libs: -L${libdir} @LIBS@ -lgts
+ Cflags: -I${includedir}

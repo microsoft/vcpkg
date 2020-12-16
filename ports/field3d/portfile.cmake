@@ -1,26 +1,28 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
-if (VCPKG_TARGET_IS_WINDOWS)
-	message(FATAL_ERROR "Windows is currently not supported.")
-elseif (TRIPLET_SYSTEM_ARCH MATCHES "arm")
-    message(FATAL_ERROR "ARM is currently not supported.")
-elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO imageworks/Field3D
-    REF v1.7.2
-    SHA512 e4ea51310105980f759dce48830db8ae3592ce32a02b246214d8aed9df7a7f5c500314f2daf92196b7a76d648f2909b18112df4c5c3c8949c0676d710dfbf1f2
+    REF 0cf75ad982917e0919f59e5cb3d483517d06d7da
+    SHA512 e6f137013dd7b64b51b2ec3cc3ed8f4dbfadb85858946f08393653d78136cf8f93ae124716db11358e325c5e64ba04802afd4b89ca36ad65a14dd3db17f3072c
     HEAD_REF master
     PATCHES
-        fix-build_error.patch
+        0001_fix_build_errors.patch
+        0002_improve_win_compatibility.patch
+        0003_hdf5_api.patch # Switches the HDF5 default API for this port to 1.10
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake/FindILMBase.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        "-DINSTALL_DOCS:BOOL=OFF"
 )
 
 vcpkg_install_cmake()
@@ -30,6 +32,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING ${SOURCE_PATH}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/field3d)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/field3d/COPYING ${CURRENT_PACKAGES_DIR}/share/field3d/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

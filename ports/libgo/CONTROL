@@ -1,4 +1,5 @@
 Source: libgo
-Version: 2.8-2
-Build-Depends: boost-context
+Version: 3.1-1
+Homepage: https://github.com/yyzybb537/libgo
 Description: The best stackful coroutine by c++11.
+Supports: !(arm|uwp)

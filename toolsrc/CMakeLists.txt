@@ -1,171 +1,173 @@
 cmake_minimum_required(VERSION 3.14)
 
-project(vcpkg C CXX)
+project(vcpkg CXX)
+include(cmake/utilities.cmake)
 
-OPTION(DEFINE_DISABLE_METRICS "Option for disabling metrics" OFF)
-OPTION(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang" OFF)
-OPTION(VCPKG_DEVELOPMENT_WARNINGS "Option for turning on all warnings, and making them errors" ON)
-OPTION(BUILD_TESTING "Option for enabling testing" ON)
-OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF)
+# ===============
+# === Options ===
+# ===============
 
-# for backwards compatibility with existing code
-if (WERROR)
-    set(VCPKG_DEVELOPMENT_WARNINGS On)
+include(CMakeDependentOption)
+
+option(BUILD_TESTING "Option for enabling testing" ON)
+option(VCPKG_DISABLE_METRICS "Option for disabling metrics" OFF)
+option(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang, even versions that we don't know will work" OFF)
+option(VCPKG_DEVELOPMENT_WARNINGS "Option for turning on all warnings" ON)
+option(VCPKG_WARNINGS_AS_ERRORS "Set warnings to be errors" ${VCPKG_DEVELOPMENT_WARNINGS})
+option(VCPKG_BUILD_FUZZING "Option for enabling vcpkg-fuzz support" OFF)
+
+CMAKE_DEPENDENT_OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF
+    "BUILD_TESTING" OFF)
+
+if(WERROR)
+    message(DEPRECATION "-DWERROR is no longer a supported flag. It doesn't do anything.")
+endif()
+if(DEFINE_DISABLE_METRICS)
+    message(DEPRECATION "DEFINE_DISABLE_METRICS is now called VCPKG_DISABLE_METRICS.")
+    set(VCPKG_DISABLE_METRICS ${DEFINE_DISABLE_METRICS} CACHE BOOL "Option for disabling metrics" FORCE)
 endif()
 
+# =============
+# === Files ===
+# =============
 
-if (DEFINE_DISABLE_METRICS)
-    set(DISABLE_METRICS_VALUE "1")
-else()
-    set(DISABLE_METRICS_VALUE "0")
-endif()
+file(GLOB VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
+file(GLOB VCPKGLIB_BASE_SOURCES CONFIGURE_DEPENDS src/vcpkg/base/*.cpp)
+file(GLOB VCPKGLIB_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h include/vcpkg/fwd/*.h)
+file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h include/vcpkg/base/fwd/*.h)
 
-if(CMAKE_COMPILER_IS_GNUXX OR CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    set(GCC 1)
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang")
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "11.0.0")
-        set(CLANG 1)
-        # Disable linking with libc++fs because this features are added in libc++ library
-        set(NO_LIBCXXFS 1)
-    elseif(NOT VCPKG_ALLOW_APPLE_CLANG)
-        message(FATAL_ERROR
-"Building the vcpkg tool requires support for the C++ Filesystem TS.
-Apple clang versions 10.01 and below do not have support for it.
-Please install gcc6 or newer from homebrew (brew install gcc@6).
-If you would like to try anyway, pass --allowAppleClang to bootstrap.sh.")
-    else()
-        set(CLANG 1)
+set(VCPKG_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkg.cpp)
+
+file(GLOB VCPKG_TEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
+file(GLOB VCPKG_TEST_INCLUDES CONFIGURE_DEPENDS include/vcpkg-test/*.h)
+
+file(GLOB VCPKG_FUZZ_SOURCES CONFIGURE_DEPENDS src/vcpkg-fuzz/*.cpp)
+
+# ========================
+# === System detection ===
+# ========================
+
+vcpkg_detect_compiler()
+vcpkg_detect_standard_library()
+vcpkg_detect_std_filesystem()
+
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 17)
+if(MSVC)
+    string(REGEX REPLACE "[-/]W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    if (CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /guard:cf")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG /debugtype:cv,fixup /guard:cf")
     endif()
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "[Cc]lang")
-    set(CLANG 1)
-    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "9.0.0")
-        set(NO_LIBCXXFS 1)
-        add_compile_definitions(_LIBCPP_NO_EXPERIMENTAL_DEPRECATION_WARNING_FILESYSTEM=1)
-    endif()
-elseif(NOT MSVC)
-    message(FATAL_ERROR "Unknown compiler: ${CMAKE_CXX_COMPILER_ID}")
 endif()
+
+if(APPLE)
+    SET(CMAKE_C_ARCHIVE_CREATE   "<CMAKE_AR> Scr <TARGET> <LINK_FLAGS> <OBJECTS>")
+    SET(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> Scr <TARGET> <LINK_FLAGS> <OBJECTS>")
+    SET(CMAKE_C_ARCHIVE_FINISH   "<CMAKE_RANLIB> -no_warning_for_no_symbols -c <TARGET>")
+    SET(CMAKE_CXX_ARCHIVE_FINISH "<CMAKE_RANLIB> -no_warning_for_no_symbols -c <TARGET>")
+endif()
+
+# ===============
+# === Targets ===
+# ===============
+
+# === Target: vcpkglib ===
+
+add_library(vcpkglib
+    ${VCPKGLIB_BASE_SOURCES}
+    ${VCPKGLIB_SOURCES}
+    ${VCPKGLIB_BASE_INCLUDES}
+    ${VCPKGLIB_INCLUDES})
+target_include_directories(vcpkglib PUBLIC include)
+
+vcpkg_target_add_warning_options(vcpkglib)
+target_compile_definitions(vcpkglib PUBLIC
+    VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
+target_link_libraries(vcpkglib PRIVATE Threads::Threads)
 
-add_definitions(-DDISABLE_METRICS=${DISABLE_METRICS_VALUE})
-include_directories(include)
-link_libraries(Threads::Threads)
-
-if(CLANG AND NOT MSVC)
-    include(CheckCXXSourceCompiles)
-    check_cxx_source_compiles("#include <iostream>
-                               int main() { return __GLIBCXX__; }" USES_LIBSTDCXX)
-    check_cxx_source_compiles("#include <iostream>
-                               int main() { return _LIBCPP_VERSION; }" USES_LIBCXX)
-    if ( NOT USES_LIBSTDCXX AND NOT USES_LIBCXX )
-        message(FATAL_ERROR "Can't find which C++ runtime is in use")
-    endif()
-endif()
-
-if(GCC OR (CLANG AND USES_LIBSTDCXX))
-    include(CheckCXXSourceCompiles)
-    set(CMAKE_REQUIRED_LIBRARIES stdc++fs)
-    check_cxx_source_compiles("#include <experimental/filesystem>
-                               int main() { return 0; }" LINKS_TO_STDCXX_FS)
-    unset(CMAKE_REQUIRED_LIBRARIES)
-    if (LINKS_TO_STDCXX_FS)
-        link_libraries(stdc++fs)
-    endif()
-elseif(CLANG AND NOT MSVC AND NOT NO_LIBCXXFS)
-    link_libraries(c++fs)
+if(VCPKG_CXXFS_LIBRARY)
+    target_link_libraries(vcpkglib PRIVATE ${VCPKG_CXXFS_LIBRARY})
 endif()
 
 if(MSVC)
-    # either MSVC, or clang-cl
-    add_compile_options(-FC)
+    get_target_property(_srcs vcpkglib SOURCES)
 
-    if (MSVC_VERSION GREATER 1900)
-        # Visual Studio 2017 or later
-        add_compile_options(-std:c++17 -permissive-)
-    else()
-        # Visual Studio 2015
-        add_compile_options(-std:c++latest)
+    if(NOT CMAKE_GENERATOR MATCHES "Visual Studio .*")
+        set_property(SOURCE src/pch.cpp APPEND PROPERTY OBJECT_OUTPUTS "${CMAKE_CURRENT_BINARY_DIR}/pch.pch")
+        set_property(SOURCE ${_srcs} APPEND PROPERTY OBJECT_DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/pch.pch")
     endif()
 
-    if(VCPKG_DEVELOPMENT_WARNINGS)
-        string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-        add_compile_options(-W4 -WX)
-
-        if (CLANG)
-            add_compile_options(-Wmissing-prototypes -Wno-missing-field-initializers)
-        endif()
-    endif()
-elseif(GCC OR CLANG)
-    add_compile_options(-std=c++1z)
-
-    if(VCPKG_DEVELOPMENT_WARNINGS)
-        add_compile_options(-Wall -Wextra -Wpedantic -Wno-unknown-pragmas -Wno-missing-field-initializers -Wno-redundant-move -Werror)
-
-        # GCC and clang have different names for the same warning
-        if (GCC)
-            add_compile_options(-Wmissing-declarations)
-        elseif(CLANG)
-            add_compile_options(-Wmissing-prototypes)
-        endif()
-    endif()
+    set_source_files_properties(src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
+    target_sources(vcpkglib PRIVATE src/pch.cpp)
+    target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
+else()
+    target_compile_options(vcpkglib PRIVATE -include "${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h")
 endif()
 
-file(GLOB_RECURSE VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
+if (MINGW)
+    target_compile_definitions(vcpkglib
+        PUBLIC
+            UNICODE
+            _WIN32_WINNT=0x0601
+            WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY=4
+            __fastfail=exit)
+    target_link_libraries(vcpkglib PUBLIC winhttp bcrypt version ole32 uuid)
+endif()
 
-add_library(vcpkglib OBJECT ${VCPKGLIB_SOURCES})
-add_executable(vcpkg src/vcpkg.cpp $<TARGET_OBJECTS:vcpkglib>)
+# === Target: vcpkg ===
+
+add_executable(vcpkg ${VCPKG_SOURCES})
+target_link_libraries(vcpkg PRIVATE vcpkglib)
+vcpkg_target_add_warning_options(vcpkg)
+
+# === Target: vcpkg-test ===
 
 if (BUILD_TESTING)
-    file(GLOB_RECURSE VCPKGTEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
-
     enable_testing()
-    add_executable(vcpkg-test
-        ${VCPKGTEST_SOURCES}
-        $<TARGET_OBJECTS:vcpkglib>)
 
-    add_test(NAME default COMMAND vcpkg-test)
+    add_executable(vcpkg-test
+        ${VCPKG_TEST_SOURCES}
+        ${VCPKG_TEST_INCLUDES})
+    target_link_libraries(vcpkg-test PRIVATE vcpkglib)
+    vcpkg_target_add_warning_options(vcpkg-test)
+
+    add_test(NAME default COMMAND vcpkg-test --order rand --rng-seed time)
 
     if (VCPKG_BUILD_BENCHMARKING)
         target_compile_options(vcpkg-test PRIVATE -DCATCH_CONFIG_ENABLE_BENCHMARKING)
     endif()
-
-    find_program(CLANG_FORMAT clang-format)
-    if (CLANG_FORMAT)
-        file(GLOB_RECURSE VCPKG_FORMAT_SOURCES CONFIGURE_DEPENDS src/*.cpp include/pch.h include/vcpkg/*.h include/vcpkg-test/*.h)
-        add_custom_target(format COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_FORMAT_SOURCES})
-    endif()
 endif()
 
-if(MSVC)
-  get_target_property(_srcs vcpkglib SOURCES)
+# === Target: vcpkg-fuzz ===
 
-  if(NOT CMAKE_GENERATOR MATCHES "Visual Studio .*")
-    set_property(SOURCE src/pch.cpp APPEND PROPERTY OBJECT_OUTPUTS "${CMAKE_CURRENT_BINARY_DIR}/pch.pch")
-    set_property(SOURCE ${_srcs} APPEND PROPERTY OBJECT_DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/pch.pch")
-  endif()
-
-  set_source_files_properties(src/pch.cpp PROPERTIES COMPILE_FLAGS "/Ycpch.h")
-  target_sources(vcpkglib PRIVATE src/pch.cpp)
-  target_compile_options(vcpkglib PRIVATE /Yupch.h /FIpch.h /Zm200)
+if(VCPKG_BUILD_FUZZING)
+    add_executable(vcpkg-fuzz ${VCPKG_FUZZ_SOURCES})
+    target_link_libraries(vcpkg-fuzz PRIVATE vcpkglib)
+    vcpkg_target_add_warning_options(vcpkg-fuzz)
 endif()
 
-if (MINGW)
-  include(CheckCXXSourceCompiles)
-    check_cxx_source_compiles("#include <experimental/filesystem>
-                               int main() { return 0; }" USES_EXPERIMENTAL_FS)
+# === Target: format ===
 
-  if (NOT USES_EXPERIMENTAL_FS)
-    add_compile_definitions(USE_STD_FILESYSTEM)
-  endif()
+find_program(CLANG_FORMAT clang-format)
+if(CLANG_FORMAT)
+    # doing all of these formats in one line has a tendency to overflow the command line length
+    add_custom_target(format
+        COMMAND ${CLANG_FORMAT} -i -verbose ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_BASE_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_BASE_INCLUDES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_INCLUDES}
 
-  add_compile_definitions(
-    UNICODE
-    _WIN32_WINNT=0x0601
-    WINHTTP_ACCESS_TYPE_AUTOMATIC_PROXY=4
-    __fastfail=exit)
-  foreach(tgt vcpkg vcpkg-test)
-    target_link_libraries(${tgt} PRIVATE winhttp bcrypt version ole32 uuid)
-  endforeach()
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_SOURCES}
+
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_INCLUDES}
+
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_FUZZ_SOURCES})
 endif()

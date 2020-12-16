@@ -1,5 +1,5 @@
 diff --git a/cmake/OpenCVFindLibsGrfmt.cmake b/cmake/OpenCVFindLibsGrfmt.cmake
-index fcf716b..bda80e9 100644
+index fcf716b..f3951e3 100644
 --- a/cmake/OpenCVFindLibsGrfmt.cmake
 +++ b/cmake/OpenCVFindLibsGrfmt.cmake
 @@ -6,7 +6,7 @@
@@ -70,7 +70,7 @@ index fcf716b..bda80e9 100644
  # --- GDAL (optional) ---
  if(WITH_GDAL)
 -    find_package(GDAL QUIET)
-+    find_package(GDAL REQUIRED)
++  find_package(GDAL REQUIRED)
  
      if(NOT GDAL_FOUND)
          set(HAVE_GDAL NO)
@@ -83,3 +83,39 @@ index fcf716b..bda80e9 100644
    if(NOT GDCM_FOUND)
      set(HAVE_GDCM NO)
      ocv_clear_vars(GDCM_VERSION GDCM_LIBRARIES)
+diff --git a/cmake/OpenCVFindLibsPerf.cmake b/cmake/OpenCVFindLibsPerf.cmake
+index b9b1a95..596c152 100644
+--- a/cmake/OpenCVFindLibsPerf.cmake
++++ b/cmake/OpenCVFindLibsPerf.cmake
+@@ -51,14 +51,9 @@ endif(WITH_CUDA)
+ 
+ # --- Eigen ---
+ if(WITH_EIGEN AND NOT HAVE_EIGEN)
+-  find_package(Eigen3 QUIET)
++  find_package(Eigen3 REQUIRED)
+ 
+   if(Eigen3_FOUND)
+-    if(TARGET Eigen3::Eigen)
+-      # Use Eigen3 imported target if possible
+-      list(APPEND OPENCV_LINKER_LIBS Eigen3::Eigen)
+-      set(HAVE_EIGEN 1)
+-    else()
+       if(DEFINED EIGEN3_INCLUDE_DIRS)
+         set(EIGEN_INCLUDE_PATH ${EIGEN3_INCLUDE_DIRS})
+         set(HAVE_EIGEN 1)
+@@ -66,7 +61,6 @@ if(WITH_EIGEN AND NOT HAVE_EIGEN)
+         set(EIGEN_INCLUDE_PATH ${EIGEN3_INCLUDE_DIR})
+         set(HAVE_EIGEN 1)
+       endif()
+-    endif()
+     if(HAVE_EIGEN)
+       if(DEFINED EIGEN3_WORLD_VERSION)  # CMake module
+         set(EIGEN_WORLD_VERSION ${EIGEN3_WORLD_VERSION})
+@@ -77,6 +71,7 @@ if(WITH_EIGEN AND NOT HAVE_EIGEN)
+         set(EIGEN_MAJOR_VERSION ${EIGEN3_VERSION_MINOR})
+         set(EIGEN_MINOR_VERSION ${EIGEN3_VERSION_PATCH})
+       endif()
++      ocv_include_directories(${EIGEN_INCLUDE_PATH})
+     endif()
+   endif()
+ 

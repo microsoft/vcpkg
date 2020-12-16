@@ -13,6 +13,7 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
 )
 
 vcpkg_install_cmake()
@@ -26,6 +27,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-# CMake integration test
-# vcpkg_test_cmake(PACKAGE_NAME ${PORT})

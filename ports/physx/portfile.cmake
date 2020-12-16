@@ -1,85 +1,4 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-	set(SYSTEM_PLATFORM "32")
-	set(SYSTEM_PLATFORM_PATH "x86_32")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-	set(SYSTEM_PLATFORM "64")
-	set(SYSTEM_PLATFORM_PATH "x86_64")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-	set(SYSTEM_PLATFORM "arm32")
-	set(SYSTEM_PLATFORM_PATH "arm_32")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-	set(SYSTEM_PLATFORM "arm64")
-	set(SYSTEM_PLATFORM_PATH "arm_64")
-else()
-    message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-	set(GENERATE_STATIC_LIBRARIES "True")
-elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(GENERATE_STATIC_LIBRARIES "False")
-endif()
-
-if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-	if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-		set(MSBUILD_PLATFORM "Win32")
-	elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-		set(MSBUILD_PLATFORM "x64")
-	elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-		if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-			set(MSBUILD_PLATFORM "ARM")
-		elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-			set(MSBUILD_PLATFORM "ARM64")
-		else()
-    		message(FATAL_ERROR "Unsupported UWP architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-		endif()
-	else()
-    	message(FATAL_ERROR "Unsupported Windows architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-	endif()
-
-	if(VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
-		set(MSVC_VERSION "14")
-		set(TOOLSET_VERSION "140")
-	elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
-		set(MSVC_VERSION "15")
-		set(TOOLSET_VERSION "141")
-	elseif(VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
-		set(MSVC_VERSION "16")
-		set(TOOLSET_VERSION "142")
-	else()
-		message(FATAL_ERROR "Unsupported platform toolset.")
-	endif()
-
-	set(FLOAT_POINT_PRECISE_MATH "False")
-	set(BUILD_SNIPPETS "False")
-	set(BUILD_PUBLIC_SAMPLES "False")
-
-	if("${VCPKG_CMAKE_SYSTEM_NAME}" STREQUAL "")
-		set(SYSTEM "win")
-		if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-			set(USE_STATIC_WINCRT "False")
-			set(RUNTIME_LIBRARY_LINKAGE "md")
-		elseif(VCPKG_CRT_LINKAGE STREQUAL "static")
-			set(USE_STATIC_WINCRT "True")
-			set(RUNTIME_LIBRARY_LINKAGE "mt")
-		endif()
-		set(USE_DEBUG_CRT "True")
-		set(COMPILER "vc${MSVC_VERSION}${SYSTEM}${SYSTEM_PLATFORM}")
-		set(PRESET_FILE ${COMPILER}-${RUNTIME_LIBRARY_LINKAGE}-${VCPKG_LIBRARY_LINKAGE})
-		set(BUILD_PATH "${SYSTEM}.${SYSTEM_PLATFORM_PATH}.vc${TOOLSET_VERSION}.${RUNTIME_LIBRARY_LINKAGE}")
-	elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-		set(SYSTEM "uwp")
-		set(USE_STATIC_WINCRT "False")
-		set(USE_DEBUG_CRT "False")
-		set(COMPILER "vc${MSVC_VERSION}${SYSTEM}${SYSTEM_PLATFORM}")
-		set(PRESET_FILE ${COMPILER}-${VCPKG_LIBRARY_LINKAGE})
-		set(BUILD_PATH "${SYSTEM}.${SYSTEM_PLATFORM_PATH}.vc${TOOLSET_VERSION}")
-	endif()
-else()
-	message(FATAL_ERROR "Unsupported platform: ${VCPKG_CMAKE_SYSTEM_NAME}")
-endif()
+vcpkg_fail_port_install(ON_TARGET MINGW)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -87,68 +6,142 @@ vcpkg_from_github(
     REF ae80dede0546d652040ae6260a810e53e20a06fa
     SHA512 f3a690039cf39fe2db9a728b82af0d39eaa02340a853bdad4b5152d63532367eb24fc7033a614882168049b80d803b6225fc60ed2900a9d0deab847f220540be
     HEAD_REF master
-	PATCHES
-		msvc_142_bug_workaround.patch
-		vs16_3_typeinfo_header_fix.patch
+    PATCHES
+        internalMBP_symbols.patch
+        msvc_142_bug_workaround.patch
+        vs16_3_typeinfo_header_fix.patch
+        fix_discarded_qualifiers.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/physx/buildtools/presets/public/${PRESET_FILE}.xml)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/preset.xml.in ${SOURCE_PATH}/physx/buildtools/presets/public/${PRESET_FILE}.xml)
-
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path(${PYTHON3_DIR})
-
-get_filename_component(CMAKE_DIR ${CMAKE_COMMAND} DIRECTORY)
-# If cmake is not installed then adding it to the end of the path
-# will allow generate_projects.bat to find the cmake used by vcpkg.
-vcpkg_add_to_path(${CMAKE_DIR})
-
-vcpkg_execute_required_process( 
-	COMMAND ${SOURCE_PATH}/physx/generate_projects.bat ${PRESET_FILE}
-	WORKING_DIRECTORY ${SOURCE_PATH}/physx
-	LOGNAME build-${TARGET_TRIPLET}
-)
-
-set(RELEASE_CONFIGURATION "release")
+if(NOT DEFINED RELEASE_CONFIGURATION)
+    set(RELEASE_CONFIGURATION "release")
+endif()
 set(DEBUG_CONFIGURATION "debug")
 
-vcpkg_build_msbuild(
-  PROJECT_PATH ${SOURCE_PATH}/physx/compiler/${COMPILER}/PhysXSDK.sln
-	RELEASE_CONFIGURATION ${RELEASE_CONFIGURATION}
-	DEBUG_CONFIGURATION ${DEBUG_CONFIGURATION}
-    PLATFORM ${MSBUILD_PLATFORM}
+set(OPTIONS
+    "-DPHYSX_ROOT_DIR=${SOURCE_PATH}/physx"
+    "-DPXSHARED_PATH=${SOURCE_PATH}/pxshared"
+    "-DPXSHARED_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}"
+    "-DCMAKEMODULES_PATH=${SOURCE_PATH}/externals/cmakemodules"
+    "-DCMAKEMODULES_NAME=CMakeModules"
+    "-DCMAKE_MODULES_VERSION=1.27"
+    "-DPX_BUILDSNIPPETS=OFF"
+    "-DPX_BUILDPUBLICSAMPLES=OFF"
+    "-DPX_FLOAT_POINT_PRECISE_MATH=OFF"
+    "-DPX_COPY_EXTERNAL_DLL=OFF"
+    "-DGPU_DLL_COPIED=ON"
 )
 
-file(INSTALL ${SOURCE_PATH}/physx/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT}/)
-file(INSTALL ${SOURCE_PATH}/pxshared/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT}/)
+set(OPTIONS_RELEASE
+    "-DPX_OUTPUT_BIN_DIR=${CURRENT_PACKAGES_DIR}"
+    "-DPX_OUTPUT_LIB_DIR=${CURRENT_PACKAGES_DIR}"
+)
+set(OPTIONS_DEBUG
+    "-DPX_OUTPUT_BIN_DIR=${CURRENT_PACKAGES_DIR}/debug"
+    "-DPX_OUTPUT_LIB_DIR=${CURRENT_PACKAGES_DIR}/debug"
+    "-DNV_USE_DEBUG_WINCRT=ON"
+)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-	file(GLOB RELEASE_BINS ${SOURCE_PATH}/physx/bin/${BUILD_PATH}/${RELEASE_CONFIGURATION}/*.dll)
-	file(INSTALL ${RELEASE_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-
-	file(GLOB DEBUG_BINS ${SOURCE_PATH}/physx/bin/${BUILD_PATH}/${DEBUG_CONFIGURATION}/*.dll)
-	file(INSTALL ${DEBUG_BINS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-
-	vcpkg_copy_pdbs()
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=uwp")
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=windows")
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=mac")
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_FREEBSD)
+    list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=linux")
+elseif(VCPKG_TARGET_IS_ANDROID)
+    list(APPEND OPTIONS "-DTARGET_BUILD_PLATFORM=android")
+else()
+    message(FATAL_ERROR "Unhandled or unsupported target platform.")
 endif()
 
-file(
-	GLOB
-	RELEASE_LIBS
-		${SOURCE_PATH}/physx/bin/${BUILD_PATH}/${RELEASE_CONFIGURATION}/*.lib
-		${SOURCE_PATH}/physx/bin/${BUILD_PATH}/${RELEASE_CONFIGURATION}/*.pdb
-		${SOURCE_PATH}/physx/compiler/${COMPILER}/sdk_source_bin/${RELEASE_CONFIGURATION}/*.pdb
-)
-file(INSTALL ${RELEASE_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    list(APPEND OPTIONS "-DNV_FORCE_64BIT_SUFFIX=ON" "-DNV_FORCE_32BIT_SUFFIX=OFF")
+endif()
 
-file(
-	GLOB
-	DEBUG_LIBS
-	${SOURCE_PATH}/physx/bin/${BUILD_PATH}/${DEBUG_CONFIGURATION}/*.lib
-	${SOURCE_PATH}/physx/bin/${BUILD_PATH}/${DEBUG_CONFIGURATION}/*.pdb
-	${SOURCE_PATH}/physx/compiler/${COMPILER}/sdk_source_bin/${DEBUG_CONFIGURATION}/*.pdb
-)
-file(INSTALL ${DEBUG_LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    list(APPEND OPTIONS "-DPX_GENERATE_STATIC_LIBRARIES=OFF")
+else()
+    list(APPEND OPTIONS "-DPX_GENERATE_STATIC_LIBRARIES=ON")
+endif()
 
+if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
+    list(APPEND OPTIONS "-DNV_USE_STATIC_WINCRT=OFF")
+else()
+    list(APPEND OPTIONS "-DNV_USE_STATIC_WINCRT=ON")
+endif()
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    list(APPEND OPTIONS "-DPX_OUTPUT_ARCH=arm")
+else()
+    list(APPEND OPTIONS "-DPX_OUTPUT_ARCH=x86")
+endif()
+
+# Replicate PhysX's CXX Flags here so we don't have to patch out /WX and -Wall
+list(APPEND OPTIONS "-DPHYSX_CXX_FLAGS:INTERNAL=${VCPKG_CXX_FLAGS}")
+
+vcpkg_configure_cmake(
+    SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
+    PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS ${OPTIONS}
+    OPTIONS_DEBUG ${OPTIONS_DEBUG}
+    OPTIONS_RELEASE ${OPTIONS_RELEASE}
+)
+vcpkg_install_cmake()
+
+# NVIDIA Gameworks release structure is generally something like <compiler>/<configuration>/[artifact]
+# It would be nice to patch this out, but that directory structure is hardcoded over many cmake files.
+# So, we have this helpful helper to copy the bins and libs out.
+function(fixup_physx_artifacts)
+    macro(_fixup _IN_DIRECTORY _OUT_DIRECTORY)
+        foreach(_SUFFIX IN LISTS _fpa_SUFFIXES)
+            file(GLOB_RECURSE _ARTIFACTS
+                LIST_DIRECTORIES false
+                "${CURRENT_PACKAGES_DIR}/${_IN_DIRECTORY}/*${_SUFFIX}"
+            )
+            if(_ARTIFACTS)
+                file(COPY ${_ARTIFACTS} DESTINATION "${CURRENT_PACKAGES_DIR}/${_OUT_DIRECTORY}")
+            endif()
+        endforeach()
+    endmacro()
+
+    cmake_parse_arguments(_fpa "" "DIRECTORY" "SUFFIXES" ${ARGN})
+    _fixup("bin" ${_fpa_DIRECTORY})
+    _fixup("debug/bin" "debug/${_fpa_DIRECTORY}")
+endfunction()
+
+fixup_physx_artifacts(
+    DIRECTORY "lib"
+    SUFFIXES ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}
+)
+fixup_physx_artifacts(
+    DIRECTORY "bin"
+    SUFFIXES ${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX} ".pdb"
+)
+
+# Remove compiler directory and descendents.
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE
+        "${CURRENT_PACKAGES_DIR}/bin/"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/"
+    )
+else()
+    file(GLOB PHYSX_ARTIFACTS LIST_DIRECTORIES true
+        "${CURRENT_PACKAGES_DIR}/bin/*"
+        "${CURRENT_PACKAGES_DIR}/debug/bin/*"
+    )
+    foreach(_ARTIFACT IN LISTS PHYSX_ARTIFACTS)
+        if(IS_DIRECTORY ${_ARTIFACT})
+            file(REMOVE_RECURSE ${_ARTIFACT})
+        endif()
+    endforeach()
+endif()
+
+file(REMOVE_RECURSE
+    "${CURRENT_PACKAGES_DIR}/debug/include"
+    "${CURRENT_PACKAGES_DIR}/debug/source"
+    "${CURRENT_PACKAGES_DIR}/source"
+)
 file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

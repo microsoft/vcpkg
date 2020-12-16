@@ -1,25 +1,14 @@
 function(qt_fix_cmake PACKAGE_DIR_TO_FIX PORT_TO_FIX)
-    set(BACKUP_PATH "$ENV{PATH}")
-    #Find Python and add it to the path
-    vcpkg_find_acquire_program(PYTHON2)
-    get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
-    vcpkg_add_to_path("${PYTHON2_EXE_PATH}")
 
-    #Fix the cmake files if they exist
-    if(EXISTS ${PACKAGE_DIR_TO_FIX}/lib/cmake)
-        vcpkg_execute_required_process(
-            COMMAND ${PYTHON2} ${CURRENT_INSTALLED_DIR}/share/qt5/fixcmake.py ${PORT_TO_FIX}
-            WORKING_DIRECTORY ${PACKAGE_DIR_TO_FIX}/lib/cmake
-            LOGNAME fix-cmake
-        )
-    endif()
-    if(EXISTS ${PACKAGE_DIR_TO_FIX}/share/cmake)
-        vcpkg_execute_required_process(
-            COMMAND ${PYTHON2} ${CURRENT_INSTALLED_DIR}/share/qt5/fixcmake.py ${PORT_TO_FIX}
-            WORKING_DIRECTORY ${PACKAGE_DIR_TO_FIX}/share/cmake
-            LOGNAME fix-cmake
-        )
-    endif()
+    file(GLOB_RECURSE cmakefiles ${PACKAGE_DIR_TO_FIX}/share/cmake/*.cmake ${PACKAGE_DIR_TO_FIX}/lib/cmake/*.cmake)
+    foreach(cmakefile ${cmakefiles})
+        file(READ "${cmakefile}" _contents)
+        if(_contents MATCHES "_install_prefix}/tools/qt5/bin/([a-z0-9]+)") # there are only about 3 to 5 cmake files which require the fix in ports: qt5-tools qt5-xmlpattern at5-activeqt qt5-quick
+            string(REGEX REPLACE "_install_prefix}/tools/qt5/bin/([a-z0-9]+)" "_install_prefix}/tools/${PORT_TO_FIX}/bin/\\1" _contents "${_contents}")
+            file(WRITE "${cmakefile}" "${_contents}")
+        endif()
+    endforeach()
+    
     #Install cmake files
     if(EXISTS ${PACKAGE_DIR_TO_FIX}/lib/cmake)
         file(MAKE_DIRECTORY ${PACKAGE_DIR_TO_FIX}/share)
@@ -29,5 +18,4 @@ function(qt_fix_cmake PACKAGE_DIR_TO_FIX PORT_TO_FIX)
     if(EXISTS ${PACKAGE_DIR_TO_FIX}/debug/lib/cmake)
         file(REMOVE_RECURSE ${PACKAGE_DIR_TO_FIX}/debug/lib/cmake)
     endif()
-    set(ENV{PATH} "${BACKUP_PATH}")
 endfunction()

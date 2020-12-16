@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nholthaus/units
-    REF v2.3.0
-    SHA512 1b9d7806e82d0f437574562e647077b6d22c0add81a19b5ec71f53ab608642db2d785a70d03d13cb2eeea2a8bc2d20f112b6bdf49acf0afce44e8e07bb6b7c39
+    REF v2.3.1
+    SHA512 1ec9e4d7d60f073ad82a02116f16b9dda57406a3b22a5b06d34f9e5a4df8fd20cc28fc7acfd8fc33054718e0efca3973df0424563f7e1833687a6c1696b9c340
 )
 
 vcpkg_configure_cmake(
@@ -16,9 +14,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Handle copyright/readme/package files
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/units RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/units)
-file(RENAME ${CURRENT_PACKAGES_DIR}/cmake/unitsConfig.cmake ${CURRENT_PACKAGES_DIR}/share/units/unitsConfig.cmake)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # remove uneeded directories
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake)

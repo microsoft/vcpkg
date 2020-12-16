@@ -1,0 +1,33 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 96d6c6a..9d3dd24 100755
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -72,9 +72,9 @@ if(WIN32)
+     PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/mman-win32>)
+ endif(WIN32)
+ 
+-add_subdirectory(trantor)
++find_package(Trantor CONFIG REQUIRED)
+ 
+-target_link_libraries(${PROJECT_NAME} PUBLIC trantor)
++target_link_libraries(${PROJECT_NAME} PUBLIC Trantor::Trantor)
+ 
+ if(NOT WIN32)
+   target_link_libraries(${PROJECT_NAME} PRIVATE dl)
+@@ -169,11 +169,11 @@ endif(NOT WIN32)
+ 
+ if(BUILD_ORM)
+   # find postgres
+-  find_package(pg)
+-  if(pg_FOUND)
+-    message(STATUS "libpq inc path:" ${PG_INCLUDE_DIRS})
+-    message(STATUS "libpq lib:" ${PG_LIBRARIES})
+-    target_link_libraries(${PROJECT_NAME} PRIVATE pg_lib)
++  find_package(PostgreSQL REQUIRED)
++  if(PostgreSQL_FOUND)
++    message(STATUS "libpq inc path:" ${PostgreSQL_INCLUDE_DIRS})
++    message(STATUS "libpq lib:" ${PostgreSQL_LIBRARIES})
++    target_link_libraries(${PROJECT_NAME} PRIVATE ${PostgreSQL_LIBRARIES})
+     set(DROGON_SOURCES ${DROGON_SOURCES}
+                        orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc)
+     if(LIBPQ_BATCH_MODE)

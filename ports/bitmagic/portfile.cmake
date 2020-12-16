@@ -1,0 +1,13 @@
+# Header-only library
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO tlk00/BitMagic
+    REF v6.4.0
+    SHA512 a7968aaed950e9174192635fe7ab560234bb2757519ea5a2db911e73457e5859f0e16499756865d1eeab286a93da0e87bd454cfa750c20093db3219c05204f96
+    HEAD_REF master
+
+)
+
+file(GLOB HEADER_LIST "${SOURCE_PATH}/src/*.h")
+file(INSTALL ${HEADER_LIST} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

@@ -1,18 +1,18 @@
-#include "pch.h"
-
 #include <vcpkg/base/system.print.h>
-#include <vcpkg/commands.h>
+
+#include <vcpkg/binarycaching.h>
+#include <vcpkg/commands.create.h>
+#include <vcpkg/commands.dependinfo.h>
+#include <vcpkg/commands.edit.h>
+#include <vcpkg/commands.env.h>
+#include <vcpkg/commands.integrate.h>
+#include <vcpkg/commands.list.h>
+#include <vcpkg/commands.owns.h>
+#include <vcpkg/commands.search.h>
 #include <vcpkg/export.h>
 #include <vcpkg/help.h>
 #include <vcpkg/install.h>
 #include <vcpkg/remove.h>
-
-// Write environment variable names as %VARIABLE% on Windows and $VARIABLE in *nix
-#ifdef _WIN32
-#define ENVVAR(VARNAME) "%%" #VARNAME "%%"
-#else
-#define ENVVAR(VARNAME) "$" #VARNAME
-#endif
 
 namespace vcpkg::Help
 {
@@ -20,7 +20,7 @@ namespace vcpkg::Help
     {
         using topic_function = void (*)(const VcpkgPaths& paths);
 
-        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) {}
+        constexpr Topic(CStringView n, topic_function fn) : name(n), print(fn) { }
 
         CStringView name;
         topic_function print;
@@ -29,28 +29,29 @@ namespace vcpkg::Help
     template<const CommandStructure& S>
     static void command_topic_fn(const VcpkgPaths&)
     {
-        display_usage(S);
+        print_usage(S);
     }
 
     static void integrate_topic_fn(const VcpkgPaths&)
     {
-        System::print2("Commands:\n", Commands::Integrate::INTEGRATE_COMMAND_HELPSTRING);
+        System::print2("Commands:\n", Commands::Integrate::get_helpstring());
     }
 
     static void help_topics(const VcpkgPaths&);
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("help"),
+        create_example_string("help"),
         0,
         1,
         {},
         nullptr,
     };
 
-    static constexpr std::array<Topic, 13> topics = {{
+    static constexpr std::array<Topic, 15> topics = {{
+        {"binarycaching", help_topic_binary_caching},
         {"create", command_topic_fn<Commands::Create::COMMAND_STRUCTURE>},
-        {"edit", command_topic_fn<Commands::Edit::COMMAND_STRUCTURE>},
         {"depend-info", command_topic_fn<Commands::DependInfo::COMMAND_STRUCTURE>},
+        {"edit", command_topic_fn<Commands::Edit::COMMAND_STRUCTURE>},
         {"env", command_topic_fn<Commands::Env::COMMAND_STRUCTURE>},
         {"export", command_topic_fn<Export::COMMAND_STRUCTURE>},
         {"help", command_topic_fn<Help::COMMAND_STRUCTURE>},
@@ -61,13 +62,12 @@ namespace vcpkg::Help
         {"remove", command_topic_fn<Remove::COMMAND_STRUCTURE>},
         {"search", command_topic_fn<Commands::Search::COMMAND_STRUCTURE>},
         {"topics", help_topics},
+        {"triplet", help_topic_valid_triplet},
     }};
 
     static void help_topics(const VcpkgPaths&)
     {
-        System::print2("Available help topics:\n"
-                       "  triplet\n"
-                       "  integrate",
+        System::print2("Available help topics:",
                        Strings::join("", topics, [](const Topic& topic) { return std::string("\n  ") + topic.name; }),
                        "\n");
     }
@@ -78,24 +78,24 @@ namespace vcpkg::Help
         vcpkg::Util::group_by(paths.get_available_triplets(),
                               &triplets_per_location,
                               [](const VcpkgPaths::TripletFile& triplet_file) -> std::string {
-                                  return triplet_file.location.u8string();
+                                  return fs::u8string(triplet_file.location);
                               });
 
         System::print2("Available architecture triplets\n");
 
         System::print2("VCPKG built-in triplets:\n");
-        for (auto* triplet : triplets_per_location[paths.triplets.u8string()])
+        for (auto* triplet : triplets_per_location[fs::u8string(paths.triplets)])
         {
             System::print2("  ", triplet->name, '\n');
         }
-        triplets_per_location.erase(paths.triplets.u8string());
+        triplets_per_location.erase(fs::u8string(paths.triplets));
 
         System::print2("\nVCPKG community triplets:\n");
-        for (auto* triplet : triplets_per_location[paths.community_triplets.u8string()])
+        for (auto* triplet : triplets_per_location[fs::u8string(paths.community_triplets)])
         {
             System::print2("  ", triplet->name, '\n');
         }
-        triplets_per_location.erase(paths.community_triplets.u8string());
+        triplets_per_location.erase(fs::u8string(paths.community_triplets));
 
         for (auto&& kv_pair : triplets_per_location)
         {
@@ -107,70 +107,9 @@ namespace vcpkg::Help
         }
     }
 
-    void print_usage()
-    {
-        System::print2("Commands:\n"
-                       "  vcpkg search [pat]              Search for packages available to be built\n"
-                       "  vcpkg install <pkg>...          Install a package\n"
-                       "  vcpkg remove <pkg>...           Uninstall a package\n"
-                       "  vcpkg remove --outdated         Uninstall all out-of-date packages\n"
-                       "  vcpkg list                      List installed packages\n"
-                       "  vcpkg update                    Display list of packages for updating\n"
-                       "  vcpkg upgrade                   Rebuild all outdated packages\n"
-                       "  vcpkg x-history <pkg>           Shows the history of CONTROL versions of a package\n"
-                       "  vcpkg hash <file> [alg]         Hash a file by specific algorithm, default SHA512\n"
-                       "  vcpkg help topics               Display the list of help topics\n"
-                       "  vcpkg help <topic>              Display help for a specific topic\n"
-                       "\n",
-                       Commands::Integrate::INTEGRATE_COMMAND_HELPSTRING, // Integration help
-                       "\n"
-                       "  vcpkg export <pkg>... [opt]...  Exports a package\n"
-                       "  vcpkg edit <pkg>                Open up a port for editing (uses " ENVVAR(EDITOR) //
-                       ", default 'code')\n"
-                       "  vcpkg import <pkg>              Import a pre-built library\n"
-                       "  vcpkg create <pkg> <url>\n"
-                       "             [archivename]        Create a new package\n"
-                       "  vcpkg owns <pat>                Search for files in installed packages\n"
-                       "  vcpkg depend-info <pkg>...      Display a list of dependencies for packages\n"
-                       "  vcpkg env                       Creates a clean shell environment for development or "
-                       "compiling.\n"
-                       "  vcpkg version                   Display version information\n"
-                       "  vcpkg contact                   Display contact information to send feedback\n"
-                       "\n"
-                       "Options:\n"
-                       "  --triplet <t>                   Specify the target architecture triplet\n"
-                       "                                  (default: " ENVVAR(VCPKG_DEFAULT_TRIPLET) //
-                       ", see 'vcpkg help triplet')\n"
-                       "\n"
-                       "  --overlay-ports=<path>          Specify directories to be used when searching for ports\n"
-                       "\n"
-                       "  --overlay-triplets=<path>       Specify directories containing triplets files\n"
-                       "\n"
-                       "  --vcpkg-root <path>             Specify the vcpkg root "
-                       "directory\n"
-                       "                                  (default: " ENVVAR(VCPKG_ROOT) //
-                       ")\n"
-                       "\n"
-                       "  --x-scripts-root=<path>             (Experimental) Specify the scripts root directory\n"
-                       "\n"
-                       "  @response_file                  Specify a "
-                       "response file to provide additional parameters\n"
-                       "\n"
-                       "For more help (including examples) see the "
-                       "accompanying README.md.\n");
-    }
-
-    std::string create_example_string(const std::string& command_and_arguments)
-    {
-        std::string cs = Strings::format("Example:\n"
-                                         "  vcpkg %s\n",
-                                         command_and_arguments);
-        return cs;
-    }
-
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
 
         if (args.command_arguments.empty())
         {
@@ -178,7 +117,7 @@ namespace vcpkg::Help
             Checks::exit_success(VCPKG_LINE_INFO);
         }
         const auto& topic = args.command_arguments[0];
-        if (topic == "triplet" || topic == "triplets" || topic == "triple")
+        if (topic == "triplets" || topic == "triple")
         {
             help_topic_valid_triplet(paths);
             Checks::exit_success(VCPKG_LINE_INFO);
@@ -194,5 +133,10 @@ namespace vcpkg::Help
         System::print2(System::Color::error, "Error: unknown topic ", topic, '\n');
         help_topics(paths);
         Checks::exit_fail(VCPKG_LINE_INFO);
+    }
+
+    void HelpCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Help::perform_and_exit(args, paths);
     }
 }

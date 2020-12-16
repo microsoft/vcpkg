@@ -6,7 +6,7 @@ namespace vcpkg
     class Lazy
     {
     public:
-        Lazy() : value(T()), initialized(false) {}
+        Lazy() : value(T()), initialized(false) { }
 
         template<class F>
         T const& get_lazy(const F& f) const

@@ -1,28 +1,22 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gabime/spdlog
-    REF 1549ff12f1aa61ffc4d9a8727c519034724392a0 #v1.4.2
-    SHA512 c159aea475baecad0a5a9eef965856203c96aa855b0480e82d751bcc050c6e08bb0aa458544da061f5d744e17dcd27bd9b6e31a62d502834f02d3591f29febec
+    REF 4a9ccf7e38e257feecce0c579a782741254eaeef # v1.8.0
+    SHA512 333f14704e0d0aa88abbe4ddd29aeb009de2f845440559d463f1b7f9c7da32b2fbdba0f2abf97ec2a5c479d2d62bb2220b21a1bc423d62fbbb93952cf829d532
     HEAD_REF v1.x
-    PATCHES
-        disable-master-project-check.patch
-        fix-feature-export.patch
-        fix-error-4275.patch
-        fix-uwp.patch
-        fix-include.patch
+    PATCHES fix-featurebuild.patch
 )
 
-set(SPDLOG_USE_BENCHMARK OFF)
-if("benchmark" IN_LIST FEATURES)
-    set(SPDLOG_USE_BENCHMARK ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+	benchmark SPDLOG_BUILD_BENCH
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DSPDLOG_FMT_EXTERNAL=ON
-        -DSPDLOG_BUILD_BENCH=${SPDLOG_USE_BENCHMARK}
         -DSPDLOG_INSTALL=ON
 )
 

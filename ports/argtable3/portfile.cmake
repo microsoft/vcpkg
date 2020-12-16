@@ -1,13 +1,9 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO argtable/argtable3
-    REF bbc4ec20991e87ecf8dcf288aef777b55b78daa7
-    SHA512 050f54ead2d029715d8f10e63ff555027ead61fbfa18bd955e3b99e080f9178ad5c41937c5d62477885143f27bb9e7e505a7120b95bfcd899a60719584191f1c
+    REF 1c1bb23b305c8cf349328fc0cacd7beb7a575ff4 # v3.1.5
+    SHA512 13150c8adc1eda107b6df65a2e276510a66bd912f6067d7cc72951735a4c20307144b04cda959cdd24f160da3810ba8bb35e48992ff4281e44ed2331d030fb1d
     HEAD_REF master
-    PATCHES
-        fix-cmake.patch
 )
 
 vcpkg_configure_cmake(
@@ -29,14 +25,9 @@ elseif(EXISTS ${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT})
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 endif()
 
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     vcpkg_replace_string(
@@ -46,8 +37,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

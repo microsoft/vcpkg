@@ -1,4 +1,4 @@
 Source: physx
-Version: 4.1.1-3
+Version: 4.1.1
+Port-Version: 6
 Description: The NVIDIA PhysX SDK is a scalable multi-platform physics solution supporting a wide range of devices, from smartphones to high-end multicore CPUs and GPUs
-Supports: !uwp

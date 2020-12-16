@@ -1,4 +1,4 @@
 Source: pugixml
-Version: 1.10-1
+Version: 1.11.1
 Homepage: https://github.com/zeux/pugixml
-Description: C++ XML processing library
+Description: Light-weight, simple and fast XML parser for C++ with XPath support

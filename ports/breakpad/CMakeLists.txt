@@ -77,15 +77,16 @@ if(INSTALL_HEADERS)
     if(WIN32)
         set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/mac|/solaris|/android|/dwarf|/tests|/testdata|/unittests")
     elseif(APPLE)
-        set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/windows|/solaris|/android|/dwarf|/tests|/testdata|/unittests")
+        set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/windows|/solaris|/android|/dwarf|/tests|/testdata|/unittests|/*proj|/gcov")
     else()
         set(HEADER_EXCLUDE_REGEX "/apple|/ios|/client/linux/data|/client/linux/sender|/windows|/mac|/solaris|/android|/dwarf|/tests|/testdata|/unittests")
     endif()
     install(
         DIRECTORY src/client src/common src/google_breakpad
         DESTINATION include/
-        FILES_MATCHING PATTERN "*.h"
-        REGEX "${HEADER_EXCLUDE_REGEX}" EXCLUDE
+        FILES_MATCHING
+        PATTERN "*.h"
+        REGEX ${HEADER_EXCLUDE_REGEX} EXCLUDE
     )
 endif()
 

@@ -1,0 +1,5 @@
+The package mosquitto provides CMake targets:
+
+    find_package(mosquitto REQUIRED)
+    target_include_directories(main PRIVATE ${MOSQUITTO_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${MOSQUITTO_LIBRARIES})

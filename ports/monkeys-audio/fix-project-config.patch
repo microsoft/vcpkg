@@ -1,0 +1,16 @@
+diff --git a/Source/Projects/VS2019/MACDll/MACDll.vcxproj b/Source/Projects/VS2019/MACDll/MACDll.vcxproj
+index 4e84b52..79882b0 100644
+--- a/Source/Projects/VS2019/MACDll/MACDll.vcxproj
++++ b/Source/Projects/VS2019/MACDll/MACDll.vcxproj
+@@ -75,10 +75,9 @@
+     <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+-    <OutDir>C:\Applications\Winamp\plugins\</OutDir>
++    <OutDir>$(Configuration)\</OutDir>
+     <IntDir>$(Configuration)\</IntDir>
+     <LinkIncremental>true</LinkIncremental>
+-    <TargetName>in_ape.dll</TargetName>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+     <OutDir>$(Configuration)\</OutDir>

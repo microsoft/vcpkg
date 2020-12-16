@@ -2,13 +2,13 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_fail_port_install(ON_ARCH "arm" "x86")
 
-set(PMDK_VERSION "1.8")
+set(PMDK_VERSION "1.9")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/pmdk
-    REF 0245d75eaf0f6106c86a7926a45fdf2149e37eaa #Commit id corresponding to the version 1.8
-    SHA512 1628f1f6be9e70c28ed490cec2db27aa31a9c6d43e11755a4232686a8523df6dff768e75e64479e22aca52d72500e3a75b256e4ae4de1f518f33cc07c5c26d9b
+    REF 1926ffb8f3f5f0617b3b3ed32029d437c272f187 #Commit id corresponding to the version 1.9
+    SHA512 dc828866291f1c4a6901de5845d21a60eb2c7951c6b5ebc680b309a4e5f7596b0d9bea663f997dff9f08f666124850aecd2219caf12bab571b4c2b63db28ec7f
     HEAD_REF master
     PATCHES
         remove-non-ascii-character.patch
@@ -49,7 +49,7 @@ file(GLOB LIB_RELEASE_FILES ${RELEASE_ARTIFACTS_PATH}/libs/libpmem*.dll)
 file(INSTALL ${LIB_RELEASE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 
 # Install tools (release only)
-file(INSTALL ${RELEASE_ARTIFACTS_PATH}/libs/pmempool.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/pmdk)
+file(INSTALL ${RELEASE_ARTIFACTS_PATH}/libs/pmempool.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/pmdk)
 

@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/util.h>
@@ -7,13 +5,12 @@
 namespace vcpkg::Strings::details
 {
     // To disambiguate between two overloads
-    static bool is_space(const char c) { return std::isspace(c) != 0; }
+    static bool is_space(const char c) { return std::isspace(static_cast<unsigned char>(c)) != 0; }
 
     // Avoids C4244 warnings because of char<->int conversion that occur when using std::tolower()
-    static char tolower_char(const char c) { return (c < 'A' || c > 'Z') ? c : c - 'A' + 'a'; }
     static char toupper_char(const char c) { return (c < 'a' || c > 'z') ? c : c - 'a' + 'A'; }
 
-    static bool icase_eq(char a, char b) { return tolower_char(a) == tolower_char(b); }
+    static bool icase_eq(char a, char b) { return tolower_char{}(a) == tolower_char{}(b); }
 
 #if defined(_WIN32)
     static _locale_t& c_locale()
@@ -102,7 +99,7 @@ bool Strings::case_insensitive_ascii_equals(StringView left, StringView right)
 
 std::string Strings::ascii_to_lowercase(std::string&& s)
 {
-    std::transform(s.begin(), s.end(), s.begin(), &details::tolower_char);
+    Strings::ascii_to_lowercase(s.begin(), s.end());
     return std::move(s);
 }
 
@@ -147,6 +144,13 @@ std::string Strings::trim(std::string&& s)
     return std::move(s);
 }
 
+StringView Strings::trim(StringView sv)
+{
+    auto last = std::find_if_not(sv.rbegin(), sv.rend(), details::is_space).base();
+    auto first = std::find_if_not(sv.begin(), sv.end(), details::is_space);
+    return StringView(first, last);
+}
+
 void Strings::trim_all_and_remove_whitespace_strings(std::vector<std::string>* strings)
 {
     for (std::string& s : *strings)
@@ -157,63 +161,37 @@ void Strings::trim_all_and_remove_whitespace_strings(std::vector<std::string>* s
     Util::erase_remove_if(*strings, [](const std::string& s) { return s.empty(); });
 }
 
-std::vector<std::string> Strings::split(const std::string& s, const std::string& delimiter)
+std::vector<std::string> Strings::split(StringView s, const char delimiter)
 {
     std::vector<std::string> output;
-
-    if (delimiter.empty())
+    auto first = s.begin();
+    const auto last = s.end();
+    for (;;)
     {
-        output.push_back(s);
-        return output;
-    }
+        first = std::find_if(first, last, [=](const char c) { return c != delimiter; });
+        if (first == last)
+        {
+            return output;
+        }
 
-    const size_t delimiter_length = delimiter.length();
-    size_t i = 0;
-    for (size_t pos = s.find(delimiter); pos != std::string::npos; pos = s.find(delimiter, pos))
-    {
-        output.push_back(s.substr(i, pos - i));
-        pos += delimiter_length;
-        i = pos;
+        auto next = std::find(first, last, delimiter);
+        output.emplace_back(first, next);
+        first = next;
     }
-
-    // Add the rest of the string after the last delimiter, unless there is nothing after it
-    if (i != s.length())
-    {
-        output.push_back(s.substr(i, s.length()));
-    }
-
-    return output;
 }
 
-std::vector<std::string> Strings::split(const std::string& s, const std::string& delimiter, size_t max_count)
+std::vector<std::string> Strings::split_paths(StringView s)
 {
-    std::vector<std::string> output;
+#if defined(_WIN32)
+    return Strings::split(s, ';');
+#else // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
+    return Strings::split(s, ':');
+#endif
+}
 
-    Checks::check_exit(VCPKG_LINE_INFO, max_count >= 1);
-
-    if (delimiter.empty())
-    {
-        output.push_back(s);
-        return output;
-    }
-
-    const size_t delimiter_length = delimiter.length();
-    size_t i = 0;
-    for (size_t pos = s.find(delimiter); pos != std::string::npos; pos = s.find(delimiter, pos))
-    {
-        if (output.size() == max_count - 1) break;
-        output.push_back(s.substr(i, pos - i));
-        pos += delimiter_length;
-        i = pos;
-    }
-
-    // Add the rest of the string after the last delimiter, unless there is nothing after it
-    if (i != s.length())
-    {
-        output.push_back(s.substr(i, s.length()));
-    }
-
-    return output;
+const char* Strings::find_first_of(StringView input, StringView chars)
+{
+    return std::find_first_of(input.begin(), input.end(), chars.begin(), chars.end());
 }
 
 std::vector<StringView> Strings::find_all_enclosed(StringView input, StringView left_delim, StringView right_delim)
@@ -223,7 +201,7 @@ std::vector<StringView> Strings::find_all_enclosed(StringView input, StringView 
 
     std::vector<StringView> output;
 
-    while (true)
+    for (;;)
     {
         it_left = std::search(it_right, input.end(), left_delim.begin(), left_delim.end());
         if (it_left == input.end()) break;
@@ -287,6 +265,55 @@ const char* Strings::search(StringView haystack, StringView needle)
 bool Strings::contains(StringView haystack, StringView needle)
 {
     return Strings::search(haystack, needle) != haystack.end();
+}
+
+size_t Strings::byte_edit_distance(StringView a, StringView b)
+{
+    static constexpr size_t max_string_size = 100;
+    // For large strings, give up early to avoid performance problems
+    if (a.size() > max_string_size || b.size() > max_string_size)
+    {
+        if (a == b)
+            return 0;
+        else
+            return std::max(a.size(), b.size());
+    }
+    if (a.size() == 0 || b.size() == 0) return std::max(a.size(), b.size());
+
+    auto pa = a.data();
+    auto pb = b.data();
+    size_t sa = a.size();
+    size_t sb = b.size();
+
+    // Levenshtein distance (https://en.wikipedia.org/wiki/Levenshtein_distance)
+    // The first row of the edit distance matrix has been omitted because it's trivial (counting from 0)
+    // Because each subsequent row only depends on the row above, we never need to store the entire matrix
+    char d[max_string_size];
+
+    // Useful invariants:
+    //   `sa` is sizeof `pa` using iterator `ia`
+    //   `sb` is sizeof `pb` using iterator `ib`
+    //   `sa` and `sb` are in (0, `max_string_size`]
+
+    // To avoid dealing with edge effects, `ia` == 0 and `ib` == 0 have been unrolled.
+    // Comparisons are used as the cost for the diagonal action (substitute/leave unchanged)
+    d[0] = pa[0] != pb[0];
+    for (size_t ia = 1; ia < sa; ++ia)
+        d[ia] = std::min<char>(d[ia - 1] + 1, static_cast<char>(ia + (pa[ia] != pb[0])));
+
+    for (size_t ib = 1; ib < sb; ++ib)
+    {
+        // The diagonal information (d[ib-1][ia-1]) is used to compute substitution cost and so must be preserved
+        char diag = d[0];
+        d[0] = std::min<char>(d[0] + 1, static_cast<char>(ib + (pa[0] != pb[ib])));
+        for (size_t ia = 1; ia < sa; ++ia)
+        {
+            auto subst_or_add = std::min<char>(d[ia - 1] + 1, static_cast<char>(diag + (pa[ia] != pb[ib])));
+            diag = d[ia];
+            d[ia] = std::min<char>(d[ia] + 1, subst_or_add);
+        }
+    }
+    return d[sa - 1];
 }
 
 namespace vcpkg::Strings

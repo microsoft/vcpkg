@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+
+  "type": "object",
+
+  "required": [
+    "pat",
+    "base_name",
+    "disk_size",
+    "machine_identifiers",
+    "archives"
+  ],
+
+  "properties": {
+    "pat": {
+      "type": "string"
+    },
+    "agent_pool": {
+      "type": "string"
+    },
+    "devops_url": {
+      "type": "string"
+    },
+    "machine_name": {
+      "type": "string"
+    },
+    "box_name": {
+      "type": "string"
+    },
+    "box_version": {
+      "type": "string"
+    },
+    "disk_size": {
+      "type": "integer"
+    },
+    "archives": {
+      "type": "object",
+      "required": [
+        "username",
+        "urn",
+        "path"
+      ],
+      "properties": {
+        "username": { "type": "string" },
+        "urn": { "type": "string" },
+        "path": { "type": "string" }
+      }
+    }
+  }
+}

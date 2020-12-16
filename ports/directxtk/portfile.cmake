@@ -1,71 +1,48 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-if(NOT VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    message(FATAL_ERROR "DirectXTK only supports dynamic CRT linkage")
-endif()
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF 9cac24555395925e3c1039bcbbae306da09742ed
-    SHA512 0cea14919cce3c31ec94826fbf65069fcd1a4654cbbf50caa9e44bad6087437e6bec4538627db18b1c5704ea27b056899040da4a7355abfbf35219b4552c07f2
+    REF nov2020
+    SHA512 9d10a851f37deb428c16166cdecf38ffba28a4ab836f9753f071bccc570fcb22ce98271c6bbad9fa1380dddd1fa6602156a7aa1607d347139bda1860fc2210ce
     HEAD_REF master
 )
 
-IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    SET(BUILD_ARCH "Win32")
-ELSE()
-    SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
-ENDIF()
-
-if (VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
-    set(VS_VERSION "2015")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
-    set(VS_VERSION "2017")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
-    set(VS_VERSION "2019")
-else()
-    message(FATAL_ERROR "Unsupported platform toolset.")
-endif()
-
-if(VCPKG_TARGET_IS_UWP)
-    set(SLN_NAME "Windows10_${VS_VERSION}")
-else()
-    if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
-        set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
-    else()
-        set(SLN_NAME "Desktop_${VS_VERSION}")
-    endif()
-endif()
-
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/DirectXTK_${SLN_NAME}.sln
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        xaudio2-9 BUILD_XAUDIO_WIN10
+        xaudio2-8 BUILD_XAUDIO_WIN8
 )
 
-file(INSTALL
-    ${SOURCE_PATH}/Inc/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXTK
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
 )
-
-file(INSTALL
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK.lib
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-
-file(INSTALL
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK.lib
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 if(NOT VCPKG_TARGET_IS_UWP)
-    set(DXTK_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtk)
-    file(MAKE_DIRECTORY ${DXTK_TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/MakeSpriteFont/bin/Release/MakeSpriteFont.exe
-        DESTINATION ${DXTK_TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/XWBTool/Bin/Desktop_${VS_VERSION}/${BUILD_ARCH}/Release/XWBTool.exe
-        DESTINATION ${DXTK_TOOL_PATH})
+    vcpkg_build_cmake()
+else()
+    vcpkg_build_cmake(TARGET DirectXTK)
+endif()
+
+file(INSTALL ${SOURCE_PATH}/Inc/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXTK)
+
+file(GLOB_RECURSE DEBUG_LIB ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/CMake/*.lib)
+file(GLOB_RECURSE RELEASE_LIB ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake/*.lib)
+file(INSTALL ${DEBUG_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+file(INSTALL ${RELEASE_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+if(NOT VCPKG_TARGET_IS_UWP)
+  vcpkg_copy_tools(
+        TOOL_NAMES XWBTool
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
+    vcpkg_install_msbuild(
+        SOURCE_PATH ${SOURCE_PATH}
+        PROJECT_SUBPATH MakeSpriteFont/MakeSpriteFont.csproj
+        PLATFORM AnyCPU
+    )
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

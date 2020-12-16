@@ -1,0 +1,25 @@
+From c3616f28d33019047e8e71df8abeb0493159539e Mon Sep 17 00:00:00 2001
+From: Silvio Traversaro <silvio@traversaro.it>
+Date: Sun, 17 May 2020 11:42:24 +0200
+Subject: [PATCH] Fix configuration with  Emscripten
+
+In Emscripten there is no separate libm library, so there is no need to explicitly link it,
+and in particular the find_library call would fail as there is not libm to find.
+See https://stackoverflow.com/questions/24663915/how-can-i-link-libm-to-my-emscripten-port
+---
+ src/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 1407080..357ed76 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -48,7 +48,7 @@ target_include_directories(ccd PUBLIC
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+ 
+-if(NOT WIN32)
++if(NOT WIN32 AND NOT (CMAKE_SYSTEM_NAME STREQUAL "Emscripten"))
+   find_library(LIBM_LIBRARY NAMES m)
+   if(NOT LIBM_LIBRARY)
+     message(FATAL_ERROR "Could NOT find required library LibM")

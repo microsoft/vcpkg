@@ -1,8 +1,8 @@
 diff --git a/CMakeModules/FindRocksDB.cmake b/CMakeModules/FindRocksDB.cmake
-index 109b383..8382ed9 100644
+index b0692b0..984d3f2 100644
 --- a/CMakeModules/FindRocksDB.cmake
 +++ b/CMakeModules/FindRocksDB.cmake
-@@ -40,5 +40,49 @@ find_package_handle_standard_args(ROCKSDB
+@@ -39,5 +39,49 @@ find_package_handle_standard_args(ROCKSDB
        "Could NOT find ROCKSDB"
  )
  
@@ -52,33 +52,28 @@ index 109b383..8382ed9 100644
 +
  set(ROCKSDB_INCLUDE_DIRS ${ROCKSDB_INCLUDE_DIR} )
  set(ROCKSDB_LIBRARIES ${ROCKSDB_LIBRARY})
--
--
-
 diff --git a/src/osgEarthDrivers/cache_rocksdb/CMakeLists.txt b/src/osgEarthDrivers/cache_rocksdb/CMakeLists.txt
-index 68ad85d..86bb18a 100644
+index ecaac34..b4ec764 100644
 --- a/src/osgEarthDrivers/cache_rocksdb/CMakeLists.txt
 +++ b/src/osgEarthDrivers/cache_rocksdb/CMakeLists.txt
-@@ -16,7 +16,19 @@ SET(TARGET_SRC
-     RocksDBCacheDriver.cpp
- )
+@@ -34,7 +34,19 @@ IF(ROCKSDB_FOUND OR RocksDB_FOUND)
+         RocksDBCacheDriver.cpp
+     )
  
--SET(TARGET_LIBRARIES_VARS ROCKSDB_LIBRARY ZLIB_LIBRARY)
-+if(SNAPPY_FOUND)
-+	SET(ROCKSDB_DEPENDENT_LIBRARY ${ROCKSDB_DEPENDENT_LIBRARY} ${SNAPPY_LIBRARY})
-+endif(SNAPPY_FOUND)
+-    SET(TARGET_LIBRARIES_VARS ROCKSDB_LIBRARY ZLIB_LIBRARY)
++    if(SNAPPY_FOUND)
++		SET(ROCKSDB_DEPENDENT_LIBRARY ${ROCKSDB_DEPENDENT_LIBRARY} ${SNAPPY_LIBRARY})
++	endif(SNAPPY_FOUND)
 +
-+if(LZ4_FOUND)
-+	SET(ROCKSDB_DEPENDENT_LIBRARY ${ROCKSDB_DEPENDENT_LIBRARY} ${LZ4_LIBRARY})
-+endif(LZ4_FOUND)
++	if(LZ4_FOUND)
++		SET(ROCKSDB_DEPENDENT_LIBRARY ${ROCKSDB_DEPENDENT_LIBRARY} ${LZ4_LIBRARY})
++	endif(LZ4_FOUND)
 +
-+if(ZSTD_FOUND)
-+	SET(ROCKSDB_DEPENDENT_LIBRARY ${ROCKSDB_DEPENDENT_LIBRARY} ${ZSTD_LIBRARY})
-+endif(ZSTD_FOUND)
++	if(ZSTD_FOUND)
++		SET(ROCKSDB_DEPENDENT_LIBRARY ${ROCKSDB_DEPENDENT_LIBRARY} ${ZSTD_LIBRARY})
++	endif(ZSTD_FOUND)
 +
-+SET(TARGET_LIBRARIES_VARS ROCKSDB_LIBRARY ZLIB_LIBRARY ROCKSDB_DEPENDENT_LIBRARY)
++	SET(TARGET_LIBRARIES_VARS ROCKSDB_LIBRARY ZLIB_LIBRARY ROCKSDB_DEPENDENT_LIBRARY)
  
- IF(MSVC)
-     SET(TARGET_EXTERNAL_LIBRARIES ws2_32 winmm rpcrt4 shlwapi)
--
--
+     IF(MSVC)
+         SET(TARGET_EXTERNAL_LIBRARIES ws2_32 winmm rpcrt4 shlwapi)

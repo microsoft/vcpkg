@@ -12,8 +12,8 @@ vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/folly
-    REF 8874256376d2f8a32867f17c9472a446d6707604 #2019.10.21.00
-    SHA512 96dfdde34697b72e8eb88431d742fffa337fc9146677d63cf0331dc5e4cd341fb00b88edf3781488e3194fa41525e70a6729e1bb6657f224cd1969deea9b468c
+    REF 430aa0d8db79989dd56f8a0361fcb1c305618e41 # v2020.10.19.00
+    SHA512 d9f6aa0f7a8aee044c01af289d71e4c80d63e40ff128ac840663e3103d19cdd0da161a0b0d106493d950b9ac9a905c5e2abf8c1970c2f16b94dd95c0d1b1943e
     HEAD_REF master
     PATCHES
         missing-include-atomic.patch
@@ -88,6 +88,7 @@ FILE(WRITE ${CURRENT_PACKAGES_DIR}/share/folly/folly-config.cmake
 find_dependency(Threads)
 find_dependency(glog CONFIG)
 find_dependency(gflags CONFIG REQUIRED)
+find_dependency(ZLIB)
 ${_contents}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

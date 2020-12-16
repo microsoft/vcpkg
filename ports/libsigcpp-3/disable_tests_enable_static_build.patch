@@ -1,0 +1,41 @@
+From 219b3f5a681731bcaeee9fee0f136e6eb6143d33 Mon Sep 17 00:00:00 2001
+From: Bruk Tedla <biruk.tedla93@gmail.com>
+Date: Thu, 17 Sep 2020 19:45:27 +0300
+Subject: [PATCH] disable_tests_enable_static_build
+
+---
+ CMakeLists.txt        | 4 ++--
+ sigc++/CMakeLists.txt | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2e7f383..b2b8395 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -89,8 +89,8 @@ enable_testing()
+ 
+ 
+ add_subdirectory (sigc++)
+-add_subdirectory (examples)
+-add_subdirectory (tests)
++#add_subdirectory (examples)
++#add_subdirectory (tests)
+ 
+ 
+ set (PROJECT_CMAKE_NAME		"${PROJECT_NAME}-3")
+diff --git a/sigc++/CMakeLists.txt b/sigc++/CMakeLists.txt
+index fa5a91a..86f1be7 100644
+--- a/sigc++/CMakeLists.txt
++++ b/sigc++/CMakeLists.txt
+@@ -23,7 +23,7 @@ set (SOURCE_FILES
+ 
+ set (SIGCPP_LIB_NAME sigc-${SIGCXX_API_VERSION})
+ 
+-add_library(${SIGCPP_LIB_NAME} SHARED ${SOURCE_FILES})
++add_library(${SIGCPP_LIB_NAME} ${SOURCE_FILES})
+ 
+ set_property (TARGET ${SIGCPP_LIB_NAME} PROPERTY VERSION ${PACKAGE_VERSION})
+ set_property(TARGET ${SIGCPP_LIB_NAME}  PROPERTY SOVERSION ${LIBSIGCPP_SOVERSION})
+-- 
+2.27.0.windows.1
+

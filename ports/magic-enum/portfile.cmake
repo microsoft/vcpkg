@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Neargye/magic_enum
-    REF v0.6.4
-    SHA512 9d7e45c5a9abfe28b8b1926805f7e5d9a94118f6330737b2c2d95c49cd8f04fdc540eb264d68bd7c697abaffba3a178499f90bc86fb54a62f7d2cc61be22599b
+    REF v0.7.1
+    SHA512 0eff2901d9829289fa36811fd428a9a6b66d6b88971948a385c9e74e5bbe3f52f4b80321c96a4d002bfe2c9b3d45e9bae8fbe17d718643fa318ab845b887be09
     HEAD_REF master
 )
 
@@ -14,6 +14,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DMAGIC_ENUM_OPT_BUILD_EXAMPLES=OFF
         -DMAGIC_ENUM_OPT_BUILD_TESTS=OFF
+        -DMAGIC_ENUM_OPT_INSTALL=ON
 )
 
 vcpkg_install_cmake()

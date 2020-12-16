@@ -1,4 +1,5 @@
 Source: pcre
 Version: 8.44
+Port-Version: 8
 Homepage: https://www.pcre.org/
 Description: Perl Compatible Regular Expressions

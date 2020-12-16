@@ -15,13 +15,32 @@ namespace vcpkg::System
         CMakeVariable(const StringView varname, const char* varvalue);
         CMakeVariable(const StringView varname, const std::string& varvalue);
         CMakeVariable(const StringView varname, const fs::path& path);
+        CMakeVariable(std::string var);
 
         std::string s;
     };
 
-    std::string make_cmake_cmd(const fs::path& cmake_exe,
-                               const fs::path& cmake_script,
-                               const std::vector<CMakeVariable>& pass_variables);
+    std::string make_basic_cmake_cmd(const fs::path& cmake_tool_path,
+                                     const fs::path& cmake_script,
+                                     const std::vector<CMakeVariable>& pass_variables);
+
+    struct CmdLineBuilder
+    {
+        CmdLineBuilder& path_arg(const fs::path& p) { return string_arg(fs::u8string(p)); }
+        CmdLineBuilder& string_arg(StringView s);
+        CmdLineBuilder& ampersand()
+        {
+            buf.push_back('&');
+            buf.push_back('&');
+            return *this;
+        }
+        std::string extract() noexcept { return std::move(buf); }
+
+        operator ZStringView() const { return buf; }
+
+    private:
+        std::string buf;
+    };
 
     fs::path get_exe_path_of_current_process();
 
@@ -48,7 +67,7 @@ namespace vcpkg::System
 #if defined(_WIN32)
     Environment cmd_execute_modify_env(const ZStringView cmd_line, const Environment& env = {});
 
-    void cmd_execute_no_wait(const StringView cmd_line);
+    void cmd_execute_background(const StringView cmd_line);
 #endif
 
     ExitCodeAndOutput cmd_execute_and_capture_output(const ZStringView cmd_line, const Environment& env = {});

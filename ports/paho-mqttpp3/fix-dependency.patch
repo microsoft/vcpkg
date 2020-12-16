@@ -10,10 +10,11 @@ index a9f8908..5c98f3f 100644
      "${CMAKE_CURRENT_BINARY_DIR}/${package_name}ConfigVersion.cmake"
      DESTINATION lib/cmake/${package_name})
 diff --git a/cmake/PahoMqttCppConfig.cmake.in b/cmake/PahoMqttCppConfig.cmake.in
-index e06dc68..df1cfa6 100644
+index aff9472..275655c 100644
 --- a/cmake/PahoMqttCppConfig.cmake.in
 +++ b/cmake/PahoMqttCppConfig.cmake.in
-@@ -1,6 +1,6 @@
+@@ -5,7 +5,7 @@ set(PAHO_WITH_SSL @PAHO_WITH_SSL@)
+ 
  include(CMakeFindDependencyMacro)
  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
 -find_dependency(PahoMqttC REQUIRED)
@@ -22,7 +23,7 @@ index e06dc68..df1cfa6 100644
  
  include("${CMAKE_CURRENT_LIST_DIR}/@package_name@Targets.cmake")
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index bfcf6bb..089e35a 100644
+index 4e9b7c4..93eaae9 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -23,7 +23,7 @@
@@ -34,21 +35,50 @@ index bfcf6bb..089e35a 100644
  
  # --- The headers ---
  
-@@ -91,7 +91,7 @@ if(PAHO_BUILD_SHARED)
+@@ -80,13 +80,21 @@ target_include_directories(paho-cpp-objs
+ ## --- Build the shared library, if requested ---
+ 
+ if(PAHO_BUILD_SHARED)
++    ## set PAHO_C_LIB
++    if(PAHO_WITH_SSL)
++        find_package(OpenSSL REQUIRED)
++        set(_PAHO_MQTT_C_LIB_NAME eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs)
++    else()
++        set(_PAHO_MQTT_C_LIB_NAME eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c)
++    endif()
++
+     ## create the shared library
+     add_library(paho-mqttpp3 SHARED $<TARGET_OBJECTS:paho-cpp-objs>)
+ 
      ## add dependencies to the shared library
      target_link_libraries(paho-mqttpp3
          PRIVATE ${LIBS_SYSTEM}
--        PUBLIC PahoMqttC::PahoMqttC)
-+        PUBLIC eclipse-paho-mqtt-c::paho-mqtt3a eclipse-paho-mqtt-c::paho-mqtt3c eclipse-paho-mqtt-c::paho-mqtt3as eclipse-paho-mqtt-c::paho-mqtt3cs)
+-        PUBLIC PahoMqttC::PahoMqttC Threads::Threads)
++        PUBLIC ${_PAHO_MQTT_C_LIB_NAME} Threads::Threads)
  
      # It would be nice to exort the include paths from the obj lib, but we
      # get an export error. Perhaps in a future version?
-@@ -129,7 +129,7 @@ if(PAHO_BUILD_STATIC)
+@@ -118,13 +126,22 @@ endif()
+ ## --- Build static version of the library, if requested ---
+ 
+ if(PAHO_BUILD_STATIC)
++
++    ## set PAHO_C_LIB
++    if(PAHO_WITH_SSL)
++        find_package(OpenSSL REQUIRED)
++        set(_PAHO_MQTT_C_LIB_NAME eclipse-paho-mqtt-c::paho-mqtt3as-static eclipse-paho-mqtt-c::paho-mqtt3cs-static)
++    else()
++        set(_PAHO_MQTT_C_LIB_NAME  eclipse-paho-mqtt-c::paho-mqtt3a-static eclipse-paho-mqtt-c::paho-mqtt3c-static)
++    endif()
++
+     ## create the static library
+     add_library(paho-mqttpp3-static STATIC $<TARGET_OBJECTS:paho-cpp-objs>)
+ 
      ## add dependencies to the shared library
      target_link_libraries(paho-mqttpp3-static
          PRIVATE ${LIBS_SYSTEM}
--        PUBLIC PahoMqttC::PahoMqttC)
-+        PUBLIC eclipse-paho-mqtt-c::paho-mqtt3as-static eclipse-paho-mqtt-c::paho-mqtt3cs-static)
+-        PUBLIC PahoMqttC::PahoMqttC Threads::Threads)
++        PUBLIC ${_PAHO_MQTT_C_LIB_NAME} Threads::Threads)
  
      target_include_directories(paho-mqttpp3-static PUBLIC
          $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>

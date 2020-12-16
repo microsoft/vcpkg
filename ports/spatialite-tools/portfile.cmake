@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 option(BUILD_DEBUG_TOOLS "Build debug version of tools" OFF)
 
 vcpkg_download_distfile(ARCHIVE
@@ -28,19 +26,23 @@ if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
     set(LIBXML2_LIBS_DBG "${LDIR}/debug/lib/libxml2.lib")
     set(SPATIALITE_LIBS_REL "${LDIR}/lib/spatialite.lib")
     set(SPATIALITE_LIBS_DBG "${LDIR}/debug/lib/spatialite.lib")
-    set(ICONV_LIBS_REL "${LDIR}/lib/libiconv.lib")
-    set(ICONV_LIBS_DBG "${LDIR}/debug/lib/libiconv.lib")
+    set(ICONV_LIBS_REL "${LDIR}/lib/iconv.lib")
+    set(ICONV_LIBS_DBG "${LDIR}/debug/lib/iconv.lib")
+    set(EXPAT_LIBS_REL "${LDIR}/lib/libexpat.lib")
+    set(EXPAT_LIBS_DBG "${LDIR}/debug/lib/libexpatd.lib")  
 else()
     set(CL_FLAGS_DBG "/MTd /Zi /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
     set(CL_FLAGS_REL "/MT /Ox /DACCEPT_USE_OF_DEPRECATED_PROJ_API_H")
-    set(GEOS_LIBS_REL "${LDIR}/lib/libgeos_c.lib ${LDIR}/lib/libgeos.lib")
-    set(GEOS_LIBS_DBG "${LDIR}/debug/lib/libgeos_c.lib ${LDIR}/debug/lib/libgeos.lib")
+    set(GEOS_LIBS_REL "${LDIR}/lib/geos_c.lib ${LDIR}/lib/geos.lib")
+    set(GEOS_LIBS_DBG "${LDIR}/debug/lib/geos_cd.lib ${LDIR}/debug/lib/geosd.lib")
     set(LIBXML2_LIBS_REL "${LDIR}/lib/libxml2.lib ${LDIR}/lib/lzma.lib ws2_32.lib")
-    set(LIBXML2_LIBS_DBG "${LDIR}/debug/lib/libxml2.lib ${LDIR}/debug/lib/lzma.lib ws2_32.lib")
+    set(LIBXML2_LIBS_DBG "${LDIR}/debug/lib/libxml2.lib ${LDIR}/debug/lib/lzmad.lib ws2_32.lib")
     set(SPATIALITE_LIBS_REL "${LDIR}/lib/spatialite.lib ${LDIR}/lib/freexl.lib")
     set(SPATIALITE_LIBS_DBG "${LDIR}/debug/lib/spatialite.lib ${LDIR}/debug/lib/freexl.lib")
-    set(ICONV_LIBS_REL "${LDIR}/lib/libiconv.lib ${LDIR}/lib/libcharset.lib")
-    set(ICONV_LIBS_DBG "${LDIR}/debug/lib/libiconv.lib ${LDIR}/debug/lib/libcharset.lib ")
+    set(ICONV_LIBS_REL "${LDIR}/lib/iconv.lib ${LDIR}/lib/charset.lib")
+    set(ICONV_LIBS_DBG "${LDIR}/debug/lib/iconv.lib ${LDIR}/debug/lib/charset.lib ")
+    set(EXPAT_LIBS_REL "${LDIR}/lib/libexpatMD.lib")
+    set(EXPAT_LIBS_DBG "${LDIR}/debug/lib/libexpatdMD.lib") 
 endif()
 
 set(LIBS_ALL_DBG
@@ -49,10 +51,10 @@ set(LIBS_ALL_DBG
     ${SPATIALITE_LIBS_DBG} \
     ${LIBXML2_LIBS_DBG} \
     ${GEOS_LIBS_DBG} \
+    ${EXPAT_LIBS_DBG} \
     ${LDIR}/debug/lib/readosm.lib \
-    ${LDIR}/debug/lib/expat.lib \
     ${LDIR}/debug/lib/zlibd.lib \
-    ${LDIR}/debug/lib/proj_d.lib"
+    ${LDIR}/debug/lib/proj_d.lib ole32.lib shell32.lib"
    )
 set(LIBS_ALL_REL
     "${ICONV_LIBS_REL} \
@@ -60,10 +62,10 @@ set(LIBS_ALL_REL
     ${SPATIALITE_LIBS_REL} \
     ${LIBXML2_LIBS_REL} \
     ${GEOS_LIBS_REL} \
+    ${EXPAT_LIBS_REL} \
     ${LDIR}/lib/readosm.lib \
-    ${LDIR}/lib/expat.lib \
     ${LDIR}/lib/zlib.lib \
-    ${LDIR}/lib/proj.lib"
+    ${LDIR}/lib/proj.lib ole32.lib shell32.lib"
    )
 
 if(BUILD_DEBUG_TOOLS)

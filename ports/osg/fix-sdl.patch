@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 81328ea..2566b48 100644
+index 81328ea..c735419 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -755,8 +755,6 @@ ELSE()
@@ -11,15 +11,14 @@ index 81328ea..2566b48 100644
      FIND_PACKAGE(Poppler-glib)
      FIND_PACKAGE(RSVG)
      FIND_PACKAGE(GtkGl)
-@@ -775,6 +773,11 @@ ELSE()
+@@ -775,6 +773,10 @@ ELSE()
              FIND_PACKAGE(Lua51)
          ENDIF()
      ENDIF()
 +    
 +    find_package(SDL)
-+    if (NOT SDL_FOUND)
-+        find_package(SDL2)
-+    endif()
++    find_package(SDL2 CONFIG)
++    set(SDL2_LIBRARY SDL2::SDL2 SDL2::SDL2main)
  
      # V8 and Python plugins are tests for linking against these libraries but aren't functionality beyond this.
      # FIND_PACKAGE(V8)
