@@ -47,9 +47,9 @@ sudo apt -y install $APT_PACKAGES
 # Install newer version of nasm than the apt package, required by intel-ipsec
 mkdir /tmp/nasm
 cd /tmp/nasm
-curl -O https://www.nasm.us/pub/nasm/releasebuilds/2.14.02/nasm-2.14.02.tar.gz
-tar -xf nasm-2.14.02.tar.gz
-cd nasm-2.14.02/
+curl -O https://www.nasm.us/pub/nasm/releasebuilds/2.15.05/nasm-2.15.05.tar.gz
+tar -xf nasm-2.15.05.tar.gz
+cd nasm-2.15.05/
 ./configure --prefix=/usr && make -j
 sudo make install
 cd ~
