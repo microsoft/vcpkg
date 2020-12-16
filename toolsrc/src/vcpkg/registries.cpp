@@ -3,7 +3,6 @@
 #include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.debug.h>
 
-#include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
@@ -175,16 +174,15 @@ namespace
             for (auto file : fs::directory_iterator(super_directory))
             {
                 auto filename = fs::u8string(file.path().filename());
-                if (Strings::ends_with(filename, ".json"))
+                if (!Strings::ends_with(filename, ".json")) continue;
+
+                auto port_name = filename.substr(0, filename.size() - 5);
+                if (!Json::PackageNameDeserializer::is_package_name(port_name))
                 {
-                    auto port_name = filename.substr(0, filename.size() - 5);
-                    if (!Json::PackageNameDeserializer::is_package_name(port_name))
-                    {
-                        Checks::exit_with_message(
-                            VCPKG_LINE_INFO, "Error: found invalid port version file name: `%s`.", fs::u8string(file));
-                    }
-                    out.push_back(std::move(port_name));
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Error: found invalid port version file name: `%s`.", fs::u8string(file));
                 }
+                out.push_back(std::move(port_name));
             }
         }
     }
@@ -213,97 +211,95 @@ namespace
             }
             return res;
         }
-        else
+
+        // Fall back to current available version
+        auto port_directory = paths.builtin_ports_directory() / fs::u8path(port_name);
+        if (paths.get_filesystem().exists(port_directory))
         {
-            // Fall back to current available version
-            auto port_directory = paths.builtin_ports_directory() / fs::u8path(port_name);
-            if (paths.get_filesystem().exists(port_directory))
+            auto found_scf = Paragraphs::try_load_port(paths.get_filesystem(), port_directory);
+            if (auto scfp = found_scf.get())
             {
-                auto found_scf = Paragraphs::try_load_port(paths.get_filesystem(), port_directory);
-                if (auto scfp = found_scf.get())
+                auto& scf = *scfp;
+                auto maybe_error = scf->check_against_feature_flags(port_directory, paths.get_feature_flags());
+                if (maybe_error)
                 {
-                    auto& scf = *scfp;
-                    auto maybe_error = scf->check_against_feature_flags(port_directory, paths.get_feature_flags());
-                    if (maybe_error)
-                        Checks::exit_with_message(VCPKG_LINE_INFO, "Parsing manifest failed: %s", *maybe_error.get());
-
-                    if (scf->core_paragraph->name == port_name)
-                    {
-                        return std::make_unique<BuiltinRegistryEntry>(
-                            std::make_unique<SourceControlFileLocation>(std::move(scf), std::move(port_directory)));
-                    }
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
-                                              fs::u8string(port_directory),
-                                              port_name,
-                                              scf->core_paragraph->name);
+                    Checks::exit_with_message(VCPKG_LINE_INFO, "Parsing manifest failed: %s", *maybe_error.get());
                 }
-            }
 
-            return nullptr;
+                if (scf->core_paragraph->name == port_name)
+                {
+                    return std::make_unique<BuiltinRegistryEntry>(
+                        std::make_unique<SourceControlFileLocation>(std::move(scf), std::move(port_directory)));
+                }
+                Checks::exit_with_message(VCPKG_LINE_INFO,
+                                          "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
+                                          fs::u8string(port_directory),
+                                          port_name,
+                                          scf->core_paragraph->name);
+            }
         }
+
+        return nullptr;
     }
 
+    Baseline parse_builtin_baseline(const VcpkgPaths& paths, StringView baseline_identifier)
+    {
+        auto path_to_baseline = paths.root / fs::u8path("port_versions") / fs::u8path("baseline.json");
+        auto res_baseline = load_baseline_versions(paths, path_to_baseline, baseline_identifier);
+
+        if (!res_baseline.has_value())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO, res_baseline.error());
+        }
+        auto opt_baseline = res_baseline.get();
+        if (auto p = opt_baseline->get())
+        {
+            return std::move(*p);
+        }
+
+        if (baseline_identifier.size() == 0)
+        {
+            return {};
+        }
+
+        if (baseline_identifier == "default")
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Couldn't find explicitly specified baseline `\"default\"` in the baseline file.",
+                                      baseline_identifier);
+        }
+
+        // attempt to check out the baseline:
+        auto maybe_path = get_git_baseline_json_path(paths, baseline_identifier);
+        if (!maybe_path.has_value())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Couldn't find explicitly specified baseline `\"%s\"` in the baseline file, "
+                                      "and there was no baseline at that commit or the commit didn't exist.\n%s",
+                                      baseline_identifier,
+                                      maybe_path.error());
+        }
+
+        res_baseline = load_baseline_versions(paths, *maybe_path.get());
+        if (!res_baseline.has_value())
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO, res_baseline.error());
+        }
+        opt_baseline = res_baseline.get();
+        if (auto p = opt_baseline->get())
+        {
+            return std::move(*p);
+        }
+
+        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                  "Couldn't find explicitly specified baseline `\"%s\"` in the baseline "
+                                  "file, and the `\"default\"` baseline does not exist at that commit.",
+                                  baseline_identifier);
+    }
     Optional<VersionT> BuiltinRegistry::get_baseline_version(const VcpkgPaths& paths, StringView port_name) const
     {
-        const auto& baseline = m_baseline.get([this, &paths]() -> Baseline {
-            auto path_to_baseline = paths.root / fs::u8path("port_versions") / fs::u8path("baseline.json");
-            auto res_baseline = load_baseline_versions(paths, path_to_baseline, m_baseline_identifier);
-
-            if (!res_baseline.has_value())
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO, res_baseline.error());
-            }
-            auto opt_baseline = res_baseline.get();
-            if (auto p = opt_baseline->get())
-            {
-                return std::move(*p);
-            }
-
-            if (m_baseline_identifier.empty())
-            {
-                return {};
-            }
-
-            if (m_baseline_identifier == "default")
-            {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO,
-                    "Couldn't find explicitly specified baseline `\"default\"` in the baseline file.",
-                    m_baseline_identifier);
-            }
-
-            // attempt to check out the baseline:
-            auto maybe_path = get_git_baseline_json_path(paths, m_baseline_identifier);
-            if (auto path_to_git_baseline = maybe_path.get())
-            {
-                res_baseline = load_baseline_versions(paths, *path_to_git_baseline);
-                if (!res_baseline.has_value())
-                {
-                    Checks::exit_with_message(VCPKG_LINE_INFO, res_baseline.error());
-                }
-                opt_baseline = res_baseline.get();
-                if (auto p = opt_baseline->get())
-                {
-                    return std::move(*p);
-                }
-                else
-                {
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "Couldn't find explicitly specified baseline `\"%s\"` in the baseline "
-                                              "file, and the `\"default\"` baseline does not exist at that commit.",
-                                              m_baseline_identifier);
-                }
-            }
-            else
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO,
-                                          "Couldn't find explicitly specified baseline `\"%s\"` in the baseline file, "
-                                          "and there was no baseline at that commit or the commit didn't exist.\n%s",
-                                          m_baseline_identifier,
-                                          maybe_path.error());
-            }
-        });
+        const auto& baseline = m_baseline.get(
+            [this, &paths]() -> Baseline { return parse_builtin_baseline(paths, m_baseline_identifier); });
 
         auto it = baseline.find(port_name);
         if (it != baseline.end())
@@ -344,35 +340,35 @@ namespace
     // } BuiltinRegistry::RegistryImplementation
 
     // { FilesystemRegistry::RegistryImplementation
+    Baseline parse_filesystem_baseline(const VcpkgPaths& paths, const fs::path& root, StringView baseline_identifier)
+    {
+        auto path_to_baseline = root / fs::u8path("port_versions") / fs::u8path("baseline.json");
+        auto res_baseline = load_baseline_versions(paths, path_to_baseline, baseline_identifier);
+        if (auto opt_baseline = res_baseline.get())
+        {
+            if (auto p = opt_baseline->get())
+            {
+                return std::move(*p);
+            }
+
+            if (baseline_identifier.size() == 0)
+            {
+                return {};
+            }
+
+            Checks::exit_with_message(
+                VCPKG_LINE_INFO,
+                "Error: could not find explicitly specified baseline `\"%s\"` in baseline file `%s`.",
+                baseline_identifier,
+                fs::u8string(path_to_baseline));
+        }
+
+        Checks::exit_with_message(VCPKG_LINE_INFO, res_baseline.error());
+    }
     Optional<VersionT> FilesystemRegistry::get_baseline_version(const VcpkgPaths& paths, StringView port_name) const
     {
-        const auto& baseline = m_baseline.get([this, &paths]() -> Baseline {
-            auto path_to_baseline = m_path / fs::u8path("port_versions") / fs::u8path("baseline.json");
-            auto res_baseline = load_baseline_versions(paths, path_to_baseline, m_baseline_identifier);
-            if (auto opt_baseline = res_baseline.get())
-            {
-                if (auto p = opt_baseline->get())
-                {
-                    return std::move(*p);
-                }
-                else if (m_baseline_identifier.empty())
-                {
-                    return {};
-                }
-                else
-                {
-                    Checks::exit_with_message(
-                        VCPKG_LINE_INFO,
-                        "Error: could not find explicitly specified baseline `\"%s\"` in baseline file `%s`.",
-                        m_baseline_identifier,
-                        fs::u8string(path_to_baseline));
-                }
-            }
-            else
-            {
-                Checks::exit_with_message(VCPKG_LINE_INFO, res_baseline.error());
-            }
-        });
+        const auto& baseline = m_baseline.get(
+            [this, &paths]() -> Baseline { return parse_filesystem_baseline(paths, m_path, m_baseline_identifier); });
 
         auto it = baseline.find(port_name);
         if (it != baseline.end())
@@ -429,20 +425,19 @@ namespace
             const auto& git_tree = git_entry->git_trees[it - git_entry->port_versions.begin()];
             return paths.git_checkout_port(paths.get_filesystem(), git_entry->port_name, git_tree);
         }
-        else if (scfl_version == version)
+
+        if (scfl_version == version)
         {
             return scfl->source_location;
         }
-        else
-        {
-            auto& name = scfl->source_control_file->core_paragraph->name;
-            return Strings::format(
-                "Error: no version entry for %s at version %s.\n"
-                "We are currently using the version in the ports tree, since no %s.json was found in port_versions.",
-                name,
-                scfl->to_versiont().to_string(),
-                name);
-        }
+
+        auto& name = scfl->source_control_file->core_paragraph->name;
+        return Strings::format(
+            "Error: no version entry for %s at version %s.\n"
+            "We are currently using the version in the ports tree, since no %s.json was found in port_versions.",
+            name,
+            scfl->to_versiont().to_string(),
+            name);
     }
     // } BuiltinRegistryEntry::RegistryEntry
 
@@ -757,49 +752,45 @@ namespace
         }
 
         auto maybe_contents = fs.read_contents(versions_file_path);
-        if (auto contents = maybe_contents.get())
-        {
-            auto maybe_versions_json = Json::parse(*contents);
-            if (!maybe_versions_json.has_value())
-            {
-                return Strings::format("Error: failed to parse versions file for `%s`: %s",
-                                       port_name,
-                                       maybe_versions_json.error()->format());
-            }
-            if (!maybe_versions_json.get()->first.is_object())
-            {
-                return Strings::format("Error: versions file for `%s` does not have a top level object.", port_name);
-            }
-
-            const auto& versions_object = maybe_versions_json.get()->first.object();
-            auto maybe_versions_array = versions_object.get("versions");
-            if (!maybe_versions_array || !maybe_versions_array->is_array())
-            {
-                return Strings::format("Error: versions file for `%s` does not contain a versions array.", port_name);
-            }
-
-            std::vector<VersionDbEntry> db_entries;
-            VersionDbEntryArrayDeserializer deserializer{type, registry_root};
-            // Avoid warning treated as error.
-            if (maybe_versions_array != nullptr)
-            {
-                Json::Reader r;
-                r.visit_in_key(*maybe_versions_array, "versions", db_entries, deserializer);
-                if (!r.errors().empty())
-                {
-                    return Strings::format("Error: failed to parse versions file for `%s`:\n%s",
-                                           port_name,
-                                           Strings::join("\n", r.errors()));
-                }
-            }
-            return db_entries;
-        }
-        else
+        if (!maybe_contents.has_value())
         {
             return Strings::format("Failed to load the versions database file %s: %s",
                                    fs::u8string(versions_file_path),
                                    maybe_contents.error().message());
         }
+
+        auto maybe_versions_json = Json::parse(*maybe_contents.get());
+        if (!maybe_versions_json.has_value())
+        {
+            return Strings::format(
+                "Error: failed to parse versions file for `%s`: %s", port_name, maybe_versions_json.error()->format());
+        }
+        if (!maybe_versions_json.get()->first.is_object())
+        {
+            return Strings::format("Error: versions file for `%s` does not have a top level object.", port_name);
+        }
+
+        const auto& versions_object = maybe_versions_json.get()->first.object();
+        auto maybe_versions_array = versions_object.get("versions");
+        if (!maybe_versions_array || !maybe_versions_array->is_array())
+        {
+            return Strings::format("Error: versions file for `%s` does not contain a versions array.", port_name);
+        }
+
+        std::vector<VersionDbEntry> db_entries;
+        VersionDbEntryArrayDeserializer deserializer{type, registry_root};
+        // Avoid warning treated as error.
+        if (maybe_versions_array != nullptr)
+        {
+            Json::Reader r;
+            r.visit_in_key(*maybe_versions_array, "versions", db_entries, deserializer);
+            if (!r.errors().empty())
+            {
+                return Strings::format(
+                    "Error: failed to parse versions file for `%s`:\n%s", port_name, Strings::join("\n", r.errors()));
+            }
+        }
+        return db_entries;
     }
 
     ExpectedS<Optional<Baseline>> parse_baseline_versions(StringView contents, StringView baseline)

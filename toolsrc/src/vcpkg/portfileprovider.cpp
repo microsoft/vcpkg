@@ -21,6 +21,8 @@ namespace
 
     struct OverlayRegistryEntry final : RegistryEntry
     {
+        OverlayRegistryEntry(fs::path&& p, VersionT&& v) : path(p), version(v) { }
+
         View<VersionT> get_port_versions() const override { return {&version, 1}; }
         ExpectedS<fs::path> get_path_to_version(const VcpkgPaths&, const VersionT& v) const override
         {
@@ -28,8 +30,8 @@ namespace
             return path;
         }
 
-        VersionT version;
         fs::path path;
+        VersionT version;
     };
 }
 
@@ -101,10 +103,7 @@ namespace vcpkg::PortFileProvider
                     auto& scf = *scfp;
                     if (scf->core_paragraph->name == spec)
                     {
-                        auto res = std::make_unique<OverlayRegistryEntry>();
-                        res->path = std::move(ports_dir);
-                        res->version = VersionT{scf->core_paragraph->version, scf->core_paragraph->port_version};
-                        return res;
+                        return std::make_unique<OverlayRegistryEntry>(fs::path(ports_dir), scf->to_versiont());
                     }
                 }
                 else
@@ -126,10 +125,7 @@ namespace vcpkg::PortFileProvider
                     auto& scf = *scfp;
                     if (scf->core_paragraph->name == spec)
                     {
-                        auto res = std::make_unique<OverlayRegistryEntry>();
-                        res->path = std::move(ports_spec);
-                        res->version = VersionT{scf->core_paragraph->version, scf->core_paragraph->port_version};
-                        return res;
+                        return std::make_unique<OverlayRegistryEntry>(std::move(ports_spec), scf->to_versiont());
                     }
                     Checks::exit_with_message(VCPKG_LINE_INFO,
                                               "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
@@ -301,7 +297,7 @@ namespace vcpkg::PortFileProvider
     {
         struct BaselineProviderImpl : IBaselineProvider, Util::ResourceBase
         {
-            BaselineProviderImpl(const VcpkgPaths& paths_) : paths(paths_) {}
+            BaselineProviderImpl(const VcpkgPaths& paths_) : paths(paths_) { }
 
             virtual Optional<VersionT> get_baseline_version(StringView port_name) const override
             {
@@ -343,12 +339,12 @@ namespace vcpkg::PortFileProvider
                 }
                 else
                 {
-                    Checks::exit_with_message(VCPKG_LINE_INFO, "Error: Could not find a definition for port %s", port_name);
+                    Checks::exit_with_message(
+                        VCPKG_LINE_INFO, "Error: Could not find a definition for port %s", port_name);
                 }
             }
 
-            ExpectedS<const SourceControlFileLocation&> get_control_file(
-                const VersionSpec& version_spec) const override
+            ExpectedS<const SourceControlFileLocation&> get_control_file(const VersionSpec& version_spec) const override
             {
                 auto cache_it = m_control_cache.find(version_spec);
                 if (cache_it != m_control_cache.end())
@@ -385,13 +381,13 @@ namespace vcpkg::PortFileProvider
                     {
                         return m_control_cache
                             .emplace(version_spec,
-                                    SourceControlFileLocation{std::move(*scf), std::move(port_directory)})
+                                     SourceControlFileLocation{std::move(*scf), std::move(port_directory)})
                             .first->second;
                     }
                     return Strings::format("Error: Failed to load port from %s: names did not match: '%s' != '%s'",
-                                        fs::u8string(port_directory),
-                                        version_spec.port_name,
-                                        scf->get()->core_paragraph->name);
+                                           fs::u8string(port_directory),
+                                           version_spec.port_name,
+                                           scf->get()->core_paragraph->name);
                 }
 
                 print_error_message(maybe_control_file.error());

@@ -4,6 +4,7 @@
 #include <vcpkg/fwd/vcpkgpaths.h>
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/view.h>
 
@@ -92,4 +93,9 @@ namespace vcpkg
         std::vector<Registry> registries_;
     };
 
+    std::unique_ptr<Json::IDeserializer<std::unique_ptr<RegistryImplementation>>>
+    get_registry_implementation_deserializer(const fs::path& configuration_directory);
+
+    std::unique_ptr<Json::IDeserializer<std::vector<Registry>>> get_registry_array_deserializer(
+        const fs::path& configuration_directory);
 }

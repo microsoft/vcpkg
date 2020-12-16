@@ -2,11 +2,39 @@
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/configuration.h>
-#include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 
-namespace vcpkg
+namespace
 {
+    using namespace vcpkg;
+
+    struct ConfigurationDeserializer final : Json::IDeserializer<Configuration>
+    {
+        virtual StringView type_name() const override { return "a configuration object"; }
+
+        constexpr static StringLiteral DEFAULT_REGISTRY = "default-registry";
+        constexpr static StringLiteral REGISTRIES = "registries";
+        virtual View<StringView> valid_fields() const override
+        {
+            constexpr static StringView t[] = {DEFAULT_REGISTRY, REGISTRIES};
+            return t;
+        }
+
+        virtual Optional<Configuration> visit_object(Json::Reader& r, const Json::Object& obj) override;
+
+        ConfigurationDeserializer(const VcpkgCmdArguments& args, const fs::path& configuration_directory);
+
+    private:
+        bool print_json;
+
+        bool registries_enabled;
+
+        fs::path configuration_directory;
+    };
+
+    constexpr StringLiteral ConfigurationDeserializer::DEFAULT_REGISTRY;
+    constexpr StringLiteral ConfigurationDeserializer::REGISTRIES;
+
     Optional<Configuration> ConfigurationDeserializer::visit_object(Json::Reader& r, const Json::Object& obj)
     {
         RegistrySet registries;
@@ -61,9 +89,6 @@ namespace vcpkg
         return Configuration{std::move(registries)};
     }
 
-    constexpr StringLiteral ConfigurationDeserializer::DEFAULT_REGISTRY;
-    constexpr StringLiteral ConfigurationDeserializer::REGISTRIES;
-
     ConfigurationDeserializer::ConfigurationDeserializer(const VcpkgCmdArguments& args,
                                                          const fs::path& configuration_directory)
         : configuration_directory(configuration_directory)
@@ -72,4 +97,10 @@ namespace vcpkg
         print_json = args.output_json();
     }
 
+}
+
+std::unique_ptr<Json::IDeserializer<Configuration>> vcpkg::make_configuration_deserializer(
+    const VcpkgCmdArguments& args, const fs::path& config_directory)
+{
+    return std::make_unique<ConfigurationDeserializer>(args, config_directory);
 }
