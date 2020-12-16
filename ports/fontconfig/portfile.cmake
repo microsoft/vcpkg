@@ -103,4 +103,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}LOCAL_APPDATA_FONTCONFIG_CACHE")
 endif()
 
+if(NOT VCPKG_TARGET_IS_LINUX)
+    set(VCPKG_TARGET_IS_LINUX 0) # To not leave empty AND statements in the wrapper
+endif()
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
