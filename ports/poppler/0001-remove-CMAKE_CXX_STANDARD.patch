@@ -1,6 +1,6 @@
-From a9f15d044520cf818bf6bb428eb933cf34a1fc10 Mon Sep 17 00:00:00 2001
+From 36fb9e11ab5b15fc003d77e7876e37339c37a55d Mon Sep 17 00:00:00 2001
 From: abc <a@b.com>
-Date: Wed, 16 Dec 2020 16:59:25 +0800
+Date: Wed, 16 Dec 2020 22:43:36 +0800
 Subject: [PATCH] remove CMAKE_CXX_STANDARD
 
 ---
@@ -8,7 +8,7 @@ Subject: [PATCH] remove CMAKE_CXX_STANDARD
  1 file changed, 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 39946b05..52d16ddb 100644
+index 1573249a..ec66b515 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -41,7 +41,6 @@ string(REGEX REPLACE "^0?(.+)$" "\\1" POPPLER_MINOR_VERSION "${POPPLER_MINOR_VER
