@@ -44,14 +44,6 @@ APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu60"
 
 sudo apt -y install $APT_PACKAGES
 
-# Delete /etc/debian_version to prevent Azure Pipelines Scale Set Agents from
-# removing some of the above
-sudo apt-mark hold libcurl4
-sudo apt-mark hold liblttng-ust0
-sudo apt-mark hold libkrb5-3
-sudo apt-mark hold zlib1g
-sudo apt-mark hold libicu60
-
 # Install newer version of nasm than the apt package, required by intel-ipsec
 mkdir /tmp/nasm
 cd /tmp/nasm
