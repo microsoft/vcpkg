@@ -8,28 +8,15 @@ vcpkg_from_github(
 	HEAD_REF master
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "example"   MDNS_BUILD_EXAMPLE
-)
-
-
 vcpkg_configure_cmake(
 	SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        ${FEATURE_OPTIONS}    
+        -DMDNS_BUILD_EXAMPLE=OFF
 )
 
 vcpkg_install_cmake()
 
-
-if ("example" IN_LIST FEATURES)
-    vcpkg_copy_tools(
-        TOOL_NAMES "mdns_example"
-        SEARCH_DIR ${CURRENT_PACKAGES_DIR}/bin
-        AUTO_CLEAN
-    )
-endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
