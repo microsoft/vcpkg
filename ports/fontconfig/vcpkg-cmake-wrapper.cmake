@@ -2,7 +2,11 @@ _find_package(${ARGS})
 if(Fontconfig_FOUND) # theoretically this could be skipped. If the wrapper is installed it should be found!
     find_package(Freetype)
     if(Freetype_FOUND AND TARGET Fontconfig::Fontconfig)
-        set_property(TARGET Fontconfig::Fontconfig APPEND PROPERTY INTERFACE_LINK_LIBRARIES "Freetype::Freetype")
+        if(TARGET Freetype::Freetype)
+            set_property(TARGET Fontconfig::Fontconfig APPEND PROPERTY INTERFACE_LINK_LIBRARIES "Freetype::Freetype")
+        else()
+            # TODO link Freetype libraries to the target if the target Freetype::Freetype is not defined;
+        endif()
     endif()
     if(FREETYPE_LIBRARIES)
         list(APPEND Fontconfig_LIBRARIES "${FREETYPE_LIBRARIES}")
