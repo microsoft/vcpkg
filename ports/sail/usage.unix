@@ -9,3 +9,8 @@ C++ bindings:
 
     find_package(Sail CONFIG REQUIRED)
     target_link_libraries(main PRIVATE SAIL::sail-c++)
+
+Note for static builds on Unix-like platforms: the client application
+must be built with -rdynamic or an equivalent to enable dlopen and dlsym
+on the same binary. If you use CMake, this could be achieved by setting
+CMAKE_ENABLE_EXPORTS to ON.
