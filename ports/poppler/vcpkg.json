@@ -11,10 +11,5 @@
     "libiconv",
     "openjpeg",
     "zlib"
-  ],
-  "features": {
-    "cpp17": {
-      "description": "build in C++ 17, C++14 and C++17 are not compatible for popper"
-    }
-  }
+  ]
 }

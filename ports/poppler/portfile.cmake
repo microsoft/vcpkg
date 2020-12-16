@@ -8,17 +8,10 @@ vcpkg_from_github(
         0001-remove-CMAKE_CXX_STANDARD.patch
 )
 
-if("cpp17" IN_LIST FEATURES)
-    set(CXX_STANDARD 17)
-else()
-    set(CXX_STANDARD 14)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
         -DBUILD_GTK_TESTS=OFF
         -DBUILD_QT5_TESTS=OFF
         -DBUILD_QT6_TESTS=OFF
