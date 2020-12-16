@@ -16,6 +16,7 @@ vcpkg_configure_cmake(
         -DCC_NO_UNIT_TESTS=ON
 )
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/LibComms/cmake TARGET_PATH share/LibComms)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
