@@ -8,51 +8,56 @@ variables:
 
 stages:
 - stage: FormatChecks
-  displayName: 'Formatting Checks:'
+  displayName: 'Formatting and Documentation Checks'
   pool: $(windows-pool)
   jobs:
-  - job: ClangFormat
-    displayName: 'C++'
-    workspace:
-      clean: resources
-    steps:
-    - task: Powershell@2
-      displayName: 'Format C++'
-      inputs:
-        filePath: 'scripts/azure-pipelines/windows/Check-CxxFormatting.ps1'
-        arguments: '-Root . -DiffOutput $(Build.ArtifactStagingDirectory)\clang-format.diff'
-        pwsh: true
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish C++ Diff'
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)\clang-format.diff'
-        ArtifactName: 'clang-format.diff'
-      condition: failed()
-  - job: Manifests
-    displayName: 'Port Manifests'
+  - job:
     workspace:
       clean: resources
     variables:
     - name: VCPKG_DOWNLOADS
       value: D:\downloads
+    - name: DIFF_FILE
+      value: $(Build.ArtifactStagingDirectory)\format.diff
     steps:
     - task: Powershell@2
-      displayName: 'Format Manifests'
+      displayName: 'Format C++'
       inputs:
-        filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
+        filePath: 'scripts/azure-pipelines/Format-CxxCode.ps1'
         arguments: '-Root .'
         pwsh: true
-  - job: DocumentationGeneration
-    displayName: 'Documentation Generation'
-    workspace:
-      clean: resources
-    steps:
     - task: Powershell@2
       displayName: 'Generate Documentation'
       inputs:
-        filePath: 'scripts/azure-pipelines/windows/Check-CMakeFunctionDocumentation.ps1'
-        arguments: '-Root .'
+        filePath: 'docs/generate.ps1'
+        arguments: '-VcpkgRoot . -WarningAction Stop'
         pwsh: true
+    - script: .\bootstrap-vcpkg.bat
+      displayName: 'Build vcpkg'
+    - script: '.\vcpkg format-manifest --all'
+      displayName: 'Format Manifests'
+    - task: Powershell@2
+      displayName: 'Create Diff'
+      inputs:
+        script: |
+          Start-Process -FilePath 'git' -ArgumentList 'diff' -NoNewWindow -Wait -RedirectStandardOutput $ENV:DIFF_FILE
+          if (0 -ne (Get-Item $ENV:DIFF_FILE).Length)
+          {
+            $msg = @(
+              'The formatting of the files in the repo were not what we expected,',
+              'or the documentation was not regenerated.',
+              'Please access the diff from format.diff in the build artifacts,'
+              'and apply the patch with `git apply`'
+            )
+            Write-Error ($msg -join "`n")
+            throw
+          }
+    - task: PublishBuildArtifacts@1
+      condition: failed()
+      displayName: 'Publish C++ Diff'
+      inputs:
+        PathtoPublish: '$(DIFF_FILE)'
+        ArtifactName: 'format.diff'
 - stage: RunPrTests
   displayName: 'Run PR Tests:'
   dependsOn: FormatChecks
