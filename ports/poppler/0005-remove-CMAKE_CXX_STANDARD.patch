@@ -1,22 +1,21 @@
-From 7d1ffcdc4bf8f8c69cb8fec3ea2efc28b5b4c24a Mon Sep 17 00:00:00 2001
+From a9f15d044520cf818bf6bb428eb933cf34a1fc10 Mon Sep 17 00:00:00 2001
 From: abc <a@b.com>
-Date: Sun, 13 Dec 2020 23:10:12 +0800
-Subject: [PATCH] C++14 to C++17
+Date: Wed, 16 Dec 2020 16:59:25 +0800
+Subject: [PATCH] remove CMAKE_CXX_STANDARD
 
 ---
- CMakeLists.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ CMakeLists.txt | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 39946b05..067c56ea 100644
+index 39946b05..52d16ddb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -41,7 +41,7 @@ string(REGEX REPLACE "^0?(.+)$" "\\1" POPPLER_MINOR_VERSION "${POPPLER_MINOR_VER
+@@ -41,7 +41,6 @@ string(REGEX REPLACE "^0?(.+)$" "\\1" POPPLER_MINOR_VERSION "${POPPLER_MINOR_VER
  set(POPPLER_MICRO_VERSION "1")
  set(POPPLER_VERSION "${POPPLER_MAJOR_VERSION}.${POPPLER_MINOR_VERSION_STRING}.${POPPLER_MICRO_VERSION}")
  
 -set(CMAKE_CXX_STANDARD 14)
-+set(CMAKE_CXX_STANDARD 17)
  set(CMAKE_CXX_EXTENSIONS OFF)
  set(CMAKE_LINK_DEPENDS_NO_SHARED TRUE)
  

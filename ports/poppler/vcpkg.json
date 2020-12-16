@@ -1,14 +1,20 @@
 {
-  "name": "poppler-cpp17",
+  "name": "poppler",
   "version-string": "20.12.1",
   "port-version": 1,
   "description": "a PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
   "dependencies": [
+    "cairo",
     "devil",
     "freetype",
     "libiconv",
     "openjpeg",
     "zlib"
-  ]
+  ],
+  "features": {
+    "cpp17": {
+      "description": "build in C++ 17, C++14 and C++17 are not compatible for popper"
+    }
+  }
 }

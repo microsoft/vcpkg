@@ -43,12 +43,22 @@ vcpkg_from_github(
         0002-remove-utils.patch
         0003-remove-glib-and-GObject-introspection.patch
         0004-remove-Qt5-and-Qt6-support.patch
-        0005-CPP-14-to-CPP-17.patch
+        0005-remove-CMAKE_CXX_STANDARD.patch
 )
+
+if("cpp17" IN_LIST FEATURES)
+    set(CXX_STANDARD 17)
+else()
+    set(CXX_STANDARD 14)
+endif()
+
+message(${CXX_STANDARD})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    OPTIONS -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
+    #OPTIONS -DCMAKE_CXX_STANDARD=${CXX_STANDARD}
     # OPTIONS -DUSE_THIS_IN_ALL_BUILDS=1 -DUSE_THIS_TOO=2
     # OPTIONS_RELEASE -DOPTIMIZE=1
     # OPTIONS_DEBUG -DDEBUGGABLE=1
