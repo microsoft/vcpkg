@@ -44,9 +44,15 @@ else()
     set(BUILD_PLUGINS_STATIC 0)
 endif()
 
+# Head only features
+set(ALL_SUPPORTED_FEATURES ${ALL_FEATURES})
+if(NOT VCPKG_USE_HEAD_VERSION)
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES glslangshaderconverter spirvtoolsshaderconverter)
+endif()
+
 set(_COMPONENTS "")
 # Generate cmake parameters from feature names
-foreach(_feature IN LISTS ALL_FEATURES)
+foreach(_feature IN LISTS ALL_SUPPORTED_FEATURES)
     # Uppercase the feature name and replace "-" with "_"
     string(TOUPPER "${_feature}" _FEATURE)
     string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
