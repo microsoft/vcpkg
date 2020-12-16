@@ -16,11 +16,11 @@ if ($IsWindows)
 {
     if ([String]::IsNullOrEmpty($clangFormat) -or -not (Test-Path $clangFormat))
     {
-        $clangFormat = 'C:\Program Files\LLVM\bin\clang-format.exe'
+        $clangFormat = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\Llvm\x64\bin\clang-format.exe'
     }
     if (-not (Test-Path $clangFormat))
     {
-        $clangFormat = 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Tools\Llvm\x64\bin\clang-format.exe'
+        $clangFormat = 'C:\Program Files\LLVM\bin\clang-format.exe'
     }
 }
 
