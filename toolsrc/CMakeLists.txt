@@ -83,6 +83,11 @@ add_library(vcpkglib
 target_include_directories(vcpkglib PUBLIC include)
 
 vcpkg_target_add_warning_options(vcpkglib)
+if(VCPKG_COMPILER STREQUAL "clang")
+    set_property(SOURCE src/vcpkg/portfileprovider.cpp
+        APPEND PROPERTY COMPILE_FLAGS "-Wno-delete-non-abstract-non-virtual-dtor")
+endif()
+
 target_compile_definitions(vcpkglib PUBLIC
     VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>)
 
