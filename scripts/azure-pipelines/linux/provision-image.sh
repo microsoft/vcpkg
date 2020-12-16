@@ -16,7 +16,7 @@ APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
 
 # Additionally required by qt5-base
 APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
-  libxcb1-dev libx11-xcb-dev libxcb-glx0-dev"
+  libxcb1-dev libx11-xcb-dev libxcb-glx0-dev libxcb-util0-dev"
 
 # Additionally required by qt5-base for qt5-x11extras
 APT_PACKAGES="$APT_PACKAGES libxkbcommon-dev libxcb-keysyms1-dev \
