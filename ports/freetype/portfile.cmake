@@ -16,19 +16,21 @@ vcpkg_from_sourceforge(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        zlib        FT_WITH_ZLIB
         bzip2       FT_WITH_BZIP2
         png         FT_WITH_PNG
+        brotli      FT_WITH_BROTLI
     INVERTED_FEATURES
+        zlib        CMAKE_DISABLE_FIND_PACKAGE_ZLIB
         bzip2       CMAKE_DISABLE_FIND_PACKAGE_BZip2
         png         CMAKE_DISABLE_FIND_PACKAGE_PNG
+        brotli      CMAKE_DISABLE_FIND_PACKAGE_BrotliDec
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DFT_WITH_ZLIB=ON # Force system zlib.
-        -DFT_WITH_BROTLI=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_HarfBuzz=ON
         ${FEATURE_OPTIONS}
 )
@@ -73,12 +75,20 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    if("zlib" IN_LIST FEATURES)
+        set(USE_ZLIB ON)
+    endif()
+
     if("bzip2" IN_LIST FEATURES)
         set(USE_BZIP2 ON)
     endif()
 
     if("png" IN_LIST FEATURES)
         set(USE_PNG ON)
+    endif()
+
+    if("brotli" IN_LIST FEATURES)
+        set(USE_BROTLI ON)
     endif()
 
     configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake 
