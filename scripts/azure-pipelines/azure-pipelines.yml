@@ -29,7 +29,7 @@ stages:
     - task: Powershell@2
       displayName: 'Generate Documentation'
       inputs:
-        filePath: 'docs/generate.ps1'
+        filePath: 'docs/regenerate.ps1'
         arguments: '-VcpkgRoot . -WarningAction Stop'
         pwsh: true
     - script: .\bootstrap-vcpkg.bat
