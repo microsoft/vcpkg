@@ -17,6 +17,7 @@ stages:
       clean: resources
     steps:
     - task: Powershell@2
+      displayName: 'Format C++'
       inputs:
         filePath: 'scripts/azure-pipelines/windows/Check-CxxFormatting.ps1'
         arguments: '-Root . -DiffOutput $(Build.ArtifactStagingDirectory)\clang-format.diff'
@@ -36,6 +37,7 @@ stages:
       value: D:\downloads
     steps:
     - task: Powershell@2
+      displayName: 'Format Manifests'
       inputs:
         filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
         arguments: '-Root .'
@@ -46,12 +48,13 @@ stages:
       clean: resources
     steps:
     - task: Powershell@2
+      displayName: 'Generate Documentation'
       inputs:
         filePath: 'scripts/azure-pipelines/windows/Check-CMakeFunctionDocumentation.ps1'
         arguments: '-Root .'
         pwsh: true
-- stage: run_port_ci
-  displayName: 'Run the Port CI'
+- stage: RunPrTests
+  displayName: 'Run PR Tests:'
   dependsOn: FormatChecks
   jobs:
   - template: windows/azure-pipelines.yml
