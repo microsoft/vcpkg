@@ -83,7 +83,6 @@ add_library(vcpkglib
 target_include_directories(vcpkglib PUBLIC include)
 
 vcpkg_target_add_warning_options(vcpkglib)
-
 target_compile_definitions(vcpkglib PUBLIC
     VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>)
 
