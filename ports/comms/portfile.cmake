@@ -14,10 +14,10 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCC_COMMS_LIB_ONLY=ON
         -DCC_NO_UNIT_TESTS=ON
+        -DCMAKE_INSTALL_INCLUDEDIR="${CURRENT_PACKAGES_DIR}/include"
 )
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright

@@ -18,10 +18,10 @@ vcpkg_configure_cmake(
         -DOPT_BUILD_PLUGIN=OFF
         -DOPT_NO_COMMS=ON
         -DOPT_EXTERNALS_UPDATE_DISCONNECTED=ON
+        -DCMAKE_INSTALL_INCLUDEDIR="${CURRENT_PACKAGES_DIR}/include"
 )
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright

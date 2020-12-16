@@ -15,6 +15,7 @@ vcpkg_configure_cmake(
         -DCOMMSDSL_NO_COMMS_CHAMPION=ON
         -DCOMMSDSL_NO_TESTS=ON
         -DCOMMSDSL_NO_WARN_AS_ERR=ON # remove on next version or on next version of boost
+        -DCMAKE_INSTALL_INCLUDEDIR="${CURRENT_PACKAGES_DIR}/include"
 )
 vcpkg_install_cmake()
 
@@ -23,8 +24,6 @@ vcpkg_copy_tools(
     SEARCH_DIR ${CURRENT_PACKAGES_DIR}/bin
     AUTO_CLEAN
 )
-
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
