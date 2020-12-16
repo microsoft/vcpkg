@@ -1,7 +1,7 @@
 [CmdletBinding(PositionalBinding=$False)]
 Param(
     [Parameter(Mandatory=$True)]
-    [String]DiffFile
+    [String]$DiffFile
 )
 
 Start-Process -FilePath 'git' -ArgumentList 'diff' `
