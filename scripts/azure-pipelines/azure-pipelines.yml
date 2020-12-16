@@ -17,7 +17,7 @@ stages:
     variables:
     - name: VCPKG_DOWNLOADS
       value: D:\downloads
-    - name: DIFF_FILE
+    - name: DiffFile
       value: $(Build.ArtifactStagingDirectory)\format.diff
     steps:
     - task: Powershell@2
@@ -40,11 +40,13 @@ stages:
       displayName: 'Create Diff'
       inputs:
         filePath: scripts/azure-pipelines/Create-FormatDiff.ps1
+        arguments: '-DiffFile $(DiffFile)'
+        pwsh: true
     - task: PublishBuildArtifacts@1
       condition: failed()
       displayName: 'Publish C++ Diff'
       inputs:
-        PathtoPublish: '$(DIFF_FILE)'
+        PathtoPublish: '$(DiffFile)'
         ArtifactName: 'format.diff'
 - stage: RunPrTests
   displayName: 'Run PR Tests:'
