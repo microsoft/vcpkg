@@ -115,18 +115,6 @@ $allFirewallRules += New-AzNetworkSecurityRuleConfig `
   -DestinationPortRange 9418
 
 $allFirewallRules += New-AzNetworkSecurityRuleConfig `
-  -Name AllowStorage `
-  -Description 'Allow Storage' `
-  -Access Allow `
-  -Protocol * `
-  -Direction Outbound `
-  -Priority 1012 `
-  -SourceAddressPrefix VirtualNetwork `
-  -SourcePortRange * `
-  -DestinationAddressPrefix Storage `
-  -DestinationPortRange *
-
-$allFirewallRules += New-AzNetworkSecurityRuleConfig `
   -Name DenyElse `
   -Description 'Deny everything else' `
   -Access Deny `
