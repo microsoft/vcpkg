@@ -7,7 +7,7 @@ Param(
 Start-Process -FilePath 'git' -ArgumentList 'diff' `
     -NoNewWindow -Wait `
     -RedirectStandardOutput $DiffFile
-if (0 -ne (Get-Item $ENV:DIFF_FILE).Length)
+if (0 -ne (Get-Item -LiteralPath $DiffFile).Length)
 {
     $msg = @(
         'The formatting of the files in the repo were not what we expected,',
