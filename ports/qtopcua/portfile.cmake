@@ -1,7 +1,9 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES build.patch)
+set(${PORT}_PATCHES build.patch
+                    limits.patch
+                    build_fixes.patch)
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
@@ -13,7 +15,8 @@ FEATURES
 INVERTED_FEATURES
     )
 if("open62541" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DINPUT_open62541=system)
+    list(APPEND FEATURE_OPTIONS -DINPUT_open62541=system
+                                -DHAVE_open62541=true)
 else()
     list(APPEND FEATURE_OPTIONS -DINPUT_open62541=no)
 endif()
@@ -24,6 +27,7 @@ endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS
+                        ${FEATURE_OPTIONS}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )

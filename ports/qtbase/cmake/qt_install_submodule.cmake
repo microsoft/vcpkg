@@ -10,7 +10,7 @@ macro(qt_stop_on_update)
 endmacro()
 
 function(qt_install_submodule)
-    cmake_parse_arguments(PARSE_ARGV 0 "_qis" ""
+    cmake_parse_arguments(PARSE_ARGV 0 "_qis" "DISABLE_NINJA"
                           ""
                           "PATCHES;TOOL_NAMES;CONFIGURE_OPTIONS;CONFIGURE_OPTIONS_DEBUG;CONFIGURE_OPTIONS_RELEASE")
 
@@ -69,9 +69,13 @@ function(qt_install_submodule)
         set(PERL_OPTION -DHOST_PERL:PATH=${PERL})
     endif()
 
+    if(NOT _qis_DISABLE_NINJA)
+        set(NINJA_OPTION PREFER_NINJA)
+    endif()
+
     vcpkg_configure_cmake(
         SOURCE_PATH "${SOURCE_PATH}"
-        PREFER_NINJA
+        ${NINJA_OPTION}
         OPTIONS 
             #-DQT_HOST_PATH=<somepath> # For crosscompiling
             #-DQT_PLATFORM_DEFINITION_DIR=mkspecs/win32-msvc
@@ -134,8 +138,8 @@ function(qt_install_submodule)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
-        message(STATUS "PLUGIN_CMAKE_TARGETS:${PLUGIN_CMAKE_TARGETS}")
-        foreach(_plugin_target IN LISTS PLUGIN_CMAKE_TARGETS)
+        message(STATUS "STATIC_CMAKE_TARGETS:${STATIC_CMAKE_TARGETS}")
+        foreach(_plugin_target IN LISTS STATIC_CMAKE_TARGETS)
             # restore a single get_filename_component which was remove by vcpkg_fixup_pkgconfig
             vcpkg_replace_string("${_plugin_target}" 
                                  [[get_filename_component(_IMPORT_PREFIX "${CMAKE_CURRENT_LIST_FILE}" PATH)]]

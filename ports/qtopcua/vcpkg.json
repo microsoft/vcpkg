@@ -32,6 +32,7 @@
           "name": "open62541",
           "default-features": false,
           "features": [
+            "amalgamation",
             "openssl"
           ]
         }

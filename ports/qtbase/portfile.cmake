@@ -2,6 +2,7 @@
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
+        2548438.diff
         jpeg.patch
         harfbuzz.patch
         config_install.patch 
@@ -9,6 +10,8 @@ set(${PORT}_PATCHES
         buildcmake.patch
         dont_force_cmakecache.patch
         #print_condition.patch
+        #no-promotion.patch 
+        fix_find_dep.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION)
