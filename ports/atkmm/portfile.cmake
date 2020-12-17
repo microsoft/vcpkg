@@ -49,11 +49,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
     
     vcpkg_copy_pdbs()
 else()
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        set(ATKMM_OPTIONS --enable-shared=yes --enable-static=no)
-    else()
-        set(ATKMM_OPTIONS --enable-shared=no --enable-static=yes)
-    endif()
     set(ENV{CONFIG_SHELL} /bin/bash)
     vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH} OPTIONS ${ATKMM_OPTIONS})
     
