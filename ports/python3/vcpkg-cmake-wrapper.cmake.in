@@ -55,7 +55,7 @@ endif()
 
 _find_package(${ARGS})
 
-if(@PythonFinder_LIBS@)
+if(@PythonFinder_LIBS@ AND @VCPKG_LIBRARY_LINKAGE@ STREQUAL static)
     # Python for Windows embeds the zlib module into the core, so we have to link against it.
     # This is a separate extension module on Unix-like platforms.
     if(WIN32)
