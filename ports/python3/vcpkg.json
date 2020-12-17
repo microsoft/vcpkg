@@ -12,8 +12,16 @@
     },
     "expat",
     {
+      "name": "gettext",
+      "platform": "osx"
+    },
+    {
       "name": "libffi",
       "platform": "!(windows & static)"
+    },
+    {
+      "name": "libiconv",
+      "platform": "osx"
     },
     {
       "name": "liblzma",

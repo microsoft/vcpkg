@@ -76,4 +76,32 @@ if(@PythonFinder_LIBS@)
             list(APPEND @PythonFinder_PREFIX@_LIBRARIES ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS} ${UTIL_LIBRARY})
         endif()
     endif()
+
+    if(APPLE)
+        find_package(Iconv)
+        find_package(Intl)
+        if(TARGET @PythonFinder_PREFIX@::Python)
+            get_target_property(_PYTHON_INTERFACE_LIBS @PythonFinder_PREFIX@::Python INTERFACE_LINK_LIBRARIES)
+            list(REMOVE_ITEM _PYTHON_INTERFACE_LIBS "-liconv" "-lintl")
+            list(APPEND _PYTHON_INTERFACE_LIBS
+                Iconv::Iconv
+                "$<IF:$<CONFIG:Debug>,${Intl_LIBRARY_DEBUG},${Intl_LIBRARY_RELEASE}>"
+            )
+            set_property(TARGET @PythonFinder_PREFIX@::Python PROPERTY INTERFACE_LINK_LIBRARIES ${_PYTHON_INTERFACE_LIBS})
+            unset(_PYTHON_INTERFACE_LIBS)
+        endif()
+        if(TARGET @PythonFinder_PREFIX@::Module)
+            get_target_property(_PYTHON_INTERFACE_LIBS @PythonFinder_PREFIX@::Module INTERFACE_LINK_LIBRARIES)
+            list(REMOVE_ITEM _PYTHON_INTERFACE_LIBS "-liconv" "-lintl")
+            list(APPEND _PYTHON_INTERFACE_LIBS
+                Iconv::Iconv
+                "$<IF:$<CONFIG:Debug>,${Intl_LIBRARY_DEBUG},${Intl_LIBRARY_RELEASE}>"
+            )
+            set_property(TARGET @PythonFinder_PREFIX@::Module PROPERTY INTERFACE_LINK_LIBRARIES ${_PYTHON_INTERFACE_LIBS})
+            unset(_PYTHON_INTERFACE_LIBS)
+        endif()
+        if(@PythonFinder_PREFIX@_LIBRARIES)
+            list(APPEND @PythonFinder_PREFIX@_LIBRARIES "-framework CoreFoundation" ${Iconv_LIBRARIES} ${Intl_LIBRARIES})
+        endif()
+    endif()
 endif()
