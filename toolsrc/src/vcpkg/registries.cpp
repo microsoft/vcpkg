@@ -243,7 +243,8 @@ namespace
         fs::path path_to_registry_database(const VcpkgPaths& paths) const
         {
             fs::path path_to_db = paths.config_root_dir / path;
-            path_to_db /= fs::u8path({'\xF0', '\x9F', '\x98', '\x87'}); // utf-8 for 😇
+            path_to_db /= fs::u8path(
+                {'\xF0', '\x9F', '\x98', '\x87'}); // utf-8 for https://emojipedia.org/smiling-face-with-halo/
             return path_to_db;
         }
 

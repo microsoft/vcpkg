@@ -311,47 +311,52 @@ namespace vcpkg::Dependencies
     static std::string to_output_string(RequestType request_type,
                                         const CStringView s,
                                         const Build::BuildPackageOptions& options,
-                                        const fs::path& install_port_path,
+                                        const SourceControlFileLocation* scfl,
+                                        const InstalledPackageView* ipv,
                                         const fs::path& builtin_ports_dir)
     {
-        if (!builtin_ports_dir.empty() && !Strings::case_insensitive_ascii_starts_with(fs::u8string(install_port_path),
-                                                                                       fs::u8string(builtin_ports_dir)))
+        std::string ret;
+        switch (request_type)
         {
-            const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
-            switch (request_type)
+            case RequestType::AUTO_SELECTED: Strings::append(ret, "  * "); break;
+            case RequestType::USER_REQUESTED: Strings::append(ret, "    "); break;
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+        Strings::append(ret, s);
+        if (scfl)
+        {
+            Strings::append(ret, " -> ", scfl->to_versiont());
+        }
+        else if (ipv)
+        {
+            Strings::append(ret, " -> ", VersionT{ipv->core->package.version, ipv->core->package.port_version});
+        }
+        if (options.use_head_version == Build::UseHeadVersion::YES)
+        {
+            Strings::append(ret, " (+HEAD)");
+        }
+        if (scfl)
+        {
+            const auto s_install_port_path = fs::u8string(scfl->source_location);
+            if (!builtin_ports_dir.empty() &&
+                !Strings::case_insensitive_ascii_starts_with(s_install_port_path, fs::u8string(builtin_ports_dir)))
             {
-                case RequestType::AUTO_SELECTED:
-                    return Strings::format("  * %s%s -- %s", s, from_head, fs::u8string(install_port_path));
-                case RequestType::USER_REQUESTED:
-                    return Strings::format("    %s%s -- %s", s, from_head, fs::u8string(install_port_path));
-                default: Checks::unreachable(VCPKG_LINE_INFO);
+                Strings::append(ret, " -- ", s_install_port_path);
             }
         }
-        return to_output_string(request_type, s, options);
+        return ret;
     }
 
     std::string to_output_string(RequestType request_type,
                                  const CStringView s,
                                  const Build::BuildPackageOptions& options)
     {
-        const char* const from_head = options.use_head_version == Build::UseHeadVersion::YES ? " (from HEAD)" : "";
-
-        switch (request_type)
-        {
-            case RequestType::AUTO_SELECTED: return Strings::format("  * %s%s", s, from_head);
-            case RequestType::USER_REQUESTED: return Strings::format("    %s%s", s, from_head);
-            default: Checks::unreachable(VCPKG_LINE_INFO);
-        }
+        return to_output_string(request_type, s, options, {}, {}, {});
     }
 
     std::string to_output_string(RequestType request_type, const CStringView s)
     {
-        switch (request_type)
-        {
-            case RequestType::AUTO_SELECTED: return Strings::format("  * %s", s);
-            case RequestType::USER_REQUESTED: return Strings::format("    %s", s);
-            default: Checks::unreachable(VCPKG_LINE_INFO);
-        }
+        return to_output_string(request_type, s, {Build::UseHeadVersion::NO}, {}, {}, {});
     }
 
     InstallPlanAction::InstallPlanAction() noexcept
@@ -1096,13 +1101,12 @@ namespace vcpkg::Dependencies
 
         static auto actions_to_output_string = [&](const std::vector<const InstallPlanAction*>& v) {
             return Strings::join("\n", v, [&](const InstallPlanAction* p) {
-                if (auto* pscfl = p->source_control_file_location.get())
-                {
-                    return to_output_string(
-                        p->request_type, p->displayname(), p->build_options, pscfl->source_location, builtin_ports_dir);
-                }
-
-                return to_output_string(p->request_type, p->displayname(), p->build_options);
+                return to_output_string(p->request_type,
+                                        p->displayname(),
+                                        p->build_options,
+                                        p->source_control_file_location.get(),
+                                        p->installed_package.get(),
+                                        builtin_ports_dir);
             });
         };
 
@@ -1211,6 +1215,8 @@ namespace vcpkg::Dependencies
                 std::map<Versions::Version, VersionSchemeInfo*, VersionTMapLess> vermap;
                 std::map<std::string, VersionSchemeInfo> exacts;
                 Optional<std::unique_ptr<VersionSchemeInfo>> relaxed;
+                Optional<std::unique_ptr<VersionSchemeInfo>> semver;
+                Optional<std::unique_ptr<VersionSchemeInfo>> date;
                 std::set<std::string> features;
                 bool default_features = true;
 
@@ -1267,6 +1273,30 @@ namespace vcpkg::Dependencies
                     vsi = relaxed.get()->get();
                 }
             }
+            else if (scheme == Versions::Scheme::Semver)
+            {
+                if (auto p = semver.get())
+                {
+                    vsi = p->get();
+                }
+                else
+                {
+                    semver = std::make_unique<VersionSchemeInfo>();
+                    vsi = semver.get()->get();
+                }
+            }
+            else if (scheme == Versions::Scheme::Date)
+            {
+                if (auto p = date.get())
+                {
+                    vsi = p->get();
+                }
+                else
+                {
+                    date = std::make_unique<VersionSchemeInfo>();
+                    vsi = date.get()->get();
+                }
+            }
             else
             {
                 // not implemented
@@ -1283,40 +1313,24 @@ namespace vcpkg::Dependencies
             return it == vermap.end() ? nullptr : it->second;
         }
 
-        enum class VerComp
-        {
-            unk,
-            lt,
-            eq,
-            gt,
-        };
+        using Versions::VerComp;
+
         static VerComp compare_versions(Versions::Scheme sa,
                                         const Versions::Version& a,
                                         Versions::Scheme sb,
                                         const Versions::Version& b)
         {
             if (sa != sb) return VerComp::unk;
-            switch (sa)
+
+            if (a.text() != b.text())
             {
-                case Versions::Scheme::String:
-                {
-                    if (a.text() != b.text()) return VerComp::unk;
-                    if (a.port_version() < b.port_version()) return VerComp::lt;
-                    if (a.port_version() > b.port_version()) return VerComp::gt;
-                    return VerComp::eq;
-                }
-                case Versions::Scheme::Relaxed:
-                {
-                    auto i1 = atoi(a.text().c_str());
-                    auto i2 = atoi(b.text().c_str());
-                    if (i1 < i2) return VerComp::lt;
-                    if (i1 > i2) return VerComp::gt;
-                    if (a.port_version() < b.port_version()) return VerComp::lt;
-                    if (a.port_version() > b.port_version()) return VerComp::gt;
-                    return VerComp::eq;
-                }
-                default: Checks::unreachable(VCPKG_LINE_INFO);
+                auto result = Versions::compare(a.text(), b.text(), sa);
+                if (result != VerComp::eq) return result;
             }
+
+            if (a.port_version() < b.port_version()) return VerComp::lt;
+            if (a.port_version() > b.port_version()) return VerComp::gt;
+            return VerComp::eq;
         }
 
         bool VersionedPackageGraph::VersionSchemeInfo::is_less_than(const Versions::Version& new_ver) const

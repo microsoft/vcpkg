@@ -1,49 +1,51 @@
-## # vcpkg_find_acquire_program
-##
-## Download or find a well-known tool.
-##
-## ## Usage
-## ```cmake
-## vcpkg_find_acquire_program(<VAR>)
-## ```
-## ## Parameters
-## ### VAR
-## This variable specifies both the program to be acquired as well as the out parameter that will be set to the path of the program executable.
-##
-## ## Notes
-## The current list of programs includes:
-##
-## - 7Z
-## - ARIA2 (Downloader)
-## - BISON
-## - CLANG
-## - DARK
-## - DOXYGEN
-## - FLEX
-## - GASPREPROCESSOR
-## - GPERF
-## - PERL
-## - PYTHON2
-## - PYTHON3
-## - GIT
-## - GN
-## - GO
-## - JOM
-## - MESON
-## - NASM
-## - NINJA
-## - NUGET
-## - SCONS
-## - SWIG
-## - YASM
-##
-## Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
-##
-## ## Examples
-##
-## * [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
-## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
-## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+#[===[.md:
+# vcpkg_find_acquire_program
+
+Download or find a well-known tool.
+
+## Usage
+```cmake
+vcpkg_find_acquire_program(<VAR>)
+```
+## Parameters
+### VAR
+This variable specifies both the program to be acquired as well as the out parameter that will be set to the path of the program executable.
+
+## Notes
+The current list of programs includes:
+
+* 7Z
+* ARIA2 (Downloader)
+* BISON
+* CLANG
+* DARK
+* DOXYGEN
+* FLEX
+* GASPREPROCESSOR
+* GPERF
+* PERL
+* PYTHON2
+* PYTHON3
+* GIT
+* GN
+* GO
+* JOM
+* MESON
+* NASM
+* NINJA
+* NUGET
+* SCONS
+* SWIG
+* YASM
+
+Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
+
+## Examples
+
+* [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
+* [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
+* [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+#]===]
 
 include(vcpkg_execute_in_download_mode)
 
@@ -77,7 +79,7 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH d353d3dc743ebdc6d1e9f6f2b7a6db3c387c1ce6c890bae8adc8ae5deae8404f4c5e3cf249d1e151e7256d4c5ee9cd317e6c41f3b6f244340de18a24b938e0c4)
   elseif(VAR MATCHES "NASM")
     set(PROGNAME nasm)
-    set(NASM_VERSION 2.14.02)
+    set(NASM_VERSION 2.15.05)
     set(PATHS ${DOWNLOADS}/tools/nasm/nasm-${NASM_VERSION})
     set(BREW_PACKAGE_NAME "nasm")
     set(APT_PACKAGE_NAME "nasm")
@@ -86,7 +88,7 @@ function(vcpkg_find_acquire_program VAR)
       "https://fossies.org/windows/misc/nasm-${NASM_VERSION}-win32.zip"
     )
     set(ARCHIVE "nasm-${NASM_VERSION}-win32.zip")
-    set(HASH a0f16a9f3b668b086e3c4e23a33ff725998e120f2e3ccac8c28293fd4faeae6fc59398919e1b89eed7461685d2730de02f2eb83e321f73609f35bf6b17a23d1e)
+    set(HASH 9412b8caa07e15eac8f500f6f8fab9f038d95dc25e0124b08a80645607cf5761225f98546b52eac7b894420d64f26c3cbf22c19cd286bbe583f7c964256c97ed)
   elseif(VAR MATCHES "YASM")
     set(PROGNAME yasm)
     set(YASM_VERSION 1.3.0.6.g1962)
@@ -464,7 +466,7 @@ function(vcpkg_find_acquire_program VAR)
 
   macro(do_version_check)
     if(VERSION_CMD)
-        _execute_process(
+        vcpkg_execute_in_download_mode(
             COMMAND ${${VAR}} ${VERSION_CMD}
             WORKING_DIRECTORY ${DOWNLOADS}
             OUTPUT_VARIABLE ${VAR}_VERSION_OUTPUT
