@@ -58,7 +58,6 @@ vcpkg_install_cmake()
 # copy plugins into tool path, if any plugin is installed
 if(IS_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin/plugins)
   file(COPY ${CURRENT_PACKAGES_DIR}/bin/plugins DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-  #file(COPY ${SOURCE_PATH}/fonts DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 vcpkg_copy_pdbs()
 
