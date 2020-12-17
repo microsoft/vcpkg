@@ -335,32 +335,32 @@ namespace vcpkg::Export::Prefab
 
         /*
         prefab
-        └── <name>
-            ├── aar
-            │   ├── AndroidManifest.xml
-            │   ├── META-INF
-            │   │   └── LICENCE
-            │   └── prefab
-            │       ├── modules
-            │       │   └── <module>
-            │       │       ├── include
-            │       │       ├── libs
-            │       │       │   ├── android.arm64-v8a
-            │       │       │   │   ├── abi.json
-            │       │       │   │   └── lib<module>.so
-            │       │       │   ├── android.armeabi-v7a
-            │       │       │   │   ├── abi.json
-            │       │       │   │   └── lib<module>.so
-            │       │       │   ├── android.x86
-            │       │       │   │   ├── abi.json
-            │       │       │   │   └── lib<module>.so
-            │       │       │   └── android.x86_64
-            │       │       │       ├── abi.json
-            │       │       │       └── lib<module>.so
-            │       │       └── module.json
-            │       └── prefab.json
-            ├── <name>-<version>.aar
-            └── pom.xml
+        +-- <name>
+            +-- aar
+            |   +-- AndroidManifest.xml
+            |   +-- META-INF
+            |   |   +-- LICENCE
+            |   +-- prefab
+            |       +-- modules
+            |       |   +-- <module>
+            |       |       +-- include
+            |       |       +-- libs
+            |       |       |   +-- android.arm64-v8a
+            |       |       |   |   +-- abi.json
+            |       |       |   |   +-- lib<module>.so
+            |       |       |   +-- android.armeabi-v7a
+            |       |       |   |   +-- abi.json
+            |       |       |   |   +-- lib<module>.so
+            |       |       |   +-- android.x86
+            |       |       |   |   +-- abi.json
+            |       |       |   |   +-- lib<module>.so
+            |       |       |   +-- android.x86_64
+            |       |       |       +-- abi.json
+            |       |       |       +-- lib<module>.so
+            |       |       +-- module.json
+            |       +-- prefab.json
+            +-- <name>-<version>.aar
+            +-- pom.xml
         */
 
         std::unordered_map<std::string, std::string> version_map;

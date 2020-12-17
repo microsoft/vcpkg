@@ -392,6 +392,7 @@ These predefined identifier expressions are computed from standard triplet setti
 - `arm` - `VCPKG_TARGET_ARCHITECTURE` == `"arm"` or `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`
 - `arm64` - `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`
 - `windows` - `VCPKG_CMAKE_SYSTEM_NAME` == `""` or `VCPKG_CMAKE_SYSTEM_NAME` == `"WindowsStore"`
+- `mingw` - `VCPKG_CMAKE_SYSTEM_NAME` == `"MinGW"`
 - `uwp` - `VCPKG_CMAKE_SYSTEM_NAME` == `"WindowsStore"`
 - `linux` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Linux"`
 - `osx` - `VCPKG_CMAKE_SYSTEM_NAME` == `"Darwin"`
