@@ -47,3 +47,5 @@ endforeach()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/src/doc/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_test_cmake_config()
