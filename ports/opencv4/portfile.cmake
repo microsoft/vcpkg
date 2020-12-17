@@ -19,6 +19,7 @@ vcpkg_from_github(
       0002-install-options.patch
       0003-force-package-requirements.patch
       0004-fix-policy-CMP0057.patch
+      0006-fix-vtk9.patch
       0006-jpeg2000_getref.patch
       0009-fix-uwp.patch
       0010-fix-interface_link_libraries.patch # Remove this patch when the next update
@@ -48,11 +49,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "qt"       WITH_QT
  "sfm"      BUILD_opencv_sfm
  "tiff"     WITH_TIFF
+ "vtk"      WITH_VTK
  "webp"     WITH_WEBP
  "world"    BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "dnn", ipp", "openmp", "ovis", "tbb", and "vtk".
+# Cannot use vcpkg_check_features() for "dnn", ipp", "openmp", "ovis", "tbb"
 # As the respective value of their variables can be unset conditionally.
 set(BUILD_opencv_dnn OFF)
 if("dnn" IN_LIST FEATURES)
@@ -85,11 +87,6 @@ endif()
 set(WITH_TBB OFF)
 if("tbb" IN_LIST FEATURES)
   set(WITH_TBB ON)
-endif()
-
-set(WITH_VTK OFF)
-if("vtk" IN_LIST FEATURES)
-  set(WITH_VTK ON)
 endif()
 
 if("dnn" IN_LIST FEATURES)
@@ -128,6 +125,7 @@ if("contrib" IN_LIST FEATURES)
     HEAD_REF master
     PATCHES
       0005-add-missing-stdexcept-include.patch
+      0007-fix-vtk9-contrib.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
@@ -256,11 +254,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(WITH_TBB OFF)
   endif()
 
-  if (WITH_VTK)
-    message(WARNING "VTK is currently unsupported in this build configuration, turning it off")
-    set(WITH_VTK OFF)
-  endif()
-
   if (VCPKG_TARGET_IS_WINDOWS AND BUILD_opencv_ovis)
     message(WARNING "OVIS is currently unsupported in this build configuration, turning it off")
     set(BUILD_opencv_ovis OFF)
@@ -291,6 +284,7 @@ vcpkg_configure_cmake(
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
+        -DOPENCV_FFMPEG_SKIP_BUILD_CHECK=TRUE
         -DCMAKE_DEBUG_POSTFIX=d
         -DOPENCV_DLLVERSION=
         -DOPENCV_DEBUG_POSTFIX=d
@@ -351,7 +345,6 @@ vcpkg_configure_cmake(
         -DWITH_OPENMP=${WITH_OPENMP}
         -DWITH_PROTOBUF=${BUILD_opencv_dnn}
         -DWITH_TBB=${WITH_TBB}
-        -DWITH_VTK=${WITH_VTK}
         -DWITH_OPENJPEG=OFF
         ###### WITH PROPERTIES explicitly disabled, they have problems with libraries if already installed by user and that are "involuntarily" found during install
         -DWITH_LAPACK=OFF
@@ -406,7 +399,7 @@ find_dependency(Tesseract)")
   if(WITH_TBB)
     string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
   endif()
-  if(WITH_VTK)
+  if("vtk" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(VTK)")
   endif()
   if("sfm" IN_LIST FEATURES)
