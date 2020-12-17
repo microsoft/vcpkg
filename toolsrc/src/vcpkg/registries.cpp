@@ -19,6 +19,8 @@ namespace
 
     using Baseline = std::map<std::string, VersionT, std::less<>>;
 
+    static fs::path port_versions_dir = fs::u8path("port_versions");
+
     // this class is an implementation detail of `BuiltinRegistryEntry`;
     // when `BuiltinRegistryEntry` is using a port versions file for a port,
     // it uses this as it's underlying type;
@@ -192,11 +194,11 @@ namespace
     // { BuiltinRegistry::RegistryImplementation
     std::unique_ptr<RegistryEntry> BuiltinRegistry::get_port_entry(const VcpkgPaths& paths, StringView port_name) const
     {
-        auto versions_path = paths.root / fs::u8path("port_versions") / relative_path_to_versions(port_name);
-        if (paths.get_filesystem().exists(versions_path))
+        auto versions_path = paths.builtin_port_versions / relative_path_to_versions(port_name);
+        if (paths.get_feature_flags().registries && paths.get_filesystem().exists(versions_path))
         {
-            auto maybe_version_entries = load_versions_file(
-                paths.get_filesystem(), VersionDbType::Git, paths.root / fs::u8path("port_versions"), port_name);
+            auto maybe_version_entries =
+                load_versions_file(paths.get_filesystem(), VersionDbType::Git, paths.builtin_port_versions, port_name);
             Checks::check_exit(
                 VCPKG_LINE_INFO, maybe_version_entries.has_value(), "Error: %s", maybe_version_entries.error());
             auto version_entries = std::move(maybe_version_entries).value_or_exit(VCPKG_LINE_INFO);
@@ -244,7 +246,7 @@ namespace
 
     Baseline parse_builtin_baseline(const VcpkgPaths& paths, StringView baseline_identifier)
     {
-        auto path_to_baseline = paths.root / fs::u8path("port_versions") / fs::u8path("baseline.json");
+        auto path_to_baseline = paths.builtin_port_versions / fs::u8path("baseline.json");
         auto res_baseline = load_baseline_versions(paths, path_to_baseline, baseline_identifier);
 
         if (!res_baseline.has_value())
@@ -298,35 +300,35 @@ namespace
     }
     Optional<VersionT> BuiltinRegistry::get_baseline_version(const VcpkgPaths& paths, StringView port_name) const
     {
-        const auto& baseline = m_baseline.get(
-            [this, &paths]() -> Baseline { return parse_builtin_baseline(paths, m_baseline_identifier); });
+        if (paths.get_feature_flags().registries)
+        {
+            const auto& baseline = m_baseline.get(
+                [this, &paths]() -> Baseline { return parse_builtin_baseline(paths, m_baseline_identifier); });
 
-        auto it = baseline.find(port_name);
-        if (it != baseline.end())
-        {
-            return it->second;
-        }
-        else
-        {
-            // fall back to using the ports directory version
-            auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(),
-                                                       paths.builtin_ports_directory() / fs::u8path(port_name));
-            if (auto pscf = maybe_scf.get())
+            auto it = baseline.find(port_name);
+            if (it != baseline.end())
             {
-                auto& scf = *pscf;
-                return scf->to_versiont();
+                return it->second;
             }
-            Debug::print("Failed to load port `%s` from the ports tree: %s.", port_name, maybe_scf.error()->error);
-            return nullopt;
         }
+
+        // fall back to using the ports directory version
+        auto maybe_scf =
+            Paragraphs::try_load_port(paths.get_filesystem(), paths.builtin_ports_directory() / fs::u8path(port_name));
+        if (auto pscf = maybe_scf.get())
+        {
+            auto& scf = *pscf;
+            return scf->to_versiont();
+        }
+        Debug::print("Failed to load port `%s` from the ports tree: %s.", port_name, maybe_scf.error()->error);
+        return nullopt;
     }
 
     void BuiltinRegistry::get_all_port_names(std::vector<std::string>& out, const VcpkgPaths& paths) const
     {
-        auto port_versions_path = paths.root / fs::u8path("port_versions");
-        if (paths.get_filesystem().exists(port_versions_path))
+        if (paths.get_feature_flags().registries && paths.get_filesystem().exists(paths.builtin_port_versions))
         {
-            load_all_port_names_from_port_versions(out, paths, port_versions_path);
+            load_all_port_names_from_port_versions(out, paths, paths.builtin_port_versions);
         }
 
         for (auto port_directory : fs::directory_iterator(paths.builtin_ports_directory()))
@@ -342,7 +344,7 @@ namespace
     // { FilesystemRegistry::RegistryImplementation
     Baseline parse_filesystem_baseline(const VcpkgPaths& paths, const fs::path& root, StringView baseline_identifier)
     {
-        auto path_to_baseline = root / fs::u8path("port_versions") / fs::u8path("baseline.json");
+        auto path_to_baseline = root / port_versions_dir / fs::u8path("baseline.json");
         auto res_baseline = load_baseline_versions(paths, path_to_baseline, baseline_identifier);
         if (auto opt_baseline = res_baseline.get())
         {
@@ -385,7 +387,7 @@ namespace
                                                                       StringView port_name) const
     {
         auto maybe_version_entries = load_versions_file(
-            paths.get_filesystem(), VersionDbType::Filesystem, m_path / fs::u8path("port_versions"), port_name, m_path);
+            paths.get_filesystem(), VersionDbType::Filesystem, m_path / port_versions_dir, port_name, m_path);
         Checks::check_exit(
             VCPKG_LINE_INFO, maybe_version_entries.has_value(), "Error: %s", maybe_version_entries.error());
         auto version_entries = std::move(maybe_version_entries).value_or_exit(VCPKG_LINE_INFO);
@@ -401,7 +403,7 @@ namespace
 
     void FilesystemRegistry::get_all_port_names(std::vector<std::string>& out, const VcpkgPaths& paths) const
     {
-        load_all_port_names_from_port_versions(out, paths, m_path / fs::u8path("port_versions"));
+        load_all_port_names_from_port_versions(out, paths, m_path / port_versions_dir);
     }
     // } FilesystemRegistry::RegistryImplementation
 

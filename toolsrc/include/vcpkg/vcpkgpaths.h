@@ -92,6 +92,7 @@ namespace vcpkg
         fs::path scripts;
         fs::path prefab;
         fs::path builtin_ports;
+        fs::path builtin_port_versions;
 
         fs::path tools;
         fs::path buildsystems;

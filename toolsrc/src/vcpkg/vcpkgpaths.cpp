@@ -341,6 +341,8 @@ If you wish to silence this error and use classic mode, you can:
         scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
         builtin_ports =
             process_output_directory(filesystem, root, args.builtin_ports_root_dir.get(), "ports", VCPKG_LINE_INFO);
+        builtin_port_versions = process_output_directory(
+            filesystem, root, args.builtin_port_versions_dir.get(), "port_versions", VCPKG_LINE_INFO);
         prefab = root / fs::u8path("prefab");
 
         if (args.default_visual_studio_path)
