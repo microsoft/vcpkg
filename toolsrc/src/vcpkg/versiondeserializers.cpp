@@ -12,7 +12,6 @@ namespace
     constexpr StringLiteral VERSION_STRING = "version-string";
     constexpr StringLiteral VERSION_DATE = "version-date";
     constexpr StringLiteral PORT_VERSION = "port-version";
-    constexpr StringLiteral GIT_TREE = "git-tree";
 
     struct VersionDeserializer final : Json::IDeserializer<std::string>
     {
