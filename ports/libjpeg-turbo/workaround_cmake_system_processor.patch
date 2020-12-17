@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2f137a..3754095 100644
+index 73ebb10..b5caf5d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -40,7 +40,7 @@ message(STATUS "VERSION = ${VERSION}, BUILD = ${BUILD}")

@@ -1,13 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
-    REF ae87a958613b69628b92088b313ded0d4f59a716 # 2.0.5
-    SHA512 25e8857a3542cc74c48775959f11811529fe6a853990cb285f91a6218c1cde5dd1e58043208e81709fb7a71c376396b2de1f20b53b2c5b8595ca097fa02992fd
+    REF 4e52b66f342a803d3b8099b79607e3158d3a241c # 2.0.90
+    SHA512 28f6af4b1a93a80dc828d62bc074449a3c5651639f250a2dd67a3572fe3d8a0ac0c9ed07f542465a5a7fe0906fd486c21581f9a115063ef1e891cc387f280fb1
     HEAD_REF master
     PATCHES
-        add-options-for-exes-docs-headers.patch
-		
-        #workaround for vcpkg bug see #5697 on github for more information
+        ##workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
 )
 
@@ -39,8 +37,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DENABLE_SHARED=${ENABLE_SHARED}
-        -DENABLE_EXECUTABLES=OFF
-        -DINSTALL_DOCS=OFF
         -DWITH_CRT_DLL=${WITH_CRT_DLL}
         ${FEATURE_OPTIONS}
         ${LIBJPEGTURBO_SIMD}
@@ -48,25 +44,6 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-# Rename libraries for static builds
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/jpeg.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/turbojpeg.lib")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpegd.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpegd.lib")
-    
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-    endif()
-else(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpegd.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpegd.lib")
-    endif()
-endif()
 
 file(INSTALL 
     ${SOURCE_PATH}/LICENSE.md
@@ -77,8 +54,11 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/man)
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/jpeg)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libjpeg-turbo)
+
+vcpkg_fixup_pkgconfig()
+
+vcpkg_copy_tools(TOOL_NAMES cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom AUTO_CLEAN)
 
 vcpkg_copy_pdbs()
 
