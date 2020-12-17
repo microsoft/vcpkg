@@ -3,26 +3,15 @@
   "version-string": "20.12.1",
   "description": "a PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
-  "dependencies": [
-    "cairo",
-    "devil",
-    "fontconfig",
-    {
-      "name": "freetype",
-      "default-features": false,
-      "features": [
-        "bzip2"
-      ],
-      "platform": "linux"
-    },
-    {
-      "name": "freetype",
-      "default-features": true,
-      "platform": "!linux"
-    },
-    "rapidjson",
-    "libiconv",
-    "openjpeg",
-    "zlib"
-  ]
+    "dependencies":
+    [
+        "cairo",
+        "devil",
+        "fontconfig",
+        "freetype",
+        "rapidjson",
+        "libiconv",
+        "openjpeg",
+        "zlib"
+    ]
 }
