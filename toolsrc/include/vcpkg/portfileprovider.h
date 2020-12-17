@@ -12,6 +12,7 @@ namespace vcpkg::PortFileProvider
 {
     struct PortFileProvider
     {
+        virtual ~PortFileProvider() = default;
         virtual ExpectedS<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const = 0;
         virtual std::vector<const SourceControlFileLocation*> load_all_control_files() const = 0;
     };
