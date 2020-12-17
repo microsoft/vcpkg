@@ -603,7 +603,7 @@ TEST_CASE ("version parse relaxed", "[versionplan]")
 
     auto version_long =
         Versions::RelaxedVersion::from_string("1.20.300.4000.50000.6000000.70000000.80000000.18446744073709551610");
-    check_relaxed_version(version_long, {1, 20, 300, 4000, 50000, 6000000, 70000000, 80000000, 18446744073709551610});
+    check_relaxed_version(version_long, {1, 20, 300, 4000, 50000, 6000000, 70000000, 80000000, 18446744073709551610u});
 
     auto version_invalid_characters = Versions::RelaxedVersion::from_string("1.a.0");
     CHECK(!version_invalid_characters.has_value());
