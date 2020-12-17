@@ -188,5 +188,6 @@ namespace vcpkg::Commands::Info
             response.insert("results", std::move(results));
             System::print2(Json::stringify(response, {}));
         }
+        Checks::exit_success(VCPKG_LINE_INFO);
     }
 }
