@@ -88,6 +88,16 @@ Example:
   * `abseil[cxx17]` changes `absl::string_view` to a replacement or `std::string_view`; the patch
 https://github.com/microsoft/vcpkg/blob/981e65ce0ac1f6c86e5a5ded7824db8780173c76/ports/abseil/fix-cxx-standard.patch implements the baking requirement
 
+### Recommended solutions
+
+If it's critical to expose the underlying alternatives, we recommend providing messages at build time to instruct the user on how to copy the port into a private overlay:
+```cmake
+set(USING_DOG 0)
+message(STATUS "This version of LibContosoFrobnicate uses the Kittens backend. To use the Dog backend instead, create an overlay port of this with USING_DOG set to 1 and the `kittens` dependency replaced with `dog`.")
+message(STATUS "This recipe is at ${CMAKE_CURRENT_LIST_DIR}")
+message(STATUS "See the overlay ports documentation at https://github.com/microsoft/vcpkg/blob/master/docs/specifications/ports-overlay.md")
+```
+
 ## Build Techniques
 
 ### Do not use vendored dependencies
