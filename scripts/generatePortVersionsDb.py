@@ -32,10 +32,12 @@ def generate_port_versions_file(port_name):
 
     output_file_path = os.path.join(containing_dir, f'{port_name}.json')
     if not os.path.exists(output_file_path):
+        env = os.environ.copy()
+        env['GIT_OPTIONAL_LOCKS'] = '0'
         output = subprocess.run(
             [os.path.join(SCRIPT_DIRECTORY, '../vcpkg.exe'),
              'x-history', port_name, '--x-json', f'--output={output_file_path}'],
-            capture_output=True, encoding='utf-8')
+            capture_output=True, encoding='utf-8', env=env)
         if output.returncode != 0:
             print(f'x-history {port_name} failed: ',
                   output.stdout.strip(), file=sys.stderr)
@@ -50,10 +52,11 @@ def generate_port_versions_db(revision):
     total_count = len(port_names)
 
     concurrency = MAX_PROCESSES / 2
-    print(f'Running on {concurrency:.0f} parallel processes')
+    print(f'Running {concurrency:.0f} parallel processes')
     process_pool = multiprocessing.Pool(MAX_PROCESSES)
     for i, _ in enumerate(process_pool.imap_unordered(generate_port_versions_file, port_names), 1):
-        sys.stderr.write(f'\rProcessed: {i}/{total_count} ({(i / total_count):.2%})')
+        sys.stderr.write(
+            f'\rProcessed: {i}/{total_count} ({(i / total_count):.2%})')
     process_pool.close()
     process_pool.join()
 
