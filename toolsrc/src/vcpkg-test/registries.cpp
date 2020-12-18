@@ -16,7 +16,7 @@ namespace
 
         int number;
 
-        TestRegistryImplementation(int n) : number(n) {}
+        TestRegistryImplementation(int n) : number(n) { }
     };
 
     Registry make_registry(int n, std::vector<std::string>&& port_names)
@@ -34,7 +34,6 @@ namespace
         {
             return -1;
         }
-        
     }
 
 }
