@@ -11,11 +11,11 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive_ex(
-  ARCHIVE ${ARCHIVE}
-  OUT_SOURCE_PATH SOURCE_PATH
-  PATCHES
-    fix-makefiles.patch
-    fix-geoconfig.patch
+    ARCHIVE ${ARCHIVE}
+    OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES
+        fix-makefiles.patch
+        fix-geoconfig.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
