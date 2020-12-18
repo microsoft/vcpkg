@@ -320,7 +320,7 @@ namespace
             auto& scf = *pscf;
             return scf->to_versiont();
         }
-        Debug::print("Failed to load port `%s` from the ports tree: %s.", port_name, maybe_scf.error()->error);
+        Debug::print("Failed to load port `", port_name, "` from the ports tree: ", maybe_scf.error()->error, "\n");
         return nullopt;
     }
 

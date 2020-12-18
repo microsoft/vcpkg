@@ -167,8 +167,7 @@ namespace vcpkg::PortFileProvider
             }
             else
             {
-                Debug::print(
-                    "Failed to find port `", spec, "` in registry:", entry ? " entry found." : " no entry found");
+                Debug::print("Failed to find port `", spec, "` in registry: no entry found.\n");
             }
         }
         else
@@ -223,7 +222,10 @@ namespace vcpkg::PortFileProvider
                 }
                 else
                 {
-                    return maybe_scfl.error()->error;
+                    return Strings::format("Error: when loading port `%s` from directory `%s`:\n%s\n",
+                                           spec,
+                                           fs::u8string(port_path),
+                                           maybe_scfl.error()->error);
                 }
             }
         }

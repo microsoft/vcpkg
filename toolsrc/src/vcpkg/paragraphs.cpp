@@ -357,14 +357,23 @@ namespace vcpkg::Paragraphs
 
             return res;
         }
-        ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs(fs, path_to_control);
-        if (auto vector_pghs = pghs.get())
+
+        if (fs.exists(path_to_control))
         {
-            return SourceControlFile::parse_control_file(fs::u8string(path_to_control), std::move(*vector_pghs));
+            ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs(fs, path_to_control);
+            if (auto vector_pghs = pghs.get())
+            {
+                return SourceControlFile::parse_control_file(fs::u8string(path_to_control), std::move(*vector_pghs));
+            }
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = fs::u8string(path.filename());
+            error_info->error = pghs.error();
+            return error_info;
         }
+
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         error_info->name = fs::u8string(path.filename());
-        error_info->error = pghs.error();
+        error_info->error = "Failed to find either a CONTROL file or vcpkg.json file.";
         return error_info;
     }
 
