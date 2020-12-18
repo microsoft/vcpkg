@@ -71,3 +71,44 @@ TEST_CASE ("edit distance", "[strings]")
     REQUIRE(byte_edit_distance("", "hello") == 5);
     REQUIRE(byte_edit_distance("world", "") == 5);
 }
+
+TEST_CASE ("replace_all", "[strings]")
+{
+    REQUIRE(vcpkg::Strings::replace_all("literal", "ter", "x") == "lixal");
+}
+
+TEST_CASE ("inplace_replace_all", "[strings]")
+{
+    using vcpkg::Strings::inplace_replace_all;
+    std::string target;
+    inplace_replace_all(target, "", "content");
+    REQUIRE(target.empty());
+    target = "aa";
+    inplace_replace_all(target, "a", "content");
+    REQUIRE(target == "contentcontent");
+    inplace_replace_all(target, "content", "");
+    REQUIRE(target.empty());
+    target = "ababababa";
+    inplace_replace_all(target, "aba", "X");
+    REQUIRE(target == "XbXba");
+    target = "ababababa";
+    inplace_replace_all(target, "aba", "aba");
+    REQUIRE(target == "ababababa");
+}
+
+TEST_CASE ("inplace_replace_all(char)", "[strings]")
+{
+    using vcpkg::Strings::inplace_replace_all;
+    static_assert(noexcept(inplace_replace_all(std::declval<std::string&>(), 'a', 'a')));
+
+    std::string target;
+    inplace_replace_all(target, ' ', '?');
+    REQUIRE(target.empty());
+    target = "hello";
+    inplace_replace_all(target, 'l', 'w');
+    REQUIRE(target == "hewwo");
+    inplace_replace_all(target, 'w', 'w');
+    REQUIRE(target == "hewwo");
+    inplace_replace_all(target, 'x', '?');
+    REQUIRE(target == "hewwo");
+}
