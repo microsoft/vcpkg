@@ -25,8 +25,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
   configure_file(${SOURCE_PATH}/headers/librttopo_geom.h.in ${SOURCE_PATH}/headers/librttopo_geom.h @ONLY)
 
   vcpkg_build_nmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    TARGET librttopo.lib
+      SOURCE_PATH ${SOURCE_PATH}
+      TARGET librttopo.lib
   )
 
   file(GLOB LIBRTTOPO_INCLUDE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/headers/*.h)
