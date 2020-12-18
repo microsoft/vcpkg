@@ -337,16 +337,13 @@ namespace vcpkg::PortFileProvider
                 }
 
                 auto entry = try_load_registry_port_and_baseline(paths, port_name.to_string());
-                if (entry.first)
-                {
-                    auto it = m_entry_cache.emplace(port_name.to_string(), std::move(entry.first));
-                    return it.first->second->get_port_versions();
-                }
-                else
+                if (!entry.first)
                 {
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO, "Error: Could not find a definition for port %s", port_name);
                 }
+                auto it = m_entry_cache.emplace(port_name.to_string(), std::move(entry.first));
+                return it.first->second->get_port_versions();
             }
 
             ExpectedS<const SourceControlFileLocation&> get_control_file(const VersionSpec& version_spec) const override
