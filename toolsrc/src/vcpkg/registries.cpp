@@ -936,4 +936,22 @@ namespace vcpkg
             }
         }
     }
+
+    bool RegistrySet::has_modifications() const
+    {
+        if (!registries_.empty())
+        {
+            return true;
+        }
+        if (auto builtin_reg = dynamic_cast<const BuiltinRegistry*>(default_registry_.get()))
+        {
+            if (builtin_reg->m_baseline_identifier.empty())
+            {
+                return false;
+            }
+            return true;
+        }
+        // default_registry_ is not a BuiltinRegistry
+        return true;
+    }
 }

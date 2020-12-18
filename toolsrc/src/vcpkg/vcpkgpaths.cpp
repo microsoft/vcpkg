@@ -88,7 +88,7 @@ namespace vcpkg
                                                    const fs::path& filepath)
     {
         Json::Reader reader;
-        auto deserializer = make_configuration_deserializer(args, filepath.parent_path());
+        auto deserializer = make_configuration_deserializer(filepath.parent_path());
 
         auto parsed_config_opt = reader.visit(obj, *deserializer);
         if (!reader.errors().empty())
@@ -101,6 +101,8 @@ namespace vcpkg
                            "more information.\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
+
+        parsed_config_opt.get()->validate_feature_flags(args.feature_flag_settings());
 
         return std::move(parsed_config_opt).value_or_exit(VCPKG_LINE_INFO);
     }
@@ -570,6 +572,7 @@ If you wish to silence this error and use classic mode, you can:
         Files::Filesystem& fs = paths.get_filesystem();
         fs.remove_all(work_tree, VCPKG_LINE_INFO);
         fs.remove_all(destination, VCPKG_LINE_INFO);
+        fs::path destination_tar = fs::u8path(Strings::format("%s.tmp.tar", fs::u8string(destination)));
 
         if (!fs.exists(dot_git_dir))
         {
@@ -598,35 +601,41 @@ If you wish to silence this error and use classic mode, you can:
                                fetch_output.output);
         }
 
-        if (!fs.exists(work_tree))
+        fs.create_directories(destination_tar.parent_path(), VCPKG_LINE_INFO);
+        System::CmdLineBuilder git_archive = git_cmd_builder(paths, dot_git_dir, work_tree)
+                                                 .string_arg("archive")
+                                                 .string_arg("--format")
+                                                 .string_arg("tar")
+                                                 .string_arg(git_object)
+                                                 .string_arg("--output")
+                                                 .path_arg(destination_tar);
+        auto git_archive_output = System::cmd_execute_and_capture_output(git_archive.extract());
+        if (git_archive_output.exit_code != 0)
         {
-            fs.create_directories(work_tree, VCPKG_LINE_INFO);
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to run git archive: %s", git_archive_output.output);
         }
 
-        // git checkout {tree_object} .
-        System::CmdLineBuilder checkout_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
-                                                          .string_arg("checkout")
-                                                          .string_arg(git_object)
-                                                          .string_arg(".");
-        const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder.extract());
-        Checks::check_exit(VCPKG_LINE_INFO, checkout_output.exit_code == 0, "Failed to checkout %s", git_object);
+        fs.create_directories(destination, VCPKG_LINE_INFO);
+        System::CmdLineBuilder untar{};
+        untar.string_arg("cd").path_arg(destination);
+        untar.ampersand();
+        untar.path_arg(paths.get_tool_exe(Tools::CMAKE))
+            .string_arg("-E")
+            .string_arg("tar")
+            .string_arg("xf")
+            .path_arg(destination_tar);
 
-        const auto& containing_folder = destination.parent_path();
-        if (!fs.exists(containing_folder))
-        {
-            fs.create_directories(containing_folder, VCPKG_LINE_INFO);
-        }
+        auto untar_cmdline = untar.extract();
+#ifdef WIN32
+        // Invoke through `cmd` to support `&&`
+        untar_cmdline.insert(0, "cmd /c \"");
+        untar_cmdline.push_back('"');
+#endif
 
-        std::error_code ec;
-        fs.rename_or_copy(work_tree, destination, ".tmp", ec);
-        fs.remove_all(work_tree, VCPKG_LINE_INFO);
-        if (ec)
+        auto untar_output = System::cmd_execute_and_capture_output(untar_cmdline);
+        if (untar_output.exit_code != 0)
         {
-            System::printf(System::Color::error,
-                           "Error: Couldn't move checked out files from %s to destination %s",
-                           fs::u8string(work_tree),
-                           fs::u8string(destination));
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to run cmake -E tar xf: %s", untar_output.output);
         }
     }
 

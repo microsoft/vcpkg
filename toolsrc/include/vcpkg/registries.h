@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vcpkg/fwd/configuration.h>
 #include <vcpkg/fwd/registries.h>
 #include <vcpkg/fwd/vcpkgpaths.h>
 
@@ -21,7 +22,6 @@ namespace vcpkg
     {
         virtual View<VersionT> get_port_versions() const = 0;
 
-        // precondition: version \in get_port_versions(). Otherwise, this function asserts.
         virtual ExpectedS<fs::path> get_path_to_version(const VcpkgPaths& paths, const VersionT& version) const = 0;
 
         virtual ~RegistryEntry() = default;
@@ -87,6 +87,11 @@ namespace vcpkg
 
         // this exists in order to allow versioning and registries to be developed and tested separately
         void experimental_set_builtin_registry_baseline(StringView baseline) const;
+
+        // returns whether the registry set has any modifications to the default
+        // (i.e., whether `default_registry` was set, or `registries` had any entries)
+        // for checking against the registry feature flag.
+        bool has_modifications() const;
 
     private:
         std::unique_ptr<RegistryImplementation> default_registry_;

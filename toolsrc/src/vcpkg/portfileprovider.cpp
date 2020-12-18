@@ -26,8 +26,11 @@ namespace
         View<VersionT> get_port_versions() const override { return {&version, 1}; }
         ExpectedS<fs::path> get_path_to_version(const VcpkgPaths&, const VersionT& v) const override
         {
-            Checks::check_exit(VCPKG_LINE_INFO, v == version);
-            return path;
+            if (v == version)
+            {
+                return path;
+            }
+            return Strings::format("Version %s not found; only %s is available.", v.to_string(), version.to_string());
         }
 
         fs::path path;
