@@ -2,8 +2,7 @@
   "name": "poppler",
   "version-string": "20.12.1",
   "description": "a PDF rendering library",
-  "homepage": "https://poppler.freedesktop.org/",
-  "supports": "!linux",
+  "homepage": "https://poppler.freedesktop.org/",  
   "dependencies": [
     "cairo",
     "devil",

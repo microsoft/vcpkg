@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-remove-CMAKE_CXX_STANDARD.patch
+        0002-remove-test-subdirectory.patch
 )
 
 vcpkg_configure_cmake(
