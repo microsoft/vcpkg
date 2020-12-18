@@ -40,5 +40,23 @@ function(vcpkg_copy_tool_dependencies TOOL_DIR)
         endmacro()
         search_for_dependencies("${CURRENT_PACKAGES_DIR}/bin")
         search_for_dependencies("${CURRENT_INSTALLED_DIR}/bin")
+    elseif (VCPKG_TARGET_IS_LINUX AND ("${VCPKG_LIBRARY_LINKAGE}" STREQUAL "dynamic"))
+        # Fix RPATH: works but requires patchelf
+        find_program(PATCHELF_FOUND NAMES patchelf)
+        if(PATCHELF_FOUND)
+            file(GLOB TOOLS 
+                LIST_DIRECTORIES FALSE
+                "${TOOL_DIR}/*"
+            )
+            foreach(TOOL IN LISTS TOOLS)
+                execute_process(
+                    COMMAND  patchelf --set-rpath "\$ORIGIN/../../lib" "${TOOL}"
+                    OUTPUT_QUIET
+                    ERROR_QUIET
+                )
+            endforeach()
+        else()
+            message(FATAL_ERROR "`patchelf` is not available. You can install it with `apt install patchelf`")
+        endif()
     endif()
 endfunction()

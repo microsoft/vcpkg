@@ -112,6 +112,11 @@ else()
         file(INSTALL ${E} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}
                 PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ)
     endforeach()
+
+    if(protobuf_BUILD_PROTOC_BINARIES)
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+    endif()
+
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
 endif()
