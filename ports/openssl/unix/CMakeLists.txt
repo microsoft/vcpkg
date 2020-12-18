@@ -119,6 +119,7 @@ endif()
 foreach(lib ssl crypto)
     foreach(ext ${LIB_EXTS})
         list(APPEND INSTALL_LIBS "${BUILDDIR}/lib${lib}.${ext}")
+        list(APPEND INSTALL_PKG_CONFIGS "${BUILDDIR}/lib${lib}.pc")
     endforeach()
     foreach(ext ${BIN_EXTS})
     # This might be wrong for targets which don't follow this naming scheme, but I'm not aware of any
@@ -208,3 +209,8 @@ install(
     FILES ${INSTALL_BINS}
     DESTINATION bin
 )
+install(
+    FILES ${INSTALL_PKG_CONFIGS}
+    DESTINATION lib/pkgconfig
+)
+
