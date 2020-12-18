@@ -1,3 +1,7 @@
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/mozjpeg/copyright")
+    message(FATAL_ERROR "Can't build ${PORT} if mozjpeg is installed. Please remove mozjpeg:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
@@ -5,8 +9,7 @@ vcpkg_from_github(
     SHA512 25e8857a3542cc74c48775959f11811529fe6a853990cb285f91a6218c1cde5dd1e58043208e81709fb7a71c376396b2de1f20b53b2c5b8595ca097fa02992fd
     HEAD_REF master
     PATCHES
-        add-options-for-exes-docs-headers.patch
-		
+        add-options-for-exes-docs-headers.patch	
         #workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
 )
