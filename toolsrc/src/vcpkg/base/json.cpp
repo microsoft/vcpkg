@@ -71,7 +71,7 @@ namespace vcpkg::Json
                 else
                 {
                     destroy_underlying();
-                    auto *address = &(this->*mp);
+                    auto* address = &(this->*mp);
                     new (address) T(std::move(other.*mp));
                     tag = vk;
                 }
