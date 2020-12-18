@@ -36,15 +36,15 @@ if (VCPKG_TARGET_IS_WINDOWS)
   file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/librttopo.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    AUTOCONFIG
-    OPTIONS
-      "GEOS_MAJOR_VERSION=3"
-      "GEOS_MINOR_VERSION=8"
-    OPTIONS_DEBUG
-      "GEOS_LDFLAGS=-lgeos_cd -lgeosd -lm"
-    OPTIONS_RELEASE
-      "GEOS_LDFLAGS=-lgeos_c -lgeos -lm"
+      SOURCE_PATH ${SOURCE_PATH}
+      AUTOCONFIG
+      OPTIONS
+          "GEOS_MAJOR_VERSION=3"
+          "GEOS_MINOR_VERSION=8"
+      OPTIONS_DEBUG
+          "GEOS_LDFLAGS=-lgeos_cd -lgeosd -lm"
+      OPTIONS_RELEASE
+          "GEOS_LDFLAGS=-lgeos_c -lgeos -lm"
   )
 
   vcpkg_install_make()
