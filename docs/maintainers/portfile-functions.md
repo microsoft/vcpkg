@@ -55,3 +55,4 @@
 - [vcpkg\_internal\_get\_cmake\_vars](vcpkg_internal_get_cmake_vars.md)
 - [vcpkg\_prettify\_command](vcpkg_prettify_command.md)
 - [vcpkg\_replace\_string](vcpkg_replace_string.md)
+- [vcpkg\_test\_cmake\_config](vcpkg_test_cmake_config.md)
