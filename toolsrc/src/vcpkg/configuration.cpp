@@ -74,11 +74,10 @@ namespace vcpkg
     {
         if (!flags.registries && registry_set.has_modifications())
         {
-            System::printf(
-                System::Color::warning,
-                "Warning: configuration specified the \"registries\" or \"default-registries\" field, but "
-                "the %s feature flag was not enabled.\n",
-                VcpkgCmdArguments::REGISTRIES_FEATURE);
+            System::printf(System::Color::warning,
+                           "Warning: configuration specified the \"registries\" or \"default-registries\" field, but "
+                           "the %s feature flag was not enabled.\n",
+                           VcpkgCmdArguments::REGISTRIES_FEATURE);
             registry_set = RegistrySet();
         }
     }
