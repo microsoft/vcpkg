@@ -34,7 +34,7 @@ def generate_port_versions_db():
         with open(port_file_path, 'r') as db_file:
             try:
                 versions_object = json.load(db_file)
-                if len(versions_object['versions']) > 0:
+                if versions_object['versions']:
                     last_version = versions_object['versions'][0] 
                     version_obj = {}
                     if 'version' in last_version:
