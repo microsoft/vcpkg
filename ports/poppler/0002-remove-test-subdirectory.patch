@@ -1,7 +1,7 @@
 From aa0fa5f737b8ea3d2dfb396243be79af49274b6e Mon Sep 17 00:00:00 2001
 From: abc <a@b.com>
 Date: Fri, 18 Dec 2020 14:32:31 +0800
-Subject: [PATCH] remove test subdirectory
+Subject: [PATCH 2/2] remove test subdirectory
 
 ---
  CMakeLists.txt | 1 -

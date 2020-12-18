@@ -1,7 +1,7 @@
 From 36fb9e11ab5b15fc003d77e7876e37339c37a55d Mon Sep 17 00:00:00 2001
 From: abc <a@b.com>
 Date: Wed, 16 Dec 2020 22:43:36 +0800
-Subject: [PATCH] remove CMAKE_CXX_STANDARD
+Subject: [PATCH 1/2] remove CMAKE_CXX_STANDARD
 
 ---
  CMakeLists.txt | 1 -
