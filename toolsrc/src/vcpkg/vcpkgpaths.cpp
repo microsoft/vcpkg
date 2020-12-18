@@ -496,11 +496,13 @@ If you wish to silence this error and use classic mode, you can:
         fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
 
         // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
-        // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
+        // git clone --no-checkout --local --no-hardlinks {vcpkg_root} {dot_git_dir}
+        // note that `--no-hardlinks` is added because otherwise, git fails to clone in some cases
         System::CmdLineBuilder clone_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
                                                        .string_arg("clone")
                                                        .string_arg("--no-checkout")
                                                        .string_arg("--local")
+                                                       .string_arg("--no-hardlinks")
                                                        .path_arg(local_repo)
                                                        .path_arg(dot_git_dir);
         const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
@@ -577,11 +579,13 @@ If you wish to silence this error and use classic mode, you can:
         if (!fs.exists(dot_git_dir))
         {
             // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
-            // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
+            // git clone --no-checkout --local --no-hardlinks {vcpkg_root} {dot_git_dir}
+            // note that `--no-hardlinks` is added because otherwise, git fails to clone in some cases
             System::CmdLineBuilder clone_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
                                                            .string_arg("clone")
                                                            .string_arg("--no-checkout")
                                                            .string_arg("--local")
+                                                           .string_arg("--no-hardlinks")
                                                            .path_arg(local_repo)
                                                            .path_arg(dot_git_dir);
             const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
