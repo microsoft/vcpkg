@@ -11,7 +11,7 @@ PORTS_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../ports')
 VERSIONS_DB_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../port_versions')
 
 
-def generate_port_versions_db():
+def generate_baseline():
     start_time = time.time()
 
     # Assume each directory in ${VCPKG_ROOT}/ports is a different port
@@ -64,7 +64,7 @@ def generate_port_versions_db():
 def main():
     if not os.path.exists(VERSIONS_DB_DIRECTORY):
         print(f'Version DB files must exist before generating a baseline.\nRun: `python generatePortVersionsDB`\n')
-    generate_port_versions_db()
+    generate_baseline()
 
 
 if __name__ == "__main__":
