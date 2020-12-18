@@ -119,7 +119,9 @@ $Workloads = @(
   'Microsoft.Net.Component.4.8.SDK',
   'Microsoft.Component.NetFX.Native',
   'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
-  'Microsoft.VisualStudio.Component.VC.Llvm.Clang'
+  'Microsoft.VisualStudio.Component.VC.Llvm.Clang',
+  'Microsoft.VisualStudio.Component.VC.v141.x86.x64',
+  'Microsoft.VisualStudio.Component.VC.140'
 )
 
 $WindowsWDKUrl = 'https://download.microsoft.com/download/1/a/7/1a730121-7aa7-46f7-8978-7db729aa413d/wdk/wdksetup.exe'
