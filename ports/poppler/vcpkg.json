@@ -4,13 +4,14 @@
   "description": "a PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
   "dependencies": [
-    "cairo",
-    "devil",
     "fontconfig",
+    {
+      "name": "fontconfig",
+      "platform": "!(windows | android)"
+    },
     "freetype",
     "libiconv",
     "openjpeg",
-    "rapidjson",
     "zlib"
   ]
 }
