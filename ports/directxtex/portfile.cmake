@@ -56,8 +56,6 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 if("openexr" IN_LIST FEATURES)
-  file(INSTALL ${SOURCE_PATH}/DirectXTex/DirectXTexEXR.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-
   vcpkg_copy_tools(
         TOOL_NAMES texassemble texconv texdiag
         SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
