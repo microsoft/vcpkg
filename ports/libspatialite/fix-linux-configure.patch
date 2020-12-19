@@ -1,76 +1,39 @@
 diff --git a/configure.ac b/configure.ac
-index ead87caff..b7f8d9cb2 100644
+index ead87caff..47abb90f0 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -302,31 +302,31 @@ if test x"$enable_geos" != "xno"; then
+@@ -302,6 +302,7 @@ if test x"$enable_geos" != "xno"; then
    #-----------------------------------------------------------------------
    #   --with-geosconfig
    #
--  AC_ARG_WITH([geosconfig],
--        [AS_HELP_STRING([--with-geosconfig=FILE], [specify an alternative geos-config file])],
--	[GEOSCONFIG="$withval"], [GEOSCONFIG=""])
--  if test "x$GEOSCONFIG" = "x"; then
--        # GEOSCONFIG was not specified, so search within the current path
--        AC_PATH_PROG([GEOSCONFIG], [geos-config])	
--        # If we couldn't find geos-config, display an error
--        if test "x$GEOSCONFIG" = "x"; then
--                AC_MSG_ERROR([could not find geos-config within the current path. You may need to try re-running configure with a --with-geosconfig parameter.])
--        fi
--  else
--        # GEOSCONFIG was specified; display a message to the user
--        if test "x$GEOSCONFIG" = "xyes"; then
--                AC_MSG_ERROR([you must specify a parameter to --with-geosconfig, e.g. --with-geosconfig=/path/to/geos-config])
--        else
--                if test -f $GEOSCONFIG; then
--                        AC_MSG_RESULT([Using user-specified geos-config file: $GEOSCONFIG])
--                else
--                        AC_MSG_ERROR([the user-specified geos-config file $GEOSCONFIG does not exist])
--                fi     
--        fi
--  fi
-+  #AC_ARG_WITH([geosconfig],
-+  #      [AS_HELP_STRING([--with-geosconfig=FILE], [specify an alternative geos-config file])],
-+	#[GEOSCONFIG="$withval"], [GEOSCONFIG=""])
-+  #if test "x$GEOSCONFIG" = "x"; then
-+  #      # GEOSCONFIG was not specified, so search within the current path
-+  #      AC_PATH_PROG([GEOSCONFIG], [geos-config])	
-+  #      # If we couldn't find geos-config, display an error
-+  #      if test "x$GEOSCONFIG" = "x"; then
-+  #              AC_MSG_ERROR([could not find geos-config within the current path. You may need to try re-running configure with a --with-geosconfig parameter.])
-+  #      fi
-+  #else
-+  #      # GEOSCONFIG was specified; display a message to the user
-+  #      if test "x$GEOSCONFIG" = "xyes"; then
-+  #              AC_MSG_ERROR([you must specify a parameter to --with-geosconfig, e.g. --with-geosconfig=/path/to/geos-config])
-+  #      else
-+  #              if test -f $GEOSCONFIG; then
-+  #                      AC_MSG_RESULT([Using user-specified geos-config file: $GEOSCONFIG])
-+  #              else
-+  #                      AC_MSG_ERROR([the user-specified geos-config file $GEOSCONFIG does not exist])
-+  #              fi     
-+  #      fi
-+  #fi
++ if 0; then
+   AC_ARG_WITH([geosconfig],
+         [AS_HELP_STRING([--with-geosconfig=FILE], [specify an alternative geos-config file])],
+ 	[GEOSCONFIG="$withval"], [GEOSCONFIG=""])
+@@ -327,6 +328,7 @@ if test x"$enable_geos" != "xno"; then
    # Extract the linker and include flags
--  GEOS_LDFLAGS=`$GEOSCONFIG --ldflags`
--  GEOS_CFLAGS=-I`$GEOSCONFIG --includes`
-+  #GEOS_LDFLAGS=`$GEOSCONFIG --ldflags`
-+  #GEOS_CFLAGS=-I`$GEOSCONFIG --includes`
+   GEOS_LDFLAGS=`$GEOSCONFIG --ldflags`
+   GEOS_CFLAGS=-I`$GEOSCONFIG --includes`
++ fi
    AC_SUBST([GEOS_LDFLAGS])
    AC_SUBST([GEOS_CFLAGS])	
    # Ensure that we can parse geos_c.h
-@@ -337,9 +337,9 @@ if test x"$enable_geos" != "xno"; then
+@@ -335,11 +337,14 @@ if test x"$enable_geos" != "xno"; then
+   AC_CHECK_HEADERS([geos_c.h],, [AC_MSG_ERROR([could not find geos_c.h - you may need to specify the directory of a geos-config file using --with-geosconfig])])
+   CPPFLAGS="$CPPFLAGS_SAVE"	
    # Ensure we can link against libgeos_c
++ if 0; then
    LIBS_SAVE="$LIBS"
    LIBS="$GEOS_LDFLAGS"
--  AC_SEARCH_LIBS(GEOSCoveredBy,geos_c,,AC_MSG_ERROR([could not find libgeos_c (or obsolete 'libgeos_c' < v.3.3.0 found) - you may need to specify the directory of a geos-config file using --with-geosconfig]))
-+  #AC_SEARCH_LIBS(GEOSCoveredBy,geos_c,,AC_MSG_ERROR([could not find libgeos_c (or obsolete 'libgeos_c' < v.3.3.0 found) - you may need to specify the directory of a geos-config file using --with-geosconfig]))
+   AC_SEARCH_LIBS(GEOSCoveredBy,geos_c,,AC_MSG_ERROR([could not find libgeos_c (or obsolete 'libgeos_c' < v.3.3.0 found) - you may need to specify the directory of a geos-config file using --with-geosconfig]))
    LIBS="$LIBS_SAVE"
--  LIBS="$LIBS $GEOS_LDFLAGS -lgeos_c"
+   LIBS="$LIBS $GEOS_LDFLAGS -lgeos_c"
++ fi
 +  LIBS="$LIBS $GEOS_LDFLAGS"
  
    #-----------------------------------------------------------------------
    #   --enable-controlpoints
-@@ -358,7 +358,7 @@ if test x"$enable_geos" != "xno"; then
+@@ -358,7 +363,7 @@ if test x"$enable_geos" != "xno"; then
  	  [--enable-geosadvanced], [enables GEOS advanced features [default=yes]])],
  	  [], [enable_geosadvanced=yes])
    if test x"$enable_geosadvanced" != "xno"; then
@@ -79,7 +42,7 @@ index ead87caff..b7f8d9cb2 100644
  	  AC_DEFINE(GEOS_ADVANCED)
    fi
  
-@@ -369,7 +369,7 @@ if test x"$enable_geos" != "xno"; then
+@@ -369,7 +374,7 @@ if test x"$enable_geos" != "xno"; then
  	  [--enable-geosreentrant], [enables GEOS reentrant (fully thread safe) [default=yes]])],
  	  [], [enable_geosreentrant=yes])
    if test x"$enable_geosreentrant" != "xno"; then
@@ -88,7 +51,7 @@ index ead87caff..b7f8d9cb2 100644
  	  AC_DEFINE(GEOS_REENTRANT)
    fi
  
-@@ -390,7 +390,7 @@ if test x"$enable_geos" != "xno"; then
+@@ -390,7 +395,7 @@ if test x"$enable_geos" != "xno"; then
  	  [--enable-geos370], [enables GEOS 3.7.0 features [default=yes]])],
  	  [], [enable_geos370=yes])
    if test x"$enable_geos370" != "xno"; then

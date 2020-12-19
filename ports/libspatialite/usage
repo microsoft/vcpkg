@@ -1,5 +1,0 @@
-The package SPATIALITE provides CMake targets:
-
-    find_package(SPATIALITE REQUIRED)
-    target_include_directories(main PRIVATE ${SPATIALITE_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${SPATIALITE_LIBRARIES})
