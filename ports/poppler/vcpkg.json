@@ -4,6 +4,7 @@
   "description": "a PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
   "dependencies": [
+    "devil",
     "fontconfig",
     "freetype",
     "libiconv",
