@@ -1,0 +1,62 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6451fcf1b..dbd5016ca 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -63,11 +63,22 @@ option(PNG_HARDWARE_OPTIMIZATIONS "Enable hardware optimizations" ON)
+ set(PNG_PREFIX "" CACHE STRING "Prefix to add to the API function names")
+ set(DFA_XTRA "" CACHE FILEPATH "File containing extra configuration settings")
+ 
++# CMake currently sets CMAKE_SYSTEM_PROCESSOR to one of x86_64 or arm64 on macOS,
++# based upon the OS architecture, not the target architecture. As such, we need
++# to check CMAKE_OSX_ARCHITECTURES to identify which hardware-specific flags to
++# enable. Note that this will fail if you attempt to build a universal binary in
++# a single cmake invokation.
++if (APPLE AND CMAKE_OSX_ARCHITECTURES)
++  set(TARGET_ARCH ${CMAKE_OSX_ARCHITECTURES})
++else()
++  set(TARGET_ARCH ${CMAKE_SYSTEM_PROCESSOR})
++endif()
++
+ if(PNG_HARDWARE_OPTIMIZATIONS)
+ 
+ # set definitions and sources for arm
+-if(CMAKE_SYSTEM_PROCESSOR MATCHES "^arm" OR
+-  CMAKE_SYSTEM_PROCESSOR MATCHES "^aarch64")
++if(TARGET_ARCH MATCHES "^arm" OR
++  TARGET_ARCH MATCHES "^aarch64")
+   set(PNG_ARM_NEON_POSSIBLE_VALUES check on off)
+   set(PNG_ARM_NEON "check" CACHE STRING "Enable ARM NEON optimizations:
+      check: (default) use internal checking code;
+@@ -121,8 +132,8 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "^powerpc*" OR
+ endif()
+ 
+ # set definitions and sources for intel
+-if(CMAKE_SYSTEM_PROCESSOR MATCHES "^i?86" OR
+-   CMAKE_SYSTEM_PROCESSOR MATCHES "^x86_64*")
++if(TARGET_ARCH MATCHES "^i?86" OR
++   TARGET_ARCH MATCHES "^x86_64*")
+   set(PNG_INTEL_SSE_POSSIBLE_VALUES on off)
+   set(PNG_INTEL_SSE "on" CACHE STRING "Enable INTEL_SSE optimizations:
+      off: disable the optimizations")
+@@ -171,8 +182,8 @@ endif()
+ else(PNG_HARDWARE_OPTIMIZATIONS)
+ 
+ # set definitions and sources for arm
+-if(CMAKE_SYSTEM_PROCESSOR MATCHES "^arm" OR
+-   CMAKE_SYSTEM_PROCESSOR MATCHES "^aarch64")
++if(TARGET_ARCH MATCHES "^arm" OR
++  TARGET_ARCH MATCHES "^aarch64")
+   add_definitions(-DPNG_ARM_NEON_OPT=0)
+ endif()
+ 
+@@ -183,8 +194,8 @@ if(CMAKE_SYSTEM_PROCESSOR MATCHES "^powerpc*" OR
+ endif()
+ 
+ # set definitions and sources for intel
+-if(CMAKE_SYSTEM_PROCESSOR MATCHES "^i?86" OR
+-   CMAKE_SYSTEM_PROCESSOR MATCHES "^x86_64*")
++if(TARGET_ARCH MATCHES "^i?86" OR
++   TARGET_ARCH MATCHES "^x86_64")
+   add_definitions(-DPNG_INTEL_SSE_OPT=0)
+ endif()
+ 
