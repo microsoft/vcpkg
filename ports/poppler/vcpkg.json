@@ -6,6 +6,10 @@
   "dependencies": [
     "devil",
     "fontconfig",
+    {
+      "name": "fontconfig",
+      "platform": "!(windows | android)"
+    },
     "freetype",
     "libiconv",
     "openjpeg",
