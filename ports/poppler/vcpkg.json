@@ -5,10 +5,6 @@
   "homepage": "https://poppler.freedesktop.org/",
   "dependencies": [
     "fontconfig",
-    {
-      "name": "fontconfig",
-      "platform": "!(windows | android)"
-    },
     "freetype",
     "libiconv",
     "openjpeg",
