@@ -34,7 +34,7 @@ index c048aa758..be68e21cd 100644
 @@ -1,8 +1,8 @@
  # Directory tree where SpatiaLite will be installed.
 -INSTDIR=C:\OSGeo4W
-+INSTDIR=$(INSTALLDIR)
++INSTDIR=$(INST_DIR)
  
  # Uncomment the first for an optimized build, or the second for debug.
 -OPTFLAGS=	/nologo /Ox /fp:precise /W4 /MD /D_CRT_SECURE_NO_WARNINGS \

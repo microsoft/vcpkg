@@ -56,10 +56,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
 
   string(REPLACE "/" "\\\\" INST_DIR ${CURRENT_PACKAGES_DIR})
   list(APPEND OPTIONS_RELEASE
-      "LIBS_ALL=${LIBS_ALL_REL}"
+      "INST_DIR=${INST_DIR}" "LIBS_ALL=${LIBS_ALL_REL}"
   )
   list(APPEND OPTIONS_DEBUG
-      "LINK_FLAGS=/debug" "LIBS_ALL=${LIBS_ALL_DBG}"
+      "LINK_FLAGS=/debug" "INST_DIR=${INST_DIR}\\debug" "LIBS_ALL=${LIBS_ALL_DBG}"
    )
 
   vcpkg_install_nmake(
@@ -86,33 +86,37 @@ if (VCPKG_TARGET_IS_WINDOWS)
       file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
   endif()
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
+  if(VCPKG_TARGET_IS_LINUX)
+      set(STDLIB stdc++)
+  else()
+      set(STDLIB c++)
+  endif()
+
   list(APPEND OPTIONS_RELEASE
-    "LIBS=-lpthread -ldl -lm"
-    "LIBXML2_LIBS=-lxml2 -llzma"
-    "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
-    "GEOS_LDFLAGS=-lgeos_c -lgeos -lm"
+      "LIBXML2_LIBS=-lxml2 -llzma"
+      "GEOS_LDFLAGS=-lgeos_c -lgeos -l${STDLIB}"
   )
   list(APPEND OPTIONS_DEBUG
-    "LIBS=-lpthread -ldl -lm"
-    "LIBXML2_LIBS=-lxml2 -llzmad"
-    "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
-    "GEOS_LDFLAGS=-lgeos_cd -lgeosd -lm"
+      "LIBXML2_LIBS=-lxml2 -llzmad"
+      "GEOS_LDFLAGS=-lgeos_cd -lgeosd -l${STDLIB}"
   )
 
   vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    AUTOCONFIG
-    OPTIONS
-      "CFLAGS=-DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
-      "--enable-rttopo"
-      "--enable-gcp"
-      "--enable-geocallbacks"
-      "--disable-examples"
-      "--disable-minizip"
-    OPTIONS_DEBUG
-      ${OPTIONS_DEBUG}
-    OPTIONS_RELEASE
-      ${OPTIONS_RELEASE}
+      SOURCE_PATH ${SOURCE_PATH}
+      AUTOCONFIG
+      OPTIONS
+          "CFLAGS=-DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
+          "LIBS=-lpthread -ldl -lm -l${STDLIB}"
+          "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
+          "--enable-rttopo"
+          "--enable-gcp"
+          "--enable-geocallbacks"
+          "--disable-examples"
+          "--disable-minizip"
+      OPTIONS_DEBUG
+          ${OPTIONS_DEBUG}
+      OPTIONS_RELEASE
+          ${OPTIONS_RELEASE}
   )
 
   vcpkg_install_make()
