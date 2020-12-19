@@ -5,19 +5,6 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index de8ccc8..e2484d2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -193,6 +193,12 @@ target_sources(telnetpp
-         src/detail/registration.cpp
- )
- 
-+if (BUILD_SHARED_LIBS)
-+    add_definitions(-Dtelnetpp_EXPORTS)
-+else()
-+    add_definitions(-DTELNETPP_STATIC_DEFINE)
-+endif()
-+
- # The zlib compressors for MCCP should only be compiled into the library
- # if zlib is available.
- if (TELNETPP_WITH_ZLIB)
 @@ -239,17 +245,19 @@ install(
          telnetpp
      EXPORT
