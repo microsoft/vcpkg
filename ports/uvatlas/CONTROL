@@ -1,5 +1,5 @@
 Source: uvatlas
-Version: aug2020
+Version: dec2020b
 Homepage: https://github.com/Microsoft/UVAtlas
 Description: UVAtlas isochart texture atlas
-Supports: windows
+Build-Depends: uvatlas[core](arm64|uwp)

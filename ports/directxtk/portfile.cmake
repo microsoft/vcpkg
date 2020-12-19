@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF nov2020
-    SHA512 9d10a851f37deb428c16166cdecf38ffba28a4ab836f9753f071bccc570fcb22ce98271c6bbad9fa1380dddd1fa6602156a7aa1607d347139bda1860fc2210ce
+    REF nov2020b
+    SHA512 43a8d3ffdf975f80c082eee6669cac8208fb0382f1f3cd74e6520f953ca9c667b54c7828821680d93ce4f14778edd6e75bb3f1f3a69839d6bfb704c6fbc8a8d3
     HEAD_REF master
 )
 
@@ -18,31 +18,33 @@ vcpkg_check_features(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS ${FEATURE_OPTIONS} -DBUILD_TOOLS=OFF
 )
 
-if(NOT VCPKG_TARGET_IS_UWP)
-    vcpkg_build_cmake()
-else()
-    vcpkg_build_cmake(TARGET DirectXTK)
-endif()
+vcpkg_build_cmake()
 
-file(INSTALL ${SOURCE_PATH}/Inc/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXTK)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-file(GLOB_RECURSE DEBUG_LIB ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/CMake/*.lib)
-file(GLOB_RECURSE RELEASE_LIB ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake/*.lib)
-file(INSTALL ${DEBUG_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL ${RELEASE_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-if(NOT VCPKG_TARGET_IS_UWP)
-  vcpkg_copy_tools(
-        TOOL_NAMES XWBTool
-        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
-    )
-    vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH MakeSpriteFont/MakeSpriteFont.csproj
-        PLATFORM AnyCPU
-    )
-endif()
+vcpkg_download_distfile(makespritefont
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/nov2020/MakeSpriteFont.exe"
+    FILENAME "makespritefont.exe"
+    SHA512 d576eecd9763d238e12ba8d865917738a4bc8cbf632943e5c11b9426ecdfeaa9e8522076f1bb7122d41e69158fc7ca0939f2d90f9986470639966b3f849d236a
+)
+
+vcpkg_download_distfile(xwbtool
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/nov2020/XWBTool.exe"
+    FILENAME "xwbtool.exe"
+    SHA512 6ac8fc12fcea0f808aac1367907dbbb0c5669c8c654fc21f38b4e1ce951710ade1851515dba074e9254579b018545c3cdb2b6cf57366dfba0196603510bf51cd
+)
+
+file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
+
+file(INSTALL
+    ${DOWNLOADS}/makespritefont.exe
+    ${DOWNLOADS}/xwbtool.exe
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxtk/)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

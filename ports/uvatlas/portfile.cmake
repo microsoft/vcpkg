@@ -1,61 +1,36 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF 60e2f2d5175f3a9fa6987516c4b44a4f0de3e1fa # aug2020
-    SHA512 6ff99148d8d26345d3e935840d43536558a8174346492d794a4583f50b89a0648bfba3c5a9a433d803fcfd6092716b2f482ff5d1bad896fc4933971dc8107d6d
+    REF dec2020b
+    SHA512 6dc18c4c86df6d4590e82d2c040f504ba2010700b49ab4d8b562e5e93a7ef2b7c393d132f0531f360cf2cd01614d333438e75186272edfc68337b7083b4a39e6
     HEAD_REF master
 )
 
-if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
-    set(SOLUTION_TYPE 2019)
-    set(OCILIB_ARCH_X86 x86)
-    set(OCILIB_ARCH_X64 x64)
-else()
-    set(SOLUTION_TYPE 2017)
-    set(OCILIB_ARCH_X86 x86)
-    set(OCILIB_ARCH_X64 x64)
-endif()
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(PLATFORM ${OCILIB_ARCH_X86})
-	SET(BUILD_ARCH "Win32")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(PLATFORM ${OCILIB_ARCH_X64})
-	SET(BUILD_ARCH ${OCILIB_ARCH_X64})
-else()
-    set(PLATFORM ${TRIPLET_SYSTEM_ARCH})
-endif()
-
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/UVAtlas_Windows10_${SOLUTION_TYPE}.sln
-	PLATFORM ${PLATFORM}
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS -DBUILD_TOOLS=OFF
 )
 
-file(INSTALL
-	${SOURCE_PATH}/UVAtlas/inc/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL
-	${SOURCE_PATH}/UVAtlas/Bin/Windows10_${SOLUTION_TYPE}/${BUILD_ARCH}/Release/UVAtlas.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL
-	${SOURCE_PATH}/UVAtlas/Bin/Windows10_${SOLUTION_TYPE}/${BUILD_ARCH}/Debug/UVAtlas.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+vcpkg_build_cmake()
+
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 vcpkg_download_distfile(uvatlastool
-    URLS "https://github.com/Microsoft/UVAtlas/releases/download/sept2016/uvatlastool.exe"
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/dec2020/uvatlastool.exe"
     FILENAME "uvatlastool.exe"
-    SHA512 2583ba8179d0a58fb85d871368b17571e36242436b5a5dbaf6f99ec2f2ee09f4e11e8f922b29563da3cb3b5bacdb771036c84d5b94f405c7988bfe5f2881c3df
+    SHA512 f3388e590bb45281a089d6d38ff603e99f2ff9124ec1e6caebae2663e4ab8ccaf06f5cce671f78ed9a1f882c6d2e2b1188212ef0219f96b46872faa20cc649fd
 )
 
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
 
 file(INSTALL
-	${DOWNLOADS}/uvatlastool.exe
-	DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
+    ${DOWNLOADS}/uvatlastool.exe
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
-	# Handle copyright
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
