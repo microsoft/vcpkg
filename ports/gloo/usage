@@ -1,0 +1,5 @@
+The package gloo provides CMake variables:
+
+    find_package(Gloo REQUIRED)
+    target_link_libraries(main PRIVATE ${Gloo_LIBRARIES})
+    target_include_directories(main PRIVATE ${Gloo_INCLUDE_DIRS})
