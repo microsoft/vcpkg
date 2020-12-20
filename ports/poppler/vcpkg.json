@@ -9,6 +9,7 @@
     "freetype",
     "libiconv",
     "openjpeg",
+    "rapidjson",
     "zlib"
   ]
 }
