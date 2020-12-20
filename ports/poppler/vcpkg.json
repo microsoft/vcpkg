@@ -8,7 +8,6 @@
       "name": "cairo",
       "platform": "osx"
     },
-    "devil",
     "fontconfig",
     {
       "name": "fontconfig",
