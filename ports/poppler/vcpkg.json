@@ -8,6 +8,10 @@
       "name": "cairo",
       "platform": "osx"
     },
+    {
+      "name": "devil",
+      "platform": "(windows | linux) & !arm"
+    },
     "fontconfig",
     {
       "name": "fontconfig",
