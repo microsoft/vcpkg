@@ -12,7 +12,6 @@
       "name": "devil",
       "platform": "(windows | linux) & !arm"
     },
-    "fontconfig",
     {
       "name": "fontconfig",
       "platform": "!(windows | android)"
