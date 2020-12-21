@@ -9,6 +9,8 @@ vcpkg_from_github(
 		
         #workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
+        
+        fix-compatibility-for-c11-and-c17.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
