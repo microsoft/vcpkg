@@ -9,7 +9,6 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
-        fix-latin-literals.patch
         fix-makefiles.patch
         fix-linux-configure.patch
 )
