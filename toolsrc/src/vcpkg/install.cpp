@@ -7,6 +7,7 @@
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.setinstalled.h>
+#include <vcpkg/configuration.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
@@ -16,6 +17,7 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/remove.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Install
 {
@@ -841,16 +843,12 @@ namespace vcpkg::Install
             if (args.versions_enabled())
             {
                 auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
-                auto baseprovider = [&]() -> std::unique_ptr<PortFileProvider::IBaselineProvider> {
-                    if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
-                    {
-                        return PortFileProvider::make_baseline_provider(paths, p_baseline->string().to_string());
-                    }
-                    else
-                    {
-                        return PortFileProvider::make_baseline_provider(paths);
-                    }
-                }();
+                auto baseprovider = PortFileProvider::make_baseline_provider(paths);
+                if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
+                {
+                    paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(
+                        p_baseline->string());
+                }
 
                 auto install_plan =
                     Dependencies::create_versioned_install_plan(*verprovider,
