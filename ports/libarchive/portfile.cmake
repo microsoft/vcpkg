@@ -64,6 +64,22 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+# create a very simple cmake config that just includes the required packages that have their own cmake configs
+set(LIBARCHIVE_CONFIG "")
+if(FEATURES MATCHES "lz4")
+    set(LIBARCHIVE_CONFIG "${LIBARCHIVE_CONFIG}find_package(lz4 REQUIRED)\n")
+endif()
+if(FEATURES MATCHES "lzma")
+    set(LIBARCHIVE_CONFIG "${LIBARCHIVE_CONFIG}find_package(liblzma REQUIRED)\n")
+endif()
+if(FEATURES MATCHES "zstd")
+    set(LIBARCHIVE_CONFIG "${LIBARCHIVE_CONFIG}find_package(zstd REQUIRED)\n")
+endif()
+if(LIBARCHIVE_CONFIG)
+    file(WRITE ${CURRENT_PACKAGES_DIR}/share/libarchive/libarchiveConfig.cmake "${LIBARCHIVE_CONFIG}")
+endif()
+
 vcpkg_copy_pdbs()
 
 foreach(_feature IN LISTS FEATURE_OPTIONS)
