@@ -23,17 +23,19 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-vcpkg_download_distfile(meshconvert
+if (VCPKG_HOST_IS_WINDOWS)
+  vcpkg_download_distfile(meshconvert
     URLS "https://github.com/Microsoft/DirectXMesh/releases/download/nov2020/meshconvert.exe"
     FILENAME "meshconvert.exe"
     SHA512 189552c74dc634f673a0d15851d7bb7c42c860023b1488086a9904323fc45207244c159c8848a211afafe258825f5051ee6fd85080da3f7f4afdf910764ca8ec
-)
+  )
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
 
-file(INSTALL
+  file(INSTALL
     ${DOWNLOADS}/meshconvert.exe
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxmesh/)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

@@ -17,17 +17,19 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-vcpkg_download_distfile(uvatlastool
+if(VCPKG_HOST_IS_WINDOWS)
+  vcpkg_download_distfile(uvatlastool
     URLS "https://github.com/Microsoft/UVAtlas/releases/download/dec2020/uvatlastool.exe"
     FILENAME "uvatlastool.exe"
     SHA512 f3388e590bb45281a089d6d38ff603e99f2ff9124ec1e6caebae2663e4ab8ccaf06f5cce671f78ed9a1f882c6d2e2b1188212ef0219f96b46872faa20cc649fd
-)
+  )
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
 
-file(INSTALL
+  file(INSTALL
     ${DOWNLOADS}/uvatlastool.exe
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

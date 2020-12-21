@@ -59,7 +59,7 @@ if("openexr" IN_LIST FEATURES)
         SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
     )
 
-else()
+elseif(VCPKG_HOST_IS_WINDOWS)
   vcpkg_download_distfile(texassemble
     URLS "https://github.com/Microsoft/DirectXTex/releases/download/nov2020/texassemble.exe"
     FILENAME "texassemble.exe"
