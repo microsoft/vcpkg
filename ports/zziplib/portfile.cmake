@@ -7,6 +7,7 @@ vcpkg_from_github(
         install-dll-to-proper-folder.patch
         no-release-postfix.patch
         fix-export-define.patch
+        suppress-c4996-msvc.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
