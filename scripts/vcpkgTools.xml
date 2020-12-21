@@ -8,25 +8,25 @@
         <archiveName>python-3.8.3-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.19.1</version>
-        <exeRelativePath>cmake-3.19.1-win32-x86\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.19.1/cmake-3.19.1-win32-x86.zip</url>
+        <version>3.19.2</version>
+        <exeRelativePath>cmake-3.19.2-win32-x86\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-win32-x86.zip</url>
         <sha512>77093a67d03a0f5d6c4914fd72d72463570003b2e57997e9455398c4aad267b38e1791b767cd2405859532ced89b58f7ee522b646683d9f17527b7080335e6ed</sha512>
-        <archiveName>cmake-3.19.1-win32-x86.zip</archiveName>
+        <archiveName>cmake-3.19.2-win32-x86.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.19.1</version>
-        <exeRelativePath>cmake-3.19.1-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.19.1/cmake-3.19.1-Darwin-x86_64.tar.gz</url>
+        <version>3.19.2</version>
+        <exeRelativePath>cmake-3.19.2-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-Darwin-x86_64.tar.gz</url>
         <sha512>d791e592823926195c967990651af49df11c0a4d066cdcc46341831d1e037c453443683b0099f4f8b49e2a3ed002134b31eff44647a1e4447e387e749d9dad35</sha512>
-        <archiveName>cmake-3.19.1-Darwin-x86_64.tar.gz</archiveName>
+        <archiveName>cmake-3.19.2-Darwin-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.19.1</version>
-        <exeRelativePath>cmake-3.19.1-Linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.19.1/cmake-3.19.1-Linux-x86_64.tar.gz</url>
+        <version>3.19.2</version>
+        <exeRelativePath>cmake-3.19.2-Linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-Linux-x86_64.tar.gz</url>
         <sha512>9ae097f836198991b44fb1b6c761e4f6205773d7f51755f09715d61796ccd40a08d1442cea2d569abffac38a292da6ed82dc38504d35d8420b983c167f14c7b7</sha512>
-        <archiveName>cmake-3.19.1-Linux-x86_64.tar.gz</archiveName>
+        <archiveName>cmake-3.19.2-Linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.12.4</version>
