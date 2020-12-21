@@ -1,0 +1,12 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d1a0c1d..4dd0f88 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -96,7 +96,6 @@ install(
+ if(DYNAMIC_SOLID)
+     install(
+         TARGETS solid3
+-        EXPORT solid3
+         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT development NAMELINK_ONLY
+     )
+ endif()

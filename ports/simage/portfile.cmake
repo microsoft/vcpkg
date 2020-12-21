@@ -12,6 +12,7 @@ vcpkg_from_github(
         link-math-library.patch
         link-ogg-library.patch
         potentially-uninitialized-local-pointer-variable.patch
+        fix-export-target.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

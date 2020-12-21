@@ -1,0 +1,12 @@
+diff --git a/cmake/AwsSharedLibSetup.cmake b/cmake/AwsSharedLibSetup.cmake
+index e8e6940..3e8b8ed 100644
+--- a/cmake/AwsSharedLibSetup.cmake
++++ b/cmake/AwsSharedLibSetup.cmake
+@@ -32,7 +32,6 @@ function(aws_prepare_shared_lib_exports target)
+                 DESTINATION ${RUNTIME_DIRECTORY}
+                 COMPONENT Runtime)
+         install(TARGETS ${target}
+-                EXPORT ${target}-targets
+                 LIBRARY
+                 DESTINATION ${LIBRARY_DIRECTORY}
+                 NAMELINK_ONLY
