@@ -79,6 +79,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
       file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib)
       file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite_i.lib)
   else()
+      file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/spatialite.pdb DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
       file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
       file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/spatialite.lib)
       file(RENAME ${CURRENT_PACKAGES_DIR}/lib/spatialite_i.lib ${CURRENT_PACKAGES_DIR}/lib/spatialite.lib)
@@ -119,6 +120,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   )
 
   vcpkg_install_make()
+  vcpkg_fixup_pkgconfig()
 endif()
 
 # Handle copyright
