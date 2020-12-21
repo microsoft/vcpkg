@@ -239,6 +239,12 @@ namespace vcpkg::Files
         virtual void current_path(const fs::path& path, std::error_code&) = 0;
         void current_path(const fs::path& path, LineInfo li);
 
+        // if the path does not exist, then (try_|)take_exclusive_file_lock attempts to create the file
+        // (but not any path members above the file itself)
+        // in other words, if `/a/b` is a directory, and you're attempting to lock `/a/b/c`,
+        // then these lock functions create `/a/b/c` if it doesn't exist;
+        // however, if `/a/b` doesn't exist, then the functions will fail.
+
         // waits forever for the file lock
         virtual fs::SystemHandle take_exclusive_file_lock(const fs::path& path, std::error_code&) = 0;
         // waits, at most, 1.5 seconds, for the file lock
