@@ -31,8 +31,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "dynamic-arch"      DYNAMIC_ARCH
 )
 
-message(STATUS "FEATURE_OPTIONS=${FEATURE_OPTIONS}")
-
 # for UWP version, must build non uwp first for helper
 # binaries.
 if(VCPKG_TARGET_IS_UWP)
