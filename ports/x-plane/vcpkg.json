@@ -1,0 +1,8 @@
+{
+  "name": "x-plane",
+  "version-string": "3.0.3",
+  "homepage": "https://developer.x-plane.com/sdk/",
+  "description": "The X-Plane Plugin SDK",
+  "dependencies": [],
+  "supports": "!x86"
+}
