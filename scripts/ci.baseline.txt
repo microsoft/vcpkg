@@ -402,8 +402,6 @@ gmmlib:x64-uwp=fail
 gmmlib:x64-windows=fail
 gmmlib:x64-windows-static=fail
 gmmlib:x86-windows=fail
-# VS 2019 16.7 broke gmp UWP https://github.com/microsoft/vcpkg/issues/13172
-gmp:x64-uwp=fail
 google-cloud-cpp:arm64-windows=fail
 google-cloud-cpp:arm-uwp=fail
 google-cloud-cpp:x64-uwp=fail
