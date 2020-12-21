@@ -27,6 +27,12 @@ vcpkg_add_to_path("${SED_EXE_PATH}")
 
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    "dynamic-arch"      DYNAMIC_ARCH
+)
+
+message(STATUS "FEATURE_OPTIONS=${FEATURE_OPTIONS}")
+
 # for UWP version, must build non uwp first for helper
 # binaries.
 if(VCPKG_TARGET_IS_UWP)
@@ -69,7 +75,8 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         PREFER_NINJA
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
-            ${COMMON_OPTIONS})
+            ${COMMON_OPTIONS}
+            ${FEATURE_OPTIONS})
 else()
     list(APPEND VCPKG_C_FLAGS "-DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
     list(APPEND VCPKG_CXX_FLAGS "-DNEEDBUNDERSCORE")
@@ -78,6 +85,7 @@ else()
         OPTIONS
             ${COMMON_OPTIONS}
             -DCMAKE_SYSTEM_PROCESSOR=AMD64
+            ${FEATURE_OPTIONS}
             -DNOFORTRAN=ON
             -DBU=_  #required for all blas functions to append extra _ using NAME
             )
