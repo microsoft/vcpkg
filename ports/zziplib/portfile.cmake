@@ -21,6 +21,10 @@ else()
     set(BUILD_STATIC_LIBS OFF)
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(ZZIPLIBTOOL OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -35,6 +39,7 @@ vcpkg_configure_cmake(
         -DZZIPTEST=OFF
         -DZZIPDOCS=OFF
         -DZZIPCOMPAT=OFF
+        -DZZIPLIBTOOL=${ZZIPLIBTOOL}
 )
 
 vcpkg_install_cmake()
