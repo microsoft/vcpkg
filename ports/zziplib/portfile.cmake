@@ -8,6 +8,7 @@ vcpkg_from_github(
         no-release-postfix.patch
         fix-export-define.patch
         suppress-c4996-msvc.patch
+        always-find-unixcommands-on-unix.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
