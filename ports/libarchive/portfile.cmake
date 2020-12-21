@@ -64,6 +64,19 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+set(LIBARCHIVE_CONFIG "include(CMakeFindDependencyMacro)\n")
+if(FEATURES MATCHES "lz4")
+    set(LIBARCHIVE_CONFIG "${LIBARCHIVE_CONFIG}find_dependency(lz4)\n")
+endif()
+if(FEATURES MATCHES "lzma")
+    set(LIBARCHIVE_CONFIG "${LIBARCHIVE_CONFIG}find_dependency(LibLZMA)\n")
+endif()
+if(FEATURES MATCHES "zstd")
+    set(LIBARCHIVE_CONFIG "${LIBARCHIVE_CONFIG}find_dependency(zstd)\n")
+endif()
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/libarchive/libarchiveConfig.cmake "${LIBARCHIVE_CONFIG}")
+
 vcpkg_copy_pdbs()
 
 foreach(_feature IN LISTS FEATURE_OPTIONS)
