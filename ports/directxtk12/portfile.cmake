@@ -16,8 +16,6 @@ vcpkg_configure_cmake(
     OPTIONS -DBUILD_XAUDIO_WIN10=ON
 )
 
-vcpkg_build_cmake()
-
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 

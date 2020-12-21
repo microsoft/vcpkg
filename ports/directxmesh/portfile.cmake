@@ -20,8 +20,6 @@ vcpkg_configure_cmake(
     OPTIONS ${FEATURE_OPTIONS} -DBUILD_TOOLS=OFF
 )
 
-vcpkg_build_cmake()
-
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
