@@ -37,10 +37,10 @@ vcpkg_check_features(
         openexr ENABLE_OPENEXR_SUPPORT
 )
 
-if(NOT VCPKG_TARGET_IS_UWP)
-  set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DBUILD_TOOLS=ON)
-elseif()
-  set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DBUILD_TOOLS=OFF)
+if(VCPKG_TARGET_IS_UWP)
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
+else()
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
 vcpkg_configure_cmake(
@@ -48,6 +48,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${EXTRA_OPTIONS}
         -DBC_USE_OPENMP=ON
         -DBUILD_DX11=ON
 )

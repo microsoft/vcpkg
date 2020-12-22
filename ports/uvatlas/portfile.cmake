@@ -10,16 +10,16 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(NOT VCPKG_TARGET_IS_UWP)
-  set(FEATURE_OPTIONS -DBUILD_TOOLS=ON)
+if(VCPKG_TARGET_IS_UWP)
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
-  set(FEATURE_OPTIONS -DBUILD_TOOLS=OFF)
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
 vcpkg_install_cmake()
