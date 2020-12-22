@@ -53,11 +53,13 @@ namespace vcpkg
         static constexpr StringLiteral OS_STRING = "linux";
 #elif defined(__FreeBSD__)
         static constexpr StringLiteral OS_STRING = "freebsd";
+#elif defined(__OpenBSD__)
+        static constexpr StringLiteral OS_STRING = "openbsd";
 #else
         return std::string("operating system is unknown");
 #endif
 
-#if defined(_WIN32) || defined(__APPLE__) || defined(__linux__) || defined(__FreeBSD__)
+#if defined(_WIN32) || defined(__APPLE__) || defined(__linux__) || defined(__FreeBSD__) || defined(__OpenBSD__)
         static const std::string XML_VERSION = "2";
         static const fs::path XML_PATH = paths.scripts / "vcpkgTools.xml";
         static const std::regex XML_VERSION_REGEX{R"###(<tools[\s]+version="([^"]+)">)###"};
@@ -81,12 +83,23 @@ namespace vcpkg
         const bool has_tool_entry = std::regex_search(XML.cbegin(), XML.cend(), match_tool_entry, tool_regex);
         if (!has_tool_entry)
         {
+            StringLiteral add_info = "";
+            if (tool == "mono")
+            {
+#if defined(__APPLE__)
+                add_info = " (brew install mono)";
+#else
+                add_info = " (e.g. sudo apt install mono-complete). Ubuntu 18.04 users may "
+                           "need a newer version of mono, available at https://www.mono-project.com/download/stable/";
+#endif
+            }
             return Strings::format("Could not automatically acquire %s because there is no entry in %s for os=%s. You "
-                                   "may be able to install %s via your system package manager.",
+                                   "may be able to install %s via your system package manager%s.",
                                    tool,
                                    fs::u8string(XML_PATH),
                                    OS_STRING,
-                                   tool);
+                                   tool,
+                                   add_info);
         }
 
         const std::string tool_data =
@@ -137,7 +150,7 @@ namespace vcpkg
         virtual std::array<int, 3> default_min_version() const = 0;
 
         virtual void add_special_paths(std::vector<fs::path>& out_candidate_paths) const { (void)out_candidate_paths; }
-        virtual Optional<std::string> get_version(const VcpkgPaths& paths, const fs::path& path_to_exe) const = 0;
+        virtual ExpectedS<std::string> get_version(const VcpkgPaths& paths, const fs::path& path_to_exe) const = 0;
     };
 
     static Optional<PathAndVersion> find_first_with_sufficient_version(const VcpkgPaths& paths,
@@ -220,10 +233,9 @@ namespace vcpkg
                                      const ToolProvider& tool_provider,
                                      const ToolData& tool_data)
     {
-        const auto downloaded_path = fetch_tool(paths, tool_provider.tool_data_name(), tool_data);
-        const auto downloaded_version =
-            tool_provider.get_version(paths, downloaded_path).value_or_exit(VCPKG_LINE_INFO);
-        return {downloaded_path, downloaded_version};
+        auto downloaded_path = fetch_tool(paths, tool_provider.tool_data_name(), tool_data);
+        auto downloaded_version = tool_provider.get_version(paths, downloaded_path).value_or_exit(VCPKG_LINE_INFO);
+        return {std::move(downloaded_path), std::move(downloaded_version)};
     }
 
     static PathAndVersion get_path(const VcpkgPaths& paths, const ToolProvider& tool)
@@ -283,13 +295,15 @@ namespace vcpkg
             (void)out_candidate_paths;
 #endif
         }
-        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
             const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
-            const auto rc = System::cmd_execute_and_capture_output(cmd);
+            auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
-                return nullopt;
+                return {Strings::concat(
+                            std::move(rc.output), "\n\nFailed to get version of ", fs::u8string(path_to_exe), "\n"),
+                        expected_right_tag};
             }
 
             /* Sample output:
@@ -297,7 +311,8 @@ cmake version 3.10.2
 
 CMake suite maintained and supported by Kitware (kitware.com/cmake).
                 */
-            return StringView::find_exactly_one_enclosed(rc.output, "cmake version ", "\n").to_string();
+            return {StringView::find_exactly_one_enclosed(rc.output, "cmake version ", "\n").to_string(),
+                    expected_left_tag};
         }
     };
 
@@ -309,19 +324,21 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
         virtual const std::string& exe_stem() const override { return m_exe; }
         virtual std::array<int, 3> default_min_version() const override { return {3, 5, 1}; }
 
-        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
             const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
-            const auto rc = System::cmd_execute_and_capture_output(cmd);
+            auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
-                return nullopt;
+                return {Strings::concat(
+                            std::move(rc.output), "\n\nFailed to get version of ", fs::u8string(path_to_exe), "\n"),
+                        expected_right_tag};
             }
 
             /* Sample output:
 1.8.2
                 */
-            return rc.output;
+            return {std::move(rc.output), expected_left_tag};
         }
     };
 
@@ -333,7 +350,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
         virtual const std::string& exe_stem() const override { return m_exe; }
         virtual std::array<int, 3> default_min_version() const override { return {4, 6, 2}; }
 
-        virtual Optional<std::string> get_version(const VcpkgPaths& paths, const fs::path& path_to_exe) const override
+        virtual ExpectedS<std::string> get_version(const VcpkgPaths& paths, const fs::path& path_to_exe) const override
         {
             System::CmdLineBuilder cmd;
 #ifndef _WIN32
@@ -342,10 +359,23 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
             (void)paths;
 #endif
             cmd.path_arg(path_to_exe);
-            const auto rc = System::cmd_execute_and_capture_output(cmd.extract());
+            auto rc = System::cmd_execute_and_capture_output(cmd.extract());
             if (rc.exit_code != 0)
             {
-                return nullopt;
+#ifndef _WIN32
+                return {Strings::concat(
+                            std::move(rc.output),
+                            "\n\nFailed to get version of ",
+                            fs::u8string(path_to_exe),
+                            "\nThis may be caused by an incomplete mono installation. Full mono is "
+                            "available on some systems via `sudo apt install mono-complete`. Ubuntu 18.04 users may "
+                            "need a newer version of mono, available at https://www.mono-project.com/download/stable/"),
+                        expected_right_tag};
+#else
+                return {Strings::concat(
+                            std::move(rc.output), "\n\nFailed to get version of ", fs::u8string(path_to_exe), "\n"),
+                        expected_right_tag};
+#endif
             }
 
             /* Sample output:
@@ -355,7 +385,8 @@ Type 'NuGet help <command>' for help on a specific command.
 
 [[[List of available commands follows]]]
                 */
-            return StringView::find_exactly_one_enclosed(rc.output, "NuGet Version: ", "\n").to_string();
+            return {StringView::find_exactly_one_enclosed(rc.output, "NuGet Version: ", "\n").to_string(),
+                    expected_left_tag};
         }
     };
 
@@ -381,13 +412,15 @@ Type 'NuGet help <command>' for help on a specific command.
 #endif
         }
 
-        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
             const std::string cmd = Strings::format(R"("%s" --version)", fs::u8string(path_to_exe));
-            const auto rc = System::cmd_execute_and_capture_output(cmd);
+            auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
-                return nullopt;
+                return {Strings::concat(
+                            std::move(rc.output), "\n\nFailed to get version of ", fs::u8string(path_to_exe), "\n"),
+                        expected_right_tag};
             }
 
             /* Sample output:
@@ -396,7 +429,7 @@ git version 2.17.1.windows.2
             const auto idx = rc.output.find("git version ");
             Checks::check_exit(
                 VCPKG_LINE_INFO, idx != std::string::npos, "Unexpected format of git version string: %s", rc.output);
-            return rc.output.substr(idx);
+            return {rc.output.substr(idx), expected_left_tag};
         }
     };
 
@@ -408,13 +441,15 @@ git version 2.17.1.windows.2
         virtual const std::string& exe_stem() const override { return m_exe; }
         virtual std::array<int, 3> default_min_version() const override { return {0, 0, 0}; }
 
-        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            const auto rc = System::cmd_execute_and_capture_output(
+            auto rc = System::cmd_execute_and_capture_output(
                 System::CmdLineBuilder().path_arg(path_to_exe).string_arg("--version").extract());
             if (rc.exit_code != 0)
             {
-                return nullopt;
+                return {Strings::concat(
+                            std::move(rc.output), "\n\nFailed to get version of ", fs::u8string(path_to_exe), "\n"),
+                        expected_right_tag};
             }
 
             /* Sample output:
@@ -423,7 +458,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
             const auto idx = rc.output.find("Mono JIT compiler version ");
             Checks::check_exit(
                 VCPKG_LINE_INFO, idx != std::string::npos, "Unexpected format of mono version string: %s", rc.output);
-            return rc.output.substr(idx);
+            return {rc.output.substr(idx), expected_left_tag};
         }
     };
 
@@ -448,19 +483,54 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
             // "Qt" / "QtIFW-3.1.0" / "bin" / "installerbase.exe");
         }
 
-        virtual Optional<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
             const std::string cmd = Strings::format(R"("%s" --framework-version)", fs::u8string(path_to_exe));
-            const auto rc = System::cmd_execute_and_capture_output(cmd);
+            auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
-                return nullopt;
+                return {Strings::concat(
+                            std::move(rc.output), "\n\nFailed to get version of ", fs::u8string(path_to_exe), "\n"),
+                        expected_right_tag};
             }
 
             /* Sample output:
 3.1.81
                 */
-            return rc.output;
+            return {std::move(rc.output), expected_left_tag};
+        }
+    };
+
+    struct PowerShellCoreProvider : ToolProvider
+    {
+        std::string m_exe = "pwsh";
+        std::string m_name = "powershell-core";
+
+        virtual const std::string& tool_data_name() const override { return m_name; }
+        virtual const std::string& exe_stem() const override { return m_exe; }
+        virtual std::array<int, 3> default_min_version() const override { return {7, 0, 3}; }
+
+        virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
+        {
+            auto rc = System::cmd_execute_and_capture_output(
+                System::CmdLineBuilder().path_arg(path_to_exe).string_arg("--version").extract());
+            if (rc.exit_code != 0)
+            {
+                return {Strings::concat(
+                            std::move(rc.output), "\n\nFailed to get version of ", fs::u8string(path_to_exe), "\n"),
+                        expected_right_tag};
+            }
+
+            // Sample output: PowerShell 7.0.3\r\n
+            auto output = std::move(rc.output);
+            if (!Strings::starts_with(output, "PowerShell "))
+            {
+                Checks::exit_with_message(
+                    VCPKG_LINE_INFO, "Unexpected format of powershell-core version string: %s", output);
+            }
+
+            output.erase(0, 11);
+            return {Strings::trim(std::move(output)), expected_left_tag};
         }
     };
 
@@ -510,6 +580,14 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
                         return {"ninja", "0"};
                     }
                     return get_path(paths, NinjaProvider());
+                }
+                if (tool == Tools::POWERSHELL_CORE)
+                {
+                    if (System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+                    {
+                        return {"pwsh", "0"};
+                    }
+                    return get_path(paths, PowerShellCoreProvider());
                 }
                 if (tool == Tools::NUGET) return get_path(paths, NuGetProvider());
                 if (tool == Tools::IFW_INSTALLER_BASE) return get_path(paths, IfwInstallerBaseProvider());

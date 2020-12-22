@@ -1,0 +1,39 @@
+diff --git a/src/float_cast.h b/src/float_cast.h
+index 0318427..8499e69 100644
+--- a/src/float_cast.h
++++ b/src/float_cast.h
+@@ -117,6 +117,9 @@
+ 	**	most likely both WIN32 and WIN64 will be defined in 64-bit case.
+ 	*/
+ 
++/* MSVC pre 16.8 do not have lrintf */
++#if defined(_MSC_VER) && _MSC_VER < 1928
++
+ 	#include	<math.h>
+ 
+ 	/*	Win64 doesn't seem to have these functions, nor inline assembly.
+@@ -136,12 +139,16 @@
+ 	{
+ 		return _mm_cvtss_si32(_mm_load_ss(&flt));
+ 	}
++#endif
+ 
+ #elif (defined (WIN32) || defined (_WIN32))
+ 
+ 	#undef		HAVE_LRINT_REPLACEMENT
+ 	#define		HAVE_LRINT_REPLACEMENT	1
+ 
++/* MSVC pre 16.8 do not have lrintf */
++#if defined(_MSC_VER) && _MSC_VER < 1928
++
+ 	#include	<math.h>
+ 
+ 	/*
+@@ -172,6 +179,7 @@
+ 
+ 		return intgr ;
+ 	}
++#endif
+ 
+ #elif (defined (__MWERKS__) && defined (macintosh))
+ 

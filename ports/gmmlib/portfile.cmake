@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "Intel gmmlib currently only supports Linux platforms")
 endif()

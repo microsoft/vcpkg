@@ -120,10 +120,14 @@ find_library(LIBPNG_RELEASE NAMES png16 libpng16 PATHS "${CURRENT_INSTALLED_DIR}
 find_library(LIBPNG_DEBUG NAMES png16 png16d libpng16 libpng16d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(PSQL_RELEASE NAMES pq libpq PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
 find_library(PSQL_DEBUG NAMES pq libpq pqd libpqd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(PSQL_COMMON_RELEASE NAMES pgcommon libpgcommon PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
-find_library(PSQL_COMMON_DEBUG NAMES pgcommon libpgcommon pgcommond libpgcommond PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(PSQL_PORT_RELEASE NAMES pgport libpgport PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
-find_library(PSQL_PORT_DEBUG NAMES pgport libpgport pgportd libpgportd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
+if(NOT (PSQL_RELEASE MATCHES ".*\.so") AND NOT (PSQL_DEBUG MATCHES ".*\.so"))
+    find_library(PSQL_COMMON_RELEASE NAMES pgcommon libpgcommon PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
+    find_library(PSQL_COMMON_DEBUG NAMES pgcommon libpgcommon pgcommond libpgcommond PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+    find_library(PSQL_PORT_RELEASE NAMES pgport libpgport PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
+    find_library(PSQL_PORT_DEBUG NAMES pgport libpgport pgportd libpgportd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+endif()
+
 find_library(PCRE2_RELEASE NAMES pcre2-16 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(PCRE2_DEBUG NAMES pcre2-16 pcre2-16d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(FREETYPE_RELEASE NAMES freetype PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) #zlib, bzip2, libpng
@@ -139,8 +143,6 @@ find_library(BROTLI_COMMON_RELEASE NAMES brotlicommon brotlicommon-static PATHS 
 find_library(BROTLI_COMMON_DEBUG NAMES brotlicommon brotlicommon-static brotlicommond brotlicommon-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(BROTLI_DEC_RELEASE NAMES brotlidec brotlidec-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(BROTLI_DEC_DEBUG NAMES brotlidec brotlidec-static brotlidecd brotlidec-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(BROTLI_ENC_RELEASE NAMES brotlienc brotlienc-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(BROTLI_ENC_DEBUG NAMES brotlienc brotlienc-static brotliencd brotlienc-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 find_library(ICUUC_RELEASE NAMES icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ICUUC_DEBUG NAMES icuucd libicuucd icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
@@ -171,6 +173,8 @@ find_library(EXPAT_RELEASE NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_D
 find_library(EXPAT_DEBUG NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 #Dependent libraries
+find_library(ZSTD_RELEASE NAMES zstd zstd_static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ZSTD_DEBUG NAMES zstdd zstd_staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(BZ2_RELEASE bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(BZ2_DEBUG bz2 bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(SSL_RELEASE ssl ssleay32 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -178,8 +182,8 @@ find_library(SSL_DEBUG ssl ssleay32 ssld ssleay32d PATHS "${CURRENT_INSTALLED_DI
 find_library(EAY_RELEASE libeay32 crypto libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(EAY_DEBUG libeay32 crypto libcrypto libeay32d cryptod libcryptod PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
-set(FREETYPE_RELEASE_ALL "${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} ${ZLIB_RELEASE} ${BROTLI_ENC_RELEASE} ${BROTLI_DEC_RELEASE} ${BROTLI_COMMON_RELEASE}")
-set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG} ${BROTLI_ENC_DEBUG} ${BROTLI_DEC_DEBUG} ${BROTLI_COMMON_RELEASE}")
+set(FREETYPE_RELEASE_ALL "${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} ${ZLIB_RELEASE} ${BROTLI_DEC_RELEASE} ${BROTLI_COMMON_RELEASE}")
+set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG} ${BROTLI_DEC_DEBUG} ${BROTLI_COMMON_DEBUG}")
 
 # If HarfBuzz is built with GLib enabled, it must be statically link
 set(GLIB_LIB_VERSION 2.0)
@@ -199,6 +203,8 @@ set(RELEASE_OPTIONS
             "ICU_LIBS=${ICU_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${ZSTD_RELEASE}"
             )
 set(DEBUG_OPTIONS
             "LIBJPEG_LIBS=${JPEG_DEBUG}"
@@ -209,6 +215,8 @@ set(DEBUG_OPTIONS
             "ICU_LIBS=${ICU_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
 
 
@@ -244,14 +252,14 @@ elseif(VCPKG_TARGET_IS_LINUX)
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} ${FREETYPE_RELEASE_ALL} ${GLIB_RELEASE} -lpthread"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
-            "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE}"
+            "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE} -luuid"
         )
     list(APPEND DEBUG_OPTIONS
             "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_TYPES_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} ${FREETYPE_DEBUG_ALL} ${GLIB_DEBUG} -lpthread"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
-            "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG}"
+            "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG} -luuid"
         )
 elseif(VCPKG_TARGET_IS_OSX)
     list(APPEND CORE_OPTIONS -fontconfig)

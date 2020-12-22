@@ -17,7 +17,7 @@ index 3d4a162..6926bc3 100644
 +    ZLIB::ZLIB
 +    Snappy::snappy
 +    lz4::lz4
-+    libzstd
++    $<IF:$<TARGET_EXISTS:zstd::libzstd_shared>,zstd::libzstd_shared,zstd::libzstd_static>
 +    ${LIBHDFSPP_LIBRARIES}
    )
  

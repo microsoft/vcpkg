@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(NOT VCPKG_CMAKE_SYSTEM_NAME)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_STATIC_CRT)
 endif()

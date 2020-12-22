@@ -13,13 +13,19 @@ vcpkg_from_github(
         disable-test-build.patch
         fix-InstallPath.patch
         fix-iconv.patch
+        export-cmake-targets.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     zlib WITH_EXTERNAL_ZLIB
-    openssl WITH_SSL
     iconv WITH_ICONV
 )
+
+if("openssl" IN_LIST FEATURES)
+	set(WITH_SSL OPENSSL)
+else()
+	set(WITH_SSL OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -28,9 +34,12 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DWITH_UNITTEST=OFF
         -DWITH_CURL=OFF
+        -DWITH_SSL=${WITH_SSL}
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-libmariadb TARGET_PATH share/unofficial-libmariadb)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # remove debug header
