@@ -2,7 +2,7 @@
 
 $CurrentTest = "Build Missing tests"
 
-Run-Vcpkg -TestArgs ($commonArgs + @("install", "rapidjson", "--no-build-missing","--x-binarysource=clear;files,$ArchiveRoot,read"))
+Run-Vcpkg -TestArgs ($commonArgs + @("install", "rapidjson", "--only-binarycaching","--x-binarysource=clear;files,$ArchiveRoot,read"))
 Throw-IfNotFailed
 Require-FileNotExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 
@@ -13,6 +13,6 @@ Throw-IfFailed
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
 
 Remove-Item -Recurse -Force $installRoot
-Run-Vcpkg -TestArgs ($commonArgs + @("install", "rapidjson", "--no-build-missing","--x-binarysource=clear;files,$ArchiveRoot,read"))
+Run-Vcpkg -TestArgs ($commonArgs + @("install", "rapidjson", "--only-binarycaching","--x-binarysource=clear;files,$ArchiveRoot,read"))
 Throw-IfFailed
 Require-FileExists "$installRoot/$Triplet/include/rapidjson/rapidjson.h"
