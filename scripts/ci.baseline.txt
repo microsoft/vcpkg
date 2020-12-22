@@ -194,9 +194,6 @@ devicenameresolver:x64-windows-static=fail
 dimcli:arm-uwp=fail
 dimcli:x64-osx=fail
 dimcli:x64-uwp=fail
-# directxmath should work on Linux/OSX depending on toolset. requires a sal.h as well.
-directxmath:x64-linux=fail
-directxmath:x64-osx=fail
 directxmesh:x64-linux=fail
 directxmesh:x64-osx=fail
 directxmesh:x64-windows-static=fail
