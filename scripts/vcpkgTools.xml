@@ -134,10 +134,10 @@
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.0.3</version>
+        <version>7.1.0</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.0.3/PowerShell-7.0.3-win-x86.zip</url>
-        <sha512>2e410fc5e429fc6ad478976eff3efcffe9d53a0620c7c31c2b8bfe1f0976cade74632fc202bf58959cec111f03b824ba42ad4d74c8a66d67ec21bbfe9b9c626d</sha512>
-        <archiveName>PowerShell-7.0.3-win-x86.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.1.0/PowerShell-7.1.0-win-x86.zip</url>
+        <sha512>ea6ed619c784af65b09a5e98cdfc0d41333ba7373b7409e488ec70aaf1e0c4e5568e846d2b1748d72c3e3a9c1a4827f0ba29e9f6e93e79b4f49312ca40af6d2a</sha512>
+        <archiveName>PowerShell-7.1.0-win-x86.zip</archiveName>
     </tool>
 </tools>
