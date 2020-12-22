@@ -10,18 +10,16 @@
 
 namespace vcpkg
 {
-    struct VersionDbEntry
-    {
-        VersionT version;
-        Versions::Scheme scheme = Versions::Scheme::String;
-        std::string git_tree;
-    };
-
     Json::IDeserializer<VersionT>& get_versiont_deserializer_instance();
     std::unique_ptr<Json::IDeserializer<std::string>> make_version_deserializer(StringLiteral type_name);
 
     struct SchemedVersion
     {
+        SchemedVersion() = default;
+        SchemedVersion(Versions::Scheme scheme_, VersionT versiont_) : scheme(scheme_), versiont(std::move(versiont_))
+        {
+        }
+
         Versions::Scheme scheme = Versions::Scheme::String;
         VersionT versiont;
     };
@@ -39,12 +37,4 @@ namespace vcpkg
                                    const std::string& version,
                                    int port_version,
                                    bool always_emit_port_version = false);
-
-    ExpectedS<std::map<std::string, VersionT, std::less<>>> parse_baseline_file(Files::Filesystem& fs,
-                                                                                StringView baseline_name,
-                                                                                const fs::path& baseline_file_path);
-
-    ExpectedS<std::vector<VersionDbEntry>> parse_versions_file(Files::Filesystem& fs,
-                                                               StringView port_name,
-                                                               const fs::path& versions_file_path);
 }

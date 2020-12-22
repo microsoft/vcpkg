@@ -116,8 +116,8 @@ namespace vcpkg
     Json::Object serialize_debug_manifest(const SourceControlFile& scf);
 
     /// <summary>
-    /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was
-    /// loaded from.
+    /// Full metadata of a package: core and other features,
+    /// as well as the port directory the SourceControlFile was loaded from
     /// </summary>
     struct SourceControlFileLocation
     {

@@ -21,8 +21,16 @@ option(INSTALL_HEADERS "Install header files" ${DEFAULT_INSTALL_HEADERS})
 
 # libbreakpad target
 file(GLOB_RECURSE LIBBREAKPAD_SOURCES src/processor/*.cc)
-list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
-    "_unittest|synth_minidump|/tests|/testdata|/linux|/mac|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+if(WIN32)
+    list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
+        "_unittest|synth_minidump|/tests|/testdata|/linux|/mac|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+elseif(APPLE)
+    list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
+        "_unittest|synth_minidump|/tests|/testdata|/linux|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+else()
+    list(FILTER LIBBREAKPAD_SOURCES EXCLUDE REGEX
+        "_unittest|synth_minidump|/tests|/testdata|/mac|/windows|/android|/solaris|microdump_stackwalk|minidump_dump|minidump_stackwalk")
+endif()
 
 find_library(LIBDISASM_LIB NAMES libdisasmd libdisasm)
 
@@ -37,34 +45,49 @@ target_include_directories(libbreakpad
 
 set(TARGETS libbreakpad)
 if(WIN32)
-    # libbreakpad_client target does not currently work on non-windows
-    if(WIN32)
-        file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/windows/*.cc src/common/windows/*.cc)
-        include_directories("$ENV{VSINSTALLDIR}/DIA SDK/include")
-    elseif(APPLE)
-        add_definitions(-DHAVE_MACH_O_NLIST_H)
-        file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/mac/*.cc src/common/mac/*.cc)
-    else()
-        add_definitions(-DHAVE_A_OUT_H)
-        file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/linux/*.cc src/common/linux/*.cc)
-    endif()
-    file(GLOB LIBBREAKPAD_COMMON_SOURCES src/common/*.cc src/common/*.c src/client/*.cc)
-    list(APPEND LIBBREAKPAD_CLIENT_SOURCES ${LIBBREAKPAD_COMMON_SOURCES})
-    list(FILTER LIBBREAKPAD_CLIENT_SOURCES EXCLUDE REGEX "/tests|/unittests|_unittest")
-    if(WIN32)
-        list(FILTER LIBBREAKPAD_CLIENT_SOURCES EXCLUDE REGEX "language.cc|path_helper.cc|stabs_to_module.cc|stabs_reader.cc|minidump_file_writer.cc")
-    endif()
-
-    add_library(libbreakpad_client ${LIBBREAKPAD_CLIENT_SOURCES})
-    target_link_libraries(libbreakpad_client PRIVATE wininet.lib)
-
-    target_include_directories(libbreakpad_client
-        PUBLIC
-            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-            $<INSTALL_INTERFACE:include>
-    )
-    list(APPEND TARGETS libbreakpad_client)
+    file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/windows/*.cc src/common/windows/*.cc)
+    include_directories("$ENV{VSINSTALLDIR}/DIA SDK/include")
+elseif(APPLE)
+    add_definitions(-DHAVE_MACH_O_NLIST_H)
+    file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/mac/*.cc src/common/mac/*.cc)
+    list(APPEND LIBBREAKPAD_CLIENT_SOURCES src/common/mac/MachIPC.mm)
+else()
+    add_definitions(-DHAVE_A_OUT_H)
+    file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/linux/*.cc src/common/linux/*.cc)
 endif()
+file(GLOB LIBBREAKPAD_COMMON_SOURCES src/common/*.cc src/common/*.c src/client/*.cc)
+list(APPEND LIBBREAKPAD_CLIENT_SOURCES ${LIBBREAKPAD_COMMON_SOURCES})
+list(FILTER LIBBREAKPAD_CLIENT_SOURCES EXCLUDE REGEX "/sender|/tests|/unittests|/testcases|_unittest|_test")
+if(WIN32)
+    list(FILTER LIBBREAKPAD_CLIENT_SOURCES EXCLUDE REGEX "language.cc|path_helper.cc|stabs_to_module.cc|stabs_reader.cc|minidump_file_writer.cc")
+elseif(NOT APPLE)
+    try_compile(HAVE_GETCONTEXT ${CMAKE_BINARY_DIR}/check_getcontext ${CMAKE_CURRENT_LIST_DIR}/check_getcontext.cc OUTPUT_VARIABLE BUILD_OUT)
+    if (NOT HAVE_GETCONTEXT)
+        enable_language(ASM)
+        list(APPEND LIBBREAKPAD_CLIENT_SOURCES src/common/linux/breakpad_getcontext.S)
+    endif()
+endif()
+
+add_library(libbreakpad_client ${LIBBREAKPAD_CLIENT_SOURCES})
+if(WIN32)
+    target_link_libraries(libbreakpad_client PRIVATE wininet.lib)
+elseif(APPLE)
+    find_library(CoreFoundation_FRAMEWORK CoreFoundation)
+    target_link_libraries(libbreakpad_client PRIVATE ${CoreFoundation_FRAMEWORK})
+else()
+    find_library(PTHREAD_LIBRARIES pthread)
+    target_link_libraries(libbreakpad_client PRIVATE ${PTHREAD_LIBRARIES})
+    if (HAVE_GETCONTEXT)
+        target_compile_definitions(libbreakpad_client PRIVATE HAVE_GETCONTEXT=1)
+    endif()
+endif()
+
+target_include_directories(libbreakpad_client
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+        $<INSTALL_INTERFACE:include>
+)
+list(APPEND TARGETS libbreakpad_client)
 
 # installation
 install(TARGETS ${TARGETS} EXPORT unofficial-breakpad-targets
@@ -77,9 +100,15 @@ if(INSTALL_HEADERS)
     if(WIN32)
         set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/mac|/solaris|/android|/dwarf|/tests|/testdata|/unittests")
     elseif(APPLE)
-        set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/windows|/solaris|/android|/dwarf|/tests|/testdata|/unittests|/*proj|/gcov")
+        set(HEADER_EXCLUDE_REGEX "/apple|/ios|/linux|/windows|/solaris|/android|/dwarf|/tests|/testdata|/unittests|/sender|/testapp|/*proj|/gcov")
     else()
         set(HEADER_EXCLUDE_REGEX "/apple|/ios|/client/linux/data|/client/linux/sender|/windows|/mac|/solaris|/android|/dwarf|/tests|/testdata|/unittests")
+        install(
+            DIRECTORY src/third_party/lss
+            DESTINATION include/third_party
+            FILES_MATCHING PATTERN "*.h"
+            REGEX "${HEADER_EXCLUDE_REGEX}" EXCLUDE
+        )
     endif()
     install(
         DIRECTORY src/client src/common src/google_breakpad
