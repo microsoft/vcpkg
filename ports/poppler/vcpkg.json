@@ -20,6 +20,9 @@
     "libiconv",
     "openjpeg"
   ],
+  "default-features": [
+    "zlib"
+  ],
   "features": {
     "zlib": {
       "description": "zlib for poppler",
