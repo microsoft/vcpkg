@@ -9,6 +9,10 @@ vcpkg_from_github(
         0002-remove-test-subdirectory.patch
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    zlib ENABLE_ZLIB
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -22,6 +26,7 @@ vcpkg_configure_cmake(
         -DENABLE_GLOBJECT_INTROSPECTION=OFF
         -DENABLE_QT5=OFF
         -DENABLE_QT6=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

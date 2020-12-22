@@ -13,13 +13,19 @@
       "platform": "(windows | linux) & !arm"
     },
     "fontconfig",
-    {
-      "name": "fontconfig",
-      "platform": "!(windows | android)"
-    },
     "freetype",
     "libiconv",
-    "openjpeg",
+    "openjpeg"
+  ],
+  "default-features": [
     "zlib"
-  ]
+  ],
+  "features": {
+    "zlib": {
+      "description": "zlib for poppler",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
 }
