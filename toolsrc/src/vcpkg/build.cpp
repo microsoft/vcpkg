@@ -896,11 +896,13 @@ namespace vcpkg::Build
                                       Hash::Algorithm::Sha1));
         }
 
-        for (const auto& env_var : pre_build_info.passthrough_env_vars)
+        for (const auto& env_var : pre_build_info.passthrough_env_vars_tracked)
         {
-            abi_tag_entries.emplace_back(
-                "ENV:" + env_var,
-                Hash::get_string_hash(System::get_environment_variable(env_var).value_or(""), Hash::Algorithm::Sha1));
+            if (auto e = System::get_environment_variable(env_var))
+            {
+                abi_tag_entries.emplace_back(
+                    "ENV:" + env_var, Hash::get_string_hash(e.value_or_exit(VCPKG_LINE_INFO), Hash::Algorithm::Sha1));
+            }
         }
     }
 
@@ -1305,6 +1307,7 @@ namespace vcpkg::Build
             CHAINLOAD_TOOLCHAIN_FILE,
             BUILD_TYPE,
             ENV_PASSTHROUGH,
+            ENV_PASSTHROUGH_UNTRACKED,
             PUBLIC_ABI_OVERRIDE,
             LOAD_VCVARS_ENV,
         };
@@ -1318,6 +1321,7 @@ namespace vcpkg::Build
             {"VCPKG_CHAINLOAD_TOOLCHAIN_FILE", VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE},
             {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
             {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
+            {"VCPKG_ENV_PASSTHROUGH_UNTRACKED", VcpkgTripletVar::ENV_PASSTHROUGH_UNTRACKED},
             {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
             {"VCPKG_LOAD_VCVARS_ENV", VcpkgTripletVar::LOAD_VCVARS_ENV},
         };
@@ -1365,7 +1369,11 @@ namespace vcpkg::Build
                             variable_value);
                     break;
                 case VcpkgTripletVar::ENV_PASSTHROUGH:
-                    passthrough_env_vars = Strings::split(variable_value, ';');
+                    passthrough_env_vars_tracked = Strings::split(variable_value, ';');
+                    Util::Vectors::append(&passthrough_env_vars, passthrough_env_vars_tracked);
+                    break;
+                case VcpkgTripletVar::ENV_PASSTHROUGH_UNTRACKED:
+                    Util::Vectors::append(&passthrough_env_vars, Strings::split(variable_value, ';'));
                     break;
                 case VcpkgTripletVar::PUBLIC_ABI_OVERRIDE:
                     public_abi_override = variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
