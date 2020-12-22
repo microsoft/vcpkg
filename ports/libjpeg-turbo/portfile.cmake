@@ -8,7 +8,6 @@ vcpkg_from_github(
         add-options-for-exes-docs-headers.patch
         #workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
-        
         fix-incompatibility-for-c11-c17.patch
 )
 
