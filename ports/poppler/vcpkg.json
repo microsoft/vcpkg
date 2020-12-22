@@ -12,7 +12,7 @@
       "name": "devil",
       "platform": "(windows | linux) & !arm"
     },
-    "fontconfig",    
+    "fontconfig",
     "freetype",
     "libiconv",
     "openjpeg"
