@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF nov2020b
     SHA512 cc457dc3f516da6f40e03f796c6504a6e3cbad2f82160c20a3b45510ccf3a988a17ea204ffeacae551cef2dfa7d24d340afb32a374ad113feddb9709f13dfd20
     HEAD_REF master
+    FILE_DISAMBIGUATOR 1
 )
 
 if("openexr" IN_LIST FEATURES)

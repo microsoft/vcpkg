@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF nov2020b
     SHA512 17f8debfc703bf8c9a5264c168f51c9859475fedfe7c68e56b62b9efe5ef100e41ecf4efdde1e33fd6cbe3ab4264c25d722e68868eeb906db203c157f5a98484
     HEAD_REF master
+    FILE_DISAMBIGUATOR 1
 )
 
 vcpkg_check_features(
