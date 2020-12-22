@@ -6,6 +6,5 @@ Build-Depends: libgpg-error, libassuan
 Default-Features: cpp
 Supports: !windows
 
-
 Feature: cpp
 Description: C++ bindings
