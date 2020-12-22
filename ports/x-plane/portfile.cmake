@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "The X-Plane SDK cannot be built for the x86 architecture" ON_ARCH "x86")
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64" "wasm32")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://developer.x-plane.com/wp-content/plugins/code-sample-generation/sample_templates/XPSDK303.zip"
