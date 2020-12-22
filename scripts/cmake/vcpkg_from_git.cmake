@@ -1,47 +1,50 @@
-## # vcpkg_from_git
-##
-## Download and extract a project from git
-##
-## ## Usage:
-## ```cmake
-## vcpkg_from_git(
-##     OUT_SOURCE_PATH <SOURCE_PATH>
-##     URL <https://android.googlesource.com/platform/external/fdlibm>
-##     REF <59f7335e4d...>
-##     [PATCHES <patch1.patch> <patch2.patch>...]
-## )
-## ```
-##
-## ## Parameters:
-## ### OUT_SOURCE_PATH
-## Specifies the out-variable that will contain the extracted location.
-##
-## This should be set to `SOURCE_PATH` by convention.
-##
-## ### URL
-## The url of the git repository.
-##
-## ### REF
-## The git sha of the commit to download.
-##
-## ### PATCHES
-## A list of patches to be applied to the extracted sources.
-##
-## Relative paths are based on the port directory.
-##
-## ## Notes:
-## `OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
-##
-## ## Examples:
-##
-## * [fdlibm](https://github.com/Microsoft/vcpkg/blob/master/ports/fdlibm/portfile.cmake)
+#[===[.md:
+# vcpkg_from_git
+
+Download and extract a project from git
+
+## Usage:
+```cmake
+vcpkg_from_git(
+    OUT_SOURCE_PATH <SOURCE_PATH>
+    URL <https://android.googlesource.com/platform/external/fdlibm>
+    REF <59f7335e4d...>
+    [PATCHES <patch1.patch> <patch2.patch>...]
+)
+```
+
+## Parameters:
+### OUT_SOURCE_PATH
+Specifies the out-variable that will contain the extracted location.
+
+This should be set to `SOURCE_PATH` by convention.
+
+### URL
+The url of the git repository.
+
+### REF
+The git sha of the commit to download.
+
+### PATCHES
+A list of patches to be applied to the extracted sources.
+
+Relative paths are based on the port directory.
+
+## Notes:
+`OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
+
+## Examples:
+
+* [fdlibm](https://github.com/Microsoft/vcpkg/blob/master/ports/fdlibm/portfile.cmake)
+#]===]
 
 include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_from_git)
   set(oneValueArgs OUT_SOURCE_PATH URL REF)
   set(multipleValuesArgs PATCHES)
-  cmake_parse_arguments(_vdud "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
+  # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+  cmake_parse_arguments(PARSE_ARGV 0 _vdud "" "${oneValueArgs}" "${multipleValuesArgs}")
 
   if(NOT DEFINED _vdud_OUT_SOURCE_PATH)
     message(FATAL_ERROR "OUT_SOURCE_PATH must be specified.")

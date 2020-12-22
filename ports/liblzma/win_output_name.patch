@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 120dc7548..728ca3591 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -398,11 +398,12 @@ else()
+ endif()
+ 
+ if(WIN32)
++    set_target_properties(liblzma PROPERTIES OUTPUT_NAME lzma)
+     if(BUILD_SHARED_LIBS)
+         # Add the Windows resource file for liblzma.dll.
+         target_sources(liblzma PRIVATE src/liblzma/liblzma_w32res.rc)
+         target_include_directories(liblzma PRIVATE windows/vs2019)
+ 
+         # Export the public API symbols with __declspec(dllexport).
+         target_compile_definitions(liblzma PRIVATE DLL_EXPORT)
+     else()

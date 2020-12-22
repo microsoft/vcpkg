@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(ADDITIONAL_PATCH "shared.patch")
 endif()

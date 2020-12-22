@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     message("parson only supports static linkage")
     set(VCPKG_LIBRARY_LINKAGE "static")

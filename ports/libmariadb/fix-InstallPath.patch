@@ -12,10 +12,10 @@ index b8d15ba..7f59db7 100644
      INSTALL(FILES $<TARGET_PDB_FILE:${name}> COMPONENT Debuginfo
        DESTINATION symbols CONFIGURATIONS Debug RelWithDebInfo)
 diff --git a/libmariadb/CMakeLists.txt b/libmariadb/CMakeLists.txt
-index f406b37..a9ae9d7 100644
+index 14e34ab..083a863 100644
 --- a/libmariadb/CMakeLists.txt
 +++ b/libmariadb/CMakeLists.txt
-@@ -395,10 +395,10 @@ ADD_LIBRARY(mariadbclient STATIC  ${MARIADB_OBJECTS} ${EMPTY_FILE})
+@@ -398,10 +398,10 @@ ADD_LIBRARY(mariadbclient STATIC  ${MARIADB_OBJECTS} ${EMPTY_FILE})
  TARGET_LINK_LIBRARIES(mariadbclient ${SYSTEM_LIBS})
  
  IF(UNIX)
@@ -28,21 +28,20 @@ index f406b37..a9ae9d7 100644
    TARGET_LINK_LIBRARIES(libmariadb LINK_PRIVATE mariadbclient)
    SET_TARGET_PROPERTIES(libmariadb PROPERTIES LINKER_LANGUAGE C)
  ENDIF()
-@@ -452,13 +452,14 @@ ENDIF()
+@@ -457,13 +457,15 @@ ENDIF()
  
  INSTALL(TARGETS mariadbclient
            COMPONENT Development
 -          DESTINATION ${INSTALL_LIBDIR})
 +          LIBRARY DESTINATION lib)
  INSTALL(TARGETS libmariadb
--          COMPONENT SharedLibraries
+           COMPONENT SharedLibraries
 -        DESTINATION ${INSTALL_LIBDIR})
-+        COMPONENT SharedLibraries
 +        RUNTIME DESTINATION bin
 +        LIBRARY DESTINATION lib
 +        ARCHIVE DESTINATION lib)
  
--
+ 
 -IF(MSVC)
 +IF(0)
     # On Windows, install PDB

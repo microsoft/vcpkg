@@ -1,7 +1,5 @@
 set(MODPLUG_HASH 5a39f5913d07ba3e61d8d5afdba00b70165da81d)
 
-include(vcpkg_common_functions)
-
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_from_github(ARCHIVE
         OUT_SOURCE_PATH SOURCE_PATH

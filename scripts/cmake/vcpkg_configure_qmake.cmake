@@ -1,22 +1,27 @@
-#.rst:
-# .. command:: vcpkg_configure_qmake
-#
-#  Configure a qmake-based project.
-#
-#  ::
-#  vcpkg_configure_qmake(SOURCE_PATH <pro_file_path>
-#                        [OPTIONS arg1 [arg2 ...]]
-#                        [OPTIONS_RELEASE arg1 [arg2 ...]]
-#                        [OPTIONS_DEBUG arg1 [arg2 ...]]
-#                        )
-#
-#  ``SOURCE_PATH``
-#    The path to the *.pro qmake project file.
-#  ``OPTIONS[_RELEASE|_DEBUG]``
-#    The options passed to qmake.
+#[===[.md:
+# vcpkg_configure_qmake
+
+Configure a qmake-based project.
+
+```cmake
+vcpkg_configure_qmake(
+    SOURCE_PATH <pro_file_path>
+    [OPTIONS arg1 [arg2 ...]]
+    [OPTIONS_RELEASE arg1 [arg2 ...]]
+    [OPTIONS_DEBUG arg1 [arg2 ...]]
+)
+```
+
+### SOURCE_PATH
+The path to the *.pro qmake project file.
+
+### OPTIONS, OPTIONS\_RELEASE, OPTIONS\_DEBUG
+The options passed to qmake.
+#]===]
 
 function(vcpkg_configure_qmake)
-    cmake_parse_arguments(_csc "" "SOURCE_PATH" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;BUILD_OPTIONS;BUILD_OPTIONS_RELEASE;BUILD_OPTIONS_DEBUG" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _csc "" "SOURCE_PATH" "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG;BUILD_OPTIONS;BUILD_OPTIONS_RELEASE;BUILD_OPTIONS_DEBUG")
      
     # Find qmake executable
     set(_triplet_hostbindir ${CURRENT_INSTALLED_DIR}/tools/qt5/bin)

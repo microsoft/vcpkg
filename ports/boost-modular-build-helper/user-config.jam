@@ -2,7 +2,7 @@ import toolset ;
 
 if "@VCPKG_PLATFORM_TOOLSET@" != "external"
 {
-    using msvc : : cl.exe
+    using msvc : @MSVC_VERSION@ : cl.exe
         :
         <setup>"@NOTHING_BAT@"
         @TOOLSET_OPTIONS@
@@ -55,14 +55,28 @@ if "@VCPKG_PLATFORM_TOOLSET@" != "external"
 }
 else
 {
-    lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/lib/libicuuc.a" <variant>release : : ;
-    lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/libicuuc.a" <variant>debug : : ;
+    if "@CMAKE_SYSTEM_NAME@" = "Windows" # We are hopelessly stuck inside boost-modular-build-helper, only this works
+    {
+        lib icuuc : : <name>icuuc <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icuuc : : <name>icuucd <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
 
-    lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/lib/libicui18n.a" <variant>release : : ;
-    lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/libicui18n.a" <variant>debug : : ;
+        lib icuin : : <name>icuin <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icuin : : <name>icuind <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
 
-    lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/lib/libicudata.a" <variant>release : : ;
-    lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/libicudata.a" <variant>debug : : ;
+        lib icudt : : <name>icudt <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icudt : : <name>icudtd <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
+    }
+    else
+    {
+        lib icuuc : : <name>icuuc <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icuuc : : <name>icuuc <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
+
+        lib icuin : : <name>icui18n <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icuin : : <name>icui18n <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
+
+        lib icudt : : <name>icudata <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icudt : : <name>icudata <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
+    }
 }
 
 lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>release : : ;
