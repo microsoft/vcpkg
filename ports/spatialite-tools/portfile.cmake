@@ -104,18 +104,18 @@ if (VCPKG_TARGET_IS_WINDOWS)
   vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug)
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   if(VCPKG_TARGET_IS_LINUX)
-      set(LIBS -lpthread -ldl -lm -lz -lstdc++)
+      set(STDLIB stdc++)
   else()
-      set(LIBS -lpthread -ldl -lm -lz -lc++ -liconv)
+      set(STDLIB c++)
   endif()
 
   list(APPEND OPTIONS_RELEASE
-      "LIBXML2_LIBS=-lxml2 -llzma"
-      "GEOS_LDFLAGS=-lgeos_c -lgeos -l${STDLIB}"
+      "LIBXML2_LIBS=-lxml2 -llzma -liconv"
+      "GEOS_LDFLAGS=-lgeos_c -lgeos"
   )
   list(APPEND OPTIONS_DEBUG
-      "LIBXML2_LIBS=-lxml2 -llzmad"
-      "GEOS_LDFLAGS=-lgeos_cd -lgeosd -l${STDLIB}"
+      "LIBXML2_LIBS=-lxml2 -llzmad -liconv"
+      "GEOS_LDFLAGS=-lgeos_cd -lgeosd"
   )
 
   vcpkg_configure_make(
@@ -124,7 +124,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
     OPTIONS
         "CFLAGS=-DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
         "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
-        "LIBS=${LIBS}"
+        "LIBS=-lpthread -ldl -lm -lz -l${STDLIB}"
         "--disable-minizip"
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
