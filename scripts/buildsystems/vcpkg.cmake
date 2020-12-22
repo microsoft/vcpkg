@@ -392,7 +392,12 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
             list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
         endif()
 
-        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log" _VCPKG_MANIFEST_INSTALL_LOG)
+        if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.18")
+            set(_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE)
+        else()
+            set(_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS)
+        endif()
+
         execute_process(
             COMMAND "${_VCPKG_EXECUTABLE}" install
                 --triplet "${VCPKG_TARGET_TRIPLET}"
@@ -402,10 +407,14 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
                 "--x-install-root=${_VCPKG_INSTALLED_DIR}"
                 ${_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
                 ${VCPKG_INSTALL_OPTIONS}
-            OUTPUT_FILE "${_VCPKG_MANIFEST_INSTALL_LOG}"
-            ERROR_FILE "${_VCPKG_MANIFEST_INSTALL_LOG}"
+            OUTPUT_VARIABLE _VCPKG_MANIFEST_INSTALL_LOGTEXT
+            ERROR_VARIABLE _VCPKG_MANIFEST_INSTALL_LOGTEXT
             RESULT_VARIABLE _VCPKG_INSTALL_RESULT
+            ${_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS}
         )
+
+        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log" _VCPKG_MANIFEST_INSTALL_LOGFILE)
+        file(WRITE "${_VCPKG_MANIFEST_INSTALL_LOGFILE}" "${_VCPKG_MANIFEST_INSTALL_LOGTEXT}")
 
         if (_VCPKG_INSTALL_RESULT EQUAL 0)
             message(STATUS "Running vcpkg install - done")
@@ -415,7 +424,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
                 "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
         else()
             message(STATUS "Running vcpkg install - failed")
-            _vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${_VCPKG_MANIFEST_INSTALL_LOG}")
+            _vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${_VCPKG_MANIFEST_INSTALL_LOGFILE}")
         endif()
     endif()
 endif()
@@ -503,14 +512,17 @@ endfunction()
 #   DESTINATION - the runtime directory for those targets (usually `bin`)
 function(x_vcpkg_install_local_dependencies)
     if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
-        cmake_parse_arguments(PARSE_ARGV __VCPKG_APPINSTALL "" "DESTINATION" "TARGETS")
+        cmake_parse_arguments(PARSE_ARGV 0 __VCPKG_APPINSTALL "" "DESTINATION" "TARGETS")
         _vcpkg_set_powershell_path()
         foreach(TARGET IN LISTS __VCPKG_APPINSTALL_TARGETS)
-            install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
-                execute_process(COMMAND \"${_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                    -targetBinary \"\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
-                    -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                    -OutVariable out)")
+            get_target_property(TARGETTYPE ${TARGET} TYPE)
+            if(NOT TARGETTYPE STREQUAL "INTERFACE_LIBRARY")
+                install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
+                    execute_process(COMMAND \"${_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
+                        -targetBinary \"\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
+                        -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
+                        -OutVariable out)")
+            endif()
         endforeach()
     endif()
 endfunction()

@@ -108,6 +108,19 @@ if(INSTALL_HEADERS)
     set_target_properties(libxml2 PROPERTIES PUBLIC_HEADER "${PUBLIC_HEADERS}")
 endif()
 target_include_directories(libxml2 PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/include include ${LIBLZMA_INCLUDE_DIRS})
+get_property(LIBRARIES TARGET Iconv::Iconv PROPERTY INTERFACE_LINK_LIBRARIES)
+if(LIBRARIES)
+    set_property(TARGET Iconv::Iconv PROPERTY INTERFACE_LINK_LIBRARIES "")
+    foreach(LIBRARY ${LIBRARIES})
+        # Since `libc.so` has no SONAME, CMake maps e.g. `/usr/lib/x86_64-linux-gnu/libc.so` to `-llibc`.
+        # This is not found: it should be mapped to `-lc`.
+        if(LIBRARY MATCHES "/libc\\.so$")
+            set_property(TARGET Iconv::Iconv APPEND PROPERTY INTERFACE_LINK_LIBRARIES "c")
+        else()
+            set_property(TARGET Iconv::Iconv APPEND PROPERTY INTERFACE_LINK_LIBRARIES "${LIBRARY}")
+        endif()
+    endforeach()
+endif()
 target_link_libraries(libxml2 PRIVATE
     Iconv::Iconv
     ZLIB::ZLIB

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF 315ee3fe75dade912b48a21ceec9ccda0230d937 #curl-7_73_0
-    SHA512 db9385d63688256c335f08fe044c67e7c17e2fbcbb47df234d5f9a1586b259edb07a37845c2ad85d2da00738b19dc0e718d91d05b2881c2828fec2660f858444
+    REF e052859759b34d0e05ce0f17244873e5cd7b457b #curl-7_74_0
+    SHA512 3dbbab00dda4f0e7d012fab358d2dd1362ff0c0f59c81f638fb547acba6f74a61c306906892447af3b18e8b0ebb93ebb8e0ac77e92247864bfa3a9c4ce7ea1d0
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -123,7 +123,14 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/mbedcrypto.lib" "-lmbedcrypto")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/nghttp2.lib" "-lnghttp2")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libssh2.lib" "-lssh2")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/cares.lib" "-lcares")		
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/cares.lib" "-lcares")
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/brotlicommon.lib" "-lbrotlicommon")
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/brotlidec.lib" "-lbrotlidec")			
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/pthreadVC3d.lib" "-lpthreadVC3d")
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc " ${CURRENT_INSTALLED_DIR}/lib/pthreadVC3.lib" "")		
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc " -loptimized" "")
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc " -ldebug" "")	
+	
     elseif(VCPKG_TARGET_IS_LINUX)
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "-lcurl" "-lcurl-d")    
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a" "-lssl")
@@ -152,6 +159,12 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/nghttp2.lib" "-lnghttp2")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libssh2.lib" "-lssh2")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/cares.lib" "-lcares")
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/brotlicommon.lib" "-lbrotlicommon")
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/brotlidec.lib" "-lbrotlidec")			
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/pthreadVC3.lib" "-lpthreadVC3")
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc " ${CURRENT_INSTALLED_DIR}/debug/lib/pthreadVC3d.lib" "")		
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc " -loptimized" "")
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc " -ldebug" "")		
     elseif(VCPKG_TARGET_IS_LINUX)
         #vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "-lcurl" "-lcurl")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libssl.a" "-lssl")

@@ -1,9 +1,7 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP build is not supported.")
-endif()
+vcpkg_fail_port_install(ON_TARGET uwp)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set( LOCAL_OPTIONS
+    set(LOCAL_OPTIONS
         -DBUILD_STATIC_LIBS=OFF
     )
 else()
@@ -16,13 +14,15 @@ vcpkg_from_github(
     REPO opentracing/opentracing-cpp
     REF 4bb431f7728eaf383a07e86f9754a5b67575dab0 # v1.6.0
     SHA512 1c69ff4cfd5f6037a48815367d3026c1bf06c3c49ebf232a64c43167385fb62e444c3b3224fc38f68ef0fdb378e3736db6ee6ba57160e6e578c87c09e92e527e
+    PATCHES
+        repair_mojibake.patch
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
-        ${OPTIONS}
+        -DENABLE_LINTING=OFF
         ${LOCAL_OPTIONS}
 )
 
@@ -54,7 +54,7 @@ if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR NOT VCPKG_CMAKE_SYSTEM_NAM
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/opentracing RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Remove duplicate headers
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

@@ -17,11 +17,6 @@ jobs:
 
   steps:
   - task: PowerShell@2
-    displayName: 'Initialize Environment'
-    inputs:
-      filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
-      pwsh: true
-  - task: PowerShell@2
     displayName: 'Report on Disk Space'
     condition: always()
     inputs:
@@ -57,7 +52,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -UseEnvironmentSasToken -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
       pwsh: true
   - task: PowerShell@2
     displayName: 'Report on Disk Space After Build'

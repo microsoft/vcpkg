@@ -143,6 +143,5 @@ vcpkg_configure_cmake(
 * [pcl](https://github.com/microsoft/vcpkg/blob/master/ports/pcl/portfile.cmake)
 * [rocksdb](https://github.com/microsoft/vcpkg/blob/master/ports/rocksdb/portfile.cmake)
 
-
 ## Source
 [scripts/cmake/vcpkg_check_features.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_check_features.cmake)

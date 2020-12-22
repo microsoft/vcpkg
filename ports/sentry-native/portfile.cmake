@@ -9,8 +9,10 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES fix-warningC5105.patch
     NO_REMOVE_ONE_LEVEL
+    PATCHES
+        fix-warningC5105.patch
+        fix-config-cmake.patch
 )
 
 if (NOT DEFINED SENTRY_BACKEND)
