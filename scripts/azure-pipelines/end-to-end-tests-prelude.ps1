@@ -12,9 +12,9 @@ $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
     "--x-packages-root=$packagesRoot",
-    "--overlay-ports=scripts/e2e_ports"
+    "--overlay-ports=scripts/e2e_ports/overlays"
 )
-$CurrentTest = 'unassigned'
+$Script:CurrentTest = 'unassigned'
 
 function Refresh-TestRoot {
     Remove-Item -Recurse -Force $TestingRoot -ErrorAction SilentlyContinue
@@ -28,7 +28,7 @@ function Require-FileExists {
         [string]$File
     )
     if (-Not (Test-Path $File)) {
-        throw "'$CurrentTest' failed to create file '$File'"
+        throw "'$Script:CurrentTest' failed to create file '$File'"
     }
 }
 
@@ -38,26 +38,29 @@ function Require-FileNotExists {
         [string]$File
     )
     if (Test-Path $File) {
-        throw "'$CurrentTest' should not have created file '$File'"
+        throw "'$Script:CurrentTest' should not have created file '$File'"
     }
 }
 
 function Throw-IfFailed {
     if ($LASTEXITCODE -ne 0) {
-        throw "'$CurrentTest' had a step with a nonzero exit code"
+        throw "'$Script:CurrentTest' had a step with a nonzero exit code"
     }
 }
 
 function Throw-IfNotFailed {
     if ($LASTEXITCODE -eq 0) {
-        throw "'$CurrentTest' had a step with an unexpectedly zero exit code"
+        throw "'$Script:CurrentTest' had a step with an unexpectedly zero exit code"
     }
 }
 
 function Run-Vcpkg {
-    param([string[]]$TestArgs)
-    $CurrentTest = "./vcpkg $($testArgs -join ' ')"
-    Write-Host $CurrentTest
+    Param(
+        [Parameter(ValueFromRemainingArguments)]
+        [string[]]$TestArgs
+    )
+    $Script:CurrentTest = "./vcpkg $($testArgs -join ' ')"
+    Write-Host $Script:CurrentTest
     ./vcpkg @testArgs
 }
 
