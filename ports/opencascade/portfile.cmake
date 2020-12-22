@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-msvc-32bit-builds.patch
         fix-build-with-vs2017.patch
         fix-static-build.patch
+        fix-install-prefix-path.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

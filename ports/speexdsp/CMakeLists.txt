@@ -94,6 +94,7 @@ configure_file("${CMAKE_CURRENT_LIST_DIR}/include/speex/speexdsp_config_types.h.
 list(APPEND LIBSPEEXDSP_HEADERS_PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/speexdsp_config_types.h")
 
 include_directories("${CMAKE_CURRENT_LIST_DIR}/include")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
 add_library(speexdsp ${LIBSPEEXDSP_SOURCES} ${LIBSPEEXDSP_HEADERS})
 set_target_properties(speexdsp PROPERTIES PUBLIC_HEADER "${LIBSPEEXDSP_HEADERS_PUBLIC}")

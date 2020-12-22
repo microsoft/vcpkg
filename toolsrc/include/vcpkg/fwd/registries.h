@@ -2,7 +2,8 @@
 
 namespace vcpkg
 {
-    struct RegistryImpl;
+    struct RegistryEntry;
+    struct RegistryImplementation;
     struct Registry;
     struct RegistrySet;
 }
