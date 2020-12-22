@@ -85,12 +85,14 @@ else()
         ARCHIVE
         URLS https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
         FILENAME gmp-6.2.1.tar.xz
-        SHA512 a066f0456f0314a1359f553c49fc2587e484ff8ac390ff88537266a146ea373f97a1c0ba24608bf6756f4eab11c9056f103c8deb99e5b57741b4f7f0ec44b90c)
+        SHA512 c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
+    )
 
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE ${ARCHIVE}
-        REF gmp-6.2.1)
+        REF gmp-6.2.1
+    )
 
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}

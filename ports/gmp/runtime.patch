@@ -102,3 +102,79 @@ index fc70bd8..d515523 100644
      </ClCompile>
      <Link>
        <EnableCOMDATFolding>true</EnableCOMDATFolding>
+diff --git a/SMP/smp_winrt.props b/SMP/smp_winrt.props
+index cb5f090..19b2b8d 100644
+--- a/SMP/smp_winrt.props
++++ b/SMP/smp_winrt.props
+@@ -97,7 +97,7 @@
+   </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWinRT|Win32'">
+-    <TargetName>lib$(RootNamespace)d_winrt</TargetName>
++    <TargetName>l$(RootNamespace)d</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -105,7 +105,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWinRT|x64'">
+-    <TargetName>lib$(RootNamespace)d_winrt</TargetName>
++    <TargetName>$(RootNamespace)d</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -113,7 +113,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLLWinRT|Win32'">
+-    <TargetName>$(RootNamespace)d_winrt</TargetName>
++    <TargetName>$(RootNamespace)d</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -121,7 +121,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLLWinRT|x64'">
+-    <TargetName>$(RootNamespace)d_winrt</TargetName>
++    <TargetName>$(RootNamespace)d</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -129,7 +129,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWinRT|Win32'">
+-    <TargetName>lib$(RootNamespace)_winrt</TargetName>
++    <TargetName>$(RootNamespace)</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -137,7 +137,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWinRT|x64'">
+-    <TargetName>lib$(RootNamespace)_winrt</TargetName>
++    <TargetName>$(RootNamespace)</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -145,7 +145,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRT|Win32'">
+-    <TargetName>$(RootNamespace)_winrt</TargetName>
++    <TargetName>$(RootNamespace)</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
+@@ -153,7 +153,7 @@
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRT|x64'">
+-    <TargetName>$(RootNamespace)_winrt</TargetName>
++    <TargetName>$(RootNamespace)</TargetName>
+     <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <GeneratedFilesDir>$(ProjectDir)obj\Generated</GeneratedFilesDir>
