@@ -31,10 +31,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(COPY ${SOURCE_PATH}/Libraries/Win/XPLM_64.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
     file(COPY ${SOURCE_PATH}/Libraries/Win/XPWidgets_64.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
 elseif (VCPKG_TARGET_IS_OSX)
-    file(COPY ${SOURCE_PATH}/Libraries/Mac/XPLM.framework/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(COPY ${SOURCE_PATH}/Libraries/Mac/XPWidgets.framework/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(COPY ${SOURCE_PATH}/Libraries/Mac/XPLM.framework/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-    file(COPY ${SOURCE_PATH}/Libraries/Mac/XPWidgets.framework/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
+    file(COPY ${SOURCE_PATH}/Libraries/Mac/ DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
+    file(COPY ${SOURCE_PATH}/Libraries/Mac/ DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
 endif()
 
 # Handle copyright
