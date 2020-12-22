@@ -36,4 +36,4 @@ elseif (VCPKG_TARGET_IS_OSX)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/x-plane/ RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
