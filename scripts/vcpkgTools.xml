@@ -16,10 +16,10 @@
     </tool>
     <tool name="cmake" os="osx">
         <version>3.19.2</version>
-        <exeRelativePath>cmake-3.19.2-Darwin-x86_64/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-Darwin-x86_64.tar.gz</url>
-        <sha512>935b3d516e996f6d25948ba8a54c1b7f70f7f0e3f517e36481fdf0196c2c5cfc2841f86e891f3df9517746b7fb605db47cdded1b8ff78d9482ddaa621db43a34</sha512>
-        <archiveName>cmake-3.19.2-Darwin-x86_64.tar.gz</archiveName>
+        <exeRelativePath>cmake-3.19.2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-macos-universal.tar.gz</url>
+        <sha512>031196439a26d6ff2a1f42830ca26b5159752dc2c2c889a4e304327c858157b68088905b10727090918c3605fe7fe429aa19d46e68ed30c17d4d89b3d209aae8</sha512>
+        <archiveName>cmake-3.19.2-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
         <version>3.19.2</version>
