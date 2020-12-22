@@ -236,6 +236,7 @@
     <ClInclude Include="..\include\vcpkg\commands.search.h" />
     <ClInclude Include="..\include\vcpkg\commands.setinstalled.h" />
     <ClInclude Include="..\include\vcpkg\commands.upgrade.h" />
+    <ClInclude Include="..\include\vcpkg\commands.usage.h" />
     <ClInclude Include="..\include\vcpkg\commands.version.h" />
     <ClInclude Include="..\include\vcpkg\commands.xvsinstances.h" />
     <ClInclude Include="..\include\vcpkg\dependencies.h" />
@@ -326,6 +327,7 @@
     <ClCompile Include="..\src\vcpkg\commands.search.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.setinstalled.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.upgrade.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.usage.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.upload-metrics.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.version.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.xvsinstances.cpp" />

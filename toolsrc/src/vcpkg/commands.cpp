@@ -25,6 +25,7 @@
 #include <vcpkg/commands.setinstalled.h>
 #include <vcpkg/commands.upgrade.h>
 #include <vcpkg/commands.upload-metrics.h>
+#include <vcpkg/commands.usage.h>
 #include <vcpkg/commands.version.h>
 #include <vcpkg/commands.xvsinstances.h>
 #include <vcpkg/export.h>
@@ -110,6 +111,7 @@ namespace vcpkg::Commands
         static const BuildExternal::BuildExternalCommand build_external{};
         static const Export::ExportCommand export_command{};
         static const DependInfo::DependInfoCommand depend_info{};
+        static const Usage::UsageCommand usage{};
 
         static std::vector<PackageNameAndFunction<const TripletCommand*>> t = {
             {"install", &install},
@@ -122,6 +124,7 @@ namespace vcpkg::Commands
             {"build-external", &build_external},
             {"export", &export_command},
             {"depend-info", &depend_info},
+            {"x-usage", &usage},
         };
         return t;
     }
