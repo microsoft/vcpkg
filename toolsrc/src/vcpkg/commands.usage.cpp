@@ -8,7 +8,8 @@
 namespace vcpkg::Commands::Usage
 {
     const CommandStructure COMMAND_STRUCTURE = {
-        Strings::format("Display usage information for packages.\n%s", create_example_string("x-usage zlib openssl")),
+        Strings::format("Display usage information for installed packages.\n%s",
+                        create_example_string("x-usage zlib openssl")),
         1,
         SIZE_MAX,
         {},
