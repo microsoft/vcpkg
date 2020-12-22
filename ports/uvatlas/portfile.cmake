@@ -4,20 +4,20 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
     REF dec2020b
-    SHA512 6dc18c4c86df6d4590e82d2c040f504ba2010700b49ab4d8b562e5e93a7ef2b7c393d132f0531f360cf2cd01614d333438e75186272edfc68337b7083b4a39e6
+    SHA512 2b919f8f7911b095a12608ad2904ee230fc9a9d647bf78d3187d2619d2130b9cbeb9aa592b195781531cb86ade0efef564416ce0891f8175a44f9aaaffc081c4
     HEAD_REF master
 )
 
 if(NOT VCPKG_TARGET_IS_UWP)
   set(FEATURE_OPTIONS -DBUILD_TOOLS=ON)
-elseif()
+else()
   set(FEATURE_OPTIONS -DBUILD_TOOLS=OFF)
 endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS {FEATURE_OPTIONS}
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -25,7 +25,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 if(NOT VCPKG_TARGET_IS_UWP)
   vcpkg_copy_tools(
-        TOOL_NAMES uvatlastool.exe
+        TOOL_NAMES uvatlastool
         SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
     )
 
