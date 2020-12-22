@@ -106,7 +106,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   if(VCPKG_TARGET_IS_LINUX)
       set(LIBS "-lpthread -ldl -lm -lz -lstdc++")
   else()
-      set(LIBS "-lpthread -ldl -lm -lz -lc++ -iconv -lc")
+      set(LIBS "-lpthread -ldl -lm -lz -lc++ -iconv")
   endif()
 
   list(APPEND OPTIONS_RELEASE
