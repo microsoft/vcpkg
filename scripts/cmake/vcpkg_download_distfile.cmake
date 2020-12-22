@@ -56,7 +56,7 @@ include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_download_distfile VAR)
     set(options SKIP_SHA512 SILENT_EXIT QUIET)
-    set(oneValueArgs FILENAME SHA512)
+    set(oneValueArgs FILENAME SHA512 FILE_DISAMBIGUATOR)
     set(multipleValuesArgs URLS HEADERS)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 1 vcpkg_download_distfile "${options}" "${oneValueArgs}" "${multipleValuesArgs}")
@@ -133,7 +133,7 @@ function(vcpkg_download_distfile VAR)
             endif()
             vcpkg_execute_in_download_mode(
                 COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
-                -o temp/${vcpkg_download_distfile_FILENAME}
+                -o temp/${vcpkg_download_distfile_FILENAME}${vcpkg_download_distfile_FILE_DISAMBIGUATOR}
                 -l download-${vcpkg_download_distfile_FILENAME}-detailed.log
                 ${request_headers}
                 OUTPUT_FILE download-${vcpkg_download_distfile_FILENAME}-out.log
@@ -141,6 +141,12 @@ function(vcpkg_download_distfile VAR)
                 RESULT_VARIABLE error_code
                 WORKING_DIRECTORY ${DOWNLOADS}
             )
+            
+            if (vcpkg_download_distfile_FILE_DISAMBIGUATOR)
+                file(RENAME ${DOWNLOADS}/temp/${vcpkg_download_distfile_FILENAME}${vcpkg_download_distfile_FILE_DISAMBIGUATOR}
+                    ${DOWNLOADS}/temp/${vcpkg_download_distfile_FILENAME})
+            endif()
+            
             if (NOT "${error_code}" STREQUAL "0")
                 message(STATUS
                     "Downloading ${vcpkg_download_distfile_FILENAME}... Failed.\n"
