@@ -35,9 +35,9 @@ vcpkg_check_features(
         openexr ENABLE_OPENEXR_SUPPORT
 )
 
-if("openexr" IN_LIST FEATURES)
+if(NOT VCPKG_TARGET_IS_UWP)
   set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DBUILD_TOOLS=ON)
-else()
+elseif()
   set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DBUILD_TOOLS=OFF)
 endif()
 
@@ -53,13 +53,13 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-if("openexr" IN_LIST FEATURES)
+if(NOT VCPKG_TARGET_IS_UWP)
   vcpkg_copy_tools(
         TOOL_NAMES texassemble texconv texdiag
         SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
     )
 
-elseif(VCPKG_HOST_IS_WINDOWS)
+elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(texassemble
     URLS "https://github.com/Microsoft/DirectXTex/releases/download/nov2020/texassemble.exe"
     FILENAME "texassemble.exe"

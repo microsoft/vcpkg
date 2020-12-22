@@ -8,16 +8,28 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(NOT VCPKG_TARGET_IS_UWP)
+  set(FEATURE_OPTIONS -DBUILD_TOOLS=ON)
+elseif()
+  set(FEATURE_OPTIONS -DBUILD_TOOLS=OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DBUILD_TOOLS=OFF
+    OPTIONS {FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-if(VCPKG_HOST_IS_WINDOWS)
+if(NOT VCPKG_TARGET_IS_UWP)
+  vcpkg_copy_tools(
+        TOOL_NAMES uvatlastool.exe
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
+
+elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(uvatlastool
     URLS "https://github.com/Microsoft/UVAtlas/releases/download/dec2020/uvatlastool.exe"
     FILENAME "uvatlastool.exe"

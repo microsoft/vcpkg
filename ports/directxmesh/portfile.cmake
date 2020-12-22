@@ -14,16 +14,28 @@ vcpkg_check_features(
         dx12 BUILD_DX12
 )
 
+if(NOT VCPKG_TARGET_IS_UWP)
+  set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DBUILD_TOOLS=ON)
+elseif()
+  set(FEATURE_OPTIONS ${FEATURE_OPTIONS} -DBUILD_TOOLS=OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS} -DBUILD_TOOLS=OFF
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-if (VCPKG_HOST_IS_WINDOWS)
+if(NOT VCPKG_TARGET_IS_UWP)
+  vcpkg_copy_tools(
+        TOOL_NAMES meshconvert
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
+
+elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(meshconvert
     URLS "https://github.com/Microsoft/DirectXMesh/releases/download/nov2020/meshconvert.exe"
     FILENAME "meshconvert.exe"
