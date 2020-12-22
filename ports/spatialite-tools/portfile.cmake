@@ -110,11 +110,11 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   endif()
 
   list(APPEND OPTIONS_RELEASE
-      "LIBXML2_LIBS=-lxml2 -llzma -liconv"
+      "LIBXML2_LIBS=-lxml2 -llzma"
       "GEOS_LDFLAGS=-lgeos_c -lgeos"
   )
   list(APPEND OPTIONS_DEBUG
-      "LIBXML2_LIBS=-lxml2 -llzmad -liconv"
+      "LIBXML2_LIBS=-lxml2 -llzmad"
       "GEOS_LDFLAGS=-lgeos_cd -lgeosd"
   )
 
