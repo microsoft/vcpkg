@@ -68,7 +68,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
       ${CURRENT_INSTALLED_DIR}/lib/proj.lib ole32.lib shell32.lib"
   )
 
-  file(TO_CMAKE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
+  file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}" INST_DIR)
   list(APPEND OPTIONS_RELEASE
       "LINK_FLAGS=${UWP_LINK_FLAGS}" "INST_DIR=${INST_DIR}" "LIBS_ALL=${LIBS_ALL_REL}"
   )
@@ -86,22 +86,24 @@ if (VCPKG_TARGET_IS_WINDOWS)
           ${OPTIONS_DEBUG}
   )
 
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
-  file(GLOB EXES "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-  file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-  file(REMOVE ${EXES})
-
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/)
-  file(GLOB DEBUG_EXES "${CURRENT_PACKAGES_DIR}/debug/bin/*.exe")
-  file(COPY ${DEBUG_EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug)
-  file(REMOVE ${DEBUG_EXES})
+  list(APPEND TOOL_EXES
+      shp_sanitize
+      spatialite_osm_filter
+      spatialite_osm_raw
+      spatialite_gml
+      spatialite_osm_map
+      exif_loader
+      spatialite_osm_net
+      spatialite_network
+      spatialite_tool
+      shp_doctor
+      spatialite
+  )
+  vcpkg_copy_tools(TOOL_NAMES ${TOOL_EXES} AUTO_CLEAN)
 
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-
-  vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-  vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug)
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   if(VCPKG_TARGET_IS_LINUX)
       set(LIBS "-lpthread -ldl -lm -lz -lstdc++")
