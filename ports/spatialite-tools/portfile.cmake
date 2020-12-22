@@ -104,9 +104,9 @@ if (VCPKG_TARGET_IS_WINDOWS)
   vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug)
 elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   if(VCPKG_TARGET_IS_LINUX)
-      set(STDLIB stdc++)
+      set(LIBS -lpthread -ldl -lm -lz -lstdc++)
   else()
-      set(STDLIB c++)
+      set(LIBS -lpthread -ldl -lm -lz -lc++ -liconv)
   endif()
 
   list(APPEND OPTIONS_RELEASE
@@ -124,7 +124,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
     OPTIONS
         "CFLAGS=-DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
         "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
-        "LIBS=-lpthread -ldl -lm -lz -l${STDLIB}"
+        "LIBS=${LIBS}"
         "--disable-minizip"
     OPTIONS_DEBUG
         ${OPTIONS_DEBUG}
