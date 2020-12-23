@@ -257,7 +257,6 @@ class PortUpdate {
     [Object[]]$Pulls
     [Version]$Version
     [Boolean]$New
-    [String[]]$Authors
 }
 
 
@@ -301,7 +300,6 @@ function Select-UpdatedPorts {
                 Pulls = $_.Value.Pulls
                 Version = $versionChange
                 New = Find-NewFile 'CONTROL' -or (-not (Find-File 'CONTROL') -and (Find-NewFile 'vcpkg.json'))
-                Authors = $_.Value.Pulls | ForEach-Object { $_.user.login } | Get-Unique
             }
         }
     }
