@@ -1,0 +1,26 @@
+{
+  "name": "libdatachannel",
+  "version-string": "v0.10.1",
+  "description": "libdatachannel is a standalone implementation of WebRTC Data Channels, WebRTC Media Transport, and WebSockets in C++17 with C bindings for POSIX platforms (including GNU/Linux, Android, and Apple macOS) and Microsoft Windows.",
+  "homepage": "https://github.com/paullouisageneau/libdatachannel",
+  "dependencies": [
+    "libjuice",
+    "openssl",
+    "plog",
+    "usrsctp"
+  ],
+  "default-features": [
+    "ws"
+  ],
+  "features": {
+    "srtp": {
+      "description": "Use Cisco's libSRTP for media transport.",
+      "dependencies": [
+        "libsrtp"
+      ]
+    },
+    "ws": {
+      "description": "Web Socket support"
+    }
+  }
+}
