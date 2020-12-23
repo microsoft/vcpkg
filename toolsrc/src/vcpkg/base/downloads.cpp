@@ -303,6 +303,7 @@ namespace vcpkg::Downloads
         cmd.string_arg("-w").string_arg(Strings::concat("\\n", guid_marker, "%{http_code}"));
         cmd.string_arg(url);
         cmd.string_arg("-T").path_arg(file);
+        cmd.string_arg("-H").string_arg("x-ms-version: 2020-04-08");
         cmd.string_arg("-H").string_arg("x-ms-blob-type: BlockBlob");
         int code = 0;
         auto res = System::cmd_execute_and_stream_lines(cmd, [&code](const std::string& line) {
