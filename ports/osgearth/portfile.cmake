@@ -13,7 +13,7 @@ vcpkg_from_github(
     REF 342fcadf4c8892ba84841cb5b4162bdc51519e3c #version 3.1
     SHA512 03378a918306846d2144e545785c783b01e33fa2dd5c77d16d390a275217b6ce7a3a743c35ae99a497b272a7516b055442c0a891bd312cce727a5538b40364f5 
     HEAD_REF master
-    PATCHES 
+    PATCHES
         fix-feature.patch
 )
 
