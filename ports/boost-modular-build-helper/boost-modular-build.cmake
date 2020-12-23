@@ -116,22 +116,11 @@ function(boost_modular_build)
         set(VARIANT ${BUILD_TYPE})
         set(BUILD_LIB_PATH ${BUILD_LIB_PATH})
         configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
-    endfunction()
-
-    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            unix_build(${BOOST_LIB_RELEASE_SUFFIX} "release" "lib/")
-        endif()
-
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            unix_build(${BOOST_LIB_DEBUG_SUFFIX} "debug" "debug/lib/")
-        endif()
 
         set(configure_option)
         if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
             list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
         endif()
-
         vcpkg_configure_cmake(
             SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
             PREFER_NINJA
@@ -145,6 +134,27 @@ function(boost_modular_build)
                 ${configure_option}
         )
         vcpkg_install_cmake()
+    endfunction()
+
+    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        set(build_flag 0)
+        if(NOT DEFINED VCPKG_BUILD_TYPE)
+            set(build_flag 1)
+            set(VCPKG_BUILD_TYPE "release")
+        endif()
+
+        if(VCPKG_BUILD_TYPE STREQUAL "release")
+            unix_build(${BOOST_LIB_RELEASE_SUFFIX} "release" "lib/")
+        endif()
+
+        if(build_flag)
+            set(VCPKG_BUILD_TYPE "debug")
+        endif()
+
+        if(VCPKG_BUILD_TYPE STREQUAL "debug")
+            unix_build(${BOOST_LIB_DEBUG_SUFFIX} "debug" "debug/lib/")
+        endif()
+
         if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib)
             message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
         endif()
