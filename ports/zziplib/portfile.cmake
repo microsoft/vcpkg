@@ -7,7 +7,6 @@ vcpkg_from_github(
         install-dll-to-proper-folder.patch
         no-release-postfix.patch
         fix-export-define.patch
-        suppress-c4996-msvc.patch
         always-find-unixcommands-on-unix.patch
 )
 
@@ -26,6 +25,9 @@ endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     set(ZZIPLIBTOOL OFF)
 endif()
+
+set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS")
+set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_WARNINGS")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
