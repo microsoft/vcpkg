@@ -31,10 +31,6 @@ azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/2.179.0/vsts-age
 devops_url = configuration['devops_url']
 agent_pool = configuration['agent_pool']
 pat = configuration['pat']
-archives = configuration['archives']
-archives_username = archives['username']
-archives_urn = archives['urn']
-archives_path = archives['path']
 
 Vagrant.configure('2') do |config|
   # give them extra time to boot up
@@ -93,18 +89,6 @@ Vagrant.configure('2') do |config|
     run: 'once',
     name: 'Install brew applications',
     inline: "brew install #{brew_formulas.join(' ')} && brew cask install #{brew_cask_formulas.join(' ')}",
-    privileged: false
-
-  config.vm.provision 'shell',
-    run: 'once',
-    name: 'Create archives mountpoint',
-    inline: 'mkdir ~/Data/archives',
-    privileged: false
-
-  config.vm.provision "shell",
-    run: 'once',
-    name: 'Mount archives directory',
-    inline: "sshfs #{archives_username}@#{archives_urn}:#{archives_path} ~/Data/archives",
     privileged: false
 
   config.vm.provision 'shell',
