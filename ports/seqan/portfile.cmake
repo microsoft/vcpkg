@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://packages.seqan.de/seqan-library/seqan-library-2.4.0.zip"
     FILENAME "seqan-library-2.4.0.zip"

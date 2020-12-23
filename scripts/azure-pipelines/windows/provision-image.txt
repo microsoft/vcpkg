@@ -20,17 +20,18 @@ The administrator user's password; if this is $null, or not passed, then the
 script assumes it's running on an administrator account.
 
 .PARAMETER StorageAccountName
-The name of the storage account. Stored in the environment variable %StorageAccountName%.
+The name of the storage account. Stored in the environment variable %PROVISIONED_AZURE_STORAGE_NAME%.
 Used by the CI system to access the global storage.
 
-.PARAMETER StorageAccountKey
-The key of the storage account. Stored in the environment variable %StorageAccountKey%.
+.PARAMETER StorageAccountSasToken
+The SAS token to access the storage account. Stored in the environment variable
+%PROVISIONED_AZURE_STORAGE_SAS_TOKEN%.
 Used by the CI system to access the global storage.
 #>
 param(
   [string]$AdminUserPassword = $null,
   [string]$StorageAccountName = $null,
-  [string]$StorageAccountKey = $null
+  [string]$StorageAccountSasToken = $null
 )
 
 $ErrorActionPreference = 'Stop'
@@ -88,9 +89,9 @@ if ([string]::IsNullOrEmpty($AdminUserPassword)) {
     $PsExecArgs += $StorageAccountName
   }
 
-  if (-Not ([string]::IsNullOrWhiteSpace($StorageAccountKey))) {
-    $PsExecArgs += '-StorageAccountKey'
-    $PsExecArgs += $StorageAccountKey
+  if (-Not ([string]::IsNullOrWhiteSpace($StorageAccountSasToken))) {
+    $PsExecArgs += '-StorageAccountSasToken'
+    $PsExecArgs += $StorageAccountSasToken
   }
 
   Write-Host "Executing: $PsExecPath $PsExecArgs"
@@ -114,15 +115,16 @@ $Workloads = @(
   'Microsoft.VisualStudio.Component.VC.ATLMFC',
   'Microsoft.VisualStudio.Component.VC.v141.x86.x64.Spectre',
   'Microsoft.VisualStudio.Component.Windows10SDK.18362',
+  'Microsoft.VisualStudio.Component.Windows10SDK.19041',
   'Microsoft.Net.Component.4.8.SDK',
   'Microsoft.Component.NetFX.Native',
   'Microsoft.VisualStudio.Component.VC.Llvm.ClangToolset',
-  'Microsoft.VisualStudio.Component.VC.Llvm.Clang'
+  'Microsoft.VisualStudio.Component.VC.Llvm.Clang',
+  'Microsoft.VisualStudio.Component.VC.v141.x86.x64',
+  'Microsoft.VisualStudio.Component.VC.140'
 )
 
-$WindowsSDKUrl = 'https://download.microsoft.com/download/1/c/3/1c3d5161-d9e9-4e4b-9b43-b70fe8be268c/windowssdk/winsdksetup.exe'
-
-$WindowsWDKUrl = 'https://download.microsoft.com/download/1/a/7/1a730121-7aa7-46f7-8978-7db729aa413d/wdk/wdksetup.exe'
+$WindowsWDKUrl = 'https://go.microsoft.com/fwlink/?linkid=2128854'
 
 $MpiUrl = 'https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe'
 
@@ -133,7 +135,7 @@ $CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_ad
   'cusparse_dev_10.1 nvgraph_10.1 nvgraph_dev_10.1 npp_10.1 npp_dev_10.1 nvrtc_10.1 nvrtc_dev_10.1 nvml_dev_10.1 ' + `
   'occupancy_calculator_10.1 fortran_examples_10.1'
 
-$PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.0.3/PowerShell-7.0.3-win-x64.msi'
+$PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.1.0/PowerShell-7.1.0-win-x64.msi'
 
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
@@ -296,43 +298,6 @@ Function InstallZip {
 
 <#
 .SYNOPSIS
-Installs Windows SDK version 2004
-
-.DESCRIPTION
-Downloads the Windows SDK installer located at $Url, and installs it with the
-correct flags.
-
-.PARAMETER Url
-The URL of the installer.
-#>
-Function InstallWindowsSDK {
-  Param(
-    [String]$Url
-  )
-
-  try {
-    Write-Host 'Downloading Windows SDK...'
-    [string]$installerPath = Get-TempFilePath -Extension 'exe'
-    curl.exe -L -o $installerPath -s -S $Url
-    Write-Host 'Installing Windows SDK...'
-    $proc = Start-Process -FilePath $installerPath -ArgumentList @('/features', '+', '/q') -Wait -PassThru
-    $exitCode = $proc.ExitCode
-    if ($exitCode -eq 0) {
-      Write-Host 'Installation successful!'
-    }
-    else {
-      Write-Error "Installation failed! Exited with $exitCode."
-      throw
-    }
-  }
-  catch {
-    Write-Error "Failed to install Windows SDK! $($_.Exception.Message)"
-    throw
-  }
-}
-
-<#
-.SYNOPSIS
 Installs Windows WDK version 2004
 
 .DESCRIPTION
@@ -467,7 +432,6 @@ if ($null -eq $av) {
 }
 
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
-InstallWindowsSDK -Url $WindowsSDKUrl
 InstallWindowsWDK -Url $WindowsWDKUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
@@ -477,14 +441,14 @@ if ([string]::IsNullOrWhiteSpace($StorageAccountName)) {
 } else {
   Write-Host 'Storing storage account name to environment'
   Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' `
-    -Name StorageAccountName `
+    -Name PROVISIONED_AZURE_STORAGE_NAME `
     -Value $StorageAccountName
 }
-if ([string]::IsNullOrWhiteSpace($StorageAccountKey)) {
+if ([string]::IsNullOrWhiteSpace($StorageAccountSasToken)) {
   Write-Host 'No storage account key configured.'
 } else {
   Write-Host 'Storing storage account key to environment'
   Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' `
-    -Name StorageAccountKey `
-    -Value $StorageAccountKey
+    -Name PROVISIONED_AZURE_STORAGE_SAS_TOKEN `
+    -Value $StorageAccountSasToken
 }

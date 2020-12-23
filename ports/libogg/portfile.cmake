@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/ogg
@@ -7,6 +5,10 @@ vcpkg_from_github(
     SHA512 52980fcca3c1dbb5fbfa4032f179679a5c4000f1fea88e7ed8b2522d80d27513be96d94933daeb9e36f4ac8556e7e4e8ec7e91101e2ba456e0fce51c484eee9e
     HEAD_REF master
 )
+
+if(VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string(${SOURCE_PATH}/win32/ogg.def "LIBRARY ogg" "LIBRARY libogg")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

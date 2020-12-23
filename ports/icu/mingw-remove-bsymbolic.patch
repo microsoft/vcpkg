@@ -1,0 +1,26 @@
+diff --git a/source/config/mh-mingw b/source/config/mh-mingw
+index a28e47b..7d77ec0 100644
+--- a/source/config/mh-mingw
++++ b/source/config/mh-mingw
+@@ -57,7 +57,7 @@ LINK.c=       $(CXX) $(CXXFLAGS) $(LDFLAGS)
+ #LINK.cc=      $(CXX) $(CXXFLAGS) $(LDFLAGS)
+ 
+ ## Shared library options
+-LD_SOOPTIONS= -Wl,-Bsymbolic
++LD_SOOPTIONS=
+ 
+ ## Commands to make a shared library
+ SHLIB.c=	$(CC) $(CFLAGS) $(LDFLAGS) -shared $(LD_SOOPTIONS) -Wl,--enable-auto-import -Wl,--out-implib=$(dir $@)lib$(notdir $(@:$(SO_TARGET_VERSION_MAJOR).$(SO)=))$(IMPORT_LIB_EXT)#M#
+diff --git a/source/config/mh-mingw64 b/source/config/mh-mingw64
+index afe2c0e..ca0b8d4 100644
+--- a/source/config/mh-mingw64
++++ b/source/config/mh-mingw64
+@@ -57,7 +57,7 @@ LINK.c=       $(CXX) $(CXXFLAGS) $(LDFLAGS)
+ #LINK.cc=      $(CXX) $(CXXFLAGS) $(LDFLAGS)
+ 
+ ## Shared library options
+-LD_SOOPTIONS= -Wl,-Bsymbolic
++LD_SOOPTIONS=
+ 
+ ## Commands to make a shared library
+ SHLIB.c=	$(CC) $(CFLAGS) $(LDFLAGS) -shared $(LD_SOOPTIONS) -Wl,--enable-auto-import -Wl,--out-implib=$(dir $@)lib$(notdir $(@:$(SO_TARGET_VERSION_MAJOR).$(SO)=))$(IMPORT_LIB_EXT)#M#

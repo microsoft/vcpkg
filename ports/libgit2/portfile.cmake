@@ -4,8 +4,8 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgit2/libgit2
-    REF 0ced29612dacb67eefe0c562a5c1d3aab21cce96#version 1.0.1
-    SHA512 477e7309682d470965ef85c84f57b647526e1d2cd9ece1fd4f5f4e03e586280651ee40aafadb5b66940cfbd80816f205aa54886f457ca8fd795313137e015102
+    REF 7f4fa178629d559c037a1f72f79f79af9c1ef8ce#version 1.1.0
+    SHA512 2fdbbb263fe71dc6d04b64c2967e7acff1a5b6102e62d69c9a7ea1b6777ab74a1625e798438ea239d8b489648a9335833f937f893f73a66e16c658eae453ab62
     HEAD_REF master
 )
 

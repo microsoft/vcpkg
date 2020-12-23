@@ -1,8 +1,8 @@
 #pragma once
 
+#include <vcpkg/base/fwd/lineinfo.h>
 #include <vcpkg/base/fwd/optional.h>
 
-#include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/pragmas.h>
 
 #include <type_traits>
@@ -30,7 +30,7 @@ namespace vcpkg
             constexpr OptionalStorage(const T& t) : m_is_present(true), m_t(t) { }
             constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) { }
             template<class U, class = std::enable_if_t<!std::is_reference<U>::value>>
-            constexpr explicit OptionalStorage(Optional<U>&& t) : m_is_present(false), m_inactive()
+            explicit OptionalStorage(Optional<U>&& t) : m_is_present(false), m_inactive()
             {
                 if (auto p = t.get())
                 {
@@ -39,7 +39,7 @@ namespace vcpkg
                 }
             }
             template<class U>
-            constexpr explicit OptionalStorage(const Optional<U>& t) : m_is_present(false), m_inactive()
+            explicit OptionalStorage(const Optional<U>& t) : m_is_present(false), m_inactive()
             {
                 if (auto p = t.get())
                 {
