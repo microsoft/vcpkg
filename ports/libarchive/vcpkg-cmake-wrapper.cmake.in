@@ -1,3 +1,5 @@
+_find_package(${ARGS})
+
 include(CMakeFindDependencyMacro)
 
 if(@ENABLE_ZLIB@)
@@ -25,8 +27,6 @@ if(@ENABLE_LZO@)
     find_library(LZO_LIBRARY_DEBUG NAMES lzo2d lzo2 NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH)
     find_library(LZO_LIBRARY_RELEASE NAMES lzo2 NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH)
 endif()
-
-_find_package(${ARGS})
 
 if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
     if(@ENABLE_ZLIB@)
