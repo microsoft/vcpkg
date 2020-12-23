@@ -15,7 +15,7 @@ vcpkg_check_features(
 )
 
 if ("cuda" IN_LIST FEATURES)
-  list(APPEND GLOO_FEATURE_OPTIONS USE_CUDA=1 USE_NCCL=1)
+  list(APPEND GLOO_FEATURE_OPTIONS "-DUSE_CUDA=1 -DUSE_NCCL=1")
 endif()
 
 vcpkg_configure_cmake(
