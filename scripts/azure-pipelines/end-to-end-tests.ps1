@@ -34,7 +34,7 @@ $ErrorActionPreference = "Stop"
 
 $AllTests = Get-ChildItem $PSScriptRoot/end-to-end-tests-dir/*.ps1
 if ($Filter -ne $Null) {
-    $AllTests = $AllTests | ? { $_ -match $Filter }
+    $AllTests = $AllTests | ? { $_.Name -match $Filter }
 }
 $n = 1
 $m = $AllTests.Count
