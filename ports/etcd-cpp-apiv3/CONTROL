@@ -1,0 +1,6 @@
+Source: etcd-cpp-apiv3
+Version: etcd-cpp-apiv3-7e280ec
+Homepage: https://github.com/etcd-cpp-apiv3/etcd-cpp-apiv3
+Description: The etcd-cpp-apiv3 is a C++ API for etcd's v3 client API, i.e., ETCDCTL_API=3.
+Build-Depends: boost-system, boost-thread, boost-locale, boost-random,
+               cpprestsdk, grpc, openssl, protobuf
