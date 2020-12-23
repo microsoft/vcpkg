@@ -64,7 +64,7 @@ vcpkg_configure_cmake(
     -Donnxruntime_USE_JEMALLOC=OFF
     -Donnxruntime_USE_MIMALLOC_STL_ALLOCATOR=OFF
     -Donnxruntime_USE_MIMALLOC_ARENA_ALLOCATOR=OFF
-    -Donnxruntime_BUILD_SHARED_LIB=ON
+    -Donnxruntime_BUILD_SHARED_LIB=OFF
     -Donnxruntime_USE_EIGEN_FOR_BLAS=ON
     -Donnxruntime_USE_OPENBLAS=OFF
     -Donnxruntime_USE_DNNL=OFF
@@ -110,7 +110,7 @@ vcpkg_configure_cmake(
     -Donnxruntime_PYBIND_EXPORT_OPSCHEMA=OFF
     -Donnxruntime_ENABLE_MEMLEAK_CHECKER=OFF
     -DCMAKE_BUILD_TYPE=RelWithDebInfo
-    -DONNX_ML=1
+    -DONNX_ML=ON
     -DONNX_NAMESPACE=onnx
     ${FEATURE_OPTIONS}
 )
@@ -129,85 +129,171 @@ elseif(VCPKG_TARGET_IS_LINUX) # !Winddows
   set(SYM_FILE_EXTN "*.pdb")
 endif()
 
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug") 
-  # copy the onnxruntime_*.libs
-  message(STATUS "Copying from ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
-  file(GLOB DEBUG_LIBS LIST_DIRECTORIES false ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${STATIC_LIB_EXTN})
-  file(COPY
-      ${DEBUG_LIBS}
-      DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-      )
-  # copy their corresponding *.pdbs
-  if(VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB DEBUG_LIB_PDBS LIST_DIRECTORIES false ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${SYM_FILE_EXTN})
-    file(COPY
-        ${DEBUG_LIB_PDBS}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-        )
-  endif()
-endif()
-
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-  # copy the onnxruntime_*.libs
-  message(STATUS "Copying from ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
-  file(GLOB DEBUG_LIBS LIST_DIRECTORIES false ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${STATIC_LIB_EXTN})
-  file(COPY
-      ${DEBUG_LIBS}
-      DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-      )
-
-  # copy their corresponding *.pdbs
-  if(VCPKG_TARGET_IS_WINDOWS)
-    file(GLOB DEBUG_LIB_PDBS LIST_DIRECTORIES false ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SYM_FILE_EXTN})
-    file(COPY
-        ${DEBUG_LIB_PDBS}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-        )
-  endif()
-endif()
-
-# copy library from external modules
+# Copy all libraries and PDBs
 foreach(BUILD_TYPE rel dbg)
   if(${BUILD_TYPE} STREQUAL "dbg")
-    set(Destination "${CURRENT_PACKAGES_DIR}/debug/lib")
+    set(SRCBASEDIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+    set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/debug/lib")
   else()
-    set(Destination "${CURRENT_PACKAGES_DIR}/lib")
+    set(SRCBASEDIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/lib")
   endif()
-  foreach(EXTERNAL_MODULE flatbuffers onnx protobuf re2)
-    message(STATUS "Copying from ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/external/${EXTERNAL_MODULE}")
-    file(GLOB_RECURSE EXT_LIBS LIST_DIRECTORIES false ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/external/${EXTERNAL_MODULE}/${STATIC_LIB_EXTN})
-    file(COPY
-        ${EXT_LIBS}
-        DESTINATION ${Destination}
-        )
-    file(GLOB_RECURSE EXT_LIB_PDBS LIST_DIRECTORIES false ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/external/${EXTERNAL_MODULE}/${SYM_FILE_EXTN})
-    file(COPY
-        ${EXT_LIB_PDBS}
-        DESTINATION ${Destination}
-        )
-  endforeach () # for all externam modules
-endforeach() # for different linkage types
+
+  file(GLOB_RECURSE ORT_LIBS LIST_DIRECTORIES false ${SRCBASEDIR}/${STATIC_LIB_EXTN})
+  file(COPY ${ORT_LIBS} DESTINATION ${DESTBASEDIR})
+
+  file(GLOB_RECURSE ORT_LIB_PDBS LIST_DIRECTORIES false ${SRCBASEDIR}/${SYM_FILE_EXTN})
+  file(COPY ${ORT_LIB_PDBS} DESTINATION ${DESTBASEDIR})
+endforeach()
 
 message(STATUS "Copy libs done, copying additional header files!")
+
 # Copy additional header files
-# 1. Copy missing orttraining header files
 # TODO: Make changes in ORT souce repo to put all training header files under top level include dir
-file(GLOB_RECURSE TRAINING_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/orttraining/*.h)
-file(COPY ${SOURCE_PATH}/orttraining/orttraining/core DESTINATION ${CURRENT_PACKAGES_DIR}/include/orttraining FOLLOW_SYMLINK_CHAIN FILES_MATCHING PATTERN "*.h")
-# file(INSTALL ${SOURCE_PATH}/orttraining/orttraining/models DESTINATION ${CURRENT_PACKAGES_DIR}/include/orttraining FOLLOW_SYMLINK_CHAIN PATTERN "*.h")
 
-# 2. copy headers from external modules
-file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/onnx/onnx/*.h)
-file(COPY ${EXT_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/onnx/onnx)
+# 1. Copy missing external header files from build output folders. These are generaterd by build
+# e.g. onnx-data.pb.h
+# Trailing '/' is significant. Without it copying 'mydir' folder would be installed under Destination.
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+  set(SRCBASEDIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/external")
+  set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/onnxruntime/external")
+  foreach(MOD onnx/onnx/)   # Placeholder to put more directories ,if needed!.
+    file(COPY ${SRCBASEDIR}/${MOD} DESTINATION ${DESTBASEDIR}/${MOD}/ FOLLOW_SYMLINK_CHAIN FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN ".inc")
+  endforeach() 
+endif()
 
-file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/SafeInt/*.h)
-file(COPY ${EXT_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/SafeInt)
+# 2. Copy header files from source core directories
+# Todo: Check if we need to copy this: core/providers/nuphar/compiler/x86/op_ir_creator/all_ops.h
+set(SRCBASEDIR "${SOURCE_PATH}/onnxruntime/core")
+set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/onnxruntime/core")
+foreach(MOD 
+      common/ 
+      framework/
+      graph/
+      platform/
+      optimizer/
+      providers/
+      session/
+      util/
+      )
+  file(COPY 
+    ${SRCBASEDIR}/${MOD} 
+    DESTINATION ${DESTBASEDIR}/${MOD} 
+    FOLLOW_SYMLINK_CHAIN 
+    FILES_MATCHING
+    PATTERN "*.h" 
+    PATTERN "*.hpp" 
+    PATTERN ".inc"
+    PATTERN "cuda/atomic" EXCLUDE
+    PATTERN "cuda/cu_inc*" EXCLUDE
+    PATTERN "cuda/multi_tensor" EXCLUDE
+    PATTERN "nuphar/compiler/x86/op_ir_creator" EXCLUDE
+    PATTERN "nuphar/scripts" EXCLUDE
+    PATTERN "rocm/atomic" EXCLUDE
+    PATTERN "rocm/cu_inc" EXCLUDE
+    )
+endforeach()
 
-file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/protobuf/src/*.h)
-file(COPY ${EXT_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/protobuf/src)
+# 3. Copy header files from top level include directories
+# Todo: Investigate why these headers files are not copied by vcpkg 
+set(SRCBASEDIR "${SOURCE_PATH}/include/onnxruntime/core/")
+set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/onnxruntime/core/")
+foreach(MOD
+      platform
+      graph
+      session
+      optimizer
+      providers
+      )
+  file(COPY ${SRCBASEDIR}/${MOD}/ DESTINATION ${DESTBASEDIR}/${MOD} FOLLOW_SYMLINK_CHAIN FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN ".inc")
+endforeach()
 
-file(GLOB_RECURSE EXT_HEADERS LIST_DIRECTORIES false ${SOURCE_PATH}/cmake/external/nsync/public/*.h)
-file(COPY ${EXT_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/nsync/public)
+# 4. Copy external header files from source folders
+set(SRCBASEDIR "${SOURCE_PATH}/cmake/external")
+set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/onnxruntime/external")
+foreach(MOD 
+      optional-lite/include/nonstd/
+      optional-lite/test/
+      onnx/onnx/common/
+      onnx/onnx/optimizer/
+      onnx/onnx/shape_inference/
+      onnx/onnx/version_converter/
+      onnx/third_party/benchmark/include/
+      onnx/third_party/benchmark/src/ 
+      onnx/third_party/benchmark/test/ 
+      onnx/third_party/pybind11/include/      
+      SafeInt/SafeInt/Archive/releases/2/
+      SafeInt/SafeInt/Archive/releases/6/
+      protobuf/src/google/
+      nsync/public/
+    )
+  file(COPY
+    ${SRCBASEDIR}/${MOD}
+    DESTINATION ${DESTBASEDIR}/${MOD} 
+    FOLLOW_SYMLINK_CHAIN
+    FILES_MATCHING 
+    PATTERN "*.h"
+    PATTERN "*.hpp" 
+    PATTERN ".inc"
+    PATTERN "protobuf/util/internal/testdata" EXCLUDE # protobuf/src/google/ subfolders to skip
+    PATTERN "protobuf/testdata" EXCLUDE
+    )
+endforeach()
+
+# Now copy files from folders that does need to be copied recursively
+foreach(MOD 
+    SafeInt/SafeInt/Test
+    onnx/onnx
+    onnx/onnx/defs
+    onnx/onnx/defs/tensor
+    onnx/third_party/pybind11/tests
+    )
+  set(EXT_ADDL_HDRS "")
+  file(GLOB EXT_ADDL_HDRS LIST_DIRECTORIES false ${SRCBASEDIR}/${MOD}/*.h )
+  file(COPY ${EXT_ADDL_HDRS} DESTINATION ${DESTBASEDIR}/${MOD})
+endforeach()
+
+# 4. Copy training header files from sources directories
+set(SRCBASEDIR "${SOURCE_PATH}/orttraining/orttraining")
+set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/orttraining")
+foreach(MOD
+      core/
+      models/mnist/
+      models/runner/ 
+      training_ops/
+      )
+  file(COPY 
+    ${SRCBASEDIR}/${MOD} 
+    DESTINATION ${DESTBASEDIR}/${MOD} 
+    FOLLOW_SYMLINK_CHAIN 
+    FILES_MATCHING 
+    PATTERN "*.h" 
+    PATTERN "*.hpp" 
+    PATTERN ".inc"
+    PATTERN "rocm/activation" EXCLUDE
+    PATTERN "rocm/collective" EXCLUDE
+    PATTERN "rocm/loss" EXCLUDE
+    PATTERN "rocm/math" EXCLUDE
+    PATTERN "rocm/optimizer" EXCLUDE
+    PATTERN "rocm/reduction" EXCLUDE
+    )
+endforeach()
+
+# 5. Copy Test header files from sources directories
+set(SRCBASEDIR "${SOURCE_PATH}/onnxruntime/test")
+set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/onnxruntime/test")
+foreach(MOD 
+      util/include/ 
+      framework/
+      )
+  file(COPY
+    ${SRCBASEDIR}/${MOD} 
+    DESTINATION ${DESTBASEDIR}/${MOD} 
+    FOLLOW_SYMLINK_CHAIN 
+    FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN ".inc"
+    PATTERN "cuda" EXCLUDE
+    )
+endforeach()
 
 # Copy onnxruntime_config.h file
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug") 
