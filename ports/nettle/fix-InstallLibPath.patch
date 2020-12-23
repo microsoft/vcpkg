@@ -1,8 +1,8 @@
 diff --git a/configure.ac b/configure.ac
-index 3547cae..e13a5bf 100644
+index 90ea1ea..58cfe88 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -366,25 +366,25 @@ if test "x$ABI" != xstandard ; then
+@@ -354,25 +354,25 @@ if test "x$ABI" != xstandard ; then
  	else
  	  # The dash builtin pwd tries to be "helpful" and remember
  	  # symlink names. Use -P option, and hope it's portable enough.
