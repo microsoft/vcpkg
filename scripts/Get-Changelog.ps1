@@ -233,7 +233,7 @@ function Select-Version {
             switch -Wildcard ($m.operation + $m.field) {
                 'Version*' { $V.Begin = $V.End = $m.version }
                 '-Version*' { $V.Begin = ($V.Begin, $m.version | Measure-Object -Minimum).Minimum }
-                '+Version*' { $V.End = ($V.End, $m.version | Measure-Object -Minimum).Minimum }
+                '+Version*' { $V.End = ($V.End, $m.version | Measure-Object -Maximum).Maximum }
                 'Port-Version' { $V.BeginPort = $V.EndPort = $m.version }
                 '-Port-Version' { $V.BeginPort = ($V.BeginPort, $m.version | Measure-Object -Minimum).Minimum }
                 '+Port-Version' { $V.EndPort = ($V.EndPort, $m.version | Measure-Object -Maximum).Maximum }
@@ -358,7 +358,7 @@ $(-join ($UpdatedInfrastructure | ForEach-Object {
 $(-join ($NewPorts | ForEach-Object {
     "|[{0}]({1})" -f $_.Port, $_.Pulls[0].html_url
     
-    if ($_.Pulls.Length -gt 1 ) {
+    if ($_.Pulls.Length -gt 1) {
         '<sup>'
         $_.Pulls[1..($_.Pulls.Length - 1)] | ForEach-Object {
             "[#{0}]({1})" -f $_.number, $_.html_url
