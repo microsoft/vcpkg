@@ -48,15 +48,17 @@ Next, install prerequisites and grab the current base box with:
 ```sh
 $ cd vcpkg/scripts/azure-pipelines/osx
 $ ./Install-Prerequisites.ps1 -Force
-$ ./Get-InternalBaseBox.ps1 -FileshareMachine vcpkgmm-01.guest.corp.microsoft.com
+$ ./Get-InternalBaseBox.ps1 -FileshareMachine vcpkgmm-01.guest.corp.microsoft.com -BoxVersion 2020-09-28
 ```
 
-Getting the base box will fail due to missing kernel modules for sshfs and VirtualBox. Log in to the
-machine, open System Preferences > Security & Privacy > General, and allow the kernel extensions for
-VirtualBox and sshfs to load. Then, again:
+... where -BoxVersion is the version you want to use.
+
+Getting the base box will fail due to missing kernel modules for osxfuse, sshfs, and/or VirtualBox.
+Log in to the machine, open System Preferences > Security & Privacy > General, and allow the kernel
+extensions for VirtualBox and sshfs to load. Then, again:
 
 ```sh
-$ ./Get-InternalBaseBox.ps1 -FileshareMachine vcpkgmm-01.guest.corp.microsoft.com
+$ ./Get-InternalBaseBox.ps1 -FileshareMachine vcpkgmm-01.guest.corp.microsoft.com -BoxVersion 2020-09-28
 ```
 
 Replace `XX` with the number of
@@ -68,7 +70,7 @@ for the physical machine; i.e., vcpkgmm-04 would use 04.
 $ ./Setup-VagrantMachines.ps1 \
   -MachineId XX \
   -DevopsPat '<get this from azure devops; it needs agent pool read and manage access>' \
-  -Date <this is the date of the pool; 2020-12-22 at time of writing>
+  -Date <this is the date of the pool; 2020-09-28 at time of writing>
 $ cd ~/vagrant/vcpkg-eg-mac
 $ vagrant up
 ```
