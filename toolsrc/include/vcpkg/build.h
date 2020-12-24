@@ -213,6 +213,7 @@ namespace vcpkg::Build
         Optional<ConfigurationType> build_type;
         Optional<std::string> public_abi_override;
         std::vector<std::string> passthrough_env_vars;
+        std::vector<std::string> passthrough_env_vars_tracked;
 
         fs::path toolchain_file() const;
         bool using_vcvars() const;

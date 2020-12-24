@@ -23,6 +23,7 @@ namespace vcpkg::PlatformExpression
         wasm32,
 
         windows,
+        mingw,
         linux,
         osx,
         uwp,
@@ -41,6 +42,7 @@ namespace vcpkg::PlatformExpression
             {"arm64", Identifier::arm64},
             {"wasm32", Identifier::wasm32},
             {"windows", Identifier::windows},
+            {"mingw", Identifier::mingw},
             {"linux", Identifier::linux},
             {"osx", Identifier::osx},
             {"uwp", Identifier::uwp},
@@ -382,6 +384,7 @@ namespace vcpkg::PlatformExpression
                         case Identifier::windows:
                             return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "") ||
                                    true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
+                        case Identifier::mingw: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "MinGW");
                         case Identifier::linux: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Linux");
                         case Identifier::osx: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Darwin");
                         case Identifier::uwp:

@@ -18,6 +18,7 @@ vcpkg_from_github(
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
+      0005-fix-vtk9.patch
       0009-fix-uwp.patch
 )
 
@@ -44,11 +45,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "qt"       WITH_QT
  "sfm"      BUILD_opencv_sfm
  "tiff"     WITH_TIFF
+ "vtk"      WITH_VTK
  "webp"     WITH_WEBP
  "world"    BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "dnn", "ipp", ovis", "tbb", and "vtk".
+# Cannot use vcpkg_check_features() for "dnn", "ipp", ovis", "tbb"
 # As the respective value of their variables can be unset conditionally.
 set(BUILD_opencv_dnn OFF)
 if("dnn" IN_LIST FEATURES)
@@ -72,11 +74,6 @@ endif()
 set(WITH_TBB OFF)
 if("tbb" IN_LIST FEATURES)
   set(WITH_TBB ON)
-endif()
-
-set(WITH_VTK OFF)
-if("vtk" IN_LIST FEATURES)
-  set(WITH_VTK ON)
 endif()
 
 if("dnn" IN_LIST FEATURES)
@@ -214,11 +211,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(WITH_TBB OFF)
   endif()
 
-  if (WITH_VTK)
-    message(WARNING "VTK is currently unsupported in this build configuration, turning it off")
-    set(WITH_VTK OFF)
-  endif()
-
   if (VCPKG_TARGET_IS_WINDOWS AND BUILD_opencv_ovis)
     message(WARNING "OVIS is currently unsupported in this build configuration, turning it off")
     set(BUILD_opencv_ovis OFF)
@@ -258,6 +250,7 @@ vcpkg_configure_cmake(
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
+        -DOPENCV_FFMPEG_SKIP_BUILD_CHECK=TRUE
         -DCMAKE_DEBUG_POSTFIX=d
         -DOPENCV_DLLVERSION=
         -DOPENCV_DEBUG_POSTFIX=d
@@ -320,7 +313,6 @@ vcpkg_configure_cmake(
         -DWITH_PROTOBUF=${BUILD_opencv_flann}
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_TBB=${WITH_TBB}
-        -DWITH_VTK=${WITH_VTK}
         -DWITH_OPENJPEG=OFF
         ###### WITH PROPERTIES explicitly disabled, they have problems with libraries if already installed by user and that are "involuntarily" found during install
         -DWITH_LAPACK=OFF
@@ -339,17 +331,16 @@ vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
   file(READ ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake OPENCV_MODULES)
-  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
-                 "set(CMAKE_IMPORT_FILE_VERSION 1)
-find_package(Protobuf REQUIRED)
-if(Protobuf_FOUND)
+  set(DEPS_STRING "include(CMakeFindDependencyMacro)
+find_dependency(protobuf CONFIG)
+if(protobuf_FOUND)
   if(TARGET protobuf::libprotobuf)
-    add_library(libprotobuf INTERFACE IMPORTED)
+    add_library (libprotobuf INTERFACE IMPORTED)
     set_target_properties(libprotobuf PROPERTIES
       INTERFACE_LINK_LIBRARIES protobuf::libprotobuf
     )
   else()
-    add_library(libprotobuf UNKNOWN IMPORTED)
+    add_library (libprotobuf UNKNOWN IMPORTED)
     set_target_properties(libprotobuf PROPERTIES
       IMPORTED_LOCATION \"${Protobuf_LIBRARY}\"
       INTERFACE_INCLUDE_DIRECTORIES \"${Protobuf_INCLUDE_DIR}\"
@@ -357,25 +348,64 @@ if(Protobuf_FOUND)
     )
   endif()
 endif()
-find_package(CUDA QUIET)
-find_package(Threads QUIET)
-find_package(TIFF QUIET)
-find_package(HDF5 QUIET)
-find_package(Freetype QUIET)
-find_package(Ogre QUIET)
-find_package(gflags QUIET)
-find_package(Ceres QUIET)
-find_package(ade QUIET)
-find_package(VTK QUIET)
-find_package(OpenMP QUIET)
-find_package(Tesseract QUIET)
-find_package(OpenEXR QUIET)
+find_dependency(Threads)")
+  if("tiff" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(TIFF)")
+  endif()
+  if("cuda" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
+  endif()
+  if(BUILD_opencv_quality)
+    string(APPEND DEPS_STRING "
+# C language is required for try_compile tests in FindHDF5
+enable_language(C)
+find_dependency(HDF5)
+find_dependency(Tesseract)")
+  endif()
+  if(WITH_TBB)
+    string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
+  endif()
+  if("vtk" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(VTK)")
+  endif()
+  if("sfm" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(gflags CONFIG)\nfind_dependency(Ceres CONFIG)")
+  endif()
+  if("eigen" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
+  endif()
+  if("openexr" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
+  endif()
+  if(WITH_OPENMP)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenMP CONFIG)")
+  endif()
+  if(BUILD_opencv_ovis)
+    string(APPEND DEPS_STRING "\nfind_dependency(Ogre)\nfind_dependency(Freetype)")
+  endif()
+  if("qt" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
+find_dependency(Qt5 COMPONENTS OpenGL Concurrent Test)")
+  endif()
+  if("ade" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(ade)")
+  endif()
+  if("gdcm" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(GDCM)")
+  endif()
 
-find_package(Qt5 COMPONENTS OpenGL Concurrent Test QUIET)
-find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
+  string(REPLACE "set(CMAKE_IMPORT_FILE_VERSION 1)"
+                 "set(CMAKE_IMPORT_FILE_VERSION 1)\n${DEPS_STRING}" OPENCV_MODULES "${OPENCV_MODULES}")
+
+  if(WITH_OPENMP)
+    string(REPLACE "set_target_properties(opencv_core PROPERTIES
+  INTERFACE_LINK_LIBRARIES \""
+                   "set_target_properties(opencv_core PROPERTIES
+  INTERFACE_LINK_LIBRARIES \"\$<LINK_ONLY:OpenMP::OpenMP_CXX>;" OPENCV_MODULES "${OPENCV_MODULES}")
+  endif()
 
   if(BUILD_opencv_ovis)
     string(REPLACE "OgreGLSupportStatic"
@@ -383,6 +413,7 @@ find_package(GDCM QUIET)" OPENCV_MODULES "${OPENCV_MODULES}")
   endif()
 
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+
 
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
