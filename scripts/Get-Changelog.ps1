@@ -24,19 +24,20 @@ using namespace System.Collections.Generic
 .OUTPUTS
    A "CHANGELOG.md" file in the working directory.
 #>
+[CmdletBinding(PositionalBinding=$False)]
 Param (
     # The begin date range (inclusive)
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory=$True)]
     [ValidateScript({$_ -le (Get-Date)})]
     [DateTime]$StartDate,
-    
+
     # The end date range (exclusive)
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory=$True)]
     [ValidateScript({$_ -le (Get-Date)})]
     [DateTime]$EndDate,
-    
+
     # GitHub credentials (username and PAT)
-    [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
+    [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
     [Credential()]
     [PSCredential]$Credentials
 )
@@ -69,7 +70,7 @@ function Get-MergedPullRequests {
     }
     Process {
         $page = 1
-        while ($true) {
+        while ($True) {
             $splat = @{
                 Uri = $PullsUrl + "?page=$page"
                 Body = $Body
@@ -98,8 +99,8 @@ function Get-MergedPullRequests {
 
 
 class PRFileMap {
-    [PSCustomObject]$Pull
-    [PSCustomObject[]]$Files
+    [Object]$Pull
+    [Object[]]$Files
 }
 
 
@@ -107,7 +108,7 @@ function Get-PullRequestFileMap {
     [CmdletBinding()]
     [OutputType([PRFileMap])]
     Param (
-        [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
+        [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
         [Object]$Pull
     )
     Process {
@@ -146,7 +147,7 @@ function Select-Documentation {
     [CmdletBinding()]
     [OutputType([DocumentationUpdate])]
     Param (
-        [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
+        [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
         [PRFileMap]$PRFileMap
     )
     Begin {
@@ -184,7 +185,7 @@ function Select-InfrastructurePullRequests {
     [CmdletBinding()]
     [OutputType([Object])]
     Param (
-        [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
+        [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
         [PRFileMap]$PRFileMap
     )
     Process {
@@ -209,7 +210,7 @@ function Select-Version {
     [CmdletBinding()]
     [OutputType([Version])]
     Param (
-        [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
+        [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
         [Object]$VersionFile
     )
     Begin {
@@ -264,7 +265,7 @@ function Select-UpdatedPorts {
     [CmdletBinding()]
     [OutputType([PortUpdate])]
     Param (
-        [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
+        [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
         [PRFileMap]$PRFileMap
     )
     Begin {
@@ -357,7 +358,7 @@ $(-join ($UpdatedInfrastructure | ForEach-Object {
 |---|---|
 $(-join ($NewPorts | ForEach-Object {
     "|[{0}]({1})" -f $_.Port, $_.Pulls[0].html_url
-    
+
     if ($_.Pulls.Length -gt 1) {
         '<sup>'
         $_.Pulls[1..($_.Pulls.Length - 1)] | ForEach-Object {
