@@ -1,6 +1,7 @@
 set(VCPKG_LIBRARY_LINKAGE "dynamic")
 
-message(WARNING "Download ${PORT} may take a few minutes, It depends on your network speed and connection.")
+message(WARNING "Download ${PORT} may take a several hours to download!!!")
+message(WARNING "Port ${PORT} source resides NGA US Government military ftp server with an extremely slow connection.")
 
 # We specify the Linux URL, but the only difference between the Windows/Linux packages are the included libraries
 # which we re-build anyway.  There is no source only package provided or it would be preferred (and smaller).
