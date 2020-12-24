@@ -1,11 +1,11 @@
-#include "pch.h"
-
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg
 {
@@ -173,12 +173,11 @@ namespace vcpkg
     {
         std::map<PackageSpec, InstalledPackageView> ipv_map;
 
-        std::vector<InstalledPackageView> installed_packages;
         for (auto&& pgh : status_db)
         {
             if (!pgh->is_installed()) continue;
             auto& ipv = ipv_map[pgh->package.spec];
-            if (pgh->package.feature.empty())
+            if (!pgh->package.is_feature())
             {
                 ipv.core = pgh.get();
             }
@@ -206,7 +205,7 @@ namespace vcpkg
 
         for (const std::unique_ptr<StatusParagraph>& pgh : status_db)
         {
-            if (!pgh->is_installed() || !pgh->package.feature.empty())
+            if (!pgh->is_installed() || pgh->package.is_feature())
             {
                 continue;
             }

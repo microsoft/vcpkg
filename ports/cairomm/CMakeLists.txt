@@ -15,6 +15,7 @@ string(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" CAIROMM_MICRO_VERSION ${
 message(STATUS "Ciaromm version: ${CAIROMM_MAJOR_VERSION}.${CAIROMM_MINOR_VERSION}.${CAIROMM_MICRO_VERSION}")
 
 find_package(Cairo REQUIRED)
+find_package(Freetype REQUIRED)
 find_package(SigC++ REQUIRED)
 
 #configure
@@ -87,7 +88,7 @@ set(cairomm_rc
     ${CMAKE_BINARY_DIR}/cairomm.rc)
 
 add_library(cairomm-1.0 ${cairomm_cc} ${cairomm_rc})
-target_link_libraries(cairomm-1.0 ${CAIRO_LIBRARY} ${SIGC++_LIBRARY} )
+target_link_libraries(cairomm-1.0 ${CAIRO_LIBRARY} ${SIGC++_LIBRARY} Freetype::Freetype)
 target_include_directories(cairomm-1.0 PRIVATE
     ${CAIRO_INCLUDE_DIR}
     ${SIGC++_INCLUDE_DIR}

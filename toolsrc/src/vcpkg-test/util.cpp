@@ -1,14 +1,17 @@
+#include <vcpkg/base/system_headers.h>
+
 #include <catch2/catch.hpp>
-#include <vcpkg-test/util.h>
 
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/statusparagraph.h>
+
+#include <vcpkg-test/util.h>
 
 // used to get the implementation specific compiler flags (i.e., __cpp_lib_filesystem)
 #include <ciso646>
-
 #include <iostream>
 #include <memory>
 
@@ -20,15 +23,13 @@
 #define FILESYSTEM_SYMLINK_UNIX 1
 #define FILESYSTEM_SYMLINK_NONE 2
 
-#if defined(__cpp_lib_filesystem)
+#if VCPKG_USE_STD_FILESYSTEM
 
 #define FILESYSTEM_SYMLINK FILESYSTEM_SYMLINK_STD
-#include <filesystem> // required for filesystem::create_{directory_}symlink
 
 #elif !defined(_MSC_VER)
 
 #define FILESYSTEM_SYMLINK FILESYSTEM_SYMLINK_UNIX
-#include <unistd.h>
 
 #else
 
@@ -38,6 +39,12 @@
 
 namespace vcpkg::Test
 {
+    const Triplet X86_WINDOWS = Triplet::from_canonical_name("x86-windows");
+    const Triplet X64_WINDOWS = Triplet::from_canonical_name("x64-windows");
+    const Triplet X86_UWP = Triplet::from_canonical_name("x86-uwp");
+    const Triplet ARM_UWP = Triplet::from_canonical_name("arm-uwp");
+    const Triplet X64_ANDROID = Triplet::from_canonical_name("x64-android");
+
     std::unique_ptr<SourceControlFile> make_control_file(
         const char* name,
         const char* depends,
@@ -101,8 +108,10 @@ namespace vcpkg::Test
 
     PackageSpec PackageSpecMap::emplace(vcpkg::SourceControlFileLocation&& scfl)
     {
-        map.emplace(scfl.source_control_file->core_paragraph->name, std::move(scfl));
-        return {scfl.source_control_file->core_paragraph->name, triplet};
+        const auto& name = scfl.source_control_file->core_paragraph->name;
+        REQUIRE(map.find(name) == map.end());
+        map.emplace(name, std::move(scfl));
+        return {name, triplet};
     }
 
     static AllowSymlinks internal_can_create_symlinks() noexcept
@@ -114,19 +123,21 @@ namespace vcpkg::Test
 #elif !defined(_WIN32) // FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_STD
         return AllowSymlinks::Yes;
 #else
-        constexpr static const wchar_t regkey[] =
-            LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock)";
+        constexpr static const wchar_t regkey[] = LR"(SOFTWARE\Microsoft\Windows\CurrentVersion\AppModelUnlock)";
         constexpr static const wchar_t regkey_member[] = LR"(AllowDevelopmentWithoutDevLicense)";
 
         DWORD data;
         DWORD dataSize = sizeof(data);
-        const auto status = RegGetValueW(
-            HKEY_LOCAL_MACHINE, regkey, regkey_member, RRF_RT_DWORD, nullptr, &data, &dataSize);
+        const auto status =
+            RegGetValueW(HKEY_LOCAL_MACHINE, regkey, regkey_member, RRF_RT_DWORD, nullptr, &data, &dataSize);
 
-        if (status == ERROR_SUCCESS && data == 1) {
+        if (status == ERROR_SUCCESS && data == 1)
+        {
             return AllowSymlinks::Yes;
-        } else {
-            std::clog << "Symlinks are not allowed on this system\n";
+        }
+        else
+        {
+            std::cout << "Symlinks are not allowed on this system\n";
             return AllowSymlinks::No;
         }
 #endif
@@ -155,9 +166,11 @@ namespace vcpkg::Test
 #endif
     }
 
-    const static fs::path BASE_TEMPORARY_DIRECTORY = internal_base_temporary_directory();
-
-    const fs::path& base_temporary_directory() noexcept { return BASE_TEMPORARY_DIRECTORY; }
+    const fs::path& base_temporary_directory() noexcept
+    {
+        const static fs::path BASE_TEMPORARY_DIRECTORY = internal_base_temporary_directory();
+        return BASE_TEMPORARY_DIRECTORY;
+    }
 
 #if FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_NONE
     constexpr char no_filesystem_message[] =
@@ -169,10 +182,10 @@ namespace vcpkg::Test
 #if FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_STD
         if (can_create_symlinks())
         {
-            std::filesystem::path targetp = target.native();
-            std::filesystem::path filep = file.native();
+            fs::path targetp = target.native();
+            fs::path filep = file.native();
 
-            std::filesystem::create_symlink(targetp, filep, ec);
+            fs::stdfs::create_symlink(targetp, filep, ec);
         }
         else
         {
@@ -184,7 +197,9 @@ namespace vcpkg::Test
             ec.assign(errno, std::system_category());
         }
 #else
-        Util::unused(target, file, ec);
+        (void)target;
+        (void)file;
+        (void)ec;
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }
@@ -206,7 +221,9 @@ namespace vcpkg::Test
 #elif FILESYSTEM_SYMLINK == FILESYSTEM_SYMLINK_UNIX
         ::vcpkg::Test::create_symlink(target, file, ec);
 #else
-        Util::unused(target, file, ec);
+        (void)target;
+        (void)file;
+        (void)ec;
         vcpkg::Checks::exit_with_message(VCPKG_LINE_INFO, no_filesystem_message);
 #endif
     }

@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e580b1a..572ea06 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -86,7 +86,7 @@ endif()
+ 
+ # check for SSE flags
+ include("${PCL_SOURCE_DIR}/cmake/pcl_find_sse.cmake")
+-if(PCL_ENABLE_SSE AND "${CMAKE_CXX_FLAGS}" STREQUAL "${CMAKE_CXX_FLAGS_DEFAULT}")
++if(PCL_ENABLE_SSE)
+   PCL_CHECK_FOR_SSE()
+ endif()
+ 

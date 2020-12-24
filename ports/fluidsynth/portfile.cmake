@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FluidSynth/fluidsynth
-    REF 37c9ae2bf431a764032f023b3b2c0c0b86b7c272 #v2.1.0
-    SHA512 1eea26b7d71fd09e748df0989f7df42ab57a74d8d853a835da734120ee1198c0b8d73a39b8640aef8ef0c1788c9a329671de899882601da55ec20ab6ca3ff778
+    REF 2393aef3bd0b4e78084cfe16735d402bc1497edd #v2.1.4
+    SHA512 181914f883982d931dfa4d8c0d0391fb91fbf3448e1eb1ea1541c938d874d7611066e7e289859d83b610a85ba089463e0a93f77db5a6253349f6b328a7373dc6
     HEAD_REF master
     PATCHES
        force-x86-gentables.patch
@@ -16,13 +16,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Copy fluidsynth.exe to tools dir
-file(COPY ${CURRENT_PACKAGES_DIR}/bin/fluidsynth.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/fluidsynth)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/fluidsynth)
+vcpkg_copy_tools(TOOL_NAMES fluidsynth AUTO_CLEAN)
 
 # Remove unnecessary files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/fluidsynth.exe)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/fluidsynth.exe)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

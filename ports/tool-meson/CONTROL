@@ -1,3 +1,4 @@
 Source: tool-meson
-Version: 0.53.2
+Version: 0.56.01
+Homepage: https://github.com/mesonbuild/meson
 Description: Meson build system

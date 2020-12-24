@@ -248,7 +248,7 @@ if (INSTALL_HEADERS)
     install(FILES magick/widget.h DESTINATION include/magick)
     install(FILES magick/xwindow.h DESTINATION include/magick)
  
-    install(FILES Magick++/lib/Magick++.h DESTINATION include/Magick++)
+    install(FILES Magick++/lib/Magick++.h DESTINATION include)
 
     install(FILES Magick++/lib/Magick++/Blob.h DESTINATION include/Magick++)
     install(FILES Magick++/lib/Magick++/BlobRef.h DESTINATION include/Magick++)

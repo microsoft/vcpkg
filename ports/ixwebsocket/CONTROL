@@ -1,5 +1,5 @@
 Source: ixwebsocket
-Version: 9.1.9
+Version: 9.6.2
 Build-Depends: zlib
 Homepage: https://github.com/machinezone/IXWebSocket
 Description: Lightweight WebSocket Client and Server + HTTP Client and Server

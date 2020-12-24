@@ -1,3 +1,5 @@
 Source: boost-vcpkg-helpers
 Version: 7
+Port-Version: 2
 Description: a set of vcpkg-internal scripts used to modularize boost
+Build-Depends: boost-uninstall

@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT) # This is a lie. mosquitto can be build staticlly it just must be implemented by vcpkg 
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eclipse/mosquitto
@@ -7,9 +5,11 @@ vcpkg_from_github(
     SHA512 c192b53f52ce9dc8e02d31acd9e93c00cafbe543b038d7619e6b653f102126872bbd485c94604bca9287e71a5dfe0de2f4d8d3f51cdd5c37f90fd2a6535bd89b
     HEAD_REF master
     PATCHES
-        archive-dest.patch
-        win64-cmake.patch
-        libwebsockets.patch
+        0001-add-archive-destination-to-install.patch
+        0002-win64-support.patch
+        0003-add-find_package-libwebsockets.patch
+        0004-support-static-build.patch
+        0005-add-mach.h-include.patch
 )
 
 vcpkg_configure_cmake(
@@ -43,11 +43,11 @@ file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_rr${VCPKG_TARGET_EXECUTABLE_SU
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/mosquitto_sub${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/mosquitto_sub${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 
-#if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-    endif()
-#endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+endif()
+
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

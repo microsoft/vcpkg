@@ -1,20 +1,16 @@
+# highfive should be updated together with hdf5
+
 vcpkg_fail_port_install(ON_TARGET "UWP")
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://support.hdfgroup.org/ftp/HDF5/releases/hdf5-1.10/hdf5-1.10.5/src/CMake-hdf5-1.10.5.tar.gz"
-    FILENAME "CMake-hdf5-1.10.5.tar.gz"
-    SHA512 a25ea28d7a511f9184d97b5b8cd4c6d52dcdcad2bffd670e24a1c9a6f98b03108014a853553fa2b00d4be7523128b5fd6a4454545e3b17ff8c66fea16a09e962
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF hdf5
-    PATCHES
-        hdf5_config.patch       
-        fix-generate.patch      # removes the build of static targets in shared builds
-        static-targets.patch    # maps the internal static tagets to the shared targets if building as a dynamic library
-        export-private.patch    # exports two additional functions in shared builds to make hl/tools/h5watch build in shared builds. 
+    REPO  HDFGroup/hdf5 
+    REF hdf5-1_12_0
+    SHA512 d84df1ea72dc6fa038440a370e1b1ff523364474e7f214b967edc26d3191b2ef4fe1d9273c4a086a5945f1ad1ab6aa8dbcda495898e7967b2b73fd93dd5071e0
+    HEAD_REF develop
+    PATCHES 
+       hdf5_config.patch
+       szip.patch
 )
 
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
@@ -42,11 +38,17 @@ if(FEATURES MATCHES "tools" AND VCPKG_CRT_LINKAGE STREQUAL "static")
     list(APPEND FEATURE_OPTIONS -DBUILD_STATIC_EXECS=ON)
 endif()
 
+if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND FEATURE_OPTIONS
+                    -DBUILD_STATIC_LIBS=OFF
+                    -DONLY_SHARED_LIBS=ON)
+endif()
+
 find_library(SZIP_RELEASE NAMES libsz libszip szip sz PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(SZIP_DEBUG NAMES libsz libszip szip sz libsz_D libszip_D szip_D sz_D szip_debug PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/hdf5-1.10.5
+    SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
@@ -55,8 +57,7 @@ vcpkg_configure_cmake(
         -DHDF5_BUILD_EXAMPLES=OFF
         -DHDF5_INSTALL_DATA_DIR=share/hdf5/data
         -DHDF5_INSTALL_CMAKE_DIR=share
-        "-DSZIP_LIBRARY_DEBUG:PATH=${SZIP_DEBUG}"
-        "-DSZIP_LIBRARY_RELEASE:PATH=${SZIP_RELEASE}"
+        -DHDF_PACKAGE_NAMESPACE:STRING=hdf5::
 )
 
 vcpkg_install_cmake()

@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6451fcf..4090f42 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -821,20 +821,31 @@ endif()
+ # Only do this on Windows for Cygwin - the files don't make much sense outside
+ # of a UNIX look-alike.
+ if(NOT WIN32 OR CYGWIN OR MINGW)
+-  set(prefix      ${CMAKE_INSTALL_PREFIX})
+-  set(exec_prefix ${CMAKE_INSTALL_PREFIX})
+-  set(libdir      ${CMAKE_INSTALL_FULL_LIBDIR})
+-  set(includedir  ${CMAKE_INSTALL_FULL_INCLUDEDIR})
+-  set(LIBS        "-lz -lm")
+-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpng.pc.in
+-    ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}.pc @ONLY)
+-  create_symlink(libpng.pc FILE ${PNGLIB_NAME}.pc)
+-
+-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpng-config.in
+-    ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}-config @ONLY)
+-  create_symlink(libpng-config FILE ${PNGLIB_NAME}-config)
++  set(LIBS        "-lz")
++  if(NOT APPLE)
++    string(APPEND LIBS " -lm")
++  endif()
++else()
++  if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++    set(LIBS "-lzlibd")
++  else()
++    set(LIBS "-lzlib")
++  endif()
+ endif()
+ 
++set(prefix      ${CMAKE_INSTALL_PREFIX})
++set(exec_prefix ${CMAKE_INSTALL_PREFIX})
++set(libdir      ${CMAKE_INSTALL_FULL_LIBDIR})
++set(includedir  ${CMAKE_INSTALL_FULL_INCLUDEDIR})
++
++configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpng.pc.in
++  ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}.pc @ONLY)
++create_symlink(libpng.pc FILE ${PNGLIB_NAME}.pc)
++
++configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libpng-config.in
++  ${CMAKE_CURRENT_BINARY_DIR}/${PNGLIB_NAME}-config @ONLY)
++create_symlink(libpng-config FILE ${PNGLIB_NAME}-config)
++
+ # SET UP LINKS
+ if(PNG_SHARED)
+   set_target_properties(png PROPERTIES

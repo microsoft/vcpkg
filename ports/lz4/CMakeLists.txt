@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(lz4 C)
 
-if(BUILD_SHARED_LIBS)
+if(MSVC AND BUILD_SHARED_LIBS)
     add_definitions(-DLZ4_DLL_EXPORT)
 endif()
 add_definitions(-DXXH_NAMESPACE=LZ4_)
@@ -40,7 +40,7 @@ list(REMOVE_ITEM lz4h "${CMAKE_CURRENT_LIST_DIR}/lib/xxhash.h")
 INSTALL(FILES ${lz4h} DESTINATION "${INSTALL_INCLUDE_DIR}")
 
 install(EXPORT lz4Config
-  FILE lz4Config.cmake
+  FILE lz4-config.cmake
   NAMESPACE lz4::
   DESTINATION "${INSTALL_CMAKE_DIR}"
 )

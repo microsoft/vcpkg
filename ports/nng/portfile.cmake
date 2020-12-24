@@ -1,33 +1,27 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
-    REF 53ae1a5ab37fdfc9ad5c236df3eaf4dd63f0fee9
-    SHA512 f5532c0b0287df52ddae173dc92eff06d1f4b2b42a2f7afaf28a7736bf70618ae29ccd51fb9743795a8004918a2a2f55233e6ced58829561c745eafa6118b762
+    REF 32b12a311e1f490f0d5c629ce887edfbf18f2d2c # version 1.3.2
+    SHA512 cd1b1906e5b99d9f04ce41d3d93c0841c45a571ed824c4d19428ce68fd53366e5ed90411d5958baaf9fa0ab412639dec7594a8ec1f64de4b41168932e3565125
     HEAD_REF master
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" NNG_STATIC_LIB)
-
-if("mbedtls" IN_LIST FEATURES)
-    set(NNG_ENABLE_TLS ON)
-else()
-    set(NNG_ENABLE_TLS OFF)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    mbedtls NNG_ENABLE_TLS
+    tools NNG_ENABLE_NNGCAT
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
-        -DNNG_STATIC_LIB=${NNG_STATIC_LIB}
         -DNNG_TESTS=OFF
-        -DNNG_ENABLE_NNGCAT=OFF
-        -DNNG_ENABLE_TLS=${NNG_ENABLE_TLS}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
 
-# Move CMake config files to the right place
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nng)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -52,7 +46,10 @@ else()
     )
 endif()
 
-# Put the licence file where vcpkg expects it
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES nngcat AUTO_CLEAN)
+endif()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

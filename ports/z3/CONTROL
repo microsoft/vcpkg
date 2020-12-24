@@ -1,5 +1,5 @@
 Source: z3
-Version: 4.8.6
+Version: 4.8.9
 Homepage: https://github.com/Z3Prover/z3
 Description: Z3 is a theorem prover from Microsoft Research.
 Supports: !arm64 && !uwp

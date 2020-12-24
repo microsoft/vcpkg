@@ -1,11 +1,12 @@
-#include "pch.h"
-
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
-#include <vcpkg/commands.h>
+#include <vcpkg/base/util.h>
+
+#include <vcpkg/commands.contact.h>
 #include <vcpkg/help.h>
 #include <vcpkg/userconfig.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg::Commands::Contact
 {
@@ -15,21 +16,21 @@ namespace vcpkg::Commands::Contact
         return S_EMAIL;
     }
 
-    static constexpr StringLiteral OPTION_SURVEY = "--survey";
+    static constexpr StringLiteral OPTION_SURVEY = "survey";
 
     static constexpr std::array<CommandSwitch, 1> SWITCHES = {{
         {OPTION_SURVEY, "Launch default browser to the current vcpkg survey"},
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        Help::create_example_string("contact"),
+        create_example_string("contact"),
         0,
         0,
         {SWITCHES, {}},
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args)
+    void perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem& fs)
     {
         const ParsedArguments parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
 
@@ -38,7 +39,6 @@ namespace vcpkg::Commands::Contact
             auto maybe_now = Chrono::CTime::get_current_date_time();
             if (const auto p_now = maybe_now.get())
             {
-                auto& fs = Files::get_real_filesystem();
                 auto config = UserConfig::try_read_data(fs);
                 config.last_completed_survey = p_now->to_string();
                 config.try_write_data(fs);
@@ -57,5 +57,10 @@ namespace vcpkg::Commands::Contact
             System::print2("Send an email to ", email(), " with any feedback.\n");
         }
         Checks::exit_success(VCPKG_LINE_INFO);
+    }
+
+    void ContactCommand::perform_and_exit(const VcpkgCmdArguments& args, Files::Filesystem& fs) const
+    {
+        Contact::perform_and_exit(args, fs);
     }
 }

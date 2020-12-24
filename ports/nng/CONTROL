@@ -1,8 +1,0 @@
-Source: nng
-Version: 1.2.5
-Description: NNG, like its predecessors nanomsg (and to some extent ZeroMQ), is a lightweight, broker-less library, offering a simple API to solve common recurring messaging problems, such as publish/subscribe, RPC-style request/reply, or service discovery.
-Homepage: https://github.com/nanomsg/nng
-
-Feature: mbedtls
-Description: nng built with TLS support(needs mbedTLS)
-Build-Depends: mbedtls

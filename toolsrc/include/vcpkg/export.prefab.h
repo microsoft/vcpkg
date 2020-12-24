@@ -1,9 +1,10 @@
 #pragma once
 
-#include <vcpkg/base/system.h>
-#include <vcpkg/dependencies.h>
-#include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
 
+#include <vcpkg/base/system.h>
+
+#include <vcpkg/dependencies.h>
 
 #include <vector>
 
@@ -18,22 +19,19 @@ namespace vcpkg::Export::Prefab
         Optional<std::string> maybe_version;
         Optional<std::string> maybe_min_sdk;
         Optional<std::string> maybe_target_sdk;
-        bool enable_maven;
-        bool enable_debug;
+        bool enable_maven = false;
+        bool enable_debug = false;
     };
     struct NdkVersion
     {
-        NdkVersion(int _major, int _minor, int _patch) : m_major{_major},
-                                                     m_minor{_minor},
-                                                     m_patch{_patch}{
-        }
-        int major()  { return this->m_major; }
-        int minor()  { return this->m_minor; }
-        int patch()  { return this->m_patch; }
+        NdkVersion(int _major, int _minor, int _patch) : m_major{_major}, m_minor{_minor}, m_patch{_patch} { }
+        int major() { return this->m_major; }
+        int minor() { return this->m_minor; }
+        int patch() { return this->m_patch; }
         std::string to_string();
         void to_string(std::string& out);
 
-        private:
+    private:
         int m_major;
         int m_minor;
         int m_patch;
@@ -72,11 +70,10 @@ namespace vcpkg::Export::Prefab
         std::string to_json();
     };
 
-
-
     void do_export(const std::vector<Dependencies::ExportPlanAction>& export_plan,
                    const VcpkgPaths& paths,
-                   const Options& prefab_options, const Triplet& triplet);
-    Optional<std::string> find_ndk_version(const std::string &content);
-    Optional<NdkVersion> to_version(const std::string &version);
+                   const Options& prefab_options,
+                   const Triplet& triplet);
+    Optional<std::string> find_ndk_version(const std::string& content);
+    Optional<NdkVersion> to_version(const std::string& version);
 }

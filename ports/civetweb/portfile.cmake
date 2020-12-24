@@ -1,17 +1,14 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install(MESSAGE "${PORT} does not currently support UWP" ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO civetweb/civetweb
-    REF 2c1caa6e690bfe3b435a10c372ab2dcd14b872e8
-    SHA512 bfd37906f85c10649108f83e755f28f058c0c27b0d597e6eb82f097db7fa043f6014984f1735c904d0e01c8a5e0dc45f1c57c1fb45b08bce78f42539e19160d6
+    REF 8e243456965c9be5212cb96519da69cd54550e3d # v1.13
+    SHA512 6f9daf404975697c6b7a56cc71006aaf14442acf545e483d8a7b845f255d5e5d6e08194fe3350a667e0b737b6924c9d39b025b587af27e7f12cd7b64f314eb70
     HEAD_REF master
+    PATCHES "add-option-to-disable-debug-tools.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -23,6 +20,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DCIVETWEB_BUILD_TESTING=OFF
+        -DCIVETWEB_ENABLE_DEBUG_TOOLS=OFF
         -DCIVETWEB_ENABLE_ASAN=OFF
         -DCIVETWEB_ENABLE_CXX=ON
         -DCIVETWEB_ENABLE_IPV6=ON
@@ -39,6 +37,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/civetweb)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/civetweb/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

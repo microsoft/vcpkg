@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nuspell/nuspell
-    REF v3.0.0
-    SHA512 d9cd7dd276e2bca43dec3abaf11c5206695949b9fda8c9b86f2772cc7e8fa95bf17c685a2ef9ca87fe3c4f0b55f2fcb435bc21c187355f5e3fa35dcafab2c8c2
+    REF v4.0.1
+    SHA512 122616fd24c2de35000ba12d680d3617e7fe97881d33febbcb106ce70d3bac356a00d90680a1bc8ee631ed532ace0f4b4f9fce4760a25b0f7fc1d60553e74528
     HEAD_REF master
-
     PATCHES cmake-disable-cli-and-docs.patch
     # This patch disables building the CLI tool and leaves only the library.
     # That is because Vcpkg complains when it finds .exe files in the folder
@@ -19,11 +18,16 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nuspell)
+vcpkg_fixup_pkgconfig(
+    # nuspell.pc depends on icu-uc.pc which has -lm specified as private
+    # library. Ignore this -lm, otherwise this function shows error
+    # because it can't find this. -lm is part of glibc on Linux.
+    SYSTEM_LIBRARIES m
+)
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+)
 file(
     INSTALL ${SOURCE_PATH}/COPYING.LESSER
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}

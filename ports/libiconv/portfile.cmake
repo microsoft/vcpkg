@@ -1,7 +1,7 @@
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/unofficial-iconv)
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-iconv-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-iconv)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/Iconv)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/iconv)
     return()
 endif()
 
@@ -21,24 +21,25 @@ vcpkg_extract_source_archive_ex(
         0003-Add-export.patch
 )
 
-#Since libiconv uses automake, make and configure, we use a custom CMake file
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS -DINSTALLDIR=\"\" -DLIBDIR=\"\"
-    OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
-)
-
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-iconv TARGET_PATH share/unofficial-iconv)
+vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}
+                     DETERMINE_BUILD_TRIPLET
+                     USE_WRAPPERS
+                     OPTIONS
+                        --enable-relocatable
+                        --enable-extra-encodings
+                        --without-libiconv-prefix 
+                        --without-libintl-prefix
+                        ${OPTIONS}
+                    )
+vcpkg_install_make()
 
 vcpkg_copy_pdbs()
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/iconv)
 
 file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-vcpkg_test_cmake(PACKAGE_NAME unofficial-iconv)
-
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)

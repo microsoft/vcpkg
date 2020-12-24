@@ -1,0 +1,59 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6debae6..facdc1e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -47,7 +47,7 @@ add_library(sqlite_orm INTERFACE)
+ 
+ target_sources(sqlite_orm INTERFACE
+ 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/sqlite_orm/sqlite_orm.h>
+-	$<INSTALL_INTERFACE:include/sqlite_orm/sqlite_orm.h>)
++	$<INSTALL_INTERFACE:include/sqlite_orm.h>)
+ 
+ target_include_directories(sqlite_orm INTERFACE
+ 	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+@@ -83,11 +83,11 @@ add_subdirectory(examples)
+ endif()
+ 
+ install(TARGETS sqlite_orm EXPORT "${ProjectName}Targets"
+-	INCLUDES DESTINATION "${INCLUDE_INSTALL_DIR}" COMPONENT Development
+-	PUBLIC_HEADER DESTINATION "${INCLUDE_INSTALL_DIR}" COMPONENT Development)
++	INCLUDES DESTINATION "${INCLUDE_INSTALL_DIR}"
++	PUBLIC_HEADER DESTINATION "${INCLUDE_INSTALL_DIR}")
+ 
+ install(FILES "include/sqlite_orm/sqlite_orm.h"
+-	DESTINATION "${INCLUDE_INSTALL_DIR}" COMPONENT Development)
++	DESTINATION "${INCLUDE_INSTALL_DIR}")
+ 
+ export(EXPORT "${ProjectName}Targets"
+ 	FILE "${CMAKE_CURRENT_BINARY_DIR}/${ProjectName}/${ProjectName}Targets.cmake"
+diff --git a/build/cmake/GenerateConfigModule.cmake b/build/cmake/GenerateConfigModule.cmake
+index 3c5143d..a49f76a 100644
+--- a/build/cmake/GenerateConfigModule.cmake
++++ b/build/cmake/GenerateConfigModule.cmake
+@@ -1,7 +1,7 @@
+ include(CMakePackageConfigHelpers)
+ 
+-set(PACKAGE_INCLUDE_INSTALL_DIR "${includedir}/sqlite_orm")
+-set(PACKAGE_CMAKE_INSTALL_DIR "${cmakedir}/sqlite_orm")
++set(PACKAGE_INCLUDE_INSTALL_DIR "${includedir}")
++set(PACKAGE_CMAKE_INSTALL_DIR "${cmakedir}")
+ 
+ # In CYGWIN enviroment below commands does not work properly
+ if (NOT CYGWIN)
+diff --git a/build/cmake/SqliteOrmConfig.cmake.in b/build/cmake/SqliteOrmConfig.cmake.in
+index a6b6f20..7411aa1 100644
+--- a/build/cmake/SqliteOrmConfig.cmake.in
++++ b/build/cmake/SqliteOrmConfig.cmake.in
+@@ -3,10 +3,10 @@ set(SQLITE_ORM_VERSION ${sqlite_orm_VERSION})
+ @PACKAGE_INIT@
+ 
+ set_and_check(SQLITE_ORM_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+-set_and_check(SQLITE_ORM_CMAKE_DIR "@PACKAGE_CMAKE_INSTALL_DIR@")
++set_and_check(SQLITE_ORM_CMAKE_DIR "@PACKAGE_CMAKE_INSTALL_DIR@/../../")
+ 
+ if (NOT TARGET sqlite_orm::sqlite_orm)
+-  include("${SQLITE_ORM_CMAKE_DIR}/SqliteOrmTargets.cmake")
++  include("${SQLITE_ORM_CMAKE_DIR}/share/SqliteOrm/SqliteOrmTargets.cmake")
+ endif()
+ 
+ set(SQLITE_ORM_LIBRARIES sqlite_orm::sqlite_orm)

@@ -1,11 +1,8 @@
-#include "pch.h"
-
-#include <vcpkg/base/hash.h>
-
 #include <vcpkg/base/checks.h>
-#include <vcpkg/base/uint128.h>
+#include <vcpkg/base/hash.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.process.h>
+#include <vcpkg/base/uint128.h>
 #include <vcpkg/base/util.h>
 
 #if defined(_WIN32)
@@ -51,13 +48,16 @@ namespace vcpkg::Hash
         }
     }
 
-    template<class T>
-    void top_bits(T) = delete;
-
-    [[maybe_unused]] static uchar top_bits(uchar x) noexcept { return x; }
-    [[maybe_unused]] static uchar top_bits(std::uint32_t x) noexcept { return (x >> 24) & 0xFF; }
-    [[maybe_unused]] static uchar top_bits(std::uint64_t x) noexcept { return (x >> 56) & 0xFF; }
-    [[maybe_unused]] static uchar top_bits(UInt128 x) noexcept { return top_bits(x.top_64_bits()); }
+    template<class UIntTy>
+    auto top_bits(UIntTy x) -> std::enable_if_t<std::is_unsigned<UIntTy>::value, uchar>
+    {
+        return static_cast<uchar>(x >> ((sizeof(x) - 1) * 8));
+    }
+    template<class UIntTy>
+    auto top_bits(UIntTy x) -> decltype(top_bits(x.top_64_bits()))
+    {
+        return top_bits(x.top_64_bits());
+    }
 
     // treats UIntTy as big endian for the purpose of this mapping
     template<class UIntTy>

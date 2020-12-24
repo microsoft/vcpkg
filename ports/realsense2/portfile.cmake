@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF 842ee1e1e5c4bb96d63582a7fde061dbc1bebf69#v2.33.1
-    SHA512 70f6f9c2f1c5925532b2ff22779579b3610a7f616d66ac92e8e85c6f30df334bf8fb125355a0706bacef0be8370acc62bb7623f3f200326e71fe53e07726fa6a
+    REF aae6f315ce80ff80df5bc9439b4ee852187533c1 #v2.40.0
+    SHA512 6d8d0837bd2d502a84e4a8193a9bf5f2cb27c1ca97fceffc9d5bc81c6ed5a2d2b5c79e2fc3446f34425d3db0693de02c561b9ba276e59598b33d928f0799fba4
     HEAD_REF master
     PATCHES
         fix_openni2.patch
@@ -11,6 +11,10 @@ vcpkg_from_github(
 
 file(COPY ${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf DESTINATION ${SOURCE_PATH})
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tm2   BUILD_WITH_TM2
+)
 
 set(BUILD_TOOLS OFF)
 if("tools" IN_LIST FEATURES)
@@ -25,9 +29,8 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DENFORCE_METADATA=ON
-        -DBUILD_WITH_TM2=OFF
         -DBUILD_WITH_OPENMP=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_WITH_STATIC_CRT=${BUILD_CRT_LINKAGE}

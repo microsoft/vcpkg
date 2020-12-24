@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Milerius/shiva
@@ -12,7 +10,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-          -DSHIVA_BUILD_TESTS=OFF -DSHIVA_USE_SFML_AS_RENDERER=ON -DSHIVA_INSTALL_PLUGINS=ON -DSHIVA_BUILD_EXAMPLES=OFF     
+          -DSHIVA_BUILD_TESTS=OFF -DSHIVA_USE_SFML_AS_RENDERER=ON -DSHIVA_INSTALL_PLUGINS=ON -DSHIVA_BUILD_EXAMPLES=OFF
 )
 
 vcpkg_install_cmake()
@@ -67,22 +65,22 @@ file(COPY ${PLUGINS_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/${SUFFIX_BINARY
 file(COPY ${PLUGINS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/${SUFFIX_BINARY}/shiva/plugins/shiva-sfml/Debug)
 
 if (NOT VCPKG_CMAKE_SYSTEM_NAME)
-	find_file(LUADLL lua.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(FMTDLL fmt.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(FLACDLL FLAC.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(FREETYPEDLL freetype.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(LIBBZ2DLL libbz2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(LIBPNG16DLL libpng16.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(OGGDLL ogg.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(OPENAL32DLL OpenAL32.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(SFMLAUDIO2DLL sfml-audio-2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(SFMLGRAPHICS2DLL sfml-graphics-2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(SFMLSYSTEM2DLL sfml-system-2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(SFMLWINDOW2DLL sfml-window-2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(VORBISDLL vorbis.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(VORBISENCDLL vorbisenc.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(VORBISFILEDLL vorbisfile.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
-	find_file(ZLIB1DLL zlib1.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/bin)
+	find_file(LUADLL lua.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(FMTDLL fmt.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(FLACDLL FLAC.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(FREETYPEDLL freetype.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(LIBBZ2DLL libbz2.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(LIBPNG16DLL libpng16.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(OGGDLL ogg.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(OPENAL32DLL OpenAL32.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(SFMLAUDIO2DLL sfml-audio-2.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(SFMLGRAPHICS2DLL sfml-graphics-2.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(SFMLSYSTEM2DLL sfml-system-2.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(SFMLWINDOW2DLL sfml-window-2.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(VORBISDLL vorbis.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(VORBISENCDLL vorbisenc.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(VORBISFILEDLL vorbisfile.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
+	find_file(ZLIB1DLL zlib1.dll PATHS ${CURRENT_INSTALLED_DIR}/bin)
 	set(DEPENDANCIES_RELEASE_DLL
 		${LUADLL}
 		${FMTDLL}
@@ -100,23 +98,23 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME)
 		${VORBISENCDLL}
 		${VORBISFILEDLL}
 		${ZLIB1DLL})
-		
-	find_file(LUADLL_D lua.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(FMTDLL_D fmtd.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(FLACDLL_D FLAC.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(FREETYPEDLL_D freetyped.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(LIBBZ2DLL_D libbz2d.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(LIBPNG16DLL_D libpng16d.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(OGGDLL_D ogg.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(OPENAL32DLL_D OpenAL32.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(SFMLAUDIO2DLL_D sfml-audio-d-2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(SFMLGRAPHICS2DLL_D sfml-graphics-d-2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(SFMLSYSTEM2DLL_D sfml-system-d-2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(SFMLWINDOW2DLL_D sfml-window-d-2.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(VORBISDLL_D vorbis.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(VORBISENCDLL_D vorbisenc.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(VORBISFILEDLL_D vorbisfile.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
-	find_file(ZLIB1DLL_D zlibd1.dll PATHS ${VCPKG_ROOT_DIR}/installed/${TARGET_TRIPLET}/debug/bin)
+
+	find_file(LUADLL_D lua.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(FMTDLL_D fmtd.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(FLACDLL_D FLAC.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(FREETYPEDLL_D freetyped.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(LIBBZ2DLL_D libbz2d.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(LIBPNG16DLL_D libpng16d.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(OGGDLL_D ogg.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(OPENAL32DLL_D OpenAL32.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(SFMLAUDIO2DLL_D sfml-audio-d-2.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(SFMLGRAPHICS2DLL_D sfml-graphics-d-2.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(SFMLSYSTEM2DLL_D sfml-system-d-2.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(SFMLWINDOW2DLL_D sfml-window-d-2.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(VORBISDLL_D vorbis.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(VORBISENCDLL_D vorbisenc.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(VORBISFILEDLL_D vorbisfile.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
+	find_file(ZLIB1DLL_D zlibd1.dll PATHS ${CURRENT_INSTALLED_DIR}/debug/bin)
 	set(DEPENDANCIES_DEBUG_DLL
 		${LUADLL_D}
 		${FMTDLL_D}
@@ -135,7 +133,7 @@ if (NOT VCPKG_CMAKE_SYSTEM_NAME)
 		${VORBISFILEDLL_D}
 		${ZLIB1DLL_D}
 		)
-	
+
 	file(COPY ${DEPENDANCIES_RELEASE_DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/${SUFFIX_BINARY}/shiva/plugins/shiva-sfml/Release)
     file(COPY ${DEPENDANCIES_DEBUG_DLL} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/${SUFFIX_BINARY}/shiva/plugins/shiva-sfml/Debug)
 endif()

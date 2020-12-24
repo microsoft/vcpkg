@@ -1,11 +1,17 @@
 #pragma once
 
-#include <vcpkg/dependencies.h>
+#include <vcpkg/fwd/portfileprovider.h>
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
+
+#include <vcpkg/commands.interface.h>
 #include <vcpkg/packagespec.h>
-#include <vcpkg/statusparagraphs.h>
-#include <vcpkg/vcpkgcmdarguments.h>
-#include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/versiont.h>
+
+namespace vcpkg
+{
+    struct StatusParagraphs;
+}
 
 namespace vcpkg::Update
 {
@@ -21,4 +27,9 @@ namespace vcpkg::Update
                                                         const StatusParagraphs& status_db);
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+
+    struct UpdateCommand : Commands::PathsCommand
+    {
+        virtual void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const override;
+    };
 }

@@ -1,6 +1,9 @@
 #pragma once
 
-#include <vcpkg/base/lineinfo.h>
+#include <vcpkg/base/fwd/lineinfo.h>
+#include <vcpkg/base/fwd/optional.h>
+
+#include <vcpkg/base/pragmas.h>
 
 #include <type_traits>
 #include <utility>
@@ -9,39 +12,54 @@ namespace vcpkg
 {
     struct NullOpt
     {
-        explicit constexpr NullOpt(int) {}
+        explicit constexpr NullOpt(int) { }
     };
 
     const static constexpr NullOpt nullopt{0};
+
+    template<class T>
+    struct Optional;
 
     namespace details
     {
         template<class T, bool B = std::is_copy_constructible<T>::value>
         struct OptionalStorage
         {
-#if defined(_WIN32)
-#pragma warning(suppress : 26495)
-#endif
-            constexpr OptionalStorage() noexcept : m_is_present(false), m_inactive() {}
-            constexpr OptionalStorage(const T& t) : m_is_present(true), m_t(t) {}
-            constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) {}
+            VCPKG_MSVC_WARNING(suppress : 26495)
+            constexpr OptionalStorage() noexcept : m_is_present(false), m_inactive() { }
+            constexpr OptionalStorage(const T& t) : m_is_present(true), m_t(t) { }
+            constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) { }
+            template<class U, class = std::enable_if_t<!std::is_reference<U>::value>>
+            explicit OptionalStorage(Optional<U>&& t) : m_is_present(false), m_inactive()
+            {
+                if (auto p = t.get())
+                {
+                    m_is_present = true;
+                    new (&m_t) T(std::move(*p));
+                }
+            }
+            template<class U>
+            explicit OptionalStorage(const Optional<U>& t) : m_is_present(false), m_inactive()
+            {
+                if (auto p = t.get())
+                {
+                    m_is_present = true;
+                    new (&m_t) T(*p);
+                }
+            }
 
             ~OptionalStorage() noexcept
             {
                 if (m_is_present) m_t.~T();
             }
 
-#if defined(_WIN32)
-#pragma warning(suppress : 26495)
-#endif
+            VCPKG_MSVC_WARNING(suppress : 26495)
             OptionalStorage(const OptionalStorage& o) : m_is_present(o.m_is_present), m_inactive()
             {
                 if (m_is_present) new (&m_t) T(o.m_t);
             }
 
-#if defined(_WIN32)
-#pragma warning(suppress : 26495)
-#endif
+            VCPKG_MSVC_WARNING(suppress : 26495)
             OptionalStorage(OptionalStorage&& o) noexcept : m_is_present(o.m_is_present), m_inactive()
             {
                 if (m_is_present)
@@ -100,7 +118,8 @@ namespace vcpkg
             }
 
             bool m_is_present;
-            union {
+            union
+            {
                 char m_inactive;
                 T m_t;
             };
@@ -109,20 +128,16 @@ namespace vcpkg
         template<class T>
         struct OptionalStorage<T, false>
         {
-#if defined(_WIN32)
-#pragma warning(suppress : 26495)
-#endif
-            constexpr OptionalStorage() noexcept : m_is_present(false), m_inactive() {}
-            constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) {}
+            VCPKG_MSVC_WARNING(suppress : 26495)
+            constexpr OptionalStorage() noexcept : m_is_present(false), m_inactive() { }
+            constexpr OptionalStorage(T&& t) : m_is_present(true), m_t(std::move(t)) { }
 
             ~OptionalStorage() noexcept
             {
                 if (m_is_present) m_t.~T();
             }
 
-#if defined(_WIN32)
-#pragma warning(suppress : 26495)
-#endif
+            VCPKG_MSVC_WARNING(suppress : 26495)
             OptionalStorage(OptionalStorage&& o) noexcept : m_is_present(o.m_is_present), m_inactive()
             {
                 if (m_is_present)
@@ -163,7 +178,8 @@ namespace vcpkg
             }
 
             bool m_is_present;
-            union {
+            union
+            {
                 char m_inactive;
                 T m_t;
             };
@@ -172,8 +188,9 @@ namespace vcpkg
         template<class T, bool B>
         struct OptionalStorage<T&, B>
         {
-            constexpr OptionalStorage() noexcept : m_t(nullptr) {}
-            constexpr OptionalStorage(T& t) : m_t(&t) {}
+            constexpr OptionalStorage() noexcept : m_t(nullptr) { }
+            constexpr OptionalStorage(T& t) : m_t(&t) { }
+            constexpr OptionalStorage(Optional<T>& t) : m_t(t.get()) { }
 
             constexpr bool has_value() const { return m_t != nullptr; }
 
@@ -183,6 +200,24 @@ namespace vcpkg
             T* m_t;
         };
 
+        template<class T, bool B>
+        struct OptionalStorage<const T&, B>
+        {
+            constexpr OptionalStorage() noexcept : m_t(nullptr) { }
+            constexpr OptionalStorage(const T& t) : m_t(&t) { }
+            constexpr OptionalStorage(const Optional<T>& t) : m_t(t.get()) { }
+            constexpr OptionalStorage(const Optional<const T>& t) : m_t(t.get()) { }
+            constexpr OptionalStorage(Optional<T>&& t) = delete;
+            constexpr OptionalStorage(Optional<const T>&& t) = delete;
+
+            constexpr bool has_value() const { return m_t != nullptr; }
+
+            const T& value() const { return *this->m_t; }
+
+        private:
+            const T* m_t;
+        };
+
         // Note: implemented in checks.cpp to cut the header dependency
         void exit_if_null(bool b, const LineInfo& line_info);
     }
@@ -190,10 +225,10 @@ namespace vcpkg
     template<class T>
     struct Optional
     {
-        constexpr Optional() noexcept {}
+        constexpr Optional() noexcept { }
 
         // Constructors are intentionally implicit
-        constexpr Optional(NullOpt) {}
+        constexpr Optional(NullOpt) { }
 
         template<class U, class = std::enable_if_t<!std::is_same<std::decay_t<U>, Optional>::value>>
         constexpr Optional(U&& t) : m_base(std::forward<U>(t))
@@ -331,28 +366,5 @@ namespace vcpkg
     {
         if (auto p = o.get()) return t != *p;
         return true;
-    }
-
-    template<class Container, class Projection>
-    auto common_projection(const Container& input, Projection proj)
-        -> Optional<std::decay_t<decltype(proj(*(input.begin())))>>
-    {
-        const auto last = input.end();
-        auto first = input.begin();
-        if (first == last)
-        {
-            return nullopt;
-        }
-
-        const auto& prototype = proj(*first);
-        while (++first != last)
-        {
-            if (prototype != proj(*first))
-            {
-                return nullopt;
-            }
-        }
-
-        return prototype;
     }
 }

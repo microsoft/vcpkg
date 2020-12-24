@@ -1,14 +1,10 @@
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KazDragon/telnetpp
-  REF 8dc780579293153ad2ae9ad6943815c050d4c659
-  SHA512 280a8e6c0392f5822b05968520d176d1510f00c12a2502f6039f4f1f78a558e61f825a231fb70b7de6fd21a18b24734eea3ba36a24b29f2a7e9856b1f4de5217
+  REF f370ebd0c0dc6505708065ee5afdc59a6de54387 # v2.1.2 + MSVC patches
+  SHA512 c58cb9159a8fb6c4b089a0212a995f70f08b93877d98828aa263e9f065f42a932d98749b56741d9e711c0805dcc2dcf0607dc86b0553c4e34bd3fad99e0bf157
   HEAD_REF master
-  PATCHES fix-build-error.patch
+  PATCHES fix-install-paths.patch
 )
 
 set(USE_ZLIB OFF)

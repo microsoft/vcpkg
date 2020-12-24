@@ -1,5 +1,5 @@
 Source: ogre-next
-Version: 2019-10-20
+Version: 2019-10-20-1
 Build-Depends: zlib, freeimage, freetype, rapidjson, openvr, boost-thread, boost-date-time, poco, tbb, sdl2, tinyxml, zziplib
 Homepage: https://github.com/OGRECave/ogre-next
 Description: Ogre 2.1 & 2.2 - scene-oriented, flexible 3D engine written in C++

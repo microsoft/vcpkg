@@ -1,0 +1,22 @@
+From 81d758d025089d6b3b5309205ff4cb75789e6205 Mon Sep 17 00:00:00 2001
+From: crziter <crziter@gmail.com>
+Date: Tue, 25 Feb 2020 11:33:56 +0700
+Subject: [PATCH] Add call convention to mock function
+
+---
+ test/gl_version.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/test/gl_version.c b/test/gl_version.c
+index 9ab0080..9fe1bba 100644
+--- a/test/gl_version.c
++++ b/test/gl_version.c
+@@ -29,7 +29,7 @@ GLenum mock_enum;
+ const char *mock_gl_version;
+ const char *mock_glsl_version;
+ 
+-static const GLubyte *override_glGetString(GLenum name)
++static const GLubyte * EPOXY_CALLSPEC override_glGetString(GLenum name)
+ {
+     switch (name) {
+     case GL_VERSION:

@@ -1,39 +1,65 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    # Building python bindings is currently broken on Windows
+    if("python" IN_LIST FEATURES)
+        message(FATAL_ERROR "The python feature is currently broken on Windows")
+    endif()
+
+    if(NOT "iconv" IN_LIST FEATURES)
+        # prevent picking up libiconv if it happens to already be installed
+        set(ICONV_PATCH "no_use_iconv.patch")
+    endif()
+
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        set(_static_runtime ON)
+    endif()
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    deprfun     deprecated-functions
+    examples    build_examples
+    python      python-bindings
+    test        build_tests
+    tools       build_tools
+)
+
+# Note: the python feature currently requires `python3-dev` and `python3-setuptools` installed on the system
+if("python" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
+    vcpkg_add_to_path(${PYTHON3_PATH})
+
+    file(GLOB BOOST_PYTHON_LIB "${CURRENT_INSTALLED_DIR}/lib/*boost_python*")
+    string(REGEX REPLACE ".*(python)([0-9])([0-9]+).*" "\\1\\2\\3" _boost-python-module-name "${BOOST_PYTHON_LIB}")
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arvidn/libtorrent
-    REF libtorrent-1_2_2
-    SHA512 34dcf5421dfccbba78bdd30890b9c18b92fdee1a2e1693ada9b55b79a167730093862017581b9251a654b5517011dbe4c46b520b03b78aa86a909457f7edcf2c
-    HEAD_REF master
+    REF v1.2.11
+    SHA512 d502286f67bf462f14169daafe12b94ca723598530c85360c3a4b3c73535202b63632036248fdecc942cb559e66e6a5cb5afa830dc78bbff72a6c9a330710b62
+    HEAD_REF RC_1_2
     PATCHES
-        add-datetime-to-boost-libs.patch
-        add-executor_type.patch
+        ${ICONV_PATCH}
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
-        -Ddeprecated-functions=off
+        ${FEATURE_OPTIONS}
+        -Dboost-python-module-name=${_boost-python-module-name}
+        -Dstatic_runtime=${_static_runtime}
+        -DPython3_USE_STATIC_LIBS=ON
 )
 
 vcpkg_install_cmake()
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/libtorrent/aux_/export.hpp EXPORT_H)
-string(REPLACE "defined TORRENT_BUILDING_SHARED" "0" EXPORT_H "${EXPORT_H}")
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    string(REPLACE "defined TORRENT_LINKING_SHARED" "1" EXPORT_H "${EXPORT_H}")
-else()
-    string(REPLACE "defined TORRENT_LINKING_SHARED" "0" EXPORT_H "${EXPORT_H}")
-endif()
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/libtorrent/aux_/export.hpp "${EXPORT_H}")
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/LibtorrentRasterbar TARGET_PATH share/libtorrentrasterbar)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/LibtorrentRasterbar TARGET_PATH share/LibtorrentRasterbar)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libtorrent)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libtorrent/LICENSE ${CURRENT_PACKAGES_DIR}/share/libtorrent/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # Do not duplicate include files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share ${CURRENT_PACKAGES_DIR}/share/cmake)

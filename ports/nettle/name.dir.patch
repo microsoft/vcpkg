@@ -1,0 +1,567 @@
+diff --git a/SMP/libhogweed.vcxproj b/SMP/libhogweed.vcxproj
+index 9f741e240..5bb05b359 100644
+--- a/SMP/libhogweed.vcxproj	
++++ b/SMP/libhogweed.vcxproj
+@@ -670,142 +670,142 @@
+   </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libhogweedd</TargetName>
++    <TargetName>hogweedd</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWinRT|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libhogweedd_winrt</TargetName>
++    <TargetName>hogweedd</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libhogweedd</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>hogweedd</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWinRT|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libhogweedd_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>hogweedd</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>hogweedd</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLLWinRT|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>hogweedd_winrt</TargetName>
++    <TargetName>hogweedd</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>hogweedd</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLLWinRT|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>hogweedd_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>hogweedd</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libhogweed</TargetName>
++    <TargetName>hogweed</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWinRT|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libhogweed_winrt</TargetName>
++    <TargetName>hogweed</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libhogweed</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>hogweed</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWinRT|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libhogweed_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>hogweed</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>hogweed</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLStaticDeps|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>hogweed</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRT|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>hogweed_winrt</TargetName>
++    <TargetName>hogweed</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRTStaticDeps|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>hogweed_winrt</TargetName>
++    <TargetName>hogweed</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>hogweed</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLStaticDeps|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>hogweed</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRT|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>hogweed_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>hogweed</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRTStaticDeps|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>hogweed_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>hogweed</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+@@ -826,7 +826,7 @@
+       <TargetMachine>MachineX86</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libnettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+     <PostBuildEvent>
+@@ -950,7 +950,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX86</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libnettled_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+     <PostBuildEvent>
+@@ -1072,7 +1072,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX64</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libnettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+     <PostBuildEvent>
+@@ -1196,7 +1196,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX64</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libnettled_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+     <PostBuildEvent>
+@@ -1325,7 +1325,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <LargeAddressAware>true</LargeAddressAware>
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+     <PostBuildEvent>
+@@ -1457,7 +1457,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+@@ -1585,7 +1585,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+     <PostBuildEvent>
+@@ -1715,7 +1715,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettled.lib;gmpd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+@@ -1845,7 +1845,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX86</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+     <PostBuildEvent>
+@@ -1975,7 +1975,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX86</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x86\;$(ProjectDir)\..\..\prebuilt\lib\x86\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libnettle_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+     <PostBuildEvent>
+@@ -2103,7 +2103,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX64</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+     <PostBuildEvent>
+@@ -2233,7 +2233,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <TargetMachine>MachineX64</TargetMachine>
+       <SubSystem>Windows</SubSystem>
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+-      <AdditionalDependencies>libnettle_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Lib>
+     <PostBuildEvent>
+@@ -2368,7 +2368,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <LargeAddressAware>true</LargeAddressAware>
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+     <PostBuildEvent>
+@@ -2503,7 +2503,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <LargeAddressAware>true</LargeAddressAware>
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>5.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+     <PostBuildEvent>
+@@ -2641,7 +2641,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+@@ -2780,7 +2780,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>libnettle_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <WindowsMetadataFile>$(OutDir)\lib\x86\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+@@ -2915,7 +2915,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+     <PostBuildEvent>
+@@ -3049,7 +3049,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <AdditionalLibraryDirectories>$(OutDir)\lib\x64\;$(ProjectDir)\..\..\prebuilt\lib\x64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion>6.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>libnettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+     <PostBuildEvent>
+@@ -3186,7 +3186,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;gmp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+@@ -3324,7 +3324,7 @@ del /f /q $(OutDir)\licenses\nettle.txt
+       <GenerateDebugInformation>true</GenerateDebugInformation>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '10.0'">10.0</MinimumRequiredVersion>
+       <MinimumRequiredVersion Condition="'$(ApplicationTypeRevision)' == '8.1'">8.1</MinimumRequiredVersion>
+-      <AdditionalDependencies>libnettle_winrt.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>nettle.lib;%(AdditionalDependencies)</AdditionalDependencies>
+       <WindowsMetadataFile>$(OutDir)\lib\x64\$(RootNamespace).winmd</WindowsMetadataFile>
+       <AdditionalOptions>/IGNORE:4006,4221,4078 %(AdditionalOptions)</AdditionalOptions>
+     </Link>
+diff --git a/SMP/libnettle.vcxproj b/SMP/libnettle.vcxproj
+index 56583e10f..665e8ef4e 100644
+--- a/SMP/libnettle.vcxproj	
++++ b/SMP/libnettle.vcxproj
+@@ -812,142 +812,142 @@
+   </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libnettled</TargetName>
++    <TargetName>nettled</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWinRT|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libnettled_winrt</TargetName>
++    <TargetName>nettled</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libnettled</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>nettled</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWinRT|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libnettled_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>nettled</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>nettled</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLLWinRT|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>nettled_winrt</TargetName>
++    <TargetName>nettled</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLL|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>nettled</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDLLWinRT|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>nettled_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>nettled</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libnettle</TargetName>
++    <TargetName>nettle</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWinRT|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libnettle_winrt</TargetName>
++    <TargetName>nettle</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libnettle</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>nettle</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWinRT|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>libnettle_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>nettle</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>nettle</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLStaticDeps|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>nettle</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRT|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>nettle_winrt</TargetName>
++    <TargetName>nettle</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRTStaticDeps|Win32'">
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>nettle_winrt</TargetName>
++    <TargetName>nettle</TargetName>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLL|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>nettle</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLStaticDeps|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+     <TargetName>nettle</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRT|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>nettle_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>nettle</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDLLWinRTStaticDeps|x64'">
+     <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\$(ProjectName)\</IntDir>
+-    <TargetName>nettle_winrt</TargetName>
+-    <OutDir>$(ProjectDir)..\..\..\msvc\</OutDir>
++    <TargetName>nettle</TargetName>
++    <OutDir>$(ProjectDir)..\msvc\</OutDir>
+     <CustomBuildAfterTargets>Clean</CustomBuildAfterTargets>
+     <MSBuildWarningsAsMessages>MSB8012</MSBuildWarningsAsMessages>
+   </PropertyGroup>
+diff --git a/hogweed.pc.in b/hogweed.pc.in
+index 97fb9d46a..ce977c02e 100644
+--- a/hogweed.pc.in	
++++ b/hogweed.pc.in
+@@ -13,7 +13,7 @@ URL: http://www.lysator.liu.se/~nisse/nettle
+ Version: @PACKAGE_VERSION@
+ Requires: @IF_NOT_SHARED@ nettle
+ Requires.private: @IF_SHARED@ nettle
+-Libs: -L${libdir} -lhogweed @IF_NOT_SHARED@ @LIBS@
++Libs: -L${libdir} @HOGWEED@ @IF_NOT_SHARED@ @LIBS@
+ Libs.private: @IF_SHARED@ @LIBS@
+ Cflags: -I${includedir}
+ 
+diff --git a/nettle.pc.in b/nettle.pc.in
+index eb0020caa..6e3ed1e4f 100644
+--- a/nettle.pc.in	
++++ b/nettle.pc.in
+@@ -7,5 +7,6 @@ Name: Nettle
+ Description: Nettle low-level cryptographic library (symmetric algorithms)
+ URL: http://www.lysator.liu.se/~nisse/nettle
+ Version: @PACKAGE_VERSION@
+-Libs: -L${libdir} -lnettle
++Requires.private: gmp
++Libs: -L${libdir} @LIBS@
+ Cflags: -I${includedir}

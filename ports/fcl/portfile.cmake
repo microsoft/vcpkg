@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO flexible-collision-library/fcl
-    REF a13c681e41eb8180cba7d4fd32637511f588cb82 #v0.6.0
-    SHA512 b0fe70f411871ff50b6e5978c01e5849099bec7b68983c6d1ff1afa1628980eaabafd59748ee06e4337efeb77dba6c65af93868a5fc5df980a133a3f667ddccf
+    REF 97455a46de121fb7c0f749e21a58b1b54cd2c6be # 0.6.1
+    SHA512 1ed1f43866a2da045fcb82ec54a7812c3fc46306386bc04ccf33b5e169773743b2985997373a63bf480098a321600321fdf5061b1448b48e993cf92cad032891
     HEAD_REF master
 )
 
@@ -14,12 +14,19 @@ else()
     set(FCL_STATIC_LIBRARY OFF)
 endif()
 
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+    set(FCL_USE_X64_SSE ON)
+else()
+    set(FCL_USE_X64_SSE OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DFCL_STATIC_LIBRARY=${FCL_STATIC_LIBRARY}
         -DFCL_BUILD_TESTS=OFF
+        -DFCL_USE_X64_SSE=${FCL_USE_X64_SSE}
 )
 
 vcpkg_install_cmake()
@@ -30,12 +37,6 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/CMake)
 else()
   vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/fcl)
 endif()
-
-
-file(READ ${CURRENT_PACKAGES_DIR}/share/fcl/fclConfig.cmake FCL_CONFIG)
-string(REPLACE "unset(_expectedTargets)"
-               "unset(_expectedTargets)\n\nfind_package(octomap REQUIRED)\nfind_package(ccd REQUIRED)" FCL_CONFIG "${FCL_CONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/fcl/fclConfig.cmake "${FCL_CONFIG}")
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 

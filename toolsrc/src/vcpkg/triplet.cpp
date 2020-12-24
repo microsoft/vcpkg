@@ -1,13 +1,13 @@
-#include "pch.h"
-
 #include <vcpkg/base/strings.h>
+
 #include <vcpkg/triplet.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 
 namespace vcpkg
 {
     struct TripletInstance
     {
-        TripletInstance(std::string&& s) : value(std::move(s)), hash(std::hash<std::string>()(value)) {}
+        TripletInstance(std::string&& s) : value(std::move(s)), hash(std::hash<std::string>()(value)) { }
 
         const std::string value;
         const size_t hash = 0;
@@ -28,25 +28,9 @@ namespace std
 
 namespace vcpkg
 {
-    static std::unordered_set<TripletInstance> g_triplet_instances;
-
-    const Triplet Triplet::X86_WINDOWS = from_canonical_name("x86-windows");
-    const Triplet Triplet::X64_WINDOWS = from_canonical_name("x64-windows");
-    const Triplet Triplet::ARM_WINDOWS = from_canonical_name("arm-windows");
-    const Triplet Triplet::ARM64_WINDOWS = from_canonical_name("arm64-windows");
-    const Triplet Triplet::X86_UWP = from_canonical_name("x86-uwp");
-    const Triplet Triplet::X64_UWP = from_canonical_name("x64-uwp");
-    const Triplet Triplet::ARM_UWP = from_canonical_name("arm-uwp");
-    const Triplet Triplet::ARM64_UWP = from_canonical_name("arm64-uwp");
-
-    //
-    const Triplet Triplet::ARM_ANDROID = from_canonical_name("arm-android");
-    const Triplet Triplet::ARM64_ANDROID = from_canonical_name("arm64-android");
-    const Triplet Triplet::X86_ANDROID = from_canonical_name("x86-android");
-    const Triplet Triplet::X64_ANDROID = from_canonical_name("x64-android");
-
     Triplet Triplet::from_canonical_name(std::string&& triplet_as_string)
     {
+        static std::unordered_set<TripletInstance> g_triplet_instances;
         std::string s(Strings::ascii_to_lowercase(std::move(triplet_as_string)));
         const auto p = g_triplet_instances.emplace(std::move(s));
         return &*p.first;
@@ -61,23 +45,67 @@ namespace vcpkg
     Optional<System::CPUArchitecture> Triplet::guess_architecture() const noexcept
     {
         using System::CPUArchitecture;
-        if (*this == X86_WINDOWS || *this == X86_UWP || *this == X86_ANDROID)
+        if (Strings::starts_with(this->canonical_name(), "x86-"))
         {
             return CPUArchitecture::X86;
         }
-        else if (*this == X64_WINDOWS || *this == X64_UWP || *this ==X64_ANDROID)
+        if (Strings::starts_with(this->canonical_name(), "x64-"))
         {
             return CPUArchitecture::X64;
         }
-        else if (*this == ARM_WINDOWS || *this == ARM_UWP || *this == ARM_ANDROID)
+        if (Strings::starts_with(this->canonical_name(), "arm-"))
         {
             return CPUArchitecture::ARM;
         }
-        else if (*this == ARM64_WINDOWS || *this == ARM64_UWP || *this == ARM64_ANDROID)
+        if (Strings::starts_with(this->canonical_name(), "arm64-"))
         {
             return CPUArchitecture::ARM64;
         }
+        if (Strings::starts_with(this->canonical_name(), "s390x-"))
+        {
+            return CPUArchitecture::S390X;
+        }
 
         return nullopt;
+    }
+
+    Triplet default_triplet(const VcpkgCmdArguments& args)
+    {
+        if (args.triplet != nullptr)
+        {
+            return Triplet::from_canonical_name(std::string(*args.triplet));
+        }
+        else
+        {
+            auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
+            if (auto v = vcpkg_default_triplet_env.get())
+            {
+                return Triplet::from_canonical_name(std::move(*v));
+            }
+            else
+            {
+#if defined(_WIN32)
+                return Triplet::from_canonical_name("x86-windows");
+#elif defined(__APPLE__)
+                return Triplet::from_canonical_name("x64-osx");
+#elif defined(__FreeBSD__)
+                return Triplet::from_canonical_name("x64-freebsd");
+#elif defined(__OpenBSD__)
+                return Triplet::from_canonical_name("x64-openbsd");
+#elif defined(__GLIBC__)
+#if defined(__aarch64__)
+                return Triplet::from_canonical_name("arm64-linux");
+#elif defined(__arm__)
+                return Triplet::from_canonical_name("arm-linux");
+#elif defined(__s390x__)
+                return Triplet::from_canonical_name("s390x-linux");
+#else
+                return Triplet::from_canonical_name("x64-linux");
+#endif
+#else
+                return Triplet::from_canonical_name("x64-linux-musl");
+#endif
+            }
+        }
     }
 }

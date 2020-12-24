@@ -1,0 +1,59 @@
+diff --git a/Makefile b/Makefile
+index 4b377c628..39cbf5cb4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,10 +1,12 @@
+ all:
+-	cd kernel; make
+-	cd userland; ./configure; make
+-	cd drivers; make
++	$(MAKE) -C kernel;
++	#cd kernel; make
++	cd userland; ./configure;
++	$(MAKE) -C userland;
++	$(MAKE) -C drivers;
+ 
+ install:
+-	cd userland; make install
++	$(MAKE) install -C userland;
+ 
+ clean:
+ 	-cd kernel; make clean
+diff --git a/userland/Makefile b/userland/Makefile
+index 959470c0f..e35ca8de7 100644
+--- a/userland/Makefile
++++ b/userland/Makefile
+@@ -9,22 +9,22 @@ lib/Makefile:
+ config: lib/Makefile
+ 
+ libpfring: config
+-	cd lib; make
++	$(MAKE) -C lib
+ 
+ build_nbpf: config
+-	cd nbpf; make
++	$(MAKE) -C nbpf
+ 
+ build_c++: libpfring
+-	cd c++; make
++	$(MAKE) -C c++
+ 
+ tcpdump/Makefile:
+ 	cd tcpdump; ./configure --with_system_libpcap=yes
+ 
+ build_tcpdump: libpfring tcpdump/Makefile
+-	cd tcpdump; make
++	$(MAKE) -C tcpdump
+ 
+ build_extcap: libpfring
+-	cd wireshark/extcap; make
++	$(MAKE) -C wireshark/extcap
+ 
+ ###################
+ 
+@@ -46,4 +46,4 @@ extcap_clean:
+ 	cd wireshark/extcap; make clean
+ 
+ install: libpfring
+-	cd lib; make install
++	$(MAKE) -C lib install

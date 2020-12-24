@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO redis/hiredis
-    REF e777b0295eeeda89ee2ecef6ec5cb54889033d94
-    SHA512 9486ce3e40580ca6a1da8a31c3e139eb8b5e17ac1b94bd0987f2435aeb2465ad271784d5e8e83dc6cbaf362f95c9e175efa5fbe80a63c56070ceb212d3d68470
+    REF v1.0.0
+    SHA512 eb56201121eecdbfc8d42e8c2c141ae77bea248eeb36687ac6835c9b2404f5475beb351c4d8539d552db4d88e933bb2bd5b73f165e62b130bb11aeff39928e69
     HEAD_REF master
     PATCHES
         fix-feature-example.patch
@@ -15,7 +15,7 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    ssl     ENABLE_SSL 
+    ssl     ENABLE_SSL
     example ENABLE_EXAMPLES
 )
 
@@ -30,6 +30,10 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_fixup_cmake_targets()
+if("ssl" IN_LIST FEATURES)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/hiredis_ssl TARGET_PATH share/hiredis_ssl)
+endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

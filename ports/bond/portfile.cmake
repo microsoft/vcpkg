@@ -1,26 +1,28 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+set(BOND_VER 9.0.3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/bond
-    REF  8.1.0
-    SHA512 287a2d299036b57e0576903b1f5372bf8071243ada57153c4bf231cdc660faab1e70c60ddde57ac759d941b74af4ba25d81a5d58e8dbf391032b7b226c4cd18c
+    REF  ${BOND_VER}
+    SHA512 3a7884eb00e6d0ab40c688f4a40cb2d3f356c48b38d48a9a08c756047a94b82619ef345483f42c3240732f5da06816b65a61acb83bfebb3c2c6b44099ce71bf9
     HEAD_REF master
-    PATCHES fix-install-path.patch
+    PATCHES fix-install-path.patch skip-grpc-compilation.patch
 )
 
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_download_distfile(GBC_ARCHIVE
-    URLS "https://github.com/microsoft/bond/releases/download/8.1.0/gbc-8.1.0-amd64.zip"
-    FILENAME "gbc-8.1.0-amd64.zip"
-    SHA512 896c9a78fc714e0ea44c37ed36400ec8e5f52d495a8d81aa80834ff6cd6303c7c94e06129f7b2269416a9e0ffb61423e87406db798fb5be7ff00f14981530089
+    URLS "https://github.com/microsoft/bond/releases/download/${BOND_VER}/gbc-${BOND_VER}-amd64.zip"
+    FILENAME "gbc-${BOND_VER}-amd64.zip"
+    SHA512 41a4e01a9a0f6246a3c07f516f2c0cfc8a837eff2166c2bb787877e409d6f55eeb6084e63aabc3502492775a3fa7e381bf37fde0bdfced50a9d0b39dfaca7dfd
     )
 
+    # Clear the generator to prevent it from updating
+    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/tools/)
     # Extract the precompiled gbc
     vcpkg_extract_source_archive(${GBC_ARCHIVE} ${CURRENT_BUILDTREES_DIR}/tools/)
-    set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc.exe)
+    set(FETCHED_GBC_PATH ${CURRENT_BUILDTREES_DIR}/tools/gbc-${BOND_VER}-amd64.exe)
 
     if (NOT EXISTS "${FETCHED_GBC_PATH}")
         message(FATAL_ERROR "Fetching GBC failed. Expected '${FETCHED_GBC_PATH}' to exists, but it doesn't.")
@@ -34,6 +36,10 @@ else()
 
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  bond-over-grpc BOND_ENABLE_GRPC
+)
+
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
@@ -42,21 +48,21 @@ vcpkg_configure_cmake(
     -DBOND_GBC_PATH=${FETCHED_GBC_PATH}
     -DBOND_SKIP_GBC_TESTS=TRUE
     -DBOND_ENABLE_COMM=FALSE
-    -DBOND_ENABLE_GRPC=FALSE
     -DBOND_FIND_RAPIDJSON=TRUE
+    -DBOND_STACK_OPTIONS=--allow-different-user
+    ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/bond TARGET_PATH share/bond)
 
-# Put the license file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/bond)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/bond/LICENSE ${CURRENT_PACKAGES_DIR}/share/bond/copyright)
+vcpkg_copy_pdbs()
 
 # There's no way to supress installation of the headers in the debug build,
 # so we just delete them.
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-vcpkg_copy_pdbs()
+# Put the license file where vcpkg expects it
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,20 +1,26 @@
 #pragma once
 
+#include <vcpkg/fwd/cmakevars.h>
+#include <vcpkg/fwd/portfileprovider.h>
+
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/build.h>
-#include <vcpkg/cmakevars.h>
 #include <vcpkg/packagespec.h>
-#include <vcpkg/portfileprovider.h>
-#include <vcpkg/statusparagraphs.h>
-#include <vcpkg/vcpkgpaths.h>
 
 #include <functional>
+#include <map>
 #include <vector>
 
 namespace vcpkg::Graphs
 {
     struct Randomizer;
+}
+
+namespace vcpkg
+{
+    struct StatusParagraphs;
 }
 
 namespace vcpkg::Dependencies
@@ -50,10 +56,13 @@ namespace vcpkg::Dependencies
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFileLocation& scfl,
                           const RequestType& request_type,
-                          std::unordered_map<std::string, std::vector<FeatureSpec>>&& dependencies);
+                          std::map<std::string, std::vector<FeatureSpec>>&& dependencies);
 
         std::string displayname() const;
         const std::string& public_abi() const;
+        bool has_package_abi() const;
+        Optional<const std::string&> package_abi() const;
+        const Build::PreBuildInfo& pre_build_info(LineInfo linfo) const;
 
         PackageSpec spec;
 
@@ -64,13 +73,11 @@ namespace vcpkg::Dependencies
         RequestType request_type;
         Build::BuildPackageOptions build_options;
 
-        std::unordered_map<std::string, std::vector<FeatureSpec>> feature_dependencies;
+        std::map<std::string, std::vector<FeatureSpec>> feature_dependencies;
         std::vector<PackageSpec> package_dependencies;
         std::vector<std::string> feature_list;
 
-        Optional<std::unique_ptr<Build::PreBuildInfo>> pre_build_info;
-        Optional<std::string> package_abi;
-        Optional<fs::path> abi_tag_file;
+        Optional<Build::AbiInfo> abi_info;
     };
 
     enum class RemovePlanType
@@ -160,7 +167,21 @@ namespace vcpkg::Dependencies
                                    const StatusParagraphs& status_db,
                                    const CreateInstallPlanOptions& options = {});
 
-    void print_plan(const ActionPlan& action_plan,
-                    const bool is_recursive = true,
-                    const fs::path& default_ports_dir = "");
+    // `features` should have "default" instead of missing "core". This is only exposed for testing purposes.
+    std::vector<FullPackageSpec> resolve_deps_as_top_level(const SourceControlFile& scf,
+                                                           Triplet triplet,
+                                                           std::vector<std::string> features,
+                                                           CMakeVars::CMakeVarProvider& var_provider);
+
+    /// <param name="provider">Contains the ports of the current environment.</param>
+    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
+    /// <param name="status_db">Status of installed packages in the current environment.</param>
+    ExpectedS<ActionPlan> create_versioned_install_plan(const PortFileProvider::IVersionedPortfileProvider& vprovider,
+                                                        const PortFileProvider::IBaselineProvider& bprovider,
+                                                        const CMakeVars::CMakeVarProvider& var_provider,
+                                                        const std::vector<Dependency>& deps,
+                                                        const std::vector<DependencyOverride>& overrides,
+                                                        const PackageSpec& toplevel);
+
+    void print_plan(const ActionPlan& action_plan, const bool is_recursive = true, const fs::path& vcpkg_root_dir = {});
 }

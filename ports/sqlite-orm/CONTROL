@@ -1,4 +1,13 @@
 Source: sqlite-orm
 Version: 1.5
+Port-Version: 2
+Homepage: https://github.com/fnc12/sqlite_orm
 Build-Depends: sqlite3
 Description: SQLite ORM light header only library for modern C++
+
+Feature: test
+Description: Build sqlite_orm unit tests
+Build-Depends: catch2
+
+Feature: example
+Description: Build examples

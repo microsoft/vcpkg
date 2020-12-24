@@ -1,6 +1,5 @@
-#include "pch.h"
-
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/statusparagraph.h>
 
 using namespace vcpkg::Parse;
@@ -12,7 +11,7 @@ namespace vcpkg
         static const std::string STATUS = "Status";
     }
 
-    StatusParagraph::StatusParagraph() noexcept : want(Want::ERROR_STATE), state(InstallState::ERROR_STATE) {}
+    StatusParagraph::StatusParagraph() noexcept : want(Want::ERROR_STATE), state(InstallState::ERROR_STATE) { }
 
     void serialize(const StatusParagraph& pgh, std::string& out_str)
     {
@@ -86,16 +85,16 @@ namespace vcpkg
         }
     }
 
-    std::unordered_map<std::string, std::vector<FeatureSpec>> InstalledPackageView::feature_dependencies() const
+    std::map<std::string, std::vector<FeatureSpec>> InstalledPackageView::feature_dependencies() const
     {
         auto extract_deps = [&](const std::string& name) { return FeatureSpec{{name, spec().triplet()}, "core"}; };
 
-        std::unordered_map<std::string, std::vector<FeatureSpec>> deps;
+        std::map<std::string, std::vector<FeatureSpec>> deps;
 
-        deps.emplace("core", Util::fmap(core->package.depends, extract_deps));
+        deps.emplace("core", Util::fmap(core->package.dependencies, extract_deps));
 
         for (const StatusParagraph* const& feature : features)
-            deps.emplace(feature->package.feature, Util::fmap(feature->package.depends, extract_deps));
+            deps.emplace(feature->package.feature, Util::fmap(feature->package.dependencies, extract_deps));
 
         return deps;
     }
@@ -106,11 +105,11 @@ namespace vcpkg
         // Todo: make this unneeded by collapsing all package dependencies into the core package
         std::vector<std::string> deps;
         for (auto&& feature : features)
-            for (auto&& dep : feature->package.depends)
+            for (auto&& dep : feature->package.dependencies)
                 deps.push_back(dep);
 
         // Add the core paragraph dependencies to the list
-        for (auto&& dep : core->package.depends)
+        for (auto&& dep : core->package.dependencies)
             deps.push_back(dep);
 
         Util::erase_remove_if(deps, [&](const std::string& pspec) { return pspec == spec().name(); });
