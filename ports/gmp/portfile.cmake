@@ -63,7 +63,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
     get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
     file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
-    set(PACKAGE_VERSION 6.2.0)
+    set(PACKAGE_VERSION 6.2.1)
     set(PACKAGE_NAME gmp)
     set(prefix "${CURRENT_INSTALLED_DIR}")
     set(exec_prefix "\${prefix}")
@@ -97,7 +97,6 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
-        OPTIONS ${OPTIONS}
     )
 
     vcpkg_install_make()
