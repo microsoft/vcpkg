@@ -6,16 +6,16 @@ if (@IMGUI_BUILD_GLFW_BINDING@)
     find_dependency(glfw3 CONFIG)
 endif()
 
-if (@IMGUI_INSTALL_OPENGL3_GLEW_BINDING@)
+if (@IMGUI_BUILD_OPENGL3_GLEW_BINDING@)
     find_dependency(GLEW)
 endif()
 
-if (@IMGUI_BUILD_OPENGL3_GLEW_BINDING@)
-    find_dependency(glad)
+if (@IMGUI_BUILD_OPENGL3_GLAD_BINDING@)
+    find_dependency(glad CONFIG)
 endif()
 
 if (@IMGUI_BUILD_OPENGL3_GL3W_BINDING@)
-    find_dependency(gl3w)
+    find_dependency(gl3w CONFIG)
 endif()
 
 if (@IMGUI_BUILD_GLUT_BINDING@)
@@ -23,7 +23,7 @@ if (@IMGUI_BUILD_GLUT_BINDING@)
 endif()
 
 if (@IMGUI_BUILD_OPENGL3_GLBINDING_BINDING@)
-    find_dependency(glbinding)
+    find_dependency(glbinding CONFIG)
 endif()
 
 if (@IMGUI_BUILD_SDL2_BINDING@)
@@ -35,7 +35,7 @@ if (@IMGUI_BUILD_VULKAN_BINDING@)
 endif()
 
 if (@IMGUI_FREETYPE@)
-    find_dependency(Freetype)
+    find_dependency(freetype CONFIG)
 endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/imgui-targets.cmake")
