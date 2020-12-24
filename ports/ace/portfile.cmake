@@ -126,6 +126,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     LICENSE_SUBPATH COPYING
     PLATFORM ${MSBUILD_PLATFORM}
     USE_VCPKG_INTEGRATION
+    SKIP_CLEAN
   )
 
   # ACE itself does not define an install target, so it is not clear which
@@ -146,6 +147,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
            DESTINATION ${CURRENT_PACKAGES_DIR}/include/${RELATIVE_PATH})
     endforeach()
   endfunction()
+  
+  get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
+  set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
 
   # Install headers in subdirectory
   set(ACE_INCLUDE_FOLDERS
@@ -160,22 +164,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
       "ace/os_include/net"
       "ace/os_include/netinet"
       "ace/os_include/sys")
-  install_includes(${ACE_ROOT} "${ACE_INCLUDE_FOLDERS}")
+  install_includes(${SOURCE_COPY_PATH} "${ACE_INCLUDE_FOLDERS}")
 
   if("ssl" IN_LIST FEATURES)
-    install_includes(${ACE_ROOT} "ace/SSL")
+    install_includes(${SOURCE_COPY_PATH} "ace/SSL")
   endif()
 
   if("tao" IN_LIST FEATURES)
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/apps/svcconf" "ACEXML/common"
                                "ACEXML/parser/parser")
-    install_includes(${ACE_ROOT} "${ACEXML_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH} "${ACEXML_INCLUDE_FOLDERS}")
 
     set(ACE_PROTOCOLS_INCLUDE_FOLDERS "ace/HTBP" "ace/INet" "ace/RMCast"
                                       "ace/TMCast")
-    install_includes(${ACE_ROOT}/protocols "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/protocols "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
 
-    install_includes(${ACE_ROOT} "Kokyu")
+    install_includes(${SOURCE_COPY_PATH} "Kokyu")
 
     set(TAO_ORBSVCS_INCLUDE_FOLDERS
         "orbsvcs"
@@ -209,11 +213,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("ssl" IN_LIST FEATURES)
       list(APPEND TAO_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/SSLIOP")
     endif()
-    install_includes(${TAO_ROOT}/orbsvcs "${TAO_ORBSVCS_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/TAO/orbsvcs "${TAO_ORBSVCS_INCLUDE_FOLDERS}")
 
     set(TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/FT_ReplicationManager"
                                          "orbsvcs/Notify_Service")
-    install_includes(${TAO_ROOT} "${TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/TAO "${TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS}")
 
     set(TAO_INCLUDE_FOLDERS
         "tao"
@@ -255,7 +259,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("zlib" IN_LIST FEATURES)
       list(APPEND TAO_INCLUDE_FOLDERS "tao/Compression/zlib")
     endif()
-    install_includes(${TAO_ROOT} "${TAO_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/TAO "${TAO_INCLUDE_FOLDERS}")
   endif()
 
   # Remove dlls without any export
@@ -268,6 +272,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)
     endif()
   endif()
+  
+  vcpkg_clean_msbuild()
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)

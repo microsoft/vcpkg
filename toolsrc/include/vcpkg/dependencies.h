@@ -173,5 +173,15 @@ namespace vcpkg::Dependencies
                                                            std::vector<std::string> features,
                                                            CMakeVars::CMakeVarProvider& var_provider);
 
+    /// <param name="provider">Contains the ports of the current environment.</param>
+    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
+    /// <param name="status_db">Status of installed packages in the current environment.</param>
+    ExpectedS<ActionPlan> create_versioned_install_plan(const PortFileProvider::IVersionedPortfileProvider& vprovider,
+                                                        const PortFileProvider::IBaselineProvider& bprovider,
+                                                        const CMakeVars::CMakeVarProvider& var_provider,
+                                                        const std::vector<Dependency>& deps,
+                                                        const std::vector<DependencyOverride>& overrides,
+                                                        const PackageSpec& toplevel);
+
     void print_plan(const ActionPlan& action_plan, const bool is_recursive = true, const fs::path& vcpkg_root_dir = {});
 }
