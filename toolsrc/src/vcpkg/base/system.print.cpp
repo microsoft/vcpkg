@@ -22,7 +22,7 @@ namespace vcpkg::System
 #else
             // TODO: add color handling code
             // it should probably use VT-220 codes
-            (void)(c);
+            (void)c;
             System::print2(message);
 #endif
         }

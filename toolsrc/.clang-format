@@ -40,13 +40,15 @@ IncludeCategories:
     Priority: -1
   - Regex: '^<catch2/catch\.hpp>$'
     Priority: 1
-  - Regex: '^<vcpkg/fwd/.*\.h>$'
+  - Regex: '^<vcpkg/base/fwd/.*\.h>$'
     Priority: 2
-  - Regex: '^<vcpkg/base/.*\.h>$'
+  - Regex: '^<vcpkg/fwd/.*\.h>$'
     Priority: 3
-  - Regex: '^<vcpkg/.*\.h>$'
+  - Regex: '^<vcpkg/base/.*\.h>$'
     Priority: 4
-  - Regex: '^<[a-z0-9_]*\.h>$'
+  - Regex: '^<vcpkg/.*\.h>$'
     Priority: 5
-  - Regex: '^<[a-z0-9_]*>$' # C++ standard library
+  - Regex: '^<[a-z0-9_]*\.h>$'
     Priority: 6
+  - Regex: '^<[a-z0-9_]*>$' # C++ standard library
+    Priority: 7

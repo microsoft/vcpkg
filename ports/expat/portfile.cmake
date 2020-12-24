@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libexpat/libexpat
-    REF a7bc26b69768f7fb24f0c7976fae24b157b85b13 #tag 2.2.9
-    SHA512 18842d5c9ff89654c5beeb9daba7ff5a911da318d419735fb14a5acbe0d1b4ac07077822c70cfa5c845892bcec2d72f8f265b9a259fe459092864f4d1754f8dd
+    REF c092d40c300c6d219cb3b111932a824022265370 #Head from commit 2020-08-18
+    SHA512 5a5d41b500f5602a32aea8f4e15593e639206bb3f97553497e80b2975360cac88ac90386f5efc11728614f24bbb620fb908a3c8ca71c9e7b312f6157b2477afe
     HEAD_REF master
     PATCHES
-        fix-find-package-by-cmake.patch
+        pkgconfig.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -26,16 +26,11 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/expat)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/expat-2.2.9)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
-file(GLOB DEBUG_EXE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
-if(EXE OR DEBUG_EXE)
-    file(REMOVE ${EXE} ${DEBUG_EXE})
-endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/expat_external.h
@@ -48,3 +43,5 @@ vcpkg_copy_pdbs()
 
 #Handle copyright
 file(INSTALL ${SOURCE_PATH}/expat/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

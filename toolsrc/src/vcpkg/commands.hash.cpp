@@ -18,7 +18,7 @@ namespace vcpkg::Commands::Hash
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        (void)(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
 
         const fs::path file_to_hash = args.command_arguments[0];
 

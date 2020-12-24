@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 include(${CURRENT_INSTALLED_DIR}/share/ignitionmodularscripts/ignition_modular_library.cmake)
 
 ignition_modular_library(NAME math

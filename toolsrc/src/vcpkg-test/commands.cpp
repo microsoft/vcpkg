@@ -2,68 +2,80 @@
 
 #include <vcpkg/commands.contact.h>
 #include <vcpkg/commands.h>
+#include <vcpkg/commands.upload-metrics.h>
 #include <vcpkg/commands.version.h>
+
+#include <stddef.h>
 
 using namespace vcpkg;
 
-TEST_CASE ("test commands are constructible", "[commands]")
+namespace
 {
-    Commands::Contact::ContactCommand contact{};
-    Commands::Version::VersionCommand version{};
-}
+    template<class CommandListT, size_t ExpectedCount>
+    void check_all_commands(const CommandListT& actual_commands, const char* const (&expected_commands)[ExpectedCount])
+    {
+        CHECK(actual_commands.size() == ExpectedCount); // makes sure this test is updated if we add a command
+        for (const char* expected_command : expected_commands)
+        {
+            CHECK(Commands::find(StringView{expected_command, strlen(expected_command)}, actual_commands) != nullptr);
+        }
 
+        CHECK(Commands::find("x-never-will-exist", actual_commands) == nullptr);
+    }
+} // unnamed namespace
+
+// clang-format tries to wrap the following lists inappropriately
+
+// clang-format off
 TEST_CASE ("get_available_basic_commands works", "[commands]")
 {
-    auto commands_list = Commands::get_available_basic_commands();
-    CHECK(commands_list.size() == 2);
-    CHECK(Commands::find("version", commands_list) != nullptr);
-    CHECK(Commands::find("contact", commands_list) != nullptr);
-    CHECK(Commands::find("aang", commands_list) == nullptr);
+    check_all_commands(Commands::get_available_basic_commands(), {
+        "contact",
+        "version",
+#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+        "x-upload-metrics",
+#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+        });
 }
 
 TEST_CASE ("get_available_paths_commands works", "[commands]")
 {
-    auto commands_list = Commands::get_available_paths_commands();
-    CHECK(commands_list.size() == 19);
-
-    CHECK(Commands::find("/?", commands_list) != nullptr);
-    CHECK(Commands::find("help", commands_list) != nullptr);
-    CHECK(Commands::find("search", commands_list) != nullptr);
-    CHECK(Commands::find("list", commands_list) != nullptr);
-    CHECK(Commands::find("integrate", commands_list) != nullptr);
-    CHECK(Commands::find("owns", commands_list) != nullptr);
-    CHECK(Commands::find("update", commands_list) != nullptr);
-    CHECK(Commands::find("edit", commands_list) != nullptr);
-    CHECK(Commands::find("create", commands_list) != nullptr);
-    CHECK(Commands::find("cache", commands_list) != nullptr);
-    CHECK(Commands::find("portsdiff", commands_list) != nullptr);
-    CHECK(Commands::find("autocomplete", commands_list) != nullptr);
-    CHECK(Commands::find("hash", commands_list) != nullptr);
-    CHECK(Commands::find("fetch", commands_list) != nullptr);
-    CHECK(Commands::find("x-ci-clean", commands_list) != nullptr);
-    CHECK(Commands::find("x-history", commands_list) != nullptr);
-    CHECK(Commands::find("x-package-info", commands_list) != nullptr);
-    CHECK(Commands::find("x-vsinstances", commands_list) != nullptr);
-    CHECK(Commands::find("x-format-manifest", commands_list) != nullptr);
-
-    CHECK(Commands::find("korra", commands_list) == nullptr);
+    check_all_commands(Commands::get_available_paths_commands(), {
+        "/?",
+        "help",
+        "search",
+        "list",
+        "integrate",
+        "owns",
+        "update",
+        "edit",
+        "create",
+        "cache",
+        "portsdiff",
+        "autocomplete",
+        "hash",
+        "fetch",
+        "format-manifest",
+        "x-ci-clean",
+        "x-history",
+        "x-package-info",
+        "x-vsinstances",
+        });
 }
 
 TEST_CASE ("get_available_commands_type_a works", "[commands]")
 {
-    auto commands_list = Commands::get_available_triplet_commands();
-    CHECK(commands_list.size() == 10);
-
-    CHECK(Commands::find("install", commands_list) != nullptr);
-    CHECK(Commands::find("x-set-installed", commands_list) != nullptr);
-    CHECK(Commands::find("ci", commands_list) != nullptr);
-    CHECK(Commands::find("remove", commands_list) != nullptr);
-    CHECK(Commands::find("upgrade", commands_list) != nullptr);
-    CHECK(Commands::find("build", commands_list) != nullptr);
-    CHECK(Commands::find("env", commands_list) != nullptr);
-    CHECK(Commands::find("build-external", commands_list) != nullptr);
-    CHECK(Commands::find("export", commands_list) != nullptr);
-    CHECK(Commands::find("depend-info", commands_list) != nullptr);
-
-    CHECK(Commands::find("mai", commands_list) == nullptr);
+    check_all_commands(Commands::get_available_triplet_commands(), {
+        "install",
+        "x-set-installed",
+        "ci",
+        "remove",
+        "upgrade",
+        "build",
+        "env",
+        "build-external",
+        "export",
+        "depend-info",
+        });
 }
+// clang-format on

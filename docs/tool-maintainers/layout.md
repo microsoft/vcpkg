@@ -36,16 +36,6 @@ We have six files in this directory -- one `.clang-format` file, one
       the IDE.
     - `vcpkg.sln`: The solution file is how one opens the project in the VS IDE.
 
-### `vcpkg`, `vcpkglib`, `vcpkgmetricsuploader`, and `vcpkgtest`
-
-These four contain exactly one `<name>.vcxproj` and one
-`<name>.vcxproj.filters`. The `<name>.vcxproj` file contains the source files
-and the `<name>.vcxproj.filters` contains information on how Visual Studio
-should lay out the project's source files in the IDE's project view.
-
-`vcpkgtest` should not be touched. It's likely that it will be deleted soon. If
-you want to test your code, use the cmake build system.
-
 ## Source Files
 
 If you're modifying the project, it's likely that these are the directories that
@@ -72,8 +62,7 @@ There are three directories:
 ### `src`
 
 The source files live here. `pch.cpp` is the source file for the
-[precompiled header]; `vcpkg.cpp` is where the `vcpkg` binary lives; and
-`vcpkgmetricsuploader.cpp` is where the metrics uploader lives.
+[precompiled header]; `vcpkg.cpp` is where the `vcpkg` binary lives.
 
 The interesting files live in the `vcpkg` and `vcpkg-test` directories. In
 `vcpkg`, you have the implementation for the interfaces that live in

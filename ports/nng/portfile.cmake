@@ -1,30 +1,27 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nanomsg/nng
-    REF 6ec4107907552db927be8601aed97b5a4b83d33d#version 1.3.0
-    SHA512 28b99d822d7be0348d4e367c2d92cd2bd4a5563806454388ad3c7d9817ef91fa7b4408d15ce4c77ac6a8ad2dd7db173899fdaf7881585282bf57f4c487909be6
+    REF 32b12a311e1f490f0d5c629ce887edfbf18f2d2c # version 1.3.2
+    SHA512 cd1b1906e5b99d9f04ce41d3d93c0841c45a571ed824c4d19428ce68fd53366e5ed90411d5958baaf9fa0ab412639dec7594a8ec1f64de4b41168932e3565125
     HEAD_REF master
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" NNG_STATIC_LIB)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     mbedtls NNG_ENABLE_TLS
+    tools NNG_ENABLE_NNGCAT
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=TRUE
-        -DNNG_STATIC_LIB=${NNG_STATIC_LIB}
+    OPTIONS
         -DNNG_TESTS=OFF
-        -DNNG_ENABLE_NNGCAT=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
 
-# Move CMake config files to the right place
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/nng)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -49,7 +46,10 @@ else()
     )
 endif()
 
-# Put the licence file where vcpkg expects it
-configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+if ("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES nngcat AUTO_CLEAN)
+endif()
+
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

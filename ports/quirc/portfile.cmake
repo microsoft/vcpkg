@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dlbeer/quirc
-    REF v1.0
-    SHA512 a556b08f2e2c710648b342fd06a855aa577b2b8c047c45a1c47cf54cde9963faf612978afba80bfd60a6f4f63156566f549ea303f09ed6e5348c1c30f5d77c13
+    REF 2e8c4ce7bc45fbe137e50e338c297e265777e7dd # v1.1
+    SHA512 83eeab7c70c93477f9a7a2d3114e080ce831d27e035bb47c3fc114d5ede8852599c37af591af348dde1a870f65f8a860284e4a3e1e05585cb7948556b464f59c
     HEAD_REF master
     PATCHES
         patch-for-msvc.patch

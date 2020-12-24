@@ -2,12 +2,14 @@
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.dependinfo.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 
 #include <vector>

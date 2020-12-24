@@ -1,12 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO protocolbuffers/protobuf
-    REF fde7cf7358ec7cd69e8db9be4f1fa6a5c431386a    #v3.13.0
-    SHA512 b458410311a0905048c86d70ded263ae0cbb6693fd42cba730d3a95c69ca533cf453eb15c5f8bf8b00003ddc63fe96b3c4242907e2d6b00d5bec5d37b2ae1c5e
+    REF 2514f0bd7da7e2af1bed4c5d1b84f031c4d12c10    #v3.14.0
+    SHA512 765fd12786b405eb8b7365f1117fa16d0e268f8677e829e0a91635bb4278295c5e488949726394f84d0993f8ea8205ca66eb1f79c88cc89ad5ac4a2df483d473
     HEAD_REF master
     PATCHES
-        fix-uwp.patch
-        fix-android-log.patch
         fix-static-build.patch
 )
 
@@ -38,6 +36,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 	zlib	protobuf_WITH_ZLIB
 )
 
+if (VCPKG_DOWNLOAD_MODE)
+    # download PKGCONFIG in download mode which is used in `vcpkg_fixup_pkgconfig()` at the end of this script.
+    # download it here because `vcpkg_configure_cmake()` halts execution in download mode when running configure process.
+    vcpkg_find_acquire_program(PKGCONFIG)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cmake
@@ -119,7 +122,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
 )
 endif()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 vcpkg_copy_pdbs()
 set(packages protobuf protobuf-lite)
 foreach(_package IN LISTS packages)
@@ -133,3 +135,6 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(SYSTEM_LIBRARIES SYSTEM_LIBRARIES pthread)
 endif()
 vcpkg_fixup_pkgconfig(${SYSTEM_LIBRARIES})
+
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

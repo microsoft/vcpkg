@@ -1,0 +1,45 @@
+#!/bin/sh
+
+set -e
+
+export PATH="/usr/bin:$PATH"
+
+command -v cygpath >/dev/null && have_cygpath=1
+
+cygpath() {
+    if [ -n "$have_cygpath" ]; then
+        command cygpath "$@"
+    else
+        eval _p='$'$#
+        printf '%s\n' "$_p"
+    fi
+}
+
+export PKG_CONFIG_PATH="$(cygpath -p "${PKG_CONFIG_PATH}")"
+
+# Export HTTP(S)_PROXY as http(s)_proxy:
+[ -n "$HTTP_PROXY"  ] && export http_proxy="$HTTP_PROXY"
+[ -n "$HTTPS_PROXY" ] && export https_proxy="$HTTPS_PROXY"
+
+PATH_TO_BUILD_DIR=$(  cygpath "@BUILD_DIR@")
+PATH_TO_SRC_DIR=$(    cygpath "@SOURCE_PATH@")
+PATH_TO_PACKAGE_DIR=$(cygpath "@INST_PREFIX@")
+
+JOBS=@VCPKG_CONCURRENCY@
+
+# Default to hardware concurrency if unset.
+: ${JOBS:=$(nproc)}
+
+cd "$PATH_TO_BUILD_DIR"
+
+echo "=== CONFIGURING ==="
+
+sh "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" @CONFIGURE_OPTIONS@
+
+echo "=== BUILDING ==="
+
+make -j${JOBS}
+
+echo "=== INSTALLING ==="
+
+make install

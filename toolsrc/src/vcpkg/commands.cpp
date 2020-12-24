@@ -24,6 +24,7 @@
 #include <vcpkg/commands.search.h>
 #include <vcpkg/commands.setinstalled.h>
 #include <vcpkg/commands.upgrade.h>
+#include <vcpkg/commands.upload-metrics.h>
 #include <vcpkg/commands.version.h>
 #include <vcpkg/commands.xvsinstances.h>
 #include <vcpkg/export.h>
@@ -38,9 +39,16 @@ namespace vcpkg::Commands
     {
         static const Version::VersionCommand version{};
         static const Contact::ContactCommand contact{};
+#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+        static const UploadMetrics::UploadMetricsCommand upload_metrics{};
+#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+
         static std::vector<PackageNameAndFunction<const BasicCommand*>> t = {
             {"version", &version},
             {"contact", &contact},
+#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+            {"x-upload-metrics", &upload_metrics},
+#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
         };
         return t;
     }
@@ -85,7 +93,7 @@ namespace vcpkg::Commands
             {"x-package-info", &info},
             {"x-history", &porthistory},
             {"x-vsinstances", &vsinstances},
-            {"x-format-manifest", &format_manifest},
+            {"format-manifest", &format_manifest},
         };
         return t;
     }
