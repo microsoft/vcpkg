@@ -91,7 +91,7 @@ Vagrant.configure('2') do |config|
   config.vm.provision 'shell',
     run: 'once',
     name: 'Install brew applications',
-    inline: "brew install #{brew_formulas.join(' ')} && brew cask install #{brew_cask_formulas.join(' ')}",
+    inline: "brew install #{brew_formulas.join(' ')} && brew install --cask #{brew_cask_formulas.join(' ')}",
     privileged: false
 
   config.vm.provision 'shell',
