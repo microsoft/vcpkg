@@ -18,6 +18,7 @@ else()
     )
 endif()
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/imgui-config.cmake.in DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_OSX))
@@ -25,24 +26,24 @@ if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    allegro5-binding            IMGUI_BUILD_ALLEGRO5_BINDING
-    dx9-binding                 IMGUI_BUILD_DX9_BINDING
-    dx10-binding                IMGUI_BUILD_DX10_BINDING
-    dx11-binding                IMGUI_BUILD_DX11_BINDING
-    dx12-binding                IMGUI_BUILD_DX12_BINDING
-    glfw-binding                IMGUI_BUILD_GLFW_BINDING
-    glut-binding                IMGUI_BUILD_GLUT_BINDING
+    allegro5-binding            IMGUI_INSTALL_ALLEGRO5_BINDING
+    dx9-binding                 IMGUI_INSTALL_DX9_BINDING
+    dx10-binding                IMGUI_INSTALL_DX10_BINDING
+    dx11-binding                IMGUI_INSTALL_DX11_BINDING
+    dx12-binding                IMGUI_INSTALL_DX12_BINDING
+    glfw-binding                IMGUI_INSTALL_GLFW_BINDING
+    glut-binding                IMGUI_INSTALL_GLUT_BINDING
     marmalade-binding           IMGUI_COPY_MARMALADE_BINDING
-    metal-binding               IMGUI_BUILD_METAL_BINDING
-    opengl2-binding             IMGUI_BUILD_OPENGL2_BINDING
-    opengl3-glew-binding        IMGUI_BUILD_OPENGL3_GLEW_BINDING
-    opengl3-glad-binding        IMGUI_BUILD_OPENGL3_GLAD_BINDING
-    opengl3-gl3w-binding        IMGUI_BUILD_OPENGL3_GL3W_BINDING
-    opengl3-glbinding-binding   IMGUI_BUILD_OPENGL3_GLBINDING_BINDING
-    osx-binding                 IMGUI_BUILD_OSX_BINDING
-    sdl2-binding                IMGUI_BUILD_SDL2_BINDING
-    vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
-    win32-binding               IMGUI_BUILD_WIN32_BINDING
+    metal-binding               IMGUI_INSTALL_METAL_BINDING
+    opengl2-binding             IMGUI_INSTALL_OPENGL2_BINDING
+    opengl3-glew-binding        IMGUI_INSTALL_OPENGL3_GLEW_BINDING
+    opengl3-glad-binding        IMGUI_INSTALL_OPENGL3_GLAD_BINDING
+    opengl3-gl3w-binding        IMGUI_INSTALL_OPENGL3_GL3W_BINDING
+    opengl3-glbinding-binding   IMGUI_INSTALL_OPENGL3_GLBINDING_BINDING
+    osx-binding                 IMGUI_INSTALL_OSX_BINDING
+    sdl2-binding                IMGUI_INSTALL_SDL2_BINDING
+    vulkan-binding              IMGUI_INSTALL_VULKAN_BINDING
+    win32-binding               IMGUI_INSTALL_WIN32_BINDING
     freetype                    IMGUI_FREETYPE
     wchar32                     IMGUI_USE_WCHAR32
 )
