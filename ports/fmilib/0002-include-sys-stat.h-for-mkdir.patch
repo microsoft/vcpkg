@@ -1,0 +1,20 @@
+From 080876bf3735efeedaab0b211d2be7b3c3524d97 Mon Sep 17 00:00:00 2001
+From: Nicole Mazzuca <mazzucan@outlook.com>
+Date: Wed, 23 Sep 2020 10:03:30 -0700
+Subject: [PATCH 2/2] include sys/stat.h for mkdir
+
+---
+ ThirdParty/Minizip/minizip/miniunz.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/ThirdParty/Minizip/minizip/miniunz.c b/ThirdParty/Minizip/minizip/miniunz.c
+index 2264705..e0167d5 100644
+--- a/ThirdParty/Minizip/minizip/miniunz.c
++++ b/ThirdParty/Minizip/minizip/miniunz.c
+@@ -53,5 +53,6 @@
+ #else
+ # include <unistd.h>
+ # include <utime.h>
++# include <sys/stat.h>
+ #endif
+ 

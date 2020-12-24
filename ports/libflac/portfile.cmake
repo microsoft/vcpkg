@@ -5,27 +5,45 @@ vcpkg_from_github(
     SHA512 d0d3b5451f8d74aa0a0832fbe95cca55597ce9654765a95adaac98ecd0da9e803b98551a40a3fb3fd5b86bc5f40cd1a791127c03da5322e7f01e7fa761171a21
     HEAD_REF master
     PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-library-console.patch"
-        "${CMAKE_CURRENT_LIST_DIR}/uwp-createfile2.patch"
+        uwp-library-console.patch
+        uwp-createfile2.patch
+        fix-compile-options.patch
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(BUILD_SHARED_LIBS ON)
+if(VCPKG_TARGET_IS_MINGW)
+    set(WITH_STACK_PROTECTOR OFF)
+    string(APPEND VCPKG_C_FLAGS "-D_FORTIFY_SOURCE=0")
+    string(APPEND VCPKG_CXX_FLAGS "-D_FORTIFY_SOURCE=0")
 else()
-    set(BUILD_SHARED_LIBS OFF)
+    set(WITH_STACK_PROTECTOR ON)
 endif()
+
+if("asm" IN_LIST FEATURES)
+    if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+        message(FATAL_ERROR "Feature asm only supports x86 architecture.")
+    endif()
+
+    VCPKG_FIND_ACQUIRE_PROGRAM(NASM)
+    GET_FILENAME_COMPONENT(NASM_PATH ${NASM} DIRECTORY)
+    vcpkg_add_to_path("${NASM_PATH}")
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    asm WITH_ASM
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_PROGRAMS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_DOCS=OFF
         -DBUILD_TESTING=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS})
+        -DWITH_STACK_PROTECTOR=${WITH_STACK_PROTECTOR})
 
 vcpkg_install_cmake()
+
 vcpkg_fixup_cmake_targets(
     CONFIG_PATH share/FLAC/cmake
     TARGET_PATH share/FLAC
@@ -55,7 +73,8 @@ else()
     )
 endif()
 
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
+
 # This license (BSD) is relevant only for library - if someone would want to install
 # FLAC cmd line tools as well additional license (GPL) should be included
-file(COPY ${SOURCE_PATH}/COPYING.Xiph DESTINATION ${CURRENT_PACKAGES_DIR}/share/libflac)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libflac/COPYING.Xiph ${CURRENT_PACKAGES_DIR}/share/libflac/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.Xiph DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

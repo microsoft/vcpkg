@@ -1,47 +1,53 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-	message(FATAL_ERROR "Cross-compiling is not supported")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ampl/mp
-    REF 67875b71ef68511277ec2dc8224f613487cefce9
-    SHA512 fad2496c10b843ddad7c4dba1eea1b4cd22e90be12dec2ad598fbd1ed5e1c492d92c5130490c7045ea608bc9ea2af191661c39b3bee3bc5159663f306ce50950
+    REF bb7d616605dd23e4a453a834b0fc8c0a2a71b5aa
+    SHA512 558321f700a2ffe9d13f29f7c034825f5644a49c55da8490160d7ee8303484de5f9a636783387cc108bd238cdc3d2afa6b28cafecce73ee7893d792f5293712a
     HEAD_REF master
     PATCHES
-    disable-matlab-mex.patch
-    workaround-msvc-optimizer-ice.patch
-    install-targets.patch
+        disable-matlab-mex.patch
+        fix-build.patch
+        fix-dependency-asl.patch
+        fix-arm-build.patch # https://github.com/ampl/mp/issues/115
+        install-targets.patch
 )
+
+if (VCPKG_TARGET_IS_WINDOWS AND (TRIPLET_SYSTEM_ARCH STREQUAL "arm" OR TRIPLET_SYSTEM_ARCH STREQUAL "arm64"))
+    set(EXPECTED_EXE ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/${PORT}/gen-expr-info.exe)
+    if (NOT EXISTS ${EXPECTED_EXE})
+        message(FATAL_ERROR "Please install ${PORT}:x86-windows first.")
+    endif()
+    set(ARITHCHK_EXEC ${EXPECTED_EXE})
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-    -DBUILD=asl
-    -DBUILD_TESTING=OFF
+        -DBUILD=no
+        -DBUILD_TESTING=OFF
+        -DMP_VARIADIC_TEMPLATES=OFF
+        -DARITHCHK_EXEC=${ARITHCHK_EXEC}
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(
-    CONFIG_PATH share/unofficial-mp
-    TARGET_PATH share/unofficial-mp
-)
-
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/bin
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/share/mp)
-
-configure_file(${SOURCE_PATH}/LICENSE.rst
-    ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 
 vcpkg_copy_pdbs()
-vcpkg_test_cmake(PACKAGE_NAME unofficial-mp)
+
+vcpkg_copy_tools(TOOL_NAMES gen-expr-info AUTO_CLEAN)
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-mp TARGET_PATH share/unofficial-mp)
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
+    # remove amplsig.dll and cp.dll, see https://github.com/ampl/mp/issues/130
+    ${CURRENT_PACKAGES_DIR}/debug/bin
+    ${CURRENT_PACKAGES_DIR}/bin
+)
+
+configure_file(${SOURCE_PATH}/LICENSE.rst ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

@@ -1,7 +1,5 @@
 # single header file library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO sharkdp/dbg-macro

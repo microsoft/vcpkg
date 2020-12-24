@@ -1,14 +1,25 @@
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO herumi/xbyak
-    REF v5.911
-    SHA512 3cb6b1e73d7dc2a23dcb31310720f0d4b83b62cfc69ff09eeefafe032e58e04574419f668d5ca957e8fc21e679e25da059f6e93724949e0ff1fcaa6779b88bdd
+    REF 77ffe717376d194f1e5cc910bbd755d99bbba94e	# 5.991 + cmake targets
+    SHA512 4e1ffa98dc63444aebf0a6e7a4ea57a9040cbf261f3a6fa43d23f0361cece71f1f4b597e95b6c85efbd4668e421081730b04ee924450ea0b0114923c36fc9c74
     HEAD_REF master
 )
 
-# handle license file
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
 
-# copy headers
-file(GLOB HEADER_FILES ${SOURCE_PATH}/xbyak/*.h)
-file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/xbyak)
+vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug
+    ${CURRENT_PACKAGES_DIR}/lib
+)
+
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -14,13 +14,23 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   avx AVX_SUPPORTED
 )
 
+if(VCPKG_TARGET_IS_MINGW)
+  set(STACK_PROTECTOR OFF)
+  string(APPEND VCPKG_C_FLAGS "-D_FORTIFY_SOURCE=0")
+  string(APPEND VCPKG_CXX_FLAGS "-D_FORTIFY_SOURCE=0")
+else()
+  set(STACK_PROTECTOR ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
+            -DOPUS_STACK_PROTECTOR=${STACK_PROTECTOR}
     PREFER_NINJA)
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Opus)
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
 file(INSTALL
      ${SOURCE_PATH}/COPYING

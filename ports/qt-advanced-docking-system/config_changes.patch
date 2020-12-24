@@ -1,47 +1,13 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 578dfc1..a4c9460 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -70,7 +70,7 @@ if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
- else()
-     set(ads_PlatformDir "x64")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0bd721d..4848c5f 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -52,7 +52,7 @@ if (UNIX)
+     set(ads_SRCS linux/FloatingWidgetTitleBar.cpp ${ads_SRCS})
+     set(ads_HEADERS linux/FloatingWidgetTitleBar.h ${ads_HEADERS})
  endif()
 -if(BUILD_STATIC)
 +if(NOT BUILD_SHARED_LIBS)
-     add_library(qtadvanceddocking STATIC ${ads_SRCS})
+     add_library(qtadvanceddocking STATIC ${ads_SRCS} ${ads_HEADERS})
      target_compile_definitions(qtadvanceddocking PUBLIC ADS_STATIC)
  else()
-@@ -88,7 +88,7 @@ install(FILES
-     COMPONENT license
- )
- install(TARGETS qtadvanceddocking
--    EXPORT adsTargets
-+    EXPORT qt-advanced-docking-systemConfig
-     RUNTIME DESTINATION bin
-     LIBRARY DESTINATION lib
-     ARCHIVE DESTINATION lib
-@@ -100,14 +100,8 @@ write_basic_package_version_file("adsConfigVersion.cmake"
-     VERSION ${ads_VERSION}
-     COMPATIBILITY SameMajorVersion
- )
--install(EXPORT adsTargets
--    FILE adsTargets.cmake
--    NAMESPACE ads::
--    DESTINATION lib/cmake/ads
--)
--install(FILES "adsConfig.cmake" "${CMAKE_BINARY_DIR}/adsConfigVersion.cmake"
--    DESTINATION lib/cmake/ads
--)
-+
-+install(EXPORT qt-advanced-docking-systemConfig NAMESPACE qt-advanced-docking-system:: DESTINATION share/qt-advanced-docking-system)
- 
- target_include_directories(qtadvanceddocking PUBLIC 
-     "$<BUILD_INTERFACE:${ads_INCLUDE}>"
-@@ -117,7 +111,6 @@ target_link_libraries(qtadvanceddocking PUBLIC ${ads_LIBS})
- target_compile_definitions(qtadvanceddocking PRIVATE ${ads_COMPILE_DEFINE})
- set_target_properties(qtadvanceddocking PROPERTIES 
-     VERSION ${ads_VERSION}
--    EXPORT_NAME "QtAdvancedDockingSystem"
-     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/lib"
-     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/lib"
-     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/bin"

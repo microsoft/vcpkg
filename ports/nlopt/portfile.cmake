@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevengj/nlopt
-    REF v2.6.2
-    SHA512 61e5c01140a57c0ad2a0acd82ad50dce1b5679dc281e55cbbc332e876b19a689013100617545a42b721d8c487df37d6ccd67859171243433fe29468f259b556b
+    REF v2.7.0
+    SHA512 3c41cab357b50adf50fe2d6225409ade8c5e8ee3576e3680ab29dded29ed7d328bc3d51d3a50054630159c319dca69e47ff08dc5df891b180b7d7e8fcbc27694
     HEAD_REF master
-    PATCHES
-        0001-suppress-MS-compiler-complaint-about-negating-unsign.patch
 )
 
 vcpkg_configure_cmake(

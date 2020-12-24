@@ -1,0 +1,22 @@
+diff --git a/openmp/runtime/src/CMakeLists.txt b/openmp/runtime/src/CMakeLists.txt
+index 81275c0483d..61468e048ec 100644
+--- a/openmp/runtime/src/CMakeLists.txt
++++ b/openmp/runtime/src/CMakeLists.txt
+@@ -136,7 +136,7 @@ libomp_get_ldflags(LIBOMP_CONFIGURED_LDFLAGS)
+ add_library(omp ${LIBOMP_LIBRARY_KIND} ${LIBOMP_SOURCE_FILES})
+ 
+ set_target_properties(omp PROPERTIES
+-  PREFIX "" SUFFIX "" OUTPUT_NAME "${LIBOMP_LIB_FILE}"
++  PREFIX "" SUFFIX "" OUTPUT_NAME "${LIBOMP_LIB_FILE}" DEBUG_POSTFIX ""
+   LINK_FLAGS "${LIBOMP_CONFIGURED_LDFLAGS}"
+   LINKER_LANGUAGE ${LIBOMP_LINKER_LANGUAGE}
+ )
+@@ -215,7 +215,7 @@ if(WIN32)
+     # Create new import library that is just the previously created one + kmp_import.cpp
+     add_library(ompimp STATIC ${LIBOMP_GENERATED_IMP_LIB} kmp_import.cpp)
+     set_target_properties(ompimp PROPERTIES
+-      PREFIX "" SUFFIX "" OUTPUT_NAME "${LIBOMP_IMP_LIB_FILE}"
++      PREFIX "" SUFFIX "" OUTPUT_NAME "${LIBOMP_IMP_LIB_FILE}" DEBUG_POSTFIX ""
+       LINKER_LANGUAGE C
+     )
+     add_dependencies(ompimp omp) # ensure generated import library is created first

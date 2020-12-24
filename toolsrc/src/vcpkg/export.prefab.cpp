@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/system.print.h>
@@ -11,6 +9,7 @@
 #include <vcpkg/export.h>
 #include <vcpkg/export.prefab.h>
 #include <vcpkg/install.h>
+#include <vcpkg/tools.h>
 
 namespace vcpkg::Export::Prefab
 {
@@ -104,9 +103,9 @@ namespace vcpkg::Export::Prefab
     "stl":"@STL@"
 })";
         std::string json = Strings::replace_all(std::move(TEMPLATE), "@ABI@", abi);
-        json = Strings::replace_all(std::move(json), "@API@", std::to_string(api));
-        json = Strings::replace_all(std::move(json), "@NDK@", std::to_string(ndk));
-        json = Strings::replace_all(std::move(json), "@STL@", stl);
+        Strings::inplace_replace_all(json, "@API@", std::to_string(api));
+        Strings::inplace_replace_all(json, "@NDK@", std::to_string(ndk));
+        Strings::inplace_replace_all(json, "@STL@", stl);
         return json;
     }
 
@@ -118,7 +117,7 @@ namespace vcpkg::Export::Prefab
 })";
 
         std::string json = Strings::replace_all(std::move(TEMPLATE), "@LIBRARY_NAME@", null_if_empty(library_name));
-        json = Strings::replace_all(std::move(json), "@LIBRARIES@", null_if_empty_array(jsonify(export_libraries)));
+        Strings::inplace_replace_all(json, "@LIBRARIES@", null_if_empty_array(jsonify(export_libraries)));
         return json;
     }
 
@@ -131,8 +130,8 @@ namespace vcpkg::Export::Prefab
 })";
 
         std::string json = Strings::replace_all(std::move(TEMPLATE), "@LIBRARY_NAME@", null_if_empty(library_name));
-        json = Strings::replace_all(std::move(json), "@LIBRARIES@", jsonify(export_libraries));
-        json = Strings::replace_all(std::move(json), "@ANDROID_METADATA@", android.to_json());
+        Strings::inplace_replace_all(json, "@LIBRARIES@", jsonify(export_libraries));
+        Strings::inplace_replace_all(json, "@ANDROID_METADATA@", android.to_json());
         return json;
     }
 
@@ -147,9 +146,9 @@ namespace vcpkg::Export::Prefab
     "version":"@PACKAGE_VERSION@"
 })";
         std::string json = Strings::replace_all(std::move(TEMPLATE), "@PACKAGE_NAME@", name);
-        json = Strings::replace_all(std::move(json), "@PACKAGE_SCHEMA@", std::to_string(schema));
-        json = Strings::replace_all(std::move(json), "@PACKAGE_DEPS@", deps);
-        json = Strings::replace_all(std::move(json), "@PACKAGE_VERSION@", version);
+        Strings::inplace_replace_all(json, "@PACKAGE_SCHEMA@", std::to_string(schema));
+        Strings::inplace_replace_all(json, "@PACKAGE_DEPS@", deps);
+        Strings::inplace_replace_all(json, "@PACKAGE_VERSION@", version);
         return json;
     }
 
@@ -203,17 +202,17 @@ namespace vcpkg::Export::Prefab
 
         fs.remove(destination, ec);
         Checks::check_exit(
-            VCPKG_LINE_INFO, !fs.exists(destination), "Could not remove file: %s", destination.u8string());
+            VCPKG_LINE_INFO, !fs.exists(destination), "Could not remove file: %s", fs::u8string(destination));
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
         System::cmd_execute_and_capture_output(
             Strings::format(
-                R"("%s" a "%s" "%s\*")", seven_zip_exe.u8string(), destination.u8string(), source.u8string()),
+                R"("%s" a "%s" "%s\*")", fs::u8string(seven_zip_exe), fs::u8string(destination), fs::u8string(source)),
             System::get_clean_environment());
 #else
         System::cmd_execute_clean(
-            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", source.u8string(), destination.u8string()));
+            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
 #endif
     }
 
@@ -227,9 +226,10 @@ namespace vcpkg::Export::Prefab
                                           ? R"("%s" "install:install-file" "-Dfile=%s" "-DpomFile=%s")"
                                           : R"("%s" "-q" "install:install-file" "-Dfile=%s" "-DpomFile=%s")";
 
-        const auto cmd_line = Strings::format(cmd_line_format, Tools::MAVEN, aar.u8string(), pom.u8string());
+        const auto cmd_line = Strings::format(cmd_line_format, Tools::MAVEN, fs::u8string(aar), fs::u8string(pom));
         const int exit_code = System::cmd_execute_clean(cmd_line);
-        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: %s installing maven file", aar.generic_u8string());
+        Checks::check_exit(
+            VCPKG_LINE_INFO, exit_code == 0, "Error: %s installing maven file", fs::generic_u8string(aar));
     }
 
     static std::unique_ptr<Build::PreBuildInfo> build_info_from_triplet(
@@ -312,13 +312,13 @@ namespace vcpkg::Export::Prefab
         Checks::check_exit(VCPKG_LINE_INFO,
                            utils.exists(ndk_location),
                            "Error: ANDROID_NDK_HOME Directory does not exists %s",
-                           ndk_location.generic_u8string());
+                           fs::generic_u8string(ndk_location));
         const fs::path source_properties_location = ndk_location / "source.properties";
 
         Checks::check_exit(VCPKG_LINE_INFO,
                            utils.exists(ndk_location),
                            "Error: source.properties missing in ANDROID_NDK_HOME directory %s",
-                           source_properties_location.generic_u8string());
+                           fs::generic_u8string(source_properties_location));
 
         std::string content = utils.read_contents(source_properties_location, VCPKG_LINE_INFO);
 
@@ -327,7 +327,7 @@ namespace vcpkg::Export::Prefab
         Checks::check_exit(VCPKG_LINE_INFO,
                            version_opt.has_value(),
                            "Error: NDK version missing %s",
-                           source_properties_location.generic_u8string());
+                           fs::generic_u8string(source_properties_location));
 
         NdkVersion version = to_version(version_opt.value_or_exit(VCPKG_LINE_INFO)).value_or_exit(VCPKG_LINE_INFO);
 
@@ -335,32 +335,32 @@ namespace vcpkg::Export::Prefab
 
         /*
         prefab
-        └── <name>
-            ├── aar
-            │   ├── AndroidManifest.xml
-            │   ├── META-INF
-            │   │   └── LICENCE
-            │   └── prefab
-            │       ├── modules
-            │       │   └── <module>
-            │       │       ├── include
-            │       │       ├── libs
-            │       │       │   ├── android.arm64-v8a
-            │       │       │   │   ├── abi.json
-            │       │       │   │   └── lib<module>.so
-            │       │       │   ├── android.armeabi-v7a
-            │       │       │   │   ├── abi.json
-            │       │       │   │   └── lib<module>.so
-            │       │       │   ├── android.x86
-            │       │       │   │   ├── abi.json
-            │       │       │   │   └── lib<module>.so
-            │       │       │   └── android.x86_64
-            │       │       │       ├── abi.json
-            │       │       │       └── lib<module>.so
-            │       │       └── module.json
-            │       └── prefab.json
-            ├── <name>-<version>.aar
-            └── pom.xml
+        +-- <name>
+            +-- aar
+            |   +-- AndroidManifest.xml
+            |   +-- META-INF
+            |   |   +-- LICENCE
+            |   +-- prefab
+            |       +-- modules
+            |       |   +-- <module>
+            |       |       +-- include
+            |       |       +-- libs
+            |       |       |   +-- android.arm64-v8a
+            |       |       |   |   +-- abi.json
+            |       |       |   |   +-- lib<module>.so
+            |       |       |   +-- android.armeabi-v7a
+            |       |       |   |   +-- abi.json
+            |       |       |   |   +-- lib<module>.so
+            |       |       |   +-- android.x86
+            |       |       |   |   +-- abi.json
+            |       |       |   |   +-- lib<module>.so
+            |       |       |   +-- android.x86_64
+            |       |       |       +-- abi.json
+            |       |       |       +-- lib<module>.so
+            |       |       +-- module.json
+            |       +-- prefab.json
+            +-- <name>-<version>.aar
+            +-- pom.xml
         */
 
         std::unordered_map<std::string, std::string> version_map;
@@ -426,9 +426,9 @@ namespace vcpkg::Export::Prefab
     <uses-sdk android:minSdkVersion="@MIN_SDK_VERSION@" android:targetSdkVersion="@SDK_TARGET_VERSION@" />
 </manifest>)";
             std::string manifest = Strings::replace_all(std::move(MANIFEST_TEMPLATE), "@GROUP_ID@", group_id);
-            manifest = Strings::replace_all(std::move(manifest), "@ARTIFACT_ID@", artifact_id);
-            manifest = Strings::replace_all(std::move(manifest), "@MIN_SDK_VERSION@", sdk_min_version);
-            manifest = Strings::replace_all(std::move(manifest), "@SDK_TARGET_VERSION@", sdk_target_version);
+            Strings::inplace_replace_all(manifest, "@ARTIFACT_ID@", artifact_id);
+            Strings::inplace_replace_all(manifest, "@MIN_SDK_VERSION@", sdk_min_version);
+            Strings::inplace_replace_all(manifest, "@SDK_TARGET_VERSION@", sdk_target_version);
 
             fs::path manifest_path = package_directory / "AndroidManifest.xml";
             fs::path prefab_path = prefab_directory / "prefab.json";
@@ -484,8 +484,8 @@ namespace vcpkg::Export::Prefab
         <scope>runtime</scope>
     </dependency>)";
                 std::string pom = Strings::replace_all(std::move(maven_pom), "@GROUP_ID@", group_id);
-                pom = Strings::replace_all(std::move(pom), "@ARTIFACT_ID@", it.name());
-                pom = Strings::replace_all(std::move(pom), "@VERSION@", version_map[it.name()]);
+                Strings::inplace_replace_all(pom, "@ARTIFACT_ID@", it.name());
+                Strings::inplace_replace_all(pom, "@VERSION@", version_map[it.name()]);
                 pom_dependencies.push_back(pom);
                 pm.dependencies.push_back(it.name());
             }
@@ -499,8 +499,8 @@ namespace vcpkg::Export::Prefab
             {
                 System::print2(
                     Strings::format("[DEBUG]\n\tWriting manifest\n\tTo %s\n\tWriting prefab meta data\n\tTo %s\n\n",
-                                    manifest_path.generic_u8string(),
-                                    prefab_path.generic_u8string()));
+                                    fs::generic_u8string(manifest_path),
+                                    fs::generic_u8string(prefab_path)));
             }
 
             utils.write_contents(manifest_path, manifest, VCPKG_LINE_INFO);
@@ -528,7 +528,7 @@ namespace vcpkg::Export::Prefab
                                    "Error: Packages not installed %s:%s %s",
                                    name,
                                    triplet,
-                                   listfile.generic_u8string());
+                                   fs::generic_u8string(listfile));
 
                 fs::path libs = installed_dir / fs::u8path("lib");
 
@@ -567,8 +567,8 @@ namespace vcpkg::Export::Prefab
                 {
                     for (const auto& module : modules)
                     {
-                        std::string module_name = module.stem().generic_u8string();
-                        std::string extension = module.extension().generic_u8string();
+                        std::string module_name = fs::generic_u8string(module.stem());
+                        std::string extension = fs::generic_u8string(module.extension());
 
                         ABIMetadata ab;
                         ab.abi = triplet_abi_map[triplet];
@@ -597,7 +597,7 @@ namespace vcpkg::Export::Prefab
                         if (prefab_options.enable_debug)
                         {
                             System::print2(
-                                Strings::format("\tWriting abi metadata\n\tTo %s\n", abi_path.generic_u8string()));
+                                Strings::format("\tWriting abi metadata\n\tTo %s\n", fs::generic_u8string(abi_path)));
                         }
                         utils.write_contents(abi_path, ab.to_string(), VCPKG_LINE_INFO);
 
@@ -611,8 +611,8 @@ namespace vcpkg::Export::Prefab
                         if (prefab_options.enable_debug)
                         {
                             System::print2(Strings::format("\tCopying libs\n\tFrom %s\n\tTo %s\n",
-                                                           installed_module_path.generic_u8string(),
-                                                           exported_module_path.generic_u8string()));
+                                                           fs::generic_u8string(installed_module_path),
+                                                           fs::generic_u8string(exported_module_path)));
                         }
                         fs::path installed_headers_dir = installed_dir / "include";
                         fs::path exported_headers_dir = module_libs_dir / "include";
@@ -620,8 +620,8 @@ namespace vcpkg::Export::Prefab
                         if (prefab_options.enable_debug)
                         {
                             System::print2(Strings::format("\tCopying headers\n\tFrom %s\n\tTo %s\n",
-                                                           installed_headers_dir.generic_u8string(),
-                                                           exported_headers_dir.generic_u8string()));
+                                                           fs::generic_u8string(installed_headers_dir),
+                                                           fs::generic_u8string(exported_headers_dir)));
                         }
 
                         utils.copy(installed_headers_dir, exported_headers_dir, fs::copy_options::recursive);
@@ -633,7 +633,7 @@ namespace vcpkg::Export::Prefab
                         if (prefab_options.enable_debug)
                         {
                             System::print2(Strings::format("\tWriting module metadata\n\tTo %s\n\n",
-                                                           module_meta_path.generic_u8string()));
+                                                           fs::generic_u8string(module_meta_path)));
                         }
 
                         utils.write_contents(module_meta_path, meta.to_json(), VCPKG_LINE_INFO);
@@ -647,8 +647,8 @@ namespace vcpkg::Export::Prefab
             if (prefab_options.enable_debug)
             {
                 System::print2(Strings::format("[DEBUG] Exporting AAR And POM\n\tAAR Path %s\n\tPOM Path %s\n",
-                                               exported_archive_path.generic_u8string(),
-                                               pom_path.generic_u8string()));
+                                               fs::generic_u8string(exported_archive_path),
+                                               fs::generic_u8string(pom_path)));
             }
 
             compress_directory(paths, package_directory, exported_archive_path);
@@ -670,9 +670,9 @@ namespace vcpkg::Export::Prefab
 </project>)";
 
             std::string pom = Strings::replace_all(std::move(POM), "@GROUP_ID@", group_id);
-            pom = Strings::replace_all(std::move(pom), "@ARTIFACT_ID@", artifact_id);
-            pom = Strings::replace_all(std::move(pom), "@DEPENDENCIES@", Strings::join("\n", pom_dependencies));
-            pom = Strings::replace_all(std::move(pom), "@VERSION@", norm_version);
+            Strings::inplace_replace_all(pom, "@ARTIFACT_ID@", artifact_id);
+            Strings::inplace_replace_all(pom, "@DEPENDENCIES@", Strings::join("\n", pom_dependencies));
+            Strings::inplace_replace_all(pom, "@VERSION@", norm_version);
 
             utils.write_contents(pom_path, pom, VCPKG_LINE_INFO);
 
@@ -709,7 +709,7 @@ namespace vcpkg::Export::Prefab
             }
             System::print2(
                 System::Color::success,
-                Strings::format("Successfuly exported %s. Checkout %s  \n", name, paths.prefab.generic_u8string()));
+                Strings::format("Successfuly exported %s. Checkout %s  \n", name, fs::generic_u8string(paths.prefab)));
         }
     }
 }

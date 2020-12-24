@@ -2,11 +2,13 @@
 
 #include <vcpkg/commands.interface.h>
 
-namespace vcpkg::Commands
+namespace vcpkg::Commands::X_VSInstances
 {
-    namespace X_VSInstances
+    extern const CommandStructure COMMAND_STRUCTURE;
+    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
+
+    struct VSInstancesCommand : PathsCommand
     {
-        extern const CommandStructure COMMAND_STRUCTURE;
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths);
-    }
+        virtual void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const override;
+    };
 }

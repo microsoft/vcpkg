@@ -1,0 +1,48 @@
+diff --git a/CMake/FindEXPAT.cmake b/CMake/FindEXPAT.cmake
+index 45d923764..0ebcd3c83 100644
+--- a/CMake/FindEXPAT.cmake
++++ b/CMake/FindEXPAT.cmake
+@@ -73,15 +73,37 @@ if(EXPAT_FOUND)
+ 
+   if(NOT TARGET EXPAT::EXPAT)
+     include(vtkDetectLibraryType)
+-    vtk_detect_library_type(expat_library_type
+-      PATH "${EXPAT_LIBRARY}")
++    if(EXPAT_LIBRARY_RELEASE)
++            vtk_detect_library_type(expat_library_type
++                                    PATH "${EXPAT_LIBRARY_RELEASE}")
++    elseif(EXPAT_LIBRARY_DEBUG)
++            vtk_detect_library_type(expat_library_type
++                                    PATH "${EXPAT_LIBRARY_RELEASE}")
++    else()
++            vtk_detect_library_type(expat_library_type
++                                    PATH "${EXPAT_LIBRARY}")
++    endif()
++
+     add_library(EXPAT::EXPAT "${expat_library_type}" IMPORTED)
+     unset(expat_library_type)
+     set_target_properties(EXPAT::EXPAT PROPERTIES
+-      IMPORTED_LINK_INTERFACE_LANGUAGES "C"
+-      IMPORTED_LOCATION "${EXPAT_LIBRARY}"
+-      IMPORTED_IMPLIB "${EXPAT_LIBRARY}"
+-      INTERFACE_INCLUDE_DIRECTORIES "${EXPAT_INCLUDE_DIRS}")
++          IMPORTED_LINK_INTERFACE_LANGUAGES "C"
++          INTERFACE_INCLUDE_DIRECTORIES "${EXPAT_INCLUDE_DIRS}")
++    if(EXPAT_LIBRARY_RELEASE)
++        set_target_properties(EXPAT::EXPAT PROPERTIES
++          IMPORTED_LOCATION_RELEASE "${EXPAT_LIBRARY_RELEASE}"
++          IMPORTED_IMPLIB_RELEASE "${EXPAT_LIBRARY_RELEASE}")
++    endif()
++    if(EXPAT_LIBRARY_DEBUG)
++        set_target_properties(EXPAT::EXPAT PROPERTIES
++          IMPORTED_LOCATION_DEBUG "${EXPAT_LIBRARY_DEBUG}"
++          IMPORTED_IMPLIB_DEBUG "${EXPAT_LIBRARY_DEBUG}")
++    endif()
++    if(EXPAT_LIBRARY_RELEASE OR EXPAT_LIBRARY_DEBUG AND NOT (EXPAT_LIBRARY_RELEASE AND EXPAT_LIBRARY_DEBUG))
++        set_target_properties(EXPAT::EXPAT PROPERTIES
++          IMPORTED_LOCATION "${EXPAT_LIBRARY}"
++          IMPORTED_IMPLIB "${EXPAT_LIBRARY}")
++    endif()
+   endif()
+ endif()
+ 

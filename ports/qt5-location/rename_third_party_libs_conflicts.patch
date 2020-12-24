@@ -1,0 +1,68 @@
+diff --git a/src/3rdparty/clip2tri/clip2tri.pro b/src/3rdparty/clip2tri/clip2tri.pro
+index 802c040..4059a63 100644
+--- a/src/3rdparty/clip2tri/clip2tri.pro
++++ b/src/3rdparty/clip2tri/clip2tri.pro
+@@ -1,4 +1,4 @@
+-TARGET = clip2tri
++TARGET = qt_clip2tri
+ 
+ CONFIG += staticlib exceptions warn_off optimize_full
+ 
+@@ -18,5 +18,5 @@ gcc {
+ HEADERS += clip2tri.h
+ SOURCES += clip2tri.cpp
+ 
+-LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lpoly2tri$$qtPlatformTargetSuffix() -lclipper$$qtPlatformTargetSuffix()
++LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lqt_poly2tri$$qtPlatformTargetSuffix() -lqt_clipper$$qtPlatformTargetSuffix()
+ 
+diff --git a/src/3rdparty/clipper/clipper.pro b/src/3rdparty/clipper/clipper.pro
+index 874d55c..a518d24 100644
+--- a/src/3rdparty/clipper/clipper.pro
++++ b/src/3rdparty/clipper/clipper.pro
+@@ -1,4 +1,4 @@
+-TARGET = clipper
++TARGET = qt_clipper
+ 
+ CONFIG += staticlib exceptions warn_off optimize_full
+ 
+diff --git a/src/3rdparty/poly2tri/poly2tri.pro b/src/3rdparty/poly2tri/poly2tri.pro
+index 76f2779..6c5f769 100644
+--- a/src/3rdparty/poly2tri/poly2tri.pro
++++ b/src/3rdparty/poly2tri/poly2tri.pro
+@@ -1,4 +1,4 @@
+-TARGET = poly2tri
++TARGET = qt_poly2tri
+ 
+ CONFIG += staticlib warn_off optimize_full
+ 
+diff --git a/src/location/declarativemaps/declarativemaps.pri b/src/location/declarativemaps/declarativemaps.pri
+index e2a922f..12199ee 100644
+--- a/src/location/declarativemaps/declarativemaps.pri
++++ b/src/location/declarativemaps/declarativemaps.pri
+@@ -68,5 +68,5 @@ SOURCES += \
+         declarativemaps/qquickgeomapgesturearea.cpp
+ 
+ load(qt_build_paths)
+-LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lpoly2tri$$qtPlatformTargetSuffix() -lclip2tri$$qtPlatformTargetSuffix()
++LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lqt_poly2tri$$qtPlatformTargetSuffix() -lqt_clip2tri$$qtPlatformTargetSuffix()
+ 
+diff --git a/src/location/location.pro b/src/location/location.pro
+index 1b541b9..b0e2c3f 100644
+--- a/src/location/location.pro
++++ b/src/location/location.pro
+@@ -45,4 +45,4 @@ HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+ 
+ load(qt_module)
+ 
+-LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lclip2tri$$qtPlatformTargetSuffix()
++LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lqt_clip2tri$$qtPlatformTargetSuffix()
+diff --git a/src/positioning/positioning.pro b/src/positioning/positioning.pro
+index 6535090..db49921 100644
+--- a/src/positioning/positioning.pro
++++ b/src/positioning/positioning.pro
+@@ -95,4 +95,4 @@ HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS
+ 
+ load(qt_module)
+ 
+-LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lclip2tri$$qtPlatformTargetSuffix()
++LIBS_PRIVATE += -L$$MODULE_BASE_OUTDIR/lib -lqt_clip2tri$$qtPlatformTargetSuffix()

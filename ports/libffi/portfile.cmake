@@ -6,6 +6,9 @@ vcpkg_from_github(
     REF v3.3
     SHA512 62798fb31ba65fa2a0e1f71dd3daca30edcf745dc562c6f8e7126e54db92572cc63f5aa36d927dd08375bb6f38a2380ebe6c5735f35990681878fc78fc9dbc83
     HEAD_REF master
+    PATCHES
+        win64-disable-stackframe-check.patch
+        win32-disable-stackframe-check.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -44,6 +47,12 @@ endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
+if(VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libffi.pc
+        "-lffi" "-llibffi")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libffi.pc
+        "-lffi" "-llibffi")
+endif()
 vcpkg_fixup_pkgconfig()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)

@@ -1,11 +1,22 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/util.h>
 
 #include <vcpkg/buildenvironment.h>
 #include <vcpkg/commands.create.h>
 #include <vcpkg/help.h>
+#include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
+
+namespace
+{
+    std::string remove_trailing_slashes(std::string argument)
+    {
+        using fs::is_slash;
+        argument.erase(std::find_if_not(argument.rbegin(), argument.rend(), is_slash).base(), argument.end());
+        return argument;
+    }
+}
 
 namespace vcpkg::Commands::Create
 {
@@ -19,11 +30,15 @@ namespace vcpkg::Commands::Create
 
     int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        Util::unused(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
         const std::string port_name = args.command_arguments.at(0);
-        const std::string url = args.command_arguments.at(1);
+        const std::string url = remove_trailing_slashes(args.command_arguments.at(1));
 
-        std::vector<System::CMakeVariable> cmake_args{{"CMD", "CREATE"}, {"PORT", port_name}, {"URL", url}};
+        std::vector<System::CMakeVariable> cmake_args{
+            {"CMD", "CREATE"},
+            {"PORT", port_name},
+            {"URL", url},
+            {"PORT_PATH", fs::generic_u8string(paths.builtin_ports_directory() / fs::u8path(port_name))}};
 
         if (args.command_arguments.size() >= 3)
         {
@@ -43,5 +58,10 @@ namespace vcpkg::Commands::Create
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         Checks::exit_with_code(VCPKG_LINE_INFO, perform(args, paths));
+    }
+
+    void CreateCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
+    {
+        Create::perform_and_exit(args, paths);
     }
 }

@@ -51,6 +51,38 @@ TEST_CASE ("SourceParagraph construct minimum", "[paragraph]")
     REQUIRE(pgh.core_paragraph->dependencies.size() == 0);
 }
 
+TEST_CASE ("SourceParagraph construct invalid", "[paragraph]")
+{
+    auto m_pgh = test_parse_control_file({{
+        {"Source", "zlib"},
+        {"Version", "1.2.8"},
+        {"Build-Depends", "1.2.8"},
+    }});
+
+    REQUIRE(!m_pgh.has_value());
+
+    m_pgh = test_parse_control_file({{
+        {"Source", "zlib"},
+        {"Version", "1.2.8"},
+        {"Default-Features", "1.2.8"},
+    }});
+
+    REQUIRE(!m_pgh.has_value());
+
+    m_pgh = test_parse_control_file({
+        {
+            {"Source", "zlib"},
+            {"Version", "1.2.8"},
+        },
+        {
+            {"Feature", "a"},
+            {"Build-Depends", "1.2.8"},
+        },
+    });
+
+    REQUIRE(!m_pgh.has_value());
+}
+
 TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
 {
     auto m_pgh = test_parse_control_file({{
@@ -76,6 +108,24 @@ TEST_CASE ("SourceParagraph construct maximum", "[paragraph]")
     REQUIRE(pgh.core_paragraph->default_features[0] == "df");
 }
 
+TEST_CASE ("SourceParagraph construct feature", "[paragraph]")
+{
+    auto m_pgh = test_parse_control_file({
+        {
+            {"Source", "s"},
+            {"Version", "v"},
+        },
+        {{"Feature", "f"}, {"Description", "d2"}, {"Build-Depends", "bd2"}},
+    });
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
+
+    REQUIRE(pgh.feature_paragraphs.size() == 1);
+    REQUIRE(pgh.feature_paragraphs[0]->name == "f");
+    REQUIRE(pgh.feature_paragraphs[0]->description == std::vector<std::string>{"d2"});
+    REQUIRE(pgh.feature_paragraphs[0]->dependencies.size() == 1);
+}
+
 TEST_CASE ("SourceParagraph two dependencies", "[paragraph]")
 {
     auto m_pgh = test_parse_control_file({{
@@ -87,8 +137,9 @@ TEST_CASE ("SourceParagraph two dependencies", "[paragraph]")
     auto& pgh = **m_pgh.get();
 
     REQUIRE(pgh.core_paragraph->dependencies.size() == 2);
-    REQUIRE(pgh.core_paragraph->dependencies[0].name == "z");
-    REQUIRE(pgh.core_paragraph->dependencies[1].name == "openssl");
+    // should be ordered
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "openssl");
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "z");
 }
 
 TEST_CASE ("SourceParagraph three dependencies", "[paragraph]")
@@ -102,9 +153,10 @@ TEST_CASE ("SourceParagraph three dependencies", "[paragraph]")
     auto& pgh = **m_pgh.get();
 
     REQUIRE(pgh.core_paragraph->dependencies.size() == 3);
-    REQUIRE(pgh.core_paragraph->dependencies[0].name == "z");
-    REQUIRE(pgh.core_paragraph->dependencies[1].name == "openssl");
-    REQUIRE(pgh.core_paragraph->dependencies[2].name == "xyz");
+    // should be ordered
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "openssl");
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "xyz");
+    REQUIRE(pgh.core_paragraph->dependencies[2].name == "z");
 }
 
 TEST_CASE ("SourceParagraph construct qualified dependencies", "[paragraph]")

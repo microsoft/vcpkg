@@ -1,9 +1,11 @@
 #pragma once
 
 #include <vcpkg/base/checks.h>
+#include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/stringliteral.h>
 
 #include <system_error>
+#include <type_traits>
 
 namespace vcpkg
 {
@@ -108,10 +110,13 @@ namespace vcpkg
         // Constructors are intentionally implicit
 
         ExpectedT(const S& s, ExpectedRightTag = {}) : m_s(s) { }
-        ExpectedT(S&& s, ExpectedRightTag = {}) : m_s(std::move(s)) { }
+        template<class = std::enable_if<!std::is_reference<S>::value>>
+        ExpectedT(S&& s, ExpectedRightTag = {}) : m_s(std::move(s))
+        {
+        }
 
         ExpectedT(const T& t, ExpectedLeftTag = {}) : m_t(t) { }
-        template<class = std::enable_if<!std::is_reference_v<T>>>
+        template<class = std::enable_if<!std::is_reference<T>::value>>
         ExpectedT(T&& t, ExpectedLeftTag = {}) : m_t(std::move(t))
         {
         }

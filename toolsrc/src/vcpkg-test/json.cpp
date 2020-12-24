@@ -28,8 +28,8 @@ static std::string mystringify(const Value& val) { return Json::stringify(val, J
 
 TEST_CASE ("JSON stringify weird strings", "[json]")
 {
-    vcpkg::StringView str = U8_STR("😀 😁 😂 🤣 😃 😄 😅 😆 😉");
-    REQUIRE(mystringify(Value::string(str)) == ('"' + str.to_string() + "\"\n"));
+    std::string str = U8_STR("😀 😁 😂 🤣 😃 😄 😅 😆 😉");
+    REQUIRE(mystringify(Value::string(str)) == ('"' + str + "\"\n"));
     REQUIRE(mystringify(Value::string("\xED\xA0\x80")) == "\"\\ud800\"\n"); // unpaired surrogate
 }
 
@@ -78,6 +78,49 @@ TEST_CASE ("JSON parse strings", "[json]")
     REQUIRE(res);
     REQUIRE(res.get()->first.is_string());
     REQUIRE(res.get()->first.string() == grin);
+}
+
+TEST_CASE ("JSON parse strings with escapes", "[json]")
+{
+    auto res = Json::parse(R"("\t")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\t");
+
+    res = Json::parse(R"("\\")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\\");
+
+    res = Json::parse(R"("\/")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "/");
+
+    res = Json::parse(R"("\b")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\b");
+
+    res = Json::parse(R"("\f")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\f");
+
+    res = Json::parse(R"("\n")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\n");
+
+    res = Json::parse(R"("\r")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == "\r");
+
+    res = Json::parse(R"("This is a \"test\", hopefully it worked")");
+    REQUIRE(res);
+    REQUIRE(res.get()->first.is_string());
+    REQUIRE(res.get()->first.string() == R"(This is a "test", hopefully it worked)");
 }
 
 TEST_CASE ("JSON parse integers", "[json]")
@@ -184,4 +227,15 @@ TEST_CASE ("JSON parse full file", "[json]")
         std::cerr << res.error()->format() << '\n';
     }
     REQUIRE(res);
+}
+
+TEST_CASE ("JSON track newlines", "[json]")
+{
+    auto res = Json::parse("{\n,", fs::u8path("filename"));
+    REQUIRE(!res);
+    REQUIRE(res.error()->format() ==
+            R"(Error: filename:2:1: Unexpected character; expected property name
+   on expression: ,
+                  ^
+)");
 }

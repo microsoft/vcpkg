@@ -1,10 +1,10 @@
 diff --git a/cmake/AwsCFlags.cmake b/cmake/AwsCFlags.cmake
-index 42d146e..813f56d 100644
+index 249b7d5..41a31e2 100644
 --- a/cmake/AwsCFlags.cmake
 +++ b/cmake/AwsCFlags.cmake
-@@ -39,15 +39,6 @@ function(aws_set_common_properties target)
-         # Since we want to be compatible with user builds using /volatile:iso, use it for the tests.
-         list(APPEND AWS_C_FLAGS /volatile:iso)
+@@ -38,15 +38,6 @@ function(aws_set_common_properties target)
+             list(APPEND AWS_C_FLAGS /DAWS_SUPPORT_WIN7=1)
+         endif()
  
 -        string(TOUPPER "${CMAKE_BUILD_TYPE}" _CMAKE_BUILD_TYPE)
 -        if(STATIC_CRT)

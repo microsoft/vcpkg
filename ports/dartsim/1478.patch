@@ -1,0 +1,25 @@
+From 6d03ee61c38e2b07b2dbb85f0ba61d2a76956e3b Mon Sep 17 00:00:00 2001
+From: Steve Peters <scpeters@openrobotics.org>
+Date: Fri, 24 Jul 2020 17:24:42 -0700
+Subject: [PATCH] Don't force CMAKE_INSTALL_PREFIX on windows
+
+Fixes #1477.
+
+Signed-off-by: Steve Peters <scpeters@openrobotics.org>
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6552bedc162..47df721559b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -51,7 +51,7 @@ initialize_component_helpers(${PROJECT_NAME})
+ 
+ # System install paths on Windows
+ if(WIN32)
+-  set(CMAKE_INSTALL_PREFIX "C:/Golems" CACHE PATH "Install prefix" FORCE)
++  set(CMAKE_INSTALL_PREFIX "C:/Golems" CACHE PATH "Install prefix")
+ endif()
+ 
+ #===============================================================================

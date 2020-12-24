@@ -1,6 +1,4 @@
 
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnome.org/pub/GNOME/sources/libsigc++/2.10/libsigc++-2.10.0.tar.xz"
     FILENAME "libsigc++-2.10.0.tar.xz"

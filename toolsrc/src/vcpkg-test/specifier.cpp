@@ -5,6 +5,8 @@
 
 #include <vcpkg/packagespec.h>
 
+#include <vcpkg-test/util.h>
+
 using namespace vcpkg;
 
 TEST_CASE ("specifier conversion", "[specifier]")
@@ -13,8 +15,8 @@ TEST_CASE ("specifier conversion", "[specifier]")
     {
         constexpr std::size_t SPEC_SIZE = 6;
 
-        PackageSpec a_spec("a", Triplet::X64_WINDOWS);
-        PackageSpec b_spec("b", Triplet::X64_WINDOWS);
+        PackageSpec a_spec("a", Test::X64_WINDOWS);
+        PackageSpec b_spec("b", Test::X64_WINDOWS);
 
         auto fspecs = FullPackageSpec{a_spec, {"0", "1"}}.to_feature_specs({}, {});
         auto fspecs2 = FullPackageSpec{b_spec, {"2", "3"}}.to_feature_specs({}, {});
@@ -94,19 +96,18 @@ TEST_CASE ("specifier parsing", "[specifier]")
 
     SECTION ("expand wildcards")
     {
-        auto zlib = vcpkg::FullPackageSpec::from_string("zlib[0,1]", Triplet::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
-        auto openssl =
-            vcpkg::FullPackageSpec::from_string("openssl[*]", Triplet::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
+        auto zlib = vcpkg::FullPackageSpec::from_string("zlib[0,1]", Test::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
+        auto openssl = vcpkg::FullPackageSpec::from_string("openssl[*]", Test::X86_UWP).value_or_exit(VCPKG_LINE_INFO);
         auto specs = zlib.to_feature_specs({}, {});
         auto specs2 = openssl.to_feature_specs({}, {});
         Util::Vectors::append(&specs, specs2);
         Util::sort(specs);
 
         std::vector<FeatureSpec> spectargets{
-            {{"openssl", Triplet::X86_UWP}, "core"},
-            {{"zlib", Triplet::X86_UWP}, "core"},
-            {{"zlib", Triplet::X86_UWP}, "0"},
-            {{"zlib", Triplet::X86_UWP}, "1"},
+            {{"openssl", Test::X86_UWP}, "core"},
+            {{"zlib", Test::X86_UWP}, "core"},
+            {{"zlib", Test::X86_UWP}, "0"},
+            {{"zlib", Test::X86_UWP}, "1"},
         };
         Util::sort(spectargets);
         REQUIRE(specs.size() == spectargets.size());

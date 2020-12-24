@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4ec8787..cfea5b3 100644
+index eef0c41..5d2c0d1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,7 +1,7 @@
@@ -11,10 +11,10 @@ index 4ec8787..cfea5b3 100644
  
  option(TINYUTF8_BUILD_STATIC "Build as static library" On)
  
-@@ -14,3 +14,14 @@ endif()
- add_library(tinyutf8 ${LIB_BUILD_TYPE} lib/tinyutf8.cpp)
+@@ -12,3 +12,14 @@ else()
+ endif()
  
- target_include_directories(tinyutf8 PUBLIC include)
+ add_library(tinyutf8 ${LIB_BUILD_TYPE} tinyutf8.cpp)
 +
 +if(MSVC)
 +    ADD_DEFINITIONS(-D_UNICODE)
@@ -25,5 +25,19 @@ index 4ec8787..cfea5b3 100644
 +    ARCHIVE DESTINATION lib
 +    LIBRARY DESTINATION lib)
 +
-+install(FILES include/tinyutf8.h DESTINATION include)
++install(FILES tinyutf8.h DESTINATION include)
+diff --git a/tinyutf8.cpp b/tinyutf8.cpp
+index ca07b1e..502312f 100644
+--- a/tinyutf8.cpp
++++ b/tinyutf8.cpp
+@@ -1,6 +1,6 @@
+ #include "tinyutf8.h"
+ 
+ // Explicit template instantiations for utf8_string
+-template struct tiny_utf8::basic_utf8_string<>;
+-template extern std::ostream& operator<<( std::ostream& stream , const tiny_utf8::basic_utf8_string<>& str );
+-template extern std::istream& operator>>( std::istream& stream , tiny_utf8::basic_utf8_string<>& str );
 \ No newline at end of file
++template class tiny_utf8::basic_utf8_string<>;
++extern template std::ostream& operator<<( std::ostream& stream , const tiny_utf8::basic_utf8_string<>& str );
++extern template std::istream& operator>>( std::istream& stream , tiny_utf8::basic_utf8_string<>& str );

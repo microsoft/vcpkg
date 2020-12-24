@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
 #include <vcpkg/base/system.debug.h>
@@ -158,6 +156,12 @@ namespace vcpkg
         Checks::check_exit(VCPKG_LINE_INFO, rcode == 0, "Could not determine current executable path.");
         Checks::check_exit(VCPKG_LINE_INFO, len > 0, "Could not determine current executable path.");
         return fs::path(exePath, exePath + len - 1);
+#elif defined(__OpenBSD__)
+        const char* progname = getprogname();
+        char resolved_path[PATH_MAX];
+        auto ret = realpath(progname, resolved_path);
+        Checks::check_exit(VCPKG_LINE_INFO, ret != nullptr, "Could not determine current executable path.");
+        return fs::u8path(resolved_path);
 #else /* LINUX */
         std::array<char, 1024 * 4> buf;
         auto written = readlink("/proc/self/exe", buf.data(), buf.size());
@@ -175,9 +179,10 @@ namespace vcpkg
     {
     }
     System::CMakeVariable::CMakeVariable(const StringView varname, const fs::path& path)
-        : CMakeVariable(varname, path.generic_u8string())
+        : CMakeVariable(varname, fs::generic_u8string(path))
     {
     }
+    System::CMakeVariable::CMakeVariable(std::string var) : s(std::move(var)) { }
 
     std::string System::make_basic_cmake_cmd(const fs::path& cmake_tool_path,
                                              const fs::path& cmake_script,
@@ -291,7 +296,6 @@ namespace vcpkg
             L"USERDOMAIN_ROAMINGPROFILE",
             L"USERNAME",
             L"USERPROFILE",
-            L"VCPKG_DISABLE_METRICS",
             L"windir",
             // Enables proxy information to be passed to Curl, the underlying download library in cmake.exe
             L"http_proxy",
@@ -464,13 +468,15 @@ namespace vcpkg
             return GetLastError();
     }
 
-    static ExpectedT<ProcessInfo, unsigned long> windows_create_process(const StringView cmd_line,
-                                                                        const Environment& env,
-                                                                        DWORD dwCreationFlags) noexcept
+    static ExpectedT<ProcessInfo, unsigned long> windows_create_windowless_process(const StringView cmd_line,
+                                                                                   const Environment& env,
+                                                                                   DWORD dwCreationFlags) noexcept
     {
         STARTUPINFOW startup_info;
         memset(&startup_info, 0, sizeof(STARTUPINFOW));
         startup_info.cb = sizeof(STARTUPINFOW);
+        startup_info.dwFlags = STARTF_USESHOWWINDOW;
+        startup_info.wShowWindow = SW_HIDE;
 
         return windows_create_process(cmd_line, env, dwCreationFlags, startup_info);
     }
@@ -545,17 +551,18 @@ namespace vcpkg
 #endif
 
 #if defined(_WIN32)
-    void System::cmd_execute_no_wait(StringView cmd_line)
+    void System::cmd_execute_background(StringView cmd_line)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 
-        auto process_info = windows_create_process(cmd_line, {}, DETACHED_PROCESS | CREATE_BREAKAWAY_FROM_JOB);
+        auto process_info = windows_create_windowless_process(
+            cmd_line, {}, CREATE_NEW_CONSOLE | CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB);
         if (!process_info.get())
         {
-            Debug::print("cmd_execute_no_wait() failed with error code ", process_info.error(), "\n");
+            Debug::print("cmd_execute_background() failed with error code ", process_info.error(), "\n");
         }
 
-        Debug::print("cmd_execute_no_wait() took ", static_cast<int>(timer.microseconds()), " us\n");
+        Debug::print("cmd_execute_background() took ", static_cast<int>(timer.microseconds()), " us\n");
     }
 
     Environment System::cmd_execute_modify_env(const ZStringView cmd_line, const Environment& env)
@@ -599,7 +606,7 @@ namespace vcpkg
 #if defined(_WIN32)
         using vcpkg::g_ctrl_c_state;
         g_ctrl_c_state.transition_to_spawn_process();
-        auto proc_info = windows_create_process(cmd_line, env, 0);
+        auto proc_info = windows_create_windowless_process(cmd_line, env, 0);
         auto long_exit_code = [&]() -> unsigned long {
             if (auto p = proc_info.get())
                 return p->wait();

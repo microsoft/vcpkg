@@ -1,8 +1,8 @@
-#include "pch.h"
-
 #include <vcpkg/base/checks.h>
 
+#include <vcpkg/install.h>
 #include <vcpkg/statusparagraphs.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg
 {
@@ -144,5 +144,43 @@ namespace vcpkg
             serialize(*pgh, out_str);
             out_str.push_back('\n');
         }
+    }
+
+    Json::Value serialize_ipv(const InstalledPackageView& ipv, const VcpkgPaths& paths)
+    {
+        const auto& fs = paths.get_filesystem();
+        Json::Object iobj;
+        iobj.insert("version-string", Json::Value::string(ipv.core->package.version));
+        iobj.insert("port-version", Json::Value::integer(ipv.core->package.port_version));
+        iobj.insert("triplet", Json::Value::string(ipv.spec().triplet().to_string()));
+        iobj.insert("abi", Json::Value::string(ipv.core->package.abi));
+        Json::Array deps;
+        for (auto&& dep : ipv.dependencies())
+            deps.push_back(Json::Value::string(dep.to_string()));
+        if (deps.size() != 0)
+        {
+            iobj.insert("dependencies", std::move(deps));
+        }
+        Json::Array features;
+        for (auto&& feature : ipv.features)
+        {
+            features.push_back(Json::Value::string(feature->package.feature));
+        }
+        if (features.size() != 0)
+        {
+            iobj.insert("features", std::move(features));
+        }
+        auto usage = Install::get_cmake_usage(ipv.core->package, paths);
+        if (!usage.message.empty())
+        {
+            iobj.insert("usage", Json::Value::string(std::move(usage.message)));
+        }
+        auto owns_files = fs.read_lines(paths.listfile_path(ipv.core->package)).value_or_exit(VCPKG_LINE_INFO);
+        Json::Array owns;
+        for (auto&& owns_file : owns_files)
+            owns.push_back(Json::Value::string(std::move(owns_file)));
+
+        iobj.insert("owns", std::move(owns));
+        return Json::Value::object(std::move(iobj));
     }
 }
