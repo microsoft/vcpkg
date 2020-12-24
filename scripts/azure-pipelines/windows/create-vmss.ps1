@@ -70,7 +70,9 @@ Write-Progress `
   -Status 'Creating virtual network' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-$allowHttp = New-AzNetworkSecurityRuleConfig `
+$allFirewallRules = @()
+
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
   -Name AllowHTTP `
   -Description 'Allow HTTP(S)' `
   -Access Allow `
@@ -82,75 +84,67 @@ $allowHttp = New-AzNetworkSecurityRuleConfig `
   -DestinationAddressPrefix * `
   -DestinationPortRange @(80, 443)
 
-$allowDns = New-AzNetworkSecurityRuleConfig `
-  -Name AllowDNS `
-  -Description 'Allow DNS' `
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
+  -Name AllowSFTP `
+  -Description 'Allow (S)FTP' `
   -Access Allow `
-  -Protocol * `
+  -Protocol Tcp `
   -Direction Outbound `
   -Priority 1009 `
   -SourceAddressPrefix * `
   -SourcePortRange * `
   -DestinationAddressPrefix * `
-  -DestinationPortRange 53
+  -DestinationPortRange @(21, 22)
 
-$allowGit = New-AzNetworkSecurityRuleConfig `
-  -Name AllowGit `
-  -Description 'Allow git' `
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
+  -Name AllowDNS `
+  -Description 'Allow DNS' `
   -Access Allow `
-  -Protocol Tcp `
+  -Protocol * `
   -Direction Outbound `
   -Priority 1010 `
   -SourceAddressPrefix * `
   -SourcePortRange * `
   -DestinationAddressPrefix * `
+  -DestinationPortRange 53
+
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
+  -Name AllowGit `
+  -Description 'Allow git' `
+  -Access Allow `
+  -Protocol Tcp `
+  -Direction Outbound `
+  -Priority 1011 `
+  -SourceAddressPrefix * `
+  -SourcePortRange * `
+  -DestinationAddressPrefix * `
   -DestinationPortRange 9418
 
-if (-Not $Unstable) {
-  $allowStorage = New-AzNetworkSecurityRuleConfig `
-    -Name AllowStorage `
-    -Description 'Allow Storage' `
-    -Access Allow `
-    -Protocol * `
-    -Direction Outbound `
-    -Priority 1011 `
-    -SourceAddressPrefix VirtualNetwork `
-    -SourcePortRange * `
-    -DestinationAddressPrefix Storage `
-    -DestinationPortRange *
-}
-
-$denyEverythingElse = New-AzNetworkSecurityRuleConfig `
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
   -Name DenyElse `
   -Description 'Deny everything else' `
   -Access Deny `
   -Protocol * `
   -Direction Outbound `
-  -Priority 1012 `
+  -Priority 1013 `
   -SourceAddressPrefix * `
   -SourcePortRange * `
   -DestinationAddressPrefix * `
   -DestinationPortRange *
 
 $NetworkSecurityGroupName = $ResourceGroupName + 'NetworkSecurity'
-$securityRules = @($allowHttp, $allowDns, $allowGit);
-if (-Not $Unstable) {
-  $securityRules += @($allowStorage)
-}
-
-$securityRules += @($denyEverythingElse)
-
 $NetworkSecurityGroup = New-AzNetworkSecurityGroup `
   -Name $NetworkSecurityGroupName `
   -ResourceGroupName $ResourceGroupName `
   -Location $Location `
-  -SecurityRules $securityRules
+  -SecurityRules $allFirewallRules
 
 $SubnetName = $ResourceGroupName + 'Subnet'
 $Subnet = New-AzVirtualNetworkSubnetConfig `
   -Name $SubnetName `
   -AddressPrefix "10.0.0.0/16" `
-  -NetworkSecurityGroup $NetworkSecurityGroup
+  -NetworkSecurityGroup $NetworkSecurityGroup `
+  -ServiceEndpoint "Microsoft.Storage"
 
 $VirtualNetworkName = $ResourceGroupName + 'Network'
 $VirtualNetwork = New-AzVirtualNetwork `
@@ -186,8 +180,31 @@ if (-Not $Unstable) {
     -StorageAccountName $StorageAccountName `
     -StorageAccountKey $StorageAccountKey
 
-  New-AzStorageShare -Name 'archives' -Context $StorageContext
-  Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 2048
+  New-AzStorageContainer -Name archives -Context $StorageContext -Permission Off
+  $StartTime = [DateTime]::Now
+  $ExpiryTime = $StartTime.AddMonths(6)
+
+  $SasToken = New-AzStorageAccountSASToken `
+    -Service Blob `
+    -Permission "racwdlup" `
+    -Context $StorageContext `
+    -StartTime $StartTime `
+    -ExpiryTime $ExpiryTime `
+    -ResourceType Service,Container,Object `
+    -Protocol HttpsOnly
+
+  $SasToken = $SasToken.Substring(1) # strip leading ?
+
+  # Note that we put the storage account into the firewall after creating the above SAS token or we
+  # would be denied since the person running this script isn't one of the VMs we're creating here.
+  Set-AzStorageAccount `
+    -ResourceGroupName $ResourceGroupName `
+    -AccountName $StorageAccountName `
+    -NetworkRuleSet ( `
+      @{bypass="AzureServices"; `
+      virtualNetworkRules=( `
+        @{VirtualNetworkResourceId=$VirtualNetwork.Subnets[0].Id;Action="allow"}); `
+      defaultAction="Deny"})
 }
 
 ####################################################################################################
@@ -234,7 +251,7 @@ Write-Progress `
 $provisionParameters = @{AdminUserPassword = $AdminPW;}
 if (-Not $Unstable) {
   $provisionParameters['StorageAccountName'] = $StorageAccountName
-  $provisionParameters['StorageAccountKey'] = $StorageAccountKey
+  $provisionParameters['StorageAccountSasToken'] = $SasToken
 }
 
 $ProvisionImageResult = Invoke-AzVMRunCommand `

@@ -318,13 +318,16 @@ function(boost_modular_build)
         set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <cflags>-Zl <compileflags> /AI\"${PLATFORM_WINMD_DIR}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
     endif()
 
-    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
-    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam @ONLY)
-
+    set(MSVC_VERSION)
     if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
         list(APPEND _bm_OPTIONS toolset=msvc)
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v14.")
+        set(MSVC_VERSION 14.2)
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         list(APPEND _bm_OPTIONS toolset=msvc)
+        set(MSVC_VERSION 14.1)
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v140")
+        list(APPEND _bm_OPTIONS toolset=msvc)
+        set(MSVC_VERSION 14.0)
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
         list(APPEND _bm_OPTIONS toolset=msvc)
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "external")
@@ -332,6 +335,9 @@ function(boost_modular_build)
     else()
         message(FATAL_ERROR "Unsupported value for VCPKG_PLATFORM_TOOLSET: '${VCPKG_PLATFORM_TOOLSET}'")
     endif()
+
+    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
+    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam @ONLY)
 
     ######################
     # Perform build + Package
@@ -429,7 +435,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_74" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-1_75" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
         elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})

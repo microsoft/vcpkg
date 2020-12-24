@@ -1,8 +1,8 @@
 . $PSScriptRoot/../end-to-end-tests-prelude.ps1
 
 ##### Test spaces in the path
-$CurrentTest = "zlib with spaces in path"
-Write-Host $CurrentTest
+$Script:CurrentTest = "zlib with spaces in path"
+Write-Host $Script:CurrentTest
 ./vcpkg install zlib "--triplet" $Triplet `
     "--no-binarycaching" `
     "--x-buildtrees-root=$TestingRoot/build Trees" `
