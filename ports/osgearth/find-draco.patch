@@ -1,0 +1,31 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 049e37e..d3d82f7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -134,7 +134,6 @@ find_package(GDAL REQUIRED)
+ # optional
+ find_package(GEOS)
+ find_package(Sqlite3)
+-find_package(Draco)
+ find_package(BASISU)
+ find_package(GLEW)
+ find_package(Protobuf)
+@@ -162,9 +161,18 @@ IF(SQLITE3_FOUND)
+ ENDIF(SQLITE3_FOUND)
+ 
+ # DRACO enables geometry compression sometimes used in glTF:
++if(BUILD_WITH_DRACO)
++  find_path(DRACO_INCLUDE_DIRS draco/core/draco_version.h)
++  find_library(DRACO_LIBRARY NAMES draco dracodec dracoenc libdraco libdracodec libdracoenc)
++  set(draco_INCLUDE_DIRS ${DRACO_INCLUDE_DIRS})
++  set(draco_LIBRARIES ${DRACO_LIBRARY})
++  if(DRACO_LIBRARY)
++    set(draco_FOUND 1)
++  endif()
+ IF(draco_FOUND)
+     ADD_DEFINITIONS(-DOSGEARTH_HAVE_DRACO)
+ ENDIF(draco_FOUND)
++endif()
+ 
+ # GDAL is the underlying geospatial processing SDK
+ IF(GDAL_FOUND)
