@@ -56,3 +56,59 @@ TEST_CASE ("find_first_of", "[strings]")
     REQUIRE(find_first_of("abcdefg", "bg") == std::string("bcdefg"));
     REQUIRE(find_first_of("abcdefg", "gb") == std::string("bcdefg"));
 }
+
+TEST_CASE ("edit distance", "[strings]")
+{
+    using vcpkg::Strings::byte_edit_distance;
+    REQUIRE(byte_edit_distance("", "") == 0);
+    REQUIRE(byte_edit_distance("a", "a") == 0);
+    REQUIRE(byte_edit_distance("abcd", "abcd") == 0);
+    REQUIRE(byte_edit_distance("aaa", "aa") == 1);
+    REQUIRE(byte_edit_distance("aa", "aaa") == 1);
+    REQUIRE(byte_edit_distance("abcdef", "bcdefa") == 2);
+    REQUIRE(byte_edit_distance("hello", "world") == 4);
+    REQUIRE(byte_edit_distance("CAPITAL", "capital") == 7);
+    REQUIRE(byte_edit_distance("", "hello") == 5);
+    REQUIRE(byte_edit_distance("world", "") == 5);
+}
+
+TEST_CASE ("replace_all", "[strings]")
+{
+    REQUIRE(vcpkg::Strings::replace_all("literal", "ter", "x") == "lixal");
+}
+
+TEST_CASE ("inplace_replace_all", "[strings]")
+{
+    using vcpkg::Strings::inplace_replace_all;
+    std::string target;
+    inplace_replace_all(target, "", "content");
+    REQUIRE(target.empty());
+    target = "aa";
+    inplace_replace_all(target, "a", "content");
+    REQUIRE(target == "contentcontent");
+    inplace_replace_all(target, "content", "");
+    REQUIRE(target.empty());
+    target = "ababababa";
+    inplace_replace_all(target, "aba", "X");
+    REQUIRE(target == "XbXba");
+    target = "ababababa";
+    inplace_replace_all(target, "aba", "aba");
+    REQUIRE(target == "ababababa");
+}
+
+TEST_CASE ("inplace_replace_all(char)", "[strings]")
+{
+    using vcpkg::Strings::inplace_replace_all;
+    static_assert(noexcept(inplace_replace_all(std::declval<std::string&>(), 'a', 'a')));
+
+    std::string target;
+    inplace_replace_all(target, ' ', '?');
+    REQUIRE(target.empty());
+    target = "hello";
+    inplace_replace_all(target, 'l', 'w');
+    REQUIRE(target == "hewwo");
+    inplace_replace_all(target, 'w', 'w');
+    REQUIRE(target == "hewwo");
+    inplace_replace_all(target, 'x', '?');
+    REQUIRE(target == "hewwo");
+}

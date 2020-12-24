@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-c
-    REF b7cd387bee8c661141fabb490f4969587c008c55 # v4.7.3
-    SHA512 a55391620fac61e4975fe62907ca21049911afce6190fc12d183d24133a32aae8cd223b97a3fe57fc82d8bdca1a7db451046e3be3c379051624d48b1f56c0332
+    REF 26fba54a58fa02af92d84441ed90b417c1d08161 # v4.7.4
+    SHA512 7144374b5bd3574ea422de07ffb30fecc4e5f560f9b46f62762cc0cce511dd33068b8df9244fe94ae3cc7b3a9bb9fe398c7e67c3e5ac2109768e5a9b984f24fb
     HEAD_REF master
     PATCHES
         no-install-deps.patch
         config-pkg-location.patch
         use_targets.patch
-        mpi.patch
         fix-dependency-libmath.patch
+        fix-linkage-error.patch
 )
 
 #Remove outdated find modules

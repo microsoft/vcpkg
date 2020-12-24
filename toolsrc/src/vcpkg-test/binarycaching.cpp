@@ -1,6 +1,7 @@
 #include <catch2/catch.hpp>
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/xmlserializer.h>
 
 #include <vcpkg/binarycaching.h>
 #include <vcpkg/binarycaching.private.h>
@@ -29,28 +30,28 @@ using namespace vcpkg;
 
 TEST_CASE ("reformat_version semver-ish", "[reformat_version]")
 {
-    REQUIRE(reformat_version("0.0.0", "abitag") == "0.0.0-abitag");
-    REQUIRE(reformat_version("1.0.1", "abitag") == "1.0.1-abitag");
-    REQUIRE(reformat_version("1.01.000", "abitag") == "1.1.0-abitag");
-    REQUIRE(reformat_version("1.2", "abitag") == "1.2.0-abitag");
-    REQUIRE(reformat_version("v52", "abitag") == "52.0.0-abitag");
-    REQUIRE(reformat_version("v09.01.02", "abitag") == "9.1.2-abitag");
-    REQUIRE(reformat_version("1.1.1q", "abitag") == "1.1.1-abitag");
-    REQUIRE(reformat_version("1", "abitag") == "1.0.0-abitag");
+    REQUIRE(reformat_version("0.0.0", "abitag") == "0.0.0-vcpkgabitag");
+    REQUIRE(reformat_version("1.0.1", "abitag") == "1.0.1-vcpkgabitag");
+    REQUIRE(reformat_version("1.01.000", "abitag") == "1.1.0-vcpkgabitag");
+    REQUIRE(reformat_version("1.2", "abitag") == "1.2.0-vcpkgabitag");
+    REQUIRE(reformat_version("v52", "abitag") == "52.0.0-vcpkgabitag");
+    REQUIRE(reformat_version("v09.01.02", "abitag") == "9.1.2-vcpkgabitag");
+    REQUIRE(reformat_version("1.1.1q", "abitag") == "1.1.1-vcpkgabitag");
+    REQUIRE(reformat_version("1", "abitag") == "1.0.0-vcpkgabitag");
 }
 
 TEST_CASE ("reformat_version date", "[reformat_version]")
 {
-    REQUIRE(reformat_version("2020-06-26", "abitag") == "2020.6.26-abitag");
-    REQUIRE(reformat_version("20-06-26", "abitag") == "0.0.0-abitag");
-    REQUIRE(reformat_version("2020-06-26-release", "abitag") == "2020.6.26-abitag");
-    REQUIRE(reformat_version("2020-06-26000", "abitag") == "2020.6.26-abitag");
+    REQUIRE(reformat_version("2020-06-26", "abitag") == "2020.6.26-vcpkgabitag");
+    REQUIRE(reformat_version("20-06-26", "abitag") == "0.0.0-vcpkgabitag");
+    REQUIRE(reformat_version("2020-06-26-release", "abitag") == "2020.6.26-vcpkgabitag");
+    REQUIRE(reformat_version("2020-06-26000", "abitag") == "2020.6.26-vcpkgabitag");
 }
 
 TEST_CASE ("reformat_version generic", "[reformat_version]")
 {
-    REQUIRE(reformat_version("apr", "abitag") == "0.0.0-abitag");
-    REQUIRE(reformat_version("", "abitag") == "0.0.0-abitag");
+    REQUIRE(reformat_version("apr", "abitag") == "0.0.0-vcpkgabitag");
+    REQUIRE(reformat_version("", "abitag") == "0.0.0-vcpkgabitag");
 }
 
 TEST_CASE ("generate_nuspec", "[generate_nuspec]")
@@ -75,7 +76,7 @@ Build-Depends: bzip
 )",
                                              "<testdata>");
     REQUIRE(pghs.has_value());
-    auto maybe_scf = SourceControlFile::parse_control_file(fs::path(), std::move(*pghs.get()));
+    auto maybe_scf = SourceControlFile::parse_control_file(fs::u8string(fs::path()), std::move(*pghs.get()));
     REQUIRE(maybe_scf.has_value());
     SourceControlFileLocation scfl{std::move(*maybe_scf.get()), fs::path()};
 
@@ -88,10 +89,15 @@ Build-Depends: bzip
     ipa.abi_info.get()->package_abi = "packageabi";
     std::string tripletabi("tripletabi");
     ipa.abi_info.get()->triplet_abi = tripletabi;
+    Build::CompilerInfo compiler_info;
+    compiler_info.hash = "compilerhash";
+    compiler_info.id = "compilerid";
+    compiler_info.version = "compilerversion";
+    ipa.abi_info.get()->compiler_info = compiler_info;
 
     NugetReference ref(ipa);
 
-    REQUIRE(ref.nupkg_filename() == "zlib2_x64-windows.1.5.0-packageabi.nupkg");
+    REQUIRE(ref.nupkg_filename() == "zlib2_x64-windows.1.5.0-vcpkgpackageabi.nupkg");
 
     {
         auto nuspec = generate_nuspec(paths, ipa, ref, {});
@@ -103,13 +109,16 @@ Build-Depends: bzip
         std::string expected = R"(<package>
   <metadata>
     <id>zlib2_x64-windows</id>
-    <version>1.5.0-packageabi</version>
+    <version>1.5.0-vcpkgpackageabi</version>
     <authors>vcpkg</authors>
     <description>NOT FOR DIRECT USE. Automatically generated cache package.
 
 a spiffy compression library wrapper
 
 Version: 1.5
+Triplet: x64-windows
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
 Triplet/Compiler hash: tripletabi
 Features: a, b
 Dependencies:
@@ -132,13 +141,16 @@ Dependencies:
         std::string expected = R"(<package>
   <metadata>
     <id>zlib2_x64-windows</id>
-    <version>1.5.0-packageabi</version>
+    <version>1.5.0-vcpkgpackageabi</version>
     <authors>vcpkg</authors>
     <description>NOT FOR DIRECT USE. Automatically generated cache package.
 
 a spiffy compression library wrapper
 
 Version: 1.5
+Triplet: x64-windows
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
 Triplet/Compiler hash: tripletabi
 Features: a, b
 Dependencies:
@@ -161,13 +173,16 @@ Dependencies:
         std::string expected = R"(<package>
   <metadata>
     <id>zlib2_x64-windows</id>
-    <version>1.5.0-packageabi</version>
+    <version>1.5.0-vcpkgpackageabi</version>
     <authors>vcpkg</authors>
     <description>NOT FOR DIRECT USE. Automatically generated cache package.
 
 a spiffy compression library wrapper
 
 Version: 1.5
+Triplet: x64-windows
+CXX Compiler id: compilerid
+CXX Compiler version: compilerversion
 Triplet/Compiler hash: tripletabi
 Features: a, b
 Dependencies:
@@ -241,7 +256,7 @@ Description: a spiffy compression library wrapper
 )",
                                              "<testdata>");
     REQUIRE(pghs.has_value());
-    auto maybe_scf = SourceControlFile::parse_control_file(fs::path(), std::move(*pghs.get()));
+    auto maybe_scf = SourceControlFile::parse_control_file(fs::u8string(fs::path()), std::move(*pghs.get()));
     REQUIRE(maybe_scf.has_value());
     SourceControlFileLocation scfl{std::move(*maybe_scf.get()), fs::path()};
     plan.install_actions.push_back(Dependencies::InstallPlanAction());
@@ -253,7 +268,7 @@ Description: a spiffy compression library wrapper
     packageconfig = generate_nuget_packages_config(plan);
     REQUIRE(packageconfig == R"(<?xml version="1.0" encoding="utf-8"?>
 <packages>
-  <package id="zlib_x64-android" version="1.5.0-packageabi"/>
+  <package id="zlib_x64-android" version="1.5.0-vcpkgpackageabi"/>
 </packages>
 )");
 
@@ -264,7 +279,7 @@ Description: a spiffy compression library wrapper
 )",
                                               "<testdata>");
     REQUIRE(pghs2.has_value());
-    auto maybe_scf2 = SourceControlFile::parse_control_file(fs::path(), std::move(*pghs2.get()));
+    auto maybe_scf2 = SourceControlFile::parse_control_file(fs::u8string(fs::path()), std::move(*pghs2.get()));
     REQUIRE(maybe_scf2.has_value());
     SourceControlFileLocation scfl2{std::move(*maybe_scf2.get()), fs::path()};
     plan.install_actions.push_back(Dependencies::InstallPlanAction());
@@ -276,8 +291,8 @@ Description: a spiffy compression library wrapper
     packageconfig = generate_nuget_packages_config(plan);
     REQUIRE(packageconfig == R"(<?xml version="1.0" encoding="utf-8"?>
 <packages>
-  <package id="zlib_x64-android" version="1.5.0-packageabi"/>
-  <package id="zlib2_x64-android" version="1.52.0-packageabi2"/>
+  <package id="zlib_x64-android" version="1.5.0-vcpkgpackageabi"/>
+  <package id="zlib2_x64-android" version="1.52.0-vcpkgpackageabi2"/>
 </packages>
 )");
 }

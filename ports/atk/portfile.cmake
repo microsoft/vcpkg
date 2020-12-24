@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
 set(ATK_VERSION 2.24.0)
@@ -17,7 +15,17 @@ vcpkg_extract_source_archive_ex(
         fix-linux-config.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+# Here are used API version of library, not the version of library itself
+set(ATK_LIB_SUFFIX 1.0)
+set(ATK_DLL_SUFFIX 1)
+
+set(GLIB_LIB_VERSION 2.0)
+if (WIN32)
+    set(ATK_API_VERSION ${ATK_LIB_SUFFIX})
+else()
+    set(ATK_API_VERSION ${ATK_DLL_SUFFIX})
+endif()
+configure_file("${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt.in" "${SOURCE_PATH}/CMakeLists.txt" @ONLY)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -31,5 +39,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

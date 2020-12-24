@@ -1,0 +1,61 @@
+diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
+index f5553e5..5cffa0c 100644
+--- a/code/CMakeLists.txt
++++ b/code/CMakeLists.txt
+@@ -862,7 +862,7 @@ SET( Extra_SRCS
+ SOURCE_GROUP( Extra FILES ${Extra_SRCS})
+ 
+ # irrXML
+-  find_package(irrXML CONFIG REQUIRED)
++  find_package(irrlicht CONFIG REQUIRED)
+ 
+ # polyclipping
+   find_package(polyclipping CONFIG REQUIRED)
+@@ -1033,7 +1033,7 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+ 
+   TARGET_LINK_LIBRARIES(assimp
+       polyclipping::polyclipping
+-      irrXML::irrXML
++      Irrlicht
+       minizip::minizip
+       ZLIB::ZLIB
+       kubazip::kubazip
+diff --git a/code/X3D/FIReader.cpp b/code/X3D/FIReader.cpp
+index 525a084..0cbca48 100644
+--- a/code/X3D/FIReader.cpp
++++ b/code/X3D/FIReader.cpp
+@@ -654,8 +654,8 @@ public:
+         return currentNodeType;
+     }
+ 
+-    virtual int getAttributeCount() const /*override*/ {
+-        return static_cast<int>(attributes.size());
++    virtual unsigned int getAttributeCount() const /*override*/ {
++        return static_cast<unsigned int>(attributes.size());
+     }
+ 
+     virtual const char* getAttributeName(int idx) const /*override*/ {
+@@ -1733,7 +1733,7 @@ public:
+         return reader->getNodeType();
+     }
+ 
+-    virtual int getAttributeCount() const /*override*/ {
++    virtual unsigned int getAttributeCount() const /*override*/ {
+         return reader->getAttributeCount();
+     }
+ 
+diff --git a/include/assimp/irrXMLWrapper.h b/include/assimp/irrXMLWrapper.h
+index 77cfd5e..ba584a0 100644
+--- a/include/assimp/irrXMLWrapper.h
++++ b/include/assimp/irrXMLWrapper.h
+@@ -133,8 +133,8 @@ public:
+ 
+     // ----------------------------------------------------------------------------------
+     //! Returns size of file in bytes
+-    virtual int getSize()   {
+-        return (int)data.size();
++    virtual long getSize() const override {
++        return (long)data.size();
+     }
+ 
+ private:

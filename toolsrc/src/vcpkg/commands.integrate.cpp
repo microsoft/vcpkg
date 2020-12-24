@@ -112,8 +112,8 @@ namespace vcpkg::Commands::Integrate
 )";
 
         std::string content = Strings::replace_all(CONTENT_TEMPLATE, "@NUGET_ID@", nuget_id);
-        content = Strings::replace_all(std::move(content), "@VCPKG_DIR@", vcpkg_root_dir.string());
-        content = Strings::replace_all(std::move(content), "@VERSION@", nupkg_version);
+        Strings::inplace_replace_all(content, "@VCPKG_DIR@", vcpkg_root_dir.string());
+        Strings::inplace_replace_all(content, "@VERSION@", nupkg_version);
         return content;
     }
 #endif
@@ -393,7 +393,7 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
         System::print2(System::Color::success, "Created nupkg: ", fs::u8string(nuget_package), '\n');
 
         auto source_path = fs::u8string(buildsystems_dir);
-        source_path = Strings::replace_all(std::move(source_path), "`", "``");
+        Strings::inplace_replace_all(source_path, "`", "``");
 
         System::printf(R"(
 With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:
@@ -477,6 +477,34 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         fs.write_contents(bashrc_path, Strings::join("\n", bashrc_content) + '\n', VCPKG_LINE_INFO);
         Checks::exit_success(VCPKG_LINE_INFO);
     }
+
+    static void integrate_fish(const VcpkgPaths& paths)
+    {
+        fs::path fish_completions_path;
+        const auto config_path = System::get_environment_variable("XDG_CONFIG_HOME");
+        if (config_path.has_value())
+        {
+            fish_completions_path = fs::path{config_path.value_or_exit(VCPKG_LINE_INFO)};
+        }
+        else
+        {
+            const auto home_path = System::get_environment_variable("HOME").value_or_exit(VCPKG_LINE_INFO);
+            fish_completions_path = fs::path{home_path} / ".config";
+        }
+        fish_completions_path = fish_completions_path / "fish" / "completions" / "vcpkg.fish";
+
+        if (fs::stdfs::exists(fish_completions_path))
+        {
+            System::printf("vcpkg fish completion is already added at %s.\n", fs::u8string(fish_completions_path));
+            Checks::exit_success(VCPKG_LINE_INFO);
+        }
+
+        const fs::path completion_script_path = paths.scripts / "vcpkg_completion.fish";
+
+        System::printf("Adding vcpkg completion entry at %s.\n", fs::u8string(fish_completions_path));
+        fs::stdfs::create_symlink(completion_script_path, fish_completions_path);
+        Checks::exit_success(VCPKG_LINE_INFO);
+    }
 #endif
 
     void append_helpstring(HelpTableFormatter& table)
@@ -491,6 +519,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         table.format("vcpkg integrate install", "Make installed packages available user-wide");
         table.format("vcpkg integrate remove", "Remove user-wide integration");
         table.format("vcpkg integrate bash", "Enable bash tab-completion");
+        table.format("vcpkg integrate fish", "Enable fish tab-completion");
 #endif // ^^^ !defined(_WIN32)
     }
 
@@ -508,6 +537,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         static const std::string PROJECT = "project";
         static const std::string POWERSHELL = "powershell";
         static const std::string BASH = "bash";
+        static const std::string FISH = "x-fish";
     }
 
     static std::vector<std::string> valid_arguments(const VcpkgPaths&)
@@ -518,7 +548,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 #if defined(_WIN32)
                 Subcommand::PROJECT, Subcommand::POWERSHELL,
 #else
-                Subcommand::BASH,
+                Subcommand::BASH, Subcommand::FISH,
 #endif
         };
     }
@@ -556,6 +586,10 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         if (args.command_arguments[0] == Subcommand::BASH)
         {
             return integrate_bash(paths);
+        }
+        if (args.command_arguments[0] == Subcommand::FISH)
+        {
+            return integrate_fish(paths);
         }
 #endif
 

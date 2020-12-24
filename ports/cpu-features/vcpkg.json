@@ -5,10 +5,9 @@
   "homepage": "https://github.com/google/cpu_features",
   "license": "Apache-2.0",
   "supports": "!(arm | uwp)",
-  "features": [
-    {
-      "name": "tools",
+  "features": {
+    "tools": {
       "description": "list_cpu_features command line tool"
     }
-  ]
+  }
 }

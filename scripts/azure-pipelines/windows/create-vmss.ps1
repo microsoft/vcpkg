@@ -14,10 +14,28 @@ for more information.
 This script assumes you have installed Azure tools into PowerShell by following the instructions
 at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6.1
 or are running from Azure Cloud Shell.
+
+.PARAMETER Unstable
+If this parameter is set, the machine is configured for use in the "unstable" pool used for testing
+the compiler rather than for testing vcpkg. Differences:
+* The machine prefix is changed to VcpkgUnstable instead of PrWin.
+* No storage account or "archives" share is provisioned.
+* The firewall is not opened to allow communication with Azure Storage.
 #>
 
+[CmdLetBinding()]
+Param(
+  [switch]$Unstable = $false
+)
+
 $Location = 'westus2'
-$Prefix = 'PrWin-' + (Get-Date -Format 'yyyy-MM-dd')
+if ($Unstable) {
+  $Prefix = 'VcpkgUnstable-'
+} else {
+  $Prefix = 'PrWin-'
+}
+
+$Prefix += (Get-Date -Format 'yyyy-MM-dd')
 $VMSize = 'Standard_D16a_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
@@ -26,6 +44,10 @@ $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
 $TotalProgress = 12
+if ($Unstable) {
+  $TotalProgress -= 1 # skipping the archives share part
+}
+
 $CurrentProgress = 1
 
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
@@ -48,7 +70,9 @@ Write-Progress `
   -Status 'Creating virtual network' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-$allowHttp = New-AzNetworkSecurityRuleConfig `
+$allFirewallRules = @()
+
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
   -Name AllowHTTP `
   -Description 'Allow HTTP(S)' `
   -Access Allow `
@@ -60,49 +84,49 @@ $allowHttp = New-AzNetworkSecurityRuleConfig `
   -DestinationAddressPrefix * `
   -DestinationPortRange @(80, 443)
 
-$allowDns = New-AzNetworkSecurityRuleConfig `
-  -Name AllowDNS `
-  -Description 'Allow DNS' `
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
+  -Name AllowSFTP `
+  -Description 'Allow (S)FTP' `
   -Access Allow `
-  -Protocol * `
+  -Protocol Tcp `
   -Direction Outbound `
   -Priority 1009 `
   -SourceAddressPrefix * `
   -SourcePortRange * `
   -DestinationAddressPrefix * `
-  -DestinationPortRange 53
+  -DestinationPortRange @(21, 22)
 
-$allowGit = New-AzNetworkSecurityRuleConfig `
-  -Name AllowGit `
-  -Description 'Allow git' `
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
+  -Name AllowDNS `
+  -Description 'Allow DNS' `
   -Access Allow `
-  -Protocol Tcp `
+  -Protocol * `
   -Direction Outbound `
   -Priority 1010 `
   -SourceAddressPrefix * `
   -SourcePortRange * `
   -DestinationAddressPrefix * `
-  -DestinationPortRange 9418
+  -DestinationPortRange 53
 
-$allowStorage = New-AzNetworkSecurityRuleConfig `
-  -Name AllowStorage `
-  -Description 'Allow Storage' `
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
+  -Name AllowGit `
+  -Description 'Allow git' `
   -Access Allow `
-  -Protocol * `
+  -Protocol Tcp `
   -Direction Outbound `
   -Priority 1011 `
-  -SourceAddressPrefix VirtualNetwork `
+  -SourceAddressPrefix * `
   -SourcePortRange * `
-  -DestinationAddressPrefix Storage `
-  -DestinationPortRange *
+  -DestinationAddressPrefix * `
+  -DestinationPortRange 9418
 
-$denyEverythingElse = New-AzNetworkSecurityRuleConfig `
+$allFirewallRules += New-AzNetworkSecurityRuleConfig `
   -Name DenyElse `
   -Description 'Deny everything else' `
   -Access Deny `
   -Protocol * `
   -Direction Outbound `
-  -Priority 1012 `
+  -Priority 1013 `
   -SourceAddressPrefix * `
   -SourcePortRange * `
   -DestinationAddressPrefix * `
@@ -113,13 +137,14 @@ $NetworkSecurityGroup = New-AzNetworkSecurityGroup `
   -Name $NetworkSecurityGroupName `
   -ResourceGroupName $ResourceGroupName `
   -Location $Location `
-  -SecurityRules @($allowHttp, $allowDns, $allowGit, $allowStorage, $denyEverythingElse)
+  -SecurityRules $allFirewallRules
 
 $SubnetName = $ResourceGroupName + 'Subnet'
 $Subnet = New-AzVirtualNetworkSubnetConfig `
   -Name $SubnetName `
   -AddressPrefix "10.0.0.0/16" `
-  -NetworkSecurityGroup $NetworkSecurityGroup
+  -NetworkSecurityGroup $NetworkSecurityGroup `
+  -ServiceEndpoint "Microsoft.Storage"
 
 $VirtualNetworkName = $ResourceGroupName + 'Network'
 $VirtualNetwork = New-AzVirtualNetwork `
@@ -130,32 +155,57 @@ $VirtualNetwork = New-AzVirtualNetwork `
   -Subnet $Subnet
 
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Creating archives storage account' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+if (-Not $Unstable) {
+  Write-Progress `
+    -Activity $ProgressActivity `
+    -Status 'Creating archives storage account' `
+    -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-$StorageAccountName = Sanitize-Name $ResourceGroupName
+  $StorageAccountName = Sanitize-Name $ResourceGroupName
 
-New-AzStorageAccount `
-  -ResourceGroupName $ResourceGroupName `
-  -Location $Location `
-  -Name $StorageAccountName `
-  -SkuName 'Standard_LRS' `
-  -Kind StorageV2
+  New-AzStorageAccount `
+    -ResourceGroupName $ResourceGroupName `
+    -Location $Location `
+    -Name $StorageAccountName `
+    -SkuName 'Standard_LRS' `
+    -Kind StorageV2
 
-$StorageAccountKeys = Get-AzStorageAccountKey `
-  -ResourceGroupName $ResourceGroupName `
-  -Name $StorageAccountName
+  $StorageAccountKeys = Get-AzStorageAccountKey `
+    -ResourceGroupName $ResourceGroupName `
+    -Name $StorageAccountName
 
-$StorageAccountKey = $StorageAccountKeys[0].Value
+  $StorageAccountKey = $StorageAccountKeys[0].Value
 
-$StorageContext = New-AzStorageContext `
-  -StorageAccountName $StorageAccountName `
-  -StorageAccountKey $StorageAccountKey
+  $StorageContext = New-AzStorageContext `
+    -StorageAccountName $StorageAccountName `
+    -StorageAccountKey $StorageAccountKey
 
-New-AzStorageShare -Name 'archives' -Context $StorageContext
-Set-AzStorageShareQuota -ShareName 'archives' -Context $StorageContext -Quota 2048
+  New-AzStorageContainer -Name archives -Context $StorageContext -Permission Off
+  $StartTime = [DateTime]::Now
+  $ExpiryTime = $StartTime.AddMonths(6)
+
+  $SasToken = New-AzStorageAccountSASToken `
+    -Service Blob `
+    -Permission "racwdlup" `
+    -Context $StorageContext `
+    -StartTime $StartTime `
+    -ExpiryTime $ExpiryTime `
+    -ResourceType Service,Container,Object `
+    -Protocol HttpsOnly
+
+  $SasToken = $SasToken.Substring(1) # strip leading ?
+
+  # Note that we put the storage account into the firewall after creating the above SAS token or we
+  # would be denied since the person running this script isn't one of the VMs we're creating here.
+  Set-AzStorageAccount `
+    -ResourceGroupName $ResourceGroupName `
+    -AccountName $StorageAccountName `
+    -NetworkRuleSet ( `
+      @{bypass="AzureServices"; `
+      virtualNetworkRules=( `
+        @{VirtualNetworkResourceId=$VirtualNetwork.Subnets[0].Id;Action="allow"}); `
+      defaultAction="Deny"})
+}
 
 ####################################################################################################
 Write-Progress `
@@ -198,14 +248,18 @@ Write-Progress `
   -Status 'Running provisioning script provision-image.txt (as a .ps1) in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
+$provisionParameters = @{AdminUserPassword = $AdminPW;}
+if (-Not $Unstable) {
+  $provisionParameters['StorageAccountName'] = $StorageAccountName
+  $provisionParameters['StorageAccountSasToken'] = $SasToken
+}
+
 $ProvisionImageResult = Invoke-AzVMRunCommand `
   -ResourceGroupName $ResourceGroupName `
   -VMName $ProtoVMName `
   -CommandId 'RunPowerShellScript' `
   -ScriptPath "$PSScriptRoot\provision-image.txt" `
-  -Parameter @{AdminUserPassword = $AdminPW; `
-    StorageAccountName=$StorageAccountName; `
-    StorageAccountKey=$StorageAccountKey;}
+  -Parameter $provisionParameters
 
 Write-Host "provision-image.ps1 output: $($ProvisionImageResult.value.Message)"
 

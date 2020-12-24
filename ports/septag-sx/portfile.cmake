@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(TARGET_TRIPLET MATCHES "(uwp|arm)")
     message(FATAL_ERROR "septag-sx doesn't support ${TARGET_TRIPLET} currently.")
 endif()
@@ -39,6 +37,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME sx)

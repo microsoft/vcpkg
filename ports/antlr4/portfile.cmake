@@ -1,15 +1,11 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
-include(vcpkg_common_functions)
-
-set(VERSION 4.7.1)
+set(VERSION 4.8)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
     FILENAME "antlr4-cpp-runtime-${VERSION}-source.zip"
-    SHA512 24d53278db56b199e6787242f22339f74e07d2cd3ed56f851ad905b110c2ba3cb001e1e2fcbc8624f0e93e00ba1fe1b23630dd1a736558c694655aeb1c3129da
+    SHA512 df76a724e8acf29018ad122d909e1d43e7c8842e1c0df8022a3e8c840cb2b99de49cc148f75fef519b65ece9bd27b92cf0067c9099b664c127e80559c6492322
 )
 
 # license not exist in antlr folder.
@@ -88,6 +84,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/antlr4-runtime)
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/antlr4 RENAME copyright)
+file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 message(STATUS "Installing done")

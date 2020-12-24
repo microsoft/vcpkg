@@ -1,6 +1,5 @@
 Source: libzip
-Version: 1.7.1
-Port-Version: 1
+Version: 1.7.3
 Homepage: https://github.com/nih-at/libzip
 Build-Depends: zlib
 Default-Features: bzip2,default-aes

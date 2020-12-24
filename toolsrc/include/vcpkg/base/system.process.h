@@ -15,6 +15,7 @@ namespace vcpkg::System
         CMakeVariable(const StringView varname, const char* varvalue);
         CMakeVariable(const StringView varname, const std::string& varvalue);
         CMakeVariable(const StringView varname, const fs::path& path);
+        CMakeVariable(std::string var);
 
         std::string s;
     };
@@ -66,7 +67,7 @@ namespace vcpkg::System
 #if defined(_WIN32)
     Environment cmd_execute_modify_env(const ZStringView cmd_line, const Environment& env = {});
 
-    void cmd_execute_no_wait(const StringView cmd_line);
+    void cmd_execute_background(const StringView cmd_line);
 #endif
 
     ExitCodeAndOutput cmd_execute_and_capture_output(const ZStringView cmd_line, const Environment& env = {});
