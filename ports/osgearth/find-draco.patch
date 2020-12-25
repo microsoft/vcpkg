@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 049e37e..d3d82f7 100644
+index 049e37e..93bd89f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -134,7 +134,6 @@ find_package(GDAL REQUIRED)
@@ -10,14 +10,21 @@ index 049e37e..d3d82f7 100644
  find_package(BASISU)
  find_package(GLEW)
  find_package(Protobuf)
-@@ -162,9 +161,18 @@ IF(SQLITE3_FOUND)
+@@ -162,9 +161,25 @@ IF(SQLITE3_FOUND)
  ENDIF(SQLITE3_FOUND)
  
  # DRACO enables geometry compression sometimes used in glTF:
 +if(BUILD_WITH_DRACO)
-+  find_path(DRACO_INCLUDE_DIRS draco/core/draco_version.h)
-+  find_library(DRACO_LIBRARY NAMES draco dracodec dracoenc libdraco libdracodec libdracoenc)
-+  set(draco_INCLUDE_DIRS ${DRACO_INCLUDE_DIRS})
++  include(FindPackageHandleStandardArgs)
++  include(SelectLibraryConfigurations)
++  
++  find_path(DRACO_INCLUDE_DIR draco/core/draco_version.h)
++  find_library(DRACO_LIBRARY_DEBUG NAMES draco dracodec dracoenc libdraco libdracodec libdracoenc NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
++  find_library(DRACO_LIBRARY_RELEASE NAMES draco dracodec dracoenc libdraco libdracodec libdracoenc NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH REQUIRED)
++  
++  select_library_configurations(DRACO)
++  
++  set(draco_INCLUDE_DIRS ${DRACO_INCLUDE_DIR})
 +  set(draco_LIBRARIES ${DRACO_LIBRARY})
 +  if(DRACO_LIBRARY)
 +    set(draco_FOUND 1)
