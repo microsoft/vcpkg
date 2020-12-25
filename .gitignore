@@ -295,6 +295,8 @@ __pycache__/
 /toolsrc/windows-bootstrap/msbuild.x86.release/
 /toolsrc/windows-bootstrap/msbuild.x64.debug/
 /toolsrc/windows-bootstrap/msbuild.x64.release/
+#ignore db
+/port_versions/
 #ignore custom triplets
 /triplets/*
 #add vcpkg-designed triplets back in
@@ -320,3 +322,8 @@ archives
 .DS_Store
 prefab/
 *.swp
+
+###################
+# Codespaces
+###################
+pythonenv3.8/

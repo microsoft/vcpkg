@@ -16,6 +16,9 @@ vcpkg_extract_source_archive_ex(
         disable-wcslcpy-and-wcslcat-for-windows.patch
         fix-EventToken-header-reference.patch
         0006-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
+        0007-sdl2-skip-ibus-on-linux.patch
+        0008-fix-macos-metal-test.patch
+        no-propagate-shared-link-options.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)

@@ -86,7 +86,7 @@ namespace vcpkg::Commands::SetInstalled
             return Util::Sets::contains(specs_installed, ipa.spec);
         });
 
-        Dependencies::print_plan(action_plan, true, paths.ports);
+        Dependencies::print_plan(action_plan, true, paths.builtin_ports_directory());
 
         if (auto p_pkgsconfig = maybe_pkgsconfig.get())
         {
@@ -103,7 +103,8 @@ namespace vcpkg::Commands::SetInstalled
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
-        const auto summary = Install::perform(action_plan,
+        const auto summary = Install::perform(args,
+                                              action_plan,
                                               Install::KeepGoing::NO,
                                               paths,
                                               status_db,
