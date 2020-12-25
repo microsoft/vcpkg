@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO boost-experimental/di
+    REPO boost-ext/di
     REF 6078f073feb8560127fbf0308b3794a551146252 # v1.2.0
     SHA512 d7876b10b0365a92095ee7edefdc9cb9a0e237baf2bad124a927f22ed6ec30e18802b20517bc032184f39b7b4d71f44e965bdcea074646871d0194bd4e851d43
-    HEAD_REF master
+    HEAD_REF cpp14
 )
 
 file(INSTALL ${SOURCE_PATH}/include/boost
