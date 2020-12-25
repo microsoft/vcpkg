@@ -1,9 +1,9 @@
 diff --git a/frmts/fits/fitsdataset.cpp b/frmts/fits/fitsdataset.cpp
-index 4f41a12..723d211 100644
+index bf16c8cd5..cab9f9968 100644
 --- a/frmts/fits/fitsdataset.cpp
 +++ b/frmts/fits/fitsdataset.cpp
-@@ -34,7 +34,7 @@
- #include "ogr_spatialref.h"
+@@ -35,7 +35,7 @@
+ #include "ogrsf_frmts.h"
  
  #include <string.h>
 -#include <fitsio.h>
