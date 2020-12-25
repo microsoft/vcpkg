@@ -35,6 +35,7 @@ The current list of programs includes:
 * NINJA
 * NUGET
 * SCONS
+* STACK
 * SWIG
 * YASM
 
@@ -361,6 +362,23 @@ function(vcpkg_find_acquire_program VAR)
     set(URL "https://sourceforge.net/projects/scons/files/scons-local-${SCONS_VERSION}.zip/download")
     set(ARCHIVE "scons-local-${SCONS_VERSION}.zip")
     set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727) 
+  elseif(VAR MATCHES "STACK")
+    set(PROGNAME stack)
+    set(STACK_VERSION 2.5.1)
+    set(SUBDIR ${STACK_VERSION})
+    if (CMAKE_HOST_WIN32)
+      set(STACK_SUFFIX windows-x86_64)
+      set(HASH 825b9b12725301607f3acec2a967d35508cb95231bfaeb7558135b2d37978fe9fc85d4cbe60ee3d7537b6bc6b3d69f278a9fe1c87b4ba23279b00c9b40318a36)
+    elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
+      set(STACK_SUFFIX osx-x86_64)
+      set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727)
+    else()
+      set(STACK_SUFFIX linux-x86_64)
+      set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727)
+    endif()
+    set(URL "https://github.com/commercialhaskell/stack/releases/download/v${STACK_VERSION}/stack-${STACK_VERSION}-${STACK_SUFFIX}.tar.gz")
+    set(ARCHIVE "stack-${STACK_VERSION}-${STACK_SUFFIX}.tar.gz")
+    set(PATHS ${DOWNLOADS}/tools/stack/${STACK_VERSION}/stack-${STACK_VERSION}-${STACK_SUFFIX})
   elseif(VAR MATCHES "SWIG")
     set(SWIG_VERSION 4.0.2)
     set(PROGNAME swig)
@@ -484,6 +502,7 @@ function(vcpkg_find_acquire_program VAR)
   
   macro(do_find)
     if(NOT DEFINED REQUIRED_INTERPRETER)
+      message("Finding ${VAR} name ${PROGNAME} in ${PATHS}")
       find_program(${VAR} ${PROGNAME} PATHS ${PATHS} NO_DEFAULT_PATH)
       if(NOT ${VAR})
         find_program(${VAR} ${PROGNAME})
@@ -541,6 +560,7 @@ function(vcpkg_find_acquire_program VAR)
       vcpkg_from_sourceforge(OUT_SOURCE_PATH SFPATH ${SOURCEFORGE_ARGS})
       unset(_VCPKG_EDITABLE)
     else()
+      message("down: ${URL}")
       vcpkg_download_distfile(ARCHIVE_PATH
           URLS ${URL}
           SHA512 ${HASH}
