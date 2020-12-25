@@ -1,0 +1,4 @@
+Source: arcus
+Version: 4.8.0
+Description: This library contains C++ code and Python3 bindings for creating a socket in a thread and using this socket to send and receive messages based on the Protocol Buffers library.
+Build-Depends: protobuf
