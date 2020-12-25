@@ -1,4 +1,3 @@
-
 if(EXISTS ${CURRENT_INSTALLED_DIR}/share/libturbo-jpeg/copyright)
     message(FATAL_ERROR "'${PORT}' conflicts with 'libturbo-jpeg'. Please remove libturbo-jpeg:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
 endif()
@@ -7,7 +6,6 @@ if(EXISTS ${CURRENT_INSTALLED_DIR}/share/mozjpeg/copyright)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    # The release doesn't have `__declspec(dllexport)`.
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
