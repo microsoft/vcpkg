@@ -49,7 +49,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     
     vcpkg_copy_pdbs()
 else()
-    set(ENV{CONFIG_SHELL} /bin/bash)
+    set(ENV{CONFIG_SHELL} bash)
     vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH} OPTIONS ${ATKMM_OPTIONS})
     
     vcpkg_install_make()
