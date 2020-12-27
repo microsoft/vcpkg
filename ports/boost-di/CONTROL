@@ -1,4 +1,4 @@
 Source: boost-di
-Version: 1.1.0-1
-Homepage: https://github.com/boost-experimental/di
+Version: 1.2.0
+Homepage: https://github.com/boost-ext/di
 Description: C++14 Dependency Injection Library.
