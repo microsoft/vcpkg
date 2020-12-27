@@ -33,6 +33,8 @@ apr:arm64-windows=fail
 # Requires ATL for ARM64 to be installed in CI
 azure-storage-cpp:arm64-windows=fail
 
+bcg729:arm-uwp=fail
+bcg729:x64-uwp=fail
 blend2d:arm64-windows=fail
 blend2d:arm-uwp=fail
 blend2d:x64-uwp=fail
