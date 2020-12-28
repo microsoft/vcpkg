@@ -15,7 +15,7 @@ vcpkg_from_github(
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_acquire_msys(MSYS_ROOT)
-    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+    set(BASH_ROOT ${MSYS_ROOT}/usr/bin)
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
@@ -56,6 +56,8 @@ endif()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ktx TARGET_PATH share/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
 
 configure_file("${SOURCE_PATH}/LICENSE.md" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 file(GLOB LICENSE_FILES "${SOURCE_PATH}/LICENSES/*")
