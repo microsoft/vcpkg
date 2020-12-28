@@ -458,6 +458,15 @@ ignition-msgs5:arm64-windows=fail
 ignition-msgs5:arm-uwp=fail
 ignition-msgs5:x64-uwp=fail
 ignition-msgs5:x64-osx=skip
+# Conflicts with libjpeg-turbo, mozjpeg
+ijg-libjpeg:arm64-windows      = skip
+ijg-libjpeg:arm-uwp            = skip
+ijg-libjpeg:x64-linux          = skip
+ijg-libjpeg:x64-osx            = skip
+ijg-libjpeg:x64-uwp            = skip
+ijg-libjpeg:x64-windows        = skip
+ijg-libjpeg:x64-windows-static = skip
+ijg-libjpeg:x86-windows        = skip
 intel-ipsec:arm64-windows=fail
 intel-ipsec:arm-uwp=fail
 intel-ipsec:x64-osx=fail
