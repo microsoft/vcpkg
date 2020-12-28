@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index de38d5fe..1ef03712 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -283,9 +283,10 @@ macro(commom_lib_settings lib write )
+     endif()
+ 
+     if(WIN32)
++        find_library(ZSTD_LIBRARY NAMES zstdd zstd_staticd zstd zstd_static NAMES_PER_DIR)
+         target_link_libraries(
+             ${lib}
+-            ${CMAKE_CURRENT_SOURCE_DIR}/other_lib/win/Release-x64/zstd_static.lib
++            ${ZSTD_LIBRARY}
+         )
+         # By wrapping in generator expression we force multi configuration generators (like Visual Studio)
+         # to take the exact path and not change it.
