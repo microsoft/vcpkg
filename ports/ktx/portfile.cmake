@@ -13,6 +13,11 @@ vcpkg_from_github(
         0002-Fix-versioning.patch
 )
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_acquire_msys(MSYS_ROOT)
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+endif()
+
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
