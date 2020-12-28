@@ -4,10 +4,10 @@
   "port-version": 1,
   "description": "A small library of functions for writing and reading KTX files, and instantiating OpenGL®, OpenGL ES™️ and Vulkan® textures from them",
   "homepage": "https://github.com/KhronosGroup/KTX-Software",
+  "supports": "!uwp",
   "dependencies": [
     "zstd"
   ],
-  "supports": "!uwp",
   "features": {
     "tools": {
       "description": "Build tools"
