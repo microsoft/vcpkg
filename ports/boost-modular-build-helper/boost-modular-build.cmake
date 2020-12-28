@@ -213,7 +213,7 @@ function(boost_modular_build)
     else()
         list(APPEND B2_OPTIONS threadapi=pthread)
     endif()
-    set(B2_OPTIONS_DBG
+    list(APPEND B2_OPTIONS_DBG
          -sZLIB_BINARY=zlibd
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
          -sBZIP2_BINARY=bz2d
@@ -224,7 +224,7 @@ function(boost_modular_build)
          "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
 
-    set(B2_OPTIONS_REL
+    list(APPEND B2_OPTIONS_REL
          -sZLIB_BINARY=zlib
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
          -sBZIP2_BINARY=bz2
@@ -435,7 +435,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_74" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-1_75" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
         elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
