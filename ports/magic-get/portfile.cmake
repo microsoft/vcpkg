@@ -1,3 +1,7 @@
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-pfr/copyright")
+    message(FATAL_ERROR "Can't build ${PORT} if boost-pfr is installed. Please remove boost-pfr:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
+
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO apolukhin/magic_get
