@@ -19,6 +19,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(READ ${CURRENT_PACKAGES_DIR}/include/sigc++config.h SIGCPPCONFIG_H)
