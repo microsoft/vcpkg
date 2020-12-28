@@ -6,7 +6,7 @@ index f192ae6..22900ed 100644
      return;
    }
    // Check if the upper level directory has an "include" subdirectory.
-+  // Suitable for vcpkg directory structure
++  // change "'$/bin' is next to 'include'" assumption to "'$/bin/tools' is next to 'include'"
 +  for (int i = 0; i < 2; i++)
 +  {
    pos = path.find_last_of("/\\");
