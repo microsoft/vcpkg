@@ -8,11 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(ENABLE_STATIC ON)
-else()
-    set(ENABLE_STATIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
