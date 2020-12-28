@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO smoked-herring/sail
-    REF v0.9.0-pre11
-    SHA512 81d0322313b52eacbe212b7c3421402586db28eef8466d1ba85188ee194fb9132bd33f2fb3d4f8d0e044e0357c8da688c50ca31e0897ba37ad2431442c1e20c2
+    REF a7b8cdb
+    SHA512 402b0e05ce99b5abeebf695a132121cc59789834d5a296ffada34fa3090c16ffc2266e98393e10136e31480b2378b966a8a48a153240f43b0196d986316aa9df
     HEAD_REF master
 )
 
@@ -33,9 +33,6 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sail)
 
 # Fix pkg-config files
 vcpkg_fixup_pkgconfig()
-
-# Handle cmake wrapper
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # Handle usage
 if (UNIX AND NOT APPLE)
