@@ -213,7 +213,7 @@ function(boost_modular_build)
     else()
         list(APPEND B2_OPTIONS threadapi=pthread)
     endif()
-    set(B2_OPTIONS_DBG
+    list(APPEND B2_OPTIONS_DBG
          -sZLIB_BINARY=zlibd
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
          -sBZIP2_BINARY=bz2d
@@ -224,7 +224,7 @@ function(boost_modular_build)
          "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
 
-    set(B2_OPTIONS_REL
+    list(APPEND B2_OPTIONS_REL
          -sZLIB_BINARY=zlib
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
          -sBZIP2_BINARY=bz2
