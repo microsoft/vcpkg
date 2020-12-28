@@ -2,11 +2,18 @@ vcpkg_buildpath_length_warning(37)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     option(QT_OPENSSL_LINK "Link against OpenSSL at compile-time." ON)
-    option(QT_MYSQL_PLUGIN "Create MySQL plugin" OFF)
 else()
-    option(QT_MYSQL_PLUGIN "Create MySQL plugin" ON)
     option(QT_OPENSSL_LINK "Link against OpenSSL at compile-time." OFF)
 endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    option(QT_MYSQL_PLUGIN "Create MySQL plugin" OFF)
+else()
+    if ("mysqlplugin" IN_LIST FEATURES)
+        option(QT_MYSQL_PLUGIN "Create MySQL plugin" ON)
+    endif()
+endif()
+
 
 if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-xcb-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-xcb-dev.")
