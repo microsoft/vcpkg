@@ -15,7 +15,7 @@ vcpkg_download_distfile(ARCHIVE
     SHA512 ${GDAL_PACKAGE_SUM}
 )
 
-set(GDAL_PATCHES 0001-Fix-debug-crt-flags.patch 0002-Fix-build.patch)
+set(GDAL_PATCHES 0001-Fix-debug-crt-flags.patch 0002-Fix-build.patch 0005-Fix-configure.patch)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND GDAL_PATCHES 0003-Fix-static-build.patch)
 endif()
@@ -186,6 +186,7 @@ else()
     
     set(CONF_OPTS --enable-shared=${BUILD_DYNAMIC} --enable-static=${BUILD_STATIC})
     list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR} --with-libjson-c=${CURRENT_INSTALLED_DIR})
+    list(APPEND CONF_OPTS --without-jasper)
     
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}

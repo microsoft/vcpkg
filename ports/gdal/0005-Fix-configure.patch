@@ -1,0 +1,78 @@
+diff --git a/m4/ax_lib_sqlite3.m4 b/m4/ax_lib_sqlite3.m4
+index e53a4a967..440e2c5ed 100644
+--- a/m4/ax_lib_sqlite3.m4
++++ b/m4/ax_lib_sqlite3.m4
+@@ -76,23 +76,22 @@ AC_DEFUN([AX_LIB_SQLITE3],
+ 
+             unset ac_cv_lib_sqlite3_sqlite3_open
+             saved_LIBS="$LIBS"
+-            LIBS=""
+             AC_CHECK_LIB(sqlite3,sqlite3_open,LIB_SQLITE3_FOUND=yes,LIB_SQLITE3_FOUND=no,-L$ac_sqlite3_path/lib)
+             LIBS="$saved_LIBS"
+             if test "$LIB_SQLITE3_FOUND" = "yes"; then
+                 ac_sqlite3_ldflags="-L$ac_sqlite3_path/lib"
+             fi
+ 
++            ac_sqlite3_include_path="$ac_sqlite3_path/include"
+             ac_sqlite3_cppflags="-I$ac_sqlite3_path/include"
+         else
+-            for ac_sqlite3_path_tmp in /usr /usr/local /opt ; do
+-                if test -f "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header" \
+-                    && test -r "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header"; then
++            for ac_sqlite3_path_tmp in $prefix /usr /usr/local /opt; do
++                if (test -f "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header" \
++                    && test -r "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header") || (test -f "$ac_sqlite3_path_tmp/../include/$ac_sqlite3_header" && test -r "$ac_sqlite3_path_tmp/../include/$ac_sqlite3_header"); then
+                     ac_sqlite3_path=$ac_sqlite3_path_tmp
+ 
+                     unset ac_cv_lib_sqlite3_sqlite3_open
+                     saved_LIBS="$LIBS"
+-                    LIBS=""
+                     AC_CHECK_LIB(sqlite3,sqlite3_open,LIB_SQLITE3_FOUND=yes,LIB_SQLITE3_FOUND=no,)
+                     LIBS="$saved_LIBS"
+                     if test "$LIB_SQLITE3_FOUND" = "yes"; then
+@@ -100,7 +99,6 @@ AC_DEFUN([AX_LIB_SQLITE3],
+                     else
+                         unset ac_cv_lib_sqlite3_sqlite3_open
+                         saved_LIBS="$LIBS"
+-                        LIBS=""
+                         AC_CHECK_LIB(sqlite3,sqlite3_open,LIB_SQLITE3_FOUND=yes,LIB_SQLITE3_FOUND=no,-L$ac_sqlite3_path_tmp/lib)
+                         LIBS="$saved_LIBS"
+                         if test "$LIB_SQLITE3_FOUND" = "yes"; then
+@@ -108,7 +106,12 @@ AC_DEFUN([AX_LIB_SQLITE3],
+                         fi
+                     fi
+ 
+-                    ac_sqlite3_cppflags="-I$ac_sqlite3_path_tmp/include"
++                    if test -f "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header" && test -r "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header"; then
++                        ac_sqlite3_include_path="$ac_sqlite3_path_tmp/include"
++                    else
++                        ac_sqlite3_include_path="$ac_sqlite3_path_tmp/../include"
++                    fi
++                    ac_sqlite3_cppflags="-I$ac_sqlite3_include_path"
+                     break;
+                 fi
+             done
+@@ -122,7 +125,6 @@ AC_DEFUN([AX_LIB_SQLITE3],
+     AC_MSG_CHECKING([for SQLite3 library >= $sqlite3_version_req])
+ 
+     if test "x$WANT_SQLITE3" = "xyes"; then
+-
+         ac_sqlite3_ldflags="$ac_sqlite3_ldflags -lsqlite3"
+ 
+         saved_CPPFLAGS="$CPPFLAGS"
+@@ -161,7 +163,7 @@ AC_DEFUN([AX_LIB_SQLITE3],
+             SQLITE3_CFLAGS="$ac_sqlite3_cppflags"
+             SQLITE3_LDFLAGS="$ac_sqlite3_ldflags"
+ 
+-            ac_sqlite3_header_path="$ac_sqlite3_path/include/$ac_sqlite3_header"
++            ac_sqlite3_header_path="$ac_sqlite3_include_path/$ac_sqlite3_header"
+ 
+             dnl Retrieve SQLite release version
+             if test "x$ac_sqlite3_header_path" != "x"; then
+@@ -184,5 +186,6 @@ AC_DEFUN([AX_LIB_SQLITE3],
+     else
+         AC_MSG_RESULT([disabled])
+     fi
++    unset ac_sqlite3_include_path
+ ])
+ 
