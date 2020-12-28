@@ -1,0 +1,3 @@
+Source: taocpp-tuple
+Version: 1.0.0
+Description: Compile-time-efficient proof-of-concept implementation for std::tuple 
