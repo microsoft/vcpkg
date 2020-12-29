@@ -563,20 +563,20 @@ If you wish to silence this error and use classic mode, you can:
 
     ExpectedS<std::map<std::string, std::string, std::less<>>> VcpkgPaths::git_get_local_port_treeish_map() const
     {
-        auto local_repo = this->root / fs::u8path(".git");
-        auto git_cmd = git_cmd_builder(*this, local_repo, this->root)
-                           .string_arg("ls-tree")
-                           .string_arg("-r")
-                           .string_arg("-d")
-                           .string_arg("HEAD")
-                           .string_arg("--")
-                           .path_arg(this->builtin_ports_directory())
-                           .extract();
+        const auto local_repo = this->root / fs::u8path(".git");
+        const auto path_with_separator =
+            Strings::concat(fs::u8string(this->builtin_ports_directory()), Files::preferred_separator);
+        const auto git_cmd = git_cmd_builder(*this, local_repo, this->root)
+                                 .string_arg("ls-tree")
+                                 .string_arg("-d")
+                                 .string_arg("HEAD")
+                                 .string_arg("--")
+                                 .path_arg(path_with_separator)
+                                 .extract();
 
         auto output = System::cmd_execute_and_capture_output(git_cmd);
         if (output.exit_code != 0)
-            return std::move(
-                Strings::format("Error: Couldn't get local treeish objects for ports.\n%s", output.output));
+            return Strings::format("Error: Couldn't get local treeish objects for ports.\n%s", output.output);
 
         std::map<std::string, std::string, std::less<>> ret;
         auto lines = Strings::split(output.output, '\n');
@@ -587,13 +587,13 @@ If you wish to silence this error and use classic mode, you can:
             // <mode> SP <type> SP <object> TAB <file>
             auto split_line = Strings::split(*line_it, '\t');
             if (split_line.size() != 2)
-                return std::move(Strings::format(
-                    "Error: Unexpected output from command `%s`. Couldn't split by `\\t`.\n%s", git_cmd, *line_it));
+                return Strings::format(
+                    "Error: Unexpected output from command `%s`. Couldn't split by `\\t`.\n%s", git_cmd, *line_it);
 
             auto file_info_section = Strings::split(split_line[0], ' ');
             if (file_info_section.size() != 3)
-                return std::move(Strings::format(
-                    "Error: Unexepcted output from command `%s`. Couldn't split by ` `.\n%s", git_cmd, *line_it));
+                return Strings::format(
+                    "Error: Unexepcted output from command `%s`. Couldn't split by ` `.\n%s", git_cmd, *line_it);
 
             auto find_port_name = [&](const std::string& str) -> std::string {
                 auto index = str.find("ports/");
@@ -605,9 +605,14 @@ If you wish to silence this error and use classic mode, you can:
                 return Strings::split(str, '/').back();
             };
 
-            auto port_name = find_port_name(split_line[1]);
-            auto&& git_tree = file_info_section.back();
-            ret.emplace(port_name, git_tree);
+            const auto index = split_line[1].find_last_of('/');
+            if (index == std::string::npos)
+            {
+                return Strings::format(
+                    "Error: Unexpected output from command `%s`. Couldn't split by `/`.\n%s", git_cmd, *line_it);
+            }
+
+            ret.emplace(split_line[1].substr(index + 1), file_info_section.back());
         }
         return ret;
     }
