@@ -116,7 +116,7 @@ function(boost_modular_build)
         set(VARIANT ${BUILD_TYPE})
         set(BUILD_LIB_PATH ${BUILD_LIB_PATH})
         configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
-        
+
         set(configure_option)
         if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
             list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
@@ -135,13 +135,23 @@ function(boost_modular_build)
         )
         vcpkg_install_cmake()
     endfunction()
-    
+
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(build_flag 0)
+        if(NOT DEFINED VCPKG_BUILD_TYPE)
+            set(build_flag 1)
+            set(VCPKG_BUILD_TYPE "release")
+        endif()
+
+        if(VCPKG_BUILD_TYPE STREQUAL "release")
             unix_build(${BOOST_LIB_RELEASE_SUFFIX} "release" "lib/")
         endif()
 
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        if(build_flag)
+            set(VCPKG_BUILD_TYPE "debug")
+        endif()
+
+        if(VCPKG_BUILD_TYPE STREQUAL "debug")
             unix_build(${BOOST_LIB_DEBUG_SUFFIX} "debug" "debug/lib/")
         endif()
 
@@ -213,7 +223,7 @@ function(boost_modular_build)
     else()
         list(APPEND B2_OPTIONS threadapi=pthread)
     endif()
-    set(B2_OPTIONS_DBG
+    list(APPEND B2_OPTIONS_DBG
          -sZLIB_BINARY=zlibd
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
          -sBZIP2_BINARY=bz2d
@@ -224,7 +234,7 @@ function(boost_modular_build)
          "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
 
-    set(B2_OPTIONS_REL
+    list(APPEND B2_OPTIONS_REL
          -sZLIB_BINARY=zlib
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
          -sBZIP2_BINARY=bz2
