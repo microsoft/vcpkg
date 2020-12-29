@@ -244,8 +244,10 @@ function(vcpkg_configure_make)
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
     set(_cm_FLAGS AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
+    set(_cm_COMPILERS CC CXX)
     list(TRANSFORM _cm_FLAGS APPEND "FLAGS")
     _vcpkg_backup_env_variables(${_cm_FLAGS})
+    _vcpkg_backup_env_variables(${_cm_COMPILERS})
 
 
     # FC fotran compiler | FF Fortran 77 compiler 
@@ -647,6 +649,10 @@ function(vcpkg_configure_make)
         endif()
 
         # Setup environment
+        if (NOT CMAKE_HOST_WIN32)
+            set(ENV{CC} "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
+            set(ENV{CXX} "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
+        endif()
         set(ENV{CPPFLAGS} "${CPPFLAGS_${_buildtype}}")
         set(ENV{CFLAGS} "${CFLAGS_${_buildtype}}")
         set(ENV{CXXFLAGS} "${CXXFLAGS_${_buildtype}}")
@@ -721,7 +727,7 @@ function(vcpkg_configure_make)
     endforeach()
 
     # Restore environment
-    _vcpkg_restore_env_variables(${_cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
+    _vcpkg_restore_env_variables(${_cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH ${_cm_COMPILERS})
 
     SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${_csc_PROJECT_SUBPATH} PARENT_SCOPE)
