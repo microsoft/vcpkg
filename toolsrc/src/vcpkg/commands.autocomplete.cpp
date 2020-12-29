@@ -76,7 +76,6 @@ namespace vcpkg::Commands::Autocomplete
                 "ci",
                 "depend-info",
                 "env",
-                "import",
                 "portsdiff",
             };
 
@@ -94,7 +93,8 @@ namespace vcpkg::Commands::Autocomplete
             const auto triplet_prefix = match[3].str();
 
             // TODO: Support autocomplete for ports in --overlay-ports
-            auto maybe_port = Paragraphs::try_load_port(paths.get_filesystem(), paths.ports / port_name);
+            auto maybe_port =
+                Paragraphs::try_load_port(paths.get_filesystem(), paths.builtin_ports_directory() / port_name);
             if (maybe_port.error())
             {
                 Checks::exit_success(VCPKG_LINE_INFO);

@@ -14,6 +14,9 @@ jobs:
     value: /Users/vagrant/Data
   - name: VCPKG_DOWNLOADS
     value: /Users/vagrant/Data/downloads
+  - group: azblob-test-sas-group
+  - name: BINARY_SOURCE_STUB
+    value: "x-azblob,$(azblob-root-url),$(azblob-test-sas)"
 
   steps:
   - bash: df -h
@@ -40,7 +43,7 @@ jobs:
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -ArchivesRoot ${{ variables.WORKING_ROOT }}/archives -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -BinarySourceStub "$(BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
   - bash: |
       df -h
     displayName: 'Report on Disk Space After Build'
@@ -50,7 +53,7 @@ jobs:
     inputs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)/failure-logs'
       ArtifactName: 'failure logs for x64-osx'
-    condition: failed()
+    condition: always()
   - bash: |
       python3 scripts/file_script.py /Users/vagrant/Data/installed/vcpkg/info/
     displayName: 'Build a file list for all packages'

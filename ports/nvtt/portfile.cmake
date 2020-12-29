@@ -15,6 +15,7 @@ vcpkg_from_github(
         squish.patch
         fix-build-error.patch
         add-compile-options-for-osx.patch
+        skip-building-libsquish.patch
 )
 
 vcpkg_configure_cmake(

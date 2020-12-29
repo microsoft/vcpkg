@@ -10,20 +10,21 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_find_acquire_program(YASM)
 vcpkg_find_acquire_program(PERL)
 
-get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
 get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 
 if(CMAKE_HOST_WIN32)
 	vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
 	set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-	set(ENV{PATH} "${YASM_EXE_PATH};${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
+	set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH};${PERL_EXE_PATH}")
 else()
 	set(BASH /bin/bash)
-	set(ENV{PATH} "${YASM_EXE_PATH}:${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
+	set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
 endif()
+
+include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
+yasm_tool_helper(PREPEND_TO_PATH OUT_VAR ENV{AS})
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 

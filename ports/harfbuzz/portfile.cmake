@@ -13,6 +13,7 @@ vcpkg_from_github(
         # This patch is required for propagating the full list of dependencies from glib
         glib-cmake.patch
         fix_include.patch
+        icu.patch
 )
 
 file(READ ${SOURCE_PATH}/CMakeLists.txt _contents)

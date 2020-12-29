@@ -6,8 +6,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GamedevFramework/gf
     HEAD_REF master
-    REF v0.18.0
-    SHA512 3a09939715d9e225df0e3ef1e7d1e74a7f84c1926657fc55be6c77e7869d0cb3e3f4bd9ee97c21e0920947d05837736a1cd2d6aa02aa09e6f294c8b6fdb6ece5
+    REF v0.18.1
+    SHA512 7d027bc9c56ad60e242f44c40e79039a0b95fb01b805cba529089a9a7e4e3ca79986d05f6906653065b96cc39d9d9e79aeafb72524453508468a30d6cf7609cf
 )
 
 vcpkg_configure_cmake(
