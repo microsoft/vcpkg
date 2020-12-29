@@ -11,8 +11,6 @@ vcpkg_extract_source_archive_ex(
     REF ${ILBC_VERSION}
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
