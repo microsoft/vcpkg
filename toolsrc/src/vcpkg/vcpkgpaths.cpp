@@ -581,19 +581,19 @@ If you wish to silence this error and use classic mode, you can:
         std::map<std::string, std::string, std::less<>> ret;
         auto lines = Strings::split(output.output, '\n');
         // The first line of the output is always the parent directory itself.
-        for (auto line_it = lines.begin() + 1; line_it != lines.end(); ++line_it)
+        for (auto line : lines)
         {
             // The default output comes in the format:
             // <mode> SP <type> SP <object> TAB <file>
-            auto split_line = Strings::split(*line_it, '\t');
+            auto split_line = Strings::split(line, '\t');
             if (split_line.size() != 2)
                 return Strings::format(
-                    "Error: Unexpected output from command `%s`. Couldn't split by `\\t`.\n%s", git_cmd, *line_it);
+                    "Error: Unexpected output from command `%s`. Couldn't split by `\\t`.\n%s", git_cmd, line);
 
             auto file_info_section = Strings::split(split_line[0], ' ');
             if (file_info_section.size() != 3)
                 return Strings::format(
-                    "Error: Unexepcted output from command `%s`. Couldn't split by ` `.\n%s", git_cmd, *line_it);
+                    "Error: Unexepcted output from command `%s`. Couldn't split by ` `.\n%s", git_cmd, line);
 
             auto find_port_name = [&](const std::string& str) -> std::string {
                 auto index = str.find("ports/");
@@ -609,7 +609,7 @@ If you wish to silence this error and use classic mode, you can:
             if (index == std::string::npos)
             {
                 return Strings::format(
-                    "Error: Unexpected output from command `%s`. Couldn't split by `/`.\n%s", git_cmd, *line_it);
+                    "Error: Unexpected output from command `%s`. Couldn't split by `/`.\n%s", git_cmd, line);
             }
 
             ret.emplace(split_line[1].substr(index + 1), file_info_section.back());

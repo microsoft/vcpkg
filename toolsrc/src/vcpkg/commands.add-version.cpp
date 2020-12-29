@@ -14,15 +14,18 @@ using namespace vcpkg;
 
 namespace vcpkg::Commands::AddVersion
 {
+    static constexpr StringLiteral OPTION_ALL = "all";
+    static constexpr StringLiteral OPTION_CREATE_MISSING = "create-missing";
     static constexpr StringLiteral OPTION_OVERWRITE_VERSION = "overwrite-version";
 
     const CommandSwitch COMMAND_SWITCHES[] = {
+        {OPTION_ALL, "Process versions for all ports."},
         {OPTION_OVERWRITE_VERSION, "Overwrite `git-tree` of an existing version."},
     };
 
     const CommandStructure COMMAND_STRUCTURE{
         create_example_string(R"###(x-add-version <port name>)###"),
-        1,
+        0,
         1,
         {{COMMAND_SWITCHES}, {}, {}},
         nullptr,
@@ -149,35 +152,44 @@ namespace vcpkg::Commands::AddVersion
                                  const SchemedVersion& version,
                                  const fs::path& baseline_path)
     {
-        auto maybe_baseline_map = vcpkg::parse_baseline_file(fs, "default", baseline_path);
-        if (auto pbaseline = maybe_baseline_map.get())
+        bool is_new_file = false;
+        auto baseline_map = [&]() -> std::map<std::string, vcpkg::SchemedVersion, std::less<>> {
+            if (!fs.exists(VCPKG_LINE_INFO, baseline_path))
+            {
+                is_new_file = true;
+                std::map<std::string, vcpkg::SchemedVersion, std::less<>> ret;
+                return ret;
+            }
+            auto maybe_baseline_map = vcpkg::parse_baseline_file(fs, "default", baseline_path);
+            return maybe_baseline_map.value_or_exit(VCPKG_LINE_INFO);
+        }();
+
+        auto it = baseline_map.find(port_name);
+        if (it != baseline_map.end())
         {
-            auto it = pbaseline->find(port_name);
-            if (it != pbaseline->end())
+            auto& baseline_version = it->second;
+            if (baseline_version.versiont == version.versiont && baseline_version.scheme == version.scheme)
             {
-                auto& baseline_version = it->second;
-                if (baseline_version.versiont == version.versiont && baseline_version.scheme == version.scheme)
-                {
-                    System::printf(System::Color::success,
-                                   "Version `%s` is already in `%s`\n",
-                                   version.versiont,
-                                   fs::u8string(baseline_path));
-                    return;
-                }
-                baseline_version = version;
+                System::printf(System::Color::success,
+                               "Version `%s` is already in `%s`\n",
+                               version.versiont,
+                               fs::u8string(baseline_path));
+                return;
             }
-            else
-            {
-                pbaseline->emplace(port_name, version);
-            }
-            write_baseline_file(fs, *pbaseline, baseline_path);
-            System::printf(
-                System::Color::success, "Added version `%s` to `%s`.\n", version.versiont, fs::u8string(baseline_path));
-            return;
+            baseline_version = version;
+        }
+        else
+        {
+            baseline_map.emplace(port_name, version);
         }
 
-        System::printf(System::Color::error, "Error: Couldn't parse baseline file.\n%s\n", maybe_baseline_map.error());
-        Checks::exit_fail(VCPKG_LINE_INFO);
+        write_baseline_file(fs, baseline_map, baseline_path);
+        System::printf(System::Color::success,
+                       "Added version `%s` to `%s`%s.\n",
+                       version.versiont,
+                       fs::u8string(baseline_path),
+                       is_new_file ? " (new file)" : "");
+        return;
     }
 
     void update_version_db_file(Files::Filesystem& fs,
@@ -187,7 +199,7 @@ namespace vcpkg::Commands::AddVersion
                                 const fs::path& version_db_file_path,
                                 bool overwrite_version)
     {
-        if (!fs.exists(version_db_file_path))
+        if (!fs.exists(VCPKG_LINE_INFO, version_db_file_path))
         {
             std::vector<VersionDbEntry> new_entry{VersionDbEntry{version.versiont, version.scheme, git_tree}};
             write_versions_file(fs, new_entry, version_db_file_path);
@@ -276,48 +288,78 @@ namespace vcpkg::Commands::AddVersion
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
         auto parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
-        const auto port_name = args.command_arguments[0];
-        bool overwrite_version = Util::Sets::contains(parsed_args.switches, OPTION_OVERWRITE_VERSION);
+        const bool add_all = Util::Sets::contains(parsed_args.switches, OPTION_ALL);
+        const bool overwrite_version = Util::Sets::contains(parsed_args.switches, OPTION_OVERWRITE_VERSION);
 
-        auto baseline_path = paths.builtin_port_versions / fs::u8path("baseline.json");
         auto& fs = paths.get_filesystem();
-        if (!fs.exists(baseline_path))
+        auto baseline_path = paths.builtin_port_versions / fs::u8path("baseline.json");
+        if (!fs.exists(VCPKG_LINE_INFO, baseline_path))
         {
             System::printf(
-                System::Color::error, "Error: Couldn't find required file `%s`", fs::u8string(baseline_path));
+                System::Color::error, "Error: Couldn't find required file `%s`\n.", fs::u8string(baseline_path));
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
 
-        // Get version information of the local port
-        PortFileProvider::PathsPortFileProvider provider(paths, {});
-        auto maybe_scf = provider.get_control_file(port_name);
-        Checks::check_exit(VCPKG_LINE_INFO, maybe_scf.has_value(), "Error: Couldn't load port `%s`.", port_name);
-        const auto& scf = maybe_scf.value_or_exit(VCPKG_LINE_INFO);
-        const auto& versiont = scf.source_control_file->to_versiont();
-        auto scheme = scf.source_control_file->core_paragraph->version_scheme;
+        std::vector<std::string> port_names;
+        if (!args.command_arguments.empty())
+        {
+            if (add_all)
+            {
+                System::printf(System::Color::warning,
+                               "Warning: Ignoring option `--%s` since a port name argument was provided.\n",
+                               OPTION_ALL);
+            }
+            port_names.emplace_back(args.command_arguments[0]);
+        }
+        else
+        {
+            if (!add_all)
+            {
+                System::printf(System::Color::error,
+                               "Error: Use option `--%s` to update version files for all ports at once.\n",
+                               OPTION_ALL);
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
+            for (auto&& port_dir : fs::directory_iterator(paths.builtin_ports_directory()))
+            {
+                port_names.emplace_back(fs::u8string(port_dir.path().stem()));
+            }
+        }
 
         // Get tree-ish from local repository state.
         auto maybe_git_tree_map = paths.git_get_local_port_treeish_map();
         auto git_tree_map = maybe_git_tree_map.value_or_exit(VCPKG_LINE_INFO);
-        auto git_tree_it = git_tree_map.find(port_name);
-        if (git_tree_it == git_tree_map.end())
+        PortFileProvider::PathsPortFileProvider provider(paths, {});
+
+        for (auto&& port_name : port_names)
         {
-            System::printf(System::Color::warning,
-                           "Warning: No local Git SHA was found for port `%s`.\n"
-                           "-- Did you remember to commit your changes?\n"
-                           "No files were updated.\n",
-                           port_name);
-            Checks::exit_fail(VCPKG_LINE_INFO);
+            // Get version information of the local port
+            auto maybe_scf = provider.get_control_file(port_name);
+            Checks::check_exit(VCPKG_LINE_INFO, maybe_scf.has_value(), "Error: Couldn't load port `%s`.", port_name);
+            const auto& scf = maybe_scf.value_or_exit(VCPKG_LINE_INFO);
+            const auto& versiont = scf.source_control_file->to_versiont();
+            auto scheme = scf.source_control_file->core_paragraph->version_scheme;
+
+            auto git_tree_it = git_tree_map.find(port_name);
+            if (git_tree_it == git_tree_map.end())
+            {
+                System::printf(System::Color::warning,
+                               "Warning: No local Git SHA was found for port `%s`.\n"
+                               "-- Did you remember to commit your changes?\n"
+                               "No files were updated.\n",
+                               port_name);
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+            const auto& git_tree = git_tree_it->second;
+
+            auto port_versions_path =
+                paths.builtin_port_versions / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
+            update_version_db_file(
+                fs, port_name, SchemedVersion{scheme, versiont}, git_tree, port_versions_path, overwrite_version);
+
+            update_baseline_version(fs, port_name, SchemedVersion{scheme, versiont}, baseline_path);
         }
-        const auto& git_tree = git_tree_it->second;
-
-        auto port_versions_path =
-            paths.builtin_port_versions / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
-        update_version_db_file(
-            fs, port_name, SchemedVersion{scheme, versiont}, git_tree, port_versions_path, overwrite_version);
-
-        update_baseline_version(fs, port_name, SchemedVersion{scheme, versiont}, baseline_path);
-
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
