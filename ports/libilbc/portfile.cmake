@@ -14,8 +14,6 @@ vcpkg_extract_source_archive_ex(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
 vcpkg_install_cmake()
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
