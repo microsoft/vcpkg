@@ -42,7 +42,7 @@ namespace vcpkg::Commands::CIVerifyVersions
 
     ExpectedS<std::string> verify_version_in_db(const VcpkgPaths& paths,
                                                 const PortFileProvider::PathsPortFileProvider& paths_provider,
-                                                const PortFileProvider::BaselineProvider& baseline_provider,
+                                                const PortFileProvider::IBaselineProvider& baseline_provider,
                                                 const std::string& port_name,
                                                 const fs::path& versions_file_path,
                                                 const std::string& local_git_tree,
@@ -220,7 +220,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                            fs.exists(baseline_file_path),
                            "Error: Couldn't find required file `%s`.",
                            fs::u8string(baseline_file_path));
-        PortFileProvider::BaselineProvider baseline_provider(paths);
+        auto baseline_provider = PortFileProvider::make_baseline_provider(paths);
         PortFileProvider::PathsPortFileProvider paths_provider(paths, {});
 
         std::set<std::string> errors;
@@ -278,7 +278,7 @@ namespace vcpkg::Commands::CIVerifyVersions
             }
 
             auto maybe_ok = verify_version_in_db(
-                paths, paths_provider, baseline_provider, port_name, versions_file_path, git_tree, verify_git_trees);
+                paths, paths_provider, *baseline_provider, port_name, versions_file_path, git_tree, verify_git_trees);
 
             if (!maybe_ok.has_value())
             {
