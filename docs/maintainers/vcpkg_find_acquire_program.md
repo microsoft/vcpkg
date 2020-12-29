@@ -34,6 +34,7 @@ The current list of programs includes:
 * NINJA
 * NUGET
 * SCONS
+* STACK
 * SWIG
 * YASM
 
