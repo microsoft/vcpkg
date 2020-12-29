@@ -1,0 +1,13 @@
+diff --git a/src/tools/msvc/MSBuildProject.pm b/src/tools/msvc/MSBuildProject.pm
+index b93992f..2397511 100644
+--- a/src/tools/msvc/MSBuildProject.pm
++++ b/src/tools/msvc/MSBuildProject.pm
+@@ -333,7 +333,7 @@ sub WriteItemDefinitionGroup
+       <BrowseInformation>false</BrowseInformation>
+       <WarningLevel>Level3</WarningLevel>
+       <SuppressStartupBanner>true</SuppressStartupBanner>
+-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
++      <DebugInformationFormat>OldStyle</DebugInformationFormat>
+       <CompileAs>Default</CompileAs>
+     </ClCompile>
+     <Link>
