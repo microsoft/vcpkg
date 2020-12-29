@@ -124,9 +124,9 @@ if(QT_OPENSSL_LINK)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-if(QT_MYSQL_PLUGIN)
-    list(APPEND CORE_OPTIONS -sql-mysql)
-endif()
+    if(QT_MYSQL_PLUGIN)
+        list(APPEND CORE_OPTIONS -sql-mysql)
+    endif()
 endif()
 
 find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
