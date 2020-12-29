@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.0)
 project(glib C)
 
+set(PACKAGE_VERSION 2.52.3)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
 
@@ -357,6 +358,7 @@ message(STATUS "  " ${CHARSET_LIBRARY})
 message(STATUS "  " ${FFI_LIBRARY})
 message(STATUS "  " ${Intl_LIBRARIES})
 
+set(VERSION ${PACKAGE_VERSION})
 set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix ${CMAKE_INSTALL_PREFIX})
 set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
