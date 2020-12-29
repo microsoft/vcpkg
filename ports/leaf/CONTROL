@@ -1,5 +1,0 @@
-Source: leaf
-Version: 0.2.2
-Port-Version: 1
-Description: Deprecated boost-leaf port.
-Build-Depends: boost-leaf
