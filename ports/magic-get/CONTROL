@@ -1,5 +1,6 @@
 Source: magic-get
-Version: removed
+Version: 2019-09-02
+Port-Version: 2
 Homepage: https://github.com/apolukhin/magic_get
 Description: Deprecated boost-pfr port.
 Build-Depends: boost-pfr
