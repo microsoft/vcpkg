@@ -14,8 +14,15 @@ vcpkg_from_github(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_acquire_msys(MSYS_ROOT)
-    set(BASH_ROOT ${MSYS_ROOT}/usr/bin)
+    vcpkg_acquire_msys(MSYS_ROOT
+        PACKAGES
+            bash
+        DIRECT_PACKAGES
+            # Required for "getopt"
+            "https://repo.msys2.org/msys/x86_64/util-linux-2.35.2-1-x86_64.pkg.tar.zst"
+            ff951c2cd96d0fda87bacb505c93e4aa1f9aeb35f829c52b5a7862d05e167f69605a4927a0e7197b5ee2b2fa5cb56619ad7a6ba293ede4765fdcacedf2ed35da
+        )
+    vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
