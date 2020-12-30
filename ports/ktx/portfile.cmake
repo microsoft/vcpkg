@@ -23,14 +23,14 @@ if(VCPKG_TARGET_IS_WINDOWS)
             ff951c2cd96d0fda87bacb505c93e4aa1f9aeb35f829c52b5a7862d05e167f69605a4927a0e7197b5ee2b2fa5cb56619ad7a6ba293ede4765fdcacedf2ed35da
         )
     vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
+
+    vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+        tools KTX_FEATURE_TOOLS
+        vulkan KTX_FEATURE_VULKAN
+    )
 endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools KTX_FEATURE_TOOLS
-    vulkan KTX_FEATURE_VULKAN
-)
 
 file(REMOVE
     "${SOURCE_PATH}/other_include/zstd.h"
