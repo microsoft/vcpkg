@@ -649,7 +649,7 @@ function(vcpkg_configure_make)
         endif()
 
         # Setup environment
-        if (NOT CMAKE_HOST_WIN32)
+        if (NOT CMAKE_HOST_WIN32 AND NOT CMAKE_HOST_APPLE)
             set(ENV{CC} "${VCPKG_DETECTED_CMAKE_C_COMPILER}")
             set(ENV{CXX} "${VCPKG_DETECTED_CMAKE_CXX_COMPILER}")
         endif()
