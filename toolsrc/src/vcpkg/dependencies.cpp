@@ -356,7 +356,7 @@ namespace vcpkg::Dependencies
 
     std::string to_output_string(RequestType request_type, const CStringView s)
     {
-        return to_output_string(request_type, s, {Build::UseHeadVersion::NO}, {}, {}, {});
+        return to_output_string(request_type, s, {}, {}, {}, {});
     }
 
     InstallPlanAction::InstallPlanAction() noexcept
