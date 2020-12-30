@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "UWP")
+vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86")
 
 set(PORT_VERSION 4.0.0-beta5)
 
@@ -31,6 +31,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools KTX_FEATURE_TOOLS
     vulkan KTX_FEATURE_VULKAN
 )
+
+file(REMOVE
+    "${SOURCE_PATH}/other_include/zstd.h"
+    "${SOURCE_PATH}/other_include/zstd_errors.h")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
