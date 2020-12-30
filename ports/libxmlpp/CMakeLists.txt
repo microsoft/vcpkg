@@ -4,7 +4,7 @@ project(libxmlpp)
 set(CMAKE_CXX_STANDARD 17)
 
 find_path(GLIBMM_INCLUDE_DIR NAMES glibmm.h)
-find_library(GLIBMM_LIBRARY NAMES glibmm)
+find_library(GLIBMM_LIBRARY NAMES glibmm glibmm-2.0)
 find_library(GIOMM_LIBRARY NAMES giomm)
 find_library(GLIB_LIBRARY NAMES glib glib-2.0)
 find_library(GIO_LIBRARY NAMES gio gio-2.0)

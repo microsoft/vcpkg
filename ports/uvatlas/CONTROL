@@ -1,5 +1,6 @@
 Source: uvatlas
-Version: aug2020
+Version: dec2020b
 Homepage: https://github.com/Microsoft/UVAtlas
 Description: UVAtlas isochart texture atlas
+Build-Depends: directxmesh(!uwp), directxtex(!uwp)
 Supports: windows
