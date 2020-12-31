@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "x86" "arm" ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oneapi-src/oneDNN
@@ -17,7 +19,9 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+# The port name and the find_package() name are different (onednn versus dnnl)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/dnnl TARGET_PATH share/dnnl)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
