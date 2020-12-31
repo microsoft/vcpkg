@@ -13,16 +13,3 @@ index 3df385a..1ee7be0 100644
  ENDIF()
  
  ADD_SUBDIRECTORY(src)
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 20b578a..75dc833 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -183,7 +183,7 @@ IF (PAHO_BUILD_STATIC)
- ENDIF()
- 
- INSTALL(FILES MQTTAsync.h MQTTClient.h MQTTClientPersistence.h MQTTProperties.h MQTTReasonCodes.h MQTTSubscribeOpts.h MQTTExportDeclarations.h
--    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
-+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/paho-mqtt)
- 
- IF (PAHO_WITH_SSL)
-     SET(OPENSSL_ROOT_DIR "" CACHE PATH "Directory containing OpenSSL libraries and includes")
