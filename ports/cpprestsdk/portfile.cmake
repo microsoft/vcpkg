@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/cpprestsdk
-    REF v2.10.16
+    REF 41e7d0074b6cb5b22c89f835b4531d848ab66987
     SHA512 d850b26051439dd10edcecd006075c64c61c565193cd76870af175bd343a72ecc59485deb0f907807071a57dd256b67139ad5d016f19cb38f7142357f430be1c
     HEAD_REF master
     PATCHES fix-find-openssl.patch
