@@ -73,7 +73,6 @@ macro(select_executable_location target basename)
 endmacro()
 
 select_library_location(LibXml2::LibXml2 LIBXML2)
-select_executable_location(LibXml2::xmllint LIBXML2_XMLLINT)
 
 set(LIBXML2_LIBRARIES ${LIBXML2_LIBRARY})
 set(LIBXML2_INCLUDE_DIRS ${LIBXML2_INCLUDE_DIR})
@@ -101,7 +100,7 @@ if(NOT @BUILD_SHARED_LIBS@)
   endif()
 
   if(@LIBXML2_WITH_LZMA@)
-    find_dependency(LibLZMA)
+    find_dependency(LibLZMA CONFIG)
     list(APPEND LIBXML2_LIBRARIES    ${LIBLZMA_LIBRARIES})
     list(APPEND LIBXML2_INCLUDE_DIRS ${LIBLZMA_INCLUDE_DIRS})
   endif()
