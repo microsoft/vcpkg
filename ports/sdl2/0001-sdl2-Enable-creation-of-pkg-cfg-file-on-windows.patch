@@ -1,20 +1,14 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 7dfd35389..7944f401b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1916,9 +1916,10 @@ listtostr(EXTRA_CFLAGS _EXTRA_CFLAGS)
- set(EXTRA_CFLAGS ${_EXTRA_CFLAGS})
- 
- # Compat helpers for the configuration files
+@@ -2086,7 +2086,6 @@
+   execute_process(COMMAND sh ${SDL2_SOURCE_DIR}/build-scripts/updaterev.sh
+     WORKING_DIRECTORY ${SDL2_BINARY_DIR})
+ endif()
 -if(NOT WINDOWS OR CYGWIN)
-   # TODO: we need a Windows script, too
-+  if(NOT WINDOWS OR CYGWIN)
-   execute_process(COMMAND sh ${SDL2_SOURCE_DIR}/build-scripts/updaterev.sh)
-+  endif()
- 
    set(prefix ${CMAKE_INSTALL_PREFIX})
    set(exec_prefix "\${prefix}")
-@@ -1960,7 +1961,6 @@ if(NOT WINDOWS OR CYGWIN)
+   set(libdir "\${exec_prefix}/lib${LIB_SUFFIX}")
+@@ -2129,7 +2129,6 @@
      "${SDL2_BINARY_DIR}/sdl2-config" @ONLY)
    configure_file("${SDL2_SOURCE_DIR}/SDL2.spec.in"
      "${SDL2_BINARY_DIR}/SDL2.spec" @ONLY)
@@ -22,7 +16,7 @@ index 7dfd35389..7944f401b 100644
  
  ##### Info output #####
  message(STATUS "")
-@@ -2198,6 +2198,7 @@ if(NOT (WINDOWS OR CYGWIN))
+@@ -2376,6 +2376,7 @@
    # TODO: what about the .spec file? Is it only needed for RPM creation?
    install(FILES "${SDL2_SOURCE_DIR}/sdl2.m4" DESTINATION "${CMAKE_INSTALL_FULL_DATAROOTDIR}/aclocal")
  endif()
@@ -30,4 +24,3 @@ index 7dfd35389..7944f401b 100644
  
  ##### Uninstall target #####
  
-
