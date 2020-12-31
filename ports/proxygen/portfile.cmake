@@ -9,8 +9,6 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path(${PYTHON3_PATH})
 
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(GPERF)
@@ -26,6 +24,8 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DPROXYGEN_PYTHON=${PYTHON3}
 )
 
 vcpkg_install_cmake()

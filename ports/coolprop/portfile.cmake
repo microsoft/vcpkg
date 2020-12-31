@@ -13,8 +13,6 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR ${PYTHON2} DIRECTORY)
-vcpkg_add_to_path(${PYTHON2_DIR})
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/externals)
 
@@ -80,6 +78,7 @@ vcpkg_configure_cmake(
         -DCOOLPROP_STATIC_LIBRARY=${COOLPROP_STATIC_LIBRARY}
         -DCOOLPROP_MSVC_DYNAMIC=${COOLPROP_MSVC_DYNAMIC}
         -DCOOLPROP_MSVC_STATIC=${COOLPROP_MSVC_STATIC}
+        -DPYTHON_EXECUTABLE=${PYTHON2}
     OPTIONS_RELEASE
         -DCOOLPROP_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}
     OPTIONS_DEBUG

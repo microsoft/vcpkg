@@ -25,13 +25,16 @@ endif()
 
 # shaderc uses python to manipulate copyright information
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path(PREPEND "${PYTHON3_EXE_PATH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DSHADERC_SKIP_TESTS=true ${OPTIONS} -Dglslang_SOURCE_DIR=${CURRENT_INSTALLED_DIR}/include -Dspirv-tools_SOURCE_DIR=${CURRENT_INSTALLED_DIR}/include 
+    OPTIONS
+        -DSHADERC_SKIP_TESTS=true
+        ${OPTIONS}
+        -Dglslang_SOURCE_DIR=${CURRENT_INSTALLED_DIR}/include
+        -Dspirv-tools_SOURCE_DIR=${CURRENT_INSTALLED_DIR}/include
+        -DPYTHON_EXECUTABLE=${PYTHON3}
     OPTIONS_DEBUG -DSUFFIX_D=true
     OPTIONS_RELEASE -DSUFFIX_D=false
 )

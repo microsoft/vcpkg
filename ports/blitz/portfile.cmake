@@ -9,14 +9,13 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path(${PYTHON2_DIR})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
         -DBUILD_DOC=OFF
-        -DBUILD_TESTING=OFF    
+        -DBUILD_TESTING=OFF
+        -DPython_EXECUTABLE=${PYTHON2}
 )
 
 vcpkg_install_cmake()

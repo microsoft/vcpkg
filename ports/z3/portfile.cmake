@@ -1,8 +1,6 @@
 vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "arm64")
 
 vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON2_DIR}")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -23,6 +21,7 @@ vcpkg_configure_cmake(
   PREFER_NINJA
   OPTIONS
     ${BUILD_STATIC}
+    -DPYTHON_EXECUTABLE=${PYTHON2}
 )
 
 vcpkg_install_cmake()

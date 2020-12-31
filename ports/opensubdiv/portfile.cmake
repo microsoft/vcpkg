@@ -19,8 +19,6 @@ These can be installed on Ubuntu systems via sudo apt install libxinerama-dev")
 endif()
 
 vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON2_DIR}")
 
 if (VCPKG_CRT_LINKAGE STREQUAL static)
     set(STATIC_CRT_LNK ON)
@@ -39,6 +37,7 @@ vcpkg_configure_cmake(
         -DNO_REGRESSION=ON
         -DNO_TESTS=ON
         -DMSVC_STATIC_CRT=${STATIC_CRT_LNK}
+        -DPYTHON_EXECUTABLE=${PYTHON2}
 )
 
 vcpkg_install_cmake()

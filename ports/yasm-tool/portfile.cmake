@@ -4,8 +4,6 @@ set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 set(VCPKG_LIBRARY_LINKAGE static)
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -19,6 +17,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DENABLE_NLS=OFF
+        -DPYTHON_EXECUTABLE=${PYTHON3}
         -DYASM_BUILD_TESTS=OFF
 )
 

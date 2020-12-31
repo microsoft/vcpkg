@@ -14,8 +14,6 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON2_DIR}")
 
 IF (VCPKG_TARGET_IS_WINDOWS)
 ELSE()
@@ -37,6 +35,7 @@ vcpkg_configure_cmake(
         -DPXR_BUILD_EXAMPLES:BOOL=OFF
         -DPXR_BUILD_TUTORIALS:BOOL=OFF
         -DPXR_BUILD_USD_TOOLS:BOOL=OFF
+        -DPYTHON_EXECUTABLE:FILEPATH=${PYTHON2}
 )
 
 vcpkg_install_cmake()

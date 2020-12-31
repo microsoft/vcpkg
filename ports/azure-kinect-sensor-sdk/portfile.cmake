@@ -13,8 +13,6 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     docs K4A_BUILD_DOCS
@@ -31,6 +29,7 @@ vcpkg_configure_cmake(
     -DBUILD_EXAMPLES=OFF
     -DWITH_TEST=OFF
     -DIMGUI_EXTERNAL_PATH=${CURRENT_INSTALLED_DIR}/include/bindings
+    -DPython3_EXECUTABLE=${PYTHON3}
 )
 
 vcpkg_install_cmake()

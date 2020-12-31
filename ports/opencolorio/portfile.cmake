@@ -22,8 +22,6 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_PATH "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path(PREPEND ${PYTHON3_PATH})
 
 # TODO(theblackunknown) build additional targets based on feature
 
@@ -41,6 +39,7 @@ vcpkg_configure_cmake(
         -DOCIO_BUILD_PYGLUE:BOOL=OFF
         -DOCIO_BUILD_JNIGLUE:BOOL=OFF
         -DOCIO_STATIC_JNIGLUE:BOOL=OFF
+        -DPython_EXECUTABLE:FILEPATH=${PYTHON3}
         -DUSE_EXTERNAL_TINYXML:BOOL=ON
         -DUSE_EXTERNAL_YAML:BOOL=ON
 )

@@ -148,8 +148,6 @@ foreach(llvm_target IN LISTS known_llvm_targets)
 endforeach()
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR ${PYTHON3} DIRECTORY)
-vcpkg_add_to_path(${PYTHON3_DIR})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/llvm
@@ -174,6 +172,7 @@ vcpkg_configure_cmake(
         -DLLVM_BUILD_LLVM_C_DYLIB=OFF
         # Path for binary subdirectory (defaults to 'bin')
         -DLLVM_TOOLS_INSTALL_DIR=tools/llvm
+        -DPython3_EXECUTABLE=${PYTHON3}
     OPTIONS_DEBUG
         -DCMAKE_DEBUG_POSTFIX=d
 )

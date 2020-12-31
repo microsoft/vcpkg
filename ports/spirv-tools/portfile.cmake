@@ -13,8 +13,6 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -23,6 +21,7 @@ vcpkg_configure_cmake(
         -DSPIRV-Headers_SOURCE_DIR=${CURRENT_INSTALLED_DIR}
         -DSPIRV_WERROR=OFF
         -DENABLE_SPIRV_TOOLS_INSTALL=ON
+        -DPYTHON_EXECUTABLE=${PYTHON3}
 )
 
 vcpkg_install_cmake()

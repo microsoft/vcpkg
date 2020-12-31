@@ -7,8 +7,6 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYPATH ${PYTHON3} PATH)
-vcpkg_add_to_path("${PYPATH}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -16,6 +14,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DPYBIND11_TEST=OFF
         -DPYTHONLIBS_FOUND=ON
+        -DPYTHON_EXECUTABLE=${PYTHON3}
         -DPYTHON_INCLUDE_DIRS=${CURRENT_INSTALLED_DIR}/include
         -DPYTHON_MODULE_EXTENSION=.dll
     OPTIONS_RELEASE

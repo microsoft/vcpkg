@@ -27,8 +27,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 # Note: the python feature currently requires `python3-dev` and `python3-setuptools` installed on the system
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
-    get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
-    vcpkg_add_to_path(${PYTHON3_PATH})
+    list(APPEND FEATURE_OPTIONS -DPython3_EXECUTABLE=${PYTHON3})
 
     file(GLOB BOOST_PYTHON_LIB "${CURRENT_INSTALLED_DIR}/lib/*boost_python*")
     string(REGEX REPLACE ".*(python)([0-9])([0-9]+).*" "\\1\\2\\3" _boost-python-module-name "${BOOST_PYTHON_LIB}")
