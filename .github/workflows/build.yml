@@ -1,0 +1,87 @@
+name: Build
+
+on: [pull_request, push]
+
+jobs:
+  build-windows:
+    env:
+      VCPKG_PATH: C:\mixxx-vcpkg
+      VCPKG_PACKAGES: >-
+        chromaprint
+        ffmpeg
+        fftw3
+        hidapi
+        hss1394
+        libebur128
+        libflac
+        libkeyfinder
+        libmad
+        libmodplug
+        libogg
+        libopusenc
+        libshout
+        libsndfile
+        libvorbis
+        mp3lame
+        opus
+        opusfile
+        portaudio
+        portmidi
+        protobuf
+        pthreads
+        qt5-base
+        qt5-declarative
+        qt5-script
+        qt5-svg
+        qt5-winextras
+        qtkeychain
+        rubberband
+        soundtouch
+        taglib
+      VCPKG_DEFAULT_TRIPLET: x64-windows-static
+    name: windows
+    runs-on: windows-latest
+    steps:
+    - name: Check out git repository
+      uses: LebedevRI/checkout@issue197
+      with:
+        path: ${{ env.VCPKG_PATH }}
+
+    - name: Bootstrap vcpkg
+      run: .\bootstrap-vcpkg.bat
+      working-directory: ${{ env.VCPKG_PATH }}
+
+    - name: Set up cache
+      uses: actions/cache@v2
+      with:
+        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
+        key: vcpkg-${{ env.VCPKG_DEFAULT_TRIPLET }}-${{ github.head_ref }}-${{ github.run_number }}
+        restore-keys: |
+          vcpkg-${{ env.VCPKG_DEFAULT_TRIPLET }}-${{ github.head_ref }}
+          vcpkg-${{ env.VCPKG_DEFAULT_TRIPLET }}
+          vcpkg
+
+    - name: Check available disk space
+      run: Get-PSDrive
+
+    - name: Build packages
+      run: .\vcpkg install --clean-after-build ${{ env.VCPKG_PACKAGES }}
+      working-directory: ${{ env.VCPKG_PATH }}
+      env:
+        VCPKG_OVERLAY_PORTS: overlay/ports
+
+    - name: Create buildenv archive
+      run: .\vcpkg export ${{ env.VCPKG_PACKAGES }} --zip --output=buildenv-2.3-${{ env.vcpkg_DEFAULT_TRIPLET}}-${{ github.sha }}
+      working-directory: ${{ env.VCPKG_PATH }}
+
+    - name: Upload GitHub Actions artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: buildenv-2.3-${{ env.vcpkg_DEFAULT_TRIPLET}}-${{ github.sha }}
+        path: ${{ env.VCPKG_PATH }}\buildenv-2.3-${{ env.vcpkg_DEFAULT_TRIPLET}}-${{ github.sha }}.zip
+
+    - name: Upload GitHub Actions artifacts of failed build
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        path: ${{ env.VCPKG_PATH }}\buildtrees\**\*.log
