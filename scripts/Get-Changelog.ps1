@@ -9,22 +9,24 @@ using namespace System.Collections.Generic
 
 <#
 .Synopsis
-   Changelog generator for vcpkg.
+    Changelog generator for vcpkg.
 .DESCRIPTION
-   The changelog generator uses the GitHub Pull Request and Files API's to get
-   pull requests and their associated file changes over the provided date range.
-   Then, the data is processed into buckets which are then presented to the user
-   in a markdown file.
+    The changelog generator uses the GitHub Pull Request and Files API's to get
+    pull requests and their associated file changes over the provided date range.
+    Then, the data is processed into buckets which are then presented to the user
+    in a markdown file.
 .EXAMPLE
-   Get-Changelog
+    Get-Changelog
 .EXAMPLE
-   Get-Changelog -StartDate 11/1/20 -EndDate 12/1/20
-.INPUTS
-   The Credentials object.
+    Get-Changelog -StartDate 11/1/20 -EndDate 12/1/20
+.EXAMPLE
+    $cred = Get-Credential
+    Get-Changelog -Credentials $cred
 .OUTPUTS
-   A "CHANGELOG.md" file in the working directory.
+    A "CHANGELOG.md" file in the working directory. If the file already exists,
+
 #>
-[CmdletBinding(PositionalBinding=$False)]
+[CmdletBinding(PositionalBinding=$True)]
 Param (
     # The begin date range (inclusive)
     [Parameter(Mandatory=$True)]
@@ -189,7 +191,7 @@ function Select-InfrastructurePullRequests {
         [PRFileMap]$PRFileMap
     )
     Process {
-        switch -Wildcard ($PRFileMap.Files | Get-Member filename) {
+        switch -Wildcard ($PRFileMap.Files | Get-Member 'filename') {
             "docs/*" { continue }
             "ports/*" { continue }
             Default { return $PRFileMap.Pull }
@@ -270,7 +272,8 @@ function Select-UpdatedPorts {
     )
     Begin {
         $ModifiedPorts = @{}
-    } Process {
+    }
+    Process {
         $PRFileMap.Files | Where-Object {
             $_.filename -like 'ports/*/CONTROL' -or
             $_.filename -like 'ports/*/vcpkg.json'
@@ -304,6 +307,20 @@ function Select-UpdatedPorts {
             }
         }
     }
+}
+
+function Get-ChangelogFileName() {
+    $suffixes = Get-ChildItem -Path . | ForEach-Object {
+        if($_ -match '^CHANGELOG([\-](?<number>[0-9]+))?\.md') {
+            if ($Matches.number) { $Matches.number } else { '0' }
+        }
+    } | Sort-Object
+
+    $count = 0
+    while ([String]$count -in $suffixes) { $count++ }
+
+    $suffix = if ($count) { "-$count" } else { '' }
+    "CHANGELOG$suffix.md"
 }
 
 $PRFileMaps = Get-MergedPullRequests | Sort-Object -Property 'number' | Get-PullRequestFileMap
@@ -386,4 +403,4 @@ $(-join ($ChangedPorts | ForEach-Object {
 </details>
 
 -- vcpkg team vcpkg@microsoft.com $(Get-Date -UFormat "%a, %d %B %T %Z00")
-"@ | Out-File 'CHANGELOG.md'
+"@ | Out-File (Get-ChangelogFileName)
