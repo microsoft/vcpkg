@@ -1,0 +1,5 @@
+Source: rubberband
+Version: 1.9.0
+Description: A high quality software library for audio time-stretching and pitch-shifting.
+Homepage: https://breakfastquay.com/rubberband/
+Build-Depends: fftw3, libsamplerate, libsndfile

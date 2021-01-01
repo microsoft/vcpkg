@@ -1,0 +1,45 @@
+--- rubberband-library.vcxproj	2020-09-10 15:30:36.000000000 +0200
++++ rubberband-library.vcxproj	2021-01-04 21:21:11.509176542 +0100
+@@ -78,7 +78,7 @@
+       <PreprocessorDefinitions>__MSVC__;WIN32;_DEBUG;_LIB;NOMINMAX;_USE_MATH_DEFINES;USE_KISSFFT;USE_SPEEX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <MinimalRebuild>true</MinimalRebuild>
+       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RubberbandRuntimeLibraryDebug)</RuntimeLibrary>
+       <PrecompiledHeader />
+       <WarningLevel>Level2</WarningLevel>
+       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+@@ -91,7 +91,7 @@
+       <AdditionalIncludeDirectories>.;.\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>__MSVC__;WIN32;_DEBUG;_LIB;NOMINMAX;_USE_MATH_DEFINES;USE_KISSFFT;USE_SPEEX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RubberbandRuntimeLibraryDebug)</RuntimeLibrary>
+       <PrecompiledHeader>
+       </PrecompiledHeader>
+       <WarningLevel>Level2</WarningLevel>
+@@ -108,7 +108,7 @@
+       <OmitFramePointers>true</OmitFramePointers>
+       <AdditionalIncludeDirectories>.;.\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>__MSVC__;WIN32;NDEBUG;_LIB;NOMINMAX;_USE_MATH_DEFINES;USE_KISSFFT;NO_TIMING;USE_SPEEX;NO_THREAD_CHECKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RubberbandRuntimeLibraryRelease)</RuntimeLibrary>
+       <BufferSecurityCheck>false</BufferSecurityCheck>
+       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+       <FloatingPointModel>Fast</FloatingPointModel>
+@@ -126,7 +126,7 @@
+       <OmitFramePointers>true</OmitFramePointers>
+       <AdditionalIncludeDirectories>.;.\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <PreprocessorDefinitions>__MSVC__;WIN32;NDEBUG;_LIB;NOMINMAX;_USE_MATH_DEFINES;USE_KISSFFT;NO_TIMING;USE_SPEEX;NO_THREAD_CHECKS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RubberbandRuntimeLibraryRelease)</RuntimeLibrary>
+       <BufferSecurityCheck>false</BufferSecurityCheck>
+       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+       <FloatingPointModel>Fast</FloatingPointModel>
+@@ -192,4 +192,4 @@
+   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+   <ImportGroup Label="ExtensionTargets">
+   </ImportGroup>
+-</Project>
+\ No newline at end of file
++</Project>
