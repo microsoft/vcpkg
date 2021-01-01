@@ -50,7 +50,7 @@ Param(
     $BuildReason = $null
 )
 
-if (-Not (Test-Path "triplets/$Triplet.cmake")) {
+if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
     Write-Error "Incorrect triplet '$Triplet', please supply a valid triplet."
     throw
 }
