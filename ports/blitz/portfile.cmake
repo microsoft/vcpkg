@@ -13,6 +13,7 @@ vcpkg_find_acquire_program(PYTHON2)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
         -DBUILD_DOC=OFF
         -DBUILD_TESTING=OFF
         -DPython_EXECUTABLE=${PYTHON2}
