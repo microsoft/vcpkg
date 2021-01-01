@@ -23,6 +23,7 @@
 ##    x64-uwp
 ##    x64-windows
 ##    x64-windows-static
+##    x64-windows-static-md
 ##    x86-windows
 ##
 

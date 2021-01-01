@@ -140,7 +140,7 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
 # Install them so the CI succeeds:
 if ($Triplet -in @('x64-uwp', 'arm64-windows', 'arm-uwp')) {
     .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows yasm-tool:x86-windows ampl-mp:x86-windows @commonArgs
-} elseif ($Triplet -in @('x64-windows', 'x64-windows-static')) {
+} elseif ($Triplet -in @('x64-windows', 'x64-windows-static', 'x64-windows-static-md')) {
     .\vcpkg.exe install yasm-tool:x86-windows @commonArgs
 }
 
