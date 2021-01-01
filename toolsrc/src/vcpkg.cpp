@@ -84,28 +84,6 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
         !args.output_json())
     {
         Commands::Version::warn_if_vcpkg_version_mismatch(paths);
-        std::string surveydate = *GlobalState::g_surveydate.lock();
-        auto maybe_surveydate = Chrono::CTime::parse(surveydate);
-        if (auto p_surveydate = maybe_surveydate.get())
-        {
-            const auto now = Chrono::CTime::get_current_date_time().value_or_exit(VCPKG_LINE_INFO);
-            const auto delta = now.to_time_point() - p_surveydate->to_time_point();
-            if (std::chrono::duration_cast<std::chrono::hours>(delta).count() > SURVEY_INTERVAL_IN_HOURS)
-            {
-                std::default_random_engine generator(
-                    static_cast<unsigned int>(now.to_time_point().time_since_epoch().count()));
-                std::uniform_int_distribution<int> distribution(1, 4);
-
-                if (distribution(generator) == 1)
-                {
-                    Metrics::g_metrics.lock()->track_property("surveyprompt", "true");
-                    System::print2(
-                        System::Color::success,
-                        "Your feedback is important to improve Vcpkg! Please take 3 minutes to complete our survey "
-                        "by running: vcpkg contact --survey\n");
-                }
-            }
-        }
     }
 
     if (const auto command_function = find_command(Commands::get_available_paths_commands()))

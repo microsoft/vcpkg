@@ -896,11 +896,13 @@ namespace vcpkg::Build
                                       Hash::Algorithm::Sha1));
         }
 
-        for (const auto& env_var : pre_build_info.passthrough_env_vars)
+        for (const auto& env_var : pre_build_info.passthrough_env_vars_tracked)
         {
-            abi_tag_entries.emplace_back(
-                "ENV:" + env_var,
-                Hash::get_string_hash(System::get_environment_variable(env_var).value_or(""), Hash::Algorithm::Sha1));
+            if (auto e = System::get_environment_variable(env_var))
+            {
+                abi_tag_entries.emplace_back(
+                    "ENV:" + env_var, Hash::get_string_hash(e.value_or_exit(VCPKG_LINE_INFO), Hash::Algorithm::Sha1));
+            }
         }
     }
 
@@ -1162,6 +1164,10 @@ namespace vcpkg::Build
                 // missing package, proceed to build.
             }
         }
+        if (action.build_options.build_missing == BuildMissing::NO)
+        {
+            return BuildResult::CACHE_MISSING;
+        }
 
         ExtendedBuildResult result = do_build_package_and_clean_buildtrees(args, paths, action);
 
@@ -1188,6 +1194,7 @@ namespace vcpkg::Build
         static const std::string POST_BUILD_CHECKS_FAILED_STRING = "POST_BUILD_CHECKS_FAILED";
         static const std::string CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING = "CASCADED_DUE_TO_MISSING_DEPENDENCIES";
         static const std::string EXCLUDED_STRING = "EXCLUDED";
+        static const std::string CACHE_MISSING_STRING = "CACHE_MISSING";
         static const std::string DOWNLOADED_STRING = "DOWNLOADED";
 
         switch (build_result)
@@ -1199,6 +1206,7 @@ namespace vcpkg::Build
             case BuildResult::FILE_CONFLICTS: return FILE_CONFLICTS_STRING;
             case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
             case BuildResult::EXCLUDED: return EXCLUDED_STRING;
+            case BuildResult::CACHE_MISSING: return CACHE_MISSING_STRING;
             case BuildResult::DOWNLOADED: return DOWNLOADED_STRING;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }
@@ -1305,6 +1313,7 @@ namespace vcpkg::Build
             CHAINLOAD_TOOLCHAIN_FILE,
             BUILD_TYPE,
             ENV_PASSTHROUGH,
+            ENV_PASSTHROUGH_UNTRACKED,
             PUBLIC_ABI_OVERRIDE,
             LOAD_VCVARS_ENV,
         };
@@ -1318,6 +1327,7 @@ namespace vcpkg::Build
             {"VCPKG_CHAINLOAD_TOOLCHAIN_FILE", VcpkgTripletVar::CHAINLOAD_TOOLCHAIN_FILE},
             {"VCPKG_BUILD_TYPE", VcpkgTripletVar::BUILD_TYPE},
             {"VCPKG_ENV_PASSTHROUGH", VcpkgTripletVar::ENV_PASSTHROUGH},
+            {"VCPKG_ENV_PASSTHROUGH_UNTRACKED", VcpkgTripletVar::ENV_PASSTHROUGH_UNTRACKED},
             {"VCPKG_PUBLIC_ABI_OVERRIDE", VcpkgTripletVar::PUBLIC_ABI_OVERRIDE},
             {"VCPKG_LOAD_VCVARS_ENV", VcpkgTripletVar::LOAD_VCVARS_ENV},
         };
@@ -1365,7 +1375,11 @@ namespace vcpkg::Build
                             variable_value);
                     break;
                 case VcpkgTripletVar::ENV_PASSTHROUGH:
-                    passthrough_env_vars = Strings::split(variable_value, ';');
+                    passthrough_env_vars_tracked = Strings::split(variable_value, ';');
+                    Util::Vectors::append(&passthrough_env_vars, passthrough_env_vars_tracked);
+                    break;
+                case VcpkgTripletVar::ENV_PASSTHROUGH_UNTRACKED:
+                    Util::Vectors::append(&passthrough_env_vars, Strings::split(variable_value, ';'));
                     break;
                 case VcpkgTripletVar::PUBLIC_ABI_OVERRIDE:
                     public_abi_override = variable_value.empty() ? nullopt : Optional<std::string>{variable_value};
