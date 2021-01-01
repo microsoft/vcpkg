@@ -525,8 +525,8 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
             auto output = std::move(rc.output);
             if (!Strings::starts_with(output, "PowerShell "))
             {
-                Checks::exit_with_message(
-                    VCPKG_LINE_INFO, "Unexpected format of powershell-core version string: %s", output);
+                return {Strings::concat("Unexpected format of powershell-core version string: ", output),
+                        expected_right_tag};
             }
 
             output.erase(0, 11);

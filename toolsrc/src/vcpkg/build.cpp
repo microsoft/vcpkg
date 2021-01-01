@@ -1164,6 +1164,10 @@ namespace vcpkg::Build
                 // missing package, proceed to build.
             }
         }
+        if (action.build_options.build_missing == BuildMissing::NO)
+        {
+            return BuildResult::CACHE_MISSING;
+        }
 
         ExtendedBuildResult result = do_build_package_and_clean_buildtrees(args, paths, action);
 
@@ -1190,6 +1194,7 @@ namespace vcpkg::Build
         static const std::string POST_BUILD_CHECKS_FAILED_STRING = "POST_BUILD_CHECKS_FAILED";
         static const std::string CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING = "CASCADED_DUE_TO_MISSING_DEPENDENCIES";
         static const std::string EXCLUDED_STRING = "EXCLUDED";
+        static const std::string CACHE_MISSING_STRING = "CACHE_MISSING";
         static const std::string DOWNLOADED_STRING = "DOWNLOADED";
 
         switch (build_result)
@@ -1201,6 +1206,7 @@ namespace vcpkg::Build
             case BuildResult::FILE_CONFLICTS: return FILE_CONFLICTS_STRING;
             case BuildResult::CASCADED_DUE_TO_MISSING_DEPENDENCIES: return CASCADED_DUE_TO_MISSING_DEPENDENCIES_STRING;
             case BuildResult::EXCLUDED: return EXCLUDED_STRING;
+            case BuildResult::CACHE_MISSING: return CACHE_MISSING_STRING;
             case BuildResult::DOWNLOADED: return DOWNLOADED_STRING;
             default: Checks::unreachable(VCPKG_LINE_INFO);
         }

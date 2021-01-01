@@ -51,7 +51,6 @@ In the `ports/` directory are many libraries that can be used as examples, inclu
   - rapidjson
   - range-v3
 - MSBuild-based
-  - cppunit
   - mpg123
 - Non-CMake, custom buildsystem
   - openssl
