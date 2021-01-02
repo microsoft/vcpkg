@@ -371,7 +371,7 @@ function Get-ChangelogFileName() {
     "CHANGELOG$suffix.md"
 }
 
-$PRFileMaps = (Get-MergedPullRequests | Sort-Object -Property 'number' | Get-PullRequestFileMap)
+$PRFileMaps = Get-MergedPullRequests | Sort-Object -Property 'number' | Get-PullRequestFileMap
 
 Write-Progress -Activity 'Selecting updates from pull request files' -PercentComplete -1
 
