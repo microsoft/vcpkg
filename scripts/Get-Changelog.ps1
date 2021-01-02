@@ -32,14 +32,14 @@ Param (
     [Parameter(Mandatory=$True)]
     [ValidateScript({$_ -le (Get-Date)})]
     [DateTime]$StartDate,
-
+    
     # The end date range (exclusive)
     [Parameter(Mandatory=$True)]
     [ValidateScript({$_ -le (Get-Date)})]
     [DateTime]$EndDate,
-
+    
     # GitHub credentials (username and PAT)
-    [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
+    [Parameter(Mandatory=$False,ValueFromPipeline=$True)]
     [Credential()]
     [PSCredential]$Credentials
 )
@@ -47,10 +47,25 @@ Param (
 
 Set-StrictMode -Version 2
 
+if (-not $Credentials) {
+    $Credentials = Get-Credential -Message 'Enter GitHub Credentials (username and PAT)'
+    if (-not $Credentials) {
+        throw [System.ArgumentException]::new(
+            'Cannot process command because of the missing mandatory parameter: Credentials.'
+        )
+    }
+}
 
-function Get-AuthHeader {
-    @{ Authorization = "Basic " + [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(
-        '{0}:{1}' -f ($Credentials.UserName, $Credentials.GetNetworkCredential().Password))) }
+function Get-AuthHeader() {
+    @{ Authorization = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(
+        ('{0}:{1}' -f $Credentials.UserName, $Credentials.GetNetworkCredential().Password))) }
+}
+
+$response = Invoke-WebRequest -uri 'https://api.github.com' -Headers ($Credentials | Get-AuthHeader)
+if ('X-OAuth-Scopes' -notin $response.Headers.Keys) {
+    throw [System.ArgumentException]::new(
+        "Cannot validate argument on parameter 'Credentials'. Incorrect GitHub credentials"
+    )
 }
 
 
@@ -59,42 +74,53 @@ function Get-MergedPullRequests {
     [OutputType([Object[]])]
     Param ()
     Begin {
-        $PullsUrl = 'https://api.github.com/repos/Microsoft/vcpkg/pulls'
-        $Body = @{
-            state = 'closed'
-            sort = 'updated'
-            base = 'master'
-            per_page = 100
-            direction = 'desc'
-            # In PowerShell 7 this can be used to increment the page instead of url hacking
-            #page = 1
+        $RequestSplat = @{
+            Uri = 'https://api.github.com/repos/Microsoft/vcpkg/pulls'
+            Body = @{
+                state = 'closed'
+                sort = 'updated'
+                base = 'master'
+                per_page = 100
+                direction = 'desc'
+                page = 1
+            }
+        }
+        $Epoch = Get-Date
+        $DeltaEpochStart = ($Epoch - $StartDate).Ticks
+
+        $ProgressSplat = @{
+            Activity = 'Searching for merged Pull Requests in date range: {0} - {1}' -f
+                $StartDate.ToString('yyyy.MM.dd'), $EndDate.ToString('yyyy.MM.dd')
+            PercentComplete = 0
+        }
+
+        Write-Progress @ProgressSplat
+
+        $writeProgress = {
+            $ProgressSplat.PercentComplete = 100 * ($Epoch - $_.updated_at).Ticks / $DeltaEpochStart
+            Write-Progress @ProgressSplat -Status ('Current item date: {0}' -f $_.updated_at.ToString('yyyy.MM.dd'))
         }
     }
     Process {
-        $page = 1
         while ($True) {
-            $splat = @{
-                Uri = $PullsUrl + "?page=$page"
-                Body = $Body
-                ContentType = 'application/json'
-            }
-            $response = Invoke-RestMethod -Headers (Get-AuthHeader) @splat
+            $response = Invoke-WebRequest -Headers (Get-AuthHeader) @RequestSplat | ConvertFrom-Json
 
             foreach ($_ in $response) {
-                # In PowerShell 7 this automatically happens
                 foreach ($x in 'created_at', 'merged_at', 'updated_at', 'closed_at') {
                     if ($_.$x) { $_.$x = [DateTime]::Parse($_.$x) }
                 }
 
                 if (-not $_.merged_at) { continue }
                 if ($_.updated_at -lt $StartDate) { return }
+
+                &$WriteProgress
+
                 if ($_.merged_at -ge $EndDate -or $_.merged_at -lt $StartDate) { continue }
 
                 $_
             }
 
-            #$Body.page++
-            $page++
+            $RequestSplat.Body.page++
         }
     }
 }
@@ -108,31 +134,54 @@ class PRFileMap {
 
 function Get-PullRequestFileMap {
     [CmdletBinding()]
-    [OutputType([PRFileMap])]
+    [OutputType([PRFileMap[]])]
     Param (
         [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
         [Object]$Pull
     )
-    Process {
-        [PRFileMap]@{
-            Pull = $Pull
-            Files = & {
-                # The -FollowRelLink option in PowerShell 6 will automatically get all pages
-                $page = 1
-                $pageLength = 100
-                $mergeUrl = "https://api.github.com/repos/Microsoft/vcpkg/pulls/{0}/files" -f $Pull.number
-                do {
-                    $splat = @{
-                        Uri = $mergeUrl + "?page=$page"
-                        Body = @{ per_page = $pageLength }
-                        ContentType = 'application/json'
-                    }
-                    $response = Invoke-RestMethod -Headers (Get-AuthHeader) @splat
+    Begin {
+        $Pulls = [List[Object]]::new()
 
-                    $page++
-                    $response
-                } until ($response.Length -lt $pageLength) 
+        $ProgressSplat = @{
+            Activity = 'Getting Pull Request files'
+            PercentComplete = 0
+        }
+
+        $Count = 0
+        $WriteProgress = {
+            $ProgressSplat.Status = 'Getting files for: #{0} ({1}/{2})' -f $_.number, $Count, $Pulls.Length
+            $ProgressSplat.PercentComplete = 100 * $Count / $Pulls.Length
+            Write-Progress @ProgressSplat
+        }
+    }
+    Process {
+        $Pulls += $Pull
+    }
+    End {
+        Write-Progress @ProgressSplat
+        $ProgressSplat += @{ Status = '' }
+
+        $Pulls | ForEach-Object {
+            $Count++
+
+            [PRFileMap]@{
+                Pull = $_
+                Files = $(
+                    $requestSplat = @{
+                        Uri = 'https://api.github.com/repos/Microsoft/vcpkg/pulls/{0}/files' -f $_.number
+                        Body = @{ page = 0; per_page = 100 }
+                    }
+                    do {
+                        $requestSplat.Body.page++
+
+                        $response = Invoke-WebRequest -Headers (Get-AuthHeader) @requestSplat | ConvertFrom-Json
+
+                        $response
+                    } until ($response.Length -lt $requestSplat.Body.per_page)
+                )
             }
+
+            &$WriteProgress
         }
     }
 }
@@ -236,7 +285,7 @@ function Select-Version {
             switch -Wildcard ($m.operation + $m.field) {
                 'Version*' { $V.Begin = $V.End = $m.version }
                 '-Version*' { $V.Begin = ($V.Begin, $m.version | Measure-Object -Minimum).Minimum }
-                '+Version*' { $V.End = ($V.End, $m.version | Measure-Object -Maximum).Maximum }
+                '+Version*' { $V.End = ($V.End, $m.version | Measure-Object -Minimum).Minimum }
                 'Port-Version' { $V.BeginPort = $V.EndPort = $m.version }
                 '-Port-Version' { $V.BeginPort = ($V.BeginPort, $m.version | Measure-Object -Minimum).Minimum }
                 '+Port-Version' { $V.EndPort = ($V.EndPort, $m.version | Measure-Object -Maximum).Maximum }
@@ -311,25 +360,30 @@ function Select-UpdatedPorts {
 
 function Get-ChangelogFileName() {
     $suffixes = Get-ChildItem -Path . | ForEach-Object {
-        if($_ -match '^CHANGELOG([\-](?<number>[0-9]+))?\.md') {
-            if ($Matches.number) { $Matches.number } else { '0' }
-        }
+        if (-not($_ -match '^CHANGELOG([\-](?<number>[0-9]+))?\.md')) { return }
+        if ($Matches.PSObject.Properties.Name -contains 'number') { $Matches.number } else { '0' }
     } | Sort-Object
 
-    $count = 0
-    while ([String]$count -in $suffixes) { $count++ }
+    $suffix = 0
+    while ([String]$suffix -in $suffixes) { $suffix++ }
 
-    $suffix = if ($count) { "-$count" } else { '' }
+    $suffix = if ($suffix) { "-$suffix" } else { '' }
     "CHANGELOG$suffix.md"
 }
 
-$PRFileMaps = Get-MergedPullRequests | Sort-Object -Property 'number' | Get-PullRequestFileMap
+$PRFileMaps = (Get-MergedPullRequests | Sort-Object -Property 'number' | Get-PullRequestFileMap)
+
+Write-Progress -Activity 'Selecting updates from pull request files' -PercentComplete -1
+
 $UpdatedDocumentation = $PRFileMaps | Select-Documentation | Sort-Object -Property 'New' -Descending
 $UpdatedInfrastructure = $PRFileMaps | Select-InfrastructurePullRequests
 $UpdatedPorts = $PRFileMaps | Select-UpdatedPorts
 $NewPorts = $UpdatedPorts | Where-Object { $_.New }
 $ChangedPorts = $UpdatedPorts | Where-Object { -not $_.New }
 
+Write-Progress -Activity 'Selecting updates from pull request files' -Completed
+
+Write-Progress -Activity 'Writing changelog file' -PercentComplete -1
 @"
 vcpkg ($($StartDate.ToString('yyyy.MM.dd')) - $((($EndDate).AddSeconds(-1)).ToString('yyyy.MM.dd')))
 ---
@@ -351,7 +405,7 @@ vcpkg ($($StartDate.ToString('yyyy.MM.dd')) - $((($EndDate).AddSeconds(-1)).ToSt
 #### The following documentation has been updated:
 
 $(-join ($UpdatedDocumentation | ForEach-Object {
-    "- [TITLE]({0}){1}`n" -f $_.Path, (& { if ($_.New) { ' ***[NEW]***' } else { '' } })
+    "- [TITLE]({0}){1}`n" -f $_.Path, ($(if ($_.New) { ' ***[NEW]***' } else { '' }))
 
     $_.Pulls | ForEach-Object {
         "    - [(#{0})]({1}) {2} (by @{3})`n" -f $_.number, $_.html_url, $_.title, $_.user.login
@@ -375,8 +429,8 @@ $(-join ($UpdatedInfrastructure | ForEach-Object {
 |---|---|
 $(-join ($NewPorts | ForEach-Object {
     "|[{0}]({1})" -f $_.Port, $_.Pulls[0].html_url
-
-    if ($_.Pulls.Length -gt 1) {
+    
+    if ($_.Pulls.Length -gt 1 ) {
         '<sup>'
         $_.Pulls[1..($_.Pulls.Length - 1)] | ForEach-Object {
             "[#{0}]({1})" -f $_.number, $_.html_url
@@ -404,3 +458,5 @@ $(-join ($ChangedPorts | ForEach-Object {
 
 -- vcpkg team vcpkg@microsoft.com $(Get-Date -UFormat "%a, %d %B %T %Z00")
 "@ | Out-File (Get-ChangelogFileName)
+
+Write-Progress -Activity 'Writing changelog file' -Completed
