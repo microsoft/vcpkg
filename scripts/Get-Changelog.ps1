@@ -375,7 +375,8 @@ $PRFileMaps = Get-MergedPullRequests | Sort-Object -Property 'number' | Get-Pull
 
 Write-Progress -Activity 'Selecting updates from pull request files' -PercentComplete -1
 
-$sortSplat = @{ Property = @{ Expression = 'New'; Descending = $True }, @{ Expression = 'Path'; Descending = $False }}
+$sortSplat = @{ Property =
+    @{ Expression = 'New'; Descending = $True }, @{ Expression = 'Path'; Descending = $False } }
 $UpdatedDocumentation = $PRFileMaps | Select-Documentation | Sort-Object @sortSplat
 $UpdatedInfrastructure = $PRFileMaps | Select-InfrastructurePullRequests
 $UpdatedPorts = $PRFileMaps | Select-UpdatedPorts
