@@ -361,7 +361,7 @@ function Select-UpdatedPorts {
 function Get-ChangelogFileName() {
     $suffixes = Get-ChildItem -Path . | ForEach-Object {
         if (-not($_ -match '^CHANGELOG([\-](?<number>[0-9]+))?\.md')) { return }
-        if ($Matches.PSObject.Properties.Name -contains 'number') { $Matches.number } else { '0' }
+        if ($Matches['number']) { $Matches.number } else { '0' }
     } | Sort-Object
 
     $suffix = 0
@@ -375,7 +375,8 @@ $PRFileMaps = Get-MergedPullRequests | Sort-Object -Property 'number' | Get-Pull
 
 Write-Progress -Activity 'Selecting updates from pull request files' -PercentComplete -1
 
-$UpdatedDocumentation = $PRFileMaps | Select-Documentation | Sort-Object -Property 'New' -Descending
+$sortSplat = @{ Property = @{ Expression = 'New'; Descending = $True }, @{ Expression = 'Path'; Descending = $False }}
+$UpdatedDocumentation = $PRFileMaps | Select-Documentation | Sort-Object @sortSplat
 $UpdatedInfrastructure = $PRFileMaps | Select-InfrastructurePullRequests
 $UpdatedPorts = $PRFileMaps | Select-UpdatedPorts
 $NewPorts = $UpdatedPorts | Where-Object { $_.New }
