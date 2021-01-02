@@ -32,12 +32,12 @@ Param (
     [Parameter(Mandatory=$True)]
     [ValidateScript({$_ -le (Get-Date)})]
     [DateTime]$StartDate,
-    
+
     # The end date range (exclusive)
     [Parameter(Mandatory=$True)]
     [ValidateScript({$_ -le (Get-Date)})]
     [DateTime]$EndDate,
-    
+
     # GitHub credentials (username and PAT)
     [Parameter(Mandatory=$False,ValueFromPipeline=$True)]
     [Credential()]
@@ -429,7 +429,7 @@ $(-join ($UpdatedInfrastructure | ForEach-Object {
 |---|---|
 $(-join ($NewPorts | ForEach-Object {
     "|[{0}]({1})" -f $_.Port, $_.Pulls[0].html_url
-    
+
     if ($_.Pulls.Length -gt 1 ) {
         '<sup>'
         $_.Pulls[1..($_.Pulls.Length - 1)] | ForEach-Object {
