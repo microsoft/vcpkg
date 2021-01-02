@@ -1,0 +1,24 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mixxxdj/libkeyfinder
+    REF fea05eaee1275fd14c0c96253095ee9c8bef215c
+    SHA512 0f94deb14ccffef246bc8e15444b05a294f93eb509102b3ce801fa354a762d958cf85d75702d33e1f221a9b4e74d4e5d6129e09f2962c3db1f93cb6d07f53b23
+    HEAD_REF main
+)
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(LIBKEYFINDER_OPTIONS -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF)
+endif()
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS ${LIBKEYFINDER_OPTIONS}
+)
+
+vcpkg_install_cmake()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libkeyfinder RENAME copyright)

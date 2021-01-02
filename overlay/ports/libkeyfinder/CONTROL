@@ -1,0 +1,5 @@
+Source: libkeyfinder
+Version: 2.2.3
+Description: Musical key detection for digital audio
+Homepage: https://github.com/mixxxdj/libKeyFinder
+Build-Depends: fftw3
