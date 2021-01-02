@@ -360,7 +360,7 @@ function Select-UpdatedPorts {
 
 function Get-ChangelogFileName() {
     $suffixes = Get-ChildItem -Path . | ForEach-Object {
-        if (-not($_ -match '^CHANGELOG([\-](?<number>[0-9]+))?\.md')) { return }
+        if (-not ($_ -match '^CHANGELOG([\-](?<number>[0-9]+))?\.md')) { return }
         if ($Matches['number']) { $Matches.number } else { '0' }
     } | Sort-Object
 
