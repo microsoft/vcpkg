@@ -1,0 +1,5 @@
+Source: hss1394
+Version: 1.0.0
+Homepage: https://github.com/mixxxdj/hss1394
+Description: High-speed MIDI-over-Firewire device access library for Windows and macOS.
+Supports: windows&macos
