@@ -1,0 +1,32 @@
+{
+  "name": "python3",
+  "version-string": "3.9.0",
+  "port-version": 2,
+  "description": "The Python programming language",
+  "homepage": "https://github.com/python/cpython",
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    {
+      "name": "bzip2",
+      "platform": "!(windows & static)"
+    },
+    "expat",
+    {
+      "name": "libffi",
+      "platform": "!(windows & static)"
+    },
+    {
+      "name": "liblzma",
+      "platform": "!(windows & static)"
+    },
+    {
+      "name": "openssl",
+      "platform": "!(windows & static)"
+    },
+    {
+      "name": "sqlite3",
+      "platform": "!(windows & static)"
+    },
+    "zlib"
+  ]
+}

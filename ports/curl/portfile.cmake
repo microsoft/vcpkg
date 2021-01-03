@@ -13,6 +13,7 @@ vcpkg_from_github(
         0009_fix_openssl_config.patch
         0010_fix_othertests_cmake.patch
         0011_fix_static_build.patch
+        0012-fix-dependency-idn2.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -41,6 +42,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     brotli      CURL_BROTLI
     schannel    CMAKE_USE_SCHANNEL
     sectransp   CMAKE_USE_SECTRANSP
+    idn2        CMAKE_USE_IDN2
     
     INVERTED_FEATURES
     non-http HTTP_ONLY

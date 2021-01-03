@@ -7,6 +7,7 @@
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.setinstalled.h>
+#include <vcpkg/configuration.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
@@ -16,6 +17,7 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/remove.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Install
 {
@@ -435,13 +437,14 @@ namespace vcpkg::Install
         SpecSummary* current_summary = nullptr;
         Chrono::ElapsedTimer build_timer = Chrono::ElapsedTimer::create_started();
 
-        TrackedPackageInstallGuard(const size_t package_count,
+        TrackedPackageInstallGuard(const size_t action_index,
+                                   const size_t action_count,
                                    std::vector<SpecSummary>& results,
                                    const PackageSpec& spec)
         {
             results.emplace_back(spec, nullptr);
             current_summary = &results.back();
-            System::printf("Starting package %zd/%zd: %s\n", results.size(), package_count, spec.to_string());
+            System::printf("Starting package %zd/%zd: %s\n", action_index, action_count, spec.to_string());
         }
 
         ~TrackedPackageInstallGuard()
@@ -465,12 +468,13 @@ namespace vcpkg::Install
                            const CMakeVars::CMakeVarProvider& var_provider)
     {
         std::vector<SpecSummary> results;
-        const size_t package_count = action_plan.remove_actions.size() + action_plan.install_actions.size();
+        const size_t action_count = action_plan.remove_actions.size() + action_plan.install_actions.size();
+        size_t action_index = 1;
 
         const auto timer = Chrono::ElapsedTimer::create_started();
         for (auto&& action : action_plan.remove_actions)
         {
-            TrackedPackageInstallGuard this_install(package_count, results, action.spec);
+            TrackedPackageInstallGuard this_install(action_index++, action_count, results, action.spec);
             Remove::perform_remove_plan_action(paths, action, Remove::Purge::YES, &status_db);
         }
 
@@ -488,7 +492,7 @@ namespace vcpkg::Install
 
         for (auto&& action : action_plan.install_actions)
         {
-            TrackedPackageInstallGuard this_install(package_count, results, action.spec);
+            TrackedPackageInstallGuard this_install(action_index++, action_count, results, action.spec);
             auto result =
                 perform_install_plan_action(args, paths, action, status_db, binaryprovider, build_logs_recorder);
             if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
@@ -507,6 +511,7 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
     static constexpr StringLiteral OPTION_USE_HEAD_VERSION = "head";
     static constexpr StringLiteral OPTION_NO_DOWNLOADS = "no-downloads";
+    static constexpr StringLiteral OPTION_ONLY_BINARYCACHING = "only-binarycaching";
     static constexpr StringLiteral OPTION_ONLY_DOWNLOADS = "only-downloads";
     static constexpr StringLiteral OPTION_RECURSE = "recurse";
     static constexpr StringLiteral OPTION_KEEP_GOING = "keep-going";
@@ -519,11 +524,12 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_MANIFEST_FEATURE = "x-feature";
     static constexpr StringLiteral OPTION_PROHIBIT_BACKCOMPAT_FEATURES = "x-prohibit-backcompat-features";
 
-    static constexpr std::array<CommandSwitch, 10> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 11> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
         {OPTION_ONLY_DOWNLOADS, "Download sources but don't build packages"},
+        {OPTION_ONLY_BINARYCACHING, "Fail if cached binaries are not available"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_EDITABLE, "Disable source re-extraction and binary caching for libraries on the command line"},
@@ -533,12 +539,12 @@ namespace vcpkg::Install
         {OPTION_PROHIBIT_BACKCOMPAT_FEATURES,
          "(experimental) Fail install if a package attempts to use a deprecated feature"},
     }};
-
-    static constexpr std::array<CommandSwitch, 10> MANIFEST_INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 11> MANIFEST_INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
         {OPTION_ONLY_DOWNLOADS, "Download sources but don't build packages"},
+        {OPTION_ONLY_BINARYCACHING, "Fail if cached binaries are not available"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_EDITABLE, "Disable source re-extraction and binary caching for libraries on the command line"},
@@ -761,6 +767,7 @@ namespace vcpkg::Install
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
         const bool only_downloads = Util::Sets::contains(options.switches, (OPTION_ONLY_DOWNLOADS));
+        const bool no_build_missing = Util::Sets::contains(options.switches, OPTION_ONLY_BINARYCACHING);
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
         const bool is_editable = Util::Sets::contains(options.switches, (OPTION_EDITABLE)) || !args.cmake_args.empty();
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
@@ -776,6 +783,7 @@ namespace vcpkg::Install
         if (use_aria2) download_tool = Build::DownloadTool::ARIA2;
 
         const Build::BuildPackageOptions install_plan_options = {
+            Util::Enum::to_enum<Build::BuildMissing>(!no_build_missing),
             Util::Enum::to_enum<Build::UseHeadVersion>(use_head_version),
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
             Util::Enum::to_enum<Build::OnlyDownloads>(only_downloads),
@@ -838,21 +846,16 @@ namespace vcpkg::Install
 
             if (args.versions_enabled())
             {
-                PortFileProvider::VersionedPortfileProvider verprovider(paths);
-                auto baseprovider = [&]() -> std::unique_ptr<PortFileProvider::BaselineProvider> {
-                    if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
-                    {
-                        return std::make_unique<PortFileProvider::BaselineProvider>(paths,
-                                                                                    p_baseline->string().to_string());
-                    }
-                    else
-                    {
-                        return std::make_unique<PortFileProvider::BaselineProvider>(paths);
-                    }
-                }();
+                auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
+                auto baseprovider = PortFileProvider::make_baseline_provider(paths);
+                if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
+                {
+                    paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(
+                        p_baseline->string());
+                }
 
                 auto install_plan =
-                    Dependencies::create_versioned_install_plan(verprovider,
+                    Dependencies::create_versioned_install_plan(*verprovider,
                                                                 *baseprovider,
                                                                 var_provider,
                                                                 manifest_scf.core_paragraph->dependencies,
@@ -1071,6 +1074,7 @@ namespace vcpkg::Install
             case BuildResult::POST_BUILD_CHECKS_FAILED:
             case BuildResult::FILE_CONFLICTS:
             case BuildResult::BUILD_FAILED:
+            case BuildResult::CACHE_MISSING:
                 result_string = "Fail";
                 message_block =
                     Strings::format("<failure><message><![CDATA[%s]]></message></failure>", to_string(code));

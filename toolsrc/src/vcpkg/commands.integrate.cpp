@@ -112,8 +112,8 @@ namespace vcpkg::Commands::Integrate
 )";
 
         std::string content = Strings::replace_all(CONTENT_TEMPLATE, "@NUGET_ID@", nuget_id);
-        content = Strings::replace_all(std::move(content), "@VCPKG_DIR@", vcpkg_root_dir.string());
-        content = Strings::replace_all(std::move(content), "@VERSION@", nupkg_version);
+        Strings::inplace_replace_all(content, "@VCPKG_DIR@", vcpkg_root_dir.string());
+        Strings::inplace_replace_all(content, "@VERSION@", nupkg_version);
         return content;
     }
 #endif
@@ -393,7 +393,7 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
         System::print2(System::Color::success, "Created nupkg: ", fs::u8string(nuget_package), '\n');
 
         auto source_path = fs::u8string(buildsystems_dir);
-        source_path = Strings::replace_all(std::move(source_path), "`", "``");
+        Strings::inplace_replace_all(source_path, "`", "``");
 
         System::printf(R"(
 With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:

@@ -357,10 +357,13 @@ message(STATUS "  " ${CHARSET_LIBRARY})
 message(STATUS "  " ${FFI_LIBRARY})
 message(STATUS "  " ${Intl_LIBRARIES})
 
+set(VERSION ${GLIB_VERSION})
 set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix ${CMAKE_INSTALL_PREFIX})
 set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
 set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+set(PCRE_REQUIRES libpcre)
+set(LIBFFI_LIBS "-lffi")
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/glib-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/glib-2.0.pc" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gobject-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gobject-2.0.pc" @ONLY)
