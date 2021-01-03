@@ -327,6 +327,11 @@ namespace vcpkg::Downloads
         download_file(fs, {&url, 1}, download_path, sha512);
     }
 
+    void download_file(Files::Filesystem& fs, const std::string& url, const fs::path& download_path)
+    {
+        download_file(fs, {&url, 1}, download_path);
+    }
+
 #if defined(_WIN32)
     namespace
     {
@@ -409,6 +414,56 @@ namespace vcpkg::Downloads
         }
     }
 #endif
+
+    std::string download_file(vcpkg::Files::Filesystem& fs, View<std::string> urls, const fs::path& download_path)
+    {
+        Checks::check_exit(VCPKG_LINE_INFO, urls.size() > 0);
+
+        auto download_path_part_path = download_path;
+        download_path_part_path += fs::u8path(".part");
+        fs.remove(download_path, ignore_errors);
+        fs.remove(download_path_part_path, ignore_errors);
+
+        std::string errors;
+        for (const std::string& url : urls)
+        {
+#if defined(_WIN32)
+            auto split_uri = details::split_uri_view(url).value_or_exit(VCPKG_LINE_INFO);
+            auto authority = split_uri.authority.value_or_exit(VCPKG_LINE_INFO).substr(2);
+            if (split_uri.scheme == "https" || split_uri.scheme == "http")
+            {
+                // This check causes complex URLs (non-default port, embedded basic auth) to be passed down to curl.exe
+                if (Strings::find_first_of(authority, ":@") == authority.end())
+                {
+                    if (download_winhttp(fs, download_path_part_path, split_uri, url, errors))
+                    {
+                        fs.rename(download_path_part_path, download_path, VCPKG_LINE_INFO);
+                        return url;
+                    }
+                    continue;
+                }
+            }
+#endif
+            System::CmdLineBuilder cmd;
+            cmd.string_arg("curl")
+                .string_arg("--fail")
+                .string_arg("-L")
+                .string_arg(url)
+                .string_arg("--create-dirs")
+                .string_arg("--output")
+                .path_arg(download_path_part_path);
+            const auto out = System::cmd_execute_and_capture_output(cmd);
+            if (out.exit_code != 0)
+            {
+                Strings::append(errors, url, ": ", out.output, '\n');
+                continue;
+            }
+
+            fs.rename(download_path_part_path, download_path, VCPKG_LINE_INFO);
+            return url;
+        }
+        Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to download from mirror set:\n%s", errors);
+    }
 
     std::string download_file(vcpkg::Files::Filesystem& fs,
                               View<std::string> urls,

@@ -24,11 +24,15 @@ namespace vcpkg::Downloads
                                      const fs::path& path,
                                      const std::string& sha512);
 
+    std::string download_file(Files::Filesystem& fs, View<std::string> urls, const fs::path& download_path);
+
     // Returns url that was successfully downloaded from
     std::string download_file(Files::Filesystem& fs,
                               View<std::string> urls,
                               const fs::path& download_path,
                               const std::string& sha512);
+
+    void download_file(Files::Filesystem& fs, const std::string& url, const fs::path& download_path);
 
     void download_file(Files::Filesystem& fs,
                        const std::string& url,

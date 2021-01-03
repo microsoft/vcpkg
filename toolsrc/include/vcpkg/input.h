@@ -1,6 +1,10 @@
 #pragma once
 
+#include <vcpkg/base/cstringview.h>
+
 #include <vcpkg/packagespec.h>
+#include <vcpkg/triplet.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Input
 {

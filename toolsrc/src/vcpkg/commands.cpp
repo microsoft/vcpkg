@@ -32,6 +32,7 @@
 #include <vcpkg/export.h>
 #include <vcpkg/help.h>
 #include <vcpkg/install.h>
+#include <vcpkg/remote_install.h>
 #include <vcpkg/remove.h>
 #include <vcpkg/update.h>
 
@@ -116,6 +117,7 @@ namespace vcpkg::Commands
         static const BuildExternal::BuildExternalCommand build_external{};
         static const Export::ExportCommand export_command{};
         static const DependInfo::DependInfoCommand depend_info{};
+        static const RemoteInstall::RemoteInstallCommand remote_install{};
 
         static std::vector<PackageNameAndFunction<const TripletCommand*>> t = {
             {"install", &install},
@@ -128,6 +130,7 @@ namespace vcpkg::Commands
             {"build-external", &build_external},
             {"export", &export_command},
             {"depend-info", &depend_info},
+            {"remote-install", &remote_install},
         };
         return t;
     }
