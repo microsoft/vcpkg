@@ -1,0 +1,10 @@
+{
+  "name": "msdfgen",
+  "version-string": "1.8",
+  "description": "Multi-channel signed distance field generator",
+  "homepage": "https://github.com/Chlumsky/msdfgen",
+  "dependencies": 
+  [
+    "freetype"
+  ]
+}
