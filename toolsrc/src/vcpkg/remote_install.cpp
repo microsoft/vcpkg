@@ -29,27 +29,29 @@ namespace vcpkg::RemoteInstall
                 std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
         });
 
+        // check triplets
         for (auto&& spec : specs)
         {
             Input::check_triplet(spec.package_spec.triplet(), paths);
+            System::printf("dir: %s, name: %s, triplet: %s \n",
+                           spec.package_spec.dir(),
+                           spec.package_spec.name(),
+                           spec.package_spec.triplet().to_string());
         }
 
-        std::string str = "";
-        System::printf("command remote-install, %s \n", str);
-
-        // Files::Filesystem& fs = paths.get_filesystem();
-
-        // fs::path destination = paths.builtin_ports_directory() / "capture-example";
-
-        // std::error_code err;
-        // bool res = fs.create_directory(destination, err);
-        // Checks::check_exit(VCPKG_LINE_INFO,
-        //                    !err.value(),
-        //                    "Failed to create directory '%s', code: %d",
-        //                    fs::u8string(destination),
-        //                    err.value());
-
-        // System::printf("capture command. create directory : %d \n", res);
+        Files::Filesystem& fs = paths.get_filesystem();
+        // create directories
+        for (auto&& spec : specs)
+        {
+            std::error_code err;
+            fs::path destination = paths.builtin_ports_directory() / spec.package_spec.name();
+            fs.create_directory(destination, err);
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               !err.value(),
+                               "Failed to create directory '%s', code: %d",
+                               fs::u8string(destination),
+                               err.value());
+        }
 
         // Downloads::download_file(
         //     fs,

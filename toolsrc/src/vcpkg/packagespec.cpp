@@ -102,7 +102,8 @@ namespace vcpkg
 
     static bool is_package_name_char(char32_t ch)
     {
-        return Parse::ParserBase::is_lower_alpha(ch) || Parse::ParserBase::is_ascii_digit(ch) || ch == '-';
+        return Parse::ParserBase::is_lower_alpha(ch) || Parse::ParserBase::is_ascii_digit(ch) || ch == '-' ||
+               ch == '/' || ch == '\\' || ch == '.';
     }
 
     static bool is_feature_name_char(char32_t ch)
