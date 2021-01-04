@@ -50,5 +50,5 @@ if(VCPKG_TARGET_IS_WINDOWS)
         LICENSE_SUBPATH LICENSE-bsd.txt # use BSD license
     )
 
-    file(COPY {CMAKE_CURRENT_LIST_DIR}/hidapi-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/hidapi-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 endif()
