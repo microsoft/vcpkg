@@ -244,15 +244,16 @@ namespace
         return nullptr;
     }
 
-    Baseline parse_builtin_baseline(const VcpkgPaths& paths, StringView baseline_identifier)
+    ExpectedS<Baseline> try_parse_builtin_baseline(const VcpkgPaths& paths, StringView baseline_identifier)
     {
         auto path_to_baseline = paths.builtin_port_versions / fs::u8path("baseline.json");
         auto res_baseline = load_baseline_versions(paths, path_to_baseline, baseline_identifier);
 
         if (!res_baseline.has_value())
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO, res_baseline.error());
+            return res_baseline.error();
         }
+
         auto opt_baseline = res_baseline.get();
         if (auto p = opt_baseline->get())
         {
@@ -261,31 +262,29 @@ namespace
 
         if (baseline_identifier.size() == 0)
         {
-            return {};
+            return {{}, expected_left_tag};
         }
 
         if (baseline_identifier == "default")
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Couldn't find explicitly specified baseline `\"default\"` in the baseline file.",
-                                      baseline_identifier);
+            return Strings::format("Couldn't find explicitly specified baseline `\"default\"` in the baseline file.",
+                                   baseline_identifier);
         }
 
         // attempt to check out the baseline:
         auto maybe_path = get_git_baseline_json_path(paths, baseline_identifier);
         if (!maybe_path.has_value())
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Couldn't find explicitly specified baseline `\"%s\"` in the baseline file, "
-                                      "and there was no baseline at that commit or the commit didn't exist.\n%s",
-                                      baseline_identifier,
-                                      maybe_path.error());
+            return Strings::format("Couldn't find explicitly specified baseline `\"%s\"` in the baseline file, "
+                                   "and there was no baseline at that commit or the commit didn't exist.\n%s",
+                                   baseline_identifier,
+                                   maybe_path.error());
         }
 
         res_baseline = load_baseline_versions(paths, *maybe_path.get());
         if (!res_baseline.has_value())
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO, res_baseline.error());
+            return res_baseline.error();
         }
         opt_baseline = res_baseline.get();
         if (auto p = opt_baseline->get())
@@ -293,10 +292,15 @@ namespace
             return std::move(*p);
         }
 
-        Checks::exit_with_message(VCPKG_LINE_INFO,
-                                  "Couldn't find explicitly specified baseline `\"%s\"` in the baseline "
-                                  "file, and the `\"default\"` baseline does not exist at that commit.",
-                                  baseline_identifier);
+        return Strings::format("Couldn't find explicitly specified baseline `\"%s\"` in the baseline "
+                               "file, and the `\"default\"` baseline does not exist at that commit.",
+                               baseline_identifier);
+    }
+
+    Baseline parse_builtin_baseline(const VcpkgPaths& paths, StringView baseline_identifier)
+    {
+        auto maybe_baseline = try_parse_builtin_baseline(paths, baseline_identifier);
+        return maybe_baseline.value_or_exit(VCPKG_LINE_INFO);
     }
     Optional<VersionT> BuiltinRegistry::get_baseline_version(const VcpkgPaths& paths, StringView port_name) const
     {
@@ -953,5 +957,24 @@ namespace vcpkg
         }
         // default_registry_ is not a BuiltinRegistry
         return true;
+    }
+
+    ExpectedS<std::vector<std::pair<VersionT, std::string>>> get_builtin_versions(const VcpkgPaths& paths,
+                                                                                  StringView port_name)
+    {
+        auto maybe_versions =
+            load_versions_file(paths.get_filesystem(), VersionDbType::Git, paths.builtin_port_versions, port_name);
+        if (auto pversions = maybe_versions.get())
+        {
+            return Util::fmap(
+                *pversions, [](auto&& entry) -> auto { return std::make_pair(entry.version, entry.git_tree); });
+        }
+
+        return maybe_versions.error();
+    }
+
+    ExpectedS<std::map<std::string, VersionT, std::less<>>> get_builtin_baseline(const VcpkgPaths& paths)
+    {
+        return try_parse_builtin_baseline(paths, "default");
     }
 }

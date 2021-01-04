@@ -48,9 +48,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                                                 const std::string& local_git_tree,
                                                 bool verify_git_trees)
     {
-        auto& fs = paths.get_filesystem();
-
-        auto maybe_versions = vcpkg::parse_versions_file(fs, port_name, versions_file_path);
+        auto maybe_versions = vcpkg::get_builtin_versions(paths, port_name);
         if (!maybe_versions.has_value())
         {
             return {
@@ -76,7 +74,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                 bool version_ok = false;
                 for (const std::string& control_file : {"CONTROL", "vcpkg.json"})
                 {
-                    auto treeish = Strings::concat(version_entry.git_tree, ':', control_file);
+                    auto treeish = Strings::concat(version_entry.second, ':', control_file);
                     auto maybe_file = paths.git_show(Strings::concat(treeish), paths.root / fs::u8path(".git"));
                     if (!maybe_file.has_value()) continue;
 
@@ -87,7 +85,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                         return {
                             Strings::format("Error: Unable to parse `%s` used in version `%s`.\n%s\n",
                                             treeish,
-                                            version_entry.version,
+                                            version_entry.first.to_string(),
                                             maybe_scf.error()->error),
                             expected_right_tag,
                         };
@@ -95,15 +93,15 @@ namespace vcpkg::Commands::CIVerifyVersions
 
                     const auto& scf = maybe_scf.value_or_exit(VCPKG_LINE_INFO);
                     auto&& git_tree_version = scf.get()->to_versiont();
-                    if (version_entry.version != git_tree_version)
+                    if (version_entry.first != git_tree_version)
                     {
                         return {
                             Strings::format("Error: Version in git-tree `%s` does not match version in file "
                                             "`%s`.\n\tgit-tree version: %s\n\t    file version: %s\n",
-                                            version_entry.git_tree,
+                                            version_entry.second,
                                             fs::u8string(versions_file_path),
                                             git_tree_version,
-                                            version_entry.version),
+                                            version_entry.second),
                             expected_right_tag,
                         };
                     }
@@ -116,8 +114,8 @@ namespace vcpkg::Commands::CIVerifyVersions
                     return {
                         Strings::format("Error: The git-tree `%s` for version `%s` in `%s` does not contain a "
                                         "CONTROL file or vcpkg.json file.",
-                                        version_entry.git_tree,
-                                        version_entry.version,
+                                        version_entry.second,
+                                        version_entry.first,
                                         fs::u8string(versions_file_path)),
                         expected_right_tag,
                     };
@@ -136,13 +134,13 @@ namespace vcpkg::Commands::CIVerifyVersions
             };
         }
         const auto& scf = maybe_scf.value_or_exit(VCPKG_LINE_INFO);
-        auto found_version = scf.to_versiont();
+        const auto found_version = scf.to_versiont();
 
-        if (top_entry.version != found_version)
+        if (top_entry.first != found_version)
         {
             auto versions_end = versions.end();
             auto it = std::find_if(
-                versions.begin(), versions_end, [&](auto&& version) { return version.version == found_version; });
+                versions.begin(), versions_end, [&](auto&& entry) { return entry.first == found_version; });
             if (it != versions_end)
             {
                 return {
@@ -172,7 +170,7 @@ namespace vcpkg::Commands::CIVerifyVersions
         }
 
         const auto& baseline_version = maybe_baseline_version.value_or_exit(VCPKG_LINE_INFO);
-        if (baseline_version != top_entry.version)
+        if (baseline_version != top_entry.first)
         {
             return {
                 Strings::format("Error: The baseline version for port `%s` doesn't match the latest version.\n"
@@ -180,13 +178,13 @@ namespace vcpkg::Commands::CIVerifyVersions
                                 "\t  Latest version: %s (%s)",
                                 port_name,
                                 baseline_version,
-                                top_entry.version,
+                                top_entry.first,
                                 fs::u8string(versions_file_path)),
                 expected_right_tag,
             };
         }
 
-        if (local_git_tree != top_entry.git_tree)
+        if (local_git_tree != top_entry.second)
         {
             return {
                 Strings::format("Error: Git tree-ish object for version `%s` in `%s` does not match local port files.\n"
@@ -195,13 +193,13 @@ namespace vcpkg::Commands::CIVerifyVersions
                                 found_version,
                                 fs::u8string(versions_file_path),
                                 local_git_tree,
-                                top_entry.git_tree),
+                                top_entry.second),
                 expected_right_tag,
             };
         }
 
         return {
-            Strings::format("OK: %s\t%s -> %s\n", top_entry.git_tree, port_name, top_entry.version),
+            Strings::format("OK: %s\t%s -> %s\n", top_entry.second, port_name, top_entry.first),
             expected_left_tag,
         };
     }

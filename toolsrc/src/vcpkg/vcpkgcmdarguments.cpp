@@ -630,7 +630,7 @@ namespace vcpkg
         table.format(opt(SCRIPTS_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the scripts root directory");
         table.format(opt(BUILTIN_PORTS_ROOT_DIR_ARG, "=", "<path>"),
                      "(Experimental) Specify the packages root directory");
-        table.format(opt(BUILTIN_PORT_VERSIONS_ROOT_DIR_ARG, "=", "<path>"),
+        table.format(opt(BUILTIN_PORT_VERSIONS_DIR_ARG, "=", "<path>"),
                      "(Experimental) Specify the scripts root directory");
         table.format(opt(JSON_SWITCH, "", ""), "(Experimental) Request JSON output");
     }
@@ -920,7 +920,7 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::PACKAGES_ROOT_DIR_ARG;
     constexpr StringLiteral VcpkgCmdArguments::SCRIPTS_ROOT_DIR_ARG;
     constexpr StringLiteral VcpkgCmdArguments::BUILTIN_PORTS_ROOT_DIR_ARG;
-    constexpr StringLiteral VcpkgCmdArguments::BUILTIN_PORT_VERSIONS_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::BUILTIN_PORT_VERSIONS_DIR_ARG;
 
     constexpr StringLiteral VcpkgCmdArguments::DEFAULT_VISUAL_STUDIO_PATH_ENV;
 
