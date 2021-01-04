@@ -17,7 +17,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/msdfgen TARGET_PATH share/msdfgen)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/msdfgen)
 
 # move exe to tools
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
