@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index c4c8b3e..3373d82 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -3,9 +3,26 @@ PROJECT(libgraphqlparser C CXX)
+@@ -3,9 +3,17 @@ PROJECT(libgraphqlparser C CXX)
  
  SET(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" "${CMAKE_MODULE_PATH}")
  
@@ -11,15 +11,6 @@ index c4c8b3e..3373d82 100644
 +  SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
 +  SET(FLEX_COMPILE_FLAGS "--header-file=lexer.h")
 +ELSEIF(WIN32)
-+  # If we're building this with vcpkg on Windows, let portfile.cmake tell us where it
-+  # stored these tools. Otherwise these variables should be empty and we'll fall back
-+  # to the normal CMake FIND_PACKAGE logic for each of these programs.
-+  SET(CMAKE_PROGRAM_PATH
-+    "${VCPKG_DOWNLOADS_PYTHON2_DIR}"
-+	"${VCPKG_DOWNLOADS_FLEX_DIR}"
-+	"${VCPKG_DOWNLOADS_BISON_DIR}"
-+	"${CMAKE_PROGRAM_PATH}")
-+
 +  SET(FLEX_COMPILE_FLAGS "--header-file=lexer.h --wincompat")
 +
 +  # Let CMake figure out the exports for the SHARED library (DLL) on Windows.
