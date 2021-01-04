@@ -21,8 +21,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/msdfgen)
 
 # move exe to tools
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(INSTALL "${CURRENT_PACKAGES_DIR}/bin" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/" RENAME msdfgen)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    vcpkg_copy_tools(TOOL_NAMES msdfgen AUTO_CLEAN)
 endif()
 
 # cleanup
