@@ -8,42 +8,17 @@ vcpkg_from_github(
     0001-rename-_castu32_f32-to-gemm_castu32_f32.patch
 )
 
-# enable CUDA inside DARKNET
-set(ENABLE_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-  set(ENABLE_CUDA ON)
-endif()
-
-set(ENABLE_OPENCV OFF)
-# enable OPENCV (basic version) inside DARKNET
-if("opencv-base" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv2-base" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv3-base" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-
-# enable OPENCV (with its own CUDA feature enabled) inside DARKNET
-# (note: this does not mean that DARKNET itself will have CUDA support since by design it is independent, to have it you must require both opencv-cuda and cuda features!)
-# DARKNET will be automatically able to distinguish an OpenCV that is built with or without CUDA support.
-if("opencv-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv2-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv3-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-
-# enable CUDNN inside DARKNET (which depends on the "cuda" feature by design)
-set(ENABLE_CUDNN OFF)
-if("cudnn" IN_LIST FEATURES)
-  set(ENABLE_CUDNN ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    cuda ENABLE_CUDA
+    opencv-base ENABLE_OPENCV
+    opencv2-base ENABLE_OPENCV
+    opencv3-base ENABLE_OPENCV
+    opencv-cuda ENABLE_OPENCV
+    opencv2-cuda ENABLE_OPENCV
+    opencv3-cuda ENABLE_OPENCV
+    cudnn ENABLE_CUDNN
+        
+)
 
 if ("cuda" IN_LIST FEATURES)
   if (NOT VCPKG_CMAKE_SYSTEM_NAME AND NOT ENV{CUDACXX})
@@ -128,7 +103,7 @@ vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   DISABLE_PARALLEL_CONFIGURE
   PREFER_NINJA
-  OPTIONS
+  OPTIONS ${FEATURE_OPTIONS}
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
     -DENABLE_CUDA=${ENABLE_CUDA}
