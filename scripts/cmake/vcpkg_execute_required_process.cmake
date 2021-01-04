@@ -105,6 +105,9 @@ Halting portfile execution.
             list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
         endforeach()
         vcpkg_prettify_command(vcpkg_execute_required_process_COMMAND vcpkg_execute_required_process_COMMAND_PRETTY)
+        if(EXISTS "${vcpkg_execute_required_process_WORKING_DIRECTORY}/config.log")
+            file(RENAME "${vcpkg_execute_required_process_WORKING_DIRECTORY}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${vcpkg_execute_required_process_LOGNAME}.log")
+        endif()
         message(FATAL_ERROR
             "  Command failed: ${vcpkg_execute_required_process_COMMAND_PRETTY}\n"
             "  Working Directory: ${vcpkg_execute_required_process_WORKING_DIRECTORY}\n"
