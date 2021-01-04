@@ -221,7 +221,7 @@ namespace vcpkg::Commands::PortHistory
                 auto output_file_path = fs::u8path(maybe_output_file.value_or_exit(VCPKG_LINE_INFO));
                 auto& fs = paths.get_filesystem();
                 std::error_code ec;
-                fs.write_contents(output_file_path, json_string, ec);
+                fs.write_contents(output_file_path, json_string, VCPKG_LINE_INFO);
                 if (ec)
                 {
                     System::printf(
