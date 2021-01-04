@@ -1,3 +1,94 @@
+diff --git a/configure.ac b/configure.ac
+index bd85e0616..5023a6724 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1298,6 +1298,7 @@ elif test "x${with_libtiff}" = "xinternal" ; then
+ else
+ 
+   TIFF_SETTING=external
++  if 0; then
+   if test -r "$with_libtiff/tiff.h" ; then
+     LIBS="-L$with_libtiff -ltiff $LIBS"
+     EXTRA_INCLUDES="-I$with_libtiff $EXTRA_INCLUDES"
+@@ -1305,11 +1306,12 @@ else
+     LIBS="-L$with_libtiff/lib -ltiff $LIBS"
+     EXTRA_INCLUDES="-I$with_libtiff/include $EXTRA_INCLUDES"
+   fi
++  fi
+ 
+   AC_MSG_RESULT([using libtiff from ${with_libtiff}.])
+ 
+   dnl Check for the BigTIFF enabled library (libtiff >= 4.0)
+-  AC_CHECK_LIB(tiff,TIFFScanlineSize64,HAVE_BIGTIFF=yes,HAVE_BIGTIFF=no,)
++  AC_SEARCH_LIBS(TIFFScanlineSize64,[tiff tiffd],HAVE_BIGTIFF=yes,HAVE_BIGTIFF=no,)
+ 
+ fi
+ 
+@@ -1338,18 +1340,19 @@ if test "`basename xx/$with_curl`" = "curl-config" ; then
+ elif test "$with_curl" = "no" ; then
+   LIBCURL_CONFIG=no
+ else
+-  AC_PATH_PROG(LIBCURL_CONFIG, curl-config, no)
++  LIBCURL_CONFIG=yes
+ fi
+ 
+ if test "$LIBCURL_CONFIG" != "no" ; then
+-
++  if 0; then
+   CURL_VERNUM=`$LIBCURL_CONFIG --vernum`
+   CURL_VER=`$LIBCURL_CONFIG --version | awk '{print $2}'`
+ 
+   AC_MSG_RESULT([        found libcurl version $CURL_VER])
+ 
+   AC_CHECK_LIB(curl,curl_global_init,CURL_SETTING=yes,CURL_SETTING=no,`$LIBCURL_CONFIG --libs`)
+-
++  fi
++  CURL_SETTING=yes
+ fi
+ 
+ AC_SUBST(CURL_SETTING,$CURL_SETTING)
+@@ -1570,12 +1573,10 @@ dnl ---------------------------------------------------------------------------
+ AC_ARG_WITH(liblzma,[  --with-liblzma[=ARG]       Include liblzma support (ARG=yes/no)],,)
+ 
+ if test "$with_liblzma" = "yes" ; then
+-  AC_CHECK_LIB(lzma,lzma_code,LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
++  AC_SEARCH_LIBS(lzma_code,[lzma lzmad],LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
+   AC_CHECK_HEADERS(lzma.h)
+ 
+-  if test "$LIBLZMA_SETTING" = "yes" -a "$ac_cv_header_lzma_h" = "yes" ; then
+-    LIBS="-llzma $LIBS"
+-  else
++  if test "$ac_cv_header_lzma_h" != "yes" ; then
+     LIBLZMA_SETTING=no
+   fi
+ else
+@@ -1891,7 +1892,7 @@ else
+     PG_LIB="${PQ_LIBS}"
+     PG_INC="${PQ_CFLAGS}"
+     SAVED_LIBS="${LIBS}"
+-    LIBS="${PG_LIB}"
++    LIBS="${PG_LIB} ${LIBS}"
+     AC_CHECK_LIB(pq,PQconnectdb,HAVE_PG=yes,HAVE_PG=no)
+     LIBS="${SAVED_LIBS}"
+     if test "${HAVE_PG}" = "yes" ; then
+@@ -4281,6 +4282,7 @@ AC_ARG_WITH(xml2,
+ 
+ if test "x$with_xml2" = "xyes" -o "x$with_xml2" = "x" ; then
+ 
++  if 0; then
+   PKG_PROG_PKG_CONFIG([0.21])
+   PKG_CHECK_MODULES(LIBXML2,[libxml-2.0], [HAVE_LIBXML2=yes], [HAVE_LIBXML2=no])
+ 
+@@ -4299,6 +4301,8 @@ if test "x$with_xml2" = "xyes" -o "x$with_xml2" = "x" ; then
+       AC_MSG_ERROR([--with-xml2 was requested, but libxml2 is not available])
+     fi
+   fi
++  fi
++  HAVE_LIBXML2=yes
+ elif test "x$with_xml2" != "xno"; then
+   AC_MSG_ERROR([Only --with-xml2=yes/no supported])
+ fi
+
 diff --git a/m4/ax_lib_sqlite3.m4 b/m4/ax_lib_sqlite3.m4
 index e53a4a967..440e2c5ed 100644
 --- a/m4/ax_lib_sqlite3.m4
@@ -75,4 +166,17 @@ index e53a4a967..440e2c5ed 100644
      fi
 +    unset ac_sqlite3_include_path
  ])
+ 
+
+diff --git a/m4/geos.m4 b/m4/geos.m4
+index a410673b4..c16e1f33a 100644
+--- a/m4/geos.m4
++++ b/m4/geos.m4
+@@ -60,6 +60,7 @@ AC_DEFUN([GEOS_INIT],[
+ 
+     AC_PATH_PROG(GEOS_CONFIG, geos-config, no)
+     ac_geos_config_auto=yes
++    HAVE_GEOS="yes"
+ 
+   else
  

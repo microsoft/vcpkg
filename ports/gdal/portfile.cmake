@@ -183,21 +183,40 @@ else()
         set(BUILD_DYNAMIC no)
         set(BUILD_STATIC yes)
     endif()
-    
+
     set(CONF_OPTS --enable-shared=${BUILD_DYNAMIC} --enable-static=${BUILD_STATIC})
-    list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR} --with-libjson-c=${CURRENT_INSTALLED_DIR})
-    list(APPEND CONF_OPTS --without-jasper)
-    
+    list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR} --with-libjson-c=${CURRENT_INSTALLED_DIR} --with-spatialite=${CURRENT_INSTALLED_DIR})
+    list(APPEND CONF_OPTS --with-libtiff=${CURRENT_INSTALLED_DIR} --with-geotiff=${CURRENT_INSTALLED_DIR})
+    list(APPEND CONF_OPTS --with-pg=yes --with-liblzma=yes)
+
+    if(VCPKG_TARGET_IS_LINUX)
+        set(STDLIB stdc++)
+    else()
+        set(STDLIB c++)
+    endif()
+
+    list(APPEND OPTIONS_RELEASE
+        "LIBS=-pthread -l${STDLIB} -ltiff -ljpeg -lpq -lpgcommon -lpgport -lcurl -lssl -lcrypto -lgeos_c -lgeos -lrttopo -lxml2 -lfreexl -llzma -lz -lszip"
+    )
+    list(APPEND OPTIONS_DEBUG
+        "LIBS=-pthread -l${STDLIB} -ltiffd -ljpeg -lpq -lpgcommon -lpgport -lcurl-d -lssl -lcrypto -lgeos_cd -lgeosd -lrttopo -lxml2 -lfreexl -llzmad -lz -lszip_debug"
+    )
+
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
         COPY_SOURCE
-        OPTIONS ${CONF_OPTS}
+        OPTIONS
+            ${CONF_OPTS}
+            "GEOS_VERSION=3.8.1"
+        OPTIONS_RELEASE
+            ${OPTIONS_RELEASE}
         OPTIONS_DEBUG
             --enable-debug
             --without-fit # Disable cfitsio temporary
+            ${OPTIONS_DEBUG}
     )
-    
+
     vcpkg_install_make(MAKEFILE GNUmakefile)
     
     file(REMOVE_RECURSE
