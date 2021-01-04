@@ -196,10 +196,10 @@ else()
     endif()
 
     list(APPEND OPTIONS_RELEASE
-        "LIBS=-pthread -l${STDLIB} -ltiff -ljpeg -lpq -lpgcommon -lpgport -lcurl -lssl -lcrypto -lgeos_c -lgeos -lrttopo -lxml2 -lfreexl -llzma -lz -lszip"
+        "LIBS=-lpthread -l${STDLIB} -ltiff -ljpeg -lpq -lpgcommon -lpgport -lcurl -lssl -lcrypto -lgeos_c -lgeos -lrttopo -lxml2 -lfreexl -llzma -lz -lszip"
     )
     list(APPEND OPTIONS_DEBUG
-        "LIBS=-pthread -l${STDLIB} -ltiffd -ljpeg -lpq -lpgcommon -lpgport -lcurl-d -lssl -lcrypto -lgeos_cd -lgeosd -lrttopo -lxml2 -lfreexl -llzmad -lz -lszip_debug"
+        "LIBS=-lpthread -l${STDLIB} -ltiffd -ljpeg -lpq -lpgcommon -lpgport -lcurl-d -lssl -lcrypto -lgeos_cd -lgeosd -lrttopo -lxml2 -lfreexl -llzmad -lz -lszip_debug"
     )
 
     vcpkg_configure_make(
@@ -213,7 +213,6 @@ else()
             ${OPTIONS_RELEASE}
         OPTIONS_DEBUG
             --enable-debug
-            --without-fit # Disable cfitsio temporary
             ${OPTIONS_DEBUG}
     )
 
