@@ -52,24 +52,31 @@ else()
     message(FATAL_ERROR "Unsupported architecture: ${VCPKG_TARGET_ARCHITECTURE}")
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/PCBuild/pythoncore.vcxproj
-    PLATFORM ${BUILD_ARCH})
+vcpkg_install_msbuild(
+    SOURCE_PATH ${SOURCE_PATH}
+    PROJECT_SUBPATH PCBuild/pythoncore.vcxproj
+    PLATFORM ${BUILD_ARCH}
+)
 
+file(REMOVE ${CURRENT_PACKAGES_DIR}/tools ${CURRENT_PACKAGES_DIR}/debug/tools)
+
+# Install headers manually
 file(GLOB HEADERS ${SOURCE_PATH}/Include/*.h)
 file(COPY ${HEADERS} ${SOURCE_PATH}/PC/pyconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR})
 
-file(COPY ${SOURCE_PATH}/Lib DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR})
-
-file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(COPY ${SOURCE_PATH}/PCBuild/${OUT_DIR}/python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_d.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+if ("tools" IN_LIST FEATURES)
+    vcpkg_install_msbuild(
+        SOURCE_PATH ${SOURCE_PATH}
+        PROJECT_SUBPATH PCBuild/python.vcxproj
+        PLATFORM ${BUILD_ARCH}
+    )
+    
+    vcpkg_copy_tools(TOOL_NAMES python w9xpopen SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools/python2 AUTO_CLEAN)
+    
+    file(COPY ${SOURCE_PATH}/Lib DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR})
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}/LICENSE ${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}/copyright)
-
 vcpkg_copy_pdbs()
+
+# Handle copyright
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/python${PYTHON_VERSION_MAJOR}" RENAME copyright)
