@@ -1,3 +1,7 @@
+# For very old ports whose upstream do not properly set the minimum CMake version.
+cmake_policy(SET CMP0012 NEW)
+cmake_policy(SET CMP0057 NEW)
+
 # This prevents the port's python.exe from overriding the Python fetched by
 # vcpkg_find_acquire_program(PYTHON3) and prevents the vcpkg toolchain from
 # stomping on FindPython's default functionality.
