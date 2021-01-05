@@ -341,6 +341,12 @@ gdcm:arm64-windows=fail
 gdcm:x64-linux               = skip
 geos:arm-uwp=fail
 geos:x64-uwp=fail
+
+# Port geotrans source ftp://ftp.nga.mil server 
+# extremely slow may take several hours to download
+geotrans:x64-linux           = skip
+geotrans:x64-windows         = skip
+geotrans:x86-windows         = skip
 getopt:arm-uwp=fail
 getopt:x64-uwp=fail
 getopt-win32:arm64-windows=fail
