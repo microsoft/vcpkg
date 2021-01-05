@@ -44,6 +44,19 @@ file(GLOB VCPKG_TEST_INCLUDES CONFIGURE_DEPENDS include/vcpkg-test/*.h)
 file(GLOB VCPKG_FUZZ_SOURCES CONFIGURE_DEPENDS src/vcpkg-fuzz/*.cpp)
 
 # ========================
+# === Compile cache ======
+# ========================
+
+if(UNIX)
+    find_program(CCACHE_FOUND ccache)
+    if(CCACHE_FOUND)
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+    endif(CCACHE_FOUND)
+endif()
+
+
+# ========================
 # === System detection ===
 # ========================
 
