@@ -57,7 +57,7 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        ./vcpkg.exe x-ci-verify-versions --verbose --feature-flags=versions --x-builtin-ports-root=./scripts/testing/version-files/ports --x-builtin-port-versions-root=./scripts/testing/version-files/port_versions
+        ./vcpkg.exe x-ci-verify-versions --verify-git-trees --verbose --feature-flags=versions --x-builtin-ports-root=./scripts/testing/version-files/ports --x-builtin-port-versions-dir=./scripts/testing/version-files/port_versions
       pwsh: true
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'

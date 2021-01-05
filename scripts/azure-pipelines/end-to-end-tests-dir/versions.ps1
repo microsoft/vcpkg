@@ -6,12 +6,12 @@ Copy-Item -Recurse "scripts/testing/version-files/port_versions_incomplete" $Ver
 $portsRedirectArgsOK = @(
     "--feature-flags=versions",
     "--x-builtin-ports-root=scripts/testing/version-files/ports",
-    "--x-builtin-port-versions-root=scripts/testing/version-files/port_versions"
+    "--x-builtin-port-versions-dir=scripts/testing/version-files/port_versions"
 )
 $portsRedirectArgsIncomplete = @(
     "--feature-flags=versions",
     "--x-builtin-ports-root=scripts/testing/version-files/ports_incomplete",
-    "--x-builtin-port-versions-root=$VersionFilesRoot/port_versions_incomplete"
+    "--x-builtin-port-versions-dir=$VersionFilesRoot/port_versions_incomplete"
 )
 $CurrentTest = "x-verify-ci-versions (All files OK)"
 Write-Host $CurrentTest
