@@ -24,4 +24,4 @@ file(REMOVE_RECURSE
 )
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/tmx/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
