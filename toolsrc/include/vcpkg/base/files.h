@@ -184,6 +184,10 @@ namespace vcpkg::Files
                                  std::error_code& ec) = 0;
         void write_contents(const fs::path& path, const std::string& data, LineInfo linfo);
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) = 0;
+        void write_contents_and_dirs(const fs::path& path, const std::string& data, LineInfo linfo);
+        virtual void write_contents_and_dirs(const fs::path& file_path,
+                                             const std::string& data,
+                                             std::error_code& ec) = 0;
         void rename(const fs::path& oldpath, const fs::path& newpath, LineInfo linfo);
         virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) = 0;
         virtual void rename_or_copy(const fs::path& oldpath,
@@ -234,6 +238,12 @@ namespace vcpkg::Files
         fs::path current_path(LineInfo li) const;
         virtual void current_path(const fs::path& path, std::error_code&) = 0;
         void current_path(const fs::path& path, LineInfo li);
+
+        // if the path does not exist, then (try_|)take_exclusive_file_lock attempts to create the file
+        // (but not any path members above the file itself)
+        // in other words, if `/a/b` is a directory, and you're attempting to lock `/a/b/c`,
+        // then these lock functions create `/a/b/c` if it doesn't exist;
+        // however, if `/a/b` doesn't exist, then the functions will fail.
 
         // waits forever for the file lock
         virtual fs::SystemHandle take_exclusive_file_lock(const fs::path& path, std::error_code&) = 0;

@@ -276,6 +276,8 @@ namespace vcpkg
                     {INSTALL_ROOT_DIR_ARG, &VcpkgCmdArguments::install_root_dir},
                     {PACKAGES_ROOT_DIR_ARG, &VcpkgCmdArguments::packages_root_dir},
                     {SCRIPTS_ROOT_DIR_ARG, &VcpkgCmdArguments::scripts_root_dir},
+                    {BUILTIN_PORTS_ROOT_DIR_ARG, &VcpkgCmdArguments::builtin_ports_root_dir},
+                    {BUILTIN_PORT_VERSIONS_DIR_ARG, &VcpkgCmdArguments::builtin_port_versions_dir},
                 };
 
             constexpr static std::pair<StringView, std::vector<std::string> VcpkgCmdArguments::*>
@@ -283,6 +285,7 @@ namespace vcpkg
                     {OVERLAY_PORTS_ARG, &VcpkgCmdArguments::overlay_ports},
                     {OVERLAY_TRIPLETS_ARG, &VcpkgCmdArguments::overlay_triplets},
                     {BINARY_SOURCES_ARG, &VcpkgCmdArguments::binary_sources},
+                    {CMAKE_SCRIPT_ARG, &VcpkgCmdArguments::cmake_args},
                 };
 
             constexpr static std::pair<StringView, Optional<bool> VcpkgCmdArguments::*> switches[] = {
@@ -560,7 +563,6 @@ namespace vcpkg
         table.format("vcpkg export <pkg>... [opt]...", "Exports a package");
         table.format("vcpkg edit <pkg>",
                      "Open up a port for editing (uses " + format_environment_variable("EDITOR") + ", default 'code')");
-        table.format("vcpkg import <pkg>", "Import a pre-built library");
         table.format("vcpkg create <pkg> <url> [archivename]", "Create a new package");
         table.format("vcpkg owns <pat>", "Search for files in installed packages");
         table.format("vcpkg depend-info <pkg>...", "Display a list of dependencies for packages");
@@ -913,6 +915,7 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::INSTALL_ROOT_DIR_ARG;
     constexpr StringLiteral VcpkgCmdArguments::PACKAGES_ROOT_DIR_ARG;
     constexpr StringLiteral VcpkgCmdArguments::SCRIPTS_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::BUILTIN_PORTS_ROOT_DIR_ARG;
 
     constexpr StringLiteral VcpkgCmdArguments::DEFAULT_VISUAL_STUDIO_PATH_ENV;
 
@@ -922,7 +925,6 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ARG;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ENV;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ARG;
-    constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ENV;
 
     constexpr StringLiteral VcpkgCmdArguments::BINARY_SOURCES_ARG;
 
@@ -949,4 +951,6 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::REGISTRIES_FEATURE;
     constexpr StringLiteral VcpkgCmdArguments::RECURSIVE_DATA_ENV;
     constexpr StringLiteral VcpkgCmdArguments::VERSIONS_FEATURE;
+
+    constexpr StringLiteral VcpkgCmdArguments::CMAKE_SCRIPT_ARG;
 }

@@ -86,7 +86,7 @@ More information about Azure DevOps Artifacts' NuGet support is available in the
 
 ## Configuration
 
-Binary caching is configured via a combination of defaults, the environment variable `VCPKG_BINARY_SOURCES` (set to `<source>;<source>;...`), and the command line option `--binarysource=<source>`. Source options are evaluated in order of defaults, then environment, then command line.
+Binary caching is configured via a combination of defaults, the environment variable `VCPKG_BINARY_SOURCES` (set to `<source>;<source>;...`), and the command line option `--binarysource=<source>`. Source options are evaluated in order of defaults, then environment, then command line. Binary caching can be completely disabled by passing `--binarysource=clear` as the last command line option.
 
 By default, zip-based archives will be cached at the first valid location of:
 
@@ -115,6 +115,47 @@ By default, zip-based archives will be cached at the first valid location of:
 The `<rw>` optional parameter for certain sources controls whether they will be consulted for
 downloading binaries (`read`), whether on-demand builds will be uploaded to that remote (`write`), or both (`readwrite`).
 
+### Nuget Provider Configuration
+
+#### Credentials
+
+Many NuGet servers require additional credentials to access. The most flexible way to supply credentials is via the `nugetconfig` provider with a custom `nuget.config` file. See https://docs.microsoft.com/en-us/nuget/consume-packages/consuming-packages-authenticated-feeds for more information on authenticating via `nuget.config`.
+
+However, it is still possible to authenticate against many servers using NuGet's built-in credential providers or via customizing your environment's default `nuget.config`. The default config can be extended via nuget client calls such as
+```
+nuget sources add -Name MyRemote -Source https://... -Username $user -Password $pass
+```
+and then passed to vcpkg via `--binarysource=nuget,MyRemote,readwrite`. You can get a path to the precise copy of NuGet used by vcpkg by running `vcpkg fetch nuget`, which will report something like:
+```
+$ vcpkg fetch nuget
+/vcpkg/downloads/tools/nuget-5.5.1-linux/nuget.exe
+```
+Non-Windows users will need to call this through mono via `mono /path/to/nuget.exe sources add ...`.
+
+##### Credential Example for Azure Dev Ops
+```bash
+# On Linux or OSX
+$ mono `vcpkg fetch nuget | tail -n1` sources add \
+  -name ADO \
+  -Source https://pkgs.dev.azure.com/$ORG/_packaging/$FEEDNAME/nuget/v3/index.json \
+  -Username $USERNAME \
+  -Password $PAT
+$ export VCPKG_BINARY_SOURCES="nuget,ADO,readwrite"
+```
+```powershell
+# On Windows Powershell
+PS> & $(vcpkg fetch nuget | select -last 1) sources add `
+  -name ADO `
+  -Source https://pkgs.dev.azure.com/$ORG/_packaging/$FEEDNAME/nuget/v3/index.json `
+  -Username $USERNAME `
+  -Password $PAT
+PS> $env:VCPKG_BINARY_SOURCES="nuget,ADO,readwrite"
+```
+
+We recommend using a Personal Access Token (PAT) as the password for maximum security. You can generate a PAT in User Settings -> Personal Access Tokens or `https://dev.azure.com/$ORG/_usersSettings/tokens`.
+
+#### `metadata.repository`
+
 The `nuget` and `nugetconfig` source providers additionally respect certain environment variables while generating nuget packages. The `metadata.repository` field of any packages will be generated as:
 ```
     <repository type="git" url="${VCPKG_NUGET_REPOSITORY}"/>
@@ -127,8 +168,6 @@ or
                 commit="${GITHUB_SHA}"/>
 ```
 if the appropriate environment variables are defined and non-empty. This is specifically used to associate packages in GitHub Packages with the _building_ project and not intended to associate with the original package sources.
-
-Finally, binary caching can be completely disabled by passing `--no-binarycaching` on the command line.
 
 ## Implementation Notes (internal details subject to change without notice)
 

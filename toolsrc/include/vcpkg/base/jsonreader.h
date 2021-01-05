@@ -23,7 +23,7 @@ namespace vcpkg::Json
         Optional<Type> visit(Reader&, const Value&);
         Optional<Type> visit(Reader&, const Object&);
 
-    protected:
+    public:
         virtual Optional<Type> visit_null(Reader&);
         virtual Optional<Type> visit_boolean(Reader&, bool);
         virtual Optional<Type> visit_integer(Reader& r, int64_t i);
@@ -33,12 +33,14 @@ namespace vcpkg::Json
         virtual Optional<Type> visit_object(Reader&, const Object&);
         virtual View<StringView> valid_fields() const;
 
+        virtual ~IDeserializer() = default;
+
+    protected:
         IDeserializer() = default;
         IDeserializer(const IDeserializer&) = default;
         IDeserializer& operator=(const IDeserializer&) = default;
         IDeserializer(IDeserializer&&) = default;
         IDeserializer& operator=(IDeserializer&&) = default;
-        virtual ~IDeserializer() = default;
     };
 
     struct Reader
@@ -73,13 +75,13 @@ namespace vcpkg::Json
         };
         std::vector<Path> m_path;
 
+    public:
         // checks that an object doesn't contain any fields which both:
         // * don't start with a `$`
         // * are not in `valid_fields`
         // if known_fields.empty(), then it's treated as if all field names are valid
         void check_for_unexpected_fields(const Object& obj, View<StringView> valid_fields, StringView type_name);
 
-    public:
         template<class Type>
         void required_object_field(
             StringView type, const Object& obj, StringView key, Type& place, IDeserializer<Type>& visitor)
