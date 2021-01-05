@@ -17,7 +17,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opencv2-cuda ENABLE_OPENCV
     opencv3-cuda ENABLE_OPENCV
     cudnn ENABLE_CUDNN
-        
 )
 
 if ("cuda" IN_LIST FEATURES)
@@ -106,9 +105,6 @@ vcpkg_configure_cmake(
   OPTIONS ${FEATURE_OPTIONS}
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
-    -DENABLE_CUDA=${ENABLE_CUDA}
-    -DENABLE_CUDNN=${ENABLE_CUDNN}
-    -DENABLE_OPENCV=${ENABLE_OPENCV}
 )
 
 vcpkg_install_cmake()
