@@ -183,7 +183,7 @@ endif()
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 function(_generate_finder)
-    cmake_parse_arguments(PythonFinder "" "DIRECTORY;PREFIX" "" ${ARGN})
+    cmake_parse_arguments(PythonFinder "NO_OVERRIDE" "DIRECTORY;PREFIX" "" ${ARGN})
     configure_file(
         "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
         "${CURRENT_PACKAGES_DIR}/share/${PythonFinder_DIRECTORY}/vcpkg-cmake-wrapper.cmake"
@@ -194,3 +194,4 @@ endfunction()
 message(STATUS "Installing cmake wrappers")
 _generate_finder(DIRECTORY "python" PREFIX "Python")
 _generate_finder(DIRECTORY "python3" PREFIX "Python3")
+_generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)

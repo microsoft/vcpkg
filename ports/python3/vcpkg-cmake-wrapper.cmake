@@ -1,3 +1,12 @@
+# This prevents the port's python.exe from overriding the Python fetched by
+# vcpkg_find_acquire_program(PYTHON3) and prevents the vcpkg toolchain from
+# stomping on FindPython's default functionality.
+list(REMOVE_ITEM CMAKE_PROGRAM_PATH "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/python3")
+if(@PythonFinder_NO_OVERRIDE@)
+    _find_package(${ARGS})
+    return()
+endif()
+
 # CMake's FindPython's separation of concerns is very muddy. We only want to force vcpkg's Python
 # if the consumer is using the development component. What we don't want to do is break detection
 # of the system Python, which may have certain packages the user expects. But - if the user is
