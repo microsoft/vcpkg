@@ -1,11 +1,11 @@
 {
   "default": {
     "cat": {
-      "version": "1.0",
+      "version-string": "1.0",
       "port-version": 0
     },
     "dog": {
-      "version-date": "2001-01-01",
+      "version-string": "2001-01-01",
       "port-version": 0
     }, 
     "duck": {
