@@ -206,10 +206,10 @@ else()
     endif()
 
     list(APPEND OPTIONS_RELEASE
-        "LIBS=-lpthread -l${STDLIB} -ltiff -ljpeg -lpq -lpgcommon -lpgport -lcurl -lssl -lcrypto -lgeos_c -lgeos -lxml2 ${DEPENDENCY_LIBS_RELEASE} -llzma -lz -lszip"
+        "LIBS=-pthread -l${STDLIB} -ltiff -ljpeg -lpq -lpgcommon -lpgport -lcurl -lssl -lcrypto -lgeos_c -lgeos -lxml2 ${DEPENDENCY_LIBS_RELEASE} -llzma -lz -lszip"
     )
     list(APPEND OPTIONS_DEBUG
-        "LIBS=-lpthread -l${STDLIB} -ltiffd -ljpeg -lpq -lpgcommon -lpgport -lcurl-d -lssl -lcrypto -lgeos_cd -lgeosd -lxml2 ${DEPENDENCY_LIBS_DEBUG} -llzmad -lz -lszip_debug"
+        "LIBS=-pthread -l${STDLIB} -ltiffd -ljpeg -lpq -lpgcommon -lpgport -lcurl-d -lssl -lcrypto -lgeos_cd -lgeosd -lxml2 ${DEPENDENCY_LIBS_DEBUG} -llzmad -lz -lszip_debug"
     )
 
     vcpkg_configure_make(
