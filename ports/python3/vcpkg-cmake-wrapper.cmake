@@ -43,7 +43,7 @@ if(_PythonFinder_WantLibs)
         NO_DEFAULT_PATH
     )
     find_library(
-        __@PythonFinder_PREFIX@_LIBRARY_RELEASE
+        _@PythonFinder_PREFIX@_LIBRARY_DEBUG
         NAMES
         "python@PYTHON_VERSION_MAJOR@@PYTHON_VERSION_MINOR@_d"
         "python@PYTHON_VERSION_MAJOR@.@PYTHON_VERSION_MINOR@d"
