@@ -185,9 +185,19 @@ else()
     endif()
 
     set(CONF_OPTS --enable-shared=${BUILD_DYNAMIC} --enable-static=${BUILD_STATIC})
-    list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR} --with-libjson-c=${CURRENT_INSTALLED_DIR} --with-spatialite=${CURRENT_INSTALLED_DIR})
+    list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR} --with-libjson-c=${CURRENT_INSTALLED_DIR})
     list(APPEND CONF_OPTS --with-libtiff=${CURRENT_INSTALLED_DIR} --with-geotiff=${CURRENT_INSTALLED_DIR})
     list(APPEND CONF_OPTS --with-pg=yes --with-liblzma=yes)
+
+    if ("libspatialite" IN_LIST FEATURES)
+        list(APPEND CONF_OPTS --with-spatialite=${CURRENT_INSTALLED_DIR})
+        list(APPEND DEPENDENCY_LIBS_RELEASE
+            "-lrttopo -lfreexl"
+        )
+        list(APPEND DEPENDENCY_LIBS_DEBUG
+            "-lrttopo -lfreexl"
+        )
+    endif()
 
     if(VCPKG_TARGET_IS_LINUX)
         set(STDLIB stdc++)
@@ -196,10 +206,10 @@ else()
     endif()
 
     list(APPEND OPTIONS_RELEASE
-        "LIBS=-lpthread -l${STDLIB} -ltiff -ljpeg -lpq -lpgcommon -lpgport -lcurl -lssl -lcrypto -lgeos_c -lgeos -lrttopo -lxml2 -lfreexl -llzma -lz -lszip"
+        "LIBS=-lpthread -l${STDLIB} -ltiff -ljpeg -lpq -lpgcommon -lpgport -lcurl -lssl -lcrypto -lgeos_c -lgeos -lxml2 ${DEPENDENCY_LIBS_RELEASE} -llzma -lz -lszip"
     )
     list(APPEND OPTIONS_DEBUG
-        "LIBS=-lpthread -l${STDLIB} -ltiffd -ljpeg -lpq -lpgcommon -lpgport -lcurl-d -lssl -lcrypto -lgeos_cd -lgeosd -lrttopo -lxml2 -lfreexl -llzmad -lz -lszip_debug"
+        "LIBS=-lpthread -l${STDLIB} -ltiffd -ljpeg -lpq -lpgcommon -lpgport -lcurl-d -lssl -lcrypto -lgeos_cd -lgeosd -lxml2 ${DEPENDENCY_LIBS_DEBUG} -llzmad -lz -lszip_debug"
     )
 
     vcpkg_configure_make(
