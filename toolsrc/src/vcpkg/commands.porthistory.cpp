@@ -156,13 +156,6 @@ namespace vcpkg::Commands::PortHistory
                         ret.emplace_back(version);
                     }
                 }
-                // NOTE: Uncomment this code if you're looking for edge cases to patch in the generation.
-                //       Otherwise, x-history simply skips "bad" versions, which is OK behavior.
-                // else
-                //{
-                //    Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to get version from %s:%s",
-                //    commit_date_pair.first, port_name);
-                //}
             }
             return ret;
         }
@@ -220,14 +213,7 @@ namespace vcpkg::Commands::PortHistory
             {
                 auto output_file_path = fs::u8path(maybe_output_file.value_or_exit(VCPKG_LINE_INFO));
                 auto& fs = paths.get_filesystem();
-                std::error_code ec;
-                fs.write_contents(output_file_path, json_string, ec);
-                if (ec)
-                {
-                    System::printf(
-                        System::Color::error, "Error: Couldn't write output file `%s`", fs::u8string(output_file_path));
-                    Checks::exit_fail(VCPKG_LINE_INFO);
-                }
+                fs.write_contents(output_file_path, json_string, VCPKG_LINE_INFO);
             }
             else
             {
@@ -236,6 +222,12 @@ namespace vcpkg::Commands::PortHistory
         }
         else
         {
+            if (maybe_output_file.has_value())
+            {
+                System::printf(
+                    System::Color::warning, "Warning: Option `--$s` requires `--x-json` switch.", OPTION_OUTPUT_FILE);
+            }
+
             System::print2("             version          date    vcpkg commit\n");
             for (auto&& version : versions)
             {
