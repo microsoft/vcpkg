@@ -1,5 +1,5 @@
 {
-   "name": "debug-assert",
-   "version-string": "1.3.3",
-   "description": "Provides flexible DEBUG_ASSERT() macro."
+  "name": "debug-assert",
+  "version-string": "1.3.3",
+  "description": "Provides flexible DEBUG_ASSERT() macro."
 }
