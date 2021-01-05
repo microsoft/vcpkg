@@ -24,8 +24,6 @@ elseif("Development.Module" IN_LIST ARGS)
 endif()
 
 if(_PythonFinder_WantLibs)
-    set(@PythonFinder_PREFIX@_FIND_REGISTRY "NEVER")
-
     find_path(
         @PythonFinder_PREFIX@_INCLUDE_DIR
         NAMES "Python.h"
