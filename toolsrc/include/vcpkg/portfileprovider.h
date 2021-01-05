@@ -5,6 +5,7 @@
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/versions.h>
 
@@ -12,6 +13,7 @@ namespace vcpkg::PortFileProvider
 {
     struct PortFileProvider
     {
+        virtual ~PortFileProvider() = default;
         virtual ExpectedS<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const = 0;
         virtual std::vector<const SourceControlFileLocation*> load_all_control_files() const = 0;
     };
@@ -40,46 +42,19 @@ namespace vcpkg::PortFileProvider
 
     struct IVersionedPortfileProvider
     {
-        virtual const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(StringView port_name) const = 0;
+        virtual View<VersionT> get_port_versions(StringView port_name) const = 0;
+        virtual ~IVersionedPortfileProvider() = default;
 
         virtual ExpectedS<const SourceControlFileLocation&> get_control_file(
-            const vcpkg::Versions::VersionSpec& version_spec) const = 0;
+            const Versions::VersionSpec& version_spec) const = 0;
     };
 
     struct IBaselineProvider
     {
         virtual Optional<VersionT> get_baseline_version(StringView port_name) const = 0;
+        virtual ~IBaselineProvider() = default;
     };
 
-    namespace details
-    {
-        struct BaselineProviderImpl;
-        struct VersionedPortfileProviderImpl;
-    }
-
-    struct VersionedPortfileProvider : IVersionedPortfileProvider, Util::ResourceBase
-    {
-        explicit VersionedPortfileProvider(const vcpkg::VcpkgPaths& paths);
-        ~VersionedPortfileProvider();
-
-        const std::vector<vcpkg::Versions::VersionSpec>& get_port_versions(StringView port_name) const override;
-
-        ExpectedS<const SourceControlFileLocation&> get_control_file(
-            const vcpkg::Versions::VersionSpec& version_spec) const override;
-
-    private:
-        std::unique_ptr<details::VersionedPortfileProviderImpl> m_impl;
-    };
-
-    struct BaselineProvider : IBaselineProvider, Util::ResourceBase
-    {
-        explicit BaselineProvider(const vcpkg::VcpkgPaths& paths);
-        BaselineProvider(const vcpkg::VcpkgPaths& paths, const std::string& baseline);
-        ~BaselineProvider();
-
-        Optional<VersionT> get_baseline_version(StringView port_name) const override;
-
-    private:
-        std::unique_ptr<details::BaselineProviderImpl> m_impl;
-    };
+    std::unique_ptr<IBaselineProvider> make_baseline_provider(const VcpkgPaths&);
+    std::unique_ptr<IVersionedPortfileProvider> make_versioned_portfile_provider(const VcpkgPaths&);
 }

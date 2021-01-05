@@ -7,7 +7,7 @@ Description: Modern C++ toolkit containing machine learning algorithms and tools
 Default-Features: fftw3, sqlite3
 
 Feature: cuda
-Build-Depends: cuda
+Build-Depends: cuda, cudnn
 Description: CUDA support for dlib
 
 Feature: fftw3
