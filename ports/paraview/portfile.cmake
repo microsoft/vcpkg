@@ -3,7 +3,7 @@ set(VERSION 5.8)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
     "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
-    "mpi"          PARAVIEW_USE_MPI             #untested
+    "mpi"          PARAVIEW_USE_MPI
     "vtkm"         PARAVIEW_USE_VTKM
     "python"       PARAVIEW_USE_PYTHON
     "tools"        PARAVIEW_BUILD_TOOLS
@@ -28,7 +28,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND VisItPatches removedoublesymbols.patch)
 endif()
 
-#The following two dependencies should probably be their own port 
+#The following three dependencies should probably be their own port 
 #but require additional patching in paraview to make it work. 
 
 #Get VisItBridge Plugin
@@ -51,9 +51,18 @@ vcpkg_from_gitlab(
     REF f2429588feb839e0d8f9f3ee73bfa8a032a3f178
     SHA512  752b13ff79095a14faa2edc134a64497ff0426da3aa6b1a5951624816fb4f113a26fbe559cedf495ebb775d782c9a1851421a88dd299a79f27cbebb730ea227e
 )
+#Get IceT
+vcpkg_from_gitlab(
+    OUT_SOURCE_PATH ICET_SOURCE_PATH
+    GITLAB_URL https://gitlab.kitware.com/
+    REPO paraview/icet
+    REF 61e37d02157e0bbc337e4e628813ab5c929a1eb1
+    SHA512  baa6ba0c05ab844c13d376dfb91fc2fe7c9e4608837a18f4c89f87fbe5f36e14e3306cc9c250eae91c3360ea8d0275d85774ef1cc66d83f650a6b62fdcab7485
+)
 
 file(COPY ${VISITIT_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/Utilities/VisItBridge)
 file(COPY ${QTTESTING_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/QtTesting/vtkqttesting)
+file(COPY ${ICET_SOURCE_PATH}/ DESTINATION ${SOURCE_PATH}/ThirdParty/IceT/vtkicet)
 
 if("python" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON3)
