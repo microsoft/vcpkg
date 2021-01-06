@@ -75,6 +75,13 @@ namespace vcpkg::Commands::Env
             extra_env.emplace("PYTHONPATH",
                               fs::u8string(paths.installed / fs::u8path(triplet.to_string()) / fs::u8path("python")));
         if (path_vars.size() > 0) extra_env.emplace("PATH", Strings::join(";", path_vars));
+        for (auto&& passthrough : pre_build_info.passthrough_env_vars)
+        {
+            if (auto e = System::get_environment_variable(passthrough))
+            {
+                extra_env.emplace(passthrough, e.value_or_exit(VCPKG_LINE_INFO));
+            }
+        }
 
         auto env = [&] {
             auto clean_env = System::get_modified_clean_environment(extra_env);

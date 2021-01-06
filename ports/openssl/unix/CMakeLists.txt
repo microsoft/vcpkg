@@ -28,6 +28,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(PLATFORM darwin64-x86_64-cc)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
     set(PLATFORM BSD-generic64)
+elseif(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
+    set(PLATFORM BSD-generic64)
 elseif(MINGW)
     if(CMAKE_SYSTEM_PROCESSOR STREQUAL "x86_64")
         set(PLATFORM mingw64)
@@ -44,10 +46,12 @@ message("CMAKE_C_COMPILER=${CMAKE_C_COMPILER}")
 message("COMPILER_ROOT=${COMPILER_ROOT}")
 message("CMAKE_SYSROOT=${CMAKE_SYSROOT}")
 message("CMAKE_OSX_SYSROOT=${CMAKE_OSX_SYSROOT}")
+message("CMAKE_OSX_DEPLOYMENT_TARGET=${CMAKE_OSX_DEPLOYMENT_TARGET}")
 message("CMAKE_C_FLAGS=${CMAKE_C_FLAGS}")
 message("CMAKE_C_FLAGS_RELEASE=${CMAKE_C_FLAGS_RELEASE}")
 message("CMAKE_C_FLAGS_DEBUG=${CMAKE_C_FLAGS_DEBUG}")
 message("CMAKE_INCLUDE_SYSTEM_FLAG_C=${CMAKE_INCLUDE_SYSTEM_FLAG_C}")
+message("CMAKE_C_OSX_DEPLOYMENT_TARGET_FLAG=${CMAKE_C_OSX_DEPLOYMENT_TARGET_FLAG}")
 
 set(CFLAGS "${CMAKE_C_FLAGS}")
 if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -63,6 +67,9 @@ if(CMAKE_SYSROOT AND CMAKE_C_COMPILE_OPTIONS_SYSROOT)
     set(CFLAGS "${CFLAGS} ${CMAKE_C_COMPILE_OPTIONS_SYSROOT}${CMAKE_SYSROOT}")
 elseif(CMAKE_OSX_SYSROOT AND CMAKE_C_COMPILE_OPTIONS_SYSROOT)
     set(CFLAGS "${CFLAGS} ${CMAKE_C_COMPILE_OPTIONS_SYSROOT}${CMAKE_OSX_SYSROOT}")
+endif()
+if (CMAKE_OSX_DEPLOYMENT_TARGET AND CMAKE_C_OSX_DEPLOYMENT_TARGET_FLAG)
+    set(CFLAGS "${CFLAGS} ${CMAKE_C_OSX_DEPLOYMENT_TARGET_FLAG}${CMAKE_OSX_DEPLOYMENT_TARGET}")
 endif()
 
 string(REGEX REPLACE "^ " "" CFLAGS "${CFLAGS}")
@@ -172,6 +179,26 @@ add_custom_target(build_libs ALL
     DEPENDS "${BUILDDIR}/Makefile"
     BYPRODUCTS ${INSTALL_LIBS}
 )
+
+if((CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "iOS") AND BUILD_SHARED_LIBS)
+    if(DEFINED CMAKE_INSTALL_NAME_DIR)
+        set(ID_PREFIX "${CMAKE_INSTALL_NAME_DIR}")
+    else()
+        set(ID_PREFIX "@rpath")
+    endif()
+
+    add_custom_command(
+        TARGET build_libs
+        COMMAND /usr/bin/install_name_tool -id "${ID_PREFIX}/libssl.${SHLIB_VERSION}.dylib"
+                                               "${BUILDDIR}/libssl.${SHLIB_VERSION}.dylib"
+        COMMAND /usr/bin/install_name_tool -id "${ID_PREFIX}/libcrypto.${SHLIB_VERSION}.dylib"
+                                               "${BUILDDIR}/libcrypto.1.1.dylib"
+        COMMAND /usr/bin/install_name_tool -change "${CMAKE_INSTALL_PREFIX}/lib/libcrypto.${SHLIB_VERSION}.dylib"
+                                                   "${ID_PREFIX}/libcrypto.${SHLIB_VERSION}.dylib"
+                                                   "${BUILDDIR}/libssl.${SHLIB_VERSION}.dylib"
+        VERBATIM
+    )
+endif()
 
 install(
     FILES ${INSTALL_LIBS}

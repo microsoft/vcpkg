@@ -1,3 +1,4 @@
 Source: libsigcpp
 Version: 2.10-3
+Port-Version: 2
 Description: Typesafe callback framework for C++

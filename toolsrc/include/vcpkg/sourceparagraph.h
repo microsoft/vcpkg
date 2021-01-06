@@ -74,6 +74,8 @@ namespace vcpkg
 
         Json::Object extra_info;
 
+        VersionT to_versiont() const { return VersionT{version, port_version}; }
+
         friend bool operator==(const SourceParagraph& lhs, const SourceParagraph& rhs);
         friend bool operator!=(const SourceParagraph& lhs, const SourceParagraph& rhs) { return !(lhs == rhs); }
     };
@@ -104,6 +106,8 @@ namespace vcpkg
         Optional<std::string> check_against_feature_flags(const fs::path& origin,
                                                           const FeatureFlagSettings& flags) const;
 
+        VersionT to_versiont() const { return core_paragraph->to_versiont(); }
+
         friend bool operator==(const SourceControlFile& lhs, const SourceControlFile& rhs);
         friend bool operator!=(const SourceControlFile& lhs, const SourceControlFile& rhs) { return !(lhs == rhs); }
     };
@@ -112,8 +116,8 @@ namespace vcpkg
     Json::Object serialize_debug_manifest(const SourceControlFile& scf);
 
     /// <summary>
-    /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was
-    /// loaded from.
+    /// Full metadata of a package: core and other features,
+    /// as well as the port directory the SourceControlFile was loaded from
     /// </summary>
     struct SourceControlFileLocation
     {
@@ -131,6 +135,8 @@ namespace vcpkg
         {
             return {std::make_unique<SourceControlFile>(source_control_file->clone()), source_location};
         }
+
+        VersionT to_versiont() const { return source_control_file->to_versiont(); }
 
         std::unique_ptr<SourceControlFile> source_control_file;
         fs::path source_location;
