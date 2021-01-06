@@ -103,73 +103,67 @@ function(vcpkg_install_msbuild)
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
     )
 
-    if(NOT DEFINED _csc_RELEASE_CONFIGURATION)
-        set(_csc_RELEASE_CONFIGURATION Release)
-    endif()
-    if(NOT DEFINED _csc_DEBUG_CONFIGURATION)
-        set(_csc_DEBUG_CONFIGURATION Debug)
-    endif()
-    if(NOT DEFINED _csc_PLATFORM)
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-            set(_csc_PLATFORM  x64)
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            set(_csc_PLATFORM  Win32)
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL ARM)
-            set(_csc_PLATFORM  ARM)
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-            set(_csc_PLATFORM  arm64)
+    function(fast_copy SRC DEST)
+        if(CMAKE_HOST_WIN32)
+            get_filename_component(F ${SRC} NAME)
+            file(TO_NATIVE_PATH "${SRC}" SRC)
+            file(TO_NATIVE_PATH "${DEST}/${F}" DEST)
+            file(MAKE_DIRECTORY "${DEST}")
+            execute_process(
+                COMMAND xcopy /E /Q /B /J "${SRC}" "${DEST}"
+                RESULT_VARIABLE N
+                OUTPUT_VARIABLE OUT
+                ERROR_VARIABLE OUT
+            )
+            if(NOT N EQUAL 0)
+                message(FATAL_ERROR "xcopy /E /Q /B /J \"${SRC}\" \"${DEST}\" failed:\n${OUT}")
+            endif()
         else()
-            message(FATAL_ERROR "Unsupported target architecture")
+            file(COPY "${SRC}" DESTINATION "${DEST}")
         endif()
-    endif()
-    if(NOT DEFINED _csc_PLATFORM_TOOLSET)
-        set(_csc_PLATFORM_TOOLSET ${VCPKG_PLATFORM_TOOLSET})
-    endif()
-    if(NOT DEFINED _csc_TARGET_PLATFORM_VERSION)
-        vcpkg_get_windows_sdk(_csc_TARGET_PLATFORM_VERSION)
-    endif()
-    if(NOT DEFINED _csc_TARGET)
-        set(_csc_TARGET Rebuild)
-    endif()
+    endfunction()
 
-    list(APPEND _csc_OPTIONS
-        /t:${_csc_TARGET}
-        /p:Platform=${_csc_PLATFORM}
-        /p:PlatformToolset=${_csc_PLATFORM_TOOLSET}
-        /p:VCPkgLocalAppDataDisabled=true
-        /p:UseIntelMKL=No
-        /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
-        /p:VcpkgTriplet=${TARGET_TRIPLET}
-        "/p:VcpkgCurrentInstalledDir=${CURRENT_INSTALLED_DIR}"
-        /p:VcpkgManifestInstall=false
-        /m
+    set(BUILD_MSBUILD_OPTIONS
+        OPTIONS ${_csc_OPTIONS}
+        OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
+        OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
     )
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
-        # TODO: Add a way for the user to override this if they want to opt-in to incompatibility
-        list(APPEND _csc_OPTIONS /p:WholeProgramOptimization=false)
+    if(DEFINED _csc_TARGET)
+        list(APPEND BUILD_MSBUILD_OPTIONS TARGET ${_csc_TARGET})
     endif()
-
-    if(_csc_USE_VCPKG_INTEGRATION)
-        list(APPEND _csc_OPTIONS /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets /p:VcpkgApplocalDeps=false)
+    if(DEFINED _csc_TARGET_PLATFORM_VERSION)
+        list(APPEND BUILD_MSBUILD_OPTIONS TARGET_PLATFORM_VERSION ${_csc_TARGET_PLATFORM_VERSION})
     endif()
-
+    if(DEFINED _csc_PLATFORM_TOOLSET)
+        list(APPEND BUILD_MSBUILD_OPTIONS PLATFORM_TOOLSET ${_csc_PLATFORM_TOOLSET})
+    endif()
+    if(DEFINED _csc_PLATFORM)
+        list(APPEND BUILD_MSBUILD_OPTIONS PLATFORM ${_csc_PLATFORM})
+    endif()
+    if(DEFINED _csc_USE_VCPKG_INTEGRATION)
+        list(APPEND BUILD_MSBUILD_OPTIONS USE_VCPKG_INTEGRATION)
+    endif()
+    if(DEFINED _csc_DEBUG_CONFIGURATION)
+        list(APPEND BUILD_MSBUILD_OPTIONS DEBUG_CONFIGURATION ${_csc_DEBUG_CONFIGURATION})
+    endif()
+    if(DEFINED _csc_RELEASE_CONFIGURATION)
+        list(APPEND BUILD_MSBUILD_OPTIONS RELEASE_CONFIGURATION ${_csc_RELEASE_CONFIGURATION})
+    endif()
     get_filename_component(SOURCE_PATH_SUFFIX "${_csc_SOURCE_PATH}" NAME)
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Release")
+    set(_VCPKG_BUILD_TYPE "${VCPKG_BUILD_TYPE}")
+    if(_VCPKG_BUILD_TYPE STREQUAL "" OR _VCPKG_BUILD_TYPE STREQUAL "release")
+        message(STATUS "Copying sources for Release")
         file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        fast_copy("${_csc_SOURCE_PATH}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
         set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
-        vcpkg_execute_required_process(
-            COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH}
-                /p:Configuration=${_csc_RELEASE_CONFIGURATION}
-                ${_csc_OPTIONS}
-                ${_csc_OPTIONS_RELEASE}
-            WORKING_DIRECTORY ${SOURCE_COPY_PATH}
-            LOGNAME build-${TARGET_TRIPLET}-rel
+
+        set(VCPKG_BUILD_TYPE release)
+        vcpkg_build_msbuild(
+            PROJECT_PATH ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH}
+            ${BUILD_MSBUILD_OPTIONS}
         )
+
         file(GLOB_RECURSE LIBS ${SOURCE_COPY_PATH}/*.lib)
         file(GLOB_RECURSE DLLS ${SOURCE_COPY_PATH}/*.dll)
         file(GLOB_RECURSE EXES ${SOURCE_COPY_PATH}/*.exe)
@@ -185,20 +179,19 @@ function(vcpkg_install_msbuild)
         endif()
     endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Debug")
+    if(_VCPKG_BUILD_TYPE STREQUAL "" OR _VCPKG_BUILD_TYPE STREQUAL "debug")
+        message(STATUS "Copying sources for Debug")
         file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        fast_copy("${_csc_SOURCE_PATH}" "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
         set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${SOURCE_PATH_SUFFIX})
-        vcpkg_execute_required_process(
-            COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH}
-                /p:Configuration=${_csc_DEBUG_CONFIGURATION}
-                ${_csc_OPTIONS}
-                ${_csc_OPTIONS_DEBUG}
-            WORKING_DIRECTORY ${SOURCE_COPY_PATH}
-            LOGNAME build-${TARGET_TRIPLET}-dbg
+
+        set(VCPKG_BUILD_TYPE debug)
+        vcpkg_build_msbuild(
+            PROJECT_PATH ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH}
+            ${BUILD_MSBUILD_OPTIONS}
         )
+
         file(GLOB_RECURSE LIBS ${SOURCE_COPY_PATH}/*.lib)
         file(GLOB_RECURSE DLLS ${SOURCE_COPY_PATH}/*.dll)
         if(LIBS)
