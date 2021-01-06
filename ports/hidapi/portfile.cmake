@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/hidapi
     REF hidapi-0.10.1 # use commit from master for windows/hidapi.vcxproj
-    SHA512 1
+    SHA512 0479706c631775483378070ff7170542725678eabc202a5bd07436c951fd766e01743417999ac3fb2b5436c865f6ace2cfced1f210fa3a3e88c19ceb3bbe0534
     HEAD_REF master
 )
 
