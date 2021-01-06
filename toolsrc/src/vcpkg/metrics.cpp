@@ -299,10 +299,7 @@ namespace vcpkg::Metrics
 
     void Metrics::set_disabled(bool disabled) { g_metrics_disabled = disabled; }
 
-    bool Metrics::metrics_enabled()
-    {
-        return !g_metrics_disabled;
-    }
+    bool Metrics::metrics_enabled() { return !g_metrics_disabled; }
 
     void Metrics::track_metric(const std::string& name, double value)
     {
