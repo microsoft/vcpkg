@@ -40,8 +40,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
-
 file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
 if(DLLS)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
@@ -58,6 +56,8 @@ if(DLLS)
         file(RENAME ${DLL} ${CURRENT_PACKAGES_DIR}/debug/bin/${N})
     endforeach()
 endif()
+
+vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
 
 # do the copy pdbs now after the dlls got moved to the expected /bin folder above
 vcpkg_copy_pdbs()
