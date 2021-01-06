@@ -18,7 +18,7 @@ Description: enables cuda within paraview
 Build-Depends: cuda, vtk[core, cuda]
 
 Feature: mpi
-Description: enables cuda within paraview
+Description: enables MPI support for paraview
 Build-Depends: hdf5[core,parallel], vtk[core, mpi]
 
 Feature: tools
