@@ -205,7 +205,15 @@ foreach(MOD
       optimizer
       providers
       )
-  file(COPY ${SRCBASEDIR}/${MOD}/ DESTINATION ${DESTBASEDIR}/${MOD} FOLLOW_SYMLINK_CHAIN FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN ".inc")
+  file(COPY
+    ${SRCBASEDIR}/${MOD}
+    DESTINATION ${DESTBASEDIR}/${MOD}
+    FOLLOW_SYMLINK_CHAIN
+    FILES_MATCHING
+    PATTERN "*.h"
+    PATTERN "*.hpp"
+    PATTERN ".inc"
+    )
 endforeach()
 
 # 4. Copy external header files from source folders
@@ -219,11 +227,10 @@ foreach(MOD
       onnx/onnx/shape_inference/
       onnx/onnx/version_converter/
       onnx/third_party/benchmark/include/
-      onnx/third_party/benchmark/src/ 
-      onnx/third_party/benchmark/test/ 
-      onnx/third_party/pybind11/include/      
-      SafeInt/SafeInt/Archive/releases/2/
-      SafeInt/SafeInt/Archive/releases/6/
+      onnx/third_party/benchmark/src/
+      onnx/third_party/benchmark/test/
+      onnx/third_party/pybind11/include/
+      SafeInt/safeInt/Archive/releases/
       protobuf/src/google/
       nsync/public/
     )
@@ -242,14 +249,15 @@ endforeach()
 
 # Now copy files from folders that does need to be copied recursively
 foreach(MOD 
-    SafeInt/SafeInt/Test
+    SafeInt/safeInt
+    SafeInt/safeInt/Test
     onnx/onnx
     onnx/onnx/defs
     onnx/onnx/defs/tensor
     onnx/third_party/pybind11/tests
     )
   set(EXT_ADDL_HDRS "")
-  file(GLOB EXT_ADDL_HDRS LIST_DIRECTORIES false ${SRCBASEDIR}/${MOD}/*.h )
+  file(GLOB EXT_ADDL_HDRS LIST_DIRECTORIES false ${SRCBASEDIR}/${MOD}/*.h  ${SRCBASEDIR}/${MOD}/*.hpp)
   file(COPY ${EXT_ADDL_HDRS} DESTINATION ${DESTBASEDIR}/${MOD})
 endforeach()
 
@@ -322,6 +330,9 @@ endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 endif()
+
+# Remove empty directories that are created during copy operations
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/SafeInt/safeInt/Archive/releases/8")
 
 vcpkg_copy_pdbs()
 
