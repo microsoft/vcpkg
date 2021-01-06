@@ -15,7 +15,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DPYTHON=${PYTHON2}
+        -DPYTHON=${PYTHON2} # Switch to python3 on the next update
         -DUSE_WINDOWS6_API=ON
 )
 
