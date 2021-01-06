@@ -84,6 +84,34 @@ More information about Azure DevOps Artifacts' NuGet support is available in the
 
 [devops-nuget]: https://docs.microsoft.com/en-us/azure/devops/artifacts/get-started-nuget?view=azure-devops
 
+### Azure Blob Storage (experimental)
+
+> Note: This is an experimental feature and may change or be removed at any time
+
+Vcpkg supports interfacing with Azure Blob Storage via the `x-azblob` source type.
+
+```
+x-azblob,<baseuri>,<sas>[,<rw>]
+```
+
+First, you need to create an Azure Storage Account as well as a container ([Quick Start Documentation](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal)].
+
+Next, you will need to create a Shared Access Signature, which can be done from the storage account under Settings -> Shared access signature. This SAS will need:
+- Allowed services: Blob
+- Allowed resource types: Object
+- Allowed permissions: Read, Create (if using `write` or `readwrite`)
+
+The blob endpoint plus the container must be passed as the `<baseuri>` and the generated SAS without the `?` prefix must be passed as the `<sas>`.
+
+Example:
+```
+x-azblob,https://<storagename>.blob.core.windows.net/<containername>,sv=2019-12-12&ss=b&srt=o&sp=rcx&se=2020-12-31T06:20:36Z&st=2020-12-30T22:20:36Z&spr=https&sig=abcd,readwrite
+```
+
+Vcpkg will attempt to avoid revealing the SAS during normal operations, however:
+1. It will be printed in full if `--debug` is passed
+2. It will be passed as a command line parameter to subprocesses, such as `curl.exe`
+
 ## Configuration
 
 Binary caching is configured via a combination of defaults, the environment variable `VCPKG_BINARY_SOURCES` (set to `<source>;<source>;...`), and the command line option `--binarysource=<source>`. Source options are evaluated in order of defaults, then environment, then command line. Binary caching can be completely disabled by passing `--binarysource=clear` as the last command line option.
