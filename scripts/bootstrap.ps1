@@ -370,7 +370,6 @@ else
 
 $arguments = (
 "`"/p:VCPKG_VERSION=-nohash`"",
-"`"/p:DISABLE_METRICS=$disableMetricsValue`"",
 "/p:Configuration=Release",
 "/p:Platform=$platform",
 "/p:PlatformToolset=$platformToolset",
@@ -413,7 +412,11 @@ if ($ec -ne 0)
 
 Write-Host "`nBuilding vcpkg.exe... done.`n"
 
-if (-not $disableMetrics)
+if ($disableMetrics)
+{
+    Set-Content -Value "" -Path "$vcpkgRootDir\vcpkg.exe.disable-metrics" -Force
+}
+else
 {
     Write-Host @"
 Telemetry

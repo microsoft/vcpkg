@@ -59,9 +59,17 @@ function Run-Vcpkg {
         [Parameter(ValueFromRemainingArguments)]
         [string[]]$TestArgs
     )
-    $Script:CurrentTest = "./vcpkg $($testArgs -join ' ')"
+
+    if ($IsWindows) {
+        $vcpkgName = 'vcpkg.exe'
+    } else {
+        $vcpkgName = 'vcpkg'
+    }
+
+    $Script:CurrentTest = "./$vcpkgName $($testArgs -join ' ')"
     Write-Host $Script:CurrentTest
-    ./vcpkg @testArgs
+    & "./$vcpkgName" @testArgs | Tee-Object -Variable 'ConsoleOutput'
+    return $ConsoleOutput
 }
 
 Refresh-TestRoot
