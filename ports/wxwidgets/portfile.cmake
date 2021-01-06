@@ -57,7 +57,11 @@ if(DLLS)
     endforeach()
 endif()
 
-vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
+else()
+    vcpkg_copy_tools(TOOL_NAMES wxrc wx-config wxrc-3.1 AUTO_CLEAN)
+endif()
 
 # do the copy pdbs now after the dlls got moved to the expected /bin folder above
 vcpkg_copy_pdbs()
