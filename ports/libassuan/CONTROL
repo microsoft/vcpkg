@@ -1,0 +1,6 @@
+Source: libassuan
+Version: 2.5.3
+Homepage: https://gnupg.org/software/libassuan/index.html
+Description: A library implementing the so-called Assuan protocol
+Build-Depends: libgpg-error
+Supports: !windows
