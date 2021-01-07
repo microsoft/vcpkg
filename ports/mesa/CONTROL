@@ -8,8 +8,7 @@ Supports: !(windows&arm)
 
 Feature: default-features
 Description: Platform dependent default features
-Build-Depends: mesa[core,llvm](x64), mesa[core,shared-glapi], mesa[core,gles1], mesa[core,gles2]
-
+Build-Depends: mesa[core,llvm](x64), mesa[core,shared-glapi], mesa[core,opengl] , mesa[core,gles1], mesa[core,gles2]
 
 Feature: llvm
 Description: Build with llvmpipe
@@ -20,12 +19,16 @@ Description: Building with shared glapi (Required if more than one GL API is sel
 
 Feature: gles1
 Description: Build support for OpenGL ES 1.x
-Build-Depends: mesa[core, shared-glapi]
+Build-Depends: mesa[core]
 
 Feature: gles2
 Description: Build support for OpenGL ES 2.x and 3.x
-Build-Depends: mesa[core, shared-glapi]
+Build-Depends: mesa[core]
+
+Feature: opengl
+Description: Build support for OpenGL (all versions)
+Build-Depends: mesa[core]
 
 Feature: egl
 Description: Build support for EGL platform
-Build-Depends: mesa[core, shared-glapi]
+Build-Depends: mesa[core]
