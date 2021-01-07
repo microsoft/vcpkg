@@ -39,6 +39,6 @@ index f440884..d1b0c2f 100644
 +  ARCHIVE DESTINATION lib
 +)
 +# Install headers
-+install(DIRECTORY ${PROJECT_INCLUDE_DIR} DESTINATION include)
++install(DIRECTORY ${PROJECT_INCLUDE_DIR} DESTINATION .)
 +
  

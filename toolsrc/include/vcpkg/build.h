@@ -42,6 +42,7 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
+        CACHE_MISSING,
         DOWNLOADED
     };
 
@@ -141,8 +142,15 @@ namespace vcpkg::Build
         PROHIBIT
     };
 
+    enum class BuildMissing
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
+        BuildMissing build_missing;
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
         OnlyDownloads only_downloads;
@@ -156,6 +164,7 @@ namespace vcpkg::Build
     };
 
     static constexpr BuildPackageOptions default_build_package_options{
+        Build::BuildMissing::YES,
         Build::UseHeadVersion::NO,
         Build::AllowDownloads::YES,
         Build::OnlyDownloads::NO,
@@ -169,6 +178,7 @@ namespace vcpkg::Build
     };
 
     static constexpr BuildPackageOptions backcompat_prohibiting_package_options{
+        Build::BuildMissing::YES,
         Build::UseHeadVersion::NO,
         Build::AllowDownloads::YES,
         Build::OnlyDownloads::NO,
