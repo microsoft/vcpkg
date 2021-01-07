@@ -116,7 +116,8 @@ namespace
     void update_baseline_version(const VcpkgPaths& paths,
                                  const std::string& port_name,
                                  const VersionT& version,
-                                 const fs::path& baseline_path)
+                                 const fs::path& baseline_path,
+                                 bool print_success)
     {
         bool is_new_file = false;
         auto& fs = paths.get_filesystem();
@@ -137,8 +138,13 @@ namespace
             auto& baseline_version = it->second;
             if (baseline_version == version)
             {
-                System::printf(
-                    System::Color::success, "Version `%s` is already in `%s`\n", version, fs::u8string(baseline_path));
+                if (print_success)
+                {
+                    System::printf(System::Color::success,
+                                   "Version `%s` is already in `%s`\n",
+                                   version,
+                                   fs::u8string(baseline_path));
+                }
                 return;
             }
             baseline_version = version;
@@ -149,11 +155,14 @@ namespace
         }
 
         write_baseline_file(fs, baseline_map, baseline_path);
-        System::printf(System::Color::success,
-                       "Added version `%s` to `%s`%s.\n",
-                       version.to_string(),
-                       fs::u8string(baseline_path),
-                       is_new_file ? " (new file)" : "");
+        if (print_success)
+        {
+            System::printf(System::Color::success,
+                           "Added version `%s` to `%s`%s.\n",
+                           version.to_string(),
+                           fs::u8string(baseline_path),
+                           is_new_file ? " (new file)" : "");
+        }
         return;
     }
 
@@ -162,17 +171,21 @@ namespace
                                 const VersionT& version,
                                 const std::string& git_tree,
                                 const fs::path& version_db_file_path,
-                                bool overwrite_version)
+                                bool overwrite_version,
+                                bool print_success)
     {
         auto& fs = paths.get_filesystem();
         if (!fs.exists(VCPKG_LINE_INFO, version_db_file_path))
         {
             std::vector<VersionGitTree> new_entry{{version, git_tree}};
             write_versions_file(fs, new_entry, version_db_file_path);
-            System::printf(System::Color::success,
-                           "Added version `%s` to `%s` (new file).\n",
-                           version.to_string(),
-                           fs::u8string(version_db_file_path));
+            if (print_success)
+            {
+                System::printf(System::Color::success,
+                               "Added version `%s` to `%s` (new file).\n",
+                               version.to_string(),
+                               fs::u8string(version_db_file_path));
+            }
             return;
         }
 
@@ -187,21 +200,24 @@ namespace
             {
                 if (found_same_sha->first == version)
                 {
-                    System::printf(System::Color::success,
-                                   "Version `%s` is already in `%s`\n",
-                                   version.to_string(),
-                                   fs::u8string(version_db_file_path));
+                    if (print_success)
+                    {
+                        System::printf(System::Color::success,
+                                       "Version `%s` is already in `%s`\n",
+                                       version.to_string(),
+                                       fs::u8string(version_db_file_path));
+                    }
                     return;
                 }
                 System::printf(System::Color::warning,
                                "Warning: Local port files SHA is the same as version `%s` in `%s`.\n"
                                "-- SHA: %s\n"
                                "-- Did you remember to commit your changes?\n"
-                               "No files were updated.\n",
+                               "***No files were updated.***\n",
                                found_same_sha->first.to_string(),
                                fs::u8string(version_db_file_path),
                                git_tree);
-                Checks::exit_fail(VCPKG_LINE_INFO);
+                return;
             }
 
             auto it = std::find_if(
@@ -212,17 +228,18 @@ namespace
                 if (!overwrite_version)
                 {
                     System::printf(System::Color::error,
-                                   "Error: Local changes detected but no changes to version or port version.\n"
+                                   "Error: Local changes detected for %s but no changes to version or port version.\n"
                                    "-- Version: %s\n"
                                    "-- Old SHA: %s\n"
                                    "-- New SHA: %s\n"
                                    "-- Did you remember to update the version or port version?\n"
-                                   "No files were updated.\n"
-                                   "Pass `--overwrite-version` to bypass this check.\n",
+                                   "-- Pass `--overwrite-version` to bypass this check.\n"
+                                   "***No files were updated.***\n",
+                                   port_name,
                                    version.to_string(),
                                    it->second,
                                    git_tree);
-                    Checks::exit_fail(VCPKG_LINE_INFO);
+                    return;
                 }
 
                 it->first = version;
@@ -234,10 +251,13 @@ namespace
             }
 
             write_versions_file(fs, *versions, version_db_file_path);
-            System::printf(System::Color::success,
-                           "Added version `%s` to `%s`.\n",
-                           version.to_string(),
-                           fs::u8string(version_db_file_path));
+            if (print_success)
+            {
+                System::printf(System::Color::success,
+                               "Added version `%s` to `%s`.\n",
+                               version.to_string(),
+                               fs::u8string(version_db_file_path));
+            }
             return;
         }
 
@@ -253,10 +273,12 @@ namespace vcpkg::Commands::AddVersion
 {
     static constexpr StringLiteral OPTION_ALL = "all";
     static constexpr StringLiteral OPTION_OVERWRITE_VERSION = "overwrite-version";
+    static constexpr StringLiteral OPTION_VERBOSE = "verbose";
 
     const CommandSwitch COMMAND_SWITCHES[] = {
         {OPTION_ALL, "Process versions for all ports."},
         {OPTION_OVERWRITE_VERSION, "Overwrite `git-tree` of an existing version."},
+        {OPTION_VERBOSE, "Print success messages instead of just errors."},
     };
 
     const CommandStructure COMMAND_STRUCTURE{
@@ -272,6 +294,7 @@ namespace vcpkg::Commands::AddVersion
         auto parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
         const bool add_all = Util::Sets::contains(parsed_args.switches, OPTION_ALL);
         const bool overwrite_version = Util::Sets::contains(parsed_args.switches, OPTION_OVERWRITE_VERSION);
+        const bool verbose = Util::Sets::contains(parsed_args.switches, OPTION_VERBOSE);
 
         auto& fs = paths.get_filesystem();
         auto baseline_path = paths.builtin_port_versions / fs::u8path("baseline.json");
@@ -328,7 +351,7 @@ namespace vcpkg::Commands::AddVersion
                 System::printf(System::Color::warning,
                                "Warning: No local Git SHA was found for port `%s`.\n"
                                "-- Did you remember to commit your changes?\n"
-                               "No files were updated.\n",
+                               "***No files were updated.***\n",
                                port_name);
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
@@ -336,8 +359,9 @@ namespace vcpkg::Commands::AddVersion
 
             auto port_versions_path =
                 paths.builtin_port_versions / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
-            update_version_db_file(paths, port_name, versiont, git_tree, port_versions_path, overwrite_version);
-            update_baseline_version(paths, port_name, versiont, baseline_path);
+            update_version_db_file(
+                paths, port_name, versiont, git_tree, port_versions_path, overwrite_version, verbose);
+            update_baseline_version(paths, port_name, versiont, baseline_path, verbose);
         }
         Checks::exit_success(VCPKG_LINE_INFO);
     }
