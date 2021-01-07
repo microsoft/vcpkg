@@ -9,6 +9,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH <SOURCE_PATH>
     URL <https://android.googlesource.com/platform/external/fdlibm>
     REF <59f7335e4d...>
+    [TAG <v1.0.2>]
     [PATCHES <patch1.patch> <patch2.patch>...]
 )
 ```
@@ -104,12 +105,12 @@ function(vcpkg_from_git)
         message(FATAL_ERROR "unable to determine FETCH_HEAD after fetching git repository")
     endif()
     string(REGEX REPLACE "\n$" "" REV_PARSE_HEAD "${REV_PARSE_HEAD}")
-    if(NOT REV_PARSE_HEAD STREQUAL _vdud_REF AND NOT DEFINED _vdud_OUT_REF)
+    if(NOT REV_PARSE_HEAD STREQUAL _vdud_REF AND NOT DEFINED _vdud_X_OUT_REF)
         message(STATUS "[Expected : ( ${_vdud_REF} )]")
         message(STATUS "[  Actual : ( ${REV_PARSE_HEAD} )]")
         message(FATAL_ERROR "REF (${_vdud_REF}) does not match FETCH_HEAD (${REV_PARSE_HEAD})")
-    elseif(DEFINED _vdud_OUT_REF)
-        set(${_vdud_OUT_REF} ${REV_PARSE_HEAD} PARENT_SCOPE)
+    elseif(DEFINED _vdud_X_OUT_REF)
+        set(${_vdud_X_OUT_REF} ${REV_PARSE_HEAD} PARENT_SCOPE)
         return()
     endif()
 
