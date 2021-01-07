@@ -633,7 +633,7 @@ function(vcpkg_configure_make)
 
         if(_csc_COPY_SOURCE)
             include(vcpkg_copy_source)
-            vcpkg_copy_source(${SRC_DIR} ${TAR_DIR})
+            vcpkg_copy_source(SOURCE_PATH ${SRC_DIR} DEST_PATH ${TAR_DIR})
             set(RELATIVE_BUILD_PATH .)
         endif()
 

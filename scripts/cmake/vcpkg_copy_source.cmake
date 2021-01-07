@@ -26,7 +26,7 @@ function(vcpkg_copy_source)
     cmake_parse_arguments(PARSE_ARGV 0 _vcs "CLEAN_BEFORE_BUILD" "SOURCE_PATH;DEST_PATH" "")
 
     set(TAR_DIR "${CURRENT_BUILDTREES_DIR}/${_vcs_DEST_PATH}")
-    if (NOT EXISTS "TAR_DIR${TAR_DIR}")
+    if (NOT EXISTS "${TAR_DIR}")
         file(MAKE_DIRECTORY "${TAR_DIR}")
     endif()
     
