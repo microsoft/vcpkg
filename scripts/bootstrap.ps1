@@ -414,7 +414,7 @@ Write-Host "`nBuilding vcpkg.exe... done.`n"
 
 if ($disableMetrics)
 {
-    Set-Content -Value "" -Path "$vcpkgRootDir\vcpkg.exe.disable-metrics" -Force
+    Set-Content -Value "" -Path "$vcpkgRootDir\vcpkg.disable-metrics" -Force
 }
 else
 {

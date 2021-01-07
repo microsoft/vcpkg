@@ -1,12 +1,7 @@
 . $PSScriptRoot/../end-to-end-tests-prelude.ps1
 
 # Test that metrics are on by default
-if ($IsWindows) {
-    $metricsTagName = 'vcpkg.exe.disable-metrics'
-} else {
-    $metricsTagName = 'vcpkg.disable-metrics'
-}
-
+$metricsTagName = 'vcpkg.disable-metrics'
 $metricsAreDisabledMessage = 'Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.'
 
 function Test-Metrics-Enabled() {

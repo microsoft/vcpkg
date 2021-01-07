@@ -238,8 +238,8 @@ int main(const int argc, const char* const* const argv)
             metrics->set_disabled(*p);
         }
 
-        auto disable_metrics_tag_file_path = System::get_exe_path_of_current_process();
-        disable_metrics_tag_file_path += fs::u8path(".disable-metrics");
+        auto disable_metrics_tag_file_path =
+            System::get_exe_path_of_current_process().replace_filename(fs::u8path(".disable-metrics"));
         std::error_code ec;
         if (fs.exists(disable_metrics_tag_file_path, ec) || ec)
         {
