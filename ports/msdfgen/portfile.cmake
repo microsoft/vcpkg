@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 6b1dadd386aedf1e2de927dc83fe1f7fd7e053b0e9829ea0609a193ab8d9f92ecf08d2a6225b76a4f7bf9344b2935f38bbd00c4cc0c6627c1d95f67d2db728fe
     HEAD_REF master
     PATCHES
-        remove_pragma.patch
+        compatibility.patch
 )
 
 vcpkg_configure_cmake(
@@ -21,8 +21,10 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/msdfgen)
 
 # move exe to tools
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_copy_tools(TOOL_NAMES msdfgen AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES msdfgen-standalone AUTO_CLEAN)
+    file(INSTALL ${CURRENT_PACKAGES_DIR}/tools/${PORT}/msdfgen-standalone${VCPKG_TARGET_EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT} RENAME msdfgen${VCPKG_TARGET_EXECUTABLE_SUFFIX})
 endif()
+
 
 # cleanup
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
