@@ -13,33 +13,9 @@
 
 using namespace vcpkg;
 
-namespace vcpkg::Commands::AddVersion
+namespace
 {
-    struct VersionDbEntry : VersionT
-    {
-        std::string git_tree;
-
-        VersionDbEntry(VersionT version_, std::string git_tree_)
-            : VersionT(version_.text(), version_.port_version()), git_tree(git_tree_)
-        {
-        }
-    };
-
-    static constexpr StringLiteral OPTION_ALL = "all";
-    static constexpr StringLiteral OPTION_OVERWRITE_VERSION = "overwrite-version";
-
-    const CommandSwitch COMMAND_SWITCHES[] = {
-        {OPTION_ALL, "Process versions for all ports."},
-        {OPTION_OVERWRITE_VERSION, "Overwrite `git-tree` of an existing version."},
-    };
-
-    const CommandStructure COMMAND_STRUCTURE{
-        create_example_string(R"###(x-add-version <port name>)###"),
-        0,
-        1,
-        {{COMMAND_SWITCHES}, {}, {}},
-        nullptr,
-    };
+    using VersionGitTree = std::pair<VersionT, std::string>;
 
     void insert_version_to_json_object(Json::Object& obj, const VersionT& version)
     {
@@ -62,14 +38,14 @@ namespace vcpkg::Commands::AddVersion
         return baseline_obj;
     }
 
-    Json::Object serialize_versions(const std::vector<VersionDbEntry>& versions)
+    Json::Object serialize_versions(const std::vector<VersionGitTree>& versions)
     {
         Json::Array versions_array;
         for (auto&& version : versions)
         {
             Json::Object version_obj;
-            version_obj.insert("git-tree", Json::Value::string(version.git_tree));
-            insert_version_to_json_object(version_obj, version);
+            version_obj.insert("git-tree", Json::Value::string(version.second));
+            insert_version_to_json_object(version_obj, version.first);
             versions_array.push_back(std::move(version_obj));
         }
 
@@ -108,7 +84,7 @@ namespace vcpkg::Commands::AddVersion
     }
 
     void write_versions_file(Files::Filesystem& fs,
-                             const std::vector<VersionDbEntry>& versions,
+                             const std::vector<VersionGitTree>& versions,
                              const fs::path& output_path)
     {
         auto backup_path = fs::u8path(Strings::concat(fs::u8string(output_path), ".backup"));
@@ -191,7 +167,7 @@ namespace vcpkg::Commands::AddVersion
         auto& fs = paths.get_filesystem();
         if (!fs.exists(VCPKG_LINE_INFO, version_db_file_path))
         {
-            std::vector<VersionDbEntry> new_entry{{version, git_tree}};
+            std::vector<VersionGitTree> new_entry{{version, git_tree}};
             write_versions_file(fs, new_entry, version_db_file_path);
             System::printf(System::Color::success,
                            "Added version `%s` to `%s` (new file).\n",
@@ -257,11 +233,7 @@ namespace vcpkg::Commands::AddVersion
                 versions->insert(versions->begin(), std::make_pair(version, git_tree));
             }
 
-            auto version_as_db_entries = Util::fmap(*versions, [](auto&& entry) -> VersionDbEntry {
-                return {entry.first, entry.second};
-            });
-
-            write_versions_file(fs, version_as_db_entries, version_db_file_path);
+            write_versions_file(fs, *versions, version_db_file_path);
             System::printf(System::Color::success,
                            "Added version `%s` to `%s`.\n",
                            version.to_string(),
@@ -275,6 +247,25 @@ namespace vcpkg::Commands::AddVersion
                        maybe_versions.error());
         Checks::exit_fail(VCPKG_LINE_INFO);
     }
+}
+
+namespace vcpkg::Commands::AddVersion
+{
+    static constexpr StringLiteral OPTION_ALL = "all";
+    static constexpr StringLiteral OPTION_OVERWRITE_VERSION = "overwrite-version";
+
+    const CommandSwitch COMMAND_SWITCHES[] = {
+        {OPTION_ALL, "Process versions for all ports."},
+        {OPTION_OVERWRITE_VERSION, "Overwrite `git-tree` of an existing version."},
+    };
+
+    const CommandStructure COMMAND_STRUCTURE{
+        create_example_string(R"###(x-add-version <port name>)###"),
+        0,
+        1,
+        {{COMMAND_SWITCHES}, {}, {}},
+        nullptr,
+    };
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
