@@ -369,7 +369,7 @@ else
 }
 
 $arguments = (
-"`"/p:VCPKG_VERSION=-nohash`"",
+"`"/p:VCPKG_VERSION=-unknownhash`"",
 "/p:Configuration=Release",
 "/p:Platform=$platform",
 "/p:PlatformToolset=$platformToolset",

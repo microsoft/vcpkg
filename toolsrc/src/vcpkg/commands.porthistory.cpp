@@ -58,44 +58,6 @@ namespace vcpkg::Commands::PortHistory
             return std::regex_match(version_string, re);
         }
 
-        std::pair<std::string, int> clean_version_string(const std::string& version_string,
-                                                         int port_version,
-                                                         bool from_manifest)
-        {
-            // Manifest files and ports that use the `Port-Version` field are assumed to have a clean version string
-            // already.
-            if (from_manifest || port_version > 0)
-            {
-                return std::make_pair(version_string, port_version);
-            }
-
-            std::string clean_version = version_string;
-            int clean_port_version = 0;
-
-            const auto index = version_string.find_last_of('-');
-            if (index != std::string::npos)
-            {
-                // Very lazy check to keep date versions untouched
-                if (!is_date(version_string))
-                {
-                    auto maybe_port_version = version_string.substr(index + 1);
-                    clean_version.resize(index);
-
-                    try
-                    {
-                        clean_port_version = std::stoi(maybe_port_version);
-                    }
-                    catch (std::exception&)
-                    {
-                        // If not convertible to int consider last fragment as part of version string
-                        clean_version = version_string;
-                    }
-                }
-            }
-
-            return std::make_pair(clean_version, clean_port_version);
-        }
-
         vcpkg::Optional<HistoryVersion> get_version_from_text(const std::string& text,
                                                               const std::string& git_tree,
                                                               const std::string& commit_id,
@@ -108,20 +70,17 @@ namespace vcpkg::Commands::PortHistory
             {
                 if (const auto& scf = maybe_scf->get())
                 {
-                    // TODO: Get clean version name and port version
-                    const auto version_string = scf->core_paragraph->version;
-                    const auto clean_version =
-                        clean_version_string(version_string, scf->core_paragraph->port_version, is_manifest);
-
-                    // SCF to HistoryVersion
+                    auto version = scf->core_paragraph->version;
+                    auto port_version = scf->core_paragraph->port_version;
                     return HistoryVersion{
                         port_name,
                         git_tree,
                         commit_id,
                         commit_date,
-                        Strings::concat(clean_version.first, "#", std::to_string(clean_version.second)),
-                        clean_version.first,
-                        clean_version.second};
+                        Strings::concat(version, "#", port_version),
+                        version,
+                        port_version,
+                    };
                 }
             }
 
@@ -197,29 +156,37 @@ namespace vcpkg::Commands::PortHistory
                         ret.emplace_back(version);
                     }
                 }
-                // NOTE: Uncomment this code if you're looking for edge cases to patch in the generation.
-                //       Otherwise, x-history simply skips "bad" versions, which is OK behavior.
-                // else
-                //{
-                //    Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to get version from %s:%s",
-                //    commit_date_pair.first, port_name);
-                //}
             }
             return ret;
         }
     }
 
+    static constexpr StringLiteral OPTION_OUTPUT_FILE = "output";
+
+    static const CommandSetting HISTORY_SETTINGS[] = {
+        {OPTION_OUTPUT_FILE, "Write output to a file"},
+    };
+
     const CommandStructure COMMAND_STRUCTURE = {
         create_example_string("history <port>"),
         1,
         1,
-        {},
+        {{}, {HISTORY_SETTINGS}, {}},
         nullptr,
     };
 
+    static Optional<std::string> maybe_lookup(std::unordered_map<std::string, std::string> const& m,
+                                              std::string const& key)
+    {
+        const auto it = m.find(key);
+        if (it != m.end()) return it->second;
+        return nullopt;
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
+        const ParsedArguments parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
+        auto maybe_output_file = maybe_lookup(parsed_args.settings, OPTION_OUTPUT_FILE);
 
         std::string port_name = args.command_arguments.at(0);
         std::vector<HistoryVersion> versions = read_versions_from_log(paths, port_name);
@@ -241,10 +208,26 @@ namespace vcpkg::Commands::PortHistory
             root.insert("versions", versions_json);
 
             auto json_string = Json::stringify(root, vcpkg::Json::JsonStyle::with_spaces(2));
-            System::printf("%s\n", json_string);
+
+            if (maybe_output_file.has_value())
+            {
+                auto output_file_path = fs::u8path(maybe_output_file.value_or_exit(VCPKG_LINE_INFO));
+                auto& fs = paths.get_filesystem();
+                fs.write_contents(output_file_path, json_string, VCPKG_LINE_INFO);
+            }
+            else
+            {
+                System::printf("%s\n", json_string);
+            }
         }
         else
         {
+            if (maybe_output_file.has_value())
+            {
+                System::printf(
+                    System::Color::warning, "Warning: Option `--$s` requires `--x-json` switch.", OPTION_OUTPUT_FILE);
+            }
+
             System::print2("             version          date    vcpkg commit\n");
             for (auto&& version : versions)
             {
