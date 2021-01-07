@@ -22,6 +22,12 @@
     "zlib"
   ],
   "features": {
+    "curl": {
+      "description": "curl for poppler",
+      "dependencies": [
+        "curl"
+      ]
+    },
     "zlib": {
       "description": "zlib for poppler",
       "dependencies": [
