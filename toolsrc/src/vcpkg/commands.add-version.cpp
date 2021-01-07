@@ -23,7 +23,7 @@ namespace
         obj.insert("port-version", Json::Value::integer(version.port_version()));
     }
 
-    Json::Object serialize_baseline(const std::map<std::string, VersionT, std::less<>>& baseline)
+    static Json::Object serialize_baseline(const std::map<std::string, VersionT, std::less<>>& baseline)
     {
         Json::Object port_entries_obj;
         for (auto&& kv_pair : baseline)
@@ -38,7 +38,7 @@ namespace
         return baseline_obj;
     }
 
-    Json::Object serialize_versions(const std::vector<VersionGitTree>& versions)
+    static Json::Object serialize_versions(const std::vector<VersionGitTree>& versions)
     {
         Json::Array versions_array;
         for (auto&& version : versions)
@@ -54,9 +54,9 @@ namespace
         return output_object;
     }
 
-    void write_baseline_file(Files::Filesystem& fs,
-                             const std::map<std::string, VersionT, std::less<>>& baseline_map,
-                             const fs::path& output_path)
+    static void write_baseline_file(Files::Filesystem& fs,
+                                    const std::map<std::string, VersionT, std::less<>>& baseline_map,
+                                    const fs::path& output_path)
     {
         auto backup_path = fs::u8path(Strings::concat(fs::u8string(output_path), ".backup"));
         if (fs.exists(output_path))
@@ -83,9 +83,9 @@ namespace
         }
     }
 
-    void write_versions_file(Files::Filesystem& fs,
-                             const std::vector<VersionGitTree>& versions,
-                             const fs::path& output_path)
+    static void write_versions_file(Files::Filesystem& fs,
+                                    const std::vector<VersionGitTree>& versions,
+                                    const fs::path& output_path)
     {
         auto backup_path = fs::u8path(Strings::concat(fs::u8string(output_path), ".backup"));
         if (fs.exists(output_path))
@@ -113,11 +113,11 @@ namespace
         }
     }
 
-    void update_baseline_version(const VcpkgPaths& paths,
-                                 const std::string& port_name,
-                                 const VersionT& version,
-                                 const fs::path& baseline_path,
-                                 bool print_success)
+    static void update_baseline_version(const VcpkgPaths& paths,
+                                        const std::string& port_name,
+                                        const VersionT& version,
+                                        const fs::path& baseline_path,
+                                        bool print_success)
     {
         bool is_new_file = false;
         auto& fs = paths.get_filesystem();
@@ -166,13 +166,13 @@ namespace
         return;
     }
 
-    void update_version_db_file(const VcpkgPaths& paths,
-                                const std::string& port_name,
-                                const VersionT& version,
-                                const std::string& git_tree,
-                                const fs::path& version_db_file_path,
-                                bool overwrite_version,
-                                bool print_success)
+    static void update_version_db_file(const VcpkgPaths& paths,
+                                       const std::string& port_name,
+                                       const VersionT& version,
+                                       const std::string& git_tree,
+                                       const fs::path& version_db_file_path,
+                                       bool overwrite_version,
+                                       bool print_success)
     {
         auto& fs = paths.get_filesystem();
         if (!fs.exists(VCPKG_LINE_INFO, version_db_file_path))

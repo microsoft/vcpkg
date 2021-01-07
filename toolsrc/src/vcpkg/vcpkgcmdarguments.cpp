@@ -631,7 +631,7 @@ namespace vcpkg
         table.format(opt(BUILTIN_PORTS_ROOT_DIR_ARG, "=", "<path>"),
                      "(Experimental) Specify the packages root directory");
         table.format(opt(BUILTIN_PORT_VERSIONS_DIR_ARG, "=", "<path>"),
-                     "(Experimental) Specify the scripts root directory");
+                     "(Experimental) Specify the versions root directory");
         table.format(opt(JSON_SWITCH, "", ""), "(Experimental) Request JSON output");
     }
 

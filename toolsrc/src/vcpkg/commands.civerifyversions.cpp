@@ -40,13 +40,13 @@ namespace vcpkg::Commands::CIVerifyVersions
         nullptr,
     };
 
-    ExpectedS<std::string> verify_version_in_db(const VcpkgPaths& paths,
-                                                const PortFileProvider::PathsPortFileProvider& paths_provider,
-                                                const PortFileProvider::IBaselineProvider& baseline_provider,
-                                                const std::string& port_name,
-                                                const fs::path& versions_file_path,
-                                                const std::string& local_git_tree,
-                                                bool verify_git_trees)
+    static ExpectedS<std::string> verify_version_in_db(const VcpkgPaths& paths,
+                                                       const PortFileProvider::PathsPortFileProvider& paths_provider,
+                                                       const PortFileProvider::IBaselineProvider& baseline_provider,
+                                                       const std::string& port_name,
+                                                       const fs::path& versions_file_path,
+                                                       const std::string& local_git_tree,
+                                                       bool verify_git_trees)
     {
         auto maybe_versions = vcpkg::get_builtin_versions(paths, port_name);
         if (!maybe_versions.has_value())

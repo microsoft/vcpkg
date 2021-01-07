@@ -597,16 +597,6 @@ If you wish to silence this error and use classic mode, you can:
                 return Strings::format(
                     "Error: Unexepcted output from command `%s`. Couldn't split by ` `.\n%s", git_cmd, line);
 
-            auto find_port_name = [&](const std::string& str) -> std::string {
-                auto index = str.find("ports/");
-                if (index != std::string::npos)
-                {
-                    return str.substr(index + std::string("ports/").size());
-                }
-
-                return Strings::split(str, '/').back();
-            };
-
             const auto index = split_line[1].find_last_of('/');
             if (index == std::string::npos)
             {
