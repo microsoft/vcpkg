@@ -11,7 +11,6 @@ PORTS_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../ports')
 VERSIONS_DB_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../port_versions')
 
 
-
 def generate_baseline():
     start_time = time.time()
 

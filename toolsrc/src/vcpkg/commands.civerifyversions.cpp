@@ -160,6 +160,20 @@ namespace vcpkg::Commands::CIVerifyVersions
             }
         }
 
+        if (local_git_tree != top_entry.second)
+        {
+            return {
+                Strings::format("Error: Git tree-ish object for version `%s` in `%s` does not match local port files.\n"
+                                "\tLocal SHA: %s\n"
+                                "\t File SHA: %s",
+                                found_version,
+                                fs::u8string(versions_file_path),
+                                local_git_tree,
+                                top_entry.second),
+                expected_right_tag,
+            };
+        }
+
         auto maybe_baseline_version = baseline_provider.get_baseline_version(port_name);
         if (!maybe_baseline_version.has_value())
         {
