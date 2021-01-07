@@ -15,7 +15,6 @@ vcpkg_configure_make(
     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
     [ADD_BIN_TO_PATH]
     [NO_DEBUG]
-    [SKIP_CONFIGURE]
     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
     [PRERUN_SHELL <${SHELL_PATH}>]
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
@@ -32,9 +31,6 @@ By convention, this is usually set in the portfile as the variable `SOURCE_PATH`
 ### PROJECT_SUBPATH
 Specifies the directory containing the ``configure`/`configure.ac`.
 By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-
-### SKIP_CONFIGURE
-Skip configure process
 
 ### USE_WRAPPERS
 Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)

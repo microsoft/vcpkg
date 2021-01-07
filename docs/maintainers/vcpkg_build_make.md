@@ -5,6 +5,7 @@ Build a linux makefile project.
 ## Usage:
 ```cmake
 vcpkg_build_make([BUILD_TARGET <target>]
+                 [SOURCE_PATH <${SOURCE_PATH}>]
                  [ADD_BIN_TO_PATH]
                  [ENABLE_INSTALL]
                  [MAKEFILE <makefileName>]

@@ -24,6 +24,7 @@
 - [vcpkg\_configure\_meson](vcpkg_configure_meson.md)
 - [vcpkg\_configure\_qmake](vcpkg_configure_qmake.md)
 - [vcpkg\_copy\_pdbs](vcpkg_copy_pdbs.md)
+- [vcpkg\_copy\_source](vcpkg_copy_source.md)
 - [vcpkg\_copy\_tool\_dependencies](vcpkg_copy_tool_dependencies.md)
 - [vcpkg\_copy\_tools](vcpkg_copy_tools.md)
 - [vcpkg\_download\_distfile](vcpkg_download_distfile.md)
