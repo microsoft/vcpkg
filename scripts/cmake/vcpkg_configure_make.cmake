@@ -16,7 +16,6 @@ vcpkg_configure_make(
     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
     [ADD_BIN_TO_PATH]
     [NO_DEBUG]
-    [SKIP_CONFIGURE]
     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
     [PRERUN_SHELL <${SHELL_PATH}>]
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
@@ -33,9 +32,6 @@ By convention, this is usually set in the portfile as the variable `SOURCE_PATH`
 ### PROJECT_SUBPATH
 Specifies the directory containing the ``configure`/`configure.ac`.
 By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-
-### SKIP_CONFIGURE
-Skip configure process
 
 ### USE_WRAPPERS
 Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
@@ -207,7 +203,7 @@ endmacro()
 function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _csc
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
+        "AUTOCONFIG;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
@@ -229,7 +225,6 @@ function(vcpkg_configure_make)
             file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts
             set(_csc_AUTOCONFIG ON)
         endif()
-    elseif(EXISTS "${SRC_DIR}/configure" AND NOT _csc_SKIP_CONFIGURE) # run normally; no autoconf or autgen required
     elseif(EXISTS "${SRC_DIR}/configure.ac") # Run autoconfig
         set(REQUIRES_AUTOCONFIG TRUE)
         set(_csc_AUTOCONFIG ON)
@@ -675,25 +670,23 @@ function(vcpkg_configure_make)
             vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_buildtype}}/bin")
         endif()
         debug_message("Configure command:'${command}'")
-        if (NOT _csc_SKIP_CONFIGURE)
-            message(STATUS "Configuring ${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}")
-            vcpkg_execute_required_process(
-                COMMAND ${command}
-                WORKING_DIRECTORY "${TAR_DIR}"
-                LOGNAME config-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}
-            )
-            if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-                file(GLOB_RECURSE LIBTOOL_FILES "${TAR_DIR}*/libtool")
-                foreach(lt_file IN LISTS LIBTOOL_FILES)
-                    file(READ "${lt_file}" _contents)
-                    string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
-                    file(WRITE "${lt_file}" "${_contents}")
-                endforeach()
-            endif()
-            
-            if(EXISTS "${TAR_DIR}/config.log")
-                file(RENAME "${TAR_DIR}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}.log")
-            endif()
+        message(STATUS "Configuring ${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}")
+        vcpkg_execute_required_process(
+            COMMAND ${command}
+            WORKING_DIRECTORY "${TAR_DIR}"
+            LOGNAME config-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}
+        )
+        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            file(GLOB_RECURSE LIBTOOL_FILES "${TAR_DIR}*/libtool")
+            foreach(lt_file IN LISTS LIBTOOL_FILES)
+                file(READ "${lt_file}" _contents)
+                string(REPLACE ".dll.lib" ".lib" _contents "${_contents}")
+                file(WRITE "${lt_file}" "${_contents}")
+            endforeach()
+        endif()
+        
+        if(EXISTS "${TAR_DIR}/config.log")
+            file(RENAME "${TAR_DIR}/config.log" "${CURRENT_BUILDTREES_DIR}/config.log-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}.log")
         endif()
 
         if(BACKUP_ENV_PKG_CONFIG_PATH_${_buildtype})
