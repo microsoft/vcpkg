@@ -276,6 +276,8 @@ namespace vcpkg
                     {INSTALL_ROOT_DIR_ARG, &VcpkgCmdArguments::install_root_dir},
                     {PACKAGES_ROOT_DIR_ARG, &VcpkgCmdArguments::packages_root_dir},
                     {SCRIPTS_ROOT_DIR_ARG, &VcpkgCmdArguments::scripts_root_dir},
+                    {BUILTIN_PORTS_ROOT_DIR_ARG, &VcpkgCmdArguments::builtin_ports_root_dir},
+                    {BUILTIN_PORT_VERSIONS_DIR_ARG, &VcpkgCmdArguments::builtin_port_versions_dir},
                 };
 
             constexpr static std::pair<StringView, std::vector<std::string> VcpkgCmdArguments::*>
@@ -913,6 +915,7 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::INSTALL_ROOT_DIR_ARG;
     constexpr StringLiteral VcpkgCmdArguments::PACKAGES_ROOT_DIR_ARG;
     constexpr StringLiteral VcpkgCmdArguments::SCRIPTS_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::BUILTIN_PORTS_ROOT_DIR_ARG;
 
     constexpr StringLiteral VcpkgCmdArguments::DEFAULT_VISUAL_STUDIO_PATH_ENV;
 
