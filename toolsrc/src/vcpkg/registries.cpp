@@ -440,8 +440,9 @@ namespace
         auto& name = scfl->source_control_file->core_paragraph->name;
         return Strings::format(
             "Error: no version entry for %s at version %s.\n"
-            "We are currently using the version in the ports tree, since no %s.json was found in port_versions.",
+            "We are currently using the version in the ports tree (%s), since no %s.json was found in port_versions.",
             name,
+            version.to_string(),
             scfl->to_versiont().to_string(),
             name);
     }
@@ -929,7 +930,7 @@ namespace vcpkg
             System::print2(System::Color::warning,
                            "Warning: when using the registries feature, one should not use `\"$x-default-baseline\"` "
                            "to set the baseline.\n",
-                           "    Instead, use the \"baseline\" field of the registry.");
+                           "    Instead, use the \"baseline\" field of the registry.\n");
         }
 
         for (auto& reg : registries_)
