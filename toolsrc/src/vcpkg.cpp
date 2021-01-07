@@ -239,7 +239,7 @@ int main(const int argc, const char* const* const argv)
         }
 
         auto disable_metrics_tag_file_path =
-            System::get_exe_path_of_current_process().replace_filename(fs::u8path(".disable-metrics"));
+            System::get_exe_path_of_current_process().replace_filename(fs::u8path("vcpkg.disable-metrics"));
         std::error_code ec;
         if (fs.exists(disable_metrics_tag_file_path, ec) || ec)
         {
