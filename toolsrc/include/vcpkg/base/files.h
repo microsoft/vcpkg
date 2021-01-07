@@ -48,14 +48,10 @@ namespace fs
     inline path u8path(std::initializer_list<char> il) { return u8path(vcpkg::StringView{il.begin(), il.end()}); }
     inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
 
-    // this allows us to support implementations where std::is_same_v<std::string::const_iterator, const char*>
-    // otherwise, this would collide with u8path(const char*, const char*)
-    template <class T, class = std::enable_if_t<std::is_convertible_v<T, std::string::const_iterator>>>
-    inline path u8path(T first, T last)
+    inline path u8path(std::string::const_iterator first, std::string::const_iterator last)
     {
-        std::string::const_iterator first_it = first, last_it = last;
-        auto firstp = &*first_it;
-        return u8path(vcpkg::StringView{firstp, firstp + (last_it - first_it)});
+        auto firstp = &*first;
+        return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
     }
 
     std::string u8string(const path& p);
