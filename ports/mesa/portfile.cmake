@@ -76,7 +76,6 @@ endif()
 
 # For features https://github.com/pal1000/mesa-dist-win should be probably studied a bit more. 
 #string(APPEND GALLIUM_DRIVERS 'auto')
-list(APPEND MESA_OPTIONS -Dopengl=true)
 list(APPEND MESA_OPTIONS -Dzstd=enabled)
 list(APPEND MESA_OPTIONS -Dshared-llvm=auto)
 list(APPEND MESA_OPTIONS -Dlibunwind=disabled)
@@ -106,21 +105,18 @@ else()
 endif()
 
 list(APPEND MESA_OPTIONS -Dgallium-drivers=[${GALLIUM_DRIVERS}])
-set(GL_FEATURES)
+
 if("gles1" IN_LIST FEATURES)
     list(APPEND MESA_OPTIONS -Dgles1=enabled)
-    list(APPEND GL_FEATURES gles1)
 else()
     list(APPEND MESA_OPTIONS -Dgles1=disabled)
 endif()
 if("gles2" IN_LIST FEATURES)
-    list(APPEND GL_FEATURES gles2)
     list(APPEND MESA_OPTIONS -Dgles2=enabled)
 else()
     list(APPEND MESA_OPTIONS -Dgles2=disabled)
 endif()
 if("opengl" IN_LIST FEATURES)
-    list(APPEND GL_FEATURES opengl)
     list(APPEND MESA_OPTIONS -Dopengl=true)
 else()
     list(APPEND MESA_OPTIONS -Dopengl=false)
@@ -131,15 +127,7 @@ else()
     list(APPEND MESA_OPTIONS -Degl=disabled)
 endif()
 
-if("shared-glapi" IN_LIST FEATURES)
-    list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
-else()
-    list(LENGTH GL_FEATURES NUMBER_GL_FEATURES)
-    if(NUMBER_GL_FEATURES GREATER 1)
-        message(FATAL_ERROR "Building more than one GL API requires a shared GL API!")
-    endif()
-    list(APPEND MESA_OPTIONS -Dshared-glapi=disabled)
-endif()
+list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when building two or more of the following APIs - opengl, gles1 gles2
 
 
 if(VCPKG_TARGET_IS_WINDOWS)
