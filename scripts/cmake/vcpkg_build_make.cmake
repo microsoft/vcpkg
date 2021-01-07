@@ -6,6 +6,7 @@ Build a linux makefile project.
 ## Usage:
 ```cmake
 vcpkg_build_make([BUILD_TARGET <target>]
+                 [SOURCE_PATH <${SOURCE_PATH}>]
                  [ADD_BIN_TO_PATH]
                  [ENABLE_INSTALL]
                  [MAKEFILE <makefileName>]
@@ -58,7 +59,7 @@ function(vcpkg_build_make)
     include("${_VCPKG_CMAKE_VARS_FILE}")
 
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET" "")
+    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SOURCE_PATH;SUBPATH;MAKEFILE;INSTALL_TARGET" "")
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -140,6 +141,13 @@ function(vcpkg_build_make)
             endif()
 
             set(WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}${SHORT_BUILDTYPE}${_bc_SUBPATH}")
+            if (NOT EXISTS "${WORKING_DIRECTORY}")
+                if (NOT _bc_SOURCE_PATH)
+                    message(FATAL_ERROR "Please pass in 'SOURCE_PATH' when only calling 'vcpkg_build_make'")
+                endif()
+                include(vcpkg_copy_source)
+                vcpkg_copy_source(${_bc_SOURCE_PATH} ${WORKING_DIRECTORY})
+            endif()
             message(STATUS "Building ${TARGET_TRIPLET}${SHORT_BUILDTYPE}")
 
             _vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags(${CMAKE_BUILDTYPE})
