@@ -26,7 +26,7 @@ function(vcpkg_copy_tool_dependencies TOOL_DIR)
             message(FATAL_ERROR "Could not find PowerShell Core; please open an issue to report this.")
         endif()
         macro(search_for_dependencies PATH_TO_SEARCH)
-            file(GLOB TOOLS "${TOOL_DIR}/*.exe" "${TOOL_DIR}/*.dll")
+            file(GLOB TOOLS "${TOOL_DIR}/*.exe" "${TOOL_DIR}/*.dll" "${TOOL_DIR}/*.pyd")
             foreach(TOOL IN LISTS TOOLS)
                 vcpkg_execute_required_process(
                     COMMAND "${PWSH_EXE}" -noprofile -executionpolicy Bypass -nologo

@@ -16,6 +16,7 @@ namespace vcpkg::Parse
     {
         virtual ~IParseError() = default;
         virtual std::string format() const = 0;
+        virtual const std::string& get_message() const = 0;
     };
 
     struct ParseError : IParseError
@@ -38,6 +39,7 @@ namespace vcpkg::Parse
         const std::string message;
 
         virtual std::string format() const override;
+        virtual const std::string& get_message() const override;
     };
 
     struct ParserBase

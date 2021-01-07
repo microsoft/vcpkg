@@ -30,6 +30,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${FEATURE_OPTIONS}
 )
 

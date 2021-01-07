@@ -74,7 +74,7 @@ vcpkgCheckRepoTool()
     __tool=$1
     if ! command -v "$__tool" >/dev/null 2>&1 ; then
         echo "Could not find $__tool. Please install it (and other dependencies) with:"
-        echo "sudo apt-get install curl unzip tar"
+        echo "sudo apt-get install curl zip unzip tar"
         exit 1
     fi
 }

@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.74.0",
+    $version = "1.75.0",
     $portsDir = $null
 )
 
@@ -25,7 +25,6 @@ else
 # Optionally clear this array when moving to a new boost version
 $port_versions = @{
     #e.g.  "asio" = 1;
-    "locale" = 1;
 }
 
 $per_port_data = @{
@@ -312,7 +311,7 @@ foreach ($library in $libraries)
             if ($_ -match "aligned_storage") { "type_traits" }
             elseif ($_ -match "noncopyable|ref|swap|get_pointer|checked_delete|visit_each") { "core" }
             elseif ($_ -eq "type") { "core" }
-            elseif ($_ -eq "concept") { "concept_check" }
+            elseif ($_ -match "concept|concept_archetype") { "concept_check" }
             elseif ($_ -match "unordered_") { "unordered" }
             elseif ($_ -match "cstdint|integer_fwd|integer_traits") { "integer" }
             elseif ($_ -match "call_traits|operators|current_function|cstdlib|next_prior|compressed_pair") { "utility" }
@@ -328,11 +327,11 @@ foreach ($library in $libraries)
             elseif ($_ -match "none|none_t") { "optional" }
             elseif ($_ -eq "limits") { "compatibility" }
             elseif ($_ -match "cstdfloat|math_fwd") { "math" }
-            elseif ($_ -eq "cast") { "conversion"; "numeric_conversion" } # DEPRECATED header file, includes <boost/polymorphic_cast.hpp> and <boost/numeric/conversion/cast.hpp> 
+            elseif ($_ -eq "cast") { "conversion"; "numeric_conversion" } # DEPRECATED header file, includes <boost/polymorphic_cast.hpp> and <boost/numeric/conversion/cast.hpp>
             elseif ($_ -match "polymorphic_cast|implicit_cast") { "conversion" }
             elseif ($_ -eq "nondet_random") { "random" }
             elseif ($_ -eq "memory_order") { "atomic" }
-            elseif ($_ -match "blank|blank_fwd|numeric_traits") { "detail" }
+            elseif ($_ -match "blank|blank_fwd|numeric_traits|fenv") { "detail" }
             elseif ($_ -match "is_placeholder|mem_fn") { "bind" }
             elseif ($_ -eq "exception_ptr") { "exception" }
             elseif ($_ -match "multi_index_container|multi_index_container_fwd") { "multi_index" }
@@ -373,7 +372,7 @@ foreach ($library in $libraries)
             -and `
             (($library -notmatch "throw_exception") -or ($_ -notmatch "^exception"))`
             -and `
-            (($library -notmatch "iostreams") -or ($_ -notmatch "random"))`
+            (($library -notmatch "iostreams|math") -or ($_ -notmatch "random"))`
             -and `
             (($library -notmatch "utility|concept_check") -or ($_ -notmatch "iterator"))
         } | % { $_ -replace "_","-" } | % {
@@ -400,7 +399,7 @@ foreach ($library in $libraries)
         }
         elseif ($library -eq "locale")
         {
-            $deps += @("libiconv (!uwp&!windows)", "boost-system")
+            $deps += @("libiconv (!uwp&!windows&!mingw)", "boost-system")
         }
         elseif ($library -eq "asio")
         {
