@@ -1,7 +1,7 @@
 include(${CURRENT_INSTALLED_DIR}/share/qt5/qt_port_functions.cmake)
 #qt_submodule_installation() No binary package for this port. 
 if(QT_UPDATE_VERSION)
-    set(UPDATE_PORT_GIT_OPTIONS OUT_REF NEW_REF) # TO get an SHA512 error if the variable is set. 
+    set(UPDATE_PORT_GIT_OPTIONS X_OUT_REF NEW_REF) # TO get an SHA512 error if the variable is set. 
 endif()
 
 vcpkg_from_git(
