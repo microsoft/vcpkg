@@ -151,21 +151,44 @@ message(STATUS "Copy libs done, copying additional header files!")
 # Copy additional header files
 # TODO: Make changes in ORT souce repo to put all training header files under top level include dir
 
-# 1. Copy missing external header files from build output folders. These are generaterd by build
+# 1. Copy header files from top level include directories
+# Todo: Investigate why these headers files are not copied by vcpkg 
+set(SRCBASEDIR "${SOURCE_PATH}/include/onnxruntime/core")
+set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/onnxruntime/core")
+foreach(MOD
+      platform/
+      graph/
+      session/
+      optimizer/
+      providers/
+      )
+  file(COPY
+    ${SRCBASEDIR}/${MOD}
+    DESTINATION ${DESTBASEDIR}/${MOD}
+    FOLLOW_SYMLINK_CHAIN
+    FILES_MATCHING
+    PATTERN "*.h"
+    PATTERN "*.hpp"
+    PATTERN ".inc"
+    )
+endforeach()
+
+# 2. Copy missing external header files from build output folders. These are generaterd by build
 # e.g. onnx-data.pb.h
 # Trailing '/' is significant. Without it copying 'mydir' folder would be installed under Destination.
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
   set(SRCBASEDIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/external")
   set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/onnxruntime/external")
   foreach(MOD onnx/onnx/)   # Placeholder to put more directories ,if needed!.
-    file(COPY ${SRCBASEDIR}/${MOD} DESTINATION ${DESTBASEDIR}/${MOD}/ FOLLOW_SYMLINK_CHAIN FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN ".inc")
+    file(COPY ${SRCBASEDIR}/${MOD} DESTINATION ${DESTBASEDIR}/${MOD} FOLLOW_SYMLINK_CHAIN FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN ".inc")
   endforeach() 
 endif()
 
-# 2. Copy header files from source core directories
+# 3. Copy header files from source core directories
 # Todo: Check if we need to copy this: core/providers/nuphar/compiler/x86/op_ir_creator/all_ops.h
 set(SRCBASEDIR "${SOURCE_PATH}/onnxruntime/core")
 set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/onnxruntime/core")
+set(MOD "")
 foreach(MOD 
       common/ 
       framework/
@@ -194,31 +217,10 @@ foreach(MOD
     )
 endforeach()
 
-# 3. Copy header files from top level include directories
-# Todo: Investigate why these headers files are not copied by vcpkg 
-set(SRCBASEDIR "${SOURCE_PATH}/include/onnxruntime/core/")
-set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/onnxruntime/core/")
-foreach(MOD
-      platform
-      graph
-      session
-      optimizer
-      providers
-      )
-  file(COPY
-    ${SRCBASEDIR}/${MOD}
-    DESTINATION ${DESTBASEDIR}/${MOD}
-    FOLLOW_SYMLINK_CHAIN
-    FILES_MATCHING
-    PATTERN "*.h"
-    PATTERN "*.hpp"
-    PATTERN ".inc"
-    )
-endforeach()
-
 # 4. Copy external header files from source folders
 set(SRCBASEDIR "${SOURCE_PATH}/cmake/external")
 set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/onnxruntime/external")
+set(MOD "")
 foreach(MOD 
       optional-lite/include/nonstd/
       optional-lite/test/
@@ -248,6 +250,7 @@ foreach(MOD
 endforeach()
 
 # Now copy files from folders that does need to be copied recursively
+set(MOD "")
 foreach(MOD 
     SafeInt/safeInt
     SafeInt/safeInt/Test
@@ -264,6 +267,7 @@ endforeach()
 # 4. Copy training header files from sources directories
 set(SRCBASEDIR "${SOURCE_PATH}/orttraining/orttraining")
 set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/orttraining")
+set(MOD "")
 foreach(MOD
       core/
       models/mnist/
@@ -278,7 +282,7 @@ foreach(MOD
     PATTERN "*.h" 
     PATTERN "*.hpp" 
     PATTERN ".inc"
-    PATTERN "rocm/activation" EXCLUDE
+    PATTERN "rocm/activation" EXCLUDE  # All these folders under training_ops do not have header files!
     PATTERN "rocm/collective" EXCLUDE
     PATTERN "rocm/loss" EXCLUDE
     PATTERN "rocm/math" EXCLUDE
@@ -290,6 +294,7 @@ endforeach()
 # 5. Copy Test header files from sources directories
 set(SRCBASEDIR "${SOURCE_PATH}/onnxruntime/test")
 set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/include/onnxruntime/test")
+set(MOD "")
 foreach(MOD 
       util/include/ 
       framework/
