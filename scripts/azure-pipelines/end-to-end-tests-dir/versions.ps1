@@ -45,11 +45,7 @@ Throw-IfFailed
 $CurrentTest = "x-add-version fish (must fail)"
 # Discrepancy between local SHA and SHA in fish.json. Requires --overwrite-version.
 $out = ./vcpkg $portsRedirectArgsIncomplete x-add-version fish
-if ($out -notmatch "Error: Local changes detected for fish but no changes to version or port version")
-{
-    $out 
-    throw "Expected to fail due to SHA discrepancy."
-}
+Throw-IfNotFailed
 $CurrentTest = "x-add-version fish --overwrite-version"
 ./vcpkg $portsRedirectArgsIncomplete x-add-version fish --overwrite-version
 Throw-IfFailed

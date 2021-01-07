@@ -173,7 +173,8 @@ namespace
                                        const std::string& git_tree,
                                        const fs::path& version_db_file_path,
                                        bool overwrite_version,
-                                       bool print_success)
+                                       bool print_success,
+                                       bool keep_going)
     {
         auto& fs = paths.get_filesystem();
         if (!fs.exists(VCPKG_LINE_INFO, version_db_file_path))
@@ -218,7 +219,8 @@ namespace
                                found_same_sha->first.to_string(),
                                fs::u8string(version_db_file_path),
                                git_tree);
-                return;
+                if (keep_going) return;
+                Checks::exit_fail(VCPKG_LINE_INFO);
             }
 
             auto it = std::find_if(
@@ -240,7 +242,8 @@ namespace
                                    version.to_string(),
                                    it->second,
                                    git_tree);
-                    return;
+                    if (keep_going) return;
+                    Checks::exit_fail(VCPKG_LINE_INFO);
                 }
 
                 it->first = version;
@@ -341,7 +344,13 @@ namespace vcpkg::Commands::AddVersion
         {
             // Get version information of the local port
             auto maybe_scf = Paragraphs::try_load_port(fs, paths.builtin_ports_directory() / fs::u8path(port_name));
-            Checks::check_exit(VCPKG_LINE_INFO, maybe_scf.has_value(), "Error: Couldn't load port `%s`.", port_name);
+            if (!maybe_scf.has_value())
+            {
+                if (add_all) continue;
+                System::printf(System::Color::error, "Error: Couldn't load port `%s`.", port_name);
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
             const auto& scf = maybe_scf.value_or_exit(VCPKG_LINE_INFO);
             const auto& versiont = scf->to_versiont();
 
@@ -353,6 +362,7 @@ namespace vcpkg::Commands::AddVersion
                                "-- Did you remember to commit your changes?\n"
                                "***No files were updated.***\n",
                                port_name);
+                if (add_all) continue;
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
             const auto& git_tree = git_tree_it->second;
@@ -360,7 +370,7 @@ namespace vcpkg::Commands::AddVersion
             auto port_versions_path =
                 paths.builtin_port_versions / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
             update_version_db_file(
-                paths, port_name, versiont, git_tree, port_versions_path, overwrite_version, verbose);
+                paths, port_name, versiont, git_tree, port_versions_path, overwrite_version, verbose, add_all);
             update_baseline_version(paths, port_name, versiont, baseline_path, verbose);
         }
         Checks::exit_success(VCPKG_LINE_INFO);
