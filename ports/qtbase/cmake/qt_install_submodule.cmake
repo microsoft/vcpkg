@@ -26,7 +26,7 @@ function(qt_install_submodule)
                     # OUT_DOWNLOADED_FILE_NAME DOWNLOADED_FILE_NAME
                     # NO_EXTRACT)
         set(UPDATE_PORT_GIT_OPTIONS
-                OUT_REF NEW_REF)
+                X_OUT_REF NEW_REF)
     endif()
 
     # vcpkg_from_github(

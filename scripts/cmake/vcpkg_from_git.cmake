@@ -9,6 +9,7 @@ vcpkg_from_git(
     OUT_SOURCE_PATH <SOURCE_PATH>
     URL <https://android.googlesource.com/platform/external/fdlibm>
     REF <59f7335e4d...>
+    [TAG <v1.0.2>]
     [PATCHES <patch1.patch> <patch2.patch>...]
 )
 ```
@@ -26,16 +27,15 @@ The url of the git repository.
 The git sha of the commit to download.
 
 ### TAG
-The git tag to download.
+An optional git tag to be verified against the `REF`. If the remote repository's tag does not match the specified `REF`, the build will fail.
 
 ### PATCHES
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
 
-### OUT_REF
-Maintainers only. Used for automatic REF updates for ports using a versioned TAG.
-Will return early!
+### X_OUT_REF (internal only)
+This parameter is used for automatic REF updates for certain ports in the central vcpkg catalog. It should not be used by any ports outside the central catalog and within the central catalog it should not be used on any user path. This parameter may change behavior incompatibly or be removed at any time.
 
 ## Notes:
 `OUT_SOURCE_PATH`, `REF`, and `URL` must be specified.
@@ -48,7 +48,7 @@ Will return early!
 include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_from_git)
-  set(oneValueArgs OUT_SOURCE_PATH URL REF TAG OUT_REF)
+  set(oneValueArgs OUT_SOURCE_PATH URL REF TAG X_OUT_REF)
   set(multipleValuesArgs PATCHES)
   # parse parameters such that semicolons in options arguments to COMMAND don't get erased
   cmake_parse_arguments(PARSE_ARGV 0 _vdud "" "${oneValueArgs}" "${multipleValuesArgs}")
@@ -105,10 +105,12 @@ function(vcpkg_from_git)
         message(FATAL_ERROR "unable to determine FETCH_HEAD after fetching git repository")
     endif()
     string(REGEX REPLACE "\n$" "" REV_PARSE_HEAD "${REV_PARSE_HEAD}")
-    if(NOT REV_PARSE_HEAD STREQUAL _vdud_REF AND NOT DEFINED _vdud_OUT_REF)
+    if(NOT REV_PARSE_HEAD STREQUAL _vdud_REF AND NOT DEFINED _vdud_X_OUT_REF)
+        message(STATUS "[Expected : ( ${_vdud_REF} )]")
+        message(STATUS "[  Actual : ( ${REV_PARSE_HEAD} )]")
         message(FATAL_ERROR "REF (${_vdud_REF}) does not match FETCH_HEAD (${REV_PARSE_HEAD})")
-    elseif(DEFINED _vdud_OUT_REF)
-        set(${_vdud_OUT_REF} ${REV_PARSE_HEAD} PARENT_SCOPE)
+    elseif(DEFINED _vdud_X_OUT_REF)
+        set(${_vdud_X_OUT_REF} ${REV_PARSE_HEAD} PARENT_SCOPE)
         return()
     endif()
 
