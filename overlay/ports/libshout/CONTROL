@@ -1,0 +1,5 @@
+Source: libshout
+Version: 2.4.5
+Description: A library for communicating with and sending data to an Icecast server.
+Homepage: https://gitlab.xiph.org/xiph/icecast-libshout
+Build-Depends: libogg, libvorbis, libtheora, openssl, pthread
