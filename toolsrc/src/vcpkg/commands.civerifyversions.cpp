@@ -5,7 +5,7 @@
 
 #include <vcpkg/commands.civerifyversions.h>
 #include <vcpkg/paragraphs.h>
-#include <vcpkg/portfileprovider.h>
+#include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
@@ -41,9 +41,9 @@ namespace vcpkg::Commands::CIVerifyVersions
     };
 
     static ExpectedS<std::string> verify_version_in_db(const VcpkgPaths& paths,
-                                                       const PortFileProvider::PathsPortFileProvider& paths_provider,
-                                                       const PortFileProvider::IBaselineProvider& baseline_provider,
+                                                       const std::map<std::string, VersionT, std::less<>> baseline,
                                                        const std::string& port_name,
+                                                       const fs::path& port_path,
                                                        const fs::path& versions_file_path,
                                                        const std::string& local_git_tree,
                                                        bool verify_git_trees)
@@ -100,8 +100,8 @@ namespace vcpkg::Commands::CIVerifyVersions
                                             "`%s`.\n\tgit-tree version: %s\n\t    file version: %s\n",
                                             version_entry.second,
                                             fs::u8string(versions_file_path),
-                                            git_tree_version,
-                                            version_entry.second),
+                                            git_tree_version.to_string(),
+                                            version_entry.first.to_string()),
                             expected_right_tag,
                         };
                     }
@@ -125,17 +125,16 @@ namespace vcpkg::Commands::CIVerifyVersions
 
         const auto& top_entry = versions.front();
 
-        auto maybe_scf = paths_provider.get_control_file(port_name);
+        auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(), port_path);
         if (!maybe_scf.has_value())
         {
             return {
-                Strings::format("Error: Cannot load port `%s`.\n\t%s", port_name, maybe_scf.error()),
+                Strings::format("Error: Cannot load port `%s`.\n\t%s", port_name, maybe_scf.error()->error),
                 expected_right_tag,
             };
         }
-        const auto& scf = maybe_scf.value_or_exit(VCPKG_LINE_INFO);
-        const auto found_version = scf.to_versiont();
 
+        const auto found_version = maybe_scf.value_or_exit(VCPKG_LINE_INFO)->to_versiont();
         if (top_entry.first != found_version)
         {
             auto versions_end = versions.end();
@@ -174,8 +173,8 @@ namespace vcpkg::Commands::CIVerifyVersions
             };
         }
 
-        auto maybe_baseline_version = baseline_provider.get_baseline_version(port_name);
-        if (!maybe_baseline_version.has_value())
+        auto maybe_baseline = baseline.find(port_name);
+        if (maybe_baseline == baseline.end())
         {
             return {
                 Strings::format("Error: Couldn't find baseline version for port `%s`.", port_name),
@@ -183,7 +182,7 @@ namespace vcpkg::Commands::CIVerifyVersions
             };
         }
 
-        const auto& baseline_version = maybe_baseline_version.value_or_exit(VCPKG_LINE_INFO);
+        auto&& baseline_version = maybe_baseline->second;
         if (baseline_version != top_entry.first)
         {
             return {
@@ -241,12 +240,10 @@ namespace vcpkg::Commands::CIVerifyVersions
                            maybe_port_git_tree_map.error());
         auto port_git_tree_map = maybe_port_git_tree_map.value_or_exit(VCPKG_LINE_INFO);
 
+
+        // Baseline is required.
+        auto baseline = get_builtin_baseline(paths).value_or_exit(VCPKG_LINE_INFO);
         auto& fs = paths.get_filesystem();
-
-        // Without a revision, baseline will use local baseline.json file.
-        auto baseline_provider = PortFileProvider::make_baseline_provider(paths);
-        PortFileProvider::PathsPortFileProvider paths_provider(paths, {});
-
         std::set<std::string> errors;
         for (const auto& dir : fs::directory_iterator(paths.builtin_ports_directory()))
         {
@@ -301,7 +298,7 @@ namespace vcpkg::Commands::CIVerifyVersions
             }
 
             auto maybe_ok = verify_version_in_db(
-                paths, paths_provider, *baseline_provider, port_name, versions_file_path, git_tree, verify_git_trees);
+                paths, baseline, port_name, port_path, versions_file_path, git_tree, verify_git_trees);
 
             if (!maybe_ok.has_value())
             {
