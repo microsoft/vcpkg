@@ -195,7 +195,8 @@ namespace
     std::unique_ptr<RegistryEntry> BuiltinRegistry::get_port_entry(const VcpkgPaths& paths, StringView port_name) const
     {
         auto versions_path = paths.builtin_port_versions / relative_path_to_versions(port_name);
-        if (paths.get_feature_flags().registries && paths.get_filesystem().exists(versions_path))
+        if ((paths.get_feature_flags().registries || paths.get_feature_flags().versions) &&
+            paths.get_filesystem().exists(versions_path))
         {
             auto maybe_version_entries =
                 load_versions_file(paths.get_filesystem(), VersionDbType::Git, paths.builtin_port_versions, port_name);
@@ -304,7 +305,7 @@ namespace
     }
     Optional<VersionT> BuiltinRegistry::get_baseline_version(const VcpkgPaths& paths, StringView port_name) const
     {
-        if (paths.get_feature_flags().registries)
+        if (!m_baseline_identifier.empty())
         {
             const auto& baseline = m_baseline.get(
                 [this, &paths]() -> Baseline { return parse_builtin_baseline(paths, m_baseline_identifier); });
@@ -315,22 +316,25 @@ namespace
                 return it->second;
             }
         }
-
-        // fall back to using the ports directory version
-        auto maybe_scf =
-            Paragraphs::try_load_port(paths.get_filesystem(), paths.builtin_ports_directory() / fs::u8path(port_name));
-        if (auto pscf = maybe_scf.get())
+        else
         {
-            auto& scf = *pscf;
-            return scf->to_versiont();
+            // fall back to using the ports directory version
+            auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(),
+                                                       paths.builtin_ports_directory() / fs::u8path(port_name));
+            if (auto pscf = maybe_scf.get())
+            {
+                auto& scf = *pscf;
+                return scf->to_versiont();
+            }
+            Debug::print("Failed to load port `", port_name, "` from the ports tree: ", maybe_scf.error()->error, "\n");
         }
-        Debug::print("Failed to load port `", port_name, "` from the ports tree: ", maybe_scf.error()->error, "\n");
         return nullopt;
     }
 
     void BuiltinRegistry::get_all_port_names(std::vector<std::string>& out, const VcpkgPaths& paths) const
     {
-        if (paths.get_feature_flags().registries && paths.get_filesystem().exists(paths.builtin_port_versions))
+        if ((paths.get_feature_flags().registries || paths.get_feature_flags().versions) &&
+            paths.get_filesystem().exists(paths.builtin_port_versions))
         {
             load_all_port_names_from_port_versions(out, paths, paths.builtin_port_versions);
         }
@@ -440,7 +444,7 @@ namespace
         auto& name = scfl->source_control_file->core_paragraph->name;
         return Strings::format(
             "Error: no version entry for %s at version %s.\n"
-            "We are currently using the version in the ports tree (%s), since no %s.json was found in port_versions.",
+            "We are currently using the version in the ports tree (%s), since no %s.json was found in /port_versions.",
             name,
             version.to_string(),
             scfl->to_versiont().to_string(),

@@ -5,6 +5,7 @@
 
 #include <vcpkg/commands.add-version.h>
 #include <vcpkg/configuration.h>
+#include <vcpkg/paragraphs.h>
 #include <vcpkg/portfileprovider.h>
 #include <vcpkg/registries.h>
 #include <vcpkg/vcpkgcmdarguments.h>
@@ -321,15 +322,14 @@ namespace vcpkg::Commands::AddVersion
         // Get tree-ish from local repository state.
         auto maybe_git_tree_map = paths.git_get_local_port_treeish_map();
         auto git_tree_map = maybe_git_tree_map.value_or_exit(VCPKG_LINE_INFO);
-        PortFileProvider::PathsPortFileProvider provider(paths, {});
 
         for (auto&& port_name : port_names)
         {
             // Get version information of the local port
-            auto maybe_scf = provider.get_control_file(port_name);
+            auto maybe_scf = Paragraphs::try_load_port(fs, paths.builtin_ports_directory() / fs::u8path(port_name));
             Checks::check_exit(VCPKG_LINE_INFO, maybe_scf.has_value(), "Error: Couldn't load port `%s`.", port_name);
             const auto& scf = maybe_scf.value_or_exit(VCPKG_LINE_INFO);
-            const auto& versiont = scf.source_control_file->to_versiont();
+            const auto& versiont = scf->to_versiont();
 
             auto git_tree_it = git_tree_map.find(port_name);
             if (git_tree_it == git_tree_map.end())
