@@ -26,6 +26,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DINSTALL_CMAKE_MODULE_PATH=${CURRENT_PACKAGES_DIR}/share/libraw
         -DCMAKE_DEBUG_POSTFIX=d
+        -DENABLE_OPENMP=OFF
 )
 
 vcpkg_install_cmake()
