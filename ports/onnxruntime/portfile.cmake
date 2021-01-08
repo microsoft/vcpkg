@@ -169,7 +169,7 @@ foreach(MOD
     FILES_MATCHING
     PATTERN "*.h"
     PATTERN "*.hpp"
-    PATTERN ".inc"
+    PATTERN "*.inc"
     )
 endforeach()
 
@@ -206,7 +206,7 @@ foreach(MOD
     FILES_MATCHING
     PATTERN "*.h" 
     PATTERN "*.hpp" 
-    PATTERN ".inc"
+    PATTERN "*.inc"
     PATTERN "cuda/atomic" EXCLUDE
     PATTERN "cuda/cu_inc*" EXCLUDE
     PATTERN "cuda/multi_tensor" EXCLUDE
@@ -242,8 +242,8 @@ foreach(MOD
     FOLLOW_SYMLINK_CHAIN
     FILES_MATCHING 
     PATTERN "*.h"
-    PATTERN "*.hpp" 
-    PATTERN ".inc"
+    PATTERN "*.hpp"
+    PATTERN "*.inc"
     PATTERN "protobuf/util/internal/testdata" EXCLUDE # protobuf/src/google/ subfolders to skip
     PATTERN "protobuf/testdata" EXCLUDE
     )
@@ -281,7 +281,7 @@ foreach(MOD
     FILES_MATCHING 
     PATTERN "*.h" 
     PATTERN "*.hpp" 
-    PATTERN ".inc"
+    PATTERN "*.inc"
     PATTERN "rocm/activation" EXCLUDE  # All these folders under training_ops do not have header files!
     PATTERN "rocm/collective" EXCLUDE
     PATTERN "rocm/loss" EXCLUDE
@@ -303,7 +303,10 @@ foreach(MOD
     ${SRCBASEDIR}/${MOD} 
     DESTINATION ${DESTBASEDIR}/${MOD} 
     FOLLOW_SYMLINK_CHAIN 
-    FILES_MATCHING PATTERN "*.h" PATTERN "*.hpp" PATTERN ".inc"
+    FILES_MATCHING
+    PATTERN "*.h"
+    PATTERN "*.hpp"
+    PATTERN "*.inc"
     PATTERN "cuda" EXCLUDE
     )
 endforeach()
