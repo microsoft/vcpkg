@@ -1,0 +1,17 @@
+diff --git a/src/signalrclient/CMakeLists.txt b/src/signalrclient/CMakeLists.txt
+index 42d64d3..10fa72f 100644
+--- a/src/signalrclient/CMakeLists.txt
++++ b/src/signalrclient/CMakeLists.txt
+@@ -58,10 +58,10 @@ else()
+         target_compile_options(signalrclient PRIVATE -Wall)
+     endif()
+ 
+-    # GCC on OSX has a bug with exceptions and no-rtti that can cause crashes
+-    if(NOT APPLE)
++    # boost-asio (a dependency) doesn't support fno-rtti anymore
++    if(0)
+         target_compile_options(signalrclient PRIVATE -fno-rtti)
+     endif()
+     target_compile_options(signalrclient PRIVATE -Wextra -Wpedantic -Wno-unknown-pragmas)
+ endif()
+ 
