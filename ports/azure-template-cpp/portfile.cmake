@@ -6,8 +6,8 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF azure-template_1.0.0-beta.20
-    SHA512 99cf9d66a200d4a0e278cf3a311a6c3f1107c6d59a9aaa9f2e478d066bffc59dc56538e4ddd29e9b24af10b5195d9a3d5ca84d42363d420ecc36d4e851737a8e
+    REF azure-template_1.0.0-beta.21
+    SHA512 f6cf1c16c52d273aff35a539e4533016be2279644bcefb6bccb270820b53a5ebe30976c71fbd1cfa82f9cb597df7114e1468fe9e7af041b1dd55e72b8c80edfe
 )
 
 vcpkg_configure_cmake(
