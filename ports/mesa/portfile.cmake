@@ -7,7 +7,7 @@ set(PATCHES dual-osmesa.patch
             swravx512.patch
             )
 
-
+vcpkg_check_linkage(ONLY_DYNAMIC_CRT)
 IF(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_POLICY_DLLS_IN_STATIC_LIBRARY enabled) # some parts of this port can only build as a shared library.
 endif()
@@ -25,38 +25,61 @@ vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
 vcpkg_add_to_path("${PYTHON3_DIR}")
 vcpkg_add_to_path("${PYTHON3_DIR}/Scripts")
-if(DEFINED ENV{PYTHON})
-    set(ENV_PYTHON_BACKUP "$ENV{PYTHON}")
-endif()
 set(ENV{PYTHON} "${PYTHON3}")
 
-
-if (WIN32)
-    set(PYTHON_OPTION "")
-else()
-    set(PYTHON_OPTION "--user")
-endif()
-
-if(NOT EXISTS ${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX})
-    if(NOT EXISTS ${PYTHON3_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX})
-        vcpkg_from_github(
-            OUT_SOURCE_PATH PYFILE_PATH
-            REPO pypa/get-pip
-            REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
-            SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
-            HEAD_REF master
-        )
-        execute_process(COMMAND ${PYTHON3_DIR}/python${VCPKG_HOST_EXECUTABLE_SUFFIX} ${PYFILE_PATH}/get-pip.py ${PYTHON_OPTION})
+function(vcpkg_get_python_package PYTHON_DIR )
+    cmake_parse_arguments(PARSE_ARGV 0 _vgpp "" "PYTHON_EXECUTABLE" "PACKAGES")
+    
+    if(NOT _vgpp_PYTHON_EXECUTABLE)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PYTHON_EXECUTABLE!")
     endif()
-    execute_process(COMMAND ${PYTHON3_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX} install mako ${PYTHON_OPTION})
-    execute_process(COMMAND ${PYTHON3_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX} install setuptools ${PYTHON_OPTION})
-else()
-    execute_process(COMMAND ${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX} mako)
-    execute_process(COMMAND ${PYTHON3_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX} setuptools)
-endif()
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-    execute_process(COMMAND pip3 install setuptools mako)
-endif()
+    if(NOT _vgpp_PACKAGES)
+        message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} requires parameter PACKAGES!")
+    endif()
+    if(NOT _vgpp_PYTHON_DIR)
+        get_filename_component(_vgpp_PYTHON_DIR "${_vgpp_PYTHON_EXECUTABLE}" DIRECTORY)
+    endif()
+
+    if (WIN32)
+        set(PYTHON_OPTION "")
+    else()
+        set(PYTHON_OPTION "--user")
+    endif()
+
+    if("${_vgpp_PYTHON_DIR}" MATCHES "${DOWNLOADS}") # inside vcpkg
+        if(NOT EXISTS "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+            if(NOT EXISTS "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+                vcpkg_from_github(
+                    OUT_SOURCE_PATH PYFILE_PATH
+                    REPO pypa/get-pip
+                    REF 309a56c5fd94bd1134053a541cb4657a4e47e09d #2019-08-25
+                    SHA512 bb4b0745998a3205cd0f0963c04fb45f4614ba3b6fcbe97efe8f8614192f244b7ae62705483a5305943d6c8fedeca53b2e9905aed918d2c6106f8a9680184c7a
+                    HEAD_REF master
+                )
+                execute_process(COMMAND "${_vgpp_PYTHON_EXECUTABLE}" "${PYFILE_PATH}/get-pip.py" ${PYTHON_OPTION})
+            endif()
+            foreach(_package IN LISTS _vgpp_PACKAGES)
+                execute_process(COMMAND "${_vgpp_PYTHON_DIR}/Scripts/pip${VCPKG_HOST_EXECUTABLE_SUFFIX}" install ${_package} ${PYTHON_OPTION})
+            endforeach()
+        else()
+            foreach(_package IN LISTS _vgpp_PACKAGES)
+                execute_process(COMMAND "${_vgpp_PYTHON_DIR}/easy_install${VCPKG_HOST_EXECUTABLE_SUFFIX}" ${_package})
+            endforeach()
+        endif()
+        if(NOT VCPKG_TARGET_IS_WINDOWS)
+            execute_process(COMMAND pip3 install ${_vgpp_PACKAGES})
+        endif()
+    else() # outside vcpkg
+        foreach(_package IN LISTS _vgpp_PACKAGES)
+            execute_process(COMMAND ${_vgpp_PYTHON_EXECUTABLE} -c "import ${_package}" RESULT_VARIABLE HAS_ERROR)
+            if(HAS_ERROR)
+                message(FATAL_ERROR "Python package '${_package}' needs to be installed for port '${PORT}'.\nComplete list of required python packages: ${_vgpp_PACKAGES}")
+            endif()
+        endforeach()
+    endif()
+endfunction()
+
+vcpkg_get_python_package(PYTHON_EXECUTABLE "${PYTHON3}" PACKAGES setuptools mako)
 
 vcpkg_find_acquire_program(FLEX)
 get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
@@ -67,10 +90,18 @@ vcpkg_add_to_path(PREPEND "${BISON_DIR}")
 
 if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-        file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        if(FLEX_DIR MATCHES "${DOWNLOADS}")
+            file(CREATE_LINK "${FLEX}" "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        else()
+            message(FATAL_ERROR "${PORT} requires flex being named flex on windows and not win_flex!\n(Can be solved by creating a simple link from win_flex to flex)")
+        endif()
     endif()
     if(NOT EXISTS "${BISON_DIR}/BISON${VCPKG_HOST_EXECUTABLE_SUFFIX}")
-        file(CREATE_LINK "${BISON}" "${BISON_DIR}/bison${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        if(BISON_DIR MATCHES "${DOWNLOADS}")
+            file(CREATE_LINK "${BISON}" "${BISON_DIR}/bison${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        else()
+            message(FATAL_ERROR "${PORT} requires bison being named bison on windows and not win_bison!\n(Can be solved by creating a simple link from win_bison to bison)")
+        endif()
     endif()
 endif()
 
@@ -143,7 +174,7 @@ vcpkg_configure_meson(
         ${MESA_OPTIONS}
     )
 vcpkg_install_meson()
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
