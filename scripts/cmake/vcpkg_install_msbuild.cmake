@@ -124,6 +124,7 @@ function(vcpkg_install_msbuild)
     endfunction()
 
     set(BUILD_MSBUILD_OPTIONS
+        _PASS_VCPKG_VARS
         OPTIONS ${_csc_OPTIONS}
         OPTIONS_RELEASE ${_csc_OPTIONS_RELEASE}
         OPTIONS_DEBUG ${_csc_OPTIONS_DEBUG}
@@ -137,11 +138,22 @@ function(vcpkg_install_msbuild)
     if(DEFINED _csc_PLATFORM_TOOLSET)
         list(APPEND BUILD_MSBUILD_OPTIONS PLATFORM_TOOLSET ${_csc_PLATFORM_TOOLSET})
     endif()
-    if(DEFINED _csc_PLATFORM)
-        list(APPEND BUILD_MSBUILD_OPTIONS PLATFORM ${_csc_PLATFORM})
+    if(NOT DEFINED _csc_PLATFORM)
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+            set(_csc_PLATFORM x64)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+            set(_csc_PLATFORM Win32)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL ARM)
+            set(_csc_PLATFORM ARM)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+            set(_csc_PLATFORM arm64)
+        else()
+            message(FATAL_ERROR "Unsupported target architecture")
+        endif()
     endif()
+    list(APPEND BUILD_MSBUILD_OPTIONS PLATFORM ${_csc_PLATFORM})
     if(DEFINED _csc_USE_VCPKG_INTEGRATION)
-        list(APPEND BUILD_MSBUILD_OPTIONS USE_VCPKG_INTEGRATION)
+        list(APPEND BUILD_MSBUILD_OPTIONS USE_VCPKG_INTEGRATION DISABLE_APPLOCAL_DEPS)
     endif()
     if(DEFINED _csc_DEBUG_CONFIGURATION)
         list(APPEND BUILD_MSBUILD_OPTIONS DEBUG_CONFIGURATION ${_csc_DEBUG_CONFIGURATION})

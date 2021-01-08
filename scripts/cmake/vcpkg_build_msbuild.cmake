@@ -17,6 +17,7 @@ vcpkg_build_msbuild(
     [OPTIONS_RELEASE </p:ZLIB_LIB=X>...]
     [OPTIONS_DEBUG </p:ZLIB_LIB=X>...]
     [USE_VCPKG_INTEGRATION]
+    [DISABLE_APPLOCAL_DEPS]
 )
 ```
 
@@ -25,6 +26,11 @@ vcpkg_build_msbuild(
 Apply the normal `integrate install` integration for building the project.
 
 By default, projects built with this command will not automatically link libraries or have header paths set.
+
+### DISABLE_APPLOCAL_DEPS
+Disables copying dependent DLLs to the output folder.
+
+This option is strongly recommended when passing `USE_VCPKG_INTEGRATION`.
 
 ### PROJECT_PATH
 The path to the solution (`.sln`) or project (`.vcxproj`) file.
@@ -67,7 +73,7 @@ function(vcpkg_build_msbuild)
     cmake_parse_arguments(
         PARSE_ARGV 0
         _csc
-        "USE_VCPKG_INTEGRATION"
+        "USE_VCPKG_INTEGRATION;DISABLE_APPLOCAL_DEPS;_PASS_VCPKG_VARS"
         "PROJECT_PATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
     )
@@ -107,13 +113,21 @@ function(vcpkg_build_msbuild)
         list(APPEND _csc_OPTIONS /p:WholeProgramOptimization=false)
     endif()
 
+    if(_csc__PASS_VCPKG_VARS OR _csc_USE_VCPKG_INTEGRATION)
+        list(
+            APPEND _csc_OPTIONS
+            "/p:VcpkgTriplet=${TARGET_TRIPLET}"
+            "/p:VcpkgCurrentInstalledDir=${CURRENT_INSTALLED_DIR}"
+        )
+    endif()
+
+    if(_csc_DISABLE_APPLOCAL_DEPS)
+        list(APPEND _csc_OPTIONS "/p:VcpkgApplocalDeps=false")
+    endif()
     if(_csc_USE_VCPKG_INTEGRATION)
         list(
             APPEND _csc_OPTIONS
             "/p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets"
-            "/p:VcpkgTriplet=${TARGET_TRIPLET}"
-            "/p:VcpkgCurrentInstalledDir=${CURRENT_INSTALLED_DIR}"
-            "/p:VcpkgApplocalDeps=false"
         )
     else()
         list(APPEND _csc_OPTIONS
@@ -121,15 +135,22 @@ function(vcpkg_build_msbuild)
         )
     endif()
 
+    if(DEFINED ENV{CL})
+        set(CL "$ENV{CL}")
+    else()
+        unset(CL)
+    endif()
+
+    set(ENV{CL} "$ENV{CL} /MP${VCPKG_CONCURRENCY}")
+
     list(APPEND _csc_OPTIONS_RELEASE /p:Configuration=${_csc_RELEASE_CONFIGURATION})
     list(APPEND _csc_OPTIONS_DEBUG /p:Configuration=${_csc_DEBUG_CONFIGURATION})
     set(BASE_COMMAND msbuild ${_csc_PROJECT_PATH} ${_csc_OPTIONS})
-    set(PARALLEL_OPTIONS /m /p:UseMultiToolTask=true /p:EnforceProcessCountAcrossBuilds=true /p:MultiProcMaxCount=${VCPKG_CONCURRENCY})
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${_csc_PROJECT_PATH} for Release")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
         vcpkg_execute_build_process(
-            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_RELEASE} ${PARALLEL_OPTIONS}
+            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_RELEASE} /m
             NO_PARALLEL_COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_RELEASE}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
             LOGNAME build-${TARGET_TRIPLET}-rel
@@ -140,10 +161,16 @@ function(vcpkg_build_msbuild)
         message(STATUS "Building ${_csc_PROJECT_PATH} for Debug")
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
         vcpkg_execute_build_process(
-            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_DEBUG} ${PARALLEL_OPTIONS}
+            COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_DEBUG} /m
             NO_PARALLEL_COMMAND ${BASE_COMMAND} ${_csc_OPTIONS_DEBUG}
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
             LOGNAME build-${TARGET_TRIPLET}-dbg
         )
+    endif()
+
+    if(DEFINED CL)
+        set(ENV{CL} "${CL}")
+    else()
+        unset(ENV{CL})
     endif()
 endfunction()

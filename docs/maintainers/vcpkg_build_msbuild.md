@@ -16,6 +16,7 @@ vcpkg_build_msbuild(
     [OPTIONS_RELEASE </p:ZLIB_LIB=X>...]
     [OPTIONS_DEBUG </p:ZLIB_LIB=X>...]
     [USE_VCPKG_INTEGRATION]
+    [DISABLE_APPLOCAL_DEPS]
 )
 ```
 
@@ -24,6 +25,11 @@ vcpkg_build_msbuild(
 Apply the normal `integrate install` integration for building the project.
 
 By default, projects built with this command will not automatically link libraries or have header paths set.
+
+### DISABLE_APPLOCAL_DEPS
+Disables copying dependent DLLs to the output folder.
+
+This option is strongly recommended when passing `USE_VCPKG_INTEGRATION`.
 
 ### PROJECT_PATH
 The path to the solution (`.sln`) or project (`.vcxproj`) file.
