@@ -207,13 +207,14 @@ foreach(MOD
     PATTERN "*.h" 
     PATTERN "*.hpp" 
     PATTERN "*.inc"
-    PATTERN "cuda/atomic" EXCLUDE
-    PATTERN "cuda/cu_inc*" EXCLUDE
+    PATTERN "cuda/atomic" EXCLUDE     #These paths under providers don't have any header files to be copied
+    PATTERN "cuda/cu_inc" EXCLUDE
     PATTERN "cuda/multi_tensor" EXCLUDE
     PATTERN "nuphar/compiler/x86/op_ir_creator" EXCLUDE
     PATTERN "nuphar/scripts" EXCLUDE
     PATTERN "rocm/atomic" EXCLUDE
     PATTERN "rocm/cu_inc" EXCLUDE
+    PATTERN "rocm/math" EXCLUDE
     )
 endforeach()
 
