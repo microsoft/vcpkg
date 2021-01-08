@@ -1,5 +1,5 @@
 Source: curl
-Port-Version: 1
+Port-Version: 2
 Version: 7.74.0
 Build-Depends: zlib
 Homepage: https://github.com/curl/curl

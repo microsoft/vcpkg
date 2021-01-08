@@ -24,8 +24,11 @@ vcpkg_configure_cmake(
         -DENABLE_UTILS=OFF
         -DENABLE_GLIB=OFF
         -DENABLE_GLOBJECT_INTROSPECTION=OFF
+        -DENABLE_GTK_DOC=OFF
         -DENABLE_QT5=OFF
         -DENABLE_QT6=OFF
+        -DENABLE_CMS=none
+        -DRUN_GPERF_IF_PRESENT=OFF
         ${FEATURE_OPTIONS}
 )
 
