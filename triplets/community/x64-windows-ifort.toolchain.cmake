@@ -71,12 +71,8 @@ set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${VCPKG_CXX_
 
 # Make sure the name mangling of Intel Fortran generated symbols is all lowercase with underscore suffix
 # because this is assumed by many libraries (that e.g. consume BLAS/LAPACK)
-set(CMAKE_Fortran_FLAGS " /fpp /W0 /nologo /names:lowercase /assume:underscore /threads ")
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    string(APPEND CMAKE_Fortran_FLAGS " /libs:static")
-elseif(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-    string(APPEND CMAKE_Fortran_FLAGS " /libs:dll")
-endif()
+set(CMAKE_Fortran_FLAGS_INIT "/names:lowercase /assume:underscore /Z7" CACHE STRING "")
+
 # Set linker flags.
 foreach(LINKER SHARED_LINKER MODULE_LINKER EXE_LINKER)
   set(CMAKE_${LINKER}_FLAGS_INIT "${VCPKG_LINKER_FLAGS}")
