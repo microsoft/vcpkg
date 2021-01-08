@@ -210,7 +210,13 @@ namespace vcpkg::PortFileProvider
 
             if (port)
             {
-                auto port_path = port->get_path_to_version(paths, port_version).value_or_exit(VCPKG_LINE_INFO);
+                auto maybe_port_path = port->get_path_to_version(paths, port_version);
+                if (!maybe_port_path.has_value())
+                {
+                    return std::move(maybe_port_path.error());
+                }
+                auto port_path = std::move(maybe_port_path).value_or_exit(VCPKG_LINE_INFO);
+
                 auto maybe_scfl = Paragraphs::try_load_port(fs, port_path);
                 if (auto p = maybe_scfl.get())
                 {
