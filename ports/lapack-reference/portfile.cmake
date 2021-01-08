@@ -11,14 +11,15 @@ endif()
 include(vcpkg_find_fortran)
 SET(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 
-set(lapack_ver 3.8.0)
+set(lapack_ver 3.9.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO  "Reference-LAPACK/lapack"
     REF "v${lapack_ver}"
-    SHA512 17786cb7306fccdc9b4a242de7f64fc261ebe6a10b6ec55f519deb4cb673cb137e8742aa5698fd2dc52f1cd56d3bd116af3f593a01dcf6770c4dcc86c50b2a7f
+    SHA512 424956ad941a60a4b71e0d451ad48db12a692f8a71a90f3ca7f71d6ecc1922f392746ea84df1c47a46577ed2db32e9e47ec44ad248207c5ac7da179becb712ef
     HEAD_REF master
+    PATCHES 4c09cda6943f3c893fb20ed6a490e1ba485148dd.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)

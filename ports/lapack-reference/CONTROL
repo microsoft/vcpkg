@@ -1,5 +1,5 @@
 Source: lapack-reference
-Version: 3.8.0
+Version: 3.9.0
 Port-Version: 4
 Description: LAPACK — Linear Algebra PACKage http://www.netlib.org/lapack/
 Default-Features: blas-select
