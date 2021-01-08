@@ -8,7 +8,7 @@ namespace vcpkg
 {
     std::vector<StringView> StringView::find_all_enclosed(const StringView& input,
                                                           const std::string& left_delim,
-                                                          const std::string& right_delim)
+                                                          const std::string& right_delim) noexcept
     {
         auto it_left = input.begin();
         auto it_right = input.begin();
@@ -35,7 +35,7 @@ namespace vcpkg
 
     StringView StringView::find_exactly_one_enclosed(const StringView& input,
                                                      const std::string& left_tag,
-                                                     const std::string& right_tag)
+                                                     const std::string& right_tag) noexcept
     {
         std::vector<StringView> result = find_all_enclosed(input, left_tag, right_tag);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -50,7 +50,7 @@ namespace vcpkg
 
     Optional<StringView> StringView::find_at_most_one_enclosed(const StringView& input,
                                                                const std::string& left_tag,
-                                                               const std::string& right_tag)
+                                                               const std::string& right_tag) noexcept
     {
         std::vector<StringView> result = find_all_enclosed(input, left_tag, right_tag);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -69,12 +69,12 @@ namespace vcpkg
         return result.front();
     }
 
-    StringView::StringView(const std::string& s) : m_ptr(s.data()), m_size(s.size()) { }
+    StringView::StringView(const std::string& s) noexcept : m_ptr(s.data()), m_size(s.size()) { }
 
     std::string StringView::to_string() const { return std::string(m_ptr, m_size); }
     void StringView::to_string(std::string& s) const { s.append(m_ptr, m_size); }
 
-    StringView StringView::substr(size_t pos, size_t count) const
+    StringView StringView::substr(size_t pos, size_t count) const noexcept
     {
         if (pos > m_size)
         {

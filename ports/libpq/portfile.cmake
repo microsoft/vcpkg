@@ -42,6 +42,7 @@ set(PATCHES
         patches/windows/MSBuildProject_fix_gendef_perl.patch
         patches/windows/msgfmt.patch
         patches/windows/python_lib.patch
+        patches/windows/fix-compile-flag-Zi.patch
         patches/linux/configure.patch)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)

@@ -88,7 +88,7 @@ Build-Depends: tiff
 Description: TIFF support for opencv
 
 Feature: vtk
-Build-Depends: vtk
+Build-Depends: opencv4[contrib], vtk
 Description: vtk support for opencv
 
 Feature: webp
