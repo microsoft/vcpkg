@@ -66,6 +66,7 @@ vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             "-DUSE_OPTIMIZED_BLAS=${USE_OPTIMIZED_BLAS}"
+            "-DBLA_VENDOR=OpenBLAS"
             "-DCBLAS=${CBLAS}"
             ${FORTRAN_CMAKE}
         )
