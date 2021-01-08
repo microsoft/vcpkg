@@ -206,7 +206,7 @@ endif()
 # === Target: tls12-download ===
 if(WIN32)
     add_executable(tls12-download src/tls12-download.c)
-    set_property(TARGET tls12-download PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    set_property(TARGET tls12-download PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
     set_property(TARGET tls12-download APPEND PROPERTY LINK_OPTIONS "/ENTRY:entry")
     target_link_libraries(tls12-download winhttp)
 endif()
