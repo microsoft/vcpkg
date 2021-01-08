@@ -1,6 +1,10 @@
+if(WIN32)
+cmake_minimum_required(VERSION 3.16)
+else()
 cmake_minimum_required(VERSION 3.14)
+endif()
 
-project(vcpkg CXX)
+project(vcpkg C CXX)
 include(cmake/utilities.cmake)
 
 # ===============
@@ -197,4 +201,12 @@ if(CLANG_FORMAT)
         COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_INCLUDES}
 
         COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_FUZZ_SOURCES})
+endif()
+
+# === Target: tls12-download ===
+if(WIN32)
+    add_executable(tls12-download src/tls12-download.c)
+    set_property(TARGET tls12-download PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    set_property(TARGET tls12-download APPEND PROPERTY LINK_OPTIONS "/ENTRY:entry")
+    target_link_libraries(tls12-download winhttp)
 endif()
