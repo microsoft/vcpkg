@@ -60,6 +60,8 @@ TEST_CASE ("get_available_paths_commands works", "[commands]")
         "x-history",
         "x-package-info",
         "x-vsinstances",
+        "x-ci-verify-versions",
+        "x-add-version",
         });
 }
 
