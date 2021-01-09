@@ -20,6 +20,7 @@ vcpkg_from_github(
     SHA512 424956ad941a60a4b71e0d451ad48db12a692f8a71a90f3ca7f71d6ecc1922f392746ea84df1c47a46577ed2db32e9e47ec44ad248207c5ac7da179becb712ef
     HEAD_REF master
     PATCHES 4c09cda6943f3c893fb20ed6a490e1ba485148dd.patch
+            intel.patch
 )
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
