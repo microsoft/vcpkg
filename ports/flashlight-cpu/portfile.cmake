@@ -12,7 +12,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-################################### Build ###################################
 # Default flags
 set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
   -DFL_BUILD_TESTS=OFF
