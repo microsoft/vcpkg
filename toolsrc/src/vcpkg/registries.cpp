@@ -122,17 +122,6 @@ namespace
         DelayedInit<Baseline> m_baseline;
     };
 
-    ExpectedS<fs::path> get_git_baseline_json_path(const VcpkgPaths& paths, StringView baseline_commit_sha)
-    {
-        auto baseline_path = paths.git_checkout_baseline(paths.get_filesystem(), baseline_commit_sha);
-        if (paths.get_filesystem().exists(baseline_path))
-        {
-            return std::move(baseline_path);
-        }
-        return {Strings::concat("Error: Baseline database file does not exist: ", fs::u8string(baseline_path)),
-                expected_right_tag};
-    }
-
     struct VersionDbEntry
     {
         VersionT version;
@@ -195,7 +184,8 @@ namespace
     std::unique_ptr<RegistryEntry> BuiltinRegistry::get_port_entry(const VcpkgPaths& paths, StringView port_name) const
     {
         auto versions_path = paths.builtin_port_versions / relative_path_to_versions(port_name);
-        if ((paths.get_feature_flags().registries || paths.get_feature_flags().versions) &&
+        if ((paths.get_feature_flags().registries ||
+             (paths.get_feature_flags().versions && !this->m_baseline_identifier.empty())) &&
             paths.get_filesystem().exists(versions_path))
         {
             auto maybe_version_entries =
@@ -273,7 +263,7 @@ namespace
         }
 
         // attempt to check out the baseline:
-        auto maybe_path = get_git_baseline_json_path(paths, baseline_identifier);
+        auto maybe_path = paths.git_checkout_baseline(baseline_identifier);
         if (!maybe_path.has_value())
         {
             return Strings::format("Couldn't find explicitly specified baseline `\"%s\"` in the baseline file, "
@@ -428,12 +418,13 @@ namespace
             auto it = std::find(git_entry->port_versions.begin(), git_entry->port_versions.end(), version);
             if (it == git_entry->port_versions.end())
             {
-                return Strings::concat(
-                    "Error: No version entry for ", git_entry->port_name, " at version ", version, ".");
+                return {
+                    Strings::concat("Error: No version entry for ", git_entry->port_name, " at version ", version, "."),
+                    expected_right_tag};
             }
 
             const auto& git_tree = git_entry->git_trees[it - git_entry->port_versions.begin()];
-            return paths.git_checkout_port(paths.get_filesystem(), git_entry->port_name, git_tree);
+            return paths.git_checkout_port(git_entry->port_name, git_tree, paths.root / fs::u8path(".git"));
         }
 
         if (scfl_version == version)

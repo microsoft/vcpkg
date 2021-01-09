@@ -196,7 +196,7 @@ private:
 
 static const MockOverlayProvider s_empty_mock_overlay;
 
-ExpectedS<Dependencies::ActionPlan> create_versioned_install_plan(
+static ExpectedS<Dependencies::ActionPlan> create_versioned_install_plan(
     const PortFileProvider::IVersionedPortfileProvider& provider,
     const PortFileProvider::IBaselineProvider& bprovider,
     const CMakeVars::CMakeVarProvider& var_provider,
