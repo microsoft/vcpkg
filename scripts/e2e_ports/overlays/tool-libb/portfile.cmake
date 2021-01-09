@@ -1,0 +1,11 @@
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
+if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
+    message(FATAL_ERROR "tool-libb requires CURRENT_HOST_INSTALLED_DIR to be defined")
+endif()
+if(NOT EXISTS "${CURRENT_HOST_INSTALLED_DIR}/share/tool-manifest")
+    message(FATAL_ERROR "tool-libb requires tool-manifest on the host (${CURRENT_HOST_INSTALLED_DIR}/share/tool-manifest)")
+endif()
+if(NOT EXISTS "${CURRENT_HOST_INSTALLED_DIR}/share/tool-control")
+    message(FATAL_ERROR "tool-libb requires tool-control on the host (${CURRENT_HOST_INSTALLED_DIR}/share/tool-control)")
+endif()

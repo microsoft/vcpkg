@@ -14,19 +14,19 @@ namespace vcpkg::Export::Chocolatey
     using Install::InstallDir;
 
     static std::string create_nuspec_dependencies(const BinaryParagraph& binary_paragraph,
-                                                  const std::map<std::string, std::string>& packages_version)
+                                                  const std::map<PackageSpec, std::string>& packages_version)
     {
         static constexpr auto CONTENT_TEMPLATE = R"(<dependency id="@PACKAGE_ID@" version="[@PACKAGE_VERSION@]" />)";
 
         std::string nuspec_dependencies;
-        for (const std::string& depend : binary_paragraph.dependencies)
+        for (const auto& depend : binary_paragraph.dependencies)
         {
             auto found = packages_version.find(depend);
             if (found == packages_version.end())
             {
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find desired dependency version.");
             }
-            std::string nuspec_dependency = Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", depend);
+            std::string nuspec_dependency = Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", depend.name());
             Strings::inplace_replace_all(nuspec_dependency, "@PACKAGE_VERSION@", found->second);
             nuspec_dependencies += nuspec_dependency;
         }
@@ -35,7 +35,7 @@ namespace vcpkg::Export::Chocolatey
 
     static std::string create_nuspec_file_contents(const std::string& exported_root_dir,
                                                    const BinaryParagraph& binary_paragraph,
-                                                   const std::map<std::string, std::string>& packages_version,
+                                                   const std::map<PackageSpec, std::string>& packages_version,
                                                    const Options& chocolatey_options)
     {
         static constexpr auto CONTENT_TEMPLATE = R"(<?xml version="1.0" encoding="utf-8"?>
@@ -57,7 +57,7 @@ namespace vcpkg::Export::Chocolatey
     </files>
 </package>
 )";
-        auto package_version = packages_version.find(binary_paragraph.spec.name());
+        auto package_version = packages_version.find(binary_paragraph.spec);
         if (package_version == packages_version.end())
         {
             Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find desired package version.");
@@ -166,7 +166,7 @@ if (Test-Path $installedDir)
         fs.create_directory(exported_dir_path, ec);
 
         // execute the plan
-        std::map<std::string, std::string> packages_version;
+        std::map<PackageSpec, std::string> packages_version;
         for (const ExportPlanAction& action : export_plan)
         {
             if (action.plan_type != ExportPlanType::ALREADY_BUILT)
@@ -181,7 +181,7 @@ if (Test-Path $installedDir)
             Strings::inplace_replace_all(norm_version, '-', '.');
             Strings::inplace_replace_all(norm_version, '_', '.');
             norm_version += chocolatey_options.maybe_version_suffix.value_or("");
-            packages_version.insert(std::make_pair(binary_paragraph.spec.name(), norm_version));
+            packages_version.insert(std::make_pair(binary_paragraph.spec, norm_version));
         }
 
         for (const ExportPlanAction& action : export_plan)

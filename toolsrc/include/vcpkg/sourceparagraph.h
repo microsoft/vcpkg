@@ -18,6 +18,7 @@ namespace vcpkg
 {
     std::vector<FullPackageSpec> filter_dependencies(const std::vector<Dependency>& deps,
                                                      Triplet t,
+                                                     Triplet host,
                                                      const std::unordered_map<std::string, std::string>& cmake_vars);
 
     struct Type
@@ -69,7 +70,7 @@ namespace vcpkg
         std::vector<std::string> default_features;
         std::string license; // SPDX license expression
 
-        Type type;
+        Type type = {Type::PORT};
         PlatformExpression::Expr supports_expression;
 
         Json::Object extra_info;

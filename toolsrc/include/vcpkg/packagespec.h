@@ -149,10 +149,20 @@ namespace vcpkg
 
     struct Dependency
     {
+        // Remove when support for MSVC v140 is dropped.
+        Dependency(std::string n = {},
+                   std::vector<std::string> f = {},
+                   PlatformExpression::Expr expr = {},
+                   DependencyConstraint dc = {},
+                   bool h = false)
+            : name(std::move(n)), features(std::move(f)), platform(std::move(expr)), constraint(std::move(dc)), host(h)
+        {
+        }
         std::string name;
         std::vector<std::string> features;
         PlatformExpression::Expr platform;
         DependencyConstraint constraint;
+        bool host = false;
 
         Json::Object extra_info;
 

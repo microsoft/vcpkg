@@ -427,6 +427,7 @@ namespace vcpkg
         virtual StringView type_name() const override { return "a dependency"; }
 
         constexpr static StringLiteral NAME = "name";
+        constexpr static StringLiteral HOST = "host";
         constexpr static StringLiteral FEATURES = "features";
         constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
         constexpr static StringLiteral PLATFORM = "platform";
@@ -438,6 +439,7 @@ namespace vcpkg
         {
             static const StringView t[] = {
                 NAME,
+                HOST,
                 FEATURES,
                 DEFAULT_FEATURES,
                 PLATFORM,
@@ -485,6 +487,7 @@ namespace vcpkg
             {
                 dep.features.push_back("core");
             }
+            r.optional_object_field(obj, HOST, dep.host, Json::BooleanDeserializer::instance);
 
             r.optional_object_field(obj, PLATFORM, dep.platform, PlatformExprDeserializer::instance);
 
@@ -905,7 +908,6 @@ namespace vcpkg
             control_file->core_paragraph = std::make_unique<SourceParagraph>();
 
             auto& spgh = control_file->core_paragraph;
-            spgh->type = Type{Type::PORT};
 
             for (const auto& el : obj)
             {
@@ -1168,6 +1170,7 @@ namespace vcpkg
 
     std::vector<FullPackageSpec> filter_dependencies(const std::vector<vcpkg::Dependency>& deps,
                                                      Triplet t,
+                                                     Triplet host,
                                                      const std::unordered_map<std::string, std::string>& cmake_vars)
     {
         std::vector<FullPackageSpec> ret;
@@ -1175,7 +1178,14 @@ namespace vcpkg
         {
             if (dep.platform.evaluate(cmake_vars))
             {
-                ret.emplace_back(FullPackageSpec({dep.name, t}, dep.features));
+                if (dep.host)
+                {
+                    ret.emplace_back(FullPackageSpec({dep.name, host}, dep.features));
+                }
+                else
+                {
+                    ret.emplace_back(FullPackageSpec({dep.name, t}, dep.features));
+                }
             }
         }
         return ret;
@@ -1226,7 +1236,7 @@ namespace vcpkg
         };
         auto serialize_dependency = [&](Json::Array& arr, const Dependency& dep) {
             if (dep.features.empty() && dep.platform.is_empty() && dep.extra_info.is_empty() &&
-                dep.constraint.type == Versions::Constraint::Type::None)
+                dep.constraint.type == Versions::Constraint::Type::None && !dep.host)
             {
                 arr.push_back(Json::Value::string(dep.name));
             }
@@ -1239,6 +1249,7 @@ namespace vcpkg
                 }
 
                 dep_obj.insert(DependencyDeserializer::NAME, Json::Value::string(dep.name));
+                if (dep.host) dep_obj.insert(DependencyDeserializer::HOST, Json::Value::boolean(true));
 
                 auto features_copy = dep.features;
                 auto core_it = std::find(features_copy.begin(), features_copy.end(), "core");
@@ -1347,11 +1358,6 @@ namespace vcpkg
             {
                 serialize_override(overrides, over);
             }
-        }
-
-        if (debug)
-        {
-            obj.insert("TYPE", Json::Value::string(Type::to_string(scf.core_paragraph->type)));
         }
 
         return obj;

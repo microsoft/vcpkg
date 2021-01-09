@@ -94,7 +94,7 @@ namespace vcpkg::Export::IFW
                                fs::generic_u8string(package_xml_file_path));
 
             auto deps = Strings::join(
-                ",", binary_paragraph.dependencies, [](const std::string& dep) { return "packages." + dep + ":"; });
+                ",", binary_paragraph.dependencies, [](const auto& dep) { return "packages." + dep.name() + ":"; });
 
             if (!deps.empty()) deps = "\n    <Dependencies>" + deps + "</Dependencies>";
 

@@ -290,6 +290,19 @@ namespace vcpkg
         using map_t = decltype(std::declval<F&>()(std::declval<const T&>()));
 
         template<class F, class U = map_t<F>>
+        Optional<U> map(F f) const&
+        {
+            if (has_value())
+            {
+                return f(this->m_base.value());
+            }
+            else
+            {
+                return nullopt;
+            }
+        }
+
+        template<class F, class U = map_t<F>>
         U then(F f) const&
         {
             if (has_value())
@@ -304,6 +317,19 @@ namespace vcpkg
 
         template<class F>
         using move_map_t = decltype(std::declval<F&>()(std::declval<T&&>()));
+
+        template<class F, class U = move_map_t<F>>
+        Optional<U> map(F f) &&
+        {
+            if (has_value())
+            {
+                return f(std::move(this->m_base.value()));
+            }
+            else
+            {
+                return nullopt;
+            }
+        }
 
         template<class F, class U = move_map_t<F>>
         U then(F f) &&

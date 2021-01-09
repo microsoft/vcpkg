@@ -81,9 +81,13 @@ namespace vcpkg
 
         this->dependencies = Util::fmap(
             parse_qualified_specifier_list(parser.optional_field(Fields::DEPENDS)).value_or_exit(VCPKG_LINE_INFO),
-            [](const ParsedQualifiedSpecifier& dep) {
+            [this](const ParsedQualifiedSpecifier& dep) {
                 // for compatibility with previous vcpkg versions, we discard all irrelevant information
-                return dep.name;
+                return PackageSpec{
+                    dep.name,
+                    dep.triplet.map([](auto&& s) { return Triplet::from_canonical_name(std::string(s)); })
+                        .value_or(this->spec.triplet()),
+                };
             });
         if (!this->is_feature())
         {
@@ -119,7 +123,7 @@ namespace vcpkg
         , abi(abi_tag)
         , type(spgh.type)
     {
-        this->dependencies = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
+        this->dependencies = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec(); });
         Util::sort_unique_erase(this->dependencies);
     }
 
@@ -138,7 +142,7 @@ namespace vcpkg
         , abi()
         , type(spgh.type)
     {
-        this->dependencies = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
+        this->dependencies = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec(); });
         Util::sort_unique_erase(this->dependencies);
     }
 
@@ -221,7 +225,20 @@ namespace vcpkg
 
         if (!pgh.dependencies.empty())
         {
-            serialize_array(Fields::DEPENDS, pgh.dependencies, out_str);
+            serialize_string(Fields::DEPENDS,
+                             Strings::join(", ",
+                                           pgh.dependencies,
+                                           [&pgh](const PackageSpec& pspec) {
+                                               if (pspec.triplet() == pgh.spec.triplet())
+                                               {
+                                                   return pspec.name();
+                                               }
+                                               else
+                                               {
+                                                   return pspec.to_string();
+                                               }
+                                           }),
+                             out_str);
         }
 
         serialize_string(Fields::ARCHITECTURE, pgh.spec.triplet().to_string(), out_str);

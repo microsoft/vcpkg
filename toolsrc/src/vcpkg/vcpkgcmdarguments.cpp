@@ -270,6 +270,7 @@ namespace vcpkg
                 cojoined_values[] = {
                     {VCPKG_ROOT_DIR_ARG, &VcpkgCmdArguments::vcpkg_root_dir},
                     {TRIPLET_ARG, &VcpkgCmdArguments::triplet},
+                    {HOST_TRIPLET_ARG, &VcpkgCmdArguments::host_triplet},
                     {MANIFEST_ROOT_DIR_ARG, &VcpkgCmdArguments::manifest_root_dir},
                     {BUILDTREES_ROOT_DIR_ARG, &VcpkgCmdArguments::buildtrees_root_dir},
                     {DOWNLOADS_ROOT_DIR_ARG, &VcpkgCmdArguments::downloads_root_dir},
@@ -613,6 +614,9 @@ namespace vcpkg
 
         table.format(opt(TRIPLET_ARG, "=", "<t>"), "Specify the target architecture triplet. See 'vcpkg help triplet'");
         table.format("", "(default: " + format_environment_variable("VCPKG_DEFAULT_TRIPLET") + ')');
+        table.format(opt(HOST_TRIPLET_ARG, "=", "<t>"),
+                     "Specify the host architecture triplet. See 'vcpkg help triplet'");
+        table.format("", "(default: " + format_environment_variable("VCPKG_DEFAULT_HOST_TRIPLET") + ')');
         table.format(opt(OVERLAY_PORTS_ARG, "=", "<path>"), "Specify directories to be used when searching for ports");
         table.format("", "(also: " + format_environment_variable("VCPKG_OVERLAY_PORTS") + ')');
         table.format(opt(OVERLAY_TRIPLETS_ARG, "=", "<path>"), "Specify directories containing triplets files");
@@ -665,6 +669,7 @@ namespace vcpkg
         }
 
         from_env(TRIPLET_ENV, triplet);
+        from_env(HOST_TRIPLET_ENV, host_triplet);
         from_env(VCPKG_ROOT_DIR_ENV, vcpkg_root_dir);
         from_env(DOWNLOADS_ROOT_DIR_ENV, downloads_root_dir);
         from_env(DEFAULT_VISUAL_STUDIO_PATH_ENV, default_visual_studio_path);
@@ -926,6 +931,8 @@ namespace vcpkg
 
     constexpr StringLiteral VcpkgCmdArguments::TRIPLET_ENV;
     constexpr StringLiteral VcpkgCmdArguments::TRIPLET_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::HOST_TRIPLET_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::HOST_TRIPLET_ARG;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ENV;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ARG;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ENV;

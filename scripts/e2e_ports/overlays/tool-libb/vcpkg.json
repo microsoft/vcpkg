@@ -1,0 +1,14 @@
+{
+	"name": "tool-libb",
+	"version-string": "1",
+	"dependencies": [
+		{
+			"name": "tool-manifest",
+			"host": true
+		},
+		{
+			"name": "tool-control",
+			"host": true
+		}
+	]
+}

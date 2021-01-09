@@ -12,7 +12,8 @@ $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
     "--x-packages-root=$packagesRoot",
-    "--overlay-ports=scripts/e2e_ports/overlays"
+    "--overlay-ports=$PSScriptRoot/../e2e_ports/overlays",
+    "--overlay-triplets=$PSScriptRoot/../e2e_ports/triplets"
 )
 $Script:CurrentTest = 'unassigned'
 

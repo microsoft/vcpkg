@@ -132,7 +132,7 @@ namespace vcpkg::Dependencies
         RequestType request_type;
 
         Optional<const BinaryParagraph&> core_paragraph() const;
-        std::vector<PackageSpec> dependencies(Triplet triplet) const;
+        std::vector<PackageSpec> dependencies() const;
 
     private:
         Optional<InstalledPackageView> m_installed_package;
@@ -142,7 +142,11 @@ namespace vcpkg::Dependencies
 
     struct CreateInstallPlanOptions
     {
+        CreateInstallPlanOptions(Graphs::Randomizer* r, Triplet t) : randomizer(r), host_triplet(t) { }
+        CreateInstallPlanOptions(Triplet t) : host_triplet(t) { }
+
         Graphs::Randomizer* randomizer = nullptr;
+        Triplet host_triplet;
     };
 
     std::vector<RemovePlanAction> create_remove_plan(const std::vector<PackageSpec>& specs,
@@ -159,30 +163,31 @@ namespace vcpkg::Dependencies
                                            const CMakeVars::CMakeVarProvider& var_provider,
                                            const std::vector<FullPackageSpec>& specs,
                                            const StatusParagraphs& status_db,
-                                           const CreateInstallPlanOptions& options = {});
+                                           const CreateInstallPlanOptions& options = {Triplet{}});
 
     ActionPlan create_upgrade_plan(const PortFileProvider::PortFileProvider& provider,
                                    const CMakeVars::CMakeVarProvider& var_provider,
                                    const std::vector<PackageSpec>& specs,
                                    const StatusParagraphs& status_db,
-                                   const CreateInstallPlanOptions& options = {});
+                                   const CreateInstallPlanOptions& options = {Triplet{}});
 
     // `features` should have "default" instead of missing "core". This is only exposed for testing purposes.
     std::vector<FullPackageSpec> resolve_deps_as_top_level(const SourceControlFile& scf,
                                                            Triplet triplet,
+                                                           Triplet host_triplet,
                                                            std::vector<std::string> features,
                                                            CMakeVars::CMakeVarProvider& var_provider);
 
-    /// <param name="provider">Contains the ports of the current environment.</param>
-    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
-    /// <param name="status_db">Status of installed packages in the current environment.</param>
     ExpectedS<ActionPlan> create_versioned_install_plan(const PortFileProvider::IVersionedPortfileProvider& vprovider,
                                                         const PortFileProvider::IBaselineProvider& bprovider,
                                                         const PortFileProvider::IOverlayProvider& oprovider,
                                                         const CMakeVars::CMakeVarProvider& var_provider,
                                                         const std::vector<Dependency>& deps,
                                                         const std::vector<DependencyOverride>& overrides,
-                                                        const PackageSpec& toplevel);
+                                                        const PackageSpec& toplevel,
+                                                        Triplet host_triplet);
 
-    void print_plan(const ActionPlan& action_plan, const bool is_recursive = true, const fs::path& vcpkg_root_dir = {});
+    void print_plan(const ActionPlan& action_plan,
+                    const bool is_recursive = true,
+                    const fs::path& builtin_ports_dir = {});
 }

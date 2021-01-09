@@ -230,7 +230,7 @@ TEST_CASE ("BinaryParagraph construct maximum", "[paragraph]")
     REQUIRE(pgh.description.size() == 1);
     REQUIRE(pgh.description[0] == "d");
     REQUIRE(pgh.dependencies.size() == 1);
-    REQUIRE(pgh.dependencies[0] == "bd");
+    REQUIRE(pgh.dependencies[0].name() == "bd");
 }
 
 TEST_CASE ("BinaryParagraph three dependencies", "[paragraph]")
@@ -244,9 +244,28 @@ TEST_CASE ("BinaryParagraph three dependencies", "[paragraph]")
     });
 
     REQUIRE(pgh.dependencies.size() == 3);
-    REQUIRE(pgh.dependencies[0] == "a");
-    REQUIRE(pgh.dependencies[1] == "b");
-    REQUIRE(pgh.dependencies[2] == "c");
+    REQUIRE(pgh.dependencies[0].name() == "a");
+    REQUIRE(pgh.dependencies[1].name() == "b");
+    REQUIRE(pgh.dependencies[2].name() == "c");
+}
+
+TEST_CASE ("BinaryParagraph dependencies with triplets", "[paragraph]")
+{
+    auto pgh = test_make_binary_paragraph({
+        {"Package", "zlib"},
+        {"Version", "1.2.8"},
+        {"Architecture", "x86-windows"},
+        {"Multi-Arch", "same"},
+        {"Depends", "a:x64-windows, b, c:arm-uwp"},
+    });
+
+    REQUIRE(pgh.dependencies.size() == 3);
+    REQUIRE(pgh.dependencies[0].name() == "a");
+    REQUIRE(pgh.dependencies[0].triplet() == vcpkg::Test::X64_WINDOWS);
+    REQUIRE(pgh.dependencies[1].name() == "b");
+    REQUIRE(pgh.dependencies[1].triplet() == vcpkg::Test::X86_WINDOWS);
+    REQUIRE(pgh.dependencies[2].name() == "c");
+    REQUIRE(pgh.dependencies[2].triplet() == vcpkg::Test::ARM_UWP);
 }
 
 TEST_CASE ("BinaryParagraph abi", "[paragraph]")

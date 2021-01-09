@@ -224,6 +224,8 @@ namespace vcpkg
             Configuration m_config;
 
             FeatureFlagSettings m_ff_settings;
+
+            Triplet m_host_triplet;
         };
     }
 
@@ -251,6 +253,8 @@ namespace vcpkg
 
         Checks::check_exit(VCPKG_LINE_INFO, !root.empty(), "Error: Could not detect vcpkg-root.");
         Debug::print("Using vcpkg-root: ", fs::u8string(root), '\n');
+
+        m_pimpl->m_host_triplet = default_host_triplet(args);
 
         std::error_code ec;
         bool manifest_mode_on = args.manifest_mode.value_or(args.manifest_root_dir != nullptr);
@@ -413,6 +417,8 @@ If you wish to silence this error and use classic mode, you can:
         });
         return it != this->get_available_triplets().cend();
     }
+
+    Triplet VcpkgPaths::host_triplet() const { return m_pimpl->m_host_triplet; }
 
     const std::vector<std::string> VcpkgPaths::get_available_triplets_names() const
     {

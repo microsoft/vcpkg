@@ -97,7 +97,7 @@ namespace vcpkg::Build
         StatusParagraphs status_db = database_load_check(paths);
 
         auto action_plan = Dependencies::create_feature_install_plan(
-            provider, var_provider, std::vector<FullPackageSpec>{full_spec}, status_db);
+            provider, var_provider, std::vector<FullPackageSpec>{full_spec}, status_db, {paths.host_triplet()});
 
         var_provider.load_tag_vars(action_plan, provider);
 
@@ -515,6 +515,7 @@ namespace vcpkg::Build
                               std::initializer_list<System::CMakeVariable>{
                                   {"CMD", "BUILD"},
                                   {"TARGET_TRIPLET", triplet.canonical_name()},
+                                  {"HOST_TRIPLET", paths.host_triplet().canonical_name()},
                                   {"TARGET_TRIPLET_FILE", fs::u8string(paths.get_triplet_file_path(triplet))},
                                   {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                                   {"DOWNLOADS", paths.downloads},
@@ -947,7 +948,8 @@ namespace vcpkg::Build
 
         const auto& abi_info = action.abi_info.value_or_exit(VCPKG_LINE_INFO);
         const auto& triplet_abi = paths.get_triplet_info(abi_info);
-        abi_tag_entries.emplace_back("triplet", triplet_abi);
+        abi_tag_entries.emplace_back("triplet", triplet.canonical_name());
+        abi_tag_entries.emplace_back("triplet_abi", triplet_abi);
         abi_entries_from_abi_info(abi_info, abi_tag_entries);
 
         // If there is an unusually large number of files in the port then

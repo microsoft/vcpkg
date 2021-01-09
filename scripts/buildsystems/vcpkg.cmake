@@ -398,6 +398,10 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
             set(_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS)
         endif()
 
+        if(VCPKG_HOST_TRIPLET)
+            list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--host-triplet=${VCPKG_HOST_TRIPLET}")
+        endif()
+
         execute_process(
             COMMAND "${_VCPKG_EXECUTABLE}" install
                 --triplet "${VCPKG_TARGET_TRIPLET}"

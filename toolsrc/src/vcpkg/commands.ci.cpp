@@ -2,6 +2,7 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/graphs.h>
 #include <vcpkg/base/stringliteral.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
 #include <vcpkg/base/util.h>
 
@@ -65,7 +66,8 @@ namespace
             {
                 for (const fs::path& p : children)
                 {
-                    filesystem.copy_file(p, target_path / p.filename(), fs::copy_options::none, VCPKG_LINE_INFO);
+                    filesystem.copy_file(
+                        p, target_path / p.filename(), fs::copy_options::overwrite_existing, VCPKG_LINE_INFO);
                 }
             }
         }
@@ -271,7 +273,7 @@ namespace vcpkg::Commands::CI
         std::vector<FullPackageSpec> unknown;
         std::map<PackageSpec, Build::BuildResult> known;
         std::map<PackageSpec, std::vector<std::string>> features;
-        std::unordered_map<std::string, SourceControlFileLocation> default_feature_provider;
+        Dependencies::ActionPlan plan;
         std::map<PackageSpec, std::string> abi_map;
     };
 
@@ -292,7 +294,8 @@ namespace vcpkg::Commands::CI
         const PortFileProvider::PortFileProvider& provider,
         const CMakeVars::CMakeVarProvider& var_provider,
         const std::vector<FullPackageSpec>& specs,
-        IBinaryProvider& binaryprovider)
+        IBinaryProvider& binaryprovider,
+        const Dependencies::CreateInstallPlanOptions& serialize_options)
     {
         auto ret = std::make_unique<UnknownCIPortsResults>();
 
@@ -312,7 +315,8 @@ namespace vcpkg::Commands::CI
         }
 
         var_provider.load_dep_info_vars(packages_with_qualified_deps);
-        auto action_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {}, {});
+        auto action_plan =
+            Dependencies::create_feature_install_plan(provider, var_provider, specs, {}, serialize_options);
 
         std::vector<FullPackageSpec> install_specs;
         for (auto&& install_action : action_plan.install_actions)
@@ -330,22 +334,15 @@ namespace vcpkg::Commands::CI
 
         Build::compute_all_abis(paths, action_plan, var_provider, {});
 
+        auto precheck_results = binary_provider_precheck(paths, action_plan, binaryprovider);
         {
             vcpkg::System::BufferedPrint stdout_print;
-            auto precheck_results = binary_provider_precheck(paths, action_plan, binaryprovider);
 
             for (auto&& action : action_plan.install_actions)
             {
                 auto p = &action;
                 ret->abi_map.emplace(action.spec, action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi);
                 ret->features.emplace(action.spec, action.feature_list);
-                if (auto scfl = p->source_control_file_location.get())
-                {
-                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), scfl->clone());
-                    emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
-
-                    p->build_options = vcpkg::Build::backcompat_prohibiting_package_options;
-                }
 
                 auto precheck_result = precheck_results.at(&action);
                 bool b_will_build = false;
@@ -399,6 +396,27 @@ namespace vcpkg::Commands::CI
             }
         } // flush stdout_print
 
+        std::vector<InstallPlanAction*> rev_install_actions;
+        std::set<PackageSpec> to_keep;
+        for (auto it = action_plan.install_actions.rbegin(); it != action_plan.install_actions.rend(); ++it)
+        {
+            if (!Util::Sets::contains(ret->known, it->spec))
+            {
+                to_keep.insert(it->spec);
+            }
+
+            if (Util::Sets::contains(to_keep, it->spec))
+            {
+                rev_install_actions.push_back(&*it);
+                to_keep.insert(it->package_dependencies.begin(), it->package_dependencies.end());
+            }
+        }
+
+        for (auto it = rev_install_actions.rbegin(); it != rev_install_actions.rend(); ++it)
+        {
+            ret->plan.install_actions.push_back(std::move(**it));
+        }
+
         System::printf("Time to determine pass/fail: %s\n", timer.elapsed());
         return ret;
     }
@@ -429,6 +447,11 @@ namespace vcpkg::Commands::CI
 
         std::vector<Triplet> triplets = Util::fmap(
             args.command_arguments, [](std::string s) { return Triplet::from_canonical_name(std::move(s)); });
+
+        if (args.command_arguments.at(0) == "x64-windows-static")
+        {
+            Debug::g_debugging = true;
+        }
 
         if (triplets.empty())
         {
@@ -480,11 +503,7 @@ namespace vcpkg::Commands::CI
                 return FullPackageSpec{spec, std::move(default_features)};
             });
 
-            auto split_specs = find_unknown_ports_for_ci(
-                paths, exclusions_set, provider, var_provider, all_default_full_specs, binaryprovider);
-            PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);
-
-            Dependencies::CreateInstallPlanOptions serialize_options;
+            Dependencies::CreateInstallPlanOptions serialize_options(paths.host_triplet());
 
             struct RandomizerInstance : Graphs::Randomizer
             {
@@ -503,8 +522,15 @@ namespace vcpkg::Commands::CI
                 serialize_options.randomizer = &randomizer_instance;
             }
 
-            auto action_plan = Dependencies::create_feature_install_plan(
-                new_default_provider, var_provider, split_specs->unknown, status_db, serialize_options);
+            auto split_specs = find_unknown_ports_for_ci(paths,
+                                                         exclusions_set,
+                                                         provider,
+                                                         var_provider,
+                                                         all_default_full_specs,
+                                                         binaryprovider,
+                                                         serialize_options);
+
+            auto& action_plan = split_specs->plan;
 
             for (auto&& action : action_plan.install_actions)
             {

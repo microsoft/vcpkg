@@ -1,0 +1,11 @@
+{
+    "name": "integrate-install-test",
+    "version-string": "0",
+    "dependencies": [
+        {
+            "name": "zlib",
+            "host": true
+        },
+        "zlib"
+    ]
+}

@@ -1,5 +1,6 @@
 #include <vcpkg/buildenvironment.h>
 #include <vcpkg/tools.h>
+#include <vcpkg/triplet.h>
 #include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg
@@ -15,6 +16,7 @@ namespace vcpkg
         local_variables.emplace_back("_VCPKG_INSTALLED_DIR", paths.installed);
         local_variables.emplace_back("DOWNLOADS", paths.downloads);
         local_variables.emplace_back("VCPKG_MANIFEST_INSTALL", "OFF");
+        local_variables.emplace_back("HOST_TRIPLET", paths.host_triplet().canonical_name());
         return System::make_basic_cmake_cmd(paths.get_tool_exe(Tools::CMAKE), cmake_script, local_variables);
     }
 }

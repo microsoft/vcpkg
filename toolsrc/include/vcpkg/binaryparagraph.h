@@ -37,9 +37,9 @@ namespace vcpkg
         std::vector<std::string> maintainers;
         std::string feature;
         std::vector<std::string> default_features;
-        std::vector<std::string> dependencies;
+        std::vector<PackageSpec> dependencies;
         std::string abi;
-        Type type = {Type::UNKNOWN};
+        Type type = {Type::PORT};
     };
 
     bool operator==(const BinaryParagraph&, const BinaryParagraph&);

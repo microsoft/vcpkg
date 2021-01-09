@@ -80,6 +80,14 @@ TEST_CASE ("value conversion", "[optional]")
     REQUIRE(o_v.get()->size() == 3);
 }
 
+TEST_CASE ("optional.map", "[optional]")
+{
+    using vcpkg::Optional;
+
+    Optional<std::unique_ptr<int>> move_only;
+    Optional<std::unique_ptr<int>> move_only2;
+}
+
 TEST_CASE ("common_projection", "[optional]")
 {
     using vcpkg::Util::common_projection;

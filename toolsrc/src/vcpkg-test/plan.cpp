@@ -1066,6 +1066,159 @@ TEST_CASE ("features depend core remove scheme 2", "[plan]")
     REQUIRE(remove_plan.at(0).spec.name() == "curl");
 }
 
+TEST_CASE ("self-referencing scheme", "[plan]")
+{
+    PackageSpecMap spec_map;
+    auto spec_a = spec_map.emplace("a", "a");
+    auto spec_b = spec_map.emplace("b", "b, b (x64)");
+
+    PortFileProvider::MapPortFileProvider map_port(spec_map.map);
+    MockCMakeVarProvider var_provider;
+
+    SECTION ("basic")
+    {
+        auto install_plan = Dependencies::create_feature_install_plan(
+            map_port, var_provider, {FullPackageSpec{spec_a, {}}}, {}, {{}, Test::X64_WINDOWS});
+
+        REQUIRE(install_plan.size() == 1);
+        REQUIRE(install_plan.install_actions.at(0).spec == spec_a);
+    }
+    SECTION ("qualified")
+    {
+        auto install_plan = Dependencies::create_feature_install_plan(
+            map_port, var_provider, {FullPackageSpec{spec_b, {}}}, {}, {{}, Test::X64_WINDOWS});
+
+        REQUIRE(install_plan.size() == 1);
+        REQUIRE(install_plan.install_actions.at(0).spec == spec_b);
+    }
+}
+
+TEST_CASE ("basic tool port scheme", "[plan]")
+{
+    std::vector<std::unique_ptr<StatusParagraph>> status_paragraphs;
+
+    PackageSpecMap spec_map;
+    auto spec_a = spec_map.emplace("a", "b");
+    auto spec_b = spec_map.emplace("b", "c");
+    auto spec_c = spec_map.emplace("c");
+
+    spec_map.map.at("a").source_control_file->core_paragraph->dependencies[0].host = true;
+
+    PortFileProvider::MapPortFileProvider map_port(spec_map.map);
+    MockCMakeVarProvider var_provider;
+
+    auto install_plan = Dependencies::create_feature_install_plan(map_port,
+                                                                  var_provider,
+                                                                  {FullPackageSpec{spec_a, {}}},
+                                                                  StatusParagraphs(std::move(status_paragraphs)),
+                                                                  {{}, Test::X64_WINDOWS});
+
+    REQUIRE(install_plan.size() == 3);
+    REQUIRE(install_plan.install_actions.at(0).spec.name() == "c");
+    REQUIRE(install_plan.install_actions.at(0).spec.triplet() == Test::X64_WINDOWS);
+    REQUIRE(install_plan.install_actions.at(1).spec.name() == "b");
+    REQUIRE(install_plan.install_actions.at(1).spec.triplet() == Test::X64_WINDOWS);
+    REQUIRE(install_plan.install_actions.at(2).spec.name() == "a");
+}
+
+TEST_CASE ("basic existing tool port scheme", "[plan]")
+{
+    std::vector<std::unique_ptr<StatusParagraph>> pghs;
+    pghs.push_back(make_status_pgh("b", "", "", "x64-windows"));
+    StatusParagraphs status_db(std::move(pghs));
+    MockCMakeVarProvider var_provider;
+
+    SECTION ("a+b")
+    {
+        PackageSpecMap spec_map;
+        auto spec_a = spec_map.emplace("a", "b");
+        auto spec_b = spec_map.emplace("b");
+
+        spec_map.map.at("a").source_control_file->core_paragraph->dependencies[0].host = true;
+
+        PortFileProvider::MapPortFileProvider map_port(spec_map.map);
+
+        auto install_plan = Dependencies::create_feature_install_plan(
+            map_port, var_provider, {FullPackageSpec{spec_a, {}}}, status_db, {{}, Test::X64_WINDOWS});
+
+        REQUIRE(install_plan.size() == 1);
+        REQUIRE(install_plan.install_actions.at(0).spec == spec_a);
+    }
+
+    SECTION ("a recurse")
+    {
+        PackageSpecMap spec_map;
+        auto spec_a = spec_map.emplace("a", "a");
+
+        spec_map.map.at("a").source_control_file->core_paragraph->dependencies[0].host = true;
+
+        PortFileProvider::MapPortFileProvider map_port(spec_map.map);
+
+        auto install_plan = Dependencies::create_feature_install_plan(
+            map_port, var_provider, {FullPackageSpec{spec_a, {}}}, status_db, {{}, Test::X64_WINDOWS});
+
+        REQUIRE(install_plan.size() == 2);
+        REQUIRE(install_plan.install_actions.at(0).spec.name() == "a");
+        REQUIRE(install_plan.install_actions.at(0).spec.triplet() == Test::X64_WINDOWS);
+        REQUIRE(install_plan.install_actions.at(1).spec == spec_a);
+
+        install_plan = Dependencies::create_feature_install_plan(
+            map_port, var_provider, {FullPackageSpec{spec_a, {}}}, status_db, {{}, Test::X86_WINDOWS});
+
+        REQUIRE(install_plan.size() == 1);
+        REQUIRE(install_plan.install_actions.at(0).spec == spec_a);
+    }
+
+    SECTION ("a+b (arm)")
+    {
+        PackageSpecMap spec_map;
+        auto spec_a = spec_map.emplace("a", "b");
+        auto spec_b = spec_map.emplace("b");
+
+        spec_map.map.at("a").source_control_file->core_paragraph->dependencies[0].host = true;
+
+        PortFileProvider::MapPortFileProvider map_port(spec_map.map);
+
+        auto install_plan = Dependencies::create_feature_install_plan(
+            map_port, var_provider, {FullPackageSpec{spec_a, {}}}, status_db, {{}, Test::ARM_UWP});
+
+        REQUIRE(install_plan.size() == 2);
+        REQUIRE(install_plan.install_actions.at(0).spec.name() == "b");
+        REQUIRE(install_plan.install_actions.at(0).spec.triplet() == Test::ARM_UWP);
+        REQUIRE(install_plan.install_actions.at(1).spec == spec_a);
+    }
+
+    SECTION ("a+b+c")
+    {
+        PackageSpecMap spec_map;
+        auto spec_a = spec_map.emplace("a", "b");
+        auto spec_b = spec_map.emplace("b", "c");
+        auto spec_c = spec_map.emplace("c");
+
+        spec_map.map.at("a").source_control_file->core_paragraph->dependencies[0].host = true;
+
+        PortFileProvider::MapPortFileProvider map_port(spec_map.map);
+
+        auto install_plan = Dependencies::create_feature_install_plan(
+            map_port, var_provider, {FullPackageSpec{spec_a, {}}}, status_db, {{}, Test::X64_WINDOWS});
+
+        REQUIRE(install_plan.size() == 1);
+        REQUIRE(install_plan.install_actions.at(0).spec == spec_a);
+    }
+}
+
+TEST_CASE ("remove tool port scheme", "[plan]")
+{
+    std::vector<std::unique_ptr<StatusParagraph>> pghs;
+    pghs.push_back(make_status_pgh("a"));
+    StatusParagraphs status_db(std::move(pghs));
+
+    auto remove_plan = Dependencies::create_remove_plan({{"a", Test::X86_WINDOWS}}, status_db);
+
+    REQUIRE(remove_plan.size() == 1);
+    REQUIRE(remove_plan.at(0).spec.name() == "a");
+}
+
 TEST_CASE ("basic upgrade scheme", "[plan]")
 {
     std::vector<std::unique_ptr<StatusParagraph>> pghs;

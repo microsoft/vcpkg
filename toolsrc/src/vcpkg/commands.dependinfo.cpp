@@ -261,7 +261,8 @@ namespace vcpkg::Commands::DependInfo
         // By passing an empty status_db, we should get a plan containing all dependencies.
         // All actions in the plan should be install actions, as there's no installed packages to remove.
         StatusParagraphs status_db;
-        auto action_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db);
+        auto action_plan =
+            Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db, {paths.host_triplet()});
         Checks::check_exit(
             VCPKG_LINE_INFO, action_plan.remove_actions.empty(), "Only install actions should exist in the plan");
         std::vector<const InstallPlanAction*> install_actions =

@@ -78,7 +78,8 @@ namespace vcpkg::Commands::Upgrade
                 provider,
                 var_provider,
                 Util::fmap(outdated_packages, [](const Update::OutdatedPackage& package) { return package.spec; }),
-                status_db);
+                status_db,
+                {paths.host_triplet()});
         }
         else
         {
@@ -158,7 +159,8 @@ namespace vcpkg::Commands::Upgrade
 
             if (to_upgrade.empty()) Checks::exit_success(VCPKG_LINE_INFO);
 
-            action_plan = Dependencies::create_upgrade_plan(provider, var_provider, to_upgrade, status_db);
+            action_plan = Dependencies::create_upgrade_plan(
+                provider, var_provider, to_upgrade, status_db, {paths.host_triplet()});
         }
 
         Checks::check_exit(VCPKG_LINE_INFO, !action_plan.empty());

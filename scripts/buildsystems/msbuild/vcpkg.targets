@@ -18,8 +18,8 @@
     <VcpkgRoot Condition="'$(VcpkgRoot)' != '' and !$(VcpkgRoot.EndsWith('\'))">$(VcpkgRoot)\</VcpkgRoot>
     <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' != '' and !$(VcpkgManifestRoot.EndsWith('\'))">$(VcpkgManifestRoot)\</VcpkgManifestRoot>
 
-    <VcpkgInstalledDir>$([System.IO.Path]::Combine($(VcpkgRoot), 'installed'))</VcpkgInstalledDir>
-    <VcpkgInstalledDir Condition="'$(VcpkgEnableManifest)' == 'true'">$([System.IO.Path]::Combine($(VcpkgManifestRoot), 'vcpkg_installed'))</VcpkgInstalledDir>
+    <VcpkgInstalledDir Condition="'$(VcpkgEnableManifest)' != 'true' and '$(VcpkgInstalledDir)' == ''">$([System.IO.Path]::Combine($(VcpkgRoot), 'installed'))</VcpkgInstalledDir>
+    <VcpkgInstalledDir Condition="'$(VcpkgEnableManifest)' == 'true' and '$(VcpkgInstalledDir)' == ''">$([System.IO.Path]::Combine($(VcpkgManifestRoot), 'vcpkg_installed'))</VcpkgInstalledDir>
     <VcpkgInstalledDir Condition="!$(VcpkgInstalledDir.EndsWith('\'))">$(VcpkgInstalledDir)\</VcpkgInstalledDir>
 
     <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$([System.IO.Path]::Combine($(VcpkgInstalledDir), $(VcpkgTriplet)))</VcpkgCurrentInstalledDir>
@@ -30,6 +30,8 @@
 
     <VcpkgConfigSubdir Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">debug\</VcpkgConfigSubdir>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
+    <_VcpkgHostTripletParameter Condition="'$(VcpkgHostTriplet)' != ''">"--host-triplet=$(VcpkgHostTriplet)"</_VcpkgHostTripletParameter>
+    <_VcpkgExecutable>"$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))"</_VcpkgExecutable>
   </PropertyGroup>
 
   <!-- Import property page 'Vcpkg' -->
@@ -71,7 +73,7 @@
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'">
     <Message Text="Installing vcpkg dependencies" Importance="High" />
-    <Exec Command="%22$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22"
+    <Exec Command="$(_VcpkgExecutable) install $(_VcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22"
           StandardOutputImportance="High" />
   </Target>
 

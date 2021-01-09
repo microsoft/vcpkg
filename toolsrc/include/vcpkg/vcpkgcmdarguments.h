@@ -143,6 +143,9 @@ namespace vcpkg
         constexpr static StringLiteral TRIPLET_ENV = "VCPKG_DEFAULT_TRIPLET";
         constexpr static StringLiteral TRIPLET_ARG = "triplet";
         std::unique_ptr<std::string> triplet;
+        constexpr static StringLiteral HOST_TRIPLET_ENV = "VCPKG_DEFAULT_HOST_TRIPLET";
+        constexpr static StringLiteral HOST_TRIPLET_ARG = "host-triplet";
+        std::unique_ptr<std::string> host_triplet;
         constexpr static StringLiteral OVERLAY_PORTS_ENV = "VCPKG_OVERLAY_PORTS";
         constexpr static StringLiteral OVERLAY_PORTS_ARG = "overlay-ports";
         std::vector<std::string> overlay_ports;

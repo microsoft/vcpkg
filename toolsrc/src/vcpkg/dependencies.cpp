@@ -16,6 +16,8 @@ using namespace vcpkg;
 
 namespace vcpkg::Dependencies
 {
+    struct ClusterGraph;
+
     namespace
     {
         struct ClusterInstalled
@@ -82,7 +84,8 @@ namespace vcpkg::Dependencies
             // Precondition: must have called "mark_for_reinstall()" or "create_install_info()" on this cluster
             void add_feature(const std::string& feature,
                              const CMakeVars::CMakeVarProvider& var_provider,
-                             std::vector<FeatureSpec>& out_new_dependencies)
+                             std::vector<FeatureSpec>& out_new_dependencies,
+                             Triplet host_triplet)
             {
                 ClusterInstallInfo& info = m_install_info.value_or_exit(VCPKG_LINE_INFO);
                 if (feature == "default")
@@ -110,7 +113,7 @@ namespace vcpkg::Dependencies
                 if (auto vars = maybe_vars.get())
                 {
                     // Qualified dependency resolution is available
-                    auto fullspec_list = filter_dependencies(*qualified_deps, m_spec.triplet(), *vars);
+                    auto fullspec_list = filter_dependencies(*qualified_deps, m_spec.triplet(), host_triplet, *vars);
 
                     for (auto&& fspec : fullspec_list)
                     {
@@ -127,8 +130,9 @@ namespace vcpkg::Dependencies
                     {
                         if (dep.platform.is_empty())
                         {
+                            auto t = dep.host ? host_triplet : m_spec.triplet();
                             Util::Vectors::append(&dep_list,
-                                                  FullPackageSpec({dep.name, m_spec.triplet()}, dep.features)
+                                                  FullPackageSpec({dep.name, t}, dep.features)
                                                       .to_feature_specs({"default"}, {"default"}));
                         }
                         else
@@ -137,11 +141,16 @@ namespace vcpkg::Dependencies
                         }
                     }
                     Util::sort_unique_erase(dep_list);
-                    if (!requires_qualified_resolution)
+                    if (requires_qualified_resolution)
+                    {
+                        Util::erase_remove_if(dep_list, [this](FeatureSpec& f) { return f.spec() == m_spec; });
+                    }
+                    else
                     {
                         info.build_edges.emplace(feature, dep_list);
                     }
                 }
+
                 Util::Vectors::append(&out_new_dependencies, dep_list);
             }
 
@@ -220,14 +229,15 @@ namespace vcpkg::Dependencies
         {
             PackageGraph(const PortFileProvider::PortFileProvider& provider,
                          const CMakeVars::CMakeVarProvider& var_provider,
-                         const StatusParagraphs& status_db);
+                         const StatusParagraphs& status_db,
+                         Triplet host_triplet);
             ~PackageGraph();
 
             void install(Span<const FeatureSpec> specs);
             void upgrade(Span<const PackageSpec> specs);
             void mark_user_requested(const PackageSpec& spec);
 
-            ActionPlan serialize(const CreateInstallPlanOptions& options = {}) const;
+            ActionPlan serialize(Graphs::Randomizer* randomizer) const;
 
             void mark_for_reinstall(const PackageSpec& spec, std::vector<FeatureSpec>& out_reinstall_requirements);
             const CMakeVars::CMakeVarProvider& m_var_provider;
@@ -240,9 +250,10 @@ namespace vcpkg::Dependencies
     /// <summary>
     /// Directional graph representing a collection of packages with their features connected by their dependencies.
     /// </summary>
-    struct ClusterGraph : Util::MoveOnlyBase
+    struct ClusterGraph : Util::ResourceBase
     {
-        explicit ClusterGraph(const PortFileProvider::PortFileProvider& port_provider) : m_port_provider(port_provider)
+        explicit ClusterGraph(const PortFileProvider::PortFileProvider& port_provider, Triplet host_triplet)
+            : m_port_provider(port_provider), m_host_triplet(host_triplet)
         {
         }
 
@@ -258,45 +269,48 @@ namespace vcpkg::Dependencies
             {
                 const SourceControlFileLocation* scfl = m_port_provider.get_control_file(spec.name()).get();
 
-                Checks::check_exit(
-                    VCPKG_LINE_INFO, scfl, "Error: Cannot find definition for package `%s`.", spec.name());
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   scfl,
+                                   "Error: Cannot find definition for package `%s` while getting `%s`.",
+                                   spec.name(),
+                                   spec);
 
-                return m_graph
-                    .emplace(std::piecewise_construct, std::forward_as_tuple(spec), std::forward_as_tuple(spec, *scfl))
-                    .first->second;
+                it = m_graph
+                         .emplace(
+                             std::piecewise_construct, std::forward_as_tuple(spec), std::forward_as_tuple(spec, *scfl))
+                         .first;
             }
 
             return it->second;
         }
 
-        Cluster& get(const InstalledPackageView& ipv)
+        Cluster& insert(const InstalledPackageView& ipv)
         {
-            auto it = m_graph.find(ipv.spec());
+            ExpectedS<const SourceControlFileLocation&> maybe_scfl =
+                m_port_provider.get_control_file(ipv.spec().name());
 
-            if (it == m_graph.end())
+            if (maybe_scfl.has_value())
             {
-                ExpectedS<const SourceControlFileLocation&> maybe_scfl =
-                    m_port_provider.get_control_file(ipv.spec().name());
-
-                return m_graph
-                    .emplace(std::piecewise_construct,
-                             std::forward_as_tuple(ipv.spec()),
-                             std::forward_as_tuple(ipv, std::move(maybe_scfl)))
-                    .first->second;
+                Checks::check_exit(VCPKG_LINE_INFO,
+                                   maybe_scfl.get()->source_control_file->core_paragraph->type.type ==
+                                       ipv.core->package.type.type,
+                                   "Error: the port type of '%s' differs between the installed and available "
+                                   "portfile.\nPlease manually remove '%s' and re-run this command.",
+                                   ipv.spec().name(),
+                                   ipv.spec());
             }
 
-            if (!it->second.m_installed)
-            {
-                it->second.m_installed = {ipv};
-            }
-
-            return it->second;
+            return m_graph
+                .emplace(std::piecewise_construct,
+                         std::forward_as_tuple(ipv.spec()),
+                         std::forward_as_tuple(ipv, std::move(maybe_scfl)))
+                .first->second;
         }
 
         const Cluster& find_or_exit(const PackageSpec& spec, LineInfo linfo) const
         {
             auto it = m_graph.find(spec);
-            Checks::check_exit(linfo, it != m_graph.end(), "Failed to locate spec in graph");
+            Checks::check_exit(linfo, it != m_graph.end(), "Failed to locate spec in graph: %s", spec);
             return it->second;
         }
 
@@ -306,6 +320,9 @@ namespace vcpkg::Dependencies
     private:
         std::map<PackageSpec, Cluster> m_graph;
         const PortFileProvider::PortFileProvider& m_port_provider;
+
+    public:
+        const Triplet m_host_triplet;
     };
 
     static std::string to_output_string(RequestType request_type,
@@ -500,7 +517,7 @@ namespace vcpkg::Dependencies
         return nullopt;
     }
 
-    std::vector<PackageSpec> ExportPlanAction::dependencies(Triplet) const
+    std::vector<PackageSpec> ExportPlanAction::dependencies() const
     {
         if (auto p_ip = m_installed_package.get())
             return p_ip->dependencies();
@@ -587,7 +604,7 @@ namespace vcpkg::Dependencies
 
             std::vector<PackageSpec> adjacency_list(const ExportPlanAction& plan) const override
             {
-                return plan.dependencies(plan.spec.triplet());
+                return plan.dependencies();
             }
 
             ExportPlanAction load_vertex_data(const PackageSpec& spec) const override
@@ -623,11 +640,12 @@ namespace vcpkg::Dependencies
     // `features` should have "default" instead of missing "core"
     std::vector<FullPackageSpec> resolve_deps_as_top_level(const SourceControlFile& scf,
                                                            Triplet triplet,
+                                                           Triplet host_triplet,
                                                            std::vector<std::string> features,
                                                            CMakeVars::CMakeVarProvider& var_provider)
     {
         PackageSpec spec{scf.core_paragraph->name, triplet};
-        std::map<std::string, std::vector<std::string>> specs_to_features;
+        std::map<PackageSpec, std::vector<std::string>> specs_to_features;
 
         Optional<const PlatformExpression::Context&> ctx_storage = var_provider.get_dep_info_vars(spec);
         auto ctx = [&]() -> const PlatformExpression::Context& {
@@ -647,7 +665,10 @@ namespace vcpkg::Dependencies
                     if (dep.name == spec.name())
                         Util::Vectors::append(&features, dep.features);
                     else
-                        Util::Vectors::append(&specs_to_features[dep.name], dep.features);
+                    {
+                        auto t = dep.host ? host_triplet : triplet;
+                        Util::Vectors::append(&specs_to_features[{dep.name, t}], dep.features);
+                    }
                 }
             }
         };
@@ -679,8 +700,8 @@ namespace vcpkg::Dependencies
                 if (it != scf.feature_paragraphs.end()) handle_deps(it->get()->dependencies);
             }
         }
-        return Util::fmap(specs_to_features, [triplet](std::pair<const std::string, std::vector<std::string>>& p) {
-            return FullPackageSpec({p.first, triplet}, Util::sort_unique_erase(std::move(p.second)));
+        return Util::fmap(specs_to_features, [](std::pair<const PackageSpec, std::vector<std::string>>& p) {
+            return FullPackageSpec(p.first, Util::sort_unique_erase(std::move(p.second)));
         });
     }
 
@@ -690,7 +711,7 @@ namespace vcpkg::Dependencies
                                            const StatusParagraphs& status_db,
                                            const CreateInstallPlanOptions& options)
     {
-        PackageGraph pgraph(port_provider, var_provider, status_db);
+        PackageGraph pgraph(port_provider, var_provider, status_db, options.host_triplet);
 
         std::vector<FeatureSpec> feature_specs;
         for (const FullPackageSpec& spec : specs)
@@ -722,7 +743,7 @@ namespace vcpkg::Dependencies
         }
         pgraph.install(feature_specs);
 
-        auto res = pgraph.serialize(options);
+        auto res = pgraph.serialize(options.randomizer);
 
         return res;
     }
@@ -772,6 +793,7 @@ namespace vcpkg::Dependencies
 
                 // Get the cluster for the PackageSpec of the FeatureSpec we are adding to the install graph
                 Cluster& clust = m_graph->get(spec.spec());
+                spec = FeatureSpec{clust.m_spec, spec.feature()};
 
                 // If this spec hasn't already had its qualified dependencies resolved
                 if (!m_var_provider.get_dep_info_vars(spec.spec()).has_value())
@@ -809,14 +831,14 @@ namespace vcpkg::Dependencies
 
                 if (clust.m_install_info.has_value())
                 {
-                    clust.add_feature(spec.feature(), m_var_provider, next_dependencies);
+                    clust.add_feature(spec.feature(), m_var_provider, next_dependencies, m_graph->m_host_triplet);
                 }
                 else
                 {
                     if (!clust.m_installed.has_value())
                     {
                         clust.create_install_info(next_dependencies);
-                        clust.add_feature(spec.feature(), m_var_provider, next_dependencies);
+                        clust.add_feature(spec.feature(), m_var_provider, next_dependencies, m_graph->m_host_triplet);
                     }
                     else
                     {
@@ -837,7 +859,8 @@ namespace vcpkg::Dependencies
                             // which hasn't already been installed to this cluster. In this case, we need to reinstall
                             // the port if the feature isn't already present.
                             mark_for_reinstall(spec.spec(), next_dependencies);
-                            clust.add_feature(spec.feature(), m_var_provider, next_dependencies);
+                            clust.add_feature(
+                                spec.feature(), m_var_provider, next_dependencies, m_graph->m_host_triplet);
                         }
                     }
                 }
@@ -882,14 +905,14 @@ namespace vcpkg::Dependencies
                                    const StatusParagraphs& status_db,
                                    const CreateInstallPlanOptions& options)
     {
-        PackageGraph pgraph(port_provider, var_provider, status_db);
+        PackageGraph pgraph(port_provider, var_provider, status_db, options.host_triplet);
 
         pgraph.upgrade(specs);
 
-        return pgraph.serialize(options);
+        return pgraph.serialize(options.randomizer);
     }
 
-    ActionPlan PackageGraph::serialize(const CreateInstallPlanOptions& options) const
+    ActionPlan PackageGraph::serialize(Graphs::Randomizer* randomizer) const
     {
         struct BaseEdgeProvider : Graphs::AdjacencyProvider<PackageSpec, const Cluster*>
         {
@@ -949,8 +972,8 @@ namespace vcpkg::Dependencies
                 installed_vertices.push_back(kv.first);
             }
         }
-        auto remove_toposort = Graphs::topological_sort(removed_vertices, removeedgeprovider, options.randomizer);
-        auto insert_toposort = Graphs::topological_sort(installed_vertices, installedgeprovider, options.randomizer);
+        auto remove_toposort = Graphs::topological_sort(removed_vertices, removeedgeprovider, randomizer);
+        auto insert_toposort = Graphs::topological_sort(installed_vertices, installedgeprovider, randomizer);
 
         ActionPlan plan;
 
@@ -1005,15 +1028,17 @@ namespace vcpkg::Dependencies
     }
 
     static std::unique_ptr<ClusterGraph> create_feature_install_graph(
-        const PortFileProvider::PortFileProvider& port_provider, const StatusParagraphs& status_db)
+        const PortFileProvider::PortFileProvider& port_provider,
+        const StatusParagraphs& status_db,
+        Triplet host_triplet)
     {
-        std::unique_ptr<ClusterGraph> graph = std::make_unique<ClusterGraph>(port_provider);
+        std::unique_ptr<ClusterGraph> graph = std::make_unique<ClusterGraph>(port_provider, host_triplet);
 
         auto installed_ports = get_installed_ports(status_db);
 
         for (auto&& ipv : installed_ports)
         {
-            graph->get(ipv);
+            graph->insert(ipv);
         }
 
         // Populate the graph with "remove edges", which are the reverse of the Build-Depends edges.
@@ -1037,8 +1062,9 @@ namespace vcpkg::Dependencies
 
     PackageGraph::PackageGraph(const PortFileProvider::PortFileProvider& port_provider,
                                const CMakeVars::CMakeVarProvider& var_provider,
-                               const StatusParagraphs& status_db)
-        : m_var_provider(var_provider), m_graph(create_feature_install_graph(port_provider, status_db))
+                               const StatusParagraphs& status_db,
+                               Triplet host_triplet)
+        : m_var_provider(var_provider), m_graph(create_feature_install_graph(port_provider, status_db, host_triplet))
     {
     }
 
@@ -1174,11 +1200,13 @@ namespace vcpkg::Dependencies
             VersionedPackageGraph(const IVersionedPortfileProvider& ver_provider,
                                   const IBaselineProvider& base_provider,
                                   const PortFileProvider::IOverlayProvider& oprovider,
-                                  const CMakeVars::CMakeVarProvider& var_provider)
+                                  const CMakeVars::CMakeVarProvider& var_provider,
+                                  Triplet host_triplet)
                 : m_ver_provider(ver_provider)
                 , m_base_provider(base_provider)
                 , m_o_provider(oprovider)
                 , m_var_provider(var_provider)
+                , m_host_triplet(host_triplet)
             {
             }
 
@@ -1193,6 +1221,7 @@ namespace vcpkg::Dependencies
             const IBaselineProvider& m_base_provider;
             const PortFileProvider::IOverlayProvider& m_o_provider;
             const CMakeVars::CMakeVarProvider& m_var_provider;
+            const Triplet m_host_triplet;
 
             struct DepSpec
             {
@@ -1390,7 +1419,7 @@ namespace vcpkg::Dependencies
 
             for (auto&& dep : *deps.get())
             {
-                PackageSpec dep_spec(dep.name, ref.first.triplet());
+                PackageSpec dep_spec(dep.name, dep.host ? m_host_triplet : ref.first.triplet());
 
                 if (!dep.platform.is_empty())
                 {
@@ -1408,7 +1437,6 @@ namespace vcpkg::Dependencies
                 }
 
                 auto& dep_node = emplace_package(dep_spec);
-                // Todo: cycle detection
                 add_constraint(dep_node, dep, ref.first.name());
 
                 p.first->second.emplace_back(dep_spec, "core");
@@ -1587,9 +1615,11 @@ namespace vcpkg::Dependencies
 
         void VersionedPackageGraph::add_roots(View<Dependency> deps, const PackageSpec& toplevel)
         {
-            auto specs = Util::fmap(deps, [&toplevel](const Dependency& d) {
-                return PackageSpec{d.name, toplevel.triplet()};
-            });
+            auto dep_to_spec = [&toplevel, this](const Dependency& d) {
+                return PackageSpec{d.name, d.host ? m_host_triplet : toplevel.triplet()};
+            };
+            auto specs = Util::fmap(deps, dep_to_spec);
+
             specs.push_back(toplevel);
             Util::sort_unique_erase(specs);
             m_var_provider.load_dep_info_vars(specs);
@@ -1598,7 +1628,6 @@ namespace vcpkg::Dependencies
 
             for (auto&& dep : deps)
             {
-                PackageSpec spec(dep.name, toplevel.triplet());
                 if (!dep.platform.evaluate(vars)) continue;
 
                 active_deps.push_back(&dep);
@@ -1607,7 +1636,7 @@ namespace vcpkg::Dependencies
                 // Note: x[core], x[y] will still eventually depend on defaults due to the second x[y]
                 if (Util::find(dep.features, "core") != dep.features.end())
                 {
-                    auto& node = emplace_package(spec);
+                    auto& node = emplace_package(dep_to_spec(dep));
                     node.second.default_features = false;
                 }
             }
@@ -1615,7 +1644,7 @@ namespace vcpkg::Dependencies
             for (auto pdep : active_deps)
             {
                 const auto& dep = *pdep;
-                PackageSpec spec(dep.name, toplevel.triplet());
+                auto spec = dep_to_spec(dep);
 
                 auto& node = emplace_package(spec);
 
@@ -1768,7 +1797,8 @@ namespace vcpkg::Dependencies
                         {
                             for (auto&& dep : *maybe_deps)
                             {
-                                if (dep.name == spec.name()) continue;
+                                PackageSpec dep_spec(dep.name, dep.host ? m_host_triplet : spec.triplet());
+                                if (dep_spec == spec) continue;
 
                                 if (!dep.platform.is_empty() &&
                                     !dep.platform.evaluate(maybe_vars.value_or_exit(VCPKG_LINE_INFO)))
@@ -1779,7 +1809,7 @@ namespace vcpkg::Dependencies
 
                                 if (auto cons = maybe_cons.get())
                                 {
-                                    deps.emplace_back(DepSpec{{dep.name, spec.triplet()}, std::move(*cons)});
+                                    deps.emplace_back(DepSpec{std::move(dep_spec), std::move(*cons)});
                                 }
                                 else
                                 {
@@ -1854,9 +1884,10 @@ namespace vcpkg::Dependencies
                                                         const CMakeVars::CMakeVarProvider& var_provider,
                                                         const std::vector<Dependency>& deps,
                                                         const std::vector<DependencyOverride>& overrides,
-                                                        const PackageSpec& toplevel)
+                                                        const PackageSpec& toplevel,
+                                                        Triplet host_triplet)
     {
-        VersionedPackageGraph vpg(provider, bprovider, oprovider, var_provider);
+        VersionedPackageGraph vpg(provider, bprovider, oprovider, var_provider, host_triplet);
         for (auto&& o : overrides)
             vpg.add_override(o.name, {o.version, o.port_version});
         vpg.add_roots(deps, toplevel);

@@ -544,6 +544,37 @@ TEST_CASE ("SourceParagraph manifest construct qualified dependencies", "[manife
     REQUIRE(pgh.core_paragraph->dependencies[1].platform.evaluate({{"VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore"}}));
 }
 
+TEST_CASE ("SourceParagraph manifest construct host dependencies", "[manifests]")
+{
+    std::string raw = R"json({
+    "name": "zlib",
+    "version-string": "1.2.8",
+    "dependencies": [
+        {
+            "name": "liba",
+            "host": true
+        },
+        "libb"
+    ]
+}
+)json";
+    auto m_pgh = test_parse_manifest(raw);
+    REQUIRE(m_pgh.has_value());
+    auto& pgh = **m_pgh.get();
+
+    REQUIRE(pgh.core_paragraph->name == "zlib");
+    REQUIRE(pgh.core_paragraph->version == "1.2.8");
+    REQUIRE(pgh.core_paragraph->maintainers.empty());
+    REQUIRE(pgh.core_paragraph->description.empty());
+    REQUIRE(pgh.core_paragraph->dependencies.size() == 2);
+    REQUIRE(pgh.core_paragraph->dependencies[0].name == "liba");
+    REQUIRE(pgh.core_paragraph->dependencies[0].host);
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "libb");
+    REQUIRE(!pgh.core_paragraph->dependencies[1].host);
+
+    REQUIRE(Json::stringify(serialize_manifest(pgh), Json::JsonStyle::with_spaces(4)) == raw);
+}
+
 TEST_CASE ("SourceParagraph manifest default features", "[manifests]")
 {
     auto m_pgh = test_parse_manifest(R"json({
@@ -626,13 +657,21 @@ TEST_CASE ("Serialize all the ports", "[manifests]")
         const auto manifest = dir / fs::u8path("vcpkg.json");
         if (fs.exists(control))
         {
+            INFO(control);
             auto contents = fs.read_contents(control, VCPKG_LINE_INFO);
             auto pghs = Paragraphs::parse_paragraphs(contents, fs::u8string(control));
             REQUIRE(pghs);
 
-            scfs.push_back(std::move(*SourceControlFile::parse_control_file(
-                                          fs::u8string(control), std::move(pghs).value_or_exit(VCPKG_LINE_INFO))
-                                          .value_or_exit(VCPKG_LINE_INFO)));
+            auto scf = SourceControlFile::parse_control_file(fs::u8string(control),
+                                                             std::move(pghs).value_or_exit(VCPKG_LINE_INFO));
+            if (!scf)
+            {
+                INFO(scf.error()->name);
+                INFO(scf.error()->error);
+                REQUIRE(scf);
+            }
+
+            scfs.push_back(std::move(*scf.value_or_exit(VCPKG_LINE_INFO)));
         }
         else if (fs.exists(manifest))
         {

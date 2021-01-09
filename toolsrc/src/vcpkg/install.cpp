@@ -862,7 +862,8 @@ namespace vcpkg::Install
                                                                 var_provider,
                                                                 manifest_scf.core_paragraph->dependencies,
                                                                 manifest_scf.core_paragraph->overrides,
-                                                                {manifest_scf.core_paragraph->name, default_triplet})
+                                                                {manifest_scf.core_paragraph->name, default_triplet},
+                                                                paths.host_triplet())
                         .value_or_exit(VCPKG_LINE_INFO);
 
                 for (InstallPlanAction& action : install_plan.install_actions)
@@ -883,8 +884,10 @@ namespace vcpkg::Install
             }
             else
             {
-                auto specs = resolve_deps_as_top_level(manifest_scf, default_triplet, features, var_provider);
-                auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
+                auto specs = resolve_deps_as_top_level(
+                    manifest_scf, default_triplet, paths.host_triplet(), features, var_provider);
+                auto install_plan = Dependencies::create_feature_install_plan(
+                    provider, var_provider, specs, {}, {paths.host_triplet()});
 
                 for (InstallPlanAction& action : install_plan.install_actions)
                 {
@@ -919,7 +922,8 @@ namespace vcpkg::Install
         StatusParagraphs status_db = database_load_check(paths);
 
         // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
-        auto action_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db);
+        auto action_plan =
+            Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db, {paths.host_triplet()});
 
         for (auto&& action : action_plan.install_actions)
         {

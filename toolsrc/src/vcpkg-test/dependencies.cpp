@@ -196,7 +196,7 @@ private:
 
 static const MockOverlayProvider s_empty_mock_overlay;
 
-ExpectedS<Dependencies::ActionPlan> create_versioned_install_plan(
+static ExpectedS<Dependencies::ActionPlan> create_versioned_install_plan(
     const PortFileProvider::IVersionedPortfileProvider& provider,
     const PortFileProvider::IBaselineProvider& bprovider,
     const CMakeVars::CMakeVarProvider& var_provider,
@@ -205,7 +205,23 @@ ExpectedS<Dependencies::ActionPlan> create_versioned_install_plan(
     const PackageSpec& toplevel)
 {
     return Dependencies::create_versioned_install_plan(
-        provider, bprovider, s_empty_mock_overlay, var_provider, deps, overrides, toplevel);
+        provider, bprovider, s_empty_mock_overlay, var_provider, deps, overrides, toplevel, Test::ARM_UWP);
+}
+
+namespace vcpkg::Dependencies
+{
+    static ExpectedS<vcpkg::Dependencies::ActionPlan> create_versioned_install_plan(
+        const PortFileProvider::IVersionedPortfileProvider& provider,
+        const PortFileProvider::IBaselineProvider& bprovider,
+        const PortFileProvider::IOverlayProvider& oprovider,
+        const CMakeVars::CMakeVarProvider& var_provider,
+        const std::vector<Dependency>& deps,
+        const std::vector<DependencyOverride>& overrides,
+        const PackageSpec& toplevel)
+    {
+        return vcpkg::Dependencies::create_versioned_install_plan(
+            provider, bprovider, oprovider, var_provider, deps, overrides, toplevel, Test::ARM_UWP);
+    }
 }
 
 TEST_CASE ("basic version install single", "[versionplan]")
@@ -1588,6 +1604,89 @@ TEST_CASE ("version install self features", "[versionplan]")
     check_name_and_version(install_plan.install_actions[0], "a", {"1", 0}, {"x", "y"});
 }
 
+static auto create_versioned_install_plan(MockVersionedPortfileProvider& vp,
+                                          MockBaselineProvider& bp,
+                                          std::vector<Dependency> deps)
+{
+    MockCMakeVarProvider var_provider;
+
+    return create_versioned_install_plan(vp, bp, var_provider, deps, {}, toplevel_spec());
+}
+
+TEST_CASE ("version install host tool", "[versionplan]")
+{
+    MockBaselineProvider bp;
+    bp.v["a"] = {"1", 0};
+    bp.v["b"] = {"1", 0};
+    bp.v["c"] = {"1", 0};
+    bp.v["d"] = {"1", 0};
+
+    MockVersionedPortfileProvider vp;
+    vp.emplace("a", {"1", 0});
+    auto& b_scf = vp.emplace("b", {"1", 0}).source_control_file;
+    b_scf->core_paragraph->dependencies.push_back(Dependency{"a", {}, {}, {}, true});
+    auto& c_scf = vp.emplace("c", {"1", 0}).source_control_file;
+    c_scf->core_paragraph->dependencies.push_back(Dependency{"a"});
+    auto& d_scf = vp.emplace("d", {"1", 0}).source_control_file;
+    d_scf->core_paragraph->dependencies.push_back(Dependency{"d", {}, {}, {}, true});
+
+    SECTION ("normal toplevel")
+    {
+        Dependency dep_c{"c"};
+
+        auto install_plan = unwrap(create_versioned_install_plan(vp, bp, {dep_c}));
+
+        REQUIRE(install_plan.size() == 2);
+        check_name_and_version(install_plan.install_actions[0], "a", {"1", 0});
+        REQUIRE(install_plan.install_actions[0].spec.triplet() == Test::X86_WINDOWS);
+        check_name_and_version(install_plan.install_actions[1], "c", {"1", 0});
+        REQUIRE(install_plan.install_actions[1].spec.triplet() == Test::X86_WINDOWS);
+    }
+    SECTION ("toplevel")
+    {
+        Dependency dep_a{"a"};
+        dep_a.host = true;
+
+        auto install_plan = unwrap(create_versioned_install_plan(vp, bp, {dep_a}));
+
+        REQUIRE(install_plan.size() == 1);
+        check_name_and_version(install_plan.install_actions[0], "a", {"1", 0});
+        REQUIRE(install_plan.install_actions[0].spec.triplet() == Test::ARM_UWP);
+    }
+    SECTION ("transitive 1")
+    {
+        auto install_plan = unwrap(create_versioned_install_plan(vp, bp, {{"b"}}));
+
+        REQUIRE(install_plan.size() == 2);
+        check_name_and_version(install_plan.install_actions[0], "a", {"1", 0});
+        REQUIRE(install_plan.install_actions[0].spec.triplet() == Test::ARM_UWP);
+        check_name_and_version(install_plan.install_actions[1], "b", {"1", 0});
+        REQUIRE(install_plan.install_actions[1].spec.triplet() == Test::X86_WINDOWS);
+    }
+    SECTION ("transitive 2")
+    {
+        Dependency dep_c{"c"};
+        dep_c.host = true;
+
+        auto install_plan = unwrap(create_versioned_install_plan(vp, bp, {dep_c}));
+
+        REQUIRE(install_plan.size() == 2);
+        check_name_and_version(install_plan.install_actions[0], "a", {"1", 0});
+        REQUIRE(install_plan.install_actions[0].spec.triplet() == Test::ARM_UWP);
+        check_name_and_version(install_plan.install_actions[1], "c", {"1", 0});
+        REQUIRE(install_plan.install_actions[1].spec.triplet() == Test::ARM_UWP);
+    }
+    SECTION ("self-reference")
+    {
+        auto install_plan = unwrap(create_versioned_install_plan(vp, bp, {{"d"}}));
+
+        REQUIRE(install_plan.size() == 2);
+        check_name_and_version(install_plan.install_actions[0], "d", {"1", 0});
+        REQUIRE(install_plan.install_actions[0].spec.triplet() == Test::ARM_UWP);
+        check_name_and_version(install_plan.install_actions[1], "d", {"1", 0});
+        REQUIRE(install_plan.install_actions[1].spec.triplet() == Test::X86_WINDOWS);
+    }
+}
 TEST_CASE ("version overlay ports", "[versionplan]")
 {
     MockBaselineProvider bp;

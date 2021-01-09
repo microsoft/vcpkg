@@ -38,6 +38,7 @@ namespace vcpkg
     inline bool operator!=(Triplet left, Triplet right) { return !(left == right); }
 
     Triplet default_triplet(const VcpkgCmdArguments& args);
+    Triplet default_host_triplet(const VcpkgCmdArguments& args);
 }
 
 namespace std
