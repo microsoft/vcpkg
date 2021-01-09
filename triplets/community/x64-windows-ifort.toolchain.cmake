@@ -70,9 +70,8 @@ set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS_MINSIZEREL} ${VCPKG_CXX_FLAGS_RE
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO} ${VCPKG_CXX_FLAGS_RELEASE}" CACHE STRING "")
 
 # Make sure the name mangling of Intel Fortran generated symbols is all lowercase with underscore suffix
-# because this is assumed by many libraries (that e.g. consume BLAS/LAPACK)
-set(CMAKE_Fortran_FLAGS_INIT "/names:lowercase /assume:underscore /Z7" CACHE STRING "")
-
+# because this is assumed by many libraries (that e.g. consume BLAS/LAPACK and even CMake itself!)
+set(CMAKE_Fortran_FLAGS_INIT "/Z7 /names:lowercase /assume:underscore /assume:protect_parens" CACHE STRING "")
 # Set linker flags.
 foreach(LINKER SHARED_LINKER MODULE_LINKER EXE_LINKER)
   set(CMAKE_${LINKER}_FLAGS_INIT "${VCPKG_LINKER_FLAGS}")
