@@ -1,0 +1,2 @@
+set(BLA_VENDOR @BLA_VENDOR@)
+_find_package(${ARGS})
