@@ -38,17 +38,6 @@ namespace vcpkg::RemoteInstall
                 std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
         });
 
-        // check triplets
-        for (auto&& spec : specs)
-        {
-            Input::check_triplet(spec.package_spec.triplet(), paths);
-
-            System::printf("dir: %s, name: %s, triplet: %s \n",
-                           spec.package_spec.dir(),
-                           spec.package_spec.name(),
-                           spec.package_spec.triplet().to_string());
-        }
-
         std::string author_name = "";
         auto it_author_name = options.settings.find(OPTION_AUTHOR_NAME);
         if (it_author_name != options.settings.end())
@@ -61,12 +50,19 @@ namespace vcpkg::RemoteInstall
             Checks::exit_fail(LineInfo());
         }
 
+        // check triplets
+        for (auto&& spec : specs)
+        {
+            Input::check_triplet(spec.package_spec.triplet(), paths);
+        }
+
         Files::Filesystem& fs = paths.get_filesystem();
         // create directories
         for (auto&& spec : specs)
         {
             std::error_code err;
-            fs::path destination = paths.builtin_ports_directory() / (author_name + "_" + spec.package_spec.name());
+            fs::path destination =
+                paths.builtin_ports_directory() / Strings::format("%s_%s", author_name, spec.package_spec.name());
 
             fs.create_directory(destination, err);
             Checks::check_exit(VCPKG_LINE_INFO,
@@ -79,12 +75,16 @@ namespace vcpkg::RemoteInstall
         // Download archive
         for (auto&& spec : specs)
         {
-            Downloads::download_file(
-                fs,
-                GITHUB_URL + "/" + author_name + "/" + spec.package_spec.name() + "/raw/master/" +
-                    spec.package_spec.name() + ARCHIVE_ENDING.to_string(),
-                (paths.builtin_ports_directory() / (author_name + "_" + spec.package_spec.name())) /
-                    (spec.package_spec.name() + ARCHIVE_ENDING.to_string()));
+            Downloads::download_file(fs,
+                                     Strings::format("%s/%s/%s/raw/master/%s%s",
+                                                     GITHUB_URL,
+                                                     author_name,
+                                                     spec.package_spec.name(),
+                                                     spec.package_spec.name(),
+                                                     ARCHIVE_ENDING),
+                                     paths.builtin_ports_directory() /
+                                         Strings::format("%s_%s", author_name, spec.package_spec.name()) /
+                                         Strings::format("%s%s", spec.package_spec.name(), ARCHIVE_ENDING));
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
