@@ -45,10 +45,7 @@ vcpkg_configure_make(
 
 vcpkg_install_make(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
-if(VCPKG_TARGET_IS_LINUX)
-    set(SYSTEM_LIBRARIES SYSTEM_LIBRARIES uuid)
-endif()
-vcpkg_fixup_pkgconfig(${SYSTEM_LIBRARIES})
+vcpkg_fixup_pkgconfig()
 
 # Fix paths in debug pc file.
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fontconfig.pc")
