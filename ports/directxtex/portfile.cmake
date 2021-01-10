@@ -6,8 +6,9 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
     REF jan2021
-    SHA512 a5cbe0e050018e3987bf842203b011c9fbb280f85e2f2907d08826317e3bdc1fc7a2295a50a20e51cf1367ed01509863283ac44a4f64ec1316396198c53c36cb
+    SHA512 f48f05aea811b2ce04f7e82837ed8da9cd3452d0f582d933dbd8878acdc94d8dfb123fa85f5d483a9cd688d3a129d765514069c6c83c58eb1880f6e5661d61e8
     HEAD_REF master
+    FILE_DISAMBIGUATOR 1
 )
 
 if("openexr" IN_LIST FEATURES)
@@ -21,12 +22,13 @@ if("openexr" IN_LIST FEATURES)
     vcpkg_download_distfile(
         DIRECTXTEX_EXR_SOURCE
         URLS "https://raw.githubusercontent.com/wiki/Microsoft/DirectXTex/DirectXTexEXR.cpp"
-        FILENAME "DirectXTexEXR.cpp"
-        SHA512 8bc66e102a0a163e42d428774c857271ad457a85038fd4ddfdbf083674879f9a8406a9aecd26949296b156a5c5fd08fdfba9600b71879be9affb9dabf23a497c
+        FILENAME "DirectXTexEXR-1.cpp"
+        SHA512 770fc0325b49139079b0bceb50619f93887e87a3dcf264b10dc01be16209fa51ba03d8273d4d4f84e596ac014376db96b7fed0afabe08c32394ed92495168ea6
     )
 
     file(COPY ${DIRECTXTEX_EXR_HEADER} DESTINATION ${SOURCE_PATH}/DirectXTex)
     file(COPY ${DIRECTXTEX_EXR_SOURCE} DESTINATION ${SOURCE_PATH}/DirectXTex)
+    file(RENAME ${SOURCE_PATH}/DirectXTex/DirectXTexEXR-1.cpp ${SOURCE_PATH}/DirectXTex/DirectXTexEXR.cpp)
     vcpkg_apply_patches(SOURCE_PATH ${SOURCE_PATH} PATCHES enable_openexr_support.patch)
 endif()
 
