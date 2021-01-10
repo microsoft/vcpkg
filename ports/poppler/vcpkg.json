@@ -1,6 +1,7 @@
 {
   "name": "poppler",
   "version-string": "20.12.1",
+  "port-version": 1,
   "description": "a PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
   "dependencies": [
@@ -21,6 +22,12 @@
     "zlib"
   ],
   "features": {
+    "curl": {
+      "description": "curl for poppler",
+      "dependencies": [
+        "curl"
+      ]
+    },
     "zlib": {
       "description": "zlib for poppler",
       "dependencies": [
