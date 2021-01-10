@@ -6,7 +6,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
     REF jan2021
-    SHA512 1
+    SHA512 a0248f31626a0835c9aaf7ed9cabfc5771e34257b8e8e4a3139dca69d7242d79fbb7883071379cd9202edecef3a518d6cf9e7ef9b0338afd384bf2c9830878d3
     HEAD_REF master
 )
 
@@ -33,9 +33,9 @@ if(NOT VCPKG_TARGET_IS_UWP)
 
 elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(uvatlastool
-    URLS "https://github.com/Microsoft/UVAtlas/releases/download/dec2020/uvatlastool.exe"
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/jan2021/uvatlastool.exe"
     FILENAME "uvatlastool.exe"
-    SHA512 f3388e590bb45281a089d6d38ff603e99f2ff9124ec1e6caebae2663e4ab8ccaf06f5cce671f78ed9a1f882c6d2e2b1188212ef0219f96b46872faa20cc649fd
+    SHA512 8727510f3ec41c2fa7ed75100b8c0f4daa41e93a1b812e5ec3c265dc87c3f48651da37a18af5d8b57a0aa096c42232b58a50a00c036ec7c04dcae4767a2691f9
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
