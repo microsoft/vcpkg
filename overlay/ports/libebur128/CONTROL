@@ -1,0 +1,4 @@
+Source: libebur128
+Version: 1.2.4
+Description: A library implementing the EBU R128 loudness standard.
+Homepage: https://github.com/jiixyj/libebur128
