@@ -17,7 +17,9 @@
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/userconfig.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/vcpkgpaths.h>
 
 #include <cassert>
 #include <fstream>
@@ -82,28 +84,6 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
         !args.output_json())
     {
         Commands::Version::warn_if_vcpkg_version_mismatch(paths);
-        std::string surveydate = *GlobalState::g_surveydate.lock();
-        auto maybe_surveydate = Chrono::CTime::parse(surveydate);
-        if (auto p_surveydate = maybe_surveydate.get())
-        {
-            const auto now = Chrono::CTime::get_current_date_time().value_or_exit(VCPKG_LINE_INFO);
-            const auto delta = now.to_time_point() - p_surveydate->to_time_point();
-            if (std::chrono::duration_cast<std::chrono::hours>(delta).count() > SURVEY_INTERVAL_IN_HOURS)
-            {
-                std::default_random_engine generator(
-                    static_cast<unsigned int>(now.to_time_point().time_since_epoch().count()));
-                std::uniform_int_distribution<int> distribution(1, 4);
-
-                if (distribution(generator) == 1)
-                {
-                    Metrics::g_metrics.lock()->track_property("surveyprompt", "true");
-                    System::print2(
-                        System::Color::success,
-                        "Your feedback is important to improve Vcpkg! Please take 3 minutes to complete our survey "
-                        "by running: vcpkg contact --survey\n");
-                }
-            }
-        }
     }
 
     if (const auto command_function = find_command(Commands::get_available_paths_commands()))
@@ -200,6 +180,7 @@ int main(const int argc, const char* const* const argv)
 
     System::initialize_global_job_object();
 #endif
+    System::set_environment_variable("VCPKG_COMMAND", fs::generic_u8string(System::get_exe_path_of_current_process()));
 
     Checks::register_global_shutdown_handler([]() {
         const auto elapsed_us_inner = GlobalState::timer.lock()->microseconds();
@@ -234,6 +215,16 @@ int main(const int argc, const char* const* const argv)
     System::register_console_ctrl_handler();
 
     load_config(fs);
+
+#if (defined(__aarch64__) || defined(__arm__) || defined(__s390x__) || defined(_M_ARM) || defined(_M_ARM64)) &&        \
+    !defined(_WIN32) && !defined(__APPLE__)
+    if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
+    {
+        Checks::exit_with_message(
+            VCPKG_LINE_INFO,
+            "Environment variable VCPKG_FORCE_SYSTEM_BINARIES must be set on arm and s390x platforms.");
+    }
+#endif
 
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(fs, argc, argv);
     args.imbue_from_environment();

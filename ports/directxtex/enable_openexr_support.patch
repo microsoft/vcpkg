@@ -1,0 +1,29 @@
+diff --git a/DirectXTex/DirectXTexEXR.cpp b/DirectXTex/DirectXTexEXR.cpp
+index 0cfd4db..7a6e70c 100644
+--- a/DirectXTex/DirectXTexEXR.cpp
++++ b/DirectXTex/DirectXTexEXR.cpp
+@@ -8,7 +8,7 @@
+ //--------------------------------------------------------------------------------------
+ 
+ //Uncomment if you add DirectXTexEXR to your copy of the DirectXTex library
+-//#include "DirectXTexP.h"
++#include "DirectXTexP.h"
+ 
+ #include "DirectXTexEXR.h"
+ 
+@@ -38,6 +38,7 @@
+ using PackedVector::XMHALF4;
+ 
+ // Comment out this first anonymous namespace if you add the include of DirectXTexP.h above
++#if 0
+ namespace
+ {
+     struct handle_closer { void operator()(HANDLE h) { assert(h != INVALID_HANDLE_VALUE); if (h) CloseHandle(h); } };
+@@ -70,6 +76,7 @@
+         HANDLE m_handle;
+     };
+ }
++#endif
+ 
+ namespace
+ {

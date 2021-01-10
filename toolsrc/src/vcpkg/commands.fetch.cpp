@@ -16,8 +16,7 @@ namespace vcpkg::Commands::Fetch
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        (void)(args.parse_arguments(COMMAND_STRUCTURE));
-
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
         const std::string tool = args.command_arguments[0];
         const fs::path tool_path = paths.get_tool_exe(tool);
         System::print2(fs::u8string(tool_path), '\n');

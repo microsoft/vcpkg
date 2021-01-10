@@ -1,9 +1,11 @@
 #pragma once
 
+#include <vcpkg/base/optional.h>
+#include <vcpkg/base/view.h>
+
 #include <algorithm>
 #include <functional>
 #include <map>
-#include <mutex>
 #include <type_traits>
 #include <unordered_map>
 #include <utility>
@@ -26,6 +28,15 @@ namespace vcpkg::Util
         bool contains(const Vec& container, const Key& item)
         {
             return std::find(container.begin(), container.end(), item) != container.end();
+        }
+        template<class T>
+        std::vector<T> concat(View<T> r1, View<T> r2)
+        {
+            std::vector<T> v;
+            v.reserve(r1.size() + r2.size());
+            v.insert(v.end(), r1.begin(), r1.end());
+            v.insert(v.end(), r2.begin(), r2.end());
+            return v;
         }
     }
 
@@ -63,7 +74,10 @@ namespace vcpkg::Util
     }
 
     template<class Range, class Func>
-    using FmapOut = std::remove_reference_t<decltype(std::declval<Func&>()(*std::declval<Range>().begin()))>;
+    using FmapRefOut = decltype(std::declval<Func&>()(*std::declval<Range>().begin()));
+
+    template<class Range, class Func>
+    using FmapOut = std::decay_t<FmapRefOut<Range, Func>>;
 
     template<class Range, class Func, class Out = FmapOut<Range, Func>>
     std::vector<Out> fmap(Range&& xs, Func&& f)
@@ -75,6 +89,28 @@ namespace vcpkg::Util
             ret.push_back(f(x));
 
         return ret;
+    }
+
+    template<class Range, class Proj, class Out = FmapRefOut<Range, Proj>>
+    Optional<Out> common_projection(Range&& input, Proj&& proj)
+    {
+        const auto last = input.end();
+        auto first = input.begin();
+        if (first == last)
+        {
+            return nullopt;
+        }
+
+        Out prototype = proj(*first);
+        while (++first != last)
+        {
+            if (prototype != proj(*first))
+            {
+                return nullopt;
+            }
+        }
+
+        return prototype;
     }
 
     template<class Cont, class Func>
@@ -193,36 +229,6 @@ namespace vcpkg::Util
         ResourceBase& operator=(ResourceBase&&) = delete;
 
         ~ResourceBase() = default;
-    };
-
-    template<class T>
-    struct LockGuardPtr;
-
-    template<class T>
-    struct LockGuarded
-    {
-        friend struct LockGuardPtr<T>;
-
-        LockGuardPtr<T> lock() { return *this; }
-
-    private:
-        std::mutex m_mutex;
-        T m_t;
-    };
-
-    template<class T>
-    struct LockGuardPtr
-    {
-        T& operator*() { return m_ptr; }
-        T* operator->() { return &m_ptr; }
-
-        T* get() { return &m_ptr; }
-
-        LockGuardPtr(LockGuarded<T>& sync) : m_lock(sync.m_mutex), m_ptr(sync.m_t) { }
-
-    private:
-        std::unique_lock<std::mutex> m_lock;
-        T& m_ptr;
     };
 
     namespace Enum

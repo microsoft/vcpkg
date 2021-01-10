@@ -2,6 +2,8 @@
 
 #include <vcpkg/base/sortedvector.h>
 
+#include <vcpkg/portfileprovider.h>
+#include <vcpkg/statusparagraphs.h>
 #include <vcpkg/update.h>
 
 #include <vcpkg-test/util.h>

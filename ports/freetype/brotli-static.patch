@@ -2,7 +2,7 @@ diff --git a/builds/cmake/FindBrotliDec.cmake b/builds/cmake/FindBrotliDec.cmake
 index 7c484c7df..0bd49b825 100644
 --- a/builds/cmake/FindBrotliDec.cmake
 +++ b/builds/cmake/FindBrotliDec.cmake
-@@ -34,14 +34,14 @@ find_path(BROTLIDEC_INCLUDE_DIRS
+@@ -34,14 +34,22 @@ find_path(BROTLIDEC_INCLUDE_DIRS
    PATH_SUFFIXES brotli)
  
  find_library(BROTLIDEC_LIBRARIES
@@ -11,6 +11,14 @@ index 7c484c7df..0bd49b825 100644
    HINTS ${PC_BROTLIDEC_LIBDIR}
          ${PC_BROTLIDEC_LIBRARY_DIRS})
  
++find_library(BROTLICOMMON_LIBRARIES
++  NAMES brotlicommon-static
++  HINTS ${PC_BROTLIDEC_LIBDIR}
++        ${PC_BROTLIDEC_LIBRARY_DIRS})
++
++if(BROTLICOMMON_LIBRARIES)
++  set(BROTLIDEC_LIBRARIES ${BROTLIDEC_LIBRARIES} ${BROTLICOMMON_LIBRARIES})
++endif()
  
  include(FindPackageHandleStandardArgs)
  find_package_handle_standard_args(

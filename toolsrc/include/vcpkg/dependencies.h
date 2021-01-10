@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vcpkg/fwd/cmakevars.h>
+#include <vcpkg/fwd/portfileprovider.h>
+
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/util.h>
 
@@ -13,16 +16,6 @@
 namespace vcpkg::Graphs
 {
     struct Randomizer;
-}
-
-namespace vcpkg::CMakeVars
-{
-    struct CMakeVarProvider;
-}
-
-namespace vcpkg::PortFileProvider
-{
-    struct PortFileProvider;
 }
 
 namespace vcpkg
@@ -68,6 +61,7 @@ namespace vcpkg::Dependencies
         std::string displayname() const;
         const std::string& public_abi() const;
         bool has_package_abi() const;
+        Optional<const std::string&> package_abi() const;
         const Build::PreBuildInfo& pre_build_info(LineInfo linfo) const;
 
         PackageSpec spec;
@@ -179,7 +173,16 @@ namespace vcpkg::Dependencies
                                                            std::vector<std::string> features,
                                                            CMakeVars::CMakeVarProvider& var_provider);
 
-    void print_plan(const ActionPlan& action_plan,
-                    const bool is_recursive = true,
-                    const fs::path& default_ports_dir = {});
+    /// <param name="provider">Contains the ports of the current environment.</param>
+    /// <param name="specs">Feature specifications to resolve dependencies for.</param>
+    /// <param name="status_db">Status of installed packages in the current environment.</param>
+    ExpectedS<ActionPlan> create_versioned_install_plan(const PortFileProvider::IVersionedPortfileProvider& vprovider,
+                                                        const PortFileProvider::IBaselineProvider& bprovider,
+                                                        const PortFileProvider::IOverlayProvider& oprovider,
+                                                        const CMakeVars::CMakeVarProvider& var_provider,
+                                                        const std::vector<Dependency>& deps,
+                                                        const std::vector<DependencyOverride>& overrides,
+                                                        const PackageSpec& toplevel);
+
+    void print_plan(const ActionPlan& action_plan, const bool is_recursive = true, const fs::path& vcpkg_root_dir = {});
 }

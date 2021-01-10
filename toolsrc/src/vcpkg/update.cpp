@@ -3,7 +3,9 @@
 #include <vcpkg/commands.h>
 #include <vcpkg/help.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/update.h>
+#include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkglib.h>
 
 namespace vcpkg::Update
@@ -53,7 +55,7 @@ namespace vcpkg::Update
 
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths)
     {
-        (void)(args.parse_arguments(COMMAND_STRUCTURE));
+        (void)args.parse_arguments(COMMAND_STRUCTURE);
         System::print2("Using local portfile versions. To update the local portfiles, use `git pull`.\n");
 
         const StatusParagraphs status_db = database_load_check(paths);
@@ -80,7 +82,7 @@ namespace vcpkg::Update
 #else
             auto vcpkg_cmd = "./vcpkg";
 #endif
-            System::print2("\n"
+            System::printf("\n"
                            "To update these packages and all dependencies, run\n"
                            "    %s upgrade\n"
                            "\n"

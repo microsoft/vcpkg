@@ -15,6 +15,7 @@ option(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang, even versions t
 option(VCPKG_DEVELOPMENT_WARNINGS "Option for turning on all warnings" ON)
 option(VCPKG_WARNINGS_AS_ERRORS "Set warnings to be errors" ${VCPKG_DEVELOPMENT_WARNINGS})
 option(VCPKG_BUILD_FUZZING "Option for enabling vcpkg-fuzz support" OFF)
+option(VCPKG_EMBED_GIT_SHA "Option for to fill in the Git SHA version; off by default to avoid privacy concerns out of official builds" OFF)
 
 CMAKE_DEPENDENT_OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF
     "BUILD_TESTING" OFF)
@@ -33,12 +34,10 @@ endif()
 
 file(GLOB VCPKGLIB_SOURCES CONFIGURE_DEPENDS src/vcpkg/*.cpp)
 file(GLOB VCPKGLIB_BASE_SOURCES CONFIGURE_DEPENDS src/vcpkg/base/*.cpp)
-file(GLOB VCPKGLIB_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h)
-file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h)
+file(GLOB VCPKGLIB_INCLUDES CONFIGURE_DEPENDS include/vcpkg/*.h include/vcpkg/fwd/*.h)
+file(GLOB VCPKGLIB_BASE_INCLUDES CONFIGURE_DEPENDS include/vcpkg/base/*.h include/vcpkg/base/fwd/*.h)
 
 set(VCPKG_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkg.cpp)
-
-set(VCPKGMETRICSUPLOADER_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/vcpkgmetricsuploader.cpp)
 
 file(GLOB VCPKG_TEST_SOURCES CONFIGURE_DEPENDS src/vcpkg-test/*.cpp)
 file(GLOB VCPKG_TEST_INCLUDES CONFIGURE_DEPENDS include/vcpkg-test/*.h)
@@ -53,11 +52,47 @@ vcpkg_detect_compiler()
 vcpkg_detect_standard_library()
 vcpkg_detect_std_filesystem()
 
+if (VCPKG_EMBED_GIT_SHA)
+    find_package(Git REQUIRED)
+    execute_process(
+        COMMAND "${GIT_EXECUTABLE}" status --porcelain=v1
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+        OUTPUT_VARIABLE VCPKG_GIT_STATUS
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+
+    if (VCPKG_GIT_STATUS STREQUAL "")
+        execute_process(
+            COMMAND "${GIT_EXECUTABLE}" rev-parse HEAD
+            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+            OUTPUT_VARIABLE VCPKG_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+    else()
+        message(WARNING "Skipping embedding SHA due to local changes.")
+    endif()
+endif()
+
+if (VCPKG_VERSION STREQUAL "")
+    set(VCPKG_VERSION "nohash")
+endif()
+
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 if(MSVC)
     string(REGEX REPLACE "[-/]W[0-4]" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    if (CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi /guard:cf")
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG /debugtype:cv,fixup /guard:cf")
+    endif()
+endif()
+
+if(APPLE)
+    SET(CMAKE_C_ARCHIVE_CREATE   "<CMAKE_AR> Scr <TARGET> <LINK_FLAGS> <OBJECTS>")
+    SET(CMAKE_CXX_ARCHIVE_CREATE "<CMAKE_AR> Scr <TARGET> <LINK_FLAGS> <OBJECTS>")
+    SET(CMAKE_C_ARCHIVE_FINISH   "<CMAKE_RANLIB> -no_warning_for_no_symbols -c <TARGET>")
+    SET(CMAKE_CXX_ARCHIVE_FINISH "<CMAKE_RANLIB> -no_warning_for_no_symbols -c <TARGET>")
 endif()
 
 # ===============
@@ -75,7 +110,8 @@ target_include_directories(vcpkglib PUBLIC include)
 
 vcpkg_target_add_warning_options(vcpkglib)
 target_compile_definitions(vcpkglib PUBLIC
-    VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>)
+    VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>
+    VCPKG_VERSION=${VCPKG_VERSION})
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -116,14 +152,6 @@ add_executable(vcpkg ${VCPKG_SOURCES})
 target_link_libraries(vcpkg PRIVATE vcpkglib)
 vcpkg_target_add_warning_options(vcpkg)
 
-# === Target: vcpkgmetricsuploader ===
-
-if(WIN32 AND NOT VCPKG_DISABLE_METRICS)
-    add_executable(vcpkgmetricsuploader WIN32 ${VCPKGMETRICSUPLOADER_SOURCES})
-    target_link_libraries(vcpkgmetricsuploader PRIVATE vcpkglib)
-    vcpkg_target_add_warning_options(vcpkgmetricsuploader)
-endif()
-
 # === Target: vcpkg-test ===
 
 if (BUILD_TESTING)
@@ -154,19 +182,19 @@ endif()
 
 find_program(CLANG_FORMAT clang-format)
 if(CLANG_FORMAT)
-    add_custom_target(format COMMAND ${CLANG_FORMAT} -i -verbose
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp
-        ${VCPKGLIB_BASE_SOURCES}
-        ${VCPKGLIB_SOURCES}
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h
-        ${VCPKGLIB_BASE_INCLUDES}
-        ${VCPKGLIB_INCLUDES}
+    # doing all of these formats in one line has a tendency to overflow the command line length
+    add_custom_target(format
+        COMMAND ${CLANG_FORMAT} -i -verbose ${CMAKE_CURRENT_SOURCE_DIR}/src/pch.cpp
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_BASE_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${CMAKE_CURRENT_SOURCE_DIR}/include/pch.h
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_BASE_INCLUDES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKGLIB_INCLUDES}
 
-        ${VCPKG_SOURCES}
-        ${VCPKGMETRICSUPLOADER_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_SOURCES}
 
-        ${VCPKG_TEST_SOURCES}
-        ${VCPKG_TEST_INCLUDES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_INCLUDES}
 
-        ${VCPKG_FUZZ_SOURCES})
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_FUZZ_SOURCES})
 endif()

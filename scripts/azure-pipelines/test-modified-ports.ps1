@@ -9,38 +9,70 @@ Runs the 'Test Modified Ports' part of the vcpkg CI system for all platforms.
 .PARAMETER Triplet
 The triplet to test.
 
-.PARAMETER ArchivesRoot
-The location where the binary caching archives are stored. Shared across runs of this script.
-
 .PARAMETER WorkingRoot
 The location used as scratch space for 'installed', 'packages', and 'buildtrees' vcpkg directories.
 
-.PARAMETER ArtifactsDirectory
+.PARAMETER ArtifactStagingDirectory
 The Azure Pipelines artifacts directory. If not supplied, defaults to the current directory.
 
+.PARAMETER ArchivesRoot
+Equivalent to '-BinarySourceStub "files,$ArchivesRoot"'
+
+.PARAMETER UseEnvironmentSasToken
+Equivalent to '-BinarySourceStub "x-azblob,https://$($env:PROVISIONED_AZURE_STORAGE_NAME).blob.core.windows.net/archives,$($env:PROVISIONED_AZURE_STORAGE_SAS_TOKEN)"'
+
+.PARAMETER BinarySourceStub
+The type and parameters of the binary source. Shared across runs of this script. If
+this parameter is not set, binary caching will not be used. Example: "files,W:\"
+
 .PARAMETER BuildReason
-The reason Azure Pipelines is running this script (controls whether Binary Caching is used). If not
-supplied, binary caching will be used.
+The reason Azure Pipelines is running this script (controls in which mode Binary Caching is used).
+If BinarySourceStub is not set, this parameter has no effect. If BinarySourceStub is set and this is
+not, binary caching will default to read-write mode.
 #>
 
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName="ArchivesRoot")]
 Param(
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
     [string]$Triplet,
     [Parameter(Mandatory = $true)]
     [ValidateNotNullOrEmpty()]
-    $ArchivesRoot,
-    [Parameter(Mandatory = $true)]
-    [ValidateNotNullOrEmpty()]
     $WorkingRoot,
     [ValidateNotNullOrEmpty()]
-    $ArtifactsDirectory = '.',
+    $ArtifactStagingDirectory = '.',
+    [Parameter(ParameterSetName='ArchivesRoot')]
+    $ArchivesRoot = $null,
+    [switch]
+    $UseEnvironmentSasToken = $false,
+    [Parameter(ParameterSetName='BinarySourceStub')]
+    $BinarySourceStub = $null,
     $BuildReason = $null
 )
 
-if (-Not (Test-Path "triplets/$Triplet.cmake")) {
+if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
     Write-Error "Incorrect triplet '$Triplet', please supply a valid triplet."
+    throw
+}
+
+$usingBinaryCaching = $true
+if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
+    if ([string]::IsNullOrWhiteSpace($ArchivesRoot)) {
+        if ($UseEnvironmentSasToken) {
+            $BinarySourceStub = "x-azblob,https://$($env:PROVISIONED_AZURE_STORAGE_NAME).blob.core.windows.net/archives,$($env:PROVISIONED_AZURE_STORAGE_SAS_TOKEN)"
+        } else {
+            $usingBinaryCaching = $false
+        }
+    } else {
+        if ($UseEnvironmentSasToken) {
+            Write-Error "Only one binary caching setting may be used."
+            throw
+        } else {
+            $BinarySourceStub = "files,$ArchivesRoot"
+        }
+    }
+} elseif ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot)) -Or $UseEnvironmentSasToken) {
+    Write-Error "Only one binary caching setting may be used."
     throw
 }
 
@@ -48,29 +80,38 @@ $env:VCPKG_DOWNLOADS = Join-Path $WorkingRoot 'downloads'
 $buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'packages'
-$commonArgs = @(
-    '--binarycaching',
+
+$commonArgs = @()
+if ($usingBinaryCaching) {
+    $commonArgs += @('--binarycaching')
+} else {
+    $commonArgs += @('--no-binarycaching')
+}
+
+$commonArgs += @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
     "--x-packages-root=$packagesRoot",
     "--overlay-ports=scripts/test_ports"
 )
 
-$binaryCachingMode = 'readwrite'
 $skipFailures = $false
-if ([string]::IsNullOrWhiteSpace($BuildReason)) {
-    Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
-}
-elseif ($BuildReason -eq 'PullRequest') {
-    Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
-    $skipFailures = $true
-}
-else {
-    Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
-    $binaryCachingMode = 'write'
-}
+if ($usingBinaryCaching) {
+    $binaryCachingMode = 'readwrite'
+    if ([string]::IsNullOrWhiteSpace($BuildReason)) {
+        Write-Host 'Build reason not specified, defaulting to using binary caching in read write mode.'
+    }
+    elseif ($BuildReason -eq 'PullRequest') {
+        Write-Host 'Build reason was Pull Request, using binary caching in read write mode, skipping failures.'
+        $skipFailures = $true
+    }
+    else {
+        Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
+        $binaryCachingMode = 'write'
+    }
 
-$commonArgs += @("--x-binarysource=clear;files,$ArchivesRoot,$binaryCachingMode")
+    $commonArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
+}
 
 if ($Triplet -eq 'x64-linux') {
     $env:HOME = '/home/agent'
@@ -83,11 +124,11 @@ else {
     $executableExtension = '.exe'
 }
 
-$xmlResults = Join-Path $ArtifactsDirectory 'xml-results'
+$xmlResults = Join-Path $ArtifactStagingDirectory 'xml-results'
 mkdir $xmlResults
 $xmlFile = Join-Path $xmlResults "$Triplet.xml"
 
-$failureLogs = Join-Path $ArtifactsDirectory 'failure-logs'
+$failureLogs = Join-Path $ArtifactStagingDirectory 'failure-logs'
 
 & "./vcpkg$executableExtension" x-ci-clean @commonArgs
 $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
@@ -98,7 +139,9 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
 # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
 # Install them so the CI succeeds:
 if ($Triplet -in @('x64-uwp', 'arm64-windows', 'arm-uwp')) {
-    .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows @commonArgs
+    .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows yasm-tool:x86-windows ampl-mp:x86-windows @commonArgs
+} elseif ($Triplet -in @('x64-windows', 'x64-windows-static', 'x64-windows-static-md')) {
+    .\vcpkg.exe install yasm-tool:x86-windows @commonArgs
 }
 
 & "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs

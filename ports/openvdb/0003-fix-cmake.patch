@@ -1,133 +1,162 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d7c4ff8..123e50f 100644
+index f2e8c2a..749e12c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -302,7 +302,6 @@ if(OPENVDB_INSTALL_CMAKE_MODULES)
+@@ -353,14 +353,10 @@ endif()
+ 
+ if(OPENVDB_INSTALL_CMAKE_MODULES)
+   set(OPENVDB_CMAKE_MODULES
+-    cmake/FindBlosc.cmake
+     cmake/FindCppUnit.cmake
+     cmake/FindJemalloc.cmake
+-    cmake/FindIlmBase.cmake
      cmake/FindLog4cplus.cmake
-     cmake/FindOpenEXR.cmake
+-    cmake/FindOpenEXR.cmake
      cmake/FindOpenVDB.cmake
 -    cmake/FindTBB.cmake
      cmake/OpenVDBGLFW3Setup.cmake
      cmake/OpenVDBHoudiniSetup.cmake
      cmake/OpenVDBMayaSetup.cmake
 diff --git a/cmake/FindOpenVDB.cmake b/cmake/FindOpenVDB.cmake
-index 01a2f04..16b71bb 100644
+index b065192..7549843 100644
 --- a/cmake/FindOpenVDB.cmake
 +++ b/cmake/FindOpenVDB.cmake
-@@ -299,7 +299,7 @@ endif()
+@@ -224,8 +224,9 @@ foreach(COMPONENT ${OpenVDB_FIND_COMPONENTS})
+     ${OPENVDB_${COMPONENT}_ROOT}
+     ${OPENVDB_${COMPONENT}_INCLUDEDIR}
+   )
+-  list(REMOVE_DUPLICATES _VDB_COMPONENT_SEARCH_DIRS)
+-
++  if(_VDB_COMPONENT_SEARCH_DIRS)
++	list(REMOVE_DUPLICATES _VDB_COMPONENT_SEARCH_DIRS)
++  endif()
+   # Look for a standard header files.
+   if(${COMPONENT} STREQUAL "openvdb")
+     # Look for a standard OpenVDB header file.
+@@ -429,8 +430,8 @@ endif()
+ 
  # Add standard dependencies
  
- find_package(IlmBase REQUIRED COMPONENTS Half)
+-find_package(IlmBase REQUIRED COMPONENTS Half)
 -find_package(TBB REQUIRED COMPONENTS tbb)
++find_package(IlmBase CONFIG REQUIRED)
 +find_package(TBB CONFIG REQUIRED)
  find_package(ZLIB REQUIRED)
  
+ if(NOT OPENVDB_USE_STATIC_LIBS AND NOT Boost_USE_STATIC_LIBS)
+@@ -540,7 +541,7 @@ if(NOT OPENVDB_USE_STATIC_LIBS)
+ endif()
+ 
+ if(OpenVDB_USES_BLOSC)
+-  find_package(Blosc REQUIRED)
++  find_package(blosc CONFIG REQUIRED)
+ endif()
+ 
+ if(OpenVDB_USES_LOG4CPLUS)
+@@ -548,8 +549,8 @@ if(OpenVDB_USES_LOG4CPLUS)
+ endif()
+ 
+ if(OpenVDB_USES_EXR)
+-  find_package(IlmBase REQUIRED)
+-  find_package(OpenEXR REQUIRED)
++  find_package(IlmBase CONFIG REQUIRED)
++  find_package(OpenEXR CONFIG REQUIRED)
+ endif()
+ 
+ if(UNIX)
+@@ -610,7 +611,7 @@ set(_OPENVDB_HIDDEN_DEPENDENCIES)
+ 
  if(NOT OPENVDB_USE_STATIC_LIBS)
+   if(OpenVDB_USES_BLOSC)
+-    list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES Blosc::blosc)
++    list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES blosc)
+   endif()
+ 
+   list(APPEND _OPENVDB_HIDDEN_DEPENDENCIES ZLIB::ZLIB)
 diff --git a/openvdb/CMakeLists.txt b/openvdb/CMakeLists.txt
-index 9501ff1..ab14fd9 100644
+index 45b302c..d75cfd1 100644
 --- a/openvdb/CMakeLists.txt
 +++ b/openvdb/CMakeLists.txt
-@@ -48,6 +48,7 @@ message(STATUS "----------------------------------------------------")
+@@ -47,7 +47,7 @@ message(STATUS "----------------------------------------------------")
+ ##########################################################################
  
  # Collect and configure lib dependencies
- 
+-
 +if(0)
  if(USE_EXR)
    find_package(IlmBase ${MINIMUM_ILMBASE_VERSION} REQUIRED)
    find_package(OpenEXR ${MINIMUM_OPENEXR_VERSION} REQUIRED)
-@@ -76,6 +77,14 @@ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_TBB_VERSION)
-       "is deprecated and will be removed.")
+@@ -57,8 +57,14 @@ if(USE_EXR)
+         "is deprecated and will be removed.")
+     endif()
    endif()
- endif()
++endif()
 +endif()
 +
 +if(USE_EXR)
-+  find_package(IlmBase REQUIRED)
-+  find_package(OpenEXR REQUIRED)
-+else()
-+  find_package(IlmBase REQUIRED COMPONENTS Half)
-+endif()
++  find_package(IlmBase CONFIG REQUIRED)
++  find_package(OpenEXR CONFIG REQUIRED)
+ else()
+-  find_package(IlmBase ${MINIMUM_ILMBASE_VERSION} REQUIRED COMPONENTS Half)
++  find_package(IlmBase CONFIG REQUIRED)
+ endif()
  
- find_package(ZLIB ${MINIMUM_ZLIB_VERSION} REQUIRED)
- 
-@@ -127,10 +136,10 @@ if(CONCURRENT_MALLOC STREQUAL "Jemalloc")
-     message(WARNING "Unable to find Jemalloc, attempting to fall back to TBB malloc.
-       It is recommended to use Jemalloc for optimum performance."
-     )
--    find_package(TBB ${MINIMUM_TBB_VERSION} REQUIRED COMPONENTS tbbmalloc tbbmalloc_proxy)
-+    find_package(TBB CONFIG REQUIRED)
+ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_ILMBASE_VERSION)
+@@ -68,7 +74,7 @@ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_ILMBASE_VERSION)
    endif()
- elseif(CONCURRENT_MALLOC STREQUAL "Tbbmalloc")
--  find_package(TBB ${MINIMUM_TBB_VERSION} REQUIRED COMPONENTS tbbmalloc tbbmalloc_proxy)
-+  find_package(TBB CONFIG REQUIRED)
  endif()
  
- # Set deps. Note that the order here is important. If we're building against
-@@ -142,15 +151,15 @@ endif()
- set(OPENVDB_CORE_DEPENDENT_LIBS
-   Boost::iostreams
-   Boost::system
--  IlmBase::Half
-+  ${Ilmbase_HALF_LIBRARY}
- )
+-find_package(TBB ${MINIMUM_TBB_VERSION} REQUIRED COMPONENTS tbb)
++find_package(TBB CONFIG REQUIRED)
  
- if(USE_EXR)
-   list(APPEND OPENVDB_CORE_DEPENDENT_LIBS
--    IlmBase::IlmThread
--    IlmBase::Iex
--    IlmBase::Imath
--    OpenEXR::IlmImf
-+    ${Ilmbase_ILMTHREAD_LIBRARY}
-+    ${Ilmbase_IEX_LIBRARY}
-+    ${Ilmbase_IMATH_LIBRARY}
-+    ${OPENEXR_ILMIMF_LIBRARY}
-   )
+ if(OPENVDB_FUTURE_DEPRECATION AND FUTURE_MINIMUM_TBB_VERSION)
+   if(${Tbb_VERSION} VERSION_LESS FUTURE_MINIMUM_TBB_VERSION)
+@@ -84,14 +90,7 @@ if(USE_LOG4CPLUS)
  endif()
  
-@@ -162,7 +171,7 @@ endif()
+ if(USE_BLOSC)
+-  find_package(Blosc ${MINIMUM_BLOSC_VERSION} REQUIRED)
+-  if(Blosc_FOUND AND Blosc_VERSION VERSION_GREATER MINIMUM_BLOSC_VERSION)
+-    message(WARNING "The version of Blosc located is greater than ${MINIMUM_BLOSC_VERSION}. "
+-      "There have been reported issues with using later versions of Blosc with OpenVDB. "
+-      "OpenVDB has been tested fully against Blosc ${MINIMUM_BLOSC_VERSION}, it is "
+-      "recommended that you use this version where possible."
+-    )
+-  endif()
++  find_package(blosc CONFIG REQUIRED)
+ else()
+   message(WARNING "Blosc support is disabled. It is strongly recommended to "
+     "enable blosc for optimal builds of OpenVDB and to support compatible "
+@@ -163,7 +162,7 @@ endif()
  # See FindOpenVDB.cmake
  
  if(USE_BLOSC)
 -  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS Blosc::blosc)
-+  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS ${BLOSC_blosc_LIBRARY})
++  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS blosc)
  endif()
  
  list(APPEND OPENVDB_CORE_DEPENDENT_LIBS
-@@ -197,7 +206,11 @@ endif()
- 
- # @todo Should be target definitions
- if(WIN32)
--  add_definitions(-D_WIN32 -DNOMINMAX -DOPENVDB_DLL)
-+  add_definitions(-D_WIN32 -DNOMINMAX)
-+  add_definitions(-D__TBB_NO_IMPLICIT_LINKAGE -D__TBBMALLOC_NO_IMPLICIT_LINKAGE)
-+  if (OPENVDB_SHARED)
-+    add_definitions(-DOPENEXR_DLL -DOPENVDB_DLL)
-+  endif()
- endif()
- 
- ##### Core library configuration
-@@ -415,6 +428,7 @@ if(USE_BLOSC)
-   list(APPEND OPENVDB_CORE_PRIVATE_DEFINES "-DOPENVDB_USE_BLOSC")
- endif()
- 
-+list(APPEND OPENVDB_CORE_PRIVATE_DEFINES "$<$<CXX_COMPILER_ID:MSVC>:/bigobj>")
- # Public defines
- 
- if(USE_EXR)
 diff --git a/openvdb/cmd/CMakeLists.txt b/openvdb/cmd/CMakeLists.txt
-index 1e5ef0d..8e78efe 100644
+index 2b831bb..a13b63b 100644
 --- a/openvdb/cmd/CMakeLists.txt
 +++ b/openvdb/cmd/CMakeLists.txt
-@@ -133,9 +133,9 @@ if(OPENVDB_BUILD_VDB_RENDER)
-   # headers
+@@ -50,7 +50,7 @@ if(CONCURRENT_MALLOC STREQUAL "Jemalloc")
+   find_package(Jemalloc REQUIRED)
+   list(APPEND OPENVDB_BINARIES_DEPENDENT_LIBS Jemalloc::jemalloc)
+ elseif(CONCURRENT_MALLOC STREQUAL "Tbbmalloc")
+-  find_package(TBB ${MINIMUM_TBB_VERSION} REQUIRED COMPONENTS tbbmalloc)
++  find_package(TBB CONFIG REQUIRED)
+   list(APPEND OPENVDB_BINARIES_DEPENDENT_LIBS TBB::tbbmalloc)
+ endif()
  
-   target_link_libraries(vdb_render
--    OpenEXR::IlmImf
--    IlmBase::IlmThread
--    IlmBase::Iex
-+    ${OPENEXR_ILMIMF_LIBRARY}
-+    ${Ilmbase_ILMTHREAD_LIBRARY}
-+    ${Ilmbase_IEX_LIBRARY}
-     ${OPENVDB_BINARIES_DEPENDENT_LIBS}
-   )
+@@ -120,8 +120,8 @@ endif()
+ #### vdb_render
  
+ if(OPENVDB_BUILD_VDB_RENDER)
+-  find_package(IlmBase ${MINIMUM_ILMBASE_VERSION} REQUIRED COMPONENTS Half Iex IlmThread Imath)
+-  find_package(OpenEXR ${MINIMUM_OPENEXR_VERSION} REQUIRED COMPONENTS IlmImf)
++  find_package(IlmBase CONFIG REQUIRED)
++  find_package(OpenEXR CONFIG REQUIRED)
+ 
+   set(VDB_RENDER_SOURCE_FILES openvdb_render.cc)
+   add_executable(vdb_render ${VDB_RENDER_SOURCE_FILES})

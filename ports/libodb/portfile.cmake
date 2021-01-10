@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 include(CMakePackageConfigHelpers)
 
 vcpkg_download_distfile(ARCHIVE

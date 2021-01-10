@@ -18,10 +18,16 @@ function(boost_modular_build)
 
     # Todo: this serves too similar a purpose as vcpkg_find_acquire_program()
     if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x64-linux/tools/boost-build")
+        if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "aarch64")
+            set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../arm64-linux/tools/boost-build")
+        else()
+            set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x64-linux/tools/boost-build")
+        endif()
+    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "armv7l")
+        set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../arm-linux/tools/boost-build")
     elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
         get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
-    elseif(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "s390x")
+    elseif(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "s390x" AND CMAKE_HOST_WIN32)
         get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
     else()
         set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/tools/boost-build")
@@ -29,9 +35,17 @@ function(boost_modular_build)
 
     if(NOT EXISTS "${BOOST_BUILD_PATH}")
         if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-            message(FATAL_ERROR "The x64 boost-build tools must be installed to build arm64 for Linux. Please run `vcpkg install boost-build:x64-linux`.")
+            if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "aarch64")
+                message(FATAL_ERROR "The arm64 boost-build tools must be installed to build arm64 for Linux. Please run `vcpkg install boost-build:arm64-linux`.")
+            else()
+                message(FATAL_ERROR "The x64 boost-build tools must be installed to build arm64 for Linux. Please run `vcpkg install boost-build:x64-linux`.")
+            endif()
         else()
-            message(FATAL_ERROR "The x86 boost-build tools must be installed to build for non-x86/x64 platforms. Please run `vcpkg install boost-build:x86-windows`.")
+            if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "armv7l")
+                message(FATAL_ERROR "The arm boost-build tools must be installed to build arm64 for Linux. Please run `vcpkg install boost-build:arm-linux`.")
+            else()
+                message(FATAL_ERROR "The x86 boost-build tools must be installed to build for non-x86/x64 platforms. Please run `vcpkg install boost-build:x86-windows`.")
+            endif()
         endif()
     endif()
 
@@ -51,8 +65,13 @@ function(boost_modular_build)
 
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(BOOST_LIB_PREFIX)
-        set(BOOST_LIB_RELEASE_SUFFIX -vc140-mt.lib)
-        set(BOOST_LIB_DEBUG_SUFFIX -vc140-mt-gd.lib)
+	if(VCPKG_PLATFORM_TOOLSET MATCHES "v14.")
+	    set(BOOST_LIB_RELEASE_SUFFIX -vc140-mt.lib)
+	    set(BOOST_LIB_DEBUG_SUFFIX -vc140-mt-gd.lib)
+	elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
+	    set(BOOST_LIB_RELEASE_SUFFIX -vc120-mt.lib)
+	    set(BOOST_LIB_DEBUG_SUFFIX -vc120-mt-gd.lib)
+	endif()
     else()
         set(BOOST_LIB_PREFIX lib)
         if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -61,6 +80,9 @@ function(boost_modular_build)
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
             set(BOOST_LIB_RELEASE_SUFFIX .dylib)
             set(BOOST_LIB_DEBUG_SUFFIX .dylib)
+        elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+            set(BOOST_LIB_RELEASE_SUFFIX .dll.a)
+            set(BOOST_LIB_DEBUG_SUFFIX .dll.a)
         else()
             set(BOOST_LIB_RELEASE_SUFFIX .so)
             set(BOOST_LIB_DEBUG_SUFFIX .so)
@@ -94,7 +116,7 @@ function(boost_modular_build)
         set(VARIANT ${BUILD_TYPE})
         set(BUILD_LIB_PATH ${BUILD_LIB_PATH})
         configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
-        
+
         set(configure_option)
         if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
             list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
@@ -113,19 +135,31 @@ function(boost_modular_build)
         )
         vcpkg_install_cmake()
     endfunction()
-    
+
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(build_flag 0)
+        if(NOT DEFINED VCPKG_BUILD_TYPE)
+            set(build_flag 1)
+            set(VCPKG_BUILD_TYPE "release")
+        endif()
+
+        if(VCPKG_BUILD_TYPE STREQUAL "release")
             unix_build(${BOOST_LIB_RELEASE_SUFFIX} "release" "lib/")
         endif()
 
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        if(build_flag)
+            set(VCPKG_BUILD_TYPE "debug")
+        endif()
+
+        if(VCPKG_BUILD_TYPE STREQUAL "debug")
             unix_build(${BOOST_LIB_DEBUG_SUFFIX} "debug" "debug/lib/")
         endif()
 
         if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/lib)
             message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
         endif()
+
+        file(INSTALL ${CURRENT_INSTALLED_DIR}/share/boost-build/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
         return()
     endif()
 
@@ -189,7 +223,7 @@ function(boost_modular_build)
     else()
         list(APPEND B2_OPTIONS threadapi=pthread)
     endif()
-    set(B2_OPTIONS_DBG
+    list(APPEND B2_OPTIONS_DBG
          -sZLIB_BINARY=zlibd
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
          -sBZIP2_BINARY=bz2d
@@ -200,7 +234,7 @@ function(boost_modular_build)
          "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
 
-    set(B2_OPTIONS_REL
+    list(APPEND B2_OPTIONS_REL
          -sZLIB_BINARY=zlib
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
          -sBZIP2_BINARY=bz2
@@ -294,16 +328,26 @@ function(boost_modular_build)
         set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <cflags>-Zl <compileflags> /AI\"${PLATFORM_WINMD_DIR}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
     endif()
 
-    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
-    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam @ONLY)
-
-    if(VCPKG_PLATFORM_TOOLSET MATCHES "v14.")
-        list(APPEND B2_OPTIONS toolset=msvc)
+    set(MSVC_VERSION)
+    if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
+        list(APPEND _bm_OPTIONS toolset=msvc)
+        set(MSVC_VERSION 14.2)
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
+        list(APPEND _bm_OPTIONS toolset=msvc)
+        set(MSVC_VERSION 14.1)
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v140")
+        list(APPEND _bm_OPTIONS toolset=msvc)
+        set(MSVC_VERSION 14.0)
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
+        list(APPEND _bm_OPTIONS toolset=msvc)
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "external")
         list(APPEND B2_OPTIONS toolset=gcc)
     else()
         message(FATAL_ERROR "Unsupported value for VCPKG_PLATFORM_TOOLSET: '${VCPKG_PLATFORM_TOOLSET}'")
     endif()
+
+    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
+    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam @ONLY)
 
     ######################
     # Perform build + Package
@@ -401,7 +445,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_73" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-1_75" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
         elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})
@@ -420,4 +464,5 @@ function(boost_modular_build)
     endif()
 
     vcpkg_copy_pdbs()
+    file(INSTALL ${CURRENT_INSTALLED_DIR}/share/boost-build/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 endfunction()
