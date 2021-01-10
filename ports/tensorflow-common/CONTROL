@@ -1,6 +1,0 @@
-Source: tensorflow-common
-Version: 2.3.1
-Port-Version: 0
-Homepage: https://github.com/tensorflow/tensorflow
-Description: This meta package holds common files for the C [tensorflow] and the C++ [tensorflow-cc] API version of TensorFlow but is not installable on its own.
-Supports: false
