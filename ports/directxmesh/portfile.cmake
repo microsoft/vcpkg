@@ -1,14 +1,13 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
+vcpkg_fail_port_install(ON_TARGET "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF nov2020b
-    SHA512 a3520d916324e16004ec0052c6d4c628be2ea62583d0169b663f67ce03ef84c3ba8ea01c239c75dc89a359de6748039dc11e405ba4b0c4f33ee0225e4e248415
+    REF jan2021
+    SHA512 1
     HEAD_REF master
-    FILE_DISAMBIGUATOR 2
 )
 
 vcpkg_check_features(

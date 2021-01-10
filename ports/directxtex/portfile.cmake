@@ -1,14 +1,13 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
+vcpkg_fail_port_install(ON_TARGET "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF nov2020b
-    SHA512 b32f063f838c150f0ce81f4807bb88090d9695ee9857ec198b22a06c758e905008a3e3c3a1370f89ce5ec4d7e3c66f896a915968312776e8e5ada7e53e346475
+    REF jan2021
+    SHA512 1
     HEAD_REF master
-    FILE_DISAMBIGUATOR 2
 )
 
 if("openexr" IN_LIST FEATURES)

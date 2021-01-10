@@ -5,10 +5,9 @@ vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF nov2020b
-    SHA512 25c8404a949988bcb468383bffa9510dfcc4fa5498f10319816024448987bbddbecef4a29c44d414d5696b0ec58704fd10071b674fc24ec5844fc5bf0f58097e
+    REF jan2021
+    SHA512 1
     HEAD_REF master
-    FILE_DISAMBIGUATOR 2
 )
 
 vcpkg_check_features(

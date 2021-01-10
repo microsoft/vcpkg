@@ -1,14 +1,13 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
+vcpkg_fail_port_install(ON_TARGET "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF dec2020b
-    SHA512 4a81f5e45d906a897a73af940e63f684e416e7b851c4c439fb2dc7fe761838f7a84ccd5088bc94460cdb5d5fd9f5105c719a81e65a381bbdd2fad3465cdf3d46
+    REF jan2021
+    SHA512 1
     HEAD_REF master
-    FILE_DISAMBIGUATOR 2
 )
 
 if(VCPKG_TARGET_IS_UWP)
