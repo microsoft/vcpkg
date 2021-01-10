@@ -2,6 +2,7 @@ Source: directxmesh
 Version: jan2021
 Homepage: https://walbourn.github.io/directxmesh
 Description: DirectXMesh geometry processing library
+Build-Depends: directxmath(linux), directx-headers(linux)
 Supports: windows|linux
 
 Feature: dx12

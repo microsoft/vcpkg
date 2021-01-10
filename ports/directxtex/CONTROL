@@ -2,6 +2,7 @@ Source: directxtex
 Version: jan2021
 Homepage: https://walbourn.github.io/directxtex
 Description: DirectXTex texture processing library
+Build-Depends: directxmath(linux), directx-headers(linux)
 Supports: windows|linux
 
 Feature: dx12

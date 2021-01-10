@@ -25,7 +25,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-if(NOT VCPKG_TARGET_IS_UWP)
+if((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
   vcpkg_copy_tools(
         TOOL_NAMES uvatlastool
         SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
