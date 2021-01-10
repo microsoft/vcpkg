@@ -12,7 +12,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PATCHES 
             vs.build.patch
             runtime.patch
-            prefix.patch
             adddef.patch
     )
     vcpkg_find_acquire_program(YASM)
