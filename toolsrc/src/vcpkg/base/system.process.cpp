@@ -617,10 +617,6 @@ namespace vcpkg
     }
 #endif
 
-    int System::cmd_execute(StringView cmd_line, const Environment& env)
-    {
-        return System::cmd_execute(cmd_line, System::InWorkingDirectory{fs::path()}, env);
-    }
     int System::cmd_execute(StringView cmd_line, System::InWorkingDirectory wd, const Environment& env)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
@@ -663,13 +659,6 @@ namespace vcpkg
     }
 
     int System::cmd_execute_and_stream_lines(StringView cmd_line,
-                                             std::function<void(StringView)> per_line_cb,
-                                             const Environment& env)
-    {
-        return System::cmd_execute_and_stream_lines(
-            cmd_line, System::InWorkingDirectory{fs::path()}, std::move(per_line_cb), env);
-    }
-    int System::cmd_execute_and_stream_lines(StringView cmd_line,
                                              System::InWorkingDirectory wd,
                                              std::function<void(StringView)> per_line_cb,
                                              const Environment& env)
@@ -696,14 +685,6 @@ namespace vcpkg
 
         per_line_cb(buf);
         return rc;
-    }
-
-    int System::cmd_execute_and_stream_data(StringView cmd_line,
-                                            std::function<void(StringView)> data_cb,
-                                            const Environment& env)
-    {
-        return System::cmd_execute_and_stream_data(
-            cmd_line, System::InWorkingDirectory{fs::path()}, std::move(data_cb), env);
     }
 
     int System::cmd_execute_and_stream_data(StringView cmd_line,
@@ -771,14 +752,6 @@ namespace vcpkg
                      " us\n");
 
         return exit_code;
-    }
-
-    ExitCodeAndOutput System::cmd_execute_and_capture_output(StringView cmd_line, const Environment& env)
-    {
-        std::string output;
-        auto rc = cmd_execute_and_stream_data(
-            cmd_line, [&](StringView sv) { Strings::append(output, sv); }, env);
-        return {rc, std::move(output)};
     }
 
     ExitCodeAndOutput System::cmd_execute_and_capture_output(StringView cmd_line,
