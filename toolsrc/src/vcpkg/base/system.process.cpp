@@ -384,7 +384,6 @@ namespace vcpkg
         return clean_env;
     }
 
-    int System::cmd_execute_clean(StringView cmd_line) { return cmd_execute(cmd_line, get_clean_environment()); }
     int System::cmd_execute_clean(StringView cmd_line, InWorkingDirectory wd)
     {
         return cmd_execute(cmd_line, wd, get_clean_environment());

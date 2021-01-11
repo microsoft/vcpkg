@@ -81,8 +81,7 @@ namespace vcpkg::System
     int cmd_execute(StringView cmd_line, const Environment& env = {});
     int cmd_execute(StringView cmd_line, InWorkingDirectory wd, const Environment& env = {});
 
-    int cmd_execute_clean(StringView cmd_line);
-    int cmd_execute_clean(StringView cmd_line, InWorkingDirectory wd);
+    int cmd_execute_clean(StringView cmd_line, InWorkingDirectory wd = InWorkingDirectory{fs::path()});
 
 #if defined(_WIN32)
     Environment cmd_execute_modify_env(StringView cmd_line, const Environment& env = {});
