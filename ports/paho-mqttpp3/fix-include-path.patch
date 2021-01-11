@@ -1,5 +1,5 @@
 diff --git a/src/mqtt/async_client.h b/src/mqtt/async_client.h
-index 4bbd95c..9db5746 100644
+index 7fb13a4..59247ca 100644
 --- a/src/mqtt/async_client.h
 +++ b/src/mqtt/async_client.h
 @@ -25,7 +25,7 @@
@@ -10,9 +10,9 @@ index 4bbd95c..9db5746 100644
 +#include "paho-mqtt/MQTTAsync.h"
  #include "mqtt/types.h"
  #include "mqtt/token.h"
- #include "mqtt/string_collection.h"
+ #include "mqtt/create_options.h"
 diff --git a/src/mqtt/callback.h b/src/mqtt/callback.h
-index 434b979..2d2ee1f 100644
+index 63f21a1..c4638fa 100644
 --- a/src/mqtt/callback.h
 +++ b/src/mqtt/callback.h
 @@ -24,7 +24,7 @@
@@ -25,7 +25,7 @@ index 434b979..2d2ee1f 100644
  #include "mqtt/types.h"
  #include <vector>
 diff --git a/src/mqtt/connect_options.h b/src/mqtt/connect_options.h
-index 891bd01..2046b93 100644
+index 8001fe3..650ba91 100644
 --- a/src/mqtt/connect_options.h
 +++ b/src/mqtt/connect_options.h
 @@ -24,7 +24,7 @@
@@ -37,6 +37,19 @@ index 891bd01..2046b93 100644
  #include "mqtt/types.h"
  #include "mqtt/message.h"
  #include "mqtt/topic.h"
+diff --git a/src/mqtt/create_options.h b/src/mqtt/create_options.h
+index d57e32b..2bb3561 100644
+--- a/src/mqtt/create_options.h
++++ b/src/mqtt/create_options.h
+@@ -24,7 +24,7 @@
+ #ifndef __mqtt_create_options_h
+ #define __mqtt_create_options_h
+ 
+-#include "MQTTAsync.h"
++#include "paho-mqtt/MQTTAsync.h"
+ #include "mqtt/types.h"
+ 
+ namespace mqtt {
 diff --git a/src/mqtt/delivery_token.h b/src/mqtt/delivery_token.h
 index b70d582..ee1b306 100644
 --- a/src/mqtt/delivery_token.h
@@ -51,7 +64,7 @@ index b70d582..ee1b306 100644
  #include "mqtt/message.h"
  #include <memory>
 diff --git a/src/mqtt/disconnect_options.h b/src/mqtt/disconnect_options.h
-index d2ebdbf..6eb3e9a 100644
+index db93679..2739d89 100644
 --- a/src/mqtt/disconnect_options.h
 +++ b/src/mqtt/disconnect_options.h
 @@ -23,7 +23,7 @@
@@ -64,7 +77,7 @@ index d2ebdbf..6eb3e9a 100644
  #include "mqtt/token.h"
  #include "mqtt/properties.h"
 diff --git a/src/mqtt/exception.h b/src/mqtt/exception.h
-index cdcd2fc..11ddc7d 100644
+index 9db330a..32b7c97 100644
 --- a/src/mqtt/exception.h
 +++ b/src/mqtt/exception.h
 @@ -24,7 +24,7 @@
@@ -74,8 +87,8 @@ index cdcd2fc..11ddc7d 100644
 -#include "MQTTAsync.h"
 +#include "paho-mqtt/MQTTAsync.h"
  #include "mqtt/types.h"
+ #include <iostream>
  #include <vector>
- #include <memory>
 diff --git a/src/mqtt/iaction_listener.h b/src/mqtt/iaction_listener.h
 index 1e34577..2af8c1b 100644
 --- a/src/mqtt/iaction_listener.h
@@ -90,7 +103,7 @@ index 1e34577..2af8c1b 100644
  #include <vector>
  
 diff --git a/src/mqtt/iclient_persistence.h b/src/mqtt/iclient_persistence.h
-index 852ec8e..aa721bc 100644
+index 635a292..aedc1d9 100644
 --- a/src/mqtt/iclient_persistence.h
 +++ b/src/mqtt/iclient_persistence.h
 @@ -24,7 +24,7 @@
@@ -103,7 +116,7 @@ index 852ec8e..aa721bc 100644
  #include "mqtt/buffer_view.h"
  #include "mqtt/string_collection.h"
 diff --git a/src/mqtt/message.h b/src/mqtt/message.h
-index 5d64e8d..9f7096a 100644
+index 4cb95a6..e036269 100644
 --- a/src/mqtt/message.h
 +++ b/src/mqtt/message.h
 @@ -25,7 +25,7 @@
@@ -116,7 +129,7 @@ index 5d64e8d..9f7096a 100644
  #include "mqtt/properties.h"
  #include "mqtt/exception.h"
 diff --git a/src/mqtt/properties.h b/src/mqtt/properties.h
-index bbe977c..fa55560 100644
+index 826bc97..42c286a 100644
 --- a/src/mqtt/properties.h
 +++ b/src/mqtt/properties.h
 @@ -25,7 +25,7 @@
@@ -124,12 +137,12 @@ index bbe977c..fa55560 100644
  
  extern "C" {
 -	#include "MQTTProperties.h"
-+	#include "paho-mqtt/MQTTProperties.h"
++	#include "paho-mqtt/MQTTAsync.h"
  }
  
  #include "mqtt/types.h"
 diff --git a/src/mqtt/response_options.h b/src/mqtt/response_options.h
-index 48f7831..7ec94e4 100644
+index 7bcb45c..40e45a2 100644
 --- a/src/mqtt/response_options.h
 +++ b/src/mqtt/response_options.h
 @@ -7,7 +7,7 @@
@@ -142,7 +155,7 @@ index 48f7831..7ec94e4 100644
  #include "mqtt/delivery_token.h"
  #include "subscribe_options.h"
 diff --git a/src/mqtt/server_response.h b/src/mqtt/server_response.h
-index 7f0fe72..4d0fb2c 100644
+index a111839..094135b 100644
 --- a/src/mqtt/server_response.h
 +++ b/src/mqtt/server_response.h
 @@ -24,7 +24,7 @@
@@ -155,7 +168,7 @@ index 7f0fe72..4d0fb2c 100644
  #include "mqtt/properties.h"
  
 diff --git a/src/mqtt/ssl_options.h b/src/mqtt/ssl_options.h
-index f44607c..cdd2cdc 100644
+index eba49ed..aad0da3 100644
 --- a/src/mqtt/ssl_options.h
 +++ b/src/mqtt/ssl_options.h
 @@ -27,7 +27,7 @@
@@ -167,6 +180,19 @@ index f44607c..cdd2cdc 100644
  #include "mqtt/message.h"
  #include "mqtt/topic.h"
  #include "mqtt/types.h"
+diff --git a/src/mqtt/string_collection.h b/src/mqtt/string_collection.h
+index bc43775..99a2674 100644
+--- a/src/mqtt/string_collection.h
++++ b/src/mqtt/string_collection.h
+@@ -24,7 +24,7 @@
+ #ifndef __mqtt_string_collection_h
+ #define __mqtt_string_collection_h
+ 
+-#include "MQTTAsync.h"
++#include "paho-mqtt/MQTTAsync.h"
+ #include "mqtt/types.h"
+ #include <vector>
+ #include <map>
 diff --git a/src/mqtt/subscribe_options.h b/src/mqtt/subscribe_options.h
 index 753c811..5f0d86c 100644
 --- a/src/mqtt/subscribe_options.h
@@ -183,7 +209,7 @@ index 753c811..5f0d86c 100644
  
  namespace mqtt {
 diff --git a/src/mqtt/token.h b/src/mqtt/token.h
-index efb1659..d0b2dee 100644
+index 4cafda7..1815ab9 100644
 --- a/src/mqtt/token.h
 +++ b/src/mqtt/token.h
 @@ -25,7 +25,7 @@
@@ -209,7 +235,7 @@ index 618eb85..555de60 100644
  #include "mqtt/subscribe_options.h"
  #include "mqtt/message.h"
 diff --git a/src/mqtt/will_options.h b/src/mqtt/will_options.h
-index a685a96..7bfc46e 100644
+index 8c5c67d..63bfffc 100644
 --- a/src/mqtt/will_options.h
 +++ b/src/mqtt/will_options.h
 @@ -26,7 +26,7 @@
