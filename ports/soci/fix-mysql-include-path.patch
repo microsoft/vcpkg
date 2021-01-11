@@ -1,0 +1,12 @@
+diff --git a/cmake/modules/FindMySQL.cmake b/cmake/modules/FindMySQL.cmake
+index 1233568..c53bd95 100644
+--- a/cmake/modules/FindMySQL.cmake
++++ b/cmake/modules/FindMySQL.cmake
+@@ -24,6 +24,7 @@ if(WIN32)
+       $ENV{ProgramFiles}/MySQL/*/include
+       $ENV{SystemDrive}/MySQL/*/include
+       $ENV{ProgramW6432}/MySQL/*/include
++      ${_VCPKG_ROOT_DIR}/installed/${VCPKG_TARGET_TRIPLET}/include/mysql
+    )
+ else(WIN32)
+    find_path(MYSQL_INCLUDE_DIR mysql.h

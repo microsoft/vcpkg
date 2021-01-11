@@ -17,3 +17,7 @@ Description: Build postgresql backend
 
 Feature: odbc
 Description: Build odbc backend
+
+Feature: mysql
+Build-Depends: libmysql
+Description: Build mysql backend
