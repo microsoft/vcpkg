@@ -1,5 +1,7 @@
 # header-only library
 
+set(FEATURE_PATCHES)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fnc12/sqlite_orm
@@ -8,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         fix-features-build-error.patch
+        fix-dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

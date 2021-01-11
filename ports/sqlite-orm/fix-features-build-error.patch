@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dd86d2f..3993064 100644
+index dd86d2f..6696809 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -32,7 +32,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+@@ -32,15 +32,14 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
  include(CTest)
  
  ### Dependencies
@@ -10,6 +10,16 @@ index dd86d2f..3993064 100644
  
  ### Main Build Targets
  set(SqliteOrm_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}/include")
+ add_library(sqlite_orm INTERFACE)
+ add_library(sqlite_orm::sqlite_orm ALIAS sqlite_orm)
+ 
+-find_package(SQLite3 REQUIRED)
+-target_link_libraries(sqlite_orm INTERFACE SQLite::SQLite3)
++find_package(unofficial-sqlite3 CONFIG REQUIRED)
++target_link_libraries(sqlite_orm INTERFACE unofficial::sqlite3::sqlite3)
+ 
+ target_sources(sqlite_orm INTERFACE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/sqlite_orm/sqlite_orm.h>)
+ 
 diff --git a/examples/CMakeLists.txt b/examples/CMakeLists.txt
 index 2857b65..3ee46e6 100644
 --- a/examples/CMakeLists.txt
@@ -22,7 +32,7 @@ index 2857b65..3ee46e6 100644
 +    target_link_libraries(${file_basename} PRIVATE sqlite_orm)
  endforeach()
 diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
-index fd41e70..9f26268 100644
+index fd41e70..8087899 100644
 --- a/tests/CMakeLists.txt
 +++ b/tests/CMakeLists.txt
 @@ -7,9 +7,11 @@ option(SqliteOrm_SysSqlite "Use system version of sqlite library" OFF)
@@ -30,7 +40,7 @@ index fd41e70..9f26268 100644
      message(FATAL_ERROR "WIP: please, disable the SqliteOrm_SysSqlite option.")
  else()
 -    add_subdirectory(third_party/sqlite)
-+    find_package(sqlite3 REQUIRED)
++    find_package(unofficial-sqlite3 CONFIG REQUIRED)
  endif()
  
 +find_package(Catch2 CONFIG REQUIRED)
