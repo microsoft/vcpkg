@@ -22,7 +22,7 @@ index 99f39caa5..21b5559d6 100644
 +		#die "Could not query for python version!\n" if $?;
 +		#my ($pyprefix, $pyver) = split(/\r?\n/, $pyout);
 +		my $pyprefix = $solution->{options}->{python};
-+		my $pyver = 37;
++		my $pyver = 39;
  		# Sometimes (always?) if python is not present, the execution
  		# appears to work, but gives no data...
  		die "Failed to query python for version information\n"
@@ -32,7 +32,7 @@ index 99f39caa5..21b5559d6 100644
  			'dll', 'PLs', 'src/pl/plpython');
 -		$plpython->AddIncludeDir($pyprefix . '/include');
 -		$plpython->AddLibrary($pyprefix . "/Libs/python$pyver.lib");
-+		$plpython->AddIncludeDir($pyprefix . '/include/python3.7');
++		$plpython->AddIncludeDir($pyprefix . '/include/python3.9');
 +		$plpython->AddLibrary($pyprefix . "/lib/python$pyver.lib");
  		$plpython->AddReference($postgres);
  
