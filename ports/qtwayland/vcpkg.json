@@ -5,7 +5,9 @@
   "homepage": "https://www.qt.io/",
   "supports": "!windows",
   "dependencies": [
-    "qtbase"
+    "qtbase",
+    "qtopcua",
+    "qtdeclarative"
   ],
   "default-features": [
     "default-features"
