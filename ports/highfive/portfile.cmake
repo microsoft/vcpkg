@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF v2.2.2
     SHA512 7e562951b18425f1bfc96c30d0e47b6d218830417a732856a27943cd7ee6feab54d833b94aa303c40ca5038ac1aaf0eadd8c61800ffe82b6da46a465b21b1fc4
     HEAD_REF master
+    PATCHES fix-dependency-hdf5.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

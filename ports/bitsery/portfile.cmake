@@ -1,8 +1,8 @@
 vcpkg_from_github(
 	OUT_SOURCE_PATH SOURCE_PATH
 	REPO fraillt/bitsery
-	REF d7876808195834f05fd84619b8f6b266e5c1d5bd
-	SHA512 ac2c6e3907f8ee8cf51070b3c00aab9071586510d8cfe30f9660ed5aa9918cd996c806b1db2b46d464f1d933fc41472e5406e63ba4814bdc37d2b0f1ad6e1083
+	REF db884a0656a3aabb87da1ae6edf12629507f76a7
+	SHA512 7c94a09ed7cf07aa6c347d2960de622c5d69a25c7af501d10224b02f9db1bb191e8a5f7f096de488650f5a164e554b20f950fcdde423afced0ebfed249cb1c3d
 	HEAD_REF master
 )
 
@@ -13,7 +13,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets( CONFIG_PATH lib/cmake/${PORT} )
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
