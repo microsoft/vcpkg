@@ -11,7 +11,7 @@ vcpkg_configure_cmake(
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
-        -DBUILD_TESTING=OFF
+        -DENTT_BUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()
