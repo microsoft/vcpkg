@@ -45,10 +45,7 @@ vcpkg_configure_make(
 
 vcpkg_install_make(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
-if(VCPKG_TARGET_IS_LINUX)
-    set(SYSTEM_LIBRARIES SYSTEM_LIBRARIES uuid)
-endif()
-vcpkg_fixup_pkgconfig(${SYSTEM_LIBRARIES})
+vcpkg_fixup_pkgconfig()
 
 # Fix paths in debug pc file.
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fontconfig.pc")
@@ -106,4 +103,4 @@ endif()
 if(NOT VCPKG_TARGET_IS_LINUX)
     set(VCPKG_TARGET_IS_LINUX 0) # To not leave empty AND statements in the wrapper
 endif()
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
