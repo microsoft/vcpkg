@@ -10,6 +10,7 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    curl ENABLE_CURL
     zlib ENABLE_ZLIB
 )
 
@@ -21,6 +22,7 @@ vcpkg_configure_cmake(
         -DBUILD_QT5_TESTS=OFF
         -DBUILD_QT6_TESTS=OFF
         -DBUILD_CPP_TESTS=OFF
+        -DENABLE_LIBCURL=${ENABLE_CURL}
         -DENABLE_UTILS=OFF
         -DENABLE_GLIB=OFF
         -DENABLE_GLOBJECT_INTROSPECTION=OFF

@@ -104,6 +104,11 @@ namespace
 
 fs::path fs::u8path(vcpkg::StringView s)
 {
+    if (s.size() == 0)
+    {
+        return fs::path();
+    }
+
 #if defined(_WIN32)
     return fs::path(vcpkg::Strings::to_utf16(s));
 #else

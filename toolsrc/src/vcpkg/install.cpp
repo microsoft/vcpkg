@@ -853,10 +853,12 @@ namespace vcpkg::Install
                     paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(
                         p_baseline->string());
                 }
+                auto oprovider = PortFileProvider::make_overlay_provider(paths, args.overlay_ports);
 
                 auto install_plan =
                     Dependencies::create_versioned_install_plan(*verprovider,
                                                                 *baseprovider,
+                                                                *oprovider,
                                                                 var_provider,
                                                                 manifest_scf.core_paragraph->dependencies,
                                                                 manifest_scf.core_paragraph->overrides,
