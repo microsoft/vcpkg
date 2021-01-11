@@ -238,6 +238,10 @@ function(vcpkg_build_make)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
     endif()
 
+    # Remove libtool files since they encode absolute paths
+    file(GLOB_RECURSE LIBTOOL_FILES "${CURRENT_PACKAGES_DIR}/**/*.la")
+    file(REMOVE ${LIBTOOL_FILES})
+
     if (CMAKE_HOST_WIN32)
         set(ENV{PATH} "${PATH_GLOBAL}")
     endif()
