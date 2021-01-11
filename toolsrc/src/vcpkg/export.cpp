@@ -224,8 +224,6 @@ namespace vcpkg::Export
         const fs::path exported_archive_path = (output_dir / exported_archive_filename);
 
         System::CmdLineBuilder cmd;
-        cmd.string_arg("cd").path_arg(raw_exported_dir.parent_path());
-        cmd.ampersand();
         cmd.path_arg(cmake_exe)
             .string_arg("-E")
             .string_arg("tar")

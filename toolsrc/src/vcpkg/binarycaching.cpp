@@ -96,13 +96,19 @@ namespace
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
-        System::cmd_execute_and_capture_output(
-            Strings::format(
-                R"("%s" a "%s" "%s\*")", fs::u8string(seven_zip_exe), fs::u8string(destination), fs::u8string(source)),
-            System::get_clean_environment());
+        System::cmd_execute_and_capture_output(System::CmdLineBuilder{seven_zip_exe}
+                                                   .string_arg("a")
+                                                   .path_arg(destination)
+                                                   .path_arg(source / fs::u8path("*")),
+                                               System::get_clean_environment());
 #else
-        System::cmd_execute_clean(
-            Strings::format(R"(cd '%s' && zip --quiet -y -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
+        System::cmd_execute_clean(System::CmdLineBuilder{"zip"}
+                                      .string_arg("--quiet")
+                                      .string_arg("-y")
+                                      .string_arg("-r")
+                                      .path_arg(destination)
+                                      .string_arg("*"),
+                                  System::InWorkingDirectory{source});
 #endif
     }
 

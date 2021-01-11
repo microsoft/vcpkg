@@ -34,18 +34,15 @@ namespace vcpkg::System
 
         CmdLineBuilder& path_arg(const fs::path& p) & { return string_arg(fs::u8string(p)); }
         CmdLineBuilder& string_arg(StringView s) &;
+        CmdLineBuilder& raw_arg(StringView s) &
+        {
+            buf.push_back(' ');
+            buf.append(s.begin(), s.end());
+        }
 
         CmdLineBuilder&& path_arg(const fs::path& p) && { return std::move(path_arg(p)); }
         CmdLineBuilder&& string_arg(StringView s) && { return std::move(string_arg(s)); };
-
-        CmdLineBuilder& ampersand() &
-        {
-            buf.push_back('&');
-            buf.push_back('&');
-            return *this;
-        }
-
-        CmdLineBuilder&& ampersand() && { return std::move(ampersand()); }
+        CmdLineBuilder&& raw_arg(StringView s) && { return std::move(raw_arg(s)); }
 
         std::string&& extract() && { return std::move(buf); }
         operator StringView() noexcept { return buf; }

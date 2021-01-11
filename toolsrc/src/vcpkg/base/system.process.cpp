@@ -650,7 +650,8 @@ namespace vcpkg
         }
         else
         {
-            real_command_line = Strings::format(R"(cd "%s" && %s)", fs::u8string(wd.working_directory), cmd_line);
+            real_command_line =
+                System::CmdLineBuilder("cd").path_arg(wd.working_directory).raw_arg("&&").raw_arg(cmd_line).extract();
         }
         Debug::print("system(", real_command_line, ")\n");
         fflush(nullptr);
@@ -734,7 +735,12 @@ namespace vcpkg
         }
         else
         {
-            actual_cmd_line = Strings::format(R"(cd "%s" && %s 2>&1)", fs::u8string(wd.working_directory), cmd_line);
+            actual_cmd_line = System::CmdLineBuilder("cd")
+                                  .path_arg(wd.working_directory)
+                                  .raw_arg("&&")
+                                  .raw_arg(cmd_line)
+                                  .raw_arg("2>&1")
+                                  .extract();
         }
 
         Debug::print("popen(", actual_cmd_line, ")\n");
