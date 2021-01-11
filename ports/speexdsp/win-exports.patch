@@ -1,0 +1,41 @@
+--- a/win32/libspeexdsp.def	2018-09-08 00:49:31.000000000 +0300
++++ b/win32/libspeexdsp.def	2021-01-11 03:17:12.864767700 +0300
+@@ -1,4 +1,4 @@
+-LIBRARY libspeexdsp
++LIBRARY speexdsp
+ EXPORTS
+ 
+ 
+@@ -23,6 +23,7 @@
+ speex_echo_cancel
+ speex_echo_capture
+ speex_echo_playback
++speex_echo_state_destroy
+ speex_echo_state_reset
+ speex_echo_ctl
+ speex_decorrelate_new
+@@ -32,12 +33,15 @@
+ ;
+ ;	speex_jitter.h
+ ;
++jitter_buffer_ctl
+ jitter_buffer_init
+ jitter_buffer_reset
+ jitter_buffer_destroy
+ jitter_buffer_put
+ jitter_buffer_get
++jitter_buffer_get_another
+ jitter_buffer_get_pointer_timestamp
++jitter_buffer_remaining_span
+ jitter_buffer_tick
+ jitter_buffer_update_delay
+ 
+@@ -71,6 +75,8 @@
+ speex_resampler_get_input_stride
+ speex_resampler_set_output_stride
+ speex_resampler_get_output_stride
++speex_resampler_get_input_latency
++speex_resampler_get_output_latency
+ speex_resampler_skip_zeros
+ speex_resampler_reset_mem
+ speex_resampler_strerror
