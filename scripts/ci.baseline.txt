@@ -1292,6 +1292,7 @@ qpid-proton:x64-windows-static-md=fail
 # Skip qt5-base so that qtbase can be succesfull 
 qt5-base:x64-windows=skip
 qt5-base:x64-windows-static=skip
+qt5-base:x64-windows-static-md=skip
 qt5-base:x86-windows=skip
 qt5-base:x64-linux=skip
 qt5-base:x64-osx=skip
