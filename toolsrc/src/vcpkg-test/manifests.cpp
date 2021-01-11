@@ -136,6 +136,25 @@ TEST_CASE ("manifest versioning", "[manifests]")
         "version-semver": "abcd#1"
     })json",
                         true);
+
+    SECTION ("version syntax")
+    {
+        test_parse_manifest(R"json({
+        "name": "zlib",
+        "version-semver": "2020-01-01"
+    })json",
+                            true);
+        test_parse_manifest(R"json({
+        "name": "zlib",
+        "version-date": "1.1.1"
+    })json",
+                            true);
+        test_parse_manifest(R"json({
+        "name": "zlib",
+        "version": "1.2.3-rc3"
+    })json",
+                            true);
+    }
 }
 
 TEST_CASE ("manifest constraints error hash", "[manifests]")
