@@ -23,11 +23,13 @@ namespace vcpkg::PlatformExpression
         wasm32,
 
         windows,
+        mingw,
         linux,
         osx,
         uwp,
         android,
         emscripten,
+        ios,
 
         static_link,
     };
@@ -41,11 +43,13 @@ namespace vcpkg::PlatformExpression
             {"arm64", Identifier::arm64},
             {"wasm32", Identifier::wasm32},
             {"windows", Identifier::windows},
+            {"mingw", Identifier::mingw},
             {"linux", Identifier::linux},
             {"osx", Identifier::osx},
             {"uwp", Identifier::uwp},
             {"android", Identifier::android},
             {"emscripten", Identifier::emscripten},
+            {"ios", Identifier::ios},
             {"static", Identifier::static_link},
         };
 
@@ -382,6 +386,7 @@ namespace vcpkg::PlatformExpression
                         case Identifier::windows:
                             return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "") ||
                                    true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "WindowsStore");
+                        case Identifier::mingw: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "MinGW");
                         case Identifier::linux: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Linux");
                         case Identifier::osx: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Darwin");
                         case Identifier::uwp:
@@ -389,6 +394,7 @@ namespace vcpkg::PlatformExpression
                         case Identifier::android: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Android");
                         case Identifier::emscripten:
                             return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "Emscripten");
+                        case Identifier::ios: return true_if_exists_and_equal("VCPKG_CMAKE_SYSTEM_NAME", "iOS");
                         case Identifier::wasm32: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "wasm32");
                         case Identifier::static_link:
                             return true_if_exists_and_equal("VCPKG_LIBRARY_LINKAGE", "static");

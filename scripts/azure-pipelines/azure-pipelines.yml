@@ -2,64 +2,55 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  windows-pool: 'PrWin-2020-08-12'
-  linux-pool: 'PrLin-2020-08-12'
+  windows-pool: 'PrWin-2020-12-17'
+  linux-pool: 'PrLin-2020-12-16'
   osx-pool: 'PrOsx-2020-09-28'
 
 stages:
-- stage: check_cxx_formatting
-  displayName: 'Check the formatting of the C++'
+- stage: FormatChecks
+  displayName: 'Formatting and Documentation Checks'
   pool: $(windows-pool)
   jobs:
   - job:
     workspace:
       clean: resources
+    variables:
+    - name: VCPKG_DOWNLOADS
+      value: D:\downloads
+    - name: DiffFile
+      value: $(Build.ArtifactStagingDirectory)\format.diff
     steps:
     - task: Powershell@2
-      displayName: 'Check C++ Formatting'
+      displayName: 'Format C++'
       inputs:
-        filePath: 'scripts/azure-pipelines/windows/Check-CxxFormatting.ps1'
+        filePath: 'scripts/azure-pipelines/Format-CxxCode.ps1'
         arguments: '-Root .'
         pwsh: true
-- stage: check_manifest_formatting
-  displayName: Check the formatting of port manifests
-  pool: $(windows-pool)
-  dependsOn: []
-  variables:
-  - name: VCPKG_DOWNLOADS
-    value: D:\downloads
-  jobs:
-  - job:
-    workspace:
-      clean: resources
-    steps:
     - task: Powershell@2
-      displayName: 'Check port manifest Formatting'
+      displayName: 'Generate Documentation'
       inputs:
-        filePath: 'scripts/azure-pipelines/windows/Check-ManifestFormatting.ps1'
-        arguments: '-Root .'
+        filePath: 'docs/regenerate.ps1'
+        arguments: '-VcpkgRoot . -WarningAction Stop'
         pwsh: true
-- stage: check_documentation_generation
-  displayName: Check if the documentation has been regenerated correctly
-  pool: $(windows-pool)
-  dependsOn: []
-  jobs:
-  - job:
-    workspace:
-      clean: resources
-    steps:
+    - script: .\bootstrap-vcpkg.bat
+      displayName: 'Build vcpkg'
+    - script: '.\vcpkg format-manifest --all'
+      displayName: 'Format Manifests'
     - task: Powershell@2
-      displayName: 'Check documentation generation'
+      displayName: 'Create Diff'
       inputs:
-        filePath: 'scripts/azure-pipelines/windows/Check-CMakeFunctionDocumentation.ps1'
-        arguments: '-Root .'
+        filePath: scripts/azure-pipelines/Create-FormatDiff.ps1
+        arguments: '-DiffFile $(DiffFile)'
         pwsh: true
-- stage: run_port_ci
-  displayName: 'Run the Port CI'
-  dependsOn:
-  - check_cxx_formatting
-  - check_manifest_formatting
-  - check_documentation_generation
+    - task: PublishBuildArtifacts@1
+      condition: failed()
+      displayName: 'Publish C++ Diff'
+      inputs:
+        PathtoPublish: '$(DiffFile)'
+        ArtifactName: 'format.diff'
+- stage: RunPrTests
+  displayName: 'Run PR Tests:'
+  dependsOn: FormatChecks
   jobs:
   - template: windows/azure-pipelines.yml
     parameters:
@@ -77,6 +68,12 @@ stages:
     parameters:
       triplet: x64-windows-static
       jobName: x64_windows_static
+      poolName: $(windows-pool)
+
+  - template: windows/azure-pipelines.yml
+    parameters:
+      triplet: x64-windows-static-md
+      jobName: x64_windows_static_md
       poolName: $(windows-pool)
 
   - template: windows/azure-pipelines.yml
