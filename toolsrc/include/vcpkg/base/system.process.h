@@ -37,7 +37,7 @@ namespace vcpkg::System
         CmdLineBuilder& raw_arg(StringView s) &
         {
             buf.push_back(' ');
-            buf.append(s.begin(), s.end());
+            buf.append(s.data(), s.size());
         }
 
         CmdLineBuilder&& path_arg(const fs::path& p) && { return std::move(path_arg(p)); }
