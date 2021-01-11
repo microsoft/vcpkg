@@ -258,18 +258,20 @@ namespace
 
         if (baseline_identifier == "default")
         {
-            return Strings::format("Couldn't find explicitly specified baseline `\"default\"` in the baseline file.",
-                                   baseline_identifier);
+            return Strings::format(
+                "Error: Couldn't find explicitly specified baseline `\"default\"` in the baseline file.",
+                baseline_identifier);
         }
 
         // attempt to check out the baseline:
         auto maybe_path = paths.git_checkout_baseline(baseline_identifier);
         if (!maybe_path.has_value())
         {
-            return Strings::format("Couldn't find explicitly specified baseline `\"%s\"` in the baseline file, "
-                                   "and there was no baseline at that commit or the commit didn't exist.\n%s",
+            return Strings::format("Error: Couldn't find explicitly specified baseline `\"%s\"` in the baseline file, "
+                                   "and there was no baseline at that commit or the commit didn't exist.\n%s\n%s",
                                    baseline_identifier,
-                                   maybe_path.error());
+                                   maybe_path.error(),
+                                   paths.get_current_git_sha_message());
         }
 
         res_baseline = load_baseline_versions(paths, *maybe_path.get());
@@ -283,7 +285,7 @@ namespace
             return std::move(*p);
         }
 
-        return Strings::format("Couldn't find explicitly specified baseline `\"%s\"` in the baseline "
+        return Strings::format("Error: Couldn't find explicitly specified baseline `\"%s\"` in the baseline "
                                "file, and the `\"default\"` baseline does not exist at that commit.",
                                baseline_identifier);
     }
@@ -419,7 +421,16 @@ namespace
             if (it == git_entry->port_versions.end())
             {
                 return {
-                    Strings::concat("Error: No version entry for ", git_entry->port_name, " at version ", version, "."),
+                    Strings::concat("Error: No version entry for ",
+                                    git_entry->port_name,
+                                    " at version ",
+                                    version,
+                                    ". This may be fixed by updating vcpkg to the latest master via `git "
+                                    "pull`.\nAvailable versions:\n",
+                                    Strings::join("",
+                                                  git_entry->port_versions,
+                                                  [](const VersionT& v) { return Strings::concat("    ", v, "\n"); }),
+                                    "\nSee `vcpkg help versioning` for more information."),
                     expected_right_tag};
             }
 
@@ -923,7 +934,7 @@ namespace vcpkg
         if (!default_registry_is_builtin || registries_.size() != 0)
         {
             System::print2(System::Color::warning,
-                           "Warning: when using the registries feature, one should not use `\"$x-default-baseline\"` "
+                           "Warning: when using the registries feature, one should not use `\"builtin-baseline\"` "
                            "to set the baseline.\n",
                            "    Instead, use the \"baseline\" field of the registry.\n");
         }

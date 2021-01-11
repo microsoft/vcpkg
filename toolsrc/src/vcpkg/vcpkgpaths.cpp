@@ -545,6 +545,33 @@ If you wish to silence this error and use classic mode, you can:
         }
     }
 
+    ExpectedS<std::string> VcpkgPaths::get_current_git_sha() const
+    {
+        auto cmd = git_cmd_builder(*this, this->root / fs::u8path(".git"), this->root);
+        cmd.string_arg("rev-parse").string_arg("HEAD");
+        auto output = System::cmd_execute_and_capture_output(cmd);
+        if (output.exit_code != 0)
+        {
+            return {std::move(output.output), expected_right_tag};
+        }
+        else
+        {
+            return {Strings::trim(std::move(output.output)), expected_left_tag};
+        }
+    }
+    std::string VcpkgPaths::get_current_git_sha_message() const
+    {
+        auto maybe_cur_sha = get_current_git_sha();
+        if (auto p_sha = maybe_cur_sha.get())
+        {
+            return Strings::concat("The current commit is \"", *p_sha, '"');
+        }
+        else
+        {
+            return Strings::concat("Failed to determine the current commit:\n", maybe_cur_sha.error());
+        }
+    }
+
     ExpectedS<std::string> VcpkgPaths::git_show(const std::string& treeish, const fs::path& dot_git_dir) const
     {
         // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
@@ -655,9 +682,11 @@ If you wish to silence this error and use classic mode, you can:
             }
             else
             {
-                return {
-                    Strings::format("Error: while checking out baseline '%s':\n%s", treeish, maybe_contents.error()),
-                    expected_right_tag};
+                return {Strings::format("Error: while checking out baseline '%s':\n%s\nThis may be fixed by updating "
+                                        "vcpkg to the latest master via `git pull`.",
+                                        treeish,
+                                        maybe_contents.error()),
+                        expected_right_tag};
             }
         }
         return destination;
@@ -701,8 +730,6 @@ If you wish to silence this error and use classic mode, you can:
                 expected_right_tag};
         }
 
-        // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
-        // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
         System::CmdLineBuilder tar_cmd_builder = git_cmd_builder(*this, dot_git_dir, dot_git_dir)
                                                      .string_arg("archive")
                                                      .string_arg(git_tree)
@@ -716,7 +743,11 @@ If you wish to silence this error and use classic mode, you can:
         }
 
         System::CmdLineBuilder extract_cmd_builder;
-        extract_cmd_builder.string_arg("cd")
+        extract_cmd_builder
+            .string_arg("cd")
+#ifdef WIN32
+            .string_arg("/D")
+#endif
             .path_arg(destination_tmp)
             .ampersand()
             .path_arg(this->get_tool_exe(Tools::CMAKE))

@@ -68,6 +68,7 @@ namespace vcpkg
         std::vector<DependencyOverride> overrides;
         std::vector<std::string> default_features;
         std::string license; // SPDX license expression
+        Optional<std::string> builtin_baseline;
 
         Type type;
         PlatformExpression::Expr supports_expression;

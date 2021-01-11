@@ -256,6 +256,10 @@
           "description": "An SPDX license expression at version 3.9.",
           "type": "string"
         },
+        "builtin-baseline": {
+          "description": "A vcpkg repository commit for version control.",
+          "type": "string"
+        },
         "dependencies": {
           "description": "Dependencies that are always required.",
           "type": "array",
