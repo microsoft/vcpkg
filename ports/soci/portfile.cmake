@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF 334cc55d9fa7b42d7214a8533a246d637bc92899 #version 4.0.1 commit on 2020.10.19
     SHA512 b300b13f68347d78252812e09efffb1735072cf5019940da53366a5cdee997f4b8b03a584a87a95ba764b0a78640ad6eb4966b53f9156280cb452465607afbc7
     HEAD_REF master
-    PATCHES 
-    "fix-mysql-include-path.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)
@@ -39,6 +37,7 @@ vcpkg_configure_cmake(
         -DSOCI_SHARED=${SOCI_DYNAMIC}
         ${_COMPONENT_FLAGS}
 
+        -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql"
         -DWITH_ORACLE=OFF
         -DWITH_FIREBIRD=OFF
         -DWITH_DB2=OFF
