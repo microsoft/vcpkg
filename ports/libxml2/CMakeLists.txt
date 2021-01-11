@@ -164,6 +164,16 @@ install(TARGETS libxml2
     ${TARGET_INSTALL_OPTIONS}
 )
 
+if(BUILD_XMLLINT)
+    add_executable(xmllint xmllint.c)
+    target_include_directories(xmllint PRIVATE ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_BINARY_DIR}/include include ${LIBLZMA_INCLUDE_DIRS})
+    target_link_libraries(xmllint PRIVATE libxml2)
+    install(TARGETS xmllint
+        RUNTIME DESTINATION tools/libxml2
+        ${TARGET_INSTALL_OPTIONS}
+)
+endif()
+
 # pkgconfig
 set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix "\${prefix}")
