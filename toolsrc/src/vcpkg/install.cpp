@@ -849,8 +849,13 @@ namespace vcpkg::Install
             {
                 auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
                 auto baseprovider = PortFileProvider::make_baseline_provider(paths);
+                if (!manifest_scf.core_paragraph->overrides.empty())
+                {
+                    Metrics::g_metrics.lock()->track_property("manifest_overrides", "defined");
+                }
                 if (auto p_baseline = manifest_scf.core_paragraph->builtin_baseline.get())
                 {
+                    Metrics::g_metrics.lock()->track_property("manifest_baseline", "defined");
                     if (p_baseline->size() != 40 || !std::all_of(p_baseline->begin(), p_baseline->end(), [](char ch) {
                             return (ch >= 'a' || ch <= 'f') || Parse::ParserBase::is_ascii_digit(ch);
                         }))
