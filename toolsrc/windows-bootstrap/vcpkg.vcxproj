@@ -213,11 +213,13 @@
     <ClInclude Include="..\include\vcpkg\buildenvironment.h" />
     <ClInclude Include="..\include\vcpkg\cmakevars.h" />
     <ClInclude Include="..\include\vcpkg\commands.h" />
+    <ClInclude Include="..\include\vcpkg\commands.add-version.h" />
     <ClInclude Include="..\include\vcpkg\commands.autocomplete.h" />
     <ClInclude Include="..\include\vcpkg\commands.buildexternal.h" />
     <ClInclude Include="..\include\vcpkg\commands.cache.h" />
     <ClInclude Include="..\include\vcpkg\commands.ci.h" />
     <ClInclude Include="..\include\vcpkg\commands.ciclean.h" />
+    <ClInclude Include="..\include\vcpkg\commands.civerifyversions.h" />
     <ClInclude Include="..\include\vcpkg\commands.contact.h" />
     <ClInclude Include="..\include\vcpkg\commands.create.h" />
     <ClInclude Include="..\include\vcpkg\commands.dependinfo.h" />
@@ -303,11 +305,13 @@
     <ClCompile Include="..\src\vcpkg\build.cpp" />
     <ClCompile Include="..\src\vcpkg\buildenvironment.cpp" />
     <ClCompile Include="..\src\vcpkg\cmakevars.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.add-version.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.autocomplete.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.buildexternal.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.cache.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.ci.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.ciclean.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.civerifyversions.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.contact.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.create.cpp" />
