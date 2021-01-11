@@ -5,7 +5,6 @@ vcpkg_from_gitlab(
     REF 92d18649e92566ccc3abeba244adabda249cce1b # 1.1.4 
     SHA512  856158604d55954d4cba900792e865290f6c52d78bacaf35855ac64e7dfcd71d323ed1bbefe192357cdf21bcdee32311a4df6db99d074408a3a27637e8c49fa5
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -13,14 +12,6 @@ set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
-    #SKIP_CONFIGURE
-    #NO_DEBUG
-    #AUTO_HOST
-    #AUTO_DST
-    #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
-    #OPTIONS
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
 )
 
 vcpkg_install_make()

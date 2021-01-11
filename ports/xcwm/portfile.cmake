@@ -10,7 +10,6 @@ vcpkg_from_gitlab(
     REF  ff4c47ac4e22dd561d888ef14de5c92268b4ca78 #head
     SHA512 711611ff8ed7fa192b8c4c1c017bf0e0177e71cc246c80393aa5a3d99c161a3dea6a526499ff0ee24e7c08e98cf0b1b216700f85927616b921be314cb7e0beb8
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
 ) 
 #file(TOUCH ${SOURCE_PATH}/m4/dummy)
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
