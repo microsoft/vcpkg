@@ -58,18 +58,11 @@ set(ENV{PYTHONPATH} "$ENV{PYTHONPATH}${VCPKG_HOST_PATH_SEPARATOR}${CURRENT_INSTA
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
-    #SKIP_CONFIGURE
-    #NO_DEBUG
-    #AUTO_HOST
-    #AUTO_DST
-    #PRERUN_SHELL ${SHELL_PATH}
     OPTIONS ${OPTIONS}
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
 )
 
 vcpkg_install_make(MAKE_OPTIONS -k --print-data-base)
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES Ws2_32 ws2_32)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

@@ -17,13 +17,10 @@ vcpkg_configure_cmake(
         -DDBUS_ENABLE_XML_DOCS=OFF
         -DDBUS_INSTALL_SYSTEM_LIBS=ON
         -DXSLTPROC_EXECUTABLE=FALSE
-    #OPTIONS ${OPTIONS} --enable-tests=no
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
 )
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/DBus1")
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES gcc gcc_s c pthread /usr/lib/x86_64-linux-gnu/librt.so SKIP_CHECK) # For some reason there is an error here with the CHECK 
+vcpkg_fixup_pkgconfig() 
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

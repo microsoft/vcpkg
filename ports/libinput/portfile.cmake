@@ -6,10 +6,8 @@ vcpkg_from_gitlab(
     REF 5b500c0e744db962fceadccd029fd5075654f4bc # 1.3.4 
     SHA512  fb89248ca67996fe1b5bd42162153b7b913ced2a7f85b8f3b1e9feb2f1a298907d4a04c3b3cc67417553c8f4e82f74454e3febf5ec187e16969456bb89c55d60
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
 ) 
 
-set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
@@ -17,7 +15,8 @@ vcpkg_configure_meson(
             -Ddocumentation=false
 )
 vcpkg_install_meson()
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread)
+vcpkg_fixup_pkgconfig()
+
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

@@ -5,7 +5,6 @@ vcpkg_from_gitlab(
     REF a52c79544fcd6b5e2242b9122dfaa34be07aebb2 # 1.2.3
     SHA512  379e450d90e61d80d4fea8449a582b3eee3968bef137022053cb3bd51fa2815d8fccc43ff11e3b593c4a67ad64e93209c25111a20ac88e38c1f663cd274f5d56
     HEAD_REF master # branch name
-    #PATCHES example.patch #patch name
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -13,14 +12,6 @@ set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
-    #SKIP_CONFIGURE
-    #NO_DEBUG
-    #AUTO_HOST
-    #AUTO_DST
-    #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
-    #OPTIONS
-    #OPTIONS_DEBUG
-    #OPTIONS_RELEASE
 )
 
 vcpkg_install_make()
@@ -31,4 +22,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
