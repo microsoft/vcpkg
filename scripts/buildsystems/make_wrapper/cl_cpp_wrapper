@@ -83,7 +83,13 @@ input_file="${file:-/dev/stdin}"
 if [ "$input_file" == "/dev/stdin" ]; then
     #echo "STDIN"
     # CL does not support reading from STDIN so it is wrapped here. 
-    cp $input_file cppstdtmp.h
+    # cp $input_file cppstdtmp.h
+    # from https://stackoverflow.com/questions/36313562/how-to-redirect-stdin-to-file-in-bash
+    exec 3> cppstdtmp.h
+    while IFS= read -r line; do
+      printf '%s\n' "$line"
+    done
+    exec 3<&-
     exec $prog ${cppopt[@]} cppstdtmp.h
     rm -f cppstdtmp.h
 else
