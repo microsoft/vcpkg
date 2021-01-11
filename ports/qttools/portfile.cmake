@@ -56,6 +56,7 @@ set(${PORT}_PATCHES fix_static_build.patch)
         qtplugininfo
         qdbus
         qdbusviewer
+        qdoc
     )
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND TOOL_NAMES windeployqt)
