@@ -15,6 +15,7 @@ option(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang, even versions t
 option(VCPKG_DEVELOPMENT_WARNINGS "Option for turning on all warnings" ON)
 option(VCPKG_WARNINGS_AS_ERRORS "Set warnings to be errors" ${VCPKG_DEVELOPMENT_WARNINGS})
 option(VCPKG_BUILD_FUZZING "Option for enabling vcpkg-fuzz support" OFF)
+option(VCPKG_EMBED_GIT_SHA "Option for to fill in the Git SHA version; off by default to avoid privacy concerns out of official builds" OFF)
 
 CMAKE_DEPENDENT_OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF
     "BUILD_TESTING" OFF)
@@ -51,6 +52,31 @@ vcpkg_detect_compiler()
 vcpkg_detect_standard_library()
 vcpkg_detect_std_filesystem()
 
+if (VCPKG_EMBED_GIT_SHA)
+    find_package(Git REQUIRED)
+    execute_process(
+        COMMAND "${GIT_EXECUTABLE}" status --porcelain=v1
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+        OUTPUT_VARIABLE VCPKG_GIT_STATUS
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+
+    if (VCPKG_GIT_STATUS STREQUAL "")
+        execute_process(
+            COMMAND "${GIT_EXECUTABLE}" rev-parse HEAD
+            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+            OUTPUT_VARIABLE VCPKG_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+    else()
+        message(WARNING "Skipping embedding SHA due to local changes.")
+    endif()
+endif()
+
+if (VCPKG_VERSION STREQUAL "")
+    set(VCPKG_VERSION "nohash")
+endif()
+
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -84,7 +110,8 @@ target_include_directories(vcpkglib PUBLIC include)
 
 vcpkg_target_add_warning_options(vcpkglib)
 target_compile_definitions(vcpkglib PUBLIC
-    VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>)
+    VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>
+    VCPKG_VERSION=${VCPKG_VERSION})
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
