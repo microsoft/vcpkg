@@ -178,6 +178,7 @@ namespace vcpkg::Dependencies
     /// <param name="status_db">Status of installed packages in the current environment.</param>
     ExpectedS<ActionPlan> create_versioned_install_plan(const PortFileProvider::IVersionedPortfileProvider& vprovider,
                                                         const PortFileProvider::IBaselineProvider& bprovider,
+                                                        const PortFileProvider::IOverlayProvider& oprovider,
                                                         const CMakeVars::CMakeVarProvider& var_provider,
                                                         const std::vector<Dependency>& deps,
                                                         const std::vector<DependencyOverride>& overrides,
