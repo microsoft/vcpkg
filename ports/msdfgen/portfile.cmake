@@ -31,7 +31,7 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/msdfgen)
 
 # move exe to tools
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(BUILD_TOOLS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_copy_tools(TOOL_NAMES msdfgen AUTO_CLEAN)
 endif()
 
