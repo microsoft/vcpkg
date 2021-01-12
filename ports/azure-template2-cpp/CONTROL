@@ -1,0 +1,7 @@
+Source: azure-template2-cpp
+Version: 1.0.0-beta.22
+Description: Microsoft Azure Template SDK for C++
+  This is a template library meant to illustrate initial client library development process for Azure SDK.
+  It is not meant to be published to vcpkg.
+Homepage: https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/template/azure-template2
+Supports: !uwp
