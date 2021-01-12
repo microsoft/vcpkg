@@ -12,10 +12,8 @@ Throw-IfFailed
 Run-Vcpkg install @builtinRegistryArgs --feature-flags=registries 'zlib'
 Throw-IfFailed
 
-Run-Vcpkg x-set-installed @builtinRegistryArgs --feature-flags=registries
-Throw-IfFailed
-
 # Test git and filesystem registries
+Refresh-TestRoot
 $filesystemRegistry = "$TestingRoot/filesystem-registry"
 $gitRegistryUpstream = "$TestingRoot/git-registry-upstream"
 
@@ -35,18 +33,19 @@ New-Item `
 New-Item `
     -Path "$filesystemRegistry/port_versions/v-" `
     -ItemType Directory
+
+$vcpkgInternalE2eTestPortJson = @{
+    "versions" = @(
+        @{
+            "version-string" = "1.0.0";
+            "path" = "$/vcpkg-internal-e2e-test-port"
+        }
+    )
+}
 New-Item `
     -Path "$filesystemRegistry/port_versions/v-/vcpkg-internal-e2e-test-port.json" `
-    -ItemType File -Value "
-{
-    `"versions`": [
-        {
-            `"version-string`": `"1.0.0`",
-            `"path`": `"$/vcpkg-internal-e2e-test-port`"
-        }
-    ]
-}
-"
+    -ItemType File `
+    -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgInternalE2eTestPortJson)
 
 
 # build a git registry
@@ -92,30 +91,30 @@ $manifestDir = (Get-Item $manifestDir).FullName
 Push-Location $manifestDir
 try
 {
-    New-Item -Path 'vcpkg.json' -ItemType File -Value "
-{
-    `"name`": `"manifest-test`",
-    `"version-string`": `"1.0.0`",
-    `"dependencies`": [
-        `"vcpkg-internal-e2e-test-port`"
-    ]
-}
-"
-    New-Item -Path 'vcpkg-configuration.json' -ItemType File -Value "
-{
-    `"default-registry`": null,
-    `"registries`": [
-        {
-            `"kind`": `"filesystem`",
-            `"path`": `"$($filesystemRegistry -Replace '\\','/')`",
-            `"packages`": [ `"vcpkg-internal-e2e-test-port`" ]
-        }
-    ]
-}
-"
+    $vcpkgJson = @{
+        "name" = "manifest-test";
+        "version-string" = "1.0.0";
+        "dependencies" = @(
+            "vcpkg-internal-e2e-test-port"
+        )
+    }
+    New-Item -Path 'vcpkg.json' -ItemType File `
+        -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgJson)
+
+    $vcpkgConfigurationJson = @{
+        "default-registry" = $null;
+        "registries" = @(
+            @{
+                "kind" = "filesystem";
+                "path" = $filesystemRegistry;
+                "packages" = @( "vcpkg-internal-e2e-test-port" )
+            }
+        )
+    }
+    New-Item -Path 'vcpkg-configuration.json' -ItemType File `
+        -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgConfigurationJson)
+
     Run-Vcpkg install @commonArgs '--feature-flags=registries,manifests'
-    Throw-IfFailed
-    Run-Vcpkg x-set-installed @commonArgs '--feature-flags=registries,manifests'
     Throw-IfFailed
 }
 finally
@@ -132,30 +131,30 @@ $manifestDir = (Get-Item $manifestDir).FullName
 Push-Location $manifestDir
 try
 {
-    New-Item -Path 'vcpkg.json' -ItemType File -Value "
-{
-    `"name`": `"manifest-test`",
-    `"version-string`": `"1.0.0`",
-    `"dependencies`": [
-        `"vcpkg-internal-e2e-test-port`"
-    ]
-}
-"
-    New-Item -Path 'vcpkg-configuration.json' -ItemType File -Value "
-{
-    `"default-registry`": null,
-    `"registries`": [
-        {
-            `"kind`": `"git`",
-            `"repository`": `"$($gitRegistryUpstream -Replace '\\','/')`",
-            `"packages`": [ `"vcpkg-internal-e2e-test-port`" ]
-        }
-    ]
-}
-"
+    $vcpkgJson = @{
+        "name" = "manifest-test";
+        "version-string" = "1.0.0";
+        "dependencies" = @(
+            "vcpkg-internal-e2e-test-port"
+        )
+    }
+    New-Item -Path 'vcpkg.json' -ItemType File `
+        -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgJson)
+
+    $vcpkgConfigurationJson = @{
+        "default-registry" = $null;
+        "registries" = @(
+            @{
+                "kind" = "git";
+                "repository" = $gitRegistryUpstream;
+                "packages" = @( "vcpkg-internal-e2e-test-port" )
+            }
+        )
+    }
+    New-Item -Path 'vcpkg-configuration.json' -ItemType File `
+        -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgConfigurationJson)
+
     Run-Vcpkg install @commonArgs '--feature-flags=registries,manifests'
-    Throw-IfFailed
-    Run-Vcpkg x-set-installed @commonArgs '--feature-flags=registries,manifests'
     Throw-IfFailed
 }
 finally
