@@ -39,6 +39,10 @@ vcpkg_check_features(
         openexr ENABLE_OPENEXR_SUPPORT
 )
 
+if (VCPKG_HOST_IS_LINUX)
+    message(WARNING "Build ${PORT} requires GCC version 9 or later")
+endif()
+
 if(VCPKG_TARGET_IS_UWP)
   set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()

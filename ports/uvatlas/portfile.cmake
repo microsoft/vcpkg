@@ -10,6 +10,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if (VCPKG_HOST_IS_LINUX)
+    message(WARNING "Build ${PORT} requires GCC version 9 or later")
+endif()
+
 if(VCPKG_TARGET_IS_UWP)
   set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
