@@ -30,7 +30,7 @@ namespace vcpkg::Commands::PortHistory
         const System::ExitCodeAndOutput run_git_command_inner(const VcpkgPaths& paths,
                                                               const fs::path& dot_git_directory,
                                                               const fs::path& working_directory,
-                                                              const std::string& cmd)
+                                                              StringView cmd)
         {
             const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
 
@@ -38,13 +38,13 @@ namespace vcpkg::Commands::PortHistory
             builder.path_arg(git_exe)
                 .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_directory)))
                 .string_arg(Strings::concat("--work-tree=", fs::u8string(working_directory)));
-            const std::string full_cmd = Strings::concat(builder.extract(), " ", cmd);
+            const std::string full_cmd = Strings::concat(std::move(builder).extract(), " ", cmd);
 
             const auto output = System::cmd_execute_and_capture_output(full_cmd);
             return output;
         }
 
-        const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths, const std::string& cmd)
+        const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths, StringView cmd)
         {
             const fs::path& work_dir = paths.root;
             const fs::path dot_git_dir = paths.root / ".git";
@@ -125,7 +125,7 @@ namespace vcpkg::Commands::PortHistory
             builder.string_arg("--left-only");
             builder.string_arg("--"); // Begin pathspec
             builder.string_arg(Strings::format("ports/%s/.", port_name));
-            const auto output = run_git_command(paths, builder.extract());
+            const auto output = run_git_command(paths, builder);
 
             auto commits = Util::fmap(
                 Strings::split(output.output, '\n'), [](const std::string& line) -> auto {
