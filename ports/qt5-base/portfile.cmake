@@ -16,33 +16,7 @@ endif()
 
 
 if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING
-[[
-qt5-base currently requires the following libraries from the system package manager:
-    libx11-xcb-dev
-    libx11-dev
-    libxext-dev
-    libxfixes-dev
-    libxi-dev
-    libxrender-dev
-    libxcb1-dev
-    libxcb-glx0-dev
-    libxcb-keysyms1-dev
-    libxcb-image0-dev
-    libxcb-shm0-dev
-    libxcb-icccm4-dev
-    libxcb-sync-dev
-    libxcb-xfixes0-dev
-    libxcb-shape0-dev
-    libxcb-randr0-dev
-    libxcb-render-util0-dev
-    libxcb-xinerama0-dev
-    libxkbcommon-dev
-    libxkbcommon-x11-dev
-
-These can be installed on Ubuntu systems via apt-get install PACKAGE_NAME.
-]]
-    )
+    message(WARNING "qt5-base currently requires some packages from the system package manager, see https://doc.qt.io/qt-5/linux-requirements.html")
     message(WARNING 
 [[
 qt5-base for qt5-x11extras requires the following libraries from the system package manager:
