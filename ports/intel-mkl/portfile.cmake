@@ -4,7 +4,6 @@
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-
 if (VCPKG_TARGET_IS_WINDOWS)
     set(MKL_REQUIRED_VERSION 20200000)
     set(ProgramFilesx86 "ProgramFiles(x86)")
@@ -15,7 +14,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
                         "\nAlso ensure vcpkg has been rebuilt with the latest version (v0.0.104 or later)")
 else()
     set(MKL_REQUIRED_VERSION 2020.0.000)
-    file(GLOB MKL_PATHS /opt/intel/compilers_and_libraries_*.*.*)
+    file(GLOB MKL_PATHS "$ENV{MKLROOT}" "${INTEL_ROOT}/mkl" "${INTEL_ONEAPI_MKL_ROOT}" /opt/intel/compilers_and_libraries_*.*.*)
     foreach(MKL_PATH ${MKL_PATHS})
         get_filename_component(CURRENT_VERSION ${MKL_PATH} NAME)
         string(REGEX MATCH "[0-9]+\\.[0-9]+\\.[0-9]+$" VERSION_NUM ${CURRENT_VERSION})
@@ -48,7 +47,7 @@ endif()
 file(STRINGS ${MKL_ROOT}/include/mkl_version.h MKL_VERSION_DEFINITION REGEX "INTEL_MKL_VERSION")
 string(REGEX MATCH "([0-9]+)" MKL_VERSION ${MKL_VERSION_DEFINITION})
 
-if (MKL_VERSION LESS MKL_REQUIRED_VERSION)
+if (MKL_VERSION VERSION_LESS MKL_REQUIRED_VERSION)
     message(FATAL_ERROR "MKL ${MKL_VERSION} is found but ${MKL_REQUIRED_VERSION} is required. Please download and install a more recent version of MKL from:"
-                        "\n    https://registrationcenter.intel.com/en/products/download/3178/\n")
+                        "\n    https://software.intel.com/content/www/us/en/develop/tools/oneapi/base-toolkit.html\n")
 endif()
