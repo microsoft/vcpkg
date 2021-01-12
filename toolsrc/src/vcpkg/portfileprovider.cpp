@@ -210,7 +210,13 @@ namespace vcpkg::PortFileProvider
 
             if (port)
             {
-                auto port_path = port->get_path_to_version(paths, port_version).value_or_exit(VCPKG_LINE_INFO);
+                auto maybe_port_path = port->get_path_to_version(paths, port_version);
+                if (!maybe_port_path.has_value())
+                {
+                    return std::move(maybe_port_path.error());
+                }
+                auto port_path = std::move(maybe_port_path).value_or_exit(VCPKG_LINE_INFO);
+
                 auto maybe_scfl = Paragraphs::try_load_port(fs, port_path);
                 if (auto p = maybe_scfl.get())
                 {
@@ -402,6 +408,50 @@ namespace vcpkg::PortFileProvider
             mutable std::unordered_map<VersionSpec, SourceControlFileLocation, VersionSpecHasher> m_control_cache;
             mutable std::map<std::string, std::unique_ptr<RegistryEntry>, std::less<>> m_entry_cache;
         };
+
+        struct OverlayProviderImpl : IOverlayProvider, Util::ResourceBase
+        {
+            OverlayProviderImpl(const VcpkgPaths& paths, View<std::string> overlay_ports)
+                : paths(paths), m_overlay_ports(Util::fmap(overlay_ports, [&paths](const std::string& s) -> fs::path {
+                    return Files::combine(paths.original_cwd, fs::u8path(s));
+                }))
+            {
+            }
+
+            virtual Optional<const SourceControlFileLocation&> get_control_file(StringView port_name) const override
+            {
+                auto it = m_overlay_cache.find(port_name);
+                if (it == m_overlay_cache.end())
+                {
+                    auto s_port_name = port_name.to_string();
+                    auto maybe_overlay = try_load_overlay_port(paths.get_filesystem(), m_overlay_ports, s_port_name);
+                    Optional<SourceControlFileLocation> v;
+                    if (maybe_overlay)
+                    {
+                        auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(), maybe_overlay->path);
+                        if (auto scf = maybe_scf.get())
+                        {
+                            v = SourceControlFileLocation{std::move(*scf), maybe_overlay->path};
+                        }
+                        else
+                        {
+                            print_error_message(maybe_scf.error());
+                            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                                      "Error: Failed to load port %s from %s",
+                                                      port_name,
+                                                      fs::u8string(maybe_overlay->path));
+                        }
+                    }
+                    it = m_overlay_cache.emplace(std::move(s_port_name), std::move(v)).first;
+                }
+                return it->second;
+            }
+
+        private:
+            const VcpkgPaths& paths;
+            const std::vector<fs::path> m_overlay_ports;
+            mutable std::map<std::string, Optional<SourceControlFileLocation>, std::less<>> m_overlay_cache;
+        };
     }
 
     std::unique_ptr<IBaselineProvider> make_baseline_provider(const vcpkg::VcpkgPaths& paths)
@@ -412,5 +462,11 @@ namespace vcpkg::PortFileProvider
     std::unique_ptr<IVersionedPortfileProvider> make_versioned_portfile_provider(const vcpkg::VcpkgPaths& paths)
     {
         return std::make_unique<VersionedPortfileProviderImpl>(paths);
+    }
+
+    std::unique_ptr<IOverlayProvider> make_overlay_provider(const vcpkg::VcpkgPaths& paths,
+                                                            View<std::string> overlay_ports)
+    {
+        return std::make_unique<OverlayProviderImpl>(paths, std::move(overlay_ports));
     }
 }

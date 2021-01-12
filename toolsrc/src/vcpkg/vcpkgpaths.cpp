@@ -367,7 +367,6 @@ If you wish to silence this error and use classic mode, you can:
         vcpkg_dir_info = vcpkg_dir / fs::u8path("info");
         vcpkg_dir_updates = vcpkg_dir / fs::u8path("updates");
 
-        // Versioning paths
         const auto versioning_tmp = buildtrees / fs::u8path("versioning_tmp");
         const auto versioning_output = buildtrees / fs::u8path("versioning");
 
@@ -562,6 +561,52 @@ If you wish to silence this error and use classic mode, you can:
         {
             return {std::move(output.output), expected_right_tag};
         }
+    }
+
+    ExpectedS<std::map<std::string, std::string, std::less<>>> VcpkgPaths::git_get_local_port_treeish_map() const
+    {
+        const auto local_repo = this->root / fs::u8path(".git");
+        const auto path_with_separator =
+            Strings::concat(fs::u8string(this->builtin_ports_directory()), Files::preferred_separator);
+        const auto git_cmd = git_cmd_builder(*this, local_repo, this->root)
+                                 .string_arg("ls-tree")
+                                 .string_arg("-d")
+                                 .string_arg("HEAD")
+                                 .string_arg("--")
+                                 .path_arg(path_with_separator)
+                                 .extract();
+
+        auto output = System::cmd_execute_and_capture_output(git_cmd);
+        if (output.exit_code != 0)
+            return Strings::format("Error: Couldn't get local treeish objects for ports.\n%s", output.output);
+
+        std::map<std::string, std::string, std::less<>> ret;
+        auto lines = Strings::split(output.output, '\n');
+        // The first line of the output is always the parent directory itself.
+        for (auto line : lines)
+        {
+            // The default output comes in the format:
+            // <mode> SP <type> SP <object> TAB <file>
+            auto split_line = Strings::split(line, '\t');
+            if (split_line.size() != 2)
+                return Strings::format(
+                    "Error: Unexpected output from command `%s`. Couldn't split by `\\t`.\n%s", git_cmd, line);
+
+            auto file_info_section = Strings::split(split_line[0], ' ');
+            if (file_info_section.size() != 3)
+                return Strings::format(
+                    "Error: Unexepcted output from command `%s`. Couldn't split by ` `.\n%s", git_cmd, line);
+
+            const auto index = split_line[1].find_last_of('/');
+            if (index == std::string::npos)
+            {
+                return Strings::format(
+                    "Error: Unexpected output from command `%s`. Couldn't split by `/`.\n%s", git_cmd, line);
+            }
+
+            ret.emplace(split_line[1].substr(index + 1), file_info_section.back());
+        }
+        return ret;
     }
 
     void VcpkgPaths::git_checkout_object(const VcpkgPaths& paths,

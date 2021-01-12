@@ -122,6 +122,8 @@ namespace vcpkg
         fs::path git_checkout_port(Files::Filesystem& filesystem, StringView port_name, StringView git_tree) const;
         ExpectedS<std::string> git_show(const std::string& treeish, const fs::path& dot_git_dir) const;
 
+        ExpectedS<std::map<std::string, std::string, std::less<>>> git_get_local_port_treeish_map() const;
+
         Optional<const Json::Object&> get_manifest() const;
         Optional<const fs::path&> get_manifest_path() const;
         const Configuration& get_configuration() const;

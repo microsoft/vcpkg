@@ -52,12 +52,6 @@ namespace vcpkg::Commands::PortHistory
             return run_git_command_inner(paths, dot_git_dir, work_dir, cmd);
         }
 
-        bool is_date(const std::string& version_string)
-        {
-            std::regex re("^([0-9]{4,}[-][0-9]{2}[-][0-9]{2})$");
-            return std::regex_match(version_string, re);
-        }
-
         vcpkg::Optional<HistoryVersion> get_version_from_text(const std::string& text,
                                                               const std::string& git_tree,
                                                               const std::string& commit_id,
