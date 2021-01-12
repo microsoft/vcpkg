@@ -894,6 +894,11 @@ memorymodule:arm-uwp=fail
 memorymodule:x64-linux=fail
 memorymodule:x64-osx=fail
 memorymodule:x64-uwp=fail
+# Due to static crt. 
+mesa:x64-windows-static=fail
+# Missing dependent libraries. 
+mesa:x64-linux=fail
+mesa:x64-osx=fail
 meschach:arm-uwp=fail
 meschach:x64-linux=fail
 meschach:x64-osx=fail
