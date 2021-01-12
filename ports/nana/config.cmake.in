@@ -1,9 +1,10 @@
 @PACKAGE_INIT@
+include(CMakeFindDependencyMacro)
 
 if(UNIX)
-  find_package(Threads REQUIRED)
-  find_package(Freetype REQUIRED)
-  find_package(X11 REQUIRED)
+  find_dependency(Threads REQUIRED)
+  find_dependency(Freetype REQUIRED)
+  find_dependency(X11 REQUIRED)
   find_dependency(Fontconfig)
 endif()
 
@@ -11,11 +12,11 @@ option(NANA_ENABLE_PNG "Enable PNG support" @NANA_ENABLE_PNG@)
 option(NANA_ENABLE_JPEG "Enable JPEG support" @NANA_ENABLE_JPEG@)
 
 if(NANA_ENABLE_PNG)
-  find_package(PNG REQUIRED)
+  find_dependency(PNG REQUIRED)
 endif()
 
 if(NANA_ENABLE_JPEG)
-  find_package(JPEG REQUIRED)
+  find_dependency(JPEG REQUIRED)
 endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/unofficial-nana-targets.cmake")
