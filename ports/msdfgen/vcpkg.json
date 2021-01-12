@@ -5,5 +5,10 @@
   "homepage": "https://github.com/Chlumsky/msdfgen",
   "dependencies": [
     "freetype"
-  ]
+  ],
+  "features": {
+    "tools": {
+      "description": "Generates an executable inside the tools folder. Not supported on UWP."
+    }
+  }
 }

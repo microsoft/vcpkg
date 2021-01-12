@@ -10,9 +10,20 @@ vcpkg_from_github(
         compatibility.patch
 )
 
+set(BUILD_TOOLS OFF)
+if ("tools" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_UWP)
+        message("Tools couldn't be built on UWP, disable it automatically.")
+    else()
+        set(BUILD_TOOLS ON)
+    endif()
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DMSDFGEN_BUILD_MSDFGEN_STANDALONE=${BUILD_TOOLS}
 )
 
 vcpkg_install_cmake()
@@ -21,8 +32,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/msdfgen)
 
 # move exe to tools
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_copy_tools(TOOL_NAMES msdfgen-standalone AUTO_CLEAN)
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/tools/${PORT}/msdfgen-standalone${VCPKG_TARGET_EXECUTABLE_SUFFIX} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT} RENAME msdfgen${VCPKG_TARGET_EXECUTABLE_SUFFIX})
+    vcpkg_copy_tools(TOOL_NAMES msdfgen AUTO_CLEAN)
 endif()
 
 
