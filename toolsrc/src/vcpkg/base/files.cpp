@@ -104,6 +104,11 @@ namespace
 
 fs::path fs::u8path(vcpkg::StringView s)
 {
+    if (s.size() == 0)
+    {
+        return fs::path();
+    }
+
 #if defined(_WIN32)
     return fs::path(vcpkg::Strings::to_utf16(s));
 #else
@@ -1216,7 +1221,7 @@ namespace vcpkg::Files
             {
             }
 
-#if defined(WIN32)
+#if defined(_WIN32)
             void assign_busy_error(std::error_code& ec) { ec.assign(ERROR_BUSY, std::system_category()); }
 
             bool operator()(std::error_code& ec)
@@ -1242,7 +1247,7 @@ namespace vcpkg::Files
                 res.system_handle = reinterpret_cast<intptr_t>(handle);
                 return true;
             }
-#else // ^^^ WIN32 / !WIN32 vvv
+#else // ^^^ _WIN32 / !_WIN32 vvv
             int fd = -1;
 
             void assign_busy_error(std::error_code& ec) { ec.assign(EBUSY, std::generic_category()); }
@@ -1252,7 +1257,7 @@ namespace vcpkg::Files
                 ec.clear();
                 if (fd == -1)
                 {
-                    fd = ::open(native.c_str(), 0);
+                    fd = ::open(native.c_str(), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
                     if (fd < 0)
                     {
                         ec.assign(errno, std::generic_category());
@@ -1335,7 +1340,7 @@ namespace vcpkg::Files
 
         virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code& ec) override
         {
-#if defined(WIN32)
+#if defined(_WIN32)
             if (CloseHandle(reinterpret_cast<HANDLE>(handle.system_handle)) == 0)
             {
                 ec.assign(GetLastError(), std::system_category());

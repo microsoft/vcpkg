@@ -48,20 +48,11 @@ namespace fs
     inline path u8path(std::initializer_list<char> il) { return u8path(vcpkg::StringView{il.begin(), il.end()}); }
     inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
 
-#if defined(_MSC_VER)
     inline path u8path(std::string::const_iterator first, std::string::const_iterator last)
     {
-        if (first == last)
-        {
-            return path{};
-        }
-        else
-        {
-            auto firstp = &*first;
-            return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
-        }
+        auto firstp = &*first;
+        return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
     }
-#endif
 
     std::string u8string(const path& p);
     std::string generic_u8string(const path& p);
@@ -238,6 +229,12 @@ namespace vcpkg::Files
         fs::path current_path(LineInfo li) const;
         virtual void current_path(const fs::path& path, std::error_code&) = 0;
         void current_path(const fs::path& path, LineInfo li);
+
+        // if the path does not exist, then (try_|)take_exclusive_file_lock attempts to create the file
+        // (but not any path members above the file itself)
+        // in other words, if `/a/b` is a directory, and you're attempting to lock `/a/b/c`,
+        // then these lock functions create `/a/b/c` if it doesn't exist;
+        // however, if `/a/b` doesn't exist, then the functions will fail.
 
         // waits forever for the file lock
         virtual fs::SystemHandle take_exclusive_file_lock(const fs::path& path, std::error_code&) = 0;

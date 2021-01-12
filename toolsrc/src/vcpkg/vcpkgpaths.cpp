@@ -10,7 +10,6 @@
 #include <vcpkg/build.h>
 #include <vcpkg/commands.h>
 #include <vcpkg/configuration.h>
-#include <vcpkg/configurationdeserializer.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/metrics.h>
 #include <vcpkg/packagespec.h>
@@ -89,9 +88,9 @@ namespace vcpkg
                                                    const fs::path& filepath)
     {
         Json::Reader reader;
-        ConfigurationDeserializer deserializer(args);
+        auto deserializer = make_configuration_deserializer(filepath.parent_path());
 
-        auto parsed_config_opt = reader.visit(obj, deserializer);
+        auto parsed_config_opt = reader.visit(obj, *deserializer);
         if (!reader.errors().empty())
         {
             System::print2(System::Color::error, "Errors occurred while parsing ", fs::u8string(filepath), "\n");
@@ -102,6 +101,8 @@ namespace vcpkg
                            "more information.\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
+
+        parsed_config_opt.get()->validate_feature_flags(args.feature_flag_settings());
 
         return std::move(parsed_config_opt).value_or_exit(VCPKG_LINE_INFO);
     }
@@ -342,6 +343,8 @@ If you wish to silence this error and use classic mode, you can:
         scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
         builtin_ports =
             process_output_directory(filesystem, root, args.builtin_ports_root_dir.get(), "ports", VCPKG_LINE_INFO);
+        builtin_port_versions = process_output_directory(
+            filesystem, root, args.builtin_port_versions_dir.get(), "port_versions", VCPKG_LINE_INFO);
         prefab = root / fs::u8path("prefab");
 
         if (args.default_visual_studio_path)
@@ -364,7 +367,6 @@ If you wish to silence this error and use classic mode, you can:
         vcpkg_dir_info = vcpkg_dir / fs::u8path("info");
         vcpkg_dir_updates = vcpkg_dir / fs::u8path("updates");
 
-        // Versioning paths
         const auto versioning_tmp = buildtrees / fs::u8path("versioning_tmp");
         const auto versioning_output = buildtrees / fs::u8path("versioning");
 
@@ -493,11 +495,13 @@ If you wish to silence this error and use classic mode, you can:
         fs.remove_all(dot_git_dir, VCPKG_LINE_INFO);
 
         // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
-        // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
+        // git clone --no-checkout --local --no-hardlinks {vcpkg_root} {dot_git_dir}
+        // note that `--no-hardlinks` is added because otherwise, git fails to clone in some cases
         System::CmdLineBuilder clone_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
                                                        .string_arg("clone")
                                                        .string_arg("--no-checkout")
                                                        .string_arg("--local")
+                                                       .string_arg("--no-hardlinks")
                                                        .path_arg(local_repo)
                                                        .path_arg(dot_git_dir);
         const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
@@ -559,6 +563,52 @@ If you wish to silence this error and use classic mode, you can:
         }
     }
 
+    ExpectedS<std::map<std::string, std::string, std::less<>>> VcpkgPaths::git_get_local_port_treeish_map() const
+    {
+        const auto local_repo = this->root / fs::u8path(".git");
+        const auto path_with_separator =
+            Strings::concat(fs::u8string(this->builtin_ports_directory()), Files::preferred_separator);
+        const auto git_cmd = git_cmd_builder(*this, local_repo, this->root)
+                                 .string_arg("ls-tree")
+                                 .string_arg("-d")
+                                 .string_arg("HEAD")
+                                 .string_arg("--")
+                                 .path_arg(path_with_separator)
+                                 .extract();
+
+        auto output = System::cmd_execute_and_capture_output(git_cmd);
+        if (output.exit_code != 0)
+            return Strings::format("Error: Couldn't get local treeish objects for ports.\n%s", output.output);
+
+        std::map<std::string, std::string, std::less<>> ret;
+        auto lines = Strings::split(output.output, '\n');
+        // The first line of the output is always the parent directory itself.
+        for (auto line : lines)
+        {
+            // The default output comes in the format:
+            // <mode> SP <type> SP <object> TAB <file>
+            auto split_line = Strings::split(line, '\t');
+            if (split_line.size() != 2)
+                return Strings::format(
+                    "Error: Unexpected output from command `%s`. Couldn't split by `\\t`.\n%s", git_cmd, line);
+
+            auto file_info_section = Strings::split(split_line[0], ' ');
+            if (file_info_section.size() != 3)
+                return Strings::format(
+                    "Error: Unexepcted output from command `%s`. Couldn't split by ` `.\n%s", git_cmd, line);
+
+            const auto index = split_line[1].find_last_of('/');
+            if (index == std::string::npos)
+            {
+                return Strings::format(
+                    "Error: Unexpected output from command `%s`. Couldn't split by `/`.\n%s", git_cmd, line);
+            }
+
+            ret.emplace(split_line[1].substr(index + 1), file_info_section.back());
+        }
+        return ret;
+    }
+
     void VcpkgPaths::git_checkout_object(const VcpkgPaths& paths,
                                          StringView git_object,
                                          const fs::path& local_repo,
@@ -578,6 +628,7 @@ If you wish to silence this error and use classic mode, you can:
                                                            .string_arg("clone")
                                                            .string_arg("--no-checkout")
                                                            .string_arg("--local")
+                                                           .string_arg("--no-hardlinks")
                                                            .path_arg(local_repo)
                                                            .path_arg(dot_git_dir);
             const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
@@ -662,8 +713,8 @@ If you wish to silence this error and use classic mode, you can:
          * Since we are checking a git tree object, all files will be checked out to the root of `work-tree`.
          * Because of that, it makes sense to use the git hash as the name for the directory.
          */
-        const fs::path local_repo = this->root;
-        const fs::path destination = this->versions_output / fs::u8path(git_tree) / fs::u8path(port_name);
+        const fs::path& local_repo = this->root;
+        fs::path destination = this->versions_output / fs::u8path(git_tree) / fs::u8path(port_name);
 
         if (!fs.exists(destination / "CONTROL") && !fs.exists(destination / "vcpkg.json"))
         {

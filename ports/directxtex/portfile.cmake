@@ -1,11 +1,14 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF nov2020
-    SHA512 a3f4abc2729c6e98b8cd29ff1d410410bced2eaa2dc62563f18344dbb33f30d7ce32c11cafe85f91786e80610d8a2030dab48919f5bf9ccf92ceba2c5ed4db13
+    REF nov2020b
+    SHA512 b32f063f838c150f0ce81f4807bb88090d9695ee9857ec198b22a06c758e905008a3e3c3a1370f89ce5ec4d7e3c66f896a915968312776e8e5ada7e53e346475
     HEAD_REF master
+    FILE_DISAMBIGUATOR 2
 )
 
 if("openexr" IN_LIST FEATURES)
@@ -35,36 +38,59 @@ vcpkg_check_features(
         openexr ENABLE_OPENEXR_SUPPORT
 )
 
+if(VCPKG_TARGET_IS_UWP)
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
+else()
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
+        ${EXTRA_OPTIONS}
         -DBC_USE_OPENMP=ON
         -DBUILD_DX11=ON
 )
 
-if(NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-    vcpkg_build_cmake()
-else()
-    vcpkg_build_cmake(TARGET DirectXTex)
-endif()
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-file(INSTALL ${SOURCE_PATH}/DirectXTex/DirectXTex.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/DirectXTex/DirectXTex.inl DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-if("openexr" IN_LIST FEATURES)
-    file(INSTALL ${SOURCE_PATH}/DirectXTex/DirectXTexEXR.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-endif()
-
-file(GLOB_RECURSE DEBUG_LIB ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/bin/CMake/*.lib)
-file(GLOB_RECURSE RELEASE_LIB ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake/*.lib)
-file(INSTALL ${DEBUG_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(INSTALL ${RELEASE_LIB} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-if(NOT VCPKG_TARGET_IS_UWP AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+if(NOT VCPKG_TARGET_IS_UWP)
   vcpkg_copy_tools(
         TOOL_NAMES texassemble texconv texdiag
         SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
     )
+
+elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+  vcpkg_download_distfile(texassemble
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/nov2020/texassemble.exe"
+    FILENAME "texassemble.exe"
+    SHA512 8094a4ef4a00df3d2cb4a18a1c84664f4a8bf018328751f19feef1691d1a3d9380556039b1a771728e55d94113baa0f69998f63c96a3b4a6f6c3ba9e53a29a64
+  )
+
+  vcpkg_download_distfile(texconv
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/nov2020/texconv.exe"
+    FILENAME "texconv.exe"
+    SHA512 91555fae9fadb942e8f3bc7052888fe515b1a0efb17f5eb53ef437e06c2e50baaef6a0552c93f218b028133baf65ba6e3393042a47b210baa9692ed6f8bbed2b
+  )
+
+  vcpkg_download_distfile(texdiag
+    URLS "https://github.com/Microsoft/DirectXTex/releases/download/nov2020/texdiag.exe"
+    FILENAME "texdiag.exe"
+    SHA512 7ba66004228ea1830fbfe5c40f4ee6cf1023f8256136a565c28e584a71115dd2d38e5f79f862de39ee54f8b34d7d8848c656082800f2a59f5b4833aee678d4b8
+  )
+
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
+
+  file(INSTALL
+    ${DOWNLOADS}/texassemble.exe
+    ${DOWNLOADS}/texconv.exe
+    ${DOWNLOADS}/texdiag.exe
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxtex/)
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
