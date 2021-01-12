@@ -48,20 +48,11 @@ namespace fs
     inline path u8path(std::initializer_list<char> il) { return u8path(vcpkg::StringView{il.begin(), il.end()}); }
     inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
 
-#if defined(_MSC_VER)
     inline path u8path(std::string::const_iterator first, std::string::const_iterator last)
     {
-        if (first == last)
-        {
-            return path{};
-        }
-        else
-        {
-            auto firstp = &*first;
-            return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
-        }
+        auto firstp = &*first;
+        return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
     }
-#endif
 
     std::string u8string(const path& p);
     std::string generic_u8string(const path& p);

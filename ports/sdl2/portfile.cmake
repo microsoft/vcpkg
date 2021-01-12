@@ -1,24 +1,17 @@
-set(SDL2_VERSION 2.0.12)
+set(SDL2_VERSION 2.0.14)
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.libsdl.org/release/SDL2-2.0.12.tar.gz"
+    URLS "https://www.libsdl.org/release/SDL2-${SDL2_VERSION}.tar.gz"
     FILENAME "SDL2-${SDL2_VERSION}.tar.gz"
-    SHA512 3f1f04af0f3d9dda9c84a2e9274ae8d83ea0da3fc367970a820036cc4dc1dbf990cfc37e4975ae05f0b45a4ffa739c6c19e470c00bf3f2bce9b8b63717b8b317
+    SHA512 ebc482585bd565bf3003fbcedd91058b2183e333b9ea566d2f386da0298ff970645d9d25c1aa4459c7c96e9ea839fd1c5f2da0242a56892865b2e456cdd027ee
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
-        export-symbols-only-in-shared-build.patch
-        enable-winrt-cmake.patch
-        disable-hidapi-for-uwp.patch
-        fix-space-in-path.patch
-        disable-wcslcpy-and-wcslcat-for-windows.patch
-        fix-EventToken-header-reference.patch
-        0006-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
-        0007-sdl2-skip-ibus-on-linux.patch
-        0008-fix-macos-metal-test.patch
-        no-propagate-shared-link-options.patch
+        0001-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
+        0002-sdl2-skip-ibus-on-linux.patch
+        0003-sdl2-fix-uwp-build.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
