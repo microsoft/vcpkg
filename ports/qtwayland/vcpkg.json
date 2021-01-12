@@ -6,8 +6,8 @@
   "supports": "!windows",
   "dependencies": [
     "qtbase",
-    "qtopcua",
-    "qtdeclarative"
+    "qtdeclarative",
+    "qtopcua"
   ],
   "default-features": [
     "default-features"
