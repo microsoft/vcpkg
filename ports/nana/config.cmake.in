@@ -4,7 +4,7 @@ if(UNIX)
   find_package(Threads REQUIRED)
   find_package(Freetype REQUIRED)
   find_package(X11 REQUIRED)
-  find_library(FONTCONFIG_LIB NAMES fontconfig)
+  find_dependency(Fontconfig)
 endif()
 
 option(NANA_ENABLE_PNG "Enable PNG support" @NANA_ENABLE_PNG@)
@@ -21,7 +21,7 @@ endif()
 include("${CMAKE_CURRENT_LIST_DIR}/unofficial-nana-targets.cmake")
 
 if(UNIX)
-  target_link_libraries(unofficial::nana::nana INTERFACE ${FONTCONFIG_LIB} ${X11_LIBRARIES} ${X11_Xft_LIB})
+  target_link_libraries(unofficial::nana::nana INTERFACE Fontconfig::Fontconfig ${X11_LIBRARIES} ${X11_Xft_LIB})
 endif()
 
 if(NANA_ENABLE_JPEG)
