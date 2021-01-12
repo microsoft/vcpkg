@@ -48,7 +48,7 @@ if(UNIX)
   target_link_libraries(nana PUBLIC ${X11_LIBRARIES} ${X11_Xft_LIB})
 
   find_package(Fontconfig)
-  target_link_libraries(nana PUBLIC ${FONTCONFIG_LIB})
+  target_link_libraries(nana PUBLIC Fontconfig::Fontconfig)
 endif()
 
 if(NANA_ENABLE_PNG)
