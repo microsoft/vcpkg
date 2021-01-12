@@ -7,6 +7,7 @@
 #include <vcpkg/input.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/remote_install.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 
@@ -22,7 +23,7 @@ namespace vcpkg::RemoteInstall
     }};
 
     const CommandStructure COMMAND_STRUCTURE = {
-        create_example_string("remote-install nnoops-long-arith-lib"),
+        create_example_string("remote-install nnoops-long-arith-lib --author-name=Mr-Leshiy"),
         1,
         1,
         {{}, REMOTE_INSTALL_SETTINGS},
@@ -85,6 +86,33 @@ namespace vcpkg::RemoteInstall
                                      paths.builtin_ports_directory() /
                                          Strings::format("%s_%s", author_name, spec.package_spec.name()) /
                                          Strings::format("%s%s", spec.package_spec.name(), ARCHIVE_ENDING));
+        }
+
+        // Unarchive
+        const fs::path& cmake_exe = paths.get_tool_exe(Tools::CMAKE);
+        for (auto&& spec : specs)
+        {
+            fs::path destination =
+                paths.builtin_ports_directory() / Strings::format("%s_%s", author_name, spec.package_spec.name());
+
+            System::CmdLineBuilder cmd;
+            cmd.string_arg("cd").path_arg(destination);
+            cmd.ampersand();
+            cmd.path_arg(cmake_exe).string_arg("-E").string_arg("tar").string_arg("xzf").path_arg(
+                Strings::format("%s%s", spec.package_spec.name(), ARCHIVE_ENDING));
+
+            auto cmdline = cmd.extract();
+#ifdef WIN32
+            // Invoke through `cmd` to support `&&`
+            cmdline.insert(0, "cmd /c \"");
+            cmdline.push_back('"');
+#endif
+
+            const int exit_code = System::cmd_execute_clean(cmdline);
+            Checks::check_exit(VCPKG_LINE_INFO,
+                               exit_code == 0,
+                               "Error: %s unzip failed",
+                               Strings::format("%s%s", spec.package_spec.name(), ARCHIVE_ENDING));
         }
 
         Checks::exit_success(VCPKG_LINE_INFO);
