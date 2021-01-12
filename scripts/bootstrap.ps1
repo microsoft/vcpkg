@@ -416,8 +416,10 @@ if ($disableMetrics)
 {
     Set-Content -Value "" -Path "$vcpkgRootDir\vcpkg.disable-metrics" -Force
 }
-else
+elseif (-Not (Test-Path "$vcpkgRootDir\vcpkg.disable-metrics"))
 {
+    # Note that we intentionally leave any existing vcpkg.disable-metrics; once a user has
+    # opted out they should stay opted out.
     Write-Host @"
 Telemetry
 ---------
