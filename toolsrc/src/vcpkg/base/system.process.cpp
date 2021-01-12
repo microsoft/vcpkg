@@ -651,7 +651,7 @@ namespace vcpkg
         Debug::print("system(", real_command_line, ")\n");
         fflush(nullptr);
 
-        int exit_code = system(cmd_line.c_str());
+        int exit_code = system(real_command_line.c_str());
         Debug::print(
             "system() returned ", exit_code, " after ", static_cast<unsigned int>(timer.microseconds()), " us\n");
 #endif

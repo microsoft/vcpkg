@@ -38,6 +38,7 @@ namespace vcpkg::System
         {
             buf.push_back(' ');
             buf.append(s.data(), s.size());
+            return *this;
         }
 
         CmdLineBuilder&& path_arg(const fs::path& p) && { return std::move(path_arg(p)); }
