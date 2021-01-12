@@ -1,5 +1,5 @@
 Source: opencv4
-Version: 4.3.0
+Version: 4.5.1
 Port-Version: 4
 Build-Depends: zlib
 Homepage: https://github.com/opencv/opencv
