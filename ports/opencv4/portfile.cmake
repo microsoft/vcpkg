@@ -6,23 +6,23 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv3")
   message(FATAL_ERROR "OpenCV 3 is installed, please uninstall and try again:\n    vcpkg remove opencv3")
 endif()
 
-set(OPENCV_VERSION "4.3.0")
+set(OPENCV_VERSION "4.5.1")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 ac22b41fffa3e3138701fa0df0d19900b3ce72e168f4478ecdc593c5c9fd004b4b1b26612d62c25b681db99a8720db7a11b5b224e576e595624965fa79b0f383
+    SHA512 d74ae3bc340639cbc8b5db41a1fec710acabf8ec828dd28ce3bacf7029d1afd23aeaf47a2273a42995de285daa8aef33a7f90d5c57ef096e2cb872e0845e92b0
     HEAD_REF master
-    PATCHES
-      0001-disable-downloading.patch
-      0002-install-options.patch
-      0003-force-package-requirements.patch
-      0004-fix-policy-CMP0057.patch
-      0006-fix-vtk9.patch
-      0006-jpeg2000_getref.patch
-      0009-fix-uwp.patch
-      0010-fix-interface_link_libraries.patch # Remove this patch when the next update
+    #PATCHES
+    #  0001-disable-downloading.patch
+    #  0002-install-options.patch
+    #  0003-force-package-requirements.patch
+    #  0004-fix-policy-CMP0057.patch
+    #  0006-fix-vtk9.patch
+    #  0006-jpeg2000_getref.patch
+    #  0009-fix-uwp.patch
+    #  0010-fix-interface_link_libraries.patch # Remove this patch when the next update
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
@@ -121,11 +121,11 @@ if("contrib" IN_LIST FEATURES)
     OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
     REPO opencv/opencv_contrib
     REF ${OPENCV_VERSION}
-    SHA512 cfeda06a9f86ccaedbca9521c35bf685c3d8d3a182fb943f9378a7ecd1949d6e2e9df1673f0e3e9686840ca4c9e5a8e8cf2ac962a33b6e1f88f8278abd8c37e5
+    SHA512 1ebb9fec53b74039ffa2dc9f00899ab83af615f01156c0454ea7c53161256b6c9fd4548387fbfd197182c2d03db4de8c7170e2877b4648ce92531f821e81fdd7
     HEAD_REF master
-    PATCHES
-      0005-add-missing-stdexcept-include.patch
-      0007-fix-vtk9-contrib.patch
+    #PATCHES
+    #  0005-add-missing-stdexcept-include.patch
+    #  0007-fix-vtk9-contrib.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
