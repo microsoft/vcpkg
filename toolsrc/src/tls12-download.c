@@ -121,9 +121,16 @@ void report_api_failure(const HANDLE hStdOut, const wchar_t* api_name)
     TerminateProcess(GetCurrentProcess(), 3);
 }
 
+#ifndef NDEBUG
+int main()
+#else // ^^^ debug // !debug vvv
 int __stdcall entry()
+#endif // ^^^ !debug
 {
+    #ifdef NDEBUG
     __security_init_cookie();
+    #endif // ^^^ release
+
     const HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (stdOut == INVALID_HANDLE_VALUE)
     {
