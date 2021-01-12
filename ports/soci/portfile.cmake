@@ -24,7 +24,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
         list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
     endif()
 
-    if ("mysql" IN_LIST FEATURES)
+    if(_feature MATCHES "mysql"))
         set(MYSQL_OPT -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql")
     endif()
 endforeach()
