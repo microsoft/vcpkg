@@ -6,3 +6,7 @@ Build-Depends: zlib, zstd, libjpeg-turbo, libpng, freetype, pcre2, harfbuzz, sql
 
 Feature: latest
 Description: Build latest qt version (5.15.2) instead of LTS (latest and LTS are currently the same)
+
+Feature: mysqlplugin
+Build-Depends: libmysql
+Description: Build the sql plugin for connecting to mysql databases
