@@ -1,4 +1,5 @@
 if(WIN32)
+# 3.16 for MSVC_RUNTIME_LIBRARY
 cmake_minimum_required(VERSION 3.16)
 else()
 cmake_minimum_required(VERSION 3.14)

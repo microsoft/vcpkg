@@ -11,7 +11,13 @@
  * hello world program that does link with the CRT is ~300kb)
  */
 
-void __declspec(noreturn) win32_abort() { TerminateProcess(GetCurrentProcess(), 3); }
+void __declspec(noreturn) win32_abort() {
+    /*
+     * Note that TerminateProcess does not return when called from the terminated process, see
+     * https://github.com/MicrosoftDocs/sdk-api/pull/626
+     */
+    TerminateProcess(GetCurrentProcess(), 3);
+    }
 
 size_t wide_length(const wchar_t* str)
 {
@@ -75,25 +81,25 @@ void write_message(const HANDLE hStdOut, const wchar_t* msg)
 void write_number(const HANDLE hStdOut, DWORD number)
 {
     wchar_t buffer[11]; // 4294967295\0
-    wchar_t* cursor = buffer + 11;
-    *--cursor = L'\0';
+    wchar_t* firstDigit = buffer + 11;
+    *--firstDigit = L'\0';
     if (number == 0)
     {
-        *--cursor = L'0';
+        *--firstDigit = L'0';
     }
     else
     {
         do
         {
-            *--cursor = L'0' + number % 10;
+            *--firstDigit = L'0' + number % 10;
             number /= 10;
         } while (number != 0);
     }
 
-    write_message(hStdOut, cursor);
+    write_message(hStdOut, firstDigit);
 }
 
-void report_api_failure(const HANDLE hStdOut, const wchar_t* api_name)
+void __declspec(noreturn) abort_api_failure(const HANDLE hStdOut, const wchar_t* api_name)
 {
     DWORD lastError = GetLastError();
     write_message(hStdOut, L"While calling Windows API function ");
@@ -118,7 +124,7 @@ void report_api_failure(const HANDLE hStdOut, const wchar_t* api_name)
 
     write_message(hStdOut, L"\r\n");
     FlushFileBuffers(hStdOut);
-    TerminateProcess(GetCurrentProcess(), 3);
+    win32_abort();
 }
 
 #ifndef NDEBUG
@@ -160,10 +166,10 @@ int __stdcall entry()
     write_message(stdOut, out_file_path);
     write_message(stdOut, L"\r\n");
 
-    HANDLE outFile = CreateFileW(out_file_path, FILE_WRITE_DATA, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+    const HANDLE outFile = CreateFileW(out_file_path, FILE_WRITE_DATA, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
     if (outFile == INVALID_HANDLE_VALUE)
     {
-        report_api_failure(stdOut, L"CreateFileW");
+        abort_api_failure(stdOut, L"CreateFileW");
     }
 
     BOOL results = FALSE;
@@ -171,36 +177,36 @@ int __stdcall entry()
         L"tls12-download/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
     if (!session)
     {
-        report_api_failure(stdOut, L"WinHttpOpen");
+        abort_api_failure(stdOut, L"WinHttpOpen");
     }
 
     unsigned long secure_protocols = WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2;
     if (!WinHttpSetOption(session, WINHTTP_OPTION_SECURE_PROTOCOLS, &secure_protocols, sizeof(DWORD)))
     {
-        report_api_failure(stdOut, L"WinHttpSetOption");
+        abort_api_failure(stdOut, L"WinHttpSetOption");
     }
 
     const HINTERNET connect = WinHttpConnect(session, domain, INTERNET_DEFAULT_HTTPS_PORT, 0);
     if (!connect)
     {
-        report_api_failure(stdOut, L"WinHttpConnect");
+        abort_api_failure(stdOut, L"WinHttpConnect");
     }
 
     const HINTERNET request = WinHttpOpenRequest(
         connect, L"GET", relative_path, 0, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
     if (!request)
     {
-        report_api_failure(stdOut, L"WinHttpOpenRequest");
+        abort_api_failure(stdOut, L"WinHttpOpenRequest");
     }
 
     if (!WinHttpSendRequest(request, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0))
     {
-        report_api_failure(stdOut, L"WinHttpSendRequest");
+        abort_api_failure(stdOut, L"WinHttpSendRequest");
     }
 
     if (!WinHttpReceiveResponse(request, 0))
     {
-        report_api_failure(stdOut, L"WinHttpReceiveResponse");
+        abort_api_failure(stdOut, L"WinHttpReceiveResponse");
     }
 
     DWORD httpCode = 0;
@@ -213,7 +219,7 @@ int __stdcall entry()
                              &unused,
                              WINHTTP_NO_HEADER_INDEX))
     {
-        report_api_failure(stdOut, L"WinHttpQueryHeaders");
+        abort_api_failure(stdOut, L"WinHttpQueryHeaders");
     }
 
     if (httpCode != 200)
@@ -231,7 +237,7 @@ int __stdcall entry()
         DWORD receivedBytes;
         if (!WinHttpReadData(request, buffer, sizeof(buffer), &receivedBytes))
         {
-            report_api_failure(stdOut, L"WinHttpReadData");
+            abort_api_failure(stdOut, L"WinHttpReadData");
         }
 
         if (receivedBytes == 0)
@@ -244,7 +250,7 @@ int __stdcall entry()
             DWORD writtenBytes;
             if (!WriteFile(outFile, buffer, receivedBytes, &writtenBytes, 0))
             {
-                report_api_failure(stdOut, L"WriteFile");
+                abort_api_failure(stdOut, L"WriteFile");
             }
 
             receivedBytes -= writtenBytes;
