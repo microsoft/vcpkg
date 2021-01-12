@@ -137,6 +137,28 @@ $CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_ad
 
 $PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.1.0/PowerShell-7.1.0-win-x64.msi'
 
+# Seems like only the HPC kit is really needed?
+#$oneAPIBaseUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/17453/w_BaseKit_p_2021.1.0.2664_offline.exe'
+$oneAPIHPCUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/17392/w_HPCKit_p_2021.1.0.2682_offline.exe'
+
+# Possible oneAPI Base components:
+#intel.oneapi.win.vtune           2021.1.1-68           true      Intel® VTune(TM) Profiler
+#intel.oneapi.win.tbb.devel       2021.1.1-133          true      Intel® oneAPI Threading Building Blocks
+#intel.oneapi.win.dnnl            2021.1.1-44           true      Intel® oneAPI Deep Neural Network Library
+#intel.oneapi.win.mkl.devel       2021.1.1-52           true      Intel® oneAPI Math Kernel Library
+#intel.oneapi.win.vpl             2021.1.1-76           true      Intel® oneAPI Video Processing Library
+#intel.oneapi.win.dpcpp_debugger  10.0.0-2213           true      Intel® Distribution for GDB*
+#intel.oneapi.win.ipp.devel       2021.1.1-47           true      Intel® Integrated Performance Primitives
+#intel.oneapi.win.ippcp           2021.1.1-53           true      Intel® Integrated Performance Primitives Cryptography
+#intel.oneapi.win.dpcpp-compiler  2021.1.1-191          true      Intel® oneAPI DPC++/C++ Compiler
+#intel.oneapi.win.dpcpp-library   2021.1.1-191          true      Intel® oneAPI DPC++ Library
+#intel.oneapi.win.dpcpp_ct.common 2021.1.1-54           true      Intel® DPC++ Compatibility Tool
+#intel.oneapi.win.dal.devel       2021.1.1-71           true      Intel® oneAPI Data Analytics Library
+#intel.oneapi.win.python3         2021.1.1-46           true      Intel® Distribution for Python*
+#intel.oneapi.win.advisor         2021.1.1-53           true      Intel® Advisor
+#$oneAPIBaseComponents = 'intel.oneapi.win.dpcpp-compiler:intel.oneapi.win.dpcpp-library:intel.oneapi.win.mkl.devel:intel.oneapi.win.ipp.devel:intel.oneapi.win.ippcp:intel.oneapi.win.dal.devel:intel.oneapi.win.dnnl:intel.oneapi.win.vpl:intel.oneapi.win.tbb.devel'
+$oneAPIHPCComponents = 'intel.oneapi.win.cpp-compiler:intel.oneapi.win.ifort-compiler'
+
 $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 
@@ -411,6 +433,50 @@ Function InstallCuda {
   }
 }
 
+<#
+.SYNOPSIS
+Installs Intel oneAPI compilers and toolsets.
+
+.DESCRIPTION
+InstallInteloneAPI installs the Intel oneAPI Compiler & Toolkit with the components specified as a
+:-separated list of strings in $Components.
+
+.PARAMETER Url
+The URL of the Intel Toolkit installer.
+
+.PARAMETER Components
+A :-separated list of components to install.
+#>
+Function InstallInteloneAPI {
+  Param(
+    [String]$Url,
+    [String]$Components
+  )
+
+  try {
+    [string]$installerPath = Get-TempFilePath -Extension 'exe'
+    [string]$extractionPath = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName()
+    Write-Host 'Downloading Intel oneAPI...to: ' $installerPath
+    curl.exe -L -o $installerPath -s -S $Url
+    Write-Host 'Extracting Intel oneAPI...to folder: ' $extractionPath
+    $proc = Start-Process -FilePath $installerPath -ArgumentList @('-s ', '-x ', '-f ' + $extractionPath , '--log extract.log') -Wait -PassThru
+    Write-Host 'Install Intel oneAPI...from folder: ' $extractionPath
+    $proc = Start-Process -FilePath $extractionPath/bootstrapper.exe -ArgumentList @('-s ', '--action install', "--components=$Components" , '--eula=accept', '--continue-with-optional-error=yes', '-p=NEED_VS2017_INTEGRATION=0', '-p=NEED_VS2019_INTEGRATION=0', '--log-dir=.') -Wait -PassThru
+    $exitCode = $proc.ExitCode
+    if ($exitCode -eq 0) {
+      Write-Host 'Installation successful!'
+    }
+    else {
+      Write-Error "Installation failed! Exited with $exitCode."
+      throw
+    }
+  }
+  catch {
+    Write-Error "Failed to install Intel oneAPI! $($_.Exception.Message)"
+    throw
+  }
+}
+
 Write-Host "AdminUser password not supplied; assuming already running as AdminUser"
 
 Write-Host 'Disabling pagefile...'
@@ -428,7 +494,14 @@ if ($null -eq $av) {
   Add-MPPreference -ExclusionProcess clang-cl.exe
   Add-MPPreference -ExclusionProcess cl.exe
   Add-MPPreference -ExclusionProcess link.exe
+  Add-MPPreference -ExclusionProcess lib.exe
   Add-MPPreference -ExclusionProcess python.exe
+  Add-MPPreference -ExclusionProcess msbuild.exe
+  Add-MPPreference -ExclusionProcess cmake.exe
+  Add-MPPreference -ExclusionProcess nmake.exe
+  Add-MPPreference -ExclusionProcess jom.exe
+  Add-MPPreference -ExclusionProcess qmake.exe
+  Add-MPPreference -ExclusionProcess ifort.exe
 }
 
 InstallVisualStudio -Workloads $Workloads -BootstrapperUrl $VisualStudioBootstrapperUrl -Nickname 'Stable'
@@ -436,6 +509,7 @@ InstallWindowsWDK -Url $WindowsWDKUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallMSI -Url $PwshUrl -Name 'PowerShell Core'
+InstallInteloneAPI -Url $oneAPIHPCUrl -Features $oneAPIHPCComponents
 if ([string]::IsNullOrWhiteSpace($StorageAccountName)) {
   Write-Host 'No storage account name configured.'
 } else {
