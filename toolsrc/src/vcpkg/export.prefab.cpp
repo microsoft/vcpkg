@@ -212,7 +212,8 @@ namespace vcpkg::Export::Prefab
             System::get_clean_environment());
 #else
         System::cmd_execute_clean(
-            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
+            System::CmdLineBuilder{"zip"}.string_arg("--quiet").string_arg("-r").path_arg(destination).string_arg("*"),
+            System::InWorkingDirectory{source});
 #endif
     }
 
