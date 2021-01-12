@@ -455,7 +455,7 @@ namespace vcpkg
         {
             // this only fails if we can't get the current working directory of vcpkg, and we assume that we have that,
             // so it's fine anyways
-            working_directory = Files::get_real_filesystem().absolute(VCPKG_LINE_INFO, wd.working_directory.native());
+            working_directory = Files::get_real_filesystem().absolute(VCPKG_LINE_INFO, wd.working_directory).native();
         }
 
         VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'process_info.proc_info.hProcess'
