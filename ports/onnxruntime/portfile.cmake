@@ -3,9 +3,8 @@
 # x64-linux
 # No support for osx and uwp OS
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "dynamic")
-    vcpkg_fail_port_install(ON_TARGET "uwp")
-    vcpkg_fail_port_install(ON_ARCH "arm" "arm64" "wasm32" "x86")
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY) 
+    vcpkg_fail_port_install(ON_ARCH "arm" "arm64" "wasm32" "x86" ON_TARGET "uwp")
 elseif(VCPKG_TARGET_IS_LINUX)
     vcpkg_fail_port_install(ON_ARCH "x86")
 else()
@@ -18,8 +17,10 @@ vcpkg_find_acquire_program(GIT)
 get_filename_component(GIT_PATH ${GIT} DIRECTORY)
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
+vcpkg_add_to_path(${PYTHON3_PATH})
 vcpkg_find_acquire_program(NINJA)
 get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
+vcpkg_add_to_path(${PYTHON3_PATH})
 set(ONNXRUNTIME "onnxruntime.git")
 set(ONNX_GITHUB_URL "https://github.com/microsoft/${ONNXRUNTIME}")
 
@@ -113,6 +114,7 @@ vcpkg_configure_cmake(
     -DONNX_ML=ON
     -DONNX_NAMESPACE=onnx
     ${FEATURE_OPTIONS}
+    -DPYTHON_EXECUTABLE=${PYTHON3}
 )
 
 vcpkg_install_cmake()
@@ -272,7 +274,12 @@ set(MOD "")
 foreach(MOD
       core/
       models/mnist/
-      models/runner/ 
+      models/runner/
+      test/distributed/
+      test/gradient/
+      test/graph/
+      test/optimizer/
+      test/session/
       training_ops/
       )
   file(COPY 
@@ -290,6 +297,16 @@ foreach(MOD
     PATTERN "rocm/optimizer" EXCLUDE
     PATTERN "rocm/reduction" EXCLUDE
     )
+endforeach()
+
+# Now copy files from folders that does need to be copied recursively
+set(MOD "")
+foreach(MOD
+    test/training_ops
+    )
+  set(EXT_ADDL_HDRS "")
+  file(GLOB EXT_ADDL_HDRS LIST_DIRECTORIES false ${SRCBASEDIR}/${MOD}/*.h  ${SRCBASEDIR}/${MOD}/*.hpp)
+  file(COPY ${EXT_ADDL_HDRS} DESTINATION ${DESTBASEDIR}/${MOD})
 endforeach()
 
 # 5. Copy Test header files from sources directories
