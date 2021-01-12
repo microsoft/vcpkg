@@ -11,11 +11,12 @@ vcpkg_from_github(
     PATCHES
         deprecated_constants.patch # Change from upstream pangolin to address build failures from latest ffmpeg library
         fix-includepath-error.patch # include path has one more ../
-        fix-dependeny-ffmpeg.patch
         fix-dependency-python.patch
+        add-definition.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindGLEW.cmake)
+file(REMOVE ${SOURCE_PATH}/CMakeModules/FindFFMPEG.cmake)
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_STATIC_CRT)
 
