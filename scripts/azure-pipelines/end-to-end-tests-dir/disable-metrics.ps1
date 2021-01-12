@@ -2,7 +2,7 @@
 
 # Test that metrics are on by default
 $metricsTagName = 'vcpkg.disable-metrics'
-$metricsAreDisabledMessage = 'Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.'
+$metricsAreDisabledMessage = 'Warning: passed --sendmetrics, but metrics are disabled.'
 
 function Test-Metrics-Enabled() {
     Param(
@@ -10,7 +10,7 @@ function Test-Metrics-Enabled() {
         [string[]]$TestArgs
     )
 
-    $actualArgs = @('version', '--printmetrics')
+    $actualArgs = @('version', '--sendmetrics')
     if ($TestArgs.Length -ne 0) {
         $actualArgs += $TestArgs
     }

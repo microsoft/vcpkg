@@ -256,16 +256,10 @@ int main(const int argc, const char* const* const argv)
             metrics->set_send_metrics(*p);
         }
 
-        if (args.send_metrics.has_value() && !metrics->metrics_enabled())
+        if (args.send_metrics.value_or(true) && !metrics->metrics_enabled())
         {
             System::print2(System::Color::warning,
-                           "Warning: passed either --sendmetrics or --no-sendmetrics, but metrics are disabled.\n");
-        }
-
-        if (args.print_metrics.has_value() && !metrics->metrics_enabled())
-        {
-            System::print2(System::Color::warning,
-                           "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
+                           "Warning: passed --sendmetrics, but metrics are disabled.\n");
         }
     } // unlock Metrics::g_metrics
 
