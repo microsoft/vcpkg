@@ -23,6 +23,10 @@ foreach(_feature IN LISTS ALL_FEATURES)
     else()
         list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
     endif()
+
+    if ("mysql" IN_LIST FEATURES)
+        set(MYSQL_OPT -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql")
+    endif()
 endforeach()
 
 vcpkg_configure_cmake(
@@ -37,7 +41,7 @@ vcpkg_configure_cmake(
         -DSOCI_SHARED=${SOCI_DYNAMIC}
         ${_COMPONENT_FLAGS}
 
-        -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql"
+        ${MYSQL_OPT}
         -DWITH_ORACLE=OFF
         -DWITH_FIREBIRD=OFF
         -DWITH_DB2=OFF
