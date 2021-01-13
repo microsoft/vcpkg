@@ -30,6 +30,26 @@ namespace vcpkg::RemoteInstall
         nullptr,
     };
 
+    static void do_archive_unzip(const VcpkgPaths& paths, const fs::path& destination, const std::string& file_name)
+    {
+        const fs::path& cmake_exe = paths.get_tool_exe(Tools::CMAKE);
+
+        System::CmdLineBuilder cmd;
+        cmd.string_arg("cd").path_arg(destination);
+        cmd.ampersand();
+        cmd.path_arg(cmake_exe).string_arg("-E").string_arg("tar").string_arg("xzf").path_arg(file_name);
+
+        auto cmdline = cmd.extract();
+#ifdef WIN32
+        // Invoke through `cmd` to support `&&`
+        cmdline.insert(0, "cmd /c \"");
+        cmdline.push_back('"');
+#endif
+
+        const int exit_code = System::cmd_execute_clean(cmdline);
+        Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: %s unzip failed", file_name);
+    }
+
     void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
@@ -38,6 +58,8 @@ namespace vcpkg::RemoteInstall
             return Input::check_and_get_full_package_spec(
                 std::string(arg), default_triplet, COMMAND_STRUCTURE.example_text);
         });
+
+        FullPackageSpec spec = specs[0];
 
         std::string author_name = "";
         auto it_author_name = options.settings.find(OPTION_AUTHOR_NAME);
@@ -51,69 +73,30 @@ namespace vcpkg::RemoteInstall
             Checks::exit_fail(LineInfo());
         }
 
-        // check triplets
-        for (auto&& spec : specs)
-        {
-            Input::check_triplet(spec.package_spec.triplet(), paths);
-        }
+        Input::check_triplet(spec.package_spec.triplet(), paths);
 
         Files::Filesystem& fs = paths.get_filesystem();
-        // create directories
-        for (auto&& spec : specs)
-        {
-            std::error_code err;
-            fs::path destination =
-                paths.builtin_ports_directory() / Strings::format("%s_%s", author_name, spec.package_spec.name());
+        std::string package_directory_name = Strings::format("%s_%s", author_name, spec.package_spec.name());
 
-            fs.create_directory(destination, err);
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               !err.value(),
-                               "Failed to create directory '%s', code: %d",
-                               fs::u8string(destination),
-                               err.value());
-        }
+        // create directories
+        std::error_code err;
+        fs::path destination = paths.builtin_ports_directory() / package_directory_name;
+        fs.create_directory(destination, err);
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !err.value(),
+                           "Failed to create directory '%s', code: %d",
+                           fs::u8string(destination),
+                           err.value());
 
         // Download archive
-        for (auto&& spec : specs)
-        {
-            Downloads::download_file(fs,
-                                     Strings::format("%s/%s/%s/raw/master/%s%s",
-                                                     GITHUB_URL,
-                                                     author_name,
-                                                     spec.package_spec.name(),
-                                                     spec.package_spec.name(),
-                                                     ARCHIVE_ENDING),
-                                     paths.builtin_ports_directory() /
-                                         Strings::format("%s_%s", author_name, spec.package_spec.name()) /
-                                         Strings::format("%s%s", spec.package_spec.name(), ARCHIVE_ENDING));
-        }
+        std::string archive_name = Strings::format("%s%s", spec.package_spec.name(), ARCHIVE_ENDING);
+        std::string archive_url =
+            Strings::format("%s/%s/%s/raw/master/%s", GITHUB_URL, author_name, spec.package_spec.name(), archive_name);
+        Downloads::download_file(
+            fs, archive_url, paths.builtin_ports_directory() / package_directory_name / archive_name);
 
-        // Unarchive
-        const fs::path& cmake_exe = paths.get_tool_exe(Tools::CMAKE);
-        for (auto&& spec : specs)
-        {
-            fs::path destination =
-                paths.builtin_ports_directory() / Strings::format("%s_%s", author_name, spec.package_spec.name());
-
-            System::CmdLineBuilder cmd;
-            cmd.string_arg("cd").path_arg(destination);
-            cmd.ampersand();
-            cmd.path_arg(cmake_exe).string_arg("-E").string_arg("tar").string_arg("xzf").path_arg(
-                Strings::format("%s%s", spec.package_spec.name(), ARCHIVE_ENDING));
-
-            auto cmdline = cmd.extract();
-#ifdef WIN32
-            // Invoke through `cmd` to support `&&`
-            cmdline.insert(0, "cmd /c \"");
-            cmdline.push_back('"');
-#endif
-
-            const int exit_code = System::cmd_execute_clean(cmdline);
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               exit_code == 0,
-                               "Error: %s unzip failed",
-                               Strings::format("%s%s", spec.package_spec.name(), ARCHIVE_ENDING));
-        }
+        // Unzip
+        do_archive_unzip(paths, destination, Strings::format("%s%s", spec.package_spec.name(), ARCHIVE_ENDING));
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
