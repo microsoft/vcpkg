@@ -3,9 +3,24 @@ name: Build
 on: [pull_request, push]
 
 jobs:
-  build-windows:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2019
+            vcpkg_path: C:\mixxx-vcpkg
+            vcpkg_bootstrap: .\bootstrap-vcpkg.bat
+            vcpkg_triplet: x64-windows
+            vcpkg_cache: C:\Users\runneradmin\AppData\Local\vcpkg\archives
+            check_disk_space: Get-PSDrive
+          - os: macos-10.15
+            vcpkg_path: /Users/runner/mixxx-vcpkg
+            vcpkg_bootstrap: ./bootstrap-vcpkg.sh
+            vcpkg_triplet: x64-osx
+            vcpkg_cache: /Users/runner/.cache/vcpkg/archives
+            check_disk_space: df -h
     env:
-      VCPKG_PATH: C:\mixxx-vcpkg
       VCPKG_PACKAGES: >-
         chromaprint
         ffmpeg
@@ -38,50 +53,55 @@ jobs:
         rubberband
         soundtouch
         taglib
-      VCPKG_DEFAULT_TRIPLET: x64-windows-static
-    name: windows
-    runs-on: windows-latest
+      VCPKG_DEFAULT_TRIPLET: ${{ matrix.vcpkg_triplet }}
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Check out git repository
       uses: LebedevRI/checkout@issue197
       with:
-        path: ${{ env.VCPKG_PATH }}
+        path: ${{ matrix.vcpkg_path }}
 
     - name: Bootstrap vcpkg
-      run: .\bootstrap-vcpkg.bat
-      working-directory: ${{ env.VCPKG_PATH }}
+      run: ${{ matrix.vcpkg_bootstrap }}
+      working-directory: ${{ matrix.vcpkg_path }}
+
+    - name: "[macOS] Bootstrap vcpkg"
+      if: runner.os == 'macOS'
+      run: brew install yasm automake
 
     - name: Set up cache
       uses: actions/cache@v2
       with:
-        path: C:\Users\runneradmin\AppData\Local\vcpkg\archives
-        key: vcpkg-${{ env.VCPKG_DEFAULT_TRIPLET }}-${{ github.head_ref }}-${{ github.run_number }}
+        path: ${{ matrix.vcpkg_cache }}
+        key: vcpkg-${{ matrix.vcpkg_triplet }}-${{ github.head_ref }}-${{ github.run_number }}
         restore-keys: |
-          vcpkg-${{ env.VCPKG_DEFAULT_TRIPLET }}-${{ github.head_ref }}
-          vcpkg-${{ env.VCPKG_DEFAULT_TRIPLET }}
+          vcpkg-${{ matrix.vcpkg_triplet }}-${{ github.head_ref }}
+          vcpkg-${{ matrix.vcpkg_triplet }}
           vcpkg
 
     - name: Check available disk space
-      run: Get-PSDrive
+      run: ${{ matrix.check_disk_space }}
 
     - name: Build packages
-      run: .\vcpkg install --clean-after-build ${{ env.VCPKG_PACKAGES }}
-      working-directory: ${{ env.VCPKG_PATH }}
+      run: ./vcpkg install --clean-after-build ${{ env.VCPKG_PACKAGES }}
+      working-directory: ${{ matrix.vcpkg_path }}
       env:
         VCPKG_OVERLAY_PORTS: overlay/ports
-
-    - name: Create buildenv archive
-      run: .\vcpkg export ${{ env.VCPKG_PACKAGES }} --zip --output=buildenv-2.3-${{ env.vcpkg_DEFAULT_TRIPLET}}-${{ github.sha }}
-      working-directory: ${{ env.VCPKG_PATH }}
-
-    - name: Upload GitHub Actions artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: buildenv-2.3-${{ env.vcpkg_DEFAULT_TRIPLET}}-${{ github.sha }}
-        path: ${{ env.VCPKG_PATH }}\buildenv-2.3-${{ env.vcpkg_DEFAULT_TRIPLET}}-${{ github.sha }}.zip
 
     - name: Upload GitHub Actions artifacts of failed build
       if: failure()
       uses: actions/upload-artifact@v2
       with:
-        path: ${{ env.VCPKG_PATH }}\buildtrees\**\*.log
+        name: logs-${{ matrix.os }}
+        path: ${{ matrix.vcpkg_path  }}/buildtrees/**/*.log
+
+    - name: Create buildenv archive
+      run: ./vcpkg export ${{ env.VCPKG_PACKAGES }} --zip --output=buildenv-2.3-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
+      working-directory: ${{ matrix.vcpkg_path }}
+
+    - name: Upload GitHub Actions artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: buildenv-2.3-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
+        path: ${{ matrix.vcpkg_path }}/buildenv-2.3-${{ matrix.vcpkg_triplet }}-${{ github.sha }}.zip
