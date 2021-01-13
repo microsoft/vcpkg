@@ -504,7 +504,7 @@ If you wish to silence this error and use classic mode, you can:
                                                        .string_arg("--no-hardlinks")
                                                        .path_arg(local_repo)
                                                        .path_arg(dot_git_dir);
-        const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
+        const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder);
         Checks::check_exit(VCPKG_LINE_INFO,
                            clone_output.exit_code == 0,
                            "Failed to clone temporary vcpkg instance.\n%s\n",
@@ -516,7 +516,7 @@ If you wish to silence this error and use classic mode, you can:
                                                           .string_arg(commit_sha)
                                                           .string_arg("--")
                                                           .path_arg(subpath);
-        const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder.extract());
+        const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder);
         Checks::check_exit(VCPKG_LINE_INFO,
                            checkout_output.exit_code == 0,
                            "Error: Failed to checkout %s:%s\n%s\n",
@@ -579,7 +579,7 @@ If you wish to silence this error and use classic mode, you can:
         System::CmdLineBuilder showcmd =
             git_cmd_builder(*this, dot_git_dir, dot_git_dir).string_arg("show").string_arg(treeish);
 
-        auto output = System::cmd_execute_and_capture_output(showcmd.extract());
+        auto output = System::cmd_execute_and_capture_output(showcmd);
         if (output.exit_code == 0)
         {
             return {std::move(output.output), expected_left_tag};
@@ -743,27 +743,14 @@ If you wish to silence this error and use classic mode, you can:
         }
 
         System::CmdLineBuilder extract_cmd_builder;
-        extract_cmd_builder
-            .string_arg("cd")
-#ifdef WIN32
-            .string_arg("/D")
-#endif
-            .path_arg(destination_tmp)
-            .ampersand()
-            .path_arg(this->get_tool_exe(Tools::CMAKE))
+        extract_cmd_builder.path_arg(this->get_tool_exe(Tools::CMAKE))
             .string_arg("-E")
             .string_arg("tar")
             .string_arg("xf")
             .path_arg(destination_tar);
 
-        auto cmdline = extract_cmd_builder.extract();
-#ifdef WIN32
-        // Invoke through `cmd` to support `&&`
-        cmdline.insert(0, "cmd /c \"");
-        cmdline.push_back('"');
-#endif
-
-        const auto extract_output = System::cmd_execute_and_capture_output(cmdline);
+        const auto extract_output =
+            System::cmd_execute_and_capture_output(extract_cmd_builder, System::InWorkingDirectory{destination_tmp});
         if (extract_output.exit_code != 0)
         {
             return {Strings::concat(PRELUDE, "Error: Failed to extract port directory\n", extract_output.output),

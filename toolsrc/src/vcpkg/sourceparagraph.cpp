@@ -1017,15 +1017,6 @@ namespace vcpkg
         static constexpr StringLiteral s_extended_help = "See `vcpkg help versioning` for more information.";
         if (!flags.versions)
         {
-            if (core_paragraph->version_scheme != Versions::Scheme::String)
-            {
-                return Strings::concat(fs::u8string(origin),
-                                       " was rejected because it uses a non-string version scheme and the `",
-                                       VcpkgCmdArguments::VERSIONS_FEATURE,
-                                       "` feature flag is disabled.\nThis can be fixed by using \"version-string\".\n",
-                                       s_extended_help);
-            }
-
             auto check_deps = [&](View<Dependency> deps) -> Optional<std::string> {
                 for (auto&& dep : deps)
                 {

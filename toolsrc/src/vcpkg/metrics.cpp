@@ -491,7 +491,7 @@ namespace vcpkg::Metrics
         builder.path_arg(temp_folder_path_exe);
         builder.string_arg("x-upload-metrics");
         builder.path_arg(vcpkg_metrics_txt_path);
-        System::cmd_execute_background(builder.extract());
+        System::cmd_execute_background(builder);
 #else
         auto escaped_path = Strings::escape_string(fs::u8string(vcpkg_metrics_txt_path), '\'', '\\');
         const std::string cmd_line = Strings::format(
