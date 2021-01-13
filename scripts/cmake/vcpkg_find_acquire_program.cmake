@@ -71,7 +71,7 @@ function(vcpkg_find_acquire_program VAR)
     set(PATHS ${DOWNLOADS}/tools/perl/${SUBDIR}/perl/bin)
     set(BREW_PACKAGE_NAME "perl")
     set(APT_PACKAGE_NAME "perl")
-    set(URL 
+    set(URL
       "https://strawberry.perl.bot/download/${PERL_VERSION}/strawberry-perl-${PERL_VERSION}-32bit.zip"
       "http://strawberryperl.com/download/${PERL_VERSION}/strawberry-perl-${PERL_VERSION}-32bit.zip"
     )
@@ -300,7 +300,7 @@ function(vcpkg_find_acquire_program VAR)
     set(PROGNAME clang)
     set(SUBDIR "clang-10.0.0")
     if(CMAKE_HOST_WIN32)
-      set(PATHS 
+      set(PATHS
         # Support LLVM in Visual Studio 2019
         "$ENV{LLVMInstallDir}/x64/bin"
         "$ENV{LLVMInstallDir}/bin"
@@ -314,7 +314,7 @@ function(vcpkg_find_acquire_program VAR)
       else()
         set(HOST_ARCH_ $ENV{PROCESSOR_ARCHITECTURE})
       endif()
-      
+
       if(HOST_ARCH_ MATCHES "64")
         set(URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe")
         set(ARCHIVE "LLVM-10.0.0-win64.7z.exe")
@@ -360,7 +360,7 @@ function(vcpkg_find_acquire_program VAR)
     set(SCRIPTNAME "scons.py")
     set(URL "https://sourceforge.net/projects/scons/files/scons-local-${SCONS_VERSION}.zip/download")
     set(ARCHIVE "scons-local-${SCONS_VERSION}.zip")
-    set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727) 
+    set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727)
   elseif(VAR MATCHES "SWIG")
     set(SWIG_VERSION 4.0.2)
     set(PROGNAME swig)
@@ -468,7 +468,7 @@ function(vcpkg_find_acquire_program VAR)
     if(VERSION_CMD)
         vcpkg_execute_in_download_mode(
             COMMAND ${${VAR}} ${VERSION_CMD}
-            WORKING_DIRECTORY ${DOWNLOADS}
+            WORKING_DIRECTORY ${VCPKG_ROOT_DIR}
             OUTPUT_VARIABLE ${VAR}_VERSION_OUTPUT
         )
         string(STRIP "${${VAR}_VERSION_OUTPUT}" ${VAR}_VERSION_OUTPUT)
@@ -481,7 +481,7 @@ function(vcpkg_find_acquire_program VAR)
         endif()
     endif()
   endmacro()
-  
+
   macro(do_find)
     if(NOT DEFINED REQUIRED_INTERPRETER)
       find_program(${VAR} ${PROGNAME} PATHS ${PATHS} NO_DEFAULT_PATH)

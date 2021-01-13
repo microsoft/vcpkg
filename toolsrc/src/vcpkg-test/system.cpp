@@ -135,13 +135,15 @@ TEST_CASE ("cmdlinebuilder", "[system]")
     cmd.string_arg("hello world!");
     cmd.string_arg("|");
     cmd.string_arg(";");
-    REQUIRE(cmd.extract() == "relative/path.exe abc \"hello world!\" \"|\" \";\"");
+    REQUIRE(cmd.command_line() == "relative/path.exe abc \"hello world!\" \"|\" \";\"");
+
+    cmd.clear();
 
     cmd.path_arg(fs::u8path("trailing\\slash\\"));
     cmd.string_arg("inner\"quotes");
 #ifdef _WIN32
-    REQUIRE(cmd.extract() == "\"trailing\\slash\\\\\" \"inner\\\"quotes\"");
+    REQUIRE(cmd.command_line() == "\"trailing\\slash\\\\\" \"inner\\\"quotes\"");
 #else
-    REQUIRE(cmd.extract() == "\"trailing\\\\slash\\\\\" \"inner\\\"quotes\"");
+    REQUIRE(cmd.command_line() == "\"trailing\\\\slash\\\\\" \"inner\\\"quotes\"");
 #endif
 }

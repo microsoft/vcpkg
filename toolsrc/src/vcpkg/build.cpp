@@ -565,7 +565,7 @@ namespace vcpkg::Build
         CompilerInfo compiler_info;
         System::cmd_execute_and_stream_lines(
             command,
-            [&](const std::string& s) {
+            [&](StringView s) {
                 static const StringLiteral s_hash_marker = "#COMPILER_HASH#";
                 if (Strings::starts_with(s, s_hash_marker))
                 {

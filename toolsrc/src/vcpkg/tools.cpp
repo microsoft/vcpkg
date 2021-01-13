@@ -359,7 +359,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
             (void)paths;
 #endif
             cmd.path_arg(path_to_exe);
-            auto rc = System::cmd_execute_and_capture_output(cmd.extract());
+            auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
 #ifndef _WIN32
