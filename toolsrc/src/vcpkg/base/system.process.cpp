@@ -586,31 +586,37 @@ namespace vcpkg
         static StringLiteral magic_string = "cdARN4xjKueKScMy9C6H";
 
         auto actual_cmd_line = cmd_line;
-        actual_cmd_line.raw_arg("& echo").string_arg(magic_string).raw_arg("& set");
+        actual_cmd_line.raw_arg(Strings::concat(" & echo ", magic_string, " & set"));
 
         auto rc_output = cmd_execute_and_capture_output(actual_cmd_line, env);
         Checks::check_exit(VCPKG_LINE_INFO, rc_output.exit_code == 0);
-        auto it = Strings::search(rc_output.output, Strings::concat(magic_string, "\r\n"));
-        const auto e = static_cast<const char*>(rc_output.output.data()) + rc_output.output.size();
-        Checks::check_exit(VCPKG_LINE_INFO, it != e);
-        it += magic_string.size() + 2;
+        Debug::print("command line: ", actual_cmd_line.command_line(), "\n");
+        Debug::print(rc_output.output, "\n");
+
+        auto it = Strings::search(rc_output.output, magic_string);
+        const char* const last = rc_output.output.data() + rc_output.output.size();
+
+        Checks::check_exit(VCPKG_LINE_INFO, it != last);
+        // find the first non-whitespace character after the magic string
+        it = std::find_if_not(it + magic_string.size(), last, ::isspace);
+        Checks::check_exit(VCPKG_LINE_INFO, it != last);
 
         std::wstring out_env;
 
         for (;;)
         {
-            auto eq = std::find(it, e, '=');
-            if (eq == e) break;
-            StringView varname(it, eq);
-            auto nl = std::find(eq + 1, e, '\r');
-            if (nl == e) break;
-            StringView value(eq + 1, nl);
+            auto equal_it = std::find(it, last, '=');
+            if (equal_it == last) break;
+            StringView variable_name(it, equal_it);
+            auto newline_it = std::find(equal_it + 1, last, '\r');
+            if (newline_it == last) break;
+            StringView value(equal_it + 1, newline_it);
 
-            out_env.append(Strings::to_utf16(Strings::concat(varname, '=', value)));
+            out_env.append(Strings::to_utf16(Strings::concat(variable_name, '=', value)));
             out_env.push_back(L'\0');
 
-            it = nl + 1;
-            if (it != e && *it == '\n') ++it;
+            it = newline_it + 1;
+            if (it != last && *it == '\n') ++it;
         }
 
         return {std::move(out_env)};
