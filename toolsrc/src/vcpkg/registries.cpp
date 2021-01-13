@@ -484,7 +484,7 @@ namespace
             {
                 const auto& version_value = pr.second;
                 VersionT version;
-                r.visit_in_key(version_value, pr.first, version, get_versiont_deserializer_instance());
+                r.visit_in_key(version_value, pr.first, version, get_versiontag_deserializer_instance());
 
                 result.emplace(pr.first.to_string(), std::move(version));
             }
@@ -964,15 +964,17 @@ namespace vcpkg
         return true;
     }
 
-    ExpectedS<std::vector<std::pair<VersionT, std::string>>> get_builtin_versions(const VcpkgPaths& paths,
-                                                                                  StringView port_name)
+    ExpectedS<std::vector<std::pair<SchemedVersion, std::string>>> get_builtin_versions(const VcpkgPaths& paths,
+                                                                                        StringView port_name)
     {
         auto maybe_versions =
             load_versions_file(paths.get_filesystem(), VersionDbType::Git, paths.builtin_port_versions, port_name);
         if (auto pversions = maybe_versions.get())
         {
             return Util::fmap(
-                *pversions, [](auto&& entry) -> auto { return std::make_pair(entry.version, entry.git_tree); });
+                *pversions, [](auto&& entry) -> auto {
+                    return std::make_pair(SchemedVersion{entry.scheme, entry.version}, entry.git_tree);
+                });
         }
 
         return maybe_versions.error();
