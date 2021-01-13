@@ -11,15 +11,16 @@
  * hello world program that does link with the CRT is ~300kb)
  */
 
-void __declspec(noreturn) win32_abort() {
+static void __declspec(noreturn) win32_abort()
+{
     /*
      * Note that TerminateProcess does not return when called from the terminated process, see
      * https://github.com/MicrosoftDocs/sdk-api/pull/626
      */
     TerminateProcess(GetCurrentProcess(), 3);
-    }
+}
 
-size_t wide_length(const wchar_t* str)
+static size_t wide_length(const wchar_t* str)
 {
     size_t answer = 0;
     while (*str)
@@ -30,7 +31,7 @@ size_t wide_length(const wchar_t* str)
     return answer;
 }
 
-void write_message(const HANDLE hStdOut, const wchar_t* msg)
+static void write_message(const HANDLE hStdOut, const wchar_t* msg)
 {
     size_t wcharsToWrite = wide_length(msg);
     if (wcharsToWrite == 0)
@@ -78,7 +79,7 @@ void write_message(const HANDLE hStdOut, const wchar_t* msg)
     }
 }
 
-void write_number(const HANDLE hStdOut, DWORD number)
+static void write_number(const HANDLE hStdOut, DWORD number)
 {
     wchar_t buffer[11]; // 4294967295\0
     wchar_t* firstDigit = buffer + 11;
@@ -99,12 +100,27 @@ void write_number(const HANDLE hStdOut, DWORD number)
     write_message(hStdOut, firstDigit);
 }
 
-void __declspec(noreturn) abort_api_failure(const HANDLE hStdOut, const wchar_t* api_name)
+static void write_hex(const HANDLE hStdOut, DWORD number)
+{
+    wchar_t buffer[] = L"0x00000000";
+    wchar_t* firstDigit = buffer + (sizeof(buffer) / sizeof(wchar_t)) - 1;
+    while (number != 0)
+    {
+        *--firstDigit = L"0123456789ABCDEF"[number % 16];
+        number /= 16;
+    }
+
+    write_message(hStdOut, firstDigit);
+}
+
+static void __declspec(noreturn) abort_api_failure(const HANDLE hStdOut, const wchar_t* api_name)
 {
     DWORD lastError = GetLastError();
     write_message(hStdOut, L"While calling Windows API function ");
     write_message(hStdOut, api_name);
-    write_message(hStdOut, L"\r\n");
+    write_message(hStdOut, L" got error ");
+    write_hex(hStdOut, lastError);
+    write_message(hStdOut, L":\r\n");
     wchar_t* message;
     if (FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE_ALLOCATE_BUFFER,
                        GetModuleHandleW(L"winhttp.dll"),
@@ -119,7 +135,10 @@ void __declspec(noreturn) abort_api_failure(const HANDLE hStdOut, const wchar_t*
     }
     else
     {
-        write_message(hStdOut, L"(unknown error, FormatMessageW failed)");
+        lastError = GetLastError();
+        write_message(hStdOut, L"(unknown error, FormatMessageW failed with ");
+        write_hex(hStdOut, lastError);
+        write_message(hStdOut, L")");
     }
 
     write_message(hStdOut, L"\r\n");
@@ -129,13 +148,13 @@ void __declspec(noreturn) abort_api_failure(const HANDLE hStdOut, const wchar_t*
 
 #ifndef NDEBUG
 int main()
-#else // ^^^ debug // !debug vvv
+#else  // ^^^ debug // !debug vvv
 int __stdcall entry()
 #endif // ^^^ !debug
 {
-    #ifdef NDEBUG
+#ifdef NDEBUG
     __security_init_cookie();
-    #endif // ^^^ release
+#endif // ^^^ release
 
     const HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
     if (stdOut == INVALID_HANDLE_VALUE)
@@ -210,11 +229,11 @@ int __stdcall entry()
     }
 
     DWORD httpCode = 0;
-    DWORD unused = sizeof(DWORD);
+    DWORD unused = sizeof(httpCode);
 
     if (!WinHttpQueryHeaders(request,
                              WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
-                             0,
+                             WINHTTP_HEADER_NAME_BY_INDEX,
                              &httpCode,
                              &unused,
                              WINHTTP_NO_HEADER_INDEX))
@@ -224,7 +243,7 @@ int __stdcall entry()
 
     if (httpCode != 200)
     {
-        write_message(stdOut, L"Download failed, server returned HTTP status ");
+        write_message(stdOut, L"Download failed, server returned HTTP status: ");
         write_number(stdOut, httpCode);
         write_message(stdOut, L"\r\n");
         FlushFileBuffers(stdOut);
