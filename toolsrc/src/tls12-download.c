@@ -31,118 +31,118 @@ static size_t wide_length(const wchar_t* str)
     return answer;
 }
 
-static void write_message(const HANDLE hStdOut, const wchar_t* msg)
+static void write_message(const HANDLE std_out, const wchar_t* msg)
 {
-    size_t wcharsToWrite = wide_length(msg);
-    if (wcharsToWrite == 0)
+    size_t wchars_to_write = wide_length(msg);
+    if (wchars_to_write == 0)
     {
         return;
     }
 
-    if (wcharsToWrite > 65535)
+    if (wchars_to_write > 65535)
     {
         win32_abort();
     }
 
-    if (WriteConsoleW(hStdOut, msg, wcharsToWrite, 0, 0))
+    if (WriteConsoleW(std_out, msg, wchars_to_write, 0, 0))
     {
         return;
     }
 
     // this happens if output has been redirected
-    int narrowChars = WideCharToMultiByte(CP_ACP, 0, msg, (int)wcharsToWrite, 0, 0, 0, 0);
-    if (narrowChars == 0)
+    int narrow_chars = WideCharToMultiByte(CP_ACP, 0, msg, (int)wchars_to_write, 0, 0, 0, 0);
+    if (narrow_chars == 0)
     {
         win32_abort();
     }
 
-    char* narrowBuffer = HeapAlloc(GetProcessHeap(), 0, (size_t)narrowChars);
-    if (WideCharToMultiByte(CP_ACP, 0, msg, (int)wcharsToWrite, narrowBuffer, narrowChars, 0, 0) == 0)
+    char* narrow_buffer = HeapAlloc(GetProcessHeap(), 0, (size_t)narrow_chars);
+    if (WideCharToMultiByte(CP_ACP, 0, msg, (int)wchars_to_write, narrow_buffer, narrow_chars, 0, 0) == 0)
     {
         win32_abort();
     }
 
-    while (narrowChars != 0)
+    while (narrow_chars != 0)
     {
-        DWORD charsWritten;
-        if (!WriteFile(hStdOut, narrowBuffer, (DWORD)narrowChars, &charsWritten, 0))
+        DWORD chars_written;
+        if (!WriteFile(std_out, narrow_buffer, (DWORD)narrow_chars, &chars_written, 0))
         {
             win32_abort();
         }
 
-        narrowChars -= (int)charsWritten;
+        narrow_chars -= (int)chars_written;
     }
 
-    if (!HeapFree(GetProcessHeap(), 0, narrowBuffer))
+    if (!HeapFree(GetProcessHeap(), 0, narrow_buffer))
     {
         win32_abort();
     }
 }
 
-static void write_number(const HANDLE hStdOut, DWORD number)
+static void write_number(const HANDLE std_out, DWORD number)
 {
     wchar_t buffer[11]; // 4294967295\0
-    wchar_t* firstDigit = buffer + 11;
-    *--firstDigit = L'\0';
+    wchar_t* first_digit = buffer + 11;
+    *--first_digit = L'\0';
     if (number == 0)
     {
-        *--firstDigit = L'0';
+        *--first_digit = L'0';
     }
     else
     {
         do
         {
-            *--firstDigit = L'0' + number % 10;
+            *--first_digit = L'0' + number % 10;
             number /= 10;
         } while (number != 0);
     }
 
-    write_message(hStdOut, firstDigit);
+    write_message(std_out, first_digit);
 }
 
-static void write_hex(const HANDLE hStdOut, DWORD number)
+static void write_hex(const HANDLE std_out, DWORD number)
 {
     wchar_t buffer[] = L"0x00000000";
-    wchar_t* firstDigit = buffer + (sizeof(buffer) / sizeof(wchar_t)) - 1;
+    wchar_t* first_digit = buffer + (sizeof(buffer) / sizeof(wchar_t)) - 1;
     while (number != 0)
     {
-        *--firstDigit = L"0123456789ABCDEF"[number % 16];
+        *--first_digit = L"0123456789ABCDEF"[number % 16];
         number /= 16;
     }
 
-    write_message(hStdOut, buffer);
+    write_message(std_out, buffer);
 }
 
-static void __declspec(noreturn) abort_api_failure(const HANDLE hStdOut, const wchar_t* api_name)
+static void __declspec(noreturn) abort_api_failure(const HANDLE std_out, const wchar_t* api_name)
 {
-    DWORD lastError = GetLastError();
-    write_message(hStdOut, L"While calling Windows API function ");
-    write_message(hStdOut, api_name);
-    write_message(hStdOut, L" got error ");
-    write_hex(hStdOut, lastError);
-    write_message(hStdOut, L":\r\n");
+    DWORD last_error = GetLastError();
+    write_message(std_out, L"While calling Windows API function ");
+    write_message(std_out, api_name);
+    write_message(std_out, L" got error ");
+    write_hex(std_out, last_error);
+    write_message(std_out, L":\r\n");
     wchar_t* message;
     if (FormatMessageW(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_FROM_HMODULE | FORMAT_MESSAGE_ALLOCATE_BUFFER,
                        GetModuleHandleW(L"winhttp.dll"),
-                       lastError,
+                       last_error,
                        0,
                        (LPWSTR)&message,
                        0,
                        0))
     {
-        write_message(hStdOut, message);
+        write_message(std_out, message);
         // intentionally leaks the message buffer
     }
     else
     {
-        lastError = GetLastError();
-        write_message(hStdOut, L"(unknown error, FormatMessageW failed with ");
-        write_hex(hStdOut, lastError);
-        write_message(hStdOut, L")");
+        last_error = GetLastError();
+        write_message(std_out, L"(unknown error, FormatMessageW failed with ");
+        write_hex(std_out, last_error);
+        write_message(std_out, L")");
     }
 
-    write_message(hStdOut, L"\r\n");
-    FlushFileBuffers(hStdOut);
+    write_message(std_out, L"\r\n");
+    FlushFileBuffers(std_out);
     win32_abort();
 }
 
@@ -156,8 +156,8 @@ int __stdcall entry()
     __security_init_cookie();
 #endif // ^^^ release
 
-    const HANDLE stdOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (stdOut == INVALID_HANDLE_VALUE)
+    const HANDLE std_out = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (std_out == INVALID_HANDLE_VALUE)
     {
         win32_abort();
     }
@@ -171,142 +171,141 @@ int __stdcall entry()
 
     if (argc != 4)
     {
-        write_message(stdOut, L"Usage: tls12-download.exe DOMAIN RELATIVE-PATH OUT-FILE\r\n");
+        write_message(std_out, L"Usage: tls12-download.exe DOMAIN RELATIVE-PATH OUT-FILE\r\n");
         return 1;
     }
 
     const wchar_t* const domain = argv[1];
     const wchar_t* const relative_path = argv[2];
     const wchar_t* const out_file_path = argv[3];
-    write_message(stdOut, L"Downloading https://");
-    write_message(stdOut, domain);
-    write_message(stdOut, relative_path);
-    write_message(stdOut, L" -> ");
-    write_message(stdOut, out_file_path);
+    write_message(std_out, L"Downloading https://");
+    write_message(std_out, domain);
+    write_message(std_out, relative_path);
+    write_message(std_out, L" -> ");
+    write_message(std_out, out_file_path);
 
     wchar_t https_proxy_env[32767];
-    DWORD dwAccessType;
-    const wchar_t* pszProxyW;
-    const wchar_t* pszProxyBypassW;
+    DWORD access_type;
+    const wchar_t* proxy_setting;
+    const wchar_t* proxy_bypass_setting;
     if (GetEnvironmentVariableW(L"HTTPS_PROXY", https_proxy_env, sizeof(https_proxy_env) / sizeof(wchar_t)))
     {
-        dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
-        pszProxyW = https_proxy_env;
-        pszProxyBypassW = L"<local>";
-        write_message(stdOut, L" (using proxy: ");
-        write_message(stdOut, pszProxyW);
-        write_message(stdOut, L")");
+        access_type = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+        proxy_setting = https_proxy_env;
+        proxy_bypass_setting = L"<local>";
+        write_message(std_out, L" (using proxy: ");
+        write_message(std_out, proxy_setting);
+        write_message(std_out, L")");
     }
     else if (GetLastError() == ERROR_ENVVAR_NOT_FOUND)
     {
-        dwAccessType = WINHTTP_ACCESS_TYPE_NO_PROXY;
-        pszProxyW = WINHTTP_NO_PROXY_NAME;
-        pszProxyBypassW = WINHTTP_NO_PROXY_BYPASS;
+        access_type = WINHTTP_ACCESS_TYPE_NO_PROXY;
+        proxy_setting = WINHTTP_NO_PROXY_NAME;
+        proxy_bypass_setting = WINHTTP_NO_PROXY_BYPASS;
     }
     else
     {
-        abort_api_failure(stdOut, L"GetEnvironmentVariableW");
+        abort_api_failure(std_out, L"GetEnvironmentVariableW");
     }
 
-    write_message(stdOut, L"\r\n");
+    write_message(std_out, L"\r\n");
 
-    const HANDLE outFile = CreateFileW(out_file_path, FILE_WRITE_DATA, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
-    if (outFile == INVALID_HANDLE_VALUE)
+    const HANDLE out_file = CreateFileW(out_file_path, FILE_WRITE_DATA, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+    if (out_file == INVALID_HANDLE_VALUE)
     {
-        abort_api_failure(stdOut, L"CreateFileW");
+        abort_api_failure(std_out, L"CreateFileW");
     }
 
     BOOL results = FALSE;
-    const HINTERNET session = WinHttpOpen(L"tls12-download/1.0", dwAccessType, pszProxyW, pszProxyBypassW, 0);
+    const HINTERNET session = WinHttpOpen(L"tls12-download/1.0", access_type, proxy_setting, proxy_bypass_setting, 0);
     if (!session)
     {
-        abort_api_failure(stdOut, L"WinHttpOpen");
+        abort_api_failure(std_out, L"WinHttpOpen");
     }
 
     unsigned long secure_protocols = WINHTTP_FLAG_SECURE_PROTOCOL_TLS1_2;
     if (!WinHttpSetOption(session, WINHTTP_OPTION_SECURE_PROTOCOLS, &secure_protocols, sizeof(DWORD)))
     {
-        abort_api_failure(stdOut, L"WinHttpSetOption");
+        abort_api_failure(std_out, L"WinHttpSetOption");
     }
 
     const HINTERNET connect = WinHttpConnect(session, domain, INTERNET_DEFAULT_HTTPS_PORT, 0);
     if (!connect)
     {
-        abort_api_failure(stdOut, L"WinHttpConnect");
+        abort_api_failure(std_out, L"WinHttpConnect");
     }
 
     const HINTERNET request = WinHttpOpenRequest(
         connect, L"GET", relative_path, 0, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, WINHTTP_FLAG_SECURE);
     if (!request)
     {
-        abort_api_failure(stdOut, L"WinHttpOpenRequest");
+        abort_api_failure(std_out, L"WinHttpOpenRequest");
     }
 
     if (!WinHttpSendRequest(request, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0))
     {
-        abort_api_failure(stdOut, L"WinHttpSendRequest");
+        abort_api_failure(std_out, L"WinHttpSendRequest");
     }
 
     if (!WinHttpReceiveResponse(request, 0))
     {
-        abort_api_failure(stdOut, L"WinHttpReceiveResponse");
+        abort_api_failure(std_out, L"WinHttpReceiveResponse");
     }
 
-    DWORD httpCode = 0;
-    DWORD unused = sizeof(httpCode);
-
+    DWORD http_code = 0;
+    DWORD query_headers_buffer_size = sizeof(http_code);
     if (!WinHttpQueryHeaders(request,
                              WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
                              WINHTTP_HEADER_NAME_BY_INDEX,
-                             &httpCode,
-                             &unused,
+                             &http_code,
+                             &query_headers_buffer_size,
                              WINHTTP_NO_HEADER_INDEX))
     {
-        abort_api_failure(stdOut, L"WinHttpQueryHeaders");
+        abort_api_failure(std_out, L"WinHttpQueryHeaders");
     }
 
-    if (httpCode != 200)
+    if (http_code != 200)
     {
-        write_message(stdOut, L"Download failed, server returned HTTP status: ");
-        write_number(stdOut, httpCode);
-        write_message(stdOut, L"\r\n");
-        FlushFileBuffers(stdOut);
+        write_message(std_out, L"Download failed, server returned HTTP status: ");
+        write_number(std_out, http_code);
+        write_message(std_out, L"\r\n");
+        FlushFileBuffers(std_out);
         TerminateProcess(GetCurrentProcess(), 2);
     }
 
     char buffer[32768];
     for (;;)
     {
-        DWORD receivedBytes;
-        if (!WinHttpReadData(request, buffer, sizeof(buffer), &receivedBytes))
+        DWORD received_bytes;
+        if (!WinHttpReadData(request, buffer, sizeof(buffer), &received_bytes))
         {
-            abort_api_failure(stdOut, L"WinHttpReadData");
+            abort_api_failure(std_out, L"WinHttpReadData");
         }
 
-        if (receivedBytes == 0)
+        if (received_bytes == 0)
         {
             break; // end of response
         }
 
         do
         {
-            DWORD writtenBytes;
-            if (!WriteFile(outFile, buffer, receivedBytes, &writtenBytes, 0))
+            DWORD written_bytes;
+            if (!WriteFile(out_file, buffer, received_bytes, &written_bytes, 0))
             {
-                abort_api_failure(stdOut, L"WriteFile");
+                abort_api_failure(std_out, L"WriteFile");
             }
 
-            receivedBytes -= writtenBytes;
-        } while (receivedBytes != 0);
+            received_bytes -= written_bytes;
+        } while (received_bytes != 0);
     }
 
     WinHttpCloseHandle(request);
     WinHttpCloseHandle(connect);
     WinHttpCloseHandle(session);
-    CloseHandle(outFile);
+    CloseHandle(out_file);
 
-    write_message(stdOut, L"Done.\r\n");
-    FlushFileBuffers(stdOut);
+    write_message(std_out, L"Done.\r\n");
+    FlushFileBuffers(std_out);
     TerminateProcess(GetCurrentProcess(), 0);
     return 0;
 }
