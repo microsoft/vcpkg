@@ -486,21 +486,50 @@ namespace vcpkg
 
             r.optional_object_field(obj, PLATFORM, dep.platform, PlatformExprDeserializer::instance);
 
-            static auto version_deserializer = make_version_deserializer("a version");
+            static Json::StringDeserializer version_deserializer("a version");
 
             auto has_ge_constraint =
-                r.optional_object_field(obj, VERSION_GE, dep.constraint.value, *version_deserializer);
+                r.optional_object_field(obj, VERSION_GE, dep.constraint.value, version_deserializer);
             auto has_port_ver = r.optional_object_field(
                 obj, PORT_VERSION, dep.constraint.port_version, Json::NaturalNumberDeserializer::instance);
 
             if (has_ge_constraint)
             {
                 dep.constraint.type = Versions::Constraint::Type::Minimum;
+                /*** SUPPORT_HASH_SYNTAX ***/
+                auto h = dep.constraint.value.find('#');
+                if (h != std::string::npos)
+                {
+                    if (has_port_ver)
+                    {
+                        r.add_generic_error(type_name(),
+                                            "\"port-version\" cannot be used with an embedded '#' in the primary "
+                                            "constraint (\"",
+                                            VERSION_GE,
+                                            "\")");
+                    }
+                    auto opt = Strings::strto<int>(dep.constraint.value.c_str() + h + 1);
+                    auto v = opt.get();
+                    if (v && *v >= 0)
+                    {
+                        dep.constraint.port_version = *v;
+                    }
+                    else
+                    {
+                        r.add_generic_error(type_name(),
+                                            "embedded port-version ('#') in the primary "
+                                            "constraint (\"",
+                                            VERSION_GE,
+                                            "\") must be a nonnegative integer");
+                    }
+                    dep.constraint.value.erase(h);
+                }
+                /*** /SUPPORT_HASH_SYNTAX ***/
             }
             else if (has_port_ver) // does not have a primary constraint
             {
-                r.add_generic_error(type_name(),
-                                    "\"port-version\" cannot be used without a primary constraint (\"version>=\")");
+                r.add_generic_error(
+                    type_name(), "\"port-version\" cannot be used without a primary constraint (\"", VERSION_GE, "\")");
             }
 
             return dep;
