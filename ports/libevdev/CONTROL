@@ -3,3 +3,4 @@ Version: 1.9.0
 Homepage: https://gitlab.freedesktop.org/libevdev/libevdev
 Description:  Wrapper library for evdev devices
 Build-Depends: 
+Supports: !windows
