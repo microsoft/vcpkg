@@ -1,4 +1,4 @@
-set(PORT_VERSION 12.2)
+set(PORT_VERSION 13.1)
 
 macro(feature_unsupported)
     foreach(_feat ${ARGN})
@@ -31,7 +31,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.postgresql.org/pub/source/v${PORT_VERSION}/postgresql-${PORT_VERSION}.tar.bz2"
     FILENAME "postgresql-${PORT_VERSION}.tar.bz2"
-    SHA512 0e0ce8e21856e8f43e58b840c10c4e3ffae6d5207e0d778e9176e36f8e20e34633cbb06f0030a7c963c3491bb7e941456d91b55444c561cfc6f283fba76f33ee
+    SHA512 b7bd378db1dcb74ebcd5fffba03b82d8117d182029e4caca48eef62d8bcdbeef2c2e10f18eef0cdafb9d7acf21aa164d040e56687709f97b08c51540a786eeca
 )
 
 set(PATCHES
@@ -43,7 +43,9 @@ set(PATCHES
         patches/windows/msgfmt.patch
         patches/windows/python_lib.patch
         patches/windows/fix-compile-flag-Zi.patch
-        patches/linux/configure.patch)
+        patches/windows/fix-releaseInstall.patch
+        patches/linux/configure.patch
+    )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND PATCHES patches/windows/MSBuildProject-static-lib.patch)

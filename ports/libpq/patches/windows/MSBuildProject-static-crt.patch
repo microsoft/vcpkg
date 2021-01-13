@@ -1,8 +1,8 @@
 diff --git a/src/tools/msvc/MSBuildProject.pm b/src/tools/msvc/MSBuildProject.pm
-index 823357c02..faa3e336f 100644
+index ebb169e..7841563 100644
 --- a/src/tools/msvc/MSBuildProject.pm
 +++ b/src/tools/msvc/MSBuildProject.pm
-@@ -84,16 +84,16 @@ EOF
+@@ -84,7 +84,7 @@ EOF
  			defs    => "_DEBUG;DEBUG=1",
  			opt     => 'Disabled',
  			strpool => 'false',
@@ -11,8 +11,7 @@ index 823357c02..faa3e336f 100644
  		});
  	$self->WriteItemDefinitionGroup(
  		$f,
- 		'Release',
- 		{
+@@ -93,7 +93,7 @@ EOF
  			defs    => "",
  			opt     => 'Full',
  			strpool => 'true',

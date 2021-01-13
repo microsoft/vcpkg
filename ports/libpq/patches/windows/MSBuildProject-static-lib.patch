@@ -1,5 +1,5 @@
 diff --git a/src/tools/msvc/MSBuildProject.pm b/src/tools/msvc/MSBuildProject.pm
-index 823357c02..e1dc59aa7 100644
+index ebb169e..2e7b969 100644
 --- a/src/tools/msvc/MSBuildProject.pm
 +++ b/src/tools/msvc/MSBuildProject.pm
 @@ -262,7 +262,7 @@ sub WriteConfigurationPropertyGroup

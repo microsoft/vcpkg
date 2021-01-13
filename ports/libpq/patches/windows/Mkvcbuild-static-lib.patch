@@ -1,8 +1,8 @@
 diff --git a/src/tools/msvc/Mkvcbuild.pm b/src/tools/msvc/Mkvcbuild.pm
-index 99f39caa5..4f51c12f2 100644
+index 20da798..7436d4c 100644
 --- a/src/tools/msvc/Mkvcbuild.pm
 +++ b/src/tools/msvc/Mkvcbuild.pm
-@@ -182,7 +182,7 @@ sub mkvcbuild
+@@ -185,7 +185,7 @@ sub mkvcbuild
  		'syncrep_gram.y');
  	$postgres->AddFiles('src/backend/utils/adt', 'jsonpath_scan.l',
  		'jsonpath_gram.y');

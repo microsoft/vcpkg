@@ -1,5 +1,5 @@
 diff --git a/src/tools/msvc/Install.pm b/src/tools/msvc/Install.pm
-index d109b2c90..75c7446e6 100644
+index ea3af48..a849035 100644
 --- a/src/tools/msvc/Install.pm
 +++ b/src/tools/msvc/Install.pm
 @@ -19,13 +19,13 @@ our (@ISA, @EXPORT_OK);
@@ -23,7 +23,7 @@ index d109b2c90..75c7446e6 100644
  
  sub lcopy
  {
-@@ -110,7 +110,7 @@ sub Install
+@@ -118,7 +118,7 @@ sub Install
  	CopyFiles(
  		'Import libraries',
  		$target . '/lib/',
@@ -32,4 +32,3 @@ index d109b2c90..75c7446e6 100644
  		"libpgport\\libpgport.lib");
  	CopyContribFiles($config, $target);
  	CopyIncludeFiles($target);
-

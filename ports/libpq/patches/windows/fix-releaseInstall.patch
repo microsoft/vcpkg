@@ -1,0 +1,22 @@
+diff --git a/src/tools/msvc/Install.pm b/src/tools/msvc/Install.pm
+index 857fb2d..162a95f 100644
+--- a/src/tools/msvc/Install.pm
++++ b/src/tools/msvc/Install.pm
+@@ -375,10 +375,15 @@ sub GenerateTimezoneFiles
+ 	  || die "Could not find TZDATAFILES line in timezone makefile\n";
+ 	my @tzfiles = split /\s+/, $1;
+ 
++	$mf =~ /^POSIXRULES\s*:?=\s*(.*)$/m
++	  || die "Could not find POSIXRULES line in timezone makefile\n";
++	my $posixrules = $1;
++	$posixrules =~ s/\s+//g;
++
+ 	print "Generating timezone files...";
+ 
+-	my @args = (
+-		("$conf/zic/zic", '-d', "$target/share/libpq/timezone", '-p', "$posixrules");
++	my @args =
++	  ("$conf/zic/zic", '-d', "$target/share/libpq/timezone", '-p', "$posixrules");
+ 	foreach (@tzfiles)
+ 	{
+ 		my $tzfile = $_;
