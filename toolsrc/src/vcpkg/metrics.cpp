@@ -503,8 +503,8 @@ namespace vcpkg::Metrics
                         .string_arg("--tlsv1.2")
                         .string_arg("--data")
                         .string_arg(Strings::concat("@", fs::u8string(vcpkg_metrics_txt_path)))
-                        .string_arg(">/dev/null")
-                        .string_arg("2>&1");
+                        .raw_arg(">/dev/null")
+                        .raw_arg("2>&1");
         auto remove = System::CmdLineBuilder("rm").path_arg(vcpkg_metrics_txt_path);
         System::CmdLineBuilder cmd_line;
         cmd_line.raw_arg("(").raw_arg(curl.command_line()).raw_arg(";").raw_arg(remove.command_line()).raw_arg(") &");
