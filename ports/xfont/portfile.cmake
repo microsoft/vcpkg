@@ -6,6 +6,7 @@ vcpkg_from_gitlab(
     SHA512  abea04d57a951434f1cb88005d0651b5cd67ce27c4581e9688c52bbb3a5e7771e0aa9af3a108250e137125b454dbb382b45b8b75d107e7b1eec670ac61a898f2
     HEAD_REF master # branch name
     PATCHES build.patch #patch name
+            build2.patch
             configure.patch
 ) 
 
@@ -14,25 +15,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     #set(OPTIONS --enable-ipv6=no)
     string(APPEND VCPKG_CXX_FLAGS " /D_WILLWINSOCK_")
     string(APPEND VCPKG_C_FLAGS " /D_WILLWINSOCK_")
-    set(DEPS_DEBUG
-                "FREETYPE_LIBS=\"-L${CURRENT_INSTALLED_DIR}/debug/lib/ -lfreetyped -lpng16d -lzlib -lbz2d\"")
-    set(DEPS_RELEASE
-                "FREETYPE_LIBS=\"-L${CURRENT_INSTALLED_DIR}/lib/ -lfreetype -lpng16 -lzlibd -lbz2\"")
-else()
-    set(DEPS_DEBUG
-                "FREETYPE_LIBS=\"-L${CURRENT_INSTALLED_DIR}/debug/lib/ -lfreetyped -lpng16d -lz -lbz2d\"")
-    set(DEPS_RELEASE
-                "FREETYPE_LIBS=\"-L${CURRENT_INSTALLED_DIR}/lib/ -lfreetype -lpng16 -lz -lbz2\"")
 endif()
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
-    #SKIP_CONFIGURE
-    #NO_DEBUG
-    #AUTO_HOST
-    #AUTO_DST
-    #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
     OPTIONS ${OPTIONS}
+      --with-bzip2=yes
     OPTIONS_DEBUG ${DEPS_DEBUG}
     OPTIONS_RELEASE ${DEPS_RELEASE}
 )
