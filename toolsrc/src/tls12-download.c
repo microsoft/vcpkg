@@ -183,6 +183,31 @@ int __stdcall entry()
     write_message(stdOut, relative_path);
     write_message(stdOut, L" -> ");
     write_message(stdOut, out_file_path);
+
+    wchar_t https_proxy_env[32767];
+    DWORD dwAccessType;
+    const wchar_t* pszProxyW;
+    const wchar_t* pszProxyBypassW;
+    if (GetEnvironmentVariableW(L"HTTPS_PROXY", https_proxy_env, sizeof(https_proxy_env) / sizeof(wchar_t)))
+    {
+        dwAccessType = WINHTTP_ACCESS_TYPE_NAMED_PROXY;
+        pszProxyW = https_proxy_env;
+        pszProxyBypassW = L"<local>";
+        write_message(stdOut, L" (using proxy: ");
+        write_message(stdOut, pszProxyW);
+        write_message(stdOut, L")");
+    }
+    else if (GetLastError() == ERROR_ENVVAR_NOT_FOUND)
+    {
+        dwAccessType = WINHTTP_ACCESS_TYPE_NO_PROXY;
+        pszProxyW = WINHTTP_NO_PROXY_NAME;
+        pszProxyBypassW = WINHTTP_NO_PROXY_BYPASS;
+    }
+    else
+    {
+        abort_api_failure(stdOut, L"GetEnvironmentVariableW");
+    }
+
     write_message(stdOut, L"\r\n");
 
     const HANDLE outFile = CreateFileW(out_file_path, FILE_WRITE_DATA, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
@@ -192,8 +217,7 @@ int __stdcall entry()
     }
 
     BOOL results = FALSE;
-    const HINTERNET session = WinHttpOpen(
-        L"tls12-download/1.0", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+    const HINTERNET session = WinHttpOpen(L"tls12-download/1.0", dwAccessType, pszProxyW, pszProxyBypassW, 0);
     if (!session)
     {
         abort_api_failure(stdOut, L"WinHttpOpen");
