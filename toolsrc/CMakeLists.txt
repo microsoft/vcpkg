@@ -15,7 +15,6 @@ include(cmake/utilities.cmake)
 include(CMakeDependentOption)
 
 option(BUILD_TESTING "Option for enabling testing" ON)
-option(VCPKG_DISABLE_METRICS "Option for disabling metrics" OFF)
 option(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang, even versions that we don't know will work" OFF)
 option(VCPKG_DEVELOPMENT_WARNINGS "Option for turning on all warnings" ON)
 option(VCPKG_WARNINGS_AS_ERRORS "Set warnings to be errors" ${VCPKG_DEVELOPMENT_WARNINGS})
@@ -28,9 +27,9 @@ CMAKE_DEPENDENT_OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarkin
 if(WERROR)
     message(DEPRECATION "-DWERROR is no longer a supported flag. It doesn't do anything.")
 endif()
-if(DEFINE_DISABLE_METRICS)
-    message(DEPRECATION "DEFINE_DISABLE_METRICS is now called VCPKG_DISABLE_METRICS.")
-    set(VCPKG_DISABLE_METRICS ${DEFINE_DISABLE_METRICS} CACHE BOOL "Option for disabling metrics" FORCE)
+if(DEFINE_DISABLE_METRICS OR VCPKG_DISABLE_METRICS)
+    message(DEPRECATION "DEFINE_DISABLE_METRICS / VCPKG_DISABLE_METRICS are now handled by creating a "
+        "file vcpkg.disable_metrics next to the binary.")
 endif()
 
 # =============
