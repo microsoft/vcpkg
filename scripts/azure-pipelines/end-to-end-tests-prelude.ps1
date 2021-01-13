@@ -1,5 +1,3 @@
-$WorkingRoot = (Get-Item $WorkingRoot).FullName
-
 $TestingRoot = Join-Path $WorkingRoot 'testing'
 $buildtreesRoot = Join-Path $TestingRoot 'buildtrees'
 $installRoot = Join-Path $TestingRoot 'installed'

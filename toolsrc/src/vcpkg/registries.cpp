@@ -73,22 +73,7 @@ namespace
             return m_versions_tree.get([this, &paths]() -> fs::path {
                 auto maybe_tree = paths.git_find_object_id_for_remote_registry_path(get_commit_of_repo(paths),
                                                                                     fs::u8path("port_versions"));
-                if (auto tree = maybe_tree.get())
-                {
-                    auto maybe_path = paths.git_checkout_object_from_remote_registry(*tree);
-                    if (auto path = maybe_path.get())
-                    {
-                        return std::move(*path);
-                    }
-                    else
-                    {
-                        Checks::exit_with_message(VCPKG_LINE_INFO,
-                                                  "Error: failed to check out `port_versions` from repo %s: %s",
-                                                  m_repo,
-                                                  maybe_path.error());
-                    }
-                }
-                else
+                if (!maybe_tree)
                 {
                     Checks::exit_with_message(
                         VCPKG_LINE_INFO,
@@ -97,6 +82,15 @@ namespace
                         get_commit_of_repo(paths),
                         maybe_tree.error());
                 }
+                auto maybe_path = paths.git_checkout_object_from_remote_registry(*maybe_tree.get());
+                if (!maybe_path)
+                {
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: failed to check out `port_versions` from repo %s: %s",
+                                              m_repo,
+                                              maybe_path.error());
+                }
+                return std::move(*maybe_path.get());
             });
         }
 

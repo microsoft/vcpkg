@@ -68,8 +68,8 @@ try
     Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/port_versions" -Destination .
     Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/vcpkg-internal-e2e-test-port" -Destination .
 
-    $CurrentTest = 'git add .'
-    git add .
+    $CurrentTest = 'git add -A'
+    git add -A
     Throw-IfFailed
     $CurrentTest = 'git commit'
     git commit -m 'initial commit'

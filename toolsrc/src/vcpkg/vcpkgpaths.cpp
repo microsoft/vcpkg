@@ -4,7 +4,6 @@
 #include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.process.h>
-#include <vcpkg/base/unique_resource.h>
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/binaryparagraph.h>
@@ -758,18 +757,7 @@ If you wish to silence this error and use classic mode, you can:
         auto lock_file = work_tree / fs::u8path(".vcpkg-lock");
 
         std::error_code ec;
-        auto guard = make_unique_resource(
-            fs.take_exclusive_file_lock(lock_file, ec), fs::SystemHandle{}, [&fs](fs::SystemHandle h) {
-                if (h != fs::SystemHandle{})
-                {
-                    std::error_code ec;
-                    fs.unlock_file_lock(h, ec);
-                    if (ec)
-                    {
-                        Debug::print("Warning: failed to drop file lock on git registry: ", ec.message());
-                    }
-                }
-            });
+        auto guard = Files::ExclusiveFileLock(Files::ExclusiveFileLock::Wait::Yes, fs, lock_file, ec);
 
         System::CmdLineBuilder fetch_git_ref =
             git_cmd_builder(*this, dot_git_dir, work_tree).string_arg("fetch").string_arg("--").string_arg(repo);

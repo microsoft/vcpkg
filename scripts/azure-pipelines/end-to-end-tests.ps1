@@ -32,6 +32,8 @@ Param(
 
 $ErrorActionPreference = "Stop"
 
+$WorkingRoot = (Get-Item $WorkingRoot).FullName
+
 $AllTests = Get-ChildItem $PSScriptRoot/end-to-end-tests-dir/*.ps1
 if ($Filter -ne $Null) {
     $AllTests = $AllTests | ? { $_.Name -match $Filter }
