@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5ade734..54071bd 100644
+index 5ade734..76702f8 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.0)
@@ -22,7 +22,7 @@ index 5ade734..54071bd 100644
      list(APPEND LIBZXING_FILES
          opencv/src/zxing/MatSource.cpp
          opencv/src/zxing/MatSource.h
-@@ -58,10 +60,10 @@ include_directories(core/src)
+@@ -58,16 +60,16 @@ include_directories(core/src)
  add_library(libzxing ${LIBZXING_FILES})
  set_target_properties(libzxing PROPERTIES PREFIX "")
  
@@ -37,3 +37,19 @@ index 5ade734..54071bd 100644
  else()
      add_definitions(-DNO_ICONV=1)
  endif()
+ 
+ # Add OpenCV cli executable
+-if(OpenCV_FOUND)
++if(WITH_OPENCV)
+     file(GLOB_RECURSE OPENCV_ZXING_FILES
+         "./opencv-cli/src/*.cpp"
+         "./opencv-cli/src/*.h"
+@@ -100,7 +102,7 @@ install(
+     FILES_MATCHING PATTERN "*.h"
+ )
+ 
+-if(OpenCV_FOUND)
++if(WITH_OPENCV)
+     install(
+         DIRECTORY opencv/src/zxing/
+         DESTINATION include/zxing
