@@ -85,7 +85,8 @@ namespace vcpkg::Commands::PortHistory
                                                                 const std::string& commit_date,
                                                                 const std::string& port_name)
         {
-            auto rev_parse_cmd = System::CmdLineBuilder("rev-parse").string_arg(Strings::concat(commit_id, ":ports/", port_name));
+            auto rev_parse_cmd =
+                System::CmdLineBuilder("rev-parse").string_arg(Strings::concat(commit_id, ":ports/", port_name));
             auto rev_parse_output = run_git_command(paths, rev_parse_cmd);
             if (rev_parse_output.exit_code == 0)
             {
