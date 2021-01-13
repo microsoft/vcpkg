@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK12
-    REF nov2020b
-    SHA512 3a47209f109f993e4ca779bca9c9417c3f11a0472b3c91f52beb46a388edc5487d4e2cd472371ef6ffc4d3e54782d12e884befe8537fa68190c1556d6e36fbab
+    REF jan2021
+    SHA512 a6938194bc8857fe0076cb21f000aaa4ab4e207342e07f76ecea9d3f064c1b0c220a5f410c2e1184f37d98b54ef2f4852a6bc7cb13a029885bd3c39cb3f1a727
     HEAD_REF master
 )
 
@@ -21,15 +21,15 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(makespritefont
-    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/nov2020/MakeSpriteFont.exe"
+    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/jan2021/MakeSpriteFont.exe"
     FILENAME "makespritefont.exe"
-    SHA512 d576eecd9763d238e12ba8d865917738a4bc8cbf632943e5c11b9426ecdfeaa9e8522076f1bb7122d41e69158fc7ca0939f2d90f9986470639966b3f849d236a
+    SHA512 0cca19694fd3625c5130a85456f7bf1dabc8c5f893223c19da134a0c4d64de853f7871644365dcec86012543f3a59a96bfabd9e51947648f6d82480602116fc4
   )
 
   vcpkg_download_distfile(xwbtool
-    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/nov2020/XWBTool.exe"
+    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/jan2021/XWBTool.exe"
     FILENAME "xwbtool.exe"
-    SHA512 6ac8fc12fcea0f808aac1367907dbbb0c5669c8c654fc21f38b4e1ce951710ade1851515dba074e9254579b018545c3cdb2b6cf57366dfba0196603510bf51cd
+    SHA512 91c9d0da90697ba3e0ebe4afcc4c8e084045b76b26e94d7acd4fd87e5965b52dd61d26038f5eb749a3f6de07940bf6e3af8e9f19d820bf904fbdb2752b78fce9
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
