@@ -291,7 +291,7 @@ if [ "$vcpkgDisableMetrics" = "ON" ]; then
 else
     # Note that we intentionally leave any existing vcpkg.disable-metrics; once a user has
     # opted out they should stay opted out.
-    if [! -f "$vcpkgRootDir/vcpkg.disable-metrics"]
+    if [! -f "$vcpkgRootDir/vcpkg.disable-metrics"]; then
     cat <<EOF
 Telemetry
 ---------
