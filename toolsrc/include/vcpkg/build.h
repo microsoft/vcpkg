@@ -42,6 +42,7 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
+        CACHE_MISSING,
         DOWNLOADED
     };
 
@@ -56,13 +57,15 @@ namespace vcpkg::Build
 
     namespace Command
     {
-        int perform_ex(const FullPackageSpec& full_spec,
+        int perform_ex(const VcpkgCmdArguments& args,
+                       const FullPackageSpec& full_spec,
                        const SourceControlFileLocation& scfl,
                        const PortFileProvider::PathsPortFileProvider& provider,
                        IBinaryProvider& binaryprovider,
                        const IBuildLogsRecorder& build_logs_recorder,
                        const VcpkgPaths& paths);
-        void perform_and_exit_ex(const FullPackageSpec& full_spec,
+        void perform_and_exit_ex(const VcpkgCmdArguments& args,
+                                 const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
                                  IBinaryProvider& binaryprovider,
@@ -139,8 +142,15 @@ namespace vcpkg::Build
         PROHIBIT
     };
 
+    enum class BuildMissing
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
+        BuildMissing build_missing;
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
         OnlyDownloads only_downloads;
@@ -154,6 +164,7 @@ namespace vcpkg::Build
     };
 
     static constexpr BuildPackageOptions default_build_package_options{
+        Build::BuildMissing::YES,
         Build::UseHeadVersion::NO,
         Build::AllowDownloads::YES,
         Build::OnlyDownloads::NO,
@@ -167,6 +178,7 @@ namespace vcpkg::Build
     };
 
     static constexpr BuildPackageOptions backcompat_prohibiting_package_options{
+        Build::BuildMissing::YES,
         Build::UseHeadVersion::NO,
         Build::AllowDownloads::YES,
         Build::OnlyDownloads::NO,
@@ -211,6 +223,7 @@ namespace vcpkg::Build
         Optional<ConfigurationType> build_type;
         Optional<std::string> public_abi_override;
         std::vector<std::string> passthrough_env_vars;
+        std::vector<std::string> passthrough_env_vars_tracked;
 
         fs::path toolchain_file() const;
         bool using_vcvars() const;
@@ -232,7 +245,8 @@ namespace vcpkg::Build
         std::unique_ptr<BinaryControlFile> binary_control_file;
     };
 
-    ExtendedBuildResult build_package(const VcpkgPaths& paths,
+    ExtendedBuildResult build_package(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& config,
                                       IBinaryProvider& binaries_provider,
                                       const IBuildLogsRecorder& build_logs_recorder,
@@ -243,6 +257,8 @@ namespace vcpkg::Build
         EMPTY_PACKAGE,
         DLLS_WITHOUT_LIBS,
         DLLS_WITHOUT_EXPORTS,
+        DLLS_IN_STATIC_LIBRARY,
+        MISMATCHED_NUMBER_OF_BINARIES,
         ONLY_RELEASE_CRT,
         EMPTY_INCLUDE_FOLDER,
         ALLOW_OBSOLETE_MSVCRT,
@@ -253,16 +269,8 @@ namespace vcpkg::Build
         COUNT,
     };
 
-    constexpr std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> G_ALL_POLICIES = {
-        BuildPolicy::EMPTY_PACKAGE,
-        BuildPolicy::DLLS_WITHOUT_LIBS,
-        BuildPolicy::DLLS_WITHOUT_EXPORTS,
-        BuildPolicy::ONLY_RELEASE_CRT,
-        BuildPolicy::EMPTY_INCLUDE_FOLDER,
-        BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
-        BuildPolicy::ALLOW_RESTRICTED_HEADERS,
-        BuildPolicy::SKIP_DUMPBIN_CHECKS,
-        BuildPolicy::SKIP_ARCHITECTURE_CHECK};
+    // could be constexpr, but we want to generate this and that's not constexpr in C++14
+    extern const std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> ALL_POLICIES;
 
     const std::string& to_string(BuildPolicy policy);
     CStringView to_cmake_variable(BuildPolicy policy);

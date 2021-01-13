@@ -5,12 +5,15 @@
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/util.h>
 
+#include <vcpkg/registries.h>
 #include <vcpkg/sourceparagraph.h>
+#include <vcpkg/versions.h>
 
 namespace vcpkg::PortFileProvider
 {
     struct PortFileProvider
     {
+        virtual ~PortFileProvider() = default;
         virtual ExpectedS<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const = 0;
         virtual std::vector<const SourceControlFileLocation*> load_all_control_files() const = 0;
     };
@@ -36,4 +39,30 @@ namespace vcpkg::PortFileProvider
         std::vector<fs::path> overlay_ports;
         mutable std::unordered_map<std::string, SourceControlFileLocation> cache;
     };
+
+    struct IVersionedPortfileProvider
+    {
+        virtual View<VersionT> get_port_versions(StringView port_name) const = 0;
+        virtual ~IVersionedPortfileProvider() = default;
+
+        virtual ExpectedS<const SourceControlFileLocation&> get_control_file(
+            const Versions::VersionSpec& version_spec) const = 0;
+    };
+
+    struct IBaselineProvider
+    {
+        virtual Optional<VersionT> get_baseline_version(StringView port_name) const = 0;
+        virtual ~IBaselineProvider() = default;
+    };
+
+    struct IOverlayProvider
+    {
+        virtual ~IOverlayProvider() = default;
+        virtual Optional<const SourceControlFileLocation&> get_control_file(StringView port_name) const = 0;
+    };
+
+    std::unique_ptr<IBaselineProvider> make_baseline_provider(const vcpkg::VcpkgPaths& paths);
+    std::unique_ptr<IVersionedPortfileProvider> make_versioned_portfile_provider(const vcpkg::VcpkgPaths& paths);
+    std::unique_ptr<IOverlayProvider> make_overlay_provider(const vcpkg::VcpkgPaths& paths,
+                                                            View<std::string> overlay_ports);
 }

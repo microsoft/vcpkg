@@ -9,6 +9,9 @@ vcpkg_from_github(
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindIlmBase.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindBlosc.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindOpenEXR.cmake)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OPENVDB_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPENVDB_SHARED)
@@ -51,5 +54,6 @@ if (OPENVDB_BUILD_TOOLS)
     vcpkg_copy_tools(TOOL_NAMES vdb_print vdb_render vdb_view vdb_lod AUTO_CLEAN)
 endif()
 
-# Handle copyright
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/openvdb/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

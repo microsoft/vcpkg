@@ -132,6 +132,10 @@ namespace vcpkg
         std::unique_ptr<std::string> packages_root_dir;
         constexpr static StringLiteral SCRIPTS_ROOT_DIR_ARG = "x-scripts-root";
         std::unique_ptr<std::string> scripts_root_dir;
+        constexpr static StringLiteral BUILTIN_PORTS_ROOT_DIR_ARG = "x-builtin-ports-root";
+        std::unique_ptr<std::string> builtin_ports_root_dir;
+        constexpr static StringLiteral BUILTIN_PORT_VERSIONS_DIR_ARG = "x-builtin-port-versions-dir";
+        std::unique_ptr<std::string> builtin_port_versions_dir;
 
         constexpr static StringLiteral DEFAULT_VISUAL_STUDIO_PATH_ENV = "VCPKG_VISUAL_STUDIO_PATH";
         std::unique_ptr<std::string> default_visual_studio_path;
@@ -149,6 +153,9 @@ namespace vcpkg
         constexpr static StringLiteral BINARY_SOURCES_ARG = "binarysource";
         std::vector<std::string> binary_sources;
 
+        constexpr static StringLiteral CMAKE_SCRIPT_ARG = "x-cmake-args";
+        std::vector<std::string> cmake_args;
+
         constexpr static StringLiteral DEBUG_SWITCH = "debug";
         Optional<bool> debug = nullopt;
         constexpr static StringLiteral SEND_METRICS_SWITCH = "sendmetrics";
@@ -162,6 +169,10 @@ namespace vcpkg
 
         constexpr static StringLiteral WAIT_FOR_LOCK_SWITCH = "x-wait-for-lock";
         Optional<bool> wait_for_lock = nullopt;
+
+        constexpr static StringLiteral IGNORE_LOCK_FAILURES_SWITCH = "x-ignore-lock-failures";
+        constexpr static StringLiteral IGNORE_LOCK_FAILURES_ENV = "X_VCPKG_IGNORE_LOCK_FAILURES";
+        Optional<bool> ignore_lock_failures = nullopt;
 
         constexpr static StringLiteral JSON_SWITCH = "x-json";
         Optional<bool> json = nullopt;

@@ -21,7 +21,24 @@
 #endif // ^^^ defined(__APPLE__)
 
 #include <algorithm>
+#include <list>
 #include <string>
+
+namespace
+{
+    struct NativeStringView
+    {
+        const fs::path::value_type* first;
+        const fs::path::value_type* last;
+        NativeStringView() = default;
+        NativeStringView(const fs::path::value_type* first, const fs::path::value_type* last) : first(first), last(last)
+        {
+        }
+        bool empty() const { return first == last; }
+        bool is_dot() const { return (last - first) == 1 && *first == '.'; }
+        bool is_dot_dot() const { return (last - first) == 2 && *first == '.' && *(first + 1) == '.'; }
+    };
+}
 
 #if defined(_WIN32)
 namespace
@@ -87,6 +104,11 @@ namespace
 
 fs::path fs::u8path(vcpkg::StringView s)
 {
+    if (s.size() == 0)
+    {
+        return fs::path();
+    }
+
 #if defined(_WIN32)
     return fs::path(vcpkg::Strings::to_utf16(s));
 #else
@@ -109,6 +131,148 @@ std::string fs::generic_u8string(const fs::path& p)
 #else
     return p.generic_string();
 #endif
+}
+
+fs::path fs::lexically_normal(const fs::path& p)
+{
+    // copied from microsoft/STL, stl/inc/filesystem:lexically_normal()
+    // relicensed under MIT for the vcpkg repository.
+
+    // N4810 29.11.7.1 [fs.path.generic]/6:
+    // "Normalization of a generic format pathname means:"
+
+    // "1. If the path is empty, stop."
+    if (p.empty())
+    {
+        return {};
+    }
+
+    // "2. Replace each slash character in the root-name with a preferred-separator."
+    const auto first = p.native().data();
+    const auto last = first + p.native().size();
+    const auto root_name_end = first + p.root_name().native().size();
+
+    fs::path::string_type normalized(first, root_name_end);
+
+#if defined(_WIN32)
+    std::replace(normalized.begin(), normalized.end(), L'/', L'\\');
+#endif
+
+    // "3. Replace each directory-separator with a preferred-separator.
+    // [ Note: The generic pathname grammar (29.11.7.1) defines directory-separator
+    // as one or more slashes and preferred-separators. -end note ]"
+    std::list<NativeStringView> lst; // Empty string_view means directory-separator
+                                     // that will be normalized to a preferred-separator.
+                                     // Non-empty string_view means filename.
+    for (auto next = root_name_end; next != last;)
+    {
+        if (is_slash(*next))
+        {
+            if (lst.empty() || !lst.back().empty())
+            {
+                // collapse one or more slashes and preferred-separators to one empty wstring_view
+                lst.emplace_back();
+            }
+
+            ++next;
+        }
+        else
+        {
+            const auto filename_end = std::find_if(next + 1, last, is_slash);
+            lst.emplace_back(next, filename_end);
+            next = filename_end;
+        }
+    }
+
+    // "4. Remove each dot filename and any immediately following directory-separator."
+    for (auto next = lst.begin(); next != lst.end();)
+    {
+        if (next->is_dot())
+        {
+            next = lst.erase(next); // erase dot filename
+
+            if (next != lst.end())
+            {
+                next = lst.erase(next); // erase immediately following directory-separator
+            }
+        }
+        else
+        {
+            ++next;
+        }
+    }
+
+    // "5. As long as any appear, remove a non-dot-dot filename immediately followed by a
+    // directory-separator and a dot-dot filename, along with any immediately following directory-separator."
+    for (auto next = lst.begin(); next != lst.end();)
+    {
+        auto prev = next;
+
+        // If we aren't going to erase, keep advancing.
+        // If we're going to erase, next now points past the dot-dot filename.
+        ++next;
+
+        if (prev->is_dot_dot() && prev != lst.begin() && --prev != lst.begin() && !(--prev)->is_dot_dot())
+        {
+            if (next != lst.end())
+            { // dot-dot filename has an immediately following directory-separator
+                ++next;
+            }
+
+            lst.erase(prev, next); // next remains valid
+        }
+    }
+
+    // "6. If there is a root-directory, remove all dot-dot filenames
+    // and any directory-separators immediately following them.
+    // [ Note: These dot-dot filenames attempt to refer to nonexistent parent directories. -end note ]"
+    if (!lst.empty() && lst.front().empty())
+    { // we have a root-directory
+        for (auto next = lst.begin(); next != lst.end();)
+        {
+            if (next->is_dot_dot())
+            {
+                next = lst.erase(next); // erase dot-dot filename
+
+                if (next != lst.end())
+                {
+                    next = lst.erase(next); // erase immediately following directory-separator
+                }
+            }
+            else
+            {
+                ++next;
+            }
+        }
+    }
+
+    // "7. If the last filename is dot-dot, remove any trailing directory-separator."
+    if (lst.size() >= 2 && lst.back().empty() && std::prev(lst.end(), 2)->is_dot_dot())
+    {
+        lst.pop_back();
+    }
+
+    // Build up normalized by flattening lst.
+    for (const auto& elem : lst)
+    {
+        if (elem.empty())
+        {
+            normalized += fs::path::preferred_separator;
+        }
+        else
+        {
+            normalized.append(elem.first, elem.last);
+        }
+    }
+
+    // "8. If the path is empty, add a dot."
+    if (normalized.empty())
+    {
+        normalized.push_back('.');
+    }
+
+    // "The result of normalization is a path in normal form, which is said to be normalized."
+    return std::move(normalized);
 }
 
 namespace vcpkg::Files
@@ -305,6 +469,14 @@ namespace vcpkg::Files
         std::error_code ec;
         this->write_contents(path, data, ec);
         if (ec) Checks::exit_with_message(linfo, "error writing file: %s: %s", fs::u8string(path), ec.message());
+    }
+    void Filesystem::write_contents_and_dirs(const fs::path& path, const std::string& data, LineInfo linfo)
+    {
+        std::error_code ec;
+        this->write_contents_and_dirs(path, data, ec);
+        if (ec)
+            Checks::exit_with_message(
+                linfo, "error writing file and creating directories: %s: %s", fs::u8string(path), ec.message());
     }
     void Filesystem::rename(const fs::path& oldpath, const fs::path& newpath, LineInfo linfo)
     {
@@ -990,6 +1162,22 @@ namespace vcpkg::Files
             }
         }
 
+        virtual void write_contents_and_dirs(const fs::path& file_path,
+                                             const std::string& data,
+                                             std::error_code& ec) override
+        {
+            write_contents(file_path, data, ec);
+            if (ec)
+            {
+                create_directories(file_path.parent_path(), ec);
+                if (ec)
+                {
+                    return;
+                }
+                write_contents(file_path, data, ec);
+            }
+        }
+
         virtual fs::path absolute(const fs::path& path, std::error_code& ec) const override
         {
 #if VCPKG_USE_STD_FILESYSTEM
@@ -1033,7 +1221,7 @@ namespace vcpkg::Files
             {
             }
 
-#if defined(WIN32)
+#if defined(_WIN32)
             void assign_busy_error(std::error_code& ec) { ec.assign(ERROR_BUSY, std::system_category()); }
 
             bool operator()(std::error_code& ec)
@@ -1059,7 +1247,7 @@ namespace vcpkg::Files
                 res.system_handle = reinterpret_cast<intptr_t>(handle);
                 return true;
             }
-#else // ^^^ WIN32 / !WIN32 vvv
+#else // ^^^ _WIN32 / !_WIN32 vvv
             int fd = -1;
 
             void assign_busy_error(std::error_code& ec) { ec.assign(EBUSY, std::generic_category()); }
@@ -1069,7 +1257,7 @@ namespace vcpkg::Files
                 ec.clear();
                 if (fd == -1)
                 {
-                    fd = ::open(native.c_str(), 0);
+                    fd = ::open(native.c_str(), O_RDWR | O_CREAT, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
                     if (fd < 0)
                     {
                         ec.assign(errno, std::generic_category());
@@ -1152,7 +1340,7 @@ namespace vcpkg::Files
 
         virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code& ec) override
         {
-#if defined(WIN32)
+#if defined(_WIN32)
             if (CloseHandle(reinterpret_cast<HANDLE>(handle.system_handle)) == 0)
             {
                 ec.assign(GetLastError(), std::system_category());
@@ -1168,20 +1356,21 @@ namespace vcpkg::Files
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const override
         {
 #if defined(_WIN32)
-            static constexpr StringLiteral EXTS[] = {".cmd", ".exe", ".bat"};
+            static constexpr wchar_t const* EXTS[] = {L".cmd", L".exe", L".bat"};
 #else  // ^^^ defined(_WIN32) // !defined(_WIN32) vvv
-            static constexpr StringLiteral EXTS[] = {""};
+            static constexpr char const* EXTS[] = {""};
 #endif // ^^^!defined(_WIN32)
             auto paths = Strings::split_paths(System::get_environment_variable("PATH").value_or_exit(VCPKG_LINE_INFO));
 
             std::vector<fs::path> ret;
             for (auto&& path : paths)
             {
-                auto base = add_filename(path, name);
+                auto base = fs::u8path(path);
+                base /= fs::u8path(name);
 
                 for (auto&& ext : EXTS)
                 {
-                    auto p = fs::u8path(base + ext.c_str());
+                    auto p = fs::path(base.native() + ext);
                     if (Util::find(ret, p) == ret.end() && this->exists(p, ignore_errors))
                     {
                         ret.push_back(p);
@@ -1367,25 +1556,4 @@ namespace vcpkg::Files
     }
 #endif // _WIN32
 
-    std::string add_filename(StringView base, StringView file)
-    {
-        std::string result;
-        const auto base_size = base.size();
-        const auto file_size = file.size();
-        if (base_size != 0 && !fs::is_slash(base.data()[base_size - 1]))
-        {
-            result.reserve(base_size + file_size + 1);
-            result.append(base.data(), base_size);
-            result.push_back(preferred_separator);
-            result.append(file.data(), file_size);
-        }
-        else
-        {
-            result.reserve(base_size + file_size);
-            result.append(base.data(), base_size);
-            result.append(file.data(), file_size);
-        }
-
-        return result;
-    }
 }

@@ -7,7 +7,7 @@ function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PAC
         OPTIONS -DBUILD_TESTING=OFF
     )
 
-    vcpkg_install_cmake()
+    vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
     # If necessary, move the CMake config files
     if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake")

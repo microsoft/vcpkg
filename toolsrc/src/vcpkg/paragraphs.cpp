@@ -357,14 +357,23 @@ namespace vcpkg::Paragraphs
 
             return res;
         }
-        ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs(fs, path_to_control);
-        if (auto vector_pghs = pghs.get())
+
+        if (fs.exists(path_to_control))
         {
-            return SourceControlFile::parse_control_file(fs::u8string(path_to_control), std::move(*vector_pghs));
+            ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs(fs, path_to_control);
+            if (auto vector_pghs = pghs.get())
+            {
+                return SourceControlFile::parse_control_file(fs::u8string(path_to_control), std::move(*vector_pghs));
+            }
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = fs::u8string(path.filename());
+            error_info->error = pghs.error();
+            return error_info;
         }
+
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         error_info->name = fs::u8string(path.filename());
-        error_info->error = pghs.error();
+        error_info->error = "Failed to find either a CONTROL file or vcpkg.json file.";
         return error_info;
     }
 
@@ -388,24 +397,6 @@ namespace vcpkg::Paragraphs
         return pghs.error();
     }
 
-    static void load_port_names_from_root(std::vector<std::string>& ports,
-                                          const VcpkgPaths& paths,
-                                          const fs::path& registry_root)
-    {
-        const auto& fs = paths.get_filesystem();
-        auto port_dirs = fs.get_files_non_recursive(registry_root);
-        Util::sort(port_dirs);
-
-        // TODO: search in `b-` for ports starting with `b`
-        Util::erase_remove_if(port_dirs,
-                              [&](auto&& port_dir_entry) { return port_dir_entry.filename() == ".DS_Store"; });
-
-        for (auto&& path : port_dirs)
-        {
-            ports.push_back(fs::u8string(path.filename()));
-        }
-    }
-
     LoadResults try_load_all_registry_ports(const VcpkgPaths& paths)
     {
         LoadResults ret;
@@ -417,11 +408,11 @@ namespace vcpkg::Paragraphs
 
         for (const auto& registry : registries.registries())
         {
-            load_port_names_from_root(ports, paths, registry.implementation().get_registry_root(paths));
+            registry.implementation().get_all_port_names(ports, paths);
         }
         if (auto registry = registries.default_registry())
         {
-            load_port_names_from_root(ports, paths, registry->get_registry_root(paths));
+            registry->get_all_port_names(ports, paths);
         }
 
         Util::sort_unique_erase(ports);
@@ -437,26 +428,28 @@ namespace vcpkg::Paragraphs
                 continue;
             }
 
-            auto root = impl->get_registry_root(paths);
-
-            auto port_path = root / fs::u8path(port_name);
-
-            if (!fs.exists(port_path))
+            auto port_entry = impl->get_port_entry(paths, port_name);
+            auto baseline_version = impl->get_baseline_version(paths, port_name);
+            if (port_entry && baseline_version)
+            {
+                auto port_path =
+                    port_entry->get_path_to_version(paths, *baseline_version.get()).value_or_exit(VCPKG_LINE_INFO);
+                auto maybe_spgh = try_load_port(fs, port_path);
+                if (const auto spgh = maybe_spgh.get())
+                {
+                    ret.paragraphs.emplace_back(std::move(*spgh), std::move(port_path));
+                }
+                else
+                {
+                    ret.errors.emplace_back(std::move(maybe_spgh).error());
+                }
+            }
+            else
             {
                 // the registry that owns the name of this port does not actually contain the port
                 // this can happen if R1 contains the port definition for <abc>, but doesn't
                 // declare it owns <abc>.
                 continue;
-            }
-
-            auto maybe_spgh = try_load_port(fs, port_path);
-            if (const auto spgh = maybe_spgh.get())
-            {
-                ret.paragraphs.emplace_back(std::move(*spgh), std::move(port_path));
-            }
-            else
-            {
-                ret.errors.emplace_back(std::move(maybe_spgh).error());
             }
         }
 
@@ -496,13 +489,16 @@ namespace vcpkg::Paragraphs
         LoadResults ret;
 
         std::vector<std::string> port_names;
-        load_port_names_from_root(port_names, paths, directory);
 
         const auto& fs = paths.get_filesystem();
+        auto port_dirs = fs.get_files_non_recursive(directory);
+        Util::sort(port_dirs);
 
-        for (const auto& name : port_names)
+        Util::erase_remove_if(port_dirs,
+                              [&](auto&& port_dir_entry) { return port_dir_entry.filename() == ".DS_Store"; });
+
+        for (auto&& path : port_dirs)
         {
-            auto path = directory / fs::u8path(name);
             auto maybe_spgh = try_load_port(fs, path);
             if (const auto spgh = maybe_spgh.get())
             {

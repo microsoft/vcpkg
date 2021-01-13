@@ -18,10 +18,17 @@
 
 namespace fs
 {
+#if defined(_WIN32)
     struct IsSlash
     {
         bool operator()(const wchar_t c) const noexcept { return c == L'/' || c == L'\\'; }
     };
+#else
+    struct IsSlash
+    {
+        bool operator()(const char c) const noexcept { return c == '/'; }
+    };
+#endif
 
     constexpr IsSlash is_slash;
 
@@ -38,25 +45,20 @@ namespace fs
 
     path u8path(vcpkg::StringView s);
     inline path u8path(const char* first, const char* last) { return u8path(vcpkg::StringView{first, last}); }
+    inline path u8path(std::initializer_list<char> il) { return u8path(vcpkg::StringView{il.begin(), il.end()}); }
     inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
 
-#if defined(_MSC_VER)
     inline path u8path(std::string::const_iterator first, std::string::const_iterator last)
     {
-        if (first == last)
-        {
-            return path{};
-        }
-        else
-        {
-            auto firstp = &*first;
-            return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
-        }
+        auto firstp = &*first;
+        return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
     }
-#endif
 
     std::string u8string(const path& p);
     std::string generic_u8string(const path& p);
+
+    // equivalent to p.lexically_normal()
+    path lexically_normal(const path& p);
 
 #if defined(_WIN32)
     enum class file_type
@@ -173,6 +175,10 @@ namespace vcpkg::Files
                                  std::error_code& ec) = 0;
         void write_contents(const fs::path& path, const std::string& data, LineInfo linfo);
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) = 0;
+        void write_contents_and_dirs(const fs::path& path, const std::string& data, LineInfo linfo);
+        virtual void write_contents_and_dirs(const fs::path& file_path,
+                                             const std::string& data,
+                                             std::error_code& ec) = 0;
         void rename(const fs::path& oldpath, const fs::path& newpath, LineInfo linfo);
         virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) = 0;
         virtual void rename_or_copy(const fs::path& oldpath,
@@ -224,6 +230,12 @@ namespace vcpkg::Files
         virtual void current_path(const fs::path& path, std::error_code&) = 0;
         void current_path(const fs::path& path, LineInfo li);
 
+        // if the path does not exist, then (try_|)take_exclusive_file_lock attempts to create the file
+        // (but not any path members above the file itself)
+        // in other words, if `/a/b` is a directory, and you're attempting to lock `/a/b/c`,
+        // then these lock functions create `/a/b/c` if it doesn't exist;
+        // however, if `/a/b` doesn't exist, then the functions will fail.
+
         // waits forever for the file lock
         virtual fs::SystemHandle take_exclusive_file_lock(const fs::path& path, std::error_code&) = 0;
         // waits, at most, 1.5 seconds, for the file lock
@@ -250,9 +262,6 @@ namespace vcpkg::Files
 #else
     constexpr char preferred_separator = '/';
 #endif // _WIN32
-
-    // Adds file as a new path element to the end of base, with an additional slash if necessary
-    std::string add_filename(StringView base, StringView file);
 
 #if defined(_WIN32)
     fs::path win32_fix_path_case(const fs::path& source);

@@ -1,3 +1,4 @@
+#include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 
 #include <vcpkg/archives.h>
@@ -79,14 +80,14 @@ namespace vcpkg::Archives
 #else
         if (ext == ".gz" && ext.extension() != ".tar")
         {
-            const auto code = System::cmd_execute(
-                Strings::format(R"(cd '%s' && tar xzf '%s')", fs::u8string(to_path_partial), fs::u8string(archive)));
+            const auto code = System::cmd_execute(System::CmdLineBuilder{"tar"}.string_arg("xzf").path_arg(archive),
+                                                  System::InWorkingDirectory{to_path_partial});
             Checks::check_exit(VCPKG_LINE_INFO, code == 0, "tar failed while extracting %s", fs::u8string(archive));
         }
         else if (ext == ".zip")
         {
-            const auto code = System::cmd_execute(
-                Strings::format(R"(cd '%s' && unzip -qqo '%s')", fs::u8string(to_path_partial), fs::u8string(archive)));
+            const auto code = System::cmd_execute(System::CmdLineBuilder{"unzip"}.string_arg("-qqo").path_arg(archive),
+                                                  System::InWorkingDirectory{to_path_partial});
             Checks::check_exit(VCPKG_LINE_INFO, code == 0, "unzip failed while extracting %s", fs::u8string(archive));
         }
         else
@@ -97,12 +98,16 @@ namespace vcpkg::Archives
 
         fs.rename(to_path_partial, to_path, ec);
 
-        for (int i = 0; i < 5 && ec; i++)
+        using namespace std::chrono_literals;
+
+        auto retry_delay = 8ms;
+
+        for (int i = 0; i < 10 && ec; i++)
         {
-            i++;
             using namespace std::chrono_literals;
-            std::this_thread::sleep_for(i * 100ms);
+            std::this_thread::sleep_for(retry_delay);
             fs.rename(to_path_partial, to_path, ec);
+            retry_delay *= 2;
         }
 
         Checks::check_exit(VCPKG_LINE_INFO,
