@@ -396,9 +396,12 @@ namespace vcpkg::Commands::CI
             }
         } // flush stdout_print
 
+        // This algorithm consumes the previous action plan to build and return a reduced one.
+        std::vector<InstallPlanAction>&& input_install_actions = std::move(action_plan.install_actions);
         std::vector<InstallPlanAction*> rev_install_actions;
+        rev_install_actions.reserve(input_install_actions.size());
         std::set<PackageSpec> to_keep;
-        for (auto it = action_plan.install_actions.rbegin(); it != action_plan.install_actions.rend(); ++it)
+        for (auto it = input_install_actions.rbegin(); it != input_install_actions.rend(); ++it)
         {
             if (!Util::Sets::contains(ret->known, it->spec))
             {
@@ -421,7 +424,10 @@ namespace vcpkg::Commands::CI
         return ret;
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args,
+                          const VcpkgPaths& paths,
+                          Triplet default_triplet,
+                          Triplet host_triplet)
     {
         std::unique_ptr<IBinaryProvider> binaryproviderStorage;
         if (args.binary_caching_enabled())
@@ -447,11 +453,6 @@ namespace vcpkg::Commands::CI
 
         std::vector<Triplet> triplets = Util::fmap(
             args.command_arguments, [](std::string s) { return Triplet::from_canonical_name(std::move(s)); });
-
-        if (args.command_arguments.at(0) == "x64-windows-static")
-        {
-            Debug::g_debugging = true;
-        }
 
         if (triplets.empty())
         {
@@ -503,7 +504,7 @@ namespace vcpkg::Commands::CI
                 return FullPackageSpec{spec, std::move(default_features)};
             });
 
-            Dependencies::CreateInstallPlanOptions serialize_options(paths.host_triplet());
+            Dependencies::CreateInstallPlanOptions serialize_options(host_triplet);
 
             struct RandomizerInstance : Graphs::Randomizer
             {
@@ -611,8 +612,9 @@ namespace vcpkg::Commands::CI
 
     void CICommand::perform_and_exit(const VcpkgCmdArguments& args,
                                      const VcpkgPaths& paths,
-                                     Triplet default_triplet) const
+                                     Triplet default_triplet,
+                                     Triplet host_triplet) const
     {
-        CI::perform_and_exit(args, paths, default_triplet);
+        CI::perform_and_exit(args, paths, default_triplet, host_triplet);
     }
 }

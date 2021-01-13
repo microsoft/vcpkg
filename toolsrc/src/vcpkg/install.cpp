@@ -755,7 +755,10 @@ namespace vcpkg::Install
     /// Run "install" command.
     /// </summary>
     ///
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args,
+                          const VcpkgPaths& paths,
+                          Triplet default_triplet,
+                          Triplet host_triplet)
     {
         // input sanitization
         const ParsedArguments options =
@@ -844,6 +847,7 @@ namespace vcpkg::Install
                 features.erase(core_it);
             }
 
+            ActionPlan install_plan;
             if (args.versions_enabled())
             {
                 auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
@@ -855,7 +859,7 @@ namespace vcpkg::Install
                 }
                 auto oprovider = PortFileProvider::make_overlay_provider(paths, args.overlay_ports);
 
-                auto install_plan =
+                install_plan =
                     Dependencies::create_versioned_install_plan(*verprovider,
                                                                 *baseprovider,
                                                                 *oprovider,
@@ -863,7 +867,7 @@ namespace vcpkg::Install
                                                                 manifest_scf.core_paragraph->dependencies,
                                                                 manifest_scf.core_paragraph->overrides,
                                                                 {manifest_scf.core_paragraph->name, default_triplet},
-                                                                paths.host_triplet())
+                                                                host_triplet)
                         .value_or_exit(VCPKG_LINE_INFO);
 
                 for (InstallPlanAction& action : install_plan.install_actions)
@@ -884,10 +888,10 @@ namespace vcpkg::Install
             }
             else
             {
-                auto specs = resolve_deps_as_top_level(
-                    manifest_scf, default_triplet, paths.host_triplet(), features, var_provider);
-                auto install_plan = Dependencies::create_feature_install_plan(
-                    provider, var_provider, specs, {}, {paths.host_triplet()});
+                auto specs =
+                    resolve_deps_as_top_level(manifest_scf, default_triplet, host_triplet, features, var_provider);
+                install_plan =
+                    Dependencies::create_feature_install_plan(provider, var_provider, specs, {}, {host_triplet});
 
                 for (InstallPlanAction& action : install_plan.install_actions)
                 {
@@ -923,7 +927,7 @@ namespace vcpkg::Install
 
         // Note: action_plan will hold raw pointers to SourceControlFileLocations from this map
         auto action_plan =
-            Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db, {paths.host_triplet()});
+            Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db, {host_triplet});
 
         for (auto&& action : action_plan.install_actions)
         {
@@ -1050,9 +1054,10 @@ namespace vcpkg::Install
 
     void InstallCommand::perform_and_exit(const VcpkgCmdArguments& args,
                                           const VcpkgPaths& paths,
-                                          Triplet default_triplet) const
+                                          Triplet default_triplet,
+                                          Triplet host_triplet) const
     {
-        Install::perform_and_exit(args, paths, default_triplet);
+        Install::perform_and_exit(args, paths, default_triplet, host_triplet);
     }
 
     SpecSummary::SpecSummary(const PackageSpec& spec, const Dependencies::InstallPlanAction* action)

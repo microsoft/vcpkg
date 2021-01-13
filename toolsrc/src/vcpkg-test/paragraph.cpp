@@ -491,18 +491,36 @@ TEST_CASE ("BinaryParagraph serialize max", "[paragraph]")
 
 TEST_CASE ("BinaryParagraph serialize multiple deps", "[paragraph]")
 {
-    auto pgh = test_make_binary_paragraph({
-        {"Package", "zlib"},
-        {"Version", "1.2.8"},
-        {"Architecture", "x86-windows"},
-        {"Multi-Arch", "same"},
-        {"Depends", "a, b, c"},
-    });
-    std::string ss = Strings::serialize(pgh);
-    auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss, "").value_or_exit(VCPKG_LINE_INFO);
+    SECTION ("target only")
+    {
+        auto pgh = test_make_binary_paragraph({
+            {"Package", "zlib"},
+            {"Version", "1.2.8"},
+            {"Architecture", "x86-windows"},
+            {"Multi-Arch", "same"},
+            {"Depends", "a, b, c"},
+        });
+        std::string ss = Strings::serialize(pgh);
+        auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss, "").value_or_exit(VCPKG_LINE_INFO);
 
-    REQUIRE(pghs.size() == 1);
-    REQUIRE(pghs[0]["Depends"].first == "a, b, c");
+        REQUIRE(pghs.size() == 1);
+        REQUIRE(pghs[0]["Depends"].first == "a, b, c");
+    }
+    SECTION ("host deps")
+    {
+        auto pgh = test_make_binary_paragraph({
+            {"Package", "zlib"},
+            {"Version", "1.2.8"},
+            {"Architecture", "x86-windows"},
+            {"Multi-Arch", "same"},
+            {"Depends", "a:x64-windows, b, c:arm-uwp"},
+        });
+        std::string ss = Strings::serialize(pgh);
+        auto pghs = vcpkg::Paragraphs::parse_paragraphs(ss, "").value_or_exit(VCPKG_LINE_INFO);
+
+        REQUIRE(pghs.size() == 1);
+        REQUIRE(pghs[0]["Depends"].first == "a:x64-windows, b, c:arm-uwp");
+    }
 }
 
 TEST_CASE ("BinaryParagraph serialize abi", "[paragraph]")

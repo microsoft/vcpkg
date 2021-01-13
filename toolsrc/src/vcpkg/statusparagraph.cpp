@@ -112,7 +112,8 @@ namespace vcpkg
         for (auto&& dep : core->package.dependencies)
             deps.push_back(dep);
 
-        Util::erase_remove_if(deps, [this](const PackageSpec& pspec) { return pspec == spec(); });
+        auto this_spec = this->spec();
+        Util::erase_remove_if(deps, [this_spec](const PackageSpec& pspec) { return pspec == this_spec; });
         Util::sort_unique_erase(deps);
 
         return deps;

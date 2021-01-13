@@ -16,7 +16,6 @@ endif()
 if((NOT DEFINED VCPKG_ROOT_DIR)
     OR (NOT DEFINED DOWNLOADS)
     OR (NOT DEFINED _VCPKG_INSTALLED_DIR)
-    OR (NOT DEFINED HOST_TRIPLET)
     OR (NOT DEFINED PACKAGES_DIR)
     OR (NOT DEFINED BUILDTREES_DIR))
     message(FATAL_ERROR [[
@@ -30,7 +29,6 @@ file(TO_CMAKE_PATH ${PACKAGES_DIR} PACKAGES_DIR)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 set(CURRENT_INSTALLED_DIR ${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET} CACHE PATH "Location to install final packages")
-set(CURRENT_HOST_INSTALLED_DIR ${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET} CACHE PATH "Location to install final packages for the host")
 set(SCRIPTS ${CMAKE_CURRENT_LIST_DIR} CACHE PATH "Location to stored scripts")
 
 if(PORT)
@@ -39,6 +37,12 @@ if(PORT)
 endif()
 
 if(CMD MATCHES "^BUILD$")
+    if(NOT DEFINED _HOST_TRIPLET)
+        message(FATAL_ERROR [[
+            Your vcpkg executable is outdated and is not compatible with the current CMake scripts.
+            Please re-build vcpkg by running bootstrap-vcpkg.
+        ]])
+    endif()
     set(CMAKE_TRIPLET_FILE ${TARGET_TRIPLET_FILE})
     if(NOT EXISTS ${CMAKE_TRIPLET_FILE})
         message(FATAL_ERROR "Unsupported target triplet. Triplet file does not exist: ${CMAKE_TRIPLET_FILE}")
@@ -81,6 +85,8 @@ if(CMD MATCHES "^BUILD$")
         endforeach()
     endif()
 
+    set(HOST_TRIPLET "${_HOST_TRIPLET}")
+    set(CURRENT_HOST_INSTALLED_DIR ${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET} CACHE PATH "Location to install final packages for the host")
     set(TRIPLET_SYSTEM_ARCH ${VCPKG_TARGET_ARCHITECTURE})
     include(${SCRIPTS}/cmake/vcpkg_common_definitions.cmake)
     include(execute_process)

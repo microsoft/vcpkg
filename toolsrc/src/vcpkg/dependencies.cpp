@@ -384,6 +384,7 @@ namespace vcpkg::Dependencies
     InstallPlanAction::InstallPlanAction(const PackageSpec& spec,
                                          const SourceControlFileLocation& scfl,
                                          const RequestType& request_type,
+                                         Triplet host_triplet,
                                          std::map<std::string, std::vector<FeatureSpec>>&& dependencies)
         : spec(spec)
         , source_control_file_location(scfl)
@@ -391,6 +392,7 @@ namespace vcpkg::Dependencies
         , request_type(request_type)
         , build_options{}
         , feature_dependencies(std::move(dependencies))
+        , host_triplet(host_triplet)
     {
         for (const auto& kv : feature_dependencies)
         {
@@ -1015,6 +1017,7 @@ namespace vcpkg::Dependencies
                 plan.install_actions.emplace_back(p_cluster->m_spec,
                                                   p_cluster->get_scfl_or_exit(),
                                                   p_cluster->request_type,
+                                                  m_graph->m_host_triplet,
                                                   std::move(computed_edges));
             }
             else if (p_cluster->request_type == RequestType::USER_REQUESTED && p_cluster->m_installed.has_value())
@@ -1788,7 +1791,8 @@ namespace vcpkg::Dependencies
                     // -> Add stack frame
                     auto maybe_vars = m_var_provider.get_dep_info_vars(spec);
 
-                    InstallPlanAction ipa(spec, *p_vnode->scfl, RequestType::USER_REQUESTED, std::move(p_vnode->deps));
+                    InstallPlanAction ipa(
+                        spec, *p_vnode->scfl, RequestType::USER_REQUESTED, m_host_triplet, std::move(p_vnode->deps));
                     std::vector<DepSpec> deps;
                     for (auto&& f : ipa.feature_list)
                     {

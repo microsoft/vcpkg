@@ -237,7 +237,10 @@ namespace vcpkg::Commands::DependInfo
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args,
+                          const VcpkgPaths& paths,
+                          Triplet default_triplet,
+                          Triplet host_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         const int max_depth = get_max_depth(options);
@@ -262,7 +265,7 @@ namespace vcpkg::Commands::DependInfo
         // All actions in the plan should be install actions, as there's no installed packages to remove.
         StatusParagraphs status_db;
         auto action_plan =
-            Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db, {paths.host_triplet()});
+            Dependencies::create_feature_install_plan(provider, var_provider, specs, status_db, {host_triplet});
         Checks::check_exit(
             VCPKG_LINE_INFO, action_plan.remove_actions.empty(), "Only install actions should exist in the plan");
         std::vector<const InstallPlanAction*> install_actions =
@@ -333,8 +336,9 @@ namespace vcpkg::Commands::DependInfo
 
     void DependInfoCommand::perform_and_exit(const VcpkgCmdArguments& args,
                                              const VcpkgPaths& paths,
-                                             Triplet default_triplet) const
+                                             Triplet default_triplet,
+                                             Triplet host_triplet) const
     {
-        DependInfo::perform_and_exit(args, paths, default_triplet);
+        DependInfo::perform_and_exit(args, paths, default_triplet, host_triplet);
     }
 }

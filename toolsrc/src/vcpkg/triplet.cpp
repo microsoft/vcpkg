@@ -108,14 +108,11 @@ namespace vcpkg
         {
             return Triplet::from_canonical_name(std::string(*args.triplet));
         }
-        else
-        {
 #if defined(_WIN32)
-            return Triplet::from_canonical_name("x86-windows");
+        return Triplet::from_canonical_name("x86-windows");
 #else
-            return system_triplet();
+        return system_triplet();
 #endif
-        }
     }
 
     Triplet default_host_triplet(const VcpkgCmdArguments& args)
@@ -124,9 +121,6 @@ namespace vcpkg
         {
             return Triplet::from_canonical_name(std::string(*args.host_triplet));
         }
-        else
-        {
-            return system_triplet();
-        }
+        return system_triplet();
     }
 }

@@ -56,6 +56,7 @@ namespace vcpkg::Dependencies
         InstallPlanAction(const PackageSpec& spec,
                           const SourceControlFileLocation& scfl,
                           const RequestType& request_type,
+                          Triplet host_triplet,
                           std::map<std::string, std::vector<FeatureSpec>>&& dependencies);
 
         std::string displayname() const;
@@ -76,6 +77,7 @@ namespace vcpkg::Dependencies
         std::map<std::string, std::vector<FeatureSpec>> feature_dependencies;
         std::vector<PackageSpec> package_dependencies;
         std::vector<std::string> feature_list;
+        Triplet host_triplet;
 
         Optional<Build::AbiInfo> abi_info;
     };

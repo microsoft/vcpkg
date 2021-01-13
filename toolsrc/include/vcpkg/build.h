@@ -59,6 +59,7 @@ namespace vcpkg::Build
     {
         int perform_ex(const VcpkgCmdArguments& args,
                        const FullPackageSpec& full_spec,
+                       Triplet host_triplet,
                        const SourceControlFileLocation& scfl,
                        const PortFileProvider::PathsPortFileProvider& provider,
                        IBinaryProvider& binaryprovider,
@@ -66,14 +67,21 @@ namespace vcpkg::Build
                        const VcpkgPaths& paths);
         void perform_and_exit_ex(const VcpkgCmdArguments& args,
                                  const FullPackageSpec& full_spec,
+                                 Triplet host_triplet,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
                                  IBinaryProvider& binaryprovider,
                                  const IBuildLogsRecorder& build_logs_recorder,
                                  const VcpkgPaths& paths);
 
-        int perform(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
-        void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet);
+        int perform(const VcpkgCmdArguments& args,
+                    const VcpkgPaths& paths,
+                    Triplet default_triplet,
+                    Triplet host_triplet);
+        void perform_and_exit(const VcpkgCmdArguments& args,
+                              const VcpkgPaths& paths,
+                              Triplet default_triplet,
+                              Triplet host_triplet);
     }
 
     enum class UseHeadVersion
@@ -382,6 +390,7 @@ namespace vcpkg::Build
     {
         virtual void perform_and_exit(const VcpkgCmdArguments& args,
                                       const VcpkgPaths& paths,
-                                      Triplet default_triplet) const override;
+                                      Triplet default_triplet,
+                                      Triplet host_triplet) const override;
     };
 }

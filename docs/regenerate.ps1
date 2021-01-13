@@ -69,7 +69,10 @@ Get-ChildItem "$VcpkgRoot/scripts/cmake" -Filter '*.cmake' | ForEach-Object {
 
 
     if ($contents) {
-        Set-Content -Path "$PSScriptRoot/maintainers/$($filename.BaseName).md" -Value "$($contents -join "`n")`n`n## Source`n[scripts/cmake/$($filename.Name)](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/$($filename.Name))"
+        Set-Content `
+            -Path "$PSScriptRoot/maintainers/$($filename.BaseName).md" `
+            -Value "$($contents -join "`n")`n`n## Source`n[scripts/cmake/$($filename.Name)](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/$($filename.Name))`r`n" `
+            -NoNewline
 
         $tableOfContents += $filename.BaseName
     } elseif (-not $filename.Name.StartsWith("vcpkg_internal")) {
@@ -89,4 +92,5 @@ $tableOfContents | Sort-Object -Culture '' | ForEach-Object {
 
 Set-Content `
     -Path "$PSScriptRoot/maintainers/portfile-functions.md" `
-    -Value ($portfileFunctionsContent -join "`n")
+    -NoNewline `
+    -Value (($portfileFunctionsContent -join "`n") + "`r`n")

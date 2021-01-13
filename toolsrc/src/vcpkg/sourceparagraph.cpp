@@ -1169,7 +1169,7 @@ namespace vcpkg
     }
 
     std::vector<FullPackageSpec> filter_dependencies(const std::vector<vcpkg::Dependency>& deps,
-                                                     Triplet t,
+                                                     Triplet target,
                                                      Triplet host,
                                                      const std::unordered_map<std::string, std::string>& cmake_vars)
     {
@@ -1178,17 +1178,17 @@ namespace vcpkg
         {
             if (dep.platform.evaluate(cmake_vars))
             {
-                if (dep.host)
-                {
-                    ret.emplace_back(FullPackageSpec({dep.name, host}, dep.features));
-                }
-                else
-                {
-                    ret.emplace_back(FullPackageSpec({dep.name, t}, dep.features));
-                }
+                Triplet t = dep.host ? host : target;
+                ret.emplace_back(FullPackageSpec({dep.name, t}, dep.features));
             }
         }
         return ret;
+    }
+
+    static bool is_dependency_trivial(const Dependency& dep)
+    {
+        return dep.features.empty() && dep.platform.is_empty() && dep.extra_info.is_empty() &&
+               dep.constraint.type == Versions::Constraint::Type::None && !dep.host;
     }
 
     static Json::Object serialize_manifest_impl(const SourceControlFile& scf, bool debug)
@@ -1235,8 +1235,7 @@ namespace vcpkg
             }
         };
         auto serialize_dependency = [&](Json::Array& arr, const Dependency& dep) {
-            if (dep.features.empty() && dep.platform.is_empty() && dep.extra_info.is_empty() &&
-                dep.constraint.type == Versions::Constraint::Type::None && !dep.host)
+            if (is_dependency_trivial(dep))
             {
                 arr.push_back(Json::Value::string(dep.name));
             }

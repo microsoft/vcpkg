@@ -1,7 +1,7 @@
 #[===[.md:
 # vcpkg_common_definitions
 
-File contains helpful variabls for portfiles which are commonly needed or used.
+File contains helpful variables for portfiles which are commonly needed or used.
 
 ## The following variables are available:
 ```cmake
@@ -19,6 +19,10 @@ VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX       import library suffix for target (same 
 VCPKG_FIND_LIBRARY_PREFIXES              target dependent prefixes used for find_library calls in portfiles
 VCPKG_FIND_LIBRARY_SUFFIXES              target dependent suffixes used for find_library calls in portfiles
 VCPKG_SYSTEM_LIBRARIES                   list of libraries are provide by the toolchain and are not managed by vcpkg
+TARGET_TRIPLET                           the name of the current triplet to build for
+CURRENT_INSTALLED_DIR                    the absolute path to the installed files for the current triplet
+HOST_TRIPLET                             the name of the triplet corresponding to the host
+CURRENT_HOST_INSTALLED_DIR               the absolute path to the installed files for the host triplet
 ```
 
 CMAKE_STATIC_LIBRARY_(PREFIX|SUFFIX), CMAKE_SHARED_LIBRARY_(PREFIX|SUFFIX) and CMAKE_IMPORT_LIBRARY_(PREFIX|SUFFIX) are defined for the target

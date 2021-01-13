@@ -33,7 +33,10 @@ namespace vcpkg::Commands::Env
     };
 
     // This command should probably optionally take a port
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args,
+                          const VcpkgPaths& paths,
+                          Triplet triplet,
+                          Triplet /*host_triplet*/)
     {
         const auto& fs = paths.get_filesystem();
 
@@ -111,8 +114,9 @@ namespace vcpkg::Commands::Env
 
     void EnvCommand::perform_and_exit(const VcpkgCmdArguments& args,
                                       const VcpkgPaths& paths,
-                                      Triplet default_triplet) const
+                                      Triplet default_triplet,
+                                      Triplet host_triplet) const
     {
-        Env::perform_and_exit(args, paths, default_triplet);
+        Env::perform_and_exit(args, paths, default_triplet, host_triplet);
     }
 }

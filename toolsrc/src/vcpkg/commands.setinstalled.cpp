@@ -117,7 +117,10 @@ namespace vcpkg::Commands::SetInstalled
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args,
+                          const VcpkgPaths& paths,
+                          Triplet default_triplet,
+                          Triplet host_triplet)
     {
         // input sanitization
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
@@ -150,8 +153,7 @@ namespace vcpkg::Commands::SetInstalled
         // We have a set of user-requested specs.
         // We need to know all the specs which are required to fulfill dependencies for those specs.
         // Therefore, we see what we would install into an empty installed tree, so we can use the existing code.
-        auto action_plan =
-            Dependencies::create_feature_install_plan(provider, *cmake_vars, specs, {}, {paths.host_triplet()});
+        auto action_plan = Dependencies::create_feature_install_plan(provider, *cmake_vars, specs, {}, {host_triplet});
 
         for (auto&& action : action_plan.install_actions)
         {
@@ -170,8 +172,9 @@ namespace vcpkg::Commands::SetInstalled
 
     void SetInstalledCommand::perform_and_exit(const VcpkgCmdArguments& args,
                                                const VcpkgPaths& paths,
-                                               Triplet default_triplet) const
+                                               Triplet default_triplet,
+                                               Triplet host_triplet) const
     {
-        SetInstalled::perform_and_exit(args, paths, default_triplet);
+        SetInstalled::perform_and_exit(args, paths, default_triplet, host_triplet);
     }
 }

@@ -700,7 +700,8 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 
     void ExportCommand::perform_and_exit(const VcpkgCmdArguments& args,
                                          const VcpkgPaths& paths,
-                                         Triplet default_triplet) const
+                                         Triplet default_triplet,
+                                         Triplet /*host_triplet*/) const
     {
         Export::perform_and_exit(args, paths, default_triplet);
     }

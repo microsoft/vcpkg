@@ -181,7 +181,7 @@ if (Test-Path $installedDir)
             Strings::inplace_replace_all(norm_version, '-', '.');
             Strings::inplace_replace_all(norm_version, '_', '.');
             norm_version += chocolatey_options.maybe_version_suffix.value_or("");
-            packages_version.insert(std::make_pair(binary_paragraph.spec, norm_version));
+            packages_version.emplace(binary_paragraph.spec, norm_version);
         }
 
         for (const ExportPlanAction& action : export_plan)

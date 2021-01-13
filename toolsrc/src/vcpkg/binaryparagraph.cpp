@@ -206,6 +206,20 @@ namespace vcpkg
         serialize_array(name, array, out_str, "\n    ");
     }
 
+    static std::string serialize_deps_list(View<PackageSpec> deps, Triplet target)
+    {
+        return Strings::join(", ", deps, [target](const PackageSpec& pspec) {
+            if (pspec.triplet() == target)
+            {
+                return pspec.name();
+            }
+            else
+            {
+                return pspec.to_string();
+            }
+        });
+    }
+
     void serialize(const BinaryParagraph& pgh, std::string& out_str)
     {
         const size_t initial_end = out_str.size();
@@ -225,20 +239,7 @@ namespace vcpkg
 
         if (!pgh.dependencies.empty())
         {
-            serialize_string(Fields::DEPENDS,
-                             Strings::join(", ",
-                                           pgh.dependencies,
-                                           [&pgh](const PackageSpec& pspec) {
-                                               if (pspec.triplet() == pgh.spec.triplet())
-                                               {
-                                                   return pspec.name();
-                                               }
-                                               else
-                                               {
-                                                   return pspec.to_string();
-                                               }
-                                           }),
-                             out_str);
+            serialize_string(Fields::DEPENDS, serialize_deps_list(pgh.dependencies, pgh.spec.triplet()), out_str);
         }
 
         serialize_string(Fields::ARCHITECTURE, pgh.spec.triplet().to_string(), out_str);

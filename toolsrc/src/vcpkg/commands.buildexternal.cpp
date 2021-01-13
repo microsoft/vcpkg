@@ -17,7 +17,10 @@ namespace vcpkg::Commands::BuildExternal
         nullptr,
     };
 
-    void perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths, Triplet default_triplet)
+    void perform_and_exit(const VcpkgCmdArguments& args,
+                          const VcpkgPaths& paths,
+                          Triplet default_triplet,
+                          Triplet host_triplet)
     {
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 
@@ -38,6 +41,7 @@ namespace vcpkg::Commands::BuildExternal
 
         Build::Command::perform_and_exit_ex(args,
                                             spec,
+                                            host_triplet,
                                             maybe_scfl.value_or_exit(VCPKG_LINE_INFO),
                                             provider,
                                             args.binary_caching_enabled() ? *binaryprovider : null_binary_provider(),
@@ -47,8 +51,9 @@ namespace vcpkg::Commands::BuildExternal
 
     void BuildExternalCommand::perform_and_exit(const VcpkgCmdArguments& args,
                                                 const VcpkgPaths& paths,
-                                                Triplet default_triplet) const
+                                                Triplet default_triplet,
+                                                Triplet host_triplet) const
     {
-        BuildExternal::perform_and_exit(args, paths, default_triplet);
+        BuildExternal::perform_and_exit(args, paths, default_triplet, host_triplet);
     }
 }
