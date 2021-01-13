@@ -505,7 +505,7 @@ namespace vcpkg::Metrics
                         .string_arg(Strings::concat("@", fs::u8string(vcpkg_metrics_txt_path)))
                         .string_arg(">/dev/null")
                         .string_arg("2>&1");
-        auto remove = System::CmdLineBuilder("rm").path_arg(escaped_path);
+        auto remove = System::CmdLineBuilder("rm").path_arg(vcpkg_metrics_txt_path);
         System::CmdLineBuilder cmd_line;
         cmd_line.raw_arg("(").raw_arg(curl.command_line()).raw_arg(";").raw_arg(remove.command_line()).raw_arg(") &");
         System::cmd_execute_clean(cmd_line);

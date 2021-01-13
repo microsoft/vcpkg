@@ -219,14 +219,15 @@ namespace vcpkg::Commands::Edit
         candidate_paths.push_back(fs::path{"/usr/share/code/bin/code"});
         candidate_paths.push_back(fs::path{"/usr/bin/code"});
 
-        if (System::cmd_execute("command -v xdg-mime") == 0)
+        if (System::cmd_execute(System::CmdLineBuilder("command").string_arg("-v").string_arg("xdg-mime")) == 0)
         {
-            auto mime_qry = Strings::format(R"(xdg-mime query default text/plain)");
+            auto mime_qry =
+                System::CmdLineBuilder("xdg-mime").string_arg("query").string_arg("default").string_arg("text/plain");
             auto execute_result = System::cmd_execute_and_capture_output(mime_qry);
             if (execute_result.exit_code == 0 && !execute_result.output.empty())
             {
-                mime_qry = Strings::format(R"(command -v %s)",
-                                           execute_result.output.substr(0, execute_result.output.find('.')));
+                mime_qry = System::CmdLineBuilder("command").string_arg("-v").string_arg(
+                    execute_result.output.substr(0, execute_result.output.find('.')));
                 execute_result = System::cmd_execute_and_capture_output(mime_qry);
                 if (execute_result.exit_code == 0 && !execute_result.output.empty())
                 {
