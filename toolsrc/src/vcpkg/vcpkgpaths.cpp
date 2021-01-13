@@ -862,16 +862,20 @@ If you wish to silence this error and use classic mode, you can:
         auto git_archive_output = System::cmd_execute_and_capture_output(git_archive);
         if (git_archive_output.exit_code != 0)
         {
-            return {git_archive_output.output, expected_right_tag};
+            return {Strings::format("git archive failed with message:\n%s", git_archive_output.output),
+                    expected_right_tag};
         }
 
-        auto untar = System::CmdLineBuilder{Tools::CMAKE}.string_arg("-E").string_arg("tar").string_arg("xf").path_arg(
-            git_tree_temp_tar);
+        auto untar = System::CmdLineBuilder{get_tool_exe(Tools::CMAKE)}
+                         .string_arg("-E")
+                         .string_arg("tar")
+                         .string_arg("xf")
+                         .path_arg(git_tree_temp_tar);
 
         auto untar_output = System::cmd_execute_and_capture_output(untar, System::InWorkingDirectory{git_tree_temp});
         if (untar_output.exit_code != 0)
         {
-            return {untar_output.output, expected_right_tag};
+            return {Strings::format("cmake's untar failed with message:\n%s", untar_output.output), expected_right_tag};
         }
 
         std::error_code ec;
@@ -883,7 +887,9 @@ If you wish to silence this error and use classic mode, you can:
         }
         if (ec)
         {
-            return {ec.message(), expected_right_tag};
+            return {
+                Strings::format("rename to %s failed with message:\n%s", fs::u8string(git_tree_final), ec.message()),
+                expected_right_tag};
         }
         else
         {
