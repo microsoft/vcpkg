@@ -61,12 +61,11 @@ namespace vcpkg::Help
         tbl.format("version", "A dot-separated sequence of numbers (1.2.3.4)");
         tbl.format("version-date", "A date (2021-01-01.5)");
         tbl.format("version-semver", "A Semantic Version 2.0 (2.1.0-rc2)");
-        tbl.format("version-string", "An exact, incomparable version (strawberry)");
+        tbl.format("version-string", "An exact, incomparable version (Vista)");
         tbl.blank();
-        tbl.text(
-            "Each version additionally has a \"port-version\" which is a natural number. When rendered as text, the "
-            "port version (if nonzero) is added as a suffix to the primary version text separated by a hash (#). "
-            "Port-versions are sorted lexographically after the primary field, for example:");
+        tbl.text("Each version additionally has a \"port-version\" which is a nonnegative integer. When rendered as "
+                 "text, the port version (if nonzero) is added as a suffix to the primary version text separated by a "
+                 "hash (#). Port-versions are sorted lexographically after the primary version text, for example:");
         tbl.blank();
         tbl.blank();
         tbl.text("    1.0.0 < 1.0.0#1 < 1.0.1 < 1.0.1#5 < 2.0.0");
