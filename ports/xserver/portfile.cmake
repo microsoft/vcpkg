@@ -1,12 +1,12 @@
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(PATCHES meson.build.patch)
+    #set(PATCHES meson.build.patch)
 endif()
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xorg/xserver
-    REF  4195e8035645007be313ade79032b8d561ceec6c #head
-    SHA512 108ff20aa4b3558177d054beab29cd8e4a8ae8dedf42f700b5aae90fc4cd4fa0bd44ef8cf9b171807753cb711c85da66095dd470752e89294736977f8f6ecc8f
+    REF  bc111a2e67e16d4e6d4f3196ab86c22c1e278c45 #v1.20.10
+    SHA512 928364bf9a7cc7f48d48154937c99ed5cbcc4dd96d13bb7ab947b54cdfcccd5e16104a0ac4b69e0362a956ad98b22760d7cdcbaa0d43ea6e57398bd0f8b5c7a4
     #REF  f84ad082557f9cde6b8faa373eca6a0a89ba7d56 #v1.20.8
     #SHA512 105bf5fa2875315bed4afc355607243b954beaf6a484069b58e37ef161bdd6691a815dca410acbf777683a7b2b880f636b8499fb161305b7c42753b1aecb1de3
     HEAD_REF master # branch name
@@ -57,8 +57,6 @@ endif()
 
 if(0)
     if(VCPKG_TARGET_IS_WINDOWS)
-    
-
         set(OPTIONS 
             --enable-windowsdri=no
             --enable-windowswm=no
@@ -72,15 +70,8 @@ if(0)
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
-        #SKIP_CONFIGURE
-        #NO_DEBUG
-        #AUTO_HOST
-        #AUTO_DST
-        #PRERUN_SHELL "export ACLOCAL=\"aclocal -I ${CURRENT_INSTALLED_DIR}/share/xorg-macros/aclocal/\""
         OPTIONS ${OPTIONS}
                 --enable-xnest=no
-        #OPTIONS_DEBUG
-        #OPTIONS_RELEASE
     )
 
     vcpkg_install_make()
@@ -125,11 +116,11 @@ else()
         endif()
     endif()
 
-    if(WIN32)
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
-        vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
-    endif()
-    #export LDFLAGS="-Wl,--copy-dt-needed-entries"
+    #if(WIN32)
+    #    vcpkg_acquire_msys(MSYS_ROOT PACKAGES pkg-config)
+    #    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
+    #endif()
+
     vcpkg_configure_meson(
         SOURCE_PATH "${SOURCE_PATH}"
         OPTIONS ${OPTIONS}
