@@ -1,3 +1,4 @@
+# No symbols are exported in msdfgen source
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
