@@ -34,13 +34,12 @@ namespace vcpkg::Commands::PortHistory
         {
             const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
 
-            System::CmdLineBuilder builder;
-            builder.path_arg(git_exe)
-                .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_directory)))
-                .string_arg(Strings::concat("--work-tree=", fs::u8string(working_directory)));
-            const std::string full_cmd = Strings::concat(std::move(builder).extract(), " ", cmd);
+            auto full_cmd = System::CmdLineBuilder(git_exe)
+                                .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_directory)))
+                                .string_arg(Strings::concat("--work-tree=", fs::u8string(working_directory)))
+                                .raw_arg(cmd);
 
-            const auto output = System::cmd_execute_and_capture_output(full_cmd);
+            auto output = System::cmd_execute_and_capture_output(full_cmd);
             return output;
         }
 

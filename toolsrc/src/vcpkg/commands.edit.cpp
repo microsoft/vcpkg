@@ -254,7 +254,7 @@ namespace vcpkg::Commands::Edit
         const fs::path env_editor = *it;
         const std::vector<std::string> arguments = create_editor_arguments(paths, options, ports);
         const auto args_as_string = Strings::join(" ", arguments);
-        const auto cmd_line = Strings::format(R"("%s" %s -n)", fs::u8string(env_editor), args_as_string);
+        auto cmd_line = System::CmdLineBuilder(env_editor).raw_arg(args_as_string).string_arg("-n");
 
         auto editor_exe = fs::u8string(env_editor.filename());
 
@@ -262,7 +262,8 @@ namespace vcpkg::Commands::Edit
         if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
             // note that we are invoking cmd silently but Code.exe is relaunched from there
-            System::cmd_execute_background(Strings::concat("cmd /c \"", cmd_line, " <NUL\""));
+            cmd_line = System::CmdLineBuilder("cmd").string_arg("/c").string_arg(cmd_line).raw_arg("<NUL");
+            System::cmd_execute_background(cmd_line);
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif

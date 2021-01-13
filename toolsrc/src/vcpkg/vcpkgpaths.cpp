@@ -573,8 +573,7 @@ If you wish to silence this error and use classic mode, you can:
                                  .string_arg("-d")
                                  .string_arg("HEAD")
                                  .string_arg("--")
-                                 .path_arg(path_with_separator)
-                                 .extract();
+                                 .path_arg(path_with_separator);
 
         auto output = System::cmd_execute_and_capture_output(git_cmd);
         if (output.exit_code != 0)
@@ -589,19 +588,22 @@ If you wish to silence this error and use classic mode, you can:
             // <mode> SP <type> SP <object> TAB <file>
             auto split_line = Strings::split(line, '\t');
             if (split_line.size() != 2)
-                return Strings::format(
-                    "Error: Unexpected output from command `%s`. Couldn't split by `\\t`.\n%s", git_cmd, line);
+                return Strings::format("Error: Unexpected output from command `%s`. Couldn't split by `\\t`.\n%s",
+                                       git_cmd.command_line(),
+                                       line);
 
             auto file_info_section = Strings::split(split_line[0], ' ');
             if (file_info_section.size() != 3)
-                return Strings::format(
-                    "Error: Unexepcted output from command `%s`. Couldn't split by ` `.\n%s", git_cmd, line);
+                return Strings::format("Error: Unexepcted output from command `%s`. Couldn't split by ` `.\n%s",
+                                       git_cmd.command_line(),
+                                       line);
 
             const auto index = split_line[1].find_last_of('/');
             if (index == std::string::npos)
             {
-                return Strings::format(
-                    "Error: Unexpected output from command `%s`. Couldn't split by `/`.\n%s", git_cmd, line);
+                return Strings::format("Error: Unexpected output from command `%s`. Couldn't split by `/`.\n%s",
+                                       git_cmd.command_line(),
+                                       line);
             }
 
             ret.emplace(split_line[1].substr(index + 1), file_info_section.back());

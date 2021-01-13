@@ -184,18 +184,17 @@ namespace vcpkg
     }
     System::CMakeVariable::CMakeVariable(std::string var) : s(std::move(var)) { }
 
-    std::string System::make_basic_cmake_cmd(const fs::path& cmake_tool_path,
-                                             const fs::path& cmake_script,
-                                             const std::vector<CMakeVariable>& pass_variables)
+    System::CmdLineBuilder System::make_basic_cmake_cmd(const fs::path& cmake_tool_path,
+                                                        const fs::path& cmake_script,
+                                                        const std::vector<CMakeVariable>& pass_variables)
     {
-        System::CmdLineBuilder cmd;
-        cmd.path_arg(cmake_tool_path);
+        System::CmdLineBuilder cmd{cmake_tool_path};
         for (auto&& var : pass_variables)
         {
             cmd.string_arg(var.s);
         }
         cmd.string_arg("-P").path_arg(cmake_script);
-        return std::move(cmd).extract();
+        return cmd;
     }
 
     System::CmdLineBuilder& System::CmdLineBuilder::string_arg(StringView s) &
@@ -384,7 +383,7 @@ namespace vcpkg
         return clean_env;
     }
 
-    int System::cmd_execute_clean(StringView cmd_line, InWorkingDirectory wd)
+    int System::cmd_execute_clean(const CmdLineBuilder& cmd_line, InWorkingDirectory wd)
     {
         return cmd_execute(cmd_line, wd, get_clean_environment());
     }
@@ -565,7 +564,7 @@ namespace vcpkg
 #endif
 
 #if defined(_WIN32)
-    void System::cmd_execute_background(StringView cmd_line)
+    void System::cmd_execute_background(const CmdLineBuilder& cmd_line)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 
@@ -582,11 +581,12 @@ namespace vcpkg
         Debug::print("cmd_execute_background() took ", static_cast<int>(timer.microseconds()), " us\n");
     }
 
-    Environment System::cmd_execute_modify_env(StringView cmd_line, const Environment& env)
+    Environment System::cmd_execute_modify_env(const CmdLineBuilder& cmd_line, const Environment& env)
     {
         static StringLiteral magic_string = "cdARN4xjKueKScMy9C6H";
 
-        auto actual_cmd_line = Strings::concat(cmd_line, " & echo ", magic_string, "& set");
+        auto actual_cmd_line = cmd_line;
+        actual_cmd_line.raw_arg("& echo").string_arg(magic_string).raw_arg("& set");
 
         auto rc_output = cmd_execute_and_capture_output(actual_cmd_line, env);
         Checks::check_exit(VCPKG_LINE_INFO, rc_output.exit_code == 0);
@@ -617,7 +617,7 @@ namespace vcpkg
     }
 #endif
 
-    int System::cmd_execute(StringView cmd_line, System::InWorkingDirectory wd, const Environment& env)
+    int System::cmd_execute(const CmdLineBuilder& cmd_line, System::InWorkingDirectory wd, const Environment& env)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
@@ -658,7 +658,7 @@ namespace vcpkg
         return exit_code;
     }
 
-    int System::cmd_execute_and_stream_lines(StringView cmd_line,
+    int System::cmd_execute_and_stream_lines(const CmdLineBuilder& cmd_line,
                                              System::InWorkingDirectory wd,
                                              std::function<void(StringView)> per_line_cb,
                                              const Environment& env)
@@ -687,7 +687,7 @@ namespace vcpkg
         return rc;
     }
 
-    int System::cmd_execute_and_stream_data(StringView cmd_line,
+    int System::cmd_execute_and_stream_data(const CmdLineBuilder& cmd_line,
                                             System::InWorkingDirectory wd,
                                             std::function<void(StringView)> data_cb,
                                             const Environment& env)
@@ -754,7 +754,7 @@ namespace vcpkg
         return exit_code;
     }
 
-    ExitCodeAndOutput System::cmd_execute_and_capture_output(StringView cmd_line,
+    ExitCodeAndOutput System::cmd_execute_and_capture_output(const CmdLineBuilder& cmd_line,
                                                              System::InWorkingDirectory wd,
                                                              const Environment& env)
     {

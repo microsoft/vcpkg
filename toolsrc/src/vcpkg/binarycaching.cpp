@@ -420,7 +420,7 @@ namespace
         {
         }
 
-        int run_nuget_commandline(StringView cmdline)
+        int run_nuget_commandline(const System::CmdLineBuilder& cmdline)
         {
             if (m_interactive)
             {
@@ -450,7 +450,9 @@ namespace
             }
             else if (res.output.find("for example \"-ApiKey AzureDevOps\"") != std::string::npos)
             {
-                auto res2 = System::cmd_execute_and_capture_output(Strings::concat(cmdline, " -ApiKey AzureDevOps"));
+                auto real_cmdline = cmdline;
+                real_cmdline.string_arg("-ApiKey").string_arg("AzureDevOps");
+                auto res2 = System::cmd_execute_and_capture_output(real_cmdline);
                 if (Debug::g_debugging)
                 {
                     System::print2(res2.output);
@@ -514,7 +516,7 @@ namespace
             };
 
             const auto& nuget_exe = paths.get_tool_exe("nuget");
-            std::vector<std::string> cmdlines;
+            std::vector<System::CmdLineBuilder> cmdlines;
 
             if (!m_read_sources.empty())
             {
@@ -544,7 +546,7 @@ namespace
                     cmdline.string_arg("-NonInteractive");
                 }
 
-                cmdlines.push_back(std::move(cmdline).extract());
+                cmdlines.push_back(std::move(cmdline));
             }
             for (auto&& cfg : m_read_configs)
             {
@@ -574,7 +576,7 @@ namespace
                     cmdline.string_arg("-NonInteractive");
                 }
 
-                cmdlines.push_back(std::move(cmdline).extract());
+                cmdlines.push_back(std::move(cmdline));
             }
 
             const size_t current_restored = m_restored.size();

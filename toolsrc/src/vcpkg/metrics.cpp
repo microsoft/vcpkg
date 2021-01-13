@@ -263,7 +263,7 @@ namespace vcpkg::Metrics
             return "{}";
         }
 
-        auto getmac = System::cmd_execute_and_capture_output("getmac");
+        auto getmac = System::cmd_execute_and_capture_output(System::CmdLineBuilder("getmac"));
 
         if (getmac.exit_code != 0) return "0";
 
