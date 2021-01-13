@@ -647,12 +647,15 @@ namespace vcpkg
         std::string real_command_line;
         if (wd.working_directory.empty())
         {
-            real_command_line.assign(cmd_line.begin(), cmd_line.end());
+            real_command_line = cmd_line.command_line().to_string();
         }
         else
         {
-            real_command_line =
-                System::CmdLineBuilder("cd").path_arg(wd.working_directory).raw_arg("&&").raw_arg(cmd_line).extract();
+            real_command_line = System::CmdLineBuilder("cd")
+                                    .path_arg(wd.working_directory)
+                                    .raw_arg("&&")
+                                    .raw_arg(cmd_line.command_line())
+                                    .extract();
         }
         Debug::print("system(", real_command_line, ")\n");
         fflush(nullptr);
@@ -717,14 +720,14 @@ namespace vcpkg
         std::string actual_cmd_line;
         if (wd.working_directory.empty())
         {
-            actual_cmd_line = Strings::format(R"(%s 2>&1)", cmd_line);
+            actual_cmd_line = Strings::format(R"(%s 2>&1)", cmd_line.command_line());
         }
         else
         {
             actual_cmd_line = System::CmdLineBuilder("cd")
                                   .path_arg(wd.working_directory)
                                   .raw_arg("&&")
-                                  .raw_arg(cmd_line)
+                                  .raw_arg(cmd_line.command_line())
                                   .raw_arg("2>&1")
                                   .extract();
         }
