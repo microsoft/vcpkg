@@ -288,10 +288,9 @@ cp "$buildDir/vcpkg" "$vcpkgRootDir/"
 
 if [ "$vcpkgDisableMetrics" = "ON" ]; then
     touch "$vcpkgRootDir/vcpkg.disable-metrics"
-else
+elif ! [ -f "$vcpkgRootDir/vcpkg.disable-metrics" ]; then
     # Note that we intentionally leave any existing vcpkg.disable-metrics; once a user has
     # opted out they should stay opted out.
-    if [! -f "$vcpkgRootDir/vcpkg.disable-metrics"]; then
     cat <<EOF
 Telemetry
 ---------
@@ -303,5 +302,4 @@ or by setting the VCPKG_DISABLE_METRICS environment variable.
 
 Read more about vcpkg telemetry at docs/about/privacy.md
 EOF
-    fi
 fi
