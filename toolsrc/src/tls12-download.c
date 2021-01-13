@@ -110,7 +110,7 @@ static void write_hex(const HANDLE hStdOut, DWORD number)
         number /= 16;
     }
 
-    write_message(hStdOut, firstDigit);
+    write_message(hStdOut, buffer);
 }
 
 static void __declspec(noreturn) abort_api_failure(const HANDLE hStdOut, const wchar_t* api_name)
