@@ -262,8 +262,8 @@ namespace vcpkg::Commands::Edit
         if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
             // note that we are invoking cmd silently but Code.exe is relaunched from there
-            cmd_line = System::CmdLineBuilder("cmd").string_arg("/c").string_arg(cmd_line).raw_arg("<NUL");
-            System::cmd_execute_background(cmd_line);
+            System::cmd_execute_background(
+                System::CmdLineBuilder("cmd").string_arg("/c").string_arg(cmd_line.command_line()).raw_arg("<NUL"));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif

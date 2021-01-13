@@ -42,7 +42,6 @@ namespace vcpkg::System
         CmdLineBuilder&& raw_arg(StringView s) && { return std::move(raw_arg(s)); }
 
         std::string&& extract() && { return std::move(buf); }
-        operator StringView() const noexcept { return buf; }
         StringView command_line() const { return buf; }
 
         void clear() { buf.clear(); }
