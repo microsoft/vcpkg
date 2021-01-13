@@ -14,6 +14,16 @@ else()
     set(YAML_BUILD_SHARED_LIBS OFF)
 endif()
 
+if (NOT(WIN32) AND ${YAML_BUILD_SHARED_LIBS})
+    vcpkg_download_distfile(patchForLinux
+        URLS https://github.com/jbeder/yaml-cpp/pull/958.patch
+        FILENAME jbeder_yaml-cpp_958.patch
+        SHA512 3f32a6a84f0003c5479458bc987d8385eb3efb79b67b4c012eec6bb2b8f79d4acc6c24cf4e9c4cfa449ea807c864e96d6aeb3b4994bc7dae0cfb0760e791927f)
+    vcpkg_apply_patches(
+       SOURCE_PATH ${SOURCE_PATH}
+       PATCHES ${patchForLinux})
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
