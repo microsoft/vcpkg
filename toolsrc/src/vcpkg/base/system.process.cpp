@@ -195,10 +195,10 @@ namespace vcpkg
             cmd.string_arg(var.s);
         }
         cmd.string_arg("-P").path_arg(cmake_script);
-        return cmd.extract();
+        return std::move(cmd).extract();
     }
 
-    System::CmdLineBuilder& System::CmdLineBuilder::string_arg(StringView s)
+    System::CmdLineBuilder& System::CmdLineBuilder::string_arg(StringView s) &
     {
         if (!buf.empty()) buf.push_back(' ');
         if (Strings::find_first_of(s, " \t\n\r\"\\,;&`^|'") != s.end())
@@ -384,7 +384,10 @@ namespace vcpkg
         return clean_env;
     }
 
-    int System::cmd_execute_clean(const ZStringView cmd_line) { return cmd_execute(cmd_line, get_clean_environment()); }
+    int System::cmd_execute_clean(StringView cmd_line, InWorkingDirectory wd)
+    {
+        return cmd_execute(cmd_line, wd, get_clean_environment());
+    }
 
 #if defined(_WIN32)
     struct ProcessInfo
@@ -435,7 +438,8 @@ namespace vcpkg
 
     /// <param name="maybe_environment">If non-null, an environment block to use for the new process. If null, the
     /// new process will inherit the current environment.</param>
-    static ExpectedT<ProcessInfo, unsigned long> windows_create_process(const StringView cmd_line,
+    static ExpectedT<ProcessInfo, unsigned long> windows_create_process(StringView cmd_line,
+                                                                        InWorkingDirectory wd,
                                                                         const Environment& env,
                                                                         DWORD dwCreationFlags,
                                                                         STARTUPINFOW& startup_info) noexcept
@@ -445,6 +449,14 @@ namespace vcpkg
 
         // Flush stdout before launching external process
         fflush(nullptr);
+
+        std::wstring working_directory;
+        if (!wd.working_directory.empty())
+        {
+            // this only fails if we can't get the current working directory of vcpkg, and we assume that we have that,
+            // so it's fine anyways
+            working_directory = Files::get_real_filesystem().absolute(VCPKG_LINE_INFO, wd.working_directory).native();
+        }
 
         VCPKG_MSVC_WARNING(suppress : 6335) // Leaking process information handle 'process_info.proc_info.hProcess'
                                             // /analyze can't tell that we transferred ownership here
@@ -458,7 +470,7 @@ namespace vcpkg
                                    env.m_env_data.empty()
                                        ? nullptr
                                        : const_cast<void*>(static_cast<const void*>(env.m_env_data.data())),
-                                   nullptr,
+                                   working_directory.empty() ? nullptr : working_directory.data(),
                                    &startup_info,
                                    &process_info.proc_info);
 
@@ -468,7 +480,8 @@ namespace vcpkg
             return GetLastError();
     }
 
-    static ExpectedT<ProcessInfo, unsigned long> windows_create_windowless_process(const StringView cmd_line,
+    static ExpectedT<ProcessInfo, unsigned long> windows_create_windowless_process(StringView cmd_line,
+                                                                                   InWorkingDirectory wd,
                                                                                    const Environment& env,
                                                                                    DWORD dwCreationFlags) noexcept
     {
@@ -478,7 +491,7 @@ namespace vcpkg
         startup_info.dwFlags = STARTF_USESHOWWINDOW;
         startup_info.wShowWindow = SW_HIDE;
 
-        return windows_create_process(cmd_line, env, dwCreationFlags, startup_info);
+        return windows_create_process(cmd_line, wd, env, dwCreationFlags, startup_info);
     }
 
     struct ProcessInfoAndPipes
@@ -506,7 +519,8 @@ namespace vcpkg
         }
     };
 
-    static ExpectedT<ProcessInfoAndPipes, unsigned long> windows_create_process_redirect(const StringView cmd_line,
+    static ExpectedT<ProcessInfoAndPipes, unsigned long> windows_create_process_redirect(StringView cmd_line,
+                                                                                         InWorkingDirectory wd,
                                                                                          const Environment& env,
                                                                                          DWORD dwCreationFlags) noexcept
     {
@@ -533,7 +547,7 @@ namespace vcpkg
         if (!SetHandleInformation(ret.child_stdin, HANDLE_FLAG_INHERIT, 0)) Checks::exit_fail(VCPKG_LINE_INFO);
         startup_info.hStdError = startup_info.hStdOutput;
 
-        auto maybe_proc_info = windows_create_process(cmd_line, env, dwCreationFlags, startup_info);
+        auto maybe_proc_info = windows_create_process(cmd_line, wd, env, dwCreationFlags, startup_info);
 
         CloseHandle(startup_info.hStdInput);
         CloseHandle(startup_info.hStdOutput);
@@ -555,8 +569,11 @@ namespace vcpkg
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 
-        auto process_info = windows_create_windowless_process(
-            cmd_line, {}, CREATE_NEW_CONSOLE | CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB);
+        auto process_info =
+            windows_create_windowless_process(cmd_line,
+                                              InWorkingDirectory{fs::path()},
+                                              {},
+                                              CREATE_NEW_CONSOLE | CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB);
         if (!process_info.get())
         {
             Debug::print("cmd_execute_background() failed with error code ", process_info.error(), "\n");
@@ -565,7 +582,7 @@ namespace vcpkg
         Debug::print("cmd_execute_background() took ", static_cast<int>(timer.microseconds()), " us\n");
     }
 
-    Environment System::cmd_execute_modify_env(const ZStringView cmd_line, const Environment& env)
+    Environment System::cmd_execute_modify_env(StringView cmd_line, const Environment& env)
     {
         static StringLiteral magic_string = "cdARN4xjKueKScMy9C6H";
 
@@ -600,13 +617,13 @@ namespace vcpkg
     }
 #endif
 
-    int System::cmd_execute(const ZStringView cmd_line, const Environment& env)
+    int System::cmd_execute(StringView cmd_line, System::InWorkingDirectory wd, const Environment& env)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
         using vcpkg::g_ctrl_c_state;
         g_ctrl_c_state.transition_to_spawn_process();
-        auto proc_info = windows_create_windowless_process(cmd_line, env, 0);
+        auto proc_info = windows_create_windowless_process(cmd_line, wd, env, 0);
         auto long_exit_code = [&]() -> unsigned long {
             if (auto p = proc_info.get())
                 return p->wait();
@@ -621,24 +638,36 @@ namespace vcpkg
             "cmd_execute() returned ", exit_code, " after ", static_cast<unsigned int>(timer.microseconds()), " us\n");
 #else
         (void)env;
-        Debug::print("system(", cmd_line, ")\n");
+        std::string real_command_line;
+        if (wd.working_directory.empty())
+        {
+            real_command_line.assign(cmd_line.begin(), cmd_line.end());
+        }
+        else
+        {
+            real_command_line =
+                System::CmdLineBuilder("cd").path_arg(wd.working_directory).raw_arg("&&").raw_arg(cmd_line).extract();
+        }
+        Debug::print("system(", real_command_line, ")\n");
         fflush(nullptr);
 
-        int exit_code = system(cmd_line.c_str());
+        int exit_code = system(real_command_line.c_str());
         Debug::print(
             "system() returned ", exit_code, " after ", static_cast<unsigned int>(timer.microseconds()), " us\n");
 #endif
         return exit_code;
     }
 
-    int System::cmd_execute_and_stream_lines(const ZStringView cmd_line,
-                                             std::function<void(const std::string&)> per_line_cb,
+    int System::cmd_execute_and_stream_lines(StringView cmd_line,
+                                             System::InWorkingDirectory wd,
+                                             std::function<void(StringView)> per_line_cb,
                                              const Environment& env)
     {
         std::string buf;
 
         auto rc = cmd_execute_and_stream_data(
             cmd_line,
+            wd,
             [&](StringView sv) {
                 auto prev_size = buf.size();
                 Strings::append(buf, sv);
@@ -658,7 +687,8 @@ namespace vcpkg
         return rc;
     }
 
-    int System::cmd_execute_and_stream_data(const ZStringView cmd_line,
+    int System::cmd_execute_and_stream_data(StringView cmd_line,
+                                            System::InWorkingDirectory wd,
                                             std::function<void(StringView)> data_cb,
                                             const Environment& env)
     {
@@ -668,7 +698,7 @@ namespace vcpkg
         using vcpkg::g_ctrl_c_state;
 
         g_ctrl_c_state.transition_to_spawn_process();
-        auto maybe_proc_info = windows_create_process_redirect(cmd_line, env, 0);
+        auto maybe_proc_info = windows_create_process_redirect(cmd_line, wd, env, 0);
         auto exit_code = [&]() -> unsigned long {
             if (auto p = maybe_proc_info.get())
                 return p->wait_and_stream_output(data_cb);
@@ -678,7 +708,20 @@ namespace vcpkg
         g_ctrl_c_state.transition_from_spawn_process();
 #else
         (void)env;
-        const auto actual_cmd_line = Strings::format(R"###(%s 2>&1)###", cmd_line);
+        std::string actual_cmd_line;
+        if (wd.working_directory.empty())
+        {
+            actual_cmd_line = Strings::format(R"(%s 2>&1)", cmd_line);
+        }
+        else
+        {
+            actual_cmd_line = System::CmdLineBuilder("cd")
+                                  .path_arg(wd.working_directory)
+                                  .raw_arg("&&")
+                                  .raw_arg(cmd_line)
+                                  .raw_arg("2>&1")
+                                  .extract();
+        }
 
         Debug::print("popen(", actual_cmd_line, ")\n");
         // Flush stdout before launching external process
@@ -711,11 +754,13 @@ namespace vcpkg
         return exit_code;
     }
 
-    ExitCodeAndOutput System::cmd_execute_and_capture_output(const ZStringView cmd_line, const Environment& env)
+    ExitCodeAndOutput System::cmd_execute_and_capture_output(StringView cmd_line,
+                                                             System::InWorkingDirectory wd,
+                                                             const Environment& env)
     {
         std::string output;
         auto rc = cmd_execute_and_stream_data(
-            cmd_line, [&](StringView sv) { Strings::append(output, sv); }, env);
+            cmd_line, wd, [&](StringView sv) { Strings::append(output, sv); }, env);
         return {rc, std::move(output)};
     }
 

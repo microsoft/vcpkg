@@ -26,17 +26,30 @@ namespace vcpkg::System
 
     struct CmdLineBuilder
     {
-        CmdLineBuilder& path_arg(const fs::path& p) { return string_arg(fs::u8string(p)); }
-        CmdLineBuilder& string_arg(StringView s);
-        CmdLineBuilder& ampersand()
+        CmdLineBuilder() = default;
+        explicit CmdLineBuilder(const fs::path& p) { path_arg(p); }
+        explicit CmdLineBuilder(StringView s) { string_arg(s); }
+        explicit CmdLineBuilder(const std::string& s) { string_arg(s); }
+        explicit CmdLineBuilder(const char* s) { string_arg({s, ::strlen(s)}); }
+
+        CmdLineBuilder& path_arg(const fs::path& p) & { return string_arg(fs::u8string(p)); }
+        CmdLineBuilder& string_arg(StringView s) &;
+        CmdLineBuilder& raw_arg(StringView s) &
         {
-            buf.push_back('&');
-            buf.push_back('&');
+            buf.push_back(' ');
+            buf.append(s.data(), s.size());
             return *this;
         }
-        std::string extract() noexcept { return std::move(buf); }
 
-        operator ZStringView() const { return buf; }
+        CmdLineBuilder&& path_arg(const fs::path& p) && { return std::move(path_arg(p)); }
+        CmdLineBuilder&& string_arg(StringView s) && { return std::move(string_arg(s)); };
+        CmdLineBuilder&& raw_arg(StringView s) && { return std::move(raw_arg(s)); }
+
+        std::string&& extract() && { return std::move(buf); }
+        operator StringView() noexcept { return buf; }
+        StringView command_line() const { return buf; }
+
+        void clear() { buf.clear(); }
 
     private:
         std::string buf;
@@ -61,24 +74,59 @@ namespace vcpkg::System
     Environment get_modified_clean_environment(const std::unordered_map<std::string, std::string>& extra_env,
                                                const std::string& prepend_to_path = {});
 
-    int cmd_execute(const ZStringView cmd_line, const Environment& env = {});
-    int cmd_execute_clean(const ZStringView cmd_line);
+    struct InWorkingDirectory
+    {
+        const fs::path& working_directory;
+    };
+
+    int cmd_execute(StringView cmd_line, InWorkingDirectory wd, const Environment& env = {});
+    inline int cmd_execute(StringView cmd_line, const Environment& env = {})
+    {
+        return cmd_execute(cmd_line, InWorkingDirectory{fs::path()}, env);
+    }
+
+    int cmd_execute_clean(StringView cmd_line, InWorkingDirectory wd);
+    inline int cmd_execute_clean(StringView cmd_line)
+    {
+        return cmd_execute_clean(cmd_line, InWorkingDirectory{fs::path()});
+    }
 
 #if defined(_WIN32)
-    Environment cmd_execute_modify_env(const ZStringView cmd_line, const Environment& env = {});
+    Environment cmd_execute_modify_env(StringView cmd_line, const Environment& env = {});
 
     void cmd_execute_background(const StringView cmd_line);
 #endif
 
-    ExitCodeAndOutput cmd_execute_and_capture_output(const ZStringView cmd_line, const Environment& env = {});
+    ExitCodeAndOutput cmd_execute_and_capture_output(StringView cmd_line,
+                                                     InWorkingDirectory wd,
+                                                     const Environment& env = {});
+    inline ExitCodeAndOutput cmd_execute_and_capture_output(StringView cmd_line, const Environment& env = {})
+    {
+        return cmd_execute_and_capture_output(cmd_line, InWorkingDirectory{fs::path()}, env);
+    }
 
-    int cmd_execute_and_stream_lines(const ZStringView cmd_line,
-                                     std::function<void(const std::string&)> per_line_cb,
+    int cmd_execute_and_stream_lines(StringView cmd_line,
+                                     InWorkingDirectory wd,
+                                     std::function<void(StringView)> per_line_cb,
                                      const Environment& env = {});
+    inline int cmd_execute_and_stream_lines(StringView cmd_line,
+                                            std::function<void(StringView)> per_line_cb,
+                                            const Environment& env = {})
+    {
+        return cmd_execute_and_stream_lines(cmd_line, InWorkingDirectory{fs::path()}, std::move(per_line_cb), env);
+    }
 
-    int cmd_execute_and_stream_data(const ZStringView cmd_line,
+    int cmd_execute_and_stream_data(StringView cmd_line,
+                                    InWorkingDirectory wd,
                                     std::function<void(StringView)> data_cb,
                                     const Environment& env = {});
+    inline int cmd_execute_and_stream_data(StringView cmd_line,
+                                           std::function<void(StringView)> data_cb,
+                                           const Environment& env = {})
+    {
+        return cmd_execute_and_stream_data(cmd_line, InWorkingDirectory{fs::path()}, std::move(data_cb), env);
+    }
+
     void register_console_ctrl_handler();
 #if defined(_WIN32)
     void initialize_global_job_object();

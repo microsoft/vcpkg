@@ -7,7 +7,12 @@ vcpkg_from_github(
     PATCHES
         0001-remove-CMAKE_CXX_STANDARD.patch
         0002-remove-test-subdirectory.patch
+        0003-fix-gperf-not-recognized.patch
 )
+
+vcpkg_find_acquire_program(GPERF)
+get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
+vcpkg_add_to_path(${GPERF_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     curl ENABLE_CURL
