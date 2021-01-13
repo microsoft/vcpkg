@@ -504,7 +504,7 @@ If you wish to silence this error and use classic mode, you can:
                                                        .string_arg("--no-hardlinks")
                                                        .path_arg(local_repo)
                                                        .path_arg(dot_git_dir);
-        const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
+        const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder);
         Checks::check_exit(VCPKG_LINE_INFO,
                            clone_output.exit_code == 0,
                            "Failed to clone temporary vcpkg instance.\n%s\n",
@@ -516,7 +516,7 @@ If you wish to silence this error and use classic mode, you can:
                                                           .string_arg(commit_sha)
                                                           .string_arg("--")
                                                           .path_arg(subpath);
-        const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder.extract());
+        const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder);
         Checks::check_exit(VCPKG_LINE_INFO,
                            checkout_output.exit_code == 0,
                            "Error: Failed to checkout %s:%s\n%s\n",
@@ -552,7 +552,7 @@ If you wish to silence this error and use classic mode, you can:
         System::CmdLineBuilder showcmd =
             git_cmd_builder(*this, dot_git_dir, dot_git_dir).string_arg("show").string_arg(treeish);
 
-        auto output = System::cmd_execute_and_capture_output(showcmd.extract());
+        auto output = System::cmd_execute_and_capture_output(showcmd);
         if (output.exit_code == 0)
         {
             return {std::move(output.output), expected_left_tag};
@@ -631,7 +631,7 @@ If you wish to silence this error and use classic mode, you can:
                                                            .string_arg("--no-hardlinks")
                                                            .path_arg(local_repo)
                                                            .path_arg(dot_git_dir);
-            const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder.extract());
+            const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder);
             Checks::check_exit(VCPKG_LINE_INFO,
                                clone_output.exit_code == 0,
                                "Failed to clone temporary vcpkg instance.\n%s\n",
@@ -641,7 +641,7 @@ If you wish to silence this error and use classic mode, you can:
         {
             System::CmdLineBuilder fetch_cmd_builder =
                 git_cmd_builder(paths, dot_git_dir, work_tree).string_arg("fetch");
-            const auto fetch_output = System::cmd_execute_and_capture_output(fetch_cmd_builder.extract());
+            const auto fetch_output = System::cmd_execute_and_capture_output(fetch_cmd_builder);
             Checks::check_exit(VCPKG_LINE_INFO,
                                fetch_output.exit_code == 0,
                                "Failed to update refs on temporary vcpkg repository.\n%s\n",
@@ -658,7 +658,7 @@ If you wish to silence this error and use classic mode, you can:
                                                           .string_arg("checkout")
                                                           .string_arg(git_object)
                                                           .string_arg(".");
-        const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder.extract());
+        const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder);
         Checks::check_exit(VCPKG_LINE_INFO, checkout_output.exit_code == 0, "Failed to checkout %s", git_object);
 
         const auto& containing_folder = destination.parent_path();
