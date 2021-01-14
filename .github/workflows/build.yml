@@ -54,6 +54,7 @@ jobs:
         soundtouch
         taglib
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.vcpkg_triplet }}
+      MIXXX_VERSION: 2.3
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
@@ -97,11 +98,11 @@ jobs:
         path: ${{ matrix.vcpkg_path  }}/buildtrees/**/*.log
 
     - name: Create buildenv archive
-      run: ./vcpkg export ${{ env.VCPKG_PACKAGES }} --zip --output=buildenv-2.3-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
+      run: ./vcpkg export ${{ env.VCPKG_PACKAGES }} --zip --output=buildenv-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
       working-directory: ${{ matrix.vcpkg_path }}
 
     - name: Upload GitHub Actions artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: buildenv-2.3-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
-        path: ${{ matrix.vcpkg_path }}/buildenv-2.3-${{ matrix.vcpkg_triplet }}-${{ github.sha }}.zip
+        name: buildenv-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
+        path: ${{ matrix.vcpkg_path }}/buildenv-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}.zip
