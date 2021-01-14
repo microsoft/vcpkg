@@ -44,13 +44,21 @@ namespace vcpkg::Archives
             const std::string nugetid = match[1];
             const std::string version = match[2];
 
-            const auto code_and_output = System::cmd_execute_and_capture_output(Strings::format(
-                R"("%s" install %s -Version %s -OutputDirectory "%s" -Source "%s" -nocache -DirectDownload -NonInteractive -ForceEnglishOutput -PackageSaveMode nuspec)",
-                fs::u8string(nuget_exe),
-                nugetid,
-                version,
-                fs::u8string(to_path_partial),
-                fs::u8string(paths.downloads)));
+            const auto code_and_output = System::cmd_execute_and_capture_output(System::CmdLineBuilder{nuget_exe}
+                                                                                    .string_arg("install")
+                                                                                    .string_arg(nugetid)
+                                                                                    .string_arg("-Version")
+                                                                                    .string_arg(version)
+                                                                                    .string_arg("-OutputDirectory")
+                                                                                    .path_arg(to_path_partial)
+                                                                                    .string_arg("-Source")
+                                                                                    .path_arg(paths.downloads)
+                                                                                    .string_arg("-nocache")
+                                                                                    .string_arg("-DirectDownload")
+                                                                                    .string_arg("-NonInteractive")
+                                                                                    .string_arg("-ForceEnglishOutput")
+                                                                                    .string_arg("-PackageSaveMode")
+                                                                                    .string_arg("nuspec"));
 
             Checks::check_exit(VCPKG_LINE_INFO,
                                code_and_output.exit_code == 0,
@@ -65,11 +73,12 @@ namespace vcpkg::Archives
             Checks::check_exit(VCPKG_LINE_INFO, !recursion_limiter_sevenzip);
             recursion_limiter_sevenzip = true;
             const auto seven_zip = paths.get_tool_exe(Tools::SEVEN_ZIP);
-            const auto code_and_output =
-                System::cmd_execute_and_capture_output(Strings::format(R"("%s" x "%s" -o"%s" -y)",
-                                                                       fs::u8string(seven_zip),
-                                                                       fs::u8string(archive),
-                                                                       fs::u8string(to_path_partial)));
+            const auto code_and_output = System::cmd_execute_and_capture_output(
+                System::CmdLineBuilder{seven_zip}
+                    .string_arg("x")
+                    .path_arg(archive)
+                    .string_arg(Strings::format("-o%s", fs::u8string(to_path_partial)))
+                    .string_arg("-y"));
             Checks::check_exit(VCPKG_LINE_INFO,
                                code_and_output.exit_code == 0,
                                "7zip failed while extracting '%s' with message:\n%s",

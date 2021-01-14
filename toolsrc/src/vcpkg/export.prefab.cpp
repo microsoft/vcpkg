@@ -206,10 +206,11 @@ namespace vcpkg::Export::Prefab
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
-        System::cmd_execute_and_capture_output(
-            Strings::format(
-                R"("%s" a "%s" "%s\*")", fs::u8string(seven_zip_exe), fs::u8string(destination), fs::u8string(source)),
-            System::get_clean_environment());
+        System::cmd_execute_and_capture_output(System::CmdLineBuilder(seven_zip_exe)
+                                                   .string_arg("a")
+                                                   .path_arg(destination)
+                                                   .path_arg(source / fs::u8path("*")),
+                                               System::get_clean_environment());
 #else
         System::cmd_execute_clean(
             System::CmdLineBuilder{"zip"}.string_arg("--quiet").string_arg("-r").path_arg(destination).string_arg("*"),
@@ -223,11 +224,14 @@ namespace vcpkg::Export::Prefab
         {
             System::print2("\n[DEBUG] Installing POM and AAR file to ~/.m2\n\n");
         }
-        const char* cmd_line_format = prefab_options.enable_debug
-                                          ? R"("%s" "install:install-file" "-Dfile=%s" "-DpomFile=%s")"
-                                          : R"("%s" "-q" "install:install-file" "-Dfile=%s" "-DpomFile=%s")";
-
-        const auto cmd_line = Strings::format(cmd_line_format, Tools::MAVEN, fs::u8string(aar), fs::u8string(pom));
+        auto cmd_line = System::CmdLineBuilder(Tools::MAVEN);
+        if (!prefab_options.enable_debug)
+        {
+            cmd_line.string_arg("-q");
+        }
+        cmd_line.string_arg("install:install-file")
+            .string_arg(Strings::concat("-Dfile=", fs::u8string(aar)))
+            .string_arg(Strings::concat("-DpomFile=", fs::u8string(pom)));
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(
             VCPKG_LINE_INFO, exit_code == 0, "Error: %s installing maven file", fs::generic_u8string(aar));
