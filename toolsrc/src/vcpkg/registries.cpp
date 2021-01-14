@@ -1063,7 +1063,8 @@ namespace
         }
         else if (maybe_contents.error() == std::errc::no_such_file_or_directory)
         {
-            return {Strings::format("Error: could not find baseline file `%s`", fs::u8string(path_to_baseline)), expected_right_tag};
+            return {Strings::format("Error: could not find baseline file `%s`", fs::u8string(path_to_baseline)),
+                    expected_right_tag};
         }
         else
         {
