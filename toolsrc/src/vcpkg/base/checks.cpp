@@ -21,8 +21,13 @@ namespace vcpkg
 #if defined(_WIN32)
             ::TerminateProcess(::GetCurrentProcess(), exit_code);
 #else
-            std::terminate();
+            std::abort();
 #endif
+        }
+
+        if (exit_code != 0) {
+            System::print2(System::Color::error,
+                "Note: Updating vcpkg by rerunning bootstrap-vcpkg may resolve this failure.\n");
         }
 
         if (g_shutdown_handler) g_shutdown_handler();
