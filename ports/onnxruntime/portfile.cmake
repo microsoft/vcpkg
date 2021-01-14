@@ -25,36 +25,54 @@ vcpkg_add_to_path(${PYTHON3_PATH})
 set(ONNXRUNTIME "onnxruntime.git")
 set(ONNX_GITHUB_URL "https://github.com/microsoft/${ONNXRUNTIME}")
 
+# Clone ORT repo
 if(EXISTS "${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}")
   # Purge any local changes
   vcpkg_execute_required_process(
-    COMMAND ${GIT} reset --hard ${ORT_COMMIT_HASH}
+    COMMAND ${GIT} clean -xfd
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
-    LOGNAME build-${TARGET_TRIPLET})
+    LOGNAME build-${TARGET_TRIPLET}
+    )
 
-  #
   vcpkg_execute_required_process(
-    COMMAND ${GIT} submodule sync --recursive
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
-    LOGNAME build-${TARGET_TRIPLET})
-
-  #
-  vcpkg_execute_required_process(
-    COMMAND ${GIT} submodule update --init --recursive
+    COMMAND ${GIT} submodule foreach --recursive git clean -xfdf
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
     LOGNAME build-${TARGET_TRIPLET})
 
 else()
+  # Clone ORT Repo
   vcpkg_execute_required_process(
     COMMAND ${GIT} clone --recursive ${ONNX_GITHUB_URL} ${ONNXRUNTIME}
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
-    LOGNAME build-${TARGET_TRIPLET})
-
-  vcpkg_execute_required_process(
-    COMMAND ${GIT} reset --hard ${ORT_COMMIT_HASH}
-    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
-    LOGNAME build-${TARGET_TRIPLET})
+    LOGNAME build-${TARGET_TRIPLET}
+    )
 endif()
+
+# Checkout the commit sha1
+vcpkg_execute_required_process(
+  COMMAND ${GIT} reset --hard ${ORT_COMMIT_HASH}
+  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
+  LOGNAME build-${TARGET_TRIPLET}
+  )
+
+vcpkg_execute_required_process(
+  COMMAND ${GIT} submodule foreach --recursive git reset --hard
+  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
+  LOGNAME build-${TARGET_TRIPLET}
+  )
+
+  #
+#vcpkg_execute_required_process(
+#COMMAND ${GIT} submodule sync --recursive
+#WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
+#LOGNAME build-${TARGET_TRIPLET})
+
+#
+vcpkg_execute_required_process(
+  COMMAND ${GIT} submodule update --init --recursive
+  WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
+  LOGNAME build-${TARGET_TRIPLET}
+  )
 
 set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}")
 
