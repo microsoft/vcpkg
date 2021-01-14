@@ -273,6 +273,7 @@ namespace vcpkg
         if (lhs.features != rhs.features) return false;
         if (!structurally_equal(lhs.platform, rhs.platform)) return false;
         if (lhs.extra_info != rhs.extra_info) return false;
+        if (lhs.constraint != rhs.constraint) return false;
 
         return true;
     }

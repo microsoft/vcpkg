@@ -74,7 +74,7 @@ vcpkgCheckRepoTool()
     __tool=$1
     if ! command -v "$__tool" >/dev/null 2>&1 ; then
         echo "Could not find $__tool. Please install it (and other dependencies) with:"
-        echo "sudo apt-get install curl unzip tar"
+        echo "sudo apt-get install curl zip unzip tar"
         exit 1
     fi
 }
@@ -245,6 +245,17 @@ if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" ]; then
     vcpkgUseSystem=true
 fi
 
+if [ "$UNAME" = "OpenBSD" ]; then
+    vcpkgUseSystem=true
+
+    if [ -z "$CXX" ]; then
+        CXX=/usr/bin/clang++
+    fi
+    if [ -z "$CC" ]; then
+        CC=/usr/bin/clang
+    fi
+fi
+
 if $vcpkgUseSystem; then
     cmakeExe="cmake"
     ninjaExe="ninja"
@@ -269,13 +280,17 @@ buildDir="$vcpkgRootDir/toolsrc/build.rel"
 rm -rf "$buildDir"
 mkdir -p "$buildDir"
 
-(cd "$buildDir" && CXX="$CXX" "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+(cd "$buildDir" && CXX="$CXX" "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 (cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"
 
-if ! [ "$vcpkgDisableMetrics" = "ON" ]; then
+if [ "$vcpkgDisableMetrics" = "ON" ]; then
+    touch "$vcpkgRootDir/vcpkg.disable-metrics"
+elif ! [ -f "$vcpkgRootDir/vcpkg.disable-metrics" ]; then
+    # Note that we intentionally leave any existing vcpkg.disable-metrics; once a user has
+    # opted out they should stay opted out.
     cat <<EOF
 Telemetry
 ---------
