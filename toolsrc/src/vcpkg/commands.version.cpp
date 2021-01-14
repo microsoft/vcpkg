@@ -23,18 +23,13 @@
 
 namespace vcpkg::Commands::Version
 {
-    const char* base_version() noexcept
-    {
-        return VCPKG_BASE_VERSION_AS_STRING;
-    }
+    const char* base_version() noexcept { return VCPKG_BASE_VERSION_AS_STRING; }
 
     const char* version() noexcept
     {
-        return VCPKG_BASE_VERSION_AS_STRING
-            "-"
-            VCPKG_VERSION_AS_STRING
+        return VCPKG_BASE_VERSION_AS_STRING "-" VCPKG_VERSION_AS_STRING
 #ifndef NDEBUG
-            "-debug"
+                                            "-debug"
 #endif
             ;
     }

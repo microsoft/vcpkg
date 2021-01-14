@@ -25,9 +25,10 @@ namespace vcpkg
 #endif
         }
 
-        if (exit_code != 0) {
+        if (exit_code != 0)
+        {
             System::print2(System::Color::error,
-                "Note: Updating vcpkg by rerunning bootstrap-vcpkg may resolve this failure.\n");
+                           "Note: Updating vcpkg by rerunning bootstrap-vcpkg may resolve this failure.\n");
         }
 
         if (g_shutdown_handler) g_shutdown_handler();
