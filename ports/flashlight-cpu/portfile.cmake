@@ -23,8 +23,8 @@ set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
 
 # Determine which components to build via specified feature
 vcpkg_check_features(
-  OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     lib FL_BUILD_LIBRARIES
     fl FL_BUILD_CORE
     asr FL_BUILD_APP_ASR
