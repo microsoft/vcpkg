@@ -240,20 +240,14 @@ namespace vcpkg::Metrics
 
     static MetricMessage g_metricmessage;
     static bool g_should_send_metrics =
-#if defined(NDEBUG) && (VCPKG_DISABLE_METRICS == 0)
+#if defined(NDEBUG)
         true
 #else
         false
 #endif
         ;
     static bool g_should_print_metrics = false;
-    static bool g_metrics_disabled =
-#if VCPKG_DISABLE_METRICS
-        true
-#else
-        false
-#endif
-        ;
+    static bool g_metrics_disabled = false;
 
     std::string get_MAC_user()
     {
@@ -305,14 +299,7 @@ namespace vcpkg::Metrics
 
     void Metrics::set_disabled(bool disabled) { g_metrics_disabled = disabled; }
 
-    bool Metrics::metrics_enabled()
-    {
-#if VCPKG_DISABLE_METRICS
-        return false;
-#else
-        return !g_metrics_disabled;
-#endif
-    }
+    bool Metrics::metrics_enabled() { return !g_metrics_disabled; }
 
     void Metrics::track_metric(const std::string& name, double value)
     {
