@@ -97,15 +97,40 @@ namespace vcpkg
         else
         {
             if (has_exact)
+            {
                 version_scheme = Versions::Scheme::String;
+            }
             else if (has_relax)
+            {
                 version_scheme = Versions::Scheme::Relaxed;
+                auto v = Versions::RelaxedVersion::from_string(version);
+                if (!v.has_value())
+                {
+                    r.add_generic_error(parent_type, "'version' text was not a relaxed version:\n", v.error());
+                }
+            }
             else if (has_semver)
+            {
                 version_scheme = Versions::Scheme::Semver;
+                auto v = Versions::SemanticVersion::from_string(version);
+                if (!v.has_value())
+                {
+                    r.add_generic_error(parent_type, "'version-semver' text was not a semantic version:\n", v.error());
+                }
+            }
             else if (has_date)
+            {
                 version_scheme = Versions::Scheme::Date;
+                auto v = Versions::DateVersion::from_string(version);
+                if (!v.has_value())
+                {
+                    r.add_generic_error(parent_type, "'version-date' text was not a date version:\n", v.error());
+                }
+            }
             else
+            {
                 Checks::unreachable(VCPKG_LINE_INFO);
+            }
         }
 
         return SchemedVersion(version_scheme, VersionT{version, port_version});
