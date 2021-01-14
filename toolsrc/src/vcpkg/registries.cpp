@@ -259,8 +259,7 @@ namespace
     std::unique_ptr<RegistryEntry> BuiltinRegistry::get_port_entry(const VcpkgPaths& paths, StringView port_name) const
     {
         auto versions_path = paths.builtin_port_versions / relative_path_to_versions(port_name);
-        if ((paths.get_feature_flags().registries || paths.get_feature_flags().versions) &&
-            paths.get_filesystem().exists(versions_path))
+        if (!m_baseline_identifier.empty() && paths.get_filesystem().exists(versions_path))
         {
             auto maybe_version_entries =
                 load_versions_file(paths.get_filesystem(), VersionDbType::Git, paths.builtin_port_versions, port_name);
@@ -311,6 +310,7 @@ namespace
 
     ExpectedS<Baseline> try_parse_builtin_baseline(const VcpkgPaths& paths, StringView baseline_identifier)
     {
+        if (baseline_identifier.size() == 0) return Baseline{};
         auto path_to_baseline = paths.builtin_port_versions / fs::u8path("baseline.json");
         auto res_baseline = load_baseline_versions(paths, path_to_baseline, baseline_identifier);
 
@@ -323,11 +323,6 @@ namespace
         if (auto p = opt_baseline->get())
         {
             return std::move(*p);
-        }
-
-        if (baseline_identifier.size() == 0)
-        {
-            return {{}, expected_left_tag};
         }
 
         if (baseline_identifier == "default")
@@ -369,6 +364,7 @@ namespace
     }
     Optional<VersionT> BuiltinRegistry::get_baseline_version(const VcpkgPaths& paths, StringView port_name) const
     {
+        Debug::print("Baseline version: \"", m_baseline_identifier, "\"\n");
         if (!m_baseline_identifier.empty())
         {
             const auto& baseline = m_baseline.get(
@@ -382,7 +378,7 @@ namespace
         }
         else
         {
-            // fall back to using the ports directory version
+            // if a baseline is not specified, use the ports directory version
             auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(),
                                                        paths.builtin_ports_directory() / fs::u8path(port_name));
             if (auto pscf = maybe_scf.get())
@@ -397,8 +393,7 @@ namespace
 
     void BuiltinRegistry::get_all_port_names(std::vector<std::string>& out, const VcpkgPaths& paths) const
     {
-        if ((paths.get_feature_flags().registries || paths.get_feature_flags().versions) &&
-            paths.get_filesystem().exists(paths.builtin_port_versions))
+        if (!m_baseline_identifier.empty() && paths.get_filesystem().exists(paths.builtin_port_versions))
         {
             load_all_port_names_from_port_versions(out, paths, paths.builtin_port_versions);
         }
@@ -1068,7 +1063,7 @@ namespace
         }
         else if (maybe_contents.error() == std::errc::no_such_file_or_directory)
         {
-            return {nullopt, expected_left_tag};
+            return {Strings::format("Error: could not find baseline file `%s`", fs::u8string(path_to_baseline)), expected_right_tag};
         }
         else
         {
