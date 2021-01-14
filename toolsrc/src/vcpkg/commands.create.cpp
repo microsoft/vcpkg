@@ -51,7 +51,7 @@ namespace vcpkg::Commands::Create
             cmake_args.emplace_back("FILENAME", zip_file_name);
         }
 
-        const std::string cmd_launch_cmake = make_cmake_cmd(paths, paths.ports_cmake, std::move(cmake_args));
+        auto cmd_launch_cmake = make_cmake_cmd(paths, paths.ports_cmake, std::move(cmake_args));
         return System::cmd_execute_clean(cmd_launch_cmake);
     }
 
