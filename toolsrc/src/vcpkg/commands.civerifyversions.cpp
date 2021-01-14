@@ -85,23 +85,23 @@ namespace vcpkg::Commands::CIVerifyVersions
                         return {
                             Strings::format("Error: Unable to parse `%s` used in version `%s`.\n%s\n",
                                             treeish,
-                                            version_entry.first.to_string(),
+                                            version_entry.first.versiont,
                                             maybe_scf.error()->error),
                             expected_right_tag,
                         };
                     }
 
                     const auto& scf = maybe_scf.value_or_exit(VCPKG_LINE_INFO);
-                    auto&& git_tree_version = scf.get()->to_versiont();
-                    if (version_entry.first != git_tree_version)
+                    auto&& git_tree_version = scf.get()->to_schemed_version();
+                    if (version_entry.first.versiont != git_tree_version.versiont)
                     {
                         return {
                             Strings::format("Error: Version in git-tree `%s` does not match version in file "
                                             "`%s`.\n\tgit-tree version: %s\n\t    file version: %s\n",
                                             version_entry.second,
                                             fs::u8string(versions_file_path),
-                                            git_tree_version.to_string(),
-                                            version_entry.first.to_string()),
+                                            git_tree_version.versiont,
+                                            version_entry.first.versiont),
                             expected_right_tag,
                         };
                     }
@@ -115,7 +115,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                         Strings::format("Error: The git-tree `%s` for version `%s` in `%s` does not contain a "
                                         "CONTROL file or vcpkg.json file.",
                                         version_entry.second,
-                                        version_entry.first,
+                                        version_entry.first.versiont,
                                         fs::u8string(versions_file_path)),
                         expected_right_tag,
                     };
@@ -134,17 +134,18 @@ namespace vcpkg::Commands::CIVerifyVersions
             };
         }
 
-        const auto found_version = maybe_scf.value_or_exit(VCPKG_LINE_INFO)->to_versiont();
-        if (top_entry.first != found_version)
+        const auto found_version = maybe_scf.value_or_exit(VCPKG_LINE_INFO)->to_schemed_version();
+        if (top_entry.first.versiont != found_version.versiont)
         {
             auto versions_end = versions.end();
-            auto it = std::find_if(
-                versions.begin(), versions_end, [&](auto&& entry) { return entry.first == found_version; });
+            auto it = std::find_if(versions.begin(), versions_end, [&](auto&& entry) {
+                return entry.first.versiont == found_version.versiont;
+            });
             if (it != versions_end)
             {
                 return {
                     Strings::format("Error: Version `%s` found but is not the top entry in `%s`.",
-                                    found_version,
+                                    found_version.versiont,
                                     fs::u8string(versions_file_path)),
                     expected_right_tag,
                 };
@@ -152,8 +153,9 @@ namespace vcpkg::Commands::CIVerifyVersions
             else
             {
                 return {
-                    Strings::format(
-                        "Error: Version `%s` not found in `%s`.", found_version, fs::u8string(versions_file_path)),
+                    Strings::format("Error: Version `%s` not found in `%s`.",
+                                    found_version.versiont,
+                                    fs::u8string(versions_file_path)),
                     expected_right_tag,
                 };
             }
@@ -165,7 +167,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                 Strings::format("Error: Git tree-ish object for version `%s` in `%s` does not match local port files.\n"
                                 "\tLocal SHA: %s\n"
                                 "\t File SHA: %s",
-                                found_version,
+                                found_version.versiont,
                                 fs::u8string(versions_file_path),
                                 local_git_tree,
                                 top_entry.second),
@@ -183,7 +185,7 @@ namespace vcpkg::Commands::CIVerifyVersions
         }
 
         auto&& baseline_version = maybe_baseline->second;
-        if (baseline_version != top_entry.first)
+        if (baseline_version != top_entry.first.versiont)
         {
             return {
                 Strings::format("Error: The baseline version for port `%s` doesn't match the latest version.\n"
@@ -191,7 +193,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                                 "\t  Latest version: %s (%s)",
                                 port_name,
                                 baseline_version,
-                                top_entry.first,
+                                top_entry.first.versiont,
                                 fs::u8string(versions_file_path)),
                 expected_right_tag,
             };
@@ -203,7 +205,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                 Strings::format("Error: Git tree-ish object for version `%s` in `%s` does not match local port files.\n"
                                 "\tLocal SHA: %s\n"
                                 "\t File SHA: %s",
-                                found_version,
+                                found_version.versiont,
                                 fs::u8string(versions_file_path),
                                 local_git_tree,
                                 top_entry.second),
@@ -212,7 +214,7 @@ namespace vcpkg::Commands::CIVerifyVersions
         }
 
         return {
-            Strings::format("OK: %s\t%s -> %s\n", top_entry.second, port_name, top_entry.first),
+            Strings::format("OK: %s\t%s -> %s\n", top_entry.second, port_name, top_entry.first.versiont),
             expected_left_tag,
         };
     }

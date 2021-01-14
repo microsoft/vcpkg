@@ -25,6 +25,7 @@ namespace vcpkg::Commands::PortHistory
             std::string version_string;
             std::string version;
             int port_version;
+            Versions::Scheme scheme;
         };
 
         const System::ExitCodeAndOutput run_git_command_inner(const VcpkgPaths& paths,
@@ -66,6 +67,7 @@ namespace vcpkg::Commands::PortHistory
                 {
                     auto version = scf->core_paragraph->version;
                     auto port_version = scf->core_paragraph->port_version;
+                    auto scheme = scf->core_paragraph->version_scheme;
                     return HistoryVersion{
                         port_name,
                         git_tree,
@@ -74,6 +76,7 @@ namespace vcpkg::Commands::PortHistory
                         Strings::concat(version, "#", port_version),
                         version,
                         port_version,
+                        scheme,
                     };
                 }
             }
@@ -193,8 +196,7 @@ namespace vcpkg::Commands::PortHistory
                 Json::Object object;
                 object.insert("git-tree", Json::Value::string(version.git_tree));
 
-                serialize_schemed_version(
-                    object, Versions::Scheme::String, version.version, version.port_version, true);
+                serialize_schemed_version(object, version.scheme, version.version, version.port_version, true);
                 versions_json.push_back(std::move(object));
             }
 
