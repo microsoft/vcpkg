@@ -34,15 +34,6 @@ namespace vcpkg::Commands::Version
             ;
     }
 
-    static int scan3(const char* input, const char* pattern, int* a, int* b, int* c)
-    {
-#if defined(_WIN32)
-        return sscanf_s(input, pattern, a, b, c);
-#else
-        return sscanf(input, pattern, a, b, c);
-#endif
-    }
-
     const CommandStructure COMMAND_STRUCTURE = {
         create_example_string("version"),
         0,
