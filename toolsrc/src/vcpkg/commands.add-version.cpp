@@ -16,12 +16,42 @@ using namespace vcpkg;
 
 namespace
 {
-    using VersionGitTree = std::pair<VersionT, std::string>;
+    constexpr StringLiteral BASELINE = "baseline";
+    constexpr StringLiteral VERSION_RELAXED = "version";
+    constexpr StringLiteral VERSION_SEMVER = "version-semver";
+    constexpr StringLiteral VERSION_DATE = "version-date";
+    constexpr StringLiteral VERSION_STRING = "version-string";
 
-    void insert_version_to_json_object(Json::Object& obj, const VersionT& version)
+    using VersionGitTree = std::pair<SchemedVersion, std::string>;
+
+    void insert_version_to_json_object(Json::Object& obj, const VersionT& version, StringLiteral version_field)
     {
-        obj.insert("version-string", Json::Value::string(version.text()));
+        obj.insert(version_field, Json::Value::string(version.text()));
         obj.insert("port-version", Json::Value::integer(version.port_version()));
+    }
+
+    void insert_schemed_version_to_json_object(Json::Object& obj, const SchemedVersion& version)
+    {
+        if (version.scheme == Versions::Scheme::Relaxed)
+        {
+            return insert_version_to_json_object(obj, version.versiont, VERSION_RELAXED);
+        }
+
+        if (version.scheme == Versions::Scheme::Semver)
+        {
+            return insert_version_to_json_object(obj, version.versiont, VERSION_SEMVER);
+        }
+
+        if (version.scheme == Versions::Scheme::Date)
+        {
+            return insert_version_to_json_object(obj, version.versiont, VERSION_DATE);
+        }
+
+        if (version.scheme == Versions::Scheme::String)
+        {
+            return insert_version_to_json_object(obj, version.versiont, VERSION_STRING);
+        }
+        Checks::unreachable(VCPKG_LINE_INFO);
     }
 
     static Json::Object serialize_baseline(const std::map<std::string, VersionT, std::less<>>& baseline)
@@ -30,7 +60,7 @@ namespace
         for (auto&& kv_pair : baseline)
         {
             Json::Object baseline_version_obj;
-            insert_version_to_json_object(baseline_version_obj, kv_pair.second);
+            insert_version_to_json_object(baseline_version_obj, kv_pair.second, BASELINE);
             port_entries_obj.insert(kv_pair.first, baseline_version_obj);
         }
 
@@ -46,7 +76,7 @@ namespace
         {
             Json::Object version_obj;
             version_obj.insert("git-tree", Json::Value::string(version.second));
-            insert_version_to_json_object(version_obj, version.first);
+            insert_schemed_version_to_json_object(version_obj, version.first);
             versions_array.push_back(std::move(version_obj));
         }
 
@@ -169,7 +199,7 @@ namespace
 
     static void update_version_db_file(const VcpkgPaths& paths,
                                        const std::string& port_name,
-                                       const VersionT& version,
+                                       const SchemedVersion& version,
                                        const std::string& git_tree,
                                        const fs::path& version_db_file_path,
                                        bool overwrite_version,
@@ -185,7 +215,7 @@ namespace
             {
                 System::printf(System::Color::success,
                                "Added version `%s` to `%s` (new file).\n",
-                               version.to_string(),
+                               version.versiont,
                                fs::u8string(version_db_file_path));
             }
             return;
@@ -200,13 +230,13 @@ namespace
                 versions->begin(), versions_end, [&](auto&& entry) -> bool { return entry.second == git_tree; });
             if (found_same_sha != versions_end)
             {
-                if (found_same_sha->first == version)
+                if (found_same_sha->first.versiont == version.versiont)
                 {
                     if (print_success)
                     {
                         System::printf(System::Color::success,
                                        "Version `%s` is already in `%s`\n",
-                                       version.to_string(),
+                                       version.versiont,
                                        fs::u8string(version_db_file_path));
                     }
                     return;
@@ -216,15 +246,16 @@ namespace
                                "-- SHA: %s\n"
                                "-- Did you remember to commit your changes?\n"
                                "***No files were updated.***\n",
-                               found_same_sha->first.to_string(),
+                               found_same_sha->first.versiont,
                                fs::u8string(version_db_file_path),
                                git_tree);
                 if (keep_going) return;
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
 
-            auto it = std::find_if(
-                versions->begin(), versions_end, [&](auto&& entry) -> bool { return entry.first == version; });
+            auto it = std::find_if(versions->begin(), versions_end, [&](auto&& entry) -> bool {
+                return entry.first.versiont == version.versiont;
+            });
 
             if (it != versions_end)
             {
@@ -239,7 +270,7 @@ namespace
                                    "-- Pass `--overwrite-version` to bypass this check.\n"
                                    "***No files were updated.***\n",
                                    port_name,
-                                   version.to_string(),
+                                   version.versiont,
                                    it->second,
                                    git_tree);
                     if (keep_going) return;
@@ -259,7 +290,7 @@ namespace
             {
                 System::printf(System::Color::success,
                                "Added version `%s` to `%s`.\n",
-                               version.to_string(),
+                               version.versiont,
                                fs::u8string(version_db_file_path));
             }
             return;
@@ -352,7 +383,7 @@ namespace vcpkg::Commands::AddVersion
             }
 
             const auto& scf = maybe_scf.value_or_exit(VCPKG_LINE_INFO);
-            const auto& versiont = scf->to_versiont();
+            const auto& schemed_version = scf->to_schemed_version();
 
             auto git_tree_it = git_tree_map.find(port_name);
             if (git_tree_it == git_tree_map.end())
@@ -370,8 +401,8 @@ namespace vcpkg::Commands::AddVersion
             auto port_versions_path =
                 paths.builtin_port_versions / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
             update_version_db_file(
-                paths, port_name, versiont, git_tree, port_versions_path, overwrite_version, verbose, add_all);
-            update_baseline_version(paths, port_name, versiont, baseline_path, verbose);
+                paths, port_name, schemed_version, git_tree, port_versions_path, overwrite_version, verbose, add_all);
+            update_baseline_version(paths, port_name, schemed_version.versiont, baseline_path, verbose);
         }
         Checks::exit_success(VCPKG_LINE_INFO);
     }

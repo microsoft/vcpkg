@@ -7,6 +7,7 @@ using namespace vcpkg::Versions;
 
 namespace
 {
+    constexpr StringLiteral BASELINE = "baseline";
     constexpr StringLiteral VERSION_RELAXED = "version";
     constexpr StringLiteral VERSION_SEMVER = "version-semver";
     constexpr StringLiteral VERSION_STRING = "version-string";
@@ -35,6 +36,26 @@ namespace
             return sv.to_string();
         }
         StringLiteral m_type;
+    };
+
+    struct GenericVersionTDeserializer : Json::IDeserializer<VersionT>
+    {
+        GenericVersionTDeserializer(StringLiteral version_field) : m_version_field(version_field) { }
+        StringView type_name() const override { return " a version object"; }
+
+        Optional<VersionT> visit_object(Json::Reader& r, const Json::Object& obj) override
+        {
+            std::string version;
+            int port_version = 0;
+
+            static VersionDeserializer version_deserializer{"version"};
+
+            r.required_object_field(type_name(), obj, m_version_field, version, version_deserializer);
+            r.optional_object_field(obj, PORT_VERSION, port_version, Json::NaturalNumberDeserializer::instance);
+
+            return VersionT{std::move(version), port_version};
+        }
+        StringLiteral m_version_field;
     };
 }
 
@@ -167,38 +188,15 @@ namespace vcpkg
         }
     }
 
-}
-
-namespace
-{
-    struct VersionTDeserializer final : Json::IDeserializer<VersionT>
+    Json::IDeserializer<VersionT>& get_versiont_deserializer_instance()
     {
-        StringView type_name() const override { return "a version object"; }
-        View<StringView> valid_fields() const override
-        {
-            static const StringView t[] = {VERSION_STRING, PORT_VERSION};
-            return t;
-        }
+        static GenericVersionTDeserializer deserializer(VERSION_STRING);
+        return deserializer;
+    }
 
-        Optional<VersionT> visit_object(Json::Reader& r, const Json::Object& obj) override
-        {
-            std::string version;
-            int port_version = 0;
-
-            static VersionDeserializer version_deserializer{"version"};
-
-            r.required_object_field(type_name(), obj, VERSION_STRING, version, version_deserializer);
-            r.optional_object_field(obj, PORT_VERSION, port_version, Json::NaturalNumberDeserializer::instance);
-
-            return VersionT{std::move(version), port_version};
-        }
-        static VersionTDeserializer instance;
-    };
-
-    VersionTDeserializer VersionTDeserializer::instance;
-}
-
-namespace vcpkg
-{
-    Json::IDeserializer<VersionT>& get_versiont_deserializer_instance() { return VersionTDeserializer::instance; }
+    Json::IDeserializer<VersionT>& get_versiontag_deserializer_instance()
+    {
+        static GenericVersionTDeserializer deserializer(BASELINE);
+        return deserializer;
+    }
 }
