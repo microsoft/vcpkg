@@ -1,5 +1,3 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "linux" "osx" "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/hidapi
@@ -49,6 +47,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
         INCLUDES_SUBPATH hidapi ALLOW_ROOT_INCLUDES
         LICENSE_SUBPATH LICENSE-bsd.txt # use BSD license
     )
-
-    file(COPY ${CMAKE_CURRENT_LIST_DIR}/hidapi-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+else()
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+    )
+    vcpkg_install_make()
+    file(COPY "${SOURCE_PATH}/LICENSE-bsd.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/hidapi/copyright")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/hidapi-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
