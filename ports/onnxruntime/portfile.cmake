@@ -12,6 +12,7 @@ else()
 endif()
 
 set(ORT_REVISION "v1.5.3")
+set(ORT_COMMIT_HASH "3b3e698674dca2014b91fb617e2c4f22ffd0c5c9")
 
 vcpkg_find_acquire_program(GIT)
 get_filename_component(GIT_PATH ${GIT} DIRECTORY)
@@ -27,7 +28,7 @@ set(ONNX_GITHUB_URL "https://github.com/microsoft/${ONNXRUNTIME}")
 if(EXISTS "${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}")
   # Purge any local changes
   vcpkg_execute_required_process(
-    COMMAND ${GIT} reset --hard
+    COMMAND ${GIT} reset --hard ${ORT_COMMIT_HASH}
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
     LOGNAME build-${TARGET_TRIPLET})
 
@@ -48,8 +49,12 @@ else()
     COMMAND ${GIT} clone --recursive ${ONNX_GITHUB_URL} ${ONNXRUNTIME}
     WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}
     LOGNAME build-${TARGET_TRIPLET})
-endif()
 
+  vcpkg_execute_required_process(
+    COMMAND ${GIT} reset --hard ${ORT_COMMIT_HASH}
+    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
+    LOGNAME build-${TARGET_TRIPLET})
+endif()
 
 set(SOURCE_PATH "${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}")
 
