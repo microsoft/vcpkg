@@ -1,19 +1,16 @@
-set(OUTCOME_GITCOMMIT ac552d1c69ef556a1327393a0c56092517ff92db)
-set(OUTCOME_HASH 2d27434bcb2d5bc27015fedc221eafd221acb7c873277c4f0c78bc6aa657e6e962f0458e64b2de5f695600a5b15559cd0d3602f276f35c414dfafb34c2214e8c)
+include(${CURRENT_PORT_DIR}/dependency_quickcpplib.cmake)
+include(${CURRENT_PORT_DIR}/dependency_status_code.cmake)
 
-# Use Outcome's all sources tarball, not its github repo. The tarball includes all dependencies.
-vcpkg_download_distfile(
-  ALL_SOURCES_TARBALL
-  URLS "https://github.com/ned14/outcome/releases/download/all_tests_passed_${OUTCOME_GITCOMMIT}/outcome-v2-all-sources-${OUTCOME_GITCOMMIT}.tar.xz"
-  FILENAME "outcome-v2-all-sources-${OUTCOME_GITCOMMIT}.tar.xz"
-  SHA512 ${OUTCOME_HASH}
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ned14/outcome
+    REF all_tests_passed_ac552d1c69ef556a1327393a0c56092517ff92db
+    SHA512 30111a6526297ff21ddaf04910b831aa38161f884a84dab52daf1200d66f3de89dc30aef15a74f5ba0cbba097313e3bd37e9fcc675254d8ca24f98b43cb47025
+    HEAD_REF develop
 )
-vcpkg_extract_source_archive_ex(
-  SKIP_PATCH_CHECK
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE "${ALL_SOURCES_TARBALL}"
-  REF "outcome-${OUTCOME_GITCOMMIT}"
-)
+# Dependencies
+download_quickcpplib("${SOURCE_PATH}/quickcpplib/repo/")
+download_status_code("${SOURCE_PATH}/include/outcome/experimental/status-code/")
 
 # Use Outcome's own build process, skipping examples and tests, bundling the embedded quickcpplib
 # instead of git cloning from latest quickcpplib.
@@ -27,27 +24,18 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Looks like vcpkg_fixup_cmake_targets() can't be run twice, so do this by hand
-file(RENAME "${CURRENT_PACKAGES_DIR}/lib/cmake/quickcpplib" "${CURRENT_PACKAGES_DIR}/share/quickcpplib")
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/quickcpplib TARGET_PATH share/quickcpplib DO_NOT_DELETE_PARENT_CONFIG_PATH)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/outcome)
+
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmakelib" "${CURRENT_PACKAGES_DIR}/share/quickcpplib/cmakelib")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/scripts" "${CURRENT_PACKAGES_DIR}/share/quickcpplib/scripts")
 
-# Must come AFTER the above, as it appears to hose the lib/cmake directory
-vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/${PORT}" TARGET_PATH "share/${PORT}")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}/lib")
 
-file(REMOVE_RECURSE
-    "${CURRENT_PACKAGES_DIR}/debug"
-    "${CURRENT_PACKAGES_DIR}/lib"
+# Fix find dependency quickcpplib
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/outcome/outcomeConfig.cmake"
+    "CONFIG_MODE)\n"
+    "CONFIG_MODE)\ninclude(CMakeFindDependencyMacro)\nfind_dependency(quickcpplib CONFIG)\n"
 )
 
-# Fixup the exports files with our embedded quickcpplib unusualness
-file(READ "${CURRENT_PACKAGES_DIR}/share/quickcpplib/quickcpplibExports.cmake" quickcpplibExports)
-string(REPLACE "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)" "get_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)\nget_filename_component(_IMPORT_PREFIX \"\${_IMPORT_PREFIX}\" PATH)" quickcpplibExports "${quickcpplibExports}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/quickcpplib/quickcpplibExports.cmake" "${quickcpplibExports}")
-
-file(READ "${CURRENT_PACKAGES_DIR}/share/outcome/outcomeExports.cmake" outcomeExports)
-string(REPLACE "get_filename_component(_DIR \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)" "get_filename_component(_DIR \"\${CMAKE_CURRENT_LIST_FILE}\" PATH)\ninclude(\"\${_DIR}/../quickcpplib/quickcpplibExports.cmake\")" outcomeExports "${outcomeExports}")
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/outcome/outcomeExports.cmake" "${outcomeExports}")
-
-
-file(INSTALL "${SOURCE_PATH}/Licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
+file(INSTALL "${SOURCE_PATH}/Licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
