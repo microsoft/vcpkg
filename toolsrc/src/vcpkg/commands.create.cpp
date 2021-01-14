@@ -4,6 +4,7 @@
 
 #include <vcpkg/buildenvironment.h>
 #include <vcpkg/commands.create.h>
+#include <vcpkg/commands.version.h>
 #include <vcpkg/help.h>
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
@@ -38,7 +39,9 @@ namespace vcpkg::Commands::Create
             {"CMD", "CREATE"},
             {"PORT", port_name},
             {"URL", url},
-            {"PORT_PATH", fs::generic_u8string(paths.builtin_ports_directory() / fs::u8path(port_name))}};
+            {"PORT_PATH", fs::generic_u8string(paths.builtin_ports_directory() / fs::u8path(port_name))},
+            {"VCPKG_BASE_VERSION", Commands::Version::base_version()},
+            };
 
         if (args.command_arguments.size() >= 3)
         {

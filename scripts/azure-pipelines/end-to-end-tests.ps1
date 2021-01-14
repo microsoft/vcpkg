@@ -31,6 +31,11 @@ Param(
 )
 
 $ErrorActionPreference = "Stop"
+
+if (-Not (Test-Path $WorkingRoot)) {
+    New-Item -Path $WorkingRoot -ItemType Directory
+}
+
 $WorkingRoot = (Get-Item $WorkingRoot).FullName
 
 $WorkingRoot = (Get-Item $WorkingRoot).FullName

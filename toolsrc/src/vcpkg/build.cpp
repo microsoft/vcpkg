@@ -520,6 +520,7 @@ namespace vcpkg::Build
                                   {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                                   {"DOWNLOADS", paths.downloads},
                                   {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
+                                  {"VCPKG_BASE_VERSION", Commands::Version::base_version()},
                               });
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
         {
@@ -541,7 +542,6 @@ namespace vcpkg::Build
 #endif
         std::vector<System::CMakeVariable> cmake_args{
             {"CURRENT_PORT_DIR", paths.scripts / "detect_compiler"},
-            {"VCPKG_BASE_VERSION", Commands::Version::base_version()},
             {"CURRENT_BUILDTREES_DIR", buildpath},
             {"CURRENT_PACKAGES_DIR", paths.packages / ("detect_compiler_" + triplet.canonical_name())},
         };
@@ -629,7 +629,6 @@ namespace vcpkg::Build
         std::vector<System::CMakeVariable> variables{
             {"PORT", scf.core_paragraph->name},
             {"CURRENT_PORT_DIR", scfl.source_location},
-            {"VCPKG_BASE_VERSION", Commands::Version::base_version()},
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(action.build_options.use_head_version) ? "1" : "0"},
             {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(action.build_options.allow_downloads) ? "1" : "0"},
             {"_VCPKG_DOWNLOAD_TOOL", to_string(action.build_options.download_tool)},

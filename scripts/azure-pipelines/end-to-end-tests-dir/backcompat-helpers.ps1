@@ -6,8 +6,7 @@ foreach ($backcompatFeaturePort in $backcompatFeaturePorts) {
     $succeedArgs = $commonArgs + @('install',$backcompatFeaturePort,'--no-binarycaching')
     $failArgs = $succeedArgs + @('--x-prohibit-backcompat-features')
     $CurrentTest = "Should fail: ./vcpkg $($failArgs -join ' ')"
-    Write-Host $CurrentTest
-    ./vcpkg @failArgs
+    Run-Vcpkg @failArgs
     if ($LastExitCode -ne 0) {
         Write-Host "... failed (this is good!)."
     } else {
@@ -16,8 +15,7 @@ foreach ($backcompatFeaturePort in $backcompatFeaturePorts) {
 
     # Install failed when prohibiting backcompat features, so it should succeed if we allow them
     $CurrentTest = "Should succeeed: ./vcpkg $($succeedArgs -join ' ')"
-    Write-Host $CurrentTest
-    ./vcpkg @succeedArgs
+    Run-Vcpkg @succeedArgs
     if ($LastExitCode -ne 0) {
         throw $CurrentTest
     } else {
