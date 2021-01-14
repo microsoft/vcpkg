@@ -2,3 +2,11 @@ Source: outcome
 Version: 2.2.0-ac552d1
 Homepage: https://github.com/ned14/outcome
 Description: Provides very lightweight outcome<T> and result<T> (non-Boost edition)
+
+Feature: vcpkg-byte-lite
+Build-Depends: byte-lite
+Description: Use the version of byte-lite vcpkg provides rather than Outcome's known good release version.
+
+Feature: vcpkg-gsl-lite
+Build-Depends: gsl-lite
+Description: Use the version of gsl-lite vcpkg provides rather than Outcome's known good release version.
