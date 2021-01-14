@@ -9,7 +9,7 @@ foreach ($backcompatFeaturePort in $backcompatFeaturePorts) {
     Write-Host $CurrentTest
     ./vcpkg @failArgs
     if ($LastExitCode -ne 0) {
-        Write-Host "... failed (this is good!)"
+        Write-Host "... failed (this is good!)."
     } else {
         throw $CurrentTest
     }

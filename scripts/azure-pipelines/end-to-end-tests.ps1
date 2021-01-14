@@ -31,6 +31,7 @@ Param(
 )
 
 $ErrorActionPreference = "Stop"
+$WorkingRoot = (Get-Item $WorkingRoot).FullName
 
 $WorkingRoot = (Get-Item $WorkingRoot).FullName
 
