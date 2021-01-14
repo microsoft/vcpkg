@@ -5,10 +5,9 @@ vcpkg_fail_port_install(ON_TARGET "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTex
-    REF jan2021
-    SHA512 f48f05aea811b2ce04f7e82837ed8da9cd3452d0f582d933dbd8878acdc94d8dfb123fa85f5d483a9cd688d3a129d765514069c6c83c58eb1880f6e5661d61e8
+    REF jan2021b
+    SHA512 bd327d0629bbae199f1b3fd80c0470b15edf221f204a4958b4e47b2b1a155b5c0e0af1cc1c39229d582363798f82efa91a3f63ec118fdb0e9255098a576b98ef
     HEAD_REF master
-    FILE_DISAMBIGUATOR 1
 )
 
 if("openexr" IN_LIST FEATURES)
