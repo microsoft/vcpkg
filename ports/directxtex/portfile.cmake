@@ -69,31 +69,38 @@ if((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
     )
 
 elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
-  vcpkg_download_distfile(texassemble
+  vcpkg_download_distfile(
+    TEXASSEMBLE_EXE
     URLS "https://github.com/Microsoft/DirectXTex/releases/download/jan2021/texassemble.exe"
-    FILENAME "texassemble.exe"
+    FILENAME "texassemble-jan2021.exe"
     SHA512 0def8873358234ea4cd16acd59cb1dda2a8ad132f362502d643caed43e9aef19f9c7e7248494093cbd61e7501a9b44f545d3fbd5f50972ebcee3d01598a7c3b7
   )
 
-  vcpkg_download_distfile(texconv
+  vcpkg_download_distfile(
+    TEXCONV_EXE
     URLS "https://github.com/Microsoft/DirectXTex/releases/download/jan2021/texconv.exe"
-    FILENAME "texconv.exe"
+    FILENAME "texconv-jan2021.exe"
     SHA512 77559db65406ad0343901ff22f7647c4f270674f7b0c31b12d8dc26c718f410708ebe95bdc0ddba4049fa6cefd52ff856174530fc4170f9e725b30aacb78249c
   )
 
-  vcpkg_download_distfile(texdiag
+  vcpkg_download_distfile(
+    TEXDIAG_EXE
     URLS "https://github.com/Microsoft/DirectXTex/releases/download/jan2021/texdiag.exe"
-    FILENAME "texdiag.exe"
+    FILENAME "texdiag-jan2021.exe"
     SHA512 1b9e733050b5f92af86a9a2f415205acbff62f0708e491a3846d7b6e480a9c57086eff636be163d42a40a6d34dafc622cc53940797e7f6f77e739f3a66365f57
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtex/")
 
   file(INSTALL
-    ${DOWNLOADS}/texassemble.exe
-    ${DOWNLOADS}/texconv.exe
-    ${DOWNLOADS}/texdiag.exe
+    ${TEXASSEMBLE_EXE}
+    ${TEXCONV_EXE}
+    ${TEXDIAG_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxtex/)
+
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble-jan2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtex/texassemble.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv-jan2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtex/texconv.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtex/texdiag-jan2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtex/texadiag.exe)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

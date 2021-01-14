@@ -42,17 +42,20 @@ if((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
     )
 
 elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
-  vcpkg_download_distfile(meshconvert
+  vcpkg_download_distfile(
+    MESHCONVERT_EXE
     URLS "https://github.com/Microsoft/DirectXMesh/releases/download/jan2021/meshconvert.exe"
-    FILENAME "meshconvert.exe"
+    FILENAME "meshconvert-jan2021.exe"
     SHA512 7df51baa495859aab418d194fd885cf37945ec2927122c18718b3a1a7d7ceb08c6853d084d74bf2bf2bc9ace47a351fd6b8d03706507f4966111ec1cb83f43a2
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
 
   file(INSTALL
-    ${DOWNLOADS}/meshconvert.exe
+    ${MESHCONVERT_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxmesh/)
+
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert-jan2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxmesh/meshconvert.exe)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
