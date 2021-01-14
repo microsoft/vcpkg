@@ -239,9 +239,11 @@ if(WITH_GOBJECT)
         endif()
     endif()
     
-    find_package(unofficial-glib CONFIG REQUIRED)    
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GLIB2 glib-2.0 gobject-2.0)
     add_library(cairo-gobject ${CAIRO_GOBJECT_SOURCES}) 
-    target_link_libraries(cairo-gobject PRIVATE cairo unofficial::glib::gobject unofficial::glib::glib)
+    target_include_directories(cairo-gobject PRIVATE ${GLIB2_INCLUDE_DIRS})
+    target_link_libraries(cairo-gobject PRIVATE cairo ${GLIB2_LIBRARIES_STATIC})
 endif()
 
 if(MSVC)

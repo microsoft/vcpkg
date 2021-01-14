@@ -4,7 +4,7 @@ find_dependency(ZLIB REQUIRED)
 if(UNIX)
   find_package(unofficial-glib CONFIG REQUIRED)
   set(V8_IMPORTED_LINK_INTERFACE_LIBRARIES
-    "ICU::in;ICU::uc;ICU::dt;unofficial::glib::gmodule;unofficial::glib::gobject;unofficial::glib::gthread;ZLIB::ZLIB")
+    "ICU::in;ICU::uc;ICU::dt;ZLIB::ZLIB")
 elseif(WIN32)
   set(V8_IMPORTED_LINK_INTERFACE_LIBRARIES
     "Winmm;DbgHelp;ZLIB::ZLIB;ICU::in;ICU::uc;ICU::dt")

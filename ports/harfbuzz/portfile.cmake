@@ -11,7 +11,7 @@ vcpkg_from_github(
         # This patch is required for propagating the full list of static dependencies from freetype
         find-package-freetype-2.patch
         # This patch is required for propagating the full list of dependencies from glib
-        glib-cmake.patch
+        #glib-cmake.patch
         fix_include.patch
         icu.patch
 )
@@ -47,16 +47,16 @@ vcpkg_fixup_cmake_targets()
 
 vcpkg_copy_pdbs()
 
-if ("glib" IN_LIST FEATURES)
-    # Propagate dependency on glib downstream
-    file(READ "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" _contents)
-    file(WRITE "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" "
-include(CMakeFindDependencyMacro)
-find_dependency(unofficial-glib CONFIG)
+# if ("glib" IN_LIST FEATURES)
+    # # Propagate dependency on glib downstream
+    # file(READ "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" _contents)
+    # file(WRITE "${CURRENT_PACKAGES_DIR}/share/harfbuzz/harfbuzzConfig.cmake" "
+# include(CMakeFindDependencyMacro)
+# find_dependency(unofficial-glib CONFIG)
     
-${_contents}
-")
-endif()
+# ${_contents}
+# ")
+# endif()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -3,7 +3,8 @@ project(librsvg C)
 
 find_package(unofficial-cairo CONFIG REQUIRED)
 find_package(unofficial-libcroco CONFIG REQUIRED)
-find_package(unofficial-glib CONFIG REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2 gio-2)
 find_package(LibXml2 REQUIRED)
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
   find_library(PANGO_LIB pango-1.0)
@@ -110,12 +111,7 @@ target_compile_definitions(pixbufloader-svg PRIVATE
     -DG_LOG_DOMAIN="libpixbufloader-svg")
 
 target_link_libraries(rsvg-2.40 PRIVATE
-    unofficial::cairo::cairo
-    unofficial::libcroco::croco-0.6
-    unofficial::glib::gio
-    unofficial::glib::glib
-    unofficial::glib::gmodule
-    unofficial::glib::gobject
+    ${GLIB2_LIBRARIES_STATIC}
     ${LIBXML2_LIBRARIES}
     ${PANGO_LIB}
     ${PANGO_CAIRO_LIB}
@@ -125,8 +121,7 @@ target_link_libraries(rsvg-2.40 PRIVATE
 )
 target_link_libraries(pixbufloader-svg PRIVATE
     rsvg-2.40
-    unofficial::glib::glib
-    unofficial::glib::gobject
+    ${GLIB2_LIBRARIES_STATIC}
     ${GDK_PIXBUF_LIB}
 )
 

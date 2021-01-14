@@ -62,14 +62,17 @@ if(WIN32)
 endif()
 add_library(gdk-pixbuf ${SOURCES})
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2 gio-2)
+
 target_include_directories(gdk-pixbuf PRIVATE 
-    ${GLIB_INCLUDE_DIR} 
+    ${GLIB2_INCLUDE_DIRS} 
     ${PNG_INCLUDE_DIRS}
     ${ZLIB_INCLUDE_DIRS}
     ${Intl_INCLUDE_DIR})
 
 set(LIBS 
-    unofficial::glib::gio unofficial::glib::glib unofficial::glib::gmodule unofficial::glib::gobject ${Intl_LIBRARIES}
+    ${GLIB2_LIBRARIES_STATIC} ${Intl_LIBRARIES}
     ${ZLIB_LIBRARIES} 
     ${PNG_LIBRARIES} 
 )

@@ -3,7 +3,8 @@ project(libcroco C)
 
 find_package(Iconv REQUIRED)
 find_package(Intl REQUIRED)
-find_package(unofficial-glib CONFIG REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2 gio-2)
 find_package(LibXml2 REQUIRED)
 if(NOT WIN32)
     find_package(Threads REQUIRED)
@@ -72,10 +73,7 @@ add_library(croco-0.6 ${SOURCES})
 
 target_include_directories(croco-0.6 PRIVATE ${GLIB_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR})
 target_link_libraries(croco-0.6 PRIVATE 
-    unofficial::glib::gio
-    unofficial::glib::glib
-    unofficial::glib::gmodule
-    unofficial::glib::gobject
+    ${GLIB2_LIBRARIES_STATIC}
     ${LIBXML2_LIBRARIES} ${Intl_LIBRARIES} Iconv::Iconv
 )
 
