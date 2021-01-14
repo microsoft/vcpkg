@@ -80,14 +80,14 @@ namespace vcpkg::Archives
 #else
         if (ext == ".gz" && ext.extension() != ".tar")
         {
-            const auto code = System::cmd_execute(
-                Strings::format(R"(cd '%s' && tar xzf '%s')", fs::u8string(to_path_partial), fs::u8string(archive)));
+            const auto code = System::cmd_execute(System::CmdLineBuilder{"tar"}.string_arg("xzf").path_arg(archive),
+                                                  System::InWorkingDirectory{to_path_partial});
             Checks::check_exit(VCPKG_LINE_INFO, code == 0, "tar failed while extracting %s", fs::u8string(archive));
         }
         else if (ext == ".zip")
         {
-            const auto code = System::cmd_execute(
-                Strings::format(R"(cd '%s' && unzip -qqo '%s')", fs::u8string(to_path_partial), fs::u8string(archive)));
+            const auto code = System::cmd_execute(System::CmdLineBuilder{"unzip"}.string_arg("-qqo").path_arg(archive),
+                                                  System::InWorkingDirectory{to_path_partial});
             Checks::check_exit(VCPKG_LINE_INFO, code == 0, "unzip failed while extracting %s", fs::u8string(archive));
         }
         else

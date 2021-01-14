@@ -1,0 +1,22 @@
+diff --git a/src/gallium/drivers/swr/meson.build b/src/gallium/drivers/swr/meson.build
+index 2fad60365a3..dce7f656d64 100644
+--- a/src/gallium/drivers/swr/meson.build
++++ b/src/gallium/drivers/swr/meson.build
+@@ -249,7 +249,7 @@ endif
+ 
+ if with_swr_arches.contains('knl')
+   swr_knl_args = cpp.first_supported_argument(
+-    '-march=knl', '-target-cpu=mic-knl', '-xMIC-AVX512',
++    '-march=knl', '-target-cpu=mic-knl', '-xMIC-AVX512', '/arch:AVX512',
+   )
+   if swr_knl_args == []
+     error('Cannot find KNL support for swr.')
+@@ -274,7 +274,7 @@ endif
+ 
+ if with_swr_arches.contains('skx')
+   swr_skx_args = cpp.first_supported_argument(
+-    '-march=skylake-avx512', '-target-cpu=x86-skylake', '-xCORE-AVX512',
++    '-march=skylake-avx512', '-target-cpu=x86-skylake', '-xCORE-AVX512', '/arch:AVX512',
+   )
+   if swr_skx_args == []
+     error('Cannot find SKX support for swr.')
