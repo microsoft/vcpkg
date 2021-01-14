@@ -151,15 +151,9 @@ although one can define their own.
 
 A minimum version constraint on the dependency.
 
-This field specifies the primary scheme text of the dependency and the optional `"port-version"` field specifies a minimum port version (if any).
+This field specifies the minimum version of the dependency using a '#' suffix to denote port-version if non-zero.
 
 See also [versioning](versioning.md#constraints) for more semantic details.
-
-#### `"port-version"`
-
-**Experimental behind the `versions` feature flag**
-
-See `"version>="` above.
 
 #### Example:
 

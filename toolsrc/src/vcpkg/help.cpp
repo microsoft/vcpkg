@@ -81,7 +81,7 @@ namespace vcpkg::Help
         tbl.format("version>=",
                    "Within the \"dependencies\" field, each dependency can have a minimum constraint listed. These "
                    "minimum constraints will be used when transitively depending upon this library. A minimum "
-                   "port-version can be specified with the \"port-version\" field.");
+                   "port-version can additionally be specified with a '#' suffix.");
         tbl.blank();
         tbl.format(
             "overrides",
@@ -97,7 +97,7 @@ namespace vcpkg::Help
     "version": "1.0",
     "builtin-baseline": "a14a6bcb27287e3ec138dba1b948a0cdbc337a3a",
     "dependencies": [
-        { "name": "zlib", "version>=": "1.2.11", "port-version": 8 },
+        { "name": "zlib", "version>=": "1.2.11#8" },
         "rapidjson"
     ],
     "overrides": [

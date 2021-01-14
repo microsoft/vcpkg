@@ -50,8 +50,9 @@ Baselines provide stability and ease of development for top-level manifest files
 Within the "dependencies" field, each dependency can have a
 minimum constraint listed. These minimum constraints will be used
 when transitively depending upon this library. A minimum
-port-version can additionally be specified with the "port-version"
-field in the same object.
+port-version can additionally be specified with a '#' suffix.
+
+This constraint must refer to an existing, valid version (including port-version).
 
 ### overrides
 When used as the top-level manifest (such as when running `vcpkg
@@ -69,7 +70,7 @@ Overrides are not considered from ports consumed as a dependency.
     "version": "1.0",
     "builtin-baseline": "a14a6bcb27287e3ec138dba1b948a0cdbc337a3a",
     "dependencies": [
-        { "name": "zlib", "version>=": "1.2.11", "port-version": 8 },
+        { "name": "zlib", "version>=": "1.2.11#8" },
         "rapidjson"
     ],
     "overrides": [

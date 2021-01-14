@@ -160,7 +160,6 @@ TEST_CASE ("manifest versioning", "[manifests]")
 
 TEST_CASE ("manifest constraints hash", "[manifests]")
 {
-#if 1 /*** SUPPORT_HASH_SYNTAX ***/
     auto p = unwrap(test_parse_manifest(R"json({
     "name": "zlib",
     "version-string": "abcd",
@@ -180,25 +179,36 @@ TEST_CASE ("manifest constraints hash", "[manifests]")
     "dependencies": [
         {
             "name": "d",
-            "version>=": "2018-09-01#1",
-            "port-version": 1
+            "version>=": "2018-09-01#0"
         }
     ]
 })json",
                         true);
-#else  /*** SUPPORT_HASH_SYNTAX ***/
+
     test_parse_manifest(R"json({
     "name": "zlib",
     "version-string": "abcd",
     "dependencies": [
         {
             "name": "d",
-            "version>=": "2018-09-01#1"
+            "version>=": "2018-09-01#-1"
         }
     ]
 })json",
                         true);
-#endif /*** SUPPORT_HASH_SYNTAX ***/
+
+    test_parse_manifest(R"json({
+    "name": "zlib",
+    "version-string": "abcd",
+    "dependencies": [
+        {
+            "name": "d",
+            "version>=": "2018-09-01",
+            "port-version": 1
+        }
+    ]
+})json",
+                        true);
 }
 
 TEST_CASE ("manifest overrides error hash", "[manifests]")

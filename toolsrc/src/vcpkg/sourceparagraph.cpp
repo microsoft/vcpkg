@@ -430,7 +430,6 @@ namespace vcpkg
         constexpr static StringLiteral FEATURES = "features";
         constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
         constexpr static StringLiteral PLATFORM = "platform";
-        constexpr static StringLiteral PORT_VERSION = "port-version";
         constexpr static StringLiteral VERSION_GE = "version>=";
 
         virtual Span<const StringView> valid_fields() const override
@@ -440,7 +439,6 @@ namespace vcpkg
                 FEATURES,
                 DEFAULT_FEATURES,
                 PLATFORM,
-                PORT_VERSION,
                 VERSION_GE,
             };
 
@@ -490,27 +488,16 @@ namespace vcpkg
 
             auto has_ge_constraint =
                 r.optional_object_field(obj, VERSION_GE, dep.constraint.value, version_deserializer);
-            auto has_port_ver = r.optional_object_field(
-                obj, PORT_VERSION, dep.constraint.port_version, Json::NaturalNumberDeserializer::instance);
 
             if (has_ge_constraint)
             {
                 dep.constraint.type = Versions::Constraint::Type::Minimum;
-                /*** SUPPORT_HASH_SYNTAX ***/
                 auto h = dep.constraint.value.find('#');
                 if (h != std::string::npos)
                 {
-                    if (has_port_ver)
-                    {
-                        r.add_generic_error(type_name(),
-                                            "\"port-version\" cannot be used with an embedded '#' in the primary "
-                                            "constraint (\"",
-                                            VERSION_GE,
-                                            "\")");
-                    }
                     auto opt = Strings::strto<int>(dep.constraint.value.c_str() + h + 1);
                     auto v = opt.get();
-                    if (v && *v >= 0)
+                    if (v && *v > 0)
                     {
                         dep.constraint.port_version = *v;
                     }
@@ -520,16 +507,10 @@ namespace vcpkg
                                             "embedded port-version ('#') in the primary "
                                             "constraint (\"",
                                             VERSION_GE,
-                                            "\") must be a nonnegative integer");
+                                            "\") must be a positive integer");
                     }
                     dep.constraint.value.erase(h);
                 }
-                /*** /SUPPORT_HASH_SYNTAX ***/
-            }
-            else if (has_port_ver) // does not have a primary constraint
-            {
-                r.add_generic_error(
-                    type_name(), "\"port-version\" cannot be used without a primary constraint (\"", VERSION_GE, "\")");
             }
 
             return dep;
@@ -557,7 +538,6 @@ namespace vcpkg
     constexpr StringLiteral DependencyDeserializer::DEFAULT_FEATURES;
     constexpr StringLiteral DependencyDeserializer::PLATFORM;
     constexpr StringLiteral DependencyDeserializer::VERSION_GE;
-    constexpr StringLiteral DependencyDeserializer::PORT_VERSION;
 
     struct DependencyOverrideDeserializer : Json::IDeserializer<DependencyOverride>
     {
@@ -1291,15 +1271,18 @@ namespace vcpkg
 
                 serialize_optional_array(dep_obj, DependencyDeserializer::FEATURES, features_copy);
                 serialize_optional_string(dep_obj, DependencyDeserializer::PLATFORM, to_string(dep.platform));
-                if (dep.constraint.port_version != 0)
-                {
-                    dep_obj.insert(DependencyDeserializer::PORT_VERSION,
-                                   Json::Value::integer(dep.constraint.port_version));
-                }
-
                 if (dep.constraint.type == Versions::Constraint::Type::Minimum)
                 {
-                    dep_obj.insert(DependencyDeserializer::VERSION_GE, Json::Value::string(dep.constraint.value));
+                    if (dep.constraint.port_version != 0)
+                    {
+                        dep_obj.insert(DependencyDeserializer::VERSION_GE,
+                                       Json::Value::string(
+                                           Strings::concat(dep.constraint.value, '#', dep.constraint.port_version)));
+                    }
+                    else
+                    {
+                        dep_obj.insert(DependencyDeserializer::VERSION_GE, Json::Value::string(dep.constraint.value));
+                    }
                 }
             }
         };
