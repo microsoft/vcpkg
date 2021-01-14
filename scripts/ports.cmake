@@ -15,7 +15,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 include(vcpkg_minimum_required)
-vcpkg_minimum_required(VERSION 2020-01-13)
+vcpkg_minimum_required(VERSION 2021-01-13)
 
 file(TO_CMAKE_PATH ${BUILDTREES_DIR} BUILDTREES_DIR)
 file(TO_CMAKE_PATH ${PACKAGES_DIR} PACKAGES_DIR)
