@@ -327,8 +327,8 @@ namespace
 
         if (baseline_identifier == "default")
         {
-            return Strings::format("Couldn't find explicitly specified baseline `\"default\"` in the baseline file.",
-                                   baseline_identifier);
+            return Strings::format("Couldn't find explicitly specified baseline `\"default\"` in baseline file: %s",
+                                   fs::u8string(path_to_baseline));
         }
 
         // attempt to check out the baseline:
