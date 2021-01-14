@@ -55,7 +55,7 @@ def generate_baseline():
                 if versions_object['versions']:
                     last_version = versions_object['versions'][0]
                     baseline_entries[port_name] = {
-                        'version-tag': get_version_tag(last_version),
+                        'baseline': get_version_tag(last_version),
                         'port-version': get_version_port_version(last_version)
                     }
             except json.JSONDecodeError as e:
