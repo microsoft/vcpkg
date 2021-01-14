@@ -16,7 +16,7 @@ using namespace vcpkg;
 
 namespace
 {
-    constexpr StringLiteral VERSION_TAG = "version-tag";
+    constexpr StringLiteral BASELINE = "baseline";
     constexpr StringLiteral VERSION_RELAXED = "version";
     constexpr StringLiteral VERSION_SEMVER = "version-semver";
     constexpr StringLiteral VERSION_DATE = "version-date";
@@ -60,7 +60,7 @@ namespace
         for (auto&& kv_pair : baseline)
         {
             Json::Object baseline_version_obj;
-            insert_version_to_json_object(baseline_version_obj, kv_pair.second, VERSION_TAG);
+            insert_version_to_json_object(baseline_version_obj, kv_pair.second, BASELINE);
             port_entries_obj.insert(kv_pair.first, baseline_version_obj);
         }
 

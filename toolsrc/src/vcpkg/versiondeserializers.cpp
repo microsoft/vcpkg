@@ -7,7 +7,7 @@ using namespace vcpkg::Versions;
 
 namespace
 {
-    constexpr StringLiteral VERSION_TAG = "version-tag";
+    constexpr StringLiteral BASELINE = "baseline";
     constexpr StringLiteral VERSION_RELAXED = "version";
     constexpr StringLiteral VERSION_SEMVER = "version-semver";
     constexpr StringLiteral VERSION_STRING = "version-string";
@@ -171,7 +171,7 @@ namespace vcpkg
 
     Json::IDeserializer<VersionT>& get_versiontag_deserializer_instance()
     {
-        static GenericVersionTDeserializer deserializer(VERSION_TAG);
+        static GenericVersionTDeserializer deserializer(BASELINE);
         return deserializer;
     }
 }
