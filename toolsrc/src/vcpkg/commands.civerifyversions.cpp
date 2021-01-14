@@ -179,7 +179,7 @@ namespace vcpkg::Commands::CIVerifyVersions
             {
                 return {
                     Strings::format("Error: While reading versions for port %s from file: %s\n"
-                                    "       Local port version `%s` exists in version file but it is not the first "
+                                    "       Local port version `%s` exists in version file but it's not the first "
                                     "entry in the \"versions\" array.",
                                     port_name,
                                     fs::u8string(versions_file_path),
@@ -191,7 +191,7 @@ namespace vcpkg::Commands::CIVerifyVersions
             {
                 return {
                     Strings::format("Error: While reading versions for port %s from file: %s\n"
-                                    "       Version `%s` not found in versions file.\n\n"
+                                    "       Version `%s` was not found in versions file.\n"
                                     "       Run:\n\n"
                                     "           vcpkg x-add-version %s\n\n"
                                     "       to add the new port version.",
@@ -328,7 +328,7 @@ namespace vcpkg::Commands::CIVerifyVersions
             {
                 System::printf(System::Color::error, "FAIL: %s\n", port_name);
                 errors.emplace(Strings::format("Error: While validating port %s.\n"
-                                               "       Missing Git SHA."
+                                               "       Missing Git SHA.\n"
                                                "       Run:\n\n"
                                                "           git add %s.\n"
                                                "           git commit -m \"[%s] Add new port\"\n"
@@ -401,9 +401,8 @@ namespace vcpkg::Commands::CIVerifyVersions
                 System::printf(System::Color::error, "%s\n", error);
             }
             System::print2(System::Color::error,
-                           "\nRun:\n\n"
-                           "    vcpkg x-add-version --all --overwrite-versions\n\n"
-                           "to attempt to resolve all errors at once.\n");
+                           "\nTo attempt to resolve all erros at once, run:\n\n"
+                           "    vcpkg x-add-version --all --overwrite-versions\n\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
         Checks::exit_success(VCPKG_LINE_INFO);
