@@ -84,8 +84,14 @@ namespace vcpkg::VisualStudio
         const fs::path vswhere_exe = program_files_32_bit / "Microsoft Visual Studio" / "Installer" / "vswhere.exe";
         if (fs.exists(vswhere_exe))
         {
-            const auto code_and_output = System::cmd_execute_and_capture_output(
-                Strings::format(R"("%s" -all -prerelease -legacy -products * -format xml)", fs::u8string(vswhere_exe)));
+            const auto code_and_output = System::cmd_execute_and_capture_output(System::CmdLineBuilder(vswhere_exe)
+                                                                                    .string_arg("-all")
+                                                                                    .string_arg("-prerelease")
+                                                                                    .string_arg("-legacy")
+                                                                                    .string_arg("-products")
+                                                                                    .string_arg("*")
+                                                                                    .string_arg("-format")
+                                                                                    .string_arg("xml"));
             Checks::check_exit(VCPKG_LINE_INFO,
                                code_and_output.exit_code == 0,
                                "Running vswhere.exe failed with message:\n%s",
