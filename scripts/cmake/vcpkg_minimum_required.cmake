@@ -5,7 +5,7 @@ Asserts that the version of the vcpkg program being used to build a port is late
 
 ## Usage
 ```cmake
-vcpkg_check_linkage(
+vcpkg_minimum_required(
     VERSION 2021-01-13
 )
 ```
