@@ -15,6 +15,17 @@ namespace
 {
     using namespace vcpkg;
 
+    std::string get_scheme_name(Versions::Scheme scheme)
+    {
+        switch (scheme)
+        {
+            case Versions::Scheme::Relaxed: return "version";
+            case Versions::Scheme::Semver: return "version-semver";
+            case Versions::Scheme::String: return "version-string";
+            case Versions::Scheme::Date: return "version-date";
+            default: Checks::unreachable(VCPKG_LINE_INFO);
+        }
+    }
 }
 
 namespace vcpkg::Commands::CIVerifyVersions
@@ -52,8 +63,11 @@ namespace vcpkg::Commands::CIVerifyVersions
         if (!maybe_versions.has_value())
         {
             return {
-                Strings::format(
-                    "Error: Cannot parse `%s`.\n\t%s", fs::u8string(versions_file_path), maybe_versions.error()),
+                Strings::format("Error: While attempting to parse versions for port %s from file: %s\n"
+                                "       Found the following error(s):\n%s",
+                                port_name,
+                                fs::u8string(versions_file_path),
+                                maybe_versions.error()),
                 expected_right_tag,
             };
         }
@@ -62,7 +76,10 @@ namespace vcpkg::Commands::CIVerifyVersions
         if (versions.empty())
         {
             return {
-                Strings::format("Error: File `%s` contains no versions.", fs::u8string(versions_file_path)),
+                Strings::format("Error: While reading versions for port %s from file: %s\n"
+                                "       File contains no versions.",
+                                port_name,
+                                fs::u8string(versions_file_path)),
                 expected_right_tag,
             };
         }
@@ -83,9 +100,14 @@ namespace vcpkg::Commands::CIVerifyVersions
                     if (!maybe_scf.has_value())
                     {
                         return {
-                            Strings::format("Error: Unable to parse `%s` used in version `%s`.\n%s\n",
-                                            treeish,
+                            Strings::format("Error: While reading versions for port %s from file: %s\n"
+                                            "       While validating version: %s.\n"
+                                            "       While trying to load port from: %s\n"
+                                            "       Found the following error(s):\n%s",
+                                            port_name,
+                                            fs::u8string(versions_file_path),
                                             version_entry.first.versiont,
+                                            treeish,
                                             maybe_scf.error()->error),
                             expected_right_tag,
                         };
@@ -96,12 +118,16 @@ namespace vcpkg::Commands::CIVerifyVersions
                     if (version_entry.first.versiont != git_tree_version.versiont)
                     {
                         return {
-                            Strings::format("Error: Version in git-tree `%s` does not match version in file "
-                                            "`%s`.\n\tgit-tree version: %s\n\t    file version: %s\n",
-                                            version_entry.second,
-                                            fs::u8string(versions_file_path),
-                                            git_tree_version.versiont,
-                                            version_entry.first.versiont),
+                            Strings::format(
+                                "Error: While reading versions for port %s from file: %s\n"
+                                "       While validating version: %s.\n"
+                                "       The version declared in file does not match checked-out version: %s\n"
+                                "       Checked out Git SHA: %s",
+                                port_name,
+                                fs::u8string(versions_file_path),
+                                version_entry.first.versiont,
+                                git_tree_version.versiont,
+                                version_entry.second),
                             expected_right_tag,
                         };
                     }
@@ -112,11 +138,15 @@ namespace vcpkg::Commands::CIVerifyVersions
                 if (!version_ok)
                 {
                     return {
-                        Strings::format("Error: The git-tree `%s` for version `%s` in `%s` does not contain a "
-                                        "CONTROL file or vcpkg.json file.",
-                                        version_entry.second,
-                                        version_entry.first.versiont,
-                                        fs::u8string(versions_file_path)),
+                        Strings::format(
+                            "Error: While reading versions for port %s from file: %s\n"
+                            "       While validating version: %s.\n"
+                            "       The checked-out object does not contain a CONTROL file or vcpkg.json file.\n"
+                            "       Checked out Git SHA: %s",
+                            port_name,
+                            fs::u8string(versions_file_path),
+                            version_entry.first.versiont,
+                            version_entry.second),
                         expected_right_tag,
                     };
                 }
@@ -129,48 +159,87 @@ namespace vcpkg::Commands::CIVerifyVersions
         if (!maybe_scf.has_value())
         {
             return {
-                Strings::format("Error: Cannot load port `%s`.\n\t%s", port_name, maybe_scf.error()->error),
+                Strings::format("Error: While attempting to load local port %s.\n"
+                                "       Found the following error(s):\n%s",
+                                port_name,
+                                maybe_scf.error()->error),
                 expected_right_tag,
             };
         }
 
-        const auto found_version = maybe_scf.value_or_exit(VCPKG_LINE_INFO)->to_schemed_version();
-        if (top_entry.first.versiont != found_version.versiont)
+        const auto local_port_version = maybe_scf.value_or_exit(VCPKG_LINE_INFO)->to_schemed_version();
+
+        if (top_entry.first.versiont != local_port_version.versiont)
         {
             auto versions_end = versions.end();
             auto it = std::find_if(versions.begin(), versions_end, [&](auto&& entry) {
-                return entry.first.versiont == found_version.versiont;
+                return entry.first.versiont == local_port_version.versiont;
             });
             if (it != versions_end)
             {
                 return {
-                    Strings::format("Error: Version `%s` found but is not the top entry in `%s`.",
-                                    found_version.versiont,
-                                    fs::u8string(versions_file_path)),
+                    Strings::format("Error: While reading versions for port %s from file: %s\n"
+                                    "       Local port version `%s` exists in version file but it's not the first "
+                                    "entry in the \"versions\" array.",
+                                    port_name,
+                                    fs::u8string(versions_file_path),
+                                    local_port_version.versiont),
                     expected_right_tag,
                 };
             }
             else
             {
                 return {
-                    Strings::format("Error: Version `%s` not found in `%s`.",
-                                    found_version.versiont,
-                                    fs::u8string(versions_file_path)),
+                    Strings::format("Error: While reading versions for port %s from file: %s\n"
+                                    "       Version `%s` was not found in versions file.\n"
+                                    "       Run:\n\n"
+                                    "           vcpkg x-add-version %s\n\n"
+                                    "       to add the new port version.",
+                                    port_name,
+                                    fs::u8string(versions_file_path),
+                                    local_port_version.versiont,
+                                    port_name),
                     expected_right_tag,
                 };
             }
         }
 
+        if (top_entry.first.scheme != local_port_version.scheme)
+        {
+            return {
+                Strings::format("Error: While reading versions for port %s from file: %s\n"
+                                "       File declares version `%s` with scheme: `%s`.\n"
+                                "       But local port declares the same version with a different scheme: `%s`.\n"
+                                "       Version must be unique even between different schemes.\n"
+                                "       Run:\n\n"
+                                "           vcpkg x-add-version %s --overwrite-version\n\n"
+                                "       to overwrite the declared version's scheme.",
+                                port_name,
+                                fs::u8string(versions_file_path),
+                                top_entry.first.versiont,
+                                get_scheme_name(top_entry.first.scheme),
+                                get_scheme_name(local_port_version.scheme),
+                                port_name),
+                expected_right_tag,
+            };
+        }
+
         if (local_git_tree != top_entry.second)
         {
             return {
-                Strings::format("Error: Git tree-ish object for version `%s` in `%s` does not match local port files.\n"
-                                "\tLocal SHA: %s\n"
-                                "\t File SHA: %s",
-                                found_version.versiont,
+                Strings::format("Error: While reading versions for port %s from file: %s\n"
+                                "       File declares version `%s` with SHA: %s\n"
+                                "       But local port with the same verion has a differint SHA: %s\n"
+                                "       This may be caused by locally commited changes to the port.\n"
+                                "       Run:\n\n"
+                                "           vcpkg x-add-version %s --overwrite-version\n\n"
+                                "       to overwrite the declared version's SHA.",
+                                port_name,
                                 fs::u8string(versions_file_path),
+                                top_entry.first.versiont,
                                 local_git_tree,
-                                top_entry.second),
+                                top_entry.second,
+                                port_name),
                 expected_right_tag,
             };
         }
@@ -179,7 +248,14 @@ namespace vcpkg::Commands::CIVerifyVersions
         if (maybe_baseline == baseline.end())
         {
             return {
-                Strings::format("Error: Couldn't find baseline version for port `%s`.", port_name),
+                Strings::format("Error: While reading baseline version for port %s.\n"
+                                "       Baseline version not found.\n"
+                                "       Run:\n\n"
+                                "           vcpkg x-add-version %s\n\n"
+                                "       to set version %s as the baseline version.",
+                                port_name,
+                                port_name,
+                                local_port_version.versiont),
                 expected_right_tag,
             };
         }
@@ -188,27 +264,18 @@ namespace vcpkg::Commands::CIVerifyVersions
         if (baseline_version != top_entry.first.versiont)
         {
             return {
-                Strings::format("Error: The baseline version for port `%s` doesn't match the latest version.\n"
-                                "\tBaseline version: %s\n"
-                                "\t  Latest version: %s (%s)",
+                Strings::format("Error: While reading baseline version for port %s.\n"
+                                "       While validating latest version from file: %s\n"
+                                "       Baseline file declares version: %s.\n"
+                                "       But the latest version in version files is: %s.\n"
+                                "       Run:\n\n"
+                                "           vcpkg x-add-version %s\n\n"
+                                "       to update the baseline version.",
                                 port_name,
+                                fs::u8string(versions_file_path),
                                 baseline_version,
                                 top_entry.first.versiont,
-                                fs::u8string(versions_file_path)),
-                expected_right_tag,
-            };
-        }
-
-        if (local_git_tree != top_entry.second)
-        {
-            return {
-                Strings::format("Error: Git tree-ish object for version `%s` in `%s` does not match local port files.\n"
-                                "\tLocal SHA: %s\n"
-                                "\t File SHA: %s",
-                                found_version.versiont,
-                                fs::u8string(versions_file_path),
-                                local_git_tree,
-                                top_entry.second),
+                                port_name),
                 expected_right_tag,
             };
         }
@@ -238,7 +305,7 @@ namespace vcpkg::Commands::CIVerifyVersions
         auto maybe_port_git_tree_map = paths.git_get_local_port_treeish_map();
         Checks::check_exit(VCPKG_LINE_INFO,
                            maybe_port_git_tree_map.has_value(),
-                           "Error: Failed to obtain git treeish objects for local ports.\n%s",
+                           "Fatal error: Failed to obtain git SHAs for local ports.\n%s",
                            maybe_port_git_tree_map.error());
         auto port_git_tree_map = maybe_port_git_tree_map.value_or_exit(VCPKG_LINE_INFO);
 
@@ -260,7 +327,17 @@ namespace vcpkg::Commands::CIVerifyVersions
             if (git_tree_it == port_git_tree_map.end())
             {
                 System::printf(System::Color::error, "FAIL: %s\n", port_name);
-                errors.emplace(Strings::format("Error: Missing local git tree object for port `%s`.", port_name));
+                errors.emplace(Strings::format("Error: While validating port %s.\n"
+                                               "       Missing Git SHA.\n"
+                                               "       Run:\n\n"
+                                               "           git add %s.\n"
+                                               "           git commit -m \"[%s] Add new port\"\n"
+                                               "           vcpkg x-add-version %s\n\n"
+                                               "       to commit the new port and create its version file.",
+                                               port_name,
+                                               fs::u8string(port_path),
+                                               port_name,
+                                               port_name));
                 continue;
             }
             auto git_tree = git_tree_it->second;
@@ -274,7 +351,9 @@ namespace vcpkg::Commands::CIVerifyVersions
             {
                 System::printf(System::Color::error, "FAIL: %s\n", port_name);
                 errors.emplace(
-                    Strings::format("Error: Both a manifest file and a CONTROL file exist in port directory: %s",
+                    Strings::format("Error: While validating port %s.\n"
+                                    "       Both a manifest file and a CONTROL file exist in port directory: %s",
+                                    port_name,
                                     fs::u8string(port_path)));
                 continue;
             }
@@ -282,7 +361,9 @@ namespace vcpkg::Commands::CIVerifyVersions
             if (!manifest_exists && !control_exists)
             {
                 System::printf(System::Color::error, "FAIL: %s\n", port_name);
-                errors.emplace(Strings::format("Error: No manifest file or CONTROL file exist in port directory: %s",
+                errors.emplace(Strings::format("Error: While validating port %s.\n"
+                                               "       No manifest file or CONTROL file exist in port directory: %s",
+                                               port_name,
                                                fs::u8string(port_path)));
                 continue;
             }
@@ -292,7 +373,8 @@ namespace vcpkg::Commands::CIVerifyVersions
             if (!fs.exists(versions_file_path))
             {
                 System::printf(System::Color::error, "FAIL: %s\n", port_name);
-                errors.emplace(Strings::format("Error: Missing versions file for `%s`. Expected at `%s`.",
+                errors.emplace(Strings::format("Error: While validating port %s.\n"
+                                               "       Missing expected versions file at: %s",
                                                port_name,
                                                fs::u8string(versions_file_path)));
                 continue;
@@ -318,6 +400,9 @@ namespace vcpkg::Commands::CIVerifyVersions
             {
                 System::printf(System::Color::error, "%s\n", error);
             }
+            System::print2(System::Color::error,
+                           "\nTo attempt to resolve all erros at once, run:\n\n"
+                           "    vcpkg x-add-version --all --overwrite-versions\n\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
         Checks::exit_success(VCPKG_LINE_INFO);
