@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eProsima/Fast-DDS
-    REF 40568fa4784e846f95c461608d43a2b57eaef55b # v2.0.1
-    SHA512 a0cb48713a41ba3562c98dfc176508779e70e35b573428ac0a74c74254aa34c583bd545169f3a3961172bfc9e7bb14d08b5d56569e176fe8248d714bec5813a4
+    REF 30c143f8fabd568ef357e94e787878f181fa0b3b # v2.1.0
+    SHA512 15c7d2bd6e02f80591df9cd43b046760d8002a85e63ea0155bccacbd4d0388850167b0d3c6fee0e820b448db50925e5e682d5ae3a2451653c36f20841aae97e5
     HEAD_REF master
 )
 
@@ -12,6 +12,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/fastrtps/cmake TARGET_PATH share/fastrtps)
