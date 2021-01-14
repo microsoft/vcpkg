@@ -57,24 +57,23 @@ $gitRegistryUpstream = (Get-Item $gitRegistryUpstream).FullName
 Push-Location $gitRegistryUpstream
 try
 {
+    $gitConfigOptions = @(
+        '-c', 'user.name=Nobody',
+        '-c', 'user.email=nobody@example.com',
+        '-c', 'core.autocrlf=false'
+    )
+
     $CurrentTest = 'git init .'
-    git init .
-    Throw-IfFailed
-    $CurrentTest = 'git config'
-    git config --local user.name 'Nobody'
-    Throw-IfFailed
-    git config --local user.email 'nobody@example.com'
-    Throw-IfFailed
-    git config --local core.autocrlf 'false'
+    git @gitConfigOptions init .
     Throw-IfFailed
     Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/port_versions" -Destination .
     Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/vcpkg-internal-e2e-test-port" -Destination .
 
     $CurrentTest = 'git add -A'
-    git add -A
+    git @gitConfigOptions add -A
     Throw-IfFailed
     $CurrentTest = 'git commit'
-    git commit -m 'initial commit'
+    git @gitConfigOptions commit -m 'initial commit'
     Throw-IfFailed
 }
 finally
