@@ -97,7 +97,8 @@ namespace
         }
 
         std::error_code ec;
-        fs.write_contents(output_path, Json::stringify(serialize_baseline(baseline_map), {}), ec);
+        fs.write_contents(
+            output_path, Json::stringify(serialize_baseline(baseline_map), Json::JsonStyle::with_spaces(2)), ec);
         if (ec)
         {
             System::printf(
@@ -127,7 +128,8 @@ namespace
 
         std::error_code ec;
         fs.create_directories(output_path.parent_path(), VCPKG_LINE_INFO);
-        fs.write_contents(output_path, Json::stringify(serialize_versions(versions), {}), ec);
+        fs.write_contents(
+            output_path, Json::stringify(serialize_versions(versions), Json::JsonStyle::with_spaces(2)), ec);
         if (ec)
         {
             System::printf(
