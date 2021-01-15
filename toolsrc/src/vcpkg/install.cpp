@@ -846,82 +846,54 @@ namespace vcpkg::Install
                 features.erase(core_it);
             }
 
-            if (args.versions_enabled() || args.registries_enabled())
+            if (!manifest_scf.core_paragraph->overrides.empty())
             {
-                if (!manifest_scf.core_paragraph->overrides.empty())
-                {
-                    Metrics::g_metrics.lock()->track_property("manifest_overrides", "defined");
-                }
-                if (auto p_baseline = manifest_scf.core_paragraph->builtin_baseline.get())
-                {
-                    Metrics::g_metrics.lock()->track_property("manifest_baseline", "defined");
-                    if (p_baseline->size() != 40 || !std::all_of(p_baseline->begin(), p_baseline->end(), [](char ch) {
-                            return (ch >= 'a' || ch <= 'f') || Parse::ParserBase::is_ascii_digit(ch);
-                        }))
-                    {
-                        Checks::exit_with_message(
-                            VCPKG_LINE_INFO,
-                            "Error: the top-level builtin-baseline (%s) was not a valid commit sha: "
-                            "expected 40 lowercase hexadecimal characters.\n%s\n",
-                            *p_baseline,
-                            paths.get_current_git_sha_message());
-                    }
-                    paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(*p_baseline);
-                }
+                Metrics::g_metrics.lock()->track_property("manifest_overrides", "defined");
             }
-            if (args.versions_enabled())
+            if (auto p_baseline = manifest_scf.core_paragraph->builtin_baseline.get())
             {
-                auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
-                auto baseprovider = PortFileProvider::make_baseline_provider(paths);
-                auto oprovider = PortFileProvider::make_overlay_provider(paths, args.overlay_ports);
-
-                auto install_plan =
-                    Dependencies::create_versioned_install_plan(*verprovider,
-                                                                *baseprovider,
-                                                                *oprovider,
-                                                                var_provider,
-                                                                manifest_scf.core_paragraph->dependencies,
-                                                                manifest_scf.core_paragraph->overrides,
-                                                                {manifest_scf.core_paragraph->name, default_triplet})
-                        .value_or_exit(VCPKG_LINE_INFO);
-
-                for (InstallPlanAction& action : install_plan.install_actions)
+                Metrics::g_metrics.lock()->track_property("manifest_baseline", "defined");
+                if (p_baseline->size() != 40 || !std::all_of(p_baseline->begin(), p_baseline->end(), [](char ch) {
+                        return (ch >= 'a' || ch <= 'f') || Parse::ParserBase::is_ascii_digit(ch);
+                    }))
                 {
-                    action.build_options = install_plan_options;
-                    action.build_options.use_head_version = Build::UseHeadVersion::NO;
-                    action.build_options.editable = Build::Editable::NO;
+                    Checks::exit_with_message(VCPKG_LINE_INFO,
+                                              "Error: the top-level builtin-baseline (%s) was not a valid commit sha: "
+                                              "expected 40 lowercase hexadecimal characters.\n%s\n",
+                                              *p_baseline,
+                                              paths.get_current_git_sha_message());
                 }
+                paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(*p_baseline);
+            }
+            auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
+            auto baseprovider = PortFileProvider::make_baseline_provider(paths);
+            auto oprovider = PortFileProvider::make_overlay_provider(paths, args.overlay_ports);
 
-                Commands::SetInstalled::perform_and_exit_ex(args,
-                                                            paths,
-                                                            provider,
-                                                            *binaryprovider,
+            auto install_plan =
+                Dependencies::create_versioned_install_plan(*verprovider,
+                                                            *baseprovider,
+                                                            *oprovider,
                                                             var_provider,
-                                                            std::move(install_plan),
-                                                            dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
-                                                            pkgsconfig);
-            }
-            else
+                                                            manifest_scf.core_paragraph->dependencies,
+                                                            manifest_scf.core_paragraph->overrides,
+                                                            {manifest_scf.core_paragraph->name, default_triplet})
+                    .value_or_exit(VCPKG_LINE_INFO);
+
+            for (InstallPlanAction& action : install_plan.install_actions)
             {
-                auto specs = resolve_deps_as_top_level(manifest_scf, default_triplet, features, var_provider);
-                auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
-
-                for (InstallPlanAction& action : install_plan.install_actions)
-                {
-                    action.build_options = install_plan_options;
-                    action.build_options.use_head_version = Build::UseHeadVersion::NO;
-                    action.build_options.editable = Build::Editable::NO;
-                }
-
-                Commands::SetInstalled::perform_and_exit_ex(args,
-                                                            paths,
-                                                            provider,
-                                                            *binaryprovider,
-                                                            var_provider,
-                                                            std::move(install_plan),
-                                                            dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
-                                                            pkgsconfig);
+                action.build_options = install_plan_options;
+                action.build_options.use_head_version = Build::UseHeadVersion::NO;
+                action.build_options.editable = Build::Editable::NO;
             }
+
+            Commands::SetInstalled::perform_and_exit_ex(args,
+                                                        paths,
+                                                        provider,
+                                                        *binaryprovider,
+                                                        var_provider,
+                                                        std::move(install_plan),
+                                                        dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
+                                                        pkgsconfig);
         }
 
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
