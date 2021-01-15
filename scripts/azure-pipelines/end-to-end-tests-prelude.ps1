@@ -16,6 +16,15 @@ $commonArgs = @(
 )
 $Script:CurrentTest = 'unassigned'
 
+if ($IsWindows)
+{
+    $VcpkgExe = Get-Item './vcpkg.exe'
+}
+else
+{
+    $VcpkgExe = Get-Item './vcpkg'
+}
+
 function Refresh-TestRoot {
     Remove-Item -Recurse -Force $TestingRoot -ErrorAction SilentlyContinue
     mkdir $TestingRoot | Out-Null
@@ -54,22 +63,18 @@ function Throw-IfNotFailed {
     }
 }
 
+function Write-Trace ([string]$text) {
+    Write-Host (@($MyInvocation.ScriptName, ":", $MyInvocation.ScriptLineNumber, ": ", $text) -join "")
+}
+
 function Run-Vcpkg {
     Param(
         [Parameter(ValueFromRemainingArguments)]
         [string[]]$TestArgs
     )
-
-    if ($IsWindows) {
-        $vcpkgName = 'vcpkg.exe'
-    } else {
-        $vcpkgName = 'vcpkg'
-    }
-
-    $Script:CurrentTest = "./$vcpkgName $($testArgs -join ' ')"
+    $Script:CurrentTest = "vcpkg $($testArgs -join ' ')"
     Write-Host $Script:CurrentTest
-    & "./$vcpkgName" @testArgs | Tee-Object -Variable 'ConsoleOutput'
-    return $ConsoleOutput
+    & $VcpkgExe @testArgs
 }
 
 Refresh-TestRoot

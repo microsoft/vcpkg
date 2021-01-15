@@ -68,26 +68,31 @@ if ($out -notmatch ".*Error: while checking out baseline.*")
 }
 
 git fetch https://github.com/vicroms/test-registries
-$CurrentTest = "without default baseline 2 -- enabling versions should not change behavior"
-Remove-Item -Recurse $buildtreesRoot/versioning -ErrorAction SilentlyContinue
-./vcpkg $commonArgs "--feature-flags=versions" install `
-    "--dry-run" `
-    "--x-manifest-root=scripts/testing/version-files/without-default-baseline-2" `
-    "--x-builtin-port-versions-dir=scripts/testing/version-files/default-baseline-2/port_versions"
-Throw-IfFailed
-Require-FileNotExists $buildtreesRoot/versioning
+foreach ($opt_registries in @("",",registries"))
+{
+    Write-Trace "testing baselines: $opt_registries"
+    Refresh-TestRoot
+    $CurrentTest = "without default baseline 2 -- enabling versions should not change behavior"
+    Remove-Item -Recurse $buildtreesRoot/versioning -ErrorAction SilentlyContinue
+    ./vcpkg $commonArgs "--feature-flags=versions$opt_registries" install `
+        "--dry-run" `
+        "--x-manifest-root=scripts/testing/version-files/without-default-baseline-2" `
+        "--x-builtin-port-versions-dir=scripts/testing/version-files/default-baseline-2/port_versions"
+    Throw-IfFailed
+    Require-FileNotExists $buildtreesRoot/versioning
 
-$CurrentTest = "default baseline 2"
-./vcpkg $commonArgs "--feature-flags=versions" install `
-    "--dry-run" `
-    "--x-manifest-root=scripts/testing/version-files/default-baseline-2" `
-    "--x-builtin-port-versions-dir=scripts/testing/version-files/default-baseline-2/port_versions"
-Throw-IfFailed
-Require-FileExists $buildtreesRoot/versioning
+    $CurrentTest = "default baseline 2"
+    ./vcpkg $commonArgs "--feature-flags=versions$opt_registries" install `
+        "--dry-run" `
+        "--x-manifest-root=scripts/testing/version-files/default-baseline-2" `
+        "--x-builtin-port-versions-dir=scripts/testing/version-files/default-baseline-2/port_versions"
+    Throw-IfFailed
+    Require-FileExists $buildtreesRoot/versioning
 
-$CurrentTest = "using version features fails without flag"
-./vcpkg $commonArgs "--feature-flags=-versions" install `
-    "--dry-run" `
-    "--x-manifest-root=scripts/testing/version-files/default-baseline-2" `
-    "--x-builtin-port-versions-dir=scripts/testing/version-files/default-baseline-2/port_versions"
-Throw-IfNotFailed
+    $CurrentTest = "using version features fails without flag"
+    ./vcpkg $commonArgs "--feature-flags=-versions$opt_registries" install `
+        "--dry-run" `
+        "--x-manifest-root=scripts/testing/version-files/default-baseline-2" `
+        "--x-builtin-port-versions-dir=scripts/testing/version-files/default-baseline-2/port_versions"
+    Throw-IfNotFailed
+}

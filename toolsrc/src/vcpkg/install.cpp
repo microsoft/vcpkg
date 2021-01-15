@@ -1,5 +1,6 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
@@ -845,10 +846,8 @@ namespace vcpkg::Install
                 features.erase(core_it);
             }
 
-            if (args.versions_enabled())
+            if (args.versions_enabled() || args.registries_enabled())
             {
-                auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
-                auto baseprovider = PortFileProvider::make_baseline_provider(paths);
                 if (!manifest_scf.core_paragraph->overrides.empty())
                 {
                     Metrics::g_metrics.lock()->track_property("manifest_overrides", "defined");
@@ -869,6 +868,11 @@ namespace vcpkg::Install
                     }
                     paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(*p_baseline);
                 }
+            }
+            if (args.versions_enabled())
+            {
+                auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
+                auto baseprovider = PortFileProvider::make_baseline_provider(paths);
                 auto oprovider = PortFileProvider::make_overlay_provider(paths, args.overlay_ports);
 
                 auto install_plan =
