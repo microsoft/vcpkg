@@ -57,7 +57,7 @@ namespace vcpkg::Help
         tbl.text("** This feature is experimental and requires `--feature-flags=versions` **");
         tbl.blank();
         tbl.blank();
-        tbl.header("Versions in vcpkg come in three primary flavors");
+        tbl.header("Versions in vcpkg come in four primary flavors");
         tbl.format("version", "A dot-separated sequence of numbers (1.2.3.4)");
         tbl.format("version-date", "A date (2021-01-01.5)");
         tbl.format("version-semver", "A Semantic Version 2.0 (2.1.0-rc2)");

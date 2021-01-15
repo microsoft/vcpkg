@@ -8,7 +8,7 @@ your project from within your manifest file.
 ## Version schemes
 
 ### Schemes
-Versions in vcpkg come in three primary flavors:
+Versions in vcpkg come in four primary flavors:
 
 #### version
 A dot-separated sequence of numbers (1.2.3.4)
