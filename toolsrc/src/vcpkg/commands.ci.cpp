@@ -271,7 +271,7 @@ namespace vcpkg::Commands::CI
         std::vector<FullPackageSpec> unknown;
         std::map<PackageSpec, Build::BuildResult> known;
         std::map<PackageSpec, std::vector<std::string>> features;
-        std::unordered_map<std::string, SourceControlFileLocation> default_feature_provider;
+        Dependencies::ActionPlan plan;
         std::map<PackageSpec, std::string> abi_map;
     };
 
@@ -324,28 +324,20 @@ namespace vcpkg::Commands::CI
 
         auto timer = Chrono::ElapsedTimer::create_started();
 
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           action_plan.already_installed.empty(),
-                           "Cannot use CI command with packages already installed.");
+        Checks::check_exit(VCPKG_LINE_INFO, action_plan.already_installed.empty());
+        Checks::check_exit(VCPKG_LINE_INFO, action_plan.remove_actions.empty());
 
         Build::compute_all_abis(paths, action_plan, var_provider, {});
 
+        auto precheck_results = binary_provider_precheck(paths, action_plan, binaryprovider);
         {
             vcpkg::System::BufferedPrint stdout_print;
-            auto precheck_results = binary_provider_precheck(paths, action_plan, binaryprovider);
 
             for (auto&& action : action_plan.install_actions)
             {
                 auto p = &action;
                 ret->abi_map.emplace(action.spec, action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi);
                 ret->features.emplace(action.spec, action.feature_list);
-                if (auto scfl = p->source_control_file_location.get())
-                {
-                    auto emp = ret->default_feature_provider.emplace(p->spec.name(), scfl->clone());
-                    emp.first->second.source_control_file->core_paragraph->default_features = p->feature_list;
-
-                    p->build_options = vcpkg::Build::backcompat_prohibiting_package_options;
-                }
 
                 auto precheck_result = precheck_results.at(&action);
                 bool b_will_build = false;
@@ -398,6 +390,30 @@ namespace vcpkg::Commands::CI
                                                     action.abi_info.value_or_exit(VCPKG_LINE_INFO).package_abi));
             }
         } // flush stdout_print
+
+        // This algorithm consumes the previous action plan to build and return a reduced one.
+        std::vector<InstallPlanAction>&& input_install_actions = std::move(action_plan.install_actions);
+        std::vector<InstallPlanAction*> rev_install_actions;
+        rev_install_actions.reserve(input_install_actions.size());
+        std::set<PackageSpec> to_keep;
+        for (auto it = input_install_actions.rbegin(); it != input_install_actions.rend(); ++it)
+        {
+            if (!Util::Sets::contains(ret->known, it->spec))
+            {
+                to_keep.insert(it->spec);
+            }
+
+            if (Util::Sets::contains(to_keep, it->spec))
+            {
+                rev_install_actions.push_back(&*it);
+                to_keep.insert(it->package_dependencies.begin(), it->package_dependencies.end());
+            }
+        }
+
+        for (auto it = rev_install_actions.rbegin(); it != rev_install_actions.rend(); ++it)
+        {
+            ret->plan.install_actions.push_back(std::move(**it));
+        }
 
         System::printf("Time to determine pass/fail: %s\n", timer.elapsed());
         return ret;
@@ -480,10 +496,6 @@ namespace vcpkg::Commands::CI
                 return FullPackageSpec{spec, std::move(default_features)};
             });
 
-            auto split_specs = find_unknown_ports_for_ci(
-                paths, exclusions_set, provider, var_provider, all_default_full_specs, binaryprovider);
-            PortFileProvider::MapPortFileProvider new_default_provider(split_specs->default_feature_provider);
-
             Dependencies::CreateInstallPlanOptions serialize_options;
 
             struct RandomizerInstance : Graphs::Randomizer
@@ -503,8 +515,10 @@ namespace vcpkg::Commands::CI
                 serialize_options.randomizer = &randomizer_instance;
             }
 
-            auto action_plan = Dependencies::create_feature_install_plan(
-                new_default_provider, var_provider, split_specs->unknown, status_db, serialize_options);
+            auto split_specs = find_unknown_ports_for_ci(
+                paths, exclusions_set, provider, var_provider, all_default_full_specs, binaryprovider);
+
+            auto& action_plan = split_specs->plan;
 
             for (auto&& action : action_plan.install_actions)
             {

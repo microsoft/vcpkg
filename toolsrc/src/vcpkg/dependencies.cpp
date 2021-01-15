@@ -500,7 +500,7 @@ namespace vcpkg::Dependencies
         return nullopt;
     }
 
-    std::vector<PackageSpec> ExportPlanAction::dependencies(Triplet) const
+    std::vector<PackageSpec> ExportPlanAction::dependencies() const
     {
         if (auto p_ip = m_installed_package.get())
             return p_ip->dependencies();
@@ -587,7 +587,7 @@ namespace vcpkg::Dependencies
 
             std::vector<PackageSpec> adjacency_list(const ExportPlanAction& plan) const override
             {
-                return plan.dependencies(plan.spec.triplet());
+                return plan.dependencies();
             }
 
             ExportPlanAction load_vertex_data(const PackageSpec& spec) const override
