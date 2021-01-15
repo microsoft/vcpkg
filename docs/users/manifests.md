@@ -64,12 +64,26 @@ Additionally, the `"port-version"` field is used by registries of packages,
 as a way to version "the package gotten from `vcpkg install`" differently from the upstream package version.
 You shouldn't need to worry about this at all.
 
+#### Additional version fields
+
+**Experimental behind the `versions` feature flag**
+
+See [versioning.md](versioning.md#version%20schemes) for additional version types.
+
 ### `"description"`
 
 This is where you describe your project. Give it a good description to help in searching for it!
 This can be a single string, or it can be an array of strings;
 in the latter case, the first string is treated as a summary,
 while the remaining strings are treated as the full description.
+
+### `"builtin-baseline"`
+
+**Experimental behind the `versions` feature flag**
+
+This field indicates the commit of vcpkg which provides global minimum version information for your manifest. It is required for top-level manifest files using versioning.
+
+See also [versioning](versioning.md#builtin-baseline) for more semantic details.
 
 ### `"dependencies"`
 
@@ -131,6 +145,16 @@ The common identifiers are:
 
 although one can define their own.
 
+#### `"version>="`
+
+**Experimental behind the `versions` feature flag**
+
+A minimum version constraint on the dependency.
+
+This field specifies the minimum version of the dependency using a '#' suffix to denote port-version if non-zero.
+
+See also [versioning](versioning.md#constraints) for more semantic details.
+
 #### Example:
 
 ```json
@@ -146,6 +170,26 @@ although one can define their own.
     {
       "name": "picosha2",
       "platform": "!windows"
+    }
+  ]
+}
+```
+
+### `"overrides"`
+
+**Experimental behind the `versions` feature flag**
+
+This field enables version resolution to be ignored for certain dependencies and to use specific versions instead.
+
+See also [versioning](versioning.md#overrides) for more semantic details.
+
+#### Example:
+
+```json
+{
+  "overrides": [
+    {
+      "name": "arrow", "version": "1.2.3", "port-version": 7
     }
   ]
 }
@@ -180,8 +224,9 @@ and that's the `"default-features"` field, which is an array of feature names.
   "name": "libdb",
   "description": [
     "An example database library.",
-    "Optionally uses one of CBOR, JSON, or CSV as a backend."
+    "Optionally can build with CBOR, JSON, or CSV as backends."
   ],
+  "$default-features-explanation": "Users using this library transitively will get all backends automatically",
   "default-features": [ "cbor", "csv", "json" ],
   "features": {
     "cbor": {
@@ -189,8 +234,7 @@ and that's the `"default-features"` field, which is an array of feature names.
       "dependencies": [
         {
           "$explanation": [
-            "This is currently how you tell vcpkg that the cbor feature depends on the json feature of this package",
-            "We're looking into making this easier"
+            "This is how you tell vcpkg that the cbor feature depends on the json feature of this package"
           ],
           "name": "libdb",
           "default-features": false,

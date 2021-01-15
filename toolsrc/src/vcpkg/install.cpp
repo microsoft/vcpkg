@@ -17,6 +17,7 @@
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/remove.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/vcpkgpaths.h>
 
@@ -847,10 +848,25 @@ namespace vcpkg::Install
 
             if (args.versions_enabled() || args.registries_enabled())
             {
-                if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
+                if (!manifest_scf.core_paragraph->overrides.empty())
                 {
-                    paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(
-                        p_baseline->string());
+                    Metrics::g_metrics.lock()->track_property("manifest_overrides", "defined");
+                }
+                if (auto p_baseline = manifest_scf.core_paragraph->builtin_baseline.get())
+                {
+                    Metrics::g_metrics.lock()->track_property("manifest_baseline", "defined");
+                    if (p_baseline->size() != 40 || !std::all_of(p_baseline->begin(), p_baseline->end(), [](char ch) {
+                            return (ch >= 'a' || ch <= 'f') || Parse::ParserBase::is_ascii_digit(ch);
+                        }))
+                    {
+                        Checks::exit_with_message(
+                            VCPKG_LINE_INFO,
+                            "Error: the top-level builtin-baseline (%s) was not a valid commit sha: "
+                            "expected 40 lowercase hexadecimal characters.\n%s\n",
+                            *p_baseline,
+                            paths.get_current_git_sha_message());
+                    }
+                    paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(*p_baseline);
                 }
             }
             if (args.versions_enabled())

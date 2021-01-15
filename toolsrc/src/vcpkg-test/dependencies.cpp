@@ -196,7 +196,7 @@ private:
 
 static const MockOverlayProvider s_empty_mock_overlay;
 
-ExpectedS<Dependencies::ActionPlan> create_versioned_install_plan(
+static ExpectedS<Dependencies::ActionPlan> create_versioned_install_plan(
     const PortFileProvider::IVersionedPortfileProvider& provider,
     const PortFileProvider::IBaselineProvider& bprovider,
     const CMakeVars::CMakeVarProvider& var_provider,
@@ -335,7 +335,7 @@ TEST_CASE ("basic version install scheme baseline missing success", "[versionpla
                                              bp,
                                              var_provider,
                                              {
-                                                 Dependency{"a", {}, {}, {Constraint::Type::Exact, "2"}},
+                                                 Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2"}},
                                              },
                                              {},
                                              toplevel_spec()));
@@ -375,7 +375,7 @@ TEST_CASE ("version string baseline agree", "[versionplan]")
     MockCMakeVarProvider var_provider;
 
     auto install_plan = create_versioned_install_plan(
-        vp, bp, var_provider, {Dependency{"a", {}, {}, {Constraint::Type::Exact, "2"}}}, {}, toplevel_spec());
+        vp, bp, var_provider, {Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2"}}}, {}, toplevel_spec());
 
     REQUIRE(install_plan.has_value());
 }
@@ -396,7 +396,7 @@ TEST_CASE ("version install scheme baseline conflict", "[versionplan]")
                                                       bp,
                                                       var_provider,
                                                       {
-                                                          Dependency{"a", {}, {}, {Constraint::Type::Exact, "3"}},
+                                                          Dependency{"a", {}, {}, {Constraint::Type::Minimum, "3"}},
                                                       },
                                                       {},
                                                       toplevel_spec());
@@ -421,7 +421,7 @@ TEST_CASE ("version install string port version", "[versionplan]")
                                              bp,
                                              var_provider,
                                              {
-                                                 Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 1}},
+                                                 Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2", 1}},
                                              },
                                              {},
                                              toplevel_spec()));
@@ -447,7 +447,7 @@ TEST_CASE ("version install string port version 2", "[versionplan]")
                                              bp,
                                              var_provider,
                                              {
-                                                 Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 0}},
+                                                 Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2", 0}},
                                              },
                                              {},
                                              toplevel_spec()));
@@ -463,10 +463,10 @@ TEST_CASE ("version install transitive string", "[versionplan]")
 
     MockVersionedPortfileProvider vp;
     vp.emplace("a", {"2", 0}).source_control_file->core_paragraph->dependencies = {
-        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Exact, "1"}},
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "1"}},
     };
     vp.emplace("a", {"2", 1}).source_control_file->core_paragraph->dependencies = {
-        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Exact, "2"}},
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "2"}},
     };
     vp.emplace("b", {"1", 0});
     vp.emplace("b", {"2", 0});
@@ -478,7 +478,7 @@ TEST_CASE ("version install transitive string", "[versionplan]")
                                              bp,
                                              var_provider,
                                              {
-                                                 Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 1}},
+                                                 Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2", 1}},
                                              },
                                              {},
                                              toplevel_spec()));
@@ -1006,7 +1006,7 @@ TEST_CASE ("version install scheme change in port version", "[versionplan]")
 {
     MockVersionedPortfileProvider vp;
     vp.emplace("a", {"2", 0}).source_control_file->core_paragraph->dependencies = {
-        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Exact, "1"}},
+        Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "1"}},
     };
     vp.emplace("a", {"2", 1}).source_control_file->core_paragraph->dependencies = {
         Dependency{"b", {}, {}, DependencyConstraint{Constraint::Type::Minimum, "1", 1}},
@@ -1026,7 +1026,7 @@ TEST_CASE ("version install scheme change in port version", "[versionplan]")
                                                  bp,
                                                  var_provider,
                                                  {
-                                                     Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 1}},
+                                                     Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2", 1}},
                                                  },
                                                  {},
                                                  toplevel_spec()));
@@ -1045,7 +1045,7 @@ TEST_CASE ("version install scheme change in port version", "[versionplan]")
                                                  bp,
                                                  var_provider,
                                                  {
-                                                     Dependency{"a", {}, {}, {Constraint::Type::Exact, "2", 0}},
+                                                     Dependency{"a", {}, {}, {Constraint::Type::Minimum, "2", 0}},
                                                  },
                                                  {},
                                                  toplevel_spec()));
@@ -1305,7 +1305,8 @@ TEST_CASE ("version install transitive overrides", "[versionplan]")
     MockVersionedPortfileProvider vp;
 
     vp.emplace("b", {"1", 0}, Scheme::Relaxed)
-        .source_control_file->core_paragraph->dependencies.push_back({"c", {}, {}, {Constraint::Type::Exact, "2", 1}});
+        .source_control_file->core_paragraph->dependencies.push_back(
+            {"c", {}, {}, {Constraint::Type::Minimum, "2", 1}});
     vp.emplace("b", {"2", 0}, Scheme::Relaxed);
     vp.emplace("c", {"1", 0}, Scheme::String);
     vp.emplace("c", {"2", 1}, Scheme::String);
