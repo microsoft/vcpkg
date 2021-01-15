@@ -69,7 +69,7 @@ Throw-IfNotFailed
 
 git fetch https://github.com/vicroms/test-registries
 $CurrentTest = "default baseline"
-./vcpkg $commonArgs "--feature-flags=versions" install `
+./vcpkg $commonArgs --debug "--feature-flags=versions" install `
     "--x-manifest-root=scripts/testing/version-files/default-baseline-2" `
     "--x-builtin-port-versions-dir=scripts/testing/version-files/default-baseline-2/port_versions"
 Throw-IfFailed

@@ -173,8 +173,7 @@ namespace vcpkg::Export
             .path_arg(output_dir)
             .string_arg("-NoDefaultExcludes");
 
-        const int exit_code =
-            System::cmd_execute_and_capture_output(cmd.extract(), System::get_clean_environment()).exit_code;
+        const int exit_code = System::cmd_execute_and_capture_output(cmd, System::get_clean_environment()).exit_code;
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
 
         const fs::path output_path = output_dir / (nuget_id + "." + nuget_version + ".nupkg");
@@ -225,8 +224,6 @@ namespace vcpkg::Export
         const fs::path exported_archive_path = (output_dir / exported_archive_filename);
 
         System::CmdLineBuilder cmd;
-        cmd.string_arg("cd").path_arg(raw_exported_dir.parent_path());
-        cmd.ampersand();
         cmd.path_arg(cmake_exe)
             .string_arg("-E")
             .string_arg("tar")
@@ -236,14 +233,8 @@ namespace vcpkg::Export
             .string_arg("--")
             .path_arg(raw_exported_dir);
 
-        auto cmdline = cmd.extract();
-#ifdef WIN32
-        // Invoke through `cmd` to support `&&`
-        cmdline.insert(0, "cmd /c \"");
-        cmdline.push_back('"');
-#endif
-
-        const int exit_code = System::cmd_execute_clean(cmdline);
+        const int exit_code =
+            System::cmd_execute_clean(cmd, System::InWorkingDirectory{raw_exported_dir.parent_path()});
         Checks::check_exit(
             VCPKG_LINE_INFO, exit_code == 0, "Error: %s creation failed", exported_archive_path.generic_string());
         return exported_archive_path;
