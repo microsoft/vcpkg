@@ -32,7 +32,7 @@ Param(
 
 $ErrorActionPreference = "Stop"
 
-$WorkingRoot = Resolve-Path $WorkingRoot
+$WorkingRoot = (Get-Item $WorkingRoot).FullName
 
 $AllTests = Get-ChildItem $PSScriptRoot/end-to-end-tests-dir/*.ps1
 if ($Filter -ne $Null) {

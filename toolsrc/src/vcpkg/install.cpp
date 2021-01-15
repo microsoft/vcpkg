@@ -1,5 +1,6 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
@@ -847,19 +848,21 @@ namespace vcpkg::Install
                 features.erase(core_it);
             }
 
-            ActionPlan install_plan;
-            if (args.versions_enabled())
+            if (args.versions_enabled() || args.registries_enabled())
             {
-                auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
-                auto baseprovider = PortFileProvider::make_baseline_provider(paths);
                 if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
                 {
                     paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(
                         p_baseline->string());
                 }
+            }
+            if (args.versions_enabled())
+            {
+                auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
+                auto baseprovider = PortFileProvider::make_baseline_provider(paths);
                 auto oprovider = PortFileProvider::make_overlay_provider(paths, args.overlay_ports);
 
-                install_plan =
+                auto install_plan =
                     Dependencies::create_versioned_install_plan(*verprovider,
                                                                 *baseprovider,
                                                                 *oprovider,
@@ -890,7 +893,7 @@ namespace vcpkg::Install
             {
                 auto specs =
                     resolve_deps_as_top_level(manifest_scf, default_triplet, host_triplet, features, var_provider);
-                install_plan =
+                auto install_plan =
                     Dependencies::create_feature_install_plan(provider, var_provider, specs, {}, {host_triplet});
 
                 for (InstallPlanAction& action : install_plan.install_actions)
