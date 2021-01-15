@@ -118,8 +118,12 @@ namespace vcpkg
         const std::string& get_tool_version(const std::string& tool) const;
 
         // Git manipulation in the vcpkg directory
-        fs::path git_checkout_baseline(Files::Filesystem& filesystem, StringView commit_sha) const;
-        fs::path git_checkout_port(Files::Filesystem& filesystem, StringView port_name, StringView git_tree) const;
+        ExpectedS<std::string> get_current_git_sha() const;
+        std::string get_current_git_sha_message() const;
+        ExpectedS<fs::path> git_checkout_baseline(StringView commit_sha) const;
+        ExpectedS<fs::path> git_checkout_port(StringView port_name,
+                                              StringView git_tree,
+                                              const fs::path& dot_git_dir) const;
         ExpectedS<std::string> git_show(const std::string& treeish, const fs::path& dot_git_dir) const;
 
         ExpectedS<std::map<std::string, std::string, std::less<>>> git_get_local_port_treeish_map() const;
@@ -168,12 +172,5 @@ namespace vcpkg
                                          const fs::path& destination,
                                          const fs::path& dot_git_dir,
                                          const fs::path& work_tree);
-
-        static void git_checkout_object(const VcpkgPaths& paths,
-                                        StringView git_object,
-                                        const fs::path& local_repo,
-                                        const fs::path& destination,
-                                        const fs::path& dot_git_dir,
-                                        const fs::path& work_tree);
     };
 }

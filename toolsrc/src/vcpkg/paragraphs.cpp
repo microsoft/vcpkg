@@ -373,7 +373,14 @@ namespace vcpkg::Paragraphs
 
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         error_info->name = fs::u8string(path.filename());
-        error_info->error = "Failed to find either a CONTROL file or vcpkg.json file.";
+        if (fs.exists(path))
+        {
+            error_info->error = "Failed to find either a CONTROL file or vcpkg.json file.";
+        }
+        else
+        {
+            error_info->error = "The port directory (" + fs::u8string(path) + ") does not exist";
+        }
         return error_info;
     }
 
