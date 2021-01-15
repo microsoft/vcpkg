@@ -12,3 +12,17 @@ index 3deac78..134ded9 100644
  #endif
  
  #ifdef G_PLATFORM_WIN32
+diff --git a/meson.build b/meson.build
+index d938ddf51..2ba256115 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1914,7 +1914,8 @@ glibconfig_conf.set10('G_HAVE_GROWING_STACK', growing_stack)
+ # the built-in implementation
+ iconv_opt = get_option('iconv')
+ if host_system == 'windows'
+-  libiconv = []
++  libiconv = [cc.find_library('iconv')]
++  found_iconv = true
+   # We have a #include "win_iconv.c" in gconvert.c on Windows, so we don't need
+   # any external library for it
+   if iconv_opt != 'auto'

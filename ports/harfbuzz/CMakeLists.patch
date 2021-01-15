@@ -55,7 +55,7 @@ index 11118595f..257e7c85e 100644
    list(APPEND project_headers ${PROJECT_SOURCE_DIR}/src/hb-icu.h)
  
 -  list(APPEND THIRD_PARTY_LIBS ${ICU_LIBRARY})
-+  list(APPEND THIRD_PARTY_LIBS ${ICU_LIBRARIES })
++  list(APPEND THIRD_PARTY_LIBS ${ICU_LIBRARIES})
  
 -  mark_as_advanced(ICU_INCLUDE_DIR ICU_LIBRARY)
 +  mark_as_advanced(ICU_INCLUDE_DIRS ICU_LIBRARIES )
