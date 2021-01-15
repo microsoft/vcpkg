@@ -52,6 +52,14 @@ jobs:
       arguments: '-Triplet ${{ parameters.triplet }} -WorkingRoot ${{ variables.WORKING_ROOT }}'
       pwsh: true
   - task: PowerShell@2
+    displayName: 'Validate version files'
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    inputs:
+      targetType: inline
+      script: |
+        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose
+      pwsh: true
+  - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
       failOnStderr: true
