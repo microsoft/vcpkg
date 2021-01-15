@@ -183,7 +183,6 @@
     <ClInclude Include="..\include\vcpkg\base\expected.h" />
     <ClInclude Include="..\include\vcpkg\base\files.h" />
     <ClInclude Include="..\include\vcpkg\base\graphs.h" />
-    <ClInclude Include="..\include\vcpkg\base\hash.h" />
     <ClInclude Include="..\include\vcpkg\base\ignore_errors.h" />
     <ClInclude Include="..\include\vcpkg\base\json.h" />
     <ClInclude Include="..\include\vcpkg\base\lazy.h" />
@@ -289,10 +288,10 @@
     <ClCompile Include="..\src\vcpkg\base\downloads.cpp" />
     <ClCompile Include="..\src\vcpkg\base\enums.cpp" />
     <ClCompile Include="..\src\vcpkg\base\files.cpp" />
-    <ClCompile Include="..\src\vcpkg\base\hash.cpp" />
     <ClCompile Include="..\src\vcpkg\base\json.cpp" />
     <ClCompile Include="..\src\vcpkg\base\machinetype.cpp" />
     <ClCompile Include="..\src\vcpkg\base\parse.cpp" />
+    <ClCompile Include="..\src\vcpkg\base\digest.cpp" />
     <ClCompile Include="..\src\vcpkg\base\strings.cpp" />
     <ClCompile Include="..\src\vcpkg\base\stringview.cpp" />
     <ClCompile Include="..\src\vcpkg\base\system.cpp" />

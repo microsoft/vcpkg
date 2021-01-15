@@ -1,6 +1,6 @@
 #include <vcpkg/base/chrono.h>
+#include <vcpkg/base/digest.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/hash.h>
 #include <vcpkg/base/json.h>
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/system.process.h>
@@ -270,7 +270,7 @@ namespace vcpkg::Metrics
             const auto match = *next;
             if (match[0] != "00-00-00-00-00-00")
             {
-                return vcpkg::Hash::get_string_hash(match[0].str(), Hash::Algorithm::Sha256);
+                return vcpkg::get_string_digest(match[0].str(), DigestAlgorithm::Sha256);
             }
             ++next;
         }

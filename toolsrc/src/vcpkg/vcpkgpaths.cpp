@@ -1,6 +1,6 @@
+#include <vcpkg/base/digest.h>
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/hash.h>
 #include <vcpkg/base/jsonreader.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.process.h>
@@ -457,7 +457,7 @@ If you wish to silence this error and use classic mode, you can:
             for (auto&& file : files)
             {
                 helpers.emplace(fs::u8string(file.stem()),
-                                Hash::get_file_hash(VCPKG_LINE_INFO, fs, file, Hash::Algorithm::Sha1));
+                                get_file_digest(VCPKG_LINE_INFO, fs, file, DigestAlgorithm::Sha1));
             }
             return helpers;
         });

@@ -1,13 +1,12 @@
 #include <catch2/catch.hpp>
 
-#include <vcpkg/base/hash.h>
+#include <vcpkg/base/digest.h>
 
 #include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <map>
 
-namespace Hash = vcpkg::Hash;
 using vcpkg::StringView;
 
 // Require algorithm: Hash::Algorithm::Tag to be in scope
@@ -16,21 +15,21 @@ using vcpkg::StringView;
     {                                                                                                                  \
         unsigned char data[size];                                                                                      \
         std::fill(std::begin(data), std::end(data), static_cast<unsigned char>(value));                                \
-        const auto hash = Hash::get_bytes_hash(data, data + size, algorithm);                                          \
+        const auto hash = vcpkg::get_bytes_digest(data, data + size, algorithm);                                       \
         REQUIRE(hash == real_hash);                                                                                    \
     } while (0)
 
 #define CHECK_HASH_OF(data, real_hash)                                                                                 \
     do                                                                                                                 \
     {                                                                                                                  \
-        const auto hash = Hash::get_bytes_hash(std::begin(data), std::end(data), algorithm);                           \
+        const auto hash = vcpkg::get_bytes_digest(std::begin(data), std::end(data), algorithm);                        \
         REQUIRE(hash == real_hash);                                                                                    \
     } while (0)
 
 #define CHECK_HASH_STRING(data, real_hash)                                                                             \
     do                                                                                                                 \
     {                                                                                                                  \
-        const auto hash = Hash::get_string_hash(data, algorithm);                                                      \
+        const auto hash = vcpkg::get_string_digest(data, algorithm);                                                   \
         REQUIRE(hash == real_hash);                                                                                    \
     } while (0)
 
@@ -60,7 +59,7 @@ using vcpkg::StringView;
 
 TEST_CASE ("SHA1: basic tests", "[hash][sha1]")
 {
-    const auto algorithm = Hash::Algorithm::Sha1;
+    const auto algorithm = vcpkg::DigestAlgorithm::Sha1;
 
     CHECK_HASH_STRING("", "da39a3ee5e6b4b0d3255bfef95601890afd80709");
     CHECK_HASH_STRING(";", "2d14ab97cc3dc294c51c0d6814f4ea45f4b4e312");
@@ -72,7 +71,7 @@ TEST_CASE ("SHA1: basic tests", "[hash][sha1]")
 
 TEST_CASE ("SHA1: NIST test cases (small)", "[hash][sha1]")
 {
-    const auto algorithm = Hash::Algorithm::Sha1;
+    const auto algorithm = vcpkg::DigestAlgorithm::Sha1;
 
     CHECK_HASH_STRING("abc", "a9993e364706816aba3e25717850c26c9cd0d89d");
     CHECK_HASH_STRING("abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq",
@@ -81,7 +80,7 @@ TEST_CASE ("SHA1: NIST test cases (small)", "[hash][sha1]")
 
 TEST_CASE ("SHA256: basic tests", "[hash][sha256]")
 {
-    const auto algorithm = Hash::Algorithm::Sha256;
+    const auto algorithm = vcpkg::DigestAlgorithm::Sha256;
 
     CHECK_HASH_STRING("", "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
     CHECK_HASH_STRING(";", "41b805ea7ac014e23556e98bb374702a08344268f92489a02f0880849394a1e4");
@@ -93,7 +92,7 @@ TEST_CASE ("SHA256: basic tests", "[hash][sha256]")
 
 TEST_CASE ("SHA256: NIST test cases (small)", "[hash][sha256]")
 {
-    const auto algorithm = Hash::Algorithm::Sha256;
+    const auto algorithm = vcpkg::DigestAlgorithm::Sha256;
 
     CHECK_HASH(1, 0xbd, "68325720aabd7c82f30f554b313d0570c95accbb7dc4b5aae11204c08ffe732b");
     {
@@ -111,7 +110,7 @@ TEST_CASE ("SHA256: NIST test cases (small)", "[hash][sha256]")
 
 TEST_CASE ("SHA512: NIST test cases (small)", "[hash][sha512]")
 {
-    const auto algorithm = Hash::Algorithm::Sha512;
+    const auto algorithm = vcpkg::DigestAlgorithm::Sha512;
 
     CHECK_HASH_STRING("",
                       "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f"
@@ -149,7 +148,7 @@ TEST_CASE ("SHA512: NIST test cases (small)", "[hash][sha512]")
 
 TEST_CASE ("SHA256: NIST test cases (large)", "[.][hash-expensive][sha256-expensive]")
 {
-    auto hasher = Hash::get_hasher_for(Hash::Algorithm::Sha256);
+    auto hasher = vcpkg::get_hasher_for(vcpkg::DigestAlgorithm::Sha256);
     CHECK_HASH_LARGE(1'000'000, 0, "d29751f2649b32ff572b5e0a9f541ea660a50f94ff0beedfb0b692b924cc8025");
     CHECK_HASH_LARGE(0x2000'0000, 'Z', "15a1868c12cc53951e182344277447cd0979536badcc512ad24c67e9b2d4f3dd");
     CHECK_HASH_LARGE(0x4100'0000, 0, "461c19a93bd4344f9215f5ec64357090342bc66b15a148317d276e31cbc20b53");
@@ -158,7 +157,7 @@ TEST_CASE ("SHA256: NIST test cases (large)", "[.][hash-expensive][sha256-expens
 
 TEST_CASE ("SHA512: NIST test cases (large)", "[.][hash-expensive][sha512-expensive]")
 {
-    auto hasher = Hash::get_hasher_for(Hash::Algorithm::Sha512);
+    auto hasher = vcpkg::get_hasher_for(vcpkg::DigestAlgorithm::Sha512);
     CHECK_HASH_LARGE(1'000'000,
                      0,
                      "ce044bc9fd43269d5bbc946cbebc3bb711341115cc4abdf2edbc3ff2c57ad4b15deb699bda257fea5aef9c6e55fcf4cf9"
@@ -179,7 +178,7 @@ TEST_CASE ("SHA512: NIST test cases (large)", "[.][hash-expensive][sha512-expens
 
 #if defined(CATCH_CONFIG_ENABLE_BENCHMARKING)
 using Catch::Benchmark::Chronometer;
-void benchmark_hasher(Chronometer& meter, Hash::Hasher& hasher, std::uint64_t size, unsigned char byte) noexcept
+void benchmark_hasher(Chronometer& meter, vcpkg::DigestHasher& hasher, std::uint64_t size, unsigned char byte) noexcept
 {
     unsigned char buffer[1024];
     std::fill(std::begin(buffer), std::end(buffer), byte);
@@ -208,7 +207,7 @@ TEST_CASE ("SHA1: benchmark", "[.][hash][sha256][!benchmark]")
 {
     using Catch::Benchmark::Chronometer;
 
-    auto hasher = Hash::get_hasher_for(Hash::Algorithm::Sha1);
+    auto hasher = vcpkg::get_hasher_for(vcpkg::DigestAlgorithm::Sha1);
 
     BENCHMARK_ADVANCED("0 x 1'000'000")(Catch::Benchmark::Chronometer meter)
     {
@@ -232,7 +231,7 @@ TEST_CASE ("SHA256: benchmark", "[.][hash][sha256][!benchmark]")
 {
     using Catch::Benchmark::Chronometer;
 
-    auto hasher = Hash::get_hasher_for(Hash::Algorithm::Sha256);
+    auto hasher = vcpkg::get_hasher_for(vcpkg::DigestAlgorithm::Sha256);
 
     BENCHMARK_ADVANCED("0 x 1'000'000")(Catch::Benchmark::Chronometer meter)
     {
@@ -254,7 +253,7 @@ TEST_CASE ("SHA256: benchmark", "[.][hash][sha256][!benchmark]")
 
 TEST_CASE ("SHA512: large -- benchmark", "[.][hash][sha512][!benchmark]")
 {
-    auto hasher = Hash::get_hasher_for(Hash::Algorithm::Sha512);
+    auto hasher = vcpkg::get_hasher_for(vcpkg::DigestAlgorithm::Sha512);
 
     BENCHMARK_ADVANCED("0 x 1'000'000")(Catch::Benchmark::Chronometer meter)
     {

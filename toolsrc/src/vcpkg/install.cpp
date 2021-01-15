@@ -1,5 +1,5 @@
+#include <vcpkg/base/digest.h>
 #include <vcpkg/base/files.h>
-#include <vcpkg/base/hash.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
@@ -933,13 +933,13 @@ namespace vcpkg::Install
         for (auto&& remove_action : action_plan.remove_actions)
         {
             if (!specs_string.empty()) specs_string.push_back(',');
-            specs_string += "R$" + Hash::get_string_hash(remove_action.spec.to_string(), Hash::Algorithm::Sha256);
+            specs_string += "R$" + get_string_digest(remove_action.spec.to_string(), DigestAlgorithm::Sha256);
         }
 
         for (auto&& install_action : action_plan.install_actions)
         {
             if (!specs_string.empty()) specs_string.push_back(',');
-            specs_string += Hash::get_string_hash(install_action.spec.to_string(), Hash::Algorithm::Sha256);
+            specs_string += get_string_digest(install_action.spec.to_string(), DigestAlgorithm::Sha256);
         }
 
 #if defined(_WIN32)

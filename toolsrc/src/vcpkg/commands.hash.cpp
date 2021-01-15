@@ -1,4 +1,4 @@
-#include <vcpkg/base/hash.h>
+#include <vcpkg/base/digest.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
@@ -22,14 +22,14 @@ namespace vcpkg::Commands::Hash
 
         const fs::path file_to_hash = args.command_arguments[0];
 
-        auto algorithm = vcpkg::Hash::Algorithm::Sha512;
+        auto algorithm = vcpkg::DigestAlgorithm::Sha512;
         if (args.command_arguments.size() == 2)
         {
-            algorithm = vcpkg::Hash::algorithm_from_string(args.command_arguments[1]).value_or_exit(VCPKG_LINE_INFO);
+            algorithm = vcpkg::digest_algorithm_from_string(args.command_arguments[1]).value_or_exit(VCPKG_LINE_INFO);
         }
 
         const std::string hash =
-            vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, paths.get_filesystem(), file_to_hash, algorithm);
+            vcpkg::get_file_digest(VCPKG_LINE_INFO, paths.get_filesystem(), file_to_hash, algorithm);
         System::print2(hash, '\n');
         Checks::exit_success(VCPKG_LINE_INFO);
     }

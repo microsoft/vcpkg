@@ -1,6 +1,6 @@
 #include <vcpkg/base/cache.h>
+#include <vcpkg/base/digest.h>
 #include <vcpkg/base/downloads.h>
-#include <vcpkg/base/hash.h>
 #include <vcpkg/base/lockguarded.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.h>
@@ -192,7 +192,7 @@ namespace vcpkg::Downloads
                                      const fs::path& path,
                                      const std::string& sha512)
     {
-        std::string actual_hash = vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, fs, path, Hash::Algorithm::Sha512);
+        std::string actual_hash = vcpkg::get_file_digest(VCPKG_LINE_INFO, fs, path, DigestAlgorithm::Sha512);
 
         // <HACK to handle NuGet.org changing nupkg hashes.>
         // This is the NEW hash for 7zip

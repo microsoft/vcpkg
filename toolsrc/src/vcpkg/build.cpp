@@ -1,8 +1,8 @@
 #include <vcpkg/base/cache.h>
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/chrono.h>
+#include <vcpkg/base/digest.h>
 #include <vcpkg/base/enums.h>
-#include <vcpkg/base/hash.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/stringliteral.h>
 #include <vcpkg/base/system.debug.h>
@@ -385,10 +385,10 @@ namespace vcpkg::Build
 
         auto tcfile = abi_info.pre_build_info->toolchain_file();
         auto&& toolchain_hash = m_toolchain_cache.get_lazy(
-            tcfile, [&]() { return Hash::get_file_hash(VCPKG_LINE_INFO, fs, tcfile, Hash::Algorithm::Sha1); });
+            tcfile, [&]() { return get_file_digest(VCPKG_LINE_INFO, fs, tcfile, DigestAlgorithm::Sha1); });
 
         auto&& triplet_entry = m_triplet_cache.get_lazy(triplet_file_path, [&]() -> TripletMapEntry {
-            return TripletMapEntry{Hash::get_file_hash(VCPKG_LINE_INFO, fs, triplet_file_path, Hash::Algorithm::Sha1)};
+            return TripletMapEntry{get_file_digest(VCPKG_LINE_INFO, fs, triplet_file_path, DigestAlgorithm::Sha1)};
         });
 
         return triplet_entry.compiler_info.get_lazy(toolchain_hash, [&]() -> CompilerInfo {
@@ -411,10 +411,10 @@ namespace vcpkg::Build
 
         auto tcfile = abi_info.pre_build_info->toolchain_file();
         auto&& toolchain_hash = m_toolchain_cache.get_lazy(
-            tcfile, [&]() { return Hash::get_file_hash(VCPKG_LINE_INFO, fs, tcfile, Hash::Algorithm::Sha1); });
+            tcfile, [&]() { return get_file_digest(VCPKG_LINE_INFO, fs, tcfile, DigestAlgorithm::Sha1); });
 
         auto&& triplet_entry = m_triplet_cache.get_lazy(triplet_file_path, [&]() -> TripletMapEntry {
-            return TripletMapEntry{Hash::get_file_hash(VCPKG_LINE_INFO, fs, triplet_file_path, Hash::Algorithm::Sha1)};
+            return TripletMapEntry{get_file_digest(VCPKG_LINE_INFO, fs, triplet_file_path, DigestAlgorithm::Sha1)};
         });
 
         return triplet_entry.compiler_hashes.get_lazy(toolchain_hash, [&]() -> std::string {
@@ -809,12 +809,12 @@ namespace vcpkg::Build
         {
             auto locked_metrics = Metrics::g_metrics.lock();
 
-            locked_metrics->track_buildtime(Hash::get_string_hash(spec_string, Hash::Algorithm::Sha256) + ":[" +
+            locked_metrics->track_buildtime(get_string_digest(spec_string, DigestAlgorithm::Sha256) + ":[" +
                                                 Strings::join(",",
                                                               action.feature_list,
                                                               [](const std::string& feature) {
-                                                                  return Hash::get_string_hash(feature,
-                                                                                               Hash::Algorithm::Sha256);
+                                                                  return get_string_digest(feature,
+                                                                                           DigestAlgorithm::Sha256);
                                                               }) +
                                                 "]",
                                             buildtimeus);
@@ -893,8 +893,8 @@ namespace vcpkg::Build
         {
             abi_tag_entries.emplace_back(
                 "public_abi_override",
-                Hash::get_string_hash(pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO),
-                                      Hash::Algorithm::Sha1));
+                get_string_digest(pre_build_info.public_abi_override.value_or_exit(VCPKG_LINE_INFO),
+                                  DigestAlgorithm::Sha1));
         }
 
         for (const auto& env_var : pre_build_info.passthrough_env_vars_tracked)
@@ -902,7 +902,7 @@ namespace vcpkg::Build
             if (auto e = System::get_environment_variable(env_var))
             {
                 abi_tag_entries.emplace_back(
-                    "ENV:" + env_var, Hash::get_string_hash(e.value_or_exit(VCPKG_LINE_INFO), Hash::Algorithm::Sha1));
+                    "ENV:" + env_var, get_string_digest(e.value_or_exit(VCPKG_LINE_INFO), DigestAlgorithm::Sha1));
             }
         }
     }
@@ -962,9 +962,8 @@ namespace vcpkg::Build
         {
             if (fs::is_regular_file(fs.status(VCPKG_LINE_INFO, port_file)))
             {
-                abi_tag_entries.emplace_back(
-                    fs::u8string(port_file.path().filename()),
-                    vcpkg::Hash::get_file_hash(VCPKG_LINE_INFO, fs, port_file, Hash::Algorithm::Sha1));
+                abi_tag_entries.emplace_back(fs::u8string(port_file.path().filename()),
+                                             get_file_digest(VCPKG_LINE_INFO, fs, port_file, DigestAlgorithm::Sha1));
 
                 ++port_file_count;
                 if (port_file_count > max_port_file_count)
@@ -1023,7 +1022,7 @@ namespace vcpkg::Build
             fs.write_contents(abi_file_path, full_abi_info, VCPKG_LINE_INFO);
 
             return AbiTagAndFile{&triplet_abi,
-                                 Hash::get_file_hash(VCPKG_LINE_INFO, fs, abi_file_path, Hash::Algorithm::Sha1),
+                                 get_file_digest(VCPKG_LINE_INFO, fs, abi_file_path, DigestAlgorithm::Sha1),
                                  abi_file_path};
         }
 
