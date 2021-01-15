@@ -256,7 +256,7 @@ int main(const int argc, const char* const* const argv)
             metrics->set_send_metrics(*p);
         }
 
-        if (args.send_metrics.value_or(true) && !metrics->metrics_enabled())
+        if (args.send_metrics.value_or(false) && !metrics->metrics_enabled())
         {
             System::print2(System::Color::warning, "Warning: passed --sendmetrics, but metrics are disabled.\n");
         }
