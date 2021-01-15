@@ -1117,7 +1117,7 @@
       "port-version": 0
     },
     "cgal": {
-      "baseline": "5.1.1",
+      "baseline": "5.2",
       "port-version": 0
     },
     "cgicc": {
