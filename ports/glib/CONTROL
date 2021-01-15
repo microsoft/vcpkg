@@ -4,7 +4,7 @@ Port-Version: 0
 Homepage: https://developer.gnome.org/glib/
 Description: Portable, general-purpose utility library.
 Build-Depends: zlib, pcre, libffi, gettext, libiconv, dirent
-Supports: !uwp|!(windows&static)
+Supports: !uwp&!(windows&static)
 
 Feature: selinux
 Description: Build with selinux support.
