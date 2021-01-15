@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.8)
 project(pango C)
 
 set(PANGO_LIB_SUFFIX 1.0)
@@ -26,11 +26,9 @@ find_library(LIBINTL_LIBRARY NAMES libintl intl)
 endif()
 
 # find glib
-find_path(GLIB_INCLUDE_DIR glib.h)
-find_library(GLIB_GLIB_LIBRARY glib-${GLIB_LIB_VERSION})
-find_library(GLIB_GOBJECT_LIBRARY gobject-${GLIB_LIB_VERSION})
-find_library(GLIB_GMODULE_LIBRARY gmodule-${GLIB_LIB_VERSION})
-set(GLIB_LIBRARIES ${GLIB_GLIB_LIBRARY} ${GLIB_GOBJECT_LIBRARY} ${GLIB_GMODULE_LIBRARY})
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 IMPORTED_TARGET)
+set(GLIB_LIBRARIES PkgConfig::GLIB2)
 
 # find cairo
 find_path(CAIRO_INCLUDE_DIR cairo.h)
@@ -45,23 +43,20 @@ find_library(CAIRO_GOBJECT_LIBRARY cairo-gobject${CAIRO_SUFFIX})
 set(CAIRO_LIBRARIES ${CAIRO_LIBRARY} ${CAIRO_GOBJECT_LIBRARY})
 
 # find fontconfig
-find_path(FONTCONFIG_INCLUDE_DIR fontconfig/fontconfig.h)
-find_library(FONTCONFIG_LIBRARY fontconfig)
-
+find_package(Fontconfig REQUIRED)
 # find freetype
 find_package(Freetype REQUIRED)
 
 # find harfbuzz
-find_path(HARFBUZZ_INCLUDE_DIR harfbuzz/hb.h)
-find_library(HARFBUZZ_LIBRARY harfbuzz)
+find_package(harfbuzz REQUIRED)
 
 if (APPLE)
     find_library(COREFOUNDATION_LIBRARY CoreFoundation)
     link_libraries(${COREFOUNDATION_LIBRARY})
 endif()
 
-set(FONT_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIR} ${FONTCONFIG_INCLUDE_DIR} ${HARFBUZZ_INCLUDE_DIR}/harfbuzz)
-set(FONT_LIBRARIES Freetype::Freetype ${FONTCONFIG_LIBRARY} ${HARFBUZZ_LIBRARY})
+#set(FONT_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIR} ${FONTCONFIG_INCLUDE_DIR} ${HARFBUZZ_INCLUDE_DIR}/harfbuzz)
+set(FONT_LIBRARIES Freetype::Freetype Fontconfig::Fontconfig harfbuzz::harfbuzz)
 
 macro(pango_add_module MODULE_NAME)
     add_library(${MODULE_NAME} ${ARGN})
@@ -135,7 +130,7 @@ pango_add_module(pangoft2
     pango/pango-ot-ruleset.c
     pango/pango-ot-tag.c)
 target_link_libraries(pangoft2 pango ${FONT_LIBRARIES})
-target_include_directories(pangoft2 PRIVATE ${FONT_INCLUDE_DIRS})
+#target_include_directories(pangoft2 PRIVATE ${FONT_INCLUDE_DIRS})
 
 list(APPEND PANGO_CAIRO_SOURCES 
 	pango/pangocairo-fcfont.c
