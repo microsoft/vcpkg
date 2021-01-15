@@ -50,7 +50,7 @@ index 11118595f..257e7c85e 100644
 +  find_package(ICU COMPONENTS uc REQUIRED)
  
 -  include_directories(${ICU_INCLUDE_DIR})
-+  include_directories(${ICU_INCLUDE_DIRS })
++  include_directories(${ICU_INCLUDE_DIRS})
  
    list(APPEND project_headers ${PROJECT_SOURCE_DIR}/src/hb-icu.h)
  

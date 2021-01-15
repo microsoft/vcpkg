@@ -34,11 +34,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     x11 WITH_X11
     gobject WITH_GOBJECT
 )
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}/src
     OPTIONS ${FEATURE_OPTIONS}
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
 )
 
 vcpkg_install_cmake()
