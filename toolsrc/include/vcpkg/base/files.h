@@ -282,45 +282,34 @@ namespace vcpkg::Files
         };
 
         ExclusiveFileLock() = default;
-        ExclusiveFileLock(ExclusiveFileLock&& other)
-            : fs_(other.fs_), handle_(std::exchange(handle_, fs::SystemHandle{}))
-        {
-        }
-        ExclusiveFileLock& operator=(ExclusiveFileLock&& other)
-        {
-            if (this == &other) return *this;
+        ExclusiveFileLock(ExclusiveFileLock&&) = delete;
+        ExclusiveFileLock& operator=(ExclusiveFileLock&&) = delete;
 
-            clear();
-            fs_ = other.fs_;
-            handle_ = std::exchange(other.handle_, fs::SystemHandle{});
-            return *this;
-        }
-
-        ExclusiveFileLock(Wait wait, Filesystem& fs, const fs::path& path_, std::error_code& ec) : fs_(&fs)
+        ExclusiveFileLock(Wait wait, Filesystem& fs, const fs::path& path_, std::error_code& ec) : m_fs(&fs)
         {
             switch (wait)
             {
-                case Wait::Yes: handle_ = fs_->take_exclusive_file_lock(path_, ec); break;
-                case Wait::No: handle_ = fs_->try_take_exclusive_file_lock(path_, ec); break;
+                case Wait::Yes: m_handle = m_fs->take_exclusive_file_lock(path_, ec); break;
+                case Wait::No: m_handle = m_fs->try_take_exclusive_file_lock(path_, ec); break;
             }
         }
         ~ExclusiveFileLock() { clear(); }
 
-        explicit operator bool() const { return handle_.is_valid(); }
-        bool has_lock() const { return handle_.is_valid(); }
+        explicit operator bool() const { return m_handle.is_valid(); }
+        bool has_lock() const { return m_handle.is_valid(); }
 
         void clear()
         {
-            if (fs_ && handle_.is_valid())
+            if (m_fs && m_handle.is_valid())
             {
                 std::error_code ignore;
-                fs_->unlock_file_lock(std::exchange(handle_, fs::SystemHandle{}), ignore);
+                m_fs->unlock_file_lock(std::exchange(m_handle, fs::SystemHandle{}), ignore);
             }
         }
 
     private:
-        fs::SystemHandle handle_;
-        Filesystem* fs_;
+        Filesystem* m_fs;
+        fs::SystemHandle m_handle;
     };
 
 }

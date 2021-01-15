@@ -404,7 +404,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                 System::printf(System::Color::error, "%s\n", error);
             }
             System::print2(System::Color::error,
-                           "\nTo attempt to resolve all erros at once, run:\n\n"
+                           "\nTo attempt to resolve all errors at once, run:\n\n"
                            "    vcpkg x-add-version --all\n\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
