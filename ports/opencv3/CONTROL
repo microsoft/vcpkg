@@ -14,7 +14,7 @@ Build-Depends: protobuf
 Description: opencv_flann module
 
 Feature: contrib
-Build-Depends: opencv3[dnn], hdf5 (!uwp), tesseract (!uwp&!(arm64&windows)&!(arm&windows))
+Build-Depends: opencv3[dnn], hdf5 (!uwp&!(windows&(arm|arm64))), tesseract (!uwp&!(windows&(arm|arm64)))
 Description: opencv_contrib module
 
 Feature: cuda
