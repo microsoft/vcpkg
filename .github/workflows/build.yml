@@ -36,7 +36,9 @@ jobs:
         libopusenc
         libshout
         libsndfile
+        libusb
         libvorbis
+        lilv
         mp3lame
         opus
         opusfile
@@ -53,6 +55,7 @@ jobs:
         rubberband
         soundtouch
         taglib
+        wavpack
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.vcpkg_triplet }}
       MIXXX_VERSION: 2.3
     name: ${{ matrix.os }}
