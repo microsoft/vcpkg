@@ -1,19 +1,19 @@
 {
   "default": {
     "cat": {
-      "version-string": "1.0",
+      "baseline": "1.0",
       "port-version": 0
     },
     "dog": {
-      "version-string": "2001-01-01",
+      "baseline": "2001-01-01",
       "port-version": 0
     }, 
     "duck": {
-      "version-string": "mallard",
+      "baseline": "mallard",
       "port-version": 0
     },
     "fish": {
-      "version-string": "1.0.0",
+      "baseline": "1.0.0",
       "port-version": 0
     }
   }
