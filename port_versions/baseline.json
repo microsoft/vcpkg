@@ -2273,8 +2273,8 @@
       "port-version": 2
     },
     "gtk": {
-      "baseline": "3.22.19-4",
-      "port-version": 0
+      "baseline": "3.22.19",
+      "port-version": 5
     },
     "gtkmm": {
       "baseline": "3.22.2",
