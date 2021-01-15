@@ -36,6 +36,7 @@ Push-Location $toolsrc
 try
 {
     $files = Get-ChildItem -Recurse -LiteralPath "$toolsrc/src" -Filter '*.cpp'
+    $files += Get-ChildItem -Recurse -LiteralPath "$toolsrc/src" -Filter '*.c'
     $files += Get-ChildItem -Recurse -LiteralPath "$toolsrc/include/vcpkg" -Filter '*.h'
     $files += Get-ChildItem -Recurse -LiteralPath "$toolsrc/include/vcpkg-test" -Filter '*.h'
     $files += Get-Item "$toolsrc/include/pch.h"
