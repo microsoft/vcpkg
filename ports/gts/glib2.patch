@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 941e9b96b..ea031828d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -85,30 +85,34 @@ include_directories(
+@@ -85,30 +85,35 @@ include_directories(
    ${CMAKE_CURRENT_SOURCE_DIR}/src
    )
  
@@ -47,6 +47,7 @@ index 941e9b96b..ea031828d 100644
  
  add_library(${kit} SHARED ${srcs})
 -target_link_libraries(${kit} ${glib_LIBRARY})
++target_include_directories(${kit} PUBLIC ${GLIB2_INCLUDE_DIRS})
 +target_link_libraries(${kit} PkgConfig::GLIB2)
  
  if(MSVC)
