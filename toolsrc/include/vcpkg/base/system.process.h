@@ -20,10 +20,6 @@ namespace vcpkg::System
         std::string s;
     };
 
-    std::string make_basic_cmake_cmd(const fs::path& cmake_tool_path,
-                                     const fs::path& cmake_script,
-                                     const std::vector<CMakeVariable>& pass_variables);
-
     struct CmdLineBuilder
     {
         CmdLineBuilder() = default;
@@ -46,14 +42,26 @@ namespace vcpkg::System
         CmdLineBuilder&& raw_arg(StringView s) && { return std::move(raw_arg(s)); }
 
         std::string&& extract() && { return std::move(buf); }
-        operator StringView() noexcept { return buf; }
         StringView command_line() const { return buf; }
 
         void clear() { buf.clear(); }
+        bool empty() const { return buf.empty(); }
 
     private:
         std::string buf;
     };
+
+    struct CmdLineBuilderMapLess
+    {
+        bool operator()(const CmdLineBuilder& lhs, const CmdLineBuilder& rhs) const
+        {
+            return lhs.command_line() < rhs.command_line();
+        }
+    };
+
+    CmdLineBuilder make_basic_cmake_cmd(const fs::path& cmake_tool_path,
+                                        const fs::path& cmake_script,
+                                        const std::vector<CMakeVariable>& pass_variables);
 
     fs::path get_exe_path_of_current_process();
 
@@ -79,48 +87,48 @@ namespace vcpkg::System
         const fs::path& working_directory;
     };
 
-    int cmd_execute(StringView cmd_line, InWorkingDirectory wd, const Environment& env = {});
-    inline int cmd_execute(StringView cmd_line, const Environment& env = {})
+    int cmd_execute(const CmdLineBuilder& cmd_line, InWorkingDirectory wd, const Environment& env = {});
+    inline int cmd_execute(const CmdLineBuilder& cmd_line, const Environment& env = {})
     {
         return cmd_execute(cmd_line, InWorkingDirectory{fs::path()}, env);
     }
 
-    int cmd_execute_clean(StringView cmd_line, InWorkingDirectory wd);
-    inline int cmd_execute_clean(StringView cmd_line)
+    int cmd_execute_clean(const CmdLineBuilder& cmd_line, InWorkingDirectory wd);
+    inline int cmd_execute_clean(const CmdLineBuilder& cmd_line)
     {
         return cmd_execute_clean(cmd_line, InWorkingDirectory{fs::path()});
     }
 
 #if defined(_WIN32)
-    Environment cmd_execute_modify_env(StringView cmd_line, const Environment& env = {});
+    Environment cmd_execute_modify_env(const CmdLineBuilder& cmd_line, const Environment& env = {});
 
-    void cmd_execute_background(const StringView cmd_line);
+    void cmd_execute_background(const CmdLineBuilder& cmd_line);
 #endif
 
-    ExitCodeAndOutput cmd_execute_and_capture_output(StringView cmd_line,
+    ExitCodeAndOutput cmd_execute_and_capture_output(const CmdLineBuilder& cmd_line,
                                                      InWorkingDirectory wd,
                                                      const Environment& env = {});
-    inline ExitCodeAndOutput cmd_execute_and_capture_output(StringView cmd_line, const Environment& env = {})
+    inline ExitCodeAndOutput cmd_execute_and_capture_output(const CmdLineBuilder& cmd_line, const Environment& env = {})
     {
         return cmd_execute_and_capture_output(cmd_line, InWorkingDirectory{fs::path()}, env);
     }
 
-    int cmd_execute_and_stream_lines(StringView cmd_line,
+    int cmd_execute_and_stream_lines(const CmdLineBuilder& cmd_line,
                                      InWorkingDirectory wd,
                                      std::function<void(StringView)> per_line_cb,
                                      const Environment& env = {});
-    inline int cmd_execute_and_stream_lines(StringView cmd_line,
+    inline int cmd_execute_and_stream_lines(const CmdLineBuilder& cmd_line,
                                             std::function<void(StringView)> per_line_cb,
                                             const Environment& env = {})
     {
         return cmd_execute_and_stream_lines(cmd_line, InWorkingDirectory{fs::path()}, std::move(per_line_cb), env);
     }
 
-    int cmd_execute_and_stream_data(StringView cmd_line,
+    int cmd_execute_and_stream_data(const CmdLineBuilder& cmd_line,
                                     InWorkingDirectory wd,
                                     std::function<void(StringView)> data_cb,
                                     const Environment& env = {});
-    inline int cmd_execute_and_stream_data(StringView cmd_line,
+    inline int cmd_execute_and_stream_data(const CmdLineBuilder& cmd_line,
                                            std::function<void(StringView)> data_cb,
                                            const Environment& env = {})
     {

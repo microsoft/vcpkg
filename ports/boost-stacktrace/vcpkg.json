@@ -1,0 +1,20 @@
+{
+  "name": "boost-stacktrace",
+  "version-string": "1.75.0",
+  "description": "Boost stacktrace module",
+  "homepage": "https://github.com/boostorg/stacktrace",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-array",
+    "boost-build",
+    "boost-config",
+    "boost-container-hash",
+    "boost-core",
+    "boost-modular-build-helper",
+    "boost-predef",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-vcpkg-helpers",
+    "boost-winapi"
+  ]
+}
