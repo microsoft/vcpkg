@@ -229,10 +229,9 @@ namespace vcpkg::Commands::CIVerifyVersions
             return {
                 Strings::format("Error: While reading versions for port %s from file: %s\n"
                                 "       File declares version `%s` with SHA: %s\n"
-                                "       But local port with the same verion has a differint SHA: %s\n"
-                                "       This may be caused by locally commited changes to the port.\n"
-                                "       Run:\n\n"
-                                "           vcpkg x-add-version %s --overwrite-version\n\n"
+                                "       But local port with the same verion has a different SHA: %s\n"
+                                "       Please update the port's version fields and then run:\n\n"
+                                "           vcpkg x-add-version %s\n\n"
                                 "       to overwrite the declared version's SHA.",
                                 port_name,
                                 fs::u8string(versions_file_path),
