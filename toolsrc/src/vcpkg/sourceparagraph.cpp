@@ -1273,16 +1273,12 @@ namespace vcpkg
                 serialize_optional_string(dep_obj, DependencyDeserializer::PLATFORM, to_string(dep.platform));
                 if (dep.constraint.type == Versions::Constraint::Type::Minimum)
                 {
+                    auto s = dep.constraint.value;
                     if (dep.constraint.port_version != 0)
                     {
-                        dep_obj.insert(DependencyDeserializer::VERSION_GE,
-                                       Json::Value::string(
-                                           Strings::concat(dep.constraint.value, '#', dep.constraint.port_version)));
+                        Strings::append(s, '#', dep.constraint.port_version);
                     }
-                    else
-                    {
-                        dep_obj.insert(DependencyDeserializer::VERSION_GE, Json::Value::string(dep.constraint.value));
-                    }
+                    dep_obj.insert(DependencyDeserializer::VERSION_GE, Json::Value::string(std::move(s)));
                 }
             }
         };
