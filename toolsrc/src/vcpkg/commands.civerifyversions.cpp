@@ -373,9 +373,13 @@ namespace vcpkg::Commands::CIVerifyVersions
             {
                 System::printf(System::Color::error, "FAIL: %s\n", port_name);
                 errors.emplace(Strings::format("Error: While validating port %s.\n"
-                                               "       Missing expected versions file at: %s",
+                                               "       Missing expected versions file at: %s\n"
+                                               "       Run:\n\n"
+                                               "           vcpkg x-add-version %s\n\n"
+                                               "       to create the versions file.",
                                                port_name,
-                                               fs::u8string(versions_file_path)));
+                                               fs::u8string(versions_file_path),
+                                               port_name));
                 continue;
             }
 
