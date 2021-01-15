@@ -14,12 +14,13 @@ Throw-IfNotFailed
 Run-Vcpkg install @builtinRegistryArgs --feature-flags=registries 'zlib'
 Throw-IfFailed
 
-# Test git and filesystem registries
+Write-Trace "Test git and filesystem registries"
 Refresh-TestRoot
 $filesystemRegistry = "$TestingRoot/filesystem-registry"
 $gitRegistryUpstream = "$TestingRoot/git-registry-upstream"
 
 # build a filesystem registry
+Write-Trace "build a filesystem registry"
 New-Item -Path $filesystemRegistry -ItemType Directory
 $filesystemRegistry = (Get-Item $filesystemRegistry).FullName
 
@@ -51,6 +52,7 @@ New-Item `
 
 
 # build a git registry
+Write-Trace "build a git registry"
 New-Item -Path $gitRegistryUpstream -ItemType Directory
 $gitRegistryUpstream = (Get-Item $gitRegistryUpstream).FullName
 
@@ -82,6 +84,7 @@ finally
 }
 
 # actually test the registries
+Write-Trace "actually test the registries"
 $vcpkgJson = @{
     "name" = "manifest-test";
     "version-string" = "1.0.0";
@@ -90,37 +93,8 @@ $vcpkgJson = @{
     )
 }
 
-$manifestDir = "$TestingRoot/builtin-registry-test-manifest-dir"
-
-New-Item -Path $manifestDir -ItemType Directory
-$manifestDir = (Get-Item $manifestDir).FullName
-
-Push-Location $manifestDir
-
-try
-{
-    $vcpkgJsonWithBaseline = $vcpkgJson.Clone()
-    $vcpkgJsonWithBaseline['$x-default-baseline'] = 'default'
-
-    New-Item -Path 'vcpkg.json' -ItemType File `
-        -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgJson)
-
-    Run-Vcpkg install @builtinRegistryArgs '--feature-flags=registries,manifests'
-    Throw-IfNotFailed
-
-    New-Item -Path 'vcpkg.json' -ItemType File -Force `
-        -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgJsonWithBaseline)
-
-    Run-Vcpkg install @builtinRegistryArgs '--feature-flags=registries,manifests'
-    Throw-IfFailed
-}
-finally
-{
-    Pop-Location
-}
-
-
 # test the filesystem registry
+Write-Trace "test the filesystem registry"
 $manifestDir = "$TestingRoot/filesystem-registry-test-manifest-dir"
 
 New-Item -Path $manifestDir -ItemType Directory
@@ -154,6 +128,7 @@ finally
 }
 
 # test the git registry
+Write-Trace "test the git registry"
 $manifestDir = "$TestingRoot/git-registry-test-manifest-dir"
 
 New-Item -Path $manifestDir -ItemType Directory
