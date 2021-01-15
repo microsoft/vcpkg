@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.8)
 project(gdk-pixbuf C)
 
 set(GDK_PIXBUF_LIB_SUFFIX 2.0)
@@ -9,7 +9,7 @@ set(GLIB_LIB_VERSION 2.0)
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
 
-find_package(unofficial-glib CONFIG REQUIRED)
+
 find_path(GLIB_INCLUDE_DIR glib.h)
 
 find_package(Intl REQUIRED)
@@ -63,7 +63,7 @@ endif()
 add_library(gdk-pixbuf ${SOURCES})
 
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2 gio-2)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
 
 target_include_directories(gdk-pixbuf PRIVATE 
     ${GLIB2_INCLUDE_DIRS} 
@@ -72,7 +72,7 @@ target_include_directories(gdk-pixbuf PRIVATE
     ${Intl_INCLUDE_DIR})
 
 set(LIBS 
-    ${GLIB2_LIBRARIES_STATIC} ${Intl_LIBRARIES}
+    PkgConfig::GLIB2 ${Intl_LIBRARIES}
     ${ZLIB_LIBRARIES} 
     ${PNG_LIBRARIES} 
 )
@@ -118,8 +118,8 @@ install(TARGETS gdk-pixbuf
 
 macro(gdk_add_tool TOOL_NAME)
     add_executable(${TOOL_NAME} ${ARGN})
-    target_include_directories(${TOOL_NAME} PRIVATE ${GLIB_INCLUDE_DIR})
-    target_link_libraries(${TOOL_NAME} gdk-pixbuf ${GLIB_LIBRARIES})
+    target_include_directories(${TOOL_NAME} PRIVATE ${GLIB2_INCLUDE_DIRS})
+    target_link_libraries(${TOOL_NAME} gdk-pixbuf PkgConfig::GLIB2)
     install(TARGETS ${TOOL_NAME} RUNTIME DESTINATION tools/gdk-pixbuf)
 endmacro()  
 

@@ -17,12 +17,16 @@ vcpkg_extract_source_archive_ex(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 configure_file(${CMAKE_CURRENT_LIST_DIR}/config.h.linux ${SOURCE_PATH}/config.h.linux)
 
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
     OPTIONS_DEBUG
         -DGDK_SKIP_HEADERS=ON
-        -DGDK_SKIP_TOOLS=ON)
+        -DGDK_SKIP_TOOLS=ON
+        )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
