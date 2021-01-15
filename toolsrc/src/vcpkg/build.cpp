@@ -328,7 +328,7 @@ namespace vcpkg::Build
 #if defined(_WIN32)
     const System::Environment& EnvCache::get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info)
     {
-        std::string build_env_cmd =
+        auto build_env_cmd =
             make_build_env_cmd(*abi_info.pre_build_info, abi_info.toolset.value_or_exit(VCPKG_LINE_INFO));
 
         const auto& base_env = envs.get_lazy(abi_info.pre_build_info->passthrough_env_vars, [&]() -> EnvMapEntry {
@@ -439,9 +439,9 @@ namespace vcpkg::Build
         });
     }
 
-    std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
+    System::CmdLineBuilder make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
-        if (!pre_build_info.using_vcvars()) return "";
+        if (!pre_build_info.using_vcvars()) return {};
 
         const char* tonull = " >nul";
         if (Debug::g_debugging)
@@ -452,12 +452,13 @@ namespace vcpkg::Build
         const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
-        return Strings::format(R"(cmd /c ""%s" %s %s %s %s 2>&1 <NUL")",
-                               fs::u8string(toolset.vcvarsall),
-                               Strings::join(" ", toolset.vcvarsall_options),
-                               arch,
-                               target,
-                               tonull);
+        return System::CmdLineBuilder{"cmd"}.string_arg("/c").raw_arg(
+            Strings::format(R"("%s" %s %s %s %s 2>&1 <NUL)",
+                            fs::u8string(toolset.vcvarsall),
+                            Strings::join(" ", toolset.vcvarsall_options),
+                            arch,
+                            target,
+                            tonull));
     }
 
     static std::unique_ptr<BinaryControlFile> create_binary_control_file(

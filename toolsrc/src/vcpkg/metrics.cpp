@@ -257,7 +257,7 @@ namespace vcpkg::Metrics
             return "{}";
         }
 
-        auto getmac = System::cmd_execute_and_capture_output("getmac");
+        auto getmac = System::cmd_execute_and_capture_output(System::CmdLineBuilder("getmac"));
 
         if (getmac.exit_code != 0) return "0";
 
@@ -480,11 +480,21 @@ namespace vcpkg::Metrics
         builder.path_arg(vcpkg_metrics_txt_path);
         System::cmd_execute_background(builder);
 #else
-        auto escaped_path = Strings::escape_string(fs::u8string(vcpkg_metrics_txt_path), '\'', '\\');
-        const std::string cmd_line = Strings::format(
-            R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --tlsv1.2 --data '@%s' >/dev/null 2>&1; rm '%s') &)",
-            escaped_path,
-            escaped_path);
+        // TODO: convert to cmd_execute_background or something.
+        auto curl = System::CmdLineBuilder("curl")
+                        .string_arg("https://dc.services.visualstudio.com/v2/track")
+                        .string_arg("-H")
+                        .string_arg("Content-Type: application/json")
+                        .string_arg("-X")
+                        .string_arg("POST")
+                        .string_arg("--tlsv1.2")
+                        .string_arg("--data")
+                        .string_arg(Strings::concat("@", fs::u8string(vcpkg_metrics_txt_path)))
+                        .raw_arg(">/dev/null")
+                        .raw_arg("2>&1");
+        auto remove = System::CmdLineBuilder("rm").path_arg(vcpkg_metrics_txt_path);
+        System::CmdLineBuilder cmd_line;
+        cmd_line.raw_arg("(").raw_arg(curl.command_line()).raw_arg(";").raw_arg(remove.command_line()).raw_arg(") &");
         System::cmd_execute_clean(cmd_line);
 #endif
     }

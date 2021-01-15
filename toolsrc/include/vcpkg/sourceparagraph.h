@@ -12,6 +12,7 @@
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphparser.h>
 #include <vcpkg/platform-expression.h>
+#include <vcpkg/versiondeserializers.h>
 #include <vcpkg/versions.h>
 
 namespace vcpkg
@@ -107,6 +108,10 @@ namespace vcpkg
                                                           const FeatureFlagSettings& flags) const;
 
         VersionT to_versiont() const { return core_paragraph->to_versiont(); }
+        SchemedVersion to_schemed_version() const
+        {
+            return SchemedVersion{core_paragraph->version_scheme, core_paragraph->to_versiont()};
+        }
 
         friend bool operator==(const SourceControlFile& lhs, const SourceControlFile& rhs);
         friend bool operator!=(const SourceControlFile& lhs, const SourceControlFile& rhs) { return !(lhs == rhs); }
