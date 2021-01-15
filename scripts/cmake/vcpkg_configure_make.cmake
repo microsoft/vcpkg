@@ -139,6 +139,22 @@ macro(_vcpkg_determine_autotools_target_cpu out_var)
     endif()
 endmacro()
 
+macro(_vcpkg_determine_autotools_host_arch_mac out_var)
+    set(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
+endmacro()
+
+macro(_vcpkg_determine_autotools_target_arch_mac out_var)
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)64")
+        set(${out_var} x86_64)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86")
+        set(${out_var} i386)
+    elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^(ARM|arm)64$")
+        set(${out_var} arm64)
+    else()
+        message(FATAL_ERROR "Unsupported VCPKG_TARGET_ARCHITECTURE architecture ${VCPKG_TARGET_ARCHITECTURE} in _vcpkg_determine_autotools_target_arch_mac!" )
+    endif()
+endmacro()
+
 macro(_vcpkg_backup_env_variable envvar)
     if(DEFINED ENV{${envvar}})
         set(${envvar}_BACKUP "$ENV{${envvar}}")
@@ -191,6 +207,15 @@ macro(_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags _SUFFIX)
     string(REGEX REPLACE " +" " " CPPFLAGS_${_SUFFIX} "${CPPFLAGS_${_SUFFIX}}")
     string(REGEX REPLACE " +" " " CFLAGS_${_SUFFIX} "${CFLAGS_${_SUFFIX}}")
     string(REGEX REPLACE " +" " " CXXFLAGS_${_SUFFIX} "${CXXFLAGS_${_SUFFIX}}")
+    # on macOS - need to add flags (if cross-compiling)
+    if(VCPKG_TARGET_IS_OSX)
+        _vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH)
+        _vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
+        if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}") # we don't need to specify the additional flags if we build natively.
+            string(APPEND CFLAGS_${_SUFFIX} " -arch ${TARGET_ARCH} -isysroot ${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
+            string(APPEND CXXFLAGS_${_SUFFIX} " -arch ${TARGET_ARCH} -isysroot ${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
+        endif()
+    endif()
     # libtool has and -R option so we need to guard against -RTC by using -Xcompiler
     # while configuring there might be a lot of unknown compiler option warnings due to that
     # just ignore them. 
@@ -400,6 +425,24 @@ function(vcpkg_configure_make)
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
         set(EXTRA_QUOTES)
         set(prefix_var "\${prefix}")
+    endif()
+
+    # macOS - cross-compiling support
+    if(VCPKG_TARGET_IS_OSX)
+        if (_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET)
+            _vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
+            _vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
+            # --build: the machine you are building on
+            # --host: the machine you are building for
+            # --target: the machine that CC will produce binaries for
+            # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
+            # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
+            set(_csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-apple-darwin")
+            if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}") # we don't need to specify the additional flags if we build natively.
+                list(APPEND _csc_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+            endif()
+            debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
+        endif()
     endif()
 
     # Cleanup previous build dirs
