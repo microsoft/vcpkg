@@ -19,12 +19,9 @@ endif()
 
 # find dependencies
 # glib
-find_path(GLIB_INCLUDE_DIR glib.h)
-find_library(GLIB_GLIB_LIBRARY glib-${GLIB_LIB_SUFFIX})
-find_library(GLIB_GIO_LIBRARY gio-${GLIB_LIB_SUFFIX})
-find_library(GLIB_GMODULE_LIBRARY gmodule-${GLIB_LIB_SUFFIX})
-find_library(GLIB_GOBJECT_LIBRARY gobject-${GLIB_LIB_SUFFIX})
-set(GLIB_LIBRARIES ${GLIB_GLIB_LIBRARY} ${GLIB_GIO_LIBRARY} ${GLIB_GMODULE_LIBRARY} ${GLIB_GOBJECT_LIBRARY})
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2.0 gio-2.0 IMPORTED_TARGET)
+set(GLIB_LIBRARIES PkgConfig::GLIB2)
 
 # pango
 find_path(PANGO_INCLUDE_DIR pango/pango.h)
@@ -66,7 +63,7 @@ set(GTK_REQUIRED_LIBRARIES
 set(GTK_REQUIRED_INCLUDE_DIR
     ${LIBINTL_INCLUDE_DIR}
     ${EPOXY_INCLUDE_DIR}
-    ${GLIB_INCLUDE_DIR}
+    ${GLIB_INCLUDE_DIRS}
     ${GDK_PIXBUF_INCLUDE_DIR}
     ${CAIRO_INCLUDE_DIR}
     ${PANGO_INCLUDE_DIR}

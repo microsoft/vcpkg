@@ -25,13 +25,14 @@ if(NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.h OR NOT EXISTS ${SOURCE_PATH}
         WORKING_DIRECTORY ${SOURCE_PATH}/gtk
         LOGNAME source-gen)
 endif()
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DGTK_VERSION=${GTK_VERSION}
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
     OPTIONS_DEBUG
         -DGTK_SKIP_HEADERS=ON)
 
