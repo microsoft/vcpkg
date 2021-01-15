@@ -19,11 +19,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${GLIB_VERSION}
     PATCHES
-        #remove_tests.patch
-        #use-libiconv-on-windows.patch
-        #arm64-defines.patch
-        #fix-arm-builds.patch
-        #fix_pkgconfig.patch
+        use-libiconv-on-windows.patch
 )
 
 
@@ -108,7 +104,7 @@ endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glib-2.0.pc")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/glib-2.0.pc" "\${bindir}" "\${bindir}/../../tools/${PORT}")
 endif()
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES ${SYSTEM_LIBRARIES})
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
