@@ -14,6 +14,9 @@
     <FilesToSign Include="$(IntermediateOutputPath)\vcpkg.exe">
       <Authenticode>Microsoft400</Authenticode>
     </FilesToSign>
+    <FilesToSign Include="$(IntermediateOutputPath)\tls12-download.exe">
+      <Authenticode>Microsoft400</Authenticode>
+    </FilesToSign>
   </ItemGroup>
 
   <ImportGroup Label="ExtensionTargets">

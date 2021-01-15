@@ -50,6 +50,7 @@ string(REPLACE "#undef HAVE_VSNPRINTF" "#define HAVE_VSNPRINTF" CONFIG_H "${CONF
 string(REPLACE "#undef MagickLibSubdir" "#define MagickLibSubdir \"magick\"" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef MagickLibConfigSubDir" "#define MagickLibConfigSubDir \"magick/config\"" CONFIG_H "${CONFIG_H}")
 string(REPLACE "#undef MagickShareConfigSubDir" "#define MagickShareConfigSubDir \"magick/config\"" CONFIG_H "${CONFIG_H}")
+string(REPLACE "#undef HAVE_STDINT_H" "#define HAVE_STDINT_H" CONFIG_H "${CONFIG_H}")
 endif ()
 file(WRITE "magick/magick_config.h" "${CONFIG_H}")
 

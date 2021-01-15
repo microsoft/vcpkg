@@ -91,6 +91,8 @@ namespace vcpkg
         fs::path community_triplets;
         fs::path scripts;
         fs::path prefab;
+        fs::path builtin_ports;
+        fs::path builtin_port_versions;
 
         fs::path tools;
         fs::path buildsystems;
@@ -115,10 +117,22 @@ namespace vcpkg
         const fs::path& get_tool_exe(const std::string& tool) const;
         const std::string& get_tool_version(const std::string& tool) const;
 
-        // Git manipulation
+        // Git manipulation in the vcpkg directory
         fs::path git_checkout_baseline(Files::Filesystem& filesystem, StringView commit_sha) const;
         fs::path git_checkout_port(Files::Filesystem& filesystem, StringView port_name, StringView git_tree) const;
         ExpectedS<std::string> git_show(const std::string& treeish, const fs::path& dot_git_dir) const;
+
+        ExpectedS<std::map<std::string, std::string, std::less<>>> git_get_local_port_treeish_map() const;
+
+        // Git manipulation for remote registries
+        // runs `git fetch {uri} {treeish}`, and returns the hash of FETCH_HEAD.
+        // If `treeish` is empty, then just runs `git fetch {uri}`
+        ExpectedS<std::string> git_fetch_from_remote_registry(StringView uri, StringView treeish = {}) const;
+        ExpectedS<std::string> git_show_from_remote_registry(StringView hash,
+                                                             const fs::path& relative_path_to_file) const;
+        ExpectedS<std::string> git_find_object_id_for_remote_registry_path(StringView hash,
+                                                                           const fs::path& relative_path_to_file) const;
+        ExpectedS<fs::path> git_checkout_object_from_remote_registry(StringView tree) const;
 
         Optional<const Json::Object&> get_manifest() const;
         Optional<const fs::path&> get_manifest_path() const;
@@ -142,7 +156,7 @@ namespace vcpkg
 
         // the directory of the builtin ports
         // this should be used only for helper commands, not core commands like `install`.
-        fs::path builtin_ports_directory() const { return root / fs::u8path("ports"); }
+        fs::path builtin_ports_directory() const { return this->builtin_ports; }
 
     private:
         std::unique_ptr<details::VcpkgPathsImpl> m_pimpl;

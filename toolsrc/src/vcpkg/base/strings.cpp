@@ -126,15 +126,30 @@ bool Strings::starts_with(StringView s, StringView pattern)
     return std::equal(s.begin(), s.begin() + pattern.size(), pattern.begin(), pattern.end());
 }
 
-std::string Strings::replace_all(std::string&& s, const std::string& search, StringView rep)
+std::string Strings::replace_all(std::string&& s, StringView search, StringView rep)
 {
+    inplace_replace_all(s, search, rep);
+    return std::move(s);
+}
+
+void Strings::inplace_replace_all(std::string& s, StringView search, StringView rep)
+{
+    if (search.empty())
+    {
+        return;
+    }
+
     size_t pos = 0;
-    while ((pos = s.find(search, pos)) != std::string::npos)
+    while ((pos = s.find(search.data(), pos, search.size())) != std::string::npos)
     {
         s.replace(pos, search.size(), rep.data(), rep.size());
         pos += rep.size();
     }
-    return std::move(s);
+}
+
+void Strings::inplace_replace_all(std::string& s, char search, char rep) noexcept
+{
+    std::replace(s.begin(), s.end(), search, rep);
 }
 
 std::string Strings::trim(std::string&& s)

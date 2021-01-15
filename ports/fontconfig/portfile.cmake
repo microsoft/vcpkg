@@ -14,6 +14,7 @@ vcpkg_from_gitlab(
     PATCHES remove_tests.patch
             build.patch
             build2.patch
+            disable-install-data.patch
             ${PATCHES}
 )
 
@@ -44,7 +45,7 @@ vcpkg_configure_make(
 
 vcpkg_install_make(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES uuid)
+vcpkg_fixup_pkgconfig()
 
 # Fix paths in debug pc file.
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fontconfig.pc")
@@ -98,3 +99,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     # Unnecessary make rule creating the fontconfig cache dir on windows. 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}LOCAL_APPDATA_FONTCONFIG_CACHE")
 endif()
+
+if(NOT VCPKG_TARGET_IS_LINUX)
+    set(VCPKG_TARGET_IS_LINUX 0) # To not leave empty AND statements in the wrapper
+endif()
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)

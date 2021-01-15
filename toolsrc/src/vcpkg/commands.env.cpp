@@ -75,6 +75,13 @@ namespace vcpkg::Commands::Env
             extra_env.emplace("PYTHONPATH",
                               fs::u8string(paths.installed / fs::u8path(triplet.to_string()) / fs::u8path("python")));
         if (path_vars.size() > 0) extra_env.emplace("PATH", Strings::join(";", path_vars));
+        for (auto&& passthrough : pre_build_info.passthrough_env_vars)
+        {
+            if (auto e = System::get_environment_variable(passthrough))
+            {
+                extra_env.emplace(passthrough, e.value_or_exit(VCPKG_LINE_INFO));
+            }
+        }
 
         auto env = [&] {
             auto clean_env = System::get_modified_clean_environment(extra_env);
@@ -91,7 +98,11 @@ namespace vcpkg::Commands::Env
             }
         }();
 
-        std::string cmd = args.command_arguments.empty() ? "cmd" : ("cmd /c " + args.command_arguments.at(0));
+        System::CmdLineBuilder cmd("cmd");
+        if (!args.command_arguments.empty())
+        {
+            cmd.string_arg("/c").raw_arg(args.command_arguments.at(0));
+        }
 #ifdef _WIN32
         System::enter_interactive_subprocess();
 #endif

@@ -71,7 +71,7 @@ function(vcpkg_find_acquire_program VAR)
     set(PATHS ${DOWNLOADS}/tools/perl/${SUBDIR}/perl/bin)
     set(BREW_PACKAGE_NAME "perl")
     set(APT_PACKAGE_NAME "perl")
-    set(URL 
+    set(URL
       "https://strawberry.perl.bot/download/${PERL_VERSION}/strawberry-perl-${PERL_VERSION}-32bit.zip"
       "http://strawberryperl.com/download/${PERL_VERSION}/strawberry-perl-${PERL_VERSION}-32bit.zip"
     )
@@ -257,13 +257,13 @@ function(vcpkg_find_acquire_program VAR)
     set(APT_PACKAGE_NAME "meson")
     set(BREW_PACKAGE_NAME "meson")
     set(SCRIPTNAME meson meson.py)
-    set(PATHS ${DOWNLOADS}/tools/meson/meson-91876b40316962620c1705ae14075ab46f8dd644)
-    set(URL "https://github.com/mesonbuild/meson/archive/91876b40316962620c1705ae14075ab46f8dd644.tar.gz")
-    set(ARCHIVE "meson-91876b40316962620c1705ae14075ab46f8dd644.tar.gz")
+    set(PATHS ${DOWNLOADS}/tools/meson/meson-f5871f434a5b768ad9fcafa797a6db0286421842)
+    set(URL "https://github.com/mesonbuild/meson/archive/f5871f434a5b768ad9fcafa797a6db0286421842.tar.gz")
+    set(ARCHIVE "meson-f5871f434a5b768ad9fcafa797a6db0286421842.tar.gz")
     #set(PATHS ${DOWNLOADS}/tools/meson/meson-${MESON_VERSION})
     #set(URL "https://github.com/mesonbuild/meson/releases/download/${MESON_VERSION}/meson-${MESON_VERSION}.tar.gz")
     #set(ARCHIVE "meson-${MESON_VERSION}.tar.gz")
-    set(HASH 784b740a01de70312f9240d38b683b2065f40572c87d30929386fe417b2cc70bcc86213c86e143f349c78121c9cc6d7392526d6e53512ae22a6ec0db57f26e3e)
+    set(HASH e8c36166b673acfccda54dcdbbc2414c9d0ce018debcdf6a09418f2f240edf14e72725188fe7ff7a3fcdc3942e8d1393e08a28d6f1bded4610f3ab836ab8e254)
     set(_vfa_SUPPORTED ON)
     set(VERSION_CMD --version)
   elseif(VAR MATCHES "FLEX" OR VAR MATCHES "BISON")
@@ -300,7 +300,7 @@ function(vcpkg_find_acquire_program VAR)
     set(PROGNAME clang)
     set(SUBDIR "clang-10.0.0")
     if(CMAKE_HOST_WIN32)
-      set(PATHS 
+      set(PATHS
         # Support LLVM in Visual Studio 2019
         "$ENV{LLVMInstallDir}/x64/bin"
         "$ENV{LLVMInstallDir}/bin"
@@ -314,7 +314,7 @@ function(vcpkg_find_acquire_program VAR)
       else()
         set(HOST_ARCH_ $ENV{PROCESSOR_ARCHITECTURE})
       endif()
-      
+
       if(HOST_ARCH_ MATCHES "64")
         set(URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe")
         set(ARCHIVE "LLVM-10.0.0-win64.7z.exe")
@@ -360,7 +360,7 @@ function(vcpkg_find_acquire_program VAR)
     set(SCRIPTNAME "scons.py")
     set(URL "https://sourceforge.net/projects/scons/files/scons-local-${SCONS_VERSION}.zip/download")
     set(ARCHIVE "scons-local-${SCONS_VERSION}.zip")
-    set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727) 
+    set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727)
   elseif(VAR MATCHES "SWIG")
     set(SWIG_VERSION 4.0.2)
     set(PROGNAME swig)
@@ -468,7 +468,7 @@ function(vcpkg_find_acquire_program VAR)
     if(VERSION_CMD)
         vcpkg_execute_in_download_mode(
             COMMAND ${${VAR}} ${VERSION_CMD}
-            WORKING_DIRECTORY ${DOWNLOADS}
+            WORKING_DIRECTORY ${VCPKG_ROOT_DIR}
             OUTPUT_VARIABLE ${VAR}_VERSION_OUTPUT
         )
         string(STRIP "${${VAR}_VERSION_OUTPUT}" ${VAR}_VERSION_OUTPUT)
@@ -481,7 +481,7 @@ function(vcpkg_find_acquire_program VAR)
         endif()
     endif()
   endmacro()
-  
+
   macro(do_find)
     if(NOT DEFINED REQUIRED_INTERPRETER)
       find_program(${VAR} ${PROGNAME} PATHS ${PATHS} NO_DEFAULT_PATH)
