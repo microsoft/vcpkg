@@ -1,0 +1,91 @@
+diff --git a/cmake/build_external.cmake b/cmake/build_external.cmake
+--- a/cmake/build_external.cmake	(revision e98e5732ec7319051f162f7314ae361c85d0a8c9)
++++ b/cmake/build_external.cmake	(date 1610744839203)
+@@ -23,6 +23,11 @@
+         #zlib
+         #based on http://stackoverflow.com/questions/16842218/how-to-use-cmake-externalproject-add-or-alternatives-in-a-cross-platform-way
+         #likely, some of the things here are unnecessary
++        if (VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
++            set(EXTRA_ARGS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
++                    "-DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
++        endif()
++
+         ExternalProject_Add(ZLIB
+             SOURCE_DIR ${ZLIB_SOURCE_DIR}
+             URL https://sdk.amazonaws.com/cpp/builds/zlib-1.2.11.tar.gz
+@@ -31,6 +36,7 @@
+             CMAKE_ARGS
+             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
+             -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=${CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION}
++            ${EXTRA_ARGS}
+             -DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL}
+             -DANDROID_ABI=${ANDROID_ABI}
+             -DANDROID_TOOLCHAIN=${ANDROID_TOOLCHAIN}
+@@ -70,6 +76,11 @@
+         set(OPENSSL_INCLUDE_FLAGS "-isystem ${OPENSSL_INCLUDE_DIR} -isystem ${OPENSSL_INCLUDE_DIR}/openssl" CACHE INTERNAL "compiler flags to find openssl includes")
+         set(OPENSSL_LINKER_FLAGS "-L${OPENSSL_LIBRARY_DIR}" CACHE INTERNAL "linker flags to find openssl")
+
++        if (VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
++            set(EXTRA_ARGS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
++                    "-DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
++        endif()
++
+         ExternalProject_Add(OPENSSL
+             SOURCE_DIR ${OPENSSL_SOURCE_DIR}
+             GIT_REPOSITORY https://github.com/openssl/openssl.git
+@@ -78,6 +89,7 @@
+             PATCH_COMMAND cd ${CMAKE_BINARY_DIR} && python ${AWS_NATIVE_SDK_ROOT}/android-build/configure_openssl_cmake.py --source ${AWS_NATIVE_SDK_ROOT} --dest ${OPENSSL_SOURCE_DIR}
+             CMAKE_ARGS
+             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
++            ${EXTRA_ARGS}
+             -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=${CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION}
+             -DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL}
+             -DANDROID_ABI=${ANDROID_ABI}
+@@ -120,6 +132,11 @@
+             set(CURL_USE_ZLIB "OFF")
+         endif()
+
++        if (VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
++            set(EXTRA_ARGS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
++                    "-DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
++        endif()
++
+         ExternalProject_Add(CURL
+                 DEPENDS ${CURL_OPENSSL_DEPENDENCY} ${CURL_ZLIB_DEPENDENCY}
+                 SOURCE_DIR ${CURL_SOURCE_DIR}
+@@ -130,6 +147,7 @@
+                 CMAKE_ARGS
+                 -C ${AWS_NATIVE_SDK_ROOT}/android-build/CurlAndroidCrossCompile.cmake
+                 -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
++                ${EXTRA_ARGS}
+                 -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=${CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION}
+                 -DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL}
+                 -DANDROID_ABI=${ANDROID_ABI}
+@@ -146,7 +164,6 @@
+                 -DOPENSSL_INCLUDE_DIR=${OPENSSL_INCLUDE_DIR}
+                 -DCURL_STATICLIB=ON
+                 -DBUILD_CURL_EXE=ON
+-                -DBUILD_CURL_TESTS=OFF
+                 -DCURL_ZLIB=${CURL_USE_ZLIB}
+                 )
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision e98e5732ec7319051f162f7314ae361c85d0a8c9)
++++ b/CMakeLists.txt	(date 1610744839158)
+@@ -163,10 +163,16 @@
+     endif()
+     file(MAKE_DIRECTORY ${AWS_DEPS_BUILD_DIR})
+     if(TARGET_ARCH STREQUAL "ANDROID")
++        if (VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
++            set(EXTRA_ARGS "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
++                    "-DVCPKG_TARGET_TRIPLET=${VCPKG_TARGET_TRIPLET}")
++        endif()
++
+         execute_process(
+             COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR}
+             -DTARGET_ARCH=${TARGET_ARCH}
+             -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
++            ${EXTRA_ARGS}
+             -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=${CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION}
+             -DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL}
+             -DANDROID_ABI=${ANDROID_ABI}
