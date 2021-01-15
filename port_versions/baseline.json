@@ -1046,7 +1046,7 @@
     },
     "cairomm": {
       "baseline": "1.15.3",
-      "port-version": 5
+      "port-version": 6
     },
     "camport3": {
       "baseline": "1.5.3",
@@ -2402,7 +2402,7 @@
     },
     "ignition-cmake2": {
       "baseline": "2.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ignition-common1": {
       "baseline": "1.1.1-1",
@@ -4370,7 +4370,7 @@
     },
     "pango": {
       "baseline": "1.40.11",
-      "port-version": 8
+      "port-version": 9
     },
     "pangolin": {
       "baseline": "0.5",
