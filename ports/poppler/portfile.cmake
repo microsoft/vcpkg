@@ -7,9 +7,15 @@ vcpkg_from_github(
     PATCHES
         0001-remove-CMAKE_CXX_STANDARD.patch
         0002-remove-test-subdirectory.patch
+        0003-fix-gperf-not-recognized.patch
 )
 
+vcpkg_find_acquire_program(GPERF)
+get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
+vcpkg_add_to_path(${GPERF_PATH})
+
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    curl ENABLE_CURL
     zlib ENABLE_ZLIB
 )
 
@@ -21,6 +27,7 @@ vcpkg_configure_cmake(
         -DBUILD_QT5_TESTS=OFF
         -DBUILD_QT6_TESTS=OFF
         -DBUILD_CPP_TESTS=OFF
+        -DENABLE_LIBCURL=${ENABLE_CURL}
         -DENABLE_UTILS=OFF
         -DENABLE_GLIB=OFF
         -DENABLE_GLOBJECT_INTROSPECTION=OFF

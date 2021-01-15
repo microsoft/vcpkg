@@ -1,0 +1,18 @@
+{
+  "name": "boost-poly-collection",
+  "version-string": "1.75.0",
+  "description": "Boost poly_collection module",
+  "homepage": "https://github.com/boostorg/poly_collection",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-core",
+    "boost-detail",
+    "boost-iterator",
+    "boost-mp11",
+    "boost-mpl",
+    "boost-type-erasure",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}
