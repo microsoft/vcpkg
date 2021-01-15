@@ -26,14 +26,16 @@ index 11118595f..257e7c85e 100644
  if (HB_HAVE_GLIB)
    add_definitions(-DHAVE_GLIB)
  
-@@ -217,7 +219,9 @@ if (HB_HAVE_GLIB)
+@@ -217,7 +219,11 @@ if (HB_HAVE_GLIB)
    find_package(PkgConfig)
    pkg_check_modules(PC_GLIB QUIET glib-2.0)
++  find_package(Iconv REQUIRED)
  
 -  find_library(GLIB_LIBRARIES NAMES glib-2.0 HINTS ${PC_GLIB_LIBDIR} ${PC_GLIB_LIBRARY_DIRS})
 +  find_library(GLIB_LIBRARY_RELEASE NAMES glib-2.0 HINTS ${PC_GLIB_LIBDIR} ${PC_GLIB_LIBRARY_DIRS} ${PC_GLIB_LIBDIR}/.. ${PC_GLIB_LIBRARY_DIRS}/..)
 +  find_library(GLIB_LIBRARY_DEBUG NAMES glib-2.0 HINTS ${PC_GLIB_LIBDIR}/debug ${PC_GLIB_LIBRARY_DIRS}/debug ${PC_GLIB_LIBDIR} ${PC_GLIB_LIBRARY_DIRS})
 +  select_library_configurations(GLIB)
++  list(APPEND GLIB_LIBRARIES ${Iconv_LIBRARIES})
    find_path(GLIBCONFIG_INCLUDE_DIR NAMES glibconfig.h HINTS ${PC_LIBDIR} ${PC_LIBRARY_DIRS} ${PC_GLIB_INCLUDEDIR} ${PC_GLIB_INCLUDE_DIRS} PATH_SUFFIXES glib-2.0/include)
    find_path(GLIB_INCLUDE_DIR NAMES glib.h HINTS ${PC_GLIB_INCLUDEDIR} ${PC_GLIB_INCLUDE_DIRS} PATH_SUFFIXES glib-2.0)
  
