@@ -2,8 +2,10 @@ vcpkg_from_gitlab(
     GITLAB_URL https://code.videolan.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO videolan/dav1d
-    REF 0.7.1
-    SHA512 355a021df537f24b39e54ca77c167cdebe1c6739a1f97500ceb522526b9d1fb51aeee8d8c729ed14907c5796de8a99a0e83ac306182f8cef5be90d3b5aec7b37
+    REF 0.8.1
+    SHA512 dd40b82b65e4be37a27ab11e7116f7a244b0da4469915ead3922ac31724fb6da3910a78629a32a669031fe08d4323ab135174afb7462f6ea4adf96c111841c1c
+    PATCHES
+        "patch_underscore_prefix.patch"
 )
 
 vcpkg_find_acquire_program(NASM)
@@ -19,6 +21,8 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --default-library=${LIBRARY_TYPE}
+        -Denable_tests=false
+        -Denable_tools=false
 )
 
 vcpkg_install_meson()
