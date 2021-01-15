@@ -207,7 +207,7 @@ See our [manifest files document](manifest-files.md#port-version) for a full exp
 ### Update the version files in `port_versions/` of any modified ports
 
 Vcpkg uses a set of metadata files to power its versioning features.
-This files are located in the following locations:
+These files are located in the following locations:
 * `${VCPKG_ROOT}/port_versions/baseline.json`, (this file is commont for all ports) and
 * `${VCPKG_ROOT}/port_versions/${first-letter-of-portname}-/${portname}.json`
 
