@@ -1904,6 +1904,10 @@
       "baseline": "2019-04-07",
       "port-version": 1
     },
+    "flashlight-cpu": {
+      "baseline": "20210111",
+      "port-version": 0
+    },
     "flashlight-cuda": {
       "baseline": "20210111",
       "port-version": 0
