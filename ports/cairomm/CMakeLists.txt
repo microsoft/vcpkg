@@ -14,9 +14,11 @@ string(REGEX REPLACE "[0-9]+\\.([0-9]+)\\.[0-9]+" "\\1" CAIROMM_MINOR_VERSION ${
 string(REGEX REPLACE "[0-9]+\\.[0-9]+\\.([0-9]+)" "\\1" CAIROMM_MICRO_VERSION ${VERSION})
 message(STATUS "Ciaromm version: ${CAIROMM_MAJOR_VERSION}.${CAIROMM_MINOR_VERSION}.${CAIROMM_MICRO_VERSION}")
 
-find_package(Cairo REQUIRED)
+find_package(CAIRO REQUIRED)
 find_package(Freetype REQUIRED)
-find_package(SigC++ REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(SIGCPP sigc++-3.0 IMPORTED_TARGET)
+
 
 #configure
 option(BUILD_SHARED_LIBS "Build the shared library" ON)
@@ -88,10 +90,10 @@ set(cairomm_rc
     ${CMAKE_BINARY_DIR}/cairomm.rc)
 
 add_library(cairomm-1.0 ${cairomm_cc} ${cairomm_rc})
-target_link_libraries(cairomm-1.0 ${CAIRO_LIBRARY} ${SIGC++_LIBRARY} Freetype::Freetype)
+target_link_libraries(cairomm-1.0 ${CAIRO_LIBRARY} PkgConfig::SIGCPP Freetype::Freetype)
 target_include_directories(cairomm-1.0 PRIVATE
     ${CAIRO_INCLUDE_DIR}
-    ${SIGC++_INCLUDE_DIR}
+    ${SIGCCPP_INCLUDE_DIRS}
     ${CMAKE_BINARY_DIR}
     ${CMAKE_SOURCE_DIR})
 

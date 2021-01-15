@@ -19,9 +19,12 @@ vcpkg_extract_source_archive_ex(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH}/build)
 
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
 )
 
 vcpkg_install_cmake()
