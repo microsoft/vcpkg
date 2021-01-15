@@ -57,7 +57,7 @@ jobs:
     inputs:
       targetType: inline
       script: |
-        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose --verify-git-trees
+        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose
       pwsh: true
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
