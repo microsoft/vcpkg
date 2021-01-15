@@ -1,14 +1,13 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
+vcpkg_fail_port_install(ON_TARGET "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXMesh
-    REF nov2020b
-    SHA512 a3520d916324e16004ec0052c6d4c628be2ea62583d0169b663f67ce03ef84c3ba8ea01c239c75dc89a359de6748039dc11e405ba4b0c4f33ee0225e4e248415
+    REF jan2021
+    SHA512 2e3950571703e48de083900e5f4ff94a6f882071969e48dd200ecbf7d8357f3131f647ba6ad97e7dcdbd3e051edad99521661738e7af73ca6f89e8715cd29f9c
     HEAD_REF master
-    FILE_DISAMBIGUATOR 2
 )
 
 vcpkg_check_features(
@@ -16,6 +15,10 @@ vcpkg_check_features(
     FEATURES
         dx12 BUILD_DX12
 )
+
+if (VCPKG_HOST_IS_LINUX)
+    message(WARNING "Build ${PORT} requires GCC version 9 or later")
+endif()
 
 if(VCPKG_TARGET_IS_UWP)
   set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
@@ -32,7 +35,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-if(NOT VCPKG_TARGET_IS_UWP)
+if((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
   vcpkg_copy_tools(
         TOOL_NAMES meshconvert
         SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
@@ -40,9 +43,9 @@ if(NOT VCPKG_TARGET_IS_UWP)
 
 elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
   vcpkg_download_distfile(meshconvert
-    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/nov2020/meshconvert.exe"
+    URLS "https://github.com/Microsoft/DirectXMesh/releases/download/jan2021/meshconvert.exe"
     FILENAME "meshconvert.exe"
-    SHA512 189552c74dc634f673a0d15851d7bb7c42c860023b1488086a9904323fc45207244c159c8848a211afafe258825f5051ee6fd85080da3f7f4afdf910764ca8ec
+    SHA512 7df51baa495859aab418d194fd885cf37945ec2927122c18718b3a1a7d7ceb08c6853d084d74bf2bf2bc9ace47a351fd6b8d03706507f4966111ec1cb83f43a2
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxmesh/")
