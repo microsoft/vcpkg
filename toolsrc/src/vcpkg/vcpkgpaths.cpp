@@ -202,6 +202,11 @@ namespace vcpkg
                 , m_env_cache(ff_settings.compiler_tracking)
                 , m_ff_settings(ff_settings)
             {
+                const auto& cache_root =
+                    System::get_platform_cache_home().value_or_exit(VCPKG_LINE_INFO) / fs::u8path("vcpkg");
+                registries_work_tree_dir = cache_root / fs::u8path("registries") / fs::u8path("git");
+                registries_dot_git_dir = registries_work_tree_dir / fs::u8path(".git");
+                registries_git_trees = cache_root / fs::u8path("registries") / fs::u8path("git-trees");
             }
 
             Lazy<std::vector<VcpkgPaths::TripletFile>> available_triplets;
@@ -224,6 +229,10 @@ namespace vcpkg
             Configuration m_config;
 
             FeatureFlagSettings m_ff_settings;
+
+            fs::path registries_work_tree_dir;
+            fs::path registries_dot_git_dir;
+            fs::path registries_git_trees;
         };
     }
 
@@ -724,6 +733,156 @@ If you wish to silence this error and use classic mode, you can:
                 *this, git_tree, local_repo, destination, this->versions_dot_git_dir, this->versions_work_tree);
         }
         return destination;
+    }
+
+    ExpectedS<std::string> VcpkgPaths::git_fetch_from_remote_registry(StringView repo, StringView treeish) const
+    {
+        auto& fs = get_filesystem();
+
+        auto work_tree = m_pimpl->registries_work_tree_dir;
+        fs.create_directories(work_tree, VCPKG_LINE_INFO);
+        auto dot_git_dir = m_pimpl->registries_dot_git_dir;
+
+        System::CmdLineBuilder init_registries_git_dir =
+            git_cmd_builder(*this, dot_git_dir, work_tree).string_arg("init");
+        auto init_output = System::cmd_execute_and_capture_output(init_registries_git_dir);
+        if (init_output.exit_code != 0)
+        {
+            return {Strings::format("Error: Failed to initialize local repository %s.\n%s\n",
+                                    fs::u8string(work_tree),
+                                    init_output.output),
+                    expected_right_tag};
+        }
+
+        auto lock_file = work_tree / fs::u8path(".vcpkg-lock");
+
+        std::error_code ec;
+        auto guard = Files::ExclusiveFileLock(Files::ExclusiveFileLock::Wait::Yes, fs, lock_file, ec);
+
+        System::CmdLineBuilder fetch_git_ref =
+            git_cmd_builder(*this, dot_git_dir, work_tree).string_arg("fetch").string_arg("--").string_arg(repo);
+        if (treeish.size() != 0)
+        {
+            fetch_git_ref.string_arg(treeish);
+        }
+
+        auto fetch_output = System::cmd_execute_and_capture_output(fetch_git_ref);
+        if (fetch_output.exit_code != 0)
+        {
+            return {Strings::format("Error: Failed to fetch %s%s from repository %s.\n%s\n",
+                                    treeish.size() != 0 ? "ref " : "",
+                                    treeish,
+                                    repo,
+                                    fetch_output.output),
+                    expected_right_tag};
+        }
+
+        System::CmdLineBuilder get_fetch_head =
+            git_cmd_builder(*this, dot_git_dir, work_tree).string_arg("rev-parse").string_arg("FETCH_HEAD");
+        auto fetch_head_output = System::cmd_execute_and_capture_output(get_fetch_head);
+        if (fetch_head_output.exit_code != 0)
+        {
+            return {Strings::format("Error: Failed to rev-parse FETCH_HEAD.\n%s\n", fetch_head_output.output),
+                    expected_right_tag};
+        }
+        return {Strings::trim(fetch_head_output.output).to_string(), expected_left_tag};
+    }
+    // returns an error if there was an unexpected error; returns nullopt if the file doesn't exist at the specified
+    // hash
+    ExpectedS<std::string> VcpkgPaths::git_show_from_remote_registry(StringView hash,
+                                                                     const fs::path& relative_path) const
+    {
+        auto revision = Strings::format("%s:%s", hash, fs::generic_u8string(relative_path));
+        System::CmdLineBuilder git_show =
+            git_cmd_builder(*this, m_pimpl->registries_dot_git_dir, m_pimpl->registries_work_tree_dir)
+                .string_arg("show")
+                .string_arg(revision);
+
+        auto git_show_output = System::cmd_execute_and_capture_output(git_show);
+        if (git_show_output.exit_code != 0)
+        {
+            return {git_show_output.output, expected_right_tag};
+        }
+        return {git_show_output.output, expected_left_tag};
+    }
+    ExpectedS<std::string> VcpkgPaths::git_find_object_id_for_remote_registry_path(StringView hash,
+                                                                                   const fs::path& relative_path) const
+    {
+        auto revision = Strings::format("%s:%s", hash, fs::generic_u8string(relative_path));
+        System::CmdLineBuilder git_rev_parse =
+            git_cmd_builder(*this, m_pimpl->registries_dot_git_dir, m_pimpl->registries_work_tree_dir)
+                .string_arg("rev-parse")
+                .string_arg(revision);
+
+        auto git_rev_parse_output = System::cmd_execute_and_capture_output(git_rev_parse);
+        if (git_rev_parse_output.exit_code != 0)
+        {
+            return {git_rev_parse_output.output, expected_right_tag};
+        }
+        return {Strings::trim(git_rev_parse_output.output).to_string(), expected_left_tag};
+    }
+    ExpectedS<fs::path> VcpkgPaths::git_checkout_object_from_remote_registry(StringView object) const
+    {
+        auto& fs = get_filesystem();
+        fs.create_directories(m_pimpl->registries_git_trees, VCPKG_LINE_INFO);
+
+        auto git_tree_final = m_pimpl->registries_git_trees / fs::u8path(object);
+        if (fs.exists(git_tree_final))
+        {
+            return std::move(git_tree_final);
+        }
+
+        auto pid = System::get_process_id();
+
+        fs::path git_tree_temp = fs::u8path(Strings::format("%s.tmp%ld", fs::u8string(git_tree_final), pid));
+        fs::path git_tree_temp_tar = fs::u8path(Strings::format("%s.tmp%ld.tar", fs::u8string(git_tree_final), pid));
+        fs.remove_all(git_tree_temp, VCPKG_LINE_INFO);
+        fs.create_directory(git_tree_temp, VCPKG_LINE_INFO);
+
+        auto dot_git_dir = m_pimpl->registries_dot_git_dir;
+        System::CmdLineBuilder git_archive = git_cmd_builder(*this, dot_git_dir, m_pimpl->registries_work_tree_dir)
+                                                 .string_arg("archive")
+                                                 .string_arg("--format")
+                                                 .string_arg("tar")
+                                                 .string_arg(object)
+                                                 .string_arg("--output")
+                                                 .path_arg(git_tree_temp_tar);
+        auto git_archive_output = System::cmd_execute_and_capture_output(git_archive);
+        if (git_archive_output.exit_code != 0)
+        {
+            return {Strings::format("git archive failed with message:\n%s", git_archive_output.output),
+                    expected_right_tag};
+        }
+
+        auto untar = System::CmdLineBuilder{get_tool_exe(Tools::CMAKE)}
+                         .string_arg("-E")
+                         .string_arg("tar")
+                         .string_arg("xf")
+                         .path_arg(git_tree_temp_tar);
+
+        auto untar_output = System::cmd_execute_and_capture_output(untar, System::InWorkingDirectory{git_tree_temp});
+        if (untar_output.exit_code != 0)
+        {
+            return {Strings::format("cmake's untar failed with message:\n%s", untar_output.output), expected_right_tag};
+        }
+
+        std::error_code ec;
+        fs.rename(git_tree_temp, git_tree_final, ec);
+
+        if (fs.exists(git_tree_final))
+        {
+            return git_tree_final;
+        }
+        if (ec)
+        {
+            return {
+                Strings::format("rename to %s failed with message:\n%s", fs::u8string(git_tree_final), ec.message()),
+                expected_right_tag};
+        }
+        else
+        {
+            return {"Unknown error", expected_right_tag};
+        }
     }
 
     Optional<const Json::Object&> VcpkgPaths::get_manifest() const
