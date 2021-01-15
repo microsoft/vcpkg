@@ -515,12 +515,12 @@ namespace vcpkg::Build
         Util::Vectors::append(&out_vars,
                               std::initializer_list<System::CMakeVariable>{
                                   {"CMD", "BUILD"},
+                                  {"DOWNLOADS", paths.downloads},
                                   {"TARGET_TRIPLET", triplet.canonical_name()},
                                   {"TARGET_TRIPLET_FILE", fs::u8string(paths.get_triplet_file_path(triplet))},
-                                  {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
-                                  {"DOWNLOADS", paths.downloads},
-                                  {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
                                   {"VCPKG_BASE_VERSION", Commands::Version::base_version()},
+                                  {"VCPKG_CONCURRENCY", std::to_string(get_concurrency())},
+                                  {"VCPKG_PLATFORM_TOOLSET", toolset.version.c_str()},
                               });
         if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
         {
@@ -627,14 +627,14 @@ namespace vcpkg::Build
         }
 
         std::vector<System::CMakeVariable> variables{
-            {"PORT", scf.core_paragraph->name},
+            {"ALL_FEATURES", all_features},
             {"CURRENT_PORT_DIR", scfl.source_location},
+            {"FEATURES", Strings::join(";", action.feature_list)},
+            {"PORT", scf.core_paragraph->name},
             {"VCPKG_USE_HEAD_VERSION", Util::Enum::to_bool(action.build_options.use_head_version) ? "1" : "0"},
-            {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(action.build_options.allow_downloads) ? "1" : "0"},
             {"_VCPKG_DOWNLOAD_TOOL", to_string(action.build_options.download_tool)},
             {"_VCPKG_EDITABLE", Util::Enum::to_bool(action.build_options.editable) ? "1" : "0"},
-            {"FEATURES", Strings::join(";", action.feature_list)},
-            {"ALL_FEATURES", all_features},
+            {"_VCPKG_NO_DOWNLOADS", !Util::Enum::to_bool(action.build_options.allow_downloads) ? "1" : "0"},
         };
 
         for (auto cmake_arg : args.cmake_args)
