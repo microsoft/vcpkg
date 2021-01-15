@@ -193,6 +193,9 @@ devicenameresolver:x64-windows-static-md=fail
 dimcli:arm-uwp=fail
 dimcli:x64-osx=fail
 dimcli:x64-uwp=fail
+# directxtex, directxmesh requires GCC 9 or later for linux support
+directxtex:x64-linux=fail
+directxmesh:x64-linux=fail
 discord-game-sdk:x64-windows-static=fail
 discord-game-sdk:x64-windows-static-md=fail
 discord-rpc:arm-uwp=fail
@@ -1649,6 +1652,8 @@ urdfdom:x64-windows-static-md=fail
 usd:x86-windows=fail
 uthenticode:arm-uwp=fail
 uthenticode:x64-uwp=fail
+# uvatlas requires GCC 9 or later for linux support
+uvatlas:x64-linux=fail
 v8:arm64-windows=fail
 v8:arm-uwp=fail
 v8:x64-osx=fail
