@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         0002-Fix-z7-override.patch
         fix-main-lib-path.patch
+        fix-build-failure-in-gcc-11.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
