@@ -232,7 +232,7 @@ namespace vcpkg::Commands::CIVerifyVersions
                                 "       But local port with the same verion has a different SHA: %s\n"
                                 "       Please update the port's version fields and then run:\n\n"
                                 "           vcpkg x-add-version %s\n\n"
-                                "       to overwrite the declared version's SHA.",
+                                "       to add a new version.",
                                 port_name,
                                 fs::u8string(versions_file_path),
                                 top_entry.first.versiont,
