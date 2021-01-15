@@ -1,0 +1,33 @@
+diff --git a/Source/FreeImage.h b/Source/FreeImage.h
+index 59de277..224877f 100644
+--- a/Source/FreeImage.h
++++ b/Source/FreeImage.h
+@@ -420,15 +420,19 @@ FI_ENUM(FREE_IMAGE_FORMAT) {
+ #if 0
+  	FIF_FAXG3	= 27,
+ #endif
+-	FIF_SGI		= 28,
+-	FIF_EXR		= 29,
+-	FIF_J2K		= 30,
+-	FIF_JP2		= 31,
+-	FIF_PFM		= 32,
+-	FIF_PICT	= 33,
+-	FIF_RAW		= 34,
+-	FIF_WEBP	= 35,
+-	FIF_JXR		= 36
++/* vcpkg: removal of G3 fax format messes up the format enum numbering due to FreeImage
++   relying on the list of plugins as created in AddNode(). Enum values have been
++   corrected to compensate. This is similar to the reported bug:
++   https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=841089 */
++	FIF_SGI		= 27,
++	FIF_EXR		= 28,
++	FIF_J2K		= 29,
++	FIF_JP2		= 30,
++	FIF_PFM		= 31,
++	FIF_PICT	= 32,
++	FIF_RAW		= 33,
++	FIF_WEBP	= 34,
++	FIF_JXR		= 35
+ };
+ 
+ /** Image type used in FreeImage.

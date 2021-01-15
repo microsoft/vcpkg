@@ -55,6 +55,14 @@ namespace vcpkg::PortFileProvider
         virtual ~IBaselineProvider() = default;
     };
 
-    std::unique_ptr<IBaselineProvider> make_baseline_provider(const VcpkgPaths&);
-    std::unique_ptr<IVersionedPortfileProvider> make_versioned_portfile_provider(const VcpkgPaths&);
+    struct IOverlayProvider
+    {
+        virtual ~IOverlayProvider() = default;
+        virtual Optional<const SourceControlFileLocation&> get_control_file(StringView port_name) const = 0;
+    };
+
+    std::unique_ptr<IBaselineProvider> make_baseline_provider(const vcpkg::VcpkgPaths& paths);
+    std::unique_ptr<IVersionedPortfileProvider> make_versioned_portfile_provider(const vcpkg::VcpkgPaths& paths);
+    std::unique_ptr<IOverlayProvider> make_overlay_provider(const vcpkg::VcpkgPaths& paths,
+                                                            View<std::string> overlay_ports);
 }

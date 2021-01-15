@@ -57,7 +57,7 @@ if (APPLE)
     )
 endif()
 
-set_target_properties(SDL2_image PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
+set_target_properties(SDL2_image PROPERTIES DEFINE_SYMBOL DLL_EXPORT)
 
 foreach(FORMAT ${SUPPORTED_FORMATS})
     add_definitions(-DLOAD_${FORMAT})

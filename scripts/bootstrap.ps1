@@ -369,8 +369,7 @@ else
 }
 
 $arguments = (
-"`"/p:VCPKG_VERSION=-nohash`"",
-"`"/p:DISABLE_METRICS=$disableMetricsValue`"",
+"`"/p:VCPKG_VERSION=-unknownhash`"",
 "/p:Configuration=Release",
 "/p:Platform=$platform",
 "/p:PlatformToolset=$platformToolset",
@@ -413,8 +412,14 @@ if ($ec -ne 0)
 
 Write-Host "`nBuilding vcpkg.exe... done.`n"
 
-if (-not $disableMetrics)
+if ($disableMetrics)
 {
+    Set-Content -Value "" -Path "$vcpkgRootDir\vcpkg.disable-metrics" -Force
+}
+elseif (-Not (Test-Path "$vcpkgRootDir\vcpkg.disable-metrics"))
+{
+    # Note that we intentionally leave any existing vcpkg.disable-metrics; once a user has
+    # opted out they should stay opted out.
     Write-Host @"
 Telemetry
 ---------

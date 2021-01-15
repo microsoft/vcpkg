@@ -8,42 +8,16 @@ vcpkg_from_github(
     0001-rename-_castu32_f32-to-gemm_castu32_f32.patch
 )
 
-# enable CUDA inside DARKNET
-set(ENABLE_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-  set(ENABLE_CUDA ON)
-endif()
-
-set(ENABLE_OPENCV OFF)
-# enable OPENCV (basic version) inside DARKNET
-if("opencv-base" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv2-base" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv3-base" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-
-# enable OPENCV (with its own CUDA feature enabled) inside DARKNET
-# (note: this does not mean that DARKNET itself will have CUDA support since by design it is independent, to have it you must require both opencv-cuda and cuda features!)
-# DARKNET will be automatically able to distinguish an OpenCV that is built with or without CUDA support.
-if("opencv-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv2-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv3-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-
-# enable CUDNN inside DARKNET (which depends on the "cuda" feature by design)
-set(ENABLE_CUDNN OFF)
-if("cudnn" IN_LIST FEATURES)
-  set(ENABLE_CUDNN ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    cuda ENABLE_CUDA
+    opencv-base ENABLE_OPENCV
+    opencv2-base ENABLE_OPENCV
+    opencv3-base ENABLE_OPENCV
+    opencv-cuda ENABLE_OPENCV
+    opencv2-cuda ENABLE_OPENCV
+    opencv3-cuda ENABLE_OPENCV
+    cudnn ENABLE_CUDNN
+)
 
 if ("cuda" IN_LIST FEATURES)
   if (NOT VCPKG_CMAKE_SYSTEM_NAME AND NOT ENV{CUDACXX})
@@ -56,7 +30,7 @@ if("weights" IN_LIST FEATURES)
   vcpkg_download_distfile(YOLOV4-TINY_WEIGHTS
     URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights"
     FILENAME "darknet-cache/yolov4-tiny.weights"
-    SHA512 804ca2ab8e3699d31c95bf773d22f901f186703487c7945f30dc2dbb808094793362cb6f5da5cd0b4b83f820c8565a3cba22fafa069ee6ca2a925677137d95f4
+    SHA512 7d4d9fe150f9fe3ea7d2310f1445fe983b31fbf06d301c70ecfe00e8559e6f1bf940198c2dd55db772238f23ea0092fb6553558e5414f3ee173b8b28e53c5b54
   )
   vcpkg_download_distfile(YOLOV4_WEIGHTS
     URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights"
@@ -99,7 +73,7 @@ if("weights-train" IN_LIST FEATURES)
   vcpkg_download_distfile(YOLOV4-TINY-CONV-29
     URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.conv.29"
     FILENAME "darknet-cache/yolov4-tiny.conv.29"
-    SHA512 318e47f4bdf43b7f4eff8f3669bc9ba66cd7bd8ffb31df5bc1978682c85fec8e63a8349958022fd933cc676cbf5241953f2181bf4d1789f7cf9d371e012e3e49
+    SHA512 d145deb80aea3d422752e784323d89919281ed7a37d15f939f5b680ff62e502072a30e074c34a09026669126d360c7d6817ea1afa53cfa53c56bd1e16333a602
   )
   vcpkg_download_distfile(YOLOV4-CONV-137
     URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.conv.137"
@@ -128,12 +102,9 @@ vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   DISABLE_PARALLEL_CONFIGURE
   PREFER_NINJA
-  OPTIONS
+  OPTIONS ${FEATURE_OPTIONS}
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
-    -DENABLE_CUDA=${ENABLE_CUDA}
-    -DENABLE_CUDNN=${ENABLE_CUDNN}
-    -DENABLE_OPENCV=${ENABLE_OPENCV}
 )
 
 vcpkg_install_cmake()
