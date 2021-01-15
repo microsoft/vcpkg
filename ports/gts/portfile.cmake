@@ -10,10 +10,13 @@ vcpkg_from_github(
         fix-M_PI-in-windows.patch
         support-unix.patch
         fix-pkgconfig.patch
+        glib2.patch
 )
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
 )
 
 vcpkg_install_cmake()
