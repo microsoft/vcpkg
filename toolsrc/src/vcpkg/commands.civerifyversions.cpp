@@ -402,7 +402,7 @@ namespace vcpkg::Commands::CIVerifyVersions
             }
             System::print2(System::Color::error,
                            "\nTo attempt to resolve all erros at once, run:\n\n"
-                           "    vcpkg x-add-version --all --overwrite-versions\n\n");
+                           "    vcpkg x-add-version --all\n\n");
             Checks::exit_fail(VCPKG_LINE_INFO);
         }
         Checks::exit_success(VCPKG_LINE_INFO);
