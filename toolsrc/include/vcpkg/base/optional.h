@@ -296,10 +296,7 @@ namespace vcpkg
             {
                 return f(this->m_base.value());
             }
-            else
-            {
-                return nullopt;
-            }
+            return nullopt;
         }
 
         template<class F, class U = map_t<F>>
@@ -309,10 +306,7 @@ namespace vcpkg
             {
                 return f(this->m_base.value());
             }
-            else
-            {
-                return nullopt;
-            }
+            return nullopt;
         }
 
         template<class F>
@@ -325,10 +319,7 @@ namespace vcpkg
             {
                 return f(std::move(this->m_base.value()));
             }
-            else
-            {
-                return nullopt;
-            }
+            return nullopt;
         }
 
         template<class F, class U = move_map_t<F>>
@@ -338,10 +329,7 @@ namespace vcpkg
             {
                 return f(std::move(this->m_base.value()));
             }
-            else
-            {
-                return nullopt;
-            }
+            return nullopt;
         }
 
         friend bool operator==(const Optional& lhs, const Optional& rhs)
