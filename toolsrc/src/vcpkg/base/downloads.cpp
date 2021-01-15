@@ -220,7 +220,7 @@ namespace vcpkg::Downloads
     {
         static constexpr StringLiteral guid_marker = "8a1db05f-a65d-419b-aa72-037fb4d0672e";
 
-        System::CmdLineBuilder cmd;
+        System::Command cmd;
         cmd.string_arg("curl")
             .string_arg("--head")
             .string_arg("--location")
@@ -260,7 +260,7 @@ namespace vcpkg::Downloads
     {
         static constexpr StringLiteral guid_marker = "8a1db05f-a65d-419b-aa72-037fb4d0672e";
 
-        System::CmdLineBuilder cmd;
+        System::Command cmd;
         cmd.string_arg("curl")
             .string_arg("--location")
             .string_arg("-w")
@@ -298,7 +298,7 @@ namespace vcpkg::Downloads
     {
         static constexpr StringLiteral guid_marker = "9a1db05f-a65d-419b-aa72-037fb4d0672e";
 
-        System::CmdLineBuilder cmd;
+        System::Command cmd;
         cmd.string_arg("curl").string_arg("-X").string_arg("PUT");
         cmd.string_arg("-w").string_arg(Strings::concat("\\n", guid_marker, "%{http_code}"));
         cmd.string_arg(url);
@@ -443,7 +443,7 @@ namespace vcpkg::Downloads
                 }
             }
 #endif
-            System::CmdLineBuilder cmd;
+            System::Command cmd;
             cmd.string_arg("curl")
                 .string_arg("--fail")
                 .string_arg("-L")
