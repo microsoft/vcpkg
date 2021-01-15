@@ -12,9 +12,18 @@ $commonArgs = @(
     "--x-buildtrees-root=$buildtreesRoot",
     "--x-install-root=$installRoot",
     "--x-packages-root=$packagesRoot",
-    "--overlay-ports=scripts/e2e_ports/overlays"
+    "--overlay-ports=$PSScriptRoot/../e2e_ports/overlays"
 )
 $Script:CurrentTest = 'unassigned'
+
+if ($IsWindows)
+{
+    $VcpkgExe = Get-Item './vcpkg.exe'
+}
+else
+{
+    $VcpkgExe = Get-Item './vcpkg'
+}
 
 function Refresh-TestRoot {
     Remove-Item -Recurse -Force $TestingRoot -ErrorAction SilentlyContinue
@@ -59,17 +68,9 @@ function Run-Vcpkg {
         [Parameter(ValueFromRemainingArguments)]
         [string[]]$TestArgs
     )
-
-    if ($IsWindows) {
-        $vcpkgName = 'vcpkg.exe'
-    } else {
-        $vcpkgName = 'vcpkg'
-    }
-
-    $Script:CurrentTest = "./$vcpkgName $($testArgs -join ' ')"
+    $Script:CurrentTest = "vcpkg $($testArgs -join ' ')"
     Write-Host $Script:CurrentTest
-    & "./$vcpkgName" @testArgs | Tee-Object -Variable 'ConsoleOutput'
-    return $ConsoleOutput
+    & $VcpkgExe @testArgs
 }
 
 Refresh-TestRoot
