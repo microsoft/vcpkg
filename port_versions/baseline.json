@@ -1633,8 +1633,8 @@
       "port-version": 4
     },
     "dmlc": {
-      "baseline": "2019-08-12-4",
-      "port-version": 0
+      "baseline": "2019-08-12",
+      "port-version": 5
     },
     "docopt": {
       "baseline": "2018-11-01",
@@ -2066,7 +2066,7 @@
     },
     "gdcm": {
       "baseline": "3.0.7",
-      "port-version": 0
+      "port-version": 1
     },
     "gdcm2": {
       "baseline": "deprecated",
@@ -2814,7 +2814,7 @@
     },
     "libarchive": {
       "baseline": "3.4.3",
-      "port-version": 2
+      "port-version": 3
     },
     "libass": {
       "baseline": "0.15.0",
@@ -4190,19 +4190,19 @@
     },
     "opencv": {
       "baseline": "4.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 4
+      "port-version": 5
     },
     "opencv3": {
       "baseline": "3.4.10",
-      "port-version": 4
+      "port-version": 5
     },
     "opencv4": {
       "baseline": "4.3.0",
-      "port-version": 4
+      "port-version": 5
     },
     "opendnp3": {
       "baseline": "3.1.0",
@@ -5626,7 +5626,7 @@
     },
     "tesseract": {
       "baseline": "4.1.1",
-      "port-version": 5
+      "port-version": 6
     },
     "tfhe": {
       "baseline": "1.0.1-1",
