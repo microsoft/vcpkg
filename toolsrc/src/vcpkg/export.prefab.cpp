@@ -206,14 +206,12 @@ namespace vcpkg::Export::Prefab
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
-        System::cmd_execute_and_capture_output(System::CmdLineBuilder(seven_zip_exe)
-                                                   .string_arg("a")
-                                                   .path_arg(destination)
-                                                   .path_arg(source / fs::u8path("*")),
-                                               System::get_clean_environment());
+        System::cmd_execute_and_capture_output(
+            System::Command(seven_zip_exe).string_arg("a").path_arg(destination).path_arg(source / fs::u8path("*")),
+            System::get_clean_environment());
 #else
         System::cmd_execute_clean(
-            System::CmdLineBuilder{"zip"}.string_arg("--quiet").string_arg("-r").path_arg(destination).string_arg("*"),
+            System::Command{"zip"}.string_arg("--quiet").string_arg("-r").path_arg(destination).string_arg("*"),
             System::InWorkingDirectory{source});
 #endif
     }
@@ -224,7 +222,7 @@ namespace vcpkg::Export::Prefab
         {
             System::print2("\n[DEBUG] Installing POM and AAR file to ~/.m2\n\n");
         }
-        auto cmd_line = System::CmdLineBuilder(Tools::MAVEN);
+        auto cmd_line = System::Command(Tools::MAVEN);
         if (!prefab_options.enable_debug)
         {
             cmd_line.string_arg("-q");
