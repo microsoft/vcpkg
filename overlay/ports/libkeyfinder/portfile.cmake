@@ -1,14 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mixxxdj/libkeyfinder
-    REF fea05eaee1275fd14c0c96253095ee9c8bef215c
-    SHA512 0f94deb14ccffef246bc8e15444b05a294f93eb509102b3ce801fa354a762d958cf85d75702d33e1f221a9b4e74d4e5d6129e09f2962c3db1f93cb6d07f53b23
+    REF 1c55a91dbf58b555f6f74ea425c75a98e77e4296
+    SHA512 ac98374d1a90d065183f1ed691a569f1af9fe1b000ddb0d52f56d88fac716cf5302df1490f009aaaa4b269c7563a5ce38e04f9539ee6d76727b971cb118f56d5
     HEAD_REF main
 )
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(LIBKEYFINDER_OPTIONS -DBUILD_SHARED_LIBS=ON -DBUILD_TESTING=OFF)
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -17,6 +13,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KeyFinder TARGET_PATH share/KeyFinder)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
