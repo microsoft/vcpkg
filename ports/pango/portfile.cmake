@@ -2,7 +2,7 @@ set(PANGO_VERSION 1.48.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "http://ftp.gnome.org/pub/GNOME/sources/pango/1.48/pango-${PANGO_VERSION}.tar.xz"
     FILENAME "pango-${PANGO_VERSION}.tar.xz"
-    SHA512 e4ac40f8da9c326e1e4dfaf4b1d2070601b17f88f5a12991a9a8bbc58bb08640404e2a794a5c68c5ebb2e7e80d9c186d4b26cd417bb63a23f024ef8a38bb152a)
+    SHA512 4819575a583134083819c1548d86bba71af97fd927f7cac05e3903b6d1c84de0ab1b593eea1e17b974f194e2d81123aa46e3af942eef258ad1bd14c72322342e)
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -15,18 +15,24 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -Dintrospection=false
-        -Dfontconfig=true
+        -Dintrospection=disabled
+        -Dfontconfig=enabled
         -Dsysprof=disabled
-        -Dlibtahi=false
-        -Dcairo=true
-        -Dxft=false
-        -Dfreetype=true
+        -Dlibtahi=disabled
+        -Dcairo=enabled
+        -Dxft=disabled
+        -Dfreetype=enabled
+    ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
+    ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
 
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
+
+vcpkg_copy_tools(TOOL_NAMES pango-view pango-list AUTO_CLEAN)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
