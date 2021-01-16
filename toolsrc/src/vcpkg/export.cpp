@@ -162,7 +162,7 @@ namespace vcpkg::Export
         fs.write_contents(nuspec_file_path, nuspec_file_content, VCPKG_LINE_INFO);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
-        System::CmdLineBuilder cmd;
+        System::Command cmd;
 #ifndef _WIN32
         cmd.path_arg(paths.get_tool_exe(Tools::MONO));
 #endif
@@ -223,7 +223,7 @@ namespace vcpkg::Export
             Strings::format("%s.%s", exported_dir_filename, format.extension());
         const fs::path exported_archive_path = (output_dir / exported_archive_filename);
 
-        System::CmdLineBuilder cmd;
+        System::Command cmd;
         cmd.path_arg(cmake_exe)
             .string_arg("-E")
             .string_arg("tar")

@@ -31,11 +31,11 @@ namespace vcpkg::Commands::PortHistory
         const System::ExitCodeAndOutput run_git_command_inner(const VcpkgPaths& paths,
                                                               const fs::path& dot_git_directory,
                                                               const fs::path& working_directory,
-                                                              const System::CmdLineBuilder& cmd)
+                                                              const System::Command& cmd)
         {
             const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
 
-            auto full_cmd = System::CmdLineBuilder(git_exe)
+            auto full_cmd = System::Command(git_exe)
                                 .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_directory)))
                                 .string_arg(Strings::concat("--work-tree=", fs::u8string(working_directory)))
                                 .raw_arg(cmd.command_line());
@@ -44,7 +44,7 @@ namespace vcpkg::Commands::PortHistory
             return output;
         }
 
-        const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths, const System::CmdLineBuilder& cmd)
+        const System::ExitCodeAndOutput run_git_command(const VcpkgPaths& paths, const System::Command& cmd)
         {
             const fs::path& work_dir = paths.root;
             const fs::path dot_git_dir = paths.root / ".git";
@@ -89,7 +89,7 @@ namespace vcpkg::Commands::PortHistory
                                                                 const std::string& port_name)
         {
             auto rev_parse_cmd =
-                System::CmdLineBuilder("rev-parse").string_arg(Strings::concat(commit_id, ":ports/", port_name));
+                System::Command("rev-parse").string_arg(Strings::concat(commit_id, ":ports/", port_name));
             auto rev_parse_output = run_git_command(paths, rev_parse_cmd);
             if (rev_parse_output.exit_code == 0)
             {
@@ -97,7 +97,7 @@ namespace vcpkg::Commands::PortHistory
                 const auto git_tree = Strings::trim(std::move(rev_parse_output.output));
 
                 // Do we have a manifest file?
-                auto manifest_cmd = System::CmdLineBuilder("show").string_arg(Strings::concat(git_tree, ":vcpkg.json"));
+                auto manifest_cmd = System::Command("show").string_arg(Strings::concat(git_tree, ":vcpkg.json"));
                 auto manifest_output = run_git_command(paths, manifest_cmd);
                 if (manifest_output.exit_code == 0)
                 {
@@ -105,7 +105,7 @@ namespace vcpkg::Commands::PortHistory
                         manifest_output.output, git_tree, commit_id, commit_date, port_name, true);
                 }
 
-                auto cmd = System::CmdLineBuilder("show").string_arg(Strings::concat(git_tree, ":CONTROL"));
+                auto cmd = System::Command("show").string_arg(Strings::concat(git_tree, ":CONTROL"));
                 auto control_output = run_git_command(paths, cmd);
 
                 if (control_output.exit_code == 0)
@@ -121,7 +121,7 @@ namespace vcpkg::Commands::PortHistory
         std::vector<HistoryVersion> read_versions_from_log(const VcpkgPaths& paths, const std::string& port_name)
         {
             // log --format="%H %cd" --date=short --left-only -- ports/{port_name}/.
-            System::CmdLineBuilder builder;
+            System::Command builder;
             builder.string_arg("log");
             builder.string_arg("--format=%H %cd");
             builder.string_arg("--date=short");
