@@ -25,7 +25,7 @@ endif()
 find_path(CAIRO_INCLUDE_DIR cairo/cairo.h)
 
 # Add include directories
-include_directories(${CAIRO_INCLUDE_DIR} ${GDK_PIXBUF_INCLUDE_DIR})
+include_directories(${CAIRO_INCLUDE_DIR} ${GDK_PIXBUF_INCLUDE_DIR} ${GLIB2_INCLUDE_DIRS})
 
 set(LIBRSVG_SOURCES
     librsvg-features.c
