@@ -39,6 +39,7 @@ set(LIBSPEEXDSP_HEADERS
     "${CMAKE_CURRENT_LIST_DIR}/include/speex/speex_buffer.h"
 )
 set(LIBSPEEXDSP_HEADERS_PUBLIC
+    "${CMAKE_CURRENT_LIST_DIR}/include/speex/speex_buffer.h"
     "${CMAKE_CURRENT_LIST_DIR}/include/speex/speex_echo.h"
     "${CMAKE_CURRENT_LIST_DIR}/include/speex/speex_jitter.h"
     "${CMAKE_CURRENT_LIST_DIR}/include/speex/speex_preprocess.h"
