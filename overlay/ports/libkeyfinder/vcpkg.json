@@ -1,0 +1,10 @@
+{
+  "name": "libkeyfinder",
+  "version-string": "2.2.4",
+  "description": "Musical key detection for digital audio",
+  "homepage": "https://github.com/mixxxdj/libKeyFinder",
+  "port-version": 1,
+  "dependencies": [
+    "fftw3"
+  ]
+}
