@@ -9,7 +9,7 @@
 
 namespace vcpkg
 {
-    std::string make_cmake_cmd(const VcpkgPaths& paths,
-                               const fs::path& cmake_script,
-                               std::vector<System::CMakeVariable>&& pass_variables);
+    System::Command make_cmake_cmd(const VcpkgPaths& paths,
+                                   const fs::path& cmake_script,
+                                   std::vector<System::CMakeVariable>&& pass_variables);
 }

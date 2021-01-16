@@ -62,6 +62,7 @@ TEST_CASE ("manifest construct minimum", "[manifests]")
     REQUIRE(pgh.core_paragraph->maintainers.empty());
     REQUIRE(pgh.core_paragraph->description.empty());
     REQUIRE(pgh.core_paragraph->dependencies.empty());
+    REQUIRE(!pgh.core_paragraph->builtin_baseline.has_value());
 
     REQUIRE(!pgh.check_against_feature_flags({}, feature_flags_without_versioning));
 }
@@ -136,21 +137,52 @@ TEST_CASE ("manifest versioning", "[manifests]")
         "version-semver": "abcd#1"
     })json",
                         true);
+
+    SECTION ("version syntax")
+    {
+        test_parse_manifest(R"json({
+        "name": "zlib",
+        "version-semver": "2020-01-01"
+    })json",
+                            true);
+        test_parse_manifest(R"json({
+        "name": "zlib",
+        "version-date": "1.1.1"
+    })json",
+                            true);
+        test_parse_manifest(R"json({
+        "name": "zlib",
+        "version": "1.2.3-rc3"
+    })json",
+                            true);
+    }
 }
 
-TEST_CASE ("manifest constraints error hash", "[manifests]")
+TEST_CASE ("manifest constraints hash", "[manifests]")
 {
+    auto p = unwrap(test_parse_manifest(R"json({
+    "name": "zlib",
+    "version-string": "abcd",
+    "dependencies": [
+        {
+            "name": "d",
+            "version>=": "2018-09-01#1"
+        }
+    ]
+})json"));
+    REQUIRE(p->core_paragraph->dependencies.at(0).constraint.value == "2018-09-01");
+    REQUIRE(p->core_paragraph->dependencies.at(0).constraint.port_version == 1);
+
     test_parse_manifest(R"json({
     "name": "zlib",
     "version-string": "abcd",
     "dependencies": [
         {
-            "name": "b",
-            "version=": "5#1"
+            "name": "d",
+            "version>=": "2018-09-01#0"
         }
     ]
-}
-)json",
+})json",
                         true);
 
     test_parse_manifest(R"json({
@@ -159,7 +191,20 @@ TEST_CASE ("manifest constraints error hash", "[manifests]")
     "dependencies": [
         {
             "name": "d",
-            "version>=": "2018-09-01#1"
+            "version>=": "2018-09-01#-1"
+        }
+    ]
+})json",
+                        true);
+
+    test_parse_manifest(R"json({
+    "name": "zlib",
+    "version-string": "abcd",
+    "dependencies": [
+        {
+            "name": "d",
+            "version>=": "2018-09-01",
+            "port-version": 1
         }
     ]
 })json",
@@ -219,13 +264,9 @@ TEST_CASE ("manifest constraints", "[manifests]")
     std::string raw = R"json({
     "name": "zlib",
     "version-string": "abcd",
+    "builtin-baseline": "089fa4de7dca22c67dcab631f618d5cd0697c8d4",
     "dependencies": [
         "a",
-        {
-            "name": "b",
-            "port-version": 12,
-            "version=": "5"
-        },
         {
             "$extra": null,
             "name": "c"
@@ -244,32 +285,17 @@ TEST_CASE ("manifest constraints", "[manifests]")
     REQUIRE(pgh.check_against_feature_flags({}, feature_flags_without_versioning));
     REQUIRE(!pgh.check_against_feature_flags({}, feature_flags_with_versioning));
     REQUIRE(Json::stringify(serialize_manifest(pgh), Json::JsonStyle::with_spaces(4)) == raw);
-    REQUIRE(pgh.core_paragraph->dependencies.size() == 4);
+    REQUIRE(pgh.core_paragraph->dependencies.size() == 3);
     REQUIRE(pgh.core_paragraph->dependencies[0].name == "a");
     REQUIRE(pgh.core_paragraph->dependencies[0].constraint ==
             DependencyConstraint{Versions::Constraint::Type::None, "", 0});
-    REQUIRE(pgh.core_paragraph->dependencies[1].name == "b");
+    REQUIRE(pgh.core_paragraph->dependencies[1].name == "c");
     REQUIRE(pgh.core_paragraph->dependencies[1].constraint ==
-            DependencyConstraint{Versions::Constraint::Type::Exact, "5", 12});
-    REQUIRE(pgh.core_paragraph->dependencies[2].name == "c");
-    REQUIRE(pgh.core_paragraph->dependencies[2].constraint ==
             DependencyConstraint{Versions::Constraint::Type::None, "", 0});
-    REQUIRE(pgh.core_paragraph->dependencies[3].name == "d");
-    REQUIRE(pgh.core_paragraph->dependencies[3].constraint ==
+    REQUIRE(pgh.core_paragraph->dependencies[2].name == "d");
+    REQUIRE(pgh.core_paragraph->dependencies[2].constraint ==
             DependencyConstraint{Versions::Constraint::Type::Minimum, "2018-09-01", 0});
-
-    test_parse_manifest(R"json({
-        "name": "zlib",
-        "version-string": "abcd",
-        "dependencies": [
-            {
-                "name": "d",
-                "version=": "2018-09-01",
-                "version>=": "2018-09-01"
-            }
-        ]
-    })json",
-                        true);
+    REQUIRE(pgh.core_paragraph->builtin_baseline == "089fa4de7dca22c67dcab631f618d5cd0697c8d4");
 
     test_parse_manifest(R"json({
         "name": "zlib",
@@ -282,6 +308,45 @@ TEST_CASE ("manifest constraints", "[manifests]")
         ]
     })json",
                         true);
+}
+
+TEST_CASE ("manifest builtin-baseline", "[manifests]")
+{
+    SECTION ("valid baseline")
+    {
+        std::string raw = R"json({
+    "name": "zlib",
+    "version-string": "abcd",
+    "builtin-baseline": "089fa4de7dca22c67dcab631f618d5cd0697c8d4"
+}
+)json";
+        auto m_pgh = test_parse_manifest(raw);
+
+        REQUIRE(m_pgh.has_value());
+        auto& pgh = **m_pgh.get();
+        REQUIRE(pgh.check_against_feature_flags({}, feature_flags_without_versioning));
+        REQUIRE(!pgh.check_against_feature_flags({}, feature_flags_with_versioning));
+        REQUIRE(pgh.core_paragraph->builtin_baseline.value_or("does not have a value") ==
+                "089fa4de7dca22c67dcab631f618d5cd0697c8d4");
+    }
+
+    SECTION ("empty baseline")
+    {
+        std::string raw = R"json({
+    "name": "zlib",
+    "version-string": "abcd",
+    "builtin-baseline": ""
+}
+)json";
+
+        auto m_pgh = test_parse_manifest(raw);
+
+        REQUIRE(m_pgh.has_value());
+        auto& pgh = **m_pgh.get();
+        REQUIRE(pgh.check_against_feature_flags({}, feature_flags_without_versioning));
+        REQUIRE(!pgh.check_against_feature_flags({}, feature_flags_with_versioning));
+        REQUIRE(pgh.core_paragraph->builtin_baseline.value_or("does not have a value") == "");
+    }
 }
 
 TEST_CASE ("manifest overrides", "[manifests]")
