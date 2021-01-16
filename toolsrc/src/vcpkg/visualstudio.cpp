@@ -84,7 +84,7 @@ namespace vcpkg::VisualStudio
         const fs::path vswhere_exe = program_files_32_bit / "Microsoft Visual Studio" / "Installer" / "vswhere.exe";
         if (fs.exists(vswhere_exe))
         {
-            const auto code_and_output = System::cmd_execute_and_capture_output(System::CmdLineBuilder(vswhere_exe)
+            const auto code_and_output = System::cmd_execute_and_capture_output(System::Command(vswhere_exe)
                                                                                     .string_arg("-all")
                                                                                     .string_arg("-prerelease")
                                                                                     .string_arg("-legacy")

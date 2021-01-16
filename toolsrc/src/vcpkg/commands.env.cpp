@@ -98,7 +98,7 @@ namespace vcpkg::Commands::Env
             }
         }();
 
-        System::CmdLineBuilder cmd("cmd");
+        System::Command cmd("cmd");
         if (!args.command_arguments.empty())
         {
             cmd.string_arg("/c").raw_arg(args.command_arguments.at(0));
