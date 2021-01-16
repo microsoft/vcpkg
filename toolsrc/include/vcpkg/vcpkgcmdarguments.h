@@ -113,6 +113,17 @@ namespace vcpkg
                                                           const CommandLineCharType* const* const argv);
         static VcpkgCmdArguments create_from_arg_sequence(const std::string* arg_begin, const std::string* arg_end);
 
+        VcpkgCmdArguments() = default;
+
+        VcpkgCmdArguments(const VcpkgCmdArguments& val)
+            : command(val.command)
+            , command_arguments(val.command_arguments)
+            , m_is_recursive_invocation(val.m_is_recursive_invocation)
+            , command_switches(val.command_switches)
+            , command_options(val.command_options)
+        {
+        }
+
         static void append_common_options(HelpTableFormatter& target);
 
         constexpr static StringLiteral VCPKG_ROOT_DIR_ENV = "VCPKG_ROOT";
@@ -225,6 +236,10 @@ namespace vcpkg
 
         void debug_print_feature_flags() const;
         void track_feature_flag_metrics() const;
+
+        void remove_command_switches(const StringLiteral& command_switch) { command_switches.erase(command_switch); }
+
+        void remove_command_option(const StringLiteral& command_option) { command_options.erase(command_option); }
 
     private:
         bool m_is_recursive_invocation = false;

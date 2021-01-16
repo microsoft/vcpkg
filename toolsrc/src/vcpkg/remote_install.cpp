@@ -5,6 +5,7 @@
 #include <vcpkg/base/util.h>
 
 #include <vcpkg/input.h>
+#include <vcpkg/install.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/remote_install.h>
 #include <vcpkg/tools.h>
@@ -16,19 +17,31 @@ namespace vcpkg::RemoteInstall
     static constexpr StringLiteral ARCHIVE_ENDING = "-vcpkg.zip";
     static constexpr StringLiteral GITHUB_URL = "https://github.com";
 
+    static std::vector<CommandSwitch> REMOTE_INSTALL_SWITCHES;
+
     static constexpr StringLiteral OPTION_AUTHOR_NAME = "author-name";
 
-    static constexpr std::array<CommandSetting, 1> REMOTE_INSTALL_SETTINGS = {{
+    static std::vector<CommandSetting> REMOTE_INSTALL_SETTINGS = {{
         {OPTION_AUTHOR_NAME, "author name"},
     }};
 
-    const CommandStructure COMMAND_STRUCTURE = {
-        create_example_string("remote-install nnoops-long-arith-lib --author-name=Mr-Leshiy"),
-        1,
-        1,
-        {{}, REMOTE_INSTALL_SETTINGS},
-        nullptr,
-    };
+    const CommandStructure COMMAND_STRUCTURE = []() {
+        // insert install command switches
+        REMOTE_INSTALL_SWITCHES.insert(REMOTE_INSTALL_SWITCHES.end(),
+                                       Install::COMMAND_STRUCTURE.options.switches.begin(),
+                                       Install::COMMAND_STRUCTURE.options.switches.end());
+
+        // insert install command settigns
+        REMOTE_INSTALL_SETTINGS.insert(REMOTE_INSTALL_SETTINGS.end(),
+                                       Install::COMMAND_STRUCTURE.options.settings.begin(),
+                                       Install::COMMAND_STRUCTURE.options.settings.end());
+
+        return CommandStructure{create_example_string("remote-install nnoops-long-arith-lib --author-name=Mr-Leshiy"),
+                                1,
+                                1,
+                                {REMOTE_INSTALL_SWITCHES, REMOTE_INSTALL_SETTINGS},
+                                nullptr};
+    }();
 
     static void do_archive_unzip(const VcpkgPaths& paths, const fs::path& destination, const std::string& file_name)
     {
@@ -66,6 +79,7 @@ namespace vcpkg::RemoteInstall
         if (it_author_name != options.settings.end())
         {
             author_name = it_author_name->second;
+            Strings::ascii_to_lowercase(author_name.begin(), author_name.end());
         }
         else
         {
@@ -76,7 +90,7 @@ namespace vcpkg::RemoteInstall
         Input::check_triplet(spec.package_spec.triplet(), paths);
 
         Files::Filesystem& fs = paths.get_filesystem();
-        std::string package_directory_name = Strings::format("%s_%s", author_name, spec.package_spec.name());
+        std::string package_directory_name = spec.package_spec.name();
 
         // create directories
         std::error_code err;
@@ -97,6 +111,13 @@ namespace vcpkg::RemoteInstall
 
         // Unzip
         do_archive_unzip(paths, destination, Strings::format("%s%s", spec.package_spec.name(), ARCHIVE_ENDING));
+
+        // install package using 'install' command
+        VcpkgCmdArguments install_args(args);
+        // prepare arguments for the install command
+        install_args.remove_command_option(OPTION_AUTHOR_NAME);
+
+        Install::perform_and_exit(install_args, paths, default_triplet);
 
         Checks::exit_success(VCPKG_LINE_INFO);
     }
