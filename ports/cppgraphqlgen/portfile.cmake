@@ -26,7 +26,9 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/cppgraphqlgen)
+vcpkg_copy_tools(
+    TOOL_NAMES schemagen
+    SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools/cppgraphqlgen)
 
 vcpkg_copy_pdbs()
 
