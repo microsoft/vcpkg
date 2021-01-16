@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO KhronosGroup/glslang
-  REF f88e5824d2cfca5edc58c7c2101ec9a4ec36afac
-  SHA512 92dc287e8930db6e00bde23b770f763dc3cf8a405a37b682bbd65e1dbde1f1f5161543fcc70b09eef07a5ce8bbe8f368ef84ac75003c122f42d1f6b9eaa8bd50
+  REF c594de23cdd790d64ad5f9c8b059baae0ee2941d
+  SHA512 4b9e300152dc2ec3b14657b3a745d5b26b5da49e5ff3da0d75680f84126237ec6af0f7cee5aaa74b2d4a123a386522cd7342b5f25e4c01f114da3d5d92057128
   HEAD_REF master
   PATCHES
     CMakeLists-targets.patch
@@ -17,11 +17,12 @@ vcpkg_configure_cmake(
   OPTIONS
     -DCMAKE_DEBUG_POSTFIX=d
     -DSKIP_GLSLANG_INSTALL=OFF
+    -DENABLE_GLSLANG_BINARIES=ON
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/glslang)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/glslang)
 
 vcpkg_copy_pdbs()
 
