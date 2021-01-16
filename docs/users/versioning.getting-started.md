@@ -4,7 +4,7 @@ Vcpkg lets you take control of which version of packages to install in your proj
 
 ## Enabling versions
 
-To start using the versioning feature first you need to enable the `versions` feature flag in any of the following manners:
+To start using the versioning feature, first you need to enable the `versions` feature flag in any of the following manners:
 
 * Setting the `VCPKG_FEATURE_FLAGS` environment variable.
 
@@ -21,9 +21,9 @@ $env:VCPKG_FEATURE_FLAGS="versions"
 
 ## Using versions with manifests
 
-With the `versions` feature flag enabled you can now start addding version constraints to your dependencies.
+With the `versions` feature flag enabled you can start addding version constraints to your dependencies.
 
-Let's start with creating a simple CMake project that depends on `fmt`.
+Let's start with creating a simple CMake project that depends on `fmt` and `zlib`.
 
 Create a folder with the following files:
 
@@ -71,13 +71,13 @@ target_link_libraries(main PRIVATE ZLIB::ZLIB fmt::fmt)
 
 And now we build and run our project with CMake:
 
-1. Create the build directory for the project:
+1. Create the build directory for the project.
 ```
 PS D:\versions-test> mkdir build
 PS D:\versions-test> cd build
 ```
 
-2. Configure CMake:  
+2. Configure CMake.  
 ```
 PS D:\versions-test\build> cmake -G Ninja -DCMAKE_TOOLCHAIN_FILE=D:/vcpkg/scripts/buildsystems/vcpkg.cmake ..
 -- Running vcpkg install
@@ -88,7 +88,7 @@ The following packages will be built and installed:
 ...
 ```
 
-3. Build the project
+3. Build the project.
 ```
 PS D:\versions-test\build> cmake --build .
 [2/2] Linking CXX executable main.exe
@@ -101,7 +101,7 @@ fmt version is 70103
 zlib version is 1.2.11
 ```
 
-You will notice that the output has also changed:
+Take a look at the output:
 
 ```
 fmt[core]:x86-windows -> 7.1.3 -- D:\vcpkg\buildtrees\versioning\versions\fmt\dd8cf5e1a2dce2680189a0744102d4b0f1cfb8b6
@@ -110,8 +110,28 @@ zlib[core]:x86-windows -> 1.2.11#9 -- D:\vcpkg\buildtrees\versioning\versions\zl
 
 Instead of using the portfiles in `ports/`; vcpkg is checking out the files for each version in `buildtrees/versioning/versions/`.  The files in `ports/` are still used when running vcpkg in classic mode or when the `versions` feature flag is disabled. 
 
+_NOTE: Output from the vcpkg while configuring CMake is only available when using CMake version `3.18` or newer. If you're using an older CMake you can check the `vcpkg-manifest-install.log` file in your build directory instead._
+
 ### Manifest changes
-If you have used manifests before you will notice that there are also a couple of new fields. Let's analyze these changes:
+If you have used manifests before you will notice that there are some new JSON properties. Let's analyze these changes:
+
+* **`version`**
+```
+{
+    "name": "versions-test",
+    "version": "1.0.0",
+    ...
+}
+```
+
+This is your project's version declaration. Previously, you could only declare versions for your projects using the `version-string` scheme. Now that versioning has come around, vcpkg is aware of some new versioning schemes.
+
+Version scheme | Description
+-- | --
+`version` | Dot-separated numerics: `1.0.0`.
+`version-semver` | Compliant [semantic versions](https://semver.org): `1.2.0` and `1.2.0-rc`.
+`version-date` | Dates in `YYYY-MM-DD` format: `2021-01-01`
+`version-string` | Arbitrary strings: `vista`, `candy`.
 
 * **`version>=`** 
 ```
@@ -124,13 +144,13 @@ If you have used manifests before you will notice that there are also a couple o
 ],
 ```
 
-This field is used to express minimum version constraints, it is allowed only as part of the `"dependencies"` declarations. In our example we set an explicit constraint on version `7.1.3` of `fmt`. 
+This property is used to express minimum version constraints, it is allowed only as part of the `"dependencies"` declarations. In our example we set an explicit constraint on version `7.1.3` of `fmt`. 
 
 Vcpkg is allowed to upgrade this constraint if a transitive dependency requires a newer version. For example, if `zlib` were to declare a dependency on `fmt` version `7.1.4` then vcpkg would install `7.1.4` instead.
 
-Vcpkg uses a minimum version approach, in our example, even if `fmt` version `8.0.0` were to be released, vcpkg will still install version `7.1.3` as that is the minimum version that satisfies the constraint. The advantages of this approach are that you don't get unexpected dependency upgrades when you update vcpkg and you get reproducible builds, in terms of version used, as long as you use the same manifest. 
+Vcpkg uses a minimum version approach, in our example, even if `fmt` version `8.0.0` were to be released, vcpkg would still install version `7.1.3` as that is the minimum version that satisfies the constraint. The advantages of this approach are that you don't get unexpected dependency upgrades when you update vcpkg and you get reproducible builds (in terms of version used) as long as you use the same manifest. 
 
-If you want to upgrade your dependencies, you can bump the minimum version constraint or use any of the methods described below.
+If you want to upgrade your dependencies, you can bump the minimum version constraint or use a newer baseline.
 
 * **`builtin-baseline`**
 
@@ -148,9 +168,9 @@ no other constraints are specified (directly or transitively),
 then the version from the baseline of the top level manifest will
 be used.
 
-In our example, you can notice that we do not declare a version constraint for `zlib`; instead, the version is taken from the baseline. Internally, vcpkg will look in commit `b60f003ccf5fe8613d029f49f835c8929a66eb61` to find out what version of `zlib` was the latest at that point in time (in our case this was `1.2.11#9`).
+In our example, you can notice that we do not declare a version constraint for `zlib`; instead, the version is taken from the baseline. Internally, vcpkg will look in commit `b60f003ccf5fe8613d029f49f835c8929a66eb61` to find out what version of `zlib` was the latest at that point in time (in our case it was `1.2.11#9`).
 
-Baseline versions are treated as minimum version constraints when resolving versions. If you declare an explicit constraint that is lower than a baseline version, the explicit constraint will be upgraded to the baseline version. 
+During version resolution, baseline versions are treated as minimum version constraints. If you declare an explicit constraint that is lower than a baseline version, the explicit constraint will be upgraded to the baseline version. 
 
 For example, if we modified our dependencies like this:
 ```
@@ -170,9 +190,9 @@ _NOTE: The value `1.2.11#7` represents version `1.2.11`, port version `7`._
 
 Since the baseline introduces a minimum version constraint for `zlib` at `1.2.11#9` and a higher version does satisfy the minimum version constraint for `1.2.11#7`, vcpkg is allowed to upgrade it. 
 
-Baseline are also a convenient mechanism to upgrade multiple versions at a time, for example, if you wanted to depend on multiple `boost` libraries, it is more convenient to set the `baseline` once than declaring a version constraint on each package.
+Baselines are also a convenient mechanism to upgrade multiple versions at a time, for example, if you wanted to depend on multiple `boost` libraries, it is more convenient to set the `baseline` once than declaring a version constraint on each package.
 
-But what if you want to specify a version older than the baseline? 
+But what if you want to pin a version older than the baseline? 
 
 * **`overrides`**
 
@@ -231,16 +251,17 @@ zlib version is 1.2.11
 
 Notice how the `fmt` is now at version `6.0.0` just like we wanted.
 
-## Versions and overlay ports
+## Versions and custom ports
 
 The last thing to discuss is how overlay ports interact with versioning resolution. The answer is: they don't. 
 
-Going into more detail, when you provide an overlay for a port, vcpkg will always use the overlay port without caring what version is contained in the overlayed port. 
+Going into more detail, when you provide an overlay for a port, vcpkg will always use the overlay port without caring what version is contained in it. The reasons are two-fold: (1) it is consistent with the existing behavior of overlay ports of completely masking the existing port, and (2) overlay ports do not (and are not expected to) provide enough information to power vcpkg's versioning feature.
 
-The reason is that overlay ports do not contain (and are not expected to) provide enough information to power vcpkg's versioning features. If you're interesting in delving deeper into the details of how versioning works in vcpkg it is recommended that you read the [versioning specification](../specifications/versioning.md).
+If you want to have flexible port customization along with versioning features, you should consider making your own custom registry. See our [registries specification for more details](../specifications/registries.md).
 
-If you want to have port customization with versioning features enabled, you should look into making your own custom registry. See our [registries specification for more details](../specifications/registries.md).
+## Further reading
 
+If you're interested in delving deeper into the details of how versioning works we recommended that you read the [original versioning specification](../specifications/versioning.md) and the [implementation details](../versioning.implementation-details.md).
 
 See also:
 
