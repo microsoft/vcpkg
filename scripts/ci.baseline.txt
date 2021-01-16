@@ -1234,7 +1234,6 @@ pfring:x64-osx=fail
 # pfring on Linux currently fails because its build scripts enable warnings as
 # errors, and warnings trigger with the Linux kernel headers in the Azure images.
 pfring:x64-linux=fail
-physfs:arm64-windows=fail
 physx:arm64-windows=fail
 piex:x64-osx=fail
 pistache:arm64-windows=fail

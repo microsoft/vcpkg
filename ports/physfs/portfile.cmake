@@ -1,6 +1,3 @@
-if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_TARGET_ARCHITECTURE} MATCHES "arm64")
-	message(FATAL_ERROR "Architecture 'arm64' not supported on target 'Windows' by physfs!\n")
-endif()
 set(PHYSFS_VERSION 3.0.2)
 
 vcpkg_download_distfile(ARCHIVE
@@ -14,6 +11,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${PHYSFS_VERSION}
+    PATCHES
+        "fix-lzmasdk-arm64-windows.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PHYSFS_STATIC)

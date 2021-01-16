@@ -4466,7 +4466,7 @@
     },
     "physfs": {
       "baseline": "3.0.2",
-      "port-version": 3
+      "port-version": 4
     },
     "physx": {
       "baseline": "4.1.1",
