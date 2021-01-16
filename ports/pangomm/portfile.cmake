@@ -3,7 +3,7 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/pangomm/2.48/pangomm-2.48.0.tar.xz"
     FILENAME "pangomm-2.48.0.tar.xz"
-    SHA512 bed19800b76e69cc51abeb5997bdc2f687f261ebcbe36aeee51f1fbf5010a46f4b9469033c34a912502001d9985135fd5c7f7574d3de8ba33cc5832520c6aa6f
+    SHA512 0c1be5726740669c366214caf8b8b0bca1c7b223aafb2e6ce64f7a5a90d07c62ee509821ac787f3997ae78aa3a3ffd5cff7d33c73bc7ebd7fe642c56689d98a3
 )
 
 vcpkg_extract_source_archive_ex(
@@ -16,6 +16,10 @@ vcpkg_configure_meson(
     PREFER_NINJA
     OPTIONS
         -Dmsvc14x-parallel-installable=false
+    ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
+    ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
 
 vcpkg_install_meson()

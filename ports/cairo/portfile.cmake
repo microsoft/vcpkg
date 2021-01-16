@@ -14,37 +14,38 @@ vcpkg_extract_source_archive_ex(
         0001_fix_osx_defined.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)
-file(COPY ${CURRENT_PORT_DIR}/cairo-features.h DESTINATION ${SOURCE_PATH}/src)
-
+#TODO the autoconf script has a lot of additional option which use auto detection and should be disabled!
 if ("x11" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
         message(FATAL_ERROR "Feature x11 only support UNIX.")
     endif()
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\napt install libx11-dev libxft-dev\n")
+    list(APPEND OPTIONS --with-x --enable-xlib=yes)
+else()
+    list(APPEND OPTIONS --enable-xlib=no)
 endif()
 
 if("gobject" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         message(FATAL_ERROR "Feature gobject currently only supports dynamic build.")
     endif()
+    list(APPEND OPTIONS --enable-gobject=yes)
+else()
+    list(APPEND OPTIONS --enable-gobject=no)
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    x11 WITH_X11
-    gobject WITH_GOBJECT
+set(PORT_DEBUG ON)
+vcpkg_configure_make(
+    SOURCE_PATH ${SOURCE_PATH}
+    #AUTOCONFIG
+    OPTIONS ${OPTIONS}
+        ax_cv_c_float_words_bigendian=no
+        ac_cv_lib_z_compress=yes
+        ac_cv_lib_lzo2_lzo2a_decompress=yes
 )
-vcpkg_find_acquire_program(PKGCONFIG)
-vcpkg_configure_cmake(
-    PREFER_NINJA
-    SOURCE_PATH ${SOURCE_PATH}/src
-    OPTIONS ${FEATURE_OPTIONS}
-        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
-)
+vcpkg_install_make()
 
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-cairo TARGET_PATH share/unofficial-cairo)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
@@ -62,3 +63,15 @@ endforeach()
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()
+
+# This is required so that meson can find cairo since there is no *.pc file installed for cairo! 
+# file(WRITE "${CURRENT_PACKAGES_DIR}/share/cairo/cairo-config.cmake"
+# " \
+# find_package(unofficial-cairo REQUIRED)\n \
+# add_library(cairo::cairo INTERFACE IMPORTED)\n \
+# target_link_libraries(cairo::cairo INTERFACE unofficial::cairo::cairo)\n \
+# if(TARGET unofficial::cairo::cairo-gobject)\n \
+  # target_link_libraries(cairo::cairo INTERFACE unofficial::cairo::cairo-gobject)\n \
+# endif()\n \
+# set(cairo_FOUND TRUE)"
+# )
