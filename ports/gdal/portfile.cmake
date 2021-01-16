@@ -174,6 +174,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
   if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal204.pdb)
   endif()
+
 else()
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         set(BUILD_DYNAMIC yes)
