@@ -70,11 +70,9 @@ namespace
         return result;
     }
 
-    System::CmdLineBuilder git_cmd_builder(const VcpkgPaths& paths,
-                                           const fs::path& dot_git_dir,
-                                           const fs::path& work_tree)
+    System::Command git_cmd_builder(const VcpkgPaths& paths, const fs::path& dot_git_dir, const fs::path& work_tree)
     {
-        return System::CmdLineBuilder()
+        return System::Command()
             .path_arg(paths.get_tool_exe(Tools::GIT))
             .string_arg(Strings::concat("--git-dir=", fs::u8string(dot_git_dir)))
             .string_arg(Strings::concat("--work-tree=", fs::u8string(work_tree)));
@@ -506,13 +504,13 @@ If you wish to silence this error and use classic mode, you can:
         // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
         // git clone --no-checkout --local --no-hardlinks {vcpkg_root} {dot_git_dir}
         // note that `--no-hardlinks` is added because otherwise, git fails to clone in some cases
-        System::CmdLineBuilder clone_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
-                                                       .string_arg("clone")
-                                                       .string_arg("--no-checkout")
-                                                       .string_arg("--local")
-                                                       .string_arg("--no-hardlinks")
-                                                       .path_arg(local_repo)
-                                                       .path_arg(dot_git_dir);
+        System::Command clone_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
+                                                .string_arg("clone")
+                                                .string_arg("--no-checkout")
+                                                .string_arg("--local")
+                                                .string_arg("--no-hardlinks")
+                                                .path_arg(local_repo)
+                                                .path_arg(dot_git_dir);
         const auto clone_output = System::cmd_execute_and_capture_output(clone_cmd_builder);
         Checks::check_exit(VCPKG_LINE_INFO,
                            clone_output.exit_code == 0,
@@ -520,11 +518,11 @@ If you wish to silence this error and use classic mode, you can:
                            clone_output.output);
 
         // git checkout {commit-sha} -- {subpath}
-        System::CmdLineBuilder checkout_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
-                                                          .string_arg("checkout")
-                                                          .string_arg(commit_sha)
-                                                          .string_arg("--")
-                                                          .path_arg(subpath);
+        System::Command checkout_cmd_builder = git_cmd_builder(paths, dot_git_dir, work_tree)
+                                                   .string_arg("checkout")
+                                                   .string_arg(commit_sha)
+                                                   .string_arg("--")
+                                                   .path_arg(subpath);
         const auto checkout_output = System::cmd_execute_and_capture_output(checkout_cmd_builder);
         Checks::check_exit(VCPKG_LINE_INFO,
                            checkout_output.exit_code == 0,
@@ -585,7 +583,7 @@ If you wish to silence this error and use classic mode, you can:
     {
         // All git commands are run with: --git-dir={dot_git_dir} --work-tree={work_tree_temp}
         // git clone --no-checkout --local {vcpkg_root} {dot_git_dir}
-        System::CmdLineBuilder showcmd =
+        System::Command showcmd =
             git_cmd_builder(*this, dot_git_dir, dot_git_dir).string_arg("show").string_arg(treeish);
 
         auto output = System::cmd_execute_and_capture_output(showcmd);
@@ -741,11 +739,11 @@ If you wish to silence this error and use classic mode, you can:
                 expected_right_tag};
         }
 
-        System::CmdLineBuilder tar_cmd_builder = git_cmd_builder(*this, dot_git_dir, dot_git_dir)
-                                                     .string_arg("archive")
-                                                     .string_arg(git_tree)
-                                                     .string_arg("-o")
-                                                     .path_arg(destination_tar);
+        auto tar_cmd_builder = git_cmd_builder(*this, dot_git_dir, dot_git_dir)
+                                   .string_arg("archive")
+                                   .string_arg(git_tree)
+                                   .string_arg("-o")
+                                   .path_arg(destination_tar);
         const auto tar_output = System::cmd_execute_and_capture_output(tar_cmd_builder);
         if (tar_output.exit_code != 0)
         {
@@ -753,12 +751,11 @@ If you wish to silence this error and use classic mode, you can:
                     expected_right_tag};
         }
 
-        System::CmdLineBuilder extract_cmd_builder;
-        extract_cmd_builder.path_arg(this->get_tool_exe(Tools::CMAKE))
-            .string_arg("-E")
-            .string_arg("tar")
-            .string_arg("xf")
-            .path_arg(destination_tar);
+        auto extract_cmd_builder = System::Command{this->get_tool_exe(Tools::CMAKE)}
+                                       .string_arg("-E")
+                                       .string_arg("tar")
+                                       .string_arg("xf")
+                                       .path_arg(destination_tar);
 
         const auto extract_output =
             System::cmd_execute_and_capture_output(extract_cmd_builder, System::InWorkingDirectory{destination_tmp});
@@ -799,8 +796,7 @@ If you wish to silence this error and use classic mode, you can:
         fs.create_directories(work_tree, VCPKG_LINE_INFO);
         auto dot_git_dir = m_pimpl->registries_dot_git_dir;
 
-        System::CmdLineBuilder init_registries_git_dir =
-            git_cmd_builder(*this, dot_git_dir, work_tree).string_arg("init");
+        System::Command init_registries_git_dir = git_cmd_builder(*this, dot_git_dir, work_tree).string_arg("init");
         auto init_output = System::cmd_execute_and_capture_output(init_registries_git_dir);
         if (init_output.exit_code != 0)
         {
@@ -815,7 +811,7 @@ If you wish to silence this error and use classic mode, you can:
         std::error_code ec;
         Files::ExclusiveFileLock guard(Files::ExclusiveFileLock::Wait::Yes, fs, lock_file, ec);
 
-        System::CmdLineBuilder fetch_git_ref =
+        System::Command fetch_git_ref =
             git_cmd_builder(*this, dot_git_dir, work_tree).string_arg("fetch").string_arg("--").string_arg(repo);
         if (treeish.size() != 0)
         {
@@ -833,7 +829,7 @@ If you wish to silence this error and use classic mode, you can:
                     expected_right_tag};
         }
 
-        System::CmdLineBuilder get_fetch_head =
+        System::Command get_fetch_head =
             git_cmd_builder(*this, dot_git_dir, work_tree).string_arg("rev-parse").string_arg("FETCH_HEAD");
         auto fetch_head_output = System::cmd_execute_and_capture_output(get_fetch_head);
         if (fetch_head_output.exit_code != 0)
@@ -849,7 +845,7 @@ If you wish to silence this error and use classic mode, you can:
                                                                      const fs::path& relative_path) const
     {
         auto revision = Strings::format("%s:%s", hash, fs::generic_u8string(relative_path));
-        System::CmdLineBuilder git_show =
+        System::Command git_show =
             git_cmd_builder(*this, m_pimpl->registries_dot_git_dir, m_pimpl->registries_work_tree_dir)
                 .string_arg("show")
                 .string_arg(revision);
@@ -865,7 +861,7 @@ If you wish to silence this error and use classic mode, you can:
                                                                                    const fs::path& relative_path) const
     {
         auto revision = Strings::format("%s:%s", hash, fs::generic_u8string(relative_path));
-        System::CmdLineBuilder git_rev_parse =
+        System::Command git_rev_parse =
             git_cmd_builder(*this, m_pimpl->registries_dot_git_dir, m_pimpl->registries_work_tree_dir)
                 .string_arg("rev-parse")
                 .string_arg(revision);
@@ -896,13 +892,13 @@ If you wish to silence this error and use classic mode, you can:
         fs.create_directory(git_tree_temp, VCPKG_LINE_INFO);
 
         auto dot_git_dir = m_pimpl->registries_dot_git_dir;
-        System::CmdLineBuilder git_archive = git_cmd_builder(*this, dot_git_dir, m_pimpl->registries_work_tree_dir)
-                                                 .string_arg("archive")
-                                                 .string_arg("--format")
-                                                 .string_arg("tar")
-                                                 .string_arg(object)
-                                                 .string_arg("--output")
-                                                 .path_arg(git_tree_temp_tar);
+        System::Command git_archive = git_cmd_builder(*this, dot_git_dir, m_pimpl->registries_work_tree_dir)
+                                          .string_arg("archive")
+                                          .string_arg("--format")
+                                          .string_arg("tar")
+                                          .string_arg(object)
+                                          .string_arg("--output")
+                                          .path_arg(git_tree_temp_tar);
         auto git_archive_output = System::cmd_execute_and_capture_output(git_archive);
         if (git_archive_output.exit_code != 0)
         {
@@ -910,11 +906,9 @@ If you wish to silence this error and use classic mode, you can:
                     expected_right_tag};
         }
 
-        auto untar = System::CmdLineBuilder{get_tool_exe(Tools::CMAKE)}
-                         .string_arg("-E")
-                         .string_arg("tar")
-                         .string_arg("xf")
-                         .path_arg(git_tree_temp_tar);
+        auto untar =
+            System::Command{get_tool_exe(Tools::CMAKE)}.string_arg("-E").string_arg("tar").string_arg("xf").path_arg(
+                git_tree_temp_tar);
 
         auto untar_output = System::cmd_execute_and_capture_output(untar, System::InWorkingDirectory{git_tree_temp});
         if (untar_output.exit_code != 0)

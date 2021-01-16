@@ -370,10 +370,8 @@ namespace vcpkg::Export::IFW
                                fs::generic_u8string(repository_dir),
                                failure_point.string());
 
-            auto cmd_line = System::CmdLineBuilder(repogen_exe)
-                                .string_arg("--packages")
-                                .path_arg(packages_dir)
-                                .path_arg(repository_dir);
+            auto cmd_line =
+                System::Command(repogen_exe).string_arg("--packages").path_arg(packages_dir).path_arg(repository_dir);
 
             const int exit_code =
                 System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;
@@ -393,12 +391,12 @@ namespace vcpkg::Export::IFW
 
             System::printf("Generating installer %s...\n", fs::generic_u8string(installer_file));
 
-            System::CmdLineBuilder cmd_line;
+            System::Command cmd_line;
 
             std::string ifw_repo_url = ifw_options.maybe_repository_url.value_or("");
             if (!ifw_repo_url.empty())
             {
-                cmd_line = System::CmdLineBuilder(binarycreator_exe)
+                cmd_line = System::Command(binarycreator_exe)
                                .string_arg("--online-only")
                                .string_arg("--config")
                                .path_arg(config_file)
@@ -408,7 +406,7 @@ namespace vcpkg::Export::IFW
             }
             else
             {
-                cmd_line = System::CmdLineBuilder(binarycreator_exe)
+                cmd_line = System::Command(binarycreator_exe)
                                .string_arg("--config")
                                .path_arg(config_file)
                                .string_arg("--packages")
