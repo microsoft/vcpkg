@@ -8,7 +8,7 @@ vcpkg_from_github(
   HEAD_REF master
   PATCHES
     CMakeLists-targets.patch
-    CMakeLists-windows.patch
+    CMakeLists-os.patch
 )
 
 vcpkg_configure_cmake(
