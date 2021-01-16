@@ -2,9 +2,12 @@
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/system.debug.h>
 
+#include <stdlib.h>
+
 namespace vcpkg
 {
     static void (*g_shutdown_handler)() = nullptr;
+
     void Checks::register_global_shutdown_handler(void (*func)())
     {
         if (g_shutdown_handler)
@@ -37,8 +40,10 @@ namespace vcpkg
 
     [[noreturn]] void Checks::unreachable(const LineInfo& line_info)
     {
-        System::print2(System::Color::error, "Error: Unreachable code was reached\n");
-        System::print2(System::Color::error, line_info, '\n'); // Always print line_info here
+        System::printf(System::Color::error,
+                       "Error: Unreachable code was reached\n%s(%d)\n",
+                       line_info.file_name,
+                       line_info.line_number);
 #ifndef NDEBUG
         std::abort();
 #else
@@ -48,13 +53,12 @@ namespace vcpkg
 
     [[noreturn]] void Checks::exit_with_code(const LineInfo& line_info, const int exit_code)
     {
-        Debug::print(System::Color::error, line_info, '\n');
+        Debug::print(Strings::format("%s(%d)\n", line_info.file_name, line_info.line_number));
         final_cleanup_and_exit(exit_code);
     }
 
     [[noreturn]] void Checks::exit_fail(const LineInfo& line_info) { exit_with_code(line_info, EXIT_FAILURE); }
 
-    // Exit the tool successfully.
     [[noreturn]] void Checks::exit_success(const LineInfo& line_info) { exit_with_code(line_info, EXIT_SUCCESS); }
 
     [[noreturn]] void Checks::exit_with_message(const LineInfo& line_info, StringView error_message)
@@ -77,23 +81,5 @@ namespace vcpkg
         {
             exit_with_message(line_info, error_message);
         }
-    }
-
-    std::string LineInfo::to_string() const
-    {
-        std::string ret;
-        this->to_string(ret);
-        return ret;
-    }
-
-    void LineInfo::to_string(std::string& out) const
-    {
-        out += m_file_name;
-        Strings::append(out, '(', m_line_number, ')');
-    }
-
-    namespace details
-    {
-        void exit_if_null(bool b, const LineInfo& line_info) { Checks::check_exit(line_info, b, "Value was null"); }
     }
 }

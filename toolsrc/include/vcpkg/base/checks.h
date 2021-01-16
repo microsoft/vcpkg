@@ -5,6 +5,8 @@
 
 namespace vcpkg::Checks
 {
+    // Additional convenience overloads on top of basic_checks.h that do formatting.
+
     template<class Arg1, class... Args>
     // Display an error message to the user and exit the tool.
     [[noreturn]] void exit_with_message(const LineInfo& line_info,
