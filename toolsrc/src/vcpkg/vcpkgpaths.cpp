@@ -158,16 +158,15 @@ namespace vcpkg
                                             const fs::path& manifest_dir)
     {
         fs::path config_dir;
-
-        if (!manifest_dir.empty())
-        {
-            // manifest mode
-            config_dir = manifest_dir;
-        }
-        else
+        if (manifest_dir.empty())
         {
             // classic mode
             config_dir = vcpkg_root;
+        }
+        else
+        {
+            // manifest mode
+            config_dir = manifest_dir;
         }
 
         auto path_to_config = config_dir / fs::u8path("vcpkg-configuration.json");

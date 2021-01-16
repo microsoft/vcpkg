@@ -25,12 +25,6 @@ namespace vcpkg
 #endif
         }
 
-        if (exit_code != 0)
-        {
-            System::print2(System::Color::error,
-                           "Note: Updating vcpkg by rerunning bootstrap-vcpkg may resolve this failure.\n");
-        }
-
         if (g_shutdown_handler) g_shutdown_handler();
 
         fflush(nullptr);
@@ -57,6 +51,11 @@ namespace vcpkg
         Debug::print(System::Color::error, line_info, '\n');
         final_cleanup_and_exit(exit_code);
     }
+
+    [[noreturn]] void Checks::exit_fail(const LineInfo& line_info) { exit_with_code(line_info, EXIT_FAILURE); }
+
+    // Exit the tool successfully.
+    [[noreturn]] void Checks::exit_success(const LineInfo& line_info) { exit_with_code(line_info, EXIT_SUCCESS); }
 
     [[noreturn]] void Checks::exit_with_message(const LineInfo& line_info, StringView error_message)
     {
@@ -86,11 +85,13 @@ namespace vcpkg
         this->to_string(ret);
         return ret;
     }
+
     void LineInfo::to_string(std::string& out) const
     {
         out += m_file_name;
         Strings::append(out, '(', m_line_number, ')');
     }
+
     namespace details
     {
         void exit_if_null(bool b, const LineInfo& line_info) { Checks::check_exit(line_info, b, "Value was null"); }

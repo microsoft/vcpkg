@@ -2,6 +2,15 @@
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/util.h>
 
+#include <locale.h>
+#include <stdarg.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <locale>
+#include <string>
+#include <vector>
+
 namespace vcpkg::Strings::details
 {
     // To disambiguate between two overloads
