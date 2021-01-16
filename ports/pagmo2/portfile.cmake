@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF v2.16.1
     SHA512 dac85a8525316e827df809d187d40f14dc20db7119796b7384d7855f83ba37e0bb595f6d8199053aac857460816929dd599c9d43802f2ed920a6f42dd2f16a03
     HEAD_REF master
-    PATCHES "disable-C4701.patch"
+    PATCHES
+        "disable-C4701.patch"
+        "disable-md-override.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
