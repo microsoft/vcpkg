@@ -379,7 +379,7 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
             nuspec_file_path, create_nuspec_file_contents(paths.root, nuget_id, nupkg_version), VCPKG_LINE_INFO);
 
         // Using all forward slashes for the command line
-        auto cmd_line = System::CmdLineBuilder(nuget_exe)
+        auto cmd_line = System::Command(nuget_exe)
                             .string_arg("pack")
                             .string_arg("-OutputDirectory")
                             .path_arg(buildsystems_dir)
@@ -415,7 +415,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         const fs::path script_path = paths.scripts / "addPoshVcpkgToPowershellProfile.ps1";
 
         const auto& ps = paths.get_tool_exe("powershell-core");
-        auto cmd = System::CmdLineBuilder(ps)
+        auto cmd = System::Command(ps)
                        .string_arg("-NoProfile")
                        .string_arg("-ExecutionPolicy")
                        .string_arg("Bypass")

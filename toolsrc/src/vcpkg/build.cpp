@@ -439,7 +439,7 @@ namespace vcpkg::Build
         });
     }
 
-    System::CmdLineBuilder make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
+    System::Command make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
     {
         if (!pre_build_info.using_vcvars()) return {};
 
@@ -452,7 +452,7 @@ namespace vcpkg::Build
         const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
-        return System::CmdLineBuilder{"cmd"}.string_arg("/c").raw_arg(
+        return System::Command{"cmd"}.string_arg("/c").raw_arg(
             Strings::format(R"("%s" %s %s %s %s 2>&1 <NUL)",
                             fs::u8string(toolset.vcvarsall),
                             Strings::join(" ", toolset.vcvarsall_options),

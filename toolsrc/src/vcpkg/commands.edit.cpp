@@ -219,14 +219,14 @@ namespace vcpkg::Commands::Edit
         candidate_paths.push_back(fs::path{"/usr/share/code/bin/code"});
         candidate_paths.push_back(fs::path{"/usr/bin/code"});
 
-        if (System::cmd_execute(System::CmdLineBuilder("command").string_arg("-v").string_arg("xdg-mime")) == 0)
+        if (System::cmd_execute(System::Command("command").string_arg("-v").string_arg("xdg-mime")) == 0)
         {
             auto mime_qry =
-                System::CmdLineBuilder("xdg-mime").string_arg("query").string_arg("default").string_arg("text/plain");
+                System::Command("xdg-mime").string_arg("query").string_arg("default").string_arg("text/plain");
             auto execute_result = System::cmd_execute_and_capture_output(mime_qry);
             if (execute_result.exit_code == 0 && !execute_result.output.empty())
             {
-                mime_qry = System::CmdLineBuilder("command").string_arg("-v").string_arg(
+                mime_qry = System::Command("command").string_arg("-v").string_arg(
                     execute_result.output.substr(0, execute_result.output.find('.')));
                 execute_result = System::cmd_execute_and_capture_output(mime_qry);
                 if (execute_result.exit_code == 0 && !execute_result.output.empty())
@@ -255,7 +255,7 @@ namespace vcpkg::Commands::Edit
         const fs::path env_editor = *it;
         const std::vector<std::string> arguments = create_editor_arguments(paths, options, ports);
         const auto args_as_string = Strings::join(" ", arguments);
-        auto cmd_line = System::CmdLineBuilder(env_editor).raw_arg(args_as_string).string_arg("-n");
+        auto cmd_line = System::Command(env_editor).raw_arg(args_as_string).string_arg("-n");
 
         auto editor_exe = fs::u8string(env_editor.filename());
 
@@ -264,7 +264,7 @@ namespace vcpkg::Commands::Edit
         {
             // note that we are invoking cmd silently but Code.exe is relaunched from there
             System::cmd_execute_background(
-                System::CmdLineBuilder("cmd").string_arg("/c").string_arg(cmd_line.command_line()).raw_arg("<NUL"));
+                System::Command("cmd").string_arg("/c").string_arg(cmd_line.command_line()).raw_arg("<NUL"));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif
