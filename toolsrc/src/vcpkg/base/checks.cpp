@@ -82,4 +82,39 @@ namespace vcpkg
             exit_with_message(line_info, error_message);
         }
     }
+
+    static void display_upgrade_message()
+    {
+        System::print2(System::Color::error,
+                       "Note: Updating vcpkg by rerunning bootstrap-vcpkg may resolve this failure.\n");
+    }
+
+    [[noreturn]] void Checks::exit_maybe_upgrade(const LineInfo& line_info)
+    {
+        display_upgrade_message();
+        exit_fail(line_info);
+    }
+
+    [[noreturn]] void Checks::exit_maybe_upgrade(const LineInfo& line_info, StringView error_message)
+    {
+        System::print2(System::Color::error, error_message, '\n');
+        display_upgrade_message();
+        exit_fail(line_info);
+    }
+
+    void Checks::check_maybe_upgrade(const LineInfo& line_info, bool expression)
+    {
+        if (!expression)
+        {
+            exit_maybe_upgrade(line_info);
+        }
+    }
+
+    void Checks::check_maybe_upgrade(const LineInfo& line_info, bool expression, StringView error_message)
+    {
+        if (!expression)
+        {
+            exit_maybe_upgrade(line_info, error_message);
+        }
+    }
 }

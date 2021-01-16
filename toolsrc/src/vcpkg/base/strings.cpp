@@ -246,26 +246,26 @@ std::vector<StringView> Strings::find_all_enclosed(StringView input, StringView 
 StringView Strings::find_exactly_one_enclosed(StringView input, StringView left_tag, StringView right_tag)
 {
     std::vector<StringView> result = find_all_enclosed(input, left_tag, right_tag);
-    Checks::check_exit(VCPKG_LINE_INFO,
-                       result.size() == 1,
-                       "Found %d sets of %s.*%s but expected exactly 1, in block:\n%s",
-                       result.size(),
-                       left_tag,
-                       right_tag,
-                       input);
+    Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                result.size() == 1,
+                                "Found %d sets of %s.*%s but expected exactly 1, in block:\n%s",
+                                result.size(),
+                                left_tag,
+                                right_tag,
+                                input);
     return result.front();
 }
 
 Optional<StringView> Strings::find_at_most_one_enclosed(StringView input, StringView left_tag, StringView right_tag)
 {
     std::vector<StringView> result = find_all_enclosed(input, left_tag, right_tag);
-    Checks::check_exit(VCPKG_LINE_INFO,
-                       result.size() <= 1,
-                       "Found %d sets of %s.*%s but expected at most 1, in block:\n%s",
-                       result.size(),
-                       left_tag,
-                       right_tag,
-                       input);
+    Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                result.size() <= 1,
+                                "Found %d sets of %s.*%s but expected at most 1, in block:\n%s",
+                                result.size(),
+                                left_tag,
+                                right_tag,
+                                input);
 
     if (result.empty())
     {

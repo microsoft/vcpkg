@@ -30,4 +30,12 @@ namespace vcpkg::Checks
 
     // if expression is false, call exit_with_message.
     void check_exit(const LineInfo& line_info, bool expression, StringView error_message);
+
+    // Display a message indicating that vcpkg should be upgraded and exit.
+    [[noreturn]] void exit_maybe_upgrade(const LineInfo& line_info);
+    [[noreturn]] void exit_maybe_upgrade(const LineInfo& line_info, StringView error_message);
+
+    // Check the indicated condition and call exit_maybe_upgrade if it is false.
+    void check_maybe_upgrade(const LineInfo& line_info, bool condition);
+    void check_maybe_upgrade(const LineInfo& line_info, bool condition, StringView error_message);
 }

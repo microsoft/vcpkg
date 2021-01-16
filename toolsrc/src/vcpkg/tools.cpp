@@ -184,13 +184,13 @@ namespace vcpkg
     {
         const std::array<int, 3>& version = tool_data.version;
         const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !tool_data.url.empty(),
-                           "A suitable version of %s was not found (required v%s) and unable to automatically "
-                           "download a portable one. Please install a newer version of %s.",
-                           tool_name,
-                           version_as_string,
-                           tool_name);
+        Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                    !tool_data.url.empty(),
+                                    "A suitable version of %s was not found (required v%s) and unable to automatically "
+                                    "download a portable one. Please install a newer version of %s.",
+                                    tool_name,
+                                    version_as_string,
+                                    tool_name);
         System::printf("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...\n",
                        tool_name,
                        version_as_string,
@@ -270,7 +270,7 @@ namespace vcpkg
             return fetch_tool(paths, tool, *tool_data);
         }
 
-        Checks::exit_with_message(VCPKG_LINE_INFO, maybe_tool_data.error());
+        Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, maybe_tool_data.error());
     }
 
     struct CMakeProvider : ToolProvider
@@ -601,7 +601,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
                     return {fetch_tool(paths, tool, *p_tool_data), p_tool_data->sha512};
                 }
 
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown or unavailable tool: %s", tool);
+                Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, "Unknown or unavailable tool: %s", tool);
             });
         }
 
