@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         export-only-in-shared-build.patch
         0001_fix_osx_defined.patch
+        build.patch
 )
 
 #TODO the autoconf script has a lot of additional option which use auto detection and should be disabled!
@@ -34,7 +35,6 @@ else()
     list(APPEND OPTIONS --enable-gobject=no)
 endif()
 
-set(PORT_DEBUG ON)
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     #AUTOCONFIG
@@ -43,13 +43,13 @@ vcpkg_configure_make(
         ac_cv_lib_z_compress=yes
         ac_cv_lib_lzo2_lzo2a_decompress=yes
 )
-vcpkg_install_make()
+vcpkg_install_make(SUBPATH /src)
 
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h" "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
+foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
     file(READ ${FILE} CAIRO_H)
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "1" CAIRO_H "${CAIRO_H}")
