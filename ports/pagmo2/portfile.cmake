@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         "disable-C4701.patch"
         "disable-md-override.patch"
+        "find-tbb.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
