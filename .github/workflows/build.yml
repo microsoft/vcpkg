@@ -84,11 +84,30 @@ jobs:
     - name: Check available disk space
       run: ${{ matrix.check_disk_space }}
 
+    - name: Set up NuGet source read + write
+      if: env.AZURE_ARTIFACTS_ACCESS_TOKEN != null
+      shell: bash
+      run: |
+        nuget sources add -name azure-artifacts -Source https://pkgs.dev.azure.com/mixxx/vcpkg/_packaging/dependencies/nuget/v3/index.json -Username mixxx -password "$AZURE_ARTIFACTS_ACCESS_TOKEN"
+        echo "VCPKG_BINARY_SOURCES=clear;nuget,azure-artifacts,readwrite" >> $GITHUB_ENV
+      env:
+        AZURE_ARTIFACTS_ACCESS_TOKEN: ${{ secrets.AZURE_ARTIFACTS_ACCESS_TOKEN }}
+
+    - name: Set up NuGet source read only
+      if: env.AZURE_ARTIFACTS_ACCESS_TOKEN == null
+      shell: bash
+      run: |
+        nuget sources add -name azure-artifacts -Source https://pkgs.dev.azure.com/mixxx/vcpkg/_packaging/dependencies/nuget/v3/index.json
+        echo "VCPKG_BINARY_SOURCES=clear;nuget,azure-artifacts,read;default" >> $GITHUB_ENV
+      env:
+        AZURE_ARTIFACTS_ACCESS_TOKEN: ${{ secrets.AZURE_ARTIFACTS_ACCESS_TOKEN }}
+
     - name: Build packages
       run: ./vcpkg install --clean-after-build ${{ env.VCPKG_PACKAGES }}
       working-directory: ${{ matrix.vcpkg_path }}
       env:
         VCPKG_OVERLAY_PORTS: overlay/ports
+        VCPKG_BINARY_SOURCES: ${{ env.VCPKG_BINARY_SOURCES }}
 
     - name: Upload GitHub Actions artifacts of failed build
       if: failure()
