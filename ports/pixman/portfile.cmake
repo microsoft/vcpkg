@@ -7,22 +7,24 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_IS_UWP)
     list(INSERT VCPKG_CXX_FLAGS 0 /arch:SSE2)
     list(INSERT VCPKG_C_FLAGS 0 /arch:SSE2)
     list(APPEND OPTIONS
             -Dmmx=enabled
             -Dsse2=enabled
             -Dssse3=enabled)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS
             -Dmmx=enabled
             -Dsse2=enabled
             -Dssse3=enabled)
 elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-    list(APPEND OPTIONS
-            -Darm-simd=enabled
-        )
+# If somebody teaches meson to actually do the test correctly....
+# Currently pixman-x86 is included unconditionally in builds as such arm support is disabled. 
+#    list(APPEND OPTIONS
+#            -Darm-simd=enabled
+#        )
 endif()
 
 set(PIXMAN_VERSION 0.40.0)
