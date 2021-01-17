@@ -78,6 +78,11 @@ struct MockVersionedPortfileProvider : PortFileProvider::IVersionedPortfileProvi
         }
         return it2->second;
     }
+
+    virtual void load_all_control_files(std::map<std::string, const SourceControlFileLocation*>&) const override
+    {
+        Checks::unreachable(VCPKG_LINE_INFO);
+    }
 };
 
 using Versions::Constraint;
@@ -188,6 +193,11 @@ struct MockOverlayProvider : PortFileProvider::IOverlayProvider, Util::ResourceB
             it = mappings.emplace(name, SourceControlFileLocation{std::move(scf), fs::u8path(name)}).first;
         }
         return it->second;
+    }
+
+    virtual void load_all_control_files(std::map<std::string, const SourceControlFileLocation*>&) const override
+    {
+        Checks::unreachable(VCPKG_LINE_INFO);
     }
 
 private:
