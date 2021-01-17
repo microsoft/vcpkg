@@ -75,7 +75,7 @@ index 525bafb2a..69cd985c6 100644
  
  #include <sys/types.h>
  #include <sys/stat.h>
-+#if defined(HAVE_UNISTD)
++#if defined(HAVE_UNISTD_H)
  #include <unistd.h>
 +#endif
  

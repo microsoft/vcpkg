@@ -12,7 +12,8 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         export-only-in-shared-build.patch
         0001_fix_osx_defined.patch
-        build.patch
+        #build.patch
+        build2.patch
 )
 
 #TODO the autoconf script has a lot of additional option which use auto detection and should be disabled!
@@ -35,14 +36,20 @@ else()
     list(APPEND OPTIONS --enable-gobject=no)
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    set(ENV{CPP} "cl_cpp_wrapper")
+endif()
+
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    #AUTOCONFIG
+    AUTOCONFIG
     OPTIONS ${OPTIONS}
         ax_cv_c_float_words_bigendian=no
         ac_cv_lib_z_compress=yes
         ac_cv_lib_lzo2_lzo2a_decompress=yes
+        lt_cv_deplibs_check_method=pass_all
 )
+#vcpkg_install_make()
 vcpkg_install_make(SUBPATH /src)
 
 vcpkg_fixup_pkgconfig()
