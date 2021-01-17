@@ -10,6 +10,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_replace_string(${SOURCE_PATH}/CMakeLists.txt
+  "if (\"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsX\")"
+  "if (\"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsX\" OR \"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsStoreX\" )"
+)
+
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
