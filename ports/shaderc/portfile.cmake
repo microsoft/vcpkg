@@ -1,12 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/shaderc
-    REF 05c766a1f4615ee37d37d09271aaabca30ffd293
-    SHA512 329697e8e23d619313440d57ef740a94c49d13533e1b8734fc8ff72fd5092c2addabb306f64cb69160fa5fee373a05ba39a5ee6d92d95e5e2e9c7ec96a51aadc
+    REF 0dbd899941a43ffd55df527d65128b3b66e75c9c
+    SHA512 fe85aa633abaff22ae2a52af474cc45d068d018aa2821efd1e7c1016be598eb29085be1822400865826aa4d481ae0286a93c5925cc83f364070815fc1172d027
     HEAD_REF master
     PATCHES 
     	"disable-update-version.patch"
-        "fix-install.patch"
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/third_party/glslang)
