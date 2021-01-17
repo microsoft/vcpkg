@@ -334,79 +334,101 @@ namespace vcpkg::PortFileProvider
         {
             VersionedPortfileProviderImpl(const VcpkgPaths& paths_) : paths(paths_) { }
 
+            const ExpectedS<std::unique_ptr<RegistryEntry>>& entry(StringView name) const
+            {
+                auto entry_it = m_entry_cache.find(name);
+                if (entry_it == m_entry_cache.end())
+                {
+                    if (auto reg = paths.get_configuration().registry_set.registry_for_port(name))
+                    {
+                        if (auto entry = reg->get_port_entry(paths, name))
+                        {
+                            entry_it = m_entry_cache.emplace(name.to_string(), std::move(entry)).first;
+                        }
+                        else
+                        {
+                            entry_it =
+                                m_entry_cache
+                                    .emplace(name.to_string(),
+                                             Strings::concat("Error: Could not find a definition for port ", name))
+                                    .first;
+                        }
+                    }
+                    else
+                    {
+                        entry_it = m_entry_cache
+                                       .emplace(name.to_string(),
+                                                Strings::concat("Error: no registry configured for port ", name))
+                                       .first;
+                    }
+                }
+                return entry_it->second;
+            }
+
             virtual View<VersionT> get_port_versions(StringView port_name) const override
             {
-                auto entry_it = m_entry_cache.find(port_name.to_string());
-                if (entry_it != m_entry_cache.end())
-                {
-                    return entry_it->second->get_port_versions();
-                }
-
-                auto entry = try_load_registry_port_and_baseline(paths, port_name.to_string());
-                if (!entry.first)
-                {
-                    Checks::exit_with_message(
-                        VCPKG_LINE_INFO, "Error: Could not find a definition for port %s", port_name);
-                }
-                auto it = m_entry_cache.emplace(port_name.to_string(), std::move(entry.first));
-                return it.first->second->get_port_versions();
+                return entry(port_name).value_or_exit(VCPKG_LINE_INFO)->get_port_versions();
             }
 
             ExpectedS<const SourceControlFileLocation&> get_control_file(const VersionSpec& version_spec) const override
             {
-                auto cache_it = m_control_cache.find(version_spec);
-                if (cache_it != m_control_cache.end())
+                auto it = m_control_cache.find(version_spec);
+                if (it == m_control_cache.end())
                 {
-                    return cache_it->second;
-                }
-
-                auto entry_it = m_entry_cache.find(version_spec.port_name);
-                if (entry_it == m_entry_cache.end())
-                {
-                    auto reg_for_port =
-                        paths.get_configuration().registry_set.registry_for_port(version_spec.port_name);
-
-                    if (!reg_for_port)
+                    const auto& maybe_ent = entry(version_spec.port_name);
+                    if (auto ent = maybe_ent.get())
                     {
-                        return Strings::format("Error: no registry set up for port %s", version_spec.port_name);
+                        auto maybe_path = ent->get()->get_path_to_version(paths, version_spec.version);
+                        if (auto path = maybe_path.get())
+                        {
+                            auto maybe_control_file = Paragraphs::try_load_port(paths.get_filesystem(), *path);
+                            if (auto scf = maybe_control_file.get())
+                            {
+                                if (scf->get()->core_paragraph->name == version_spec.port_name)
+                                {
+                                    it = m_control_cache
+                                             .emplace(version_spec,
+                                                      std::make_unique<SourceControlFileLocation>(std::move(*scf),
+                                                                                                  std::move(*path)))
+                                             .first;
+                                }
+                                it =
+                                    m_control_cache
+                                        .emplace(
+                                            version_spec,
+                                            Strings::format(
+                                                "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
+                                                fs::u8string(*path),
+                                                version_spec.port_name,
+                                                scf->get()->core_paragraph->name))
+                                        .first;
+                            }
+                            // This should change to a soft error when ParseExpected is eliminated.
+                            print_error_message(maybe_control_file.error());
+                            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                                      "Error: Failed to load port %s from %s",
+                                                      version_spec.port_name,
+                                                      fs::u8string(*path));
+                        }
+                        else
+                        {
+                            it = m_control_cache.emplace(version_spec, maybe_path.error()).first;
+                        }
                     }
-
-                    auto entry = reg_for_port->get_port_entry(paths, version_spec.port_name);
-                    entry_it = m_entry_cache.emplace(version_spec.port_name, std::move(entry)).first;
-                }
-
-                auto maybe_path = entry_it->second->get_path_to_version(paths, version_spec.version);
-                if (!maybe_path.has_value())
-                {
-                    return std::move(maybe_path).error();
-                }
-                auto& port_directory = *maybe_path.get();
-
-                auto maybe_control_file = Paragraphs::try_load_port(paths.get_filesystem(), port_directory);
-                if (auto scf = maybe_control_file.get())
-                {
-                    if (scf->get()->core_paragraph->name == version_spec.port_name)
+                    else
                     {
-                        return m_control_cache
-                            .emplace(version_spec,
-                                     SourceControlFileLocation{std::move(*scf), std::move(port_directory)})
-                            .first->second;
+                        it = m_control_cache.emplace(version_spec, maybe_ent.error()).first;
                     }
-                    return Strings::format("Error: Failed to load port from %s: names did not match: '%s' != '%s'",
-                                           fs::u8string(port_directory),
-                                           version_spec.port_name,
-                                           scf->get()->core_paragraph->name);
                 }
-
-                print_error_message(maybe_control_file.error());
-                return Strings::format(
-                    "Error: Failed to load port %s from %s", version_spec.port_name, fs::u8string(port_directory));
+                return it->second.map([](const auto& x) -> const SourceControlFileLocation& { return *x.get(); });
             }
 
         private:
             const VcpkgPaths& paths; // TODO: remove this data member
-            mutable std::unordered_map<VersionSpec, SourceControlFileLocation, VersionSpecHasher> m_control_cache;
-            mutable std::map<std::string, std::unique_ptr<RegistryEntry>, std::less<>> m_entry_cache;
+            mutable std::
+                unordered_map<VersionSpec, ExpectedS<std::unique_ptr<SourceControlFileLocation>>, VersionSpecHasher>
+                    m_control_cache;
+            mutable std::map<std::string, ExpectedS<std::unique_ptr<RegistryEntry>>, std::less<>> m_entry_cache;
         };
 
         struct OverlayProviderImpl : IOverlayProvider, Util::ResourceBase
