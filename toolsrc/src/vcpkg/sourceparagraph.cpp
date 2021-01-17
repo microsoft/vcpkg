@@ -430,8 +430,6 @@ namespace vcpkg
         constexpr static StringLiteral FEATURES = "features";
         constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
         constexpr static StringLiteral PLATFORM = "platform";
-        constexpr static StringLiteral PORT_VERSION = "port-version";
-        constexpr static StringLiteral VERSION_EQ = "version=";
         constexpr static StringLiteral VERSION_GE = "version>=";
 
         virtual Span<const StringView> valid_fields() const override
@@ -441,8 +439,6 @@ namespace vcpkg
                 FEATURES,
                 DEFAULT_FEATURES,
                 PLATFORM,
-                PORT_VERSION,
-                VERSION_EQ,
                 VERSION_GE,
             };
 
@@ -488,32 +484,33 @@ namespace vcpkg
 
             r.optional_object_field(obj, PLATFORM, dep.platform, PlatformExprDeserializer::instance);
 
-            static auto version_deserializer = make_version_deserializer("a version");
+            static Json::StringDeserializer version_deserializer("a version");
 
-            auto has_eq_constraint =
-                r.optional_object_field(obj, VERSION_EQ, dep.constraint.value, *version_deserializer);
             auto has_ge_constraint =
-                r.optional_object_field(obj, VERSION_GE, dep.constraint.value, *version_deserializer);
-            auto has_port_ver = r.optional_object_field(
-                obj, PORT_VERSION, dep.constraint.port_version, Json::NaturalNumberDeserializer::instance);
+                r.optional_object_field(obj, VERSION_GE, dep.constraint.value, version_deserializer);
 
-            if (has_eq_constraint)
-            {
-                dep.constraint.type = Versions::Constraint::Type::Exact;
-                if (has_ge_constraint)
-                {
-                    r.add_generic_error(type_name(), "cannot have both exact and minimum constraints simultaneously");
-                }
-            }
-            else if (has_ge_constraint)
+            if (has_ge_constraint)
             {
                 dep.constraint.type = Versions::Constraint::Type::Minimum;
-            }
-            else if (has_port_ver) // does not have a primary constraint
-            {
-                r.add_generic_error(
-                    type_name(),
-                    "\"port-version\" cannot be used without a primary constraint (\"version=\" or \"version>=\")");
+                auto h = dep.constraint.value.find('#');
+                if (h != std::string::npos)
+                {
+                    auto opt = Strings::strto<int>(dep.constraint.value.c_str() + h + 1);
+                    auto v = opt.get();
+                    if (v && *v > 0)
+                    {
+                        dep.constraint.port_version = *v;
+                    }
+                    else
+                    {
+                        r.add_generic_error(type_name(),
+                                            "embedded port-version ('#') in the primary "
+                                            "constraint (\"",
+                                            VERSION_GE,
+                                            "\") must be a positive integer");
+                    }
+                    dep.constraint.value.erase(h);
+                }
             }
 
             return dep;
@@ -540,9 +537,7 @@ namespace vcpkg
     constexpr StringLiteral DependencyDeserializer::FEATURES;
     constexpr StringLiteral DependencyDeserializer::DEFAULT_FEATURES;
     constexpr StringLiteral DependencyDeserializer::PLATFORM;
-    constexpr StringLiteral DependencyDeserializer::VERSION_EQ;
     constexpr StringLiteral DependencyDeserializer::VERSION_GE;
-    constexpr StringLiteral DependencyDeserializer::PORT_VERSION;
 
     struct DependencyOverrideDeserializer : Json::IDeserializer<DependencyOverride>
     {
@@ -860,6 +855,21 @@ namespace vcpkg
     };
     LicenseExpressionDeserializer LicenseExpressionDeserializer::instance;
 
+    struct BaselineCommitDeserializer final : Json::IDeserializer<std::string>
+    {
+        virtual StringView type_name() const override { return "a vcpkg repository commit"; }
+
+        virtual Optional<std::string> visit_string(Json::Reader&, StringView s) override
+        {
+            // We allow non-sha strings here to allow the core vcpkg code to provide better error
+            // messages including the current git commit
+            return s.to_string();
+        }
+
+        static BaselineCommitDeserializer instance;
+    };
+    BaselineCommitDeserializer BaselineCommitDeserializer::instance;
+
     struct ManifestDeserializer : Json::IDeserializer<std::unique_ptr<SourceControlFile>>
     {
         virtual StringView type_name() const override { return "a manifest"; }
@@ -876,6 +886,7 @@ namespace vcpkg
         constexpr static StringLiteral DEFAULT_FEATURES = "default-features";
         constexpr static StringLiteral SUPPORTS = "supports";
         constexpr static StringLiteral OVERRIDES = "overrides";
+        constexpr static StringLiteral BUILTIN_BASELINE = "builtin-baseline";
 
         virtual Span<const StringView> valid_fields() const override
         {
@@ -892,6 +903,7 @@ namespace vcpkg
                 DEFAULT_FEATURES,
                 SUPPORTS,
                 OVERRIDES,
+                BUILTIN_BASELINE,
             };
             static const auto t = Util::Vectors::concat<StringView>(schemed_deserializer_fields(), u);
 
@@ -917,9 +929,9 @@ namespace vcpkg
 
             static Json::StringDeserializer url_deserializer{"a url"};
 
-            constexpr static StringView type_name = "vcpkg.json";
+            constexpr static StringView inner_type_name = "vcpkg.json";
             DependencyOverrideDeserializer::visit_impl(
-                type_name, r, obj, spgh->name, spgh->version, spgh->version_scheme, spgh->port_version);
+                inner_type_name, r, obj, spgh->name, spgh->version, spgh->version_scheme, spgh->port_version);
 
             r.optional_object_field(obj, MAINTAINERS, spgh->maintainers, Json::ParagraphDeserializer::instance);
             r.optional_object_field(obj, DESCRIPTION, spgh->description, Json::ParagraphDeserializer::instance);
@@ -933,8 +945,12 @@ namespace vcpkg
 
             if (obj.contains(DEV_DEPENDENCIES))
             {
-                System::print2(System::Color::error, DEV_DEPENDENCIES, " are not yet supported");
-                Checks::exit_fail(VCPKG_LINE_INFO);
+                r.add_generic_error(type_name(), DEV_DEPENDENCIES, " are not yet supported");
+            }
+            std::string baseline;
+            if (r.optional_object_field(obj, BUILTIN_BASELINE, baseline, BaselineCommitDeserializer::instance))
+            {
+                spgh->builtin_baseline = std::move(baseline);
             }
 
             r.optional_object_field(obj, SUPPORTS, spgh->supports_expression, PlatformExprDeserializer::instance);
@@ -1007,26 +1023,20 @@ namespace vcpkg
     Optional<std::string> SourceControlFile::check_against_feature_flags(const fs::path& origin,
                                                                          const FeatureFlagSettings& flags) const
     {
+        static constexpr StringLiteral s_extended_help = "See `vcpkg help versioning` for more information.";
         if (!flags.versions)
         {
-            if (core_paragraph->version_scheme != Versions::Scheme::String)
-            {
-                return Strings::concat(fs::u8string(origin),
-                                       " was rejected because it uses a non-string version scheme and the `",
-                                       VcpkgCmdArguments::VERSIONS_FEATURE,
-                                       "` feature flag is disabled.\nThis can be fixed by using \"version-string\".");
-            }
-
             auto check_deps = [&](View<Dependency> deps) -> Optional<std::string> {
                 for (auto&& dep : deps)
                 {
                     if (dep.constraint.type != Versions::Constraint::Type::None)
                     {
-                        return Strings::concat(fs::u8string(origin),
-                                               " was rejected because it uses constraints and the `",
-                                               VcpkgCmdArguments::VERSIONS_FEATURE,
-                                               "` feature flag is disabled.\nThis can be fixed by removing uses of "
-                                               "\"version>=\" and \"version=\".");
+                        return Strings::concat(
+                            fs::u8string(origin),
+                            " was rejected because it uses constraints and the `",
+                            VcpkgCmdArguments::VERSIONS_FEATURE,
+                            "` feature flag is disabled.\nThis can be fixed by removing uses of \"version>=\".\n",
+                            s_extended_help);
                     }
                 }
                 return nullopt;
@@ -1044,7 +1054,18 @@ namespace vcpkg
                 return Strings::concat(fs::u8string(origin),
                                        " was rejected because it uses overrides and the `",
                                        VcpkgCmdArguments::VERSIONS_FEATURE,
-                                       "` feature flag is disabled.\nThis can be fixed by removing \"overrides\".");
+                                       "` feature flag is disabled.\nThis can be fixed by removing \"overrides\".\n",
+                                       s_extended_help);
+            }
+
+            if (core_paragraph->builtin_baseline.has_value())
+            {
+                return Strings::concat(
+                    fs::u8string(origin),
+                    " was rejected because it uses builtin-baseline and the `",
+                    VcpkgCmdArguments::VERSIONS_FEATURE,
+                    "` feature flag is disabled.\nThis can be fixed by removing \"builtin-baseline\".\n",
+                    s_extended_help);
             }
         }
         return nullopt;
@@ -1250,19 +1271,14 @@ namespace vcpkg
 
                 serialize_optional_array(dep_obj, DependencyDeserializer::FEATURES, features_copy);
                 serialize_optional_string(dep_obj, DependencyDeserializer::PLATFORM, to_string(dep.platform));
-                if (dep.constraint.port_version != 0)
+                if (dep.constraint.type == Versions::Constraint::Type::Minimum)
                 {
-                    dep_obj.insert(DependencyDeserializer::PORT_VERSION,
-                                   Json::Value::integer(dep.constraint.port_version));
-                }
-
-                if (dep.constraint.type == Versions::Constraint::Type::Exact)
-                {
-                    dep_obj.insert(DependencyDeserializer::VERSION_EQ, Json::Value::string(dep.constraint.value));
-                }
-                else if (dep.constraint.type == Versions::Constraint::Type::Minimum)
-                {
-                    dep_obj.insert(DependencyDeserializer::VERSION_GE, Json::Value::string(dep.constraint.value));
+                    auto s = dep.constraint.value;
+                    if (dep.constraint.port_version != 0)
+                    {
+                        Strings::append(s, '#', dep.constraint.port_version);
+                    }
+                    dep_obj.insert(DependencyDeserializer::VERSION_GE, Json::Value::string(std::move(s)));
                 }
             }
         };
@@ -1302,6 +1318,11 @@ namespace vcpkg
         serialize_optional_string(obj, ManifestDeserializer::LICENSE, scf.core_paragraph->license);
         serialize_optional_string(
             obj, ManifestDeserializer::SUPPORTS, to_string(scf.core_paragraph->supports_expression));
+        if (scf.core_paragraph->builtin_baseline.has_value())
+        {
+            obj.insert(ManifestDeserializer::BUILTIN_BASELINE,
+                       Json::Value::string(scf.core_paragraph->builtin_baseline.value_or_exit(VCPKG_LINE_INFO)));
+        }
 
         if (!scf.core_paragraph->dependencies.empty() || debug)
         {

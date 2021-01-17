@@ -25,7 +25,11 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     # disable that makes linkage error (e.g. require stderr usage)
     list(APPEND DISABLES no-stdio no-ui no-asm)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(PLATFORM darwin64-x86_64-cc)
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+        set(PLATFORM darwin64-arm64-cc)
+    else()
+        set(PLATFORM darwin64-x86_64-cc)
+    endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
     set(PLATFORM BSD-generic64)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
@@ -213,4 +217,3 @@ install(
     FILES ${INSTALL_PKG_CONFIGS}
     DESTINATION lib/pkgconfig
 )
-
