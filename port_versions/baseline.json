@@ -5342,7 +5342,7 @@
     },
     "soci": {
       "baseline": "4.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "socket-io-client": {
       "baseline": "1.6.1-1",
