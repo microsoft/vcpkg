@@ -6,6 +6,9 @@
   "dependencies": [
     "rapidjson"
   ],
+  "default-features": [
+    "test"
+  ],
   "features": {
     "samples": {
       "description": "Build with GLTF samples"
