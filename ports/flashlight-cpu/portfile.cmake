@@ -1,7 +1,7 @@
-if (EXISTS "${CURRENT_INSTALLED_DIR}/share/flashlight-cpu")
-  message(FATAL_ERROR "flashlight-cpu is installed; only one Flashlight "
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/flashlight-cuda")
+  message(FATAL_ERROR "flashlight-cuda is installed; only one Flashlight "
     "backend package can be installed at once. Uninstall and try again:"
-    "\n    vcpkg remove flashlight-cpu\n")
+    "\n    vcpkg remove flashlight-cuda\n")
 endif()
 
 vcpkg_from_github(
@@ -12,12 +12,11 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-################################### Build ###################################
 # Default flags
 set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
   -DFL_BUILD_TESTS=OFF
   -DFL_BUILD_EXAMPLES=OFF
-  -DFL_BACKEND=CUDA # this port is CUDA-backend only
+  -DFL_BACKEND=CPU # this port is CPU-backend only
   -DFL_BUILD_STANDALONE=OFF
   -DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT} # for CMake configs/targets
 )
