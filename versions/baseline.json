@@ -3860,6 +3860,10 @@
       "baseline": "alias",
       "port-version": 0
     },
+    "ms-gltf": {
+      "baseline": "r1.9.5.0",
+      "port-version": 0
+    },
     "ms-gsl": {
       "baseline": "3.1.0",
       "port-version": 0
