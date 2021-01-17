@@ -316,6 +316,7 @@ __pycache__/
 ############################################################
 # vcpkg - End
 ############################################################
+vcpkg.disable-metrics
 archives
 .DS_Store
 prefab/
@@ -325,3 +326,4 @@ prefab/
 # Codespaces
 ###################
 pythonenv3.8/
+.venv/
