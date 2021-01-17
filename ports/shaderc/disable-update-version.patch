@@ -28,10 +28,10 @@ index 31664d1..358d91b 100644
  shaderc_add_tests(
    TEST_PREFIX glslc
 diff --git a/libshaderc/CMakeLists.txt b/libshaderc/CMakeLists.txt
-index 0ffa06f..c4c95cc 100644
+index 3ada419..8a7dcd4 100644
 --- a/libshaderc/CMakeLists.txt
 +++ b/libshaderc/CMakeLists.txt
-@@ -42,7 +42,7 @@ endif(SHADERC_ENABLE_INSTALL)
+@@ -62,7 +62,7 @@ endif(SHADERC_ENABLE_INSTALL)
  
  find_package(Threads)
  set(SHADERC_LIBS
@@ -40,3 +40,16 @@ index 0ffa06f..c4c95cc 100644
    shaderc_util
    SPIRV # from glslang
    SPIRV-Tools
+diff --git a/libshaderc_util/CMakeLists.txt b/libshaderc_util/CMakeLists.txt
+index 48f9991..1f77aa9 100644
+--- a/libshaderc_util/CMakeLists.txt
++++ b/libshaderc_util/CMakeLists.txt
+@@ -46,7 +46,7 @@ add_definitions(-DENABLE_HLSL)
+ 
+ find_package(Threads)
+ target_link_libraries(shaderc_util PRIVATE
+-  glslang OSDependent OGLCompiler HLSL glslang SPIRV
++  glslang OSDependent OGLCompiler HLSL GenericCodeGen MachineIndependent glslang SPIRV
+   SPIRV-Tools-opt ${CMAKE_THREAD_LIBS_INIT})
+ 
+ shaderc_add_tests(
