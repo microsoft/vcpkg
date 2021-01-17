@@ -1,12 +1,12 @@
 vcpkg_fail_port_install(ON_TARGET "UWP" ON_ARCH "x86")
 
-set(PORT_VERSION 4.0.0-beta5)
+set(PORT_VERSION 4.0.0-beta6)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/KTX-Software
     REF v${PORT_VERSION}
-    SHA512 8c63be2a7c55b8fdb8c8aee1f7cacdc2105e54061691c69cddbd3bed49f8e907262cc3ae83dfd723e76f0911bd6c85f5bbc19347998988a1fc6ecae26bfecf33
+    SHA512 f70e7f3184fc5e42c48c022dd7c11a098f7b589da3fbf2bd1c6613979c8831d96d8ff1ecdb700b81ea5ddd8d13a8a0bb3bdd2470698298d0c117884ab56e982f
     HEAD_REF master
     PATCHES
         0001-Use-vcpkg-zstd.patch
