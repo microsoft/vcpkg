@@ -1,0 +1,9 @@
+{
+  "name": "boost-predef",
+  "version-string": "1.75.0",
+  "description": "Boost predef module",
+  "homepage": "https://github.com/boostorg/predef",
+  "dependencies": [
+    "boost-vcpkg-helpers"
+  ]
+}
