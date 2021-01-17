@@ -1,4 +1,4 @@
 Source: minimp3
-Version: 2019-07-24-1
+Version: 2020-12-25
 Homepage: https://github.com/lieff/minimp3
 Description: Minimalistic, single-header library for decoding MP3. minimp3 is designed to be small, fast (with SSE and NEON support), and accurate (ISO conformant).

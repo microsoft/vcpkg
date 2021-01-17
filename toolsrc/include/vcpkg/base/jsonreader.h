@@ -75,13 +75,13 @@ namespace vcpkg::Json
         };
         std::vector<Path> m_path;
 
+    public:
         // checks that an object doesn't contain any fields which both:
         // * don't start with a `$`
         // * are not in `valid_fields`
         // if known_fields.empty(), then it's treated as if all field names are valid
         void check_for_unexpected_fields(const Object& obj, View<StringView> valid_fields, StringView type_name);
 
-    public:
         template<class Type>
         void required_object_field(
             StringView type, const Object& obj, StringView key, Type& place, IDeserializer<Type>& visitor)
@@ -278,7 +278,7 @@ namespace vcpkg::Json
 
     struct NaturalNumberDeserializer final : IDeserializer<int>
     {
-        virtual StringView type_name() const override { return "a natural number"; }
+        virtual StringView type_name() const override { return "a nonnegative integer"; }
 
         virtual Optional<int> visit_integer(Reader&, int64_t value) override
         {

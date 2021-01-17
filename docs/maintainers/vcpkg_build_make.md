@@ -25,8 +25,10 @@ IF the port supports the install target use vcpkg_install_make() instead of vcpk
 Specifies the Makefile as a relative path from the root of the sources passed to `vcpkg_configure_make()`
 
 ### BUILD_TARGET
-The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
-be passed.
+The target passed to the make build command (`./make <target>`). Defaults to 'all'.
+
+### INSTALL_TARGET
+The target passed to the make build command (`./make <target>`) if `ENABLE_INSTALL` is used. Defaults to 'install'.
 
 ### DISABLE_PARALLEL
 The underlying buildsystem will be instructed to not parallelize
@@ -36,7 +38,7 @@ Additional subdir to invoke make in. Useful if only parts of a port should be bu
 
 ## Notes:
 This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
-You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your CMake script supports the
+You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
 "install" target
 
 ## Examples

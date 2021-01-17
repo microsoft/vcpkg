@@ -1,6 +1,6 @@
 Source: tbb
 Version: 2020_U3
-Port-Version: 2
+Port-Version: 3
 Homepage: https://github.com/01org/tbb
 Description: Intel's Threading Building Blocks.
-Supports: !(uwp|arm|arm64) | linux
+Supports: !(uwp|arm|arm64) | linux | osx

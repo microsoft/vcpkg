@@ -7,12 +7,12 @@ using namespace vcpkg::Versions;
 
 namespace
 {
+    constexpr StringLiteral BASELINE = "baseline";
     constexpr StringLiteral VERSION_RELAXED = "version";
     constexpr StringLiteral VERSION_SEMVER = "version-semver";
     constexpr StringLiteral VERSION_STRING = "version-string";
     constexpr StringLiteral VERSION_DATE = "version-date";
     constexpr StringLiteral PORT_VERSION = "port-version";
-    constexpr StringLiteral GIT_TREE = "git-tree";
 
     struct VersionDeserializer final : Json::IDeserializer<std::string>
     {
@@ -36,6 +36,26 @@ namespace
             return sv.to_string();
         }
         StringLiteral m_type;
+    };
+
+    struct GenericVersionTDeserializer : Json::IDeserializer<VersionT>
+    {
+        GenericVersionTDeserializer(StringLiteral version_field) : m_version_field(version_field) { }
+        StringView type_name() const override { return " a version object"; }
+
+        Optional<VersionT> visit_object(Json::Reader& r, const Json::Object& obj) override
+        {
+            std::string version;
+            int port_version = 0;
+
+            static VersionDeserializer version_deserializer{"version"};
+
+            r.required_object_field(type_name(), obj, m_version_field, version, version_deserializer);
+            r.optional_object_field(obj, PORT_VERSION, port_version, Json::NaturalNumberDeserializer::instance);
+
+            return VersionT{std::move(version), port_version};
+        }
+        StringLiteral m_version_field;
     };
 }
 
@@ -98,18 +118,43 @@ namespace vcpkg
         else
         {
             if (has_exact)
+            {
                 version_scheme = Versions::Scheme::String;
+            }
             else if (has_relax)
+            {
                 version_scheme = Versions::Scheme::Relaxed;
+                auto v = Versions::RelaxedVersion::from_string(version);
+                if (!v.has_value())
+                {
+                    r.add_generic_error(parent_type, "'version' text was not a relaxed version:\n", v.error());
+                }
+            }
             else if (has_semver)
+            {
                 version_scheme = Versions::Scheme::Semver;
+                auto v = Versions::SemanticVersion::from_string(version);
+                if (!v.has_value())
+                {
+                    r.add_generic_error(parent_type, "'version-semver' text was not a semantic version:\n", v.error());
+                }
+            }
             else if (has_date)
+            {
                 version_scheme = Versions::Scheme::Date;
+                auto v = Versions::DateVersion::from_string(version);
+                if (!v.has_value())
+                {
+                    r.add_generic_error(parent_type, "'version-date' text was not a date version:\n", v.error());
+                }
+            }
             else
+            {
                 Checks::unreachable(VCPKG_LINE_INFO);
+            }
         }
 
-        return SchemedVersion{version_scheme, {version, port_version}};
+        return SchemedVersion(version_scheme, VersionT{version, port_version});
     }
 
     View<StringView> schemed_deserializer_fields()
@@ -143,174 +188,15 @@ namespace vcpkg
         }
     }
 
-}
-
-namespace
-{
-    struct VersionDbEntryDeserializer final : Json::IDeserializer<VersionDbEntry>
+    Json::IDeserializer<VersionT>& get_versiont_deserializer_instance()
     {
-        static constexpr StringLiteral GIT_TREE = "git-tree";
-
-        StringView type_name() const override { return "a version database entry"; }
-        View<StringView> valid_fields() const override
-        {
-            static const StringView u[] = {GIT_TREE};
-            static const auto t = vcpkg::Util::Vectors::concat<StringView>(schemed_deserializer_fields(), u);
-            return t;
-        }
-
-        Optional<VersionDbEntry> visit_object(Json::Reader& r, const Json::Object& obj) override
-        {
-            VersionDbEntry ret;
-
-            auto schemed_version = visit_required_schemed_deserializer(type_name(), r, obj);
-            ret.scheme = schemed_version.scheme;
-            ret.version = std::move(schemed_version.versiont);
-
-            static Json::StringDeserializer git_tree_deserializer("a git object SHA");
-
-            r.required_object_field(type_name(), obj, GIT_TREE, ret.git_tree, git_tree_deserializer);
-
-            return std::move(ret);
-        }
-
-        static VersionDbEntryDeserializer instance;
-    };
-
-    struct VersionDbEntryArrayDeserializer final : Json::IDeserializer<std::vector<VersionDbEntry>>
-    {
-        virtual StringView type_name() const override { return "an array of versions"; }
-
-        virtual Optional<std::vector<VersionDbEntry>> visit_array(Json::Reader& r, const Json::Array& arr) override
-        {
-            return r.array_elements(arr, VersionDbEntryDeserializer::instance);
-        }
-
-        static VersionDbEntryArrayDeserializer instance;
-    };
-
-    VersionDbEntryDeserializer VersionDbEntryDeserializer::instance;
-    VersionDbEntryArrayDeserializer VersionDbEntryArrayDeserializer::instance;
-
-    struct BaselineDeserializer final : Json::IDeserializer<std::map<std::string, VersionT, std::less<>>>
-    {
-        StringView type_name() const override { return "a baseline object"; }
-
-        Optional<type> visit_object(Json::Reader& r, const Json::Object& obj) override
-        {
-            std::map<std::string, VersionT, std::less<>> result;
-
-            for (auto&& pr : obj)
-            {
-                const auto& version_value = pr.second;
-                VersionT version;
-                r.visit_in_key(version_value, pr.first, version, get_versiont_deserializer_instance());
-
-                result.emplace(pr.first.to_string(), std::move(version));
-            }
-
-            return std::move(result);
-        }
-
-        static BaselineDeserializer instance;
-    };
-    BaselineDeserializer BaselineDeserializer::instance;
-
-    struct VersionTDeserializer final : Json::IDeserializer<VersionT>
-    {
-        StringView type_name() const override { return "a version object"; }
-        View<StringView> valid_fields() const override
-        {
-            static const StringView t[] = {VERSION_STRING, PORT_VERSION};
-            return t;
-        }
-
-        Optional<VersionT> visit_object(Json::Reader& r, const Json::Object& obj) override
-        {
-            std::string version;
-            int port_version = 0;
-
-            static VersionDeserializer version_deserializer{"version"};
-
-            r.required_object_field(type_name(), obj, VERSION_STRING, version, version_deserializer);
-            r.optional_object_field(obj, PORT_VERSION, port_version, Json::NaturalNumberDeserializer::instance);
-
-            return VersionT{std::move(version), port_version};
-        }
-        static VersionTDeserializer instance;
-    };
-
-    VersionTDeserializer VersionTDeserializer::instance;
-}
-
-namespace vcpkg
-{
-    Json::IDeserializer<VersionT>& get_versiont_deserializer_instance() { return VersionTDeserializer::instance; }
-
-    ExpectedS<std::map<std::string, VersionT, std::less<>>> parse_baseline_file(Files::Filesystem& fs,
-                                                                                StringView baseline_name,
-                                                                                const fs::path& baseline_file_path)
-    {
-        if (!fs.exists(baseline_file_path))
-        {
-            return Strings::format("Couldn't find `%s`", fs::u8string(baseline_file_path));
-        }
-
-        auto value = Json::parse_file(VCPKG_LINE_INFO, fs, baseline_file_path);
-        if (!value.first.is_object())
-        {
-            return Strings::format("Error: `%s` does not have a top-level object.", fs::u8string(baseline_file_path));
-        }
-
-        const auto& obj = value.first.object();
-        auto baseline_value = obj.get(baseline_name);
-        if (!baseline_value)
-        {
-            return Strings::format(
-                "Error: `%s` does not contain the baseline \"%s\"", fs::u8string(baseline_file_path), baseline_name);
-        }
-
-        Json::Reader r;
-        std::map<std::string, VersionT, std::less<>> result;
-        r.visit_in_key(*baseline_value, baseline_name, result, BaselineDeserializer::instance);
-        if (!r.errors().empty())
-        {
-            return Strings::format(
-                "Error: failed to parse `%s`:\n%s", fs::u8string(baseline_file_path), Strings::join("\n", r.errors()));
-        }
-        return result;
+        static GenericVersionTDeserializer deserializer(VERSION_STRING);
+        return deserializer;
     }
 
-    ExpectedS<std::vector<VersionDbEntry>> parse_versions_file(Files::Filesystem& fs,
-                                                               StringView port_name,
-                                                               const fs::path& versions_file_path)
+    Json::IDeserializer<VersionT>& get_versiontag_deserializer_instance()
     {
-        (void)port_name;
-        if (!fs.exists(versions_file_path))
-        {
-            return Strings::format("Couldn't find the versions database file: %s", fs::u8string(versions_file_path));
-        }
-
-        auto versions_json = Json::parse_file(VCPKG_LINE_INFO, fs, versions_file_path);
-        if (!versions_json.first.is_object())
-        {
-            return Strings::format("Error: `%s` does not have a top level object.", fs::u8string(versions_file_path));
-        }
-
-        const auto& versions_object = versions_json.first.object();
-        auto maybe_versions_array = versions_object.get("versions");
-        if (!maybe_versions_array || !maybe_versions_array->is_array())
-        {
-            return Strings::format("Error: `%s` does not contain a versions array.", fs::u8string(versions_file_path));
-        }
-
-        std::vector<VersionDbEntry> db_entries;
-        // Avoid warning treated as error.
-        if (maybe_versions_array != nullptr)
-        {
-            Json::Reader r;
-            r.visit_in_key(*maybe_versions_array, "versions", db_entries, VersionDbEntryArrayDeserializer::instance);
-        }
-        return db_entries;
+        static GenericVersionTDeserializer deserializer(BASELINE);
+        return deserializer;
     }
 }

@@ -12,6 +12,7 @@
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphparser.h>
 #include <vcpkg/platform-expression.h>
+#include <vcpkg/versiondeserializers.h>
 #include <vcpkg/versions.h>
 
 namespace vcpkg
@@ -68,6 +69,7 @@ namespace vcpkg
         std::vector<DependencyOverride> overrides;
         std::vector<std::string> default_features;
         std::string license; // SPDX license expression
+        Optional<std::string> builtin_baseline;
 
         Type type;
         PlatformExpression::Expr supports_expression;
@@ -107,6 +109,10 @@ namespace vcpkg
                                                           const FeatureFlagSettings& flags) const;
 
         VersionT to_versiont() const { return core_paragraph->to_versiont(); }
+        SchemedVersion to_schemed_version() const
+        {
+            return SchemedVersion{core_paragraph->version_scheme, core_paragraph->to_versiont()};
+        }
 
         friend bool operator==(const SourceControlFile& lhs, const SourceControlFile& rhs);
         friend bool operator!=(const SourceControlFile& lhs, const SourceControlFile& rhs) { return !(lhs == rhs); }
@@ -116,8 +122,8 @@ namespace vcpkg
     Json::Object serialize_debug_manifest(const SourceControlFile& scf);
 
     /// <summary>
-    /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was
-    /// loaded from.
+    /// Full metadata of a package: core and other features,
+    /// as well as the port directory the SourceControlFile was loaded from
     /// </summary>
     struct SourceControlFileLocation
     {

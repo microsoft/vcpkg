@@ -20,6 +20,7 @@ vcpkg_from_github(
       0003-force-package-requirements.patch
       0004-fix-policy-CMP0057.patch
       0006-jpeg2000_getref.patch
+      0008-fix-vtk9.patch
       0009-fix-uwp.patch
       0010-fix-interface_link_libraries.patch # Remove this patch when the next update
 )
@@ -41,6 +42,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "halide"   WITH_HALIDE
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
+ "lapack"   WITH_LAPACK
  "nonfree"  OPENCV_ENABLE_NONFREE
  "openexr"  WITH_OPENEXR
  "opengl"   WITH_OPENGL
@@ -48,11 +50,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "qt"       WITH_QT
  "sfm"      BUILD_opencv_sfm
  "tiff"     WITH_TIFF
+ "vtk"      WITH_VTK
  "webp"     WITH_WEBP
  "world"    BUILD_opencv_world
 )
 
-# Cannot use vcpkg_check_features() for "dnn", ipp", "openmp", "ovis", "tbb", and "vtk".
+# Cannot use vcpkg_check_features() for "dnn", ipp", "openmp", "ovis", "tbb"
 # As the respective value of their variables can be unset conditionally.
 set(BUILD_opencv_dnn OFF)
 if("dnn" IN_LIST FEATURES)
@@ -61,6 +64,19 @@ if("dnn" IN_LIST FEATURES)
   else()
     message(WARNING "The dnn module cannot be enabled on Android")
   endif()
+endif()
+
+#OpenCV on arm on windows platform (non UWP) has serious problems right now. Disabling this module is not enough (remember to put the definition in vcpkg_configure_cmake)
+#set(BUILD_opencv_surface_matching ON)
+#if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+#  set(BUILD_opencv_surface_matching OFF)
+#  message(WARNING "The surface_matching module cannot be enabled on ARM architectures")
+#endif()
+
+set(BUILD_opencv_gapi ON)
+if(VCPKG_TARGET_IS_UWP)
+  set(BUILD_opencv_gapi OFF)
+  message(WARNING "The gapi module cannot be enabled on UWP platform")
 endif()
 
 set(WITH_IPP OFF)
@@ -85,11 +101,6 @@ endif()
 set(WITH_TBB OFF)
 if("tbb" IN_LIST FEATURES)
   set(WITH_TBB ON)
-endif()
-
-set(WITH_VTK OFF)
-if("vtk" IN_LIST FEATURES)
-  set(WITH_VTK ON)
 endif()
 
 if("dnn" IN_LIST FEATURES)
@@ -128,6 +139,7 @@ if("contrib" IN_LIST FEATURES)
     HEAD_REF master
     PATCHES
       0005-add-missing-stdexcept-include.patch
+      0007-fix-vtk9-contrib.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
@@ -256,11 +268,6 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(WITH_TBB OFF)
   endif()
 
-  if (WITH_VTK)
-    message(WARNING "VTK is currently unsupported in this build configuration, turning it off")
-    set(WITH_VTK OFF)
-  endif()
-
   if (VCPKG_TARGET_IS_WINDOWS AND BUILD_opencv_ovis)
     message(WARNING "OVIS is currently unsupported in this build configuration, turning it off")
     set(BUILD_opencv_ovis OFF)
@@ -291,6 +298,7 @@ vcpkg_configure_cmake(
         -DOPENCV_CONFIG_INSTALL_PATH=share/opencv
         -DINSTALL_TO_MANGLED_PATHS=OFF
         -DOPENCV_FFMPEG_USE_FIND_PACKAGE=FFMPEG
+        -DOPENCV_FFMPEG_SKIP_BUILD_CHECK=TRUE
         -DCMAKE_DEBUG_POSTFIX=d
         -DOPENCV_DLLVERSION=
         -DOPENCV_DEBUG_POSTFIX=d
@@ -351,15 +359,13 @@ vcpkg_configure_cmake(
         -DWITH_OPENMP=${WITH_OPENMP}
         -DWITH_PROTOBUF=${BUILD_opencv_dnn}
         -DWITH_TBB=${WITH_TBB}
-        -DWITH_VTK=${WITH_VTK}
         -DWITH_OPENJPEG=OFF
-        ###### WITH PROPERTIES explicitly disabled, they have problems with libraries if already installed by user and that are "involuntarily" found during install
-        -DWITH_LAPACK=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
         ###### The following modules are disabled for UWP
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
+        -DBUILD_opencv_gapi=${DBUILD_opencv_gapi}
         ###### The following module is disabled because it's broken #https://github.com/opencv/opencv_contrib/issues/2307
         -DBUILD_opencv_rgbd=OFF
         ###### Additional build flags
@@ -406,7 +412,7 @@ find_dependency(Tesseract)")
   if(WITH_TBB)
     string(APPEND DEPS_STRING "\nfind_dependency(TBB)")
   endif()
-  if(WITH_VTK)
+  if("vtk" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(VTK)")
   endif()
   if("sfm" IN_LIST FEATURES)
@@ -418,8 +424,11 @@ find_dependency(Tesseract)")
   if("openexr" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
   endif()
+  if("lapack" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
+  endif()
   if(WITH_OPENMP)
-    string(APPEND DEPS_STRING "\nfind_dependency(OpenMP CONFIG)")
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
   endif()
   if(BUILD_opencv_ovis)
     string(APPEND DEPS_STRING "\nfind_dependency(Ogre)\nfind_dependency(Freetype)")

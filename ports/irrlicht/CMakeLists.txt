@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.8)
 project(Irrlicht)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-    
+
 # Irrlicht directories
 # -------------------------------------------------------------------------------------------------
 set(IRR_SRC_DIR "source/Irrlicht")
@@ -48,7 +48,11 @@ glob_c_cpp_sources(IRR_TOOL_FILES_FILE_TO_HEADER    ${IRR_TOOL_DIR}/FileToHeader
 glob_c_cpp_sources(IRR_TOOL_FILES_GUI_EDITOR        ${IRR_TOOL_DIR}/GUIEditor/)
 glob_c_cpp_sources(IRR_TOOL_FILES_FONT_TOOL         ${IRR_TOOL_DIR}/IrrFontTool/newFontTool/)
 glob_c_cpp_sources(IRR_TOOL_FILES_MESH_CONVERTER    ${IRR_TOOL_DIR}/MeshConverter/)
-    
+
+if(APPLE)
+    set_source_files_properties(${IRR_SRC_DIR}/COpenGLDriver.cpp PROPERTIES LANGUAGE OBJCXX)
+endif()
+
 # Group files
 # -------------------------------------------------------------------------------------------------
 source_group(Irrlicht\\engine           FILES ${IRR_SRC_FILES})
@@ -79,9 +83,9 @@ else()
     add_library(Irrlicht STATIC ${IRR_ALL_SRC_FILES})
 endif()
 
-target_link_libraries(Irrlicht PRIVATE 
-    ${PNG_LIBRARY} 
-    ${JPEG_LIBRARY} 
+target_link_libraries(Irrlicht PRIVATE
+    ${PNG_LIBRARY}
+    ${JPEG_LIBRARY}
     ${ZLIB_LIBRARY}
     ${BZIP2_LIBRARY}
     )
@@ -112,7 +116,7 @@ target_include_directories(Irrlicht
     )
 
 # I dont realy understand why this is necesary or what it is doing,
-# but it is necesarry to build and export a package. 
+# but it is necesarry to build and export a package.
 # See: https://cmake.org/cmake/help/v3.8/command/target_include_directories.html
 target_include_directories(Irrlicht PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -185,7 +189,7 @@ elseif(UNIX)
         PRIVATE -pipe
         PRIVATE -fno-exceptions
         PRIVATE -fno-strict-aliasing)
-    
+
     # Disable RTTI on C++ files only (no sense for C files)
     set_source_files_properties(${IRR_SRC_FILES} ${IRR_SRC_FILES_AESGLADMAN}
         PROPERTIES COMPILE_FLAGS -fno-rtti)
@@ -214,7 +218,7 @@ install(FILES ${IRR_SRC_FILES_INTERFACE} DESTINATION "include/irrlicht" CONFIGUR
 
 if(IRR_BUILD_TOOLS)
     install(
-        TARGETS FileToHeader GUIEditor FontTool MeshConverter 
+        TARGETS FileToHeader GUIEditor FontTool MeshConverter
         RUNTIME DESTINATION tools/irrlicht/
         CONFIGURATIONS Release
     )

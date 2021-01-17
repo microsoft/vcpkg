@@ -5,7 +5,7 @@ Check if one or more features are a part of a package installation.
 ## Usage
 ```cmake
 vcpkg_check_features(
-  OUT_FEATURE_OPTIONS <FEATURE_OPTIONS>  
+  OUT_FEATURE_OPTIONS <FEATURE_OPTIONS>
   [FEATURES
     <cuda> <WITH_CUDA>
     [<opencv> <WITH_OPENCV>]
@@ -16,27 +16,27 @@ vcpkg_check_features(
     ...]
 )
 ```
-`vcpkg_check_features()` accepts these parameters: 
+`vcpkg_check_features()` accepts these parameters:
 
-* `OUT_FEATURE_OPTIONS`:  
-  An output variable, the function will clear the variable passed to `OUT_FEATURE_OPTIONS` 
+* `OUT_FEATURE_OPTIONS`:
+  An output variable, the function will clear the variable passed to `OUT_FEATURE_OPTIONS`
   and then set it to contain a list of option definitions (`-D<OPTION_NAME>=ON|OFF`).
-  
-  This should be set to `FEATURE_OPTIONS` by convention.
-  
-* `FEATURES`:  
-  A list of (`FEATURE_NAME`, `OPTION_NAME`) pairs.  
-  For each `FEATURE_NAME` a definition is added to `OUT_FEATURE_OPTIONS` in the form of:   
-    
-    * `-D<OPTION_NAME>=ON`, if a feature is specified for installation,
-    * `-D<OPTION_NAME>=OFF`, otherwise. 
 
-* `INVERTED_FEATURES`:  
-  A list of (`FEATURE_NAME`, `OPTION_NAME`) pairs, uses reversed logic from `FEATURES`.  
-  For each `FEATURE_NAME` a definition is added to `OUT_FEATURE_OPTIONS` in the form of:   
-    
+  This should be set to `FEATURE_OPTIONS` by convention.
+
+* `FEATURES`:
+  A list of (`FEATURE_NAME`, `OPTION_NAME`) pairs.
+  For each `FEATURE_NAME` a definition is added to `OUT_FEATURE_OPTIONS` in the form of:
+
+    * `-D<OPTION_NAME>=ON`, if a feature is specified for installation,
+    * `-D<OPTION_NAME>=OFF`, otherwise.
+
+* `INVERTED_FEATURES`:
+  A list of (`FEATURE_NAME`, `OPTION_NAME`) pairs, uses reversed logic from `FEATURES`.
+  For each `FEATURE_NAME` a definition is added to `OUT_FEATURE_OPTIONS` in the form of:
+
     * `-D<OPTION_NAME>=OFF`, if a feature is specified for installation,
-    * `-D<OPTION_NAME>=ON`, otherwise. 
+    * `-D<OPTION_NAME>=ON`, otherwise.
 
 
 ## Notes
@@ -45,8 +45,8 @@ The `FEATURES` name parameter can be omitted if no `INVERTED_FEATURES` are used.
 
 At least one (`FEATURE_NAME`, `OPTION_NAME`) pair must be passed to the function call.
 
-Arguments passed to `FEATURES` and `INVERTED_FEATURES` are not validated to prevent duplication.  
-If the same (`FEATURE_NAME`, `OPTION_NAME`) pair is passed to both lists, 
+Arguments passed to `FEATURES` and `INVERTED_FEATURES` are not validated to prevent duplication.
+If the same (`FEATURE_NAME`, `OPTION_NAME`) pair is passed to both lists,
 two conflicting definitions are added to `OUT_FEATURE_OPTIONS`.
 
 
@@ -114,7 +114,7 @@ vcpkg_configure_cmake(
     # Expands to "-DWITH_CUDA=ON; -DBUILD_CUDA=ON; -DBUILD_GPU=ON"
     ${FEATURE_OPTIONS}
 )
-``` 
+```
 
 ### Example 4: Use regular and inverted features
 
@@ -136,7 +136,7 @@ vcpkg_configure_cmake(
     # Expands to "-DWITH_TBB=ON; -DROCKSDB_IGNORE_PACKAGE_TBB=OFF"
     ${FEATURE_OPTIONS}
 )
-``` 
+```
 
 ## Examples in portfiles
 
@@ -172,8 +172,10 @@ function(vcpkg_check_features)
                 set(_vcf_FEATURE_VARIABLE ${_vcf_ARG})
                 if(${_vcf_FEATURE_NAME} IN_LIST FEATURES)
                     list(APPEND _vcf_FEATURE_OPTIONS "-D${_vcf_FEATURE_VARIABLE}=${_set_if}")
+                    set(${_vcf_FEATURE_VARIABLE} "${_set_if}" PARENT_SCOPE)
                 else()
                     list(APPEND _vcf_FEATURE_OPTIONS "-D${_vcf_FEATURE_VARIABLE}=${_set_else}")
+                    set(${_vcf_FEATURE_VARIABLE} "${_set_else}" PARENT_SCOPE)
                 endif()
                 set(_vcf_IS_FEATURE_NAME_ARG ON)
             endif()
@@ -185,7 +187,7 @@ function(vcpkg_check_features)
     if (DEFINED _vcf_FEATURES OR DEFINED _vcf_INVERTED_FEATURES)
         _check_features(_vcf_FEATURES ON OFF)
         _check_features(_vcf_INVERTED_FEATURES OFF ON)
-    else() 
+    else()
         # Skip arguments that correspond to OUT_FEATURE_OPTIONS and its value.
         list(SUBLIST ARGN 2 -1 _vcf_ARGN)
         _check_features(_vcf_ARGN ON OFF)

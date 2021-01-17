@@ -356,7 +356,7 @@ namespace vcpkg::Dependencies
 
     std::string to_output_string(RequestType request_type, const CStringView s)
     {
-        return to_output_string(request_type, s, {Build::UseHeadVersion::NO}, {}, {}, {});
+        return to_output_string(request_type, s, {}, {}, {}, {});
     }
 
     InstallPlanAction::InstallPlanAction() noexcept
@@ -1173,8 +1173,12 @@ namespace vcpkg::Dependencies
         public:
             VersionedPackageGraph(const IVersionedPortfileProvider& ver_provider,
                                   const IBaselineProvider& base_provider,
+                                  const PortFileProvider::IOverlayProvider& oprovider,
                                   const CMakeVars::CMakeVarProvider& var_provider)
-                : m_ver_provider(ver_provider), m_base_provider(base_provider), m_var_provider(var_provider)
+                : m_ver_provider(ver_provider)
+                , m_base_provider(base_provider)
+                , m_o_provider(oprovider)
+                , m_var_provider(var_provider)
             {
             }
 
@@ -1187,6 +1191,7 @@ namespace vcpkg::Dependencies
         private:
             const IVersionedPortfileProvider& m_ver_provider;
             const IBaselineProvider& m_base_provider;
+            const PortFileProvider::IOverlayProvider& m_o_provider;
             const CMakeVars::CMakeVarProvider& m_var_provider;
 
             struct DepSpec
@@ -1465,12 +1470,27 @@ namespace vcpkg::Dependencies
                                                    const Versions::Version& version,
                                                    const std::string& origin)
         {
-            auto over_it = m_overrides.find(ref.first.name());
-            if (over_it != m_overrides.end() && over_it->second != version)
+            ExpectedS<const vcpkg::SourceControlFileLocation&> maybe_scfl;
+
+            auto maybe_overlay = m_o_provider.get_control_file(ref.first.name());
+            if (auto p_overlay = maybe_overlay.get())
             {
-                return add_constraint(ref, over_it->second, origin);
+                auto overlay_version = to_version(*p_overlay->source_control_file);
+                if (version != overlay_version)
+                {
+                    return add_constraint(ref, overlay_version, origin);
+                }
+                maybe_scfl = *p_overlay;
             }
-            auto maybe_scfl = m_ver_provider.get_control_file({ref.first.name(), version});
+            else
+            {
+                auto over_it = m_overrides.find(ref.first.name());
+                if (over_it != m_overrides.end() && over_it->second != version)
+                {
+                    return add_constraint(ref, over_it->second, origin);
+                }
+                maybe_scfl = m_ver_provider.get_control_file({ref.first.name(), version});
+            }
 
             if (auto p_scfl = maybe_scfl.get())
             {
@@ -1599,6 +1619,15 @@ namespace vcpkg::Dependencies
 
                 auto& node = emplace_package(spec);
 
+                auto maybe_overlay = m_o_provider.get_control_file(dep.name);
+                if (auto p_overlay = maybe_overlay.get())
+                {
+                    auto ver = to_version(*p_overlay->source_control_file);
+                    m_roots.push_back(DepSpec{spec, ver, dep.features});
+                    add_constraint(node, ver, toplevel.name());
+                    continue;
+                }
+
                 auto over_it = m_overrides.find(dep.name);
                 if (over_it != m_overrides.end())
                 {
@@ -1690,10 +1719,13 @@ namespace vcpkg::Dependencies
             auto push = [&emitted, this, &stack](const PackageSpec& spec,
                                                  const Versions::Version& new_ver) -> Optional<std::string> {
                 auto&& node = m_graph[spec];
+                auto overlay = m_o_provider.get_control_file(spec.name());
                 auto over_it = m_overrides.find(spec.name());
 
                 VersionedPackageGraph::VersionSchemeInfo* p_vnode;
-                if (over_it != m_overrides.end())
+                if (auto p_overlay = overlay.get())
+                    p_vnode = node.get_node(to_version(*p_overlay->source_control_file));
+                else if (over_it != m_overrides.end())
                     p_vnode = node.get_node(over_it->second);
                 else
                     p_vnode = node.get_node(new_ver);
@@ -1704,7 +1736,7 @@ namespace vcpkg::Dependencies
                 if (p.second)
                 {
                     // Newly inserted
-                    if (over_it == m_overrides.end())
+                    if (!overlay && over_it == m_overrides.end())
                     {
                         // Not overridden -- Compare against baseline
                         if (auto baseline = m_base_provider.get_baseline_version(spec.name()))
@@ -1818,12 +1850,13 @@ namespace vcpkg::Dependencies
 
     ExpectedS<ActionPlan> create_versioned_install_plan(const PortFileProvider::IVersionedPortfileProvider& provider,
                                                         const PortFileProvider::IBaselineProvider& bprovider,
+                                                        const PortFileProvider::IOverlayProvider& oprovider,
                                                         const CMakeVars::CMakeVarProvider& var_provider,
                                                         const std::vector<Dependency>& deps,
                                                         const std::vector<DependencyOverride>& overrides,
                                                         const PackageSpec& toplevel)
     {
-        VersionedPackageGraph vpg(provider, bprovider, var_provider);
+        VersionedPackageGraph vpg(provider, bprovider, oprovider, var_provider);
         for (auto&& o : overrides)
             vpg.add_override(o.name, {o.version, o.port_version});
         vpg.add_roots(deps, toplevel);

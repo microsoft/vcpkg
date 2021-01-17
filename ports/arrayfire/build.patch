@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1f30a5b3..f93e4ed9 100644
+index 1f30a5b3..7b62e003 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -104,18 +104,11 @@ mark_as_advanced(
+@@ -104,8 +104,6 @@ mark_as_advanced(
    CUDA_HOST_COMPILER
    CUDA_USE_STATIC_CUDA_RUNTIME
    CUDA_rt_LIBRARY
@@ -11,17 +11,7 @@ index 1f30a5b3..f93e4ed9 100644
    ADDR2LINE_PROGRAM
    Backtrace_LIBRARY
    AF_WITH_STATIC_MKL
-   )
- 
--#Configure forge submodule
--#forge is included in ALL target if AF_BUILD_FORGE is ON
--#otherwise, forge is not built at all
--include(AFconfigure_forge_submodule)
--
- configure_file(
-     ${ArrayFire_SOURCE_DIR}/CMakeModules/version.hpp.in
-     ${ArrayFire_BINARY_DIR}/version.hpp
-@@ -159,9 +152,7 @@ if(NOT LAPACK_FOUND)
+@@ -159,9 +157,7 @@ if(NOT LAPACK_FOUND)
      endif()
  endif()
  
@@ -32,7 +22,7 @@ index 1f30a5b3..f93e4ed9 100644
  add_subdirectory(src/backend/common)
  add_subdirectory(src/api/c)
  add_subdirectory(src/api/cpp)
-@@ -269,10 +260,6 @@ install(DIRECTORY examples/ #NOTE The slash at the end is important
+@@ -269,10 +265,6 @@ install(DIRECTORY examples/ #NOTE The slash at the end is important
      DESTINATION ${AF_INSTALL_EXAMPLE_DIR}
      COMPONENT examples)
  
@@ -62,6 +52,28 @@ index 2c7b96ea..b5006ee0 100644
  endif()
  
  # Libraries
+diff --git a/CMakeModules/AFconfigure_forge_submodule.cmake b/CMakeModules/AFconfigure_forge_submodule.cmake
+index d16849f0..36ab01b6 100644
+--- a/CMakeModules/AFconfigure_forge_submodule.cmake
++++ b/CMakeModules/AFconfigure_forge_submodule.cmake
+@@ -39,13 +39,13 @@ if(AF_BUILD_FORGE)
+       COMPONENT common_backend_dependencies)
+   set_property(TARGET forge APPEND_STRING PROPERTY COMPILE_FLAGS " -w")
+ else(AF_BUILD_FORGE)
+-  set(FG_VERSION "1.0.0")
++  set(FG_VERSION "1.0.5")
+   set(FG_VERSION_MAJOR 1)
+   set(FG_VERSION_MINOR 0)
+-  set(FG_VERSION_PATCH 0)
++  set(FG_VERSION_PATCH 5)
+   set(FG_API_VERSION_CURRENT 10)
+   configure_file(
+-    ${PROJECT_SOURCE_DIR}/extern/forge/CMakeModules/version.h.in
+-    ${PROJECT_BINARY_DIR}/extern/forge/include/fg/version.h
++    ${AF_FORGE_PATH}/CMakeModules/version.h.in
++    ${AF_FORGE_PATH}/include/fg/version.h
+     )
+ endif(AF_BUILD_FORGE)
 diff --git a/src/api/unified/CMakeLists.txt b/src/api/unified/CMakeLists.txt
 index 967eaa63..ff04392c 100644
 --- a/src/api/unified/CMakeLists.txt
@@ -76,7 +88,7 @@ index 967eaa63..ff04392c 100644
      Boost::boost
      ${CMAKE_DL_LIBS}
 diff --git a/src/backend/common/CMakeLists.txt b/src/backend/common/CMakeLists.txt
-index c9fe0889..4fdfeb66 100644
+index c9fe0889..f97bf0e8 100644
 --- a/src/backend/common/CMakeLists.txt
 +++ b/src/backend/common/CMakeLists.txt
 @@ -77,12 +77,15 @@ else()
@@ -97,8 +109,11 @@ index c9fe0889..4fdfeb66 100644
  )
  
  if(AF_BUILD_FORGE)
-@@ -95,8 +98,6 @@ target_include_directories(afcommon_interface
+@@ -93,10 +96,9 @@ target_include_directories(afcommon_interface
+   INTERFACE
+     ${ArrayFire_SOURCE_DIR}/src/backend
      ${ArrayFire_BINARY_DIR}
++    ${AF_FORGE_PATH}/include # passed via vcpkg
    SYSTEM INTERFACE
      $<$<PLATFORM_ID:Darwin>:${OPENGL_INCLUDE_DIR}>
 -    ${ArrayFire_SOURCE_DIR}/extern/forge/include

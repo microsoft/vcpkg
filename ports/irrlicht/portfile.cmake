@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "osx" "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -24,7 +24,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIB)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
-    OPTIONS 
+    OPTIONS
         -DIRR_SHARED_LIB=${SHARED_LIB}
         ${FEATURE_OPTIONS}
 )

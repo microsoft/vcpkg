@@ -1,0 +1,23 @@
+{
+  "name": "boost-icl",
+  "version-string": "1.75.0",
+  "description": "Boost icl module",
+  "homepage": "https://github.com/boostorg/icl",
+  "dependencies": [
+    "boost-assert",
+    "boost-concept-check",
+    "boost-config",
+    "boost-container",
+    "boost-date-time",
+    "boost-detail",
+    "boost-iterator",
+    "boost-move",
+    "boost-mpl",
+    "boost-range",
+    "boost-rational",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

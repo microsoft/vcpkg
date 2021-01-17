@@ -60,7 +60,6 @@ Additional options passed to msbuild for Debug builds. These are in addition to 
 ## Examples
 
 * [chakracore](https://github.com/Microsoft/vcpkg/blob/master/ports/chakracore/portfile.cmake)
-* [cppunit](https://github.com/Microsoft/vcpkg/blob/master/ports/cppunit/portfile.cmake)
 #]===]
 
 function(vcpkg_build_msbuild)

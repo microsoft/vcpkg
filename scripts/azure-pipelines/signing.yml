@@ -52,6 +52,10 @@ jobs:
       inputs:
         InputType: 'CommandLine'
         arguments: 'analyze "$(Build.StagingDirectory)\vcpkg.exe"'
+    - task: BinSkim@3
+      inputs:
+        InputType: 'CommandLine'
+        arguments: 'analyze "$(Build.StagingDirectory)\tls12-download.exe"'
     - task: PublishBuildArtifacts@1
       displayName: 'Publish vcpkg.exe'
       inputs:
@@ -62,6 +66,18 @@ jobs:
       displayName: 'Publish vcpkg.pdb'
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)\vcpkg.pdb'
+        ArtifactName: 'Windows'
+        publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish tls12-download.exe'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\tls12-download.exe'
+        ArtifactName: 'Windows'
+        publishLocation: 'Container'
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish tls12-download.pdb'
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)\tls12-download.pdb'
         ArtifactName: 'Windows'
         publishLocation: 'Container'
     - task: MicroBuildCleanup@1
