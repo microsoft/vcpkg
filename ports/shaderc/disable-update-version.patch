@@ -53,3 +53,16 @@ index 48f9991..1f77aa9 100644
    SPIRV-Tools-opt ${CMAKE_THREAD_LIBS_INIT})
  
  shaderc_add_tests(
+diff --git a/glslc/CMakeLists.txt b/glslc/CMakeLists.txt
+index 31664d1..05692aa 100644
+--- a/glslc/CMakeLists.txt
++++ b/glslc/CMakeLists.txt
+@@ -43,7 +43,7 @@ if (SHADERC_ENABLE_WGSL_OUTPUT)
+ endif(SHADERC_ENABLE_WGSL_OUTPUT)
+ 
+ target_link_libraries(glslc PRIVATE
+-  glslang OSDependent OGLCompiler HLSL glslang SPIRV    # Glslang libraries
++  glslang OSDependent OGLCompiler HLSL GenericCodeGen MachineIndependent glslang SPIRV    # Glslang libraries
+   $<$<BOOL:${SHADERC_ENABLE_WGSL_OUTPUT}>:libtint>      # Tint libraries, optional
+   shaderc_util shaderc                                  # internal Shaderc libraries
+   ${CMAKE_THREAD_LIBS_INIT})
