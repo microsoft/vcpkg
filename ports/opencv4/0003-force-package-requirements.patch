@@ -1,5 +1,5 @@
 diff --git a/cmake/OpenCVFindLibsGrfmt.cmake b/cmake/OpenCVFindLibsGrfmt.cmake
-index 0beaf19..3ba1ebd 100644
+index 22e20b6..5d1431c 100644
 --- a/cmake/OpenCVFindLibsGrfmt.cmake
 +++ b/cmake/OpenCVFindLibsGrfmt.cmake
 @@ -6,7 +6,7 @@
@@ -38,7 +38,7 @@ index 0beaf19..3ba1ebd 100644
      if(WEBP_FOUND)
        set(HAVE_WEBP 1)
      endif()
-@@ -173,7 +173,7 @@ if(WITH_JASPER AND NOT HAVE_OPENJPEG)
+@@ -186,7 +186,7 @@ if(WITH_JASPER AND NOT HAVE_OPENJPEG)
    if(BUILD_JASPER)
      ocv_clear_vars(JASPER_FOUND)
    else()
@@ -47,7 +47,7 @@ index 0beaf19..3ba1ebd 100644
    endif()
  
    if(NOT JASPER_FOUND)
-@@ -197,7 +197,7 @@ if(WITH_PNG)
+@@ -210,7 +210,7 @@ if(WITH_PNG)
    if(BUILD_PNG)
      ocv_clear_vars(PNG_FOUND)
    else()
@@ -56,7 +56,7 @@ index 0beaf19..3ba1ebd 100644
      if(PNG_FOUND)
        include(CheckIncludeFile)
        check_include_file("${PNG_PNG_INCLUDE_DIR}/libpng/png.h" HAVE_LIBPNG_PNG_H)
-@@ -228,7 +228,7 @@ endif()
+@@ -241,7 +241,7 @@ endif()
  if(WITH_OPENEXR)
    ocv_clear_vars(HAVE_OPENEXR)
    if(NOT BUILD_OPENEXR)
@@ -65,7 +65,7 @@ index 0beaf19..3ba1ebd 100644
    endif()
  
    if(OPENEXR_FOUND)
-@@ -246,7 +246,7 @@ endif()
+@@ -259,7 +259,7 @@ endif()
  
  # --- GDAL (optional) ---
  if(WITH_GDAL)
@@ -74,7 +74,7 @@ index 0beaf19..3ba1ebd 100644
  
      if(NOT GDAL_FOUND)
          set(HAVE_GDAL NO)
-@@ -258,7 +258,7 @@ if(WITH_GDAL)
+@@ -271,7 +271,7 @@ if(WITH_GDAL)
  endif()
  
  if (WITH_GDCM)

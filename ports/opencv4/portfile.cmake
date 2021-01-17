@@ -15,14 +15,12 @@ vcpkg_from_github(
     SHA512 c34100f3f3fe45f2115975350d23288a3badb32864ba0cbd32512387416d1cf10d16d3ef5f3d089d6a1c2be587d788d33997513fc015dbf7d774a622f2d3811f
     HEAD_REF master
     PATCHES
-      #0001-disable-downloading.patch
-      #0002-install-options.patch
-      #0003-force-package-requirements.patch
-      #0004-fix-policy-CMP0057.patch
-      #0006-jpeg2000_getref.patch
-      #0008-fix-vtk9.patch
-      #0009-fix-uwp.patch
-      #0010-fix-interface_link_libraries.patch # Remove this patch when the next update
+      0001-disable-downloading.patch
+      0002-install-options.patch
+      0003-force-package-requirements.patch
+      0004-fix-policy-CMP0057.patch
+      0009-fix-uwp.patch
+      0010-fix-interface_link_libraries.patch # Remove this patch when the next update
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
@@ -138,8 +136,7 @@ if("contrib" IN_LIST FEATURES)
     SHA512 b2ae72e920c78472fd677281b8dd6f25872399d8ade97b0d3b0fc50bbabea8c00ea849d87bfb311ac148cef663481d0c89c0f6875578c052c1cc7ddcd70e6e17
     HEAD_REF master
     PATCHES
-      #0005-add-missing-stdexcept-include.patch
-      #0007-fix-vtk9-contrib.patch
+      0005-add-missing-stdexcept-include.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
