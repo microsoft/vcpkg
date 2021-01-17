@@ -1,0 +1,129 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 993f15d..ef695e5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -270,18 +270,28 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "^Linux")
+         include_directories(${aarch64_linux_include})
+     endif()
+ endif()
++
++if(MNN_OPENCL)
++  find_package(OpenCL REQUIRED)
++endif()
++find_package(RapidJSON CONFIG REQUIRED)
++find_path(STB_INCLUDE_DIRS "stb.h")
++find_package(Flatbuffers CONFIG REQUIRED)
+ include_directories(${CMAKE_CURRENT_LIST_DIR}/include/
+                     ${CMAKE_CURRENT_LIST_DIR}/source/
+                     ${CMAKE_CURRENT_LIST_DIR}/express/
+                     ${CMAKE_CURRENT_LIST_DIR}/tools/
+                     ${CMAKE_CURRENT_LIST_DIR}/schema/current/
+-                    ${CMAKE_CURRENT_LIST_DIR}/3rd_party/
+-                    ${CMAKE_CURRENT_LIST_DIR}/3rd_party/flatbuffers/include
++                    # ${CMAKE_CURRENT_LIST_DIR}/3rd_party/
++                    # ${CMAKE_CURRENT_LIST_DIR}/3rd_party/flatbuffers/include
++                    # ${CMAKE_CURRENT_LIST_DIR}/3rd_party/imageHelper
++                    # ${CMAKE_CURRENT_LIST_DIR}/3rd_party/OpenCLHeaders/
+                     ${CMAKE_CURRENT_LIST_DIR}/3rd_party/half
+-                    ${CMAKE_CURRENT_LIST_DIR}/3rd_party/imageHelper
+-                    ${CMAKE_CURRENT_LIST_DIR}/3rd_party/OpenCLHeaders/
++                    ${RAPIDJSON_INCLUDE_DIRS}
++                    ${STB_INCLUDE_DIRS}
++                    ${OpenCL_INCLUDE_DIRS}
+                   )
+-
++link_libraries(flatbuffers::flatbuffers ${OpenCL_LIBRARIES})
+ 
+ set(MNN_OBJECTS_TO_LINK "")
+ set(MNN_TARGETS "")
+@@ -631,10 +641,13 @@ ELSEIF(NOT APPLE)
+   INSTALL(FILES ${MNN_PUB_HDRS} DESTINATION include/MNN/)
+   INSTALL(FILES ${MNN_EXPR_PUB_HDRS} DESTINATION include/MNN/expr/)
+   install(TARGETS MNN
++      RUNTIME DESTINATION bin # for MNN.dll
+       LIBRARY DESTINATION lib
+       ARCHIVE DESTINATION lib
+   )
+ ELSE()
++  INSTALL(FILES ${MNN_PUB_HDRS} DESTINATION include/MNN/)
++  INSTALL(FILES ${MNN_EXPR_PUB_HDRS} DESTINATION include/MNN/expr/)
+   install(TARGETS MNN
+       LIBRARY DESTINATION lib
+       ARCHIVE DESTINATION lib
+@@ -648,5 +661,6 @@ ELSE()
+   ENDFOREACH()
+   IF(MNN_METAL)
+     SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/mnn.metallib PROPERTIES MACOSX_PACKAGE_LOCATION Resources/)
++    INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/mnn.metallib DESTINATION bin)
+   ENDIF()
+ ENDIF()
+diff --git a/tools/converter/CMakeLists.txt b/tools/converter/CMakeLists.txt
+index 2d5133a..827e314 100644
+--- a/tools/converter/CMakeLists.txt
++++ b/tools/converter/CMakeLists.txt
+@@ -39,10 +39,10 @@ IF(MNN_BUILD_CONVERTER)
+     ${CMAKE_CURRENT_LIST_DIR}/source/config.cpp
+   )
+   IF(MNN_BUILD_SHARED_LIBS)
+-    add_library(MNNConvertDeps SHARED ${COMMON_SRC} ${MNN_CONVERTER_BACKENDS_OBJECTS} ${CMAKE_CURRENT_LIST_DIR}/../../3rd_party/flatbuffers/src/util.cpp $<TARGET_OBJECTS:MNNUtils>)
++    add_library(MNNConvertDeps SHARED ${COMMON_SRC} ${MNN_CONVERTER_BACKENDS_OBJECTS} $<TARGET_OBJECTS:MNNUtils>)
+     add_dependencies(MNNConvertDeps MNN)
+   ELSE()
+-    add_library(MNNConvertDeps STATIC ${COMMON_SRC} ${MNN_CONVERTER_BACKENDS_OBJECTS} ${CMAKE_CURRENT_LIST_DIR}/../../3rd_party/flatbuffers/src/util.cpp)
++    add_library(MNNConvertDeps STATIC ${COMMON_SRC} ${MNN_CONVERTER_BACKENDS_OBJECTS})
+   ENDIF()
+   
+   
+@@ -68,5 +68,7 @@ IF(MNN_BUILD_CONVERTER)
+     add_executable(TestConvertResult ${CMAKE_CURRENT_LIST_DIR}/source/TestConvertResult.cpp)
+     target_link_libraries(TestConvertResult MNNConvertDeps)
+     target_link_libraries(MNNConvert MNNConvertDeps)
++    install(TARGETS TestConvertResult RUNTIME DESTINATION bin)
+   ENDIF()
++  install(TARGETS MNNDump2Json MNNConvert RUNTIME DESTINATION bin)
+ ENDIF()
+diff --git a/tools/cpp/CMakeLists.txt b/tools/cpp/CMakeLists.txt
+index def574c..eb83133 100644
+--- a/tools/cpp/CMakeLists.txt
++++ b/tools/cpp/CMakeLists.txt
+@@ -53,3 +53,5 @@ if (MSVC)
+         endif()
+     endforeach()
+ endif()
++
++install(TARGETS ${MNN_CPP_TOOLS} RUNTIME DESTINATION bin)
+diff --git a/tools/evaluation/CMakeLists.txt b/tools/evaluation/CMakeLists.txt
+index 8773372..3615b5c 100644
+--- a/tools/evaluation/CMakeLists.txt
++++ b/tools/evaluation/CMakeLists.txt
+@@ -7,4 +7,5 @@ IF(MNN_EVALUATION)
+         target_link_options(classficationTopkEval.out PRIVATE /WHOLEARCHIVE:$<TARGET_FILE:${DEPEND}>)
+       endforeach ()
+   endif()
++  install(TARGETS classficationTopkEval.out RUNTIME DESTINATION bin)
+ ENDIF()
+\ No newline at end of file
+diff --git a/tools/quantization/CMakeLists.txt b/tools/quantization/CMakeLists.txt
+index 1e84ee0..00aecd7 100644
+--- a/tools/quantization/CMakeLists.txt
++++ b/tools/quantization/CMakeLists.txt
+@@ -1,3 +1,5 @@
+ file(GLOB QUANFILES ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
+ add_executable(quantized.out ${QUANFILES})
+ target_link_libraries(quantized.out ${MNN_DEPS})
++
++install(TARGETS quantized.out RUNTIME DESTINATION bin)
+diff --git a/tools/train/CMakeLists.txt b/tools/train/CMakeLists.txt
+index 48f355b..6848249 100644
+--- a/tools/train/CMakeLists.txt
++++ b/tools/train/CMakeLists.txt
+@@ -59,3 +59,9 @@ if (MNN_USE_OPENCV)
+     add_definitions(-D MNN_USE_OPENCV)
+     target_link_libraries(runTrainDemo.out ${OpenCV_LIBS})
+ endif()
++
++install(TARGETS MNNTrain transformer.out train.out dataTransformer.out runTrainDemo.out
++    RUNTIME DESTINATION bin
++    LIBRARY DESTINATION lib
++    ARCHIVE DESTINATION lib
++)
