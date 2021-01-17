@@ -2185,8 +2185,8 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "2019-03-05-1",
-      "port-version": 0
+      "baseline": "2019-03-05",
+      "port-version": 2
     },
     "glui": {
       "baseline": "2019-11-30",
