@@ -1,7 +1,5 @@
-vcpkg_fail_port_install(MESSAGE "ms-gltf currently only supports Windows and Mac platforms" ON_TARGET "linux")
-
+vcpkg_fail_port_install(MESSAGE "ms-gltf currently only supports Windows and Mac platforms" ON_TARGET "linux" "ios")
 if(VCPKG_TARGET_IS_WINDOWS)
-    # The release doesn't have `__declspec(dllexport)`.
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
@@ -15,21 +13,18 @@ vcpkg_from_github(
         fix-install.patch
 )
 
-# This part will configure build options with tests/samples
+# note: Test/Sample executables won't be installed
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         test    ENABLE_UNIT_TESTS
         samples ENABLE_SAMPLES
 )
 
+# note: Platform-native buildsystem will be more helpful to launch/debug the tests/samples.
+# note: The PDB file path is making Ninja fails to install. 
+#       For Windows, we rely on /MP. The other platforms should be able to build with PREFER_NINJA.
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    # note: Platform-native buildsystem will be more helpful to launch/debug the tests/samples.
-    # note: The PDB file path is making Ninja fails to install. 
-    #       There is an /MP option, simply disable PREFER_NINJA. The other platforms should be able to build with this.
-    # PREFER_NINJA
-    OPTIONS
-        ${FEATURE_OPTIONS} # ENABLE_UNIT_TESTS:BOOL=ON|OFF ENABLE_SAMPLES:BOOL=ON|OFF
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

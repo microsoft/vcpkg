@@ -11,7 +11,7 @@
       "description": "Build with GLTF samples"
     },
     "test": {
-      "description": "Build with test programs",
+      "description": "Build test programs",
       "dependencies": [
         "gtest"
       ]
