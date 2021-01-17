@@ -91,9 +91,9 @@ namespace vcpkg::PortFileProvider
         }
     }
 
-    static std::unique_ptr<OverlayRegistryEntry> try_load_overlay_port(const Files::Filesystem& fs,
-                                                                       View<fs::path> overlay_ports,
-                                                                       const std::string& spec)
+    static Optional<std::unique_ptr<SourceControlFileLocation>> try_load_overlay_port(const Files::Filesystem& fs,
+                                                                                      View<fs::path> overlay_ports,
+                                                                                      const std::string& spec)
     {
         for (auto&& ports_dir : overlay_ports)
         {
@@ -106,7 +106,7 @@ namespace vcpkg::PortFileProvider
                     auto& scf = *scfp;
                     if (scf->core_paragraph->name == spec)
                     {
-                        return std::make_unique<OverlayRegistryEntry>(fs::path(ports_dir), scf->to_versiont());
+                        return std::make_unique<SourceControlFileLocation>(std::move(scf), fs::path(ports_dir));
                     }
                 }
                 else
@@ -128,7 +128,7 @@ namespace vcpkg::PortFileProvider
                     auto& scf = *scfp;
                     if (scf->core_paragraph->name == spec)
                     {
-                        return std::make_unique<OverlayRegistryEntry>(std::move(ports_spec), scf->to_versiont());
+                        return std::make_unique<SourceControlFileLocation>(std::move(scf), std::move(ports_spec));
                     }
                     Checks::exit_with_message(VCPKG_LINE_INFO,
                                               "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
@@ -144,7 +144,7 @@ namespace vcpkg::PortFileProvider
                 }
             }
         }
-        return nullptr;
+        return nullopt;
     }
 
     static std::pair<std::unique_ptr<RegistryEntry>, Optional<VersionT>> try_load_registry_port_and_baseline(
@@ -185,37 +185,31 @@ namespace vcpkg::PortFileProvider
         {
             const auto& fs = paths.get_filesystem();
 
-            std::unique_ptr<RegistryEntry> port;
-            VersionT port_version;
-
             auto maybe_overlay_port = try_load_overlay_port(fs, overlay_ports, spec);
-            if (maybe_overlay_port)
+            if (auto overlay_port = maybe_overlay_port.get())
             {
-                port_version = maybe_overlay_port->version;
-                port = std::move(maybe_overlay_port);
+                cache_it = cache.emplace(spec, std::move(**overlay_port)).first;
             }
             else
             {
-                auto maybe_registry_port = try_load_registry_port_and_baseline(paths, spec);
-                port = std::move(maybe_registry_port.first);
-                if (auto version = maybe_registry_port.second.get())
+                auto entry_and_baseline = try_load_registry_port_and_baseline(paths, spec);
+                auto& entry = entry_and_baseline.first;
+                if (!entry)
                 {
-                    port_version = std::move(*version);
+                    return Strings::concat("Error: could not find definition for port ", spec);
                 }
-                else if (port)
+                if (!entry_and_baseline.second.has_value())
                 {
-                    return std::string("No baseline version available.");
+                    return Strings::concat("Error: no baseline version available for port ", spec);
                 }
-            }
+                const auto& version = *entry_and_baseline.second.get();
 
-            if (port)
-            {
-                auto maybe_port_path = port->get_path_to_version(paths, port_version);
+                auto maybe_port_path = entry->get_path_to_version(paths, version);
                 if (!maybe_port_path.has_value())
                 {
                     return std::move(maybe_port_path.error());
                 }
-                auto port_path = std::move(maybe_port_path).value_or_exit(VCPKG_LINE_INFO);
+                const auto& port_path = *maybe_port_path.get();
 
                 auto maybe_scfl = Paragraphs::try_load_port(fs, port_path);
                 if (auto p = maybe_scfl.get())
@@ -236,14 +230,8 @@ namespace vcpkg::PortFileProvider
             }
         }
 
-        if (cache_it == cache.end())
-        {
-            return std::string("Port definition not found");
-        }
-        else
-        {
-            return cache_it->second;
-        }
+        Checks::check_exit(VCPKG_LINE_INFO, cache_it != cache.end());
+        return cache_it->second;
     }
 
     std::vector<const SourceControlFileLocation*> PathsPortFileProvider::load_all_control_files() const
@@ -447,24 +435,14 @@ namespace vcpkg::PortFileProvider
                 {
                     auto s_port_name = port_name.to_string();
                     auto maybe_overlay = try_load_overlay_port(paths.get_filesystem(), m_overlay_ports, s_port_name);
-                    Optional<SourceControlFileLocation> v;
-                    if (maybe_overlay)
+                    if (auto overlay = maybe_overlay.get())
                     {
-                        auto maybe_scf = Paragraphs::try_load_port(paths.get_filesystem(), maybe_overlay->path);
-                        if (auto scf = maybe_scf.get())
-                        {
-                            v = SourceControlFileLocation{std::move(*scf), maybe_overlay->path};
-                        }
-                        else
-                        {
-                            print_error_message(maybe_scf.error());
-                            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                                      "Error: Failed to load port %s from %s",
-                                                      port_name,
-                                                      fs::u8string(maybe_overlay->path));
-                        }
+                        it = m_overlay_cache.emplace(std::move(s_port_name), std::move(**overlay)).first;
                     }
-                    it = m_overlay_cache.emplace(std::move(s_port_name), std::move(v)).first;
+                    else
+                    {
+                        it = m_overlay_cache.emplace(std::move(s_port_name), nullopt).first;
+                    }
                 }
                 return it->second;
             }
