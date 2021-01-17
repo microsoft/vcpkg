@@ -22,7 +22,7 @@ index 0b007d45..5bba8245 100644
 +	install(EXPORT glslangConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
  endif(ENABLE_GLSLANG_INSTALL)
 diff --git a/SPIRV/CMakeLists.txt b/SPIRV/CMakeLists.txt
-index d699dadd..b5430f22 100644
+index d699dadd..f21dfdc3 100644
 --- a/SPIRV/CMakeLists.txt
 +++ b/SPIRV/CMakeLists.txt
 @@ -111,28 +111,28 @@ endif(WIN32)
@@ -58,7 +58,8 @@ index d699dadd..b5430f22 100644
 -    install(EXPORT SPIRVTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
 +    install(EXPORT glslangConfig DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
  
-     install(FILES ${HEADERS} ${SPVREMAP_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/glslang/SPIRV/)
+-    install(FILES ${HEADERS} ${SPVREMAP_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/glslang/SPIRV/)
++    install(FILES ${HEADERS} ${SPVREMAP_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/SPIRV/)
  endif(ENABLE_GLSLANG_INSTALL)
 diff --git a/hlsl/CMakeLists.txt b/hlsl/CMakeLists.txt
 index 62faa195..0fa0e6b7 100644
