@@ -6,4 +6,5 @@ namespace vcpkg::PortFileProvider
     struct PathsPortFileProvider;
     struct IVersionedPortfileProvider;
     struct IBaselineProvider;
+    struct IOverlayProvider;
 }

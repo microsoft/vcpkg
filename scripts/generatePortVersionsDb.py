@@ -35,7 +35,7 @@ def generate_port_versions_file(port_name):
         env = os.environ.copy()
         env['GIT_OPTIONAL_LOCKS'] = '0'
         output = subprocess.run(
-            [os.path.join(SCRIPT_DIRECTORY, '../vcpkg.exe'),
+            [os.path.join(SCRIPT_DIRECTORY, '../vcpkg'),
              'x-history', port_name, '--x-json', f'--output={output_file_path}'],
             capture_output=True, encoding='utf-8', env=env)
         if output.returncode != 0:
