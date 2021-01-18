@@ -32,7 +32,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-		${EXTRA_ARGS}
+        ${EXTRA_ARGS}
         ${FEATURE_OPTIONS}
         -DWITH_EXAMPLES=OFF
         -DUNIT_TESTING=OFF
