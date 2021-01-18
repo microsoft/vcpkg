@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         patch-relocatable-rpath.patch
         fix-AWSSDKCONFIG.patch
+        allow-vcpkg-chaining.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -19,6 +20,15 @@ include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")
+elseif (VCPKG_TARGET_IS_ANDROID)
+    find_package(Git)
+
+    set(EXTRA_ARGS "-DTARGET_ARCH=ANDROID"
+            "-DGIT_EXECUTABLE=${GIT_EXECUTABLE}"
+            "-DGIT_FOUND=${GIT_FOUND}"
+            "-DGIT_VERSION_STRING=${GIT_VERSION_STRING}"
+            "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
+            )
 else()
     set(rpath "\$ORIGIN")
 endif()
@@ -27,6 +37,7 @@ vcpkg_configure_cmake(
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
+        ${EXTRA_ARGS}
         -DENABLE_UNITY_BUILD=ON
         -DENABLE_TESTING=OFF
         -DFORCE_SHARED_CRT=${FORCE_SHARED_CRT}
