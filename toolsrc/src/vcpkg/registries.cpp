@@ -186,17 +186,6 @@ namespace
         DelayedInit<Baseline> m_baseline;
     };
 
-    ExpectedS<fs::path> get_git_baseline_json_path(const VcpkgPaths& paths, StringView baseline_commit_sha)
-    {
-        auto baseline_path = paths.git_checkout_baseline(paths.get_filesystem(), baseline_commit_sha);
-        if (paths.get_filesystem().exists(baseline_path))
-        {
-            return std::move(baseline_path);
-        }
-        return {Strings::concat("Error: Baseline database file does not exist: ", fs::u8string(baseline_path)),
-                expected_right_tag};
-    }
-
     struct VersionDbEntry
     {
         VersionT version;
@@ -224,7 +213,7 @@ namespace
 
     // returns nullopt if the baseline is valid, but doesn't contain the specified baseline,
     // or (equivalently) if the baseline does not exist.
-    ExpectedS<Optional<Baseline>> parse_baseline_versions(StringView contents, StringView baseline);
+    ExpectedS<Optional<Baseline>> parse_baseline_versions(StringView contents, StringView baseline, StringView origin);
     ExpectedS<Optional<Baseline>> load_baseline_versions(const VcpkgPaths& paths,
                                                          const fs::path& path_to_baseline,
                                                          StringView identifier = {});
@@ -327,18 +316,20 @@ namespace
 
         if (baseline_identifier == "default")
         {
-            return Strings::format("Couldn't find explicitly specified baseline `\"default\"` in baseline file: %s",
-                                   fs::u8string(path_to_baseline));
+            return Strings::format(
+                "Error: Couldn't find explicitly specified baseline `\"default\"` in baseline file: %s",
+                fs::u8string(path_to_baseline));
         }
 
         // attempt to check out the baseline:
-        auto maybe_path = get_git_baseline_json_path(paths, baseline_identifier);
+        auto maybe_path = paths.git_checkout_baseline(baseline_identifier);
         if (!maybe_path.has_value())
         {
-            return Strings::format("Couldn't find explicitly specified baseline `\"%s\"` in the baseline file, "
-                                   "and there was no baseline at that commit or the commit didn't exist.\n%s",
+            return Strings::format("Error: Couldn't find explicitly specified baseline `\"%s\"` in the baseline file, "
+                                   "and there was no baseline at that commit or the commit didn't exist.\n%s\n%s",
                                    baseline_identifier,
-                                   maybe_path.error());
+                                   maybe_path.error(),
+                                   paths.get_current_git_sha_message());
         }
 
         res_baseline = load_baseline_versions(paths, *maybe_path.get());
@@ -352,7 +343,7 @@ namespace
             return std::move(*p);
         }
 
-        return Strings::format("Couldn't find explicitly specified baseline `\"%s\"` in the baseline "
+        return Strings::format("Error: Couldn't find explicitly specified baseline `\"%s\"` in the baseline "
                                "file, and the `\"default\"` baseline does not exist at that commit.",
                                baseline_identifier);
     }
@@ -549,7 +540,7 @@ namespace
             }
 
             auto contents = maybe_contents.get();
-            res_baseline = parse_baseline_versions(*contents, {});
+            res_baseline = parse_baseline_versions(*contents, "default", fs::u8string(path_to_baseline));
             if (!res_baseline.has_value())
             {
                 Checks::exit_with_message(VCPKG_LINE_INFO, res_baseline.error());
@@ -599,12 +590,22 @@ namespace
             auto it = std::find(git_entry->port_versions.begin(), git_entry->port_versions.end(), version);
             if (it == git_entry->port_versions.end())
             {
-                return Strings::concat(
-                    "Error: No version entry for ", git_entry->port_name, " at version ", version, ".");
+                return {
+                    Strings::concat("Error: No version entry for ",
+                                    git_entry->port_name,
+                                    " at version ",
+                                    version,
+                                    ". This may be fixed by updating vcpkg to the latest master via `git "
+                                    "pull`.\nAvailable versions:\n",
+                                    Strings::join("",
+                                                  git_entry->port_versions,
+                                                  [](const VersionT& v) { return Strings::concat("    ", v, "\n"); }),
+                                    "\nSee `vcpkg help versioning` for more information."),
+                    expected_right_tag};
             }
 
             const auto& git_tree = git_entry->git_trees[it - git_entry->port_versions.begin()];
-            return paths.git_checkout_port(paths.get_filesystem(), git_entry->port_name, git_tree);
+            return paths.git_checkout_port(git_entry->port_name, git_tree, paths.root / fs::u8path(".git"));
         }
 
         if (scfl_version == version)
@@ -1014,19 +1015,20 @@ namespace
         return db_entries;
     }
 
-    ExpectedS<Optional<Baseline>> parse_baseline_versions(StringView contents, StringView baseline)
+    ExpectedS<Optional<Baseline>> parse_baseline_versions(StringView contents, StringView baseline, StringView origin)
     {
-        auto maybe_value = Json::parse(contents);
+        auto maybe_value = Json::parse(contents, origin);
         if (!maybe_value.has_value())
         {
-            return Strings::format("Error: failed to parse baseline file: %s", maybe_value.error()->format());
+            return Strings::format(
+                "Error: failed to parse baseline file: %s\n%s", origin, maybe_value.error()->format());
         }
 
         auto& value = *maybe_value.get();
 
         if (!value.first.is_object())
         {
-            return std::string("Error: baseline does not have a top-level object.");
+            return Strings::concat("Error: baseline does not have a top-level object: ", origin);
         }
 
         auto real_baseline = baseline.size() == 0 ? "default" : baseline;
@@ -1047,8 +1049,7 @@ namespace
         }
         else
         {
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO, "Error: failed to parse baseline:\n%s", Strings::join("\n", r.errors()));
+            return Strings::format("Error: failed to parse baseline: %s\n%s", origin, Strings::join("\n", r.errors()));
         }
     }
 
@@ -1059,7 +1060,7 @@ namespace
         auto maybe_contents = paths.get_filesystem().read_contents(path_to_baseline);
         if (auto contents = maybe_contents.get())
         {
-            return parse_baseline_versions(*contents, baseline);
+            return parse_baseline_versions(*contents, baseline, fs::u8string(path_to_baseline));
         }
         else if (maybe_contents.error() == std::errc::no_such_file_or_directory)
         {
@@ -1143,7 +1144,7 @@ namespace vcpkg
         if (!default_registry_is_builtin || registries_.size() != 0)
         {
             System::print2(System::Color::warning,
-                           "Warning: when using the registries feature, one should not use `\"$x-default-baseline\"` "
+                           "Warning: when using the registries feature, one should not use `\"builtin-baseline\"` "
                            "to set the baseline.\n",
                            "    Instead, use the \"baseline\" field of the registry.\n");
         }

@@ -257,7 +257,7 @@ namespace vcpkg::Metrics
             return "{}";
         }
 
-        auto getmac = System::cmd_execute_and_capture_output(System::CmdLineBuilder("getmac"));
+        auto getmac = System::cmd_execute_and_capture_output(System::Command("getmac"));
 
         if (getmac.exit_code != 0) return "0";
 
@@ -474,14 +474,14 @@ namespace vcpkg::Metrics
         if (ec) return;
 
 #if defined(_WIN32)
-        System::CmdLineBuilder builder;
+        System::Command builder;
         builder.path_arg(temp_folder_path_exe);
         builder.string_arg("x-upload-metrics");
         builder.path_arg(vcpkg_metrics_txt_path);
         System::cmd_execute_background(builder);
 #else
         // TODO: convert to cmd_execute_background or something.
-        auto curl = System::CmdLineBuilder("curl")
+        auto curl = System::Command("curl")
                         .string_arg("https://dc.services.visualstudio.com/v2/track")
                         .string_arg("-H")
                         .string_arg("Content-Type: application/json")
@@ -492,8 +492,8 @@ namespace vcpkg::Metrics
                         .string_arg(Strings::concat("@", fs::u8string(vcpkg_metrics_txt_path)))
                         .raw_arg(">/dev/null")
                         .raw_arg("2>&1");
-        auto remove = System::CmdLineBuilder("rm").path_arg(vcpkg_metrics_txt_path);
-        System::CmdLineBuilder cmd_line;
+        auto remove = System::Command("rm").path_arg(vcpkg_metrics_txt_path);
+        System::Command cmd_line;
         cmd_line.raw_arg("(").raw_arg(curl.command_line()).raw_arg(";").raw_arg(remove.command_line()).raw_arg(") &");
         System::cmd_execute_clean(cmd_line);
 #endif

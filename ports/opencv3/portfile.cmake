@@ -38,6 +38,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "halide"   WITH_HALIDE
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
+ "lapack"   WITH_LAPACK
  "nonfree"  OPENCV_ENABLE_NONFREE
  "openexr"  WITH_OPENEXR
  "opengl"   WITH_OPENGL
@@ -314,8 +315,6 @@ vcpkg_configure_cmake(
         -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_TBB=${WITH_TBB}
         -DWITH_OPENJPEG=OFF
-        ###### WITH PROPERTIES explicitly disabled, they have problems with libraries if already installed by user and that are "involuntarily" found during install
-        -DWITH_LAPACK=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
@@ -374,11 +373,14 @@ find_dependency(Tesseract)")
   if("eigen" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
   endif()
+  if("lapack" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
+  endif()
   if("openexr" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
   endif()
   if(WITH_OPENMP)
-    string(APPEND DEPS_STRING "\nfind_dependency(OpenMP CONFIG)")
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
   endif()
   if(BUILD_opencv_ovis)
     string(APPEND DEPS_STRING "\nfind_dependency(Ogre)\nfind_dependency(Freetype)")

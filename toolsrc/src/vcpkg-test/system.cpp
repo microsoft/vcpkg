@@ -127,9 +127,9 @@ TEST_CASE ("guess_visual_studio_prompt", "[system]")
 
 TEST_CASE ("cmdlinebuilder", "[system]")
 {
-    using vcpkg::System::CmdLineBuilder;
+    using vcpkg::System::Command;
 
-    CmdLineBuilder cmd;
+    Command cmd;
     cmd.path_arg(fs::u8path("relative/path.exe"));
     cmd.string_arg("abc");
     cmd.string_arg("hello world!");

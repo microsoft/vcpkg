@@ -47,7 +47,69 @@ namespace vcpkg::Help
         nullptr,
     };
 
-    static constexpr std::array<Topic, 15> topics = {{
+    static void help_topic_versioning(const VcpkgPaths&)
+    {
+        HelpTableFormatter tbl;
+        tbl.text("Versioning allows you to deterministically control the precise revisions of dependencies used by "
+                 "your project from within your manifest file.");
+        tbl.blank();
+        tbl.blank();
+        tbl.text("** This feature is experimental and requires `--feature-flags=versions` **");
+        tbl.blank();
+        tbl.blank();
+        tbl.header("Versions in vcpkg come in four primary flavors");
+        tbl.format("version", "A dot-separated sequence of numbers (1.2.3.4)");
+        tbl.format("version-date", "A date (2021-01-01.5)");
+        tbl.format("version-semver", "A Semantic Version 2.0 (2.1.0-rc2)");
+        tbl.format("version-string", "An exact, incomparable version (Vista)");
+        tbl.blank();
+        tbl.text("Each version additionally has a \"port-version\" which is a nonnegative integer. When rendered as "
+                 "text, the port version (if nonzero) is added as a suffix to the primary version text separated by a "
+                 "hash (#). Port-versions are sorted lexographically after the primary version text, for example:");
+        tbl.blank();
+        tbl.blank();
+        tbl.text("    1.0.0 < 1.0.0#1 < 1.0.1 < 1.0.1#5 < 2.0.0");
+        tbl.blank();
+        tbl.blank();
+        tbl.header("Manifests can place three kinds of constraints upon the versions used");
+        tbl.format("builtin-baseline",
+                   "The baseline references a commit within the vcpkg repository that establishes a minimum version on "
+                   "every dependency in the graph. If no other constraints are specified (directly or transitively), "
+                   "then the version from the baseline of the top level manifest will be used. Baselines of transitive "
+                   "dependencies are ignored.");
+        tbl.blank();
+        tbl.format("version>=",
+                   "Within the \"dependencies\" field, each dependency can have a minimum constraint listed. These "
+                   "minimum constraints will be used when transitively depending upon this library. A minimum "
+                   "port-version can additionally be specified with a '#' suffix.");
+        tbl.blank();
+        tbl.format(
+            "overrides",
+            "When used as the top-level manifest (such as when running `vcpkg install` in the directory), overrides "
+            "allow a manifest to short-circuit dependency resolution and specify exactly the version to use. These can "
+            "be used to handle version conflicts, such as with `version-string` dependencies. They will not be "
+            "considered when transitively depended upon.");
+        tbl.blank();
+        tbl.text("Example manifest:");
+        tbl.blank();
+        tbl.text(R"({
+    "name": "example",
+    "version": "1.0",
+    "builtin-baseline": "a14a6bcb27287e3ec138dba1b948a0cdbc337a3a",
+    "dependencies": [
+        { "name": "zlib", "version>=": "1.2.11#8" },
+        "rapidjson"
+    ],
+    "overrides": [
+        { "name": "rapidjson", "version": "2020-09-14" }
+    ]
+})");
+        System::print2(tbl.m_str,
+                       "\nExtended documentation is available at "
+                       "https://github.com/Microsoft/vcpkg/tree/master/docs/users/versioning.md\n");
+    }
+
+    static constexpr std::array<Topic, 16> topics = {{
         {"binarycaching", help_topic_binary_caching},
         {"create", command_topic_fn<Commands::Create::COMMAND_STRUCTURE>},
         {"depend-info", command_topic_fn<Commands::DependInfo::COMMAND_STRUCTURE>},
@@ -63,6 +125,7 @@ namespace vcpkg::Help
         {"search", command_topic_fn<Commands::Search::COMMAND_STRUCTURE>},
         {"topics", help_topics},
         {"triplet", help_topic_valid_triplet},
+        {"versioning", help_topic_versioning},
     }};
 
     static void help_topics(const VcpkgPaths&)
