@@ -3,5 +3,5 @@ Version: 3.6.4
 Port-Version: 0
 Description: LibSass - Sass compiler written in C++
 Homepage: https://github.com/sass/libsass
-Build-Depends: 
+Supports: !uwp
 
