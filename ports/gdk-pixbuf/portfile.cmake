@@ -10,6 +10,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES fix_build.patch
 )
 if(VCPKG_TARGET_IS_WINDOWS)
     #list(APPEND OPTIONS -Dnative_windows_loaders=true)
@@ -27,18 +28,41 @@ vcpkg_configure_meson(
         -Drelocatable=true
         -Dinstalled_tests=false
         -Dgio_sniffing=false
+        -Dbuiltin_loaders=all # since it is unclear where loadable plugins should be located
     ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
     ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
         )
 vcpkg_install_meson(ADD_BIN_TO_PATH)
+
+
+
+# FIx paths in pc file. 
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdk-pixbuf-2.0.pc")
+if(EXISTS "${_file}")
+    file(READ "${_file}" _contents)
+    string(REPLACE [[${bindir}]] "\${bindir}/../../tools/${PORT}" _contents "${_contents}")
+    string(REPLACE [[gdk_pixbuf_binarydir=${libdir}/gdk-pixbuf-2.0/2.10.0]] "gdk_pixbuf_binarydir=\${libdir}/../gdk-pixbuf-2.0/2.10.0" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
+set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/gdk-pixbuf-2.0.pc")
+if(EXISTS "${_file}")
+    file(READ "${_file}" _contents)
+    string(REPLACE [[${bindir}]] "\${bindir}/../tools/${PORT}" _contents "${_contents}")
+    string(REPLACE [[gdk_pixbuf_binarydir=${libdir}/gdk-pixbuf-2.0/2.10.0]] "gdk_pixbuf_binarydir=\${libdir}/../gdk-pixbuf-2.0/2.10.0" _contents "${_contents}")
+    file(WRITE "${_file}" "${_contents}")
+endif()
+
 vcpkg_fixup_pkgconfig()
+
 vcpkg_copy_pdbs()
 vcpkg_copy_tools(TOOL_NAMES gdk-pixbuf-csource gdk-pixbuf-pixdata gdk-pixbuf-query-loaders gdk-pixbuf-thumbnailer AUTO_CLEAN)
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gdk-pixbuf)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/gdk-pixbuf/COPYING ${CURRENT_PACKAGES_DIR}/share/gdk-pixbuf/copyright)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # option('png',
        # description: 'Enable PNG loader (requires libpng)',
