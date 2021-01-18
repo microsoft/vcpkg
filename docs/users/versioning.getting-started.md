@@ -112,8 +112,10 @@ Instead of using the portfiles in `ports/`; vcpkg is checking out the files for 
 
 _NOTE: Output from the vcpkg while configuring CMake is only available when using CMake version `3.18` or newer. If you're using an older CMake you can check the `vcpkg-manifest-install.log` file in your build directory instead._
 
+Read our [manifests announcement blog post](https://devblogs.microsoft.com/cppblog/vcpkg-accelerate-your-team-development-environment-with-binary-caching-and-manifests/#using-manifests-with-msbuild-projects) to learn how to use manifests with MSBuild.
+
 ### Manifest changes
-If you have used manifests before you will notice that there are some new JSON properties. Let's analyze these changes:
+If you have used manifests before you will notice that there are some new JSON properties. Let's review these changes:
 
 * **`version`**
 ```
@@ -124,7 +126,7 @@ If you have used manifests before you will notice that there are some new JSON p
 }
 ```
 
-This is your project's version declaration. Previously, you could only declare versions for your projects using the `version-string` scheme. Now that versioning has come around, vcpkg is aware of some new versioning schemes.
+This is your project's version declaration. Previously, you could only declare versions for your projects using the `version-string` property. Now that versioning has come around, vcpkg is aware of some new versioning schemes.
 
 Version scheme | Description
 -- | --
