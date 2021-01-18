@@ -1,31 +1,22 @@
 cmake_minimum_required(VERSION 3.11)
 project(librsvg C)
 
-find_package(unofficial-cairo CONFIG REQUIRED)
 find_package(unofficial-libcroco CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
-pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2 gio-2 IMPORTED_TARGETS)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2 gio-2 IMPORTED_TARGET)
+pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
+pkg_check_modules(GDK_PIXBUF gdk-pixbuf-2.0 IMPORTED_TARGET)
+pkg_check_modules(PANGO pango pangocairo IMPORTED_TARGET)
 find_package(LibXml2 REQUIRED)
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
-  find_library(PANGO_LIB pango-1.0)
-  find_library(PANGO_CAIRO_LIB pangocairo-1.0)
-  find_library(GDK_PIXBUF_LIB gdk_pixbuf-2.0)
 elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
-  find_library(PANGO_LIB pango-1.0)
-  find_library(PANGO_CAIRO_LIB pangocairo-1.0)
-  find_library(GDK_PIXBUF_LIB gdk_pixbuf-2)
 else()
-  find_library(PANGO_LIB pango-1)
-  find_library(PANGO_CAIRO_LIB pangocairo-1)
   find_library(PANGO_FT2_LIB pangoft2-1)
   find_library(FONTCONFIG_LIB fontconfig)
-  find_library(GDK_PIXBUF_LIB gdk_pixbuf-2)
 endif()
 
-find_path(CAIRO_INCLUDE_DIR cairo/cairo.h)
-
 # Add include directories
-include_directories(${CAIRO_INCLUDE_DIR} ${GDK_PIXBUF_INCLUDE_DIR} ${GLIB2_INCLUDE_DIRS})
+include_directories(${CAIRO_INCLUDE_DIRS} ${GDK_PIXBUF_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS} ${PANGO_INCLUDE_DIRS})
 
 set(LIBRSVG_SOURCES
     librsvg-features.c
@@ -111,18 +102,18 @@ target_compile_definitions(pixbufloader-svg PRIVATE
     -DG_LOG_DOMAIN="libpixbufloader-svg")
 
 target_link_libraries(rsvg-2.40 PRIVATE
-    ${GLIB2_LIBRARIES_STATIC}
+    PkgConfig::GLIB2
     ${LIBXML2_LIBRARIES}
-    ${PANGO_LIB}
-    ${PANGO_CAIRO_LIB}
-    ${GDK_PIXBUF_LIB}
+    PkgConfig::PANGO
+    PkgConfig::GDK_PIXBUF
     ${PANGO_FT2_LIB}
     ${FONTCONFIG_LIB}
+    unofficial::libcroco::croco-0.6
 )
 target_link_libraries(pixbufloader-svg PRIVATE
     rsvg-2.40
-    ${GLIB2_LIBRARIES_STATIC}
-    ${GDK_PIXBUF_LIB}
+    PkgConfig::GLIB2
+    PkgConfig::GDK_PIXBUF
 )
 
 install(TARGETS rsvg-2.40 pixbufloader-svg
@@ -149,10 +140,12 @@ install(FILES
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-librsvg-config.cmake "
 include(CMakeFindDependencyMacro)
-find_dependency(unofficial-cairo CONFIG)
+find_dependency(PkgConfig)
+pkg_check_modules(GLIB2 glib-2.0 gobject-2.0 gmodule-2 gio-2 IMPORTED_TARGET)
+pkg_check_modules(CAIRO cairo IMPORTED_TARGET)
+pkg_check_modules(GDK_PIXBUF gdk-pixbuf IMPORTED_TARGET)
+pkg_check_modules(PANGO pango pangocairo IMPORTED_TARGET)
 find_dependency(unofficial-libcroco CONFIG)
-find_dependency(gdk-pixbuf CONFIG)
-find_dependency(pango CONFIG)
 
 include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-librsvg-targets.cmake)
 ")

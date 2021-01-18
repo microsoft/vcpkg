@@ -1,3 +1,5 @@
+# port update requires rust/cargo
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gnome.org/sources/librsvg/2.40/librsvg-2.40.20.tar.xz"
     FILENAME "librsvg-2.40.20.tar.xz"
