@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
         0001_fix_osx_defined.patch
         #build.patch
         build2.patch
+        remove_test_perf.patch
 )
 
 #TODO the autoconf script has a lot of additional option which use auto detection and should be disabled!
@@ -49,22 +50,25 @@ vcpkg_configure_make(
         ac_cv_lib_lzo2_lzo2a_decompress=yes
         lt_cv_deplibs_check_method=pass_all
 )
-#vcpkg_install_make()
-vcpkg_install_make(SUBPATH /src)
-
+vcpkg_install_make()
+# vcpkg_install_make(SUBPATH /src)
+# if("gobject" IN_LIST FEATURES)
+    # This deletes the previous build
+    # vcpkg_install_make(SUBPATH /util/cairo-gobject)
+# endif()
 vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
-    file(READ ${FILE} CAIRO_H)
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "1" CAIRO_H "${CAIRO_H}")
-    else()
-        string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "0" CAIRO_H "${CAIRO_H}")
-    endif()
-    file(WRITE ${FILE} "${CAIRO_H}")
-endforeach()
+set(_file "${CURRENT_PACKAGES_DIR}/include/cairo/cairo.h")
+file(READ ${_file} CAIRO_H)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "1" CAIRO_H "${CAIRO_H}")
+else()
+    string(REPLACE "defined (CAIRO_WIN32_STATIC_BUILD)" "0" CAIRO_H "${CAIRO_H}")
+endif()
+file(WRITE ${_file} "${CAIRO_H}")
+
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

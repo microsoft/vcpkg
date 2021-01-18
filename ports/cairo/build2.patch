@@ -19,109 +19,6 @@ index 7d7e9735f..f39ea1991 100644
  
  CAIRO_CFLAGS = $(DEFAULT_CFLAGS) $(CFLAGS)
  
-diff --git a/configure b/configure
-index 59582f14b..da5c4d61d 100644
---- a/configure
-+++ b/configure
-@@ -21240,13 +21240,12 @@ fi
- rm -f confcache
- 
- 
--{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for compress in -lz" >&5
--$as_echo_n "checking for compress in -lz... " >&6; }
--if ${ac_cv_lib_z_compress+:} false; then :
-+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing compress" >&5
-+$as_echo_n "checking for library containing compress... " >&6; }
-+if ${ac_cv_search_compress+:} false; then :
-   $as_echo_n "(cached) " >&6
- else
--  ac_check_lib_save_LIBS=$LIBS
--LIBS="-lz  $LIBS"
-+  ac_func_search_save_LIBS=$LIBS
- cat confdefs.h - <<_ACEOF >conftest.$ac_ext
- /* end confdefs.h.  */
- 
-@@ -21265,18 +21264,35 @@ return compress ();
-   return 0;
- }
- _ACEOF
--if ac_fn_c_try_link "$LINENO"; then :
--  ac_cv_lib_z_compress=yes
--else
--  ac_cv_lib_z_compress=no
-+for ac_lib in '' z zlib zlibd; do
-+  if test -z "$ac_lib"; then
-+    ac_res="none required"
-+  else
-+    ac_res=-l$ac_lib
-+    LIBS="-l$ac_lib  $ac_func_search_save_LIBS"
-+  fi
-+  if ac_fn_c_try_link "$LINENO"; then :
-+  ac_cv_search_compress=$ac_res
- fi
- rm -f core conftest.err conftest.$ac_objext \
--    conftest$ac_exeext conftest.$ac_ext
--LIBS=$ac_check_lib_save_LIBS
-+    conftest$ac_exeext
-+  if ${ac_cv_search_compress+:} false; then :
-+  break
-+fi
-+done
-+if ${ac_cv_search_compress+:} false; then :
-+
-+else
-+  ac_cv_search_compress=no
-+fi
-+rm conftest.$ac_ext
-+LIBS=$ac_func_search_save_LIBS
- fi
--{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_z_compress" >&5
--$as_echo "$ac_cv_lib_z_compress" >&6; }
--if test "x$ac_cv_lib_z_compress" = xyes; then :
-+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_compress" >&5
-+$as_echo "$ac_cv_search_compress" >&6; }
-+ac_res=$ac_cv_search_compress
-+if test "$ac_res" != no; then :
-+  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
-   ac_fn_c_check_header_mongrel "$LINENO" "zlib.h" "ac_cv_header_zlib_h" "$ac_includes_default"
- if test "x$ac_cv_header_zlib_h" = xyes; then :
- 
-@@ -30406,7 +30422,7 @@ script_NONPKGCONFIG_EXTRA_LIBS="$ac_env_script_NONPKGCONFIG_EXTRA_LIBS_value"
-   any2ppm_cs=yes
-   # The script backend requires zlib.
-   use_script=$have_libz
--  script_NONPKGCONFIG_LIBS=-lz
-+  script_NONPKGCONFIG_LIBS=$ac_cv_search_compress
- 
- 
- 		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether cairo's script surface backend feature could be enabled" >&5
-@@ -31479,7 +31495,7 @@ ps_NONPKGCONFIG_EXTRA_LIBS="$ac_env_ps_NONPKGCONFIG_EXTRA_LIBS_value"
- 
-     # The ps backend requires zlib.
-     use_ps=$have_libz
--    ps_NONPKGCONFIG_LIBS=-lz
-+    ps_NONPKGCONFIG_LIBS=$ac_cv_search_compress
- 
- 
- 		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether cairo's PostScript surface backend feature could be enabled" >&5
-@@ -31875,7 +31891,7 @@ pdf_NONPKGCONFIG_EXTRA_LIBS="$ac_env_pdf_NONPKGCONFIG_EXTRA_LIBS_value"
- 
-     # The pdf backend requires zlib.
-     use_pdf=$have_libz
--    pdf_NONPKGCONFIG_LIBS=-lz
-+    pdf_NONPKGCONFIG_LIBS=$ac_cv_search_compress
- 
- 
- 		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether cairo's PDF surface backend feature could be enabled" >&5
-@@ -33766,7 +33782,7 @@ xml_NONPKGCONFIG_EXTRA_LIBS="$ac_env_xml_NONPKGCONFIG_EXTRA_LIBS_value"
- 
- 
-     use_xml=$have_libz
--    xml_NONPKGCONFIG_LIBS=-lz
-+    xml_NONPKGCONFIG_LIBS=$ac_cv_search_compress
- 
- 
- 		{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether cairo's xml surface backend feature could be enabled" >&5
 diff --git a/configure.ac b/configure.ac
 index 5e33c96ea..c9e9cfaa9 100644
 --- a/configure.ac
@@ -184,19 +81,6 @@ index acf0a8281..fe339a3cf 100644
  	$(EGREP) '^cairo_.* \(' | \
  	sed -e 's/[ 	].*//' | \
  	sort; \
-diff --git a/src/Makefile.in b/src/Makefile.in
-index 4e94feb09..42a1b236d 100644
---- a/src/Makefile.in
-+++ b/src/Makefile.in
-@@ -3680,7 +3680,7 @@ cairo.def: cairo-features.h $(enabled_cairo_headers)
- 	@(echo EXPORTS; \
- 	(cd $(srcdir); cat $(enabled_cairo_headers) || echo 'cairo_ERROR ()' ) | \
- 	$(EGREP) -v '^# *include' | \
--	( cat cairo-features.h - | $(CPP) -D__cplusplus - || echo 'cairo_ERROR ()' ) | \
-+	( cat cairo-features.h - | $(CPP) $(CPP_FLAGS) -D__cplusplus - || echo 'cairo_ERROR ()' ) | \
- 	$(EGREP) '^cairo_.* \(' | \
- 	sed -e 's/[ 	].*//' | \
- 	sort; \
 diff --git a/util/cairo-script/Makefile.am b/util/cairo-script/Makefile.am
 index d5c2998ac..e6e23b2ed 100644
 --- a/util/cairo-script/Makefile.am
@@ -210,19 +94,6 @@ index d5c2998ac..e6e23b2ed 100644
  
  csi_replay_SOURCES = csi-replay.c
  csi_replay_CFLAGS = $(CAIRO_CFLAGS)
-diff --git a/util/cairo-script/Makefile.in b/util/cairo-script/Makefile.in
-index 6b86c86c5..13630cd55 100644
---- a/util/cairo-script/Makefile.in
-+++ b/util/cairo-script/Makefile.in
-@@ -561,7 +561,7 @@ libcairo_script_interpreter_la_SOURCES = \
- 
- libcairo_script_interpreter_la_CFLAGS = $(CAIRO_CFLAGS)
- libcairo_script_interpreter_la_LDFLAGS = -version-info $(CAIRO_LIBTOOL_VERSION_INFO) -no-undefined $(export_symbols)
--libcairo_script_interpreter_la_LIBADD = $(top_builddir)/src/libcairo.la $(CAIRO_LIBS) $(lzo_LIBS) -lz
-+libcairo_script_interpreter_la_LIBADD = $(top_builddir)/src/libcairo.la $(CAIRO_LIBS) $(lzo_LIBS)
- csi_replay_SOURCES = csi-replay.c
- csi_replay_CFLAGS = $(CAIRO_CFLAGS)
- csi_replay_LDADD = libcairo-script-interpreter.la $(top_builddir)/src/libcairo.la $(CAIRO_LIBS)
 diff --git a/util/cairo-trace/Makefile.am b/util/cairo-trace/Makefile.am
 index a0091f882..64d86184f 100644
 --- a/util/cairo-trace/Makefile.am
@@ -236,16 +107,3 @@ index a0091f882..64d86184f 100644
  if CAIRO_HAS_DL
  libcairo_trace_la_LIBADD += -ldl
  endif
-diff --git a/util/cairo-trace/Makefile.in b/util/cairo-trace/Makefile.in
-index a35c501a2..780af44ba 100644
---- a/util/cairo-trace/Makefile.in
-+++ b/util/cairo-trace/Makefile.in
-@@ -470,7 +470,7 @@ libcairo_trace_la_CPPFLAGS = -DCAIRO_TRACE_OUTDIR="\"$(cairooutdir)\"" \
- 
- libcairo_trace_la_CFLAGS = $(CAIRO_CFLAGS) $(real_pthread_CFLAGS)
- libcairo_trace_la_LDFLAGS = -module -no-undefined -avoid-version
--libcairo_trace_la_LIBADD = $(real_pthread_LIBS) -lz $(am__append_1) \
-+libcairo_trace_la_LIBADD = $(real_pthread_LIBS) $(am__append_1) \
- 	$(am__append_3)
- EXTRA_DIST = \
- 	COPYING \
