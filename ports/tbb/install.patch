@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f71eff14..e4341628 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -204,7 +204,7 @@ else()
+ 
+     install(EXPORT ${PROJECT_NAME}Targets
+             NAMESPACE TBB::
+-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
++            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/tbb
+             COMPONENT devel)
+     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+                "include(\${CMAKE_CURRENT_LIST_DIR}/${PROJECT_NAME}Targets.cmake)\n")
+@@ -214,7 +214,7 @@ else()
+ 
+     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+                   "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
++            DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/tbb
+             COMPONENT devel)
+     # -------------------------------------------------------------------
+ endif()
