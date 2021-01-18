@@ -21,15 +21,12 @@ This command should always be called by portfiles after they have finished rearr
 
 function(vcpkg_copy_tool_dependencies TOOL_DIR)
     if (VCPKG_TARGET_IS_WINDOWS)
-        find_program(PWSH_EXE pwsh)
-        if (NOT PWSH_EXE)
-            message(FATAL_ERROR "Could not find PowerShell Core; please open an issue to report this.")
-        endif()
+        vcpkg_find_acquire_program(POWERSHELL)
         macro(search_for_dependencies PATH_TO_SEARCH)
             file(GLOB TOOLS "${TOOL_DIR}/*.exe" "${TOOL_DIR}/*.dll" "${TOOL_DIR}/*.pyd")
             foreach(TOOL IN LISTS TOOLS)
                 vcpkg_execute_required_process(
-                    COMMAND "${PWSH_EXE}" -noprofile -executionpolicy Bypass -nologo
+                    COMMAND "${POWERSHELL}" -noprofile -executionpolicy Bypass -nologo
                         -file "${SCRIPTS}/buildsystems/msbuild/applocal.ps1"
                         -targetBinary "${TOOL}"
                         -installedDir "${PATH_TO_SEARCH}"

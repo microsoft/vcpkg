@@ -24,6 +24,7 @@ The current list of programs includes:
 * GASPREPROCESSOR
 * GPERF
 * PERL
+* POWERSHELL
 * PYTHON2
 * PYTHON3
 * GIT
@@ -114,6 +115,16 @@ function(vcpkg_find_acquire_program VAR)
     else()
       set(BREW_PACKAGE_NAME "git")
       set(APT_PACKAGE_NAME "git")
+    endif()
+  elseif(VAR MATCHES "POWERSHELL")
+    set(PROGNAME pwsh)
+    if(CMAKE_HOST_WIN32)
+      set(PWSH_VERSION 7.1.10)
+      set(SUBDIR "powershell-core-${GIT_VERSION}-windows")
+      #set(URL "https://github.com/git-for-windows/git/releases/download/v${GIT_VERSION}.windows.1/PortableGit-${GIT_VERSION}-32-bit.7z.exe")
+      #set(ARCHIVE "PortableGit-${GIT_VERSION}-32-bit.7z.exe")
+      #set(HASH d3cb60d62ca7b5d05ab7fbed0fa7567bec951984568a6c1646842a798c4aaff74bf534cf79414a6275c1927081a11b541d09931c017bf304579746e24fe57b36)
+      set(PATHS "${DOWNLOADS}/tools/${SUBDIR}")
     endif()
   elseif(VAR MATCHES "GN")
     set(PROGNAME gn)
