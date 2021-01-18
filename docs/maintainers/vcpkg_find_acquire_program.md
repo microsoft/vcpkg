@@ -23,6 +23,7 @@ The current list of programs includes:
 * GASPREPROCESSOR
 * GPERF
 * PERL
+* POWERSHELL
 * PYTHON2
 * PYTHON3
 * GIT
