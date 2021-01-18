@@ -1,0 +1,54 @@
+{
+  "name": "restc-cpp",
+  "version-string": "v0.10.0",
+  "homepage": "https://github.com/jgaa/restc-cpp",
+  "description": "Modern C++ REST Client library",
+  "dependencies": [
+    "rapidjson",
+    "boost-system",
+    "boost-program-options",
+    "boost-filesystem",
+    "boost-date-time",
+    "boost-context",
+    "boost-coroutine",
+    "boost-chrono",
+    "boost-uuid"
+  ],
+  "license": "MIT",
+  "supports": "static",
+
+  "default-features": [
+    "openssl",
+    "boost-log",
+    "zlib"
+  ],
+  "features": {
+    "cxx17": {
+      "description": "Use the C++17 standard (default is C++14)."
+    },
+    "openssl": {
+      "description": "OpenSSL support.",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "boost-log": {
+      "description": "Use boost::log for logging.",
+      "dependencies": [
+        "boost-log"
+      ]
+    },
+    "clog": {
+      "description": "Use std::clog for logging."
+    },
+    "zlib": {
+      "description": "Use zlib.",
+      "dependencies": [
+        "zlib"
+      ]
+    },
+    "threaded-ctx": {
+      "description": "Allow asio contexts with multiple threads. Enables thread-safe internal access."
+    }
+  }
+}
