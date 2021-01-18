@@ -1950,7 +1950,7 @@
     },
     "flann": {
       "baseline": "2019-04-07",
-      "port-version": 1
+      "port-version": 2
     },
     "flashlight-cpu": {
       "baseline": "20210111",

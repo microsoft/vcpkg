@@ -1,6 +1,4 @@
 #the port uses inside the CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS, which is discouraged by vcpkg.
-#Since it's its author choice, we should not disallow it, but unfortunately looks like it's broken, so we block it anyway...
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,14 +12,20 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    hdf5    WITH_HDF5
+    FEATURES
+        hdf5    WITH_HDF5
 )
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" FLANN_BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" FLANN_BUILD_DYNAMIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${FEATURE_OPTIONS}
+        -DBUILD_DYNAMIC=${FLANN_BUILD_DYNAMIC}
+        -DBUILD_STATIC=${FLANN_BUILD_STATIC}
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTS=OFF
         -DBUILD_DOC=OFF
