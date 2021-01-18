@@ -46,6 +46,7 @@ vcpkg_fixup_pkgconfig()
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtk)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/gtk/COPYING ${CURRENT_PACKAGES_DIR}/share/gtk/copyright)
 
+vcpkg_copy_tools(TOOL_NAMES gtk4-builder-tool gtk4-encode-symbolic-svg qtk4-query-settings gtk4-update-icon-cache AUTO_CLEAN)
 
 # GDK backends
 
