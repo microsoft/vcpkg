@@ -2,9 +2,9 @@
 set(GTK_VERSION 4.0.1)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/gnome/sources/gtk+/4.0.1/gtk+-${GTK_VERSION}.tar.xz"
-    FILENAME "gtk+-${GTK_VERSION}.tar.xz"
-    SHA512 c83198794433ee6eb29f8740d59bd7056cd36808b4bff1a99563ab1a1742e6635dab4f2a8be33317f74d3b336f0d1adc28dd91410da056b50a08c215f184dce2
+    URLS "https://download.gnome.org/sources/gtk/4.0/gtk-4.0.1.tar.xz"
+    FILENAME "gtk-${GTK_VERSION}.tar.xz"
+    SHA512 cab50b5bcf1a6bfdd5245c908e813330b9173531c49fdd63f9b5618f5329ddf2560f0a3548f61bba55dea6d816e57681d4e59941cfc50cf430544d3ebcd90aad
 )
 
 vcpkg_extract_source_archive_ex(
@@ -12,32 +12,126 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH})
-
-# generate sources using python script installed with glib
-if(NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.h OR NOT EXISTS ${SOURCE_PATH}/gtk/gtkdbusgenerated.c)
-    vcpkg_find_acquire_program(PYTHON3)
-    set(GLIB_TOOL_DIR ${CURRENT_INSTALLED_DIR}/tools/glib)
-
-    vcpkg_execute_required_process(
-        COMMAND ${PYTHON3} ${GLIB_TOOL_DIR}/gdbus-codegen --interface-prefix org.Gtk. --c-namespace _Gtk --generate-c-code gtkdbusgenerated ./gtkdbusinterfaces.xml
-        WORKING_DIRECTORY ${SOURCE_PATH}/gtk
-        LOGNAME source-gen)
-endif()
-vcpkg_find_acquire_program(PKGCONFIG)
-vcpkg_configure_cmake(
+vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
-        -DGTK_VERSION=${GTK_VERSION}
-        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
-    OPTIONS_DEBUG
-        -DGTK_SKIP_HEADERS=ON)
+        -Ddemos=false
+        -Dbuild-examples=false
+        -Dbuild-tests=false
+        -Dinstall-tests=false
+        -Dgtk_doc=false
+        -Dman-pages=false
+        -Dintrospection=disabled
+        -Dsassc=enabled
+    ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
+                               glib-compile-resources='${CURRENT_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+                               gdbus-codegen='${CURRENT_INSTALLED_DIR}/tools/glib/gdbus-codegen'
+                               glib-compile-schemas='${CURRENT_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+                               sassc='${CURRENT_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+    ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                               glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
+                               glib-compile-resources='${CURRENT_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+                               gdbus-codegen='${CURRENT_INSTALLED_DIR}/tools/glib/gdbus-codegen'
+                               glib-compile-schemas='${CURRENT_INSTALLED_DIR}/tools/glib/glib-compile-schemas${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+                               sassc='${CURRENT_INSTALLED_DIR}/tools/sassc/bin/sassc${VCPKG_HOST_EXECUTABLE_SUFFIX}'
+)
 
-vcpkg_install_cmake()
+vcpkg_install_meson()
+
 vcpkg_copy_pdbs()
+
+vcpkg_fixup_pkgconfig()
 
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtk)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/gtk/COPYING ${CURRENT_PACKAGES_DIR}/share/gtk/copyright)
+
+
+# GDK backends
+
+# option('x11-backend',
+       # type: 'boolean',
+       # value: true,
+       # description : 'Enable the X11 gdk backend (only when building on Unix)')
+
+# option('wayland-backend',
+       # type: 'boolean',
+       # value: true,
+       # description : 'Enable the wayland gdk backend (only when building on Unix except for macOS)')
+
+# option('broadway-backend',
+       # type: 'boolean',
+       # value: false,
+       # description : 'Enable the broadway (HTML5) gdk backend')
+
+# option('win32-backend',
+       # type: 'boolean',
+       # value: true,
+       # description : 'Enable the Windows gdk backend (only when building on Windows)')
+
+# option('macos-backend',
+       # type: 'boolean',
+       # value: true,
+       # description : 'Enable the macOS gdk backend (only when building on macOS)')
+
+# # Media backends
+
+# option('media-ffmpeg',
+       # type: 'feature',
+       # value: 'auto',
+       # description : 'Build the ffmpeg media backend')
+
+# option('media-gstreamer',
+       # type: 'feature',
+       # value: 'auto',
+       # description : 'Build the gstreamer media backend')
+
+# # Print backends
+
+# option('print-cups',
+       # type: 'feature',
+       # value: 'auto',
+       # description : 'Build the cups print backend')
+
+# option('print-cloudprint',
+       # type: 'feature',
+       # value: 'auto',
+       # description : 'Build the cloudprint print backend')
+
+# # Optional features
+
+# option('vulkan',
+       # type: 'feature',
+       # value: 'auto',
+       # description : 'Enable support for the Vulkan graphics API')
+
+# option('xinerama',
+       # type: 'feature',
+       # value: 'auto',
+       # description : 'Enable support for the X11 Xinerama extension')
+
+# option('cloudproviders',
+       # type: 'feature',
+       # value: 'disabled',
+       # description : 'Enable the cloudproviders support')
+
+# option('sysprof',
+       # type: 'feature',
+       # value: 'disabled',
+       # description : 'include tracing support for sysprof')
+
+# option('tracker',
+       # type: 'feature',
+       # value: 'disabled',
+       # description : 'Enable Tracker3 filechooser search')
+
+# option('colord',
+       # type: 'feature',
+       # value: 'disabled',
+       # description : 'Build colord support for the CUPS printing backend')
+
+# option('sassc',
+       # type: 'feature',
+       # value: 'auto',
+       # description: 'Rebuild themes using sassc')
+ 
