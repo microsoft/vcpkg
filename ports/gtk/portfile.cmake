@@ -10,8 +10,12 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
+    PATCHES build.patch
 )
-
+vcpkg_find_acquire_program(PKGCONFIG)
+get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
+vcpkg_add_to_path("${PKGCONFIG_DIR}") # Post install script runs pkg-config so it needs to be an PATH
+vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/glib/")
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
@@ -39,6 +43,40 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson()
 
+# If somebody finds out how to access and forward env variables to
+# the meson install script be my guest. Nevertheless the script still
+# needs manual execution in the crosscompiling case. 
+vcpkg_find_acquire_program(PYTHON3)
+foreach(_config release debug)
+    if(_config STREQUAL "release")
+        set(_short rel)
+        set(_path_suffix /debug)
+    else()
+        set(_short dbg)
+        set(_path_suffix /debug)
+    endif()
+    if(NOT EXISTS "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib")
+        continue()
+    endif()
+    message(STATUS "Running post install script: ${TARGET_TRIPLET}-${_short}")
+
+    set(PKGCONFIG_INSTALLED_DIR "${CURRENT_INSTALLED_DIR}${_path_suffix}/lib/pkgconfig/")
+    set(ENV{PKG_CONFIG_PATH} "${PKGCONFIG_INSTALLED_DIR}")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/media")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/immodules")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/printbackends")
+    vcpkg_execute_required_process(
+        COMMAND "${PYTHON3}" "${SOURCE_PATH}/build-aux/meson/post-install.py" 4.0 4.0.0 "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib" "${CURRENT_PACKAGES_DIR}${_path_suffix}/share" "${CURRENT_PACKAGES_DIR}${_path_suffix}/bin"
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME post-install-${TARGET_TRIPLET}-${_short}
+    )
+    unset(ENV{PKG_CONFIG_PATH})
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/immodules")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/4.0.0/printbackends")
+    file(RENAME "${CURRENT_PACKAGES_DIR}${_path_suffix}/lib/gtk-4.0/" "${CURRENT_PACKAGES_DIR}${_path_suffix}/bin/gtk-4.0/")
+    message(STATUS "Post install ${TARGET_TRIPLET}-${_short} done")
+endforeach()
+
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
@@ -46,7 +84,9 @@ vcpkg_fixup_pkgconfig()
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtk)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/gtk/COPYING ${CURRENT_PACKAGES_DIR}/share/gtk/copyright)
 
-vcpkg_copy_tools(TOOL_NAMES gtk4-builder-tool gtk4-encode-symbolic-svg qtk4-query-settings gtk4-update-icon-cache AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES gtk4-builder-tool gtk4-encode-symbolic-svg gtk4-query-settings gtk4-update-icon-cache AUTO_CLEAN)
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # GDK backends
 
