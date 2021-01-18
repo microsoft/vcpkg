@@ -44,7 +44,7 @@ namespace vcpkg::Archives
             const std::string nugetid = match[1];
             const std::string version = match[2];
 
-            const auto code_and_output = System::cmd_execute_and_capture_output(System::CmdLineBuilder{nuget_exe}
+            const auto code_and_output = System::cmd_execute_and_capture_output(System::Command{nuget_exe}
                                                                                     .string_arg("install")
                                                                                     .string_arg(nugetid)
                                                                                     .string_arg("-Version")
@@ -74,7 +74,7 @@ namespace vcpkg::Archives
             recursion_limiter_sevenzip = true;
             const auto seven_zip = paths.get_tool_exe(Tools::SEVEN_ZIP);
             const auto code_and_output = System::cmd_execute_and_capture_output(
-                System::CmdLineBuilder{seven_zip}
+                System::Command{seven_zip}
                     .string_arg("x")
                     .path_arg(archive)
                     .string_arg(Strings::format("-o%s", fs::u8string(to_path_partial)))
@@ -89,13 +89,13 @@ namespace vcpkg::Archives
 #else
         if (ext == ".gz" && ext.extension() != ".tar")
         {
-            const auto code = System::cmd_execute(System::CmdLineBuilder{"tar"}.string_arg("xzf").path_arg(archive),
+            const auto code = System::cmd_execute(System::Command{"tar"}.string_arg("xzf").path_arg(archive),
                                                   System::InWorkingDirectory{to_path_partial});
             Checks::check_exit(VCPKG_LINE_INFO, code == 0, "tar failed while extracting %s", fs::u8string(archive));
         }
         else if (ext == ".zip")
         {
-            const auto code = System::cmd_execute(System::CmdLineBuilder{"unzip"}.string_arg("-qqo").path_arg(archive),
+            const auto code = System::cmd_execute(System::Command{"unzip"}.string_arg("-qqo").path_arg(archive),
                                                   System::InWorkingDirectory{to_path_partial});
             Checks::check_exit(VCPKG_LINE_INFO, code == 0, "unzip failed while extracting %s", fs::u8string(archive));
         }

@@ -1633,8 +1633,8 @@
       "port-version": 4
     },
     "dmlc": {
-      "baseline": "2019-08-12-4",
-      "port-version": 0
+      "baseline": "2019-08-12",
+      "port-version": 5
     },
     "docopt": {
       "baseline": "2018-11-01",
@@ -1904,8 +1904,12 @@
       "baseline": "2019-04-07",
       "port-version": 1
     },
+    "flashlight-cpu": {
+      "baseline": "20210111",
+      "port-version": 0
+    },
     "flashlight-cuda": {
-      "baseline": "20201201",
+      "baseline": "20210111",
       "port-version": 0
     },
     "flatbuffers": {
@@ -2066,7 +2070,7 @@
     },
     "gdcm": {
       "baseline": "3.0.7",
-      "port-version": 0
+      "port-version": 1
     },
     "gdcm2": {
       "baseline": "deprecated",
@@ -2181,8 +2185,8 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "2019-03-05-1",
-      "port-version": 0
+      "baseline": "2019-03-05",
+      "port-version": 2
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -2414,6 +2418,10 @@
     },
     "ignition-fuel-tools1": {
       "baseline": "1.2.0-2",
+      "port-version": 0
+    },
+    "ignition-fuel-tools4": {
+      "baseline": "4.3.0",
       "port-version": 0
     },
     "ignition-math4": {
@@ -2814,7 +2822,7 @@
     },
     "libarchive": {
       "baseline": "3.4.3",
-      "port-version": 2
+      "port-version": 3
     },
     "libass": {
       "baseline": "0.15.0",
@@ -3848,6 +3856,10 @@
       "baseline": "3.1.0",
       "port-version": 0
     },
+    "msdfgen": {
+      "baseline": "1.8",
+      "port-version": 0
+    },
     "msgpack": {
       "baseline": "3.3.0",
       "port-version": 0
@@ -4154,7 +4166,7 @@
     },
     "openal-soft": {
       "baseline": "1.20.1",
-      "port-version": 5
+      "port-version": 6
     },
     "openblas": {
       "baseline": "0.3.10",
@@ -4190,19 +4202,19 @@
     },
     "opencv": {
       "baseline": "4.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opencv2": {
       "baseline": "2.4.13.7",
-      "port-version": 4
+      "port-version": 5
     },
     "opencv3": {
       "baseline": "3.4.10",
-      "port-version": 4
+      "port-version": 5
     },
     "opencv4": {
       "baseline": "4.3.0",
-      "port-version": 4
+      "port-version": 5
     },
     "opendnp3": {
       "baseline": "3.1.0",
@@ -4225,8 +4237,8 @@
       "port-version": 0
     },
     "openimageio": {
-      "baseline": "2.1.16.0",
-      "port-version": 4
+      "baseline": "2.2.10.0",
+      "port-version": 0
     },
     "openjpeg": {
       "baseline": "2.3.1",
@@ -5334,7 +5346,7 @@
     },
     "soci": {
       "baseline": "4.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "socket-io-client": {
       "baseline": "1.6.1-1",
@@ -5626,7 +5638,7 @@
     },
     "tesseract": {
       "baseline": "4.1.1",
-      "port-version": 5
+      "port-version": 6
     },
     "tfhe": {
       "baseline": "1.0.1-1",
@@ -5794,7 +5806,7 @@
     },
     "tomlplusplus": {
       "baseline": "2.3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tool-meson": {
       "baseline": "0.56.02",
