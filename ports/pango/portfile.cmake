@@ -36,6 +36,14 @@ vcpkg_copy_tools(TOOL_NAMES pango-view pango-list AUTO_CLEAN)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/pango.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" [[-I"${includedir}/pango-1.0"]] [[-I"${includedir}/pango-1.0" -I"${includedir}/harfbuzz"]])
+endif()
+set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/pango.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" [[-I"${includedir}/pango-1.0"]] [[-I"${includedir}/pango-1.0" -I"${includedir}/harfbuzz"]])
+endif()
 # option('gtk_doc',
        # description: 'Build API reference for Pango using GTK-Doc',
        # type: 'boolean',
