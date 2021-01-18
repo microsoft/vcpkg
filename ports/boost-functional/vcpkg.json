@@ -1,0 +1,16 @@
+{
+  "name": "boost-functional",
+  "version-string": "1.75.0",
+  "description": "Boost functional module",
+  "homepage": "https://github.com/boostorg/functional",
+  "dependencies": [
+    "boost-config",
+    "boost-core",
+    "boost-mpl",
+    "boost-preprocessor",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}
