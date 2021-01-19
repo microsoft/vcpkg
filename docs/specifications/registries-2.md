@@ -555,17 +555,3 @@ Git registries _are_ an important step on that road,
 but are also a good way to support both enterprise,
 and experimentation by our users.
 They allow us a lot more flexibility than we've had in the past.
-
-## Bikeshedding
-
-### Name of the Registry Database Directory
-
-This document calls this `port_versions`.
-
-### Name of the Command to Update Ports
-
-This document calls this command `add-port`.
-
-* `add-port`
-  * "`add-port` sounds too much like what `vcpkg create` does" - Billy O'Neal
-* `update-registry`
