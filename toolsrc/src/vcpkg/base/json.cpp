@@ -1064,6 +1064,11 @@ namespace vcpkg::Json
     {
         return Parser::parse(json, fs::generic_u8string(filepath));
     }
+    ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(StringView json,
+                                                                                      StringView origin) noexcept
+    {
+        return Parser::parse(json, origin);
+    }
     // } auto parse()
 
     namespace

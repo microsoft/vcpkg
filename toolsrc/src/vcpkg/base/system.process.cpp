@@ -184,11 +184,11 @@ namespace vcpkg
     }
     System::CMakeVariable::CMakeVariable(std::string var) : s(std::move(var)) { }
 
-    System::CmdLineBuilder System::make_basic_cmake_cmd(const fs::path& cmake_tool_path,
-                                                        const fs::path& cmake_script,
-                                                        const std::vector<CMakeVariable>& pass_variables)
+    System::Command System::make_basic_cmake_cmd(const fs::path& cmake_tool_path,
+                                                 const fs::path& cmake_script,
+                                                 const std::vector<CMakeVariable>& pass_variables)
     {
-        System::CmdLineBuilder cmd{cmake_tool_path};
+        System::Command cmd{cmake_tool_path};
         for (auto&& var : pass_variables)
         {
             cmd.string_arg(var.s);
@@ -197,7 +197,7 @@ namespace vcpkg
         return cmd;
     }
 
-    System::CmdLineBuilder& System::CmdLineBuilder::string_arg(StringView s) &
+    System::Command& System::Command::string_arg(StringView s) &
     {
         if (!buf.empty()) buf.push_back(' ');
         if (Strings::find_first_of(s, " \t\n\r\"\\,;&`^|'") != s.end())
@@ -383,7 +383,7 @@ namespace vcpkg
         return clean_env;
     }
 
-    int System::cmd_execute_clean(const CmdLineBuilder& cmd_line, InWorkingDirectory wd)
+    int System::cmd_execute_clean(const Command& cmd_line, InWorkingDirectory wd)
     {
         return cmd_execute(cmd_line, wd, get_clean_environment());
     }
@@ -564,7 +564,7 @@ namespace vcpkg
 #endif
 
 #if defined(_WIN32)
-    void System::cmd_execute_background(const CmdLineBuilder& cmd_line)
+    void System::cmd_execute_background(const Command& cmd_line)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 
@@ -581,7 +581,7 @@ namespace vcpkg
         Debug::print("cmd_execute_background() took ", static_cast<int>(timer.microseconds()), " us\n");
     }
 
-    Environment System::cmd_execute_modify_env(const CmdLineBuilder& cmd_line, const Environment& env)
+    Environment System::cmd_execute_modify_env(const Command& cmd_line, const Environment& env)
     {
         static StringLiteral magic_string = "cdARN4xjKueKScMy9C6H";
 
@@ -623,7 +623,7 @@ namespace vcpkg
     }
 #endif
 
-    int System::cmd_execute(const CmdLineBuilder& cmd_line, System::InWorkingDirectory wd, const Environment& env)
+    int System::cmd_execute(const Command& cmd_line, System::InWorkingDirectory wd, const Environment& env)
     {
         auto timer = Chrono::ElapsedTimer::create_started();
 #if defined(_WIN32)
@@ -651,7 +651,7 @@ namespace vcpkg
         }
         else
         {
-            real_command_line = System::CmdLineBuilder("cd")
+            real_command_line = System::Command("cd")
                                     .path_arg(wd.working_directory)
                                     .raw_arg("&&")
                                     .raw_arg(cmd_line.command_line())
@@ -667,7 +667,7 @@ namespace vcpkg
         return exit_code;
     }
 
-    int System::cmd_execute_and_stream_lines(const CmdLineBuilder& cmd_line,
+    int System::cmd_execute_and_stream_lines(const Command& cmd_line,
                                              System::InWorkingDirectory wd,
                                              std::function<void(StringView)> per_line_cb,
                                              const Environment& env)
@@ -696,7 +696,7 @@ namespace vcpkg
         return rc;
     }
 
-    int System::cmd_execute_and_stream_data(const CmdLineBuilder& cmd_line,
+    int System::cmd_execute_and_stream_data(const Command& cmd_line,
                                             System::InWorkingDirectory wd,
                                             std::function<void(StringView)> data_cb,
                                             const Environment& env)
@@ -724,7 +724,7 @@ namespace vcpkg
         }
         else
         {
-            actual_cmd_line = System::CmdLineBuilder("cd")
+            actual_cmd_line = System::Command("cd")
                                   .path_arg(wd.working_directory)
                                   .raw_arg("&&")
                                   .raw_arg(cmd_line.command_line())
@@ -763,7 +763,7 @@ namespace vcpkg
         return exit_code;
     }
 
-    ExitCodeAndOutput System::cmd_execute_and_capture_output(const CmdLineBuilder& cmd_line,
+    ExitCodeAndOutput System::cmd_execute_and_capture_output(const Command& cmd_line,
                                                              System::InWorkingDirectory wd,
                                                              const Environment& env)
     {

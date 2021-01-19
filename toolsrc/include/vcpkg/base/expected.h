@@ -226,11 +226,10 @@ namespace vcpkg
         void exit_if_error(const LineInfo& line_info) const
         {
             // This is used for quick value_or_exit() calls, so always put line_info in the error message.
-            Checks::check_exit(line_info,
-                               !m_s.has_error(),
-                               "Failed at [%s] with message:\n%s",
-                               line_info.to_string(),
-                               m_s.to_string());
+            if (m_s.has_error())
+            {
+                Checks::exit_with_message(line_info, "Failed at [%s] with message:\n%s", line_info, m_s.to_string());
+            }
         }
 
         ErrorHolder<S> m_s;

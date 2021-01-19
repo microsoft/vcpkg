@@ -390,7 +390,7 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> dlls_with_no_exports;
         for (const fs::path& dll : dlls)
         {
-            auto cmd_line = System::CmdLineBuilder(dumpbin_exe).string_arg("/exports").path_arg(dll);
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/exports").path_arg(dll);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(
                 VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line.command_line());
@@ -428,7 +428,7 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> dlls_with_improper_uwp_bit;
         for (const fs::path& dll : dlls)
         {
-            auto cmd_line = System::CmdLineBuilder(dumpbin_exe).string_arg("/headers").path_arg(dll);
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/headers").path_arg(dll);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(
                 VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line.command_line());
@@ -720,7 +720,7 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& lib : libs)
         {
-            auto cmd_line = System::CmdLineBuilder(dumpbin_exe).string_arg("/directives").path_arg(lib);
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/directives").path_arg(lib);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO,
                                ec_data.exit_code == 0,
@@ -774,7 +774,7 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& dll : dlls)
         {
-            auto cmd_line = System::CmdLineBuilder(dumpbin_exe).string_arg("/dependents").path_arg(dll);
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/dependents").path_arg(dll);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(
                 VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line.command_line());
