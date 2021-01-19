@@ -9,7 +9,7 @@ vcpkg_from_github(
     PATCHES
         patch-relocatable-rpath.patch
         fix-AWSSDKCONFIG.patch
-        build-external-allow-vcpkg-chaining.patch
+        #build-external-allow-vcpkg-chaining.patch
         allow-vcpkg-chaining.patch
 )
 
