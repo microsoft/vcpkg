@@ -4,7 +4,7 @@
 
 namespace vcpkg
 {
-    template<class Key, class Value>
+    template<class Key, class Value, class Less = std::less<Key>>
     struct Cache
     {
         template<class F>
@@ -16,6 +16,6 @@ namespace vcpkg
         }
 
     private:
-        mutable std::map<Key, Value> m_cache;
+        mutable std::map<Key, Value, Less> m_cache;
     };
 }

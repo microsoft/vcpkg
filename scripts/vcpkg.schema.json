@@ -136,12 +136,9 @@
           "$ref": "#/definitions/platform-expression"
         },
         "version>=": {
-          "description": "Minimum required port version",
-          "$ref": "#/definitions/version-text"
-        },
-        "port-version": {
-          "description": "Minimum port revision (defaults to 0)",
-          "$ref": "#/definitions/port-version"
+          "description": "Minimum required version",
+          "type": "string",
+          "pattern": "^[^#]+(#\\d+)?$"
         }
       },
       "patternProperties": {
@@ -254,6 +251,10 @@
         },
         "license": {
           "description": "An SPDX license expression at version 3.9.",
+          "type": "string"
+        },
+        "builtin-baseline": {
+          "description": "A vcpkg repository commit for version control.",
           "type": "string"
         },
         "dependencies": {

@@ -127,21 +127,23 @@ TEST_CASE ("guess_visual_studio_prompt", "[system]")
 
 TEST_CASE ("cmdlinebuilder", "[system]")
 {
-    using vcpkg::System::CmdLineBuilder;
+    using vcpkg::System::Command;
 
-    CmdLineBuilder cmd;
+    Command cmd;
     cmd.path_arg(fs::u8path("relative/path.exe"));
     cmd.string_arg("abc");
     cmd.string_arg("hello world!");
     cmd.string_arg("|");
     cmd.string_arg(";");
-    REQUIRE(cmd.extract() == "relative/path.exe abc \"hello world!\" \"|\" \";\"");
+    REQUIRE(cmd.command_line() == "relative/path.exe abc \"hello world!\" \"|\" \";\"");
+
+    cmd.clear();
 
     cmd.path_arg(fs::u8path("trailing\\slash\\"));
     cmd.string_arg("inner\"quotes");
 #ifdef _WIN32
-    REQUIRE(cmd.extract() == "\"trailing\\slash\\\\\" \"inner\\\"quotes\"");
+    REQUIRE(cmd.command_line() == "\"trailing\\slash\\\\\" \"inner\\\"quotes\"");
 #else
-    REQUIRE(cmd.extract() == "\"trailing\\\\slash\\\\\" \"inner\\\"quotes\"");
+    REQUIRE(cmd.command_line() == "\"trailing\\\\slash\\\\\" \"inner\\\"quotes\"");
 #endif
 }

@@ -59,7 +59,7 @@ namespace
                                                         const fs::path& dst,
                                                         const fs::path& archive_path)
     {
-        System::CmdLineBuilder cmd;
+        System::Command cmd;
 #if defined(_WIN32)
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
         cmd.path_arg(seven_zip_exe)
@@ -97,12 +97,16 @@ namespace
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
         System::cmd_execute_and_capture_output(
-            Strings::format(
-                R"("%s" a "%s" "%s\*")", fs::u8string(seven_zip_exe), fs::u8string(destination), fs::u8string(source)),
+            System::Command{seven_zip_exe}.string_arg("a").path_arg(destination).path_arg(source / fs::u8path("*")),
             System::get_clean_environment());
 #else
-        System::cmd_execute_clean(
-            Strings::format(R"(cd '%s' && zip --quiet -y -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
+        System::cmd_execute_clean(System::Command{"zip"}
+                                      .string_arg("--quiet")
+                                      .string_arg("-y")
+                                      .string_arg("-r")
+                                      .path_arg(destination)
+                                      .string_arg("*"),
+                                  System::InWorkingDirectory{source});
 #endif
     }
 
@@ -414,7 +418,7 @@ namespace
         {
         }
 
-        int run_nuget_commandline(const std::string& cmdline)
+        int run_nuget_commandline(const System::Command& cmdline)
         {
             if (m_interactive)
             {
@@ -444,7 +448,9 @@ namespace
             }
             else if (res.output.find("for example \"-ApiKey AzureDevOps\"") != std::string::npos)
             {
-                auto res2 = System::cmd_execute_and_capture_output(cmdline + " -ApiKey AzureDevOps");
+                auto real_cmdline = cmdline;
+                real_cmdline.string_arg("-ApiKey").string_arg("AzureDevOps");
+                auto res2 = System::cmd_execute_and_capture_output(real_cmdline);
                 if (Debug::g_debugging)
                 {
                     System::print2(res2.output);
@@ -508,12 +514,12 @@ namespace
             };
 
             const auto& nuget_exe = paths.get_tool_exe("nuget");
-            std::vector<std::string> cmdlines;
+            std::vector<System::Command> cmdlines;
 
             if (!m_read_sources.empty())
             {
                 // First check using all sources
-                System::CmdLineBuilder cmdline;
+                System::Command cmdline;
 #ifndef _WIN32
                 cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
 #endif
@@ -538,12 +544,12 @@ namespace
                     cmdline.string_arg("-NonInteractive");
                 }
 
-                cmdlines.push_back(cmdline.extract());
+                cmdlines.push_back(std::move(cmdline));
             }
             for (auto&& cfg : m_read_configs)
             {
                 // Then check using each config
-                System::CmdLineBuilder cmdline;
+                System::Command cmdline;
 #ifndef _WIN32
                 cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
 #endif
@@ -568,7 +574,7 @@ namespace
                     cmdline.string_arg("-NonInteractive");
                 }
 
-                cmdlines.push_back(cmdline.extract());
+                cmdlines.push_back(std::move(cmdline));
             }
 
             const size_t current_restored = m_restored.size();
@@ -634,7 +640,7 @@ namespace
                 nuspec_path, generate_nuspec(paths, action, nuget_ref), VCPKG_LINE_INFO);
 
             const auto& nuget_exe = paths.get_tool_exe("nuget");
-            System::CmdLineBuilder cmdline;
+            System::Command cmdline;
 #ifndef _WIN32
             cmdline.path_arg(paths.get_tool_exe(Tools::MONO));
 #endif
@@ -647,7 +653,7 @@ namespace
                 .string_arg("-ForceEnglishOutput");
             if (!m_interactive) cmdline.string_arg("-NonInteractive");
 
-            auto pack_rc = run_nuget_commandline(cmdline.extract());
+            auto pack_rc = run_nuget_commandline(cmdline);
 
             if (pack_rc != 0)
             {
@@ -658,7 +664,7 @@ namespace
                 auto nupkg_path = paths.buildtrees / nuget_ref.nupkg_filename();
                 for (auto&& write_src : m_write_sources)
                 {
-                    System::CmdLineBuilder cmd;
+                    System::Command cmd;
 #ifndef _WIN32
                     cmd.path_arg(paths.get_tool_exe(Tools::MONO));
 #endif
@@ -676,7 +682,7 @@ namespace
 
                     System::print2("Uploading binaries for ", spec, " to NuGet source ", write_src, ".\n");
 
-                    auto rc = run_nuget_commandline(cmd.extract());
+                    auto rc = run_nuget_commandline(cmd);
                     if (rc != 0)
                     {
                         System::print2(System::Color::error,
@@ -687,7 +693,7 @@ namespace
                 }
                 for (auto&& write_cfg : m_write_configs)
                 {
-                    System::CmdLineBuilder cmd;
+                    System::Command cmd;
 #ifndef _WIN32
                     cmd.path_arg(paths.get_tool_exe(Tools::MONO));
 #endif
@@ -705,7 +711,7 @@ namespace
                     System::print2(
                         "Uploading binaries for ", spec, " using NuGet config ", fs::u8string(write_cfg), ".\n");
 
-                    auto rc = run_nuget_commandline(cmd.extract());
+                    auto rc = run_nuget_commandline(cmd);
 
                     if (rc != 0)
                     {

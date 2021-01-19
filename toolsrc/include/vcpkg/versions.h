@@ -81,8 +81,7 @@ namespace vcpkg::Versions
         enum class Type
         {
             None,
-            Minimum,
-            Exact
+            Minimum
         };
     };
 }
