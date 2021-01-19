@@ -2205,7 +2205,7 @@
       "port-version": 0
     },
     "google-cloud-cpp": {
-      "baseline": "1.22.0",
+      "baseline": "1.23.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
