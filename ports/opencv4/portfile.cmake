@@ -19,8 +19,8 @@ vcpkg_from_github(
       0002-install-options.patch
       0003-force-package-requirements.patch
       0004-fix-policy-CMP0057.patch
-      0006-fix-vtk9.patch
       0006-jpeg2000_getref.patch
+      0008-fix-vtk9.patch
       0009-fix-uwp.patch
       0010-fix-interface_link_libraries.patch # Remove this patch when the next update
 )
@@ -42,6 +42,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "halide"   WITH_HALIDE
  "jasper"   WITH_JASPER
  "jpeg"     WITH_JPEG
+ "lapack"   WITH_LAPACK
  "nonfree"  OPENCV_ENABLE_NONFREE
  "openexr"  WITH_OPENEXR
  "opengl"   WITH_OPENGL
@@ -63,6 +64,19 @@ if("dnn" IN_LIST FEATURES)
   else()
     message(WARNING "The dnn module cannot be enabled on Android")
   endif()
+endif()
+
+#OpenCV on arm on windows platform (non UWP) has serious problems right now. Disabling this module is not enough (remember to put the definition in vcpkg_configure_cmake)
+#set(BUILD_opencv_surface_matching ON)
+#if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
+#  set(BUILD_opencv_surface_matching OFF)
+#  message(WARNING "The surface_matching module cannot be enabled on ARM architectures")
+#endif()
+
+set(BUILD_opencv_gapi ON)
+if(VCPKG_TARGET_IS_UWP)
+  set(BUILD_opencv_gapi OFF)
+  message(WARNING "The gapi module cannot be enabled on UWP platform")
 endif()
 
 set(WITH_IPP OFF)
@@ -346,13 +360,12 @@ vcpkg_configure_cmake(
         -DWITH_PROTOBUF=${BUILD_opencv_dnn}
         -DWITH_TBB=${WITH_TBB}
         -DWITH_OPENJPEG=OFF
-        ###### WITH PROPERTIES explicitly disabled, they have problems with libraries if already installed by user and that are "involuntarily" found during install
-        -DWITH_LAPACK=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
         -DBUILD_opencv_ovis=${BUILD_opencv_ovis}
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
         ###### The following modules are disabled for UWP
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
+        -DBUILD_opencv_gapi=${DBUILD_opencv_gapi}
         ###### The following module is disabled because it's broken #https://github.com/opencv/opencv_contrib/issues/2307
         -DBUILD_opencv_rgbd=OFF
         ###### Additional build flags
@@ -411,8 +424,11 @@ find_dependency(Tesseract)")
   if("openexr" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
   endif()
+  if("lapack" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
+  endif()
   if(WITH_OPENMP)
-    string(APPEND DEPS_STRING "\nfind_dependency(OpenMP CONFIG)")
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
   endif()
   if(BUILD_opencv_ovis)
     string(APPEND DEPS_STRING "\nfind_dependency(Ogre)\nfind_dependency(Freetype)")
