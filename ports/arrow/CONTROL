@@ -1,5 +1,5 @@
 Source: arrow
-Version: 2.0.0
+Version: 3.0.0
 Port-Version: 0
 Build-Depends: boost-system, boost-filesystem, boost-multiprecision, boost-algorithm, flatbuffers, rapidjson, zlib, lz4, brotli, bzip2, zstd, snappy, gflags, thrift, double-conversion, glog, uriparser, openssl, utf8proc
 Homepage: https://github.com/apache/arrow
