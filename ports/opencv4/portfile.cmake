@@ -74,13 +74,6 @@ if("dnn" IN_LIST FEATURES)
   endif()
 endif()
 
-#OpenCV on arm on windows platform (non UWP) has serious problems right now. Disabling this module is not enough (remember to put the definition in vcpkg_configure_cmake)
-#set(BUILD_opencv_surface_matching ON)
-#if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-#  set(BUILD_opencv_surface_matching OFF)
-#  message(WARNING "The surface_matching module cannot be enabled on ARM architectures")
-#endif()
-
 set(BUILD_opencv_gapi ON)
 if(VCPKG_TARGET_IS_UWP)
   set(BUILD_opencv_gapi OFF)
@@ -365,13 +358,15 @@ vcpkg_configure_cmake(
         ###### customized properties
         ## Options from vcpkg_check_features()
         ${FEATURE_OPTIONS}
-        -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DCMAKE_DISABLE_FIND_PACKAGE_Halide=ON
+        -DHALIDE_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DWITH_GTK=OFF
         -DWITH_IPP=${WITH_IPP}
+        -DWITH_MATLAB=OFF
         -DWITH_MSMF=${WITH_MSMF}
         -DWITH_OPENMP=${WITH_OPENMP}
         -DWITH_PROTOBUF=${BUILD_opencv_dnn}
+        -DWITH_OPENCLAMDBLAS=OFF
         -DWITH_TBB=${WITH_TBB}
         -DWITH_OPENJPEG=OFF
         ###### BUILD_options (mainly modules which require additional libraries)
@@ -435,11 +430,11 @@ find_dependency(Tesseract)")
   if("eigen" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(Eigen3 CONFIG)")
   endif()
-  if("openexr" IN_LIST FEATURES)
-    string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
-  endif()
   if("lapack" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(LAPACK)")
+  endif()
+  if("openexr" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(OpenEXR CONFIG)")
   endif()
   if(WITH_OPENMP)
     string(APPEND DEPS_STRING "\nfind_dependency(OpenMP)")
@@ -477,6 +472,7 @@ find_dependency(Qt5 COMPONENTS OpenGL Concurrent Test)")
   endif()
 
   file(WRITE ${CURRENT_PACKAGES_DIR}/share/opencv/OpenCVModules.cmake "${OPENCV_MODULES}")
+
 
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
