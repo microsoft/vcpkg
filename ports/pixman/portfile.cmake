@@ -32,6 +32,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${PIXMAN_VERSION}
+    PATCHES remove_test_demos.patch
 )
 # Meson install wrongly pkgconfig file!
 vcpkg_configure_meson(
