@@ -1,11 +1,5 @@
 # Registries: Take 2 (including Git Registries)
 
-<i>
-Warning: this feature is extremely unstable.
-Do not use this feature unless you just want to play around with what we're working on,
-and definitely do not use this feature in production.
-</i>
-
 Originally, the design of registries was decided upon and written up in the [Registries RFC](registries.md).
 However, as we've gotten further into the design process of git registries and versioning,
 and discussed the interaction of versioning with registries,
@@ -35,15 +29,6 @@ this means that the ports directory is no longer anything but a data store.
 This also means that the existing rules around locations of ports is no longer required;
 however, it will still keep getting followed for the main repository,
 and it's recommended that other registries follow the same pattern to make contributing easier.
-
-An important consideration is making it easy for people to contribute new ports,
-and new versions of ports; thus, all of the common registry updates can be done via vcpkg commands.
-The most common command will be `vcpkg add-port`, which will update the registry database
-with the new port or version that the user has added.
-We will also add checking to the PR testing to make certain that the registry database is up-to-date
-with the ports directory.
-More information on the `vcpkg add-port` command is in the
-[Adding Ports to the Registry Database](#adding-ports-to-the-registry-database) section.
 
 ## What does the registry database look like?
 
@@ -87,17 +72,19 @@ and this is a major feature of vcpkg.
 We wish to have the same feature in the new versioning world,
 and so we'll have a set of baseline versions in the registry database.
 
-There are two kinds of baselines: the `"default"` baseline,
-which is used by default, and also named baselines.
-Baseline names must be identifiers, in the same vein as ports.
-Additionally, for git registries,
-if the user uses a baseline that does not have an entry,
-then vcpkg attempts to use the `"default"` entry at the reference specified by the baseline.
+Baselines act differently between git registries or the builtin registry,
+and in filesystem registries.
+In git registries and the builtin registry,
+since there's a history that one can access,
+a baseline is the `"default"` entry in the baseline at the reference specified.
+In filesystem registries, since there is no accessible history,
+the baseline identifiers are mapped directly to entries in the baseline file,
+without translation; by default, the `"default"` entry is used.
 
 These baselines are placed in `port_versions/baseline.json`.
 This is an object mapping baseline names to baseline objects,
 where baseline objects map port names to version objects.
-A version object contains exactly one version field (one of `"version-string"`, `"version"`, etc.),
+A version object contains `"baseline"`, which is un-schemed version,
 and optionally `"port-version"`.
 
 [git object ID]: https://git-scm.com/book/en/v2/Git-Internals-Git-Objects
@@ -109,15 +96,15 @@ The following is a reasonable baseline.json for a filesystem registry that only 
 ```json
 {
   "default": {
-    "abseil": { "version-string": "2020-03-03" },
-    "zlib": { "version-string": "1.2.11", "port-version": 9 }
+    "abseil": { "baseline": "2020-03-03" },
+    "zlib": { "baseline": "1.2.11", "port-version": 9 }
   },
   "old": {
-    "abseil": { "version-string": "2019-02-11" },
-    "zlib": { "version-string": "1.2.11", "port-version": 3 }
+    "abseil": { "baseline": "2019-02-11" },
+    "zlib": { "baseline": "1.2.11", "port-version": 3 }
   },
   "really-old": {
-    "zlib": { "version-string": "1.2.9" }
+    "zlib": { "baseline": "1.2.9" }
   }
 }
 ```
@@ -145,37 +132,6 @@ remember that this file would be `port_versions/o-/ogre.json`.
   ...
 ]
 ```
-
-### Adding ports to a Registry Database
-
-We don't want people modifying these registry database files themselves without knowing what they're doing,
-so we will add a new command: `vcpkg add-port` (name up for discussion; please give suggestions).
-This command takes as input the path to the port to be added to the database,
-and by default produces a `git-tree` version entry
-(since we expect that git registries will be the most common kind of registry).
-It also updates the `"baseline-version"` to the new latest version.
-
-`vcpkg add-port` will additionally have the following options:
-
-* `--registry-root`: Used for setting the root of the registry to something different than the default;
-  this is the folder that contains the `port_versions` directory, and by default is found by searching upwards from the
-  directory that the port is contained in for a directory that contains a directory named `port_versions`.
-  This root must either:
-  * Be in the same git directory as the port folder for `git-tree` version entries; for example,
-    if one `vcpkg add-port /foo/bar/baz`,
-    and `/foo/bar/baz` is contained in the git repository `/foo/bar`,
-    then the registry root must also be in the git repository `/foo/bar`.
-  * Be a parent of the port folder for `path` version entries; for example,
-    if one `vcpkg add-port /meow/bark/nyan`,
-    then the registry root must either be `/meow` or `/meow/bark`.
-* `--no-update-baseline`: Add a new version without updating the baseline.
-  Used for backfilling older versions, or perhaps prerelease versions.
-* `--port-type`: One of `git-tree`, `path`. Defaults to `git-tree`,
-  but can be used for filesystem registries as well by passing `path`.
-
-The specific way to use `add-port` depends on the kind of registry you're modifying.
-See the specific sections for more information on [Filesystem Registries](#filesystem-registry-databases)
-and [Git Registries](#git-registry-databases).
 
 #### Filesystem Registry Databases
 
@@ -263,13 +219,13 @@ with `port_versions/baseline.json` looking like:
 {
   "default": {
     ...,
-    "asmjit": { "version-string": "2020-07-22" },
+    "asmjit": { "baseline": "2020-07-22" },
     ...
   }
 }
 ```
 
-and we'd like to update to 2020-10-08.
+and we'd like to update to `2020-10-08`.
 We should first copy the existing implementation to a new folder:
 
 ```sh
@@ -277,13 +233,7 @@ $ cp -r ports/a-/asmjit/2020-07-22 ports/a-/asmjit/2020-10-08
 ```
 
 then, we'll make the edits required to `ports/a-/asmjit/2020-10-08` to update to latest.
-We should then call `add-port`:
-
-```sh
-$ vcpkg add-port ./ports/a-/asmjit/2020-10-08 --port-type path
-```
-
-vcpkg will then update `port_versions/a-/asmjit.json` as follows:
+We should then update `port_versions/a-/asmjit.json`:
 
 ```json
 [
@@ -308,7 +258,7 @@ and update `port_versions/baseline.json`:
 {
   "default": {
     ...,
-    "asmjit": { "version-string": "2020-10-08" },
+    "asmjit": { "baseline": "2020-10-08" },
     ...
   }
 }
@@ -377,18 +327,15 @@ and make the proper edits to the portfile.cmake. Then, let's commit the changes:
 > git commit -m "[asmjit] update asmjit to 2020-10-08"
 ```
 
-In `git-tree` mode, one needs to commit the new version of the port before running the `add-port` command,
-since git needs to give the port's tree an object hash.
-Thus, we will error if there are any differences between the port tree in HEAD,
-and the port tree on disk, when one runs `add-port`.
+In `git-tree` mode, one needs to commit the new version of the port to get the git tree hash;
+we use `git rev-parse` to do so:
 
-Since we have run a commit, we can add the new version to the versions database:
-
-```sh
-$ vcpkg add-port ./ports/asmjit
+```cmd
+> git rev-parse HEAD:ports/asmjit
+2bb51d8ec8b43bb9b21032185ca8123da10ecc6c
 ```
 
-and vcpkg will update `port_versions/a-/asmjit.json` as follows:
+and then modify `port_versions/a-/asmjit.json` as follows:
 
 ```json
 [
@@ -422,7 +369,6 @@ A `<configuration>` is still an object with the following fields:
 Additionally, `<registry>` is still the same;
 a `<registry-implementation>` object, plus the following properties:
 * Optionally, `"baseline"`: A named baseline. Defaults to `"default"`.
-* Optionally, `"scopes"`: An array of `<package-name>`s
 * Optionally, `"packages"`: An array of `<package-name>`s
 
 however, `<registry-implementation>`s are now slightly different:
@@ -435,8 +381,8 @@ however, `<registry-implementation>`s are now slightly different:
   * `"kind"`: The string `"git"`
   * `"repository"`: A URI
 
-The `"packages"` and `"scopes"` fields of distinct registries must be disjoint,
-and each `<registry>` must have at least one of the `"scopes"` and `"packages"` property,
+The `"packages"` field of distinct registries must be disjoint,
+and each `<registry>` must have at the `"packages"` property,
 since otherwise there's no point.
 
 As an example, a package which uses a different default registry, and a different registry for boost,
@@ -450,11 +396,6 @@ might look like the following:
   },
   "registries": [
     {
-      "kind": "git",
-      "repository": "https://github.com/boostorg/vcpkg-ports",
-      "scopes": [ "boost" ]
-    },
-    {
       "kind": "builtin",
       "packages": [ "cppitertools" ]
     }
@@ -463,8 +404,7 @@ might look like the following:
 ```
 
 This will install `fmt` from `<directory-of-vcpkg-configuration.json>/vcpkg-ports`,
-`cppitertools` from the registry that ships with vcpkg,
-and any `boost` dependencies from `https://github.com/boostorg/vcpkg-ports`.
+and `cppitertools` and the `boost` ports from the registry that ships with vcpkg.
 Notably, this does not replace behavior up the tree -- only the `vcpkg-configuration.json`s
 for the current invocation do anything.
 
