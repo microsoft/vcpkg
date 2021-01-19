@@ -2,14 +2,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY) # Meson is not able to automatically export symbols for DLLs
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND OPTIONS
+            -Dmmx=disabled
+            -Dsse2=disabled
+            -Dssse3=disabled)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(VCPKG_CXX_FLAGS "/arch:SSE2 ${VCPKG_CXX_FLAGS}")
     set(VCPKG_C_FLAGS "/arch:SSE2 ${VCPKG_C_FLAGS}")
     list(APPEND OPTIONS
             -Dmmx=enabled
             -Dsse2=enabled
             -Dssse3=enabled)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_IS_UWP)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+    #x64 in general has all those intrinsics. (except for UWP for some reason)
     list(APPEND OPTIONS
             -Dmmx=enabled
             -Dsse2=enabled
