@@ -56,7 +56,7 @@ vcpkg_install_make()
     # This deletes the previous build
     # vcpkg_install_make(SUBPATH /util/cairo-gobject)
 # endif()
-vcpkg_fixup_pkgconfig()
+
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
@@ -75,14 +75,22 @@ file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 
 vcpkg_copy_pdbs()
 
-# This is required so that meson can find cairo since there is no *.pc file installed for cairo! 
-# file(WRITE "${CURRENT_PACKAGES_DIR}/share/cairo/cairo-config.cmake"
-# " \
-# find_package(unofficial-cairo REQUIRED)\n \
-# add_library(cairo::cairo INTERFACE IMPORTED)\n \
-# target_link_libraries(cairo::cairo INTERFACE unofficial::cairo::cairo)\n \
-# if(TARGET unofficial::cairo::cairo-gobject)\n \
-  # target_link_libraries(cairo::cairo INTERFACE unofficial::cairo::cairo-gobject)\n \
-# endif()\n \
-# set(cairo_FOUND TRUE)"
-# )
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(ZLINK "-lzlibd")
+else()
+    set(ZLINK "-lz")
+endif()
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cairo-script.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" "Libs: -l${ZLINK}" "Requires.private: lzo2 zlib\nLibs: -L\${libdir} -lcairo-script-interpreter")
+    file(INSTALL "${_file}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/" RENAME cairo-script-interpreter.pc) #normally the *.pc file is named like the library
+endif()
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(ZLINK "-lzlib")
+endif()
+set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cairo-script.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" "Libs: -l${ZLINK}" "Requires.private: lzo2 zlib\nLibs: -L\${libdir} -lcairo-script-interpreter")
+    file(INSTALL "${_file}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/" RENAME cairo-script-interpreter.pc) #normally the *.pc file is named like the library
+endif()
+vcpkg_fixup_pkgconfig()
