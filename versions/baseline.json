@@ -4517,8 +4517,8 @@
       "port-version": 0
     },
     "pixman": {
-      "baseline": "0.38.4",
-      "port-version": 2
+      "baseline": "0.40.0",
+      "port-version": 0
     },
     "platform-folders": {
       "baseline": "4.0.0",
