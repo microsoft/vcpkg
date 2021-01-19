@@ -9,6 +9,7 @@ vcpkg_from_github(
         geotiff-config.patch
         fix-proj4.patch
         fix-staticbuild.patch
+        fix-package-name.patch
 )
 
 set(SOURCE_PATH ${SOURCE_PATH}/libgeotiff)
