@@ -45,6 +45,17 @@ set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libtiff-4.pc")
 if(EXISTS "${_file}")
     vcpkg_replace_string("${_file}" "-ltiff" "-ltiffd")
 endif() 
+
+# FIx dependencies:
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libtiff-4.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" "Version: 4.1.0" "Version: 4.1.0\nRequires.private: liblzma libjpeg")
+endif() 
+set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libtiff-4.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" "Version: 4.1.0" "Version: 4.1.0\nRequires.private: liblzma libjpeg")
+endif() 
+
 vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
