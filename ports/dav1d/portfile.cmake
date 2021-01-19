@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" "x86" ON_TARGET "uwp")
+
 vcpkg_from_gitlab(
     GITLAB_URL https://code.videolan.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -28,5 +30,4 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
