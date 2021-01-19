@@ -32,14 +32,6 @@ jobs:
       filePath: 'scripts/azure-pipelines/end-to-end-tests.ps1'
       arguments: '-Triplet ${{ parameters.triplet }} -WorkingRoot ${{ variables.WORKING_ROOT }}'
       pwsh: true
-  - task: PowerShell@2
-    displayName: 'Validate version files'
-    condition: eq('${{ parameters.triplet }}', 'x86-windows')
-    inputs:
-      targetType: inline
-      script: |
-        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose
-      pwsh: true
   - task: CmdLine@2
     displayName: "Build vcpkg with CMake, with older VS, and Run Tests"
     condition: eq('${{ parameters.triplet }}', 'x86-windows')
@@ -65,6 +57,14 @@ jobs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
       arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -UseEnvironmentSasToken -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      pwsh: true
+  - task: PowerShell@2
+    displayName: 'Validate version files'
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    inputs:
+      targetType: inline
+      script: |
+        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose
       pwsh: true
   - task: PowerShell@2
     displayName: 'Report on Disk Space After Build'
