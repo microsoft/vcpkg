@@ -249,7 +249,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     endforeach()
 
     string(APPEND CROSS "[properties]\n")
-    #string(APPEND CROSS "skip_sanity_check = true\n")
+
     string(APPEND CROSS "[host_machine]\n")
     string(APPEND CROSS "endian = 'little'\n")
     if(NOT VCPKG_CMAKE_SYSTEM_NAME)

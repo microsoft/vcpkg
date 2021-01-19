@@ -11,6 +11,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES build.patch
+            link_fix_static.patch
 )
 vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
@@ -85,10 +86,21 @@ vcpkg_fixup_pkgconfig()
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtk)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/gtk/COPYING ${CURRENT_PACKAGES_DIR}/share/gtk/copyright)
 
-vcpkg_copy_tools(TOOL_NAMES gtk4-builder-tool gtk4-encode-symbolic-svg gtk4-query-settings gtk4-update-icon-cache AUTO_CLEAN)
+set(TOOL_NAMES gtk4-builder-tool 
+               gtk4-encode-symbolic-svg 
+               gtk4-query-settings 
+               gtk4-update-icon-cache)
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND TOOL_NAMES gtk4-launch)
+endif()
+
+vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 # GDK backends
 
 # option('x11-backend',
