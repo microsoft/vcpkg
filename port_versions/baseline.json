@@ -4998,7 +4998,7 @@
     },
     "realsense2": {
       "baseline": "2.40.0",
-      "port-version": 0
+      "port-version": 1
     },
     "recast": {
       "baseline": "1.5.1-3",
