@@ -297,7 +297,7 @@ namespace vcpkg
         }
         virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            auto cmd = System::CmdLineBuilder(path_to_exe).string_arg("--version");
+            auto cmd = System::Command(path_to_exe).string_arg("--version");
             auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
@@ -326,7 +326,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 
         virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            auto cmd = System::CmdLineBuilder(path_to_exe).string_arg("--version");
+            auto cmd = System::Command(path_to_exe).string_arg("--version");
             auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
@@ -352,7 +352,7 @@ CMake suite maintained and supported by Kitware (kitware.com/cmake).
 
         virtual ExpectedS<std::string> get_version(const VcpkgPaths& paths, const fs::path& path_to_exe) const override
         {
-            System::CmdLineBuilder cmd;
+            System::Command cmd;
 #ifndef _WIN32
             cmd.path_arg(paths.get_tool_exe(Tools::MONO));
 #else
@@ -414,7 +414,7 @@ Type 'NuGet help <command>' for help on a specific command.
 
         virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            auto cmd = System::CmdLineBuilder(path_to_exe).string_arg("--version");
+            auto cmd = System::Command(path_to_exe).string_arg("--version");
             auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
@@ -443,8 +443,7 @@ git version 2.17.1.windows.2
 
         virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            auto rc =
-                System::cmd_execute_and_capture_output(System::CmdLineBuilder(path_to_exe).string_arg("--version"));
+            auto rc = System::cmd_execute_and_capture_output(System::Command(path_to_exe).string_arg("--version"));
             if (rc.exit_code != 0)
             {
                 return {Strings::concat(
@@ -485,7 +484,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
 
         virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            auto cmd = System::CmdLineBuilder(path_to_exe).string_arg("--framework-version");
+            auto cmd = System::Command(path_to_exe).string_arg("--framework-version");
             auto rc = System::cmd_execute_and_capture_output(cmd);
             if (rc.exit_code != 0)
             {
@@ -512,8 +511,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
 
         virtual ExpectedS<std::string> get_version(const VcpkgPaths&, const fs::path& path_to_exe) const override
         {
-            auto rc =
-                System::cmd_execute_and_capture_output(System::CmdLineBuilder(path_to_exe).string_arg("--version"));
+            auto rc = System::cmd_execute_and_capture_output(System::Command(path_to_exe).string_arg("--version"));
             if (rc.exit_code != 0)
             {
                 return {Strings::concat(

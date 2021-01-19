@@ -240,7 +240,7 @@ namespace vcpkg::Build
         const VcpkgPaths& m_paths;
     };
 
-    System::CmdLineBuilder make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
+    System::Command make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
 
     struct ExtendedBuildResult
     {
@@ -377,7 +377,7 @@ namespace vcpkg::Build
         struct EnvMapEntry
         {
             std::unordered_map<std::string, std::string> env_map;
-            Cache<System::CmdLineBuilder, System::Environment, System::CmdLineBuilderMapLess> cmd_cache;
+            Cache<System::Command, System::Environment, System::CommandLess> cmd_cache;
         };
 
         Cache<std::vector<std::string>, EnvMapEntry> envs;

@@ -216,7 +216,7 @@ if (Test-Path $installedDir)
             const fs::path chocolatey_uninstall_file_path = per_package_dir_path / "tools" / "chocolateyUninstall.ps1";
             fs.write_contents(chocolatey_uninstall_file_path, chocolatey_uninstall_content, VCPKG_LINE_INFO);
 
-            auto cmd_line = System::CmdLineBuilder(nuget_exe)
+            auto cmd_line = System::Command(nuget_exe)
                                 .string_arg("pack")
                                 .string_arg("-OutputDirectory")
                                 .path_arg(exported_dir_path)
