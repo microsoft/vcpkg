@@ -67,7 +67,6 @@ diff --git a/cmake/build_external.cmake b/cmake/build_external.cmake
                  -DBUILD_CURL_EXE=ON
                  -DCURL_ZLIB=${CURL_USE_ZLIB}
                  )
-
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt	(revision e98e5732ec7319051f162f7314ae361c85d0a8c9)
 +++ b/CMakeLists.txt	(date 1610744839158)
