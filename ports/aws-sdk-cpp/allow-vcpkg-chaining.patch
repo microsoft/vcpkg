@@ -1,7 +1,7 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt	(revision e98e5732ec7319051f162f7314ae361c85d0a8c9)
-+++ b/CMakeLists.txt	(date 1610744839158)
-@@ -163,10 +163,16 @@
++++ b/CMakeLists.txt	(date 1611024813458)
+@@ -163,11 +163,17 @@
      endif()
      file(MAKE_DIRECTORY ${AWS_DEPS_BUILD_DIR})
      if(TARGET_ARCH STREQUAL "ANDROID")
@@ -14,7 +14,8 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
              COMMAND ${CMAKE_COMMAND} -G ${CMAKE_GENERATOR}
              -DTARGET_ARCH=${TARGET_ARCH}
              -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}
-+            ${EXTRA_ARGS}
              -DCMAKE_ANDROID_NDK_TOOLCHAIN_VERSION=${CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION}
++            ${EXTRA_ARGS}
              -DANDROID_NATIVE_API_LEVEL=${ANDROID_NATIVE_API_LEVEL}
              -DANDROID_ABI=${ANDROID_ABI}
+             -DANDROID_TOOLCHAIN=${ANDROID_TOOLCHAIN}
