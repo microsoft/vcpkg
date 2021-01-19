@@ -1,6 +1,6 @@
 {
   "name": "restc-cpp",
-  "version-string": "v0.10.0",
+  "version-string": "0.10.0",
   "homepage": "https://github.com/jgaa/restc-cpp",
   "description": "Modern C++ REST Client library",
   "dependencies": [
