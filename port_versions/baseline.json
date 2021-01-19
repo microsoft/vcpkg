@@ -357,7 +357,7 @@
       "port-version": 1
     },
     "blend2d": {
-      "baseline": "beta_2020-08-24",
+      "baseline": "beta_2021-01-02",
       "port-version": 0
     },
     "blitz": {
@@ -2205,7 +2205,7 @@
       "port-version": 0
     },
     "google-cloud-cpp": {
-      "baseline": "1.22.0",
+      "baseline": "1.23.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -4457,7 +4457,7 @@
       "port-version": 0
     },
     "pegtl": {
-      "baseline": "3.1.0",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "pegtl-2": {
@@ -4473,12 +4473,12 @@
       "port-version": 0
     },
     "phnt": {
-      "baseline": "2019-05-01",
+      "baseline": "2020-12-21",
       "port-version": 0
     },
     "physfs": {
       "baseline": "3.0.2",
-      "port-version": 3
+      "port-version": 4
     },
     "physx": {
       "baseline": "4.1.1",
@@ -5165,7 +5165,7 @@
       "port-version": 0
     },
     "sdformat9": {
-      "baseline": "9.2.0-1",
+      "baseline": "9.4.0",
       "port-version": 0
     },
     "sdl1": {
@@ -5286,7 +5286,7 @@
     },
     "simage": {
       "baseline": "1.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "simde": {
       "baseline": "0.7.0",
@@ -5925,8 +5925,8 @@
       "port-version": 0
     },
     "usockets": {
-      "baseline": "0.6.0",
-      "port-version": 1
+      "baseline": "2021-1-19",
+      "port-version": 0
     },
     "usrsctp": {
       "baseline": "0db9691",
@@ -6174,7 +6174,7 @@
     },
     "xlnt": {
       "baseline": "1.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "xmlsec": {
       "baseline": "1.2.31",
