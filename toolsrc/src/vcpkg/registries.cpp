@@ -893,7 +893,7 @@ namespace
             fs::path path;
             r.required_object_field("a filesystem registry", obj, PATH, path, Json::PathDeserializer::instance);
 
-            res = std::make_unique<FilesystemRegistry>(config_directory / path, std::move(baseline));
+            res = std::make_unique<FilesystemRegistry>(Files::combine(config_directory, path), std::move(baseline));
         }
         else if (kind == KIND_GIT)
         {
