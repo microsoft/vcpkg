@@ -35,8 +35,8 @@ vcpkg_configure_cmake(
         -DARROW_BROTLI_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
         -DARROW_GFLAGS_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
         -DARROW_LZ4_USE_SHARED=${ARROW_BUILD_SHARED}        # This can be wrong in custom triplets
-		-DARROW_SNAPPY_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
-		-DARROW_THRIFT_USE_SHARED=${ARROW_BUILD_SHARED}      # This can be wrong in custom triplets
+        -DARROW_SNAPPY_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
+        -DARROW_THRIFT_USE_SHARED=${ARROW_BUILD_SHARED}      # This can be wrong in custom triplets
         -DARROW_UTF8PROC_USE_SHARED=${ARROW_BUILD_SHARED}   # This can be wrong in custom triplets
         -DARROW_ZSTD_USE_SHARED=${ARROW_BUILD_SHARED}       # This can be wrong in custom triplets
         -DARROW_JEMALLOC=OFF
