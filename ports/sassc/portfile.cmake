@@ -9,8 +9,9 @@ vcpkg_from_github(
 
 find_library(LIBSASS_DEBUG sass PATHS "${CURRENT_INSTALLED_DIR}/debug/lib/" NO_DEFAULT_PATH)
 find_library(LIBSASS_RELEASE sass PATHS "${CURRENT_INSTALLED_DIR}/lib/" NO_DEFAULT_PATH)
-
-set(ENV{LIBS} "$ENV{LIBS} -lgetopt")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(ENV{LIBS} "$ENV{LIBS} -lgetopt")
+endif()
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
