@@ -1,10 +1,10 @@
 Source: opencv3
 Version: 3.4.10
-Port-Version: 4
+Port-Version: 5
 Build-Depends: zlib
 Homepage: https://github.com/opencv/opencv
 Description: computer vision library
-Default-Features: dnn, jpeg, opengl, png, tiff, webp
+Default-Features: dnn, jpeg, png, tiff, webp
 
 Feature: nonfree
 Description: allow nonfree and unredistributable libraries
@@ -14,7 +14,7 @@ Build-Depends: protobuf
 Description: opencv_flann module
 
 Feature: contrib
-Build-Depends: opencv3[dnn], hdf5 (!uwp), tesseract (!uwp)
+Build-Depends: opencv3[dnn], hdf5 (!uwp&!(windows&(arm|arm64))), tesseract (!uwp&!(windows&(arm|arm64)))
 Description: opencv_contrib module
 
 Feature: cuda
@@ -51,6 +51,10 @@ Description: JPEG 2000 support for opencv
 Feature: jpeg
 Build-Depends: libjpeg-turbo
 Description: JPEG support for opencv
+
+Feature: lapack
+Build-Depends: blas, lapack
+Description: LAPACK support for opencv
 
 Feature: openexr
 Build-Depends: openexr
