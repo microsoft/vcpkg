@@ -2954,7 +2954,7 @@
     },
     "libgeotiff": {
       "baseline": "1.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libgit2": {
       "baseline": "1.1.0",
