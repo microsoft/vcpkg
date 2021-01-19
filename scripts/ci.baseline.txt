@@ -1250,6 +1250,7 @@ pixel:x64-windows=fail
 pixel:x64-windows-static=fail
 pixel:x64-windows-static-md=fail
 pixel:x86-windows=fail
+pixman:arm-uwp=fail
 platform-folders:arm-uwp=fail
 platform-folders:x64-uwp=fail
 plib:arm-uwp=fail
