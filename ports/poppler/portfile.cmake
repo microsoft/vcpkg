@@ -14,10 +14,9 @@ vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
 
-vcpkg_find_acquire_program(CLANG_FORMAT)
-get_filename_component(CLANG_FORMAT_PATH ${CLANG} DIRECTORY)
-vcpkg_add_to_path(${CLANG_FORMAT_PATH})
-
+vcpkg_find_acquire_program(CLANG-FORMAT)
+get_filename_component(CLANG-FORMAT_PATH ${CLANG-FORMAT} DIRECTORY)
+vcpkg_add_to_path(${CLANG-FORMAT_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     curl ENABLE_CURL
