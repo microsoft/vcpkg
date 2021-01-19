@@ -4473,7 +4473,7 @@
       "port-version": 0
     },
     "phnt": {
-      "baseline": "2019-05-01",
+      "baseline": "2020-12-21",
       "port-version": 0
     },
     "physfs": {
