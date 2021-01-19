@@ -36,7 +36,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/GeoTIFF TARGET_PATH share/GeoTIFF)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/GeoTIFF/geotiff-config.cmake "if (GeoTIFF_USE_STATIC_LIBS)" "if (1)")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/GeoTIFF/GeoTIFF-config.cmake "if (GeoTIFF_USE_STATIC_LIBS)" "if (1)")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
