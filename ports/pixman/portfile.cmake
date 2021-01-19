@@ -21,11 +21,12 @@ elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
             -Dsse2=enabled
             -Dssse3=enabled)
 elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "arm")
-# If somebody teaches meson to actually do the test correctly....
-# Currently pixman-x86 is included unconditionally in builds as such arm support is disabled. 
-#    list(APPEND OPTIONS
-#            -Darm-simd=enabled
-#        )
+   list(APPEND OPTIONS
+               #-Darm-simd=enabled does not work with arm64-windows
+               -Dmmx=disabled
+               -Dsse2=disabled
+               -Dssse3=disabled
+       )
 endif()
 
 set(PIXMAN_VERSION 0.40.0)
