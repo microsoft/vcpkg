@@ -11,7 +11,7 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES build.patch
-            link_fix_static.patch
+            #link_fix_static.patch
 )
 vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
