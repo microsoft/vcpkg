@@ -22,6 +22,7 @@ jobs:
             #  check_disk_space: df -h
     env:
       VCPKG_PACKAGES: >-
+        angle
         chromaprint
         ffmpeg
         fftw3
