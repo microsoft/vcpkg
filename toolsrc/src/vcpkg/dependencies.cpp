@@ -197,13 +197,16 @@ namespace vcpkg::Dependencies
                 static auto vcpkg_remove_cmd = "./vcpkg";
 #endif
                 if (!m_scfl)
-                    Checks::exit_with_message(
+                {
+                    Checks::exit_maybe_upgrade(
                         VCPKG_LINE_INFO,
                         "Error: while loading control file for %s: %s.\nPlease run \"%s remove %s\" and re-attempt.",
                         m_spec,
                         m_scfl.error(),
                         vcpkg_remove_cmd,
                         m_spec);
+                }
+
                 return *m_scfl.get();
             }
 
@@ -258,7 +261,7 @@ namespace vcpkg::Dependencies
             {
                 const SourceControlFileLocation* scfl = m_port_provider.get_control_file(spec.name()).get();
 
-                Checks::check_exit(
+                Checks::check_maybe_upgrade(
                     VCPKG_LINE_INFO, scfl, "Error: Cannot find definition for package `%s`.", spec.name());
 
                 return m_graph
@@ -296,7 +299,7 @@ namespace vcpkg::Dependencies
         const Cluster& find_or_exit(const PackageSpec& spec, LineInfo linfo) const
         {
             auto it = m_graph.find(spec);
-            Checks::check_exit(linfo, it != m_graph.end(), "Failed to locate spec in graph");
+            Checks::check_maybe_upgrade(linfo, it != m_graph.end(), "Failed to locate spec in graph");
             return it->second;
         }
 
@@ -697,11 +700,11 @@ namespace vcpkg::Dependencies
         {
             auto maybe_scfl = port_provider.get_control_file(spec.package_spec.name());
 
-            Checks::check_exit(VCPKG_LINE_INFO,
-                               maybe_scfl.has_value(),
-                               "Error: while loading port `%s`: %s",
-                               spec.package_spec.name(),
-                               maybe_scfl.error());
+            Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                        maybe_scfl.has_value(),
+                                        "Error: while loading port `%s`: %s",
+                                        spec.package_spec.name(),
+                                        maybe_scfl.error());
 
             const SourceControlFileLocation* scfl = maybe_scfl.get();
 
@@ -790,11 +793,11 @@ namespace vcpkg::Dependencies
                     {
                         auto maybe_paragraph =
                             clust.get_scfl_or_exit().source_control_file->find_feature(spec.feature());
-                        Checks::check_exit(VCPKG_LINE_INFO,
-                                           maybe_paragraph.has_value(),
-                                           "Package %s does not have a %s feature",
-                                           spec.name(),
-                                           spec.feature());
+                        Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                                    maybe_paragraph.has_value(),
+                                                    "Package %s does not have a %s feature",
+                                                    spec.name(),
+                                                    spec.feature());
                         paragraph_depends = &maybe_paragraph.value_or_exit(VCPKG_LINE_INFO).dependencies;
                     }
 
@@ -1024,11 +1027,12 @@ namespace vcpkg::Dependencies
             for (auto&& dep : deps)
             {
                 auto p_installed = graph->get(dep).m_installed.get();
-                Checks::check_exit(VCPKG_LINE_INFO,
-                                   p_installed,
-                                   "Error: database corrupted. Package %s is installed but dependency %s is not.",
-                                   ipv.spec(),
-                                   dep);
+                Checks::check_maybe_upgrade(
+                    VCPKG_LINE_INFO,
+                    p_installed,
+                    "Error: database corrupted. Package %s is installed but dependency %s is not.",
+                    ipv.spec(),
+                    dep);
                 p_installed->remove_edges.emplace(ipv.spec());
             }
         }
