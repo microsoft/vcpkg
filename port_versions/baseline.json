@@ -1353,8 +1353,8 @@
       "port-version": 0
     },
     "cppgraphqlgen": {
-      "baseline": "2020-12-07",
-      "port-version": 1
+      "baseline": "3.5.0",
+      "port-version": 0
     },
     "cppitertools": {
       "baseline": "2.0",
