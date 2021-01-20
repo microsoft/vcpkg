@@ -30,6 +30,7 @@ jobs:
         hss1394
         libebur128
         libflac
+        libid3tag
         libkeyfinder
         libmad
         libmodplug
