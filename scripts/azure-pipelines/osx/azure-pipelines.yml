@@ -38,12 +38,14 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/end-to-end-tests.ps1'
       arguments: '-Triplet x64-osx -WorkingRoot ${{ variables.WORKING_ROOT }}'
+      pwsh: true
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
       arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -BinarySourceStub "$(BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      pwsh: true
   - bash: |
       df -h
     displayName: 'Report on Disk Space After Build'

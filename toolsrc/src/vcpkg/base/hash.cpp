@@ -122,7 +122,7 @@ namespace vcpkg::Hash
                     case Algorithm::Sha1: alg_handle = sha1_alg_handle; break;
                     case Algorithm::Sha256: alg_handle = sha256_alg_handle; break;
                     case Algorithm::Sha512: alg_handle = sha512_alg_handle; break;
-                    default: Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown algorithm");
+                    default: Checks::unreachable(VCPKG_LINE_INFO);
                 }
 
                 clear();

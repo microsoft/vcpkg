@@ -462,6 +462,6 @@ namespace vcpkg::Downloads
             fs.rename(download_path_part_path, download_path, VCPKG_LINE_INFO);
             return url;
         }
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to download from mirror set:\n%s", errors);
+        Checks::exit_with_message(VCPKG_LINE_INFO, Strings::concat("Failed to download from mirror set:\n", errors));
     }
 }

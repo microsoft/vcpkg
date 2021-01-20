@@ -53,5 +53,6 @@
 - [vcpkg\_install\_nmake](vcpkg_install_nmake.md)
 - [vcpkg\_install\_qmake](vcpkg_install_qmake.md)
 - [vcpkg\_internal\_get\_cmake\_vars](vcpkg_internal_get_cmake_vars.md)
+- [vcpkg\_minimum\_required](vcpkg_minimum_required.md)
 - [vcpkg\_prettify\_command](vcpkg_prettify_command.md)
 - [vcpkg\_replace\_string](vcpkg_replace_string.md)

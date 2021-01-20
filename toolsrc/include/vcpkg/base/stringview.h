@@ -2,28 +2,16 @@
 
 #include <vcpkg/base/fwd/stringview.h>
 
-#include <vcpkg/base/optional.h>
+#include <stddef.h>
 
+#include <iterator>
 #include <limits>
 #include <string>
-#include <vector>
 
 namespace vcpkg
 {
     struct StringView
     {
-        static std::vector<StringView> find_all_enclosed(const StringView& input,
-                                                         const std::string& left_delim,
-                                                         const std::string& right_delim) noexcept;
-
-        static StringView find_exactly_one_enclosed(const StringView& input,
-                                                    const std::string& left_tag,
-                                                    const std::string& right_tag) noexcept;
-
-        static Optional<StringView> find_at_most_one_enclosed(const StringView& input,
-                                                              const std::string& left_tag,
-                                                              const std::string& right_tag) noexcept;
-
         constexpr StringView() = default;
         StringView(const std::string& s) noexcept; // Implicit by design
 

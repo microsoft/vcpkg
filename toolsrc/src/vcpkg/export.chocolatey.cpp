@@ -26,6 +26,7 @@ namespace vcpkg::Export::Chocolatey
             {
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find desired dependency version.");
             }
+
             std::string nuspec_dependency = Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", depend);
             Strings::inplace_replace_all(nuspec_dependency, "@PACKAGE_VERSION@", found->second);
             nuspec_dependencies += nuspec_dependency;
@@ -62,6 +63,7 @@ namespace vcpkg::Export::Chocolatey
         {
             Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find desired package version.");
         }
+
         std::string nuspec_file_content =
             Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", binary_paragraph.spec.name());
         Strings::inplace_replace_all(nuspec_file_content, "@PACKAGE_VERSION@", package_version->second);

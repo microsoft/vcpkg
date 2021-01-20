@@ -1,8 +1,9 @@
 #pragma once
 
-#include <vcpkg/base/fwd/lineinfo.h>
 #include <vcpkg/base/fwd/optional.h>
 
+#include <vcpkg/base/basic_checks.h>
+#include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/pragmas.h>
 
 #include <type_traits>
@@ -217,9 +218,6 @@ namespace vcpkg
         private:
             const T* m_t;
         };
-
-        // Note: implemented in checks.cpp to cut the header dependency
-        void exit_if_null(bool b, const LineInfo& line_info);
     }
 
     template<class T>
@@ -237,19 +235,19 @@ namespace vcpkg
 
         T&& value_or_exit(const LineInfo& line_info) &&
         {
-            details::exit_if_null(this->m_base.has_value(), line_info);
+            Checks::check_exit(line_info, this->m_base.has_value(), "Value was null");
             return std::move(this->m_base.value());
         }
 
         T& value_or_exit(const LineInfo& line_info) &
         {
-            details::exit_if_null(this->m_base.has_value(), line_info);
+            Checks::check_exit(line_info, this->m_base.has_value(), "Value was null");
             return this->m_base.value();
         }
 
         const T& value_or_exit(const LineInfo& line_info) const&
         {
-            details::exit_if_null(this->m_base.has_value(), line_info);
+            Checks::check_exit(line_info, this->m_base.has_value(), "Value was null");
             return this->m_base.value();
         }
 

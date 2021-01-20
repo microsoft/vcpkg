@@ -112,7 +112,7 @@ namespace vcpkg::PortFileProvider
                 else
                 {
                     print_error_message(maybe_scf.error());
-                    Checks::exit_with_message(
+                    Checks::exit_maybe_upgrade(
                         VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(ports_dir));
                 }
 
@@ -130,16 +130,16 @@ namespace vcpkg::PortFileProvider
                     {
                         return std::make_unique<OverlayRegistryEntry>(std::move(ports_spec), scf->to_versiont());
                     }
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
-                                              fs::u8string(ports_spec),
-                                              spec,
-                                              scf->core_paragraph->name);
+                    Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                               "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
+                                               fs::u8string(ports_spec),
+                                               spec,
+                                               scf->core_paragraph->name);
                 }
                 else
                 {
                     print_error_message(found_scf.error());
-                    Checks::exit_with_message(
+                    Checks::exit_maybe_upgrade(
                         VCPKG_LINE_INFO, "Error: Failed to load port %s from %s", spec, fs::u8string(ports_dir));
                 }
             }
@@ -271,7 +271,7 @@ namespace vcpkg::PortFileProvider
                 else
                 {
                     print_error_message(maybe_scf.error());
-                    Checks::exit_with_message(
+                    Checks::exit_maybe_upgrade(
                         VCPKG_LINE_INFO, "Error: Failed to load port from %s", fs::u8string(ports_dir));
                 }
                 continue;
@@ -345,7 +345,7 @@ namespace vcpkg::PortFileProvider
                 auto entry = try_load_registry_port_and_baseline(paths, port_name.to_string());
                 if (!entry.first)
                 {
-                    Checks::exit_with_message(
+                    Checks::exit_maybe_upgrade(
                         VCPKG_LINE_INFO, "Error: Could not find a definition for port %s", port_name);
                 }
                 auto it = m_entry_cache.emplace(port_name.to_string(), std::move(entry.first));
@@ -436,10 +436,10 @@ namespace vcpkg::PortFileProvider
                         else
                         {
                             print_error_message(maybe_scf.error());
-                            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                                      "Error: Failed to load port %s from %s",
-                                                      port_name,
-                                                      fs::u8string(maybe_overlay->path));
+                            Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                                       "Error: Failed to load port %s from %s",
+                                                       port_name,
+                                                       fs::u8string(maybe_overlay->path));
                         }
                     }
                     it = m_overlay_cache.emplace(std::move(s_port_name), std::move(v)).first;

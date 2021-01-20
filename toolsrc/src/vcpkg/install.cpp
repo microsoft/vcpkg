@@ -51,8 +51,9 @@ namespace vcpkg::Install
     {
         auto& fs = paths.get_filesystem();
         auto source_dir = paths.package_dir(spec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", fs::u8string(source_dir));
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           fs.exists(source_dir),
+                           Strings::concat("Source directory ", fs::u8string(source_dir), "does not exist"));
         auto files = fs.get_files_recursive(source_dir);
         install_files_and_write_listfile(fs, source_dir, files, destination_dir);
     }
@@ -857,12 +858,13 @@ namespace vcpkg::Install
                         return (ch >= 'a' || ch <= 'f') || Parse::ParserBase::is_ascii_digit(ch);
                     }))
                 {
-                    Checks::exit_with_message(VCPKG_LINE_INFO,
-                                              "Error: the top-level builtin-baseline (%s) was not a valid commit sha: "
-                                              "expected 40 lowercase hexadecimal characters.\n%s\n",
-                                              *p_baseline,
-                                              paths.get_current_git_sha_message());
+                    Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                               "Error: the top-level builtin-baseline (%s) was not a valid commit sha: "
+                                               "expected 40 lowercase hexadecimal characters.\n%s\n",
+                                               *p_baseline,
+                                               paths.get_current_git_sha_message());
                 }
+
                 paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(*p_baseline);
             }
             auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
@@ -1079,7 +1081,7 @@ namespace vcpkg::Install
                 message_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(code));
                 break;
             case BuildResult::SUCCEEDED: result_string = "Pass"; break;
-            default: Checks::exit_fail(VCPKG_LINE_INFO);
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
 
         return Strings::format(R"(<test name="%s" method="%s" time="%lld" result="%s">%s</test>)"

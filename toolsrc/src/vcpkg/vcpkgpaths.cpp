@@ -119,18 +119,18 @@ namespace vcpkg
         auto manifest_opt = Json::parse_file(fs, manifest_path, ec);
         if (ec)
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Failed to load manifest from directory %s: %s",
-                                      fs::u8string(manifest_dir),
-                                      ec.message());
+            Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                       "Failed to load manifest from directory %s: %s",
+                                       fs::u8string(manifest_dir),
+                                       ec.message());
         }
 
         if (!manifest_opt.has_value())
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "Failed to parse manifest at %s:\n%s",
-                                      fs::u8string(manifest_path),
-                                      manifest_opt.error()->format());
+            Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                       "Failed to parse manifest at %s:\n%s",
+                                       fs::u8string(manifest_path),
+                                       manifest_opt.error()->format());
         }
         auto manifest_value = std::move(manifest_opt).value_or_exit(VCPKG_LINE_INFO);
 
@@ -158,16 +158,15 @@ namespace vcpkg
                                             const fs::path& manifest_dir)
     {
         fs::path config_dir;
-
-        if (!manifest_dir.empty())
-        {
-            // manifest mode
-            config_dir = manifest_dir;
-        }
-        else
+        if (manifest_dir.empty())
         {
             // classic mode
             config_dir = vcpkg_root;
+        }
+        else
+        {
+            // manifest mode
+            config_dir = manifest_dir;
         }
 
         auto path_to_config = config_dir / fs::u8path("vcpkg-configuration.json");
@@ -979,7 +978,7 @@ If you wish to silence this error and use classic mode, you can:
         }
 
 #if !defined(_WIN32)
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot build windows triplets from non-windows.");
+        Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, "Cannot build windows triplets from non-windows.");
 #else
         const std::vector<Toolset>& vs_toolsets = m_pimpl->toolsets.get_lazy(
             [this]() { return VisualStudio::find_toolset_instances_preferred_first(*this); });

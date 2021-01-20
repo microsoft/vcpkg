@@ -3,6 +3,7 @@
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/stringliteral.h>
+#include <vcpkg/base/system.print.h>
 
 #include <system_error>
 #include <type_traits>
@@ -225,10 +226,10 @@ namespace vcpkg
     private:
         void exit_if_error(const LineInfo& line_info) const
         {
-            // This is used for quick value_or_exit() calls, so always put line_info in the error message.
             if (m_s.has_error())
             {
-                Checks::exit_with_message(line_info, "Failed at [%s] with message:\n%s", line_info, m_s.to_string());
+                System::print2(System::Color::error, m_s.to_string(), "\n");
+                Checks::unreachable(line_info);
             }
         }
 

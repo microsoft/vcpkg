@@ -56,7 +56,7 @@ namespace vcpkg::Json
             {
                 case Newline::Lf: return "\n";
                 case Newline::CrLf: return "\r\n";
-                default: Checks::exit_fail(VCPKG_LINE_INFO);
+                default: Checks::unreachable(VCPKG_LINE_INFO);
             }
         }
 

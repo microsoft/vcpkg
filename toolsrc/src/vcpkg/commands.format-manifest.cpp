@@ -120,18 +120,18 @@ Please open an issue at https://github.com/microsoft/vcpkg, with the following o
 Error:)",
                            data.scf.core_paragraph->name);
             print_error_message(check.error());
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      R"(
+            Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                       R"(
 === Serialized manifest file ===
 %s
 )",
-                                      Json::stringify(res, {}));
+                                       Json::stringify(res, {}));
         }
 
         auto check_scf = std::move(check).value_or_exit(VCPKG_LINE_INFO);
         if (*check_scf != data.scf)
         {
-            Checks::exit_with_message(
+            Checks::exit_maybe_upgrade(
                 VCPKG_LINE_INFO,
                 R"([correctness check] The serialized manifest SCF was different from the original SCF.
 Please open an issue at https://github.com/microsoft/vcpkg, with the following output:

@@ -22,17 +22,17 @@ namespace vcpkg
 
     namespace details
     {
-        inline bool vcpkg_strcmp(const char* l, const char* r) { return strcmp(l, r) == 0; }
+        inline bool strequal(const char* l, const char* r) { return strcmp(l, r) == 0; }
     }
 
     inline bool operator==(const CStringView& l, const CStringView& r)
     {
-        return details::vcpkg_strcmp(l.c_str(), r.c_str());
+        return details::strequal(l.c_str(), r.c_str());
     }
 
-    inline bool operator==(const char* l, const CStringView& r) { return details::vcpkg_strcmp(l, r.c_str()); }
+    inline bool operator==(const char* l, const CStringView& r) { return details::strequal(l, r.c_str()); }
 
-    inline bool operator==(const CStringView& r, const char* l) { return details::vcpkg_strcmp(l, r.c_str()); }
+    inline bool operator==(const CStringView& r, const char* l) { return details::strequal(l, r.c_str()); }
 
     inline bool operator==(const std::string& l, const CStringView& r) { return l == r.c_str(); }
 
@@ -41,12 +41,12 @@ namespace vcpkg
     // notequals
     inline bool operator!=(const CStringView& l, const CStringView& r)
     {
-        return !details::vcpkg_strcmp(l.c_str(), r.c_str());
+        return !details::strequal(l.c_str(), r.c_str());
     }
 
-    inline bool operator!=(const char* l, const CStringView& r) { return !details::vcpkg_strcmp(l, r.c_str()); }
+    inline bool operator!=(const char* l, const CStringView& r) { return !details::strequal(l, r.c_str()); }
 
-    inline bool operator!=(const CStringView& r, const char* l) { return !details::vcpkg_strcmp(l, r.c_str()); }
+    inline bool operator!=(const CStringView& r, const char* l) { return !details::strequal(l, r.c_str()); }
 
     inline bool operator!=(const CStringView& r, const std::string& l) { return l != r.c_str(); }
 

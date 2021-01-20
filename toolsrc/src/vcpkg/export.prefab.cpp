@@ -257,7 +257,8 @@ namespace vcpkg::Export::Prefab
 
         {
             auto build_info = build_info_from_triplet(paths, provider, default_triplet);
-            Checks::check_exit(VCPKG_LINE_INFO, is_supported(*build_info), "Currenty supported on android triplets");
+            Checks::check_maybe_upgrade(
+                VCPKG_LINE_INFO, is_supported(*build_info), "Currenty supported on android triplets");
         }
 
         std::vector<VcpkgPaths::TripletFile> available_triplets = paths.get_available_triplets();
@@ -312,25 +313,25 @@ namespace vcpkg::Export::Prefab
 
         const fs::path ndk_location = android_ndk_home.value_or_exit(VCPKG_LINE_INFO);
 
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           utils.exists(ndk_location),
-                           "Error: ANDROID_NDK_HOME Directory does not exists %s",
-                           fs::generic_u8string(ndk_location));
+        Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                    utils.exists(ndk_location),
+                                    "Error: ANDROID_NDK_HOME Directory does not exists %s",
+                                    fs::generic_u8string(ndk_location));
         const fs::path source_properties_location = ndk_location / "source.properties";
 
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           utils.exists(ndk_location),
-                           "Error: source.properties missing in ANDROID_NDK_HOME directory %s",
-                           fs::generic_u8string(source_properties_location));
+        Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                    utils.exists(ndk_location),
+                                    "Error: source.properties missing in ANDROID_NDK_HOME directory %s",
+                                    fs::generic_u8string(source_properties_location));
 
         std::string content = utils.read_contents(source_properties_location, VCPKG_LINE_INFO);
 
         Optional<std::string> version_opt = find_ndk_version(content);
 
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           version_opt.has_value(),
-                           "Error: NDK version missing %s",
-                           fs::generic_u8string(source_properties_location));
+        Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                    version_opt.has_value(),
+                                    "Error: NDK version missing %s",
+                                    fs::generic_u8string(source_properties_location));
 
         NdkVersion version = to_version(version_opt.value_or_exit(VCPKG_LINE_INFO)).value_or_exit(VCPKG_LINE_INFO);
 

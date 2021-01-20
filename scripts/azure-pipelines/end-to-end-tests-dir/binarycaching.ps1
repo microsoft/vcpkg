@@ -1,3 +1,8 @@
+if ($IsLinux) {
+    # The tests below need a mono installation not currently available on the Linux agents.
+    return
+}
+
 . $PSScriptRoot/../end-to-end-tests-prelude.ps1
 
 # Test simple installation

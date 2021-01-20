@@ -15,69 +15,25 @@
 
 #define VCPKG_VERSION_AS_STRING MACRO_TO_STRING(VCPKG_VERSION)
 
+#if !defined(VCPKG_BASE_VERSION)
+#error VCPKG_BASE_VERSION must be defined
+#endif
+
+#define VCPKG_BASE_VERSION_AS_STRING MACRO_TO_STRING(VCPKG_BASE_VERSION)
+
 namespace vcpkg::Commands::Version
 {
-    const char* base_version()
-    {
-        return
-#include "../VERSION.txt"
-            ;
-    }
+    const char* base_version() noexcept { return VCPKG_BASE_VERSION_AS_STRING; }
 
-    const char* version()
+    const char* version() noexcept
     {
-        return
-#include "../VERSION.txt"
-            "-" VCPKG_VERSION_AS_STRING
+        return VCPKG_BASE_VERSION_AS_STRING "-" VCPKG_VERSION_AS_STRING
 #ifndef NDEBUG
-            "-debug"
+                                            "-debug"
 #endif
             ;
     }
 
-    static int scan3(const char* input, const char* pattern, int* a, int* b, int* c)
-    {
-#if defined(_WIN32)
-        return sscanf_s(input, pattern, a, b, c);
-#else
-        return sscanf(input, pattern, a, b, c);
-#endif
-    }
-
-    void warn_if_vcpkg_version_mismatch(const VcpkgPaths& paths)
-    {
-        auto version_file = paths.get_filesystem().read_contents(paths.root / "toolsrc" / "VERSION.txt");
-        if (const auto version_contents = version_file.get())
-        {
-            int maj1, min1, rev1;
-            const auto num1 = scan3(version_contents->c_str(), "\"%d.%d.%d\"", &maj1, &min1, &rev1);
-
-            int maj2, min2, rev2;
-            const auto num2 = scan3(Version::version(), "%d.%d.%d-", &maj2, &min2, &rev2);
-
-            if (num1 == 3 && num2 == 3)
-            {
-                if (maj1 != maj2 || min1 != min2 || rev1 != rev2)
-                {
-#if defined(_WIN32)
-                    auto bootstrap = ".\\bootstrap-vcpkg.bat";
-#else
-                    auto bootstrap = "./bootstrap-vcpkg.sh";
-#endif
-                    System::printf(System::Color::warning,
-                                   "Warning: Different source is available for vcpkg (%d.%d.%d -> %d.%d.%d). Use "
-                                   "%s to update.\n",
-                                   maj2,
-                                   min2,
-                                   rev2,
-                                   maj1,
-                                   min1,
-                                   rev1,
-                                   bootstrap);
-                }
-            }
-        }
-    }
     const CommandStructure COMMAND_STRUCTURE = {
         create_example_string("version"),
         0,

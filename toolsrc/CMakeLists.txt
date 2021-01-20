@@ -77,9 +77,11 @@ if (VCPKG_EMBED_GIT_SHA)
     endif()
 endif()
 
-if (VCPKG_VERSION STREQUAL "")
-    set(VCPKG_VERSION "nohash")
+if (NOT DEFINED VCPKG_VERSION OR VCPKG_VERSION STREQUAL "")
+    set(VCPKG_VERSION "unknownhash")
 endif()
+
+set(VCPKG_BASE_VERSION "2021-01-13")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -115,7 +117,9 @@ target_include_directories(vcpkglib PUBLIC include)
 vcpkg_target_add_warning_options(vcpkglib)
 target_compile_definitions(vcpkglib PUBLIC
     VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>
-    VCPKG_VERSION=${VCPKG_VERSION})
+    VCPKG_VERSION=${VCPKG_VERSION}
+    VCPKG_BASE_VERSION=${VCPKG_BASE_VERSION}
+    )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
