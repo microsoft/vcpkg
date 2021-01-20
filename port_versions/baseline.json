@@ -5262,7 +5262,7 @@
     },
     "sfml": {
       "baseline": "2.5.1",
-      "port-version": 9
+      "port-version": 10
     },
     "sfsexp": {
       "baseline": "1.3",
