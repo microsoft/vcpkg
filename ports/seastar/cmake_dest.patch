@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5f34fe88..8292178a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1107,7 +1107,7 @@ if (Seastar_INSTALL)
+     INPUT ${CMAKE_CURRENT_BINARY_DIR}/pkgconfig/seastar-testing-install.pc.in)
+ 
+   include (CMakePackageConfigHelpers)
+-  set (install_cmakedir ${CMAKE_INSTALL_LIBDIR}/cmake/Seastar)
++  set (install_cmakedir "share/seastar")
+ 
+   install (
+     DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/

@@ -1,0 +1,29 @@
+{
+    "name": "seastar",
+    "version-string": "20.05.0",
+    "description": "High performance server-side application framework",
+    "homepage": "https://github.com/scylladb/seastar",
+    "documentation": "http://docs.seastar.io/master/index.html",
+    "license": "Apache-2.0",
+    "dependencies": [
+        "ragel",
+        "hwloc",
+        "numactl",
+        "cryptopp",
+        "boost",
+        "libxml2",
+        "lz4",
+        "protobuf",
+        "yaml-cpp",
+        "c-ares",
+        "fmt"
+    ],
+    "features":{
+        "dpdk": {
+            "description": "Use DPDK network backend",
+            "dependencies":[
+                "dpdk"
+            ]
+        }
+    }
+}

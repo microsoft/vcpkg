@@ -1,0 +1,13 @@
+diff --git a/cmake/SeastarDependencies.cmake b/cmake/SeastarDependencies.cmake
+index c918165f..dc8272b5 100644
+--- a/cmake/SeastarDependencies.cmake
++++ b/cmake/SeastarDependencies.cmake
+@@ -93,7 +93,7 @@ macro (seastar_find_dependencies)
+   set (_seastar_dep_args_c-ares 1.13 REQUIRED)
+   set (_seastar_dep_args_cryptopp 5.6.5 REQUIRED)
+   set (_seastar_dep_args_fmt 5.0.0 REQUIRED)
+-  set (_seastar_dep_args_lz4 1.7.3 REQUIRED)
++  set (_seastar_dep_args_lz4 REQUIRED)
+   set (_seastar_dep_args_GnuTLS 3.3.26 REQUIRED)
+   set (_seastar_dep_args_Protobuf 2.5.0 REQUIRED)
+   set (_seastar_dep_args_StdAtomic REQUIRED)
