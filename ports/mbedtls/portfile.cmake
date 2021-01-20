@@ -19,9 +19,7 @@ vcpkg_check_features(
 )
 
 if (VCPKG_TARGET_IS_ANDROID)
-    set(EXTRA_ARGS "-DMBEDTLS_FATAL_WARNINGS=FALSE"
-            "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
-            )
+    set(EXTRA_ARGS "-DMBEDTLS_FATAL_WARNINGS=FALSE")
 endif ()
 
 vcpkg_configure_cmake(
