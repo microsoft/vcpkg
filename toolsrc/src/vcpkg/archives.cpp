@@ -101,7 +101,7 @@ namespace vcpkg::Archives
         }
         else
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO, "Unexpected archive extension: %s", fs::u8string(ext));
+            Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, "Unexpected archive extension: %s", fs::u8string(ext));
         }
 #endif
 
