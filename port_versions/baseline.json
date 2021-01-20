@@ -3292,6 +3292,10 @@
       "baseline": "0.1.9.0",
       "port-version": 3
     },
+    "libsass": {
+      "baseline": "3.6.4",
+      "port-version": 0
+    },
     "libsbml": {
       "baseline": "5.18.0",
       "port-version": 0
@@ -5142,6 +5146,10 @@
     },
     "sajson": {
       "baseline": "2018-09-21",
+      "port-version": 0
+    },
+    "sassc": {
+      "baseline": "3.6.1",
       "port-version": 0
     },
     "scintilla": {
