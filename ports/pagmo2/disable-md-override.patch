@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 96653ba..549d9d4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -141,6 +141,7 @@ endif()
+ # Boost setup.
+ include(PagmoFindBoost)
+ 
++if(0)
+ # Explanation: on MSVC, when building static libraries, it is good practice to link
+ # to the static runtime. CMake, however, is hard-coded to link to the dynamic runtime.
+ # Hence we hackishly replace the /MD flag with /MT. This is the approach suggested
+@@ -161,6 +162,7 @@ if(YACMA_COMPILER_IS_MSVC AND PAGMO_BUILD_STATIC_LIBRARY)
+         endif()
+     endforeach()
+ endif()
++endif()
+ 
+ # List of source files.
+ set(PAGMO_SRC_FILES
