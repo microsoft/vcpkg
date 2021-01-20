@@ -1,0 +1,48 @@
+#! /bin/sh -e
+## 10_utf16.dpatch by  <kurt@roeckx.be>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: Handle bogus UTF16 sequences that have a length that is not
+## DP: an even number of 8 bit characters.
+
+if [ $# -lt 1 ]; then
+    echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+    exit 1
+fi
+
+[ -f debian/patches/00patch-opts ] && . debian/patches/00patch-opts
+patch_opts="${patch_opts:--f --no-backup-if-mismatch} ${2:+-d $2}"
+
+case "$1" in
+    -patch) patch -p1 ${patch_opts} < $0;;
+    -unpatch) patch -R -p1 ${patch_opts} < $0;;
+    *)
+        echo "`basename $0`: script expects -patch|-unpatch as argument" >&2
+        exit 1;;
+esac
+
+exit 0
+
+@DPATCH@
+diff -urNad utf16.c utf16.c
+--- utf16.c	2006-01-13 15:26:29.000000000 +0100
++++ utf16.c	2006-01-13 15:27:19.000000000 +0100
+@@ -282,5 +282,18 @@
+ 
+   free(utf16);
+ 
++  if (end == *ptr && length % 2 != 0)
++  {
++     /* We were called with a bogus length.  It should always
++      * be an even number.  We can deal with this in a few ways:
++      * - Always give an error.
++      * - Try and parse as much as we can and
++      *   - return an error if we're called again when we
++      *     already tried to parse everything we can.
++      *   - tell that we parsed it, which is what we do here.
++      */
++     (*ptr)++;
++  }
++
+   return ucs4;
+ }

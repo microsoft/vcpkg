@@ -1,0 +1,9 @@
+{
+  "name": "libid3tag",
+  "version-string": "0.15.1b",
+  "homepage": "https://www.underbit.com/products/mad/",
+  "description": "ID3 tag manipulation library",
+  "dependencies": [
+      "zlib"
+  ]
+}
