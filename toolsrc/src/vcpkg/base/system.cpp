@@ -10,6 +10,15 @@ using namespace vcpkg::System;
 
 namespace vcpkg
 {
+    long System::get_process_id()
+    {
+#ifdef _WIN32
+        return ::_getpid();
+#else
+        return ::getpid();
+#endif
+    }
+
     Optional<CPUArchitecture> System::to_cpu_architecture(StringView arch)
     {
         if (Strings::case_insensitive_ascii_equals(arch, "x86")) return CPUArchitecture::X86;
