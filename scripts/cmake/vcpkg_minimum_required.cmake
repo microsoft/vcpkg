@@ -23,24 +23,20 @@ function(vcpkg_minimum_required)
     endif()
 
     set(_vcpkg_date_regex "^[12][0-9][0-9][0-9]-[01][0-9]-[0-3][0-9]$")
-
-    string(REGEX MATCH "${_vcpkg_date_regex}" _vcpkg_matched_base_version "${VCPKG_BASE_VERSION}")
-    if (NOT _vcpkg_matched_base_version STREQUAL VCPKG_BASE_VERSION)
+    if (NOT VCPKG_BASE_VERSION MATCHES "${_vcpkg_date_regex}")
         message(FATAL_ERROR
             "vcpkg internal failure; \${VCPKG_BASE_VERSION} (${VCPKG_BASE_VERSION}) was not a valid date."
             )
     endif()
 
-    string(REPLACE "-" "." _VCPKG_BASE_VERSION_as_dotted "${VCPKG_BASE_VERSION}")
-
-    string(REGEX MATCH "${_vcpkg_date_regex}" _vcpkg_matched_test_version "${_vcpkg_VERSION}")
-    if (NOT _vcpkg_matched_test_version STREQUAL _vcpkg_VERSION)
+    if (NOT _vcpkg_VERSION MATCHES "${_vcpkg_date_regex}")
         message(FATAL_ERROR
             "VERSION parameter to vcpkg_minimum_required was not a valid date. "
             "Comparing with vcpkg tool version ${_vcpkg_matched_base_version}"
             )
     endif()
 
+    string(REPLACE "-" "." _VCPKG_BASE_VERSION_as_dotted "${VCPKG_BASE_VERSION}")
     string(REPLACE "-" "." _vcpkg_VERSION_as_dotted "${_vcpkg_VERSION}")
 
     if (_VCPKG_BASE_VERSION_as_dotted VERSION_LESS _vcpkg_VERSION_as_dotted)

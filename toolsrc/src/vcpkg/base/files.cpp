@@ -847,20 +847,24 @@ namespace vcpkg::Files
                                  std::error_code& ec) override
         {
             std::fstream output(file_path, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-            if (output)
+            auto first = lines.begin();
+            const auto last = lines.end();
+            for (;;)
             {
-                for (const std::string& line : lines)
+                if (!output)
                 {
-                    output << line << "\n";
-                    if (!output)
-                    {
-                        break;
-                    }
+                    ec.assign(static_cast<int>(std::errc::io_error), std::generic_category());
+                    return;
                 }
-            }
 
-            ec.assign(std::errc::io_error, std::generic_category());
-            return;
+                if (first == last)
+                {
+                    return;
+                }
+
+                output << *first << "\n";
+                ++first;
+            }
         }
         virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
         {
