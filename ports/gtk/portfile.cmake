@@ -15,8 +15,13 @@ vcpkg_extract_source_archive_ex(
 )
 vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
-vcpkg_add_to_path("${PKGCONFIG_DIR}") # Post install script runs pkg-config so it needs to be an PATH
+vcpkg_add_to_path("${PKGCONFIG_DIR}") # Post install script runs pkg-config so it needs to be on PATH
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/glib/")
+
+if(VCPKG_TARGET_IS_LINUX)
+    set(OPTIONS -Dwayland-backend=disabled) # CI missing at least wayland-protocols
+endif()
+
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
