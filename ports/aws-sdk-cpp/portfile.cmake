@@ -28,7 +28,6 @@ elseif (VCPKG_TARGET_IS_ANDROID)
             "-DGIT_EXECUTABLE=${GIT_EXECUTABLE}"
             "-DGIT_FOUND=${GIT_FOUND}"
             "-DGIT_VERSION_STRING=${GIT_VERSION_STRING}"
-            "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
             )
 else()
     set(rpath "\$ORIGIN")
