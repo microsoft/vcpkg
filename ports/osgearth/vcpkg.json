@@ -1,0 +1,19 @@
+{
+  "name": "osgearth",
+  "version-string": "3.1",
+  "port-version": 1,
+  "description": "osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2015 Pelican Mapping.",
+  "homepage": "https://github.com/gwaldron/osgearth",
+  "supports": "!(x86 | wasm32) & !static-crt",
+  "dependencies": [
+    "glew",
+    "libzip",
+    {
+      "name": "osg",
+      "features": [
+        "plugins"
+      ]
+    },
+    "protobuf"
+  ]
+}
