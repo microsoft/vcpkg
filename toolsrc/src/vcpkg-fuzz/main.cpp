@@ -189,6 +189,6 @@ int main(int argc, char** argv)
         case FuzzKind::JsonParser: fuzz_json_and_exit(text);
         case FuzzKind::Utf8Decoder: fuzz_utf8_and_exit(text);
         case FuzzKind::PlatformExpr: fuzz_platform_expr_and_exit(text);
-        default: Checks::exit_fail(VCPKG_LINE_INFO);
+        default: Checks::unreachable(VCPKG_LINE_INFO);
     }
 }

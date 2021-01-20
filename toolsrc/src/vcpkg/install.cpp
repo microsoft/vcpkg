@@ -1081,7 +1081,7 @@ namespace vcpkg::Install
                 message_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(code));
                 break;
             case BuildResult::SUCCEEDED: result_string = "Pass"; break;
-            default: Checks::exit_fail(VCPKG_LINE_INFO);
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
 
         return Strings::format(R"(<test name="%s" method="%s" time="%lld" result="%s">%s</test>)"
