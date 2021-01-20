@@ -1809,7 +1809,6 @@ open62541:x64-windows-static-md=fail
 pngpp:x64-windows-static-md=fail
 portmidi:x64-windows-static-md=fail
 pthreads:x64-windows-static-md=fail
-qt5-tools:x64-windows-static-md=fail
 quantlib:x64-windows-static-md=fail
 readosm:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
