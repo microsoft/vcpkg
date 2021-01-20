@@ -51,7 +51,10 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
+
+if(NOT VCPKG_TARGET_IS_UWP)
+    vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
