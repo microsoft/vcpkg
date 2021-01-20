@@ -748,7 +748,6 @@ namespace vcpkg::Files
             std::string output;
             output.resize(static_cast<size_t>(length));
             file_stream.read(&output[0], length);
-            file_stream.close();
 
             return output;
         }
@@ -771,7 +770,6 @@ namespace vcpkg::Files
                 output.push_back(line);
             }
 
-            file_stream.close();
             return output;
         }
         virtual fs::path find_file_recursively_up(const fs::path& starting_dir, const fs::path& filename) const override
@@ -849,22 +847,20 @@ namespace vcpkg::Files
                                  std::error_code& ec) override
         {
             std::fstream output(file_path, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-            if (!output)
+            if (output)
             {
-                ec.assign(errno, std::generic_category());
-                return;
-            }
-            for (const std::string& line : lines)
-            {
-                output << line << "\n";
-                if (!output)
+                for (const std::string& line : lines)
                 {
-                    output.close();
-                    ec.assign(errno, std::generic_category());
-                    return;
+                    output << line << "\n";
+                    if (!output)
+                    {
+                        break;
+                    }
                 }
             }
-            output.close();
+
+            ec.assign(std::errc::io_error, std::generic_category());
+            return;
         }
         virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) override
         {
