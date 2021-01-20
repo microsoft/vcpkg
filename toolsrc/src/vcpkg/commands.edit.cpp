@@ -264,7 +264,7 @@ namespace vcpkg::Commands::Edit
         {
             // note that we are invoking cmd silently but Code.exe is relaunched from there
             System::cmd_execute_background(
-                System::Command("cmd").string_arg("/c").string_arg(cmd_line.command_line()).raw_arg("<NUL"));
+                System::Command("cmd").string_arg("/c").raw_arg(Strings::concat('"', cmd_line.command_line(), R"( <NUL")")));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif
