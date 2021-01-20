@@ -19,12 +19,13 @@ vcpkg_add_to_path("${PKGCONFIG_DIR}") # Post install script runs pkg-config so i
 vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/glib/")
 
 if(VCPKG_TARGET_IS_LINUX)
-    set(OPTIONS -Dwayland-backend=disabled) # CI missing at least wayland-protocols
+    set(OPTIONS -Dwayland-backend=false) # CI missing at least wayland-protocols
 endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        ${OPTIONS}
         -Ddemos=false
         -Dbuild-examples=false
         -Dbuild-tests=false
