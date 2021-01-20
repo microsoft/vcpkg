@@ -52,7 +52,7 @@ namespace vcpkg::PlatformExpression
             {"emscripten", Identifier::emscripten},
             {"ios", Identifier::ios},
             {"static", Identifier::static_link},
-            {"static-crt", Identifier::static_link},
+            {"staticcrt", Identifier::static_link},
         };
 
         auto id_pair = id_map.find(name);
@@ -129,12 +129,8 @@ namespace vcpkg::PlatformExpression
         private:
             // identifier-character =
             // | lowercase-alpha
-            // | digit
-            // | '-' ;
-            static bool is_identifier_char(char32_t ch)
-            {
-                return is_lower_alpha(ch) || is_ascii_digit(ch) || ch == '-';
-            }
+            // | digit ;
+            static bool is_identifier_char(char32_t ch) { return is_lower_alpha(ch) || is_ascii_digit(ch); }
 
             // platform-expression =
             // | platform-expression-not
