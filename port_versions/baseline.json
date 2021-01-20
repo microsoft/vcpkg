@@ -4570,7 +4570,7 @@
     },
     "podofo": {
       "baseline": "0.9.6",
-      "port-version": 12
+      "port-version": 13
     },
     "poly2tri": {
       "baseline": "2020-07-21",
