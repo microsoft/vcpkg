@@ -2,7 +2,10 @@
 
 #include <vcpkg/base/fwd/stringview.h>
 
+#include <stddef.h>
+
 #include <iterator>
+#include <limits>
 #include <string>
 
 namespace vcpkg
@@ -34,7 +37,7 @@ namespace vcpkg
         std::string to_string() const;
         void to_string(std::string& out) const;
 
-        StringView substr(size_t pos, size_t count = static_cast<size_t>(-1)) const noexcept;
+        StringView substr(size_t pos, size_t count = std::numeric_limits<size_t>::max()) const noexcept;
 
         constexpr char byte_at_index(size_t pos) const noexcept { return m_ptr[pos]; }
 
