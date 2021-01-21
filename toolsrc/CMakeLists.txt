@@ -47,13 +47,12 @@ file(GLOB VCPKG_FUZZ_SOURCES CONFIGURE_DEPENDS src/vcpkg-fuzz/*.cpp)
 # === Compile cache ======
 # ========================
 
-if(UNIX)
-    find_program(CCACHE_FOUND ccache)
-    if(CCACHE_FOUND)
-        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
-        set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
-    endif(CCACHE_FOUND)
-endif()
+find_program(CCACHE_FOUND ccache)
+if(CCACHE_FOUND)
+    message("Ccache found ${CCACHE_FOUND}")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_LINK ccache)
+endif(CCACHE_FOUND)
 
 
 # ========================
