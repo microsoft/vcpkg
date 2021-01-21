@@ -39,7 +39,7 @@ namespace vcpkg
             case CPUArchitecture::ARM: return "arm";
             case CPUArchitecture::ARM64: return "arm64";
             case CPUArchitecture::S390X: return "s390x";
-            default: Checks::exit_with_message(VCPKG_LINE_INFO, "unexpected vcpkg::System::CPUArchitecture");
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 
