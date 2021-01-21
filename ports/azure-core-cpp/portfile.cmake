@@ -4,8 +4,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO antkmsft/azure-sdk-for-cpp
-    REF azure-sdk-for-cpp_1.0.0-test.0
-    SHA512 9f60751d6baa5517383225c90f992105b78dfa2a73f10788a547228e9f9a95b15f5b168bfc8beaed3cefe276581cfabf6cfabe83d807880e2271c899e1cea941
+    REF azure-sdk-for-cpp_1.0.0-test.8
+    SHA512 a6217e1c614cb77cc644321f7f774dde5499c9db94cb0d64eb5ba93c441fb1288bb81dc7da513744b050d26af32d041d068d9b22784703ad7ed82cc7568cab8f
 )
 
 vcpkg_check_features(
