@@ -1426,7 +1426,7 @@
     },
     "crfsuite": {
       "baseline": "2019-07-21",
-      "port-version": 0
+      "port-version": 1
     },
     "croncpp": {
       "baseline": "2020-09-04",
