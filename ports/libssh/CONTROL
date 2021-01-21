@@ -12,7 +12,7 @@ Build-Depends: libssh[mbedtls]
 Description: Default crypto backend
 
 Feature: mbedtls
-Build-Depends: mbedtls[pthreads] (!android)
+Build-Depends: mbedtls[pthreads] (!android), mbedtls[core]
 Description: Crypto support (mbedTLS)
 
 Feature: openssl
