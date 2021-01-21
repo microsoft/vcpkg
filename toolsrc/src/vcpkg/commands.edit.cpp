@@ -262,7 +262,6 @@ namespace vcpkg::Commands::Edit
 #ifdef _WIN32
         if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
-            // note that we are invoking cmd silently but Code.exe is relaunched from there
             System::cmd_execute_background(cmd_line);
             Checks::exit_success(VCPKG_LINE_INFO);
         }
