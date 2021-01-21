@@ -369,7 +369,8 @@ else
 }
 
 $arguments = (
-"`"/p:VCPKG_VERSION=-unknownhash`"",
+"`"/p:VCPKG_VERSION=unknownhash`"",
+"`"/p:VCPKG_BASE_VERSION=2021-01-13`"",  # Note: This duplicate date version will be short lived. See https://github.com/microsoft/vcpkg/pull/15474
 "/p:Configuration=Release",
 "/p:Platform=$platform",
 "/p:PlatformToolset=$platformToolset",
