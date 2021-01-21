@@ -4,75 +4,69 @@ vcpkg_from_github(
     REF 7236c7e29cef1c2d76c7a284c5081ff4d3aa1127 # 2.7.4
     SHA512 d231a788ea4e52231d4c363c1eca76424cb82ed0952b5c24d0b082e88b3dddbda967e7fffe67fffdcb22c7ebfbf0ec923365eb4532be772f2e61fa7d29b51998
     HEAD_REF master
-    PATCHES
-        0002-fix-uwp-build.patch
-        0003-remove-broken-test.patch
-        CMakeLists.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    icu         HB_HAVE_ICU
-    graphite2   HB_HAVE_GRAPHITE2
-    glib        HB_HAVE_GLIB
-)
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND FEATURE_OPTIONS -DHP_HAVE_GDI=ON)
+if("icu" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dicu=enabled)
+else()
+    list(APPEND FEATURE_OPTIONS -Dicu=disabled)
 endif()
-vcpkg_find_acquire_program(PKGCONFIG)
-vcpkg_configure_cmake(
+if("graphite2" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dgraphite=enabled)
+else()
+    list(APPEND FEATURE_OPTIONS -Dgraphite=disabled)
+endif()
+if("glib" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -Dglib=enabled)
+    list(APPEND FEATURE_OPTIONS -Dgobject=enabled)
+else()
+    list(APPEND FEATURE_OPTIONS -Dglib=disabled)
+    list(APPEND FEATURE_OPTIONS -Dgobject=disabled)
+endif()
+list(APPEND FEATURE_OPTIONS -Dfreetype=enabled)
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_OPTIONS -Dgdi=enabled)
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND FEATURE_OPTIONS -Dcoretext=enabled)
+endif()
+
+vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
-        -DHB_HAVE_FREETYPE=ON
-        -DHB_BUILD_TESTS=OFF
-        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
-    OPTIONS_DEBUG
-        -DSKIP_INSTALL_HEADERS=ON
+        -Dcairo=disabled
+        -Dfontconfig=disabled
+        -Dintrospection=disabled
+        -Ddocs=disabled
+        -Dtests=disabled
+        -Dbenchmark=disabled
+    ADDITIONAL_NATIVE_BINARIES  glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                                glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
+    ADDITIONAL_CROSS_BINARIES   glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                                glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
-vcpkg_install_cmake()
 
-# if("icu" IN_LIST FEATURES)
-    # list(APPEND FEATURE_OPTIONS -Dicu=enabled)
-# else()
-    # list(APPEND FEATURE_OPTIONS -Dicu=disabled)
-# endif()
-# if("graphite2" IN_LIST FEATURES)
-    # list(APPEND FEATURE_OPTIONS -Dgraphite=enabled)
-# else()
-    # list(APPEND FEATURE_OPTIONS -Dgraphite=disabled)
-# endif()
-# if("glib" IN_LIST FEATURES)
-    # list(APPEND FEATURE_OPTIONS -Dglib=enabled)
-    # list(APPEND FEATURE_OPTIONS -Dgobject=enabled)
-# else()
-    # list(APPEND FEATURE_OPTIONS -Dglib=disabled)
-    # list(APPEND FEATURE_OPTIONS -Dgobject=disabled)
-# endif()
-# list(APPEND FEATURE_OPTIONS -Dfreetype=enabled)
-# if(VCPKG_TARGET_IS_WINDOWS)
-    # list(APPEND FEATURE_OPTIONS -Dgdi=enabled)
-# endif()
-# vcpkg_configure_meson(
-    # SOURCE_PATH ${SOURCE_PATH}
-    # PREFER_NINJA
-    # OPTIONS ${FEATURE_OPTIONS}
-            # -Dtests=disabled
-            # -Dintrospection=disabled
-            # -Ddocs=disabled
-            # -Dbenchmark=disabled
-            # -Dfontconfig=disabled
-# )
-# vcpkg_install_meson()
-
-vcpkg_fixup_pkgconfig()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_install_meson()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/lib/cmake")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib/cmake")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/harfbuzzConfig.cmake.in"
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}/harfbuzzConfig.cmake" @ONLY)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
+if("glib" IN_LIST FEATURES)
+    list(APPEND TOOL_NAMES hb-subset hb-shape hb-ot-shape-closure)
+endif()
+if(TOOL_NAMES)
+    vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
+endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 # # HarfBuzz feature options
 # option('glib', type: 'feature', value: 'auto',
   # description: 'Enable GLib unicode functions')
