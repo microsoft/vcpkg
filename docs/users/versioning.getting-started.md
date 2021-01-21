@@ -269,5 +269,5 @@ See also:
 
 * [Versioning docs](versioning.md)
 * [Original specification](../specifications/versioning.md)
-* **[TBR]** [Version files](../versioning.version-files.md)
-* **[TBR]** [Versioning implementation details](../versioning.implementation-details.md)
+* [Versioning reference](versioning.reference.md)
+* [Versioning implementation details](../versioning.implementation-details.md)
