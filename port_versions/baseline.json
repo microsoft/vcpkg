@@ -4346,7 +4346,7 @@
     },
     "osg": {
       "baseline": "3.6.5",
-      "port-version": 5
+      "port-version": 6
     },
     "osg-qt": {
       "baseline": "Qt4",
