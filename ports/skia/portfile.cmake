@@ -75,10 +75,6 @@ function(find_libraries RESOLVED LIBRARY_NAMES PATHS)
     set(${RESOLVED} "${_RESOLVED}" PARENT_SCOPE)
 endfunction()
 
-if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-endif()
-
 # For each .gn file in the current list directory, configure and install at
 # the corresponding directory to replace Skia dependencies with ones from vcpkg.
 function(replace_skia_dep NAME INCLUDES LIBS_DBG LIBS_REL DEFINITIONS)

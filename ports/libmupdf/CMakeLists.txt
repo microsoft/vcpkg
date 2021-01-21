@@ -16,10 +16,6 @@ else()
   )
 endif() 
 
-if(WIN32 AND NOT BUILD_SHARED_LIBS)
-  list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-  list(APPEND CMAKE_FIND_LIBRARY_PREFIXES "" "lib")
-endif()
 
 find_package(freetype NO_MODULE REQUIRED)
 find_package(JPEG REQUIRED)

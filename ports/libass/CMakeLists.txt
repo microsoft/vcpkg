@@ -48,11 +48,6 @@ find_path(HARFBUZZ_INCLUDE_DIR
 find_path(DIRENT_INCLUDE_DIR
           NAMES dirent.h)
 
-if(WIN32 AND NOT BUILD_SHARED_LIBS)
-  list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-  list(APPEND CMAKE_FIND_LIBRARY_PREFIXES "" "lib")
-endif()
-
 find_library(FRIBIDI_LIBRARY NAMES libfribidi fribidi)
 find_library(HARFBUZZ_LIBRARY NAMES harfbuzz)
 
