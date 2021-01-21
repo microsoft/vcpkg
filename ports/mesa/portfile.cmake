@@ -168,7 +168,7 @@ endif()
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
-        #-D gles-lib-suffix=_mesa
+        -D gles-lib-suffix=_mesa
         #-D egl-lib-suffix=_mesa
         -Dbuild-tests=false
         ${MESA_OPTIONS}
@@ -191,13 +191,6 @@ set(_double_files include/GL/glcorearb.h include/GL/glext.h include/GL/glxext.h
     include/GLES3/gl3.h  include/GLES3/gl31.h include/GLES3/gl32.h include/GLES3/gl3platform.h)
 list(TRANSFORM _double_files PREPEND "${CURRENT_PACKAGES_DIR}/")
 file(REMOVE ${_double_files})
-#installed by angle
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/libGLESv2.dll)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/libGLESv2.pdb)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/libGLESv2.dll)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/libGLESv2.pdb)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libGLESv2.lib)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libGLESv2.lib)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/GLES)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/GLES2)
