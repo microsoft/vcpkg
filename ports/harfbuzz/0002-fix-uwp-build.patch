@@ -1,0 +1,15 @@
+diff --git a/src/hb-ft.cc b/src/hb-ft.cc
+index 1900f30..add9917 100644
+--- a/src/hb-ft.cc
++++ b/src/hb-ft.cc
+@@ -31,6 +31,10 @@
+
+ #include "hb-ft.h"
+
++#if defined(WINAPI_FAMILY) && (WINAPI_FAMILY != WINAPI_FAMILY_DESKTOP_APP)
++#define generic GenericFromFreeTypeLibrary
++#endif
++
+ #include "hb-font.hh"
+ #include "hb-machinery.hh"
+ #include "hb-cache.hh"
