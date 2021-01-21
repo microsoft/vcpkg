@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-dependencies.patch
         fix-cpu-set.patch
         disable-warnings.patch
+        fix-xxhash-inline-for-visual-studio.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
