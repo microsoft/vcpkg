@@ -1,7 +1,7 @@
 Source: opencv4
 Version: 4.3.0
-Port-Version: 5
-Build-Depends: zlib
+Port-Version: 6
+Build-Depends: zlib, quirc
 Homepage: https://github.com/opencv/opencv
 Description: computer vision library
 Default-Features: dnn, jpeg, png, tiff, webp
