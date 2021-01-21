@@ -72,6 +72,13 @@ else(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     endif()
 endif()
 
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libjpeg.pc")
+if(EXISTS "${_file}" AND VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${_file}" "-ljpeg" "-ljpegd")
+endif() 
+
+vcpkg_fixup_pkgconfig()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/man)
