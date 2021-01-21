@@ -3,25 +3,25 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 set(VCPKG_LIBRARY_LINKAGE static)
 
 vcpkg_from_github(
-        OUT_SOURCE_PATH SOURCE_PATH
-        REPO ARMmbed/mbedtls
-        REF 523f0554b6cdc7ace5d360885c3f5bbcc73ec0e8 # mbedtls-2.24.0
-        SHA512 1ce78f34e8d87c2ce0454e0a08f4c6e5b3129d4b24cfa44162af21c2e8b5dc7feabf849e4fa547ce3781b5ce11aaf675cfed47412bae40091fbdd87bbcdbee07
-        HEAD_REF master
-        PATCHES
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO ARMmbed/mbedtls
+    REF 523f0554b6cdc7ace5d360885c3f5bbcc73ec0e8 # mbedtls-2.24.0
+    SHA512 1ce78f34e8d87c2ce0454e0a08f4c6e5b3129d4b24cfa44162af21c2e8b5dc7feabf849e4fa547ce3781b5ce11aaf675cfed47412bae40091fbdd87bbcdbee07
+    HEAD_REF master
+    PATCHES
         enable-pthread.patch
 )
 
 vcpkg_check_features(
-        OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-        FEATURES
-        pthreads ENABLE_PTHREAD
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    pthreads ENABLE_PTHREAD
 )
 
 vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
-        OPTIONS
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
         ${FEATURE_OPTIONS}
         -DENABLE_TESTING=OFF
         -DENABLE_PROGRAMS=OFF
