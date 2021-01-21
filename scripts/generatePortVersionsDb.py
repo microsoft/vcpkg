@@ -13,7 +13,7 @@ from pathlib import Path
 MAX_PROCESSES = multiprocessing.cpu_count()
 SCRIPT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 PORTS_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../ports')
-VERSIONS_DB_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../port_versions')
+VERSIONS_DB_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../versions')
 
 
 def get_current_git_ref():
@@ -26,7 +26,7 @@ def get_current_git_ref():
     return None
 
 
-def generate_port_versions_file(port_name):
+def generate_versions_file(port_name):
     containing_dir = os.path.join(VERSIONS_DB_DIRECTORY, f'{port_name[0]}-')
     os.makedirs(containing_dir, exist_ok=True)
 
@@ -43,7 +43,7 @@ def generate_port_versions_file(port_name):
                   output.stdout.strip(), file=sys.stderr)
 
 
-def generate_port_versions_db(revision):
+def generate_versions_db(revision):
     start_time = time.time()
 
     # Assume each directory in ${VCPKG_ROOT}/ports is a different port
@@ -54,7 +54,7 @@ def generate_port_versions_db(revision):
     concurrency = MAX_PROCESSES / 2
     print(f'Running {concurrency:.0f} parallel processes')
     process_pool = multiprocessing.Pool(MAX_PROCESSES)
-    for i, _ in enumerate(process_pool.imap_unordered(generate_port_versions_file, port_names), 1):
+    for i, _ in enumerate(process_pool.imap_unordered(generate_versions_file, port_names), 1):
         sys.stderr.write(
             f'\rProcessed: {i}/{total_count} ({(i / total_count):.2%})')
     process_pool.close()
@@ -80,7 +80,7 @@ def main():
         print(f'Database files already exist for commit {revision}')
         sys.exit(0)
 
-    generate_port_versions_db(revision)
+    generate_versions_db(revision)
 
 
 if __name__ == "__main__":
