@@ -258,7 +258,7 @@ foreach(MOD
       onnx/third_party/benchmark/src/
       onnx/third_party/benchmark/test/
       onnx/third_party/pybind11/include/
-      SafeInt/safeInt/Archive/releases/
+      SafeInt/safeint/Archive/releases/
       protobuf/src/google/
       nsync/public/
     )
@@ -278,8 +278,8 @@ endforeach()
 # Now copy files from folders that does need to be copied recursively
 set(MOD "")
 foreach(MOD 
-    SafeInt/safeInt
-    SafeInt/safeInt/Test
+    SafeInt/safeint
+    SafeInt/safeint/Test
     onnx/onnx
     onnx/onnx/defs
     onnx/onnx/defs/tensor
@@ -381,7 +381,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
 endif()
 
 # Remove empty directories that are created during copy operations
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/SafeInt/safeInt/Archive/releases/8")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/SafeInt/safeint/Archive/releases/8")
 
 vcpkg_copy_pdbs()
 
