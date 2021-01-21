@@ -302,7 +302,7 @@ flint:x64-osx=fail
 fltk:arm-uwp=fail
 fltk:x64-uwp=fail
 fluidsynth:x64-osx=fail
-fluidsynth:x64-windows-static-md
+fluidsynth:x64-windows-static-md=fail
 # fluidlite conflicts with fluidsynth; we test fluidsynth rather than fluidlite because
 # fluidlite has no dependencies and thus is less likely to be broken by another package.
 fluidlite:arm-uwp=skip
@@ -446,7 +446,7 @@ hpx:x64-linux=fail
 libhsplasma:x64-windows-static=fail
 icu:arm-uwp=fail
 icu:x64-uwp=fail
-ideviceinstaller:x64-windows-static-md
+ideviceinstaller:x64-windows-static-md=fail
 idevicerestore:x64-linux=fail
 idevicerestore:x64-osx=fail
 ignition-common1:x64-linux=fail
@@ -549,7 +549,7 @@ libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 libcrafter:x86-windows=fail
 libcrafter:x64-windows=fail
-libcrafter:x64-windows-static-md
+libcrafter:x64-windows-static-md=fail
 cpuid:arm-uwp=fail
 cpuid:x64-uwp=fail
 cpuid:arm64-windows=fail
@@ -612,7 +612,7 @@ libics:x64-uwp=fail
 libigl:arm64-windows=fail
 libigl:arm-uwp=fail
 libigl:x64-uwp=fail
-libirecovery:x64-windows-static-md
+libirecovery:x64-windows-static-md=fail
 liblemon:arm-uwp=fail
 liblemon:x64-uwp=fail
 liblo:arm-uwp=fail
@@ -954,7 +954,7 @@ moos-core:arm-uwp=fail
 moos-core:x64-uwp=fail
 moos-core:x64-windows-static=fail
 moos-essential:arm64-windows=fail
-moos-essential:x64-windows-static-md
+moos-essential:x64-windows-static-md=fail
 moos-essential:x64-windows=fail
 moos-essential:x86-windows=fail
 # Conflicts with libjpeg-turbo
@@ -1124,7 +1124,7 @@ openexr:arm-uwp=fail
 openexr:x64-uwp=fail
 opengl:arm64-windows=fail
 opengl:arm-uwp=fail
-openmama:x64-windows-static-md
+openmama:x64-windows-static-md=fail
 openmesh:arm64-windows=fail
 openmesh:arm-uwp=fail
 openmesh:x64-uwp=fail
@@ -1401,15 +1401,15 @@ scylla-wrapper:x64-linux=fail
 scylla-wrapper:x64-osx=fail
 scylla-wrapper:x64-uwp=fail
 scylla-wrapper:x64-windows-static=fail
-sdformat10:x64-windows-static-md
+sdformat10:x64-windows-static-md=fail
 sdformat6:arm-uwp=fail
 sdformat6:arm64-windows=fail
 sdformat6:x64-uwp=fail
-sdformat6:x64-windows-static-md
+sdformat6:x64-windows-static-md=fail
 sdformat9:arm-uwp=fail
 sdformat9:x64-linux=fail
 sdformat9:x64-uwp=fail
-sdformat9:x64-windows-static-md
+sdformat9:x64-windows-static-md=fail
 sdl1:arm-uwp=fail
 sdl1:x64-uwp=fail
 sdl1:x64-osx=fail
