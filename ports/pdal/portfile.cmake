@@ -18,6 +18,10 @@ vcpkg_extract_source_archive_ex(
         fix-CPL_DLL.patch
         0004-fix-const-overloaded.patch
         geotiff.patch
+        dep-versions.patch
+        no-werror.patch
+        no-git.patch
+        gdal-target.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")

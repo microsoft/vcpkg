@@ -1,0 +1,53 @@
+diff --git a/CMakeModules/CheckAtomicOps.cmake b/CMakeModules/CheckAtomicOps.cmake
+index 11ddae5..913b127 100644
+--- a/CMakeModules/CheckAtomicOps.cmake
++++ b/CMakeModules/CheckAtomicOps.cmake
+@@ -26,10 +26,10 @@ ELSE()
+        SET(_OPENTHREADS_ATOMIC_USE_BSD_ATOMIC 1)
+ 
+     ELSE()
+-       INCLUDE(CheckCXXSourceRuns)
++       INCLUDE(CheckCXXSourceCompiles)
+ 
+        # Do step by step checking,
+-       CHECK_CXX_SOURCE_RUNS("
++       check_cxx_source_compiles("
+        #include <cstdlib>
+ 
+        int main()
+@@ -49,7 +49,7 @@ ELSE()
+        }
+        " _OPENTHREADS_ATOMIC_USE_GCC_BUILTINS)
+ 
+-       CHECK_CXX_SOURCE_RUNS("
++       check_cxx_source_compiles("
+        #include <stdlib.h>
+ 
+        int main(int, const char**)
+@@ -69,7 +69,7 @@ ELSE()
+        }
+        " _OPENTHREADS_ATOMIC_USE_MIPOSPRO_BUILTINS)
+ 
+-       CHECK_CXX_SOURCE_RUNS("
++       check_cxx_source_compiles("
+        #include <atomic.h>
+        #include <cstdlib>
+ 
+@@ -90,7 +90,7 @@ ELSE()
+        }
+        " _OPENTHREADS_ATOMIC_USE_SUN)
+ 
+-       CHECK_CXX_SOURCE_RUNS("
++       check_cxx_source_compiles("
+        #include <windows.h>
+        #include <intrin.h>
+        #include <cstdlib>
+@@ -119,7 +119,7 @@ ELSE()
+        }
+        " _OPENTHREADS_ATOMIC_USE_WIN32_INTERLOCKED)
+ 
+-       CHECK_CXX_SOURCE_RUNS("
++       check_cxx_source_compiles("
+        #include <libkern/OSAtomic.h>
+ 
+        int main()

@@ -1,5 +1,4 @@
-The package GDAL provides CMake targets:
+The package gdal:@TARGET_TRIPLET@ is compatible with built-in CMake Targets:
 
     find_package(GDAL REQUIRED)
-    target_include_directories(main PRIVATE ${GDAL_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${GDAL_LIBRARIES})
+    target_link_libraries(main PRIVATE GDAL::GDAL)

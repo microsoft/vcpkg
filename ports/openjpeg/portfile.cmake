@@ -42,7 +42,13 @@ vcpkg_fixup_cmake_targets()
 if(VCPKG_TARGET_IS_WINDOWS)
     # TODO: remove -lm from *.pc files
 endif()
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libopenjp2.pc " -lm" " -lm -lpthread")
+endif()
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libopenjp2.pc " -lm" " -lm -lpthread")
+endif()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

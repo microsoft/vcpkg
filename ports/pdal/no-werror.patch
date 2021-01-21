@@ -1,0 +1,12 @@
+diff --git a/cmake/unix_compiler_options.cmake b/cmake/unix_compiler_options.cmake
+index 035a2b9..650de8f 100644
+--- a/cmake/unix_compiler_options.cmake
++++ b/cmake/unix_compiler_options.cmake
+@@ -24,7 +24,6 @@ function(PDAL_TARGET_COMPILE_SETTINGS target)
+         ${PDAL_CXX_STANDARD}
+         -Wextra
+         -Wpedantic
+-        -Werror
+         -Wall
+         -Wno-unused-parameter
+         -Wno-unused-variable

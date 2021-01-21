@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         dont-build-docs.patch
         dont-build-astyle.patch
+        pc.patch
 )
 
 # NOTE: GEOS provides CMake as optional build configuration, it might not be actively
@@ -27,24 +28,24 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DCMAKE_DEBUG_POSTFIX=d
         -DBUILD_TESTING=OFF
         ${_CMAKE_EXTRA_OPTIONS}
+    OPTIONS_DEBUG
+        -DCMAKE_DEBUG_POSTFIX=d
 )
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GEOS)
+vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/geos)
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/geos-config ${CURRENT_PACKAGES_DIR}/share/geos/geos-config)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/geos-config)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/geos-config)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/geos)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/geos-config ${CURRENT_PACKAGES_DIR}/share/geos/geos-config)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/geos-config)
-endif()
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/geos/copyright COPYONLY)

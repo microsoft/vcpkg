@@ -1,29 +1,51 @@
 {
   "name": "gdal",
-  "version-string": "3.1.3",
-  "port-version": 3,
+  "version-semver": "3.1.3",
+  "port-version": 4,
   "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data.",
-  "homepage": "hhttps://gdal.org/",
+  "homepage": "https://gdal.org/",
   "dependencies": [
-    "cfitsio",
-    "curl",
-    "expat",
+    {
+      "name": "curl",
+      "platform": "windows"
+    },
+    {
+      "name": "expat",
+      "platform": "windows"
+    },
     "geos",
-    "hdf5",
+    {
+      "name": "hdf5",
+      "platform": "windows"
+    },
     {
       "name": "json-c",
       "platform": "!windows"
     },
     "libgeotiff",
+    {
+      "name": "libjpeg-turbo",
+      "platform": "!windows"
+    },
     "liblzma",
     "libpng",
-    "libpq",
-    "libwebp",
+    {
+      "name": "libpq",
+      "platform": "windows"
+    },
+    {
+      "name": "libwebp",
+      "platform": "windows"
+    },
     "libxml2",
     "netcdf-c",
     "openjpeg",
     "proj4",
     "sqlite3",
+    {
+      "name": "tiff",
+      "platform": "!windows"
+    },
     "zlib"
   ],
   "features": {

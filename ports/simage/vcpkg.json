@@ -1,0 +1,44 @@
+{
+  "name": "simage",
+  "version": "1.8.0",
+  "port-version": 2,
+  "description": "Image file format library abstraction layer",
+  "homepage": "https://github.com/coin3d/simage",
+  "dependencies": [
+    {
+      "name": "giflib",
+      "platform": "linux | uwp"
+    },
+    {
+      "name": "libjpeg-turbo",
+      "platform": "linux | uwp"
+    },
+    {
+      "name": "libpng",
+      "platform": "linux | uwp"
+    },
+    {
+      "name": "tiff",
+      "platform": "linux | uwp"
+    }
+  ],
+  "features": {
+    "libsndfile": {
+      "description": "Build libsndfile support",
+      "dependencies": [
+        "libflac",
+        {
+          "name": "libsndfile",
+          "default-features": false
+        }
+      ]
+    },
+    "libvorbis": {
+      "description": "Build Ogg Vorbis support",
+      "dependencies": [
+        "libogg",
+        "libvorbis"
+      ]
+    }
+  }
+}

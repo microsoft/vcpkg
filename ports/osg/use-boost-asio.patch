@@ -24,7 +24,7 @@ index 433d5c7..04a0edf 100644
 -    IF(Boost_FOUND)
 -        SET(ASIO_FOUND "YES")
 -    ENDIF()
-+FIND_PACKAGE( Boost 1.37 COMPONENTS asio )
++FIND_PACKAGE( Boost 1.37 )
 +IF(Boost_FOUND)
 +    SET(ASIO_FOUND "YES")
  ENDIF()

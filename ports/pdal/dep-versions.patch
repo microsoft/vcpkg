@@ -1,0 +1,13 @@
+diff --git a/cmake/gdal.cmake b/cmake/gdal.cmake
+index b7be79b..f5a4757 100644
+--- a/cmake/gdal.cmake
++++ b/cmake/gdal.cmake
+@@ -1,7 +1,7 @@
+ #
+ # GDAL/OGR support (required)
+ #
+-find_package(GDAL 1.9.0)
++find_package(GDAL)
+ set_package_properties(GDAL PROPERTIES TYPE REQUIRED
+     PURPOSE "Provides general purpose raster, vector, and reference system support")
+ if (GDAL_FOUND)

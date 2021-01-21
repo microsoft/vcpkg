@@ -14,17 +14,25 @@ vcpkg_from_github(
     REF 342fcadf4c8892ba84841cb5b4162bdc51519e3c #version 3.1
     SHA512 03378a918306846d2144e545785c783b01e33fa2dd5c77d16d390a275217b6ce7a3a743c35ae99a497b272a7516b055442c0a891bd312cce727a5538b40364f5
     HEAD_REF master
-    PATCHES 
+    PATCHES
         StaticOSG.patch # Fix port compilation in static-md module
         deprecated_cpp_fix.patch # Fix port headers to not use classes deprecated in c++17. Gives errors when using the installed port headers
-        make-all-find-packages-required.patch
         fix-dependencies.patch
         fix-dependency-osg.patch
         remove-tool-debug-suffix.patch
 )
+# Remove embedded tinyxml to ensure our copy is used
+file(REMOVE
+    ${SOURCE_PATH}/src/osgEarth/tinyxml.h
+    ${SOURCE_PATH}/src/osgEarth/tinystr.h
+    ${SOURCE_PATH}/src/osgEarth/tinystr.cpp
+    ${SOURCE_PATH}/src/osgEarth/tinyxml.cpp
+    ${SOURCE_PATH}/src/osgEarth/tinyxmlerror.cpp
+    ${SOURCE_PATH}/src/osgEarth/tinyxmlparser.cpp
+)
 
-# Upstream bug, see https://github.com/gwaldron/osgearth/issues/1002
-file(REMOVE ${SOURCE_PATH}/src/osgEarth/tinyxml.h)
+# pkg-config is required by FindFontconfig
+vcpkg_find_acquire_program(PKGCONFIG)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
@@ -36,8 +44,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    REQUIRE_ALL_PACKAGES
+    DISABLE_PACKAGES SilverLining Triton Tracy
+        # Using "WITH_EXTERNAL_DUKTAPE=ON" and then disabling the "find_package()" is the only way to disable the duktape feature
+        Duktape
     OPTIONS ${FEATURE_OPTIONS}
         -DOSGEARTH_BUILD_SHARED_LIBS=${BUILD_SHARED}
+        # TODO: This is incorrect; dependencies could be static or dynamic independently of BUILD_STATIC
         -DNRL_STATIC_LIBRARIES=${BUILD_STATIC}
         -DOSG_IS_STATIC=${BUILD_STATIC}
         -DGEOS_IS_STATIC=${BUILD_STATIC}
@@ -49,6 +62,9 @@ vcpkg_configure_cmake(
         -DOSGEARTH_BUILD_TRITON_NODEKIT=OFF
         -DOSGEARTH_BUILD_SILVERLINING_NODEKIT=OFF
         -DWITH_EXTERNAL_TINYXML=ON
+        -DWITH_EXTERNAL_DUKTAPE=ON
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
+        "-DLIB_POSTFIX:STRING="
 )
 
 vcpkg_install_cmake()

@@ -1,0 +1,23 @@
+diff --git a/tools/CMakeLists.txt b/tools/CMakeLists.txt
+index 8a81a2a..b3e3da1 100644
+--- a/tools/CMakeLists.txt
++++ b/tools/CMakeLists.txt
+@@ -12,7 +12,7 @@
+ #################################################################################
+ 
+ 
+-if(NOT MSVC)
++if(TRUE)
+   # Consider CMAKE_INSTALL_PREFIX with spaces
+   string(REPLACE " " "\\ " ESCAPED_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+   configure_file(
+diff --git a/tools/geos.pc.cmake b/tools/geos.pc.cmake
+index 0a9df7f..443b770 100644
+--- a/tools/geos.pc.cmake
++++ b/tools/geos.pc.cmake
+@@ -8,4 +8,4 @@ Description: Geometry Engine, Open Source - C API
+ Requires:
+ Version: @GEOS_VERSION@
+ Cflags: -I${includedir}
+-Libs: -L${libdir} -lgeos_c
++Libs: -L${libdir} -lgeos_c@CMAKE_DEBUG_POSTFIX@ -lgeos@CMAKE_DEBUG_POSTFIX@

@@ -338,5 +338,4 @@ $portfileFunctionsContent += "" # final newline
 
 WriteFile `
     -Path "$PSScriptRoot/maintainers/portfile-functions.md" `
-    -NoNewline `
-    -Value (($portfileFunctionsContent -join "`n") + "`r`n")
+    -Value $portfileFunctionsContent

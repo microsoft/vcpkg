@@ -1,4 +1,4 @@
-The package pangolin is compatible with built-in CMake targets:
+The package pangolin provides CMake integration:
 
     find_package(Pangolin CONFIG REQUIRED)
     target_link_libraries(main PRIVATE pangolin)

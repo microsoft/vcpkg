@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6845ec3..36550fc 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -265,7 +265,7 @@ target_include_directories(${PDAL_BASE_LIB_NAME}
+ target_link_libraries(${PDAL_BASE_LIB_NAME}
+     PUBLIC
+         ${CMAKE_THREAD_LIBS_INIT}
+-        ${GDAL_LIBRARY}
++        GDAL::GDAL
+         ${GEOS_LIBRARY}
+         ${GEOTIFF_LIBRARY}
+         ${LASZIP_LIBRARY}

@@ -27,6 +27,8 @@ vcpkg_extract_source_archive_ex(
     PATCHES ${GDAL_PATCHES}
 )
 
+set(DEPENDENCY_TIFF OFF)
+
 if (VCPKG_TARGET_IS_WINDOWS)
   set(NATIVE_DATA_DIR "${CURRENT_PACKAGES_DIR}/share/gdal")
   set(NATIVE_HTML_DIR "${CURRENT_PACKAGES_DIR}/share/gdal/html")
@@ -183,32 +185,140 @@ else()
         set(BUILD_DYNAMIC no)
         set(BUILD_STATIC yes)
     endif()
-    
-    set(CONF_OPTS --enable-shared=${BUILD_DYNAMIC} --enable-static=${BUILD_STATIC})
-    list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR} --with-libjson-c=${CURRENT_INSTALLED_DIR} --without-freexl)
-    list(APPEND CONF_OPTS --without-jasper)
-    
+
+    vcpkg_find_acquire_program(PKGCONFIG)
+
+    set(backup_PKG_CONFIG_PATH "$ENV{PKG_CONFIG_PATH}")
+    set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}$ENV{PKG_CONFIG_PATH}")
+    execute_process(
+        COMMAND "${PKGCONFIG}" --libs libtiff-4 libxml-2.0 libpng json-c netcdf libopenjp2 geos expat cfitsio
+        OUTPUT_VARIABLE release_libs
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(ENV{PKG_CONFIG_PATH} "${CURRENT_INSTALLED_DIR}/debug/lib/pkgconfig${VCPKG_HOST_PATH_SEPARATOR}${backup_PKG_CONFIG_PATH}")
+    execute_process(
+        COMMAND "${PKGCONFIG}" --libs libtiff-4 libxml-2.0 libpng json-c netcdf libopenjp2 geos expat cfitsio
+        OUTPUT_VARIABLE debug_libs
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    set(ENV{PKG_CONFIG_PATH} "${backup_PKG_CONFIG_PATH}")
+
+    # This is required to link proj4 statically.
+    if(VCPKG_TARGET_IS_OSX)
+        set(cppstdlib c++)
+    else()
+        set(cppstdlib stdc++)
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
         COPY_SOURCE
-        OPTIONS ${CONF_OPTS}
+        OPTIONS_RELEASE
+            "LIBS=${release_libs} -l${cppstdlib} -lm -lpthread"
         OPTIONS_DEBUG
             --enable-debug
-            --without-fit # Disable cfitsio temporary
+            "LIBS=${debug_libs} -l${cppstdlib} -lm -lpthread"
+        OPTIONS
+            HAVE_GEOS=yes
+            HAVE_EXPAT=yes
+            --enable-shared=${BUILD_DYNAMIC}
+            --enable-static=${BUILD_STATIC}
+            --with-proj=${CURRENT_INSTALLED_DIR}
+            --with-liblzma=${CURRENT_INSTALLED_DIR}
+            --without-zstd
+            --without-pg
+            --without-grass
+            --without-libgrass
+            --with-cfitsio=${CURRENT_INSTALLED_DIR}
+            --with-pcraster=internal
+            --with-png=${CURRENT_INSTALLED_DIR}
+            --without-dds
+            --without-gta
+            --with-pcidsk=internal
+            --with-libtiff=${CURRENT_INSTALLED_DIR}
+            --with-geotiff=${CURRENT_INSTALLED_DIR}
+            --with-jpeg=${CURRENT_INSTALLED_DIR}
+            --without-charls
+            --without-jpeg12
+            --with-gif=internal
+            --without-ogdi
+            --without-fme
+            --without-sosi
+            --without-mongocxx
+            --without-boost-lib-path
+            --without-mongocxxv3
+            --without-hdf4
+            --without-hdf5
+            --without-kea
+            --with-netcdf=${CURRENT_INSTALLED_DIR}
+            --without-jasper
+            --with-openjpeg=${CURRENT_INSTALLED_DIR}
+            --without-fgdb
+            --without-ecw
+            --without-kakadu
+            --without-mrsid
+            --without-jp2mrsid
+            --without-mrsid_lidar
+            --without-j2lua
+            --without-msg
+            --without-oci
+            --without-mysql
+            --without-ingres
+            --without-xerces
+            --with-expat
+            --without-libkml
+            --without-odbc
+            --without-dods-root
+            --without-curl
+            --with-xml2=yes
+            --without-spatialite
+            --with-sqlite3=yes
+            --without-rasterlite2
+            --without-pcre
+            --without-teigha
+            --without-idb
+            --without-sde
+            --without-epsilon
+            --without-webp
+            --with-geos=yes
+            --without-qhull
+            --without-opencl
+            --without-freexl
+            --with-libjson-c=${CURRENT_INSTALLED_DIR}
+            --without-pam
+            --without-poppler
+            --without-podofo
+            --without-pdfium
+            --without-perl
+            --without-python
+            --without-java
+            --without-hdfs
+            --without-tiledb
+            --without-mdb
+            --without-rasdaman
+            --without-rdb
+            --without-armadillo
+            --without-cryptopp
+            --with-cypto=no
+            --without-lerc
+            --without-exr
     )
-    
+
     vcpkg_install_make(MAKEFILE GNUmakefile)
-    
+
     file(REMOVE_RECURSE
          ${CURRENT_PACKAGES_DIR}/lib/gdalplugins
          ${CURRENT_PACKAGES_DIR}/debug/lib/gdalplugins
          ${CURRENT_PACKAGES_DIR}/debug/share
     )
+
+    set(DEPENDENCY_TIFF ON)
 endif()
 
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/gdal-config.in.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/gdal-config.cmake @ONLY)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

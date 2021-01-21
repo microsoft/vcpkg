@@ -23,15 +23,24 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools     BUILD_CLI_EXECUTABLES
 )
 
+if(VCPKG_TARGET_IS_OSX)
+    # find_package(OpenMP) fails on OSX
+    set(USE_OPENMP OFF)
+else()
+    set(USE_OPENMP ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    REQUIRE_ALL_PACKAGES
+    DISABLE_PACKAGES Julia Go Gonum R Doxygen Git PkgConfig
     PREFER_NINJA
     OPTIONS
+        -DUSE_OPENMP=${USE_OPENMP}
         -DBUILD_TESTS=OFF
         -DDOWNLOAD_STB_IMAGE=OFF
         -DDOWNLOAD_ENSMALLEN=OFF
         -DBUILD_PYTHON_BINDINGS=OFF
-        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
         ${FEATURE_OPTIONS}
 )
 vcpkg_install_cmake()

@@ -1,0 +1,14 @@
+diff --git a/cmake/modules/GetGitRevisionDescription.cmake b/cmake/modules/GetGitRevisionDescription.cmake
+index 2e61f4f..b2a16f1 100644
+--- a/cmake/modules/GetGitRevisionDescription.cmake
++++ b/cmake/modules/GetGitRevisionDescription.cmake
+@@ -40,6 +40,9 @@ set(__get_git_revision_description YES)
+ get_filename_component(_gitdescmoddir ${CMAKE_CURRENT_LIST_FILE} PATH)
+ 
+ function(get_git_head_revision _refspecvar _hashvar)
++	set(${_refspecvar} "Release" PARENT_SCOPE)
++	set(${_hashvar} "Release" PARENT_SCOPE)
++	return()
+ 	set(GIT_PARENT_DIR "${CMAKE_SOURCE_DIR}")
+ 	set(GIT_DIR "${GIT_PARENT_DIR}/.git")
+ 	while(NOT EXISTS "${GIT_DIR}")	# .git dir not found, search parent directories

@@ -14,11 +14,6 @@ vcpkg_from_github(
         fix-compiler-flag.patch
 )
 
-if(NOT DEFINED RELEASE_CONFIGURATION)
-    set(RELEASE_CONFIGURATION "release")
-endif()
-set(DEBUG_CONFIGURATION "debug")
-
 set(OPTIONS
     "-DPHYSX_ROOT_DIR=${SOURCE_PATH}/physx"
     "-DPXSHARED_PATH=${SOURCE_PATH}/pxshared"
@@ -82,6 +77,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
     PREFER_NINJA
+    REQUIRE_ALL_PACKAGES
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${OPTIONS_DEBUG}

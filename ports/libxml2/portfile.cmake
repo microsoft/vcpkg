@@ -30,6 +30,20 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(LINK_ICONV "-liconv")
+else()
+    set(LINK_ICONV)
+endif()
+
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libxml-2.0.pc "Requires:" "Requires: liblzma zlib")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libxml-2.0.pc " -lxml2" " -lxml2 ${LINK_ICONV} -lm")
+endif()
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libxml-2.0.pc "Requires:" "Requires: liblzma zlib")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libxml-2.0.pc " -lxml2" " -lxml2 ${LINK_ICONV} -lm")
+endif()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()

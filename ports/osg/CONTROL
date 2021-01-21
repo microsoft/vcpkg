@@ -2,8 +2,10 @@ Source: osg
 Version: 3.6.5
 Port-Version: 7
 Homepage: https://github.com/openscenegraph/OpenSceneGraph
-Description:  The OpenSceneGraph is an open source high performance 3D graphics toolkit.
-Build-Depends: zlib, fontconfig (!windows), expat (windows), openimageio (osx)
+Description: The OpenSceneGraph is an open source high performance 3D graphics toolkit.
+Build-Depends: zlib, openimageio (osx), opengl
+Default-Features: default-features
+Supports: !uwp
 
 Feature: collada
 Description: Support for Collada (.dae) files
@@ -11,15 +13,47 @@ Build-Depends: collada-dom
 
 Feature: tools
 Description: Enable to build OSG Applications (e.g. osgviewer)
-Build-Depends: freetype, sdl1, curl, libjpeg-turbo, libpng, libiconv (windows)
+Build-Depends: osg[core,freetype,sdl1,curl,jpeg,png], expat (windows), libiconv (windows)
 
 Feature: examples
 Description: Enable to build OSG Examples
-Build-Depends: freetype, sdl1, sdl2, libiconv (windows)
+Build-Depends: osg[core,freetype,sdl1], sdl2
 
 Feature: plugins
 Description: Build OSG Plugins - Disable for compile testing examples on a time limit
-Build-Depends: freetype, sdl1, curl, openexr, ilmbase, gdal, giflib (windows), jasper, libjpeg-turbo, libpng, tiff, libxml2 (windows), libiconv (windows), libgta, liblas, nvtt (!x86), coin, boost-asio (!windows), boost-core (!windows), boost-logic (!windows), boost-lexical-cast (!windows), boost-smart-ptr (!windows), boost-tuple (!windows), boost-bind (!windows)
+Build-Depends: osg[core,freetype,sdl1,curl,jpeg,png], openexr, ilmbase, gdal, giflib (windows), jasper, tiff, libxml2 (windows), libgta, coin
+
+Feature: default-features
+Description: Set of default features for osg
+Build-Depends: osg[core,fontconfig] (linux)
+
+Feature: fontconfig
+Description: Build with fontconfig support
+Build-Depends: fontconfig
+
+Feature: freetype
+Description: Build with freetype support
+Build-Depends: freetype
+
+Feature: sdl1
+Description: Build with SDL1 support
+Build-Depends: sdl1
+
+Feature: curl
+Description: Build with curl support
+Build-Depends: curl
+
+Feature: jpeg
+Description: Build with libjpeg-turbo support
+Build-Depends: libjpeg-turbo
+
+Feature: png
+Description: Build with libpng support
+Build-Depends: libpng
+
+Feature: nvtt
+Description: Build with NVTT support
+Build-Depends: nvtt
 
 Feature: packages
 Description: Set to ON to generate CPack configuration files and packaging targets
