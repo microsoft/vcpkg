@@ -3,11 +3,10 @@ vcpkg_fail_port_install(ON_TARGET "linux" "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO osrf/sdformat
-    REF sdformat9_9.2.0
-    SHA512 6fc7d0ce46d9a7d1cae4fd905ebe6a07bb4ba98faa267be92a32b3409d6d82a99d5082485008a15484f7b5be2c347b5b24bc472fb1a4be5eb8b678b105cae6af
+    REF sdformat9_9.4.0
+    SHA512 b7ed458a5a9ba5b5dcf457d3e0c9de0bca3d514a6870aa977a00a84f8a3b8d1bd21f3b437c0651af7f0cc9b9c6c8b905c968525194605b334ab62280b9d55b0e 
     HEAD_REF sdf9
     PATCHES
-        respect-build-testing.patch # Backport of https://github.com/osrf/sdformat/pull/269
         fix-dependency-urdfdom.patch
 )
 
