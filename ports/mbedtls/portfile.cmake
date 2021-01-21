@@ -18,10 +18,6 @@ vcpkg_check_features(
         pthreads ENABLE_PTHREAD
 )
 
-if (VCPKG_TARGET_IS_ANDROID)
-    set(EXTRA_ARGS "-DMBEDTLS_FATAL_WARNINGS=FALSE")
-endif ()
-
 vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
@@ -29,7 +25,7 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DENABLE_TESTING=OFF
         -DENABLE_PROGRAMS=OFF
-        ${EXTRA_ARGS}
+        -DMBEDTLS_FATAL_WARNINGS=FALSE
 )
 
 vcpkg_install_cmake()
