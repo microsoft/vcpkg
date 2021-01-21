@@ -41,6 +41,12 @@ try {
         throw "Environment variable did not disable metrics."
     }
 
+    # Also test that you get no message without --sendmetrics
+    $vcpkgOutput = Run-Vcpkg list
+    if ($vcpkgOutput -contains $metricsAreDisabledMessage) {
+        throw "Disabled metrics emit message even without --sendmetrics"
+    }
+
     if (-Not (Test-Metrics-Enabled '--no-disable-metrics')) {
         throw "Environment variable to disable metrics could not be overridden by switch."
     }

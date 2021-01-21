@@ -79,12 +79,6 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
     paths.track_feature_flag_metrics();
 
     fs.current_path(paths.root, VCPKG_LINE_INFO);
-    if ((args.command == "install" || args.command == "remove" || args.command == "export" ||
-         args.command == "update") &&
-        !args.output_json())
-    {
-        Commands::Version::warn_if_vcpkg_version_mismatch(paths);
-    }
 
     if (const auto command_function = find_command(Commands::get_available_paths_commands()))
     {
@@ -256,7 +250,7 @@ int main(const int argc, const char* const* const argv)
             metrics->set_send_metrics(*p);
         }
 
-        if (args.send_metrics.value_or(true) && !metrics->metrics_enabled())
+        if (args.send_metrics.value_or(false) && !metrics->metrics_enabled())
         {
             System::print2(System::Color::warning, "Warning: passed --sendmetrics, but metrics are disabled.\n");
         }

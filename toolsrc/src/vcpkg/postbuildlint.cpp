@@ -390,10 +390,10 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> dlls_with_no_exports;
         for (const fs::path& dll : dlls)
         {
-            const std::string cmd_line =
-                Strings::format(R"("%s" /exports "%s")", fs::u8string(dumpbin_exe), fs::u8string(dll));
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/exports").path_arg(dll);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line.command_line());
 
             if (ec_data.output.find("ordinal hint RVA      name") == std::string::npos)
             {
@@ -428,10 +428,10 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> dlls_with_improper_uwp_bit;
         for (const fs::path& dll : dlls)
         {
-            const std::string cmd_line =
-                Strings::format(R"("%s" /headers "%s")", fs::u8string(dumpbin_exe), fs::u8string(dll));
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/headers").path_arg(dll);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line.command_line());
 
             if (ec_data.output.find("App Container") == std::string::npos)
             {
@@ -720,13 +720,12 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& lib : libs)
         {
-            const std::string cmd_line =
-                Strings::format(R"("%s" /directives "%s")", fs::u8string(dumpbin_exe), fs::u8string(lib));
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/directives").path_arg(lib);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO,
                                ec_data.exit_code == 0,
                                "Running command:\n   %s\n failed with message:\n%s",
-                               cmd_line,
+                               cmd_line.command_line(),
                                ec_data.output);
 
             for (const BuildType& bad_build_type : bad_build_types)
@@ -775,10 +774,10 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& dll : dlls)
         {
-            const auto cmd_line =
-                Strings::format(R"("%s" /dependents "%s")", fs::u8string(dumpbin_exe), fs::u8string(dll));
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/dependents").path_arg(dll);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line.command_line());
 
             for (const OutdatedDynamicCrt& outdated_crt : get_outdated_dynamic_crts(pre_build_info.platform_toolset))
             {

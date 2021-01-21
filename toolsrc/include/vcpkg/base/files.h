@@ -125,6 +125,12 @@ namespace fs
 
 #endif
 
+    inline bool operator==(SystemHandle lhs, SystemHandle rhs) noexcept
+    {
+        return lhs.system_handle == rhs.system_handle;
+    }
+    inline bool operator!=(SystemHandle lhs, SystemHandle rhs) noexcept { return !(lhs == rhs); }
+
     inline bool is_symlink(file_status s) noexcept
     {
 #if defined(_WIN32)
@@ -266,4 +272,44 @@ namespace vcpkg::Files
 #if defined(_WIN32)
     fs::path win32_fix_path_case(const fs::path& source);
 #endif // _WIN32
+
+    struct ExclusiveFileLock
+    {
+        enum class Wait
+        {
+            Yes,
+            No,
+        };
+
+        ExclusiveFileLock() = default;
+        ExclusiveFileLock(ExclusiveFileLock&&) = delete;
+        ExclusiveFileLock& operator=(ExclusiveFileLock&&) = delete;
+
+        ExclusiveFileLock(Wait wait, Filesystem& fs, const fs::path& path_, std::error_code& ec) : m_fs(&fs)
+        {
+            switch (wait)
+            {
+                case Wait::Yes: m_handle = m_fs->take_exclusive_file_lock(path_, ec); break;
+                case Wait::No: m_handle = m_fs->try_take_exclusive_file_lock(path_, ec); break;
+            }
+        }
+        ~ExclusiveFileLock() { clear(); }
+
+        explicit operator bool() const { return m_handle.is_valid(); }
+        bool has_lock() const { return m_handle.is_valid(); }
+
+        void clear()
+        {
+            if (m_fs && m_handle.is_valid())
+            {
+                std::error_code ignore;
+                m_fs->unlock_file_lock(std::exchange(m_handle, fs::SystemHandle{}), ignore);
+            }
+        }
+
+    private:
+        Filesystem* m_fs;
+        fs::SystemHandle m_handle;
+    };
+
 }
