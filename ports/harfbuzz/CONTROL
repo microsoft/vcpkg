@@ -11,3 +11,7 @@ Description: Graphite2 shaper support
 Feature: icu
 Build-Depends: icu
 Description: icu support for harfbuzz
+
+Feature: glib
+Build-Depends: glib
+Description: Glib Unicode callbacks support

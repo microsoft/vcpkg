@@ -21,6 +21,7 @@ brew_formulas = [
   'gfortran',
   'gperf',
   'libtool',
+  'meson',
   'mono',
   'nasm',
   'pkg-config',

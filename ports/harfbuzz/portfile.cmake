@@ -11,6 +11,7 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     icu         icu
     graphite2   graphite
+    glib        glib
 )
 
 string(REPLACE "=ON" "=enabled" FEATURE_OPTIONS "${FEATURE_OPTIONS}")
@@ -20,7 +21,6 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
         -Dfreetype=enabled
-        -Dglib=disabled
         -Dgobject=disabled
         -Dcairo=disabled
         -Dfontconfig=disabled
