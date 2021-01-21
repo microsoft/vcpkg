@@ -220,7 +220,7 @@ namespace vcpkg::Commands::CI
                     message_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(test.result));
                     break;
                 case BuildResult::SUCCEEDED: result_string = "Pass"; break;
-                default: Checks::exit_fail(VCPKG_LINE_INFO); break;
+                default: Checks::unreachable(VCPKG_LINE_INFO);
             }
 
             std::string traits_block;

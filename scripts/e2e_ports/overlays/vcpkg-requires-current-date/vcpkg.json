@@ -1,0 +1,6 @@
+{
+  "name": "vcpkg-requires-current-date",
+  "version-string": "1.0.0",
+  "description": "A test port that verifies that vcpkg_minimum_required is inclusive by using the current base version value.",
+  "homepage": ""
+}
