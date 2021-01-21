@@ -24,11 +24,6 @@ elseif(@VCPKG_TARGET_IS_ANDROID@)
         boost.locale.icu=${BOOST_LOCALE_ICU_FEATURE}
         -sICONV_PATH=${LIBICONV_DIR}
     )
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Emscripten" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "wasm32")
-        list(APPEND B2_OPTIONS
-            boost.locale.force-found-iconv=on
-        )
-    endif()
 else()
     find_library(LIBICONV_LIBRARY iconv)
     get_filename_component(LIBICONV_DIR "${LIBICONV_LIBRARY}" DIRECTORY)
