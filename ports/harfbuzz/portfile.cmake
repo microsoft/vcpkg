@@ -25,11 +25,11 @@ else()
     list(APPEND FEATURE_OPTIONS -Dgobject=disabled)
 endif()
 list(APPEND FEATURE_OPTIONS -Dfreetype=enabled)
-if(VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND FEATURE_OPTIONS -Dgdi=enabled)
-elseif(VCPKG_TARGET_IS_OSX)
-    list(APPEND FEATURE_OPTIONS -Dcoretext=enabled)
-endif()
+#if(VCPKG_TARGET_IS_WINDOWS)
+#    list(APPEND FEATURE_OPTIONS -Dgdi=enabled) # This breaks qt5-base:x64-windows-static due to missing libraries being link against. 
+#elseif(VCPKG_TARGET_IS_OSX)
+#    list(APPEND FEATURE_OPTIONS -Dcoretext=enabled)
+#endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
