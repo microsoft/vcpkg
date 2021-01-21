@@ -1,12 +1,12 @@
 . "$PSScriptRoot/../end-to-end-tests-prelude.ps1"
 
 
-$builtinRegistryArgs = $commonArgs + @("--x-builtin-port-versions-dir=$PSScriptRoot/../../e2e_ports/port_versions")
+$builtinRegistryArgs = $commonArgs + @("--x-builtin-registry-versions-dir=$PSScriptRoot/../../e2e_ports/versions")
 
 Run-Vcpkg install @builtinRegistryArgs 'vcpkg-internal-e2e-test-port'
 Throw-IfNotFailed
 
-# We should not look into the port_versions directory unless we have a baseline,
+# We should not look into the versions directory unless we have a baseline,
 # even if we pass the registries feature flag
 Run-Vcpkg install @builtinRegistryArgs --feature-flags=registries 'vcpkg-internal-e2e-test-port'
 Throw-IfNotFailed
@@ -14,12 +14,13 @@ Throw-IfNotFailed
 Run-Vcpkg install @builtinRegistryArgs --feature-flags=registries 'zlib'
 Throw-IfFailed
 
-# Test git and filesystem registries
+Write-Trace "Test git and filesystem registries"
 Refresh-TestRoot
 $filesystemRegistry = "$TestingRoot/filesystem-registry"
 $gitRegistryUpstream = "$TestingRoot/git-registry-upstream"
 
 # build a filesystem registry
+Write-Trace "build a filesystem registry"
 New-Item -Path $filesystemRegistry -ItemType Directory
 $filesystemRegistry = (Get-Item $filesystemRegistry).FullName
 
@@ -27,13 +28,13 @@ Copy-Item -Recurse `
     -LiteralPath "$PSScriptRoot/../../e2e_ports/vcpkg-internal-e2e-test-port" `
     -Destination "$filesystemRegistry"
 New-Item `
-    -Path "$filesystemRegistry/port_versions" `
+    -Path "$filesystemRegistry/versions" `
     -ItemType Directory
 Copy-Item `
-    -LiteralPath "$PSScriptRoot/../../e2e_ports/port_versions/baseline.json" `
-    -Destination "$filesystemRegistry/port_versions/baseline.json"
+    -LiteralPath "$PSScriptRoot/../../e2e_ports/versions/baseline.json" `
+    -Destination "$filesystemRegistry/versions/baseline.json"
 New-Item `
-    -Path "$filesystemRegistry/port_versions/v-" `
+    -Path "$filesystemRegistry/versions/v-" `
     -ItemType Directory
 
 $vcpkgInternalE2eTestPortJson = @{
@@ -45,12 +46,13 @@ $vcpkgInternalE2eTestPortJson = @{
     )
 }
 New-Item `
-    -Path "$filesystemRegistry/port_versions/v-/vcpkg-internal-e2e-test-port.json" `
+    -Path "$filesystemRegistry/versions/v-/vcpkg-internal-e2e-test-port.json" `
     -ItemType File `
     -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgInternalE2eTestPortJson)
 
 
 # build a git registry
+Write-Trace "build a git registry"
 New-Item -Path $gitRegistryUpstream -ItemType Directory
 $gitRegistryUpstream = (Get-Item $gitRegistryUpstream).FullName
 
@@ -66,7 +68,7 @@ try
     $CurrentTest = 'git init .'
     git @gitConfigOptions init .
     Throw-IfFailed
-    Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/port_versions" -Destination .
+    Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/versions" -Destination .
     Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/vcpkg-internal-e2e-test-port" -Destination .
 
     $CurrentTest = 'git add -A'
@@ -82,6 +84,7 @@ finally
 }
 
 # actually test the registries
+Write-Trace "actually test the registries"
 $vcpkgJson = @{
     "name" = "manifest-test";
     "version-string" = "1.0.0";
@@ -90,37 +93,8 @@ $vcpkgJson = @{
     )
 }
 
-$manifestDir = "$TestingRoot/builtin-registry-test-manifest-dir"
-
-New-Item -Path $manifestDir -ItemType Directory
-$manifestDir = (Get-Item $manifestDir).FullName
-
-Push-Location $manifestDir
-
-try
-{
-    $vcpkgJsonWithBaseline = $vcpkgJson.Clone()
-    $vcpkgJsonWithBaseline['$x-default-baseline'] = 'default'
-
-    New-Item -Path 'vcpkg.json' -ItemType File `
-        -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgJson)
-
-    Run-Vcpkg install @builtinRegistryArgs '--feature-flags=registries,manifests'
-    Throw-IfNotFailed
-
-    New-Item -Path 'vcpkg.json' -ItemType File -Force `
-        -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgJsonWithBaseline)
-
-    Run-Vcpkg install @builtinRegistryArgs '--feature-flags=registries,manifests'
-    Throw-IfFailed
-}
-finally
-{
-    Pop-Location
-}
-
-
 # test the filesystem registry
+Write-Trace "test the filesystem registry"
 $manifestDir = "$TestingRoot/filesystem-registry-test-manifest-dir"
 
 New-Item -Path $manifestDir -ItemType Directory
@@ -154,6 +128,7 @@ finally
 }
 
 # test the git registry
+Write-Trace "test the git registry"
 $manifestDir = "$TestingRoot/git-registry-test-manifest-dir"
 
 New-Item -Path $manifestDir -ItemType Directory

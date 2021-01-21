@@ -63,6 +63,10 @@ function Throw-IfNotFailed {
     }
 }
 
+function Write-Trace ([string]$text) {
+    Write-Host (@($MyInvocation.ScriptName, ":", $MyInvocation.ScriptLineNumber, ": ", $text) -join "")
+}
+
 function Run-Vcpkg {
     Param(
         [Parameter(ValueFromRemainingArguments)]

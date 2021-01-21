@@ -278,7 +278,7 @@ namespace vcpkg::Json
 
     struct NaturalNumberDeserializer final : IDeserializer<int>
     {
-        virtual StringView type_name() const override { return "a natural number"; }
+        virtual StringView type_name() const override { return "a nonnegative integer"; }
 
         virtual Optional<int> visit_integer(Reader&, int64_t value) override
         {
