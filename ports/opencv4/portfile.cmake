@@ -22,7 +22,7 @@ vcpkg_from_github(
       0006-jpeg2000_getref.patch
       0008-fix-vtk9.patch
       0009-fix-uwp.patch
-      0010-fix-interface_link_libraries.patch # Remove this patch when the next update\
+      0010-fix-interface_link_libraries.patch # Remove this patch when the next update
       0011-devendor-quirc.patch
 )
 
