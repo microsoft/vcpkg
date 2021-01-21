@@ -234,7 +234,7 @@ namespace
                 auto port_name = filename.substr(0, filename.size() - 5);
                 if (!Json::PackageNameDeserializer::is_package_name(port_name))
                 {
-                    Checks::exit_with_message(
+                    Checks::exit_maybe_upgrade(
                         VCPKG_LINE_INFO, "Error: found invalid port version file name: `%s`.", fs::u8string(file));
                 }
                 out.push_back(std::move(port_name));
@@ -252,8 +252,8 @@ namespace
         {
             auto maybe_version_entries =
                 load_versions_file(paths.get_filesystem(), VersionDbType::Git, paths.builtin_port_versions, port_name);
-            Checks::check_exit(
-                VCPKG_LINE_INFO, maybe_version_entries.has_value(), "Error: %s", maybe_version_entries.error());
+            Checks::check_maybe_upgrade(
+                VCPKG_LINE_INFO, maybe_version_entries.has_value(), "Error: " + maybe_version_entries.error());
             auto version_entries = std::move(maybe_version_entries).value_or_exit(VCPKG_LINE_INFO);
 
             auto res =
@@ -278,7 +278,7 @@ namespace
                 auto maybe_error = scf->check_against_feature_flags(port_directory, paths.get_feature_flags());
                 if (maybe_error)
                 {
-                    Checks::exit_with_message(VCPKG_LINE_INFO, "Parsing manifest failed: %s", *maybe_error.get());
+                    Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, "Parsing manifest failed: %s", *maybe_error.get());
                 }
 
                 if (scf->core_paragraph->name == port_name)
@@ -286,11 +286,11 @@ namespace
                     return std::make_unique<BuiltinRegistryEntry>(
                         std::make_unique<SourceControlFileLocation>(std::move(scf), std::move(port_directory)));
                 }
-                Checks::exit_with_message(VCPKG_LINE_INFO,
-                                          "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
-                                          fs::u8string(port_directory),
-                                          port_name,
-                                          scf->core_paragraph->name);
+                Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                           "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
+                                           fs::u8string(port_directory),
+                                           port_name,
+                                           scf->core_paragraph->name);
             }
         }
 
@@ -416,14 +416,14 @@ namespace
                 return {};
             }
 
-            Checks::exit_with_message(
+            Checks::exit_maybe_upgrade(
                 VCPKG_LINE_INFO,
                 "Error: could not find explicitly specified baseline `\"%s\"` in baseline file `%s`.",
                 baseline_identifier,
                 fs::u8string(path_to_baseline));
         }
 
-        Checks::exit_with_message(VCPKG_LINE_INFO, res_baseline.error());
+        Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, res_baseline.error());
     }
     Optional<VersionT> FilesystemRegistry::get_baseline_version(const VcpkgPaths& paths, StringView port_name) const
     {
@@ -446,8 +446,8 @@ namespace
     {
         auto maybe_version_entries = load_versions_file(
             paths.get_filesystem(), VersionDbType::Filesystem, m_path / port_versions_dir, port_name, m_path);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, maybe_version_entries.has_value(), "Error: %s", maybe_version_entries.error());
+        Checks::check_maybe_upgrade(
+            VCPKG_LINE_INFO, maybe_version_entries.has_value(), "Error: " + maybe_version_entries.error());
         auto version_entries = std::move(maybe_version_entries).value_or_exit(VCPKG_LINE_INFO);
 
         auto res = std::make_unique<FilesystemRegistryEntry>(port_name.to_string());
@@ -471,8 +471,8 @@ namespace
         auto port_versions = get_versions_tree_path(paths);
         auto maybe_version_entries =
             load_versions_file(paths.get_filesystem(), VersionDbType::Git, port_versions, port_name);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, maybe_version_entries.has_value(), "Error: %s", maybe_version_entries.error());
+        Checks::check_maybe_upgrade(
+            VCPKG_LINE_INFO, maybe_version_entries.has_value(), "Error: " + maybe_version_entries.error());
         auto version_entries = std::move(maybe_version_entries).value_or_exit(VCPKG_LINE_INFO);
 
         auto res = std::make_unique<GitRegistryEntry>(port_name.to_string());
@@ -493,7 +493,7 @@ namespace
 
             if (!res_baseline.has_value())
             {
-                Checks::exit_with_message(VCPKG_LINE_INFO, res_baseline.error());
+                Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, res_baseline.error());
             }
             auto opt_baseline = res_baseline.get();
             if (auto p = opt_baseline->get())
@@ -552,7 +552,7 @@ namespace
             }
             else
             {
-                Checks::exit_with_message(
+                Checks::exit_maybe_upgrade(
                     VCPKG_LINE_INFO,
                     "Couldn't find explicitly specified baseline `\"%s\"` in the baseline file for repo %s, "
                     "and the `\"default\"` baseline does not exist at that commit.",
@@ -893,7 +893,7 @@ namespace
             fs::path path;
             r.required_object_field("a filesystem registry", obj, PATH, path, Json::PathDeserializer::instance);
 
-            res = std::make_unique<FilesystemRegistry>(config_directory / path, std::move(baseline));
+            res = std::make_unique<FilesystemRegistry>(Files::combine(config_directory, path), std::move(baseline));
         }
         else if (kind == KIND_GIT)
         {
