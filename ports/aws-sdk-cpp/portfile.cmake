@@ -9,8 +9,6 @@ vcpkg_from_github(
     PATCHES
         patch-relocatable-rpath.patch
         fix-AWSSDKCONFIG.patch
-        build-external-allow-vcpkg-chaining.patch
-        allow-vcpkg-chaining.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" FORCE_SHARED_CRT)
@@ -24,10 +22,15 @@ if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
 elseif (VCPKG_TARGET_IS_ANDROID)
     find_package(Git)
 
+    if(NOT GIT_EXECUTABLE)
+        include(${CMAKE_CURRENT_LIST_DIR}/FindGit.cmake)
+    endif()
+
     set(EXTRA_ARGS "-DTARGET_ARCH=ANDROID"
             "-DGIT_EXECUTABLE=${GIT_EXECUTABLE}"
             "-DGIT_FOUND=${GIT_FOUND}"
             "-DGIT_VERSION_STRING=${GIT_VERSION_STRING}"
+            "-DNDK_DIR=$ENV{ANDROID_NDK_HOME}"
             )
 else()
     set(rpath "\$ORIGIN")
