@@ -10,6 +10,9 @@ Configure CMake for Debug and Release builds of a project.
 vcpkg_configure_cmake(
     SOURCE_PATH <${SOURCE_PATH}>
     [PREFER_NINJA]
+    [REQUIRE_ALL_PACKAGES]
+    [OPTIONAL_PACKAGES <ZLIB>...]
+    [DISABLE_PACKAGES <PNG>...]
     [DISABLE_PARALLEL_CONFIGURE]
     [NO_CHARSET_FLAG]
     [GENERATOR <"NMake Makefiles">]
@@ -74,9 +77,9 @@ function(vcpkg_configure_cmake)
     endif()
 
     cmake_parse_arguments(PARSE_ARGV 0 arg
-        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG"
+        "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG;REQUIRE_ALL_PACKAGES"
         "SOURCE_PATH;GENERATOR;LOGNAME"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;DISABLE_PACKAGES;OPTIONAL_PACKAGES"
     )
 
     if(NOT VCPKG_PLATFORM_TOOLSET)
@@ -185,6 +188,17 @@ function(vcpkg_configure_cmake)
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
         list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
+    endif()
+    if(arg_REQUIRE_ALL_PACKAGES)
+        list(APPEND arg_OPTIONS "-DZ_VCPKG_REQUIRE_ALL_PACKAGES=ON")
+    endif()
+    if(arg_OPTIONAL_PACKAGES)
+        list(APPEND arg_OPTIONS "-DZ_VCPKG_OPTIONAL_PACKAGES=${arg_OPTIONAL_PACKAGES}")
+    endif()
+    if(arg_DISABLE_PACKAGES)
+        set(X "-DZ_VCPKG_DISABLE_PACKAGES=${arg_DISABLE_PACKAGES}")
+        string(REPLACE ";" "\\;" X "${X}")
+        list(APPEND arg_OPTIONS "${X}")
     endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")

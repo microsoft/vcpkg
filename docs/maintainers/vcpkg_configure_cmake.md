@@ -11,6 +11,9 @@ Configure CMake for Debug and Release builds of a project.
 vcpkg_configure_cmake(
     SOURCE_PATH <${SOURCE_PATH}>
     [PREFER_NINJA]
+    [REQUIRE_ALL_PACKAGES]
+    [OPTIONAL_PACKAGES <ZLIB>...]
+    [DISABLE_PACKAGES <PNG>...]
     [DISABLE_PARALLEL_CONFIGURE]
     [NO_CHARSET_FLAG]
     [GENERATOR <"NMake Makefiles">]

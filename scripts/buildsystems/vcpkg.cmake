@@ -810,6 +810,23 @@ function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}")
 
     set(VCPKG_CMAKE_WRAPPER_PATH "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${LOWERCASE_PACKAGE_NAME}/vcpkg-cmake-wrapper.cmake")
 
+    # These if() conditions are split to avoid exposing lower CMake versions to IN_LIST
+    set(ARGS "${ARGV}")
+    cmake_policy(PUSH)
+    if(DEFINED Z_VCPKG_DISABLE_PACKAGES)
+        cmake_policy(SET CMP0057 NEW)
+        if("${name}" IN_LIST Z_VCPKG_DISABLE_PACKAGES)
+            set(CMAKE_DISABLE_FIND_PACKAGE_${name} 1)
+        endif()
+    endif()
+    if(DEFINED Z_VCPKG_REQUIRE_ALL_PACKAGES)
+        cmake_policy(SET CMP0057 NEW)
+        if(NOT CMAKE_DISABLE_FIND_PACKAGE_${name} AND NOT "REQUIRED" IN_LIST ARGS AND NOT "${name}" IN_LIST Z_VCPKG_OPTIONAL_PACKAGES)
+            list(APPEND ARGS REQUIRED)
+        endif()
+    endif()
+    cmake_policy(POP)
+
     z_vcpkg_start_parent_scope_export()
     if(EXISTS "${VCPKG_CMAKE_WRAPPER_PATH}")
         include("${VCPKG_CMAKE_WRAPPER_PATH}")
