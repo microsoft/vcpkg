@@ -1426,7 +1426,7 @@
     },
     "crfsuite": {
       "baseline": "2019-07-21",
-      "port-version": 0
+      "port-version": 1
     },
     "croncpp": {
       "baseline": "2020-09-04",
@@ -4346,7 +4346,7 @@
     },
     "osg": {
       "baseline": "3.6.5",
-      "port-version": 5
+      "port-version": 6
     },
     "osg-qt": {
       "baseline": "Qt4",
@@ -4354,7 +4354,7 @@
     },
     "osgearth": {
       "baseline": "3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "osi": {
       "baseline": "0.108.6",
