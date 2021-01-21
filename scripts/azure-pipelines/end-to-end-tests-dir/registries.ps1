@@ -1,12 +1,12 @@
 . "$PSScriptRoot/../end-to-end-tests-prelude.ps1"
 
 
-$builtinRegistryArgs = $commonArgs + @("--x-builtin-port-versions-dir=$PSScriptRoot/../../e2e_ports/port_versions")
+$builtinRegistryArgs = $commonArgs + @("--x-builtin-registry-versions-dir=$PSScriptRoot/../../e2e_ports/versions")
 
 Run-Vcpkg install @builtinRegistryArgs 'vcpkg-internal-e2e-test-port'
 Throw-IfNotFailed
 
-# We should not look into the port_versions directory unless we have a baseline,
+# We should not look into the versions directory unless we have a baseline,
 # even if we pass the registries feature flag
 Run-Vcpkg install @builtinRegistryArgs --feature-flags=registries 'vcpkg-internal-e2e-test-port'
 Throw-IfNotFailed
@@ -28,13 +28,13 @@ Copy-Item -Recurse `
     -LiteralPath "$PSScriptRoot/../../e2e_ports/vcpkg-internal-e2e-test-port" `
     -Destination "$filesystemRegistry"
 New-Item `
-    -Path "$filesystemRegistry/port_versions" `
+    -Path "$filesystemRegistry/versions" `
     -ItemType Directory
 Copy-Item `
-    -LiteralPath "$PSScriptRoot/../../e2e_ports/port_versions/baseline.json" `
-    -Destination "$filesystemRegistry/port_versions/baseline.json"
+    -LiteralPath "$PSScriptRoot/../../e2e_ports/versions/baseline.json" `
+    -Destination "$filesystemRegistry/versions/baseline.json"
 New-Item `
-    -Path "$filesystemRegistry/port_versions/v-" `
+    -Path "$filesystemRegistry/versions/v-" `
     -ItemType Directory
 
 $vcpkgInternalE2eTestPortJson = @{
@@ -46,7 +46,7 @@ $vcpkgInternalE2eTestPortJson = @{
     )
 }
 New-Item `
-    -Path "$filesystemRegistry/port_versions/v-/vcpkg-internal-e2e-test-port.json" `
+    -Path "$filesystemRegistry/versions/v-/vcpkg-internal-e2e-test-port.json" `
     -ItemType File `
     -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgInternalE2eTestPortJson)
 
@@ -68,7 +68,7 @@ try
     $CurrentTest = 'git init .'
     git @gitConfigOptions init .
     Throw-IfFailed
-    Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/port_versions" -Destination .
+    Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/versions" -Destination .
     Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/vcpkg-internal-e2e-test-port" -Destination .
 
     $CurrentTest = 'git add -A'

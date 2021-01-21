@@ -349,8 +349,8 @@ If you wish to silence this error and use classic mode, you can:
         scripts = process_input_directory(filesystem, root, args.scripts_root_dir.get(), "scripts", VCPKG_LINE_INFO);
         builtin_ports =
             process_output_directory(filesystem, root, args.builtin_ports_root_dir.get(), "ports", VCPKG_LINE_INFO);
-        builtin_port_versions = process_output_directory(
-            filesystem, root, args.builtin_port_versions_dir.get(), "port_versions", VCPKG_LINE_INFO);
+        builtin_registry_versions = process_output_directory(
+            filesystem, root, args.builtin_registry_versions_dir.get(), "versions", VCPKG_LINE_INFO);
         prefab = root / fs::u8path("prefab");
 
         if (args.default_visual_studio_path)
@@ -653,7 +653,7 @@ If you wish to silence this error and use classic mode, you can:
         if (!fs.exists(destination))
         {
             const fs::path destination_tmp = destination_parent / fs::u8path("baseline.json.tmp");
-            auto treeish = Strings::concat(commit_sha, ":port_versions/baseline.json");
+            auto treeish = Strings::concat(commit_sha, ":versions/baseline.json");
             auto maybe_contents = git_show(treeish, this->root / fs::u8path(".git"));
             if (auto contents = maybe_contents.get())
             {

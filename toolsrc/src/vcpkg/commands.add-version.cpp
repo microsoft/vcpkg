@@ -334,7 +334,7 @@ namespace vcpkg::Commands::AddVersion
         const bool verbose = Util::Sets::contains(parsed_args.switches, OPTION_VERBOSE);
 
         auto& fs = paths.get_filesystem();
-        auto baseline_path = paths.builtin_port_versions / fs::u8path("baseline.json");
+        auto baseline_path = paths.builtin_registry_versions / fs::u8path("baseline.json");
         if (!fs.exists(VCPKG_LINE_INFO, baseline_path))
         {
             System::printf(
@@ -400,8 +400,8 @@ namespace vcpkg::Commands::AddVersion
             }
             const auto& git_tree = git_tree_it->second;
 
-            auto port_versions_path =
-                paths.builtin_port_versions / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
+            auto port_versions_path = paths.builtin_registry_versions / fs::u8path({port_name[0], '-'}) /
+                                      fs::u8path(Strings::concat(port_name, ".json"));
             update_version_db_file(
                 paths, port_name, schemed_version, git_tree, port_versions_path, overwrite_version, verbose, add_all);
             update_baseline_version(paths, port_name, schemed_version.versiont, baseline_path, verbose);

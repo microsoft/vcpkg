@@ -204,16 +204,16 @@ For Example:
 
 See our [manifest files document](manifest-files.md#port-version) for a full explanation of our conventions.
 
-### Update the version files in `port_versions/` of any modified ports
+### Update the version files in `versions/` of any modified ports
 
 Vcpkg uses a set of metadata files to power its versioning feature.
 These files are located in the following locations:
-* `${VCPKG_ROOT}/port_versions/baseline.json`, (this file is common to all ports) and
-* `${VCPKG_ROOT}/port_versions/${first-letter-of-portname}-/${portname}.json` (one per port).
+* `${VCPKG_ROOT}/versions/baseline.json`, (this file is common to all ports) and
+* `${VCPKG_ROOT}/versions/${first-letter-of-portname}-/${portname}.json` (one per port).
 
 For example, for `zlib` the relevant files are:
-* `${VCPKG_ROOT}/port_versions/baseline.json`
-* `${VCPKG_ROOT}/port_versions/z-/zlib.json`
+* `${VCPKG_ROOT}/versions/baseline.json`
+* `${VCPKG_ROOT}/versions/z-/zlib.json`
 
 We expect that each time you update a port, you also update its version files.
 

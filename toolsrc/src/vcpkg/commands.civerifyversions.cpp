@@ -367,8 +367,8 @@ namespace vcpkg::Commands::CIVerifyVersions
                 continue;
             }
 
-            auto versions_file_path =
-                paths.builtin_port_versions / Strings::concat(port_name[0], '-') / Strings::concat(port_name, ".json");
+            auto versions_file_path = paths.builtin_registry_versions / fs::u8path({port_name[0], '-'}) /
+                                      fs::u8path(Strings::concat(port_name, ".json"));
             if (!fs.exists(versions_file_path))
             {
                 System::printf(System::Color::error, "FAIL: %s\n", port_name);

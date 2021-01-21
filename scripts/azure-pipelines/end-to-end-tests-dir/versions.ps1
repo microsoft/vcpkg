@@ -2,16 +2,16 @@
 
 # Test verify versions
 mkdir $VersionFilesRoot
-Copy-Item -Recurse "scripts/testing/version-files/port_versions_incomplete" $VersionFilesRoot
+Copy-Item -Recurse "scripts/testing/version-files/versions_incomplete" $VersionFilesRoot
 $portsRedirectArgsOK = @(
     "--feature-flags=versions",
     "--x-builtin-ports-root=scripts/testing/version-files/ports",
-    "--x-builtin-port-versions-dir=scripts/testing/version-files/port_versions"
+    "--x-builtin-registry-versions-dir=scripts/testing/version-files/versions"
 )
 $portsRedirectArgsIncomplete = @(
     "--feature-flags=versions",
     "--x-builtin-ports-root=scripts/testing/version-files/ports_incomplete",
-    "--x-builtin-port-versions-dir=$VersionFilesRoot/port_versions_incomplete"
+    "--x-builtin-registry-versions-dir=$VersionFilesRoot/versions_incomplete"
 )
 $CurrentTest = "x-verify-ci-versions (All files OK)"
 Write-Host $CurrentTest
@@ -77,7 +77,7 @@ foreach ($opt_registries in @("",",registries"))
     ./vcpkg $commonArgs "--feature-flags=versions$opt_registries" install `
         "--dry-run" `
         "--x-manifest-root=scripts/testing/version-files/without-default-baseline-2" `
-        "--x-builtin-port-versions-dir=scripts/testing/version-files/default-baseline-2/port_versions"
+        "--x-builtin-registry-versions-dir=scripts/testing/version-files/default-baseline-2/versions"
     Throw-IfFailed
     Require-FileNotExists $buildtreesRoot/versioning
 
@@ -85,7 +85,7 @@ foreach ($opt_registries in @("",",registries"))
     ./vcpkg $commonArgs "--feature-flags=versions$opt_registries" install `
         "--dry-run" `
         "--x-manifest-root=scripts/testing/version-files/default-baseline-2" `
-        "--x-builtin-port-versions-dir=scripts/testing/version-files/default-baseline-2/port_versions"
+        "--x-builtin-registry-versions-dir=scripts/testing/version-files/default-baseline-2/versions"
     Throw-IfFailed
     Require-FileExists $buildtreesRoot/versioning
 
@@ -93,6 +93,6 @@ foreach ($opt_registries in @("",",registries"))
     ./vcpkg $commonArgs "--feature-flags=-versions$opt_registries" install `
         "--dry-run" `
         "--x-manifest-root=scripts/testing/version-files/default-baseline-2" `
-        "--x-builtin-port-versions-dir=scripts/testing/version-files/default-baseline-2/port_versions"
+        "--x-builtin-registry-versions-dir=scripts/testing/version-files/default-baseline-2/versions"
     Throw-IfNotFailed
 }
