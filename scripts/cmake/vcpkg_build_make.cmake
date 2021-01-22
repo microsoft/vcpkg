@@ -238,7 +238,7 @@ function(vcpkg_build_make)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
     endif()
 
-    # Remove libtool files since they encode absolute paths
+    # Remove libtool files since they contain absolute paths and are not necessary. 
     file(GLOB_RECURSE LIBTOOL_FILES "${CURRENT_PACKAGES_DIR}/**/*.la")
     if(LIBTOOL_FILES)
         file(REMOVE ${LIBTOOL_FILES})

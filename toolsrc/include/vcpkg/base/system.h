@@ -20,6 +20,8 @@ namespace vcpkg::System
 
     Optional<std::string> get_registry_string(void* base_hkey, StringView subkey, StringView valuename);
 
+    long get_process_id();
+
     enum class CPUArchitecture
     {
         X86,

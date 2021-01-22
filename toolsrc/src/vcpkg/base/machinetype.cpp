@@ -33,7 +33,7 @@ namespace vcpkg
             case MachineType::SH5:
             case MachineType::THUMB:
             case MachineType::WCEMIPSV2: return t;
-            default: Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown machine type code 0x%hx", value);
+            default: Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, "Unknown machine type code 0x%hx", value);
         }
     }
 }

@@ -15,6 +15,7 @@ vcpkg_from_gitlab(
         #xwinsock.patch #TODO: Redo these patches to be less intrusive
         xwin.patch # REDID the above two but a bit more minimal
         xmd_bool.patch
+        _win32.patch
 ) 
 
 set(ENV{ACLOCAL} "aclocal -I \"${CURRENT_INSTALLED_DIR}/share/xorg/aclocal/\"")
@@ -25,7 +26,7 @@ endif()
 
 if(NOT XLSTPROC)
     if(WIN32)
-        set(HOST_TRIPLETS x64-windows x64-windows-static x86-windows x86-windows-static)
+        set(HOST_TRIPLETS x64-windows x64-windows-static x64-windows-static-md x86-windows x86-windows-static)
     elseif(APPLE)
         set(HOST_TRIPLETS x64-osx)
     elseif(UNIX)
@@ -79,4 +80,3 @@ file(INSTALL ${_files} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(TOUCH "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright")
 
 file(REMOVE "${CURRENT_PACKAGES_DIR}/include/X11/extensions/vldXvMC.h") #duplicate with xmvc
-

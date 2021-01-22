@@ -207,12 +207,12 @@ namespace vcpkg::Export::Prefab
         auto&& seven_zip_exe = paths.get_tool_exe(Tools::SEVEN_ZIP);
 
         System::cmd_execute_and_capture_output(
-            Strings::format(
-                R"("%s" a "%s" "%s\*")", fs::u8string(seven_zip_exe), fs::u8string(destination), fs::u8string(source)),
+            System::Command(seven_zip_exe).string_arg("a").path_arg(destination).path_arg(source / fs::u8path("*")),
             System::get_clean_environment());
 #else
         System::cmd_execute_clean(
-            Strings::format(R"(cd '%s' && zip --quiet -r '%s' *)", fs::u8string(source), fs::u8string(destination)));
+            System::Command{"zip"}.string_arg("--quiet").string_arg("-r").path_arg(destination).string_arg("*"),
+            System::InWorkingDirectory{source});
 #endif
     }
 
@@ -222,11 +222,14 @@ namespace vcpkg::Export::Prefab
         {
             System::print2("\n[DEBUG] Installing POM and AAR file to ~/.m2\n\n");
         }
-        const char* cmd_line_format = prefab_options.enable_debug
-                                          ? R"("%s" "install:install-file" "-Dfile=%s" "-DpomFile=%s")"
-                                          : R"("%s" "-q" "install:install-file" "-Dfile=%s" "-DpomFile=%s")";
-
-        const auto cmd_line = Strings::format(cmd_line_format, Tools::MAVEN, fs::u8string(aar), fs::u8string(pom));
+        auto cmd_line = System::Command(Tools::MAVEN);
+        if (!prefab_options.enable_debug)
+        {
+            cmd_line.string_arg("-q");
+        }
+        cmd_line.string_arg("install:install-file")
+            .string_arg(Strings::concat("-Dfile=", fs::u8string(aar)))
+            .string_arg(Strings::concat("-DpomFile=", fs::u8string(pom)));
         const int exit_code = System::cmd_execute_clean(cmd_line);
         Checks::check_exit(
             VCPKG_LINE_INFO, exit_code == 0, "Error: %s installing maven file", fs::generic_u8string(aar));
@@ -254,7 +257,8 @@ namespace vcpkg::Export::Prefab
 
         {
             auto build_info = build_info_from_triplet(paths, provider, default_triplet);
-            Checks::check_exit(VCPKG_LINE_INFO, is_supported(*build_info), "Currenty supported on android triplets");
+            Checks::check_maybe_upgrade(
+                VCPKG_LINE_INFO, is_supported(*build_info), "Currenty supported on android triplets");
         }
 
         std::vector<VcpkgPaths::TripletFile> available_triplets = paths.get_available_triplets();
@@ -309,25 +313,25 @@ namespace vcpkg::Export::Prefab
 
         const fs::path ndk_location = android_ndk_home.value_or_exit(VCPKG_LINE_INFO);
 
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           utils.exists(ndk_location),
-                           "Error: ANDROID_NDK_HOME Directory does not exists %s",
-                           fs::generic_u8string(ndk_location));
+        Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                    utils.exists(ndk_location),
+                                    "Error: ANDROID_NDK_HOME Directory does not exists %s",
+                                    fs::generic_u8string(ndk_location));
         const fs::path source_properties_location = ndk_location / "source.properties";
 
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           utils.exists(ndk_location),
-                           "Error: source.properties missing in ANDROID_NDK_HOME directory %s",
-                           fs::generic_u8string(source_properties_location));
+        Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                    utils.exists(ndk_location),
+                                    "Error: source.properties missing in ANDROID_NDK_HOME directory %s",
+                                    fs::generic_u8string(source_properties_location));
 
         std::string content = utils.read_contents(source_properties_location, VCPKG_LINE_INFO);
 
         Optional<std::string> version_opt = find_ndk_version(content);
 
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           version_opt.has_value(),
-                           "Error: NDK version missing %s",
-                           fs::generic_u8string(source_properties_location));
+        Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                    version_opt.has_value(),
+                                    "Error: NDK version missing %s",
+                                    fs::generic_u8string(source_properties_location));
 
         NdkVersion version = to_version(version_opt.value_or_exit(VCPKG_LINE_INFO)).value_or_exit(VCPKG_LINE_INFO);
 
