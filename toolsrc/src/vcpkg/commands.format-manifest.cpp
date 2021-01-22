@@ -221,17 +221,17 @@ namespace vcpkg::Commands::FormatManifest
         {
             if (filesystem.exists(p, ignore_errors))
             {
-                return p;
+                return std::move(p);
             }
 
             return {Strings::concat(input, " not found.")};
         }
 
         {
-            const auto as_absolute = Files::combine(original_cwd, p);
+            auto as_absolute = Files::combine(original_cwd, p);
             if (filesystem.exists(as_absolute, ignore_errors))
             {
-                return as_absolute;
+                return std::move(as_absolute);
             }
         } // destroy as_absolute
 
@@ -239,8 +239,8 @@ namespace vcpkg::Commands::FormatManifest
         {
             // nonexistent single element relative path, try to interpret as port name
             const auto port_path = Files::combine(ports_base, p);
-            const auto control_path = Files::combine(port_path, CONTROL_name);
-            const auto vcpkg_json_path = Files::combine(port_path, vcpkg_json_name);
+            auto control_path = Files::combine(port_path, CONTROL_name);
+            auto vcpkg_json_path = Files::combine(port_path, vcpkg_json_name);
             const bool control_exists = filesystem.exists(control_path, ignore_errors);
             const bool vcpkg_json_exists = filesystem.exists(vcpkg_json_path, ignore_errors);
             if (control_exists)
@@ -250,11 +250,11 @@ namespace vcpkg::Commands::FormatManifest
                     return {format_both_manifest_and_control_error(input)};
                 }
 
-                return {control_path};
+                return {std::move(control_path)};
             }
             else if (vcpkg_json_exists)
             {
-                return {vcpkg_json_path};
+                return {std::move(vcpkg_json_path)};
             }
         }
 
