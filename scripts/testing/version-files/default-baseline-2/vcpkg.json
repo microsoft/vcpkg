@@ -1,7 +1,7 @@
 {
     "name": "default-baseline-test-2",
     "version-string": "0",
-    "builtin-baseline": "16002d9c2318dec4c69e02d9af8c0e11dca0d4c6",
+    "builtin-baseline": "d5cd6b8c74ee548cfc9ff83cefdac4843cc1503f",
     "dependencies": [
         "zlib"
     ]

@@ -13,21 +13,13 @@ else()
     set(_VCPKG_BACKCOMPAT_MESSAGE_LEVEL "WARNING")
 endif()
 
-if((NOT DEFINED VCPKG_ROOT_DIR)
-    OR (NOT DEFINED DOWNLOADS)
-    OR (NOT DEFINED _VCPKG_INSTALLED_DIR)
-    OR (NOT DEFINED PACKAGES_DIR)
-    OR (NOT DEFINED BUILDTREES_DIR))
-    message(FATAL_ERROR [[
-        Your vcpkg executable is outdated and is not compatible with the current CMake scripts.
-        Please re-build vcpkg by running bootstrap-vcpkg.
-    ]])
-endif()
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
+include(vcpkg_minimum_required)
+vcpkg_minimum_required(VERSION 2021-01-13)
 
 file(TO_CMAKE_PATH ${BUILDTREES_DIR} BUILDTREES_DIR)
 file(TO_CMAKE_PATH ${PACKAGES_DIR} PACKAGES_DIR)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 set(CURRENT_INSTALLED_DIR ${_VCPKG_INSTALLED_DIR}/${TARGET_TRIPLET} CACHE PATH "Location to install final packages")
 set(SCRIPTS ${CMAKE_CURRENT_LIST_DIR} CACHE PATH "Location to stored scripts")
 

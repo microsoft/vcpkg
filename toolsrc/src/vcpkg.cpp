@@ -79,12 +79,6 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
     paths.track_feature_flag_metrics();
 
     fs.current_path(paths.root, VCPKG_LINE_INFO);
-    if ((args.command == "install" || args.command == "remove" || args.command == "export" ||
-         args.command == "update") &&
-        !args.output_json())
-    {
-        Commands::Version::warn_if_vcpkg_version_mismatch(paths);
-    }
 
     if (const auto command_function = find_command(Commands::get_available_paths_commands()))
     {
