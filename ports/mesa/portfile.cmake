@@ -169,7 +169,6 @@ vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS 
         -Dgles-lib-suffix=_mesa
-
         #-D egl-lib-suffix=_mesa
         -Dbuild-tests=false
         ${MESA_OPTIONS}
