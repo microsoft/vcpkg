@@ -1,3 +1,7 @@
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/mozjpeg/copyright")
+    message(FATAL_ERROR "Can't build ${PORT} if mozjpeg is installed. Please remove mozjpeg:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
@@ -67,6 +71,13 @@ else(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpegd.lib")
     endif()
 endif()
+
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libjpeg.pc")
+if(EXISTS "${_file}" AND VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${_file}" "-ljpeg" "-ljpegd")
+endif() 
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -1,0 +1,11 @@
+{
+  "name": "boost-winapi",
+  "version-string": "1.75.0",
+  "description": "Boost winapi module",
+  "homepage": "https://github.com/boostorg/winapi",
+  "dependencies": [
+    "boost-config",
+    "boost-predef",
+    "boost-vcpkg-helpers"
+  ]
+}

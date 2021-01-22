@@ -1,5 +1,6 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
@@ -16,6 +17,7 @@
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/remove.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/vcpkglib.h>
 #include <vcpkg/vcpkgpaths.h>
 
@@ -49,8 +51,9 @@ namespace vcpkg::Install
     {
         auto& fs = paths.get_filesystem();
         auto source_dir = paths.package_dir(spec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", fs::u8string(source_dir));
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           fs.exists(source_dir),
+                           Strings::concat("Source directory ", fs::u8string(source_dir), "does not exist"));
         auto files = fs.get_files_recursive(source_dir);
         install_files_and_write_listfile(fs, source_dir, files, destination_dir);
     }
@@ -844,62 +847,55 @@ namespace vcpkg::Install
                 features.erase(core_it);
             }
 
-            if (args.versions_enabled())
+            if (!manifest_scf.core_paragraph->overrides.empty())
             {
-                auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
-                auto baseprovider = PortFileProvider::make_baseline_provider(paths);
-                if (auto p_baseline = manifest_scf.core_paragraph->extra_info.get("$x-default-baseline"))
-                {
-                    paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(
-                        p_baseline->string());
-                }
-
-                auto install_plan =
-                    Dependencies::create_versioned_install_plan(*verprovider,
-                                                                *baseprovider,
-                                                                var_provider,
-                                                                manifest_scf.core_paragraph->dependencies,
-                                                                manifest_scf.core_paragraph->overrides,
-                                                                {manifest_scf.core_paragraph->name, default_triplet})
-                        .value_or_exit(VCPKG_LINE_INFO);
-
-                for (InstallPlanAction& action : install_plan.install_actions)
-                {
-                    action.build_options = install_plan_options;
-                    action.build_options.use_head_version = Build::UseHeadVersion::NO;
-                    action.build_options.editable = Build::Editable::NO;
-                }
-
-                Commands::SetInstalled::perform_and_exit_ex(args,
-                                                            paths,
-                                                            provider,
-                                                            *binaryprovider,
-                                                            var_provider,
-                                                            std::move(install_plan),
-                                                            dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
-                                                            pkgsconfig);
+                Metrics::g_metrics.lock()->track_property("manifest_overrides", "defined");
             }
-            else
+            if (auto p_baseline = manifest_scf.core_paragraph->builtin_baseline.get())
             {
-                auto specs = resolve_deps_as_top_level(manifest_scf, default_triplet, features, var_provider);
-                auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
-
-                for (InstallPlanAction& action : install_plan.install_actions)
+                Metrics::g_metrics.lock()->track_property("manifest_baseline", "defined");
+                if (p_baseline->size() != 40 || !std::all_of(p_baseline->begin(), p_baseline->end(), [](char ch) {
+                        return (ch >= 'a' || ch <= 'f') || Parse::ParserBase::is_ascii_digit(ch);
+                    }))
                 {
-                    action.build_options = install_plan_options;
-                    action.build_options.use_head_version = Build::UseHeadVersion::NO;
-                    action.build_options.editable = Build::Editable::NO;
+                    Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                               "Error: the top-level builtin-baseline (%s) was not a valid commit sha: "
+                                               "expected 40 lowercase hexadecimal characters.\n%s\n",
+                                               *p_baseline,
+                                               paths.get_current_git_sha_message());
                 }
 
-                Commands::SetInstalled::perform_and_exit_ex(args,
-                                                            paths,
-                                                            provider,
-                                                            *binaryprovider,
-                                                            var_provider,
-                                                            std::move(install_plan),
-                                                            dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
-                                                            pkgsconfig);
+                paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(*p_baseline);
             }
+            auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
+            auto baseprovider = PortFileProvider::make_baseline_provider(paths);
+            auto oprovider = PortFileProvider::make_overlay_provider(paths, args.overlay_ports);
+
+            auto install_plan =
+                Dependencies::create_versioned_install_plan(*verprovider,
+                                                            *baseprovider,
+                                                            *oprovider,
+                                                            var_provider,
+                                                            manifest_scf.core_paragraph->dependencies,
+                                                            manifest_scf.core_paragraph->overrides,
+                                                            {manifest_scf.core_paragraph->name, default_triplet})
+                    .value_or_exit(VCPKG_LINE_INFO);
+
+            for (InstallPlanAction& action : install_plan.install_actions)
+            {
+                action.build_options = install_plan_options;
+                action.build_options.use_head_version = Build::UseHeadVersion::NO;
+                action.build_options.editable = Build::Editable::NO;
+            }
+
+            Commands::SetInstalled::perform_and_exit_ex(args,
+                                                        paths,
+                                                        provider,
+                                                        *binaryprovider,
+                                                        var_provider,
+                                                        std::move(install_plan),
+                                                        dry_run ? Commands::DryRun::Yes : Commands::DryRun::No,
+                                                        pkgsconfig);
         }
 
         const std::vector<FullPackageSpec> specs = Util::fmap(args.command_arguments, [&](auto&& arg) {
@@ -1085,7 +1081,7 @@ namespace vcpkg::Install
                 message_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(code));
                 break;
             case BuildResult::SUCCEEDED: result_string = "Pass"; break;
-            default: Checks::exit_fail(VCPKG_LINE_INFO);
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
 
         return Strings::format(R"(<test name="%s" method="%s" time="%lld" result="%s">%s</test>)"

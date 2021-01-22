@@ -50,7 +50,7 @@ Vagrant.configure('2') do |config|
   # to do this. When vagrant finishes the `disk` feature, switch
   # over to that -- Nicole Mazzuca
   if (not File.exists? diskname) then
-    system "VBoxManage createmedium --filename #{diskname} --size #{1024 * server[:disk_size]}"
+    system "VBoxManage createmedium --filename #{diskname} --size #{1024 * server[:disk_size]} --variant Fixed"
   end
 
   config.vm.provider 'virtualbox' do |vb|

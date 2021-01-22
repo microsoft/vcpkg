@@ -26,6 +26,7 @@ namespace vcpkg::Export::Chocolatey
             {
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find desired dependency version.");
             }
+
             std::string nuspec_dependency = Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", depend);
             Strings::inplace_replace_all(nuspec_dependency, "@PACKAGE_VERSION@", found->second);
             nuspec_dependencies += nuspec_dependency;
@@ -62,6 +63,7 @@ namespace vcpkg::Export::Chocolatey
         {
             Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find desired package version.");
         }
+
         std::string nuspec_file_content =
             Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", binary_paragraph.spec.name());
         Strings::inplace_replace_all(nuspec_file_content, "@PACKAGE_VERSION@", package_version->second);
@@ -216,10 +218,12 @@ if (Test-Path $installedDir)
             const fs::path chocolatey_uninstall_file_path = per_package_dir_path / "tools" / "chocolateyUninstall.ps1";
             fs.write_contents(chocolatey_uninstall_file_path, chocolatey_uninstall_content, VCPKG_LINE_INFO);
 
-            const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)",
-                                                  fs::u8string(nuget_exe),
-                                                  fs::u8string(exported_dir_path),
-                                                  fs::u8string(nuspec_file_path));
+            auto cmd_line = System::Command(nuget_exe)
+                                .string_arg("pack")
+                                .string_arg("-OutputDirectory")
+                                .path_arg(exported_dir_path)
+                                .path_arg(nuspec_file_path)
+                                .string_arg("-NoDefaultExcludes");
 
             const int exit_code =
                 System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;

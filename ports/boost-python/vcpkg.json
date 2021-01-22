@@ -1,0 +1,45 @@
+{
+  "name": "boost-python",
+  "version-string": "1.75.0",
+  "port-version": 1,
+  "description": "Boost python module",
+  "homepage": "https://github.com/boostorg/python",
+  "supports": "!uwp & !(arm & windows) & !emscripten",
+  "dependencies": [
+    "boost-bind",
+    "boost-compatibility",
+    "boost-config",
+    "boost-conversion",
+    "boost-core",
+    "boost-detail",
+    "boost-foreach",
+    "boost-function",
+    "boost-graph",
+    "boost-integer",
+    "boost-iterator",
+    "boost-lexical-cast",
+    "boost-math",
+    "boost-mpl",
+    "boost-numeric-conversion",
+    "boost-preprocessor",
+    "boost-property-map",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers",
+    "python3"
+  ],
+  "features": {
+    "python2": {
+      "description": "Build with Python2 support",
+      "dependencies": [
+        {
+          "name": "python2",
+          "platform": "windows"
+        }
+      ]
+    }
+  }
+}

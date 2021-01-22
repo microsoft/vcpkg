@@ -1,6 +1,11 @@
+if(WIN32)
+# 3.16 for MSVC_RUNTIME_LIBRARY
+cmake_minimum_required(VERSION 3.16)
+else()
 cmake_minimum_required(VERSION 3.14)
+endif()
 
-project(vcpkg CXX)
+project(vcpkg C CXX)
 include(cmake/utilities.cmake)
 
 # ===============
@@ -10,11 +15,11 @@ include(cmake/utilities.cmake)
 include(CMakeDependentOption)
 
 option(BUILD_TESTING "Option for enabling testing" ON)
-option(VCPKG_DISABLE_METRICS "Option for disabling metrics" OFF)
 option(VCPKG_ALLOW_APPLE_CLANG "Option for allowing apple clang, even versions that we don't know will work" OFF)
 option(VCPKG_DEVELOPMENT_WARNINGS "Option for turning on all warnings" ON)
 option(VCPKG_WARNINGS_AS_ERRORS "Set warnings to be errors" ${VCPKG_DEVELOPMENT_WARNINGS})
 option(VCPKG_BUILD_FUZZING "Option for enabling vcpkg-fuzz support" OFF)
+option(VCPKG_EMBED_GIT_SHA "Option for to fill in the Git SHA version; off by default to avoid privacy concerns out of official builds" OFF)
 
 CMAKE_DEPENDENT_OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarking" OFF
     "BUILD_TESTING" OFF)
@@ -22,9 +27,9 @@ CMAKE_DEPENDENT_OPTION(VCPKG_BUILD_BENCHMARKING "Option for enabling benchmarkin
 if(WERROR)
     message(DEPRECATION "-DWERROR is no longer a supported flag. It doesn't do anything.")
 endif()
-if(DEFINE_DISABLE_METRICS)
-    message(DEPRECATION "DEFINE_DISABLE_METRICS is now called VCPKG_DISABLE_METRICS.")
-    set(VCPKG_DISABLE_METRICS ${DEFINE_DISABLE_METRICS} CACHE BOOL "Option for disabling metrics" FORCE)
+if(DEFINE_DISABLE_METRICS OR VCPKG_DISABLE_METRICS)
+    message(DEPRECATION "DEFINE_DISABLE_METRICS / VCPKG_DISABLE_METRICS are now handled by creating a "
+        "file vcpkg.disable_metrics next to the binary.")
 endif()
 
 # =============
@@ -50,6 +55,33 @@ file(GLOB VCPKG_FUZZ_SOURCES CONFIGURE_DEPENDS src/vcpkg-fuzz/*.cpp)
 vcpkg_detect_compiler()
 vcpkg_detect_standard_library()
 vcpkg_detect_std_filesystem()
+
+if (VCPKG_EMBED_GIT_SHA)
+    find_package(Git REQUIRED)
+    execute_process(
+        COMMAND "${GIT_EXECUTABLE}" status --porcelain=v1
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+        OUTPUT_VARIABLE VCPKG_GIT_STATUS
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        )
+
+    if (VCPKG_GIT_STATUS STREQUAL "")
+        execute_process(
+            COMMAND "${GIT_EXECUTABLE}" rev-parse HEAD
+            WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+            OUTPUT_VARIABLE VCPKG_VERSION
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+    else()
+        message(WARNING "Skipping embedding SHA due to local changes.")
+    endif()
+endif()
+
+if (NOT DEFINED VCPKG_VERSION OR VCPKG_VERSION STREQUAL "")
+    set(VCPKG_VERSION "unknownhash")
+endif()
+
+set(VCPKG_BASE_VERSION "2021-01-13")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -84,7 +116,10 @@ target_include_directories(vcpkglib PUBLIC include)
 
 vcpkg_target_add_warning_options(vcpkglib)
 target_compile_definitions(vcpkglib PUBLIC
-    VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>)
+    VCPKG_USE_STD_FILESYSTEM=$<BOOL:${VCPKG_USE_STD_FILESYSTEM}>
+    VCPKG_VERSION=${VCPKG_VERSION}
+    VCPKG_BASE_VERSION=${VCPKG_BASE_VERSION}
+    )
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
@@ -151,6 +186,18 @@ if(VCPKG_BUILD_FUZZING)
     vcpkg_target_add_warning_options(vcpkg-fuzz)
 endif()
 
+
+# === Target: tls12-download ===
+
+set(TLS12_DOWNLOAD_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/src/tls12-download.c)
+if(WIN32)
+    add_executable(tls12-download ${TLS12_DOWNLOAD_SOURCES})
+    set_property(TARGET tls12-download PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded")
+    set_property(TARGET tls12-download APPEND PROPERTY LINK_OPTIONS "$<IF:$<CONFIG:Debug>,,/ENTRY:entry>")
+    target_link_libraries(tls12-download winhttp)
+endif()
+
+
 # === Target: format ===
 
 find_program(CLANG_FORMAT clang-format)
@@ -169,5 +216,7 @@ if(CLANG_FORMAT)
         COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_SOURCES}
         COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_TEST_INCLUDES}
 
-        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_FUZZ_SOURCES})
+        COMMAND ${CLANG_FORMAT} -i -verbose ${VCPKG_FUZZ_SOURCES}
+        COMMAND ${CLANG_FORMAT} -i -verbose ${TLS12_DOWNLOAD_SOURCES}
+        )
 endif()
