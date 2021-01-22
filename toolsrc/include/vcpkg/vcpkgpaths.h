@@ -148,6 +148,8 @@ namespace vcpkg
         /// </remarks>
         const Toolset& get_toolset(const Build::PreBuildInfo& prebuildinfo) const;
 
+        View<Toolset> get_all_toolsets() const;
+
         Files::Filesystem& get_filesystem() const;
 
         const System::Environment& get_action_env(const Build::AbiInfo& abi_info) const;
