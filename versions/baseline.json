@@ -234,7 +234,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.8.126",
-      "port-version": 7
+      "port-version": 6
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -4354,7 +4354,7 @@
     },
     "osgearth": {
       "baseline": "3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "osi": {
       "baseline": "0.108.6",
