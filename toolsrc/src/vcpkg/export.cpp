@@ -616,7 +616,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     {
         if (paths.manifest_mode_enabled())
         {
-            Checks::exit_with_message(
+            Checks::exit_maybe_upgrade(
                 VCPKG_LINE_INFO,
                 "vcpkg export does not support manifest mode, in order to allow for future design considerations. You "
                 "may use export in classic mode by running vcpkg outside of a manifest-based project.");
