@@ -1110,7 +1110,7 @@
     },
     "ceres": {
       "baseline": "2.0.0",
-      "port-version": 2
+      "port-version": 3
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -5570,7 +5570,7 @@
     },
     "suitesparse": {
       "baseline": "5.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sundials": {
       "baseline": "5.5.0",
