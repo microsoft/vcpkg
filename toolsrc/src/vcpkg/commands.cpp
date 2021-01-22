@@ -41,16 +41,16 @@ namespace vcpkg::Commands
     {
         static const Version::VersionCommand version{};
         static const Contact::ContactCommand contact{};
-#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#if defined(_WIN32)
         static const UploadMetrics::UploadMetricsCommand upload_metrics{};
-#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#endif // defined(_WIN32)
 
         static std::vector<PackageNameAndFunction<const BasicCommand*>> t = {
             {"version", &version},
             {"contact", &contact},
-#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#if defined(_WIN32)
             {"x-upload-metrics", &upload_metrics},
-#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#endif // defined(_WIN32)
         };
         return t;
     }

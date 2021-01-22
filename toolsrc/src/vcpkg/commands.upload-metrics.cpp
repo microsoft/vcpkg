@@ -1,6 +1,6 @@
 #include <vcpkg/commands.upload-metrics.h>
 
-#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#if defined(_WIN32)
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/files.h>
 
@@ -26,4 +26,4 @@ namespace vcpkg::Commands::UploadMetrics
         Checks::exit_success(VCPKG_LINE_INFO);
     }
 }
-#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#endif // defined(_WIN32)
