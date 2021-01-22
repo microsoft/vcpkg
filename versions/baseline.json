@@ -4142,7 +4142,7 @@
     },
     "ogre": {
       "baseline": "1.12.9",
-      "port-version": 4
+      "port-version": 5
     },
     "ogre-next": {
       "baseline": "2019-10-20-1",
