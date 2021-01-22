@@ -161,7 +161,7 @@ namespace vcpkg::Commands::Edit
         for (auto&& port_name : ports)
         {
             const fs::path portpath = paths.builtin_ports_directory() / port_name;
-            Checks::check_exit(
+            Checks::check_maybe_upgrade(
                 VCPKG_LINE_INFO, fs.is_directory(portpath), R"(Could not find port named "%s")", port_name);
         }
 
@@ -263,8 +263,8 @@ namespace vcpkg::Commands::Edit
         if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
             // note that we are invoking cmd silently but Code.exe is relaunched from there
-            System::cmd_execute_background(
-                System::Command("cmd").string_arg("/c").string_arg(cmd_line.command_line()).raw_arg("<NUL"));
+            System::cmd_execute_background(System::Command("cmd").string_arg("/c").raw_arg(
+                Strings::concat('"', cmd_line.command_line(), R"( <NUL")")));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif
