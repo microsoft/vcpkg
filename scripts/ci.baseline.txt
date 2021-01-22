@@ -366,7 +366,7 @@ gdal:x64-windows-static-md=fail
 geos:arm-uwp=fail
 geos:x64-uwp=fail
 
-# Port geotrans source ftp://ftp.nga.mil server 
+# Port geotrans source ftp://ftp.nga.mil server
 # extremely slow may take several hours to download
 geotrans:x64-linux           = skip
 geotrans:x64-windows         = skip
@@ -893,9 +893,9 @@ memorymodule:arm-uwp=fail
 memorymodule:x64-linux=fail
 memorymodule:x64-osx=fail
 memorymodule:x64-uwp=fail
-# Due to static crt. 
+# Due to static crt.
 mesa:x64-windows-static=fail
-# Missing dependent libraries. 
+# Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
 meschach:arm-uwp=fail
@@ -1136,8 +1136,6 @@ opencv3:x64-windows        = skip
 opencv3:x64-windows-static = skip
 opencv3:x64-windows-static-md=skip
 opencv3:x86-windows        = skip
-opencv4:arm64-windows      = fail
-opencv4:arm-uwp            = fail
 opendnp3:x64-uwp=fail
 opendnp3:arm-uwp=fail
 openexr:arm64-windows=fail
@@ -1802,7 +1800,6 @@ open62541:x64-windows-static-md=fail
 pngpp:x64-windows-static-md=fail
 portmidi:x64-windows-static-md=fail
 pthreads:x64-windows-static-md=fail
-qt5-tools:x64-windows-static-md=fail
 quantlib:x64-windows-static-md=fail
 readosm:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail

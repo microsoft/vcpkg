@@ -4217,12 +4217,12 @@
       "port-version": 5
     },
     "opencv3": {
-      "baseline": "3.4.10",
-      "port-version": 5
+      "baseline": "3.4.12",
+      "port-version": 0
     },
     "opencv4": {
-      "baseline": "4.3.0",
-      "port-version": 5
+      "baseline": "4.5.0",
+      "port-version": 0
     },
     "opendnp3": {
       "baseline": "3.1.0",

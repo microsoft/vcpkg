@@ -1,0 +1,12 @@
+diff --git a/modules/sfm/CMakeLists.txt b/modules/sfm/CMakeLists.txt
+index 53a8d43..8809c88 100644
+--- a/modules/sfm/CMakeLists.txt
++++ b/modules/sfm/CMakeLists.txt
+@@ -20,6 +20,7 @@ if((gflags_FOUND OR GFLAGS_FOUND OR GFLAGS_INCLUDE_DIRS) AND (glog_FOUND OR GLOG
+   )
+   file(REMOVE "${_fname}")
+   message(STATUS "Checking SFM deps... ${SFM_DEPS_OK}")
++  add_definitions(-DGLOG_NO_ABBREVIATED_SEVERITIES)
+ else()
+   set(SFM_DEPS_OK FALSE)
+ endif()
