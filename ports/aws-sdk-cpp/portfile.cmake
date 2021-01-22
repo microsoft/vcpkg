@@ -31,6 +31,9 @@ elseif (VCPKG_TARGET_IS_ANDROID)
             "-DGIT_FOUND=${GIT_FOUND}"
             "-DGIT_VERSION_STRING=${GIT_VERSION_STRING}"
             "-DNDK_DIR=$ENV{ANDROID_NDK_HOME}"
+            "-DANDROID_BUILD_ZLIB=FALSE"
+            "-DANDROID_BUILD_CURL=FALSE"
+            "-DANDROID_BUILD_OPENSSL=FALSE"
             )
 else()
     set(rpath "\$ORIGIN")

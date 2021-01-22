@@ -64,12 +64,17 @@ if(VCPKG_TARGET_IS_UWP)
     )
 endif()
 
+if(VCPKG_TARGET_IS_ANDROID)
+    set(EXTRA_ARGS "-C ${CURRENT_PORT_DIR}/CurlAndroidCrossCompile.cmake")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         ${UWP_OPTIONS}
         ${SECTRANSP_OPTIONS}
+        -C "${CURRENT_PORT_DIR}/CurlAndroidCrossCompile.cmake"
         -DBUILD_TESTING=OFF
         -DENABLE_MANUAL=OFF
         -DCURL_STATICLIB=${CURL_STATICLIB}
@@ -185,6 +190,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_pkgconfig()
 elseif(VCPKG_TARGET_IS_LINUX)
     vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread dl c)
+elseif(VCPKG_TARGET_IS_ANDROID)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
