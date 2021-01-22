@@ -8,7 +8,7 @@ from pathlib import Path
 
 SCRIPT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 PORTS_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../ports')
-VERSIONS_DB_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../port_versions')
+VERSIONS_DB_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../versions')
 
 
 def get_version_tag(version):
