@@ -1,7 +1,6 @@
 {
   "name": "libsamplerate",
-  "version-string": "0.1.9.0",
-  "port-version": 3,
+  "version-string": "0.2.0",
   "description": "Sample Rate Converter for audio",
-  "homepage": "https://www.mega-nerd.com/SRC"
+  "homepage": "http://libsndfile.github.io/libsamplerate/"
 }
