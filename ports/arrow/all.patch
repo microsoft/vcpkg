@@ -60,10 +60,10 @@ index 14b6d93b9..7de0a1dff 100644
        "${CMAKE_STATIC_LIBRARY_PREFIX}${LZ4_LIB_NAME_BASE}${LZ4_STATIC_LIB_SUFFIX}")
  endif()
 diff --git a/cpp/cmake_modules/FindSnappy.cmake b/cpp/cmake_modules/FindSnappy.cmake
-index 5784cf592..acd02cd82 100644
+index 5784cf592..817cf0c47 100644
 --- a/cpp/cmake_modules/FindSnappy.cmake
 +++ b/cpp/cmake_modules/FindSnappy.cmake
-@@ -15,7 +15,14 @@
+@@ -15,20 +15,27 @@
  # specific language governing permissions and limitations
  # under the License.
 
@@ -73,20 +73,29 @@ index 5784cf592..acd02cd82 100644
 +  set(SNAPPY_LIB_NAME_DEBUG_SUFFIX d)
 +endif()
 +
++set(SNAPPY_LIB_NAME_BASE "snappy${SNAPPY_LIB_NAME_DEBUG_SUFFIX}")
++
  if(ARROW_SNAPPY_USE_SHARED)
-+  set(SNAPPY_SHARED_LIB_NAME_BASE "snappy${SNAPPY_LIB_NAME_DEBUG_SUFFIX}")
    set(SNAPPY_LIB_NAMES)
    if(CMAKE_IMPORT_LIBRARY_SUFFIX)
      list(APPEND SNAPPY_LIB_NAMES
-@@ -24,7 +31,7 @@ if(ARROW_SNAPPY_USE_SHARED)
+-                "${CMAKE_IMPORT_LIBRARY_PREFIX}snappy${CMAKE_IMPORT_LIBRARY_SUFFIX}")
++                "${CMAKE_IMPORT_LIBRARY_PREFIX}${SNAPPY_LIB_NAME_BASE}${CMAKE_IMPORT_LIBRARY_SUFFIX}")
+   endif()
    list(APPEND SNAPPY_LIB_NAMES
-               "${CMAKE_SHARED_LIBRARY_PREFIX}snappy${CMAKE_SHARED_LIBRARY_SUFFIX}")
+-              "${CMAKE_SHARED_LIBRARY_PREFIX}snappy${CMAKE_SHARED_LIBRARY_SUFFIX}")
++              "${CMAKE_SHARED_LIBRARY_PREFIX}${SNAPPY_LIB_NAME_BASE}${CMAKE_SHARED_LIBRARY_SUFFIX}")
  else()
 -  set(SNAPPY_STATIC_LIB_NAME_BASE "snappy")
-+  set(SNAPPY_STATIC_LIB_NAME_BASE "snappy${SNAPPY_LIB_NAME_DEBUG_SUFFIX}")
    if(MSVC)
-     set(SNAPPY_STATIC_LIB_NAME_BASE "${SNAPPY_STATIC_LIB_NAME_BASE}${SNAPPY_MSVC_STATIC_LIB_SUFFIX}")
+-    set(SNAPPY_STATIC_LIB_NAME_BASE "${SNAPPY_STATIC_LIB_NAME_BASE}${SNAPPY_MSVC_STATIC_LIB_SUFFIX}")
++    set(SNAPPY_STATIC_LIB_NAME_BASE "${SNAPPY_LIB_NAME_BASE}${SNAPPY_MSVC_STATIC_LIB_SUFFIX}")
    endif()
+-  set(SNAPPY_LIB_NAMES "${CMAKE_STATIC_LIBRARY_PREFIX}${SNAPPY_STATIC_LIB_NAME_BASE}${CMAKE_STATIC_LIBRARY_SUFFIX}")
++  set(SNAPPY_LIB_NAMES "${CMAKE_STATIC_LIBRARY_PREFIX}${SNAPPY_LIB_NAME_BASE}${CMAKE_STATIC_LIBRARY_SUFFIX}")
+ endif()
+
+ if(Snappy_ROOT)
 diff --git a/cpp/cmake_modules/FindThrift.cmake b/cpp/cmake_modules/FindThrift.cmake
 index 273d907ed..e3712c556 100644
 --- a/cpp/cmake_modules/FindThrift.cmake
