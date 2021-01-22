@@ -32,6 +32,7 @@ namespace vcpkg::PlatformExpression
         ios,
 
         static_link,
+        static_crt,
     };
 
     static Identifier string2identifier(StringView name)
@@ -51,6 +52,7 @@ namespace vcpkg::PlatformExpression
             {"emscripten", Identifier::emscripten},
             {"ios", Identifier::ios},
             {"static", Identifier::static_link},
+            {"staticcrt", Identifier::static_link},
         };
 
         auto id_pair = id_map.find(name);
@@ -398,11 +400,8 @@ namespace vcpkg::PlatformExpression
                         case Identifier::wasm32: return true_if_exists_and_equal("VCPKG_TARGET_ARCHITECTURE", "wasm32");
                         case Identifier::static_link:
                             return true_if_exists_and_equal("VCPKG_LIBRARY_LINKAGE", "static");
-                        default:
-                            Checks::exit_with_message(
-                                VCPKG_LINE_INFO,
-                                "vcpkg bug: string2identifier returned a value that we don't recognize: %d\n",
-                                static_cast<int>(id));
+                        case Identifier::static_crt: return true_if_exists_and_equal("VCPKG_CRT_LINKAGE", "static");
+                        default: Checks::unreachable(VCPKG_LINE_INFO);
                     }
                 }
                 else if (expr.kind == ExprKind::op_not)

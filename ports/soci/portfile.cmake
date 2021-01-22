@@ -23,6 +23,10 @@ foreach(_feature IN LISTS ALL_FEATURES)
     else()
         list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
     endif()
+
+    if(_feature MATCHES "mysql")
+        set(MYSQL_OPT -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql")
+    endif()
 endforeach()
 
 vcpkg_configure_cmake(
@@ -37,14 +41,16 @@ vcpkg_configure_cmake(
         -DSOCI_SHARED=${SOCI_DYNAMIC}
         ${_COMPONENT_FLAGS}
 
-        -DWITH_MYSQL=OFF
+        ${MYSQL_OPT}
         -DWITH_ORACLE=OFF
         -DWITH_FIREBIRD=OFF
         -DWITH_DB2=OFF
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/SOCI)
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+# Correct the config file name
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCI.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCI-config.cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 

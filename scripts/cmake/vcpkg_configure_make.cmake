@@ -392,8 +392,13 @@ function(vcpkg_configure_make)
         list(APPEND _csc_OPTIONS gl_cv_double_slash_root=yes
                                  ac_cv_func_memmove=yes)
         #list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all) # Just ignore libtool checks 
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        if(VCPKG_TARGET_ARCHITECTURE MATCHES "^[Aa][Rr][Mm]64$")
             list(APPEND _csc_OPTIONS gl_cv_host_cpu_c_abi=no)
+            # Currently needed for arm64 because objdump yields: "unrecognised machine type (0xaa64) in Import Library Format archive"
+            list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all)
+        elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^[Aa][Rr][Mm]$")
+            # Currently needed for arm because objdump yields: "unrecognised machine type (0x1c4) in Import Library Format archive"
+            list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
     else()
         string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
