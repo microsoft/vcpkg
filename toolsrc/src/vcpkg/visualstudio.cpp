@@ -1,6 +1,7 @@
 #if defined(_WIN32)
 
 #include <vcpkg/base/sortedvector.h>
+#include <vcpkg/base/strings.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
@@ -98,11 +99,11 @@ namespace vcpkg::VisualStudio
                                code_and_output.output);
 
             const auto instance_entries =
-                StringView::find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
+                Strings::find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
             for (const StringView& instance : instance_entries)
             {
                 auto maybe_is_prerelease =
-                    StringView::find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
+                    Strings::find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
 
                 VisualStudioInstance::ReleaseType release_type = VisualStudioInstance::ReleaseType::LEGACY;
                 if (const auto p = maybe_is_prerelease.get())
@@ -117,9 +118,9 @@ namespace vcpkg::VisualStudio
                 }
 
                 instances.emplace_back(
-                    StringView::find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>")
+                    Strings::find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>")
                         .to_string(),
-                    StringView::find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>")
+                    Strings::find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>")
                         .to_string(),
                     release_type);
             }
