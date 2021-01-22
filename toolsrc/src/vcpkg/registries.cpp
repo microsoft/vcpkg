@@ -372,7 +372,7 @@ namespace
             return scf->to_versiont();
         }
         print_error_message(maybe_scf.error());
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Error: failed to load port from %s", fs::u8string(port_path));
+        Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, "Error: failed to load port from %s", fs::u8string(port_path));
     }
 
     void BuiltinRegistry::get_all_port_names(std::vector<std::string>& out, const VcpkgPaths& paths) const

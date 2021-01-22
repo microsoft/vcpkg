@@ -185,10 +185,10 @@ namespace vcpkg::PortFileProvider
                         {
                             // This should change to a soft error when ParseExpected is eliminated.
                             print_error_message(maybe_control_file.error());
-                            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                                      "Error: Failed to load port %s from %s",
-                                                      version_spec.port_name,
-                                                      fs::u8string(*path));
+                            Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                                       "Error: Failed to load port %s from %s",
+                                                       version_spec.port_name,
+                                                       fs::u8string(*path));
                         }
                     }
                     else
@@ -276,10 +276,10 @@ namespace vcpkg::PortFileProvider
                         else
                         {
                             print_error_message(maybe_scf.error());
-                            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                                      "Error: Failed to load port %s from %s",
-                                                      port_name,
-                                                      fs::u8string(ports_dir));
+                            Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                                       "Error: Failed to load port %s from %s",
+                                                       port_name,
+                                                       fs::u8string(ports_dir));
                         }
 
                         continue;
@@ -296,7 +296,7 @@ namespace vcpkg::PortFileProvider
                             {
                                 return SourceControlFileLocation{std::move(scf), std::move(ports_spec)};
                             }
-                            Checks::exit_with_message(
+                            Checks::exit_maybe_upgrade(
                                 VCPKG_LINE_INFO,
                                 "Error: Failed to load port from %s: names did not match: '%s' != '%s'",
                                 fs::u8string(ports_spec),
@@ -306,10 +306,10 @@ namespace vcpkg::PortFileProvider
                         else
                         {
                             print_error_message(found_scf.error());
-                            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                                      "Error: Failed to load port %s from %s",
-                                                      port_name,
-                                                      fs::u8string(ports_dir));
+                            Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                                       "Error: Failed to load port %s from %s",
+                                                       port_name,
+                                                       fs::u8string(ports_dir));
                         }
                     }
                 }
@@ -346,7 +346,7 @@ namespace vcpkg::PortFileProvider
                         else
                         {
                             print_error_message(maybe_scf.error());
-                            Checks::exit_with_message(
+                            Checks::exit_maybe_upgrade(
                                 VCPKG_LINE_INFO, "Error: Failed to load port from %s", fs::u8string(ports_dir));
                         }
 
