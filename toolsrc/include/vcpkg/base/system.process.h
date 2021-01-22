@@ -20,26 +20,26 @@ namespace vcpkg::System
         std::string s;
     };
 
-    struct CmdLineBuilder
+    struct Command
     {
-        CmdLineBuilder() = default;
-        explicit CmdLineBuilder(const fs::path& p) { path_arg(p); }
-        explicit CmdLineBuilder(StringView s) { string_arg(s); }
-        explicit CmdLineBuilder(const std::string& s) { string_arg(s); }
-        explicit CmdLineBuilder(const char* s) { string_arg({s, ::strlen(s)}); }
+        Command() = default;
+        explicit Command(const fs::path& p) { path_arg(p); }
+        explicit Command(StringView s) { string_arg(s); }
+        explicit Command(const std::string& s) { string_arg(s); }
+        explicit Command(const char* s) { string_arg({s, ::strlen(s)}); }
 
-        CmdLineBuilder& path_arg(const fs::path& p) & { return string_arg(fs::u8string(p)); }
-        CmdLineBuilder& string_arg(StringView s) &;
-        CmdLineBuilder& raw_arg(StringView s) &
+        Command& path_arg(const fs::path& p) & { return string_arg(fs::u8string(p)); }
+        Command& string_arg(StringView s) &;
+        Command& raw_arg(StringView s) &
         {
             buf.push_back(' ');
             buf.append(s.data(), s.size());
             return *this;
         }
 
-        CmdLineBuilder&& path_arg(const fs::path& p) && { return std::move(path_arg(p)); }
-        CmdLineBuilder&& string_arg(StringView s) && { return std::move(string_arg(s)); };
-        CmdLineBuilder&& raw_arg(StringView s) && { return std::move(raw_arg(s)); }
+        Command&& path_arg(const fs::path& p) && { return std::move(path_arg(p)); }
+        Command&& string_arg(StringView s) && { return std::move(string_arg(s)); };
+        Command&& raw_arg(StringView s) && { return std::move(raw_arg(s)); }
 
         std::string&& extract() && { return std::move(buf); }
         StringView command_line() const { return buf; }
@@ -51,17 +51,17 @@ namespace vcpkg::System
         std::string buf;
     };
 
-    struct CmdLineBuilderMapLess
+    struct CommandLess
     {
-        bool operator()(const CmdLineBuilder& lhs, const CmdLineBuilder& rhs) const
+        bool operator()(const Command& lhs, const Command& rhs) const
         {
             return lhs.command_line() < rhs.command_line();
         }
     };
 
-    CmdLineBuilder make_basic_cmake_cmd(const fs::path& cmake_tool_path,
-                                        const fs::path& cmake_script,
-                                        const std::vector<CMakeVariable>& pass_variables);
+    Command make_basic_cmake_cmd(const fs::path& cmake_tool_path,
+                                 const fs::path& cmake_script,
+                                 const std::vector<CMakeVariable>& pass_variables);
 
     fs::path get_exe_path_of_current_process();
 
@@ -87,48 +87,48 @@ namespace vcpkg::System
         const fs::path& working_directory;
     };
 
-    int cmd_execute(const CmdLineBuilder& cmd_line, InWorkingDirectory wd, const Environment& env = {});
-    inline int cmd_execute(const CmdLineBuilder& cmd_line, const Environment& env = {})
+    int cmd_execute(const Command& cmd_line, InWorkingDirectory wd, const Environment& env = {});
+    inline int cmd_execute(const Command& cmd_line, const Environment& env = {})
     {
         return cmd_execute(cmd_line, InWorkingDirectory{fs::path()}, env);
     }
 
-    int cmd_execute_clean(const CmdLineBuilder& cmd_line, InWorkingDirectory wd);
-    inline int cmd_execute_clean(const CmdLineBuilder& cmd_line)
+    int cmd_execute_clean(const Command& cmd_line, InWorkingDirectory wd);
+    inline int cmd_execute_clean(const Command& cmd_line)
     {
         return cmd_execute_clean(cmd_line, InWorkingDirectory{fs::path()});
     }
 
 #if defined(_WIN32)
-    Environment cmd_execute_modify_env(const CmdLineBuilder& cmd_line, const Environment& env = {});
+    Environment cmd_execute_modify_env(const Command& cmd_line, const Environment& env = {});
 
-    void cmd_execute_background(const CmdLineBuilder& cmd_line);
+    void cmd_execute_background(const Command& cmd_line);
 #endif
 
-    ExitCodeAndOutput cmd_execute_and_capture_output(const CmdLineBuilder& cmd_line,
+    ExitCodeAndOutput cmd_execute_and_capture_output(const Command& cmd_line,
                                                      InWorkingDirectory wd,
                                                      const Environment& env = {});
-    inline ExitCodeAndOutput cmd_execute_and_capture_output(const CmdLineBuilder& cmd_line, const Environment& env = {})
+    inline ExitCodeAndOutput cmd_execute_and_capture_output(const Command& cmd_line, const Environment& env = {})
     {
         return cmd_execute_and_capture_output(cmd_line, InWorkingDirectory{fs::path()}, env);
     }
 
-    int cmd_execute_and_stream_lines(const CmdLineBuilder& cmd_line,
+    int cmd_execute_and_stream_lines(const Command& cmd_line,
                                      InWorkingDirectory wd,
                                      std::function<void(StringView)> per_line_cb,
                                      const Environment& env = {});
-    inline int cmd_execute_and_stream_lines(const CmdLineBuilder& cmd_line,
+    inline int cmd_execute_and_stream_lines(const Command& cmd_line,
                                             std::function<void(StringView)> per_line_cb,
                                             const Environment& env = {})
     {
         return cmd_execute_and_stream_lines(cmd_line, InWorkingDirectory{fs::path()}, std::move(per_line_cb), env);
     }
 
-    int cmd_execute_and_stream_data(const CmdLineBuilder& cmd_line,
+    int cmd_execute_and_stream_data(const Command& cmd_line,
                                     InWorkingDirectory wd,
                                     std::function<void(StringView)> data_cb,
                                     const Environment& env = {});
-    inline int cmd_execute_and_stream_data(const CmdLineBuilder& cmd_line,
+    inline int cmd_execute_and_stream_data(const Command& cmd_line,
                                            std::function<void(StringView)> data_cb,
                                            const Environment& env = {})
     {

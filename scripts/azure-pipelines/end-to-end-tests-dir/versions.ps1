@@ -2,16 +2,16 @@
 
 # Test verify versions
 mkdir $VersionFilesRoot
-Copy-Item -Recurse "scripts/testing/version-files/port_versions_incomplete" $VersionFilesRoot
+Copy-Item -Recurse "scripts/testing/version-files/versions_incomplete" $VersionFilesRoot
 $portsRedirectArgsOK = @(
     "--feature-flags=versions",
     "--x-builtin-ports-root=scripts/testing/version-files/ports",
-    "--x-builtin-port-versions-dir=scripts/testing/version-files/port_versions"
+    "--x-builtin-registry-versions-dir=scripts/testing/version-files/versions"
 )
 $portsRedirectArgsIncomplete = @(
     "--feature-flags=versions",
     "--x-builtin-ports-root=scripts/testing/version-files/ports_incomplete",
-    "--x-builtin-port-versions-dir=$VersionFilesRoot/port_versions_incomplete"
+    "--x-builtin-registry-versions-dir=$VersionFilesRoot/versions_incomplete"
 )
 $CurrentTest = "x-verify-ci-versions (All files OK)"
 Write-Host $CurrentTest
@@ -59,17 +59,40 @@ Throw-IfFailed
 Throw-IfFailed
 
 $CurrentTest = "default baseline"
-$out = ./vcpkg $commonArgs "--feature-flags=versions" install --x-manifest-root=scripts/testing/version-files/default-baseline-1
+$out = ./vcpkg $commonArgs "--feature-flags=versions" install --x-manifest-root=scripts/testing/version-files/default-baseline-1 2>&1 | Out-String
 Throw-IfNotFailed
-# if ($out -notmatch "Error: while checking out baseline" -or $out -notmatch " does not exist in ")
-# {
-#     $out
-#     throw "Expected to fail due to missing baseline"
-# }
+if ($out -notmatch ".*Error: while checking out baseline.*")
+{
+    $out
+    throw "Expected to fail due to missing baseline"
+}
 
 git fetch https://github.com/vicroms/test-registries
-$CurrentTest = "default baseline"
-./vcpkg $commonArgs --debug "--feature-flags=versions" install `
-    "--x-manifest-root=scripts/testing/version-files/default-baseline-2" `
-    "--x-builtin-port-versions-dir=scripts/testing/version-files/default-baseline-2/port_versions"
-Throw-IfFailed
+foreach ($opt_registries in @("",",registries"))
+{
+    Write-Trace "testing baselines: $opt_registries"
+    Refresh-TestRoot
+    $CurrentTest = "without default baseline 2 -- enabling versions should not change behavior"
+    Remove-Item -Recurse $buildtreesRoot/versioning -ErrorAction SilentlyContinue
+    ./vcpkg $commonArgs "--feature-flags=versions$opt_registries" install `
+        "--dry-run" `
+        "--x-manifest-root=scripts/testing/version-files/without-default-baseline-2" `
+        "--x-builtin-registry-versions-dir=scripts/testing/version-files/default-baseline-2/versions"
+    Throw-IfFailed
+    Require-FileNotExists $buildtreesRoot/versioning
+
+    $CurrentTest = "default baseline 2"
+    ./vcpkg $commonArgs "--feature-flags=versions$opt_registries" install `
+        "--dry-run" `
+        "--x-manifest-root=scripts/testing/version-files/default-baseline-2" `
+        "--x-builtin-registry-versions-dir=scripts/testing/version-files/default-baseline-2/versions"
+    Throw-IfFailed
+    Require-FileExists $buildtreesRoot/versioning
+
+    $CurrentTest = "using version features fails without flag"
+    ./vcpkg $commonArgs "--feature-flags=-versions$opt_registries" install `
+        "--dry-run" `
+        "--x-manifest-root=scripts/testing/version-files/default-baseline-2" `
+        "--x-builtin-registry-versions-dir=scripts/testing/version-files/default-baseline-2/versions"
+    Throw-IfNotFailed
+}
