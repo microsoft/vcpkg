@@ -1,37 +1,27 @@
 {
   "name": "restc-cpp",
   "version-string": "0.10.0",
-  "homepage": "https://github.com/jgaa/restc-cpp",
   "description": "Modern C++ REST Client library",
-  "dependencies": [
-    "rapidjson",
-    "boost-system",
-    "boost-program-options",
-    "boost-filesystem",
-    "boost-date-time",
-    "boost-context",
-    "boost-coroutine",
-    "boost-chrono",
-    "boost-uuid"
-  ],
+  "homepage": "https://github.com/jgaa/restc-cpp",
   "license": "MIT",
   "supports": "static",
-
+  "dependencies": [
+    "boost-chrono",
+    "boost-context",
+    "boost-coroutine",
+    "boost-date-time",
+    "boost-filesystem",
+    "boost-program-options",
+    "boost-system",
+    "boost-uuid",
+    "rapidjson"
+  ],
   "default-features": [
-    "openssl",
     "boost-log",
+    "openssl",
     "zlib"
   ],
   "features": {
-    "cxx17": {
-      "description": "Use the C++17 standard (default is C++14)."
-    },
-    "openssl": {
-      "description": "OpenSSL support.",
-      "dependencies": [
-        "openssl"
-      ]
-    },
     "boost-log": {
       "description": "Use boost::log for logging.",
       "dependencies": [
@@ -41,14 +31,23 @@
     "clog": {
       "description": "Use std::clog for logging."
     },
+    "cxx17": {
+      "description": "Use the C++17 standard (default is C++14)."
+    },
+    "openssl": {
+      "description": "OpenSSL support.",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "threaded-ctx": {
+      "description": "Allow asio contexts with multiple threads. Enables thread-safe internal access."
+    },
     "zlib": {
       "description": "Use zlib.",
       "dependencies": [
         "zlib"
       ]
-    },
-    "threaded-ctx": {
-      "description": "Allow asio contexts with multiple threads. Enables thread-safe internal access."
     }
   }
 }
