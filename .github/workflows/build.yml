@@ -52,6 +52,7 @@ jobs:
         qt5-declarative
         qt5-script
         qt5-svg
+        qt5-translations
         qt5-winextras
         qtkeychain
         rubberband
