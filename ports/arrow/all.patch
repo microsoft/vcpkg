@@ -29,39 +29,58 @@ index b46a0f1a0..3d87f5204 100644
 
      # Some systems (e.g. Fedora) don't fill Brotli_LIBRARY_DIRS, so add the other dirs here.
 diff --git a/cpp/cmake_modules/FindLz4.cmake b/cpp/cmake_modules/FindLz4.cmake
-index 7159f96f7..5f58e2103 100644
+index 14b6d93b9..788fb93e8 100644
 --- a/cpp/cmake_modules/FindLz4.cmake
 +++ b/cpp/cmake_modules/FindLz4.cmake
-@@ -34,12 +34,11 @@ if(ARROW_LZ4_USE_SHARED)
+@@ -15,10 +15,10 @@
+ # specific language governing permissions and limitations
+ # under the License.
+
+-if(MSVC_TOOLCHAIN AND NOT DEFINED LZ4_MSVC_LIB_PREFIX)
+-  set(LZ4_MSVC_LIB_PREFIX "lib")
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(LZ4_LIB_NAME_DEBUG_SUFFIX d)
+ endif()
+-set(LZ4_LIB_NAME_BASE "${LZ4_MSVC_LIB_PREFIX}lz4")
++set(LZ4_LIB_NAME_BASE "lz4${LZ4_LIB_NAME_DEBUG_SUFFIX}")
+
+ if(ARROW_LZ4_USE_SHARED)
+   set(LZ4_LIB_NAMES)
+@@ -34,10 +34,6 @@ if(ARROW_LZ4_USE_SHARED)
        LZ4_LIB_NAMES
        "${CMAKE_SHARED_LIBRARY_PREFIX}${LZ4_LIB_NAME_BASE}${CMAKE_SHARED_LIBRARY_SUFFIX}")
  else()
 -  if(MSVC AND NOT DEFINED LZ4_MSVC_STATIC_LIB_SUFFIX)
 -    set(LZ4_MSVC_STATIC_LIB_SUFFIX "_static")
-+  if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
-+    set(LZ4_LIB_NAME_DEBUG_SUFFIX d)
-   endif()
+-  endif()
 -  set(LZ4_STATIC_LIB_SUFFIX "${LZ4_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
--  set(LZ4_LIB_NAMES
--      "${CMAKE_STATIC_LIBRARY_PREFIX}${LZ4_LIB_NAME_BASE}${LZ4_STATIC_LIB_SUFFIX}")
-+  set(LZ4_STATIC_LIB_NAME ${CMAKE_STATIC_LIBRARY_PREFIX}lz4${LZ4_LIB_NAME_DEBUG_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX})
-+  set(LZ4_LIB_NAMES ${LZ4_STATIC_LIB_NAME} lib${LZ4_STATIC_LIB_NAME})
+   set(LZ4_LIB_NAMES
+       "${CMAKE_STATIC_LIBRARY_PREFIX}${LZ4_LIB_NAME_BASE}${LZ4_STATIC_LIB_SUFFIX}")
  endif()
+diff --git a/cpp/cmake_modules/FindThrift.cmake b/cpp/cmake_modules/FindThrift.cmake
+index 273d907ed..b3c6cb99b 100644
+--- a/cpp/cmake_modules/FindThrift.cmake
++++ b/cpp/cmake_modules/FindThrift.cmake
+@@ -39,6 +39,10 @@ function(EXTRACT_THRIFT_VERSION)
+   endif()
+ endfunction(EXTRACT_THRIFT_VERSION)
 
- if(LZ4_ROOT)
-@@ -55,9 +54,9 @@ if(LZ4_ROOT)
-             PATH_SUFFIXES ${ARROW_INCLUDE_PATH_SUFFIXES})
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(THRIFT_LIB_NAME_DEBUG_SUFFIX d)
++endif()
++
+ if(MSVC_TOOLCHAIN AND NOT DEFINED THRIFT_MSVC_LIB_SUFFIX)
+   if(NOT ARROW_THRIFT_USE_SHARED)
+     if(ARROW_USE_STATIC_CRT)
+@@ -48,7 +52,7 @@ if(MSVC_TOOLCHAIN AND NOT DEFINED THRIFT_MSVC_LIB_SUFFIX)
+     endif()
+   endif()
+ endif()
+-set(THRIFT_LIB_NAME_BASE "thrift${THRIFT_MSVC_LIB_SUFFIX}")
++set(THRIFT_LIB_NAME_BASE "thrift${THRIFT_MSVC_LIB_SUFFIX}${THRIFT_LIB_NAME_DEBUG_SUFFIX}")
 
- else()
--  find_package(PkgConfig QUIET)
--  pkg_check_modules(LZ4_PC liblz4)
--  if(LZ4_PC_FOUND)
-+  #find_package(PkgConfig QUIET)
-+  #pkg_check_modules(LZ4_PC liblz4)
-+  if(LZ4_PC_FOUND AND 0) # Disabled as sometimes incompatible with vcpkg on Linux and OSX
-     set(LZ4_INCLUDE_DIR "${LZ4_PC_INCLUDEDIR}")
-
-     list(APPEND LZ4_PC_LIBRARY_DIRS "${LZ4_PC_LIBDIR}")
+ if(ARROW_THRIFT_USE_SHARED)
+   set(THRIFT_LIB_NAMES thrift)
 diff --git a/cpp/cmake_modules/Findzstd.cmake b/cpp/cmake_modules/Findzstd.cmake
 index 6659a682d..d8cc4f72d 100644
 --- a/cpp/cmake_modules/Findzstd.cmake

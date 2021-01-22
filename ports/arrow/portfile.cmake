@@ -36,7 +36,7 @@ vcpkg_configure_cmake(
         -DARROW_GFLAGS_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
         -DARROW_LZ4_USE_SHARED=${ARROW_BUILD_SHARED}        # This can be wrong in custom triplets
         -DARROW_SNAPPY_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
-        -DARROW_THRIFT_USE_SHARED=${ARROW_BUILD_SHARED}      # This can be wrong in custom triplets
+        -DARROW_THRIFT_USE_SHARED=OFF                       # vcpkg doesn't build Thrift as a shared library for the moment (2020/01/22).
         -DARROW_UTF8PROC_USE_SHARED=${ARROW_BUILD_SHARED}   # This can be wrong in custom triplets
         -DARROW_ZSTD_USE_SHARED=${ARROW_BUILD_SHARED}       # This can be wrong in custom triplets
         -DARROW_JEMALLOC=OFF
