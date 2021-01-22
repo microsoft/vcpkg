@@ -165,7 +165,17 @@ void is_directory(const fs::path& p, std::error_code& ec) = delete;
 
 namespace vcpkg::Files
 {
-    struct Filesystem
+    struct ITestFileExists
+    {
+        virtual bool exists(const fs::path& path, std::error_code& ec) const = 0;
+        bool exists(LineInfo li, const fs::path& path) const;
+        bool exists(const fs::path& path, ignore_errors_t = ignore_errors) const;
+
+    protected:
+        ~ITestFileExists() = default;
+    };
+
+    struct Filesystem : ITestFileExists
     {
         std::string read_contents(const fs::path& file_path, LineInfo linfo) const;
         virtual Expected<std::string> read_contents(const fs::path& file_path) const = 0;
@@ -201,9 +211,7 @@ namespace vcpkg::Files
         virtual void remove_all_inside(const fs::path& path, std::error_code& ec, fs::path& failure_point) = 0;
         void remove_all_inside(const fs::path& path, LineInfo li);
         void remove_all_inside(const fs::path& path, ignore_errors_t);
-        bool exists(const fs::path& path, std::error_code& ec) const;
-        bool exists(LineInfo li, const fs::path& path) const;
-        bool exists(const fs::path& path, ignore_errors_t = ignore_errors) const;
+
         virtual bool is_directory(const fs::path& path) const = 0;
         virtual bool is_regular_file(const fs::path& path) const = 0;
         virtual bool is_empty(const fs::path& path) const = 0;
@@ -249,6 +257,9 @@ namespace vcpkg::Files
         virtual void unlock_file_lock(fs::SystemHandle handle, std::error_code&) = 0;
 
         virtual std::vector<fs::path> find_from_PATH(const std::string& name) const = 0;
+
+    protected:
+        ~Filesystem() = default;
     };
 
     Filesystem& get_real_filesystem();
@@ -311,5 +322,4 @@ namespace vcpkg::Files
         Filesystem* m_fs;
         fs::SystemHandle m_handle;
     };
-
 }

@@ -10,6 +10,8 @@
 #include <vcpkg/vcpkgcmdarguments.h>
 #include <vcpkg/vcpkgpaths.h>
 
+#include <algorithm>
+
 namespace
 {
     using namespace vcpkg;
@@ -22,7 +24,7 @@ namespace
         std::string original_source;
     };
 
-    Optional<ToWrite> read_manifest(Files::Filesystem& fs, fs::path&& manifest_path)
+    Optional<ToWrite> read_manifest(Files::Filesystem& fs, const fs::path& manifest_path)
     {
         auto path_string = fs::u8string(manifest_path);
         Debug::print("Reading ", path_string, "\n");
@@ -60,7 +62,7 @@ namespace
         };
     }
 
-    Optional<ToWrite> read_control_file(Files::Filesystem& fs, fs::path&& control_path)
+    Optional<ToWrite> read_control_file(Files::Filesystem& fs, const fs::path& control_path)
     {
         std::error_code ec;
         auto control_path_string = fs::u8string(control_path);
@@ -172,10 +174,93 @@ Please open an issue at https://github.com/microsoft/vcpkg, with the following o
             }
         }
     }
+
+    static const auto CONTROL_name = fs::u8path("CONTROL");
+    static const auto vcpkg_json_name = fs::u8path("vcpkg.json");
+
+    Optional<ToWrite> read_input_file(Files::Filesystem& fs, const fs::path& resolved_path)
+    {
+        if (resolved_path.filename() == CONTROL_name)
+        {
+            return read_control_file(fs, resolved_path);
+        }
+
+        return read_manifest(fs, resolved_path);
+    }
+
+    void add_write(std::vector<std::string>& errors,
+                   std::vector<ToWrite>& to_write,
+                   Optional<ToWrite>&& this_manifest,
+                   const fs::path& resolved_path)
+    {
+        if (this_manifest.get())
+        {
+            to_write.push_back(std::move(this_manifest).value_or_exit(VCPKG_LINE_INFO));
+        }
+        else
+        {
+            errors.push_back(Strings::concat("Failed to parse ", fs::u8string(resolved_path)));
+        }
+    }
+
+    std::string format_both_manifest_and_control_error(StringView port_name)
+    {
+        return Strings::concat("Both a manifest file and a CONTROL file exist in port ", port_name, ".");
+    }
 }
 
 namespace vcpkg::Commands::FormatManifest
 {
+    ExpectedS<fs::path> resolve_format_manifest_input(StringView input,
+                                                      const fs::path& original_cwd,
+                                                      const fs::path& ports_base,
+                                                      const Files::ITestFileExists& filesystem)
+    {
+        auto p = fs::u8path(input);
+        if (p.is_absolute())
+        {
+            if (filesystem.exists(p, ignore_errors))
+            {
+                return p;
+            }
+
+            return {Strings::concat(input, " not found.")};
+        }
+
+        {
+            const auto as_absolute = Files::combine(original_cwd, p);
+            if (filesystem.exists(as_absolute, ignore_errors))
+            {
+                return as_absolute;
+            }
+        } // destroy as_absolute
+
+        if (std::none_of(input.begin(), input.end(), fs::is_slash))
+        {
+            // nonexistent single element relative path, try to interpret as port name
+            const auto port_path = Files::combine(ports_base, p);
+            const auto control_path = Files::combine(port_path, CONTROL_name);
+            const auto vcpkg_json_path = Files::combine(port_path, vcpkg_json_name);
+            const bool control_exists = filesystem.exists(control_path, ignore_errors);
+            const bool vcpkg_json_exists = filesystem.exists(vcpkg_json_path, ignore_errors);
+            if (control_exists)
+            {
+                if (vcpkg_json_exists)
+                {
+                    return {format_both_manifest_and_control_error(input)};
+                }
+
+                return {control_path};
+            }
+            else if (vcpkg_json_exists)
+            {
+                return {vcpkg_json_path};
+            }
+        }
+
+        return {Strings::concat(input, " could not be interpreted as a port name, CONTROL path, or manifest path.")};
+    }
+
     static constexpr StringLiteral OPTION_ALL = "all";
     static constexpr StringLiteral OPTION_CONVERT_CONTROL = "convert-control";
 
@@ -197,7 +282,6 @@ namespace vcpkg::Commands::FormatManifest
         auto parsed_args = args.parse_arguments(COMMAND_STRUCTURE);
 
         auto& fs = paths.get_filesystem();
-        bool has_error = false;
 
         const bool format_all = Util::Sets::contains(parsed_args.switches, OPTION_ALL);
         const bool convert_control = Util::Sets::contains(parsed_args.switches, OPTION_CONVERT_CONTROL);
@@ -216,54 +300,45 @@ namespace vcpkg::Commands::FormatManifest
                 "No files to format; please pass either --all, or the explicit files to format or convert.");
         }
 
+        std::vector<std::string> errors;
         std::vector<ToWrite> to_write;
-
-        const auto add_file = [&to_write, &has_error](Optional<ToWrite>&& opt) {
-            if (auto t = opt.get())
-                to_write.push_back(std::move(*t));
-            else
-                has_error = true;
-        };
-
         for (const auto& arg : args.command_arguments)
         {
-            auto path = fs::u8path(arg);
-            if (path.is_relative())
+            auto maybe_resolved =
+                resolve_format_manifest_input(arg, paths.original_cwd, paths.builtin_ports_directory(), fs);
+            if (!maybe_resolved)
             {
-                path = paths.original_cwd / path;
+                errors.push_back(std::move(maybe_resolved).error());
+                continue;
             }
 
-            if (path.filename() == fs::u8path("CONTROL"))
-            {
-                add_file(read_control_file(fs, std::move(path)));
-            }
-            else
-            {
-                add_file(read_manifest(fs, std::move(path)));
-            }
+            const auto& resolved = maybe_resolved.value_or_exit(VCPKG_LINE_INFO);
+            add_write(errors, to_write, read_input_file(fs, resolved), resolved);
         }
 
         if (format_all)
         {
             for (const auto& dir : fs::directory_iterator(paths.builtin_ports_directory()))
             {
-                auto control_path = dir.path() / fs::u8path("CONTROL");
-                auto manifest_path = dir.path() / fs::u8path("vcpkg.json");
-                auto manifest_exists = fs.exists(manifest_path);
-                auto control_exists = fs.exists(control_path);
-
-                Checks::check_exit(VCPKG_LINE_INFO,
-                                   !manifest_exists || !control_exists,
-                                   "Both a manifest file and a CONTROL file exist in port directory: %s",
-                                   fs::u8string(dir.path()));
-
-                if (manifest_exists)
+                const auto& port_path = dir.path();
+                auto control_path = port_path / CONTROL_name;
+                auto manifest_path = port_path / vcpkg_json_name;
+                auto manifest_exists = fs.exists(manifest_path, ignore_errors);
+                auto control_exists = fs.exists(control_path, ignore_errors);
+                if (control_exists)
                 {
-                    add_file(read_manifest(fs, std::move(manifest_path)));
+                    if (manifest_exists)
+                    {
+                        errors.push_back(format_both_manifest_and_control_error(fs::u8string(port_path.filename())));
+                    }
+                    else if (convert_control)
+                    {
+                        add_write(errors, to_write, read_control_file(fs, control_path), control_path);
+                    }
                 }
-                if (convert_control && control_exists)
+                else if (manifest_exists)
                 {
-                    add_file(read_control_file(fs, std::move(control_path)));
+                    add_write(errors, to_write, read_manifest(fs, manifest_path), manifest_path);
                 }
             }
         }
@@ -273,15 +348,18 @@ namespace vcpkg::Commands::FormatManifest
             write_file(fs, el);
         }
 
-        if (has_error)
+        if (errors.empty())
         {
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-        else
-        {
-            System::print2("Succeeded in formatting the manifest files.\n");
+            System::print2("Succeeded in formatting all manifest files.\n");
             Checks::exit_success(VCPKG_LINE_INFO);
         }
+
+        for (const std::string& error : errors)
+        {
+            System::print2(System::Color::error, error, "\n");
+        }
+
+        Checks::exit_fail(VCPKG_LINE_INFO);
     }
 
     void FormatManifestCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const

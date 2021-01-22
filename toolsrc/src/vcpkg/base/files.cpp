@@ -455,6 +455,24 @@ namespace vcpkg::Files
         }
     }
 
+    bool ITestFileExists::exists(LineInfo li, const fs::path& path) const
+    {
+        std::error_code ec;
+        auto result = this->exists(path, ec);
+        if (ec)
+        {
+            Checks::exit_with_message(li, "error checking existence of file %s: %s", fs::u8string(path), ec.message());
+        }
+
+        return result;
+    }
+
+    bool ITestFileExists::exists(const fs::path& path, ignore_errors_t) const
+    {
+        std::error_code ec;
+        return this->exists(path, ec);
+    }
+
     std::string Filesystem::read_contents(const fs::path& path, LineInfo linfo) const
     {
         auto maybe_contents = this->read_contents(path);
@@ -512,26 +530,6 @@ namespace vcpkg::Files
     {
         std::error_code ec;
         return this->remove(path, ec);
-    }
-
-    bool Filesystem::exists(const fs::path& path, std::error_code& ec) const
-    {
-        return fs::exists(this->symlink_status(path, ec));
-    }
-
-    bool Filesystem::exists(LineInfo li, const fs::path& path) const
-    {
-        std::error_code ec;
-        auto result = this->exists(path, ec);
-        if (ec)
-            Checks::exit_with_message(li, "error checking existence of file %s: %s", fs::u8string(path), ec.message());
-        return result;
-    }
-
-    bool Filesystem::exists(const fs::path& path, ignore_errors_t) const
-    {
-        std::error_code ec;
-        return this->exists(path, ec);
     }
 
     bool Filesystem::create_directory(const fs::path& path, ignore_errors_t)
@@ -728,6 +726,12 @@ namespace vcpkg::Files
 
     struct RealFilesystem final : Filesystem
     {
+        using ITestFileExists::exists;
+        virtual bool exists(const fs::path& path, std::error_code& ec) const override
+        {
+            return fs::exists(this->symlink_status(path, ec));
+        }
+
         virtual Expected<std::string> read_contents(const fs::path& file_path) const override
         {
             std::fstream file_stream(file_path, std::ios_base::in | std::ios_base::binary);
