@@ -29,15 +29,17 @@ index b46a0f1a0..3d87f5204 100644
 
      # Some systems (e.g. Fedora) don't fill Brotli_LIBRARY_DIRS, so add the other dirs here.
 diff --git a/cpp/cmake_modules/FindLz4.cmake b/cpp/cmake_modules/FindLz4.cmake
-index 14b6d93b9..788fb93e8 100644
+index 14b6d93b9..7de0a1dff 100644
 --- a/cpp/cmake_modules/FindLz4.cmake
 +++ b/cpp/cmake_modules/FindLz4.cmake
-@@ -15,10 +15,10 @@
+@@ -15,10 +15,12 @@
  # specific language governing permissions and limitations
  # under the License.
 
 -if(MSVC_TOOLCHAIN AND NOT DEFINED LZ4_MSVC_LIB_PREFIX)
 -  set(LZ4_MSVC_LIB_PREFIX "lib")
++# Avoid the debug build linking to the release library by mistake.
++# In theory harmless if static linking at this point, but disastrous if done for a shared library.
 +if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
 +  set(LZ4_LIB_NAME_DEBUG_SUFFIX d)
  endif()
@@ -46,7 +48,7 @@ index 14b6d93b9..788fb93e8 100644
 
  if(ARROW_LZ4_USE_SHARED)
    set(LZ4_LIB_NAMES)
-@@ -34,10 +34,6 @@ if(ARROW_LZ4_USE_SHARED)
+@@ -34,10 +36,6 @@ if(ARROW_LZ4_USE_SHARED)
        LZ4_LIB_NAMES
        "${CMAKE_SHARED_LIBRARY_PREFIX}${LZ4_LIB_NAME_BASE}${CMAKE_SHARED_LIBRARY_SUFFIX}")
  else()
@@ -57,14 +59,44 @@ index 14b6d93b9..788fb93e8 100644
    set(LZ4_LIB_NAMES
        "${CMAKE_STATIC_LIBRARY_PREFIX}${LZ4_LIB_NAME_BASE}${LZ4_STATIC_LIB_SUFFIX}")
  endif()
+diff --git a/cpp/cmake_modules/FindSnappy.cmake b/cpp/cmake_modules/FindSnappy.cmake
+index 5784cf592..acd02cd82 100644
+--- a/cpp/cmake_modules/FindSnappy.cmake
++++ b/cpp/cmake_modules/FindSnappy.cmake
+@@ -15,7 +15,14 @@
+ # specific language governing permissions and limitations
+ # under the License.
+
++# Avoid the debug build linking to the release library by mistake.
++# In theory harmless if static linking at this point, but disastrous if done for a shared library.
++if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
++  set(SNAPPY_LIB_NAME_DEBUG_SUFFIX d)
++endif()
++
+ if(ARROW_SNAPPY_USE_SHARED)
++  set(SNAPPY_SHARED_LIB_NAME_BASE "snappy${SNAPPY_LIB_NAME_DEBUG_SUFFIX}")
+   set(SNAPPY_LIB_NAMES)
+   if(CMAKE_IMPORT_LIBRARY_SUFFIX)
+     list(APPEND SNAPPY_LIB_NAMES
+@@ -24,7 +31,7 @@ if(ARROW_SNAPPY_USE_SHARED)
+   list(APPEND SNAPPY_LIB_NAMES
+               "${CMAKE_SHARED_LIBRARY_PREFIX}snappy${CMAKE_SHARED_LIBRARY_SUFFIX}")
+ else()
+-  set(SNAPPY_STATIC_LIB_NAME_BASE "snappy")
++  set(SNAPPY_STATIC_LIB_NAME_BASE "snappy${SNAPPY_LIB_NAME_DEBUG_SUFFIX}")
+   if(MSVC)
+     set(SNAPPY_STATIC_LIB_NAME_BASE "${SNAPPY_STATIC_LIB_NAME_BASE}${SNAPPY_MSVC_STATIC_LIB_SUFFIX}")
+   endif()
 diff --git a/cpp/cmake_modules/FindThrift.cmake b/cpp/cmake_modules/FindThrift.cmake
-index 273d907ed..b3c6cb99b 100644
+index 273d907ed..e3712c556 100644
 --- a/cpp/cmake_modules/FindThrift.cmake
 +++ b/cpp/cmake_modules/FindThrift.cmake
-@@ -39,6 +39,10 @@ function(EXTRACT_THRIFT_VERSION)
+@@ -39,6 +39,12 @@ function(EXTRACT_THRIFT_VERSION)
    endif()
  endfunction(EXTRACT_THRIFT_VERSION)
 
++# Avoid the debug build linking to the release library by mistake.
++# In theory harmless if static linking at this point, but disastrous if done for a shared library.
 +if(CMAKE_BUILD_TYPE STREQUAL "DEBUG")
 +  set(THRIFT_LIB_NAME_DEBUG_SUFFIX d)
 +endif()
@@ -72,7 +104,7 @@ index 273d907ed..b3c6cb99b 100644
  if(MSVC_TOOLCHAIN AND NOT DEFINED THRIFT_MSVC_LIB_SUFFIX)
    if(NOT ARROW_THRIFT_USE_SHARED)
      if(ARROW_USE_STATIC_CRT)
-@@ -48,7 +52,7 @@ if(MSVC_TOOLCHAIN AND NOT DEFINED THRIFT_MSVC_LIB_SUFFIX)
+@@ -48,7 +54,7 @@ if(MSVC_TOOLCHAIN AND NOT DEFINED THRIFT_MSVC_LIB_SUFFIX)
      endif()
    endif()
  endif()
