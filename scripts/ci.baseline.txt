@@ -820,7 +820,6 @@ libwandio:arm-uwp=fail
 libxmp-lite:x64-linux=fail
 libxmp-lite:x64-osx=fail
 libxslt:arm-uwp=fail
-libxslt:x64-osx=fail
 libxslt:x64-uwp=fail
 libyuv:arm-uwp=fail
 libyuv:x64-uwp=fail
