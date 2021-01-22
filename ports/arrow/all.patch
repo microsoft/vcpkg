@@ -29,7 +29,7 @@ index b46a0f1a0..3d87f5204 100644
 
      # Some systems (e.g. Fedora) don't fill Brotli_LIBRARY_DIRS, so add the other dirs here.
 diff --git a/cpp/cmake_modules/FindLz4.cmake b/cpp/cmake_modules/FindLz4.cmake
-index 14b6d93b9..7de0a1dff 100644
+index 14b6d93b9..95621720f 100644
 --- a/cpp/cmake_modules/FindLz4.cmake
 +++ b/cpp/cmake_modules/FindLz4.cmake
 @@ -15,10 +15,12 @@
@@ -48,7 +48,7 @@ index 14b6d93b9..7de0a1dff 100644
 
  if(ARROW_LZ4_USE_SHARED)
    set(LZ4_LIB_NAMES)
-@@ -34,10 +36,6 @@ if(ARROW_LZ4_USE_SHARED)
+@@ -34,12 +36,8 @@ if(ARROW_LZ4_USE_SHARED)
        LZ4_LIB_NAMES
        "${CMAKE_SHARED_LIBRARY_PREFIX}${LZ4_LIB_NAME_BASE}${CMAKE_SHARED_LIBRARY_SUFFIX}")
  else()
@@ -57,8 +57,11 @@ index 14b6d93b9..7de0a1dff 100644
 -  endif()
 -  set(LZ4_STATIC_LIB_SUFFIX "${LZ4_MSVC_STATIC_LIB_SUFFIX}${CMAKE_STATIC_LIBRARY_SUFFIX}")
    set(LZ4_LIB_NAMES
-       "${CMAKE_STATIC_LIBRARY_PREFIX}${LZ4_LIB_NAME_BASE}${LZ4_STATIC_LIB_SUFFIX}")
+-      "${CMAKE_STATIC_LIBRARY_PREFIX}${LZ4_LIB_NAME_BASE}${LZ4_STATIC_LIB_SUFFIX}")
++      "${CMAKE_STATIC_LIBRARY_PREFIX}${LZ4_LIB_NAME_BASE}${CMAKE_STATIC_LIBRARY_SUFFIX}")
  endif()
+
+ if(LZ4_ROOT)
 diff --git a/cpp/cmake_modules/FindSnappy.cmake b/cpp/cmake_modules/FindSnappy.cmake
 index 5784cf592..817cf0c47 100644
 --- a/cpp/cmake_modules/FindSnappy.cmake
