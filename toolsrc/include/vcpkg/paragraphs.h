@@ -56,5 +56,5 @@ namespace vcpkg::Paragraphs
     LoadResults try_load_all_registry_ports(const VcpkgPaths& paths);
 
     std::vector<SourceControlFileLocation> load_all_registry_ports(const VcpkgPaths& paths);
-    std::vector<SourceControlFileLocation> load_overlay_ports(const VcpkgPaths& paths, const fs::path& dir);
+    std::vector<SourceControlFileLocation> load_overlay_ports(const Files::Filesystem& fs, const fs::path& dir);
 }

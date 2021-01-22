@@ -54,8 +54,6 @@ namespace vcpkg
         View<std::string> packages() const { return packages_; }
         const RegistryImplementation& implementation() const { return *implementation_; }
 
-        static std::unique_ptr<RegistryImplementation> builtin_registry(std::string&& baseline = {});
-
         friend RegistrySet; // for experimental_set_builtin_registry_baseline
 
     private:
