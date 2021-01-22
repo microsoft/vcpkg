@@ -1513,8 +1513,8 @@
       "port-version": 0
     },
     "darknet": {
-      "baseline": "2020-08-30",
-      "port-version": 2
+      "baseline": "2021-01-21",
+      "port-version": 0
     },
     "darts-clone": {
       "baseline": "1767ab87cffe-1",
