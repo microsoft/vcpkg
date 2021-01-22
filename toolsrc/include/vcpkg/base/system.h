@@ -29,6 +29,7 @@ namespace vcpkg::System
         ARM,
         ARM64,
         S390X,
+        PPC64LE,
     };
 
     Optional<CPUArchitecture> to_cpu_architecture(StringView arch);

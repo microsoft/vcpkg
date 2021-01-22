@@ -240,8 +240,8 @@ selectCXX()
 UNAME="$(uname)"
 ARCH="$(uname -m)"
 
-# Force using system utilities for building vcpkg if host arch is arm, arm64, or s390x.
-if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" ]; then
+# Force using system utilities for building vcpkg if host arch is arm, arm64, s390x, or ppc64le.
+if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" -o "$ARCH" = "ppc64le" ]; then
     vcpkgUseSystem=true
 fi
 
