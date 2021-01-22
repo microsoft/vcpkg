@@ -266,11 +266,11 @@ namespace vcpkg::Commands::FormatManifest
 
     const CommandSwitch FORMAT_SWITCHES[] = {
         {OPTION_ALL, "Format all ports' manifest files."},
-        {OPTION_CONVERT_CONTROL, "Convert CONTROL files to manifest files."},
+        {OPTION_CONVERT_CONTROL, "Convert CONTROL files to manifest files; requires --all."},
     };
 
     const CommandStructure COMMAND_STRUCTURE = {
-        create_example_string(R"###(format-manifest --all)###"),
+        create_example_string(R"###(format-manifest name-of-port path/to/vcpkg.json path/to/CONTROL)###"),
         0,
         SIZE_MAX,
         {FORMAT_SWITCHES, {}, {}},
@@ -288,16 +288,15 @@ namespace vcpkg::Commands::FormatManifest
 
         if (!format_all && convert_control)
         {
-            System::print2(System::Color::warning, R"(format-manifest was passed '--convert-control' without '--all'.
-    This doesn't do anything:
-    we will automatically convert all control files passed explicitly.)");
+            System::print2(System::Color::warning, R"(Warning: '--convert-control' has no effect without '--all'.
+    Explicit paths to CONTROL files, or names of ports using CONTROL files
+    are always converted.)");
         }
 
         if (!format_all && args.command_arguments.empty())
         {
-            Checks::exit_with_message(
-                VCPKG_LINE_INFO,
-                "No files to format; please pass either --all, or the explicit files to format or convert.");
+            Checks::exit_with_message(VCPKG_LINE_INFO, R"(Error: No targets to format. Please pass --all,
+    or a list of port names, CONTROL files, and/or manifests to format or convert.)");
         }
 
         std::vector<std::string> errors;
@@ -350,7 +349,7 @@ namespace vcpkg::Commands::FormatManifest
 
         if (errors.empty())
         {
-            System::print2("Succeeded in formatting all manifest files.\n");
+            System::print2("Succeeded in formatting all manifests.\n");
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 
