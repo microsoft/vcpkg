@@ -53,32 +53,32 @@ namespace
         original_cwd / fs::u8path("example" SEPARATOR "anything.json"),
         // port name test cases
         ports,
-        ports / fs::u8path("control_port"),
-        ports / fs::u8path("control_port" SEPARATOR "CONTROL"),
-        ports / fs::u8path("manifest_port"),
-        ports / fs::u8path("manifest_port" SEPARATOR "vcpkg.json"),
-        ports / fs::u8path("ambiguous_port"),
-        ports / fs::u8path("ambiguous_port" SEPARATOR "CONTROL"),
-        ports / fs::u8path("ambiguous_port" SEPARATOR "vcpkg.json"),
+        ports / fs::u8path("control-port"),
+        ports / fs::u8path("control-port" SEPARATOR "CONTROL"),
+        ports / fs::u8path("manifest-port"),
+        ports / fs::u8path("manifest-port" SEPARATOR "vcpkg.json"),
+        ports / fs::u8path("ambiguous-port"),
+        ports / fs::u8path("ambiguous-port" SEPARATOR "CONTROL"),
+        ports / fs::u8path("ambiguous-port" SEPARATOR "vcpkg.json"),
         // conflict between port name and filesystem name test cases
-        original_cwd / fs::u8path("overlap_port"),
-        ports / fs::u8path("overlap_port"),
-        ports / fs::u8path("overlap_port" SEPARATOR "CONTROL"),
+        original_cwd / fs::u8path("overlap-port"),
+        ports / fs::u8path("overlap-port"),
+        ports / fs::u8path("overlap-port" SEPARATOR "CONTROL"),
     }};
 }
 
 TEST_CASE ("resolves_existing_absolute_path", "[commands][format-manifest]")
 {
     const auto result = resolve_format_manifest_input(existing_absolute, original_cwd, ports, filesystem);
-    CHECK(result.has_value());
-    CHECK(result.value_or_exit(VCPKG_LINE_INFO) == existing_absolute_path);
+    REQUIRE(result.has_value());
+    REQUIRE(result.value_or_exit(VCPKG_LINE_INFO) == existing_absolute_path);
 }
 
 TEST_CASE ("does_not_resolve_missing_absolute_path", "[commands][format-manifest]")
 {
     const auto result = resolve_format_manifest_input(missing_absolute, original_cwd, ports, filesystem);
-    CHECK(!result.has_value());
-    CHECK(result.error().find(" not found.") != std::string::npos);
+    REQUIRE(!result.has_value());
+    REQUIRE(result.error().find(" not found.") != std::string::npos);
 }
 
 TEST_CASE ("resolves_relative_paths", "[commands][format-manifest]")
@@ -93,35 +93,35 @@ TEST_CASE ("resolves_relative_paths", "[commands][format-manifest]")
     for (vcpkg::StringView& relative : relative_paths)
     {
         const auto result = resolve_format_manifest_input(relative, original_cwd, ports, filesystem);
-        CHECK(result.has_value());
-        CHECK(result.value_or_exit(VCPKG_LINE_INFO) == original_cwd / fs::u8path(relative));
+        REQUIRE(result.has_value());
+        REQUIRE(result.value_or_exit(VCPKG_LINE_INFO) == original_cwd / fs::u8path(relative));
     }
 }
 
 TEST_CASE ("resolves_control_port", "[commands][format-manifest]")
 {
-    const auto result = resolve_format_manifest_input("control_port", original_cwd, ports, filesystem);
-    CHECK(result.has_value());
-    CHECK(result.value_or_exit(VCPKG_LINE_INFO) == ports / fs::u8path("control_port" SEPARATOR "CONTROL"));
+    const auto result = resolve_format_manifest_input("control-port", original_cwd, ports, filesystem);
+    REQUIRE(result.has_value());
+    REQUIRE(result.value_or_exit(VCPKG_LINE_INFO) == ports / fs::u8path("control-port" SEPARATOR "CONTROL"));
 }
 
 TEST_CASE ("resolves_manifest_port", "[commands][format-manifest]")
 {
-    const auto result = resolve_format_manifest_input("manifest_port", original_cwd, ports, filesystem);
-    CHECK(result.has_value());
-    CHECK(result.value_or_exit(VCPKG_LINE_INFO) == ports / fs::u8path("manifest_port" SEPARATOR "vcpkg.json"));
+    const auto result = resolve_format_manifest_input("manifest-port", original_cwd, ports, filesystem);
+    REQUIRE(result.has_value());
+    REQUIRE(result.value_or_exit(VCPKG_LINE_INFO) == ports / fs::u8path("manifest-port" SEPARATOR "vcpkg.json"));
 }
 
 TEST_CASE ("does_not_resolve_ambiguous_port", "[commands][format-manifest]")
 {
-    const auto result = resolve_format_manifest_input("ambiguous_port", original_cwd, ports, filesystem);
-    CHECK(!result.has_value());
-    CHECK(result.error().find("Both a manifest file and a CONTROL file exist") != std::string::npos);
+    const auto result = resolve_format_manifest_input("ambiguous-port", original_cwd, ports, filesystem);
+    REQUIRE(!result.has_value());
+    REQUIRE(result.error().find("Both a manifest file and a CONTROL file exist") != std::string::npos);
 }
 
 TEST_CASE ("chooses_filesystem_path_over_port_name", "[commands][format-manifest]")
 {
-    const auto result = resolve_format_manifest_input("overlap_port", original_cwd, ports, filesystem);
-    CHECK(result.has_value());
-    CHECK(result.value_or_exit(VCPKG_LINE_INFO) == original_cwd / fs::u8path("overlap_port"));
+    const auto result = resolve_format_manifest_input("overlap-port", original_cwd, ports, filesystem);
+    REQUIRE(result.has_value());
+    REQUIRE(result.value_or_exit(VCPKG_LINE_INFO) == original_cwd / fs::u8path("overlap-port"));
 }
