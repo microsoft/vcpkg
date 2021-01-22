@@ -1,7 +1,7 @@
 {
   "name": "ogre",
   "version-string": "1.12.9",
-  "port-version": 4,
+  "port-version": 5,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "dependencies": [
@@ -13,7 +13,6 @@
     "assimp",
     "freeimage",
     "overlay",
-    "strict",
     "zziplib"
   ],
   "features": {
