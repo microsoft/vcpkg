@@ -12,6 +12,7 @@ else()
 endif()
 
 set(ORT_REVISION "v1.5.3")
+#Todo: Move to tag rathter than commit hash
 set(ORT_COMMIT_HASH "3b3e698674dca2014b91fb617e2c4f22ffd0c5c9")
 
 vcpkg_find_acquire_program(GIT)
@@ -21,7 +22,7 @@ get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_PATH})
 vcpkg_find_acquire_program(NINJA)
 get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-vcpkg_add_to_path(${PYTHON3_PATH})
+vcpkg_add_to_path(${NINJA_PATH})
 set(ONNXRUNTIME "onnxruntime.git")
 set(ONNX_GITHUB_URL "https://github.com/microsoft/${ONNXRUNTIME}")
 
@@ -61,13 +62,12 @@ vcpkg_execute_required_process(
   LOGNAME build-${TARGET_TRIPLET}
   )
 
-  #
+# Todo: Check if we need to do the sync
 #vcpkg_execute_required_process(
 #COMMAND ${GIT} submodule sync --recursive
 #WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
 #LOGNAME build-${TARGET_TRIPLET})
 
-#
 vcpkg_execute_required_process(
   COMMAND ${GIT} submodule update --init --recursive
   WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${ONNXRUNTIME}
@@ -167,8 +167,13 @@ foreach(BUILD_TYPE rel dbg)
   file(GLOB_RECURSE ORT_LIBS LIST_DIRECTORIES false ${SRCBASEDIR}/${STATIC_LIB_EXTN})
   file(COPY ${ORT_LIBS} DESTINATION ${DESTBASEDIR})
 
-  file(GLOB_RECURSE ORT_LIB_PDBS LIST_DIRECTORIES false ${SRCBASEDIR}/${SYM_FILE_EXTN})
-  file(COPY ${ORT_LIB_PDBS} DESTINATION ${DESTBASEDIR})
+  #Todo: 1. PDB's are contributing to 6GiB to the total package size of 10GiB
+  # Disabling it for time, enable back once we have fixed other issue
+  if(FALSE)
+    file(GLOB_RECURSE ORT_LIB_PDBS LIST_DIRECTORIES false ${SRCBASEDIR}/${SYM_FILE_EXTN})
+    file(COPY ${ORT_LIB_PDBS} DESTINATION ${DESTBASEDIR})
+  endif()
+
 endforeach()
 
 message(STATUS "Copy libs done, copying additional header files!")
@@ -383,6 +388,10 @@ endif()
 # Remove empty directories that are created during copy operations
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/onnxruntime/external/SafeInt/safeint/Archive/releases/8")
 
-vcpkg_copy_pdbs()
+#Todo: 2. PDB's are contributing to 6GiB to the total package size of 10GiB
+# Disabling it for time, enable back once we have fixed other issue
+if(FALSE)
+  vcpkg_copy_pdbs()
+endif()
 
-message(STATUS "Installing done")
+message(STATUS "Installing done!")
