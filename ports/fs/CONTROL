@@ -3,3 +3,4 @@ Version: 1.0.8
 Homepage: https://gitlab.freedesktop.org/xorg/lib/libfs
 Description: X Font Service client library
 Build-Depends: xorg-macros, bzip2, xproto, xtrans
+Supports: !windows

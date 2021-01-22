@@ -1,0 +1,105 @@
+diff --git a/include/X11/Xos.h b/include/X11/Xos.h
+index 28dfc673a..c97e71eb4 100644
+--- a/include/X11/Xos.h
++++ b/include/X11/Xos.h
+@@ -79,7 +79,7 @@ in this Software without prior written authorization from The Open Group.
+ #  if defined(USL) || defined(__i386__) && (defined(SYSV) || defined(SVR4))
+ #   include <unistd.h>
+ #  endif
+-#  ifdef WIN32
++#  if defined(WIN32) || defined(_WIN32)
+ #   include <X11/Xw32defs.h>
+ #  else
+ #   include <sys/file.h>
+@@ -98,7 +98,7 @@ in this Software without prior written authorization from The Open Group.
+ #  undef _POSIX_SOURCE
+ #  include <sys/time.h>
+ #  define _POSIX_SOURCE
+-# elif defined(WIN32)
++# elif defined(WIN32) || defined(_WIN32)
+ #  include <time.h>
+ #  if !defined(_WINSOCKAPI_) && !defined(_WILLWINSOCK_) && !defined(_TIMEVAL_DEFINED) && !defined(_STRUCT_TIMEVAL)
+ struct timeval {
+@@ -124,7 +124,7 @@ struct timeval {
+ # if defined(_XOPEN_XPG4) || defined(_XOPEN_UNIX) /* _XOPEN_UNIX is XPG4.2 */
+ #  define X_GETTIMEOFDAY(t) gettimeofday(t, (struct timezone*)0)
+ # else
+-#  if defined(SVR4) || defined(__SVR4) || defined(WIN32)
++#  if defined(SVR4) || defined(__SVR4) || defined(WIN32) || defined(_WIN32)
+ #   define X_GETTIMEOFDAY(t) gettimeofday(t)
+ #  else
+ #   define X_GETTIMEOFDAY(t) gettimeofday(t, (struct timezone*)0)
+diff --git a/include/X11/Xos_r.h b/include/X11/Xos_r.h
+index f963b6410..d6d48af8f 100644
+--- a/include/X11/Xos_r.h
++++ b/include/X11/Xos_r.h
+@@ -88,7 +88,7 @@ in this Software without prior written authorization from The Open Group.
+ # endif
+ #endif /* _XOS_R_H */
+ 
+-#ifndef WIN32
++#if !(defined(WIN32) || defined(_WIN32)) 
+ 
+ #ifdef __cplusplus
+ extern "C" {
+@@ -382,7 +382,7 @@ typedef int _Xgetpwret;
+ 
+ #undef XTHREADS_NEEDS_BYNAMEPARAMS
+ #if defined(X_INCLUDE_NETDB_H) && !defined(_XOS_INCLUDED_NETDB_H) \
+-    && !defined(WIN32)
++    && ! (defined(WIN32) || defined(_WIN32))
+ # include <netdb.h>
+ # if defined(XUSE_MTSAFE_API) || defined(XUSE_MTSAFE_NETDBAPI)
+ #  define XOS_USE_MTSAFE_NETDBAPI 1
+diff --git a/include/X11/Xosdefs.h b/include/X11/Xosdefs.h
+index 33eaee436..9e11d1ff0 100644
+--- a/include/X11/Xosdefs.h
++++ b/include/X11/Xosdefs.h
+@@ -64,7 +64,7 @@ in this Software without prior written authorization from The Open Group.
+ #  endif
+ # endif
+ 
+-# ifdef WIN32
++# if defined(WIN32) || defined(_WIN32)
+ #  ifndef _POSIX_
+ #   define X_NOT_POSIX
+ #  endif
+diff --git a/include/X11/Xpoll.h.in b/include/X11/Xpoll.h.in
+index 9f127e106..35e318b55 100644
+--- a/include/X11/Xpoll.h.in
++++ b/include/X11/Xpoll.h.in
+@@ -50,7 +50,7 @@ from The Open Group.
+ #ifndef _XPOLL_H_
+ #define _XPOLL_H_
+ 
+-#if !defined(WIN32) || defined(__CYGWIN__)
++#if !(defined(WIN32) || defined(_WIN32)) || defined(__CYGWIN__)
+ 
+ #ifndef USE_POLL
+ 
+diff --git a/include/X11/Xthreads.h b/include/X11/Xthreads.h
+index 2027127eb..2f08bea6d 100644
+--- a/include/X11/Xthreads.h
++++ b/include/X11/Xthreads.h
+@@ -94,7 +94,7 @@ extern xthread_t (*_x11_thr_self)();
+ #   define xcondition_signal(cv) cond_signal(cv)
+ #   define xcondition_broadcast(cv) cond_broadcast(cv)
+ #  else /* !SVR4 */
+-#   ifdef WIN32
++#   if defined(WIN32) || defined(_WIN32)
+ #    include <X11/Xwindows.h>
+ typedef DWORD xthread_t;
+ typedef DWORD xthread_key_t;
+diff --git a/include/X11/Xwindows.h b/include/X11/Xwindows.h
+index 04c479c5e..789663be9 100644
+--- a/include/X11/Xwindows.h
++++ b/include/X11/Xwindows.h
+@@ -184,7 +184,7 @@ The Open Group.
+ #define sleep(x) Sleep((x) * 1000)
+ #endif
+ 
+-#if defined(WIN32) && (!defined(PATH_MAX) || PATH_MAX < 1024)
++#if (defined(WIN32)||defined(_WIN32)) && (!defined(PATH_MAX) || PATH_MAX < 1024)
+ # undef PATH_MAX
+ # define PATH_MAX 1024
+ #endif
