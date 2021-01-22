@@ -42,9 +42,6 @@ APT_PACKAGES="$APT_PACKAGES libasound2-dev"
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu60"
 
-# Additionally required by poppler
-APT_PACKAGES="$APT_PACKAGES clang-format"
-
 sudo apt -y install $APT_PACKAGES
 
 # Install newer version of nasm than the apt package, required by intel-ipsec
