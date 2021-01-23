@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Tools
-    REF v2020.6
-    SHA512 b6d3667581101536e1f4d405e9c1c64e64a0aba174cc2f41d31e080f44d23bcfaed9642fd31f1d44a56c3df3e894526b643c572832cb96218b16d748b1ac6fe2
+    REF v2020.7
+    SHA512 34d870e5aaaa2ad744369521efd43bdfba5e47208bb31bc0e325322e3a6edbe7686d3f4d9a6ebff6e85625e1a00811ab0162e2b8f39dd18603b7ff6548897950
     PATCHES
         cmake-install.patch
         install-config-typo.patch
