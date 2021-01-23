@@ -8,13 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(openssl IN_LIST FEATURES)
-    set(CRYPTO_BACKEND OpenSSL)
-endif()
-
-if(libsodium IN_LIST FEATURES)
-    set(CRYPTO_BACKEND libsodium)
-endif()
+set(CRYPTO_BACKEND OpenSSL)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

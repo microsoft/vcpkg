@@ -6,23 +6,7 @@
   "license": "BSD-3-Clause",
   "supports": "!(static & windows) & !uwp & !(arm64 & windows)",
   "dependencies": [
-    "protobuf"
-  ],
-  "default-features": [
+    "protobuf",
     "openssl"
-  ],
-  "features": {
-    "libsodium": {
-      "description": "Use libsodium as the crypto backend",
-      "dependencies": [
-        "libsodium"
-      ]
-    },
-    "openssl": {
-      "description": "Use OpenSSL as the crypto backend",
-      "dependencies": [
-        "openssl"
-      ]
-    }
-  }
+  ]
 }
