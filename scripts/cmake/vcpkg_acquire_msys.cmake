@@ -291,8 +291,8 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
         DEPS gcc-libs
     )
     msys_package(
-        URL "https://repo.msys2.org/msys/x86_64/pkg-config-0.29.2-1-x86_64.pkg.tar.xz"
-        SHA512 f1d70f0b4ebcfeb3fa2156a7a4f7b0b404795853e05361de14054dc6658a6154915bb982626cbfe76bef0828325f993f30da6817361ca8d7ea440a40023fa864
+        URL "https://repo.msys2.org/msys/x86_64/pkg-config-0.29.2-4-x86_64.pkg.tar.zst"
+        SHA512 9f72c81d8095ca1c341998bc80788f7ce125770ec4252f1eb6445b9cba74db5614caf9a6cc7c0fcc2ac18d4a0f972c49b9f245c3c9c8e588126be6c72a8c1818
         DEPS libiconv
     )
     msys_package(

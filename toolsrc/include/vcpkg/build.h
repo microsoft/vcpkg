@@ -232,7 +232,9 @@ namespace vcpkg::Build
         const VcpkgPaths& m_paths;
     };
 
-    System::Command make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
+    System::Command make_build_env_cmd(const PreBuildInfo& pre_build_info,
+                                       const Toolset& toolset,
+                                       View<Toolset> all_toolsets);
 
     struct ExtendedBuildResult
     {
