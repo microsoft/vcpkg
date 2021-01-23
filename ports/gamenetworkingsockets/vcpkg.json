@@ -6,7 +6,7 @@
   "license": "BSD-3-Clause",
   "supports": "!(static & windows) & !uwp & !(arm64 & windows)",
   "dependencies": [
-    "protobuf",
-    "openssl"
+    "openssl",
+    "protobuf"
   ]
 }
