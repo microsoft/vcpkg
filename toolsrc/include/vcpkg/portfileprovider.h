@@ -28,18 +28,6 @@ namespace vcpkg::PortFileProvider
         const std::unordered_map<std::string, SourceControlFileLocation>& ports;
     };
 
-    struct PathsPortFileProvider : Util::ResourceBase, PortFileProvider
-    {
-        explicit PathsPortFileProvider(const vcpkg::VcpkgPaths& paths, const std::vector<std::string>& overlay_ports);
-        ExpectedS<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
-        std::vector<const SourceControlFileLocation*> load_all_control_files() const override;
-
-    private:
-        const VcpkgPaths& paths;
-        std::vector<fs::path> overlay_ports;
-        mutable std::unordered_map<std::string, SourceControlFileLocation> cache;
-    };
-
     struct IVersionedPortfileProvider
     {
         virtual View<VersionT> get_port_versions(StringView port_name) const = 0;
@@ -47,6 +35,7 @@ namespace vcpkg::PortFileProvider
 
         virtual ExpectedS<const SourceControlFileLocation&> get_control_file(
             const Versions::VersionSpec& version_spec) const = 0;
+        virtual void load_all_control_files(std::map<std::string, const SourceControlFileLocation*>& out) const = 0;
     };
 
     struct IBaselineProvider
@@ -59,6 +48,19 @@ namespace vcpkg::PortFileProvider
     {
         virtual ~IOverlayProvider() = default;
         virtual Optional<const SourceControlFileLocation&> get_control_file(StringView port_name) const = 0;
+        virtual void load_all_control_files(std::map<std::string, const SourceControlFileLocation*>& out) const = 0;
+    };
+
+    struct PathsPortFileProvider : Util::ResourceBase, PortFileProvider
+    {
+        explicit PathsPortFileProvider(const vcpkg::VcpkgPaths& paths, const std::vector<std::string>& overlay_ports);
+        ExpectedS<const SourceControlFileLocation&> get_control_file(const std::string& src_name) const override;
+        std::vector<const SourceControlFileLocation*> load_all_control_files() const override;
+
+    private:
+        std::unique_ptr<IBaselineProvider> m_baseline;
+        std::unique_ptr<IVersionedPortfileProvider> m_versioned;
+        std::unique_ptr<IOverlayProvider> m_overlay;
     };
 
     std::unique_ptr<IBaselineProvider> make_baseline_provider(const vcpkg::VcpkgPaths& paths);
