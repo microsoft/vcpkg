@@ -980,8 +980,7 @@ If you wish to silence this error and use classic mode, you can:
 #if !defined(_WIN32)
         Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, "Cannot build windows triplets from non-windows.");
 #else
-        const std::vector<Toolset>& vs_toolsets = m_pimpl->toolsets.get_lazy(
-            [this]() { return VisualStudio::find_toolset_instances_preferred_first(*this); });
+        View<Toolset> vs_toolsets = get_all_toolsets();
 
         std::vector<const Toolset*> candidates = Util::fmap(vs_toolsets, [](auto&& x) { return &x; });
         const auto tsv = prebuildinfo.platform_toolset.get();
@@ -1026,6 +1025,16 @@ If you wish to silence this error and use classic mode, you can:
         Checks::check_exit(VCPKG_LINE_INFO, !candidates.empty(), "No suitable Visual Studio instances were found");
         return *candidates.front();
 
+#endif
+    }
+
+    View<Toolset> VcpkgPaths::get_all_toolsets() const
+    {
+#if defined(_WIN32)
+        return m_pimpl->toolsets.get_lazy(
+            [this]() { return VisualStudio::find_toolset_instances_preferred_first(*this); });
+#else
+        return {};
 #endif
     }
 
