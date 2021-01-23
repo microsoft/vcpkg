@@ -11,6 +11,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-install.patch
+        fix-apple-filesystem.patch
 )
 
 # note: Test/Sample executables won't be installed
