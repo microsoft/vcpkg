@@ -5224,6 +5224,10 @@
       "baseline": "3.6.0",
       "port-version": 0
     },
+    "seastar": {
+      "baseline": "20.05.0",
+      "port-version": 0
+    },
     "secp256k1": {
       "baseline": "2017-19-10",
       "port-version": 3
