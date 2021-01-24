@@ -2,4 +2,4 @@ Source: xvmc
 Version: 1.0.12
 Homepage: https://gitlab.freedesktop.org/xorg/lib/libxvmc
 Description: Xlib-based X-Video Motion Compensation API
-Build-Depends: xorg-macros, bzip2, xproto, xext, xv, x11
+Build-Depends: xorg-macros, bzip2, xproto, xext, xv, x11, dlfcn-win32(windows)

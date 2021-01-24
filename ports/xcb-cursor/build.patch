@@ -1,0 +1,121 @@
+diff --git a/cursor/cursor.h b/cursor/cursor.h
+index 455dc3485..f1bfd60db 100644
+--- a/cursor/cursor.h
++++ b/cursor/cursor.h
+@@ -106,18 +106,32 @@ struct xcb_cursor_context_t {
+ /* little-endian */
+ #define XCURSOR_MAGIC 0x72756358
+ 
++#ifdef _MSC_VER
++    #define PACKED
++#else
++    #define PACKED __attribute__((packed))
++#endif
++
++#ifdef _MSC_VER
++#pragma pack(push,1)
++#endif
++
+ typedef struct xcint_file_header_t {
+     uint32_t magic;
+     uint32_t header;
+     uint32_t version;
+     uint32_t ntoc;
+-} __attribute__((packed)) xcint_file_header_t;
++} PACKED xcint_file_header_t;
+ 
+ typedef struct xcint_file_toc_t {
+     uint32_t type;
+     uint32_t subtype;
+     uint32_t position;
+-} __attribute__((packed)) xcint_file_toc_t;
++} PACKED xcint_file_toc_t;
++
++#ifdef _MSC_VER
++#pragma pack(pop)
++#endif
+ 
+ typedef struct xcint_cursor_file_t {
+     xcint_file_header_t header;
+@@ -140,12 +154,16 @@ typedef struct xcint_cursor_file_t {
+  *      CARD32      version     chunk type version
+  */
+ 
++#ifdef _MSC_VER
++#pragma pack(push,1)
++#endif
++
+ typedef struct xcint_chunk_header_t {
+     uint32_t header;
+     uint32_t type;
+     uint32_t subtype;
+     uint32_t version;
+-} __attribute__((packed)) xcint_chunk_header_t;
++} PACKED xcint_chunk_header_t;
+ 
+ #define XCURSOR_IMAGE_TYPE          0xfffd0002
+ #define XCURSOR_IMAGE_VERSION       1
+@@ -158,7 +176,13 @@ typedef struct xcint_image_t {
+     uint32_t yhot;
+     uint32_t delay;
+     uint32_t *pixels;
+-} __attribute__((packed)) xcint_image_t;
++} PACKED xcint_image_t;
++
++#ifdef _MSC_VER
++#pragma pack(pop)
++#endif
++
++#undef PACKED
+ 
+ /* shape_to_id.c */
+ const int cursor_shape_to_id(const char *name);
+diff --git a/cursor/load_cursor.c b/cursor/load_cursor.c
+index e82fc63e9..1d574a7d2 100644
+--- a/cursor/load_cursor.c
++++ b/cursor/load_cursor.c
+@@ -35,7 +35,12 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
++#ifdef _MSC_VER
++#include <io.h>
++#endif
+ 
+ #include <xcb/xcb.h>
+ #include <xcb/render.h>
+@@ -223,7 +228,11 @@ xcb_cursor_t xcb_cursor_load_cursor(xcb_cursor_context_t *c, const char *name) {
+     close(fd);
+ 
+     /* create a cursor from it */
++#ifdef _MSC_VER
++    xcb_render_animcursorelt_t * elements =(xcb_render_animcursorelt_t*)_alloca(nimg*sizeof(xcb_render_animcursorelt_t));
++#else
+     xcb_render_animcursorelt_t elements[nimg];
++#endif
+     xcb_render_picture_t pic = xcb_generate_id(c->conn);
+ 
+     for (int n = 0; n < nimg; n++) {
+diff --git a/cursor/parse_cursor_file.c b/cursor/parse_cursor_file.c
+index 21f72bf5b..c43dd82b4 100644
+--- a/cursor/parse_cursor_file.c
++++ b/cursor/parse_cursor_file.c
+@@ -34,9 +34,15 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
++#ifdef HAVE_UNISTD_H
+ #include <unistd.h>
++#endif
+ #include <stdbool.h>
+ 
++#ifdef _MSC_VER
++# include <io.h>
++#endif
++
+ #ifdef HAVE_ENDIAN_H
+ #include <endian.h>
+ #endif

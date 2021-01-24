@@ -1,0 +1,16 @@
+diff --git a/examples/xrandr.c b/examples/xrandr.c
+index a69eea3c8..78c490f19 100644
+--- a/examples/xrandr.c
++++ b/examples/xrandr.c
+@@ -32,7 +32,11 @@
+ #include <X11/Xatom.h>
+ #include <X11/extensions/Xrandr.h>
+ #include <X11/extensions/Xrender.h>	/* we share subpixel information */
++#if !defined _MSC_VER
+ #include <strings.h>
++#else
++#define strcasecmp _stricmp
++#endif
+ #include <string.h>
+ #include <stdlib.h>
+ #include <stdarg.h>

@@ -1,9 +1,3 @@
 Windows:
-ice -> unistd
-fs -> winsock2.h(180): error C2011: 'timeval': 'struct' type redefinition
-xcb-error -> OSError: [Errno 22] Invalid argument: 'D:/installed/x64-windows/debug/../share/xcb-proto/xcb/*.xml'
 xcwm -> src/libxcwm/event_loop.c(48): error C2074: '_event_thread': 'struct' initialization requires a brace-enclosed initializer list
-xpm -> D:\buildtrees\xpm\src\d5575c554d-7758f31930.clean\src\XpmI.h(328): fatal error C1083: Cannot open include file: 'strings.h': No such file or directory
-xrandrutils -> D:\buildtrees\xrandrutils\src\5de815dc7c-c34f2cdac4.clean\examples\xrandr.c(35): fatal error C1083: Cannot open include file: 'strings.h': No such file or directory
-xres -> .././../src/f4fe226948-60b8ee4612.clean/src/XRes.c(348): error C2061: syntax error: identifier 'XResGetClientPid'
 xxf86vm -> libtool:   error: can't build x86_64-pc-mingw32 shared library unless -no-undefined is specified

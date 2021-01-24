@@ -1,3 +1,5 @@
+#TODO needs asprintf from gettext ('asprintf' undefined; assuming extern returning int)
+
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org/xorg
     OUT_SOURCE_PATH SOURCE_PATH
@@ -5,6 +7,7 @@ vcpkg_from_gitlab(
     REF  95b9a8fd876fdbbc854cdf3d90317be3846c7417 #0.1.3
     SHA512 cca7bf1f2aeaab8d256052a676098d7c600b90dc47cf9bc84d11229e59fbf5c83f7f877b8538f7cc662983807566d28c87b3501abc7cab76cc553d9db29eceb9
     HEAD_REF master # branch name
+    PATCHES build.patch
 ) 
 
 vcpkg_find_acquire_program(GPERF)
@@ -26,4 +29,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # # Handle copyright
-file(COPY "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
+
+
