@@ -5,4 +5,3 @@ Description: A small but full-featured unit testing framework for C
 Build-Depends: tool-meson
 Supports: !(arm|arm64|uwp)
 Homepage: https://github.com/nemequ/munit
-Build-Depends: tool-meson
