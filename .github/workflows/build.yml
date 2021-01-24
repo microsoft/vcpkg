@@ -123,11 +123,32 @@ jobs:
         path: ${{ matrix.vcpkg_path  }}/buildtrees/**/*.log
 
     - name: Create buildenv archive
-      run: ./vcpkg export ${{ env.VCPKG_PACKAGES }} --zip --output=buildenv-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
+      run: ./vcpkg export ${{ env.VCPKG_PACKAGES }} --zip --output=mixxx-dependencies-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
       working-directory: ${{ matrix.vcpkg_path }}
+
+    - name: "[Windows] Install additional tools"
+      if: runner.os == 'Windows'
+      run: |
+        python -m pip install ninja git+https://github.com/frerich/clcache.git
+        $Env:PATH="C:\msys64\usr\bin;$Env:PATH"
+        pacman -S --noconfirm coreutils bash rsync openssh
+        Add-Content -Path "$Env:GITHUB_ENV" -Value "PATH=$Env:PATH"
+
+    - name: "Upload build to downloads.mixxx.org"
+      if: github.event_name == 'push' && env.SSH_PASSWORD != null
+      run: bash .github/deploy.sh mixxx-dependencies-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}.zip
+      working-directory: ${{ matrix.vcpkg_path }}
+      env:
+        DESTDIR: public_html/downloads/dependencies/${{ runner.os }}
+        OS: ${{ runner.os }}
+        SSH_HOST: downloads-hostgator.mixxx.org
+        SSH_KEY: .github/downloads-hostgator.mixxx.org.key
+        SSH_PASSWORD: ${{ secrets.DOWNLOADS_HOSTGATOR_DOT_MIXXX_DOT_ORG_KEY_PASSWORD }}
+        SSH_USER: mixxx
+        UPLOAD_ID: ${{ github.run_id }}
 
     - name: Upload GitHub Actions artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: buildenv-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
-        path: ${{ matrix.vcpkg_path }}/buildenv-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}.zip
+        name: mixxx-dependencies-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
+        path: ${{ matrix.vcpkg_path }}/mixxx-dependencies-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}.zip
