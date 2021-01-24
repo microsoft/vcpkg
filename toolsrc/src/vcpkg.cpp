@@ -210,13 +210,16 @@ int main(const int argc, const char* const* const argv)
 
     load_config(fs);
 
-#if (defined(__aarch64__) || defined(__arm__) || defined(__s390x__) || defined(_M_ARM) || defined(_M_ARM64)) &&        \
+#if (defined(__aarch64__) || defined(__arm__) || defined(__s390x__) ||                                                 \
+     ((defined(__ppc64__) || defined(__PPC64__) || defined(__ppc64le__) || defined(__PPC64LE__)) &&                    \
+      defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)) ||                                       \
+     defined(_M_ARM) || defined(_M_ARM64)) &&                                                                          \
     !defined(_WIN32) && !defined(__APPLE__)
     if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
     {
         Checks::exit_with_message(
             VCPKG_LINE_INFO,
-            "Environment variable VCPKG_FORCE_SYSTEM_BINARIES must be set on arm and s390x platforms.");
+            "Environment variable VCPKG_FORCE_SYSTEM_BINARIES must be set on arm, s390x, and ppc64le platforms.");
     }
 #endif
 
