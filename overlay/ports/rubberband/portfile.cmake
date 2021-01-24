@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://github.com/jcelerier/rubberband.git
-    REF 3a9dde33aa7e29cb70a735bb4d3e730f793ebc6c
+    URL https://github.com/be-ing/rubberband.git
+    REF 3abe9d2ce8ada8b1d087cfc9d6f2f5199c727e14
 )
 
 # Find cross-compiler prefix
