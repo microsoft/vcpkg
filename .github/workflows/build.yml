@@ -139,7 +139,7 @@ jobs:
       run: bash .github/deploy.sh mixxx-dependencies-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}.zip
       working-directory: ${{ matrix.vcpkg_path }}
       env:
-        DESTDIR: public_html/downloads/dependencies/${{ runner.os }}
+        DESTDIR: public_html/downloads/dependencies
         OS: ${{ runner.os }}
         SSH_HOST: downloads-hostgator.mixxx.org
         SSH_KEY: .github/downloads-hostgator.mixxx.org.key
