@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/Be-ing/icecast-libshout.git
-    REF d9c605ea73c83c19ae8246e62d183c58299d677f
+    REF 18e169b290a4b6f769af81c9adc55726c9b6c2cf
 )
 
 vcpkg_from_git(
