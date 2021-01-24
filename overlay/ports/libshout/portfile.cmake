@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://github.com/Holzhaus/icecast-libshout.git
-    REF 8a3d405ceda9d27f6f49871f566b685b1db4eff7
+    URL https://github.com/Be-ing/icecast-libshout.git
+    REF d9c605ea73c83c19ae8246e62d183c58299d677f
 )
 
 vcpkg_from_git(
@@ -45,6 +45,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Shout TARGET_PATH share/Shout)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libshout RENAME copyright)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
