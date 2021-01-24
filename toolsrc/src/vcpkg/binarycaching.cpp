@@ -1433,6 +1433,9 @@ void vcpkg::help_topic_binary_caching(const VcpkgPaths&)
              "\n"
              "if the appropriate environment variables are defined and non-empty.\n");
     tbl.blank();
+    tbl.text("NuGet's cache is not used by default. To use it for every nuget-based source, set the environment "
+             "variable `VCPKG_USE_NUGET_CACHE` to `true` (case-insensitive) or `1`.\n");
+    tbl.blank();
     System::print2(tbl.m_str);
     const auto& maybe_cachepath = default_cache_path();
     if (auto p = maybe_cachepath.get())
