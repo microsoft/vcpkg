@@ -175,7 +175,7 @@ endif()
 
 set(STATIC_LINKAGE OFF)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-set(STATIC_LINKAGE ON)
+    set(STATIC_LINKAGE ON)
 endif()
 
 if("avisynthplus" IN_LIST FEATURES)
