@@ -92,7 +92,7 @@ namespace vcpkg
         fs::path scripts;
         fs::path prefab;
         fs::path builtin_ports;
-        fs::path builtin_port_versions;
+        fs::path builtin_registry_versions;
 
         fs::path tools;
         fs::path buildsystems;
@@ -147,6 +147,8 @@ namespace vcpkg
         ///   Valid version strings are "v120", "v140", "v141", and "". Empty string gets the latest.
         /// </remarks>
         const Toolset& get_toolset(const Build::PreBuildInfo& prebuildinfo) const;
+
+        View<Toolset> get_all_toolsets() const;
 
         Files::Filesystem& get_filesystem() const;
 

@@ -103,15 +103,14 @@ namespace vcpkg
         }
 
         const std::string tool_data =
-            StringView::find_exactly_one_enclosed(XML, match_tool_entry[0], "</tool>").to_string();
+            Strings::find_exactly_one_enclosed(XML, match_tool_entry[0].str(), "</tool>").to_string();
         const std::string version_as_string =
-            StringView::find_exactly_one_enclosed(tool_data, "<version>", "</version>").to_string();
+            Strings::find_exactly_one_enclosed(tool_data, "<version>", "</version>").to_string();
         const std::string exe_relative_path =
-            StringView::find_exactly_one_enclosed(tool_data, "<exeRelativePath>", "</exeRelativePath>").to_string();
-        const std::string url = StringView::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
-        const std::string sha512 =
-            StringView::find_exactly_one_enclosed(tool_data, "<sha512>", "</sha512>").to_string();
-        auto archive_name = StringView::find_at_most_one_enclosed(tool_data, "<archiveName>", "</archiveName>");
+            Strings::find_exactly_one_enclosed(tool_data, "<exeRelativePath>", "</exeRelativePath>").to_string();
+        const std::string url = Strings::find_exactly_one_enclosed(tool_data, "<url>", "</url>").to_string();
+        const std::string sha512 = Strings::find_exactly_one_enclosed(tool_data, "<sha512>", "</sha512>").to_string();
+        auto archive_name = Strings::find_at_most_one_enclosed(tool_data, "<archiveName>", "</archiveName>");
 
         const Optional<std::array<int, 3>> version = parse_version_string(version_as_string);
         Checks::check_exit(VCPKG_LINE_INFO,
@@ -185,13 +184,13 @@ namespace vcpkg
     {
         const std::array<int, 3>& version = tool_data.version;
         const std::string version_as_string = Strings::format("%d.%d.%d", version[0], version[1], version[2]);
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !tool_data.url.empty(),
-                           "A suitable version of %s was not found (required v%s) and unable to automatically "
-                           "download a portable one. Please install a newer version of %s.",
-                           tool_name,
-                           version_as_string,
-                           tool_name);
+        Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                    !tool_data.url.empty(),
+                                    "A suitable version of %s was not found (required v%s) and unable to automatically "
+                                    "download a portable one. Please install a newer version of %s.",
+                                    tool_name,
+                                    version_as_string,
+                                    tool_name);
         System::printf("A suitable version of %s was not found (required v%s). Downloading portable %s v%s...\n",
                        tool_name,
                        version_as_string,
@@ -271,7 +270,7 @@ namespace vcpkg
             return fetch_tool(paths, tool, *tool_data);
         }
 
-        Checks::exit_with_message(VCPKG_LINE_INFO, maybe_tool_data.error());
+        Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, maybe_tool_data.error());
     }
 
     struct CMakeProvider : ToolProvider
@@ -311,7 +310,7 @@ cmake version 3.10.2
 
 CMake suite maintained and supported by Kitware (kitware.com/cmake).
                 */
-            return {StringView::find_exactly_one_enclosed(rc.output, "cmake version ", "\n").to_string(),
+            return {Strings::find_exactly_one_enclosed(rc.output, "cmake version ", "\n").to_string(),
                     expected_left_tag};
         }
     };
@@ -385,7 +384,7 @@ Type 'NuGet help <command>' for help on a specific command.
 
 [[[List of available commands follows]]]
                 */
-            return {StringView::find_exactly_one_enclosed(rc.output, "NuGet Version: ", "\n").to_string(),
+            return {Strings::find_exactly_one_enclosed(rc.output, "NuGet Version: ", "\n").to_string(),
                     expected_left_tag};
         }
     };
@@ -602,7 +601,7 @@ Mono JIT compiler version 6.8.0.105 (Debian 6.8.0.105+dfsg-2 Wed Feb 26 23:23:50
                     return {fetch_tool(paths, tool, *p_tool_data), p_tool_data->sha512};
                 }
 
-                Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown or unavailable tool: %s", tool);
+                Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, "Unknown or unavailable tool: %s", tool);
             });
         }
 
