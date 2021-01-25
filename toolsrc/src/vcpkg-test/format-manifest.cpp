@@ -38,7 +38,6 @@ namespace
 #endif // ^^^ !defined(_WIN32)
 
     const auto existing_absolute_path = fs::u8path(existing_absolute);
-    const auto missing_absolute_path = fs::u8path(missing_absolute);
 
     const auto original_cwd = existing_absolute_path / fs::u8path("cwd");
     const auto ports = existing_absolute_path / fs::u8path("ports");
