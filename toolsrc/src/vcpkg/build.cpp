@@ -1134,7 +1134,7 @@ namespace vcpkg::Build
                                       const IBuildLogsRecorder& build_logs_recorder,
                                       const StatusParagraphs& status_db)
     {
-        auto& fs = paths.get_filesystem();
+        auto& filesystem = paths.get_filesystem();
         auto& spec = action.spec;
         const std::string& name = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
                                       .source_control_file->core_paragraph->name;
@@ -1177,7 +1177,6 @@ namespace vcpkg::Build
 
         auto& abi_file = *abi_info.abi_tag_file.get();
 
-        std::error_code ec;
         const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
         const fs::path abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
         if (action.has_package_abi())
@@ -1204,17 +1203,34 @@ namespace vcpkg::Build
         }
 
         ExtendedBuildResult result = do_build_package_and_clean_buildtrees(args, paths, action);
+        build_logs_recorder.record_build_result(paths, spec, result.code);
 
-        fs.create_directories(abi_package_dir, ec);
-        fs.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", fs::u8string(abi_file_in_package));
+        std::error_code ec;
+        filesystem.create_directories(abi_package_dir, ec);
+        if (ec)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      Strings::format("Could not create %s: %s (%d)",
+                                                      fs::u8string(abi_package_dir).c_str(),
+                                                      ec.message().c_str(),
+                                                      ec.value()));
+        }
+
+        filesystem.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
+        if (ec)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      Strings::format("Could not copy %s -> %s: %s (%d)",
+                                                      fs::u8string(abi_file).c_str(),
+                                                      fs::u8string(abi_file_in_package).c_str(),
+                                                      ec.message().c_str(),
+                                                      ec.value()));
+        }
 
         if (action.has_package_abi() && result.code == BuildResult::SUCCEEDED)
         {
             binaries_provider.push_success(paths, action);
         }
-
-        build_logs_recorder.record_build_result(paths, spec, result.code);
 
         return result;
     }
