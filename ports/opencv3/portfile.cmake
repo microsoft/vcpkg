@@ -21,6 +21,7 @@ vcpkg_from_github(
       0004-fix-eigen.patch
       0005-fix-vtk9.patch
       0006-fix-uwp.patch
+      0008-devendor-quirc.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -55,6 +56,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "opengl"   WITH_OPENGL
  "png"      WITH_PNG
  "qt"       WITH_QT
+ "quirc"    WITH_QUIRC
  "sfm"      BUILD_opencv_sfm
  "tiff"     WITH_TIFF
  "vtk"      WITH_VTK

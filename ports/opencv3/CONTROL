@@ -75,6 +75,10 @@ Feature: qt
 Build-Depends: qt5-base[core]
 Description: Qt GUI support for opencv
 
+Feature: quirc
+Build-Depends: quirc
+Description: quirc support for opencv
+
 Feature: sfm
 Build-Depends: opencv3[contrib], eigen3, glog, gflags, ceres
 Description: opencv_sfm module
