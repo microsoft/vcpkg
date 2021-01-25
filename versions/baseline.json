@@ -3010,7 +3010,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 6
+      "port-version": 7
     },
     "libics": {
       "baseline": "1.6.4",
