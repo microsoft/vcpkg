@@ -30,6 +30,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "dynamic-arch"      DYNAMIC_ARCH
 )
 
+if(VCPKG_TARGET_IS_OSX)
+    if("dynamic-arch" IN_LIST FEATURES)
+        set(VCPKG_LIBRARY_LINKAGE dynamic)
+        message(STATUS "using dynamic VCPKG_LIBRARY_LINKAGE for osx target with dynamic-arch feature") 
+    endif()
+endif()
+
 # for UWP version, must build non uwp first for helper
 # binaries.
 if(VCPKG_TARGET_IS_UWP)
@@ -81,7 +88,6 @@ else()
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
             ${COMMON_OPTIONS}
-            -DCMAKE_SYSTEM_PROCESSOR=AMD64
             ${FEATURE_OPTIONS}
             -DNOFORTRAN=ON
             -DBU=_  #required for all blas functions to append extra _ using NAME
