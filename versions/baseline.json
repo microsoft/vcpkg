@@ -3658,7 +3658,7 @@
     },
     "mbedtls": {
       "baseline": "2.24.0",
-      "port-version": 1
+      "port-version": 2
     },
     "mcpp": {
       "baseline": "2.7.2.14",
