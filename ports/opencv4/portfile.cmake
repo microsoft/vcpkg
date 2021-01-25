@@ -19,8 +19,8 @@ vcpkg_from_github(
       0002-install-options.patch
       0003-force-package-requirements.patch
       0004-fix-policy-CMP0057.patch
-      0009-fix-uwp.patch
-      0010-fix-interface_link_libraries.patch # Remove this patch when the next update
+      0005-fix-eigen.patch
+      0006-fix-uwp.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -138,9 +138,6 @@ if("contrib" IN_LIST FEATURES)
     REF ${OPENCV_VERSION}
     SHA512 1ebb9fec53b74039ffa2dc9f00899ab83af615f01156c0454ea7c53161256b6c9fd4548387fbfd197182c2d03db4de8c7170e2877b4648ce92531f821e81fdd7
     HEAD_REF master
-    PATCHES
-      0005-add-missing-stdexcept-include.patch
-      0006-fix-glog-abbreviated-severity.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 

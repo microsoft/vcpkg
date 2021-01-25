@@ -18,8 +18,9 @@ vcpkg_from_github(
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
+      0004-fix-eigen.patch
       0005-fix-vtk9.patch
-      0009-fix-uwp.patch
+      0006-fix-uwp.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -113,8 +114,6 @@ if("contrib" IN_LIST FEATURES)
       REF ${OPENCV_VERSION}
       SHA512 49f0aed8e07a443f354859a16c8de5ceae26560f141721ae4beb0d5fcc5b24b755ee313519e159b1a5b6ba125dcca8584f2a515e0ac96a8c9c36bb11ac6b3375
       HEAD_REF master
-      PATCHES
-        0004-add-missing-stdexcept-include.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
