@@ -53,6 +53,7 @@ endif()
 if(NOT VCPKG_USE_HEAD_VERSION)
     list(REMOVE_ITEM ALL_SUPPORTED_FEATURES anyshaderconverter shadertools shaderconverter
         vk-info)
+    message(WARNING "Features anyshaderconverter, shadertools, shaderconverter and vk-info are not avaliable when building non-head version.")
 endif()
 
 set(_COMPONENTS "")
