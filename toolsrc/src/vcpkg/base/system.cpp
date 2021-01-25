@@ -10,6 +10,15 @@ using namespace vcpkg::System;
 
 namespace vcpkg
 {
+    long System::get_process_id()
+    {
+#ifdef _WIN32
+        return ::_getpid();
+#else
+        return ::getpid();
+#endif
+    }
+
     Optional<CPUArchitecture> System::to_cpu_architecture(StringView arch)
     {
         if (Strings::case_insensitive_ascii_equals(arch, "x86")) return CPUArchitecture::X86;
@@ -18,6 +27,7 @@ namespace vcpkg
         if (Strings::case_insensitive_ascii_equals(arch, "arm")) return CPUArchitecture::ARM;
         if (Strings::case_insensitive_ascii_equals(arch, "arm64")) return CPUArchitecture::ARM64;
         if (Strings::case_insensitive_ascii_equals(arch, "s390x")) return CPUArchitecture::S390X;
+        if (Strings::case_insensitive_ascii_equals(arch, "ppc64le")) return CPUArchitecture::PPC64LE;
         return nullopt;
     }
 
@@ -30,6 +40,7 @@ namespace vcpkg
             case CPUArchitecture::ARM: return "arm";
             case CPUArchitecture::ARM64: return "arm64";
             case CPUArchitecture::S390X: return "s390x";
+            case CPUArchitecture::PPC64LE: return "ppc64le";
             default: Checks::exit_with_message(VCPKG_LINE_INFO, "unexpected vcpkg::System::CPUArchitecture");
         }
     }
@@ -53,6 +64,9 @@ namespace vcpkg
         return CPUArchitecture::ARM64;
 #elif defined(__s390x__)
         return CPUArchitecture::S390X;
+#elif (defined(__ppc64__) || defined(__PPC64__) || defined(__ppc64le__) || defined(__PPC64LE__)) &&                    \
+    defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+        return CPUArchitecture::PPC64LE;
 #else // choose architecture
 #error "Unknown host architecture"
 #endif // choose architecture

@@ -1,38 +1,67 @@
 {
   "name": "ogre",
   "version-string": "1.12.9",
-  "port-version": 3,
+  "port-version": 5,
   "description": "3D Object-Oriented Graphics Rendering Engine",
   "homepage": "https://github.com/OGRECave/ogre",
   "dependencies": [
-    "assimp",
-    "freeimage",
-    "freetype",
-    {
-      "name": "imgui",
-      "features": [
-        "freetype"
-      ]
-    },
     "pugixml",
     "sdl2",
-    "zlib",
+    "zlib"
+  ],
+  "default-features": [
+    "assimp",
+    "freeimage",
+    "overlay",
     "zziplib"
   ],
   "features": {
+    "assimp": {
+      "description": "Use assimp",
+      "dependencies": [
+        "assimp"
+      ]
+    },
     "csharp": {
       "description": "Build csharp bindings"
     },
     "d3d9": {
       "description": "Build Direct3D9 RenderSystem"
     },
+    "freeimage": {
+      "description": "Build with FreeImage support",
+      "dependencies": [
+        "freeimage"
+      ]
+    },
     "java": {
       "description": "Build Java (JNI) bindings"
+    },
+    "overlay": {
+      "description": "Build overlay component",
+      "dependencies": [
+        "freetype",
+        {
+          "name": "imgui",
+          "features": [
+            "freetype"
+          ]
+        }
+      ]
     },
     "python": {
       "description": "Build Python bindings",
       "dependencies": [
         "python3"
+      ]
+    },
+    "strict": {
+      "description": "Force Ogre resource manager to be strict with group names and resource names"
+    },
+    "zziplib": {
+      "description": "Build with zziplib support (GPL)",
+      "dependencies": [
+        "zziplib"
       ]
     }
   }

@@ -198,6 +198,8 @@ else()
             set(_VCPKG_TARGET_TRIPLET_ARCH x64)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
             set(_VCPKG_TARGET_TRIPLET_ARCH s390x)
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "ppc64le")
+            set(_VCPKG_TARGET_TRIPLET_ARCH ppc64le)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "armv7l")
             set(_VCPKG_TARGET_TRIPLET_ARCH arm)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "aarch64")
@@ -384,6 +386,11 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
             endforeach()
         endif()
 
+        if(DEFINED VCPKG_FEATURE_FLAGS OR DEFINED CACHE{VCPKG_FEATURE_FLAGS})
+            list(JOIN VCPKG_FEATURE_FLAGS "," _VCPKG_FEATURE_FLAGS)
+            set(_VCPKG_FEATURE_FLAGS "--feature-flags=${_VCPKG_FEATURE_FLAGS}")
+        endif()
+
         foreach(feature IN LISTS VCPKG_MANIFEST_FEATURES)
             list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-feature=${feature}")
         endforeach()
@@ -405,6 +412,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
                 "--x-wait-for-lock"
                 "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
                 "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+                "${_VCPKG_FEATURE_FLAGS}"
                 ${_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
                 ${VCPKG_INSTALL_OPTIONS}
             OUTPUT_VARIABLE _VCPKG_MANIFEST_INSTALL_LOGTEXT
@@ -422,6 +430,10 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
             set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
                 "${_VCPKG_MANIFEST_DIR}/vcpkg.json"
                 "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
+            if(EXISTS "${_VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
+                set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+                    "${_VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
+            endif()
         else()
             message(STATUS "Running vcpkg install - failed")
             _vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${_VCPKG_MANIFEST_INSTALL_LOGFILE}")

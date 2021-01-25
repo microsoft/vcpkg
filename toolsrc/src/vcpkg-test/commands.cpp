@@ -32,9 +32,9 @@ TEST_CASE ("get_available_basic_commands works", "[commands]")
     check_all_commands(Commands::get_available_basic_commands(), {
         "contact",
         "version",
-#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#if defined(_WIN32)
         "x-upload-metrics",
-#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#endif // defined(_WIN32)
         });
 }
 
@@ -60,6 +60,8 @@ TEST_CASE ("get_available_paths_commands works", "[commands]")
         "x-history",
         "x-package-info",
         "x-vsinstances",
+        "x-ci-verify-versions",
+        "x-add-version",
         });
 }
 

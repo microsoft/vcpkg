@@ -162,7 +162,7 @@ namespace vcpkg::Export
         fs.write_contents(nuspec_file_path, nuspec_file_content, VCPKG_LINE_INFO);
 
         // -NoDefaultExcludes is needed for ".vcpkg-root"
-        System::CmdLineBuilder cmd;
+        System::Command cmd;
 #ifndef _WIN32
         cmd.path_arg(paths.get_tool_exe(Tools::MONO));
 #endif
@@ -173,8 +173,7 @@ namespace vcpkg::Export
             .path_arg(output_dir)
             .string_arg("-NoDefaultExcludes");
 
-        const int exit_code =
-            System::cmd_execute_and_capture_output(cmd.extract(), System::get_clean_environment()).exit_code;
+        const int exit_code = System::cmd_execute_and_capture_output(cmd, System::get_clean_environment()).exit_code;
         Checks::check_exit(VCPKG_LINE_INFO, exit_code == 0, "Error: NuGet package creation failed");
 
         const fs::path output_path = output_dir / (nuget_id + "." + nuget_version + ".nupkg");
@@ -224,9 +223,7 @@ namespace vcpkg::Export
             Strings::format("%s.%s", exported_dir_filename, format.extension());
         const fs::path exported_archive_path = (output_dir / exported_archive_filename);
 
-        System::CmdLineBuilder cmd;
-        cmd.string_arg("cd").path_arg(raw_exported_dir.parent_path());
-        cmd.ampersand();
+        System::Command cmd;
         cmd.path_arg(cmake_exe)
             .string_arg("-E")
             .string_arg("tar")
@@ -236,14 +233,8 @@ namespace vcpkg::Export
             .string_arg("--")
             .path_arg(raw_exported_dir);
 
-        auto cmdline = cmd.extract();
-#ifdef WIN32
-        // Invoke through `cmd` to support `&&`
-        cmdline.insert(0, "cmd /c \"");
-        cmdline.push_back('"');
-#endif
-
-        const int exit_code = System::cmd_execute_clean(cmdline);
+        const int exit_code =
+            System::cmd_execute_clean(cmd, System::InWorkingDirectory{raw_exported_dir.parent_path()});
         Checks::check_exit(
             VCPKG_LINE_INFO, exit_code == 0, "Error: %s creation failed", exported_archive_path.generic_string());
         return exported_archive_path;
@@ -625,7 +616,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
     {
         if (paths.manifest_mode_enabled())
         {
-            Checks::exit_with_message(
+            Checks::exit_maybe_upgrade(
                 VCPKG_LINE_INFO,
                 "vcpkg export does not support manifest mode, in order to allow for future design considerations. You "
                 "may use export in classic mode by running vcpkg outside of a manifest-based project.");
