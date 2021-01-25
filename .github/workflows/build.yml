@@ -115,8 +115,8 @@ jobs:
         VCPKG_OVERLAY_PORTS: overlay/ports
         VCPKG_BINARY_SOURCES: ${{ env.VCPKG_BINARY_SOURCES }}
 
-    - name: Upload GitHub Actions artifacts of failed build
-      if: failure()
+    - name: Upload GitHub Actions artifacts of build logs
+      if: always()
       uses: actions/upload-artifact@v2
       with:
         name: logs-${{ matrix.os }}
