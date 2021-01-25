@@ -11,6 +11,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     PATCHES
        mark-threads-private.patch
+       precxx11.patch
 )
 
 vcpkg_configure_cmake(
