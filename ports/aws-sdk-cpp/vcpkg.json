@@ -1,0 +1,557 @@
+{
+  "name": "aws-sdk-cpp",
+  "version": "1.8.126",
+  "port-version": 6,
+  "description": "AWS SDK for C++",
+  "homepage": "https://github.com/aws/aws-sdk-cpp",
+  "dependencies": [
+    "aws-c-event-stream",
+    {
+      "name": "curl",
+      "platform": "!uwp & !windows"
+    },
+    {
+      "name": "openssl",
+      "platform": "!uwp & !windows"
+    },
+    "zlib"
+  ],
+  "default-features": [
+    "dynamodb",
+    "kinesis",
+    "s3"
+  ],
+  "features": {
+    "access-management": {
+      "description": "C++ SDK for the AWS access-management service"
+    },
+    "acm": {
+      "description": "C++ SDK for the AWS acm service"
+    },
+    "acm-pca": {
+      "description": "C++ SDK for the AWS acm-pca service"
+    },
+    "alexaforbusiness": {
+      "description": "C++ SDK for the AWS alexaforbusiness service"
+    },
+    "amplify": {
+      "description": "C++ SDK for the AWS amplify service"
+    },
+    "apigateway": {
+      "description": "C++ SDK for the AWS apigateway service"
+    },
+    "apigatewaymanagementapi": {
+      "description": "C++ SDK for the AWS apigatewaymanagementapi service"
+    },
+    "apigatewayv2": {
+      "description": "C++ SDK for the AWS apigatewayv2 service"
+    },
+    "application-autoscaling": {
+      "description": "C++ SDK for the AWS application-autoscaling service"
+    },
+    "appmesh": {
+      "description": "C++ SDK for the AWS appmesh service"
+    },
+    "appstream": {
+      "description": "C++ SDK for the AWS appstream service"
+    },
+    "appsync": {
+      "description": "C++ SDK for the AWS appsync service"
+    },
+    "athena": {
+      "description": "C++ SDK for the AWS athena service"
+    },
+    "autoscaling": {
+      "description": "C++ SDK for the AWS autoscaling service"
+    },
+    "autoscaling-plans": {
+      "description": "C++ SDK for the AWS autoscaling-plans service"
+    },
+    "awsmigrationhub": {
+      "description": "C++ SDK for the AWS AWSMigrationHub service"
+    },
+    "awstransfer": {
+      "description": "C++ SDK for the AWS awstransfer service"
+    },
+    "backup": {
+      "description": "C++ SDK for the AWS backup service"
+    },
+    "batch": {
+      "description": "C++ SDK for the AWS batch service"
+    },
+    "budgets": {
+      "description": "C++ SDK for the AWS budgets service"
+    },
+    "ce": {
+      "description": "C++ SDK for the AWS ce service"
+    },
+    "chime": {
+      "description": "C++ SDK for the AWS chime service"
+    },
+    "cloud9": {
+      "description": "C++ SDK for the AWS cloud9 service"
+    },
+    "clouddirectory": {
+      "description": "C++ SDK for the AWS clouddirectory service"
+    },
+    "cloudformation": {
+      "description": "C++ SDK for the AWS cloudformation service"
+    },
+    "cloudfront": {
+      "description": "C++ SDK for the AWS cloudfront service"
+    },
+    "cloudhsm": {
+      "description": "C++ SDK for the AWS cloudhsm service"
+    },
+    "cloudhsmv2": {
+      "description": "C++ SDK for the AWS cloudhsmv2 service"
+    },
+    "cloudsearch": {
+      "description": "C++ SDK for the AWS cloudsearch service"
+    },
+    "cloudsearchdomain": {
+      "description": "C++ SDK for the AWS cloudsearchdomain service"
+    },
+    "cloudtrail": {
+      "description": "C++ SDK for the AWS cloudtrail service"
+    },
+    "codebuild": {
+      "description": "C++ SDK for the AWS codebuild service"
+    },
+    "codecommit": {
+      "description": "C++ SDK for the AWS codecommit service"
+    },
+    "codedeploy": {
+      "description": "C++ SDK for the AWS codedeploy service"
+    },
+    "codepipeline": {
+      "description": "C++ SDK for the AWS codepipeline service"
+    },
+    "codestar": {
+      "description": "C++ SDK for the AWS codestar service"
+    },
+    "cognito-identity": {
+      "description": "C++ SDK for the AWS cognito-identity service"
+    },
+    "cognito-idp": {
+      "description": "C++ SDK for the AWS cognito-idp service"
+    },
+    "cognito-sync": {
+      "description": "C++ SDK for the AWS cognito-sync service"
+    },
+    "comprehend": {
+      "description": "C++ SDK for the AWS comprehend service"
+    },
+    "comprehendmedical": {
+      "description": "C++ SDK for the AWS comprehendmedical service"
+    },
+    "config": {
+      "description": "C++ SDK for the AWS config service"
+    },
+    "connect": {
+      "description": "C++ SDK for the AWS connect service"
+    },
+    "cur": {
+      "description": "C++ SDK for the AWS cur service"
+    },
+    "datapipeline": {
+      "description": "C++ SDK for the AWS datapipeline service"
+    },
+    "datasync": {
+      "description": "C++ SDK for the AWS datasync service"
+    },
+    "dax": {
+      "description": "C++ SDK for the AWS dax service"
+    },
+    "devicefarm": {
+      "description": "C++ SDK for the AWS devicefarm service"
+    },
+    "directconnect": {
+      "description": "C++ SDK for the AWS directconnect service"
+    },
+    "discovery": {
+      "description": "C++ SDK for the AWS discovery service"
+    },
+    "dlm": {
+      "description": "C++ SDK for the AWS dlm service"
+    },
+    "dms": {
+      "description": "C++ SDK for the AWS dms service"
+    },
+    "docdb": {
+      "description": "C++ SDK for the AWS docdb service"
+    },
+    "ds": {
+      "description": "C++ SDK for the AWS ds service"
+    },
+    "dynamodb": {
+      "description": "C++ SDK for the AWS dynamodb service"
+    },
+    "dynamodbstreams": {
+      "description": "C++ SDK for the AWS dynamodbstreams service"
+    },
+    "ec2": {
+      "description": "C++ SDK for the AWS ec2 service"
+    },
+    "ecr": {
+      "description": "C++ SDK for the AWS ecr service"
+    },
+    "ecs": {
+      "description": "C++ SDK for the AWS ecs service"
+    },
+    "eks": {
+      "description": "C++ SDK for the AWS eks service"
+    },
+    "elasticache": {
+      "description": "C++ SDK for the AWS elasticache service"
+    },
+    "elasticbeanstalk": {
+      "description": "C++ SDK for the AWS elasticbeanstalk service"
+    },
+    "elasticfilesystem": {
+      "description": "C++ SDK for the AWS elasticfilesystem service"
+    },
+    "elasticloadbalancing": {
+      "description": "C++ SDK for the AWS elasticloadbalancing service"
+    },
+    "elasticloadbalancingv2": {
+      "description": "C++ SDK for the AWS elasticloadbalancingv2 service"
+    },
+    "elasticmapreduce": {
+      "description": "C++ SDK for the AWS elasticmapreduce service"
+    },
+    "elastictranscoder": {
+      "description": "C++ SDK for the AWS elastictranscoder service"
+    },
+    "email": {
+      "description": "C++ SDK for the AWS email service"
+    },
+    "es": {
+      "description": "C++ SDK for the AWS es service"
+    },
+    "events": {
+      "description": "C++ SDK for the AWS events service"
+    },
+    "firehose": {
+      "description": "C++ SDK for the AWS firehose service"
+    },
+    "fms": {
+      "description": "C++ SDK for the AWS fms service"
+    },
+    "fsx": {
+      "description": "C++ SDK for the AWS fsx service"
+    },
+    "gamelift": {
+      "description": "C++ SDK for the AWS gamelift service"
+    },
+    "glacier": {
+      "description": "C++ SDK for the AWS glacier service"
+    },
+    "globalaccelerator": {
+      "description": "C++ SDK for the AWS globalaccelerator service"
+    },
+    "glue": {
+      "description": "C++ SDK for the AWS glue service"
+    },
+    "greengrass": {
+      "description": "C++ SDK for the AWS greengrass service"
+    },
+    "guardduty": {
+      "description": "C++ SDK for the AWS guardduty service"
+    },
+    "health": {
+      "description": "C++ SDK for the AWS health service"
+    },
+    "iam": {
+      "description": "C++ SDK for the AWS iam service"
+    },
+    "identity-management": {
+      "description": "C++ SDK for the AWS identity-management service"
+    },
+    "importexport": {
+      "description": "C++ SDK for the AWS importexport service"
+    },
+    "inspector": {
+      "description": "C++ SDK for the AWS inspector service"
+    },
+    "iot": {
+      "description": "C++ SDK for the AWS iot service"
+    },
+    "iot-data": {
+      "description": "C++ SDK for the AWS iot-data service"
+    },
+    "iot-jobs-data": {
+      "description": "C++ SDK for the AWS iot-jobs-data service"
+    },
+    "iot1click-devices": {
+      "description": "C++ SDK for the AWS iot1click-devices service"
+    },
+    "iot1click-projects": {
+      "description": "C++ SDK for the AWS iot1click-projects service"
+    },
+    "iotanalytics": {
+      "description": "C++ SDK for the AWS iotanalytics service"
+    },
+    "kafka": {
+      "description": "C++ SDK for the AWS kafka service"
+    },
+    "kinesis": {
+      "description": "C++ SDK for the AWS kinesis service"
+    },
+    "kinesis-video-archived-media": {
+      "description": "C++ SDK for the AWS kinesis-video-archived-media service"
+    },
+    "kinesis-video-media": {
+      "description": "C++ SDK for the AWS kinesis-video-media service"
+    },
+    "kinesisanalytics": {
+      "description": "C++ SDK for the AWS kinesisanalytics service"
+    },
+    "kinesisanalyticsv2": {
+      "description": "C++ SDK for the AWS kinesisanalyticsv2 service"
+    },
+    "kinesisvideo": {
+      "description": "C++ SDK for the AWS kinesisvideo service"
+    },
+    "kms": {
+      "description": "C++ SDK for the AWS kms service"
+    },
+    "lambda": {
+      "description": "C++ SDK for the AWS lambda service"
+    },
+    "lex": {
+      "description": "C++ SDK for the AWS lex service"
+    },
+    "lex-models": {
+      "description": "C++ SDK for the AWS lex-models service"
+    },
+    "license-manager": {
+      "description": "C++ SDK for the AWS license-manager service"
+    },
+    "lightsail": {
+      "description": "C++ SDK for the AWS lightsail service"
+    },
+    "logs": {
+      "description": "C++ SDK for the AWS logs service"
+    },
+    "machinelearning": {
+      "description": "C++ SDK for the AWS machinelearning service"
+    },
+    "macie": {
+      "description": "C++ SDK for the AWS macie service"
+    },
+    "marketplace-entitlement": {
+      "description": "C++ SDK for the AWS marketplace-entitlement service"
+    },
+    "marketplacecommerceanalytics": {
+      "description": "C++ SDK for the AWS marketplacecommerceanalytics service"
+    },
+    "mediaconnect": {
+      "description": "C++ SDK for the AWS mediaconnect service"
+    },
+    "mediaconvert": {
+      "description": "C++ SDK for the AWS mediaconvert service"
+    },
+    "medialive": {
+      "description": "C++ SDK for the AWS medialive service"
+    },
+    "mediapackage": {
+      "description": "C++ SDK for the AWS mediapackage service"
+    },
+    "mediastore": {
+      "description": "C++ SDK for the AWS mediastore service"
+    },
+    "mediastore-data": {
+      "description": "C++ SDK for the AWS mediastore-data service"
+    },
+    "mediatailor": {
+      "description": "C++ SDK for the AWS mediatailor service"
+    },
+    "meteringmarketplace": {
+      "description": "C++ SDK for the AWS meteringmarketplace service"
+    },
+    "mobile": {
+      "description": "C++ SDK for the AWS mobile service"
+    },
+    "mobileanalytics": {
+      "description": "C++ SDK for the AWS mobileanalytics service"
+    },
+    "monitoring": {
+      "description": "C++ SDK for the AWS monitoring service"
+    },
+    "mq": {
+      "description": "C++ SDK for the AWS mq service"
+    },
+    "mturk-requester": {
+      "description": "C++ SDK for the AWS mturk-requester service"
+    },
+    "neptune": {
+      "description": "C++ SDK for the AWS neptune service"
+    },
+    "opsworks": {
+      "description": "C++ SDK for the AWS opsworks service"
+    },
+    "opsworkscm": {
+      "description": "C++ SDK for the AWS opsworkscm service"
+    },
+    "organizations": {
+      "description": "C++ SDK for the AWS organizations service"
+    },
+    "pi": {
+      "description": "C++ SDK for the AWS pi service"
+    },
+    "pinpoint": {
+      "description": "C++ SDK for the AWS pinpoint service"
+    },
+    "pinpoint-email": {
+      "description": "C++ SDK for the AWS pinpoint-email service"
+    },
+    "polly": {
+      "description": "C++ SDK for the AWS polly service"
+    },
+    "pricing": {
+      "description": "C++ SDK for the AWS pricing service"
+    },
+    "queues": {
+      "description": "C++ SDK for the AWS queues service"
+    },
+    "quicksight": {
+      "description": "C++ SDK for the AWS quicksight service"
+    },
+    "ram": {
+      "description": "C++ SDK for the AWS ram service"
+    },
+    "rds": {
+      "description": "C++ SDK for the AWS rds service"
+    },
+    "rds-data": {
+      "description": "C++ SDK for the AWS rds-data service"
+    },
+    "redshift": {
+      "description": "C++ SDK for the AWS redshift service"
+    },
+    "rekognition": {
+      "description": "C++ SDK for the AWS rekognition service"
+    },
+    "resource-groups": {
+      "description": "C++ SDK for the AWS resource-groups service"
+    },
+    "resourcegroupstaggingapi": {
+      "description": "C++ SDK for the AWS resourcegroupstaggingapi service"
+    },
+    "robomaker": {
+      "description": "C++ SDK for the AWS robomaker service"
+    },
+    "route53": {
+      "description": "C++ SDK for the AWS route53 service"
+    },
+    "route53domains": {
+      "description": "C++ SDK for the AWS route53domains service"
+    },
+    "route53resolver": {
+      "description": "C++ SDK for the AWS route53resolver service"
+    },
+    "s3": {
+      "description": "C++ SDK for the AWS s3 service"
+    },
+    "s3-encryption": {
+      "description": "C++ SDK for the AWS s3-encryption service"
+    },
+    "s3control": {
+      "description": "C++ SDK for the AWS s3control service"
+    },
+    "sagemaker": {
+      "description": "C++ SDK for the AWS sagemaker service"
+    },
+    "sagemaker-runtime": {
+      "description": "C++ SDK for the AWS sagemaker-runtime service"
+    },
+    "sdb": {
+      "description": "C++ SDK for the AWS sdb service"
+    },
+    "secretsmanager": {
+      "description": "C++ SDK for the AWS secretsmanager service"
+    },
+    "securityhub": {
+      "description": "C++ SDK for the AWS securityhub service"
+    },
+    "serverlessrepo": {
+      "description": "C++ SDK for the AWS serverlessrepo service"
+    },
+    "servicecatalog": {
+      "description": "C++ SDK for the AWS servicecatalog service"
+    },
+    "servicediscovery": {
+      "description": "C++ SDK for the AWS servicediscovery service"
+    },
+    "shield": {
+      "description": "C++ SDK for the AWS shield service"
+    },
+    "signer": {
+      "description": "C++ SDK for the AWS signer service"
+    },
+    "sms": {
+      "description": "C++ SDK for the AWS sms service"
+    },
+    "sms-voice": {
+      "description": "C++ SDK for the AWS sms-voice service"
+    },
+    "snowball": {
+      "description": "C++ SDK for the AWS snowball service"
+    },
+    "sns": {
+      "description": "C++ SDK for the AWS sns service"
+    },
+    "sqs": {
+      "description": "C++ SDK for the AWS sqs service"
+    },
+    "ssm": {
+      "description": "C++ SDK for the AWS ssm service"
+    },
+    "states": {
+      "description": "C++ SDK for the AWS states service"
+    },
+    "storagegateway": {
+      "description": "C++ SDK for the AWS storagegateway service"
+    },
+    "sts": {
+      "description": "C++ SDK for the AWS sts service"
+    },
+    "support": {
+      "description": "C++ SDK for the AWS support service"
+    },
+    "swf": {
+      "description": "C++ SDK for the AWS swf service"
+    },
+    "text-to-speech": {
+      "description": "C++ SDK for the AWS text-to-speech service"
+    },
+    "transcribe": {
+      "description": "C++ SDK for the AWS transcribe service"
+    },
+    "transfer": {
+      "description": "C++ SDK for the AWS transfer service"
+    },
+    "translate": {
+      "description": "C++ SDK for the AWS translate service"
+    },
+    "waf": {
+      "description": "C++ SDK for the AWS waf service"
+    },
+    "waf-regional": {
+      "description": "C++ SDK for the AWS waf-regional service"
+    },
+    "workdocs": {
+      "description": "C++ SDK for the AWS workdocs service"
+    },
+    "workmail": {
+      "description": "C++ SDK for the AWS workmail service"
+    },
+    "workspaces": {
+      "description": "C++ SDK for the AWS workspaces service"
+    },
+    "xray": {
+      "description": "C++ SDK for the AWS xray service"
+    }
+  }
+}

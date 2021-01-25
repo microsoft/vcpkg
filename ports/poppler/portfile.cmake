@@ -8,6 +8,7 @@ vcpkg_from_github(
         0001-remove-CMAKE_CXX_STANDARD.patch
         0002-remove-test-subdirectory.patch
         0003-fix-gperf-not-recognized.patch
+        0004-disable-clang-format.patch
 )
 
 vcpkg_find_acquire_program(GPERF)
