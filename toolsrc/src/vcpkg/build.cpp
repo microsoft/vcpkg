@@ -1210,21 +1210,21 @@ namespace vcpkg::Build
         if (ec)
         {
             Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      Strings::format("Could not create %s: %d %s",
+                                      Strings::format("Could not create %s: %s (%d)",
                                                       fs::u8string(abi_package_dir).c_str(),
-                                                      ec.value(),
-                                                      ec.message().c_str()));
+                                                      ec.message().c_str(),
+                                                      ec.value()));
         }
 
         filesystem.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
         if (ec)
         {
             Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      Strings::format("Could not copy %s -> %s: %d %s",
+                                      Strings::format("Could not copy %s -> %s: %s (%d)",
                                                       fs::u8string(abi_file).c_str(),
                                                       fs::u8string(abi_file_in_package).c_str(),
-                                                      ec.value(),
-                                                      ec.message().c_str()));
+                                                      ec.message().c_str(),
+                                                      ec.value()));
         }
 
         if (action.has_package_abi() && result.code == BuildResult::SUCCEEDED)
