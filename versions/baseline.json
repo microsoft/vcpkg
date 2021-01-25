@@ -3693,7 +3693,7 @@
       "port-version": 7
     },
     "metrohash": {
-      "baseline": "v1.1.3",
+      "baseline": "1.1.3",
       "port-version": 2
     },
     "mgnlibs": {
