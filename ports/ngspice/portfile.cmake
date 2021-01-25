@@ -8,9 +8,9 @@ set(VCPKG_CRT_LINKAGE static)
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ngspice/ng-spice-rework
-    REF 32
-    FILENAME "ngspice-32.tar.gz"
-    SHA512 222eaa0cd6577a6eb8454bb49a7050a162d430c4b07a4fdc6baf350c5b3f5b018bac640fd44f465ec09c8cba6a9729b1cbe8d3d8c097f672acc2c22fabe8f4bc
+    REF 33
+    FILENAME "ngspice-33.tar.gz"
+    SHA512 895e39f7de185df18bf443a9fa5691cdb3bf0a5091d9860d20ccb02254ef396a4cca5a1c8bf4ba19a03783fc89bb86649218cee977b0fe4565d3c84548943c09
     PATCHES
         use-winbison-global.patch
 )
