@@ -155,8 +155,6 @@ crashpad:arm-uwp=fail
 crashpad:x64-linux=fail
 crashpad:x64-uwp=fail
 crashpad:x86-windows=fail
-crfsuite:arm-uwp=fail
-crfsuite:x64-uwp=fail
 crossguid:x64-osx=fail
 ctemplate:arm64-windows=fail
 ctemplate:arm-uwp=fail
@@ -368,7 +366,7 @@ gdal:x64-windows-static-md=fail
 geos:arm-uwp=fail
 geos:x64-uwp=fail
 
-# Port geotrans source ftp://ftp.nga.mil server 
+# Port geotrans source ftp://ftp.nga.mil server
 # extremely slow may take several hours to download
 geotrans:x64-linux           = skip
 geotrans:x64-windows         = skip
@@ -821,9 +819,6 @@ libwandio:arm64-windows=fail
 libwandio:arm-uwp=fail
 libxmp-lite:x64-linux=fail
 libxmp-lite:x64-osx=fail
-libxslt:arm-uwp=fail
-libxslt:x64-osx=fail
-libxslt:x64-uwp=fail
 libyuv:arm-uwp=fail
 libyuv:x64-uwp=fail
 licensepp:arm-uwp=fail
@@ -895,9 +890,9 @@ memorymodule:arm-uwp=fail
 memorymodule:x64-linux=fail
 memorymodule:x64-osx=fail
 memorymodule:x64-uwp=fail
-# Due to static crt. 
+# Due to static crt.
 mesa:x64-windows-static=fail
-# Missing dependent libraries. 
+# Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
 meschach:arm-uwp=fail
@@ -1138,8 +1133,6 @@ opencv3:x64-windows        = skip
 opencv3:x64-windows-static = skip
 opencv3:x64-windows-static-md=skip
 opencv3:x86-windows        = skip
-opencv4:arm64-windows      = fail
-opencv4:arm-uwp            = fail
 opendnp3:x64-uwp=fail
 opendnp3:arm-uwp=fail
 openexr:arm64-windows=fail
@@ -1201,12 +1194,6 @@ opusfile:arm-uwp=fail
 opusfile:x64-uwp=fail
 orocos-kdl:arm-uwp=fail
 orocos-kdl:x64-uwp=fail
-osgearth:x64-linux=fail
-osgearth:x64-osx=fail
-osgearth:x64-windows-static=fail
-osgearth:x64-windows-static-md=fail
-osgearth:x64-windows=fail
-osgearth:x86-windows=fail
 paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
 pangomm:x64-osx=fail
@@ -1234,7 +1221,6 @@ pfring:x64-osx=fail
 # pfring on Linux currently fails because its build scripts enable warnings as
 # errors, and warnings trigger with the Linux kernel headers in the Azure images.
 pfring:x64-linux=fail
-physfs:arm64-windows=fail
 physx:arm64-windows=fail
 piex:x64-osx=fail
 pistache:arm64-windows=fail
@@ -1811,7 +1797,6 @@ open62541:x64-windows-static-md=fail
 pngpp:x64-windows-static-md=fail
 portmidi:x64-windows-static-md=fail
 pthreads:x64-windows-static-md=fail
-qt5-tools:x64-windows-static-md=fail
 quantlib:x64-windows-static-md=fail
 readosm:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail

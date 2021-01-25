@@ -15,7 +15,7 @@ TEST_CASE ("VcpkgCmdArguments from lowercase argument sequence", "[arguments]")
                                   "C:\\vcpkg",
                                   "--x-scripts-root=C:\\scripts",
                                   "--x-builtin-ports-root=C:\\ports",
-                                  "--x-builtin-port-versions-dir=C:\\port_versions",
+                                  "--x-builtin-registry-versions-dir=C:\\versions",
                                   "--debug",
                                   "--sendmetrics",
                                   "--printmetrics",
@@ -28,7 +28,7 @@ TEST_CASE ("VcpkgCmdArguments from lowercase argument sequence", "[arguments]")
     REQUIRE(*v.vcpkg_root_dir == "C:\\vcpkg");
     REQUIRE(*v.scripts_root_dir == "C:\\scripts");
     REQUIRE(*v.builtin_ports_root_dir == "C:\\ports");
-    REQUIRE(*v.builtin_port_versions_dir == "C:\\port_versions");
+    REQUIRE(*v.builtin_registry_versions_dir == "C:\\versions");
     REQUIRE(v.debug);
     REQUIRE(*v.debug.get());
     REQUIRE(v.send_metrics);
@@ -51,7 +51,7 @@ TEST_CASE ("VcpkgCmdArguments from uppercase argument sequence", "[arguments]")
                                   "C:\\vcpkg",
                                   "--X-SCRIPTS-ROOT=C:\\scripts",
                                   "--X-BUILTIN-PORTS-ROOT=C:\\ports",
-                                  "--X-BUILTIN-PORT-VERSIONS-DIR=C:\\port_versions",
+                                  "--X-BUILTIN-REGISTRY-VERSIONS-DIR=C:\\versions",
                                   "--DEBUG",
                                   "--SENDMETRICS",
                                   "--PRINTMETRICS",
@@ -64,7 +64,7 @@ TEST_CASE ("VcpkgCmdArguments from uppercase argument sequence", "[arguments]")
     REQUIRE(*v.vcpkg_root_dir == "C:\\vcpkg");
     REQUIRE(*v.scripts_root_dir == "C:\\scripts");
     REQUIRE(*v.builtin_ports_root_dir == "C:\\ports");
-    REQUIRE(*v.builtin_port_versions_dir == "C:\\port_versions");
+    REQUIRE(*v.builtin_registry_versions_dir == "C:\\versions");
     REQUIRE(v.debug);
     REQUIRE(*v.debug.get());
     REQUIRE(v.send_metrics);

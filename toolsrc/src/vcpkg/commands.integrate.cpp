@@ -597,7 +597,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         }
 #endif
 
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown parameter %s for integrate", args.command_arguments[0]);
+        Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, "Unknown parameter %s for integrate", args.command_arguments[0]);
     }
 
     void IntegrateCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const
