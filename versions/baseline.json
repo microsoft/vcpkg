@@ -1110,7 +1110,7 @@
     },
     "ceres": {
       "baseline": "2.0.0",
-      "port-version": 2
+      "port-version": 3
     },
     "cfitsio": {
       "baseline": "3.49",
@@ -1513,8 +1513,8 @@
       "port-version": 0
     },
     "darknet": {
-      "baseline": "2020-08-30",
-      "port-version": 2
+      "baseline": "2021-01-21",
+      "port-version": 0
     },
     "darts-clone": {
       "baseline": "1767ab87cffe-1",
@@ -1531,6 +1531,10 @@
     "date": {
       "baseline": "3.0.0",
       "port-version": 1
+    },
+    "dav1d": {
+      "baseline": "0.8.1",
+      "port-version": 0
     },
     "dbg-macro": {
       "baseline": "2019-07-11",
@@ -1982,7 +1986,7 @@
     },
     "freeimage": {
       "baseline": "3.18.0",
-      "port-version": 18
+      "port-version": 19
     },
     "freeopcua": {
       "baseline": "20190125-3",
@@ -2046,6 +2050,10 @@
     },
     "gamedev-framework": {
       "baseline": "0.18.1",
+      "port-version": 0
+    },
+    "gamenetworkingsockets": {
+      "baseline": "2020-09-02",
       "port-version": 0
     },
     "gamma": {
@@ -2201,8 +2209,8 @@
       "port-version": 0
     },
     "gmp": {
-      "baseline": "6.2.1-2",
-      "port-version": 0
+      "baseline": "6.2.1",
+      "port-version": 3
     },
     "google-cloud-cpp": {
       "baseline": "1.23.0",
@@ -2317,8 +2325,8 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "2.7.2",
-      "port-version": 1
+      "baseline": "2.7.4",
+      "port-version": 0
     },
     "hayai": {
       "baseline": "2019-08-10",
@@ -3006,7 +3014,7 @@
     },
     "libiconv": {
       "baseline": "1.16",
-      "port-version": 6
+      "port-version": 7
     },
     "libics": {
       "baseline": "1.6.4",
@@ -3346,7 +3354,7 @@
     },
     "libssh": {
       "baseline": "0.9.5",
-      "port-version": 0
+      "port-version": 1
     },
     "libssh2": {
       "baseline": "1.9.0",
@@ -3478,7 +3486,7 @@
     },
     "libxslt": {
       "baseline": "1.1.33",
-      "port-version": 8
+      "port-version": 9
     },
     "libyaml": {
       "baseline": "0.2.5",
@@ -3589,8 +3597,8 @@
       "port-version": 0
     },
     "lzo": {
-      "baseline": "2.10-5",
-      "port-version": 0
+      "baseline": "2.10",
+      "port-version": 6
     },
     "lzokay": {
       "baseline": "2020-07-30",
@@ -3654,7 +3662,7 @@
     },
     "mbedtls": {
       "baseline": "2.24.0",
-      "port-version": 1
+      "port-version": 2
     },
     "mcpp": {
       "baseline": "2.7.2.14",
@@ -3832,8 +3840,12 @@
       "baseline": "1.4.0",
       "port-version": 0
     },
+    "mpc": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "mpfr": {
-      "baseline": "4.0.2-2",
+      "baseline": "4.1.0",
       "port-version": 0
     },
     "mpg123": {
@@ -3858,6 +3870,10 @@
     },
     "ms-angle": {
       "baseline": "alias",
+      "port-version": 0
+    },
+    "ms-gltf": {
+      "baseline": "r1.9.5.0",
       "port-version": 0
     },
     "ms-gsl": {
@@ -4001,8 +4017,8 @@
       "port-version": 0
     },
     "ngspice": {
-      "baseline": "32",
-      "port-version": 1
+      "baseline": "33",
+      "port-version": 0
     },
     "nifticlib": {
       "baseline": "2020-04-30",
@@ -4142,7 +4158,7 @@
     },
     "ogre": {
       "baseline": "1.12.9",
-      "port-version": 4
+      "port-version": 5
     },
     "ogre-next": {
       "baseline": "2019-10-20-1",
@@ -4217,12 +4233,12 @@
       "port-version": 5
     },
     "opencv3": {
-      "baseline": "3.4.10",
-      "port-version": 5
+      "baseline": "3.4.12",
+      "port-version": 0
     },
     "opencv4": {
-      "baseline": "4.3.0",
-      "port-version": 5
+      "baseline": "4.5.0",
+      "port-version": 0
     },
     "opendnp3": {
       "baseline": "3.1.0",
@@ -4242,7 +4258,7 @@
     },
     "openigtlink": {
       "baseline": "3.0",
-      "port-version": 0
+      "port-version": 1
     },
     "openimageio": {
       "baseline": "2.2.10.0",
@@ -4394,7 +4410,7 @@
     },
     "pango": {
       "baseline": "1.40.11",
-      "port-version": 8
+      "port-version": 9
     },
     "pangolin": {
       "baseline": "0.5",
@@ -5194,7 +5210,7 @@
     },
     "sdl2": {
       "baseline": "2.0.14",
-      "port-version": 0
+      "port-version": 1
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -5570,7 +5586,7 @@
     },
     "suitesparse": {
       "baseline": "5.8.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sundials": {
       "baseline": "5.5.0",
@@ -5698,7 +5714,7 @@
     },
     "tiff": {
       "baseline": "4.1.0",
-      "port-version": 0
+      "port-version": 1
     },
     "tinkerforge": {
       "baseline": "2.1.25",
@@ -5833,7 +5849,7 @@
       "port-version": 0
     },
     "trantor": {
-      "baseline": "1.1.1",
+      "baseline": "1.2.0",
       "port-version": 0
     },
     "tre": {
@@ -6038,7 +6054,7 @@
     },
     "vtk": {
       "baseline": "9.0.1",
-      "port-version": 3
+      "port-version": 4
     },
     "vtk-dicom": {
       "baseline": "0.8.12-1",

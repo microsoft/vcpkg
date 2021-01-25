@@ -6,13 +6,13 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-set(OPENCV_VERSION "3.4.10")
+set(OPENCV_VERSION "3.4.12")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 7ccdc7fef26436b2f643cce2a13c9f9f77e56d3fd0340117419df3c1665ca12416277b626cce3c056fdc14899805bbe9ece391f11d28c6adea716d47ce8894bc
+    SHA512 e69ff4869a8128b7d2a0537d198ec7f287fb821a8965df26339bec662da1888860941f50a269db7693309b9861f986c219288bb5856de76a6c7bc4c0a7026bee
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -21,6 +21,16 @@ vcpkg_from_github(
       0005-fix-vtk9.patch
       0009-fix-uwp.patch
 )
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  set(TARGET_IS_AARCH64 1)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+  set(TARGET_IS_ARM 1)
+elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+  set(TARGET_IS_X86_64 1)
+else()
+  set(TARGET_IS_X86 1)
+endif()
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 
@@ -101,7 +111,7 @@ if("contrib" IN_LIST FEATURES)
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
       REPO opencv/opencv_contrib
       REF ${OPENCV_VERSION}
-      SHA512 70b4ecfaf9881390ad826a2aba24cced8514a680965ec7151df9926082fff53364bbe6be36458bb9ff466fda6f6f6ca2174eeac94c10a6bada989f07ed1c4da1
+      SHA512 0191b1d49d5a50195ed94951c570da03dc33677b682e61a65b34d40f355c36a58441034730ea7eca78dcb4af4c821983754250f93fdf3adb2b4a20e71806eb03
       HEAD_REF master
       PATCHES
         0004-add-missing-stdexcept-include.patch
@@ -242,6 +252,12 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        ###### opencv cpu recognition is broken, always using host and not target: here we bypass that
+        -DOPENCV_SKIP_SYSTEM_PROCESSOR_DETECTION=TRUE
+        -DAARCH64=${TARGET_IS_AARCH64}
+        -DX86_64=${TARGET_IS_X86_64}
+        -DX86=${TARGET_IS_X86}
+        -DARM=${TARGET_IS_ARM}
         ###### ocv_options
         -DOpenCV_INSTALL_BINARIES_PREFIX=
         -DOPENCV_BIN_INSTALL_PATH=bin
