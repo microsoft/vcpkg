@@ -299,11 +299,17 @@ namespace vcpkg::Build
         if (cmake_system_name == "Windows") return "";
         if (cmake_system_name == "WindowsStore") return "store";
 
-        Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, "Unsupported vcvarsall target %s", cmake_system_name);
+        Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                   "Error: Could not map VCPKG_CMAKE_SYSTEM_NAME '%s' to a vcvarsall platform. "
+                                   "Supported systems are '', 'Windows' and 'WindowsStore'.",
+                                   cmake_system_name);
     }
 
-    static CStringView to_vcvarsall_toolchain(const std::string& target_architecture, const Toolset& toolset)
+    static CStringView to_vcvarsall_toolchain(const std::string& target_architecture,
+                                              const Toolset& toolset,
+                                              View<Toolset> all_toolsets)
     {
+#if defined(_WIN32)
         auto maybe_target_arch = System::to_cpu_architecture(target_architecture);
         Checks::check_maybe_upgrade(
             VCPKG_LINE_INFO, maybe_target_arch.has_value(), "Invalid architecture string: %s", target_architecture);
@@ -318,19 +324,36 @@ namespace vcpkg::Build
             if (it != toolset.supported_architectures.end()) return it->name;
         }
 
-        Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
-                                   "Unsupported toolchain combination. Target was: %s but supported ones were:\n%s",
-                                   target_architecture,
-                                   Strings::join(",", toolset.supported_architectures, [](const ToolsetArchOption& t) {
-                                       return t.name.c_str();
-                                   }));
+        System::print2("Error: Unsupported toolchain combination.\n");
+        System::print2("Target was ",
+                       target_architecture,
+                       " but the chosen Visual Studio instance supports:\n    ",
+                       Strings::join(", ",
+                                     toolset.supported_architectures,
+                                     [](const ToolsetArchOption& t) { return t.name.c_str(); }),
+                       "\nVcpkg selected ",
+                       fs::u8string(toolset.visual_studio_root_path),
+                       " as the Visual Studio instance.\nDetected instances:\n",
+                       Strings::join("",
+                                     all_toolsets,
+                                     [](const Toolset& t) {
+                                         return Strings::concat("    ", fs::u8string(t.visual_studio_root_path), '\n');
+                                     }),
+                       "\nSee "
+                       "https://github.com/microsoft/vcpkg/blob/master/docs/users/triplets.md#VCPKG_VISUAL_STUDIO_PATH "
+                       "for more information.\n");
+        Checks::exit_maybe_upgrade(VCPKG_LINE_INFO);
+#else
+        Checks::exit_with_message(VCPKG_LINE_INFO,
+                                  "Error: vcvars-based toolchains are only usable on Windows platforms.");
+#endif
     }
 
 #if defined(_WIN32)
     const System::Environment& EnvCache::get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info)
     {
-        auto build_env_cmd =
-            make_build_env_cmd(*abi_info.pre_build_info, abi_info.toolset.value_or_exit(VCPKG_LINE_INFO));
+        auto build_env_cmd = make_build_env_cmd(
+            *abi_info.pre_build_info, abi_info.toolset.value_or_exit(VCPKG_LINE_INFO), paths.get_all_toolsets());
 
         const auto& base_env = envs.get_lazy(abi_info.pre_build_info->passthrough_env_vars, [&]() -> EnvMapEntry {
             std::unordered_map<std::string, std::string> env;
@@ -440,7 +463,9 @@ namespace vcpkg::Build
         });
     }
 
-    System::Command make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset)
+    System::Command make_build_env_cmd(const PreBuildInfo& pre_build_info,
+                                       const Toolset& toolset,
+                                       View<Toolset> all_toolsets)
     {
         if (!pre_build_info.using_vcvars()) return {};
 
@@ -450,7 +475,7 @@ namespace vcpkg::Build
             tonull = "";
         }
 
-        const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset);
+        const auto arch = to_vcvarsall_toolchain(pre_build_info.target_architecture, toolset, all_toolsets);
         const auto target = to_vcvarsall_target(pre_build_info.cmake_system_name);
 
         return System::Command{"cmd"}.string_arg("/c").raw_arg(
@@ -566,7 +591,8 @@ namespace vcpkg::Build
         std::ofstream out_file(stdoutlog.native().c_str(), std::ios::out | std::ios::binary | std::ios::trunc);
         Checks::check_exit(VCPKG_LINE_INFO, out_file, "Failed to open '%s' for writing", fs::u8string(stdoutlog));
         CompilerInfo compiler_info;
-        System::cmd_execute_and_stream_lines(
+        std::string buf;
+        int rc = System::cmd_execute_and_stream_lines(
             command,
             [&](StringView s) {
                 static const StringLiteral s_hash_marker = "#COMPILER_HASH#";
@@ -585,6 +611,7 @@ namespace vcpkg::Build
                     compiler_info.id = s.data() + s_id_marker.size();
                 }
                 Debug::print(s, '\n');
+                Strings::append(buf, s, '\n');
                 out_file.write(s.data(), s.size()).put('\n');
                 Checks::check_exit(
                     VCPKG_LINE_INFO, out_file, "Error occurred while writing '%s'", fs::u8string(stdoutlog));
@@ -592,19 +619,24 @@ namespace vcpkg::Build
             env);
         out_file.close();
 
-        if (compiler_info.hash.empty())
+        if (compiler_info.hash.empty() || rc != 0)
         {
             Debug::print("Compiler information tracking can be disabled by passing --",
                          VcpkgCmdArguments::FEATURE_FLAGS_ARG,
                          "=-",
                          VcpkgCmdArguments::COMPILER_TRACKING_FEATURE,
                          "\n");
-        }
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !compiler_info.hash.empty(),
-                           "Error occurred while detecting compiler information. Pass `--debug` for more information.");
 
-        Debug::print("Detecting compiler hash for triplet ", triplet, ": ", compiler_info.hash, "\n");
+            System::print2("Error: while detecting compiler information:\nThe log content at ",
+                           fs::u8string(stdoutlog),
+                           " is:\n",
+                           buf);
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      "Error: vcpkg was unable to detect the active compiler's information. See above "
+                                      "for the CMake failure output.");
+        }
+
+        Debug::print("Detected compiler hash for triplet ", triplet, ": ", compiler_info.hash, "\n");
         return compiler_info;
     }
 
@@ -1102,7 +1134,7 @@ namespace vcpkg::Build
                                       const IBuildLogsRecorder& build_logs_recorder,
                                       const StatusParagraphs& status_db)
     {
-        auto& fs = paths.get_filesystem();
+        auto& filesystem = paths.get_filesystem();
         auto& spec = action.spec;
         const std::string& name = action.source_control_file_location.value_or_exit(VCPKG_LINE_INFO)
                                       .source_control_file->core_paragraph->name;
@@ -1145,7 +1177,6 @@ namespace vcpkg::Build
 
         auto& abi_file = *abi_info.abi_tag_file.get();
 
-        std::error_code ec;
         const fs::path abi_package_dir = paths.package_dir(spec) / "share" / spec.name();
         const fs::path abi_file_in_package = paths.package_dir(spec) / "share" / spec.name() / "vcpkg_abi_info.txt";
         if (action.has_package_abi())
@@ -1172,17 +1203,34 @@ namespace vcpkg::Build
         }
 
         ExtendedBuildResult result = do_build_package_and_clean_buildtrees(args, paths, action);
+        build_logs_recorder.record_build_result(paths, spec, result.code);
 
-        fs.create_directories(abi_package_dir, ec);
-        fs.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
-        Checks::check_exit(VCPKG_LINE_INFO, !ec, "Could not copy into file: %s", fs::u8string(abi_file_in_package));
+        std::error_code ec;
+        filesystem.create_directories(abi_package_dir, ec);
+        if (ec)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      Strings::format("Could not create %s: %s (%d)",
+                                                      fs::u8string(abi_package_dir).c_str(),
+                                                      ec.message().c_str(),
+                                                      ec.value()));
+        }
+
+        filesystem.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
+        if (ec)
+        {
+            Checks::exit_with_message(VCPKG_LINE_INFO,
+                                      Strings::format("Could not copy %s -> %s: %s (%d)",
+                                                      fs::u8string(abi_file).c_str(),
+                                                      fs::u8string(abi_file_in_package).c_str(),
+                                                      ec.message().c_str(),
+                                                      ec.value()));
+        }
 
         if (action.has_package_abi() && result.code == BuildResult::SUCCEEDED)
         {
             binaries_provider.push_success(paths, action);
         }
-
-        build_logs_recorder.record_build_result(paths, spec, result.code);
 
         return result;
     }
