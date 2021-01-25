@@ -2321,8 +2321,8 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "2.7.2",
-      "port-version": 1
+      "baseline": "2.7.4",
+      "port-version": 0
     },
     "hayai": {
       "baseline": "2019-08-10",
@@ -4402,7 +4402,7 @@
     },
     "pango": {
       "baseline": "1.40.11",
-      "port-version": 8
+      "port-version": 9
     },
     "pangolin": {
       "baseline": "0.5",
