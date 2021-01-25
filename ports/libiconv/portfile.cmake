@@ -1,4 +1,4 @@
-if(NOT VCPKG_TARGET_IS_WINDOWS)
+if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_ANDROID)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/iconv)
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/iconv)
@@ -21,11 +21,14 @@ vcpkg_extract_source_archive_ex(
         0003-Add-export.patch
 )
 
+if (NOT VCPKG_TARGET_IS_ANDROID)
+    list(APPEND OPTIONS --enable-relocatable)
+endif()
+
 vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}
                      DETERMINE_BUILD_TRIPLET
                      USE_WRAPPERS
                      OPTIONS
-                        --enable-relocatable
                         --enable-extra-encodings
                         --without-libiconv-prefix 
                         --without-libintl-prefix
