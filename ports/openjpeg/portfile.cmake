@@ -37,7 +37,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
-if(WIN32 AND (NOT MINGW))
+if(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL MinGW))
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libopenjp2.pc" "-lm" "")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libopenjp2.pc" "-lm" "")
 else()
