@@ -280,6 +280,15 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     endif()
 endfunction()
 
+function(vcpkg_internal_meson_convert_compiler_flags_to_list _out_var _compiler_flags)
+    string(REGEX REPLACE "( |^)(-|/)" ";\\2" ${_out_var} "${_compiler_flags}")
+    if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+        # special-case handling for "-arch <arm64/etc>" on macOS/iOS - this must be split into separate list entries
+        string(REGEX REPLACE "-arch ([^;]+)" "-arch;\\1" ${_out_var} "${${_out_var}}")
+    endif()
+    set(${_out_var} "${${_out_var}}" PARENT_SCOPE)
+endfunction()
+
 function(vcpkg_internal_meson_generate_cross_file_config _config) #https://mesonbuild.com/Native-environments.html
     if(VCPKG_TARGET_IS_WINDOWS)
         set(L_FLAG /LIBPATH:)
@@ -291,14 +300,14 @@ function(vcpkg_internal_meson_generate_cross_file_config _config) #https://meson
 
 
     set(NATIVE_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
     list(TRANSFORM MESON_CFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CFLAGS_${_config} PREPEND "'")
     list(APPEND MESON_CFLAGS_${_config} "'-I\"${CURRENT_INSTALLED_DIR}/include\"'")
     list(JOIN MESON_CFLAGS_${_config} ", " MESON_CFLAGS_${_config})
     string(REPLACE "'', " "" MESON_CFLAGS_${_config} "${MESON_CFLAGS_${_config}}")
     string(APPEND NATIVE_${_config} "c_args = [${MESON_CFLAGS_${_config}}]\n")
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
     list(TRANSFORM MESON_CXXFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CXXFLAGS_${_config} PREPEND "'")
     list(APPEND MESON_CXXFLAGS_${_config} "'-I\"${CURRENT_INSTALLED_DIR}/include\"'")
