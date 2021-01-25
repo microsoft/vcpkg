@@ -1207,7 +1207,7 @@ namespace vcpkg::Build
 
         std::error_code ec;
         filesystem.create_directories(abi_package_dir, ec);
-        if (!ec)
+        if (ec)
         {
             Checks::exit_with_message(VCPKG_LINE_INFO,
                                       Strings::format("Could not create %s: %d %s",
@@ -1217,7 +1217,7 @@ namespace vcpkg::Build
         }
 
         filesystem.copy_file(abi_file, abi_file_in_package, fs::copy_options::none, ec);
-        if (!ec)
+        if (ec)
         {
             Checks::exit_with_message(VCPKG_LINE_INFO,
                                       Strings::format("Could not copy %s -> %s: %d %s",
