@@ -412,6 +412,9 @@ find_dependency(Threads)")
   if("cuda" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "\nfind_dependency(CUDA)")
   endif()
+  if("quirc" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(quirc)")
+  endif()
   if(BUILD_opencv_quality)
     string(APPEND DEPS_STRING "
 # C language is required for try_compile tests in FindHDF5
