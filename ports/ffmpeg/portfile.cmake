@@ -25,6 +25,7 @@ endif()
 
 
 if(${VCPKG_TARGET_ARCHITECTURE} STREQUAL x86)
+    # ffmpeg nasm build gives link error on x86, so fall back to yasm
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
     vcpkg_add_to_path(${YASM_EXE_PATH})
