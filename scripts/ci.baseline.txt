@@ -349,7 +349,6 @@ gainput:x64-uwp=fail
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
-gdal:x64-windows-static-md=fail
 geos:arm-uwp=fail
 geos:x64-uwp=fail
 
