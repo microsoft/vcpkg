@@ -1,5 +1,6 @@
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/hash.h>
+#include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/util.h>
 
@@ -7,6 +8,7 @@
 #include <vcpkg/build.h>
 #include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.setinstalled.h>
+#include <vcpkg/configuration.h>
 #include <vcpkg/dependencies.h>
 #include <vcpkg/globalstate.h>
 #include <vcpkg/help.h>
@@ -15,7 +17,9 @@
 #include <vcpkg/metrics.h>
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/remove.h>
+#include <vcpkg/tools.h>
 #include <vcpkg/vcpkglib.h>
+#include <vcpkg/vcpkgpaths.h>
 
 namespace vcpkg::Install
 {
@@ -47,8 +51,9 @@ namespace vcpkg::Install
     {
         auto& fs = paths.get_filesystem();
         auto source_dir = paths.package_dir(spec);
-        Checks::check_exit(
-            VCPKG_LINE_INFO, fs.exists(source_dir), "Source directory %s does not exist", fs::u8string(source_dir));
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           fs.exists(source_dir),
+                           Strings::concat("Source directory ", fs::u8string(source_dir), "does not exist"));
         auto files = fs.get_files_recursive(source_dir);
         install_files_and_write_listfile(fs, source_dir, files, destination_dir);
     }
@@ -305,7 +310,8 @@ namespace vcpkg::Install
     using Build::BuildResult;
     using Build::ExtendedBuildResult;
 
-    static ExtendedBuildResult perform_install_plan_action(const VcpkgPaths& paths,
+    static ExtendedBuildResult perform_install_plan_action(const VcpkgCmdArguments& args,
+                                                           const VcpkgPaths& paths,
                                                            InstallPlanAction& action,
                                                            StatusParagraphs& status_db,
                                                            IBinaryProvider& binaries_provider,
@@ -336,7 +342,7 @@ namespace vcpkg::Install
             else
                 System::printf("Building package %s...\n", display_name_with_features);
 
-            auto result = Build::build_package(paths, action, binaries_provider, build_logs_recorder, status_db);
+            auto result = Build::build_package(args, paths, action, binaries_provider, build_logs_recorder, status_db);
 
             if (BuildResult::DOWNLOADED == result.code)
             {
@@ -434,13 +440,14 @@ namespace vcpkg::Install
         SpecSummary* current_summary = nullptr;
         Chrono::ElapsedTimer build_timer = Chrono::ElapsedTimer::create_started();
 
-        TrackedPackageInstallGuard(const size_t package_count,
+        TrackedPackageInstallGuard(const size_t action_index,
+                                   const size_t action_count,
                                    std::vector<SpecSummary>& results,
                                    const PackageSpec& spec)
         {
             results.emplace_back(spec, nullptr);
             current_summary = &results.back();
-            System::printf("Starting package %zd/%zd: %s\n", results.size(), package_count, spec.to_string());
+            System::printf("Starting package %zd/%zd: %s\n", action_index, action_count, spec.to_string());
         }
 
         ~TrackedPackageInstallGuard()
@@ -454,7 +461,8 @@ namespace vcpkg::Install
         TrackedPackageInstallGuard& operator=(const TrackedPackageInstallGuard&) = delete;
     };
 
-    InstallSummary perform(ActionPlan& action_plan,
+    InstallSummary perform(const VcpkgCmdArguments& args,
+                           ActionPlan& action_plan,
                            const KeepGoing keep_going,
                            const VcpkgPaths& paths,
                            StatusParagraphs& status_db,
@@ -463,12 +471,13 @@ namespace vcpkg::Install
                            const CMakeVars::CMakeVarProvider& var_provider)
     {
         std::vector<SpecSummary> results;
-        const size_t package_count = action_plan.remove_actions.size() + action_plan.install_actions.size();
+        const size_t action_count = action_plan.remove_actions.size() + action_plan.install_actions.size();
+        size_t action_index = 1;
 
         const auto timer = Chrono::ElapsedTimer::create_started();
         for (auto&& action : action_plan.remove_actions)
         {
-            TrackedPackageInstallGuard this_install(package_count, results, action.spec);
+            TrackedPackageInstallGuard this_install(action_index++, action_count, results, action.spec);
             Remove::perform_remove_plan_action(paths, action, Remove::Purge::YES, &status_db);
         }
 
@@ -476,17 +485,19 @@ namespace vcpkg::Install
         {
             results.emplace_back(action.spec, &action);
             results.back().build_result =
-                perform_install_plan_action(paths, action, status_db, binaryprovider, build_logs_recorder);
+                perform_install_plan_action(args, paths, action, status_db, binaryprovider, build_logs_recorder);
         }
 
         Build::compute_all_abis(paths, action_plan, var_provider, status_db);
 
-        binaryprovider.prefetch(paths, action_plan);
+        auto to_prefetch = Util::fmap(action_plan.install_actions, [](const auto& x) { return &x; });
+        binaryprovider.prefetch(paths, to_prefetch);
 
         for (auto&& action : action_plan.install_actions)
         {
-            TrackedPackageInstallGuard this_install(package_count, results, action.spec);
-            auto result = perform_install_plan_action(paths, action, status_db, binaryprovider, build_logs_recorder);
+            TrackedPackageInstallGuard this_install(action_index++, action_count, results, action.spec);
+            auto result =
+                perform_install_plan_action(args, paths, action, status_db, binaryprovider, build_logs_recorder);
             if (result.code != BuildResult::SUCCEEDED && keep_going == KeepGoing::NO)
             {
                 System::print2(Build::create_user_troubleshooting_message(action.spec), '\n');
@@ -503,6 +514,7 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_DRY_RUN = "dry-run";
     static constexpr StringLiteral OPTION_USE_HEAD_VERSION = "head";
     static constexpr StringLiteral OPTION_NO_DOWNLOADS = "no-downloads";
+    static constexpr StringLiteral OPTION_ONLY_BINARYCACHING = "only-binarycaching";
     static constexpr StringLiteral OPTION_ONLY_DOWNLOADS = "only-downloads";
     static constexpr StringLiteral OPTION_RECURSE = "recurse";
     static constexpr StringLiteral OPTION_KEEP_GOING = "keep-going";
@@ -515,11 +527,12 @@ namespace vcpkg::Install
     static constexpr StringLiteral OPTION_MANIFEST_FEATURE = "x-feature";
     static constexpr StringLiteral OPTION_PROHIBIT_BACKCOMPAT_FEATURES = "x-prohibit-backcompat-features";
 
-    static constexpr std::array<CommandSwitch, 10> INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 11> INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
         {OPTION_ONLY_DOWNLOADS, "Download sources but don't build packages"},
+        {OPTION_ONLY_BINARYCACHING, "Fail if cached binaries are not available"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_EDITABLE, "Disable source re-extraction and binary caching for libraries on the command line"},
@@ -529,12 +542,12 @@ namespace vcpkg::Install
         {OPTION_PROHIBIT_BACKCOMPAT_FEATURES,
          "(experimental) Fail install if a package attempts to use a deprecated feature"},
     }};
-
-    static constexpr std::array<CommandSwitch, 10> MANIFEST_INSTALL_SWITCHES = {{
+    static constexpr std::array<CommandSwitch, 11> MANIFEST_INSTALL_SWITCHES = {{
         {OPTION_DRY_RUN, "Do not actually build or install"},
         {OPTION_USE_HEAD_VERSION, "Install the libraries on the command line using the latest upstream sources"},
         {OPTION_NO_DOWNLOADS, "Do not download new sources"},
         {OPTION_ONLY_DOWNLOADS, "Download sources but don't build packages"},
+        {OPTION_ONLY_BINARYCACHING, "Fail if cached binaries are not available"},
         {OPTION_RECURSE, "Allow removal of packages as part of installation"},
         {OPTION_KEEP_GOING, "Continue installing packages on failure"},
         {OPTION_EDITABLE, "Disable source re-extraction and binary caching for libraries on the command line"},
@@ -757,8 +770,9 @@ namespace vcpkg::Install
         const bool use_head_version = Util::Sets::contains(options.switches, (OPTION_USE_HEAD_VERSION));
         const bool no_downloads = Util::Sets::contains(options.switches, (OPTION_NO_DOWNLOADS));
         const bool only_downloads = Util::Sets::contains(options.switches, (OPTION_ONLY_DOWNLOADS));
+        const bool no_build_missing = Util::Sets::contains(options.switches, OPTION_ONLY_BINARYCACHING);
         const bool is_recursive = Util::Sets::contains(options.switches, (OPTION_RECURSE));
-        const bool is_editable = Util::Sets::contains(options.switches, (OPTION_EDITABLE));
+        const bool is_editable = Util::Sets::contains(options.switches, (OPTION_EDITABLE)) || !args.cmake_args.empty();
         const bool use_aria2 = Util::Sets::contains(options.switches, (OPTION_USE_ARIA2));
         const bool clean_after_build = Util::Sets::contains(options.switches, (OPTION_CLEAN_AFTER_BUILD));
         const KeepGoing keep_going =
@@ -772,6 +786,7 @@ namespace vcpkg::Install
         if (use_aria2) download_tool = Build::DownloadTool::ARIA2;
 
         const Build::BuildPackageOptions install_plan_options = {
+            Util::Enum::to_enum<Build::BuildMissing>(!no_build_missing),
             Util::Enum::to_enum<Build::UseHeadVersion>(use_head_version),
             Util::Enum::to_enum<Build::AllowDownloads>(!no_downloads),
             Util::Enum::to_enum<Build::OnlyDownloads>(only_downloads),
@@ -797,7 +812,7 @@ namespace vcpkg::Install
                 Metrics::g_metrics.lock()->track_property("x-write-nuget-packages-config", "defined");
                 pkgsconfig = fs::u8path(it_pkgsconfig->second);
             }
-            auto manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
+            const auto& manifest_path = paths.get_manifest_path().value_or_exit(VCPKG_LINE_INFO);
             auto maybe_manifest_scf = SourceControlFile::parse_manifest_file(manifest_path, *manifest);
             if (!maybe_manifest_scf)
             {
@@ -806,7 +821,13 @@ namespace vcpkg::Install
                                "more information.\n");
                 Checks::exit_fail(VCPKG_LINE_INFO);
             }
+
             auto& manifest_scf = *maybe_manifest_scf.value_or_exit(VCPKG_LINE_INFO);
+
+            if (auto maybe_error = manifest_scf.check_against_feature_flags(manifest_path, paths.get_feature_flags()))
+            {
+                Checks::exit_with_message(VCPKG_LINE_INFO, maybe_error.value_or_exit(VCPKG_LINE_INFO));
+            }
 
             std::vector<std::string> features;
             auto manifest_feature_it = options.multisettings.find(OPTION_MANIFEST_FEATURE);
@@ -825,9 +846,40 @@ namespace vcpkg::Install
                 // remove "core" because resolve_deps_as_top_level uses default-inversion
                 features.erase(core_it);
             }
-            auto specs = resolve_deps_as_top_level(manifest_scf, default_triplet, features, var_provider);
 
-            auto install_plan = Dependencies::create_feature_install_plan(provider, var_provider, specs, {});
+            if (!manifest_scf.core_paragraph->overrides.empty())
+            {
+                Metrics::g_metrics.lock()->track_property("manifest_overrides", "defined");
+            }
+            if (auto p_baseline = manifest_scf.core_paragraph->builtin_baseline.get())
+            {
+                Metrics::g_metrics.lock()->track_property("manifest_baseline", "defined");
+                if (p_baseline->size() != 40 || !std::all_of(p_baseline->begin(), p_baseline->end(), [](char ch) {
+                        return (ch >= 'a' || ch <= 'f') || Parse::ParserBase::is_ascii_digit(ch);
+                    }))
+                {
+                    Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                               "Error: the top-level builtin-baseline (%s) was not a valid commit sha: "
+                                               "expected 40 lowercase hexadecimal characters.\n%s\n",
+                                               *p_baseline,
+                                               paths.get_current_git_sha_message());
+                }
+
+                paths.get_configuration().registry_set.experimental_set_builtin_registry_baseline(*p_baseline);
+            }
+            auto verprovider = PortFileProvider::make_versioned_portfile_provider(paths);
+            auto baseprovider = PortFileProvider::make_baseline_provider(paths);
+            auto oprovider = PortFileProvider::make_overlay_provider(paths, args.overlay_ports);
+
+            auto install_plan =
+                Dependencies::create_versioned_install_plan(*verprovider,
+                                                            *baseprovider,
+                                                            *oprovider,
+                                                            var_provider,
+                                                            manifest_scf.core_paragraph->dependencies,
+                                                            manifest_scf.core_paragraph->overrides,
+                                                            {manifest_scf.core_paragraph->name, default_triplet})
+                    .value_or_exit(VCPKG_LINE_INFO);
 
             for (InstallPlanAction& action : install_plan.install_actions)
             {
@@ -947,7 +999,8 @@ namespace vcpkg::Install
         }
 
         const InstallSummary summary =
-            perform(action_plan,
+            perform(args,
+                    action_plan,
                     keep_going,
                     paths,
                     status_db,
@@ -1017,6 +1070,7 @@ namespace vcpkg::Install
             case BuildResult::POST_BUILD_CHECKS_FAILED:
             case BuildResult::FILE_CONFLICTS:
             case BuildResult::BUILD_FAILED:
+            case BuildResult::CACHE_MISSING:
                 result_string = "Fail";
                 message_block =
                     Strings::format("<failure><message><![CDATA[%s]]></message></failure>", to_string(code));
@@ -1027,7 +1081,7 @@ namespace vcpkg::Install
                 message_block = Strings::format("<reason><![CDATA[%s]]></reason>", to_string(code));
                 break;
             case BuildResult::SUCCEEDED: result_string = "Pass"; break;
-            default: Checks::exit_fail(VCPKG_LINE_INFO);
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
 
         return Strings::format(R"(<test name="%s" method="%s" time="%lld" result="%s">%s</test>)"

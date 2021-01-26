@@ -71,7 +71,8 @@ namespace vcpkg::Json
                 else
                 {
                     destroy_underlying();
-                    new (&(this->*mp)) T(std::move(other.*mp));
+                    auto* address = &(this->*mp);
+                    new (address) T(std::move(other.*mp));
                     tag = vk;
                 }
 
@@ -1062,6 +1063,11 @@ namespace vcpkg::Json
                                                                                       const fs::path& filepath) noexcept
     {
         return Parser::parse(json, fs::generic_u8string(filepath));
+    }
+    ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(StringView json,
+                                                                                      StringView origin) noexcept
+    {
+        return Parser::parse(json, origin);
     }
     // } auto parse()
 

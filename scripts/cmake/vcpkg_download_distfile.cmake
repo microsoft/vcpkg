@@ -1,54 +1,56 @@
-## # vcpkg_download_distfile
-##
-## Download and cache a file needed for this port.
-##
-## This helper should always be used instead of CMake's built-in `file(DOWNLOAD)` command.
-##
-## ## Usage
-## ```cmake
-## vcpkg_download_distfile(
-##     <OUT_VARIABLE>
-##     URLS <http://mainUrl> <http://mirror1>...
-##     FILENAME <output.zip>
-##     SHA512 <5981de...>
-## )
-## ```
-## ## Parameters
-## ### OUT_VARIABLE
-## This variable will be set to the full path to the downloaded file. This can then immediately be passed in to [`vcpkg_extract_source_archive`](vcpkg_extract_source_archive.md) for sources.
-##
-## ### URLS
-## A list of URLs to be consulted. They will be tried in order until one of the downloaded files successfully matches the SHA512 given.
-##
-## ### FILENAME
-## The local name for the file. Files are shared between ports, so the file may need to be renamed to make it clearly attributed to this port and avoid conflicts.
-##
-## ### SHA512
-## The expected hash for the file.
-##
-## If this doesn't match the downloaded version, the build will be terminated with a message describing the mismatch.
-##
-## ### QUIET
-## Suppress output on cache hit
-##
-## ### SKIP_SHA512
-## Skip SHA512 hash check for file.
-##
-## This switch is only valid when building with the `--head` command line flag.
-##
-## ### HEADERS
-## A list of headers to append to the download request. This can be used for authentication during a download.
-##
-## Headers should be specified as "<header-name>: <header-value>".
-##
-## ## Notes
-## The helper [`vcpkg_from_github`](vcpkg_from_github.md) should be used for downloading from GitHub projects.
-##
-## ## Examples
-##
-## * [apr](https://github.com/Microsoft/vcpkg/blob/master/ports/apr/portfile.cmake)
-## * [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
-## * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
+#[===[.md:
+# vcpkg_download_distfile
+
+Download and cache a file needed for this port.
+
+This helper should always be used instead of CMake's built-in `file(DOWNLOAD)` command.
+
+## Usage
+```cmake
+vcpkg_download_distfile(
+    <OUT_VARIABLE>
+    URLS <http://mainUrl> <http://mirror1>...
+    FILENAME <output.zip>
+    SHA512 <5981de...>
+)
+```
+## Parameters
+### OUT_VARIABLE
+This variable will be set to the full path to the downloaded file. This can then immediately be passed in to [`vcpkg_extract_source_archive`](vcpkg_extract_source_archive.md) for sources.
+
+### URLS
+A list of URLs to be consulted. They will be tried in order until one of the downloaded files successfully matches the SHA512 given.
+
+### FILENAME
+The local name for the file. Files are shared between ports, so the file may need to be renamed to make it clearly attributed to this port and avoid conflicts.
+
+### SHA512
+The expected hash for the file.
+
+If this doesn't match the downloaded version, the build will be terminated with a message describing the mismatch.
+
+### QUIET
+Suppress output on cache hit
+
+### SKIP_SHA512
+Skip SHA512 hash check for file.
+
+This switch is only valid when building with the `--head` command line flag.
+
+### HEADERS
+A list of headers to append to the download request. This can be used for authentication during a download.
+
+Headers should be specified as "<header-name>: <header-value>".
+
+## Notes
+The helper [`vcpkg_from_github`](vcpkg_from_github.md) should be used for downloading from GitHub projects.
+
+## Examples
+
+* [apr](https://github.com/Microsoft/vcpkg/blob/master/ports/apr/portfile.cmake)
+* [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
+* [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
+#]===]
 
 include(vcpkg_execute_in_download_mode)
 
@@ -159,7 +161,7 @@ function(vcpkg_download_distfile VAR)
             endif()
         else()
             foreach(url IN LISTS vcpkg_download_distfile_URLS)
-                message(STATUS "Downloading ${url}...")
+                message(STATUS "Downloading ${url} -> ${vcpkg_download_distfile_FILENAME}...")
                 if(vcpkg_download_distfile_HEADERS)
                     foreach(header ${vcpkg_download_distfile_HEADERS})
                         list(APPEND request_headers HTTPHEADER ${header})
@@ -184,6 +186,10 @@ function(vcpkg_download_distfile VAR)
                 "    Failed to download file.\n"
                 "    If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment\n"
                 "    variables to \"https://user:password@your-proxy-ip-address:port/\".\n"
+                "    \n"
+                "    If error with status 4 (Issue #15434),\n"
+                "    try setting \"http://user:password@your-proxy-ip-address:port/\".\n"
+                "    \n"
                 "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
             else()
                 test_hash("${download_file_path_part}" "downloaded file" "The file may have been corrupted in transit. This can be caused by proxies. If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment variables to \"https://user:password@your-proxy-ip-address:port/\".\n")

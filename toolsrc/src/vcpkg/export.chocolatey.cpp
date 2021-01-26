@@ -26,8 +26,9 @@ namespace vcpkg::Export::Chocolatey
             {
                 Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find desired dependency version.");
             }
+
             std::string nuspec_dependency = Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", depend);
-            nuspec_dependency = Strings::replace_all(std::move(nuspec_dependency), "@PACKAGE_VERSION@", found->second);
+            Strings::inplace_replace_all(nuspec_dependency, "@PACKAGE_VERSION@", found->second);
             nuspec_dependencies += nuspec_dependency;
         }
         return nuspec_dependencies;
@@ -62,19 +63,18 @@ namespace vcpkg::Export::Chocolatey
         {
             Checks::exit_with_message(VCPKG_LINE_INFO, "Cannot find desired package version.");
         }
+
         std::string nuspec_file_content =
             Strings::replace_all(CONTENT_TEMPLATE, "@PACKAGE_ID@", binary_paragraph.spec.name());
-        nuspec_file_content =
-            Strings::replace_all(std::move(nuspec_file_content), "@PACKAGE_VERSION@", package_version->second);
-        nuspec_file_content = Strings::replace_all(
-            std::move(nuspec_file_content), "@PACKAGE_MAINTAINER@", chocolatey_options.maybe_maintainer.value_or(""));
-        nuspec_file_content = Strings::replace_all(
-            std::move(nuspec_file_content), "@PACKAGE_DESCRIPTION@", Strings::join("\n", binary_paragraph.description));
-        nuspec_file_content =
-            Strings::replace_all(std::move(nuspec_file_content), "@EXPORTED_ROOT_DIR@", exported_root_dir);
-        nuspec_file_content = Strings::replace_all(std::move(nuspec_file_content),
-                                                   "@PACKAGE_DEPENDENCIES@",
-                                                   create_nuspec_dependencies(binary_paragraph, packages_version));
+        Strings::inplace_replace_all(nuspec_file_content, "@PACKAGE_VERSION@", package_version->second);
+        Strings::inplace_replace_all(
+            nuspec_file_content, "@PACKAGE_MAINTAINER@", chocolatey_options.maybe_maintainer.value_or(""));
+        Strings::inplace_replace_all(
+            nuspec_file_content, "@PACKAGE_DESCRIPTION@", Strings::join("\n", binary_paragraph.description));
+        Strings::inplace_replace_all(nuspec_file_content, "@EXPORTED_ROOT_DIR@", exported_root_dir);
+        Strings::inplace_replace_all(nuspec_file_content,
+                                     "@PACKAGE_DEPENDENCIES@",
+                                     create_nuspec_dependencies(binary_paragraph, packages_version));
         return nuspec_file_content;
     }
 
@@ -179,10 +179,10 @@ if (Test-Path $installedDir)
             const BinaryParagraph& binary_paragraph = action.core_paragraph().value_or_exit(VCPKG_LINE_INFO);
             auto norm_version = binary_paragraph.version;
 
-            // normalize the version string to be separated by dots to be compliant with Nusepc.
-            norm_version = Strings::replace_all(std::move(norm_version), "-", ".");
-            norm_version = Strings::replace_all(std::move(norm_version), "_", ".");
-            norm_version = norm_version + chocolatey_options.maybe_version_suffix.value_or("");
+            // normalize the version string to be separated by dots to be compliant with Nuspec.
+            Strings::inplace_replace_all(norm_version, '-', '.');
+            Strings::inplace_replace_all(norm_version, '_', '.');
+            norm_version += chocolatey_options.maybe_version_suffix.value_or("");
             packages_version.insert(std::make_pair(binary_paragraph.spec.name(), norm_version));
         }
 
@@ -218,10 +218,12 @@ if (Test-Path $installedDir)
             const fs::path chocolatey_uninstall_file_path = per_package_dir_path / "tools" / "chocolateyUninstall.ps1";
             fs.write_contents(chocolatey_uninstall_file_path, chocolatey_uninstall_content, VCPKG_LINE_INFO);
 
-            const auto cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s" -NoDefaultExcludes)",
-                                                  fs::u8string(nuget_exe),
-                                                  fs::u8string(exported_dir_path),
-                                                  fs::u8string(nuspec_file_path));
+            auto cmd_line = System::Command(nuget_exe)
+                                .string_arg("pack")
+                                .string_arg("-OutputDirectory")
+                                .path_arg(exported_dir_path)
+                                .path_arg(nuspec_file_path)
+                                .string_arg("-NoDefaultExcludes");
 
             const int exit_code =
                 System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;

@@ -1,41 +1,34 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <VcpkgHasProps>true</VcpkgHasProps>
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
-    <VcpkgAutoLink Condition="'$(VcpkgAutoLink)' == ''">true</VcpkgAutoLink>
-    <VcpkgUseStatic Condition="'$(VcpkgUseStatic)' == ''">false</VcpkgUseStatic>
-    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .vcpkg-root))</VcpkgRoot>
-    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
-    <VcpkgPageSchema Condition="'$(VcpkgPageSchema)' == ''">$(VcpkgRoot)\scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
-  </PropertyGroup>
+  <!-- Do not define derived properties here. This file may be imported once and some of the properties below may be overridden afterwards -->
 
   <!-- Set default OS Target-->
-  <PropertyGroup Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' == 'Windows Store|10.0'">
-    <VcpkgOSTarget Condition="'$(VcpkgOSTarget)' == ''">uwp</VcpkgOSTarget>
-  </PropertyGroup>
-  <PropertyGroup>
-    <VcpkgOSTarget Condition="'$(VcpkgOSTarget)' == ''">windows</VcpkgOSTarget>
+  <PropertyGroup Condition="'$(VcpkgOSTarget)' == ''">
+    <VcpkgOSTarget>windows</VcpkgOSTarget>
+    <VcpkgOSTarget Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' == 'Windows Store|10.0'">uwp</VcpkgOSTarget>
   </PropertyGroup>
 
   <!-- Set default Platform Target. $(PlatformTarget) is not available at the top of the .vcxproj file. -->
-  <PropertyGroup Condition="'$(Platform)' == 'Win32'">
-    <VcpkgPlatformTarget Condition="'$(VcpkgPlatformTarget)' == ''">x86</VcpkgPlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup>
-    <VcpkgPlatformTarget Condition="'$(VcpkgPlatformTarget)' == ''">$(Platform)</VcpkgPlatformTarget>
+  <PropertyGroup Condition="'$(VcpkgPlatformTarget)' == ''">
+    <VcpkgPlatformTarget>$(Platform)</VcpkgPlatformTarget>
+    <VcpkgPlatformTarget Condition="'$(Platform)' == 'Win32'">x86</VcpkgPlatformTarget>
   </PropertyGroup>
 
-  <!-- Manifest files -->
   <PropertyGroup>
+    <VcpkgPropsImported>true</VcpkgPropsImported>
+    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
+    <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
+    <VcpkgUseStatic Condition="'$(VcpkgUseStatic)' == ''">false</VcpkgUseStatic>
+    <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), '..\..\..'))</VcpkgRoot>
+
+    <VcpkgAutoLink Condition="'$(VcpkgAutoLink)' == ''">true</VcpkgAutoLink>
+    <!-- Deactivate Autolinking if lld is used as a linker. (Until a better way to solve the problem is found!).
+    Tried to add /lib as a parameter to the linker call but was unable to find a way to pass it as the first parameter. -->
+    <VcpkgAutoLink Condition="'$(UseLldLink)' == 'true'">false</VcpkgAutoLink>
+
+    <!-- Manifest files -->
     <VcpkgEnableManifest Condition="'$(VcpkgEnableManifest)' == ''">false</VcpkgEnableManifest>
     <VcpkgManifestInstall Condition="'$(VcpkgManifestInstall)' == ''">true</VcpkgManifestInstall>
-    <VcpkgManifestRoot>$([MSbuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), vcpkg.json))</VcpkgManifestRoot>
+    <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' == ''">$([MSbuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), vcpkg.json))</VcpkgManifestRoot>
   </PropertyGroup>
 
-  <!-- Set other defaults-->
-  <PropertyGroup>
-    <VcpkgUserTriplet Condition="'$(VcpkgUserTriplet)' == ''">$(VcpkgPlatformTarget)-$(VcpkgOSTarget)</VcpkgUserTriplet>
-    <VcpkgTriplet Condition="'$(VcpkgTriplet)' == ''">$(VcpkgUserTriplet)</VcpkgTriplet>
-    <VcpkgPageSchema>$(VcpkgRoot)\scripts\buildsystems\msbuild\vcpkg-general.xml</VcpkgPageSchema>
-  </PropertyGroup>
 </Project>

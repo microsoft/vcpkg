@@ -353,18 +353,35 @@ namespace vcpkg::Paragraphs
                 error_info->name = fs::u8string(path.filename());
                 error_info->error = Strings::format(
                     "Failed to load manifest file for port: %s\n", fs::u8string(path_to_manifest), ec.message());
+                return error_info;
             }
 
             return res;
         }
-        ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs(fs, path_to_control);
-        if (auto vector_pghs = pghs.get())
+
+        if (fs.exists(path_to_control))
         {
-            return SourceControlFile::parse_control_file(fs::u8string(path_to_control), std::move(*vector_pghs));
+            ExpectedS<std::vector<Paragraph>> pghs = get_paragraphs(fs, path_to_control);
+            if (auto vector_pghs = pghs.get())
+            {
+                return SourceControlFile::parse_control_file(fs::u8string(path_to_control), std::move(*vector_pghs));
+            }
+            auto error_info = std::make_unique<ParseControlErrorInfo>();
+            error_info->name = fs::u8string(path.filename());
+            error_info->error = pghs.error();
+            return error_info;
         }
+
         auto error_info = std::make_unique<ParseControlErrorInfo>();
         error_info->name = fs::u8string(path.filename());
-        error_info->error = pghs.error();
+        if (fs.exists(path))
+        {
+            error_info->error = "Failed to find either a CONTROL file or vcpkg.json file.";
+        }
+        else
+        {
+            error_info->error = "The port directory (" + fs::u8string(path) + ") does not exist";
+        }
         return error_info;
     }
 
@@ -423,15 +440,8 @@ namespace vcpkg::Paragraphs
             auto baseline_version = impl->get_baseline_version(paths, port_name);
             if (port_entry && baseline_version)
             {
-                auto port_path = port_entry->get_port_directory(paths, *baseline_version.get());
-                if (port_path.empty())
-                {
-                    Debug::print("Registry for port `",
-                                 port_name,
-                                 "` is incorrect - baseline port version `",
-                                 baseline_version.get()->to_string(),
-                                 "` not found.");
-                }
+                auto port_path =
+                    port_entry->get_path_to_version(paths, *baseline_version.get()).value_or_exit(VCPKG_LINE_INFO);
                 auto maybe_spgh = try_load_port(fs, port_path);
                 if (const auto spgh = maybe_spgh.get())
                 {
@@ -482,13 +492,10 @@ namespace vcpkg::Paragraphs
         return std::move(results.paragraphs);
     }
 
-    std::vector<SourceControlFileLocation> load_overlay_ports(const VcpkgPaths& paths, const fs::path& directory)
+    std::vector<SourceControlFileLocation> load_overlay_ports(const Files::Filesystem& fs, const fs::path& directory)
     {
         LoadResults ret;
 
-        std::vector<std::string> port_names;
-
-        const auto& fs = paths.get_filesystem();
         auto port_dirs = fs.get_files_non_recursive(directory);
         Util::sort(port_dirs);
 

@@ -84,9 +84,37 @@ More information about Azure DevOps Artifacts' NuGet support is available in the
 
 [devops-nuget]: https://docs.microsoft.com/en-us/azure/devops/artifacts/get-started-nuget?view=azure-devops
 
+### Azure Blob Storage (experimental)
+
+> Note: This is an experimental feature and may change or be removed at any time
+
+Vcpkg supports interfacing with Azure Blob Storage via the `x-azblob` source type.
+
+```
+x-azblob,<baseuri>,<sas>[,<rw>]
+```
+
+First, you need to create an Azure Storage Account as well as a container ([Quick Start Documentation](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal)].
+
+Next, you will need to create a Shared Access Signature, which can be done from the storage account under Settings -> Shared access signature. This SAS will need:
+- Allowed services: Blob
+- Allowed resource types: Object
+- Allowed permissions: Read, Create (if using `write` or `readwrite`)
+
+The blob endpoint plus the container must be passed as the `<baseuri>` and the generated SAS without the `?` prefix must be passed as the `<sas>`.
+
+Example:
+```
+x-azblob,https://<storagename>.blob.core.windows.net/<containername>,sv=2019-12-12&ss=b&srt=o&sp=rcx&se=2020-12-31T06:20:36Z&st=2020-12-30T22:20:36Z&spr=https&sig=abcd,readwrite
+```
+
+Vcpkg will attempt to avoid revealing the SAS during normal operations, however:
+1. It will be printed in full if `--debug` is passed
+2. It will be passed as a command line parameter to subprocesses, such as `curl.exe`
+
 ## Configuration
 
-Binary caching is configured via a combination of defaults, the environment variable `VCPKG_BINARY_SOURCES` (set to `<source>;<source>;...`), and the command line option `--binarysource=<source>`. Source options are evaluated in order of defaults, then environment, then command line.
+Binary caching is configured via a combination of defaults, the environment variable `VCPKG_BINARY_SOURCES` (set to `<source>;<source>;...`), and the command line option `--binarysource=<source>`. Source options are evaluated in order of defaults, then environment, then command line. Binary caching can be completely disabled by passing `--binarysource=clear` as the last command line option.
 
 By default, zip-based archives will be cached at the first valid location of:
 
@@ -108,11 +136,53 @@ By default, zip-based archives will be cached at the first valid location of:
 | `default[,<rw>]`            | Adds the default file-based location
 | `files,<path>[,<rw>]`       | Adds a custom file-based location
 | `nuget,<uri>[,<rw>]`        | Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI
-| `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter <br>of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
+| `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
+| `x-azblob,<baseuri>,<sas>[,<rw>]`    | **Experimental: will change or be removed without warning**<br> Adds an Azure Blob Storage source. Uses Shared Access Signature validation. URL should include the container path.
 | `interactive`               | Enables interactive credential management for NuGet (for debugging; requires `--debug` on the command line)
 
 The `<rw>` optional parameter for certain sources controls whether they will be consulted for
 downloading binaries (`read`), whether on-demand builds will be uploaded to that remote (`write`), or both (`readwrite`).
+
+### Nuget Provider Configuration
+
+#### Credentials
+
+Many NuGet servers require additional credentials to access. The most flexible way to supply credentials is via the `nugetconfig` provider with a custom `nuget.config` file. See https://docs.microsoft.com/en-us/nuget/consume-packages/consuming-packages-authenticated-feeds for more information on authenticating via `nuget.config`.
+
+However, it is still possible to authenticate against many servers using NuGet's built-in credential providers or via customizing your environment's default `nuget.config`. The default config can be extended via nuget client calls such as
+```
+nuget sources add -Name MyRemote -Source https://... -Username $user -Password $pass
+```
+and then passed to vcpkg via `--binarysource=nuget,MyRemote,readwrite`. You can get a path to the precise copy of NuGet used by vcpkg by running `vcpkg fetch nuget`, which will report something like:
+```
+$ vcpkg fetch nuget
+/vcpkg/downloads/tools/nuget-5.5.1-linux/nuget.exe
+```
+Non-Windows users will need to call this through mono via `mono /path/to/nuget.exe sources add ...`.
+
+##### Credential Example for Azure Dev Ops
+```bash
+# On Linux or OSX
+$ mono `vcpkg fetch nuget | tail -n1` sources add \
+  -name ADO \
+  -Source https://pkgs.dev.azure.com/$ORG/_packaging/$FEEDNAME/nuget/v3/index.json \
+  -Username $USERNAME \
+  -Password $PAT
+$ export VCPKG_BINARY_SOURCES="nuget,ADO,readwrite"
+```
+```powershell
+# On Windows Powershell
+PS> & $(vcpkg fetch nuget | select -last 1) sources add `
+  -name ADO `
+  -Source https://pkgs.dev.azure.com/$ORG/_packaging/$FEEDNAME/nuget/v3/index.json `
+  -Username $USERNAME `
+  -Password $PAT
+PS> $env:VCPKG_BINARY_SOURCES="nuget,ADO,readwrite"
+```
+
+We recommend using a Personal Access Token (PAT) as the password for maximum security. You can generate a PAT in User Settings -> Personal Access Tokens or `https://dev.azure.com/$ORG/_usersSettings/tokens`.
+
+#### `metadata.repository`
 
 The `nuget` and `nugetconfig` source providers additionally respect certain environment variables while generating nuget packages. The `metadata.repository` field of any packages will be generated as:
 ```
@@ -127,7 +197,9 @@ or
 ```
 if the appropriate environment variables are defined and non-empty. This is specifically used to associate packages in GitHub Packages with the _building_ project and not intended to associate with the original package sources.
 
-Finally, binary caching can be completely disabled by passing `--no-binarycaching` on the command line.
+#### NuGet's cache
+
+NuGet's cache is not used by default. To use it for every nuget-based source, set the [environment variable](config-environment.md) `VCPKG_USE_NUGET_CACHE` to `true` (case-insensitive) or `1`.
 
 ## Implementation Notes (internal details subject to change without notice)
 

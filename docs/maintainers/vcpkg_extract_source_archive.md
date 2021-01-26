@@ -15,7 +15,7 @@ The full path to the archive to be extracted.
 This is usually obtained from calling [`vcpkg_download_distfile`](vcpkg_download_distfile.md).
 
 ### TARGET_DIRECTORY
-If specified, the archive will be extracted into the target directory instead of `${CURRENT_BUILDTREES_DIR}\src\`.
+If specified, the archive will be extracted into the target directory instead of `${CURRENT_BUILDTREES_DIR}/src/`.
 
 This can be used to mimic git submodules, by extracting into a subdirectory of another archive.
 
