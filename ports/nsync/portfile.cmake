@@ -4,22 +4,22 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO    google/nsync
-    REF     1.24.0
-    SHA512  14dd582488072123a353c967664ed9a3f636865bb35e64d7256dcc809539129fa47c7979a4009fd45c9341cac537a4ca6b4b617ba2cae1d3995a7c251376339f
+    REPO google/nsync
+    REF 1.24.0
+    SHA512 14dd582488072123a353c967664ed9a3f636865bb35e64d7256dcc809539129fa47c7979a4009fd45c9341cac537a4ca6b4b617ba2cae1d3995a7c251376339f
     HEAD_REF master
 )
 
 vcpkg_replace_string(${SOURCE_PATH}/CMakeLists.txt
-  "if (\"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsX\")"
-  "if (\"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsX\" OR \"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsStoreX\" )"
+    "if (\"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsX\")"
+    "if (\"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsX\" OR \"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsStoreX\" )"
 )
 
 vcpkg_configure_cmake(
-  SOURCE_PATH ${SOURCE_PATH}
-  PREFER_NINJA
-  OPTIONS
-    -DNSYNC_ENABLE_TESTS=OFF
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DNSYNC_ENABLE_TESTS=OFF
 )
 vcpkg_build_cmake(TARGET nsync)
 vcpkg_install_cmake()
