@@ -2,14 +2,13 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Be-ing/portaudio
-    REF e103b2c18cadd648bdc3aa057172537b72f56c64
-    SHA512 952b791d135ead3529c65c0274599be4b9194e4615849144127f88f661cbb8323a821b20ba59eec92692d1fec7f43a432a7853ea335c0a785532f7ba73888a6b
+    REF 5905aff5f72fa72dc1da97bfcfaea39ffe11c547
+    SHA512 3698e8948ef53410cd2875a8909d2e057721f3c05be033af1df0fbd19bff299f29fdef92fa9ef8b631f3f461b1ebe0c663e578da213c7d8b49b5b4c2235a62a7
     HEAD_REF cmake_rewrite
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS_DEBUG
         -DDEBUG_OUTPUT:BOOL=ON
 )
