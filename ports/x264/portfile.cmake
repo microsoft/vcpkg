@@ -1,5 +1,7 @@
 set(X264_VERSION 157)
 
+vcpkg_fail_port_install(ON_ARCH "arm")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mirror/x264
@@ -12,7 +14,7 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
+vcpkg_add_to_path(${NASM_EXE_PATH})
 
 if(VCPKG_TARGET_IS_WINDOWS)
     _vcpkg_determine_autotools_host_cpu(BUILD_ARCH)
@@ -82,7 +84,7 @@ elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
 endif()
 
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES -lpthread -lm -ldl)
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
