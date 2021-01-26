@@ -45,7 +45,7 @@ namespace vcpkg::Commands::Contact
             }
 
 #if defined(_WIN32)
-            System::cmd_execute("start https://aka.ms/NPS_vcpkg");
+            System::cmd_execute(System::Command("start").string_arg("https://aka.ms/NPS_vcpkg"));
             System::print2("Default browser launched to https://aka.ms/NPS_vcpkg; thank you for your feedback!\n");
 #else
             System::print2("Please navigate to https://aka.ms/NPS_vcpkg in your preferred browser. Thank you for your "

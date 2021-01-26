@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         werror.patch
         fix-dependency-gtest.patch
+        fix-warning-c4834.patch
 )
 
 vcpkg_configure_cmake(
@@ -21,7 +22,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
 
 vcpkg_fixup_cmake_targets()
 

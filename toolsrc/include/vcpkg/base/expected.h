@@ -3,6 +3,7 @@
 #include <vcpkg/base/checks.h>
 #include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/stringliteral.h>
+#include <vcpkg/base/system.print.h>
 
 #include <system_error>
 #include <type_traits>
@@ -110,7 +111,10 @@ namespace vcpkg
         // Constructors are intentionally implicit
 
         ExpectedT(const S& s, ExpectedRightTag = {}) : m_s(s) { }
-        ExpectedT(S&& s, ExpectedRightTag = {}) : m_s(std::move(s)) { }
+        template<class = std::enable_if<!std::is_reference<S>::value>>
+        ExpectedT(S&& s, ExpectedRightTag = {}) : m_s(std::move(s))
+        {
+        }
 
         ExpectedT(const T& t, ExpectedLeftTag = {}) : m_t(t) { }
         template<class = std::enable_if<!std::is_reference<T>::value>>
@@ -222,12 +226,11 @@ namespace vcpkg
     private:
         void exit_if_error(const LineInfo& line_info) const
         {
-            // This is used for quick value_or_exit() calls, so always put line_info in the error message.
-            Checks::check_exit(line_info,
-                               !m_s.has_error(),
-                               "Failed at [%s] with message:\n%s",
-                               line_info.to_string(),
-                               m_s.to_string());
+            if (m_s.has_error())
+            {
+                System::print2(System::Color::error, m_s.to_string(), "\n");
+                Checks::unreachable(line_info);
+            }
         }
 
         ErrorHolder<S> m_s;

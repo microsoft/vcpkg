@@ -112,8 +112,8 @@ namespace vcpkg::Commands::Integrate
 )";
 
         std::string content = Strings::replace_all(CONTENT_TEMPLATE, "@NUGET_ID@", nuget_id);
-        content = Strings::replace_all(std::move(content), "@VCPKG_DIR@", vcpkg_root_dir.string());
-        content = Strings::replace_all(std::move(content), "@VERSION@", nupkg_version);
+        Strings::inplace_replace_all(content, "@VCPKG_DIR@", vcpkg_root_dir.string());
+        Strings::inplace_replace_all(content, "@VERSION@", nupkg_version);
         return content;
     }
 #endif
@@ -379,10 +379,11 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
             nuspec_file_path, create_nuspec_file_contents(paths.root, nuget_id, nupkg_version), VCPKG_LINE_INFO);
 
         // Using all forward slashes for the command line
-        const std::string cmd_line = Strings::format(R"("%s" pack -OutputDirectory "%s" "%s")",
-                                                     fs::u8string(nuget_exe),
-                                                     fs::u8string(buildsystems_dir),
-                                                     fs::u8string(nuspec_file_path));
+        auto cmd_line = System::Command(nuget_exe)
+                            .string_arg("pack")
+                            .string_arg("-OutputDirectory")
+                            .path_arg(buildsystems_dir)
+                            .path_arg(nuspec_file_path);
 
         const int exit_code =
             System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;
@@ -393,7 +394,7 @@ CMake projects should use: "-DCMAKE_TOOLCHAIN_FILE=%s"
         System::print2(System::Color::success, "Created nupkg: ", fs::u8string(nuget_package), '\n');
 
         auto source_path = fs::u8string(buildsystems_dir);
-        source_path = Strings::replace_all(std::move(source_path), "`", "``");
+        Strings::inplace_replace_all(source_path, "`", "``");
 
         System::printf(R"(
 With a project open, go to Tools->NuGet Package Manager->Package Manager Console and paste:
@@ -414,9 +415,12 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         const fs::path script_path = paths.scripts / "addPoshVcpkgToPowershellProfile.ps1";
 
         const auto& ps = paths.get_tool_exe("powershell-core");
-        const std::string cmd = Strings::format(R"("%s" -NoProfile -ExecutionPolicy Bypass -Command "& {& '%s' }")",
-                                                fs::u8string(ps),
-                                                fs::u8string(script_path));
+        auto cmd = System::Command(ps)
+                       .string_arg("-NoProfile")
+                       .string_arg("-ExecutionPolicy")
+                       .string_arg("Bypass")
+                       .string_arg("-Command")
+                       .string_arg(Strings::format("& {& '%s' }", fs::u8string(script_path)));
         const int rc = System::cmd_execute(cmd);
         if (rc)
         {
@@ -593,7 +597,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
         }
 #endif
 
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Unknown parameter %s for integrate", args.command_arguments[0]);
+        Checks::exit_maybe_upgrade(VCPKG_LINE_INFO, "Unknown parameter %s for integrate", args.command_arguments[0]);
     }
 
     void IntegrateCommand::perform_and_exit(const VcpkgCmdArguments& args, const VcpkgPaths& paths) const

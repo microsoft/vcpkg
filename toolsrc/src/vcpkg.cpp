@@ -79,34 +79,6 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
     paths.track_feature_flag_metrics();
 
     fs.current_path(paths.root, VCPKG_LINE_INFO);
-    if ((args.command == "install" || args.command == "remove" || args.command == "export" ||
-         args.command == "update") &&
-        !args.output_json())
-    {
-        Commands::Version::warn_if_vcpkg_version_mismatch(paths);
-        std::string surveydate = *GlobalState::g_surveydate.lock();
-        auto maybe_surveydate = Chrono::CTime::parse(surveydate);
-        if (auto p_surveydate = maybe_surveydate.get())
-        {
-            const auto now = Chrono::CTime::get_current_date_time().value_or_exit(VCPKG_LINE_INFO);
-            const auto delta = now.to_time_point() - p_surveydate->to_time_point();
-            if (std::chrono::duration_cast<std::chrono::hours>(delta).count() > SURVEY_INTERVAL_IN_HOURS)
-            {
-                std::default_random_engine generator(
-                    static_cast<unsigned int>(now.to_time_point().time_since_epoch().count()));
-                std::uniform_int_distribution<int> distribution(1, 4);
-
-                if (distribution(generator) == 1)
-                {
-                    Metrics::g_metrics.lock()->track_property("surveyprompt", "true");
-                    System::print2(
-                        System::Color::success,
-                        "Your feedback is important to improve Vcpkg! Please take 3 minutes to complete our survey "
-                        "by running: vcpkg contact --survey\n");
-                }
-            }
-        }
-    }
 
     if (const auto command_function = find_command(Commands::get_available_paths_commands()))
     {
@@ -238,35 +210,54 @@ int main(const int argc, const char* const* const argv)
 
     load_config(fs);
 
-#if (defined(__aarch64__) || defined(__arm__) || defined(__s390x__) || defined(_M_ARM) || defined(_M_ARM64)) &&        \
-    !defined(_WIN32)
+#if (defined(__aarch64__) || defined(__arm__) || defined(__s390x__) ||                                                 \
+     ((defined(__ppc64__) || defined(__PPC64__) || defined(__ppc64le__) || defined(__PPC64LE__)) &&                    \
+      defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)) ||                                       \
+     defined(_M_ARM) || defined(_M_ARM64)) &&                                                                          \
+    !defined(_WIN32) && !defined(__APPLE__)
     if (!System::get_environment_variable("VCPKG_FORCE_SYSTEM_BINARIES").has_value())
     {
         Checks::exit_with_message(
             VCPKG_LINE_INFO,
-            "Environment variable VCPKG_FORCE_SYSTEM_BINARIES must be set on arm and s390x platforms.");
+            "Environment variable VCPKG_FORCE_SYSTEM_BINARIES must be set on arm, s390x, and ppc64le platforms.");
     }
 #endif
 
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(fs, argc, argv);
+    if (const auto p = args.debug.get()) Debug::g_debugging = *p;
     args.imbue_from_environment();
     args.check_feature_flag_consistency();
 
-    if (const auto p = args.disable_metrics.get()) Metrics::g_metrics.lock()->set_disabled(*p);
-    if (const auto p = args.print_metrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
-    if (const auto p = args.send_metrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
-    if (const auto p = args.debug.get()) Debug::g_debugging = *p;
+    {
+        auto metrics = Metrics::g_metrics.lock();
+        if (const auto p = args.disable_metrics.get())
+        {
+            metrics->set_disabled(*p);
+        }
 
-    if (args.send_metrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
-    {
-        System::print2(System::Color::warning,
-                       "Warning: passed either --sendmetrics or --no-sendmetrics, but metrics are disabled.\n");
-    }
-    if (args.print_metrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
-    {
-        System::print2(System::Color::warning,
-                       "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
-    }
+        auto disable_metrics_tag_file_path =
+            System::get_exe_path_of_current_process().replace_filename(fs::u8path("vcpkg.disable-metrics"));
+        std::error_code ec;
+        if (fs.exists(disable_metrics_tag_file_path, ec) || ec)
+        {
+            metrics->set_disabled(true);
+        }
+
+        if (const auto p = args.print_metrics.get())
+        {
+            metrics->set_print_metrics(*p);
+        }
+
+        if (const auto p = args.send_metrics.get())
+        {
+            metrics->set_send_metrics(*p);
+        }
+
+        if (args.send_metrics.value_or(false) && !metrics->metrics_enabled())
+        {
+            System::print2(System::Color::warning, "Warning: passed --sendmetrics, but metrics are disabled.\n");
+        }
+    } // unlock Metrics::g_metrics
 
     args.debug_print_feature_flags();
     args.track_feature_flag_metrics();

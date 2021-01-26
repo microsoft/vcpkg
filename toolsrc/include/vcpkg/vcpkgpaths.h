@@ -91,6 +91,8 @@ namespace vcpkg
         fs::path community_triplets;
         fs::path scripts;
         fs::path prefab;
+        fs::path builtin_ports;
+        fs::path builtin_registry_versions;
 
         fs::path tools;
         fs::path buildsystems;
@@ -102,10 +104,39 @@ namespace vcpkg
         fs::path vcpkg_dir_info;
         fs::path vcpkg_dir_updates;
 
+        fs::path baselines_dot_git_dir;
+        fs::path baselines_work_tree;
+        fs::path baselines_output;
+
+        fs::path versions_dot_git_dir;
+        fs::path versions_work_tree;
+        fs::path versions_output;
+
         fs::path ports_cmake;
 
         const fs::path& get_tool_exe(const std::string& tool) const;
         const std::string& get_tool_version(const std::string& tool) const;
+
+        // Git manipulation in the vcpkg directory
+        ExpectedS<std::string> get_current_git_sha() const;
+        std::string get_current_git_sha_message() const;
+        ExpectedS<fs::path> git_checkout_baseline(StringView commit_sha) const;
+        ExpectedS<fs::path> git_checkout_port(StringView port_name,
+                                              StringView git_tree,
+                                              const fs::path& dot_git_dir) const;
+        ExpectedS<std::string> git_show(const std::string& treeish, const fs::path& dot_git_dir) const;
+
+        ExpectedS<std::map<std::string, std::string, std::less<>>> git_get_local_port_treeish_map() const;
+
+        // Git manipulation for remote registries
+        // runs `git fetch {uri} {treeish}`, and returns the hash of FETCH_HEAD.
+        // If `treeish` is empty, then just runs `git fetch {uri}`
+        ExpectedS<std::string> git_fetch_from_remote_registry(StringView uri, StringView treeish = {}) const;
+        ExpectedS<std::string> git_show_from_remote_registry(StringView hash,
+                                                             const fs::path& relative_path_to_file) const;
+        ExpectedS<std::string> git_find_object_id_for_remote_registry_path(StringView hash,
+                                                                           const fs::path& relative_path_to_file) const;
+        ExpectedS<fs::path> git_checkout_object_from_remote_registry(StringView tree) const;
 
         Optional<const Json::Object&> get_manifest() const;
         Optional<const fs::path&> get_manifest_path() const;
@@ -116,6 +147,8 @@ namespace vcpkg
         ///   Valid version strings are "v120", "v140", "v141", and "". Empty string gets the latest.
         /// </remarks>
         const Toolset& get_toolset(const Build::PreBuildInfo& prebuildinfo) const;
+
+        View<Toolset> get_all_toolsets() const;
 
         Files::Filesystem& get_filesystem() const;
 
@@ -129,9 +162,17 @@ namespace vcpkg
 
         // the directory of the builtin ports
         // this should be used only for helper commands, not core commands like `install`.
-        fs::path builtin_ports_directory() const { return root / fs::u8path("ports"); }
+        fs::path builtin_ports_directory() const { return this->builtin_ports; }
 
     private:
         std::unique_ptr<details::VcpkgPathsImpl> m_pimpl;
+
+        static void git_checkout_subpath(const VcpkgPaths& paths,
+                                         StringView commit_sha,
+                                         const fs::path& subpath,
+                                         const fs::path& local_repo,
+                                         const fs::path& destination,
+                                         const fs::path& dot_git_dir,
+                                         const fs::path& work_tree);
     };
 }

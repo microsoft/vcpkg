@@ -2,6 +2,15 @@
 #include <vcpkg/base/strings.h>
 #include <vcpkg/base/util.h>
 
+#include <locale.h>
+#include <stdarg.h>
+#include <stdio.h>
+
+#include <algorithm>
+#include <locale>
+#include <string>
+#include <vector>
+
 namespace vcpkg::Strings::details
 {
     // To disambiguate between two overloads
@@ -126,15 +135,30 @@ bool Strings::starts_with(StringView s, StringView pattern)
     return std::equal(s.begin(), s.begin() + pattern.size(), pattern.begin(), pattern.end());
 }
 
-std::string Strings::replace_all(std::string&& s, const std::string& search, StringView rep)
+std::string Strings::replace_all(std::string&& s, StringView search, StringView rep)
 {
+    inplace_replace_all(s, search, rep);
+    return std::move(s);
+}
+
+void Strings::inplace_replace_all(std::string& s, StringView search, StringView rep)
+{
+    if (search.empty())
+    {
+        return;
+    }
+
     size_t pos = 0;
-    while ((pos = s.find(search, pos)) != std::string::npos)
+    while ((pos = s.find(search.data(), pos, search.size())) != std::string::npos)
     {
         s.replace(pos, search.size(), rep.data(), rep.size());
         pos += rep.size();
     }
-    return std::move(s);
+}
+
+void Strings::inplace_replace_all(std::string& s, char search, char rep) noexcept
+{
+    std::replace(s.begin(), s.end(), search, rep);
 }
 
 std::string Strings::trim(std::string&& s)
@@ -222,26 +246,26 @@ std::vector<StringView> Strings::find_all_enclosed(StringView input, StringView 
 StringView Strings::find_exactly_one_enclosed(StringView input, StringView left_tag, StringView right_tag)
 {
     std::vector<StringView> result = find_all_enclosed(input, left_tag, right_tag);
-    Checks::check_exit(VCPKG_LINE_INFO,
-                       result.size() == 1,
-                       "Found %d sets of %s.*%s but expected exactly 1, in block:\n%s",
-                       result.size(),
-                       left_tag,
-                       right_tag,
-                       input);
+    Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                result.size() == 1,
+                                "Found %d sets of %s.*%s but expected exactly 1, in block:\n%s",
+                                result.size(),
+                                left_tag,
+                                right_tag,
+                                input);
     return result.front();
 }
 
 Optional<StringView> Strings::find_at_most_one_enclosed(StringView input, StringView left_tag, StringView right_tag)
 {
     std::vector<StringView> result = find_all_enclosed(input, left_tag, right_tag);
-    Checks::check_exit(VCPKG_LINE_INFO,
-                       result.size() <= 1,
-                       "Found %d sets of %s.*%s but expected at most 1, in block:\n%s",
-                       result.size(),
-                       left_tag,
-                       right_tag,
-                       input);
+    Checks::check_maybe_upgrade(VCPKG_LINE_INFO,
+                                result.size() <= 1,
+                                "Found %d sets of %s.*%s but expected at most 1, in block:\n%s",
+                                result.size(),
+                                left_tag,
+                                right_tag,
+                                input);
 
     if (result.empty())
     {
