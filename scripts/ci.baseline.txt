@@ -225,10 +225,6 @@ duilib:x64-uwp=fail
 # python2 EOL yay!
 duktape:x64-osx=skip
 
-dxut:arm64-windows=fail
-dxut:arm-uwp=fail
-dxut:x64-linux=fail
-dxut:x64-osx=fail
 eastl:arm-uwp=fail
 easyhook:arm64-windows=fail
 easyhook:arm-uwp=fail

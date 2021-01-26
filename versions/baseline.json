@@ -1689,8 +1689,8 @@
       "port-version": 0
     },
     "dxut": {
-      "baseline": "11.14-3",
-      "port-version": 0
+      "baseline": "11.14",
+      "port-version": 4
     },
     "eabase": {
       "baseline": "2.09.12-1",
