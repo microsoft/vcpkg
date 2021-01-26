@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 16c0ede..78532d1 100644
+index 89521b1..5ff0f01 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -763,7 +763,7 @@ if(WITH_OPENVX)
+@@ -772,7 +772,7 @@ if(WITH_OPENVX)
  endif()
  
  if(WITH_QUIRC)
@@ -12,11 +12,11 @@ index 16c0ede..78532d1 100644
  endif()
  # ----------------------------------------------------------------------------
 diff --git a/modules/objdetect/CMakeLists.txt b/modules/objdetect/CMakeLists.txt
-index 414e578..4f26d75 100644
+index 3fa0c5d..f4c0ad6 100644
 --- a/modules/objdetect/CMakeLists.txt
 +++ b/modules/objdetect/CMakeLists.txt
 @@ -2,7 +2,5 @@ set(the_description "Object Detection")
- ocv_define_module(objdetect opencv_core opencv_imgproc opencv_calib3d WRAP java python js)
+ ocv_define_module(objdetect opencv_core opencv_imgproc opencv_calib3d WRAP java objc python js)
  
  if(HAVE_QUIRC)
 -    get_property(QUIRC_INCLUDE GLOBAL PROPERTY QUIRC_INCLUDE_DIR)
