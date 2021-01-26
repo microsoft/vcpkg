@@ -3614,7 +3614,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 2
+      "port-version": 3
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -3626,7 +3626,7 @@
     },
     "magnum-plugins": {
       "baseline": "2020.06",
-      "port-version": 1
+      "port-version": 2
     },
     "mapbox-variant": {
       "baseline": "1.2.0",
