@@ -102,5 +102,4 @@ function(vcpkg_install_meson)
             unset(ENV{MACOSX_DEPLOYMENT_TARGET})
         endif()
     endif()
-
 endfunction()
