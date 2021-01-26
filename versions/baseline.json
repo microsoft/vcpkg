@@ -4234,7 +4234,7 @@
     },
     "opencv3": {
       "baseline": "3.4.12",
-      "port-version": 0
+      "port-version": 1
     },
     "opencv4": {
       "baseline": "4.5.0",
