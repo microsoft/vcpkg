@@ -12,12 +12,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES build.patch
+            gtkapi.patch    #upstream patch to fix dllimport issue
 )
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} /DGTKMM_BUILD /DGDKMM_BUILD")
-    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} /DGTKMM_BUILD /DGDKMM_BUILD")
-endif()
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
