@@ -2838,7 +2838,7 @@
     },
     "libass": {
       "baseline": "0.15.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libassuan": {
       "baseline": "2.5.3",
