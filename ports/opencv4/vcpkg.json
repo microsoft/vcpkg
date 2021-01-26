@@ -5,13 +5,13 @@
   "description": "computer vision library",
   "homepage": "https://github.com/opencv/opencv",
   "dependencies": [
-    "quirc",
     "zlib"
   ],
   "default-features": [
     "dnn",
     "jpeg",
     "png",
+    "quirc",
     "tiff",
     "webp"
   ],
@@ -155,6 +155,12 @@
           "name": "qt5-base",
           "default-features": false
         }
+      ]
+    },
+    "quirc": {
+      "description": "Enable QR code module",
+      "dependencies": [
+        "quirc"
       ]
     },
     "sfm": {

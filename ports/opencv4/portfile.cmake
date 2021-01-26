@@ -43,8 +43,8 @@ set(ADE_DIR ${CURRENT_INSTALLED_DIR}/share/ade CACHE PATH "Path to existing ADE 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "ade"      WITH_ADE
  "contrib"  WITH_CONTRIB
- "cuda"     WITH_CUDA
  "cuda"     WITH_CUBLAS
+ "cuda"     WITH_CUDA
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
  "gdcm"     WITH_GDCM
@@ -57,6 +57,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "opengl"   WITH_OPENGL
  "png"      WITH_PNG
  "qt"       WITH_QT
+ "quirc"    WITH_QUIRC
  "sfm"      BUILD_opencv_sfm
  "tiff"     WITH_TIFF
  "vtk"      WITH_VTK
@@ -442,6 +443,9 @@ find_dependency(Tesseract)")
   endif()
   if(BUILD_opencv_ovis)
     string(APPEND DEPS_STRING "\nfind_dependency(Ogre)\nfind_dependency(Freetype)")
+  endif()
+  if("quirc" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(quirc CONFIG)")
   endif()
   if("qt" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "
