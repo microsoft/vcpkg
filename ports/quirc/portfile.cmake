@@ -16,7 +16,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets()
