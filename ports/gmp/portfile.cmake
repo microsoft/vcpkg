@@ -9,9 +9,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
         REF 0018c44e8dfcc3b64b43e0aea4b3f419f0b65fd0 #v6.2.1-2
         SHA512 2405e2536ca9fe0b890f44f54c936ac0e4b5a9ebe6a19e1c48a9c21b7211d2a1b45865852e3c65a98a6735216a4e27bea75c0fd6e52efeed4baecd95da9895a5
         HEAD_REF master
-        PATCHES
+        PATCHES 
             vs.build.patch
             runtime.patch
+            adddef.patch 
     )
 
     include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
@@ -80,6 +81,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     configure_file("${SOURCE_PATH}/gmp.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gmp.pc" @ONLY)
     configure_file("${SOURCE_PATH}/gmpxx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gmpxx.pc" @ONLY)
     vcpkg_fixup_pkgconfig()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gmp.h"
+                            "#if defined(DLL_EXPORT) && defined(NO_ASM)"
+                            "#if 1")
+    endif()
 else()
     vcpkg_download_distfile(
         ARCHIVE
@@ -97,6 +103,7 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
+        OPTIONS ${OPTIONS}
     )
 
     vcpkg_install_make()
@@ -104,5 +111,6 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+    # # Handle copyright
     file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 endif()
