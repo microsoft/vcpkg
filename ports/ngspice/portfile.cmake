@@ -12,7 +12,8 @@ vcpkg_from_sourceforge(
     FILENAME "ngspice-33.tar.gz"
     SHA512 895e39f7de185df18bf443a9fa5691cdb3bf0a5091d9860d20ccb02254ef396a4cca5a1c8bf4ba19a03783fc89bb86649218cee977b0fe4565d3c84548943c09
     PATCHES
-        use-winbison-global.patch
+        use-winbison-sharedspice.patch
+        use-winbison-vngspice.patch
 )
 
 vcpkg_find_acquire_program(BISON)
@@ -30,6 +31,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE ${SOURCE_PATH}/man)
     file(REMOVE_RECURSE ${SOURCE_PATH}/tests)
 
+	# this builds the main dll
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
         INCLUDES_SUBPATH /src/include
@@ -39,9 +41,41 @@ if (VCPKG_TARGET_IS_WINDOWS)
         PROJECT_SUBPATH visualc/sharedspice.sln
         TARGET Build
     )
+	
+	# vngspice generates "codemodels" to enhance simulation capabilities
+	# we cannot use install_msbuild as they output with ".cm" extensions on purpose
+	set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+	file(REMOVE_RECURSE ${BUILDTREE_PATH})
+	file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
+
+    vcpkg_build_msbuild(
+        PROJECT_PATH ${BUILDTREE_PATH}/visualc/vngspice.sln
+        INCLUDES_SUBPATH /src/include
+        LICENSE_SUBPATH COPYING
+        # build_msbuild swaps x86 for win32(bad) if we dont force our own setting
+        PLATFORM ${TRIPLET_SYSTEM_ARCH}
+        TARGET Build
+    )
+	
+	#put the code models in the intended location
+	file(GLOB NGSPICE_CODEMODELS_DEBUG
+		${BUILDTREE_PATH}/visualc/codemodels/${TRIPLET_SYSTEM_ARCH}/Debug/*.cm
+	)
+	file(COPY ${NGSPICE_CODEMODELS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/ngspice)
+	
+	file(GLOB NGSPICE_CODEMODELS_RELEASE
+		${BUILDTREE_PATH}/visualc/codemodels/${TRIPLET_SYSTEM_ARCH}/Release/*.cm
+	)
+	file(COPY ${NGSPICE_CODEMODELS_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/ngspice)
+	
+	
+	# copy over spinit (spice init)
+	file(RENAME ${BUILDTREE_PATH}/visualc/spinit_all ${BUILDTREE_PATH}/visualc/spinit)
+	file(COPY ${BUILDTREE_PATH}/visualc/spinit DESTINATION ${CURRENT_PACKAGES_DIR}/share/ngspice)
 else()
     message(FATAL_ERROR "Sorry but ngspice only can be built in Windows")
 endif()
+
 
 # Unforunately install_msbuild isn't able to dual include directories that effectively layer
 file(GLOB NGSPICE_INCLUDES
