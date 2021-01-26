@@ -104,7 +104,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
 elseif(VCPKG_TARGET_IS_OSX)
   set(SOLUTION_TYPE gnuace)
   file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-macosx.h\"")
-  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
+  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "c++11=1\ninclude $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
@@ -147,7 +147,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
            DESTINATION ${CURRENT_PACKAGES_DIR}/include/${RELATIVE_PATH})
     endforeach()
   endfunction()
-  
+
   get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
   set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
 
@@ -272,7 +272,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)
     endif()
   endif()
-  
+
   vcpkg_clean_msbuild()
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
