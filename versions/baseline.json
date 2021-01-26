@@ -1689,8 +1689,8 @@
       "port-version": 0
     },
     "dxut": {
-      "baseline": "11.14-3",
-      "port-version": 0
+      "baseline": "11.14",
+      "port-version": 4
     },
     "eabase": {
       "baseline": "2.09.12-1",
@@ -4225,8 +4225,8 @@
       "port-version": 0
     },
     "opencv": {
-      "baseline": "4.3.0",
-      "port-version": 1
+      "baseline": "4.5.0",
+      "port-version": 0
     },
     "opencv2": {
       "baseline": "2.4.13.7",
@@ -4234,11 +4234,11 @@
     },
     "opencv3": {
       "baseline": "3.4.12",
-      "port-version": 0
+      "port-version": 1
     },
     "opencv4": {
       "baseline": "4.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opendnp3": {
       "baseline": "3.1.0",
@@ -4946,7 +4946,7 @@
     },
     "quirc": {
       "baseline": "1.1",
-      "port-version": 1
+      "port-version": 2
     },
     "qwt": {
       "baseline": "6.1.5",

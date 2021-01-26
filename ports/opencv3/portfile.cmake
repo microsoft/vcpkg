@@ -20,6 +20,7 @@ vcpkg_from_github(
       0003-force-package-requirements.patch
       0005-fix-vtk9.patch
       0009-fix-uwp.patch
+      0010-devendor-quirc.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -38,8 +39,8 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "contrib"  WITH_CONTRIB
- "cuda"     WITH_CUDA
  "cuda"     WITH_CUBLAS
+ "cuda"     WITH_CUDA
  "dnn"      BUILD_opencv_dnn
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
@@ -54,6 +55,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "opengl"   WITH_OPENGL
  "png"      WITH_PNG
  "qt"       WITH_QT
+ "quirc"    WITH_QUIRC
  "sfm"      BUILD_opencv_sfm
  "tiff"     WITH_TIFF
  "vtk"      WITH_VTK
@@ -400,6 +402,9 @@ find_dependency(Tesseract)")
   endif()
   if(BUILD_opencv_ovis)
     string(APPEND DEPS_STRING "\nfind_dependency(Ogre)\nfind_dependency(Freetype)")
+  endif()
+  if("quirc" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(quirc)")
   endif()
   if("qt" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "
