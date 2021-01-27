@@ -8,11 +8,8 @@ vcpkg_from_github(
     REF 1.24.0
     SHA512 14dd582488072123a353c967664ed9a3f636865bb35e64d7256dcc809539129fa47c7979a4009fd45c9341cac537a4ca6b4b617ba2cae1d3995a7c251376339f
     HEAD_REF master
-)
-
-vcpkg_replace_string(${SOURCE_PATH}/CMakeLists.txt
-    "if (\"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsX\")"
-    "if (\"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsX\" OR \"\${CMAKE_SYSTEM_NAME}X\" STREQUAL \"WindowsStoreX\" )"
+    PATCHES
+        fix-install.patch
 )
 
 vcpkg_configure_cmake(
@@ -21,7 +18,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DNSYNC_ENABLE_TESTS=OFF
 )
-vcpkg_build_cmake(TARGET nsync)
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
