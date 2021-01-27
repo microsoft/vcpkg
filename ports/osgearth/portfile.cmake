@@ -15,7 +15,11 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         make-all-find-packages-required.patch
+        fix-tinyxml.patch
 )
+
+# Upstream bug, see https://github.com/gwaldron/osgearth/issues/1002
+file(REMOVE ${SOURCE_PATH}/src/osgEarth/tinyxml.h)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
