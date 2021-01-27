@@ -29,7 +29,7 @@ index b46a0f1a0..3d87f5204 100644
 
      # Some systems (e.g. Fedora) don't fill Brotli_LIBRARY_DIRS, so add the other dirs here.
 diff --git a/cpp/cmake_modules/FindLz4.cmake b/cpp/cmake_modules/FindLz4.cmake
-index 14b6d93b9..95621720f 100644
+index 14b6d93b9..d8d80c408 100644
 --- a/cpp/cmake_modules/FindLz4.cmake
 +++ b/cpp/cmake_modules/FindLz4.cmake
 @@ -15,10 +15,12 @@
@@ -62,6 +62,17 @@ index 14b6d93b9..95621720f 100644
  endif()
 
  if(LZ4_ROOT)
+@@ -56,8 +54,8 @@ if(LZ4_ROOT)
+
+ else()
+   find_package(PkgConfig QUIET)
+-  pkg_check_modules(LZ4_PC liblz4)
+-  if(LZ4_PC_FOUND)
++  #pkg_check_modules(LZ4_PC liblz4)
++  if(0) # Do not use pkg_check_modules, doesn't seem to work correctly on some macOS versions (10.x in GitHub Actions)
+     set(LZ4_INCLUDE_DIR "${LZ4_PC_INCLUDEDIR}")
+
+     list(APPEND LZ4_PC_LIBRARY_DIRS "${LZ4_PC_LIBDIR}")
 diff --git a/cpp/cmake_modules/FindSnappy.cmake b/cpp/cmake_modules/FindSnappy.cmake
 index 5784cf592..817cf0c47 100644
 --- a/cpp/cmake_modules/FindSnappy.cmake
