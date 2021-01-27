@@ -4064,6 +4064,10 @@
       "baseline": "4.1.2",
       "port-version": 0
     },
+    "nsync": {
+      "baseline": "1.24.0",
+      "port-version": 0
+    },
     "nt-wrapper": {
       "baseline": "2019-08-10",
       "port-version": 0
