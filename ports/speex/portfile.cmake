@@ -1,5 +1,4 @@
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
-  set(USE_CMAKE_BUILDSYSTEM TRUE)
+if(VCPKG_TARGET_IS_WINDOWS)
   list(APPEND PATCHES "0001-make-pkg-config-lib-name-configurable.patch")
 endif()
 
@@ -12,8 +11,9 @@ vcpkg_from_github(
   PATCHES ${PATCHES}
 )
 
-if(USE_CMAKE_BUILDSYSTEM)
-  file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+if(VCPKG_TARGET_IS_WINDOWS)
+  file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
+  
   vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -22,18 +22,16 @@ if(USE_CMAKE_BUILDSYSTEM)
   vcpkg_install_cmake()
 
   if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(READ "${CURRENT_PACKAGES_DIR}/include/speex/speex.h" _contents)
-    string(REPLACE "extern const SpeexMode" "__declspec(dllimport) extern const SpeexMode" _contents "${_contents}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/include/speex/speex.h" "${_contents}")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/speex/speex.h"
+        "extern const SpeexMode"
+        "__declspec(dllimport) extern const SpeexMode"
+    )
   endif()
 else()
-  message("\
-${PORT} currently requires the following libraries from the system package manager:
-    autoconf libtool
-These can be installed on Ubuntu systems via sudo apt install autoconf libtool\
-  ")
-
-  vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH} AUTOCONFIG)
+  vcpkg_configure_make(
+    SOURCE_PATH ${SOURCE_PATH}
+    AUTOCONFIG
+  )
   vcpkg_install_make()
 
   file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
@@ -41,4 +39,4 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
