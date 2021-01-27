@@ -42,36 +42,38 @@ if (VCPKG_TARGET_IS_WINDOWS)
         TARGET Build
     )
     
-    # vngspice generates "codemodels" to enhance simulation capabilities
-    # we cannot use install_msbuild as they output with ".cm" extensions on purpose
-    set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
-    file(REMOVE_RECURSE ${BUILDTREE_PATH})
-    file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
+	if("codemodels" IN_LIST FEATURES)
+		# vngspice generates "codemodels" to enhance simulation capabilities
+		# we cannot use install_msbuild as they output with ".cm" extensions on purpose
+		set(BUILDTREE_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
+		file(REMOVE_RECURSE ${BUILDTREE_PATH})
+		file(COPY ${SOURCE_PATH}/ DESTINATION ${BUILDTREE_PATH})
 
-    vcpkg_build_msbuild(
-        PROJECT_PATH ${BUILDTREE_PATH}/visualc/vngspice.sln
-        INCLUDES_SUBPATH /src/include
-        LICENSE_SUBPATH COPYING
-        # build_msbuild swaps x86 for win32(bad) if we dont force our own setting
-        PLATFORM ${TRIPLET_SYSTEM_ARCH}
-        TARGET Build
-    )
-    
-    #put the code models in the intended location
-    file(GLOB NGSPICE_CODEMODELS_DEBUG
-        ${BUILDTREE_PATH}/visualc/codemodels/${TRIPLET_SYSTEM_ARCH}/Debug/*.cm
-    )
-    file(COPY ${NGSPICE_CODEMODELS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/ngspice)
-    
-    file(GLOB NGSPICE_CODEMODELS_RELEASE
-        ${BUILDTREE_PATH}/visualc/codemodels/${TRIPLET_SYSTEM_ARCH}/Release/*.cm
-    )
-    file(COPY ${NGSPICE_CODEMODELS_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/ngspice)
-    
-    
-    # copy over spinit (spice init)
-    file(RENAME ${BUILDTREE_PATH}/visualc/spinit_all ${BUILDTREE_PATH}/visualc/spinit)
-    file(COPY ${BUILDTREE_PATH}/visualc/spinit DESTINATION ${CURRENT_PACKAGES_DIR}/share/ngspice)
+		vcpkg_build_msbuild(
+			PROJECT_PATH ${BUILDTREE_PATH}/visualc/vngspice.sln
+			INCLUDES_SUBPATH /src/include
+			LICENSE_SUBPATH COPYING
+			# build_msbuild swaps x86 for win32(bad) if we dont force our own setting
+			PLATFORM ${TRIPLET_SYSTEM_ARCH}
+			TARGET Build
+		)
+		
+		#put the code models in the intended location
+		file(GLOB NGSPICE_CODEMODELS_DEBUG
+			${BUILDTREE_PATH}/visualc/codemodels/${TRIPLET_SYSTEM_ARCH}/Debug/*.cm
+		)
+		file(COPY ${NGSPICE_CODEMODELS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/ngspice)
+		
+		file(GLOB NGSPICE_CODEMODELS_RELEASE
+			${BUILDTREE_PATH}/visualc/codemodels/${TRIPLET_SYSTEM_ARCH}/Release/*.cm
+		)
+		file(COPY ${NGSPICE_CODEMODELS_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/ngspice)
+		
+		
+		# copy over spinit (spice init)
+		file(RENAME ${BUILDTREE_PATH}/visualc/spinit_all ${BUILDTREE_PATH}/visualc/spinit)
+		file(COPY ${BUILDTREE_PATH}/visualc/spinit DESTINATION ${CURRENT_PACKAGES_DIR}/share/ngspice)
+	endif()
 else()
     message(FATAL_ERROR "Sorry but ngspice only can be built in Windows")
 endif()
