@@ -1,8 +1,5 @@
 Source: opencl
 Version: 2.2
-Port-Version: 3
+Port-Version: 6
 Homepage: https://github.com/KhronosGroup/OpenCL-Headers
 Description: C/C++ headers and ICD loader (Installable Client Driver) for OpenCL
-
-Feature: wdk
-Description: Windows Driver Kit support

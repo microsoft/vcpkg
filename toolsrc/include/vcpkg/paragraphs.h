@@ -1,10 +1,15 @@
 #pragma once
 
+#include <vcpkg/fwd/vcpkgpaths.h>
+
 #include <vcpkg/base/expected.h>
 
 #include <vcpkg/binaryparagraph.h>
-#include <vcpkg/paragraphparser.h>
-#include <vcpkg/vcpkgpaths.h>
+
+namespace vckpg::Parse
+{
+    struct ParseControlErrorInfo;
+}
 
 namespace vcpkg::Paragraphs
 {
@@ -12,12 +17,18 @@ namespace vcpkg::Paragraphs
 
     ExpectedS<Paragraph> parse_single_paragraph(const std::string& str, const std::string& origin);
     ExpectedS<Paragraph> get_single_paragraph(const Files::Filesystem& fs, const fs::path& control_path);
+
     ExpectedS<std::vector<Paragraph>> get_paragraphs(const Files::Filesystem& fs, const fs::path& control_path);
+    ExpectedS<std::vector<Paragraph>> get_paragraphs_text(const std::string& text, const std::string& origin);
+
     ExpectedS<std::vector<Paragraph>> parse_paragraphs(const std::string& str, const std::string& origin);
 
     bool is_port_directory(const Files::Filesystem& fs, const fs::path& path);
 
     Parse::ParseExpected<SourceControlFile> try_load_port(const Files::Filesystem& fs, const fs::path& path);
+    Parse::ParseExpected<SourceControlFile> try_load_port_text(const std::string& text,
+                                                               const std::string& origin,
+                                                               bool is_manifest);
 
     ExpectedS<BinaryControlFile> try_load_cached_package(const VcpkgPaths& paths, const PackageSpec& spec);
 
@@ -45,5 +56,5 @@ namespace vcpkg::Paragraphs
     LoadResults try_load_all_registry_ports(const VcpkgPaths& paths);
 
     std::vector<SourceControlFileLocation> load_all_registry_ports(const VcpkgPaths& paths);
-    std::vector<SourceControlFileLocation> load_overlay_ports(const VcpkgPaths& paths, const fs::path& dir);
+    std::vector<SourceControlFileLocation> load_overlay_ports(const Files::Filesystem& fs, const fs::path& dir);
 }

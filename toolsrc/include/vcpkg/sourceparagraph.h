@@ -2,6 +2,8 @@
 
 #include <vcpkg/base/fwd/json.h>
 
+#include <vcpkg/fwd/vcpkgcmdarguments.h>
+
 #include <vcpkg/base/expected.h>
 #include <vcpkg/base/span.h>
 #include <vcpkg/base/system.h>
@@ -10,6 +12,8 @@
 #include <vcpkg/packagespec.h>
 #include <vcpkg/paragraphparser.h>
 #include <vcpkg/platform-expression.h>
+#include <vcpkg/versiondeserializers.h>
+#include <vcpkg/versions.h>
 
 namespace vcpkg
 {
@@ -54,6 +58,7 @@ namespace vcpkg
     struct SourceParagraph
     {
         std::string name;
+        Versions::Scheme version_scheme = Versions::Scheme::String;
         std::string version;
         int port_version = 0;
         std::vector<std::string> description;
@@ -61,13 +66,17 @@ namespace vcpkg
         std::string homepage;
         std::string documentation;
         std::vector<Dependency> dependencies;
+        std::vector<DependencyOverride> overrides;
         std::vector<std::string> default_features;
         std::string license; // SPDX license expression
+        Optional<std::string> builtin_baseline;
 
         Type type;
         PlatformExpression::Expr supports_expression;
 
         Json::Object extra_info;
+
+        VersionT to_versiont() const { return VersionT{version, port_version}; }
 
         friend bool operator==(const SourceParagraph& lhs, const SourceParagraph& rhs);
         friend bool operator!=(const SourceParagraph& lhs, const SourceParagraph& rhs) { return !(lhs == rhs); }
@@ -78,21 +87,16 @@ namespace vcpkg
     /// </summary>
     struct SourceControlFile
     {
-        SourceControlFile() = default;
-        SourceControlFile(const SourceControlFile& scf)
-            : core_paragraph(std::make_unique<SourceParagraph>(*scf.core_paragraph))
-        {
-            for (const auto& feat_ptr : scf.feature_paragraphs)
-            {
-                feature_paragraphs.push_back(std::make_unique<FeatureParagraph>(*feat_ptr));
-            }
-        }
+        SourceControlFile clone() const;
+
+        static Parse::ParseExpected<SourceControlFile> parse_manifest_object(const std::string& origin,
+                                                                             const Json::Object& object);
 
         static Parse::ParseExpected<SourceControlFile> parse_manifest_file(const fs::path& path_to_manifest,
                                                                            const Json::Object& object);
 
         static Parse::ParseExpected<SourceControlFile> parse_control_file(
-            const fs::path& path_to_control, std::vector<Parse::Paragraph>&& control_paragraphs);
+            const std::string& origin, std::vector<Parse::Paragraph>&& control_paragraphs);
 
         // Always non-null in non-error cases
         std::unique_ptr<SourceParagraph> core_paragraph;
@@ -100,6 +104,15 @@ namespace vcpkg
 
         Optional<const FeatureParagraph&> find_feature(const std::string& featurename) const;
         Optional<const std::vector<Dependency>&> find_dependencies_for_feature(const std::string& featurename) const;
+
+        Optional<std::string> check_against_feature_flags(const fs::path& origin,
+                                                          const FeatureFlagSettings& flags) const;
+
+        VersionT to_versiont() const { return core_paragraph->to_versiont(); }
+        SchemedVersion to_schemed_version() const
+        {
+            return SchemedVersion{core_paragraph->version_scheme, core_paragraph->to_versiont()};
+        }
 
         friend bool operator==(const SourceControlFile& lhs, const SourceControlFile& rhs);
         friend bool operator!=(const SourceControlFile& lhs, const SourceControlFile& rhs) { return !(lhs == rhs); }
@@ -109,17 +122,11 @@ namespace vcpkg
     Json::Object serialize_debug_manifest(const SourceControlFile& scf);
 
     /// <summary>
-    /// Full metadata of a package: core and other features. As well as the location the SourceControlFile was
-    /// loaded from.
+    /// Full metadata of a package: core and other features,
+    /// as well as the port directory the SourceControlFile was loaded from
     /// </summary>
     struct SourceControlFileLocation
     {
-        SourceControlFileLocation(const SourceControlFileLocation& scfl)
-            : source_control_file(std::make_unique<SourceControlFile>(*scfl.source_control_file))
-            , source_location(scfl.source_location)
-        {
-        }
-
         SourceControlFileLocation(std::unique_ptr<SourceControlFile>&& scf, fs::path&& source)
             : source_control_file(std::move(scf)), source_location(std::move(source))
         {
@@ -129,6 +136,13 @@ namespace vcpkg
             : source_control_file(std::move(scf)), source_location(source)
         {
         }
+
+        SourceControlFileLocation clone() const
+        {
+            return {std::make_unique<SourceControlFile>(source_control_file->clone()), source_location};
+        }
+
+        VersionT to_versiont() const { return source_control_file->to_versiont(); }
 
         std::unique_ptr<SourceControlFile> source_control_file;
         fs::path source_location;

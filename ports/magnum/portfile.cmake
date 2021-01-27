@@ -49,6 +49,13 @@ if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" MATCHES "(Emscripten|Linux)")
     list(REMOVE_ITEM ALL_SUPPORTED_FEATURES eglcontext windowlesseglapplication)
 endif()
 
+# Head only features
+if(NOT VCPKG_USE_HEAD_VERSION)
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES anyshaderconverter shadertools shaderconverter
+        vk-info)
+    message(WARNING "Features anyshaderconverter, shadertools, shaderconverter and vk-info are not avaliable when building non-head version.")
+endif()
+
 set(_COMPONENTS "")
 # Generate cmake parameters from feature names
 foreach(_feature IN LISTS ALL_SUPPORTED_FEATURES)
@@ -79,13 +86,6 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-# Drop a copy of tools
-if(NOT VCPKG_CMAKE_SYSTEM_NAME)
-    set(EXE_SUFFIX .exe)
-else()
-    set(EXE_SUFFIX)
-endif()
-
 # Copy tools into vcpkg's tools directory
 set(_TOOL_EXEC_NAMES "")
 set(_TOOLS
@@ -95,6 +95,11 @@ set(_TOOLS
     gl-info
     imageconverter
     sceneconverter)
+if(VCPKG_USE_HEAD_VERSION)
+list(APPEND _TOOLS
+    shaderconverter
+    vk-info)
+endif()
 foreach(_tool IN LISTS _TOOLS)
     if("${_tool}" IN_LIST FEATURES)
         list(APPEND _TOOL_EXEC_NAMES magnum-${_tool})
@@ -102,7 +107,7 @@ foreach(_tool IN LISTS _TOOLS)
 endforeach()
 message(STATUS ${_TOOL_EXEC_NAMES})
 if(_TOOL_EXEC_NAMES)
-    vcpkg_copy_tools(TOOL_NAMES "${_TOOL_EXEC_NAMES}" AUTO_CLEAN)
+    vcpkg_copy_tools(TOOL_NAMES ${_TOOL_EXEC_NAMES} AUTO_CLEAN)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
@@ -123,6 +128,4 @@ else()
    file(COPY ${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/magnum-d)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-    RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

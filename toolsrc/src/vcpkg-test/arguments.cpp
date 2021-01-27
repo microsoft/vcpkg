@@ -14,6 +14,8 @@ TEST_CASE ("VcpkgCmdArguments from lowercase argument sequence", "[arguments]")
     std::vector<std::string> t = {"--vcpkg-root",
                                   "C:\\vcpkg",
                                   "--x-scripts-root=C:\\scripts",
+                                  "--x-builtin-ports-root=C:\\ports",
+                                  "--x-builtin-registry-versions-dir=C:\\versions",
                                   "--debug",
                                   "--sendmetrics",
                                   "--printmetrics",
@@ -25,6 +27,8 @@ TEST_CASE ("VcpkgCmdArguments from lowercase argument sequence", "[arguments]")
 
     REQUIRE(*v.vcpkg_root_dir == "C:\\vcpkg");
     REQUIRE(*v.scripts_root_dir == "C:\\scripts");
+    REQUIRE(*v.builtin_ports_root_dir == "C:\\ports");
+    REQUIRE(*v.builtin_registry_versions_dir == "C:\\versions");
     REQUIRE(v.debug);
     REQUIRE(*v.debug.get());
     REQUIRE(v.send_metrics);
@@ -46,6 +50,8 @@ TEST_CASE ("VcpkgCmdArguments from uppercase argument sequence", "[arguments]")
     std::vector<std::string> t = {"--VCPKG-ROOT",
                                   "C:\\vcpkg",
                                   "--X-SCRIPTS-ROOT=C:\\scripts",
+                                  "--X-BUILTIN-PORTS-ROOT=C:\\ports",
+                                  "--X-BUILTIN-REGISTRY-VERSIONS-DIR=C:\\versions",
                                   "--DEBUG",
                                   "--SENDMETRICS",
                                   "--PRINTMETRICS",
@@ -57,6 +63,8 @@ TEST_CASE ("VcpkgCmdArguments from uppercase argument sequence", "[arguments]")
 
     REQUIRE(*v.vcpkg_root_dir == "C:\\vcpkg");
     REQUIRE(*v.scripts_root_dir == "C:\\scripts");
+    REQUIRE(*v.builtin_ports_root_dir == "C:\\ports");
+    REQUIRE(*v.builtin_registry_versions_dir == "C:\\versions");
     REQUIRE(v.debug);
     REQUIRE(*v.debug.get());
     REQUIRE(v.send_metrics);
@@ -106,4 +114,22 @@ TEST_CASE ("VcpkgCmdArguments from argument sequence with valued options", "[arg
         REQUIRE(opts.settings.find("c") == opts.settings.end());
         REQUIRE(v.command_arguments.size() == 0);
     }
+}
+
+TEST_CASE ("vcpkg_root parse with arg separator", "[arguments]")
+{
+    std::vector<std::string> t = {"--vcpkg-root", "C:\\vcpkg"};
+    auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
+    auto& vcpkg_root_dir = v.vcpkg_root_dir;
+    REQUIRE(vcpkg_root_dir);
+    REQUIRE(*vcpkg_root_dir == "C:\\vcpkg");
+}
+
+TEST_CASE ("vcpkg_root parse with equal separator", "[arguments]")
+{
+    std::vector<std::string> t = {"--vcpkg-root=C:\\vcpkg"};
+    auto v = VcpkgCmdArguments::create_from_arg_sequence(t.data(), t.data() + t.size());
+    auto& vcpkg_root_dir = v.vcpkg_root_dir;
+    REQUIRE(vcpkg_root_dir);
+    REQUIRE(*vcpkg_root_dir == "C:\\vcpkg");
 }

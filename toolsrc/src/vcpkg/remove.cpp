@@ -6,6 +6,7 @@
 #include <vcpkg/help.h>
 #include <vcpkg/input.h>
 #include <vcpkg/paragraphs.h>
+#include <vcpkg/portfileprovider.h>
 #include <vcpkg/remove.h>
 #include <vcpkg/update.h>
 #include <vcpkg/vcpkglib.h>
@@ -217,9 +218,9 @@ namespace vcpkg::Remove
     {
         if (paths.manifest_mode_enabled())
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      "vcpkg remove does not support manifest mode. In order to remove dependencies, "
-                                      "you will need to edit your manifest (vcpkg.json).");
+            Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                       "vcpkg remove does not support manifest mode. In order to remove dependencies, "
+                                       "you will need to edit your manifest (vcpkg.json).");
         }
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
 

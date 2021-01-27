@@ -1,49 +1,21 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF ecad770071eb776208a46977347e6d2410d4f50e
-  SHA512 1de0dc3f4842c68f5c12addf100996f7176ffb50dcd89a0b57446ba996d9199e31531f64c32eedbc2ea6a449459573811444dd35f1a50ece3880f58717c795ab
+  REF 00d578e327c22638ea12e73c4efb74c798c08de5
+  SHA512 ef2d46fab670759e9c22d0233b60192bfe47669e29d2ec1e020a77dfaf09894a93160c11de070bc39d86109dd2a37ca7172fbb081809b1ea2783207a6e385b2c
   HEAD_REF master
-  PATCHES
-    0001-rename-_castu32_f32-to-gemm_castu32_f32.patch
 )
 
-# enable CUDA inside DARKNET
-set(ENABLE_CUDA OFF)
-if("cuda" IN_LIST FEATURES)
-  set(ENABLE_CUDA ON)
-endif()
-
-set(ENABLE_OPENCV OFF)
-# enable OPENCV (basic version) inside DARKNET
-if("opencv-base" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv2-base" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv3-base" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-
-# enable OPENCV (with its own CUDA feature enabled) inside DARKNET
-# (note: this does not mean that DARKNET itself will have CUDA support since by design it is independent, to have it you must require both opencv-cuda and cuda features!)
-# DARKNET will be automatically able to distinguish an OpenCV that is built with or without CUDA support.
-if("opencv-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv2-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-if("opencv3-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV ON)
-endif()
-
-# enable CUDNN inside DARKNET (which depends on the "cuda" feature by design)
-set(ENABLE_CUDNN OFF)
-if("cudnn" IN_LIST FEATURES)
-  set(ENABLE_CUDNN ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    cuda ENABLE_CUDA
+    opencv-base ENABLE_OPENCV
+    opencv2-base ENABLE_OPENCV
+    opencv3-base ENABLE_OPENCV
+    opencv-cuda ENABLE_OPENCV
+    opencv2-cuda ENABLE_OPENCV
+    opencv3-cuda ENABLE_OPENCV
+    cudnn ENABLE_CUDNN
+)
 
 if ("cuda" IN_LIST FEATURES)
   if (NOT VCPKG_CMAKE_SYSTEM_NAME AND NOT ENV{CUDACXX})
@@ -128,12 +100,9 @@ vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   DISABLE_PARALLEL_CONFIGURE
   PREFER_NINJA
-  OPTIONS
+  OPTIONS ${FEATURE_OPTIONS}
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
-    -DENABLE_CUDA=${ENABLE_CUDA}
-    -DENABLE_CUDNN=${ENABLE_CUDNN}
-    -DENABLE_OPENCV=${ENABLE_OPENCV}
 )
 
 vcpkg_install_cmake()

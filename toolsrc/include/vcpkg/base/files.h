@@ -18,6 +18,20 @@
 
 namespace fs
 {
+#if defined(_WIN32)
+    struct IsSlash
+    {
+        bool operator()(const wchar_t c) const noexcept { return c == L'/' || c == L'\\'; }
+    };
+#else
+    struct IsSlash
+    {
+        bool operator()(const char c) const noexcept { return c == '/'; }
+    };
+#endif
+
+    constexpr IsSlash is_slash;
+
 #if VCPKG_USE_STD_FILESYSTEM
     namespace stdfs = std::filesystem;
 #else
@@ -31,25 +45,20 @@ namespace fs
 
     path u8path(vcpkg::StringView s);
     inline path u8path(const char* first, const char* last) { return u8path(vcpkg::StringView{first, last}); }
+    inline path u8path(std::initializer_list<char> il) { return u8path(vcpkg::StringView{il.begin(), il.end()}); }
     inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
 
-#if defined(_MSC_VER)
     inline path u8path(std::string::const_iterator first, std::string::const_iterator last)
     {
-        if (first == last)
-        {
-            return path{};
-        }
-        else
-        {
-            auto firstp = &*first;
-            return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
-        }
+        auto firstp = &*first;
+        return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
     }
-#endif
 
     std::string u8string(const path& p);
     std::string generic_u8string(const path& p);
+
+    // equivalent to p.lexically_normal()
+    path lexically_normal(const path& p);
 
 #if defined(_WIN32)
     enum class file_type
@@ -116,6 +125,12 @@ namespace fs
 
 #endif
 
+    inline bool operator==(SystemHandle lhs, SystemHandle rhs) noexcept
+    {
+        return lhs.system_handle == rhs.system_handle;
+    }
+    inline bool operator!=(SystemHandle lhs, SystemHandle rhs) noexcept { return !(lhs == rhs); }
+
     inline bool is_symlink(file_status s) noexcept
     {
 #if defined(_WIN32)
@@ -166,6 +181,10 @@ namespace vcpkg::Files
                                  std::error_code& ec) = 0;
         void write_contents(const fs::path& path, const std::string& data, LineInfo linfo);
         virtual void write_contents(const fs::path& file_path, const std::string& data, std::error_code& ec) = 0;
+        void write_contents_and_dirs(const fs::path& path, const std::string& data, LineInfo linfo);
+        virtual void write_contents_and_dirs(const fs::path& file_path,
+                                             const std::string& data,
+                                             std::error_code& ec) = 0;
         void rename(const fs::path& oldpath, const fs::path& newpath, LineInfo linfo);
         virtual void rename(const fs::path& oldpath, const fs::path& newpath, std::error_code& ec) = 0;
         virtual void rename_or_copy(const fs::path& oldpath,
@@ -217,6 +236,12 @@ namespace vcpkg::Files
         virtual void current_path(const fs::path& path, std::error_code&) = 0;
         void current_path(const fs::path& path, LineInfo li);
 
+        // if the path does not exist, then (try_|)take_exclusive_file_lock attempts to create the file
+        // (but not any path members above the file itself)
+        // in other words, if `/a/b` is a directory, and you're attempting to lock `/a/b/c`,
+        // then these lock functions create `/a/b/c` if it doesn't exist;
+        // however, if `/a/b` doesn't exist, then the functions will fail.
+
         // waits forever for the file lock
         virtual fs::SystemHandle take_exclusive_file_lock(const fs::path& path, std::error_code&) = 0;
         // waits, at most, 1.5 seconds, for the file lock
@@ -234,11 +259,57 @@ namespace vcpkg::Files
 
     void print_paths(const std::vector<fs::path>& paths);
 
-    /// Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
-    /// This function exists as a workaround for TS implementations.
+    // Performs "lhs / rhs" according to the C++17 Filesystem Library Specification.
+    // This function exists as a workaround for TS implementations.
     fs::path combine(const fs::path& lhs, const fs::path& rhs);
+
+#if defined(_WIN32)
+    constexpr char preferred_separator = '\\';
+#else
+    constexpr char preferred_separator = '/';
+#endif // _WIN32
 
 #if defined(_WIN32)
     fs::path win32_fix_path_case(const fs::path& source);
 #endif // _WIN32
+
+    struct ExclusiveFileLock
+    {
+        enum class Wait
+        {
+            Yes,
+            No,
+        };
+
+        ExclusiveFileLock() = default;
+        ExclusiveFileLock(ExclusiveFileLock&&) = delete;
+        ExclusiveFileLock& operator=(ExclusiveFileLock&&) = delete;
+
+        ExclusiveFileLock(Wait wait, Filesystem& fs, const fs::path& path_, std::error_code& ec) : m_fs(&fs)
+        {
+            switch (wait)
+            {
+                case Wait::Yes: m_handle = m_fs->take_exclusive_file_lock(path_, ec); break;
+                case Wait::No: m_handle = m_fs->try_take_exclusive_file_lock(path_, ec); break;
+            }
+        }
+        ~ExclusiveFileLock() { clear(); }
+
+        explicit operator bool() const { return m_handle.is_valid(); }
+        bool has_lock() const { return m_handle.is_valid(); }
+
+        void clear()
+        {
+            if (m_fs && m_handle.is_valid())
+            {
+                std::error_code ignore;
+                m_fs->unlock_file_lock(std::exchange(m_handle, fs::SystemHandle{}), ignore);
+            }
+        }
+
+    private:
+        Filesystem* m_fs;
+        fs::SystemHandle m_handle;
+    };
+
 }

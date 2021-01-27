@@ -98,6 +98,14 @@ namespace vcpkg
         std::string m_str;
     };
 
+    struct FeatureFlagSettings
+    {
+        bool registries;
+        bool compiler_tracking;
+        bool binary_caching;
+        bool versions;
+    };
+
     struct VcpkgCmdArguments
     {
         static VcpkgCmdArguments create_from_command_line(const Files::Filesystem& fs,
@@ -124,6 +132,10 @@ namespace vcpkg
         std::unique_ptr<std::string> packages_root_dir;
         constexpr static StringLiteral SCRIPTS_ROOT_DIR_ARG = "x-scripts-root";
         std::unique_ptr<std::string> scripts_root_dir;
+        constexpr static StringLiteral BUILTIN_PORTS_ROOT_DIR_ARG = "x-builtin-ports-root";
+        std::unique_ptr<std::string> builtin_ports_root_dir;
+        constexpr static StringLiteral BUILTIN_REGISTRY_VERSIONS_DIR_ARG = "x-builtin-registry-versions-dir";
+        std::unique_ptr<std::string> builtin_registry_versions_dir;
 
         constexpr static StringLiteral DEFAULT_VISUAL_STUDIO_PATH_ENV = "VCPKG_VISUAL_STUDIO_PATH";
         std::unique_ptr<std::string> default_visual_studio_path;
@@ -134,11 +146,15 @@ namespace vcpkg
         constexpr static StringLiteral OVERLAY_PORTS_ENV = "VCPKG_OVERLAY_PORTS";
         constexpr static StringLiteral OVERLAY_PORTS_ARG = "overlay-ports";
         std::vector<std::string> overlay_ports;
+        constexpr static StringLiteral OVERLAY_TRIPLETS_ENV = "VCPKG_OVERLAY_TRIPLETS";
         constexpr static StringLiteral OVERLAY_TRIPLETS_ARG = "overlay-triplets";
         std::vector<std::string> overlay_triplets;
 
         constexpr static StringLiteral BINARY_SOURCES_ARG = "binarysource";
         std::vector<std::string> binary_sources;
+
+        constexpr static StringLiteral CMAKE_SCRIPT_ARG = "x-cmake-args";
+        std::vector<std::string> cmake_args;
 
         constexpr static StringLiteral DEBUG_SWITCH = "debug";
         Optional<bool> debug = nullopt;
@@ -153,6 +169,10 @@ namespace vcpkg
 
         constexpr static StringLiteral WAIT_FOR_LOCK_SWITCH = "x-wait-for-lock";
         Optional<bool> wait_for_lock = nullopt;
+
+        constexpr static StringLiteral IGNORE_LOCK_FAILURES_SWITCH = "x-ignore-lock-failures";
+        constexpr static StringLiteral IGNORE_LOCK_FAILURES_ENV = "X_VCPKG_IGNORE_LOCK_FAILURES";
+        Optional<bool> ignore_lock_failures = nullopt;
 
         constexpr static StringLiteral JSON_SWITCH = "x-json";
         Optional<bool> json = nullopt;
@@ -172,11 +192,27 @@ namespace vcpkg
         Optional<bool> manifest_mode = nullopt;
         constexpr static StringLiteral REGISTRIES_FEATURE = "registries";
         Optional<bool> registries_feature = nullopt;
+        constexpr static StringLiteral VERSIONS_FEATURE = "versions";
+        Optional<bool> versions_feature = nullopt;
+
+        constexpr static StringLiteral RECURSIVE_DATA_ENV = "VCPKG_X_RECURSIVE_DATA";
 
         bool binary_caching_enabled() const { return binary_caching.value_or(true); }
         bool compiler_tracking_enabled() const { return compiler_tracking.value_or(true); }
         bool registries_enabled() const { return registries_feature.value_or(false); }
+        bool versions_enabled() const { return versions_feature.value_or(false); }
+        FeatureFlagSettings feature_flag_settings() const
+        {
+            FeatureFlagSettings f;
+            f.binary_caching = binary_caching_enabled();
+            f.compiler_tracking = compiler_tracking_enabled();
+            f.registries = registries_enabled();
+            f.versions = versions_enabled();
+            return f;
+        }
+
         bool output_json() const { return json.value_or(false); }
+        bool is_recursive_invocation() const { return m_is_recursive_invocation; }
 
         std::string command;
         std::vector<std::string> command_arguments;
@@ -191,6 +227,7 @@ namespace vcpkg
         void track_feature_flag_metrics() const;
 
     private:
+        bool m_is_recursive_invocation = false;
         std::unordered_set<std::string> command_switches;
         std::unordered_map<std::string, std::vector<std::string>> command_options;
     };

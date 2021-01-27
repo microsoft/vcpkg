@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vcpkg/base/chrono.h>
+#include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/system.print.h>
 
 #include <atomic>
@@ -8,12 +9,6 @@
 namespace vcpkg::Debug
 {
     extern std::atomic<bool> g_debugging;
-
-    template<class... Args>
-    void print(System::Color c, const Args&... args)
-    {
-        if (g_debugging) System::print2(c, "[DEBUG] ", args...);
-    }
 
     template<class... Args>
     void print(const Args&... args)

@@ -21,8 +21,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         prefix=@INSTALL_DIR@
         include=@INCLUDE_DIR@
         lib=@LIB_DIR@
-        bindir=$(PREFIX)\\tools\\
-        sodir=$(PREFIX)\\bin\\
+        bindir=$(PREFIX)\\bin
+        sodir=$(PREFIX)\\bin
     )
     # Debug params
     if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
@@ -60,6 +60,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         OPTIONS rebuild
     )
     
+    vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
+    
     # The makefile builds both static and dynamic libraries, so remove the ones we don't want
     if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libxslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/lib/libexslt_a${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
@@ -81,6 +83,12 @@ else()
     find_library(LibXml2_DEBUG_LIBRARIES libxml2 PATHS ${CURRENT_INSTALLED_DIR}/debug/lib REQUIRED)
     find_library(LibXml2_RELEASE_LIBRARIES libxml2 PATHS ${CURRENT_INSTALLED_DIR}/lib REQUIRED)
     
+   	if (VCPKG_TARGET_IS_OSX )
+	  set(LIBICONV "-liconv")
+	else()
+	  set(LIBICONV "")
+	endif()
+	
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
@@ -93,26 +101,18 @@ else()
             --with-mem-debug
             --with-debug
             --with-debugger
-            --with-libxml-libs-prefix="${CURRENT_INSTALLED_DIR}/debug/lib -lxml2 -lz -llzmad"
+            --with-libxml-libs-prefix="${CURRENT_INSTALLED_DIR}/debug/lib -lxml2 -lz -llzmad ${LIBICONV}"
             --with-html-dir=${CURRENT_INSTALLED_DIR}/debug/tools
             --with-html-subdir=${CURRENT_INSTALLED_DIR}/debug/tools
         OPTIONS_RELEASE
-            --with-libxml-libs-prefix="${CURRENT_INSTALLED_DIR}/lib -lxml2 -lz -llzma"
+            --with-libxml-libs-prefix="${CURRENT_INSTALLED_DIR}/lib -lxml2 -lz -llzma ${LIBICONV}"
             --with-html-dir=${CURRENT_INSTALLED_DIR}/tools
             --with-html-subdir=${CURRENT_INSTALLED_DIR}/tools
-    )
+    ) 
     
     vcpkg_install_make()
-    #vcpkg_fixup_pkgconfig()?
+    vcpkg_fixup_pkgconfig()
     
-    if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
-        file(COPY ${CURRENT_PACKAGES_DIR}/bin/xslt-config DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
-    endif()
-    if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/xsltproc)
-        file(COPY ${CURRENT_PACKAGES_DIR}/bin/xsltproc DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/xslt-config)
-    endif()
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         file(COPY ${CURRENT_PACKAGES_DIR}/lib/libxslt.so ${CURRENT_PACKAGES_DIR}/bin/)
     else()
@@ -143,8 +143,6 @@ endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/libexslt/exsltexports.h "${EXSLTEXPORTS_H}")
 
 # Remove tools and debug include directories
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 

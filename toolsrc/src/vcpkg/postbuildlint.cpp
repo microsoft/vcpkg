@@ -390,10 +390,10 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> dlls_with_no_exports;
         for (const fs::path& dll : dlls)
         {
-            const std::string cmd_line =
-                Strings::format(R"("%s" /exports "%s")", fs::u8string(dumpbin_exe), fs::u8string(dll));
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/exports").path_arg(dll);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line.command_line());
 
             if (ec_data.output.find("ordinal hint RVA      name") == std::string::npos)
             {
@@ -428,10 +428,10 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> dlls_with_improper_uwp_bit;
         for (const fs::path& dll : dlls)
         {
-            const std::string cmd_line =
-                Strings::format(R"("%s" /headers "%s")", fs::u8string(dumpbin_exe), fs::u8string(dll));
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/headers").path_arg(dll);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line.command_line());
 
             if (ec_data.output.find("App Container") == std::string::npos)
             {
@@ -561,9 +561,9 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
-    static LintStatus check_no_dlls_present(const std::vector<fs::path>& dlls)
+    static LintStatus check_no_dlls_present(const Build::BuildPolicies& policies, const std::vector<fs::path>& dlls)
     {
-        if (dlls.empty())
+        if (dlls.empty() || policies.is_enabled(BuildPolicy::DLLS_IN_STATIC_LIBRARY))
         {
             return LintStatus::SUCCESS;
         }
@@ -628,9 +628,12 @@ namespace vcpkg::PostBuildLint
         return LintStatus::SUCCESS;
     }
 
-    static LintStatus check_bin_folders_are_not_present_in_static_build(const Files::Filesystem& fs,
+    static LintStatus check_bin_folders_are_not_present_in_static_build(const Build::BuildPolicies& policies,
+                                                                        const Files::Filesystem& fs,
                                                                         const fs::path& package_dir)
     {
+        if (policies.is_enabled(BuildPolicy::DLLS_IN_STATIC_LIBRARY)) return LintStatus::SUCCESS;
+
         const fs::path bin = package_dir / "bin";
         const fs::path debug_bin = package_dir / "debug" / "bin";
 
@@ -717,13 +720,12 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& lib : libs)
         {
-            const std::string cmd_line =
-                Strings::format(R"("%s" /directives "%s")", fs::u8string(dumpbin_exe), fs::u8string(lib));
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/directives").path_arg(lib);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
             Checks::check_exit(VCPKG_LINE_INFO,
                                ec_data.exit_code == 0,
                                "Running command:\n   %s\n failed with message:\n%s",
-                               cmd_line,
+                               cmd_line.command_line(),
                                ec_data.output);
 
             for (const BuildType& bad_build_type : bad_build_types)
@@ -772,10 +774,10 @@ namespace vcpkg::PostBuildLint
 
         for (const fs::path& dll : dlls)
         {
-            const auto cmd_line =
-                Strings::format(R"("%s" /dependents "%s")", fs::u8string(dumpbin_exe), fs::u8string(dll));
+            auto cmd_line = System::Command(dumpbin_exe).string_arg("/dependents").path_arg(dll);
             System::ExitCodeAndOutput ec_data = System::cmd_execute_and_capture_output(cmd_line);
-            Checks::check_exit(VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line);
+            Checks::check_exit(
+                VCPKG_LINE_INFO, ec_data.exit_code == 0, "Running command:\n   %s\n failed", cmd_line.command_line());
 
             for (const OutdatedDynamicCrt& outdated_crt : get_outdated_dynamic_crts(pre_build_info.platform_toolset))
             {
@@ -872,7 +874,7 @@ namespace vcpkg::PostBuildLint
         std::vector<fs::path> release_libs = fs.get_files_recursive(release_lib_dir);
         Util::erase_remove_if(release_libs, not_extension_pred(fs, ".lib"));
 
-        if (!pre_build_info.build_type)
+        if (!pre_build_info.build_type && !build_info.policies.is_enabled(BuildPolicy::MISMATCHED_NUMBER_OF_BINARIES))
             error_count += check_matching_debug_and_release_binaries(debug_libs, release_libs);
 
         if (!build_info.policies.is_enabled(BuildPolicy::SKIP_ARCHITECTURE_CHECK))
@@ -892,7 +894,8 @@ namespace vcpkg::PostBuildLint
         {
             case Build::LinkageType::DYNAMIC:
             {
-                if (!pre_build_info.build_type)
+                if (!pre_build_info.build_type &&
+                    !build_info.policies.is_enabled(BuildPolicy::MISMATCHED_NUMBER_OF_BINARIES))
                     error_count += check_matching_debug_and_release_binaries(debug_dlls, release_dlls);
 
                 error_count += check_lib_files_are_available_if_dlls_are_available(
@@ -921,9 +924,9 @@ namespace vcpkg::PostBuildLint
             {
                 auto dlls = release_dlls;
                 dlls.insert(dlls.end(), debug_dlls.begin(), debug_dlls.end());
-                error_count += check_no_dlls_present(dlls);
+                error_count += check_no_dlls_present(build_info.policies, dlls);
 
-                error_count += check_bin_folders_are_not_present_in_static_build(fs, package_dir);
+                error_count += check_bin_folders_are_not_present_in_static_build(build_info.policies, fs, package_dir);
 
                 if (!toolset.dumpbin.empty() && !build_info.policies.is_enabled(BuildPolicy::SKIP_DUMPBIN_CHECKS))
                 {

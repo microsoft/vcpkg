@@ -1,26 +1,32 @@
-
 if (EXISTS "${CURRENT_INSTALLED_DIR}/share/libmysql")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO MariaDB/mariadb-connector-c
-    REF 8e9c3116105d9a998a60991b7f4ba910d454d4b1 # v3.1.7
-    SHA512 b663effe7794d997c0589a9a20dab6b7359414612e60e3cb43e3fd0ddeae0391bcbc2d816cba4a7438602566ad6781cbf8e18b0062f1d37a2b2bd521af16033c
-    HEAD_REF master
+    REF 159540fe8c8f30b281748fe8a1b79e8b17993a67 # v3.1.10
+    SHA512 3e154f5dc4b5051607c7ebc0691a50c0699d60e4414660cf8f65689081ff78ef6b135667761ba8ac4163b469a3b55158c6b48c6fc0a0cc09381452aad157e4ad
+    HEAD_REF 3.1
     PATCHES
-            md.patch
-            disable-test-build.patch
-			fix-InstallPath.patch
+        arm64.patch
+        md.patch
+        disable-test-build.patch
+        fix-InstallPath.patch
+        fix-iconv.patch
+        export-cmake-targets.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     zlib WITH_EXTERNAL_ZLIB
-    openssl WITH_SSL
+    iconv WITH_ICONV
 )
+
+if("openssl" IN_LIST FEATURES)
+	set(WITH_SSL OPENSSL)
+else()
+	set(WITH_SSL OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -29,9 +35,12 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DWITH_UNITTEST=OFF
         -DWITH_CURL=OFF
+        -DWITH_SSL=${WITH_SSL}
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-libmariadb TARGET_PATH share/unofficial-libmariadb)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # remove debug header
@@ -65,5 +74,4 @@ file(RENAME
     ${CURRENT_PACKAGES_DIR}/include/mysql)
 
 # copy license file
-file(COPY ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmariadb)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libmariadb/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/libmariadb/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

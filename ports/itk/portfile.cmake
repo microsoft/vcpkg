@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         hdf5.patch
-        double-conversion.patch 
+        double-conversion.patch
         openjpeg.patch
         openjpeg2.patch
         var_libraries.patch
@@ -16,6 +16,7 @@ vcpkg_from_github(
         python_gpu_wrapping.patch
         opencl.patch
         cufftw.patch
+        use-the-lrintf-intrinsic.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,7 +28,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "tbb"          Module_ITKTBB
     "rtk"          Module_RTK
     "tools"        RTK_BUILD_APPLICATIONS
-    # There are a lot of more (remote) modules and options in ITK 
+    # There are a lot of more (remote) modules and options in ITK
     # feel free to add those as a feature
 )
 
@@ -45,7 +46,7 @@ if("cufftw" IN_LIST FEATURES)
         else()
             message(FATAL_ERROR "Architecture ${VCPKG_TARGET_ARCHITECTURE} not supported !")
         endif()
-        
+
         list(APPEND ADDITIONAL_OPTIONS
              "-DFFTW_LIB_SEARCHPATH=${CUDA_LIB_PATH}"
              "-DFFTW_INCLUDE_PATH=${CUDA_PATH}/include"
@@ -64,7 +65,7 @@ if("rtk" IN_LIST FEATURES)
          )
     if("cuda" IN_LIST FEATURES)
         list(APPEND ADDITIONAL_OPTIONS "-DRTK_USE_CUDA=ON")
-        #RTK + CUDA + PYTHON + dynamic library linkage will fail and needs upstream fixes. 
+        #RTK + CUDA + PYTHON + dynamic library linkage will fail and needs upstream fixes.
     endif()
 endif()
 file(REMOVE_RECURSE "${SOURCE_PATH}/Modules/Remote/RTK")
@@ -76,16 +77,16 @@ if("opencl" IN_LIST FEATURES)
          )
 endif()
 if("tools" IN_LIST FEATURES)
-    
+
     if("rtk" IN_LIST FEATURES)
-        list(APPEND TOOL_NAMES rtkadmmtotalvariation rtkadmmwavelets rtkamsterdamshroud rtkbackprojections rtkbioscangeometry rtkcheckimagequality rtkconjugategradient 
-                               rtkdigisensgeometry rtkdrawgeometricphantom rtkdrawshepploganphantom rtkdualenergysimplexdecomposition rtkelektasynergygeometry rtkextractphasesignal 
-                               rtkextractshroudsignal rtkfdk rtkfdktwodweights rtkfieldofview rtkforwardprojections rtkfourdconjugategradient rtkfourdfdk rtkfourdrooster rtkfourdsart 
-                               rtkgaincorrection rtki0estimation rtkimagxgeometry rtkiterativefdk rtklagcorrection rtklastdimensionl0gradientdenoising rtklut rtkmaskcollimation rtkmcrooster 
-                               rtkmotioncompensatedfourdconjugategradient rtkorageometry rtkosem rtkoverlayphaseandshroud rtkparkershortscanweighting rtkprojectgeometricphantom 
-                               rtkprojectionmatrix rtkprojections rtkprojectshepploganphantom rtkramp rtkrayboxintersection rtkrayquadricintersection rtkregularizedconjugategradient 
-                               rtksart rtkscatterglarecorrection rtksimulatedgeometry rtkspectraldenoiseprojections rtkspectralforwardmodel rtkspectralonestep rtkspectralrooster rtkspectralsimplexdecomposition 
-                               rtksubselect rtktotalnuclearvariationdenoising rtktotalvariationdenoising rtktutorialapplication rtkvarianobigeometry rtkvarianprobeamgeometry rtkvectorconjugategradient 
+        list(APPEND TOOL_NAMES rtkadmmtotalvariation rtkadmmwavelets rtkamsterdamshroud rtkbackprojections rtkbioscangeometry rtkcheckimagequality rtkconjugategradient
+                               rtkdigisensgeometry rtkdrawgeometricphantom rtkdrawshepploganphantom rtkdualenergysimplexdecomposition rtkelektasynergygeometry rtkextractphasesignal
+                               rtkextractshroudsignal rtkfdk rtkfdktwodweights rtkfieldofview rtkforwardprojections rtkfourdconjugategradient rtkfourdfdk rtkfourdrooster rtkfourdsart
+                               rtkgaincorrection rtki0estimation rtkimagxgeometry rtkiterativefdk rtklagcorrection rtklastdimensionl0gradientdenoising rtklut rtkmaskcollimation rtkmcrooster
+                               rtkmotioncompensatedfourdconjugategradient rtkorageometry rtkosem rtkoverlayphaseandshroud rtkparkershortscanweighting rtkprojectgeometricphantom
+                               rtkprojectionmatrix rtkprojections rtkprojectshepploganphantom rtkramp rtkrayboxintersection rtkrayquadricintersection rtkregularizedconjugategradient
+                               rtksart rtkscatterglarecorrection rtksimulatedgeometry rtkspectraldenoiseprojections rtkspectralforwardmodel rtkspectralonestep rtkspectralrooster rtkspectralsimplexdecomposition
+                               rtksubselect rtktotalnuclearvariationdenoising rtktotalvariationdenoising rtktutorialapplication rtkvarianobigeometry rtkvarianprobeamgeometry rtkvectorconjugategradient
                                rtkwangdisplaceddetectorweighting rtkwarpedbackprojectsequence rtkwarpedforwardprojectsequence rtkwaveletsdenoising rtkxradgeometry)
     endif()
 endif()
@@ -107,23 +108,7 @@ if("python" IN_LIST FEATURES)
         "-DSWIG_EXECUTABLE=${SWIG}"
         "-DSWIG_DIR=${SWIG_DIR}"
         )
-    # Due to ITKs internal shenanigans with the variables ......
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/python38.lib"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/python38_d.lib"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.8")
-        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/python38_d.lib")
-        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/python38.lib")
-    elseif(VCPKG_TARGET_IS_LINUX)
-        list(APPEND ADDITIONAL_OPTIONS  "-DPython3_LIBRARY_RELEASE:PATH=${CURRENT_INSTALLED_DIR}/lib/libpython38m.a"
-                                        "-DPython3_LIBRARY_DEBUG:PATH=${CURRENT_INSTALLED_DIR}/debug/lib/libpython38md.a"
-                                        "-DPython3_INCLUDE_DIR:PATH=${CURRENT_INSTALLED_DIR}/include/python3.8m")
-        list(APPEND OPTIONS_DEBUG "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/debug/lib/libpython38md.a")
-        list(APPEND OPTIONS_RELEASE "-DPython3_LIBRARY=${CURRENT_INSTALLED_DIR}/lib/libpython38m.a")
-    elseif(VCPKG_TARGET_IS_OSX)
-        #Need Python3 information on OSX within VCPKG
-    endif()    
-    #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages within vcpkg 
+    #ITK_PYTHON_SITE_PACKAGES_SUFFIX should be set to the install dir of the site-packages within vcpkg
 endif()
 
 set(USE_64BITS_IDS OFF)
@@ -139,7 +124,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_TESTING=OFF
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_PKGCONFIG_FILES=OFF 
+        -DBUILD_PKGCONFIG_FILES=OFF
         -DITK_DOXYGEN_HTML=OFF
         -DDO_NOT_INSTALL_ITK_TEST_DRIVER=ON
         -DITK_SKIP_PATH_LENGTH_CHECKS=ON
@@ -160,7 +145,7 @@ vcpkg_configure_cmake(
         -DITK_USE_SYSTEM_HDF5=ON # HDF5 was problematic in the past and still is. ITK still has not figured out how to do it correctly!
         -DITK_USE_SYSTEM_GDCM=ON
         -DITK_USE_SYSTEM_OpenJPEG=ON # Added by VCPKG
-        -DITK_USE_SYSTEM_DCMTK=ON 
+        -DITK_USE_SYSTEM_DCMTK=ON
         -DDCMTK_USE_ICU=ON
         -DITK_USE_SYSTEM_ICU=ON
         #-DITK_USE_SYSTEM_VXL=ON
@@ -171,16 +156,16 @@ vcpkg_configure_cmake(
         -DINSTALL_GTEST=OFF
         -DITK_USE_SYSTEM_GOOGLETEST=ON
         -DEXECUTABLE_OUTPUT_PATH=tools/${PORT}
-        
+
         # TODO
         #-DVXL_USE_GEOTIFF=ON
         -DVXL_USE_LFS=ON
-        
+
         -DITK_MINIMUM_COMPLIANCE_LEVEL:STRING=1 # To Display all remote modules within cmake-gui
         #-DModule_IOSTL=ON # example how to turn on a non-default module
         #-DModule_MorphologicalContourInterpolation=ON # example how to turn on a remote module
         #-DModule_RLEImage=ON # example how to turn on a remote module
-        
+
         # Some additional wraping options
         #-DITK_WRAP_double=ON
         #-DITK_WRAP_complex_double=ON
@@ -189,11 +174,11 @@ vcpkg_configure_cmake(
 
         ${FEATURE_OPTIONS}
         ${ADDITIONAL_OPTIONS}
-        
+
     OPTIONS_DEBUG   ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
 )
-if(BUILD_RTK) # Remote Modules are only downloaded on configure. 
+if(BUILD_RTK) # Remote Modules are only downloaded on configure.
     # TODO: In the future try to download via vcpkg_from_github and move the files. That way patching does not need this workaround
     vcpkg_apply_patches(SOURCE_PATH "${SOURCE_PATH}/Modules/Remote/RTK" QUIET PATCHES rtk/already_defined.patch rtk/unresolved.patch)
 endif()

@@ -6,10 +6,25 @@ else()
     option(QT_OPENSSL_LINK "Link against OpenSSL at compile-time." OFF)
 endif()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    option(QT_MYSQL_PLUGIN "Create MySQL plugin" OFF)
+else()
+    if ("mysqlplugin" IN_LIST FEATURES)
+        option(QT_MYSQL_PLUGIN "Create MySQL plugin" ON)
+    endif()
+endif()
+
+
 if (VCPKG_TARGET_IS_LINUX)
-    message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libx11-xcb-dev\n\nThese can be installed on Ubuntu systems via apt-get install libx11-xcb-dev.")
-    message(WARNING "${PORT} for qt5-x11extras requires the following libraries from the system package manager:\n    libxkbcommon-x11-dev\n\nThese can be installed on Ubuntu systems via apt-get install libxkbcommon-x11-dev.")
-    #
+    message(WARNING "qt5-base currently requires some packages from the system package manager, see https://doc.qt.io/qt-5/linux-requirements.html")
+    message(WARNING 
+[[
+qt5-base for qt5-x11extras requires the following libraries from the system package manager:
+    libxkbcommon-x11-dev
+
+These can be installed on Ubuntu systems via apt-get install libxkbcommon-x11-dev.
+]]
+    )
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR})
@@ -17,13 +32,13 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
 if("latest" IN_LIST FEATURES) # latest = core currently
     set(QT_BUILD_LATEST ON)
-    set(PATCHES 
+    set(PATCHES
         patches/Qt5BasicConfig.patch
         patches/Qt5PluginTarget.patch
         patches/create_cmake.patch
         )
 else()
-    set(PATCHES 
+    set(PATCHES
         patches/Qt5BasicConfig.patch
         patches/Qt5PluginTarget.patch
         patches/create_cmake.patch
@@ -52,29 +67,31 @@ endif()
 
 qt_download_submodule(  OUT_SOURCE_PATH SOURCE_PATH
                         PATCHES
-                            patches/winmain_pro.patch    #Moves qtmain to manual-link
-                            patches/windows_prf.patch    #fixes the qtmain dependency due to the above move
-                            patches/qt_app.patch         #Moves the target location of qt5 host apps to always install into the host dir. 
-                            patches/gui_configure.patch  #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
-                            patches/icu.patch            #Help configure find static icu builds in vcpkg on windows
-                            patches/xlib.patch           #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
-                            patches/egl.patch            #Fix egl detection logic. 
-                            patches/8c44d70.diff         #Upstream fix for MSVC 16.6.2. static init of std::atomic. 
-                            #patches/static_opengl.patch #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static). 
-                                                         #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the 
-                                                         #the windows supplied gl.h header and the angle gl.h otherwise. 
+                            patches/winmain_pro.patch          #Moves qtmain to manual-link
+                            patches/windows_prf.patch          #fixes the qtmain dependency due to the above move
+                            patches/qt_app.patch               #Moves the target location of qt5 host apps to always install into the host dir.
+                            patches/gui_configure.patch        #Patches the gui configure.json to break freetype/fontconfig autodetection because it does not include its dependencies.
+                            patches/icu.patch                  #Help configure find static icu builds in vcpkg on windows
+                            patches/xlib.patch                 #Patches Xlib check to actually use Pkgconfig instead of makeSpec only
+                            patches/egl.patch                  #Fix egl detection logic.
+                            patches/zstdd.patch                #Fix detection of zstd in debug builds
+                            patches/mysql_plugin_include.patch #Fix include path of mysql plugin
+                            patches/mysql-configure.patch      #Fix mysql project
+                            #patches/static_opengl.patch       #Use this patch if you really want to statically link angle on windows (e.g. using -opengl es2 and -static).
+                                                               #Be carefull since it requires definining _GDI32_ for all dependent projects due to redefinition errors in the
+                                                               #the windows supplied gl.h header and the angle gl.h otherwise.
                             #CMake fixes
                             ${PATCHES}
                             patches/Qt5GuiConfigExtras.patch # Patches the library search behavior for EGL since angle is not build with Qt
                     )
 
 # Remove vendored dependencies to ensure they are not picked up by the build
-foreach(DEPENDENCY freetype zlib harfbuzz-ng libjpeg libpng double-conversion sqlite pcre2)
+foreach(DEPENDENCY zlib freetype harfbuzz-ng libjpeg libpng double-conversion sqlite pcre2)
     if(EXISTS ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
         file(REMOVE_RECURSE ${SOURCE_PATH}/src/3rdparty/${DEPENDENCY})
     endif()
 endforeach()
-file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
+#file(REMOVE_RECURSE ${SOURCE_PATH}/include/QtZlib)
 
 #########################
 ## Setup Configure options
@@ -87,7 +104,7 @@ set(CORE_OPTIONS
     -opensource
     #-simulator_and_device
     #-ltcg
-    #-combined-angle-lib 
+    #-combined-angle-lib
     # ENV ANGLE_DIR to external angle source dir. (Will always be compiled with Qt)
     #-optimized-tools
     #-force-debug-info
@@ -104,11 +121,18 @@ list(APPEND CORE_OPTIONS
     -system-doubleconversion
     -system-sqlite
     -system-harfbuzz
+    -sql-psql
     -icu
     -no-angle)      # Qt does not need to build angle. VCPKG will build angle!
 
 if(QT_OPENSSL_LINK)
     list(APPEND CORE_OPTIONS -openssl-linked)
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(QT_MYSQL_PLUGIN)
+        list(APPEND CORE_OPTIONS -sql-mysql)
+    endif()
 endif()
 
 find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -119,13 +143,23 @@ find_library(LIBPNG_RELEASE NAMES png16 libpng16 PATHS "${CURRENT_INSTALLED_DIR}
 find_library(LIBPNG_DEBUG NAMES png16 png16d libpng16 libpng16d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(PSQL_RELEASE NAMES pq libpq PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
 find_library(PSQL_DEBUG NAMES pq libpq pqd libpqd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
+if(NOT (PSQL_RELEASE MATCHES ".*\.so") AND NOT (PSQL_DEBUG MATCHES ".*\.so"))
+    find_library(PSQL_COMMON_RELEASE NAMES pgcommon libpgcommon PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
+    find_library(PSQL_COMMON_DEBUG NAMES pgcommon libpgcommon pgcommond libpgcommond PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+    find_library(PSQL_PORT_RELEASE NAMES pgport libpgport PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
+    find_library(PSQL_PORT_DEBUG NAMES pgport libpgport pgportd libpgportd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+endif()
+find_library(MYSQL_RELEASE NAMES libmysql mysqlclient PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
+find_library(MYSQL_DEBUG NAMES libmysql libmysqld mysqlclient mysqlclientd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
+
 find_library(PCRE2_RELEASE NAMES pcre2-16 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(PCRE2_DEBUG NAMES pcre2-16 pcre2-16d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(FREETYPE_RELEASE NAMES freetype PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) #zlib, bzip2, libpng
 find_library(FREETYPE_DEBUG NAMES freetype freetyped PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(DOUBLECONVERSION_RELEASE NAMES double-conversion PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(DOUBLECONVERSION_RELEASE NAMES double-conversion PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(DOUBLECONVERSION_DEBUG NAMES double-conversion PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(HARFBUZZ_RELEASE NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) 
+find_library(HARFBUZZ_RELEASE NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(HARFBUZZ_DEBUG NAMES harfbuzz PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(SQLITE_RELEASE NAMES sqlite3 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH) # Depends on openssl and zlib(linux)
 find_library(SQLITE_DEBUG NAMES sqlite3 sqlite3d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
@@ -134,8 +168,6 @@ find_library(BROTLI_COMMON_RELEASE NAMES brotlicommon brotlicommon-static PATHS 
 find_library(BROTLI_COMMON_DEBUG NAMES brotlicommon brotlicommon-static brotlicommond brotlicommon-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(BROTLI_DEC_RELEASE NAMES brotlidec brotlidec-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(BROTLI_DEC_DEBUG NAMES brotlidec brotlidec-static brotlidecd brotlidec-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-find_library(BROTLI_ENC_RELEASE NAMES brotlienc brotlienc-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(BROTLI_ENC_DEBUG NAMES brotlienc brotlienc-static brotliencd brotlienc-staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 find_library(ICUUC_RELEASE NAMES icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ICUUC_DEBUG NAMES icuucd libicuucd icuuc libicuuc PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
@@ -166,6 +198,8 @@ find_library(EXPAT_RELEASE NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_D
 find_library(EXPAT_DEBUG NAMES expat PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 #Dependent libraries
+find_library(ZSTD_RELEASE NAMES zstd zstd_static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
+find_library(ZSTD_DEBUG NAMES zstdd zstd_staticd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(BZ2_RELEASE bz2 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(BZ2_DEBUG bz2 bz2d PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(SSL_RELEASE ssl ssleay32 PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
@@ -173,8 +207,8 @@ find_library(SSL_DEBUG ssl ssleay32 ssld ssleay32d PATHS "${CURRENT_INSTALLED_DI
 find_library(EAY_RELEASE libeay32 crypto libcrypto PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(EAY_DEBUG libeay32 crypto libcrypto libeay32d cryptod libcryptod PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
-set(FREETYPE_RELEASE_ALL "${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} ${ZLIB_RELEASE} ${BROTLI_ENC_RELEASE} ${BROTLI_DEC_RELEASE} ${BROTLI_COMMON_RELEASE}")
-set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG} ${BROTLI_ENC_DEBUG} ${BROTLI_DEC_DEBUG} ${BROTLI_COMMON_RELEASE}")
+set(FREETYPE_RELEASE_ALL "${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} ${ZLIB_RELEASE} ${BROTLI_DEC_RELEASE} ${BROTLI_COMMON_RELEASE}")
+set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG} ${BROTLI_DEC_DEBUG} ${BROTLI_COMMON_DEBUG}")
 
 # If HarfBuzz is built with GLib enabled, it must be statically link
 set(GLIB_LIB_VERSION 2.0)
@@ -194,6 +228,8 @@ set(RELEASE_OPTIONS
             "ICU_LIBS=${ICU_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_RELEASE}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${ICU_RELEASE}"
+            "QMAKE_LIBS_PRIVATE+=${ZSTD_RELEASE}"
             )
 set(DEBUG_OPTIONS
             "LIBJPEG_LIBS=${JPEG_DEBUG}"
@@ -204,8 +240,9 @@ set(DEBUG_OPTIONS
             "ICU_LIBS=${ICU_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${BZ2_DEBUG}"
             "QMAKE_LIBS_PRIVATE+=${LIBPNG_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${ICU_DEBUG}"
+            "QMAKE_LIBS_PRIVATE+=${ZSTD_DEBUG}"
             )
-
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_IS_UWP)
@@ -214,39 +251,44 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if(NOT ${VCPKG_LIBRARY_LINKAGE} STREQUAL "static")
         list(APPEND CORE_OPTIONS -opengl dynamic) # other options are "-no-opengl", "-opengl angle", and "-opengl desktop" and "-opengel es2"
     else()
-        list(APPEND CORE_OPTIONS -opengl dynamic) # other possible option without moving angle dlls: "-opengl desktop". "-opengel es2" only works with commented patch 
+        list(APPEND CORE_OPTIONS -opengl dynamic) # other possible option without moving angle dlls: "-opengl desktop". "-opengel es2" only works with commented patch
     endif()
     list(APPEND RELEASE_OPTIONS
-            "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
+            "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
             "SQLITE_LIBS=${SQLITE_RELEASE}"
             "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} ${FREETYPE_RELEASE_ALL}"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
-        
+
     list(APPEND DEBUG_OPTIONS
-            "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
+            "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
             "SQLITE_LIBS=${SQLITE_DEBUG}"
             "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} ${FREETYPE_DEBUG_ALL}"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
+    if (QT_MYSQL_PLUGIN)
+        list(APPEND RELEASE_OPTIONS "MYSQL_LIBS=${MYSQL_RELEASE}")
+        list(APPEND DEBUG_OPTIONS "MYSQL_LIBS=${MYSQL_DEBUG}")
+    endif(QT_MYSQL_PLUGIN)
+
 elseif(VCPKG_TARGET_IS_LINUX)
     list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -xcb -linuxfb)
     if (NOT EXISTS "/usr/include/GL/glu.h")
         message(FATAL_ERROR "qt5 requires libgl1-mesa-dev and libglu1-mesa-dev, please use your distribution's package manager to install them.\nExample: \"apt-get install libgl1-mesa-dev libglu1-mesa-dev\"")
     endif()
     list(APPEND RELEASE_OPTIONS
-            "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
+            "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_TYPES_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} ${FREETYPE_RELEASE_ALL} ${GLIB_RELEASE} -lpthread"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
-            "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE}"
+            "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE} -luuid"
         )
     list(APPEND DEBUG_OPTIONS
-            "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
+            "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_TYPES_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} ${FREETYPE_DEBUG_ALL} ${GLIB_DEBUG} -lpthread"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
-            "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG}"
+            "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG} -luuid"
         )
 elseif(VCPKG_TARGET_IS_OSX)
     list(APPEND CORE_OPTIONS -fontconfig)
@@ -273,14 +315,14 @@ elseif(VCPKG_TARGET_IS_OSX)
     endif()
     #list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${TARGET_MKSPEC})
     list(APPEND RELEASE_OPTIONS
-            "PSQL_LIBS=${PSQL_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
+            "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_TYPES_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} ${FREETYPE_RELEASE_ALL} -framework ApplicationServices"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE} -liconv"
         )
     list(APPEND DEBUG_OPTIONS
-            "PSQL_LIBS=${PSQL_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
+            "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_TYPES_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
             "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} ${FREETYPE_DEBUG_ALL} -framework ApplicationServices"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
@@ -308,7 +350,7 @@ else()
     #########################
     #TODO: Make this a function since it is also done by modular scripts!
     # e.g. by patching mkspecs/features/qt_tools.prf somehow
-    file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/mkspecs/*.pri" 
+    file(GLOB_RECURSE PRL_FILES "${CURRENT_PACKAGES_DIR}/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/mkspecs/*.pri"
                                 "${CURRENT_PACKAGES_DIR}/debug/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/debug/lib/*.prl" "${CURRENT_PACKAGES_DIR}/tools/qt5/debug/mkspecs/*.pri")
 
     file(TO_CMAKE_PATH "${CURRENT_INSTALLED_DIR}/include" CMAKE_INCLUDE_PATH)
@@ -325,10 +367,10 @@ else()
 
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/cmake ${CURRENT_PACKAGES_DIR}/share/cmake)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake) # TODO: check if important debug information for cmake is lost 
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake) # TODO: check if important debug information for cmake is lost
 
-    #This needs a new VCPKG policy or a static angle build (ANGLE needs to be fixed in VCPKG!) 
-    if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static") # Move angle dll libraries 
+    #This needs a new VCPKG policy or a static angle build (ANGLE needs to be fixed in VCPKG!)
+    if(VCPKG_TARGET_IS_WINDOWS AND ${VCPKG_LIBRARY_LINKAGE} MATCHES "static") # Move angle dll libraries
         if(EXISTS "${CURRENT_PACKAGES_DIR}/bin")
             message(STATUS "Moving ANGLE dlls from /bin to /tools/qt5-angle/bin. In static builds dlls are not allowed in /bin")
             file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/qt5-angle)
@@ -345,32 +387,32 @@ else()
     file(READ "${cmakefile}" _contents)
     if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_BUILD_TYPE)
         string(REPLACE "set_property(TARGET Qt5::WinMain APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)" "set_property(TARGET Qt5::WinMain APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE DEBUG)" _contents "${_contents}")
-        string(REPLACE 
-        [[set(imported_location "${_qt5Core_install_prefix}/lib/qtmain.lib")]] 
+        string(REPLACE
+        [[set(imported_location "${_qt5Core_install_prefix}/lib/qtmain.lib")]]
         [[set(imported_location_release "${_qt5Core_install_prefix}/lib/manual-link/qtmain.lib")
-          set(imported_location_debug "${_qt5Core_install_prefix}/debug/lib/manual-link/qtmaind.lib")]] 
+          set(imported_location_debug "${_qt5Core_install_prefix}/debug/lib/manual-link/qtmaind.lib")]]
           _contents "${_contents}")
-        string(REPLACE 
+        string(REPLACE
 [[    set_target_properties(Qt5::WinMain PROPERTIES
         IMPORTED_LOCATION_RELEASE ${imported_location}
-    )]] 
+    )]]
 [[    set_target_properties(Qt5::WinMain PROPERTIES
         IMPORTED_LOCATION_RELEASE ${imported_location_release}
         IMPORTED_LOCATION_DEBUG ${imported_location_debug}
-    )]] 
+    )]]
     _contents "${_contents}")
     else() # Single configuration build (either debug or release)
         # Release case
-        string(REPLACE 
+        string(REPLACE
             [[set(imported_location "${_qt5Core_install_prefix}/lib/qtmain.lib")]]
             [[set(imported_location "${_qt5Core_install_prefix}/lib/manual-link/qtmain.lib")]]
             _contents "${_contents}")
         # Debug case (whichever will match)
-        string(REPLACE 
+        string(REPLACE
             [[set(imported_location "${_qt5Core_install_prefix}/lib/qtmaind.lib")]]
             [[set(imported_location "${_qt5Core_install_prefix}/debug/lib/manual-link/qtmaind.lib")]]
             _contents "${_contents}")
-        string(REPLACE 
+        string(REPLACE
             [[set(imported_location "${_qt5Core_install_prefix}/debug/lib/qtmaind.lib")]]
             [[set(imported_location "${_qt5Core_install_prefix}/debug/lib/manual-link/qtmaind.lib")]]
             _contents "${_contents}")
@@ -387,7 +429,7 @@ else()
         file(COPY ${CURRENT_PACKAGES_DIR}/tools/qt5/bin DESTINATION ${CURRENT_PACKAGES_DIR}/tools/qt5/debug)
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qt5/debug/bin)
     endif()
-    
+
     if(EXISTS ${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf)
         file(REMOVE "${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf")
     endif()
@@ -395,7 +437,7 @@ else()
     set(CURRENT_INSTALLED_DIR "./../../.." ) # Making the qt.conf relative and not absolute
     configure_file(${CURRENT_PACKAGES_DIR}/tools/qt5/qt_release.conf ${CURRENT_PACKAGES_DIR}/tools/qt5/bin/qt.conf) # This makes the tools at least useable for release
     set(CURRENT_INSTALLED_DIR "${CURRENT_INSTALLED_DIR_BACKUP}")
-    
+
     qt_install_copyright(${SOURCE_PATH})
 endif()
 #install scripts for other qt ports
@@ -429,7 +471,7 @@ if(QT_BUILD_LATEST)
     )
 endif()
 
-# #Code to get generated CMake files from CI 
+# #Code to get generated CMake files from CI
 # file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Core/Qt5CoreConfig.cmake" "${CURRENT_BUILDTREES_DIR}/Qt5CoreConfig.cmake.log")
 # file(GLOB_RECURSE CMAKE_GUI_FILES "${CURRENT_PACKAGES_DIR}/share/cmake/Qt5Gui/*.cmake" )
 # foreach(cmake_file ${CMAKE_GUI_FILES})

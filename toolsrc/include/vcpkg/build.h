@@ -1,11 +1,14 @@
 #pragma once
 
+#include <vcpkg/fwd/cmakevars.h>
+#include <vcpkg/fwd/dependencies.h>
+#include <vcpkg/fwd/portfileprovider.h>
+
 #include <vcpkg/base/cstringview.h>
 #include <vcpkg/base/files.h>
 #include <vcpkg/base/optional.h>
 #include <vcpkg/base/system.process.h>
 
-#include <vcpkg/cmakevars.h>
 #include <vcpkg/commands.integrate.h>
 #include <vcpkg/packagespec.h>
 #include <vcpkg/statusparagraphs.h>
@@ -21,12 +24,6 @@
 namespace vcpkg
 {
     struct IBinaryProvider;
-}
-
-namespace vcpkg::Dependencies
-{
-    struct InstallPlanAction;
-    struct ActionPlan;
 }
 
 namespace vcpkg::System
@@ -45,6 +42,7 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
+        CACHE_MISSING,
         DOWNLOADED
     };
 
@@ -59,13 +57,15 @@ namespace vcpkg::Build
 
     namespace Command
     {
-        int perform_ex(const FullPackageSpec& full_spec,
+        int perform_ex(const VcpkgCmdArguments& args,
+                       const FullPackageSpec& full_spec,
                        const SourceControlFileLocation& scfl,
                        const PortFileProvider::PathsPortFileProvider& provider,
                        IBinaryProvider& binaryprovider,
                        const IBuildLogsRecorder& build_logs_recorder,
                        const VcpkgPaths& paths);
-        void perform_and_exit_ex(const FullPackageSpec& full_spec,
+        void perform_and_exit_ex(const VcpkgCmdArguments& args,
+                                 const FullPackageSpec& full_spec,
                                  const SourceControlFileLocation& scfl,
                                  const PortFileProvider::PathsPortFileProvider& provider,
                                  IBinaryProvider& binaryprovider,
@@ -136,8 +136,21 @@ namespace vcpkg::Build
         YES
     };
 
+    enum class BackcompatFeatures
+    {
+        ALLOW = 0,
+        PROHIBIT
+    };
+
+    enum class BuildMissing
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
+        BuildMissing build_missing;
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
         OnlyDownloads only_downloads;
@@ -147,9 +160,11 @@ namespace vcpkg::Build
         DownloadTool download_tool;
         PurgeDecompressFailure purge_decompress_failure;
         Editable editable;
+        BackcompatFeatures backcompat_features;
     };
 
     static constexpr BuildPackageOptions default_build_package_options{
+        Build::BuildMissing::YES,
         Build::UseHeadVersion::NO,
         Build::AllowDownloads::YES,
         Build::OnlyDownloads::NO,
@@ -159,6 +174,21 @@ namespace vcpkg::Build
         Build::DownloadTool::BUILT_IN,
         Build::PurgeDecompressFailure::YES,
         Build::Editable::NO,
+        Build::BackcompatFeatures::ALLOW,
+    };
+
+    static constexpr BuildPackageOptions backcompat_prohibiting_package_options{
+        Build::BuildMissing::YES,
+        Build::UseHeadVersion::NO,
+        Build::AllowDownloads::YES,
+        Build::OnlyDownloads::NO,
+        Build::CleanBuildtrees::YES,
+        Build::CleanPackages::YES,
+        Build::CleanDownloads::NO,
+        Build::DownloadTool::BUILT_IN,
+        Build::PurgeDecompressFailure::YES,
+        Build::Editable::NO,
+        Build::BackcompatFeatures::PROHIBIT,
     };
 
     static constexpr std::array<BuildResult, 6> BUILD_RESULT_VALUES = {
@@ -193,6 +223,7 @@ namespace vcpkg::Build
         Optional<ConfigurationType> build_type;
         Optional<std::string> public_abi_override;
         std::vector<std::string> passthrough_env_vars;
+        std::vector<std::string> passthrough_env_vars_tracked;
 
         fs::path toolchain_file() const;
         bool using_vcvars() const;
@@ -201,7 +232,9 @@ namespace vcpkg::Build
         const VcpkgPaths& m_paths;
     };
 
-    std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
+    System::Command make_build_env_cmd(const PreBuildInfo& pre_build_info,
+                                       const Toolset& toolset,
+                                       View<Toolset> all_toolsets);
 
     struct ExtendedBuildResult
     {
@@ -214,7 +247,8 @@ namespace vcpkg::Build
         std::unique_ptr<BinaryControlFile> binary_control_file;
     };
 
-    ExtendedBuildResult build_package(const VcpkgPaths& paths,
+    ExtendedBuildResult build_package(const VcpkgCmdArguments& args,
+                                      const VcpkgPaths& paths,
                                       const Dependencies::InstallPlanAction& config,
                                       IBinaryProvider& binaries_provider,
                                       const IBuildLogsRecorder& build_logs_recorder,
@@ -225,6 +259,8 @@ namespace vcpkg::Build
         EMPTY_PACKAGE,
         DLLS_WITHOUT_LIBS,
         DLLS_WITHOUT_EXPORTS,
+        DLLS_IN_STATIC_LIBRARY,
+        MISMATCHED_NUMBER_OF_BINARIES,
         ONLY_RELEASE_CRT,
         EMPTY_INCLUDE_FOLDER,
         ALLOW_OBSOLETE_MSVCRT,
@@ -235,16 +271,8 @@ namespace vcpkg::Build
         COUNT,
     };
 
-    constexpr std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> G_ALL_POLICIES = {
-        BuildPolicy::EMPTY_PACKAGE,
-        BuildPolicy::DLLS_WITHOUT_LIBS,
-        BuildPolicy::DLLS_WITHOUT_EXPORTS,
-        BuildPolicy::ONLY_RELEASE_CRT,
-        BuildPolicy::EMPTY_INCLUDE_FOLDER,
-        BuildPolicy::ALLOW_OBSOLETE_MSVCRT,
-        BuildPolicy::ALLOW_RESTRICTED_HEADERS,
-        BuildPolicy::SKIP_DUMPBIN_CHECKS,
-        BuildPolicy::SKIP_ARCHITECTURE_CHECK};
+    // could be constexpr, but we want to generate this and that's not constexpr in C++14
+    extern const std::array<BuildPolicy, size_t(BuildPolicy::COUNT)> ALL_POLICIES;
 
     const std::string& to_string(BuildPolicy policy);
     CStringView to_cmake_variable(BuildPolicy policy);
@@ -299,10 +327,11 @@ namespace vcpkg::Build
         }
     };
 
-    struct AbiTagAndFile
+    struct CompilerInfo
     {
-        std::string tag;
-        fs::path tag_file;
+        std::string id;
+        std::string version;
+        std::string hash;
     };
 
     struct AbiInfo
@@ -312,6 +341,7 @@ namespace vcpkg::Build
         Optional<const std::string&> triplet_abi;
         std::string package_abi;
         Optional<fs::path> abi_tag_file;
+        Optional<const CompilerInfo&> compiler_info;
     };
 
     void compute_all_abis(const VcpkgPaths& paths,
@@ -325,12 +355,14 @@ namespace vcpkg::Build
 
         const System::Environment& get_action_env(const VcpkgPaths& paths, const AbiInfo& abi_info);
         const std::string& get_triplet_info(const VcpkgPaths& paths, const AbiInfo& abi_info);
+        const CompilerInfo& get_compiler_info(const VcpkgPaths& paths, const AbiInfo& abi_info);
 
     private:
         struct TripletMapEntry
         {
             std::string hash;
             Cache<std::string, std::string> compiler_hashes;
+            Cache<std::string, CompilerInfo> compiler_info;
         };
         Cache<fs::path, TripletMapEntry> m_triplet_cache;
         Cache<fs::path, std::string> m_toolchain_cache;
@@ -339,7 +371,7 @@ namespace vcpkg::Build
         struct EnvMapEntry
         {
             std::unordered_map<std::string, std::string> env_map;
-            Cache<std::string, System::Environment> cmd_cache;
+            Cache<System::Command, System::Environment, System::CommandLess> cmd_cache;
         };
 
         Cache<std::vector<std::string>, EnvMapEntry> envs;

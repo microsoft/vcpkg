@@ -8,6 +8,7 @@
 #include <vcpkg/paragraphs.h>
 #include <vcpkg/tools.h>
 #include <vcpkg/vcpkgcmdarguments.h>
+#include <vcpkg/vcpkgpaths.h>
 #include <vcpkg/versiont.h>
 
 namespace vcpkg::Commands::PortsDiff
@@ -83,25 +84,27 @@ namespace vcpkg::Commands::PortsDiff
         auto& fs = paths.get_filesystem();
         const fs::path& git_exe = paths.get_tool_exe(Tools::GIT);
         const fs::path dot_git_dir = paths.root / ".git";
-        const std::string ports_dir_name_as_string = fs::u8string(paths.ports.filename());
+        const std::string ports_dir_name_as_string = fs::u8string(paths.builtin_ports_directory().filename());
         const fs::path temp_checkout_path =
             paths.root / Strings::format("%s-%s", ports_dir_name_as_string, git_commit_id);
         fs.create_directory(temp_checkout_path, ec);
         const auto checkout_this_dir =
             Strings::format(R"(.\%s)", ports_dir_name_as_string); // Must be relative to the root of the repository
 
-        const std::string cmd = Strings::format(R"("%s" --git-dir="%s" --work-tree="%s" checkout %s -f -q -- %s %s)",
-                                                fs::u8string(git_exe),
-                                                fs::u8string(dot_git_dir),
-                                                fs::u8string(temp_checkout_path),
-                                                git_commit_id,
-                                                checkout_this_dir,
-                                                ".vcpkg-root");
+        auto cmd = System::Command(git_exe)
+                       .string_arg(Strings::format("--git-dir=%s", fs::u8string(dot_git_dir)))
+                       .string_arg(Strings::format("--work-tree=%s", fs::u8string(temp_checkout_path)))
+                       .string_arg("checkout")
+                       .string_arg(git_commit_id)
+                       .string_arg("-f")
+                       .string_arg("-q")
+                       .string_arg("--")
+                       .string_arg(checkout_this_dir)
+                       .string_arg(".vcpkg-root");
         System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
-        System::cmd_execute_and_capture_output(Strings::format(R"("%s" reset)", fs::u8string(git_exe)),
+        System::cmd_execute_and_capture_output(System::Command(git_exe).string_arg("reset"),
                                                System::get_clean_environment());
-        const auto ports_at_commit =
-            Paragraphs::load_overlay_ports(paths, temp_checkout_path / ports_dir_name_as_string);
+        const auto ports_at_commit = Paragraphs::load_overlay_ports(fs, temp_checkout_path / ports_dir_name_as_string);
         std::map<std::string, VersionT> names_and_versions;
         for (auto&& port : ports_at_commit)
         {
@@ -116,7 +119,7 @@ namespace vcpkg::Commands::PortsDiff
     {
         static const std::string VALID_COMMIT_OUTPUT = "commit\n";
 
-        const auto cmd = Strings::format(R"("%s" cat-file -t %s)", fs::u8string(git_exe), git_commit_id);
+        auto cmd = System::Command(git_exe).string_arg("cat-file").string_arg("-t").string_arg(git_commit_id);
         const System::ExitCodeAndOutput output = System::cmd_execute_and_capture_output(cmd);
         Checks::check_exit(
             VCPKG_LINE_INFO, output.output == VALID_COMMIT_OUTPUT, "Invalid commit id %s", git_commit_id);

@@ -9,7 +9,7 @@ index ba2ef17..c3c5cd6 100644
 -#include "../ZLib/zlib.h"
 -#include "../LibPNG/png.h"
 +#include <zlib.h>
-+#include <png.h>
++#include <libpng16/png.h>
  
  // ----------------------------------------------------------
  

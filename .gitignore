@@ -30,6 +30,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
+# VS Code build
+toolsrc/build
 # Ignore the executable
 /vcpkg
 /vcpkg.exe
@@ -314,7 +316,15 @@ __pycache__/
 ############################################################
 # vcpkg - End
 ############################################################
+vcpkg.disable-metrics
 archives
 .DS_Store
 prefab/
 *.swp
+
+###################
+# Codespaces
+###################
+pythonenv3.8/
+.venv/
+

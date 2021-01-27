@@ -13,29 +13,20 @@ configuration JSON file into ~/vagrant/vcpkg-eg-mac.
 .PARAMETER MachineId
 The number to give the machine; should match [0-9]{2}.
 
-.PARAMETER BoxVersion
-The version of the box to use.
-
-.PARAMETER AgentPool
-The agent pool to add the machine to.
-
-.PARAMETER DevopsUrl
-The URL of the ADO instance; for example, https://dev.azure.com/vcpkg is the vcpkg ADO instance.
-
-.PARAMETER Pat
+.PARAMETER DevopsPat
 The personal access token which has Read & Manage permissions on the ADO pool.
 
-.PARAMETER ArchivesUsername
-The username for the archives share.
+.PARAMETER Date
+The date on which this pool is being created. Sets the default values for BoxVersion and AgentPool.
 
-.PARAMETER ArchivesAccessKey
-The access key for the archives share.
+.PARAMETER BoxVersion
+The version of the box to use. If -Date is passed, uses that as the version.
 
-.PARAMETER ArchivesUrn
-The URN of the archives share; looks like `foo.windows.core.net`.
+.PARAMETER AgentPool
+The agent pool to add the machine to. If -Date is passed, uses "PrOsx-$Date" as the pool.
 
-.PARAMETER ArchivesShare
-The archives share name.
+.PARAMETER DevopsUrl
+The URL of the ADO instance; defaults to vcpkg's, which is https://dev.azure.com/vcpkg.
 
 .PARAMETER BaseName
 The base name for the vagrant VM; the machine name is $BaseName-$MachineId.
@@ -49,7 +40,7 @@ which is only available internally.
 Delete any existing vagrant/vcpkg-eg-mac directory.
 
 .PARAMETER DiskSize
-The size to make the temporary disks in gigabytes. Defaults to 425.
+The size to make the temporary disks in gigabytes. Defaults to 350.
 
 .INPUTS
 None
@@ -57,34 +48,25 @@ None
 .OUTPUTS
 None
 #>
-[CmdletBinding(PositionalBinding=$False)]
+[CmdletBinding(PositionalBinding=$False, DefaultParameterSetName='DefineDate')]
 Param(
     [Parameter(Mandatory=$True)]
     [String]$MachineId,
 
     [Parameter(Mandatory=$True)]
+    [String]$DevopsPat,
+
+    [Parameter(Mandatory=$True, ParameterSetName='DefineDate')]
+    [String]$Date,
+
+    [Parameter(Mandatory=$True, ParameterSetName='DefineVersionAndAgentPool')]
     [String]$BoxVersion,
 
-    [Parameter(Mandatory=$True)]
+    [Parameter(Mandatory=$True, ParameterSetName='DefineVersionAndAgentPool')]
     [String]$AgentPool,
 
-    [Parameter(Mandatory=$True)]
-    [String]$DevopsUrl,
-
-    [Parameter(Mandatory=$True)]
-    [String]$Pat,
-
-    [Parameter(Mandatory=$True)]
-    [String]$ArchivesUsername,
-
-    [Parameter(Mandatory=$True)]
-    [String]$ArchivesAccessKey,
-
-    [Parameter(Mandatory=$True)]
-    [String]$ArchivesUrn,
-
-    [Parameter(Mandatory=$True)]
-    [String]$ArchivesShare,
+    [Parameter(Mandatory=$False)]
+    [String]$DevopsUrl = 'https://dev.azure.com/vcpkg',
 
     [Parameter()]
     [String]$BaseName = 'vcpkg-eg-mac',
@@ -93,16 +75,21 @@ Param(
     [String]$BoxName = 'vcpkg/macos-ci',
 
     [Parameter()]
-    [Switch]$Force,
+    [Int]$DiskSize = 250,
 
     [Parameter()]
-    [Int]$DiskSize = 425
+    [Switch]$Force
 )
 
 Set-StrictMode -Version 2
 
 if (-not $IsMacOS) {
     throw 'This script should only be run on a macOS host'
+}
+
+if (-not [String]::IsNullOrEmpty($Date)) {
+    $BoxVersion = $Date
+    $AgentPool = "PrOsx-$Date"
 }
 
 if (Test-Path '~/vagrant/vcpkg-eg-mac') {
@@ -115,8 +102,7 @@ if (Test-Path '~/vagrant/vcpkg-eg-mac') {
 }
 
 Write-Host 'Creating new directories'
-if (-not (Test-Path -Path '~/vagrant'))
-{
+if (-not (Test-Path -Path '~/vagrant')) {
 	New-Item -ItemType 'Directory' -Path '~/vagrant' | Out-Null
 }
 New-Item -ItemType 'Directory' -Path '~/vagrant/vcpkg-eg-mac' | Out-Null
@@ -126,19 +112,13 @@ Copy-Item `
     -Destination '~/vagrant/vcpkg-eg-mac/Vagrantfile'
 
 $configuration = @{
-    pat = $Pat;
+    pat = $DevopsPat;
     agent_pool = $AgentPool;
     devops_url = $DevopsUrl;
     machine_name = "${BaseName}-${MachineId}";
     box_name = $BoxName;
     box_version = $BoxVersion;
     disk_size = $DiskSize;
-    archives = @{
-        username = $ArchivesUsername;
-        access_key = $ArchivesAccessKey;
-        urn = $ArchivesUrn;
-        share = $ArchivesShare;
-    };
 }
 ConvertTo-Json -InputObject $configuration -Depth 5 `
     | Set-Content -Path '~/vagrant/vcpkg-eg-mac/vagrant-configuration.json'

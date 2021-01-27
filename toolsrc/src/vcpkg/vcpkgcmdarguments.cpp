@@ -1,3 +1,4 @@
+#include <vcpkg/base/json.h>
 #include <vcpkg/base/system.debug.h>
 #include <vcpkg/base/system.print.h>
 
@@ -50,36 +51,13 @@ namespace vcpkg
             {VcpkgCmdArguments::MANIFEST_MODE_FEATURE, args.manifest_mode},
             {VcpkgCmdArguments::COMPILER_TRACKING_FEATURE, args.compiler_tracking},
             {VcpkgCmdArguments::REGISTRIES_FEATURE, args.registries_feature},
+            {VcpkgCmdArguments::VERSIONS_FEATURE, args.versions_feature},
         };
 
         for (const auto& desc : flag_descriptions)
         {
             set_from_feature_flag(flags, desc.flag_name, desc.local_option);
         }
-    }
-
-    static void parse_value(const std::string* arg_begin,
-                            const std::string* arg_end,
-                            StringView option_name,
-                            std::unique_ptr<std::string>& option_field)
-    {
-        if (arg_begin == arg_end)
-        {
-            System::print2(System::Color::error, "Error: expected value after --", option_name, '\n');
-            Metrics::g_metrics.lock()->track_property("error", "error option name");
-            print_usage();
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-
-        if (option_field != nullptr)
-        {
-            System::print2(System::Color::error, "Error: --", option_name, " specified multiple times\n");
-            Metrics::g_metrics.lock()->track_property("error", "error option specified multiple times");
-            print_usage();
-            Checks::exit_fail(VCPKG_LINE_INFO);
-        }
-
-        option_field = std::make_unique<std::string>(*arg_begin);
     }
 
     static void parse_cojoined_value(StringView new_value,
@@ -176,27 +154,46 @@ namespace vcpkg
         return VcpkgCmdArguments::create_from_arg_sequence(v.data(), v.data() + v.size());
     }
 
-    // returns true if this does parse this argument as this option
-    template<class T, class F>
-    static bool try_parse_argument_as_option(StringView option, StringView arg, T& place, F parser)
+    enum class TryParseArgumentResult
     {
-        if (arg.size() <= option.size() + 1)
-        {
-            // it is impossible for this argument to be this option
-            return false;
-        }
+        NotFound,
+        Found,
+        FoundAndConsumedLookahead
+    };
 
+    template<class T, class F>
+    static TryParseArgumentResult try_parse_argument_as_option(
+        StringView arg, Optional<StringView> lookahead, StringView option, T& place, F parser)
+    {
         if (Strings::starts_with(arg, "x-") && !Strings::starts_with(option, "x-"))
         {
             arg = arg.substr(2);
         }
-        if (Strings::starts_with(arg, option) && arg.byte_at_index(option.size()) == '=')
+
+        if (Strings::starts_with(arg, option))
         {
-            parser(arg.substr(option.size() + 1), option, place);
-            return true;
+            if (arg.size() == option.size())
+            {
+                if (auto next = lookahead.get())
+                {
+                    parser(*next, option, place);
+                    return TryParseArgumentResult::FoundAndConsumedLookahead;
+                }
+
+                System::print2(System::Color::error, "Error: expected value after ", option, '\n');
+                Metrics::g_metrics.lock()->track_property("error", "error option name");
+                print_usage();
+                Checks::exit_fail(VCPKG_LINE_INFO);
+            }
+
+            if (arg.byte_at_index(option.size()) == '=')
+            {
+                parser(arg.substr(option.size() + 1), option, place);
+                return TryParseArgumentResult::Found;
+            }
         }
 
-        return false;
+        return TryParseArgumentResult::NotFound;
     }
 
     static bool equals_modulo_experimental(StringView arg, StringView option)
@@ -230,13 +227,13 @@ namespace vcpkg
         return false;
     }
 
-    VcpkgCmdArguments VcpkgCmdArguments::create_from_arg_sequence(const std::string* arg_begin,
-                                                                  const std::string* arg_end)
+    VcpkgCmdArguments VcpkgCmdArguments::create_from_arg_sequence(const std::string* arg_first,
+                                                                  const std::string* arg_last)
     {
         VcpkgCmdArguments args;
         std::vector<std::string> feature_flags;
 
-        for (auto it = arg_begin; it != arg_end; ++it)
+        for (auto it = arg_first; it != arg_last; ++it)
         {
             std::string basic_arg = *it;
 
@@ -269,29 +266,18 @@ namespace vcpkg
             Strings::ascii_to_lowercase(std::begin(basic_arg), first_eq);
             // basic_arg[0] == '-' && basic_arg[1] == '-'
             StringView arg = StringView(basic_arg).substr(2);
-
-            // command switch
-            if (arg == VCPKG_ROOT_DIR_ARG)
-            {
-                ++it;
-                parse_value(it, arg_end, VCPKG_ROOT_DIR_ARG, args.vcpkg_root_dir);
-                continue;
-            }
-            if (arg == TRIPLET_ARG)
-            {
-                ++it;
-                parse_value(it, arg_end, TRIPLET_ARG, args.triplet);
-                continue;
-            }
-
             constexpr static std::pair<StringView, std::unique_ptr<std::string> VcpkgCmdArguments::*>
                 cojoined_values[] = {
+                    {VCPKG_ROOT_DIR_ARG, &VcpkgCmdArguments::vcpkg_root_dir},
+                    {TRIPLET_ARG, &VcpkgCmdArguments::triplet},
                     {MANIFEST_ROOT_DIR_ARG, &VcpkgCmdArguments::manifest_root_dir},
                     {BUILDTREES_ROOT_DIR_ARG, &VcpkgCmdArguments::buildtrees_root_dir},
                     {DOWNLOADS_ROOT_DIR_ARG, &VcpkgCmdArguments::downloads_root_dir},
                     {INSTALL_ROOT_DIR_ARG, &VcpkgCmdArguments::install_root_dir},
                     {PACKAGES_ROOT_DIR_ARG, &VcpkgCmdArguments::packages_root_dir},
                     {SCRIPTS_ROOT_DIR_ARG, &VcpkgCmdArguments::scripts_root_dir},
+                    {BUILTIN_PORTS_ROOT_DIR_ARG, &VcpkgCmdArguments::builtin_ports_root_dir},
+                    {BUILTIN_REGISTRY_VERSIONS_DIR_ARG, &VcpkgCmdArguments::builtin_registry_versions_dir},
                 };
 
             constexpr static std::pair<StringView, std::vector<std::string> VcpkgCmdArguments::*>
@@ -299,6 +285,7 @@ namespace vcpkg
                     {OVERLAY_PORTS_ARG, &VcpkgCmdArguments::overlay_ports},
                     {OVERLAY_TRIPLETS_ARG, &VcpkgCmdArguments::overlay_triplets},
                     {BINARY_SOURCES_ARG, &VcpkgCmdArguments::binary_sources},
+                    {CMAKE_SCRIPT_ARG, &VcpkgCmdArguments::cmake_args},
                 };
 
             constexpr static std::pair<StringView, Optional<bool> VcpkgCmdArguments::*> switches[] = {
@@ -309,33 +296,49 @@ namespace vcpkg
                 {FEATURE_PACKAGES_SWITCH, &VcpkgCmdArguments::feature_packages},
                 {BINARY_CACHING_SWITCH, &VcpkgCmdArguments::binary_caching},
                 {WAIT_FOR_LOCK_SWITCH, &VcpkgCmdArguments::wait_for_lock},
+                {IGNORE_LOCK_FAILURES_SWITCH, &VcpkgCmdArguments::ignore_lock_failures},
                 {JSON_SWITCH, &VcpkgCmdArguments::json},
             };
+
+            Optional<StringView> lookahead;
+            if (it + 1 != arg_last)
+            {
+                lookahead = it[1];
+            }
 
             bool found = false;
             for (const auto& pr : cojoined_values)
             {
-                if (try_parse_argument_as_option(pr.first, arg, args.*pr.second, parse_cojoined_value))
+                switch (try_parse_argument_as_option(arg, lookahead, pr.first, args.*pr.second, parse_cojoined_value))
                 {
-                    found = true;
-                    break;
+                    case TryParseArgumentResult::FoundAndConsumedLookahead: ++it; [[fallthrough]];
+                    case TryParseArgumentResult::Found: found = true; break;
+                    case TryParseArgumentResult::NotFound: break;
+                    default: Checks::unreachable(VCPKG_LINE_INFO);
                 }
             }
             if (found) continue;
 
             for (const auto& pr : cojoined_multivalues)
             {
-                if (try_parse_argument_as_option(pr.first, arg, args.*pr.second, parse_cojoined_multivalue))
+                switch (
+                    try_parse_argument_as_option(arg, lookahead, pr.first, args.*pr.second, parse_cojoined_multivalue))
                 {
-                    found = true;
-                    break;
+                    case TryParseArgumentResult::FoundAndConsumedLookahead: ++it; [[fallthrough]];
+                    case TryParseArgumentResult::Found: found = true; break;
+                    case TryParseArgumentResult::NotFound: break;
+                    default: Checks::unreachable(VCPKG_LINE_INFO);
                 }
             }
             if (found) continue;
 
-            if (try_parse_argument_as_option(FEATURE_FLAGS_ARG, arg, feature_flags, parse_cojoined_list_multivalue))
+            switch (try_parse_argument_as_option(
+                arg, lookahead, FEATURE_FLAGS_ARG, feature_flags, parse_cojoined_list_multivalue))
             {
-                continue;
+                case TryParseArgumentResult::FoundAndConsumedLookahead: ++it; [[fallthrough]];
+                case TryParseArgumentResult::Found: found = true; break;
+                case TryParseArgumentResult::NotFound: break;
+                default: Checks::unreachable(VCPKG_LINE_INFO);
             }
 
             for (const auto& pr : switches)
@@ -515,7 +518,7 @@ namespace vcpkg
             }
         }
 
-        if (!switches_copy.empty())
+        if (!switches_copy.empty() || !options_copy.empty())
         {
             System::printf(System::Color::error, "Unknown option(s) for command '%s':\n", this->command);
             for (auto&& switch_ : switches_copy)
@@ -560,7 +563,6 @@ namespace vcpkg
         table.format("vcpkg export <pkg>... [opt]...", "Exports a package");
         table.format("vcpkg edit <pkg>",
                      "Open up a port for editing (uses " + format_environment_variable("EDITOR") + ", default 'code')");
-        table.format("vcpkg import <pkg>", "Import a pre-built library");
         table.format("vcpkg create <pkg> <url> [archivename]", "Create a new package");
         table.format("vcpkg owns <pat>", "Search for files in installed packages");
         table.format("vcpkg depend-info <pkg>...", "Display a list of dependencies for packages");
@@ -609,27 +611,50 @@ namespace vcpkg
             return Strings::concat("--", arg, joiner, value);
         };
 
-        table.format(opt(TRIPLET_ARG, " ", "<t>"), "Specify the target architecture triplet. See 'vcpkg help triplet'");
+        table.format(opt(TRIPLET_ARG, "=", "<t>"), "Specify the target architecture triplet. See 'vcpkg help triplet'");
         table.format("", "(default: " + format_environment_variable("VCPKG_DEFAULT_TRIPLET") + ')');
         table.format(opt(OVERLAY_PORTS_ARG, "=", "<path>"), "Specify directories to be used when searching for ports");
         table.format("", "(also: " + format_environment_variable("VCPKG_OVERLAY_PORTS") + ')');
         table.format(opt(OVERLAY_TRIPLETS_ARG, "=", "<path>"), "Specify directories containing triplets files");
+        table.format("", "(also: " + format_environment_variable("VCPKG_OVERLAY_TRIPLETS") + ')');
         table.format(opt(BINARY_SOURCES_ARG, "=", "<path>"),
                      "Add sources for binary caching. See 'vcpkg help binarycaching'");
         table.format(opt(DOWNLOADS_ROOT_DIR_ARG, "=", "<path>"), "Specify the downloads root directory");
         table.format("", "(default: " + format_environment_variable("VCPKG_DOWNLOADS") + ')');
-        table.format(opt(VCPKG_ROOT_DIR_ARG, " ", "<path>"), "Specify the vcpkg root directory");
+        table.format(opt(VCPKG_ROOT_DIR_ARG, "=", "<path>"), "Specify the vcpkg root directory");
         table.format("", "(default: " + format_environment_variable("VCPKG_ROOT") + ')');
         table.format(opt(BUILDTREES_ROOT_DIR_ARG, "=", "<path>"),
                      "(Experimental) Specify the buildtrees root directory");
         table.format(opt(INSTALL_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the install root directory");
         table.format(opt(PACKAGES_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the packages root directory");
         table.format(opt(SCRIPTS_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the scripts root directory");
+        table.format(opt(BUILTIN_PORTS_ROOT_DIR_ARG, "=", "<path>"),
+                     "(Experimental) Specify the packages root directory");
+        table.format(opt(BUILTIN_REGISTRY_VERSIONS_DIR_ARG, "=", "<path>"),
+                     "(Experimental) Specify the versions root directory");
         table.format(opt(JSON_SWITCH, "", ""), "(Experimental) Request JSON output");
+    }
+
+    static void from_env(ZStringView var, std::unique_ptr<std::string>& dst)
+    {
+        if (dst) return;
+
+        auto maybe_val = System::get_environment_variable(var);
+        if (auto val = maybe_val.get())
+        {
+            dst = std::make_unique<std::string>(std::move(*val));
+        }
     }
 
     void VcpkgCmdArguments::imbue_from_environment()
     {
+        static bool s_reentrancy_guard = false;
+        Checks::check_exit(VCPKG_LINE_INFO,
+                           !s_reentrancy_guard,
+                           "VcpkgCmdArguments::imbue_from_environment() modifies global state and thus may only be "
+                           "called once per process.");
+        s_reentrancy_guard = true;
+
         if (!disable_metrics)
         {
             const auto vcpkg_disable_metrics_env = System::get_environment_variable(DISABLE_METRICS_ENV);
@@ -639,12 +664,16 @@ namespace vcpkg
             }
         }
 
-        if (!triplet)
+        from_env(TRIPLET_ENV, triplet);
+        from_env(VCPKG_ROOT_DIR_ENV, vcpkg_root_dir);
+        from_env(DOWNLOADS_ROOT_DIR_ENV, downloads_root_dir);
+        from_env(DEFAULT_VISUAL_STUDIO_PATH_ENV, default_visual_studio_path);
+
         {
-            const auto vcpkg_default_triplet_env = System::get_environment_variable(TRIPLET_ENV);
-            if (const auto unpacked = vcpkg_default_triplet_env.get())
+            const auto vcpkg_disable_lock = System::get_environment_variable(IGNORE_LOCK_FAILURES_ENV);
+            if (vcpkg_disable_lock.has_value() && !ignore_lock_failures.has_value())
             {
-                triplet = std::make_unique<std::string>(*unpacked);
+                ignore_lock_failures = true;
             }
         }
 
@@ -652,45 +681,65 @@ namespace vcpkg
             const auto vcpkg_overlay_ports_env = System::get_environment_variable(OVERLAY_PORTS_ENV);
             if (const auto unpacked = vcpkg_overlay_ports_env.get())
             {
-#ifdef WIN32
-                auto overlays = Strings::split(*unpacked, ';');
-#else
-                auto overlays = Strings::split(*unpacked, ':');
-#endif
+                auto overlays = Strings::split_paths(*unpacked);
                 overlay_ports.insert(std::end(overlay_ports), std::begin(overlays), std::end(overlays));
             }
         }
-
-        if (!vcpkg_root_dir)
         {
-            const auto vcpkg_root_env = System::get_environment_variable(VCPKG_ROOT_DIR_ENV);
-            if (const auto unpacked = vcpkg_root_env.get())
+            const auto vcpkg_overlay_triplets_env = System::get_environment_variable(OVERLAY_TRIPLETS_ENV);
+            if (const auto unpacked = vcpkg_overlay_triplets_env.get())
             {
-                vcpkg_root_dir = std::make_unique<std::string>(*unpacked);
+                auto triplets = Strings::split_paths(*unpacked);
+                overlay_triplets.insert(std::end(overlay_triplets), std::begin(triplets), std::end(triplets));
+            }
+        }
+        {
+            const auto vcpkg_feature_flags_env = System::get_environment_variable(FEATURE_FLAGS_ENV);
+            if (const auto v = vcpkg_feature_flags_env.get())
+            {
+                auto flags = Strings::split(*v, ',');
+                parse_feature_flags(flags, *this);
             }
         }
 
-        if (!downloads_root_dir)
         {
-            const auto vcpkg_downloads_env = vcpkg::System::get_environment_variable(DOWNLOADS_ROOT_DIR_ENV);
-            if (const auto unpacked = vcpkg_downloads_env.get())
+            auto maybe_vcpkg_recursive_data = System::get_environment_variable(RECURSIVE_DATA_ENV);
+            if (auto vcpkg_recursive_data = maybe_vcpkg_recursive_data.get())
             {
-                downloads_root_dir = std::make_unique<std::string>(*unpacked);
+                m_is_recursive_invocation = true;
+
+                auto rec_doc = Json::parse(*vcpkg_recursive_data).value_or_exit(VCPKG_LINE_INFO).first;
+                const auto& obj = rec_doc.object();
+
+                if (auto entry = obj.get(DOWNLOADS_ROOT_DIR_ENV))
+                {
+                    downloads_root_dir = std::make_unique<std::string>(entry->string().to_string());
+                }
+
+                if (obj.get(DISABLE_METRICS_ENV))
+                {
+                    disable_metrics = true;
+                }
+
+                // Setting the recursive data to 'poison' prevents more than one level of recursion because
+                // Json::parse() will fail.
+                System::set_environment_variable(RECURSIVE_DATA_ENV, "poison");
             }
-        }
-
-        const auto vcpkg_feature_flags_env = System::get_environment_variable(FEATURE_FLAGS_ENV);
-        if (const auto v = vcpkg_feature_flags_env.get())
-        {
-            auto flags = Strings::split(*v, ',');
-            parse_feature_flags(flags, *this);
-        }
-
-        {
-            const auto vcpkg_visual_studio_path_env = System::get_environment_variable(DEFAULT_VISUAL_STUDIO_PATH_ENV);
-            if (const auto unpacked = vcpkg_visual_studio_path_env.get())
+            else
             {
-                default_visual_studio_path = std::make_unique<std::string>(*unpacked);
+                Json::Object obj;
+                if (downloads_root_dir)
+                {
+                    obj.insert(DOWNLOADS_ROOT_DIR_ENV, Json::Value::string(*downloads_root_dir.get()));
+                }
+
+                if (disable_metrics)
+                {
+                    obj.insert(DISABLE_METRICS_ENV, Json::Value::boolean(true));
+                }
+
+                System::set_environment_variable(RECURSIVE_DATA_ENV,
+                                                 Json::stringify(obj, Json::JsonStyle::with_spaces(0)));
             }
         }
     }
@@ -732,6 +781,7 @@ namespace vcpkg
             {MANIFEST_MODE_FEATURE, manifest_mode},
             {COMPILER_TRACKING_FEATURE, compiler_tracking},
             {REGISTRIES_FEATURE, registries_feature},
+            {VERSIONS_FEATURE, versions_feature},
         };
 
         for (const auto& flag : flags)
@@ -757,6 +807,7 @@ namespace vcpkg
             {BINARY_CACHING_FEATURE, binary_caching_enabled()},
             {COMPILER_TRACKING_FEATURE, compiler_tracking_enabled()},
             {REGISTRIES_FEATURE, registries_enabled()},
+            {VERSIONS_FEATURE, versions_enabled()},
         };
 
         for (const auto& flag : flags)
@@ -868,6 +919,8 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::INSTALL_ROOT_DIR_ARG;
     constexpr StringLiteral VcpkgCmdArguments::PACKAGES_ROOT_DIR_ARG;
     constexpr StringLiteral VcpkgCmdArguments::SCRIPTS_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::BUILTIN_PORTS_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::BUILTIN_REGISTRY_VERSIONS_DIR_ARG;
 
     constexpr StringLiteral VcpkgCmdArguments::DEFAULT_VISUAL_STUDIO_PATH_ENV;
 
@@ -875,6 +928,7 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::TRIPLET_ARG;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ENV;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_PORTS_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ENV;
     constexpr StringLiteral VcpkgCmdArguments::OVERLAY_TRIPLETS_ARG;
 
     constexpr StringLiteral VcpkgCmdArguments::BINARY_SOURCES_ARG;
@@ -886,6 +940,8 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::PRINT_METRICS_SWITCH;
 
     constexpr StringLiteral VcpkgCmdArguments::WAIT_FOR_LOCK_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::IGNORE_LOCK_FAILURES_SWITCH;
+    constexpr StringLiteral VcpkgCmdArguments::IGNORE_LOCK_FAILURES_ENV;
 
     constexpr StringLiteral VcpkgCmdArguments::JSON_SWITCH;
 
@@ -898,4 +954,8 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::COMPILER_TRACKING_FEATURE;
     constexpr StringLiteral VcpkgCmdArguments::MANIFEST_MODE_FEATURE;
     constexpr StringLiteral VcpkgCmdArguments::REGISTRIES_FEATURE;
+    constexpr StringLiteral VcpkgCmdArguments::RECURSIVE_DATA_ENV;
+    constexpr StringLiteral VcpkgCmdArguments::VERSIONS_FEATURE;
+
+    constexpr StringLiteral VcpkgCmdArguments::CMAKE_SCRIPT_ARG;
 }

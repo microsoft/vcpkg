@@ -1,6 +1,5 @@
 Source: qt5
-Version: 5.15.0
-Port-Version: 2
+Version: 5.15.2
 Homepage: https://www.qt.io/
 Description: Qt5 Application Framework
 Build-Depends: qt5-base[core]
@@ -12,10 +11,10 @@ Description: Build the essential qt modules
 
 Feature: latest
 Build-Depends: qt5-base[core, latest]
-Description: Build latest qt version (5.14.2) instead of LTS
+Description: Build latest qt version (5.15.2) instead of LTS (Currently latest==LTS)
 
 Feature: all
-Build-Depends: qt5[3d, webchannel, websockets, extras, xmlpatterns, sensors, serialport, speech, svg, tools, virtualkeyboard, networkauth, purchasing, quickcontrols, quickcontrols2, script, scxml, activeqt, charts, datavis3d, declarative, gamepad, graphicaleffects, imageformats, location, multimedia, mqtt, webglplugin, webview, serialbus, translations, doc, remoteobjects, connectivity], qt5[core,webengine] (!static), qt5[core,wayland] (!windows)
+Build-Depends: qt5[3d, webchannel, websockets, extras, xmlpatterns, sensors, serialport, speech, svg, tools, virtualkeyboard, networkauth, purchasing, quickcontrols, quickcontrols2, script, scxml, activeqt, charts, datavis3d, declarative, gamepad, graphicaleffects, imageformats, location, multimedia, mqtt, webglplugin, webview, serialbus, translations, doc, remoteobjects, connectivity], qt5[core,webengine,mysqlplugin] (!static), qt5[core,wayland] (!windows)
 Description: Install all Qt5 submodules (Warning: Could take a long time and fail...)
 
 Feature: extras

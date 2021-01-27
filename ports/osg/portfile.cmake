@@ -17,6 +17,8 @@ vcpkg_from_github(
         fix-liblas.patch
         fix-nvtt.patch
         use-boost-asio.patch
+        fix-dependency-coin.patch
+        osgdb_zip_nozip.patch # This is fix symbol clashes with other libs when built in static-lib mode
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

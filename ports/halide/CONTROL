@@ -1,49 +1,64 @@
 Source: halide
-Version: master_2020_03_07
+Version: 10.0.0
 Homepage: https://github.com/halide/Halide
-Description: Halide is a programming language designed to make it easier to write high-performance image processing code on modern machines.
-Build-Depends: llvm[tools], openblas
+Description: Halide is a programming language designed to make it easier to write high-performance image and array processing code on modern machines.
+Supports: !uwp
+Default-Features: jit
+Build-Depends: llvm[enable-rtti,tools,clang]
 
-Feature: app
-Description: app support
+Feature: jit
+Description: Include targets required for jit compilation
+Build-Depends: halide[core,target-x86] (x86|x64), halide[core,target-arm] (arm&!arm64), halide[core,target-aarch64] (arm64), halide[target-all] (!x86&!x64&!arm&!arm64)
 
-Feature: tutorials
-Description: tutorials support
+Feature: target-all
+Description: Include all targets
+Build-Depends: halide[core,target-aarch64,target-amdgpu,target-arm,target-d3d12compute,target-hexagon,target-metal,target-mips,target-nvptx,target-opencl,target-opengl,target-powerpc,target-riscv,target-x86]
 
-Feature: utils
-Description: utils
+Feature: target-aarch64
+Description: Include AArch64 target
+Build-Depends: llvm[core,target-aarch64]
 
-Feature: nativeclient
-Description: nativeclient
+Feature: target-amdgpu
+Description: Include AMDGPU target
+Build-Depends: llvm[core,target-amdgpu]
 
-Feature: hexagon
-Description: hexagon
+Feature: target-arm
+Description: Include ARM target
+Build-Depends: llvm[core,target-arm]
 
-Feature: metal
-Description: metal support
+Feature: target-d3d12compute
+Description: Include Direct3D 12 Compute target
 
-Feature: mips
-Description: mips support
+Feature: target-hexagon
+Description: Include Hexagon target
+Build-Depends: llvm[core,target-hexagon]
 
-Feature: powerpc
-Description: powerpc support
+Feature: target-metal
+Description: Include Metal target
 
-Feature: ptx
-Description: ptx support
+Feature: target-mips
+Description: Include Mips target
+Build-Depends: llvm[core,target-mips]
 
-Feature: opencl
-Build-Depends: opencl
-Description: opencl support
+Feature: target-nvptx
+Description: Include NVPTX target
+Build-Depends: llvm[core,target-nvptx]
 
-Feature: opengl
-Build-Depends: opengl
-Description: opengl support
+Feature: target-opencl
+Description: Include OpenCL-C target
 
-Feature: rtti
-Description: rtti support
+Feature: target-opengl
+Description: Include OpenGL/GLSL target
 
-Feature: docs
-Description: docs
+Feature: target-powerpc
+Description: Include PowerPC target
+Build-Depends: llvm[core,target-powerpc]
 
-Feature: test
-Description: test
+Feature: target-riscv
+Description: Include RISCV target
+Build-Depends: llvm[core,target-riscv]
+
+Feature: target-x86
+Description: Include X86 target
+Build-Depends: llvm[core,target-x86]
+

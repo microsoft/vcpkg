@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gocha/sf2cute
@@ -36,6 +34,3 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/sf
 if(BUILD_EXAMPLE)
   vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/sf2cute)
 endif()
-
-# Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME sf2cute)
