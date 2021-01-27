@@ -13,7 +13,8 @@ endif()
 
 set(ORT_REVISION "v1.5.3")
 #Todo: Move to tag rathter than commit hash
-set(ORT_COMMIT_HASH "3b3e698674dca2014b91fb617e2c4f22ffd0c5c9")
+# set(ORT_COMMIT_HASH "3b3e698674dca2014b91fb617e2c4f22ffd0c5c9")
+set(ORT_COMMIT_HASH "6c2162e97add696e9f7d0377dba322a4d1fe05cd")
 
 vcpkg_find_acquire_program(GIT)
 get_filename_component(GIT_PATH ${GIT} DIRECTORY)
@@ -302,8 +303,7 @@ set(MOD "")
 foreach(MOD
       core/
       models/mnist/
-      models/runner/
-      test/distributed/
+      models/runner/    # Add this folder when move to newer commit hash, test/distributed/
       test/gradient/
       test/graph/
       test/optimizer/
