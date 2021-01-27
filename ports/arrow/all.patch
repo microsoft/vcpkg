@@ -111,7 +111,7 @@ index 5784cf592..817cf0c47 100644
 
  if(Snappy_ROOT)
 diff --git a/cpp/cmake_modules/FindThrift.cmake b/cpp/cmake_modules/FindThrift.cmake
-index 273d907ed..e3712c556 100644
+index 273d907ed..65f477f54 100644
 --- a/cpp/cmake_modules/FindThrift.cmake
 +++ b/cpp/cmake_modules/FindThrift.cmake
 @@ -39,6 +39,12 @@ function(EXTRACT_THRIFT_VERSION)
@@ -136,6 +136,27 @@ index 273d907ed..e3712c556 100644
 
  if(ARROW_THRIFT_USE_SHARED)
    set(THRIFT_LIB_NAMES thrift)
+@@ -84,8 +90,8 @@ else()
+   # THRIFT-4760: The pkgconfig files are currently only installed when using autotools.
+   # Starting with 0.13, they are also installed for the CMake-based installations of Thrift.
+   find_package(PkgConfig QUIET)
+-  pkg_check_modules(THRIFT_PC thrift)
+-  if(THRIFT_PC_FOUND)
++  #pkg_check_modules(THRIFT_PC thrift)
++  if(0) # Do not use pkg_check_modules, as it finds the wrong location (an intermediate build dir).
+     set(THRIFT_INCLUDE_DIR "${THRIFT_PC_INCLUDEDIR}")
+
+     list(APPEND THRIFT_PC_LIBRARY_DIRS "${THRIFT_PC_LIBDIR}")
+@@ -101,8 +107,7 @@ else()
+     set(THRIFT_VERSION ${THRIFT_PC_VERSION})
+   else()
+     find_library(THRIFT_LIB
+-                 NAMES ${THRIFT_LIB_NAMES}
+-                 PATH_SUFFIXES "lib/${CMAKE_LIBRARY_ARCHITECTURE}" "lib")
++                 NAMES ${THRIFT_LIB_NAMES})
+     find_path(THRIFT_INCLUDE_DIR thrift/Thrift.h PATH_SUFFIXES "include")
+     find_program(THRIFT_COMPILER thrift PATH_SUFFIXES "bin")
+     extract_thrift_version()
 diff --git a/cpp/cmake_modules/Findzstd.cmake b/cpp/cmake_modules/Findzstd.cmake
 index 6659a682d..d8cc4f72d 100644
 --- a/cpp/cmake_modules/Findzstd.cmake
