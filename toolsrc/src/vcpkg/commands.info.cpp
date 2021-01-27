@@ -37,7 +37,7 @@ namespace vcpkg::Commands::Info
         const ParsedArguments options = args.parse_arguments(COMMAND_STRUCTURE);
         if (!args.output_json())
         {
-            Checks::exit_with_message(
+            Checks::exit_maybe_upgrade(
                 VCPKG_LINE_INFO, "This command currently requires --%s", VcpkgCmdArguments::JSON_SWITCH);
         }
 

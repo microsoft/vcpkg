@@ -1,7 +1,7 @@
 {
   "name": "boost-modular-build-helper",
   "version-string": "1.75.0",
-  "port-version": 2,
+  "port-version": 4,
   "dependencies": [
     "boost-uninstall"
   ]
