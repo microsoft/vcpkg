@@ -1,0 +1,5 @@
+Source: sciplot
+Version: 0.1
+Homepage: https://github.com/sciplot/sciplot
+Description: A modern c++ scientific plotting library powered by gnuplot
+Supports: x86 | x64
