@@ -1,0 +1,4 @@
+Source: grantlee
+Version: 5.2.0
+Description: Libraries for text templating with Qt
+Build-Depends:  qt5-base[core]
