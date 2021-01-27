@@ -6,13 +6,38 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(Grantlee5_MAJOR_MINOR_VERSION_STRING "5.2" )
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS -DBUILD_TESTS=off
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Grantlee5)
 vcpkg_copy_pdbs()
+
+
+foreach(GrantleeLib grantlee_defaultfilters.dll grantlee_defaulttags.dll grantlee_i18ntags.dll grantlee_loadertags.dll
+                    grantlee_defaultfiltersd.dll grantlee_defaulttagsd.dll grantlee_i18ntagsd.dll grantlee_loadertagsd.dll)
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/grantlee/${Grantlee5_MAJOR_MINOR_VERSION_STRING}/${GrantleeLib})
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin/grantlee/${Grantlee5_MAJOR_MINOR_VERSION_STRING}/)
+        file(RENAME
+            ${CURRENT_PACKAGES_DIR}/lib/grantlee/${Grantlee5_MAJOR_MINOR_VERSION_STRING}/${GrantleeLib}
+            ${CURRENT_PACKAGES_DIR}/bin/grantlee/${Grantlee5_MAJOR_MINOR_VERSION_STRING}/${GrantleeLib})
+    endif()
+    if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/grantlee/${Grantlee5_MAJOR_MINOR_VERSION_STRING}/${GrantleeLib})
+        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin/grantlee/${Grantlee5_MAJOR_MINOR_VERSION_STRING}/)
+        file(RENAME
+            ${CURRENT_PACKAGES_DIR}/debug/lib/grantlee/${Grantlee5_MAJOR_MINOR_VERSION_STRING}/${GrantleeLib}
+            ${CURRENT_PACKAGES_DIR}/debug/bin/grantlee/${Grantlee5_MAJOR_MINOR_VERSION_STRING}/${GrantleeLib})
+    endif()
+endforeach()
+
+if (WIN32)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib" "${CURRENT_PACKAGES_DIR}/debug/lib")
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

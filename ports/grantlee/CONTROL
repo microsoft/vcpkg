@@ -1,4 +1,5 @@
 Source: grantlee
 Version: 5.2.0
 Description: Libraries for text templating with Qt
+Homepage: https://github.com/steveire/grantlee
 Build-Depends:  qt5-base[core]
