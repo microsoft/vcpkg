@@ -112,9 +112,14 @@ function(fixup_physx_artifacts)
     _fixup("debug/bin" "debug/${_fpa_DIRECTORY}")
 endfunction()
 
+set(_PHYSX_LIB_SUFFIXES ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX})
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    list(APPEND _PHYSX_LIB_SUFFIXES ".pdb")
+endif()
+
 fixup_physx_artifacts(
     DIRECTORY "lib"
-    SUFFIXES ${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX}
+    SUFFIXES ${_PHYSX_LIB_SUFFIXES}
 )
 fixup_physx_artifacts(
     DIRECTORY "bin"
