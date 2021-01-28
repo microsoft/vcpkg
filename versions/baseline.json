@@ -5482,7 +5482,7 @@
     },
     "speex": {
       "baseline": "1.2.0",
-      "port-version": 7
+      "port-version": 8
     },
     "speexdsp": {
       "baseline": "1.2.0",
