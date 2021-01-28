@@ -104,8 +104,7 @@ namespace vcpkg::Commands::PortsDiff
         System::cmd_execute_and_capture_output(cmd, System::get_clean_environment());
         System::cmd_execute_and_capture_output(System::Command(git_exe).string_arg("reset"),
                                                System::get_clean_environment());
-        const auto ports_at_commit =
-            Paragraphs::load_overlay_ports(paths, temp_checkout_path / ports_dir_name_as_string);
+        const auto ports_at_commit = Paragraphs::load_overlay_ports(fs, temp_checkout_path / ports_dir_name_as_string);
         std::map<std::string, VersionT> names_and_versions;
         for (auto&& port : ports_at_commit)
         {

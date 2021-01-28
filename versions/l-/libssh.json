@@ -1,0 +1,79 @@
+{
+  "versions": [
+    {
+      "git-tree": "bf1fb5ae9324823a60784a5ed0ecbca8a3325214",
+      "version-string": "0.9.5",
+      "port-version": 1
+    },
+    {
+      "git-tree": "a9db7620dc774257483a98c9c5309dbb7eff8263",
+      "version-string": "0.9.5",
+      "port-version": 0
+    },
+    {
+      "git-tree": "e6abfa633623458bf8c58025435c0a707bf0fb1c",
+      "version-string": "0.9.3-2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "8f14c7ec09f7d0d29c691fc9b225d6a67761db7a",
+      "version-string": "0.9.3-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "0a6feb828d27c5ee860145508a17ede4e7a1e73a",
+      "version-string": "0.9.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "ee6061def32a105af072e75d61f0de95a6fdec14",
+      "version-string": "0.9.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "b2fa5e9b88af986ee5c817a6b99c185132af3781",
+      "version-string": "0.9.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "10c4e4dd3e0b3d524dfb75f7295db75930fcb1e9",
+      "version-string": "0.9.0",
+      "port-version": 0
+    },
+    {
+      "git-tree": "44d8f2b3b277e909d608c68049230b5f4ea5ccfa",
+      "version-string": "0.7.6-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4145721a2592ce28523e1ece83cd3eb8fe0ed7c3",
+      "version-string": "0.7.6",
+      "port-version": 0
+    },
+    {
+      "git-tree": "cd2e1e955f2d79a9e36bb6930f01c98a18d9ca65",
+      "version-string": "0.7.5-4",
+      "port-version": 0
+    },
+    {
+      "git-tree": "f2ef7bc5dc9d0003d7647ee7b6b9a04b23596a98",
+      "version-string": "0.7.5-3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1dceea4b45e9099aebdef27ac5b6ae4a8219873d",
+      "version-string": "0.7.5-2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4efe97ee1e31efd2b6fbeb69ba6974ea40173591",
+      "version-string": "0.7.5-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "4ee8a7bd27fed40a2cce00ac57d7f98dcba69d04",
+      "version-string": "0.7.5",
+      "port-version": 0
+    }
+  ]
+}

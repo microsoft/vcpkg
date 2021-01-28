@@ -19,10 +19,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     zlib    WITH_ZLIB
 )
 
+if (VCPKG_TARGET_IS_ANDROID)
+	set(EXTRA_ARGS "-DWITH_SERVER=FALSE"
+			"-DWITH_PCAP=FALSE"
+			)
+endif ()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${EXTRA_ARGS}
         ${FEATURE_OPTIONS}
         -DWITH_EXAMPLES=OFF
         -DUNIT_TESTING=OFF
