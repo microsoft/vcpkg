@@ -11,7 +11,6 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         libusb-fix.patch
         libconfuse-fix.patch
-        ftdi-eeprom-fix.patch
         win32.patch
 )
 
@@ -31,6 +30,7 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_Libintl=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_PythonLibs=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_PythonInterp=ON
+        -DFTDI_EEPROM=OFF
 )
 
 vcpkg_install_cmake()
