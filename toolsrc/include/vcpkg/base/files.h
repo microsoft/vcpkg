@@ -48,20 +48,11 @@ namespace fs
     inline path u8path(std::initializer_list<char> il) { return u8path(vcpkg::StringView{il.begin(), il.end()}); }
     inline path u8path(const char* s) { return u8path(vcpkg::StringView{s, s + ::strlen(s)}); }
 
-#if defined(_MSC_VER)
     inline path u8path(std::string::const_iterator first, std::string::const_iterator last)
     {
-        if (first == last)
-        {
-            return path{};
-        }
-        else
-        {
-            auto firstp = &*first;
-            return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
-        }
+        auto firstp = &*first;
+        return u8path(vcpkg::StringView{firstp, firstp + (last - first)});
     }
-#endif
 
     std::string u8string(const path& p);
     std::string generic_u8string(const path& p);
@@ -133,6 +124,12 @@ namespace fs
     };
 
 #endif
+
+    inline bool operator==(SystemHandle lhs, SystemHandle rhs) noexcept
+    {
+        return lhs.system_handle == rhs.system_handle;
+    }
+    inline bool operator!=(SystemHandle lhs, SystemHandle rhs) noexcept { return !(lhs == rhs); }
 
     inline bool is_symlink(file_status s) noexcept
     {
@@ -275,4 +272,44 @@ namespace vcpkg::Files
 #if defined(_WIN32)
     fs::path win32_fix_path_case(const fs::path& source);
 #endif // _WIN32
+
+    struct ExclusiveFileLock
+    {
+        enum class Wait
+        {
+            Yes,
+            No,
+        };
+
+        ExclusiveFileLock() = default;
+        ExclusiveFileLock(ExclusiveFileLock&&) = delete;
+        ExclusiveFileLock& operator=(ExclusiveFileLock&&) = delete;
+
+        ExclusiveFileLock(Wait wait, Filesystem& fs, const fs::path& path_, std::error_code& ec) : m_fs(&fs)
+        {
+            switch (wait)
+            {
+                case Wait::Yes: m_handle = m_fs->take_exclusive_file_lock(path_, ec); break;
+                case Wait::No: m_handle = m_fs->try_take_exclusive_file_lock(path_, ec); break;
+            }
+        }
+        ~ExclusiveFileLock() { clear(); }
+
+        explicit operator bool() const { return m_handle.is_valid(); }
+        bool has_lock() const { return m_handle.is_valid(); }
+
+        void clear()
+        {
+            if (m_fs && m_handle.is_valid())
+            {
+                std::error_code ignore;
+                m_fs->unlock_file_lock(std::exchange(m_handle, fs::SystemHandle{}), ignore);
+            }
+        }
+
+    private:
+        Filesystem* m_fs;
+        fs::SystemHandle m_handle;
+    };
+
 }

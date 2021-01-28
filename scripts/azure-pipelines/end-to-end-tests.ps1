@@ -32,6 +32,12 @@ Param(
 
 $ErrorActionPreference = "Stop"
 
+if (-Not (Test-Path $WorkingRoot)) {
+    New-Item -Path $WorkingRoot -ItemType Directory
+}
+
+$WorkingRoot = (Get-Item $WorkingRoot).FullName
+
 $AllTests = Get-ChildItem $PSScriptRoot/end-to-end-tests-dir/*.ps1
 if ($Filter -ne $Null) {
     $AllTests = $AllTests | ? { $_.Name -match $Filter }
@@ -45,4 +51,5 @@ $AllTests | % {
     $n += 1
 }
 
+Write-Host "[end-to-end-tests.ps1] All tests passed."
 $LASTEXITCODE = 0

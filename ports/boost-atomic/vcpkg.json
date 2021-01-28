@@ -1,0 +1,20 @@
+{
+  "name": "boost-atomic",
+  "version-string": "1.75.0",
+  "description": "Boost atomic module",
+  "homepage": "https://github.com/boostorg/atomic",
+  "dependencies": [
+    "boost-align",
+    "boost-assert",
+    "boost-build",
+    "boost-config",
+    "boost-integer",
+    "boost-modular-build-helper",
+    "boost-predef",
+    "boost-preprocessor",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-vcpkg-helpers",
+    "boost-winapi"
+  ]
+}

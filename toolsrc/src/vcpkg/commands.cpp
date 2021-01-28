@@ -1,11 +1,13 @@
 #include <vcpkg/base/system.print.h>
 
 #include <vcpkg/build.h>
+#include <vcpkg/commands.add-version.h>
 #include <vcpkg/commands.autocomplete.h>
 #include <vcpkg/commands.buildexternal.h>
 #include <vcpkg/commands.cache.h>
 #include <vcpkg/commands.ci.h>
 #include <vcpkg/commands.ciclean.h>
+#include <vcpkg/commands.civerifyversions.h>
 #include <vcpkg/commands.contact.h>
 #include <vcpkg/commands.create.h>
 #include <vcpkg/commands.dependinfo.h>
@@ -39,16 +41,16 @@ namespace vcpkg::Commands
     {
         static const Version::VersionCommand version{};
         static const Contact::ContactCommand contact{};
-#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#if defined(_WIN32)
         static const UploadMetrics::UploadMetricsCommand upload_metrics{};
-#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#endif // defined(_WIN32)
 
         static std::vector<PackageNameAndFunction<const BasicCommand*>> t = {
             {"version", &version},
             {"contact", &contact},
-#if VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#if defined(_WIN32)
             {"x-upload-metrics", &upload_metrics},
-#endif // VCPKG_ENABLE_X_UPLOAD_METRICS_COMMAND
+#endif // defined(_WIN32)
         };
         return t;
     }
@@ -73,6 +75,8 @@ namespace vcpkg::Commands
         static const PortHistory::PortHistoryCommand porthistory{};
         static const X_VSInstances::VSInstancesCommand vsinstances{};
         static const FormatManifest::FormatManifestCommand format_manifest{};
+        static const CIVerifyVersions::CIVerifyVersionsCommand ci_verify_versions{};
+        static const AddVersion::AddVersionCommand add_version{};
 
         static std::vector<PackageNameAndFunction<const PathsCommand*>> t = {
             {"/?", &help},
@@ -94,6 +98,8 @@ namespace vcpkg::Commands
             {"x-history", &porthistory},
             {"x-vsinstances", &vsinstances},
             {"format-manifest", &format_manifest},
+            {"x-ci-verify-versions", &ci_verify_versions},
+            {"x-add-version", &add_version},
         };
         return t;
     }

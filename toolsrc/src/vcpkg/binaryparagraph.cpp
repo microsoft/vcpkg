@@ -242,23 +242,23 @@ namespace vcpkg
             out_str.substr(initial_end), "vcpkg::serialize(const BinaryParagraph&, std::string&)");
         if (!parsed_paragraph.has_value())
         {
-            Checks::exit_with_message(VCPKG_LINE_INFO,
-                                      R"([sanity check] Failed to parse a serialized binary paragraph.
+            Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
+                                       R"([sanity check] Failed to parse a serialized binary paragraph.
 Please open an issue at https://github.com/microsoft/vcpkg, with the following output:
     Error: %s
 
 === Serialized BinaryParagraph ===
 %s
             )",
-                                      parsed_paragraph.error(),
-                                      my_paragraph);
+                                       parsed_paragraph.error(),
+                                       my_paragraph);
         }
 
         auto binary_paragraph = BinaryParagraph(*parsed_paragraph.get());
         if (binary_paragraph != pgh)
         {
             const auto& join_str = R"(", ")";
-            Checks::exit_with_message(
+            Checks::exit_maybe_upgrade(
                 VCPKG_LINE_INFO,
                 R"([sanity check] The serialized binary paragraph was different from the original binary paragraph.
 Please open an issue at https://github.com/microsoft/vcpkg, with the following output:
