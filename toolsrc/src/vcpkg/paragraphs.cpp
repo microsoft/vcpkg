@@ -353,6 +353,7 @@ namespace vcpkg::Paragraphs
                 error_info->name = fs::u8string(path.filename());
                 error_info->error = Strings::format(
                     "Failed to load manifest file for port: %s\n", fs::u8string(path_to_manifest), ec.message());
+                return error_info;
             }
 
             return res;
@@ -491,13 +492,10 @@ namespace vcpkg::Paragraphs
         return std::move(results.paragraphs);
     }
 
-    std::vector<SourceControlFileLocation> load_overlay_ports(const VcpkgPaths& paths, const fs::path& directory)
+    std::vector<SourceControlFileLocation> load_overlay_ports(const Files::Filesystem& fs, const fs::path& directory)
     {
         LoadResults ret;
 
-        std::vector<std::string> port_names;
-
-        const auto& fs = paths.get_filesystem();
         auto port_dirs = fs.get_files_non_recursive(directory);
         Util::sort(port_dirs);
 
