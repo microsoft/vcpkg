@@ -35,7 +35,11 @@ vcpkg_from_github(
         StaticOSG.patch # Fix port compilation in static-md module
         deprecated_cpp_fix.patch # Fix port headers to not use classes deprecated in c++17. Gives errors when using the installed port headers
         make-all-find-packages-required.patch
+        fix-tinyxml.patch
 )
+
+# Upstream bug, see https://github.com/gwaldron/osgearth/issues/1002
+file(REMOVE ${SOURCE_PATH}/src/osgEarth/tinyxml.h)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

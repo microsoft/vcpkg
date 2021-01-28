@@ -1145,7 +1145,7 @@
       "port-version": 1
     },
     "charls": {
-      "baseline": "2.1.0-1",
+      "baseline": "2.2.0",
       "port-version": 0
     },
     "chartdir": {
@@ -1266,7 +1266,7 @@
     },
     "colmap": {
       "baseline": "3.6",
-      "port-version": 0
+      "port-version": 1
     },
     "comms": {
       "baseline": "3.1.3",
@@ -1878,7 +1878,7 @@
     },
     "ffmpeg": {
       "baseline": "4.3.1",
-      "port-version": 9
+      "port-version": 10
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
@@ -3237,7 +3237,7 @@
       "port-version": 10
     },
     "libpqxx": {
-      "baseline": "7.3.0",
+      "baseline": "7.3.1",
       "port-version": 0
     },
     "libprotobuf-mutator": {
@@ -4064,6 +4064,10 @@
       "baseline": "4.1.2",
       "port-version": 0
     },
+    "nsync": {
+      "baseline": "1.24.0",
+      "port-version": 0
+    },
     "nt-wrapper": {
       "baseline": "2019-08-10",
       "port-version": 0
@@ -4322,7 +4326,7 @@
     },
     "openvdb": {
       "baseline": "7.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "openvpn3": {
       "baseline": "3.4.1-1",
@@ -4370,7 +4374,7 @@
     },
     "osgearth": {
       "baseline": "3.1",
-      "port-version": 1
+      "port-version": 2
     },
     "osi": {
       "baseline": "0.108.6",
@@ -5478,7 +5482,7 @@
     },
     "speex": {
       "baseline": "1.2.0",
-      "port-version": 7
+      "port-version": 8
     },
     "speexdsp": {
       "baseline": "1.2.0",
@@ -5629,7 +5633,7 @@
       "port-version": 0
     },
     "taskflow": {
-      "baseline": "2.7.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "tbb": {
