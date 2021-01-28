@@ -11,11 +11,15 @@ vcpkg_extract_source_archive_ex(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    cpp COMPILE_AS_CPP
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DCOMPILE_AS_CPP=OFF
+         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
         -DSKIP_INSTALL_TOOLS=ON
@@ -23,20 +27,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-lua TARGET_PATH share/unofficial-lua)
+
 set(ENABLE_LUA_CPP 0)
 if("cpp" IN_LIST FEATURES)
     set(ENABLE_LUA_CPP 1)
-    vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
-        OPTIONS
-            -DCOMPILE_AS_CPP=ON
-        OPTIONS_DEBUG
-            -DSKIP_INSTALL_HEADERS=ON
-            -DSKIP_INSTALL_TOOLS=ON
-    )
-
-    vcpkg_install_cmake()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-lua-cpp TARGET_PATH share/unofficial-lua-cpp)
 endif()
 
 vcpkg_copy_pdbs()
@@ -51,9 +47,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     endif()
 endif()
 
-# Handle post-build CMake instructions
+# Suitable for old version
 configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in  ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # Handle copyright
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

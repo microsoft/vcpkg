@@ -1,6 +1,17 @@
-_find_package(${ARGS})
+set(REQUIRES )
+foreach(ARG ${ARGS})
+    if (ARG STREQUAL "REQUIRED")
+        set(REQUIRES "REQUIRED")
+        break()
+    endif()
+endforeach()
+
+_find_package(unofficial-lua CONFIG ${REQUIRES})
+
+set(LUA_LIBRARIES lua)
+set(LUA_FOUND 1)
 
 if (@ENABLE_LUA_CPP@)
-    find_library(lua_cpp NAMES lua-c++ liblua-c++ REQUIRED)
-    set(LUA_LIBRARIES ${LUA_LIBRARIES} ${lua_cpp})
+    _find_package(unofficial-lua-cpp CONFIG ${REQUIRES})
+    list(APPEND LUA_LIBRARIES lua-cpp)
 endif()
