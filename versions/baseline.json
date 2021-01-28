@@ -5633,7 +5633,7 @@
       "port-version": 0
     },
     "taskflow": {
-      "baseline": "2.7.0",
+      "baseline": "3.0.0",
       "port-version": 0
     },
     "tbb": {
