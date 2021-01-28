@@ -1266,7 +1266,7 @@
     },
     "colmap": {
       "baseline": "3.6",
-      "port-version": 0
+      "port-version": 1
     },
     "comms": {
       "baseline": "3.1.3",
