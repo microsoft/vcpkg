@@ -11,6 +11,7 @@ vcpkg_from_github(
         msvc_142_bug_workaround.patch
         vs16_3_typeinfo_header_fix.patch
         fix_discarded_qualifiers.patch
+        fix-compiler-flag.patch
 )
 
 if(NOT DEFINED RELEASE_CONFIGURATION)

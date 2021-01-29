@@ -1,0 +1,38 @@
+diff --git a/physx/source/compiler/cmake/uwp/CMakeLists.txt b/physx/source/compiler/cmake/uwp/CMakeLists.txt
+index 2abab31..e3cd075 100644
+--- a/physx/source/compiler/cmake/uwp/CMakeLists.txt
++++ b/physx/source/compiler/cmake/uwp/CMakeLists.txt
+@@ -40,10 +40,10 @@ ENDIF()
+ 
+ # Cache the CXX flags so the other CMakeLists.txt can use them if needed
+ SET(PHYSX_CXX_FLAGS "/Wall /d2Zi+ /MP /WX /W4 /GF /GS- /GR- /Gd ${PHYSX_FP_MODE} ${PHYSX_WARNING_DISABLES}" CACHE INTERNAL "PhysX CXX")
+-SET(PHYSX_CXX_FLAGS_DEBUG "/Od ${WINCRT_DEBUG} /Zi" CACHE INTERNAL "PhysX Debug CXX Flags")
+-SET(PHYSX_CXX_FLAGS_CHECKED "/Ox ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Checked CXX Flags")
+-SET(PHYSX_CXX_FLAGS_PROFILE "/Ox ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Profile CXX Flags")
+-SET(PHYSX_CXX_FLAGS_RELEASE "/Ox ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Release CXX Flags")
++SET(PHYSX_CXX_FLAGS_DEBUG "/Od ${WINCRT_DEBUG} /Z7" CACHE INTERNAL "PhysX Debug CXX Flags")
++SET(PHYSX_CXX_FLAGS_CHECKED "/Ox ${WINCRT_NDEBUG} /Z7" CACHE INTERNAL "PhysX Checked CXX Flags")
++SET(PHYSX_CXX_FLAGS_PROFILE "/Ox ${WINCRT_NDEBUG} /Z7" CACHE INTERNAL "PhysX Profile CXX Flags")
++SET(PHYSX_CXX_FLAGS_RELEASE "/Ox ${WINCRT_NDEBUG} /Z7" CACHE INTERNAL "PhysX Release CXX Flags")
+ 
+ # These flags are local to the directory the CMakeLists.txt is in, so don't get carried over to OTHER CMakeLists.txt (thus the CACHE variables above)
+ SET(CMAKE_CXX_FLAGS ${PHYSX_CXX_FLAGS})
+diff --git a/physx/source/compiler/cmake/windows/CMakeLists.txt b/physx/source/compiler/cmake/windows/CMakeLists.txt
+index c772333..a0b30d8 100644
+--- a/physx/source/compiler/cmake/windows/CMakeLists.txt
++++ b/physx/source/compiler/cmake/windows/CMakeLists.txt
+@@ -46,10 +46,10 @@ ELSE()
+ 	SET(PHYSX_CXX_FLAGS "/arch:SSE2 /d2Zi+ /MP /WX /W4 /GF /GS- /GR- /Gd ${PHYSX_FP_MODE} /Oy ${PHYSX_WARNING_DISABLES}" CACHE INTERNAL "PhysX CXX")	
+ ENDIF()
+ 
+-SET(PHYSX_CXX_FLAGS_DEBUG "/Od ${WINCRT_DEBUG} /RTCu /Zi" CACHE INTERNAL "PhysX Debug CXX Flags")
+-SET(PHYSX_CXX_FLAGS_CHECKED "/Ox ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Checked CXX Flags")
+-SET(PHYSX_CXX_FLAGS_PROFILE "/Ox ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Profile CXX Flags")
+-SET(PHYSX_CXX_FLAGS_RELEASE "/Ox ${WINCRT_NDEBUG} /Zi" CACHE INTERNAL "PhysX Release CXX Flags")
++SET(PHYSX_CXX_FLAGS_DEBUG "/Od ${WINCRT_DEBUG} /RTCu /Z7" CACHE INTERNAL "PhysX Debug CXX Flags")
++SET(PHYSX_CXX_FLAGS_CHECKED "/Ox ${WINCRT_NDEBUG} /Z7" CACHE INTERNAL "PhysX Checked CXX Flags")
++SET(PHYSX_CXX_FLAGS_PROFILE "/Ox ${WINCRT_NDEBUG} /Z7" CACHE INTERNAL "PhysX Profile CXX Flags")
++SET(PHYSX_CXX_FLAGS_RELEASE "/Ox ${WINCRT_NDEBUG} /Z7" CACHE INTERNAL "PhysX Release CXX Flags")
+ 
+ # cache lib type defs
+ IF(PX_GENERATE_STATIC_LIBRARIES)	
