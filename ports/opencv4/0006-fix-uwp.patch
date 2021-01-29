@@ -1,8 +1,8 @@
 diff --git a/cmake/OpenCVModule.cmake b/cmake/OpenCVModule.cmake
-index 10ee406..73f4af2 100644
+index a548df3..1799e44 100644
 --- a/cmake/OpenCVModule.cmake
 +++ b/cmake/OpenCVModule.cmake
-@@ -1183,7 +1183,7 @@ function(ocv_add_perf_tests)
+@@ -1198,7 +1198,7 @@ function(ocv_add_perf_tests)
          set_target_properties(${the_target} PROPERTIES FOLDER "tests performance")
        endif()
  
