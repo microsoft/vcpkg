@@ -6,8 +6,8 @@ $noDefaultFeatureArgs = $manifestDir + @('--x-no-default-features')
 
 function feature {
     @{
-        'description': '';
-        'dependencies': $args;
+        'description' = '';
+        'dependencies' = $args;
     }
 }
 
