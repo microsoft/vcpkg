@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 5aecafc..111ae26 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -25,7 +25,7 @@ if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+ endif(${CMAKE_BUILD_TYPE} STREQUAL Debug)
+ 
+ # find libusb
+-find_package ( USB1 REQUIRED )
++find_package ( libusb CONFIG REQUIRED )
+ include_directories ( ${LIBUSB_INCLUDE_DIR} )
+ 
+ # Find Boost
+diff --git a/ftdi_eeprom/CMakeLists.txt b/ftdi_eeprom/CMakeLists.txt
+index 8737c4b..5b50edb 100644
+--- a/ftdi_eeprom/CMakeLists.txt
++++ b/ftdi_eeprom/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-find_package ( Confuse REQUIRED )
++find_package(confuse REQUIRED)
+ find_package ( Libintl )
+ 
+ # determine docdir
+@@ -11,6 +11,7 @@ if(NOT CMAKE_INSTALL_DOCDIR)
+   endif(WIN32)
+ endif(NOT CMAKE_INSTALL_DOCDIR)
+ 
++if ( CONFUSE_FOUND )
+ message(STATUS "Building ftdi_eeprom")
+ 
+ include_directories ( ${CONFUSE_INCLUDE_DIRS} )
+@@ -42,3 +43,6 @@ if ( LIBINTL_FOUND )
+ endif ()
+ install ( TARGETS ftdi_eeprom DESTINATION bin )
+ install ( FILES example.conf DESTINATION ${CMAKE_INSTALL_DOCDIR} )
++else ()
++  message ( STATUS "libConfuse not found, won't build ftdi_eeprom" )
++endif ()
+\ No newline at end of file
