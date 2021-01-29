@@ -8,14 +8,14 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda ENABLE_CUDA
-    opencv-base ENABLE_OPENCV
-    opencv2-base ENABLE_OPENCV
-    opencv3-base ENABLE_OPENCV
-    opencv-cuda ENABLE_OPENCV
-    opencv2-cuda ENABLE_OPENCV
-    opencv3-cuda ENABLE_OPENCV
     cudnn ENABLE_CUDNN
 )
+
+#do not move following features to vcpkg_check_features because they break themselves: one off will turn off the others even if true
+set(ENABLE_OPENCV FALSE)
+if ("opencv-base" IN_LIST FEATURES OR "opencv2-base" IN_LIST FEATURES OR "opencv3-base" IN_LIST FEATURES)
+  set(ENABLE_OPENCV TRUE)
+endif()
 
 if ("cuda" IN_LIST FEATURES)
   if (NOT VCPKG_CMAKE_SYSTEM_NAME AND NOT ENV{CUDACXX})
