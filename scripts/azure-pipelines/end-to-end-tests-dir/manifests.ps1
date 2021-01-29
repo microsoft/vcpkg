@@ -1,3 +1,6 @@
+. "$PSScriptRoot/../end-to-end-tests-prelude.ps1"
+
+
 Write-Trace "test manifest features"
 $manifestDir = "$TestingRoot/manifest-dir"
 
