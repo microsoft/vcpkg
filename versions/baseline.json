@@ -4705,7 +4705,7 @@
       "port-version": 0
     },
     "pugixml": {
-      "baseline": "1.11.1",
+      "baseline": "1.11.4",
       "port-version": 0
     },
     "pybind11": {
