@@ -14,6 +14,7 @@ set(PATCHES
     0004-dont-copy-vcruntime.patch
     0005-only-build-required-projects.patch
     0006-fix-duplicate-symbols.patch
+    pyproject-runtimelibrary.patch
 )
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
@@ -98,10 +99,18 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/debug/bin")
     endif()
 
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        set(RUNTIME_LIBRARY_SUFFIX)
+    else()
+        set(RUNTIME_LIBRARY_SUFFIX DLL)
+    endif()
+
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH "PCbuild/pcbuild.proj"
         OPTIONS ${OPTIONS}
+        OPTIONS_RELEASE /p:RuntimeLibrary=MultiThreaded${RUNTIME_LIBRARY_SUFFIX}
+        OPTIONS_DEBUG /p:RuntimeLibrary=MultiThreadedDebug${RUNTIME_LIBRARY_SUFFIX}
         LICENSE_SUBPATH "LICENSE"
         SKIP_CLEAN
     )

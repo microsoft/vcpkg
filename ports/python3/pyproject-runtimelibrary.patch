@@ -1,0 +1,21 @@
+diff --git a/PCbuild/pyproject.props b/PCbuild/pyproject.props
+index c659d14..9229d90 100644
+--- a/PCbuild/pyproject.props
++++ b/PCbuild/pyproject.props
+@@ -37,7 +37,7 @@
+       <IntrinsicFunctions>true</IntrinsicFunctions>
+       <StringPooling>true</StringPooling>
+       <ExceptionHandling></ExceptionHandling>
+-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
+       <FunctionLevelLinking>true</FunctionLevelLinking>
+       <WarningLevel>Level3</WarningLevel>
+       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+@@ -50,7 +50,6 @@
+     <ClCompile Condition="$(Configuration) == 'Debug'">
+       <Optimization>Disabled</Optimization>
+       <WholeProgramOptimization>false</WholeProgramOptimization>
+-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+     </ClCompile>
+     <ClCompile Condition="$(ICCBuild) == 'true'">
+       <FloatingPointModel>Strict</FloatingPointModel>
