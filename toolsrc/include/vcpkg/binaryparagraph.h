@@ -22,6 +22,8 @@ namespace vcpkg
                         Triplet triplet,
                         const std::vector<FeatureSpec>& deps);
 
+        void canonicalize();
+
         std::string displayname() const;
 
         std::string fullstem() const;

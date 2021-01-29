@@ -5,7 +5,7 @@ Write-Trace "test manifest features"
 $manifestDir = "$TestingRoot/manifest-dir"
 
 $manifestDirArgs = $commonArgs + @("--x-manifest-root=$manifestDir")
-$noDefaultFeatureArgs = $manifestDir + @('--x-no-default-features')
+$noDefaultFeatureArgs = $manifestDirArgs + @('--x-no-default-features')
 
 function feature {
     @{
@@ -23,25 +23,15 @@ $vcpkgJson = @{
         'copied-feature' = feature 'vcpkg-empty-port'
         'multiple-dep-1' = feature 'vcpkg-empty-port'
         'multiple-dep-2' = feature 'vcpkg-empty-port'
-        'no-default-features-1' = @(
-            @{
-                'name' = 'vcpkg-default-features-fail';
-                'default-features' = $False;
-            };
-        );
-        'no-default-features-2' = @(
-            @{
-                'name' = 'vcpkg-default-features-fail';
-                'features' = @( 'core' );
-            };
-        );
-        'no-default-features-3' = @(
-            @{
-                'name' = 'vcpkg-default-features-fail-require-other-feature';
-                'default-features' = $False;
-                'features' = @( 'success' )
-            };
-        );
+        'no-default-features-1' = feature @{
+            'name' = 'vcpkg-default-features-fail';
+            'default-features' = $False;
+        };
+        'no-default-features-2' = feature @{
+            'name' = 'vcpkg-default-features-fail-require-other-feature';
+            'default-features' = $False;
+            'features' = @( 'success' )
+        };
     }
 }
 
@@ -88,7 +78,4 @@ Run-Vcpkg install @noDefaultFeatureArgs --x-feature=no-default-features-1
 Throw-IfFailed
 Write-Trace "test manifest features: no-default-features, features = [no-default-features-2]"
 Run-Vcpkg install @noDefaultFeatureArgs --x-feature=no-default-features-2
-Throw-IfFailed
-Write-Trace "test manifest features: no-default-features, features = [no-default-features-3]"
-Run-Vcpkg install @noDefaultFeatureArgs --x-feature=no-default-features-3
 Throw-IfFailed

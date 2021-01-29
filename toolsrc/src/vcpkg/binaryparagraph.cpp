@@ -64,16 +64,7 @@ namespace vcpkg
         }
 
         this->description = Strings::split(parser.optional_field(Fields::DESCRIPTION), '\n');
-        for (auto& desc : this->description)
-        {
-            desc = Strings::trim(std::move(desc));
-        }
         this->maintainers = Strings::split(parser.optional_field(Fields::MAINTAINER), '\n');
-        for (auto& maintainer : this->maintainers)
-        {
-            maintainer = Strings::trim(std::move(maintainer));
-        }
-
         this->abi = parser.optional_field(Fields::ABI);
 
         std::string multi_arch;
@@ -102,6 +93,8 @@ namespace vcpkg
 
         // prefer failing above when possible because it gives better information
         Checks::check_exit(VCPKG_LINE_INFO, multi_arch == "same", "Multi-Arch must be 'same' but was %s", multi_arch);
+
+        canonicalize();
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh,
@@ -120,7 +113,7 @@ namespace vcpkg
         , type(spgh.type)
     {
         this->dependencies = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
-        Util::sort_unique_erase(this->dependencies);
+        canonicalize();
     }
 
     BinaryParagraph::BinaryParagraph(const SourceParagraph& spgh,
@@ -139,7 +132,35 @@ namespace vcpkg
         , type(spgh.type)
     {
         this->dependencies = Util::fmap(deps, [](const FeatureSpec& spec) { return spec.spec().name(); });
+        canonicalize();
+    }
+
+    void BinaryParagraph::canonicalize()
+    {
+        constexpr auto all_empty = [](const std::vector<std::string>& range) {
+            return std::all_of(range.begin(), range.end(), [](const std::string& el) { return el.empty(); });
+        };
+
         Util::sort_unique_erase(this->dependencies);
+
+        for (auto& maintainer : this->maintainers)
+        {
+            maintainer = Strings::trim(std::move(maintainer));
+        }
+        if (all_empty(this->maintainers))
+        {
+            this->maintainers.clear();
+        }
+
+        for (auto& desc : this->description)
+        {
+            desc = Strings::trim(std::move(desc));
+        }
+        if (all_empty(this->description))
+        {
+            this->description.clear();
+        }
+
     }
 
     std::string BinaryParagraph::displayname() const
@@ -258,6 +279,9 @@ Please open an issue at https://github.com/microsoft/vcpkg, with the following o
         if (binary_paragraph != pgh)
         {
             const auto& join_str = R"(", ")";
+            constexpr static auto format_bool = [](bool b) {
+                return b ? "true" : "false";
+            };
             Checks::exit_maybe_upgrade(
                 VCPKG_LINE_INFO,
                 R"([sanity check] The serialized binary paragraph was different from the original binary paragraph.
@@ -286,6 +310,18 @@ default_features: ["%s"]
 dependencies: ["%s"]
 abi: "%s"
 type: %s
+
+=== Differences ===
+spec: %s
+version: %s
+port_version: %s
+description: %s
+maintainers: %s
+feature: %s
+default_features: %s
+dependencies: %s
+abi: %s
+type: %s
 )",
                 pgh.spec.to_string(),
                 pgh.version,
@@ -306,7 +342,17 @@ type: %s
                 Strings::join(join_str, binary_paragraph.default_features),
                 Strings::join(join_str, binary_paragraph.dependencies),
                 binary_paragraph.abi,
-                Type::to_string(binary_paragraph.type));
+                Type::to_string(binary_paragraph.type),
+                format_bool(pgh.spec != binary_paragraph.spec),
+                format_bool(pgh.version != binary_paragraph.version),
+                format_bool(pgh.port_version != binary_paragraph.port_version),
+                Strings::format("%zu vs %zu", pgh.description.size(), binary_paragraph.description.size()),
+                format_bool(pgh.maintainers != binary_paragraph.maintainers),
+                format_bool(pgh.feature != binary_paragraph.feature),
+                format_bool(pgh.default_features != binary_paragraph.default_features),
+                format_bool(pgh.dependencies != binary_paragraph.dependencies),
+                format_bool(pgh.abi != binary_paragraph.abi),
+                format_bool(pgh.type != binary_paragraph.type));
         }
     }
 }
