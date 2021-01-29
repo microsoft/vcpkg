@@ -30,6 +30,7 @@
 
     <VcpkgConfigSubdir Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">debug\</VcpkgConfigSubdir>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
+    <ProjectStateLine>VcpkgTriplet=$(VcpkgTriplet):$(ProjectStateLine)</ProjectStateLine>
   </PropertyGroup>
 
   <!-- Import property page 'Vcpkg' -->
@@ -68,15 +69,35 @@
              Importance="High" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgNormalizedConfiguration)' == ''"/>
   </Target>
 
+  <ItemGroup>
+    <_VcpkgInstallManifestDependenciesInputs Include="$(VcpkgManifestRoot)vcpkg.json"/>
+    <_VcpkgInstallManifestDependenciesInputs Include="$(VcpkgManifestRoot)vcpkg-configuration.json" Condition="Exists('$(VcpkgManifestRoot)vcpkg-configuration.json')"/>
+  </ItemGroup>
+
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
-          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'">
-    <Message Text="Installing vcpkg dependencies" Importance="High" />
-    <Exec Command="%22$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22"
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
+          Inputs="@(_VcpkgInstallManifestDependenciesInputs)"
+          Outputs="$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).read.1u.tlog">
+    <Message Text="Installing vcpkg dependencies to $(VcpkgInstalledDir)" Importance="High" />
+    <MakeDir Directories="$(TLogLocation)" />
+    <ItemGroup>
+      <_VcpkgItemToDelete Include="$(TLogLocation)VcpkgInstallManifest*.read.1u.tlog" />
+    </ItemGroup>
+    <Delete Files="@(_VcpkgItemToDelete)" />
+    <Exec Command="%22$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22" 
           StandardOutputImportance="High" />
+    <WriteLinesToFile File="$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).read.1u.tlog"
+                      Lines="@(_VcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
+                      Encoding="Unicode"
+                      Overwrite="true"/>
+
+    <CreateProperty Value="false">
+      <Output TaskParameter="ValueSetByTask" PropertyName="Link_MinimalRebuildFromTracking" />
+    </CreateProperty>
   </Target>
 
   <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput"
-          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgApplocalDeps)' == 'true'">
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgApplocalDeps)' == 'true' and '$(LinkSkippedExecution)' != 'true'">
     <Message Text="[vcpkg] Starting VcpkgApplocalDeps" Importance="low" />
     <PropertyGroup>
       <_VcpkgAppLocalPowerShellCommonArguments>-ExecutionPolicy Bypass -noprofile -File "$(MSBuildThisFileDirectory)applocal.ps1" "$(TargetPath)" "$(VcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)bin" "$(TLogLocation)$(ProjectName).write.1u.tlog" "$(IntDir)vcpkg.applocal.log"</_VcpkgAppLocalPowerShellCommonArguments>
