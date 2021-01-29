@@ -836,15 +836,33 @@ namespace vcpkg::Install
                 features.insert(features.end(), manifest_feature_it->second.begin(), manifest_feature_it->second.end());
             }
             auto core_it = Util::find(features, "core");
-            if (core_it == features.end())
+            if (core_it == features.end() && !Util::Sets::contains(options.switches, OPTION_MANIFEST_NO_DEFAULT_FEATURES))
             {
-                if (!Util::Sets::contains(options.switches, OPTION_MANIFEST_NO_DEFAULT_FEATURES))
-                    features.push_back("default");
+                const auto& default_features = manifest_scf.core_paragraph->default_features;
+                features.insert(features.end(), default_features.begin(), default_features.end());
             }
             else
             {
                 // remove "core" because resolve_deps_as_top_level uses default-inversion
-                features.erase(core_it);
+                // support multiple core features
+                core_it = std::remove(core_it, features.end(), "core");
+                features.erase(core_it, features.end());
+            }
+            Util::sort_unique_erase(features);
+
+            auto dependencies = manifest_scf.core_paragraph->dependencies;
+            for (const auto& feature : features)
+            {
+                auto it = Util::find_if(manifest_scf.feature_paragraphs, [&feature](const std::unique_ptr<FeatureParagraph>& fpgh)
+                {
+                    return fpgh->name == feature;
+                });
+                if (it == manifest_scf.feature_paragraphs.end())
+                {
+                    System::printf(System::Color::warning, "Warning: feature %s was passed, but that is not a feature that %s supports.", feature, manifest_scf.core_paragraph->name);
+                }
+
+                dependencies.insert(dependencies.end(), it->get()->dependencies.begin(), it->get()->dependencies.end());
             }
 
             if (!manifest_scf.core_paragraph->overrides.empty())
@@ -876,7 +894,7 @@ namespace vcpkg::Install
                                                             *baseprovider,
                                                             *oprovider,
                                                             var_provider,
-                                                            manifest_scf.core_paragraph->dependencies,
+                                                            dependencies,
                                                             manifest_scf.core_paragraph->overrides,
                                                             {manifest_scf.core_paragraph->name, default_triplet})
                     .value_or_exit(VCPKG_LINE_INFO);
