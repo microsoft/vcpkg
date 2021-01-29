@@ -88,3 +88,13 @@ This environment variable changes the metadata of produced NuGet packages. See [
 #### VCPKG_USE_NUGET_CACHE
 
 This environment variable allows using NuGet's cache for every nuget-based binary source. See [Binary Caching](binarycaching.md#NuGets-cache) for more details.
+
+#### X_VCPKG_ASSET_SOURCES
+
+> Note: This is an experimental feature and may change or be removed at any time
+
+This environment variable allows using a private mirror for all SHA512-tagged assets.
+
+It must be set to a value of the form `x-azurl,<baseuri>[,<sas>[,read|,write|,readwrite]]`, which will turn into HTTP
+URLs to GET and PUT like `<baseuri><sha512><sas>`. `baseuri` should be terminated with a `/` and `sas` (if defined)
+should be prefixed with a `?`.

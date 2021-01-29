@@ -294,6 +294,9 @@ else
 fi
 
 echo "Building vcpkg-tool..."
+
+return # Fail to build the tool, waiting for release containing https://github.com/microsoft/vcpkg-tool/pull/10
+
 rm -rf "$baseBuildDir"
 mkdir -p "$buildDir"
 vcpkgExtractArchive "$tarballPath" "$srcBaseDir"

@@ -67,7 +67,9 @@ function(vcpkg_download_distfile VAR)
     if(NOT DEFINED vcpkg_download_distfile_FILENAME)
         message(FATAL_ERROR "vcpkg_download_distfile requires a FILENAME argument.")
     endif()
-    if(NOT _VCPKG_INTERNAL_NO_HASH_CHECK)
+    if(_VCPKG_INTERNAL_NO_HASH_CHECK)
+        set(vcpkg_download_distfile_SKIP_SHA512 1)
+    else()
         if(NOT vcpkg_download_distfile_SKIP_SHA512 AND NOT DEFINED vcpkg_download_distfile_SHA512)
             message(FATAL_ERROR "vcpkg_download_distfile requires a SHA512 argument. If you do not know the SHA512, add it as 'SHA512 0' and re-run this command.")
         endif()
@@ -113,7 +115,7 @@ function(vcpkg_download_distfile VAR)
 
     if(EXISTS "${downloaded_file_path}")
         if(NOT vcpkg_download_distfile_QUIET)
-            message(STATUS "Using cached ${downloaded_file_path}")
+            message(STATUS "Using ${downloaded_file_path}")
         endif()
         test_hash("${downloaded_file_path}" "cached file" "Please delete the file and retry if this file should be downloaded again.")
     else()
@@ -123,47 +125,12 @@ function(vcpkg_download_distfile VAR)
 
         # Tries to download the file.
         list(GET vcpkg_download_distfile_URLS 0 SAMPLE_URL)
-        if(_VCPKG_DOWNLOAD_TOOL STREQUAL "ARIA2" AND NOT SAMPLE_URL MATCHES "aria2")
-            vcpkg_find_acquire_program("ARIA2")
-            message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME}...")
-            if(vcpkg_download_distfile_HEADERS)
-                foreach(header ${vcpkg_download_distfile_HEADERS})
-                    list(APPEND request_headers "--header=${header}")
-                endforeach()
-            endif()
-            vcpkg_execute_in_download_mode(
-                COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
-                -o temp/${vcpkg_download_distfile_FILENAME}
-                -l download-${vcpkg_download_distfile_FILENAME}-detailed.log
-                ${request_headers}
-                OUTPUT_FILE download-${vcpkg_download_distfile_FILENAME}-out.log
-                ERROR_FILE download-${vcpkg_download_distfile_FILENAME}-err.log
-                RESULT_VARIABLE error_code
-                WORKING_DIRECTORY ${DOWNLOADS}
-            )
-            if (NOT "${error_code}" STREQUAL "0")
-                message(STATUS
-                    "Downloading ${vcpkg_download_distfile_FILENAME}... Failed.\n"
-                    "    Exit Code: ${error_code}\n"
-                    "    See logs for more information:\n"
-                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-out.log\n"
-                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-err.log\n"
-                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-detailed.log\n"
-                )
-                set(download_success 0)
-            else()
-                file(REMOVE
-                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-out.log
-                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-err.log
-                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-detailed.log
-                )
-                set(download_success 1)
-            endif()
-        else()
+        if(vcpkg_download_distfile_SKIP_SHA512)
             foreach(url IN LISTS vcpkg_download_distfile_URLS)
                 message(STATUS "Downloading ${url} -> ${vcpkg_download_distfile_FILENAME}...")
+                set(request_headers)
                 if(vcpkg_download_distfile_HEADERS)
-                    foreach(header ${vcpkg_download_distfile_HEADERS})
+                    foreach(header IN LISTS vcpkg_download_distfile_HEADERS)
                         list(APPEND request_headers HTTPHEADER ${header})
                     endforeach()
                 endif()
@@ -173,40 +140,54 @@ function(vcpkg_download_distfile VAR)
                     message(STATUS "Downloading ${url}... Failed. Status: ${download_status}")
                     set(download_success 0)
                 else()
+                    get_filename_component(downloaded_file_dir "${downloaded_file_path}" DIRECTORY)
+                    file(MAKE_DIRECTORY "${downloaded_file_dir}")
+                    file(RENAME ${download_file_path_part} ${downloaded_file_path})
                     set(download_success 1)
                     break()
                 endif()
             endforeach(url)
+        else()
+            set(URLS)
+            foreach(url IN LISTS vcpkg_download_distfile_URLS)
+                list(APPEND URLS "--url=${url}")
+            endforeach(url)
+            if(NOT vcpkg_download_distfile_QUIET)
+                message(STATUS "Downloading ${vcpkg_download_distfile_URLS} -> ${vcpkg_download_distfile_FILENAME}...")
+            endif()
+            set(request_headers)
+            if(vcpkg_download_distfile_HEADERS)
+                foreach(header IN LISTS vcpkg_download_distfile_HEADERS)
+                    list(APPEND request_headers "--header=${header}")
+                endforeach()
+            endif()
+            vcpkg_execute_in_download_mode(
+                COMMAND "$ENV{VCPKG_COMMAND}" x-download "${downloaded_file_path}" "${vcpkg_download_distfile_SHA512}" ${URLS} ${request_headers} --debug
+                OUTPUT_VARIABLE output
+                ERROR_VARIABLE output
+                RESULT_VARIABLE FAILURE
+                WORKING_DIRECTORY ${DOWNLOADS}
+            )
+            if(FAILURE)
+                message("${output}")
+                set(download_success 0)
+            else()
+                set(download_success 1)
+            endif()
         endif()
 
-        if (NOT vcpkg_download_distfile_SILENT_EXIT)
-            if (NOT download_success)
+        if(NOT download_success)
+            if(NOT vcpkg_download_distfile_SILENT_EXIT)
                 message(FATAL_ERROR
-                "    \n"
-                "    Failed to download file.\n"
-                "    If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment\n"
-                "    variables to \"https://user:password@your-proxy-ip-address:port/\".\n"
-                "    \n"
-                "    If error with status 4 (Issue #15434),\n"
-                "    try setting \"http://user:password@your-proxy-ip-address:port/\".\n"
-                "    \n"
-                "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
-            else()
-                test_hash("${download_file_path_part}" "downloaded file" "The file may have been corrupted in transit. This can be caused by proxies. If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment variables to \"https://user:password@your-proxy-ip-address:port/\".\n")
-                get_filename_component(downloaded_file_dir "${downloaded_file_path}" DIRECTORY)
-                file(MAKE_DIRECTORY "${downloaded_file_dir}")
-                file(RENAME ${download_file_path_part} ${downloaded_file_path})
-            endif()
-        else()
-            if (NOT download_success)
-                message(WARNING
-                "    \n"
-                "    Failed to download file.\n")
-            else()
-                test_hash("${download_file_path_part}" "downloaded file" "The file may have been corrupted in transit. This can be caused by proxies. If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment variables to \"https://user:password@your-proxy-ip-address:port/\".\n")
-                get_filename_component(downloaded_file_dir "${downloaded_file_path}" DIRECTORY)
-                file(MAKE_DIRECTORY "${downloaded_file_dir}")
-                file(RENAME ${download_file_path_part} ${downloaded_file_path})
+                    "    \n"
+                    "    Failed to download file.\n"
+                    "    If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment\n"
+                    "    variables to \"https://user:password@your-proxy-ip-address:port/\".\n"
+                    "    \n"
+                    "    If error with status 4 (Issue #15434),\n"
+                    "    try setting \"http://user:password@your-proxy-ip-address:port/\".\n"
+                    "    \n"
+                    "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
             endif()
         endif()
     endif()
