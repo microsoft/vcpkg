@@ -529,6 +529,10 @@ function(x_vcpkg_install_local_dependencies)
         foreach(TARGET IN LISTS __VCPKG_APPINSTALL_TARGETS)
             get_target_property(TARGETTYPE ${TARGET} TYPE)
             if(NOT TARGETTYPE STREQUAL "INTERFACE_LIBRARY")
+                # Install CODE|SCRIPT allow the use of generator expressions
+                if(POLICY CMP0087)
+                    cmake_policy(SET CMP0087 NEW)
+                endif()
                 install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
                     execute_process(COMMAND \"${_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
                         -targetBinary \"\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
