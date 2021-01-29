@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DaveGamble/cJSON
@@ -15,8 +13,10 @@ vcpkg_check_features(
 
 if(CMAKE_HOST_WIN32)
     string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_PUBLIC_SYMBOLS)
+    string(COMPARE NOTEQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" DENABLE_HIDDEN_SYMBOLS)
 else()
     set(ENABLE_PUBLIC_SYMBOLS OFF)
+    set(DENABLE_HIDDEN_SYMBOLS OFF)
 endif()
 
 vcpkg_configure_cmake(
@@ -26,6 +26,7 @@ vcpkg_configure_cmake(
         -DBUILD_SHARED_AND_STATIC_LIBS=OFF
         -DCJSON_OVERRIDE_BUILD_SHARED_LIBS=OFF
         -DENABLE_PUBLIC_SYMBOLS=${ENABLE_PUBLIC_SYMBOLS}
+        -DENABLE_HIDDEN_SYMBOLS=${DENABLE_HIDDEN_SYMBOLS}
         -DENABLE_TARGET_EXPORT=ON # Export CMake config files
         -DENABLE_CJSON_TEST=OFF
         -DENABLE_FUZZING=OFF
@@ -55,6 +56,3 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/include/cjson/cJSON.h "${_contents}")
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

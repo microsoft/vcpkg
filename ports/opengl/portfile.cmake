@@ -1,17 +1,14 @@
-include(vcpkg_common_functions)
-
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    vcpkg_get_program_files_32_bit(PROGRAM_FILES_32_BIT)
     vcpkg_get_windows_sdk(WINDOWS_SDK)
 
     if (WINDOWS_SDK MATCHES "10.")
-        set(LIBGLFILEPATH  "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
-        set(LIBGLUFILEPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Lib\\${WINDOWS_SDK}\\um\\${TRIPLET_SYSTEM_ARCH}\\GlU32.Lib")
-        set(HEADERSPATH    "${PROGRAM_FILES_32_BIT}\\Windows Kits\\10\\Include\\${WINDOWS_SDK}\\um")
+        file(TO_NATIVE_PATH "$ENV{WindowsSdkDir}Lib/${WINDOWS_SDK}/um/${TRIPLET_SYSTEM_ARCH}/OpenGL32.Lib" LIBGLFILEPATH)
+        file(TO_NATIVE_PATH "$ENV{WindowsSdkDir}Lib/${WINDOWS_SDK}/um/${TRIPLET_SYSTEM_ARCH}/GlU32.Lib" LIBGLUFILEPATH)
+        file(TO_NATIVE_PATH "$ENV{WindowsSdkDir}Include/${WINDOWS_SDK}/um" HEADERSPATH)
     elseif(WINDOWS_SDK MATCHES "8.")
-        set(LIBGLFILEPATH  "${PROGRAM_FILES_32_BIT}\\Windows Kits\\8.1\\Lib\\winv6.3\\um\\${TRIPLET_SYSTEM_ARCH}\\OpenGL32.Lib")
-        set(LIBGLUFILEPATH "${PROGRAM_FILES_32_BIT}\\Windows Kits\\8.1\\Lib\\winv6.3\\um\\${TRIPLET_SYSTEM_ARCH}\\GlU32.Lib")
-        set(HEADERSPATH    "${PROGRAM_FILES_32_BIT}\\Windows Kits\\8.1\\Include\\um")
+        file(TO_NATIVE_PATH "$ENV{WindowsSdkDir}Lib/winv6.3/um/${TRIPLET_SYSTEM_ARCH}/OpenGL32.Lib" LIBGLFILEPATH)
+        file(TO_NATIVE_PATH "$ENV{WindowsSdkDir}Lib/winv6.3/um/${TRIPLET_SYSTEM_ARCH}/GlU32.Lib" LIBGLUFILEPATH)
+        file(TO_NATIVE_PATH "$ENV{WindowsSdkDir}Include/um" HEADERSPATH)
     else()
         message(FATAL_ERROR "Portfile not yet configured for Windows SDK with version: ${WINDOWS_SDK}")
     endif()
@@ -24,22 +21,41 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore
         message(FATAL_ERROR "Cannot find Windows ${WINDOWS_SDK} SDK. File does not exist: ${LIBGLUFILEPATH}")
     endif()
 
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/include/gl"   INCLUDEGLPATH)   
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/share/opengl" SHAREOPENGLPATH)   
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/lib"          RELEASELIBPATH)
+    file(TO_NATIVE_PATH "${CURRENT_PACKAGES_DIR}/debug/lib"    DEBUGLIBPATH)
+    file(TO_NATIVE_PATH "${HEADERSPATH}/gl/GL.h"               GLGLHPATH)
+    file(TO_NATIVE_PATH "${HEADERSPATH}/gl/GLU.h"              GLGLUHPATH)
+
     file(MAKE_DIRECTORY
-        ${CURRENT_PACKAGES_DIR}/include/gl
-        ${CURRENT_PACKAGES_DIR}/lib
-        ${CURRENT_PACKAGES_DIR}/debug/lib
-        ${CURRENT_PACKAGES_DIR}/share/opengl
+        "${INCLUDEGLPATH}"
+        "${SHAREOPENGLPATH}"
     )
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(MAKE_DIRECTORY
+            "${RELEASELIBPATH}"
+        )
+    endif()
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(MAKE_DIRECTORY
+            "${DEBUGLIBPATH}"
+        )
+    endif()
 
     file(COPY
-        "${HEADERSPATH}\\gl\\GL.h"
-        "${HEADERSPATH}\\gl\\GLU.h"
-        DESTINATION ${CURRENT_PACKAGES_DIR}/include/gl
+       "${GLGLHPATH}"
+       "${GLGLUHPATH}"
+        DESTINATION "${INCLUDEGLPATH}"
     )
-    file(COPY ${LIBGLFILEPATH}  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(COPY ${LIBGLUFILEPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-    file(COPY ${LIBGLFILEPATH}  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    file(COPY ${LIBGLUFILEPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(COPY ${LIBGLFILEPATH}  DESTINATION "${RELEASELIBPATH}")
+        file(COPY ${LIBGLUFILEPATH} DESTINATION "${RELEASELIBPATH}")
+    endif()
+    if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(COPY ${LIBGLFILEPATH}  DESTINATION "${DEBUGLIBPATH}")
+        file(COPY ${LIBGLUFILEPATH} DESTINATION "${DEBUGLIBPATH}")
+    endif()
 
     if (WINDOWS_SDK MATCHES "10.")
         file(WRITE ${CURRENT_PACKAGES_DIR}/share/opengl/copyright "See https://developer.microsoft.com/windows/downloads/windows-10-sdk for the Windows 10 SDK license")

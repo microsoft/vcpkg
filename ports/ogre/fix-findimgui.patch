@@ -1,0 +1,65 @@
+diff --git a/Components/Overlay/CMakeLists.txt b/Components/Overlay/CMakeLists.txt
+index df8f32af4..42be1e8f2 100644
+--- a/Components/Overlay/CMakeLists.txt
++++ b/Components/Overlay/CMakeLists.txt
+@@ -19,21 +19,8 @@ list(APPEND HEADER_FILES
+ file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+ 
+ if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
+-  set(IMGUI_DIR "${PROJECT_BINARY_DIR}/imgui-1.77" CACHE PATH "")
+-  if(NOT EXISTS ${IMGUI_DIR})
+-    message(STATUS "Dowloading imgui")
+-    file(DOWNLOAD
+-        https://github.com/ocornut/imgui/archive/v1.77.tar.gz
+-        ${PROJECT_BINARY_DIR}/imgui.tar.gz)
+-    execute_process(COMMAND ${CMAKE_COMMAND}
+-        -E tar xf imgui.tar.gz WORKING_DIRECTORY ${PROJECT_BINARY_DIR})
+-  endif()
+-  list(APPEND SOURCE_FILES
+-    ${IMGUI_DIR}/imgui.cpp
+-    ${IMGUI_DIR}/imgui_draw.cpp
+-    ${IMGUI_DIR}/imgui_widgets.cpp
+-    ${IMGUI_DIR}/imgui_demo.cpp
+-    ${IMGUI_DIR}/misc/freetype/imgui_freetype.cpp)
++    find_package(imgui CONFIG REQUIRED)
++    find_path(IMGUI_INCLUDE_DIR imgui.h)
+ else()
+     list(REMOVE_ITEM SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/OgreImGuiOverlay.cpp")
+ endif()
+@@ -41,13 +28,17 @@ endif()
+ # setup target
+ add_library(OgreOverlay ${OGRE_COMP_LIB_TYPE} ${HEADER_FILES} ${SOURCE_FILES})
+ set_target_properties(OgreOverlay PROPERTIES VERSION ${OGRE_SOVERSION} SOVERSION ${OGRE_SOVERSION})
+-target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE ${FREETYPE_LIBRARIES} ZLIB::ZLIB)
++if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
++    target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE freetype ZLIB::ZLIB imgui::imgui)
++else()
++    target_link_libraries(OgreOverlay PUBLIC OgreMain PRIVATE freetype ZLIB::ZLIB)
++endif()
+ target_include_directories(OgreOverlay PUBLIC 
+   "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+   $<INSTALL_INTERFACE:include/OGRE/Overlay>
+   PRIVATE ${FREETYPE_INCLUDE_DIRS})
+ 
+-if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
++if(0)
+   target_include_directories(OgreOverlay PUBLIC
+     PUBLIC "$<BUILD_INTERFACE:${IMGUI_DIR}>"
+     PRIVATE "$<BUILD_INTERFACE:${IMGUI_DIR}/misc/freetype>")
+diff --git "a/Components/Bites/CMakeLists.txt" "b/Components/Bites/CMakeLists.txt"
+index 5d58a8d74..fe41e4a28 100644
+--- "a/Components/Bites/CMakeLists.txt"
++++ "b/Components/Bites/CMakeLists.txt"
+@@ -152,6 +152,11 @@ elseif(NOT EMSCRIPTEN)
+   message(WARNING "SDL2 not found - no input handling and reduced window creation capabilites")
+ endif()
+ 
++if(OGRE_BUILD_COMPONENT_OVERLAY_IMGUI)
++  find_package(imgui CONFIG REQUIRED)
++  target_link_libraries(OgreBites PRIVATE imgui::imgui)
++endif()
++
+ generate_export_header(OgreBites 
+     EXPORT_MACRO_NAME _OgreBitesExport
+     EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/include/OgreBitesPrerequisites.h)
+

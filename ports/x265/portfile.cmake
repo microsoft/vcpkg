@@ -1,17 +1,15 @@
-include(vcpkg_common_functions)
-
-vcpkg_from_bitbucket(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO multicoreware/x265
-    REF 3.2
-    SHA512 e98e26a9d3c2eb7f147ba052d9d8009e1c47e54905375b29e813f33ffddf8b7fac55ea455ae6d28ed1ade2d90f887c7cafe374873cd48b6c5e2560ddd21ccb84
+    REPO videolan/x265
+    REF 07295ba7ab551bb9c1580fdaee3200f1b45711b7 #v3.4
+    SHA512 21a4ef8733a9011eec8b336106c835fbe04689e3a1b820acb11205e35d2baba8c786d9d8cf5f395e78277f921857e4eb8622cf2ef3597bce952d374f7fe9ec29
     HEAD_REF master
     PATCHES
         disable-install-pdb.patch
 )
 
 set(ENABLE_ASSEMBLY OFF)
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(NASM)
     get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
     set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
@@ -36,20 +34,50 @@ vcpkg_copy_pdbs()
 # remove duplicated include files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/x265)
+vcpkg_copy_tools(TOOL_NAMES x265 AUTO_CLEAN)
 
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265 ${CURRENT_PACKAGES_DIR}/tools/x265/x265)
-elseif(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/x265.exe ${CURRENT_PACKAGES_DIR}/tools/x265/x265.exe)
-endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/x265)
+if(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_MINGW))
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
+    endif()
+endif()
+
+# maybe create vcpkg_regex_replace_string?
+
+file(READ ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc _contents)
+string(REGEX REPLACE "-l(std)?c\\+\\+" "" _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc "${_contents}")
+
+file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc _contents)
+string(REGEX REPLACE "-l(std)?c\\+\\+" "" _contents "${_contents}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc "${_contents}")
+
+if(VCPKG_TARGET_IS_MINGW AND ENABLE_SHARED)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libx265.a)
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libx265.a)
+endif()
+
+if(UNIX)
+    foreach(FILE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc")
+        if(EXISTS "${FILE}")
+            file(READ "${FILE}" _contents)
+            string(REPLACE " -lstdc++" "" _contents "${_contents}")
+            string(REPLACE " -lc++" "" _contents "${_contents}")
+            string(REPLACE " -lgcc_s" "" _contents "${_contents}")
+            string(REPLACE " -lgcc" "" _contents "${_contents}")
+            string(REPLACE " -lrt" "" _contents "${_contents}")
+            file(WRITE "${FILE}" "${_contents}")
+        endif()
+    endforeach()
+    vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES numa)
+else()
+    vcpkg_fixup_pkgconfig()
+endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/x265)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/x265/COPYING ${CURRENT_PACKAGES_DIR}/share/x265/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

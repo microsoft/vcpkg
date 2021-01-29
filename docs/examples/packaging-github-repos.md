@@ -1,18 +1,23 @@
 ## Packaging Github Repos Example: libogg
-### Create the CONTROL file
-The `CONTROL` file is a simple set of fields describing the package's metadata.
+### Create the manifest file
+The manifest file (called `vcpkg.json`) is a json file describing the package's metadata.
 
-*For libogg, we'll create the file `ports\libogg\CONTROL` with the following contents:*
-```no-highlight
-Source: libogg
-Version: 1.3.3
-Description: Ogg is a multimedia container format, and the native file and stream format for the Xiph.org multimedia codecs.
+For libogg, we'll create the file `ports/libogg/vcpkg.json` with the following content:
+
+```json
+{
+  "name": "libogg",
+  "version-string": "1.3.3",
+  "description": "Ogg is a multimedia container format, and the native file and stream format for the Xiph.org multimedia codecs."
+}
 ```
+
+You can format the manifest file to our specifications with `vcpkg format-manifest ports/libogg/vcpkg.json`.
 
 ### Create the portfile
 `portfile.cmake` describes how to build and install the package. First we download the project from Github with [`vcpkg_from_github`](../maintainers/vcpkg_from_github.md):
 
-```no-highlight
+```cmake
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xiph/ogg
@@ -26,7 +31,7 @@ The important parts to update are `REPO` for the GitHub repository path, `REF` f
 
 Finally, we configure the project with CMake, install the package, and copy over the license file:
 
-```no-highlight
+```cmake
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -40,14 +45,13 @@ Check the documentation for [`vcpkg_configure_cmake`](../maintainers/vcpkg_confi
 Now you can run `vcpkg install libogg` to build and install the package.
 
 ### Suggested example portfiles
-In the `ports\` directory are many libraries that can be used as examples, including many that are not based on CMake.
+In the `ports/` directory are many libraries that can be used as examples, including many that are not based on CMake.
 
 - Header only libraries
-    - rapidjson
-    - range-v3
+  - rapidjson
+  - range-v3
 - MSBuild-based
-    - cppunit
-    - mpg123
+  - mpg123
 - Non-CMake, custom buildsystem
-    - openssl
-    - ffmpeg
+  - openssl
+  - ffmpeg

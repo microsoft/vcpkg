@@ -1,11 +1,9 @@
-include(vcpkg_common_functions)
-
-set(LIBTIFF_VERSION 4.0.10)
+set(LIBTIFF_VERSION 4.1.0)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/libtiff/tiff-${LIBTIFF_VERSION}.tar.gz"
     FILENAME "tiff-${LIBTIFF_VERSION}.tar.gz"
-    SHA512 d213e5db09fd56b8977b187c5a756f60d6e3e998be172550c2892dbdb4b2a8e8c750202bc863fe27d0d1c577ab9de1710d15e9f6ed665aadbfd857525a81eea8
+    SHA512 fd541dcb11e3d5afaa1ec2f073c9497099727a52f626b338ef87dc93ca2e23ca5f47634015a4beac616d4e8f05acf7b7cd5797fb218758cc2ad31b390491c5a6
 )
 
 vcpkg_extract_source_archive_ex(
@@ -43,7 +41,22 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libtiff-4.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" "-ltiff" "-ltiffd")
+endif()
 
+# Fix dependencies:
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libtiff-4.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" "Version: 4.1.0" "Version: 4.1.0\nRequires.private: liblzma libjpeg")
+endif() 
+set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libtiff-4.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" "Version: 4.1.0" "Version: 4.1.0\nRequires.private: liblzma libjpeg")
+endif()
+
+vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
@@ -51,16 +64,17 @@ file(REMOVE_RECURSE
 )
 
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/tiff)
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/tiff RENAME copyright)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 if ("tool" IN_LIST FEATURES)
     file(GLOB TIFF_TOOLS ${CURRENT_PACKAGES_DIR}/bin/*.exe)
     file(INSTALL ${TIFF_TOOLS} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
     file(REMOVE ${TIFF_TOOLS})
     file(GLOB TIFF_TOOLS ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
     file(REMOVE ${TIFF_TOOLS})
-    
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()

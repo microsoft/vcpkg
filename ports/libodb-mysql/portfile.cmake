@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.codesynthesis.com/download/odb/2.4/libodb-mysql-2.4.0.tar.gz"
     FILENAME "libodb-mysql-2.4.0.tar.gz"
@@ -10,7 +8,8 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/adapter_mysql_8.0.patch
+        adapter_mysql_8.0.patch
+        fix-redefinttion.patch
 )
 
 file(COPY
@@ -23,6 +22,7 @@ set(MYSQL_LIB "${CURRENT_INSTALLED_DIR}/lib/libmysql.lib")
 set(MYSQL_LIB_DEBUG "${CURRENT_INSTALLED_DIR}/debug/lib/libmysql.lib")
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
         -DMYSQL_INCLUDE_DIR=${MYSQL_INCLUDE_DIR}

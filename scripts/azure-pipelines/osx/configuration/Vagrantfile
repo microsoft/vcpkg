@@ -1,0 +1,118 @@
+require 'json'
+
+require "erb"
+include ERB::Util
+
+configuration = JSON.parse(File.read("#{__dir__}/vagrant-configuration.json"))
+
+server = {
+  :hostname => configuration['machine_name'],
+  :box => configuration['box_name'],
+  :box_version => configuration['box_version'],
+  :disk_size => configuration['disk_size'],
+  :ram => 12000,
+  :cpu => 5
+}
+
+brew_formulas = [
+  'autoconf',
+  'automake',
+  'bison',
+  'gfortran',
+  'gperf',
+  'libtool',
+  'meson',
+  'mono',
+  'nasm',
+  'pkg-config',
+  'yasm' ]
+
+brew_cask_formulas = [
+  'powershell' ]
+
+azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/2.179.0/vsts-agent-osx-x64-2.179.0.tar.gz'
+devops_url = configuration['devops_url']
+agent_pool = configuration['agent_pool']
+pat = configuration['pat']
+
+Vagrant.configure('2') do |config|
+  # give them extra time to boot up
+  config.vm.boot_timeout = 600
+
+  config.vm.box = server[:box]
+  config.vm.box_version = server[:box_version]
+  config.vm.hostname = server[:hostname]
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+
+  diskname = "#{server[:hostname]}-data.vmdk"
+
+  # I don't like this, but as far as I can tell, it's the only way
+  # to do this. When vagrant finishes the `disk` feature, switch
+  # over to that -- Nicole Mazzuca
+  if (not File.exists? diskname) then
+    system "VBoxManage createmedium --filename #{diskname} --size #{1024 * server[:disk_size]} --variant Fixed"
+  end
+
+  config.vm.provider 'virtualbox' do |vb|
+    vb.memory = server[:ram]
+    vb.cpus = server[:cpu]
+    vb.customize ['modifyvm', :id, '--ioapic', 'on']
+    vb.customize ['storageattach', :id,
+      '--storagectl', 'SATA Controller',
+      '--port', '1', '--device', '0', '--type', 'hdd',
+      '--medium', "#{diskname}"
+    ]
+  end
+
+  config.vm.provision 'shell',
+    run: 'once',
+    name: 'Format and mount the data filesystem',
+    inline: 'diskutil partitionDisk /dev/disk0 1 GPT jhfs+ data 0',
+    privileged: true
+
+  config.vm.provision 'shell',
+    run: 'once',
+    name: 'Link the data filesystem to the home directory',
+    inline: "ln -s /Volumes/data ~/Data",
+    privileged: false
+
+  config.vm.provision 'shell',
+    run: 'once',
+    name: 'Download azure agent',
+    inline: "curl -s -o ~/Downloads/azure-agent.tar.gz #{azure_agent_url}",
+    privileged: false
+
+  config.vm.provision 'shell',
+    run: 'once',
+    name: 'Unpack azure agent',
+    inline: 'mkdir myagent; cd myagent; tar xf ~/Downloads/azure-agent.tar.gz',
+    privileged: false
+
+  config.vm.provision 'shell',
+    run: 'once',
+    name: 'Install brew applications',
+    inline: "brew install #{brew_formulas.join(' ')} && brew install --cask #{brew_cask_formulas.join(' ')}",
+    privileged: false
+
+  config.vm.provision 'shell',
+    run: 'once',
+    name: 'Add VM to azure agent pool',
+    inline: "cd ~/myagent;\
+      ./config.sh --unattended \
+        --url #{devops_url} \
+        --work ~/Data/work \
+        --auth pat --token #{pat} \
+        --pool #{agent_pool} \
+        --agent `hostname` \
+        --replace \
+        --acceptTeeEula",
+    privileged: false
+
+  # Start listening for jobs
+  config.vm.provision 'shell',
+    run: 'always',
+    name: 'Start running azure pipelines',
+    inline: 'cd /Users/vagrant/myagent;\
+      nohup ./run.sh&',
+    privileged: false
+end

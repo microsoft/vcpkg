@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libgd/libgd
@@ -9,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-fix-cmake.patch
         no-write-source-dir.patch
+        intrin.patch
 )
 
 #delete CMake builtins modules

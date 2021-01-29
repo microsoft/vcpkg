@@ -1,0 +1,7 @@
+{
+  "name": "directxsdk",
+  "version-string": "jun10",
+  "description": "DirectX SDK",
+  "homepage": "https://www.microsoft.com/en-us/download/details.aspx?id=6812",
+  "supports": "windows & !arm & !uwp"
+}

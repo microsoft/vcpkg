@@ -1,4 +1,6 @@
-include(vcpkg_common_functions)
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/libpcap")
+    message(FATAL_ERROR "FATAL ERROR: libpcap and winpcap are incompatible.")
+endif()
 
 set(WINPCAP_VERSION 4_1_3)
 
@@ -43,12 +45,7 @@ vcpkg_extract_source_archive_ex(
         "${CMAKE_CURRENT_LIST_DIR}/fix-create-lib-batch.patch"
 )
 
-file(
-    COPY
-        "${CURRENT_PORT_DIR}/create_bin.bat"
-    DESTINATION
-        ${SOURCE_PATH}
-)
+file(COPY "${CURRENT_PORT_DIR}/create_bin.bat" DESTINATION ${SOURCE_PATH})
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(PLATFORM Win32)
@@ -109,8 +106,7 @@ vcpkg_execute_required_process(
     LOGNAME create_include-${TARGET_TRIPLET}
 )
 
-file(
-    INSTALL
+file(INSTALL
         "${SOURCE_PATH}/WpdPack/Include/bittypes.h"
         "${SOURCE_PATH}/WpdPack/Include/ip6_misc.h"
         "${SOURCE_PATH}/WpdPack/Include/Packet32.h"
@@ -120,12 +116,9 @@ file(
         "${SOURCE_PATH}/WpdPack/Include/pcap-stdinc.h"
         "${SOURCE_PATH}/WpdPack/Include/remote-ext.h"
         "${SOURCE_PATH}/WpdPack/Include/Win32-Extensions.h"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include
-)
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-file(
-    INSTALL
+file(INSTALL
         "${SOURCE_PATH}/WpdPack/Include/pcap/bluetooth.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap/bpf.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap/namedb.h"
@@ -133,9 +126,7 @@ file(
         "${SOURCE_PATH}/WpdPack/Include/pcap/sll.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap/usb.h"
         "${SOURCE_PATH}/WpdPack/Include/pcap/vlan.h"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include/pcap
-)
+    DESTINATION ${CURRENT_PACKAGES_DIR}/include/pcap)
 
 vcpkg_execute_required_process(
     COMMAND ${SOURCE_PATH}/create_lib.bat
@@ -148,21 +139,15 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
     set(PCAP_LIBRARY_PATH "${PCAP_LIBRARY_PATH}/x64")
 endif()
 
-file(
-    INSTALL
+file(INSTALL
         "${PCAP_LIBRARY_PATH}/Packet.lib"
         "${PCAP_LIBRARY_PATH}/wpcap.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/lib
-)
+    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
 
-file(
-    INSTALL
+file(INSTALL
         "${PCAP_LIBRARY_PATH}/debug/Packet.lib"
         "${PCAP_LIBRARY_PATH}/debug/wpcap.lib"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/debug/lib
-)
+    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_execute_required_process(
@@ -176,21 +161,17 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(PCAP_BINARY_PATH "${PCAP_BINARY_PATH}/x64")
     endif()
 
-    file(
-        INSTALL
+    file(INSTALL
             "${PCAP_BINARY_PATH}/Packet.dll"
             "${PCAP_BINARY_PATH}/wpcap.dll"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/bin
-    )
+        DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 
-    file(
-        INSTALL
+    file(INSTALL
             "${PCAP_BINARY_PATH}/Packet.dll"
             "${PCAP_BINARY_PATH}/wpcap.dll"
-        DESTINATION
-            ${CURRENT_PACKAGES_DIR}/debug/bin
-    )
+        DESTINATION  ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
-configure_file(${COPYRIGHT} ${CURRENT_PACKAGES_DIR}/share/winpcap/copyright COPYONLY)
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/pcap-stdinc.h "#define inline __inline" "#ifndef __cplusplus\n#define inline __inline\n#endif")
+
+configure_file(${COPYRIGHT} ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

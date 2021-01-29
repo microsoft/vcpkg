@@ -1,0 +1,28 @@
+diff --git a/cmake/libigl-config.cmake.in b/cmake/libigl-config.cmake.in
+index 21aa2468..0aa6d8a0 100644
+--- a/cmake/libigl-config.cmake.in
++++ b/cmake/libigl-config.cmake.in
+@@ -27,5 +27,23 @@ if (TARGET igl::common)
+   endif()
+ endif()
+ 
++ include(CMakeFindDependencyMacro)
++if (TARGET igl::embree)
++  find_dependency(embree 3 CONFIG REQUIRED)
++endif()
++if (TARGET igl::xml)
++  find_dependency(tinyxml2 CONFIG REQUIRED)
++endif()
++if (TARGET igl::opengl)
++  find_dependency(OpenGL REQUIRED)
++  find_dependency(glad CONFIG REQUIRED)
++  if (TARGET igl::opengl_glfw)
++    find_dependency(glfw3 CONFIG REQUIRED)
++    if (TARGET igl::opengl_glfw_imgui)
++      find_dependency(imgui CONFIG REQUIRED)
++    endif()
++  endif()
++endif()
++
+ check_required_components(libigl)
+ 

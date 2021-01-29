@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ros/console_bridge
-    REF f0b423c0c2d02651db1776c96887c0a314908063
-    SHA512 f022341f06c4edf564b94305b7ce279a7a2a61d0323a7ccf374598011909d86b0a9c514b4d41fd1d523baecc1c320d16a931a8f0fbb3a3e4950720f84f0472e6
+    REF 0a6c16ed68750837c32ed1cedee9fca7d61d4364 # 1.0.1
+    SHA512 8b856bf8c0eec7d7f3f87e10c4de2b99369bd35cab5f9dd5ea3813fdd5a3fd4e7cd31b2336746920e093a515ad1175fd5af79f9d2f6a4648b1814b3131a1ef03
     HEAD_REF master
 )
 
@@ -22,6 +20,10 @@ else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/console_bridge/cmake TARGET_PATH share/console_bridge)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/console_bridge)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/console_bridge)
+endif()
+
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+    vcpkg_fixup_pkgconfig()
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

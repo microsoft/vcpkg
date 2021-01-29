@@ -3,7 +3,7 @@ index a98540c..a3697cb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -479,6 +479,10 @@ if(WEBP_BUILD_VWEBP)
-                                        ${CMAKE_CURRENT_SOURCE_DIR}/src
+                                PRIVATE ${GLUT_INCLUDE_DIR}
                                         ${CMAKE_CURRENT_BINARY_DIR}/src
                                         ${OPENGL_INCLUDE_DIR})
 +    if(UNIX AND NOT(ANDROID OR BLACKBERRY OR APPLE))

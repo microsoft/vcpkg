@@ -1,8 +1,12 @@
+if (NOT VCPKG_TARGET_IS_LINUX AND NOT VCPKG_TARGET_IS_OSX)
+    vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO intel/tbb
-    REF 4bdba61bafc6ba2d636f31564f1de5702d365cf7
-    SHA512 0b00c9deefdac5dc1f4fbae314e91eb3513b54b47ff6dec08ed2460486fc7d211ab36d6130e5787bfd50523cb613c65f03f9217d967292ca9056e2d3f5010bf8
+    REPO oneapi-src/oneTBB
+    REF eca91f16d7490a8abfdee652dadf457ec820cc37 # 2020_U3
+    SHA512 7144e1dc68304b5358e6ea330431b6f0c61fadb147efa353a5b242777d6fabf7b8cf99b79cffb51b49b911dd17a9f1879619d6eebdf319f23ec3235c89cffc25
     HEAD_REF tbb_2019
     PATCHES
         fix-static-build.patch
@@ -20,7 +24,17 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_install_cmake()
 
     # Settings for TBBConfigInternal.cmake.in
-    set(TBB_LIB_EXT a)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+        set(TBB_LIB_EXT a)
+    else()
+        if (VCPKG_TARGET_IS_LINUX)
+            set(TBB_LIB_EXT "so.2")
+        elseif(VCPKG_TARGET_IS_OSX)
+            set(TBB_LIB_EXT "dylib")
+        else()
+            set(TBB_LIB_EXT "so")
+        endif()
+    endif()
     set(TBB_LIB_PREFIX lib)
 else()
     if (VCPKG_CRT_LINKAGE STREQUAL static)
@@ -30,7 +44,7 @@ else()
         set(RELEASE_CONFIGURATION Release)
         set(DEBUG_CONFIGURATION Debug)
     endif()
-    
+
     macro(CONFIGURE_PROJ_FILE arg)
         set(CONFIGURE_FILE_NAME ${arg})
         set(CONFIGURE_BAK_FILE_NAME ${arg}.bak)
@@ -52,7 +66,7 @@ else()
             file(WRITE ${CONFIGURE_FILE_NAME} "${SLN_CONFIGURE}")
         endif()
     endmacro()
-    
+
     CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbb.vcxproj)
     CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbbmalloc.vcxproj)
     CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbbmalloc_proxy.vcxproj)
@@ -93,6 +107,13 @@ configure_file(
     ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake
     @ONLY
 )
+
+configure_file(
+    ${SOURCE_PATH}/cmake/templates/TBBConfigVersion.cmake.in
+    ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfigVersion.cmake
+    @ONLY
+)
+
 file(READ ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake _contents)
 string(REPLACE
     "get_filename_component(_tbb_root \"\${_tbb_root}\" PATH)"
@@ -112,6 +133,7 @@ string(REPLACE
     _contents
     "${_contents}"
 )
+
 string(REPLACE "SHARED IMPORTED)" "UNKNOWN IMPORTED)" _contents "${_contents}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/tbb/TBBConfig.cmake "${_contents}")
 

@@ -1,36 +1,13 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8a9f919..9c2b8ad 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -62,7 +62,7 @@ if("${CMAKE_SIZEOF_VOID_P}" STREQUAL "4")
- else()
-     set(ads_PlatformDir "x64")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 0bd721d..4848c5f 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -52,7 +52,7 @@ if (UNIX)
+     set(ads_SRCS linux/FloatingWidgetTitleBar.cpp ${ads_SRCS})
+     set(ads_HEADERS linux/FloatingWidgetTitleBar.h ${ads_HEADERS})
  endif()
 -if(BUILD_STATIC)
 +if(NOT BUILD_SHARED_LIBS)
-     add_library(qtadvanceddocking STATIC ${ads_SRCS})
-     set(ads_COMPILE_DEFINE ${ads_COMPILE_DEFINE} ADS_STATIC)
+     add_library(qtadvanceddocking STATIC ${ads_SRCS} ${ads_HEADERS})
+     target_compile_definitions(qtadvanceddocking PUBLIC ADS_STATIC)
  else()
-@@ -80,7 +80,7 @@ install(FILES
-     COMPONENT license
- )
- install(TARGETS qtadvanceddocking
--    EXPORT adsBinary
-+    EXPORT qt-advanced-docking-systemConfig
-     RUNTIME DESTINATION bin COMPONENT library
-     LIBRARY DESTINATION lib COMPONENT library
-     ARCHIVE DESTINATION lib COMPONENT library
-@@ -93,7 +93,6 @@ target_link_libraries(qtadvanceddocking PUBLIC ${ads_LIBS})
- target_compile_definitions(qtadvanceddocking PRIVATE ${ads_COMPILE_DEFINE})
- set_target_properties(qtadvanceddocking PROPERTIES 
-     VERSION ${ads_VERSION}
--    EXPORT_NAME "Qt Advanced Docking System"
-     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/lib"
-     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/lib"
-     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ads_PlatformDir}/bin"
-@@ -103,3 +102,4 @@ if(BUILD_EXAMPLES)
-     add_subdirectory(demo)
- endif()
- 
-+install(EXPORT qt-advanced-docking-systemConfig NAMESPACE qt-advanced-docking-system:: DESTINATION share/qt-advanced-docking-system)
-\ No newline at end of file

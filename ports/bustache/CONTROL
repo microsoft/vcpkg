@@ -1,0 +1,5 @@
+Source: bustache
+Version: 1.1.0
+Build-Depends: boost-unordered, boost-utility
+Description: C++11 implementation of {{ mustache }}
+Homepage: https://github.com/jamboree/bustache

@@ -1,4 +1,13 @@
 Source: directxtex
-Version: dec2019
+Version: jan2021b
 Homepage: https://walbourn.github.io/directxtex
 Description: DirectXTex texture processing library
+Build-Depends: directxmath(linux), directx-headers(linux)
+Supports: windows|linux
+
+Feature: dx12
+Description: Build with DirectX12 support for Windows 10
+
+Feature: openexr
+Description: Enable OpenEXR support
+Build-Depends: openexr

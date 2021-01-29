@@ -1,27 +1,31 @@
-## # vcpkg_copy_pdbs
-##
-## Automatically locate pdbs in the build tree and copy them adjacent to all DLLs.
-##
-## ## Usage
-## ```cmake
-## vcpkg_copy_pdbs([BUILD_PATHS <${CURRENT_PACKAGES_DIR}/bin/*.dll> ...])
-## ```
-##
-## ## Notes
-## This command should always be called by portfiles after they have finished rearranging the binary output.
-##
-## ## Parameters
-## ### BUILD_PATHS
-## Path patterns passed to `file(GLOB_RECURSE)` for locating dlls.
-##
-## Defaults to `${CURRENT_PACKAGES_DIR}/bin/*.dll` and `${CURRENT_PACKAGES_DIR}/debug/bin/*.dll`.
-##
-## ## Examples
-##
-## * [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
-## * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
+#[===[.md:
+# vcpkg_copy_pdbs
+
+Automatically locate pdbs in the build tree and copy them adjacent to all DLLs.
+
+## Usage
+```cmake
+vcpkg_copy_pdbs([BUILD_PATHS <${CURRENT_PACKAGES_DIR}/bin/*.dll> ...])
+```
+
+## Notes
+This command should always be called by portfiles after they have finished rearranging the binary output.
+
+## Parameters
+### BUILD_PATHS
+Path patterns passed to `file(GLOB_RECURSE)` for locating dlls.
+
+Defaults to `${CURRENT_PACKAGES_DIR}/bin/*.dll` and `${CURRENT_PACKAGES_DIR}/debug/bin/*.dll`.
+
+## Examples
+
+* [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
+* [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
+#]===]
+
 function(vcpkg_copy_pdbs)
-    cmake_parse_arguments(_vcp "" "" "BUILD_PATHS" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vcp "" "" "BUILD_PATHS")
     
     if(NOT _vcp_BUILD_PATHS)
         set(
@@ -39,7 +43,7 @@ function(vcpkg_copy_pdbs)
         set(${OUTVAR} ${MSG} PARENT_SCOPE)
     endfunction()
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND NOT VCPKG_TARGET_IS_MINGW)
         file(GLOB_RECURSE DLLS ${_vcp_BUILD_PATHS})
 
         set(DLLS_WITHOUT_MATCHING_PDBS)

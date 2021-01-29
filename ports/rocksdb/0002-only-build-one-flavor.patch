@@ -1,12 +1,11 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ff370fb..6916fcd 100644
+index 6761929..4d2b0a1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -810,24 +810,30 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
-   )
+@@ -987,13 +987,17 @@ if(NOT WIN32 OR ROCKSDB_INSTALL_ON_WINDOWS)
  
-   install(DIRECTORY include/rocksdb COMPONENT devel DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
--
+   install(DIRECTORY "${PROJECT_SOURCE_DIR}/cmake/modules" COMPONENT devel DESTINATION ${package_config_destination})
+ 
 -  install(
 -    TARGETS ${ROCKSDB_STATIC_LIB}
 -    EXPORT RocksDBTargets
@@ -14,17 +13,7 @@ index ff370fb..6916fcd 100644
 -    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 -    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 -  )
--
--  install(
--    TARGETS ${ROCKSDB_SHARED_LIB}
--    EXPORT RocksDBTargets
--    COMPONENT runtime
--    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
--    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
--    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
--    INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
--  )
-+  if(NOT ROCKSDB_DISABLE_INSTALL_STATIC_LIB)
++  if(NOT ROCKSDB_BUILD_SHARED)
 +    install(
 +      TARGETS ${ROCKSDB_STATIC_LIB}
 +      EXPORT RocksDBTargets
@@ -35,19 +24,6 @@ index ff370fb..6916fcd 100644
 +  else()
 +    set_target_properties(${ROCKSDB_STATIC_LIB} PROPERTIES EXCLUDE_FROM_ALL TRUE)
 +  endif()
-+  if(NOT ROCKSDB_DISABLE_INSTALL_SHARED_LIB)
-+    install(
-+      TARGETS ${ROCKSDB_SHARED_LIB}
-+      EXPORT RocksDBTargets
-+      COMPONENT runtime
-+      ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-+      RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-+      LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-+      INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
-+    )
-+  else()
-+    set_target_properties(${ROCKSDB_SHARED_LIB} PROPERTIES EXCLUDE_FROM_ALL TRUE)
-+  endif()
  
-   install(
-     EXPORT RocksDBTargets
+   if(ROCKSDB_BUILD_SHARED)
+     install(

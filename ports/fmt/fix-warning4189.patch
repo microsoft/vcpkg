@@ -1,5 +1,5 @@
 diff --git a/include/fmt/format.h b/include/fmt/format.h
-index efec5d6..9b15b48 100644
+index 4e96539..0f1d179 100644
 --- a/include/fmt/format.h
 +++ b/include/fmt/format.h
 @@ -33,6 +33,7 @@
@@ -8,5 +8,5 @@ index efec5d6..9b15b48 100644
  
 +#pragma warning(disable:4189)
  #include <algorithm>
- #include <cassert>
+ #include <cerrno>
  #include <cmath>

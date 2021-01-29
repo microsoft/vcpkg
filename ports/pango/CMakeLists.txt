@@ -49,18 +49,19 @@ find_path(FONTCONFIG_INCLUDE_DIR fontconfig/fontconfig.h)
 find_library(FONTCONFIG_LIBRARY fontconfig)
 
 # find freetype
-find_path(FREETYPE_INCLUDE_DIR ft2build.h)
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(FT_SUFFIX d)
-endif()
-find_library(FREETYPE_LIBRARY freetype${FT_SUFFIX})
+find_package(Freetype REQUIRED)
 
 # find harfbuzz
 find_path(HARFBUZZ_INCLUDE_DIR harfbuzz/hb.h)
 find_library(HARFBUZZ_LIBRARY harfbuzz)
 
+if (APPLE)
+    find_library(COREFOUNDATION_LIBRARY CoreFoundation)
+    link_libraries(${COREFOUNDATION_LIBRARY})
+endif()
+
 set(FONT_INCLUDE_DIRS ${FREETYPE_INCLUDE_DIR} ${FONTCONFIG_INCLUDE_DIR} ${HARFBUZZ_INCLUDE_DIR}/harfbuzz)
-set(FONT_LIBRARIES ${FREETYPE_LIBRARY} ${FONTCONFIG_LIBRARY} ${HARFBUZZ_LIBRARY})
+set(FONT_LIBRARIES Freetype::Freetype ${FONTCONFIG_LIBRARY} ${HARFBUZZ_LIBRARY})
 
 macro(pango_add_module MODULE_NAME)
     add_library(${MODULE_NAME} ${ARGN})
@@ -151,7 +152,11 @@ if(WIN32)
 endif()
 
 pango_add_module(pangocairo ${PANGO_CAIRO_SOURCES})
-target_link_libraries(pangocairo ${CAIRO_LIBRARIES} pango pangowin32 pangoft2 ${FONT_LIBRARIES})
+list(APPEND PANGO_CAIRO_LIBRARIES  ${CAIRO_LIBRARIES} pango pangoft2 ${FONT_LIBRARIES})
+if (WIN32)
+    list(APPEND PANGO_CAIRO_LIBRARIES pangowin32)
+endif()
+target_link_libraries(pangocairo ${PANGO_CAIRO_LIBRARIES}) 
 target_include_directories(pangocairo PRIVATE ${CAIRO_INCLUDE_DIR} ${FONT_INCLUDE_DIRS})
 
 

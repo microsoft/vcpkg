@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://heasarc.gsfc.nasa.gov/fitsio/ccfits/CCfits-2.5.tar.gz"
     FILENAME "CCfits-2.5.tar.gz"
@@ -9,7 +7,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES dll_exports.patch
+    PATCHES
+        dll_exports.patch
+        fix-dependency.patch
 )
 
 vcpkg_configure_cmake(
@@ -40,4 +40,4 @@ foreach(HEADER IN LISTS HEADERS)
 endforeach()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/ccfits RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

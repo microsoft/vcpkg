@@ -1,0 +1,19 @@
+diff --git a/CMake/vtkModuleWrapPython.cmake b/CMake/vtkModuleWrapPython.cmake
+index 5d2c2e1bf..e33a16d68 100644
+--- a/CMake/vtkModuleWrapPython.cmake
++++ b/CMake/vtkModuleWrapPython.cmake
+@@ -152,11 +152,14 @@ function (_vtk_module_wrap_python_sources module sources classes)
+   set(_vtk_python_genex_compile_definitions
+     "$<TARGET_PROPERTY:${_vtk_python_target_name},COMPILE_DEFINITIONS>")
+   set(_vtk_python_genex_include_directories
+     "$<TARGET_PROPERTY:${_vtk_python_target_name},INCLUDE_DIRECTORIES>")
++  set(_vtk_python_genex_interface_include_directories
++    "$<TARGET_PROPERTY:${_vtk_python_target_name},INTERFACE_INCLUDE_DIRECTORIES>")
+   file(GENERATE
+     OUTPUT  "${_vtk_python_args_file}"
+     CONTENT "$<$<BOOL:${_vtk_python_genex_compile_definitions}>:\n-D\'$<JOIN:${_vtk_python_genex_compile_definitions},\'\n-D\'>\'>\n
+ $<$<BOOL:${_vtk_python_genex_include_directories}>:\n-I\'$<JOIN:${_vtk_python_genex_include_directories},\'\n-I\'>\'>\n
++$<$<BOOL:${_vtk_python_genex_interface_include_directories}>:\n-I\'$<JOIN:${_vtk_python_genex_interface_include_directories},\'\n-I\'>\'>\n
+ $<$<BOOL:${_vtk_python_hierarchy_files}>:\n--types \'$<JOIN:${_vtk_python_hierarchy_files},\'\n--types \'>\'>\n")
+ 
+   set(_vtk_python_sources)

@@ -1,8 +1,8 @@
-include(vcpkg_common_functions)
 set(PHYSFS_VERSION 3.0.2)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://icculus.org/physfs/downloads/physfs-${PHYSFS_VERSION}.tar.bz2"
+    "https://hg.icculus.org/icculus/physfs/archive/release-${PHYSFS_VERSION}.tar.bz2"
     FILENAME "physfs-${PHYSFS_VERSION}.tar.bz2"
     SHA512 4024b6c3348e0b6fc1036aac330192112dfe17de3e3d14773be9f06e9a062df5a1006869f21162b4e0b584989f463788a35e64186b1913225c073fea62754472
 )
@@ -11,6 +11,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${PHYSFS_VERSION}
+    PATCHES
+        "fix-lzmasdk-arm64-windows.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PHYSFS_STATIC)

@@ -2,6 +2,7 @@ Source: mongoose
 Version: 6.15-2
 Description: Embedded web server / embedded networking library
 Homepage: https://cesanta.com/
+Supports: !uwp
 
 Feature: ssl
 Build-Depends: openssl

@@ -1,0 +1,17 @@
+diff --git a/src/shogun/CMakeLists.txt b/src/shogun/CMakeLists.txt
+index fd76961..396251c 100644
+--- a/src/shogun/CMakeLists.txt
++++ b/src/shogun/CMakeLists.txt
+@@ -170,10 +170,10 @@ IF(MSVC)
+   ENDIF()
+ 
+   # bundle dirent
+-  include(external/MSDirent)
++  find_path(MSDIRENT_INCLUDE_DIR NAMES dirent.h)
+   SHOGUN_INCLUDE_DIRS(SCOPE PUBLIC
+     $<BUILD_INTERFACE:${MSDIRENT_INCLUDE_DIR}>
+-    $<INSTALL_INTERFACE:include/shogun/lib/external/MSDirent>
++    $<INSTALL_INTERFACE:include>
+   )
+ 
+   target_link_libraries(shogun PUBLIC winmm)

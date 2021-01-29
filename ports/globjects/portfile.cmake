@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cginternals/globjects
@@ -28,7 +26,7 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/globjects/globjects-config.cmake "inclu
 find_dependency(glm)
 find_dependency(glbinding)
 
-include(\${CMAKE_CURRENT_LIST_DIR}/cmake/globjects/globjects-export.cmake)
+include(\${CMAKE_CURRENT_LIST_DIR}/globjects-export.cmake)
 ")
 
 # Handle copyright

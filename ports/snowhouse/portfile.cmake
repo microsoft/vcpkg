@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO banditcpp/snowhouse
-  REF v3.1.1
-  SHA512 4547893c77eb7ddf7c1dac222ebd2456c518c38a12001b8a27b64d876ece93591ff624b911cb4f1ea3d7b635e92cc3ace536ca12e476bdfbce9789293b95b08f
+  REF 3faaff8d836c726aa2001adf3d2253d3b368b06b # v5.0.0
+  SHA512 d1fdd01b376ea26a4c9312df9f952f5b543d1f9d4a8049b7302961d3403200659cb448e5c032f9f05f4f0eeed7434d94beaf108f80cd155c37fe63eaf14651c2
   HEAD_REF master
 )
 

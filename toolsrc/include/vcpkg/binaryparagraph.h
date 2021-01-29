@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vcpkg/packagespec.h>
-#include <vcpkg/parse.h>
+#include <vcpkg/paragraphparser.h>
 #include <vcpkg/sourceparagraph.h>
 
 namespace vcpkg
@@ -12,9 +12,15 @@ namespace vcpkg
     struct BinaryParagraph
     {
         BinaryParagraph();
-        explicit BinaryParagraph(Parse::RawParagraph fields);
-        BinaryParagraph(const SourceParagraph& spgh, const Triplet& triplet, const std::string& abi_tag);
-        BinaryParagraph(const SourceParagraph& spgh, const FeatureParagraph& fpgh, const Triplet& triplet);
+        explicit BinaryParagraph(Parse::Paragraph fields);
+        BinaryParagraph(const SourceParagraph& spgh,
+                        Triplet triplet,
+                        const std::string& abi_tag,
+                        const std::vector<FeatureSpec>& deps);
+        BinaryParagraph(const SourceParagraph& spgh,
+                        const FeatureParagraph& fpgh,
+                        Triplet triplet,
+                        const std::vector<FeatureSpec>& deps);
 
         std::string displayname() const;
 
@@ -22,15 +28,22 @@ namespace vcpkg
 
         std::string dir() const;
 
+        bool is_feature() const { return !feature.empty(); }
+
         PackageSpec spec;
         std::string version;
-        std::string description;
-        std::string maintainer;
+        int port_version = 0;
+        std::vector<std::string> description;
+        std::vector<std::string> maintainers;
         std::string feature;
         std::vector<std::string> default_features;
-        std::vector<std::string> depends;
+        std::vector<std::string> dependencies;
         std::string abi;
+        Type type = {Type::UNKNOWN};
     };
+
+    bool operator==(const BinaryParagraph&, const BinaryParagraph&);
+    bool operator!=(const BinaryParagraph&, const BinaryParagraph&);
 
     struct BinaryControlFile
     {

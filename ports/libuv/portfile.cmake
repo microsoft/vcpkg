@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libuv/libuv
-    REF 1551969c84c2f546a429dac169c7fdac3e38115e
-    SHA512 86ad8223c2ec6815e009f5070766e7fc626a6249892a097aafbd45d0ac7c6ef2a38c7db45404ebd5c7648d406172b9236c115a2f1f15eaf735ff60e45bfe9bdd
+    REF 25f4b8b8a3c0f934158cd37a37b0525d75ca488e # v1.39.0
+    SHA512 749f89aaaee26237ace84f0ff6ff2e703ba8c2ff7ec81f1c90844876dd865fe925ef0028fdb2fef92c7aa8eca5f66aefe43effad7d7def4240d3f57b848acbe1
     HEAD_REF v1.x
 )
 
@@ -32,8 +30,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     string(REPLACE "defined(USING_UV_SHARED)" "1" UV_H "${UV_H}")
 else()
     string(REPLACE "defined(USING_UV_SHARED)" "0" UV_H "${UV_H}")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/uv.h "${UV_H}")
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libuv)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libuv/LICENSE ${CURRENT_PACKAGES_DIR}/share/libuv/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+

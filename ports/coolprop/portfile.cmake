@@ -1,19 +1,20 @@
-include(vcpkg_common_functions)
 set(PORT_VERSION 6.1.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CoolProp/CoolProp
-    REF 0e934e842e9ce83eea64fda1d4ab8e59adf9d8cd
-    SHA512 a44eafc84f2b88259d7bcf6cfa81daeb81ea9d55bd356e59b3ef77b6f68ea405961c7cb54ba899e3896bb2a02d3e01119a4a51f72899126c8da6081fa2ece948
+    REF f5ebb4e655add4c23bb327ab5209f3dbf919bc6d # v6.4.1
+    SHA512 916d00777fe56035171ed0a6cbe09b8d4487317772802e4fe9b43f5965f3212dcb3754e18fe1db9c748a4d17facbbe6cb2244451cf5cf66334465760fc1701b7
     HEAD_REF master
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/fmt-fix.patch
+        fmt-fix.patch
+        fix-builderror.patch
+        fix-dependency.patch
 )
 
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR ${PYTHON2} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${PYTHON2_DIR}")
+vcpkg_add_to_path(${PYTHON2_DIR})
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/externals)
 
@@ -116,8 +117,4 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/${TARGET_FOLDER} ${CURRENT_PACKAGES_DIR}/${TARGET_FOLDER})
 
 # Handle copyright
-file(
-  INSTALL ${SOURCE_PATH}/LICENSE
-  DESTINATION ${CURRENT_PACKAGES_DIR}/share/coolprop
-  RENAME copyright
-)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

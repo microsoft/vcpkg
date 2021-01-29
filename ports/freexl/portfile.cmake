@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(FREEXL_VERSION_STR "1.0.4")
 
 vcpkg_download_distfile(ARCHIVE
@@ -17,12 +16,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
     
     set(LIBS_ALL_DBG 
-      "\"${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib\" \
-      \"${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib\""
+      "\"${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib\" \
+      \"${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib\""
       )
     set(LIBS_ALL_REL 
-      "\"${CURRENT_INSTALLED_DIR}/lib/libiconv.lib\" \
-      \"${CURRENT_INSTALLED_DIR}/lib/libcharset.lib\""
+      "\"${CURRENT_INSTALLED_DIR}/lib/iconv.lib\" \
+      \"${CURRENT_INSTALLED_DIR}/lib/charset.lib\""
       )
     
     vcpkg_install_nmake(
@@ -36,8 +35,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
             INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}"
             INST_DIR="${CURRENT_PACKAGES_DIR}"
             "LINK_FLAGS="
-            "LIBS_ALL=${LIBS_ALL_REL}"
-        
+            "LIBS_ALL=${LIBS_ALL_REL}"       
     )
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freexl RENAME copyright)
@@ -64,8 +62,9 @@ elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
         ARCHIVE ${ARCHIVE}
         OUT_SOURCE_PATH SOURCE_PATH
     )
-    
+    file(REMOVE_RECURSE "${SOURCE_PATH}/configure")
     vcpkg_configure_make(
+    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS_DEBUG
         INSTALLED_ROOT="${CURRENT_INSTALLED_DIR}"
@@ -80,6 +79,7 @@ elseif (CMAKE_HOST_UNIX OR CMAKE_HOST_APPLE) # Build in UNIX
     )
     
     vcpkg_install_make()
+    vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
     
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/freexl RENAME copyright)

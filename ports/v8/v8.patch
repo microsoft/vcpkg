@@ -1,0 +1,233 @@
+diff --git a/gni/v8.gni b/gni/v8.gni
+index 413b0d3810..8c17353120 100644
+--- a/gni/v8.gni
++++ b/gni/v8.gni
+@@ -2,7 +2,6 @@
+ # Use of this source code is governed by a BSD-style license that can be
+ # found in the LICENSE file.
+
+-import("//build/config/gclient_args.gni")
+ import("//build/config/sanitizers/sanitizers.gni")
+ import("//build/config/v8_target_cpu.gni")
+ import("split_static_library.gni")
+@@ -67,7 +66,7 @@ declare_args() {
+   # Add fuzzilli fuzzer support.
+   v8_fuzzilli = false
+
+-  v8_enable_google_benchmark = checkout_google_benchmark
++  v8_enable_google_benchmark = false
+ }
+
+ if (v8_use_external_startup_data == "") {
+diff --git a/include/v8-cppgc.h b/include/v8-cppgc.h
+index e202293bcf..317bac7f17 100644
+--- a/include/v8-cppgc.h
++++ b/include/v8-cppgc.h
+@@ -90,7 +90,7 @@ void JSMemberBase::Reset() {
+  * method.
+  */
+ template <typename T>
+-class V8_EXPORT JSMember : public internal::JSMemberBase {
++class JSMember : public internal::JSMemberBase {
+   static_assert(std::is_base_of<v8::Value, T>::value,
+                 "JSMember only supports references to v8::Value");
+
+diff --git a/src/common/globals.h b/src/common/globals.h
+index dbc6b9af9b..7634fc1a08 100644
+--- a/src/common/globals.h
++++ b/src/common/globals.h
+@@ -1356,7 +1356,7 @@ class BinaryOperationFeedback {
+ // This is distinct from BinaryOperationFeedback on purpose, because the
+ // feedback that matters differs greatly as well as the way it is consumed.
+ class CompareOperationFeedback {
+-  enum {
++  enum : uint32_t {
+     kSignedSmallFlag = 1 << 0,
+     kOtherNumberFlag = 1 << 1,
+     kBooleanFlag = 1 << 2,
+@@ -1370,7 +1370,7 @@ class CompareOperationFeedback {
+   };
+
+  public:
+-  enum Type {
++  enum Type : uint32_t {
+     kNone = 0,
+
+     kBoolean = kBooleanFlag,
+diff --git a/src/compiler/node-cache.h b/src/compiler/node-cache.h
+index 935e5778e3..d5dae22512 100644
+--- a/src/compiler/node-cache.h
++++ b/src/compiler/node-cache.h
+@@ -29,7 +29,7 @@ class Node;
+ // nodes such as constants, parameters, etc.
+ template <typename Key, typename Hash = base::hash<Key>,
+           typename Pred = std::equal_to<Key> >
+-class EXPORT_TEMPLATE_DECLARE(V8_EXPORT_PRIVATE) NodeCache final {
++class V8_EXPORT_PRIVATE NodeCache final {
+  public:
+   explicit NodeCache(Zone* zone) : map_(zone) {}
+   ~NodeCache() = default;
+diff --git a/src/heap/paged-spaces-inl.h b/src/heap/paged-spaces-inl.h
+index e135e30efc..0c055247bc 100644
+--- a/src/heap/paged-spaces-inl.h
++++ b/src/heap/paged-spaces-inl.h
+@@ -19,7 +19,7 @@ namespace internal {
+ // -----------------------------------------------------------------------------
+ // PagedSpaceObjectIterator
+
+-HeapObject PagedSpaceObjectIterator::Next() {
++inline HeapObject PagedSpaceObjectIterator::Next() {
+   do {
+     HeapObject next_obj = FromCurrentPage();
+     if (!next_obj.is_null()) return next_obj;
+diff --git a/src/heap/paged-spaces.h b/src/heap/paged-spaces.h
+index 4af1b3013c..2489ad6a35 100644
+--- a/src/heap/paged-spaces.h
++++ b/src/heap/paged-spaces.h
+@@ -45,7 +45,7 @@ class V8_EXPORT_PRIVATE PagedSpaceObjectIterator : public ObjectIterator {
+   // Advance to the next object, skipping free spaces and other fillers and
+   // skipping the special garbage section of which there is one per space.
+   // Returns nullptr when the iteration has ended.
+-  inline HeapObject Next() override;
++  HeapObject Next() override;
+
+  private:
+   // Fast (inlined) path of next().
+diff --git a/src/objects/feedback-vector.cc b/src/objects/feedback-vector.cc
+index cf1712b0f0..73eb5c0ec7 100644
+--- a/src/objects/feedback-vector.cc
++++ b/src/objects/feedback-vector.cc
+@@ -115,9 +115,9 @@ Handle<FeedbackMetadata> FeedbackMetadata::New(LocalIsolate* isolate,
+   return metadata;
+ }
+
+-template Handle<FeedbackMetadata> FeedbackMetadata::New(
++template V8_EXPORT Handle<FeedbackMetadata> FeedbackMetadata::New(
+     Isolate* isolate, const FeedbackVectorSpec* spec);
+-template Handle<FeedbackMetadata> FeedbackMetadata::New(
++template V8_EXPORT Handle<FeedbackMetadata> FeedbackMetadata::New(
+     LocalIsolate* isolate, const FeedbackVectorSpec* spec);
+
+ bool FeedbackMetadata::SpecDiffersFrom(
+diff --git a/src/objects/fixed-array-inl.h b/src/objects/fixed-array-inl.h
+index f6c52b8ed0..94f81d3e7d 100644
+--- a/src/objects/fixed-array-inl.h
++++ b/src/objects/fixed-array-inl.h
+@@ -88,7 +88,7 @@ bool FixedArray::is_the_hole(Isolate* isolate, int index) {
+   return get(isolate, index).IsTheHole(isolate);
+ }
+
+-void FixedArray::set(int index, Smi value) {
++inline V8_EXPORT_PRIVATE void FixedArray::set(int index, Smi value) {
+   DCHECK_NE(map(), GetReadOnlyRoots().fixed_cow_array_map());
+   DCHECK_LT(static_cast<unsigned>(index), static_cast<unsigned>(length()));
+   DCHECK(Object(value).IsSmi());
+diff --git a/src/objects/fixed-array.h b/src/objects/fixed-array.h
+index fea05b4001..90659c3867 100644
+--- a/src/objects/fixed-array.h
++++ b/src/objects/fixed-array.h
+@@ -122,7 +122,7 @@ class FixedArray
+   inline bool is_the_hole(Isolate* isolate, int index);
+
+   // Setter that doesn't need write barrier.
+-  inline void set(int index, Smi value);
++  inline V8_EXPORT_PRIVATE void set(int index, Smi value);
+   // Setter with explicit barrier mode.
+   inline void set(int index, Object value, WriteBarrierMode mode);
+
+diff --git a/src/objects/string.h b/src/objects/string.h
+index 0b7bd55aee..c7fa7f49d9 100644
+--- a/src/objects/string.h
++++ b/src/objects/string.h
+@@ -293,7 +293,7 @@ class String : public TorqueGeneratedString<String, Name> {
+
+   V8_EXPORT_PRIVATE bool HasOneBytePrefix(Vector<const char> str);
+   V8_EXPORT_PRIVATE bool IsOneByteEqualTo(Vector<const uint8_t> str);
+-  V8_EXPORT_PRIVATE bool IsOneByteEqualTo(Vector<const char> str) {
++  inline bool IsOneByteEqualTo(Vector<const char> str) {
+     return IsOneByteEqualTo(Vector<const uint8_t>::cast(str));
+   }
+   bool IsTwoByteEqualTo(Vector<const uc16> str);
+diff --git a/src/snapshot/snapshot-utils.cc b/src/snapshot/snapshot-utils.cc
+index 319b828446..64c974fcd8 100644
+--- a/src/snapshot/snapshot-utils.cc
++++ b/src/snapshot/snapshot-utils.cc
+@@ -5,7 +5,7 @@
+ #include "src/snapshot/snapshot-utils.h"
+
+ #include "src/sanitizer/msan.h"
+-#include "third_party/zlib/zlib.h"
++#include "zlib.h"
+
+ namespace v8 {
+ namespace internal {
+diff --git a/src/wasm/function-body-decoder-impl.h b/src/wasm/function-body-decoder-impl.h
+index cb54e46d64..e12336950a 100644
+--- a/src/wasm/function-body-decoder-impl.h
++++ b/src/wasm/function-body-decoder-impl.h
+@@ -1748,7 +1748,7 @@ class WasmDecoder : public Decoder {
+   }
+
+   // TODO(clemensb): This is only used by the interpreter; move there.
+-  V8_EXPORT_PRIVATE std::pair<uint32_t, uint32_t> StackEffect(const byte* pc) {
++  std::pair<uint32_t, uint32_t> StackEffect(const byte* pc) {
+     WasmOpcode opcode = static_cast<WasmOpcode>(*pc);
+     // Handle "simple" opcodes with a fixed signature first.
+     const FunctionSig* sig = WasmOpcodes::Signature(opcode);
+diff --git a/src/wasm/wasm-module-builder.h b/src/wasm/wasm-module-builder.h
+index 309d4bbb9f..1390d422a1 100644
+--- a/src/wasm/wasm-module-builder.h
++++ b/src/wasm/wasm-module-builder.h
+@@ -361,6 +361,7 @@ class V8_EXPORT_PRIVATE WasmModuleBuilder : public ZoneObject {
+   // Indirect functions must be allocated before adding extra tables.
+   bool allocating_indirect_functions_allowed_ = true;
+ #endif
++  DISALLOW_COPY_AND_ASSIGN(WasmModuleBuilder);
+ };
+
+ inline FunctionSig* WasmFunctionBuilder::signature() {
+diff --git a/test/cctest/BUILD.gn b/test/cctest/BUILD.gn
+index 35a22344fb..01a77268cc 100644
+--- a/test/cctest/BUILD.gn
++++ b/test/cctest/BUILD.gn
+@@ -444,6 +444,10 @@ v8_source_set("cctest_sources") {
+     # C4309: 'static_cast': truncation of constant value
+     cflags += [ "/wd4309" ]
+
++    if(!is_clang) {
++      cflags += [ "/wd4789" ]
++    }
++
+     # MSVS wants this for gay-{precision,shortest}.cc.
+     cflags += [ "/bigobj" ]
+
+diff --git a/tools/debug_helper/BUILD.gn b/tools/debug_helper/BUILD.gn
+index 522a0e2270..bbe5809baa 100644
+--- a/tools/debug_helper/BUILD.gn
++++ b/tools/debug_helper/BUILD.gn
+@@ -92,10 +92,12 @@ v8_component("v8_debug_helper") {
+     "../..:run_torque",
+     "../..:v8_headers",
+     "../..:v8_libbase",
++    "../..:v8",
+   ]
+
+   configs = [ ":internal_config" ]
+   if (v8_enable_i18n_support) {
++    public_deps = [ "//third_party/icu" ]
+     configs += [ "//third_party/icu:icu_config" ]
+   }
+
+diff --git a/tools/v8windbg/BUILD.gn b/tools/v8windbg/BUILD.gn
+index 10d06a127f..d0deb7adca 100644
+--- a/tools/v8windbg/BUILD.gn
++++ b/tools/v8windbg/BUILD.gn
+@@ -6,7 +6,7 @@ import("../../gni/v8.gni")
+
+ config("v8windbg_config") {
+   # Required for successful compilation of SDK header file DbgModel.h.
+-  cflags_cc = [ "/Zc:twoPhase-" ]
++  cflags_cc = [ "/Zc:twoPhase-", "/std:c++latest" ]
+
+   include_dirs = [ "../.." ]
+ }

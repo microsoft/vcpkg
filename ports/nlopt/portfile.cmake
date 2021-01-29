@@ -1,12 +1,8 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stevengj/nlopt
-    REF v2.6.1
-    SHA512 e9b8ee75536a568e75150dc0a169d951b670d54ca9d2797f9db6f2751811d9d21be367fa6794a0bc76370715caf5356b368c9c12ad416f3cfb74ae8fa8eabd5c
+    REF v2.7.0
+    SHA512 3c41cab357b50adf50fe2d6225409ade8c5e8ee3576e3680ab29dded29ed7d328bc3d51d3a50054630159c319dca69e47ff08dc5df891b180b7d7e8fcbc27694
     HEAD_REF master
 )
 

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_gitlab(
     GITLAB_URL http://gitlab.onelab.info
     OUT_SOURCE_PATH SOURCE_PATH

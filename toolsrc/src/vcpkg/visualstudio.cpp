@@ -1,12 +1,12 @@
-#include "pch.h"
-
 #if defined(_WIN32)
 
 #include <vcpkg/base/sortedvector.h>
+#include <vcpkg/base/strings.h>
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/system.print.h>
 #include <vcpkg/base/system.process.h>
 #include <vcpkg/base/util.h>
+
 #include <vcpkg/visualstudio.h>
 
 namespace vcpkg::VisualStudio
@@ -67,7 +67,8 @@ namespace vcpkg::VisualStudio
 
         std::string to_string() const
         {
-            return Strings::format("%s, %s, %s", root_path.u8string(), version, release_type_to_string(release_type));
+            return Strings::format(
+                "%s, %s, %s", fs::u8string(root_path), version, release_type_to_string(release_type));
         }
 
         std::string major_version() const { return version.substr(0, 2); }
@@ -84,19 +85,25 @@ namespace vcpkg::VisualStudio
         const fs::path vswhere_exe = program_files_32_bit / "Microsoft Visual Studio" / "Installer" / "vswhere.exe";
         if (fs.exists(vswhere_exe))
         {
-            const auto code_and_output = System::cmd_execute_and_capture_output(
-                Strings::format(R"("%s" -all -prerelease -legacy -products * -format xml)", vswhere_exe.u8string()));
+            const auto code_and_output = System::cmd_execute_and_capture_output(System::Command(vswhere_exe)
+                                                                                    .string_arg("-all")
+                                                                                    .string_arg("-prerelease")
+                                                                                    .string_arg("-legacy")
+                                                                                    .string_arg("-products")
+                                                                                    .string_arg("*")
+                                                                                    .string_arg("-format")
+                                                                                    .string_arg("xml"));
             Checks::check_exit(VCPKG_LINE_INFO,
                                code_and_output.exit_code == 0,
                                "Running vswhere.exe failed with message:\n%s",
                                code_and_output.output);
 
             const auto instance_entries =
-                StringView::find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
+                Strings::find_all_enclosed(code_and_output.output, "<instance>", "</instance>");
             for (const StringView& instance : instance_entries)
             {
                 auto maybe_is_prerelease =
-                    StringView::find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
+                    Strings::find_at_most_one_enclosed(instance, "<isPrerelease>", "</isPrerelease>");
 
                 VisualStudioInstance::ReleaseType release_type = VisualStudioInstance::ReleaseType::LEGACY;
                 if (const auto p = maybe_is_prerelease.get())
@@ -111,15 +118,31 @@ namespace vcpkg::VisualStudio
                 }
 
                 instances.emplace_back(
-                    StringView::find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>")
+                    Strings::find_exactly_one_enclosed(instance, "<installationPath>", "</installationPath>")
                         .to_string(),
-                    StringView::find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>")
+                    Strings::find_exactly_one_enclosed(instance, "<installationVersion>", "</installationVersion>")
                         .to_string(),
                     release_type);
             }
         }
 
-        const auto append_if_has_cl = [&](fs::path&& path_root) {
+        // VS2019 instance from environment variable
+        auto maybe_vs160_comntools = System::get_environment_variable("vs160comntools");
+        if (const auto path_as_string = maybe_vs160_comntools.get())
+        {
+            // We want lexically_normal(), but it is not available
+            // Correct root path might be 2 or 3 levels up, depending on if the path has trailing backslash.
+            auto common7_tools = fs::u8path(*path_as_string);
+            if (common7_tools.filename().empty())
+                instances.emplace_back(common7_tools.parent_path().parent_path().parent_path(),
+                                       "16.0",
+                                       VisualStudioInstance::ReleaseType::LEGACY);
+            else
+                instances.emplace_back(
+                    common7_tools.parent_path().parent_path(), "16.0", VisualStudioInstance::ReleaseType::LEGACY);
+        }
+
+        const auto append_if_has_cl_vs140 = [&](fs::path&& path_root) {
             const auto cl_exe = path_root / "VC" / "bin" / "cl.exe";
             const auto vcvarsall_bat = path_root / "VC" / "vcvarsall.bat";
 
@@ -132,14 +155,16 @@ namespace vcpkg::VisualStudio
         if (const auto path_as_string = maybe_vs140_comntools.get())
         {
             // We want lexically_normal(), but it is not available
-            // Correct root path might be 2 or 3 levels up, depending on if the path has trailing backslash. Try both.
-            auto common7_tools = fs::path{*path_as_string};
-            append_if_has_cl(fs::path{*path_as_string}.parent_path().parent_path());
-            append_if_has_cl(fs::path{*path_as_string}.parent_path().parent_path().parent_path());
+            // Correct root path might be 2 or 3 levels up, depending on if the path has trailing backslash.
+            auto common7_tools = fs::u8path(*path_as_string);
+            if (common7_tools.filename().empty())
+                append_if_has_cl_vs140(common7_tools.parent_path().parent_path().parent_path());
+            else
+                append_if_has_cl_vs140(common7_tools.parent_path().parent_path());
         }
 
         // VS2015 instance from Program Files
-        append_if_has_cl(program_files_32_bit / "Microsoft Visual Studio 14.0");
+        append_if_has_cl_vs140(program_files_32_bit / "Microsoft Visual Studio 14.0");
 
         return instances;
     }
@@ -216,7 +241,7 @@ namespace vcpkg::VisualStudio
 
                 for (const fs::path& subdir : msvc_subdirectories)
                 {
-                    auto toolset_version_full = subdir.filename().u8string();
+                    auto toolset_version_full = fs::u8string(subdir.filename());
                     auto toolset_version_prefix = toolset_version_full.substr(0, 4);
                     CStringView toolset_version;
                     std::string vcvars_option;
@@ -333,7 +358,7 @@ namespace vcpkg::VisualStudio
                 "Warning: The following VS instances are excluded because the English language pack is unavailable.\n");
             for (const Toolset& toolset : excluded_toolsets)
             {
-                System::print2("    ", toolset.visual_studio_root_path.u8string(), '\n');
+                System::print2("    ", fs::u8string(toolset.visual_studio_root_path), '\n');
             }
             System::print2(System::Color::warning, "Please install the English language pack.\n");
         }
@@ -344,7 +369,7 @@ namespace vcpkg::VisualStudio
             System::print2("The following paths were examined:\n");
             for (const fs::path& path : paths_examined)
             {
-                System::print2("    ", path.u8string(), '\n');
+                System::print2("    ", fs::u8string(path), '\n');
             }
             Checks::exit_fail(VCPKG_LINE_INFO);
         }

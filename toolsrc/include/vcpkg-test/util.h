@@ -1,7 +1,10 @@
+#include <vcpkg/base/system_headers.h>
+
 #include <catch2/catch.hpp>
-#include <vcpkg/pragmas.h>
 
 #include <vcpkg/base/files.h>
+#include <vcpkg/base/pragmas.h>
+
 #include <vcpkg/statusparagraph.h>
 
 #include <memory>
@@ -15,8 +18,42 @@
         }                                                                                                              \
     } while (0)
 
+namespace Catch
+{
+    template<>
+    struct StringMaker<vcpkg::FullPackageSpec>
+    {
+        static std::string convert(vcpkg::FullPackageSpec const& value)
+        {
+            return vcpkg::Strings::concat(value.package_spec.name(),
+                                          '[',
+                                          vcpkg::Strings::join(",", value.features),
+                                          "]:",
+                                          value.package_spec.triplet());
+        }
+    };
+}
+
 namespace vcpkg::Test
 {
+    std::unique_ptr<SourceControlFile> make_control_file(
+        const char* name,
+        const char* depends,
+        const std::vector<std::pair<const char*, const char*>>& features = {},
+        const std::vector<const char*>& default_features = {});
+
+    inline auto test_parse_control_file(const std::vector<std::unordered_map<std::string, std::string>>& v)
+    {
+        std::vector<vcpkg::Parse::Paragraph> pghs;
+        for (auto&& p : v)
+        {
+            pghs.emplace_back();
+            for (auto&& kv : p)
+                pghs.back().emplace(kv.first, std::make_pair(kv.second, vcpkg::Parse::TextRowCol{}));
+        }
+        return vcpkg::SourceControlFile::parse_control_file("", std::move(pghs));
+    }
+
     std::unique_ptr<vcpkg::StatusParagraph> make_status_pgh(const char* name,
                                                             const char* depends = "",
                                                             const char* default_features = "",
@@ -27,7 +64,28 @@ namespace vcpkg::Test
                                                                     const char* depends = "",
                                                                     const char* triplet = "x86-windows");
 
-    vcpkg::PackageSpec unsafe_pspec(std::string name, vcpkg::Triplet t = vcpkg::Triplet::X86_WINDOWS);
+    extern const Triplet X86_WINDOWS;
+    extern const Triplet X64_WINDOWS;
+    extern const Triplet X86_UWP;
+    extern const Triplet ARM_UWP;
+    extern const Triplet X64_ANDROID;
+
+    /// <summary>
+    /// Map of source control files by their package name.
+    /// </summary>
+    struct PackageSpecMap
+    {
+        std::unordered_map<std::string, SourceControlFileLocation> map;
+        Triplet triplet;
+        PackageSpecMap(Triplet t = X86_WINDOWS) noexcept : triplet(t) { }
+
+        PackageSpec emplace(const char* name,
+                            const char* depends = "",
+                            const std::vector<std::pair<const char*, const char*>>& features = {},
+                            const std::vector<const char*>& default_features = {});
+
+        PackageSpec emplace(vcpkg::SourceControlFileLocation&& scfl);
+    };
 
     template<class T, class S>
     T&& unwrap(vcpkg::ExpectedT<T, S>&& p)
@@ -51,9 +109,9 @@ namespace vcpkg::Test
             Yes = true,
         } tag;
 
-        constexpr AllowSymlinks(Tag tag) noexcept : tag(tag) {}
+        constexpr AllowSymlinks(Tag tag) noexcept : tag(tag) { }
 
-        constexpr explicit AllowSymlinks(bool b) noexcept : tag(b ? Yes : No) {}
+        constexpr explicit AllowSymlinks(bool b) noexcept : tag(b ? Yes : No) { }
 
         constexpr operator bool() const noexcept { return tag == Yes; }
     };

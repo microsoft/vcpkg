@@ -1,25 +1,24 @@
 #header-only library
-include(vcpkg_common_functions)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zaphoyd/websocketpp
-    REF 1c699ce46843a787482a703fdeff9271fbb7bb5d
-    SHA512 9de30e02e09b066dca8d840963e78673ef118e5183f9638b8a5c941116422916fe9fe02bb5271843aeb292a460f159b5957887594c0824a88600e6c4a5620dbd
+    REF 56123c87598f8b1dd471be83ca841ceae07f95ba # 0.8.2
+    SHA512 f185a66e5a7c783254352a6ef87e2e559f681032b7368765d08393ed12bcae76825abed7dcaea73de09df644320409dad46279701f5f469520542a2c9b6a6163
     HEAD_REF master
 )
 
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/websocketpp)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 # Copy the header files
 file(COPY "${SOURCE_PATH}/websocketpp" DESTINATION "${CURRENT_PACKAGES_DIR}/include" FILES_MATCHING PATTERN "*.hpp")
 
 set(PACKAGE_INSTALL_INCLUDE_DIR "\${CMAKE_CURRENT_LIST_DIR}/../../include")
-set(WEBSOCKETPP_VERSION 0.8.1)
+set(WEBSOCKETPP_VERSION 0.8.2)
 set(PACKAGE_INIT "
 macro(set_and_check)
   set(\${ARGV})
 endmacro()
 ")
-configure_file(${SOURCE_PATH}/websocketpp-config.cmake.in "${CURRENT_PACKAGES_DIR}/share/websocketpp/websocketpp-config.cmake" @ONLY)
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/websocketpp/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/websocketpp-config.cmake.in "${CURRENT_PACKAGES_DIR}/share/${PORT}/websocketpp-config.cmake" @ONLY)
+configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

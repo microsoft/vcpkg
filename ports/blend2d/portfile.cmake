@@ -1,28 +1,28 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_ARCH "arm" ON_ARCH "wasm32" ON_TARGET "uwp")
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO blend2d/blend2d
-  REF bddae39a210aa48c839901584eec647c8ae1b967
-  SHA512 4d80571f5ec8f05753497af396046a75059002a1b7593cee80724a8b3c2495e566e88935bcc02c7380480a20b84ce44c228b1d6ca9c06e24af6564c2e40bc143
+  REF a48108b7efde01ab7e11d1110db9d5a87cc2fbe6
+  SHA512 30c790950166eb1f729394cf2594b3ec57d64e24c89e2a3a46b74310efb085b66c211e1cd4061fb80cb4582bd66d37c1d0bce844ab3b09f3978d03230044c0f3
   HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BLEND2D_STATIC)
 
-if(NOT ("jit" IN_LIST FEATURES))
-  set(BLEND2D_BUILD_NO_JIT TRUE)
-endif()
-if(NOT ("logging" IN_LIST FEATURES))
-  set(BLEND2D_BUILD_NO_LOGGING TRUE)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+  INVERTED_FEATURES
+    jit        BLEND2D_NO_JIT
+    logging    BLEND2D_NO_JIT_LOGGING
+    tls        BLEND2D_NO_TLS
+)
 
 if(NOT BLEND2D_BUILD_NO_JIT)
   vcpkg_from_github(
     OUT_SOURCE_PATH ASMJIT_SOURCE_PATH
     REPO asmjit/asmjit
-    REF baa79895c81b47a9d39abec904204dc0d9e0e6bb
-    SHA512 ec79736d22795de0135598e6649089df5f1594100ff6b6595ed2b83707808ba76d69cf807ecf5e4b9f17ebf7c00e4c7155105e600d56932cb209b77ee9b4fd96
+    REF 70e80b18a5cc05d566e6c90dde200472c9325113
+    SHA512 d3040cca0e34f70eaf498d872b94e2e32e79f1122d6fd1e7c37ab1b7c12ede948d1555229ad75a0335434ead6fc807a8c949175cd81d7b98408df5bbdf9a38f1
     HEAD_REF master
   )
 
@@ -38,22 +38,19 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBLEND2D_STATIC=${BLEND2D_STATIC}
-        -DBLEND2D_BUILD_NO_JIT=${BLEND2D_BUILD_NO_JIT}
-        -DBLEND2D_BUILD_NO_LOGGING=${BLEND2D_BUILD_NO_LOGGING}
+        ${FEATURE_OPTIONS}
 )
-
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if(BLEND2D_STATIC)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
-
-
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

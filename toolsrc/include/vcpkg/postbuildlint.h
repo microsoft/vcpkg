@@ -1,8 +1,14 @@
 #pragma once
 
-#include <vcpkg/build.h>
-#include <vcpkg/packagespec.h>
-#include <vcpkg/vcpkgpaths.h>
+#include <vcpkg/fwd/build.h>
+#include <vcpkg/fwd/vcpkgpaths.h>
+
+#include <vcpkg/base/files.h>
+
+namespace vcpkg
+{
+    struct PackageSpec;
+}
 
 namespace vcpkg::PostBuildLint
 {

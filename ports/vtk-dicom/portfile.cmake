@@ -1,11 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO dgobbi/vtk-dicom
-    REF faf41f35652fcdd66038e623dff5fbc748ccf15b
-    SHA512 8e03e24e28420e48046f15305ea4b8120ac6a4e34eef2f6d1f38e4ebde16e037e7383ff53c3091e939167fadccbbcbe6471bb8ac8c56c9232d3992c56489a102
+    REF 5034c68450de857b70fbe4a4b9f8dddb62badef3 # v0.8.12
+    SHA512 bad1ed6a4a412402a2cd69e5f85b2b73f1ee7ea46a6bbcac31c5f66d07ae006679ffbd9a3c70f9baa1b05b1af0a2d4ca0efc34ec0a85a92f5116b900e81635cd
     HEAD_REF master
+    PATCHES std.patch # similar patch is already in master
 )
 
 if ("gdcm" IN_LIST FEATURES)
@@ -21,22 +20,23 @@ if(USE_GDCM)
         -DUSE_DCMTK=OFF
     )
 endif()
-
+vcpkg_find_acquire_program(PYTHON3)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_PROGRAMS=OFF
         -DBUILD_EXAMPLES=OFF
+        "-DPython3_EXECUTABLE=${PYTHON3}"
         ${ADDITIONAL_OPTIONS}
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/vtk-dicom)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/vtk-dicom/Copyright.txt ${CURRENT_PACKAGES_DIR}/share/vtk-dicom/copyright)
+file(INSTALL ${SOURCE_PATH}/Copyright.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
