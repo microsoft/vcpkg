@@ -20,29 +20,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     threaded-ctx  RESTC_CPP_THREADED_CTX
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
-    if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-        set(DBG_CRT MultiThreadedDebugDLL)
-        set(REL_CRT MultiThreadedDLL)
-    else()
-        set(DBG_CRT MultiThreadedDebug)
-        set(REL_CRT MultiThreaded)
-    endif()
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DCMAKE_POLICY_DEFAULT_CMP0091=NEW
         -DINSTALL_RAPIDJSON_HEADERS=OFF
         -DRESTC_CPP_WITH_EXAMPLES=OFF
         -DRESTC_CPP_WITH_UNIT_TESTS=OFF
         -DRESTC_CPP_WITH_FUNCTIONALT_TESTS=OFF
         ${FEATURE_OPTIONS}
-    OPTIONS_DEBUG
-        -DCMAKE_MSVC_RUNTIME_LIBRARY=${DBG_CRT}
-    OPTIONS_RELEASE
-        -DCMAKE_MSVC_RUNTIME_LIBRARY=${REL_CRT}
 )
 
 vcpkg_install_cmake()
