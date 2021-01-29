@@ -1,0 +1,13 @@
+{
+    "name": "vcpkg-default-features-fail-require-other-feature",
+    "version": "0",
+    "default-features": [ "default-feature" ],
+    "features": {
+        "default-feature": {
+            "description": ""
+        },
+        "success": {
+            "description": ""
+        }
+    }
+}

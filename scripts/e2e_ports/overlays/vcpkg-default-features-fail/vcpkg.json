@@ -1,0 +1,10 @@
+{
+    "name": "vcpkg-default-features-fail",
+    "version": "0",
+    "default-features": [ "default-feature" ],
+    "features": {
+        "default-feature": {
+            "description": ""
+        }
+    }
+}

@@ -1,0 +1,7 @@
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+if("default-feature" IN_LIST FEATURES)
+    message(FATAL_ERROR "the default feature was depended upon")
+endif()
+if(NOT "success" IN_LIST FEATURES)
+    message(FATAL_ERROR "the success feature was not depended upon")
+endif()
