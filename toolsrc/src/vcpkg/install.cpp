@@ -836,7 +836,8 @@ namespace vcpkg::Install
                 features.insert(features.end(), manifest_feature_it->second.begin(), manifest_feature_it->second.end());
             }
             auto core_it = Util::find(features, "core");
-            if (core_it == features.end() && !Util::Sets::contains(options.switches, OPTION_MANIFEST_NO_DEFAULT_FEATURES))
+            if (core_it == features.end() &&
+                !Util::Sets::contains(options.switches, OPTION_MANIFEST_NO_DEFAULT_FEATURES))
             {
                 const auto& default_features = manifest_scf.core_paragraph->default_features;
                 features.insert(features.end(), default_features.begin(), default_features.end());
@@ -853,13 +854,15 @@ namespace vcpkg::Install
             auto dependencies = manifest_scf.core_paragraph->dependencies;
             for (const auto& feature : features)
             {
-                auto it = Util::find_if(manifest_scf.feature_paragraphs, [&feature](const std::unique_ptr<FeatureParagraph>& fpgh)
-                {
-                    return fpgh->name == feature;
-                });
+                auto it = Util::find_if(
+                    manifest_scf.feature_paragraphs,
+                    [&feature](const std::unique_ptr<FeatureParagraph>& fpgh) { return fpgh->name == feature; });
                 if (it == manifest_scf.feature_paragraphs.end())
                 {
-                    System::printf(System::Color::warning, "Warning: feature %s was passed, but that is not a feature that %s supports.", feature, manifest_scf.core_paragraph->name);
+                    System::printf(System::Color::warning,
+                                   "Warning: feature %s was passed, but that is not a feature that %s supports.",
+                                   feature,
+                                   manifest_scf.core_paragraph->name);
                 }
 
                 dependencies.insert(dependencies.end(), it->get()->dependencies.begin(), it->get()->dependencies.end());
