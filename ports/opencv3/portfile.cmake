@@ -6,20 +6,22 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-set(OPENCV_VERSION "3.4.12")
+set(OPENCV_VERSION "3.4.13")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 e69ff4869a8128b7d2a0537d198ec7f287fb821a8965df26339bec662da1888860941f50a269db7693309b9861f986c219288bb5856de76a6c7bc4c0a7026bee
+    SHA512 ec87b10534b9187c5ac2eea498c05c73bceab08afaed93b5a117ed34d1eeeb0ffc45901642bebf8f55126fd49ec78d731fc61debe6b40d8642f1323b5dbbeacf
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
       0002-install-options.patch
       0003-force-package-requirements.patch
+      0004-fix-eigen.patch
       0005-fix-vtk9.patch
-      0009-fix-uwp.patch
+      0006-fix-uwp.patch
+      0008-devendor-quirc.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -38,8 +40,8 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "contrib"  WITH_CONTRIB
- "cuda"     WITH_CUDA
  "cuda"     WITH_CUBLAS
+ "cuda"     WITH_CUDA
  "dnn"      BUILD_opencv_dnn
  "eigen"    WITH_EIGEN
  "ffmpeg"   WITH_FFMPEG
@@ -54,6 +56,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "opengl"   WITH_OPENGL
  "png"      WITH_PNG
  "qt"       WITH_QT
+ "quirc"    WITH_QUIRC
  "sfm"      BUILD_opencv_sfm
  "tiff"     WITH_TIFF
  "vtk"      WITH_VTK
@@ -111,10 +114,10 @@ if("contrib" IN_LIST FEATURES)
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
       REPO opencv/opencv_contrib
       REF ${OPENCV_VERSION}
-      SHA512 0191b1d49d5a50195ed94951c570da03dc33677b682e61a65b34d40f355c36a58441034730ea7eca78dcb4af4c821983754250f93fdf3adb2b4a20e71806eb03
+      SHA512 49f0aed8e07a443f354859a16c8de5ceae26560f141721ae4beb0d5fcc5b24b755ee313519e159b1a5b6ba125dcca8584f2a515e0ac96a8c9c36bb11ac6b3375
       HEAD_REF master
       PATCHES
-        0004-add-missing-stdexcept-include.patch
+        0007-fix-hdf5.patch
   )
   set(BUILD_WITH_CONTRIB_FLAG "-DOPENCV_EXTRA_MODULES_PATH=${CONTRIB_SOURCE_PATH}/modules")
 
@@ -400,6 +403,9 @@ find_dependency(Tesseract)")
   endif()
   if(BUILD_opencv_ovis)
     string(APPEND DEPS_STRING "\nfind_dependency(Ogre)\nfind_dependency(Freetype)")
+  endif()
+  if("quirc" IN_LIST FEATURES)
+    string(APPEND DEPS_STRING "\nfind_dependency(quirc)")
   endif()
   if("qt" IN_LIST FEATURES)
     string(APPEND DEPS_STRING "
