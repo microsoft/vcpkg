@@ -553,7 +553,7 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
             set(PARSED_TARGETS "")
 
             # Destination - [RUNTIME] DESTINATION argument overrides this
-            set(DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+            set(DESTINATION "bin")
 
             # Parse arguments given to the install function to find targets and (runtime) destination
             set(MODIFIER "") # Modifier for the command in the argument
