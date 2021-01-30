@@ -1,12 +1,13 @@
 vcpkg_fail_port_install(ON_TARGET "uwp" "ios" "android")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO    alibaba/MNN
-    REF     1.1.0
-    SHA512  3e31eec9a876be571cb2d29e0a2bcdb8209a43a43a5eeae19b295fadfb1252dd5bd4ed5b7c584706171e1b531710248193bc04520a796963e2b21546acbedae0
+    REPO alibaba/MNN
+    REF 1.1.0
+    SHA512 3e31eec9a876be571cb2d29e0a2bcdb8209a43a43a5eeae19b295fadfb1252dd5bd4ed5b7c584706171e1b531710248193bc04520a796963e2b21546acbedae0
     HEAD_REF master
     PATCHES
         use-package-and-install.patch
+        fix-cuda.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -18,7 +19,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opencl      MNN_OPENCL
 )
 
-message(STATUS "feature")
+message(STATUS "Applying feature options")
 message(STATUS "  ${FEATURE_OPTIONS}")
 if(FEATURE_OPTIONS MATCHES "MNN_BUILD_TEST=ON")
     list(APPEND BUILD_OPTIONS -DMNN_BUILD_BENCHMARK=ON)
@@ -39,7 +40,7 @@ if(FEATURE_OPTIONS MATCHES "MNN_OPENCL=ON" OR
    FEATURE_OPTIONS MATCHES "MNN_VULKAN=ON")
     list(APPEND BUILD_OPTIONS -DMNN_USE_SYSTEM_LIB=ON)
 endif()
-message(STATUS "build")
+message(STATUS "Applying build options")
 message(STATUS "  ${BUILD_OPTIONS}")
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -50,7 +51,7 @@ elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     # use Metal API by default
     list(APPEND PLATFORM_OPTIONS -DMNN_METAL=ON -DMNN_GPU_TRACE=ON)
 endif()
-message(STATUS "platform")
+message(STATUS "Applying platform options")
 message(STATUS "  ${PLATFORM_OPTIONS}")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
@@ -67,8 +68,10 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 file(INSTALL ${CURRENT_PORT_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
-file(RENAME ${CURRENT_PACKAGES_DIR}/bin/mnn.metallib
-            ${CURRENT_PACKAGES_DIR}/share/${PORT}/mnn.metallib)
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/mnn.metallib
+                ${CURRENT_PACKAGES_DIR}/share/${PORT}/mnn.metallib)
+endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin
                         ${CURRENT_PACKAGES_DIR}/debug/bin)

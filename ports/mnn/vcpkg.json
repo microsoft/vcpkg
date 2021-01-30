@@ -14,7 +14,8 @@
     "cuda": {
       "description": "Enable CUDA API usage",
       "dependencies": [
-        "cuda"
+        "cuda",
+        "cudnn"
       ]
     },
     "opencl": {
