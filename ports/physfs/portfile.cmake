@@ -12,7 +12,9 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${PHYSFS_VERSION}
     PATCHES
-        "fix-lzmasdk-arm64-windows.patch"
+        "001-fix-lzmasdk-arm64-windows.patch"
+        "002-fix-posix-eintr.patch"
+        "003-fix-posix-cloexec.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PHYSFS_STATIC)
