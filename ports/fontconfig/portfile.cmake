@@ -45,6 +45,11 @@ vcpkg_configure_make(
 
 vcpkg_install_make(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
+#Fix missing libintl static dependency
+if(NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fontconfig.pc" "-liconv" "-liconv -lintl")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/fontconfig.pc" "-liconv" "-liconv -lintl")
+endif()
 vcpkg_fixup_pkgconfig()
 
 # Fix paths in debug pc file.
