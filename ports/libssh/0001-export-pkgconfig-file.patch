@@ -15,7 +15,7 @@ index 1f5b0bf5..c51fb0d3 100644
 +  if (WITH_GCRYPT)
 +    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -lgcrypt")
 +  elseif (WITH_MBEDTLS)
-+    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -lmbedcrypto")
++    file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc "\nLibs.private: -lmbedcrypto -lpthread")
 +  else ()
 +    if (UNIX)
 +      file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/libssh.pc " libcrypto\nLibs.private:")
