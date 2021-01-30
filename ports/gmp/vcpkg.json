@@ -4,7 +4,7 @@
   "port-version": 3,
   "description": "The GNU Multiple Precision Arithmetic Library",
   "homepage": "https://gmplib.org",
-  "supports": "windows & !(arm | arm64)",
+  "supports": "!(windows & (arm | arm64))",
   "dependencies": [
     {
       "name": "vs-yasm",
