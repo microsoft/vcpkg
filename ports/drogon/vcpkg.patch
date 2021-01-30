@@ -57,14 +57,3 @@ index 6df5dac..b79036d 100755
  
    # Find mysql, only mariadb client liberary is supported
    find_package(MySQL)
-@@ -251,7 +249,10 @@ if(BUILD_EXAMPLES)
- endif(BUILD_EXAMPLES)
- 
- if(BUILD_CTL)
-+  message("BUILD_CTL")
-   add_subdirectory(drogon_ctl)
-+else()
-+  message("no BUILD_CTL")
- endif(BUILD_CTL)
- 
- if(COZ_PROFILING)
