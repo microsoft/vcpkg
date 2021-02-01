@@ -7,7 +7,7 @@ index abbadb7..cab58e5 100644
        void test(boost::false_type)
        {
 -          f(first,second);
-+          //f(first,second);
++          std::ignore = f(first,second);
            Return r = f(first, second); // require operator()
            (void)r;
        }
