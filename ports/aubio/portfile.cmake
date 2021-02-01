@@ -10,15 +10,17 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tools    BUILD_TOOLS
+)
+
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS_RELEASE
     -DTOOLS_INSTALLDIR=tools/aubio
-    -DBUILD_TOOLS=ON
   OPTIONS_DEBUG
     -DDISABLE_INSTALL_HEADERS=1
-    -DBUILD_TOOLS=OFF
 )
 vcpkg_install_cmake()
 
