@@ -18,5 +18,5 @@ file(REMOVE_RECURSE
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/discreture
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
     RENAME copyright)
