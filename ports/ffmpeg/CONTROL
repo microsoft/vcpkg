@@ -55,7 +55,7 @@ Feature: version3
 Description: Upgrade (L)GPL to version 3
 
 Feature: all
-Build-Depends: ffmpeg[bzip2,iconv,freetype,fribidi,lzma,mp3lame,nvcodec,opencl,openjpeg,opus,sdl2,snappy,soxr,speex,ssh,theora,vorbis,vpx,wavpack,webp,zlib], ffmpeg[fontconfig] (!windows | !static), ffmpeg[modplug] (!windows | !static), ffmpeg[tesseract] (!static), ffmpeg[xml2] (!static)
+Build-Depends: ffmpeg[ass,bzip2,iconv,freetype,fribidi,lzma,mp3lame,nvcodec,opencl,openjpeg,opus,sdl2,snappy,soxr,speex,ssh,theora,vorbis,vpx,wavpack,webp,zlib], ffmpeg[fontconfig] (!windows | !static), ffmpeg[modplug] (!windows | !static), ffmpeg[tesseract] (!static), ffmpeg[xml2] (!static)
 Description: Build with all allowed dependencies selected that are compatible with the lgpl license
 
 Feature: all-gpl
@@ -65,6 +65,10 @@ Description: Build with all allowed dependencies selected that are compatible wi
 Feature: all-nonfree
 Build-Depends: ffmpeg[nonfree,all-gpl,fdk-aac,openssl]
 Description: Build with all allowed dependencies selected with a non-redistributable license
+
+Feature: ass
+Build-Depends: libass
+Description: Libass subtitles rendering, needed for subtitles and ass filter support in ffmpeg
 
 Feature: avisynthplus
 Build-Depends: avisynthplus, ffmpeg[core,gpl]

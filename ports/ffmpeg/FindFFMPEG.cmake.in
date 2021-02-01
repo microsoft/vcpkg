@@ -72,6 +72,11 @@ if(UNIX AND NOT APPLE)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -lX11)
 endif()
 
+if(@ENABLE_ASS@)
+  select_library_configurations_from_names(BASENAME ASS NAMES ass libass)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${ASS_LIBRARIES})
+endif()
+
 if(@ENABLE_BZIP2@)
   find_dependency(BZip2)
   select_library_configurations_from_targets(BASENAME BZip2 TARGETS BZip2::BZip2)
