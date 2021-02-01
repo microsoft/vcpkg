@@ -55,7 +55,7 @@ Feature: version3
 Description: Upgrade (L)GPL to version 3
 
 Feature: all
-Build-Depends: ffmpeg[ass,bzip2,iconv,freetype,fribidi,lzma,mp3lame,nvcodec,opencl,openjpeg,opus,sdl2,snappy,soxr,speex,ssh,theora,vorbis,vpx,wavpack,webp,zlib], ffmpeg[fontconfig] (!windows | !static), ffmpeg[modplug] (!windows | !static), ffmpeg[tesseract] (!static), ffmpeg[xml2] (!static)
+Build-Depends: ffmpeg[ass,bzip2,iconv,freetype,fribidi,lzma,mp3lame,nvcodec,opencl,openjpeg,opus,sdl2,snappy,soxr,speex,ssh,theora,vorbis,vpx,wavpack,webp,zlib], ffmpeg[dav1d] (!uwp & !arm & !x86), ffmpeg[fontconfig] (!windows | !static), ffmpeg[modplug] (!windows | !static), ffmpeg[tesseract] (!static), ffmpeg[xml2] (!static)
 Description: Build with all allowed dependencies selected that are compatible with the lgpl license
 
 Feature: all-gpl
@@ -77,6 +77,10 @@ Description: Reading of AviSynth script files
 Feature: bzip2
 Build-Depends: bzip2
 Description: Bzip2 support
+
+Feature: dav1d
+Build-Depends: dav1d
+Description: AV1 decoding via libdav1d
 
 Feature: iconv
 Build-Depends: libiconv
