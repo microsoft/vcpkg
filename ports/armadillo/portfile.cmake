@@ -1,12 +1,11 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.com
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO conradsnicta/armadillo-code
-    REF 24b4762cbfbd3ad14c99a4854acd3560559a3195    #v 10.1.0
-    SHA512 224a875d21168f80e00604185ef72cb559a86a350a037c9cd1660a6f4dcc68f2ebf6dbc073f234a3cb03d35d959adb44ec49af88b11e3aaca9e0017c9c3fcee6
-    HEAD_REF 10.1.x
+    REPO arma
+    FILENAME "armadillo-10.2.0.tar.xz"
+    NO_REMOVE_ONE_LEVEL
+    SHA512 c5d6f4bac0acba63fbd7681653d521249fd303ffbbc5b18df71500eb111514c1d09db600a580091d6a23c83748c109c30938bbcd80a3a0b2c25e2fdea932f2cd
     PATCHES
         remove_custom_modules.patch
         fix-CMakePath.patch
@@ -18,7 +17,7 @@ file(REMOVE ${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindLAPACK.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindOpenBLAS.cmake)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${SOURCE_PATH}/armadillo-10.2.0
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
@@ -47,4 +46,4 @@ if(SHARE_LEN EQUAL 0)
 endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/armadillo-10.2.0/LICENSE.txt  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
