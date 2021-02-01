@@ -78,6 +78,12 @@ stages:
 
   - template: windows/azure-pipelines.yml
     parameters:
+      triplet: x64-windows-release
+      jobName: x64_windows_release
+      poolName: $(windows-pool)
+
+  - template: windows/azure-pipelines.yml
+    parameters:
       triplet: x64-uwp
       jobName: x64_uwp
       poolName: $(windows-pool)
