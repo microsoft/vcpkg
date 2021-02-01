@@ -1,0 +1,11 @@
+{
+  "name": "libid3tag",
+  "version-string": "0.15.1b",
+  "description": "ID3 tag manipulation library",
+  "homepage": "https://www.underbit.com/products/mad/",
+  "license": "GPL-2.0-or-later",
+  "supports": "!(arm & windows) & !uwp",
+  "dependencies": [
+    "zlib"
+  ]
+}

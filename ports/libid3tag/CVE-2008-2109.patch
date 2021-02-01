@@ -1,0 +1,11 @@
+--- field.c.orig	2008-05-05 09:49:15.000000000 -0400
++++ field.c	2008-05-05 09:49:25.000000000 -0400
+@@ -291,7 +291,7 @@
+ 
+       end = *ptr + length;
+ 
+-      while (end - *ptr > 0) {
++      while (end - *ptr > 0 && **ptr != '\0') {
+ 	ucs4 = id3_parse_string(ptr, end - *ptr, *encoding, 0);
+ 	if (ucs4 == 0)
+ 	  goto fail;

@@ -1,0 +1,37 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 11_unknown_encoding.dpatch by Andreas Henriksson <andreas@fatal.se>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: In case of an unknown/invalid encoding, id3_parse_string() will
+## DP: return NULL, but the return value wasn't checked resulting
+## DP: in segfault in id3_ucs4_length().  This is the only place
+## DP: the return value wasn't checked.
+
+@DPATCH@
+diff -urNad compat.gperf compat.gperf
+--- compat.gperf	2004-01-23 09:41:32.000000000 +0000
++++ compat.gperf	2007-01-14 14:36:53.000000000 +0000
+@@ -236,6 +236,10 @@
+ 
+     encoding = id3_parse_uint(&data, 1);
+     string   = id3_parse_string(&data, end - data, encoding, 0);
++    if (!string)
++    {
++	continue;
++    }
+ 
+     if (id3_ucs4_length(string) < 4) {
+       free(string);
+diff -urNad parse.c parse.c
+--- parse.c	2004-01-23 09:41:32.000000000 +0000
++++ parse.c	2007-01-14 14:37:34.000000000 +0000
+@@ -165,6 +165,9 @@
+   case ID3_FIELD_TEXTENCODING_UTF_8:
+     ucs4 = id3_utf8_deserialize(ptr, length);
+     break;
++  default:
++  	/* FIXME: Unknown encoding! Print warning? */
++	return NULL;
+   }
+ 
+   if (ucs4 && !full) {
