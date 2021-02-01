@@ -93,6 +93,11 @@ if(@ENABLE_ICONV@)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${Iconv_LIBRARIES})
 endif()
 
+if(@ENABLE_ILBC@)
+  select_library_configurations_from_names(BASENAME ILBC NAMES ilbc libilbc)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${ILBC_LIBRARIES})
+endif()
+
 if(@ENABLE_FDKAAC@)
   select_library_configurations_from_names(BASENAME FDK NAMES fdk-aac libfdk-aac)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${FDK_LIBRARIES})
