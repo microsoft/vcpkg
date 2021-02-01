@@ -101,9 +101,8 @@ if(@ENABLE_FREETYPE@)
 endif()
 
 if(@ENABLE_FRIBIDI@)
-  find_dependency(Fribidi REQUIRED)
-  select_library_configurations_from_targets(BASENAME fribidi TARGETS Fribidi::Fribidi)
-  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${fribidi_LIBRARIES})
+  select_library_configurations_from_names(BASENAME FRIBIDI NAMES fribidi libfribidi)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${FRIBIDI_LIBRARIES})
 endif()
 
 if(@ENABLE_LZMA@)
@@ -118,9 +117,8 @@ if(@ENABLE_LAME@)
 endif()
 
 if(@ENABLE_MODPLUG@)
-  find_dependency(ModPlug REQUIRED)
-  select_library_configurations_from_targets(BASENAME modplug TARGETS ModPlug::ModPlug)
-  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${modplug_LIBRARIES})
+  select_library_configurations_from_names(BASENAME MODPLUG NAMES modplug libmodplug)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${MODPLUG_LIBRARIES})
 endif()
 
 if(@ENABLE_NVCODEC@)
@@ -136,7 +134,7 @@ endif()
 
 if(@ENABLE_OPENJPEG@)
   find_dependency(OpenJPEG REQUIRED)
-  select_library_configurations_from_targets(BASENAME openjpeg TARGETS OpenJPEG::OpenJPEG)
+  select_library_configurations_from_targets(BASENAME openjpeg TARGETS openjp2)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${openjpeg_LIBRARIES})
 endif()
 
@@ -179,8 +177,8 @@ endif()
 
 if(@ENABLE_SSH@)
   find_dependency(libssh REQUIRED)
-  select_library_configurations_from_targets(BASENAME ssh TARGETS libssh::ssh)
-  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${ssh_LIBRARIES})
+  select_library_configurations_from_targets(BASENAME libssh TARGETS ssh)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${libssh_LIBRARIES})
 endif()
 
 if(@ENABLE_THEORA@)
@@ -192,7 +190,7 @@ endif()
 
 if(@ENABLE_TESSERACT@)
   find_dependency(Tesseract REQUIRED)
-  select_library_configurations_from_targets(BASENAME tesseract TARGETS Tesseract::tesseract)
+  select_library_configurations_from_targets(BASENAME tesseract TARGETS libtesseract)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${tesseract_LIBRARIES})
 endif()
 
