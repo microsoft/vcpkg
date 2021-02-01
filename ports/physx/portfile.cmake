@@ -79,9 +79,6 @@ else()
     list(APPEND OPTIONS "-DPX_OUTPUT_ARCH=x86")
 endif()
 
-# Replicate PhysX's CXX Flags here so we don't have to patch out /WX and -Wall
-list(APPEND OPTIONS "-DPHYSX_CXX_FLAGS:INTERNAL=${VCPKG_CXX_FLAGS}")
-
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
     PREFER_NINJA
