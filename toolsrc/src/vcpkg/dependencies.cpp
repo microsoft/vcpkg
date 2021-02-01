@@ -1651,71 +1651,70 @@ namespace vcpkg::Dependencies
                 auto& node = emplace_package(spec);
 
                 auto maybe_overlay = m_o_provider.get_control_file(dep.name);
+                auto over_it = m_overrides.find(dep.name);
                 if (auto p_overlay = maybe_overlay.get())
                 {
                     auto ver = to_version(*p_overlay->source_control_file);
                     m_roots.push_back(DepSpec{spec, ver, dep.features});
                     add_constraint(node, ver, toplevel.name());
-                    continue;
                 }
-
-                auto over_it = m_overrides.find(dep.name);
-                if (over_it != m_overrides.end())
+                else if (over_it != m_overrides.end())
                 {
                     m_roots.push_back(DepSpec{spec, over_it->second, dep.features});
                     add_constraint(node, over_it->second, toplevel.name());
-                    continue;
                 }
-
-                auto dep_ver = to_version(dep.constraint);
-                auto base_ver = m_base_provider.get_baseline_version(dep.name);
-                if (auto p_dep_ver = dep_ver.get())
+                else
                 {
-                    m_roots.push_back(DepSpec{spec, *p_dep_ver, dep.features});
-                    if (auto p_base_ver = base_ver.get())
+                    auto dep_ver = to_version(dep.constraint);
+                    auto base_ver = m_base_provider.get_baseline_version(dep.name);
+                    if (auto p_dep_ver = dep_ver.get())
                     {
-                        // Compare version constraint with baseline to only evaluate the "tighter" constraint
-                        auto dep_scfl = m_ver_provider.get_control_file({dep.name, *p_dep_ver});
-                        auto base_scfl = m_ver_provider.get_control_file({dep.name, *p_base_ver});
-                        if (dep_scfl && base_scfl)
+                        m_roots.push_back(DepSpec{spec, *p_dep_ver, dep.features});
+                        if (auto p_base_ver = base_ver.get())
                         {
-                            auto r =
-                                compare_versions(dep_scfl.get()->source_control_file->core_paragraph->version_scheme,
-                                                 *p_dep_ver,
-                                                 base_scfl.get()->source_control_file->core_paragraph->version_scheme,
-                                                 *p_base_ver);
-                            if (r == VerComp::lt)
+                            // Compare version constraint with baseline to only evaluate the "tighter" constraint
+                            auto dep_scfl = m_ver_provider.get_control_file({dep.name, *p_dep_ver});
+                            auto base_scfl = m_ver_provider.get_control_file({dep.name, *p_base_ver});
+                            if (dep_scfl && base_scfl)
                             {
-                                add_constraint(node, *p_base_ver, "baseline");
-                                add_constraint(node, *p_dep_ver, toplevel.name());
+                                auto r = compare_versions(
+                                    dep_scfl.get()->source_control_file->core_paragraph->version_scheme,
+                                    *p_dep_ver,
+                                    base_scfl.get()->source_control_file->core_paragraph->version_scheme,
+                                    *p_base_ver);
+                                if (r == VerComp::lt)
+                                {
+                                    add_constraint(node, *p_base_ver, "baseline");
+                                    add_constraint(node, *p_dep_ver, toplevel.name());
+                                }
+                                else
+                                {
+                                    add_constraint(node, *p_dep_ver, toplevel.name());
+                                    add_constraint(node, *p_base_ver, "baseline");
+                                }
                             }
                             else
                             {
-                                add_constraint(node, *p_dep_ver, toplevel.name());
-                                add_constraint(node, *p_base_ver, "baseline");
+                                if (!dep_scfl) m_errors.push_back(dep_scfl.error());
+                                if (!base_scfl) m_errors.push_back(base_scfl.error());
                             }
                         }
                         else
                         {
-                            if (!dep_scfl) m_errors.push_back(dep_scfl.error());
-                            if (!base_scfl) m_errors.push_back(base_scfl.error());
+                            add_constraint(node, *p_dep_ver, toplevel.name());
                         }
+                    }
+                    else if (auto p_base_ver = base_ver.get())
+                    {
+                        m_roots.push_back(DepSpec{spec, *p_base_ver, dep.features});
+                        add_constraint(node, *p_base_ver, toplevel.name());
                     }
                     else
                     {
-                        add_constraint(node, *p_dep_ver, toplevel.name());
+                        m_errors.push_back(Strings::concat("Cannot resolve unversioned dependency from top-level to ",
+                                                           dep.name,
+                                                           " without a baseline entry or override."));
                     }
-                }
-                else if (auto p_base_ver = base_ver.get())
-                {
-                    m_roots.push_back(DepSpec{spec, *p_base_ver, dep.features});
-                    add_constraint(node, *p_base_ver, toplevel.name());
-                }
-                else
-                {
-                    m_errors.push_back(Strings::concat("Cannot resolve unversioned dependency from top-level to ",
-                                                       dep.name,
-                                                       " without a baseline entry or override."));
                 }
 
                 for (auto&& f : dep.features)

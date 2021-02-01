@@ -160,7 +160,6 @@ namespace vcpkg
         {
             this->description.clear();
         }
-
     }
 
     std::string BinaryParagraph::displayname() const
@@ -279,9 +278,7 @@ Please open an issue at https://github.com/microsoft/vcpkg, with the following o
         if (binary_paragraph != pgh)
         {
             const auto& join_str = R"(", ")";
-            constexpr static auto format_bool = [](bool b) {
-                return b ? "true" : "false";
-            };
+            constexpr static auto format_bool = [](bool b) { return b ? "true" : "false"; };
             Checks::exit_maybe_upgrade(
                 VCPKG_LINE_INFO,
                 R"([sanity check] The serialized binary paragraph was different from the original binary paragraph.
