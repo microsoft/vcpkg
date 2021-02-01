@@ -24,6 +24,7 @@
 ##    x64-windows
 ##    x64-windows-static
 ##    x64-windows-static-md
+##    x64-windows-release
 ##    x86-windows
 ##
 
@@ -1770,3 +1771,5 @@ unicorn:x64-windows-static-md=fail
 v8:x64-windows-static-md=fail
 yato:x64-windows-static-md=fail
 zyre:x64-windows-static-md=fail
+
+harfbuzz:x64-windows-release=fail
