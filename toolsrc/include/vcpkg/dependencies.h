@@ -132,7 +132,7 @@ namespace vcpkg::Dependencies
         RequestType request_type;
 
         Optional<const BinaryParagraph&> core_paragraph() const;
-        std::vector<PackageSpec> dependencies(Triplet triplet) const;
+        std::vector<PackageSpec> dependencies() const;
 
     private:
         Optional<InstalledPackageView> m_installed_package;

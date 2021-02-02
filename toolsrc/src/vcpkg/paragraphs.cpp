@@ -399,6 +399,16 @@ namespace vcpkg::Paragraphs
             bcf.features =
                 Util::fmap(*p, [&](auto&& raw_feature) -> BinaryParagraph { return BinaryParagraph(raw_feature); });
 
+            if (bcf.core_paragraph.spec != spec)
+            {
+                return Strings::concat("Mismatched spec in package at ",
+                                       fs::u8string(paths.package_dir(spec)),
+                                       ": expected ",
+                                       spec,
+                                       ", actual ",
+                                       bcf.core_paragraph.spec);
+            }
+
             return bcf;
         }
 

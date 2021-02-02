@@ -32,6 +32,12 @@ namespace Catch
                                           value.package_spec.triplet());
         }
     };
+
+    template<>
+    struct StringMaker<vcpkg::Triplet>
+    {
+        static const std::string& convert(const vcpkg::Triplet& triplet) { return triplet.canonical_name(); }
+    };
 }
 
 namespace vcpkg::Test

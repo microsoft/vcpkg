@@ -1202,6 +1202,12 @@ namespace vcpkg
         return ret;
     }
 
+    static bool is_dependency_trivial(const Dependency& dep)
+    {
+        return dep.features.empty() && dep.platform.is_empty() && dep.extra_info.is_empty() &&
+               dep.constraint.type == Versions::Constraint::Type::None;
+    }
+
     static Json::Object serialize_manifest_impl(const SourceControlFile& scf, bool debug)
     {
         auto serialize_paragraph =
@@ -1246,8 +1252,7 @@ namespace vcpkg
             }
         };
         auto serialize_dependency = [&](Json::Array& arr, const Dependency& dep) {
-            if (dep.features.empty() && dep.platform.is_empty() && dep.extra_info.is_empty() &&
-                dep.constraint.type == Versions::Constraint::Type::None)
+            if (is_dependency_trivial(dep))
             {
                 arr.push_back(Json::Value::string(dep.name));
             }

@@ -378,7 +378,7 @@ namespace vcpkg::Export::Prefab
         for (const auto& action : export_plan)
         {
             const std::string name = action.spec.name();
-            auto dependencies = action.dependencies(default_triplet);
+            auto dependencies = action.dependencies();
 
             const auto action_build_info = Build::read_build_info(utils, paths.build_info_file_path(action.spec));
             const bool is_empty_package = action_build_info.policies.is_enabled(Build::BuildPolicy::EMPTY_PACKAGE);

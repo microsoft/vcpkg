@@ -80,6 +80,33 @@ TEST_CASE ("value conversion", "[optional]")
     REQUIRE(o_v.get()->size() == 3);
 }
 
+TEST_CASE ("optional.map", "[optional]")
+{
+    using vcpkg::NullOpt;
+    using vcpkg::nullopt;
+    using vcpkg::Optional;
+
+    const Optional<std::unique_ptr<int>> move_only;
+
+    Optional<int*> m = move_only.map([](auto&& p) { return p.get(); });
+    Optional<Optional<int*>> n =
+        move_only.map([](auto&& p) -> Optional<int*> { return p ? Optional<int*>{p.get()} : nullopt; });
+    Optional<NullOpt> o = move_only.map([](auto&&) { return nullopt; });
+
+    Optional<int> five = 5;
+
+    struct MoveTest
+    {
+        int operator()(int&&) { return 1; }
+        int operator()(const int&) { return -1; }
+    } move_test;
+
+    Optional<int> dst = std::move(five).map(move_test);
+    REQUIRE(dst == 1);
+    Optional<int> dst2 = five.map(move_test);
+    REQUIRE(dst2 == -1);
+}
+
 TEST_CASE ("common_projection", "[optional]")
 {
     using vcpkg::Util::common_projection;
