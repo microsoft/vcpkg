@@ -8,7 +8,6 @@ vcpkg_from_github(
         DontInstallSystemRuntimeLibs.patch
         fix-linux-build.patch
         openssl_threads.patch
-        fix-include-path.patch
         fix-libusb.patch
 )
 
