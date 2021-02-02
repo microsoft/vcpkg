@@ -1837,7 +1837,7 @@
       "port-version": 2
     },
     "fast-cpp-csv-parser": {
-      "baseline": "2019-08-14",
+      "baseline": "2021-01-03",
       "port-version": 0
     },
     "fastcdr": {
