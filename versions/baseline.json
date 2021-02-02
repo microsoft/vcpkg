@@ -2934,7 +2934,7 @@
     },
     "libffi": {
       "baseline": "3.3",
-      "port-version": 6
+      "port-version": 7
     },
     "libflac": {
       "baseline": "1.3.3",
