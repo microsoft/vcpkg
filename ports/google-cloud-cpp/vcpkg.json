@@ -1,6 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version-string": "1.23.0",
+  "version-string": "1.24.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "supports": "!uwp",
