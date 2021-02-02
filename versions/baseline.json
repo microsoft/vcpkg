@@ -3045,8 +3045,8 @@
       "port-version": 0
     },
     "libjpeg-turbo": {
-      "baseline": "2.0.5",
-      "port-version": 4
+      "baseline": "2.0.6",
+      "port-version": 0
     },
     "libjuice": {
       "baseline": "0.6.0",
