@@ -1665,7 +1665,7 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.1.0",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "dtl": {
