@@ -78,3 +78,6 @@ vcpkg_copy_pdbs()
 # Unforunately install_msbuild isn't able to dual include directories that effectively layer
 file(GLOB NGSPICE_INCLUDES ${SOURCE_PATH}/visualc/src/include/ngspice/*)
 file(COPY ${NGSPICE_INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ngspice)
+
+# This gets copied by install_msbuild but should not be shared
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/cppduals)
