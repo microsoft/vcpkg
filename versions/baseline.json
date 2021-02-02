@@ -145,8 +145,8 @@
       "port-version": 3
     },
     "arrow": {
-      "baseline": "1.0.1",
-      "port-version": 2
+      "baseline": "3.0.0",
+      "port-version": 0
     },
     "ashes": {
       "baseline": "2020-10-21",
