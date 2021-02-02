@@ -1,0 +1,22 @@
+diff --git a/configure.ac b/configure.ac
+index 256aedb..4292dcc 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -3,7 +3,7 @@ AC_PREREQ([2.61])
+ AC_INIT([zbar], [0.10], [spadix@users.sourceforge.net])
+ AC_CONFIG_AUX_DIR(config)
+ AC_CONFIG_MACRO_DIR(config)
+-AM_INIT_AUTOMAKE([1.10 -Wall -Werror foreign subdir-objects std-options dist-bzip2])
++AM_INIT_AUTOMAKE([1.10 foreign subdir-objects std-options dist-bzip2])
+ AC_CONFIG_HEADERS([include/config.h])
+ AC_CONFIG_SRCDIR(zbar/scanner.c)
+ LT_PREREQ([2.2])
+@@ -47,7 +47,7 @@ AC_DEFINE_UNQUOTED([LIB_VERSION_REVISION],
+   [Library revision])
+ 
+ AM_CPPFLAGS="-I$srcdir/include"
+-AM_CFLAGS="-Wall -Wno-parentheses -Werror"
++AM_CFLAGS="-Wall -Wno-parentheses -Werror -Wno-error=unused-but-set-variable -Wno-error=unused-variable"
+ AM_CXXFLAGS="$AM_CFLAGS"
+ AC_SUBST([AM_CPPFLAGS])
+ AC_SUBST([AM_CFLAGS])

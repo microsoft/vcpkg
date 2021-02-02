@@ -1,24 +1,5 @@
-Source: ZBar
-Version: 3.3.3
-Port-Version: 8
+Source: zbar
+Version: 1.3.1
 Homepage: https://github.com/ZBar/ZBar
-Description: 
-ZBar Bar Code Reader is an open source software suite for reading bar
-codes from various sources, such as video streams, image files and raw
-intensity sensors. It supports EAN-13/UPC-A, UPC-E, EAN-8, Code 128,
-Code 39, Codabar, Interleaved 2 of 5 and QR Code.  Included with the
-library are basic applications for decoding captured bar code images and
-using a video device (eg, webcam) as a bar code scanner.  For application
-developers, language bindings are included for C, C++, Python and Perl
-as well as GUI widgets for Qt, GTK and PyGTK.
-
-Build-Depends: bigint
-Default-Features: opencv, iconv
-
-Feature: opencv
-Build-Depends: opencv
-Description: Build with opencv
-
-Feature: iconv
-Build-Depends: libiconv
-Description: Build with libiconv
+Description: ZBar Bar Code Reader is an open source software suite for reading bar codes from various sources
+Supports: linux
