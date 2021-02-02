@@ -1903,3 +1903,4 @@ pangomm:x64-windows-release=fail
 qca:x64-windows-release=fail
 qt5-wayland:x64-windows-release=fail
 qt5-x11extras:x64-windows-release=fail
+skia:x64-windows-release=fail
