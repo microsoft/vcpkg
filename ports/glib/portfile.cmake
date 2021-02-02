@@ -20,6 +20,7 @@ vcpkg_extract_source_archive_ex(
     REF ${GLIB_VERSION}
     PATCHES
         use-libiconv-on-windows.patch
+        fix-libintl-detection.patch
 )
 
 
@@ -62,8 +63,12 @@ set(GLIB_TOOLS  gdbus
                 gresource
                 gsettings
                 )
+
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND GLIB_TOOLS gapplication glib-gettextize gtester)
+    if(NOT VCPKG_TARGET_IS_OSX)
+        list(APPEND GLIB_TOOLS gapplication)
+    endif()
+    list(APPEND GLIB_TOOLS glib-gettextize gtester)
 endif()
 set(GLIB_SCRIPTS gdbus-codegen glib-genmarshal glib-mkenums gtester-report)
 
