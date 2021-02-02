@@ -617,7 +617,7 @@ namespace
         }
 
         const auto& git_tree = git_trees[it - port_versions.begin()];
-        return paths.git_checkout_port(port_name, git_tree, paths.root / fs::u8path(".git"));
+        return paths.git_checkout_object_from_remote_registry(git_tree);
     }
     // } GitRegistryEntry::RegistryEntry
 
