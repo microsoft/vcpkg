@@ -3321,8 +3321,8 @@
       "port-version": 0
     },
     "libsndfile": {
-      "baseline": "1.0.30",
-      "port-version": 1
+      "baseline": "1.0.31",
+      "port-version": 0
     },
     "libsodium": {
       "baseline": "1.0.18",
