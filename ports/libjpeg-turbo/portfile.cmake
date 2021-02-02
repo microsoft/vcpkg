@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
-    REF ae87a958613b69628b92088b313ded0d4f59a716 # 2.0.5
-    SHA512 25e8857a3542cc74c48775959f11811529fe6a853990cb285f91a6218c1cde5dd1e58043208e81709fb7a71c376396b2de1f20b53b2c5b8595ca097fa02992fd
+    REF 10ba6ed3365615ed5c2995fe2d240cb2d5000173 # 2.0.6
+    SHA512 219d01907e66dd0fc20ea13cfa51a8efee305810f1245d0648b6ad8ee3cf11bf0bbd43b1ceeeb142a6ebbbfa281ec6a3b4e283b2fc343c360cd3ad29e9d42528
     HEAD_REF master
     PATCHES
         add-options-for-exes-docs-headers.patch
