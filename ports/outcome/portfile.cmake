@@ -15,102 +15,68 @@
 # the exact copy of those third party libraries known to
 # have passed Outcome's CI process.
 
-include(${CURRENT_PORT_DIR}/sha_manifest.cmake)
-
 message(WARNING [=[
-Outcome was tested against gsl-lite version 0.37.0 and byte-lite version 0.2.0.
-It is not guaranteed to work with newer versions, with failures up-to-and-including runtime crashes.
-You can pin these versions in your manifest file by adding
-    "overrides": [
-        { "name": "gsl-lite", "version": "0.37.0" },
-        { "name": "byte-lite", "version": "0.2.0" }
-    ]
-Do not report issues to upstream without first pinning these previous versions.
+Outcome depends on QuickCppLib which uses the vcpkg versions of gsl-lite and byte-lite, rather than the versions tested by QuickCppLib's and Outcome's CI. It is not guaranteed to work with other versions, with failures experienced in the past up-to-and-including runtime crashes. See the warning message from QuickCppLib for how you can pin the versions of those dependencies in your manifest file to those with which QuickCppLib was tested. Do not report issues to upstream without first pinning the versions as QuickCppLib was tested against.
 ]=])
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/outcome
-    REF ${OUTCOME_REF}
-    SHA512 ${OUTCOME_SHA512}
+#    REF all_tests_passed_35454acdb1ff76accdf213ecf068760c370b6d62
+    REF 6abb6bb68fa6aaf07b6392a855f3f16a53c7debe
+    SHA512 614c78ac75ae36f4b09ed5e3067bd35934090667c25cae58d3d17ffa2cce5f40c7d80baaa6076d9343bf2092c109bf214eb1446a87c2f61c704ae7dc0594cde1
     HEAD_REF develop
-    PATCHES outcome-deptest.patch
-)
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH QC_SOURCE_PATH
-    REPO ned14/quickcpplib
-    REF ${QUICKCPPLIB_REF}
-    SHA512 ${QUICKCPPLIB_SHA512}
-    HEAD_REF master
     PATCHES
-        quickcpp-disablegit.patch
-        quicklib-depheaders.patch
+      outcome-prune-sources.patch
 )
 
-file(COPY "${QC_SOURCE_PATH}/." DESTINATION "${SOURCE_PATH}/quickcpplib/repo/")
-
-# Quickcpplib deploys subsets of the dependency headers into a private subdirectory
-file(COPY "${CURRENT_INSTALLED_DIR}/include/nonstd/byte.hpp"
-    DESTINATION "${SOURCE_PATH}/quickcpplib/repo/include/quickcpplib/byte/include/nonstd")
-file(COPY "${CURRENT_INSTALLED_DIR}/include/gsl/gsl-lite.hpp"
-    DESTINATION "${SOURCE_PATH}/quickcpplib/repo/include/quickcpplib/gsl-lite/include/gsl")
-file(COPY "${CURRENT_INSTALLED_DIR}/include/gsl-lite/gsl-lite.hpp"
-    DESTINATION "${SOURCE_PATH}/quickcpplib/repo/include/quickcpplib/gsl-lite/include/gsl-lite")
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH OPT_SOURCE_PATH
-    REPO akrzemi1/Optional
-    REF ${OPTIONAL_REF}
-    SHA512 ${OPTIONAL_SHA512}
-    HEAD_REF master
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS OUTCOME_FEATURE_OPTIONS
+    FEATURES
+      run-tests OUTCOME_ENABLE_DEPENDENCY_SMOKE_TEST
 )
 
-file(COPY "${OPT_SOURCE_PATH}/." DESTINATION "${SOURCE_PATH}/quickcpplib/repo/include/quickcpplib/optional")
-
-vcpkg_from_github(
-    OUT_SOURCE_PATH SC_SOURCE_PATH
-    REPO ned14/status-code
-    REF ${STATUS_CODE_REF}
-    SHA512 ${STATUS_CODE_SHA512}
-    HEAD_REF master
+# Outcome needs a copy of QuickCppLib with which to bootstrap its cmake
+file(COPY "${CURRENT_INSTALLED_DIR}/include/quickcpplib"
+    DESTINATION "${SOURCE_PATH}/quickcpplib/repo/include/"
+)
+file(COPY "${CURRENT_INSTALLED_DIR}/share/ned14-internal-quickcpplib/"
+    DESTINATION "${SOURCE_PATH}/quickcpplib/repo/"
 )
 
-file(COPY "${SC_SOURCE_PATH}/." DESTINATION "${SOURCE_PATH}/include/outcome/experimental/status-code/")
+# Outcome expects status-code to live inside its include directory
+file(COPY "${CURRENT_INSTALLED_DIR}/include/status-code/"
+    DESTINATION "${SOURCE_PATH}/include/outcome/experimental/status-code/include/"
+)
+file(COPY "${CURRENT_INSTALLED_DIR}/include/status-code/detail/"
+    DESTINATION "${SOURCE_PATH}/include/outcome/experimental/status-code/include/detail/"
+)
 
-# Because outcome's deployed files are header-only, the debug build it not necessary
+
+# Because outcome's deployed files are header-only, the debug build is not necessary
 set(VCPKG_BUILD_TYPE release)
 
-# Use Outcome's own build process, skipping examples and tests, bundling the
-# embedded quickcpplib with the Outcome targets.
+# Use Outcome's own build process, skipping examples and tests.
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         -DPROJECT_IS_DEPENDENCY=On
-        -DOUTCOME_BUNDLE_EMBEDDED_QUICKCPPLIB=On
-        -DQUICKCPPLIB_USE_VCPKG_BYTE_LITE=ON
-        -DQUICKCPPLIB_USE_VCPKG_GSL_LITE=ON
-        -DOUTCOME_ENABLE_DEPENDENCY_TEST=ON
+        -Dquickcpplib_FOUND=1
+        "-DCMAKE_CXX_FLAGS=-I${CURRENT_INSTALLED_DIR}/include"
+        -DOUTCOME_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
+
+if("-DOUTCOME_ENABLE_DEPENDENCY_SMOKE_TEST=ON" IN_LIST OUTCOME_FEATURE_OPTIONS)
+    vcpkg_build_cmake(TARGET test)
+endif()
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/quickcpplib TARGET_PATH share/quickcpplib DO_NOT_DELETE_PARENT_CONFIG_PATH)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/outcome)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
-
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/cmakelib" "${CURRENT_PACKAGES_DIR}/share/quickcpplib/cmakelib")
-file(RENAME "${CURRENT_PACKAGES_DIR}/share/scripts" "${CURRENT_PACKAGES_DIR}/share/quickcpplib/scripts")
-
-# Fix find dependency quickcpplib
-vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/outcome/outcomeConfig.cmake"
-    "CONFIG_MODE)\n"
-    "CONFIG_MODE)\ninclude(CMakeFindDependencyMacro)\nfind_dependency(quickcpplib CONFIG)\n"
-)
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/Licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

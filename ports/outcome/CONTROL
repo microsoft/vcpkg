@@ -1,5 +1,8 @@
 Source: outcome
-Version: 2.2.0-ac552d1
+Version: 2.2.0-6abb6bb6
 Homepage: https://github.com/ned14/outcome
 Description: Provides very lightweight outcome<T> and result<T> (non-Boost edition)
-Build-Depends: byte-lite, gsl-lite
+Build-Depends: ned14-internal-quickcpplib, status-code
+
+Feature: run-tests
+Description: Build and run the dependency validation tests

@@ -1,0 +1,4 @@
+Source: outcome-run-tests
+Version: 0
+Description: Ensures that outcome built with vcpkg version of dependencies produces working executables.
+Build-Depends: outcome[run-tests]
