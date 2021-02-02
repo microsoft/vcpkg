@@ -4022,7 +4022,7 @@
     },
     "ngspice": {
       "baseline": "33",
-      "port-version": 0
+      "port-version": 1
     },
     "nifticlib": {
       "baseline": "2020-04-30",
