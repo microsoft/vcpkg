@@ -53,7 +53,7 @@ vcpkg_configure_cmake(
 
 # Build the shared library and static library editions
 vcpkg_build_cmake(TARGET _sl)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "shared")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_build_cmake(TARGET _dl)
 endif()
 
