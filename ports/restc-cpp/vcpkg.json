@@ -21,9 +21,6 @@
     "zlib"
   ],
   "features": {
-    "cxx17": {
-      "description": "Use the C++17 standard (default is C++14)."
-    },
     "openssl": {
       "description": "OpenSSL support.",
       "dependencies": [
