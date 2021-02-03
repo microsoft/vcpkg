@@ -101,24 +101,27 @@ namespace
 
     struct BuiltinRegistryEntry final : RegistryEntry
     {
-        View<VersionT> get_port_versions() const override { return {&version, 1}; }
-        ExpectedS<fs::path> get_path_to_version(const VcpkgPaths&, const VersionT& v) const override
+        View<VersionT> get_port_versions() const override
         {
-            if (v == version)
+            if (git_entry)
             {
-                return path;
+                return git_entry->port_versions;
             }
-            return {Strings::format("Error: no version entry for %s at version %s.\n"
-                                    "We are currently using the version in the ports tree (%s).",
-                                    name,
-                                    v.to_string(),
-                                    version.to_string()),
-                    expected_right_tag};
+            else
+            {
+                return {&scfl_version, 1};
+            }
         }
+        ExpectedS<fs::path> get_path_to_version(const VcpkgPaths&, const VersionT& version) const override;
 
-        std::string name;
-        fs::path path;
-        VersionT version;
+        // exactly one of these two shall be null
+
+        // if we find a versions.json, this shall be non-null and BuiltinRegistryEntry uses git_entry's implementation
+        std::unique_ptr<GitRegistryEntry> git_entry;
+        // otherwise, if we don't find a versions.json,
+        // we fall back to just using the version in the ports directory, and this is the non-null one
+        std::unique_ptr<SourceControlFileLocation> scfl;
+        VersionT scfl_version; // this exists so that we can return a pointer to it
     };
 
     struct FilesystemRegistryEntry final : RegistryEntry
@@ -248,14 +251,16 @@ namespace
                     VCPKG_LINE_INFO, maybe_version_entries.has_value(), "Error: " + maybe_version_entries.error());
                 auto version_entries = std::move(maybe_version_entries).value_or_exit(VCPKG_LINE_INFO);
 
-                auto gre = std::make_unique<GitRegistryEntry>();
-                gre->port_name = port_name.to_string();
+                auto res = std::make_unique<BuiltinRegistryEntry>();
+                res->git_entry = std::make_unique<GitRegistryEntry>();
+                auto& gre = *res->git_entry;
+                gre.port_name = port_name.to_string();
                 for (auto&& version_entry : version_entries)
                 {
-                    gre->port_versions.push_back(version_entry.version);
-                    gre->git_trees.push_back(version_entry.git_tree);
+                    gre.port_versions.push_back(version_entry.version);
+                    gre.git_trees.push_back(version_entry.git_tree);
                 }
-                return gre;
+                return res;
             }
         }
 
@@ -276,9 +281,8 @@ namespace
                 if (scf->core_paragraph->name == port_name)
                 {
                     auto res = std::make_unique<BuiltinRegistryEntry>();
-                    res->version = scf->core_paragraph->to_versiont();
-                    res->path = std::move(port_directory);
-                    res->name = std::move(scf->core_paragraph->name);
+                    res->scfl = std::make_unique<SourceControlFileLocation>(std::move(scf), std::move(port_directory));
+                    res->scfl_version = res->scfl->to_versiont();
                     return res;
                 }
                 Checks::exit_maybe_upgrade(VCPKG_LINE_INFO,
@@ -582,6 +586,48 @@ namespace
     // } RegistryImplementation
 
     // { RegistryEntry
+
+    // { BuiltinRegistryEntry::RegistryEntry
+    ExpectedS<fs::path> BuiltinRegistryEntry::get_path_to_version(const VcpkgPaths& paths,
+                                                                  const VersionT& version) const
+    {
+        if (git_entry)
+        {
+            auto it = std::find(git_entry->port_versions.begin(), git_entry->port_versions.end(), version);
+            if (it == git_entry->port_versions.end())
+            {
+                return {
+                    Strings::concat("Error: No version entry for ",
+                                    git_entry->port_name,
+                                    " at version ",
+                                    version,
+                                    ". This may be fixed by updating vcpkg to the latest master via `git "
+                                    "pull`.\nAvailable versions:\n",
+                                    Strings::join("",
+                                                  git_entry->port_versions,
+                                                  [](const VersionT& v) { return Strings::concat("    ", v, "\n"); }),
+                                    "\nSee `vcpkg help versioning` for more information."),
+                    expected_right_tag};
+            }
+
+            const auto& git_tree = git_entry->git_trees[it - git_entry->port_versions.begin()];
+            return paths.git_checkout_port(git_entry->port_name, git_tree, paths.root / fs::u8path(".git"));
+        }
+
+        if (scfl_version == version)
+        {
+            return scfl->source_location;
+        }
+
+        auto& name = scfl->source_control_file->core_paragraph->name;
+        return {Strings::format("Error: no version entry for %s at version %s.\n"
+                                "We are currently using the version in the ports tree (%s).",
+                                name,
+                                version.to_string(),
+                                scfl->to_versiont().to_string()),
+                expected_right_tag};
+    }
+    // } BuiltinRegistryEntry::RegistryEntry
 
     // { FilesystemRegistryEntry::RegistryEntry
     ExpectedS<fs::path> FilesystemRegistryEntry::get_path_to_version(const VcpkgPaths&, const VersionT& version) const
