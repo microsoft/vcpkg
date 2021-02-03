@@ -5329,7 +5329,7 @@
       "port-version": 0
     },
     "shaderwriter": {
-      "baseline": "2020-10-15",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "shapelib": {
