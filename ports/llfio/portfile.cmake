@@ -11,13 +11,15 @@ vcpkg_from_github(
     HEAD_REF develop
 )
 
-vcpkg_from_github(
-    OUT_SOURCE_PATH NTKEC_SOURCE_PATH
-    REPO ned14/ntkernel-error-category
-    REF bbd44623594142155d49bd3ce8820d3cf9da1e1e
-    SHA512 589d3bc7bca98ca8d05ce9f5cf009dd98b8884bdf3739582f2f6cbf5a324ce95007ea041450ed935baa4a401b4a0242c181fb6d2dcf7ad91587d75f05491f50e
-    HEAD_REF master
-)
+if(WIN32)
+  vcpkg_from_github(
+      OUT_SOURCE_PATH NTKEC_SOURCE_PATH
+      REPO ned14/ntkernel-error-category
+      REF bbd44623594142155d49bd3ce8820d3cf9da1e1e
+      SHA512 589d3bc7bca98ca8d05ce9f5cf009dd98b8884bdf3739582f2f6cbf5a324ce95007ea041450ed935baa4a401b4a0242c181fb6d2dcf7ad91587d75f05491f50e
+      HEAD_REF master
+  )
+endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS LLFIO_FEATURE_OPTIONS
@@ -36,7 +38,9 @@ file(COPY "${CURRENT_INSTALLED_DIR}/share/ned14-internal-quickcpplib/"
 
 # LLFIO expects ntkernel-error-category to live inside its include directory
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/llfio/ntkernel-error-category")
-file(RENAME "${NTKEC_SOURCE_PATH}" "${SOURCE_PATH}/include/llfio/ntkernel-error-category")
+if(WIN32)
+  file(RENAME "${NTKEC_SOURCE_PATH}" "${SOURCE_PATH}/include/llfio/ntkernel-error-category")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"

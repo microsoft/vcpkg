@@ -3,7 +3,7 @@ Version: 2.0-9294f05d
 Homepage: https://github.com/ned14/llfio
 Description: P1031 low level file i/o and filesystem library for the C++ standard
 Build-Depends: outcome
-Supports: !uwp
+Supports: !(uwp|static)
 
 Feature: status-code
 Description: Have LLFIO use SG14 `status_code` (proposed `std::error`) instead of `std::error_code`.
