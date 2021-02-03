@@ -3,7 +3,7 @@
 Benchmarking new code against old code is extremely important whenever making
 large changes to how something works. If you are attempting to make something
 faster, and you end up slowing it down, you'll never know if you don't
-benchmark! We have benchmarks in the `toolsrc/src/vcpkg-test` directory, just
+benchmark! We have benchmarks in the `vcpkg-tool/src/vcpkg-test` directory, just
 like the tests -- they're treated as a special kind of test.
 
 ## Running Benchmarks
@@ -15,7 +15,7 @@ only specific benchmarks at a time), you can do so by passing the
 `VCPKG_ENABLE_BENCHMARKING` option at cmake configure time.
 
 ```sh
-$ cmake -B toolsrc/out -S toolsrc -G Ninja \
+$ cmake -B vcpkg-tool/out -S vcpkg-tool -G Ninja \
     -DCMAKE_BUILD_TYPE=Release \
     -DVCPKG_BUILD_BENCHMARKING=On
 
@@ -38,9 +38,9 @@ $ cmake -B toolsrc/out -S toolsrc -G Ninja \
 -- Found Threads: TRUE
 -- Configuring done
 -- Generating done
--- Build files have been written to: C:/Users/t-nimaz/src/vcpkg/toolsrc/out
+-- Build files have been written to: C:/Users/t-nimaz/src/vcpkg/vcpkg-tool/out
 
-$ cmake --build toolsrc/out
+$ cmake --build vcpkg-tool/out
 
 [0/2] Re-checking globbed directories...
 [80/80] Linking CXX executable vcpkg-test.exe
@@ -50,7 +50,7 @@ You can then run benchmarks easily with the following command (which run the
 files benchmarks):
 
 ```sh
-$ ./toolsrc/out/vcpkg-test [!benchmark][file]
+$ ./vcpkg-tool/out/vcpkg-test [!benchmark][file]
 ```
 
 You can switch out `[file]` for a different set -- `[hash]`, for example.
@@ -82,10 +82,10 @@ Remember the `;` at the end of the benchmark -- it's not required for
 Now, let's rebuild and run:
 
 ```sh
-$ cmake --build toolsrc/out
+$ cmake --build vcpkg-tool/out
 [0/2] Re-checking globbed directories...
 [2/2] Linking CXX executable vcpkg-test.exe
-$ ./toolsrc/out/vcpkg-test [strings][!benchmark]
+$ ./vcpkg-tool/out/vcpkg-test [strings][!benchmark]
 Filters: [strings][!benchmark]
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -95,7 +95,7 @@ Run with -? for options
 -------------------------------------------------------------------------------
 case insensitive ascii equals: benchmark
 -------------------------------------------------------------------------------
-C:\Users\t-nimaz\src\vcpkg\toolsrc\src\vcpkg-test\strings.cpp(36)
+C:\Users\t-nimaz\src\vcpkg\vcpkg-tool\src\vcpkg-test\strings.cpp(36)
 ...............................................................................
 
 benchmark name                                  samples       iterations    estimated
@@ -150,10 +150,10 @@ TEST_CASE ("case insensitive ascii equals: benchmark", "[strings][!benchmark]")
 Then, run it again!
 
 ```sh
-$ cmake --build toolsrc/out
+$ cmake --build vcpkg-tool/out
 [0/2] Re-checking globbed directories...
 [2/2] Linking CXX executable vcpkg-test.exe
-$ toolsrc/out/vcpkg-test [strings][!benchmark]
+$ vcpkg-tool/out/vcpkg-test [strings][!benchmark]
 Filters: [strings][!benchmark]
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -163,7 +163,7 @@ Run with -? for options
 -------------------------------------------------------------------------------
 case insensitive ascii equals: benchmark
 -------------------------------------------------------------------------------
-C:\Users\t-nimaz\src\vcpkg\toolsrc\src\vcpkg-test\strings.cpp(36)
+C:\Users\t-nimaz\src\vcpkg\vcpkg-tool\src\vcpkg-test\strings.cpp(36)
 ...............................................................................
 
 benchmark name                                  samples       iterations    estimated

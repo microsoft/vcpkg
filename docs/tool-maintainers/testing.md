@@ -12,7 +12,7 @@ All you should need is a way to build vcpkg -- anything will do! All you have to
 do is follow the guide 😄
 
 With `$VCPKG_DIRECTORY` being the directory where you have cloned vcpkg, create
-a build directory in `$VCPKG_DIRECTORY/toolsrc` (commonly named `out`), and
+a build directory in `$VCPKG_DIRECTORY/vcpkg-tool` (commonly named `out`), and
 `cd` into it. Make sure to clean it out if it already exists!
 
 ```sh
@@ -67,13 +67,13 @@ and good luck on your testing journey!
 ## Adding New Test Files
 
 Adding new test files should be easy and straightforward. All it requires is
-creating a new source file in `toolsrc/src/vcpkg-test`.
+creating a new source file in `vcpkg-tool/src/vcpkg-test`.
 
 ### Example
 
 Let's try writing a new test file called `example` (very creative, I know).
 
-First, we should create a file, `example.cpp`, in `toolsrc/src/vcpkg-test`:
+First, we should create a file, `example.cpp`, in `vcpkg-tool/src/vcpkg-test`:
 
 ```cpp
 // vcpkg-test/example.cpp
@@ -109,10 +109,10 @@ Run with -? for options
 -------------------------------------------------------------------------------
 Example 1 - fail
 -------------------------------------------------------------------------------
-$VCPKG_DIRECTORY/toolsrc/src/vcpkg-test/example.cpp(3)
+$VCPKG_DIRECTORY/vcpkg-tool/src/vcpkg-test/example.cpp(3)
 ...............................................................................
 
-$VCPKG_DIRECTORY/toolsrc/src/vcpkg-test/example.cpp(14): FAILED:
+$VCPKG_DIRECTORY/vcpkg-tool/src/vcpkg-test/example.cpp(14): FAILED:
     REQUIRE( false )
 
 ===============================================================================

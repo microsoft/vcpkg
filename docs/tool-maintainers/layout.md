@@ -1,7 +1,7 @@
 # Layout of the vcpkg source tree
 
-All vcpkg sources and build systems are in `toolsrc`. If you'd like to
-contribute to the vcpkg tool itself, most of your time will be spent in here.
+All vcpkg sources and build systems are in the repo https://github.com/microsoft/vcpkg-tool/.
+If you'd like to contribute to the vcpkg tool itself, most of your code edits will be there.
 
 ## Build Files
 
