@@ -16,9 +16,6 @@ if ("boost-log" IN_LIST FEATURES AND "clog" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    cxx17         RESTC_CPP_USE_CPP17
-    boost-log     RESTC_CPP_LOG_WITH_BOOST_LOG
-    clog          RESTC_CPP_LOG_WITH_CLOG
     openssl       RESTC_CPP_WITH_TLS
     zlib          RESTC_CPP_WITH_ZLIB
     threaded-ctx  RESTC_CPP_THREADED_CTX
