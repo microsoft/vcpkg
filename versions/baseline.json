@@ -3632,8 +3632,20 @@
       "baseline": "2020.06",
       "port-version": 2
     },
+    "mapbox-geometry": {
+      "baseline": "2.0.3",
+      "port-version": 0
+    },
+    "mapbox-polylabel": {
+      "baseline": "1.0.4",
+      "port-version": 0
+    },
     "mapbox-variant": {
       "baseline": "1.2.0",
+      "port-version": 0
+    },
+    "mapnik": {
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "marble": {
