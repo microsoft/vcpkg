@@ -240,20 +240,14 @@ namespace vcpkg::Metrics
 
     static MetricMessage g_metricmessage;
     static bool g_should_send_metrics =
-#if defined(NDEBUG) && (VCPKG_DISABLE_METRICS == 0)
+#if defined(NDEBUG)
         true
 #else
         false
 #endif
         ;
     static bool g_should_print_metrics = false;
-    static bool g_metrics_disabled =
-#if VCPKG_DISABLE_METRICS
-        true
-#else
-        false
-#endif
-        ;
+    static bool g_metrics_disabled = false;
 
     std::string get_MAC_user()
     {
@@ -263,7 +257,7 @@ namespace vcpkg::Metrics
             return "{}";
         }
 
-        auto getmac = System::cmd_execute_and_capture_output("getmac");
+        auto getmac = System::cmd_execute_and_capture_output(System::Command("getmac"));
 
         if (getmac.exit_code != 0) return "0";
 
@@ -305,14 +299,7 @@ namespace vcpkg::Metrics
 
     void Metrics::set_disabled(bool disabled) { g_metrics_disabled = disabled; }
 
-    bool Metrics::metrics_enabled()
-    {
-#if VCPKG_DISABLE_METRICS
-        return false;
-#else
-        return !g_metrics_disabled;
-#endif
-    }
+    bool Metrics::metrics_enabled() { return !g_metrics_disabled; }
 
     void Metrics::track_metric(const std::string& name, double value)
     {
@@ -487,17 +474,27 @@ namespace vcpkg::Metrics
         if (ec) return;
 
 #if defined(_WIN32)
-        System::CmdLineBuilder builder;
+        System::Command builder;
         builder.path_arg(temp_folder_path_exe);
         builder.string_arg("x-upload-metrics");
         builder.path_arg(vcpkg_metrics_txt_path);
-        System::cmd_execute_background(builder.extract());
+        System::cmd_execute_background(builder);
 #else
-        auto escaped_path = Strings::escape_string(fs::u8string(vcpkg_metrics_txt_path), '\'', '\\');
-        const std::string cmd_line = Strings::format(
-            R"((curl "https://dc.services.visualstudio.com/v2/track" -H "Content-Type: application/json" -X POST --tlsv1.2 --data '@%s' >/dev/null 2>&1; rm '%s') &)",
-            escaped_path,
-            escaped_path);
+        // TODO: convert to cmd_execute_background or something.
+        auto curl = System::Command("curl")
+                        .string_arg("https://dc.services.visualstudio.com/v2/track")
+                        .string_arg("-H")
+                        .string_arg("Content-Type: application/json")
+                        .string_arg("-X")
+                        .string_arg("POST")
+                        .string_arg("--tlsv1.2")
+                        .string_arg("--data")
+                        .string_arg(Strings::concat("@", fs::u8string(vcpkg_metrics_txt_path)))
+                        .raw_arg(">/dev/null")
+                        .raw_arg("2>&1");
+        auto remove = System::Command("rm").path_arg(vcpkg_metrics_txt_path);
+        System::Command cmd_line;
+        cmd_line.raw_arg("(").raw_arg(curl.command_line()).raw_arg(";").raw_arg(remove.command_line()).raw_arg(") &");
         System::cmd_execute_clean(cmd_line);
 #endif
     }

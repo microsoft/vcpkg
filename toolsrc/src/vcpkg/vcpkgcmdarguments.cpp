@@ -277,7 +277,7 @@ namespace vcpkg
                     {PACKAGES_ROOT_DIR_ARG, &VcpkgCmdArguments::packages_root_dir},
                     {SCRIPTS_ROOT_DIR_ARG, &VcpkgCmdArguments::scripts_root_dir},
                     {BUILTIN_PORTS_ROOT_DIR_ARG, &VcpkgCmdArguments::builtin_ports_root_dir},
-                    {BUILTIN_PORT_VERSIONS_DIR_ARG, &VcpkgCmdArguments::builtin_port_versions_dir},
+                    {BUILTIN_REGISTRY_VERSIONS_DIR_ARG, &VcpkgCmdArguments::builtin_registry_versions_dir},
                 };
 
             constexpr static std::pair<StringView, std::vector<std::string> VcpkgCmdArguments::*>
@@ -628,6 +628,10 @@ namespace vcpkg
         table.format(opt(INSTALL_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the install root directory");
         table.format(opt(PACKAGES_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the packages root directory");
         table.format(opt(SCRIPTS_ROOT_DIR_ARG, "=", "<path>"), "(Experimental) Specify the scripts root directory");
+        table.format(opt(BUILTIN_PORTS_ROOT_DIR_ARG, "=", "<path>"),
+                     "(Experimental) Specify the packages root directory");
+        table.format(opt(BUILTIN_REGISTRY_VERSIONS_DIR_ARG, "=", "<path>"),
+                     "(Experimental) Specify the versions root directory");
         table.format(opt(JSON_SWITCH, "", ""), "(Experimental) Request JSON output");
     }
 
@@ -644,13 +648,6 @@ namespace vcpkg
 
     void VcpkgCmdArguments::imbue_from_environment()
     {
-        static bool s_reentrancy_guard = false;
-        Checks::check_exit(VCPKG_LINE_INFO,
-                           !s_reentrancy_guard,
-                           "VcpkgCmdArguments::imbue_from_environment() modifies global state and thus may only be "
-                           "called once per process.");
-        s_reentrancy_guard = true;
-
         if (!disable_metrics)
         {
             const auto vcpkg_disable_metrics_env = System::get_environment_variable(DISABLE_METRICS_ENV);
@@ -697,46 +694,52 @@ namespace vcpkg
                 parse_feature_flags(flags, *this);
             }
         }
+    }
 
+    void VcpkgCmdArguments::imbue_or_apply_process_recursion(VcpkgCmdArguments& args)
+    {
+        static bool s_reentrancy_guard = false;
+        Checks::check_exit(
+            VCPKG_LINE_INFO,
+            !s_reentrancy_guard,
+            "VcpkgCmdArguments::imbue_or_apply_process_recursion() modifies global state and thus may only be "
+            "called once per process.");
+        s_reentrancy_guard = true;
+
+        auto maybe_vcpkg_recursive_data = System::get_environment_variable(RECURSIVE_DATA_ENV);
+        if (auto vcpkg_recursive_data = maybe_vcpkg_recursive_data.get())
         {
-            auto maybe_vcpkg_recursive_data = System::get_environment_variable(RECURSIVE_DATA_ENV);
-            if (auto vcpkg_recursive_data = maybe_vcpkg_recursive_data.get())
+            auto rec_doc = Json::parse(*vcpkg_recursive_data).value_or_exit(VCPKG_LINE_INFO).first;
+            const auto& obj = rec_doc.object();
+
+            if (auto entry = obj.get(DOWNLOADS_ROOT_DIR_ENV))
             {
-                m_is_recursive_invocation = true;
-
-                auto rec_doc = Json::parse(*vcpkg_recursive_data).value_or_exit(VCPKG_LINE_INFO).first;
-                const auto& obj = rec_doc.object();
-
-                if (auto entry = obj.get(DOWNLOADS_ROOT_DIR_ENV))
-                {
-                    downloads_root_dir = std::make_unique<std::string>(entry->string().to_string());
-                }
-
-                if (obj.get(DISABLE_METRICS_ENV))
-                {
-                    disable_metrics = true;
-                }
-
-                // Setting the recursive data to 'poison' prevents more than one level of recursion because
-                // Json::parse() will fail.
-                System::set_environment_variable(RECURSIVE_DATA_ENV, "poison");
+                args.downloads_root_dir = std::make_unique<std::string>(entry->string().to_string());
             }
-            else
+
+            if (obj.get(DISABLE_METRICS_ENV))
             {
-                Json::Object obj;
-                if (downloads_root_dir)
-                {
-                    obj.insert(DOWNLOADS_ROOT_DIR_ENV, Json::Value::string(*downloads_root_dir.get()));
-                }
-
-                if (disable_metrics)
-                {
-                    obj.insert(DISABLE_METRICS_ENV, Json::Value::boolean(true));
-                }
-
-                System::set_environment_variable(RECURSIVE_DATA_ENV,
-                                                 Json::stringify(obj, Json::JsonStyle::with_spaces(0)));
+                args.disable_metrics = true;
             }
+
+            // Setting the recursive data to 'poison' prevents more than one level of recursion because
+            // Json::parse() will fail.
+            System::set_environment_variable(RECURSIVE_DATA_ENV, "poison");
+        }
+        else
+        {
+            Json::Object obj;
+            if (args.downloads_root_dir)
+            {
+                obj.insert(DOWNLOADS_ROOT_DIR_ENV, Json::Value::string(*args.downloads_root_dir.get()));
+            }
+
+            if (args.disable_metrics)
+            {
+                obj.insert(DISABLE_METRICS_ENV, Json::Value::boolean(true));
+            }
+
+            System::set_environment_variable(RECURSIVE_DATA_ENV, Json::stringify(obj, Json::JsonStyle::with_spaces(0)));
         }
     }
 
@@ -916,6 +919,7 @@ namespace vcpkg
     constexpr StringLiteral VcpkgCmdArguments::PACKAGES_ROOT_DIR_ARG;
     constexpr StringLiteral VcpkgCmdArguments::SCRIPTS_ROOT_DIR_ARG;
     constexpr StringLiteral VcpkgCmdArguments::BUILTIN_PORTS_ROOT_DIR_ARG;
+    constexpr StringLiteral VcpkgCmdArguments::BUILTIN_REGISTRY_VERSIONS_DIR_ARG;
 
     constexpr StringLiteral VcpkgCmdArguments::DEFAULT_VISUAL_STUDIO_PATH_ENV;
 

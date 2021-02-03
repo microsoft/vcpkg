@@ -42,6 +42,7 @@ namespace vcpkg::Build
         FILE_CONFLICTS,
         CASCADED_DUE_TO_MISSING_DEPENDENCIES,
         EXCLUDED,
+        CACHE_MISSING,
         DOWNLOADED
     };
 
@@ -141,8 +142,15 @@ namespace vcpkg::Build
         PROHIBIT
     };
 
+    enum class BuildMissing
+    {
+        NO = 0,
+        YES
+    };
+
     struct BuildPackageOptions
     {
+        BuildMissing build_missing;
         UseHeadVersion use_head_version;
         AllowDownloads allow_downloads;
         OnlyDownloads only_downloads;
@@ -156,6 +164,7 @@ namespace vcpkg::Build
     };
 
     static constexpr BuildPackageOptions default_build_package_options{
+        Build::BuildMissing::YES,
         Build::UseHeadVersion::NO,
         Build::AllowDownloads::YES,
         Build::OnlyDownloads::NO,
@@ -169,6 +178,7 @@ namespace vcpkg::Build
     };
 
     static constexpr BuildPackageOptions backcompat_prohibiting_package_options{
+        Build::BuildMissing::YES,
         Build::UseHeadVersion::NO,
         Build::AllowDownloads::YES,
         Build::OnlyDownloads::NO,
@@ -222,7 +232,9 @@ namespace vcpkg::Build
         const VcpkgPaths& m_paths;
     };
 
-    std::string make_build_env_cmd(const PreBuildInfo& pre_build_info, const Toolset& toolset);
+    System::Command make_build_env_cmd(const PreBuildInfo& pre_build_info,
+                                       const Toolset& toolset,
+                                       View<Toolset> all_toolsets);
 
     struct ExtendedBuildResult
     {
@@ -359,7 +371,7 @@ namespace vcpkg::Build
         struct EnvMapEntry
         {
             std::unordered_map<std::string, std::string> env_map;
-            Cache<std::string, System::Environment> cmd_cache;
+            Cache<System::Command, System::Environment, System::CommandLess> cmd_cache;
         };
 
         Cache<std::vector<std::string>, EnvMapEntry> envs;

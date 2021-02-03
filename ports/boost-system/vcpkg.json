@@ -1,0 +1,14 @@
+{
+  "name": "boost-system",
+  "version-string": "1.75.0",
+  "description": "Boost system module",
+  "homepage": "https://github.com/boostorg/system",
+  "dependencies": [
+    "boost-build",
+    "boost-config",
+    "boost-integer",
+    "boost-modular-build-helper",
+    "boost-vcpkg-helpers",
+    "boost-winapi"
+  ]
+}
