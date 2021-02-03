@@ -141,11 +141,11 @@
         "libpng"
       ]
     },
-    "proj4": {
-      "description": "PROJ4 Functionalities",
+    "proj": {
+      "description": "PROJ Functionalities",
       "dependencies": [
         {
-          "name": "proj4",
+          "name": "proj",
           "features": [
             "database"
           ]

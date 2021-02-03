@@ -2,8 +2,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mathisloge/mapnik
-    REF 0b76278adce93d844d9cd135074d1631cd2ef173
-    SHA512 1c2033ab67cf129883f4cf0d1c98d81eb7ca5568faaaa9277cf46c30c9b220e16b9e0b28831fe44c5fa0c2101ebc061fb47ba7490e893375f394d615d39e1816
+    REF 1f73d1c77171165ee8d404be77fe0d4e566b3bd2
+    SHA512 f634d0946190cb7f1360722e26dc14e2f852746a828c68535c2742f27059bd474276e08dca8eb7411654af30c3cac983b3cc01d6f04fd8533d0f2f44d51637e5
     HEAD_REF master
 )
 
@@ -14,7 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     webp              USE_WEBP
     libxml2           USE_LIBXML2
     cairo             USE_CAIRO
-    proj4             USE_PROJ4
+    proj             USE_PROJ
     "grid-renderer"   USE_GRID_RENDERER
     "svg-renderer"    USE_SVG_RENDERER
     "input-csv"       USE_PLUGIN_INPUT_CSV
