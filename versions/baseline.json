@@ -1593,7 +1593,7 @@
       "port-version": 0
     },
     "directxsdk": {
-      "baseline": "jun10",
+      "baseline": "jun10b",
       "port-version": 0
     },
     "directxtex": {
