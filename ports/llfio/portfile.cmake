@@ -6,8 +6,8 @@ LLFIO depends on Outcome which depends on QuickCppLib which uses the vcpkg versi
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/llfio
-    REF 33bf320ee712fab44aeba68f9fd3c672c9414b4f
-    SHA512 32c801ac53f077a26638931fdefd45a2497653891b29c0ed66d572f119c440c9733cefbb09717cc7be635f7c44a1e72a762de25ff88021716e5a7db1cb2d710d
+    REF 9294f05d48220a6a5d6d307da5fe8f236dd020cf
+    SHA512 00bd49fe568ba2a840917de8d5b8d398d7480b2431f99f8c3b282fc60785d8664869fd83e8ac56ffc9a1eaa0b991c5d8a97ab5e53e20e5567f3d75577ad4feb4
     HEAD_REF develop
 )
 
@@ -51,6 +51,10 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
 )
 
+# Build the shared library and static library editions
+vcpkg_build_cmake(TARGET _dl)
+vcpkg_build_cmake(TARGET _sl)
+
 if("-DLLFIO_ENABLE_DEPENDENCY_SMOKE_TEST=ON" IN_LIST OUTCOME_FEATURE_OPTIONS)
     vcpkg_build_cmake(TARGET test)
 endif()
@@ -59,7 +63,8 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/llfio)
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/Licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

@@ -3,13 +3,13 @@ The package llfio provides three CMake targets:
     find_package(llfio CONFIG REQUIRED)
 
 - If you want the header-only form of LLFIO:
-
     target_link_libraries(main PUBLIC llfio::hl)
 
 - If you want the static library form of LLFIO:
-
     target_link_libraries(main PUBLIC llfio::sl)
 
 - If you want the shared library form of LLFIO:
-
     target_link_libraries(main PUBLIC llfio::dl)
+
+Some people may prefer:
+    target_link_libraries(main PUBLIC $<${BUILD_SHARED_LIBS}:llfio::dl> $<$<NOT:${BUILD_SHARED_LIBS}>:llfio::sl>)
