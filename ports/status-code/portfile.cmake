@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/status-code
-    REF 770b4e6464d1aee5be2a4a1597c42f5b5a772e8c
-    SHA512 0f81bd2ad919e6979e40cf8165b0840eb21136d8ca83ef52d367ecdf5f6cb5ea5cca44f01e52d53ce9d17549ce10c140f722fafe0b5bdda660b1b4bc2410cbd7
+    REF 52f87c463c71b3914b9234874de1e64d12ab129b
+    SHA512 ff240628ed4d139ee43cb4699101d09962aabcb063eb3f73a4c0f096bad52acfa16fb2586abbc4415a78f8c6092342dc15ab2bee1e7ef6f42c7922f13d507b1b
     HEAD_REF master
 )
 
-# Because status-code's deployed files are header-only, the debug build it not necessary
+# Because status-code's deployed files are header-only, the debug build is not necessary
 set(VCPKG_BUILD_TYPE release)
 
 vcpkg_configure_cmake(
