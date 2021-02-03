@@ -204,7 +204,13 @@ function(vcpkg_target_add_warning_options TARGET)
         if(VCPKG_DEVELOPMENT_WARNINGS)
             target_compile_options(${TARGET} PRIVATE -W4)
             if(VCPKG_COMPILER STREQUAL "clang")
-                target_compile_options(${TARGET} PRIVATE -Wmissing-prototypes -Wno-missing-field-initializers)
+                # -Wno-range-loop-analysis is due to an LLVM bug which will be fixed in a
+                # future version of clang https://reviews.llvm.org/D73007
+                target_compile_options(${TARGET} PRIVATE
+                    -Wmissing-prototypes
+                    -Wno-missing-field-initializers
+                    -Wno-range-loop-analysis
+                    )
             else()
                 target_compile_options(${TARGET} PRIVATE -analyze)
             endif()
@@ -219,13 +225,21 @@ function(vcpkg_target_add_warning_options TARGET)
         if(VCPKG_DEVELOPMENT_WARNINGS)
             target_compile_options(${TARGET} PRIVATE
                 -Wall -Wextra -Wpedantic
-                -Wno-unknown-pragmas -Wno-missing-field-initializers -Wno-redundant-move)
+                -Wno-unknown-pragmas
+                -Wno-missing-field-initializers
+                -Wno-redundant-move
+                )
 
             # GCC and clang have different names for the same warning
             if(VCPKG_COMPILER STREQUAL "gcc")
-                target_compile_options(${TARGET} PRIVATE -Wmissing-declarations)
+                target_compile_options(${TARGET} PRIVATE
+                    -Wmissing-declarations
+                    )
             elseif(VCPKG_COMPILER STREQUAL "clang")
-                target_compile_options(${TARGET} PRIVATE -Wmissing-prototypes)
+                target_compile_options(${TARGET} PRIVATE
+                    -Wmissing-prototypes
+                    -Wno-range-loop-analysis
+                    )
             endif()
         endif()
 
