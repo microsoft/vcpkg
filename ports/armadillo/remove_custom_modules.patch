@@ -1,7 +1,7 @@
-diff --git a/armadillo-10.2.0/CMakeLists.txt b/armadillo-10.2.0/CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
 index ab7dbed..ea5516e 100644
---- a/armadillo-10.2.0/CMakeLists.txt
-+++ b/armadillo-10.2.0/CMakeLists.txt
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -324,15 +324,15 @@ if(APPLE)
  else()
    

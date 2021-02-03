@@ -4,7 +4,6 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arma
     FILENAME "armadillo-10.2.0.tar.xz"
-    NO_REMOVE_ONE_LEVEL
     SHA512 c5d6f4bac0acba63fbd7681653d521249fd303ffbbc5b18df71500eb111514c1d09db600a580091d6a23c83748c109c30938bbcd80a3a0b2c25e2fdea932f2cd
     PATCHES
         remove_custom_modules.patch
@@ -17,7 +16,7 @@ file(REMOVE ${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindLAPACK.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake_aux/Modules/ARMA_FindOpenBLAS.cmake)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/armadillo-10.2.0
+    SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
@@ -46,4 +45,4 @@ if(SHARE_LEN EQUAL 0)
 endif()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(INSTALL ${SOURCE_PATH}/armadillo-10.2.0/LICENSE.txt  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
