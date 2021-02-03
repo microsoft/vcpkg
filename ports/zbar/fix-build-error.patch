@@ -1,30 +1,30 @@
 diff --git a/zbar/decoder/ean.c b/zbar/decoder/ean.c
-index c20f538..41d1493 100644
+index dee0523..0a387c7 100644
 --- a/zbar/decoder/ean.c
 +++ b/zbar/decoder/ean.c
-@@ -294,7 +294,7 @@ static inline zbar_symbol_type_t ean_part_end4 (ean_pass_t *pass,
+@@ -242,7 +242,7 @@ static inline zbar_symbol_type_t ean_part_end4 (ean_pass_t *pass,
          /* invalid parity combination */
          return(ZBAR_NONE);
  
 -    if(!par == fwd) {
-+    if((!par) == fwd) {
++    if(!(par) == fwd) {
          /* reverse sampled digits */
          unsigned char tmp = pass->raw[1];
-         pass->state |= STATE_REV;
-@@ -380,7 +380,7 @@ static inline zbar_symbol_type_t ean_part_end7 (ean_decoder_t *ean,
+         pass->raw[1] = pass->raw[4];
+@@ -291,7 +291,7 @@ static inline zbar_symbol_type_t ean_part_end7 (ean_decoder_t *ean,
          /* invalid parity combination */
          return(ZBAR_NONE);
  
 -    if(!par == fwd) {
-+    if((!par) == fwd) {
-         unsigned char i;
-         pass->state |= STATE_REV;
++    if(!(par) == fwd) {
          /* reverse sampled digits */
+         unsigned char i;
+         for(i = 1; i < 4; i++) {
 diff --git a/zbar/qrcode/qrdec.c b/zbar/qrcode/qrdec.c
-index d8fa802..5d3d265 100644
+index 3349380..5b69ffd 100644
 --- a/zbar/qrcode/qrdec.c
 +++ b/zbar/qrcode/qrdec.c
-@@ -1219,8 +1219,8 @@ static int qr_finder_quick_crossing_check(const unsigned char *_img,
+@@ -1212,8 +1212,8 @@ static int qr_finder_quick_crossing_check(const unsigned char *_img,
     _x1<0||_x1>=_width||_y1<0||_y1>=_height){
      return -1;
    }
@@ -35,7 +35,7 @@ index d8fa802..5d3d265 100644
    return 0;
  }
  
-@@ -1261,7 +1261,7 @@ static int qr_finder_locate_crossing(const unsigned char *_img,
+@@ -1254,7 +1254,7 @@ static int qr_finder_locate_crossing(const unsigned char *_img,
        x0[1-steep]+=step[1-steep];
        err-=dx[steep];
      }
@@ -44,7 +44,7 @@ index d8fa802..5d3d265 100644
    }
    /*Find the last crossing from _v to !_v.*/
    err=0;
-@@ -1273,7 +1273,7 @@ static int qr_finder_locate_crossing(const unsigned char *_img,
+@@ -1266,7 +1266,7 @@ static int qr_finder_locate_crossing(const unsigned char *_img,
        x1[1-steep]-=step[1-steep];
        err-=dx[steep];
      }

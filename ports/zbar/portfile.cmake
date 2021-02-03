@@ -1,15 +1,14 @@
-vcpkg_fail_port_install(ON_TARGET "Windows" "OSX")
+#vcpkg_fail_port_install(ON_TARGET "Windows" "OSX")
 
-vcpkg_from_github(
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO ZBar/ZBar
-    REF 67003d2a985b5f9627bee2d8e3e0b26d0c474b57
-    SHA512 680fba4674d610e1eb5e5f746dba13c08befc555bb53cd2b0fa2654225ad3c7bf32c9cd15235c0b3eb5b96fc8cbecf2da721f85b074a025802ad23191847e168
-    HEAD_REF master
+    REPO zbar/zbar
+    REF 0.10
+    SHA512 76cb8a469e3ac9ea7932a95c500cf933501249cdb8dce4df558bf5681bd44c62111327b494e6e887079a5fd30b32154887dcc12962e6d27b1453f55457483db4
+    FILENAME zbar-0.10.tar.bz2
     PATCHES
         fix-build-error.patch # https://github.com/ZBar/ZBar/pull/9/files
         disable-warnings.patch
-        fix-install-doc.patch
 )
 
 vcpkg_configure_make(
