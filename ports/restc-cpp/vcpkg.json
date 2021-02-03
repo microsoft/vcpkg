@@ -4,7 +4,6 @@
   "description": "Modern C++ REST Client library",
   "homepage": "https://github.com/jgaa/restc-cpp",
   "license": "MIT",
-  "supports": "static",
   "dependencies": [
     "boost-chrono",
     "boost-context",
