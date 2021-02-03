@@ -81,38 +81,30 @@ namespace vcpkg
         }
         else
         {
-            auto vcpkg_default_triplet_env = System::get_environment_variable("VCPKG_DEFAULT_TRIPLET");
-            if (auto v = vcpkg_default_triplet_env.get())
-            {
-                return Triplet::from_canonical_name(std::move(*v));
-            }
-            else
-            {
 #if defined(_WIN32)
-                return Triplet::from_canonical_name("x86-windows");
+            return Triplet::from_canonical_name("x86-windows");
 #elif defined(__APPLE__)
-                return Triplet::from_canonical_name("x64-osx");
+            return Triplet::from_canonical_name("x64-osx");
 #elif defined(__FreeBSD__)
-                return Triplet::from_canonical_name("x64-freebsd");
+            return Triplet::from_canonical_name("x64-freebsd");
 #elif defined(__OpenBSD__)
-                return Triplet::from_canonical_name("x64-openbsd");
+            return Triplet::from_canonical_name("x64-openbsd");
 #elif defined(__GLIBC__)
 #if defined(__aarch64__)
-                return Triplet::from_canonical_name("arm64-linux");
+            return Triplet::from_canonical_name("arm64-linux");
 #elif defined(__arm__)
-                return Triplet::from_canonical_name("arm-linux");
+            return Triplet::from_canonical_name("arm-linux");
 #elif defined(__s390x__)
-                return Triplet::from_canonical_name("s390x-linux");
+            return Triplet::from_canonical_name("s390x-linux");
 #elif (defined(__ppc64__) || defined(__PPC64__) || defined(__ppc64le__) || defined(__PPC64LE__)) &&                    \
     defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-                return Triplet::from_canonical_name("ppc64le-linux");
+            return Triplet::from_canonical_name("ppc64le-linux");
 #else
-                return Triplet::from_canonical_name("x64-linux");
+            return Triplet::from_canonical_name("x64-linux");
 #endif
 #else
-                return Triplet::from_canonical_name("x64-linux-musl");
+            return Triplet::from_canonical_name("x64-linux-musl");
 #endif
-            }
         }
     }
 }
