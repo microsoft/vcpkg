@@ -1256,6 +1256,8 @@ namespace vcpkg::Dependencies
                                 VersionSchemeInfo& vsi,
                                 const std::string& feature);
 
+            Optional<Versions::Version> dep_to_version(const std::string& name, const DependencyConstraint& dc);
+
             std::vector<std::string> m_errors;
         };
 
@@ -1452,17 +1454,31 @@ namespace vcpkg::Dependencies
                                                    const Dependency& dep,
                                                    const std::string& origin)
         {
-            auto base_ver = m_base_provider.get_baseline_version(dep.name);
-            auto dep_ver = to_version(dep.constraint);
-
-            if (auto dv = dep_ver.get())
+            auto maybe_overlay = m_o_provider.get_control_file(ref.first.name());
+            auto over_it = m_overrides.find(ref.first.name());
+            if (auto p_overlay = maybe_overlay.get())
             {
-                add_constraint(ref, *dv, origin);
+                auto overlay_version = to_version(*p_overlay->source_control_file);
+                add_constraint(ref, overlay_version, origin);
             }
-
-            if (auto bv = base_ver.get())
+            else if (over_it != m_overrides.end())
             {
-                add_constraint(ref, *bv, origin);
+                add_constraint(ref, over_it->second, origin);
+            }
+            else
+            {
+                auto base_ver = m_base_provider.get_baseline_version(dep.name);
+                auto dep_ver = to_version(dep.constraint);
+
+                if (auto dv = dep_ver.get())
+                {
+                    add_constraint(ref, *dv, origin);
+                }
+
+                if (auto bv = base_ver.get())
+                {
+                    add_constraint(ref, *bv, origin);
+                }
             }
 
             for (auto&& f : dep.features)
@@ -1569,10 +1585,21 @@ namespace vcpkg::Dependencies
             return *m_graph.emplace(spec, PackageNode{}).first;
         }
 
-        static Optional<Versions::Version> dep_to_version(const std::string& name,
-                                                          const DependencyConstraint& dc,
-                                                          const PortFileProvider::IBaselineProvider& base_provider)
+        Optional<Versions::Version> VersionedPackageGraph::dep_to_version(const std::string& name,
+                                                                          const DependencyConstraint& dc)
         {
+            auto maybe_overlay = m_o_provider.get_control_file(name);
+            if (auto p_overlay = maybe_overlay.get())
+            {
+                return to_version(*p_overlay->source_control_file);
+            }
+
+            auto over_it = m_overrides.find(name);
+            if (over_it != m_overrides.end())
+            {
+                return over_it->second;
+            }
+
             auto maybe_cons = to_version(dc);
             if (maybe_cons)
             {
@@ -1580,7 +1607,7 @@ namespace vcpkg::Dependencies
             }
             else
             {
-                return base_provider.get_baseline_version(name);
+                return m_base_provider.get_baseline_version(name);
             }
         }
 
@@ -1779,7 +1806,7 @@ namespace vcpkg::Dependencies
                                 {
                                     continue;
                                 }
-                                auto maybe_cons = dep_to_version(dep.name, dep.constraint, m_base_provider);
+                                auto maybe_cons = dep_to_version(dep.name, dep.constraint);
 
                                 if (auto cons = maybe_cons.get())
                                 {

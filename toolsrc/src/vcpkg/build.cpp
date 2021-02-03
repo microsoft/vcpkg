@@ -344,6 +344,9 @@ namespace vcpkg::Build
                        "for more information.\n");
         Checks::exit_maybe_upgrade(VCPKG_LINE_INFO);
 #else
+        (void)target_architecture;
+        (void)toolset;
+        (void)all_toolsets;
         Checks::exit_with_message(VCPKG_LINE_INFO,
                                   "Error: vcvars-based toolchains are only usable on Windows platforms.");
 #endif

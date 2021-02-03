@@ -68,14 +68,44 @@ try
     $CurrentTest = 'git init .'
     git @gitConfigOptions init .
     Throw-IfFailed
-    Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/versions" -Destination .
     Copy-Item -Recurse -LiteralPath "$PSScriptRoot/../../e2e_ports/vcpkg-internal-e2e-test-port" -Destination .
+    New-Item -Path './vcpkg-internal-e2e-test-port/foobar' -Value 'this is just to get a distinct git tree'
 
     $CurrentTest = 'git add -A'
     git @gitConfigOptions add -A
     Throw-IfFailed
     $CurrentTest = 'git commit'
     git @gitConfigOptions commit -m 'initial commit'
+    Throw-IfFailed
+
+    $vcpkgInternalE2eTestPortGitTree = git rev-parse 'HEAD:vcpkg-internal-e2e-test-port'
+    $vcpkgInternalE2eTestPortVersionsJson = @{
+        "versions" = @(
+            @{
+                "version-string" = "1.0.0";
+                "git-tree" = $vcpkgInternalE2eTestPortGitTree
+            }
+        )
+    }
+    $vcpkgBaseline = @{
+        "default" = @{
+            "vcpkg-internal-e2e-test-port" = @{
+                "baseline" = "1.0.0"
+            }
+        }
+    }
+
+    New-Item -Path './versions' -ItemType Directory
+    New-Item -Path './versions/v-' -ItemType Directory
+
+    New-Item -Path './versions/baseline.json' -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgBaseline)
+    New-Item -Path './versions/v-/vcpkg-internal-e2e-test-port.json' -Value (ConvertTo-Json -Depth 5 -InputObject $vcpkgInternalE2eTestPortVersionsJson)
+
+    $CurrentTest = 'git add -A'
+    git @gitConfigOptions add -A
+    Throw-IfFailed
+    $CurrentTest = 'git commit'
+    git @gitConfigOptions commit --amend --no-edit
     Throw-IfFailed
 }
 finally
