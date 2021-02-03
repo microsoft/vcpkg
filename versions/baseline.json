@@ -3608,6 +3608,10 @@
       "baseline": "latest-1",
       "port-version": 0
     },
+    "llfio": {
+      "baseline": "2.0-9294f05d",
+      "port-version": 0
+    },
     "llgl": {
       "baseline": "2019-08-15",
       "port-version": 1
@@ -4072,6 +4076,10 @@
       "baseline": "0.2.2",
       "port-version": 0
     },
+    "ned14-internal-quickcpplib": {
+      "baseline": "0.0.0-eec4a9b6",
+      "port-version": 0
+    },
     "netcdf-c": {
       "baseline": "4.7.4",
       "port-version": 2
@@ -4465,7 +4473,7 @@
       "port-version": 1
     },
     "outcome": {
-      "baseline": "2.2.0-ac552d1",
+      "baseline": "2.2.0-6abb6bb6",
       "port-version": 0
     },
     "p-ranav-csv": {
@@ -5638,6 +5646,10 @@
     },
     "sratom": {
       "baseline": "0.6.4",
+      "port-version": 0
+    },
+    "status-code": {
+      "baseline": "1.0.0-770b4e64",
       "port-version": 0
     },
     "status-value-lite": {
