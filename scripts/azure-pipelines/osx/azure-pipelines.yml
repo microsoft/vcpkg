@@ -33,6 +33,8 @@ jobs:
       arguments: '-buildTests'
   - bash: toolsrc/build.rel/vcpkg-test
     displayName: 'Run vcpkg tests'
+    env:
+      VCPKG_DEBUG: 1
   - task: PowerShell@2
     displayName: 'Run vcpkg end-to-end tests'
     inputs:
