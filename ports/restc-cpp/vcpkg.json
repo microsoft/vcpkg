@@ -16,7 +16,6 @@
     "rapidjson"
   ],
   "default-features": [
-    "boost-log",
     "openssl",
     "zlib"
   ],
