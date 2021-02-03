@@ -244,6 +244,10 @@
       "baseline": "2020-12-09",
       "port-version": 0
     },
+    "azure-core-cpp": {
+      "baseline": "1.0.0-beta.5",
+      "port-version": 0
+    },
     "azure-iot-sdk-c": {
       "baseline": "2020-12-09",
       "port-version": 0
