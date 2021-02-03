@@ -1,4 +1,3 @@
-# only static library is available
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
