@@ -1062,7 +1062,7 @@ namespace vcpkg::Json
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(StringView json,
                                                                                       const fs::path& filepath) noexcept
     {
-        return Parser::parse(json, fs::generic_u8string(filepath));
+        return Parser::parse(json, fs::u8string(filepath));
     }
     ExpectedT<std::pair<Value, JsonStyle>, std::unique_ptr<Parse::IParseError>> parse(StringView json,
                                                                                       StringView origin) noexcept
