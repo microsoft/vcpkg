@@ -13,7 +13,6 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
 )
 
-
 # See https://walbourn.github.io/the-zombie-directx-sdk/
 set(INC_DIR "${SOURCE_PATH}/Include")
 set(LIB_DIR "${SOURCE_PATH}/Lib/${VCPKG_TARGET_ARCHITECTURE}")
