@@ -34,13 +34,12 @@ namespace vcpkg::Parse
             caret_spacing.push_back(cp == '\t' ? '\t' : ' ');
         }
 
-        return Strings::concat("Error: ",
-                               origin,
+        return Strings::concat(origin,
                                ":",
                                row,
                                ":",
                                column,
-                               ": ",
+                               ": error: ",
                                message,
                                "\n"
                                "   on expression: ", // 18 columns
