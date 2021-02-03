@@ -55,11 +55,11 @@ Feature: version3
 Description: Upgrade (L)GPL to version 3
 
 Feature: all
-Build-Depends: ffmpeg[ass,bzip2,iconv,ilbc,freetype,fribidi,lzma,mp3lame,nvcodec,opencl,openjpeg,opus,sdl2,snappy,soxr,speex,ssh,theora,vorbis,vpx,wavpack,webp,zlib], ffmpeg[dav1d] (!uwp & !arm & !x86), ffmpeg[fontconfig] (!windows | !static), ffmpeg[modplug] (!windows | !static), ffmpeg[tensorflow] (!x86 & !arm & !uwp & !static), ffmpeg[tesseract] (!static), ffmpeg[xml2] (!static)
+Build-Depends: ffmpeg[ass,bzip2,iconv,freetype,fribidi,lzma,mp3lame,opencl,openjpeg,opus,sdl2,snappy,soxr,speex,theora,vorbis,webp,zlib], ffmpeg[dav1d] (!uwp & !arm & !x86), ffmpeg[fontconfig] (!windows | !static), ffmpeg[ilbc] (!arm | !uwp), ffmpeg[modplug] (!windows | !static), ffmpeg[nvcodec] (windows | linux), ffmpeg[ssh] (!uwp), ffmpeg[tensorflow] (!x86 & !arm & !uwp & !static), ffmpeg[tesseract] (!static), ffmpeg[vpx] (!uwp | !arm), ffmpeg[wavpack] (!arm & !arm64), ffmpeg[xml2] (!static)
 Description: Build with all allowed dependencies selected that are compatible with the lgpl license
 
 Feature: all-gpl
-Build-Depends: ffmpeg[gpl,all,x264,x265], ffmpeg[avisynthplus] (windows & !arm & !uwp & !static)
+Build-Depends: ffmpeg[gpl,all,x265], ffmpeg[avisynthplus] (windows & !arm & !uwp & !static), ffmpeg[x264] (!arm)
 Description: Build with all allowed dependencies selected that are compatible with the gpl license
 
 Feature: all-nonfree
