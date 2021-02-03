@@ -30,19 +30,23 @@ function(vcpkg_install_meson)
         set(ENV{MACOSX_DEPLOYMENT_TARGET} "${VCPKG_DETECTED_CMAKE_OSX_DEPLOYMENT_TARGET}")
     endif()
 
-    message(STATUS "Package ${TARGET_TRIPLET}-rel")
-    vcpkg_execute_required_process(
-        COMMAND ${NINJA} install -v
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-        LOGNAME package-${TARGET_TRIPLET}-rel
-    )
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        message(STATUS "Package ${TARGET_TRIPLET}-rel")
+        vcpkg_execute_required_process(
+            COMMAND ${NINJA} install -v
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+            LOGNAME package-${TARGET_TRIPLET}-rel
+        )
+    endif()
 
-    message(STATUS "Package ${TARGET_TRIPLET}-dbg")
-    vcpkg_execute_required_process(
-        COMMAND ${NINJA} install -v
-        WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        LOGNAME package-${TARGET_TRIPLET}-dbg
-    )
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        message(STATUS "Package ${TARGET_TRIPLET}-dbg")
+        vcpkg_execute_required_process(
+            COMMAND ${NINJA} install -v
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
+            LOGNAME package-${TARGET_TRIPLET}-dbg
+        )
+    endif()
 
     set(RENAMED_LIBS)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -54,7 +58,7 @@ function(vcpkg_install_meson)
             string(REGEX REPLACE ".a$" ".lib" LIBNAMENEW "${LIBNAME}")
             string(REGEX REPLACE "^lib" "" LIBNAMENEW "${LIBNAMENEW}")
             file(RENAME "${_library}" "${LIBDIR}/${LIBNAMENEW}")
-            # For cmake fixes. 
+            # For cmake fixes.
             string(REGEX REPLACE ".a$" "" LIBRAWNAMEOLD "${LIBNAME}")
             string(REGEX REPLACE ".lib$" "" LIBRAWNAMENEW "${LIBNAMENEW}")
             list(APPEND RENAMED_LIBS ${LIBRAWNAMENEW})

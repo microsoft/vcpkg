@@ -45,6 +45,7 @@ jobs:
         rmdir /s /q build.x86.debug > nul 2> nul
         cmake.exe -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=ON -B build.x86.debug -S toolsrc
         ninja.exe -C build.x86.debug
+        set VCPKG_DEBUG=1
         build.x86.debug\vcpkg-test.exe
         cmake -G "Visual Studio 16 2019" -A Win32 -T v140 -DBUILD_TESTING=OFF -DVCPKG_DEVELOPMENT_WARNINGS=OFF -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=OFF -B build.x86.vs2015 -S toolsrc
         cmake --build build.x86.vs2015
