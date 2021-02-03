@@ -137,8 +137,8 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "10.1.0",
-      "port-version": 1
+      "baseline": "10.2.0",
+      "port-version": 0
     },
     "arrayfire": {
       "baseline": "3.7.3",
