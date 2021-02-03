@@ -14,7 +14,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     webp              USE_WEBP
     libxml2           USE_LIBXML2
     cairo             USE_CAIRO
-    proj             USE_PROJ
+    proj              USE_PROJ
     "grid-renderer"   USE_GRID_RENDERER
     "svg-renderer"    USE_SVG_RENDERER
     "input-csv"       USE_PLUGIN_INPUT_CSV
