@@ -21,15 +21,6 @@
     "zlib"
   ],
   "features": {
-    "boost-log": {
-      "description": "Use boost::log for logging.",
-      "dependencies": [
-        "boost-log"
-      ]
-    },
-    "clog": {
-      "description": "Use std::clog for logging."
-    },
     "cxx17": {
       "description": "Use the C++17 standard (default is C++14)."
     },
