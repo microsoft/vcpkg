@@ -4209,8 +4209,8 @@
       "port-version": 0
     },
     "opencascade": {
-      "baseline": "7.4.0",
-      "port-version": 3
+      "baseline": "7.5.0",
+      "port-version": 0
     },
     "opencc": {
       "baseline": "2020-04-26",
