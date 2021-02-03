@@ -88,9 +88,9 @@ try
         )
     }
     $vcpkgBaseline = @{
-        "default": @{
-            "vcpkg-internal-e2e-test-port": @{
-                "baseline": "1.0.0"
+        "default" = @{
+            "vcpkg-internal-e2e-test-port" = @{
+                "baseline" = "1.0.0"
             }
         }
     }
