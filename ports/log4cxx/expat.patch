@@ -7,7 +7,7 @@ index d30a71b..3ecf5f0 100644
  find_package(APR-Util REQUIRED)
  
 +# Find expat for XML parsing
-+find_package(EXPAT REQUIRED)
++find_package(expat CONFIG REQUIRED)
 +
  # Building
  add_subdirectory(src)
@@ -21,7 +21,7 @@ index 3e0cb17..9a450b7 100644
  target_compile_definitions(log4cxx PRIVATE ${LOG4CXX_COMPILE_DEFINITIONS} ${APR_COMPILE_DEFINITIONS} ${APR_UTIL_COMPILE_DEFINITIONS} )
  target_include_directories(log4cxx INTERFACE $<INSTALL_INTERFACE:include> PRIVATE ${APR_INCLUDE_DIR} ${APR_UTIL_INCLUDE_DIR})
 -target_link_libraries(log4cxx PRIVATE ${APR_UTIL_LIBRARIES} ${XMLLIB_LIBRARIES} ${APR_LIBRARIES} ${APR_SYSTEM_LIBS})
-+target_link_libraries(log4cxx PRIVATE ${APR_UTIL_LIBRARIES} EXPAT::EXPAT ${APR_LIBRARIES} ${APR_SYSTEM_LIBS})
++target_link_libraries(log4cxx PRIVATE ${APR_UTIL_LIBRARIES} expat::expat ${APR_LIBRARIES} ${APR_SYSTEM_LIBS})
  if(WIN32)
  # The ODBC appender is always enabled in the Windows configuration
  target_link_libraries(log4cxx PRIVATE odbc32.lib)
@@ -55,5 +55,5 @@ index bddfe48..138c489 100644
  )
  
 -target_link_libraries(xmltests PRIVATE ${APR_UTIL_LIBRARIES} ${XMLLIB_LIBRARIES})
-+target_link_libraries(xmltests PRIVATE ${APR_UTIL_LIBRARIES} EXPAT::EXPAT)
++target_link_libraries(xmltests PRIVATE ${APR_UTIL_LIBRARIES} expat::expat)
  set(ALL_LOG4CXX_TESTS ${ALL_LOG4CXX_TESTS} xmltests PARENT_SCOPE)
