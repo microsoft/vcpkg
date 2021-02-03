@@ -1,4 +1,4 @@
-#vcpkg_fail_port_install(ON_TARGET "Windows" "OSX")
+vcpkg_fail_port_install(ON_TARGET "Windows" "OSX")
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -20,13 +20,18 @@ vcpkg_configure_make(
         --without-gtk
         --without-imagemagick
         --without-python
+        --disable-video
 )
 
 vcpkg_install_make()
 
 vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share"
+    "${CURRENT_PACKAGES_DIR}/tools"
+    "${CURRENT_PACKAGES_DIR}/share/zbar/man1"
+    "${CURRENT_PACKAGES_DIR}/share/zbar/zbar"
+)
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/zbar" RENAME copyright)
