@@ -11,10 +11,6 @@ vcpkg_from_github(
         0001-exclude-cmake-external-projects.patch
 )
 
-if ("boost-log" IN_LIST FEATURES AND "clog" IN_LIST FEATURES)
-    message(FATAL_ERROR "Features 'boost-log' and 'clog' cannot be used together. Choose one (or none).")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     openssl       RESTC_CPP_WITH_TLS
     zlib          RESTC_CPP_WITH_ZLIB
