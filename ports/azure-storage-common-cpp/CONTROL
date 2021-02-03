@@ -1,6 +1,3 @@
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# SPDX-License-Identifier: MIT
-#
 Source: azure-storage-common-cpp
 Version: 12.0.0-beta.7
 Build-Depends: azure-core-cpp, libxml2, openssl (!windows)
