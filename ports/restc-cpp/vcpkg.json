@@ -1,6 +1,6 @@
 {
   "name": "restc-cpp",
-  "version-string": "0.10.0",
+  "version-semver": "0.10.0",
   "description": "Modern C++ REST Client library",
   "homepage": "https://github.com/jgaa/restc-cpp",
   "license": "MIT",
