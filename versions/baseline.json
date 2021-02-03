@@ -2916,6 +2916,10 @@
       "baseline": "3.0",
       "port-version": 0
     },
+    "libdjinterop": {
+      "baseline": "0.14.6",
+      "port-version": 0
+    },
     "libdshowcapture": {
       "baseline": "0.6.0-1",
       "port-version": 0
