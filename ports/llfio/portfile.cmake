@@ -52,9 +52,7 @@ vcpkg_configure_cmake(
 )
 
 # Build the shared library and static library editions
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    vcpkg_build_cmake(TARGET _sl)
-endif()
+vcpkg_build_cmake(TARGET _sl)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "shared")
     vcpkg_build_cmake(TARGET _dl)
 endif()
