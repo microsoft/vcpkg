@@ -307,4 +307,13 @@ inline BOOLEAN RtlGenRandom(
 	return FALSE;
 }
 
+
+#ifdef __cplusplus
+
+namesapce std {
+	inline char* getenv(const char* env_var) { return nullptr; }
+}
+
+#endif
+
 #endif
