@@ -9,6 +9,7 @@ function(vcpkg_find_cuda)
 
     set(CUDA_PATHS 
             ENV CUDA_PATH
+            ENV CUDA_HOME
             ENV CUDA_BIN_PATH
             ENV CUDA_PATH_V11_0
             ENV CUDA_PATH_V10_2

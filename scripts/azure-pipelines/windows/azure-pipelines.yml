@@ -17,11 +17,6 @@ jobs:
 
   steps:
   - task: PowerShell@2
-    displayName: 'Initialize Environment'
-    inputs:
-      filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
-      pwsh: true
-  - task: PowerShell@2
     displayName: 'Report on Disk Space'
     condition: always()
     inputs:
@@ -29,35 +24,21 @@ jobs:
       pwsh: true
   # Note: D: is the Azure machines' temporary disk.
   - script: .\bootstrap-vcpkg.bat
-    displayName: 'Build vcpkg'
-  - task: CmdLine@2
-    displayName: "Build vcpkg with CMake and Run Tests"
-    condition: eq('${{ parameters.triplet }}', 'x86-windows')
-    inputs:
-      script: |
-        :: TRANSITION, get these tools on the VMs next time we roll them
-        .\vcpkg.exe fetch cmake
-        .\vcpkg.exe fetch ninja
-        set PATH=${{ variables.VCPKG_DOWNLOADS }}\tools\cmake-3.18.4-windows\cmake-3.18.4-win32-x86\bin;${{ variables.VCPKG_DOWNLOADS }}\tools\ninja-1.10.1-windows;%PATH%
-        call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x86 -host_arch=x86
-        rmdir /s /q build.x86.debug > nul 2> nul
-        cmake.exe -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DVCPKG_DEVELOPMENT_WARNINGS=ON -DVCPKG_WARNINGS_AS_ERRORS=ON -DVCPKG_BUILD_FUZZING=ON -B build.x86.debug -S toolsrc
-        ninja.exe -C build.x86.debug
-        build.x86.debug\vcpkg-test.exe
-      failOnStderr: true
-  - task: PowerShell@2
-    displayName: 'Run vcpkg end-to-end tests'
-    condition: eq('${{ parameters.triplet }}', 'x86-windows')
-    inputs:
-      filePath: 'scripts/azure-pipelines/end-to-end-tests.ps1'
-      arguments: '-Triplet ${{ parameters.triplet }} -WorkingRoot ${{ variables.WORKING_ROOT }}'
-      pwsh: true
+    displayName: 'Bootstrap vcpkg'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -ArchivesRoot W:\ -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -UseEnvironmentSasToken -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      pwsh: true
+  - task: PowerShell@2
+    displayName: 'Validate version files'
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    inputs:
+      targetType: inline
+      script: |
+        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose
       pwsh: true
   - task: PowerShell@2
     displayName: 'Report on Disk Space After Build'

@@ -1,39 +1,42 @@
-## # vcpkg_configure_meson
-##
-## Configure Meson for Debug and Release builds of a project.
-##
-## ## Usage
-## ```cmake
-## vcpkg_configure_meson(
-##     SOURCE_PATH <${SOURCE_PATH}>
-##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-## )
-## ```
-##
-## ## Parameters
-## ### SOURCE_PATH
-## Specifies the directory containing the `meson.build`.
-## By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-##
-## ### OPTIONS
-## Additional options passed to Meson during the configuration.
-##
-## ### OPTIONS_RELEASE
-## Additional options passed to Meson during the Release configuration. These are in addition to `OPTIONS`.
-##
-## ### OPTIONS_DEBUG
-## Additional options passed to Meson during the Debug configuration. These are in addition to `OPTIONS`.
-##
-## ## Notes
-## This command supplies many common arguments to Meson. To see the full list, examine the source.
-##
-## ## Examples
-##
-## * [fribidi](https://github.com/Microsoft/vcpkg/blob/master/ports/fribidi/portfile.cmake)
-## * [libepoxy](https://github.com/Microsoft/vcpkg/blob/master/ports/libepoxy/portfile.cmake)
-function(vcpkg_internal_meson_generate_native_file) #https://mesonbuild.com/Native-environments.html
+#[===[.md:
+# vcpkg_configure_meson
+
+Configure Meson for Debug and Release builds of a project.
+
+## Usage
+```cmake
+vcpkg_configure_meson(
+    SOURCE_PATH <${SOURCE_PATH}>
+    [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
+    [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
+    [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+)
+```
+
+## Parameters
+### SOURCE_PATH
+Specifies the directory containing the `meson.build`.
+By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+
+### OPTIONS
+Additional options passed to Meson during the configuration.
+
+### OPTIONS_RELEASE
+Additional options passed to Meson during the Release configuration. These are in addition to `OPTIONS`.
+
+### OPTIONS_DEBUG
+Additional options passed to Meson during the Debug configuration. These are in addition to `OPTIONS`.
+
+## Notes
+This command supplies many common arguments to Meson. To see the full list, examine the source.
+
+## Examples
+
+* [fribidi](https://github.com/Microsoft/vcpkg/blob/master/ports/fribidi/portfile.cmake)
+* [libepoxy](https://github.com/Microsoft/vcpkg/blob/master/ports/libepoxy/portfile.cmake)
+#]===]
+
+function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https://mesonbuild.com/Native-environments.html
     set(NATIVE "[binaries]\n")
     #set(proglist AR RANLIB STRIP NM OBJDUMP DLLTOOL MT)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -60,7 +63,10 @@ function(vcpkg_internal_meson_generate_native_file) #https://mesonbuild.com/Nati
         string(APPEND NATIVE "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
     endif()
     string(APPEND NATIVE "cmake = '${CMAKE_COMMAND}'\n")
-    
+    foreach(_binary IN LISTS ${_additional_binaries})
+        string(APPEND NATIVE "${_binary}\n")
+    endforeach()
+
     string(APPEND NATIVE "[built-in options]\n") #https://mesonbuild.com/Builtin-options.html
     if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
         string(APPEND NATIVE "cpp_eh='none'\n") # To make sure meson is not adding eh flags by itself using msvc
@@ -152,6 +158,7 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
 
     string(APPEND NATIVE_${_config} "VCPKG_TARGET_TRIPLET = '${TARGET_TRIPLET}'\n")
     string(APPEND NATIVE_${_config} "VCPKG_CHAINLOAD_TOOLCHAIN_FILE = '${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}'\n")
+    string(APPEND NATIVE_${_config} "VCPKG_CRT_LINKAGE = '${VCPKG_CRT_LINKAGE}'\n")
 
     string(APPEND NATIVE_${_config} "[built-in options]\n")
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -171,7 +178,7 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
     file(WRITE "${_file}" "${NATIVE_${_config}}")
 endfunction()
 
-function(vcpkg_internal_meson_generate_cross_file) #https://mesonbuild.com/Cross-compilation.html
+function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https://mesonbuild.com/Cross-compilation.html
     if(CMAKE_HOST_WIN32)
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
             set(BUILD_ARCH $ENV{PROCESSOR_ARCHITEW6432})
@@ -237,6 +244,10 @@ function(vcpkg_internal_meson_generate_cross_file) #https://mesonbuild.com/Cross
         string(APPEND CROSS "c_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
         string(APPEND CROSS "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
     endif()
+    foreach(_binary IN LISTS ${_additional_binaries})
+        string(APPEND CROSS "${_binary}\n")
+    endforeach()
+
     string(APPEND CROSS "[properties]\n")
     string(APPEND CROSS "skip_sanity_check = true\n")
     string(APPEND CROSS "[host_machine]\n")
@@ -331,7 +342,7 @@ endfunction()
 
 function(vcpkg_configure_meson)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE")
+    cmake_parse_arguments(PARSE_ARGV 0 _vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES")
 
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
@@ -341,10 +352,26 @@ function(vcpkg_configure_meson)
     debug_message("Including cmake vars from: ${_VCPKG_CMAKE_VARS_FILE}")
     include("${_VCPKG_CMAKE_VARS_FILE}")
 
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    vcpkg_add_to_path("${PYTHON3_DIR}")
+    list(APPEND _vcm_ADDITIONAL_NATIVE_BINARIES "python = '${PYTHON3}'")
+    list(APPEND _vcm_ADDITIONAL_CROSS_BINARIES "python = '${PYTHON3}'")
+    
+    vcpkg_find_acquire_program(MESON)
+
+    get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
+    vcpkg_add_to_path("${CMAKE_PATH}") # Make CMake invokeable for Meson
+
+    vcpkg_find_acquire_program(NINJA)
+    get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
+    vcpkg_add_to_path(PREPEND "${NINJA_PATH}") # Need to prepend so that meson picks up the correct ninja from vcpkg ....
+    # list(APPEND _vcm_ADDITIONAL_NATIVE_BINARIES "ninja = '${NINJA}'") # This does not work due to meson issues ......
+
     list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
 
     if(NOT VCPKG_MESON_NATIVE_FILE)
-        vcpkg_internal_meson_generate_native_file()
+        vcpkg_internal_meson_generate_native_file("_vcm_ADDITIONAL_NATIVE_BINARIES")
     endif()
     if(NOT VCPKG_MESON_NATIVE_FILE_DEBUG)
         vcpkg_internal_meson_generate_native_file_config(DEBUG)
@@ -357,7 +384,7 @@ function(vcpkg_configure_meson)
     list(APPEND _vcm_OPTIONS_RELEASE --native "${VCPKG_MESON_NATIVE_FILE_RELEASE}")
 
     if(NOT VCPKG_MESON_CROSS_FILE)
-        vcpkg_internal_meson_generate_cross_file()
+        vcpkg_internal_meson_generate_cross_file("_vcm_ADDITIONAL_CROSS_BINARIES")
     endif()
     if(NOT VCPKG_MESON_CROSS_FILE_DEBUG AND VCPKG_MESON_CROSS_FILE)
         vcpkg_internal_meson_generate_cross_file_config(DEBUG)
@@ -394,19 +421,6 @@ function(vcpkg_configure_meson)
         list(APPEND _vcm_OPTIONS_DEBUG "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}/debug','${CURRENT_INSTALLED_DIR}']")
         list(APPEND _vcm_OPTIONS_RELEASE "-Dcmake_prefix_path=['${CURRENT_INSTALLED_DIR}','${CURRENT_INSTALLED_DIR}/debug']")
     endif()
-
-    vcpkg_find_acquire_program(PYTHON3)
-    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-    vcpkg_add_to_path("${PYTHON3_DIR}")
-
-    vcpkg_find_acquire_program(MESON)
-
-    get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
-    vcpkg_add_to_path("${CMAKE_PATH}") # Make CMake invokeable for Meson
-
-    vcpkg_find_acquire_program(NINJA)
-    get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
-    vcpkg_add_to_path("${NINJA_PATH}")
 
     vcpkg_find_acquire_program(PKGCONFIG)
     get_filename_component(PKGCONFIG_PATH ${PKGCONFIG} DIRECTORY)
