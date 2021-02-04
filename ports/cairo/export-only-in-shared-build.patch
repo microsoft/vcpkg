@@ -10,7 +10,7 @@ index 29b844d..f82a504 100644
 +#if defined _MSC_VER && defined cairo_EXPORTS
  #define cairo_public __declspec(dllexport)
 +#else
-+#define cairo_public 
++#define cairo_public
  #endif
  
  #include <assert.h>
