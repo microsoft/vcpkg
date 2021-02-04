@@ -1,0 +1,4 @@
+/Users/joachim/Documents/vcpkg/toolsrc/build.rel/CMakeFiles/rebuild_cache.dir
+/Users/joachim/Documents/vcpkg/toolsrc/build.rel/CMakeFiles/edit_cache.dir
+/Users/joachim/Documents/vcpkg/toolsrc/build.rel/CMakeFiles/vcpkg.dir
+/Users/joachim/Documents/vcpkg/toolsrc/build.rel/CMakeFiles/vcpkglib.dir
