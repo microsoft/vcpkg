@@ -3,3 +3,4 @@ Version: 2.2
 Port-Version: 6
 Homepage: https://github.com/KhronosGroup/OpenCL-Headers
 Description: C/C++ headers and ICD loader (Installable Client Driver) for OpenCL
+Supports: !uwp
