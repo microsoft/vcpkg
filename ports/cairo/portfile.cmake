@@ -1,9 +1,9 @@
-set(CAIRO_VERSION 1.16.0)
+set(CAIRO_VERSION 1.17.2)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.cairographics.org/releases/cairo-${CAIRO_VERSION}.tar.xz"
+    URLS "https://www.cairographics.org/snapshots/cairo-${CAIRO_VERSION}.tar.xz"
     FILENAME "cairo-${CAIRO_VERSION}.tar.xz"
-    SHA512 9eb27c4cf01c0b8b56f2e15e651f6d4e52c99d0005875546405b64f1132aed12fbf84727273f493d84056a13105e065009d89e94a8bfaf2be2649e232b82377f
+    SHA512 7219833039f001cb6fca390b68771041a572ff450b4b18e309fa11d1b4d949a7d57d74d7a7d7ff7f2188cbd3188f00b5cdb2ffe4fd5b1ec33a56cfb3aea952de
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH

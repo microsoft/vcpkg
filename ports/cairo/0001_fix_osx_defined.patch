@@ -1,5 +1,5 @@
 diff --git a/src/cairo-ft-font.c b/src/cairo-ft-font.c
-index 3b308757..36700ff0 100644
+index fea489d..46a0380 100644
 --- a/src/cairo-ft-font.c
 +++ b/src/cairo-ft-font.c
 @@ -67,7 +67,7 @@

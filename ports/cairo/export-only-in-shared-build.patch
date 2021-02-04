@@ -1,8 +1,8 @@
 diff --git a/src/cairoint.h b/src/cairoint.h
-index 4fedf86..dfa149e 100644
+index 29b844d..f82a504 100644
 --- a/src/cairoint.h
 +++ b/src/cairoint.h
-@@ -50,7 +50,9 @@
+@@ -50,8 +50,10 @@
  #include "config.h"
  #endif
  
@@ -10,6 +10,7 @@ index 4fedf86..dfa149e 100644
 +#if defined _MSC_VER && defined cairo_EXPORTS
  #define cairo_public __declspec(dllexport)
 +#else
-+#define cairo_public
++#define cairo_public 
  #endif
  
+ #include <assert.h>
