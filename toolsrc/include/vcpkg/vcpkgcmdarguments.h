@@ -134,8 +134,8 @@ namespace vcpkg
         std::unique_ptr<std::string> scripts_root_dir;
         constexpr static StringLiteral BUILTIN_PORTS_ROOT_DIR_ARG = "x-builtin-ports-root";
         std::unique_ptr<std::string> builtin_ports_root_dir;
-        constexpr static StringLiteral BUILTIN_PORT_VERSIONS_DIR_ARG = "x-builtin-port-versions-dir";
-        std::unique_ptr<std::string> builtin_port_versions_dir;
+        constexpr static StringLiteral BUILTIN_REGISTRY_VERSIONS_DIR_ARG = "x-builtin-registry-versions-dir";
+        std::unique_ptr<std::string> builtin_registry_versions_dir;
 
         constexpr static StringLiteral DEFAULT_VISUAL_STUDIO_PATH_ENV = "VCPKG_VISUAL_STUDIO_PATH";
         std::unique_ptr<std::string> default_visual_studio_path;
@@ -212,7 +212,6 @@ namespace vcpkg
         }
 
         bool output_json() const { return json.value_or(false); }
-        bool is_recursive_invocation() const { return m_is_recursive_invocation; }
 
         std::string command;
         std::vector<std::string> command_arguments;
@@ -221,13 +220,16 @@ namespace vcpkg
 
         void imbue_from_environment();
 
+        // Applies recursive settings from the environment or sets a global environment variable
+        // to be consumed by subprocesses; may only be called once per process.
+        static void imbue_or_apply_process_recursion(VcpkgCmdArguments& args);
+
         void check_feature_flag_consistency() const;
 
         void debug_print_feature_flags() const;
         void track_feature_flag_metrics() const;
 
     private:
-        bool m_is_recursive_invocation = false;
         std::unordered_set<std::string> command_switches;
         std::unordered_map<std::string, std::vector<std::string>> command_options;
     };

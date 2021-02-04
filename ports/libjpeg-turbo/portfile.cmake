@@ -1,3 +1,7 @@
+if(EXISTS "${CURRENT_INSTALLED_DIR}/share/mozjpeg/copyright")
+    message(FATAL_ERROR "Can't build ${PORT} if mozjpeg is installed. Please remove mozjpeg:${TARGET_TRIPLET}, and try to install ${PORT}:${TARGET_TRIPLET} again.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libjpeg-turbo/libjpeg-turbo
@@ -45,11 +49,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(INSTALL 
-    ${SOURCE_PATH}/LICENSE.md
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright
-)
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/man)
@@ -60,5 +59,6 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_tools(TOOL_NAMES cjpeg djpeg jpegtran rdjpgcom tjbench wrjpgcom AUTO_CLEAN)
 
-vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/LICENSE.md  DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
+vcpkg_copy_pdbs()

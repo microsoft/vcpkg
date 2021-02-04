@@ -220,7 +220,7 @@ namespace vcpkg::Downloads
     {
         static constexpr StringLiteral guid_marker = "8a1db05f-a65d-419b-aa72-037fb4d0672e";
 
-        System::CmdLineBuilder cmd;
+        System::Command cmd;
         cmd.string_arg("curl")
             .string_arg("--head")
             .string_arg("--location")
@@ -230,7 +230,7 @@ namespace vcpkg::Downloads
         {
             cmd.string_arg(url);
         }
-        auto res = System::cmd_execute_and_stream_lines(cmd, [out](const std::string& line) {
+        auto res = System::cmd_execute_and_stream_lines(cmd, [out](StringView line) {
             if (Strings::starts_with(line, guid_marker))
             {
                 out->push_back(std::strtol(line.data() + guid_marker.size(), nullptr, 10));
@@ -260,7 +260,7 @@ namespace vcpkg::Downloads
     {
         static constexpr StringLiteral guid_marker = "8a1db05f-a65d-419b-aa72-037fb4d0672e";
 
-        System::CmdLineBuilder cmd;
+        System::Command cmd;
         cmd.string_arg("curl")
             .string_arg("--location")
             .string_arg("-w")
@@ -269,7 +269,7 @@ namespace vcpkg::Downloads
         {
             cmd.string_arg(url.first).string_arg("-o").path_arg(url.second);
         }
-        auto res = System::cmd_execute_and_stream_lines(cmd, [out](const std::string& line) {
+        auto res = System::cmd_execute_and_stream_lines(cmd, [out](StringView line) {
             if (Strings::starts_with(line, guid_marker))
             {
                 out->push_back(std::strtol(line.data() + guid_marker.size(), nullptr, 10));
@@ -298,7 +298,7 @@ namespace vcpkg::Downloads
     {
         static constexpr StringLiteral guid_marker = "9a1db05f-a65d-419b-aa72-037fb4d0672e";
 
-        System::CmdLineBuilder cmd;
+        System::Command cmd;
         cmd.string_arg("curl").string_arg("-X").string_arg("PUT");
         cmd.string_arg("-w").string_arg(Strings::concat("\\n", guid_marker, "%{http_code}"));
         cmd.string_arg(url);
@@ -306,7 +306,7 @@ namespace vcpkg::Downloads
         cmd.string_arg("-H").string_arg("x-ms-version: 2020-04-08");
         cmd.string_arg("-H").string_arg("x-ms-blob-type: BlockBlob");
         int code = 0;
-        auto res = System::cmd_execute_and_stream_lines(cmd, [&code](const std::string& line) {
+        auto res = System::cmd_execute_and_stream_lines(cmd, [&code](StringView line) {
             if (Strings::starts_with(line, guid_marker))
             {
                 code = std::strtol(line.data() + guid_marker.size(), nullptr, 10);
@@ -443,7 +443,7 @@ namespace vcpkg::Downloads
                 }
             }
 #endif
-            System::CmdLineBuilder cmd;
+            System::Command cmd;
             cmd.string_arg("curl")
                 .string_arg("--fail")
                 .string_arg("-L")
@@ -462,6 +462,6 @@ namespace vcpkg::Downloads
             fs.rename(download_path_part_path, download_path, VCPKG_LINE_INFO);
             return url;
         }
-        Checks::exit_with_message(VCPKG_LINE_INFO, "Failed to download from mirror set:\n%s", errors);
+        Checks::exit_with_message(VCPKG_LINE_INFO, Strings::concat("Failed to download from mirror set:\n", errors));
     }
 }

@@ -96,7 +96,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_VERSION=$(VCPKG_VERSION);VCPKG_BASE_VERSION=$(VCPKG_BASE_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -114,7 +114,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_VERSION=$(VCPKG_VERSION);VCPKG_BASE_VERSION=$(VCPKG_BASE_VERSION);_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <MinimalRebuild>false</MinimalRebuild>
@@ -134,7 +134,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_VERSION=$(VCPKG_VERSION);VCPKG_BASE_VERSION=$(VCPKG_BASE_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions>_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -156,7 +156,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>..\include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>VCPKG_DISABLE_METRICS=$(DISABLE_METRICS);VCPKG_VERSION=$(VCPKG_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>VCPKG_VERSION=$(VCPKG_VERSION);VCPKG_BASE_VERSION=$(VCPKG_BASE_VERSION);_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions>_MBCS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -213,11 +213,13 @@
     <ClInclude Include="..\include\vcpkg\buildenvironment.h" />
     <ClInclude Include="..\include\vcpkg\cmakevars.h" />
     <ClInclude Include="..\include\vcpkg\commands.h" />
+    <ClInclude Include="..\include\vcpkg\commands.add-version.h" />
     <ClInclude Include="..\include\vcpkg\commands.autocomplete.h" />
     <ClInclude Include="..\include\vcpkg\commands.buildexternal.h" />
     <ClInclude Include="..\include\vcpkg\commands.cache.h" />
     <ClInclude Include="..\include\vcpkg\commands.ci.h" />
     <ClInclude Include="..\include\vcpkg\commands.ciclean.h" />
+    <ClInclude Include="..\include\vcpkg\commands.civerifyversions.h" />
     <ClInclude Include="..\include\vcpkg\commands.contact.h" />
     <ClInclude Include="..\include\vcpkg\commands.create.h" />
     <ClInclude Include="..\include\vcpkg\commands.dependinfo.h" />
@@ -303,11 +305,13 @@
     <ClCompile Include="..\src\vcpkg\build.cpp" />
     <ClCompile Include="..\src\vcpkg\buildenvironment.cpp" />
     <ClCompile Include="..\src\vcpkg\cmakevars.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.add-version.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.autocomplete.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.buildexternal.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.cache.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.ci.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.ciclean.cpp" />
+    <ClCompile Include="..\src\vcpkg\commands.civerifyversions.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.contact.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.cpp" />
     <ClCompile Include="..\src\vcpkg\commands.create.cpp" />
@@ -363,9 +367,6 @@
     <ClCompile Include="..\src\vcpkg\versiont.cpp" />
     <ClCompile Include="..\src\vcpkg\visualstudio.cpp" />
     <ClCompile Include="..\src\vcpkg.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\VERSION.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

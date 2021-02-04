@@ -370,10 +370,8 @@ namespace vcpkg::Export::IFW
                                fs::generic_u8string(repository_dir),
                                failure_point.string());
 
-            const auto cmd_line = Strings::format(R"("%s" --packages "%s" "%s")",
-                                                  fs::u8string(repogen_exe),
-                                                  fs::u8string(packages_dir),
-                                                  fs::u8string(repository_dir));
+            auto cmd_line =
+                System::Command(repogen_exe).string_arg("--packages").path_arg(packages_dir).path_arg(repository_dir);
 
             const int exit_code =
                 System::cmd_execute_and_capture_output(cmd_line, System::get_clean_environment()).exit_code;
@@ -393,24 +391,27 @@ namespace vcpkg::Export::IFW
 
             System::printf("Generating installer %s...\n", fs::generic_u8string(installer_file));
 
-            std::string cmd_line;
+            System::Command cmd_line;
 
             std::string ifw_repo_url = ifw_options.maybe_repository_url.value_or("");
             if (!ifw_repo_url.empty())
             {
-                cmd_line = Strings::format(R"("%s" --online-only --config "%s" --repository "%s" "%s")",
-                                           fs::u8string(binarycreator_exe),
-                                           fs::u8string(config_file),
-                                           fs::u8string(repository_dir),
-                                           fs::u8string(installer_file));
+                cmd_line = System::Command(binarycreator_exe)
+                               .string_arg("--online-only")
+                               .string_arg("--config")
+                               .path_arg(config_file)
+                               .string_arg("--repository")
+                               .path_arg(repository_dir)
+                               .path_arg(installer_file);
             }
             else
             {
-                cmd_line = Strings::format(R"("%s" --config "%s" --packages "%s" "%s")",
-                                           fs::u8string(binarycreator_exe),
-                                           fs::u8string(config_file),
-                                           fs::u8string(packages_dir),
-                                           fs::u8string(installer_file));
+                cmd_line = System::Command(binarycreator_exe)
+                               .string_arg("--config")
+                               .path_arg(config_file)
+                               .string_arg("--packages")
+                               .path_arg(packages_dir)
+                               .path_arg(installer_file);
             }
 
             const int exit_code =

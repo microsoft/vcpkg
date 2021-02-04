@@ -1,8 +1,9 @@
 #pragma once
 
-#include <vcpkg/base/fwd/lineinfo.h>
 #include <vcpkg/base/fwd/optional.h>
 
+#include <vcpkg/base/basic_checks.h>
+#include <vcpkg/base/lineinfo.h>
 #include <vcpkg/base/pragmas.h>
 
 #include <type_traits>
@@ -217,9 +218,6 @@ namespace vcpkg
         private:
             const T* m_t;
         };
-
-        // Note: implemented in checks.cpp to cut the header dependency
-        void exit_if_null(bool b, const LineInfo& line_info);
     }
 
     template<class T>
@@ -237,19 +235,19 @@ namespace vcpkg
 
         T&& value_or_exit(const LineInfo& line_info) &&
         {
-            details::exit_if_null(this->m_base.has_value(), line_info);
+            Checks::check_exit(line_info, this->m_base.has_value(), "Value was null");
             return std::move(this->m_base.value());
         }
 
         T& value_or_exit(const LineInfo& line_info) &
         {
-            details::exit_if_null(this->m_base.has_value(), line_info);
+            Checks::check_exit(line_info, this->m_base.has_value(), "Value was null");
             return this->m_base.value();
         }
 
         const T& value_or_exit(const LineInfo& line_info) const&
         {
-            details::exit_if_null(this->m_base.has_value(), line_info);
+            Checks::check_exit(line_info, this->m_base.has_value(), "Value was null");
             return this->m_base.value();
         }
 
@@ -290,20 +288,37 @@ namespace vcpkg
         using map_t = decltype(std::declval<F&>()(std::declval<const T&>()));
 
         template<class F, class U = map_t<F>>
+        Optional<U> map(F f) const&
+        {
+            if (has_value())
+            {
+                return f(this->m_base.value());
+            }
+            return nullopt;
+        }
+
+        template<class F, class U = map_t<F>>
         U then(F f) const&
         {
             if (has_value())
             {
                 return f(this->m_base.value());
             }
-            else
-            {
-                return nullopt;
-            }
+            return nullopt;
         }
 
         template<class F>
         using move_map_t = decltype(std::declval<F&>()(std::declval<T&&>()));
+
+        template<class F, class U = move_map_t<F>>
+        Optional<U> map(F f) &&
+        {
+            if (has_value())
+            {
+                return f(std::move(this->m_base.value()));
+            }
+            return nullopt;
+        }
 
         template<class F, class U = move_map_t<F>>
         U then(F f) &&
@@ -312,10 +327,7 @@ namespace vcpkg
             {
                 return f(std::move(this->m_base.value()));
             }
-            else
-            {
-                return nullopt;
-            }
+            return nullopt;
         }
 
         friend bool operator==(const Optional& lhs, const Optional& rhs)

@@ -132,7 +132,7 @@ namespace vcpkg::Dependencies
         RequestType request_type;
 
         Optional<const BinaryParagraph&> core_paragraph() const;
-        std::vector<PackageSpec> dependencies(Triplet triplet) const;
+        std::vector<PackageSpec> dependencies() const;
 
     private:
         Optional<InstalledPackageView> m_installed_package;
@@ -178,6 +178,7 @@ namespace vcpkg::Dependencies
     /// <param name="status_db">Status of installed packages in the current environment.</param>
     ExpectedS<ActionPlan> create_versioned_install_plan(const PortFileProvider::IVersionedPortfileProvider& vprovider,
                                                         const PortFileProvider::IBaselineProvider& bprovider,
+                                                        const PortFileProvider::IOverlayProvider& oprovider,
                                                         const CMakeVars::CMakeVarProvider& var_provider,
                                                         const std::vector<Dependency>& deps,
                                                         const std::vector<DependencyOverride>& overrides,

@@ -48,7 +48,7 @@ namespace vcpkg::Commands::Env
         const Build::PreBuildInfo pre_build_info(
             paths, triplet, var_provider.get_generic_triplet_vars(triplet).value_or_exit(VCPKG_LINE_INFO));
         const Toolset& toolset = paths.get_toolset(pre_build_info);
-        auto build_env_cmd = Build::make_build_env_cmd(pre_build_info, toolset);
+        auto build_env_cmd = Build::make_build_env_cmd(pre_build_info, toolset, paths.get_all_toolsets());
 
         std::unordered_map<std::string, std::string> extra_env = {};
         const bool add_bin = Util::Sets::contains(options.switches, OPTION_BIN);
@@ -98,7 +98,11 @@ namespace vcpkg::Commands::Env
             }
         }();
 
-        std::string cmd = args.command_arguments.empty() ? "cmd" : ("cmd /c " + args.command_arguments.at(0));
+        System::Command cmd("cmd");
+        if (!args.command_arguments.empty())
+        {
+            cmd.string_arg("/c").raw_arg(args.command_arguments.at(0));
+        }
 #ifdef _WIN32
         System::enter_interactive_subprocess();
 #endif

@@ -9,8 +9,10 @@
 #include <vcpkg/base/stringview.h>
 #include <vcpkg/base/view.h>
 
+#include <vcpkg/versiondeserializers.h>
 #include <vcpkg/versiont.h>
 
+#include <map>
 #include <memory>
 #include <string>
 #include <system_error>
@@ -51,8 +53,6 @@ namespace vcpkg
         // always ordered lexicographically
         View<std::string> packages() const { return packages_; }
         const RegistryImplementation& implementation() const { return *implementation_; }
-
-        static std::unique_ptr<RegistryImplementation> builtin_registry(std::string&& baseline = {});
 
         friend RegistrySet; // for experimental_set_builtin_registry_baseline
 
@@ -103,4 +103,9 @@ namespace vcpkg
 
     std::unique_ptr<Json::IDeserializer<std::vector<Registry>>> get_registry_array_deserializer(
         const fs::path& configuration_directory);
+
+    ExpectedS<std::vector<std::pair<SchemedVersion, std::string>>> get_builtin_versions(const VcpkgPaths& paths,
+                                                                                        StringView port_name);
+
+    ExpectedS<std::map<std::string, VersionT, std::less<>>> get_builtin_baseline(const VcpkgPaths& paths);
 }

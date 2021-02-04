@@ -1,10 +1,10 @@
 Source: arrow
-Version: 1.0.1
-Port-Version: 2
-Build-Depends: boost-system, boost-filesystem, boost-multiprecision, boost-algorithm, flatbuffers, rapidjson, zlib, lz4, brotli, bzip2, zstd, snappy, gflags, thrift, double-conversion, glog, uriparser, openssl, utf8proc
+Version: 3.0.0
+Port-Version: 0
+Build-Depends: boost-algorithm, boost-filesystem, boost-multiprecision, boost-system, brotli, bzip2, double-conversion, flatbuffers, gflags, glog, lz4, openssl, rapidjson, re2, snappy, thrift, uriparser, utf8proc, zlib, zstd
 Homepage: https://github.com/apache/arrow
 Description: Apache Arrow is a columnar in-memory analytics layer designed to accelerate big data. It houses a set of canonical in-memory representations of flat and hierarchical data along with multiple language-bindings for structure manipulation. It also provides IPC and common algorithm implementations.
-Supports: x64&!arm
+Supports: x64&!x86&!arm
 Default-Features: csv, json, parquet, filesystem
 
 Feature: csv

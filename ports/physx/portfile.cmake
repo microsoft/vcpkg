@@ -11,6 +11,7 @@ vcpkg_from_github(
         msvc_142_bug_workaround.patch
         vs16_3_typeinfo_header_fix.patch
         fix_discarded_qualifiers.patch
+        fix-compiler-flag.patch
 )
 
 if(NOT DEFINED RELEASE_CONFIGURATION)
@@ -77,9 +78,6 @@ if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUA
 else()
     list(APPEND OPTIONS "-DPX_OUTPUT_ARCH=x86")
 endif()
-
-# Replicate PhysX's CXX Flags here so we don't have to patch out /WX and -Wall
-list(APPEND OPTIONS "-DPHYSX_CXX_FLAGS:INTERNAL=${VCPKG_CXX_FLAGS}")
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"

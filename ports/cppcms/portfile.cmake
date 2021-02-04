@@ -10,12 +10,13 @@ vcpkg_from_github(
 )
 
 vcpkg_find_acquire_program(PYTHON2)
-get_filename_component(PYTHON2_DIR ${PYTHON2} DIRECTORY)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DCMAKE_PROGRAM_PATH=${PYTHON2_DIR} -DUSE_WINDOWS6_API=ON
+    OPTIONS
+        -DPYTHON=${PYTHON2} # Switch to python3 on the next update
+        -DUSE_WINDOWS6_API=ON
 )
 
 vcpkg_install_cmake()
