@@ -16,15 +16,12 @@ Build-Depends: opengl, glad
 
 Feature: glfw
 Description: Build with glfw
-Build-Depends: libigl[opengl], glfw3
+Build-Depends: libigl[core, opengl], glfw3
 
 Feature: imgui
 Description: Build with imgui
-Build-Depends: libigl[glfw], imgui[glfw-binding, opengl3-glew-binding, libigl-imgui]
+Build-Depends: libigl[core, glfw], imgui[core, glfw-binding, opengl3-glew-binding, libigl-imgui]
 
 Feature: xml
 Description: Build with libxml
 Build-Depends: tinyxml2
-
-Feature: header-only
-Description: Build libigl as header-only library
