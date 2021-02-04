@@ -137,8 +137,8 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "10.1.0",
-      "port-version": 1
+      "baseline": "10.2.0",
+      "port-version": 0
     },
     "arrayfire": {
       "baseline": "3.7.3",
@@ -248,6 +248,10 @@
       "baseline": "1.0.0-beta.5",
       "port-version": 0
     },
+    "azure-identity-cpp": {
+      "baseline": "1.0.0-beta.3",
+      "port-version": 0
+    },
     "azure-iot-sdk-c": {
       "baseline": "2020-12-09",
       "port-version": 0
@@ -260,8 +264,20 @@
       "baseline": "2020-06-17",
       "port-version": 2
     },
+    "azure-storage-blobs-cpp": {
+      "baseline": "12.0.0-beta.7",
+      "port-version": 0
+    },
+    "azure-storage-common-cpp": {
+      "baseline": "12.0.0-beta.7",
+      "port-version": 0
+    },
     "azure-storage-cpp": {
       "baseline": "7.5.0",
+      "port-version": 0
+    },
+    "azure-storage-files-datalake-cpp": {
+      "baseline": "12.0.0-beta.7",
       "port-version": 0
     },
     "azure-uamqp-c": {
@@ -1046,7 +1062,7 @@
     },
     "cairo": {
       "baseline": "1.16.0",
-      "port-version": 8
+      "port-version": 9
     },
     "cairomm": {
       "baseline": "1.15.3",
@@ -1538,7 +1554,7 @@
     },
     "date": {
       "baseline": "3.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "dav1d": {
       "baseline": "0.8.1",
@@ -2916,8 +2932,16 @@
       "baseline": "3.0",
       "port-version": 0
     },
+    "libdjinterop": {
+      "baseline": "0.14.6",
+      "port-version": 0
+    },
     "libdshowcapture": {
       "baseline": "0.6.0-1",
+      "port-version": 0
+    },
+    "libebur128": {
+      "baseline": "1.2.5",
       "port-version": 0
     },
     "libepoxy": {
@@ -3617,7 +3641,7 @@
       "port-version": 0
     },
     "magic-enum": {
-      "baseline": "0.7.1",
+      "baseline": "0.7.2",
       "port-version": 0
     },
     "magic-get": {
@@ -3941,7 +3965,7 @@
       "port-version": 0
     },
     "nameof": {
-      "baseline": "0.9.4",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "nana": {
@@ -4526,7 +4550,7 @@
     },
     "physx": {
       "baseline": "4.1.1",
-      "port-version": 6
+      "port-version": 7
     },
     "picojson": {
       "baseline": "1.3.0-1",
@@ -5305,7 +5329,7 @@
       "port-version": 0
     },
     "shaderwriter": {
-      "baseline": "2020-10-15",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "shapelib": {

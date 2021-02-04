@@ -1,0 +1,20 @@
+if((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "${PORT} does not support Windows ARM")
+endif()
+
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO jiixyj/libebur128
+    REF v1.2.5
+    SHA512 5f53c64f47bbad224840eef978bbc357f3fab091ef45f849749e5fabba0035d074451bc6e60240d3ff2c56b96faaf66fb91f32f96dcaacd9d81d3c148688c2f7
+)
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS -DENABLE_INTERNAL_QUEUE_H=ON
+)
+vcpkg_install_cmake()
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

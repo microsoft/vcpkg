@@ -30,9 +30,9 @@
 #define CAIRO_HAS_GOBJECT_FUNCTIONS 1
 
 /* Require FreeType */
-#define CAIRO_HAS_FT_FONT 1
+#cmakedefine01 CAIRO_HAS_FT_FONT
 
 /* Require FontConfig */
-#define CAIRO_HAS_FC_FONT 1
+#cmakedefine01 CAIRO_HAS_FC_FONT
 
 #endif
