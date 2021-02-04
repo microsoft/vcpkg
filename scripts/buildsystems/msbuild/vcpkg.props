@@ -4,7 +4,7 @@
   <!-- Set default OS Target-->
   <PropertyGroup Condition="'$(VcpkgOSTarget)' == ''">
     <VcpkgOSTarget>windows</VcpkgOSTarget>
-    <VcpkgOSTarget Condition="'$(ApplicationType)|$(ApplicationTypeRevision)' == 'Windows Store|10.0'">uwp</VcpkgOSTarget>
+    <VcpkgOSTarget Condition="'$(AppContainerApplication)' == 'true'">uwp</VcpkgOSTarget>
   </PropertyGroup>
 
   <!-- Set default Platform Target. $(PlatformTarget) is not available at the top of the .vcxproj file. -->

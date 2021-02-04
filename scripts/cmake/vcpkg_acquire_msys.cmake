@@ -163,6 +163,11 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
         DEPS msys2-runtime
     )
     msys_package(
+        URL "https://repo.msys2.org/msys/x86_64/texinfo-6.7-1-x86_64.pkg.tar.xz"
+        SHA512 d352e06c916ab5d8e34722a8d8bb93ff975525349c9bdf8206e472d93b25158134f97ba5101ffd0d32cd8d88522c0935d3c83847e759aa5376a2276aa2a392b3
+        DEPS bash perl
+    )
+    msys_package(
         URL "https://repo.msys2.org/msys/x86_64/bash-4.4.023-2-x86_64.pkg.tar.xz"
         SHA512 1cf2a07022113010e00e150e7004732013a793d49e7a6ac7c2be27a0b2c0ce3366150584b9974e30df042f8876a84d6a77c1a46f0607e38ebe18f8a25f51c32d
         DEPS msys2-runtime
@@ -170,6 +175,11 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     msys_package(
         URL "https://repo.msys2.org/msys/x86_64/autoconf-2.69-5-any.pkg.tar.xz"
         SHA512 66b9c97bd3d1dfe2a2ab576235b6b8c204a9e4c099ba14cf5d0139e564bba1e735e3b1083354b4cac8c6c42233cbdd5e1e277e32cadfe24017b94d2fbdeb5617
+        DEPS m4
+    )
+    msys_package(
+        URL "https://repo.msys2.org/msys/x86_64/autoconf-archive-2019.01.06-1-any.pkg.tar.xz"
+        SHA512 77540d3d3644d94a52ade1f5db27b7b4b5910bbcd6995195d511378ca6d394a1dd8d606d57161c744699e6c63c5e55dfe6e8664d032cc8c650af9fdbb2db08b0
         DEPS m4
     )
     msys_package(
@@ -185,7 +195,7 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
     msys_package(
         URL "https://repo.msys2.org/msys/x86_64/libtool-2.4.6-9-x86_64.pkg.tar.xz"
         SHA512 b309799e5a9d248ef66eaf11a0bd21bf4e8b9bd5c677c627ec83fa760ce9f0b54ddf1b62cbb436e641fbbde71e3b61cb71ff541d866f8ca7717a3a0dbeb00ebf
-        DEPS grep sed coreutils file 
+        DEPS grep sed coreutils file findutils
     )
     msys_package(
         URL "https://repo.msys2.org/msys/x86_64/file-5.39-1-x86_64.pkg.tar.zst"
@@ -291,8 +301,8 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
         DEPS gcc-libs
     )
     msys_package(
-        URL "https://repo.msys2.org/msys/x86_64/pkg-config-0.29.2-1-x86_64.pkg.tar.xz"
-        SHA512 f1d70f0b4ebcfeb3fa2156a7a4f7b0b404795853e05361de14054dc6658a6154915bb982626cbfe76bef0828325f993f30da6817361ca8d7ea440a40023fa864
+        URL "https://repo.msys2.org/msys/x86_64/pkg-config-0.29.2-4-x86_64.pkg.tar.zst"
+        SHA512 9f72c81d8095ca1c341998bc80788f7ce125770ec4252f1eb6445b9cba74db5614caf9a6cc7c0fcc2ac18d4a0f972c49b9f245c3c9c8e588126be6c72a8c1818
         DEPS libiconv
     )
     msys_package(

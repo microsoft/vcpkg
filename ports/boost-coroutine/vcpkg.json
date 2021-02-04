@@ -1,0 +1,28 @@
+{
+  "name": "boost-coroutine",
+  "version-string": "1.75.0",
+  "description": "Boost coroutine module",
+  "homepage": "https://github.com/boostorg/coroutine",
+  "supports": "!arm & !uwp & !emscripten",
+  "dependencies": [
+    "boost-assert",
+    "boost-build",
+    "boost-config",
+    {
+      "name": "boost-context",
+      "platform": "!uwp & !emscripten"
+    },
+    "boost-core",
+    "boost-detail",
+    "boost-exception",
+    "boost-integer",
+    "boost-modular-build-helper",
+    "boost-move",
+    "boost-system",
+    "boost-thread",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

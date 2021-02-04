@@ -39,7 +39,7 @@ Additional subdir to invoke make in. Useful if only parts of a port should be bu
 
 ## Notes:
 This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
-You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your CMake script supports the
+You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
 "install" target
 
 ## Examples
@@ -236,6 +236,12 @@ function(vcpkg_build_make)
         file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
         file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}/" "${CURRENT_PACKAGES_DIR}")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
+    endif()
+
+    # Remove libtool files since they contain absolute paths and are not necessary. 
+    file(GLOB_RECURSE LIBTOOL_FILES "${CURRENT_PACKAGES_DIR}/**/*.la")
+    if(LIBTOOL_FILES)
+        file(REMOVE ${LIBTOOL_FILES})
     endif()
 
     if (CMAKE_HOST_WIN32)
