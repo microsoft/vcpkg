@@ -8,6 +8,7 @@ set(TENSORFLOW_FILES
     "${CMAKE_CURRENT_LIST_DIR}/fix-dbg-build-errors.patch"
     "${CMAKE_CURRENT_LIST_DIR}/fix-linux-build.patch"
     "${CMAKE_CURRENT_LIST_DIR}/fix-more-build-errors.patch"
+    "${CMAKE_CURRENT_LIST_DIR}/fix-uwp-build.patch"
     "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_linux.py"
     "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_macos.py"
     "${CMAKE_CURRENT_LIST_DIR}/generate_static_link_cmd_windows.py"
@@ -19,6 +20,8 @@ set(TENSORFLOW_FILES
     "${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-static.cmake.in"
     "${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-windows-dll.cmake.in"
     "${CMAKE_CURRENT_LIST_DIR}/tensorflow-config-windows-lib.cmake.in"
+    "${CMAKE_CURRENT_LIST_DIR}/uwp_genrule.BUILD.in"
+    "${CMAKE_CURRENT_LIST_DIR}/uwppatch.h"
     )
 
 file(COPY ${TENSORFLOW_FILES} DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
