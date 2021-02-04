@@ -24,7 +24,7 @@ set(CMAKE_DEBUG_POSTFIX d)
 option(BUILD_TOOLS "Build and install tools" ON)
 set(TOOLS_INSTALLDIR "bin" CACHE STRING "Target directory for installed tools")
 
-find_package(FFmpeg COMPONENTS avcodec avutil avdevice avfilter avformat swresample REQUIRED)
+find_package(FFMPEG COMPONENTS avcodec avutil avdevice avfilter avformat swresample REQUIRED)
 find_package(BZip2 REQUIRED)
 find_package(LibLZMA REQUIRED)
 find_package(SndFile REQUIRED)
