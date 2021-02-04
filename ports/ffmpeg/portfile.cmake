@@ -23,8 +23,17 @@ if (SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-vcpkg_find_acquire_program(YASM)
-get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
+
+if(${VCPKG_TARGET_ARCHITECTURE} STREQUAL x86)
+    # ffmpeg nasm build gives link error on x86, so fall back to yasm
+    vcpkg_find_acquire_program(YASM)
+    get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
+    vcpkg_add_to_path(${YASM_EXE_PATH})
+else()
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    vcpkg_add_to_path(${NASM_EXE_PATH})
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     #We're assuming that if we're building for Windows we're using MSVC
@@ -35,8 +44,7 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${YASM_EXE_PATH}")
-set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug --enable-runtime-cpudetect")
+set(OPTIONS "--enable-asm --enable-x86asm --disable-doc --enable-debug --enable-runtime-cpudetect")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -510,6 +518,48 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 vcpkg_copy_pdbs()
+
+if (VCPKG_TARGET_IS_WINDOWS)
+    # Translate cygpath to local path
+    set(CYGPATH_CMD "${MSYS_ROOT}/usr/bin/cygpath.exe" -w)
+    
+    foreach(PKGCONFIG_PATH "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
+        file(GLOB PKGCONFIG_FILES "${PKGCONFIG_PATH}/*.pc")
+        foreach(PKGCONFIG_FILE IN LISTS PKGCONFIG_FILES)
+            file(READ "${PKGCONFIG_FILE}" PKGCONFIG_CONTENT)
+            foreach(PATH_NAME prefix libdir includedir)
+                string(REGEX MATCH "${PATH_NAME}=[^\n]*\n" PATH_VALUE "${PKGCONFIG_CONTENT}")
+                string(REPLACE "${PATH_NAME}=" "" PATH_VALUE "${PATH_VALUE}")
+                string(REPLACE "\n" "" PATH_VALUE "${PATH_VALUE}")
+                set("${PATH_NAME}_cygpath" "${PATH_VALUE}")
+            endforeach()
+            execute_process(
+                COMMAND ${CYGPATH_CMD} "${prefix_cygpath}"
+                OUTPUT_VARIABLE FIXED_PREFIX_PATH
+            )
+            string(REPLACE "\n" "" FIXED_PREFIX_PATH "${FIXED_PREFIX_PATH}")
+            file(TO_CMAKE_PATH "${FIXED_PREFIX_PATH}" FIXED_PREFIX_PATH)
+            execute_process(
+                COMMAND ${CYGPATH_CMD} "${libdir_cygpath}"
+                OUTPUT_VARIABLE FIXED_LIBDIR_PATH
+            )
+            string(REPLACE "\n" "" FIXED_LIBDIR_PATH ${FIXED_LIBDIR_PATH})
+            file(TO_CMAKE_PATH ${FIXED_LIBDIR_PATH} FIXED_LIBDIR_PATH)
+            execute_process(
+                COMMAND ${CYGPATH_CMD} "${includedir_cygpath}"
+                OUTPUT_VARIABLE FIXED_INCLUDE_PATH
+            )
+            string(REPLACE "\n" "" FIXED_INCLUDE_PATH "${FIXED_INCLUDE_PATH}")
+            file(TO_CMAKE_PATH ${FIXED_INCLUDE_PATH} FIXED_INCLUDE_PATH)
+            
+            vcpkg_replace_string("${PKGCONFIG_FILE}" "${prefix_cygpath}" "${FIXED_PREFIX_PATH}")
+            vcpkg_replace_string("${PKGCONFIG_FILE}" "${libdir_cygpath}" "${FIXED_LIBDIR_PATH}")
+            vcpkg_replace_string("${PKGCONFIG_FILE}" "${includedir_cygpath}" "${FIXED_INCLUDE_PATH}")
+        endforeach()
+    endforeach()
+endif()
+
+vcpkg_fixup_pkgconfig()
 
 # Handle copyright
 file(STRINGS ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-out.log LICENSE_STRING REGEX "License: .*" LIMIT_COUNT 1)

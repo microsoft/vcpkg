@@ -51,14 +51,23 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH "cmake")
 
 vcpkg_copy_pdbs()
 
-# Clean redundant files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(READ "${CURRENT_PACKAGES_DIR}/OpenColorIOConfig.cmake" _contents)
+string(REPLACE
+    [=[get_filename_component(OpenColorIO_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)]=]
+    [=[get_filename_component(OpenColorIO_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(OpenColorIO_DIR "${OpenColorIO_DIR}" PATH)
+get_filename_component(OpenColorIO_DIR "${OpenColorIO_DIR}" PATH)]=]
+    _contents
+    "${_contents}")
+string(REPLACE "/cmake/OpenColorIO.cmake" "/share/opencolorio/OpenColorIO.cmake" _contents "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/opencolorio/OpenColorIOConfig.cmake" "${_contents}")
 
-# CMake Configs leftovers
-file(REMOVE
-    ${CURRENT_PACKAGES_DIR}/OpenColorIOConfig.cmake
+# Clean redundant files
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/debug/include
+    ${CURRENT_PACKAGES_DIR}/debug/share
     ${CURRENT_PACKAGES_DIR}/debug/OpenColorIOConfig.cmake
+    ${CURRENT_PACKAGES_DIR}/OpenColorIOConfig.cmake
 )
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

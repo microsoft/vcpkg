@@ -1,6 +1,6 @@
 Source: curl
-Version: 7.73.0
-Port-Version: 4
+Port-Version: 2
+Version: 7.74.0
 Build-Depends: zlib
 Homepage: https://github.com/curl/curl
 Description: A library for transferring data with URLs
@@ -53,3 +53,7 @@ Description: SSPI support
 Feature: brotli
 Build-Depends: brotli
 Description: brotli support (brotli)
+
+Feature: idn2
+Build-Depends: libidn2
+Description: idn2 support (libidn2)

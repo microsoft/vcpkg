@@ -1,55 +1,55 @@
 #Every update requires an update of these hashes and the version within the control file of each of the 32 ports. 
 #So it is probably better to have a central location for these hashes and let the ports update via a script
 set(QT_MAJOR_MINOR_VER 5.15)
-set(QT_PATCH_VER 1)
+set(QT_PATCH_VER 2)
 set(QT_UPDATE_VERSION 0) # Switch to update qt and not build qt. Creates a file cmake/qt_new_hashes.cmake in qt5-base with the new hashes.
 
 set(QT_PORT_LIST base 3d activeqt charts connectivity datavis3d declarative gamepad graphicaleffects imageformats location macextras mqtt multimedia networkauth
                  purchasing quickcontrols quickcontrols2 remoteobjects script scxml sensors serialport speech svg tools virtualkeyboard webchannel websockets
                  webview winextras xmlpatterns doc x11extras androidextras translations serialbus webengine webglplugin wayland)
 
-set(QT_HASH_qt5-base                40b687c046b25a6717834ffe2616ee4f373d75214ec1c7e3a26502cd0cde9f0a872eaee99f06c54c7a3625ae85df5cdd3a3b54a160e8e37c7cfeb5800d026fe4)
-set(QT_HASH_qt5-3d                  5d35f39bd3cb65a4b7490fd3d57a4f62b3ccaad25c7963613d67641927bdc9d895fb436d049de5485a9e8e067c716951e376349cbfc3996af6765adda73d51d5)
-set(QT_HASH_qt5-activeqt            d272a6b9748ce25635c1631290670c6372f803c05ead4a8607b00e5ca777eee355b579d4040a1ab619c3f72879518e9557ea91af1cd02ce5d49f2bcb7fd1c305)
-set(QT_HASH_qt5-charts              7e644d4a674f175745646f8b541c8cfd972853fdf3a3ee5d0f7c23f035ae81cef0671292535fe65b1c276e4c54c7a48db1a1d2f9be97834513d154eea1666f3c)
-set(QT_HASH_qt5-connectivity        ad7bad604c466461bcc7bfd889ecbb36e010c89ea1ecf7736f8b0ad49e682a1800cd2507b8d8c0b582c424b176f8179aeec85a6b0fc4ed933f8b6032e935d39a)
-set(QT_HASH_qt5-datavis3d           3f11cddebd29aa90ce62fa19f9ab33026393bf95525bea7c4514e04acef23db9dbfdf000aa885aa2f823b1cd6ca99ac2a1f8afaabe67ee13785d5e4650aa4c97)
-set(QT_HASH_qt5-declarative         193ec706b764330a2ae00614b13482b7586642f9cfd32458e8c975daa07ba25f0f9887de0918c4034f52f613b860677c09c46a3b7d07d4229446cfc0805bcccd)
-set(QT_HASH_qt5-gamepad             f74933f9e28d0db03d30743e7d75c7a1ba28fa03d97aa894b5cbc306a2d501c27ec40eb84c6b999a6e5ed01b3126bfa992a3a3ca28246310edfe1f2fc12c1d88)
-set(QT_HASH_qt5-graphicaleffects    651f8d96199b6324726fcf97eebf16a3ee40e5a9523a3c03255ca4201228b8d02314d5dd9722f59d44f09b4ff8dd722fb276b9af7f65728693a2c4ee62f781c1)
-set(QT_HASH_qt5-imageformats        90da1c76b16dc5ea4ba99372208e3b10619efc4d131686ac6ab4a963ab0177ff9eee9155af564d72052f4ae1c21f06431ab66aa4e55b3c864f015b63ad75c107)
-set(QT_HASH_qt5-location            b79383b60107bc4d8fcc9b4a087db57597d0b928248806fef9dfeaa8ce3347ce96b388cbce1a7bcaf3287d380f7c269c44e8ec25966112c041aa298313854106)
-set(QT_HASH_qt5-macextras           6671d21edba0691833d45eaf7474b20be55088252fff70f8617f953366834bc5915712c00e53288dce1d97ab7f0080f4fb7547594034bd627d010d01906e20e9)
-set(QT_HASH_qt5-mqtt                6ea203318d0c4c6441f23a2648e0a3879b72426579ad3d6af7895c50cc80214010b2aba5a2103bb69df8299cb84ae7b1a0fd88d4cfe6d70b1cfc5694332b81d4)
-set(QT_HASH_qt5-multimedia          9c063dc481c91a94ba151fa96166d04a83e1cdcdb66c5fa80c038bd973c87b928c3d90d1c8add7c3ec29c4dc7dceff9e8cf288ce980f95d199f37e90593104d9)
-set(QT_HASH_qt5-networkauth         2c22acf4842f2e26c514ea48bd4e21f466571c1993b811495c1eb9fe22ea66a687ca882c9ed09b38c00a9a6616b13d44021e0d9a65020f4ab9495d6e8c64d282)
-set(QT_HASH_qt5-purchasing          5e112f449d1db2851cfbaf5b84feaba6f1243abb4c4ace3a7e2d23859b410305e0e4799c1d109553266d21a647d85688442f4ee0878434eff0e4c870a90536da)
-set(QT_HASH_qt5-quickcontrols       71e6ee040bc76dc1576d31ff2c1d687e115f4c6dc63307e64c8173c2441835923375ee6b7f5473b3ec8c586f34e04b061b9a9e16b7f34b4075cfa0278599d2ce) # deprecated
-set(QT_HASH_qt5-quickcontrols2      ecb75619e80b737e3ae214f65a5175d933f8dc7832eb4eccd469fc1cb1eb85ef5c47f81563165da2d75abf15d7c47b868e68ab758d95183371b4ef64e7c52a39)
-set(QT_HASH_qt5-remoteobjects       be7d1803957295b4900d96bc1c4bbb50bb54a0ef750a5b713ce318636040954b765c546e4ab9c95880f4c03894e5cd56ab5238504bb5c44fc4a3c277611ab997)
-set(QT_HASH_qt5-script              f97bdf0a3a402f2658d23c92d2f0d916bda68b63f1f140f90cb99176e969736758d50cbdc36c5a4b135b08cb74c117dd92c29bcbb41b1a28189af9180604b8ba) # deprecated
-set(QT_HASH_qt5-scxml               893c3b247578c330db9b828e28e4df83b0e966bb469f1f453569e0226a8181b642c37f2198ff4194bec7997daee9578bebaaa7166bf1be8b67693edd0fbac082)
-set(QT_HASH_qt5-sensors             ef0757125a6c5b89e206661d1d0e0674b673a81e1a0be1de9de2fdcd701fd507b0b47e1b67be013cbebbf846f593e37e4ef2941dcec4b78028019820d1fe7c3b)
-set(QT_HASH_qt5-serialport          5d2e9742d1c5f784375b3d0bf05e227abf1f358f4ba60e66044378b60ac256dda2ab5ecced07c68ca8d93fe894617050821654200e1faa12f4cca112a4fbd2a4)
-set(QT_HASH_qt5-speech              0e2c82ea72b5bff5b36f3d833d80dec68b39f3b9c3ca4d9c9fa29f0419a45dfb19ac59fb105136c551f6bbe60ad32af0f4aaa6abafb5bc61bc5d85ecb94b326f)
-set(QT_HASH_qt5-svg                 c0289bbce4682eef9cd87811ad11a4ce2141cb89bd026f9cc595123e6b4ebbe9e81a91b54bcf25fbf4225bc66e8a5e4f49e4fabde43e9da066583f22aab4f35f)
-set(QT_HASH_qt5-tools               8c7851431de8686a01fc5f85de5dcfa61b6878bd65b53ed78a8a23e57de70f2dcc1a72b4eed9a7219cfd443215a32a59a25fb929d343afcfd498517d6bcfb951)
-set(QT_HASH_qt5-virtualkeyboard     f369eb0c313aa5a932cacca44f93732f8a7b8de4bf46df294c40b7c7dd436d5da5012680420306b57347aa38a10d78231199093a10e2b8a272429536a327962e)
-set(QT_HASH_qt5-webchannel          01f37630ce7aa32726831b4a4d5e52e861269e33efd89246770e8a2a5536be976601d055c95f99d45699ea918ac4ce465b9ffab725f39841ddc5d320817c7523)
-set(QT_HASH_qt5-websockets          5929f972b7e8aa40dbbd0a1157065bd11e81621cc880d1dfc55e4228800215d16cd301319a204413e7fee7ec57c4e5a70229ad2d3c1d3ac69f38bd39ce4b3713)
-set(QT_HASH_qt5-webview             1da9cca184e66b02eef911e372d0f18466b989cc5c53d0a93e268857e1ca64a2f75bf20dfd1451060e6dbf4c7d248ba376112b7775e45ffa7d556712870478b1)
-set(QT_HASH_qt5-winextras           67a7d8e8053516a1ce2e725a591533b9d195ee5868973458e2139dab91131900d921644a3dd1a44d1a5fdcbf474de85728de11f250bb9a5bfb40bf8eb94176b2)
-set(QT_HASH_qt5-xmlpatterns         f76b2063f88a14754b1ba7e417b9a4936b1cf371bf35c6382a31f9ec01513894313faacb41a43fe6b97c0b0dbb7d4f578877b159ef1321cd1a2cd9b1d36bcdb3) # deprecated
+set(QT_HASH_qt5-base                a549bfaf867d746ff744ab224eb65ac1bdcdac7e8457dfa379941b2b225a90442fcfc1e1175b9afb1f169468f8130b7ab917c67be67156520a4bfb5c92d304f9)
+set(QT_HASH_qt5-3d                  38da6886b887f6d315dcb17192322efe184950716fdd0030df6c7d7c454ea43dc0250a201285da27683ce29768da6be41d4168e4f63c20adb0b5f26ae0934c1b)
+set(QT_HASH_qt5-activeqt            a2286a6736d14cf9b0dbf20af5ee8c23f94f57b6d4c0be41853e67109d87fd78dbf8f14eef2ce4b8d9ff2244af7ef139829ad7674d9ec9669434028961e65ec7)
+set(QT_HASH_qt5-charts              d16fc085a7e98078cf616cde07d57c5f04cd41e9687a26d42edf9042b4c95a837371b6b9616e7176c536d742aa9b5fc15bf3393f9f2e814ce942189ac151e65f)
+set(QT_HASH_qt5-connectivity        a934dcdd28645ba23dd429215643694d9a14449a4c3e1a6154a9a19cb3210f3d80978b46aefff2b110db533fa1816450f2f73a27d80df5330a92799e4cca1b9c)
+set(QT_HASH_qt5-datavis3d           340b5ce1b1c2d8849b665e7bc84430fdf48e443fc149530ee132f325067f57d35594a23e3a8b920e1928ca5c429dcacfa098dadcbde63d4993f748c436af4cc3)
+set(QT_HASH_qt5-declarative         a084e4ace0d6868668c95f1b62598a7dd0f455bfb0943ac8956802d7041436686f20c7ccdde7d6fd6c4b8173c936dd8600cf3b87bf8575f55514edfbb51111d3)
+set(QT_HASH_qt5-gamepad             67f299d36f70ac3205a136117bec7f983f889b6a1f7d0ff97eb03925f4789d9d90a7197f5e186a6d04aa486880c60f0f623ab56a8bd78e4682e84c7ff6cc9fe1)
+set(QT_HASH_qt5-graphicaleffects    1620a4daa6f2afc13b84752fa92f6d603aea1f7c796a239691b271a455d6887bba87a9a07edbfe008045f051c3e71fc6e22fc337d146c1793e923cfeb20e897d)
+set(QT_HASH_qt5-imageformats        3c821fac83b8d6177af256dc1d68aca14ae6d5cbdedb8d8665158ebcec0f6e6fb790b5d210a1aa8b0679ecff60fafd4e5d1387c6954498b41409ea44177e0d7e)
+set(QT_HASH_qt5-location            6192922506b3ea354e85431df83c19d7cc9aebb17549c6a1de48f625bf8365ff3db3161080dde254a5fb9199d99c3c5dc8e1533429150be55df96ddb7d6ce16f)
+set(QT_HASH_qt5-macextras           21e807a587da716615a447207abda2c3eb409111a0eb6f844c8f1281ccc842a7c2e8759c1d7ce62cc3bad3325b4570a0bae1fbe4e5592e905788dde8898c6cb0)
+set(QT_HASH_qt5-mqtt                91efd3b1ebef3c95473c018bcacd0772e613b38c) # Git commit ID
+set(QT_HASH_qt5-multimedia          be58e6934976b04707399f8525dd5d50f73e0539efd1a76c2f9868e35e6f136e0991652df5d46350a9ac39d24313353e4aa826131f268a95e458e57279f448bd)
+set(QT_HASH_qt5-networkauth         94843a74ae188eb0eff9559be6b246f61f87104479f6f52fe943b31a9263461a7051d967072d9061124b2bd056d7265645892104653c93dfcf68b11521f1c33d)
+set(QT_HASH_qt5-purchasing          1a40fd3ca149f9c8fc98a45562b37fc97c7addc513d40f50997576648d441d379179370c6491a003982feafe96736047a8faf09caf36eaeea5a97553f75d1255)
+set(QT_HASH_qt5-quickcontrols       52839e7442f4b6b5cbbb741d29ce28e9d2d9f5573499363d17252b166c1f318f37a19ecf1bf17f5cf6940bc29cc2987180b740ce036d924ff329dee9c37823a2) # deprecated
+set(QT_HASH_qt5-quickcontrols2      5af506fd5842c505ae5fbd04fdd2a467c5b6a9547b4cea80c9cf051e9dea49bbf17843d8bc12e69e95810e70119c2843c24171c84e0f5df62dd2f59a39903c8f)
+set(QT_HASH_qt5-remoteobjects       1cce1b6128f283fe8930e1e58b9620459c50b203a39607e9bcde8423930da08e5c70e7effaf64d2690f463cc7b37cfc67fb6c0ac89e27df3a57007aee1d5233d)
+set(QT_HASH_qt5-script              71c70b34f7d4a0742df64d20d7e9a685cc640b9cc6a3d22847c04f45a437b3f5537f40225a522ed82787c2744d9a4949dea5b43c2ee81961d5ed175cf10deb32) # deprecated
+set(QT_HASH_qt5-scxml               2a4719af94baefe7f0ca5a23239d07a05285a1698b052d17bb87bc221bbbc8bc25a70ff06d70d41ed7ac6a7e6646be9c516d8187c9098da1158c08e27a4b0bb8)
+set(QT_HASH_qt5-sensors             d0a34e0718cc727b1256601bc5f9a2975532d728fdf0cb7678824c7d36aa5049d9c2886053821ec93a238120441c980027306ac633677617867c7aee40bb560b)
+set(QT_HASH_qt5-serialport          353cc5f708367d646bd312f7d675b417bad4df44356f1dfc8b6ce846a86fd6d5955ec4d26f943e50f4a7b94cc6389fe658959e90bbb5ab3cdaefed0efe6ae72b)
+set(QT_HASH_qt5-speech              78a13218a639276c9b253566a1df52e2363847eac76df3962ba2a7178800206beb57859d22c7c99fa1579cb3aa7ab94baed1a6319ba946d4a64cba9e3bf52b05)
+set(QT_HASH_qt5-svg                 101e9c8fc05b1bb9c4e869564bff8e5723dd35f0ef557185e56e9dc12fdce74c531522c9642cdff639900eccf7ed0e04bfa48142741259697dded990fb481730)
+set(QT_HASH_qt5-tools               3bd32a302af6e81cd5d4eb07d60c5ef233f1ca7af1aae180c933ac28fafffce28c6c868eb032108747937ea951d6d4f0df5516841bc65d22c529207147533a8b)
+set(QT_HASH_qt5-virtualkeyboard     3ba04d171756a5434424833c5198a23e0df53eeebe9ea542047e094f83f38492d93f901cac67cf7e55aca6a71289ce3c6f5d8ac10a8d051b291155ebb8432016)
+set(QT_HASH_qt5-webchannel          7ac5e372695616863d247c5a61e5763a3934b58165e35c43da5ef1797d80005aa3d6eb258931ae7ee2b1f6a6fa743635ac4678c9cfe375cefa76e74cc81d095b)
+set(QT_HASH_qt5-websockets          1b23b79bff4289e785daf51441daaecf6de66ca5a3febfdd8fdb8ce871471bca4faf7663d68b23aaf562b1ebd6e9c8c27b3074f4b93bc9fcd3a0c54f7f79a9c4)
+set(QT_HASH_qt5-webview             11502597d5e3a9b8a3a90025b56c086a3412743019384558617c397a8ad4a0f646b406a4fbeb31ca45e6e573d1fb06cd5b22b8c0179695d06cc3d492289a1c85)
+set(QT_HASH_qt5-winextras           6555a42d4bbeb46b394f573b6ed7926ec21cf6024de3c5f43000373bf0a2f4544f19866e2c9469da2d60b5dd99fb046765be5d3f8d5025169e319795bbf66d9e)
+set(QT_HASH_qt5-xmlpatterns         5cdf51878f8bb42db57110acc0c3985a95af098da44e5dda505e0716fef5afc780419058158f7a8f9a0fe3fed83fd64abd856b4dbcdca20efa5e985fa85cc348) # deprecated
 ##TODO
-set(QT_HASH_qt5-doc                 2a1cf07ae648bf36f3127f1c4c3f0330a34b5183ec76431dfd20cf41ae3ce06e6cfead25e84f29059acce864d9328f1b8f8725aafcff9b0fe17e8245c1a7c7da)
-set(QT_HASH_qt5-x11extras           59155fc97da3f7571da37dd63bed79f61580fa4df7d4886df51520ea6fe8e01e7c09f0aa9caaeaa986c0e5eac11d4479c99c892da4d075c6369b535fd505b084)
-set(QT_HASH_qt5-androidextras       2da8a8e46c1d33926c0ee57061b1aef07182cb7c4b1bfed11b8032742a62d09a2a75d69741ba5ac26e11d5d544a415c84fb17255c14f1e1ae68d193f635200ea)
-#set(QT_HASH_qt5-canvas3d            0) deprectaed
-set(QT_HASH_qt5-translations        8e9fe7614c9aa9c557db1bfd6a0ceae90b45e5d28e0cd715fd4ad962b9fbfa722549d6c2a13d82deebd7d3fab7e68cc7affd207beb75629de0d01a5522035581)
-set(QT_HASH_qt5-serialbus           cd7e0d721aa46a59239f44c6b0122509aba2237e0e62ea5399b4d4924601a9def989dd8b5d17fdcc46b41491d582d82b46c7efdfb9277ac1f06da7f1e2a1a859)
-set(QT_HASH_qt5-webengine           651520fcf89681b06c57f1992223f06ecbe3750a88ffae7a94a339503957e09d327ee1ae7e4bce88bfb09131b3b9c9abfc44f7bccb9c50d286181eaf306991a4)
-set(QT_HASH_qt5-webglplugin         e1feae14ba911f635ee5b45569e7f8dc8db4fdf1ca0d583f84d10de89976b7728285edbf050273293327c0f8afaf0fec8dff8370e1bf6771d47ae611be8a0224)
-set(QT_HASH_qt5-wayland             d6619f35b3ab163372a0d49a2221c487d5936b6d9ebeb92a7fd41521c424d550eea7c5c584e07f15bde1ec5ece1bd5774845eb9956ce793e546197ffdb28d594)
+set(QT_HASH_qt5-doc                 ce2c003b37829da102f243ca271548cff0597b4b667109ca9533971a490b8b20eb3183af6e0b209ad58964f2be2e757f83933a3f8c484dd0814750e24d1a244e)
+set(QT_HASH_qt5-x11extras           beaefc865299f4e7c637baa96eb3a69adbe1a41fc7735b46cfec0768c9243391600e69078630fffb4aceba106b7512fd802e745abc38ddab5253233301c93ed9)
+set(QT_HASH_qt5-androidextras       cacd9252f313595d21eb6a94ffabbd5fff476af82aa619b4edfc77a9f405f52bd1b89da97c8f7dadf8c403035a243205a25a2f85250ebc0590bf68f914cdbf3a)
+#set(QT_HASH_qt5-canvas3d            0) deprecated
+set(QT_HASH_qt5-translations        483b5d919f43c96a032e610cf6316989e7b859ab177cb2f7cb9bb10ebcddf8c9be8e04ff12db38a317c618d13f88455a4d434c7a1133f453882da4e026dd8cbe)
+set(QT_HASH_qt5-serialbus           c4793f5425ca0191435d75a8fd95a623cc847d41b8722421c0bf0fdfddda1a158fd2a00f5d997f00de4fcb271a158f3273d636ef2553ccd6b90b4d072b1eb55b)
+set(QT_HASH_qt5-webengine           de64c30819f5e2f8620c853ff22b2f9717641477aef4432a552a72d1d67ed62ed61572afee6de3f2c9f32dee28f4f786ffd63fc465aa42c0ae1e87ea28341756)
+set(QT_HASH_qt5-webglplugin         14b9a0c08472121165eba82f3c81518be7b19484b7bee7887df9751edc6e2e7e76d06f961b180427014beb71c725d343e9f196f37690e2d207511f7639bd2627)
+set(QT_HASH_qt5-wayland             e8657ed676873da7b949e6a1605d025918a03336af9c68f32741945ec3c71a604def55bb00737ba4d97b91c00d0e2df1a83cdcedcf5795c6b2a1ef2caa21c91c)
 
 if(QT_UPDATE_VERSION)
     message(STATUS "Running Qt in automatic version port update mode!")

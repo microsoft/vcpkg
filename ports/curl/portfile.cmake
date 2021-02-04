@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF 315ee3fe75dade912b48a21ceec9ccda0230d937 #curl-7_73_0
-    SHA512 db9385d63688256c335f08fe044c67e7c17e2fbcbb47df234d5f9a1586b259edb07a37845c2ad85d2da00738b19dc0e718d91d05b2881c2828fec2660f858444
+    REF e052859759b34d0e05ce0f17244873e5cd7b457b #curl-7_74_0
+    SHA512 3dbbab00dda4f0e7d012fab358d2dd1362ff0c0f59c81f638fb547acba6f74a61c306906892447af3b18e8b0ebb93ebb8e0ac77e92247864bfa3a9c4ce7ea1d0
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -13,6 +13,7 @@ vcpkg_from_github(
         0009_fix_openssl_config.patch
         0010_fix_othertests_cmake.patch
         0011_fix_static_build.patch
+        0012-fix-dependency-idn2.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
@@ -41,6 +42,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     brotli      CURL_BROTLI
     schannel    CMAKE_USE_SCHANNEL
     sectransp   CMAKE_USE_SECTRANSP
+    idn2        CMAKE_USE_IDN2
     
     INVERTED_FEATURES
     non-http HTTP_ONLY

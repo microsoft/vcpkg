@@ -51,7 +51,7 @@ function(vcpkg_apply_patches)
         message(STATUS "Applying patch ${PATCH}")
         set(LOGNAME patch-${TARGET_TRIPLET}-${PATCHNUM})
         vcpkg_execute_in_download_mode(
-            COMMAND ${GIT} --work-tree=. --git-dir=.git apply "${ABSOLUTE_PATCH}" --ignore-whitespace --whitespace=nowarn --verbose
+            COMMAND ${GIT} -c core.longpaths=true -c core.autocrlf=false --work-tree=. --git-dir=.git apply "${ABSOLUTE_PATCH}" --ignore-whitespace --whitespace=nowarn --verbose
             OUTPUT_FILE ${CURRENT_BUILDTREES_DIR}/${LOGNAME}-out.log
             ERROR_VARIABLE error
             WORKING_DIRECTORY ${_ap_SOURCE_PATH}

@@ -16,6 +16,7 @@ vcpkg_from_github(
         0001_cmakelists_fixes.patch
         0002_use_glog_target.patch
         0003_fix_exported_ceres_config.patch
+        find-package-required.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindCXSparse.cmake)
@@ -38,8 +39,11 @@ vcpkg_configure_cmake(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DEXPORT_BUILD_DIR=ON
+        -DBUILD_BENCHMARKS=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_TESTING=OFF
+        -DBUILD_BENCHMARKS=OFF
+        -DPROVIDE_UNINSTALL_TARGET=OFF
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT_VALUE}
         -DLIB_SUFFIX=${LIB_SUFFIX}
 )
@@ -51,6 +55,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
   vcpkg_fixup_cmake_targets(CONFIG_PATH lib${LIB_SUFFIX}/cmake/Ceres)
 endif()
+file(READ ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake CERES_CONFIG)
+string(REPLACE "set_target_properties(ceres PROPERTIES INTERFACE_LINK_LIBRARIES Ceres::ceres)"
+               "set_target_properties(ceres PROPERTIES INTERFACE_LINK_LIBRARIES Ceres::ceres)
+  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)" CERES_CONFIG "${CERES_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/ceres/CeresConfig.cmake "${CERES_CONFIG}")
 
 vcpkg_copy_pdbs()
 
