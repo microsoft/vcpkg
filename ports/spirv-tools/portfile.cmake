@@ -32,7 +32,7 @@ vcpkg_configure_cmake(
         -DSPIRV-Headers_SOURCE_DIR=${CURRENT_INSTALLED_DIR}
         -DSPIRV_WERROR=OFF
         -DSPIRV_SKIP_EXECUTABLES=${SKIP_EXECUTABLES} # option SPIRV_SKIP_TESTS follows this value
-        -DSKIP_SPIRV_TOOLS_INSTALL=${TOOLS_INSTALL}
+        -DENABLE_SPIRV_TOOLS_INSTALL=${TOOLS_INSTALL}
 )
 
 vcpkg_install_cmake()
