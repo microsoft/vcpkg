@@ -190,7 +190,7 @@
     },
     "aubio": {
       "baseline": "0.4.9",
-      "port-version": 3
+      "port-version": 4
     },
     "audiofile": {
       "baseline": "1.0.7",
@@ -4422,7 +4422,7 @@
     },
     "pangolin": {
       "baseline": "0.5",
-      "port-version": 11
+      "port-version": 12
     },
     "pangomm": {
       "baseline": "2.40.1",
