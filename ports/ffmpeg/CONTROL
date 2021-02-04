@@ -55,15 +55,15 @@ Feature: version3
 Description: Upgrade (L)GPL to version 3
 
 Feature: all
-Build-Depends: ffmpeg[ass,bzip2,iconv,freetype,fribidi,lzma,mp3lame,opencl,openjpeg,opus,sdl2,snappy,soxr,speex,theora,vorbis,webp,zlib], ffmpeg[dav1d] (!uwp & !arm & !x86), ffmpeg[fontconfig] (!windows | !static), ffmpeg[ilbc] (!arm | !uwp), ffmpeg[modplug] (!windows | !static), ffmpeg[nvcodec] (windows | linux), ffmpeg[ssh] (!uwp), ffmpeg[tensorflow] (!x86 & !arm & !uwp & !static), ffmpeg[tesseract] (!static), ffmpeg[vpx] (!uwp | !arm), ffmpeg[wavpack] (!arm & !arm64), ffmpeg[xml2] (!static)
+Build-Depends: ffmpeg[ass,bzip2,iconv,freetype,lzma,mp3lame,openjpeg,opus,sdl2,snappy,soxr,speex,theora,vorbis,webp,zlib], ffmpeg[dav1d] (!uwp & !arm & !x86), ffmpeg[fontconfig] (!windows | !static), ffmpeg[fribidi] (!arm & !arm64 & !uwp), ffmpeg[ilbc] (!arm | !uwp), ffmpeg[modplug] (!windows | !static & !uwp), ffmpeg[nvcodec] (windows | linux), ffmpeg[opencl] (!uwp), ffmpeg[ssh] (!arm & !arm64 & !uwp), ffmpeg[tensorflow] (!x86 & !arm & !uwp & !static), ffmpeg[tesseract] (!static), ffmpeg[vpx] (!uwp | !arm), ffmpeg[wavpack] (!arm & !arm64), ffmpeg[xml2] (!static)
 Description: Build with all allowed dependencies selected that are compatible with the lgpl license
 
 Feature: all-gpl
-Build-Depends: ffmpeg[gpl,all,x265], ffmpeg[avisynthplus] (windows & !arm & !uwp & !static), ffmpeg[x264] (!arm)
+Build-Depends: ffmpeg[gpl,all], ffmpeg[avisynthplus] (windows & !arm & !uwp & !static), ffmpeg[x264] (!arm), ffmpeg[x265] (!arm & !arm64 & !uwp)
 Description: Build with all allowed dependencies selected that are compatible with the gpl license
 
 Feature: all-nonfree
-Build-Depends: ffmpeg[nonfree,all-gpl,fdk-aac,openssl]
+Build-Depends: ffmpeg[nonfree,all-gpl,openssl], ffmpeg[fdk-aac] (!arm & !arm64 & !uwp)
 Description: Build with all allowed dependencies selected with a non-redistributable license
 
 Feature: ass
