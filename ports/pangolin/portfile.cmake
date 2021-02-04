@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-includepath-error.patch # include path has one more ../
         fix-dependeny-ffmpeg.patch
         fix-dependency-python.patch
+        fix-cmake-version.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindGLEW.cmake)
