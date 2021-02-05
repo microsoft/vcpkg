@@ -84,3 +84,25 @@ diff --git a/third_party/icu/BUILD.bazel b/third_party/icu/BUILD.bazel
      ] + select({
          ":android": [
              "-fdata-sections",
+
+
+diff --git a/third_party/icu/udata.patch b/third_party/icu/udata.patch
+--- a/third_party/icu/udata.patch
++++ b/third_party/icu/udata.patch
+@@ -44,16 +44,3 @@
+
+  /*----------------------------------------------------------------------*
+   *                                                                      *
+-@@ -710,10 +708,11 @@
+-         if (uprv_getICUData_collation) {
+-             setCommonICUDataPointer(uprv_getICUData_collation(), FALSE, pErrorCode);
+-         }
+-+        */
+-         if (uprv_getICUData_conversion) {
+-             setCommonICUDataPointer(uprv_getICUData_conversion(), FALSE, pErrorCode);
+-         }
+--        */
+-+
+- #if U_PLATFORM_HAS_WINUWP_API == 0 // Windows UWP Platform does not support dll icu data at this time
+-         setCommonICUDataPointer(&U_ICUDATA_ENTRY_POINT, FALSE, pErrorCode);
+-         {
