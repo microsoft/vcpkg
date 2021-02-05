@@ -30,7 +30,6 @@ Build-Depends: ffmpeg[core,avcodec,avformat]
 Description: Device support in ffmpeg
 
 Feature: avfilter
-Build-Depends: ffmpeg[core,avcodec,avformat]
 Description: Filter support in ffmpeg
 
 Feature: postproc
