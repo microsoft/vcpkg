@@ -90,7 +90,7 @@ diff --git a/third_party/icu/udata.patch b/third_party/icu/udata.patch
 --- a/third_party/icu/udata.patch
 +++ b/third_party/icu/udata.patch
 @@ -44,16 +44,3 @@
-
+  
   /*----------------------------------------------------------------------*
    *                                                                      *
 -@@ -710,10 +708,11 @@
