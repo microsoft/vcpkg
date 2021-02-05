@@ -4000,6 +4000,10 @@
       "baseline": "1.0.4",
       "port-version": 0
     },
+    "manif": {
+      "baseline": "0.0.4",
+      "port-version": 0
+    },
     "mapbox-variant": {
       "baseline": "1.2.0",
       "port-version": 0
