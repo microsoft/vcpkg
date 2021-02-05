@@ -44,7 +44,7 @@ Not everything should remain in the scripts tree. As part of this audit, each he
 
 Changes to be made:
 
-* <s>`execute_process`' `OVERRIDDEN_EXECUTE_PROCESS` should get `Z_`</s>
-* <s>`execute_process`' override should be a function rather than a macro</s>
+* ~~`execute_process`' `OVERRIDDEN_EXECUTE_PROCESS` should get `Z_`~~
+* ~~`execute_process`' override should be a function rather than a macro~~
 * Most of vcpkg_acquire_msys needs to become a tool port, except for the content of the mirror list.
 * Calls to vcpkg_acquire_msys that call PACKAGES are deprecated; the tool port will use NO_DEFAULT_PACKAGES DIRECT_PACKAGES
