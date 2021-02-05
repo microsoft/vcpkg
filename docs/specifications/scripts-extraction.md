@@ -23,6 +23,7 @@ These are design ideals that we may break in some limited cases where that makes
 * Local variables are not named anything special (not `Z_`).
 * Internal global variable names are named `Z_VCPKG_`.
 * External experimental global variable names are named `X_VCPKG_`.
+* Internal functions are named `z_vcpkg_*`
 * Public global variables are named `VCPKG_`.
 * All non-splat variable expansions are in quotes "".
 * There are no "pointer" parameters (where a user passes a variable name rather than the contents) except for out parameters.
