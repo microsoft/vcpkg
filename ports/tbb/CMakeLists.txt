@@ -1,9 +1,13 @@
 project(tbb CXX)
 
+option(DISABLE_EXCEPTIONS "Set exceptions=0 for make to turn off exception support in TBB" OFF)
 file(GLOB SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/*)
 file(COPY ${SOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/src)
 
 include(${CMAKE_CURRENT_BINARY_DIR}/src/cmake/TBBBuild.cmake REQUIRED)
+if(DISABLE_EXCEPTIONS)
+    set(DISABLE_EXCEPTIONS_ARG exceptions=0)
+endif()
 if(NOT BUILD_SHARED_LIBS)
     set(TBB_STATIC_INCLUDE extra_inc=big_iron.inc)
 endif()
@@ -26,7 +30,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
   endif()
 endif()
 
-tbb_build(TBB_ROOT ${CMAKE_CURRENT_BINARY_DIR}/src MAKE_ARGS ${arch} ${CPLUS} ${CONLY} ${TBB_STATIC_INCLUDE} ${FORWARD_SDK_ROOT})
+tbb_build(TBB_ROOT ${CMAKE_CURRENT_BINARY_DIR}/src MAKE_ARGS ${arch} ${CPLUS} ${CONLY} ${DISABLE_EXCEPTIONS_ARG} ${TBB_STATIC_INCLUDE} ${FORWARD_SDK_ROOT})
 
 set(SUBDIR ${CMAKE_CURRENT_BINARY_DIR}/tbb_cmake_build/tbb_cmake_build_subdir)
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
