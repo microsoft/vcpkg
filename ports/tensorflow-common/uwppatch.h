@@ -308,6 +308,9 @@ inline BOOLEAN RtlGenRandom(
 }
 
 
+#undef IGNORE
+
+
 #ifdef __cplusplus
 
 namespace std {
