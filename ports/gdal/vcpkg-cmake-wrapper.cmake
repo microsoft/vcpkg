@@ -22,7 +22,7 @@ if (UNIX)
     find_dependency(LibXml2)
     find_dependency(netCDF CONFIG)
     find_dependency(OpenJPEG CONFIG)
-    find_dependency(proj4 CONFIG)
+    find_dependency(PROJ4 CONFIG)
     find_dependency(unofficial-sqlite3 CONFIG)
     find_dependency(ZLIB)
     
