@@ -7,6 +7,8 @@ vcpkg_from_github(
     SHA512 222be56e3937136bd699a5d259a068b354ffcd34287bc8e0e8c33b924e9760501b81c56420d8062e0a924fefe95451778781b2aaa07207b0f18ce4ec33732581
     HEAD_REF master
     PATCHES
+        0001-opencv4-compat.patch
+        0002-improve-features.patch
         fix-dependency-bigint.patch
 )
 
