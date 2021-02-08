@@ -12,7 +12,6 @@ jobs:
             vcpkg_path: C:\mixxx-vcpkg
             vcpkg_bootstrap: .\bootstrap-vcpkg.bat
             vcpkg_triplet: x64-windows
-            vcpkg_cache: C:\Users\runneradmin\AppData\Local\vcpkg\archives
             check_disk_space: Get-PSDrive
             #- os: macos-10.15
             #  vcpkg_path: /Users/runner/mixxx-vcpkg
@@ -81,18 +80,17 @@ jobs:
     - name: Set up cache
       uses: actions/cache@v2
       with:
-        path: ${{ matrix.vcpkg_cache }}
-        key: vcpkg-${{ matrix.vcpkg_triplet }}-${{ github.head_ref }}-${{ github.run_number }}
+        path: ${{ matrix.vcpkg_path }}/installed
+        key: vcpkg-installed-${{ matrix.vcpkg_triplet }}-${{ github.ref }}-${{ github.run_number }}
         restore-keys: |
-          vcpkg-${{ matrix.vcpkg_triplet }}-${{ github.head_ref }}
-          vcpkg-${{ matrix.vcpkg_triplet }}
-          vcpkg
+          vcpkg-installed-${{ matrix.vcpkg_triplet }}-${{ github.ref }}
+          vcpkg-installed-${{ matrix.vcpkg_triplet }}
 
     - name: Check available disk space
       run: ${{ matrix.check_disk_space }}
 
     - name: Build packages
-      run: ./vcpkg install --clean-after-build ${{ env.VCPKG_PACKAGES }}
+      run: ./vcpkg upgrade --no-dry-run && ./vcpkg install --clean-after-build ${{ env.VCPKG_PACKAGES }}
       working-directory: ${{ matrix.vcpkg_path }}
       env:
         VCPKG_OVERLAY_PORTS: overlay/ports
