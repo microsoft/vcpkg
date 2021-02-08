@@ -933,8 +933,6 @@ mmx:x64-osx=skip
 mmx:arm-uwp=skip
 mmx:x64-uwp=skip
 mmx:arm64-windows=skip
-mnn:arm64-windows=fail
-mnn:arm-uwp=fail
 # Flaky strange linker error
 mongo-c-driver:x64-osx=skip
 mongoose:arm-uwp=fail
