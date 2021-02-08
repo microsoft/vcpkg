@@ -263,11 +263,11 @@ If you want to have flexible port customization along with versioning features, 
 
 ## Further reading
 
-If you're interested in delving deeper into the details of how versioning works we recommended that you read the [original versioning specification](../specifications/versioning.md) and the [implementation details](../versioning.implementation-details.md).
+If you're interested in delving deeper into the details of how versioning works we recommended that you read the [original versioning specification](../specifications/versioning.md) and the [implementation details](versioning.implementation-details.md).
 
 See also:
 
 * [Versioning docs](versioning.md)
 * [Original specification](../specifications/versioning.md)
 * [Versioning reference](versioning.reference.md)
-* [Versioning implementation details](../versioning.implementation-details.md)
+* [Versioning implementation details](versioning.implementation-details.md)
