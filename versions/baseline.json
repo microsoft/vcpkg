@@ -280,6 +280,10 @@
       "baseline": "12.0.0-beta.7",
       "port-version": 0
     },
+    "azure-storage-files-shares-cpp": {
+      "baseline": "12.0.0-beta.7",
+      "port-version": 0
+    },
     "azure-uamqp-c": {
       "baseline": "2020-12-09",
       "port-version": 0
