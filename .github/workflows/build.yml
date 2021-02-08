@@ -135,3 +135,9 @@ jobs:
       with:
         name: mixxx-dependencies-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
         path: ${{ matrix.vcpkg_path }}/mixxx-dependencies-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}.zip
+
+    # Workaround for https://github.com/actions/cache/issues/531
+    - name: Use system tar & zstd from Chocolatey for caching
+      shell: bash
+      run: |
+        echo "C:/Windows/System32;C:/ProgramData/Chocolatey/bin" >> $GITHUB_PATH
