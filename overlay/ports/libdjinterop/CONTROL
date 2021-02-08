@@ -1,5 +1,0 @@
-Source: libdjinterop
-Version: 0.14.5
-Description: C++ library for access to DJ record libraries
-Homepage: https://github.com/xsco/libdjinterop
-Build-Depends: sqlite3, zlib
