@@ -1,4 +1,4 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID")
 

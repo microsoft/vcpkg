@@ -3,5 +3,5 @@
   "version-string": "11.25",
   "description": "A \"GLUT\"-like framework for Direct3D 11.x Win32 desktop applications",
   "homepage": "https://github.com/Microsoft/DXUT",
-  "supports": "!staticcrt & windows & !uwp"
+  "supports": "windows & !uwp"
 }
