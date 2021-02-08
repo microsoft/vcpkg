@@ -25,11 +25,17 @@ if (UNIX)
     find_dependency(PROJ4 CONFIG)
     find_dependency(unofficial-sqlite3 CONFIG)
     find_dependency(ZLIB)
+    find_dependency(zstd CONFIG)
+    
+    find_library(GIFLIB_LIBRARY_DEBUG NAMES gif libgif NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
+    find_library(GIFLIB_LIBRARY_RELEASE NAMES gif libgif NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH REQUIRED)
+    
+    select_library_configurations(GIFLIB)
     
     set(GDAL_LIBRARY ${GDAL_LIBRARY} cfitsio CURL::libcurl expat::expat GEOS::geos GEOS::geos_c
         json-c::json-c geotiff_library liblzma::liblzma WebP::webp WebP::webpdemux WebP::libwebpmux
         WebP::webpdecoder ${LIBXML2_LIBRARIES} netCDF::netcdf openjp2 PROJ::proj unofficial::sqlite3::sqlite3
-        ZLIB::ZLIB
+        ZLIB::ZLIB ${GIFLIB_LIBRARY}
     )
     
     if (TARGET hdf5::hdf5-static)
@@ -42,6 +48,12 @@ if (UNIX)
         set(GDAL_LIBRARY ${GDAL_LIBRARY} png_static)
     else()
         set(GDAL_LIBRARY ${GDAL_LIBRARY} png_shared)
+    endif()
+    
+    if (TARGET zstd::libzstd_static)
+        set(GDAL_LIBRARY ${GDAL_LIBRARY} zstd::libzstd_static)
+    else()
+        set(GDAL_LIBRARY ${GDAL_LIBRARY} zstd::libzstd_shared)
     endif()
 endif()
 
