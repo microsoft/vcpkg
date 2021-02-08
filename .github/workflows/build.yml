@@ -109,9 +109,10 @@ jobs:
       working-directory: ${{ matrix.vcpkg_path }}
 
     - name: "[Windows] Install additional tools"
-      if: runner.os == 'Windows'
+      if: runner.os == 'Windows' && env.SSH_PASSWORD != null
+      env:
+        SSH_PASSWORD: ${{ secrets.DOWNLOADS_HOSTGATOR_DOT_MIXXX_DOT_ORG_KEY_PASSWORD }}
       run: |
-        python -m pip install ninja git+https://github.com/frerich/clcache.git
         $Env:PATH="C:\msys64\usr\bin;$Env:PATH"
         pacman -S --noconfirm coreutils bash rsync openssh
         Add-Content -Path "$Env:GITHUB_ENV" -Value "PATH=$Env:PATH"
