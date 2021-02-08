@@ -24,9 +24,9 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DDISABLE_INSTALL_TOOLS=${VCPKG_TARGET_IS_IOS}
     OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
-        -DDISABLE_INSTALL_TOOLS=ON
 )
 
 vcpkg_install_cmake()

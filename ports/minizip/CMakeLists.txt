@@ -57,15 +57,16 @@ if(ENABLE_BZIP2)
   target_compile_definitions(minizip PRIVATE -DHAVE_BZIP2=1)
 endif()
 
-add_executable(minizip_bin ${MIN_SRC}/minizip.c)
-add_executable(miniunz_bin ${MIN_SRC}/miniunz.c)
+if(NOT DISABLE_INSTALL_TOOLS)
+  add_executable(minizip_bin ${MIN_SRC}/minizip.c)
+  add_executable(miniunz_bin ${MIN_SRC}/miniunz.c)
 
-target_link_libraries(minizip_bin minizip ${MINIZIP_LIBRARIES})
-target_link_libraries(miniunz_bin minizip ${MINIZIP_LIBRARIES})
+  target_link_libraries(minizip_bin minizip ${MINIZIP_LIBRARIES})
+  target_link_libraries(miniunz_bin minizip ${MINIZIP_LIBRARIES})
 
-set_target_properties(minizip_bin PROPERTIES OUTPUT_NAME minizip)
-set_target_properties(miniunz_bin PROPERTIES OUTPUT_NAME miniunz)
-
+  set_target_properties(minizip_bin PROPERTIES OUTPUT_NAME minizip)
+  set_target_properties(miniunz_bin PROPERTIES OUTPUT_NAME miniunz)
+endif()
 
 install(
   TARGETS minizip
