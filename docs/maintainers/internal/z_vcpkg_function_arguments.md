@@ -23,4 +23,4 @@ endfunction()
 ```
 
 ## Source
-[scripts/cmake/z_vcpkg_cmake_function_arguments.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/z_vcpkg_cmake_function_arguments.cmake)
+[scripts/cmake/z_vcpkg_function_arguments.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/z_vcpkg_function_arguments.cmake)
