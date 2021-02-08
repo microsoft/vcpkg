@@ -11,11 +11,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 	benchmark SPDLOG_BUILD_BENCH
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(SPDLOG_BUILD_SHARED_LIBS ON)
-else()
-    set(SPDLOG_BUILD_SHARED_LIBS OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SPDLOG_BUILD_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -24,7 +20,7 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DSPDLOG_FMT_EXTERNAL=ON
         -DSPDLOG_INSTALL=ON
-        -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED_LIBS}
+        -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
 )
 
 vcpkg_install_cmake()
