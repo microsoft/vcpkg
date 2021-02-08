@@ -18,14 +18,17 @@ The Azure Pipelines artifacts directory. If not supplied, defaults to the curren
 .PARAMETER ArchivesRoot
 Equivalent to '-BinarySourceStub "files,$ArchivesRoot"'
 
+.PARAMETER UseEnvironmentSasToken
+Equivalent to '-BinarySourceStub "x-azblob,https://$($env:PROVISIONED_AZURE_STORAGE_NAME).blob.core.windows.net/archives,$($env:PROVISIONED_AZURE_STORAGE_SAS_TOKEN)"'
+
 .PARAMETER BinarySourceStub
 The type and parameters of the binary source. Shared across runs of this script. If
 this parameter is not set, binary caching will not be used. Example: "files,W:\"
 
 .PARAMETER BuildReason
 The reason Azure Pipelines is running this script (controls in which mode Binary Caching is used).
-If ArchivesRoot is not set, this parameter has no effect. If ArchivesRoot is set and this is not,
-binary caching will default to read-write mode.
+If BinarySourceStub is not set, this parameter has no effect. If BinarySourceStub is set and this is
+not, binary caching will default to read-write mode.
 #>
 
 [CmdletBinding(DefaultParameterSetName="ArchivesRoot")]
@@ -40,13 +43,36 @@ Param(
     $ArtifactStagingDirectory = '.',
     [Parameter(ParameterSetName='ArchivesRoot')]
     $ArchivesRoot = $null,
+    [switch]
+    $UseEnvironmentSasToken = $false,
     [Parameter(ParameterSetName='BinarySourceStub')]
     $BinarySourceStub = $null,
     $BuildReason = $null
 )
 
-if (-Not (Test-Path "triplets/$Triplet.cmake")) {
+if (-Not ((Test-Path "triplets/$Triplet.cmake") -or (Test-Path "triplets/community/$Triplet.cmake"))) {
     Write-Error "Incorrect triplet '$Triplet', please supply a valid triplet."
+    throw
+}
+
+$usingBinaryCaching = $true
+if ([string]::IsNullOrWhiteSpace($BinarySourceStub)) {
+    if ([string]::IsNullOrWhiteSpace($ArchivesRoot)) {
+        if ($UseEnvironmentSasToken) {
+            $BinarySourceStub = "x-azblob,https://$($env:PROVISIONED_AZURE_STORAGE_NAME).blob.core.windows.net/archives,$($env:PROVISIONED_AZURE_STORAGE_SAS_TOKEN)"
+        } else {
+            $usingBinaryCaching = $false
+        }
+    } else {
+        if ($UseEnvironmentSasToken) {
+            Write-Error "Only one binary caching setting may be used."
+            throw
+        } else {
+            $BinarySourceStub = "files,$ArchivesRoot"
+        }
+    }
+} elseif ((-Not [string]::IsNullOrWhiteSpace($ArchivesRoot)) -Or $UseEnvironmentSasToken) {
+    Write-Error "Only one binary caching setting may be used."
     throw
 }
 
@@ -55,7 +81,6 @@ $buildtreesRoot = Join-Path $WorkingRoot 'buildtrees'
 $installRoot = Join-Path $WorkingRoot 'installed'
 $packagesRoot = Join-Path $WorkingRoot 'packages'
 
-$usingBinaryCaching = -Not ([string]::IsNullOrWhiteSpace($ArchivesRoot)) -Or -Not ([string]::IsNullOrWhiteSpace($BinarySourceStub))
 $commonArgs = @()
 if ($usingBinaryCaching) {
     $commonArgs += @('--binarycaching')
@@ -84,12 +109,8 @@ if ($usingBinaryCaching) {
         Write-Host "Build reason was $BuildReason, using binary caching in write only mode."
         $binaryCachingMode = 'write'
     }
-    if ([string]::IsNullOrWhiteSpace($ArchivesRoot)) {
-        $commonArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
-    }
-    else {
-        $commonArgs += @("--binarysource=clear;files,$ArchivesRoot,$binaryCachingMode")
-    }
+
+    $commonArgs += @("--binarysource=clear;$BinarySourceStub,$binaryCachingMode")
 }
 
 if ($Triplet -eq 'x64-linux') {
@@ -119,7 +140,7 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
 # Install them so the CI succeeds:
 if ($Triplet -in @('x64-uwp', 'arm64-windows', 'arm-uwp')) {
     .\vcpkg.exe install protobuf:x86-windows boost-build:x86-windows sqlite3:x86-windows yasm-tool:x86-windows ampl-mp:x86-windows @commonArgs
-} elseif ($Triplet -in @('x64-windows', 'x64-windows-static')) {
+} elseif ($Triplet -in @('x64-windows', 'x64-windows-static', 'x64-windows-static-md')) {
     .\vcpkg.exe install yasm-tool:x86-windows @commonArgs
 }
 

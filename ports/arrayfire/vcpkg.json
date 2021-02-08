@@ -1,13 +1,12 @@
 {
   "name": "arrayfire",
   "version-string": "3.7.3",
+  "port-version": 3,
   "description": "ArrayFire is a general-purpose library that simplifies the process of developing software that targets parallel and massively-parallel architectures including CPUs, GPUs, and other hardware acceleration devices.",
   "supports": "x64",
   "dependencies": [
     "boost-compute",
     "boost-stacktrace",
-    "forge",
-    "freeimage",
     "glad",
     "spdlog"
   ],

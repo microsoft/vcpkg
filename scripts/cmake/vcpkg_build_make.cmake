@@ -26,8 +26,10 @@ IF the port supports the install target use vcpkg_install_make() instead of vcpk
 Specifies the Makefile as a relative path from the root of the sources passed to `vcpkg_configure_make()`
 
 ### BUILD_TARGET
-The target passed to the make build command (`./make <target>`). If not specified, the 'all' target will
-be passed.
+The target passed to the make build command (`./make <target>`). Defaults to 'all'.
+
+### INSTALL_TARGET
+The target passed to the make build command (`./make <target>`) if `ENABLE_INSTALL` is used. Defaults to 'install'.
 
 ### DISABLE_PARALLEL
 The underlying buildsystem will be instructed to not parallelize
@@ -37,7 +39,7 @@ Additional subdir to invoke make in. Useful if only parts of a port should be bu
 
 ## Notes:
 This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
-You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your CMake script supports the
+You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
 "install" target
 
 ## Examples
@@ -56,7 +58,7 @@ function(vcpkg_build_make)
     include("${_VCPKG_CMAKE_VARS_FILE}")
 
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE" "")
+    cmake_parse_arguments(PARSE_ARGV 0 _bc "ADD_BIN_TO_PATH;ENABLE_INSTALL;DISABLE_PARALLEL" "LOGFILE_ROOT;BUILD_TARGET;SUBPATH;MAKEFILE;INSTALL_TARGET" "")
 
     if(NOT _bc_LOGFILE_ROOT)
         set(_bc_LOGFILE_ROOT "build")
@@ -68,6 +70,10 @@ function(vcpkg_build_make)
 
     if (NOT _bc_MAKEFILE)
         set(_bc_MAKEFILE Makefile)
+    endif()
+
+    if(NOT _bc_INSTALL_TARGET)
+        set(_bc_INSTALL_TARGET "install")
     endif()
 
     if(WIN32)
@@ -93,7 +99,7 @@ function(vcpkg_build_make)
         string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
         # Don't know why '/cygdrive' is suddenly a requirement here. (at least for x264)
         string(REGEX REPLACE "([a-zA-Z]):/" "/cygdrive/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
-        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f ${_bc_MAKEFILE} install DESTDIR=${_VCPKG_PACKAGE_PREFIX})
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f ${_bc_MAKEFILE} ${_bc_INSTALL_TARGET} DESTDIR=${_VCPKG_PACKAGE_PREFIX})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
     else()
         # Compiler requriements
@@ -106,7 +112,7 @@ function(vcpkg_build_make)
         # Set make command and install command
         set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
         set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j 1 -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
-        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} -f ${_bc_MAKEFILE} install DESTDIR=${CURRENT_PACKAGES_DIR})
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} -f ${_bc_MAKEFILE} ${_bc_INSTALL_TARGET} DESTDIR=${CURRENT_PACKAGES_DIR})
     endif()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
@@ -230,6 +236,12 @@ function(vcpkg_build_make)
         file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
         file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}/" "${CURRENT_PACKAGES_DIR}")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
+    endif()
+
+    # Remove libtool files since they contain absolute paths and are not necessary. 
+    file(GLOB_RECURSE LIBTOOL_FILES "${CURRENT_PACKAGES_DIR}/**/*.la")
+    if(LIBTOOL_FILES)
+        file(REMOVE ${LIBTOOL_FILES})
     endif()
 
     if (CMAKE_HOST_WIN32)

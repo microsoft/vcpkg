@@ -1,8 +1,8 @@
 {
   "name": "flashlight-cuda",
-  "version-string": "20201120",
-  "port-version": 1,
+  "version-string": "20210111",
   "description": "A C++ standalone library for machine learning. CUDA backend.",
+  "homepage": "https://github.com/facebookresearch/flashlight",
   "supports": "!(windows | osx)",
   "default-features": [
     "fl"
@@ -13,9 +13,9 @@
       "dependencies": [
         {
           "name": "flashlight-cuda",
-          "default-features": false,
           "features": [
-            "fl"
+            "fl",
+            "lib"
           ]
         },
         "gflags",
@@ -35,15 +35,9 @@
         "cereal",
         "cuda",
         "cudnn",
-        {
-          "name": "flashlight-cuda",
-          "default-features": false,
-          "features": [
-            "lib"
-          ]
-        },
         "nccl",
-        "openmpi"
+        "openmpi",
+        "stb"
       ]
     },
     "imgclass": {
@@ -51,9 +45,9 @@
       "dependencies": [
         {
           "name": "flashlight-cuda",
-          "default-features": false,
           "features": [
-            "fl"
+            "fl",
+            "lib"
           ]
         },
         "gflags"
@@ -66,6 +60,19 @@
         "fftw3",
         "intel-mkl",
         "kenlm"
+      ]
+    },
+    "lm": {
+      "description": "flashlight lm app",
+      "dependencies": [
+        {
+          "name": "flashlight-cuda",
+          "features": [
+            "fl",
+            "lib"
+          ]
+        },
+        "gflags"
       ]
     }
   }

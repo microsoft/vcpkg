@@ -71,7 +71,7 @@ function(vcpkg_find_acquire_program VAR)
     set(PATHS ${DOWNLOADS}/tools/perl/${SUBDIR}/perl/bin)
     set(BREW_PACKAGE_NAME "perl")
     set(APT_PACKAGE_NAME "perl")
-    set(URL 
+    set(URL
       "https://strawberry.perl.bot/download/${PERL_VERSION}/strawberry-perl-${PERL_VERSION}-32bit.zip"
       "http://strawberryperl.com/download/${PERL_VERSION}/strawberry-perl-${PERL_VERSION}-32bit.zip"
     )
@@ -79,7 +79,7 @@ function(vcpkg_find_acquire_program VAR)
     set(HASH d353d3dc743ebdc6d1e9f6f2b7a6db3c387c1ce6c890bae8adc8ae5deae8404f4c5e3cf249d1e151e7256d4c5ee9cd317e6c41f3b6f244340de18a24b938e0c4)
   elseif(VAR MATCHES "NASM")
     set(PROGNAME nasm)
-    set(NASM_VERSION 2.14.02)
+    set(NASM_VERSION 2.15.05)
     set(PATHS ${DOWNLOADS}/tools/nasm/nasm-${NASM_VERSION})
     set(BREW_PACKAGE_NAME "nasm")
     set(APT_PACKAGE_NAME "nasm")
@@ -88,7 +88,7 @@ function(vcpkg_find_acquire_program VAR)
       "https://fossies.org/windows/misc/nasm-${NASM_VERSION}-win32.zip"
     )
     set(ARCHIVE "nasm-${NASM_VERSION}-win32.zip")
-    set(HASH a0f16a9f3b668b086e3c4e23a33ff725998e120f2e3ccac8c28293fd4faeae6fc59398919e1b89eed7461685d2730de02f2eb83e321f73609f35bf6b17a23d1e)
+    set(HASH 9412b8caa07e15eac8f500f6f8fab9f038d95dc25e0124b08a80645607cf5761225f98546b52eac7b894420d64f26c3cbf22c19cd286bbe583f7c964256c97ed)
   elseif(VAR MATCHES "YASM")
     set(PROGNAME yasm)
     set(YASM_VERSION 1.3.0.6.g1962)
@@ -257,13 +257,13 @@ function(vcpkg_find_acquire_program VAR)
     set(APT_PACKAGE_NAME "meson")
     set(BREW_PACKAGE_NAME "meson")
     set(SCRIPTNAME meson meson.py)
-    set(PATHS ${DOWNLOADS}/tools/meson/meson-91876b40316962620c1705ae14075ab46f8dd644)
-    set(URL "https://github.com/mesonbuild/meson/archive/91876b40316962620c1705ae14075ab46f8dd644.tar.gz")
-    set(ARCHIVE "meson-91876b40316962620c1705ae14075ab46f8dd644.tar.gz")
+    set(PATHS ${DOWNLOADS}/tools/meson/meson-f5871f434a5b768ad9fcafa797a6db0286421842)
+    set(URL "https://github.com/mesonbuild/meson/archive/f5871f434a5b768ad9fcafa797a6db0286421842.tar.gz")
+    set(ARCHIVE "meson-f5871f434a5b768ad9fcafa797a6db0286421842.tar.gz")
     #set(PATHS ${DOWNLOADS}/tools/meson/meson-${MESON_VERSION})
     #set(URL "https://github.com/mesonbuild/meson/releases/download/${MESON_VERSION}/meson-${MESON_VERSION}.tar.gz")
     #set(ARCHIVE "meson-${MESON_VERSION}.tar.gz")
-    set(HASH 784b740a01de70312f9240d38b683b2065f40572c87d30929386fe417b2cc70bcc86213c86e143f349c78121c9cc6d7392526d6e53512ae22a6ec0db57f26e3e)
+    set(HASH e8c36166b673acfccda54dcdbbc2414c9d0ce018debcdf6a09418f2f240edf14e72725188fe7ff7a3fcdc3942e8d1393e08a28d6f1bded4610f3ab836ab8e254)
     set(_vfa_SUPPORTED ON)
     set(VERSION_CMD --version)
   elseif(VAR MATCHES "FLEX" OR VAR MATCHES "BISON")
@@ -300,7 +300,7 @@ function(vcpkg_find_acquire_program VAR)
     set(PROGNAME clang)
     set(SUBDIR "clang-10.0.0")
     if(CMAKE_HOST_WIN32)
-      set(PATHS 
+      set(PATHS
         # Support LLVM in Visual Studio 2019
         "$ENV{LLVMInstallDir}/x64/bin"
         "$ENV{LLVMInstallDir}/bin"
@@ -314,7 +314,7 @@ function(vcpkg_find_acquire_program VAR)
       else()
         set(HOST_ARCH_ $ENV{PROCESSOR_ARCHITECTURE})
       endif()
-      
+
       if(HOST_ARCH_ MATCHES "64")
         set(URL "https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.0/LLVM-10.0.0-win64.exe")
         set(ARCHIVE "LLVM-10.0.0-win64.7z.exe")
@@ -360,7 +360,7 @@ function(vcpkg_find_acquire_program VAR)
     set(SCRIPTNAME "scons.py")
     set(URL "https://sourceforge.net/projects/scons/files/scons-local-${SCONS_VERSION}.zip/download")
     set(ARCHIVE "scons-local-${SCONS_VERSION}.zip")
-    set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727) 
+    set(HASH fe121b67b979a4e9580c7f62cfdbe0c243eba62a05b560d6d513ac7f35816d439b26d92fc2d7b7d7241c9ce2a49ea7949455a17587ef53c04a5f5125ac635727)
   elseif(VAR MATCHES "SWIG")
     set(SWIG_VERSION 4.0.2)
     set(PROGNAME swig)
@@ -441,14 +441,14 @@ function(vcpkg_find_acquire_program VAR)
       set(VERSION_CMD --version)
     elseif(CMAKE_HOST_WIN32)
       if(NOT EXISTS "${PKGCONFIG}")
-        set(VERSION 0.29.2-1)
+        set(VERSION 0.29.2-2)
         set(LIBWINPTHREAD_VERSION git-8.0.0.5906.c9a21571-1)
         vcpkg_acquire_msys(
           PKGCONFIG_ROOT
           NO_DEFAULT_PACKAGES
           DIRECT_PACKAGES
-            "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz"
-            3b1b706a24d9aef7bbdf3ce4427aaa813ba6fbd292ed9dda181b4300e117c3d59a159ddcca8b013fd01ce76da2d95d590314ff9628c0d68a6966bac4842540f0
+            "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.zst"
+            54f8dad3b1a36a4515db47825a3214fbd2bd82f604aec72e7fb8d79068095fda3c836fb2296acd308522d6e12ce15f69e0c26dcf4eb0681fd105d057d912cdb7
             "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${LIBWINPTHREAD_VERSION}-any.pkg.tar.zst"
             2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c
         )
@@ -468,7 +468,7 @@ function(vcpkg_find_acquire_program VAR)
     if(VERSION_CMD)
         vcpkg_execute_in_download_mode(
             COMMAND ${${VAR}} ${VERSION_CMD}
-            WORKING_DIRECTORY ${DOWNLOADS}
+            WORKING_DIRECTORY ${VCPKG_ROOT_DIR}
             OUTPUT_VARIABLE ${VAR}_VERSION_OUTPUT
         )
         string(STRIP "${${VAR}_VERSION_OUTPUT}" ${VAR}_VERSION_OUTPUT)
@@ -481,7 +481,7 @@ function(vcpkg_find_acquire_program VAR)
         endif()
     endif()
   endmacro()
-  
+
   macro(do_find)
     if(NOT DEFINED REQUIRED_INTERPRETER)
       find_program(${VAR} ${PROGNAME} PATHS ${PATHS} NO_DEFAULT_PATH)

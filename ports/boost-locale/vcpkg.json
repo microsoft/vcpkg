@@ -1,0 +1,35 @@
+{
+  "name": "boost-locale",
+  "version-string": "1.75.0",
+  "description": "Boost locale module",
+  "homepage": "https://github.com/boostorg/locale",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-assert",
+    "boost-build",
+    "boost-config",
+    "boost-function",
+    "boost-integer",
+    "boost-iterator",
+    "boost-modular-build-helper",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-system",
+    "boost-thread",
+    "boost-type-traits",
+    "boost-unordered",
+    "boost-vcpkg-helpers",
+    {
+      "name": "libiconv",
+      "platform": "!uwp & !windows & !mingw"
+    }
+  ],
+  "features": {
+    "icu": {
+      "description": "ICU backend for Boost.Locale",
+      "dependencies": [
+        "icu"
+      ]
+    }
+  }
+}

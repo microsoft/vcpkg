@@ -1,20 +1,38 @@
 diff --git a/Source/FreeImage.h b/Source/FreeImage.h
-index e2d1c5a..cc66b7d 100644
+index 12182cd..ebd0453 100644
 --- a/Source/FreeImage.h
 +++ b/Source/FreeImage.h
-@@ -410,7 +410,11 @@ FI_ENUM(FREE_IMAGE_FORMAT) {
+@@ -410,16 +410,20 @@ FI_ENUM(FREE_IMAGE_FORMAT) {
  	FIF_DDS		= 24,
  	FIF_GIF     = 25,
  	FIF_HDR		= 26,
 -	FIF_FAXG3	= 27,
+-	FIF_SGI		= 28,
+-	FIF_EXR		= 29,
+-	FIF_J2K		= 30,
+-	FIF_JP2		= 31,
+-	FIF_PFM		= 32,
+-	FIF_PICT	= 33,
+-	FIF_RAW		= 34,
+-	FIF_WEBP	= 35,
+-	FIF_JXR		= 36
 +/* vcpkg: The G3 fax format plugin is deliberately disabled in our build of
 +   FreeImage, since it requires usage of the vendored copy of libtiff. */
 +#if 0
 + 	FIF_FAXG3	= 27,
 +#endif
- 	FIF_SGI		= 28,
- 	FIF_EXR		= 29,
- 	FIF_J2K		= 30,
++	FIF_SGI		= 27,
++	FIF_EXR		= 28,
++	FIF_J2K		= 29,
++	FIF_JP2		= 30,
++	FIF_PFM		= 31,
++	FIF_PICT	= 32,
++	FIF_RAW		= 33,
++	FIF_WEBP	= 34,
++	FIF_JXR		= 35
+ };
+ 
+ /** Image type used in FreeImage.
 @@ -476,6 +480,9 @@ FI_ENUM(FREE_IMAGE_DITHER) {
  /** Lossless JPEG transformations
  Constants used in FreeImage_JPEGTransform
@@ -33,7 +51,7 @@ index e2d1c5a..cc66b7d 100644
  
  /** Tone mapping operators.
  Constants used in FreeImage_ToneMapping.
-@@ -1077,6 +1085,9 @@ DLL_API const char* DLL_CALLCONV FreeImage_TagToString(FREE_IMAGE_MDMODEL model,
+@@ -1089,6 +1097,9 @@ DLL_API const char* DLL_CALLCONV FreeImage_TagToString(FREE_IMAGE_MDMODEL model,
  // JPEG lossless transformation routines
  // --------------------------------------------------------------------------
  
@@ -43,7 +61,7 @@ index e2d1c5a..cc66b7d 100644
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransform(const char *src_file, const char *dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect FI_DEFAULT(TRUE));
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformU(const wchar_t *src_file, const wchar_t *dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect FI_DEFAULT(TRUE));
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGCrop(const char *src_file, const char *dst_file, int left, int top, int right, int bottom);
-@@ -1085,7 +1096,7 @@ DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformFromHandle(FreeImageIO* src_io,
+@@ -1097,7 +1108,7 @@ DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformFromHandle(FreeImageIO* src_io,
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformCombined(const char *src_file, const char *dst_file, FREE_IMAGE_JPEG_OPERATION operation, int* left, int* top, int* right, int* bottom, BOOL perfect FI_DEFAULT(TRUE));
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformCombinedU(const wchar_t *src_file, const wchar_t *dst_file, FREE_IMAGE_JPEG_OPERATION operation, int* left, int* top, int* right, int* bottom, BOOL perfect FI_DEFAULT(TRUE));
  DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransformCombinedFromMemory(FIMEMORY* src_stream, FIMEMORY* dst_stream, FREE_IMAGE_JPEG_OPERATION operation, int* left, int* top, int* right, int* bottom, BOOL perfect FI_DEFAULT(TRUE));
@@ -53,7 +71,7 @@ index e2d1c5a..cc66b7d 100644
  // --------------------------------------------------------------------------
  // Image manipulation toolkit
 diff --git a/Source/FreeImage/Plugin.cpp b/Source/FreeImage/Plugin.cpp
-index 57ebffd..a93440f 100644
+index 11e7294..0119ba7 100644
 --- a/Source/FreeImage/Plugin.cpp
 +++ b/Source/FreeImage/Plugin.cpp
 @@ -263,7 +263,11 @@ FreeImage_Initialise(BOOL load_local_plugins_only) {
