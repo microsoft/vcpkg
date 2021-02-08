@@ -60,6 +60,7 @@ jobs:
         taglib
         wavpack
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.vcpkg_triplet }}
+      VCPKG_OVERLAY_PORTS: overlay/ports
       MIXXX_VERSION: 2.3
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -89,11 +90,13 @@ jobs:
     - name: Check available disk space
       run: ${{ matrix.check_disk_space }}
 
-    - name: Build packages
-      run: ./vcpkg upgrade --no-dry-run && ./vcpkg install --clean-after-build ${{ env.VCPKG_PACKAGES }}
+    - name: Upgrade packages in cache
+      run: ./vcpkg upgrade --no-dry-run
       working-directory: ${{ matrix.vcpkg_path }}
-      env:
-        VCPKG_OVERLAY_PORTS: overlay/ports
+
+    - name: Build packages
+      run: ./vcpkg install --clean-after-build ${{ env.VCPKG_PACKAGES }}
+      working-directory: ${{ matrix.vcpkg_path }}
 
     - name: Upload GitHub Actions artifacts of build logs
       if: always()
