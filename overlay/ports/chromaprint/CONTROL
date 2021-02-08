@@ -1,5 +1,0 @@
-Source: chromaprint
-Version: 1.5.0
-Description: C library for generating audio fingerprints used by AcoustID
-Homepage: https://github.com/acoustid/chromaprint
-Build-Depends: ffmpeg
