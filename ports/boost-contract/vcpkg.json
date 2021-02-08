@@ -1,0 +1,28 @@
+{
+  "name": "boost-contract",
+  "version-string": "1.75.0",
+  "description": "Boost contract module",
+  "homepage": "https://github.com/boostorg/contract",
+  "dependencies": [
+    "boost-any",
+    "boost-assert",
+    "boost-build",
+    "boost-config",
+    "boost-core",
+    "boost-detail",
+    "boost-exception",
+    "boost-function",
+    "boost-function-types",
+    "boost-modular-build-helper",
+    "boost-mpl",
+    "boost-optional",
+    "boost-preprocessor",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-thread",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}
