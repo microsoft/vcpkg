@@ -1,6 +1,6 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID" ON_ARCH "arm")
+vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
