@@ -1,0 +1,11 @@
+{
+  "name": "fdk-aac",
+  "version-string": "2021-02-03",
+  "description": "A standalone library of the Fraunhofer FDK AAC code from the Android Open Source Project. Uses a fork without HE-AAC, HE-AACv2, or xHE-AAC support to avoid patent licensing and GPL compatibility issues when built without the he-aac option.",
+  "homepage": "https://github.com/mstorsjo/fdk-aac",
+  "features": {
+    "he-aac": {
+      "description": "Support patent-encumbered HE-AAC, HE-AACv2, and xHE-AAC codec profiles. Do not distribute binaries with this option without the relevant patent licenses if you are in a jurisdiction that recognizes software patents. Might not be compatible with the GPL depending on legal interpretation. Refer to https://bugzilla.redhat.com/show_bug.cgi?id=1501522#c112"
+    }
+  }
+}

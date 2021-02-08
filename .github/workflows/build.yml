@@ -24,6 +24,7 @@ jobs:
       VCPKG_PACKAGES: >-
         angle
         chromaprint
+        fdk-aac
         ffmpeg
         fftw3
         hidapi
