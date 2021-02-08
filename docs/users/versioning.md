@@ -5,6 +5,8 @@
 Versioning allows you to deterministically control the precise revisions of dependencies used by
 your project from within your manifest file.
 
+See our guide to [getting started with versioning](versioning.getting-started.md).
+
 ## Version schemes
 
 ### Schemes
