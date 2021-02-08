@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index a119408..deff291 100644
+index 5ade734..54071bd 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.0)
@@ -11,24 +11,29 @@ index a119408..deff291 100644
  
  set(CMAKE_LIBRARY_PATH /opt/local/lib ${CMAKE_LIBRARY_PATH})
  
-@@ -51,7 +53,8 @@ link_libraries(bigint::bigint)
+@@ -43,8 +45,8 @@ if(WIN32)
+ endif()
  
  # OpenCV classes
- find_package(OpenCV)
+-find_package(OpenCV)
 -if(OpenCV_FOUND)
 +if(WITH_OPENCV)
 +    find_package(OpenCV REQUIRED)
      list(APPEND LIBZXING_FILES
          opencv/src/zxing/MatSource.cpp
          opencv/src/zxing/MatSource.h
-@@ -65,8 +68,8 @@ include_directories(core/src)
+@@ -58,10 +60,10 @@ include_directories(core/src)
  add_library(libzxing ${LIBZXING_FILES})
  set_target_properties(libzxing PROPERTIES PREFIX "")
  
 -find_package(Iconv)
 -if(ICONV_FOUND)
+-    include_directories(${ICONV_INCLUDE_DIR})
+-    target_link_libraries(libzxing ${ICONV_LIBRARIES})
 +if(WITH_ICONV)
 +    find_package(Iconv REQUIRED)
-     include_directories(${Iconv_INCLUDE_DIRS})
-     target_link_libraries(libzxing ${Iconv_LIBRARIES})
++    include_directories(${Iconv_INCLUDE_DIRS})
++    target_link_libraries(libzxing ${Iconv_LIBRARIES})
  else()
+     add_definitions(-DNO_ICONV=1)
+ endif()

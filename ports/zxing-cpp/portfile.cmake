@@ -9,7 +9,7 @@ vcpkg_from_github(
     PATCHES
         0001-opencv4-compat.patch
         0002-improve-features.patch
-        fix-dependency-bigint.patch
+        0003-fix-dependency-bigint.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindModules/FindIconv.cmake)
