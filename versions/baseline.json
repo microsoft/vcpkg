@@ -137,7 +137,7 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "10.1.0",
+      "baseline": "10.2.0",
       "port-version": 0
     },
     "arrayfire": {
@@ -145,8 +145,8 @@
       "port-version": 3
     },
     "arrow": {
-      "baseline": "1.0.1",
-      "port-version": 2
+      "baseline": "3.0.0",
+      "port-version": 0
     },
     "ashes": {
       "baseline": "2020-10-21",
@@ -244,6 +244,14 @@
       "baseline": "2020-12-09",
       "port-version": 0
     },
+    "azure-core-cpp": {
+      "baseline": "1.0.0-beta.5",
+      "port-version": 0
+    },
+    "azure-identity-cpp": {
+      "baseline": "1.0.0-beta.3",
+      "port-version": 0
+    },
     "azure-iot-sdk-c": {
       "baseline": "2020-12-09",
       "port-version": 0
@@ -256,8 +264,20 @@
       "baseline": "2020-06-17",
       "port-version": 2
     },
+    "azure-storage-blobs-cpp": {
+      "baseline": "12.0.0-beta.7",
+      "port-version": 0
+    },
+    "azure-storage-common-cpp": {
+      "baseline": "12.0.0-beta.7",
+      "port-version": 0
+    },
     "azure-storage-cpp": {
       "baseline": "7.5.0",
+      "port-version": 0
+    },
+    "azure-storage-files-datalake-cpp": {
+      "baseline": "12.0.0-beta.7",
       "port-version": 0
     },
     "azure-uamqp-c": {
@@ -1042,7 +1062,7 @@
     },
     "cairo": {
       "baseline": "1.16.0",
-      "port-version": 8
+      "port-version": 9
     },
     "cairomm": {
       "baseline": "1.15.3",
@@ -1162,6 +1182,10 @@
     },
     "chmlib": {
       "baseline": "0.40-4",
+      "port-version": 0
+    },
+    "chromaprint": {
+      "baseline": "1.5.0",
       "port-version": 0
     },
     "chromium-base": {
@@ -1530,7 +1554,7 @@
     },
     "date": {
       "baseline": "3.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "dav1d": {
       "baseline": "0.8.1",
@@ -1665,7 +1689,7 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.1.0",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "dtl": {
@@ -1837,7 +1861,7 @@
       "port-version": 2
     },
     "fast-cpp-csv-parser": {
-      "baseline": "2019-08-14",
+      "baseline": "2021-01-03",
       "port-version": 0
     },
     "fastcdr": {
@@ -2213,7 +2237,7 @@
       "port-version": 3
     },
     "google-cloud-cpp": {
-      "baseline": "1.23.0",
+      "baseline": "1.24.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -2866,7 +2890,7 @@
     },
     "libconfig": {
       "baseline": "1.7.2",
-      "port-version": 3
+      "port-version": 4
     },
     "libconfuse": {
       "baseline": "2019-07-14",
@@ -2908,8 +2932,16 @@
       "baseline": "3.0",
       "port-version": 0
     },
+    "libdjinterop": {
+      "baseline": "0.14.6",
+      "port-version": 0
+    },
     "libdshowcapture": {
       "baseline": "0.6.0-1",
+      "port-version": 0
+    },
+    "libebur128": {
+      "baseline": "1.2.5",
       "port-version": 0
     },
     "libepoxy": {
@@ -2934,7 +2966,7 @@
     },
     "libffi": {
       "baseline": "3.3",
-      "port-version": 6
+      "port-version": 7
     },
     "libflac": {
       "baseline": "1.3.3",
@@ -2957,7 +2989,7 @@
       "port-version": 0
     },
     "libgcrypt": {
-      "baseline": "1.8.6",
+      "baseline": "1.8.7",
       "port-version": 0
     },
     "libgd": {
@@ -3026,7 +3058,7 @@
     },
     "libidn2": {
       "baseline": "2.3.0",
-      "port-version": 1
+      "port-version": 2
     },
     "libigl": {
       "baseline": "2.2.0",
@@ -3045,8 +3077,8 @@
       "port-version": 0
     },
     "libjpeg-turbo": {
-      "baseline": "2.0.5",
-      "port-version": 4
+      "baseline": "2.0.6",
+      "port-version": 0
     },
     "libjuice": {
       "baseline": "0.6.0",
@@ -3242,7 +3274,7 @@
     },
     "libpqxx": {
       "baseline": "7.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "libprotobuf-mutator": {
       "baseline": "1.0",
@@ -3301,7 +3333,7 @@
       "port-version": 0
     },
     "libsamplerate": {
-      "baseline": "0.2.0",
+      "baseline": "0.2.1",
       "port-version": 0
     },
     "libsass": {
@@ -3321,8 +3353,8 @@
       "port-version": 0
     },
     "libsndfile": {
-      "baseline": "1.0.30",
-      "port-version": 1
+      "baseline": "1.0.31",
+      "port-version": 0
     },
     "libsodium": {
       "baseline": "1.0.18",
@@ -3558,7 +3590,7 @@
     },
     "log4cxx": {
       "baseline": "0.11.0",
-      "port-version": 1
+      "port-version": 2
     },
     "loguru": {
       "baseline": "2.1.0-1",
@@ -3609,7 +3641,7 @@
       "port-version": 0
     },
     "magic-enum": {
-      "baseline": "0.7.1",
+      "baseline": "0.7.2",
       "port-version": 0
     },
     "magic-get": {
@@ -3705,8 +3737,8 @@
       "port-version": 7
     },
     "metrohash": {
-      "baseline": "1.1.3-1",
-      "port-version": 0
+      "baseline": "1.1.3",
+      "port-version": 2
     },
     "mgnlibs": {
       "baseline": "2019-09-29",
@@ -3933,7 +3965,7 @@
       "port-version": 0
     },
     "nameof": {
-      "baseline": "0.9.4",
+      "baseline": "0.10.0",
       "port-version": 0
     },
     "nana": {
@@ -4022,7 +4054,7 @@
     },
     "ngspice": {
       "baseline": "33",
-      "port-version": 0
+      "port-version": 1
     },
     "nifticlib": {
       "baseline": "2020-04-30",
@@ -4205,8 +4237,8 @@
       "port-version": 0
     },
     "opencascade": {
-      "baseline": "7.4.0",
-      "port-version": 3
+      "baseline": "7.5.0",
+      "port-version": 0
     },
     "opencc": {
       "baseline": "2020-04-26",
@@ -4462,7 +4494,7 @@
     },
     "pcl": {
       "baseline": "1.11.1",
-      "port-version": 1
+      "port-version": 2
     },
     "pcre": {
       "baseline": "8.44",
@@ -4518,7 +4550,7 @@
     },
     "physx": {
       "baseline": "4.1.1",
-      "port-version": 6
+      "port-version": 7
     },
     "picojson": {
       "baseline": "1.3.0-1",
@@ -5006,7 +5038,7 @@
     },
     "raylib": {
       "baseline": "3.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "rbdl": {
       "baseline": "2.6.0",
@@ -5297,7 +5329,7 @@
       "port-version": 0
     },
     "shaderwriter": {
-      "baseline": "2020-10-15",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "shapelib": {
