@@ -10,7 +10,7 @@
     },
     "abseil": {
       "baseline": "2020-09-23",
-      "port-version": 1
+      "port-version": 2
     },
     "absent": {
       "baseline": "0.3.1",
@@ -277,6 +277,10 @@
       "port-version": 0
     },
     "azure-storage-files-datalake-cpp": {
+      "baseline": "12.0.0-beta.7",
+      "port-version": 0
+    },
+    "azure-storage-files-shares-cpp": {
       "baseline": "12.0.0-beta.7",
       "port-version": 0
     },
@@ -1669,7 +1673,7 @@
       "port-version": 0
     },
     "doctest": {
-      "baseline": "2.4.0",
+      "baseline": "2.4.5",
       "port-version": 0
     },
     "double-conversion": {
@@ -2125,8 +2129,8 @@
       "port-version": 0
     },
     "geos": {
-      "baseline": "3.8.1",
-      "port-version": 1
+      "baseline": "3.9.0",
+      "port-version": 0
     },
     "geotrans": {
       "baseline": "3.8",
@@ -2310,7 +2314,7 @@
     },
     "gtest": {
       "baseline": "1.10.0",
-      "port-version": 3
+      "port-version": 4
     },
     "gtk": {
       "baseline": "3.22.19-4",
@@ -4030,7 +4034,7 @@
     },
     "netcdf-c": {
       "baseline": "4.7.4",
-      "port-version": 1
+      "port-version": 2
     },
     "netcdf-cxx4": {
       "baseline": "4.3.1",
@@ -4081,7 +4085,7 @@
       "port-version": 0
     },
     "nng": {
-      "baseline": "1.3.2",
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "nngpp": {
@@ -5510,7 +5514,7 @@
     },
     "spdlog": {
       "baseline": "1.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "spectra": {
       "baseline": "0.9.0",
