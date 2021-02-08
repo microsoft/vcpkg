@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_TARGET "uwp" "ios" "android")
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "ios" "android")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alibaba/MNN
@@ -19,10 +19,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opencl      MNN_OPENCL
 )
 
-if(FEATURE_OPTIONS MATCHES "MNN_BUILD_TEST=ON")
+if("test" IN_LIST FEATURES)
     list(APPEND BUILD_OPTIONS -DMNN_BUILD_BENCHMARK=ON)
 endif()
-if(FEATURE_OPTIONS MATCHES "MNN_BUILD_TOOLS=ON")
+if("tools" IN_LIST FEATURES)
     list(APPEND BUILD_OPTIONS -DMNN_BUILD_QUANTOOLS=ON
                               -DMNN_BUILD_TRAIN=ON 
                               -DMNN_BUILD_DEMO=ON 
@@ -30,12 +30,10 @@ if(FEATURE_OPTIONS MATCHES "MNN_BUILD_TOOLS=ON")
                               -DMNN_BUILD_CONVERTER=ON
     )
 endif()
-if(FEATURE_OPTIONS MATCHES "MNN_CUDA=ON" OR
-   FEATURE_OPTIONS MATCHES "MNN_VULKAN=ON")
+if("cuda" IN_LIST FEATURES OR "vulkan" IN_LIST FEATURES)
     list(APPEND BUILD_OPTIONS -DMNN_GPU_TRACE=ON)
 endif()
-if(FEATURE_OPTIONS MATCHES "MNN_OPENCL=ON" OR
-   FEATURE_OPTIONS MATCHES "MNN_VULKAN=ON")
+if("opencl" IN_LIST FEATURES OR "vulkan" IN_LIST FEATURES)
     list(APPEND BUILD_OPTIONS -DMNN_USE_SYSTEM_LIB=ON)
 endif()
 
@@ -56,6 +54,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
     OPTIONS
         -DMNN_BUILD_SHARED_LIBS=${BUILD_SHARED}
         -DMNN_SEP_BUILD=OFF # build with backends/expression
@@ -65,19 +64,42 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT})
 
 file(INSTALL ${CURRENT_PORT_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     file(RENAME ${CURRENT_PACKAGES_DIR}/bin/mnn.metallib
                 ${CURRENT_PACKAGES_DIR}/share/${PORT}/mnn.metallib)
-endif()
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin
-                        ${CURRENT_PACKAGES_DIR}/debug/bin
-                        ${CURRENT_PACKAGES_DIR}/debug/include)
 else()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
-                        ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
 endif()
 
-vcpkg_fixup_cmake_targets()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+if("test" IN_LIST FEATURES)
+    # no install(TARGETS) for the following binaries. check the buildtrees...
+    # vcpkg_copy_tools(
+    #     TOOL_NAMES run_test.out benchmark.out benchmarkExprModels.out # test/
+    #     AUTO_CLEAN
+    # )
+endif()
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES MNNV2Basic.out mobilenetTest.out backendTest.out testModel.out testModelWithDescrisbe.out getPerformance.out checkInvalidValue.out timeProfile.out # tools/cpp
+                   quantized.out # tools/quantization
+                   classficationTopkEval.out # tools/evaluation
+                   MNNDump2Json MNNConvert # tools/converter
+                   transformer.out train.out dataTransformer.out runTrainDemo.out # tools/train
+        AUTO_CLEAN
+    )
+    if(BUILD_SHARED)
+        vcpkg_copy_tools(TOOL_NAMES TestConvertResult AUTO_CLEAN) # tools/converter
+    endif()
+    if(VCPKG_TARGET_IS_OSX)
+        # no install(TARGETS) for the following binaries. check the buildtrees...
+        # vcpkg_copy_tools(
+        #     TOOL_NAMES checkDir.out checkFile.out winogradExample.out winogradGenerateGLSL.out winogradGenerateCL.out # tools/cpp
+        #     AUTO_CLEAN
+        # )
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin) # remove the others. ex) mnn.metallib
+    endif()
+endif()

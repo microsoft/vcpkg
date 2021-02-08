@@ -3820,6 +3820,10 @@
       "baseline": "2019-09-29",
       "port-version": 0
     },
+    "mnn": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "modp-base64": {
       "baseline": "2020-09-26",
       "port-version": 0

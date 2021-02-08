@@ -12,14 +12,14 @@
   ],
   "features": {
     "cuda": {
-      "description": "Enable CUDA API usage",
+      "description": "Enable CUDA API backend",
       "dependencies": [
         "cuda",
         "cudnn"
       ]
     },
     "opencl": {
-      "description": "Enable OpenCL API usage",
+      "description": "Enable OpenCL API backend",
       "dependencies": [
         "opencl"
       ]
@@ -34,7 +34,7 @@
       ]
     },
     "vulkan": {
-      "description": "Enable Vulkan API usage",
+      "description": "Enable Vulkan API backend",
       "dependencies": [
         "vulkan"
       ]
