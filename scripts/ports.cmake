@@ -126,7 +126,7 @@ if(CMD MATCHES "^BUILD$")
     include(vcpkg_test_cmake)
 
     include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
-    include("${SCRIPTS}/cmake/z_vcpkg_cmake_function_arguments.cmake")
+    include("${SCRIPTS}/cmake/z_vcpkg_function_arguments.cmake")
 
     include(${CURRENT_PORT_DIR}/portfile.cmake)
     if(DEFINED PORT)
