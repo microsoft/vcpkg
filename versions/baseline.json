@@ -3798,7 +3798,7 @@
     },
     "minizip": {
       "baseline": "1.2.11",
-      "port-version": 7
+      "port-version": 8
     },
     "mio": {
       "baseline": "2019-02-10",
