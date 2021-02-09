@@ -9,6 +9,7 @@
     "libpng",
     "lzo",
     "pixman",
+    "pthread",
     "zlib"
   ],
   "default-features": [
