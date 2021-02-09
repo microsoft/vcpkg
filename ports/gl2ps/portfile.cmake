@@ -2,8 +2,8 @@ vcpkg_from_gitlab(
     GITLAB_URL http://gitlab.onelab.info
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gl2ps/gl2ps
-    REF gl2ps_1_4_0
-    SHA512 ee10e3fd312eae896934c39b8d115f28017874f918e4dd3350ca8f7cbf47dfc44101a5c6eb8826707620fcc336ca51ddc4eb7bf653af4b27651277625bac3cce
+    REF gl2ps_1_4_2
+    SHA512 cb4abd79f6790e229a0b05a6d12e4bd4d24885c89c4cb8644e49b0459361565c5c5379b53d85f59eeaba16144d3288dbd06c90f55a739f0928a788224ccb8085
     HEAD_REF master
     PATCHES separate-static-dynamic-build.patch
 )
@@ -17,5 +17,5 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING.GL2PS DESTINATION ${CURRENT_PACKAGES_DIR}/share/gl2ps RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/COPYING.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/gl2ps RENAME copyright.LGPL)
+file(INSTALL ${SOURCE_PATH}/COPYING.GL2PS DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.LGPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright.LGPL)
