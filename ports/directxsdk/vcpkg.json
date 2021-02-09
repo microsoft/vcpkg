@@ -4,7 +4,7 @@
   "port-version": 1,
   "description": "Legacy DirectX SDK",
   "homepage": "https://docs.microsoft.com/en-us/windows/win32/directx-sdk--august-2009-",
-  "supports": "windows & !arm & !uwp",
+  "supports": "windows & !windows",
   "features": {
     "xaudio2-7": {
       "description": "Include headers/libs for legacy XAudio 2.7 (prefer use of XAudio2Redist)"

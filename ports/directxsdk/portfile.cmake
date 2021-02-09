@@ -1,6 +1,6 @@
 vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID" ON_ARCH "arm")
 
-message(WARNING "Build ${PORT} is deprecated, and requires the use of the DirectSetup legacy REDIST solution. See https://aka.ms/dxsdk for more information.")
+message(WARNING "Build ${PORT} is deprecated, untested in CI, and requires the use of the DirectSetup legacy REDIST solution. See https://aka.ms/dxsdk for more information.")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://archive.org/download/dxsdk_2010/DXSDK_Jun10.exe"
