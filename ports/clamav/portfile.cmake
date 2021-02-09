@@ -1,4 +1,5 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
@@ -10,13 +11,7 @@ vcpkg_from_github(
       "build.patch"
       "cmakefiles.patch"
       "curl.patch"
-      "static_unrar.patch"
-      "static_libclammspack.patch"
-      "static_iconv.patch"
 )
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
 
 vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
@@ -24,8 +19,8 @@ vcpkg_configure_cmake(
   OPTIONS
       -DENABLE_LIBCLAMAV_ONLY=ON
       -DENABLE_DOCS=OFF
-      -DENABLE_SHARED_LIB=${ENABLE_SHARED}
-      -DENABLE_STATIC_LIB=${ENABLE_STATIC}
+      -DENABLE_SHARED_LIB=ON
+      -DENABLE_STATIC_LIB=OFF
 )
 
 vcpkg_install_cmake()
