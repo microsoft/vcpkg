@@ -1652,6 +1652,10 @@
       "baseline": "2.2.6",
       "port-version": 0
     },
+    "discreture": {
+      "baseline": "2020-01-29",
+      "port-version": 0
+    },
     "distorm": {
       "baseline": "3.4.1",
       "port-version": 0
