@@ -1,0 +1,9 @@
+{
+  "name": "workflow",
+  "version-string": "0.9.3",
+  "homepage": "https://github.com/sogou/workflow",
+  "description": "About C++ Parallel Computing and Asynchronous Networking Engine",
+  "dependencies": [
+    "openssl"
+  ]
+}
