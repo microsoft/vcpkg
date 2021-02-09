@@ -1,8 +1,25 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 96d6c6a..9d3dd24 100755
+index 6df5dac..b79036d 100755
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -72,9 +72,9 @@ if(WIN32)
+@@ -5,13 +5,11 @@ project(drogon)
+ message(STATUS "compiler: " ${CMAKE_CXX_COMPILER_ID})
+ include(CheckCXXSourceRuns)
+ check_cxx_source_runs(
+-        ${PROJECT_SOURCE_DIR}/cmake/tests/binary_compatibility_test.cc
+-        cross_compiling)
++        "int main(){return 0;}"
++        not_cross_compiling)
+ 
+-if(cross_compiling)
++if(!not_cross_compiling)
+   set(BUILD_PROGRAMS OFF)
+-else(cross_compiling)
+-  set(BUILD_PROGRAMS ON)
+ endif()
+ 
+ option(BUILD_CTL "Build drogon_ctl" ${BUILD_PROGRAMS})
+@@ -84,9 +82,9 @@ if(WIN32)
      PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/mman-win32>)
  endif(WIN32)
  
@@ -13,8 +30,8 @@ index 96d6c6a..9d3dd24 100755
 +target_link_libraries(${PROJECT_NAME} PUBLIC Trantor::Trantor)
  
  if(NOT WIN32)
-   target_link_libraries(${PROJECT_NAME} PRIVATE dl)
-@@ -169,11 +169,11 @@ endif(NOT WIN32)
+   if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "OpenBSD")
+@@ -183,11 +181,11 @@ endif(NOT WIN32)
  
  if(BUILD_ORM)
    # find postgres
@@ -31,3 +48,12 @@ index 96d6c6a..9d3dd24 100755
      set(DROGON_SOURCES ${DROGON_SOURCES}
                         orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc)
      if(LIBPQ_BATCH_MODE)
+@@ -206,7 +204,7 @@ if(BUILD_ORM)
+       set(DROGON_SOURCES ${DROGON_SOURCES}
+                          orm_lib/src/postgresql_impl/PgConnection.cc)
+     endif(libpq_supports_batch)
+-  endif(pg_FOUND)
++  endif(PostgreSQL_FOUND)
+ 
+   # Find mysql, only mariadb client liberary is supported
+   find_package(MySQL)

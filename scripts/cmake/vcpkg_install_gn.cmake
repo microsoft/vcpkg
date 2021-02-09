@@ -1,23 +1,25 @@
-## # vcpkg_install_gn
-##
-## Installs a GN project
-##
-## ## Usage:
-## ```cmake
-## vcpkg_install_gn(
-##      SOURCE_PATH <SOURCE_PATH>
-##      [TARGETS <target>...]
-## )
-## ```
-##
-## ## Parameters:
-## ### SOURCE_PATH
-## The path to the source directory
-## 
-## ### TARGETS
-## Only install the specified targets.
-##
-## Note: includes must be handled separately
+#[===[.md:
+# vcpkg_install_gn
+
+Installs a GN project
+
+## Usage:
+```cmake
+vcpkg_install_gn(
+     SOURCE_PATH <SOURCE_PATH>
+     [TARGETS <target>...]
+)
+```
+
+## Parameters:
+### SOURCE_PATH
+The path to the source directory
+
+### TARGETS
+Only install the specified targets.
+
+Note: includes must be handled separately
+#]===]
 
 function(vcpkg_install_gn)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased

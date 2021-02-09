@@ -3,13 +3,11 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kcat/openal-soft
-    REF f5e0eef34db3a3ab94b61a2f99f84f078ba947e7 # openal-soft-1.20.1
-    SHA512 3b05e67406e594215bc5a5e684feafa05ae3b6c898f5b91ab923c59688d7bc4f37f7a9f3bbc8ae252f8997d2588dc2766f44866eb095f0f53cb42030596d26a5
+    REF ae4eacf147e2c2340cc4e02a790df04c793ed0a9 # openal-soft-1.21.1
+    SHA512 6ba006d3dad6efe002f285ff509a59f02b499ec3f6065df12a89c52355464117b4dbabcd04ee9cbf22cc3b4125c8e456769b172f8c3e9ee215e760b2c51a0a8f
     HEAD_REF master
     PATCHES
         dont-export-symbols-in-static-build.patch
-        fix-arm-builds.patch
-        fix-mingw-build.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -54,9 +52,9 @@ vcpkg_configure_cmake(
         -DALSOFT_BACKEND_JACK=OFF
         -DALSOFT_BACKEND_OPENSL=OFF
         -DALSOFT_BACKEND_WAVE=ON
-        -DALSOFT_REQUIRE_WINMM=${ALSOFT_REQUIRE_WINDOWS}
-        -DALSOFT_REQUIRE_DSOUND=${ALSOFT_REQUIRE_WINDOWS}
-        -DALSOFT_REQUIRE_MMDEVAPI=${ALSOFT_REQUIRE_WINDOWS}
+        -DALSOFT_BACKEND_WINMM=OFF
+        -DALSOFT_BACKEND_DSOUND=OFF
+        -DALSOFT_REQUIRE_WASAPI=${ALSOFT_REQUIRE_WINDOWS}
         -DALSOFT_CPUEXT_NEON=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_WindowsSDK=ON
 )
@@ -74,7 +72,8 @@ foreach(HEADER al.h alc.h)
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/AL/${HEADER} "${AL_H}")
 endforeach()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 

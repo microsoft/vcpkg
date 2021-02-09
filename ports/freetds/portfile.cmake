@@ -1,12 +1,11 @@
+vcpkg_fail_port_install(ON_TARGET "uwp" "linux" "osx")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO freetds/freetds
-    REF fbf3bbbbc27283b35a5a6aec9992521e684c9abf # 1.2.5
+    REF 16f7a6280c7a19bfe5c60e5d61cc08e3f2dff991 # See https://github.com/microsoft/vcpkg/pull/14120#issuecomment-715896755
     HEAD_REF master
-    SHA512 e18dba16705db951ea52055476fac342c1bb62e90629ef82064ad9d3d4a7f2078e8f7674b1602bc21798240e005052dcbc67cdd0912b47163bd95956128c4677
-    PATCHES
-        skip-unit-tests.patch
-        fix-encoding-h-dependency.patch
+    SHA512 34ff10764156bac24444a74b636fafa56adc0097a62a3f3249d4bc09a0cdcaa88aa0c4f26761260c56dd47edf738ff68f647e045f32cac28e0be7f6760f7f90b
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -31,6 +30,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${FEATURE_OPTIONS}
 )
 
