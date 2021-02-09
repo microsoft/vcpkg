@@ -1,0 +1,59 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 69c863d..bc05d84 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,9 +17,14 @@ if (NOT CMAKE_BUILD_TYPE)
+   endif()
+ endif()
+ 
+-
+ add_library(fast_float INTERFACE)
+-target_include_directories(fast_float INTERFACE include/)
++target_include_directories(
++  fast_float
++  INTERFACE
++    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
++    $<INSTALL_INTERFACE:include>
++)
++
+ if(FASTFLOAT_SANITIZE)
+   target_compile_options(fast_float INTERFACE -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined -fno-sanitize-recover=all)
+   target_link_libraries(fast_float INTERFACE -fsanitize=address -fno-omit-frame-pointer -fsanitize=undefined -fno-sanitize-recover=all)
+@@ -28,6 +33,27 @@ if(FASTFLOAT_SANITIZE)
+   endif()
+ endif()
+ 
++include(CMakePackageConfigHelpers)
++
++set(FASTFLOAT_VERSION_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/module/FastFloatConfigVersion.cmake")
++set(FASTFLOAT_PROJECT_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/module/FastFloatConfig.cmake")
++set(FASTFLOAT_INSTALL_DIR "share/FastFloat")
++
++write_basic_package_version_file("${FASTFLOAT_VERSION_CONFIG}" VERSION ${PROJECT_VERSION} COMPATIBILITY SameMajorVersion)
++configure_package_config_file("cmake/config.cmake.in"
++                              "${FASTFLOAT_PROJECT_CONFIG}"
++                              INSTALL_DESTINATION "${FASTFLOAT_INSTALL_DIR}")
++
++install(DIRECTORY "${PROJECT_SOURCE_DIR}/include/fast_float" DESTINATION "include")
++install(FILES "${FASTFLOAT_PROJECT_CONFIG}" "${FASTFLOAT_VERSION_CONFIG}" DESTINATION "${FASTFLOAT_INSTALL_DIR}")
++install(EXPORT ${PROJECT_NAME}-targets NAMESPACE FastFloat:: DESTINATION "${FASTFLOAT_INSTALL_DIR}")
++
++install(TARGETS fast_float 
++        EXPORT ${PROJECT_NAME}-targets
++        RUNTIME DESTINATION bin
++        ARCHIVE DESTINATION lib
++        LIBRARY DESTINATION lib
++)
+ if(FASTFLOAT_TEST)
+   enable_testing()
+   add_subdirectory(tests)
+diff --git a/cmake/config.cmake.in b/cmake/config.cmake.in
+new file mode 100644
+index 0000000..035dc0f
+--- /dev/null
++++ b/cmake/config.cmake.in
+@@ -0,0 +1,4 @@
++@PACKAGE_INIT@
++
++include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")
++check_required_components("@PROJECT_NAME@")
