@@ -1,12 +1,6 @@
 # Mark variables as used so cmake doesn't complain about them
 mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 
-# VCPKG toolchain options.
-option(VCPKG_VERBOSE "Enables messages from the VCPKG toolchain for debugging purposes." OFF)
-mark_as_advanced(VCPKG_VERBOSE)
-
-include(CMakeDependentOption)
-
 set(Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION "3.1")
 if(CMAKE_VERSION VERSION_LESS Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION)
     message(FATAL_ERROR "vcpkg.cmake requires at least CMake ${Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION}.")
@@ -14,38 +8,34 @@ endif()
 # this policy is required for this file; thus, CMake 3.1 is required.
 cmake_policy(SET CMP0054 NEW)
 
-#[===[
-We use this system, instead of `message(FATAL_ERROR)`,
-since cmake prints a lot of nonsense if the toolchain errors out before it's found the build tools.
+include(CMakeDependentOption)
+include("${CMAKE_CURRENT_LIST_DIR}/cmake/z_vcpkg_utilities.cmake")
 
-This `Z_VCPKG_HAS_FATAL_ERROR` must be checked before any filesystem operations are done,
-since otherwise you might be doing something with bad variables set up.
-#]===]
-set(Z_VCPKG_FATAL_ERROR)
-set(Z_VCPKG_HAS_FATAL_ERROR OFF)
-function(z_vcpkg_add_fatal_error ERROR)
-    if(NOT Z_VCPKG_HAS_FATAL_ERROR)
-        set(Z_VCPKG_HAS_FATAL_ERROR ON PARENT_SCOPE)
-        set(Z_VCPKG_FATAL_ERROR "${ERROR}" PARENT_SCOPE)
-    else()
-        string(APPEND Z_VCPKG_FATAL_ERROR "\n${ERROR}")
-    endif()
-endfunction()
+# VCPKG toolchain options.
+option(VCPKG_VERBOSE "Enables messages from the VCPKG toolchain for debugging purposes." OFF)
+mark_as_advanced(VCPKG_VERBOSE)
 
+option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
+option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
+
+# Manifest options and settings
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
     if(EXISTS "${CMAKE_SOURCE_DIR}/vcpkg.json")
-        set(Z_VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}")
+        set(VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}")
     endif()
-else()
-    set(Z_VCPKG_MANIFEST_DIR "${VCPKG_MANIFEST_DIR}")
 endif()
-if(NOT DEFINED VCPKG_MANIFEST_MODE)
-    if(Z_VCPKG_MANIFEST_DIR)
-        set(VCPKG_MANIFEST_MODE ON)
-    else()
-        set(VCPKG_MANIFEST_MODE OFF)
-    endif()
-elseif(VCPKG_MANIFEST_MODE AND NOT Z_VCPKG_MANIFEST_DIR)
+set(VCPKG_MANIFEST_DIR "${VCPKG_MANIFEST_DIR}"
+    CACHE PATH "The path to the vcpkg manifest directory." FORCE)
+
+if(DEFINED VCPKG_MANIFEST_DIR)
+    set(Z_VCPKG_HAS_MANIFEST_DIR ON)
+else()
+    set(Z_VCPKG_HAS_MANIFEST_DIR OFF)
+endif()
+
+option(VCPKG_MANIFEST_MODE "Use manifest mode, as opposed to classic mode." "${Z_VCPKG_HAS_MANIFEST_DIR}")
+
+if(VCPKG_MANIFEST_MODE AND NOT Z_VCPKG_HAS_MANIFEST_DIR)
     z_vcpkg_add_fatal_error(
 "vcpkg manifest mode was enabled, but we couldn't find a manifest file (vcpkg.json)
 in the current source directory (${CMAKE_CURRENT_SOURCE_DIR}).
@@ -246,8 +236,6 @@ if(NOT Z_VCPKG_ROOT_DIR)
     z_vcpkg_add_fatal_error("Could not find .vcpkg-root")
 endif()
 
-include("${Z_VCPKG_ROOT_DIR}/scripts/cmake/z_vcpkg_function_arguments.cmake")
-
 # NOTE: _VCPKG_INSTALLED_DIR cannot be changed without tool changes.
 if (NOT DEFINED _VCPKG_INSTALLED_DIR)
     if(VCPKG_MANIFEST_MODE)
@@ -414,7 +402,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
                 --triplet "${VCPKG_TARGET_TRIPLET}"
                 --vcpkg-root "${Z_VCPKG_ROOT_DIR}"
                 "--x-wait-for-lock"
-                "--x-manifest-root=${Z_VCPKG_MANIFEST_DIR}"
+                "--x-manifest-root=${VCPKG_MANIFEST_DIR}"
                 "--x-install-root=${_VCPKG_INSTALLED_DIR}"
                 "${Z_VCPKG_FEATURE_FLAGS}"
                 ${Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
@@ -432,11 +420,11 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             message(STATUS "Running vcpkg install - done")
 
             set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
-                "${Z_VCPKG_MANIFEST_DIR}/vcpkg.json"
+                "${VCPKG_MANIFEST_DIR}/vcpkg.json"
                 "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
-            if(EXISTS "${Z_VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
+            if(EXISTS "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
                 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
-                    "${Z_VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
+                    "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
             endif()
         else()
             message(STATUS "Running vcpkg install - failed")
@@ -444,133 +432,6 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
         endif()
     endif()
 endif()
-
-#[===[.md:
-# z_vcpkg_*_parent_scope_export
-If you need to re-export variables to a parent scope from a call,
-you can put these around the call to re-export those variables that have changed locally
-to parent scope.
-
-## Usage:
-```cmake
-z_vcpkg_start_parent_scope_export(
-    [PREFIX <PREFIX>]
-)
-z_vcpkg_complete_parent_scope_export(
-    [PREFIX <PREFIX>]
-    [IGNORE_REGEX <REGEX>]
-)
-```
-
-## Parameters
-### PREFIX
-The prefix to use to store the old variable values; defaults to `Z_VCPKG_PARENT_SCOPE_EXPORT`.
-The value of each variable `<VAR>` will be stored in `${PREFIX}_<VAR>` by `start`,
-and then every variable which is different from `${PREFIX}_VAR` will be re-exported by `complete`.
-
-### IGNORE_REGEX
-Variables with names matching this regex will not be exported even if their value has changed.
-
-## Example:
-```cmake
-z_vcpkg_start_parent_scope_export()
-_find_package(blah)
-z_vcpkg_complete_parent_scope_export()
-```
-#]===]
-# Notes: these do not use `cmake_parse_arguments` in order to support older versions of cmake,
-# pre-3.7 and PARSE_ARGV
-macro(z_vcpkg_start_parent_scope_export)
-    if("${ARGC}" EQUAL "0")
-        set(z_vcpkg_parent_scope_export_PREFIX "Z_VCPKG_PARENT_SCOPE_EXPORT")
-    elseif("${ARGC}" EQUAL "2" AND "${ARGV0}" STREQUAL "PREFIX")
-        set(z_vcpkg_parent_scope_export_PREFIX "${ARGV1}")
-    else()
-        message(FATAL_ERROR "Invalid parameters to z_vcpkg_start_parent_scope_export: (${ARGV})")
-    endif()
-    get_property(z_vcpkg_parent_scope_export_VARIABLE_LIST
-        DIRECTORY PROPERTY "VARIABLES")
-    foreach(z_vcpkg_parent_scope_export_VARIABLE IN LISTS z_vcpkg_parent_scope_export_VARIABLE_LIST)
-        set("${z_vcpkg_parent_scope_export_PREFIX}_${z_vcpkg_parent_scope_export_VARIABLE}" "${${z_vcpkg_parent_scope_export_VARIABLE}}")
-    endforeach()
-endmacro()
-
-macro(z_vcpkg_complete_parent_scope_export)
-    set(z_vcpkg_parent_scope_export_PREFIX_FILLED OFF)
-    if("${ARGC}" EQUAL "0")
-        # do nothing, replace with default values
-    elseif("${ARGC}" EQUAL "2")
-        if("${ARGV0}" STREQUAL "PREFIX")
-            set(z_vcpkg_parent_scope_export_PREFIX_FILLED ON)
-            set(z_vcpkg_parent_scope_export_PREFIX "${ARGV1}")
-        elseif("${ARGV0}" STREQUAL "IGNORE_REGEX")
-            set(z_vcpkg_parent_scope_export_IGNORE_REGEX "${ARGV1}")
-        else()
-            message(FATAL_ERROR "Invalid arguments to z_vcpkg_complete_parent_scope_export: (${ARGV})")
-        endif()
-    elseif("${ARGC}" EQUAL "4")
-        if("${ARGV0}" STREQUAL "PREFIX" AND "${ARGV2}" STREQUAL "IGNORE_REGEX")
-            set(z_vcpkg_parent_scope_export_PREFIX_FILLED ON)
-            set(z_vcpkg_parent_scope_export_PREFIX "${ARGV1}")
-            set(z_vcpkg_parent_scope_export_IGNORE_REGEX "${ARGV3}")
-        elseif("${ARGV0}" STREQUAL "IGNORE_REGEX" AND "${ARGV2}" STREQUAL "PREFIX")
-            set(z_vcpkg_parent_scope_export_IGNORE_REGEX "${ARGV1}")
-            set(z_vcpkg_parent_scope_export_PREFIX_FILLED ON)
-            set(z_vcpkg_parent_scope_export_PREFIX "${ARGV3}")
-        else()
-            message(FATAL_ERROR "Invalid arguments to z_vcpkg_start_parent_scope_export: (${ARGV})")
-        endif()
-    else()
-        message(FATAL_ERROR "Invalid arguments to z_vcpkg_complete_parent_scope_export: (${ARGV})")
-    endif()
-
-    if(NOT z_vcpkg_parent_scope_export_PREFIX)
-        set(z_vcpkg_parent_scope_export_PREFIX "Z_VCPKG_PARENT_SCOPE_EXPORT")
-    endif()
-
-    get_property(z_vcpkg_parent_scope_export_VARIABLE_LIST
-        DIRECTORY PROPERTY "VARIABLES")
-    foreach(z_vcpkg_parent_scope_export_VARIABLE IN LISTS z_vcpkg_parent_scope_export_VARIABLE_LIST)
-        if("${z_vcpkg_parent_scope_export_VARIABLE}" MATCHES "^${z_vcpkg_parent_scope_export_PREFIX}_")
-            # skip the backup variables
-            continue()
-        endif()
-        if("${z_vcpkg_parent_scope_export_VARIABLE}" MATCHES "^${z_vcpkg_parent_scope_export_PREFIX}_")
-            # skip the backup variables
-            continue()
-        endif()
-
-        if(DEFINED "${z_vcpkg_parent_scope_export_IGNORE_REGEX}" AND "${z_vcpkg_parent_scope_export_VARIABLE}" MATCHES "${z_vcpkg_parent_scope_export_IGNORE_REGEX}")
-            # skip those variables which should be ignored
-            continue()
-        endif()
-
-        if(NOT "${${z_vcpkg_parent_scope_export_PREFIX}_${z_vcpkg_parent_scope_export_VARIABLE}}" STREQUAL "${${z_vcpkg_parent_scope_export_VARIABLE}}")
-            set("${z_vcpkg_parent_scope_export_VARIABLE}" "${${z_vcpkg_parent_scope_export_VARIABLE}}" PARENT_SCOPE)
-        endif()
-    endforeach()
-endmacro()
-
-option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
-option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
-function(z_vcpkg_set_powershell_path)
-    # Attempt to use pwsh if it is present; otherwise use powershell
-    if (NOT DEFINED Z_VCPKG_POWERSHELL_PATH)
-        find_program(Z_VCPKG_PWSH_PATH pwsh)
-        if (Z_VCPKG_PWSH_PATH)
-            set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_PWSH_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
-        else()
-            message(DEBUG "vcpkg: Could not find PowerShell Core; falling back to PowerShell")
-            find_program(Z_VCPKG_BUILTIN_POWERSHELL_PATH powershell REQUIRED)
-            if (Z_VCPKG_BUILTIN_POWERSHELL_PATH)
-                set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_BUILTIN_POWERSHELL_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
-            else()
-                message(WARNING "vcpkg: Could not find PowerShell; using static string 'powershell.exe'")
-                set(Z_VCPKG_POWERSHELL_PATH "powershell.exe" CACHE INTERNAL "The path to the PowerShell implementation to use.")
-            endif()
-        endif()
-    endif() # Z_VCPKG_POWERSHELL_PATH
-endfunction()
 
 function(add_executable)
     z_vcpkg_function_arguments(ARGS)
