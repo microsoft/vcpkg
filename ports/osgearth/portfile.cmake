@@ -19,7 +19,7 @@ vcpkg_from_github(
         deprecated_cpp_fix.patch # Fix port headers to not use classes deprecated in c++17. Gives errors when using the installed port headers
         make-all-find-packages-required.patch
         fix-dependencies.patch
-        fix-osg-link-sequence.patch
+        fix-dependency-osg.patch
         remove-tool-debug-suffix.patch
 )
 
