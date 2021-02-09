@@ -1,6 +1,7 @@
 #[===[.md:
 # z_vcpkg_prettify_command_line
 
+**Only for internal use in vcpkg helpers. Behavior and arguments will change without notice.**
 Turn a command line into a formatted string.
 
 ```cmake
@@ -18,8 +19,8 @@ This command is for internal use, when printing out to a message.
 
 function(z_vcpkg_prettify_command_line OUT_VAR)
     set(OUTPUT "")
-    z_vcpkg_cmake_function_arguments(ARGUMENTS 1)
-    foreach(v IN LISTS ARGUMENTS)
+    z_vcpkg_function_arguments(ARGS 1)
+    foreach(v IN LISTS ARGS)
         if(v MATCHES "( )")
             list(APPEND OUTPUT "\"${v}\"")
         else()
