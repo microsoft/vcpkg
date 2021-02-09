@@ -1,0 +1,10 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# SPDX-License-Identifier: MIT
+#
+Source: azure-template-cpp
+Version: 1.0.0-beta.29
+Build-Depends: azure-core-cpp
+Description: Microsoft Azure Template SDK for C++
+  This is a template library meant to illustrate initial client library development process for Azure SDK.
+  It is not meant to be published to vcpkg.
+Homepage: https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/template/azure-template
