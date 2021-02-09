@@ -281,7 +281,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
 endfunction()
 
 function(vcpkg_internal_meson_convert_compiler_flags_to_list _out_var _compiler_flags)
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" ${_out_var} "${_compiler_flags}")
+    string(REGEX REPLACE "( +|^)(--?|/)" ";\\2" ${_out_var} "${_compiler_flags}")
     if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
         # special-case handling for "-arch <arm64/etc>" on macOS/iOS - this must be split into separate list entries
         string(REGEX REPLACE "-arch ([^;]+)" "-arch;\\1" ${_out_var} "${${_out_var}}")
