@@ -1622,7 +1622,7 @@
     },
     "directxsdk": {
       "baseline": "jun10",
-      "port-version": 0
+      "port-version": 1
     },
     "directxtex": {
       "baseline": "jan2021b",
