@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 9fd86a6..e1e848c 100644
+index 17b3617..f9a8e59 100755
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -18,9 +18,14 @@ message(STATUS "Detected git snapshot version: ${SNAPSHOT_VERSION}")
@@ -16,7 +16,7 @@ index 9fd86a6..e1e848c 100644
 +if(BUILD_SHARED_LIBS)
  add_library(ftdi1 SHARED ${c_sources})
  
- math(EXPR VERSION_FIXUP "${MAJOR_VERSION} + 1")    # Compatiblity with previous releases
+ math(EXPR VERSION_FIXUP "${MAJOR_VERSION} + 1")    # Compatibility with previous releases
 @@ -38,7 +43,7 @@ install ( TARGETS ftdi1
            ARCHIVE DESTINATION lib${LIB_SUFFIX}
          )

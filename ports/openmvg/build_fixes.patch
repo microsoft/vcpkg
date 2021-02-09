@@ -525,10 +525,10 @@ index 5fcd972..b21ea7b 100644
  endif()
  set_target_properties(openMVG_matching PROPERTIES SOVERSION ${OPENMVG_VERSION_MAJOR} VERSION "${OPENMVG_VERSION_MAJOR}.${OPENMVG_VERSION_MINOR}")
 diff --git a/src/openMVG/numeric/CMakeLists.txt b/src/openMVG/numeric/CMakeLists.txt
-index 06baee7..47255be 100644
+index 1f3fc30..4097320 100644
 --- a/src/openMVG/numeric/CMakeLists.txt
 +++ b/src/openMVG/numeric/CMakeLists.txt
-@@ -24,7 +24,7 @@ target_include_directories(openMVG_numeric
+@@ -26,7 +26,7 @@ target_include_directories(openMVG_numeric
      $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}>
      $<INSTALL_INTERFACE:include>
  )
@@ -649,6 +649,19 @@ index 9a5a482..e804a19 100644
  pRecons.wait()
 -
 -
+diff --git a/src/software/SfM/main_ComputeFeatures_OpenCV.cpp b/src/software/SfM/main_ComputeFeatures_OpenCV.cpp
+index 9cc46af..f8bd892 100644
+--- a/src/software/SfM/main_ComputeFeatures_OpenCV.cpp
++++ b/src/software/SfM/main_ComputeFeatures_OpenCV.cpp
+@@ -208,7 +208,7 @@ public:
+     // Create a SIFT detector
+     std::vector< cv::KeyPoint > v_keypoints;
+     cv::Mat m_desc;
+-    cv::Ptr<cv::Feature2D> siftdetector = cv::xfeatures2d::SIFT::create();
++    cv::Ptr<cv::Feature2D> siftdetector = cv::SIFT::create();
+ 
+     // Process SIFT computation
+     siftdetector->detectAndCompute(img, m_mask, v_keypoints, m_desc);
 diff --git a/src/software/SfM/tutorial_demo.py.in b/src/software/SfM/tutorial_demo.py.in
 index 259e24e..1097062 100644
 --- a/src/software/SfM/tutorial_demo.py.in
@@ -682,7 +695,7 @@ index aa7dffe..2c4d237 100644
  
      m_detector->detect(current_img, m_nextKeypoints);
 diff --git a/src/third_party/CMakeLists.txt b/src/third_party/CMakeLists.txt
-index 816a941..f0b7145 100644
+index b71dfab..ad98e51 100644
 --- a/src/third_party/CMakeLists.txt
 +++ b/src/third_party/CMakeLists.txt
 @@ -18,7 +18,7 @@ add_subdirectory(stlplus3)

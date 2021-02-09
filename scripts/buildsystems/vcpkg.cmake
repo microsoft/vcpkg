@@ -198,6 +198,8 @@ else()
             set(_VCPKG_TARGET_TRIPLET_ARCH x64)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "s390x")
             set(_VCPKG_TARGET_TRIPLET_ARCH s390x)
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "ppc64le")
+            set(_VCPKG_TARGET_TRIPLET_ARCH ppc64le)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "armv7l")
             set(_VCPKG_TARGET_TRIPLET_ARCH arm)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "aarch64")
@@ -384,6 +386,11 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
             endforeach()
         endif()
 
+        if(DEFINED VCPKG_FEATURE_FLAGS OR DEFINED CACHE{VCPKG_FEATURE_FLAGS})
+            list(JOIN VCPKG_FEATURE_FLAGS "," _VCPKG_FEATURE_FLAGS)
+            set(_VCPKG_FEATURE_FLAGS "--feature-flags=${_VCPKG_FEATURE_FLAGS}")
+        endif()
+
         foreach(feature IN LISTS VCPKG_MANIFEST_FEATURES)
             list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-feature=${feature}")
         endforeach()
@@ -405,6 +412,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
                 "--x-wait-for-lock"
                 "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
                 "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+                "${_VCPKG_FEATURE_FLAGS}"
                 ${_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
                 ${VCPKG_INSTALL_OPTIONS}
             OUTPUT_VARIABLE _VCPKG_MANIFEST_INSTALL_LOGTEXT
@@ -422,6 +430,10 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE 
             set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
                 "${_VCPKG_MANIFEST_DIR}/vcpkg.json"
                 "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
+            if(EXISTS "${_VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
+                set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+                    "${_VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
+            endif()
         else()
             message(STATUS "Running vcpkg install - failed")
             _vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${_VCPKG_MANIFEST_INSTALL_LOGFILE}")
@@ -514,12 +526,19 @@ function(x_vcpkg_install_local_dependencies)
     if(_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
         cmake_parse_arguments(PARSE_ARGV 0 __VCPKG_APPINSTALL "" "DESTINATION" "TARGETS")
         _vcpkg_set_powershell_path()
+        if(NOT IS_ABSOLUTE ${__VCPKG_APPINSTALL_DESTINATION})
+            set(__VCPKG_APPINSTALL_DESTINATION "\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}")
+        endif()
         foreach(TARGET IN LISTS __VCPKG_APPINSTALL_TARGETS)
             get_target_property(TARGETTYPE ${TARGET} TYPE)
             if(NOT TARGETTYPE STREQUAL "INTERFACE_LIBRARY")
+                # Install CODE|SCRIPT allow the use of generator expressions
+                if(POLICY CMP0087)
+                    cmake_policy(SET CMP0087 NEW)
+                endif()
                 install(CODE "message(\"-- Installing app dependencies for ${TARGET}...\")
                     execute_process(COMMAND \"${_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
-                        -targetBinary \"\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
+                        -targetBinary \"${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
                         -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
                         -OutVariable out)")
             endif()
@@ -537,18 +556,18 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
             set(PARSED_TARGETS "")
 
             # Destination - [RUNTIME] DESTINATION argument overrides this
-            set(DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+            set(DESTINATION "bin")
 
             # Parse arguments given to the install function to find targets and (runtime) destination
             set(MODIFIER "") # Modifier for the command in the argument
             set(LAST_COMMAND "") # Last command we found to process
             foreach(ARG ${ARGN})
-                if(ARG MATCHES "ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE")
+                if(ARG MATCHES "ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE|INCLUDES")
                     set(MODIFIER ${ARG})
                     continue()
                 endif()
 
-                if(ARG MATCHES "TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP")
+                if(ARG MATCHES "TARGETS|DESTINATION|PERMISSIONS|CONFIGURATIONS|COMPONENT|NAMELINK_COMPONENT|OPTIONAL|EXCLUDE_FROM_ALL|NAMELINK_ONLY|NAMELINK_SKIP|EXPORT")
                     set(LAST_COMMAND ${ARG})
                     continue()
                 endif()
