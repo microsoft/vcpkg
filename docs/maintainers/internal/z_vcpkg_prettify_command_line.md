@@ -1,5 +1,6 @@
 # z_vcpkg_prettify_command_line
 
+**Only for internal use in vcpkg helpers. Behavior and arguments will change without notice.**
 Turn a command line into a formatted string.
 
 ```cmake
