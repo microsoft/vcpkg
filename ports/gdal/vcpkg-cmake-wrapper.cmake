@@ -9,6 +9,8 @@ find_library(GDAL_LIBRARY_RELEASE NAMES gdal_i gdal NAMES_PER_DIR PATH_SUFFIXES 
 select_library_configurations(GDAL)
 
 if (UNIX)
+    include(CMakeFindDependencyMacro)
+
     find_dependency(unofficial-cfitsio CONFIG)
     find_dependency(CURL CONFIG)
     find_dependency(expat CONFIG)
