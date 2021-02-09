@@ -239,11 +239,14 @@ if(NOT DEFINED Z_VCPKG_ROOT_DIR)
         endif()
     endwhile()
     set(Z_VCPKG_ROOT_DIR "${Z_VCPKG_ROOT_DIR_CANDIDATE}" CACHE INTERNAL "Vcpkg root directory")
+
 endif()
 
 if(NOT Z_VCPKG_ROOT_DIR)
     z_vcpkg_add_fatal_error("Could not find .vcpkg-root")
 endif()
+
+include("${Z_VCPKG_ROOT_DIR}/scripts/cmake/z_vcpkg_function_arguments.cmake")
 
 # NOTE: _VCPKG_INSTALLED_DIR cannot be changed without tool changes.
 if (NOT DEFINED _VCPKG_INSTALLED_DIR)
@@ -443,42 +446,6 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
 endif()
 
 #[===[.md:
-# z_vcpkg_escape_argv
-Get a variable that can be splatted to get _exactly_ the arguments that were passed in.
-
-## Usage:
-```cmake
-z_vcpkg_escape_argv(<OUT>)
-```
-
-## Parameters
-### OUT
-The variable to fill with the escaped arguments.
-
-## Example:
-```cmake
-function(foo_replacement)
-    z_vcpkg_escape_argv(ESCAPED_ARGV)
-    foo(${ESCAPED_ARGV})
-    ...
-endfunction()
-```
-#]===]
-macro(z_vcpkg_escape_argv OUT)
-    set("${OUT}")
-
-    # this allows us to get the value of the enclosing function's ARGC
-    set(z_vcpkg_escape_argv_ARGC_NAME "ARGC")
-    set(z_vcpkg_escape_argv_ARGC "${${z_vcpkg_escape_argv_ARGC_NAME}}")
-
-    math(EXPR z_vcpkg_escape_argv_ARGC_M1 "${z_vcpkg_escape_argv_ARGC} - 1")
-    foreach(z_vcpkg_escape_argv_N RANGE "${z_vcpkg_escape_argv_ARGC_M1}")
-        string(REPLACE ";" "\\;" z_vcpkg_escape_argv_ESCAPED_ARG "${ARGV${z_vcpkg_escape_argv_N}}")
-        list(APPEND "${OUT}" "${z_vcpkg_escape_argv_ESCAPED_ARG}")
-    endforeach()
-endmacro()
-
-#[===[.md:
 # z_vcpkg_*_parent_scope_export
 If you need to re-export variables to a parent scope from a call,
 you can put these around the call to re-export those variables that have changed locally
@@ -606,8 +573,8 @@ function(z_vcpkg_set_powershell_path)
 endfunction()
 
 function(add_executable)
-    z_vcpkg_escape_argv(ESCAPED_ARGV)
-    _add_executable(${ESCAPED_ARGV})
+    z_vcpkg_function_arguments(ARGS)
+    _add_executable(${ARGS})
     set(target_name "${ARGV0}")
 
     list(FIND ARGV "IMPORTED" IMPORTED_IDX)
@@ -644,13 +611,13 @@ function(add_executable)
 endfunction()
 
 function(add_library)
-    z_vcpkg_escape_argv(ESCAPED_ARGV)
-    _add_library(${ESCAPED_ARGV})
+    z_vcpkg_function_arguments(ARGS)
+    _add_library(${ARGS})
     set(target_name "${ARGV0}")
 
-    list(FIND ESCAPED_ARGV "IMPORTED" IMPORTED_IDX)
-    list(FIND ESCAPED_ARGV "INTERFACE" INTERFACE_IDX)
-    list(FIND ESCAPED_ARGV "ALIAS" ALIAS_IDX)
+    list(FIND ARGS "IMPORTED" IMPORTED_IDX)
+    list(FIND ARGS "INTERFACE" INTERFACE_IDX)
+    list(FIND ARGS "ALIAS" ALIAS_IDX)
     if(IMPORTED_IDX EQUAL -1 AND INTERFACE_IDX EQUAL -1 AND ALIAS_IDX EQUAL -1)
         get_target_property(IS_LIBRARY_SHARED "${target_name}" TYPE)
         if(VCPKG_APPLOCAL_DEPS AND Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp" AND (IS_LIBRARY_SHARED STREQUAL "SHARED_LIBRARY" OR IS_LIBRARY_SHARED STREQUAL "MODULE_LIBRARY"))
@@ -700,8 +667,8 @@ endfunction()
 set(X_VCPKG_APPLOCAL_DEPS_INSTALL "${X_VCPKG_APPLOCAL_DEPS_INSTALL}" CACHE BOOL "(experimental) Automatically copy dependencies into the install target directory for executables.")
 if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
     function(install)
-        z_vcpkg_escape_argv(ESCAPED_ARGV)
-        _install(${ESCAPED_ARGV})
+        z_vcpkg_function_arguments(ARGS)
+        _install(${ARGS})
 
         if(ARGV0 STREQUAL "TARGETS")
             # Will contain the list of targets
@@ -713,7 +680,7 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
             # Parse arguments given to the install function to find targets and (runtime) destination
             set(MODIFIER "") # Modifier for the command in the argument
             set(LAST_COMMAND "") # Last command we found to process
-            foreach(ARG ${ESCAPED_ARGV})
+            foreach(ARG IN LISTS ARGS)
                 if(ARG MATCHES "ARCHIVE|LIBRARY|RUNTIME|OBJECTS|FRAMEWORK|BUNDLE|PRIVATE_HEADER|PUBLIC_HEADER|RESOURCE|INCLUDES")
                     set(MODIFIER "${ARG}")
                     continue()
@@ -751,7 +718,7 @@ function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}")
         # therefore, we don't have to worry about restoring its old value
         list(APPEND CMAKE_FIND_ROOT_PATH "${VCPKG_CMAKE_FIND_ROOT_PATH}")
     endif()
-    z_vcpkg_escape_argv(ESCAPED_ARGV)
+    z_vcpkg_function_arguments(ARGS)
     set(PACKAGE_NAME "${ARGV0}")
     string(TOLOWER "${PACKAGE_NAME}" LOWERCASE_PACKAGE_NAME)
 
@@ -759,7 +726,6 @@ function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}")
 
     z_vcpkg_start_parent_scope_export()
     if(EXISTS "${VCPKG_CMAKE_WRAPPER_PATH}")
-        set(ARGS "${ESCAPED_ARGV}")
         include("${VCPKG_CMAKE_WRAPPER_PATH}")
     elseif("${PACKAGE_NAME}" STREQUAL "Boost" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/boost")
         # Checking for the boost headers disables this wrapper unless the user has installed at least one boost library
@@ -773,16 +739,16 @@ function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}")
         else()
             set(Boost_COMPILER "-vc140")
         endif()
-        _find_package(${ESCAPED_ARGV})
+        _find_package(${ARGS})
     elseif("${PACKAGE_NAME}" STREQUAL "ICU" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/unicode/utf.h")
-        list(FIND ESCAPED_ARGV "COMPONENTS" Z_VCPKG_COMPONENTS_IDX)
-        if(NOT Z_VCPKG_COMPONENTS_IDX EQUAL -1)
-            _find_package(${ESCAPED_ARGV} COMPONENTS data)
+        list(FIND ARGS "COMPONENTS" COMPONENTS_IDX)
+        if(NOT COMPONENTS_IDX EQUAL -1)
+            _find_package(${ARGS} COMPONENTS data)
         else()
-            _find_package(${ESCAPED_ARGV})
+            _find_package(${ARGS})
         endif()
     elseif("${PACKAGE_NAME}" STREQUAL "GSL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/gsl")
-        _find_package(${ESCAPED_ARGV})
+        _find_package(${ARGS})
         if(GSL_FOUND AND TARGET GSL::gsl)
             set_property( TARGET GSL::gslcblas APPEND PROPERTY IMPORTED_CONFIGURATIONS Release )
             set_property( TARGET GSL::gsl APPEND PROPERTY IMPORTED_CONFIGURATIONS Release )
@@ -794,7 +760,7 @@ function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}")
             endif()
         endif()
     elseif("${PACKAGE_NAME}" STREQUAL "CURL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/curl")
-        _find_package(${ESCAPED_ARGV})
+        _find_package(${ARGS})
         if(CURL_FOUND)
             if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/nghttp2.lib")
                 list(APPEND CURL_LIBRARIES
@@ -803,13 +769,13 @@ function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}")
             endif()
         endif()
     elseif("${LOWERCASE_PACKAGE_NAME}" STREQUAL "grpc" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/grpc")
-        list(REMOVE_AT ESCAPED_ARGV 0)
-        _find_package(gRPC ${ESCAPED_ARGV})
+        list(REMOVE_AT ARGS 0)
+        _find_package(gRPC ${ARGS})
     else()
-        _find_package(${ESCAPED_ARGV})
+        _find_package(${ARGS})
     endif()
 
-    z_vcpkg_complete_parent_scope_export(IGNORE_REGEX "^Z_VCPKG_")
+    z_vcpkg_complete_parent_scope_export(IGNORE_REGEX "(^Z_VCPKG_)|(^ARGS$)|(^COMPONENTS_IDX$)")
 endfunction()
 
 set(VCPKG_TOOLCHAIN ON)
