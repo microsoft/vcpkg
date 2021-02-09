@@ -17,14 +17,24 @@ vcpkg_from_github(
         0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
+        0014-avfilter-dependency-fix.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
     message(FATAL_ERROR "Error: ffmpeg will not build with spaces in the path. Please use a directory with no spaces")
 endif()
 
-vcpkg_find_acquire_program(YASM)
-get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
+
+if(${VCPKG_TARGET_ARCHITECTURE} STREQUAL x86)
+    # ffmpeg nasm build gives link error on x86, so fall back to yasm
+    vcpkg_find_acquire_program(YASM)
+    get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
+    vcpkg_add_to_path(${YASM_EXE_PATH})
+else()
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    vcpkg_add_to_path(${NASM_EXE_PATH})
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     #We're assuming that if we're building for Windows we're using MSVC
@@ -35,8 +45,7 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${YASM_EXE_PATH}")
-set(OPTIONS "--enable-asm --enable-yasm --disable-doc --enable-debug --enable-runtime-cpudetect")
+set(OPTIONS "--enable-asm --enable-x86asm --disable-doc --enable-debug --enable-runtime-cpudetect")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
