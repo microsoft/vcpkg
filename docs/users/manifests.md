@@ -315,7 +315,7 @@ with a `vcpkg.json` in the same directory as `CMakeLists.txt` should Just Work!
 
 ## MSBuild Integration
 
-To use manifests with MSBuild, first you need to use an [existing integration method](integration.md#With%20MSBuild). Then, simply add a vcpkg.json above your project file (such as in the root of your source repository) and set the property `VcpkgEnableManifest` to `true`. You can set this property via the IDE in `Project Properties -> Vcpkg -> Use Vcpkg Manifest`.
+To use manifests with MSBuild, first you need to use an [existing integration method](integration.md#with-msbuild). Then, simply add a vcpkg.json above your project file (such as in the root of your source repository) and set the property `VcpkgEnableManifest` to `true`. You can set this property via the IDE in `Project Properties -> Vcpkg -> Use Vcpkg Manifest`.
 
 As part of your project's build, vcpkg automatically be run and install any listed dependencies to `vcpkg_installed/` adjacent to the `vcpkg.json` file; these files will then automatically be included in and linked to your MSBuild projects.
 
