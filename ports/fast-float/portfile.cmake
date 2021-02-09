@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fastfloat/fast_float
-    REF v0.7.0
-    SHA512 26b8edd0a661dd64c9af76b01626a322a56a004df1cc707b4b9082ab5757dc74b29c12935c2dd4bbbbfed9692c78cf44b7498b3ca02e17ea123dd12edd261829
+    REF v0.8.0
+    SHA512 d3f39457859ff0132f773222db3684f9b1d4a8ed549dfceb7cfb12d8f5871f5282dfa9eb01d39646cf93ed42dd640cb6487831ec15079b4b154f5002ac74edd7
     HEAD_REF master
-	PATCHES install_targets.patch
 )
 
 vcpkg_configure_cmake(
