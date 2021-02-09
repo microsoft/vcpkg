@@ -1,7 +1,7 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES fix_static_build.patch)
+set(${PORT}_PATCHES )#fix_static_build.patch)
 
 #TODO check features and setup: (means force features!)
 

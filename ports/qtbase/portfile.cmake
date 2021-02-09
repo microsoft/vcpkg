@@ -2,7 +2,7 @@
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
-        2548438.diff
+        #2548438.diff
         jpeg.patch
         harfbuzz.patch
         config_install.patch 
@@ -270,7 +270,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
 else()
     set(script_suffix)
 endif()
-set(other_files qt-cmake-private-install.cmake syncqt.pl)
+set(other_files 
+        qt-cmake-private-install.cmake 
+        syncqt.pl
+        android_cmakelist_patcher.sh
+        android_emulator_launcher.sh
+        ensure_pro_file.cmake
+        )
 foreach(_config debug release)
     if(_config MATCHES "debug")
         set(path_suffix debug/)
@@ -304,6 +310,7 @@ endforeach()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
+
     if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error. 
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
     endif()
