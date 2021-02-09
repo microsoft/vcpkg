@@ -1,4 +1,5 @@
 set(PORT_VERSION 12.2)
+# NOTE: the python patches must be regenerated on version update
 
 macro(feature_unsupported)
     foreach(_feat ${ARGN})
