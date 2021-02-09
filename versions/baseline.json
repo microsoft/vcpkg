@@ -1722,7 +1722,7 @@
     },
     "dxut": {
       "baseline": "11.25",
-      "port-version": 1
+      "port-version": 0
     },
     "eabase": {
       "baseline": "2.09.12-1",
