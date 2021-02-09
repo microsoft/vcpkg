@@ -336,6 +336,8 @@ fribidi:arm64-windows=fail
 fribidi:arm-uwp=fail
 fribidi:x64-uwp=fail
 ftgl:x64-uwp=fail
+# https://github.com/GoogleCloudPlatform/functions-framework-cpp/issues/207
+functions-framework-cpp:x64-uwp=fail
 fuzzylite:arm-uwp=fail
 fuzzylite:x64-linux=fail
 fuzzylite:x64-osx=fail
