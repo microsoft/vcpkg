@@ -2553,7 +2553,7 @@
       "port-version": 0
     },
     "inja": {
-      "baseline": "3.0.0",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "intel-ipsec": {
