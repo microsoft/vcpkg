@@ -10,6 +10,15 @@ using namespace vcpkg::System;
 
 namespace vcpkg
 {
+    long System::get_process_id()
+    {
+#ifdef _WIN32
+        return ::_getpid();
+#else
+        return ::getpid();
+#endif
+    }
+
     Optional<CPUArchitecture> System::to_cpu_architecture(StringView arch)
     {
         if (Strings::case_insensitive_ascii_equals(arch, "x86")) return CPUArchitecture::X86;
@@ -30,7 +39,7 @@ namespace vcpkg
             case CPUArchitecture::ARM: return "arm";
             case CPUArchitecture::ARM64: return "arm64";
             case CPUArchitecture::S390X: return "s390x";
-            default: Checks::exit_with_message(VCPKG_LINE_INFO, "unexpected vcpkg::System::CPUArchitecture");
+            default: Checks::unreachable(VCPKG_LINE_INFO);
         }
     }
 

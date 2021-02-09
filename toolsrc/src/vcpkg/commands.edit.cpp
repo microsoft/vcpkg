@@ -161,7 +161,7 @@ namespace vcpkg::Commands::Edit
         for (auto&& port_name : ports)
         {
             const fs::path portpath = paths.builtin_ports_directory() / port_name;
-            Checks::check_exit(
+            Checks::check_maybe_upgrade(
                 VCPKG_LINE_INFO, fs.is_directory(portpath), R"(Could not find port named "%s")", port_name);
         }
 
@@ -219,14 +219,15 @@ namespace vcpkg::Commands::Edit
         candidate_paths.push_back(fs::path{"/usr/share/code/bin/code"});
         candidate_paths.push_back(fs::path{"/usr/bin/code"});
 
-        if (System::cmd_execute("command -v xdg-mime") == 0)
+        if (System::cmd_execute(System::Command("command").string_arg("-v").string_arg("xdg-mime")) == 0)
         {
-            auto mime_qry = Strings::format(R"(xdg-mime query default text/plain)");
+            auto mime_qry =
+                System::Command("xdg-mime").string_arg("query").string_arg("default").string_arg("text/plain");
             auto execute_result = System::cmd_execute_and_capture_output(mime_qry);
             if (execute_result.exit_code == 0 && !execute_result.output.empty())
             {
-                mime_qry = Strings::format(R"(command -v %s)",
-                                           execute_result.output.substr(0, execute_result.output.find('.')));
+                mime_qry = System::Command("command").string_arg("-v").string_arg(
+                    execute_result.output.substr(0, execute_result.output.find('.')));
                 execute_result = System::cmd_execute_and_capture_output(mime_qry);
                 if (execute_result.exit_code == 0 && !execute_result.output.empty())
                 {
@@ -254,7 +255,7 @@ namespace vcpkg::Commands::Edit
         const fs::path env_editor = *it;
         const std::vector<std::string> arguments = create_editor_arguments(paths, options, ports);
         const auto args_as_string = Strings::join(" ", arguments);
-        const auto cmd_line = Strings::format(R"("%s" %s -n)", fs::u8string(env_editor), args_as_string);
+        auto cmd_line = System::Command(env_editor).raw_arg(args_as_string).string_arg("-n");
 
         auto editor_exe = fs::u8string(env_editor.filename());
 
@@ -262,7 +263,8 @@ namespace vcpkg::Commands::Edit
         if (editor_exe == "Code.exe" || editor_exe == "Code - Insiders.exe")
         {
             // note that we are invoking cmd silently but Code.exe is relaunched from there
-            System::cmd_execute_background(Strings::concat("cmd /c \"", cmd_line, " <NUL\""));
+            System::cmd_execute_background(System::Command("cmd").string_arg("/c").raw_arg(
+                Strings::concat('"', cmd_line.command_line(), R"( <NUL")")));
             Checks::exit_success(VCPKG_LINE_INFO);
         }
 #endif

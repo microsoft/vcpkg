@@ -79,12 +79,6 @@ static void inner(vcpkg::Files::Filesystem& fs, const VcpkgCmdArguments& args)
     paths.track_feature_flag_metrics();
 
     fs.current_path(paths.root, VCPKG_LINE_INFO);
-    if ((args.command == "install" || args.command == "remove" || args.command == "export" ||
-         args.command == "update") &&
-        !args.output_json())
-    {
-        Commands::Version::warn_if_vcpkg_version_mismatch(paths);
-    }
 
     if (const auto command_function = find_command(Commands::get_available_paths_commands()))
     {
@@ -227,24 +221,40 @@ int main(const int argc, const char* const* const argv)
 #endif
 
     VcpkgCmdArguments args = VcpkgCmdArguments::create_from_command_line(fs, argc, argv);
+    if (const auto p = args.debug.get()) Debug::g_debugging = *p;
     args.imbue_from_environment();
     args.check_feature_flag_consistency();
 
-    if (const auto p = args.disable_metrics.get()) Metrics::g_metrics.lock()->set_disabled(*p);
-    if (const auto p = args.print_metrics.get()) Metrics::g_metrics.lock()->set_print_metrics(*p);
-    if (const auto p = args.send_metrics.get()) Metrics::g_metrics.lock()->set_send_metrics(*p);
-    if (const auto p = args.debug.get()) Debug::g_debugging = *p;
+    {
+        auto metrics = Metrics::g_metrics.lock();
+        if (const auto p = args.disable_metrics.get())
+        {
+            metrics->set_disabled(*p);
+        }
 
-    if (args.send_metrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
-    {
-        System::print2(System::Color::warning,
-                       "Warning: passed either --sendmetrics or --no-sendmetrics, but metrics are disabled.\n");
-    }
-    if (args.print_metrics.has_value() && !Metrics::g_metrics.lock()->metrics_enabled())
-    {
-        System::print2(System::Color::warning,
-                       "Warning: passed either --printmetrics or --no-printmetrics, but metrics are disabled.\n");
-    }
+        auto disable_metrics_tag_file_path =
+            System::get_exe_path_of_current_process().replace_filename(fs::u8path("vcpkg.disable-metrics"));
+        std::error_code ec;
+        if (fs.exists(disable_metrics_tag_file_path, ec) || ec)
+        {
+            metrics->set_disabled(true);
+        }
+
+        if (const auto p = args.print_metrics.get())
+        {
+            metrics->set_print_metrics(*p);
+        }
+
+        if (const auto p = args.send_metrics.get())
+        {
+            metrics->set_send_metrics(*p);
+        }
+
+        if (args.send_metrics.value_or(false) && !metrics->metrics_enabled())
+        {
+            System::print2(System::Color::warning, "Warning: passed --sendmetrics, but metrics are disabled.\n");
+        }
+    } // unlock Metrics::g_metrics
 
     args.debug_print_feature_flags();
     args.track_feature_flag_metrics();
