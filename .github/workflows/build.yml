@@ -44,7 +44,7 @@ jobs:
         mp3lame
         opus
         opusfile
-        portaudio
+        portaudio[asio]
         portmidi
         protobuf
         pthreads
@@ -95,7 +95,7 @@ jobs:
       working-directory: ${{ matrix.vcpkg_path }}
 
     - name: Build packages
-      run: ./vcpkg install --clean-after-build ${{ env.VCPKG_PACKAGES }}
+      run: ./vcpkg install --clean-after-build --recurse ${{ env.VCPKG_PACKAGES }}
       working-directory: ${{ matrix.vcpkg_path }}
 
     - name: Upload GitHub Actions artifacts of build logs

@@ -1,8 +1,13 @@
 {
   "name": "portaudio",
-  "version-string": "2021-01-14",
-  "port-version": 3,
+  "version-string": "2021-02-09",
   "description": "PortAudio Portable Cross-platform Audio I/O API PortAudio is a free, cross-platform, open-source, audio I/O library.  It lets you write simple audio programs in 'C' or C++ that will compile and run on many platforms including Windows, Macintosh OS X, and Unix (OSS/ALSA). It is intended to promote the exchange of audio software between developers on different platforms. Many applications use PortAudio for Audio I/O.",
   "homepage": "https://app.assembla.com/spaces/portaudio/wiki",
-  "supports": "!uwp"
+  "license": "MIT",
+  "supports": "!uwp",
+  "features": {
+    "asio": {
+      "description": "Build with support for ASIO host API. This automatically downloads the ASIO SDK from Steinberg. Review the ASIO SDK license for details https://www.steinberg.net/en/company/developers.html"
+    }
+  }
 }
