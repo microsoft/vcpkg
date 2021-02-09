@@ -1,4 +1,0 @@
-The package gppanel provides CMake targets:
-
-    find_package(gpPanel CONFIG REQUIRED)
-    target_link_libraries(main PRIVATE gpPanel)

@@ -109,6 +109,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 # =============================================================================
 # Clone & patch
+
+# This patch is huge, we prefer to download it on demand
+vcpkg_download_distfile(QT_NO_KEYWORDS_PATCH
+  URLS "https://github.com/Kitware/VTK/commit/64265c5fd1a8e26a6a81241284dea6b3272f6db6.diff"
+  FILENAME 64265c5fd1a8e26a6a81241284dea6b3272f6db6.diff
+  SHA512 08991f07b30b893b14e906017b77fb700a8298a3a8906086a0c4b67688c1c0431b3d6bf890df70bd3ebf963cbb9c035b5dbcb9d7593e8c716c3a594ccb9a0fc7
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
@@ -130,6 +138,9 @@ vcpkg_from_github(
         # Last patch TODO: Patch out internal loguru
         FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
         fix-freetype.patch # Should be fixed next version, !7367 + !7434
+        # Remove these 2 official patches in the next update
+        ${QT_NO_KEYWORDS_PATCH}
+        0002-Qt-enforce-QT_NO_KEYWORDS-builds-by-VTK-itself.patch
 )
 
 # =============================================================================

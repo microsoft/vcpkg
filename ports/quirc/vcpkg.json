@@ -1,0 +1,6 @@
+{
+  "name": "quirc",
+  "version": "1.1",
+  "port-version": 2,
+  "description": "quirc is one of the C library available for scanning QR Codes"
+}
