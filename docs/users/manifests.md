@@ -319,4 +319,4 @@ To use manifests with MSBuild, first you need to use an [existing integration me
 
 As part of your project's build, vcpkg automatically be run and install any listed dependencies to `vcpkg_installed/` adjacent to the `vcpkg.json` file; these files will then automatically be included in and linked to your MSBuild projects.
 
-It's critical that all project files consuming the same `vcpkg.json` use the same triplet; if you need to use different triplets for different projects in your solution, they must consume from different `vcpkg.json` files.
+It's critical that all project files consuming the same `vcpkg.json` use the same triplet in a single build; if you need to use different triplets for different projects in your solution, they must consume from different `vcpkg.json` files.
