@@ -1,0 +1,52 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 97ba2f9..64a2f33 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -107,7 +107,7 @@ else()
+ endif()
+ message("FREERDP_VERSION=${FREERDP_VERSION_FULL}")
+ 
+-set(FREERDP_INCLUDE_DIR "include/freerdp${FREERDP_VERSION_MAJOR}/")
++set(FREERDP_INCLUDE_DIR "include/")
+ 
+ # Compatibility options
+ if(DEFINED STATIC_CHANNELS)
+diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
+index a020dc5..0bc1157 100644
+--- a/include/CMakeLists.txt
++++ b/include/CMakeLists.txt
+@@ -19,7 +19,7 @@
+ 
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/freerdp/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/freerdp/version.h)
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/freerdp/build-config.h.in ${CMAKE_CURRENT_BINARY_DIR}/freerdp/build-config.h)
+-set(FREERDP_INSTALL_INCLUDE_DIR include/freerdp${FREERDP_VERSION_MAJOR}/freerdp)
++set(FREERDP_INSTALL_INCLUDE_DIR include/freerdp)
+ 
+ file(GLOB FREERDP_HEADERS "freerdp/*.h")
+ install(FILES ${FREERDP_HEADERS} DESTINATION ${FREERDP_INSTALL_INCLUDE_DIR} COMPONENT headers)
+diff --git a/winpr/CMakeLists.txt b/winpr/CMakeLists.txt
+index a94090a..08b6b88 100644
+--- a/winpr/CMakeLists.txt
++++ b/winpr/CMakeLists.txt
+@@ -215,7 +215,7 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.10")
+ 
+ 	SetFreeRDPCMakeInstallDir(WINPR_CMAKE_INSTALL_DIR "WinPR${WINPR_VERSION_MAJOR}")
+ 
+-	set(WINPR_INCLUDE_DIR "include/winpr${WINPR_VERSION_MAJOR}")
++	set(WINPR_INCLUDE_DIR "include")
+ 
+ 	configure_package_config_file(WinPRConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/WinPRConfig.cmake
+ 		INSTALL_DESTINATION ${WINPR_CMAKE_INSTALL_DIR}
+diff --git a/winpr/include/CMakeLists.txt b/winpr/include/CMakeLists.txt
+index 452383d..3faab0c 100644
+--- a/winpr/include/CMakeLists.txt
++++ b/winpr/include/CMakeLists.txt
+@@ -17,7 +17,7 @@
+ 
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/winpr/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/winpr/version.h)
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/winpr/wtypes.h.in ${CMAKE_CURRENT_BINARY_DIR}/winpr/wtypes.h)
+-set(WINPR_INSTALL_INCLUDE_DIR include/winpr${WINPR_VERSION_MAJOR}/winpr)
++set(WINPR_INSTALL_INCLUDE_DIR include/winpr)
+ 
+ file(GLOB WINPR_HEADERS "winpr/*.h")
+ install(FILES ${WINPR_HEADERS} DESTINATION ${WINPR_INSTALL_INCLUDE_DIR} COMPONENT headers)
