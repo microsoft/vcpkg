@@ -8,7 +8,7 @@ vcpkg_from_github(
     SHA512 329697e8e23d619313440d57ef740a94c49d13533e1b8734fc8ff72fd5092c2addabb306f64cb69160fa5fee373a05ba39a5ee6d92d95e5e2e9c7ec96a51aadc
     HEAD_REF master
     PATCHES 
-    	disable-update-version.patch
+        disable-update-version.patch
         fix-install.patch
         fix-build-type.patch
 )
