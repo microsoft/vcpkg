@@ -319,4 +319,35 @@ To use manifests with MSBuild, first you need to use an [existing integration me
 
 As part of your project's build, vcpkg automatically be run and install any listed dependencies to `vcpkg_installed/` adjacent to the `vcpkg.json` file; these files will then automatically be included in and linked to your MSBuild projects.
 
-It's critical that all project files consuming the same `vcpkg.json` use the same triplet in a single build; if you need to use different triplets for different projects in your solution, they must consume from different `vcpkg.json` files.
+Note: It is critical that all project files in a single build consuming the same `vcpkg.json` use the same triplet; if you need to use different triplets for different projects in your solution, they must consume from different `vcpkg.json` files.
+
+### MSBuild Properties
+
+These properties can be defined via the VS GUI under `Project Properties -> Vcpkg` or via a common `.props` file.
+
+#### `VcpkgEnabled` (Use Vcpkg)
+
+This can be set to "false" to explicitly disable vcpkg integration for the project
+
+#### `VcpkgTriplet` (Triplet)
+
+This can be set to a custom triplet to use for integration (such as x64-windows-static)
+
+#### `VcpkgAdditionalInstallOptions` (Additional Options)
+
+When using a manifest, this option specifies additional command line flags to pass to the underlying vcpkg tool invocation. This can be used to access features that have not yet been exposed through another option.
+
+#### `VcpkgConfiguration` (Vcpkg Configuration)
+
+If your configuration names are too complex for vcpkg to guess correctly, you can assign this property to `Release` or `Debug` to explicitly tell vcpkg what variant of libraries you want to consume.
+
+#### `VcpkgEnableManifest` (Use Vcpkg Manifest)
+
+This property must be set to true in order to consume from a local vcpkg.json file. If set to false, any local vcpkg.json files will be ignored. This will default to true in the future.
+
+#### `VcpkgManifestInstall` (Install Vcpkg Dependencies)
+
+*(Requires `Use Vcpkg Manifest` set to `true`)*
+
+This property can be set to "false" to disable automatic dependency restoration on project build. Dependencies can be manually restored via the vcpkg command line.
+

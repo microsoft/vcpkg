@@ -84,7 +84,7 @@
       <_VcpkgItemToDelete Include="$(TLogLocation)VcpkgInstallManifest*.read.1u.tlog" />
     </ItemGroup>
     <Delete Files="@(_VcpkgItemToDelete)" />
-    <Exec Command="%22$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22" 
+    <Exec Command="%22$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
           StandardOutputImportance="High" />
     <WriteLinesToFile File="$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).read.1u.tlog"
                       Lines="@(_VcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
