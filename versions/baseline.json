@@ -478,7 +478,7 @@
     },
     "boost-concept-check": {
       "baseline": "1.75.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-config": {
       "baseline": "1.75.0",
