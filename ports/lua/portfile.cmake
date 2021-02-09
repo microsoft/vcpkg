@@ -15,12 +15,12 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
-    cpp COMPILE_AS_CPP
+    # cpp COMPILE_AS_CPP
   INVERTED_FEATURES
     tools SKIP_INSTALL_TOOLS
 )
 if(VCPKG_TARGET_IS_IOS)
-    if(FEATURE_OPTIONS MATCHES "-DSKIP_INSTALL_TOOLS=OFF")
+    if("tools" IN_LIST FEATURES)
         message(FATAL_ERROR "lua[tools] is not supported for iOS platform build")
     endif()
 endif()
@@ -30,11 +30,25 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DCOMPILE_AS_CPP=OFF
     OPTIONS_DEBUG
         -DSKIP_INSTALL_HEADERS=ON
 )
-
 vcpkg_install_cmake()
+
+if("cpp" IN_LIST FEATURES) # lua[cpp] will create lua-c++, which uses C++ name mangling.
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS
+            ${FEATURE_OPTIONS}
+            -DCOMPILE_AS_CPP=ON
+        OPTIONS_DEBUG
+            -DSKIP_INSTALL_HEADERS=ON
+    )
+    vcpkg_install_cmake()
+endif()
+
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/lua)
 
