@@ -4077,7 +4077,7 @@
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "0.0.0-eec4a9b6",
+      "baseline": "0.0.0-b8177a46",
       "port-version": 0
     },
     "netcdf-c": {
@@ -5649,7 +5649,7 @@
       "port-version": 0
     },
     "status-code": {
-      "baseline": "1.0.0-52f87c46",
+      "baseline": "1.0.0-ab3cd821",
       "port-version": 0
     },
     "status-value-lite": {
