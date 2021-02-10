@@ -309,7 +309,6 @@ inline BOOLEAN RtlGenRandom(
 
 
 #undef IGNORE
-#undef CALLBACK
 
 
 #ifdef __cplusplus
