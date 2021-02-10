@@ -1,0 +1,13 @@
+{
+  "name": "functions-framework-cpp",
+  "version-string": "0.3.0",
+  "description": "Functions Framework for C++.",
+  "homepage": "https://github.com/GoogleCloudPlatform/functions-framework-cpp/",
+  "dependencies": [
+    "abseil",
+    "boost-beast",
+    "boost-program-options",
+    "boost-serialization",
+    "nlohmann-json"
+  ]
+}
