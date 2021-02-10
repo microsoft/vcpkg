@@ -2,8 +2,10 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES build.patch
-                    limits.patch
-                    build_fixes.patch)
+                    #limits.patch
+                    #build_fixes.patch
+                    )
+
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
