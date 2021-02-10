@@ -19,6 +19,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     opencl      MNN_OPENCL
 )
 
+# 'cuda' feature in Windows failes with Ninja because of parallel PDB access. Make it optional
+set(NINJA_OPTION PREFER_NINJA) 
+if("cuda" IN_LIST FEATURES)
+    unset(NINJA_OPTION)
+endif()
+
 if("test" IN_LIST FEATURES)
     list(APPEND BUILD_OPTIONS -DMNN_BUILD_BENCHMARK=ON)
 endif()
@@ -38,9 +44,8 @@ if("opencl" IN_LIST FEATURES OR "vulkan" IN_LIST FEATURES)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    # adjust /MD, /MT
-    string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" WIN_RUNTIME_MT)
-    list(APPEND PLATFORM_OPTIONS -DMNN_WIN_RUNTIME_MT=${WIN_RUNTIME_MT})
+    string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_RUNTIME_MT)
+    list(APPEND PLATFORM_OPTIONS -DMNN_WIN_RUNTIME_MT=${USE_RUNTIME_MT})
 elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     # use Metal API by default
     list(APPEND PLATFORM_OPTIONS -DMNN_METAL=ON -DMNN_GPU_TRACE=ON)
@@ -54,11 +59,13 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    ${NINJA_OPTION}
     OPTIONS
-        -DMNN_BUILD_SHARED_LIBS=${BUILD_SHARED}
         -DMNN_SEP_BUILD=OFF # build with backends/expression
+        -DMNN_BUILD_SHARED_LIBS=${BUILD_SHARED}
         ${FEATURE_OPTIONS} ${BUILD_OPTIONS} ${PLATFORM_OPTIONS}
+        # 1.1.0.0-${commit}
+        -DMNN_VERSION_MAJOR=1 -DMNN_VERSION_MINOR=1 -DMNN_VERSION_PATCH=0 -DMNN_VERSION_BUILD=0 -DMNN_VERSION_SUFFIX="-d6795ad" 
     OPTIONS_DEBUG
         -DMNN_DEBUG_MEMORY=ON -DMNN_DEBUG_TENSOR_SIZE=ON
 )
@@ -100,6 +107,10 @@ if("tools" IN_LIST FEATURES)
         #     TOOL_NAMES checkDir.out checkFile.out winogradExample.out winogradGenerateGLSL.out winogradGenerateCL.out # tools/cpp
         #     AUTO_CLEAN
         # )
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin) # remove the others. ex) mnn.metallib
     endif()
+endif()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    # remove the others. ex) mnn.metallib
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin
+                        ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
