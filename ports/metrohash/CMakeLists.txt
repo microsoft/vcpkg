@@ -5,10 +5,20 @@ set(CMAKE_CXX_STANDARD 17)
 add_library(metrohash
             src/metrohash64.cpp
             src/metrohash128.cpp
-            src/metrohash128crc.cpp
             )
-target_compile_options(metrohash PRIVATE -march=native)
-set(metro_headers src/metrohash.h src/metrohash64.h src/metrohash128.h src/metrohash128crc.h)
+list(APPEND metro_headers src/metrohash.h src/metrohash64.h src/metrohash128.h)
+
+if(NOT ANDROID AND NOT IOS)
+    list(APPEND metro_headers src/metrohash128crc.h)
+    target_sources(metrohash PRIVATE src/metrohash128crc.cpp)
+    if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
+        target_compile_options(metrohash PRIVATE -msse4.2)
+    endif()
+endif()
+if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
+    target_compile_options(metrohash PRIVATE -march=native)
+endif()
+
 set_target_properties(metrohash PROPERTIES
                       PUBLIC_HEADER "${metro_headers}"
                       )
