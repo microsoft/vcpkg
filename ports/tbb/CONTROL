@@ -4,6 +4,3 @@ Port-Version: 4
 Homepage: https://github.com/01org/tbb
 Description: Intel's Threading Building Blocks.
 Supports: !(uwp|arm|arm64) | linux | osx
-
-Feature: disable-exceptions
-Description: sets TBB_USE_EXCEPTIONS=0. This is useful if you want an unhandled exception in your tbb code to crash and yield a dump at the point where the exception is thrown, instead of being rethrown at the invocation of the associated TBB algorithm, at which point the original stack of the thrown exception is gone.

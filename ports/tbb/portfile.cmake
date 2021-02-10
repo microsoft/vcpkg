@@ -14,9 +14,14 @@ vcpkg_from_github(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+if (TBB_DISABLE_EXCEPTIONS)
+    message(STATUS "Building TBB with exception-handling constructs disabled because TBB_DISABLE_EXCEPTIONS is set to ON.")
+else()
+    message(STATUS "TBB uses exception-handling constructs by default (if supported by the compiler). This use can be disabled with 'SET(TBB_DISABLE_EXCEPTIONS ON)' in your custom triplet.")
+endif()
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)
-    if ("disable-exceptions" IN_LIST FEATURES)
+    if (TBB_DISABLE_EXCEPTIONS)
         set(DISABLE_EXCEPTIONS ON)
     else()
         set(DISABLE_EXCEPTIONS OFF)
@@ -68,7 +73,7 @@ else()
             string(REPLACE "\/D_CRT_SECURE_NO_DEPRECATE"
                         "\/D_CRT_SECURE_NO_DEPRECATE \/DIN_CILK_RUNTIME" SLN_CONFIGURE "${SLN_CONFIGURE}")
         endif()
-        if ("disable-exceptions" IN_LIST FEATURES)
+        if (TBB_DISABLE_EXCEPTIONS)
             string(REPLACE "<PreprocessorDefinitions>%(PreprocessorDefinitions)<\/PreprocessorDefinitions>"
                         "<PreprocessorDefinitions>TBB_USE_EXCEPTIONS=0;%(PreprocessorDefinitions)<\/PreprocessorDefinitions>" SLN_CONFIGURE "${SLN_CONFIGURE}")
         endif()
