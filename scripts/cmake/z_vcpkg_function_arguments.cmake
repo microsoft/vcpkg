@@ -25,7 +25,7 @@ endfunction()
 ```
 #]===]
 
-# NOTE: this function definition is copied directly to scripts/buildsystems/cmake/z_vcpkg_utility_macros.cmake
+# NOTE: this function definition is copied directly to scripts/buildsystems/cmake/z_vcpkg_utilities.cmake
 # do not make changes here without making the same change there.
 macro(z_vcpkg_function_arguments OUT_VAR)
     if("${ARGC}" EQUAL 1)
