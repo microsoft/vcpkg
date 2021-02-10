@@ -55,8 +55,8 @@
     </StringProperty.DataSource>
   </StringProperty>
 
-  <StringProperty Name="VcpkgInstalledDir" DisplayName="vcpkg installed directory" Category="General" Subtype="folder" Visible="true"
-                  Description="The vcpkg installed directory: this is the place where vcpkg places all of the ports for installation.">
+  <StringProperty Name="VcpkgInstalledDir" DisplayName="Installed Directory" Category="General" Subtype="folder" Visible="true"
+                  Description="The location where headers and binaries will be consumed from. In manifest mode, this directory will be created and populated based on vcpkg.json.">
   </StringProperty>
 
   <BoolProperty Name="VcpkgUseStatic" DisplayName="Use Static Libraries" Category="Conditional" Default="false"
