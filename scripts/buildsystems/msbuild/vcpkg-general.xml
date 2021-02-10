@@ -55,11 +55,8 @@
     </StringProperty.DataSource>
   </StringProperty>
 
-  <StringProperty Name="VcpkgCurrentInstalledDir" DisplayName="Package install directory" Category="General" Subtype="folder" Visible="false"
-                  Description="Defines the direct path to the installed Vcpkg packages.">
-    <StringProperty.DataSource>
-      <DataSource Persistence="ProjectFile" Label="Vcpkg" HasConfigurationCondition="false" />
-    </StringProperty.DataSource>
+  <StringProperty Name="VcpkgInstalledDir" DisplayName="vcpkg installed directory" Category="General" Subtype="folder" Visible="true"
+                  Description="The vcpkg installed directory: this is the place where vcpkg places all of the ports for installation.">
   </StringProperty>
 
   <BoolProperty Name="VcpkgUseStatic" DisplayName="Use Static Libraries" Category="Conditional" Default="false"
