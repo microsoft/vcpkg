@@ -17,6 +17,7 @@ mark_as_advanced(VCPKG_VERBOSE)
 
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
 option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
+option(X_VCPKG_APPLOCAL_DEPS_INSTALL "(experimental) Automatically copy dependencies into the install target directory for executables." OFF)
 
 # Manifest options and settings
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
@@ -68,6 +69,18 @@ Install the dependencies listed in your manifest:
     ON
     "VCPKG_MANIFEST_MODE"
     OFF)
+
+if(VCPKG_MANIFEST_INSTALL)
+    set(VCPKG_BOOTSTRAP_OPTIONS "${VCPKG_BOOTSTRAP_OPTIONS}" CACHE STRING "Additional options to bootstrap vcpkg" FORCE)
+    set(VCPKG_OVERLAY_PORTS "${VCPKG_OVERLAY_PORTS}" CACHE STRING "Overlay ports to use for vcpkg install in manifest mode" FORCE)
+    set(VCPKG_OVERLAY_TRIPLETS "${VCPKG_OVERLAY_TRIPLETS}" CACHE STRING "Overlay triplets to use for vcpkg install in manifest mode" FORCE)
+    set(VCPKG_INSTALL_OPTIONS "${VCPKG_INSTALL_OPTIONS}" CACHE STRING "Additional install options to pass to vcpkg" FORCE)
+    set(Z_VCPKG_UNUSED VCPKG_BOOTSTRAP_OPTIONS)
+    set(Z_VCPKG_UNUSED VCPKG_OVERLAY_PORTS)
+    set(Z_VCPKG_UNUSED VCPKG_OVERLAY_TRIPLETS)
+    set(Z_VCPKG_UNUSED VCPKG_INSTALL_OPTIONS)
+endif()
+
 
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(Z_VCPKG_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
@@ -335,9 +348,6 @@ else()
 endif()
 
 if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_COMPILE AND NOT Z_VCPKG_HAS_FATAL_ERROR)
-    set(VCPKG_BOOTSTRAP_OPTIONS "${VCPKG_BOOTSTRAP_OPTIONS}" CACHE STRING "Additional options to bootstrap vcpkg" FORCE)
-    mark_as_advanced(VCPKG_BOOTSTRAP_OPTIONS)
-
     if(NOT EXISTS "${Z_VCPKG_EXECUTABLE}" AND NOT Z_VCPKG_HAS_FATAL_ERROR)
         message(STATUS "Bootstrapping vcpkg before install")
 
@@ -357,13 +367,6 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
     endif()
 
     if (NOT Z_VCPKG_HAS_FATAL_ERROR)
-        set(VCPKG_OVERLAY_PORTS "${VCPKG_OVERLAY_PORTS}" CACHE STRING "Overlay ports to use for vcpkg install in manifest mode" FORCE)
-        mark_as_advanced(VCPKG_OVERLAY_PORTS)
-        set(VCPKG_OVERLAY_TRIPLETS "${VCPKG_OVERLAY_TRIPLETS}" CACHE STRING "Overlay triplets to use for vcpkg install in manifest mode" FORCE)
-        mark_as_advanced(VCPKG_OVERLAY_TRIPLETS)
-        set(VCPKG_INSTALL_OPTIONS "${VCPKG_INSTALL_OPTIONS}" CACHE STRING "Additional install options to pass to vcpkg" FORCE)
-        mark_as_advanced(VCPKG_INSTALL_OPTIONS)
-
         message(STATUS "Running vcpkg install")
 
         set(Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS)
@@ -525,7 +528,6 @@ function(x_vcpkg_install_local_dependencies)
     endif()
 endfunction()
 
-set(X_VCPKG_APPLOCAL_DEPS_INSTALL "${X_VCPKG_APPLOCAL_DEPS_INSTALL}" CACHE BOOL "(experimental) Automatically copy dependencies into the install target directory for executables.")
 if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
     function(install)
         z_vcpkg_function_arguments(ARGS)
