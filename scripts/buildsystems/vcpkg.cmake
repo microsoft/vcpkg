@@ -1,15 +1,18 @@
 # Mark variables as used so cmake doesn't complain about them
 mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 
+# NOTE: to figure out what cmake versions are required for different things,
+# grep for `CMake 3`. All version requirement comments should follow that format.
+
 set(Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION "3.1")
 if(CMAKE_VERSION VERSION_LESS Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION)
     message(FATAL_ERROR "vcpkg.cmake requires at least CMake ${Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION}.")
 endif()
 # this policy is required for this file; thus, CMake 3.1 is required.
+cmake_policy(PUSH)
 cmake_policy(SET CMP0054 NEW)
 
 include(CMakeDependentOption)
-include("${CMAKE_CURRENT_LIST_DIR}/cmake/z_vcpkg_utilities.cmake")
 
 # VCPKG toolchain options.
 option(VCPKG_VERBOSE "Enables messages from the VCPKG toolchain for debugging purposes." OFF)
@@ -28,7 +31,7 @@ endif()
 set(VCPKG_MANIFEST_DIR "${VCPKG_MANIFEST_DIR}"
     CACHE PATH "The path to the vcpkg manifest directory." FORCE)
 
-if(DEFINED VCPKG_MANIFEST_DIR)
+if(DEFINED VCPKG_MANIFEST_DIR AND NOT VCPKG_MANIFEST_DIR STREQUAL "")
     set(Z_VCPKG_HAS_MANIFEST_DIR ON)
 else()
     set(Z_VCPKG_HAS_MANIFEST_DIR OFF)
@@ -81,6 +84,214 @@ if(VCPKG_MANIFEST_INSTALL)
     set(Z_VCPKG_UNUSED VCPKG_INSTALL_OPTIONS)
 endif()
 
+# CMake helper utilities
+#[===[.md:
+# z_vcpkg_add_fatal_error
+Add a fatal error.
+
+```cmake
+z_vcpkg_add_fatal_error(<message>...)
+```
+
+We use this system, instead of `message(FATAL_ERROR)`,
+since cmake prints a lot of nonsense if the toolchain errors out before it's found the build tools.
+
+This `Z_VCPKG_HAS_FATAL_ERROR` must be checked before any filesystem operations are done,
+since otherwise you might be doing something with bad variables set up.
+#]===]
+set(Z_VCPKG_FATAL_ERROR)
+set(Z_VCPKG_HAS_FATAL_ERROR OFF)
+function(z_vcpkg_add_fatal_error ERROR)
+    if(NOT Z_VCPKG_HAS_FATAL_ERROR)
+        set(Z_VCPKG_HAS_FATAL_ERROR ON PARENT_SCOPE)
+        set(Z_VCPKG_FATAL_ERROR "${ERROR}" PARENT_SCOPE)
+    else()
+        string(APPEND Z_VCPKG_FATAL_ERROR "\n${ERROR}")
+    endif()
+endfunction()
+
+#[===[.md:
+# z_vcpkg_function_arguments
+
+Get a list of the arguments which were passed in.
+Unlike `ARGV`, which is simply the arguments joined with `;`,
+so that `(A B)` is not distinguishable from `("A;B")`,
+this macro gives `"A;B"` for the first argument list,
+and `"A\;B"` for the second.
+
+```cmake
+z_vcpkg_function_arguments(<out-var> [<N>])
+```
+
+`z_vcpkg_function_arguments` gets the arguments between `ARGV<N>` and the last argument.
+`<N>` defaults to `0`, so that all arguments are taken.
+
+## Example:
+```cmake
+function(foo_replacement)
+    z_vcpkg_function_arguments(ARGS)
+    foo(${ARGS})
+    ...
+endfunction()
+```
+#]===]
+
+# NOTE: this function definition is copied directly from scripts/cmake/z_vcpkg_function_arguments.cmake
+# do not make changes here without making the same change there.
+macro(z_vcpkg_function_arguments OUT_VAR)
+    if("${ARGC}" EQUAL 1)
+        set(z_vcpkg_function_arguments_FIRST_ARG 0)
+    elseif("${ARGC}" EQUAL 2)
+        set(z_vcpkg_function_arguments_FIRST_ARG "${ARGV1}")
+    else()
+        # vcpkg bug
+        message(FATAL_ERROR "z_vcpkg_function_arguments: invalid arguments (${ARGV})")
+    endif()
+
+    set("${OUT_VAR}")
+
+    # this allows us to get the value of the enclosing function's ARGC
+    set(z_vcpkg_function_arguments_ARGC_NAME "ARGC")
+    set(z_vcpkg_function_arguments_ARGC "${${z_vcpkg_function_arguments_ARGC_NAME}}")
+
+    math(EXPR z_vcpkg_function_arguments_LAST_ARG "${z_vcpkg_function_arguments_ARGC} - 1")
+    foreach(z_vcpkg_function_arguments_N RANGE "${z_vcpkg_function_arguments_FIRST_ARG}" "${z_vcpkg_function_arguments_LAST_ARG}")
+        string(REPLACE ";" "\\;" z_vcpkg_function_arguments_ESCAPED_ARG "${ARGV${z_vcpkg_function_arguments_N}}")
+        list(APPEND "${OUT_VAR}" "${z_vcpkg_function_arguments_ESCAPED_ARG}")
+    endforeach()
+endmacro()
+
+#[===[.md:
+# z_vcpkg_*_parent_scope_export
+If you need to re-export variables to a parent scope from a call,
+you can put these around the call to re-export those variables that have changed locally
+to parent scope.
+
+## Usage:
+```cmake
+z_vcpkg_start_parent_scope_export(
+    [PREFIX <PREFIX>]
+)
+z_vcpkg_complete_parent_scope_export(
+    [PREFIX <PREFIX>]
+    [IGNORE_REGEX <REGEX>]
+)
+```
+
+## Parameters
+### PREFIX
+The prefix to use to store the old variable values; defaults to `Z_VCPKG_PARENT_SCOPE_EXPORT`.
+The value of each variable `<VAR>` will be stored in `${PREFIX}_<VAR>` by `start`,
+and then every variable which is different from `${PREFIX}_VAR` will be re-exported by `complete`.
+
+### IGNORE_REGEX
+Variables with names matching this regex will not be exported even if their value has changed.
+
+## Example:
+```cmake
+z_vcpkg_start_parent_scope_export()
+_find_package(blah)
+z_vcpkg_complete_parent_scope_export()
+```
+#]===]
+# Notes: these do not use `cmake_parse_arguments` in order to support older versions of cmake,
+# pre-3.7 and PARSE_ARGV
+macro(z_vcpkg_start_parent_scope_export)
+    if("${ARGC}" EQUAL "0")
+        set(z_vcpkg_parent_scope_export_PREFIX "Z_VCPKG_PARENT_SCOPE_EXPORT")
+    elseif("${ARGC}" EQUAL "2" AND "${ARGV0}" STREQUAL "PREFIX")
+        set(z_vcpkg_parent_scope_export_PREFIX "${ARGV1}")
+    else()
+        message(FATAL_ERROR "Invalid parameters to z_vcpkg_start_parent_scope_export: (${ARGV})")
+    endif()
+    get_property(z_vcpkg_parent_scope_export_VARIABLE_LIST
+        DIRECTORY PROPERTY "VARIABLES")
+    foreach(z_vcpkg_parent_scope_export_VARIABLE IN LISTS z_vcpkg_parent_scope_export_VARIABLE_LIST)
+        set("${z_vcpkg_parent_scope_export_PREFIX}_${z_vcpkg_parent_scope_export_VARIABLE}" "${${z_vcpkg_parent_scope_export_VARIABLE}}")
+    endforeach()
+endmacro()
+
+macro(z_vcpkg_complete_parent_scope_export)
+    set(z_vcpkg_parent_scope_export_PREFIX_FILLED OFF)
+    if("${ARGC}" EQUAL "0")
+        # do nothing, replace with default values
+    elseif("${ARGC}" EQUAL "2")
+        if("${ARGV0}" STREQUAL "PREFIX")
+            set(z_vcpkg_parent_scope_export_PREFIX_FILLED ON)
+            set(z_vcpkg_parent_scope_export_PREFIX "${ARGV1}")
+        elseif("${ARGV0}" STREQUAL "IGNORE_REGEX")
+            set(z_vcpkg_parent_scope_export_IGNORE_REGEX "${ARGV1}")
+        else()
+            message(FATAL_ERROR "Invalid arguments to z_vcpkg_complete_parent_scope_export: (${ARGV})")
+        endif()
+    elseif("${ARGC}" EQUAL "4")
+        if("${ARGV0}" STREQUAL "PREFIX" AND "${ARGV2}" STREQUAL "IGNORE_REGEX")
+            set(z_vcpkg_parent_scope_export_PREFIX_FILLED ON)
+            set(z_vcpkg_parent_scope_export_PREFIX "${ARGV1}")
+            set(z_vcpkg_parent_scope_export_IGNORE_REGEX "${ARGV3}")
+        elseif("${ARGV0}" STREQUAL "IGNORE_REGEX" AND "${ARGV2}" STREQUAL "PREFIX")
+            set(z_vcpkg_parent_scope_export_IGNORE_REGEX "${ARGV1}")
+            set(z_vcpkg_parent_scope_export_PREFIX_FILLED ON)
+            set(z_vcpkg_parent_scope_export_PREFIX "${ARGV3}")
+        else()
+            message(FATAL_ERROR "Invalid arguments to z_vcpkg_start_parent_scope_export: (${ARGV})")
+        endif()
+    else()
+        message(FATAL_ERROR "Invalid arguments to z_vcpkg_complete_parent_scope_export: (${ARGV})")
+    endif()
+
+    if(NOT z_vcpkg_parent_scope_export_PREFIX)
+        set(z_vcpkg_parent_scope_export_PREFIX "Z_VCPKG_PARENT_SCOPE_EXPORT")
+    endif()
+
+    get_property(z_vcpkg_parent_scope_export_VARIABLE_LIST
+        DIRECTORY PROPERTY "VARIABLES")
+    foreach(z_vcpkg_parent_scope_export_VARIABLE IN LISTS z_vcpkg_parent_scope_export_VARIABLE_LIST)
+        if("${z_vcpkg_parent_scope_export_VARIABLE}" MATCHES "^${z_vcpkg_parent_scope_export_PREFIX}_")
+            # skip the backup variables
+            continue()
+        endif()
+        if("${z_vcpkg_parent_scope_export_VARIABLE}" MATCHES "^${z_vcpkg_parent_scope_export_PREFIX}_")
+            # skip the backup variables
+            continue()
+        endif()
+
+        if(DEFINED "${z_vcpkg_parent_scope_export_IGNORE_REGEX}" AND "${z_vcpkg_parent_scope_export_VARIABLE}" MATCHES "${z_vcpkg_parent_scope_export_IGNORE_REGEX}")
+            # skip those variables which should be ignored
+            continue()
+        endif()
+
+        if(NOT "${${z_vcpkg_parent_scope_export_PREFIX}_${z_vcpkg_parent_scope_export_VARIABLE}}" STREQUAL "${${z_vcpkg_parent_scope_export_VARIABLE}}")
+            set("${z_vcpkg_parent_scope_export_VARIABLE}" "${${z_vcpkg_parent_scope_export_VARIABLE}}" PARENT_SCOPE)
+        endif()
+    endforeach()
+endmacro()
+
+#[===[.md:
+# z_vcpkg_set_powershell_path
+
+Gets either the path to powershell or powershell core,
+and places it in the variable Z_VCPKG_POWERSHELL_PATH.
+#]===]
+function(z_vcpkg_set_powershell_path)
+    # Attempt to use pwsh if it is present; otherwise use powershell
+    if (NOT DEFINED Z_VCPKG_POWERSHELL_PATH)
+        find_program(Z_VCPKG_PWSH_PATH pwsh)
+        if (Z_VCPKG_PWSH_PATH)
+            set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_PWSH_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+        else()
+            message(DEBUG "vcpkg: Could not find PowerShell Core; falling back to PowerShell")
+            find_program(Z_VCPKG_BUILTIN_POWERSHELL_PATH powershell REQUIRED)
+            if (Z_VCPKG_BUILTIN_POWERSHELL_PATH)
+                set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_BUILTIN_POWERSHELL_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+            else()
+                message(WARNING "vcpkg: Could not find PowerShell; using static string 'powershell.exe'")
+                set(Z_VCPKG_POWERSHELL_PATH "powershell.exe" CACHE INTERNAL "The path to the PowerShell implementation to use.")
+            endif()
+        endif()
+    endif() # Z_VCPKG_POWERSHELL_PATH
+endfunction()
+
 
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(Z_VCPKG_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
@@ -100,6 +311,7 @@ if(VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
 endif()
 
 if(VCPKG_TOOLCHAIN)
+    cmake_policy(POP)
     return()
 endif()
 
@@ -168,6 +380,7 @@ else()
                                 "Consider providing a value for the CMAKE_OSX_ARCHITECTURES cache variable. "
                                 "Continuing without vcpkg.")
                 set(VCPKG_TOOLCHAIN ON)
+                cmake_policy(POP)
                 return()
             else()
                 if(arch_count GREATER 1)
@@ -189,6 +402,7 @@ else()
                 else()
                     message(WARNING "Unable to determine target architecture, continuing without vcpkg.")
                     set(VCPKG_TOOLCHAIN ON)
+                    cmake_policy(POP)
                     return()
                 endif()
             endif()
@@ -209,6 +423,7 @@ else()
                 message(WARNING "Unable to determine target architecture, continuing without vcpkg.")
             endif()
             set(VCPKG_TOOLCHAIN ON)
+            cmake_policy(POP)
             return()
         endif()
     endif()
@@ -250,17 +465,18 @@ if(NOT Z_VCPKG_ROOT_DIR)
 endif()
 
 # NOTE: _VCPKG_INSTALLED_DIR cannot be changed without tool changes.
-if (NOT DEFINED _VCPKG_INSTALLED_DIR)
-    if(VCPKG_MANIFEST_MODE)
-        set(_VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
+if (NOT DEFINED VCPKG_INSTALLED_DIR)
+    if (DEFINED _VCPKG_INSTALLED_DIR)
+        set(VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}")
+    elseif(VCPKG_MANIFEST_MODE)
+        set(VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
     else()
-        set(_VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
+        set(VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
     endif()
-
-    set(_VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}"
-        CACHE PATH
-        "The directory which contains the installed libraries for each triplet")
 endif()
+set(VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
+    CACHE PATH
+    "The directory which contains the installed libraries for each triplet" FORCE)
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths.
     list(APPEND CMAKE_PREFIX_PATH
@@ -394,7 +610,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
         endif()
 
-        if (NOT CMAKE_VERSION VERSION_LESS "3.18") # == GREATER_EQUAL, but that was added in 3.7
+        if (NOT CMAKE_VERSION VERSION_LESS "3.18") # == GREATER_EQUAL, but that was added in CMake 3.7
             set(Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE)
         else()
             set(Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS)
@@ -422,9 +638,11 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
         if (Z_VCPKG_MANIFEST_INSTALL_RESULT EQUAL 0)
             message(STATUS "Running vcpkg install - done")
 
+            # file(TOUCH) added in CMake 3.12
+            file(WRITE "${_VCPKG_INSTALLED_DIR}/.cmakestamp" "")
             set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
                 "${VCPKG_MANIFEST_DIR}/vcpkg.json"
-                "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
+                "${_VCPKG_INSTALLED_DIR}/.cmakestamp")
             if(EXISTS "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
                 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
                     "${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json")
@@ -674,3 +892,5 @@ endif()
 if(Z_VCPKG_HAS_FATAL_ERROR)
     message(FATAL_ERROR "${Z_VCPKG_FATAL_ERROR}")
 endif()
+
+cmake_policy(POP)
