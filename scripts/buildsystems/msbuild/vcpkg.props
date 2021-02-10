@@ -15,7 +15,7 @@
 
   <PropertyGroup>
     <VcpkgPropsImported>true</VcpkgPropsImported>
-    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">true</VcpkgEnabled>
+    <VcpkgEnabled Condition="'$(VcpkgEnabled)' == ''">false</VcpkgEnabled>
     <VcpkgConfiguration Condition="'$(VcpkgConfiguration)' == ''">$(Configuration)</VcpkgConfiguration>
     <VcpkgUseStatic Condition="'$(VcpkgUseStatic)' == ''">false</VcpkgUseStatic>
     <VcpkgRoot Condition="'$(VcpkgRoot)' == ''">$([System.IO.Path]::Combine($(MSBuildThisFileDirectory), '..\..\..'))</VcpkgRoot>
