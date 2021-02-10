@@ -810,7 +810,7 @@
     },
     "boost-python": {
       "baseline": "1.75.0",
-      "port-version": 2
+      "port-version": 1
     },
     "boost-qvm": {
       "baseline": "1.75.0",
