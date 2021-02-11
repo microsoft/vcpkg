@@ -1721,8 +1721,8 @@
       "port-version": 0
     },
     "dxut": {
-      "baseline": "11.14",
-      "port-version": 4
+      "baseline": "11.25",
+      "port-version": 0
     },
     "eabase": {
       "baseline": "2.09.12-1",
@@ -1766,6 +1766,10 @@
     },
     "edlib": {
       "baseline": "1.2.6",
+      "port-version": 0
+    },
+    "effects11": {
+      "baseline": "11.26",
       "port-version": 0
     },
     "effolkronium-random": {

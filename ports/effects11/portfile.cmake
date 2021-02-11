@@ -1,13 +1,14 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID")
+vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "ANDROID")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO microsoft/DXUT
+    REPO microsoft/FX11
     REF feb2021
-    SHA512 576692b79e67a9fd0b39b6e20c519fe61ad18525db663071f446f3c2e0ae3f009f67f00be45baf52749810af1ddc995ad0e5e4608d7f42d08116ff6e91bccb22
+    SHA512 bdf35347582646e782c20a96180c8286786da46583527b76b2d348cd76a75285a31ebb88297962cd279c09bbd416c15c0d25ae91881ffebbf9e8ce2f21912f16
     HEAD_REF master
+    FILE_DISAMBIGUATOR 1
 )
 
 vcpkg_configure_cmake(
