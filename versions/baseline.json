@@ -334,7 +334,7 @@
     },
     "bfgroup-lyra": {
       "baseline": "1.5",
-      "port-version": 0
+      "port-version": 1
     },
     "bigint": {
       "baseline": "2010.04.30",
