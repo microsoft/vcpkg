@@ -67,7 +67,7 @@ function Get-AuthHeader() {
         [PSCredential]$Credentials
     )
     @{ Authorization = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(
-        "$($Credentials.UserName):$($Credentials.GetNetworkCredential().Password)" }
+        "$($Credentials.UserName):$($Credentials.GetNetworkCredential().Password)")) }
 }
 
 $response = Invoke-WebRequest -uri 'https://api.github.com' -Headers (Get-AuthHeader $Credentials)
@@ -149,7 +149,10 @@ function Get-PullRequestFileMap {
     [OutputType([PRFileMap[]])]
     Param (
         [Parameter(Mandatory=$True,ValueFromPipeline=$True)]
-        [Object]$Pull
+        [Object]$Pull,
+        [Parameter(Mandatory=$True)]
+        [Credential()]
+        [PSCredential]$Credentials
     )
     Begin {
         $Pulls = [List[Object]]::new()
@@ -186,7 +189,7 @@ function Get-PullRequestFileMap {
                     do {
                         $requestSplat.Body.page++
 
-                        $response = Invoke-WebRequest -Headers (Get-AuthHeader) @requestSplat | ConvertFrom-Json
+                        $response = Invoke-WebRequest -Headers (Get-AuthHeader $Credentials) @requestSplat | ConvertFrom-Json
 
                         $response
                     } until ($response.Length -lt $requestSplat.Body.per_page)
@@ -370,20 +373,7 @@ function Select-UpdatedPorts {
     }
 }
 
-function Get-ChangelogFileName() {
-    $suffixes = Get-ChildItem -Path . | ForEach-Object {
-        if (-not ($_ -match '^CHANGELOG([\-](?<number>[0-9]+))?\.md')) { return }
-        if ($Matches['number']) { $Matches.number } else { '0' }
-    } | Sort-Object
-
-    $suffix = 0
-    while ([String]$suffix -in $suffixes) { $suffix++ }
-
-    $suffix = if ($suffix) { "-$suffix" } else { '' }
-    "CHANGELOG$suffix.md"
-}
-
-$PRFileMaps = Get-MergedPullRequests | Sort-Object -Property 'number' | Get-PullRequestFileMap
+$PRFileMaps = (Get-MergedPullRequests $Credentials) | Sort-Object -Property 'number' | Get-PullRequestFileMap -Credentials $Credentials
 
 Write-Progress -Activity 'Selecting updates from pull request files' -PercentComplete -1
 
@@ -471,6 +461,6 @@ $(-join ($ChangedPorts | ForEach-Object {
 </details>
 
 -- vcpkg team vcpkg@microsoft.com $(Get-Date -UFormat "%a, %d %B %T %Z00")
-"@ | Out-File (Get-ChangelogFileName)
+"@ | Out-File -FilePath $OutFile
 
 Write-Progress -Activity 'Writing changelog file' -Completed
