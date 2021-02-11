@@ -121,7 +121,7 @@ foreach(BUILD_TYPE dbg rel)
 		set(LINUX_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-linux-build.patch")
 	endif()
 	if(VCPKG_TARGET_IS_UWP)
-		set(UWP_ONLY_PATCHES ../tensorflow-common/fix-uwp-build.patch)
+		set(UWP_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-uwp-build.patch")
 	endif()
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
@@ -226,7 +226,6 @@ foreach(BUILD_TYPE dbg rel)
 
 		list(APPEND COPTS "--copt=-DWINAPI_FAMILY=WINAPI_FAMILY_APP")
 		list(APPEND COPTS "--copt=-D_WIN32_WINNT=0x0A00")
-		#list(APPEND COPTS "--copt=-Ibazel-out/x64_windows-${BUILD_TYPE}/bin/patching_target/patched_includes")
 		list(APPEND COPTS "--copt=-FI__vcpkg_uwppatch.h")
 		list(APPEND LINKOPTS "--linkopt=-APPCONTAINER")
 		list(APPEND LINKOPTS "--linkopt=WindowsApp.lib")
