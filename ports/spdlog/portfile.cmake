@@ -11,6 +11,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 	benchmark SPDLOG_BUILD_BENCH
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SPDLOG_BUILD_SHARED)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -18,6 +20,7 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DSPDLOG_FMT_EXTERNAL=ON
         -DSPDLOG_INSTALL=ON
+        -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
 )
 
 vcpkg_install_cmake()
