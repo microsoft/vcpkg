@@ -62,3 +62,23 @@ This environment variable can be set to a list of environment variables, separat
 the build environment.
 
 Example: `FOO_SDK_DIR;BAR_SDK_DIR`
+
+#### VCPKG_MAX_CONCURRENCY
+
+This environment variables limits the amount of concurrency requested by underlying buildsystems. If unspecified, this defaults to logical cores + 1.
+
+#### VCPKG_DEFAULT_BINARY_CACHE
+
+This environment variable redirects the default location to store binary packages. See [Binary Caching](binarycaching.md#Configuration) for more details.
+
+#### VCPKG_BINARY_SOURCES
+
+This environment variable adds or removes binary sources. See [Binary Caching](binarycaching.md#Configuration) for more details.
+
+#### VCPKG_NUGET_REPOSITORY
+
+This environment variable changes the metadata of produced NuGet packages. See [Binary Caching](binarycaching.md#Configuration) for more details.
+
+#### VCPKG_USE_NUGET_CACHE
+
+This environment variable allows using NuGet's cache for every nuget-based binary source. See [Binary Caching](binarycaching.md#NuGets-cache) for more details.

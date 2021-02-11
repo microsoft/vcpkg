@@ -1,0 +1,29 @@
+{
+  "name": "boost-multi-index",
+  "version-string": "1.75.0",
+  "description": "Boost multi_index module",
+  "homepage": "https://github.com/boostorg/multi_index",
+  "dependencies": [
+    "boost-assert",
+    "boost-bind",
+    "boost-compatibility",
+    "boost-config",
+    "boost-container-hash",
+    "boost-core",
+    "boost-detail",
+    "boost-foreach",
+    "boost-functional",
+    "boost-integer",
+    "boost-iterator",
+    "boost-move",
+    "boost-mpl",
+    "boost-preprocessor",
+    "boost-serialization",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

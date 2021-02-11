@@ -12,6 +12,8 @@ vcpkg_from_github(
         fix-link-libpng.patch
         remove-broken-targets.patch
         fix-check-sse.patch
+        realsense2.patch
+        add-gcc-version-check.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)

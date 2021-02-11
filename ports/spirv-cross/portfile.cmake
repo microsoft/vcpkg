@@ -9,10 +9,19 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(VCPKG_TARGET_IS_IOS)
+    message(STATUS "Using iOS trplet. Executables won't be created...")
+    set(BUILD_CLI OFF)
+else()
+    set(BUILD_CLI ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DSPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS=OFF
+    OPTIONS
+        -DSPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS=OFF
+        -DSPIRV_CROSS_CLI=${BUILD_CLI}
 )
 
 vcpkg_install_cmake()
