@@ -2,16 +2,16 @@
 # We are not using Powershell >= 6.0, as the only supported debugger (vscode powershell extension) breaks on complex code. See: https://github.com/PowerShell/PowerShellEditorServices/issues/1295
 # This code can be run on PowerShell Core on any platform, but it is recommend to debug this code in Windows PowerShell ISE unless debugging happens to "just work" on your machine.
 # Expect the fix to be out at around the end of 2020/beginning of 2021, at which point consider upgrading this script to PowerShell 7 the next time maintenance is necessary.
-# -- Griffin Downs Dec 15, 2020 (@grdowns)
+# -- Griffin Downs 2020-12-15 (@grdowns)
 
 using namespace System.Management.Automation
 using namespace System.Collections.Generic
 
 <#
-.Synopsis
+.SYNOPSIS
     Changelog generator for vcpkg.
 .DESCRIPTION
-    The changelog generator uses the GitHub Pull Request and Files API's to get
+    The changelog generator uses GitHub's Pull Request and Files API to get
     pull requests and their associated file changes over the provided date range.
     Then, the data is processed into buckets which are then presented to the user
     in a markdown file.
@@ -29,17 +29,20 @@ using namespace System.Collections.Generic
 [CmdletBinding(PositionalBinding=$True)]
 Param (
     # The begin date range (inclusive)
-    [Parameter(Mandatory=$True)]
+    [Parameter(Mandatory=$True, Position=0)]
     [ValidateScript({$_ -le (Get-Date)})]
     [DateTime]$StartDate,
     
     # The end date range (exclusive)
-    [Parameter(Mandatory=$True)]
+    [Parameter(Mandatory, Position=1)]
     [ValidateScript({$_ -le (Get-Date)})]
     [DateTime]$EndDate,
+
+    [Parameter(Mandatory=$True)]
+    [String]$OutFile,
     
     # GitHub credentials (username and PAT)
-    [Parameter(Mandatory=$False,ValueFromPipeline=$True)]
+    [Parameter()]
     [Credential()]
     [PSCredential]$Credentials
 )
@@ -57,11 +60,17 @@ if (-not $Credentials) {
 }
 
 function Get-AuthHeader() {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory=$True)]
+        [Credential()]
+        [PSCredential]$Credentials
+    )
     @{ Authorization = 'Basic ' + [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(
-        ('{0}:{1}' -f $Credentials.UserName, $Credentials.GetNetworkCredential().Password))) }
+        "$($Credentials.UserName):$($Credentials.GetNetworkCredential().Password)" }
 }
 
-$response = Invoke-WebRequest -uri 'https://api.github.com' -Headers ($Credentials | Get-AuthHeader)
+$response = Invoke-WebRequest -uri 'https://api.github.com' -Headers (Get-AuthHeader $Credentials)
 if ('X-OAuth-Scopes' -notin $response.Headers.Keys) {
     throw [System.ArgumentException]::new(
         "Cannot validate argument on parameter 'Credentials'. Incorrect GitHub credentials"
@@ -72,7 +81,11 @@ if ('X-OAuth-Scopes' -notin $response.Headers.Keys) {
 function Get-MergedPullRequests {
     [CmdletBinding()]
     [OutputType([Object[]])]
-    Param ()
+   Param(
+        [Parameter(Mandatory=$True)]
+        [Credential()]
+        [PSCredential]$Credentials
+    )
     Begin {
         $RequestSplat = @{
             Uri = 'https://api.github.com/repos/Microsoft/vcpkg/pulls'
@@ -89,8 +102,7 @@ function Get-MergedPullRequests {
         $DeltaEpochStart = ($Epoch - $StartDate).Ticks
 
         $ProgressSplat = @{
-            Activity = 'Searching for merged Pull Requests in date range: {0} - {1}' -f
-                $StartDate.ToString('yyyy.MM.dd'), $EndDate.ToString('yyyy.MM.dd')
+            Activity = "Searching for merged Pull Requests in date range: $($StartDate.ToString('yyyy-MM-dd')) - $($EndDate.ToString('yyyy-MM-dd'))"
             PercentComplete = 0
         }
 
@@ -98,12 +110,12 @@ function Get-MergedPullRequests {
 
         $writeProgress = {
             $ProgressSplat.PercentComplete = 100 * ($Epoch - $_.updated_at).Ticks / $DeltaEpochStart
-            Write-Progress @ProgressSplat -Status ('Current item date: {0}' -f $_.updated_at.ToString('yyyy.MM.dd'))
+            Write-Progress @ProgressSplat -Status "Current item date: $($_.updated_at.ToString('yyyy-MM-dd'))"
         }
     }
     Process {
         while ($True) {
-            $response = Invoke-WebRequest -Headers (Get-AuthHeader) @RequestSplat | ConvertFrom-Json
+            $response = Invoke-WebRequest -Headers (Get-AuthHeader $Credentials) @RequestSplat | ConvertFrom-Json
 
             foreach ($_ in $response) {
                 foreach ($x in 'created_at', 'merged_at', 'updated_at', 'closed_at') {
