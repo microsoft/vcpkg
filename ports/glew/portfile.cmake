@@ -23,6 +23,8 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/glew)
+# Skip check the required dependency opengl
+vcpkg_fixup_pkgconfig(SKIP_CHECK)
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 set(_targets_cmake_files)
