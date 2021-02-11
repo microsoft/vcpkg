@@ -219,6 +219,7 @@ foreach(BUILD_TYPE dbg rel)
 	set(ADDITIONAL_TARGETS_PRE)
 	if(VCPKG_TARGET_IS_UWP)
 		# the following doesn't work yet, use work-around for the time being
+		# details: https://stackoverflow.com/questions/65184913/how-do-i-add-an-additional-system-include-directory-using-bazel
 		#set(AT_CHAR_FOR_CONFIGURE_FILE "@")
 		#configure_file(${CMAKE_CURRENT_LIST_DIR}/uwp_genrule.BUILD.in ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patching_target/BUILD @ONLY)
 		#set(ADDITIONAL_TARGETS_PRE "///patching_target:patch_include_dirs")

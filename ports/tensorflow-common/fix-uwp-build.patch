@@ -89,7 +89,7 @@ diff --git a/third_party/icu/BUILD.bazel b/third_party/icu/BUILD.bazel
 diff --git a/third_party/icu/udata.patch b/third_party/icu/udata.patch
 --- a/third_party/icu/udata.patch
 +++ b/third_party/icu/udata.patch
-@@ -44,16 +44,3 @@
+@@ -44,16 +44,32 @@
   
   /*----------------------------------------------------------------------*
    *                                                                      *
@@ -106,13 +106,6 @@ diff --git a/third_party/icu/udata.patch b/third_party/icu/udata.patch
 - #if U_PLATFORM_HAS_WINUWP_API == 0 // Windows UWP Platform does not support dll icu data at this time
 -         setCommonICUDataPointer(&U_ICUDATA_ENTRY_POINT, FALSE, pErrorCode);
 -         {
-
-
-diff --git a/third_party/icu/ucnvisci.patch b/third_party/icu/ucnvisci.patch
-new file mode 100644
---- /dev/null
-+++ b/third_party/icu/ucnvisci.patch
-@@ -0,0 +1,29 @@
 +--- a/icu4c/source/common/ucnvisci.cpp
 +--- b/icu4c/source/common/ucnvisci.cpp
 +@@ -1230,7 +1230,7 @@
