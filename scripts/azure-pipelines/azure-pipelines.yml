@@ -21,30 +21,24 @@ stages:
       value: $(Build.ArtifactStagingDirectory)\format.diff
     steps:
     - task: Powershell@2
-      displayName: 'Format C++'
-      inputs:
-        filePath: 'scripts/azure-pipelines/Format-CxxCode.ps1'
-        arguments: '-Root .'
-        pwsh: true
-    - task: Powershell@2
       displayName: 'Generate Documentation'
       inputs:
         filePath: 'docs/regenerate.ps1'
         arguments: '-VcpkgRoot . -WarningAction Stop'
         pwsh: true
     - script: .\bootstrap-vcpkg.bat
-      displayName: 'Build vcpkg'
-    - script: '.\vcpkg format-manifest --all'
+      displayName: 'Bootstrap vcpkg'
+    - script: '.\vcpkg.exe format-manifest --all'
       displayName: 'Format Manifests'
     - task: Powershell@2
       displayName: 'Create Diff'
       inputs:
-        filePath: scripts/azure-pipelines/Create-FormatDiff.ps1
+        filePath: scripts/azure-pipelines/Create-PRDiff.ps1
         arguments: '-DiffFile $(DiffFile)'
         pwsh: true
     - task: PublishBuildArtifacts@1
       condition: failed()
-      displayName: 'Publish C++ Diff'
+      displayName: 'Publish Format and Documentation Diff'
       inputs:
         PathtoPublish: '$(DiffFile)'
         ArtifactName: 'format.diff'

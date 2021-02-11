@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         expat.patch
         linux.patch
+        pkgconfig.patch
 )
 
 vcpkg_configure_cmake(
@@ -25,6 +26,17 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/log4cxx)
+
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    vcpkg_fixup_pkgconfig()
+endif()
+
+file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/log4cxxConfig.cmake _contents)
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/log4cxxConfig.cmake
+"include(CMakeFindDependencyMacro)
+find_dependency(expat CONFIG)
+${_contents}")
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_pdbs()
