@@ -6230,7 +6230,7 @@
     },
     "wxwidgets": {
       "baseline": "3.1.4",
-      "port-version": 5
+      "port-version": 6
     },
     "x-plane": {
       "baseline": "3.0.3",
