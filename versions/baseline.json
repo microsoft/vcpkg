@@ -2194,11 +2194,11 @@
     },
     "glew": {
       "baseline": "2.1.0",
-      "port-version": 9
+      "port-version": 10
     },
     "glfw3": {
       "baseline": "3.3.2",
-      "port-version": 0
+      "port-version": 1
     },
     "gli": {
       "baseline": "dd17acf-1",
