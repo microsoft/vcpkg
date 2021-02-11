@@ -6208,6 +6208,10 @@
       "baseline": "3.0",
       "port-version": 0
     },
+    "workflow": {
+      "baseline": "0.9.3",
+      "port-version": 0
+    },
     "wpilib": {
       "baseline": "2020.3.2",
       "port-version": 0
