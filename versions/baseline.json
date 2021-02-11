@@ -4074,7 +4074,7 @@
     },
     "ngspice": {
       "baseline": "34",
-      "port-version": 0
+      "port-version": 1
     },
     "nifticlib": {
       "baseline": "2020-04-30",
