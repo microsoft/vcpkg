@@ -15,7 +15,7 @@ rather than global to a system or user.
 In manifest mode, an installed tree is associated with a particular project rather than the vcpkg installation.
 The set of installed ports is controlled by editing the project's "manifest file",
 and the installed tree is placed in the project directory or build directory.
-This mode acts more similarly to language package managers like Cargo, or npm. 
+This mode acts more similarly to language package managers like Cargo, or npm.
 We recommend using this manifest mode whenever possible,
 because it allows one to encode a project's dependencies explicitly in a project file,
 rather than in the documentation, making your project much easier to consume.
@@ -350,4 +350,8 @@ This property must be set to true in order to consume from a local vcpkg.json fi
 *(Requires `Use Vcpkg Manifest` set to `true`)*
 
 This property can be set to "false" to disable automatic dependency restoration on project build. Dependencies can be manually restored via the vcpkg command line.
+
+#### `VcpkgInstalledDirectory` (Installed Directory)
+
+This property defines the location where headers and binaries are consumed from. In manifest mode, this directory is created and populated based on your manifest.
 
