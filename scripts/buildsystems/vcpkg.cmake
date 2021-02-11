@@ -275,14 +275,14 @@ and places it in the variable Z_VCPKG_POWERSHELL_PATH.
 #]===]
 function(z_vcpkg_set_powershell_path)
     # Attempt to use pwsh if it is present; otherwise use powershell
-    if (NOT DEFINED Z_VCPKG_POWERSHELL_PATH)
+    if(NOT DEFINED Z_VCPKG_POWERSHELL_PATH)
         find_program(Z_VCPKG_PWSH_PATH pwsh)
-        if (Z_VCPKG_PWSH_PATH)
+        if(Z_VCPKG_PWSH_PATH)
             set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_PWSH_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
         else()
             message(DEBUG "vcpkg: Could not find PowerShell Core; falling back to PowerShell")
             find_program(Z_VCPKG_BUILTIN_POWERSHELL_PATH powershell REQUIRED)
-            if (Z_VCPKG_BUILTIN_POWERSHELL_PATH)
+            if(Z_VCPKG_BUILTIN_POWERSHELL_PATH)
                 set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_BUILTIN_POWERSHELL_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
             else()
                 message(WARNING "vcpkg: Could not find PowerShell; using static string 'powershell.exe'")
@@ -296,7 +296,7 @@ endfunction()
 # Determine whether the toolchain is loaded during a try-compile configuration
 get_property(Z_VCPKG_CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE)
 
-if (CMAKE_VERSION VERSION_LESS "3.6.0")
+if(CMAKE_VERSION VERSION_LESS "3.6.0")
     set(Z_VCPKG_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES ON)
 else()
     set(Z_VCPKG_CMAKE_EMULATE_TRY_COMPILE_PLATFORM_VARIABLES OFF)
@@ -374,37 +374,37 @@ else()
         elseif(Z_VCPKG_CL MATCHES "bin/cl.exe$" OR Z_VCPKG_CL MATCHES "x86/cl.exe$")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
         elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin" AND DEFINED CMAKE_SYSTEM_NAME AND NOT CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-            list(LENGTH CMAKE_OSX_ARCHITECTURES arch_count)
-            if(arch_count EQUAL 0)
+            list(LENGTH CMAKE_OSX_ARCHITECTURES Z_VCPKG_OSX_ARCH_COUNT)
+            if(Z_VCPKG_OSX_ARCH_COUNT EQUAL 0)
                 message(WARNING "Unable to determine target architecture. "
                                 "Consider providing a value for the CMAKE_OSX_ARCHITECTURES cache variable. "
                                 "Continuing without vcpkg.")
                 set(VCPKG_TOOLCHAIN ON)
                 cmake_policy(POP)
                 return()
+            endif()
+
+            if(Z_VCPKG_OSX_ARCH_COUNT GREATER 1)
+                message(WARNING "Detected more than one target architecture. Using the first one.")
+            endif()
+            list(GET CMAKE_OSX_ARCHITECTURES 0 Z_VCPKG_OSX_TARGET_ARCH)
+            if(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "arm64")
+                set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
+            elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "arm64s")
+                set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64s)
+            elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "armv7s")
+                set(Z_VCPKG_TARGET_TRIPLET_ARCH armv7s)
+            elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "armv7")
+                set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
+            elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "x86_64")
+                set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
+            elseif(Z_VCPKG_OSX_TARGET_ARCH STREQUAL "i386")
+                set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
             else()
-                if(arch_count GREATER 1)
-                    message(WARNING "Detected more than one target architecture. Using the first one.")
-                endif()
-                list(GET CMAKE_OSX_ARCHITECTURES 0 target_arch)
-                if(target_arch STREQUAL arm64)
-                    set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
-                elseif(target_arch STREQUAL arm64s)
-                    set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64s)
-                elseif(target_arch STREQUAL armv7s)
-                    set(Z_VCPKG_TARGET_TRIPLET_ARCH armv7s)
-                elseif(target_arch STREQUAL armv7)
-                    set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
-                elseif(target_arch STREQUAL x86_64)
-                    set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
-                elseif(target_arch STREQUAL i386)
-                    set(Z_VCPKG_TARGET_TRIPLET_ARCH x86)
-                else()
-                    message(WARNING "Unable to determine target architecture, continuing without vcpkg.")
-                    set(VCPKG_TOOLCHAIN ON)
-                    cmake_policy(POP)
-                    return()
-                endif()
+                message(WARNING "Unable to determine target architecture, continuing without vcpkg.")
+                set(VCPKG_TOOLCHAIN ON)
+                cmake_policy(POP)
+                return()
             endif()
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH x64)
@@ -451,22 +451,21 @@ if(NOT DEFINED Z_VCPKG_ROOT_DIR)
     set(Z_VCPKG_ROOT_DIR_CANDIDATE "${CMAKE_CURRENT_LIST_DIR}")
     while(IS_DIRECTORY "${Z_VCPKG_ROOT_DIR_CANDIDATE}" AND NOT EXISTS "${Z_VCPKG_ROOT_DIR_CANDIDATE}/.vcpkg-root")
         get_filename_component(Z_VCPKG_ROOT_DIR_TEMP "${Z_VCPKG_ROOT_DIR_CANDIDATE}" DIRECTORY)
-        if (Z_VCPKG_ROOT_DIR_TEMP STREQUAL Z_VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
+        if(Z_VCPKG_ROOT_DIR_TEMP STREQUAL Z_VCPKG_ROOT_DIR_CANDIDATE) # If unchanged, we have reached the root of the drive
         else()
             SET(Z_VCPKG_ROOT_DIR_CANDIDATE "${Z_VCPKG_ROOT_DIR_TEMP}")
         endif()
     endwhile()
     set(Z_VCPKG_ROOT_DIR "${Z_VCPKG_ROOT_DIR_CANDIDATE}" CACHE INTERNAL "Vcpkg root directory")
-
 endif()
 
 if(NOT Z_VCPKG_ROOT_DIR)
     z_vcpkg_add_fatal_error("Could not find .vcpkg-root")
 endif()
 
-# NOTE: _VCPKG_INSTALLED_DIR cannot be changed without tool changes.
-if (NOT DEFINED VCPKG_INSTALLED_DIR)
-    if (DEFINED _VCPKG_INSTALLED_DIR)
+# NOTE: _VCPKG_INSTALLED_DIR cannot be removed without tool changes.
+if(NOT DEFINED VCPKG_INSTALLED_DIR)
+    if(DEFINED _VCPKG_INSTALLED_DIR)
         set(VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}")
     elseif(VCPKG_MANIFEST_MODE)
         set(VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
@@ -555,7 +554,7 @@ endforeach()
 
 
 # CMAKE_EXECUTABLE_SUFFIX is not yet defined
-if (CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
+if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     set(Z_VCPKG_EXECUTABLE "${Z_VCPKG_ROOT_DIR}/vcpkg.exe")
     set(Z_VCPKG_BOOTSTRAP_SCRIPT "${Z_VCPKG_ROOT_DIR}/bootstrap-vcpkg.bat")
 else()
@@ -574,7 +573,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             ERROR_FILE "${Z_VCPKG_BOOTSTRAP_LOG}"
             RESULT_VARIABLE Z_VCPKG_BOOTSTRAP_RESULT)
 
-        if (Z_VCPKG_BOOTSTRAP_RESULT EQUAL 0)
+        if(Z_VCPKG_BOOTSTRAP_RESULT EQUAL 0)
             message(STATUS "Bootstrapping vcpkg before install - done")
         else()
             message(STATUS "Bootstrapping vcpkg before install - failed")
@@ -582,7 +581,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
         endif()
     endif()
 
-    if (NOT Z_VCPKG_HAS_FATAL_ERROR)
+    if(NOT Z_VCPKG_HAS_FATAL_ERROR)
         message(STATUS "Running vcpkg install")
 
         set(Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS)
@@ -610,7 +609,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
         endif()
 
-        if (NOT CMAKE_VERSION VERSION_LESS "3.18") # == GREATER_EQUAL, but that was added in CMake 3.7
+        if(NOT CMAKE_VERSION VERSION_LESS "3.18") # == GREATER_EQUAL, but that was added in CMake 3.7
             set(Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS ECHO_OUTPUT_VARIABLE ECHO_ERROR_VARIABLE)
         else()
             set(Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS)
@@ -635,7 +634,7 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
         file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log" Z_VCPKG_MANIFEST_INSTALL_LOGFILE)
         file(WRITE "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" "${Z_VCPKG_MANIFEST_INSTALL_LOGTEXT}")
 
-        if (Z_VCPKG_MANIFEST_INSTALL_RESULT EQUAL 0)
+        if(Z_VCPKG_MANIFEST_INSTALL_RESULT EQUAL 0)
             message(STATUS "Running vcpkg install - done")
 
             # file(TOUCH) added in CMake 3.12
@@ -678,7 +677,7 @@ function(add_executable)
                     ${EXTRA_OPTIONS}
                 )
             elseif(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "osx")
-                if (NOT MACOSX_BUNDLE_IDX EQUAL -1)
+                if(NOT MACOSX_BUNDLE_IDX EQUAL -1)
                     add_custom_command(TARGET "${target_name}" POST_BUILD
                     COMMAND python "${Z_VCPKG_TOOLCHAIN_DIR}/osx/applocal.py"
                         "$<TARGET_FILE:${target_name}>"
