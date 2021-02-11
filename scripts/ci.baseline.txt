@@ -1768,3 +1768,6 @@ unicorn:x64-windows-static-md=fail
 v8:x64-windows-static-md=fail
 yato:x64-windows-static-md=fail
 zyre:x64-windows-static-md=fail
+workflow:x64-uwp=fail
+workflow:arm-uwp=fail
+
