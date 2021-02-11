@@ -1872,6 +1872,10 @@
       "baseline": "2021-01-03",
       "port-version": 0
     },
+    "fast-float": {
+      "baseline": "0.8.0",
+      "port-version": 0
+    },
     "fastcdr": {
       "baseline": "1.0.15",
       "port-version": 0
