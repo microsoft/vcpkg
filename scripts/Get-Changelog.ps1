@@ -13,8 +13,8 @@ using namespace System.Collections.Generic
 .DESCRIPTION
     The changelog generator uses GitHub's Pull Request and Files API to get
     pull requests and their associated file changes over the provided date range.
-    Then, the data is processed into buckets which are then presented to the user
-    in a markdown file.
+    Then, the data is processed into buckets which are presented to the user
+    as a markdown file.
 .EXAMPLE
     Get-Changelog
 .EXAMPLE
