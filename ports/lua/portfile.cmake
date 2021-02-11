@@ -25,6 +25,7 @@ if(VCPKG_TARGET_IS_IOS)
     endif()
 endif()
 
+set(ENABLE_LUA_CPP 0)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -37,6 +38,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 if("cpp" IN_LIST FEATURES) # lua[cpp] will create lua-c++, which uses C++ name mangling.
+    set(ENABLE_LUA_CPP 1)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
