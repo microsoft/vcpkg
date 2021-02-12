@@ -37,6 +37,8 @@ These are design ideals that we may break in some limited cases where that makes
 - Out parameters only set `PARENT_SCOPE`.
 - `CACHE` variables are not used.
 - `include()`s are removed and fixes to `port.cmake` et al. are made as necessary to avoid this.
+- `foreach(RANGE)`'s arguments _must always be_ natural numbers, and `<start>` _must always be_ less than or equal to `<stop>`.
+  - This should be checked.
 
 ### Naming Variables
 
