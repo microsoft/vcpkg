@@ -4,6 +4,32 @@ mark_as_advanced(CMAKE_TOOLCHAIN_FILE)
 # NOTE: to figure out what cmake versions are required for different things,
 # grep for `CMake 3`. All version requirement comments should follow that format.
 
+#[===[.md:
+# z_vcpkg_add_fatal_error
+Add a fatal error.
+
+```cmake
+z_vcpkg_add_fatal_error(<message>...)
+```
+
+We use this system, instead of `message(FATAL_ERROR)`,
+since cmake prints a lot of nonsense if the toolchain errors out before it's found the build tools.
+
+This `Z_VCPKG_HAS_FATAL_ERROR` must be checked before any filesystem operations are done,
+since otherwise you might be doing something with bad variables set up.
+#]===]
+# this is defined above everything else so that it can be used.
+set(Z_VCPKG_FATAL_ERROR)
+set(Z_VCPKG_HAS_FATAL_ERROR OFF)
+function(z_vcpkg_add_fatal_error ERROR)
+    if(NOT Z_VCPKG_HAS_FATAL_ERROR)
+        set(Z_VCPKG_HAS_FATAL_ERROR ON PARENT_SCOPE)
+        set(Z_VCPKG_FATAL_ERROR "${ERROR}" PARENT_SCOPE)
+    else()
+        string(APPEND Z_VCPKG_FATAL_ERROR "\n${ERROR}")
+    endif()
+endfunction()
+
 set(Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION "3.1")
 if(CMAKE_VERSION VERSION_LESS Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION)
     message(FATAL_ERROR "vcpkg.cmake requires at least CMake ${Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION}.")
@@ -85,30 +111,6 @@ if(VCPKG_MANIFEST_INSTALL)
 endif()
 
 # CMake helper utilities
-#[===[.md:
-# z_vcpkg_add_fatal_error
-Add a fatal error.
-
-```cmake
-z_vcpkg_add_fatal_error(<message>...)
-```
-
-We use this system, instead of `message(FATAL_ERROR)`,
-since cmake prints a lot of nonsense if the toolchain errors out before it's found the build tools.
-
-This `Z_VCPKG_HAS_FATAL_ERROR` must be checked before any filesystem operations are done,
-since otherwise you might be doing something with bad variables set up.
-#]===]
-set(Z_VCPKG_FATAL_ERROR)
-set(Z_VCPKG_HAS_FATAL_ERROR OFF)
-function(z_vcpkg_add_fatal_error ERROR)
-    if(NOT Z_VCPKG_HAS_FATAL_ERROR)
-        set(Z_VCPKG_HAS_FATAL_ERROR ON PARENT_SCOPE)
-        set(Z_VCPKG_FATAL_ERROR "${ERROR}" PARENT_SCOPE)
-    else()
-        string(APPEND Z_VCPKG_FATAL_ERROR "\n${ERROR}")
-    endif()
-endfunction()
 
 #[===[.md:
 # z_vcpkg_function_arguments
