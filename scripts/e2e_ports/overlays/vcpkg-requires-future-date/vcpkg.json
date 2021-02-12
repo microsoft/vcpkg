@@ -1,6 +1,0 @@
-{
-  "name": "vcpkg-requires-future-date",
-  "version-string": "1.0.0",
-  "description": "A test port that requires a vcpkg version from an impossibly far future.",
-  "homepage": ""
-}

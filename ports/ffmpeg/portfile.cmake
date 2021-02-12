@@ -18,6 +18,7 @@ vcpkg_from_github(
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
         0014-Fix-xml2-detection.patch
+        0014-avfilter-dependency-fix.patch
 )
 
 if (SOURCE_PATH MATCHES " ")

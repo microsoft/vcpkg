@@ -29,7 +29,7 @@ rule tag ( name : type ? : property-set )
 
 rule python-tag ( name : type ? : property-set )
 {
-    return [ tag $(name) : $(type) : $(property-set) ] ;
+    return [ boostcpp.python-tag $(name) : $(type) : $(property-set) ] ;
 }
 
 if "@PORT@" != "boost-system"
