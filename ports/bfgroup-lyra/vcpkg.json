@@ -1,0 +1,7 @@
+{
+  "name": "bfgroup-lyra",
+  "version-string": "1.5",
+  "port-version": 1,
+  "description": "A simple to use, composable, command line parser for C++ 11 and beyond",
+  "homepage": "https://bfgroup.github.io/Lyra/"
+}
