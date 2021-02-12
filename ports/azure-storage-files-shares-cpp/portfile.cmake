@@ -1,8 +1,11 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF azure-storage-files-shares_12.0.0-beta.7
-    SHA512 77238977df087b026eaf87a0728e198a8c6989e856ba805f3710bfab34c8255e7374e0d89fb21d4fd23f3ae229c4b854f59f13bcae73cf0eb15ecca5c7fbe80e
+    REF azure-storage-files-shares_12.0.0-beta.8
+    SHA512 9798d94eb45f8882a9d82f0d6c44143a01a1003b6436e5cde4c89b09ee50e2d85630f9f6a2a800d96b97e6a8ca42f9875e84b2d60d92e6d39ba2501ee485e425
 )
 
 vcpkg_configure_cmake(
