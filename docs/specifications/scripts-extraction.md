@@ -20,6 +20,11 @@ These are design ideals that we may break in some limited cases where that makes
 
 - We always use `cmake_parse_arguments` rather than function parameters, or referring to `${ARG<N>}`.
   - Exception: there are exclusively positional parameters. This should be _very rare_.
+    - In this case, positional parameters should be put in the function declaration
+      (rather than using `${ARG<N>}`), and should be named according to local rules
+      (i.e. `snake_case`).
+    - Exception: positional parameters that are optional should be given a name via
+      `set(argument_name "${ARG<N>}") after checking `${ARGC}`.
   - Note: in cases where there are positional parameters along with non-positional parameters, positional parameters should be referred to by `arg_UNPARSED_ARGUMENTS`.
 - All `cmake_parse_arguments` use `PARSE_ARGV` for resistance to embedded semicolons.
 - All `foreach` loops use `IN LISTS` for resistance to embedded semicolons.
