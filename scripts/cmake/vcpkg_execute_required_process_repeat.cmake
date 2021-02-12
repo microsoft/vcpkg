@@ -14,13 +14,12 @@ vcpkg_execute_required_process_repeat(
 ```
 #]===]
 
-include(vcpkg_prettify_command)
 function(vcpkg_execute_required_process_repeat)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_required_process_repeat "ALLOW_IN_DOWNLOAD_MODE" "COUNT;WORKING_DIRECTORY;LOGNAME" "COMMAND")
     #debug_message("vcpkg_execute_required_process_repeat(${vcpkg_execute_required_process_repeat_COMMAND})")
     if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT vcpkg_execute_required_process_repeat_ALLOW_IN_DOWNLOAD_MODE)
-        message(FATAL_ERROR 
+        message(FATAL_ERROR
 [[
 This command cannot be executed in Download Mode.
 Halting portfile execution.
@@ -42,7 +41,7 @@ Halting portfile execution.
         endif()
     endforeach(loop_count)
     if (NOT SUCCESSFUL_EXECUTION)
-        vcpkg_prettify_command(vcpkg_execute_required_process_repeat_COMMAND vcpkg_execute_required_process_repeat_COMMAND_PRETTY)
+        z_vcpkg_prettify_command_line(vcpkg_execute_required_process_repeat_COMMAND_PRETTY ${vcpkg_execute_required_process_repeat_COMMAND})
         message(FATAL_ERROR
             "  Command failed: ${vcpkg_execute_required_process_repeat_COMMAND_PRETTY}\n"
             "  Working Directory: ${vcpkg_execute_required_process_repeat_WORKING_DIRECTORY}\n"
