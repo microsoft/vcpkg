@@ -42,6 +42,7 @@ set(PATCHES
         patches/windows/MSBuildProject_fix_gendef_perl.patch
         patches/windows/msgfmt.patch
         patches/windows/python_lib.patch
+        patches/windows/fix-compile-flag-Zi.patch
         patches/linux/configure.patch)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -296,8 +297,8 @@ else()
     if(NOT HAS_TOOLS)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
     else()
-        file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-        file(RENAME ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+        vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug)
     endif()
     set(USE_DL ON)
 endif()
