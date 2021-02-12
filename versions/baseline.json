@@ -1922,7 +1922,7 @@
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
-      "port-version": 0
+      "port-version": 1
     },
     "fftw3": {
       "baseline": "3.3.8-7",
