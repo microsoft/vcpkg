@@ -223,6 +223,7 @@ foreach(BUILD_TYPE dbg rel)
 		#set(AT_CHAR_FOR_CONFIGURE_FILE "@")
 		#configure_file(${CMAKE_CURRENT_LIST_DIR}/uwp_genrule.BUILD.in ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patching_target/BUILD @ONLY)
 		#set(ADDITIONAL_TARGETS_PRE "///patching_target:patch_include_dirs")
+		message(STATUS "UWP build requires a patched header to be force-included. As this currently is not possible with bazel, we will copy '__vcpkg_uwppatch.h' to '$ENV{VCToolsInstallDir}/include/'. This might require vcpkg to be run as Administrator if the next command fails.")
 		configure_file(${CMAKE_CURRENT_LIST_DIR}/uwppatch.h $ENV{VCToolsInstallDir}/include/__vcpkg_uwppatch.h COPYONLY)
 
 		list(APPEND COPTS "--copt=-DWINAPI_FAMILY=WINAPI_FAMILY_APP")
@@ -392,6 +393,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		${CMAKE_CURRENT_LIST_DIR}/README-${PLATFORM_SUFFIX}
 		${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/README
 		COPYONLY)
+endif()
+
+if(VCPKG_TARGET_IS_UWP)
+	message(STATUS "Note: When using the TensorFlow UWP build in a UWP app, the 'Code Generation' capability needs to be checked in the app manifest.")
+	file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/README "
+
+Note: When using the TensorFlow UWP build in a UWP app, the 'Code Generation' capability needs to be checked in the app manifest.")
 endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX})
