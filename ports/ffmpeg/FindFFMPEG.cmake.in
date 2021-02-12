@@ -173,6 +173,11 @@ if(@ENABLE_OPENCL@)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${OpenCL_LIBRARIES})
 endif()
 
+if(@ENABLE_OPENGL@)
+  find_dependency(OpenGL)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${OPENGL_LIBRARIES})
+endif()
+
 if(@ENABLE_OPENJPEG@)
   find_dependency(OpenJPEG)
   select_library_configurations_from_targets(BASENAME openjpeg TARGETS openjp2)
