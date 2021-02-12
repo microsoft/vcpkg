@@ -45,6 +45,11 @@ These are design ideals that we may break in some limited cases where that makes
 - Internal global variable names are named `Z_VCPKG_`.
 - External experimental global variable names are named `X_VCPKG_`.
 - Internal functions are named `z_vcpkg_*`
+  - Functions which are internal to a single function (i.e., helper functions)
+    are named `[z_]<func>_<name>`, where `<func>` is the name of the function they are
+    a helper to, and `<name>` is what the helper function does.
+    - `z_` should be added to the front if `<func>` doesn't have a `z_`,
+      but don't name a helper function `z_z_foo_bar`.
 - Public global variables are named `VCPKG_`.
 
 ## Prognosis
