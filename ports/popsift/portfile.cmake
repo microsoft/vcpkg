@@ -1,13 +1,8 @@
-# TODO
-# 1. change:
-#   - HEAD_REF to master
-#   - REF and SHA512 to the release version (remember to push to master the develop with release)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alicevision/popsift	
-    REF v1.0.0-rc2
-    SHA512 510912f8085c017ef4d8400f9b64c79d5da2ceb887d57917c3b7f7d56257b9741c94980227cdd1fff1ed761b446315f917f153fa5f9ab667b2af3f0ddac4ab86
+    REF v0.9
+    SHA512 56789520872203eea86e07e8210e00c0b67d85486af16df9d620b1aff10f8d9ef5d910cf1dda6c68af7ca2ed11658ab5414ac79117b543f91a7d8d6a96a17ce0
     HEAD_REF develop
 )
 

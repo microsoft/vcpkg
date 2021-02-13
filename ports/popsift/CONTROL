@@ -1,5 +1,6 @@
 Source: popsift
-Version: 1.0.0
+Version: 0.9
+Port-Version: 0
 Description: PopSift is an implementation of the SIFT algorithm in CUDA.
 Build-Depends: cuda
 Homepage: https://github.com/alicevision/popsift
