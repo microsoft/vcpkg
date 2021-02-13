@@ -5185,7 +5185,7 @@
       "port-version": 1
     },
     "rtaudio": {
-      "baseline": "5.1.0",
+      "baseline": "2021-01-25",
       "port-version": 0
     },
     "rtlsdr": {
