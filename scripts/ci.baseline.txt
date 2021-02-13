@@ -1236,6 +1236,7 @@ popsift:x86-windows=fail
 popsift:arm64-uwp=fail
 popsift:x64-uwp=fail
 popsift:arm64-windows=fail
+popsift:x64-windows-static-md=fail
 portable-snippets:arm-uwp=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
