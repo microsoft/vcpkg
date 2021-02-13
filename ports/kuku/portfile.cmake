@@ -3,10 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/Kuku
-    REF e7cd2d6ad7f8886061c8e4b85890ede69cec3929
-    SHA512 8220a8e839bd247d6a8d1049562028c620353d0cabee0681383d1457bda544ff1394709eeaa82a92a8c0d3491cc9f15de1a14b78a86e8f97ee1da68eb50c982e
+    REF 1338c4ae2211ab4c739022ff57f48ce5a76531d5
+    SHA512 6cba13b7fc8c453acbfcb4921ee3acc9c3e91d4bba0e01480ea396e17f85288d0179342090111a2e3c056b6918c7b09ec63c41116eb4021e63c54acc19631156
     HEAD_REF master
-    PATCHES CMakeLists-windows.patch
 )
 
 vcpkg_configure_cmake(
@@ -16,7 +15,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Kuku-2.0)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Kuku-2.1)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
