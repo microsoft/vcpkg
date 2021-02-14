@@ -4689,8 +4689,8 @@
       "port-version": 0
     },
     "portaudio": {
-      "baseline": "2020-02-02",
-      "port-version": 2
+      "baseline": "2020-02-20",
+      "port-version": 0
     },
     "portmidi": {
       "baseline": "0.234",
