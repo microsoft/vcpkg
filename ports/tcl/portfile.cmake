@@ -65,10 +65,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(COPY ${TOOL_BIN} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tcl/bin/)
 
         # Remove .exes only after copying
-        file(GLOB_RECURSE TOOL_EXES
-                ${CURRENT_PACKAGES_DIR}/bin/*.exe
-        )
-        file(REMOVE ${TOOL_EXES})
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
 
         file(GLOB_RECURSE TOOLS
                 ${CURRENT_PACKAGES_DIR}/lib/dde1.4/*
@@ -99,10 +96,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
         file(COPY ${TOOL_BIN} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/tcl/debug/bin/)
 
         # Remove .exes only after copying
-        file(GLOB_RECURSE EXES
-                ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe
-        )
-        file(REMOVE ${EXES})
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
     
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/dde1.4
                             ${CURRENT_PACKAGES_DIR}/debug/lib/nmake
@@ -125,10 +119,10 @@ else()
         PROJECT_SUBPATH unix
         NO_ADDITIONAL_PATHS
     )
-    
+
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
-    
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
