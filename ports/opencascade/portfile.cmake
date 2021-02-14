@@ -41,43 +41,47 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/opencascade TARGET_PATH share/opencascade)
 
-# Remove libd to lib, libd just has cmake files we dont want too
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/libd ${CURRENT_PACKAGES_DIR}/debug/lib)
+if(VCPKG_TARGET_IS_WINDOWS)
+    # Remove libd to lib, libd just has cmake files we dont want too
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/libd ${CURRENT_PACKAGES_DIR}/debug/lib)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    # debug creates libd and bind directories that need moving
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bind ${CURRENT_PACKAGES_DIR}/debug/bin)
-    
-    # fix paths in target files
-    list(APPEND TARGET_FILES 
-        ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEApplicationFrameworkTargets-debug.cmake
-        ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADECompileDefinitionsAndFlags-debug.cmake
-        ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEDataExchangeTargets-debug.cmake
-        ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEFoundationClassesTargets-debug.cmake
-        ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingAlgorithmsTargets-debug.cmake
-        ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingDataTargets-debug.cmake
-        ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEVisualizationTargets-debug.cmake
-    )
-    
-    foreach(TARGET_FILE ${TARGET_FILES})
-        file(READ ${TARGET_FILE} filedata)
-        string(REGEX REPLACE "libd" "lib" filedata "${filedata}")
-        string(REGEX REPLACE "bind" "bin" filedata "${filedata}")
-        file(WRITE ${TARGET_FILE} ${filedata})
-    endforeach()
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        # debug creates libd and bind directories that need moving
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bind ${CURRENT_PACKAGES_DIR}/debug/bin)
+        
+        # fix paths in target files
+        list(APPEND TARGET_FILES 
+            ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEApplicationFrameworkTargets-debug.cmake
+            ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADECompileDefinitionsAndFlags-debug.cmake
+            ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEDataExchangeTargets-debug.cmake
+            ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEFoundationClassesTargets-debug.cmake
+            ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingAlgorithmsTargets-debug.cmake
+            ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEModelingDataTargets-debug.cmake
+            ${CURRENT_PACKAGES_DIR}/share/opencascade/OpenCASCADEVisualizationTargets-debug.cmake
+        )
+        
+        foreach(TARGET_FILE ${TARGET_FILES})
+            file(READ ${TARGET_FILE} filedata)
+            string(REGEX REPLACE "libd" "lib" filedata "${filedata}")
+            string(REGEX REPLACE "bind" "bin" filedata "${filedata}")
+            file(WRITE ${TARGET_FILE} ${filedata})
+        endforeach()
 
-    # the bin directory ends up with bat files that are noise, let's clean that up
-    file(GLOB BATS ${CURRENT_PACKAGES_DIR}/bin/*.bat)
-    file(REMOVE_RECURSE ${BATS})
+        # the bin directory ends up with bat files that are noise, let's clean that up
+        file(GLOB BATS ${CURRENT_PACKAGES_DIR}/bin/*.bat)
+        file(REMOVE_RECURSE ${BATS})
+    else()
+        # remove scripts in bin dir
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    endif()
 else()
-    # remove scripts in bin dir
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)  
+endif() 
 
 file(INSTALL ${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
