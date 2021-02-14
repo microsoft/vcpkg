@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "OSX" "Linux")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -19,20 +19,16 @@ endif()
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "freeimage"  USE_FREEIMAGE
     "tbb"        USE_TBB
+    "draw"       BUILD_MODULE_Draw
 )
 
 # VTK option in opencascade not currently supported because only 6.1.0 is supported but vcpkg has >= 9.0
 
-
-# We turn off BUILD_MODULE_Draw as it requires TCL 8.6 and TK 8.6 specifically which conflicts with vcpkg only having TCL 9.0 
-# And pre-built ActiveTCL binaries are behind a marketing wall :(
-# We use the Unix install layout for Windows as it matches vcpkg
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DBUILD_LIBRARY_TYPE=${BUILD_TYPE}
-        -DBUILD_MODULE_Draw=OFF
         -DINSTALL_DIR_LAYOUT=Unix
         -DBUILD_SAMPLES_MFC=OFF
         -DBUILD_SAMPLES_QT=OFF
