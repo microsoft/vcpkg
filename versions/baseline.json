@@ -265,11 +265,11 @@
       "port-version": 2
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.0.0-beta.7",
+      "baseline": "12.0.0-beta.8",
       "port-version": 0
     },
     "azure-storage-common-cpp": {
-      "baseline": "12.0.0-beta.7",
+      "baseline": "12.0.0-beta.8",
       "port-version": 0
     },
     "azure-storage-cpp": {
@@ -277,11 +277,11 @@
       "port-version": 0
     },
     "azure-storage-files-datalake-cpp": {
-      "baseline": "12.0.0-beta.7",
+      "baseline": "12.0.0-beta.8",
       "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
-      "baseline": "12.0.0-beta.7",
+      "baseline": "12.0.0-beta.8",
       "port-version": 0
     },
     "azure-uamqp-c": {
@@ -2805,7 +2805,7 @@
       "port-version": 0
     },
     "kuku": {
-      "baseline": "2.0",
+      "baseline": "2.1",
       "port-version": 0
     },
     "kvasir-mpl": {
@@ -4689,8 +4689,8 @@
       "port-version": 0
     },
     "portaudio": {
-      "baseline": "2020-02-02",
-      "port-version": 2
+      "baseline": "2020-02-20",
+      "port-version": 0
     },
     "portmidi": {
       "baseline": "0.234",
@@ -6218,7 +6218,7 @@
     },
     "workflow": {
       "baseline": "0.9.3",
-      "port-version": 0
+      "port-version": 1
     },
     "wpilib": {
       "baseline": "2020.3.2",
