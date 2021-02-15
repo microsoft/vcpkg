@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/sobjectizer
-    REF 04ec6fcf63eb977e9f45348b7c05b0d98c8f0b60 # v.5.7.2.1
-    SHA512 b2550d7bf7f3e405fccff02ae12fd2a235016c5c8bdcfc0bb1baf3a91f90369d68b2c57dbecbc990a8627338b7dcd6b3d32b681aaf0335dde0b2672003fe38ec
+    REF 73b0d1bf5b4bdf543c24bc4969d2c408e0cea812 # v.5.7.2.2
+    SHA512 f911900f67832be877ac1d906deb4fb03925601d91c7d9bb0dd1c789d71a5bddb8ec5e0fe361ad7cfa8787a70d09aee26b17e8dba55c0b5dc4fba2b31651442b
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
