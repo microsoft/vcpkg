@@ -34,7 +34,6 @@ conflict when building multiple at once.
 * [icu](https://github.com/Microsoft/vcpkg/blob/master/ports/icu/portfile.cmake)
 #]===]
 
-include(vcpkg_prettify_command)
 function(vcpkg_execute_build_process)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _ebp "" "WORKING_DIRECTORY;LOGNAME" "COMMAND;NO_PARALLEL_COMMAND")
@@ -141,7 +140,7 @@ function(vcpkg_execute_build_process)
                 file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
                 list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
             endforeach()
-            vcpkg_prettify_command(_ebp_COMMAND _ebp_COMMAND_PRETTY)
+            z_vcpkg_prettify_command_line(_ebp_COMMAND_PRETTY ${_ebp_COMMAND})
             message(FATAL_ERROR
                 "  Command failed: ${_ebp_COMMAND_PRETTY}\n"
                 "  Working Directory: ${_ebp_WORKING_DIRECTORY}\n"

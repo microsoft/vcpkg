@@ -1,3 +1,5 @@
+#! /usr/bin/env pwsh
+
 [CmdletBinding()]
 Param(
     [String]$VcpkgRoot = ''
@@ -14,6 +16,33 @@ if (-not (Test-Path "$VcpkgRoot/.vcpkg-root")) {
 }
 
 $tableOfContents = @()
+$internalTableOfContents = @()
+
+function WriteFile
+{
+    Param(
+        [String[]]$Value,
+        [String]$Path
+    )
+    # note that we use this method of getting the utf-8 bytes in order to:
+    #  - have no final `r`n, which happens when Set-Content does the thing automatically on Windows
+    #  - have no BOM, which happens when one uses [System.Text.Encoding]::UTF8
+    [byte[]]$ValueAsBytes = (New-Object -TypeName 'System.Text.UTF8Encoding').GetBytes($Value -join "`n")
+    Set-Content -Path $Path -Value $ValueAsBytes -AsByteStream
+}
+function FinalDocFile
+{
+    Param(
+        [String[]]$Value,
+        [String]$Name
+    )
+    $Value + @(
+        "",
+        "## Source",
+        "[scripts/cmake/$Name](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/$Name)",
+        ""
+    )
+}
 
 Get-ChildItem "$VcpkgRoot/scripts/cmake" -Filter '*.cmake' | ForEach-Object {
     $filename = $_
@@ -27,6 +56,7 @@ Get-ChildItem "$VcpkgRoot/scripts/cmake" -Filter '*.cmake' | ForEach-Object {
     [String]$endCommentRegex = ''
     [Bool]$inComment = $False
     [Bool]$failThisFile = $False
+    [Bool]$isInternalFunction = $filename.Name.StartsWith("vcpkg_internal") -or $filename.Name.StartsWith("z_vcpkg")
 
     $contents = $contents | ForEach-Object {
         if (-not $inComment) {
@@ -69,10 +99,20 @@ Get-ChildItem "$VcpkgRoot/scripts/cmake" -Filter '*.cmake' | ForEach-Object {
 
 
     if ($contents) {
-        Set-Content -Path "$PSScriptRoot/maintainers/$($filename.BaseName).md" -Value "$($contents -join "`n")`n`n## Source`n[scripts/cmake/$($filename.Name)](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/$($filename.Name))"
+        if ($isInternalFunction) {
+            WriteFile `
+                -Path "$PSScriptRoot/maintainers/internal/$($filename.BaseName).md" `
+                -Value (FinalDocFile $contents $filename.Name)
 
-        $tableOfContents += $filename.BaseName
-    } elseif (-not $filename.Name.StartsWith("vcpkg_internal")) {
+            $internalTableOfContents += $filename.BaseName
+        } else {
+            WriteFile `
+                -Path "$PSScriptRoot/maintainers/$($filename.BaseName).md" `
+                -Value (FinalDocFile $contents $filename.Name)
+
+            $tableOfContents += $filename.BaseName
+        }
+    } elseif (-not $isInternalFunction) {
         # don't worry about undocumented internal functions
         Write-Warning "The cmake function in file $filename doesn't seem to have any documentation. Make sure the documentation comments are correctly written."
     }
@@ -86,7 +126,12 @@ $portfileFunctionsContent = @(
 $tableOfContents | Sort-Object -Culture '' | ForEach-Object {
     $portfileFunctionsContent += "- [$($_ -replace '_','\_')]($_.md)"
 }
+$portfileFunctionsContent += @("", "## Internal Functions", "")
+$internalTableOfContents | Sort-Object -Culture '' | ForEach-Object {
+    $portfileFunctionsContent += "- [$($_ -replace '_','\_')](internal/$_.md)"
+}
+$portfileFunctionsContent += "" # final newline
 
-Set-Content `
+WriteFile `
     -Path "$PSScriptRoot/maintainers/portfile-functions.md" `
-    -Value ($portfileFunctionsContent -join "`n")
+    -Value $portfileFunctionsContent

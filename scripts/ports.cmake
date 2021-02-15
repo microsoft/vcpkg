@@ -122,9 +122,12 @@ if(CMD MATCHES "^BUILD$")
     include(vcpkg_install_nmake)
     include(vcpkg_install_qmake)
     include(vcpkg_internal_get_cmake_vars)
-    include(vcpkg_prettify_command)
     include(vcpkg_replace_string)
     include(vcpkg_test_cmake)
+
+    include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
+    include("${SCRIPTS}/cmake/z_vcpkg_function_arguments.cmake")
+
     include(${CURRENT_PORT_DIR}/portfile.cmake)
     if(DEFINED PORT)
         include(${SCRIPTS}/build_info.cmake)

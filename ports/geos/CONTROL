@@ -1,5 +1,4 @@
 Source: geos
-Version: 3.8.1
-Port-Version: 1
+Version: 3.9.0
 Homepage: https://www.osgeo.org/projects/geos/
 Description: Geometry Engine Open Source

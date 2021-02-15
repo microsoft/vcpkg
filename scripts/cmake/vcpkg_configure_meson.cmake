@@ -69,7 +69,10 @@ function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https:
 
     string(APPEND NATIVE "[built-in options]\n") #https://mesonbuild.com/Builtin-options.html
     if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
-        string(APPEND NATIVE "cpp_eh='none'\n") # To make sure meson is not adding eh flags by itself using msvc
+        # This is currently wrongly documented in the meson docs or buggy. The docs say: 'none' = no flags
+        # In reality however 'none' tries to deactivate eh and meson passes the flags for it resulting in a lot of warnings
+        # about overriden flags. Until this is fixed in meson vcpkg should not pass this here. 
+        # string(APPEND NATIVE "cpp_eh='none'\n") # To make sure meson is not adding eh flags by itself using msvc
     endif()
     if(VCPKG_TARGET_IS_WINDOWS)
         string(REGEX REPLACE "( |^)(-|/)" ";\\2" WIN_C_STANDARD_LIBRARIES "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
@@ -91,47 +94,56 @@ function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https:
     file(WRITE "${_file}" "${NATIVE}")
 endfunction()
 
-function(vcpkg_internal_meson_generate_native_file_config _config) #https://mesonbuild.com/Native-environments.html
+function(vcpkg_internal_meson_convert_compiler_flags_to_list _out_var _compiler_flags)
+    string(REPLACE ";" "\\\;" tmp_var "${_compiler_flags}")
+    string(REGEX REPLACE [=[( +|^)((\"(\\\"|[^"])+\"|\\\"|\\ |[^ ])+)]=] ";\\2" ${_out_var} "${tmp_var}")
+    list(POP_FRONT ${_out_var}) # The first element is always empty due to the above replacement
+    list(TRANSFORM ${_out_var} STRIP) # Strip leading trailing whitespaces from each element in the list.
+    set(${_out_var} "${${_out_var}}" PARENT_SCOPE)
+endfunction()
+
+function(vcpkg_internal_meson_convert_list_to_python_array _out_var)
+    set(FLAG_LIST ${ARGN})
+    list(TRANSFORM FLAG_LIST APPEND "'")
+    list(TRANSFORM FLAG_LIST PREPEND "'")
+    list(JOIN FLAG_LIST ", " ${_out_var})
+    string(REPLACE "'', " "" ${_out_var} "${${_out_var}}") # remove empty elements if any
+    set(${_out_var} "[${${_out_var}}]" PARENT_SCOPE)
+endfunction()
+
+# Generates the required compiler properties for meson
+macro(vcpkg_internal_meson_generate_flags_properties_string _out_var _config)
     if(VCPKG_TARGET_IS_WINDOWS)
         set(L_FLAG /LIBPATH:)
     else()
         set(L_FLAG -L)
     endif()
     set(PATH_SUFFIX_DEBUG /debug)
-    set(LIBPATH_${_config} "'${L_FLAG}${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib'")
-    
-    set(NATIVE_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
-    string(REGEX REPLACE "( +|^)(-|/)" ";\\2" MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
-    list(TRANSFORM MESON_CFLAGS_${_config} APPEND "'")
-    list(TRANSFORM MESON_CFLAGS_${_config} PREPEND "'")
-    #list(APPEND MESON_CFLAGS_${_config} "${LIBPATH_${_config}}")
-    list(APPEND MESON_CFLAGS_${_config} "'-I${CURRENT_INSTALLED_DIR}/include'")
-    list(JOIN MESON_CFLAGS_${_config} ", " MESON_CFLAGS_${_config})
-    string(REPLACE "'', " "" MESON_CFLAGS_${_config} "${MESON_CFLAGS_${_config}}")
-    string(APPEND NATIVE_${_config} "c_args = [${MESON_CFLAGS_${_config}}]\n")
-    string(REGEX REPLACE "( +|^)(-|/)" ";\\2" MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
-    list(TRANSFORM MESON_CXXFLAGS_${_config} APPEND "'")
-    list(TRANSFORM MESON_CXXFLAGS_${_config} PREPEND "'")
-    #list(APPEND MESON_CXXFLAGS_${_config} "${LIBPATH_${_config}}")
-    list(APPEND MESON_CXXFLAGS_${_config} "'-I${CURRENT_INSTALLED_DIR}/include'")
-    list(JOIN MESON_CXXFLAGS_${_config} ", " MESON_CXXFLAGS_${_config})
-    string(REPLACE "'', " "" MESON_CXXFLAGS_${_config} "${MESON_CXXFLAGS_${_config}}")
-    string(APPEND NATIVE_${_config} "cpp_args = [${MESON_CXXFLAGS_${_config}}]\n")
-
+    set(LIBPATH_${_config} "${L_FLAG}${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
+    list(APPEND MESON_CFLAGS_${_config} "-I\"${CURRENT_INSTALLED_DIR}/include\"")
+    vcpkg_internal_meson_convert_list_to_python_array(MESON_CFLAGS_${_config} ${MESON_CFLAGS_${_config}})
+    string(APPEND ${_out_var} "c_args = ${MESON_CFLAGS_${_config}}\n")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
+    list(APPEND MESON_CXXFLAGS_${_config} "-I\"${CURRENT_INSTALLED_DIR}/include\"")
+    vcpkg_internal_meson_convert_list_to_python_array(MESON_CXXFLAGS_${_config} ${MESON_CXXFLAGS_${_config}})
+    string(APPEND ${_out_var} "cpp_args = ${MESON_CXXFLAGS_${_config}}\n")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${_config}}")
     else()
         set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${_config}}")
     endif()
-    string(REGEX REPLACE "( +|^)(-|/)" ";\\2" LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
-    list(TRANSFORM LINKER_FLAGS_${_config} APPEND "'")
-    list(TRANSFORM LINKER_FLAGS_${_config} PREPEND "'")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
     list(APPEND LINKER_FLAGS_${_config} "${LIBPATH_${_config}}")
-    list(JOIN LINKER_FLAGS_${_config} ", " LINKER_FLAGS_${_config})
-    string(REPLACE "'', " "" LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
-    string(APPEND NATIVE_${_config} "c_link_args = [${LINKER_FLAGS_${_config}}]\n")
-    string(APPEND NATIVE_${_config} "cpp_link_args = [${LINKER_FLAGS_${_config}}]\n")
+    vcpkg_internal_meson_convert_list_to_python_array(LINKER_FLAGS_${_config} ${LINKER_FLAGS_${_config}})
+    string(APPEND ${_out_var} "c_link_args = ${LINKER_FLAGS_${_config}}\n")
+    string(APPEND ${_out_var} "cpp_link_args = ${LINKER_FLAGS_${_config}}\n")
+endmacro()
 
+function(vcpkg_internal_meson_generate_native_file_config _config) #https://mesonbuild.com/Native-environments.html
+    set(NATIVE_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
+    vcpkg_internal_meson_generate_flags_properties_string(NATIVE_PROPERTIES ${_config})
+    string(APPEND NATIVE_${_config} "${NATIVE_PROPERTIES}")
     #Setup CMake properties
     string(APPEND NATIVE_${_config} "cmake_toolchain_file  = '${SCRIPTS}/buildsystems/vcpkg.cmake'\n")
     string(APPEND NATIVE_${_config} "[cmake]\n")
@@ -281,46 +293,11 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
 endfunction()
 
 function(vcpkg_internal_meson_generate_cross_file_config _config) #https://mesonbuild.com/Native-environments.html
-    if(VCPKG_TARGET_IS_WINDOWS)
-        set(L_FLAG /LIBPATH:)
-    else()
-        set(L_FLAG -L)
-    endif()
-    set(PATH_SUFFIX_DEBUG /debug)
-    set(LIBPATH_${_config} "'${L_FLAG}${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib'")
+    set(CROSS_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
+    vcpkg_internal_meson_generate_flags_properties_string(CROSS_PROPERTIES ${_config})
+    string(APPEND CROSS_${_config} "${CROSS_PROPERTIES}")
 
-
-    set(NATIVE_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
-    string(REGEX REPLACE "( +|^)(-|/)" ";\\2" MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
-    list(TRANSFORM MESON_CFLAGS_${_config} APPEND "'")
-    list(TRANSFORM MESON_CFLAGS_${_config} PREPEND "'")
-    list(APPEND MESON_CFLAGS_${_config} "'-I\"${CURRENT_INSTALLED_DIR}/include\"'")
-    list(JOIN MESON_CFLAGS_${_config} ", " MESON_CFLAGS_${_config})
-    string(REPLACE "'', " "" MESON_CFLAGS_${_config} "${MESON_CFLAGS_${_config}}")
-    string(APPEND NATIVE_${_config} "c_args = [${MESON_CFLAGS_${_config}}]\n")
-    string(REGEX REPLACE "( +|^)(-|/)" ";\\2" MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
-    list(TRANSFORM MESON_CXXFLAGS_${_config} APPEND "'")
-    list(TRANSFORM MESON_CXXFLAGS_${_config} PREPEND "'")
-    list(APPEND MESON_CXXFLAGS_${_config} "'-I\"${CURRENT_INSTALLED_DIR}/include\"'")
-    list(JOIN MESON_CXXFLAGS_${_config} ", " MESON_CXXFLAGS_${_config})
-    string(REPLACE "'', " "" MESON_CXXFLAGS_${_config} "${MESON_CXXFLAGS_${_config}}")
-    string(APPEND NATIVE_${_config} "cpp_args = [${MESON_CXXFLAGS_${_config}}]\n")
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${_config}}")
-    else()
-        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${_config}}")
-    endif()
-    string(REGEX REPLACE "( +|^)(-|/)" ";\\2" LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
-    list(TRANSFORM LINKER_FLAGS_${_config} APPEND "'")
-    list(TRANSFORM LINKER_FLAGS_${_config} PREPEND "'")
-    list(APPEND LINKER_FLAGS_${_config} "${LIBPATH_${_config}}")
-    list(JOIN LINKER_FLAGS_${_config} ", " LINKER_FLAGS_${_config})
-    string(REPLACE "'', " "" LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
-    string(APPEND NATIVE_${_config} "c_link_args = [${LINKER_FLAGS_${_config}}]\n")
-    string(APPEND NATIVE_${_config} "cpp_link_args = [${LINKER_FLAGS_${_config}}]\n")
-
-    string(APPEND NATIVE_${_config} "[built-in options]\n")
+    string(APPEND CROSS_${_config} "[built-in options]\n")
     if(VCPKG_TARGET_IS_WINDOWS)
         if(VCPKG_CRT_LINKAGE STREQUAL "static")
             set(CRT mt)
@@ -330,13 +307,12 @@ function(vcpkg_internal_meson_generate_cross_file_config _config) #https://meson
         if(${_config} STREQUAL DEBUG)
             set(CRT ${CRT}d)
         endif()
-        string(APPEND NATIVE_${_config} "b_vscrt = '${CRT}'\n")
+        string(APPEND CROSS_${_config} "b_vscrt = '${CRT}'\n")
     endif()
-    
     string(TOLOWER "${_config}" lowerconfig)
     set(_file "${CURRENT_BUILDTREES_DIR}/meson-cross-${TARGET_TRIPLET}-${lowerconfig}.log")
     set(VCPKG_MESON_CROSS_FILE_${_config} "${_file}" PARENT_SCOPE)
-    file(WRITE "${_file}" "${NATIVE_${_config}}")
+    file(WRITE "${_file}" "${CROSS_${_config}}")
 endfunction()
 
 
@@ -344,8 +320,8 @@ function(vcpkg_configure_meson)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _vcm "" "SOURCE_PATH" "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;ADDITIONAL_NATIVE_BINARIES;ADDITIONAL_CROSS_BINARIES")
 
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-    file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+    file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
     vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
     set(_VCPKG_CMAKE_VARS_FILE "${_VCPKG_CMAKE_VARS_FILE}" PARENT_SCOPE)
