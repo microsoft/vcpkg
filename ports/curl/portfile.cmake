@@ -43,7 +43,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     schannel    CMAKE_USE_SCHANNEL
     sectransp   CMAKE_USE_SECTRANSP
     idn2        CMAKE_USE_IDN2
-    
+
     INVERTED_FEATURES
     non-http HTTP_ONLY
 )
@@ -65,23 +65,41 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 
 if(VCPKG_TARGET_IS_ANDROID)
-    set(EXTRA_ARGS "-C ${CURRENT_PORT_DIR}/CurlAndroidCrossCompile.cmake")
+    vcpkg_configure_cmake(
+            SOURCE_PATH ${SOURCE_PATH}
+            PREFER_NINJA
+            OPTIONS ${FEATURE_OPTIONS}
+            ${UWP_OPTIONS}
+            -C "${CURRENT_PORT_DIR}/CurlAndroidCrossCompile.cmake"
+            -DOPENSSL_LIBRARY="${CURRENT_INSTALLED_DIR}/lib/libssl.so"
+            -DCRYPT_LIBRARY="${CURRENT_INSTALLED_DIR}/lib/libcrypto.so"
+            -DOPENSSL_INCLUDE="${CURRENT_INSTALLED_DIR}/include"
+            ${SECTRANSP_OPTIONS}
+            -DBUILD_TESTING=OFF
+            -DENABLE_MANUAL=OFF
+            -DCURL_STATICLIB=${CURL_STATICLIB}
+            -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
+            -DENABLE_DEBUG=ON
+            -DCURL_CA_FALLBACK=ON
+    )
+
+else()
+    vcpkg_configure_cmake(
+            SOURCE_PATH ${SOURCE_PATH}
+            PREFER_NINJA
+            OPTIONS ${FEATURE_OPTIONS}
+            ${UWP_OPTIONS}
+            ${SECTRANSP_OPTIONS}
+            -DBUILD_TESTING=OFF
+            -DENABLE_MANUAL=OFF
+            -DCURL_STATICLIB=${CURL_STATICLIB}
+            -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
+            -DENABLE_DEBUG=ON
+            -DCURL_CA_FALLBACK=ON
+    )
+
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
-        ${UWP_OPTIONS}
-        ${SECTRANSP_OPTIONS}
-        -C "${CURRENT_PORT_DIR}/CurlAndroidCrossCompile.cmake"
-        -DBUILD_TESTING=OFF
-        -DENABLE_MANUAL=OFF
-        -DCURL_STATICLIB=${CURL_STATICLIB}
-        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
-        -DENABLE_DEBUG=ON
-        -DCURL_CA_FALLBACK=ON
-)
 
 vcpkg_install_cmake()
 
@@ -132,14 +150,14 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libssh2.lib" "-lssh2")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/cares.lib" "-lcares")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/brotlicommon.lib" "-lbrotlicommon")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/brotlidec.lib" "-lbrotlidec")			
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/brotlidec.lib" "-lbrotlidec")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/pthreadVC3d.lib" "-lpthreadVC3d")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc " ${CURRENT_INSTALLED_DIR}/lib/pthreadVC3.lib" "")		
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc " ${CURRENT_INSTALLED_DIR}/lib/pthreadVC3.lib" "")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc " -loptimized" "")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc " -ldebug" "")	
-	
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc " -ldebug" "")
+
     elseif(VCPKG_TARGET_IS_LINUX)
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "-lcurl" "-lcurl-d")    
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "-lcurl" "-lcurl-d")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a" "-lssl")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a" "-lcrypto")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libmbedtls.a" "-lmbedtls")
@@ -147,7 +165,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libmbedcrypto.a" "-lmbedcrypto")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libnghttp2.a" "-lnghttp2")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libssh2.a" "-lssh2")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libcares.a" "-lcares") 		
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libcares.a" "-lcares")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libz.a" "-lz")
     endif()
     file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
@@ -167,11 +185,11 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libssh2.lib" "-lssh2")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/cares.lib" "-lcares")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/brotlicommon.lib" "-lbrotlicommon")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/brotlidec.lib" "-lbrotlidec")			
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/brotlidec.lib" "-lbrotlidec")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/pthreadVC3.lib" "-lpthreadVC3")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc " ${CURRENT_INSTALLED_DIR}/debug/lib/pthreadVC3d.lib" "")		
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc " ${CURRENT_INSTALLED_DIR}/debug/lib/pthreadVC3d.lib" "")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc " -loptimized" "")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc " -ldebug" "")		
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc " -ldebug" "")
     elseif(VCPKG_TARGET_IS_LINUX)
         #vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "-lcurl" "-lcurl")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libssl.a" "-lssl")
@@ -181,12 +199,12 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libmbedcrypto.a" "-lmbedcrypto")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libnghttp2.a" "-lnghttp2")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libssh2.a" "-lssh2")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libcares.a" "-lcares")        
+        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libcares.a" "-lcares")
         vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libz.a" "-lz")
     endif()
 	file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 endif()
-if(VCPKG_TARGET_IS_WINDOWS)	
+if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_pkgconfig()
 elseif(VCPKG_TARGET_IS_LINUX)
     vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread dl c)
