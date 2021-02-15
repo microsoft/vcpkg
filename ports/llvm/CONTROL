@@ -18,7 +18,7 @@ Build-Depends: llvm[core,target-x86] (x86|x64), llvm[core,target-arm] (arm&!arm6
 
 Feature: default-projects
 Description: Build with platform-specific default projects
-Build-Depends: llvm[core,clang,clang-tools-extra,compiler-rt,libc,libclc,libcxx,libcxxabi,libunwind,lld,lldb,mlir,openmp,parallel-libs,polly,pstl] (!windows), llvm[core,clang,clang-tools-extra,compiler-rt,lld,lldb] (windows)
+Build-Depends: llvm[core,clang,clang-tools-extra,compiler-rt,libclc,libcxx,libcxxabi,libunwind,lld,lldb,mlir,openmp,parallel-libs,polly,pstl] (!windows), llvm[core,clang,clang-tools-extra,compiler-rt,lld,lldb] (windows)
 
 Feature: target-all
 Description: Build with all backends.
