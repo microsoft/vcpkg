@@ -1,5 +1,6 @@
 Source: llvm
 Version: 11.0.0
+Port-Version: 1
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
 Supports: !uwp
@@ -87,6 +88,7 @@ Description: Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_OFF.
 
 Feature: clang
 Description: Build C Language Family Front-end.
+Build-Depends: llvm[core,tools]
 
 Feature: disable-clang-static-analyzer
 Description: Build without static analyzer.
@@ -99,16 +101,19 @@ Description: Build compiler's runtime libraries.
 
 Feature: flang
 Description: Build Fortran front end.
-Build-Depends: llvm[core,mlir]
+Build-Depends: llvm[core,tools,mlir]
 
 Feature: lld
 Description: Build LLVM linker.
+Build-Depends: llvm[core,tools]
 
 Feature: lldb
 Description: Build LLDB debugger.
+Build-Depends: llvm[core,tools]
 
 Feature: mlir
 Description: Build Multi-Level IR Compiler Framework.
+Build-Depends: llvm[core,tools]
 
 Feature: openmp
 Description: Build LLVM OpenMP libraries.
@@ -116,4 +121,4 @@ Build-Depends: llvm[core,utils]
 
 Feature: polly
 Description: Build polyhedral optimizations for LLVM.
-Build-Depends: llvm[core,utils]
+Build-Depends: llvm[core,tools,utils]
