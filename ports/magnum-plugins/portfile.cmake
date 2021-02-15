@@ -106,8 +106,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
 else()
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
+    if(WIN32)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
+    endif()
 endif()
 
 # Handle copyright
