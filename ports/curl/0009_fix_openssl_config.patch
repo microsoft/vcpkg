@@ -8,7 +8,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 -  find_package(OpenSSL REQUIRED)
 -  set(SSL_ENABLED ON)
 -  set(USE_OPENSSL ON)
-+  if(NOT PKG_CONFIG_FOUND)
++  if(NOT PKG_CONFIG_FOUND and ANDROID)
 +    message(WARNING "pkg-config not found, setting paths manually!" )
 +
 +    list(APPEND CURL_LIBS ${OPENSSL_LIBRARY} ${CRYPT_LIBRARY})
