@@ -159,7 +159,7 @@ index 6e0e99ae69..b8b425fd84 100644
 +        EXPORT ${PROJECT_NAME}-targets
 +        FILE ${PROJECT_NAME}-targets.cmake
 +        NAMESPACE ${PROJECT_NAME}::
-+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
      )
  
      # configure -config-version.cmake file
@@ -176,7 +176,7 @@ index 6e0e99ae69..b8b425fd84 100644
 -        ${name}-config.cmake
 -        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${name}
 +        ${PROJECT_NAME}-config.cmake
-+        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
++        INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
          PATH_VARS INCLUDE_INSTALL_DIR LIBRARY_INSTALL_DIR
      )
  
@@ -188,7 +188,7 @@ index 6e0e99ae69..b8b425fd84 100644
 -        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${name}
 +            ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake
 +            ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
-+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
      )
  endfunction()
  
