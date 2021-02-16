@@ -23,17 +23,11 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/outcome
 #    REF all_tests_passed_35454acdb1ff76accdf213ecf068760c370b6d62
-    REF 6abb6bb68fa6aaf07b6392a855f3f16a53c7debe
-    SHA512 614c78ac75ae36f4b09ed5e3067bd35934090667c25cae58d3d17ffa2cce5f40c7d80baaa6076d9343bf2092c109bf214eb1446a87c2f61c704ae7dc0594cde1
+    REF 378f8484886a93c9ce271eb9ba2d2bc8cabe6e62
+    SHA512 ba41cf96ea74d067335d949cfb8f7e8b8b72b944da3f3b2440c682e1e28dc89bff3e963dd2387fdb2fddbf91d55e01821431da150e9169513092d2b5b1f6d909
     HEAD_REF develop
     PATCHES
       outcome-prune-sources.patch
-)
-
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS OUTCOME_FEATURE_OPTIONS
-    FEATURES
-      run-tests OUTCOME_ENABLE_DEPENDENCY_SMOKE_TEST
 )
 
 # Outcome needs a copy of QuickCppLib with which to bootstrap its cmake
@@ -52,9 +46,12 @@ file(COPY "${CURRENT_INSTALLED_DIR}/include/status-code/detail/"
     DESTINATION "${SOURCE_PATH}/include/outcome/experimental/status-code/include/detail/"
 )
 
-
 # Because outcome's deployed files are header-only, the debug build is not necessary
 set(VCPKG_BUILD_TYPE release)
+
+# Already installed dependencies don't appear on the include path, which Outcome assumes.
+string(APPEND VCPKG_CXX_FLAGS " \"-I${CURRENT_INSTALLED_DIR}/include\"")
+string(APPEND VCPKG_C_FLAGS " \"-I${CURRENT_INSTALLED_DIR}/include\"")
 
 # Use Outcome's own build process, skipping examples and tests.
 vcpkg_configure_cmake(
@@ -63,12 +60,11 @@ vcpkg_configure_cmake(
     OPTIONS
         -DPROJECT_IS_DEPENDENCY=On
         -Dquickcpplib_FOUND=1
-        "-DCMAKE_CXX_FLAGS=-I${CURRENT_INSTALLED_DIR}/include"
         -DOUTCOME_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
 )
 
-if("-DOUTCOME_ENABLE_DEPENDENCY_SMOKE_TEST=ON" IN_LIST OUTCOME_FEATURE_OPTIONS)
+if("run-tests" IN_LIST FEATURES)
     vcpkg_build_cmake(TARGET test)
 endif()
 

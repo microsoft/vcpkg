@@ -6,12 +6,12 @@ LLFIO depends on Outcome which depends on QuickCppLib which uses the vcpkg versi
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ned14/llfio
-    REF 9294f05d48220a6a5d6d307da5fe8f236dd020cf
-    SHA512 00bd49fe568ba2a840917de8d5b8d398d7480b2431f99f8c3b282fc60785d8664869fd83e8ac56ffc9a1eaa0b991c5d8a97ab5e53e20e5567f3d75577ad4feb4
+    REF cd85c07b31eadfca1859c216d568b70e2e354094
+    SHA512 edd3e3c3233c28e133f5656b8366dfe04c5ca08adf5ce2d94ec3fbb2ca9117e137768f68dbea3c71a23452dd8097289919a85d1f6eead4aaed4f59ca7307e862
     HEAD_REF develop
 )
 
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
   vcpkg_from_github(
       OUT_SOURCE_PATH NTKEC_SOURCE_PATH
       REPO ned14/ntkernel-error-category
@@ -25,7 +25,6 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS LLFIO_FEATURE_OPTIONS
     FEATURES
       status-code LLFIO_USE_EXPERIMENTAL_SG14_STATUS_CODE
-      run-tests LLFIO_ENABLE_DEPENDENCY_SMOKE_TEST
 )
 
 # LLFIO needs a copy of QuickCppLib with which to bootstrap its cmake
@@ -38,8 +37,18 @@ file(COPY "${CURRENT_INSTALLED_DIR}/share/ned14-internal-quickcpplib/"
 
 # LLFIO expects ntkernel-error-category to live inside its include directory
 file(REMOVE_RECURSE "${SOURCE_PATH}/include/llfio/ntkernel-error-category")
-if(WIN32)
+if(VCPKG_TARGET_IS_WINDOWS)
   file(RENAME "${NTKEC_SOURCE_PATH}" "${SOURCE_PATH}/include/llfio/ntkernel-error-category")
+endif()
+
+# Already installed dependencies don't appear on the include path, which LLFIO assumes.
+string(APPEND VCPKG_CXX_FLAGS " \"-I${CURRENT_INSTALLED_DIR}/include\"")
+string(APPEND VCPKG_C_FLAGS " \"-I${CURRENT_INSTALLED_DIR}/include\"")
+
+set(extra_config)
+# cmake does not correctly set CMAKE_SYSTEM_PROCESSOR when targeting ARM on Windows
+if(VCPKG_TARGET_IS_WINDOWS AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
+  list(APPEND extra_config -DLLFIO_ASSUME_CROSS_COMPILING=On)
 endif()
 
 vcpkg_configure_cmake(
@@ -49,19 +58,19 @@ vcpkg_configure_cmake(
         -DPROJECT_IS_DEPENDENCY=On
         -Dquickcpplib_FOUND=1
         -Doutcome_FOUND=1
-        "-DCMAKE_CXX_FLAGS=-I${CURRENT_INSTALLED_DIR}/include"
         ${LLFIO_FEATURE_OPTIONS}
         -DLLFIO_ENABLE_DEPENDENCY_SMOKE_TEST=ON  # Leave this always on to test everything compiles
         -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        ${extra_config}
 )
 
-# Build the shared library and static library editions
+# LLFIO install assumes that the static library is always built
 vcpkg_build_cmake(TARGET _sl)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_build_cmake(TARGET _dl)
 endif()
 
-if("-DLLFIO_ENABLE_DEPENDENCY_SMOKE_TEST=ON" IN_LIST OUTCOME_FEATURE_OPTIONS)
+if("run-tests" IN_LIST FEATURES)
     vcpkg_build_cmake(TARGET test)
 endif()
 
@@ -74,5 +83,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+if("status-code" IN_LIST FEATURES)
+    file(INSTALL "${CURRENT_PORT_DIR}/usage-status-code-${VCPKG_LIBRARY_LINKAGE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+else()
+    file(INSTALL "${CURRENT_PORT_DIR}/usage-error-code-${VCPKG_LIBRARY_LINKAGE}" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+endif()
 file(INSTALL "${SOURCE_PATH}/Licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

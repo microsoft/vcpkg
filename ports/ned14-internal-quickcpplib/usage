@@ -1,7 +1,2 @@
-The package quickcpplib provides CMake targets:
-
-    find_package(quickcpplib CONFIG REQUIRED)
-    target_link_libraries(main PUBLIC quickcpplib::hl)
-
 You should NOT DIRECTLY USE quickcpplib in your own libraries!
 It is intended for internal use by ned14's vcpkg libraries only.

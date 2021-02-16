@@ -1,5 +1,5 @@
 Source: outcome
-Version: 2.2.0-6abb6bb6
+Version: 2.2.0-378f8484
 Homepage: https://github.com/ned14/outcome
 Description: Provides very lightweight outcome<T> and result<T> (non-Boost edition)
 Build-Depends: ned14-internal-quickcpplib, status-code
