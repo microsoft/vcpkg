@@ -34,6 +34,11 @@ elseif (VCPKG_TARGET_IS_ANDROID)
             "-DANDROID_BUILD_ZLIB=FALSE"
             "-DANDROID_BUILD_CURL=FALSE"
             "-DANDROID_BUILD_OPENSSL=FALSE"
+            "-DENABLE_HW_OPTIMIZATION=OFF"
+            "-DCURL_HAS_H2_EXITCODE=0"
+            "-DCURL_HAS_H2_EXITCODE__TRYRUN_OUTPUT=\"\""
+            "-DCURL_HAS_TLS_PROXY_EXITCODE=0"
+            "-DCURL_HAS_TLS_PROXY_EXITCODE__TRYRUN_OUTPUT=\"\""
             )
 else()
     set(rpath "\$ORIGIN")
