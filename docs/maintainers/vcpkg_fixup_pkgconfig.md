@@ -1,6 +1,6 @@
 # vcpkg_fixup_pkgconfig
 
-Fix common paths in *.pc files and make everything relativ to $(prefix)
+Fix common paths in *.pc files and make everything relative to $(prefix)
 
 ## Usage
 ```cmake
