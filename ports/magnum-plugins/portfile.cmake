@@ -106,6 +106,13 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
 else()
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
+    # On windows, plugins are "Modules" that cannot be linked as shared
+    # libraries, but are meant to be loaded at runtime.
+    # While this is handled adequately through the CMake project, the auto-magic
+    # linking with visual studio might try to link the import libs anyway.
+    #
+    # We delete the import libraries here to avoid the auto-magic linking
+    # for plugins which are loaded at runtime.
     if(WIN32)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
