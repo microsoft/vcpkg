@@ -5218,7 +5218,7 @@
     },
     "ryu": {
       "baseline": "2.0-2",
-      "port-version": 2
+      "port-version": 1
     },
     "safeint": {
       "baseline": "3.24",
