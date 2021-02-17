@@ -8,10 +8,9 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    # TODO: do not merge without updating to final version
-    REF 0abe228fd9f187176c3af0726a1dc663e76242a8
-    SHA512 069058c40b40eea8413887b66aee35b3555707a12349869472562d3bf6f55bcf37e16bc4f4ce9a9de301f16ad020387b8ab06d559cc590d4471988eda6aeb8a1
-    HEAD_REF backports/11.x
+    REF 405cd5fe1c8bcc40f528174cac8291f8be83753c
+    SHA512 69a8e8e9fde4d9c759170ea7ff26fd14b9dcf773d2f7b60b9eb2fb7ed3234e7d088e09a6b74365704575c9b4515a66ef810a6aee7656d28e905827bbdd6b1467
+    HEAD_REF release/11.x
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
