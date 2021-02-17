@@ -5006,7 +5006,7 @@
     },
     "quill": {
       "baseline": "1.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "quirc": {
       "baseline": "1.1",
