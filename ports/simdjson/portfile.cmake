@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO simdjson/simdjson
-    REF a7fbb17ac15c9d14187ae138a46f6b9f89b884fd # v0.8.1
+    REF 61c8cfa07deb7625bb0e6b80dbceb42edd4bf387 # v0.8.2
     HEAD_REF master
-    SHA512 9ce919e17653beba47ac6c2d5d4d674848dc486277fc523e1f2294cd2a842f67ca7db53c27afadc6ab49a05e1b0485a7152d20bc9bbbdf8fa237a807863f5c40
-    PATCHES fix-build-error-on.patch
+    SHA512 bf9c3014fd6b0d31c3d01236b2e49818fae3413441912b64dd9ed5e6c284c915a9d797a7deeb647f80109f5b1ff77d2d35934db5de54480e7cba0ca73ea54cd8
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SIMDJSON_BUILD_STATIC)
