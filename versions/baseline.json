@@ -2325,7 +2325,7 @@
       "port-version": 0
     },
     "gsoap": {
-      "baseline": "2.8.105",
+      "baseline": "2.8.111",
       "port-version": 0
     },
     "gtest": {
