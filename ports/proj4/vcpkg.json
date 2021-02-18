@@ -1,0 +1,42 @@
+{
+  "name": "proj4",
+  "version-string": "7.2.1",
+  "description": "PROJ.4 library for cartographic projections",
+  "homepage": "https://github.com/OSGeo/PROJ",
+  "dependencies": [
+    {
+      "name": "sqlite3",
+      "default-features": false
+    }
+  ],
+  "default-features": [
+    "database",
+    "tiff"
+  ],
+  "features": {
+    "database": {
+      "description": "generate database",
+      "dependencies": [
+        {
+          "name": "sqlite3",
+          "features": [
+            "tool"
+          ],
+          "platform": "!uwp & !arm"
+        }
+      ]
+    },
+    "tiff": {
+      "description": "Enable TIFF support to read some grids",
+      "dependencies": [
+        "tiff"
+      ]
+    },
+    "tools": {
+      "description": "generate tools",
+      "dependencies": [
+        "curl"
+      ]
+    }
+  }
+}

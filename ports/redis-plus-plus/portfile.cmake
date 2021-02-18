@@ -9,6 +9,12 @@ vcpkg_from_github(
         fix-conversion.patch
 )
 
+if("cxx17" IN_LIST FEATURES)
+    set(REDIS_PLUS_PLUS_CXX_STANDARD 17)
+else()
+    set(REDIS_PLUS_PLUS_CXX_STANDARD 11)
+endif()
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(REDIS_PLUS_PLUS_BUILD_STATIC ON)
     set(REDIS_PLUS_PLUS_BUILD_SHARED OFF)
@@ -25,6 +31,7 @@ vcpkg_configure_cmake(
         -DREDIS_PLUS_PLUS_BUILD_STATIC=${REDIS_PLUS_PLUS_BUILD_STATIC}
         -DREDIS_PLUS_PLUS_BUILD_SHARED=${REDIS_PLUS_PLUS_BUILD_SHARED}
         -DREDIS_PLUS_PLUS_BUILD_TEST=OFF
+        -DREDIS_PLUS_PLUS_CXX_STANDARD=${REDIS_PLUS_PLUS_CXX_STANDARD}
 )
 
 vcpkg_install_cmake()
@@ -34,4 +41,4 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright )
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright )

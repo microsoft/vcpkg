@@ -2,7 +2,7 @@
 # Other packages can depend on this package to declare a dependency on CUDA.
 # If this package is installed, we assume that CUDA is properly installed.
 
-#note: this port must be kept in sync with CUDNN port: every time one is upgraded, the other must be too
+#note: this port must be kept in sync with CUDNN and NCCL ports: every time one is upgraded, the other must be too
 
 include(${CMAKE_CURRENT_LIST_DIR}/vcpkg_find_cuda.cmake)
 

@@ -1,17 +1,19 @@
-## # vcpkg_build_ninja
-##
-## Build a ninja project
-##
-## ## Usage:
-## ```cmake
-## vcpkg_build_ninja(
-##     [TARGETS <target>...]
-## )
-## ```
-##
-## ## Parameters:
-## ### TARGETS
-## Only build the specified targets.
+#[===[.md:
+# vcpkg_build_ninja
+
+Build a ninja project
+
+## Usage:
+```cmake
+vcpkg_build_ninja(
+    [TARGETS <target>...]
+)
+```
+
+## Parameters:
+### TARGETS
+Only build the specified targets.
+#]===]
 
 function(vcpkg_build_ninja)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased

@@ -40,7 +40,15 @@ sshfs "fileshare@${FileshareMachine}:/Users/fileshare/share" $mountPoint
 if ($LASTEXITCODE -eq 1) {
     Write-Error 'sshfs returned 1.
 This means that the osxfuse kernel extension was not allowed to load.
-Please open System Preferences > Security & Privacy > General,
+You may need to force un/reinstall osxfuse and/or sshfs with
+  brew uninstall osxfuse
+  brew uninstall sshfs
+  brew install osxfuse
+  brew install sshfs
+Then, rerun this script.
+
+If you''ve already done that, Please open
+System Preferences > Security & Privacy > General,
 and allow the kernel extension to load.
 Then, rerun this script.
 
@@ -58,4 +66,3 @@ if (-not [String]::IsNullOrEmpty($BoxVersion)) {
 }
 
 vagrant box add "$mountPoint/vcpkg-boxes/macos-ci.json" @versionArgs
-

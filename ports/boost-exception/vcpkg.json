@@ -1,0 +1,17 @@
+{
+  "name": "boost-exception",
+  "version-string": "1.75.0",
+  "description": "Boost exception module",
+  "homepage": "https://github.com/boostorg/exception",
+  "dependencies": [
+    "boost-assert",
+    "boost-build",
+    "boost-config",
+    "boost-core",
+    "boost-modular-build-helper",
+    "boost-smart-ptr",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

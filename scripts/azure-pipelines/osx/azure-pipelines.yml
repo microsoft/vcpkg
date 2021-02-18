@@ -14,6 +14,9 @@ jobs:
     value: /Users/vagrant/Data
   - name: VCPKG_DOWNLOADS
     value: /Users/vagrant/Data/downloads
+  - group: azblob-test-sas-group
+  - name: BINARY_SOURCE_STUB
+    value: "x-azblob,$(azblob-root-url),$(azblob-test-sas)"
 
   steps:
   - bash: df -h
@@ -27,20 +30,13 @@ jobs:
     displayName: 'Build vcpkg'
     inputs:
       filePath: bootstrap-vcpkg.sh
-      arguments: '-buildTests'
-  - bash: toolsrc/build.rel/vcpkg-test
-    displayName: 'Run vcpkg tests'
-  - task: PowerShell@2
-    displayName: 'Run vcpkg end-to-end tests'
-    inputs:
-      filePath: 'scripts/azure-pipelines/end-to-end-tests.ps1'
-      arguments: '-Triplet x64-osx -WorkingRoot ${{ variables.WORKING_ROOT }}'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -ArchivesRoot ${{ variables.WORKING_ROOT }}/archives -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -BinarySourceStub "$(BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      pwsh: true
   - bash: |
       df -h
     displayName: 'Report on Disk Space After Build'

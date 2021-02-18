@@ -41,7 +41,8 @@ vcpkg_from_gitlab(GITLAB_URL "https://gitlab.kitware.com"
                   OUT_SOURCE_PATH SOURCE_PATH 
                   REPO vtk/vtk-m 
                   REF f2aa6ad5be1a97e3fb41ef4680ee2c76c3434ac0 # v1.5.0 Version is strongly locked to VTK 9.0. Upgrading will most likly brake the VTK build
-                  SHA512 2f2a273f74d9a583df9e25a4792440d8d89652fa14b3153f2ea5afbd329b50970e7b9bd68e0ccd036baf5c1f3ad7a8302d95c01dbb30d9a46c045987eebf5370)
+                  SHA512 35e8a2c0ad6cd3c1f02a71a50d781c89f93909ad27030b406fd69f4fea5c1862c48a6e541fd07562947322c3a69bdfdb54206ae51bb86ef7a710f9e9898e9638
+                  FILE_DISAMBIGUATOR 1)
                   # For people only wanting vtk-m and not VTK 
                   #REF 74ffad9bd0679d061bc87e544a728f1c3c926269 # v1.5.1
                   #SHA512 c9e1c18432b6c11ae086445255acf9477fe4c888122a2b2a9713dc63a40d2e4c2375742157526b5f0869f14c62a4ad66d81ee58d6cc75a1d53a1d615525a03c9)

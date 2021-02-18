@@ -15,7 +15,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Triplet files](users/triplets.md)
 - [Configuration and Environment](users/config-environment.md)
 - [Usage with Android](users/android.md)
-- [Using a manifest file to declare your dependencies](users/top-level-manifest.md)
+- [Using a manifest file to declare your dependencies](users/manifests.md)
 
 ### Maintainer help
 

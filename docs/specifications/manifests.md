@@ -236,7 +236,7 @@ And finally, to configure and build:
 
 ```sh
 $ cd example
-$ cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystem/vcpkg.cmake
+$ cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
 ... configuring and installing...
 $ cmake --build build
 ```

@@ -3,8 +3,8 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF b271ec54df4547dd63db6b84efc5b5ecd57750a7 # v5.1
-    SHA512 c1a9166eaa3b437f0f164fc04b76d2b3805a284f333a3c40b4045160210fc331f6c5d2a9fa73e3959d8e3bedbe88abc38786552e2ce5a121b3e6dda27818e103
+    REF v5.2
+    SHA512 09f46c531365697968a9d9521eb9f3b5af5da9971be7fa86db990199f046c5a16dec821ca8a8ce1a2619b3ec44634e7426e39e997e8df783aa13552bc3d86064
     HEAD_REF master
 )
 
@@ -48,7 +48,7 @@ file(INSTALL ${SOURCE_PATH}/Installation/LICENSE DESTINATION ${CURRENT_PACKAGES_
 file(
     COPY
         ${SOURCE_PATH}/Installation/LICENSE.BSL
-        ${SOURCE_PATH}/Installation/LICENSE.FREE_USE
+        ${SOURCE_PATH}/Installation/LICENSE.RFL
         ${SOURCE_PATH}/Installation/LICENSE.GPL
         ${SOURCE_PATH}/Installation/LICENSE.LGPL
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}

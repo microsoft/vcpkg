@@ -1,6 +1,6 @@
 Source: magnum-plugins
 Version: 2020.06
-Port-Version: 1
+Port-Version: 2
 Build-Depends: magnum[core]
 Description: Plugins for magnum, C++11/C++14 graphics middleware for games and data visualization
 Homepage: https://magnum.graphics/
@@ -48,6 +48,10 @@ Feature: freetypefont
 Description: FreeTypeFont plugin
 Build-Depends: freetype, magnum[text]
 
+Feature: glslangshaderconverter
+Description: GlslangShaderConverter plugin
+Build-Depends: glslang, magnum[shadertools]
+
 Feature: harfbuzzfont
 Description: HarfBuzzFont plugin
 Build-Depends: harfbuzz, magnum-plugins[freetypefont]
@@ -83,6 +87,10 @@ Build-Depends: libpng, magnum[trade]
 Feature: pngimporter
 Description: PngImporter plugin
 Build-Depends: libpng, magnum[trade]
+
+Feature: spirvtoolsshaderconverter
+Description: SpirvToolsShaderConverter plugin
+Build-Depends: spirv-tools, magnum[shadertools]
 
 Feature: stanfordimporter
 Description: StanfordImporter plugin
