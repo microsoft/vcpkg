@@ -20,9 +20,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/quill)
 
-file(READ ${CURRENT_PACKAGES_DIR}/include/quill/TweakMe.h QUILLCONFIG)
-string(REGEX REPLACE "// #define QUILL_FMT_EXTERNAL" "#define QUILL_FMT_EXTERNAL" QUILLCONFIG "${QUILLCONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/include/quill/TweakMe.h "${QUILLCONFIG}")
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/quill/TweakMe.h "// #define QUILL_FMT_EXTERNAL" "#define QUILL_FMT_EXTERNAL")
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
