@@ -15,6 +15,8 @@ get_filename_component(ROOT "${ROOT}" PATH)
 
 if (CMAKE_HOST_WIN32)
 set_library_target("RYU" "ryu" "${ROOT}/debug/lib/ryu.lib" "${ROOT}/lib/ryu.lib" "${ROOT}/include/")
+set_library_target("RYU" "ryu_printf" "${ROOT}/debug/lib/ryu_printf.lib" "${ROOT}/lib/ryu_printf.lib" "${ROOT}/include/")
 else()
 set_library_target("RYU" "ryu" "${ROOT}/debug/lib/libryu.a" "${ROOT}/lib/libryu.a" "${ROOT}/include/")
+set_library_target("RYU" "ryu_printf" "${ROOT}/debug/lib/libryu_printf.a" "${ROOT}/lib/libryu_printf.a" "${ROOT}/include/")
 endif()
