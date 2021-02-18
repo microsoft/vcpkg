@@ -5590,7 +5590,7 @@
     },
     "suitesparse": {
       "baseline": "5.8.0",
-      "port-version": 1
+      "port-version": 2
     },
     "sundials": {
       "baseline": "5.5.0",
