@@ -49,6 +49,8 @@ Arguments passed to `FEATURES` and `INVERTED_FEATURES` are not validated to prev
 If the same (`FEATURE_NAME`, `OPTION_NAME`) pair is passed to both lists,
 two conflicting definitions are added to `OUT_FEATURE_OPTIONS`.
 
+For each definition added to `OUT_FEATURE_OPTIONS`, the corresponding variable will also be set in
+the parent scope, so they are immediately available after calling this function.
 
 ## Examples
 
