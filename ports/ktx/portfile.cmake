@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF v${PORT_VERSION}
     SHA512 0ee0672413eaa8cbfacab13bfab9935be23fadcd63253012d9710f3f9ce9b0d62c43d50c652e47cb44d2878b20377026e65f3d37cdb1dd36b1c0241da250606a
     HEAD_REF master
+    FILE_DISAMBIGUATOR 1
     PATCHES
         0001-Use-vcpkg-zstd.patch
         0002-Fix-versioning.patch
