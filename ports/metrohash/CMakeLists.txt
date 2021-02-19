@@ -8,7 +8,7 @@ add_library(metrohash
             )
 list(APPEND metro_headers src/metrohash.h src/metrohash64.h src/metrohash128.h)
 
-if(NOT ANDROID)
+if(NOT ANDROID AND NOT IOS)
     list(APPEND metro_headers src/metrohash128crc.h)
     target_sources(metrohash PRIVATE src/metrohash128crc.cpp)
     if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
