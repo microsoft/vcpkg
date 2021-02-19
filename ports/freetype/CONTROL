@@ -1,6 +1,5 @@
 Source: freetype
-Version: 2.10.2
-Port-Version: 7
+Version: 2.10.4
 Homepage: https://www.freetype.org/
 Description: A library to render fonts.
 Default-Features: zlib, bzip2, png, brotli

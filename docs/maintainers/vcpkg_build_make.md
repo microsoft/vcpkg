@@ -38,7 +38,7 @@ Additional subdir to invoke make in. Useful if only parts of a port should be bu
 
 ## Notes:
 This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
-You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your CMake script supports the
+You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
 "install" target
 
 ## Examples

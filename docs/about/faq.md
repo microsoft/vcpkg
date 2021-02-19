@@ -1,7 +1,9 @@
 # Frequently Asked Questions
 
 ## Can I contribute a new library?
-Yes! Start out by reading our [contribution guidelines](https://github.com/Microsoft/vcpkg/blob/master/CONTRIBUTING.md).  If you want to contribute but don't have a particular library in mind then take a look at the list of [new port requests](https://github.com/Microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+label%3A%22new+port+request+-+consider+making+a+PR%21%22).
+Yes! Start out by reading our [contribution guidelines](https://github.com/Microsoft/vcpkg/blob/master/CONTRIBUTING.md).
+If you want to contribute but don't have a particular library in mind then take a look at the list
+of [new port requests](https://github.com/Microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+label%3Acategory%3Anew-port).
 
 ## Can Vcpkg create pre-built binary packages? What is the binary format used by Vcpkg?
 Yes! See [the `export` command](../users/integration.md#export).

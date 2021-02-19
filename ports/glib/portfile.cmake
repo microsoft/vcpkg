@@ -20,6 +20,7 @@ vcpkg_extract_source_archive_ex(
         use-libiconv-on-windows.patch
         arm64-defines.patch
         fix-arm-builds.patch
+        fix_pkgconfig.patch
 )
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt  ${SOURCE_PATH}/CMakeLists.txt COPYONLY)

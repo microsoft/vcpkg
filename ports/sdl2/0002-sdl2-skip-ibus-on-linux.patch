@@ -1,0 +1,15 @@
+--- CMakeLists.orig.txt 2020-10-28 09:08:51.925900284 +0100
++++ CMakeLists.txt      2020-10-28 09:09:10.034165780 +0100
+@@ -1240,12 +1240,6 @@
+         set(HAVE_FCITX TRUE)
+       endif()
+ 
+-      pkg_search_module(IBUS ibus-1.0 ibus)
+-      if(IBUS_FOUND)
+-        set(HAVE_IBUS_IBUS_H TRUE)
+-        include_directories(${IBUS_INCLUDE_DIRS})
+-        list(APPEND EXTRA_LIBS ${IBUS_LIBRARIES})
+-      endif()
+ 
+       if (HAVE_IBUS_IBUS_H OR HAVE_FCITX)
+         set(SDL_USE_IME TRUE)

@@ -103,7 +103,7 @@ if((WIN32 OR APPLE) AND SDL_MIXER_ENABLE_NATIVEMIDI)
     endif()
 endif()
 
-set_target_properties(SDL2_mixer PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
+set_target_properties(SDL2_mixer PROPERTIES DEFINE_SYMBOL DLL_EXPORT)
 target_compile_definitions(SDL2_mixer PRIVATE ${SDL_MIXER_DEFINES} ${SDL_MIXER_LOAD_DEFINES})
 target_include_directories(SDL2_mixer PRIVATE ${SDL_MIXER_INCLUDES} ./native_midi)
 
