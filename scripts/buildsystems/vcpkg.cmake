@@ -468,19 +468,16 @@ if(NOT Z_VCPKG_ROOT_DIR)
     z_vcpkg_add_fatal_error("Could not find .vcpkg-root")
 endif()
 
-# NOTE: _VCPKG_INSTALLED_DIR cannot be removed without tool changes.
-if(NOT DEFINED VCPKG_INSTALLED_DIR)
-    if(DEFINED _VCPKG_INSTALLED_DIR)
-        set(VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}")
-    elseif(VCPKG_MANIFEST_MODE)
-        set(VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
+if(NOT DEFINED _VCPKG_INSTALLED_DIR)
+    if(VCPKG_MANIFEST_MODE)
+        set(_VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
     else()
-        set(VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
+        set(_VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
     endif()
-endif()
-set(VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
+set(_VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}"
     CACHE PATH
     "The directory which contains the installed libraries for each triplet" FORCE)
+endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths.
     list(APPEND CMAKE_PREFIX_PATH
