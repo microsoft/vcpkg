@@ -19,16 +19,12 @@ vcpkg_configure_cmake(
         -DCTI_CONTINUABLE_WITH_NO_EXCEPTIONS=OFF
         -DCTI_CONTINUABLE_WITH_UNHANDLED_EXCEPTIONS=ON
         -DCTI_CONTINUABLE_WITH_EXPERIMENTAL_COROUTINE=ON
-        -DCTI_CONTINUABLE_WITH_CPP_LATEST=OFF
+        -DCTI_CONTINUABLE_WITH_CPP_LATEST=ON # requires cxx_std_17
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/continuable RENAME copyright)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/ReadMe.md
-            ${CURRENT_PACKAGES_DIR}/LICENSE.txt
-)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib 
                     ${CURRENT_PACKAGES_DIR}/debug
 )
