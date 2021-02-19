@@ -66,7 +66,7 @@ index 993f15d..5da4830 100644
 +    COMPATIBILITY       SameMajorVersion
 +)
 +install(FILES           ${VERSION_FILE_PATH} 
-+        DESTINATION     ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME}
++        DESTINATION     share/mnn
 +)
 diff --git a/include/MNN/Matrix.h b/include/MNN/Matrix.h
 index 0d59f66..e728c46 100644
