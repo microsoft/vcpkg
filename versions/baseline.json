@@ -3674,7 +3674,7 @@
     },
     "magnum": {
       "baseline": "2020.06",
-      "port-version": 3
+      "port-version": 4
     },
     "magnum-extras": {
       "baseline": "2020.06",
@@ -3686,7 +3686,7 @@
     },
     "magnum-plugins": {
       "baseline": "2020.06",
-      "port-version": 2
+      "port-version": 3
     },
     "mapbox-variant": {
       "baseline": "1.2.0",
@@ -5217,8 +5217,8 @@
       "port-version": 0
     },
     "ryu": {
-      "baseline": "2.0-2",
-      "port-version": 0
+      "baseline": "2.0",
+      "port-version": 3
     },
     "safeint": {
       "baseline": "3.24",
@@ -5393,7 +5393,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "0.7.1",
+      "baseline": "0.8.2",
       "port-version": 0
     },
     "simple-fft": {
@@ -5441,7 +5441,7 @@
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.7.2.1",
+      "baseline": "5.7.2.2",
       "port-version": 0
     },
     "soci": {
