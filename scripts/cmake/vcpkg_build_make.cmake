@@ -99,7 +99,7 @@ function(vcpkg_build_make)
         string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
         # Don't know why '/cygdrive' is suddenly a requirement here. (at least for x264)
         string(REGEX REPLACE "([a-zA-Z]):/" "/cygdrive/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
-        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f ${_bc_MAKEFILE} ${_bc_INSTALL_TARGET} DESTDIR=${_VCPKG_PACKAGE_PREFIX})
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f ${_bc_MAKEFILE} ${_bc_INSTALL_TARGET})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
     else()
         # Compiler requriements
@@ -112,7 +112,7 @@ function(vcpkg_build_make)
         # Set make command and install command
         set(MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j ${VCPKG_CONCURRENCY} -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
         set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} V=1 -j 1 -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
-        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} -f ${_bc_MAKEFILE} ${_bc_INSTALL_TARGET} DESTDIR=${CURRENT_PACKAGES_DIR})
+        set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} -f ${_bc_MAKEFILE} ${_bc_INSTALL_TARGET})
     endif()
 
     # Since includes are buildtype independent those are setup by vcpkg_configure_make
@@ -229,14 +229,6 @@ function(vcpkg_build_make)
             endif()
         endif()
     endforeach()
-
-    if (_bc_ENABLE_INSTALL)
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALL_PREFIX "${CURRENT_INSTALLED_DIR}")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
-        file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
-        file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}/" "${CURRENT_PACKAGES_DIR}")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
-    endif()
 
     # Remove libtool files since they contain absolute paths and are not necessary. 
     file(GLOB_RECURSE LIBTOOL_FILES "${CURRENT_PACKAGES_DIR}/**/*.la")

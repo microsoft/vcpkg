@@ -403,8 +403,8 @@ function(vcpkg_configure_make)
         # CXXLINK  The command used to actually link a C++ program. 
     
         #Some PATH handling for dealing with spaces....some tools will still fail with that!
-        string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
+        string(REPLACE " " "\\\ " _VCPKG_PREFIX "${CURRENT_PACKAGES_DIR}")
+        string(REGEX REPLACE "^([a-zA-Z]):/" "/cygdrive/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
         set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
         set(prefix_var "'\${prefix}'") # Windows needs extra quotes or else the variable gets expanded in the makefile!
 
@@ -421,8 +421,8 @@ function(vcpkg_configure_make)
             list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
     else()
-        string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
-        string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
+        string(REPLACE " " "\ " _VCPKG_PREFIX "${CURRENT_PACKAGES_DIR}")
+        string(REPLACE " " "\ " _VCPKG_INSTALLED "${CURRENT_INSTALLED_DIR}")
         set(EXTRA_QUOTES)
         set(prefix_var "\${prefix}")
     endif()
