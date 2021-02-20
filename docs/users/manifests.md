@@ -271,25 +271,43 @@ and that's the `"default-features"` field, which is an array of feature names.
 
 ## Command Line Interface
 
-The command line interface around the new manifest mode is pretty simple.
-There's only one command that one really needs to worry about, `vcpkg install`,
-although `vcpkg search` is still useful.
-Since manifest mode is still in beta, you'll need to pass a feature flag: `manifests`.
-There are a few ways to pass this feature flag:
+**Experimental behind the `manifests` feature flag**
 
-* `--feature-flags` option: On any vcpkg command, you can pass `--feature-flags=manifests`
-* `VCPKG_FEATURE_FLAGS` environment variable: one can set the environment variable `VCPKG_FEATURE_FLAGS` to
-  `manifests`.
+When invoked from any subdirectory of the directory containing `vcpkg.json`, `vcpkg install` with no package arguments
+will install all manifest dependencies into `<directory containing vcpkg.json>/vcpkg_installed/`. Most of `vcpkg
+install`'s classic mode parameters function the same in manifest mode.
 
-### `vcpkg install`
+### `--x-install-root=<path>`
 
-Once one has written a manifest file,
-they can run `vcpkg install` in any subdirectory of the directory containing `vcpkg.json`.
-It will install all of the dependencies for the default triplet into
-`<directory containing vcpkg.json>/vcpkg_installed`.
-If you want to switch the triplet (for example, this is very common on windows, where the default triplet is x86-windows, not x64-windows),
-you can pass it with the `--triplet` option: `vcpkg install --triplet x64-windows` (or whatever).
-Then, vcpkg will install all the dependencies, and you're ready to go!
+**Experimental and may change or be removed at any time**
+
+Specifies an alternate install location than `<directory containing vcpkg.json>/vcpkg_installed/`.
+
+### `--triplet=<triplet>`
+
+Specify the triplet to be used for installation.
+
+Defaults to the same default triplet as in classic mode.
+
+### `--x-feature=<feature>`
+
+**Experimental and may change or be removed at any time**
+
+Specify an additional feature from the `vcpkg.json` to install dependencies from.
+
+### `--x-no-default-features`
+
+**Experimental and may change or be removed at any time**
+
+Disables automatic activation of all default features listed in the `vcpkg.json`.
+
+### `--x-manifest-root=<path>`
+
+**Experimental and may change or be removed at any time**
+
+Specifies the directory containing `vcpkg.json`.
+
+Defaults to searching upwards from the current working directory.
 
 ## CMake Integration
 
