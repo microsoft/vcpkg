@@ -1,0 +1,7 @@
+{
+  "name": "tbb",
+  "version-string": "2021.1.1",
+  "description": "Intel's Threading Building Blocks.",
+  "homepage": "https://github.com/oneapi-src/oneTBB",
+  "supports": "!(uwp | arm | arm64) | linux | osx"
+}

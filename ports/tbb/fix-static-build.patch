@@ -1,13 +1,39 @@
-diff --git a/src/tbb/cilk-tbb-interop.h b/src/tbb/cilk-tbb-interop.h
-index 295734b..f35531e 100644
---- a/src/tbb/cilk-tbb-interop.h
-+++ b/src/tbb/cilk-tbb-interop.h
-@@ -29,6 +29,8 @@
- #else
- #ifdef IN_CILK_RUNTIME
- #define CILK_EXPORT __declspec(dllexport)
-+#elif defined(IN_CILK_STATIC)
-+#define CILK_EXPORT /* nothing */
- #else
- #define CILK_EXPORT __declspec(dllimport)
- #endif  // IN_CILK_RUNTIME
+diff --git a/src/tbb/CMakeLists.txt b/src/tbb/CMakeLists.txt
+index f518086..02ca310 100644
+--- a/src/tbb/CMakeLists.txt
++++ b/src/tbb/CMakeLists.txt
+@@ -12,7 +12,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-add_library(tbb SHARED
++add_library(tbb
+     allocator.cpp
+     arena.cpp
+     arena_slot.cpp
+diff --git a/src/tbbmalloc/CMakeLists.txt b/src/tbbmalloc/CMakeLists.txt
+index 528436d..1311eab 100644
+--- a/src/tbbmalloc/CMakeLists.txt
++++ b/src/tbbmalloc/CMakeLists.txt
+@@ -12,7 +12,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-add_library(tbbmalloc SHARED
++add_library(tbbmalloc
+     backend.cpp
+     backref.cpp
+     frontend.cpp
+diff --git a/src/tbbmalloc_proxy/CMakeLists.txt b/src/tbbmalloc_proxy/CMakeLists.txt
+index c639e78..892f26e 100644
+--- a/src/tbbmalloc_proxy/CMakeLists.txt
++++ b/src/tbbmalloc_proxy/CMakeLists.txt
+@@ -12,7 +12,7 @@
+ # See the License for the specific language governing permissions and
+ # limitations under the License.
+ 
+-add_library(tbbmalloc_proxy SHARED
++add_library(tbbmalloc_proxy
+     function_replacement.cpp
+     proxy.cpp)
+ 
