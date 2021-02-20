@@ -21,6 +21,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     _vcpkg_determine_autotools_target_cpu(HOST_ARCH)
     list(APPEND OPTIONS --build=${BUILD_ARCH}-pc-mingw32)
     list(APPEND OPTIONS --host=${HOST_ARCH}-pc-mingw32)
+    set(ENV{AS} "${NASM}")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)

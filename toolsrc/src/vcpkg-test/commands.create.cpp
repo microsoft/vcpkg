@@ -19,7 +19,7 @@ TEST_CASE ("create smoke test", "[commands-create]")
     VcpkgPaths paths(fsWrapper, args);
     const auto exit_code = Commands::Create::perform(args, paths);
     REQUIRE(exit_code == 0);
-    const auto expected_port = paths.ports / fs::u8path("zlib2");
+    const auto expected_port = paths.builtin_ports_directory() / fs::u8path("zlib2");
     const auto expected_portfile_cmake = expected_port / fs::u8path("portfile.cmake");
     const auto lines = fsWrapper.read_lines(expected_portfile_cmake);
     REQUIRE(lines.has_value());

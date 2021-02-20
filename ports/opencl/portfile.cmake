@@ -1,12 +1,3 @@
-if("wdk" IN_LIST FEATURES)
-    if(NOT VCPKG_TARGET_IS_WINDOWS)
-        message(FATAL_ERROR "Windows Driver Kit support is only available builds targeting Windows")
-    endif()
-    set(WITH_WDK ON)
-else()
-    set(WITH_WDK OFF)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/OpenCL-Headers
@@ -15,11 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(INSTALL
-        "${SOURCE_PATH}/CL"
-    DESTINATION
-        ${CURRENT_PACKAGES_DIR}/include
-)
+file(INSTALL "${SOURCE_PATH}/CL" DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 # OpenCL C++ headers
 vcpkg_from_github(
@@ -67,7 +54,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DOPENCL_ICD_LOADER_HEADERS_DIR=${CURRENT_PACKAGES_DIR}/include
-        -DOPENCL_ICD_LOADER_REQUIRE_WDK=${WITH_WDK}
+        -DOPENCL_ICD_LOADER_REQUIRE_WDK=OFF
         -DUSE_DYNAMIC_VCXX_RUNTIME=${USE_DYNAMIC_VCXX_RUNTIME}
 )
 

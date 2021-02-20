@@ -1,5 +1,5 @@
 Source: quill
-Version: 1.4.1
+Version: 1.5.2
 Homepage: https://github.com/odygrd/quill/
 Description: C++14 Asynchronous Low Latency Logging Library
 Supports: !(arm|uwp|android)

@@ -22,6 +22,10 @@ if("asm" IN_LIST FEATURES)
     if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
         message(FATAL_ERROR "Feature asm only supports x86 architecture.")
     endif()
+
+    VCPKG_FIND_ACQUIRE_PROGRAM(NASM)
+    GET_FILENAME_COMPONENT(NASM_PATH ${NASM} DIRECTORY)
+    vcpkg_add_to_path("${NASM_PATH}")
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

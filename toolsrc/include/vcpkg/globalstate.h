@@ -1,7 +1,8 @@
 #pragma once
 
+#include <vcpkg/base/fwd/lockguarded.h>
+
 #include <vcpkg/base/chrono.h>
-#include <vcpkg/base/util.h>
 
 #include <atomic>
 #include <string>

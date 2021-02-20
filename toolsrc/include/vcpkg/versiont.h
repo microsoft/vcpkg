@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 
 namespace vcpkg
@@ -14,6 +15,8 @@ namespace vcpkg
         friend bool operator==(const VersionT& left, const VersionT& right);
         friend bool operator!=(const VersionT& left, const VersionT& right);
 
+        friend struct VersionTMapLess;
+
     private:
         std::string value;
         int port_version;
@@ -28,5 +31,10 @@ namespace vcpkg
         VersionDiff(const VersionT& left, const VersionT& right);
 
         std::string to_string() const;
+    };
+
+    struct VersionTMapLess
+    {
+        bool operator()(const VersionT& left, const VersionT& right) const;
     };
 }

@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libSDL2pp/libSDL2pp
-    REF 0.16.0
-    SHA512 36603a0b1c3ba9294fffa5368357866e5689ceed9743352ff52c096d8b0070cc3f8708a5e837c10c871b410b6bda3ed7e8e3b95cb9afc136d91afb035cde6361
+    REF a02d5a81c3d4122cb578fcd1e5cd4e836878f63b # 0.16.1
+    SHA512 cf08abe69b3d313d1c3f63cb138f05105453ea0d04e26daa6d85da41cb742912a37766cce1f8af1277e92a227ea75f481f07bff76f0b501fadec392b8b62336a
     HEAD_REF master
     PATCHES fix-dependencies.patch
 )
@@ -29,5 +29,7 @@ vcpkg_install_cmake()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

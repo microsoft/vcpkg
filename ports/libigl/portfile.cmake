@@ -1,7 +1,5 @@
 vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libigl/libigl
@@ -12,16 +10,12 @@ vcpkg_from_github(
         fix-dependency.patch
         fix-imgui-set-cond.patch
         install-extra-headers.patch
+        fix-config.patch
 )
 
 set(LIBIGL_BUILD_STATIC OFF)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(LIBIGL_BUILD_STATIC ON)
-endif()
-
-if ("imgui" IN_LIST FEATURES AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    # Remove this after add port libigl-imgui
-    message(FATAL_ERROR "Feature imgui does not support non-static build currently")
 endif()
 
 if ("test" IN_LIST FEATURES AND NOT EXISTS ${SOURCE_PATH}/tests/data)

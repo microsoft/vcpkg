@@ -298,3 +298,39 @@ TEST_CASE ("BinaryConfigParser args", "[binaryconfigparser]")
         REQUIRE(parsed.has_value());
     }
 }
+
+TEST_CASE ("BinaryConfigParser azblob provider", "[binaryconfigparser]")
+{
+    {
+        auto parsed = create_binary_provider_from_configs_pure("x-azblob,https://azure/container,sas", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("x-azblob,https://azure/container,?sas", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("x-azblob,,sas", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("x-azblob,https://azure/container", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("x-azblob,https://azure/container,sas,invalid", {});
+        REQUIRE(!parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("x-azblob,https://azure/container,sas,read", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("x-azblob,https://azure/container,sas,write", {});
+        REQUIRE(parsed.has_value());
+    }
+    {
+        auto parsed = create_binary_provider_from_configs_pure("x-azblob,https://azure/container,sas,readwrite", {});
+        REQUIRE(parsed.has_value());
+    }
+}

@@ -169,6 +169,7 @@ function(vcpkg_fixup_pkgconfig_check_files pkg_cfg_cmd _file _config _system_lib
     debug_message("BEFORE IGNORE FLAGS REMOVAL: ${_pkg_libs_output}")
     foreach(_ignore IN LISTS _ignore_flags)  # Remove ignore with whitespace
         debug_message("REMOVING FLAG:'${_ignore}'")
+        vcpkg_escape_regex_control_characters(_ignore "${_ignore}")
         string(REGEX REPLACE "(^[\t ]*|;[\t ]*|[\t ]+)${_ignore}([\t ]+|[\t ]*;|[\t ]*$)" "\\2" _pkg_libs_output "${_pkg_libs_output}")
         debug_message("AFTER REMOVAL: ${_pkg_libs_output}")
     endforeach()

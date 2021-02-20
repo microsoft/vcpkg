@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 set(ICU_VERSION_MAJOR 67)
 set(ICU_VERSION_MINOR 1)
@@ -92,6 +92,18 @@ else()
         set(ICU_RUNTIME "-MT")
     else()
         set(ICU_RUNTIME "-MD")
+    endif()
+
+    if(CMAKE_HOST_WIN32 AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+        set(ICU_MSVC_CROSS_COMPILE_TO_ARM ON)
+        # Need the buildtrees dir, as the required files (e.g. icucross.mk) are not part of the installed package
+        get_filename_component(ICU_HOST_PATH "${BUILDTREES_DIR}/icu/x86-windows-rel" ABSOLUTE)
+        if(NOT EXISTS "${ICU_HOST_PATH}")
+            message(FATAL_ERROR "The x86 icu must be be built locally to build for non-x86/x64 platforms. Please run `vcpkg install icu:x86-windows`.")
+        endif()
+
+        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-cross-build=${ICU_HOST_PATH}")
+        set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${ICU_HOST_PATH}/lib")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -209,7 +221,7 @@ else()
             file(READ ${pkg_file} PKG_FILE)
             string(REGEX REPLACE "-ls([^ \\t\\n]+)" "-l\\1" PKG_FILE "${PKG_FILE}" )
             file(WRITE ${pkg_file} "${PKG_FILE}")
-        endforeach()        
+        endforeach()
     endif()
 
     # force U_STATIC_IMPLEMENTATION macro

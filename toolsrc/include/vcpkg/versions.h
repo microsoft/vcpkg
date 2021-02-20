@@ -9,4 +9,14 @@ namespace vcpkg::Versions
         Date,
         String
     };
+
+    struct Constraint
+    {
+        enum class Type
+        {
+            None,
+            Minimum,
+            Exact
+        };
+    };
 }

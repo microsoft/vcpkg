@@ -20,6 +20,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "filesystem"  ARROW_FILESYSTEM
 )
 
+file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/FindZSTD.cmake")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cpp
     PREFER_NINJA
@@ -30,10 +32,10 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
         -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
-        -DARROW_BROTLI_USE_SHARED=${ARROW_BUILD_SHARED}
-        -DARROW_GFLAGS_USE_SHARED=${ARROW_BUILD_SHARED}
-        -DARROW_UTF8PROC_USE_SHARED=${ARROW_BUILD_SHARED}
-        -DARROW_ZSTD_USE_SHARED=${ARROW_BUILD_SHARED}
+        -DARROW_BROTLI_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
+        -DARROW_GFLAGS_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
+        -DARROW_UTF8PROC_USE_SHARED=${ARROW_BUILD_SHARED}   # This can be wrong in custom triplets
+        -DARROW_ZSTD_USE_SHARED=${ARROW_BUILD_SHARED}       # This can be wrong in custom triplets
         -DARROW_JEMALLOC=OFF
         -DARROW_BUILD_UTILITIES=OFF
         -DARROW_WITH_BZ2=ON

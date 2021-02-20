@@ -1,6 +1,5 @@
 Source: directxtex
-Version: sept2020
-Port-Version: 2
+Version: nov2020
 Homepage: https://walbourn.github.io/directxtex
 Description: DirectXTex texture processing library
 Build-Depends: directxtex[core,dx12](arm64|uwp)

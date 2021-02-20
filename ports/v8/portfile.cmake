@@ -1,5 +1,5 @@
 
-set(pkgver "8.3.110.13")
+set(pkgver "8.6.395.17")
 
 set(ENV{DEPOT_TOOLS_WIN_TOOLCHAIN} 0)
 
@@ -71,15 +71,15 @@ endfunction()
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://chromium.googlesource.com/v8/v8.git
-    REF 90904eb48b16b32f7edbf1f8a92ece561d05e738
-    PATCHES ${CURRENT_PORT_DIR}/v8.patch ${CURRENT_PORT_DIR}/3f8dc4b.patch
+    REF 7565e93eb72cea4268028fc20186d415c22b1cff
+    PATCHES ${CURRENT_PORT_DIR}/v8.patch
 )
 
 message(STATUS "Fetching submodules")
 v8_fetch(
         DESTINATION build
         URL https://chromium.googlesource.com/chromium/src/build.git
-        REF 26e9d485d01d6e0eb9dadd21df767a63494c8fea
+        REF b6be94885f567b15bcb0961298b32cdb737ae2d6
         SOURCE ${SOURCE_PATH}
         PATCHES ${CURRENT_PORT_DIR}/build.patch)
 v8_fetch(
@@ -156,26 +156,33 @@ vcpkg_install_gn(
     TARGETS ${targets}
 )
 
-set(CFLAGS "-DV8_COMPRESS_POINTERS")
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(CFLAGS "${CFLAGS} -DV8_31BIT_SMIS_ON_64BIT_ARCH")
+    set(CFLAGS "-DV8_COMPRESS_POINTERS -DV8_31BIT_SMIS_ON_64BIT_ARCH")
 endif()
+
 file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.h")
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(PREFIX ${CURRENT_PACKAGES_DIR})
     configure_file(${CURRENT_PORT_DIR}/v8.pc.in ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8.pc @ONLY)
     configure_file(${CURRENT_PORT_DIR}/v8_libbase.pc.in ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libbase.pc @ONLY)
     configure_file(${CURRENT_PORT_DIR}/v8_libplatform.pc.in ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_libplatform.pc @ONLY)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/snapshot_blob.bin DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+
     set(PREFIX ${CURRENT_PACKAGES_DIR}/debug)
     configure_file(${CURRENT_PORT_DIR}/v8.pc.in ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/v8.pc @ONLY)
     configure_file(${CURRENT_PORT_DIR}/v8_libbase.pc.in ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/v8_libbase.pc @ONLY)
     configure_file(${CURRENT_PORT_DIR}/v8_libplatform.pc.in ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/v8_libplatform.pc @ONLY)
+    configure_file(${CURRENT_PORT_DIR}/V8Config-shared.cmake ${CURRENT_PACKAGES_DIR}/share/v8/V8Config.cmake @ONLY)
+    file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/snapshot_blob.bin DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 else()
     set(PREFIX ${CURRENT_PACKAGES_DIR})
     configure_file(${CURRENT_PORT_DIR}/v8_monolith.pc.in ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/v8_monolith.pc @ONLY)
     set(PREFIX ${CURRENT_PACKAGES_DIR}/debug)
     configure_file(${CURRENT_PORT_DIR}/v8_monolith.pc.in ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/v8_monolith.pc @ONLY)
+    configure_file(${CURRENT_PORT_DIR}/V8Config-static.cmake ${CURRENT_PACKAGES_DIR}/share/v8/V8Config.cmake @ONLY)
 endif()
+
 
 vcpkg_copy_pdbs()
 

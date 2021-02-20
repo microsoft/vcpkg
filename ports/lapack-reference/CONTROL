@@ -9,7 +9,7 @@ Feature: cblas
 Description: Builds CBLAS
 
 Feature: noblas
-Build-Depends: openblas
+Build-Depends: blas
 Description: Use external optimized BLAS
 
 Feature: blas-select

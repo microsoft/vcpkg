@@ -3,12 +3,11 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commschamp/commsdsl
-    REF v3.5.2
-    SHA512 cc763420e84faa7f0c6bf6c7e89e21cbf4e61eeed9916273a5117786a4d54ccc58356904266b6f8e1643fdb7715deabcea868e6a7af574a44ca0363574602aa2
+    REF v3.5.3
+    SHA512 f9e908f42e11e30aefe07f1b37d65545be2074758f054fb0d519e1a01f0b7060b309d2667459a5a6918a9ad9f535d0c0a0cc2cd0d4a281e78c2c48a6b8ae4a5d
     HEAD_REF master
-    PATCHES 
-        "use-FindPackage.patch"
-        "fix-libxml2.patch"
+    PATCHES
+        "fix-cmake-cmakedir-path.patch"
 )
 
 vcpkg_configure_cmake(

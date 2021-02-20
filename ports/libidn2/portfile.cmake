@@ -1,10 +1,10 @@
-set(IDN2_VERSION 2.2.0)
+set(IDN2_VERSION 2.3.0)
 set(IDN2_FILENAME libidn2-${IDN2_VERSION}.tar.gz)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/libidn/${IDN2_FILENAME}"
     FILENAME "${IDN2_FILENAME}"
-    SHA512 ccf56056a378d49a28ff67a2a23cd3d32ce51f86a78f84839b98dad709a1d0d03ac8d7c1496f0e4d3536bca00e3d09d34d76a37317b2ce87e3aa66bdf4e877b8
+    SHA512 a2bf6d2249948bce14fbbc802f8af1c9b427fc9bf64203a2f3d7239d8e6061d0a8e7970a23e8e5889110a654a321e0504c7a6d049bb501e7f6a23d42b50b6187
 )
 
 vcpkg_extract_source_archive_ex(

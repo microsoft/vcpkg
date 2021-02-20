@@ -25,6 +25,24 @@ function(_vcpkg_get_directory_name_of_file_above OUT DIRECTORY FILENAME)
     set(${OUT} ${_vcpkg_get_dir_out} CACHE INTERNAL "_vcpkg_get_directory_name_of_file_above: ${OUT}")
 endfunction()
 
+#[===[
+We use this system, instead of `message(FATAL_ERROR)`,
+since cmake prints a lot of nonsense if the toolchain errors out before it's found the build tools.
+
+This `_VCPKG_HAS_FATAL_ERROR` must be checked before any filesystem operations are done,
+since otherwise you might be doing something with bad variables set up.
+#]===]
+set(_VCPKG_FATAL_ERROR)
+set(_VCPKG_HAS_FATAL_ERROR OFF)
+function(_vcpkg_add_fatal_error ERROR)
+    if(NOT _VCPKG_HAS_FATAL_ERROR)
+        set(_VCPKG_HAS_FATAL_ERROR ON PARENT_SCOPE)
+        set(_VCPKG_FATAL_ERROR "${ERROR}" PARENT_SCOPE)
+    else()
+        string(APPEND _VCPKG_FATAL_ERROR "\n${ERROR}")
+    endif()
+endfunction()
+
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
     if(EXISTS "${CMAKE_SOURCE_DIR}/vcpkg.json")
         set(_VCPKG_MANIFEST_DIR "${CMAKE_SOURCE_DIR}")
@@ -39,7 +57,7 @@ if(NOT DEFINED VCPKG_MANIFEST_MODE)
         set(VCPKG_MANIFEST_MODE OFF)
     endif()
 elseif(VCPKG_MANIFEST_MODE AND NOT _VCPKG_MANIFEST_DIR)
-    message(FATAL_ERROR
+    _vcpkg_add_fatal_error(
         "vcpkg manifest mode was enabled, but we couldn't find a manifest file (vcpkg.json) "
         "in any directories above ${CMAKE_CURRENT_SOURCE_DIR}. Please add a manifest, or "
         "disable manifests by turning off VCPKG_MANIFEST_MODE.")
@@ -51,7 +69,7 @@ if(NOT DEFINED _INTERNAL_CHECK_VCPKG_MANIFEST_MODE)
 endif()
 
 if(NOT VCPKG_MANIFEST_MODE STREQUAL _INTERNAL_CHECK_VCPKG_MANIFEST_MODE)
-    message(FATAL_ERROR [[
+    _vcpkg_add_fatal_error([[
 vcpkg manifest mode was enabled for a build directory where it was initially disabled.
 This is not supported. Please delete the build directory and reconfigure.
 ]])
@@ -228,7 +246,7 @@ endif()
 
 _vcpkg_get_directory_name_of_file_above(_VCPKG_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR} ".vcpkg-root")
 if(NOT _VCPKG_ROOT_DIR)
-    message(FATAL_ERROR "Could not find .vcpkg-root")
+    _vcpkg_add_fatal_error("Could not find .vcpkg-root")
 endif()
 
 if (NOT DEFINED _VCPKG_INSTALLED_DIR)
@@ -322,75 +340,84 @@ else()
     set(_VCPKG_BOOTSTRAP_SCRIPT "${_VCPKG_ROOT_DIR}/bootstrap-vcpkg.sh")
 endif()
 
-if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE)
+if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT _CMAKE_IN_TRY_COMPILE AND NOT _VCPKG_HAS_FATAL_ERROR)
     set(VCPKG_BOOTSTRAP_OPTIONS "${VCPKG_BOOTSTRAP_OPTIONS}" CACHE STRING "Additional options to bootstrap vcpkg" FORCE)
     mark_as_advanced(VCPKG_BOOTSTRAP_OPTIONS)
 
     if(NOT EXISTS "${_VCPKG_EXECUTABLE}")
         message(STATUS "Bootstrapping vcpkg before install")
 
+        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-bootstrap.log" _VCPKG_BOOTSTRAP_LOG)
         execute_process(
             COMMAND "${_VCPKG_BOOTSTRAP_SCRIPT}" ${VCPKG_BOOTSTRAP_OPTIONS}
+            OUTPUT_FILE "${_VCPKG_BOOTSTRAP_LOG}"
+            ERROR_FILE "${_VCPKG_BOOTSTRAP_LOG}"
             RESULT_VARIABLE _VCPKG_BOOTSTRAP_RESULT)
 
-        if (NOT _VCPKG_BOOTSTRAP_RESULT EQUAL 0)
-            message(FATAL_ERROR "Bootstrapping vcpkg before install - failed")
+        if (_VCPKG_BOOTSTRAP_RESULT EQUAL 0)
+            message(STATUS "Bootstrapping vcpkg before install - done")
+        else()
+            message(STATUS "Bootstrapping vcpkg before install - failed")
+            _vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${_VCPKG_BOOTSTRAP_LOG}")
+        endif()
+    endif()
+
+    if (NOT _VCPKG_HAS_FATAL_ERROR)
+        set(VCPKG_OVERLAY_PORTS "${VCPKG_OVERLAY_PORTS}" CACHE STRING "Overlay ports to use for vcpkg install in manifest mode" FORCE)
+        mark_as_advanced(VCPKG_OVERLAY_PORTS)
+        set(VCPKG_OVERLAY_TRIPLETS "${VCPKG_OVERLAY_TRIPLETS}" CACHE STRING "Overlay triplets to use for vcpkg install in manifest mode" FORCE)
+        mark_as_advanced(VCPKG_OVERLAY_TRIPLETS)
+        set(VCPKG_INSTALL_OPTIONS "${VCPKG_INSTALL_OPTIONS}" CACHE STRING "Additional install options to pass to vcpkg" FORCE)
+        mark_as_advanced(VCPKG_INSTALL_OPTIONS)
+
+        message(STATUS "Running vcpkg install")
+
+        set(_VCPKG_ADDITIONAL_MANIFEST_PARAMS)
+        if(VCPKG_OVERLAY_PORTS)
+            foreach(_overlay_port IN LISTS VCPKG_OVERLAY_PORTS)
+                list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-ports=${_overlay_port}")
+            endforeach()
+        endif()
+        if(VCPKG_OVERLAY_TRIPLETS)
+            foreach(_overlay_triplet IN LISTS VCPKG_OVERLAY_TRIPLETS)
+                list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-triplets=${_overlay_triplet}")
+            endforeach()
         endif()
 
-        message(STATUS "Bootstrapping vcpkg before install - done")
-    endif()
-
-    set(VCPKG_OVERLAY_PORTS "${VCPKG_OVERLAY_PORTS}" CACHE STRING "Overlay ports to use for vcpkg install in manifest mode" FORCE)
-    mark_as_advanced(VCPKG_OVERLAY_PORTS)
-    set(VCPKG_OVERLAY_TRIPLETS "${VCPKG_OVERLAY_TRIPLETS}" CACHE STRING "Overlay triplets to use for vcpkg install in manifest mode" FORCE)
-    mark_as_advanced(VCPKG_OVERLAY_TRIPLETS)
-    set(VCPKG_INSTALL_OPTIONS "${VCPKG_INSTALL_OPTIONS}" CACHE STRING "Additional install options to pass to vcpkg" FORCE)
-    mark_as_advanced(VCPKG_INSTALL_OPTIONS)
-
-    message(STATUS "Running vcpkg install")
-
-    set(_VCPKG_ADDITIONAL_MANIFEST_PARAMS)
-    if(VCPKG_OVERLAY_PORTS)
-        foreach(_overlay_port IN LISTS VCPKG_OVERLAY_PORTS)
-            list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-ports=${_overlay_port}")
+        foreach(feature IN LISTS VCPKG_MANIFEST_FEATURES)
+            list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-feature=${feature}")
         endforeach()
+
+        if(VCPKG_MANIFEST_NO_DEFAULT_FEATURES)
+            list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
+        endif()
+
+        file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log" _VCPKG_MANIFEST_INSTALL_LOG)
+        execute_process(
+            COMMAND "${_VCPKG_EXECUTABLE}" install
+                --triplet "${VCPKG_TARGET_TRIPLET}"
+                --vcpkg-root "${_VCPKG_ROOT_DIR}"
+                "--x-wait-for-lock"
+                "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
+                "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+                ${_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
+                ${VCPKG_INSTALL_OPTIONS}
+            OUTPUT_FILE "${_VCPKG_MANIFEST_INSTALL_LOG}"
+            ERROR_FILE "${_VCPKG_MANIFEST_INSTALL_LOG}"
+            RESULT_VARIABLE _VCPKG_INSTALL_RESULT
+        )
+
+        if (_VCPKG_INSTALL_RESULT EQUAL 0)
+            message(STATUS "Running vcpkg install - done")
+
+            set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
+                "${_VCPKG_MANIFEST_DIR}/vcpkg.json"
+                "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
+        else()
+            message(STATUS "Running vcpkg install - failed")
+            _vcpkg_add_fatal_error("vcpkg install failed. See logs for more information: ${_VCPKG_MANIFEST_INSTALL_LOG}")
+        endif()
     endif()
-    if(VCPKG_OVERLAY_TRIPLETS)
-        foreach(_overlay_triplet IN LISTS VCPKG_OVERLAY_TRIPLETS)
-            list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-triplets=${_overlay_triplet}")
-        endforeach()
-    endif()
-
-    foreach(feature IN LISTS VCPKG_MANIFEST_FEATURES)
-        list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-feature=${feature}")
-    endforeach()
-
-    if(VCPKG_MANIFEST_NO_DEFAULT_FEATURES)
-        list(APPEND _VCPKG_ADDITIONAL_MANIFEST_PARAMS "--x-no-default-features")
-    endif()
-
-    execute_process(
-        COMMAND "${_VCPKG_EXECUTABLE}" install
-            --triplet "${VCPKG_TARGET_TRIPLET}"
-            --vcpkg-root "${_VCPKG_ROOT_DIR}"
-            "--x-manifest-root=${_VCPKG_MANIFEST_DIR}"
-            "--x-install-root=${_VCPKG_INSTALLED_DIR}"
-            ${_VCPKG_ADDITIONAL_MANIFEST_PARAMS}
-            ${VCPKG_INSTALL_OPTIONS}
-        OUTPUT_FILE "${CMAKE_BINARY_DIR}/vcpkg-manifest-install-out.log"
-        ERROR_FILE "${CMAKE_BINARY_DIR}/vcpkg-manifest-install-err.log"
-        RESULT_VARIABLE _VCPKG_INSTALL_RESULT
-    )
-
-    if (NOT _VCPKG_INSTALL_RESULT EQUAL 0)
-        message(FATAL_ERROR "Running vcpkg install - failed")
-    endif()
-
-    message(STATUS "Running vcpkg install - done")
-
-    set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS
-        "${_VCPKG_MANIFEST_DIR}/vcpkg.json"
-        "${_VCPKG_INSTALLED_DIR}/vcpkg/status")
 endif()
 
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
@@ -587,4 +614,8 @@ if(NOT _CMAKE_IN_TRY_COMPILE)
             _VCPKG_ROOT_DIR
         )
     endif()
+endif()
+
+if(_VCPKG_HAS_FATAL_ERROR)
+    message(FATAL_ERROR "${_VCPKG_FATAL_ERROR}")
 endif()
