@@ -65,41 +65,28 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 
 if(VCPKG_TARGET_IS_ANDROID)
-    vcpkg_configure_cmake(
-            SOURCE_PATH ${SOURCE_PATH}
-            PREFER_NINJA
-            OPTIONS ${FEATURE_OPTIONS}
-            ${UWP_OPTIONS}
-            -C "${CURRENT_PORT_DIR}/CurlAndroidCrossCompile.cmake"
-            -DOPENSSL_LIBRARY="${CURRENT_INSTALLED_DIR}/lib/libssl.so"
+    set(ADDITIONAL_SCRIPTS -C "${CURRENT_PORT_DIR}/CurlAndroidCrossCompile.cmake")
+    set(EXTRA_ARGS -DOPENSSL_LIBRARY="${CURRENT_INSTALLED_DIR}/lib/libssl.so"
             -DCRYPT_LIBRARY="${CURRENT_INSTALLED_DIR}/lib/libcrypto.so"
             -DOPENSSL_INCLUDE="${CURRENT_INSTALLED_DIR}/include"
-            ${SECTRANSP_OPTIONS}
-            -DBUILD_TESTING=OFF
-            -DENABLE_MANUAL=OFF
-            -DCURL_STATICLIB=${CURL_STATICLIB}
-            -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
-            -DENABLE_DEBUG=ON
-            -DCURL_CA_FALLBACK=ON
-    )
-
-else()
-    vcpkg_configure_cmake(
-            SOURCE_PATH ${SOURCE_PATH}
-            PREFER_NINJA
-            OPTIONS ${FEATURE_OPTIONS}
-            ${UWP_OPTIONS}
-            ${SECTRANSP_OPTIONS}
-            -DBUILD_TESTING=OFF
-            -DENABLE_MANUAL=OFF
-            -DCURL_STATICLIB=${CURL_STATICLIB}
-            -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
-            -DENABLE_DEBUG=ON
-            -DCURL_CA_FALLBACK=ON
-    )
-
+            )
 endif()
 
+vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA
+        OPTIONS ${FEATURE_OPTIONS}
+        ${UWP_OPTIONS}
+        ${ADDITIONAL_SCRIPTS}
+        ${EXTRA_ARGS}
+        ${SECTRANSP_OPTIONS}
+        -DBUILD_TESTING=OFF
+        -DENABLE_MANUAL=OFF
+        -DCURL_STATICLIB=${CURL_STATICLIB}
+        -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
+        -DENABLE_DEBUG=ON
+        -DCURL_CA_FALLBACK=ON
+)
 
 vcpkg_install_cmake()
 
