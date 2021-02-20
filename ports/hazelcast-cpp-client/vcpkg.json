@@ -5,7 +5,7 @@
   "homepage": "https://github.com/hazelcast/hazelcast-cpp-client",
   "documentation": "http://hazelcast.github.io/hazelcast-cpp-client/index.html",
   "supports": "!uwp",
-  "$dependencies": [
+  "dependencies": [
     "boost-any",
     "boost-asio",
     "boost-chrono",
