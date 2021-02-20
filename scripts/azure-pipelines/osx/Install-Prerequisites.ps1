@@ -60,7 +60,7 @@ $Installables.Brew | ForEach-Object {
         brew install $installable.Name
     } else {
         switch ($installable.Kind) {
-            'cask' { brew cask install $installable.Name }
+            'cask' { brew install --cask $installable.Name }
             default {
                 Write-Error "Invalid kind: $_. Expected either empty, or 'cask'."
             }

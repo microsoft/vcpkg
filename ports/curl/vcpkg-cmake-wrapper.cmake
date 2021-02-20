@@ -2,6 +2,8 @@ list(REMOVE_ITEM ARGS "NO_MODULE")
 list(REMOVE_ITEM ARGS "CONFIG")
 list(REMOVE_ITEM ARGS "MODULE")
 
+cmake_policy(SET CMP0012 NEW)
+
 _find_package(${ARGS} CONFIG)
 
 if(TARGET CURL::libcurl)

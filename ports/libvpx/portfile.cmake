@@ -8,6 +8,10 @@ vcpkg_from_github(
     REF v${LIBVPX_VERSION}
     SHA512 8d544552b35000ea5712aec220b78bb5f7dc210704b2f609365214cb95a4f5a0e343b362723d829cb4a9ac203b10d5443700ba84b28fd6b2fefbabb40663e298
     HEAD_REF master
+    PATCHES
+        0001-vcxproj-nasm.patch
+        0002-Fix-nasm-debug-format-flag.patch
+        0003-add-uwp-and-v142-support.patch
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -23,8 +27,9 @@ else()
 	set(ENV{PATH} "${MSYS_ROOT}/usr/bin:$ENV{PATH}:${PERL_EXE_PATH}")
 endif()
 
-include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
-yasm_tool_helper(PREPEND_TO_PATH)
+vcpkg_find_acquire_program(NASM)
+get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+vcpkg_add_to_path(${NASM_EXE_PATH})
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
@@ -37,21 +42,33 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_CRT_SUFFIX md)
     endif()
 
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore AND VCPKG_PLATFORM_TOOLSET STREQUAL v142)
+        set(LIBVPX_TARGET_OS "uwp")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+        set(LIBVPX_TARGET_OS "win32")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        set(LIBVPX_TARGET_OS "win64")
+    endif()
+
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-        set(LIBVPX_TARGET_ARCH "x86-win32")
+        set(LIBVPX_TARGET_ARCH "x86-${LIBVPX_TARGET_OS}")
         set(LIBVPX_ARCH_DIR "Win32")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-        set(LIBVPX_TARGET_ARCH "x86_64-win64")
+        set(LIBVPX_TARGET_ARCH "x86_64-${LIBVPX_TARGET_OS}")
         set(LIBVPX_ARCH_DIR "x64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-        set(LIBVPX_TARGET_ARCH "arm64-win64")
+        set(LIBVPX_TARGET_ARCH "arm64-${LIBVPX_TARGET_OS}")
         set(LIBVPX_ARCH_DIR "ARM64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-        set(LIBVPX_TARGET_ARCH "armv7-win32")
+        set(LIBVPX_TARGET_ARCH "armv7-${LIBVPX_TARGET_OS}")
         set(LIBVPX_ARCH_DIR "ARM")
     endif()
 
-    set(LIBVPX_TARGET_VS "vs15")
+    if(VCPKG_PLATFORM_TOOLSET STREQUAL v142)
+        set(LIBVPX_TARGET_VS "vs16")
+    else()
+        set(LIBVPX_TARGET_VS "vs15")
+    endif()
 
     message(STATUS "Generating makefile")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
@@ -64,6 +81,7 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
             --disable-examples
             --disable-tools
             --disable-docs
+            --as=nasm
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}"
         LOGNAME configure-${TARGET_TRIPLET})
 
@@ -164,6 +182,7 @@ else()
             --target=${LIBVPX_TARGET}
             ${OPTIONS}
             ${OPTIONS_RELEASE}
+            --as=nasm
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
         LOGNAME configure-${TARGET_TRIPLET}-rel)
 
@@ -196,6 +215,7 @@ else()
             --target=${LIBVPX_TARGET}
             ${OPTIONS}
             ${OPTIONS_DEBUG}
+            --as=nasm
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
         LOGNAME configure-${TARGET_TRIPLET}-dbg)
 

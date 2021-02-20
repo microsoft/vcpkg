@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeux/pugixml
-    REF v1.10
-    SHA512 0634053d4f757b9293997763bb2e51595197c192f3974e954975d6d6ff91e4a6cb7c194efa530e0eef1a2a93db16592c5630010b6482430dff5ffc6879e84b6a
+    REF v1.11.4
+    SHA512 a1fdf4cbd744318fd339362465472279767777b18a3c8c7e8618d5e637213c632bf9dd8144d16ae22a75cfbde007f383e2feb49084e681c930fc89a2e3f2bc4f
     HEAD_REF master
-    PATCHES pugixml-v1.10_fix_debug_pkgconfig.patch # Upstream: https://github.com/zeux/pugixml/pull/363
 )
 
 vcpkg_configure_cmake(

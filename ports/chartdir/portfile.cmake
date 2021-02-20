@@ -28,15 +28,15 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
     file(COPY "${LIBDIR}/chartdir60.lib"  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     file(COPY "${LIBDIR}/chartdir60.dll"  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(COPY "${LIBDIR}/chartdir60.lib"  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    
+
     set(CHARTDIR_LIB "chartdir60.lib")
 
 elseif(VCPKG_TARGET_IS_OSX)
 
     vcpkg_download_distfile(ARCHIVE_FILE
         URLS "https://www.advsofteng.net/chartdir_cpp_mac.tar.gz"
-        FILENAME "chartdir_cpp_mac-6.3.1.tar.gz"
-        SHA512 d7364b42ed7c5dd2f89ed8692ed0df1ec952216ba24f8afa8e039641f3296f23c9ff6391e3e0dcd3bfdb9e6898c21a8281aa2803fbee33c7197c1df271a0edf7
+        FILENAME "chartdir_cpp_mac-6.3.1.51483c1975.tar.gz"
+        SHA512 51483c197518203a24f652a4bfd9af1f933f8c59f3d7286e13c612cf09c5b850b4d1e9daa506379218797b5bb79bbc571b9e90b0fbb0f3ef4a3f455dd0de3848
     )
 
     vcpkg_extract_source_archive_ex(
@@ -47,7 +47,7 @@ elseif(VCPKG_TARGET_IS_OSX)
 
     file(COPY "${SOURCE_PATH}/lib/libchartdir.6.dylib"  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     file(COPY "${SOURCE_PATH}/lib/libchartdir.6.dylib"  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    
+
     set(CHARTDIR_LIB "libchartdir.6.dylib")
 
 elseif(VCPKG_TARGET_IS_LINUX)
@@ -78,7 +78,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
 
     file(COPY "${SOURCE_PATH}/lib/libchartdir.so.6.0.3"  DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
     file(COPY "${SOURCE_PATH}/lib/libchartdir.so.6.0.3"  DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-    
+
     set(CHARTDIR_LIB "libchartdir.so.6.0.3")
 
     file(COPY ${SOURCE_PATH}/lib/fonts DESTINATION ${CURRENT_PACKAGES_DIR}/share/chartdir)

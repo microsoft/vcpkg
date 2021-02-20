@@ -1,5 +1,5 @@
 diff --git a/cmake/install.cmake b/cmake/install.cmake
-index be47c54..8b1bd97 100644
+index 4091bc8..9850018 100644
 --- a/cmake/install.cmake
 +++ b/cmake/install.cmake
 @@ -31,7 +31,7 @@ endforeach()

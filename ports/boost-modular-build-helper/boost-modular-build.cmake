@@ -27,7 +27,7 @@ function(boost_modular_build)
         set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../arm-linux/tools/boost-build")
     elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
         get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
-    elseif(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "s390x")
+    elseif(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "s390x" AND CMAKE_HOST_WIN32)
         get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
     else()
         set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/tools/boost-build")
@@ -116,7 +116,7 @@ function(boost_modular_build)
         set(VARIANT ${BUILD_TYPE})
         set(BUILD_LIB_PATH ${BUILD_LIB_PATH})
         configure_file(${_bm_DIR}/Jamroot.jam ${_bm_SOURCE_PATH}/Jamroot.jam @ONLY)
-        
+
         set(configure_option)
         if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
             list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
@@ -135,13 +135,23 @@ function(boost_modular_build)
         )
         vcpkg_install_cmake()
     endfunction()
-    
+
     if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        set(build_flag 0)
+        if(NOT DEFINED VCPKG_BUILD_TYPE)
+            set(build_flag 1)
+            set(VCPKG_BUILD_TYPE "release")
+        endif()
+
+        if(VCPKG_BUILD_TYPE STREQUAL "release")
             unix_build(${BOOST_LIB_RELEASE_SUFFIX} "release" "lib/")
         endif()
 
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        if(build_flag)
+            set(VCPKG_BUILD_TYPE "debug")
+        endif()
+
+        if(VCPKG_BUILD_TYPE STREQUAL "debug")
             unix_build(${BOOST_LIB_DEBUG_SUFFIX} "debug" "debug/lib/")
         endif()
 
@@ -213,7 +223,7 @@ function(boost_modular_build)
     else()
         list(APPEND B2_OPTIONS threadapi=pthread)
     endif()
-    set(B2_OPTIONS_DBG
+    list(APPEND B2_OPTIONS_DBG
          -sZLIB_BINARY=zlibd
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
          -sBZIP2_BINARY=bz2d
@@ -224,7 +234,7 @@ function(boost_modular_build)
          "-sZSTD_LIBPATH=${CURRENT_INSTALLED_DIR}/debug/lib"
     )
 
-    set(B2_OPTIONS_REL
+    list(APPEND B2_OPTIONS_REL
          -sZLIB_BINARY=zlib
          "-sZLIB_LIBPATH=${CURRENT_INSTALLED_DIR}/lib"
          -sBZIP2_BINARY=bz2
@@ -293,6 +303,8 @@ function(boost_modular_build)
         list(APPEND B2_OPTIONS address-model=64 architecture=arm)
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "s390x")
         list(APPEND B2_OPTIONS address-model=64 architecture=s390x)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ppc64le")
+        list(APPEND B2_OPTIONS address-model=64 architecture=power)
     else()
         list(APPEND B2_OPTIONS address-model=32 architecture=x86)
     endif()
@@ -318,13 +330,16 @@ function(boost_modular_build)
         set(TOOLSET_OPTIONS "${TOOLSET_OPTIONS} <cflags>-Zl <compileflags> /AI\"${PLATFORM_WINMD_DIR}\" <linkflags>WindowsApp.lib <cxxflags>/ZW <compileflags>-DVirtualAlloc=VirtualAllocFromApp <compileflags>-D_WIN32_WINNT=0x0A00")
     endif()
 
-    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
-    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam @ONLY)
-
+    set(MSVC_VERSION)
     if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
         list(APPEND _bm_OPTIONS toolset=msvc)
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v14.")
+        set(MSVC_VERSION 14.2)
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
         list(APPEND _bm_OPTIONS toolset=msvc)
+        set(MSVC_VERSION 14.1)
+    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v140")
+        list(APPEND _bm_OPTIONS toolset=msvc)
+        set(MSVC_VERSION 14.0)
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v120")
         list(APPEND _bm_OPTIONS toolset=msvc)
     elseif(VCPKG_PLATFORM_TOOLSET MATCHES "external")
@@ -332,6 +347,9 @@ function(boost_modular_build)
     else()
         message(FATAL_ERROR "Unsupported value for VCPKG_PLATFORM_TOOLSET: '${VCPKG_PLATFORM_TOOLSET}'")
     endif()
+
+    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/user-config.jam @ONLY)
+    configure_file(${_bm_DIR}/user-config.jam ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/user-config.jam @ONLY)
 
     ######################
     # Perform build + Package
@@ -429,7 +447,7 @@ function(boost_modular_build)
         string(REPLACE "-x64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a32-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
         string(REPLACE "-a64-" "-" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake 3.10 and earlier to locate the binaries
-        string(REPLACE "-1_74" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
+        string(REPLACE "-1_75" "" NEW_FILENAME ${NEW_FILENAME}) # To enable CMake > 3.10 to locate the binaries
         if("${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME}" STREQUAL "${DIRECTORY_OF_LIB_FILE}/${OLD_FILENAME}")
             # nothing to do
         elseif(EXISTS ${DIRECTORY_OF_LIB_FILE}/${NEW_FILENAME})

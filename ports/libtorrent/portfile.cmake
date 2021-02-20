@@ -37,12 +37,10 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arvidn/libtorrent
-    REF libtorrent-1.2.10
-    SHA512 e6de939fb6527783695e0b6623ddbe27f85842a36c0899b93ea0284cb3c6f3d14b8c39e29316adb3bf9acac7804f38385cc06854a32df28e7f4f6839af9f382d
+    REF v1.2.11
+    SHA512 d502286f67bf462f14169daafe12b94ca723598530c85360c3a4b3c73535202b63632036248fdecc942cb559e66e6a5cb5afa830dc78bbff72a6c9a330710b62
     HEAD_REF RC_1_2
     PATCHES
-        add-datetime-to-boost-libs.patch
-        fix_python_cmake.patch
         ${ICONV_PATCH}
 )
 

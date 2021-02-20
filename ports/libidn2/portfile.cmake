@@ -50,6 +50,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
         COPY_SOURCE
         OPTIONS
             --with-libiconv-prefix=${CURRENT_INSTALLED_DIR}

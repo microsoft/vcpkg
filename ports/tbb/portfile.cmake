@@ -1,4 +1,4 @@
-if (NOT VCPKG_TARGET_IS_LINUX)
+if (NOT VCPKG_TARGET_IS_LINUX AND NOT VCPKG_TARGET_IS_OSX)
     vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 endif()
 

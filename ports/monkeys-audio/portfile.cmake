@@ -2,21 +2,22 @@ vcpkg_fail_port_install(ON_TARGET "UWP" "OSX" "Linux")
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
 
-set(MA_VERSION 559c)
+set(MA_VERSION 570)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://monkeysaudio.com/files/MAC_SDK_${MA_VERSION}.zip"
+         "https://web.archive.org/web/20201229182615if_/https://monkeysaudio.com/files/MAC_SDK_570.zip"
     FILENAME "MAC_SDK_${MA_VERSION}.zip"
-    SHA512 83ed3e2a4de62cb95e508a12146cecfe6bb584ce3cb30c20ae2f8e2f76839f4a83a4a0f68399a68dfd56829bcd5678824bcdf46730ae6662e14a5248522c0554
+    SHA512 d3b5a10574dde1ea90578959378b87f8a8c94b3cc7198bc51b86f7128d66117d706c191d56a699dce0c2a53b7722e0893cb614f96f9ad725a266a871da587fd4
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
-    PATCHES 
-	    fix-project-config.patch
-	    remove-certificate-step.patch
+    PATCHES
+        fix-project-config.patch
+        remove-certificate-step.patch
 )
 
 file(REMOVE_RECURSE
@@ -52,10 +53,10 @@ if ("tools" IN_LIST FEATURES)
         PROJECT_SUBPATH Source/Projects/VS2019/Console/Console.vcxproj
         PLATFORM ${PLATFORM}
     )
-    
+
     file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/Console.lib ${CURRENT_PACKAGES_DIR}/debug/lib/Console.lib)
     file(RENAME ${CURRENT_PACKAGES_DIR}/tools/monkeys-audio/Console.exe ${CURRENT_PACKAGES_DIR}/tools/monkeys-audio/mac.exe)
-    
+
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif()
 

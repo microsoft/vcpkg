@@ -1,0 +1,24 @@
+{
+  "name": "boost-variant",
+  "version-string": "1.75.0",
+  "description": "Boost variant module",
+  "homepage": "https://github.com/boostorg/variant",
+  "dependencies": [
+    "boost-assert",
+    "boost-bind",
+    "boost-config",
+    "boost-core",
+    "boost-detail",
+    "boost-functional",
+    "boost-integer",
+    "boost-move",
+    "boost-mpl",
+    "boost-preprocessor",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-index",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

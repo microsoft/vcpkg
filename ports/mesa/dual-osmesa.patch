@@ -1,0 +1,80 @@
+diff --git a/include/meson.build b/include/meson.build
+index a64d9373a92..22c50eb5eb7 100644
+--- a/include/meson.build
++++ b/include/meson.build
+@@ -89,7 +89,7 @@ if with_egl
+   )
+ endif
+ 
+-if with_osmesa != 'none'
++if with_osmesa != []
+   install_headers('GL/osmesa.h', subdir : 'GL')
+ endif
+ 
+diff --git a/meson.build b/meson.build
+index 898d025f066..d73818e7ce5 100644
+--- a/meson.build
++++ b/meson.build
+@@ -444,7 +444,7 @@ if with_any_vk and (with_platform_x11 and not with_dri3)
+   error('Vulkan drivers require dri3 for X11 support')
+ endif
+ if with_dri
+-  if with_glx == 'disabled' and not with_egl and not with_gbm and with_osmesa != 'classic'
++  if with_glx == 'disabled' and not with_egl and not with_gbm and not with_osmesa.contains('classic')
+     error('building dri drivers require at least one windowing system or classic osmesa')
+   endif
+ endif
+@@ -1508,8 +1508,8 @@ else
+   dep_unwind = null_dep
+ endif
+ 
+-if with_osmesa != 'none'
+-  if with_osmesa == 'gallium' and not with_gallium_softpipe
++if with_osmesa != []
++  if with_osmesa.contains('gallium') and not with_gallium_softpipe
+     error('OSMesa gallium requires gallium softpipe or llvmpipe.')
+   endif
+   if host_machine.system() == 'windows'
+@@ -1710,10 +1710,10 @@ lines = ['',
+                                                     with_gles2 ? 'yes' : 'no'),
+ ]
+ 
+-if with_osmesa != 'none'
++if with_osmesa != []
+   lines += ''
+   suffix = ''
+-  if with_osmesa == 'gallium'
++  if with_osmesa.contains('gallium')
+     suffix = '(Gallium)'
+   endif
+   lines += 'OSMesa:          lib' + osmesa_lib_name + suffix
+diff --git a/meson_options.txt b/meson_options.txt
+index 626baf3d5c2..cb3dc3b383f 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -295,9 +295,9 @@ option(
+ )
+ option(
+   'osmesa',
+-  type : 'combo',
+-  value : 'none',
+-  choices : ['none', 'classic', 'gallium'],
++  type : 'array',
++  value : [],
++  choices : ['classic', 'gallium'],
+   description : 'Build OSmesa.'
+ )
+ option(
+diff --git a/src/mesa/meson.build b/src/mesa/meson.build
+index fa5c54cc6fb..f7b223862fa 100644
+--- a/src/mesa/meson.build
++++ b/src/mesa/meson.build
+@@ -744,7 +744,7 @@ libmesa_gallium = static_library(
+ )
+ 
+ subdir('drivers/dri')
+-if with_osmesa == 'classic'
++if with_osmesa.contains('classic')
+   subdir('drivers/osmesa')
+ endif
+ if with_glx == 'xlib'

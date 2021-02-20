@@ -1,9 +1,10 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SOCI/soci
-    REF 3742c894ab8ba5fd51b6a156980e8b34db0f3063 #version 4.0.0 commit on 2019.11.10
-    SHA512 27950230d104bdc0ab8e439a69c59d1b157df373adc863a22c8332b8bb896c2a6e3028f8343bb36b42bf9ab2a2312375e20cbdeca7f497f0bb1424a4733f0c9c
+    REF 334cc55d9fa7b42d7214a8533a246d637bc92899 #version 4.0.1 commit on 2020.10.19
+    SHA512 b300b13f68347d78252812e09efffb1735072cf5019940da53366a5cdee997f4b8b03a584a87a95ba764b0a78640ad6eb4966b53f9156280cb452465607afbc7
     HEAD_REF master
+    PATCHES fix-dependency-libmysql.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)
@@ -23,6 +24,10 @@ foreach(_feature IN LISTS ALL_FEATURES)
     else()
         list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
     endif()
+
+    if(_feature MATCHES "mysql")
+        set(MYSQL_OPT -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql")
+    endif()
 endforeach()
 
 vcpkg_configure_cmake(
@@ -36,19 +41,19 @@ vcpkg_configure_cmake(
         -DSOCI_STATIC=${SOCI_STATIC}
         -DSOCI_SHARED=${SOCI_DYNAMIC}
         ${_COMPONENT_FLAGS}
-
-        -DWITH_MYSQL=OFF
+        ${MYSQL_OPT}
         -DWITH_ORACLE=OFF
         -DWITH_FIREBIRD=OFF
         -DWITH_DB2=OFF
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/SOCI)
+vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+# Correct the config file name
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCI.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCI-config.cmake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-vcpkg_copy_pdbs()

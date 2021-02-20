@@ -15,7 +15,7 @@ rather than global to a system or user.
 In manifest mode, an installed tree is associated with a particular project rather than the vcpkg installation.
 The set of installed ports is controlled by editing the project's "manifest file",
 and the installed tree is placed in the project directory or build directory.
-This mode acts more similarly to language package managers like Cargo, or npm. 
+This mode acts more similarly to language package managers like Cargo, or npm.
 We recommend using this manifest mode whenever possible,
 because it allows one to encode a project's dependencies explicitly in a project file,
 rather than in the documentation, making your project much easier to consume.
@@ -30,6 +30,25 @@ and a little more information on [CMake](#cmake-integration) integration.
 
 Check out the [manifest cmake example](../examples/manifest-mode-cmake.md) for an example project using CMake and
 manifest mode.
+
+## Simple Example Manifest
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "my-application",
+  "version": "0.15.2",
+  "dependencies": [
+    "boost-system",
+    {
+      "name": "cpprestsdk",
+      "default-features": false
+    },
+    "libxml2",
+    "yajl"
+  ]
+}
+```
 
 ## Writing a Manifest
 
@@ -64,12 +83,26 @@ Additionally, the `"port-version"` field is used by registries of packages,
 as a way to version "the package gotten from `vcpkg install`" differently from the upstream package version.
 You shouldn't need to worry about this at all.
 
+#### Additional version fields
+
+**Experimental behind the `versions` feature flag**
+
+See [versioning.md](versioning.md#version%20schemes) for additional version types.
+
 ### `"description"`
 
 This is where you describe your project. Give it a good description to help in searching for it!
 This can be a single string, or it can be an array of strings;
 in the latter case, the first string is treated as a summary,
 while the remaining strings are treated as the full description.
+
+### `"builtin-baseline"`
+
+**Experimental behind the `versions` feature flag**
+
+This field indicates the commit of vcpkg which provides global minimum version information for your manifest. It is required for top-level manifest files using versioning.
+
+See also [versioning](versioning.md#builtin-baseline) for more semantic details.
 
 ### `"dependencies"`
 
@@ -81,13 +114,29 @@ if they were to use you). It's an array of strings and objects:
 * On the other hand, an object dependency (e.g., `"dependencies": [ { "name": "zlib" } ]`)
   allows you to add that extra information.
 
-An object dependency can have the following fields:
+#### Example:
 
-#### `"name"`
+```json
+"dependencies": [
+  {
+    "name": "arrow",
+    "default-features": false,
+    "features": [ "json" ]
+  },
+  "boost-asio",
+  "openssl",
+  {
+    "name": "picosha2",
+    "platform": "!windows"
+  }
+]
+```
+
+#### `"name"` Field
 
 The name of the dependency. This follows the same restrictions as the [`"name"`](#name) property for a project.
 
-#### `"features"` and `"default-features"`
+#### `"features"` and `"default-features"` Fields
 
 `"features"` is an array of feature names which tell you the set of features that the
 dependencies need to have at a minimum,
@@ -106,7 +155,7 @@ Then, you might just ask for:
 }
 ```
 
-#### `"platform"`
+#### `"platform"` Field
 
 The `"platform"` field defines the platforms where the dependency should be installed - for example,
 you might need to use sha256, and so you use platform primitives on Windows, but `picosha2` on non-Windows platforms.
@@ -131,24 +180,32 @@ The common identifiers are:
 
 although one can define their own.
 
+#### `"version>="` Field
+
+**Experimental behind the `versions` feature flag**
+
+A minimum version constraint on the dependency.
+
+This field specifies the minimum version of the dependency using a '#' suffix to denote port-version if non-zero.
+
+See also [versioning](versioning.md#constraints) for more semantic details.
+
+### `"overrides"`
+
+**Experimental behind the `versions` feature flag**
+
+This field enables version resolution to be ignored for certain dependencies and to use specific versions instead.
+
+See also [versioning](versioning.md#overrides) for more semantic details.
+
 #### Example:
 
 ```json
-{
-  "dependencies": [
+  "overrides": [
     {
-      "name": "arrow",
-      "default-features": false,
-      "features": [ "json" ]
-    },
-    "boost-asio",
-    "openssl",
-    {
-      "name": "picosha2",
-      "platform": "!windows"
+      "name": "arrow", "version": "1.2.3", "port-version": 7
     }
   ]
-}
 ```
 
 ### `"supports"`
@@ -175,13 +232,15 @@ and that's the `"default-features"` field, which is an array of feature names.
 
 #### Example:
 
-```
+```json
 {
   "name": "libdb",
+  "version": "1.0.0",
   "description": [
     "An example database library.",
-    "Optionally uses one of CBOR, JSON, or CSV as a backend."
+    "Optionally can build with CBOR, JSON, or CSV as backends."
   ],
+  "$default-features-explanation": "Users using this library transitively will get all backends automatically",
   "default-features": [ "cbor", "csv", "json" ],
   "features": {
     "cbor": {
@@ -189,8 +248,7 @@ and that's the `"default-features"` field, which is an array of feature names.
       "dependencies": [
         {
           "$explanation": [
-            "This is currently how you tell vcpkg that the cbor feature depends on the json feature of this package",
-            "We're looking into making this easier"
+            "This is how you tell vcpkg that the cbor feature depends on the json feature of this package"
           ],
           "name": "libdb",
           "default-features": false,
@@ -204,16 +262,12 @@ and that's the `"default-features"` field, which is an array of feature names.
         "fast-cpp-csv-parser"
       ]
     },
-    "gui": {
-      "description": "The GUI libdb database viewer.",
-      "supports": "windows | osx"
-    }
     "json": {
       "description": "The JSON backend",
       "dependencies": [
         "jsoncons"
       ]
-    },
+    }
   }
 }
 ```
@@ -258,3 +312,46 @@ since the CMake integration won't break as long as you depending on the exact na
 ```
 
 with a `vcpkg.json` in the same directory as `CMakeLists.txt` should Just Work!
+
+## MSBuild Integration
+
+To use manifests with MSBuild, first you need to use an [existing integration method](integration.md#with-msbuild). Then, simply add a vcpkg.json above your project file (such as in the root of your source repository) and set the property `VcpkgEnableManifest` to `true`. You can set this property via the IDE in `Project Properties -> Vcpkg -> Use Vcpkg Manifest`.
+
+As part of your project's build, vcpkg automatically be run and install any listed dependencies to `vcpkg_installed/` adjacent to the `vcpkg.json` file; these files will then automatically be included in and linked to your MSBuild projects.
+
+Note: It is critical that all project files in a single build consuming the same `vcpkg.json` use the same triplet; if you need to use different triplets for different projects in your solution, they must consume from different `vcpkg.json` files.
+
+### MSBuild Properties
+
+These properties can be defined via the VS GUI under `Project Properties -> Vcpkg` or via a common `.props` file.
+
+#### `VcpkgEnabled` (Use Vcpkg)
+
+This can be set to "false" to explicitly disable vcpkg integration for the project
+
+#### `VcpkgTriplet` (Triplet)
+
+This can be set to a custom triplet to use for integration (such as x64-windows-static)
+
+#### `VcpkgAdditionalInstallOptions` (Additional Options)
+
+When using a manifest, this option specifies additional command line flags to pass to the underlying vcpkg tool invocation. This can be used to access features that have not yet been exposed through another option.
+
+#### `VcpkgConfiguration` (Vcpkg Configuration)
+
+If your configuration names are too complex for vcpkg to guess correctly, you can assign this property to `Release` or `Debug` to explicitly tell vcpkg what variant of libraries you want to consume.
+
+#### `VcpkgEnableManifest` (Use Vcpkg Manifest)
+
+This property must be set to true in order to consume from a local vcpkg.json file. If set to false, any local vcpkg.json files will be ignored. This will default to true in the future.
+
+#### `VcpkgManifestInstall` (Install Vcpkg Dependencies)
+
+*(Requires `Use Vcpkg Manifest` set to `true`)*
+
+This property can be set to "false" to disable automatic dependency restoration on project build. Dependencies can be manually restored via the vcpkg command line.
+
+#### `VcpkgInstalledDirectory` (Installed Directory)
+
+This property defines the location where headers and binaries are consumed from. In manifest mode, this directory is created and populated based on your manifest.
+

@@ -1,0 +1,13 @@
+{
+  "name": "mmloader",
+  "version-string": "2020-05-15",
+  "port-version": 1,
+  "description": "A library for loading dll module bypassing windows PE loader from memory (x86/x64)",
+  "homepage": "http://tishion.github.io/mmLoader/",
+  "supports": "(x86 | x64) & windows & static",
+  "features": {
+    "shellcode": {
+      "description": "Generate mmLoader shell code headers"
+    }
+  }
+}

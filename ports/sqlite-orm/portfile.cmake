@@ -2,28 +2,19 @@
 
 set(FEATURE_PATCHES)
 
-if(test IN_LIST FEATURES)
-    list(APPEND FEATURE_PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-test-feature.patch)
-endif()
-
-if(example IN_LIST FEATURES)
-    list(APPEND FEATURE_PATCHES ${CMAKE_CURRENT_LIST_DIR}/fix-example-feature.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fnc12/sqlite_orm
-    REF b30ddc6a50dc582c93cd49d8d0cf8f5025ba1d2b # 1.5
-    SHA512 faeeef88aef11e89e9565850c23087925fb4d75ef48a16434055f18831db8e230d044c81574d840dacca406d7095cb83a113afc326996e289ab11a02d8caa2f4
+    REF 4c6a46bd4dcfba14a650e0fafb86331526878587 # 1.6
+    SHA512 9626fc20374aff5da718d32c7b942a7a6434920da9cf68df6146e9c25cca61936c2e3091c6476c369c8bf241dcb8473169ee726eaedfeb92d79ff4fa8a6b2d32
     HEAD_REF master
     PATCHES 
-        fix-build-error.patch
-        fix-usage.patch
-        ${FEATURE_PATCHES}
+        fix-features-build-error.patch
+        fix-dependency.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    test SqliteOrm_BuildTests
+    test BUILD_TESTING
     example BUILD_EXAMPLES
 )
 
@@ -36,7 +27,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sqlite_orm TARGET_PATH share/SqliteOrm)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SqliteOrm TARGET_PATH share/SqliteOrm)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)

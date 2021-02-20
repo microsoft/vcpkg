@@ -6,13 +6,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ShiftMediaProject/gmp
-        REF e140dfc8668e96d7e56cbd46467945adcc6b3cc4 #v6.2.0
-        SHA512 3b646c142447946bb4556db01214ff130da917bc149946b8cf086f3b01e1cc3d664b941a30a42608799c14461b2f29e4b894b72915d723bd736513c8914729b7
+        REF 0018c44e8dfcc3b64b43e0aea4b3f419f0b65fd0 #v6.2.1-2
+        SHA512 2405e2536ca9fe0b890f44f54c936ac0e4b5a9ebe6a19e1c48a9c21b7211d2a1b45865852e3c65a98a6735216a4e27bea75c0fd6e52efeed4baecd95da9895a5
         HEAD_REF master
-        PATCHES
+        PATCHES 
             vs.build.patch
             runtime.patch
-            prefix.patch
+            adddef.patch 
     )
 
     include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
@@ -33,7 +33,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 
     #Setup YASM integration
-    set(_file "${SOURCE_PATH}/SMP/libgmp.vcxproj")
+    set(_porjectfile)
+    if(VCPKG_TARGET_IS_UWP)
+        set(_porjectfile "${SOURCE_PATH}/SMP/libgmp_winrt.vcxproj")
+    else()
+        set(_porjectfile "${SOURCE_PATH}/SMP/libgmp.vcxproj")
+    endif()
+    set(_file "${_porjectfile}")
     file(READ "${_file}" _contents)
     string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
                      "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
@@ -42,13 +48,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
                      "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
                     _contents "${_contents}")
     string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already replaced by another triplet
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        STRING(REPLACE ">MultiThreadedDebugDLL<" ">MultiThreadedDebug<" _contents "${_contents}")
-        STRING(REPLACE ">MultiThreadedDLL<" ">MultiThreaded<" _contents "${_contents}")
-    else()
-        STRING(REPLACE ">MultiThreadedDebug<" ">MultiThreadedDebugDLL<" _contents "${_contents}")
-        STRING(REPLACE ">MultiThreaded<" ">MultiThreadedDLL<" _contents "${_contents}")
-    endif()
     file(WRITE "${_file}" "${_contents}")
 
     vcpkg_install_msbuild(
@@ -65,7 +64,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
     get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
     file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
-    set(PACKAGE_VERSION 6.2.0)
+    set(PACKAGE_VERSION 6.2.1)
     set(PACKAGE_NAME gmp)
     set(prefix "${CURRENT_INSTALLED_DIR}")
     set(exec_prefix "\${prefix}")
@@ -82,17 +81,23 @@ if(VCPKG_TARGET_IS_WINDOWS)
     configure_file("${SOURCE_PATH}/gmp.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gmp.pc" @ONLY)
     configure_file("${SOURCE_PATH}/gmpxx.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gmpxx.pc" @ONLY)
     vcpkg_fixup_pkgconfig()
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/gmp.h"
+                            "#if defined(DLL_EXPORT) && defined(NO_ASM)"
+                            "#if 1")
+    endif()
 else()
     vcpkg_download_distfile(
         ARCHIVE
-        URLS https://gmplib.org/download/gmp/gmp-6.2.0.tar.xz
-        FILENAME gmp-6.2.0.tar.xz
-        SHA512 a066f0456f0314a1359f553c49fc2587e484ff8ac390ff88537266a146ea373f97a1c0ba24608bf6756f4eab11c9056f103c8deb99e5b57741b4f7f0ec44b90c)
+        URLS https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
+        FILENAME gmp-6.2.1.tar.xz
+        SHA512 c99be0950a1d05a0297d65641dd35b75b74466f7bf03c9e8a99895a3b2f9a0856cd17887738fa51cf7499781b65c049769271cbcb77d057d2e9f1ec52e07dd84
+    )
 
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE ${ARCHIVE}
-        REF gmp-6.2.0
+        REF gmp-6.2.1
     )
 
     vcpkg_configure_make(

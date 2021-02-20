@@ -1,0 +1,44 @@
+{
+  "versions": [
+    {
+      "git-tree": "191643fbd9c127658cf1724216a3b393951bd68e",
+      "version-string": "windows-sdk",
+      "port-version": 0
+    },
+    {
+      "git-tree": "a0c036af150f2403027d65dd1edf67912bb15038",
+      "version-string": "fall_2017_creators_update_for_vs_15.3-2",
+      "port-version": 0
+    },
+    {
+      "git-tree": "74b0e44f3bfbf43e2ce2b6a991ca2e4bb76c38bb",
+      "version-string": "fall_2017_creators_update_for_vs_15.3-1",
+      "port-version": 0
+    },
+    {
+      "git-tree": "871ffe70cfbe76920953fe524c54b3740ece517f",
+      "version-string": "fall_2017_creators_update_for_vs_15.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "3a1d02f146a6a6964bb2bfcce386b32653b4d522",
+      "version-string": "Fall_2017_Creators_Update_for_VS_15.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "2543006744c679e58a360a5215a95e8a2d651bfe",
+      "version-string": "spring_2017_creators_update_for_vs_15.3",
+      "port-version": 0
+    },
+    {
+      "git-tree": "1305a06f0e3f5e2bd2f2da5d15d74b85f1831e34",
+      "version-string": "feb2017_refresh-14393",
+      "port-version": 0
+    },
+    {
+      "git-tree": "8949a78637f33efc88f24c55d1ad0af28e312536",
+      "version-string": "1.010.0.14393.0",
+      "port-version": 0
+    }
+  ]
+}

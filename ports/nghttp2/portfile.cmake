@@ -1,5 +1,5 @@
 set(LIB_NAME nghttp2)
-set(LIB_VERSION 1.39.2)
+set(LIB_VERSION 1.42.0)
 
 set(LIB_FILENAME ${LIB_NAME}-${LIB_VERSION}.tar.gz)
 
@@ -7,7 +7,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nghttp2/nghttp2
     REF v${LIB_VERSION}
-    SHA512 1ddfb8c6538e209e39199fb5e2f9c262d58d188f25c98cd03f9f733bb261055b7625f0f79863731b112e69bc40c9d6a7d10d4fe69f56c615127e03277ee3af1d
+    SHA512 717494c9aa4eda64414535752df947d62311e7aed5cc6c4936400fcb2c9fc2818923668bcabc3e1bc61154d660f6765dad120e5a113d9eee3e934d66ee63a406
     HEAD_REF master
 )
 
@@ -30,6 +30,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
