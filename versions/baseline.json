@@ -3281,7 +3281,7 @@
       "port-version": 0
     },
     "libpmemobj-cpp": {
-      "baseline": "1.11",
+      "baseline": "1.12",
       "port-version": 0
     },
     "libpng": {
