@@ -4,10 +4,10 @@ include(${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake)
 vcpkg_fail_port_install(ON_ARCH "arm")
 
 # NOTE: update the version and checksum for new GDAL release
-set(GDAL_VERSION_STR "3.2.0")
-set(GDAL_VERSION_PKG "320")
+set(GDAL_VERSION_STR "3.2.1")
+set(GDAL_VERSION_PKG "321")
 set(GDAL_VERSION_LIB "204")
-set(GDAL_PACKAGE_SUM "2b278ae533b94857bfe0ffc9122535a384d5d374623bc17a41260d372ed7a9629a3648a93768ab484d83127fa80bb2057f3d4664c87ac4a14036d4a6df19f8b3")
+set(GDAL_PACKAGE_SUM "3c650f570f0561067fa404e5287e78ec1fb4158aa0f1d87226e92dc3adf706b0bac023fee788b816d4dc339bbce41c05ed4b14ab363cb9f98d7b43a3e8140490")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"
@@ -185,31 +185,27 @@ else()
     endif()
 
     set(CONF_OPTS --enable-shared=${BUILD_DYNAMIC} --enable-static=${BUILD_STATIC})
-    list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR} --with-libjson-c=${CURRENT_INSTALLED_DIR})
-    list(APPEND CONF_OPTS --with-libtiff=${CURRENT_INSTALLED_DIR} --with-geotiff=${CURRENT_INSTALLED_DIR})
+    list(APPEND CONF_OPTS --with-proj=yes --with-libjson-c=${CURRENT_INSTALLED_DIR})
+    list(APPEND CONF_OPTS --with-libtiff=yes --with-geotiff=yes)
     list(APPEND CONF_OPTS --with-pg=yes --with-liblzma=yes)
 
     if ("libspatialite" IN_LIST FEATURES)
-        list(APPEND CONF_OPTS --with-spatialite=${CURRENT_INSTALLED_DIR})
-        list(APPEND DEPENDENCY_LIBS_RELEASE
-            "-lrttopo -lfreexl"
-        )
-        list(APPEND DEPENDENCY_LIBS_DEBUG
-            "-lrttopo -lfreexl"
-        )
+        list(APPEND CONF_OPTS --with-spatialite=yes)
+    else()
+        list(APPEND CONF_OPTS --with-spatialite=no)
     endif()
 
     if(VCPKG_TARGET_IS_LINUX)
-        set(STDLIB stdc++)
+        set(DEPENDLIBS "-lstdc++ -lssl -lcrypto")
     else()
-        set(STDLIB c++)
+        set(DEPENDLIBS "-lc++ -llber -lldap -framework CoreFoundation -framework Security")
     endif()
 
     list(APPEND OPTIONS_RELEASE
-        "LIBS=-pthread -l${STDLIB} -ltiff -ljpeg -lpq -lpgcommon -lpgport -lcurl -lssl -lcrypto -lgeos_c -lgeos -lxml2 ${DEPENDENCY_LIBS_RELEASE} -llzma -lz -lszip"
+        "LIBS=-pthread ${DEPENDLIBS} -lz -lm -lszip -llzma -lzstd -liconv"
     )
     list(APPEND OPTIONS_DEBUG
-        "LIBS=-pthread -l${STDLIB} -ltiffd -ljpeg -lpq -lpgcommon -lpgport -lcurl-d -lssl -lcrypto -lgeos_cd -lgeosd -lxml2 ${DEPENDENCY_LIBS_DEBUG} -llzmad -lz -lszip_debug"
+        "LIBS=-pthread ${DEPENDLIBS} -lz -lm -lszip_debug -llzmad -lzstdd -liconv"
     )
 
     vcpkg_configure_make(
@@ -218,7 +214,6 @@ else()
         COPY_SOURCE
         OPTIONS
             ${CONF_OPTS}
-            "GEOS_VERSION=3.8.1"
         OPTIONS_RELEASE
             ${OPTIONS_RELEASE}
         OPTIONS_DEBUG

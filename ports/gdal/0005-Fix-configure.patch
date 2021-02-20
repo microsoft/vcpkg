@@ -1,30 +1,21 @@
 diff --git a/configure.ac b/configure.ac
-index bd85e0616..5023a6724 100644
+index bd85e0616..23d1d2f79 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1298,6 +1298,7 @@ elif test "x${with_libtiff}" = "xinternal" ; then
- else
+@@ -1275,10 +1275,10 @@ AC_MSG_CHECKING([for libtiff])
+ if test "x${with_libtiff}" = "xyes" -o "x${with_libtiff}" = "x" ; then
  
-   TIFF_SETTING=external
-+  if 0; then
-   if test -r "$with_libtiff/tiff.h" ; then
-     LIBS="-L$with_libtiff -ltiff $LIBS"
-     EXTRA_INCLUDES="-I$with_libtiff $EXTRA_INCLUDES"
-@@ -1305,11 +1306,12 @@ else
-     LIBS="-L$with_libtiff/lib -ltiff $LIBS"
-     EXTRA_INCLUDES="-I$with_libtiff/include $EXTRA_INCLUDES"
-   fi
-+  fi
+   dnl Only automatically pick up the external libtiff if it is >= 4.0.
+-  AC_CHECK_LIB(tiff,TIFFScanlineSize64,TIFF_SETTING=external HAVE_BIGTIFF=yes,TIFF_SETTING=internal HAVE_BIGTIFF=yes,)
++  AC_SEARCH_LIBS(TIFFScanlineSize64,[tiffd tiff],TIFF_SETTING=external HAVE_BIGTIFF=yes,TIFF_SETTING=internal HAVE_BIGTIFF=yes,-ljpeg)
  
-   AC_MSG_RESULT([using libtiff from ${with_libtiff}.])
- 
-   dnl Check for the BigTIFF enabled library (libtiff >= 4.0)
--  AC_CHECK_LIB(tiff,TIFFScanlineSize64,HAVE_BIGTIFF=yes,HAVE_BIGTIFF=no,)
-+  AC_SEARCH_LIBS(TIFFScanlineSize64,[tiff tiffd],HAVE_BIGTIFF=yes,HAVE_BIGTIFF=no,)
- 
- fi
- 
-@@ -1338,18 +1340,19 @@ if test "`basename xx/$with_curl`" = "curl-config" ; then
+   if test "$TIFF_SETTING" = "external" ; then
+-    LIBS="-ltiff $LIBS"
++    LIBS="-ljpeg $LIBS"
+     AC_MSG_RESULT([using pre-installed libtiff.])
+   else
+     AC_MSG_RESULT([using internal TIFF code.])
+@@ -1338,18 +1338,12 @@ if test "`basename xx/$with_curl`" = "curl-config" ; then
  elif test "$with_curl" = "no" ; then
    LIBCURL_CONFIG=no
  else
@@ -33,61 +24,92 @@ index bd85e0616..5023a6724 100644
  fi
  
  if test "$LIBCURL_CONFIG" != "no" ; then
--
-+  if 0; then
-   CURL_VERNUM=`$LIBCURL_CONFIG --vernum`
-   CURL_VER=`$LIBCURL_CONFIG --version | awk '{print $2}'`
  
-   AC_MSG_RESULT([        found libcurl version $CURL_VER])
- 
-   AC_CHECK_LIB(curl,curl_global_init,CURL_SETTING=yes,CURL_SETTING=no,`$LIBCURL_CONFIG --libs`)
+-  CURL_VERNUM=`$LIBCURL_CONFIG --vernum`
+-  CURL_VER=`$LIBCURL_CONFIG --version | awk '{print $2}'`
 -
-+  fi
-+  CURL_SETTING=yes
+-  AC_MSG_RESULT([        found libcurl version $CURL_VER])
+-
+-  AC_CHECK_LIB(curl,curl_global_init,CURL_SETTING=yes,CURL_SETTING=no,`$LIBCURL_CONFIG --libs`)
+-
++  AC_SEARCH_LIBS(curl_global_init,[curl-d curl],CURL_SETTING=yes,CURL_SETTING=no,)
  fi
  
  AC_SUBST(CURL_SETTING,$CURL_SETTING)
-@@ -1570,12 +1573,10 @@ dnl ---------------------------------------------------------------------------
+@@ -1512,12 +1506,12 @@ elif test "$with_spatialite" = "yes"; then
+     AC_CHECK_HEADERS(sqlite3.h)
+     if test "$ac_cv_header_sqlite3_h" = "yes"; then
+         AC_MSG_CHECKING([for spatialite.h in /usr/include or /usr/local/include])
+-        if test -f "/usr/include/spatialite.h" -o -f "/usr/local/include/spatialite.h"; then
++        if test -f "$prefix/../include/spatialite.h" -o -f "$prefix/include/spatialite.h" -o -f "/usr/include/spatialite.h" -o -f "/usr/local/include/spatialite.h"; then
+             AC_MSG_RESULT(found)
+-            AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,-lsqlite3)
++            AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,-lsqlite3 -lrttopo -lfreexl -lgeos_c -lgeos)
+             if test "$SPATIALITE_INIT_FOUND" = "yes"; then
+                 HAVE_SPATIALITE=yes
+-                SPATIALITE_LIBS="-lspatialite -lsqlite3"
++                SPATIALITE_LIBS="-lspatialite -lsqlite3 -lrttopo -lfreexl -lgeos_c -lgeos"
+                 LIBS="$LIBS $SPATIALITE_LIBS"
+                 HAVE_SQLITE3=yes
+             fi
+@@ -1570,12 +1564,12 @@ dnl ---------------------------------------------------------------------------
  AC_ARG_WITH(liblzma,[  --with-liblzma[=ARG]       Include liblzma support (ARG=yes/no)],,)
  
  if test "$with_liblzma" = "yes" ; then
 -  AC_CHECK_LIB(lzma,lzma_code,LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
-+  AC_SEARCH_LIBS(lzma_code,[lzma lzmad],LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
++  SAVED_LIBS="${LIBS}"
++  AC_SEARCH_LIBS(lzma_code,[lzmad lzma],LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
    AC_CHECK_HEADERS(lzma.h)
  
 -  if test "$LIBLZMA_SETTING" = "yes" -a "$ac_cv_header_lzma_h" = "yes" ; then
 -    LIBS="-llzma $LIBS"
 -  else
-+  if test "$ac_cv_header_lzma_h" != "yes" ; then
++  if test "$LIBLZMA_SETTING" != "yes" -o "$ac_cv_header_lzma_h" != "yes" ; then
++    LIBS="$SAVED_LIBS"
      LIBLZMA_SETTING=no
    fi
  else
-@@ -1891,7 +1892,7 @@ else
-     PG_LIB="${PQ_LIBS}"
+@@ -1592,11 +1586,9 @@ dnl ---------------------------------------------------------------------------
+ AC_ARG_WITH(zstd,[  --with-zstd[=ARG]       Include zstd support (ARG=yes/no/installation_prefix)],,)
+ 
+ if test "$with_zstd" = "" -o "$with_zstd" = "yes" ; then
+-  AC_CHECK_LIB(zstd,ZSTD_decompressStream,ZSTD_SETTING=yes,ZSTD_SETTING=no,)
++  AC_SEARCH_LIBS(ZSTD_decompressStream,[zstdd zstd],ZSTD_SETTING=yes,ZSTD_SETTING=no,)
+ 
+-  if test "$ZSTD_SETTING" = "yes" ; then
+-    LIBS="-lzstd $LIBS"
+-  else
++  if test "$ZSTD_SETTING" != "yes" ; then
+     if test "$with_zstd" = "yes" ; then
+       AC_MSG_ERROR([libzstd not found])
+     else
+@@ -1820,8 +1812,6 @@ fi
+ 
+ if test "$CURL_SETTING" = "yes" ; then
+ 
+-  CURL_INC=`$LIBCURL_CONFIG --cflags`
+-  CURL_LIB=`$LIBCURL_CONFIG --libs`
+ m4_foreach_w([frmt],CURL_FORMATS,[
+   driver_enabled=m4_join([_],[$INTERNAL_FORMAT],frmt,[ENABLED])
+   if test "x$driver_enabled" = "xyes"; then
+@@ -1888,7 +1878,7 @@ else
+   PKG_CHECK_MODULES([PQ],[libpq > 9.1], [HAVE_PG=yes], [HAVE_PG=no])
+ 
+   if test "${HAVE_PG}" = "yes" ; then
+-    PG_LIB="${PQ_LIBS}"
++    PG_LIB="${PQ_LIBS} -lpgcommon -lpgport"
      PG_INC="${PQ_CFLAGS}"
      SAVED_LIBS="${LIBS}"
--    LIBS="${PG_LIB}"
-+    LIBS="${PG_LIB} ${LIBS}"
-     AC_CHECK_LIB(pq,PQconnectdb,HAVE_PG=yes,HAVE_PG=no)
+     LIBS="${PG_LIB}"
+@@ -4286,7 +4276,7 @@ if test "x$with_xml2" = "xyes" -o "x$with_xml2" = "x" ; then
+ 
+   if test "${HAVE_LIBXML2}" = "yes"; then
+     SAVED_LIBS="${LIBS}"
+-    LIBS="${LIBXML2_LIBS}"
++    LIBS="${LIBXML2_LIBS} ${LIBS}"
+     AC_CHECK_LIB(xml2,xmlParseDoc,HAVE_LIBXML2=yes,HAVE_LIBXML2=no)
      LIBS="${SAVED_LIBS}"
-     if test "${HAVE_PG}" = "yes" ; then
-@@ -4281,6 +4282,7 @@ AC_ARG_WITH(xml2,
- 
- if test "x$with_xml2" = "xyes" -o "x$with_xml2" = "x" ; then
- 
-+  if 0; then
-   PKG_PROG_PKG_CONFIG([0.21])
-   PKG_CHECK_MODULES(LIBXML2,[libxml-2.0], [HAVE_LIBXML2=yes], [HAVE_LIBXML2=no])
- 
-@@ -4299,6 +4301,8 @@ if test "x$with_xml2" = "xyes" -o "x$with_xml2" = "x" ; then
-       AC_MSG_ERROR([--with-xml2 was requested, but libxml2 is not available])
-     fi
    fi
-+  fi
-+  HAVE_LIBXML2=yes
- elif test "x$with_xml2" != "xno"; then
-   AC_MSG_ERROR([Only --with-xml2=yes/no supported])
- fi
 
 diff --git a/m4/ax_lib_sqlite3.m4 b/m4/ax_lib_sqlite3.m4
 index e53a4a967..440e2c5ed 100644
@@ -169,14 +191,16 @@ index e53a4a967..440e2c5ed 100644
  
 
 diff --git a/m4/geos.m4 b/m4/geos.m4
-index a410673b4..c16e1f33a 100644
+index a410673b4..793d3803c 100644
 --- a/m4/geos.m4
 +++ b/m4/geos.m4
-@@ -60,6 +60,7 @@ AC_DEFUN([GEOS_INIT],[
+@@ -60,6 +60,9 @@ AC_DEFUN([GEOS_INIT],[
  
      AC_PATH_PROG(GEOS_CONFIG, geos-config, no)
      ac_geos_config_auto=yes
 +    HAVE_GEOS="yes"
++    GEOS_LIBS="-lgeos_c -lgeos -lm"
++    GEOS_VERSION="3.9.0"
  
    else
  
