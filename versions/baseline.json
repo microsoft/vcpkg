@@ -1324,6 +1324,10 @@
       "baseline": "2020-08-09",
       "port-version": 0
     },
+    "continuable": {
+      "baseline": "4.1.0",
+      "port-version": 0
+    },
     "coolprop": {
       "baseline": "6.4.1",
       "port-version": 0
@@ -2365,7 +2369,7 @@
       "port-version": 0
     },
     "halide": {
-      "baseline": "10.0.0",
+      "baseline": "11.0.1",
       "port-version": 0
     },
     "harfbuzz": {
@@ -5006,7 +5010,7 @@
     },
     "quill": {
       "baseline": "1.6.1",
-      "port-version": 0
+      "port-version": 1
     },
     "quirc": {
       "baseline": "1.1",
@@ -5446,7 +5450,7 @@
     },
     "soci": {
       "baseline": "4.0.1",
-      "port-version": 1
+      "port-version": 2
     },
     "socket-io-client": {
       "baseline": "1.6.1-1",
