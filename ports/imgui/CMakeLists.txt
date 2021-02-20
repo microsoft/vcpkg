@@ -120,7 +120,7 @@ if(IMGUI_FREETYPE)
     find_package(freetype CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME} PUBLIC freetype)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/misc/freetype/imgui_freetype.cpp)
-    target_add_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_FREETYPE)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_FREETYPE)
 endif()
 
 list(REMOVE_DUPLICATES BINDINGS_SOURCES)
