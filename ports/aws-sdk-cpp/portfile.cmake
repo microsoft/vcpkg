@@ -23,7 +23,8 @@ elseif (VCPKG_TARGET_IS_ANDROID)
     vcpkg_find_acquire_program(GIT)
 
     set(EXTRA_ARGS "-DTARGET_ARCH=ANDROID"
-            "-DGIT_EXECUTABLE=${GIT_EXECUTABLE}"
+            "-DGIT_EXECUTABLE=${GIT}"
+
             "-DGIT_FOUND=${GIT_FOUND}"
             "-DGIT_VERSION_STRING=${GIT_VERSION_STRING}"
             "-DNDK_DIR=$ENV{ANDROID_NDK_HOME}"
