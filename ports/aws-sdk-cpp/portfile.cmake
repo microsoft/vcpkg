@@ -20,11 +20,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/compute_build_only.cmake)
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")
 elseif (VCPKG_TARGET_IS_ANDROID)
-    find_package(Git)
-
-    if(NOT GIT_EXECUTABLE)
-        include(${CMAKE_CURRENT_LIST_DIR}/FindGit.cmake)
-    endif()
+    vcpkg_find_acquire_program(GIT)
 
     set(EXTRA_ARGS "-DTARGET_ARCH=ANDROID"
             "-DGIT_EXECUTABLE=${GIT_EXECUTABLE}"
