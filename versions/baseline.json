@@ -5705,8 +5705,8 @@
       "port-version": 0
     },
     "tbb": {
-      "baseline": "2020_U3",
-      "port-version": 3
+      "baseline": "2021.1.1",
+      "port-version": 0
     },
     "tcl": {
       "baseline": "core-9-0-a1",
