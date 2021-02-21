@@ -18,6 +18,9 @@
         "cudnn"
       ]
     },
+    "metal": {
+      "description": "Enable Metal API backend for Apple platforms"
+    },
     "opencl": {
       "description": "Enable OpenCL API backend",
       "dependencies": [

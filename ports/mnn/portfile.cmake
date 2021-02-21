@@ -17,6 +17,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda        MNN_CUDA
     vulkan      MNN_VULKAN
     opencl      MNN_OPENCL
+    metal       MNN_METAL
 )
 
 # 'cuda' feature in Windows failes with Ninja because of parallel PDB access. Make it optional
@@ -47,8 +48,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_RUNTIME_MT)
     list(APPEND PLATFORM_OPTIONS -DMNN_WIN_RUNTIME_MT=${USE_RUNTIME_MT})
 elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-    # use Metal API by default
-    list(APPEND PLATFORM_OPTIONS -DMNN_METAL=ON -DMNN_GPU_TRACE=ON)
+    if("metal" IN_LIST FEATURES)
+        list(APPEND PLATFORM_OPTIONS -DMNN_GPU_TRACE=ON)
+    endif()
 endif()
 message(STATUS "Applying build options")
 message(STATUS "  ${FEATURE_OPTIONS}")
@@ -61,7 +63,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     ${NINJA_OPTION}
     OPTIONS
-        -DMNN_SEP_BUILD=OFF # build with backends/expression
+        -DMNN_SEP_BUILD=OFF # build with backends/expression(no separate)
         -DMNN_BUILD_SHARED_LIBS=${BUILD_SHARED}
         ${FEATURE_OPTIONS} ${BUILD_OPTIONS} ${PLATFORM_OPTIONS}
         # 1.1.0.0-${commit}
@@ -75,8 +77,10 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT})
 
 file(INSTALL ${CURRENT_PORT_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/mnn.metallib
-                ${CURRENT_PACKAGES_DIR}/share/${PORT}/mnn.metallib)
+    if("metal" IN_LIST FEATURES)
+        file(RENAME ${CURRENT_PACKAGES_DIR}/bin/mnn.metallib
+                    ${CURRENT_PACKAGES_DIR}/share/${PORT}/mnn.metallib)
+    endif()
 else()
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
 endif()
