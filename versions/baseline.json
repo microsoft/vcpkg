@@ -1626,7 +1626,7 @@
     },
     "directxsdk": {
       "baseline": "jun10",
-      "port-version": 1
+      "port-version": 2
     },
     "directxtex": {
       "baseline": "jan2021b",
@@ -2077,8 +2077,8 @@
       "port-version": 0
     },
     "functions-framework-cpp": {
-      "baseline": "0.3.0",
-      "port-version": 2
+      "baseline": "0.4.0",
+      "port-version": 0
     },
     "fuzzylite": {
       "baseline": "6.0",
@@ -2413,8 +2413,8 @@
       "port-version": 0
     },
     "hpx": {
-      "baseline": "1.5.1",
-      "port-version": 1
+      "baseline": "1.6.0",
+      "port-version": 0
     },
     "http-parser": {
       "baseline": "2.9.4",
@@ -2677,7 +2677,7 @@
       "port-version": 2
     },
     "jsoncons": {
-      "baseline": "0.162.0",
+      "baseline": "0.162.1",
       "port-version": 0
     },
     "jsoncpp": {
@@ -2686,7 +2686,7 @@
     },
     "jsonnet": {
       "baseline": "0.16.0",
-      "port-version": 1
+      "port-version": 2
     },
     "jwt-cpp": {
       "baseline": "0.4.0",
@@ -3349,8 +3349,8 @@
       "port-version": 1
     },
     "librtmp": {
-      "baseline": "2019-11-11_1",
-      "port-version": 0
+      "baseline": "2019-11-11",
+      "port-version": 2
     },
     "librttopo": {
       "baseline": "1.1.0-2",
