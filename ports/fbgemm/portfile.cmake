@@ -1,6 +1,7 @@
 
-# The project's CMakeLists.txt uses PythonInterp. Check if it is available in advance.
-find_package(PythonInterp REQUIRED)
+# The project's CMakeLists.txt uses Python to select source files. Check if it is available in advance.
+cmake_minimum_required(VERSION 3.12)
+find_package(Python REQUIRED)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
