@@ -2088,6 +2088,10 @@
       "baseline": "6.0",
       "port-version": 3
     },
+    "fxdiv": {
+      "baseline": "2021-02-21",
+      "port-version": 0
+    },
     "g2o": {
       "baseline": "2020-02-07",
       "port-version": 1
@@ -4766,6 +4770,10 @@
     },
     "pthread": {
       "baseline": "3.0.0",
+      "port-version": 0
+    },
+    "pthreadpool": {
+      "baseline": "2020-02-21",
       "port-version": 0
     },
     "pthreads": {
