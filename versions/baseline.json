@@ -2077,8 +2077,8 @@
       "port-version": 0
     },
     "functions-framework-cpp": {
-      "baseline": "0.3.0",
-      "port-version": 2
+      "baseline": "0.4.0",
+      "port-version": 0
     },
     "fuzzylite": {
       "baseline": "6.0",
