@@ -14,7 +14,7 @@ project directory or build directory. This mode acts more similarly to language 
 recommend using this manifest mode whenever possible, because it allows one to encode a project's dependencies
 explicitly in a project file, rather than in the documentation, making your project much easier to consume.
 
-Manifest mode is in beta, but one can use it from the CMake or MSBuild integration, which will be stable when used via
+Manifest mode is in beta, but it can be used from the CMake or MSBuild integration, which will be stable when used via
 things like `find_package`. This is the recommended way to use manifest mode.
 
 Check out the [manifest cmake example](../examples/manifest-mode-cmake.md) for an example project using CMake and
@@ -467,4 +467,3 @@ manually restored via the vcpkg command line.
 
 This property defines the location where headers and binaries are consumed from. In manifest mode, this directory is
 created and populated based on your manifest.
-
