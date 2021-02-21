@@ -1,6 +1,6 @@
 {
   "name": "psimd",
   "version-string": "2021-02-21",
-  "homepage": "https://github.com/Maratyszcza/psimd",
-  "description": "Portable 128-bit SIMD intrinsics"
+  "description": "Portable 128-bit SIMD intrinsics",
+  "homepage": "https://github.com/Maratyszcza/psimd"
 }
