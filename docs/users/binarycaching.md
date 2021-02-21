@@ -125,7 +125,7 @@ x-gcs,<prefix>[,<rw>]
 First, you need to create an Google Cloud Platform Account as well as a storage bucket ([GCS Quick Start](https://cloud.google.com/storage/docs/quickstart-gsutil)].
 
 As part of this quickstart you would have configured the `gsutil` command-line tool to authenticate with Google Cloud.
-Vcpkg will use this command-line tool, make sure it is in your PATH.
+Vcpkg will use this command-line tool, make sure it is in your search path for executables.
 
 Example 1 (using a bucket without a common prefix for the objects):
 
