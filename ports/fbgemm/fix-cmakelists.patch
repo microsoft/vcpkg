@@ -1,7 +1,16 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6f19a16..d1fe673 100644
+index 6f19a16..a3f2d62 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
+@@ -6,7 +6,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+ include(GNUInstallDirs)
+ 
+ # function to extract filelists from defs.bzl file
+-find_package(PythonInterp)
++find_package(PythonInterp REQUIRED)
+ function(get_filelist name outputvar)
+   execute_process(
+     COMMAND "${PYTHON_EXECUTABLE}" -c
 @@ -19,9 +19,6 @@ endfunction()
  
  project(fbgemm VERSION 0.1 LANGUAGES CXX C)
