@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cpp-niel/mfl
     REF v0.0.1
-    SHA512 3cf8ab2d6e5058a618f1f91822630d19bdaa7648c4e70e003e5ccf4b26a02a6b5148c35712d83bd8a213eb77576e296e3b6ca66fe58f6c267a9528248f9af4bf
+    SHA512 a609b4ff23a01e9f9d9bf60bfa6e0b2346b054cf0c27e74e6da574dcfd2a6ead30dcb8464cf03cae2bb9995f15f01ffda5f862c0ec2744a9ad38b856ff27f073
     HEAD_REF master
 )
 
