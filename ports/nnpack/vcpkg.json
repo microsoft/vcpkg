@@ -1,0 +1,13 @@
+{
+  "name": "nnpack",
+  "version-string": "2021-02-21",
+  "description": "Acceleration package for neural networks on multi-core CPUs",
+  "homepage": "https://github.com/Maratyszcza/NNPACK",
+  "supports": "!emscripten",
+  "dependencies": [
+    "cpuinfo",
+    "fp16",
+    "fxdiv",
+    "pthreadpool"
+  ]
+}
