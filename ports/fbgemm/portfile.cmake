@@ -1,4 +1,7 @@
 
+# The project's CMakeLists.txt uses PythonInterp. Check if it is available in advance.
+find_package(PythonInterp REQUIRED)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/fbgemm
