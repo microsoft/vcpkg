@@ -31,6 +31,10 @@ and a little more information on [CMake](#cmake-integration) integration.
 Check out the [manifest cmake example](../examples/manifest-mode-cmake.md) for an example project using CMake and
 manifest mode.
 
+See [the specification](/docs/specifications/manifests.md) for all the details about what can go into a manifest,
+including some restrictions on project a feature names.
+
+
 ## Simple Example Manifest
 
 ```json
