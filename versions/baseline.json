@@ -2020,6 +2020,10 @@
       "baseline": "1.0.5",
       "port-version": 0
     },
+    "fp16": {
+      "baseline": "2021-02-21",
+      "port-version": 0
+    },
     "fplus": {
       "baseline": "0.2.3-p0",
       "port-version": 0
@@ -4750,6 +4754,10 @@
     },
     "proxywrapper": {
       "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "psimd": {
+      "baseline": "2021-02-21",
       "port-version": 0
     },
     "ptex": {
