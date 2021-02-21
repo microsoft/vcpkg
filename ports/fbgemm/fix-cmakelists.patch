@@ -1,4 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6f19a16..d1fe673 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -19,9 +19,6 @@ endfunction()
@@ -114,12 +115,12 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
  
  install(TARGETS fbgemm EXPORT fbgemmLibraryConfig
    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-@@ -255,7 +241,7 @@ install(EXPORT fbgemmLibraryConfig DESTINATION share/cmake/fbgemm
+@@ -254,7 +240,7 @@ install(FILES ${FBGEMM_PUBLIC_HEADERS}
+ install(EXPORT fbgemmLibraryConfig DESTINATION share/cmake/fbgemm
    FILE fbgemmLibraryConfig.cmake)
  
- if(MSVC)
--  if(FBGEMM_LIBRARY_TYPE STREQUAL "shared")
-+  if(FALSE)
+-if(MSVC)
++if(FALSE)
+   if(FBGEMM_LIBRARY_TYPE STREQUAL "shared")
      install(
        FILES $<TARGET_PDB_FILE:fbgemm> $<TARGET_PDB_FILE:asmjit>
-       DESTINATION ${CMAKE_INSTALL_LIBDIR} OPTIONAL)
