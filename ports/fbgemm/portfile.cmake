@@ -6,6 +6,7 @@ vcpkg_from_github(
     SHA512 2ee8b1464b29cd7ceb36665188f1b03e20d2c476b74fd81d2e3104a8e8f87196eca4497e7cb507eac576e717df8f306d05cc81a7122ed046814a171f6cfbe7b1
     PATCHES
         fix-cmakelists.patch
+        update-asmjit-usage.patch
 )
 
 vcpkg_configure_cmake(
@@ -18,6 +19,7 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-# vcpkg_fixup_cmake_targets(CONFIG_PATH cmake TARGET_PATH share/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/${PORT} TARGET_PATH share/${PORT})
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

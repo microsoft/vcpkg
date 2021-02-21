@@ -1,0 +1,161 @@
+diff --git a/src/EmbeddingSpMDM.cc b/src/EmbeddingSpMDM.cc
+index da5b3f7..400645c 100644
+--- a/src/EmbeddingSpMDM.cc
++++ b/src/EmbeddingSpMDM.cc
+@@ -264,7 +264,7 @@ GenEmbeddingSpMDMLookup<inType, indxType, offsetType, instSet, ROWWISE_SPARSE>::
+                   const float*, // weights
+                   float*, // out
+                   const std::int32_t*, // compressed_indices_table and then mask
+-                  const int*>(asmjit::CallConv::kIdHost));
++                  const int*>(asmjit::CallConv::kIdHost), a->environment());
+         } else {
+           func.init(asmjit::FuncSignatureT<
+                     bool,
+@@ -276,7 +276,7 @@ GenEmbeddingSpMDMLookup<inType, indxType, offsetType, instSet, ROWWISE_SPARSE>::
+                     const offsetType*, // offsets or lengths
+                     const float*, // weights
+                     float*, // out and then mask
+-                    const int*>(asmjit::CallConv::kIdHost));
++                    const int*>(asmjit::CallConv::kIdHost), a->environment());
+         }
+ 
+         asmjit::FuncFrame frame;
+diff --git a/src/EmbeddingSpMDMNBit.cc b/src/EmbeddingSpMDMNBit.cc
+index 6d88796..a295fd2 100644
+--- a/src/EmbeddingSpMDMNBit.cc
++++ b/src/EmbeddingSpMDMNBit.cc
+@@ -245,7 +245,7 @@ typename ReturnFunctionSignature<indxType, offsetType, ROWWISE_SPARSE>::
+                     const float*, // weights
+                     float*, // out
+                     const int32_t* /* compressed_indices_table */,
+-                    const int* /* mask */>(asmjit::CallConv::kIdHost));
++                    const int* /* mask */>(asmjit::CallConv::kIdHost), a->environment());
+         } else {
+           func.init(asmjit::FuncSignatureT<
+                     bool,
+@@ -257,7 +257,7 @@ typename ReturnFunctionSignature<indxType, offsetType, ROWWISE_SPARSE>::
+                     const offsetType*, // offsets or lengths
+                     const float*, // weights
+                     float*, // out
+-                    const int* /* mask */>(asmjit::CallConv::kIdHost));
++                    const int* /* mask */>(asmjit::CallConv::kIdHost), a->environment());
+         }
+ 
+         asmjit::FuncFrame frame;
+diff --git a/src/FbgemmI64.cc b/src/FbgemmI64.cc
+index 83a920d..c5a65f3 100644
+--- a/src/FbgemmI64.cc
++++ b/src/FbgemmI64.cc
+@@ -180,7 +180,7 @@ CodeGenBase<int64_t, int64_t, int64_t, int64_t>::getOrCreate(
+               int64_t*,
+               int64_t*,
+               int,
+-              int>(asmjit::CallConv::kIdHost));
++              int>(asmjit::CallConv::kIdHost), a->environment());
+ 
+     asmjit::FuncFrame frame;
+     frame.init(func);
+diff --git a/src/GenerateI8Depthwise.cc b/src/GenerateI8Depthwise.cc
+index 6994787..822c9dc 100644
+--- a/src/GenerateI8Depthwise.cc
++++ b/src/GenerateI8Depthwise.cc
+@@ -270,7 +270,7 @@ GenI8Depthwise::jit_kernel_signature GenI8Depthwise::getOrCreate(
+               int,
+               const int*,
+               int,
+-              const std::int32_t*>(asmjit::CallConv::kIdHost));
++              const std::int32_t*>(asmjit::CallConv::kIdHost), e->environment());
+ 
+     asmjit::FuncFrame frame;
+     frame.init(func);
+diff --git a/src/GenerateKernelU8S8S32ACC16.cc b/src/GenerateKernelU8S8S32ACC16.cc
+index 1a728db..7499db1 100644
+--- a/src/GenerateKernelU8S8S32ACC16.cc
++++ b/src/GenerateKernelU8S8S32ACC16.cc
+@@ -189,7 +189,7 @@ getOrCreate<inst_set_t::avx2>(
+               int8_t*,
+               int32_t*,
+               int,
+-              int>(asmjit::CallConv::kIdHost));
++              int>(asmjit::CallConv::kIdHost), a->environment());
+ 
+     asmjit::FuncFrame frame;
+     frame.init(func);
+diff --git a/src/GenerateKernelU8S8S32ACC16Avx512.cc b/src/GenerateKernelU8S8S32ACC16Avx512.cc
+index f501ffe..33a0306 100644
+--- a/src/GenerateKernelU8S8S32ACC16Avx512.cc
++++ b/src/GenerateKernelU8S8S32ACC16Avx512.cc
+@@ -152,7 +152,7 @@ CodeGenBase<uint8_t, int8_t, int32_t, int16_t>::getOrCreate(
+               int8_t*,
+               int32_t*,
+               int,
+-              int>(asmjit::CallConv::kIdHost));
++              int>(asmjit::CallConv::kIdHost), a->environment());
+ 
+     asmjit::FuncFrame frame;
+     frame.init(func);
+diff --git a/src/GenerateKernelU8S8S32ACC32.cc b/src/GenerateKernelU8S8S32ACC32.cc
+index 857c74d..7da200e 100644
+--- a/src/GenerateKernelU8S8S32ACC32.cc
++++ b/src/GenerateKernelU8S8S32ACC32.cc
+@@ -186,7 +186,7 @@ CodeGenBase<uint8_t, int8_t, int32_t, int32_t>::getOrCreate(
+               int8_t*,
+               int32_t*,
+               int,
+-              int>(asmjit::CallConv::kIdHost));
++              int>(asmjit::CallConv::kIdHost), a->environment());
+ 
+     asmjit::FuncFrame frame;
+     frame.init(func);
+diff --git a/src/GenerateKernelU8S8S32ACC32Avx512VNNI.cc b/src/GenerateKernelU8S8S32ACC32Avx512VNNI.cc
+index 160e0b5..c673953 100644
+--- a/src/GenerateKernelU8S8S32ACC32Avx512VNNI.cc
++++ b/src/GenerateKernelU8S8S32ACC32Avx512VNNI.cc
+@@ -134,7 +134,7 @@ CodeGenBase<uint8_t, int8_t, int32_t, int32_t>::getOrCreate(
+               int8_t*,
+               int32_t*,
+               int,
+-              int>(asmjit::CallConv::kIdHost));
++              int>(asmjit::CallConv::kIdHost), a->environment());
+ 
+     asmjit::FuncFrame frame;
+     frame.init(func);
+diff --git a/src/GroupwiseConv.cc b/src/GroupwiseConv.cc
+index f33a8e2..6376bf7 100644
+--- a/src/GroupwiseConv.cc
++++ b/src/GroupwiseConv.cc
+@@ -224,7 +224,7 @@ jit_conv_kernel_fp GenConvKernel<SPATIAL_DIM, INST_SET>::getOrCreate() {
+              int32_t,
+              int32_t,
+              int32_t,
+-             int32_t*>(asmjit::CallConv::kIdHost));
++             int32_t*>(asmjit::CallConv::kIdHost), a->environment());
+ 
+   frame_.init(func_);
+ 
+diff --git a/src/RowWiseSparseAdagradFused.cc b/src/RowWiseSparseAdagradFused.cc
+index add90ef..8079ef7 100644
+--- a/src/RowWiseSparseAdagradFused.cc
++++ b/src/RowWiseSparseAdagradFused.cc
+@@ -169,7 +169,7 @@ typename ReturnFunctionSignature<indxType, offsetType, dataType>::
+                   const int*, // lengths
+                   float, // epsilon
+                   float, // lr then rand_buffer
+-                  uint32_t*>(asmjit::CallConv::kIdHost));
++                  uint32_t*>(asmjit::CallConv::kIdHost), a->environment());
+ 
+         asmjit::FuncFrame frame;
+         frame.init(func);
+diff --git a/src/SparseAdagrad.cc b/src/SparseAdagrad.cc
+index ac3ff72..8c7f67b 100644
+--- a/src/SparseAdagrad.cc
++++ b/src/SparseAdagrad.cc
+@@ -509,7 +509,7 @@ GenSparseAdagrad<indxType, instSet>::getOrCreate(
+                   const int*, // mask_avx2
+                   float, // weight_decay
+                   const double*, // counter then counter_halflife
+-                  std::int64_t>(asmjit::CallConv::kIdHost));
++                  std::int64_t>(asmjit::CallConv::kIdHost), a->environment());
+ 
+         asmjit::FuncFrame frame;
+         frame.init(func);
