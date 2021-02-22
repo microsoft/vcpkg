@@ -5693,16 +5693,16 @@
       "port-version": 0
     },
     "tensorflow": {
-      "baseline": "2.3.1",
-      "port-version": 2
+      "baseline": "2.4.1",
+      "port-version": 0
     },
     "tensorflow-cc": {
-      "baseline": "2.3.1",
-      "port-version": 3
+      "baseline": "2.4.1",
+      "port-version": 0
     },
     "tensorflow-common": {
-      "baseline": "2.3.1",
-      "port-version": 2
+      "baseline": "2.4.1",
+      "port-version": 0
     },
     "termcolor": {
       "baseline": "1.0.1",
