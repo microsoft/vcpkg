@@ -65,7 +65,7 @@
       "port-version": 0
     },
     "amqpcpp": {
-      "baseline": "4.1.7",
+      "baseline": "4.3.11",
       "port-version": 0
     },
     "anax": {
