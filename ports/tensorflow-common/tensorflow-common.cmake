@@ -131,10 +131,7 @@ foreach(BUILD_TYPE dbg rel)
 		HEAD_REF master
 		PATCHES
 			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
-			"${CMAKE_CURRENT_LIST_DIR}/fix-dbg-build-errors.patch" # Fix no return statement
-			"${CMAKE_CURRENT_LIST_DIR}/fix-more-build-errors.patch" # Fix no return statement
 			${STATIC_ONLY_PATCHES}
-			${LINUX_ONLY_PATCHES}
 			${UWP_ONLY_PATCHES}
 	)
 
