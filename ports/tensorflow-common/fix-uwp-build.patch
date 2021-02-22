@@ -1,7 +1,7 @@
 diff --git a/.bazelrc b/.bazelrc
 --- a/.bazelrc
 +++ b/.bazelrc
-@@ -318,7 +318,9 @@
+@@ -345,7 +345,9 @@
  build:windows --verbose_failures
 
  # On windows, we never cross compile
@@ -89,7 +89,7 @@ diff --git a/third_party/icu/BUILD.bazel b/third_party/icu/BUILD.bazel
 diff --git a/third_party/icu/udata.patch b/third_party/icu/udata.patch
 --- a/third_party/icu/udata.patch
 +++ b/third_party/icu/udata.patch
-@@ -44,16 +44,32 @@
+@@ -31,17 +31,34 @@
   
   /*----------------------------------------------------------------------*
    *                                                                      *
@@ -106,6 +106,7 @@ diff --git a/third_party/icu/udata.patch b/third_party/icu/udata.patch
 - #if U_PLATFORM_HAS_WINUWP_API == 0 // Windows UWP Platform does not support dll icu data at this time
 -         setCommonICUDataPointer(&U_ICUDATA_ENTRY_POINT, FALSE, pErrorCode);
 -         {
++diff --git a/icu4c/source/common/ucnvisci.cpp b/icu4c/source/common/ucnvisci.cpp
 +--- a/icu4c/source/common/ucnvisci.cpp
 +--- b/icu4c/source/common/ucnvisci.cpp
 +@@ -1230,7 +1230,7 @@
@@ -135,3 +136,4 @@ diff --git a/third_party/icu/udata.patch b/third_party/icu/udata.patch
 +                 args->converter->toUBytes[0] = (uint8_t) sourceChar;
 +                 args->converter->toULength = 1;
 +                 break;
+ diff -ru a/icu4c/source/common/unicode/uconfig.h b/icu4c/source/common/unicode/uconfig.h
