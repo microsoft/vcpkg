@@ -5,8 +5,6 @@
   "description": "a PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
   "dependencies": [
-    "boost-container",
-    "boost-move",
     {
       "name": "cairo",
       "platform": "osx"
@@ -21,6 +19,7 @@
     "openjpeg"
   ],
   "default-features": [
+    "splash",
     "zlib"
   ],
   "features": {
@@ -28,6 +27,13 @@
       "description": "curl for poppler",
       "dependencies": [
         "curl"
+      ]
+    },
+    "splash": {
+      "description": "Build the Splash graphics backend",
+      "dependencies": [
+        "boost-container",
+        "boost-move"
       ]
     },
     "zlib": {
