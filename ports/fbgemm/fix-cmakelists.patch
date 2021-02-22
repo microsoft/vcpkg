@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6f19a16..dab4a6b 100644
+index 6f19a16..3c758d2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -6,7 +6,6 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
@@ -20,11 +20,13 @@ index 6f19a16..dab4a6b 100644
  option(FBGEMM_BUILD_TESTS "Build fbgemm unit tests" ON)
  option(FBGEMM_BUILD_BENCHMARKS "Build fbgemm benchmarks" ON)
  option(FBGEMM_BUILD_DOCS "Build fbgemm documentation" OFF)
-@@ -102,17 +98,10 @@ set_target_properties(fbgemm_generic fbgemm_avx2 fbgemm_avx512 PROPERTIES
+@@ -101,18 +97,11 @@ set_target_properties(fbgemm_generic fbgemm_avx2 fbgemm_avx512 PROPERTIES
+ #2) MSVC uses /MD in default cxx compiling flags,
  #need to change it to /MT in static case
  if(MSVC)
-   set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4305 /wd4309")
+-  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4305 /wd4309")
 -  if(FBGEMM_LIBRARY_TYPE STREQUAL "static")
++  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4267 /wd4305 /wd4309 /wd4703")
 +  if(NOT BUILD_SHARED_LIBS)
      target_compile_definitions(fbgemm_generic PRIVATE ASMJIT_STATIC)
      target_compile_definitions(fbgemm_avx2 PRIVATE ASMJIT_STATIC)
