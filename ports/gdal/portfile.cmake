@@ -196,16 +196,16 @@ else()
     endif()
 
     if(VCPKG_TARGET_IS_LINUX)
-        set(DEPENDLIBS "-lstdc++ -lssl -lcrypto")
+        set(DEPENDLIBS "-lstdc++")
     else()
         set(DEPENDLIBS "-lc++ -llber -lldap -framework CoreFoundation -framework Security")
     endif()
 
     list(APPEND OPTIONS_RELEASE
-        "LIBS=-pthread ${DEPENDLIBS} -lz -lm -lszip -llzma -lzstd -liconv"
+        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto -lz -lm -lszip -llzma -lzstd -liconv"
     )
     list(APPEND OPTIONS_DEBUG
-        "LIBS=-pthread ${DEPENDLIBS} -lz -lm -lszip_debug -llzmad -lzstdd -liconv"
+        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto -lz -lm -lszip_debug -llzmad -lzstdd -liconv"
     )
 
     vcpkg_configure_make(
