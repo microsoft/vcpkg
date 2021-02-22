@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF v1.12
     SHA512 63c96297d65486450908bda7cc1583ec338fa5a56a7c088fc37d6e125e1ee76e6d20343556a8f3d36f5b7e5187c58a5d15be964c996e3586ea1438910152b1a6
     HEAD_REF master
+    PATCHES msvc-disable-deprecated-warnings.patch
 )
 
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
