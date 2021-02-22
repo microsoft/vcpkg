@@ -1,7 +1,6 @@
 
 # The project's CMakeLists.txt uses Python to select source files. Check if it is available in advance.
-cmake_minimum_required(VERSION 3.12)
-find_package(Python REQUIRED)
+vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -20,6 +19,7 @@ vcpkg_configure_cmake(
         -DUSE_SANITIZER=OFF
         -DFBGEMM_BUILD_TESTS=OFF
         -DFBGEMM_BUILD_BENCHMARKS=OFF
+        -DPYTHON_EXECUTABLE=${PYTHON3} # inject the path instead of find_package(Python) while configuration
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
