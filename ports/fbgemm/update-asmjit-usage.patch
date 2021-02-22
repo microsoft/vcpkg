@@ -1,7 +1,16 @@
 diff --git a/src/EmbeddingSpMDM.cc b/src/EmbeddingSpMDM.cc
-index da5b3f7..400645c 100644
+index da5b3f7..ccc35d1 100644
 --- a/src/EmbeddingSpMDM.cc
 +++ b/src/EmbeddingSpMDM.cc
+@@ -188,7 +188,7 @@ GenEmbeddingSpMDMLookup<inType, indxType, offsetType, instSet, ROWWISE_SPARSE>::
+         bool areIndices64b = std::is_same<indxType, std::int64_t>::value;
+ 
+         asmjit::CodeHolder code;
+-        code.init(runtime().codeInfo());
++        code.init(runtime().environment());
+         x86::Assembler assembler(&code);
+         x86::Emitter* a = assembler.as<x86::Emitter>();
+ #if defined(FBGEMM_LOG_CODE)
 @@ -264,7 +264,7 @@ GenEmbeddingSpMDMLookup<inType, indxType, offsetType, instSet, ROWWISE_SPARSE>::
                    const float*, // weights
                    float*, // out
@@ -21,9 +30,18 @@ index da5b3f7..400645c 100644
  
          asmjit::FuncFrame frame;
 diff --git a/src/EmbeddingSpMDMNBit.cc b/src/EmbeddingSpMDMNBit.cc
-index 6d88796..a295fd2 100644
+index 6d88796..27579d3 100644
 --- a/src/EmbeddingSpMDMNBit.cc
 +++ b/src/EmbeddingSpMDMNBit.cc
+@@ -168,7 +168,7 @@ typename ReturnFunctionSignature<indxType, offsetType, ROWWISE_SPARSE>::
+         bool areIndices64b = is_same<indxType, int64_t>::value;
+ 
+         asmjit::CodeHolder code;
+-        code.init(runtime().codeInfo());
++        code.init(runtime().environment());
+         x86::Assembler assembler(&code);
+         x86::Emitter* a = assembler.as<x86::Emitter>();
+ #if defined(FBGEMM_LOG_CODE)
 @@ -245,7 +245,7 @@ typename ReturnFunctionSignature<indxType, offsetType, ROWWISE_SPARSE>::
                      const float*, // weights
                      float*, // out
@@ -43,9 +61,18 @@ index 6d88796..a295fd2 100644
  
          asmjit::FuncFrame frame;
 diff --git a/src/FbgemmI64.cc b/src/FbgemmI64.cc
-index 83a920d..c5a65f3 100644
+index 83a920d..ca45f12 100644
 --- a/src/FbgemmI64.cc
 +++ b/src/FbgemmI64.cc
+@@ -138,7 +138,7 @@ CodeGenBase<int64_t, int64_t, int64_t, int64_t>::getOrCreate(
+ 
+   return codeCache_.getOrCreate(kernelSig, [&]() -> jit_micro_kernel_fp {
+     asmjit::CodeHolder code;
+-    code.init(runtime().codeInfo());
++    code.init(runtime().environment());
+     x86::Assembler assembler(&code);
+     x86::Emitter* a = assembler.as<x86::Emitter>();
+ #ifdef FBGEMM_LOG_CODE
 @@ -180,7 +180,7 @@ CodeGenBase<int64_t, int64_t, int64_t, int64_t>::getOrCreate(
                int64_t*,
                int64_t*,
@@ -56,9 +83,18 @@ index 83a920d..c5a65f3 100644
      asmjit::FuncFrame frame;
      frame.init(func);
 diff --git a/src/GenerateI8Depthwise.cc b/src/GenerateI8Depthwise.cc
-index 6994787..822c9dc 100644
+index 6994787..c861d89 100644
 --- a/src/GenerateI8Depthwise.cc
 +++ b/src/GenerateI8Depthwise.cc
+@@ -203,7 +203,7 @@ GenI8Depthwise::jit_kernel_signature GenI8Depthwise::getOrCreate(
+ 
+   return codeCache_.getOrCreate(kernelSig, [&]() -> jit_kernel_signature {
+     asmjit::CodeHolder code;
+-    code.init(runtime().codeInfo());
++    code.init(runtime().environment());
+     x86::Assembler assembler(&code);
+     x86::Emitter* e = assembler.as<x86::Emitter>();
+ #ifdef FBGEMM_LOG_CODE
 @@ -270,7 +270,7 @@ GenI8Depthwise::jit_kernel_signature GenI8Depthwise::getOrCreate(
                int,
                const int*,
@@ -69,9 +105,18 @@ index 6994787..822c9dc 100644
      asmjit::FuncFrame frame;
      frame.init(func);
 diff --git a/src/GenerateKernelU8S8S32ACC16.cc b/src/GenerateKernelU8S8S32ACC16.cc
-index 1a728db..7499db1 100644
+index 1a728db..6f04ab5 100644
 --- a/src/GenerateKernelU8S8S32ACC16.cc
 +++ b/src/GenerateKernelU8S8S32ACC16.cc
+@@ -134,7 +134,7 @@ getOrCreate<inst_set_t::avx2>(
+ 
+   return codeCache_.getOrCreate(kernelSig, [&]() -> jit_micro_kernel_fp {
+     asmjit::CodeHolder code;
+-    code.init(runtime().codeInfo());
++    code.init(runtime().environment());
+     x86::Assembler assembler(&code);
+     x86::Emitter* a = assembler.as<x86::Emitter>();
+ 
 @@ -189,7 +189,7 @@ getOrCreate<inst_set_t::avx2>(
                int8_t*,
                int32_t*,
@@ -82,9 +127,18 @@ index 1a728db..7499db1 100644
      asmjit::FuncFrame frame;
      frame.init(func);
 diff --git a/src/GenerateKernelU8S8S32ACC16Avx512.cc b/src/GenerateKernelU8S8S32ACC16Avx512.cc
-index f501ffe..33a0306 100644
+index f501ffe..fd5fb6d 100644
 --- a/src/GenerateKernelU8S8S32ACC16Avx512.cc
 +++ b/src/GenerateKernelU8S8S32ACC16Avx512.cc
+@@ -100,7 +100,7 @@ CodeGenBase<uint8_t, int8_t, int32_t, int16_t>::getOrCreate(
+ 
+   return codeCache_.getOrCreate(kernelSig, [&]() -> jit_micro_kernel_fp {
+     asmjit::CodeHolder code;
+-    code.init(runtime().codeInfo());
++    code.init(runtime().environment());
+     x86::Assembler assembler(&code);
+     x86::Emitter* a = assembler.as<x86::Emitter>();
+ 
 @@ -152,7 +152,7 @@ CodeGenBase<uint8_t, int8_t, int32_t, int16_t>::getOrCreate(
                int8_t*,
                int32_t*,
@@ -95,9 +149,18 @@ index f501ffe..33a0306 100644
      asmjit::FuncFrame frame;
      frame.init(func);
 diff --git a/src/GenerateKernelU8S8S32ACC32.cc b/src/GenerateKernelU8S8S32ACC32.cc
-index 857c74d..7da200e 100644
+index 857c74d..c405fd8 100644
 --- a/src/GenerateKernelU8S8S32ACC32.cc
 +++ b/src/GenerateKernelU8S8S32ACC32.cc
+@@ -136,7 +136,7 @@ CodeGenBase<uint8_t, int8_t, int32_t, int32_t>::getOrCreate(
+ 
+   return codeCache_.getOrCreate(kernelSig, [&]() -> jit_micro_kernel_fp {
+     asmjit::CodeHolder code;
+-    code.init(runtime().codeInfo());
++    code.init(runtime().environment());
+     x86::Assembler assembler(&code);
+     x86::Emitter* a = assembler.as<x86::Emitter>();
+ #if defined(FBGEMM_LOG_CODE)
 @@ -186,7 +186,7 @@ CodeGenBase<uint8_t, int8_t, int32_t, int32_t>::getOrCreate(
                int8_t*,
                int32_t*,
@@ -108,9 +171,18 @@ index 857c74d..7da200e 100644
      asmjit::FuncFrame frame;
      frame.init(func);
 diff --git a/src/GenerateKernelU8S8S32ACC32Avx512VNNI.cc b/src/GenerateKernelU8S8S32ACC32Avx512VNNI.cc
-index 160e0b5..c673953 100644
+index 160e0b5..5886883 100644
 --- a/src/GenerateKernelU8S8S32ACC32Avx512VNNI.cc
 +++ b/src/GenerateKernelU8S8S32ACC32Avx512VNNI.cc
+@@ -88,7 +88,7 @@ CodeGenBase<uint8_t, int8_t, int32_t, int32_t>::getOrCreate(
+ 
+   return codeCache_.getOrCreate(kernelSig, [&]() -> jit_micro_kernel_fp {
+     asmjit::CodeHolder code;
+-    code.init(runtime().codeInfo());
++    code.init(runtime().environment());
+     x86::Assembler assembler(&code);
+     x86::Emitter* a = assembler.as<x86::Emitter>();
+ 
 @@ -134,7 +134,7 @@ CodeGenBase<uint8_t, int8_t, int32_t, int32_t>::getOrCreate(
                int8_t*,
                int32_t*,
@@ -121,9 +193,18 @@ index 160e0b5..c673953 100644
      asmjit::FuncFrame frame;
      frame.init(func);
 diff --git a/src/GroupwiseConv.cc b/src/GroupwiseConv.cc
-index f33a8e2..6376bf7 100644
+index f33a8e2..de1ea2b 100644
 --- a/src/GroupwiseConv.cc
 +++ b/src/GroupwiseConv.cc
+@@ -175,7 +175,7 @@ jit_conv_kernel_fp getOrCreateConvKernel(
+ template <int SPATIAL_DIM, inst_set_t INST_SET>
+ jit_conv_kernel_fp GenConvKernel<SPATIAL_DIM, INST_SET>::getOrCreate() {
+   asmjit::CodeHolder code;
+-  code.init(this->runtime().codeInfo());
++  code.init(this->runtime().environment());
+   x86::Assembler assembler(&code);
+   x86::Emitter* a = assembler.as<x86::Emitter>();
+ 
 @@ -224,7 +224,7 @@ jit_conv_kernel_fp GenConvKernel<SPATIAL_DIM, INST_SET>::getOrCreate() {
               int32_t,
               int32_t,
@@ -134,9 +215,18 @@ index f33a8e2..6376bf7 100644
    frame_.init(func_);
  
 diff --git a/src/RowWiseSparseAdagradFused.cc b/src/RowWiseSparseAdagradFused.cc
-index add90ef..8079ef7 100644
+index add90ef..04c17dd 100644
 --- a/src/RowWiseSparseAdagradFused.cc
 +++ b/src/RowWiseSparseAdagradFused.cc
+@@ -120,7 +120,7 @@ typename ReturnFunctionSignature<indxType, offsetType, dataType>::
+                 offsetType,
+                 dataType>::jit_sparse_adagrad_kernel {
+         asmjit::CodeHolder code;
+-        code.init(runtime().codeInfo());
++        code.init(runtime().environment());
+         x86::Assembler assembler(&code);
+         x86::Emitter* a = assembler.as<x86::Emitter>();
+         bool areIndices64b = is_same<indxType, int64_t>::value;
 @@ -169,7 +169,7 @@ typename ReturnFunctionSignature<indxType, offsetType, dataType>::
                    const int*, // lengths
                    float, // epsilon
@@ -147,9 +237,18 @@ index add90ef..8079ef7 100644
          asmjit::FuncFrame frame;
          frame.init(func);
 diff --git a/src/SparseAdagrad.cc b/src/SparseAdagrad.cc
-index ac3ff72..8c7f67b 100644
+index ac3ff72..d24a66e 100644
 --- a/src/SparseAdagrad.cc
 +++ b/src/SparseAdagrad.cc
+@@ -452,7 +452,7 @@ GenSparseAdagrad<indxType, instSet>::getOrCreate(
+       [&]() ->
+       typename ReturnFunctionSignature<indxType>::jit_sparse_adagrad_kernel {
+         asmjit::CodeHolder code;
+-        code.init(runtime().codeInfo());
++        code.init(runtime().environment());
+         x86::Assembler assembler(&code);
+         x86::Emitter* a = assembler.as<x86::Emitter>();
+         bool areIndices64b = std::is_same<indxType, std::int64_t>::value;
 @@ -509,7 +509,7 @@ GenSparseAdagrad<indxType, instSet>::getOrCreate(
                    const int*, // mask_avx2
                    float, // weight_decay
