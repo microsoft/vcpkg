@@ -4686,7 +4686,7 @@
     },
     "poppler": {
       "baseline": "20.12.1",
-      "port-version": 3
+      "port-version": 4
     },
     "portable-snippets": {
       "baseline": "2019-09-20",
