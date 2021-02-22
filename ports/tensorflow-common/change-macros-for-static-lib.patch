@@ -81,7 +81,7 @@ diff --git a/tensorflow/c/c_api_experimental.h b/tensorflow/c/c_api_experimental
 diff --git a/tensorflow/c/c_api_macros.h b/tensorflow/c/c_api_macros.h
 --- a/tensorflow/c/c_api_macros.h
 +++ b/tensorflow/c/c_api_macros.h
-@@ -16,18 +16,6 @@
+@@ -16,17 +16,5 @@
  #ifndef TENSORFLOW_C_C_API_MACROS_H_
  #define TENSORFLOW_C_C_API_MACROS_H_
  
@@ -99,7 +99,6 @@ diff --git a/tensorflow/c/c_api_macros.h b/tensorflow/c/c_api_macros.h
 -#endif  // _WIN32
 -#endif  // SWIG
  
- #endif  // TENSORFLOW_C_C_API_MACROS_H_
 
 diff --git a/tensorflow/c/kernels.h b/tensorflow/c/kernels.h
 --- a/tensorflow/c/kernels.h
