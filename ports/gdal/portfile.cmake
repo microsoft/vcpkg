@@ -203,10 +203,10 @@ else()
     endif()
 
     list(APPEND OPTIONS_RELEASE
-        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto -lxml2 -llzma -lz -lszip -lm"
+        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto -llzma -lszip"
     )
     list(APPEND OPTIONS_DEBUG
-        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto -lxml2 -llzmad -lz -lszip_debug -lm"
+        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto -llzmad -lszip_debug"
     )
 
     vcpkg_configure_make(

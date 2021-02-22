@@ -1,5 +1,5 @@
 diff --git a/configure.ac b/configure.ac
-index bd85e0616..23d1d2f79 100644
+index bd85e0616..2b03e0713 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1275,10 +1275,10 @@ AC_MSG_CHECKING([for libtiff])
@@ -110,6 +110,16 @@ index bd85e0616..23d1d2f79 100644
      AC_CHECK_LIB(xml2,xmlParseDoc,HAVE_LIBXML2=yes,HAVE_LIBXML2=no)
      LIBS="${SAVED_LIBS}"
    fi
+@@ -4817,8 +4807,7 @@ if test "$with_libjson_c" = "external" -o "$with_libjson_c" = "" -o "$with_libjs
+ elif test "$with_libjson_c" = "internal" ; then
+   LIBJSONC_SETTING=internal
+ elif test "$with_libjson_c" != "no"; then
+-  LIBS="-L$with_libjson_c/lib $LIBS"
+-  AC_CHECK_LIB(json-c,json_object_set_serializer,LIBJSONC_SETTING=external,LIBJSONC_SETTING=internal,-L$with_libjson_c/lib)
++  AC_CHECK_LIB(json-c,json_object_set_serializer,LIBJSONC_SETTING=external,LIBJSONC_SETTING=internal,)
+ else
+   AC_MSG_ERROR([libjson-c (internal or external) is required])
+ fi
 
 diff --git a/m4/ax_lib_sqlite3.m4 b/m4/ax_lib_sqlite3.m4
 index e53a4a967..440e2c5ed 100644
