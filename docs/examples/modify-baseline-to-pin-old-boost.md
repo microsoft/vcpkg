@@ -2,14 +2,13 @@
 This document will teach you how to set versions of meta-packages like `boost` or `qt5`. 
 
 **What is a meta-package?**  
-It is unlikely that a user requires all of the 140+ Boost libraries in their project. So for the sake of convenience, vcpkg splits Boost into multiple sub-packages broken down to individual libraries. By doing so, users that only require a subset of the libraries can take dependencies on only that subset without having to install all of the other Boost libraries. 
+In vcpkg we call meta-packages to ports that by themselves don't install anything but that instead forward installation to another port or ports. The reasons for these meta-packages to exist are plenty: to install different versions of a library depending on platform (like the old OpenSSL port did), to allow for multiple versions to exist in the vcpkg registry at the same time (OpenCV), or to conveniently install/uninstall a catalog of related packages (Boost and Qt).  
 
-If a user absolutely must install all of the Boost libraries available in vcpkg, they can do so by installing the `boost` port.
-The `boost` port is actually a meta-package: an empty port in itself, that depends on all the other Boost packages, to "conveniently" install the entirety of Boost at once. 
+In the case of Boost, it is unlikely that a user requires all of the 140+ Boost libraries in their project. For the sake of convenience, vcpkg splits Boost into multiple sub-packages broken down to individual libraries. By doing so, users can limit the subset of Boost libraries that they depend on. 
 
-We recommend that users only depend and install the smallest Boost subset that they need.
+If a user wants to install all of the Boost libraries available in vcpkg, they can do so by installing the `boost` meta-package. 
 
-Due to the nature of meta-packages, some unexpected issue arise when trying to use them with versioning. If a user writes the following manifest file:
+Due to the nature of meta-packages, some unexpected issues arise when trying to use them with versioning. If a user writes the following manifest file:
 
 `vcpkg.json`
 ```json
@@ -45,7 +44,7 @@ The following packages will be built and installed:
     boost-vcpkg-helpers[core]:x64-windows -> 7#2 -- D:\vcpkg\buildtrees\versioning\versions\boost-vcpkg-helpers\2a21e5ab45d1ce41c185faf85dff0670ea6def1d
 ```
 
-It is reasonable that users expect that overriding `boost` to version 1.72.0 results in all other Boost packages being pinned to version 1.72.0 as well. **However, vcpkg does not treat the `boost` meta-package any differently that any other port.** In other words, vcpkg has no notion that `boost` is related to all the other `boost-*` libraries, other than it depends on all of them. For this reason, all the other boost packages where installed at version 1.75.0, which is the baseline version.
+It is reasonable to expect that overriding `boost` to version 1.72.0 results in all Boost packages being pinned to version 1.72.0. **However, vcpkg does not treat the `boost` meta-package any differently that any other port.** In other words, vcpkg has no notion that `boost` is related to all the other `boost-*` libraries, other than it depends on all of them. For this reason, all the other boost packages are installed at version 1.75.0, which is the baseline version.
 
 Below, we describe two methods to pin down Boost versions effectively.
 
