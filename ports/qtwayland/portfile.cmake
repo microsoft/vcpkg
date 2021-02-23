@@ -8,7 +8,7 @@ set(${PORT}_PATCHES)
     # "appstore-compliant"  FEATURE_appstore-compliant
     # )
 
- set(TOOL_NAMES)
+ set(TOOL_NAMES qtwaylandscanner)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
