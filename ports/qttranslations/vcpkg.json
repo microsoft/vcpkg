@@ -4,7 +4,8 @@
   "description": "Qt Translations",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase"
+    "qtbase",
+    "qttools"
   ],
   "default-features": [
     "default-features"
