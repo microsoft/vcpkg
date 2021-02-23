@@ -44,11 +44,11 @@ index bd85e0616..2b03e0713 100644
 +        if test -f "$prefix/../include/spatialite.h" -o -f "$prefix/include/spatialite.h" -o -f "/usr/include/spatialite.h" -o -f "/usr/local/include/spatialite.h"; then
              AC_MSG_RESULT(found)
 -            AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,-lsqlite3)
-+            AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,-lsqlite3 -lrttopo -lfreexl -lgeos_c -lgeos)
++            AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,-lsqlite3 -lrttopo -lfreexl)
              if test "$SPATIALITE_INIT_FOUND" = "yes"; then
                  HAVE_SPATIALITE=yes
 -                SPATIALITE_LIBS="-lspatialite -lsqlite3"
-+                SPATIALITE_LIBS="-lspatialite -lsqlite3 -lrttopo -lfreexl -lgeos_c -lgeos"
++                SPATIALITE_LIBS="-lspatialite -lsqlite3 -lrttopo -lfreexl"
                  LIBS="$LIBS $SPATIALITE_LIBS"
                  HAVE_SQLITE3=yes
              fi
@@ -201,16 +201,14 @@ index e53a4a967..440e2c5ed 100644
  
 
 diff --git a/m4/geos.m4 b/m4/geos.m4
-index a410673b4..793d3803c 100644
+index a410673b4..c16e1f33a 100644
 --- a/m4/geos.m4
 +++ b/m4/geos.m4
-@@ -60,6 +60,9 @@ AC_DEFUN([GEOS_INIT],[
+@@ -60,6 +60,7 @@ AC_DEFUN([GEOS_INIT],[
  
      AC_PATH_PROG(GEOS_CONFIG, geos-config, no)
      ac_geos_config_auto=yes
 +    HAVE_GEOS="yes"
-+    GEOS_LIBS="-lgeos_c -lgeos -lm"
-+    GEOS_VERSION="3.9.0"
  
    else
  

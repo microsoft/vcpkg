@@ -203,10 +203,10 @@ else()
     endif()
 
     list(APPEND OPTIONS_RELEASE
-        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto -llzma -lszip"
+        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto  -lgeos_c -lgeos -llzma -lszip"
     )
     list(APPEND OPTIONS_DEBUG
-        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto -llzmad -lszip_debug"
+        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto -lgeos_cd -lgeosd -llzmad -lszip_debug"
     )
 
     vcpkg_configure_make(
@@ -215,6 +215,7 @@ else()
         COPY_SOURCE
         OPTIONS
             ${CONF_OPTS}
+            "GEOS_VERSION=3.9.0"
         OPTIONS_RELEASE
             ${OPTIONS_RELEASE}
         OPTIONS_DEBUG
