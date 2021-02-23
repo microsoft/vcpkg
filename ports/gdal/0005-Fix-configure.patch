@@ -1,5 +1,5 @@
 diff --git a/configure.ac b/configure.ac
-index bd85e0616..2b03e0713 100644
+index bd85e0616..cabce7350 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1275,10 +1275,10 @@ AC_MSG_CHECKING([for libtiff])
@@ -110,7 +110,15 @@ index bd85e0616..2b03e0713 100644
      AC_CHECK_LIB(xml2,xmlParseDoc,HAVE_LIBXML2=yes,HAVE_LIBXML2=no)
      LIBS="${SAVED_LIBS}"
    fi
-@@ -4817,8 +4807,7 @@ if test "$with_libjson_c" = "external" -o "$with_libjson_c" = "" -o "$with_libjs
+@@ -4294,6 +4284,7 @@ if test "x$with_xml2" = "xyes" -o "x$with_xml2" = "x" ; then
+   if test "${HAVE_LIBXML2}" = "yes"; then
+     LIBXML2_INC="${LIBXML2_CFLAGS}"
+     LIBXML2_LIB="${LIBXML2_LIBS}"
++    LIBS="${LIBXML2_LIBS} ${LIBS}"
+   else
+     if test "x$with_xml2" = "xyes"; then
+       AC_MSG_ERROR([--with-xml2 was requested, but libxml2 is not available])
+@@ -4817,8 +4808,7 @@ if test "$with_libjson_c" = "external" -o "$with_libjson_c" = "" -o "$with_libjs
  elif test "$with_libjson_c" = "internal" ; then
    LIBJSONC_SETTING=internal
  elif test "$with_libjson_c" != "no"; then
