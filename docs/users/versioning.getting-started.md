@@ -46,6 +46,7 @@ Create a folder with the following files:
 **main.cpp**
 ```c++
 #include <fmt/core.h>
+#include <zlib.h>
 
 int main()
 {
@@ -160,7 +161,7 @@ If you want to upgrade your dependencies, you can bump the minimum version const
 "builtin-baseline": "b60f003ccf5fe8613d029f49f835c8929a66eb61"
 ```
 
-This field declares the versioning baseline for all ports. But what is a baseline? What does it do? Why is the value a SHA? 
+This field declares the versioning baseline for all ports. Setting a baseline is required to enable versioning, otherwise you will get the current versions on the ports directory. You can run 'git rev-parse HEAD' to get the current commit of vcpkg and set it as the builtin-baseline. But what is a baseline? What does it do? Why is the value a SHA?
 
 From the [versioning documentation](versioning.md):
 
