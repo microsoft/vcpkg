@@ -1,5 +1,5 @@
 diff --git a/configure.ac b/configure.ac
-index bd85e0616..cabce7350 100644
+index bd85e0616..c45b0f74a 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1275,10 +1275,10 @@ AC_MSG_CHECKING([for libtiff])
@@ -52,24 +52,25 @@ index bd85e0616..cabce7350 100644
                  LIBS="$LIBS $SPATIALITE_LIBS"
                  HAVE_SQLITE3=yes
              fi
-@@ -1570,12 +1564,12 @@ dnl ---------------------------------------------------------------------------
+@@ -1570,11 +1564,15 @@ dnl ---------------------------------------------------------------------------
  AC_ARG_WITH(liblzma,[  --with-liblzma[=ARG]       Include liblzma support (ARG=yes/no)],,)
  
  if test "$with_liblzma" = "yes" ; then
 -  AC_CHECK_LIB(lzma,lzma_code,LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
-+  SAVED_LIBS="${LIBS}"
++  SAVED_LIBS="$LIBS"
++  LIBS=""
 +  AC_SEARCH_LIBS(lzma_code,[lzmad lzma],LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
    AC_CHECK_HEADERS(lzma.h)
++  LZMA_LIBS="$LIBS"
++  LIBS="$SAVED_LIBS"
  
--  if test "$LIBLZMA_SETTING" = "yes" -a "$ac_cv_header_lzma_h" = "yes" ; then
+   if test "$LIBLZMA_SETTING" = "yes" -a "$ac_cv_header_lzma_h" = "yes" ; then
 -    LIBS="-llzma $LIBS"
--  else
-+  if test "$LIBLZMA_SETTING" != "yes" -o "$ac_cv_header_lzma_h" != "yes" ; then
-+    LIBS="$SAVED_LIBS"
++    LIBS="$LZMA_LIBS $LIBS"
+   else
      LIBLZMA_SETTING=no
    fi
- else
-@@ -1592,11 +1586,9 @@ dnl ---------------------------------------------------------------------------
+@@ -1592,11 +1590,9 @@ dnl ---------------------------------------------------------------------------
  AC_ARG_WITH(zstd,[  --with-zstd[=ARG]       Include zstd support (ARG=yes/no/installation_prefix)],,)
  
  if test "$with_zstd" = "" -o "$with_zstd" = "yes" ; then
@@ -83,7 +84,7 @@ index bd85e0616..cabce7350 100644
      if test "$with_zstd" = "yes" ; then
        AC_MSG_ERROR([libzstd not found])
      else
-@@ -1820,8 +1812,6 @@ fi
+@@ -1820,8 +1816,6 @@ fi
  
  if test "$CURL_SETTING" = "yes" ; then
  
@@ -92,7 +93,7 @@ index bd85e0616..cabce7350 100644
  m4_foreach_w([frmt],CURL_FORMATS,[
    driver_enabled=m4_join([_],[$INTERNAL_FORMAT],frmt,[ENABLED])
    if test "x$driver_enabled" = "xyes"; then
-@@ -1888,7 +1878,7 @@ else
+@@ -1888,7 +1882,7 @@ else
    PKG_CHECK_MODULES([PQ],[libpq > 9.1], [HAVE_PG=yes], [HAVE_PG=no])
  
    if test "${HAVE_PG}" = "yes" ; then
@@ -101,24 +102,23 @@ index bd85e0616..cabce7350 100644
      PG_INC="${PQ_CFLAGS}"
      SAVED_LIBS="${LIBS}"
      LIBS="${PG_LIB}"
-@@ -4286,7 +4276,7 @@ if test "x$with_xml2" = "xyes" -o "x$with_xml2" = "x" ; then
- 
+@@ -4287,13 +4281,13 @@ if test "x$with_xml2" = "xyes" -o "x$with_xml2" = "x" ; then
    if test "${HAVE_LIBXML2}" = "yes"; then
      SAVED_LIBS="${LIBS}"
--    LIBS="${LIBXML2_LIBS}"
-+    LIBS="${LIBXML2_LIBS} ${LIBS}"
-     AC_CHECK_LIB(xml2,xmlParseDoc,HAVE_LIBXML2=yes,HAVE_LIBXML2=no)
+     LIBS="${LIBXML2_LIBS}"
+-    AC_CHECK_LIB(xml2,xmlParseDoc,HAVE_LIBXML2=yes,HAVE_LIBXML2=no)
++    AC_CHECK_LIB(xml2,xmlParseDoc,HAVE_LIBXML2=yes,HAVE_LIBXML2=no,-lz -lm $LZMA_LIBS)
      LIBS="${SAVED_LIBS}"
    fi
-@@ -4294,6 +4284,7 @@ if test "x$with_xml2" = "xyes" -o "x$with_xml2" = "x" ; then
+ 
    if test "${HAVE_LIBXML2}" = "yes"; then
      LIBXML2_INC="${LIBXML2_CFLAGS}"
-     LIBXML2_LIB="${LIBXML2_LIBS}"
-+    LIBS="${LIBXML2_LIBS} ${LIBS}"
+-    LIBXML2_LIB="${LIBXML2_LIBS}"
++    LIBXML2_LIB="${LIBXML2_LIBS} -lz -lm $LZMA_LIBS"
    else
      if test "x$with_xml2" = "xyes"; then
        AC_MSG_ERROR([--with-xml2 was requested, but libxml2 is not available])
-@@ -4817,8 +4808,7 @@ if test "$with_libjson_c" = "external" -o "$with_libjson_c" = "" -o "$with_libjs
+@@ -4817,8 +4811,7 @@ if test "$with_libjson_c" = "external" -o "$with_libjson_c" = "" -o "$with_libjs
  elif test "$with_libjson_c" = "internal" ; then
    LIBJSONC_SETTING=internal
  elif test "$with_libjson_c" != "no"; then

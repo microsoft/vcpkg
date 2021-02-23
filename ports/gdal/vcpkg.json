@@ -9,6 +9,7 @@
     "curl",
     "expat",
     "geos",
+    "giflib",
     "hdf5",
     {
       "name": "json-c",
