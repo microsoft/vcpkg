@@ -3,13 +3,13 @@ diff --git a/.bazelrc b/.bazelrc
 +++ b/.bazelrc
 @@ -345,7 +345,9 @@
  build:windows --verbose_failures
-
+ 
  # On windows, we never cross compile
 -build:windows --distinct_host_configuration=false
 +build:windows --distinct_host_configuration=true
 +build:windows --host_copt=-UWINAPI_FAMILY
 +build:windows --host_linkopt=/APPCONTAINER:NO
-
+ 
  # Suppress all warning messages.
  build:short_logs --output_filter=DONT_MATCH_ANYTHING
 
@@ -51,7 +51,7 @@ diff --git a/third_party/aws/workspace.bzl b/third_party/aws/workspace.bzl
          build_file = "//third_party/aws:BUILD.bazel",
 +        patch_file = "//third_party/aws:FileSystem.patch",
      )
-
+ 
      third_party_http_archive(
 
 
@@ -59,7 +59,7 @@ diff --git a/third_party/aws/FileSystem.patch b/third_party/aws/FileSystem.patch
 new file mode 100644
 --- /dev/null
 +++ b/third_party/aws/FileSystem.patch
-@@ -0,0 +1,10 @@
+@@ -0,0 +1,11 @@
 +diff --git a/aws-cpp-sdk-core/source/platform/windows/FileSystem.cpp b/aws-cpp-sdk-core/source/platform/windows/FileSystem.cpp
 +--- a/aws-cpp-sdk-core/source/platform/windows/FileSystem.cpp
 ++++ b/aws-cpp-sdk-core/source/platform/windows/FileSystem.cpp
@@ -68,9 +68,9 @@ new file mode 100644
 + #include <iostream>
 + #include <Userenv.h>
 ++#include <Windows.h>
-+
++ 
 + #pragma warning( disable : 4996)
-+
++ 
 
 
 diff --git a/third_party/icu/BUILD.bazel b/third_party/icu/BUILD.bazel
