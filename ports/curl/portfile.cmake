@@ -73,9 +73,9 @@ if(VCPKG_TARGET_IS_ANDROID)
 endif()
 
 vcpkg_configure_cmake(
-        SOURCE_PATH ${SOURCE_PATH}
-        PREFER_NINJA
-        OPTIONS ${FEATURE_OPTIONS}
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS}
         ${UWP_OPTIONS}
         ${ADDITIONAL_SCRIPTS}
         ${EXTRA_ARGS}
