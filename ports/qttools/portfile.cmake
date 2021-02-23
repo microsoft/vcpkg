@@ -60,6 +60,8 @@ set(${PORT}_PATCHES )#fix_static_build.patch)
     )
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND TOOL_NAMES windeployqt)
+elseif(VCPKG_TARGET_IS_OSX)
+    list(APPEND TOOL_NAMES macdeployqt)
 endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
@@ -68,3 +70,11 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
+                    
+if(VCPKG_TARGET_IS_OSX)
+    set(OSX_APP_FOLDERS Designer.app Linguist.app pixeltool.app qdbusviewer.app)
+    foreach(_appfolder IN LISTS OSX_APP_FOLDERS)
+        file(RENAME "${CURRENT_PACKAGS_DIR}/bin/${_appfolder}" "${CURRENT_PACKAGS_DIR}/tools/${port}/bin/${_appfolder}")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGS_DIR}/debug/bin/${_appfolder}")
+    endforeach()
+endif()
