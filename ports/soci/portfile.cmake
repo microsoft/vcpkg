@@ -26,7 +26,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
     endif()
 
     if(_feature MATCHES "mysql")
-        set(MYSQL_OPT -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql")
+        set(MYSQL_OPT -DMYSQL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/mysql)
     endif()
 endforeach()
 
