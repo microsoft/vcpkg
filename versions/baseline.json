@@ -5689,7 +5689,7 @@
       "port-version": 0
     },
     "taglib": {
-      "baseline": "1.11.1-20190531",
+      "baseline": "1.12.0-20210123",
       "port-version": 0
     },
     "taocpp-json": {
