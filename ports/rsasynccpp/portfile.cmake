@@ -4,17 +4,27 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH  SOURCE_PATH
     REPO renestein/Rstein.AsyncCpp
-    REF 0.0.6
-    SHA512 ba49d244eb294a907a7dab087c27120c7b2c36c89b150314b456b504eaaf3cc01125e66418ecf9f21b58468282f32dd637e252c5146c6e31fd8f87e98c87d7ab
+    REF 0.0.7
+    SHA512   b4cc1c68b6fc7bb8b418457ba18b834769abec07e44305955214f8918cc57f85c4258a0521ea55388fab3ec9724488e506d2b114c765b804991c38bf33133c55
     HEAD_REF master
 )
 
 if("lib-cl-win-legacy-await" IN_LIST FEATURES)
+  if (VCPKG_CRT_LINKAGE MATCHES "static")
+    set(RELEASE_CONFIGURATION  "ReleaseMT_VSAWAIT")
+    set(DEBUG_CONFIGURATION    "DebugMT_VSAWAIT")
+  else()
     set(RELEASE_CONFIGURATION  "Release_VSAWAIT")
     set(DEBUG_CONFIGURATION    "Debug_VSAWAIT")
+  endif()
 else()
-    set(RELEASE_CONFIGURATION "Release")
-    set(DEBUG_CONFIGURATION   "Debug")
+  if (VCPKG_CRT_LINKAGE MATCHES "static")
+    set(RELEASE_CONFIGURATION "ReleaseMT")
+    set(DEBUG_CONFIGURATION   "DebugMT")
+  else()
+    set(RELEASE_CONFIGURATION  "Release")
+    set(DEBUG_CONFIGURATION    "Debug")
+  endif()
 endif()
 
 if (TRIPLET_SYSTEM_ARCH MATCHES "x86")

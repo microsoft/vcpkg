@@ -1367,7 +1367,6 @@ rsasynccpp:arm64-windows=fail
 rsasynccpp:arm-uwp=fail
 rsasynccpp:x64-linux=fail
 rsasynccpp:x64-osx=fail
-rsasynccpp:x64-windows-static=fail
 rsocket:x64-windows=fail
 rsocket:x64-windows-static=fail
 rsocket:x64-windows-static-md=fail
