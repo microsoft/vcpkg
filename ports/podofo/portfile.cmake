@@ -15,6 +15,7 @@ vcpkg_from_sourceforge(
         freetype.patch
         ${ADDITIONAL_PATCH}
         0005-fix-crypto.patch
+        fix-x64-osx.patch
 )
 
 set(PODOFO_NO_FONTMANAGER ON)
