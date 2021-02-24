@@ -65,7 +65,7 @@
       "port-version": 0
     },
     "amqpcpp": {
-      "baseline": "4.1.7",
+      "baseline": "4.3.11",
       "port-version": 0
     },
     "anax": {
@@ -698,7 +698,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.75.0",
-      "port-version": 5
+      "port-version": 6
     },
     "boost-move": {
       "baseline": "1.75.0",
@@ -1025,7 +1025,7 @@
       "port-version": 0
     },
     "brynet": {
-      "baseline": "1.0.7",
+      "baseline": "1.10.0",
       "port-version": 0
     },
     "bullet3": {
@@ -1626,7 +1626,7 @@
     },
     "directxsdk": {
       "baseline": "jun10",
-      "port-version": 1
+      "port-version": 2
     },
     "directxtex": {
       "baseline": "jan2021b",
@@ -2077,12 +2077,16 @@
       "port-version": 0
     },
     "functions-framework-cpp": {
-      "baseline": "0.3.0",
-      "port-version": 2
+      "baseline": "0.4.0",
+      "port-version": 0
     },
     "fuzzylite": {
       "baseline": "6.0",
       "port-version": 3
+    },
+    "fxdiv": {
+      "baseline": "2021-02-21",
+      "port-version": 0
     },
     "g2o": {
       "baseline": "2020-02-07",
@@ -2413,8 +2417,8 @@
       "port-version": 0
     },
     "hpx": {
-      "baseline": "1.5.1",
-      "port-version": 1
+      "baseline": "1.6.0",
+      "port-version": 0
     },
     "http-parser": {
       "baseline": "2.9.4",
@@ -2677,7 +2681,7 @@
       "port-version": 2
     },
     "jsoncons": {
-      "baseline": "0.162.0",
+      "baseline": "0.162.1",
       "port-version": 0
     },
     "jsoncpp": {
@@ -2686,7 +2690,7 @@
     },
     "jsonnet": {
       "baseline": "0.16.0",
-      "port-version": 1
+      "port-version": 2
     },
     "jwt-cpp": {
       "baseline": "0.4.0",
@@ -3349,8 +3353,8 @@
       "port-version": 1
     },
     "librtmp": {
-      "baseline": "2019-11-11_1",
-      "port-version": 0
+      "baseline": "2019-11-11",
+      "port-version": 2
     },
     "librttopo": {
       "baseline": "1.1.0-2",
@@ -3598,7 +3602,7 @@
     },
     "llvm": {
       "baseline": "11.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "lmdb": {
       "baseline": "0.9.24",
@@ -4686,7 +4690,7 @@
     },
     "poppler": {
       "baseline": "20.12.1",
-      "port-version": 3
+      "port-version": 4
     },
     "portable-snippets": {
       "baseline": "2019-09-20",
@@ -4750,6 +4754,10 @@
     },
     "proxywrapper": {
       "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "psimd": {
+      "baseline": "2021-02-21",
       "port-version": 0
     },
     "ptex": {
@@ -5282,7 +5290,7 @@
     },
     "sdl2": {
       "baseline": "2.0.14",
-      "port-version": 2
+      "port-version": 3
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -5309,7 +5317,7 @@
       "port-version": 0
     },
     "seal": {
-      "baseline": "3.6.1",
+      "baseline": "3.6.2",
       "port-version": 0
     },
     "secp256k1": {
@@ -5689,7 +5697,7 @@
       "port-version": 0
     },
     "taglib": {
-      "baseline": "1.11.1-20190531",
+      "baseline": "1.12.0-20210123",
       "port-version": 0
     },
     "taocpp-json": {

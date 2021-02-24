@@ -28,6 +28,8 @@ manifest mode.
 - [CMake Integration](#cmake-integration)
 - [MSBuild Integration](#msbuild-integration)
 
+See also [the original specification](../specifications/manifests.md) for more low-level details.
+
 ## Simple Example Manifest
 
 ```json
