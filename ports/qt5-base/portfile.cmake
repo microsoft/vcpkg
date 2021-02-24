@@ -135,6 +135,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
+if ("vulkan" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS -vulkan)
+else()
+    list(APPEND CORE_OPTIONS -no-vulkan)
+endif()
+
 find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 find_library(JPEG_RELEASE NAMES jpeg jpeg-static PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
