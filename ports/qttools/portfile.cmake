@@ -74,7 +74,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
 if(VCPKG_TARGET_IS_OSX)
     set(OSX_APP_FOLDERS Designer.app Linguist.app pixeltool.app qdbusviewer.app)
     foreach(_appfolder IN LISTS OSX_APP_FOLDERS)
-        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_appfolder}" "${CURRENT_PACKAGES_DIR}/tools/${port}/bin/${_appfolder}")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${_appfolder}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/${_appfolder}")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endforeach()
 endif()
