@@ -1511,6 +1511,11 @@ stormlib:arm-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-uwp=fail
 stxxl:x64-uwp=fail
+# upstream issue https://github.com/stxxl/stxxl/issues/99
+stxxl:x86-windows=skip
+stxxl:x64-windows=skip
+stxxl:x64-windows-static=skip
+stxxl:x64-windows-static-md=skip
 symengine:arm64-windows=fail
 symengine:arm-uwp=fail
 systemc:arm64-windows=fail
