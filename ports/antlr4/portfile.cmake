@@ -20,9 +20,10 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
     REF ${VERSION}
-    PATCHES fixed_build.patch
-            uuid_discovery_fix.patch
-            export_guid.patch
+    PATCHES 
+        fixed_build.patch
+        uuid_discovery_fix.patch
+        export_guid.patch
 )
 
 vcpkg_configure_cmake(
