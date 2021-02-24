@@ -1282,6 +1282,7 @@ qt5-macextras:x64-windows-static-md=fail
 qt5-macextras:x86-windows=fail
 # Missing system libraries
 qt5-wayland:x64-osx=fail
+qtwayland:x64-osx=fail
 # Missing libraries
 qt5-wayland:x86-windows=fail
 qt5-wayland:x64-windows=fail
