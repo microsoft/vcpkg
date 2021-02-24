@@ -1025,7 +1025,7 @@
       "port-version": 0
     },
     "brynet": {
-      "baseline": "1.0.7",
+      "baseline": "1.10.0",
       "port-version": 0
     },
     "bullet3": {
