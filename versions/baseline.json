@@ -1014,7 +1014,7 @@
     },
     "brotli": {
       "baseline": "1.0.9",
-      "port-version": 0
+      "port-version": 1
     },
     "brpc": {
       "baseline": "0.9.7",
