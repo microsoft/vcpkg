@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         0001-fix-cmake.patch
         no-samples.patch
+        0003-fix-android-ndk-r22.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
