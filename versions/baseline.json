@@ -2384,6 +2384,10 @@
       "baseline": "2019-08-10",
       "port-version": 0
     },
+    "hazelcast-cpp-client": {
+      "baseline": "4.0.0",
+      "port-version": 0
+    },
     "hdf5": {
       "baseline": "1.12.0",
       "port-version": 0
