@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         fix-cmakelist.patch
+        disable-test.patch
 )
 
 vcpkg_configure_cmake(

@@ -1,0 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index caa3cba..a8879d8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -74,9 +74,10 @@ target_compile_features(ParallelSTL
+ ###############################################################################
+ # Setup tests
+ ###############################################################################
++if (0)
+ enable_testing()
+ add_subdirectory(test)
+-
++endif()
+ ###############################################################################
+ # Install the target and the associated CMake files
+ ###############################################################################
