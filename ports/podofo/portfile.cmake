@@ -11,7 +11,10 @@ vcpkg_from_sourceforge(
     FILENAME "podofo-${PODOFO_VERSION}.tar.gz"
     SHA512 0e699739c2fb7d4d02ffca371504bb19f3a8a97ddcbfc06f8d9636db9e73064b4f633f7f09bce92140bb2174610ad68c1e5f8460d474d176ab803ed28295251b
     PATCHES
+        0002-HAVE_UNISTD_H.patch
+        freetype.patch
         ${ADDITIONAL_PATCH}
+        0005-fix-crypto.patch
 )
 
 set(PODOFO_NO_FONTMANAGER ON)
