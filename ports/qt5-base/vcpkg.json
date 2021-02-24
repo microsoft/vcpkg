@@ -41,7 +41,7 @@
       ]
     },
     "vulkan": {
-      "description": "Build QtGui with vulkan",
+      "description": "Enable Vulkan support in QtGui",
       "dependencies": [
         "vulkan"
       ]
