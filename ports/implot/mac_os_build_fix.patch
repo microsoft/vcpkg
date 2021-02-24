@@ -1,0 +1,12 @@
+diff --git a/implot_demo.cpp b/implot_demo.cpp
+--- a/implot_demo.cpp
++++ b/implot_demo.cpp
+@@ -1426,7 +1426,7 @@
+     static int F        = 0;
+     static double t1, t2;
+ 
+-    static ImVector<ImVector<ImPlotPoint>> records;
++    static ImVector<ImVector<ImPlotPoint> > records;
+ 
+     if (running) {
+         F++;

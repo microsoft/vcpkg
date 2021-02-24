@@ -1,0 +1,27 @@
+diff --git a/libproxy/cmake/pxmodule.cmk b/libproxy/cmake/pxmodule.cmk
+index bbbd989..956948a 100644
+--- a/libproxy/cmake/pxmodule.cmk
++++ b/libproxy/cmake/pxmodule.cmk
+@@ -20,7 +20,7 @@ function(px_module name build builtin)
+       add_library(${name} MODULE modules/${name}.cpp)
+       target_link_libraries(${name} libproxy)
+       set_target_properties(${name} PROPERTIES PREFIX "")
+-      install(TARGETS ${name} LIBRARY DESTINATION ${MODULE_INSTALL_DIR})
++      install(TARGETS ${name} LIBRARY DESTINATION tools)
+       if(${ARGC} GREATER 3)
+         target_link_libraries(${name} ${ARGN})
+       endif()
+diff --git a/utils/CMakeLists.txt b/utils/CMakeLists.txt
+index 52010c6..0a3f4b5 100644
+--- a/utils/CMakeLists.txt
++++ b/utils/CMakeLists.txt
+@@ -1,5 +1,7 @@
+ include_directories("../libproxy")
+ 
++if (BUILD_TOOLS)
+ add_executable(proxy proxy.c)
+ target_link_libraries(proxy libproxy)
+-install(TARGETS proxy RUNTIME DESTINATION ${BIN_INSTALL_DIR})
++install(TARGETS proxy RUNTIME DESTINATION tools)
++endif()
+\ No newline at end of file

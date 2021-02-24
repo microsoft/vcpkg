@@ -1,0 +1,16 @@
+diff --git a/include/xlnt/xlnt.hpp b/include/xlnt/xlnt.hpp
+index fdd33c38..0d21128f 100644
+--- a/include/xlnt/xlnt.hpp
++++ b/include/xlnt/xlnt.hpp
+@@ -23,6 +23,11 @@
+ 
+ #pragma once
+ 
++// Patched by vcpkg to handle static non-cmake builds
++#ifndef XLNT_STATIC
++#define XLNT_STATIC
++#endif
++
+ #include <xlnt/xlnt_config.hpp>
+ 
+ // cell

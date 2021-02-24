@@ -1,18 +1,12 @@
-include(vcpkg_common_functions)
-
-set(RTMPDUMP_VERSION 2.4)
-set(RTMPDUMP_FILENAME rtmpdump-${RTMPDUMP_VERSION}.tar.gz)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://rtmpdump.mplayerhq.hu/download/${RTMPDUMP_FILENAME}"
-    FILENAME "${RTMPDUMP_FILENAME}"
-    SHA512 a6253af95492739366dce620a2a6cc6f4f18d7f12f9ef2c747240259066ca135beeb02091d0f3dd8380c0c294a30d3f702ad3fad1dee1db4e70473078fb81609
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO mirror/rtmpdump
+    REF c5f04a58fc2aeea6296ca7c44ee4734c18401aa3
+    SHA512 d97ac38672898a96412baa5f03d1e64d512ccefe15ead0a055ca039dc6057e2e620e046c28f4d7468e132b0b5a9eb9bd171250c1afa14da53760a0d7aae3c9e9
     PATCHES
+        dh.patch                #Openssl 1.1.1 patch
+        handshake.patch         #Openssl 1.1.1 patch
+        hashswf.patch           #Openssl 1.1.1 patch
         fix_strncasecmp.patch
         hide_netstackdump.patch
 )

@@ -1,19 +1,14 @@
-include(vcpkg_common_functions)
-
 set(MATHGL_VERSION "2.4.3")
-vcpkg_download_distfile(ARCHIVE
-  URLS "https://downloads.sourceforge.net/project/mathgl/mathgl/mathgl%20${MATHGL_VERSION}/mathgl-${MATHGL_VERSION}.tar.gz"
-  FILENAME "mathgl-${MATHGL_VERSION}.tar.gz"
-  SHA512 e47fc8171ce80c8b33a8f03d9375bc036455dae539b47cf4ee922f8fa36f5afcf8b3f0666997764e453eb698c0e8c03da36dd0ac2bf71c158e95309b247d27de
-)
 
-vcpkg_extract_source_archive_ex(
-  OUT_SOURCE_PATH SOURCE_PATH
-  ARCHIVE ${ARCHIVE}
-  REF ${MATHGL_VERSION}
-  PATCHES
-    type_fix.patch
-    fix_cmakelists_and_cpp.patch
+vcpkg_from_sourceforge(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO mathgl/mathgl
+    REF mathgl%20${MATHGL_VERSION}
+    FILENAME "mathgl-${MATHGL_VERSION}.tar.gz"
+    SHA512 e47fc8171ce80c8b33a8f03d9375bc036455dae539b47cf4ee922f8fa36f5afcf8b3f0666997764e453eb698c0e8c03da36dd0ac2bf71c158e95309b247d27de
+    PATCHES
+        type_fix.patch
+        fix_cmakelists_and_cpp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

@@ -1,3 +1,6 @@
 Source: librsync
-Version: 2.0.2-1
+Version: 2020-09-16
+Port-Version: 1
 Description: librsync is a library for calculating and applying network deltas, with an interface designed to ease integration into diverse network applications.
+Homepage: http://librsync.sourcefrog.net/
+Supports: !uwp

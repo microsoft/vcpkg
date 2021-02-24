@@ -44,6 +44,13 @@ index 14c9bb5..aaffbb2 100644
 +
  //! All squish API functions live in this namespace.
  namespace squish {
+
+@@ -115,5 +117,5 @@
+ */
+-void CompressMasked( u8 const* rgba, int mask, void* block, int flags, float* metric = 0 );
++SQUISH_EXPORT void CompressMasked( u8 const* rgba, int mask, void* block, int flags, float* metric = 0 );
+ 
+ // -----------------------------------------------------------------------------
  
 @@ -176,7 +178,7 @@ inline void Compress( u8 const* rgba, void* block, int flags, float* metric = 0
      however, DXT1 will be used by default if none is specified. All other flags

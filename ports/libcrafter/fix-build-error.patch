@@ -1,0 +1,20 @@
+diff --git a/libcrafter/configure.ac b/libcrafter/configure.ac
+index 860d98b..b04ccce 100644
+--- a/libcrafter/configure.ac
++++ b/libcrafter/configure.ac
+@@ -35,14 +35,13 @@ AC_ARG_WITH(libpcap,
+ 	PCAPINC="-I$withval -I$withval/bpf"
+ 	PCAPLIB="-L$withval -lpcap"
+      elif test -f $withval/include/pcap.h -a \
+-	       -f $withval/include/net/bpf.h -a \
+ 	       -f $withval/lib/libpcap.a; then
+ 	owd=`pwd`
+ 	if cd $withval; then withval=`pwd`; cd $owd; fi
+ 	PCAPINC="-I$withval/include"
+ 	PCAPLIB="-L$withval/lib -lpcap"
+      else
+-        AC_ERROR(pcap.h, net/bpf.h, or libpcap.a not found in $withval)
++        AC_ERROR(pcap.h, or libpcap.a not found in $withval)
+      fi
+      ;;
+   esac ],

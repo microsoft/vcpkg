@@ -1,0 +1,71 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e4ed99e..b0d2b15 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -204,12 +204,7 @@ endif()
+ # ===============================================
+ 
+ if(STX_ENABLE_BACKTRACE)
+-  if(NOT EXISTS third_party/abseil)
+-    execute_process(
+-      COMMAND git submodule update --init --recursive third_party/abseil
+-      WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR})
+-  endif()
+-  add_subdirectory(third_party/abseil)
++  find_package(absl CONFIG REQUIRED)
+ endif()
+ 
+ # the atomics library doesn't automatically link on my Android phone
+@@ -246,13 +241,17 @@ else()
+   add_library(stx STATIC ${STX_SRCS})
+ endif()
+ 
+-target_include_directories(stx PUBLIC include)
++target_include_directories(stx PUBLIC
++    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
++    $<INSTALL_INTERFACE:include>
++)
++
+ target_compile_options(stx PRIVATE ${STX_FLAGS} ${STX_WARNING_FLAGS})
+ target_compile_definitions(stx PUBLIC ${STX_COMPILER_DEFS})
+ target_link_libraries(stx ${STX_LIB_DEPENDENCIES})
+ 
+ if(STX_ENABLE_BACKTRACE)
+-  target_link_libraries(stx absl::stacktrace absl::symbolize)
++  target_link_libraries(stx PUBLIC absl::stacktrace absl::symbolize)
+ endif()
+ 
+ if(ANDROID)
+@@ -288,6 +287,7 @@ endif()
+ #
+ # ===============================================
+ 
++
+ if(STX_BUILD_BENCHMARKS)
+ 
+   if(NOT EXISTS third_party/benchmark)
+@@ -433,3 +433,24 @@ if(STX_BUILD_DOCS)
+        DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/docs/html/assets)
+ 
+ endif()
++
++install(
++    TARGETS stx
++    EXPORT stx
++    ARCHIVE DESTINATION lib
++    LIBRARY DESTINATION lib
++    RUNTIME DESTINATION bin
++)
++
++install(
++    DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
++    DESTINATION include
++    FILES_MATCHING PATTERN "*.h*")
++
++install(
++    EXPORT stx
++    DESTINATION share/stx
++    FILE stxConfig.cmake
++    NAMESPACE stx::
++)
++

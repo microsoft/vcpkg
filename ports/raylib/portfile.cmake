@@ -1,9 +1,7 @@
 # https://github.com/raysan5/raylib/issues/388
-if(TARGET_TRIPLET MATCHES "^arm" OR TARGET_TRIPLET MATCHES "uwp$")
-    message(FATAL_ERROR "raylib doesn't support ARM or UWP.")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "Linux")
+if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     message(
     "raylib currently requires the following libraries from the system package manager:
     libgl1-mesa-dev
@@ -15,24 +13,22 @@ These can be installed on Ubuntu systems via sudo apt install libgl1-mesa-dev li
     )
 endif()
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF a9f33c9a8962735fed5dd1857709d159bc4056fc # 2.5.0
-    SHA512 36ee474d5f1791385a6841e20632e078c0d3a591076faed0a648533513a3218e2817b0bbf7a921cc003c9aaf6a07024fd48830697d9d85eba307be27bd884ad8
+    REF e25e380e80a117f2404d65b37700fb620dc1f990 # 3.5.0
+    SHA512 67a2cf4f7a4be88e958f8d6c68f270b1500fde8752b32d401fa80026d2d81dbdd9f57ea754f10095858ae0deab93383d675ad3a1b45f2051a4cc1d02db64dc01
     HEAD_REF master
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC)
 
-if("non-audio" IN_LIST FEATURES)
-    set(USE_AUDIO OFF)
-else()
-    set(USE_AUDIO ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        hidpi SUPPORT_HIGH_DPI
+        use-audio USE_AUDIO
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -42,8 +38,8 @@ vcpkg_configure_cmake(
         -DBUILD_GAMES=OFF
         -DSHARED=${SHARED}
         -DSTATIC=${STATIC}
-        -DUSE_AUDIO=${USE_AUDIO}
         -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DENABLE_ASAN=ON
         -DENABLE_UBSAN=ON
@@ -79,11 +75,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     )
 endif()
 
-# Install usage
 configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
-
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE.md ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)

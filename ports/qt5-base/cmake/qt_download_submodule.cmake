@@ -4,7 +4,7 @@ function(qt_get_submodule_name OUT_NAME)
 endfunction()
 
 function(qt_download_submodule)
-    cmake_parse_arguments(_csc "" "OUT_SOURCE_PATH" "PATCHES" ${ARGN})
+    cmake_parse_arguments(_csc "" "OUT_SOURCE_PATH" "PATCHES;BUILD_OPTIONS;BUILD_OPTIONS_RELEASE;BUILD_OPTIONS_DEBUG" ${ARGN})
     
     if(NOT DEFINED _csc_OUT_SOURCE_PATH)
         message(FATAL_ERROR "qt_download_module requires parameter OUT_SOURCE_PATH to be set! Please correct the portfile!")
@@ -15,9 +15,11 @@ function(qt_download_submodule)
 
     set(FULL_VERSION "${QT_MAJOR_MINOR_VER}.${QT_PATCH_VER}")
     set(ARCHIVE_NAME "${NAME}-everywhere-src-${FULL_VERSION}.tar.xz")
-
+    set(URLS "http://download.qt.io/official_releases/qt/${QT_MAJOR_MINOR_VER}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
+    "http://mirrors.ocf.berkeley.edu/qt/official_releases/qt/${QT_MAJOR_MINOR_VER}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
+    )
     vcpkg_download_distfile(ARCHIVE_FILE
-        URLS "http://download.qt.io/official_releases/qt/${QT_MAJOR_MINOR_VER}/${FULL_VERSION}/submodules/${ARCHIVE_NAME}"
+        URLS ${URLS}
         FILENAME ${ARCHIVE_NAME}
         SHA512 ${QT_HASH_${PORT}}
     )

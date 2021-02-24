@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ericniebler/range-v3
-    REF 94f95160f23ab3ee5089b58eb2d9e66a4429d358
-    SHA512 e4669076fff12e5c48c97cbc67c9d5ee98ac30ea14beba35c9882d05f741a3de9f0125d3f5a27854f56919c61a473dbcfe1f92d6266cb632b7fe38f2d49194db
+    REF 4989f3e9ff2efee1852942bb9328ef121369ba02 # 0.11.0
+    SHA512 da571feff60d20a42e1e0593f132d4ab095f3ffbecaf0c020f295a2ec8b75c6934abb1974679e55ce8b7b16d105e0cbf3929210677c3b1b90cb349e583854fd4
     HEAD_REF master
 )
 
@@ -26,5 +24,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/range-v3)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/range-v3/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/range-v3/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,8 +1,8 @@
 diff --git a/librtmp/rtmp.c b/librtmp/rtmp.c
-index 5ef3ae9..7c6a010 100644
+index 0865689..b00710e 100644
 --- a/librtmp/rtmp.c
 +++ b/librtmp/rtmp.c
-@@ -129,7 +129,7 @@ static int clk_tck;
+@@ -155,7 +155,7 @@ static int clk_tck;
  uint32_t
  RTMP_GetTime()
  {
@@ -11,7 +11,7 @@ index 5ef3ae9..7c6a010 100644
    return 0;
  #elif defined(_WIN32)
    return timeGetTime();
-@@ -1256,7 +1256,7 @@ RTMP_ClientPacket(RTMP *r, RTMPPacket *packet)
+@@ -1381,7 +1381,7 @@ RTMP_ClientPacket(RTMP *r, RTMPPacket *packet)
    return bHasMediaPacket;
  }
  
@@ -20,8 +20,8 @@ index 5ef3ae9..7c6a010 100644
  extern FILE *netstackdump;
  extern FILE *netstackdump_read;
  #endif
-@@ -1333,7 +1333,7 @@ ReadN(RTMP *r, char *buffer, int n)
- 	    SendBytesReceived(r);
+@@ -1469,7 +1469,7 @@ ReadN(RTMP *r, char *buffer, int n)
+ 	        return FALSE;
  	}
        /*RTMP_Log(RTMP_LOGDEBUG, "%s: %d bytes\n", __FUNCTION__, nBytes); */
 -#ifdef _DEBUG
@@ -29,7 +29,7 @@ index 5ef3ae9..7c6a010 100644
        fwrite(ptr, 1, nBytes, netstackdump_read);
  #endif
  
-@@ -3064,7 +3064,7 @@ HandShake(RTMP *r, int FP9HandShake)
+@@ -3757,7 +3757,7 @@ HandShake(RTMP *r, int FP9HandShake)
  
    memset(&clientsig[4], 0, 4);
  
@@ -38,7 +38,7 @@ index 5ef3ae9..7c6a010 100644
    for (i = 8; i < RTMP_SIG_SIZE; i++)
      clientsig[i] = 0xff;
  #else
-@@ -3136,7 +3136,7 @@ SHandShake(RTMP *r)
+@@ -3829,7 +3829,7 @@ SHandShake(RTMP *r)
    memcpy(serversig, &uptime, 4);
  
    memset(&serversig[4], 0, 4);
@@ -47,7 +47,7 @@ index 5ef3ae9..7c6a010 100644
    for (i = 8; i < RTMP_SIG_SIZE; i++)
      serversig[i] = 0xff;
  #else
-@@ -3553,7 +3553,7 @@ RTMPSockBuf_Send(RTMPSockBuf *sb, const char *buf, int len)
+@@ -4298,7 +4298,7 @@ RTMPSockBuf_Send(RTMPSockBuf *sb, const char *buf, int len)
  {
    int rc;
  

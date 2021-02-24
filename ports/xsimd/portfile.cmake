@@ -1,12 +1,10 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO QuantStack/xsimd
-    REF 75702dd2772aebc6afaa1a86530170a5ef2e10cd
-    SHA512 2cf04dbf71818db571919f04a476cc8d45676ea56d88b7543b7f10c9ee5d6f718a6addc586c8a6a882ea0a34b09b83d6e20c3bf49e73d4ec1d14f3c1db47a55c
+    REPO xtensor-stack/xsimd
+    REF 0c8e9e7b67369003ba291a3df8060d605ae3bd4f # 7.4.9
+    SHA512 6c22c3a349ff1aa495d0aa66c0159539e10e1b9418eb4c4b7b1b42ce36a8a33e87cc93484daadae7b837f72fb20429ef50461316c6107b2b68c969323d68bcf9
     HEAD_REF master
 )
 
@@ -30,8 +28,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
@@ -31,6 +29,3 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/li
 
 file(GLOB RAWFILES ${SOURCE_PATH}/rawwaves/*.raw)
 file(COPY ${RAWFILES} DESTINATION ${CURRENT_PACKAGES_DIR}/share/libstk/rawwaves)
-
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME libstk)

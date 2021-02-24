@@ -1,0 +1,69 @@
+# Copyright (c) Microsoft Corporation.
+# SPDX-License-Identifier: MIT
+#
+
+jobs:
+- job: ${{ parameters.jobName }}
+  pool:
+    name: ${{ parameters.poolName }}
+  workspace:
+    clean: resources
+  timeoutInMinutes: 1440 # 1 day
+  variables:
+  - name: WORKING_ROOT
+    value: D:\
+  - name: VCPKG_DOWNLOADS
+    value: D:\downloads
+
+  steps:
+  - task: PowerShell@2
+    displayName: 'Report on Disk Space'
+    condition: always()
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
+      pwsh: true
+  # Note: D: is the Azure machines' temporary disk.
+  - script: .\bootstrap-vcpkg.bat
+    displayName: 'Bootstrap vcpkg'
+  - task: PowerShell@2
+    displayName: '*** Test Modified Ports and Prepare Test Logs ***'
+    inputs:
+      failOnStderr: true
+      filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
+      arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -UseEnvironmentSasToken -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      pwsh: true
+  - task: PowerShell@2
+    displayName: 'Validate version files'
+    condition: eq('${{ parameters.triplet }}', 'x86-windows')
+    inputs:
+      targetType: inline
+      script: |
+        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose
+      pwsh: true
+  - task: PowerShell@2
+    displayName: 'Report on Disk Space After Build'
+    condition: always()
+    inputs:
+      filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
+      pwsh: true
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: failure logs for ${{ parameters.triplet }}'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
+      ArtifactName: 'failure logs for ${{ parameters.triplet }}'
+    condition: always()
+  - task: PowerShell@2
+    displayName: 'Build a file list for all packages'
+    condition: always()
+    inputs:
+      targetType: inline
+      script: |
+        ./vcpkg.exe fetch python3
+        & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
+      pwsh: true
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: file lists for ${{ parameters.triplet }}'
+    condition: always()
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: 'file lists for ${{ parameters.triplet }}'

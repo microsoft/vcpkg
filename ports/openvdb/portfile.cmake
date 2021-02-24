@@ -1,30 +1,27 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AcademySoftwareFoundation/openvdb
-    REF v6.1.0
-    SHA512 99ebbb50104ef87792ab73989e8714c4f283fb02d04c3033126b5f0d927ff7bbdebe35c8214ded841692941d8ed8ae551fd6d1bf90ad7dc07bedc3b38b9c4b38
+    REF 2a7966ccb184092a49355c04bccb014d84956ff7 # v7.1.0
+    SHA512 6d3d2481fd116c5fd8fdf84a5139cd6e6986e188c3a5def05ec3bee47bd31bee3099a1d317a330b10c2cf93094f305eeeea02cadcabfc81f8ffc60bf8acdb84e
     HEAD_REF master
     PATCHES
-        0001-remove-pkgconfig.patch
-        0002-fix-cmake-modules.patch
         0003-fix-cmake.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(OPENVDB_STATIC ON)
-    set(OPENVDB_SHARED OFF)
-else()
-    set(OPENVDB_STATIC OFF)
-    set(OPENVDB_SHARED ON)
-endif()
+file(REMOVE ${SOURCE_PATH}/cmake/FindTBB.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindIlmBase.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindBlosc.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/FindOpenEXR.cmake)
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" OPENVDB_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" OPENVDB_SHARED)
+
+set(OPENVDB_BUILD_TOOLS OFF)
 if ("tools" IN_LIST FEATURES)
   if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(OPENVDB_BUILD_TOOLS ON)
   else()
-    message(ERROR "Unable to build tools if static libraries are required")
+    message(FATAL_ERROR "Unable to build tools if static libraries are required")
   endif()
 endif()
 
@@ -40,8 +37,9 @@ vcpkg_configure_cmake(
         -DOPENVDB_CORE_SHARED=${OPENVDB_SHARED}
         -DOPENVDB_BUILD_VDB_PRINT=${OPENVDB_BUILD_TOOLS}
         -DOPENVDB_BUILD_VDB_VIEW=${OPENVDB_BUILD_TOOLS}
-        #-DOPENVDB_BUILD_VDB_RENDER=${OPENVDB_BUILD_TOOLS} # Enable vdb_render when https://github.com/openexr/openexr/issues/302 is fixed
+        -DOPENVDB_BUILD_VDB_RENDER=${OPENVDB_BUILD_TOOLS}
         -DOPENVDB_BUILD_VDB_LOD=${OPENVDB_BUILD_TOOLS}
+        -DUSE_PKGCONFIG=OFF
 )
 
 vcpkg_install_cmake()
@@ -53,20 +51,9 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if (OPENVDB_BUILD_TOOLS)
-    # copy tools to tools/openvdb directory
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT}/)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_print.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_print.exe)
-    #file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_render.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_render.exe)
-    #file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_view.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_view.exe) # vdb_view does not support win32 currently.
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/vdb_lod.exe ${CURRENT_PACKAGES_DIR}/tools/${PORT}/vdb_lod.exe)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-    # remove debug versions of tools
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_print.exe)
-    #file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_render.exe)
-    #file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_view.exe) # vdb_view does not support win32 currently.
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/vdb_lod.exe)
+    vcpkg_copy_tools(TOOL_NAMES vdb_print vdb_render vdb_view vdb_lod AUTO_CLEAN)
 endif()
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/openvdb/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/openvdb RENAME copyright)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/openvdb/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

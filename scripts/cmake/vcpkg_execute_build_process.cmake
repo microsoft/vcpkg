@@ -1,39 +1,42 @@
-## # vcpkg_execute_build_process
-##
-## Execute a required build process
-##
-## ## Usage
-## ```cmake
-## vcpkg_execute_build_process(
-##     COMMAND <cmd> [<args>...]
-##     [NO_PARALLEL_COMMAND <cmd> [<args>...]]
-##     WORKING_DIRECTORY </path/to/dir>
-##     LOGNAME <log_name>)
-## )
-## ```
-## ## Parameters
-## ### COMMAND
-## The command to be executed, along with its arguments.
-##
-## ### NO_PARALLEL_COMMAND
-## Optional parameter which specifies a non-parallel command to attempt if a
-## failure potentially due to parallelism is detected.
-##
-## ### WORKING_DIRECTORY
-## The directory to execute the command in.
-##
-## ### LOGNAME
-## The prefix to use for the log files.
-##
-## This should be a unique name for different triplets so that the logs don't
-## conflict when building multiple at once.
-##
-## ## Examples
-##
-## * [icu](https://github.com/Microsoft/vcpkg/blob/master/ports/icu/portfile.cmake)
-include(vcpkg_prettify_command)
+#[===[.md:
+# vcpkg_execute_build_process
+
+Execute a required build process
+
+## Usage
+```cmake
+vcpkg_execute_build_process(
+    COMMAND <cmd> [<args>...]
+    [NO_PARALLEL_COMMAND <cmd> [<args>...]]
+    WORKING_DIRECTORY </path/to/dir>
+    LOGNAME <log_name>)
+)
+```
+## Parameters
+### COMMAND
+The command to be executed, along with its arguments.
+
+### NO_PARALLEL_COMMAND
+Optional parameter which specifies a non-parallel command to attempt if a
+failure potentially due to parallelism is detected.
+
+### WORKING_DIRECTORY
+The directory to execute the command in.
+
+### LOGNAME
+The prefix to use for the log files.
+
+This should be a unique name for different triplets so that the logs don't
+conflict when building multiple at once.
+
+## Examples
+
+* [icu](https://github.com/Microsoft/vcpkg/blob/master/ports/icu/portfile.cmake)
+#]===]
+
 function(vcpkg_execute_build_process)
-    cmake_parse_arguments(_ebp "" "WORKING_DIRECTORY;LOGNAME" "COMMAND;NO_PARALLEL_COMMAND" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _ebp "" "WORKING_DIRECTORY;LOGNAME" "COMMAND;NO_PARALLEL_COMMAND")
 
     set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out.log")
     set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err.log")
@@ -61,8 +64,13 @@ function(vcpkg_execute_build_process)
            OR err_contents MATCHES "LINK : fatal error LNK1102:" OR err_contents MATCHES " fatal error C1060: "
            OR out_contents MATCHES "LINK : fatal error LNK1318: Unexpected PDB error; ACCESS_DENIED"
            OR out_contents MATCHES "LINK : fatal error LNK1104:"
-           OR out_contents MATCHES "LINK : fatal error LNK1201:")
+           OR out_contents MATCHES "LINK : fatal error LNK1201:"
             # The linker ran out of memory during execution. We will try continuing once more, with parallelism disabled.
+           OR err_contents MATCHES "Cannot create parent directory" OR err_contents MATCHES "Cannot write file"
+            # Multiple threads using the same directory at the same time cause conflicts, will try again.
+           OR err_contents MATCHES "Can't open"
+            # Multiple threads caused the wrong order of creating folders and creating files in folders
+           )
             message(STATUS "Restarting Build without parallelism because memory exceeded")
             set(LOG_OUT "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-out-1.log")
             set(LOG_ERR "${CURRENT_BUILDTREES_DIR}/${_ebp_LOGNAME}-err-1.log")
@@ -132,7 +140,7 @@ function(vcpkg_execute_build_process)
                 file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
                 list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
             endforeach()
-            vcpkg_prettify_command(_ebp_COMMAND _ebp_COMMAND_PRETTY)
+            z_vcpkg_prettify_command_line(_ebp_COMMAND_PRETTY ${_ebp_COMMAND})
             message(FATAL_ERROR
                 "  Command failed: ${_ebp_COMMAND_PRETTY}\n"
                 "  Working Directory: ${_ebp_WORKING_DIRECTORY}\n"

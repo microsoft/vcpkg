@@ -3,7 +3,7 @@ project(libopenmpt)
 
 if(MSVC)
   add_compile_options(
-    /W3 /wd4005 /wd4267 /wd4244 /wd4996 /wd410 /wd4018
+    /W3 /wd4005 /wd4267 /wd4244 /wd4996 /wd4100 /wd4018
     -D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE
     -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_WARNINGS
   )
@@ -27,8 +27,6 @@ find_library(FLAC_LIBRARY NAMES FLAC flac)
 find_path(PORTAUDIO_INCLUDE_DIR NAMES portaudio.h)
 find_library(PORTAUDIO_LIBRARY NAMES portaudio)
 
-
-
 set(
   lib_headers
   libopenmpt/libopenmpt.h
@@ -44,7 +42,6 @@ set(
   libopenmpt/libopenmpt_stream_callbacks_file.h
   libopenmpt/libopenmpt_version.h
 )
-
 
 include_directories(
   .
@@ -267,15 +264,12 @@ target_link_libraries(
   Winmm
   ZLIB::ZLIB
 )
-
-
 install(
   TARGETS libopenmpt
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
-
 
 if(NOT DISABLE_INSTALL_HEADERS)
   install(FILES ${lib_headers} DESTINATION include/libopenmpt)

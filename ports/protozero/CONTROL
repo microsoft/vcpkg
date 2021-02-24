@@ -1,0 +1,5 @@
+Source: protozero
+Version: 1.6.8
+Homepage: https://github.com/am2222/mapnik-windows/
+Description: Minimalist protocol buffer decoder and encoder in C++
+Build-Depends: protobuf

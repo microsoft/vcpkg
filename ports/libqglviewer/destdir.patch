@@ -1,0 +1,21 @@
+diff --git a/QGLViewer/QGLViewer.pro b/QGLViewer/QGLViewer.pro
+index 263a141..51e3359 100644
+--- a/QGLViewer/QGLViewer.pro
++++ b/QGLViewer/QGLViewer.pro
+@@ -38,7 +38,6 @@ SOURCES = \
+ 
+ HEADERS *= $${QGL_HEADERS}
+ DISTFILES *= qglviewer-icon.xpm
+-DESTDIR = $${PWD}
+ 
+ TRANSLATIONS = qglviewer_fr.ts
+ 
+@@ -273,7 +272,7 @@ win32 {
+ 		QMAKE_CXXFLAGS *= -TP -GR
+ 		DEFINES += NOMINMAX
+ 		win32-msvc {
+-			QMAKE_CXXFLAGS *= -EHs -FS
++			QMAKE_CXXFLAGS *= -EHs -FS
+ 		} else {
+ 			QMAKE_CXXFLAGS *= -EHs
+ 		}

@@ -1,91 +1,35 @@
---- a/DevIL/src-IL/cmake/FindOpenEXR.cmake
-+++ b/DevIL/src-IL/cmake/FindOpenEXR.cmake
-@@ -1,64 +1,13 @@
--# Locate OpenEXR
--# This module defines
--# OPENEXR_LIBRARIES
--# OPENEXR_FOUND, if false, do not try to link to OpenEXR 
--# OPENEXR_INCLUDE_DIR, where to find the headers
--#
--# $OPENEXR_DIR is an environment variable that would
--# correspond to the ./configure --prefix=$OPENEXR_DIR
--#
--# Created by Robert Osfield. 
-+include(FindPackageHandleStandardArgs)
+diff --git a/DevIL/src-IL/CMakeLists.txt b/DevIL/src-IL/CMakeLists.txt
+index 02e4f03..4accaa1 100644
+--- a/DevIL/src-IL/CMakeLists.txt
++++ b/DevIL/src-IL/CMakeLists.txt
+@@ -235,8 +235,12 @@ target_link_libraries(IL ${libs})
  
-+find_path(OPENEXR_INCLUDE_PATHS NAMES ImfRgbaFile.h PATH_SUFFIXES OpenEXR)
- 
--FIND_PATH(OPENEXR_INCLUDE_DIR ImfIO.h
--    $ENV{OPENEXR_DIR}/include
--    $ENV{OPENEXR_DIR}
--    ~/Library/Frameworks
--    /Library/Frameworks
--    /usr/local/include
--    /usr/include
--    /sw/include # Fink
--    /opt/local/include # DarwinPorts
--    /opt/csw/include # Blastwave
--    /opt/include
--    /usr/freeware/include
--)
-+find_library(OPENEXR_HALF_LIBRARY NAMES Half)
-+find_library(OPENEXR_IEX_LIBRARY NAMES Iex-2_2)
-+find_library(OPENEXR_IMATH_LIBRARY NAMES Imath-2_2)
-+find_library(OPENEXR_ILMIMF_LIBRARY NAMES IlmImf-2_2)
-+find_library(OPENEXR_ILMTHREAD_LIBRARY NAMES IlmThread-2_2)
- 
--# Macro to find exr libraries (deduplicating search paths)
--# example: OPENEXR_FIND_VAR(OPENEXR_IlmImf_LIBRARY IlmImf)
--MACRO(OPENEXR_FIND_VAR varname libname)
--    FIND_LIBRARY( ${varname}
--        NAMES ${libname}
--        PATHS
--        $ENV{OPENEXR_DIR}/lib
--        $ENV{OPENEXR_DIR}
--        ~/Library/Frameworks
--        /Library/Frameworks
--        /usr/local/lib
--        /usr/lib
--        /sw/lib
--        /opt/local/lib
--        /opt/csw/lib
--        /opt/lib
--        /usr/freeware/lib64
--    )
--ENDMACRO(OPENEXR_FIND_VAR)
-+set(OPENEXR_LIBRARIES ${OPENEXR_HALF_LIBRARY} ${OPENEXR_IEX_LIBRARY} ${OPENEXR_IMATH_LIBRARY} ${OPENEXR_ILMIMF_LIBRARY} ${OPENEXR_ILMTHREAD_LIBRARY})
- 
--# Macro to find exr libraries (and debug versions)
--# example: OPENEXR_FIND(IlmImf)
--MACRO(OPENEXR_FIND libname)
--    OPENEXR_FIND_VAR(OPENEXR_${libname}_LIBRARY ${libname})
--    OPENEXR_FIND_VAR(OPENEXR_${libname}_LIBRARY_DEBUG ${libname}d)
--ENDMACRO(OPENEXR_FIND)
+ # generate config.h
+ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/include/config.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/include/config.h)
 -
--OPENEXR_FIND(IlmImf)
--OPENEXR_FIND(IlmThread)
--OPENEXR_FIND(Iex)
--OPENEXR_FIND(Half)
 -
--SET(OPENEXR_FOUND "NO")
--IF(OPENEXR_INCLUDE_DIR AND OPENEXR_IlmImf_LIBRARY AND OPENEXR_IlmThread_LIBRARY AND OPENEXR_Iex_LIBRARY AND OPENEXR_Half_LIBRARY)
--    SET(OPENEXR_LIBRARIES ${OPENEXR_IlmImf_LIBRARY} ${OPENEXR_IlmThread_LIBRARY} ${OPENEXR_Half_LIBRARY} ${OPENEXR_Iex_LIBRARY} )
--    SET(OPENEXR_LIBRARIES_VARS OPENEXR_IlmImf_LIBRARY OPENEXR_IlmThread_LIBRARY OPENEXR_Half_LIBRARY OPENEXR_Iex_LIBRARY )
--    SET(OPENEXR_FOUND "YES")
--ENDIF(OPENEXR_INCLUDE_DIR AND OPENEXR_IlmImf_LIBRARY AND OPENEXR_IlmThread_LIBRARY AND OPENEXR_Iex_LIBRARY AND OPENEXR_Half_LIBRARY)
-+find_package_handle_standard_args(OPENEXR REQUIRED_VARS OPENEXR_LIBRARIES OPENEXR_INCLUDE_PATHS)
++add_definitions(-DHAVE_CONFIG_H)
++if(WIN32)
++	if(BUILD_SHARED_LIBS)
++		add_definitions(-DOPENEXR_DLL)
++	endif()
++endif()
+ 
+ # generate pkg-config file
+ # TODO: add Requires.private or Libs.private
+diff --git a/DevIL/src-IL/src/il_exr.cpp b/DevIL/src-IL/src/il_exr.cpp
+index bbb3978..3916c6f 100644
 --- a/DevIL/src-IL/src/il_exr.cpp
 +++ b/DevIL/src-IL/src/il_exr.cpp
-@@ -15,14 +15,14 @@
+@@ -14,15 +14,10 @@
+ #include "il_internal.h"
  #ifndef IL_NO_EXR
  
- #ifndef HAVE_CONFIG_H // We are probably on a Windows box .
+-#ifndef HAVE_CONFIG_H // We are probably on a Windows box .
 -//#define OPENEXR_DLL
 -#define HALF_EXPORTS
-+#define OPENEXR_DLL
-+//#define HALF_EXPORTS
- #endif //HAVE_CONFIG_H
- 
+-#endif //HAVE_CONFIG_H
+-
  #include "il_exr.h"
 -#include <ImfRgba.h>
 -#include <ImfArray.h>
@@ -96,6 +40,8 @@
  //#include <ImfTiledRgbaFile.h>
  //#include <ImfInputFile.h>
  //#include <ImfTiledInputFile.h>
+diff --git a/DevIL/src-IL/include/il_exr.h b/DevIL/src-IL/include/il_exr.h
+index 3d880c4..04d721a 100644
 --- a/DevIL/src-IL/include/il_exr.h
 +++ b/DevIL/src-IL/include/il_exr.h
 @@ -15,7 +15,7 @@

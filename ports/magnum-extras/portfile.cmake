@@ -1,9 +1,8 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-extras
-    REF v2019.01
-    SHA512 b7116e53a6132c937ad1dc10d251d0b98884375a14e947c5ddfa046cd7a8e7e60eddf2802e1c945168fcb42d78fb13639fe65ea259c6a44f064e6065ee5ae3af
+    REF v2020.06
+    SHA512 7419af84a6de72f666a9bd12a325c4b40f9e2a25fec3d0b22c348faab0a402b62fa782231b9b12180d84f4ab2508b02df25a97713948bdd2f21c9e8cb831fa25
     HEAD_REF master
 )
 
@@ -66,7 +65,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/magnum-extras)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/magnum-extras/COPYING ${CURRENT_PACKAGES_DIR}/share/magnum-extras/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    RENAME copyright)
+
 
 vcpkg_copy_pdbs()

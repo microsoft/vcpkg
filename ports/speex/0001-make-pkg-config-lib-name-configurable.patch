@@ -1,0 +1,13 @@
+diff --git a/speex.pc.in b/speex.pc.in
+index 97bba4f..52a1d3c 100644
+--- a/speex.pc.in
++++ b/speex.pc.in
+@@ -10,6 +10,6 @@ Description: Speex is an audio codec tuned for speech
+ Version: @SPEEX_VERSION@
+ Requires:
+ Conflicts:
+-Libs: -L${libdir} -lspeex
++Libs: -L${libdir} -l@SPEEXLIB@
+ Libs.private: @LIBM@
+ Cflags: -I${includedir}
+

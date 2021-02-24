@@ -60,6 +60,10 @@ set(LIBHUNSPELL_HDRS
 
 #hunspell/libhunspell
 add_library(libhunspell ${LIBHUNSPELL_HDRS} ${LIBHUNSPELL_SRCS})
+
+#Avoid automatically added lib prefix 'lib' for hunspell
+set_target_properties(libhunspell PROPERTIES PREFIX "")
+
 target_compile_definitions(libhunspell PRIVATE -DBUILDING_LIBHUNSPELL)
 install(TARGETS libhunspell
     ARCHIVE DESTINATION lib
@@ -98,7 +102,7 @@ set(TESTPARSER_SRCS
     src/parsers/odfparser.cxx
 )
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND CMAKE_BUILD_TYPE STREQUAL "Release")
+if(NOT CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND CMAKE_BUILD_TYPE STREQUAL "Release" AND BUILD_TOOLS)
     add_executable(testparser ${TESTPARSER_SRCS})
     target_link_libraries(testparser libhunspell)
 

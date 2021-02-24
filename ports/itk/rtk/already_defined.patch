@@ -1,0 +1,100 @@
+diff --git a/include/rtkProjectionGeometry.h b/include/rtkProjectionGeometry.h
+index e5831611f..73ed2b74f 100644
+--- a/include/rtkProjectionGeometry.h
++++ b/include/rtkProjectionGeometry.h
+@@ -23,6 +23,7 @@
+ 
+ #include <vector>
+ 
++#include "RTKExport.h"
+ #include "rtkMacro.h"
+ 
+ namespace rtk
+@@ -67,25 +68,18 @@ public:
+    * with the i-th matrix provides the physical coordinate on
+    * the i-th projection.
+    */
+-  const std::vector<MatrixType> &
+-  GetMatrices() const
+-  {
+-    return this->m_Matrices;
+-  }
++  itkGetConstReferenceMacro(Matrices,std::vector<MatrixType>)
+ 
+   /** Get the i-th projection matrix. */
+   MatrixType
+-  GetMatrix(const unsigned int i) const
+-  {
+-    return this->m_Matrices[i];
+-  }
++  GetMatrix(const unsigned int i) const;
+ 
+   /** Empty the geometry object. */
+   virtual void
+   Clear();
+ 
+ protected:
+-  ProjectionGeometry() = default;
++  ProjectionGeometry();
+   ~ProjectionGeometry() override = default;
+ 
+   void
+@@ -93,11 +87,7 @@ protected:
+ 
+   /** Add projection matrix */
+   virtual void
+-  AddMatrix(const MatrixType & m)
+-  {
+-    this->m_Matrices.push_back(m);
+-    this->Modified();
+-  }
++  AddMatrix(const MatrixType & m);
+ 
+ private:
+   /** Projection matrices */
+@@ -105,6 +95,9 @@ private:
+ };
+ } // namespace rtk
+ 
+-#include "rtkProjectionGeometry.hxx"
++#ifndef ITK_MANUAL_INSTANTIATION
++#   include "rtkProjectionGeometry.hxx"
++#endif
++
+ 
+ #endif // rtkProjectionGeometry_h
+diff --git a/include/rtkProjectionGeometry.hxx b/include/rtkProjectionGeometry.hxx
+index 192265812..97dfe8c3a 100644
+--- a/include/rtkProjectionGeometry.hxx
++++ b/include/rtkProjectionGeometry.hxx
+@@ -23,6 +23,8 @@
+ 
+ namespace rtk
+ {
++template <unsigned int TDimension>
++ProjectionGeometry<TDimension>::ProjectionGeometry() = default;
+ 
+ template <unsigned int TDimension>
+ void
+@@ -43,6 +45,21 @@ ProjectionGeometry<TDimension>::Clear()
+   this->Modified();
+ }
+ 
++template <unsigned int TDimension>
++typename ProjectionGeometry<TDimension>::MatrixType
++ProjectionGeometry<TDimension>::GetMatrix(const unsigned int i) const
++{
++  return this->m_Matrices[i];
++}
++
++template <unsigned int TDimension>
++void
++ProjectionGeometry<TDimension>::AddMatrix(const typename ProjectionGeometry<TDimension>::MatrixType & m)
++{
++  this->m_Matrices.push_back(m);
++  this->Modified();
++}
++
+ } // namespace rtk
+ 
+ #endif // rtkProjectionGeometry_hxx

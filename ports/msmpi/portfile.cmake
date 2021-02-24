@@ -1,23 +1,21 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP")
 
-if(VCPKG_CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "This port is only for building msmpi on Windows Desktop")
-endif()
-
-set(MSMPI_VERSION "10.0.12498")
+set(MSMPI_VERSION "10.1.12498")
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/msmpi-${MSMPI_VERSION})
 
 vcpkg_download_distfile(SDK_ARCHIVE
-    URLS "https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisdk.msi"
+    URLS "https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisdk.msi"
     FILENAME "msmpisdk-${MSMPI_VERSION}.msi"
-    SHA512 36a31b2516f45fbc26167b31d2d6419f1928aef1591033f0430d36570159205e1a3134557a4ac0462f2d879add1fc6fee87a6997032e4438b528cd42a8bbe6b1
+    SHA512 330fad53c1979dfae786abed228d82c82207f0d61148e2efc1f37c8931838b806eb50554e7f006a56962f748a21f7017c540bd70444b7a93a72c313a64e9254c
 )
 
+
+#to enable CI, you should modify the following URL also in ${VCPKG_ROOT}/scripts/azure-pipelines/windows/provision-image.ps1
 macro(download_msmpi_redistributable_package)
     vcpkg_download_distfile(REDIST_ARCHIVE
-        URLS "https://download.microsoft.com/download/A/E/0/AE002626-9D9D-448D-8197-1EA510E297CE/msmpisetup.exe"
+        URLS "https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe"
         FILENAME "msmpisetup-${MSMPI_VERSION}.exe"
-        SHA512 c272dc842eb1e693f25eb580e1caf0c1fdb385611a12c20cdc6a40cf592ccbdba434a1c16edb63eef14b1a2ac6e678ac1cd561ec5fd003a5d17191a0fad281ae
+        SHA512 1ee463e7dfc3e55a7ac048fdfde13fef09a5eea4b74d8fd7c22a7aad667a025b467ce939e5de308e25bbc186c3fe66e0e24ac03a3741656fc7558f2af2fa132a
     )
 endmacro()
 

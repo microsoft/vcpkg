@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO liballeg/allegro5
-    REF 5.2.5.0
-    SHA512 9b97a46f0fd146c3958a5f8333822665ae06b984b3dbedc1356afdac8fe3248203347cb08b30ebda049a7320948c7844e9d00dc055c317836c2557b5bfc2ab04
+    REF 5.2.6.0
+    SHA512 d590c1a00d1b314c6946e0f6ad3e3a8b6e6309bada2ec38857186f817147ac99dae8a1c4412abe701af88da5dca3dd8f989a1da66630192643d3c08c0146b603
     HEAD_REF master
     PATCHES
         fix-pdb-install.patch

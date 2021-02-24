@@ -17,11 +17,12 @@ These link your project(s) to a specific copy of Vcpkg on your machine so any up
 ```no-highlight
 vcpkg integrate install
 ```
-This will implicitly add Include Directories, Link Directories, and Link Libraries for all packages installed with Vcpkg to all VS2015 and VS2017 MSBuild projects. We also add a post-build action for executable projects that will analyze and copy any DLLs you need to the output folder, enabling a seamless F5 experience.
+This will implicitly add Include Directories, Link Directories, and Link Libraries for all packages installed with Vcpkg to all VS2015, VS2017 and VS2019 MSBuild projects. We also add a post-build action for executable projects that will analyze and copy any DLLs you need to the output folder, enabling a seamless F5 experience.
 
 For the vast majority of libraries, this is all you need to do -- just File -> New Project and write code! However, some libraries perform conflicting behaviors such as redefining `main()`. Since you need to choose per-project which of these conflicting options you want, you will need to add those libraries to your linker inputs manually.
 
 Here are some examples, though this is not an exhaustive list:
+
 - Gtest provides `gtest`, `gmock`, `gtest_main`, and `gmock_main`
 - SDL2 provides `SDL2main`
 - SFML provides `sfml-main`
@@ -81,6 +82,7 @@ With a project open, go to Tools->NuGet Package Manager->Package Manager Console
 #### Manual compiler settings
 
 Libraries are installed into the `installed\` subfolder, partitioned by architecture (e.g. x86-windows):
+
 * The header files are installed to `installed\x86-windows\include`
 * Release `.lib` files are installed to `installed\x86-windows\lib` or `installed\x86-windows\lib\manual-link`
 * Release `.dll` files are installed to `installed\x86-windows\bin`
@@ -112,6 +114,7 @@ Please also see our [blog post](https://blogs.msdn.microsoft.com/vcblog/2017/05/
 <a name="triplet-selection"></a>
 ### Triplet selection
 Every integration mechanism besides manually adding the folders will deduce a [triplet][] for your project as one of:
+
 - x86-windows
 - x64-windows
 - x86-uwp

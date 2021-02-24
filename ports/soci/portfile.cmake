@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO SOCI/soci
-    REF c15b178a44b99ed3ff7fd953837fb97f6314abb7
-    SHA512 037c44f29e80b5ec57046606b4672088917d469e9d2254e3e15253e170026cf0fe17e4f79a4b01df22fe7032708ca87354b1560d9880d4d165cdef869c3c6081
+    REF 334cc55d9fa7b42d7214a8533a246d637bc92899 #version 4.0.1 commit on 2020.10.19
+    SHA512 b300b13f68347d78252812e09efffb1735072cf5019940da53366a5cdee997f4b8b03a584a87a95ba764b0a78640ad6eb4966b53f9156280cb452465607afbc7
     HEAD_REF master
-    PATCHES "${CMAKE_CURRENT_LIST_DIR}/0001-Deduce-reference-in-boost-fusion-for_each.patch"
-            "${CMAKE_CURRENT_LIST_DIR}/0002-Find-PostgreSQL-debug-library.patch"
+    PATCHES fix-dependency-libmysql.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)
@@ -26,6 +24,10 @@ foreach(_feature IN LISTS ALL_FEATURES)
     else()
         list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
     endif()
+
+    if(_feature MATCHES "mysql")
+        set(MYSQL_OPT -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql")
+    endif()
 endforeach()
 
 vcpkg_configure_cmake(
@@ -33,25 +35,25 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DSOCI_TESTS=OFF
-        -DSOCI_CXX_C11=ON
+        -DSOCI_CXX11=ON
         -DSOCI_LIBDIR:STRING=lib # This is to always have output in the lib folder and not lib64 for 64-bit builds
         -DLIBDIR:STRING=lib
         -DSOCI_STATIC=${SOCI_STATIC}
         -DSOCI_SHARED=${SOCI_DYNAMIC}
         ${_COMPONENT_FLAGS}
-
-        -DWITH_MYSQL=OFF
+        ${MYSQL_OPT}
         -DWITH_ORACLE=OFF
         -DWITH_FIREBIRD=OFF
         -DWITH_DB2=OFF
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+# Correct the config file name
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCI.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCI-config.cmake)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/cmake ${CURRENT_PACKAGES_DIR}/debug/cmake ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/soci)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/soci/LICENSE_1_0.txt ${CURRENT_PACKAGES_DIR}/share/soci/copyright)
-
-vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

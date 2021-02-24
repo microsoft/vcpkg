@@ -2,10 +2,11 @@ import toolset ;
 
 if "@VCPKG_PLATFORM_TOOLSET@" != "external"
 {
-    using msvc : : cl.exe :
-    <setup>"@NOTHING_BAT@"
-    @TOOLSET_OPTIONS@
-    ;
+    using msvc : @MSVC_VERSION@ : cl.exe
+        :
+        <setup>"@NOTHING_BAT@"
+        @TOOLSET_OPTIONS@
+        ;
 }
 else
 {
@@ -23,8 +24,10 @@ else
 
 if "@PORT@" = "boost-python"
 {
-    using python : @PYTHON_VERSION@ : : "@PYTHON_INCLUDE_PATH@" : "@PYTHONLIBS_RELEASE@" ;
-    using python : @PYTHON_VERSION@ : : "@PYTHON_INCLUDE_PATH@" : "@PYTHONLIBS_DEBUG@" : <python-debugging>on ;
+    using python : @VCPKG_PYTHON3_VERSION@ : : "@VCPKG_PYTHON3_INCLUDE@" : "@VCPKG_PYTHON3_LIBS_RELEASE@" ;
+    using python : @VCPKG_PYTHON3_VERSION@ : : "@VCPKG_PYTHON3_INCLUDE@" : "@VCPKG_PYTHON3_LIBS_DEBUG@" : <python-debugging>on ;
+    using python : @VCPKG_PYTHON2_VERSION@ : : "@VCPKG_PYTHON2_INCLUDE@" : "@VCPKG_PYTHON2_LIBS_RELEASE@" ;
+    using python : @VCPKG_PYTHON2_VERSION@ : : "@VCPKG_PYTHON2_INCLUDE@" : "@VCPKG_PYTHON2_LIBS_DEBUG@" : <python-debugging>on ;
 }
 
 if "@PORT@" = "boost-mpi"
@@ -37,16 +40,44 @@ if "@PORT@" = "boost-mpi"
 
 project user-config : ;
 
-lib advapi32 ;
+if "@VCPKG_PLATFORM_TOOLSET@" != "external"
+{
+    lib advapi32 ;
 
-lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/lib/icuuc.lib" <variant>release : : <library>advapi32 ;
-lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icuucd.lib" <variant>debug : : <library>advapi32 ;
+    lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/lib/icuuc.lib" <variant>release : : <library>advapi32 ;
+    lib icuuc : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icuucd.lib" <variant>debug : : <library>advapi32 ;
 
-lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/lib/icuin.lib" <variant>release : : ;
-lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icuind.lib" <variant>debug : : ;
+    lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/lib/icuin.lib" <variant>release : : ;
+    lib icuin : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icuind.lib" <variant>debug : : ;
 
-lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/lib/icudt.lib" <variant>release : : ;
-lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icudtd.lib" <variant>debug : : ;
+    lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/lib/icudt.lib" <variant>release : : ;
+    lib icudt : : <file>"@CURRENT_INSTALLED_DIR@/debug/lib/icudtd.lib" <variant>debug : : ;
+}
+else
+{
+    if "@CMAKE_SYSTEM_NAME@" = "Windows" # We are hopelessly stuck inside boost-modular-build-helper, only this works
+    {
+        lib icuuc : : <name>icuuc <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icuuc : : <name>icuucd <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
+
+        lib icuin : : <name>icuin <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icuin : : <name>icuind <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
+
+        lib icudt : : <name>icudt <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icudt : : <name>icudtd <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
+    }
+    else
+    {
+        lib icuuc : : <name>icuuc <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icuuc : : <name>icuuc <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
+
+        lib icuin : : <name>icui18n <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icuin : : <name>icui18n <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
+
+        lib icudt : : <name>icudata <search>"@CURRENT_INSTALLED_DIR@/lib" <variant>release : : ;
+        lib icudt : : <name>icudata <search>"@CURRENT_INSTALLED_DIR@/debug/lib" <variant>debug : : ;
+    }
+}
 
 lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>release : : ;
 lib iconv : : <file>"@LIBICONV_LIBRARY@" <link>shared <runtime-link>shared <variant>debug : : ;

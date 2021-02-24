@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/draco
-    REF 1.3.5
-    SHA512 f99fcbec60fbd1683d8aacc35ff8ad9ee1c84374132ad4cc8c0f56662f5d33f940f89028cf3e577cde3314fd0766c124f61798121e4127e888f302e9efe1a004
+    REF 83b0922745981a35be16e2907bdbb749ebf2bf43 # 1.3.6
+    SHA512 29b270d749c5c0efcf791aaae7e33e2ae4404103ad8849d73aaca71492a3780d2fcaec01ec225da886bce2ab20ec14b8cf2d9e0976810cdaee557f97b3b0d9b8
     HEAD_REF master
     PATCHES
         fix-compile-error-uwp.patch
@@ -40,5 +38,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 vcpkg_copy_pdbs()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/draco)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/draco/LICENSE ${CURRENT_PACKAGES_DIR}/share/draco/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

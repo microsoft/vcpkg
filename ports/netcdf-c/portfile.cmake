@@ -1,24 +1,21 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Unidata/netcdf-c
-    REF v4.7.0
-    SHA512 6602799780105c60ac8c873ed4055c1512dc8bebf98de01e1cce572d113ffb3bf3ca522475b93255c415340f672c55dc6785e0bdbcc39055314683da1d02141a
+    REF 26fba54a58fa02af92d84441ed90b417c1d08161 # v4.7.4
+    SHA512 7144374b5bd3574ea422de07ffb30fecc4e5f560f9b46f62762cc0cce511dd33068b8df9244fe94ae3cc7b3a9bb9fe398c7e67c3e5ac2109768e5a9b984f24fb
     HEAD_REF master
     PATCHES
         no-install-deps.patch
         config-pkg-location.patch
-        transitive-hdf5.patch
-        hdf5.patch
-        hdf5_2.patch
-        fix-build-error-on-linux.patch
-        hdf5_3.patch
+        use_targets.patch
+        fix-dependency-libmath.patch
+        fix-linkage-error.patch
 )
 
 #Remove outdated find modules
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindSZIP.cmake")
 file(REMOVE "${SOURCE_PATH}/cmake/modules/FindZLIB.cmake")
+file(REMOVE "${SOURCE_PATH}/cmake/modules/windows/FindHDF5.cmake")
 
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(NC_USE_STATIC_CRT ON)
@@ -28,7 +25,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
+    DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
     PREFER_NINJA
     OPTIONS
         -DBUILD_UTILITIES=OFF
@@ -44,7 +41,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/netcdf)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/netcdf TARGET_PATH share/netcdf)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
@@ -53,10 +50,4 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/netcdf-c)
-file(
-    RENAME
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/COPYRIGHT
-        ${CURRENT_PACKAGES_DIR}/share/netcdf-c/copyright
-)
+file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

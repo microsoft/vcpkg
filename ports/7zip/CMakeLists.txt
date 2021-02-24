@@ -108,6 +108,7 @@ set(SRC_C
     C/Lzma2Enc.c
     C/LzmaDec.c
     C/LzmaEnc.c
+    C/LzmaLib.c
     C/MtCoder.c
     C/MtDec.c
     C/Ppmd7.c
@@ -311,6 +312,7 @@ add_library(7zip
     ${SRC_CRYPTO}
     ${SRC_C}
     CPP/7zip/Archive/Archive2.def
+    C/Util/LzmaLib/LzmaLib.def
 )
 
 target_compile_definitions(7zip
@@ -334,6 +336,14 @@ target_include_directories(7zip
 
 set(PUBLIC_HEADERS
     C/7zTypes.h
+    C/Alloc.h
+    C/LzFind.h
+    C/LzFindMt.h
+    C/LzHash.h
+    C/LzmaDec.h
+    C/LzmaEnc.h
+    C/LzmaLib.h
+    C/Threads.h
     CPP/7zip/Archive/IArchive.h
     CPP/7zip/ICoder.h
     CPP/7zip/IDecl.h

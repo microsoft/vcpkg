@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 # volk is not prepared to be a DLL.
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 

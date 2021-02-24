@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libkml/libkml
@@ -22,11 +20,11 @@ vcpkg_copy_pdbs()
 
 if (VCPKG_TARGET_IS_WINDOWS)
     vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+elseif (VCPKG_TARGET_IS_LINUX)
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libkml)
-elseif (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+elseif (VCPKG_TARGET_IS_OSX)
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libkml)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libkml RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

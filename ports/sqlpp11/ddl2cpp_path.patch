@@ -1,0 +1,13 @@
+diff --git a/cmake/Sqlpp11Config.cmake b/cmake/Sqlpp11Config.cmake
+index 18ea9b1..730bce1 100644
+--- a/cmake/Sqlpp11Config.cmake
++++ b/cmake/Sqlpp11Config.cmake
+@@ -32,7 +32,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/Sqlpp11Targets.cmake")
+ 
+ # Import "ddl2cpp" script
+ if(NOT TARGET sqlpp11::ddl2cpp)
+-  get_filename_component(sqlpp11_ddl2cpp_location "${CMAKE_CURRENT_LIST_DIR}/../../../bin/sqlpp11-ddl2cpp" REALPATH)
++  get_filename_component(sqlpp11_ddl2cpp_location "${CMAKE_CURRENT_LIST_DIR}/../../scripts/sqlpp11-ddl2cpp" REALPATH)
+   if(NOT EXISTS "${sqlpp11_ddl2cpp_location}")
+     message(FATAL_ERROR "The imported target sqlpp11::ddl2cpp references the file '${sqlpp11_ddl2cpp_location}' but this file does not exists.")
+   endif()

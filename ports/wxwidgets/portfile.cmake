@@ -1,15 +1,18 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF v3.1.2
-    SHA512 c6f8a6065e837e145633ddbd0e10910f32009900e1f7155abe0ef53b6fc83dceb9eaf6c56369d13b6526e4b8bd6073bbcbdb790d667c0dab381b67ec5d567f6f
+    REF v3.1.4
+    SHA512 108e35220de10afbfc58762498ada9ece0b3166f56a6d11e11836d51bfbaed1de3033c32ed4109992da901fecddcf84ce8a1ba47303f728c159c638dac77d148
     HEAD_REF master
-    PATCHES disable-platform-lib-dir.patch
+    PATCHES
+        disable-platform-lib-dir.patch
+        fix-stl-build-vs2019-16.6.patch
 )
 
 set(OPTIONS)
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+if(VCPKG_TARGET_IS_OSX)
     set(OPTIONS -DCOTIRE_MINIMUM_NUMBER_OF_TARGET_SOURCES=9999)
 endif()
 
@@ -37,8 +40,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-
 file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
 if(DLLS)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
@@ -56,14 +57,39 @@ if(DLLS)
     endforeach()
 endif()
 
-# Handle copyright
-file(COPY ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/wxwidgets)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/wxwidgets/licence.txt ${CURRENT_PACKAGES_DIR}/share/wxwidgets/copyright)
-
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
+else()
+    vcpkg_copy_tools(TOOL_NAMES wxrc wx-config wxrc-3.1 AUTO_CLEAN)
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
+
+# do the copy pdbs now after the dlls got moved to the expected /bin folder above
+vcpkg_copy_pdbs()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/msvc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(GLOB_RECURSE INCLUDES ${CURRENT_PACKAGES_DIR}/include/*.h)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
+    list(APPEND INCLUDES ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
+endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h)
+    list(APPEND INCLUDES ${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h)
+endif()
+foreach(INC IN LISTS INCLUDES)
+    file(READ "${INC}" _contents)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        string(REPLACE "defined(WXUSINGDLL)" "0" _contents "${_contents}")
+    else()
+        string(REPLACE "defined(WXUSINGDLL)" "1" _contents "${_contents}")
+    endif()
+    # Remove install prefix from setup.h to ensure package is relocatable
+    string(REGEX REPLACE "\n#define wxINSTALL_PREFIX [^\n]*" "\n#define wxINSTALL_PREFIX \"\"" _contents "${_contents}")
+    file(WRITE "${INC}" "${_contents}")
+endforeach()
+
+if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/setup.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/wx)
+endif()
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/wxwidgets)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/wxwidgets/usage COPYONLY)
+file(INSTALL ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

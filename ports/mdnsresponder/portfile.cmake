@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
   URLS https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-765.30.11.tar.gz
   FILENAME mDNSResponder-765.30.11.tar.gz
@@ -21,33 +19,41 @@ ENDIF()
 
 function(FIX_VCXPROJ VCXPROJ_PATH)
   file(READ ${VCXPROJ_PATH} ORIG)
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    string(REPLACE
-      "<ConfigurationType>StaticLibrary</ConfigurationType>"
-      "<ConfigurationType>DynamicLibrary</ConfigurationType>"
-      ORIG "${ORIG}")
+  if(${VCPKG_CRT_LINKAGE} STREQUAL "dynamic")
     string(REGEX REPLACE
-      "<RuntimeLibrary>*</RuntimeLibrary>"
+      "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"
       "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>"
       ORIG "${ORIG}")
     string(REGEX REPLACE
-      "<RuntimeLibrary>*</RuntimeLibrary>"
+      "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"
       "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>"
+      ORIG "${ORIG}")
+  else()
+    string(REGEX REPLACE
+      "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>"
+      "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"
+      ORIG "${ORIG}")
+    string(REGEX REPLACE
+      "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>"
+      "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"
+      ORIG "${ORIG}")
+  endif()
+  if(${VCPKG_LIBRARY_LINKAGE} STREQUAL "dynamic")
+    string(REPLACE
+      "<ConfigurationType>StaticLibrary</ConfigurationType>"
+      "<ConfigurationType>DynamicLibrary</ConfigurationType>"
       ORIG "${ORIG}")
   else()
     string(REPLACE
       "<ConfigurationType>DynamicLibrary</ConfigurationType>"
       "<ConfigurationType>StaticLibrary</ConfigurationType>"
       ORIG "${ORIG}")
-    string(REGEX REPLACE
-      "<RuntimeLibrary>*Debug</RuntimeLibrary>"
-      "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"
-      ORIG "${ORIG}")
-    string(REGEX REPLACE
-      "<RuntimeLibrary>*</RuntimeLibrary>"
-      "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>"
-      ORIG "${ORIG}")
   endif()
+  
+  string(REPLACE
+    "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
+    "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    ORIG "${ORIG}")
   file(WRITE ${VCXPROJ_PATH} "${ORIG}")
 endfunction()
 

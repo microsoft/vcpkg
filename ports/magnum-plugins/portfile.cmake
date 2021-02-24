@@ -1,13 +1,42 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mosra/magnum-plugins
-    REF v2019.01
-    SHA512 482131372671ce0b86b6643f8c584f000db4324fe0f7e32bf9a31febded7b97ab7e947028fe21ce649554d2cff2bc11dfd94fad0006c465911c9f44b28c2d2a5
+    REF v2020.06
+    SHA512 3c11c2928bfc9d04c1ad64f72b6ffac6cf80a1ef3aacc5d0486b9ad955cf4f6ea6d5dcb3846dc5d73f64ec522a015eafb997f62c79ad7ff91169702341f23af0
     HEAD_REF master
     PATCHES
         001-tools-path.patch
+        002-fix-stb-conflict.patch
 )
+
+if("basisimporter" IN_LIST FEATURES OR "basisimageconverter" IN_LIST FEATURES)
+    # Bundle Basis Universal, a commit that's before the UASTC support (which
+    # is not implemented yet). The repo has big unrequired files in its
+    # history, so we're downloading just a snapshot instead of a git clone.
+    vcpkg_download_distfile(
+        _BASIS_UNIVERSAL_PATCHES
+        URLS "https://github.com/BinomialLLC/basis_universal/commit/e9c55faac7745ebf38d08cd3b4f71aaf542f8191.diff"
+        FILENAME "e9c55faac7745ebf38d08cd3b4f71aaf542f8191.patch"
+        SHA512 e5dda11de2ba8cfd39728e69c74a7656bb522e509786fe5673c94b26be9bd4bee897510096479ee6323f5276d34cba1c44c60804a515c0b35ff7b6ac9d625b88
+    )
+    set(_BASIS_VERSION "8565af680d1bd2ad56ab227ca7d96c56dfbe93ed")
+    vcpkg_download_distfile(
+        _BASIS_UNIVERSAL_ARCHIVE
+        URLS "https://github.com/BinomialLLC/basis_universal/archive/${_BASIS_VERSION}.tar.gz"
+        FILENAME "basis-universal-${_BASIS_VERSION}.tar.gz"
+        SHA512 65062ab3ba675c46760f56475a7528189ed4097fb9bab8316e25d9e23ffec2a9560eb9a6897468baf2a6ab2bd698b5907283e96deaeaef178085a47f9d371bb2
+    )
+    vcpkg_extract_source_archive_ex(
+        OUT_SOURCE_PATH _BASIS_UNIVERSAL_SOURCE
+        ARCHIVE ${_BASIS_UNIVERSAL_ARCHIVE}
+        WORKING_DIRECTORY "${SOURCE_PATH}/src/external"
+        PATCHES
+            ${_BASIS_UNIVERSAL_PATCHES})
+    # Remove potentially cached directory which would cause renaming to fail
+    file(REMOVE_RECURSE "${SOURCE_PATH}/src/external/basis-universal")
+    # Rename the output folder so that magnum auto-detects it
+    file(RENAME ${_BASIS_UNIVERSAL_SOURCE} "${SOURCE_PATH}/src/external/basis-universal")
+endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILD_PLUGINS_STATIC 1)
@@ -15,27 +44,33 @@ else()
     set(BUILD_PLUGINS_STATIC 0)
 endif()
 
-# Handle features
-set(_COMPONENT_FLAGS "")
-foreach(_feature IN LISTS ALL_FEATURES)
+# Head only features
+set(ALL_SUPPORTED_FEATURES ${ALL_FEATURES})
+if(NOT VCPKG_USE_HEAD_VERSION)
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES glslangshaderconverter spirvtoolsshaderconverter)
+    message(WARNING "Features glslangshaderconverter and spirvtoolsshaderconverter are not avaliable when building non-head version.")
+endif()
+
+set(_COMPONENTS "")
+# Generate cmake parameters from feature names
+foreach(_feature IN LISTS ALL_SUPPORTED_FEATURES)
     # Uppercase the feature name and replace "-" with "_"
     string(TOUPPER "${_feature}" _FEATURE)
     string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
 
-    # Turn "-DWITH_*=" ON or OFF depending on whether the feature
-    # is in the list.
-    if(_feature IN_LIST FEATURES)
-        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=ON")
-    else()
-        list(APPEND _COMPONENT_FLAGS "-DWITH_${_FEATURE}=OFF")
+    # Final feature is empty, ignore it
+    if(_feature)
+        list(APPEND _COMPONENTS ${_feature} WITH_${_FEATURE})
     endif()
 endforeach()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS ${_COMPONENTS})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
-        ${_COMPONENT_FLAGS}
+        ${FEATURE_OPTIONS}
         -DBUILD_STATIC=${BUILD_PLUGINS_STATIC}
         -DBUILD_PLUGINS_STATIC=${BUILD_PLUGINS_STATIC}
         -DMAGNUM_PLUGINS_DEBUG_DIR=${CURRENT_INSTALLED_DIR}/debug/bin/magnum-d
@@ -71,12 +106,22 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
 else()
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
+    # On windows, plugins are "Modules" that cannot be linked as shared
+    # libraries, but are meant to be loaded at runtime.
+    # While this is handled adequately through the CMake project, the auto-magic
+    # linking with visual studio might try to link the import libs anyway.
+    #
+    # We delete the import libraries here to avoid the auto-magic linking
+    # for plugins which are loaded at runtime.
+    if(WIN32)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
+    endif()
 endif()
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/magnum-plugins)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/magnum-plugins/COPYING ${CURRENT_PACKAGES_DIR}/share/magnum-plugins/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    RENAME copyright)
 
 vcpkg_copy_pdbs()

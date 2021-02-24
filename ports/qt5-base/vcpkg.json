@@ -1,0 +1,44 @@
+{
+  "name": "qt5-base",
+  "version-string": "5.15.2",
+  "port-version": 1,
+  "description": "Qt5 Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "angle",
+      "platform": "!windows"
+    },
+    "double-conversion",
+    "egl-registry",
+    {
+      "name": "fontconfig",
+      "platform": "!windows"
+    },
+    "freetype",
+    "harfbuzz",
+    {
+      "name": "icu",
+      "platform": "!uwp"
+    },
+    "libjpeg-turbo",
+    "libpng",
+    "libpq",
+    "openssl",
+    "pcre2",
+    "sqlite3",
+    "zlib",
+    "zstd"
+  ],
+  "features": {
+    "latest": {
+      "description": "Build latest qt version (5.15.2) instead of LTS (latest and LTS are currently the same)"
+    },
+    "mysqlplugin": {
+      "description": "Build the sql plugin for connecting to mysql databases",
+      "dependencies": [
+        "libmysql"
+      ]
+    }
+  }
+}

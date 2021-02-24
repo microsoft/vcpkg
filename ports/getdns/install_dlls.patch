@@ -1,0 +1,24 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 10d10b99..35761647 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1065,15 +1065,15 @@ if (ENABLE_STATIC)
+   endif ()
+ endif ()
+ if (ENABLE_SHARED)
+-  install(TARGETS getdns_shared LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
++  install(TARGETS getdns_shared LIBRARY DESTINATION lib ARCHIVE DESTINATION lib RUNTIME DESTINATION bin)
+   if (USE_LIBEV)
+-    install(TARGETS getdns_ex_ev_shared LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
++    install(TARGETS getdns_ex_ev_shared LIBRARY DESTINATION lib ARCHIVE DESTINATION lib RUNTIME DESTINATION bin)
+   endif ()
+   if (USE_LIBEVENT2)
+-    install(TARGETS getdns_ex_event_shared LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
++    install(TARGETS getdns_ex_event_shared LIBRARY DESTINATION lib ARCHIVE DESTINATION lib RUNTIME DESTINATION bin)
+   endif ()
+   if (USE_LIBUV)
+-    install(TARGETS getdns_ex_uv_shared LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
++    install(TARGETS getdns_ex_uv_shared LIBRARY DESTINATION lib ARCHIVE DESTINATION lib RUNTIME DESTINATION bin)
+   endif ()
+ endif ()
+ if (BUILD_GETDNS_QUERY)

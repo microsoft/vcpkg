@@ -1,5 +1,7 @@
 Source: atkmm
-Version: 2.24.2-2
+Version: 2.24.2
+Port-Version: 5
 Homepage: https://www.gtkmm.org
 Description: atkmm is the official C++ interface for the ATK accessibility toolkit library. It may be used, for instance, by user interfaces implemented with gtkmm.
 Build-Depends: glib, gettext, atk, glibmm
+Supports: !(osx)

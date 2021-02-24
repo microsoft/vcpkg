@@ -1,0 +1,16 @@
+{
+  "name": "@PORT@",
+  "version-string": "",
+  "homepage": "",
+  "description": "",
+  "dependencies": [],
+
+  "default-features": [],
+  "features": [
+    {
+      "name": "",
+      "description": "",
+      "dependencies": []
+    }
+  ]
+}

@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uriparser/uriparser
-    REF uriparser-0.9.3
-    SHA512 5740e2405566c17c4467a677d83596d86398b64778ad2b5234e9390d8ab817d1b5231988d120b1d19b099788e38814825a438beed991e49b242b8a5de8c51d03
+    REF 25dddb16cf044a7df27884e7ad3911baaaca3d7c # uriparser-0.9.4
+    SHA512 9001649eb027d0ff4f990b20d0f05643939e2bb8ab89d158f32353d6f7c4264a551a6af7856ad13890d05f58b3d15d59e6d82ee0d95b7788c03b34bb52086cd2
     HEAD_REF master
 )
 
@@ -31,21 +29,10 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if(URIPARSER_BUILD_TOOLS)
-    if(CMAKE_HOST_WIN32)
-        set(EXECUTABLE_SUFFIX ".exe")
-    else()
-        set(EXECUTABLE_SUFFIX "")
-    endif()
-
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-    else()
-        file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/uriparse${EXECUTABLE_SUFFIX})
-    endif()
+    vcpkg_copy_tools(
+        TOOL_NAMES uriparse
+        AUTO_CLEAN
+    )
 endif()
 
 set(_package_version_re "#define[ ]+PACKAGE_VERSION[ ]+\"([0-9]+.[0-9]+.[0-9]+)\"")
@@ -70,6 +57,3 @@ file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ur
 # Remove duplicate info
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

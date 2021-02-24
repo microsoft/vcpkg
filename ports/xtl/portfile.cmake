@@ -1,12 +1,10 @@
 # header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO QuantStack/xtl
-    REF 0d1f896ba90664248279baaea0059699cff5ab9b
-    SHA512 8375dc3c64d49b1722bdb579b397f296ae28042fd41b2e0556b3ad53b8b3615c250096aa09f1997d964285f6969d599d49e3b9204b45877af858c9a463619ab2
+    REPO xtensor-stack/xtl
+    REF 6c017f4a81a59bd52008025a785ce745e5b7f49c # 0.6.21
+    SHA512 f007196a38da267b6f457ce587220b60686b1c23670ab03d5f0516bb3b8c7b1e5b8859d57255e96f713bfc08a46d38dd497e55afc17fa40f2b653073690093c9
     HEAD_REF master
 )
 
@@ -24,5 +22,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,0 +1,11 @@
+{
+  "name": "coroutine",
+  "version-string": "1.5.0",
+  "port-version": 1,
+  "description": "C++ 20 Coroutines helper/example library",
+  "homepage": "https://github.com/luncliff/coroutine",
+  "supports": "!uwp",
+  "dependencies": [
+    "ms-gsl"
+  ]
+}

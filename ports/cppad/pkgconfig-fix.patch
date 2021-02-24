@@ -1,0 +1,63 @@
+diff --git a/pkgconfig/CMakeLists.txt b/pkgconfig/CMakeLists.txt
+index db8b65902..b1224a01d 100644
+--- a/pkgconfig/CMakeLists.txt
++++ b/pkgconfig/CMakeLists.txt
+@@ -42,8 +42,9 @@ ENDIF( cppad_has_ipopt )
+ # cppad_pkgconfig_cflags
+ # cppad_pkgconfig_cflags_uninstalled
+ #
+-SET(cppad_pkgconfig_cflags             "-I${cppad_abs_includedir}" )
+-SET(cppad_pkgconfig_cflags_uninstalled "-I${cppad_SOURCE_DIR}"     )
++SET(cppad_pkgconfig_includedir          "${cmake_install_includedirs}" )
++SET(cppad_pkgconfig_cflags_uninstalled  "-I${cppad_SOURCE_DIR}"        )
++SET(cppad_pkgconfig_libdir              "${cmake_install_libdirs}"     )
+ # ----------------------------------------------------------------------------
+ # cppad_pkgconfig_libs
+ # cppad_pkgconfig_libs_uninstalled
+@@ -74,7 +75,7 @@ IF( "${libs}" STREQUAL "" )
+     SET(cppad_pkgconfig_libs             "")
+     SET(cppad_pkgconfig_libs_uninstalled "")
+ ELSE( "${libs}" STREQUAL "" )
+-    SET(cppad_pkgconfig_libs             "-L${cppad_abs_libdir} ${libs}")
++    SET(cppad_pkgconfig_libs             "-L\${libdir} ${libs}")
+     SET(cppad_pkgconfig_libs_uninstalled "${uninstalled} ${libs}")
+ ENDIF( "${libs}" STREQUAL "" )
+ #
+@@ -84,10 +85,12 @@ ENDIF( "${libs}" STREQUAL "" )
+ CONFIGURE_FILE(
+     ${CMAKE_CURRENT_SOURCE_DIR}/cppad.pc.in
+     ${CMAKE_CURRENT_BINARY_DIR}/cppad.pc
++    @ONLY
+ )
+ CONFIGURE_FILE(
+     ${CMAKE_CURRENT_SOURCE_DIR}/cppad-uninstalled.pc.in
+     ${CMAKE_CURRENT_BINARY_DIR}/cppad-uninstalled.pc
++    @ONLY
+ )
+ # During install copy cppad.pc to datadir and libdir
+ INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/cppad.pc
+diff --git a/pkgconfig/cppad.pc.in b/pkgconfig/cppad.pc.in
+index a202e3fb3..1c34c1e08 100644
+--- a/pkgconfig/cppad.pc.in
++++ b/pkgconfig/cppad.pc.in
+@@ -12,12 +12,19 @@
+ # This file is used with pkg-config to include CppAD after it is installed
+ #
+ # Entries set by top source directory CMakeLists.txt file
++
++prefix=${pcfiledir}/../..
++exec_prefix=${prefix}
++libdir=${exec_prefix}/@cppad_pkgconfig_libdir@
++includedir=${prefix}/@cppad_pkgconfig_includedir@
++
+ Name:         cppad
+ Description:  @cppad_description@
+ Version:      @cppad_version@
+ URL:          @cppad_url@
++
+ #
+ # Entries set by pkgconfig/CMakeLists.txt file
+-Cflags:       @cppad_pkgconfig_cflags@
++Cflags:       -I${includedir}
+ Libs:         @cppad_pkgconfig_libs@
+ Requires:     @cppad_pkgconfig_requires@

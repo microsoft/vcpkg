@@ -1,9 +1,6 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP" ON_ARCH "x86")
 
-if (VCPKG_CMAKE_SYSTEM_NAME)
-    # The library supports Linux/Darwin/BSD, it is just not yet added here
-    message(FATAL_ERROR "vcpkg libfabric currently suports windows.  Please consider a pull request to add additional support!")
-endif()
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,10 +11,6 @@ vcpkg_from_github(
     PATCHES
       add_additional_includes.patch
 )
-
-if(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-   message(FATAL_ERROR "VCPKG BUILD ERROR: libfabric only supports x64")
-endif()
 
 set(LIBFABRIC_RELEASE_CONFIGURATION "Release-v141")
 set(LIBFABRIC_DEBUG_CONFIGURATION "Debug-v141")
@@ -43,4 +36,4 @@ file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
 file(RENAME ${CURRENT_PACKAGES_DIR}/includetemp ${CURRENT_PACKAGES_DIR}/include/libfabric)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libfabric RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,70 +1,79 @@
-## # vcpkg_from_gitlab
-##
-## Download and extract a project from Gitlab instances. Enables support for `install --head`.
-##
-## ## Usage:
-## ```cmake
-## vcpkg_from_gitlab(
-##     GITLAB_URL <https://gitlab.com>
-##     OUT_SOURCE_PATH <SOURCE_PATH>
-##     REPO <gitlab-org/gitlab-ce>
-##     [REF <v10.7.3>]
-##     [SHA512 <45d0d7f8cc350...>]
-##     [HEAD_REF <master>]
-##     [PATCHES <patch1.patch> <patch2.patch>...]
-## )
-## ```
-##
-## ## Parameters:
-##
-## ### GITLAB_URL
-## The URL of the Gitlab instance to use.
-##
-## ### OUT_SOURCE_PATH
-## Specifies the out-variable that will contain the extracted location.
-##
-## This should be set to `SOURCE_PATH` by convention.
-##
-## ### REPO
-## The organization or user plus the repository name on the Gitlab instance.
-##
-## ### REF
-## A stable git commit-ish (ideally a tag) that will not change contents. **This should not be a branch.**
-##
-## For repositories without official releases, this can be set to the full commit id of the current latest master.
-##
-## If `REF` is specified, `SHA512` must also be specified.
-##
-## ### SHA512
-## The SHA512 hash that should match the archive (${GITLAB_URL}/${REPO}/-/archive/${REF}/${REPO_NAME}-${REF}.tar.gz).
-## The REPO_NAME variable is parsed from the value of REPO.
-##
-## This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
-##
-## ### HEAD_REF
-## The unstable git commit-ish (ideally a branch) to pull for `--head` builds.
-##
-## For most projects, this should be `master`. The chosen branch should be one that is expected to be always buildable on all supported platforms.
-##
-## ### PATCHES
-## A list of patches to be applied to the extracted sources.
-##
-## Relative paths are based on the port directory.
-##
-## ## Notes:
-## At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.
-##
-## This exports the `VCPKG_HEAD_VERSION` variable during head builds.
-##
-## ## Examples:
-## * [curl][https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake#L75]
-## * [folly](https://github.com/Microsoft/vcpkg/blob/master/ports/folly/portfile.cmake#L15)
-## * [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
-##
+#[===[.md:
+# vcpkg_from_gitlab
+
+Download and extract a project from Gitlab instances. Enables support for `install --head`.
+
+## Usage:
+```cmake
+vcpkg_from_gitlab(
+    GITLAB_URL <https://gitlab.com>
+    OUT_SOURCE_PATH <SOURCE_PATH>
+    REPO <gitlab-org/gitlab-ce>
+    [REF <v10.7.3>]
+    [SHA512 <45d0d7f8cc350...>]
+    [HEAD_REF <master>]
+    [PATCHES <patch1.patch> <patch2.patch>...]
+    [FILE_DISAMBIGUATOR <N>]
+)
+```
+
+## Parameters:
+
+### GITLAB_URL
+The URL of the Gitlab instance to use.
+
+### OUT_SOURCE_PATH
+Specifies the out-variable that will contain the extracted location.
+
+This should be set to `SOURCE_PATH` by convention.
+
+### REPO
+The organization or user plus the repository name on the Gitlab instance.
+
+### REF
+A stable git commit-ish (ideally a tag) that will not change contents. **This should not be a branch.**
+
+For repositories without official releases, this can be set to the full commit id of the current latest master.
+
+If `REF` is specified, `SHA512` must also be specified.
+
+### SHA512
+The SHA512 hash that should match the archive (${GITLAB_URL}/${REPO}/-/archive/${REF}/${REPO_NAME}-${REF}.tar.gz).
+The REPO_NAME variable is parsed from the value of REPO.
+
+This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
+
+### HEAD_REF
+The unstable git commit-ish (ideally a branch) to pull for `--head` builds.
+
+For most projects, this should be `master`. The chosen branch should be one that is expected to be always buildable on all supported platforms.
+
+### PATCHES
+A list of patches to be applied to the extracted sources.
+
+Relative paths are based on the port directory.
+
+### FILE_DISAMBIGUATOR
+A token to uniquely identify the resulting filename if the SHA512 changes even though a git ref does not, to avoid stepping on the same file name.
+
+## Notes:
+At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.
+
+This exports the `VCPKG_HEAD_VERSION` variable during head builds.
+
+## Examples:
+* [curl][https://github.com/Microsoft/vcpkg/blob/master/ports/curl/portfile.cmake#L75]
+* [folly](https://github.com/Microsoft/vcpkg/blob/master/ports/folly/portfile.cmake#L15)
+* [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
+#]===]
+
+include(vcpkg_execute_in_download_mode)
+
 function(vcpkg_from_gitlab)
-    set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF)
+    set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF FILE_DISAMBIGUATOR)
     set(multipleValuesArgs PATCHES)
-    cmake_parse_arguments(_vdud "" "${oneValueArgs}" "${multipleValuesArgs}" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _vdud "" "${oneValueArgs}" "${multipleValuesArgs}")
 
     if(NOT DEFINED _vdud_GITLAB_URL)
         message(FATAL_ERROR "GITLAB_URL must be specified.")
@@ -91,9 +100,22 @@ function(vcpkg_from_gitlab)
         set(VCPKG_USE_HEAD_VERSION OFF)
     endif()
 
-    string(REGEX REPLACE ".*/" "" REPO_NAME ${_vdud_REPO})
-    string(REGEX REPLACE "/.*" "" ORG_NAME ${_vdud_REPO})
-
+    string(REPLACE "/" ";" GITLAB_REPO_LINK ${_vdud_REPO})
+    
+    list(LENGTH GITLAB_REPO_LINK len)
+    if(${len} EQUAL "2")
+		list(GET GITLAB_REPO_LINK 0 ORG_NAME)
+		list(GET GITLAB_REPO_LINK 1 REPO_NAME)
+		set(GITLAB_LINK ${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME})
+	endif()
+	
+	if(${len} EQUAL "3")
+		list(GET GITLAB_REPO_LINK 0 ORG_NAME)
+		list(GET GITLAB_REPO_LINK 1 GROUP_NAME)
+		list(GET GITLAB_REPO_LINK 2 REPO_NAME)
+		set(GITLAB_LINK ${_vdud_GITLAB_URL}/${ORG_NAME}/${GROUP_NAME}/${REPO_NAME})
+	endif()
+    
     # Handle --no-head scenarios
     if(NOT VCPKG_USE_HEAD_VERSION)
         if(NOT _vdud_REF)
@@ -101,11 +123,17 @@ function(vcpkg_from_gitlab)
         endif()
 
         string(REPLACE "/" "-" SANITIZED_REF "${_vdud_REF}")
+        set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_REF}")
+        if (_vdud_FILE_DISAMBIGUATOR)
+            set(downloaded_file_name "${downloaded_file_name}-${_vdud_FILE_DISAMBIGUATOR}")
+        endif()
+
+        set(downloaded_file_name "${downloaded_file_name}.tar.gz")
 
         vcpkg_download_distfile(ARCHIVE
-            URLS "${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME}/-/archive/${_vdud_REF}/${REPO_NAME}-${_vdud_REF}.tar.gz"
+            URLS "${GITLAB_LINK}/-/archive/${_vdud_REF}/${REPO_NAME}-${_vdud_REF}.tar.gz"
             SHA512 "${_vdud_SHA512}"
-            FILENAME "${ORG_NAME}-${REPO_NAME}-${SANITIZED_REF}.tar.gz"
+            FILENAME "${downloaded_file_name}"
         )
 
         vcpkg_extract_source_archive_ex(
@@ -120,7 +148,7 @@ function(vcpkg_from_gitlab)
     endif()
 
     # The following is for --head scenarios
-    set(URL "${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME}/-/archive/${_vdud_HEAD_REF}/${_vdud_HEAD_REF}.tar.gz")
+    set(URL "${GITLAB_LINK}/-/archive/${_vdud_HEAD_REF}/${_vdud_HEAD_REF}.tar.gz")
     string(REPLACE "/" "-" SANITIZED_HEAD_REF "${_vdud_HEAD_REF}")
     set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_HEAD_REF}.tar.gz")
     set(downloaded_file_path "${DOWNLOADS}/${downloaded_file_name}")
@@ -150,8 +178,8 @@ function(vcpkg_from_gitlab)
     endif()
 
     # There are issues with the Gitlab API project paths being URL-escaped, so we use git here to get the head revision
-    _execute_process(COMMAND ${GIT} ls-remote
-        "${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME}.git" "${_vdud_HEAD_REF}"
+    vcpkg_execute_in_download_mode(COMMAND ${GIT} ls-remote
+        "${GITLAB_LINK}.git" "${_vdud_HEAD_REF}"
         RESULT_VARIABLE _git_result
         OUTPUT_VARIABLE _git_output
     )

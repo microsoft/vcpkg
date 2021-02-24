@@ -1,32 +1,30 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO erincatto/Box2D
-    REF 374664b2a4ce2e7c24fbad6e1ed34bebcc9ab6bc
-    SHA512 39074bab01b36104aa685bfe39b40eb903d9dfb54cc3ba8098125db5291f55a8a9e578fc59563b2e8743abbbb26f419be7ae1524e235e7bd759257f99ff96bda
+    REF 4d7757feedc9dd36f64393ae08acfd3b9600ac17  #v2.4.0
+    SHA512 197f701016c91fda944328e7d867f0a5baa152cce53fa35826986923456af593595bad884008944e041d9ac2e1d769a54eaad4142e19b42a3bb2a2010d814cc9
     HEAD_REF master
+    PATCHES
+        export-targets.patch
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DBUILD_TESTS=OFF
+        -DBUILD_SAMPLES=OFF
 )
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-box2d TARGET_PATH share/unofficial-box2d)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(
-    COPY ${SOURCE_PATH}/Box2D/Box2D
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    FILES_MATCHING PATTERN "*.h"
-)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-box2d TARGET_PATH share/unofficial-box2d)
 
 vcpkg_copy_pdbs()
 
-file(COPY ${SOURCE_PATH}/Box2D/License.txt ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/box2d)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/box2d/License.txt ${CURRENT_PACKAGES_DIR}/share/box2d/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

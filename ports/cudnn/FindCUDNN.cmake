@@ -26,18 +26,23 @@ include(FindPackageHandleStandardArgs)
 
 if(NOT CUDNN_INCLUDE_DIR)
   find_path(CUDNN_INCLUDE_DIR cudnn.h
-    HINTS ${CUDA_HOME} ${CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN}
+    HINTS ${CUDA_HOME} ${CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR}
     PATH_SUFFIXES cuda/include include)
 endif()
 
 if(NOT CUDNN_LIBRARY)
   find_library(CUDNN_LIBRARY cudnn
-    HINTS ${CUDA_HOME} ${CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN}
+    HINTS ${CUDA_HOME} ${CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR}
     PATH_SUFFIXES lib lib64 cuda/lib cuda/lib64 lib/x64)
 endif()
 
 if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn.h")
   file(READ ${CUDNN_INCLUDE_DIR}/cudnn.h CUDNN_HEADER_CONTENTS)
+  if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn_version.h")
+    file(READ "${CUDNN_INCLUDE_DIR}/cudnn_version.h" CUDNN_VERSION_H_CONTENTS)
+    string(APPEND CUDNN_HEADER_CONTENTS "${CUDNN_VERSION_H_CONTENTS}")
+    unset(CUDNN_VERSION_H_CONTENTS)
+  endif()
     string(REGEX MATCH "define CUDNN_MAJOR * +([0-9]+)"
                  CUDNN_VERSION_MAJOR "${CUDNN_HEADER_CONTENTS}")
     string(REGEX REPLACE "define CUDNN_MAJOR * +([0-9]+)" "\\1"

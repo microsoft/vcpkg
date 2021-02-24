@@ -1,18 +1,29 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/breakpad
-    REF c46151db0ffd1a8dae914e45f1212ef427f61ed3
-    SHA512 bd9f247851a3caa6f36574c8a243c2a01cb1cf23c2266b6f6786b85c7418dba5937363c00184e26cda24225f96bb7aaeb08efd13d6a269a3b78c357c2eda7e14
+    REF 9c4671f2e3a63c0f155d9b2511192d0b5fa7f760 # accessed on 2020-09-14
+    SHA512 4c9ed9b675a772f9a6a84692865381130901820cb395b725511e7a9e2cbf4aaa5212a9ef5f87086baf58bb9d729082232b564bd827a205f87b5c1ffc1c53892a
     HEAD_REF master
-	PATCHES
-		fix-unique_ptr.patch
+    PATCHES
+        fix-unique_ptr.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+if(VCPKG_HOST_IS_LINUX)
+    vcpkg_from_git(
+        OUT_SOURCE_PATH LSS_SOURCE_PATH
+        URL https://chromium.googlesource.com/linux-syscall-support
+        REF 7bde79cc274d06451bf65ae82c012a5d3e476b5a
+    )
+    
+    file(RENAME ${LSS_SOURCE_PATH} ${SOURCE_PATH}/src/third_party/lss)
+endif()
+
+file(
+    COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt ${CMAKE_CURRENT_LIST_DIR}/check_getcontext.cc
+    DESTINATION ${SOURCE_PATH}
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -25,4 +36,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-breakpad TARGET_PATH shar
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/breakpad RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

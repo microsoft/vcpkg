@@ -1,0 +1,25 @@
+diff --git a/mad.h b/mad.h
+index 9ef6cc8..5e3f7aa 100644
+--- a/mad.h
++++ b/mad.h
+@@ -24,7 +24,11 @@
+ extern "C" {
+ # endif
+ 
++#ifdef _WIN64
++# define FPM_64BIT
++#else
+ # define FPM_INTEL
++#endif
+ 
+ 
+ 
+@@ -184,7 +188,7 @@ typedef mad_fixed_t mad_sample_t;
+ 
+ # elif defined(FPM_INTEL)
+ 
+-#  if defined(_MSC_VER)
++#  if defined(_MSC_VER) && defined(_M_IX86)
+ #   pragma warning(push)
+ #   pragma warning(disable: 4035)  /* no return value */
+ static __forceinline

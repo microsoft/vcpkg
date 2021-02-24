@@ -1,15 +1,18 @@
-include(vcpkg_common_functions)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jbeder/yaml-cpp
-    REF yaml-cpp-0.6.2
-    SHA512 fea8ce0a20a00cbc75023d1db442edfcd32d0ac57a3c41b32ec8d56f87cc1d85d7dd7a923ce662f5d3a315f91a736d6be0d649997acd190915c1d68cc93795e4
+    REF 9a3624205e8774953ef18f57067b3426c1c5ada6 #v0.6.3
+    SHA512 9bd0f05b882beed748eddb5d615bf356b7d1f31c4e3a4bbf80a6bdeb30b33fa1e0ccf596161a489169e6a111a3112e371d8d00514a0bfd02e6a6a11513904bed
     HEAD_REF master
     PATCHES
-        0001-noexcept.patch
-        0002-fix-include-path.patch
-        0003-cxx-std-features.patch
+        fix-include-path.patch
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(YAML_BUILD_SHARED_LIBS ON)
+else()
+    set(YAML_BUILD_SHARED_LIBS OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -17,6 +20,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DYAML_CPP_BUILD_TOOLS=OFF
         -DYAML_CPP_BUILD_TESTS=OFF
+        -DYAML_BUILD_SHARED_LIBS=${YAML_BUILD_SHARED_LIBS}
 )
 
 vcpkg_install_cmake()
@@ -40,5 +44,4 @@ endif()
 file(WRITE ${CURRENT_PACKAGES_DIR}/include/yaml-cpp/dll.h "${DLL_H}")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/yaml-cpp)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/LICENSE ${CURRENT_PACKAGES_DIR}/share/yaml-cpp/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

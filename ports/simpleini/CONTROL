@@ -1,3 +1,4 @@
 Source: simpleini
-Version: 2018-08-31-2
+Version: 2018-08-31-4
+Homepage: https://github.com/brofield/simpleini
 Description: Cross-platform C++ library providing a simple API to read and write INI-style configuration files

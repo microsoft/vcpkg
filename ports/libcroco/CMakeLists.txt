@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.11)
 project(libcroco C)
 
-find_package(unofficial-iconv REQUIRED)
-find_package(unofficial-gettext CONFIG REQUIRED)
+find_package(Iconv REQUIRED)
+find_package(Intl REQUIRED)
 find_package(unofficial-glib CONFIG REQUIRED)
 find_package(LibXml2 REQUIRED)
 if(NOT WIN32)
@@ -76,7 +76,7 @@ target_link_libraries(croco-0.6 PRIVATE
     unofficial::glib::glib
     unofficial::glib::gmodule
     unofficial::glib::gobject
-    ${LIBXML2_LIBRARIES}
+    ${LIBXML2_LIBRARIES} ${Intl_LIBRARIES} Iconv::Iconv
 )
 
 install(TARGETS croco-0.6
@@ -127,8 +127,8 @@ install(
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-libcroco-config.cmake "
 include(CMakeFindDependencyMacro)
-find_dependency(unofficial-gettext)
-find_dependency(unofficial-iconv CONFIG)
+find_dependency(Intl)
+find_dependency(Iconv)
 find_dependency(unofficial-glib CONFIG)
 find_dependency(LibXml2)
 if(NOT WIN32)

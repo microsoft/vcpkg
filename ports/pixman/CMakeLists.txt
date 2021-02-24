@@ -50,7 +50,7 @@ set(PIXMAN_DEFS
     PACKAGE_BUGREPORT=""
 )
 
-if(VCPKG_TARGET_TRIPLET STREQUAL arm64-windows OR VCPKG_TARGET_TRIPLET STREQUAL arm-windows)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
     # don't enable SSE2 for arm64-windows and arm-windows
 else()
     # The USE_SSE2 definition lets it use SSE2 instructions for speed. Every x86/64 target machine should have SSE2 these days.
@@ -63,7 +63,7 @@ add_library(pixman-1 ${SOURCES})
 target_include_directories(pixman-1 PUBLIC $<INSTALL_INTERFACE:include>)
 target_compile_definitions(pixman-1 ${PIXMAN_DEFS})
 
-if(UNIX AND CMAKE_SIZEOF_VOID_P EQUAL 4)
+if(USE_SSE2 AND UNIX AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     target_compile_options(pixman-1 PRIVATE -msse2)
 endif()
 

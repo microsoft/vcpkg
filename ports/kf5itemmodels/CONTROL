@@ -1,0 +1,5 @@
+Source: kf5itemmodels
+Version: 5.64.0
+Homepage: https://api.kde.org/frameworks/kitemmodels/html/index.html
+Description: Models for Qt Model/View system
+Build-Depends: ecm, qt5-tools, qt5-base

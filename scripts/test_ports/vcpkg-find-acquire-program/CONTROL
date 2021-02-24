@@ -1,0 +1,4 @@
+Source: vcpkg-find-acquire-program
+Version: 0
+Description: Test port to exercise vcpkg_find_acquire_program
+Supports: windows

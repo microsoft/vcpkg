@@ -11,7 +11,7 @@ index 7872fc8..2a06614 100644
 +    find_path(GLOG_INCLUDE_DIRS logging.h PATH_SUFFIXES glog)
 +    find_package(Libevent CONFIG REQUIRED)
 +    list(APPEND DEPENDENT_INCLUDE_DIRS "${GLOG_INCLUDE_DIRS}/../")
-+    SET(DEPENDENT_LIBRARIES event_static event_core_static event_extra_static event_openssl_static glog::glog pthread)
++    SET(DEPENDENT_LIBRARIES libevent::core libevent::extra libevent::openssl glog::glog pthread)
  else (UNIX)
      SET(DEPENDENT_LIBRARIES event glog)
  endif (UNIX)
@@ -24,7 +24,7 @@ index 469ed1c..8219424 100644
  
  if (UNIX)
 -set(LIBRARIES evpp_concurrentqueue event glog pthread)
-+set(LIBRARIES evpp_concurrentqueue event_static event_core_static event_extra_static event_openssl_static glog::glog pthread)
++set(LIBRARIES evpp_concurrentqueue libevent::core libevent::extra libevent::openssl glog::glog pthread)
  link_directories("/home/s/safe/lib" ${PROJECT_BUILD_DIR}/lib)
  else(UNIX)
  set(LIBRARIES evpp_static event glog)
@@ -36,7 +36,7 @@ index 1148616..0356b71 100644
  
  add_executable(benchmark_http_libevent libevent_http_bench.c)
 -target_link_libraries(benchmark_http_libevent event)
-+target_link_libraries(benchmark_http_libevent event_static event_core_static event_extra_static event_openssl_static)
++target_link_libraries(benchmark_http_libevent libevent::core libevent::extra libevent::openssl)
 diff --git a/benchmark/ioevent/libevent/CMakeLists.txt b/benchmark/ioevent/libevent/CMakeLists.txt
 index dfa51a3..de4849d 100644
 --- a/benchmark/ioevent/libevent/CMakeLists.txt
@@ -45,7 +45,7 @@ index dfa51a3..de4849d 100644
  
  add_executable(benchmark_ioevent_libevent libevent_ioevent_bench.c)
 -target_link_libraries(benchmark_ioevent_libevent event)
-+target_link_libraries(benchmark_ioevent_libevent event_static event_core_static event_extra_static event_openssl_static)
++target_link_libraries(benchmark_ioevent_libevent libevent::core libevent::extra libevent::openssl)
 diff --git a/benchmark/throughput/libevent/CMakeLists.txt b/benchmark/throughput/libevent/CMakeLists.txt
 index 21dab84..aefe698 100644
 --- a/benchmark/throughput/libevent/CMakeLists.txt
@@ -53,11 +53,11 @@ index 21dab84..aefe698 100644
 @@ -1,5 +1,5 @@
  add_executable(benchmark_tcp_libevent_client client.c)
 -target_link_libraries(benchmark_tcp_libevent_client event)
-+target_link_libraries(benchmark_tcp_libevent_client event_static event_core_static event_extra_static event_openssl_static)
++target_link_libraries(benchmark_tcp_libevent_client libevent::core libevent::extra libevent::openssl)
  
  add_executable(benchmark_tcp_libevent_server server.c)
 -target_link_libraries(benchmark_tcp_libevent_server event)
-+target_link_libraries(benchmark_tcp_libevent_server event_static event_core_static event_extra_static event_openssl_static)
++target_link_libraries(benchmark_tcp_libevent_server libevent::core libevent::extra libevent::openssl)
 diff --git a/examples/recipes/self_control_timer/basic_01/CMakeLists.txt b/examples/recipes/self_control_timer/basic_01/CMakeLists.txt
 index 7834db4..82294c5 100644
 --- a/examples/recipes/self_control_timer/basic_01/CMakeLists.txt
@@ -67,7 +67,7 @@ index 7834db4..82294c5 100644
  
  add_executable(example_recipes_self_control_timer_basic_01 ${SRCS})
 -target_link_libraries(example_recipes_self_control_timer_basic_01 event)
-+target_link_libraries(example_recipes_self_control_timer_basic_01 event_static event_core_static event_extra_static event_openssl_static)
++target_link_libraries(example_recipes_self_control_timer_basic_01 libevent::core libevent::extra libevent::openssl)
  
  
  
@@ -80,7 +80,7 @@ index a8be419..0329ccc 100644
  
  add_executable(example_recipes_self_control_timer_basic_02 ${SRCS})
 -target_link_libraries(example_recipes_self_control_timer_basic_02 event)
-+target_link_libraries(example_recipes_self_control_timer_basic_02 event_static event_core_static event_extra_static event_openssl_static)
++target_link_libraries(example_recipes_self_control_timer_basic_02 libevent::core libevent::extra libevent::openssl)
  
  
  
@@ -93,7 +93,7 @@ index 1cae9bb..218b771 100644
  
  add_executable(example_recipes_self_control_timer_cancel_03 ${SRCS})
 -target_link_libraries(example_recipes_self_control_timer_cancel_03 event)
-+target_link_libraries(example_recipes_self_control_timer_cancel_03 event_static event_core_static event_extra_static event_openssl_static)
++target_link_libraries(example_recipes_self_control_timer_cancel_03 libevent::core libevent::extra libevent::openssl)
  
  
  
@@ -106,7 +106,7 @@ index 749c584..e7c658e 100644
  
  add_executable(example_recipes_self_control_timer_periodic_04 ${SRCS})
 -target_link_libraries(example_recipes_self_control_timer_periodic_04 event)
-+target_link_libraries(example_recipes_self_control_timer_periodic_04 event_static event_core_static event_extra_static event_openssl_static)
++target_link_libraries(example_recipes_self_control_timer_periodic_04 libevent::core libevent::extra libevent::openssl)
  
  
  

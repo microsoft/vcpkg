@@ -1,15 +1,7 @@
-include(vcpkg_common_functions)
 
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "UWP" "Linux" "OSX")
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     set(PLATFORM x86)
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(PLATFORM x64)
-else()
-    message(FATAL_ERROR "Unsupported architecture")
-endif()
-
-if(VCPKG_CMAKE_SYSTEM_NAME)
-    message(FATAL_ERROR "Unsupported platform. ECSUTIL currently only supports windows desktop.")
 endif()
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -28,8 +20,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO EMCECS/ecs-object-client-windows-cpp
-    REF v1.0.7.3
-    SHA512 b678a784f26c8ac5fdac6f2be2c7fe2a2e1b0152d5cc21e629a077fce8dd9a72db46a348e4024a31273d45833f002a7823957295ec74392500ba069e8da8555d
+    REF af9fd3cc0be5eacfeb431ca4607d3b73dd318353 # v1.0.7.15
+    SHA512 091f4b4870d5bdcbd46c35b2d75e927c9da69e2aba9a24b36504ab9fa3e33fba6eec2a8a5b649fc3ad793e3043c3f2702b753341f74d87de1a7f96c251839c69
     HEAD_REF master
 )
 

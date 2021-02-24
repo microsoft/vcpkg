@@ -1,0 +1,22 @@
+diff --git a/cmake/LibeventConfig.cmake.in b/cmake/LibeventConfig.cmake.in
+index 7b808c3..9376a5a 100644
+--- a/cmake/LibeventConfig.cmake.in
++++ b/cmake/LibeventConfig.cmake.in
+@@ -58,7 +58,7 @@ endif()
+ 
+ # Get the path of the current file.
+ get_filename_component(LIBEVENT_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+-get_filename_component(_INSTALL_PREFIX "${LIBEVENT_CMAKE_DIR}/../../.." ABSOLUTE)
++get_filename_component(_INSTALL_PREFIX "${LIBEVENT_CMAKE_DIR}/../.." ABSOLUTE)
+ 
+ macro(message_if_needed _flag _msg)
+     if (NOT ${CMAKE_FIND_PACKAGE_NAME}_FIND_QUIETLY)
+@@ -131,7 +131,7 @@ if(CONFIG_FOR_INSTALL_TREE)
+         find_library(_event_lib
+                     NAMES "event_${_comp}"
+                     PATHS "${_INSTALL_PREFIX}/lib"
+-                    NO_DEFAULT_PATH)
++                    )
+         if(_event_lib)
+             list(APPEND LIBEVENT_LIBRARIES "libevent::${_comp}")
+             set_case_insensitive_found(${_comp})

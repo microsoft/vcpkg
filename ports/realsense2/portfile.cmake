@@ -1,17 +1,20 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF v2.22.0
-    SHA512 7595780c1955a2d4a91df5b70ab6366c672f389bc3d2dcb9f2e78a2ea1fc875c65f878103df483205e17f62dfd024ee5f7ccb15afc5d18978d3c25aa071652ab
-    HEAD_REF development
+    REF aae6f315ce80ff80df5bc9439b4ee852187533c1 #v2.40.0
+    SHA512 6d8d0837bd2d502a84e4a8193a9bf5f2cb27c1ca97fceffc9d5bc81c6ed5a2d2b5c79e2fc3446f34425d3db0693de02c561b9ba276e59598b33d928f0799fba4
+    HEAD_REF master
     PATCHES
         fix_openni2.patch
         fix-dependency-glfw3.patch
 )
 
+file(COPY ${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf DESTINATION ${SOURCE_PATH})
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    tm2   BUILD_WITH_TM2
+)
 
 set(BUILD_TOOLS OFF)
 if("tools" IN_LIST FEATURES)
@@ -23,17 +26,22 @@ if(("openni2" IN_LIST FEATURES) AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
   set(BUILD_OPENNI2_BINDINGS ON)
 endif()
 
+set(PLATFORM_OPTIONS)
+if (VCPKG_TARGET_IS_ANDROID)
+    list(APPEND PLATFORM_OPTIONS -DFORCE_RSUSB_BACKEND=ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DENFORCE_METADATA=ON
-        -DBUILD_WITH_TM2=OFF
         -DBUILD_WITH_OPENMP=OFF
         -DBUILD_UNIT_TESTS=OFF
         -DBUILD_WITH_STATIC_CRT=${BUILD_CRT_LINKAGE}
         -DBUILD_OPENNI2_BINDINGS=${BUILD_OPENNI2_BINDINGS}
         -DOPENNI2_DIR=${CURRENT_INSTALLED_DIR}/include/openni2
+        ${PLATFORM_OPTIONS}
     OPTIONS_RELEASE
         -DBUILD_EXAMPLES=${BUILD_TOOLS}
         -DBUILD_GRAPHICAL_EXAMPLES=${BUILD_TOOLS}
@@ -47,7 +55,6 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/realsense2)
 
 vcpkg_copy_pdbs()
-
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
@@ -76,10 +83,11 @@ if(BUILD_TOOLS)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/realsense2-gl.pdb)
 endif()
 
-
 if(BUILD_OPENNI2_BINDINGS)
-  file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_out/rs2driver* 
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers)
+    file(GLOB RS2DRIVER ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/_out/rs2driver*)
+    if(RS2DRIVER)
+        file(COPY ${RS2DRIVER} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/openni2/OpenNI2/Drivers)
+    endif()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

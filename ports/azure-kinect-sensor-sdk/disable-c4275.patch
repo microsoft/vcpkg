@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e36009e..58a092e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -117,7 +117,7 @@ endif()
+ # add jpeg-turbo library to jpeg libraries.
+ set(JPEG_LIBRARIES ${JPEG_LIBRARIES} ${JPEG_TURBO})
+ # Fix embl error
+-add_compile_options(/wd4828 /wd4251)
++add_compile_options(/wd4828 /wd4251 /wd4275)
+ 
+ # Find all dependencies
+ add_subdirectory(extern)

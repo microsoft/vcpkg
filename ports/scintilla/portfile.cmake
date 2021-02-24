@@ -1,16 +1,24 @@
-include(vcpkg_common_functions)
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX" "UWP")
 
 vcpkg_download_distfile(ARCHIVE
-  URLS "http://www.scintilla.org/scintilla412.zip"
-  FILENAME "scintilla412.zip"
-  SHA512 10e24a2def5b3104b0f2eec473c53edb0a0cc19fbbef261e460a77415ec68ff83f9ee20c76cda7987627708c1d4ead5f964d4d5a98929d8256280bfa9bd0cddc
+  URLS "https://www.scintilla.org/scintilla445.zip"
+  FILENAME "scintilla445.zip"
+  SHA512 bac25ee6e9b1ab3602a6fbf2f28f046f6da5c45dfd6e882df250760a254517ee9b05d95b816234b5145553f0a8da92016d7839a50624543c52fde7539ea08259
 )
+
+if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+  list(APPEND PATCHES 0001-static-lib.patch)
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL "static")
+  list(APPEND PATCHES 0002-static-crt.patch)
+endif()
+
 vcpkg_extract_source_archive_ex(
   OUT_SOURCE_PATH SOURCE_PATH
   ARCHIVE ${ARCHIVE}
-  REF 4.1.2
+  REF 4.4.5
+  PATCHES ${PATCHES}
 )
 
 vcpkg_install_msbuild(

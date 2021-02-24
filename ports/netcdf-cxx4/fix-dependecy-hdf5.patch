@@ -1,0 +1,41 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 60c699d..f06fcc0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -395,14 +395,20 @@ ENDIF(NC_HAS_DEF_VAR_FILTER)
+ ###
+ # Find HDF5
+ ###
+-IF(MSVC)
++IF(0)
+   SET(SEARCH_PACKAGE_NAME ${HDF5_PACKAGE_NAME})
+   FIND_PACKAGE(HDF5 NAMES ${SEARCH_PACKAGE_NAME} COMPONENTS C HL NO_MODULES REQUIRED ${NC_HDF5_LINK_TYPE})
+ ELSE(MSVC)
+-  FIND_PACKAGE(HDF5 COMPONENTS C HL REQUIRED)
++  FIND_PACKAGE(hdf5 CONFIG REQUIRED)
++  set(HDF5_FOUND ${hdf5_FOUND})
++  if (NOT HDF5_USE_STATIC_LIBRARIES)
++    set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-shared hdf5::hdf5_hl-shared)
++  else()
++    set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-static hdf5::hdf5_hl-static)
++  endif()
+ ENDIF(MSVC)
+ 
+-CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5free_memory "" HAVE_H5FREE_MEMORY)
++set(HAVE_H5FREE_MEMORY ON)
+ IF(NOT HAVE_H5FREE_MEMORY)
+   MESSAGE(STATUS "Plugin support requires libhdf5 with H5Free support. Your libhdf5 install does not provide H5Free.  Please install a newer version of libhdf5 if you require plugin compression support.")
+   SET(NC_HAS_DEF_VAR_FILTER "")
+diff --git a/plugins/CMakeLists.txt b/plugins/CMakeLists.txt
+index 30a4a96..1809d29 100644
+--- a/plugins/CMakeLists.txt
++++ b/plugins/CMakeLists.txt
+@@ -23,7 +23,7 @@ SET_TARGET_PROPERTIES(test_bzip2 PROPERTIES OUTPUT_NAME "bzip2")
+ SET_TARGET_PROPERTIES(test_bzip2 PROPERTIES LIBRARY_OUTPUT_NAME "h5bzip2")
+ SET_TARGET_PROPERTIES(test_bzip2 PROPERTIES ARCHIVE_OUTPUT_NAME "h5bzip2")
+ SET_TARGET_PROPERTIES(test_bzip2 PROPERTIES RUNTIME_OUTPUT_NAME "h5bzip2")
+-TARGET_LINK_LIBRARIES(test_bzip2 ${ALL_TLL_LIBS})
++TARGET_LINK_LIBRARIES(test_bzip2 ${ALL_TLL_LIBS} ${HDF5_C_LIBRARY_hdf5})
+ 
+ ADD_LIBRARY(misc MODULE ${libmisc_SOURCES})
+ SET_TARGET_PROPERTIES(misc PROPERTIES LIBRARY_OUTPUT_NAME "misc")

@@ -1,0 +1,38 @@
+From 5a7cbbe8423ee3daf533bcc1fefa7d1f1315634c Mon Sep 17 00:00:00 2001
+From: Nicole Mazzuca <mazzucan@outlook.com>
+Date: Wed, 23 Sep 2020 09:43:37 -0700
+Subject: [PATCH 2/2] fix cmake
+
+Remove this patch if https://github.com/amrayn/licensepp/pull/33 is merged
+---
+ CMakeLists.txt | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b2c39d1..0d49632 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -35,10 +35,8 @@ if (APPLE)
+     endif()
+ endif()
+ 
+-if(MSVC)
+-    list (APPEND CMAKE_CXX_FLAGS " -std=c++11 -O3 ")
+-else()
+-    list (APPEND CMAKE_CXX_FLAGS " -std=c++11 -O3 -Wall -Werror ")
++if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
++    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -Wall")
+ endif()
+ 
+ # Check for cryptopp (static)
+@@ -73,6 +71,7 @@ endif()
+ set_target_properties (licensepp-lib PROPERTIES
+     VERSION ${LICENSEPP_SOVERSION}
+ )
++target_include_directories(licensepp-lib PUBLIC $<INSTALL_INTERFACE:include>)
+ target_link_libraries (licensepp-lib
+     ${CRYPTOPP_LIBRARIES}
+ )
+-- 
+2.24.3 (Apple Git-128)
+

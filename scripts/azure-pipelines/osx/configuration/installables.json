@@ -1,0 +1,37 @@
+{
+  "$schema": "./installables.schema.json",
+
+  "Applications": [
+    {
+      "Name": "VirtualBox",
+      "TestCommand": "VBoxManage",
+      "DmgUrl": "https://download.virtualbox.org/virtualbox/6.1.16/VirtualBox-6.1.16-140961-OSX.dmg",
+      "Sha256": "D7DF0F05D9A9E7CBA50EA01DA264AC20948B1C9C0E0CCCD2D628085C9F434D45",
+      "InstallerPath": "VirtualBox.pkg"
+    },
+    {
+      "Name": "vagrant",
+      "TestCommand": "vagrant",
+      "DmgUrl": "https://releases.hashicorp.com/vagrant/2.2.14/vagrant_2.2.14_x86_64.dmg",
+      "Sha256": "76B849B26E6D6187A7829212B05545D3B424E05F1BCD0F7163DA1E5117084FA6",
+      "InstallerPath": "vagrant.pkg"
+    }
+  ],
+  "Brew": [
+    {
+      "Name": "osxfuse",
+      "Kind": "cask"
+    },
+    {
+      "Name": "sshfs"
+    }
+  ],
+  "VBoxExtensions": [
+    {
+      "Name": "Extension Pack",
+      "FullName": "Oracle VM VirtualBox Extension Pack",
+      "Url": "https://download.virtualbox.org/virtualbox/6.1.16/Oracle_VM_VirtualBox_Extension_Pack-6.1.16.vbox-extpack",
+      "Sha256": "9802482B77B95A954CB5111793DA10D009009A4E9A9C4EAA4BD1AE5DAFE9DB46"
+    }
+  ]
+}

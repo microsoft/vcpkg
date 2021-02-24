@@ -8,7 +8,7 @@ set(CMAKE_STATIC_LIBRARY_PREFIX)
 
 find_package(LibXml2 REQUIRED)
 find_package(OpenSSL REQUIRED)
-find_package(unofficial-iconv REQUIRED)
+find_package(Iconv REQUIRED)
 
 FILE(GLOB SOURCESXMLSEC
 	src/*.c
@@ -105,10 +105,13 @@ else()
 endif()
 
 install(TARGETS libxmlsec libxmlsec-openssl
+    EXPORT xmlsecExport
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
+
+install(EXPORT xmlsecExport FILE xmlsec-config.cmake DESTINATION share/xmlsec)
 
 if(INSTALL_HEADERS_TOOLS)
 	file(GLOB PUBLIC_HEADERS
@@ -136,9 +139,12 @@ if(INSTALL_HEADERS_TOOLS)
 	endif()
 
 	target_link_libraries(xmlsec PRIVATE
-		${LIBXML2_LIBRARIES} OpenSSL::SSL libxmlsec libxmlsec-openssl unofficial::iconv::libiconv
+		${LIBXML2_LIBRARIES} OpenSSL::SSL libxmlsec libxmlsec-openssl
 	)
-
+    if(NOT Iconv_IS_BUILT_IN)
+        target_link_libraries(xmlsec PRIVATE Iconv::Iconv)
+    endif()
+    
 	target_compile_definitions(xmlsec PRIVATE
 		-DXMLSEC_CRYPTO_OPENSSL
 	)
@@ -146,7 +152,9 @@ if(INSTALL_HEADERS_TOOLS)
 	if(BUILD_SHARED_LIBS)
 		target_compile_definitions(xmlsec PRIVATE -DXMLSEC_CRYPTO_DYNAMIC_LOADING)
 	else()
+        find_package(Threads REQUIRED)
 		target_compile_definitions(xmlsec PRIVATE -DLIBXML_STATIC -DLIBXSLT_STATIC -DXMLSEC_STATIC)
+        target_link_libraries(xmlsec PUBLIC Threads::Threads)
 	endif()
 	install(TARGETS xmlsec DESTINATION tools/xmlsec)
 endif()

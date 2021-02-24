@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO liteserver/binn
-    REF 38019c11e582e5078436b8257887e79a33db8b28
-    SHA512 82c7ef211154303ebb4cb991e620da520231edd224de674d4dabc42760fd7b8b6dd7be167d6c0b6c04146ea7e077b0bcff14312be909cb4ebb1ec786863d3fb4
+    REF b657ef3f38b37aa1e5dea88a9332889d0fbf3a81 # 3.0
+    SHA512 14bf572152ec5343a161dea9ebfd2b63cd5ce48c0db3decf5591aa94ae7766771cf521ba22978e9ae8855feef694bad85951f3c4a29cb9ddd881918fc6d3722a
     HEAD_REF master
     PATCHES
         0001_fix_uwp.patch

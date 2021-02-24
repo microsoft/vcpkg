@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bd80b12..6509541 100644
+index b2634da..6a1dc1f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -148,10 +148,6 @@ IF (CMAKE_C_COMPILER_ID MATCHES "^XL$")
@@ -13,7 +13,7 @@ index bd80b12..6509541 100644
    #################################################################
    # Set compile flags for debug build.
    # This is added into CMAKE_C_FLAGS when CMAKE_BUILD_TYPE is "Debug"
-@@ -377,8 +373,6 @@ IF(DEFINED __GNUWIN32PATH AND EXISTS "${__GNUWIN32PATH}")
+@@ -382,8 +378,6 @@ IF(DEFINED __GNUWIN32PATH AND EXISTS "${__GNUWIN32PATH}")
    # Maybe DLL path is "C:/Program Files/GnuWin32/bin".
    # The zlib and the bzip2 Setup program have installed programs and DLLs into
    # "C:/Program Files/GnuWin32" by default.
@@ -22,7 +22,7 @@ index bd80b12..6509541 100644
    #
    # If you didn't use Setup program or installed into nonstandard path,
    # cmake cannot find out your zlib or bzip2 libraries and include files,
-@@ -415,14 +409,7 @@ IF(ZLIB_FOUND)
+@@ -420,14 +414,7 @@ IF(ZLIB_FOUND)
    INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
    LIST(APPEND ADDITIONAL_LIBS ${ZLIB_LIBRARIES})
    IF(WIN32 AND NOT CYGWIN)
@@ -34,11 +34,11 @@ index bd80b12..6509541 100644
 -      RUNS
 -      "#include <zlib.h>\nint main() {uLong f = zlibCompileFlags(); return (f&(1U<<10))?0:-1; }"
 -      ZLIB_WINAPI)
-+    SET(ZLIB_WINAPI OFF) # skip following test, it crashes with weird message box
++	SET(ZLIB_WINAPI OFF) # skip following test, it crashes with weird message box  
      IF(ZLIB_WINAPI)
        ADD_DEFINITIONS(-DZLIB_WINAPI)
      ELSE(ZLIB_WINAPI)
-@@ -482,8 +469,6 @@ IF(LIBLZMA_FOUND)
+@@ -487,8 +474,6 @@ IF(LIBLZMA_FOUND)
    SET(HAVE_LIBLZMA 1)
    SET(HAVE_LZMA_H 1)
    CMAKE_PUSH_CHECK_STATE()
@@ -47,7 +47,7 @@ index bd80b12..6509541 100644
    INCLUDE_DIRECTORIES(${LIBLZMA_INCLUDE_DIRS})
    LIST(APPEND ADDITIONAL_LIBS ${LIBLZMA_LIBRARIES})
    # Test if a macro is needed for the library.
-@@ -1327,7 +1312,7 @@ CHECK_FUNCTION_EXISTS_GLIBC(localtime_r HAVE_LOCALTIME_R)
+@@ -1356,7 +1341,7 @@ CHECK_FUNCTION_EXISTS_GLIBC(localtime_r HAVE_LOCALTIME_R)
  CHECK_FUNCTION_EXISTS_GLIBC(lstat HAVE_LSTAT)
  CHECK_FUNCTION_EXISTS_GLIBC(lutimes HAVE_LUTIMES)
  CHECK_FUNCTION_EXISTS_GLIBC(mbrtowc HAVE_MBRTOWC)
@@ -56,7 +56,7 @@ index bd80b12..6509541 100644
  CHECK_FUNCTION_EXISTS_GLIBC(mkdir HAVE_MKDIR)
  CHECK_FUNCTION_EXISTS_GLIBC(mkfifo HAVE_MKFIFO)
  CHECK_FUNCTION_EXISTS_GLIBC(mknod HAVE_MKNOD)
-@@ -1359,11 +1344,11 @@ CHECK_FUNCTION_EXISTS_GLIBC(utime HAVE_UTIME)
+@@ -1388,11 +1373,11 @@ CHECK_FUNCTION_EXISTS_GLIBC(utime HAVE_UTIME)
  CHECK_FUNCTION_EXISTS_GLIBC(utimes HAVE_UTIMES)
  CHECK_FUNCTION_EXISTS_GLIBC(utimensat HAVE_UTIMENSAT)
  CHECK_FUNCTION_EXISTS_GLIBC(vfork HAVE_VFORK)
@@ -73,7 +73,7 @@ index bd80b12..6509541 100644
  CHECK_FUNCTION_EXISTS_GLIBC(_ctime64_s HAVE__CTIME64_S)
  CHECK_FUNCTION_EXISTS_GLIBC(_fseeki64 HAVE__FSEEKI64)
  CHECK_FUNCTION_EXISTS_GLIBC(_get_timezone HAVE__GET_TIMEZONE)
-@@ -1375,10 +1360,10 @@ CHECK_FUNCTION_EXISTS(cygwin_conv_path HAVE_CYGWIN_CONV_PATH)
+@@ -1405,10 +1390,10 @@ CHECK_FUNCTION_EXISTS(cygwin_conv_path HAVE_CYGWIN_CONV_PATH)
  CHECK_FUNCTION_EXISTS(fseeko HAVE_FSEEKO)
  CHECK_FUNCTION_EXISTS(strerror_r HAVE_STRERROR_R)
  CHECK_FUNCTION_EXISTS(strftime HAVE_STRFTIME)
@@ -88,21 +88,25 @@ index bd80b12..6509541 100644
  
  CMAKE_POP_CHECK_STATE()	# Restore the state of the variables
  
-@@ -1419,9 +1404,13 @@ CHECK_C_SOURCE_COMPILES(
+@@ -1449,6 +1434,9 @@ CHECK_C_SOURCE_COMPILES(
    "#include <sys/sysmacros.h>\nint main() { return major(256); }"
    MAJOR_IN_SYSMACROS)
  
 +CMAKE_PUSH_CHECK_STATE()
 +SET(CMAKE_REQUIRED_INCLUDES ${LIBLZMA_INCLUDE_DIR})
 +SET(CMAKE_REQUIRED_LIBRARIES ${LIBLZMA_LIBRARIES})
+ IF(ENABLE_LZMA)
  CHECK_C_SOURCE_COMPILES(
    "#include <lzma.h>\n#if LZMA_VERSION < 50020000\n#error unsupported\n#endif\nint main(void){lzma_stream_encoder_mt(0, 0); return 0;}"
-   HAVE_LZMA_STREAM_ENCODER_MT)
+@@ -1456,6 +1444,7 @@ CHECK_C_SOURCE_COMPILES(
+ ELSE()
+   SET(HAVE_LZMA_STREAM_ENCODER_MT 0)
+ ENDIF(ENABLE_LZMA)
 +CMAKE_POP_CHECK_STATE()
  
  IF(HAVE_STRERROR_R)
    SET(HAVE_DECL_STRERROR_R 1)
-@@ -1977,13 +1966,10 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/build/cmake/config.h.in
+@@ -2012,13 +2001,10 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/build/cmake/config.h.in
  INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
  ADD_DEFINITIONS(-DHAVE_CONFIG_H)
  
@@ -118,10 +122,10 @@ index bd80b12..6509541 100644
    # On Windows platform, It's better that we install PDF documents
    # on one's computer.
 diff --git a/libarchive/CMakeLists.txt b/libarchive/CMakeLists.txt
-index ec775bb..d63ac7c 100644
+index 9389bbc..0793d96 100644
 --- a/libarchive/CMakeLists.txt
 +++ b/libarchive/CMakeLists.txt
-@@ -235,28 +235,22 @@ ELSEIF(ARCHIVE_ACL_SUNOS)
+@@ -236,28 +236,22 @@ ELSEIF(ARCHIVE_ACL_SUNOS)
  ENDIF()
  
  # Libarchive is a shared library
@@ -149,7 +153,7 @@ index ec775bb..d63ac7c 100644
  IF(ENABLE_INSTALL)
    # How to install the libraries
 -  INSTALL(TARGETS archive archive_static
-+  INSTALL(TARGETS archive
++  INSTALL(TARGETS archive 
            RUNTIME DESTINATION bin
            LIBRARY DESTINATION lib
            ARCHIVE DESTINATION lib)

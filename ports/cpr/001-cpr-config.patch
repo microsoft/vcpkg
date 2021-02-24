@@ -1,94 +1,33 @@
 diff --git a/cpr/CMakeLists.txt b/cpr/CMakeLists.txt
-index a6db5bd..90bec48 100644
+index 563b785..20f8a54 100644
 --- a/cpr/CMakeLists.txt
 +++ b/cpr/CMakeLists.txt
-@@ -1,47 +1,46 @@
--message(STATUS "Using CURL_INCLUDE_DIRS: ${CURL_INCLUDE_DIRS}.")
--include_directories(
--    ${CPR_INCLUDE_DIRS}
--    ${CURL_INCLUDE_DIRS})
--
- add_library(${CPR_LIBRARIES}
-+  auth.cpp
-+  cookies.cpp
-+  cprtypes.cpp
-+  digest.cpp
-+  error.cpp
-+  multipart.cpp
-+  parameters.cpp
-+  payload.cpp
-+  proxies.cpp
-+  session.cpp
-+  timeout.cpp
-+  util.cpp
-+  ssl_options.cpp
-+)
-+
-+target_link_libraries( ${CPR_LIBRARIES}
-+  PUBLIC ${CURL_LIBRARIES}
-+)
-+
-+target_include_directories(${CPR_LIBRARIES}
-+  PUBLIC 
-+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
-+    $<INSTALL_INTERFACE:include>
-+  PRIVATE
-+    $<BUILD_INTERFACE:${CURL_INCLUDE_DIRS}>
-+)
-+
+@@ -20,6 +20,7 @@ add_library(cpr
  
--    # Source files
--    auth.cpp
--    cookies.cpp
--    cprtypes.cpp
--    digest.cpp
--    error.cpp
--    multipart.cpp
--    parameters.cpp
--    payload.cpp
--    proxies.cpp
--    session.cpp
--    timeout.cpp
--    util.cpp
--    ssl_options.cpp
+ add_library(cpr::cpr ALIAS cpr)
+ 
++target_include_directories(cpr PUBLIC $<INSTALL_INTERFACE:include>)
+ target_link_libraries(cpr PUBLIC CURL::libcurl) # todo should be private, but first dependencys in ssl_options need to be removed
+ 
+ # Set version for shared libraries.
+@@ -28,4 +29,18 @@ set_target_properties(cpr
+      VERSION ${${PROJECT_NAME}_VERSION}
+      SOVERSION ${${PROJECT_NAME}_VERSION_MAJOR})
+ 
+-install(TARGETS cpr)
 +set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
-+install(
-+  TARGETS ${CPR_LIBRARIES}
++install(TARGETS cpr
 +  EXPORT ${TARGETS_EXPORT_NAME}
 +  RUNTIME DESTINATION bin
 +  LIBRARY DESTINATION lib
-+  ARCHIVE DESTINATION lib
-+)
- 
--    # Header files (useful in IDEs)
--    "${CPR_INCLUDE_DIRS}/cpr/api.h"
--    "${CPR_INCLUDE_DIRS}/cpr/auth.h"
--    "${CPR_INCLUDE_DIRS}/cpr/body.h"
--    "${CPR_INCLUDE_DIRS}/cpr/cookies.h"
--    "${CPR_INCLUDE_DIRS}/cpr/cpr.h"
--    "${CPR_INCLUDE_DIRS}/cpr/cprtypes.h"
--    "${CPR_INCLUDE_DIRS}/cpr/curlholder.h"
--    "${CPR_INCLUDE_DIRS}/cpr/defines.h"
--    "${CPR_INCLUDE_DIRS}/cpr/digest.h"
--    "${CPR_INCLUDE_DIRS}/cpr/error.h"
--    "${CPR_INCLUDE_DIRS}/cpr/max_redirects.h"
--    "${CPR_INCLUDE_DIRS}/cpr/multipart.h"
--    "${CPR_INCLUDE_DIRS}/cpr/parameters.h"
--    "${CPR_INCLUDE_DIRS}/cpr/payload.h"
--    "${CPR_INCLUDE_DIRS}/cpr/proxies.h"
--    "${CPR_INCLUDE_DIRS}/cpr/response.h"
--    "${CPR_INCLUDE_DIRS}/cpr/session.h"
--    "${CPR_INCLUDE_DIRS}/cpr/timeout.h"
--    "${CPR_INCLUDE_DIRS}/cpr/util.h"
--    "${CPR_INCLUDE_DIRS}/cpr/ssl_options.h")
++  ARCHIVE DESTINATION lib)
++
 +install(
 +  EXPORT ${TARGETS_EXPORT_NAME} 
 +  DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
 +)
- 
--message(STATUS "Using CURL_LIBRARIES: ${CURL_LIBRARIES}.")
--target_link_libraries(${CPR_LIBRARIES}
--    ${CURL_LIBRARIES})
++
 +if (NOT DISABLE_INSTALL_HEADERS)
-+  install(DIRECTORY ${CPR_INCLUDE_DIRS}/cpr DESTINATION include)
++  install(DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/../include/cpr DESTINATION include)
 +endif()
+\ No newline at end of file

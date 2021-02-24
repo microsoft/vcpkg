@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "${PORT} does not currently support UWP")
 endif()
@@ -7,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Matroska-Org/libebml
-    REF release-1.3.9
-    SHA512 3ae22ed491024b276edde9237df0e41a8e5a4e142ec6783c77d5286d7825fb59be62f336d07f7042baac8fc7ac004ad7cc4605754c5801d65547449ea04c287f
+    REF 6145c5700d894312c4dd47ba6c1ace72075b0692 # release-1.4.0
+    SHA512 74132d4605ec8b75e72fa58ca4c04c5aa980aae4b028032d34fde14eff406c814518168ae7bfec5cdaf026d914a019b1fcac1458c40537c4964a46989c1283d0
     HEAD_REF master
 )
 

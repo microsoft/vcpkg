@@ -1,5 +1,5 @@
 diff --git a/include/jwt-cpp/base.h b/include/jwt-cpp/base.h
-index dfca7fc..4d05c0b 100644
+index 375e0eb..4023709 100644
 --- a/include/jwt-cpp/base.h
 +++ b/include/jwt-cpp/base.h
 @@ -2,6 +2,10 @@
@@ -10,11 +10,11 @@ index dfca7fc..4d05c0b 100644
 +#pragma warning(disable : 4267)
 +#endif
 +
- namespace jwt {
- 	namespace alphabet {
- 		struct base64 {
+ #ifdef __has_cpp_attribute
+ #if __has_cpp_attribute(fallthrough)
+ #define JWT_FALLTHROUGH [[fallthrough]]
 diff --git a/include/jwt-cpp/jwt.h b/include/jwt-cpp/jwt.h
-index ec56810..313cef2 100644
+index 6e55729..4579310 100644
 --- a/include/jwt-cpp/jwt.h
 +++ b/include/jwt-cpp/jwt.h
 @@ -12,6 +12,11 @@
@@ -27,5 +27,5 @@ index ec56810..313cef2 100644
 +#endif
 +
  //If openssl version less than 1.1
- #if OPENSSL_VERSION_NUMBER < 269484032
+ #if OPENSSL_VERSION_NUMBER < 0x10100000L
  #define OPENSSL10

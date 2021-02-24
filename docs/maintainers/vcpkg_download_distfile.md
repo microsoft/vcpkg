@@ -28,6 +28,9 @@ The expected hash for the file.
 
 If this doesn't match the downloaded version, the build will be terminated with a message describing the mismatch.
 
+### QUIET
+Suppress output on cache hit
+
 ### SKIP_SHA512
 Skip SHA512 hash check for file.
 
@@ -45,7 +48,7 @@ The helper [`vcpkg_from_github`](vcpkg_from_github.md) should be used for downlo
 
 * [apr](https://github.com/Microsoft/vcpkg/blob/master/ports/apr/portfile.cmake)
 * [fontconfig](https://github.com/Microsoft/vcpkg/blob/master/ports/fontconfig/portfile.cmake)
-* [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
+* [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
 
 ## Source
 [scripts/cmake/vcpkg_download_distfile.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_download_distfile.cmake)

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO zeromq/czmq
@@ -29,7 +27,6 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     draft   ENABLE_DRAFTS
-    tool    BUILD_TOOLS
     curl    CZMQ_WITH_LIBCURL
     httpd   CZMQ_WITH_LIBMICROHTTPD
     lz4     CZMQ_WITH_LZ4
@@ -63,17 +60,11 @@ file(COPY
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
-if(CMAKE_HOST_WIN32)
-    set(EXECUTABLE_SUFFIX ".exe")
-else()
-    set(EXECUTABLE_SUFFIX "")
+if ("tool" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES zmakecert)
 endif()
 
-if ("tool" IN_LIST FEATURES)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/zmakecert${EXECUTABLE_SUFFIX}
-        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-endif()
+vcpkg_clean_executables_in_bin(FILE_NAMES zmakecert)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
@@ -84,18 +75,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     )
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(REMOVE
-        ${CURRENT_PACKAGES_DIR}/debug/bin/zmakecert${EXECUTABLE_SUFFIX}
-        ${CURRENT_PACKAGES_DIR}/bin/zmakecert${EXECUTABLE_SUFFIX})
-endif()
-
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

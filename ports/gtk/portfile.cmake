@@ -1,5 +1,4 @@
 
-include(vcpkg_common_functions)
 set(GTK_VERSION 3.22.19)
 
 vcpkg_download_distfile(ARCHIVE
@@ -30,6 +29,7 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DGTK_VERSION=${GTK_VERSION}
     OPTIONS_DEBUG

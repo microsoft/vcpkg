@@ -1,16 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds not supported yet.")
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/yoga
-    REF 1.14.0
-    SHA512 c634cb9be08a4f4f478c50de9f26a2e1a18b9c6313b78665cd3a28047bd04e14aac2f06702c3bc9f55dba605177b787424a405c4043f052a94d311c76e38bef1
+    REF 1.18.0
+    SHA512 dba75bff0fd3b72a3c17a6856253bd14d8af7fbb2832b432118c6ee509f9fe234874969a9cfb56690ec5a2649637a6bf090da5c5f5e8907c1e1e9c09f05977e2
     HEAD_REF master
     PATCHES add-project-declaration.patch
 )
@@ -45,4 +39,4 @@ endif()
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/yoga RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,18 +1,16 @@
-if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
-    message(FATAL_ERROR "Error: UWP builds are currently not supported.")
-endif()
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
-include(vcpkg_common_functions)
-
-set(VERSION 61.1)
-set(VERSION2 61_1)
-set(ICU_VERSION_MAJOR 61)
+set(ICU_VERSION_MAJOR 67)
+set(ICU_VERSION_MINOR 1)
+set(VERSION "${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}")
+set(VERSION2 "${ICU_VERSION_MAJOR}_${ICU_VERSION_MINOR}")
+set(VERSION3 "${ICU_VERSION_MAJOR}-${ICU_VERSION_MINOR}")
 
 vcpkg_download_distfile(
     ARCHIVE
-    URLS "http://download.icu-project.org/files/icu4c/${VERSION}/icu4c-${VERSION2}-src.tgz"
+    URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 4c37691246db802e4bae0c8c5f6ac1dac64c5753b607e539c5c1c36e361fcd9dd81bd1d3b5416c2960153b83700ccdb356412847d0506ab7782ae626ac0ffb94
+    SHA512 4779f1ce1ca7976f6fad6768853ea8c540da54d11509e3b6cfd864a04b5f2db1c3d4b546387f91ad02fb90804525bc37d2543173f0d705d6ca11dc6f2b7640a8
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -21,9 +19,15 @@ vcpkg_extract_source_archive_ex(
         ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch
         ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix_parallel_build_on_windows.patch
+        ${CMAKE_CURRENT_LIST_DIR}/fix-extra.patch
+        ${CMAKE_CURRENT_LIST_DIR}/mingw-remove-bsymbolic.patch
+        ${CMAKE_CURRENT_LIST_DIR}/mingw-remove-version-from-link-flags.patch
 )
 
-set(CONFIGURE_OPTIONS "--disable-samples --disable-tests")
+vcpkg_find_acquire_program(PYTHON3)
+set(ENV{PYTHON} "${PYTHON3}")
+
+set(CONFIGURE_OPTIONS "--disable-samples --disable-tests --disable-layoutex")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --disable-static --enable-shared")
@@ -31,49 +35,55 @@ else()
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --enable-static --disable-shared")
 endif()
 
-set(CONFIGURE_OPTIONS_RELASE "--disable-debug --enable-release --prefix=${CURRENT_PACKAGES_DIR}")
+set(CONFIGURE_OPTIONS_RELEASE "--disable-debug --enable-release --prefix=${CURRENT_PACKAGES_DIR}")
 set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURRENT_PACKAGES_DIR}/debug")
+set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
+set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
-if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(BASH bash)
     set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -fPIC")
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -fPIC")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         # Configure release
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
+        message(STATUS "Configuring ${RELEASE_TRIPLET}")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
         set(ENV{CFLAGS} "-O2 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
         set(ENV{CXXFLAGS} "-O2 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
-                "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELASE}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-            LOGNAME "configure-${TARGET_TRIPLET}-rel")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+                "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELEASE}"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
+            LOGNAME "configure-${RELEASE_TRIPLET}")
+        message(STATUS "Configuring ${RELEASE_TRIPLET} done")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         # Configure debug
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
+        message(STATUS "Configuring ${DEBUG_TRIPLET}")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
         set(ENV{CFLAGS} "-O0 -g ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
         set(ENV{CXXFLAGS} "-O0 -g ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
                 "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-            LOGNAME "configure-${TARGET_TRIPLET}-dbg")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
+            LOGNAME "configure-${DEBUG_TRIPLET}")
+        message(STATUS "Configuring ${DEBUG_TRIPLET} done")
     endif()
 
 else()
 
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=i686-pc-mingw32")
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=x86_64-w64-mingw32")
+    else()
+        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=i686-w64-mingw32")
+    endif()
 
     # Acquire tools
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.15)
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.16)
 
     # Insert msys into the path between the compiler toolset and windows system32. This prevents masking of "link.exe" but DOES mask "find.exe".
     string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
@@ -81,45 +91,68 @@ else()
     set(ENV{PATH} "${NEWPATH}")
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
 
-    set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.15)
+    set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.16)
     file(COPY ${AUTOMAKE_DIR}/config.guess ${AUTOMAKE_DIR}/config.sub DESTINATION ${SOURCE_PATH}/source)
 
-    if(VCPKG_CRT_LINKAGE STREQUAL static)
-        set(ICU_RUNTIME "-MT")
+    if(NOT VCPKG_TARGET_IS_MINGW)
+        set(PLATFORM "MSYS/MSVC")
+        if(VCPKG_CRT_LINKAGE STREQUAL static)
+            set(ICU_RUNTIME "-MT")
+        else()
+            set(ICU_RUNTIME "-MD")
+        endif()
+        set(EXTRA_RELEASE_FLAGS "${ICU_RUNTIME} -O2 -Oi -Zi -FS")
+        set(RELEASE_LDFLAGS "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
+        set(EXTRA_DEBUG_FLAGS "${ICU_RUNTIME}d -Od -Zi -FS -RTC1")
+        set(DEBUG_LDFLAGS "-DEBUG")
     else()
-        set(ICU_RUNTIME "-MD")
+        set(PLATFORM "MinGW")
+        set(ENV{CC} "${CMAKE_C_COMPILER}")
+        set(ENV{CXX} "${CMAKE_CXX_COMPILER}")
+    endif()
+    
+    if(CMAKE_HOST_WIN32 AND (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
+        set(ICU_MSVC_CROSS_COMPILE_TO_ARM ON)
+        # Need the buildtrees dir, as the required files (e.g. icucross.mk) are not part of the installed package
+        get_filename_component(ICU_HOST_PATH "${BUILDTREES_DIR}/icu/x86-windows-rel" ABSOLUTE)
+        if(NOT EXISTS "${ICU_HOST_PATH}")
+            message(FATAL_ERROR "The x86 icu must be be built locally to build for non-x86/x64 platforms. Please run `vcpkg install icu:x86-windows`.")
+        endif()
+
+        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-cross-build=${ICU_HOST_PATH}")
+        set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${ICU_HOST_PATH}/lib")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         # Configure release
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        set(ENV{CFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi -FS ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
-        set(ENV{CXXFLAGS} "${ICU_RUNTIME} -O2 -Oi -Zi -FS ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
-        set(ENV{LDFLAGS} "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
+        message(STATUS "Configuring ${RELEASE_TRIPLET}")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
+        set(ENV{CFLAGS} "${EXTRA_RELEASE_FLAGS} ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
+        set(ENV{CXXFLAGS} "${EXTRA_RELEASE_FLAGS} ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
+        set(ENV{LDFLAGS} "${RELEASE_LDFLAGS}")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
-                "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELASE}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-            LOGNAME "configure-${TARGET_TRIPLET}-rel")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-rel done")
+                "${SOURCE_PATH}/source/runConfigureICU ${PLATFORM} ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELEASE}"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
+            LOGNAME "configure-${RELEASE_TRIPLET}")
+        message(STATUS "Configuring ${RELEASE_TRIPLET} done")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         # Configure debug
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        set(ENV{CFLAGS} "${ICU_RUNTIME}d -Od -Zi -FS -RTC1 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
-        set(ENV{CXXFLAGS} "${ICU_RUNTIME}d -Od -Zi -FS -RTC1 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
-        set(ENV{LDFLAGS} "-DEBUG")
+        message(STATUS "Configuring ${DEBUG_TRIPLET}")
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
+        set(ENV{CFLAGS} "${EXTRA_DEBUG_FLAGS} ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
+        set(ENV{CXXFLAGS} "${EXTRA_DEBUG_FLAGS} ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
+        set(ENV{LDFLAGS} "${DEBUG_LDFLAGS}")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
-                "${SOURCE_PATH}/source/runConfigureICU MSYS/MSVC ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-            LOGNAME "configure-${TARGET_TRIPLET}-dbg")
-        message(STATUS "Configuring ${TARGET_TRIPLET}-dbg done")
+                "${SOURCE_PATH}/source/runConfigureICU ${PLATFORM} ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
+            LOGNAME "configure-${DEBUG_TRIPLET}")
+        message(STATUS "Configuring ${DEBUG_TRIPLET} done")
     endif()
 endif()
 
@@ -129,44 +162,185 @@ unset(ENV{LDFLAGS})
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # Build release
-    message(STATUS "Package ${TARGET_TRIPLET}-rel")
+    message(STATUS "Package ${RELEASE_TRIPLET}")
     vcpkg_execute_build_process(
         COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY}"
         NO_PARALLEL_COMMAND ${BASH} --noprofile --norc -c "make"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        LOGNAME "make-build-${TARGET_TRIPLET}-rel")
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
+        LOGNAME "make-build-${RELEASE_TRIPLET}")
+
+    # remove this block if https://unicode-org.atlassian.net/browse/ICU-21458
+    # is resolved and use the configure script instead
+    if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        if(DEFINED CMAKE_INSTALL_NAME_DIR)
+            set(ID_PREFIX "${CMAKE_INSTALL_NAME_DIR}")
+        else()
+            set(ID_PREFIX "@rpath")
+        endif()
+
+        # install_name_tool may be missing if cross-compiling
+        find_program(
+            INSTALL_NAME_TOOL
+            install_name_tool
+            HINTS /usr/bin /Library/Developer/CommandLineTools/usr/bin/
+            DOC "Absolute path of install_name_tool"
+            REQUIRED
+        )
+
+        message(STATUS "setting rpath prefix for macOS dynamic libraries")
+
+        # add ID_PREFIX to libicudata
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -id "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
+            "libicudata.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicui18n
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -id "${ID_PREFIX}/libicui18n.${ICU_VERSION_MAJOR}.dylib"
+            "libicui18n.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicui18n dependencies
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicui18n.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicui18n.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicuio
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -id "${ID_PREFIX}/libicuio.${ICU_VERSION_MAJOR}.dylib"
+            "libicuio.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicuio dependencies
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicuio.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicuio.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicui18n.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicui18n.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicuio.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicutu
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -id "${ID_PREFIX}/libicutu.${ICU_VERSION_MAJOR}.dylib"
+            "libicutu.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicutu dependencies
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicui18n.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicui18n.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicutu.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicutu.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicutu.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicuuc
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -id "${ID_PREFIX}/libicuuc.${ICU_VERSION_MAJOR}.dylib"
+            "libicuuc.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicuuc dependencies
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicuuc.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+    endif()
 
     vcpkg_execute_build_process(
         COMMAND ${BASH} --noprofile --norc -c "make install"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
-        LOGNAME "make-install-${TARGET_TRIPLET}-rel")
-    message(STATUS "Package ${TARGET_TRIPLET}-rel done")
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
+        LOGNAME "make-install-${RELEASE_TRIPLET}")
+    message(STATUS "Package ${RELEASE_TRIPLET} done")
 endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     # Build debug
-    message(STATUS "Package ${TARGET_TRIPLET}-dbg")
+    message(STATUS "Package ${DEBUG_TRIPLET}")
     vcpkg_execute_build_process(
         COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY}"
         NO_PARALLEL_COMMAND ${BASH} --noprofile --norc -c "make"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        LOGNAME "make-build-${TARGET_TRIPLET}-dbg")
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
+        LOGNAME "make-build-${DEBUG_TRIPLET}")
 
     vcpkg_execute_build_process(
         COMMAND ${BASH} --noprofile --norc -c "make install"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-        LOGNAME "make-install-${TARGET_TRIPLET}-dbg")
-    message(STATUS "Package ${TARGET_TRIPLET}-dbg done")
+        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
+        LOGNAME "make-install-${DEBUG_TRIPLET}")
+    message(STATUS "Package ${DEBUG_TRIPLET} done")
+endif()
+
+if(NOT VCPKG_TARGET_IS_MINGW) # MinGW already has its files placed in the correct directory
+    file(REMOVE_RECURSE
+        ${CURRENT_PACKAGES_DIR}/bin
+        ${CURRENT_PACKAGES_DIR}/debug/bin)
+else()
+    file(GLOB ICU_TOOLS
+        ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX}
+        ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX}
+        ${CURRENT_PACKAGES_DIR}/bin/icu-config
+        ${CURRENT_PACKAGES_DIR}/debug/bin/icu-config)
+    file(REMOVE ${ICU_TOOLS})
 endif()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/bin
-    ${CURRENT_PACKAGES_DIR}/debug/bin
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/share
     ${CURRENT_PACKAGES_DIR}/debug/share
-    ${CURRENT_PACKAGES_DIR}/lib/pkgconfig
-    ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig
     ${CURRENT_PACKAGES_DIR}/lib/icu
     ${CURRENT_PACKAGES_DIR}/debug/lib/icud)
 
@@ -187,17 +361,26 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         file(COPY ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
     endif()
 else()
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    if(VCPKG_TARGET_IS_WINDOWS)
         # rename static libraries to match import libs
         # see https://gitlab.kitware.com/cmake/cmake/issues/16617
         foreach(MODULE dt in io tu uc)
             if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-                file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sicu${MODULE}.lib ${CURRENT_PACKAGES_DIR}/lib/icu${MODULE}.lib)
+                file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sicu${MODULE}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/lib/icu${MODULE}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
             endif()
 
             if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-                file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sicu${MODULE}d.lib ${CURRENT_PACKAGES_DIR}/debug/lib/icu${MODULE}d.lib)
+                file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sicu${MODULE}d${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/lib/icu${MODULE}d${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
             endif()
+        endforeach()
+
+        file(GLOB_RECURSE pkg_files LIST_DIRECTORIES false ${CURRENT_PACKAGES_DIR}/*.pc)
+        message(STATUS "${pkg_files}")
+        foreach(pkg_file IN LISTS pkg_files)
+            message(STATUS "${pkg_file}")
+            file(READ ${pkg_file} PKG_FILE)
+            string(REGEX REPLACE "-ls([^ \\t\\n]+)" "-l\\1" PKG_FILE "${PKG_FILE}" )
+            file(WRITE ${pkg_file} "${PKG_FILE}")
         endforeach()
     endif()
 
@@ -209,6 +392,10 @@ else()
     endforeach()
 endif()
 
+# Install executables from ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin to /tools/icu
+file(GLOB ICU_TOOLS ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(INSTALL ${ICU_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
 # remove any remaining dlls in /lib
 file(GLOB DUMMY_DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
 if(DUMMY_DLLS)
@@ -218,7 +405,7 @@ endif()
 # Generates warnings about missing pdbs for icudt.dll
 # This is expected because ICU database contains no executable code
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread m)
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/icu)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/icu/LICENSE ${CURRENT_PACKAGES_DIR}/share/icu/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

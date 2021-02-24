@@ -1,30 +1,21 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6ce583b..e9ea757 100644
+index fcb4a1d..5810b0c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -665,7 +665,7 @@ endif()
- 
- if(WIN32)
-   # Postfix of DLLs:
--  set(OPENCV_DLLVERSION "${OPENCV_VERSION_MAJOR}${OPENCV_VERSION_MINOR}${OPENCV_VERSION_PATCH}")
-+  set(OPENCV_DLLVERSION "")
-   set(OPENCV_DEBUG_POSTFIX d)
- else()
-   # Postfix of so's:
-@@ -716,7 +716,7 @@ endif()
+@@ -607,7 +607,7 @@ endif()
  ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
  
  # --- Python Support ---
 -if(NOT IOS)
-+if(0)
++if(FALSE)
    include(cmake/OpenCVDetectPython.cmake)
  endif()
  
 diff --git a/cmake/OpenCVCompilerOptions.cmake b/cmake/OpenCVCompilerOptions.cmake
-index 0b9d669..142b21b 100644
+index 8a3dcdb..b8b3bae 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
-@@ -254,7 +254,6 @@ if(MSVC)
+@@ -262,7 +262,6 @@ if(MSVC)
    #endif()
  
    if(BUILD_WITH_DEBUG_INFO)
@@ -33,27 +24,32 @@ index 0b9d669..142b21b 100644
      set(OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE} /debug")
    endif()
 diff --git a/cmake/OpenCVGenConfig.cmake b/cmake/OpenCVGenConfig.cmake
-index 2c7c42b..e7bc157 100644
+index c7f9fc2..a1f657b 100644
 --- a/cmake/OpenCVGenConfig.cmake
 +++ b/cmake/OpenCVGenConfig.cmake
-@@ -109,7 +109,7 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
+@@ -109,11 +109,11 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
    endif()
  endfunction()
  
 -if((CMAKE_HOST_SYSTEM_NAME MATCHES "Linux" OR UNIX) AND NOT ANDROID)
-+if(NOT ANDROID)
++if(TRUE)
    ocv_gen_config("${CMAKE_BINARY_DIR}/unix-install" "" "")
  endif()
  
+-if(ANDROID)
++if(FALSE)
+   ocv_gen_config("${CMAKE_BINARY_DIR}/unix-install" "abi-${ANDROID_NDK_ABI_NAME}" "OpenCVConfig.root-ANDROID.cmake.in")
+   install(FILES "${OpenCV_SOURCE_DIR}/platforms/android/android.toolchain.cmake" DESTINATION "${OPENCV_CONFIG_INSTALL_PATH}" COMPONENT dev)
+ endif()
 @@ -121,7 +121,7 @@ endif()
  # --------------------------------------------------------------------------------------------
  #  Part 3/3: ${BIN_DIR}/win-install/OpenCVConfig.cmake  -> For use within binary installers/packages
  # --------------------------------------------------------------------------------------------
 -if(WIN32)
-+if(0)
-   if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows)
-     if(BUILD_SHARED_LIBS)
-       set(_lib_suffix "lib")
++if(FALSE)
+   if(CMAKE_HOST_SYSTEM_NAME MATCHES Windows AND NOT OPENCV_SKIP_CMAKE_ROOT_CONFIG)
+     ocv_gen_config("${CMAKE_BINARY_DIR}/win-install"
+                    "${OPENCV_INSTALL_BINARIES_PREFIX}${OPENCV_INSTALL_BINARIES_SUFFIX}"
 diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
 index 1f0d720..0bb1ff7 100644
 --- a/data/CMakeLists.txt

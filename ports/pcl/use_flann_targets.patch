@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 0b4c1a3..94bb484 100755
+index 93a6448..b24f681 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -280,11 +280,9 @@ find_package(Eigen REQUIRED)
+@@ -302,10 +302,9 @@ find_package(Eigen 3.1 REQUIRED)
  include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS})
  
  # FLANN (required)
@@ -11,145 +11,87 @@ index 0b4c1a3..94bb484 100755
 -endif()
 +set(FLANN_USE_STATIC ON)
  find_package(FLANN 1.7.0 REQUIRED)
--include_directories(${FLANN_INCLUDE_DIRS})
 +find_package(lz4)
  
  # libusb-1.0
  option(WITH_LIBUSB "Build USB RGBD-Camera drivers" TRUE)
 diff --git a/PCLConfig.cmake.in b/PCLConfig.cmake.in
-index 6fadb59..6a9c5b7 100755
+index 79077fb..042467b 100644
 --- a/PCLConfig.cmake.in
 +++ b/PCLConfig.cmake.in
-@@ -226,12 +226,6 @@ endmacro(find_rssdk)
+@@ -88,11 +88,6 @@ endmacro()
  
- #remove this as soon as flann is shipped with FindFlann.cmake
- macro(find_flann)
+ ### ---[ 3rd party libraries
+ macro(find_boost)
 -  if(PCL_ALL_IN_ONE_INSTALLER)
--    set(FLANN_ROOT "${PCL_ROOT}/3rdParty/Flann")
--  elseif(NOT FLANN_ROOT)
--    get_filename_component(FLANN_ROOT "@FLANN_INCLUDE_DIRS@" PATH)
--  endif(PCL_ALL_IN_ONE_INSTALLER)
--
-   set(FLANN_USE_STATIC @FLANN_USE_STATIC@)
-   find_package(FLANN)
- endmacro(find_flann)
-@@ -651,7 +645,7 @@ endif(NOT "${PCL_DEFINITIONS}" STREQUAL "")
- pcl_remove_duplicate_libraries(PCL_COMPONENTS PCL_LIBRARIES)
+-    set(BOOST_ROOT "${PCL_ROOT}/3rdParty/Boost")
+-  elseif(NOT BOOST_INCLUDEDIR)
+-    set(BOOST_INCLUDEDIR "@Boost_INCLUDE_DIR@")
+-  endif()
+   # use static Boost in Windows
+   if(WIN32)
+     set(Boost_USE_STATIC_LIBS @Boost_USE_STATIC_LIBS@)
+@@ -667,8 +662,8 @@ pcl_remove_duplicate_libraries(PCL_COMPONENTS PCL_LIBRARIES)
  
  # Add 3rd party libraries, as user code might include our .HPP implementations
--list(APPEND PCL_LIBRARIES ${BOOST_LIBRARIES} ${QHULL_LIBRARIES} ${OPENNI_LIBRARIES} ${OPENNI2_LIBRARIES} ${ENSENSO_LIBRARIES} ${davidSDK_LIBRARIES} ${DSSDK_LIBRARIES} ${RSSDK_LIBRARIES} ${FLANN_LIBRARIES} ${VTK_LIBRARIES})
-+list(APPEND PCL_LIBRARIES ${BOOST_LIBRARIES} ${QHULL_LIBRARIES} ${OPENNI_LIBRARIES} ${OPENNI2_LIBRARIES} ${ENSENSO_LIBRARIES} ${davidSDK_LIBRARIES} ${DSSDK_LIBRARIES} ${RSSDK_LIBRARIES} flann::flann_cpp ${VTK_LIBRARIES})
+ list(APPEND PCL_LIBRARIES ${BOOST_LIBRARIES} ${QHULL_LIBRARIES} ${OPENNI_LIBRARIES} ${OPENNI2_LIBRARIES} ${ENSENSO_LIBRARIES} ${davidSDK_LIBRARIES} ${DSSDK_LIBRARIES} ${RSSDK_LIBRARIES} ${RSSDK2_LIBRARIES} ${VTK_LIBRARIES})
+-if (TARGET FLANN::FLANN)
+-  list(APPEND PCL_LIBRARIES FLANN::FLANN)
++if (TARGET flann::flann_cpp)
++  list(APPEND PCL_LIBRARIES flann::flann_cpp)
+ endif()
  
  find_package_handle_standard_args(PCL DEFAULT_MSG PCL_LIBRARIES PCL_INCLUDE_DIRS)
- mark_as_advanced(PCL_LIBRARIES PCL_INCLUDE_DIRS PCL_LIBRARY_DIRS)
 diff --git a/doc/tutorials/content/sources/vfh_recognition/CMakeLists.txt b/doc/tutorials/content/sources/vfh_recognition/CMakeLists.txt
-index 9693792..dcd4373 100755
+index 7d25d3f..18227a6 100644
 --- a/doc/tutorials/content/sources/vfh_recognition/CMakeLists.txt
 +++ b/doc/tutorials/content/sources/vfh_recognition/CMakeLists.txt
-@@ -1,6 +1,6 @@
- cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+@@ -16,7 +16,7 @@ include_directories(SYSTEM
  
--# we need FindFLANN.cmake 
-+# we need FindFLANN.cmake
- list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+ add_executable(build_tree build_tree.cpp)
+ target_link_libraries(build_tree ${PCL_LIBRARIES} ${Boost_LIBRARIES}
+-                                 FLANN::FLANN ${HDF5_LIBRARIES})
++                                 flann::flann_cpp ${HDF5_LIBRARIES})
  
- project(vfh_cluster_classifier)
-@@ -14,16 +14,15 @@ find_package(HDF5)
- if(HDF5_FOUND)
- 
-   find_package(FLANN)
--  include_directories(${FLANN_INCLUDE_DIRS})
- 
-   include_directories(${HDF5_INCLUDE_DIR})
- 
-   add_executable(build_tree build_tree.cpp)
-   target_link_libraries(build_tree ${PCL_LIBRARIES} ${Boost_LIBRARIES}
--                                 ${FLANN_LIBRARIES} ${HDF5_hdf5_LIBRARY})
-+                                 flann::flann_cpp ${HDF5_hdf5_LIBRARY})
- 
-   add_executable(nearest_neighbors nearest_neighbors.cpp)
--  target_link_libraries(nearest_neighbors ${PCL_LIBRARIES} 
--                                        ${Boost_LIBRARIES} ${FLANN_LIBRARIES} ${HDF5_hdf5_LIBRARY} 
-+  target_link_libraries(nearest_neighbors ${PCL_LIBRARIES}
-+                                        ${Boost_LIBRARIES} flann::flann_cpp ${HDF5_hdf5_LIBRARY}
-                                         )
- endif(HDF5_FOUND)
+ add_executable(nearest_neighbors nearest_neighbors.cpp)
+-target_link_libraries(nearest_neighbors ${PCL_LIBRARIES} ${Boost_LIBRARIES} FLANN::FLANN ${HDF5_LIBRARIES})
++target_link_libraries(nearest_neighbors ${PCL_LIBRARIES} ${Boost_LIBRARIES} flann::flann_cpp ${HDF5_LIBRARIES})
 diff --git a/kdtree/CMakeLists.txt b/kdtree/CMakeLists.txt
-index 311dffc..1a7712f 100755
+index 826e902..f714130 100644
 --- a/kdtree/CMakeLists.txt
 +++ b/kdtree/CMakeLists.txt
-@@ -9,18 +9,18 @@ PCL_SUBSYS_DEPEND(build "${SUBSYS_NAME}" DEPS ${SUBSYS_DEPS} EXT_DEPS flann)
- PCL_ADD_DOC("${SUBSYS_NAME}")
+@@ -31,7 +31,7 @@ set(impl_incs
+ set(LIB_NAME "pcl_${SUBSYS_NAME}")
+ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
+ PCL_ADD_LIBRARY(${LIB_NAME} COMPONENT ${SUBSYS_NAME} SOURCES ${srcs} ${incs} ${impl_incs})
+-target_link_libraries("${LIB_NAME}" pcl_common FLANN::FLANN)
++target_link_libraries("${LIB_NAME}" pcl_common flann::flann_cpp)
+ set(EXT_DEPS flann)
+ PCL_MAKE_PKGCONFIG(${LIB_NAME} COMPONENT ${SUBSYS_NAME} DESC ${SUBSYS_DESC} PCL_DEPS ${SUBSYS_DEPS} EXT_DEPS ${EXT_DEPS})
  
- if(build)
--    set(srcs 
-+    set(srcs
-         src/kdtree_flann.cpp
-         )
- 
--    set(incs 
-+    set(incs
-         "include/pcl/${SUBSYS_NAME}/kdtree.h"
-         "include/pcl/${SUBSYS_NAME}/io.h"
-         "include/pcl/${SUBSYS_NAME}/flann.h"
-         "include/pcl/${SUBSYS_NAME}/kdtree_flann.h"
-         )
- 
--    set(impl_incs 
-+    set(impl_incs
-         "include/pcl/${SUBSYS_NAME}/impl/io.hpp"
-         "include/pcl/${SUBSYS_NAME}/impl/kdtree_flann.hpp"
-         )
-@@ -28,7 +28,7 @@ if(build)
-     set(LIB_NAME "pcl_${SUBSYS_NAME}")
-     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
-     PCL_ADD_LIBRARY("${LIB_NAME}" "${SUBSYS_NAME}" ${srcs} ${incs} ${impl_incs})
--    target_link_libraries("${LIB_NAME}" pcl_common ${FLANN_LIBRARIES})
-+    target_link_libraries("${LIB_NAME}" pcl_common flann::flann_cpp)
-     set(EXT_DEPS flann)
-     PCL_MAKE_PKGCONFIG("${LIB_NAME}" "${SUBSYS_NAME}" "${SUBSYS_DESC}"
-                        "${SUBSYS_DEPS}" "${EXT_DEPS}" "" "" "")
-@@ -38,4 +38,3 @@ if(build)
-     PCL_ADD_INCLUDES("${SUBSYS_NAME}" "${SUBSYS_NAME}/impl" ${impl_incs})
- 
- endif(build)
--
 diff --git a/search/CMakeLists.txt b/search/CMakeLists.txt
-index cd82a0e..1d15241 100755
+index 46f4632..67c5e53 100644
 --- a/search/CMakeLists.txt
 +++ b/search/CMakeLists.txt
-@@ -38,7 +38,7 @@ if(build)
-     set(LIB_NAME "pcl_${SUBSYS_NAME}")
-     include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
-     PCL_ADD_LIBRARY("${LIB_NAME}" "${SUBSYS_NAME}" ${srcs} ${incs} ${impl_incs})
--    target_link_libraries("${LIB_NAME}" pcl_common ${FLANN_LIBRARIES} pcl_octree pcl_kdtree)
-+    target_link_libraries("${LIB_NAME}" pcl_common flann::flann_cpp pcl_octree pcl_kdtree)
-     list(APPEND EXT_DEPS flann)
-     PCL_MAKE_PKGCONFIG("${LIB_NAME}" "${SUBSYS_NAME}" "${SUBSYS_DESC}" "${SUBSYS_DEPS}" "" "" "" "")
+@@ -41,7 +41,7 @@ set(impl_incs
+ set(LIB_NAME "pcl_${SUBSYS_NAME}")
+ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/include")
+ PCL_ADD_LIBRARY(${LIB_NAME} COMPONENT ${SUBSYS_NAME} SOURCES ${srcs} ${incs} ${impl_incs})
+-target_link_libraries("${LIB_NAME}" pcl_common FLANN::FLANN pcl_octree pcl_kdtree)
++target_link_libraries("${LIB_NAME}" pcl_common flann::flann_cpp pcl_octree pcl_kdtree)
+ list(APPEND EXT_DEPS flann)
+ PCL_MAKE_PKGCONFIG(${LIB_NAME} COMPONENT ${SUBSYS_NAME} DESC ${SUBSYS_DESC} PCL_DEPS ${SUBSYS_DEPS})
  
-@@ -46,4 +46,3 @@ if(build)
-     PCL_ADD_INCLUDES("${SUBSYS_NAME}" "${SUBSYS_NAME}/impl" ${impl_incs})
- 
- endif(build)
--
 diff --git a/test/features/CMakeLists.txt b/test/features/CMakeLists.txt
-index cedb0cb..4b37c73 100755
+index 9775415..bf582ac 100644
 --- a/test/features/CMakeLists.txt
 +++ b/test/features/CMakeLists.txt
-@@ -81,14 +81,14 @@ if (build)
-     PCL_ADD_TEST(feature_flare_estimation test_flare_estimation
-                  FILES test_flare_estimation.cpp
-                  LINK_WITH pcl_gtest pcl_features pcl_io
--                 ARGUMENTS "${PCL_SOURCE_DIR}/test/bun0.pcd")				 
-+                 ARGUMENTS "${PCL_SOURCE_DIR}/test/bun0.pcd")
-     PCL_ADD_TEST(feature_shot_lrf_estimation test_shot_lrf_estimation
-                  FILES test_shot_lrf_estimation.cpp
-                  LINK_WITH pcl_gtest pcl_features pcl_io
-                  ARGUMENTS "${PCL_SOURCE_DIR}/test/bun0.pcd")
-     PCL_ADD_TEST(features_narf test_narf
-                  FILES test_narf.cpp
--                 LINK_WITH pcl_gtest pcl_features ${FLANN_LIBRARIES})
-+                 LINK_WITH pcl_gtest pcl_features flann::flann_cpp)
-     PCL_ADD_TEST(a_ii_normals_test test_ii_normals
-                  FILES test_ii_normals.cpp
-                  LINK_WITH pcl_gtest pcl_io pcl_features
+@@ -91,7 +91,7 @@ if(BUILD_io)
+                ARGUMENTS "${PCL_SOURCE_DIR}/test/bun0.pcd")
+   PCL_ADD_TEST(features_narf test_narf
+                FILES test_narf.cpp
+-               LINK_WITH pcl_gtest pcl_features FLANN::FLANN)
++               LINK_WITH pcl_gtest pcl_features flann::flann_cpp)
+   PCL_ADD_TEST(a_ii_normals_test test_ii_normals
+                FILES test_ii_normals.cpp
+                LINK_WITH pcl_gtest pcl_io pcl_features

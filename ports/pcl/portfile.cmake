@@ -1,24 +1,32 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF pcl-1.9.1
-    SHA512 ca95028c23861ac2df0fa7e18fdd0202255cb2e49ab714325eb36c35289442c6eedbf489e6f9f232b30fa2a93eff4c9619f8a14d3fdfe58f353a4a6e26206bdf
+    REF d98313133b014553ab1b1b5b112f9aade837d55c # pcl-1.11.1
+    SHA512 4d60f34d4fbf0a4b4caf9cc4391af471ebd260b3bbac106d45e5ff38448894ea4dc82d5320c2e395c537a4414eb13c6a6a0eb6c13e4e1cc1d831d4bf24067966
     HEAD_REF master
     PATCHES
         pcl_utils.patch
         pcl_config.patch
         use_flann_targets.patch
         boost-1.70.patch
-        cuda_10_1.patch
-		# Patch for https://github.com/microsoft/vcpkg/issues/7660
-		use_target_link_libraries_in_pclconfig.patch
+        fix-link-libpng.patch
+        remove-broken-targets.patch
+        fix-check-sse.patch
+        realsense2.patch
+        add-gcc-version-check.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
+
+if ("cuda" IN_LIST FEATURES AND VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    message(FATAL_ERROR "Feature cuda only supports 64-bit compilation.")
+endif()
+
+if ("tools" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    message(FATAL_ERROR "Feature tools only supports dynamic build")
+endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     openni2     WITH_OPENNI2
@@ -29,6 +37,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     cuda        BUILD_GPU
     tools       BUILD_tools
     opengl      WITH_OPENGL
+    vtk         WITH_VTK
 )
 
 vcpkg_configure_cmake(
@@ -46,7 +55,6 @@ vcpkg_configure_cmake(
         -DWITH_LIBUSB=OFF
         -DWITH_PNG=ON
         -DWITH_QHULL=ON
-        -DWITH_VTK=ON
         # FEATURES
         ${FEATURE_OPTIONS}
 )
@@ -58,7 +66,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if("tools" IN_LIST FEATURES)
+if("tools" IN_LIST FEATURES) 
     file(GLOB EXEFILES_RELEASE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
     file(GLOB EXEFILES_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
     file(COPY ${EXEFILES_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/pcl)
@@ -66,5 +74,4 @@ if("tools" IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/pcl)
 endif()
 
-file(COPY ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcl)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/pcl/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/pcl/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

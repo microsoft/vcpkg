@@ -1,26 +1,31 @@
-include(vcpkg_common_functions)
-
-IF (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
+IF (NOT VCPKG_TARGET_IS_LINUX)
    set(USE_LIBUV ON)
 EndIF ()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO uNetworking/uSockets
-    REF v0.3.1
-    SHA512 f02b72844fb87acbf435d86a89e55244e45e047b049f36bda8e89c9ddeba8d7e6432008d33d33771faec60dcca60a3e3bfa3918c3af08ba80741e09df62c91fd
+    REF 7683672d87067cd75b854f4e36b9820f4809a4be # 2021-1-19
+    SHA512 0dbedc5e90af9a92e6597e801116b57fd99dcd5a8488e3b5ddce83bbcd1852d30f2c8954dc1991a807d32f00bdb62e654498687fec344d295f299ccf3920a1ca
     HEAD_REF master
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-set(USE_OPENSSL OFF)
+if ("network" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "Feature network only support Windows")
+endif()
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    ssl CMAKE_USE_OPENSSL
+    event CMAKE_USE_EVENT
+    network CMAKE_USE_NETWORK
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
-        -DCMAKE_USE_OPENSSL=${USE_OPENSSL}
+    OPTIONS ${FEATURE_OPTIONS}
         -DLIBUS_USE_LIBUV=${USE_LIBUV}
     OPTIONS_DEBUG
         -DINSTALL_HEADERS=OFF
@@ -28,7 +33,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/usockets)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/usockets/LICENSE ${CURRENT_PACKAGES_DIR}/share/usockets/copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

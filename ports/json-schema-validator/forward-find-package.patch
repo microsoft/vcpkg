@@ -1,0 +1,14 @@
+diff --git a/nlohmann_json_schema_validatorConfig.cmake.in b/nlohmann_json_schema_validatorConfig.cmake.in
+index 6ee0df2..e0315fa 100644
+--- a/nlohmann_json_schema_validatorConfig.cmake.in
++++ b/nlohmann_json_schema_validatorConfig.cmake.in
+@@ -7,6 +7,9 @@
+ get_filename_component(NLOHMANN_JSON_SCHEMA_VALIDATOR_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+ set(NLOHMANN_JSON_SCHEMA_VALIDATOR_INCLUDE_DIRS @CONF_INCLUDE_DIRS@)
+ 
++include(CMakeFindDependencyMacro)
++find_dependency(nlohmann_json)
++
+ # Our library dependencies (contains definitions for IMPORTED targets)
+ if(NOT TARGET json-schema-validator)
+     include("${NLOHMANN_JSON_SCHEMA_VALIDATOR_CMAKE_DIR}/nlohmann_json_schema_validatorTargets.cmake")

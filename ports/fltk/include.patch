@@ -1,0 +1,13 @@
+diff --git a/CMake/macros.cmake b/CMake/macros.cmake
+index ca03371..bde2c7e 100644
+--- a/CMake/macros.cmake
++++ b/CMake/macros.cmake
+@@ -36,6 +36,8 @@ macro(FL_ADD_LIBRARY LIBNAME LIBTYPE LIBFILES)
+ 
+     add_library(${LIBRARY_NAME} ${LIBTYPE} ${LIBFILES})
+ 
++    target_include_directories(${LIBRARY_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
++
+     set_target_properties(${LIBRARY_NAME}
+         PROPERTIES
+         OUTPUT_NAME ${LIBRARY_NAME}
