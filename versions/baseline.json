@@ -65,7 +65,7 @@
       "port-version": 0
     },
     "amqpcpp": {
-      "baseline": "4.1.7",
+      "baseline": "4.3.11",
       "port-version": 0
     },
     "anax": {
@@ -698,7 +698,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.75.0",
-      "port-version": 5
+      "port-version": 6
     },
     "boost-move": {
       "baseline": "1.75.0",
@@ -1001,7 +1001,7 @@
       "port-version": 0
     },
     "box2d": {
-      "baseline": "2.4.0",
+      "baseline": "2.4.1",
       "port-version": 0
     },
     "breakpad": {
@@ -1025,7 +1025,7 @@
       "port-version": 0
     },
     "brynet": {
-      "baseline": "1.0.7",
+      "baseline": "1.10.0",
       "port-version": 0
     },
     "bullet3": {
@@ -2084,6 +2084,10 @@
       "baseline": "6.0",
       "port-version": 3
     },
+    "fxdiv": {
+      "baseline": "2021-02-21",
+      "port-version": 0
+    },
     "g2o": {
       "baseline": "2020-02-07",
       "port-version": 1
@@ -2378,6 +2382,10 @@
     },
     "hayai": {
       "baseline": "2019-08-10",
+      "port-version": 0
+    },
+    "hazelcast-cpp-client": {
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "hdf5": {
@@ -3281,7 +3289,7 @@
       "port-version": 0
     },
     "libpmemobj-cpp": {
-      "baseline": "1.11",
+      "baseline": "1.12",
       "port-version": 0
     },
     "libpng": {
@@ -4686,7 +4694,7 @@
     },
     "poppler": {
       "baseline": "20.12.1",
-      "port-version": 3
+      "port-version": 4
     },
     "portable-snippets": {
       "baseline": "2019-09-20",
@@ -4752,6 +4760,10 @@
       "baseline": "1.0.0",
       "port-version": 0
     },
+    "psimd": {
+      "baseline": "2021-02-21",
+      "port-version": 0
+    },
     "ptex": {
       "baseline": "2.3.2",
       "port-version": 2
@@ -4781,8 +4793,8 @@
       "port-version": 0
     },
     "python3": {
-      "baseline": "3.9.0",
-      "port-version": 3
+      "baseline": "3.9.2",
+      "port-version": 0
     },
     "qca": {
       "baseline": "2.3.1",
@@ -5282,7 +5294,7 @@
     },
     "sdl2": {
       "baseline": "2.0.14",
-      "port-version": 2
+      "port-version": 3
     },
     "sdl2-gfx": {
       "baseline": "1.0.4",
@@ -5309,7 +5321,7 @@
       "port-version": 0
     },
     "seal": {
-      "baseline": "3.6.1",
+      "baseline": "3.6.2",
       "port-version": 0
     },
     "secp256k1": {
@@ -5593,7 +5605,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.33.0",
+      "baseline": "3.34.1",
       "port-version": 0
     },
     "sqlitecpp": {
@@ -5689,7 +5701,7 @@
       "port-version": 0
     },
     "taglib": {
-      "baseline": "1.11.1-20190531",
+      "baseline": "1.12.0-20210123",
       "port-version": 0
     },
     "taocpp-json": {
