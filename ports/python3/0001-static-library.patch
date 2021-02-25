@@ -1,7 +1,7 @@
 From c8b716613c700d154f0edddf75aada19794dbb5d Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Thu, 28 May 2020 17:25:21 -0400
-Subject: [PATCH 1/6] static library
+Subject: [PATCH 1/7] static library
 
 builds the pythoncore as a static library instead of a DLL
 ---

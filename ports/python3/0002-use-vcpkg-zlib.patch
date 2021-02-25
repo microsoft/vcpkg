@@ -1,7 +1,7 @@
 From c7294282be866b2417c45d995fb1cd7bcfe0fc26 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 15:20:36 -0400
-Subject: [PATCH 2/6] use vcpkg zlib
+Subject: [PATCH 2/7] use vcpkg zlib
 
 building without zlib is not a supported configuration, per the warning
 messages.

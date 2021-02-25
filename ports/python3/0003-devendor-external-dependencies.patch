@@ -1,7 +1,7 @@
 From f24918655d42e07aeff6c1b73ca7914e16ca1bf6 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 15:24:38 -0400
-Subject: [PATCH 3/6] devendor external dependencies
+Subject: [PATCH 3/7] devendor external dependencies
 
 externally fetched libraries may cause linker errors resulting from
 duplicate symbols in downstream projects.
