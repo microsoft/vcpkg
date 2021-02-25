@@ -91,6 +91,11 @@ function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https:
     file(WRITE "${_file}" "${NATIVE}")
 endfunction()
 
+function(vcpkg_internal_meson_convert_compiler_flags_to_list _out_var _compiler_flags)
+    string(REGEX REPLACE [=[( +|^)((\"(\\\"|[^"])+\"|\\\"|\\ |[^ ])+)]=] ";\\2" ${_out_var} "${_compiler_flags}")
+    set(${_out_var} "${${_out_var}}" PARENT_SCOPE)
+endfunction()
+
 function(vcpkg_internal_meson_generate_native_file_config _config) #https://mesonbuild.com/Native-environments.html
     if(VCPKG_TARGET_IS_WINDOWS)
         set(L_FLAG /LIBPATH:)
@@ -101,7 +106,7 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
     set(LIBPATH_${_config} "'${L_FLAG}${CURRENT_INSTALLED_DIR}${PATH_SUFFIX_${_config}}/lib'")
     
     set(NATIVE_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
     list(TRANSFORM MESON_CFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CFLAGS_${_config} PREPEND "'")
     #list(APPEND MESON_CFLAGS_${_config} "${LIBPATH_${_config}}")
@@ -109,7 +114,7 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
     list(JOIN MESON_CFLAGS_${_config} ", " MESON_CFLAGS_${_config})
     string(REPLACE "'', " "" MESON_CFLAGS_${_config} "${MESON_CFLAGS_${_config}}")
     string(APPEND NATIVE_${_config} "c_args = [${MESON_CFLAGS_${_config}}]\n")
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
     list(TRANSFORM MESON_CXXFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CXXFLAGS_${_config} PREPEND "'")
     #list(APPEND MESON_CXXFLAGS_${_config} "${LIBPATH_${_config}}")
@@ -123,7 +128,7 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
     else()
         set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${_config}}")
     endif()
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
     list(TRANSFORM LINKER_FLAGS_${_config} APPEND "'")
     list(TRANSFORM LINKER_FLAGS_${_config} PREPEND "'")
     list(APPEND LINKER_FLAGS_${_config} "${LIBPATH_${_config}}")
@@ -272,8 +277,8 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     endif()
     string(APPEND CROSS "cpu_family = '${BUILD_CPU_FAM}'\n")
     string(APPEND CROSS "cpu = '${BUILD_CPU}'\n")
-    
-    if(NOT BUILD_CPU_FAM STREQUAL HOST_CPU_FAM)
+
+    if(NOT BUILD_CPU_FAM STREQUAL HOST_CPU_FAM OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
         set(_file "${CURRENT_BUILDTREES_DIR}/meson-cross-${TARGET_TRIPLET}.log")
         set(VCPKG_MESON_CROSS_FILE "${_file}" PARENT_SCOPE)
         file(WRITE "${_file}" "${CROSS}")
@@ -291,14 +296,14 @@ function(vcpkg_internal_meson_generate_cross_file_config _config) #https://meson
 
 
     set(NATIVE_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(MESON_CFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_C_FLAGS_${_config}}")
     list(TRANSFORM MESON_CFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CFLAGS_${_config} PREPEND "'")
     list(APPEND MESON_CFLAGS_${_config} "'-I\"${CURRENT_INSTALLED_DIR}/include\"'")
     list(JOIN MESON_CFLAGS_${_config} ", " MESON_CFLAGS_${_config})
     string(REPLACE "'', " "" MESON_CFLAGS_${_config} "${MESON_CFLAGS_${_config}}")
     string(APPEND NATIVE_${_config} "c_args = [${MESON_CFLAGS_${_config}}]\n")
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(MESON_CXXFLAGS_${_config} "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${_config}}")
     list(TRANSFORM MESON_CXXFLAGS_${_config} APPEND "'")
     list(TRANSFORM MESON_CXXFLAGS_${_config} PREPEND "'")
     list(APPEND MESON_CXXFLAGS_${_config} "'-I\"${CURRENT_INSTALLED_DIR}/include\"'")
@@ -311,7 +316,7 @@ function(vcpkg_internal_meson_generate_cross_file_config _config) #https://meson
     else()
         set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${_config}}")
     endif()
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
     list(TRANSFORM LINKER_FLAGS_${_config} APPEND "'")
     list(TRANSFORM LINKER_FLAGS_${_config} PREPEND "'")
     list(APPEND LINKER_FLAGS_${_config} "${LIBPATH_${_config}}")
