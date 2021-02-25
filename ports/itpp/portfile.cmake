@@ -10,12 +10,15 @@ vcpkg_from_sourceforge(
        msvc2013.patch
        fix-uwp.patch
        fix-linux.patch
-       fix_include.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_LAPACK=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_FFT=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_BLAS=ON
 )
 
 vcpkg_install_cmake()
