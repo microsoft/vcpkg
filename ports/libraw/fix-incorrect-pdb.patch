@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 948a0a0..1afe304 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -620,12 +620,12 @@ INSTALL(TARGETS raw_r
+         ARCHIVE DESTINATION lib${LIB_SUFFIX}
+        )
+ 
+-IF(MSVC)
+-    INSTALL(FILES ${PROJECT_BINARY_DIR}/raw.pdb
++IF(MSVC AND BUILD_SHARED_LIBS)
++    INSTALL(FILES ${PROJECT_BINARY_DIR}/raw${CMAKE_DEBUG_POSTFIX}.pdb
+             DESTINATION lib
+             CONFIGURATIONS Debug RelWithDebInfo
+            )
+-    INSTALL(FILES ${PROJECT_BINARY_DIR}/raw_r.pdb
++    INSTALL(FILES ${PROJECT_BINARY_DIR}/raw_r${CMAKE_DEBUG_POSTFIX}.pdb
+             DESTINATION lib
+             CONFIGURATIONS Debug RelWithDebInfo
+            )

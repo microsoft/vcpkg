@@ -1,14 +1,8 @@
---- a/cmake/modules/FindLCMS2.cmake	2016-11-02 07:09:50.000000000 +0100
-+++ b/cmake/modules/FindLCMS2.cmake	2018-06-02 00:43:27.309100600 +0200
-@@ -13,7 +13,6 @@
- # Redistribution and use is allowed according to the terms of the BSD license.
- # For details see the accompanying LICENSE file.
- 
--
- # use pkg-config to get the directories and then use these values
- # in the FIND_PATH() and FIND_LIBRARY() calls
- if(NOT WIN32)
-@@ -29,18 +28,30 @@
+diff --git a/cmake/modules/FindLCMS2.cmake b/cmake/modules/FindLCMS2.cmake
+index 4e3e482..bffc946 100644
+--- a/cmake/modules/FindLCMS2.cmake
++++ b/cmake/modules/FindLCMS2.cmake
+@@ -29,18 +29,30 @@ find_path(LCMS2_INCLUDE_DIR lcms2.h
     PATH_SUFFIXES lcms2 liblcms2
  )
  
@@ -16,13 +10,6 @@
 +include(SelectLibraryConfigurations)
 +
 +find_library(LCMS2_LIBRARY_RELEASE NAMES lcms2 liblcms2 lcms-2 liblcms-2
-+   PATHS     
-+   ${PC_LCMS2_LIBDIR}
-+   ${PC_LCMS2_LIBRARY_DIRS}
-+   PATH_SUFFIXES lcms2
-+)
-+
-+find_library(LCMS2_LIBRARY_DEBUG NAMES lcms2d liblcms2d lcms-2d liblcms-2d
     PATHS     
     ${PC_LCMS2_LIBDIR}
     ${PC_LCMS2_LIBRARY_DIRS}
@@ -30,6 +17,13 @@
  )
  
 -if(LCMS2_INCLUDE_DIR AND LCMS2_LIBRARIES)
++find_library(LCMS2_LIBRARY_DEBUG NAMES lcms2d liblcms2d lcms-2d liblcms-2d
++   PATHS     
++   ${PC_LCMS2_LIBDIR}
++   ${PC_LCMS2_LIBRARY_DIRS}
++   PATH_SUFFIXES lcms2
++)
++
 +select_library_configurations(LCMS2)
 +
 +
@@ -43,7 +37,7 @@
  
  if(LCMS2_FOUND)
     file(READ ${LCMS2_INCLUDE_DIR}/lcms2.h LCMS2_VERSION_CONTENT)
-@@ -50,11 +61,11 @@
+@@ -50,11 +62,11 @@ if(LCMS2_FOUND)
        if(NOT LCMS2_FIND_QUIETLY)
           string(SUBSTRING ${LCMS2_VERSION} 0 1 LCMS2_MAJOR_VERSION)
           string(SUBSTRING ${LCMS2_VERSION} 1 2 LCMS2_MINOR_VERSION)
@@ -57,7 +51,7 @@
        endif(NOT LCMS2_FIND_QUIETLY)
        set(LCMS2_VERSION NOTFOUND)
     endif(LCMS2_VERSION_MATCH)
-@@ -68,5 +79,5 @@
+@@ -68,5 +80,5 @@ else(LCMS2_FOUND)
     endif(NOT LCMS2_FIND_QUIETLY)
  endif(LCMS2_FOUND)
  

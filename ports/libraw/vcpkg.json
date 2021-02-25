@@ -1,0 +1,10 @@
+{
+  "name": "libraw",
+  "version-date": "2021-02-24",
+  "description": "raw image decoder library",
+  "homepage": "https://www.libraw.org",
+  "dependencies": [
+    "jasper",
+    "lcms"
+  ]
+}
