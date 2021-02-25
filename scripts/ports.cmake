@@ -23,7 +23,7 @@ else()
     set(Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL "WARNING")
 endif()
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${SCRIPTS}/cmake")
 include("${SCRIPTS}/cmake/vcpkg_minimum_required.cmake")
 vcpkg_minimum_required(VERSION 2021-01-13)
 

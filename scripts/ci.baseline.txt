@@ -27,8 +27,24 @@
 ##    x86-windows
 ##
 
-
 # Add new items alphabetically
+
+# script ports
+vcpkg-cmake:arm64-windows=fail
+vcpkg-cmake:arm-uwp=fail
+vcpkg-cmake:x64-uwp=fail
+vcpkg-cmake:x64-windows-static=fail
+vcpkg-cmake:x64-windows-static-md=fail
+vcpkg-cmake:x86-windows=fail
+
+vcpkg-cmake-config:arm64-windows=fail
+vcpkg-cmake-config:arm-uwp=fail
+vcpkg-cmake-config:x64-uwp=fail
+vcpkg-cmake-config:x64-windows-static=fail
+vcpkg-cmake-config:x64-windows-static-md=fail
+vcpkg-cmake-config:x86-windows=fail
+
+# other ports
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
 # Requires ATL for ARM64 to be installed in CI
