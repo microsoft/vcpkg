@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF v1.x
     PATCHES 
         fix-featurebuild.patch
-        fix-prevent-msvc-warning-in-cuda.patch
+        fix-prevent-msvc-warning-in-cuda.patch # Remove this patch in the next update
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
