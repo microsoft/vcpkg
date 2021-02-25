@@ -1,5 +1,7 @@
 # vcpkg_fixup_cmake_targets
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_fixup_cmake_targets.md).
+
 Merge release and debug CMake targets and configs to support multiconfig generators.
 
 Additionally corrects common issues with targets, such as absolute paths and incorrectly placed binaries.
@@ -49,4 +51,4 @@ Replace `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs and targe
 * [nlohmann-json](https://github.com/Microsoft/vcpkg/blob/master/ports/nlohmann-json/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_fixup_cmake_targets.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_fixup_cmake_targets.cmake)
+[scripts/cmake/vcpkg\_fixup\_cmake\_targets.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_fixup_cmake_targets.cmake)

@@ -1,5 +1,7 @@
 # vcpkg_copy_pdbs
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_copy_pdbs.md).
+
 Automatically locate pdbs in the build tree and copy them adjacent to all DLLs.
 
 ## Usage
@@ -22,4 +24,4 @@ Defaults to `${CURRENT_PACKAGES_DIR}/bin/*.dll` and `${CURRENT_PACKAGES_DIR}/deb
 * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_copy_pdbs.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_copy_pdbs.cmake)
+[scripts/cmake/vcpkg\_copy\_pdbs.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_copy_pdbs.cmake)

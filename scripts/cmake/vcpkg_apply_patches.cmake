@@ -1,7 +1,9 @@
+# DEPRECATED: in favor of the `PATCHES` argument to `vcpkg_from_github()` et al.
+
 #[===[.md
 # vcpkg_apply_patches
 
-Apply a set of patches to a source tree. This function is deprecated in favor of the `PATCHES` argument to `vcpkg_from_github()` et al.
+Apply a set of patches to a source tree.
 
 ## Usage
 ```cmake

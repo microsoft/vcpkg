@@ -1,5 +1,7 @@
 # vcpkg_common_definitions
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_common_definitions.md).
+
 File contains helpful variabls for portfiles which are commonly needed or used.
 
 ## The following variables are available:
@@ -25,4 +27,4 @@ Furthermore the variables CMAKE_FIND_LIBRARY_(PREFIXES|SUFFIXES) are also define
 portfiles are able to use find_library calls to discover dependent libraries within the current triplet for ports.
 
 ## Source
-[scripts/cmake/vcpkg_common_definitions.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_common_definitions.cmake)
+[scripts/cmake/vcpkg\_common\_definitions.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_common_definitions.cmake)

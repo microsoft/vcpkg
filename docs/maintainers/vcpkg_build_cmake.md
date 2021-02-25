@@ -1,5 +1,7 @@
 # vcpkg_build_cmake
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_build_cmake.md).
+
 Build a cmake project.
 
 ## Usage:
@@ -31,4 +33,4 @@ You can use the alias [`vcpkg_install_cmake()`](vcpkg_configure_cmake.md) functi
 * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_build_cmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_build_cmake.cmake)
+[scripts/cmake/vcpkg\_build\_cmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_build_cmake.cmake)

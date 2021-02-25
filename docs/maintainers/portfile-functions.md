@@ -1,10 +1,10 @@
-<!-- Run regenerate.ps1 to extract documentation from scripts/cmake/*.cmake -->
+<!-- Run regenerate.ps1 to extract scripts documentation -->
 
 # Portfile helper functions
 - [execute\_process](execute_process.md)
 - [vcpkg\_acquire\_msys](vcpkg_acquire_msys.md)
 - [vcpkg\_add\_to\_path](vcpkg_add_to_path.md)
-- [vcpkg\_apply\_patches](vcpkg_apply_patches.md)
+- [vcpkg\_apply\_patches](vcpkg_apply_patches.md) (deprecated)
 - [vcpkg\_build\_cmake](vcpkg_build_cmake.md)
 - [vcpkg\_build\_gn](vcpkg_build_gn.md)
 - [vcpkg\_build\_make](vcpkg_build_make.md)
@@ -60,3 +60,5 @@
 - [vcpkg\_internal\_get\_cmake\_vars](internal/vcpkg_internal_get_cmake_vars.md)
 - [z\_vcpkg\_function\_arguments](internal/z_vcpkg_function_arguments.md)
 - [z\_vcpkg\_prettify\_command\_line](internal/z_vcpkg_prettify_command_line.md)
+
+## Scripts from Ports
