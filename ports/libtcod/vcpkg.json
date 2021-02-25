@@ -1,0 +1,14 @@
+{
+  "name": "libtcod",
+  "version-string": "1.16.4",
+  "maintainers": "Kyle Benesch <4b796c65+github@gmail.com>",
+  "description": "Common algorithms and tools for roguelikes.",
+  "homepage": "https://github.com/libtcod/libtcod",
+  "documentation": "https://libtcod.readthedocs.io/en/latest/",
+  "dependencies": [
+    "glad",
+    "sdl2",
+    "stb",
+    "zlib"
+  ]
+}
