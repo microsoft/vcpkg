@@ -1,4 +1,4 @@
-From 4c70ef6c7de2d3ad77213608f514fb9174b149f9 Mon Sep 17 00:00:00 2001
+From e30a560527d17ae81685dd11d3268bc982af2048 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Tue, 16 Feb 2021 18:03:07 -0500
 Subject: [PATCH 7/7] restore support for windows 7
@@ -92,7 +92,7 @@ index 53da3a6d05..3d58bbfe70 100644
      return _PyStatus_OK();
  }
 diff --git a/PC/pyconfig.h b/PC/pyconfig.h
-index d2794ca96e..42da2e2bed 100644
+index 34269f0b75..812f6d9353 100644
 --- a/PC/pyconfig.h
 +++ b/PC/pyconfig.h
 @@ -136,8 +136,8 @@ WIN32 is still required for the locale module.

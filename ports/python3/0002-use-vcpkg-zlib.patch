@@ -1,4 +1,4 @@
-From c7294282be866b2417c45d995fb1cd7bcfe0fc26 Mon Sep 17 00:00:00 2001
+From 6d66d1882a6a80a74773e11592701d3596d80223 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 15:20:36 -0400
 Subject: [PATCH 2/7] use vcpkg zlib
