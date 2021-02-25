@@ -1,4 +1,4 @@
-From 196555707236f4387875749f66620fb519166963 Mon Sep 17 00:00:00 2001
+From c7294282be866b2417c45d995fb1cd7bcfe0fc26 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 15:20:36 -0400
 Subject: [PATCH 2/6] use vcpkg zlib
@@ -10,10 +10,10 @@ messages.
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index dbe236829a..5f30a35eb3 100644
+index 2f8bdaa931..3bdffde75b 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
-@@ -507,8 +507,10 @@
+@@ -495,8 +495,10 @@
      <ClCompile Include="..\Python\thread.c" />
      <ClCompile Include="..\Python\traceback.c" />
    </ItemGroup>
@@ -25,7 +25,7 @@ index dbe236829a..5f30a35eb3 100644
      <ClCompile Include="$(zlibDir)\adler32.c" />
      <ClCompile Include="$(zlibDir)\compress.c" />
      <ClCompile Include="$(zlibDir)\crc32.c" />
-@@ -556,7 +558,7 @@
+@@ -544,7 +546,7 @@
    <Target Name="_WarnAboutToolset" BeforeTargets="PrepareForBuild" Condition="$(PlatformToolset) != 'v140' and $(PlatformToolset) != 'v141' and $(PlatformToolset) != 'v142'">
      <Warning Text="Toolset $(PlatformToolset) is not used for official builds. Your build may have errors or incompatibilities." />
    </Target>

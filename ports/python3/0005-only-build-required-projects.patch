@@ -1,4 +1,4 @@
-From 6492277e39dbe7dd77d32fdc9ae4b989213ef3c6 Mon Sep 17 00:00:00 2001
+From 41dc4e49ea7f4dc6c612096e01799dc63146170d Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 20:15:58 -0400
 Subject: [PATCH 5/6] only build required projects

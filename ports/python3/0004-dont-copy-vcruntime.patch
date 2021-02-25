@@ -1,4 +1,4 @@
-From 8086c67fa7ada1888a7808cbdc6fe74b62abe5b1 Mon Sep 17 00:00:00 2001
+From e7cb34ee5dfa5f80d5c633c7d513970546eb1b59 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 16:12:49 -0400
 Subject: [PATCH 4/6] dont copy vcruntime
@@ -9,10 +9,10 @@ VCRUNTIME140.dll should not be redistributed, ever.
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
-index 5f30a35eb3..3cf21ba39c 100644
+index 3bdffde75b..d8e8d2d086 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
-@@ -565,7 +565,7 @@
+@@ -553,7 +553,7 @@
    <Target Name="_CopyVCRuntime" AfterTargets="Build" Inputs="@(VCRuntimeDLL)" Outputs="$(OutDir)%(Filename)%(Extension)" DependsOnTargets="FindVCRuntime">
      <!-- bpo-38597: When we switch to another VCRuntime DLL, include vcruntime140.dll as well -->
      <Warning Text="A copy of vcruntime140.dll is also required" Condition="!$(VCToolsRedistVersion.StartsWith(`14.`))" />
