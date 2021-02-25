@@ -1,6 +1,10 @@
 # vcpkg_apply_patches
 
-Apply a set of patches to a source tree. This function is deprecated in favor of the `PATCHES` argument to `vcpkg_from_github()` et al.
+**This function has been deprecated in favor of the `PATCHES` argument to `vcpkg_from_github()` et al.**
+
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_apply_patches.md).
+
+Apply a set of patches to a source tree.
 
 ## Usage
 ```cmake
@@ -31,4 +35,4 @@ This should only be used for edge cases, such as patches that are known to fail 
 * [gdal](https://github.com/Microsoft/vcpkg/blob/master/ports/gdal/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_apply_patches.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_apply_patches.cmake)
+[scripts/cmake/vcpkg\_apply\_patches.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_apply_patches.cmake)
