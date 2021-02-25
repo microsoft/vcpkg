@@ -62,3 +62,13 @@
 - [z\_vcpkg\_prettify\_command\_line](internal/z_vcpkg_prettify_command_line.md)
 
 ## Scripts from Ports
+
+### [vcpkg-cmake](ports/vcpkg-cmake.md)
+
+- [vcpkg\_cmake\_build](ports/vcpkg-cmake/vcpkg_cmake_build.md)
+- [vcpkg\_cmake\_configure](ports/vcpkg-cmake/vcpkg_cmake_configure.md)
+- [vcpkg\_cmake\_install](ports/vcpkg-cmake/vcpkg_cmake_install.md)
+
+### [vcpkg-cmake-config](ports/vcpkg-cmake-config.md)
+
+- [vcpkg\_cmake\_config\_fixup](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md)
