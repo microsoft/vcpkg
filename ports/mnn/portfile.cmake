@@ -13,11 +13,21 @@ vcpkg_from_github(
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     test        MNN_BUILD_TEST
-    tools       MNN_BUILD_TOOLS
+    test        MNN_BUILD_BENCHMARK
     cuda        MNN_CUDA
+    cuda        MNN_GPU_TRACE
     vulkan      MNN_VULKAN
+    vulkan      MNN_GPU_TRACE
+    vulkan      MNN_USE_SYSTEM_LIB
     opencl      MNN_OPENCL
+    opencl      MNN_USE_SYSTEM_LIB
     metal       MNN_METAL
+    metal       MNN_GPU_TRACE
+    tools       MNN_BUILD_TOOLS
+    tools       MNN_BUILD_QUANTOOLS
+    tools       MNN_BUILD_TRAIN
+    tools       MNN_EVALUATION
+    tools       MNN_BUILD_CONVERTER
 )
 
 # 'cuda' feature in Windows failes with Ninja because of parallel PDB access. Make it optional
@@ -26,36 +36,10 @@ if("cuda" IN_LIST FEATURES)
     unset(NINJA_OPTION)
 endif()
 
-if("test" IN_LIST FEATURES)
-    list(APPEND BUILD_OPTIONS -DMNN_BUILD_BENCHMARK=ON)
-endif()
-if("tools" IN_LIST FEATURES)
-    list(APPEND BUILD_OPTIONS -DMNN_BUILD_QUANTOOLS=ON
-                              -DMNN_BUILD_TRAIN=ON 
-                              -DMNN_BUILD_DEMO=ON 
-                              -DMNN_EVALUATION=ON 
-                              -DMNN_BUILD_CONVERTER=ON
-    )
-endif()
-if("cuda" IN_LIST FEATURES OR "vulkan" IN_LIST FEATURES)
-    list(APPEND BUILD_OPTIONS -DMNN_GPU_TRACE=ON)
-endif()
-if("opencl" IN_LIST FEATURES OR "vulkan" IN_LIST FEATURES)
-    list(APPEND BUILD_OPTIONS -DMNN_USE_SYSTEM_LIB=ON)
-endif()
-
 if(VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_RUNTIME_MT)
     list(APPEND PLATFORM_OPTIONS -DMNN_WIN_RUNTIME_MT=${USE_RUNTIME_MT})
-elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
-    if("metal" IN_LIST FEATURES)
-        list(APPEND PLATFORM_OPTIONS -DMNN_GPU_TRACE=ON)
-    endif()
 endif()
-message(STATUS "Applying build options")
-message(STATUS "  ${FEATURE_OPTIONS}")
-message(STATUS "  ${BUILD_OPTIONS}")
-message(STATUS "  ${PLATFORM_OPTIONS}")
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
@@ -75,7 +59,8 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT})
 
-file(INSTALL ${CURRENT_PORT_DIR}/copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(DOWNLOAD "https://apache.org/licenses/LICENSE-2.0.txt" ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     if("metal" IN_LIST FEATURES)
         file(RENAME ${CURRENT_PACKAGES_DIR}/bin/mnn.metallib
