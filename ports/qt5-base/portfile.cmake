@@ -136,9 +136,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if ("vulkan" IN_LIST FEATURES)
-    list(APPEND CORE_OPTIONS -vulkan)
+    list(APPEND CORE_OPTIONS --vulkan=yes)
 else()
-    list(APPEND CORE_OPTIONS -no-vulkan)
+    list(APPEND CORE_OPTIONS --vulkan=no)
 endif()
 
 find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
