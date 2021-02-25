@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ecfbb83..0c757ba 100644
+index ecfbb83..7fb7a15 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -34,13 +34,23 @@ endif()
@@ -13,7 +13,7 @@ index ecfbb83..0c757ba 100644
 -if (NOT BROTLIENC_FOUND)
 -    message(FATAL_ERROR "librotlienc is needed to build woff2.")
 -endif ()
-+if (BROTLIDEC_FOUND AND BROTLIENC_FOUND)
++if(BROTLIDEC_FOUND AND BROTLIENC_FOUND)
 +  include_directories("${BROTLIDEC_INCLUDE_DIRS}" "${BROTLIENC_INCLUDE_DIRS}")
 +  set(WOFF2_BROTLIDEC libbrotlidec)
 +  set(WOFF2_BROTLIENC libbrotlienc)
@@ -21,7 +21,7 @@ index ecfbb83..0c757ba 100644
 +  set(WOFF2_BORTLIENC_LIBRARIES "${BROTLIENC_LIBRARIES}")
 +else()
 +  find_package(unofficial-brotli REQUIRED)
-+  if (TARGET VCPKG_LIBRARY_LINKAGE STREQUAL static)
++  if(TARGET unofficial::brotli::brotlidec-static)
 +    set(BROTLI_LINKAGE -static)
 +  endif()
 +  set(WOFF2_BROTLIDEC unofficial::brotli::brotlidec${BROTLI_LINKAGE})
