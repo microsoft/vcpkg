@@ -1,0 +1,12 @@
+{
+  "name": "xnnpack",
+  "version-date": "2021-02-26",
+  "description": "High-efficiency floating-point neural network inference operators for mobile, server, and Web",
+  "homepage": "https://github.com/google/XNNPACK",
+  "dependencies": [
+    "cpuinfo",
+    "fp16",
+    "fxdiv",
+    "pthreadpool"
+  ]
+}
