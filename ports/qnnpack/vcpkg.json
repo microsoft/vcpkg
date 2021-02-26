@@ -1,0 +1,13 @@
+{
+  "name": "qnnpack",
+  "version-date": "2021-02-26",
+  "description": "Quantized Neural Network PACKage - mobile-optimized implementation of quantized neural network operators",
+  "homepage": "https://github.com/pytorch/QNNPACK",
+  "dependencies": [
+    "cpuinfo",
+    "fp16",
+    "fxdiv",
+    "psimd",
+    "pthreadpool"
+  ]
+}
