@@ -1,3 +1,9 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
+message("Warning: `mfl` is a C++20 library and requires a corresponding compiler. GCC 10, Clang 10 and MSVC 2019 16.8 are known to work.")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cpp-niel/mfl
