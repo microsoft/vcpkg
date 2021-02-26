@@ -10,6 +10,7 @@ vcpkg_from_github(
         disable-c4275.patch
         fix-dependency-imgui.patch
         add-MATROSKA_VERSION-define.patch
+        fix-dependency-libjpeg-turbo.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

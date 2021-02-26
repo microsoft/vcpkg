@@ -1,0 +1,26 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ed4a6d2..29813c6 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -105,7 +105,7 @@ find_package(gtest CONFIG REQUIRED)
+ find_package(imgui CONFIG REQUIRED)
+ find_package(EBML CONFIG REQUIRED)
+ find_package(JPEG REQUIRED)
+-find_library(JPEG_TURBO turbojpeg REQUIRED)
++find_package(libjpeg-turbo CONFIG REQUIRED)
+ find_package(Matroska CONFIG REQUIRED)
+ add_definitions(-DMATROSKA_VERSION=2)
+ find_package(libsoundio CONFIG REQUIRED)
+@@ -116,6 +116,12 @@ if (BUILD_TOOLS)
+     find_package(gl3w CONFIG REQUIRED)
+ endif()
+ # add jpeg-turbo library to jpeg libraries.
++if(BUILD_SHARED_LIBS OR NOT MSVC)
++    set(JPEG_TURBO libjpeg-turbo::jpeg libjpeg-turbo::turbojpeg)
++else()
++    set(JPEG_TURBO libjpeg-turbo::jpeg-static libjpeg-turbo::turbojpeg-static)
++endif()
++
+ set(JPEG_LIBRARIES ${JPEG_LIBRARIES} ${JPEG_TURBO})
+ # Fix embl error
+ add_compile_options(/wd4828 /wd4251 /wd4275)

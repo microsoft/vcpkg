@@ -24,7 +24,12 @@ install(
 
 if(NOT DISABLE_INSTALL_TOOLS)
   add_executable(butteraugli butteraugli/butteraugli_main.cc)
-  find_library(TURBO turbojpeg)
+  find_package(libjpeg-turbo CONFIG REQUIRED)
+  if(BUILD_SHARED_LIBS OR NOT MSVC)
+    set(TURBO libjpeg-turbo::jpeg libjpeg-turbo::turbojpeg)
+  else()
+    set(TURBO libjpeg-turbo::jpeg-static libjpeg-turbo::turbojpeg-static)
+  endif()
   target_link_libraries(butteraugli butteraugli_lib ${JPEG_LIBRARIES} ${TURBO} ${PNG_LIBRARIES})
 
   install (

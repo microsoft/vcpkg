@@ -100,7 +100,7 @@ replace_skia_dep(expat "/include" "libexpat,libexpatd,libexpatdMD" "libexpat,lib
 replace_skia_dep(freetype2 "/include" "freetype,freetyped" "freetype" "")
 replace_skia_dep(harfbuzz "/include/harfbuzz" "harfbuzz-icu" "harfbuzz-icu" "")
 replace_skia_dep(icu "/include" "icuuc,icuucd" "icuuc" "U_USING_ICU_NAMESPACE=0")
-replace_skia_dep(libjpeg-turbo "/include" "jpeg,jpegd;turbojpeg,turbojpegd" "jpeg;turbojpeg" "")
+replace_skia_dep(libjpeg-turbo "/include" "jpeg,jpeg-static;turbojpeg,turbojpeg-static" "jpeg;turbojpeg" "")
 replace_skia_dep(libpng "/include" "libpng16,libpng16d" "libpng16" "")
 replace_skia_dep(libwebp "/include" 
     "webp,webpd;webpdemux,webpdemuxd;webpdecoder,webpdecoderd;libwebpmux,libwebpmuxd" 

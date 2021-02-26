@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index aedc576..8cfda88 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -237,7 +237,13 @@ IF(LIBFREENECT2_WITH_VT_SUPPORT)
+   FIND_PACKAGE(TurboJPEG)
+ ELSE()
+   # VAAPI can fail to start at runtime. It must have a fallback.
+-  FIND_PACKAGE(TurboJPEG REQUIRED)
++  FIND_PACKAGE(libjpeg-turbo CONFIG REQUIRED)
++  set(TurboJPEG_FOUND 1)
++  if(BUILD_SHARED_LIBS OR NOT MSVC)
++    set(TurboJPEG_LIBRARIES libjpeg-turbo::jpeg libjpeg-turbo::turbojpeg)
++  else()
++      set(TurboJPEG_LIBRARIES libjpeg-turbo::jpeg-static libjpeg-turbo::turbojpeg-static)
++  endif()
+ ENDIF()
+ 
+ SET(HAVE_TurboJPEG no)
