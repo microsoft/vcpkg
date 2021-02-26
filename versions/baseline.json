@@ -2532,6 +2532,10 @@
       "baseline": "9.0.0",
       "port-version": 0
     },
+	"iir1": {
+      "baseline": "1.8.0",
+      "port-version": 0
+    },
     "ijg-libjpeg": {
       "baseline": "9d",
       "port-version": 0
