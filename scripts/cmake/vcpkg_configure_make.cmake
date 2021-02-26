@@ -139,6 +139,26 @@ macro(_vcpkg_determine_autotools_target_cpu out_var)
     endif()
 endmacro()
 
+macro(_vcpkg_determine_autotools_host_arch_mac out_var)
+    set(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
+endmacro()
+
+macro(_vcpkg_determine_autotools_target_arch_mac out_var)
+    list(LENGTH VCPKG_OSX_ARCHITECTURES _num_osx_archs)
+    if(_num_osx_archs GREATER_EQUAL 2)
+        set(${out_var} "universal")
+    else()
+        # Better match the arch behavior of config.guess
+        # See: https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD
+        if(VCPKG_OSX_ARCHITECTURES MATCHES "^(ARM|arm)64$")
+            set(${out_var} "aarch64")
+        else()
+            set(${out_var} "${VCPKG_OSX_ARCHITECTURES}")
+        endif()
+    endif()
+    unset(_num_osx_archs)
+endmacro()
+
 macro(_vcpkg_backup_env_variable envvar)
     if(DEFINED ENV{${envvar}})
         set(${envvar}_BACKUP "$ENV{${envvar}}")
@@ -392,14 +412,38 @@ function(vcpkg_configure_make)
         list(APPEND _csc_OPTIONS gl_cv_double_slash_root=yes
                                  ac_cv_func_memmove=yes)
         #list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all) # Just ignore libtool checks 
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        if(VCPKG_TARGET_ARCHITECTURE MATCHES "^[Aa][Rr][Mm]64$")
             list(APPEND _csc_OPTIONS gl_cv_host_cpu_c_abi=no)
+            # Currently needed for arm64 because objdump yields: "unrecognised machine type (0xaa64) in Import Library Format archive"
+            list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all)
+        elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^[Aa][Rr][Mm]$")
+            # Currently needed for arm because objdump yields: "unrecognised machine type (0x1c4) in Import Library Format archive"
+            list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
     else()
         string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
         set(EXTRA_QUOTES)
         set(prefix_var "\${prefix}")
+    endif()
+
+    # macOS - cross-compiling support
+    if(VCPKG_TARGET_IS_OSX)
+        if (_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET)
+            _vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
+            _vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
+            # --build: the machine you are building on
+            # --host: the machine you are building for
+            # --target: the machine that CC will produce binaries for
+            # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
+            # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
+            set(_csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-apple-darwin")
+            if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}") # we don't need to specify the additional flags if we build natively.
+
+                list(APPEND _csc_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+            endif()
+            debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
+        endif()
     endif()
 
     # Cleanup previous build dirs

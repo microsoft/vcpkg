@@ -1,0 +1,15 @@
+diff --git a/cmake/geotiff.cmake b/cmake/geotiff.cmake
+index 1d1e8af..ec077bc 100644
+--- a/cmake/geotiff.cmake
++++ b/cmake/geotiff.cmake
+@@ -2,8 +2,8 @@
+ # GeoTIFF support
+ #
+ 
+-find_package(GeoTIFF REQUIRED 1.3.0)
+-set_package_properties(GeoTIFF PROPERTIES TYPE REQUIRED)
++find_package(geotiff REQUIRED 1.3.0)
++set_package_properties(geotiff PROPERTIES TYPE REQUIRED)
+ if (GEOTIFF_FOUND)
+     include_directories("${GEOTIFF_INCLUDE_DIR}")
+     set(PDAL_HAVE_LIBGEOTIFF 1)

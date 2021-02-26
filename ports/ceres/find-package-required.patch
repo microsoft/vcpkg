@@ -1,0 +1,58 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b6a3d05..a78c027 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -245,7 +245,7 @@ if (EIGEN3_FOUND)
+ endif (EIGEN3_FOUND)
+ 
+ if (LAPACK)
+-  find_package(LAPACK QUIET)
++  find_package(LAPACK REQUIRED)
+   if (LAPACK_FOUND)
+     message("-- Found LAPACK library: ${LAPACK_LIBRARIES}")
+   else (LAPACK_FOUND)
+@@ -263,7 +263,7 @@ if (SUITESPARSE)
+   # built with SuiteSparse support.
+ 
+   # Check for SuiteSparse and dependencies.
+-  find_package(SuiteSparse)
++  find_package(SuiteSparse REQUIRED)
+   if (SUITESPARSE_FOUND)
+     # On Ubuntu the system install of SuiteSparse (v3.4.0) up to at least
+     # Ubuntu 13.10 cannot be used to link shared libraries.
+@@ -300,7 +300,7 @@ endif (SUITESPARSE)
+ # CXSparse.
+ if (CXSPARSE)
+   # Don't search with REQUIRED as we can continue without CXSparse.
+-  find_package(CXSparse)
++  find_package(CXSparse REQUIRED)
+   if (CXSPARSE_FOUND)
+     # By default, if CXSparse and all dependencies are found, Ceres is
+     # built with CXSparse support.
+@@ -336,7 +336,7 @@ endif(NOT SUITESPARSE AND NOT CXSPARSE AND NOT EIGENSPARSE)
+ # GFlags.
+ if (GFLAGS)
+   # Don't search with REQUIRED as we can continue without gflags.
+-  find_package(gflags 2.2.0)
++  find_package(gflags REQUIRED)
+   if (gflags_FOUND)
+     if (TARGET gflags)
+       message("-- Found Google Flags (gflags) version ${gflags_VERSION}: ${gflags_DIR}")
+@@ -537,7 +537,7 @@ else (NOT OPENMP AND NOT TBB AND NOT CXX11_THREADS)
+ set_ceres_threading_model("${CERES_THREADING_MODEL}")
+ 
+ if (BUILD_BENCHMARKS)
+-  find_package(benchmark QUIET)
++  find_package(benchmark REQUIRED)
+   if (benchmark_FOUND)
+      message("-- Found Google benchmark library. Building Ceres benchmarks.")
+   else()
+@@ -782,7 +782,7 @@ if (BUILD_DOCUMENTATION)
+   set(CERES_DOCS_INSTALL_DIR "share/doc/ceres" CACHE STRING
+       "Ceres docs install path relative to CMAKE_INSTALL_PREFIX")
+ 
+-  find_package(Sphinx QUIET)
++  find_package(Sphinx REQUIRED)
+   if (NOT SPHINX_FOUND)
+     message("-- Failed to find Sphinx, disabling build of documentation.")
+     update_cache_variable(BUILD_DOCUMENTATION OFF)

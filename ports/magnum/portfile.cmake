@@ -49,6 +49,13 @@ if(NOT "${VCPKG_CMAKE_SYSTEM_NAME}" MATCHES "(Emscripten|Linux)")
     list(REMOVE_ITEM ALL_SUPPORTED_FEATURES eglcontext windowlesseglapplication)
 endif()
 
+# Head only features
+if(NOT VCPKG_USE_HEAD_VERSION)
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES anyshaderconverter shadertools shaderconverter
+        vk-info)
+    message(WARNING "Features anyshaderconverter, shadertools, shaderconverter and vk-info are not avaliable when building non-head version.")
+endif()
+
 set(_COMPONENTS "")
 # Generate cmake parameters from feature names
 foreach(_feature IN LISTS ALL_SUPPORTED_FEATURES)
@@ -88,6 +95,11 @@ set(_TOOLS
     gl-info
     imageconverter
     sceneconverter)
+if(VCPKG_USE_HEAD_VERSION)
+list(APPEND _TOOLS
+    shaderconverter
+    vk-info)
+endif()
 foreach(_tool IN LISTS _TOOLS)
     if("${_tool}" IN_LIST FEATURES)
         list(APPEND _TOOL_EXEC_NAMES magnum-${_tool})
@@ -102,18 +114,61 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-   # move plugin libs to conventional place
-   file(GLOB_RECURSE LIB_TO_MOVE ${CURRENT_PACKAGES_DIR}/lib/magnum/*)
-   file(COPY ${LIB_TO_MOVE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
-   file(GLOB_RECURSE LIB_TO_MOVE_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum/*)
-   file(COPY ${LIB_TO_MOVE_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
-   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
+    # move plugin libs to conventional place
+    file(GLOB_RECURSE LIB_TO_MOVE ${CURRENT_PACKAGES_DIR}/lib/magnum/*)
+    file(COPY ${LIB_TO_MOVE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
+
+    file(GLOB_RECURSE LIB_TO_MOVE_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*)
+    file(COPY ${LIB_TO_MOVE_DBG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
 else()
-   file(COPY ${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/bin/magnum)
-   file(COPY ${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/magnum-d)
+    # Unlike the magnum-plugins port, we cannot remove the lib files entirely here,
+    # As other importers might depend on them (e.g. AssimpImporter depends on AnyImageImporter)
+    # and modules are not allowed to have unresolved symbols, hence simply loading the
+    # dependencies in advance like on Unix does not work on Windows.
+    #
+    # On windows, plugins are "Modules" that cannot be linked as shared
+    # libraries, but are meant to be loaded at runtime.
+    # While this is handled adequately through the CMake project, the auto-magic
+    # linking with visual studio might try to link the import libs anyway.
+    #
+    # We delete most of the import libraries here to avoid the auto-magic linking
+    # for plugins which are loaded at runtime, but keep the afforementioned Any* plugins.
+    #
+    # See https://github.com/microsoft/vcpkg/pull/1235#issuecomment-308805989 for futher info.
+    if(WIN32)
+        file(GLOB_RECURSE LIB_TO_REMOVE ${CURRENT_PACKAGES_DIR}/lib/magnum/*)
+        file(GLOB_RECURSE LIB_TO_KEEP ${CURRENT_PACKAGES_DIR}/lib/magnum/*Any*)
+        if(LIB_TO_KEEP)
+            list(REMOVE_ITEM LIB_TO_REMOVE ${LIB_TO_KEEP})
+        endif()
+        if(LIB_TO_REMOVE)
+            file(REMOVE ${LIB_TO_REMOVE})
+        endif()
+
+        file(GLOB_RECURSE LIB_TO_REMOVE_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*)
+        file(GLOB_RECURSE LIB_TO_KEEP_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/*Any*)
+        if(LIB_TO_KEEP_DBG)
+            list(REMOVE_ITEM LIB_TO_REMOVE_DBG ${LIB_TO_KEEP_DBG})
+        endif()
+        if(LIB_TO_REMOVE_DBG)
+            file(REMOVE ${LIB_TO_REMOVE_DBG})
+        endif()
+
+        # fonts and fontconverters don't have Any* plugins
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum/fonts)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum/fontconverters)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/fonts)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d/fontconverters)
+    endif()
+
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/bin/magnum)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/magnumdeploy.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/magnum-d)
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    RENAME copyright)

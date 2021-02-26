@@ -5,8 +5,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK12
-    REF nov2020b
-    SHA512 3a47209f109f993e4ca779bca9c9417c3f11a0472b3c91f52beb46a388edc5487d4e2cd472371ef6ffc4d3e54782d12e884befe8537fa68190c1556d6e36fbab
+    REF jan2021b
+    SHA512 19e017f11fb6cd25a10fbf2597d1a0fe133a339781f5b1b333eb52224fcf5869c5e5bb5a3f3a2f57ffad527076e6780cccccfbae09c48abfce3010be688b87b5
     HEAD_REF master
 )
 
@@ -20,24 +20,29 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
 if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
-  vcpkg_download_distfile(makespritefont
-    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/nov2020/MakeSpriteFont.exe"
-    FILENAME "makespritefont.exe"
-    SHA512 d576eecd9763d238e12ba8d865917738a4bc8cbf632943e5c11b9426ecdfeaa9e8522076f1bb7122d41e69158fc7ca0939f2d90f9986470639966b3f849d236a
+  vcpkg_download_distfile(
+    MAKESPRITEFONT_EXE
+    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/jan2021/MakeSpriteFont.exe"
+    FILENAME "makespritefont-jan2021.exe"
+    SHA512 0cca19694fd3625c5130a85456f7bf1dabc8c5f893223c19da134a0c4d64de853f7871644365dcec86012543f3a59a96bfabd9e51947648f6d82480602116fc4
   )
 
-  vcpkg_download_distfile(xwbtool
-    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/nov2020/XWBTool.exe"
-    FILENAME "xwbtool.exe"
-    SHA512 6ac8fc12fcea0f808aac1367907dbbb0c5669c8c654fc21f38b4e1ce951710ade1851515dba074e9254579b018545c3cdb2b6cf57366dfba0196603510bf51cd
+  vcpkg_download_distfile(
+    XWBTOOL_EXE
+    URLS "https://github.com/Microsoft/DirectXTK12/releases/download/jan2021/XWBTool.exe"
+    FILENAME "xwbtool-jan2021.exe"
+    SHA512 91c9d0da90697ba3e0ebe4afcc4c8e084045b76b26e94d7acd4fd87e5965b52dd61d26038f5eb749a3f6de07940bf6e3af8e9f19d820bf904fbdb2752b78fce9
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk12/")
 
   file(INSTALL
-    ${DOWNLOADS}/makespritefont.exe
-    ${DOWNLOADS}/xwbtool.exe
+    ${MAKESPRITEFONT_EXE}
+    ${XWBTOOL_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxtk12/)
+
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk12/makespritefont-jan2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk12/makespritefont.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool-jan2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk12/xwbtool.exe)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

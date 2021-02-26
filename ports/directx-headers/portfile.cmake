@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectX-Headers
-    REF v1.0
-    SHA512 73e35142ff460aa6114a9fa298ce409d4b1cb34fb7bbb1ca55687cf7aca05197c48a02ae8c81bcb36b39b1a3f75d8ecbe503a752df70f4b0980fc026a92df84b
+    REF v1.0.1
+    SHA512 1b0f89088b7dba846d443fd943787848435bd1b731adc7e2f4fab6f32203775153811a7d7c297ecf44ca60628db8346a8246942c609c5116481a70e67633fb04
     HEAD_REF master
 )
 

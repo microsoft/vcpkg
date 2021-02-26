@@ -1,4 +1,0 @@
-Source: libftdi1
-Version: 1.4-1
-Build-Depends: libusb
-Description: FTDI USB driver with bitbang mode (v1.4)
