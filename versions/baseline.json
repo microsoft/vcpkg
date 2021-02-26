@@ -2230,7 +2230,7 @@
     },
     "glm": {
       "baseline": "0.9.9.8",
-      "port-version": 0
+      "port-version": 1
     },
     "globjects": {
       "baseline": "1.1.0-3",
