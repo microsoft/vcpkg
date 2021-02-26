@@ -1,5 +1,4 @@
 {
-    "name": "vcpkg-cmake",
-    "version": "0",
-    "port-version": 0
+  "name": "vcpkg-cmake",
+  "version-date": "2021-02-26"
 }
