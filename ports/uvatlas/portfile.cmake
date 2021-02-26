@@ -1,15 +1,18 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
+vcpkg_fail_port_install(ON_TARGET "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF dec2020b
-    SHA512 4a81f5e45d906a897a73af940e63f684e416e7b851c4c439fb2dc7fe761838f7a84ccd5088bc94460cdb5d5fd9f5105c719a81e65a381bbdd2fad3465cdf3d46
+    REF jan2021b
+    SHA512 6ed43dbe4ea33857ed96a2c05a4618ae935eb9bc0778118af6c791f794c2ad843fe1b52a2aa484914f8aaf3534a282ab80af95350eab2c340bb6b401dc9743b0
     HEAD_REF master
-    FILE_DISAMBIGUATOR 2
 )
+
+if (VCPKG_HOST_IS_LINUX)
+    message(WARNING "Build ${PORT} requires GCC version 9 or later")
+endif()
 
 if(VCPKG_TARGET_IS_UWP)
   set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
@@ -26,24 +29,27 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-if(NOT VCPKG_TARGET_IS_UWP)
+if((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
   vcpkg_copy_tools(
         TOOL_NAMES uvatlastool
         SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
     )
 
 elseif((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
-  vcpkg_download_distfile(uvatlastool
-    URLS "https://github.com/Microsoft/UVAtlas/releases/download/dec2020/uvatlastool.exe"
-    FILENAME "uvatlastool.exe"
-    SHA512 f3388e590bb45281a089d6d38ff603e99f2ff9124ec1e6caebae2663e4ab8ccaf06f5cce671f78ed9a1f882c6d2e2b1188212ef0219f96b46872faa20cc649fd
+  vcpkg_download_distfile(
+    UVATLASTOOL_EXE
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/jan2021/uvatlastool.exe"
+    FILENAME "uvatlastool-jan2021.exe"
+    SHA512 8727510f3ec41c2fa7ed75100b8c0f4daa41e93a1b812e5ec3c265dc87c3f48651da37a18af5d8b57a0aa096c42232b58a50a00c036ec7c04dcae4767a2691f9
   )
 
   file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
 
   file(INSTALL
-    ${DOWNLOADS}/uvatlastool.exe
+    ${UVATLASTOOL_EXE}
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
+
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-jan2021.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

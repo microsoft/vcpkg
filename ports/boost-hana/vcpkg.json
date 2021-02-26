@@ -1,0 +1,14 @@
+{
+  "name": "boost-hana",
+  "version-string": "1.75.0",
+  "description": "Boost hana module",
+  "homepage": "https://github.com/boostorg/hana",
+  "dependencies": [
+    "boost-config",
+    "boost-core",
+    "boost-fusion",
+    "boost-mpl",
+    "boost-tuple",
+    "boost-vcpkg-helpers"
+  ]
+}

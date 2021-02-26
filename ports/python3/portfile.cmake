@@ -5,7 +5,7 @@ endif()
 
 set(PYTHON_VERSION_MAJOR  3)
 set(PYTHON_VERSION_MINOR  9)
-set(PYTHON_VERSION_PATCH  0)
+set(PYTHON_VERSION_PATCH  2)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
@@ -23,7 +23,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 39d304cae181674c4872c63768c0e5aeace2c92eb6d5ea550428d65c8571bc60922b3a3d484b51c46b466aadb7e27500559cafec13a489b48613bbb3fe6a5a5d
+    SHA512 f13c7e50d2c7c00e67b801b0bbb6ab6a8b6bd16c706b3bdd9d2186de3830f0043d0b95d7993d65a169adc9097738906c07727f0df49cd2fb2916bdf0456896b6
     HEAD_REF master
     PATCHES ${PATCHES}
 )
@@ -179,3 +179,19 @@ else()
 
     file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME "copyright")
 endif()
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+
+function(_generate_finder)
+    cmake_parse_arguments(PythonFinder "NO_OVERRIDE" "DIRECTORY;PREFIX" "" ${ARGN})
+    configure_file(
+        "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+        "${CURRENT_PACKAGES_DIR}/share/${PythonFinder_DIRECTORY}/vcpkg-cmake-wrapper.cmake"
+        @ONLY
+    )
+endfunction()
+
+message(STATUS "Installing cmake wrappers")
+_generate_finder(DIRECTORY "python" PREFIX "Python")
+_generate_finder(DIRECTORY "python3" PREFIX "Python3")
+_generate_finder(DIRECTORY "pythoninterp" PREFIX "PYTHON" NO_OVERRIDE)

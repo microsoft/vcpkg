@@ -45,7 +45,7 @@ add_library(smpeg2
     MPEGsystem.cpp
     smpeg.cpp)
 
-set_target_properties(smpeg2 PROPERTIES DEFINE_SYMBOL SDL2_EXPORTS)
+set_target_properties(smpeg2 PROPERTIES DEFINE_SYMBOL DLL_EXPORT)
 if(BUILD_SHARED_LIBS)
     target_link_libraries(smpeg2 SDL2::SDL2)
 else()

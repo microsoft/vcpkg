@@ -9,6 +9,3 @@ C++ bindings:
 
     find_package(Sail CONFIG REQUIRED)
     target_link_libraries(main PRIVATE SAIL::sail-c++)
-
-For dynamic builds, please also copy SAIL codecs (bin/sail) and their dependencies
-into the application directory.

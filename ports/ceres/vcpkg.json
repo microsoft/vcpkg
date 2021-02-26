@@ -1,6 +1,6 @@
 {
   "name": "ceres",
-  "version-string": "2.0.0",
+  "version-semver": "2.0.0",
   "port-version": 3,
   "description": "non-linear optimization package",
   "homepage": "https://github.com/ceres-solver/ceres-solver",

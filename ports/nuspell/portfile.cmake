@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nuspell/nuspell
-    REF v4.0.1
-    SHA512 122616fd24c2de35000ba12d680d3617e7fe97881d33febbcb106ce70d3bac356a00d90680a1bc8ee631ed532ace0f4b4f9fce4760a25b0f7fc1d60553e74528
+    REF v4.2.0
+    SHA512 ae9157e9753868c002ed69a765fb705d29d993f3940e11efbc2699778a8b1abee2eb7daa0ff51187b899d6935a215a24662e5b52ec1ef5c644e90a0245f7583d
     HEAD_REF master
     PATCHES cmake-disable-cli-and-docs.patch
     # This patch disables building the CLI tool and leaves only the library.

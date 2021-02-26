@@ -75,7 +75,7 @@ Param(
     [String]$BoxName = 'vcpkg/macos-ci',
 
     [Parameter()]
-    [Int]$DiskSize = 350,
+    [Int]$DiskSize = 250,
 
     [Parameter()]
     [Switch]$Force

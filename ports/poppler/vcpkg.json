@@ -1,0 +1,46 @@
+{
+  "name": "poppler",
+  "version-string": "20.12.1",
+  "port-version": 4,
+  "description": "a PDF rendering library",
+  "homepage": "https://poppler.freedesktop.org/",
+  "dependencies": [
+    {
+      "name": "cairo",
+      "platform": "osx"
+    },
+    {
+      "name": "devil",
+      "platform": "(windows | linux) & !arm"
+    },
+    "fontconfig",
+    "freetype",
+    "libiconv",
+    "openjpeg"
+  ],
+  "default-features": [
+    "splash",
+    "zlib"
+  ],
+  "features": {
+    "curl": {
+      "description": "curl for poppler",
+      "dependencies": [
+        "curl"
+      ]
+    },
+    "splash": {
+      "description": "Build the Splash graphics backend",
+      "dependencies": [
+        "boost-container",
+        "boost-move"
+      ]
+    },
+    "zlib": {
+      "description": "zlib for poppler",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

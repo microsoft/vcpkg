@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 06aa026..81d7645 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1240,12 +1240,6 @@ elseif(UNIX AND NOT APPLE AND NOT ANDROID AND NOT RISCOS)
+         set(HAVE_FCITX TRUE)
+       endif()
+ 
+-      pkg_search_module(IBUS ibus-1.0 ibus)
+-      if(IBUS_FOUND)
+-        set(HAVE_IBUS_IBUS_H TRUE)
+-        include_directories(${IBUS_INCLUDE_DIRS})
+-        list(APPEND EXTRA_LIBS ${IBUS_LIBRARIES})
+-      endif()
+ 
+       if (HAVE_IBUS_IBUS_H OR HAVE_FCITX)
+         set(SDL_USE_IME TRUE)

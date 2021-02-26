@@ -161,7 +161,7 @@ function(vcpkg_download_distfile VAR)
             endif()
         else()
             foreach(url IN LISTS vcpkg_download_distfile_URLS)
-                message(STATUS "Downloading ${url}...")
+                message(STATUS "Downloading ${url} -> ${vcpkg_download_distfile_FILENAME}...")
                 if(vcpkg_download_distfile_HEADERS)
                     foreach(header ${vcpkg_download_distfile_HEADERS})
                         list(APPEND request_headers HTTPHEADER ${header})
@@ -186,6 +186,10 @@ function(vcpkg_download_distfile VAR)
                 "    Failed to download file.\n"
                 "    If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment\n"
                 "    variables to \"https://user:password@your-proxy-ip-address:port/\".\n"
+                "    \n"
+                "    If error with status 4 (Issue #15434),\n"
+                "    try setting \"http://user:password@your-proxy-ip-address:port/\".\n"
+                "    \n"
                 "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
             else()
                 test_hash("${download_file_path_part}" "downloaded file" "The file may have been corrupted in transit. This can be caused by proxies. If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment variables to \"https://user:password@your-proxy-ip-address:port/\".\n")
