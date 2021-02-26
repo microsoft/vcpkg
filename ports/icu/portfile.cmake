@@ -56,6 +56,12 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
                 "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELEASE}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
             LOGNAME "configure-${RELEASE_TRIPLET}")
+        if(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            file(READ "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/icudefs.mk" FILE_CONTENTS)
+            string(REPLACE "CC = clang" "CC = clang -arch x86_64" FILE_CONTENTS ${FILE_CONTENTS})
+            string(REPLACE "CXX = clang++" "CXX = clang++ -arch x86_64" FILE_CONTENTS ${FILE_CONTENTS})
+            file(WRITE "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/icudefs.mk" ${FILE_CONTENTS})
+        endif()
         message(STATUS "Configuring ${RELEASE_TRIPLET} done")
     endif()
 
@@ -71,6 +77,12 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
                 "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
             LOGNAME "configure-${DEBUG_TRIPLET}")
+        if(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            file(READ "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}/icudefs.mk" FILE_CONTENTS)
+            string(REPLACE "CC = clang" "CC = clang -arch x86_64" FILE_CONTENTS ${FILE_CONTENTS})
+            string(REPLACE "CXX = clang++" "CXX = clang++ -arch x86_64" FILE_CONTENTS ${FILE_CONTENTS})
+            file(WRITE "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}/icudefs.mk" ${FILE_CONTENTS})
+        endif()
         message(STATUS "Configuring ${DEBUG_TRIPLET} done")
     endif()
 
