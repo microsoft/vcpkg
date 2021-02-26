@@ -10,21 +10,11 @@ vcpkg_from_sourceforge(
     REPO pthreads4w
     FILENAME "pthreads4w-code-v${PTHREADS4W_VERSION}.zip"
     SHA512 49e541b66c26ddaf812edb07b61d0553e2a5816ab002edc53a38a897db8ada6d0a096c98a9af73a8f40c94283df53094f76b429b09ac49862465d8697ed20013
+    PATCHES
+        fix-arm-uwp.patch
 )
 
-if(TRIPLET_SYSTEM_ARCH MATCHES "arm")
-  # make macro check pass for _ARM_, _M_ARM64
-  vcpkg_replace_string(${SOURCE_PATH}/context.h
-    "PTW32_PROGCTR(Context)  ((Context).Pc)"
-    "__PTW32_PROGCTR(Context)  ((Context).Pc)"
-  )
-endif()
 if(VCPKG_TARGET_IS_UWP)
-  # porvide 2 static libs to resolve link error. 'kernel32' and 'windowsapp'
-  vcpkg_replace_string(${SOURCE_PATH}/implement.h
-    "#define _IMPLEMENT_H"
-    "#define _IMPLEMENT_H\n#pragma comment(lib, \"kernel32\")\n#pragma comment(lib, \"windowsapp\")"
-  )
   # https://docs.microsoft.com/en-us/cpp/build/reference/linker-options
   # https://docs.microsoft.com/en-us/cpp/build/reference/linking#link-environment-variables
   set(ENV{LINK} "/APPCONTAINER")
