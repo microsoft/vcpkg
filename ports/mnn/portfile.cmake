@@ -7,7 +7,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-package-and-install.patch
-        fix-dllexport.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -47,9 +46,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     ${NINJA_OPTION}
     OPTIONS
-        -DMNN_SEP_BUILD=OFF # build with backends/expression(no separate)
+        ${FEATURE_OPTIONS} ${PLATFORM_OPTIONS}
         -DMNN_BUILD_SHARED_LIBS=${BUILD_SHARED}
-        ${FEATURE_OPTIONS} ${BUILD_OPTIONS} ${PLATFORM_OPTIONS}
         # 1.1.0.0-${commit}
         -DMNN_VERSION_MAJOR=1 -DMNN_VERSION_MINOR=1 -DMNN_VERSION_PATCH=0 -DMNN_VERSION_BUILD=0 -DMNN_VERSION_SUFFIX=-d6795ad
     OPTIONS_DEBUG
