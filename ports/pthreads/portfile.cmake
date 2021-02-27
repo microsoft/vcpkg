@@ -5,20 +5,23 @@ endif()
 
 set(PTHREADS4W_VERSION "3.0.0")
 
+if(VCPKG_TARGET_IS_UWP)
+  list(APPEND PATCHES fix-uwp-linkage.patch)
+  # Inject linker option using the `LINK` environment variable
+  # https://docs.microsoft.com/en-us/cpp/build/reference/linker-options
+  # https://docs.microsoft.com/en-us/cpp/build/reference/linking#link-environment-variables
+  set(ENV{LINK} "/APPCONTAINER")
+endif()
+
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pthreads4w
     FILENAME "pthreads4w-code-v${PTHREADS4W_VERSION}.zip"
     SHA512 49e541b66c26ddaf812edb07b61d0553e2a5816ab002edc53a38a897db8ada6d0a096c98a9af73a8f40c94283df53094f76b429b09ac49862465d8697ed20013
     PATCHES
-        fix-arm-uwp.patch
+        fix-arm-macro.patch
+        ${PATCHES}
 )
-
-if(VCPKG_TARGET_IS_UWP)
-  # https://docs.microsoft.com/en-us/cpp/build/reference/linker-options
-  # https://docs.microsoft.com/en-us/cpp/build/reference/linking#link-environment-variables
-  set(ENV{LINK} "/APPCONTAINER")
-endif()
 
 find_program(NMAKE nmake REQUIRED)
 
