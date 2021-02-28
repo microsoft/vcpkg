@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
 
 # restore the default ac_cv_prog_cc_g flags, otherwise it fails to compile
 set(VCPKG_C_FLAGS "-g -O2") 
+set(VCPKG_CXX_FLAGS "-g -O2")
 
 vcpkg_configure_make(
     AUTOCONFIG
