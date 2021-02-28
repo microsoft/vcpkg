@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.riverbankcomputing.com/static/Downloads/QScintilla/2.12.0/QScintilla_src-2.12.0.zip"
-    FILENAME "QScintilla-2.12.0.zip"
-    SHA512 94e826a68cfc313f7fe6caf47ca43fb43070869e698a9a4f266e0b472393c1dcaeedf33a2ecc6c7687af3f12a3b564ec160b580207311672368f9c8c28b0308e
+    URLS "https://www.riverbankcomputing.com/static/Downloads/QScintilla/2.12.0/QScintilla_src-2.12.0.tar.gz"
+    FILENAME "QScintilla-2.12.0.tar.gz"
+    SHA512 9bdaba5c33c1b11ccad83eb1fda72142758afc50c955a62d5a8ff102b41d4b67d897bf96ce0540e16bc5a7fae2ce1acbf06931d5f0ae6768759c9ff072c03daa
 )
 
 vcpkg_extract_source_archive_ex(
