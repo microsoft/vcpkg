@@ -1,12 +1,3 @@
-From fd83f64efb35eb9dac6be67d1dcabfbae67d441a Mon Sep 17 00:00:00 2001
-From: Matthias Kuhn <matthias@opengis.ch>
-Date: Sun, 28 Feb 2021 09:25:08 +0100
-Subject: [PATCH] Fix staticlib
-
----
- src/qscintilla.pro | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
 diff --git a/src/qscintilla.pro b/src/qscintilla.pro
 index 8d0acd2..2246442 100644
 --- a/src/qscintilla.pro
@@ -36,6 +27,3 @@ index 8d0acd2..2246442 100644
      features.files = $$PWD/features_staticlib/qscintilla2.prf
  } else {
      features.files = $$PWD/features/qscintilla2.prf
--- 
-2.30.1.windows.1
-
