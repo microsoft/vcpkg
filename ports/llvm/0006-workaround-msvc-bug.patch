@@ -1,0 +1,39 @@
+diff --git a/llvm/lib/CodeGen/GlobalISel/LegalityPredicates.cpp b/llvm/lib/CodeGen/GlobalISel/LegalityPredicates.cpp
+--- a/llvm/lib/CodeGen/GlobalISel/LegalityPredicates.cpp
++++ b/llvm/lib/CodeGen/GlobalISel/LegalityPredicates.cpp
+@@ -10,6 +10,17 @@
+ //
+ //===----------------------------------------------------------------------===//
+ 
++// Disable optimizations to work around MSVC debug mode bug in 32-bit:
++// https://developercommunity.visualstudio.com/content/problem/1179643/msvc-copies-overaligned-non-trivially-copyable-par.html
++// FIXME: Remove this when the issue is closed.
++#if defined(_MSC_VER) && !defined(__clang__) && defined(_M_IX86)
++// We have to disable runtime checks in order to enable optimizations. This is
++// done for the entire file because the problem is actually observed in STL
++// template functions.
++#pragma runtime_checks("", off)
++#pragma optimize("gs", on)
++#endif
++
+ #include "llvm/CodeGen/GlobalISel/LegalizerInfo.h"
+ 
+ using namespace llvm;
+diff --git a/llvm/unittests/CodeGen/GlobalISel/LegalizerInfoTest.cpp b/llvm/unittests/CodeGen/GlobalISel/LegalizerInfoTest.cpp
+--- a/llvm/unittests/CodeGen/GlobalISel/LegalizerInfoTest.cpp
++++ b/llvm/unittests/CodeGen/GlobalISel/LegalizerInfoTest.cpp
+@@ -406,3 +406,13 @@
+                                   32, 8, AtomicOrdering::NotAtomic }));
+   }
+ }
++
++// This code sequence doesn't do anything, but it covers a previously uncovered
++// codepath that used to crash in MSVC x86_32 debug mode.
++TEST(LegalizerInfoTest, MSVCDebugMiscompile) {
++  const LLT S1 = LLT::scalar(1);
++  const LLT P0 = LLT::pointer(0, 32);
++  LegalizerInfo LI;
++  auto Builder = LI.getActionDefinitionsBuilder(TargetOpcode::G_PTRTOINT);
++  (void)Builder.legalForCartesianProduct({S1}, {P0});
++}
+

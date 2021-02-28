@@ -1,12 +1,17 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
-    REF v1.0.0
-    SHA512 3ea447bee4be1956018af597d5c97d54ff04a6403cc3a0bda36ed905d459c15db8a5134cad0b68d5f628725c5488f8cb6aabbcd281faf5d62775d739b02d4c45
+    REF v1.3.0
+    SHA512 cddda4b90d28c15319b9cd1dea561c429b804508fc40678b9906fb70153cb36d7a4fc1c13fee01ec1f49d747a722856ceee364aba4118d922afabc3629ba2115
     HEAD_REF master
     PATCHES
         vcpkg.patch
-        pg.patch
+        resolv.patch
+)
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    ctl BUILD_CTL
 )
 
 vcpkg_configure_cmake(
@@ -14,6 +19,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_EXAMPLES=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -21,8 +27,11 @@ vcpkg_install_cmake()
 # Fix CMake files
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Drogon)
 # Copy drogon_ctl
-vcpkg_copy_tools(TOOL_NAMES drogon_ctl
-                 AUTO_CLEAN)
+if("ctl" IN_LIST FEATURES)
+    message("copying tools")
+    vcpkg_copy_tools(TOOL_NAMES drogon_ctl
+                     AUTO_CLEAN)
+endif()
 # # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

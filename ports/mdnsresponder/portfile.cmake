@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
   URLS https://opensource.apple.com/tarballs/mDNSResponder/mDNSResponder-765.30.11.tar.gz
   FILENAME mDNSResponder-765.30.11.tar.gz
@@ -51,6 +49,11 @@ function(FIX_VCXPROJ VCXPROJ_PATH)
       "<ConfigurationType>StaticLibrary</ConfigurationType>"
       ORIG "${ORIG}")
   endif()
+  
+  string(REPLACE
+    "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
+    "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    ORIG "${ORIG}")
   file(WRITE ${VCXPROJ_PATH} "${ORIG}")
 endfunction()
 

@@ -1,24 +1,3 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 453fdff..3a02956 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -132,7 +132,6 @@ OPTION ( IGNORE_GIT_HASH
- 
- find_package(Stb REQUIRED)
- include_directories(${Stb_INCLUDE_DIR})
--find_package(irrXML CONFIG REQUIRED)
- find_package(utf8cpp CONFIG REQUIRED)
- link_libraries(utf8cpp)
- find_package(RapidJSON CONFIG REQUIRED)
-@@ -388,7 +387,7 @@ ENDIF( BUILD_DOCS )
- 
- # Look for system installed irrXML
- IF ( SYSTEM_IRRXML )
--  FIND_PACKAGE( irrXML REQUIRED )
-+  FIND_PACKAGE( irrlicht CONFIG REQUIRED )
- ENDIF( SYSTEM_IRRXML )
- 
- # Search for external dependencies, and build them from source if not found
 diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
 index f5553e5..5cffa0c 100644
 --- a/code/CMakeLists.txt

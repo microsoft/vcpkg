@@ -11,19 +11,13 @@ vcpkg_from_github(
     PATCHES find-mbedtls.patch
 )
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "ON")
-else()
-    set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "OFF")
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
-        "-DOATPP_BUILD_TESTS:BOOL=OFF"
-        "-DBUILD_SHARED_LIBS:BOOL=${OATPP_BUILD_SHARED_LIBRARIES_OPTION}"
+        "-DOATPP_BUILD_TESTS:BOOL=OFF"   
 )
+
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-mbedtls-${OATPP_VERSION})
 vcpkg_copy_pdbs()

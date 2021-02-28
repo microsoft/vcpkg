@@ -1,0 +1,10 @@
+{
+  "name": "spirv-tools",
+  "version-string": "2020.1",
+  "port-version": 2,
+  "description": "API and commands for processing SPIR-V modules",
+  "homepage": "https://github.com/KhronosGroup/SPIRV-Tools",
+  "dependencies": [
+    "spirv-headers"
+  ]
+}

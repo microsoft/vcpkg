@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO badaix/aixlog
@@ -11,6 +9,3 @@ file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/include)
 file(COPY ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME aixlog)

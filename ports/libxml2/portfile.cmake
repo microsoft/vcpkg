@@ -19,15 +19,13 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Handle copyright
-configure_file(${SOURCE_PATH}/Copyright ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# Install usage
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 endif()
+
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

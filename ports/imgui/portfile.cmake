@@ -1,13 +1,24 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
+if ("docking-experimental" IN_LIST FEATURES)
+    vcpkg_from_github(
+       OUT_SOURCE_PATH SOURCE_PATH
+       REPO ocornut/imgui
+       REF 682249396f02b8c21e5ff333ab4a1969c89387ad
+       SHA512 95f17c14e0a8f10dfc51fd1b30894f9905433fac8f9a93b6c545a542df5eb20be68f40996080a85cba934107ce19fff91a1df1edad1a1b5a0030e8f626e1985d
+       HEAD_REF docking
+       )
+else()
+    vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.78
-    SHA512 2410df5b39d5ca14ea7181ef4f3b501ad8879e10895ed540f079f213dcc528b50e57cc16fce6f50a67e8a7be00b03c5833cabfd5db4ba210cafce6d95da389c6
+    REF v1.81
+    SHA512 d7a2b66dea77359f78068a595607d7668e09ddd0b91910f67fc6463cb920b91b0cc1855984bd4d41e6a880b69ca7cd5e3adc064dcf461c0629b9f8c845a4fc3e
     HEAD_REF master
-)
+    )
+endif()
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/imgui-config.cmake.in DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_OSX))

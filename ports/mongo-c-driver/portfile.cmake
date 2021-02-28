@@ -40,6 +40,8 @@ file(READ ${CMAKE_CURRENT_LIST_DIR}/CONTROL _contents)
 string(REGEX MATCH "\nVersion:[ ]*[^ \n]+" _contents "${_contents}")
 string(REGEX REPLACE ".+Version:[ ]*([\\.0-9]+).*" "\\1" BUILD_VERSION "${_contents}")
 
+file(WRITE "${BUILD_VERSION}" ${SOURCE_PATH}/VERSION_CURRENT)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -55,6 +57,7 @@ vcpkg_configure_cmake(
         -DENABLE_ZLIB=SYSTEM
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DBUILD_VERSION=${BUILD_VERSION}
+        -DCMAKE_DISABLE_FIND_PACKAGE_PythonInterp=ON
         ${FEATURE_OPTIONS}
 )
 

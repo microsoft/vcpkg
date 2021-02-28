@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if (VCPKG_TARGET_IS_WINDOWS)
     message("Shared build is broken under Windows. See https://github.com/darrenjs/wampcc/issues/57")
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)

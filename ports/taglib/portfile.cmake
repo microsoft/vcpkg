@@ -1,15 +1,21 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taglib/taglib
-    REF ba7adc2bc261ed634c2a964185bcffb9365ad2f4
-    SHA512 faf516f40f12031a37414ce9246ec409e64e570faebe2d604afdefbb7d665e0a0c9c68bec0e6dcb1c5ceb8fa8e1c3477f5ac75029f17beedd679fa3ea735ce6d
+    REF 4c14571647e3391dd8f59473903abc44707b4f1b
+    SHA512 2619013e38de4afce58d2c8a8fcb2fc34aeb4006c0657a942cb035a5b79ac1438609f89c31bc631b299eb270ac90f2d222c0ddeeb8151803cf7cda15ab3282b4
     HEAD_REF master
 )
 
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    set(BUILD_SHARED_LIBS OFF)
+else()
+    set(BUILD_SHARED_LIBS ON)
+endif()
+
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-	set(WINRT_OPTIONS -DHAVE_VSNPRINTF=1 -DPLATFORM_WINRT=1)
+    set(WINRT_OPTIONS -DHAVE_VSNPRINTF=1 -DPLATFORM_WINRT=1)
+    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} /wd4996")
+    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} /wd4996")
 endif()
 
 vcpkg_configure_cmake(

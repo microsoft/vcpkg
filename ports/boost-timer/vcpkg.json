@@ -1,0 +1,20 @@
+{
+  "name": "boost-timer",
+  "version-string": "1.75.0",
+  "description": "Boost timer module",
+  "homepage": "https://github.com/boostorg/timer",
+  "dependencies": [
+    "boost-build",
+    "boost-chrono",
+    "boost-compatibility",
+    "boost-config",
+    "boost-core",
+    "boost-integer",
+    "boost-io",
+    "boost-modular-build-helper",
+    "boost-predef",
+    "boost-system",
+    "boost-throw-exception",
+    "boost-vcpkg-helpers"
+  ]
+}

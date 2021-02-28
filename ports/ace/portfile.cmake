@@ -1,7 +1,7 @@
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
-set(ACE_VERSION 6.5.11)
+set(ACE_VERSION 7.0.0)
 string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
 
 if("tao" IN_LIST FEATURES)
@@ -10,14 +10,14 @@ if("tao" IN_LIST FEATURES)
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.zip"
           FILENAME ACE-TAO-${ACE_VERSION}.zip
-          SHA512 82c4aa9718814f72f6ecc45da064d8d30f104d9b4785f357525c4c4a8ceb709e5885ddb1c4729df0cab9f69282c8f58cce3a23573a74e1dbdc677a6a54c1c894
+          SHA512 9b99a07bfc80d616843b2a6f8f9a0fc0868fefcb98a1f57f04cc624f39ad9162043bb29d886eda2162143a321b434b8496717b005fa314acbc5403a37a965df6
       )
     else()
       # VCPKG_TARGET_IS_LINUX
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
           FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
-          SHA512 82d69ed23b049948b104677afb93fcaad4468335268b101e5b7d73aa15b380d120253415b42cadf6ba45bbf2ed3771d51f7b56c56eb93ff9e33a044f118f9191
+          SHA512 731896ae9939702b70d293ced64aae1030ddf7545fba926c99b495a43e37aaacc9c9d91f6aadef0153c128704ba7c8545d9b81f9fa0f58de4939e3be4eab1103
       )
     endif()
 else()
@@ -26,14 +26,14 @@ else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.zip"
         FILENAME ACE-src-${ACE_VERSION}.zip
-        SHA512 36f286240ac81c9de0c4a21a54e9e61a4efd0ae9e8381732dadfba496768b697dec9fb448e0d252293bfd686e114c644c7602ddbdbe74c5d73eb6423d00d0ae5
+        SHA512 6b2ddaabaa737bd13d8541d1458ea2f73cbee558f7a294a16078d68e0f294dc09310661ec23ba3077528dfe7340f7040cccc4bd7082025d7b4f3be52d6718769
     )
   else(VCPKG_TARGET_IS_WINDOWS)
     # VCPKG_TARGET_IS_LINUX
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
         FILENAME ACE-src-${ACE_VERSION}.tar.gz
-        SHA512 e47e1ef2e8d517aed3c647a1e7dd9ac8b54ed187f9d6adf1e535bb7c4da6e8e808d72850ae18f2e42842ea9487ef774f7af90d1fbede17e0858e2b5846650580
+        SHA512 91541eac3c7246e5620ee805c297b80406f2e27e06338f142e40633ec74ef5e18e65164c66225bb8606314b63d6b197c6122927f4300bef4bb88010e8b5571b1
     )
   endif()
 endif()
@@ -104,7 +104,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
 elseif(VCPKG_TARGET_IS_OSX)
   set(SOLUTION_TYPE gnuace)
   file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-macosx.h\"")
-  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
+  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "c++11=1\ninclude $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
@@ -126,6 +126,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     LICENSE_SUBPATH COPYING
     PLATFORM ${MSBUILD_PLATFORM}
     USE_VCPKG_INTEGRATION
+    SKIP_CLEAN
   )
 
   # ACE itself does not define an install target, so it is not clear which
@@ -147,6 +148,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
   endfunction()
 
+  get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
+  set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
+
   # Install headers in subdirectory
   set(ACE_INCLUDE_FOLDERS
       "ace"
@@ -160,22 +164,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
       "ace/os_include/net"
       "ace/os_include/netinet"
       "ace/os_include/sys")
-  install_includes(${ACE_ROOT} "${ACE_INCLUDE_FOLDERS}")
+  install_includes(${SOURCE_COPY_PATH} "${ACE_INCLUDE_FOLDERS}")
 
   if("ssl" IN_LIST FEATURES)
-    install_includes(${ACE_ROOT} "ace/SSL")
+    install_includes(${SOURCE_COPY_PATH} "ace/SSL")
   endif()
 
   if("tao" IN_LIST FEATURES)
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/apps/svcconf" "ACEXML/common"
                                "ACEXML/parser/parser")
-    install_includes(${ACE_ROOT} "${ACEXML_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH} "${ACEXML_INCLUDE_FOLDERS}")
 
     set(ACE_PROTOCOLS_INCLUDE_FOLDERS "ace/HTBP" "ace/INet" "ace/RMCast"
                                       "ace/TMCast")
-    install_includes(${ACE_ROOT}/protocols "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/protocols "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
 
-    install_includes(${ACE_ROOT} "Kokyu")
+    install_includes(${SOURCE_COPY_PATH} "Kokyu")
 
     set(TAO_ORBSVCS_INCLUDE_FOLDERS
         "orbsvcs"
@@ -209,11 +213,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("ssl" IN_LIST FEATURES)
       list(APPEND TAO_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/SSLIOP")
     endif()
-    install_includes(${TAO_ROOT}/orbsvcs "${TAO_ORBSVCS_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/TAO/orbsvcs "${TAO_ORBSVCS_INCLUDE_FOLDERS}")
 
     set(TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/FT_ReplicationManager"
                                          "orbsvcs/Notify_Service")
-    install_includes(${TAO_ROOT} "${TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/TAO "${TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS}")
 
     set(TAO_INCLUDE_FOLDERS
         "tao"
@@ -255,7 +259,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("zlib" IN_LIST FEATURES)
       list(APPEND TAO_INCLUDE_FOLDERS "tao/Compression/zlib")
     endif()
-    install_includes(${TAO_ROOT} "${TAO_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/TAO "${TAO_INCLUDE_FOLDERS}")
   endif()
 
   # Remove dlls without any export
@@ -268,6 +272,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)
     endif()
   endif()
+
+  vcpkg_clean_msbuild()
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)

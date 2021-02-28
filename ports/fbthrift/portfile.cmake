@@ -6,8 +6,8 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
-    REF 3b56786f0822f78a408addffaf3a54b1b8c86dcd # v2019.11.11.00
-    SHA512 d892c6825345d2dc68abbe7a0eacb5ee0444fdea328d8d6bbcd512752058a2de715c03567120090a355115bb9d5d41f3f9c8dc2f82b8054d0b5a2fd1621bf473
+    REF e184b41448dab2f462094fa005ed05269cfba3e3 # v2020.10.19.00
+    SHA512 df03e1779fd3f1868ed7be21292bcd91ae65bcca591b0265a40391dde7e3b3b81d83fe7eb4ec8dd5c440be471375b8e2c8c24befefaca3ae0cab9ce10bfd362c
     HEAD_REF master
 )
 

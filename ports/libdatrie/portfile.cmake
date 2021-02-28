@@ -1,7 +1,5 @@
 set(LIBDATRIE_VERSION 0.2.10)
 
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://linux.thai.net/pub/ThaiLinux/software/libthai/libdatrie-${LIBDATRIE_VERSION}.tar.xz"
     FILENAME "libdatrie-${LIBDATRIE_VERSION}.tar.xz"

@@ -1,19 +1,19 @@
-include(vcpkg_common_functions)
-
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
 if(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
     return()
 endif()
 
-set(BOOST_VERSION 1.73.0)
+set(BOOST_VERSION 1.75.0.beta1)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/build
     REF boost-${BOOST_VERSION}
-    SHA512 68e132c480c3063f99ddae48177ff5a35369e49e7f497d51d758a9bf760c5b20c1c040cb212fad94b1f27fb140054b0ef14ac0b32c6d7d246e921787ff58a037
+    SHA512 e5dd73ef41d341e2bce25677389502d22ca7f328e7fdbb91d95aac415f7b490008d75ff0a63f8e4bd9427215f863c161ec9573c29b663b727df4b60e25a3aac2
     HEAD_REF master
+    PATCHES
+        fix_options.patch
 )
 
 vcpkg_download_distfile(ARCHIVE

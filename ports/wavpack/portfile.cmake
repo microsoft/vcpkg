@@ -44,6 +44,3 @@ if(WIN32 AND (NOT MINGW))
 endif()
 
 vcpkg_fixup_pkgconfig()
-
-# Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME wavpack)

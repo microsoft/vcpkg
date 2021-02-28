@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO githubuser0xFFFF/Qt-Advanced-Docking-System
-    REF 6846c9614602f21c51057a32d759a51eba1fc4d9
-    SHA512 1ea130bf5bf2a567ec5510f450c1de74abeaab36258cb28585539a266889326e40c4912bf52b66dfced47e54b6fe0947211b9f53789666fe55744da509328edd
+    REF 44dc76bd19853dcb18d37d5be231af526c8f709e #v3.6.3
+    SHA512 ff50cd65f82736eae90f823d332d63c5c024ecb9e510f95fb8d776a0763bbd0143094b789516193c4037ca2a82eba33d73a68193bb6777e285c8a1e397b3958c 
     HEAD_REF master
     PATCHES
         hardcode_version.patch
@@ -14,7 +14,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS 
         -DBUILD_EXAMPLES=OFF
-        -DVERSION_SHORT=3.6.1
+        -DVERSION_SHORT=3.6.3
 )
 
 vcpkg_install_cmake()

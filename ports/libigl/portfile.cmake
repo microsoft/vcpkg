@@ -1,7 +1,5 @@
 vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libigl/libigl
@@ -12,29 +10,8 @@ vcpkg_from_github(
         fix-dependency.patch
         fix-imgui-set-cond.patch
         install-extra-headers.patch
+        fix-config.patch
 )
-
-set(LIBIGL_BUILD_STATIC OFF)
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(LIBIGL_BUILD_STATIC ON)
-endif()
-
-if ("imgui" IN_LIST FEATURES AND NOT VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    # Remove this after add port libigl-imgui
-    message(FATAL_ERROR "Feature imgui does not support non-static build currently")
-endif()
-
-if ("test" IN_LIST FEATURES AND NOT EXISTS ${SOURCE_PATH}/tests/data)
-    set(TEST_SOURCE_PATH ${SOURCE_PATH}/tests/data)
-    file(MAKE_DIRECTORY ${TEST_SOURCE_PATH})
-    vcpkg_from_github(
-        OUT_SOURCE_PATH ${TEST_SOURCE_PATH}
-        REPO libigl/libigl-tests-data
-        REF  0689abc55bc12825e6c01ac77446f742839ff277
-        SHA512 2b6aec21ed39a9fd534da86fff75eee0f94a3ea2db2fb9dd28974636cc34936341cc28dfcf3bb07cf79409124342717e001c529dc887da72c85fe314b0eb6ea6
-        HEAD_REF master
-    )
-endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     embree LIBIGL_WITH_EMBREE
@@ -52,7 +29,7 @@ vcpkg_configure_cmake(
     OPTIONS ${FEATURE_OPTIONS}
         -DLIBIGL_BUILD_PYTHON=OFF
         -DLIBIGL_EXPORT_TARGETS=ON
-        -DLIBIGL_USE_STATIC_LIBRARY=${LIBIGL_BUILD_STATIC}
+        -DLIBIGL_USE_STATIC_LIBRARY=OFF # Header-only mode
         -DLIBIGL_WITH_COMISO=OFF
         -DLIBIGL_WITH_TETGEN=OFF
         -DLIBIGL_WITH_TRIANGLE=OFF
@@ -68,10 +45,7 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/libigl/cmake)
 vcpkg_copy_pdbs()
 
-if (NOT LIBIGL_BUILD_STATIC)
-    # For dynamic build, libigl is a header-only library.
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
-endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+# libigl is a header-only library.
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.GPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

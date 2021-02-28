@@ -1,22 +1,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO QuantStack/xeus
-    REF 424b7cd177886906a59eee535b7de59088461910 # 0.24.1
-    SHA512 877ca45bf649b567a9921d3e8f0adb0299dbe956978bd6e217d0c06617cf3466d08d90d607fd33e129089472e1a96ecec78b1fc21346bc13ba268168a5a6b068
+    REF 0f6327a2782181e7ded9729abb32b7d8eb690aea # 0.24.3
+    SHA512 2c0ccd1bebf487a9a73e73ecfb74b7605756652b2a84c71e739d7b2d8923960594c025e36d75cec850c5f0e38614a20299feccea6cfbe9ea0f66bdf315af02b4
     HEAD_REF master
     PATCHES
-		Fix-Compile-nlohmann-json.patch
-		Fix-static-build.patch
+        Fix-Compile-nlohmann-json.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED_LIBS)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_EXAMPLES=OFF
-        -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
+        -DXEUS_BUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
+        -DXEUS_BUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
         -DBUILD_TESTS=OFF
         -DDOWNLOAD_GTEST=OFF
         -DDISABLE_ARCH_NATIVE=OFF
@@ -28,15 +29,9 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
-file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
-)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
-file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
-    ${CURRENT_PACKAGES_DIR}/debug/share
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/xeus/xeus.hpp
@@ -47,7 +42,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # Install usage
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")

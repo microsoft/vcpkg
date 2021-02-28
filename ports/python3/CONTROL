@@ -1,9 +1,0 @@
-Source: python3
-Version: 3.8.3
-Port-Version: 2
-Homepage: https://github.com/python/cpython
-Description: The Python programming language as an embeddable library
-Build-Depends: libffi, openssl, zlib (!uwp&!windows)
-
-Feature: enable-shared
-Description: Build shared libraries in addition to static ones built by default

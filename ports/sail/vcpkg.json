@@ -1,0 +1,13 @@
+{
+  "name": "sail",
+  "version-string": "0.9.0-pre11",
+  "description": "The missing small and fast image decoding library for humans (not for machines)",
+  "homepage": "https://github.com/smoked-herring/sail",
+  "supports": "!uwp",
+  "dependencies": [
+    "giflib",
+    "libjpeg-turbo",
+    "libpng",
+    "tiff"
+  ]
+}

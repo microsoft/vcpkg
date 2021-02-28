@@ -1,7 +1,8 @@
 Source: ace
-Version: 6.5.11
+Version: 7.0.0
 Homepage: https://www.dre.vanderbilt.edu/~schmidt/ACE.html
 Description: The ADAPTIVE Communication Environment
+Port-Version: 0
 
 Feature: wchar
 Description: Enable extra wide char functions in ACE

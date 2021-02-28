@@ -1,0 +1,30 @@
+diff --git a/gio-unix-2.0.pc.in b/gio-unix-2.0.pc.in
+index fba58e2..2d015f6 100644
+--- a/gio-unix-2.0.pc.in
++++ b/gio-unix-2.0.pc.in
+@@ -8,4 +8,4 @@ Description: unix specific headers for glib I/O library
+ Version: @VERSION@
+ Requires: gobject-2.0,gio-2.0
+ Libs: -L${libdir} -lgio-2.0
+-Cflags: -I${includedir}/gio-unix-2.0/
++Cflags: -I${includedir}/gio
+diff --git a/gio-windows-2.0.pc.in b/gio-windows-2.0.pc.in
+index 77eecdf..25bb0ae 100644
+--- a/gio-windows-2.0.pc.in
++++ b/gio-windows-2.0.pc.in
+@@ -8,4 +8,4 @@ Description: Windows specific headers for glib I/O library
+ Version: @VERSION@
+ Requires: gobject-2.0,gmodule-no-export-2.0,gio-2.0
+ Libs: -L${libdir} -lgio-2.0
+-Cflags: -I${includedir}/gio-win32-2.0/
++Cflags: -I${includedir}/gio
+diff --git a/glib-2.0.pc.in b/glib-2.0.pc.in
+index 275fc01..1bfd74a 100644
+--- a/glib-2.0.pc.in
++++ b/glib-2.0.pc.in
+@@ -13,4 +13,4 @@ Version: @VERSION@
+ Requires.private: @PCRE_REQUIRES@
+ Libs: -L${libdir} -lglib-2.0 @INTLLIBS@
+ Libs.private: @G_THREAD_LIBS@ @G_LIBS_EXTRA@ @PCRE_LIBS@ @INTLLIBS@ @ICONV_LIBS@ @CARBON_LIBS@ @COCOA_LIBS@
+-Cflags: -I${includedir}/glib-2.0 -I${libdir}/glib-2.0/include @GLIB_EXTRA_CFLAGS@
++Cflags: -I${includedir}/glib @GLIB_EXTRA_CFLAGS@

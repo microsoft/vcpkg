@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 set(GDK_PIXBUF_VERSION 2.36)
 set(GDK_PIXBUF_PATCH 9)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "http://ftp.gnome.org/pub/GNOME/sources/gdk-pixbuf/${GDK_PIXBUF_VERSION}/gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.xz"
+    URLS "https://ftp.gnome.org/pub/GNOME/sources/gdk-pixbuf/${GDK_PIXBUF_VERSION}/gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.xz"
     FILENAME "gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.xz"
     SHA512 ab8f2cda4490012936b094a1321e64b85e1fa1f8d070fae135a514f87f695201b845f4192e4a02954e2767d44314c0a95d727118853528182952d15890130261
 )

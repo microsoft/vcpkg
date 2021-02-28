@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(QCP_VERSION 2.0.1)
 
 vcpkg_download_distfile(ARCHIVE

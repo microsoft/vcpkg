@@ -42,6 +42,8 @@ vcpkg_from_github(
         pkgconfig.patch
         pkgconfig.2.patch
         ${APNG_EXTRA_PATCH}
+        fix-export-targets.patch
+        macos-arch-fix.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

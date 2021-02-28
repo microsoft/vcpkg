@@ -3,5 +3,5 @@
   "version-string": "3.4.3",
   "description": "An Open-Source subdivision surface library.",
   "homepage": "https://github.com/PixarAnimationStudios/OpenSubdiv",
-  "supports": "windows & !arm & !uwp"
+  "supports": "!arm & !uwp"
 }

@@ -29,6 +29,11 @@ else()
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/urdfdom)
 endif()
 
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+    vcpkg_fixup_pkgconfig()
+endif()
+
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 

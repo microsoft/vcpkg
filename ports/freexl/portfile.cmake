@@ -16,12 +16,12 @@ if (VCPKG_TARGET_IS_WINDOWS)
     )
     
     set(LIBS_ALL_DBG 
-      "\"${CURRENT_INSTALLED_DIR}/debug/lib/libiconv.lib\" \
-      \"${CURRENT_INSTALLED_DIR}/debug/lib/libcharset.lib\""
+      "\"${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib\" \
+      \"${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib\""
       )
     set(LIBS_ALL_REL 
-      "\"${CURRENT_INSTALLED_DIR}/lib/libiconv.lib\" \
-      \"${CURRENT_INSTALLED_DIR}/lib/libcharset.lib\""
+      "\"${CURRENT_INSTALLED_DIR}/lib/iconv.lib\" \
+      \"${CURRENT_INSTALLED_DIR}/lib/charset.lib\""
       )
     
     vcpkg_install_nmake(

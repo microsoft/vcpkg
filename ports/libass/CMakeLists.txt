@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.9)
 project(libass C CXX)
 
-set(LIBASS_VERSION 0.14.0)
+set(LIBASS_VERSION 0.15.0)
 
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.in config.h)
 
@@ -20,7 +20,7 @@ add_compile_definitions(CONFIG_FRIBIDI)
 add_compile_definitions(CONFIG_HARFBUZZ)
 
 file (GLOB_RECURSE SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/libass/*.c)
-
+set(FONTCONFIG_LIBRARAY)
 if(WIN32)
   list(FILTER SOURCES EXCLUDE REGEX ".*ass_coretext.c$")
   list(FILTER SOURCES EXCLUDE REGEX ".*ass_fontconfig.c$")
@@ -30,6 +30,9 @@ elseif(APPLE)
 else()
   list(FILTER SOURCES EXCLUDE REGEX ".*ass_coretext.c$")
   list(FILTER SOURCES EXCLUDE REGEX ".*ass_directwrite.c$")
+
+  find_package(Fontconfig REQUIRED)
+  set(FONTCONFIG_LIBRARAY Fontconfig::Fontconfig)
 endif()
 
 find_package(Freetype REQUIRED)
@@ -60,7 +63,8 @@ endif()
 target_link_libraries(ass PRIVATE
   Freetype::Freetype
   ${FRIBIDI_LIBRARY}
-  ${HARFBUZZ_LIBRARY})
+  ${HARFBUZZ_LIBRARY}
+  ${FONTCONFIG_LIBRARY})
 
 install(TARGETS ass
   RUNTIME DESTINATION bin
@@ -73,7 +77,7 @@ set(exec_prefix ${CMAKE_INSTALL_PREFIX})
 set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
 set(includedir ${CMAKE_INSTALL_PREFIX}/include)
 set(PACKAGE_VERSION ${LIBASS_VERSION})
-set(PKG_REQUIRES_PRIVATE "harfbuzz >= 0.9.5, fribidi >= 0.19.0, freetype2 >= 9.10.3")
+set(PKG_REQUIRES_PRIVATE "harfbuzz >= 1.2.3, fribidi >= 0.19.0, freetype2 >= 9.10.3")
 set(PKG_LIBS_PRIVATE -lm)
 configure_file(libass.pc.in libass.pc @ONLY)
 install(FILES

@@ -1,5 +1,4 @@
 
-include(vcpkg_common_functions)
 set(GTK_VERSION 3.22.19)
 
 vcpkg_download_distfile(ARCHIVE

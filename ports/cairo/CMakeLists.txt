@@ -156,9 +156,12 @@ file(GLOB SOURCES
 "cairo-svg-surface.c"
 # script surface
 "cairo-script-surface.c"
-# fontconfig + freetype
-"cairo-ft-font.c"
 )
+
+if(WITH_FREETYPE)
+    file(GLOB _FREETYPE_SOURCES "cairo-ft-font.c")
+    list(APPEND SOURCES ${_FREETYPE_SOURCES})
+endif()
 
 # win32
 file(GLOB PLATFORM_SOURCES_WIN32
@@ -181,17 +184,21 @@ set(CMAKE_DEBUG_POSTFIX "d")
 find_package(Threads REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(PNG REQUIRED)
-find_package(Freetype REQUIRED)
-find_package(unofficial-fontconfig CONFIG REQUIRED)
+if(WITH_FREETYPE)
+    find_package(Freetype REQUIRED)
+    find_package(Fontconfig REQUIRED)
+endif()
 find_package(unofficial-pixman CONFIG REQUIRED)
 
 # Cairo needs to be told which features of FreeType are availible
-add_definitions(
-    -DHAVE_FT_GLYPHSLOT_EMBOLDEN=1
-    -DHAVE_FT_LIBRARY_SETLCDFILTER=1
-    -DHAVE_FT_GLYPHSLOT_OBLIQUE=1
-    -DHAVE_FT_LOAD_SFNT_TABLE=1
-    -DHAVE_FT_GET_X11_FONT_FORMAT=1)
+if(WITH_FREETYPE)
+    add_definitions(
+        -DHAVE_FT_GLYPHSLOT_EMBOLDEN=1
+        -DHAVE_FT_LIBRARY_SETLCDFILTER=1
+        -DHAVE_FT_GLYPHSLOT_OBLIQUE=1
+        -DHAVE_FT_LOAD_SFNT_TABLE=1
+        -DHAVE_FT_GET_X11_FONT_FORMAT=1)
+endif()
 
 # additional features for macOS
 if(UNIX OR APPLE)
@@ -210,8 +217,11 @@ add_library(cairo ${SOURCES})
 if (WITH_X11)
     target_compile_definitions(cairo PUBLIC -DCAIRO_HAS_XLIB_SURFACE=1)
 endif()
-target_include_directories(cairo PUBLIC ${FREETYPE_INCLUDE_DIRS})
-target_link_libraries(cairo PRIVATE ZLIB::ZLIB PNG::PNG Freetype::Freetype unofficial::pixman::pixman-1 unofficial::fontconfig::fontconfig)
+if(WITH_FREETYPE)
+    target_include_directories(cairo PUBLIC ${FREETYPE_INCLUDE_DIRS})
+    target_link_libraries(cairo PRIVATE Freetype::Freetype Fontconfig::Fontconfig)
+endif()
+target_link_libraries(cairo PRIVATE ZLIB::ZLIB PNG::PNG unofficial::pixman::pixman-1)
 
 if(WIN32)
     target_link_libraries(cairo PRIVATE gdi32 msimg32 user32)
@@ -292,14 +302,16 @@ install(
     DESTINATION share/unofficial-cairo
 )
 
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-cairo-config.cmake "
-include(CMakeFindDependencyMacro)
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/unofficial-cairo-config.cmake
+"include(CMakeFindDependencyMacro)
 find_dependency(ZLIB)
 find_dependency(PNG)
-find_dependency(Freetype)
-find_dependency(unofficial-fontconfig CONFIG)
+if(${WITH_FREETYPE})
+    find_dependency(Freetype)
+    find_dependency(Fontconfig)
+endif()
 find_dependency(unofficial-pixman CONFIG)
-if(WITH_GOBJECT)
+if(${WITH_GOBJECT})
     find_dependency(unofficial-glib CONFIG)
 endif()
 

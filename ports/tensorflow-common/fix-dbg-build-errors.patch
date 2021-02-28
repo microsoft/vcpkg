@@ -1,0 +1,111 @@
+diff --git a/tensorflow/core/platform/path.cc b/tensorflow/core/platform/path.cc
+--- a/tensorflow/core/platform/path.cc
++++ b/tensorflow/core/platform/path.cc
+@@ -329,6 +329,7 @@
+   }
+   LOG(FATAL) << "No temp directory found.";
+ #endif
++  std::abort();
+ }
+ 
+ bool GetTestUndeclaredOutputsDir(string* dir) {
+
+diff --git a/tensorflow/core/framework/device_base.cc b/tensorflow/core/framework/device_base.cc
+--- a/tensorflow/core/framework/device_base.cc
++++ b/tensorflow/core/framework/device_base.cc
+@@ -65,10 +65,12 @@
+ 
+ const DeviceAttributes& DeviceBase::attributes() const {
+   LOG(FATAL) << "Device does not implement attributes()";
++  std::abort();
+ }
+ 
+ const string& DeviceBase::name() const {
+   LOG(FATAL) << "Device does not implement name()";
++  std::abort();
+ }
+ 
+ void DeviceBase::set_eigen_cpu_device(Eigen::ThreadPoolDevice* d) {
+
+diff --git a/tensorflow/core/kernels/depthtospace_op.cc b/tensorflow/core/kernels/depthtospace_op.cc
+--- a/tensorflow/core/kernels/depthtospace_op.cc
++++ b/tensorflow/core/kernels/depthtospace_op.cc
+@@ -117,13 +117,13 @@
+         // NCHW_VECT_C with 4 x qint8 can be treated as NCHW int32.
+         auto Tinput_v = input.template reinterpret_last_dimension<int32, 4>();
+         auto Toutput_v = outputs_tensor->reinterpret_last_dimension<int32, 4>();
+-        functor::DepthToSpaceOpFunctor<GPUDevice, int32, FORMAT_NCHW> functor;
+-        functor(context->eigen_device<GPUDevice>(), Tinput_v, block_size_,
++        functor::DepthToSpaceOpFunctor<Device, int32, FORMAT_NCHW> functor;
++        functor(context->eigen_device<Device>(), Tinput_v, block_size_,
+                 Toutput_v);
+         return;
+       } else if (data_format_ == FORMAT_NCHW) {
+-        functor::DepthToSpaceOpFunctor<GPUDevice, T, FORMAT_NCHW> functor;
+-        functor(context->eigen_device<GPUDevice>(), Tinput, block_size_,
++        functor::DepthToSpaceOpFunctor<Device, T, FORMAT_NCHW> functor;
++        functor(context->eigen_device<Device>(), Tinput, block_size_,
+                 Toutput);
+         return;
+       }
+@@ -173,6 +173,15 @@
+     }
+   }
+ };
++#ifdef WIN32
++template <typename T>
++struct DepthToSpaceOpFunctor<CPUDevice, T, FORMAT_NCHW> {
++  void operator()(const CPUDevice& d, typename TTypes<T, 4>::ConstTensor input,
++                  int block_size, typename TTypes<T, 4>::Tensor output) {
++    LOG(FATAL) << "dummy implementation to make debug build compile";
++  }
++};
++#endif
+ }  // namespace functor
+ 
+ #define REGISTER(type)                                                   \
+
+diff --git a/tensorflow/core/kernels/spacetodepth_op.cc b/tensorflow/core/kernels/spacetodepth_op.cc
+--- a/tensorflow/core/kernels/spacetodepth_op.cc
++++ b/tensorflow/core/kernels/spacetodepth_op.cc
+@@ -132,18 +132,18 @@
+         // NCHW_VECT_C with 4 x qint8 can be treated as NCHW int32.
+         auto Tinput_v = input.template reinterpret_last_dimension<int32, 4>();
+         auto Toutput_v = outputs_tensor->reinterpret_last_dimension<int32, 4>();
+-        functor::SpaceToDepthOpFunctor<GPUDevice, int32, FORMAT_NCHW> functor;
+-        functor(context->eigen_device<GPUDevice>(), Tinput_v, block_size_,
++        functor::SpaceToDepthOpFunctor<Device, int32, FORMAT_NCHW> functor;
++        functor(context->eigen_device<Device>(), Tinput_v, block_size_,
+                 Toutput_v);
+       } else if (data_format_ == FORMAT_NCHW) {
+         CHECK((std::is_same<T, RT>::value));
+-        functor::SpaceToDepthOpFunctor<GPUDevice, RT, FORMAT_NCHW> functor;
+-        functor(context->eigen_device<GPUDevice>(), input.tensor<RT, 4>(),
++        functor::SpaceToDepthOpFunctor<Device, RT, FORMAT_NCHW> functor;
++        functor(context->eigen_device<Device>(), input.tensor<RT, 4>(),
+                 block_size_, outputs_tensor->tensor<RT, 4>());
+       } else {
+         CHECK((std::is_same<T, RT>::value));
+-        functor::SpaceToDepthOpFunctor<GPUDevice, RT, FORMAT_NHWC> functor;
+-        functor(context->eigen_device<GPUDevice>(), input.tensor<RT, 4>(),
++        functor::SpaceToDepthOpFunctor<Device, RT, FORMAT_NHWC> functor;
++        functor(context->eigen_device<Device>(), input.tensor<RT, 4>(),
+                 block_size_, outputs_tensor->tensor<RT, 4>());
+       }
+     } else {
+@@ -188,6 +188,15 @@
+     }
+   }
+ };
++#ifdef WIN32
++template <typename T>
++struct SpaceToDepthOpFunctor<CPUDevice, T, FORMAT_NCHW> {
++  void operator()(const CPUDevice& d, typename TTypes<T, 4>::ConstTensor input,
++                  int block_size, typename TTypes<T, 4>::Tensor output) {
++    LOG(FATAL) << "dummy implementation to make debug build compile";
++  }
++};
++#endif
+ }  // namespace functor
+ 
+ #define REGISTER(type)                                                   \

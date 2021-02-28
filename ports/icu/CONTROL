@@ -1,6 +1,6 @@
 Source: icu
 Version: 67.1
-Port-Version: 5
+Port-Version: 8
 Homepage: http://icu-project.org/apiref/icu4c/
 Description: Mature and widely used Unicode and localization library.
 Supports: !(arm|uwp)

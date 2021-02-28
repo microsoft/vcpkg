@@ -6,7 +6,9 @@ vcpkg_from_github(
     REF 1f054617eca14eae921e987b4b4eeb2b1d91de6b
     SHA512 c18f9c22fbbb1f54ebe9c3b771fb2d7c09d502141d1b3645cff9db44cc51b3c976311ff0db79b60f410622579d043f185c56a4c7386e1b0ba8708e433238968b
     HEAD_REF master
-    PATCHES fix-boost.patch
+    PATCHES 
+        fix-boost.patch
+        fix-const-overloaded.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindEigen3.cmake)

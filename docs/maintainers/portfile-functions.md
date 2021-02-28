@@ -1,4 +1,4 @@
-<!-- Run regenerate.ps1 to extract documentation from scripts\cmake\*.cmake -->
+<!-- Run regenerate.ps1 to extract documentation from scripts/cmake/*.cmake -->
 
 # Portfile helper functions
 - [execute\_process](execute_process.md)
@@ -11,6 +11,8 @@
 - [vcpkg\_build\_msbuild](vcpkg_build_msbuild.md)
 - [vcpkg\_build\_ninja](vcpkg_build_ninja.md)
 - [vcpkg\_build\_nmake](vcpkg_build_nmake.md)
+- [vcpkg\_build\_qmake](vcpkg_build_qmake.md)
+- [vcpkg\_buildpath\_length\_warning](vcpkg_buildpath_length_warning.md)
 - [vcpkg\_check\_features](vcpkg_check_features.md)
 - [vcpkg\_check\_linkage](vcpkg_check_linkage.md)
 - [vcpkg\_clean\_executables\_in\_bin](vcpkg_clean_executables_in_bin.md)
@@ -20,16 +22,20 @@
 - [vcpkg\_configure\_gn](vcpkg_configure_gn.md)
 - [vcpkg\_configure\_make](vcpkg_configure_make.md)
 - [vcpkg\_configure\_meson](vcpkg_configure_meson.md)
+- [vcpkg\_configure\_qmake](vcpkg_configure_qmake.md)
 - [vcpkg\_copy\_pdbs](vcpkg_copy_pdbs.md)
-- [vcpkg\_copy\_tools](vcpkg_copy_tools.md)
 - [vcpkg\_copy\_tool\_dependencies](vcpkg_copy_tool_dependencies.md)
+- [vcpkg\_copy\_tools](vcpkg_copy_tools.md)
 - [vcpkg\_download\_distfile](vcpkg_download_distfile.md)
 - [vcpkg\_execute\_build\_process](vcpkg_execute_build_process.md)
+- [vcpkg\_execute\_in\_download\_mode](vcpkg_execute_in_download_mode.md)
 - [vcpkg\_execute\_required\_process](vcpkg_execute_required_process.md)
+- [vcpkg\_execute\_required\_process\_repeat](vcpkg_execute_required_process_repeat.md)
 - [vcpkg\_extract\_source\_archive](vcpkg_extract_source_archive.md)
 - [vcpkg\_extract\_source\_archive\_ex](vcpkg_extract_source_archive_ex.md)
 - [vcpkg\_fail\_port\_install](vcpkg_fail_port_install.md)
 - [vcpkg\_find\_acquire\_program](vcpkg_find_acquire_program.md)
+- [vcpkg\_find\_fortran](vcpkg_find_fortran.md)
 - [vcpkg\_fixup\_cmake\_targets](vcpkg_fixup_cmake_targets.md)
 - [vcpkg\_fixup\_pkgconfig](vcpkg_fixup_pkgconfig.md)
 - [vcpkg\_from\_bitbucket](vcpkg_from_bitbucket.md)
@@ -37,6 +43,8 @@
 - [vcpkg\_from\_github](vcpkg_from_github.md)
 - [vcpkg\_from\_gitlab](vcpkg_from_gitlab.md)
 - [vcpkg\_from\_sourceforge](vcpkg_from_sourceforge.md)
+- [vcpkg\_get\_program\_files\_platform\_bitness](vcpkg_get_program_files_platform_bitness.md)
+- [vcpkg\_get\_windows\_sdk](vcpkg_get_windows_sdk.md)
 - [vcpkg\_install\_cmake](vcpkg_install_cmake.md)
 - [vcpkg\_install\_gn](vcpkg_install_gn.md)
 - [vcpkg\_install\_make](vcpkg_install_make.md)
@@ -44,5 +52,11 @@
 - [vcpkg\_install\_msbuild](vcpkg_install_msbuild.md)
 - [vcpkg\_install\_nmake](vcpkg_install_nmake.md)
 - [vcpkg\_install\_qmake](vcpkg_install_qmake.md)
-- [vcpkg\_prettify\_command](vcpkg_prettify_command.md)
-- [vcpkg\_test\_cmake](vcpkg_test_cmake.md)
+- [vcpkg\_minimum\_required](vcpkg_minimum_required.md)
+- [vcpkg\_replace\_string](vcpkg_replace_string.md)
+
+## Internal Functions
+
+- [vcpkg\_internal\_get\_cmake\_vars](internal/vcpkg_internal_get_cmake_vars.md)
+- [z\_vcpkg\_function\_arguments](internal/z_vcpkg_function_arguments.md)
+- [z\_vcpkg\_prettify\_command\_line](internal/z_vcpkg_prettify_command_line.md)

@@ -2,49 +2,32 @@ if (NOT VCPKG_TARGET_IS_WINDOWS)
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
 
-set(ABSEIL_PATCHES
-    fix-uwp-build.patch
-
-    # This patch is an upstream commit, the related PR: https://github.com/abseil/abseil-cpp/pull/637
-    fix-MSVCbuildfail.patch
-
-    # Remove this patch in next update, see https://github.com/google/cctz/pull/145
-    fix-arm-build.patch
-
-    # This patch is an upstream commit: https://github.com/abseil/abseil-cpp/commit/68494aae959dfbbf781cdf03a988d2f5fc7e4802
-    fix-cmake-threads-dependency.patch
-)
-
-if("cxx17" IN_LIST FEATURES)
-    # in C++17 mode, use std::any, std::optional, std::string_view, std::variant
-    # instead of the library replacement types
-    list(APPEND ABSEIL_PATCHES fix-use-cxx17-stdlib-types.patch)
-else()
-    # fore use of library replacement types, otherwise the automatic
-    # detection can cause ABI issues depending on which compiler options
-    # are enabled for consuming user code
-    list(APPEND ABSEIL_PATCHES fix-lnk2019-error.patch)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO abseil/abseil-cpp
-    REF 06f0e767d13d4d68071c4fc51e25724e0fc8bc74 #commit 2020-03-03
-    SHA512 f6e2302676ddae39d84d8ec92dbd13520ae214013b43455f14ced3ae6938b94cedb06cfc40eb1781dac48f02cd35ed80673ed2d871541ef4438c282a9a4133b9
+    REF 0f3bb466b868b523cf1dc9b2aaaed65c77b28862 #LTS 20200923, Patch 2
+    SHA512 17e766a2f7a655a3877eb3accc5745a910b69a5e2426b7ce7f6d31095523dd32d48a709c5f8380488b4cb93ce9faadedc08f0481dbdbd00cf68831541d724b4d
     HEAD_REF master
-    PATCHES ${ABSEIL_PATCHES}
+    PATCHES
+        # in C++17 mode, use std::any, std::optional, std::string_view, std::variant
+        # instead of the library replacement types
+        # in C++11 mode, force use of library replacement types, otherwise the automatic
+        # detection can cause ABI issues depending on which compiler options
+        # are enabled for consuming user code
+        fix-cxx-standard.patch
+        # Official patch https://github.com/abseil/abseil-cpp/commit/58a9c6d53f93078101c2c0bd98d2951e74328a55
+        fix-msvc-flags.patch
 )
 
-set(CMAKE_CXX_STANDARD 11)
-if("cxx17" IN_LIST FEATURES)
-    set(CMAKE_CXX_STANDARD 17)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    cxx17 ABSL_USE_CXX17
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-        -DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}
+    DISABLE_PARALLEL_CONFIGURE
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

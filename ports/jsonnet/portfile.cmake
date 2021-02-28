@@ -12,11 +12,13 @@ vcpkg_from_github(
     001-enable-msvc.patch
     002-fix-dependency-and-install.patch
     0003-use-upstream-nlohmann-json.patch
+    0004-incorporate-md5.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_execute_required_process(
-    COMMAND Powershell -Command "((Get-Content -AsByteStream \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' | Out-File -Encoding Ascii \"${SOURCE_PATH}/core/std.jsonnet.h\""
+  find_program(PWSH_PATH pwsh)
+  vcpkg_execute_required_process(
+    COMMAND "${PWSH_PATH}" -Command "((Get-Content -AsByteStream \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' | Out-File -Encoding Ascii \"${SOURCE_PATH}/core/std.jsonnet.h\""
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME "std.jsonnet"
   )

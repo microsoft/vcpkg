@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 set(TARGET_BUILD_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})

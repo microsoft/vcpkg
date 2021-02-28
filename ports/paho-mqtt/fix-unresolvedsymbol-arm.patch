@@ -1,10 +1,10 @@
 diff --git a/src/SHA1.c b/src/SHA1.c
-index 9bb1175..b2ef930 100644
+index 3ef07d9..f0e82ce 100644
 --- a/src/SHA1.c
 +++ b/src/SHA1.c
 @@ -19,6 +19,7 @@
  #if !defined(OPENSSL)
- #if defined(WIN32) || defined(WIN64)
+ #if defined(_WIN32) || defined(_WIN64)
  #pragma comment(lib, "crypt32.lib")
 +#pragma comment(lib, "Advapi32.lib")
  

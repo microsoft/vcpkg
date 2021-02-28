@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "linux" "osx" "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -9,6 +9,14 @@ vcpkg_from_github(
     PATCHES
         fix_compile-option.patch
 )
+
+if(VCPKG_TARGET_IS_LINUX)
+    message(
+"OpenSubdiv currently requires the following libraries from the system package manager:
+    xinerama
+
+These can be installed on Ubuntu systems via sudo apt install libxinerama-dev")
+endif()
 
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)

@@ -8,12 +8,17 @@ vcpkg_from_github(
     REF f8882188267488ef801691e69ad072e3eb217ad8 # v4.3.1
     SHA512 9816acf221d196e21af19d4c3d85484934916e7c018e9b2c96aab9f5660b2f08c5db9cd8254ba3fa5f0aa5f5c5ad7bd3a3aaba559e5e640c5349d44e07a20ed3
     HEAD_REF master
-    PATCHES fix-dependecy-hdf5.patch
+    PATCHES 
+        fix-dependecy-hdf5.patch
+        export-cmake-targets.patch
 )
+
+#Provided by upstream https://github.com/Unidata/netcdf-cxx4/blob/master/netCDFCxxConfig.cmake.in
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/netCDFCxxConfig.cmake.in DESTINATION ${SOURCE_PATH})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS
         -DNCXX_ENABLE_TESTS=OFF
         -DCMAKE_INSTALL_CMAKECONFIGDIR=share/netCDFCxx
