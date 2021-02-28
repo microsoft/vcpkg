@@ -4813,7 +4813,7 @@
       "port-version": 0
     },
     "qscintilla": {
-      "baseline": "2.11.4-2",
+      "baseline": "2.12.0",
       "port-version": 0
     },
     "qt-advanced-docking-system": {
