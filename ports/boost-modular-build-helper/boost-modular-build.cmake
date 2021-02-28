@@ -307,6 +307,11 @@ function(boost_modular_build)
         list(APPEND B2_OPTIONS address-model=64 architecture=power)
     else()
         list(APPEND B2_OPTIONS address-model=32 architecture=x86)
+
+        if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+            list(APPEND B2_OPTIONS "asmflags=/safeseh")
+        endif()
+
     endif()
 
     file(TO_CMAKE_PATH "${_bm_DIR}/nothing.bat" NOTHING_BAT)
