@@ -1,5 +1,9 @@
 # vcpkg_fixup_cmake_targets
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_fixup_cmake_targets.md).
+
+**This function has been deprecated in favor of `vcpkg_cmake_config_fixup` from the vcpkg-cmake-config port.**
+
 Merge release and debug CMake targets and configs to support multiconfig generators.
 
 Additionally corrects common issues with targets, such as absolute paths and incorrectly placed binaries.
@@ -22,7 +26,7 @@ This needs to be specified if the port name differs from the `find_package()` na
 
 Defaults to `share/${PORT}`.
 
-### DO_NOT_DELETE_PARENT_CONFIG_PATH 
+### DO_NOT_DELETE_PARENT_CONFIG_PATH
 By default the parent directory of CONFIG_PATH is removed if it is named "cmake".
 Passing this option disable such behavior, as it is convenient for ports that install
 more than one CMake package configuration file.
@@ -49,4 +53,4 @@ Replace `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs and targe
 * [nlohmann-json](https://github.com/Microsoft/vcpkg/blob/master/ports/nlohmann-json/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_fixup_cmake_targets.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_fixup_cmake_targets.cmake)
+[scripts/cmake/vcpkg\_fixup\_cmake\_targets.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_fixup_cmake_targets.cmake)

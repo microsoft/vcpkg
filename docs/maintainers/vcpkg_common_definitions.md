@@ -1,8 +1,9 @@
 # vcpkg_common_definitions
 
-File contains helpful variabls for portfiles which are commonly needed or used.
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_common_definitions.md).
 
-## The following variables are available:
+This file defines the following variabls which are commonly needed or used in portfiles:
+
 ```cmake
 VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD, OPENBSD. only defined if <target>
 VCPKG_HOST_IS_<target>                   with <host> being one of the following: WINDOWS, LINUX, OSX, FREEBSD, OPENBSD. only defined if <host>
@@ -25,4 +26,4 @@ Furthermore the variables CMAKE_FIND_LIBRARY_(PREFIXES|SUFFIXES) are also define
 portfiles are able to use find_library calls to discover dependent libraries within the current triplet for ports.
 
 ## Source
-[scripts/cmake/vcpkg_common_definitions.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_common_definitions.cmake)
+[scripts/cmake/vcpkg\_common\_definitions.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_common_definitions.cmake)
