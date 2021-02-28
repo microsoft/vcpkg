@@ -3072,6 +3072,10 @@
       "baseline": "2020.08.30",
       "port-version": 0
     },
+    "libhv": {
+      "baseline": "v1.0.0",
+      "port-version": 0
+    },
     "libhydrogen": {
       "baseline": "2019-08-11",
       "port-version": 0
