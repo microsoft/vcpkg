@@ -1,9 +1,17 @@
-vcpkg_from_github(
+set(GNUTLS_BRANCH 3.6)
+set(GNUTLS_VERSION ${GNUTLS_BRANCH}.15)
+set(GNUTLS_HASH f757d1532198f44bcad7b73856ce6a05bab43f6fb77fcc81c59607f146202f73023d0796d3e1e7471709cf792c8ee7d436e19407e0601bc0bda2f21512b3b01c)
+
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://www.gnupg.org/ftp/gcrypt/gnutls/v${GNUTLS_BRANCH}/gnutls-${GNUTLS_VERSION}.tar.xz"
+    FILENAME "gnutls-${GNUTLS_VERSION}.tar.xz"
+    SHA512 ${GNUTLS_HASH}
+)
+
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO gnutls/gnutls
-    REF 3.6.15
-    SHA512 85005b159048b7b47b3fc77e8be5b5b317b1ae73ef536d4e2d78496763b7b8c4f80c70016ed27fc60e998cbc7642d3cf487bd4c5e5a5d8abc8f8d51e02f330d1
-    HEAD_REF master
+    ARCHIVE ${ARCHIVE}
+    REF ${GNUTLS_VERSION}
 )
 
 vcpkg_configure_make(
@@ -15,11 +23,13 @@ vcpkg_configure_make(
         --disable-tests
         --disable-maintainer-mode
         --disable-rpath
+        --with-included-unistring
+        --without-p11-kit
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig() 
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

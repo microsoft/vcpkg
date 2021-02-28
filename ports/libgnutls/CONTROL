@@ -2,4 +2,4 @@ Source: libgnutls
 Version: 3.6.15
 Homepage: https://www.gnutls.org/
 Description: A secure communications library implementing the SSL, TLS and DTLS protocols
-Build-Depends: nettle, gmp
+Build-Depends: nettle, gmp, libtasn1, libidn2
