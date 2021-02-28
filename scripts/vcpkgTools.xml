@@ -60,6 +60,27 @@
         <url></url>
         <sha512></sha512>
     </tool>
+    <tool name="gsutil" os="windows">
+        <version>4.59</version>
+        <exeRelativePath>gsutil/gsutil</exeRelativePath>
+        <url>https://storage.googleapis.com/pub/gsutil_4.59.zip</url>
+        <sha512>a9c7cae0a454c9418b62e7af16136e562f1944a551d6a0257459a0ceff0ef16e17caa9249d6d977b69fbab575e122274255781ba32da34b205912e1fa7fee9f6</sha512>
+        <archiveName>gsutil_4.59.zip</archiveName>
+    </tool>
+    <tool name="gsutil" os="osx">
+        <version>4.59</version>
+        <exeRelativePath>gsutil/gsutil</exeRelativePath>
+        <url>https://storage.googleapis.com/pub/gsutil_4.59.tar.gz</url>
+        <sha512>c86b957a2630f3a80869e3105c0baa7bf1297b84698e756fed28b28adf36345cf1dd28d4216ec395de6bfee5b118dd70040ff964a2938f22d8af15a5c3485c48</sha512>
+        <archiveName>gsutil_4.59.tar.gz</archiveName>
+    </tool>
+    <tool name="gsutil" os="linux">
+        <version>4.59</version>
+        <exeRelativePath>gsutil/gsutil</exeRelativePath>
+        <url>https://storage.googleapis.com/pub/gsutil_4.59.tar.gz</url>
+        <sha512>c86b957a2630f3a80869e3105c0baa7bf1297b84698e756fed28b28adf36345cf1dd28d4216ec395de6bfee5b118dd70040ff964a2938f22d8af15a5c3485c48</sha512>
+        <archiveName>gsutil_4.59.tar.gz</archiveName>
+    </tool>
     <tool name="vswhere" os="windows">
         <version>2.4.1</version>
         <exeRelativePath>vswhere.exe</exeRelativePath>
