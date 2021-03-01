@@ -1,3 +1,5 @@
+# static builds are currently not supported since liblsl always also builds shared binaries 
+# which need to be deleted for vcpkg but then the CMake target can no longer be imported because it still references them
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
@@ -12,8 +14,8 @@ vcpkg_configure_cmake(
 	SOURCE_PATH ${SOURCE_PATH}
 	PREFER_NINJA
 	OPTIONS
-		-DLSL_BUILD_STATIC=OFF # static builds are currently not supported since liblsl always also builds shared binaries 
-		                       # which need to be deleted for vcpkg but then the CMake target can no longer be imported because it still references them
+		-DLSL_BUILD_STATIC=OFF
+        -DLSL_BUNDLED_PUGIXML=OFF # we use the pugixml vcpkg package instead
 		-Dlslgitrevision=v1.14.0
 		-Dlslgitbranch=master
 )
