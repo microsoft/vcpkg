@@ -1,12 +1,10 @@
-vcpkg_fail_port_install(ON_TARGET "uwp" "osx")
-
-set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/iir1-1.8.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/berndporr/iir1/archive/1.8.0.zip"
-    FILENAME "iir1-1.8.0.zip"
-    SHA512 e141f4829893ea26f665d32459c2b5d5593e64ed009cd52cb892ef229c8ee6fc718b1718d9cff3856633c23021ebf67a4a9026971e3279438994336b38883754
+vcpkg_from_github(
+OUT_SOURCE_PATH SOURCE_PATH
+REPO berndporr/iir1
+REF 67591c8eac591c576b9aabe9a2f288296bb263f0 #1.8.0
+SHA512 7bea56bd3a5251656834f43ea55e1a8bff48ed2b5576ea9d7bc058e371457b7a3e8fe26111ec9457d4aa9e397f3267d330c5353aea00810a5cc4d9bec2bdcc72
+HEAD_REF master
 )
-vcpkg_extract_source_archive(${ARCHIVE})
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" KEYSTONE_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" KEYSTONE_BUILD_SHARED)
