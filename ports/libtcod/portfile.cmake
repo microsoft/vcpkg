@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 1.16.4
     SHA512  559e1b905dd79a5f1bb5abd95b0beee3b9749a8663cc1eadc824f83d30082bf14ad73a9a4f7001464357b6977a221246eced25ebd63a6400f995b012f9100790
     HEAD_REF develop
+    PATCHES fix-dependencies.patch
 )
 
 vcpkg_configure_cmake(
@@ -16,8 +17,8 @@ vcpkg_configure_cmake(
         -DLIBTCOD_SDL2=find_package
         -DLIBTCOD_ZLIB=find_package
         -DLIBTCOD_GLAD=find_package
-        -DLIBTCOD_LODEPNG=vendored
-        -DLIBTCOD_UTF8PROC=vendored
+        -DLIBTCOD_LODEPNG=find_package
+        -DLIBTCOD_UTF8PROC=vcpkg
         -DLIBTCOD_STB=vcpkg
 )
 
@@ -28,7 +29,7 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 
 file(
-    INSTALL ${SOURCE_PATH}/LICENSE.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/libtcod
+    INSTALL "${SOURCE_PATH}/LICENSE.txt"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
     RENAME copyright
 )

@@ -1,0 +1,33 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index d66d5b8..a8839bd 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -71,8 +71,8 @@ endif()
+ set(LIBTCOD_LODEPNG "vendored" CACHE STRING "How this library will be linked.")
+ set_property(CACHE LIBTCOD_LODEPNG PROPERTY STRINGS "vendored" "find_package")
+ if(LIBTCOD_LODEPNG STREQUAL "find_package")
+-    find_package(lodepng CONFIG REQUIRED)
+-    target_link_libraries(LIBTCOD PRIVATE lodepng)
++    find_package(lodepng-c CONFIG REQUIRED)
++    target_link_libraries(LIBTCOD PRIVATE lodepng-c)
+ elseif(LIBTCOD_LODEPNG STREQUAL "vendored")
+     message("Will be vendored: LodePNG")
+     target_sources(LIBTCOD PRIVATE "vendor/lodepng.c")
+@@ -86,6 +86,17 @@ if(LIBTCOD_UTF8PROC STREQUAL "vendored")
+     message("Will be vendored: utf8proc")
+     target_include_directories(LIBTCOD PRIVATE "vendor/utf8proc")
+     target_sources(LIBTCOD PRIVATE "vendor/utf8proc/utf8proc.c")
++elseif (LIBTCOD_UTF8PROC STREQUAL "vcpkg")
++    include(FindPackageHandleStandardArgs)
++    include(SelectLibraryConfigurations)
++    
++    find_path(UTF8PROC_INCLUDE_DIRS utf8proc.h)
++    find_library(UTF8PROC_LIBRARY_DEBUG NAMES utf8proc PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib NO_DEFAULT_PATH Release RelWithDebInfo MinSizeRel)
++    find_library(UTF8PROC_LIBRARY_RELEASE NAMES utf8proc PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib NO_DEFAULT_PATH Debug)
++    select_library_configurations(UTF8PROC)
++    
++    target_include_directories(LIBTCOD PRIVATE ${UTF8PROC_INCLUDE_DIRS})
++    target_link_libraries(LIBTCOD PRIVATE ${UTF8PROC_LIBRARY})
+ else()
+     message(FATAL_ERROR "Unknown option for LIBTCOD_UTF8PROC: '${LIBTCOD_UTF8PROC}'")
+ endif()

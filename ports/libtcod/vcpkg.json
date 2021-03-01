@@ -7,8 +7,10 @@
   "documentation": "https://libtcod.readthedocs.io/en/latest/",
   "dependencies": [
     "glad",
+    "lodepng-c",
     "sdl2",
     "stb",
+    "utf8proc",
     "zlib"
   ]
 }
