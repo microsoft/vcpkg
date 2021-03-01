@@ -2192,6 +2192,10 @@
       "baseline": "5.1.4-6",
       "port-version": 0
     },
+    "ginkgo": {
+      "baseline": "1.3.0",
+      "port-version": 0
+    },
     "gl2ps": {
       "baseline": "1.4.2",
       "port-version": 0
