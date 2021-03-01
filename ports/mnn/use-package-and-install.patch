@@ -68,43 +68,6 @@ index 993f15d..5da4830 100644
 +install(FILES           ${VERSION_FILE_PATH} 
 +        DESTINATION     share/mnn
 +)
-diff --git a/include/MNN/Matrix.h b/include/MNN/Matrix.h
-index 0d59f66..e728c46 100644
---- a/include/MNN/Matrix.h
-+++ b/include/MNN/Matrix.h
-@@ -1565,10 +1565,7 @@ private:
- 
-     typedef void (*MapXYProc)(const Matrix& mat, float x, float y, Point* result);
- 
--    static MapXYProc GetMapXYProc(TypeMask mask) {
--        MNN_ASSERT((mask & ~kAllMasks) == 0);
--        return gMapXYProcs[mask & kAllMasks];
--    }
-+    static MapXYProc GetMapXYProc(TypeMask mask);
- 
-     MapXYProc getMapXYProc() const {
-         return GetMapXYProc(this->getType());
-@@ -1576,10 +1573,7 @@ private:
- 
-     typedef void (*MapPtsProc)(const Matrix& mat, Point dst[], const Point src[], int count);
- 
--    static MapPtsProc GetMapPtsProc(TypeMask mask) {
--        MNN_ASSERT((mask & ~kAllMasks) == 0);
--        return gMapPtsProcs[mask & kAllMasks];
--    }
-+    static MapPtsProc GetMapPtsProc(TypeMask mask);
- 
-     MapPtsProc getMapPtsProc() const {
-         return GetMapPtsProc(this->getType());
-@@ -1600,7 +1594,7 @@ private:
-     static void Identity_pts(const Matrix&, Point[], const Point[], int);
-     static void Trans_pts(const Matrix&, Point dst[], const Point[], int);
-     static void Scale_pts(const Matrix&, Point dst[], const Point[], int);
--    static void ScaleTrans_pts(const Matrix&, Point dst[], const Point[], int count);
-+    // static void ScaleTrans_pts(const Matrix&, Point dst[], const Point[], int count);
-     static void Persp_pts(const Matrix&, Point dst[], const Point[], int);
- 
-     static void Affine_vpts(const Matrix&, Point dst[], const Point[], int);
 diff --git a/source/backend/cuda/CMakeLists.txt b/source/backend/cuda/CMakeLists.txt
 index f9a24cc..583424d 100644
 --- a/source/backend/cuda/CMakeLists.txt
@@ -153,33 +116,6 @@ index aadabd6..ce8c0f0 100644
  include_directories(${CMAKE_CURRENT_LIST_DIR}/backend/)
  include_directories(${CMAKE_CURRENT_LIST_DIR}/execution/)
  include_directories(${CMAKE_CURRENT_LIST_DIR}/execution/plugin/)
-diff --git a/source/cv/Matrix_CV.cpp b/source/cv/Matrix_CV.cpp
-index 62e0b61..ee3fe57 100644
---- a/source/cv/Matrix_CV.cpp
-+++ b/source/cv/Matrix_CV.cpp
-@@ -829,6 +829,11 @@ const Matrix::MapPtsProc Matrix::gMapPtsProcs[] = {
-     Matrix::Persp_pts, Matrix::Persp_pts, Matrix::Persp_pts, Matrix::Persp_pts, Matrix::Persp_pts, Matrix::Persp_pts,
-     Matrix::Persp_pts, Matrix::Persp_pts};
- 
-+Matrix::MapPtsProc Matrix::GetMapPtsProc(TypeMask mask) {
-+    MNN_ASSERT((mask & ~kAllMasks) == 0);
-+    return gMapPtsProcs[mask & kAllMasks];
-+}
-+
- static Sk4f sort_as_rect(const Sk4f& ltrb) {
-     Sk4f rblt(ltrb[2], ltrb[3], ltrb[0], ltrb[1]);
-     Sk4f min = Sk4f::Min(ltrb, rblt);
-@@ -940,6 +945,10 @@ const Matrix::MapXYProc Matrix::gMapXYProcs[] = {
-     // repeat the persp proc 8 times
-     Matrix::Persp_xy, Matrix::Persp_xy, Matrix::Persp_xy, Matrix::Persp_xy, Matrix::Persp_xy, Matrix::Persp_xy,
-     Matrix::Persp_xy, Matrix::Persp_xy};
-+Matrix::MapXYProc Matrix::GetMapXYProc(TypeMask mask) {
-+    MNN_ASSERT((mask & ~kAllMasks) == 0);
-+    return gMapXYProcs[mask & kAllMasks];
-+}
- 
- uint8_t Matrix::computeTypeMask() const {
-     unsigned mask = 0;
 diff --git a/tools/converter/CMakeLists.txt b/tools/converter/CMakeLists.txt
 index 2d5133a..bc00026 100644
 --- a/tools/converter/CMakeLists.txt
