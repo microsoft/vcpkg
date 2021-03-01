@@ -1,11 +1,10 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/tensorpipe
     REF a9aa71a2fe49a8e8475cd5ff16cbd0de13b67c2b
     SHA512 8b2679d4325acc6cd669326504bb49a645c126586b1d61d873d5a0423ed27e7c513574ccd2e74bdd792869167d3daba0804f127e21cfd5831d37a6d1ef7a79ba
-    # PATCHES
-    #     use-packages.patch # invoke find_package in CMakeLists.txt
+    PATCHES
+        use-packages.patch # invoke find_package in CMakeLists.txt
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -28,8 +27,7 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/cmake/Tensorpipe) # case mismatch :(
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
-                    ${CURRENT_PACKAGES_DIR}/debug/bin
-)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
