@@ -3224,6 +3224,10 @@
       "baseline": "1.0.0",
       "port-version": 1
     },
+    "libnop": {
+      "baseline": "2021-03-01",
+      "port-version": 0
+    },
     "libodb": {
       "baseline": "2.4.0-6",
       "port-version": 0
