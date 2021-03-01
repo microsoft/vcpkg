@@ -43,6 +43,7 @@ At this time, the following helpers are deprecated:
 2. `vcpkg_apply_patches()` should be replaced by the `PATCHES` arguments to the "extract" helpers (e.g. [`vcpkg_from_github()`](vcpkg_from_github.md))
 3. `vcpkg_build_msbuild()` should be replaced by [`vcpkg_install_msbuild()`](vcpkg_install_msbuild.md)
 4. `vcpkg_copy_tool_dependencies()` should be replaced by [`vcpkg_copy_tools()`](vcpkg_copy_tools.md)
+5. `vcpkg_configure_cmake()`, `vcpkg_build_cmake()`, and `vcpkg_install_cmake()` should be replaced by the helper functions in [`vcpkg-cmake`](ports/vcpkg-cmake.md).
 
 ### Avoid excessive comments in portfiles
 
@@ -229,7 +230,7 @@ If you're updating multiple ports at the same time, instead you can run:
 vcpkg x-add-version --all
 ```
 
-To update the files for all modified ports at once.  
+To update the files for all modified ports at once.
 
 _NOTE: These commands require you to have committed your changes to the ports before running them. The reason is that the Git SHA of the port directory is required in these version files. But don't worry, the `x-add-version` command will warn you if you have local changes that haven't been committed._
 
