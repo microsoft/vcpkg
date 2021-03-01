@@ -8,19 +8,21 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_UNITTEST=OFF
+        -DBUILD_STATIC=${BUILD_STATIC}
+        -DBUILD_SHARED=${BUILD_SHARED}
 )
 
 vcpkg_install_cmake()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
