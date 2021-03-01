@@ -33,7 +33,7 @@ vcpkg_from_sourceforge(
         0001-fix-x86-build.patch
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
+include(${CURRENT_HOST_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
 yasm_tool_helper(APPEND_TO_PATH)
 
 if(VCPKG_TARGET_IS_UWP)

@@ -1,3 +1,6 @@
+get_filename_component(_YASM_TOOL_INSTALL_DIR "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
+get_filename_component(_YASM_TOOL_INSTALL_DIR "${_YASM_TOOL_INSTALL_DIR}" DIRECTORY)
+
 function(yasm_tool_helper)
     cmake_parse_arguments(PARSE_ARGV 0 a
         "APPEND_TO_PATH;PREPEND_TO_PATH"
@@ -5,16 +8,10 @@ function(yasm_tool_helper)
         ""
     )
 
-    if(CMAKE_HOST_WIN32)
-        if(VCPKG_TARGET_ARCHITECTURE MATCHES "x86" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
-            # Native compilation
-            set(YASM "${CURRENT_INSTALLED_DIR}/tools/yasm-tool/yasm.exe")
-        else()
-            # Cross compilation
-            get_filename_component(YASM "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/yasm-tool/yasm.exe" ABSOLUTE)
-            if(NOT EXISTS "${YASM}")
-                message(FATAL_ERROR "Cross-targetting and x64 ports requiring yasm require the x86-windows yasm-tool to be available. Please install yasm-tool:x86-windows first.")
-            endif()
+    if(@VCPKG_TARGET_IS_WINDOWS@)
+        set(YASM "${_YASM_TOOL_INSTALL_DIR}/tools/yasm-tool/yasm${VCPKG_HOST_EXECUTABLE_SUFFIX}")
+        if(NOT EXISTS "${YASM}")
+            message(FATAL_ERROR "Cross-targetting ports requiring yasm require the host yasm-tool to be available. (${YASM}).")
         endif()
     else()
         vcpkg_find_acquire_program(YASM)

@@ -12,6 +12,7 @@
     },
     {
       "name": "yasm-tool-helper",
+      "host": true,
       "platform": "windows"
     }
   ]

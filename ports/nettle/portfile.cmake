@@ -11,7 +11,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             runtime.patch
     )
 
-    include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
+    include(${CURRENT_HOST_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
     yasm_tool_helper(OUT_VAR YASM)
     file(TO_NATIVE_PATH "${YASM}" YASM)
 

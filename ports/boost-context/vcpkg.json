@@ -7,12 +7,18 @@
   "supports": "!uwp & !emscripten",
   "dependencies": [
     "boost-assert",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     "boost-core",
     "boost-detail",
     "boost-integer",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-pool",
     "boost-predef",
     "boost-smart-ptr",
