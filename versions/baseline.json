@@ -3457,7 +3457,7 @@
       "port-version": 0
     },
     "libtorrent": {
-      "baseline": "1.2.11",
+      "baseline": "1.2.12",
       "port-version": 0
     },
     "libu2f-server": {
