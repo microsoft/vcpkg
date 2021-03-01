@@ -1,8 +1,8 @@
-﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 993f15d..5da4830 100644
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 993f15d..eea994f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -270,18 +270,28 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "^Linux")
+@@ -270,18 +270,24 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "^Linux")
          include_directories(${aarch64_linux_include})
      endif()
  endif()
@@ -20,10 +20,6 @@ index 993f15d..5da4830 100644
                      ${CMAKE_CURRENT_LIST_DIR}/schema/current/
 -                    ${CMAKE_CURRENT_LIST_DIR}/3rd_party/
 -                    ${CMAKE_CURRENT_LIST_DIR}/3rd_party/flatbuffers/include
-+                    # ${CMAKE_CURRENT_LIST_DIR}/3rd_party/
-+                    # ${CMAKE_CURRENT_LIST_DIR}/3rd_party/flatbuffers/include
-+                    # ${CMAKE_CURRENT_LIST_DIR}/3rd_party/imageHelper
-+                    # ${CMAKE_CURRENT_LIST_DIR}/3rd_party/OpenCLHeaders/
                      ${CMAKE_CURRENT_LIST_DIR}/3rd_party/half
 -                    ${CMAKE_CURRENT_LIST_DIR}/3rd_party/imageHelper
 -                    ${CMAKE_CURRENT_LIST_DIR}/3rd_party/OpenCLHeaders/
@@ -36,7 +32,7 @@ index 993f15d..5da4830 100644
  
  set(MNN_OBJECTS_TO_LINK "")
  set(MNN_TARGETS "")
-@@ -631,10 +641,14 @@ ELSEIF(NOT APPLE)
+@@ -631,10 +637,14 @@ ELSEIF(NOT APPLE)
    INSTALL(FILES ${MNN_PUB_HDRS} DESTINATION include/MNN/)
    INSTALL(FILES ${MNN_EXPR_PUB_HDRS} DESTINATION include/MNN/expr/)
    install(TARGETS MNN
@@ -51,23 +47,13 @@ index 993f15d..5da4830 100644
    install(TARGETS MNN
        LIBRARY DESTINATION lib
        ARCHIVE DESTINATION lib
-@@ -648,5 +662,16 @@ ELSE()
+@@ -648,5 +658,6 @@ ELSE()
    ENDFOREACH()
    IF(MNN_METAL)
      SET_SOURCE_FILES_PROPERTIES(${CMAKE_CURRENT_BINARY_DIR}/mnn.metallib PROPERTIES MACOSX_PACKAGE_LOCATION Resources/)
 +    INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/mnn.metallib DESTINATION bin)
    ENDIF()
  ENDIF()
-+
-+include(CMakePackageConfigHelpers)
-+set(VERSION_FILE_PATH   ${CMAKE_BINARY_DIR}/cmake/${PROJECT_NAME}ConfigVersion.cmake)
-+write_basic_package_version_file(${VERSION_FILE_PATH}
-+    VERSION             ${PROJECT_VERSION}
-+    COMPATIBILITY       SameMajorVersion
-+)
-+install(FILES           ${VERSION_FILE_PATH} 
-+        DESTINATION     share/mnn
-+)
 diff --git a/source/backend/cuda/CMakeLists.txt b/source/backend/cuda/CMakeLists.txt
 index f9a24cc..583424d 100644
 --- a/source/backend/cuda/CMakeLists.txt
@@ -145,7 +131,7 @@ index 2d5133a..bc00026 100644
 +  install(TARGETS MNNDump2Json MNNConvert RUNTIME DESTINATION bin)
  ENDIF()
 diff --git a/tools/cpp/CMakeLists.txt b/tools/cpp/CMakeLists.txt
-index def574c..eb83133 100644
+index def574c..84ee95e 100644
 --- a/tools/cpp/CMakeLists.txt
 +++ b/tools/cpp/CMakeLists.txt
 @@ -53,3 +53,5 @@ if (MSVC)
@@ -154,6 +140,7 @@ index def574c..eb83133 100644
  endif()
 +
 +install(TARGETS ${MNN_CPP_TOOLS} RUNTIME DESTINATION bin)
+\ No newline at end of file
 diff --git a/tools/evaluation/CMakeLists.txt b/tools/evaluation/CMakeLists.txt
 index 8773372..3615b5c 100644
 --- a/tools/evaluation/CMakeLists.txt

@@ -55,7 +55,6 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT})
 
 file(DOWNLOAD "https://apache.org/licenses/LICENSE-2.0.txt" ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
 
