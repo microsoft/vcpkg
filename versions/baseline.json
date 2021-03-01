@@ -3073,7 +3073,7 @@
       "port-version": 0
     },
     "libhv": {
-      "baseline": "v1.0.0",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "libhydrogen": {
