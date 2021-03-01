@@ -677,6 +677,14 @@ libmpeg2:x64-osx=fail
 libmpeg2:x64-uwp=fail
 libmupdf:x64-osx=fail
 libmysql:x86-windows=fail
+#The official website of libnice https://nice.freedesktop.org cannot be accessed
+libnice:x86-windows=skip
+libnice:x64-windows=skip
+libnice:x64-windows-static=skip
+libnice:x64-uwp=skip
+libnice:arm64-windows=skip
+libnice:x64-linux=skip
+libnice:x64-osx=skip
 libopenmpt:x64-linux=fail
 libopenmpt:x64-osx=fail
 libopusenc:arm-uwp=fail
