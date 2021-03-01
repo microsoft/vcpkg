@@ -6,6 +6,32 @@
     "homepage": "https://github.com/Dav1dde/glad",
     "documentation": "https://github.com/Dav1dde/glad/wiki",
     "license": "MIT",
+    "features": [
+      {
+        "name": "core-profile",
+        "description": "Uses `core` profile instead of `compatibility`."
+      },
+      {
+        "name": "egl",
+        "description": "Use `egl` spec instead of `gl`."
+      },
+      {
+        "name": "wgl",
+        "description": "Use `wgl` spec instead of `gl`."
+      },
+      {
+        "name": "glx",
+        "description": "Use `glx` spec instead of `gl`."
+      },
+      {
+        "name": "no-loader",
+        "description": "Disable generation of loader logic."
+      },
+      {
+          "name": "extensions",
+          "description": "Enables all extensions."
+      }
+    ],
     "dependencies": [
       "egl-registry",
       "opengl-registry"
