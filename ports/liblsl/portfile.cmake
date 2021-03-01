@@ -1,4 +1,4 @@
-set(VCPKG_LIBRARY_LINKAGE dynamic)
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -21,31 +21,10 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/lslver)
-file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/lslver.exe)
+vcpkg_copy_tools(TOOL_NAMES lslver AUTO_CLEAN)
 
-# move lslver executable to the tools folder
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/liblsl)
-if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/lslver)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/lslver ${CURRENT_PACKAGES_DIR}/tools/liblsl/lslver)
-endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/lslver.exe)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/lslver.exe ${CURRENT_PACKAGES_DIR}/tools/liblsl/lslver.exe)
-endif()
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-function(remove_if_empty path)
-    file(GLOB_RECURSE FILE_PATHS LIST_DIRECTORIES false "${path}/*")
-    list(LENGTH FILE_PATHS FILE_COUNT)
-    if(FILE_COUNT EQUAL 0)
-        file(REMOVE_RECURSE ${path})
-    endif()
-endfunction()
-
-# delete bin and debug/bin directories if empty
-remove_if_empty(${CURRENT_PACKAGES_DIR}/bin)
-remove_if_empty(${CURRENT_PACKAGES_DIR}/debug/bin)
-
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblsl RENAME copyright)
-file(INSTALL ${SOURCE_PATH}/README.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/liblsl)
+file(INSTALL "${SOURCE_PATH}/README.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
