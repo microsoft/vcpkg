@@ -1,6 +1,6 @@
 Source: pango
 Version: 1.40.11
-Port-Version: 8
+Port-Version: 9
 Homepage: https://ftp.gnome.org/pub/GNOME/sources/pango/
 Description: Text and font handling library.
-Build-Depends: glib, gettext, cairo[gobject], fontconfig, freetype, harfbuzz[glib] (!(windows&static)&!osx)
+Build-Depends: glib, gettext, cairo[gobject], fontconfig, freetype, harfbuzz (!(windows&static)&!osx)

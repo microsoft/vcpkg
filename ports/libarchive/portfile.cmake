@@ -64,19 +64,13 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
 vcpkg_copy_pdbs()
 
-foreach(_feature IN LISTS FEATURE_OPTIONS)
-    string(REPLACE "-D" "" _feature "${_feature}")
-    string(REPLACE "=" ";" _feature "${_feature}")
-    string(REPLACE "ON" "1" _feature "${_feature}")
-    string(REPLACE "OFF" "0" _feature "${_feature}")
-    list(GET _feature 0 _feature_name)
-    list(GET _feature 1 _feature_status)
-    set(${_feature_name} ${_feature_status})
-endforeach()
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 foreach(HEADER ${CURRENT_PACKAGES_DIR}/include/archive.h ${CURRENT_PACKAGES_DIR}/include/archive_entry.h)
     file(READ ${HEADER} CONTENTS)
     string(REPLACE "(!defined LIBARCHIVE_STATIC)" "0" CONTENTS "${CONTENTS}")

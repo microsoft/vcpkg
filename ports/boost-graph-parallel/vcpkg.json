@@ -1,0 +1,37 @@
+{
+  "name": "boost-graph-parallel",
+  "version-string": "1.75.0",
+  "description": "Boost graph_parallel module",
+  "homepage": "https://github.com/boostorg/graph_parallel",
+  "dependencies": [
+    "boost-assert",
+    "boost-compatibility",
+    "boost-concept-check",
+    "boost-config",
+    "boost-container-hash",
+    "boost-detail",
+    "boost-dynamic-bitset",
+    {
+      "name": "boost-filesystem",
+      "platform": "!uwp"
+    },
+    "boost-foreach",
+    "boost-function",
+    "boost-graph",
+    "boost-iterator",
+    "boost-lexical-cast",
+    "boost-math",
+    "boost-mpl",
+    "boost-optional",
+    "boost-property-map",
+    "boost-random",
+    "boost-serialization",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-tuple",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-variant",
+    "boost-vcpkg-helpers"
+  ]
+}

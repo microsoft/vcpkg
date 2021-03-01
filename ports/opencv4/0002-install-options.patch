@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4c0b388..16c0ede 100644
+index 45fc6de..9cd2b4e 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -594,7 +594,7 @@ endif()
+@@ -607,7 +607,7 @@ endif()
  ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
  
  # --- Python Support ---
@@ -12,10 +12,10 @@ index 4c0b388..16c0ede 100644
  endif()
  
 diff --git a/cmake/OpenCVCompilerOptions.cmake b/cmake/OpenCVCompilerOptions.cmake
-index 87b2161..5192875 100644
+index 5e3c056..19f5795 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
-@@ -263,7 +263,6 @@ if(MSVC)
+@@ -264,7 +264,6 @@ if(MSVC)
    #endif()
  
    if(BUILD_WITH_DEBUG_INFO)
@@ -24,10 +24,10 @@ index 87b2161..5192875 100644
      set(OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE "${OPENCV_EXTRA_SHARED_LINKER_FLAGS_RELEASE} /debug")
    endif()
 diff --git a/cmake/OpenCVGenConfig.cmake b/cmake/OpenCVGenConfig.cmake
-index 6991289..3a691c5 100644
+index 838852c..04906b3 100644
 --- a/cmake/OpenCVGenConfig.cmake
 +++ b/cmake/OpenCVGenConfig.cmake
-@@ -109,11 +109,11 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
+@@ -114,11 +114,11 @@ function(ocv_gen_config TMP_DIR NESTED_PATH ROOT_NAME)
    endif()
  endfunction()
  
@@ -41,7 +41,7 @@ index 6991289..3a691c5 100644
    ocv_gen_config("${CMAKE_BINARY_DIR}/unix-install" "abi-${ANDROID_NDK_ABI_NAME}" "OpenCVConfig.root-ANDROID.cmake.in")
    install(FILES "${OpenCV_SOURCE_DIR}/platforms/android/android.toolchain.cmake" DESTINATION "${OPENCV_CONFIG_INSTALL_PATH}" COMPONENT dev)
  endif()
-@@ -121,7 +121,7 @@ endif()
+@@ -126,7 +126,7 @@ endif()
  # --------------------------------------------------------------------------------------------
  #  Part 3/3: ${BIN_DIR}/win-install/OpenCVConfig.cmake  -> For use within binary installers/packages
  # --------------------------------------------------------------------------------------------

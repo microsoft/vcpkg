@@ -41,7 +41,7 @@ We collect various telemetry events such as the command line used, the time of i
 
 You can see the telemetry events any command by appending `--printmetrics` after the vcpkg command line.
 
-In the source code (included in `toolsrc\`), you can search for calls to the functions `track_property()`, `track_feature()`, `track_metric()`, and `track_buildtime()`
+In the source code (included at https://github.com/microsoft/vcpkg-tool/ ), you can search for calls to the functions `track_property()`, `track_feature()`, `track_metric()`, and `track_buildtime()`
 to see every specific data point we collect.
 
 ## Avoid inadvertent disclosure information

@@ -197,6 +197,10 @@ or
 ```
 if the appropriate environment variables are defined and non-empty. This is specifically used to associate packages in GitHub Packages with the _building_ project and not intended to associate with the original package sources.
 
+#### NuGet's cache
+
+NuGet's cache is not used by default. To use it for every nuget-based source, set the [environment variable](config-environment.md) `VCPKG_USE_NUGET_CACHE` to `true` (case-insensitive) or `1`.
+
 ## Implementation Notes (internal details subject to change without notice)
 
 Binary caching relies on hashing everything that contributes to a particular package build. This includes:
