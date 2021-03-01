@@ -1,0 +1,45 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 75f2e63..3882d49 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,5 +29,5 @@ endif()
+ add_subdirectory(tensorpipe)
+ 
+ install(EXPORT TensorpipeTargets
+-        DESTINATION share/cmake/Tensorpipe
++        DESTINATION share/${PROJECT_NAME}
+         FILE TensorpipeTargets.cmake)
+diff --git a/tensorpipe/CMakeLists.txt b/tensorpipe/CMakeLists.txt
+index 0a0944b..b7ff4fa 100644
+--- a/tensorpipe/CMakeLists.txt
++++ b/tensorpipe/CMakeLists.txt
+@@ -118,8 +118,9 @@ target_sources(tensorpipe PRIVATE
+   transport/uv/loop.cc
+   transport/uv/sockaddr.cc
+   transport/uv/utility.cc)
+-find_package(uv REQUIRED)
+-target_link_libraries(tensorpipe PRIVATE uv::uv)
++# use VcPkg's `libuv`
++find_package(unofficial-libuv CONFIG REQUIRED) 
++target_link_libraries(tensorpipe PRIVATE unofficial::libuv::libuv)
+ 
+ ### shm
+ 
+@@ -204,7 +205,15 @@ endif()
+ 
+ ## Install
+ 
++install(DIRECTORY channel common core transport util
++        DESTINATION include/tensorpipe
++        FILES_MATCHING PATTERN "*.h")
++
++install(FILES tensorpipe.h
++        DESTINATION include/tensorpipe)
++
+ install(TARGETS tensorpipe
+         EXPORT TensorpipeTargets
+-        LIBRARY DESTINATION ${TP_INSTALL_LIBDIR}
+-        ARCHIVE DESTINATION ${TP_INSTALL_LIBDIR})
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib)
