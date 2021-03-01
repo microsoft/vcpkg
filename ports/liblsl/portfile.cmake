@@ -11,13 +11,13 @@ vcpkg_from_github(
 )
 
 vcpkg_configure_cmake(
-	SOURCE_PATH ${SOURCE_PATH}
-	PREFER_NINJA
-	OPTIONS
-		-DLSL_BUILD_STATIC=OFF
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DLSL_BUILD_STATIC=OFF
         -DLSL_BUNDLED_PUGIXML=OFF # we use the pugixml vcpkg package instead
-		-Dlslgitrevision=v1.14.0
-		-Dlslgitbranch=master
+        -Dlslgitrevision=v1.14.0
+        -Dlslgitbranch=master
 )
 
 vcpkg_install_cmake()
