@@ -2,4 +2,4 @@ Source: libtasn1
 Version: 4.16.0
 Homepage: https://www.gnutls.org/
 Description: A secure communications library implementing the SSL, TLS and DTLS protocols
-Supports: linux, osx
+Supports: !windows
