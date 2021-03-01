@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO KDE/ki18n
     REF v5.75.0
     SHA512 9e059afb8c3bd074ecdfcb1bf4cf3c9340159dc9f7276c9bb81abb1fa73fc893229abade8c4fac344ffec555889232d3a789df72974d6f9c7c6437627872a356
+    PATCHES
+      "prevent-cmake-failing-with-variable-notfound.patch"
 )
 
 if(CMAKE_HOST_WIN32)
