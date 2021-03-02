@@ -1,12 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxslt
-    REF  v1.1.33
-    SHA512 2c20b2af3c19952b25b10dca0d95fe227602f7f815db352b04dd061c52c458d745f92c597ce08ac9207ba0fbe0169ea2fb78263d8590743717553f84463fe1d9
+    REF  v1.1.34
+    SHA512 fc57affb236e5f7602ee53c8090a854c6b950d1e6526ae3488bca41d8d421ec70433d88eb227c71c2a61213bc364517bdad907125e36486da1754fe9e460601f
     HEAD_REF master
     PATCHES
         0001-Fix-makefile.patch
-        0002-Fix-lzma.patch
+        0002-Fix-configure.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
