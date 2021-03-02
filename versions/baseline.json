@@ -3618,6 +3618,10 @@
     },
     "lodepng": {
       "baseline": "2020-03-15",
+      "port-version": 1
+    },
+    "lodepng-c": {
+      "baseline": "2021-03-01",
       "port-version": 0
     },
     "log4cplus": {
