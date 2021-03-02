@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtcod/libtcod
-    REF 1.16.4
-    SHA512  559e1b905dd79a5f1bb5abd95b0beee3b9749a8663cc1eadc824f83d30082bf14ad73a9a4f7001464357b6977a221246eced25ebd63a6400f995b012f9100790
+    REF 1.16.6
+    SHA512  88777acd89d5ab2541d8b5d2f6db966059b76501b591d6e1d782d0d39b0adbcb38be25c49716b6e581b4b0488bf2dbfc5b07452b80495365861cee97e5279bfd
     HEAD_REF develop
-    PATCHES fix-dependencies.patch
 )
 
 vcpkg_configure_cmake(
