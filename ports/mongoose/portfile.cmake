@@ -5,7 +5,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cesanta/mongoose
-    REF 8e520756366ca5739f13dc6ad65fcf269dbbc994 #v7.1.0
+    REF 8e520756366ca5739f13dc6ad65fcf269dbbc994 #v7.1
     SHA512 a966a8b4e47e36da0f630c3cf343c85a1c1138508a82e506b21e4b8bd72573d0e0145318f97b32a67f423e033b348de76a00b780430e4e69d1a98bd7494a3e0a
     HEAD_REF master
 )
