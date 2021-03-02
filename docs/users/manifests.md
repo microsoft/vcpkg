@@ -1,6 +1,8 @@
 # Manifest Mode
 
-vcpkg has two modes of operation - classic mode and manifest mode.
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/manifests.md).**
+
+vcpkg has two modes of consuming dependencies - classic mode and manifest mode.
 
 In classic mode, vcpkg produces an "installed" tree, whose contents are changed by explicit calls to `vcpkg install` or
 `vcpkg remove`. The installed tree is intended for consumption by any number of projects: for example, installing a

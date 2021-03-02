@@ -1,5 +1,7 @@
 ## Environment and Configuration
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/config-environment.md).**
+
 ### Environment Variables
 
 #### VCPKG_DOWNLOADS
