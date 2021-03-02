@@ -1,5 +1,7 @@
 # vcpkg_install_qmake
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_install_qmake.md).
+
 Build and install a qmake project.
 
 ## Usage:
@@ -21,4 +23,4 @@ staging directories.
 * [libqglviewer](https://github.com/Microsoft/vcpkg/blob/master/ports/libqglviewer/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_install_qmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_qmake.cmake)
+[scripts/cmake/vcpkg\_install\_qmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_qmake.cmake)

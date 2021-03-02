@@ -10,6 +10,11 @@ function(debug_message)
         message(STATUS "[DEBUG] " "${ARG_STRING}")
     endif()
 endfunction()
+function(z_vcpkg_deprecation_message)
+    z_vcpkg_function_arguments(ARGS)
+    list(JOIN ARGS " " ARG_STRING)
+    message(DEPRECATION "${ARG_STRING}")
+endfunction()
 
 option(_VCPKG_PROHIBIT_BACKCOMPAT_FEATURES "Controls whether use of a backcompat only support feature fails the build.")
 if (_VCPKG_PROHIBIT_BACKCOMPAT_FEATURES)
@@ -18,7 +23,7 @@ else()
     set(Z_VCPKG_BACKCOMPAT_MESSAGE_LEVEL "WARNING")
 endif()
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+list(APPEND CMAKE_MODULE_PATH "${SCRIPTS}/cmake")
 include("${SCRIPTS}/cmake/vcpkg_minimum_required.cmake")
 vcpkg_minimum_required(VERSION 2021-01-13)
 
@@ -128,6 +133,7 @@ if(CMD MATCHES "^BUILD$")
     include("${SCRIPTS}/cmake/vcpkg_replace_string.cmake")
     include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
 
+    include("${SCRIPTS}/cmake/z_vcpkg_apply_patches.cmake")
     include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")
