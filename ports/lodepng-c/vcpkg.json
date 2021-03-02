@@ -2,6 +2,6 @@
   "name": "lodepng-c",
   "version-string": "2021-03-01",
   "port-version": 15,
-  "description": "PNG encoder and decoder in C and C++",
+  "description": "PNG encoder and decoder in C",
   "homepage": "https://github.com/lvandeve/lodepng"
 }
