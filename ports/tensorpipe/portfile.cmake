@@ -25,7 +25,9 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DTP_BUILD_TESTING=OFF -DTP_BUILD_BENCHMARK=OFF -DTP_BUILD_LIBUV=OFF
+        -DTP_BUILD_TESTING=OFF 
+        -DTP_BUILD_BENCHMARK=OFF 
+        -DTP_BUILD_LIBUV=OFF
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
