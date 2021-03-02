@@ -35,4 +35,15 @@ vcpkg_install_make(DISABLE_PARALLEL)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
+# Use shell script wrappers to make the executables relocatable; see https://www.open-mpi.org/faq/?category=building#installdirs
+# All executables are symlinks to `opal_wrapper`, so we only need to replace that. This will not work on systems that don't support symlinks.
+if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/openmpi/debug/bin/opal_wrapper")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/openmpi/debug/bin/opal_wrapper" "${CURRENT_PACKAGES_DIR}/tools/openmpi/debug/bin/opal_wrapper_real")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/opal_wrapper.dbg.sh" "${CURRENT_PACKAGES_DIR}/tools/openmpi/debug/bin/opal_wrapper" COPYONLY)
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/openmpi/bin/opal_wrapper")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/tools/openmpi/bin/opal_wrapper" "${CURRENT_PACKAGES_DIR}/tools/openmpi/bin/opal_wrapper_real")
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/opal_wrapper.rel.sh" "${CURRENT_PACKAGES_DIR}/tools/openmpi/bin/opal_wrapper" COPYONLY)
+endif()
+
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
