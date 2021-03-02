@@ -4514,7 +4514,7 @@
     },
     "paraview": {
       "baseline": "5.8.0",
-      "port-version": 3
+      "port-version": 4
     },
     "parmetis": {
       "baseline": "4.0.3-3",
@@ -6158,7 +6158,7 @@
     },
     "vtk": {
       "baseline": "9.0.1",
-      "port-version": 4
+      "port-version": 5
     },
     "vtk-dicom": {
       "baseline": "0.8.12-1",
