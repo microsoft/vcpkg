@@ -1,7 +1,7 @@
-From 13c51670133836c181618dea545a3d58ed3898a7 Mon Sep 17 00:00:00 2001
+From 6492277e39dbe7dd77d32fdc9ae4b989213ef3c6 Mon Sep 17 00:00:00 2001
 From: Adam Johnson <AdamJohnso@gmail.com>
 Date: Wed, 9 Sep 2020 20:15:58 -0400
-Subject: [PATCH 5/7] only build required projects
+Subject: [PATCH 5/6] only build required projects
 
 strips out tests and unsupported externals (eg tkinter).
 ---
