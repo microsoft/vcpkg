@@ -65,11 +65,25 @@ else(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         NO_DEBUG
-        OPTIONS 
+        OPTIONS
             "--prefix=${CURRENT_INSTALLED_DIR}"
             "--with-apr=${CURRENT_INSTALLED_DIR}/tools/apr"
             "--with-openssl=${CURRENT_INSTALLED_DIR}"
             "-with-expat=${CURRENT_INSTALLED_DIR}"
+            --without-nss
+            --without-commoncrypto
+            --without-lber
+            --without-ldap
+            --without-gdbm
+            --without-ndbm
+            --without-berkeley-db
+            --without-sqlite3
+            --without-sqlite2
+            --without-mysql
+            --without-pgsql
+            --without-oracle
+            --without-odbc
+            --without-iconv
             "${CONFIGURE_PARAMETER_1}"
             "${CONFIGURE_PARAMETER_2}"
             "${CONFIGURE_PARAMETER_3}"

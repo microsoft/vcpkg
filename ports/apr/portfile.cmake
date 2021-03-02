@@ -84,6 +84,16 @@ else()
         "-lapr-\${APR_MAJOR_VERSION}" "-lapr-1"
     )
     vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread rt dl uuid crypt)
+
+    foreach(SUBPATH "" "/debug")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/tools/apr${SUBPATH}/bin/apr-1-config")
+            file(READ "${CURRENT_PACKAGES_DIR}/tools/apr${SUBPATH}/bin/apr-1-config" _contents)
+            string(REGEX REPLACE "\nprefix=[^\n]*\n" "\nprefix=\"\$(dirname \"\$0\")/../../..${SUBPATH}\"\n" _contents "${_contents}")
+            string(REGEX REPLACE "\nAPR_SOURCE_DIR=[^\n]*\n" "\nAPR_SOURCE_DIR=\"\"\n" _contents "${_contents}")
+            string(REGEX REPLACE "\nAPR_BUILD_DIR=[^\n]*\n" "\nAPR_BUILD_DIR=\"\"\n" _contents "${_contents}")
+            file(WRITE "${CURRENT_PACKAGES_DIR}/tools/apr${SUBPATH}/bin/apr-1-config" "${_contents}")
+        endif()
+    endforeach()
 endif()
 
 # Handle copyright
