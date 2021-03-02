@@ -83,7 +83,7 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
       ArtifactName: 'failure logs for ${{ parameters.triplet }}'
     condition: always()
- - task: PowerShell@2
+  - task: PowerShell@2
     displayName: 'Build a file list for all packages'
     condition: always()
     inputs:
