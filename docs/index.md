@@ -33,7 +33,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 ### Community Resources (not directly affiliated with vcpkg)
 
-- [vcpkg.info](https://vcpkg.info/) - Package index + search (includes older port versions)
+- [vcpkg.info](https://vcpkg.info/) - Package index + search
 - [vcpkgx](https://vcpkgx.com/) - Package index + search
 
 ### Specifications
