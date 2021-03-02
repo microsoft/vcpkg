@@ -16,8 +16,8 @@ macro(find_dependency_win)
 
   # Setup geos libraries + include path
   set(GEOS_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include" )
-  set(GEOS_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib" )
-  set(GEOS_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib" )
+  set(GEOS_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib" )
+  set(GEOS_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib" )
   
   # Setup expat libraries + include path
   set(EXPAT_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include" )
