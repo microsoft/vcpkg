@@ -42,6 +42,8 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL Android)
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
             $<INSTALL_INTERFACE:include>
     )
+
+    set(TARGETS libbreakpad)
 endif()
 
 # libbreakpad_client target
