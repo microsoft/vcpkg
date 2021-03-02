@@ -87,13 +87,6 @@ if("tools" IN_LIST FEATURES)
     if(BUILD_SHARED)
         vcpkg_copy_tools(TOOL_NAMES TestConvertResult AUTO_CLEAN) # tools/converter
     endif()
-    if(VCPKG_TARGET_IS_OSX)
-        # no install(TARGETS) for the following binaries. check the buildtrees...
-        # vcpkg_copy_tools(
-        #     TOOL_NAMES checkDir.out checkFile.out winogradExample.out winogradGenerateGLSL.out winogradGenerateCL.out # tools/cpp
-        #     AUTO_CLEAN
-        # )
-    endif()
 endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # remove the others. ex) mnn.metallib
