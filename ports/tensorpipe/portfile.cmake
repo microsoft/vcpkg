@@ -11,13 +11,13 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
-    cuda        TP_USE_CUDA
-    cuda        TP_ENABLE_CUDA_IPC
-    shm         TP_ENABLE_SHM
-    ibv         TP_ENABLE_IBV
-    cma         TP_ENABLE_CMA
-    pybind11    TP_BUILD_PYTHON
+    FEATURES
+        cuda        TP_USE_CUDA
+        cuda        TP_ENABLE_CUDA_IPC
+        shm         TP_ENABLE_SHM
+        ibv         TP_ENABLE_IBV
+        cma         TP_ENABLE_CMA
+        pybind11    TP_BUILD_PYTHON
 )
 
 vcpkg_configure_cmake(
