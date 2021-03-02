@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/tensorpipe
-    REF a9aa71a2fe49a8e8475cd5ff16cbd0de13b67c2b
-    SHA512 8b2679d4325acc6cd669326504bb49a645c126586b1d61d873d5a0423ed27e7c513574ccd2e74bdd792869167d3daba0804f127e21cfd5831d37a6d1ef7a79ba
+    REF f73bcd9dfaa02e8335a493dec7f6b1e3a96aa476
+    SHA512 42e144804f491e55a9135c56cc310def905ae1dd84f417237c5035e7ddc90455dd884be7942ca24c678239382d525a5b50c804e29e83919ff84c49c6061e2bea
     PATCHES
         fix-cmakelists.patch
 )
@@ -18,6 +18,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ibv         TP_ENABLE_IBV
         cma         TP_ENABLE_CMA
         pybind11    TP_BUILD_PYTHON
+        test        TP_BUILD_TESTING
+        test        TP_BUILD_BENCHMARK
 )
 
 vcpkg_configure_cmake(
@@ -25,8 +27,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DTP_BUILD_TESTING=OFF 
-        -DTP_BUILD_BENCHMARK=OFF 
         -DTP_BUILD_LIBUV=OFF
 )
 vcpkg_install_cmake()

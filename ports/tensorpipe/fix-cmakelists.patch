@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 75f2e63..3882d49 100644
+index 75f2e63..3b9c16d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -29,5 +29,5 @@ endif()
@@ -10,10 +10,25 @@ index 75f2e63..3882d49 100644
 +        DESTINATION share/${PROJECT_NAME}
          FILE TensorpipeTargets.cmake)
 diff --git a/tensorpipe/CMakeLists.txt b/tensorpipe/CMakeLists.txt
-index 0a0944b..b7ff4fa 100644
+index 0a0944b..3a48212 100644
 --- a/tensorpipe/CMakeLists.txt
 +++ b/tensorpipe/CMakeLists.txt
-@@ -118,8 +118,9 @@ target_sources(tensorpipe PRIVATE
+@@ -22,6 +22,14 @@ add_library(tensorpipe
+   core/pipe_impl.cc
+   transport/error.cc)
+ 
++find_path(LIBNOP_INCLUDE_DIRS "nop/serializer.h")
++if(LIBNOP_INCLUDE_DIRS-NOTFOUND)
++  message(FATAL_ERROR "Failed to find header of the 'libnop' package from VcPkg.")
++else()
++  message(STATUS "Using 'libnop': ${LIBNOP_INCLUDE_DIRS}")
++endif()
++target_include_directories(tensorpipe PUBLIC $<BUILD_INTERFACE:${LIBNOP_INCLUDE_DIRS}>)
++
+ # Support `#include <tensorpipe/foo.h>`.
+ target_include_directories(tensorpipe PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>)
+ 
+@@ -118,8 +126,9 @@ target_sources(tensorpipe PRIVATE
    transport/uv/loop.cc
    transport/uv/sockaddr.cc
    transport/uv/utility.cc)
@@ -25,7 +40,7 @@ index 0a0944b..b7ff4fa 100644
  
  ### shm
  
-@@ -204,7 +205,15 @@ endif()
+@@ -204,7 +213,15 @@ endif()
  
  ## Install
  
@@ -43,3 +58,37 @@ index 0a0944b..b7ff4fa 100644
 +        RUNTIME DESTINATION bin
 +        LIBRARY DESTINATION lib
 +        ARCHIVE DESTINATION lib)
+diff --git a/tensorpipe/benchmark/CMakeLists.txt b/tensorpipe/benchmark/CMakeLists.txt
+index d5a44de..05c2f6c 100644
+--- a/tensorpipe/benchmark/CMakeLists.txt
++++ b/tensorpipe/benchmark/CMakeLists.txt
+@@ -6,7 +6,7 @@
+ 
+ # TODO: Make those separate CMake projects.
+ 
+-add_executable(benchmark_transport benchmark_transport.cc options.cc transport_registry.cc)
++add_executable(benchmark_transport benchmark_transport.cc options.cc transport_registry.cc channel_registry.cc)
+ target_link_libraries(benchmark_transport PRIVATE tensorpipe)
+ 
+ add_executable(benchmark_pipe benchmark_pipe.cc options.cc transport_registry.cc channel_registry.cc)
+diff --git a/tensorpipe/test/CMakeLists.txt b/tensorpipe/test/CMakeLists.txt
+index c0320aa..ecaacaa 100644
+--- a/tensorpipe/test/CMakeLists.txt
++++ b/tensorpipe/test/CMakeLists.txt
+@@ -85,12 +85,9 @@ if(TP_USE_CUDA)
+     )
+ endif()
+ 
+-
+-add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/googletest
+-  ${PROJECT_BINARY_DIR}/third_party/googletest)
+-
++find_package(GTest CONFIG REQUIRED)
+ target_link_libraries(tensorpipe_test PRIVATE
+   tensorpipe
+-  uv::uv
+-  gmock
+-  gtest_main)
++  unofficial::libuv::libuv
++  GTest::gmock GTest::gtest_main
++)
