@@ -114,7 +114,6 @@ foreach(BUILD_TYPE dbg rel)
 	set(STATIC_ONLY_PATCHES)
 	set(WINDOWS_ONLY_PATCHES)
 	set(LINUX_ONLY_PATCHES)
-	set(UWP_ONLY_PATCHES)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		set(STATIC_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/change-macros-for-static-lib.patch")  # there is no static build option - change macros via patch and link library manually at the end
 	endif()
@@ -123,9 +122,6 @@ foreach(BUILD_TYPE dbg rel)
 	endif()
 	if(VCPKG_TARGET_IS_LINUX)
 		set(LINUX_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-linux-build.patch")
-	endif()
-	if(VCPKG_TARGET_IS_UWP)
-		set(UWP_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-uwp-build.patch")
 	endif()
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
@@ -138,7 +134,6 @@ foreach(BUILD_TYPE dbg rel)
 			${STATIC_ONLY_PATCHES}
 			${WINDOWS_ONLY_PATCHES}
 			${LINUX_ONLY_PATCHES}
-			${UWP_ONLY_PATCHES}
 	)
 
 	message(STATUS "Configuring TensorFlow (${BUILD_TYPE})")
@@ -219,39 +214,19 @@ foreach(BUILD_TYPE dbg rel)
 		endforeach()
 	endif()
 
-	set(ADDITIONAL_TARGETS_PRE)
-	if(VCPKG_TARGET_IS_UWP)
-		# the following doesn't work yet, use work-around for the time being
-		# details: https://stackoverflow.com/questions/65184913/how-do-i-add-an-additional-system-include-directory-using-bazel
-		#set(AT_CHAR_FOR_CONFIGURE_FILE "@")
-		#configure_file(${CMAKE_CURRENT_LIST_DIR}/uwp_genrule.BUILD.in ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}/patching_target/BUILD @ONLY)
-		#set(ADDITIONAL_TARGETS_PRE "///patching_target:patch_include_dirs")
-		message(STATUS "UWP build requires a patched header to be force-included. As this currently is not possible with bazel, we will copy '__vcpkg_uwppatch.h' to '$ENV{VCToolsInstallDir}/include/'. This might require vcpkg to be run as Administrator if the next command fails.")
-		configure_file(${CMAKE_CURRENT_LIST_DIR}/uwppatch.h $ENV{VCToolsInstallDir}/include/__vcpkg_uwppatch.h COPYONLY)
-
-		list(APPEND COPTS "--copt=-DWINAPI_FAMILY=WINAPI_FAMILY_APP")
-		list(APPEND COPTS "--copt=-D_WIN32_WINNT=0x0A00")
-		list(APPEND COPTS "--copt=-FI__vcpkg_uwppatch.h")
-		list(APPEND LINKOPTS "--linkopt=-APPCONTAINER")
-		list(APPEND LINKOPTS "--linkopt=WindowsApp.lib")
-		list(APPEND LINKOPTS "--linkopt='-LIBPATH:\"$ENV{VCToolsInstallDir}/lib/${VCPKG_TARGET_ARCHITECTURE}/store\"'")
-		list(APPEND LINKOPTS "--linkopt='-LIBPATH:\"$ENV{WindowsSdkDir}/lib/$ENV{WindowsSDKVersion}/um/${VCPKG_TARGET_ARCHITECTURE}\"'")
-		list(APPEND LINKOPTS "--linkopt=-FORCE:MULTIPLE")
-	endif()
-
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 		if(VCPKG_TARGET_IS_WINDOWS)
 			list(JOIN COPTS " " COPTS)
 			list(JOIN CXXOPTS " " CXXOPTS)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "'${BAZEL}' build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ${ADDITIONAL_TARGETS_PRE} ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "'${BAZEL}' build --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} ${LINKOPTS} --define=no_tensorflow_py_deps=true ${ADDITIONAL_TARGETS_PRE} //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} build --verbose_failures ${BUILD_OPTS} --python_path=${PYTHON3} ${COPTS} ${CXXOPTS} ${LINKOPTS} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -269,13 +244,13 @@ foreach(BUILD_TYPE dbg rel)
 			list(JOIN CXXOPTS " " CXXOPTS)
 			list(JOIN LINKOPTS " " LINKOPTS)
 			vcpkg_execute_build_process(
-				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ${ADDITIONAL_TARGETS_PRE} ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
+				COMMAND ${BASH} --noprofile --norc -c "${BAZEL} build -s --verbose_failures ${BUILD_OPTS} --features=fully_static_link ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path='${PYTHON3}' --define=no_tensorflow_py_deps=true ///tensorflow:${BAZEL_LIB_NAME} ///tensorflow:install_headers"
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
 		else()
 			vcpkg_execute_build_process(
-				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true ${ADDITIONAL_TARGETS_PRE} //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
+				COMMAND ${BAZEL} build -s --verbose_failures ${BUILD_OPTS} ${COPTS} ${CXXOPTS} ${LINKOPTS} --python_path=${PYTHON3} --define=no_tensorflow_py_deps=true //tensorflow:${BAZEL_LIB_NAME} //tensorflow:install_headers
 				WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${BUILD_TYPE}
 				LOGNAME build-${TARGET_TRIPLET}-${BUILD_TYPE}
 			)
@@ -396,13 +371,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 		${CMAKE_CURRENT_LIST_DIR}/README-${PLATFORM_SUFFIX}
 		${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/README
 		COPYONLY)
-endif()
-
-if(VCPKG_TARGET_IS_UWP)
-	message(STATUS "Note: When using the TensorFlow UWP build in a UWP app, the 'Code Generation' capability needs to be checked in the app manifest.")
-	file(APPEND ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX}/README "
-
-Note: When using the TensorFlow UWP build in a UWP app, the 'Code Generation' capability needs to be checked in the app manifest.")
 endif()
 
 file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tensorflow${TF_PORT_SUFFIX})
