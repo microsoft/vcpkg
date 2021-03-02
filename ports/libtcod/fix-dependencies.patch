@@ -1,5 +1,5 @@
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index d66d5b8..a8839bd 100644
+index d66d5b8..da14369 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -71,8 +71,8 @@ endif()
@@ -22,8 +22,8 @@ index d66d5b8..a8839bd 100644
 +    include(SelectLibraryConfigurations)
 +    
 +    find_path(UTF8PROC_INCLUDE_DIRS utf8proc.h)
-+    find_library(UTF8PROC_LIBRARY_DEBUG NAMES utf8proc PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib NO_DEFAULT_PATH Release RelWithDebInfo MinSizeRel)
-+    find_library(UTF8PROC_LIBRARY_RELEASE NAMES utf8proc PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib NO_DEFAULT_PATH Debug)
++    find_library(UTF8PROC_LIBRARY_DEBUG NAMES utf8proc utf8proc_static PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/lib NO_DEFAULT_PATH Release RelWithDebInfo MinSizeRel)
++    find_library(UTF8PROC_LIBRARY_RELEASE NAMES utf8proc utf8proc_static PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib NO_DEFAULT_PATH Debug)
 +    select_library_configurations(UTF8PROC)
 +    
 +    target_include_directories(LIBTCOD PRIVATE ${UTF8PROC_INCLUDE_DIRS})
