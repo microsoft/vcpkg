@@ -28,7 +28,7 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/g3log TARGET_PATH share/g3log)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/g3log)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
