@@ -32,8 +32,15 @@ elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
         message(WARNING [[
 Using Embree as static library is not supported with AppleClang >= 9.0 when multiple ISAs are selected.
 Please install embree3 with only one feature using command "./vcpkg install embree3[core,FEATURE_NAME]"
-Disable all features automaticlly.
+Only set feature avx automaticlly.
     ]])
+        set(FEATURE_OPTIONS
+            -DEMBREE_ISA_AVX=ON
+            -DEMBREE_ISA_AVX2=OFF
+            -DEMBREE_ISA_AVX512=OFF
+            -DEMBREE_ISA_SSE2=OFF
+            -DEMBREE_ISA_SSE42=OFF
+        )
     endif()
 endif()
 
