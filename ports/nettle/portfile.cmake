@@ -59,17 +59,16 @@ if(VCPKG_TARGET_IS_WINDOWS)
     string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already
     file(WRITE "${_hogweedproject}" "${_contents}")
 
-    vcpkg_install_msbuild(
-        USE_VCPKG_INTEGRATION
+    vcpkg_msbuild_install(
         SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH SMP/libnettle.sln
-        PLATFORM ${TRIPLET_SYSTEM_ARCH}
-        LICENSE_SUBPATH COPYING.LESSERv3
+        PROJECT_FILE SMP/libnettle.sln
+        PLATFORM_ARCHITECTURE "${TRIPLET_SYSTEM_ARCH}"
         TARGET Rebuild
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
         SKIP_CLEAN
         OPTIONS "/p:YasmPath=${YASM}"
+        USE_VCPKG_INTEGRATION
     )
 
     get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
@@ -125,10 +124,9 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share/")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-    # # Handle copyright
-    file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
-
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
     endif()
 endif()
+
+file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

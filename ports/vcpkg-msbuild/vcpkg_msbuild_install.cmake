@@ -147,15 +147,15 @@ function(vcpkg_msbuild_install)
     if(NOT DEFINED arg_DEBUG_CONFIGURATION)
         set(arg_DEBUG_CONFIGURATION Debug)
     endif()
-    if(NOT DEFINED arg_PLATFORM)
+    if(NOT DEFINED arg_PLATFORM_ARCHITECTURE)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-            set(arg_PLATFORM x64)
+            set(arg_PLATFORM_ARCHITECTURE x64)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-            set(arg_PLATFORM Win32)
+            set(arg_PLATFORM_ARCHITECTURE Win32)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ARM")
-            set(arg_PLATFORM ARM)
+            set(arg_PLATFORM_ARCHITECTURE ARM)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-            set(arg_PLATFORM arm64)
+            set(arg_PLATFORM_ARCHITECTURE arm64)
         else()
             message(FATAL_ERROR "Unsupported target architecture")
         endif()
@@ -163,8 +163,8 @@ function(vcpkg_msbuild_install)
     if(NOT DEFINED arg_PLATFORM_TOOLSET)
         set(arg_PLATFORM_TOOLSET "${VCPKG_PLATFORM_TOOLSET}")
     endif()
-    if(NOT DEFINED arg_TARGET_PLATFORM_VERSION)
-        vcpkg_get_windows_sdk(arg_TARGET_PLATFORM_VERSION)
+    if(NOT DEFINED arg_PLATFORM_VERSION)
+        vcpkg_get_windows_sdk(arg_PLATFORM_VERSION)
     endif()
     if(NOT DEFINED arg_TARGET)
         set(arg_TARGET Rebuild)
@@ -172,11 +172,11 @@ function(vcpkg_msbuild_install)
 
     list(APPEND arg_OPTIONS
         "/t:${arg_TARGET}"
-        "/p:Platform=${arg_PLATFORM}"
+        "/p:Platform=${arg_PLATFORM_ARCHITECTURE}"
         "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
         "/p:VCPkgLocalAppDataDisabled=true"
         "/p:UseIntelMKL=No"
-        "/p:WindowsTargetPlatformVersion=${arg_TARGET_PLATFORM_VERSION}"
+        "/p:WindowsTargetPlatformVersion=${arg_PLATFORM_VERSION}"
         "/p:VcpkgTriplet=${TARGET_TRIPLET}"
         "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
         "/p:VcpkgManifestInstall=false"
