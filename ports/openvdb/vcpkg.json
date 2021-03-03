@@ -1,0 +1,29 @@
+{
+  "name": "openvdb",
+  "version": "8.0.1",
+  "description": "Sparse volume data structure and tools",
+  "homepage": "https://github.com/dreamworksanimation/openvdb",
+  "dependencies": [
+    "blosc",
+    "boost-any",
+    "boost-date-time",
+    "boost-interprocess",
+    "boost-iostreams",
+    "boost-ptr-container",
+    "boost-system",
+    "boost-thread",
+    "boost-uuid",
+    "ilmbase",
+    "openexr",
+    "tbb"
+  ],
+  "features": {
+    "tools": {
+      "description": "OpenVDB utilities: view, print and render",
+      "dependencies": [
+        "glew",
+        "glfw3"
+      ]
+    }
+  }
+}
