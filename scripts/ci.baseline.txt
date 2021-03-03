@@ -44,6 +44,13 @@
 #vcpkg-cmake-config:x64-windows-static-md=fail
 #vcpkg-cmake-config:x86-windows=fail
 
+vcpkg-msbuild:arm64-windows=fail
+vcpkg-msbuild:arm-uwp=fail
+vcpkg-msbuild:x64-uwp=fail
+vcpkg-msbuild:x64-windows-static=fail
+vcpkg-msbuild:x64-windows-static-md=fail
+vcpkg-msbuild:x86-windows=fail
+
 # other ports
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
