@@ -30,13 +30,12 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/man)
 file(REMOVE_RECURSE ${SOURCE_PATH}/tests)
 
 # this builds the main dll
-vcpkg_install_msbuild(
+vcpkg_msbuild_install(
     SOURCE_PATH ${SOURCE_PATH}
-    INCLUDES_SUBPATH /src/include
-    LICENSE_SUBPATH COPYING
+    PROJECT_FILE visualc/sharedspice.sln
+    INCLUDES_DIRECTORY src/include
     # install_msbuild swaps x86 for win32(bad) if we dont force our own setting
-    PLATFORM ${TRIPLET_SYSTEM_ARCH}
-    PROJECT_SUBPATH visualc/sharedspice.sln
+    PLATFORM_ARCHITECTURE ${TRIPLET_SYSTEM_ARCH}
     TARGET Build
 )
 
@@ -65,19 +64,19 @@ if("codemodels" IN_LIST FEATURES)
     else()
         message(FATAL_ERROR "Unsupported target architecture")
     endif()
-        
+
     #put the code models in the intended location
     file(GLOB NGSPICE_CODEMODELS_DEBUG
         ${BUILDTREE_PATH}/visualc/codemodels/${OUT_ARCH}/Debug/*.cm
     )
     file(COPY ${NGSPICE_CODEMODELS_DEBUG} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/ngspice)
-    
+
     file(GLOB NGSPICE_CODEMODELS_RELEASE
         ${BUILDTREE_PATH}/visualc/codemodels/${OUT_ARCH}/Release/*.cm
     )
     file(COPY ${NGSPICE_CODEMODELS_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/lib/ngspice)
-    
-    
+
+
     # copy over spinit (spice init)
     file(RENAME ${BUILDTREE_PATH}/visualc/spinit_all ${BUILDTREE_PATH}/visualc/spinit)
     file(COPY ${BUILDTREE_PATH}/visualc/spinit DESTINATION ${CURRENT_PACKAGES_DIR}/share/ngspice)
@@ -88,6 +87,8 @@ vcpkg_copy_pdbs()
 # Unforunately install_msbuild isn't able to dual include directories that effectively layer
 file(GLOB NGSPICE_INCLUDES ${SOURCE_PATH}/visualc/src/include/ngspice/*)
 file(COPY ${NGSPICE_INCLUDES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/ngspice)
+
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 # This gets copied by install_msbuild but should not be shared
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/cppduals)
