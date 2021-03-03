@@ -21,7 +21,6 @@ vcpkg_msbuild_install(
     [PLATFORM_TOOLSET <toolset>]
 
     [USE_VCPKG_INTEGRATION]
-    [ADD_BIN_TO_PATH]
     [DISABLE_PARALLEL]
     [SKIP_CLEAN]
     [ALLOW_ROOT_INCLUDES]
@@ -100,14 +99,9 @@ endif()
 set(Z_VCPKG_MSBUILD_INSTALL_GUARD ON CACHE INTERNAL "guard variable")
 
 # NOTES:
-# * set /MP (add to end of ENV{CL})
 # * Add Multi-ToolTask to msbuild https://github.com/microsoft/vcpkg/pull/15478/commits/9845ea575eec309c01a905e8bf4b9b7f81248158 line 127
 #   * breaks python
-# * remove applocal deps, switch to adding bin to path if that flag passed
-# * directory.build.props, directory.build.targets
-#   Basically, these will get read from the directory tree above if they don't exist
-#   so create them if they are not already created in the source directory
-#   these should be <Project></Project>
+
 # additional improvements (probably outside scope)
 # * we should provide a way for the triplet file to inject
 #   props & targets
@@ -116,10 +110,38 @@ set(Z_VCPKG_MSBUILD_INSTALL_GUARD ON CACHE INTERNAL "guard variable")
 #   between the <Project></Project>, add <Import Project="path" />s
 # * if we have the ability to inject proper msbuild code (not just passing /p switches),
 #   we might be able to fix /MT vs /MD, static vs dynamic build
+function(z_vcpkg_msbuild_install_generate_directory_files project_file source_copy_path)
+    set(props_directory)
+    set(targets_directory)
+    get_filename_component(search_directory "${project_file}" DIRECTORY)
+    while(ON)
+        if(NOT DEFINED props_directory AND EXISTS "${source_copy_path}/${search_directory}/directory.build.props")
+            set(props_directory "${search_directory}")
+        endif()
+        if(NOT DEFINED targets_directory AND EXISTS "${source_copy_path}/${search_directory}/directory.build.targets")
+            set(targets_directory "${search_directory}")
+        endif()
+
+        if(DEFINED props_directory AND DEFINED targets_directory)
+            break()
+        endif()
+        if(search_directory STREQUAL "")
+            break()
+        endif()
+        get_filename_component(search_directory "${search_directory}" DIRECTORY)
+    endwhile()
+
+    if(NOT DEFINED props_directory)
+        file(WRITE "${source_copy_path}/directory.build.props" "<Project></Project>")
+    endif()
+    if(NOT DEFINED targets_directory)
+        file(WRITE "${source_copy_path}/directory.build.targets" "<Project></Project>")
+    endif()
+endfunction()
 
 function(vcpkg_msbuild_install)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        "USE_VCPKG_INTEGRATION;ADD_BIN_TO_PATH;DISABLE_PARALLEL;SKIP_CLEAN;ALLOW_ROOT_INCLUDES"
+        "USE_VCPKG_INTEGRATION;DISABLE_PARALLEL;SKIP_CLEAN;ALLOW_ROOT_INCLUDES"
         "SOURCE_PATH;PROJECT_FILE;TARGET;INCLUDES_DIRECTORY;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM_VERSION;PLATFORM_ARCHITECTURE;PLATFORM_TOOLSET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
     )
@@ -195,6 +217,15 @@ function(vcpkg_msbuild_install)
             "/p:VcpkgApplocalDeps=false")
     endif()
 
+    if(NOT arg_DISABLE_PARALLEL)
+        if(DEFINED ENV{CL})
+            set(env_cl_backup "$ENV{CL}")
+        else()
+            set(env_cl_backup)
+        endif()
+        set(ENV{CL} "$ENV{CL} /MP${VCPKG_CONCURRENCY}")
+    endif()
+
     get_filename_component(source_path_suffix "${arg_SOURCE_PATH}" NAME)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         message(STATUS "Building ${arg_PROJECT_FILE} for Release")
@@ -203,6 +234,8 @@ function(vcpkg_msbuild_install)
         file(COPY "${arg_SOURCE_PATH}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
         set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${source_path_suffix}")
+        z_vcpkg_msbuild_install_generate_directory_files("${arg_PROJECT_FILE}" "${source_copy_path}")
+
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_FILE}"
                 "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
@@ -241,6 +274,8 @@ function(vcpkg_msbuild_install)
         file(COPY "${arg_SOURCE_PATH}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
         set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${source_path_suffix}")
+        z_vcpkg_msbuild_install_generate_directory_files("${arg_PROJECT_FILE}" "${source_copy_path}")
+
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_FILE}"
                 "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
@@ -260,6 +295,14 @@ function(vcpkg_msbuild_install)
     endif()
 
     vcpkg_copy_pdbs()
+
+    if(NOT arg_DISABLE_PARALLEL)
+        if(DEFINED env_cl_backup)
+            set(ENV{CL} "${env_cl_backup}")
+        else()
+            set(ENV{CL})
+        endif()
+    endif()
 
     if(NOT arg_SKIP_CLEAN)
         vcpkg_msbuild_clean()
