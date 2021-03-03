@@ -2418,7 +2418,7 @@
     },
     "hiredis": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "hpx": {
       "baseline": "1.6.0",
