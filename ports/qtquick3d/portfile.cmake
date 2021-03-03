@@ -10,12 +10,14 @@ FEATURES
 INVERTED_FEATURES
     "assimp"  CMAKE_DISABLE_FIND_PACKAGE_WrapQuick3DAssimp
     )
+
 if("assimp" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=system)
+    list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=system -DTEST_quick3d_assimp=ON -DHAVE_Assimp=ON)
 else()
     list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=no)
 endif()
- set(TOOL_NAMES balsam meshdebug shadergen)
+
+set(TOOL_NAMES balsam meshdebug shadergen)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}

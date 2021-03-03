@@ -1,3 +1,5 @@
+set(QT_IS_LATEST ON)
+
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
@@ -257,8 +259,14 @@ if(QT_IS_LATEST)
 else()
     set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details.cmake") 
 endif()
-file(COPY
+file(INSTALL
     "${port_details}"
+    DESTINATION
+        "${CURRENT_PACKAGES_DIR}/share/${PORT}"
+    RENAME
+        "qt_port_details.cmake"
+    )
+file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake"
     DESTINATION

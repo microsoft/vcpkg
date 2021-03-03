@@ -1,0 +1,18 @@
+{
+  "name": "qtdatavis3d",
+  "version-string": "6.1.0-beta1",
+  "description": "Qt 3D data visualization framework",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    "qtbase",
+    "qttools"
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    }
+  }
+}
