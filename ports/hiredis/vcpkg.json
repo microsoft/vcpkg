@@ -5,7 +5,7 @@
   "description": "Hiredis is a minimalistic C client library for the Redis database.",
   "homepage": "https://github.com/redis/hiredis",
   "features": {
-    "glfw-example": {
+    "example": {
       "description": "Build example",
       "dependencies": [
         "libevent",
