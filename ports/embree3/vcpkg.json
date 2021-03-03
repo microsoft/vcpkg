@@ -9,7 +9,6 @@
   "default-features": [
     "avx",
     "avx2",
-    "avx512",
     "sse2",
     "sse42"
   ],
