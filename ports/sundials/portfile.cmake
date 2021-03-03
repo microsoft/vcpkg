@@ -15,9 +15,12 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SUN_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SUN_BUILD_SHARED)
 
 if ("klu" IN_LIST FEATURES)
+  set(CMAKE_DISABLE_FIND_PACKAGE_SUITESPARSE OFF)
   set(ENABLE_KLU ON)
   set(KLU_INCLUDE_DIR ${CURRENT_PACKAGES_DIR}/../suitesparse_x64-windows/include/suitesparse)
   set(KLU_LIBRARY_DIR ${CURRENT_PACKAGES_DIR}/../suitesparse_x64-windows/lib)
+else()
+  set(CMAKE_DISABLE_FIND_PACKAGE_SUITESPARSE ON)
 endif()
 
 vcpkg_configure_cmake(
