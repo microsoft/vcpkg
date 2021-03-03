@@ -15,17 +15,17 @@ To start using [versioning](../users/versioning.md), first you need to enable th
 $env:VCPKG_FEATURE_FLAGS="versions"
 ```
 ```bash
-# Example for Bash
+# Example for bash
 export VCPKG_FEATURE_FLAGS=versions
 ```
 ```cmd
-REM Example for Cmd
+REM Example for cmd
 SET VCPKG_FEATURE_FLAGS=versions
 ```
 
 * Passing the feature flags in the vcpkg command line
 ```bash
-./vcpkg --feature-flags=versions install
+./vcpkg install --feature-flags=versions
 ```
 
 * Setting `VCPKG_FEATURE_FLAGS` before your `project()` CMake directive
