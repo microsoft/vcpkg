@@ -59,7 +59,6 @@ list(APPEND ADDITIONAL_HEADERS
 	  "Standard_values.h"
     )
 
-
 file(GLOB files "${CURRENT_PACKAGES_DIR}/include/opencascade/[a-zA-Z0-9_]*\.[hgl]xx")
 foreach(file_name ${files})
 	file(READ ${file_name} filedata)
@@ -111,5 +110,5 @@ else()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-#file(INSTALL ${CURRENT_PACKAGES_DIR}/include/opencascade/ DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+
 
