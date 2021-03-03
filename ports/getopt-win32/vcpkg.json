@@ -1,0 +1,14 @@
+{
+  "name": "getopt-win32",
+  "version-string": "0.1",
+  "port-version": 1,
+  "description": "An implementation of getopt.",
+  "homepage": "https://github.com/libimobiledevice-win32",
+  "supports": "windows & !uwp",
+  "dependencies": [
+    {
+      "name": "vcpkg-msbuild",
+      "host": true
+    }
+  ]
+}

@@ -117,7 +117,7 @@ set(Z_VCPKG_MSBUILD_INSTALL_GUARD ON CACHE INTERNAL "guard variable")
 # * if we have the ability to inject proper msbuild code (not just passing /p switches),
 #   we might be able to fix /MT vs /MD, static vs dynamic build
 
-function(vcpkg_install_msbuild)
+function(vcpkg_msbuild_install)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "USE_VCPKG_INTEGRATION;ADD_BIN_TO_PATH;DISABLE_PARALLEL;SKIP_CLEAN;ALLOW_ROOT_INCLUDES"
         "SOURCE_PATH;PROJECT_FILE;TARGET;INCLUDES_DIRECTORY;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM_VERSION;PLATFORM_ARCHITECTURE;PLATFORM_TOOLSET"
@@ -204,7 +204,7 @@ function(vcpkg_install_msbuild)
 
         set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${source_path_suffix}")
         vcpkg_execute_required_process(
-            COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
+            COMMAND msbuild "${source_copy_path}/${arg_PROJECT_FILE}"
                 "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_RELEASE}
@@ -229,7 +229,9 @@ function(vcpkg_install_msbuild)
             string(REGEX REPLACE [[\.exe$]] "" tool_name "${exe_name}")
             list(APPEND tools "${tool_name}")
         endforeach()
-        vcpkg_copy_tools(TOOL_NAMES ${tools} SEARCH_DIR "${source_copy_path}")
+        if(NOT tools STREQUAL "")
+            vcpkg_copy_tools(TOOL_NAMES ${tools} SEARCH_DIR "${source_copy_path}")
+        endif()
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
