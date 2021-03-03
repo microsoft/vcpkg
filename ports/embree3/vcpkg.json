@@ -5,5 +5,29 @@
   "homepage": "https://github.com/embree/embree",
   "dependencies": [
     "tbb"
-  ]
+  ],
+  "default-features": [
+    "avx",
+    "avx2",
+    "avx512",
+    "sse2",
+    "sse42"
+  ],
+  "features": {
+    "avx": {
+      "description": "Enables AVX ISA."
+    },
+    "avx2": {
+      "description": "Enables AVX2 ISA."
+    },
+    "avx512": {
+      "description": "Enables AVX512 ISA."
+    },
+    "sse2": {
+      "description": "Enables SSE2 ISA."
+    },
+    "sse42": {
+      "description": "Enables SSE4.2 ISA."
+    }
+  }
 }

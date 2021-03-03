@@ -14,11 +14,30 @@ vcpkg_from_github(
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)
 string(COMPARE EQUAL ${VCPKG_CRT_LINKAGE} static EMBREE_STATIC_RUNTIME)
 
+if (NOT VCPKG_TARGET_IS_OSX)
+    vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+        avx     EMBREE_ISA_AVX
+        avx2    EMBREE_ISA_AVX2
+        avx512  EMBREE_ISA_AVX512
+        sse2    EMBREE_ISA_SSE2
+        sse42   EMBREE_ISA_SSE42
+    )
+elseif (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    list(LENGTH FEATURES FEATURE_COUNT)
+    if (FEATURE_COUNT GREATER 2)
+        message(WARNING [[
+Using Embree as static library is not supported with AppleClang >= 9.0 when multiple ISAs are selected.
+Please install embree3 with only one feature using command "./vcpkg install embree3[core,FEATURE_NAME]"
+Disable all features automaticlly.
+    ]])
+    endif()
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DEMBREE_ISPC_SUPPORT=OFF
         -DEMBREE_TUTORIALS=OFF
         -DEMBREE_STATIC_RUNTIME=${EMBREE_STATIC_RUNTIME}
