@@ -71,7 +71,7 @@ vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT OUT_CUDA_VERSION CUDA_VE
 if (CUDNN_FOUND)
   message(STATUS "Found CUDNN ${_CUDNN_VERSION} located on system: (include ${CUDNN_INCLUDE_DIR} lib: ${CUDNN_LIBRARY})")
   set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-elseif(${CUDA_VERSION} VERSION_EQUAL "10.1" OR ${CUDA_VERSION} VERSION_EQUAL "10.2")
+elseif(CUDA_VERSION VERSION_EQUAL "10.1" OR CUDA_VERSION VERSION_EQUAL "10.2")
   message(STATUS "CUDNN not found on system - downloading a version compatible with your CUDA v${CUDA_VERSION}...")
   if(${CUDA_VERSION} VERSION_EQUAL "10.1")
     set(CUDNN_VERSION "7.6.5")
