@@ -1,6 +1,6 @@
 {
   "name": "qtquickcontrols2",
-  "version-string": "6.0.1",
+  "version-string": "6.0.2",
   "description": "Qt Quick Controls 2",
   "homepage": "https://www.qt.io/",
   "dependencies": [

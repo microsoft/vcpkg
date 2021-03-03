@@ -1,6 +1,6 @@
 {
   "name": "qtshadertools",
-  "version-string": "6.0.1",
+  "version-string": "6.0.2",
   "description": "APIs and tools in this module provide the producer functionality for the shader pipeline that allows Qt Quick to operate on Vulkan, Metal, and Direct3D, in addition to OpenGL.",
   "homepage": "https://www.qt.io/",
   "dependencies": [

@@ -1,6 +1,6 @@
 {
   "name": "qtimageformats",
-  "version-string": "6.0.1",
+  "version-string": "6.0.2",
   "description": "Additional Image Format plugins for Qt",
   "homepage": "https://www.qt.io/",
   "dependencies": [

@@ -1,6 +1,6 @@
 {
   "name": "qttools",
-  "version-string": "6.0.1",
+  "version-string": "6.0.2",
   "description": "Qt Tools",
   "homepage": "https://www.qt.io/",
   "dependencies": [
