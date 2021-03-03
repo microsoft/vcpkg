@@ -10,6 +10,7 @@ vcpkg_from_github(
     HEAD_REF tbb_2019
     PATCHES
         fix-static-build.patch
+        add-find-dependency.patch
 )
 
 vcpkg_configure_cmake(
