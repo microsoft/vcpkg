@@ -4,8 +4,8 @@ if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF 682249396f02b8c21e5ff333ab4a1969c89387ad
-       SHA512 95f17c14e0a8f10dfc51fd1b30894f9905433fac8f9a93b6c545a542df5eb20be68f40996080a85cba934107ce19fff91a1df1edad1a1b5a0030e8f626e1985d
+       REF 239d09804d17997e147f4bcfb451ead04c1d67ff
+       SHA512 7e93dd8c1a465b8405d32f08aa2be0c1a2bea7762384ba6a16848e10b10f5684f8969b672cec6e994a90fc6a6189519730dd7d15b82ae39b5221278eae23ba61
        HEAD_REF docking
        )
 else()
@@ -71,6 +71,13 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+if ("freetype" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE" "#define IMGUI_ENABLE_FREETYPE")
+endif()
+if ("wchar32" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_USE_WCHAR32" "#define IMGUI_USE_WCHAR32")
+endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
