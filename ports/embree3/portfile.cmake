@@ -1,8 +1,10 @@
+set(EMBREE3_VERSION 3.12.2)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO embree/embree
-    REF v3.11.0
-    SHA512 a20acb07103d322eebc85d41152210466f8d9b97e7a332589c692f649ee02079465f89561748ddc8448fb40bc63f2595d728cc31a927f7b95bea13446c5c775d
+    REF v${EMBREE3_VERSION}
+    SHA512 a63b483a92f4653e07a21ed3b545d86003295e0aacd8ec7a40ee72bad7bb70c6ea019af511e78c5c598336b162d53e296e9c87150c0adce6463b058e7a5394d4
     HEAD_REF master
     PATCHES
         fix-path.patch
@@ -25,17 +27,18 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/embree-${EMBREE3_VERSION} TARGET_PATH share/embree)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 if(APPLE)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/uninstall.command ${CURRENT_PACKAGES_DIR}/debug/uninstall.command)
 endif()
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/${PORT}/doc)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/doc ${CURRENT_PACKAGES_DIR}/share/${PORT}/)
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

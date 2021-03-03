@@ -1,3 +1,9 @@
+message(WARNING [[
+Due to incompatibility with the new version of tbb, embree2 has been deprecated.
+If you want to use embree2, please use the manifest mode to specify the old tbb version (version < 2021.1.1).
+See more details about manifest in https://github.com/microsoft/vcpkg/blob/master/docs/specifications/versioning.md#11-proposed-experience
+]])
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO embree/embree
