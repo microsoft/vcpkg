@@ -26,7 +26,6 @@ parameter.
 #]===]
 
 function(vcpkg_install_cmake)
-    message(DEPRECATION "vcpkg_install_cmake has been deprecated in favor of vcpkg_cmake_install from the vcpkg-cmake port.")
     if(Z_VCPKG_CMAKE_INSTALL_GUARD)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-cmake; using both vcpkg-cmake and vcpkg_install_cmake in the same port is unsupported.")
     endif()
