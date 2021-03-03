@@ -1,4 +1,4 @@
-if(!VCPKG_TARGET_IS_WINDOWS)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
    list(APPEND PATCHES "prevent-cmake-failing-with-variable-notfound.patch")
 endif()
 
