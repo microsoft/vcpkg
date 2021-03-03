@@ -2093,7 +2093,7 @@
       "port-version": 1
     },
     "g3log": {
-      "baseline": "2019-07-29",
+      "baseline": "1.3.4",
       "port-version": 0
     },
     "gainput": {
