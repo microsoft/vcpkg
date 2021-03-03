@@ -3,6 +3,7 @@
   "version-string": "6.1.0-beta1",
   "description": "ActiveQt",
   "homepage": "https://www.qt.io/",
+  "supports": "windows",
   "dependencies": [
     "qtbase",
     "qttools"

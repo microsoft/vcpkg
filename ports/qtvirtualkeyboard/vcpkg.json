@@ -4,8 +4,8 @@
   "description": "SCXML (state machine notation) compiler and related tools",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtsvg",
     "qtdeclarative",
+    "qtsvg",
     "qttools"
   ],
   "default-features": [

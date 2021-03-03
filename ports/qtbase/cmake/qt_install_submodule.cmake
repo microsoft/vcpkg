@@ -1,5 +1,9 @@
 include("${CMAKE_CURRENT_LIST_DIR}/qt_install_copyright.cmake")
-include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details.cmake")
+if(QT_IS_LATEST AND PORT STREQUAL "qtbase")
+    include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details-latest.cmake")
+else()
+    include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details.cmake")
+endif()
 set(PORT_DEBUG ON)
 
 macro(qt_stop_on_update)
