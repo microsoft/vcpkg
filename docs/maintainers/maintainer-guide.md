@@ -204,16 +204,16 @@ For Example:
 
 See our [manifest files document](manifest-files.md#port-version) for a full explanation of our conventions.
 
-### Update the version files in `port_versions/` of any modified ports
+### Update the version files in `versions/` of any modified ports
 
 Vcpkg uses a set of metadata files to power its versioning feature.
 These files are located in the following locations:
-* `${VCPKG_ROOT}/port_versions/baseline.json`, (this file is common to all ports) and
-* `${VCPKG_ROOT}/port_versions/${first-letter-of-portname}-/${portname}.json` (one per port).
+* `${VCPKG_ROOT}/versions/baseline.json`, (this file is common to all ports) and
+* `${VCPKG_ROOT}/versions/${first-letter-of-portname}-/${portname}.json` (one per port).
 
 For example, for `zlib` the relevant files are:
-* `${VCPKG_ROOT}/port_versions/baseline.json`
-* `${VCPKG_ROOT}/port_versions/z-/zlib.json`
+* `${VCPKG_ROOT}/versions/baseline.json`
+* `${VCPKG_ROOT}/versions/z-/zlib.json`
 
 We expect that each time you update a port, you also update its version files.
 
@@ -229,7 +229,7 @@ If you're updating multiple ports at the same time, instead you can run:
 vcpkg x-add-version --all
 ```
 
-To update the files for all modified ports at once.  
+To update the files for all modified ports at once.
 
 _NOTE: These commands require you to have committed your changes to the ports before running them. The reason is that the Git SHA of the port directory is required in these version files. But don't worry, the `x-add-version` command will warn you if you have local changes that haven't been committed._
 

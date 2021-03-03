@@ -16,6 +16,7 @@ vcpkg_from_github(
         0001_cmakelists_fixes.patch
         0002_use_glog_target.patch
         0003_fix_exported_ceres_config.patch
+        find-package-required.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindCXSparse.cmake)

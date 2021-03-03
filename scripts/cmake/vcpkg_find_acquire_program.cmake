@@ -149,17 +149,17 @@ function(vcpkg_find_acquire_program VAR)
   elseif(VAR MATCHES "PYTHON3")
     if(CMAKE_HOST_WIN32)
       set(PROGNAME python)
-      set(PYTHON_VERSION 3.9.0)
+      set(PYTHON_VERSION 3.9.2)
       if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
         set(SUBDIR "python-${PYTHON_VERSION}-x86")
         set(URL "https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-embed-win32.zip")
         set(ARCHIVE "python-${PYTHON_VERSION}-embed-win32.zip")
-        set(HASH 1501ad0b3ed1053466bef303e639c4d5cd9c270beacd07d70fb631db15503ea9e1f9de054cafe8759403e77aa898cd8b8878bf9024add4c081b28a4c5a9947ed)
+        set(HASH d792c6179887120ec3e945764b95ae8187032e1779f327feb90ded40ebd39cb78d000056df947f28c9e4257b60dd95ee43a3f77f47a1d8878cbe37ebc20f87a3)
       else()
         set(SUBDIR "python-${PYTHON_VERSION}-x64")
         set(URL "https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-embed-amd64.zip")
         set(ARCHIVE "python-${PYTHON_VERSION}-embed-amd64.zip")
-        set(HASH e969622b74ea79a6adcf41b4d628bd80c9320df2f3d797905872610172838f1ab70d9bb0c70fcf7da396e03c3a73de96fa69a4b212b26f97de0e4f3366accf51)
+        set(HASH 30f36938d264d160136eb7062846924b980b4f8f4373dab4fbc054c764041149f56760370de571be10410363563c5688a3f1f9ac19be5bb40ae914ddbdcb3c62)
       endif()
       set(PATHS ${DOWNLOADS}/tools/python/${SUBDIR})
       set(POST_INSTALL_COMMAND ${CMAKE_COMMAND} -E rm python39._pth)
@@ -441,14 +441,14 @@ function(vcpkg_find_acquire_program VAR)
       set(VERSION_CMD --version)
     elseif(CMAKE_HOST_WIN32)
       if(NOT EXISTS "${PKGCONFIG}")
-        set(VERSION 0.29.2-1)
+        set(VERSION 0.29.2-2)
         set(LIBWINPTHREAD_VERSION git-8.0.0.5906.c9a21571-1)
         vcpkg_acquire_msys(
           PKGCONFIG_ROOT
           NO_DEFAULT_PACKAGES
           DIRECT_PACKAGES
-            "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.xz"
-            3b1b706a24d9aef7bbdf3ce4427aaa813ba6fbd292ed9dda181b4300e117c3d59a159ddcca8b013fd01ce76da2d95d590314ff9628c0d68a6966bac4842540f0
+            "https://repo.msys2.org/mingw/i686/mingw-w64-i686-pkg-config-${VERSION}-any.pkg.tar.zst"
+            54f8dad3b1a36a4515db47825a3214fbd2bd82f604aec72e7fb8d79068095fda3c836fb2296acd308522d6e12ce15f69e0c26dcf4eb0681fd105d057d912cdb7
             "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libwinpthread-${LIBWINPTHREAD_VERSION}-any.pkg.tar.zst"
             2c3d9e6b2eee6a4c16fd69ddfadb6e2dc7f31156627d85845c523ac85e5c585d4cfa978659b1fe2ec823d44ef57bc2b92a6127618ff1a8d7505458b794f3f01c
         )
