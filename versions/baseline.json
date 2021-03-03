@@ -332,6 +332,10 @@
       "baseline": "4.8.30",
       "port-version": 5
     },
+    "bext-di": {
+      "baseline": "1.2.0",
+      "port-version": 0
+    },
     "bfgroup-lyra": {
       "baseline": "1.5",
       "port-version": 1
