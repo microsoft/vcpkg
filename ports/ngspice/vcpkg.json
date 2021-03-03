@@ -5,6 +5,12 @@
   "description": "Ngspice is a mixed-level/mixed-signal electronic circuit simulator. It is a successor of the latest stable release of Berkeley SPICE",
   "homepage": "http://ngspice.sourceforge.net/",
   "supports": "windows & !uwp & (x86 | x64)",
+  "dependencies": [
+    {
+      "name": "vcpkg-msbuild",
+      "host": true
+    }
+  ],
   "default-features": [
     "codemodels"
   ],
@@ -12,11 +18,5 @@
     "codemodels": {
       "description": "Adds optional code models for XSPICE, ADMS (verilog integration) and B-/E-/G- sources."
     }
-  },
-  "dependencies": [
-    {
-      "name": "vcpkg-msbuild",
-      "host": true
-    }
-  ]
+  }
 }
