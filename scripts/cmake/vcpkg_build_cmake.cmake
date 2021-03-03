@@ -36,14 +36,11 @@ You can use the alias [`vcpkg_install_cmake()`](vcpkg_configure_cmake.md) functi
 
 function(vcpkg_build_cmake)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
-        "DISABLE_PARALLEL;ADD_BIN_TO_PATH;Z_VCPKG_DISABLE_DEPRECATION_MESSAGE"
+        "DISABLE_PARALLEL;ADD_BIN_TO_PATH"
         "TARGET;LOGFILE_ROOT"
         ""
     )
 
-    if(NOT arg_Z_VCPKG_DISABLE_DEPRECATION_MESSAGE)
-        message(DEPRECATION "vcpkg_build_cmake has been deprecated in favor of vcpkg_cmake_build from the vcpkg-cmake port.")
-    endif()
     if(Z_VCPKG_CMAKE_BUILD_GUARD)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-cmake; using both vcpkg-cmake and vcpkg_build_cmake in the same port is unsupported.")
     endif()

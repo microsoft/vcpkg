@@ -53,7 +53,6 @@ Replace `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs and targe
 #]===]
 
 function(vcpkg_fixup_cmake_targets)
-    message(DEPRECATION "vcpkg_fixup_cmake_targets has been deprecated in favor of vcpkg_cmake_config_fixup from the vcpkg-cmake-config port.")
     if(Z_VCPKG_CMAKE_CONFIG_FIXUP_GUARD)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-cmake-config; using both vcpkg-cmake-config and vcpkg_fixup_cmake_targets in the same port is unsupported.")
     endif()
