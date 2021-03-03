@@ -1,5 +1,6 @@
 {
     "name": "sundials",
+    "port-version": "1",
     "version-string": "5.5.0",
     "homepage": "https://computation.llnl.gov/projects/sundials",
     "description": "SUNDIALS (SUite of Nonlinear and DIfferential/ALgebraic equation Solvers)",
