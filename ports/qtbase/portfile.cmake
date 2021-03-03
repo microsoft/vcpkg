@@ -9,8 +9,6 @@ set(${PORT}_PATCHES
         allow_outside_prefix.patch 
         buildcmake.patch
         dont_force_cmakecache.patch
-        #print_condition.patch
-        #no-promotion.patch 
         fix_find_dep.patch
         )
 
@@ -254,13 +252,18 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                     )
 
 # Install CMake helper scripts
+if(QT_IS_LATEST)
+    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details-latest.cmake") 
+else()
+    set(port_details "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details.cmake") 
+endif()
 file(COPY
-    "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_port_details.cmake"
+    "${port_details}"
     "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_copyright.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake"
     DESTINATION
         "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-)
+    )
 
 qt_stop_on_update()
 
