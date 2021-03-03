@@ -7,18 +7,24 @@ Build and install a msbuild-based project.
 vcpkg_msbuild_install(
     SOURCE_PATH <source-path>
     PROJECT_FILE <path-to-solution-or-project>
+    [TARGET <target>]
     [INCLUDES_DIRECTORY <path-to-include-dir>]
+
     [RELEASE_CONFIGURATION <configuration>]
     [DEBUG_CONFIGURATION <configuration>]
-    [TARGET <target>]
-    [TARGET_PLATFORM_VERSION <platform-version>]
-    [PLATFORM_ARCHITECTURE <architecture>]
-    [PLATFORM_TOOLSET <toolset>]
-    [DISABLE_VCPKG_INTEGRATION]
     [OPTIONS <option>...]
     [OPTIONS_RELEASE <option>...]
     [OPTIONS_DEBUG <option>...]
-    [ALLOW_ROOT_INCLUDES | REMOVE_ROOT_INCLUDES]
+
+    [PLATFORM_VERSION <platform-version>]
+    [PLATFORM_ARCHITECTURE <architecture>]
+    [PLATFORM_TOOLSET <toolset>]
+
+    [USE_VCPKG_INTEGRATION]
+    [ADD_BIN_TO_PATH]
+    [DISABLE_PARALLEL]
+    [SKIP_CLEAN]
+    [ALLOW_ROOT_INCLUDES]
 )
 ```
 
@@ -88,144 +94,185 @@ Additional options passed to msbuild for Debug builds. These are in addition to 
 * [xalan-c](https://github.com/Microsoft/vcpkg/blob/master/ports/xalan-c/portfile.cmake)
 * [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
 #]===]
+if(Z_VCPKG_MSBUILD_INSTALL_GUARD)
+    return()
+endif()
+set(Z_VCPKG_MSBUILD_INSTALL_GUARD ON CACHE INTERNAL "guard variable")
 
-include(vcpkg_clean_msbuild)
+# NOTES:
+# * set /MP (add to end of ENV{CL})
+# * Add Multi-ToolTask to msbuild https://github.com/microsoft/vcpkg/pull/15478/commits/9845ea575eec309c01a905e8bf4b9b7f81248158 line 127
+#   * breaks python
+# * remove applocal deps, switch to adding bin to path if that flag passed
+# * directory.build.props, directory.build.targets
+#   Basically, these will get read from the directory tree above if they don't exist
+#   so create them if they are not already created in the source directory
+#   these should be <Project></Project>
+# additional improvements (probably outside scope)
+# * we should provide a way for the triplet file to inject
+#   props & targets
+#   (in the same way that we allow triplets to inject toolchains)
+#   (cc directory.build.props/directory.build.targets)
+#   between the <Project></Project>, add <Import Project="path" />s
+# * if we have the ability to inject proper msbuild code (not just passing /p switches),
+#   we might be able to fix /MT vs /MD, static vs dynamic build
 
 function(vcpkg_install_msbuild)
-    cmake_parse_arguments(
-        PARSE_ARGV 0
-        _csc
-        "DISABLE_VCPKG_INTEGRATION;ALLOW_ROOT_INCLUDES;REMOVE_ROOT_INCLUDES"
-        "SOURCE_PATH;PROJECT_SUBPATH;INCLUDES_SUBPATH;LICENSE_SUBPATH;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM;PLATFORM_TOOLSET;TARGET_PLATFORM_VERSION;TARGET"
+    cmake_parse_arguments(PARSE_ARGV 0 "arg"
+        "USE_VCPKG_INTEGRATION;ADD_BIN_TO_PATH;DISABLE_PARALLEL;SKIP_CLEAN;ALLOW_ROOT_INCLUDES"
+        "SOURCE_PATH;PROJECT_FILE;TARGET;INCLUDES_DIRECTORY;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM_VERSION;PLATFORM_ARCHITECTURE;PLATFORM_TOOLSET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
     )
 
-    if(NOT DEFINED _csc_RELEASE_CONFIGURATION)
-        set(_csc_RELEASE_CONFIGURATION Release)
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "vcpkg_install_msbuild was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-    if(NOT DEFINED _csc_DEBUG_CONFIGURATION)
-        set(_csc_DEBUG_CONFIGURATION Debug)
+
+    foreach(required_arg IN ITEMS SOURCE_PATH PROJECT_FILE)
+        if(NOT DEFINED arg_${required_arg})
+            message(FATAL_ERROR "${required_arg} must be set")
+        endif()
+    endforeach()
+
+    foreach(rel_arg IN ITEMS PROJECT_FILE INCLUDES_DIRECTORY)
+        if(DEFINED arg_${rel_arg} AND IS_ABSOLUTE "${arg_${rel_arg}}")
+            message(FATAL_ERROR "${rel_arg} is an absolute path; it should be relative to the root of the sources.
+    ${rel_arg}: ${arg_${rel_arg}}")
+        endif()
+    endforeach()
+
+    if(NOT DEFINED arg_RELEASE_CONFIGURATION)
+        set(arg_RELEASE_CONFIGURATION Release)
     endif()
-    if(NOT DEFINED _csc_PLATFORM)
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-            set(_csc_PLATFORM  x64)
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-            set(_csc_PLATFORM  Win32)
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL ARM)
-            set(_csc_PLATFORM  ARM)
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-            set(_csc_PLATFORM  arm64)
+    if(NOT DEFINED arg_DEBUG_CONFIGURATION)
+        set(arg_DEBUG_CONFIGURATION Debug)
+    endif()
+    if(NOT DEFINED arg_PLATFORM)
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+            set(arg_PLATFORM x64)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+            set(arg_PLATFORM Win32)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ARM")
+            set(arg_PLATFORM ARM)
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            set(arg_PLATFORM arm64)
         else()
             message(FATAL_ERROR "Unsupported target architecture")
         endif()
     endif()
-    if(NOT DEFINED _csc_PLATFORM_TOOLSET)
-        set(_csc_PLATFORM_TOOLSET ${VCPKG_PLATFORM_TOOLSET})
+    if(NOT DEFINED arg_PLATFORM_TOOLSET)
+        set(arg_PLATFORM_TOOLSET "${VCPKG_PLATFORM_TOOLSET}")
     endif()
-    if(NOT DEFINED _csc_TARGET_PLATFORM_VERSION)
-        vcpkg_get_windows_sdk(_csc_TARGET_PLATFORM_VERSION)
+    if(NOT DEFINED arg_TARGET_PLATFORM_VERSION)
+        vcpkg_get_windows_sdk(arg_TARGET_PLATFORM_VERSION)
     endif()
-    if(NOT DEFINED _csc_TARGET)
-        set(_csc_TARGET Rebuild)
+    if(NOT DEFINED arg_TARGET)
+        set(arg_TARGET Rebuild)
     endif()
 
-    list(APPEND _csc_OPTIONS
-        /t:${_csc_TARGET}
-        /p:Platform=${_csc_PLATFORM}
-        /p:PlatformToolset=${_csc_PLATFORM_TOOLSET}
-        /p:VCPkgLocalAppDataDisabled=true
-        /p:UseIntelMKL=No
-        /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
-        /p:VcpkgTriplet=${TARGET_TRIPLET}
+    list(APPEND arg_OPTIONS
+        "/t:${arg_TARGET}"
+        "/p:Platform=${arg_PLATFORM}"
+        "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
+        "/p:VCPkgLocalAppDataDisabled=true"
+        "/p:UseIntelMKL=No"
+        "/p:WindowsTargetPlatformVersion=${arg_TARGET_PLATFORM_VERSION}"
+        "/p:VcpkgTriplet=${TARGET_TRIPLET}"
         "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
-        /p:VcpkgManifestInstall=false
-        /m
+        "/p:VcpkgManifestInstall=false"
+        "/m"
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
         # TODO: Add a way for the user to override this if they want to opt-in to incompatibility
-        list(APPEND _csc_OPTIONS /p:WholeProgramOptimization=false)
+        list(APPEND arg_OPTIONS "/p:WholeProgramOptimization=false")
     endif()
 
-    if(_csc_USE_VCPKG_INTEGRATION)
-        list(APPEND _csc_OPTIONS /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets /p:VcpkgApplocalDeps=false)
+    if(arg_USE_VCPKG_INTEGRATION)
+        list(APPEND arg_OPTIONS
+            "/p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets"
+            "/p:VcpkgApplocalDeps=false")
     endif()
 
-    get_filename_component(SOURCE_PATH_SUFFIX "${_csc_SOURCE_PATH}" NAME)
+    get_filename_component(source_path_suffix "${arg_SOURCE_PATH}" NAME)
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Release")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
-        set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
+        message(STATUS "Building ${arg_PROJECT_FILE} for Release")
+        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+        file(COPY "${arg_SOURCE_PATH}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
+
+        set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${source_path_suffix}")
         vcpkg_execute_required_process(
-            COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH}
-                /p:Configuration=${_csc_RELEASE_CONFIGURATION}
-                ${_csc_OPTIONS}
-                ${_csc_OPTIONS_RELEASE}
-            WORKING_DIRECTORY ${SOURCE_COPY_PATH}
-            LOGNAME build-${TARGET_TRIPLET}-rel
+            COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
+                "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
+                ${arg_OPTIONS}
+                ${arg_OPTIONS_RELEASE}
+            WORKING_DIRECTORY "${source_copy_path}"
+            LOGNAME "build-${TARGET_TRIPLET}-rel"
         )
-        file(GLOB_RECURSE LIBS ${SOURCE_COPY_PATH}/*.lib)
-        file(GLOB_RECURSE DLLS ${SOURCE_COPY_PATH}/*.dll)
-        file(GLOB_RECURSE EXES ${SOURCE_COPY_PATH}/*.exe)
-        if(LIBS)
-            file(COPY ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+        file(GLOB_RECURSE libs "${source_copy_path}/*.lib")
+        file(GLOB_RECURSE dlls "${source_copy_path}/*.dll")
+        file(GLOB_RECURSE exes "${source_copy_path}/*.exe")
+        if(NOT libs STREQUAL "")
+            file(COPY ${libs}
+                DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
         endif()
-        if(DLLS)
-            file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+        if(NOT dlls STREQUAL "")
+            file(COPY ${dlls}
+                DESTINATION "${CURRENT_PACKAGES_DIR}/bin")
         endif()
-        if(EXES)
-            file(COPY ${EXES} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-            vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
-        endif()
+
+        set(tools "")
+        foreach(exe IN LISTS exes)
+            get_filename_component(exe_name "${exe}" NAME)
+            string(REGEX REPLACE [[\.exe$]] "" tool_name "${exe_name}")
+            list(APPEND tools "${tool_name}")
+        endforeach()
+        vcpkg_copy_tools(TOOL_NAMES ${tools} SEARCH_DIR "${source_copy_path}")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        message(STATUS "Building ${_csc_PROJECT_SUBPATH} for Debug")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        file(COPY ${_csc_SOURCE_PATH} DESTINATION ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
-        set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${SOURCE_PATH_SUFFIX})
+        message(STATUS "Building ${arg_PROJECT_FILE} for Debug")
+        file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        file(MAKE_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+        file(COPY "${arg_SOURCE_PATH}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
+
+        set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${source_path_suffix}")
         vcpkg_execute_required_process(
-            COMMAND msbuild ${SOURCE_COPY_PATH}/${_csc_PROJECT_SUBPATH}
-                /p:Configuration=${_csc_DEBUG_CONFIGURATION}
-                ${_csc_OPTIONS}
-                ${_csc_OPTIONS_DEBUG}
-            WORKING_DIRECTORY ${SOURCE_COPY_PATH}
-            LOGNAME build-${TARGET_TRIPLET}-dbg
+            COMMAND msbuild "${source_copy_path}/${arg_PROJECT_FILE}"
+                "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
+                ${arg_OPTIONS}
+                ${arg_OPTIONS_DEBUG}
+            WORKING_DIRECTORY "${source_copy_path}"
+            LOGNAME "build-${TARGET_TRIPLET}-dbg"
         )
-        file(GLOB_RECURSE LIBS ${SOURCE_COPY_PATH}/*.lib)
-        file(GLOB_RECURSE DLLS ${SOURCE_COPY_PATH}/*.dll)
-        if(LIBS)
-            file(COPY ${LIBS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+        file(GLOB_RECURSE libs "${source_copy_path}/*.lib")
+        file(GLOB_RECURSE dlls "${source_copy_path}/*.dll")
+        if(NOT libs STREQUAL "")
+            file(COPY ${libs} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
         endif()
-        if(DLLS)
-            file(COPY ${DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+        if(NOT dlls STREQUAL "")
+            file(COPY ${dlls} DESTINATION "${CURRENT_PACKAGES_DIR}/debug/bin")
         endif()
     endif()
 
     vcpkg_copy_pdbs()
 
-    if(NOT _csc_SKIP_CLEAN)
-        vcpkg_clean_msbuild()
+    if(NOT arg_SKIP_CLEAN)
+        vcpkg_msbuild_clean()
     endif()
 
-    if(DEFINED _csc_INCLUDES_SUBPATH)
-        file(COPY ${_csc_SOURCE_PATH}/${_csc_INCLUDES_SUBPATH}/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
-        file(GLOB ROOT_INCLUDES LIST_DIRECTORIES false ${CURRENT_PACKAGES_DIR}/include/*)
-        if(ROOT_INCLUDES)
-            if(_csc_REMOVE_ROOT_INCLUDES)
-                file(REMOVE ${ROOT_INCLUDES})
-            elseif(_csc_ALLOW_ROOT_INCLUDES)
-            else()
-                message(FATAL_ERROR "Top-level files were found in ${CURRENT_PACKAGES_DIR}/include; this may indicate a problem with the call to `vcpkg_install_msbuild()`.\nTo avoid conflicts with other libraries, it is recommended to not put includes into the root `include/` directory.\nPass either ALLOW_ROOT_INCLUDES or REMOVE_ROOT_INCLUDES to handle these files.\n")
+    if(DEFINED arg_INCLUDES_DIRECTORY)
+        file(COPY "${arg_SOURCE_PATH}/${arg_INCLUDES_DIRECTORY}/" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
+        file(GLOB root_includes LIST_DIRECTORIES false "${CURRENT_PACKAGES_DIR}/include/*")
+        if(NOT root_includes STREQUAL "")
+            if(NOT ALLOW_ROOT_INCLUDES)
+                message(FATAL_ERROR "
+Top-level files were found in ${CURRENT_PACKAGES_DIR}/include; this may indicate a problem with the call to `vcpkg_install_msbuild()`.
+To avoid conflicts with other libraries, it is recommended to not put includes into the root `include/` directory.
+Pass ALLOW_ROOT_INCLUDES to allow these files to exist.")
             endif()
         endif()
-    endif()
-
-    if(DEFINED _csc_LICENSE_SUBPATH)
-        file(INSTALL ${_csc_SOURCE_PATH}/${_csc_LICENSE_SUBPATH} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
     endif()
 endfunction()

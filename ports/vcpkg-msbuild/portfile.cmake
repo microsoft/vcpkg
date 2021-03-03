@@ -4,6 +4,7 @@ endif()
 
 file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg_msbuild_install.cmake"
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg_msbuild_clean.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake"
     "${CMAKE_CURRENT_LIST_DIR}/copyright"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
