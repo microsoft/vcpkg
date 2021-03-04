@@ -17,7 +17,7 @@ endif()
 vcpkg_extract_source_archive_ex(
   OUT_SOURCE_PATH SOURCE_PATH
   ARCHIVE ${ARCHIVE}
-  REF 4.4.5
+  REF 4.4.6
   PATCHES ${PATCHES}
 )
 
@@ -27,4 +27,4 @@ vcpkg_install_msbuild(
   LICENSE_SUBPATH License.txt
 )
 
-file(INSTALL ${SOURCE_PATH}/include DESTINATION ${CURRENT_PACKAGES_DIR}/include/scintilla)
+file(INSTALL ${SOURCE_PATH}/include/ DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT} FILES_MATCHING PATTERN "*.*")
