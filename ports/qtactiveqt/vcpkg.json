@@ -5,6 +5,7 @@
   "homepage": "https://www.qt.io/",
   "supports": "windows",
   "dependencies": [
+    "qt6betablock",
     "qtbase",
     "qttools"
   ],

@@ -4,6 +4,7 @@
   "description": "Qt 3D data visualization framework",
   "homepage": "https://www.qt.io/",
   "dependencies": [
+    "qt6betablock",
     "qtbase",
     "qttools"
   ],

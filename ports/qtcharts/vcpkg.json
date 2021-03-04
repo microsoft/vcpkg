@@ -4,6 +4,7 @@
   "description": "QtCharts module",
   "homepage": "https://www.qt.io/",
   "dependencies": [
+    "qt6betablock",
     "qtdeclarative",
     "qttools"
   ],
