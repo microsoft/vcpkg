@@ -284,8 +284,8 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     endif()
     string(APPEND CROSS "cpu_family = '${BUILD_CPU_FAM}'\n")
     string(APPEND CROSS "cpu = '${BUILD_CPU}'\n")
-    
-    if(NOT BUILD_CPU_FAM MATCHES "${HOST_CPU_FAM}" OR VCPKG_TARGET_IS_UWP)
+
+    if(NOT BUILD_CPU_FAM MATCHES "${HOST_CPU_FAM}" OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
         set(_file "${CURRENT_BUILDTREES_DIR}/meson-cross-${TARGET_TRIPLET}.log")
         set(VCPKG_MESON_CROSS_FILE "${_file}" PARENT_SCOPE)
         file(WRITE "${_file}" "${CROSS}")
@@ -296,7 +296,6 @@ function(vcpkg_internal_meson_generate_cross_file_config _config) #https://meson
     set(CROSS_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
     vcpkg_internal_meson_generate_flags_properties_string(CROSS_PROPERTIES ${_config})
     string(APPEND CROSS_${_config} "${CROSS_PROPERTIES}")
-
     string(APPEND CROSS_${_config} "[built-in options]\n")
     if(VCPKG_TARGET_IS_WINDOWS)
         if(VCPKG_CRT_LINKAGE STREQUAL "static")
@@ -364,7 +363,6 @@ function(vcpkg_configure_meson)
     if(VCPKG_MESON_CROSS_FILE_RELEASE)
         list(APPEND _vcm_OPTIONS_RELEASE --cross "${VCPKG_MESON_CROSS_FILE_RELEASE}")
     endif()
-
 
     if(NOT VCPKG_MESON_NATIVE_FILE AND NOT VCPKG_MESON_CROSS_FILE)
         vcpkg_internal_meson_generate_native_file("_vcm_ADDITIONAL_NATIVE_BINARIES")
