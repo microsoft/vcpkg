@@ -1,4 +1,4 @@
-set(QT_IS_LATEST ON)
+#set(QT_IS_LATEST ON)
 
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
