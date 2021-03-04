@@ -2,7 +2,7 @@ set(VCPKG_ENV_PASSTHROUGH EMSDK PATH)
 
 find_path(EMSCRIPTEN_ROOT "emcc")
 if(NOT EMSCRIPTEN_ROOT)
-    # Old-lookup method, try to infer emscripten direcotyr based on $EMSDK environment variable
+    # Old-lookup method, try to infer emscripten directory based on $EMSDK environment variable
     if(NOT DEFINED ENV{EMSDK})
         message(FATAL_ERROR "emcc compiler not found in PATH")
     endif()
