@@ -30,6 +30,7 @@ Here are some examples, though this is not an exhaustive list:
 
 To get a full list for all your installed packages, run `vcpkg owns manual-link`.
 
+<a name="cmake"></a>
 #### CMake toolchain file (Recommended for Open Source CMake projects)
 ```no-highlight
 cmake ../my/project -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake

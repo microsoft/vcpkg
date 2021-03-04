@@ -60,7 +60,23 @@ function(install_qt)
     foreach(_buildname ${BUILDTYPES})
         set(_build_triplet ${TARGET_TRIPLET}-${_short_name_${_buildname}})
 
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/bin")
+        set(_installed_prefix_ "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}")
+        set(_installed_libpath_ "${_installed_prefix_}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_installed_prefix_}/lib/manual-link/")
+
+        vcpkg_add_to_path(PREPEND "${_installed_prefix_}/bin")
+        vcpkg_add_to_path(PREPEND "${_installed_prefix_}/lib")
+
+        # We set LD_LIBRARY_PATH ENV variable to allow executing Qt tools (rcc,...) even with dynamic linking
+        if(CMAKE_HOST_UNIX)
+            if(DEFINED ENV{LD_LIBRARY_PATH})
+                set(_ld_library_path_defined_ TRUE)
+                set(_ld_library_path_backup_ $ENV{LD_LIBRARY_PATH})
+                set(ENV{LD_LIBRARY_PATH} "${_installed_libpath_}${VCPKG_HOST_PATH_SEPARATOR}${_ld_library_path_backup_}")
+            else()
+                set(_ld_library_path_defined_ FALSE)
+                set(ENV{LD_LIBRARY_PATH} "${_installed_libpath_}")
+            endif()
+        endif()
 
         if(VCPKG_TARGET_IS_OSX)
            # For some reason there will be an error on MacOSX without this clean!
@@ -100,5 +116,14 @@ function(install_qt)
         )
         message(STATUS "Package ${_build_triplet} done")
         set(ENV{PATH} "${_path}")
+
+        # Restore backup
+        if(CMAKE_HOST_UNIX)
+            if(_ld_library_path_defined_)
+                set(ENV{LD_LIBRARY_PATH} "${_ld_library_path_backup_}")                
+            else()
+                unset(ENV{LD_LIBRARY_PATH})
+            endif()
+        endif()
     endforeach()
 endfunction()

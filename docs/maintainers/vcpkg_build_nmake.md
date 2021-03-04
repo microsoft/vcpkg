@@ -1,5 +1,7 @@
 # vcpkg_build_nmake
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_build_nmake.md).
+
 Build a msvc makefile project.
 
 ## Usage:
@@ -64,7 +66,7 @@ Adds the appropriate Release and Debug `bin\` directories to the path during the
 
 ## Notes:
 This command should be preceeded by a call to [`vcpkg_configure_nmake()`](vcpkg_configure_nmake.md).
-You can use the alias [`vcpkg_install_nmake()`](vcpkg_configure_nmake.md) function if your CMake script supports the
+You can use the alias [`vcpkg_install_nmake()`](vcpkg_install_nmake.md) function if your makefile supports the
 "install" target
 
 ## Examples
@@ -73,4 +75,4 @@ You can use the alias [`vcpkg_install_nmake()`](vcpkg_configure_nmake.md) functi
 * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_build_nmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_build_nmake.cmake)
+[scripts/cmake/vcpkg\_build\_nmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_build_nmake.cmake)

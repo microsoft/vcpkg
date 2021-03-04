@@ -16,8 +16,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF 7ef114d1da2c34a70bba5442497103441647d8f3 # 3.0.0
-    SHA512 e15df6f0f95d9580d6211459815f174496b1385c9797a682d372a03b1175c9eb38e51b3b27077346d5e1a2d6ee2d5c636e03e8fd3ca9a73a7fa2a67afd255bd2
+    REF e25e380e80a117f2404d65b37700fb620dc1f990 # 3.5.0
+    SHA512 67a2cf4f7a4be88e958f8d6c68f270b1500fde8752b32d401fa80026d2d81dbdd9f57ea754f10095858ae0deab93383d675ad3a1b45f2051a4cc1d02db64dc01
     HEAD_REF master
 )
 
@@ -55,6 +55,12 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake
+    @ONLY
+)
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include

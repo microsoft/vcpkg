@@ -1,0 +1,24 @@
+{
+  "name": "boost-iterator",
+  "version-string": "1.75.0",
+  "description": "Boost iterator module",
+  "homepage": "https://github.com/boostorg/iterator",
+  "dependencies": [
+    "boost-assert",
+    "boost-compatibility",
+    "boost-concept-check",
+    "boost-config",
+    "boost-conversion",
+    "boost-core",
+    "boost-detail",
+    "boost-function-types",
+    "boost-fusion",
+    "boost-mpl",
+    "boost-optional",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

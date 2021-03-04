@@ -1,0 +1,13 @@
+diff --git a/tjutil.h b/tjutil.h
+index f72840c..a3ae19f 100644
+--- a/tjutil.h
++++ b/tjutil.h
+@@ -30,7 +30,7 @@
+ #ifndef __MINGW32__
+ #include <stdio.h>
+ #define snprintf(str, n, format, ...) \
+-  _snprintf_s(str, n, _TRUNCATE, format, __VA_ARGS__)
++  _snprintf_s(str, n, _TRUNCATE, format, ## __VA_ARGS__)
+ #endif
+ #define strcasecmp  stricmp
+ #define strncasecmp  strnicmp

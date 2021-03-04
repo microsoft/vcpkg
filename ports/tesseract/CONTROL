@@ -1,9 +1,10 @@
 Source: tesseract
 Version: 4.1.1
-Port-Version: 3
+Port-Version: 6
 Homepage: https://github.com/tesseract-ocr/tesseract
 Description: An OCR Engine that was developed at HP Labs between 1985 and 1995... and now at Google.
-Build-Depends: leptonica
+Build-Depends: leptonica, libarchive
+Supports: !(windows&(arm|arm64))
 
 Feature: training-tools
 Description: build training tools

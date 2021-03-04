@@ -19,7 +19,7 @@ if (CMAKE_HOST_WIN32)
 endif ()
 
 vcpkg_execute_build_process(
-            COMMAND ${BAZEL} build --verbose_failures --strategy=CppCompile=standalone //ryu
+            COMMAND ${BAZEL} build --verbose_failures --strategy=CppCompile=standalone //ryu //ryu:ryu_printf
             WORKING_DIRECTORY ${SOURCE_PATH}
             LOGNAME build-${TARGET_TRIPLET}-rel
     )
@@ -27,12 +27,16 @@ vcpkg_execute_build_process(
 if (CMAKE_HOST_WIN32)
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)    
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu_printf.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/ryu_printf.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)    
 else()
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
     file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu_printf.a DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
+    file(INSTALL ${SOURCE_PATH}/bazel-bin/ryu/libryu_printf.a DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE-Boost DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${SOURCE_PATH}/ryu/ryu.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/ryu/)
+file(INSTALL ${SOURCE_PATH}/ryu/ryu2.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/ryu/)
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/ryuConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-

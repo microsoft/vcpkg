@@ -44,9 +44,16 @@ else()
     set(BUILD_PLUGINS_STATIC 0)
 endif()
 
+# Head only features
+set(ALL_SUPPORTED_FEATURES ${ALL_FEATURES})
+if(NOT VCPKG_USE_HEAD_VERSION)
+    list(REMOVE_ITEM ALL_SUPPORTED_FEATURES glslangshaderconverter spirvtoolsshaderconverter)
+    message(WARNING "Features glslangshaderconverter and spirvtoolsshaderconverter are not avaliable when building non-head version.")
+endif()
+
 set(_COMPONENTS "")
 # Generate cmake parameters from feature names
-foreach(_feature IN LISTS ALL_FEATURES)
+foreach(_feature IN LISTS ALL_SUPPORTED_FEATURES)
     # Uppercase the feature name and replace "-" with "_"
     string(TOUPPER "${_feature}" _FEATURE)
     string(REPLACE "-" "_" _FEATURE "${_FEATURE}")
@@ -99,8 +106,17 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum)
 else()
     set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
+    # On windows, plugins are "Modules" that cannot be linked as shared
+    # libraries, but are meant to be loaded at runtime.
+    # While this is handled adequately through the CMake project, the auto-magic
+    # linking with visual studio might try to link the import libs anyway.
+    #
+    # We delete the import libraries here to avoid the auto-magic linking
+    # for plugins which are loaded at runtime.
+    if(WIN32)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/magnum)
+        file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/magnum-d)
+    endif()
 endif()
 
 # Handle copyright

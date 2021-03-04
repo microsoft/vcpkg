@@ -1,7 +1,0 @@
-Source: openexr
-Version: 2.5.0
-Port-Version: 1
-Homepage: https://www.openexr.com/
-Description: OpenEXR is a high dynamic-range (HDR) image file format developed by Industrial Light & Magic for use in computer imaging applications
-Build-Depends: zlib, python3
-Supports: !uwp

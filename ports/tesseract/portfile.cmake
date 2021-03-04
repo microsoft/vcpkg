@@ -39,6 +39,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
+file(READ ${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake TESSERACT_CONFIG)
+string(REPLACE "find_package(Leptonica REQUIRED)"
+               "find_package(Leptonica REQUIRED)
+find_package(LibArchive REQUIRED)" TESSERACT_CONFIG "${TESSERACT_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake "${TESSERACT_CONFIG}")
 
 vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)
 

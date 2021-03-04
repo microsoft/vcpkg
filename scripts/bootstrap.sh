@@ -74,7 +74,7 @@ vcpkgCheckRepoTool()
     __tool=$1
     if ! command -v "$__tool" >/dev/null 2>&1 ; then
         echo "Could not find $__tool. Please install it (and other dependencies) with:"
-        echo "sudo apt-get install curl unzip tar"
+        echo "sudo apt-get install curl zip unzip tar"
         exit 1
     fi
 }
@@ -240,8 +240,8 @@ selectCXX()
 UNAME="$(uname)"
 ARCH="$(uname -m)"
 
-# Force using system utilities for building vcpkg if host arch is arm, arm64, or s390x.
-if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" ]; then
+# Force using system utilities for building vcpkg if host arch is arm, arm64, s390x, or ppc64le.
+if [ "$ARCH" = "armv7l" -o "$ARCH" = "aarch64" -o "$ARCH" = "s390x" -o "$ARCH" = "ppc64le" ]; then
     vcpkgUseSystem=true
 fi
 
@@ -276,17 +276,39 @@ else
 fi
 
 # Do the build
-buildDir="$vcpkgRootDir/toolsrc/build.rel"
-rm -rf "$buildDir"
-mkdir -p "$buildDir"
+vcpkgToolReleaseTag="2021-02-24-d67989bce1043b98092ac45996a8230a059a2d7e"
+vcpkgToolReleaseSha="0b0f2cd40aa92556c28e1dfa9f8356313a859fb6acb6c730821a06bd9d554ab1ea0622da4026ea66fb11b9ed4fda1316cc388067d51ff1f09af85d033fe4323d"
+vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
+vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
+baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
+buildDir="$baseBuildDir/build"
+tarballPath="$downloadsDir/$vcpkgToolReleaseTarball"
+srcBaseDir="$baseBuildDir/src"
+srcDir="$srcBaseDir/vcpkg-tool-$vcpkgToolReleaseTag"
 
-(cd "$buildDir" && CXX="$CXX" "$cmakeExe" .. -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_DISABLE_METRICS=$vcpkgDisableMetrics" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
+if [ -e "$tarballPath" ]; then
+    vcpkgCheckEqualFileHash "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+else
+    echo "Downloading vcpkg tool sources"
+    vcpkgDownloadFile "$vcpkgToolUrl" "$tarballPath" "$vcpkgToolReleaseSha"
+fi
+
+echo "Building vcpkg-tool..."
+rm -rf "$baseBuildDir"
+mkdir -p "$buildDir"
+vcpkgExtractArchive "$tarballPath" "$srcBaseDir"
+
+(cd "$buildDir" && CXX="$CXX" "$cmakeExe" "$srcDir" -DCMAKE_BUILD_TYPE=Release -G "Ninja" "-DCMAKE_MAKE_PROGRAM=$ninjaExe" "-DBUILD_TESTING=$vcpkgBuildTests" "-DVCPKG_DEVELOPMENT_WARNINGS=OFF" "-DVCPKG_ALLOW_APPLE_CLANG=$vcpkgAllowAppleClang") || exit 1
 (cd "$buildDir" && "$cmakeExe" --build .) || exit 1
 
 rm -rf "$vcpkgRootDir/vcpkg"
 cp "$buildDir/vcpkg" "$vcpkgRootDir/"
 
-if ! [ "$vcpkgDisableMetrics" = "ON" ]; then
+if [ "$vcpkgDisableMetrics" = "ON" ]; then
+    touch "$vcpkgRootDir/vcpkg.disable-metrics"
+elif ! [ -f "$vcpkgRootDir/vcpkg.disable-metrics" ]; then
+    # Note that we intentionally leave any existing vcpkg.disable-metrics; once a user has
+    # opted out they should stay opted out.
     cat <<EOF
 Telemetry
 ---------

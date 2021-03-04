@@ -1,5 +1,5 @@
 Source: libcopp
-Version: 1.3.2
+Version: 1.3.4
 Description: A cross-platfrom coroutine library for C++
 Maintainer: owent <admin@owent.net>
 Homepage: https://libcopp.atframe.work/
