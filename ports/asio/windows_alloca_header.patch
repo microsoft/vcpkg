@@ -1,0 +1,15 @@
+diff --git a/asio/include/asio/detail/impl/socket_ops.ipp b/asio/include/asio/detail/impl/socket_ops.ipp
+index 7d7c31f..d2cd468 100644
+--- a/asio/include/asio/detail/impl/socket_ops.ipp
++++ b/asio/include/asio/detail/impl/socket_ops.ipp
+@@ -27,6 +27,10 @@
+ #include "asio/detail/socket_ops.hpp"
+ #include "asio/error.hpp"
+ 
++#if defined(ASIO_WINDOWS)
++#include <malloc.h>
++#endif
++
+ #if defined(ASIO_WINDOWS_RUNTIME)
+ # include <codecvt>
+ # include <locale>
