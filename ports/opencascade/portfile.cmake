@@ -44,9 +44,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/opencascade TARGET_PATH share/opencascade)
-
-
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/opencascade)
 
 #make occt includes relative to source_file
 list(APPEND ADDITIONAL_HEADERS 
@@ -110,4 +108,3 @@ else()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/OCCT_LGPL_EXCEPTION.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
