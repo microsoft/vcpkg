@@ -42,6 +42,9 @@ APT_PACKAGES="$APT_PACKAGES libasound2-dev"
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu60"
 
+# Additionally required by seastar
+APT_PACKAGES="$APT_PACKAGES libpciaccess-dev xfslibs-dev libgnutls28-dev libsctp-dev systemtap-sdt-dev valgrind"
+
 sudo apt -y install $APT_PACKAGES
 
 # Install newer version of nasm than the apt package, required by intel-ipsec
