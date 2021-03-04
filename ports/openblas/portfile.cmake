@@ -27,7 +27,8 @@ vcpkg_add_to_path("${SED_EXE_PATH}")
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "dynamic-arch"      DYNAMIC_ARCH
+    FEATURES
+    	"dynamic-arch"      DYNAMIC_ARCH
 )
 
 if(VCPKG_TARGET_IS_OSX)
