@@ -11,7 +11,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 100d613..464f95a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1171,6 +1171,15 @@ foreach (OCCT_MODULE ${OCCT_MODULES})
+@@ -1171,6 +1171,14 @@ foreach (OCCT_MODULE ${OCCT_MODULES})
  endforeach()
  set (OCCT_MODULES_ENABLED ${OCCT_MODULES_ENABLED_SORTED})
  
@@ -19,7 +19,6 @@ index 100d613..464f95a 100644
 +	target_include_directories(
 +		${OCCT_LIBRARY} 
 +		INTERFACE
-+		#$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/source>
 +		$<INSTALL_INTERFACE:include/opencascade>)
 +
 +endforeach()
