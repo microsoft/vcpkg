@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index d143a7a..15eb053 100644
+index fcb4a1d..5810b0c 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -602,7 +602,7 @@ endif()
+@@ -607,7 +607,7 @@ endif()
  ocv_cmake_hook(POST_CMAKE_BUILD_OPTIONS)
  
  # --- Python Support ---
@@ -12,10 +12,10 @@ index d143a7a..15eb053 100644
  endif()
  
 diff --git a/cmake/OpenCVCompilerOptions.cmake b/cmake/OpenCVCompilerOptions.cmake
-index 9ac671d..b14ce09 100644
+index 8a3dcdb..b8b3bae 100644
 --- a/cmake/OpenCVCompilerOptions.cmake
 +++ b/cmake/OpenCVCompilerOptions.cmake
-@@ -263,7 +263,6 @@ if(MSVC)
+@@ -262,7 +262,6 @@ if(MSVC)
    #endif()
  
    if(BUILD_WITH_DEBUG_INFO)

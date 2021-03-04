@@ -1,15 +1,16 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.intra2net.com/en/developer/libftdi/download/libftdi1-1.4.tar.bz2"
-    FILENAME "libftdi1-1.4.tar.bz2"
-    SHA512 dbab74f7bc35ca835b9c6dd5b70a64816948d65da1f73a9ece37a0f0f630bd0df1a676543acc517b02a718bc34ba4f7a30cbc48b6eed1c154c917f8ef0a358fc
+    URLS "https://www.intra2net.com/en/developer/libftdi/download/libftdi1-1.5.tar.bz2"
+    FILENAME "libftdi1-1.5.tar.bz2"
+    SHA512 c525b2ab6aff9ef9254971ae7d57f3549a36a36875765c48f947d52532814a2a004de1232389d4fe824a8c8ab84277b08427308573476e1da9b7db83db802f6f
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    REF 1.4
+    REF 1.5
     PATCHES
-        cmake-fix.patch
+        libusb-fix.patch
+        libconfuse-fix.patch
         win32.patch
 )
 
@@ -26,10 +27,10 @@ vcpkg_configure_cmake(
         -DLINK_PYTHON_LIBRARY=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
-        -DCMAKE_DISABLE_FIND_PACKAGE_Confuse=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_Libintl=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_PythonLibs=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_PythonInterp=ON
+        -DFTDI_EEPROM=OFF
 )
 
 vcpkg_install_cmake()
