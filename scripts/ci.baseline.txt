@@ -1282,6 +1282,13 @@ qhull:arm-uwp=fail
 qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
+# Skip ports not available in Qt 6.0.2
+qt6betablock:x86-windows=skip
+qt6betablock:x64-windows=skip
+qt6betablock:x64-windows-static=skip
+qt6betablock:x64-windows-static-md=skip
+qt6betablock:x64-linux=skip
+qt6betablock:x64-osx=skip
 # Skip qt5-base so that qtbase can be build
 qt5-base:x64-windows=skip
 qt5-base:x64-windows-static=skip
