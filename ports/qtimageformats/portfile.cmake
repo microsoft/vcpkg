@@ -37,4 +37,10 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )
-                    
+
+if("jasper" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND QT_IS_LATEST)
+    file(INSTALL "${SOURCE_PATH}/cmake/FindWrapJasper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/Qt6")
+endif()
+if("webp" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND QT_IS_LATEST)
+    file(INSTALL "${SOURCE_PATH}/cmake/FindWrapWebP.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/Qt6")
+endif()

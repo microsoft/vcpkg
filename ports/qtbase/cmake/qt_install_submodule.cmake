@@ -183,4 +183,5 @@ function(qt_install_submodule)
     endif()
 
     qt_install_copyright("${SOURCE_PATH}")
+    set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
