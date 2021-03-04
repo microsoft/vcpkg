@@ -5686,7 +5686,7 @@
     },
     "sundials": {
       "baseline": "5.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "superlu": {
       "baseline": "2020-01-07",
