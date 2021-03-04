@@ -11,6 +11,7 @@ get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 vcpkg_add_to_path("${PERL_EXE_PATH}")
 
 vcpkg_configure_cmake(
+    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS -DBUILD_HTML_DOCS=OFF
