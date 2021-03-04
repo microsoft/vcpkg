@@ -67,7 +67,6 @@ foreach(file_name ${files})
 	file(WRITE ${file_name} "${filedata}")
 endforeach()
 
-
 # Remove libd to lib, libd just has cmake files we dont want too
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/libd ${CURRENT_PACKAGES_DIR}/debug/lib)
