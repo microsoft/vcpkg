@@ -41,10 +41,10 @@ vcpkg_configure_meson(
         -Ddocs=disabled
         -Dtests=disabled
         -Dbenchmark=disabled
-    ADDITIONAL_NATIVE_BINARIES  glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                                glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
-    ADDITIONAL_CROSS_BINARIES   glib-genmarshal='${CURRENT_INSTALLED_DIR}/tools/glib/glib-genmarshal'
-                                glib-mkenums='${CURRENT_INSTALLED_DIR}/tools/glib/glib-mkenums'
+    ADDITIONAL_NATIVE_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
+    ADDITIONAL_CROSS_BINARIES   glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
+                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
 )
 
 vcpkg_install_meson()

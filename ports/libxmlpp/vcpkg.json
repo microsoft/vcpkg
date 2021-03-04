@@ -1,0 +1,11 @@
+{
+  "name": "libxmlpp",
+  "version-string": "5.0",
+  "port-version": 1,
+  "description": "a C++ wrapper for the libxml XML parser library.",
+  "supports": "!(windows & static)",
+  "dependencies": [
+    "glibmm",
+    "libxml2"
+  ]
+}

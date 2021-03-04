@@ -1,6 +1,0 @@
-Source: gdk-pixbuf
-Version: 2.42.2
-Port-Version: 0
-Homepage: https://developer.gnome.org/gdk-pixbuf/
-Description: Image loading library.
-Build-Depends: gettext, zlib, libpng, glib, tiff

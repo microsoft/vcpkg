@@ -18,7 +18,11 @@
     "glib": {
       "description": "Glib Unicode callbacks support",
       "dependencies": [
-        "glib"
+        "glib",
+        {
+          "name": "glib",
+          "host": true
+        }
       ]
     },
     "graphite2": {
