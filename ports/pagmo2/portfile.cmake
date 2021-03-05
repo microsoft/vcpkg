@@ -1,14 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO  esa/pagmo2 
-    REF v2.16.1
-    SHA512 dac85a8525316e827df809d187d40f14dc20db7119796b7384d7855f83ba37e0bb595f6d8199053aac857460816929dd599c9d43802f2ed920a6f42dd2f16a03
+    REPO esa/pagmo2 
+    REF v2.17.0
+    SHA512 8fea7fcb5499b0406f862b90eb8b5900bf4b3b0fa622dfd20d1349f6b556a75001d99ebef61fcb8f35fdc0958b6c5a61d9f6ae80b828ef44dc3f0d5bda176235
     HEAD_REF master
     PATCHES
         "disable-C4701.patch"
         "disable-md-override.patch"
         "find-tbb.patch"
 )
+
+file(REMOVE ${SOURCE_PATH}/cmake_modules/FindTBB.cmake)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
    FEATURES

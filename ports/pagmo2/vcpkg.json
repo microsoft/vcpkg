@@ -1,6 +1,6 @@
 {
   "name": "pagmo2",
-  "version": "2.16.1",
+  "version": "2.17.0",
   "description": "A C++ platform to perform parallel computations of optimisation tasks (global and local) via the asynchronous generalized island model.",
   "homepage": "https://esa.github.io/pagmo2/",
   "dependencies": [
