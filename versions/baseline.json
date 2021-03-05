@@ -2904,6 +2904,10 @@
       "baseline": "5.84.0",
       "port-version": 1
     },
+    "kf5configwidgets": {
+      "baseline": "5.75.0",
+      "port-version": 0
+    },
     "kf5coreaddons": {
       "baseline": "5.84.0",
       "port-version": 0
