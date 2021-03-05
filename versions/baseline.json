@@ -2748,6 +2748,10 @@
       "baseline": "5.75.0",
       "port-version": 0
     },
+    "kf5dbusaddons": {
+      "baseline": "5.75.0",
+      "port-version": 0
+    },
     "kf5guiaddons": {
       "baseline": "5.75.0",
       "port-version": 0
