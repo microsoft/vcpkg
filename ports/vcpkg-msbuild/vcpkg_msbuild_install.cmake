@@ -115,7 +115,7 @@ function(z_vcpkg_msbuild_install_generate_directory_files)
         get_filename_component(search_directory "${search_directory}" DIRECTORY)
     endwhile()
 
-    set(additional_options "") # TODO: take from VCPKG_DETECTED_CXX_FLAGS
+    set(additional_options "")
     set(props_imports)
     set(targets_imports)
 
@@ -156,7 +156,6 @@ function(z_vcpkg_msbuild_install_generate_directory_files)
     string(APPEND contents "  <ItemDefinitionGroup>\n")
     string(APPEND contents "    <ClCompile>\n")
 
-    z_vcpkg_msbuild_install_escape_msbuild(additional_options "${additional_options}")
     string(APPEND contents "      <AdditionalOptions>${additional_options} %(AdditionalOptions)</AdditionalOptions>\n")
 
     string(APPEND contents "    </ClCompile>\n")
