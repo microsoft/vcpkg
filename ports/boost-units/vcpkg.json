@@ -1,0 +1,23 @@
+{
+  "name": "boost-units",
+  "version-string": "1.75.0",
+  "description": "Boost units module",
+  "homepage": "https://github.com/boostorg/units",
+  "dependencies": [
+    "boost-assert",
+    "boost-config",
+    "boost-core",
+    "boost-integer",
+    "boost-io",
+    "boost-lambda",
+    "boost-math",
+    "boost-mpl",
+    "boost-preprocessor",
+    "boost-serialization",
+    "boost-static-assert",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

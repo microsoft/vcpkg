@@ -1,4 +1,3 @@
-
 # fail early for unsupported triplets
 vcpkg_fail_port_install(
     MESSAGE "mmLoader supports only x86/x64-windows-static triplets"
@@ -15,6 +14,8 @@ vcpkg_from_github(
     REF 1.0.0
     SHA512 ceb2ab4b60d74209fa46d198cde6fd87a97d911abb875ac35383288a67828d0420bb38ff8d2f17dd4a3f46ba3abf554152d1246eeb05215258e8af64ac4a39de
     HEAD_REF master
+    PATCHES
+        fix_c_and_cxx_flags.patch
 )
 
 # feature
@@ -30,13 +31,13 @@ vcpkg_configure_cmake(
 )
 
 # pre-clean
-file(REMOVE_RECURSE ${SOURCE_PATH}/output)
+file(REMOVE_RECURSE "${SOURCE_PATH}/output")
 
 # build and install
 vcpkg_install_cmake(DISABLE_PARALLEL)
 
 # remove the debug/include directory
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 # collect license files
-file(INSTALL ${SOURCE_PATH}/License DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/License" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

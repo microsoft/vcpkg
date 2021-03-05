@@ -40,10 +40,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-
 file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
 if(DLLS)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
@@ -61,16 +57,39 @@ if(DLLS)
     endforeach()
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
+else()
+    vcpkg_copy_tools(TOOL_NAMES wxrc wx-config wxrc-3.1 AUTO_CLEAN)
+endif()
+
 # do the copy pdbs now after the dlls got moved to the expected /bin folder above
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
-endif()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/mswu)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/mswud)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/msvc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(GLOB_RECURSE INCLUDES ${CURRENT_PACKAGES_DIR}/include/*.h)
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
+    list(APPEND INCLUDES ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
+endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h)
+    list(APPEND INCLUDES ${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h)
+endif()
+foreach(INC IN LISTS INCLUDES)
+    file(READ "${INC}" _contents)
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        string(REPLACE "defined(WXUSINGDLL)" "0" _contents "${_contents}")
+    else()
+        string(REPLACE "defined(WXUSINGDLL)" "1" _contents "${_contents}")
+    endif()
+    # Remove install prefix from setup.h to ensure package is relocatable
+    string(REGEX REPLACE "\n#define wxINSTALL_PREFIX [^\n]*" "\n#define wxINSTALL_PREFIX \"\"" _contents "${_contents}")
+    file(WRITE "${INC}" "${_contents}")
+endforeach()
 
+if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
+    file(COPY ${CMAKE_CURRENT_LIST_DIR}/setup.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/wx)
+endif()
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/wxwidgets)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/wxwidgets/usage COPYONLY)
 file(INSTALL ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -27,6 +27,11 @@ By default the parent directory of CONFIG_PATH is removed if it is named "cmake"
 Passing this option disable such behavior, as it is convenient for ports that install
 more than one CMake package configuration file.
 
+### NO_PREFIX_CORRECTION
+Disables the correction of_IMPORT_PREFIX done by vcpkg due to moving the targets.
+Currently the correction does not take into account how the files are moved and applies
+I rather simply correction which in some cases will yield the wrong results.
+
 ## Notes
 Transform all `/debug/<CONFIG_PATH>/*targets-debug.cmake` files and move them to `/<TARGET_PATH>`.
 Removes all `/debug/<CONFIG_PATH>/*targets.cmake` and `/debug/<CONFIG_PATH>/*config.cmake`.

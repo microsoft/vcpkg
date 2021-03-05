@@ -57,11 +57,6 @@ jobs:
       arguments: '-DropRoot "D:\msvc-drops\$(DropBuildNumber)" -BuildType ret'
       pwsh: true
   - task: PowerShell@2
-    displayName: 'Initialize Environment'
-    inputs:
-      filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
-      pwsh: true
-  - task: PowerShell@2
     displayName: 'Report on Disk Space'
     condition: always()
     inputs:

@@ -12,7 +12,7 @@ index 23a02d2..b13dd26 100644
  LDFLAGS = $(LDFLAGS) /LIBPATH:$(BINDIR) /LIBPATH:$(LIBPREFIX)
 -LIBS = wsock32.lib
 +# The libraries are needed for static builds (the makefile builds all tools and dlls)
-+LIBS = wsock32.lib libiconv.lib libcharset.lib
++LIBS = wsock32.lib iconv.lib charset.lib
 +!if "$(DEBUG)" == "1"
 +LIBS = $(LIBS) zlibd.lib
 +!else

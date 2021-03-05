@@ -1,6 +1,6 @@
 Source: lapack-reference
 Version: 3.8.0
-Port-Version: 3
+Port-Version: 4
 Description: LAPACK — Linear Algebra PACKage http://www.netlib.org/lapack/
 Default-Features: blas-select
 Build-Depends: vcpkg-gfortran (windows)
@@ -9,7 +9,7 @@ Feature: cblas
 Description: Builds CBLAS
 
 Feature: noblas
-Build-Depends: openblas
+Build-Depends: blas
 Description: Use external optimized BLAS
 
 Feature: blas-select

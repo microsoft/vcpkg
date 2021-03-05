@@ -15,7 +15,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Triplet files](users/triplets.md)
 - [Configuration and Environment](users/config-environment.md)
 - [Usage with Android](users/android.md)
-- [Using a manifest file to declare your dependencies](users/top-level-manifest.md)
+- [Using a manifest file to declare your dependencies](users/manifests.md)
 
 ### Maintainer help
 
@@ -30,6 +30,11 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Benchmarking](tool-maintainers/benchmarking.md)
 - [Layout of the vcpkg source tree](tool-maintainers/layout.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
+
+### Community Resources (not directly affiliated with vcpkg)
+
+- [vcpkg.info](https://vcpkg.info/) - Package index + search (includes older port versions)
+- [vcpkgx](https://vcpkgx.com/) - Package index + search
 
 ### Specifications
 

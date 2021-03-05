@@ -1,6 +1,7 @@
 Source: usockets
-Version: 0.6.0
+Version: 2021-1-19
 Build-Depends:libuv
+Homepage: https://github.com/uNetworking/uSockets
 Description: Miniscule cross-platform eventing, networking & crypto for async applications
 
 Feature: ssl

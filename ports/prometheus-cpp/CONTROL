@@ -1,5 +1,5 @@
 Source: prometheus-cpp
-Version: 0.10.0
+Version: 0.12.1
 Description: Prometheus Client Library for Modern C++
 Default-Features: compression, pull
 

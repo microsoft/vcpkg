@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lsh123/xmlsec
-    REF xmlsec-1_2_30
-    SHA512 e631e7b132b39bb53f2713fe34880f8b4e81fd759fd206e8872c066236a8a64713842ba5e0ba9ad2f345f9f6d1da304acbeb61411b52cfa79d2934fc9e260ce9
+    REF xmlsec-1_2_31
+    SHA512 00c67bdfed208c23cbdbcdecd0648c19b66e6036a8dd27145d3c3f2150cba92cbdf5bf976f8561273e752ed3b5c188fa56ab84677e894194c6f1269a07caf04d
     HEAD_REF master
     PATCHES 
         0001-uwp-fix.patch

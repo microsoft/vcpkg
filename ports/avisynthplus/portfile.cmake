@@ -1,12 +1,12 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_LIBRARY_LINKAGE "static" ON_TARGET "UWP" "OSX" "Linux")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_LIBRARY_LINKAGE "static" ON_TARGET "UWP")
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AviSynth/AviSynthPlus
-    REF v3.6.0
-    SHA512 040e9f2c99973eb96b0f1ba373627c3c43ff17ed8339ea850aebc2306228384175cb37c418a139f865c396c70c2d254cd8a40838f577f184a4c161b258328dd5
+    REF v3.6.1
+    SHA512 7104c334769aacf3b1c14491c2e0cdd6586d6ea68dae7d10e7955ac56c6277fe4ae189d30ebd161baeda80e65e80fc49d4b2aed476272dd1aa235e7c8f0209d9
     HEAD_REF master
 )
 

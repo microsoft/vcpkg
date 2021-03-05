@@ -1,91 +1,94 @@
-## # vcpkg_configure_make
-##
-## Configure configure for Debug and Release builds of a project.
-##
-## ## Usage
-## ```cmake
-## vcpkg_configure_make(
-##     SOURCE_PATH <${SOURCE_PATH}>
-##     [AUTOCONFIG]
-##     [USE_WRAPPERS]
-##     [DETERMINE_BUILD_TRIPLET]
-##     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
-##     [NO_ADDITIONAL_PATHS]
-##     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
-##     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
-##     [ADD_BIN_TO_PATH]
-##     [NO_DEBUG]
-##     [SKIP_CONFIGURE]
-##     [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
-##     [PRERUN_SHELL <${SHELL_PATH}>]
-##     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
-##     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
-##     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
-## )
-## ```
-##
-## ## Parameters
-## ### SOURCE_PATH
-## Specifies the directory containing the `configure`/`configure.ac`.
-## By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-##
-## ### PROJECT_SUBPATH
-## Specifies the directory containing the ``configure`/`configure.ac`.
-## By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
-##
-## ### SKIP_CONFIGURE
-## Skip configure process
-##
-## ### USE_WRAPPERS
-## Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
-##
-## ### BUILD_TRIPLET
-## Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
-##
-## ### DETERMINE_BUILD_TRIPLET
-## For ports having a configure script following the autotools rules for selecting the triplet
-##
-## ### NO_ADDITIONAL_PATHS
-## Don't pass any additional paths except for --prefix to the configure call
-##
-## ### AUTOCONFIG
-## Need to use autoconfig to generate configure file.
-##
-## ### PRERUN_SHELL
-## Script that needs to be called before configuration (do not use for batch files which simply call autoconf or configure)
-##
-## ### ADD_BIN_TO_PATH
-## Adds the appropriate Release and Debug `bin\` directories to the path during configure such that executables can run against the in-tree DLLs.
-##
-## ## DISABLE_VERBOSE_FLAGS
-## do not pass '--disable-silent-rules --verbose' to configure
-##
-## ### OPTIONS
-## Additional options passed to configure during the configuration.
-##
-## ### OPTIONS_RELEASE
-## Additional options passed to configure during the Release configuration. These are in addition to `OPTIONS`.
-##
-## ### OPTIONS_DEBUG
-## Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`.
-##
-## ### CONFIG_DEPENDENT_ENVIRONMENT
-## List of additional configuration dependent environment variables to set. 
-## Pass SOMEVAR to set the environment and have SOMEVAR_(DEBUG|RELEASE) set in the portfile to the appropriate values
-## General environment variables can be set from within the portfile itself. 
-##
-## ### CONFIGURE_ENVIRONMENT_VARIABLES
-## List of additional environment variables to pass via the configure call. 
-##
-## ## Notes
-## This command supplies many common arguments to configure. To see the full list, examine the source.
-##
-## ## Examples
-##
-## * [x264](https://github.com/Microsoft/vcpkg/blob/master/ports/x264/portfile.cmake)
-## * [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
-## * [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
-## * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
+#[===[.md:
+# vcpkg_configure_make
+
+Configure configure for Debug and Release builds of a project.
+
+## Usage
+```cmake
+vcpkg_configure_make(
+    SOURCE_PATH <${SOURCE_PATH}>
+    [AUTOCONFIG]
+    [USE_WRAPPERS]
+    [DETERMINE_BUILD_TRIPLET]
+    [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
+    [NO_ADDITIONAL_PATHS]
+    [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
+    [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
+    [ADD_BIN_TO_PATH]
+    [NO_DEBUG]
+    [SKIP_CONFIGURE]
+    [PROJECT_SUBPATH <${PROJ_SUBPATH}>]
+    [PRERUN_SHELL <${SHELL_PATH}>]
+    [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
+    [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
+    [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+)
+```
+
+## Parameters
+### SOURCE_PATH
+Specifies the directory containing the `configure`/`configure.ac`.
+By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+
+### PROJECT_SUBPATH
+Specifies the directory containing the ``configure`/`configure.ac`.
+By convention, this is usually set in the portfile as the variable `SOURCE_PATH`.
+
+### SKIP_CONFIGURE
+Skip configure process
+
+### USE_WRAPPERS
+Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
+
+### BUILD_TRIPLET
+Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
+
+### DETERMINE_BUILD_TRIPLET
+For ports having a configure script following the autotools rules for selecting the triplet
+
+### NO_ADDITIONAL_PATHS
+Don't pass any additional paths except for --prefix to the configure call
+
+### AUTOCONFIG
+Need to use autoconfig to generate configure file.
+
+### PRERUN_SHELL
+Script that needs to be called before configuration (do not use for batch files which simply call autoconf or configure)
+
+### ADD_BIN_TO_PATH
+Adds the appropriate Release and Debug `bin\` directories to the path during configure such that executables can run against the in-tree DLLs.
+
+## DISABLE_VERBOSE_FLAGS
+do not pass '--disable-silent-rules --verbose' to configure
+
+### OPTIONS
+Additional options passed to configure during the configuration.
+
+### OPTIONS_RELEASE
+Additional options passed to configure during the Release configuration. These are in addition to `OPTIONS`.
+
+### OPTIONS_DEBUG
+Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`.
+
+### CONFIG_DEPENDENT_ENVIRONMENT
+List of additional configuration dependent environment variables to set. 
+Pass SOMEVAR to set the environment and have SOMEVAR_(DEBUG|RELEASE) set in the portfile to the appropriate values
+General environment variables can be set from within the portfile itself. 
+
+### CONFIGURE_ENVIRONMENT_VARIABLES
+List of additional environment variables to pass via the configure call. 
+
+## Notes
+This command supplies many common arguments to configure. To see the full list, examine the source.
+
+## Examples
+
+* [x264](https://github.com/Microsoft/vcpkg/blob/master/ports/x264/portfile.cmake)
+* [tcl](https://github.com/Microsoft/vcpkg/blob/master/ports/tcl/portfile.cmake)
+* [freexl](https://github.com/Microsoft/vcpkg/blob/master/ports/freexl/portfile.cmake)
+* [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
+#]===]
+
 macro(_vcpkg_determine_host_mingw out_var)
     if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
         set(HOST_ARCH $ENV{PROCESSOR_ARCHITEW6432})
@@ -134,6 +137,26 @@ macro(_vcpkg_determine_autotools_target_cpu out_var)
     else()
         message(FATAL_ERROR "Unsupported VCPKG_TARGET_ARCHITECTURE architecture ${VCPKG_TARGET_ARCHITECTURE} in _vcpkg_determine_autotools_target_cpu!" )
     endif()
+endmacro()
+
+macro(_vcpkg_determine_autotools_host_arch_mac out_var)
+    set(${out_var} "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
+endmacro()
+
+macro(_vcpkg_determine_autotools_target_arch_mac out_var)
+    list(LENGTH VCPKG_OSX_ARCHITECTURES _num_osx_archs)
+    if(_num_osx_archs GREATER_EQUAL 2)
+        set(${out_var} "universal")
+    else()
+        # Better match the arch behavior of config.guess
+        # See: https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD
+        if(VCPKG_OSX_ARCHITECTURES MATCHES "^(ARM|arm)64$")
+            set(${out_var} "aarch64")
+        else()
+            set(${out_var} "${VCPKG_OSX_ARCHITECTURES}")
+        endif()
+    endif()
+    unset(_num_osx_archs)
 endmacro()
 
 macro(_vcpkg_backup_env_variable envvar)
@@ -206,7 +229,7 @@ function(vcpkg_configure_make)
     cmake_parse_arguments(PARSE_ARGV 0 _csc
         "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
     vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
     set(_VCPKG_CMAKE_VARS_FILE "${_VCPKG_CMAKE_VARS_FILE}" PARENT_SCOPE)
@@ -265,7 +288,7 @@ function(vcpkg_configure_make)
     # Pre-processing windows configure requirements
     if (CMAKE_HOST_WIN32)
         list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES})
+        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES} ${_csc_ADDITIONAL_MSYS_PACKAGES})
         if (_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET)
             _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
             _vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
@@ -388,14 +411,39 @@ function(vcpkg_configure_make)
         # Variables not correctly detected by configure. In release builds.
         list(APPEND _csc_OPTIONS gl_cv_double_slash_root=yes
                                  ac_cv_func_memmove=yes)
-        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        #list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all) # Just ignore libtool checks 
+        if(VCPKG_TARGET_ARCHITECTURE MATCHES "^[Aa][Rr][Mm]64$")
             list(APPEND _csc_OPTIONS gl_cv_host_cpu_c_abi=no)
+            # Currently needed for arm64 because objdump yields: "unrecognised machine type (0xaa64) in Import Library Format archive"
+            list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all)
+        elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "^[Aa][Rr][Mm]$")
+            # Currently needed for arm because objdump yields: "unrecognised machine type (0x1c4) in Import Library Format archive"
+            list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
     else()
         string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
         set(EXTRA_QUOTES)
         set(prefix_var "\${prefix}")
+    endif()
+
+    # macOS - cross-compiling support
+    if(VCPKG_TARGET_IS_OSX)
+        if (_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET)
+            _vcpkg_determine_autotools_host_arch_mac(BUILD_ARCH) # machine you are building on => --build=
+            _vcpkg_determine_autotools_target_arch_mac(TARGET_ARCH)
+            # --build: the machine you are building on
+            # --host: the machine you are building for
+            # --target: the machine that CC will produce binaries for
+            # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
+            # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
+            set(_csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-apple-darwin")
+            if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}") # we don't need to specify the additional flags if we build natively.
+
+                list(APPEND _csc_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+            endif()
+            debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
+        endif()
     endif()
 
     # Cleanup previous build dirs
@@ -478,20 +526,34 @@ function(vcpkg_configure_make)
     convert_to_list(VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES C_LIBS_LIST)
     convert_to_list(VCPKG_DETECTED_CMAKE_CXX_STANDARD_LIBRARIES CXX_LIBS_LIST)
     set(ALL_LIBS_LIST ${C_LIBS_LIST} ${CXX_LIBS_LIST})
-
     list(REMOVE_DUPLICATES ALL_LIBS_LIST)
     list(TRANSFORM ALL_LIBS_LIST STRIP)
-    list(TRANSFORM ALL_LIBS_LIST REPLACE "(.lib|.a|.so)$" "")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        list(REMOVE_ITEM ALL_LIBS_LIST "uuid")
+    #Do lib list transformation from name.lib to -lname if necessary
+    set(_VCPKG_TRANSFORM_LIBS TRUE)
+    if(VCPKG_TARGET_IS_UWP)
+        set(_VCPKG_TRANSFORM_LIBS FALSE)
+        # Avoid libtool choke: "Warning: linker path does not have real file for library -lWindowsApp."
+        # The problem with the choke is that libtool always falls back to built a static library even if a dynamic was requested. 
+        # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows. 
+        # It even does unix/dos-short/unix transformation with the path to get rid of spaces. 
     endif()
-    list(JOIN ALL_LIBS_LIST " -l" ALL_LIBS_STRING)
+    set(_lprefix)
+    if(_VCPKG_TRANSFORM_LIBS)
+        set(_lprefix "-l")
+        list(TRANSFORM ALL_LIBS_LIST REPLACE "(.dll.lib|.lib|.a|.so)$" "")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            list(REMOVE_ITEM ALL_LIBS_LIST "uuid")
+        endif()
+        list(TRANSFORM ALL_LIBS_LIST REPLACE "^(${_lprefix})" "")
+    endif()
+    list(JOIN ALL_LIBS_LIST " ${_lprefix}" ALL_LIBS_STRING)
 
     if(ALL_LIBS_STRING)
+        set(ALL_LIBS_STRING "${_lprefix}${ALL_LIBS_STRING}")
         if(DEFINED ENV{LIBS})
-            set(ENV{LIBS} "$ENV{LIBS} -l${ALL_LIBS_STRING}")
+            set(ENV{LIBS} "$ENV{LIBS} ${ALL_LIBS_STRING}")
         else()
-            set(ENV{LIBS} "-l${ALL_LIBS_STRING}")
+            set(ENV{LIBS} "${ALL_LIBS_STRING}")
         endif()
     endif()
     debug_message(STATUS "ENV{LIBS}:$ENV{LIBS}")
@@ -648,7 +710,8 @@ function(vcpkg_configure_make)
         if (CMAKE_HOST_WIN32)
             set(command ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
         else()
-            set(command /bin/bash "./${RELATIVE_BUILD_PATH}/configure" ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}})
+            find_program(BASH bash REQUIRED)
+            set(command "${BASH}" "./${RELATIVE_BUILD_PATH}/configure" ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}})
         endif()
         if(_csc_ADD_BIN_TO_PATH)
             set(PATH_BACKUP $ENV{PATH})
@@ -662,7 +725,7 @@ function(vcpkg_configure_make)
                 WORKING_DIRECTORY "${TAR_DIR}"
                 LOGNAME config-${TARGET_TRIPLET}-${SHORT_NAME_${_buildtype}}
             )
-            if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
                 file(GLOB_RECURSE LIBTOOL_FILES "${TAR_DIR}*/libtool")
                 foreach(lt_file IN LISTS LIBTOOL_FILES)
                     file(READ "${lt_file}" _contents)
