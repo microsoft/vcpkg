@@ -7,7 +7,9 @@ add_library(metrohash
     src/metrohash128.cpp)
 list(APPEND metro_headers src/metrohash.h src/metrohash64.h src/metrohash128.h)
 
-if(NOT ANDROID AND NOT IOS AND VCPKG_TARGET_ARCHITECTURE MATCHES x64)
+if(VCPKG_TARGET_ARCHITECTURE MATCHES arm OR VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
+    message(WARNING "MetroHash's 128 CRC requires SSE 4.2 intrinsic. The functions will be excluded.")
+else()
     list(APPEND metro_headers src/metrohash128crc.h)
     target_sources(metrohash PRIVATE src/metrohash128crc.cpp)
     if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
