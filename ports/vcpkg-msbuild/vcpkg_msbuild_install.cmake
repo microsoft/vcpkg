@@ -91,6 +91,10 @@ function(z_vcpkg_msbuild_install_generate_directory_files)
         endif()
     endforeach()
 
+    if(NOT CONFIGURATION IN_LIST "RELEASE;DEBUG")
+        message(FATAL_ERROR "internal error: unexpected CONFIGURATION: ${CONFIGURATION}")
+    endif()
+
     set(props_directory)
     set(targets_directory)
     get_filename_component(search_directory "${arg_PROJECT_FILE}" DIRECTORY)
@@ -114,6 +118,11 @@ function(z_vcpkg_msbuild_install_generate_directory_files)
     set(additional_options "") # TODO: take from VCPKG_DETECTED_CXX_FLAGS
     set(props_imports)
     set(targets_imports)
+
+    foreach(flag IN LISTS VCPKG_DETECTED_CXX_FLAGS VCPKG_DETECTED_CXX_FLAGS_${arg_CONFIGURATION})
+        z_vcpkg_msbuild_install_escape_msbuild(flag "\"${flag}\"")
+        string(APPEND additional_options " ${flag}")
+    endforeach()
 
     set(uuid "6077f3f7-e41e-45eb-94f0-bf6bd159ff9c")
     # in order to have msbuild not auto-include, change the name;
@@ -228,6 +237,8 @@ function(vcpkg_msbuild_install)
         "/m"
     )
 
+    vcpkg_internal_get_cmake_vars(OPTIONS "-DVCPKG_LANGUAGES=CXX")
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
         # TODO: Add a way for the user to override this if they want to opt-in to incompatibility
@@ -260,7 +271,7 @@ function(vcpkg_msbuild_install)
         z_vcpkg_msbuild_install_generate_directory_files(
             PROJECT_FILE "${arg_PROJECT_FILE}"
             SOURCE_COPY_PATH "${source_copy_path}"
-            CONFIGURATION "Release"
+            CONFIGURATION "RELEASE"
         )
 
         vcpkg_execute_required_process(
@@ -304,7 +315,7 @@ function(vcpkg_msbuild_install)
         z_vcpkg_msbuild_install_generate_directory_files(
             PROJECT_FILE "${arg_PROJECT_FILE}"
             SOURCE_COPY_PATH "${source_copy_path}"
-            CONFIGURATION "Debug"
+            CONFIGURATION "DEBUG"
         )
 
         vcpkg_execute_required_process(
