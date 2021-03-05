@@ -16,8 +16,8 @@ vcpkg_msbuild_install(
     [OPTIONS_RELEASE <option>...]
     [OPTIONS_DEBUG <option>...]
 
+    [PLATFORM <msbuild-platform>]
     [PLATFORM_VERSION <platform-version>]
-    [PLATFORM_ARCHITECTURE <architecture>]
     [PLATFORM_TOOLSET <toolset>]
 
     [USE_VCPKG_INTEGRATION]
@@ -39,59 +39,8 @@ One thing which should be noted is that because MSBuild uses in-source builds,
 the source tree will be copied into a temporary location for the build.
 
 There are a few important
+# TODO: finish docs
 
-### INCLUDES_SUBPATH
-The subpath to the includes directory relative to `SOURCE_PATH`.
-
-This parameter should be a directory and should not end in a trailing slash.
-
-### ALLOW_ROOT_INCLUDES
-Indicates that top-level include files (e.g. `include/zlib.h`) should be allowed.
-
-### REMOVE_ROOT_INCLUDES
-Indicates that top-level include files (e.g. `include/Makefile.am`) should be removed.
-
-### SKIP_CLEAN
-Indicates that the intermediate files should not be removed.
-
-Ports using this option should later call [`vcpkg_clean_msbuild()`](vcpkg_clean_msbuild.md) to manually clean up.
-
-By default, vcpkg is integrated into these builds so that dependencies can be found;
-in order to disable the integration, one can pass the `DISABLE_VCPKG_INTEGRATION`
-option.
-
-
-### RELEASE_CONFIGURATION
-The configuration (``/p:Configuration`` msbuild parameter) used for Release builds.
-
-### DEBUG_CONFIGURATION
-The configuration (``/p:Configuration`` msbuild parameter) used for Debug builds.
-
-### TARGET_PLATFORM_VERSION
-The WindowsTargetPlatformVersion (``/p:WindowsTargetPlatformVersion`` msbuild parameter)
-
-### TARGET
-The MSBuild target to build. (``/t:<TARGET>``)
-
-### PLATFORM
-The platform (``/p:Platform`` msbuild parameter) used for the build.
-
-### PLATFORM_TOOLSET
-The platform toolset (``/p:PlatformToolset`` msbuild parameter) used for the build.
-
-### OPTIONS
-Additional options passed to msbuild for all builds.
-
-### OPTIONS_RELEASE
-Additional options passed to msbuild for Release builds. These are in addition to `OPTIONS`.
-
-### OPTIONS_DEBUG
-Additional options passed to msbuild for Debug builds. These are in addition to `OPTIONS`.
-
-## Examples
-
-* [xalan-c](https://github.com/Microsoft/vcpkg/blob/master/ports/xalan-c/portfile.cmake)
-* [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
 #]===]
 if(Z_VCPKG_MSBUILD_INSTALL_GUARD)
     return()
@@ -110,15 +59,46 @@ set(Z_VCPKG_MSBUILD_INSTALL_GUARD ON CACHE INTERNAL "guard variable")
 #   between the <Project></Project>, add <Import Project="path" />s
 # * if we have the ability to inject proper msbuild code (not just passing /p switches),
 #   we might be able to fix /MT vs /MD, static vs dynamic build
-function(z_vcpkg_msbuild_install_generate_directory_files project_file source_copy_path)
+function(z_vcpkg_msbuild_install_escape_msbuild var data)
+    # replace xml special characters
+    string(REPLACE "&" "&amp;" data "${data}")
+    string(REPLACE "<" "&lt;" data "${data}")
+    string(REPLACE ">" "&gt;" data "${data}")
+    string(REPLACE "\"" "&quot;" data "${data}")
+
+    # replace MSBuild special characters
+    string(REPLACE "%" "%25" data "${data}")
+    string(REPLACE "$" "%24" data "${data}")
+    string(REPLACE "@" "%40" data "${data}")
+    string(REPLACE "'" "%27" data "${data}")
+    string(REPLACE ";" "%3B" data "${data}")
+    string(REPLACE "?" "%3F" data "${data}")
+    string(REPLACE "*" "%2A" data "${data}")
+
+    set("${var}" "${data}" PARENT_SCOPE)
+endfunction()
+
+function(z_vcpkg_msbuild_install_generate_directory_files)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "PROJECT_FILE;SOURCE_COPY_PATH;CONFIGURATION" "")
+
+    if(DEFINED arg_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "internal error: unexpected arguments: ${arg_UNPARSED_ARGUMENTS}")
+    endif()
+
+    foreach(required IN ITEMS PROJECT_FILE SOURCE_COPY_PATH CONFIGURATION)
+        if(NOT DEFINED arg_${required})
+            message(FATAL_ERROR "internal error: expected argument ${required}")
+        endif()
+    endforeach()
+
     set(props_directory)
     set(targets_directory)
-    get_filename_component(search_directory "${project_file}" DIRECTORY)
+    get_filename_component(search_directory "${arg_PROJECT_FILE}" DIRECTORY)
     while(ON)
-        if(NOT DEFINED props_directory AND EXISTS "${source_copy_path}/${search_directory}/directory.build.props")
+        if(NOT DEFINED props_directory AND EXISTS "${arg_SOURCE_COPY_PATH}/${search_directory}/directory.build.props")
             set(props_directory "${search_directory}")
         endif()
-        if(NOT DEFINED targets_directory AND EXISTS "${source_copy_path}/${search_directory}/directory.build.targets")
+        if(NOT DEFINED targets_directory AND EXISTS "${arg_SOURCE_COPY_PATH}/${search_directory}/directory.build.targets")
             set(targets_directory "${search_directory}")
         endif()
 
@@ -131,18 +111,61 @@ function(z_vcpkg_msbuild_install_generate_directory_files project_file source_co
         get_filename_component(search_directory "${search_directory}" DIRECTORY)
     endwhile()
 
-    if(NOT DEFINED props_directory)
-        file(WRITE "${source_copy_path}/directory.build.props" "<Project></Project>")
+    set(additional_options "") # TODO: take from VCPKG_DETECTED_CXX_FLAGS
+    set(props_imports)
+    set(targets_imports)
+
+    set(uuid "6077f3f7-e41e-45eb-94f0-bf6bd159ff9c")
+    # in order to have msbuild not auto-include, change the name;
+    # in order to not clash with any files, use this uuid
+    if(DEFINED props_directory)
+        file(RENAME
+            "${arg_SOURCE_COPY_PATH}/${props_directory}/directory.build.props"
+            "${arg_SOURCE_COPY_PATH}/${props_directory}/directory.build.props.${uuid}")
+        list(APPEND props_imports
+            "${arg_SOURCE_COPY_PATH}/${props_directory}/directory.build.props.${uuid}")
     endif()
-    if(NOT DEFINED targets_directory)
-        file(WRITE "${source_copy_path}/directory.build.targets" "<Project></Project>")
+    if(DEFINED targets_directory)
+        file(RENAME
+            "${arg_SOURCE_COPY_PATH}/${targets_directory}/directory.build.targets"
+            "${arg_SOURCE_COPY_PATH}/${targets_directory}/directory.build.targets.${uuid}")
+        list(APPEND targets_imports
+            "${arg_SOURCE_COPY_PATH}/${targets_directory}/directory.build.targets.${uuid}")
     endif()
+
+    # directory.build.props
+    set(contents "<Project>\n")
+    foreach(import IN LISTS props_imports)
+        string(APPEND contents "  <Import Project='${import}'></Import>\n")
+    endforeach()
+    string(APPEND contents "</Project>\n")
+
+    file(WRITE "${arg_SOURCE_COPY_PATH}/directory.build.props" "${contents}")
+
+    # directory.build.targets
+    set(contents "<Project>\n")
+    string(APPEND contents "  <ItemDefinitionGroup>\n")
+    string(APPEND contents "    <ClCompile>\n")
+
+    z_vcpkg_msbuild_install_escape_msbuild(additional_options "${additional_options}")
+    string(APPEND contents "      <AdditionalOptions>${additional_options} %(AdditionalOptions)</AdditionalOptions>\n")
+
+    string(APPEND contents "    </ClCompile>\n")
+    string(APPEND contents "  </ItemDefinitionGroup>\n")
+
+    foreach(import IN LISTS targets_imports)
+        z_vcpkg_msbuild_install_escape_msbuild(import "${import}")
+        string(APPEND contents "  <Import Project='${import}'></Import>\n")
+    endforeach()
+    string(APPEND contents "</Project>\n")
+
+    file(WRITE "${arg_SOURCE_COPY_PATH}/directory.build.targets" "${contents}")
 endfunction()
 
 function(vcpkg_msbuild_install)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "USE_VCPKG_INTEGRATION;DISABLE_PARALLEL;SKIP_CLEAN;ALLOW_ROOT_INCLUDES"
-        "SOURCE_PATH;PROJECT_FILE;TARGET;INCLUDES_DIRECTORY;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM_VERSION;PLATFORM_ARCHITECTURE;PLATFORM_TOOLSET"
+        "SOURCE_PATH;PROJECT_FILE;TARGET;INCLUDES_DIRECTORY;RELEASE_CONFIGURATION;DEBUG_CONFIGURATION;PLATFORM_VERSION;PLATFORM;PLATFORM_TOOLSET"
         "OPTIONS;OPTIONS_RELEASE;OPTIONS_DEBUG"
     )
 
@@ -169,15 +192,15 @@ function(vcpkg_msbuild_install)
     if(NOT DEFINED arg_DEBUG_CONFIGURATION)
         set(arg_DEBUG_CONFIGURATION Debug)
     endif()
-    if(NOT DEFINED arg_PLATFORM_ARCHITECTURE)
+    if(NOT DEFINED arg_PLATFORM)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-            set(arg_PLATFORM_ARCHITECTURE x64)
+            set(arg_PLATFORM x64)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-            set(arg_PLATFORM_ARCHITECTURE Win32)
+            set(arg_PLATFORM Win32)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ARM")
-            set(arg_PLATFORM_ARCHITECTURE ARM)
+            set(arg_PLATFORM ARM)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-            set(arg_PLATFORM_ARCHITECTURE arm64)
+            set(arg_PLATFORM arm64)
         else()
             message(FATAL_ERROR "Unsupported target architecture")
         endif()
@@ -194,7 +217,7 @@ function(vcpkg_msbuild_install)
 
     list(APPEND arg_OPTIONS
         "/t:${arg_TARGET}"
-        "/p:Platform=${arg_PLATFORM_ARCHITECTURE}"
+        "/p:Platform=${arg_PLATFORM}"
         "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
         "/p:VCPkgLocalAppDataDisabled=true"
         "/p:UseIntelMKL=No"
@@ -234,7 +257,11 @@ function(vcpkg_msbuild_install)
         file(COPY "${arg_SOURCE_PATH}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel")
 
         set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${source_path_suffix}")
-        z_vcpkg_msbuild_install_generate_directory_files("${arg_PROJECT_FILE}" "${source_copy_path}")
+        z_vcpkg_msbuild_install_generate_directory_files(
+            PROJECT_FILE "${arg_PROJECT_FILE}"
+            SOURCE_COPY_PATH "${source_copy_path}"
+            CONFIGURATION "Release"
+        )
 
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_FILE}"
@@ -274,7 +301,11 @@ function(vcpkg_msbuild_install)
         file(COPY "${arg_SOURCE_PATH}" DESTINATION "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
 
         set(source_copy_path "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/${source_path_suffix}")
-        z_vcpkg_msbuild_install_generate_directory_files("${arg_PROJECT_FILE}" "${source_copy_path}")
+        z_vcpkg_msbuild_install_generate_directory_files(
+            PROJECT_FILE "${arg_PROJECT_FILE}"
+            SOURCE_COPY_PATH "${source_copy_path}"
+            CONFIGURATION "Debug"
+        )
 
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_FILE}"
