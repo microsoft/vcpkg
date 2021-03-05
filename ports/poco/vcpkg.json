@@ -5,6 +5,11 @@
   "description": "Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.",
   "homepage": "https://github.com/pocoproject/poco",
   "supports": "!uwp",
+  "dependencies": [
+    "expat",
+    "pcre",
+    "zlib"
+  ],
   "features": {
     "mariadb": {
       "description": "MariaDB support for POCO",
