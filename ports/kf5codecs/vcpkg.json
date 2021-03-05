@@ -1,0 +1,11 @@
+{
+  "name": "kf5codecs",
+  "version-string": "5.75.0",
+  "description": "String encoding library",
+  "homepage": "https://api.kde.org/frameworks/kcodecs/html/index.html",
+  "dependencies": [
+    "ecm",
+    "qt5-base",
+    "qt5-tools"
+  ]
+}
