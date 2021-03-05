@@ -1121,7 +1121,7 @@
       "port-version": 0
     },
     "celero": {
-      "baseline": "2.6.0-1",
+      "baseline": "2.7.2",
       "port-version": 0
     },
     "cello": {
@@ -1849,7 +1849,7 @@
       "port-version": 0
     },
     "exprtk": {
-      "baseline": "2020-09-14",
+      "baseline": "2021-01-01",
       "port-version": 0
     },
     "ezc3d": {
@@ -1994,7 +1994,7 @@
     },
     "fmt": {
       "baseline": "7.1.3",
-      "port-version": 0
+      "port-version": 1
     },
     "folly": {
       "baseline": "2020.10.19.00",
@@ -2077,7 +2077,7 @@
       "port-version": 0
     },
     "functions-framework-cpp": {
-      "baseline": "0.4.0",
+      "baseline": "0.5.0",
       "port-version": 0
     },
     "fuzzylite": {
@@ -2093,7 +2093,7 @@
       "port-version": 1
     },
     "g3log": {
-      "baseline": "2019-07-29",
+      "baseline": "1.3.4",
       "port-version": 0
     },
     "gainput": {
@@ -2230,11 +2230,11 @@
     },
     "glm": {
       "baseline": "0.9.9.8",
-      "port-version": 0
+      "port-version": 1
     },
     "globjects": {
-      "baseline": "1.1.0-3",
-      "port-version": 0
+      "baseline": "1.1.0",
+      "port-version": 4
     },
     "glog": {
       "baseline": "0.4.0-3",
@@ -2265,7 +2265,7 @@
       "port-version": 3
     },
     "google-cloud-cpp": {
-      "baseline": "1.24.0",
+      "baseline": "1.25.0",
       "port-version": 2
     },
     "google-cloud-cpp-common": {
@@ -2542,7 +2542,7 @@
     },
     "imgui": {
       "baseline": "1.81",
-      "port-version": 1
+      "port-version": 2
     },
     "imgui-sfml": {
       "baseline": "2.1-2",
@@ -3072,6 +3072,10 @@
       "baseline": "2020.08.30",
       "port-version": 0
     },
+    "libhv": {
+      "baseline": "1.0.0",
+      "port-version": 0
+    },
     "libhydrogen": {
       "baseline": "2019-08-11",
       "port-version": 0
@@ -3224,6 +3228,10 @@
       "baseline": "1.0.0",
       "port-version": 1
     },
+    "libnop": {
+      "baseline": "2021-03-01",
+      "port-version": 0
+    },
     "libodb": {
       "baseline": "2.4.0-6",
       "port-version": 0
@@ -3302,7 +3310,7 @@
     },
     "libpq": {
       "baseline": "12.2",
-      "port-version": 11
+      "port-version": 12
     },
     "libpqxx": {
       "baseline": "7.3.1",
@@ -4745,7 +4753,7 @@
       "port-version": 0
     },
     "protopuf": {
-      "baseline": "1.0.0",
+      "baseline": "1.0.1",
       "port-version": 0
     },
     "protozero": {
@@ -4813,7 +4821,7 @@
       "port-version": 0
     },
     "qscintilla": {
-      "baseline": "2.11.4-2",
+      "baseline": "2.12.0",
       "port-version": 0
     },
     "qt-advanced-docking-system": {
@@ -5461,7 +5469,7 @@
       "port-version": 0
     },
     "sobjectizer": {
-      "baseline": "5.7.2.2",
+      "baseline": "5.7.2.3",
       "port-version": 0
     },
     "soci": {
@@ -6110,6 +6118,14 @@
     },
     "vcglib": {
       "baseline": "1.0.1",
+      "port-version": 0
+    },
+    "vcpkg-cmake": {
+      "baseline": "2021-02-28",
+      "port-version": 0
+    },
+    "vcpkg-cmake-config": {
+      "baseline": "2021-02-26",
       "port-version": 0
     },
     "vcpkg-gfortran": {
