@@ -4461,7 +4461,7 @@
       "port-version": 0
     },
     "pagmo2": {
-      "baseline": "2.16.1",
+      "baseline": "2.17.0",
       "port-version": 0
     },
     "paho-mqtt": {
