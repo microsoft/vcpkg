@@ -1,14 +1,13 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.1)
 project(metrohash LANGUAGES CXX)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 
 add_library(metrohash
-            src/metrohash64.cpp
-            src/metrohash128.cpp
-            )
+    src/metrohash64.cpp
+    src/metrohash128.cpp)
 list(APPEND metro_headers src/metrohash.h src/metrohash64.h src/metrohash128.h)
 
-if(NOT ANDROID AND NOT IOS)
+if(NOT ANDROID AND NOT IOS AND VCPKG_TARGET_ARCHITECTURE MATCHES x64)
     list(APPEND metro_headers src/metrohash128crc.h)
     target_sources(metrohash PRIVATE src/metrohash128crc.cpp)
     if(CMAKE_CXX_COMPILER_ID MATCHES Clang)
