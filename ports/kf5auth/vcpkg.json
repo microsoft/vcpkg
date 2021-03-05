@@ -1,0 +1,12 @@
+{
+  "name": "kf5auth",
+  "version-string": "5.75.0",
+  "description": "Execute actions as privileged user",
+  "homepage": "https://api.kde.org/frameworks/kauth/html/index.html",
+  "dependencies": [
+    "ecm",
+    "kf5coreaddons",
+    "qt5-base",
+    "qt5-tools"
+  ]
+}
