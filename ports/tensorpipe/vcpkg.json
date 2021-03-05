@@ -35,6 +35,9 @@
       "dependencies": [
         "gtest"
       ]
+    },
+    "benchamrk": {
+      "description": "Build benchmark executables"
     }
   }
 }

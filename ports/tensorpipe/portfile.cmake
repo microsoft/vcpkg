@@ -1,6 +1,10 @@
 vcpkg_fail_port_install(ON_TARGET "windows" "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+if("test" IN_LIST FEATURES)
+    list(APPEND FEATURE_PATCHES support-test.patch)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/tensorpipe
@@ -8,6 +12,7 @@ vcpkg_from_github(
     SHA512 42e144804f491e55a9135c56cc310def905ae1dd84f417237c5035e7ddc90455dd884be7942ca24c678239382d525a5b50c804e29e83919ff84c49c6061e2bea
     PATCHES
         fix-cmakelists.patch
+        ${FEATURE_PATCHES}
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -19,7 +24,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         cma         TP_ENABLE_CMA
         pybind11    TP_BUILD_PYTHON
         test        TP_BUILD_TESTING
-        test        TP_BUILD_BENCHMARK
+        benchmark   TP_BUILD_BENCHMARK
 )
 
 vcpkg_configure_cmake(

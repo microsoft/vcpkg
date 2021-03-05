@@ -71,24 +71,3 @@ index d5a44de..05c2f6c 100644
  target_link_libraries(benchmark_transport PRIVATE tensorpipe)
  
  add_executable(benchmark_pipe benchmark_pipe.cc options.cc transport_registry.cc channel_registry.cc)
-diff --git a/tensorpipe/test/CMakeLists.txt b/tensorpipe/test/CMakeLists.txt
-index c0320aa..ecaacaa 100644
---- a/tensorpipe/test/CMakeLists.txt
-+++ b/tensorpipe/test/CMakeLists.txt
-@@ -85,12 +85,9 @@ if(TP_USE_CUDA)
-     )
- endif()
- 
--
--add_subdirectory(${PROJECT_SOURCE_DIR}/third_party/googletest
--  ${PROJECT_BINARY_DIR}/third_party/googletest)
--
-+find_package(GTest CONFIG REQUIRED)
- target_link_libraries(tensorpipe_test PRIVATE
-   tensorpipe
--  uv::uv
--  gmock
--  gtest_main)
-+  unofficial::libuv::libuv
-+  GTest::gmock GTest::gtest_main
-+)
