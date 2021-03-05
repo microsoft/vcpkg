@@ -35,7 +35,7 @@ vcpkg_msbuild_install(
     PROJECT_FILE visualc/sharedspice.sln
     INCLUDES_DIRECTORY src/include
     # install_msbuild swaps x86 for win32(bad) if we dont force our own setting
-    PLATFORM_ARCHITECTURE ${TRIPLET_SYSTEM_ARCH}
+    PLATFORM ${TRIPLET_SYSTEM_ARCH}
     TARGET Build
 )
 
