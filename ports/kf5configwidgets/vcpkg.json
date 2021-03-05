@@ -1,0 +1,17 @@
+{
+  "name": "kf5configwidgets",
+  "version-string": "5.75.0",
+  "description": "Widgets for configuration dialogs",
+  "homepage": "https://api.kde.org/frameworks/kconfigwidgets/html/index.html",
+  "dependencies": [
+    "ecm",
+    "kf5auth",
+    "kf5codecs",
+    "kf5config",
+    "kf5guiaddons",
+    "kf5i18n",
+    "kf5widgetsaddons",
+    "qt5-base",
+    "qt5-tools"
+  ]
+}
