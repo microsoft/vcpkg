@@ -10,7 +10,7 @@
   ],
   "features": {
     "cma": {
-      "description": "Enable cma channel"
+      "description": "Enable CMA channel"
     },
     "cuda": {
       "description": "Enable support for CUDA tensors, CUDA IPC channel",
@@ -22,13 +22,13 @@
       "description": "Enable InfiniBand transport"
     },
     "pybind11": {
-      "description": "Build python bindings",
+      "description": "Build Python bindings",
       "dependencies": [
         "pybind11"
       ]
     },
     "shm": {
-      "description": "Enable shm transport"
+      "description": "Enable shared memory transport"
     },
     "test": {
       "description": "Build with Google.Test",

@@ -36,7 +36,7 @@ index 0a0944b..3a48212 100644
 -target_link_libraries(tensorpipe PRIVATE uv::uv)
 +# use VcPkg's `libuv`
 +find_package(unofficial-libuv CONFIG REQUIRED) 
-+target_link_libraries(tensorpipe PRIVATE unofficial::libuv::libuv)
++target_link_libraries(tensorpipe PRIVATE unofficial::libuv::libuv ${CMAKE_DL_LIBS})
  
  ### shm
  
