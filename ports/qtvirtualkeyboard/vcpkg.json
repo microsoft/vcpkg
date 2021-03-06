@@ -10,11 +10,27 @@
     "qttools"
   ],
   "default-features": [
-    "default-features"
+    "default-features",
+    "hunspell"
   ],
   "features": {
     "default-features": {
       "description": "Platform-dependent default features"
+    },
+    "hunspell": {
+      "description": "Use hunspell",
+      "dependencies": [
+        "hunspell"
+      ]
+    },
+    "xcb": {
+      "description": "XCB integration"
+    },
+    "t9write": {
+      "description": "T9Write handwriting (commercial SDK requires port overlay)",
+      "dependencies": [
+        "t9write"
+      ]
     }
   }
 }
