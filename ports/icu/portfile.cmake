@@ -117,9 +117,12 @@ else()
         set(ENV{CXX} "${CMAKE_CXX_COMPILER}")
     endif()
     
+    message(STATUS "Install to ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}")
+
     if(NOT "${TARGET_TRIPLET}" STREQUAL "${_HOST_TRIPLET}")
         # Need the buildtrees dir, as the required files (e.g. icucross.mk) are not part of the installed package
         get_filename_component(ICU_HOST_PATH "${CURRENT_BUILDTREES_DIR}/${_HOST_TRIPLET}-rel" ABSOLUTE)
+        message(STATUS "Test paths: ${CURRENT_BUILDTREES_DIR}/${_HOST_TRIPLET}-rel ${ICU_HOST_PATH}")
         if(NOT EXISTS "${ICU_HOST_PATH}")
             message(FATAL_ERROR "The ${_HOST_TRIPLET} icu must be be built locally to build for non ${_HOST_TRIPLET} platforms.")
         endif()
