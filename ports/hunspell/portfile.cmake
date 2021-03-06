@@ -13,11 +13,10 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    set(PORT_DEBUG ON)
     string(APPEND VCPKG_C_FLAGS " -DHUNSPELL_STATIC")
     string(APPEND VCPKG_CXX_FLAGS " -DHUNSPELL_STATIC")
 endif()
-if(NOT "tools" IN_LIST FEATURES)
+if(NOT "tools" IN_LIST FEATURES) # Building the tools is not possible on windows!
     file(READ "${SOURCE_PATH}/src/Makefile.am" _contents)
     string(REPLACE " parsers tools" "" _contents "${_contents}")
     file(WRITE "${SOURCE_PATH}/src/Makefile.am" "${_contents}")
