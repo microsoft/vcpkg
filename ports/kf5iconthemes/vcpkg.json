@@ -1,0 +1,19 @@
+{
+  "name": "kf5iconthemes",
+  "version-string": "5.75.0",
+  "description": "Icon GUI utilities",
+  "homepage": "https://api.kde.org/frameworks/kiconthemes/html/index.html",
+  "dependencies": [
+    "ecm",
+    "kf5archive",
+    "kf5configwidgets",
+    "kf5coreaddons",
+    "kf5guiaddons",
+    "kf5i18n",
+    "kf5itemviews",
+    "kf5widgetsaddons",
+    "qt5-base",
+    "qt5-svg",
+    "qt5-tools"
+  ]
+}
