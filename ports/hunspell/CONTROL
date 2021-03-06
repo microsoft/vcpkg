@@ -1,8 +1,9 @@
 Source: hunspell
 Version: 1.7.0
-Port-Version: 2
+Port-Version: 3
 Homepage: https://github.com/hunspell/hunspell
 Description: The most popular spellchecking library.
+Build-Depends: gettext[tools], libiconv
 
 Feature: tools
 Description: Build hunspell tools
