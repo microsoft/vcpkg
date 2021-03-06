@@ -1,15 +1,13 @@
 {
   "name": "winflexbison",
   "version-string": "2.5.24",
-  "homepage": "https://github.com/lexxmark/winflexbison",
   "description": "a Windows port of Flex and Bison",
+  "homepage": "https://github.com/lexxmark/winflexbison",
+  "supports": "windows & !arm & !uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
       "host": true
     }
-  ],
-  "supports": "windows & !arm & !uwp",
-
-  "default-features": []
+  ]
 }
