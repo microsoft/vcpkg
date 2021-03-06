@@ -41,6 +41,12 @@ set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
+
+    if(NOT "${TARGET_TRIPLET}" STREQUAL "${_HOST_TRIPLET}")
+        message(STATUS "CROSS COMPILE ${TARGET_TRIPLET} ${_HOST_TRIPLET}")
+        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --build=arm-darwin --host=x86_64-apple-darwin --with-cross-build=${CURRENT_BUILDTREES_DIR}/${_HOST_TRIPLET}-rel/")
+    endif()
+
     set(BASH bash)
     set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -fPIC")
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -fPIC")
