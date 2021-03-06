@@ -236,7 +236,10 @@ function(vcpkg_msbuild_install)
         "/m"
     )
 
-    vcpkg_internal_get_cmake_vars(OPTIONS "-DVCPKG_LANGUAGES=CXX")
+    vcpkg_internal_get_cmake_vars(
+        OUTPUT_FILE Z_VCPKG_MSBUILD_CMAKE_VARS_FILE
+        OPTIONS "-DVCPKG_LANGUAGES=CXX")
+    include("${Z_VCPKG_MSBUILD_CMAKE_VARS_FILE}")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         # Disable LTCG for static libraries because this setting introduces ABI incompatibility between minor compiler versions
