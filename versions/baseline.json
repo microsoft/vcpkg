@@ -4381,7 +4381,7 @@
       "port-version": 0
     },
     "openssl": {
-      "baseline": "1.1.1i",
+      "baseline": "1.1.1j",
       "port-version": 0
     },
     "openssl-unix": {
