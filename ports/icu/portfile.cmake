@@ -43,8 +43,15 @@ set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     if(NOT "${TARGET_TRIPLET}" STREQUAL "${_HOST_TRIPLET}")
-        message(STATUS "CROSS COMPILE ${TARGET_TRIPLET} ${_HOST_TRIPLET}")
-        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --build=arm-darwin --host=x86_64-apple-darwin --with-cross-build=${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/tools/${PORT}/for-cross-compile")
+        # cross compiling
+        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-cross-build=${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/tools/${PORT}/for-cross-compile")
+        if(VCPKG_TARGET_IS_OSX)
+            # on apple silicon we have to manually set the arch when we want x64 binaries, otherwise we get arm64 binaries
+            if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
+                set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -arch x86_64")
+                set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -arch x86_64")
+            endif()
+        endif()
     endif()
 
     set(BASH bash)
@@ -120,15 +127,13 @@ else()
     message(STATUS "Install to ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}")
 
     if(NOT "${TARGET_TRIPLET}" STREQUAL "${_HOST_TRIPLET}")
-        # Need the buildtrees dir, as the required files (e.g. icucross.mk) are not part of the installed package
+        # we have to give a path to the buildtree-dir of the host system, but this folder is gone. So we have capied
+        # the relvant files to ${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/tools/${PORT}/for-cross-compile
         get_filename_component(ICU_HOST_PATH "${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/tools/${PORT}/for-cross-compile" ABSOLUTE)
-        message(STATUS "Test paths: ${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/tools/${PORT}/for-cross-compile ${ICU_HOST_PATH}")
         if(NOT EXISTS "${ICU_HOST_PATH}")
-            message(FATAL_ERROR "The ${_HOST_TRIPLET} icu must be be built locally to build for non ${_HOST_TRIPLET} platforms.")
+            message(FATAL_ERROR "Please create a bug report at vcpkg.")  # can not happen (normally)
         endif()
-        message(STATUS "CROSS COMPILE ${TARGET_TRIPLET} ${_HOST_TRIPLET}")
         set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-cross-build=${ICU_HOST_PATH}")
-        set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${_VCPKG_INSTALLED_DIR}/lib")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -406,16 +411,17 @@ file(INSTALL ${ICU_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 # To cross compile, we need some files at specific positions. So lets copy them
 file(GLOB CROSS_COMPILE_TOOLS ${CURRENT_PACKAGES_DIR}/lib/icu*${ICU_VERSION_MAJOR}.dll)
-list(APPEND CROSS_COMPILE_TOOLS 
-${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/derb${VCPKG_HOST_EXECUTABLE_SUFFIX}
-${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/genbrk${VCPKG_HOST_EXECUTABLE_SUFFIX}
-${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/gencfu${VCPKG_HOST_EXECUTABLE_SUFFIX}
-${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/gencnval${VCPKG_HOST_EXECUTABLE_SUFFIX}
-${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/gendict${VCPKG_HOST_EXECUTABLE_SUFFIX}
-${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/genrb${VCPKG_HOST_EXECUTABLE_SUFFIX}
-${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/makeconv${VCPKG_HOST_EXECUTABLE_SUFFIX}
-${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/icupkg${VCPKG_HOST_EXECUTABLE_SUFFIX}
-${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/pkgdata${VCPKG_HOST_EXECUTABLE_SUFFIX})
+list(APPEND CROSS_COMPILE_TOOLS
+    ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/derb${VCPKG_HOST_EXECUTABLE_SUFFIX}
+    ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/genbrk${VCPKG_HOST_EXECUTABLE_SUFFIX}
+    ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/gencfu${VCPKG_HOST_EXECUTABLE_SUFFIX}
+    ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/gencnval${VCPKG_HOST_EXECUTABLE_SUFFIX}
+    ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/gendict${VCPKG_HOST_EXECUTABLE_SUFFIX}
+    ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/genrb${VCPKG_HOST_EXECUTABLE_SUFFIX}
+    ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/makeconv${VCPKG_HOST_EXECUTABLE_SUFFIX}
+    ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/icupkg${VCPKG_HOST_EXECUTABLE_SUFFIX}
+    ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/pkgdata${VCPKG_HOST_EXECUTABLE_SUFFIX}
+)
 file(COPY ${CROSS_COMPILE_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/for-cross-compile/bin)
 file(GLOB CROSS_COMPILE_DEFS ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/config/icucross.*)
 file(INSTALL ${CROSS_COMPILE_DEFS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/for-cross-compile/config)
