@@ -44,7 +44,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 
     if(NOT "${TARGET_TRIPLET}" STREQUAL "${_HOST_TRIPLET}")
         message(STATUS "CROSS COMPILE ${TARGET_TRIPLET} ${_HOST_TRIPLET}")
-        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --build=arm-darwin --host=x86_64-apple-darwin --with-cross-build=${CURRENT_BUILDTREES_DIR}/${_HOST_TRIPLET}-rel/")
+        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --build=arm-darwin --host=x86_64-apple-darwin --with-cross-build=${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/tools/${PORT}/for-cross-compile")
     endif()
 
     set(BASH bash)
@@ -121,8 +121,8 @@ else()
 
     if(NOT "${TARGET_TRIPLET}" STREQUAL "${_HOST_TRIPLET}")
         # Need the buildtrees dir, as the required files (e.g. icucross.mk) are not part of the installed package
-        get_filename_component(ICU_HOST_PATH "${CURRENT_BUILDTREES_DIR}/${_HOST_TRIPLET}-rel" ABSOLUTE)
-        message(STATUS "Test paths: ${CURRENT_BUILDTREES_DIR}/${_HOST_TRIPLET}-rel ${ICU_HOST_PATH}")
+        get_filename_component(ICU_HOST_PATH "${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/tools/${PORT}/for-cross-compile" ABSOLUTE)
+        message(STATUS "Test paths: ${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/tools/${PORT}/for-cross-compile ${ICU_HOST_PATH}")
         if(NOT EXISTS "${ICU_HOST_PATH}")
             message(FATAL_ERROR "The ${_HOST_TRIPLET} icu must be be built locally to build for non ${_HOST_TRIPLET} platforms.")
         endif()
@@ -403,6 +403,21 @@ endif()
 # Install executables from ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin to /tools/icu
 file(GLOB ICU_TOOLS ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX})
 file(INSTALL ${ICU_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
+
+# To cross compile, we need some files at specific positions. So lets copy them
+list(APPEND CROSS_COMPILE_TOOLS 
+${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/derb${VCPKG_HOST_EXECUTABLE_SUFFIX}
+${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/genbrk${VCPKG_HOST_EXECUTABLE_SUFFIX}
+${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/gencfu${VCPKG_HOST_EXECUTABLE_SUFFIX}
+${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/gencnval${VCPKG_HOST_EXECUTABLE_SUFFIX}
+${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/gendict${VCPKG_HOST_EXECUTABLE_SUFFIX}
+${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/genrb${VCPKG_HOST_EXECUTABLE_SUFFIX}
+${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/makeconv${VCPKG_HOST_EXECUTABLE_SUFFIX}
+${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/icupkg${VCPKG_HOST_EXECUTABLE_SUFFIX}
+${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/pkgdata${VCPKG_HOST_EXECUTABLE_SUFFIX})
+file(COPY ${CROSS_COMPILE_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/for-cross-compile/bin)
+file(GLOB CROSS_COMPILE_DEFS ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/config/icucross.*)
+file(INSTALL ${CROSS_COMPILE_DEFS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/for-cross-compile/config)
 
 # remove any remaining dlls in /lib
 file(GLOB DUMMY_DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
