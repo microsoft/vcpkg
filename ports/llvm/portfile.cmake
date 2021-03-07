@@ -149,6 +149,10 @@ if("pstl" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "pstl")
 endif()
 
+if("tools" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=../../lib/clang/11.0.0)
+endif()
+
 set(known_llvm_targets
     AArch64
     AMDGPU

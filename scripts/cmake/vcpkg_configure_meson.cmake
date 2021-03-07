@@ -128,7 +128,7 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
     else()
         set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${_config}}")
     endif()
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
     list(TRANSFORM LINKER_FLAGS_${_config} APPEND "'")
     list(TRANSFORM LINKER_FLAGS_${_config} PREPEND "'")
     list(APPEND LINKER_FLAGS_${_config} "${LIBPATH_${_config}}")
@@ -277,8 +277,8 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     endif()
     string(APPEND CROSS "cpu_family = '${BUILD_CPU_FAM}'\n")
     string(APPEND CROSS "cpu = '${BUILD_CPU}'\n")
-    
-    if(NOT BUILD_CPU_FAM STREQUAL HOST_CPU_FAM)
+
+    if(NOT BUILD_CPU_FAM STREQUAL HOST_CPU_FAM OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
         set(_file "${CURRENT_BUILDTREES_DIR}/meson-cross-${TARGET_TRIPLET}.log")
         set(VCPKG_MESON_CROSS_FILE "${_file}" PARENT_SCOPE)
         file(WRITE "${_file}" "${CROSS}")
@@ -316,7 +316,7 @@ function(vcpkg_internal_meson_generate_cross_file_config _config) #https://meson
     else()
         set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${_config}}")
     endif()
-    string(REGEX REPLACE "( |^)(-|/)" ";\\2" LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
+    vcpkg_internal_meson_convert_compiler_flags_to_list(LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
     list(TRANSFORM LINKER_FLAGS_${_config} APPEND "'")
     list(TRANSFORM LINKER_FLAGS_${_config} PREPEND "'")
     list(APPEND LINKER_FLAGS_${_config} "${LIBPATH_${_config}}")
