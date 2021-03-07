@@ -1,7 +1,7 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
-#set(VCPKG_BUILD_TYPE release) #You probably want to set this to reduce build type and space requirements
-message(STATUS "${PORT} requires a lot of free disk space (>300GB), ram (>32 GB) and time (>4h per configuration) to be successfully build.\n\
--- As such ${PORT} is not properly tested.\n\
+set(VCPKG_BUILD_TYPE release) # You probably want to set this to reduce build type and space requirements
+message(STATUS "${PORT} requires a lot of free disk space (>50GB), ram (>8 GB) and time (>4h per configuration) to be successfully build.\n\
+-- As such ${PORT} is currently EXPERIMENTAL.\n\
 -- If ${PORT} fails post build validation please open up an issue. \n\
 -- If it fails due to post validation the successfully installed files can be found in ${CURRENT_PACKAGES_DIR} \n\
 -- and just need to be copied into ${CURRENT_INSTALLED_DIR}")
@@ -36,14 +36,24 @@ vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
 vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
 vcpkg_add_to_path(PREPEND "${NINJA_DIR}")
 
-set(PATCHES common.pri.patch 
-            gl.patch
-            build_1.patch
-            build_2.patch
-            build_3.patch)
+set(PATCHES
+        common.pri.patch
+        gl.patch
+        build_1.patch
+        build_2.patch
+        build_3.patch
+)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND CORE_OPTIONS "BUILD_OPTIONS" "-webengine-system-libwebp" "-webengine-system-ffmpeg" "-webengine-system-icu")
+    set(OPTIONS
+            "-webengine-system-libwebp"
+            "-webengine-system-ffmpeg"
+            "-webengine-system-icu"
+    )
+else()
+    set(OPTIONS
+            ""
+    )
 endif()
 
-qt_submodule_installation(${CORE_OPTIONS} PATCHES ${PATCHES})
+qt_submodule_installation(PATCHES ${PATCHES} BUILD_OPTIONS ${OPTIONS})
