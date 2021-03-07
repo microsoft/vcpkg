@@ -1,5 +1,7 @@
 # vcpkg_copy_tools
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_copy_tools.md).
+
 Copy tools and all their DLL dependencies into the `tools` folder.
 
 ## Usage
@@ -27,4 +29,4 @@ Auto clean executables in `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_
 * [uriparser](https://github.com/microsoft/vcpkg/blob/master/ports/uriparser/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_copy_tools.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_copy_tools.cmake)
+[scripts/cmake/vcpkg\_copy\_tools.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_copy_tools.cmake)
