@@ -111,9 +111,15 @@ else()
         set(OPTIONS --disable-shared)
     endif()
 
+    if(VCPKG_TARGET_IS_OSX AND VCPKG_TARGET_ARCHITECTURE MATCHES "x64")
+        # fix for apple arm macs (see #16464)
+        set(BUILD_TRIPLET "--host=x86_64-apple-darwin")
+    endif()
+
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
+        BUILD_TRIPLET ${BUILD_TRIPLET}
         OPTIONS
             --disable-documentation
             --disable-openssl
