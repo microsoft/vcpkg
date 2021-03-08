@@ -7,3 +7,7 @@ Description: A library that supports the manipulation of TIFF image files
 
 Feature: tool
 Description: Build tools
+
+Feature: zstd
+Build-Depends: zstd
+Description: support zstd compression in TIFF image files
