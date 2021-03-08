@@ -15,6 +15,7 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         opengl BUILD_EXPERIMENTAL_OPENGL_BACKEND
