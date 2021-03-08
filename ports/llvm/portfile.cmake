@@ -15,14 +15,17 @@ vcpkg_from_github(
         0004-fix-dr-1734.patch
         0005-fix-tools-path.patch
         0006-workaround-msvc-bug.patch  # Fixed in LLVM 12.0.0
+        0007-fix-compiler-rt-install-path.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools LLVM_BUILD_TOOLS
-    tools LLVM_INCLUDE_TOOLS
-    utils LLVM_BUILD_UTILS
-    utils LLVM_INCLUDE_UTILS
-    enable-rtti LLVM_ENABLE_RTTI
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        tools LLVM_BUILD_TOOLS
+        tools LLVM_INCLUDE_TOOLS
+        utils LLVM_BUILD_UTILS
+        utils LLVM_INCLUDE_UTILS
+        enable-rtti LLVM_ENABLE_RTTI
 )
 
 # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
@@ -71,6 +74,10 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
             -DCLANG_ENABLE_STATIC_ANALYZER=OFF
         )
     endif()
+    # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (LLVM_TOOLS_INSTALL_DIR=tools/llvm)
+    # 2) Clang resource files are relocated from ./lib/clang/<version> to ./tools/llvm/clang/<version> (see patch 0007-fix-compiler-rt-install-path.patch)
+    # So, the relative path should be changed from ../lib/clang/<version> to ./clang/<version>
+    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=clang/${LLVM_VERSION})
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")
@@ -147,10 +154,6 @@ if("pstl" IN_LIST FEATURES)
         message(FATAL_ERROR "Building pstl with MSVC is not supported. Disable it until issues are fixed.")
     endif()
     list(APPEND LLVM_ENABLE_PROJECTS "pstl")
-endif()
-
-if("tools" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=../../lib/clang/11.0.0)
 endif()
 
 set(known_llvm_targets
@@ -267,6 +270,7 @@ foreach(tool_file IN LISTS LLVM_TOOL_FILES)
     get_filename_component(tool_file "${tool_file}" NAME)
     if(tool_file MATCHES "${LLVM_EXECUTABLE_REGEX}")
         list(APPEND LLVM_TOOLS "${CMAKE_MATCH_1}")
+        message(STATUS "Tool executable has been found: ${CMAKE_MATCH_1}")
     endif()
 endforeach()
 
