@@ -1,0 +1,7 @@
+{
+  "name": "nyan",
+  "version": "0.1",
+  "homepage": "https://github.com/SFTtech/nyan",
+  "description": "nyan is a data description language, It is a mixture of python, json, patch, wml, yaml and some new ideas.",
+  "dependencies": []
+}
