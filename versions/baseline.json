@@ -4449,8 +4449,8 @@
       "port-version": 6
     },
     "osg-qt": {
-      "baseline": "Qt4",
-      "port-version": 3
+      "baseline": "Qt5",
+      "port-version": 4
     },
     "osgearth": {
       "baseline": "3.1",
