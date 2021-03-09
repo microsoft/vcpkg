@@ -1,6 +1,6 @@
 # vcpkg_add_to_path
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_add_to_path.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_add_to_path.md).
 
 Add a directory or directories to the PATH environment variable
 

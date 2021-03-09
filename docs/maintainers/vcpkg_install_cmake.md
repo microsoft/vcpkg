@@ -1,6 +1,6 @@
 # vcpkg_install_cmake
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_install_cmake.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_cmake.md).
 
 **This function has been deprecated in favor of `vcpkg_cmake_install` from the vcpkg-cmake port.**
 
