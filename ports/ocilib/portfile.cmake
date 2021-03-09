@@ -10,15 +10,9 @@ vcpkg_from_github(
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
-        set(SOLUTION_TYPE vs2019)
         set(OCILIB_ARCH_X86 x86)
         set(OCILIB_ARCH_X64 x64)
-    elseif(VCPKG_PLATFORM_TOOLSET MATCHES "v141")
-        set(SOLUTION_TYPE vs2017)
-        set(OCILIB_ARCH_X86 Win32)
-        set(OCILIB_ARCH_X64 Win64)
     else()
-        set(SOLUTION_TYPE vs2015)
         set(OCILIB_ARCH_X86 Win32)
         set(OCILIB_ARCH_X64 Win64)
     endif()
@@ -34,7 +28,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(VCPKG_BUILD_TYPE release)
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH proj/dll/ocilib_dll_${SOLUTION_TYPE}.sln
+        PROJECT_SUBPATH proj/dll/ocilib_dll_vs2019.sln
         INCLUDES_SUBPATH include
         LICENSE_SUBPATH LICENSE
         RELEASE_CONFIGURATION "Release - ANSI"
