@@ -111,6 +111,7 @@ Description: Include OpenCL library.
 
 Feature: libcxx
 Description: Include libcxx library.
+Build-Depends: llvm[core,libcxxabi]
 
 Feature: libcxxabi
 Description: Include libcxxabi library.
