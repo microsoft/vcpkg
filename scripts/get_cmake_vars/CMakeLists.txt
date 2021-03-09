@@ -8,7 +8,13 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_SYSTEM_NAME
                                         CMAKE_HOST_SYSTEM_NAME
                                         CMAKE_SYSTEM_PROCESSOR
-                                        CMAKE_HOST_SYSTEM_PROCESSOR)
+                                        CMAKE_HOST_SYSTEM_PROCESSOR
+                                        CMAKE_INCLUDE_FLAG_C
+                                        CMAKE_INCLUDE_FLAG_CXX
+                                        CMAKE_INCLUDE_FLAG_C_SEP
+                                        CMAKE_INCLUDE_FLAG_CXX_SEP
+)
+
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_OSX_DEPLOYMENT_TARGET
                                             CMAKE_OSX_SYSROOT)

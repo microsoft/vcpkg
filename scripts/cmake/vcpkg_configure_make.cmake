@@ -10,6 +10,7 @@ vcpkg_configure_make(
     [AUTOCONFIG]
     [USE_WRAPPERS]
     [DETERMINE_BUILD_TRIPLET]
+    [FORCE_APPEND_CURRENT_INCLUDE_DIR]
     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
     [NO_ADDITIONAL_PATHS]
     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
@@ -39,6 +40,9 @@ Skip configure process
 
 ### USE_WRAPPERS
 Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
+
+### FORCE_APPEND_CURRENT_INCLUDE_DIR
+Force append ${CURRENT_INSTALLED_DIR}/include to CFLAGS and CXXFLAGS
 
 ### BUILD_TRIPLET
 Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
@@ -260,6 +264,11 @@ macro(_vcpkg_extract_cpp_flags_and_set_cflags_and_cxxflags _SUFFIX)
         string(APPEND CPPFLAGS_${_SUFFIX} " -isysroot ${VCPKG_DETECTED_CMAKE_OSX_SYSROOT}")
     endif()
 
+    if (_csc_FORCE_APPEND_CURRENT_INCLUDE_DIR)
+	string(APPEND CFLAGS_${_SUFFIX} " ${VCPKG_DETECTED_CMAKE_INCLUDE_FLAG_C}${VCPKG_DETECTED_CMAKE_INCLUDE_FLAG_C_SEP}${CURRENT_INSTALLED_DIR}/include")
+	string(APPEND CXXFLAGS_${_SUFFIX} " ${VCPKG_DETECTED_CMAKE_INCLUDE_FLAG_CXX}${VCPKG_DETECTED_CMAKE_INCLUDE_FLAG_CXX_SEP}${CURRENT_INSTALLED_DIR}/include")
+    endif()
+
     string(STRIP "${CPPFLAGS_${_SUFFIX}}" CPPFLAGS_${_SUFFIX})
     string(STRIP "${CFLAGS_${_SUFFIX}}" CFLAGS_${_SUFFIX})
     string(STRIP "${CXXFLAGS_${_SUFFIX}}" CXXFLAGS_${_SUFFIX})
@@ -271,7 +280,7 @@ endmacro()
 function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _csc
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET;FORCE_APPEND_CURRENT_INCLUDE_DIR"
         "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
@@ -845,7 +854,7 @@ function(vcpkg_configure_make)
     endforeach()
 
     # Restore environment
-    _vcpkg_restore_env_variables(${_cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH ${_cm_TOOLS})
+    _vcpkg_restore_env_variables(${_cm_FLAGS} LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH ${_cm_TOOLS} C_INCLUDE_PATH CPLUS_INCLUDE_PATH LIBRARY_PATH LD_LIBRARY_PATH)
 
     SET(_VCPKG_PROJECT_SOURCE_PATH ${_csc_SOURCE_PATH} PARENT_SCOPE)
     set(_VCPKG_PROJECT_SUBPATH ${_csc_PROJECT_SUBPATH} PARENT_SCOPE)
