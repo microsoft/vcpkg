@@ -3545,8 +3545,8 @@
       "port-version": 0
     },
     "libxslt": {
-      "baseline": "1.1.33",
-      "port-version": 9
+      "baseline": "1.1.34",
+      "port-version": 10
     },
     "libyaml": {
       "baseline": "0.2.5",
