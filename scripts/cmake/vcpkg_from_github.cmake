@@ -129,6 +129,11 @@ function(vcpkg_from_github)
         set(VCPKG_USE_HEAD_VERSION OFF)
     endif()
 
+    if(VCPKG_MANIFEST_MODE AND NOT VCPKG_USE_HEAD_VERSION AND NOT DEFINED _vdud_REF)
+        message(STATUS "Package specifies HEAD_REF but not REF, and --head was not passed to vcpkg. Manifest mode is active, so HEAD_REF is being used.")
+        set(VCPKG_USE_HEAD_VERSION ON)
+    endif()
+
     # Handle --no-head scenarios
     if(NOT VCPKG_USE_HEAD_VERSION)
         if(NOT _vdud_REF)
