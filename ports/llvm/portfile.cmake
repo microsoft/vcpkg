@@ -16,6 +16,7 @@ vcpkg_from_github(
         0005-fix-tools-path.patch
         0006-workaround-msvc-bug.patch  # Fixed in LLVM 12.0.0
         0007-fix-compiler-rt-install-path.patch
+        0008-fix-libcxx-install.patch
 )
 
 vcpkg_check_features(
