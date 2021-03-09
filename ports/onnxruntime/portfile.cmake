@@ -21,6 +21,20 @@ get_filename_component(GIT_PATH ${GIT} DIRECTORY)
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_PATH ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(${PYTHON3_PATH})
+
+# install pip
+vcpkg_from_github(
+    OUT_SOURCE_PATH PYFILE_PATH
+    REPO pypa/get-pip
+    REF 667abf5829986a5e708dc2575fe12c8ad2ce14a4
+    SHA512 59cf8dd4fd699c8ea46eb890c8287924c15a096b8a14d8b242fdc36becdaa0c1d67f0afc268f5507d1621b4d6ded85f0fb350cee1f8d39b496d8af980f871857
+    HEAD_REF master
+)
+execute_process(COMMAND ${PYTHON3} ${PYFILE_PATH}/get-pip.py)
+
+# install numpy 
+vcpkg_execute_required_process(COMMAND ${PYTHON3} -m pip install --user -U numpy WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-pip-${TARGET_TRIPLET})
+
 vcpkg_find_acquire_program(NINJA)
 get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
 vcpkg_add_to_path(${NINJA_PATH})
@@ -81,16 +95,23 @@ vcpkg_configure_cmake(
   SOURCE_PATH "${SOURCE_PATH}/cmake"
   PREFER_NINJA
   OPTIONS
-    -Donnxruntime_RUN_ONNX_TESTS=OFF
+    -Donnxruntime_ENABLE_PYTHON=ON
+    -Donnxruntime_ENABLE_TRAINING=ON
+    -Donnxruntime_BUILD_SHARED_LIB=ON
+    -Donnxruntime_USE_MPI=ON
+    -Donnxruntime_ENABLE_MEMLEAK_CHECKER=OFF
     -Donnxruntime_BUILD_WINML_TESTS=ON
     -Donnxruntime_GENERATE_TEST_REPORTS=ON
-    -Donnxruntime_USE_CUDA=OFF
+    -Donnxruntime_USE_EIGEN_FOR_BLAS=ON
+    -Donnxruntime_ARMNN_RELU_USE_CPU=ON
+    -Donnxruntime_ARMNN_BN_USE_CPU=ON    
+    -Donnxruntime_USE_NCCL=ON        
+    -Donnxruntime_RUN_ONNX_TESTS=OFF
     -Donnxruntime_USE_FEATURIZERS=OFF
+    -Donnxruntime_USE_CUDA=OFF    
     -Donnxruntime_USE_JEMALLOC=OFF
     -Donnxruntime_USE_MIMALLOC_STL_ALLOCATOR=OFF
     -Donnxruntime_USE_MIMALLOC_ARENA_ALLOCATOR=OFF
-    -Donnxruntime_BUILD_SHARED_LIB=OFF
-    -Donnxruntime_USE_EIGEN_FOR_BLAS=ON
     -Donnxruntime_USE_OPENBLAS=OFF
     -Donnxruntime_USE_DNNL=OFF
     -Donnxruntime_USE_MKLML=OFF
@@ -124,16 +145,11 @@ vcpkg_configure_cmake(
     -Donnxruntime_USE_ACL_1908=OFF
     -Donnxruntime_USE_ACL_2002=OFF
     -Donnxruntime_USE_ARMNN=OFF
-    -Donnxruntime_ARMNN_RELU_USE_CPU=ON
-    -Donnxruntime_ARMNN_BN_USE_CPU=ON
     -Donnxruntime_ENABLE_NVTX_PROFILE=OFF
-    -Donnxruntime_ENABLE_TRAINING=ON
     -Donnxruntime_USE_HOROVOD=OFF
-    -Donnxruntime_USE_NCCL=ON
     -Donnxruntime_BUILD_BENCHMARKS=OFF
     -Donnxruntime_USE_ROCM=OFF
     -Donnxruntime_PYBIND_EXPORT_OPSCHEMA=OFF
-    -Donnxruntime_ENABLE_MEMLEAK_CHECKER=OFF
     -DCMAKE_BUILD_TYPE=RelWithDebInfo
     -DONNX_ML=ON
     -DONNX_NAMESPACE=onnx
@@ -147,17 +163,15 @@ message(STATUS "Copy libs and additional header files!")
 # Copy lib and PDB files
 if(VCPKG_TARGET_IS_WINDOWS)
   set(STATIC_LIB_EXTN "*.lib")
-  set(DYN_LIB_EXTN "*.dll")
   set(SYM_FILE_EXTN "*.pdb")
-elseif(VCPKG_TARGET_IS_LINUX) # !Winddows
+elseif(VCPKG_TARGET_IS_LINUX)
   set(STATIC_LIB_EXTN "*.a")
-  set(DYN_LIB_EXTN "*.(s|S)(o|O)")
   set(SYM_FILE_EXTN "*.pdb")
 endif()
 
 # Copy all libraries and PDBs
 foreach(BUILD_TYPE rel dbg)
-  if(${BUILD_TYPE} STREQUAL "dbg")
+  if(${BUILD_TYPE} STREQUAL "dbg")    
     set(SRCBASEDIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg")
     set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/debug/lib")
   else()
@@ -174,7 +188,6 @@ foreach(BUILD_TYPE rel dbg)
     file(GLOB_RECURSE ORT_LIB_PDBS LIST_DIRECTORIES false ${SRCBASEDIR}/${SYM_FILE_EXTN})
     file(COPY ${ORT_LIB_PDBS} DESTINATION ${DESTBASEDIR})
   endif()
-
 endforeach()
 
 message(STATUS "Copy libs done, copying additional header files!")
@@ -303,11 +316,10 @@ set(MOD "")
 foreach(MOD
       core/
       models/mnist/
-      models/runner/    # Add this folder when move to newer commit hash, test/distributed/
+      models/runner/ 
       test/gradient/
       test/graph/
-      test/optimizer/
-      test/session/
+      test/optimizer/ 
       training_ops/
       )
   file(COPY 
@@ -375,6 +387,14 @@ file(INSTALL
 
 message(STATUS "Copy libs and headers done!")
 
+# Copy python packages and libraries.
+set(SRCBASEDIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/onnxruntime")
+set(DESTBASEDIR "${CURRENT_PACKAGES_DIR}/share/onnxruntime")
+
+file(COPY 
+  ${SRCBASEDIR}/ 
+  DESTINATION ${DESTBASEDIR}
+  )
 # Remove bin directories for static build, both debug and release build
 # onnx_test_runner.exe, onnxruntime.dll
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
