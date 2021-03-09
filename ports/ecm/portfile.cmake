@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 486845a91967c89dec42f9120757c7b883006713d0957e9bd21dfacb2911225fe45680590ef3dc5e0d45a9dbc81cf99e1514fb4922b1a027bcba3864da883076
     HEAD_REF master
     PATCHES
-      "do-not-override-custom-clang-format-files.patch"
+        "do-not-override-custom-clang-format-files.patch"
 )
 
 vcpkg_configure_cmake(
