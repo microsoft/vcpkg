@@ -494,7 +494,7 @@
     },
     "boost-context": {
       "baseline": "1.75.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-contract": {
       "baseline": "1.75.0",
