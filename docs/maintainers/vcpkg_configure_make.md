@@ -11,7 +11,6 @@ vcpkg_configure_make(
     [AUTOCONFIG]
     [USE_WRAPPERS]
     [DETERMINE_BUILD_TRIPLET]
-    [FORCE_APPEND_CURRENT_INCLUDE_DIR]
     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
     [NO_ADDITIONAL_PATHS]
     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
@@ -41,9 +40,6 @@ Skip configure process
 
 ### USE_WRAPPERS
 Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
-
-### FORCE_APPEND_CURRENT_INCLUDE_DIR
-Force append ${CURRENT_INSTALLED_DIR}/include to CFLAGS and CXXFLAGS
 
 ### BUILD_TRIPLET
 Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
