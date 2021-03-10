@@ -256,6 +256,11 @@ if("polly" IN_LIST FEATURES)
     file(INSTALL ${SOURCE_PATH}/polly/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/polly RENAME copyright)
 endif()
 
+if("pstl" IN_LIST FEATURES)
+    vcpkg_fixup_cmake_targets(CONFIG_PATH "share/ParallelSTL" TARGET_PATH "share/ParallelSTL" DO_NOT_DELETE_PARENT_CONFIG_PATH)
+    file(INSTALL ${SOURCE_PATH}/pstl/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/ParallelSTL RENAME copyright)
+endif()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/llvm" TARGET_PATH "share/llvm")
 file(INSTALL ${SOURCE_PATH}/llvm/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/llvm RENAME copyright)
 
