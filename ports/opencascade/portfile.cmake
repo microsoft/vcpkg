@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-pdb-find.patch
-		fix-install-prefix-path.patch
+        fix-install-prefix-path.patch
         install-include-dir.patch
 )
 
