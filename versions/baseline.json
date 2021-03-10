@@ -2182,7 +2182,7 @@
     },
     "getopt-win32": {
       "baseline": "0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "gettext": {
       "baseline": "0.21",
@@ -4162,7 +4162,7 @@
     },
     "nettle": {
       "baseline": "3.6",
-      "port-version": 0
+      "port-version": 1
     },
     "networkdirect-sdk": {
       "baseline": "2.0.1",
@@ -4174,7 +4174,7 @@
     },
     "ngspice": {
       "baseline": "34",
-      "port-version": 1
+      "port-version": 2
     },
     "nifticlib": {
       "baseline": "2020-04-30",
@@ -6226,6 +6226,10 @@
     },
     "vcpkg-gfortran": {
       "baseline": "3",
+      "port-version": 0
+    },
+    "vcpkg-msbuild": {
+      "baseline": "2021-03-05",
       "port-version": 0
     },
     "vectorclass": {
