@@ -1,0 +1,149 @@
+{
+  "name": "darknet",
+  "version-date": "2021-01-21",
+  "port-version": 1,
+  "description": "Darknet is an open source neural network framework written in C and CUDA. You only look once (YOLO) is a state-of-the-art, real-time object detection system, best example of darknet functionalities.",
+  "dependencies": [
+    "pthreads",
+    "stb"
+  ],
+  "features": {
+    "cuda": {
+      "description": "Build darknet with support for CUDA",
+      "dependencies": [
+        "cuda"
+      ]
+    },
+    "cudnn": {
+      "description": "Build darknet with support for CUDNN",
+      "dependencies": [
+        "cudnn",
+        {
+          "name": "darknet",
+          "features": [
+            "cuda"
+          ]
+        }
+      ]
+    },
+    "full": {
+      "description": " Build darknet fully-featured",
+      "dependencies": [
+        {
+          "name": "darknet",
+          "features": [
+            "cudnn"
+          ]
+        },
+        {
+          "name": "darknet",
+          "features": [
+            "opencv-cuda"
+          ]
+        },
+        {
+          "name": "darknet",
+          "features": [
+            "weights"
+          ]
+        },
+        {
+          "name": "darknet",
+          "features": [
+            "weights-train"
+          ]
+        }
+      ]
+    },
+    "opencv-base": {
+      "description": "Build darknet with support for OpenCV",
+      "dependencies": [
+        {
+          "name": "opencv",
+          "features": [
+            "ffmpeg"
+          ]
+        }
+      ]
+    },
+    "opencv-cuda": {
+      "description": "Build darknet with support for a CUDA-enabled OpenCV",
+      "dependencies": [
+        {
+          "name": "opencv",
+          "features": [
+            "cuda"
+          ]
+        },
+        {
+          "name": "opencv",
+          "features": [
+            "ffmpeg"
+          ]
+        }
+      ]
+    },
+    "opencv2-base": {
+      "description": "Build darknet with support for OpenCV3",
+      "dependencies": [
+        {
+          "name": "opencv2",
+          "features": [
+            "ffmpeg"
+          ]
+        }
+      ]
+    },
+    "opencv2-cuda": {
+      "description": "Build darknet with support for a CUDA-enabled OpenCV3",
+      "dependencies": [
+        {
+          "name": "opencv2",
+          "features": [
+            "cuda"
+          ]
+        },
+        {
+          "name": "opencv2",
+          "features": [
+            "ffmpeg"
+          ]
+        }
+      ]
+    },
+    "opencv3-base": {
+      "description": "Build darknet with support for OpenCV3",
+      "dependencies": [
+        {
+          "name": "opencv3",
+          "features": [
+            "ffmpeg"
+          ]
+        }
+      ]
+    },
+    "opencv3-cuda": {
+      "description": "Build darknet with support for a CUDA-enabled OpenCV3",
+      "dependencies": [
+        {
+          "name": "opencv3",
+          "features": [
+            "cuda"
+          ]
+        },
+        {
+          "name": "opencv3",
+          "features": [
+            "ffmpeg"
+          ]
+        }
+      ]
+    },
+    "weights": {
+      "description": "Download pre-built weights for test"
+    },
+    "weights-train": {
+      "description": "Download pre-built weights for training"
+    }
+  }
+}
