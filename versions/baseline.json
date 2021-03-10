@@ -3445,8 +3445,8 @@
       "port-version": 0
     },
     "libsvm": {
-      "baseline": "323-1",
-      "port-version": 0
+      "baseline": "323",
+      "port-version": 2
     },
     "libtheora": {
       "baseline": "1.2.0alpha1-20170719",
