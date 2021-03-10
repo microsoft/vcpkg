@@ -17,6 +17,7 @@ vcpkg_from_github(
         0006-workaround-msvc-bug.patch  # Fixed in LLVM 12.0.0
         0007-fix-compiler-rt-install-path.patch
         0008-fix-libcxx-install.patch
+        0009-fix-tools-install-path.patch
 )
 
 vcpkg_check_features(
@@ -253,12 +254,12 @@ endif()
 
 if("polly" IN_LIST FEATURES)
     vcpkg_fixup_cmake_targets(CONFIG_PATH "share/polly" TARGET_PATH "share/polly" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    file(INSTALL ${SOURCE_PATH}/polly/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/polly RENAME copyright)
+    file(INSTALL ${SOURCE_PATH}/polly/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/polly RENAME copyright)
 endif()
 
 if("pstl" IN_LIST FEATURES)
     vcpkg_fixup_cmake_targets(CONFIG_PATH "share/ParallelSTL" TARGET_PATH "share/ParallelSTL" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    file(INSTALL ${SOURCE_PATH}/pstl/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/ParallelSTL RENAME copyright)
+    file(INSTALL ${SOURCE_PATH}/pstl/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/ParallelSTL RENAME copyright)
 endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH "share/llvm" TARGET_PATH "share/llvm")
@@ -276,7 +277,7 @@ foreach(tool_file IN LISTS LLVM_TOOL_FILES)
     get_filename_component(tool_file "${tool_file}" NAME)
     if(tool_file MATCHES "${LLVM_EXECUTABLE_REGEX}")
         list(APPEND LLVM_TOOLS "${CMAKE_MATCH_1}")
-        message(STATUS "Tool executable has been found: ${CMAKE_MATCH_1}")
+        message(STATUS "Tool has been found: ${CMAKE_MATCH_1}")
     endif()
 endforeach()
 
