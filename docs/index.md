@@ -2,7 +2,7 @@
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/index.md).**
 
-Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This tool and ecosystem are constantly evolving; your involvement are vital to its success!
+Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This tool and ecosystem are constantly evolving; your involvement is vital to its success!
 
 ### Examples
 
@@ -38,7 +38,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 ### Community Resources (not directly affiliated with vcpkg)
 
-- [vcpkg.info](https://vcpkg.info/) - Package index + search (includes older port versions)
+- [vcpkg.info](https://vcpkg.info/) - Package index + search
 - [vcpkgx](https://vcpkgx.com/) - Package index + search
 
 ### Specifications

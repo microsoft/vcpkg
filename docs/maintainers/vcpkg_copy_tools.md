@@ -1,6 +1,6 @@
 # vcpkg_copy_tools
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_copy_tools.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_copy_tools.md).
 
 Copy tools and all their DLL dependencies into the `tools` folder.
 

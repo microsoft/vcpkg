@@ -1345,7 +1345,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.7.18",
+      "baseline": "0.8.4",
       "port-version": 0
     },
     "cpp-netlib": {
@@ -1469,7 +1469,7 @@
       "port-version": 0
     },
     "crow": {
-      "baseline": "0.1-1",
+      "baseline": "0.2",
       "port-version": 0
     },
     "cryptopp": {
@@ -2021,7 +2021,7 @@
       "port-version": 0
     },
     "fplus": {
-      "baseline": "0.2.3-p0",
+      "baseline": "0.2.13-p0",
       "port-version": 0
     },
     "freeglut": {
@@ -2093,7 +2093,7 @@
       "port-version": 1
     },
     "g3log": {
-      "baseline": "2019-07-29",
+      "baseline": "1.3.4",
       "port-version": 0
     },
     "gainput": {
@@ -2153,7 +2153,7 @@
       "port-version": 0
     },
     "geos": {
-      "baseline": "3.9.0",
+      "baseline": "3.9.1",
       "port-version": 0
     },
     "geotrans": {
@@ -2805,7 +2805,7 @@
       "port-version": 1
     },
     "krabsetw": {
-      "baseline": "4.1.14",
+      "baseline": "4.1.18",
       "port-version": 0
     },
     "ktx": {
@@ -3645,7 +3645,7 @@
       "port-version": 0
     },
     "lua": {
-      "baseline": "5.4.1",
+      "baseline": "5.4.2",
       "port-version": 0
     },
     "luabridge": {
@@ -4381,7 +4381,7 @@
       "port-version": 0
     },
     "openssl": {
-      "baseline": "1.1.1i",
+      "baseline": "1.1.1j",
       "port-version": 0
     },
     "openssl-unix": {
@@ -4738,7 +4738,7 @@
     },
     "proj4": {
       "baseline": "7.2.1",
-      "port-version": 0
+      "port-version": 1
     },
     "prometheus-cpp": {
       "baseline": "0.12.1",
@@ -5269,7 +5269,7 @@
       "port-version": 0
     },
     "scintilla": {
-      "baseline": "4.4.5",
+      "baseline": "4.4.6",
       "port-version": 0
     },
     "sciter": {
@@ -5349,7 +5349,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.4.7",
+      "baseline": "0.4.8",
       "port-version": 0
     },
     "septag-sx": {
@@ -5945,7 +5945,7 @@
       "port-version": 0
     },
     "trantor": {
-      "baseline": "1.2.0",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "tre": {
@@ -6217,8 +6217,8 @@
       "port-version": 0
     },
     "wil": {
-      "baseline": "2020-05-19",
-      "port-version": 1
+      "baseline": "2021-02-04",
+      "port-version": 0
     },
     "wildmidi": {
       "baseline": "0.4.3-1",

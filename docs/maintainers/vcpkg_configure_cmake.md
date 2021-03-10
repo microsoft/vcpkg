@@ -1,6 +1,6 @@
 # vcpkg_configure_cmake
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_configure_cmake.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_cmake.md).
 
 **This function has been deprecated in favor of `vcpkg_cmake_configure` from the vcpkg-cmake port.**
 
