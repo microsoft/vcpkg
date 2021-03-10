@@ -104,7 +104,6 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
   vcpkg_configure_make(
       SOURCE_PATH ${SOURCE_PATH}
       AUTOCONFIG
-      FORCE_APPEND_CURRENT_INCLUDE_DIR
       OPTIONS
           "LIBS=-lpthread -ldl -lm -l${STDLIB}"
           "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
