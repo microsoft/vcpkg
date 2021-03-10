@@ -91,8 +91,9 @@ function(z_vcpkg_msbuild_install_generate_directory_files)
         endif()
     endforeach()
 
-    if(NOT CONFIGURATION IN_LIST "RELEASE;DEBUG")
-        message(FATAL_ERROR "internal error: unexpected CONFIGURATION: ${CONFIGURATION}")
+    set(valid_configurations RELEASE DEBUG)
+    if(NOT arg_CONFIGURATION IN_LIST valid_configurations)
+        message(FATAL_ERROR "internal error: unexpected CONFIGURATION: ${arg_CONFIGURATION}")
     endif()
 
     set(props_directory)
@@ -115,14 +116,18 @@ function(z_vcpkg_msbuild_install_generate_directory_files)
         get_filename_component(search_directory "${search_directory}" DIRECTORY)
     endwhile()
 
-    set(additional_options "")
+    z_vcpkg_msbuild_install_escape_msbuild(additional_compiler_options
+        "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${arg_CONFIGURATION}}")
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        z_vcpkg_msbuild_install_escape_msbuild(additional_linker_options
+            "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${arg_CONFIGURATION}}")
+    else()
+        z_vcpkg_msbuild_install_escape_msbuild(additional_linker_options
+            "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${arg_CONFIGURATION}}")
+    endif()
+
     set(props_imports)
     set(targets_imports)
-
-    foreach(flag IN LISTS VCPKG_DETECTED_CXX_FLAGS VCPKG_DETECTED_CXX_FLAGS_${arg_CONFIGURATION})
-        z_vcpkg_msbuild_install_escape_msbuild(flag "\"${flag}\"")
-        string(APPEND additional_options " ${flag}")
-    endforeach()
 
     set(uuid "6077f3f7-e41e-45eb-94f0-bf6bd159ff9c")
     # in order to have msbuild not auto-include, change the name;
@@ -159,6 +164,11 @@ function(z_vcpkg_msbuild_install_generate_directory_files)
     string(APPEND contents "      <AdditionalOptions>${additional_options} %(AdditionalOptions)</AdditionalOptions>\n")
 
     string(APPEND contents "    </ClCompile>\n")
+    string(APPEND contents "    <Link>\n")
+
+    string(APPEND contents "      <AdditionalOptions>${additional_options} %(AdditionalOptions)</AdditionalOptions>\n")
+
+    string(APPEND contents "    </Link>\n")
     string(APPEND contents "  </ItemDefinitionGroup>\n")
 
     foreach(import IN LISTS targets_imports)

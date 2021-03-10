@@ -91,9 +91,12 @@ Additional options passed to msbuild for Debug builds. These are in addition to 
 * [libimobiledevice](https://github.com/Microsoft/vcpkg/blob/master/ports/libimobiledevice/portfile.cmake)
 #]===]
 
-include(vcpkg_clean_msbuild)
-
 function(vcpkg_install_msbuild)
+    message(DEPRECATION "vcpkg_install_msbuild has been deprecated in favor of vcpkg_msbuild_install from the vcpkg-msbuild port.")
+    if(Z_VCPKG_MSBUILD_INSTALL_GUARD)
+        message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-msbuild; using both vcpkg-msbuild and vcpkg_install_msbuild in the same port is unsupported.")
+    endif()
+
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(
         PARSE_ARGV 0
