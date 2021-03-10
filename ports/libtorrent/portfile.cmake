@@ -42,6 +42,7 @@ vcpkg_from_github(
     HEAD_REF RC_1_2
     PATCHES
         ${ICONV_PATCH}
+        fix-AppleClang-test.patch
 )
 
 vcpkg_configure_cmake(
