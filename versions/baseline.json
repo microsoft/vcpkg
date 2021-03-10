@@ -4741,7 +4741,7 @@
       "port-version": 1
     },
     "prometheus-cpp": {
-      "baseline": "0.12.1",
+      "baseline": "0.12.2",
       "port-version": 0
     },
     "protobuf": {
