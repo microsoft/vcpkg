@@ -1,4 +1,5 @@
 {
   "name": "vcpkg-msbuild",
-  "version-date": "2021-03-05"
+  "version-date": "2021-03-05",
+  "supports": "windows"
 }

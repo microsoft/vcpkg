@@ -1,4 +1,4 @@
-if(NOT TARGET_TRIPLET STREQUAL _HOST_TRIPLET)
+if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
     message(FATAL_ERROR "vcpkg-msbuild is a host-only port; please mark it as a host port in your dependencies.")
 endif()
 
