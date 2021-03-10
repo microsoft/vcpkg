@@ -1,18 +1,16 @@
  clang-tools-extra/modularize/CMakeLists.txt | 2 +-
- clang/cmake/modules/AddClang.cmake          | 4 ++--
+ clang/cmake/modules/AddClang.cmake          | 2 +-
  clang/tools/c-index-test/CMakeLists.txt     | 2 +-
  clang/tools/clang-format/CMakeLists.txt     | 2 +-
  clang/tools/scan-build/CMakeLists.txt       | 2 +-
  clang/tools/scan-view/CMakeLists.txt        | 2 +-
  clang/utils/hmaptool/CMakeLists.txt         | 2 +-
- flang/cmake/modules/AddFlang.cmake          | 4 ++--
+ flang/cmake/modules/AddFlang.cmake          | 2 +-
  flang/tools/f18/CMakeLists.txt              | 4 ++--
- lld/cmake/modules/AddLLD.cmake              | 4 ++--
+ lld/cmake/modules/AddLLD.cmake              | 2 +-
  lld/tools/lld/CMakeLists.txt                | 2 +-
- lldb/cmake/modules/AddLLDB.cmake            | 4 ++--
- llvm/cmake/modules/AddLLVM.cmake            | 4 ++--
- mlir/cmake/modules/AddMLIR.cmake            | 2 +-
- 14 files changed, 20 insertions(+), 20 deletions(-)
+ lldb/cmake/modules/AddLLDB.cmake            | 2 +-
+ 12 files changed, 13 insertions(+), 13 deletions(-)
 
 diff --git a/clang-tools-extra/modularize/CMakeLists.txt b/clang-tools-extra/modularize/CMakeLists.txt
 index 4caae81c49b6..8c459c51cc34 100644
@@ -26,18 +24,9 @@ index 4caae81c49b6..8c459c51cc34 100644
 +        RUNTIME DESTINATION tools/llvm
          COMPONENT clang-extras)
 diff --git a/clang/cmake/modules/AddClang.cmake b/clang/cmake/modules/AddClang.cmake
-index 704278a0e93b..2bd94e26628b 100644
+index 704278a0e93b..e8a87f574474 100644
 --- a/clang/cmake/modules/AddClang.cmake
 +++ b/clang/cmake/modules/AddClang.cmake
-@@ -125,7 +125,7 @@ macro(add_clang_library name)
-           ${export_to_clangtargets}
-           LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX}
-           ARCHIVE DESTINATION lib${LLVM_LIBDIR_SUFFIX}
--          RUNTIME DESTINATION bin)
-+          RUNTIME DESTINATION tools/llvm)
- 
-         if (NOT LLVM_ENABLE_IDE)
-           add_llvm_install_targets(install-${lib}
 @@ -170,7 +170,7 @@ macro(add_clang_tool name)
  
      install(TARGETS ${name}
@@ -111,18 +100,9 @@ index 62f2de0cb15c..38dc821c76de 100644
  
  add_custom_target(hmaptool ALL DEPENDS ${Depends})
 diff --git a/flang/cmake/modules/AddFlang.cmake b/flang/cmake/modules/AddFlang.cmake
-index 7fe8b7e9f406..c691fa913d1b 100644
+index 7fe8b7e9f406..b338dddd0850 100644
 --- a/flang/cmake/modules/AddFlang.cmake
 +++ b/flang/cmake/modules/AddFlang.cmake
-@@ -77,7 +77,7 @@ macro(add_flang_library name)
-         ${export_to_flangtargets}
-         LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX}
-         ARCHIVE DESTINATION lib${LLVM_LIBDIR_SUFFIX}
--        RUNTIME DESTINATION bin)
-+        RUNTIME DESTINATION tools/llvm)
- 
-       if (NOT LLVM_ENABLE_IDE)
-         add_llvm_install_targets(install-${name}
 @@ -120,7 +120,7 @@ macro(add_flang_tool name)
  
      install(TARGETS ${name}
@@ -152,18 +132,9 @@ index f3af6e8312fe..aa58108b332b 100644
 -install(PROGRAMS ${FLANG_BINARY_DIR}/bin/flang-install.sh DESTINATION bin RENAME flang PERMISSIONS OWNER_EXECUTE OWNER_READ OWNER_WRITE)
 +install(PROGRAMS ${FLANG_BINARY_DIR}/bin/flang-install.sh DESTINATION tools/llvm RENAME flang PERMISSIONS OWNER_EXECUTE OWNER_READ OWNER_WRITE)
 diff --git a/lld/cmake/modules/AddLLD.cmake b/lld/cmake/modules/AddLLD.cmake
-index 23df41312403..a5aacd447ff2 100644
+index 23df41312403..86f4eafeed07 100644
 --- a/lld/cmake/modules/AddLLD.cmake
 +++ b/lld/cmake/modules/AddLLD.cmake
-@@ -22,7 +22,7 @@ macro(add_lld_library name)
-       ${export_to_lldtargets}
-       LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX}
-       ARCHIVE DESTINATION lib${LLVM_LIBDIR_SUFFIX}
--      RUNTIME DESTINATION bin)
-+      RUNTIME DESTINATION tools/llvm)
- 
-     if (${ARG_SHARED} AND NOT CMAKE_CONFIGURATION_TYPES)
-       add_llvm_install_targets(install-${name}
 @@ -54,7 +54,7 @@ macro(add_lld_tool name)
  
      install(TARGETS ${name}
@@ -187,18 +158,9 @@ index e6f72fcd3488..0e5a2c81e825 100644
  if(NOT LLD_SYMLINKS_TO_CREATE)
    set(LLD_SYMLINKS_TO_CREATE lld-link ld.lld ld64.lld wasm-ld)
 diff --git a/lldb/cmake/modules/AddLLDB.cmake b/lldb/cmake/modules/AddLLDB.cmake
-index 4ed5c647c5d2..f2c301dc7075 100644
+index 4ed5c647c5d2..cb31901dddbb 100644
 --- a/lldb/cmake/modules/AddLLDB.cmake
 +++ b/lldb/cmake/modules/AddLLDB.cmake
-@@ -113,7 +113,7 @@ function(add_lldb_library name)
-     endif()
-     # RUNTIME is relevant for DLL platforms, FRAMEWORK for macOS
-     install(TARGETS ${name} COMPONENT ${name}
--      RUNTIME DESTINATION bin
-+      RUNTIME DESTINATION tools/llvm
-       LIBRARY DESTINATION ${install_dest}
-       ARCHIVE DESTINATION ${install_dest}
-       FRAMEWORK DESTINATION ${install_dest})
 @@ -187,7 +187,7 @@ function(add_lldb_executable name)
    endif()
  
@@ -208,38 +170,3 @@ index 4ed5c647c5d2..f2c301dc7075 100644
      if(ARG_INSTALL_PREFIX)
        set(install_dest ${ARG_INSTALL_PREFIX})
      endif()
-diff --git a/llvm/cmake/modules/AddLLVM.cmake b/llvm/cmake/modules/AddLLVM.cmake
-index b74adc11ade9..1fa9d88bcfbf 100644
---- a/llvm/cmake/modules/AddLLVM.cmake
-+++ b/llvm/cmake/modules/AddLLVM.cmake
-@@ -768,7 +768,7 @@ macro(add_llvm_library name)
-               ${export_to_llvmexports}
-               LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX} COMPONENT ${name}
-               ARCHIVE DESTINATION lib${LLVM_LIBDIR_SUFFIX} COMPONENT ${name}
--              RUNTIME DESTINATION bin COMPONENT ${name})
-+              RUNTIME DESTINATION tools/llvm COMPONENT ${name})
- 
-       if (NOT LLVM_ENABLE_IDE)
-         add_llvm_install_targets(install-${name}
-@@ -1821,7 +1821,7 @@ function(llvm_install_library_symlink name dest type)
- 
-   set(output_dir lib${LLVM_LIBDIR_SUFFIX})
-   if(WIN32 AND "${type}" STREQUAL "SHARED")
--    set(output_dir bin)
-+    set(output_dir tools/llvm)
-   endif()
- 
-   install(SCRIPT ${INSTALL_SYMLINK}
-diff --git a/mlir/cmake/modules/AddMLIR.cmake b/mlir/cmake/modules/AddMLIR.cmake
-index e740b2d1cfcb..e3e21b5b545b 100644
---- a/mlir/cmake/modules/AddMLIR.cmake
-+++ b/mlir/cmake/modules/AddMLIR.cmake
-@@ -151,7 +151,7 @@ function(add_mlir_library_install name)
-     ${export_to_mlirtargets}
-     LIBRARY DESTINATION lib${LLVM_LIBDIR_SUFFIX}
-     ARCHIVE DESTINATION lib${LLVM_LIBDIR_SUFFIX}
--    RUNTIME DESTINATION bin)
-+    RUNTIME DESTINATION tools/llvm)
- 
-   if (NOT LLVM_ENABLE_IDE)
-     add_llvm_install_targets(install-${name}
