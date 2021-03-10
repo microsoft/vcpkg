@@ -27,8 +27,24 @@
 ##    x86-windows
 ##
 
-
 # Add new items alphabetically
+
+# script ports
+vcpkg-cmake:arm64-windows=fail
+vcpkg-cmake:arm-uwp=fail
+vcpkg-cmake:x64-uwp=fail
+vcpkg-cmake:x64-windows-static=fail
+vcpkg-cmake:x64-windows-static-md=fail
+vcpkg-cmake:x86-windows=fail
+
+vcpkg-cmake-config:arm64-windows=fail
+vcpkg-cmake-config:arm-uwp=fail
+vcpkg-cmake-config:x64-uwp=fail
+vcpkg-cmake-config:x64-windows-static=fail
+vcpkg-cmake-config:x64-windows-static-md=fail
+vcpkg-cmake-config:x86-windows=fail
+
+# other ports
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
 # Requires ATL for ARM64 to be installed in CI
@@ -661,6 +677,14 @@ libmpeg2:x64-osx=fail
 libmpeg2:x64-uwp=fail
 libmupdf:x64-osx=fail
 libmysql:x86-windows=fail
+#The official website of libnice https://nice.freedesktop.org cannot be accessed
+libnice:x86-windows=skip
+libnice:x64-windows=skip
+libnice:x64-windows-static=skip
+libnice:x64-uwp=skip
+libnice:arm64-windows=skip
+libnice:x64-linux=skip
+libnice:x64-osx=skip
 libopenmpt:x64-linux=fail
 libopenmpt:x64-osx=fail
 libopusenc:arm-uwp=fail
@@ -1363,6 +1387,10 @@ rocksdb:x64-uwp=fail
 rpclib:arm64-windows=fail
 rpclib:arm-uwp=fail
 rpclib:x64-uwp=fail
+rsasynccpp:arm64-windows=fail
+rsasynccpp:arm-uwp=fail
+rsasynccpp:x64-linux=fail
+rsasynccpp:x64-osx=fail
 rsocket:x64-windows=fail
 rsocket:x64-windows-static=fail
 rsocket:x64-windows-static-md=fail
@@ -1511,6 +1539,11 @@ stormlib:arm-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-uwp=fail
 stxxl:x64-uwp=fail
+# upstream issue https://github.com/stxxl/stxxl/issues/99
+stxxl:x86-windows=skip
+stxxl:x64-windows=skip
+stxxl:x64-windows-static=skip
+stxxl:x64-windows-static-md=skip
 symengine:arm64-windows=fail
 symengine:arm-uwp=fail
 systemc:arm64-windows=fail

@@ -1,5 +1,7 @@
 # vcpkg_extract_source_archive_ex
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_extract_source_archive_ex.md).
+
 Extract an archive into the source directory. Replaces [`vcpkg_extract_source_archive`](vcpkg_extract_source_archive.md).
 
 ## Usage
@@ -53,4 +55,4 @@ Specifies that the default removal of the top level folder should not occur.
 * [cairo](https://github.com/Microsoft/vcpkg/blob/master/ports/cairo/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_extract_source_archive_ex.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_extract_source_archive_ex.cmake)
+[scripts/cmake/vcpkg\_extract\_source\_archive\_ex.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_extract_source_archive_ex.cmake)
