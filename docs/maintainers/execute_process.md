@@ -1,6 +1,6 @@
 # execute_process
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/execute_process.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/execute_process.md).
 
 Intercepts all calls to execute_process() inside portfiles and fails when Download Mode
 is enabled.
