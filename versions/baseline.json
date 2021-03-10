@@ -6089,7 +6089,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "18.13.0",
+      "baseline": "19.0.0",
       "port-version": 0
     },
     "v-hacd": {
