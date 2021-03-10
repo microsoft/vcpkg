@@ -48,29 +48,8 @@ endif()
 
 # libbreakpad_client target
 if(CMAKE_SYSTEM_NAME STREQUAL Android)
-    set(LIBBREAKPAD_CLIENT_SOURCES
-        src/client/minidump_file_writer.cc
-        src/client/linux/crash_generation/crash_generation_client.cc
-        src/client/linux/dump_writer_common/thread_info.cc
-        src/client/linux/dump_writer_common/ucontext_reader.cc
-        src/client/linux/handler/exception_handler.cc
-        src/client/linux/handler/minidump_descriptor.cc
-        src/client/linux/log/log.cc
-        src/client/linux/microdump_writer/microdump_writer.cc
-        src/client/linux/minidump_writer/linux_dumper.cc
-        src/client/linux/minidump_writer/linux_ptrace_dumper.cc
-        src/client/linux/minidump_writer/minidump_writer.cc)
-    set(LIBBREAKPAD_COMMON_SOURCES
-        src/common/convert_UTF.cc
-        src/common/md5.cc
-        src/common/string_conversion.cc
-        src/common/linux/breakpad_getcontext.S
-        src/common/linux/elfutils.cc
-        src/common/linux/file_id.cc
-        src/common/linux/guid_creator.cc
-        src/common/linux/linux_libc_support.cc
-        src/common/linux/memory_mapped_file.cc
-        src/common/linux/safe_readlink.cc)
+    file(READ "android/google_breakpad/Android.mk" android_mk)
+    string(REGEX MATCHALL "src/[^\n]*\\.cc" LIBBREAKPAD_CLIENT_SOURCES "${android_mk}")
 else()
     if(WIN32)
         file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/windows/*.cc src/common/windows/*.cc)
@@ -84,8 +63,8 @@ else()
         file(GLOB_RECURSE LIBBREAKPAD_CLIENT_SOURCES src/client/linux/*.cc src/common/linux/*.cc)
     endif()
     file(GLOB LIBBREAKPAD_COMMON_SOURCES src/common/*.cc src/common/*.c src/client/*.cc)
+    list(APPEND LIBBREAKPAD_CLIENT_SOURCES ${LIBBREAKPAD_COMMON_SOURCES})
 endif()
-list(APPEND LIBBREAKPAD_CLIENT_SOURCES ${LIBBREAKPAD_COMMON_SOURCES})
 list(FILTER LIBBREAKPAD_CLIENT_SOURCES EXCLUDE REGEX "/sender|/tests|/unittests|/testcases|_unittest|_test")
 if(WIN32)
     list(FILTER LIBBREAKPAD_CLIENT_SOURCES EXCLUDE REGEX "language.cc|path_helper.cc|stabs_to_module.cc|stabs_reader.cc|minidump_file_writer.cc")
