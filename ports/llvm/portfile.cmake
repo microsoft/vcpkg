@@ -233,7 +233,7 @@ endif()
 
 if("flang" IN_LIST FEATURES)
     vcpkg_fixup_cmake_targets(CONFIG_PATH "share/flang" TARGET_PATH "share/flang" DO_NOT_DELETE_PARENT_CONFIG_PATH)
-    file(INSTALL ${SOURCE_PATH}/flang/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/flang RENAME copyright)
+    file(INSTALL ${SOURCE_PATH}/flang/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/flang RENAME copyright)
     # Remove empty include directory /include/flang/Config
     file(GLOB_RECURSE INCLUDE_FLANG_CONFIG_FILES "${CURRENT_PACKAGES_DIR}/include/flang/Config/*")
     if(NOT INCLUDE_FLANG_CONFIG_FILES)
