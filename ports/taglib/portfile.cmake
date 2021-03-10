@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO taglib/taglib
-    REF 4c14571647e3391dd8f59473903abc44707b4f1b
-    SHA512 2619013e38de4afce58d2c8a8fcb2fc34aeb4006c0657a942cb035a5b79ac1438609f89c31bc631b299eb270ac90f2d222c0ddeeb8151803cf7cda15ab3282b4
+    REF v1.12
+    SHA512 63c96297d65486450908bda7cc1583ec338fa5a56a7c088fc37d6e125e1ee76e6d20343556a8f3d36f5b7e5187c58a5d15be964c996e3586ea1438910152b1a6
     HEAD_REF master
 )
 
@@ -25,6 +25,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_pkgconfig()
 
 # remove the debug/include files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
