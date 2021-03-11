@@ -4350,7 +4350,7 @@
     },
     "openjpeg": {
       "baseline": "2.3.1",
-      "port-version": 2
+      "port-version": 3
     },
     "openmama": {
       "baseline": "6.3.1",
