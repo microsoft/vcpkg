@@ -25,11 +25,16 @@ vcpkg_cmake_configure(
         -DGINKGO_BUILD_HIP=OFF
         -DGINKGO_BUILD_BENCHMARKS=OFF
         -DGINKGO_DEVEL_TOOLS=OFF
+        -DGINKGO_SKIP_DEPENDENCY_UPDATE=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Git=ON
+        -DGinkgo_NAME=ginkgo
         ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Ginkgo)
+vcpkg_fixup_pkgconfig()
+
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ginkgo" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

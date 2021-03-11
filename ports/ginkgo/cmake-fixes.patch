@@ -1,73 +1,44 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e2413dd29e..c835b0dc6e 100644
+index e75f7d6..63685f2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -20,6 +20,13 @@ include(cmake/hip_path.cmake)
+@@ -20,6 +20,12 @@ include(cmake/hip_path.cmake)
  include(cmake/autodetect_executors.cmake)
  include(cmake/build_type_helpers.cmake)
-
+ 
 +if (MSVC)
-+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-+endif()
-+if (MINGW OR CYGWIN)
-+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
++    add_compile_options(/bigobj)
++elseif (MINGW OR CYGWIN)
++    add_compile_options("-Wa,-mbig-obj")
 +endif()
 +
  # Ginkgo configuration options
  option(GINKGO_DEVEL_TOOLS "Add development tools to the build system" OFF)
  option(GINKGO_BUILD_TESTS "Generate build files for unit tests" ON)
 diff --git a/cmake/GinkgoConfig.cmake.in b/cmake/GinkgoConfig.cmake.in
-index 961949822e..51a2e8a724 100644
+index 0348f95..3b8be0f 100644
 --- a/cmake/GinkgoConfig.cmake.in
 +++ b/cmake/GinkgoConfig.cmake.in
-@@ -140,8 +140,12 @@ set(GINKGO_OPENMP_LIBRARIES @OpenMP_CXX_LIBRARIES@)
+@@ -129,8 +129,6 @@ set(GINKGO_OPENMP_LIBRARIES @OpenMP_CXX_LIBRARIES@)
  set(GINKGO_OPENMP_FLAGS "@OpenMP_CXX_FLAGS@")
  
  # Provide useful HIP helper functions
 -include(${CMAKE_CURRENT_LIST_DIR}/hip_helpers.cmake)
 -include(${CMAKE_CURRENT_LIST_DIR}/windows_helpers.cmake)
-+if(GINKGO_BUILD_HIP)
-+    include(${CMAKE_CURRENT_LIST_DIR}/hip_helpers.cmake)
-+endif()
-+if (WIN32 OR CYGWIN)
-+    include(${CMAKE_CURRENT_LIST_DIR}/windows_helpers.cmake)
-+endif()
  
  # NOTE: we do not export benchmarks, examples, tests or devel tools
  #     so `third_party` libraries are currently unneeded.
 diff --git a/cmake/install_helpers.cmake b/cmake/install_helpers.cmake
-index 68a75a5f9a..74ae6f8b6b 100644
+index ba7ea3f..7cc3ba8 100644
 --- a/cmake/install_helpers.cmake
 +++ b/cmake/install_helpers.cmake
-@@ -2,28 +2,29 @@ include(CMakePackageConfigHelpers)
- include(GNUInstallDirs)
- 
- 
--set(GINKGO_INSTALL_INCLUDE_DIR "include")
--set(GINKGO_INSTALL_LIBRARY_DIR "lib")
--set(GINKGO_INSTALL_PKGCONFIG_DIR "lib/pkgconfig")
--set(GINKGO_INSTALL_CONFIG_DIR "lib/cmake/Ginkgo")
--set(GINKGO_INSTALL_MODULE_DIR "lib/cmake/Ginkgo/Modules")
-+set(GINKGO_INSTALL_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}")
-+set(GINKGO_INSTALL_LIBRARY_DIR "${CMAKE_INSTALL_LIBDIR}")
-+set(GINKGO_INSTALL_RUNTIME_DIR "${CMAKE_INSTALL_BINDIR}")
-+set(GINKGO_INSTALL_PKGCONFIG_DIR "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
-+set(GINKGO_INSTALL_CONFIG_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/Ginkgo")
-+set(GINKGO_INSTALL_MODULE_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/Ginkgo/Modules")
- 
- function(ginkgo_install_library name subdir)
--    
-+
-     if (WIN32 OR CYGWIN)
+@@ -14,16 +14,11 @@ function(ginkgo_install_library name subdir)
          # dll is considered as runtime
          install(TARGETS "${name}"
              EXPORT Ginkgo
 -            LIBRARY DESTINATION ${GINKGO_INSTALL_LIBRARY_DIR}
 -            ARCHIVE DESTINATION ${GINKGO_INSTALL_LIBRARY_DIR}
 -            RUNTIME DESTINATION ${GINKGO_INSTALL_LIBRARY_DIR}
-+            LIBRARY DESTINATION "${GINKGO_INSTALL_LIBRARY_DIR}"
-+            ARCHIVE DESTINATION "${GINKGO_INSTALL_LIBRARY_DIR}"
-+            RUNTIME DESTINATION "${GINKGO_INSTALL_RUNTIME_DIR}"
              )
      else ()
          # install .so and .a files
@@ -75,12 +46,10 @@ index 68a75a5f9a..74ae6f8b6b 100644
              EXPORT Ginkgo
 -            LIBRARY DESTINATION ${GINKGO_INSTALL_LIBRARY_DIR}
 -            ARCHIVE DESTINATION ${GINKGO_INSTALL_LIBRARY_DIR}
-+            LIBRARY DESTINATION "${GINKGO_INSTALL_LIBRARY_DIR}"
-+            ARCHIVE DESTINATION "${GINKGO_INSTALL_LIBRARY_DIR}"
          )
      endif ()
  endfunction()
-@@ -37,9 +37,8 @@ function(ginkgo_install)
+@@ -37,9 +32,8 @@ function(ginkgo_install)
          DESTINATION "${GINKGO_INSTALL_INCLUDE_DIR}"
          FILES_MATCHING PATTERN "*.hpp"
          )
@@ -92,16 +61,7 @@ index 68a75a5f9a..74ae6f8b6b 100644
          )
      if (GINKGO_HAVE_PAPI_SDE)
          install(FILES "${Ginkgo_SOURCE_DIR}/third_party/papi_sde/papi_sde_interface.h"
-@@ -60,7 +59,7 @@ function(ginkgo_install)
-     write_basic_package_version_file(
-         "${Ginkgo_BINARY_DIR}/GinkgoConfigVersion.cmake"
-         VERSION "${PROJECT_VERSION}"
--        COMPATIBILITY AnyNewerVersion
-+        COMPATIBILITY SameMajorVersion
-         )
-     configure_package_config_file(
-         "${Ginkgo_SOURCE_DIR}/cmake/GinkgoConfig.cmake.in"
-@@ -75,11 +74,21 @@ function(ginkgo_install)
+@@ -70,8 +64,6 @@ function(ginkgo_install)
      install(FILES
          "${Ginkgo_BINARY_DIR}/GinkgoConfig.cmake"
          "${Ginkgo_BINARY_DIR}/GinkgoConfigVersion.cmake"
@@ -109,20 +69,18 @@ index 68a75a5f9a..74ae6f8b6b 100644
 -        "${Ginkgo_SOURCE_DIR}/cmake/windows_helpers.cmake"
          DESTINATION "${GINKGO_INSTALL_CONFIG_DIR}"
          )
--      install(EXPORT Ginkgo
-+    if (WIN32 OR CYGWIN)
-+        install(FILES
-+            "${Ginkgo_SOURCE_DIR}/cmake/windows_helpers.cmake"
-+            DESTINATION "${GINKGO_INSTALL_CONFIG_DIR}"
-+            )
-+    endif()
-+    if (GINKGO_BUILD_HIP)
-+        install(FILES
-+            "${Ginkgo_SOURCE_DIR}/cmake/hip_helpers.cmake"
-+            DESTINATION "${GINKGO_INSTALL_CONFIG_DIR}"
-+            )
-+    endif()
-+    install(EXPORT Ginkgo
-         NAMESPACE Ginkgo::
-         FILE GinkgoTargets.cmake
-         DESTINATION "${GINKGO_INSTALL_CONFIG_DIR}")
+       install(EXPORT Ginkgo
+diff --git a/cmake/windows_helpers.cmake b/cmake/windows_helpers.cmake
+index 5f517a5..46d31ba 100644
+--- a/cmake/windows_helpers.cmake
++++ b/cmake/windows_helpers.cmake
+@@ -14,9 +14,7 @@ function(ginkgo_switch_windows_link lang from to)
+ endfunction()
+ 
+ macro(ginkgo_switch_to_windows_static lang)
+-    ginkgo_switch_windows_link(${lang} "MD" "MT")
+ endmacro()
+ 
+ macro(ginkgo_switch_to_windows_dynamic lang)
+-    ginkgo_switch_windows_link(${lang} "MT" "MD")
+ endmacro()
