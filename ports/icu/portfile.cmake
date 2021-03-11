@@ -42,9 +42,9 @@ set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
 
-    if(NOT "${TARGET_TRIPLET}" STREQUAL "${_HOST_TRIPLET}")
+    if(NOT "${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}")
         # cross compiling
-        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-cross-build=${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/tools/${PORT}")
+        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-cross-build=${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}/tools/${PORT}")
         if(VCPKG_TARGET_IS_OSX)
             # on apple silicon we have to manually set the arch when we want x64 binaries, otherwise we get arm64 binaries
             if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
@@ -126,10 +126,10 @@ else()
     
     message(STATUS "Install to ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}")
 
-    if(NOT "${TARGET_TRIPLET}" STREQUAL "${_HOST_TRIPLET}")
+    if(NOT "${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}")
         # we have to give a path to the buildtree-dir of the host system, but this folder is gone. So we have capied
-        # the relvant files to ${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/tools/${PORT}
-        get_filename_component(ICU_HOST_PATH "${_VCPKG_INSTALLED_DIR}/${_HOST_TRIPLET}/tools/${PORT}" ABSOLUTE)
+        # the relvant files to ${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}/tools/${PORT}
+        get_filename_component(ICU_HOST_PATH "${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}/tools/${PORT}" ABSOLUTE)
         if(NOT EXISTS "${ICU_HOST_PATH}")
             message(FATAL_ERROR "Please create a bug report at vcpkg.")  # can not happen (normally)
         endif()
