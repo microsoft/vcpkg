@@ -45,6 +45,7 @@ else()
     )
 endif()
 
+set(WITH_PGSQL OFF)
 if("postgresqlplugin" IN_LIST FEATURES)
     set(WITH_PGSQL ON)
 endif()
