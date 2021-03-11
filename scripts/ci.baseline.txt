@@ -14,6 +14,7 @@
 ##          ports.  Please comment for why a port is skipped so it can be
 ##          removed when the issue is resolved.
 ##
+## Additionally, a special case is $port=host; this means "skip on triplets where host != target"
 ##
 ## CI tested triplets:
 ##    arm64-windows
@@ -29,20 +30,9 @@
 
 # Add new items alphabetically
 
-# script ports
-vcpkg-cmake:arm64-windows=fail
-vcpkg-cmake:arm-uwp=fail
-vcpkg-cmake:x64-uwp=fail
-vcpkg-cmake:x64-windows-static=fail
-vcpkg-cmake:x64-windows-static-md=fail
-vcpkg-cmake:x86-windows=fail
-
-vcpkg-cmake-config:arm64-windows=fail
-vcpkg-cmake-config:arm-uwp=fail
-vcpkg-cmake-config:x64-uwp=fail
-vcpkg-cmake-config:x64-windows-static=fail
-vcpkg-cmake-config:x64-windows-static-md=fail
-vcpkg-cmake-config:x86-windows=fail
+# host ports
+vcpkg-cmake=host
+vcpkg-cmake-config=host
 
 # other ports
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h

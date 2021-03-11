@@ -182,32 +182,27 @@ function build_baseline_results {
         $baselineFile,
         $triplet
     )
-    #read in the file, strip out comments and blank lines and spaces, leave only the current triplet
-    #remove comments, remove empty lines, remove whitespace, then keep only those lines for $triplet
-    $baseline_list_raw = Get-Content -Path $baselineFile `
-        | Where-Object { -not ($_ -match "\s*#") } `
-        | Where-Object { -not ( $_ -match "^\s*$") } `
-        | ForEach-Object { $_ -replace "\s" } `
-        | Where-Object { $_ -match ":$triplet=" }
+    $baseline = & "${PSScriptRoot}/parse-baseline.ps1" -Triplet $triplet -BaselineFile $baselineFile
 
-    #filter to skipped and trim the triplet
-    $skip_hash = @{ }
-    foreach ( $port in $baseline_list_raw | ? { $_ -match "=skip$" } | % { $_ -replace ":.*$" }) {
-        if ($skip_hash[$port] -ne $null) {
-            [System.Console]::Error.WriteLine("$($port):$($triplet) has multiple definitions in $baselineFile")
+    $skip_hash = @{}
+    $fail_hash = @{}
+    $host_hash = @{}
+
+    $baseline.GetEnumerator() | ForEach-Object {
+        if ($_.Value -eq 'skip') {
+            $skip_hash[$_.Name] = $true
+        } elseif ($_.Value -eq 'fail') {
+            $fail_hash[$_.Name] = $true
+        } elseif ($_.Value -eq 'host') {
+            $host_hash[$_.Name] = $true
         }
-        $skip_hash[$port] = $true
     }
-    $fail_hash = @{ }
-    $baseline_list_raw | ? { $_ -match "=fail$" } | % { $_ -replace ":.*$" } | ? { $fail_hash[$_] = $true } | Out-Null
-    $ignore_hash = @{ }
-    $baseline_list_raw | ? { $_ -match "=ignore$" } | % { $_ -replace ":.*$" } | ? { $ignore_hash[$_] = $true } | Out-Null
 
     return @{
         collectionName = $triplet;
         skip           = $skip_hash;
         fail           = $fail_hash;
-        ignore         = $ignore_hash
+        host           = $host_hash;
     }
 }
 
@@ -251,7 +246,8 @@ function combine_results {
     Param
     (
         $baseline,
-        $current
+        $current,
+        $isHost
     )
 
     if ($baseline.collectionName -ne $current.collectionName) {
@@ -285,8 +281,12 @@ function combine_results {
             Write-Verbose "$key is skipped"
             $baselineResult = "Skip"
         }
-        elseif ( $baseline.ignore[$key] -ne $null) {
-            $baselineResult = "ignore"
+        elseif ( $baseline.host[$key] -ne $null) {
+            Write-Verbose "$key is a host port"
+
+            if (-not $isHost) {
+                $baselineResult = "Skip"
+            }
         }
 
         $currentTest = $currentTests[$key]
@@ -304,12 +304,6 @@ function combine_results {
                 }
                 $message = "No change from baseline"
                 $time = $currentTest.time
-            }
-        }
-        elseif ( $baselineResult -eq "ignore") {
-            if ( $currentTest.result -eq "Fail" ) {
-                Write-Verbose "ignoring failure on $key"
-                $ignoredList += $key
             }
         }
         else {
@@ -421,6 +415,8 @@ Write-Verbose "looking for $triplet logs"
 # for example:
 #   x64-linux.xml
 
+$hostTriplets = 'x64-linux','x64-windows','x64-osx'
+
 $current_test_hash = build_test_results( Convert-Path "$logDir\$($triplet).xml" )
 $baseline_results = build_baseline_results -baselineFile $baselineFile -triplet $triplet
 
@@ -430,7 +426,7 @@ if ($current_test_hash -eq $null) {
 }
 else {
     Write-Verbose "combining results..."
-    $complete_results[$triplet] = combine_results -baseline $baseline_results -current $current_test_hash
+    $complete_results[$triplet] = combine_results -baseline $baseline_results -current $current_test_hash -isHost ($triplet -in $hostTriplets)
 }
 
 Write-Verbose "done analyzing results"

@@ -1,3 +1,4 @@
+#! /usr/bin/env pwsh
 # Copyright (c) Microsoft Corporation.
 # SPDX-License-Identifier: MIT
 #
@@ -18,66 +19,28 @@ The path to the ci.baseline.txt file.
 #>
 [CmdletBinding()]
 Param(
+    [Parameter(Mandatory)]
     [string]$Triplet,
+    [Parameter(Mandatory)]
     [string]$BaselineFile,
     [switch]$SkipFailures = $false
 )
 
 $ErrorActionPreference = 'Stop'
 
-if (-not (Test-Path -Path $BaselineFile)) {
-    Write-Error "Unable to find baseline file $BaselineFile"
-    throw
-}
+# the triplets for which host = target
+$HostTriplets = 'x64-windows','x64-linux','x64-osx'
 
-#read in the file, strip out comments and blank lines and spaces
-$baselineListRaw = Get-Content -Path $BaselineFile `
-    | Where-Object { -not ($_ -match "\s*#") } `
-    | Where-Object { -not ( $_ -match "^\s*$") } `
-    | ForEach-Object { $_ -replace "\s" }
+$baseline = & "${PSScriptRoot}/parse-baseline.ps1" -Triplet $Triplet -BaselineFile $BaselineFile
 
-###############################################################
-# This script is running at the beginning of the CI test, so do a little extra
-# checking so things can fail early.
-
-#verify everything has a valid value
-$missingValues = $baselineListRaw | Where-Object { -not ($_ -match "=\w") }
-
-if ($missingValues) {
-    Write-Error "The following are missing values: $missingValues"
-    throw
-}
-
-$invalidValues = $baselineListRaw `
-    | Where-Object { -not ($_ -match "=(skip|pass|fail|ignore)$") }
-
-if ($invalidValues) {
-    Write-Error "The following have invalid values: $invalidValues"
-    throw
-}
-
-$baselineForTriplet = $baselineListRaw `
-    | Where-Object { $_ -match ":$Triplet=" }
-
-# Verify there are no duplicates (redefinitions are not allowed)
-$file_map = @{ }
-foreach ($port in $baselineForTriplet | ForEach-Object { $_ -replace ":.*$" }) {
-    if ($null -ne $file_map[$port]) {
-        Write-Error `
-            "$($port):$($Triplet) has multiple definitions in $baselineFile"
-        throw
+$skip_list = $baseline.GetEnumerator() | ForEach-Object {
+    if ($_.Value -eq 'skip') {
+        $_.Name
+    } elseif ($_.Value -eq 'fail' -and $SkipFailures) {
+        $_.Name
+    } elseif ($_.Value -eq 'host' -and $Triplet -notin $HostTriplets) {
+        $_.Name
     }
-    $file_map[$port] = $true
 }
 
-# Format the skip list for the command line
-if ($SkipFailures) {
-    $targetRegex = "=(?:skip|fail)$"
-} else {
-    $targetRegex = "=skip$"
-}
-
-$skip_list = $baselineForTriplet `
-    | Where-Object { $_ -match $targetRegex } `
-    | ForEach-Object { $_ -replace ":.*$" }
-[string]::Join(",", $skip_list)
+$skip_list -join ','
