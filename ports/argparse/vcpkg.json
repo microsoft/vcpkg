@@ -1,6 +1,6 @@
 {
   "name": "argparse",
-  "version-semver": "2.2-predate.20210304",
+  "version-date": "2021-03-04",
   "description": "Argument parser for modern C++",
   "homepage": "https://github.com/p-ranav/argparse",
   "license": "MIT"
