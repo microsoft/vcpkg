@@ -1,5 +1,5 @@
 diff --git a/tools/k4aviewer/CMakeLists.txt b/tools/k4aviewer/CMakeLists.txt
-index 6ab38d9..d92aa0b 100644
+index 6ab38d9..f31f570 100644
 --- a/tools/k4aviewer/CMakeLists.txt
 +++ b/tools/k4aviewer/CMakeLists.txt
 @@ -54,6 +54,8 @@ include_directories(
@@ -32,3 +32,4 @@ index c9c2718..011a76e 100644
  
  // Project headers
  //
+ 
