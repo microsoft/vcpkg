@@ -4704,6 +4704,10 @@
       "baseline": "20.12.1",
       "port-version": 4
     },
+    "popsift": {
+      "baseline": "0.9",
+      "port-version": 0
+    },
     "portable-snippets": {
       "baseline": "2019-09-20",
       "port-version": 0
