@@ -8,7 +8,7 @@ index 2e4742bb..8bfe7d83 100644
  LDFLAGS = $(LDFLAGS) /LIBPATH:$(BINDIR) /LIBPATH:$(LIBPREFIX)
 -LIBS =
 +# The libraries are needed for static builds (the makefile builds all tools and dlls)
-+LIBS = iconv.lib charset.lib
++LIBS = iconv.lib charset.lib ws2_32.lib
 +!if "$(DEBUG)" == "1"
 +LIBS = $(LIBS) zlibd.lib lzmad.lib
 +!else
