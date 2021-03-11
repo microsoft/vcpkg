@@ -45,10 +45,9 @@ else()
     )
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        postgresqlplugin WITH_PGSQL
-)
+if("postgresqlplugin" IN_LIST FEATURES)
+    set(WITH_PGSQL ON)
+endif()
 
 include(qt_port_functions)
 include(configure_qt)
