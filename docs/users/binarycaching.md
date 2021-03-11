@@ -114,6 +114,38 @@ Vcpkg will attempt to avoid revealing the SAS during normal operations, however:
 1. It will be printed in full if `--debug` is passed
 2. It will be passed as a command line parameter to subprocesses, such as `curl.exe`
 
+### Google Cloud Storage (experimental)
+
+> Note: This is an experimental feature and may change or be removed at any time
+
+Vcpkg supports interfacing with Google Cloud Storage (GCS) via the `x-gcs` source type.
+
+```
+x-gcs,<prefix>[,<rw>]
+```
+
+First, you need to create an Google Cloud Platform Account as well as a storage bucket ([GCS Quick Start](https://cloud.google.com/storage/docs/quickstart-gsutil)].
+
+As part of this quickstart you would have configured the `gsutil` command-line tool to authenticate with Google Cloud.
+Vcpkg will use this command-line tool, make sure it is in your search path for executables.
+
+Example 1 (using a bucket without a common prefix for the objects):
+
+```
+x-gcs,gs://<bucket-name>/,readwrite
+```
+
+Example 2 (using a bucket and a prefix for the objects):
+
+```
+x-gcs,gs://<bucket-name>/my-vcpkg-cache/maybe/with/many/slashes/,readwrite
+x-gcs,gs://<bucket-name>/my-vcpkg-cache/maybe/with`,commas/too!/,readwrite
+```
+
+Commas (`,`) are valid as part of a object prefix in GCS, just remember to escape them in the vcpkg configuration, as
+shown in the previous example. Note that GCS does not have folders (some of the GCS tools simulate folders), it is not
+necessary to create or otherwise manipulate the prefix used by your vcpkg cache.
+
 ## Configuration
 
 Binary caching is configured via a combination of defaults, the environment variable `VCPKG_BINARY_SOURCES` (set to `<source>;<source>;...`), and the command line option `--binarysource=<source>`. Source options are evaluated in order of defaults, then environment, then command line. Binary caching can be completely disabled by passing `--binarysource=clear` as the last command line option.
