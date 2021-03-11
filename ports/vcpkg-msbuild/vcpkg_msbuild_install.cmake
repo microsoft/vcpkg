@@ -118,13 +118,10 @@ function(z_vcpkg_msbuild_install_generate_directory_files)
 
     z_vcpkg_msbuild_install_escape_msbuild(additional_compiler_options
         "${VCPKG_DETECTED_CMAKE_CXX_FLAGS_${arg_CONFIGURATION}}")
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        z_vcpkg_msbuild_install_escape_msbuild(additional_linker_options
-            "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${arg_CONFIGURATION}}")
-    else()
-        z_vcpkg_msbuild_install_escape_msbuild(additional_linker_options
-            "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${arg_CONFIGURATION}}")
-    endif()
+    z_vcpkg_msbuild_install_escape_msbuild(additional_lib_options
+        "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${arg_CONFIGURATION}}")
+    z_vcpkg_msbuild_install_escape_msbuild(additional_link_options
+        "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${arg_CONFIGURATION}}")
 
     set(props_imports)
     set(targets_imports)
@@ -161,14 +158,19 @@ function(z_vcpkg_msbuild_install_generate_directory_files)
     string(APPEND contents "  <ItemDefinitionGroup>\n")
     string(APPEND contents "    <ClCompile>\n")
 
-    string(APPEND contents "      <AdditionalOptions>${additional_options} %(AdditionalOptions)</AdditionalOptions>\n")
+    string(APPEND contents "      <AdditionalOptions>${additional_compiler_options} %(AdditionalOptions)</AdditionalOptions>\n")
 
     string(APPEND contents "    </ClCompile>\n")
     string(APPEND contents "    <Link>\n")
 
-    string(APPEND contents "      <AdditionalOptions>${additional_options} %(AdditionalOptions)</AdditionalOptions>\n")
+    string(APPEND contents "      <AdditionalOptions>${additional_link_options} %(AdditionalOptions)</AdditionalOptions>\n")
 
     string(APPEND contents "    </Link>\n")
+    string(APPEND contents "    <Lib>\n")
+
+    string(APPEND contents "      <AdditionalOptions>${additional_lib_options} %(AdditionalOptions)</AdditionalOptions>\n")
+
+    string(APPEND contents "    </Lib>\n")
     string(APPEND contents "  </ItemDefinitionGroup>\n")
 
     foreach(import IN LISTS targets_imports)
