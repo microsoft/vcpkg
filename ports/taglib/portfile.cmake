@@ -7,9 +7,9 @@ vcpkg_from_github(
     PATCHES msvc-disable-deprecated-warnings.patch
 )
 
-if(VCPKG_CRT_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(BUILD_SHARED_LIBS OFF)
-else()
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     set(BUILD_SHARED_LIBS ON)
 endif()
 
