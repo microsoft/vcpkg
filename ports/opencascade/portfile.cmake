@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-pdb-find.patch
         fix-install-prefix-path.patch
         install-include-dir.patch
+        fix-debug-library-find.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
@@ -18,9 +19,11 @@ else()
     set(BUILD_TYPE "Static")
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "freeimage"  USE_FREEIMAGE
-    "tbb"        USE_TBB
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        "freeimage"  USE_FREEIMAGE
+        "tbb"        USE_TBB
 )
 
 # VTK option in opencascade not currently supported because only 6.1.0 is supported but vcpkg has >= 9.0
