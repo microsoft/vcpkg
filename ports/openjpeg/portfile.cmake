@@ -5,8 +5,8 @@ vcpkg_from_github(
     SHA512 339fbc899bddf2393d214df71ed5d6070a3a76b933b1e75576c8a0ae9dfcc4adec40bdc544f599e4b8d0bc173e4e9e7352408497b5b3c9356985605830c26c03
     HEAD_REF master
     PATCHES 
-    dll.location.patch
-    fix-lrintf-to-opj_lrintf.patch
+        dll.location.patch
+        fix-lrintf-to-opj_lrintf.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
