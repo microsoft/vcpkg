@@ -11,6 +11,7 @@ vcpkg_from_github(
         add-MATROSKA_VERSION-define.patch
         fix-linux.patch
         fix-uvc.patch
+        fix-calibration-c.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

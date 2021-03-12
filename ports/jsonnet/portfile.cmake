@@ -12,6 +12,7 @@ vcpkg_from_github(
     001-enable-msvc.patch
     002-fix-dependency-and-install.patch
     0003-use-upstream-nlohmann-json.patch
+    0004-incorporate-md5.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)

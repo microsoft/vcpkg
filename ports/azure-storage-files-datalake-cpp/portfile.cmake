@@ -1,8 +1,11 @@
+# Copyright (c) Microsoft Corporation. All rights reserved.
+# SPDX-License-Identifier: MIT
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF azure-storage-files-datalake_12.0.0-beta.7
-    SHA512 0fe864854b46ef7130e9e473ade9beb8d64cad29a5a63c78c1053aeb0de8ee6149d5fc93d4d941a3507d8a4eaa3c9d5baa2681da410a7c8d595767f24449b46e
+    REF azure-storage-files-datalake_12.0.0-beta.8
+    SHA512 e5c767da318e5d709627c7fd0b72bf3ff401c0bb56a1476347d927100ee7724aac0472ccb5c9185fa1761bfb894ee8a5d48e0bea5987cbde376cba94250ca1ca
 )
 
 vcpkg_configure_cmake(

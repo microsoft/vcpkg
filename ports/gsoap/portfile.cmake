@@ -4,8 +4,8 @@ vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO gsoap2
     REF gsoap-2.8
-    FILENAME "gsoap_2.8.105.zip"
-    SHA512 3b7b66ef738e9ba78f0c9d5ec141faab102dc2ed7c528e84358d530ec8cb913c559438bb86ae0f22e0736c4cd9be9e74f364a44257189ccaa1e6d001317f99de
+    FILENAME "gsoap_2.8.111.zip"
+    SHA512 9cc7f0252f82ec18d19784aba2d913e70620fc09955d148a31e2c89bba4915d20a6b592bd7b6a747f89dc3ab17b2bc542d672933fa1a3acbf59bc3d1f49fe31b
     PATCHES fix-build-in-windows.patch
 )
 

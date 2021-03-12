@@ -1,5 +1,7 @@
 # vcpkg_fail_port_install
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_fail_port_install.md).
+
 Checks common requirements and fails the current portfile with a (default) error message
 
 ## Usage
@@ -38,4 +40,4 @@ Library linkage for which the build should fail early.
 * [aws-lambda-cpp](https://github.com/Microsoft/vcpkg/blob/master/ports/aws-lambda-cpp/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_fail_port_install.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_fail_port_install.cmake)
+[scripts/cmake/vcpkg\_fail\_port\_install.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_fail_port_install.cmake)
