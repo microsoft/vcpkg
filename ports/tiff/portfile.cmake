@@ -21,7 +21,6 @@ endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tool BUILD_TOOLS
-	webp WITH_WEBP
 	zstd WITH_ZSTD
 )
 
@@ -35,7 +34,7 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
-        -Dwebp=${WITH_WEBP}
+        -Dwebp=OFF
         -Dzstd=${WITH_ZSTD}
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON

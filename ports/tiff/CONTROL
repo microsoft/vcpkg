@@ -1,6 +1,6 @@
 Source: tiff
 Version: 4.1.0
-Port-Version: 3
+Port-Version: 2
 Build-Depends: zlib, libjpeg-turbo, liblzma
 Homepage: https://download.osgeo.org/libtiff
 Description: A library that supports the manipulation of TIFF image files
@@ -11,7 +11,3 @@ Description: Build tools
 Feature: zstd
 Build-Depends: zstd
 Description: support zstd compression in TIFF image files
-
-Feature: webp
-Build-Depends: libwebp
-Description: support webp compression in TIFF image files
