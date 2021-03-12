@@ -1,22 +1,43 @@
 # Getting started with versioning
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/examples/versioning.getting-started.md).**
+
 Vcpkg lets you take control of which version of packages to install in your projects using manifests. 
 
 ## Enabling versions
 
-To start using the versioning feature, first you need to enable the `versions` feature flag in any of the following manners:
+To start using [versioning](../users/versioning.md), first you need to enable the `versions` feature flag in any of the following manners:
 
-* Setting the `VCPKG_FEATURE_FLAGS` environment variable.
+* Setting the `VCPKG_FEATURE_FLAGS` environment variable
 
 ```PowerShell
 # Example for PowerShell
 $env:VCPKG_FEATURE_FLAGS="versions"
-./vcpkg install
+```
+```bash
+# Example for bash
+export VCPKG_FEATURE_FLAGS=versions
+```
+```cmd
+REM Example for cmd
+SET VCPKG_FEATURE_FLAGS=versions
 ```
 
-* Passing the feature flags in the vcpkg command line.
-```PowerShell
-./vcpkg --feature-flags="versions" install
+* Passing the feature flags in the vcpkg command line
+```bash
+./vcpkg install --feature-flags=versions
+```
+
+* Setting `VCPKG_FEATURE_FLAGS` before your `project()` CMake directive
+```cmake
+set(VCPKG_FEATURE_FLAGS versions)
+project(myapp)
+```
+* Setting `VcpkgAdditionalInstallOptions` (Project Properties -> Vcpkg -> Additional Options) in your MSBuild project
+```xml
+<PropertyGroup>
+  <VcpkgAdditionalInstallOptions>--feature-flags=versions</VcpkgAdditionalInstallOptions>
+</PropertyGroup>
 ```
 
 ## Using versions with manifests
@@ -28,7 +49,7 @@ Let's start with creating a simple CMake project that depends on `fmt` and `zlib
 Create a folder with the following files:
 
 **vcpkg.json**
-```
+```json
 {
     "name": "versions-test",
     "version": "1.0.0",
@@ -61,7 +82,7 @@ int main()
 ```CMake
 cmake_minimum_required(VERSION 3.18)
 
-project(versions-test CXX)
+project(versionstest CXX)
 
 add_executable(main main.cpp)
 
@@ -109,42 +130,40 @@ fmt[core]:x86-windows -> 7.1.3 -- D:\vcpkg\buildtrees\versioning\versions\fmt\dd
 zlib[core]:x86-windows -> 1.2.11#9 -- D:\vcpkg\buildtrees\versioning\versions\zlib\827111046e37c98153d9d82bb6fa4183b6d728e4
 ```
 
-Instead of using the portfiles in `ports/`; vcpkg is checking out the files for each version in `buildtrees/versioning/versions/`.  The files in `ports/` are still used when running vcpkg in classic mode or when the `versions` feature flag is disabled. 
+Instead of using the portfiles in `ports/`, vcpkg is checking out the files for each version in `buildtrees/versioning/versions/`. The files in `ports/` are still used when running vcpkg in classic mode or when the `versions` feature flag is disabled. 
 
-_NOTE: Output from the vcpkg while configuring CMake is only available when using CMake version `3.18` or newer. If you're using an older CMake you can check the `vcpkg-manifest-install.log` file in your build directory instead._
+_NOTE: Output from vcpkg while configuring CMake is only available when using CMake version `3.18` or newer. If you're using an older CMake you can check the `vcpkg-manifest-install.log` file in your build directory instead._
 
 Read our [manifests announcement blog post](https://devblogs.microsoft.com/cppblog/vcpkg-accelerate-your-team-development-environment-with-binary-caching-and-manifests/#using-manifests-with-msbuild-projects) to learn how to use manifests with MSBuild.
 
 ### Manifest changes
 If you have used manifests before you will notice that there are some new JSON properties. Let's review these changes:
 
-* **`version`**
-```
+#### **`version`**
+```json
 {
     "name": "versions-test",
-    "version": "1.0.0",
-    ...
+    "version": "1.0.0"
 }
 ```
 
 This is your project's version declaration. Previously, you could only declare versions for your projects using the `version-string` property. Now that versioning has come around, vcpkg is aware of some new versioning schemes.
 
-Version scheme | Description
--- | --
-`version` | Dot-separated numerics: `1.0.0`.
+Version scheme   | Description
+---------------- | ---------------
+`version`        | Dot-separated numerics: `1.0.0.5`.
 `version-semver` | Compliant [semantic versions](https://semver.org): `1.2.0` and `1.2.0-rc`.
-`version-date` | Dates in `YYYY-MM-DD` format: `2021-01-01`
+`version-date`   | Dates in `YYYY-MM-DD` format: `2021-01-01`
 `version-string` | Arbitrary strings: `vista`, `candy`.
 
-* **`version>=`** 
-```
-"dependencies": [
-    {
-        "name": "fmt",
-        "version>=": "7.1.3"
-    }, 
-    "zlib"
-],
+#### **`version>=`** 
+```json
+{
+    "dependencies": [
+        { "name": "fmt", "version>=": "7.1.3" },
+        "zlib"
+    ]
+}
 ```
 
 This property is used to express minimum version constraints, it is allowed only as part of the `"dependencies"` declarations. In our example we set an explicit constraint on version `7.1.3` of `fmt`. 
@@ -155,7 +174,7 @@ Vcpkg uses a minimum version approach, in our example, even if `fmt` version `8.
 
 If you want to upgrade your dependencies, you can bump the minimum version constraint or use a newer baseline.
 
-* **`builtin-baseline`**
+#### **`builtin-baseline`**
 
 ```
 "builtin-baseline": "b60f003ccf5fe8613d029f49f835c8929a66eb61"
@@ -163,7 +182,7 @@ If you want to upgrade your dependencies, you can bump the minimum version const
 
 This field declares the versioning baseline for all ports. Setting a baseline is required to enable versioning, otherwise you will get the current versions on the ports directory. You can run 'git rev-parse HEAD' to get the current commit of vcpkg and set it as the builtin-baseline. But what is a baseline? What does it do? Why is the value a SHA?
 
-From the [versioning documentation](versioning.md):
+From the [versioning documentation](../users/versioning.md):
 
 > The baseline references a commit within the vcpkg repository that
 establishes a minimum version on every dependency in the graph. If
@@ -197,7 +216,7 @@ Baselines are also a convenient mechanism to upgrade multiple versions at a time
 
 But what if you want to pin a version older than the baseline? 
 
-* **`overrides`**
+#### **`overrides`**
 
 Since baselines establish a version floor for all packages and explicit constraints get upgraded when they are lower than the baseline, we need another mechanism to downgrade versions past the baseline.
 
@@ -264,11 +283,11 @@ If you want to have flexible port customization along with versioning features, 
 
 ## Further reading
 
-If you're interested in delving deeper into the details of how versioning works we recommended that you read the [original versioning specification](../specifications/versioning.md) and the [implementation details](versioning.implementation-details.md).
+If you're interested in delving deeper into the details of how versioning works we recommended that you read the [original versioning specification](../specifications/versioning.md) and the [implementation details](../users/versioning.implementation-details.md).
 
 See also:
 
-* [Versioning docs](versioning.md)
+* [Versioning docs](../users/versioning.md)
 * [Original specification](../specifications/versioning.md)
-* [Versioning reference](versioning.reference.md)
-* [Versioning implementation details](versioning.implementation-details.md)
+* [Versioning reference](../users/versioning.reference.md)
+* [Versioning implementation details](../users/versioning.implementation-details.md)

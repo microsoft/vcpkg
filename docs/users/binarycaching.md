@@ -1,5 +1,7 @@
 # Binary Caching
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/binarycaching.md).**
+
 Binary caching is vcpkg's method for reusing package builds between projects and between machines. Think of it as a "package restore accelerator" that gives you the same results as though you built from source. Each build is packaged independently, so changing one library only requires rebuilding consuming libraries.
 
 If your CI provider offers a native "caching" function, we recommend using both methods for the most performant results.
