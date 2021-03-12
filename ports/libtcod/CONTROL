@@ -1,0 +1,6 @@
+Source: libtcod
+Version: 1.16.6
+Port-Version: 1
+Build-Depends: zlib, sdl2
+Description: libtcod is a free, fast, portable and uncomplicated API for roguelike developers providing an advanced true color console, input, and lots of other utilities frequently used in roguelikes.
+Homepage: https://github.com/libtcod/libtcod
