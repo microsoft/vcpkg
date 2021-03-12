@@ -1,3 +1,9 @@
+if((VCPKG_HOST_IS_WINDOWS)
+  AND ((VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)64") OR (VCPKG_TARGET_ARCHITECTURE MATCHES "(arm|ARM)"))
+  AND NOT (EXISTS "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/yasm-tool/yasm.exe"))
+    message(FATAL_ERROR "\nFatal Error: You can not build port ${PORT} without port 'yasm-tool:x86-windows' being installed.\nFirst: Please run: 'vcpkg install yasm-tool:x86-windows'\nSecond: Try to install port ${PORT} again if you need it.\n")
+endif()
+
 if(EXISTS "${CURRENT_INSTALLED_DIR}/include/gmp.h" OR "${CURRENT_INSTALLED_DIR}/include/gmpxx.h")
     message(FATAL_ERROR "Can't build ${PORT} if mpir is installed. Please remove mpir, and try install ${PORT} again if you need it.")
 endif()
@@ -9,10 +15,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
         REF 0018c44e8dfcc3b64b43e0aea4b3f419f0b65fd0 #v6.2.1-2
         SHA512 2405e2536ca9fe0b890f44f54c936ac0e4b5a9ebe6a19e1c48a9c21b7211d2a1b45865852e3c65a98a6735216a4e27bea75c0fd6e52efeed4baecd95da9895a5
         HEAD_REF master
-        PATCHES 
+        PATCHES
             vs.build.patch
             runtime.patch
-            adddef.patch 
+            adddef.patch
     )
 
     include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)

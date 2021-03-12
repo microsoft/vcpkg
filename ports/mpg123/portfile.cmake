@@ -1,3 +1,9 @@
+if((VCPKG_HOST_IS_WINDOWS)
+  AND ((VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)64") OR (VCPKG_TARGET_ARCHITECTURE MATCHES "(arm|ARM)"))
+  AND NOT (EXISTS "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/yasm-tool/yasm.exe"))
+    message(FATAL_ERROR "\nFatal Error: You can not build port ${PORT} without port 'yasm-tool:x86-windows' being installed.\nFirst: Please run: 'vcpkg install yasm-tool:x86-windows'\nSecond: Try to install port ${PORT} again if you need it.\n")
+endif()
+
 set(MPG123_VERSION 1.26.3)
 set(MPG123_HASH 7574331afaecf3f867455df4b7012e90686ad6ac8c5b5e820244204ea7088bf2b02c3e75f53fe71c205f9eca81fef93f1d969c8d0d1ee9775dc05482290f7b2d)
 
