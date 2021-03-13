@@ -133,7 +133,7 @@ function(vcpkg_execute_build_process)
                 endif()
             endwhile()
         elseif(out_contents MATCHES "fatal error: ld terminated with signal 9 [Killed]")
-            message(WARNING "Insufficient memory or hard disk space is detected, please make sure there is enough space and try again.")
+            message(WARNING "ld was terminated with signal 9 [killed], please ensure your system has sufficient hard disk space and memory.")
         endif()
 
         if(error_code)
