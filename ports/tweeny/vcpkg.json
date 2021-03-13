@@ -1,0 +1,6 @@
+{
+  "name": "tweeny",
+  "version-string": "3.2.0",
+  "description": "A modern C++ tweening library",
+  "homepage": "https://github.com/mobius3/tweeny"
+}
