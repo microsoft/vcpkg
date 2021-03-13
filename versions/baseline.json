@@ -1913,8 +1913,8 @@
       "port-version": 0
     },
     "fdk-aac": {
-      "baseline": "2018-07-08-2",
-      "port-version": 0
+      "baseline": "2018-07-08",
+      "port-version": 3
     },
     "fdlibm": {
       "baseline": "5.3-4",
@@ -2006,7 +2006,7 @@
     },
     "fontconfig": {
       "baseline": "2.13.1",
-      "port-version": 5
+      "port-version": 4
     },
     "foonathan-memory": {
       "baseline": "2019-07-21-1",
@@ -2058,7 +2058,7 @@
     },
     "fribidi": {
       "baseline": "1.0.10",
-      "port-version": 1
+      "port-version": 2
     },
     "frozen": {
       "baseline": "1.0.0",
@@ -4302,7 +4302,7 @@
     },
     "opencl": {
       "baseline": "2.2",
-      "port-version": 6
+      "port-version": 7
     },
     "opencolorio": {
       "baseline": "1.1.1",
@@ -6302,7 +6302,7 @@
     },
     "x265": {
       "baseline": "3.4",
-      "port-version": 2
+      "port-version": 3
     },
     "xalan-c": {
       "baseline": "1.11-12",
