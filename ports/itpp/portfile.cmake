@@ -15,6 +15,10 @@ vcpkg_from_sourceforge(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DCMAKE_DISABLE_FIND_PACKAGE_LAPACK=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_FFT=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_BLAS=ON
 )
 
 vcpkg_install_cmake()

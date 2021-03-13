@@ -1,5 +1,9 @@
 # Manifests -- `vcpkg.json`
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
+**Up-to-date documentation is available at [Manifests](../users/manifests.md).**
+
 For many other language package managers, there exists a way of writing one's dependencies in a declarative
 manifest format; we want something similar for vcpkg. What follows is the specification of that feature;
 this should mean that vcpkg becomes far more user and enterprise-friendly, and is additionally an important

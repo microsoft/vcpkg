@@ -1,8 +1,8 @@
-set(SQLITE_VERSION 3330000)
-set(SQLITE_HASH a9cb038c82dcafe1b5aa410f60bff21066b3e3456161bc91829a1a3b3b6591e0595209f45d4a6b10b0ad08e88df3f1b2062d4b075205e32d34780da7dea3e07b)
+set(SQLITE_VERSION 3340100)
+set(SQLITE_HASH 8a936f1c34fc9036cadf5bd53f9ee594135c2efdef1d2c82bd4fdf3e0218afde710fc4c436cfc992687d008e6086a697da0487352ed88809d677e05d824940dd)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://sqlite.org/2020/sqlite-amalgamation-${SQLITE_VERSION}.zip"
+    URLS "https://sqlite.org/2021/sqlite-amalgamation-${SQLITE_VERSION}.zip"
     FILENAME "sqlite-amalgamation-${SQLITE_VERSION}.zip"
     SHA512 ${SQLITE_HASH}
 )

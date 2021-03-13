@@ -1,9 +1,9 @@
-set(VERSION 1.4.0-alpha.0)
+set(VERSION 1.4.1)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/Azure-Kinect-Sensor-SDK
     REF v${VERSION}
-    SHA512 bf09ff92dc1b8621a941d838aef9c804bb5635f7984b7f86f01a38441d44935db764b69483d598e1f2c0aafb5c7ec196ef9c722967d92e6d075cb67ce781fea9
+    SHA512 ef94c072caae43b0a105b192013e09082d267d4064e6676fac981b52e7576a663f59fcb53f0afe66b425ef2cea0cb3aa224ff7be6485c0b5543ff9cdabd82d4d
     HEAD_REF master
     PATCHES
         fix-builds.patch
@@ -65,7 +65,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.nuget.org/api/v2/package/Microsoft.Azure.Kinect.Sensor/${VERSION}"
     FILENAME "azure-kinect-sensor-sdk.zip"
-    SHA512 6c15975e7c834672de723b0c474fa4cd58f41c5bee6511dcbdbc22f1a58daa906c4f01a7e941af0e7d09f763ff886015c1f6b1e29b6bdfb333f10857edfec2ca
+    SHA512 17630a00f4e9ff3ef68945b62021f6d0390030b43c120c207afe934075a7a87c5848be1f46f4c35c7ecd5698012452ffcbb67f739e9048857410ec7077e5e8c6
 )
 
 vcpkg_extract_source_archive_ex(
