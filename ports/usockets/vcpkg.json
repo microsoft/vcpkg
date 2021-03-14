@@ -7,20 +7,20 @@
     "libuv"
   ],
   "features": {
-    "ssl": {
-	  "description": "Build usockets with openssl support",
-      "dependencies": [
-        "openssl"
-      ]
-	},
-	"event": {
-	  "description": "Build usockets with epoll support"
-	},
-	"network": {
-	  "description": "Build usockets with winsock support",
+    "event": {
+      "description": "Build usockets with epoll support"
+    },
+    "network": {
+      "description": "Build usockets with winsock support",
       "dependencies": [
         "winsock2"
       ]
-	}
+    },
+    "ssl": {
+      "description": "Build usockets with openssl support",
+      "dependencies": [
+        "openssl"
+      ]
+    }
   }
 }
