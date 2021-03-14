@@ -2904,6 +2904,10 @@
       "baseline": "0.98.1",
       "port-version": 4
     },
+    "libbacktrace": {
+      "baseline": "2021-03-14",
+      "port-version": 0
+    },
     "libbf": {
       "baseline": "1.0.0-1",
       "port-version": 0
