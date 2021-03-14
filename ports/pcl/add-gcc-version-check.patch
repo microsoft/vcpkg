@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 6c452ce..2c50b8d 100644
+index 456009cd3..c1998252f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -303,6 +303,10 @@ set(FLANN_USE_STATIC ON)
@@ -7,9 +7,9 @@ index 6c452ce..2c50b8d 100644
  find_package(lz4)
  
 +if(UNIX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0)
-+    set (CMAKE_CXX_STANDARD 17)
++  set(CMAKE_CXX_STANDARD 17)
 +endif()
 +
- # libusb-1.0
+ # libusb
  option(WITH_LIBUSB "Build USB RGBD-Camera drivers" TRUE)
  if(WITH_LIBUSB)

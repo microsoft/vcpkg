@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF d98313133b014553ab1b1b5b112f9aade837d55c # pcl-1.11.1
-    SHA512 4d60f34d4fbf0a4b4caf9cc4391af471ebd260b3bbac106d45e5ff38448894ea4dc82d5320c2e395c537a4414eb13c6a6a0eb6c13e4e1cc1d831d4bf24067966
+    REF 4d59ab8eeee0ed45865562015450d77c730044ea # pcl-1.11.1+patch
+    SHA512 d98bed0bbd22df7a12f76fb6c2776912dccfd97938f9d8453c0cadfda0697e05017ca7a7f42ec269732bf24b8f62c4d906f14c028cc2a08cf816f8e545f00dc8
     HEAD_REF master
     PATCHES
         pcl_utils.patch
@@ -12,7 +12,6 @@ vcpkg_from_github(
         fix-link-libpng.patch
         remove-broken-targets.patch
         fix-check-sse.patch
-        realsense2.patch
         add-gcc-version-check.patch
 )
 
@@ -66,7 +65,7 @@ vcpkg_copy_pdbs()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if("tools" IN_LIST FEATURES) 
+if("tools" IN_LIST FEATURES)
     file(GLOB EXEFILES_RELEASE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
     file(GLOB EXEFILES_DEBUG ${CURRENT_PACKAGES_DIR}/debug/bin/*.exe)
     file(COPY ${EXEFILES_RELEASE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/pcl)

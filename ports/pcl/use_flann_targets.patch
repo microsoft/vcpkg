@@ -4,7 +4,7 @@ index 93a6448..b24f681 100644
 +++ b/CMakeLists.txt
 @@ -302,10 +302,9 @@ find_package(Eigen 3.1 REQUIRED)
  include_directories(SYSTEM ${EIGEN_INCLUDE_DIRS})
- 
+
  # FLANN (required)
 -if(NOT PCL_SHARED_LIBS OR ((WIN32 AND NOT MINGW) AND NOT PCL_BUILD_WITH_FLANN_DYNAMIC_LINKING_WIN32))
 -  set(FLANN_USE_STATIC ON)
@@ -12,15 +12,15 @@ index 93a6448..b24f681 100644
 +set(FLANN_USE_STATIC ON)
  find_package(FLANN 1.7.0 REQUIRED)
 +find_package(lz4)
- 
- # libusb-1.0
+
+ # libusb
  option(WITH_LIBUSB "Build USB RGBD-Camera drivers" TRUE)
 diff --git a/PCLConfig.cmake.in b/PCLConfig.cmake.in
 index 79077fb..042467b 100644
 --- a/PCLConfig.cmake.in
 +++ b/PCLConfig.cmake.in
 @@ -88,11 +88,6 @@ endmacro()
- 
+
  ### ---[ 3rd party libraries
  macro(find_boost)
 -  if(PCL_ALL_IN_ONE_INSTALLER)
@@ -32,7 +32,7 @@ index 79077fb..042467b 100644
    if(WIN32)
      set(Boost_USE_STATIC_LIBS @Boost_USE_STATIC_LIBS@)
 @@ -667,8 +662,8 @@ pcl_remove_duplicate_libraries(PCL_COMPONENTS PCL_LIBRARIES)
- 
+
  # Add 3rd party libraries, as user code might include our .HPP implementations
  list(APPEND PCL_LIBRARIES ${BOOST_LIBRARIES} ${QHULL_LIBRARIES} ${OPENNI_LIBRARIES} ${OPENNI2_LIBRARIES} ${ENSENSO_LIBRARIES} ${davidSDK_LIBRARIES} ${DSSDK_LIBRARIES} ${RSSDK_LIBRARIES} ${RSSDK2_LIBRARIES} ${VTK_LIBRARIES})
 -if (TARGET FLANN::FLANN)
@@ -40,19 +40,19 @@ index 79077fb..042467b 100644
 +if (TARGET flann::flann_cpp)
 +  list(APPEND PCL_LIBRARIES flann::flann_cpp)
  endif()
- 
+
  find_package_handle_standard_args(PCL DEFAULT_MSG PCL_LIBRARIES PCL_INCLUDE_DIRS)
 diff --git a/doc/tutorials/content/sources/vfh_recognition/CMakeLists.txt b/doc/tutorials/content/sources/vfh_recognition/CMakeLists.txt
 index 7d25d3f..18227a6 100644
 --- a/doc/tutorials/content/sources/vfh_recognition/CMakeLists.txt
 +++ b/doc/tutorials/content/sources/vfh_recognition/CMakeLists.txt
 @@ -16,7 +16,7 @@ include_directories(SYSTEM
- 
+
  add_executable(build_tree build_tree.cpp)
  target_link_libraries(build_tree ${PCL_LIBRARIES} ${Boost_LIBRARIES}
 -                                 FLANN::FLANN ${HDF5_LIBRARIES})
 +                                 flann::flann_cpp ${HDF5_LIBRARIES})
- 
+
  add_executable(nearest_neighbors nearest_neighbors.cpp)
 -target_link_libraries(nearest_neighbors ${PCL_LIBRARIES} ${Boost_LIBRARIES} FLANN::FLANN ${HDF5_LIBRARIES})
 +target_link_libraries(nearest_neighbors ${PCL_LIBRARIES} ${Boost_LIBRARIES} flann::flann_cpp ${HDF5_LIBRARIES})
@@ -68,7 +68,7 @@ index 826e902..f714130 100644
 +target_link_libraries("${LIB_NAME}" pcl_common flann::flann_cpp)
  set(EXT_DEPS flann)
  PCL_MAKE_PKGCONFIG(${LIB_NAME} COMPONENT ${SUBSYS_NAME} DESC ${SUBSYS_DESC} PCL_DEPS ${SUBSYS_DEPS} EXT_DEPS ${EXT_DEPS})
- 
+
 diff --git a/search/CMakeLists.txt b/search/CMakeLists.txt
 index 46f4632..67c5e53 100644
 --- a/search/CMakeLists.txt
@@ -81,7 +81,7 @@ index 46f4632..67c5e53 100644
 +target_link_libraries("${LIB_NAME}" pcl_common flann::flann_cpp pcl_octree pcl_kdtree)
  list(APPEND EXT_DEPS flann)
  PCL_MAKE_PKGCONFIG(${LIB_NAME} COMPONENT ${SUBSYS_NAME} DESC ${SUBSYS_DESC} PCL_DEPS ${SUBSYS_DEPS})
- 
+
 diff --git a/test/features/CMakeLists.txt b/test/features/CMakeLists.txt
 index 9775415..bf582ac 100644
 --- a/test/features/CMakeLists.txt
