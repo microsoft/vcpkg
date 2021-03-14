@@ -286,6 +286,7 @@ __pycache__/
 /installed*/
 /packages/
 /scripts/buildsystems/tmp/
+/toolsrc/*
 #ignore custom triplets
 /triplets/*
 #add vcpkg-designed triplets back in
