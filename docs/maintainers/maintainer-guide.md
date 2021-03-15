@@ -229,7 +229,7 @@ If you're updating multiple ports at the same time, instead you can run:
 vcpkg x-add-version --all
 ```
 
-To update the files for all modified ports at once.  
+To update the files for all modified ports at once.
 
 _NOTE: These commands require you to have committed your changes to the ports before running them. The reason is that the Git SHA of the port directory is required in these version files. But don't worry, the `x-add-version` command will warn you if you have local changes that haven't been committed._
 
