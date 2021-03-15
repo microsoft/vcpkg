@@ -6065,7 +6065,7 @@
       "port-version": 0
     },
     "usockets": {
-      "baseline": "2021-1-19",
+      "baseline": "0.7.1",
       "port-version": 0
     },
     "usrsctp": {
