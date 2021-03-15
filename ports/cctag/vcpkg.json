@@ -1,6 +1,6 @@
 {
   "name": "cctag",
-  "version-string": "1.0.0",
+  "version-semver": "1.0.0",
   "port-version": 0,
   "description": "Computer vision library for detecting CCTag markers made up of concentric circles",
   "homepage": "https://github.com/alicevision/CCTag",
