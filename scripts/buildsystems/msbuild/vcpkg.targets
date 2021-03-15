@@ -30,6 +30,10 @@
 
     <VcpkgConfigSubdir Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">debug\</VcpkgConfigSubdir>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
+
+    <_ZVcpkgHostTripletParameter Condition="'$(VcpkgHostTriplet)' != ''">"--host-triplet=$(VcpkgHostTriplet)"</_ZVcpkgHostTripletParameter>
+    <_ZVcpkgExecutable>$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))</_ZVcpkgExecutable>
+
     <ProjectStateLine>VcpkgTriplet=$(VcpkgTriplet):$(ProjectStateLine)</ProjectStateLine>
   </PropertyGroup>
 
@@ -77,7 +81,7 @@
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
           Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
           Inputs="@(_ZVcpkgInstallManifestDependenciesInputs)"
-          Outputs="$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).read.1u.tlog;$(VcpkgInstalledDir).msbuildstamp-$(VcpkgTriplet)">
+          Outputs="$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).read.1u.tlog;$(VcpkgInstalledDir).msbuildstamp-$(VcpkgTriplet).$(VcpkgHostTriplet).stamp">
     <Message Text="Installing vcpkg dependencies to $(VcpkgInstalledDir)" Importance="High" />
     <MakeDir Directories="$(TLogLocation)" />
     <ItemGroup>
@@ -85,15 +89,15 @@
       <_VcpkgItemToDelete Include="$(VcpkgInstalledDir).msbuildstamp-*" />
     </ItemGroup>
     <Delete Files="@(_VcpkgItemToDelete)" />
-    <Message Text="%22$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
+    <Message Text="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
           Importance="High" />
-    <Exec Command="%22$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
+    <Exec Command="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
           StandardOutputImportance="High" />
-    <WriteLinesToFile File="$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).read.1u.tlog"
+    <WriteLinesToFile File="$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).$(VcpkgHostTriplet).read.1u.tlog"
                       Lines="@(_VcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
                       Encoding="Unicode"
                       Overwrite="true"/>
-    <Touch Files="$(VcpkgInstalledDir).msbuildstamp-$(VcpkgTriplet)" AlwaysCreate="true" />
+    <Touch Files="$(VcpkgInstalledDir).msbuildstamp-$(VcpkgTriplet).$(VcpkgHostTriplet).stamp" AlwaysCreate="true" />
 
     <CreateProperty Value="false">
       <Output TaskParameter="ValueSetByTask" PropertyName="Link_MinimalRebuildFromTracking" />

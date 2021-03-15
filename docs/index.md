@@ -1,6 +1,6 @@
 ### Quick Start
 
-Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This tool and ecosystem are constantly evolving; your involvement are vital to its success!
+Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This tool and ecosystem are constantly evolving; your involvement is vital to its success!
 
 ### Examples
 
@@ -16,6 +16,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Configuration and Environment](users/config-environment.md)
 - [Usage with Android](users/android.md)
 - [Using a manifest file to declare your dependencies](users/manifests.md)
+- [Host Dependencies](users/host-dependencies.md)
 
 ### Maintainer help
 
@@ -30,6 +31,11 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Benchmarking](tool-maintainers/benchmarking.md)
 - [Layout of the vcpkg source tree](tool-maintainers/layout.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
+
+### Community Resources (not directly affiliated with vcpkg)
+
+- [vcpkg.info](https://vcpkg.info/) - Package index + search
+- [vcpkgx](https://vcpkgx.com/) - Package index + search
 
 ### Specifications
 
