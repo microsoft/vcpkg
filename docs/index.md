@@ -1,6 +1,8 @@
 ### Quick Start
 
-Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This tool and ecosystem are constantly evolving; your involvement are vital to its success!
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/index.md).**
+
+Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This tool and ecosystem are constantly evolving; your involvement is vital to its success!
 
 ### Examples
 
@@ -8,19 +10,23 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Packaging Zipfiles Example: zlib](examples/packaging-zipfiles.md)
 - [Packaging GitHub Repositories Example: libogg](examples/packaging-github-repos.md)
 - [Patching Example: Patching libpng to work for x86-uwp](examples/patching.md)
+- [Getting Started with Versioning](examples/versioning.getting-started.md)
 
 ### User Help
 
 - [Integration with build systems](users/integration.md)
 - [Triplet files](users/triplets.md)
 - [Configuration and Environment](users/config-environment.md)
+- [Manifests](users/manifests.md)
+- [Binary Caching](users/binarycaching.md)
+- [Versioning](users/versioning.md)
 - [Usage with Android](users/android.md)
-- [Using a manifest file to declare your dependencies](users/manifests.md)
+- [Host Dependencies](users/host-dependencies.md)
 
-### Maintainer help
+### Maintainer Help
 
-- [Control files](maintainers/control-files.md) - in general, one should use manifest files instead
-- [Manifest files](maintainers/manifest-files.md)
+- [Manifest files - vcpkg.json](maintainers/manifest-files.md)
+- [Control files](maintainers/control-files.md)
 - [Portfile functions](maintainers/portfile-functions.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
 
@@ -33,7 +39,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 ### Community Resources (not directly affiliated with vcpkg)
 
-- [vcpkg.info](https://vcpkg.info/) - Package index + search (includes older port versions)
+- [vcpkg.info](https://vcpkg.info/) - Package index + search
 - [vcpkgx](https://vcpkgx.com/) - Package index + search
 
 ### Specifications

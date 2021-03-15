@@ -54,7 +54,6 @@ Specifies that the default removal of the top level folder should not occur.
 * [cairo](https://github.com/Microsoft/vcpkg/blob/master/ports/cairo/portfile.cmake)
 #]===]
 
-include(vcpkg_apply_patches)
 include(vcpkg_extract_source_archive)
 
 function(vcpkg_extract_source_archive_ex)
@@ -142,7 +141,7 @@ function(vcpkg_extract_source_archive_ex)
             set (QUIET)
         endif()
 
-        vcpkg_apply_patches(
+        z_vcpkg_apply_patches(
             ${QUIET}
             SOURCE_PATH ${TEMP_SOURCE_PATH}
             PATCHES ${_vesae_PATCHES}
