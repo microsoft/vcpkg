@@ -15,8 +15,10 @@ endif()
 # Gas.
 if ((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND VCPKG_TARGET_IS_WINDOWS)
     vcpkg_find_acquire_program(GASPREPROCESSOR)
-    get_filename_component(GASPREPROCESSOR_EXE_PATH ${GASPREPROCESSOR} DIRECTORY)
-    vcpkg_add_to_path(${GASPREPROCESSOR_EXE_PATH})
+    foreach(GAS_PATH ${GASPREPROCESSOR})
+        get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
+        vcpkg_add_to_path(${GAS_ITEM_PATH})
+    endforeach(GAS_PATH)
 endif()
 
 vcpkg_configure_meson(
@@ -24,5 +26,9 @@ vcpkg_configure_meson(
 
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
