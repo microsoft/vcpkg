@@ -210,6 +210,27 @@ function(vcpkg_fixup_cmake_targets)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" [[${_IMPORT_PREFIX}]] _contents "${_contents}")
         file(WRITE ${MAIN_CMAKE} "${_contents}")
     endforeach()
+    
+    if (VCPKG_TARGET_IS_OSX)
+        # see #16259 for details why this replacement is necessary.
+        file(GLOB_RECURSE TARGETS_FILES "${RELEASE_SHARE}/*[Tt]argets.cmake")
+        if (NOT TARGETS_FILES)
+            file(GLOB_RECURSE TARGETS_FILES "${RELEASE_SHARE}/*[Cc]onfig.cmake")
+        endif()
+        foreach(TARGETS_FILE ${TARGETS_FILES})
+            file(READ ${TARGETS_FILE} _targets_content)
+            
+            string(REGEX REPLACE
+                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/[^/]+/System/Library/Frameworks/([a-z_A-Z]+)\.framework"
+                "-framework \\1"
+                _targets_content "${_targets_content}")
+            string(REGEX REPLACE
+                "/Library/Developer/CommandLineTools/SDKs/[^/]+/System/Library/Frameworks/([a-z_A-Z]+)\.framework"
+                "-framework \\1"
+                _targets_content "${_targets_content}")
+            file(WRITE ${TARGETS_FILE} "${_targets_content}")
+        endforeach()
+    endif()
 
     # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE REMAINING_FILES "${DEBUG_SHARE}/*")
