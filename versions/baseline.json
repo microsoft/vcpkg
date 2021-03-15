@@ -6101,7 +6101,7 @@
       "port-version": 0
     },
     "uwebsockets": {
-      "baseline": "19.0.0",
+      "baseline": "19.0.0.5",
       "port-version": 0
     },
     "v-hacd": {
