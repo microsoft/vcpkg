@@ -5189,7 +5189,7 @@
       "port-version": 0
     },
     "robin-hood-hashing": {
-      "baseline": "3.9.1",
+      "baseline": "3.10.0",
       "port-version": 0
     },
     "robin-map": {
