@@ -77,9 +77,9 @@ if("clang" IN_LIST FEATURES OR "clang-tools-extra" IN_LIST FEATURES)
         )
     endif()
     # 1) LLVM/Clang tools are relocated from ./bin/ to ./tools/llvm/ (LLVM_TOOLS_INSTALL_DIR=tools/llvm)
-    # 2) Clang resource files are relocated from ./lib/clang/<version> to ./tools/llvm/clang/<version> (see patch 0007-fix-compiler-rt-install-path.patch)
-    # So, the relative path should be changed from ../lib/clang/<version> to ./clang/<version>
-    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=clang/${LLVM_VERSION})
+    # 2) Clang resource files are relocated from ./lib/clang/<version> to ./tools/llvm/lib/clang/<version> (see patch 0007-fix-compiler-rt-install-path.patch)
+    # So, the relative path should be changed from ../lib/clang/<version> to ./lib/clang/<version>
+    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=lib/clang/${LLVM_VERSION})
 endif()
 if("clang-tools-extra" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "clang-tools-extra")

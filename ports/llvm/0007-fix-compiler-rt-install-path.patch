@@ -12,7 +12,7 @@ index 0692fe75a441..65f72c2da7da 100644
    RUNTIME_OUTPUT_DIRECTORY "${output_dir}")
  
 -set(header_install_dir lib${LLVM_LIBDIR_SUFFIX}/clang/${CLANG_VERSION}/include)
-+set(header_install_dir tools/llvm/clang/${CLANG_VERSION}/include)
++set(header_install_dir tools/llvm/lib/clang/${CLANG_VERSION}/include)
  
  install(
    FILES ${files} ${generated_files}
@@ -25,7 +25,7 @@ index 61bbbf8faedd..f6d0b73d9913 100644
                 -DCOMPILER_RT_OUTPUT_DIR=${LLVM_LIBRARY_OUTPUT_INTDIR}/clang/${CLANG_VERSION}
                 -DCOMPILER_RT_EXEC_OUTPUT_DIR=${LLVM_RUNTIME_OUTPUT_INTDIR}
 -               -DCOMPILER_RT_INSTALL_PATH:STRING=lib${LLVM_LIBDIR_SUFFIX}/clang/${CLANG_VERSION}
-+               -DCOMPILER_RT_INSTALL_PATH:STRING=tools/llvm/clang/${CLANG_VERSION}
++               -DCOMPILER_RT_INSTALL_PATH:STRING=tools/llvm/lib/clang/${CLANG_VERSION}
                 -DCOMPILER_RT_INCLUDE_TESTS=${LLVM_INCLUDE_TESTS}
                 -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
                 -DLLVM_LIBDIR_SUFFIX=${LLVM_LIBDIR_SUFFIX}
@@ -38,7 +38,7 @@ index 964dd598f102..7379a1ba06d1 100644
    set(COMPILER_RT_OUTPUT_DIR ${LLVM_LIBRARY_OUTPUT_INTDIR}/clang/${CLANG_VERSION})
    set(COMPILER_RT_EXEC_OUTPUT_DIR ${LLVM_RUNTIME_OUTPUT_INTDIR})
 -  set(COMPILER_RT_INSTALL_PATH lib${LLVM_LIBDIR_SUFFIX}/clang/${CLANG_VERSION})
-+  set(COMPILER_RT_INSTALL_PATH tools/llvm/clang/${CLANG_VERSION})
++  set(COMPILER_RT_INSTALL_PATH tools/llvm/lib/clang/${CLANG_VERSION})
    option(COMPILER_RT_INCLUDE_TESTS "Generate and build compiler-rt unit tests."
           ${LLVM_INCLUDE_TESTS})
    option(COMPILER_RT_ENABLE_WERROR "Fail and stop if warning is triggered"
