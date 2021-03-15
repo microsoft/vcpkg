@@ -223,25 +223,29 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
 
     if (VCPKG_TARGET_IS_OSX)
         # see #16259 for details why this replacement is necessary.
-        file(GLOB_RECURSE TARGETS_FILES "${release_share}/*[Tt]argets.cmake")
-        if (NOT TARGETS_FILES)
-            file(GLOB_RECURSE TARGETS_FILES "${release_share}/*[Cc]onfig.cmake")
+        file(GLOB_RECURSE targets_files "${release_share}/*[Tt]argets.cmake")
+        if (targets_files STREQUAL "")
+            file(GLOB_RECURSE targets_files "${release_share}/*[Cc]onfig.cmake")
         endif()
-        foreach(TARGETS_FILE ${TARGETS_FILES})
-            file(READ ${TARGETS_FILE} _targets_content)
+        foreach(targets_file IN LISTS targets_files)
+            file(READ "${targets_file}" targets_content)
             
             string(REGEX REPLACE
-                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/[^/]+/System/Library/Frameworks/([a-z_A-Z]+)\.framework"
-                "-framework \\1"
-                _targets_content "${_targets_content}")
+                [[/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/[^/]+/System/Library/Frameworks/([_a-zA-Z]+)\.framework]]
+                [[-framework \1]]
+                targets_content
+                "${targets_content}"
+            )
             string(REGEX REPLACE
-                "/Library/Developer/CommandLineTools/SDKs/[^/]+/System/Library/Frameworks/([a-z_A-Z]+)\.framework"
-                "-framework \\1"
-                _targets_content "${_targets_content}")
-            file(WRITE ${TARGETS_FILE} "${_targets_content}")
+                [[/Library/Developer/CommandLineTools/SDKs/[^/]+/System/Library/Frameworks/([_a-zA-Z]+)\.framework]]
+                [[-framework \1]]
+                targets_content
+                "${targets_content}"
+            )
+            file(WRITE "${targets_file}" "${targets_content}")
         endforeach()
     endif()
-    
+
     # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE remaining_files "${debug_share}/*")
     if(NOT remaining_files STREQUAL "")
@@ -254,5 +258,4 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     endif()
 endfunction()
-
 
