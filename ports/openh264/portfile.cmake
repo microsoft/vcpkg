@@ -22,7 +22,8 @@ if ((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQ
 endif()
 
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH})
+    SOURCE_PATH ${SOURCE_PATH}
+    -Dtests=OFF)
 
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
