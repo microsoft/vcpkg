@@ -153,7 +153,7 @@
       "port-version": 0
     },
     "asio": {
-      "baseline": "1.18.0",
+      "baseline": "1.18.1",
       "port-version": 0
     },
     "asiosdk": {
