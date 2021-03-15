@@ -5,6 +5,11 @@ vcpkg_from_github(
     SHA512 361003296e9cef2956aeff76ae4df7a949a585710facd84a92c1b4164c5a4522d6615fcc485ebc2e50be8a13feb942b870efdd28837307467081cb1eba1f17d2
 )
 
+# Git.
+vcpkg_find_acquire_program(GIT)
+get_filename_component(GIT_PATH ${GIT} DIRECTORY)
+vcpkg_add_to_path(${GIT_PATH})
+
 # NASM.
 if ((VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64"))
     vcpkg_find_acquire_program(NASM)
