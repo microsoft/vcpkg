@@ -1,5 +1,0 @@
-Source: wxchartdir
-Version: 1.0.0
-Build-Depends: chartdir, wxwidgets
-Homepage: https://github.com/utelle/wxchartdir
-Description: wxChartDir provides components for the integration and use of the commercial C++ library ChartDirector, a universal chart component developed by Advanced Software Engineering Ltd, in wxWidgets based applications.

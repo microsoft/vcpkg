@@ -1,7 +1,7 @@
 {
   "name": "osgearth",
   "version": "3.1",
-  "port-version": 1,
+  "port-version": 2,
   "description": "osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2015 Pelican Mapping.",
   "homepage": "https://github.com/gwaldron/osgearth",
   "supports": "!(x86 | wasm32) & !staticcrt",
@@ -20,6 +20,7 @@
       ]
     },
     "protobuf",
-    "sqlite3"
+    "sqlite3",
+    "tinyxml"
   ]
 }

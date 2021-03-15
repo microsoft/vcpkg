@@ -3,14 +3,21 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thestk/rtaudio
-    REF 5.1.0
-    SHA512 338a3a14cd4ea665ac7e94a275cb017bffd87cb10eb8ab6784fad320345ee828b8874439edd08c39efa48736edf9aa0622620784adc320473b03a8f81e17fff6
+    REF 34a3752e0c8249dc1780d196cd24e745425f0c77
+    SHA512 00fea107f409f6dc43154aaf69aeffa1a3385031778b5f7d1ae1cc8337ed4ab92a7917cc9eade848dedd746016b6eff6234088619cb8d6a9a3f26a63efde493e
     HEAD_REF master
 )
+
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    set(RTAUDIO_STATIC_MSVCRT ON)
+else()
+    set(RTAUDIO_STATIC_MSVCRT OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS -DRTAUDIO_STATIC_MSVCRT=${RTAUDIO_STATIC_MSVCRT}
 )
 
 vcpkg_install_cmake()

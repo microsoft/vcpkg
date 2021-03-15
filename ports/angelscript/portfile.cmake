@@ -1,7 +1,9 @@
+vcpkg_fail_port_install(ON_ARCH "arm")
+
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://angelcode.com/angelscript/sdk/files/angelscript_2.34.0.zip"
-    FILENAME "angelscript_2.34.0.zip"
-    SHA512 c26dba452ab52c300da9c95fde8398acf4840cbc0e653ededf978d4a3e942cfe5b77292c74c49dc0279250a27cfd324c696c49d139a97c844b2a1eead9aae2f4
+    URLS "https://angelcode.com/angelscript/sdk/files/angelscript_2.35.0.zip"
+    FILENAME "angelscript_2.35.0.zip"
+    SHA512 e54b58e78b21c2ff6aa34d5f55b18fcf8737d057c86aef8901ac0c11f14739fe7f1494f9bcfdbca6a8e54b6d0b36a04dd098780bcd02dea5764fd6d22984b6b0
 )
 
 vcpkg_extract_source_archive_ex(
@@ -9,6 +11,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     PATCHES
        mark-threads-private.patch
+       precxx11.patch
 )
 
 vcpkg_configure_cmake(
@@ -17,6 +20,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Angelscript)
