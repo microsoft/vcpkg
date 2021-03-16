@@ -135,6 +135,8 @@ endif()
 
 if(WITH_PGSQL)
     list(APPEND CORE_OPTIONS -sql-psql)
+else()
+    list(APPEND CORE_OPTIONS -no-sql-psql)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
