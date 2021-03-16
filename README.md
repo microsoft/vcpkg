@@ -36,6 +36,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
     - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
     - [Vcpkg with CLion](#vcpkg-with-clion)
     - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
+    - [Install dependencies automatically](#install-dependencies-automatically)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
 - [Examples](#examples)
 - [Contributing](#contributing)
@@ -275,6 +276,15 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 This will still allow people to not use vcpkg,
 by passing the `CMAKE_TOOLCHAIN_FILE` directly,
 but it will make the configure-build step slightly easier.
+
+### Install dependencies automatically
+
+Add the option `X_VCPKG_APPLOCAL_DEPS_INSTALL` and set it to `ON`.
+Then you can install the custom target and install the dependencies of the target at the same time.
+
+```cmake
+-DX_VCPKG_APPLOCAL_DEPS_INSTALL=ON
+```
 
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
 [getting-started:integration]: docs/users/integration.md
