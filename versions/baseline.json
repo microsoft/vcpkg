@@ -2262,7 +2262,7 @@
     },
     "gmp": {
       "baseline": "6.2.1",
-      "port-version": 3
+      "port-version": 4
     },
     "google-cloud-cpp": {
       "baseline": "1.25.0",
