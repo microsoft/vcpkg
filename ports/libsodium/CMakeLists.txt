@@ -1333,7 +1333,7 @@ endif ()
 install(EXPORT ${PROJECT_NAME}-targets
     FILE unofficial-${PROJECT_NAME}Targets.cmake
     NAMESPACE unofficial-${PROJECT_NAME}::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-${PROJECT_NAME}
+    DESTINATION share/unofficial-${PROJECT_NAME}
 )
 
 configure_package_config_file(
@@ -1352,7 +1352,7 @@ install(
     FILES
         ${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}Config.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}ConfigVersion.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-${PROJECT_NAME}
+    DESTINATION share/unofficial-${PROJECT_NAME}
 )
 
 # References:
