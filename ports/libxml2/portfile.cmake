@@ -11,7 +11,7 @@ vcpkg_from_github(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 if (VCPKG_TARGET_IS_UWP)
-    message(WARNING "Feature network couldn't be enabled on UWP, disable http and ftp automanticly.")
+    message(WARNING "Feature network couldn't be enabled on UWP, disable http and ftp automatically.")
     set(ENABLE_NETWORK 0)
 else()
     set(ENABLE_NETWORK 1)
