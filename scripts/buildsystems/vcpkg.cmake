@@ -280,12 +280,13 @@ and places it in the variable Z_VCPKG_POWERSHELL_PATH.
 #]===]
 function(z_vcpkg_set_powershell_path)
     # Attempt to use pwsh if it is present; otherwise use powershell
+    set(PWSH_EXPECT_VER 7.1.0)
     if(NOT DEFINED Z_VCPKG_POWERSHELL_PATH)
-        find_program(Z_VCPKG_PWSH_PATH pwsh)
+        find_program(Z_VCPKG_PWSH_PATH NAMES pwsh PATHS "${Z_VCPKG_ROOT_DIR}/downloads/tools" PATH_SUFFIXES powershell-core-${PWSH_EXPECT_VER}-windows NO_DEFAULT_PATH)
         if(Z_VCPKG_PWSH_PATH)
             set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_PWSH_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
         else()
-            message(DEBUG "vcpkg: Could not find PowerShell Core; falling back to PowerShell")
+            message("vcpkg: Could not find PowerShell Core; falling back to PowerShell")
             find_program(Z_VCPKG_BUILTIN_POWERSHELL_PATH powershell REQUIRED)
             if(Z_VCPKG_BUILTIN_POWERSHELL_PATH)
                 set(Z_VCPKG_POWERSHELL_PATH "${Z_VCPKG_BUILTIN_POWERSHELL_PATH}" CACHE INTERNAL "The path to the PowerShell implementation to use.")
