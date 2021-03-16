@@ -24,6 +24,15 @@
         "libmysql"
       ]
     },
+    "netssl": {
+      "description": "Enable NetSSL",
+      "dependencies": [
+        {
+          "name": "openssl",
+          "platform": "!windows"
+        }
+      ]
+    },
     "pdf": {
       "description": "Haru support for POCO",
       "dependencies": [

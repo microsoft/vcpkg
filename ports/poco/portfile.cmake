@@ -26,6 +26,9 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" POCO_MT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     pdf         ENABLE_PDF
+    netssl      ENABLE_NETSSL
+    netssl      ENABLE_NETSSL_WIN
+    netssl      ENABLE_CRYPTO
     sqlite3     ENABLE_DATA_SQLITE
     postgresql  ENABLE_DATA_POSTGRESQL
 )
@@ -52,7 +55,6 @@ vcpkg_configure_cmake(
         # defined on the fly if the required librairies are present
         -DENABLE_ENCODINGS=ON
         -DENABLE_ENCODINGS_COMPILER=ON
-        -DENABLE_CRYPTO=ON
         -DENABLE_XML=ON
         -DENABLE_JSON=ON
         -DENABLE_MONGODB=ON
