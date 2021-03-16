@@ -9,11 +9,18 @@ vcpkg_from_github(
         resolv.patch
 )
 
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    ctl BUILD_CTL
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DBUILD_EXAMPLES=OFF
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
@@ -21,7 +28,11 @@ vcpkg_install_cmake()
 # Fix CMake files
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Drogon)
 # Copy drogon_ctl
-vcpkg_copy_tools(TOOL_NAMES drogon_ctl AUTO_CLEAN)
+if("ctl" IN_LIST FEATURES)
+    message("copying tools")
+    vcpkg_copy_tools(TOOL_NAMES drogon_ctl
+                     AUTO_CLEAN)
+endif()
 
 # # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
