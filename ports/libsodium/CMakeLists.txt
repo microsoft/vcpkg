@@ -1336,12 +1336,6 @@ install(EXPORT ${PROJECT_NAME}-targets
     DESTINATION share/unofficial-${PROJECT_NAME}
 )
 
-configure_package_config_file(
-    ${PROJECT_NAME}Config.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}Config.cmake
-    INSTALL_DESTINATION ${PROJECT_BINARY_DIR}
-)
-
 write_basic_package_version_file(
     ${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}ConfigVersion.cmake
     VERSION ${VERSION}
@@ -1350,7 +1344,6 @@ write_basic_package_version_file(
 
 install(
     FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}Config.cmake
         ${CMAKE_CURRENT_BINARY_DIR}/unofficial-${PROJECT_NAME}ConfigVersion.cmake
     DESTINATION share/unofficial-${PROJECT_NAME}
 )

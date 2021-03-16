@@ -6,17 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt
-    ${SOURCE_PATH}/CMakeLists.txt
-    COPYONLY
-)
-
-configure_file(
-    ${CMAKE_CURRENT_LIST_DIR}/sodiumConfig.cmake.in
-    ${SOURCE_PATH}/sodiumConfig.cmake.in
-    COPYONLY
-)
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
@@ -44,4 +34,10 @@ configure_file(
     ${SOURCE_PATH}/LICENSE
     ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright
     COPYONLY
+)
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/sodiumConfig.cmake.in
+    ${CURRENT_PACKAGES_DIR}/share/unofficial-sodium/unofficial-sodiumConfig.cmake
+    @ONLY
 )
