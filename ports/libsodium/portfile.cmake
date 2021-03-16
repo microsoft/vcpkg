@@ -12,7 +12,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_TESTING=ON
+        -DBUILD_TESTING=OFF
 )
 
 vcpkg_cmake_install()
