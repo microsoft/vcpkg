@@ -8,11 +8,6 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-if(VCPKG_TARGET_ARCHITECTURE MATCHES arm OR VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-    vcpkg_replace_string(${SOURCE_PATH}/src/metrohash.h
-        "#include \"metrohash128crc.h\""
-        "//#include \"metrohash128crc.h\" // It can't be supported for ARM or x86")
-endif()
 file(COPY ${CURRENT_PORT_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 configure_file(${CURRENT_PORT_DIR}/Config.cmake.in ${SOURCE_PATH}/cmake/Config.cmake.in COPYONLY)
 
@@ -24,6 +19,12 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 vcpkg_copy_pdbs()
+
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/metrohash128crc.h")
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/metrohash.h
+        "#include \"metrohash128crc.h\""
+        "//#include \"metrohash128crc.h\" // The target platform does not support _mm_crc32_u64")
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
