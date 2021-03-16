@@ -7,7 +7,6 @@
   "supports": "!uwp",
   "dependencies": [
     "expat",
-    "openssl",
     "pcre",
     "zlib"
   ],
