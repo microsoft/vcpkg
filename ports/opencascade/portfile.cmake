@@ -47,6 +47,27 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/opencascade)
 
+#make occt includes relative to source_file
+list(APPEND ADDITIONAL_HEADERS 
+      "ExprIntrp.tab.h"
+	  "FlexLexer.h"
+	  "glext.h"
+	  "igesread.h"
+	  "NCollection_Haft.h"
+	  "OSD_PerfMeter.h"
+	  "Standard_values.h"
+    )
+
+file(GLOB files "${CURRENT_PACKAGES_DIR}/include/opencascade/[a-zA-Z0-9_]*\.[hgl]xx")
+foreach(file_name ${files})
+	file(READ ${file_name} filedata)
+	string(REGEX REPLACE "# *include \<([a-zA-Z0-9_]*\.[hgl]xx)\>" "#include \"\\1\"" filedata "${filedata}")
+	foreach(extra_header ${ADDITIONAL_HEADERS})
+		string(REGEX REPLACE "# *include \<${extra_header}\>" "#include \"${extra_header}\"" filedata "${filedata}")
+	endforeach()
+	file(WRITE ${file_name} "${filedata}")
+endforeach()
+
 # Remove libd to lib, libd just has cmake files we dont want too
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib)
 file(RENAME ${CURRENT_PACKAGES_DIR}/debug/libd ${CURRENT_PACKAGES_DIR}/debug/lib)
