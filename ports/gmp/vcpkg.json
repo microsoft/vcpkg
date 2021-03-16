@@ -12,8 +12,8 @@
     },
     {
       "name": "yasm-tool-helper",
-      "platform": "windows",
-      "host": true
+      "host": true,
+      "platform": "windows"
     }
   ]
 }
