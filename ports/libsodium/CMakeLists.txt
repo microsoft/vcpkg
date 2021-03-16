@@ -48,103 +48,347 @@ configure_file(
     ${CMAKE_BINARY_DIR}/sodium/version.h
 )
 
-file(GLOB sodium_headers
-    ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/*.h
-    ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium.h
-    ${CMAKE_BINARY_DIR}/sodium/version.h
-)
-
-if (UNIX)
-    file(GLOB_RECURSE sodium_sources
-        ${PROJECT_SOURCE_DIR}/src/libsodium/*.c
-        ${PROJECT_SOURCE_DIR}/src/libsodium/*.S # HAVE_AVX_ASM
-    )
-else ()
-    file(GLOB_RECURSE sodium_sources
-        ${PROJECT_SOURCE_DIR}/src/libsodium/*.c
-    ) 
-endif ()
-
 if (MSVC)
     enable_language(RC)
 
-    list(APPEND sodium_sources
+    target_sources(${PROJECT_NAME} PRIVATE
         builds/msvc/resource.rc
     )
-endif ()
 
-add_library(${PROJECT_NAME}
-    ${sodium_headers}
-    ${sodium_sources}
-)
-
-set_target_properties(${PROJECT_NAME}
-    PROPERTIES
-        PREFIX ""
-        OUTPUT_NAME "lib${PROJECT_NAME}"
-)
-
-test_big_endian(IS_BIG_ENDIAN)
-
-if (IS_BIG_ENDIAN)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE NATIVE_BIG_ENDIAN)
 else ()
-    target_compile_definitions(${PROJECT_NAME} PRIVATE NATIVE_LITTLE_ENDIAN)
-endif ()
 
-macro (sodium_check_func func var)
-    check_function_exists(${func} ${var})
-    if (${var})
-        target_compile_definitions(${PROJECT_NAME} PRIVATE ${var}=1)
-    endif ()
-endmacro ()
+    add_library(${PROJECT_NAME}_config_private INTERFACE)
+    add_library(${PROJECT_NAME}_config_public INTERFACE)
 
-if (MSVC)
-    target_compile_options(${PROJECT_NAME}
+    add_library(${PROJECT_NAME}_armcrypto_config INTERFACE) # TODO
+    add_library(${PROJECT_NAME}_mmx_config INTERFACE)
+
+    add_library(${PROJECT_NAME}_sse2_config INTERFACE)
+    add_library(${PROJECT_NAME}_sse3_config INTERFACE)
+    add_library(${PROJECT_NAME}_ssse3_config INTERFACE)
+    add_library(${PROJECT_NAME}_sse41_config INTERFACE)
+
+    add_library(${PROJECT_NAME}_avx_config INTERFACE)
+    add_library(${PROJECT_NAME}_avx2_config INTERFACE)
+    add_library(${PROJECT_NAME}_avx512f_config INTERFACE)
+
+    add_library(${PROJECT_NAME}_config_aesni INTERFACE)
+    add_library(${PROJECT_NAME}_config_pclmul INTERFACE)
+    add_library(${PROJECT_NAME}_config_rdrand INTERFACE)
+
+    add_library(${PROJECT_NAME})
+
+    set_target_properties(${PROJECT_NAME}
+        PROPERTIES
+            PREFIX ""
+            OUTPUT_NAME "lib${PROJECT_NAME}"
+    )
+
+    target_sources(${PROJECT_NAME} PRIVATE
+        ${CMAKE_BINARY_DIR}/sodium/version.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis128l/aead_aegis128l.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis256/aead_aegis256.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/chacha20poly1305/sodium/aead_chacha20poly1305.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/xchacha20poly1305/sodium/aead_xchacha20poly1305.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_auth/crypto_auth.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_auth/hmacsha256/auth_hmacsha256.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_auth/hmacsha512/auth_hmacsha512.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_auth/hmacsha512256/auth_hmacsha512256.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_box/crypto_box.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_box/crypto_box_easy.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_box/crypto_box_seal.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_box/curve25519xsalsa20poly1305/box_curve25519xsalsa20poly1305.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/core_h2c.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/core_h2c.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/ref10/ed25519_ref10.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/hchacha20/core_hchacha20.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/hsalsa20/ref2/core_hsalsa20_ref2.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/hsalsa20/core_hsalsa20.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/salsa/ref/core_salsa_ref.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/crypto_generichash.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/generichash_blake2.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-ref.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-sse2.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-sse41.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-load-avx2.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-ref.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/generichash_blake2b.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_hash/crypto_hash.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_hash/sha256/hash_sha256.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_hash/sha256/cp/hash_sha256_cp.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_hash/sha512/hash_sha512.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_hash/sha512/cp/hash_sha512_cp.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_kdf/blake2b/kdf_blake2b.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_kdf/crypto_kdf.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_kx/crypto_kx.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/crypto_onetimeauth.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/poly1305/onetimeauth_poly1305.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/poly1305/onetimeauth_poly1305.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/poly1305/donna/poly1305_donna.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/poly1305/donna/poly1305_donna32.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/poly1305/donna/poly1305_donna64.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/poly1305/donna/poly1305_donna.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/argon2-core.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/argon2-core.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/argon2-encoding.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/argon2-encoding.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/argon2-fill-block-ref.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/argon2.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/argon2.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/blake2b-long.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/blake2b-long.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/blamka-round-ref.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/pwhash_argon2i.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/pwhash_argon2id.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/crypto_pwhash.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/crypto_scalarmult.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/ref10/x25519_ref10.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/ref10/x25519_ref10.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/scalarmult_curve25519.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/scalarmult_curve25519.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_secretbox/crypto_secretbox.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_secretbox/crypto_secretbox_easy.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_secretbox/xsalsa20poly1305/secretbox_xsalsa20poly1305.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_secretstream/xchacha20poly1305/secretstream_xchacha20poly1305.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_shorthash/crypto_shorthash.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_shorthash/siphash24/shorthash_siphash24.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_shorthash/siphash24/ref/shorthash_siphash24_ref.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_shorthash/siphash24/ref/shorthash_siphash_ref.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_sign/crypto_sign.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_sign/ed25519/sign_ed25519.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_sign/ed25519/ref10/keypair.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_sign/ed25519/ref10/open.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_sign/ed25519/ref10/sign.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_sign/ed25519/ref10/sign_ed25519_ref10.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/stream_chacha20.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/stream_chacha20.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/ref/chacha20_ref.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/ref/chacha20_ref.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/crypto_stream.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/stream_salsa20.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/stream_salsa20.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/xsalsa20/stream_xsalsa20.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_verify/sodium/verify.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/chacha20_ietf_ext.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/common.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/ed25519_ref10.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/implementations.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/mutex.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/sse2_64_32.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/quirks.h
+        ${PROJECT_SOURCE_DIR}/src/libsodium/randombytes/randombytes.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/sodium/codecs.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/sodium/core.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/sodium/runtime.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/sodium/utils.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/sodium/version.c
+        ${PROJECT_SOURCE_DIR}/src/libsodium/randombytes/sysrandom/randombytes_sysrandom.c
+    )
+
+    add_library(${PROJECT_NAME}_rdrand
+        OBJECT
+            ${PROJECT_SOURCE_DIR}/src/libsodium/randombytes/internal/randombytes_internal_random.c
+    )
+
+    target_link_libraries(${PROJECT_NAME}_rdrand
         PRIVATE
-            /D_CONSOLE
-            /D_CRT_SECURE_NO_WARNINGS
-            /DCPU_UNALIGNED_ACCESS=1
-            /MP
-            /Dinline=__inline
-            /wd4068 # Unknown pragma
-            /wd4197
-            /wd4244 # Macro redefinition
+            ${PROJECT_NAME}_config_rdrand
+            ${PROJECT_NAME}_config_public
+            ${PROJECT_NAME}_config_private
+    )
+
+    add_library(${PROJECT_NAME}_armcrypto OBJECT) # TODO
+
+    add_library(${PROJECT_NAME}_aesni
+        OBJECT
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aes256gcm/aesni/aead_aes256gcm_aesni.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis128l/aesni/aead_aegis128l_aesni.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_aead/aegis256/aesni/aead_aegis256_aesni.c
+    )
+
+    target_link_libraries(${PROJECT_NAME}_aesni
+        PRIVATE
+            ${PROJECT_NAME}_sse2_config
+            ${PROJECT_NAME}_ssse3_config
+            ${PROJECT_NAME}_config_aesni
+            ${PROJECT_NAME}_config_pclmul
+            ${PROJECT_NAME}_config_public
+            ${PROJECT_NAME}_config_private
+    )
+
+    add_library(${PROJECT_NAME}_sse2
+        OBJECT
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/poly1305/sse2/poly1305_sse2.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_onetimeauth/poly1305/sse2/poly1305_sse2.h
+    )
+
+    target_link_libraries(${PROJECT_NAME}_sse2
+        PRIVATE
+            ${PROJECT_NAME}_sse2_config
+            ${PROJECT_NAME}_config_public
+            ${PROJECT_NAME}_config_private
+    )
+
+    add_library(${PROJECT_NAME}_ssse3
+        OBJECT
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-ssse3.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-ssse3.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/argon2-fill-block-ssse3.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/blamka-round-ssse3.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/dolbeau/chacha20_dolbeau-ssse3.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/dolbeau/chacha20_dolbeau-ssse3.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/dolbeau/u0.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/dolbeau/u1.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/dolbeau/u4.h
+    )
+
+    target_link_libraries(${PROJECT_NAME}_ssse3
+        PRIVATE
+            ${PROJECT_NAME}_sse2_config
+            ${PROJECT_NAME}_ssse3_config
+            ${PROJECT_NAME}_config_public
+            ${PROJECT_NAME}_config_private
+    )
+
+    add_library(${PROJECT_NAME}_sse41
+        OBJECT
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-sse41.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-sse41.h
+    )
+
+    target_link_libraries(${PROJECT_NAME}_sse41
+        PRIVATE
+            ${PROJECT_NAME}_sse2_config
+            ${PROJECT_NAME}_ssse3_config
+            ${PROJECT_NAME}_sse41_config
+            ${PROJECT_NAME}_config_public
+            ${PROJECT_NAME}_config_private
+    )
+
+    add_library(${PROJECT_NAME}_avx2
+        OBJECT
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-avx2.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_generichash/blake2b/ref/blake2b-compress-avx2.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/argon2-fill-block-avx2.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/blamka-round-avx2.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/dolbeau/chacha20_dolbeau-avx2.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/dolbeau/chacha20_dolbeau-avx2.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/chacha20/dolbeau/u8.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6int/salsa20_xmm6int-avx2.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6int/salsa20_xmm6int-avx2.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6int/u0.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6int/u1.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6int/u4.h
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6int/u8.h    
+    )
+
+    target_link_libraries(${PROJECT_NAME}_avx2
+        PRIVATE
+            ${PROJECT_NAME}_sse2_config
+            ${PROJECT_NAME}_ssse3_config
+            ${PROJECT_NAME}_sse41_config
+            ${PROJECT_NAME}_avx_config
+            ${PROJECT_NAME}_avx2_config
+            ${PROJECT_NAME}_config_public
+            ${PROJECT_NAME}_config_private
+    )
+
+    add_library(${PROJECT_NAME}_avx512f
+        OBJECT
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/argon2-fill-block-avx512f.c
+            ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/argon2/blamka-round-avx512f.h
+    )
+
+    target_link_libraries(${PROJECT_NAME}_avx512f
+        PRIVATE
+            ${PROJECT_NAME}_sse2_config
+            ${PROJECT_NAME}_ssse3_config
+            ${PROJECT_NAME}_sse41_config
+            ${PROJECT_NAME}_avx_config
+            ${PROJECT_NAME}_avx2_config
+            ${PROJECT_NAME}_avx512f_config
+            ${PROJECT_NAME}_config_public
+            ${PROJECT_NAME}_config_private
     )
 
     target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+            ${PROJECT_NAME}_rdrand
+            ${PROJECT_NAME}_armcrypto
+            ${PROJECT_NAME}_aesni
+            ${PROJECT_NAME}_sse2
+            ${PROJECT_NAME}_ssse3
+            ${PROJECT_NAME}_sse41
+            ${PROJECT_NAME}_avx2
+            ${PROJECT_NAME}_avx512f
+            ${PROJECT_NAME}_config_private
         PUBLIC
-            advapi32
+            ${PROJECT_NAME}_config_public
     )
-else ()
+
     if (ENABLE_BLOCKING_RANDOM)
-        target_compile_definitions(${PROJECT_NAME} PRIVATE USE_BLOCKING_RANDOM)
+        target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE USE_BLOCKING_RANDOM)
     endif ()
 
     if (ENABLE_PTHREADS)
-        target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_PTHREAD)
-        target_compile_options(${PROJECT_NAME} PRIVATE -ftls-model=local-dynamic)
-        target_compile_options(${PROJECT_NAME} PUBLIC -pthread)
+        target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_PTHREAD)
+        target_compile_options(${PROJECT_NAME}_config_private INTERFACE -ftls-model=local-dynamic)
+        target_compile_options(${PROJECT_NAME}_config_public INTERFACE -pthread)
     endif ()
 
     if (ENABLE_SSP)
-        target_compile_options(${PROJECT_NAME} PRIVATE -fstack-protector-all)
+        target_compile_options(${PROJECT_NAME}_config_private INTERFACE -fstack-protector-all)
     endif ()
 
     if (ENABLE_PIE)
-        target_compile_options(${PROJECT_NAME} PRIVATE -fPIE)
+        target_compile_options(${PROJECT_NAME}_config_private INTERFACE -fPIE)
     endif ()
 
     if (ENABLE_RETPOLINE)
-        target_compile_options(${PROJECT_NAME}
-            PRIVATE
+        target_compile_options(${PROJECT_NAME}_config_private
+            INTERFACE
                 -mindirect-branch=thunk-inline
                 -mindirect-branch-register
         )
     endif ()
 
-    target_compile_options(${PROJECT_NAME}
-        PRIVATE
+    if (ENABLE_MINIMAL)
+        target_sources(${PROJECT_NAME}
+            PRIVATE
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_box/curve25519xchacha20poly1305/box_curve25519xchacha20poly1305.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_box/curve25519xchacha20poly1305/box_seal_curve25519xchacha20poly1305.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/core_ed25519.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/core_ristretto255.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_kdf/hkdf/kdf_hkdf_sha256.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_kdf/hkdf/kdf_hkdf_sha512.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/scryptsalsa208sha256/crypto_scrypt-common.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/scryptsalsa208sha256/crypto_scrypt.h
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/scryptsalsa208sha256/scrypt_platform.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/scryptsalsa208sha256/pbkdf2-sha256.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/scryptsalsa208sha256/pbkdf2-sha256.h
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/scryptsalsa208sha256/pwhash_scryptsalsa208sha256.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/scryptsalsa208sha256/nosse/pwhash_scryptsalsa208sha256_nosse.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/ed25519/ref10/scalarmult_ed25519_ref10.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/ristretto255/ref10/scalarmult_ristretto255_ref10.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_secretbox/xchacha20poly1305/secretbox_xchacha20poly1305.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_shorthash/siphash24/shorthash_siphashx24.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_shorthash/siphash24/ref/shorthash_siphashx24_ref.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa2012/ref/stream_salsa2012_ref.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa2012/stream_salsa2012.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa208/ref/stream_salsa208_ref.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa208/stream_salsa208.c
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/xchacha20/stream_xchacha20.c
+        )
+
+        target_sources(${PROJECT_NAME}_sse2
+            PRIVATE
+                ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_pwhash/scryptsalsa208sha256/sse/pwhash_scryptsalsa208sha256_sse.c
+        )
+    endif ()
+
+    target_compile_options(${PROJECT_NAME}_config_private
+        INTERFACE
             -flax-vector-conversions
             -fvisibility=hidden
             -fPIC
@@ -184,8 +428,8 @@ else ()
 
     if (CMAKE_C_COMPILER_ID STREQUAL "Clang" OR
         CMAKE_C_COMPILER_ID STREQUAL "AppleClang")
-        target_compile_options(${PROJECT_NAME}
-            PRIVATE
+        target_compile_options(${PROJECT_NAME}_config_private
+            INTERFACE
                 -Wno-unknown-warning-option
                 -Wshorten-64-to-32
         )
@@ -193,8 +437,15 @@ else ()
 
     check_include_file(sys/mman.h HAVE_SYS_MMAN_H)
     if (HAVE_SYS_MMAN_H)
-        target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_SYS_MMAN_H)
+        target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_SYS_MMAN_H)
     endif ()
+
+    macro (sodium_check_func func var)
+        check_function_exists(${func} ${var})
+        if (${var})
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE ${var}=1)
+        endif ()
+    endmacro ()
 
     sodium_check_func(arc4random HAVE_SAFE_ARC4RANDOM)
     sodium_check_func(mmap HAVE_MMAP)
@@ -222,8 +473,8 @@ else ()
         )
 
         if (HAVE_MMINTRIN_H)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_MMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME} PRIVATE -mmmx)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_MMINTRIN_H=1)
+            target_compile_options(${PROJECT_NAME}_mmx_config INTERFACE -mmmx)
         endif ()
 
         check_c_source_runs(
@@ -243,8 +494,8 @@ else ()
         )
 
         if (HAVE_EMMINTRIN_H)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_EMMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME} PRIVATE -msse2)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_EMMINTRIN_H=1)
+            target_compile_options(${PROJECT_NAME}_sse2_config INTERFACE -msse2)
         endif ()
 
         check_c_source_runs(
@@ -259,8 +510,8 @@ else ()
         )
 
         if (HAVE_PMMINTRIN_H)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_PMMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME} PRIVATE -msse3)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_PMMINTRIN_H=1)
+            target_compile_options(${PROJECT_NAME}_sse3_config INTERFACE -msse3)
         endif ()
 
         check_c_source_runs(
@@ -275,8 +526,8 @@ else ()
         )
 
         if (HAVE_TMMINTRIN_H)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_TMMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME} PRIVATE -mssse3)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_TMMINTRIN_H=1)
+            target_compile_options(${PROJECT_NAME}_ssse3_config INTERFACE -mssse3)
         endif ()
 
         check_c_source_runs(
@@ -291,8 +542,8 @@ else ()
         )
 
         if (HAVE_SMMINTRIN_H)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_SMMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME} PRIVATE -msse4.1)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_SMMINTRIN_H=1)
+            target_compile_options(${PROJECT_NAME}_sse41_config INTERFACE -msse4.1)
         endif ()
 
         check_c_source_runs(
@@ -310,8 +561,8 @@ else ()
         )
 
         if (HAVE_AVXINTRIN_H)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_AVXINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME} PRIVATE -mavx)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_AVXINTRIN_H=1)
+            target_compile_options(${PROJECT_NAME}_avx_config INTERFACE -mavx)
         endif ()
 
         check_c_source_runs(
@@ -331,8 +582,8 @@ else ()
         )
 
         if (HAVE_AVX2INTRIN_H)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_AVX2INTRIN_H=1)
-            target_compile_options(${PROJECT_NAME} PRIVATE -mavx2)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_AVX2INTRIN_H=1)
+            target_compile_options(${PROJECT_NAME}_avx2_config INTERFACE -mavx2)
 
             check_c_source_runs(
                 "
@@ -385,10 +636,8 @@ else ()
         )
 
         if (HAVE_AVX512FINTRIN_H)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_AVX512FINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME} PRIVATE -mavx512f)
-        else ()
-            target_compile_options(${PROJECT_NAME} PRIVATE -mno-avx512f)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_AVX512FINTRIN_H=1)
+            target_compile_options(${PROJECT_NAME}_avx512f_config INTERFACE -mavx512f)
         endif ()
 
         check_c_source_runs(
@@ -409,8 +658,9 @@ else ()
         )
 
         if (HAVE_WMMINTRIN_H)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_WMMINTRIN_H=1)
-            target_compile_options(${PROJECT_NAME} PRIVATE -maes -mpclmul)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_WMMINTRIN_H=1)
+            target_compile_options(${PROJECT_NAME}_config_aesni INTERFACE -maes)
+            target_compile_options(${PROJECT_NAME}_config_pclmul INTERFACE -mpclmul)
         endif ()
 
         check_c_source_runs(
@@ -430,8 +680,8 @@ else ()
         )
 
         if (HAVE_RDRAND)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_RDRAND=1)
-            target_compile_options(${PROJECT_NAME} PRIVATE -mrdrnd)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_RDRAND=1)
+            target_compile_options(${PROJECT_NAME}_config_rdrand INTERFACE -mrdrnd)
         endif ()
 
         check_c_source_runs(
@@ -446,7 +696,7 @@ else ()
         )
 
         if (HAVE__XGETBV)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE__XGETBV=1)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE__XGETBV=1)
         endif ()
 
         check_c_source_runs(
@@ -461,7 +711,7 @@ else ()
         )
 
         if (HAVE_INLINE_ASM)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_INLINE_ASM=1)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_INLINE_ASM=1)
         endif ()
 
         check_c_source_runs(
@@ -488,7 +738,30 @@ else ()
         )
 
         if (HAVE_AMD64_ASM)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_AMD64_ASM=1)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_AMD64_ASM=1)
+            
+            target_sources(${PROJECT_NAME}
+                PRIVATE
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6/salsa20_xmm6-asm.S
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6/salsa20_xmm6.c
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6/salsa20_xmm6.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6/salsa20_xmm6-asm_namespace.h
+            )
+        else ()
+            target_sources(${PROJECT_NAME}
+                PRIVATE
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/ref/salsa20_ref.c
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/ref/salsa20_ref.h
+            )
+
+            target_sources(${PROJECT_NAME}_sse2
+               PRIVATE
+                   ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6int/salsa20_xmm6int-sse2.c
+                   ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6int/salsa20_xmm6int-sse2.h
+                   ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6int/u0.h
+                   ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6int/u1.h
+                   ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_stream/salsa20/xmm6int/u4.h
+            )
         endif ()
 
         check_c_source_runs(
@@ -509,7 +782,21 @@ else ()
         )
 
         if (HAVE_AVX_ASM)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_AVX_ASM=1)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_AVX_ASM=1)
+            target_sources(${PROJECT_NAME}
+                PRIVATE
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/consts_namespace.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/curve25519_sandy2x.c
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/curve25519_sandy2x.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_invert.c
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe51_namespace.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/fe_frombytes_sandy2x.c
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/ladder.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/ladder_namespace.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_scalarmult/curve25519/sandy2x/sandy2x.S
+            )
         endif ()
 
         check_c_source_runs(
@@ -547,7 +834,24 @@ else ()
         )
 
         if (HAVE_TI_MODE)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_TI_MODE=1)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_TI_MODE=1)
+            target_sources(${PROJECT_NAME}
+                PRIVATE
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/ref10/fe_51/base.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/ref10/fe_51/base2.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/ref10/fe_51/constants.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/ref10/fe_51/fe.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/ed25519_ref10_fe_51.h
+            )
+        else ()
+            target_sources(${PROJECT_NAME}
+                PRIVATE
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/ref10/fe_25_5/base.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/ref10/fe_25_5/base2.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/ref10/fe_25_5/constants.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/crypto_core/ed25519/ref10/fe_25_5/fe.h
+                    ${PROJECT_SOURCE_DIR}/src/libsodium/include/sodium/private/ed25519_ref10_fe_25_5.h
+            )
         endif ()
 
         check_c_source_runs(
@@ -564,7 +868,7 @@ else ()
         )
 
         if (HAVE_CPUID)
-            target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_CPUID=1)
+            target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_CPUID=1)
         endif ()
     endif ()
 
@@ -581,7 +885,7 @@ else ()
     )
 
     if (HAVE_WEAK_SYMBOLS)
-        target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_WEAK_SYMBOLS=1)
+        target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_WEAK_SYMBOLS=1)
     endif ()
 
     check_c_source_runs(
@@ -596,7 +900,7 @@ else ()
     )
 
     if (HAVE_ATOMIC_OPS)
-        target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_ATOMIC_OPS=1)
+        target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE HAVE_ATOMIC_OPS=1)
     endif ()
 
     check_c_source_runs(
@@ -620,7 +924,37 @@ else ()
     endif ()
 
     # include/sodium/private/common.h
-    target_compile_definitions(${PROJECT_NAME} PRIVATE CONFIGURED=1)
+    target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE CONFIGURED=1)
+
+endif ()
+
+test_big_endian(IS_BIG_ENDIAN)
+
+if (IS_BIG_ENDIAN)
+    target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE NATIVE_BIG_ENDIAN)
+else ()
+    target_compile_definitions(${PROJECT_NAME}_config_private INTERFACE NATIVE_LITTLE_ENDIAN)
+endif ()
+
+if (MSVC)
+    target_compile_options(${PROJECT_NAME}
+        PRIVATE
+            /D_CONSOLE
+            /D_CRT_SECURE_NO_WARNINGS
+            /DCPU_UNALIGNED_ACCESS=1
+            /MP
+            /Dinline=__inline
+            /wd4068 # Unknown pragma
+            /wd4197
+            /wd4244 # Macro redefinition
+    )
+
+    target_link_libraries(${PROJECT_NAME}
+        PUBLIC
+            advapi32
+    )
+else ()
+
 endif ()
 
 if (BUILD_SHARED_LIBS)
