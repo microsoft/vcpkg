@@ -18,6 +18,7 @@ vcpkg_from_github(
         0014-avfilter-dependency-fix.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
         0016-configure-dnn-needs-avformat.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
+        0017-Patch-for-ticket-9019-CUDA-Compile-Broken-Using-MSVC.patch  # https://trac.ffmpeg.org/ticket/9019
 )
 
 if (SOURCE_PATH MATCHES " ")
