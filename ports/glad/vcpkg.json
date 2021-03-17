@@ -113,32 +113,32 @@
           "description": "Imports extensions from OpenGL API specification version 4.6."
       },
       {
-          "name": "gles-api-latest",
-          "description": "Imports extensions from latest OpenGL ES specification."
+          "name": "gles1-api-latest",
+          "description": "Imports extensions from latest OpenGL ES 1 specification."
       },
       {
-          "name": "gles-api-10",
-          "description": "Imports extensions from OpenGL ES specification version 1.0."
+          "name": "gles1-api-10",
+          "description": "Imports extensions from OpenGL ES 1 specification version 1.0."
       },
       {
           "name": "gles2-api-latest",
-          "description": "Imports extensions from latest OpenGL (ES) specification."
+          "description": "Imports extensions from latest OpenGL ES 2 specification."
       },
       {
           "name": "gles2-api-20",
-          "description": "Imports extensions from OpenGL (ES) specification version 2.0."
+          "description": "Imports extensions from OpenGL ES 2 specification version 2.0."
       },
       {
           "name": "gles2-api-30",
-          "description": "Imports extensions from OpenGL (ES) specification version 3.0."
+          "description": "Imports extensions from OpenGL ES 2 specification version 3.0."
       },
       {
           "name": "gles2-api-31",
-          "description": "Imports extensions from OpenGL (ES) specification version 3.1."
+          "description": "Imports extensions from OpenGL ES 2 specification version 3.1."
       },
       {
           "name": "gles2-api-32",
-          "description": "Imports extensions from OpenGL (ES) specification version 3.2."
+          "description": "Imports extensions from OpenGL ES 2 specification version 3.2."
       },
       {
           "name": "glsc2-api-latest",
