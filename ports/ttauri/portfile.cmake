@@ -1,6 +1,6 @@
 vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
 vcpkg_fail_port_install(ON_TARGET "linux" "uwp" "osx")
-vcpkg_fail_port_install(ON_LIBRARY_LINKAGE "dynamic")
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
