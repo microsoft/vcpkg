@@ -4,7 +4,7 @@
   "port-version": 9,
   "description": "Mature and widely used Unicode and localization library.",
   "homepage": "http://icu-project.org/apiref/icu4c/",
-  "supports": "!(arm | uwp)",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "icu",

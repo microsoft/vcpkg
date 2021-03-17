@@ -673,6 +673,7 @@ libmpeg2:x64-osx=fail
 libmpeg2:x64-uwp=fail
 libmupdf:x64-osx=fail
 libmysql:x86-windows=fail
+libmysql:arm64-windows=fail
 #The official website of libnice https://nice.freedesktop.org cannot be accessed
 libnice:x86-windows=skip
 libnice:x64-windows=skip
@@ -1283,6 +1284,7 @@ qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
 qt5-activeqt:x64-linux=fail
 qt5-activeqt:x64-osx=fail
+qt5-base:arm64-windows=fail
 # Skip deprecated Qt module
 # (remnove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
