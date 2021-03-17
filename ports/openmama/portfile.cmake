@@ -47,14 +47,8 @@ foreach(OPENMAMA_ROOT_HEADER destroyhandle.h platform.h list.h lookup2.h propert
     endif()
 endforeach()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/include/mama/integration/transport.h")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mama/integration/transport.h" "list.h" "wombat/list.h")
-endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/include/mama/integration/types.h")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mama/integration/types.h" "list.h" "wombat/list.h")
-endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/include/mama/integration/mama.h")
-    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mama/integration/mama.h" "property.h" "wombat/property.h")
-endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mama/integration/transport.h" "list.h" "wombat/list.h")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mama/integration/types.h" "list.h" "wombat/list.h")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/mama/integration/mama.h" "property.h" "wombat/property.h")
 
 vcpkg_copy_pdbs()
