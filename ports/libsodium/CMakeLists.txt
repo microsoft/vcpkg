@@ -609,7 +609,7 @@ else ()
 
             if (NOT _mm256_broadcastsi128_si256_DEFINED)
                 target_compile_definitions(${PROJECT_NAME}_config_private
-                    PRIVATE
+                    INTERFACE
                         _mm256_broadcastsi128_si256=_mm_broadcastsi128_si256
                 )
             endif ()
