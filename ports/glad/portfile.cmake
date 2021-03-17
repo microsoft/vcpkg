@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Dav1dde/glad
-    REF v0.1.34
-    SHA512 bc20ca8c442068f2fd1170bdb8383fd3f1b5b4826083825d6f6fb4bc69fd99d2db04865f9c9bbe1cf6d0038e036f6d4ae6aac5f68cea8b20ed339bbde5e811e4
+    REF 7ece538856bf124d798ab323c8e1e64ebb83cb50
+    SHA512 f6a8ba7d0d09b89c23b6f76962d3e6eef1babc8e1a659e238d30e143eb33ccba424957e5a6d46d99a714bfa2967523b193586d0ff24e29ad8d86c92c9faf9c02
     HEAD_REF master
     PATCHES encoding.patch
 )
@@ -16,25 +16,20 @@ else()
 endif()
 
 set(GLAD_SPEC "gl")
-set(SPEC_HITS 0)
 
 if("egl" IN_LIST FEATURES)
-    set(GLAD_SPEC "egl")
-    math(EXPR SPEC_HITS "${SPEC_HITS}+1")
+    set(GLAD_SPEC "${GLAD_SPEC},egl")
+    #list(APPEND GLAD_SPEC "egl")
 endif()
 
 if("wgl" IN_LIST FEATURES)
-    set(GLAD_SPEC "wgl")
-    math(EXPR SPEC_HITS "${SPEC_HITS}+1")
+    set(GLAD_SPEC "${GLAD_SPEC},wgl")
+    #list(APPEND GLAD_SPEC "wgl")
 endif()
 
 if("glx" IN_LIST FEATURES)
-    set(GLAD_SPEC "glx")
-    math(EXPR SPEC_HITS "${SPEC_HITS}+1")
-endif()
-
-if(SPEC_HITS GREATER 1)
-    message(WARNING "Multiple specifications have been specified, but only one can be used to configure glad. Using '${GLAD_SPEC}'...")
+    set(GLAD_SPEC "${GLAD_SPEC},glx")
+    #list(APPEND GLAD_SPEC "glx")
 endif()
 
 if("no-loader" IN_LIST FEATURES)
@@ -53,6 +48,7 @@ vcpkg_find_acquire_program(PYTHON3)
 
 file(COPY
     ${CURRENT_INSTALLED_DIR}/include/KHR/khrplatform.h
+    ${CURRENT_INSTALLED_DIR}/include/EGL/eglplatform.h
     ${CURRENT_INSTALLED_DIR}/share/egl-registry/egl.xml
     ${CURRENT_INSTALLED_DIR}/share/opengl-registry/gl.xml
     ${CURRENT_INSTALLED_DIR}/share/opengl-registry/glx.xml
@@ -83,4 +79,5 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/glad)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/KHR)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/include/EGL)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
