@@ -5330,7 +5330,7 @@
     },
     "sdl2-mixer": {
       "baseline": "2.0.4",
-      "port-version": 10
+      "port-version": 11
     },
     "sdl2-net": {
       "baseline": "2.0.1-8",
