@@ -1,5 +1,7 @@
 # Vcpkg: export Android prefab Archives (AAR files)
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
 Vcpkg can export android archives ([AAR files](https://developer.android.com/studio/projects/android-library)). Once an archive is created, it can imported in Android Studio as a native dependent.  The archive is automatically consumed using [android studio's prefab tool](https://github.com/google/prefab). 
 
 For more information on Prefab, refer to:
