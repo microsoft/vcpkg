@@ -10,6 +10,7 @@ vcpkg_copy_tools(
     TOOL_NAMES <tool1>...
     [SEARCH_DIR <${CURRENT_PACKAGES_DIR}/bin>]
     [AUTO_CLEAN]
+    [DESTINATION <${CURRENT_PACKAGES_DIR}/tools/${PORT}>]
 )
 ```
 ## Parameters
@@ -21,6 +22,9 @@ The path to the directory containing the tools. This will be set to `${CURRENT_P
 
 ### AUTO_CLEAN
 Auto clean executables in `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.
+
+### DESTINATION
+The destination folder. This will be set to `${CURRENT_PACKAGES_DIR}/tools/${PORT}` if ommited.
 
 ## Examples
 

@@ -211,11 +211,7 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Package ${DEBUG_TRIPLET} done")
 endif()
 
-if(NOT VCPKG_TARGET_IS_MINGW) # MinGW already has its files placed in the correct directory
-    file(REMOVE_RECURSE
-        ${CURRENT_PACKAGES_DIR}/bin
-        ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
+if(VCPKG_TARGET_IS_MINGW)
     file(GLOB ICU_TOOLS
         ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX}
         ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX}
@@ -225,11 +221,10 @@ else()
 endif()
 
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/share
     ${CURRENT_PACKAGES_DIR}/debug/share
     ${CURRENT_PACKAGES_DIR}/lib/icu
-    ${CURRENT_PACKAGES_DIR}/debug/lib/icud)
+    ${CURRENT_PACKAGES_DIR}/debug/lib/icu)
 
 file(GLOB TEST_LIBS
     ${CURRENT_PACKAGES_DIR}/lib/*test*
@@ -280,11 +275,15 @@ else()
 endif()
 
 # Install executables from ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin to /tools/icu/bin
-file(GLOB ICU_TOOLS
-    ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin/*${VCPKG_HOST_EXECUTABLE_SUFFIX}
-    ${CURRENT_PACKAGES_DIR}/lib/icu*${ICU_VERSION_MAJOR}.dll
+vcpkg_copy_tools(
+    TOOL_NAMES icupkg gennorm2 gencmn genccode gensprep
+    SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools/icu/sbin
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin
 )
-file(COPY ${ICU_TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
+
+file(REMOVE_RECURSE
+    ${CURRENT_PACKAGES_DIR}/tools/icu/sbin
+    ${CURRENT_PACKAGES_DIR}/tools/icu/debug)
 
 # To cross compile, we need some files at specific positions. So lets copy them
 file(GLOB CROSS_COMPILE_DEFS ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/config/icucross.*)
