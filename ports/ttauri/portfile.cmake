@@ -13,7 +13,10 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DTT_BUILD_TESTS=OFF -DTT_BUILD_EXAMPLED=OFF
+    OPTIONS
+        -DTT_BUILD_TESTS=OFF
+        -DTT_BUILD_EXAMPLES=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=ON
 )
 
 vcpkg_install_cmake()
