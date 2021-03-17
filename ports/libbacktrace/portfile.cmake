@@ -1,5 +1,5 @@
-if (CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-    vcpkg_fail_port_install(ALWAYS MESSAGE "The library relies on the C++ unwind API defined at https://itanium-cxx-abi.github.io/cxx-abi/abi-eh.html This API is only provided by GCC and clang. You are using MSVC.")
+if(VCPKG_TARGET_IS_WINDOWS)
+    message("libbacktrace cannot be built using MSVC on Windows due to relying on the C++ unwind API https://itanium-cxx-abi.github.io/cxx-abi/abi-eh.html")
 endif()
 
 vcpkg_from_github(
