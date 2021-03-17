@@ -27,160 +27,43 @@ vcpkg_extract_source_archive_ex(
 vcpkg_find_acquire_program(PYTHON3)
 set(ENV{PYTHON} "${PYTHON3}")
 
-set(CONFIGURE_OPTIONS "--disable-samples --disable-tests --disable-layoutex")
+list(APPEND CONFIGURE_OPTIONS --disable-samples --disable-tests --disable-layoutex)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --disable-static --enable-shared")
-else()
-    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --enable-static --disable-shared")
-endif()
+list(APPEND CONFIGURE_OPTIONS_RELEASE --disable-debug --enable-release)
+list(APPEND CONFIGURE_OPTIONS_DEBUG  --enable-debug --disable-release)
 
-set(CONFIGURE_OPTIONS_RELEASE "--disable-debug --enable-release --prefix=${CURRENT_PACKAGES_DIR}")
-set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURRENT_PACKAGES_DIR}/debug")
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
-if(NOT VCPKG_TARGET_IS_WINDOWS)
-
-    if(NOT "${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}")
-        # cross compiling
-        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-cross-build=${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}/tools/${PORT}")
-        if(VCPKG_TARGET_IS_OSX)
-            # on apple silicon we have to manually set the arch when we want x64 binaries, otherwise we get arm64 binaries
-            if(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-                set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -arch x86_64")
-                set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -arch x86_64")
-            endif()
-        endif()
-    endif()
-
-    set(BASH bash)
-    set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -fPIC")
-    set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -fPIC")
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        # Configure release
-        message(STATUS "Configuring ${RELEASE_TRIPLET}")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
-        set(ENV{CFLAGS} "-O2 ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
-        set(ENV{CXXFLAGS} "-O2 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
-        vcpkg_execute_required_process(
-            COMMAND ${BASH} --noprofile --norc -c
-                "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELEASE}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
-            LOGNAME "configure-${RELEASE_TRIPLET}")
-        message(STATUS "Configuring ${RELEASE_TRIPLET} done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        # Configure debug
-        message(STATUS "Configuring ${DEBUG_TRIPLET}")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
-        set(ENV{CFLAGS} "-O0 -g ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
-        set(ENV{CXXFLAGS} "-O0 -g ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
-        vcpkg_execute_required_process(
-            COMMAND ${BASH} --noprofile --norc -c
-                "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
-            LOGNAME "configure-${DEBUG_TRIPLET}")
-        message(STATUS "Configuring ${DEBUG_TRIPLET} done")
-    endif()
-
-else()
-
-    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=x86_64-w64-mingw32")
-    else()
-        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --host=i686-w64-mingw32")
-    endif()
-
-    # Acquire tools
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make automake1.16)
-
-    # Insert msys into the path between the compiler toolset and windows system32. This prevents masking of "link.exe" but DOES mask "find.exe".
-    string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
-    string(REPLACE ";$ENV{SystemRoot}\\System32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "${NEWPATH}")
-    set(ENV{PATH} "${NEWPATH}")
-    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
-
-    set(AUTOMAKE_DIR ${MSYS_ROOT}/usr/share/automake-1.16)
-    file(COPY ${AUTOMAKE_DIR}/config.guess ${AUTOMAKE_DIR}/config.sub DESTINATION ${SOURCE_PATH}/source)
-
-    if(NOT VCPKG_TARGET_IS_MINGW)
-        set(PLATFORM "MSYS/MSVC")
-        if(VCPKG_CRT_LINKAGE STREQUAL static)
-            set(ICU_RUNTIME "-MT")
-        else()
-            set(ICU_RUNTIME "-MD")
-        endif()
-        set(EXTRA_RELEASE_FLAGS "${ICU_RUNTIME} -O2 -Oi -Zi -FS")
-        set(RELEASE_LDFLAGS "-DEBUG -INCREMENTAL:NO -OPT:REF -OPT:ICF")
-        set(EXTRA_DEBUG_FLAGS "${ICU_RUNTIME}d -Od -Zi -FS -RTC1")
-        set(DEBUG_LDFLAGS "-DEBUG")
-    else()
-        set(PLATFORM "MinGW")
-        set(ENV{CC} "${CMAKE_C_COMPILER}")
-        set(ENV{CXX} "${CMAKE_CXX_COMPILER}")
-    endif()
-    
-    message(STATUS "Install to ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}")
-
-    if(NOT "${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}")
-        # we have to give a path to the buildtree-dir of the host system, but this folder is gone. So we have capied
-        # the relvant files to ${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}/tools/${PORT}
-        get_filename_component(ICU_HOST_PATH "${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}/tools/${PORT}" ABSOLUTE)
-        if(NOT EXISTS "${ICU_HOST_PATH}")
-            message(FATAL_ERROR "Please create a bug report at vcpkg.")  # can not happen (normally)
-        endif()
-        set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-cross-build=${ICU_HOST_PATH}")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        # Configure release
-        message(STATUS "Configuring ${RELEASE_TRIPLET}")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
-        set(ENV{CFLAGS} "${EXTRA_RELEASE_FLAGS} ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
-        set(ENV{CXXFLAGS} "${EXTRA_RELEASE_FLAGS} ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
-        set(ENV{LDFLAGS} "${RELEASE_LDFLAGS}")
-        vcpkg_execute_required_process(
-            COMMAND ${BASH} --noprofile --norc -c
-                "${SOURCE_PATH}/source/runConfigureICU ${PLATFORM} ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELEASE}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
-            LOGNAME "configure-${RELEASE_TRIPLET}")
-        message(STATUS "Configuring ${RELEASE_TRIPLET} done")
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        # Configure debug
-        message(STATUS "Configuring ${DEBUG_TRIPLET}")
-        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
-        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
-        set(ENV{CFLAGS} "${EXTRA_DEBUG_FLAGS} ${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
-        set(ENV{CXXFLAGS} "${EXTRA_DEBUG_FLAGS} ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
-        set(ENV{LDFLAGS} "${DEBUG_LDFLAGS}")
-        vcpkg_execute_required_process(
-            COMMAND ${BASH} --noprofile --norc -c
-                "${SOURCE_PATH}/source/runConfigureICU ${PLATFORM} ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
-            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
-            LOGNAME "configure-${DEBUG_TRIPLET}")
-        message(STATUS "Configuring ${DEBUG_TRIPLET} done")
-    endif()
+if(NOT "${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}")
+    # cross compiling
+    list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_INSTALLED_DIR}/${HOST_TRIPLET}/tools/${PORT}")
 endif()
 
-unset(ENV{CFLAGS})
-unset(ENV{CXXFLAGS})
-unset(ENV{LDFLAGS})
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(VCPKG_MAKE_BUILD_TRIPLET --host=x86_64-w64-mingw32)
+    else()
+        set(VCPKG_MAKE_BUILD_TRIPLET --host=i686-w64-mingw32)
+    endif()
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
+    set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)
+else()
+    set(BASH bash)
+endif()
+
+vcpkg_configure_make(
+    SOURCE_PATH ${SOURCE_PATH}
+    PROJECT_SUBPATH source
+    OPTIONS ${CONFIGURE_OPTIONS}
+    OPTIONS_RELEASE ${CONFIGURE_OPTIONS_RELEASE}
+    OPTIONS_DEBUG ${CONFIGURE_OPTIONS_DEBUG}
+)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # Build release
     message(STATUS "Package ${RELEASE_TRIPLET}")
-    vcpkg_execute_build_process(
-        COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY}"
-        NO_PARALLEL_COMMAND ${BASH} --noprofile --norc -c "make"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
-        LOGNAME "make-build-${RELEASE_TRIPLET}")
+    vcpkg_build_make()
 
     # remove this block if https://unicode-org.atlassian.net/browse/ICU-21458
     # is resolved and use the configure script instead
@@ -324,16 +207,7 @@ endif()
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     # Build debug
     message(STATUS "Package ${DEBUG_TRIPLET}")
-    vcpkg_execute_build_process(
-        COMMAND ${BASH} --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY}"
-        NO_PARALLEL_COMMAND ${BASH} --noprofile --norc -c "make"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
-        LOGNAME "make-build-${DEBUG_TRIPLET}")
-
-    vcpkg_execute_build_process(
-        COMMAND ${BASH} --noprofile --norc -c "make install"
-        WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
-        LOGNAME "make-install-${DEBUG_TRIPLET}")
+    vcpkg_install_make()
     message(STATUS "Package ${DEBUG_TRIPLET} done")
 endif()
 
