@@ -1,0 +1,105 @@
+{
+  "name": "imgui",
+  "version": "1.81",
+  "port-version": 2,
+  "description": "Bloat-free Immediate Mode Graphical User interface for C++ with minimal dependencies.",
+  "homepage": "https://github.com/ocornut/imgui",
+  "features": {
+    "allegro5-binding": {
+      "description": "Make available Allegro5 binding",
+      "dependencies": [
+        "allegro5"
+      ]
+    },
+    "docking-experimental": {
+      "description": "Build with docking support"
+    },
+    "dx10-binding": {
+      "description": "Make available DirectX10 binding"
+    },
+    "dx11-binding": {
+      "description": "Make available DirectX11 binding"
+    },
+    "dx12-binding": {
+      "description": "Make available DirectX12 binding"
+    },
+    "dx9-binding": {
+      "description": "Make available DirectX9 binding"
+    },
+    "freetype": {
+      "description": "Build font atlases using FreeType instead of stb_truetype",
+      "dependencies": [
+        "freetype"
+      ]
+    },
+    "glfw-binding": {
+      "description": "Make available GLFW binding",
+      "dependencies": [
+        "glfw3"
+      ]
+    },
+    "glut-binding": {
+      "description": "Make available Glut binding",
+      "dependencies": [
+        "freeglut"
+      ]
+    },
+    "libigl-imgui": {
+      "description": "Install the libigl-imgui headers"
+    },
+    "marmalade-binding": {
+      "description": "Make available Marmalade binding"
+    },
+    "metal-binding": {
+      "description": "Make available Metal binding"
+    },
+    "opengl2-binding": {
+      "description": "Make available OpenGL (legacy) binding"
+    },
+    "opengl3-gl3w-binding": {
+      "description": "Make available OpenGL3/ES/ES2 (modern) binding with gl3w",
+      "dependencies": [
+        "gl3w"
+      ]
+    },
+    "opengl3-glad-binding": {
+      "description": "Make available OpenGL3/ES/ES2 (modern) binding with glad",
+      "dependencies": [
+        "glad"
+      ]
+    },
+    "opengl3-glbinding-binding": {
+      "description": "Make available OpenGL3/ES/ES2 (modern) binding glbinding",
+      "dependencies": [
+        "glbinding"
+      ]
+    },
+    "opengl3-glew-binding": {
+      "description": "Make available OpenGL3/ES/ES2 (modern) binding with GLEW",
+      "dependencies": [
+        "glew"
+      ]
+    },
+    "osx-binding": {
+      "description": "Make available OSX binding"
+    },
+    "sdl2-binding": {
+      "description": "Make available SDL2 binding",
+      "dependencies": [
+        "sdl2"
+      ]
+    },
+    "vulkan-binding": {
+      "description": "Make available Vulkan binding",
+      "dependencies": [
+        "vulkan"
+      ]
+    },
+    "wchar32": {
+      "description": "Use WCHAR32 instead of WCHAR16"
+    },
+    "win32-binding": {
+      "description": "Make available Win32 binding"
+    }
+  }
+}
