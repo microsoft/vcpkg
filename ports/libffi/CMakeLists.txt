@@ -11,7 +11,7 @@ endif()
 # config variables for ffi.h.in
 set(VERSION 3.3)
 
-set(KNOWN_PROCESSORS x86 x86_64 AMD64 ARM ARM64 i386 armv7l aarch64)
+set(KNOWN_PROCESSORS x86 x86_64 AMD64 ARM ARM64 i386 armv7l armv7-a aarch64)
 
 if(NOT CMAKE_SYSTEM_PROCESSOR IN_LIST KNOWN_PROCESSORS)
     message(FATAL_ERROR "Unknown processor: ${CMAKE_SYSTEM_PROCESSOR}")
@@ -20,6 +20,8 @@ endif()
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "ARM")
     set(TARGET ARM)
 elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "armv7l")
+    set(TARGET ARM)
+elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "armv7-a")
     set(TARGET ARM)
 elseif(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
     set(TARGET ARM64)

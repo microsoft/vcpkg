@@ -3,14 +3,11 @@ vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP" "OSX" "Linux")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Open-Cascade-SAS/OCCT
-    REF V7_4_0
-    SHA512 595ad7226b9365c1a7670b77001f71787a5d8aaa4a93a4a4d8eb938564670d79ae5a247ae7cc770b5da53c9a9f2e4166ba6e5ae104c1f2debad19ec2187f4a56
+    REF 628c0211d53c7fe1036a85e7a7b2b067c9c50f7a #V7.5.0
+    SHA512 8d946e971417642264b318353fb34ebabf214bff5c705c60818da9e56e9cd658ed15b76b73d7207edffa398c23ad9982f4e9656b218b5edada325ca05c1283bb
     HEAD_REF master
     PATCHES
-        fix-msvc-32bit-builds.patch
-        fix-build-with-vs2017.patch
-        fix-static-build.patch
-        fix-install-prefix-path.patch
+        fix-pdb-find.patch
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

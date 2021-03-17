@@ -1,5 +1,7 @@
 # vcpkg_extract_source_archive
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_extract_source_archive.md).
+
 Extract an archive into the source directory. Deprecated in favor of [`vcpkg_extract_source_archive_ex`](vcpkg_extract_source_archive_ex.md).
 
 ## Usage
@@ -29,4 +31,4 @@ This command will also create a tracking file named <FILENAME>.extracted in the 
 * [msgpack](https://github.com/Microsoft/vcpkg/blob/master/ports/msgpack/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_extract_source_archive.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_extract_source_archive.cmake)
+[scripts/cmake/vcpkg\_extract\_source\_archive.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_extract_source_archive.cmake)
