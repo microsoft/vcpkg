@@ -10,14 +10,14 @@
     },
     "abseil": {
       "baseline": "2020-09-23",
-      "port-version": 2
+      "port-version": 3
     },
     "absent": {
       "baseline": "0.3.1",
       "port-version": 0
     },
     "ace": {
-      "baseline": "7.0.0",
+      "baseline": "7.0.1",
       "port-version": 0
     },
     "activemq-cpp": {
@@ -1142,7 +1142,7 @@
     },
     "cgal": {
       "baseline": "5.2",
-      "port-version": 1
+      "port-version": 2
     },
     "cgicc": {
       "baseline": "3.2.19-4",
@@ -2262,7 +2262,7 @@
     },
     "gmp": {
       "baseline": "6.2.1",
-      "port-version": 3
+      "port-version": 4
     },
     "google-cloud-cpp": {
       "baseline": "1.25.0",
@@ -2557,7 +2557,7 @@
       "port-version": 0
     },
     "indicators": {
-      "baseline": "2020-10-30",
+      "baseline": "2.0",
       "port-version": 0
     },
     "infoware": {
@@ -2618,7 +2618,7 @@
     },
     "ixwebsocket": {
       "baseline": "11.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "jack2": {
       "baseline": "1.9.14",
@@ -3714,7 +3714,7 @@
     },
     "magnum-plugins": {
       "baseline": "2020.06",
-      "port-version": 3
+      "port-version": 4
     },
     "mapbox-variant": {
       "baseline": "1.2.0",
@@ -4230,7 +4230,7 @@
     },
     "ocilib": {
       "baseline": "4.7.1",
-      "port-version": 0
+      "port-version": 1
     },
     "octomap": {
       "baseline": "1.9.5",
@@ -4358,7 +4358,7 @@
     },
     "openjpeg": {
       "baseline": "2.3.1",
-      "port-version": 2
+      "port-version": 3
     },
     "openmama": {
       "baseline": "6.3.1",
@@ -4858,7 +4858,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 1
+      "port-version": 2
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -6126,7 +6126,7 @@
     },
     "vc": {
       "baseline": "1.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "vcglib": {
       "baseline": "1.0.1",
