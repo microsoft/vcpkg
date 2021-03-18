@@ -1,6 +1,9 @@
+#[===[
+# uncomment when issue #16773 fixed
 if(NOT TARGET_TRIPLET STREQUAL _HOST_TRIPLET)
     message(FATAL_ERROR "vcpkg-cmake is a host-only port; please mark it as a host port in your dependencies.")
 endif()
+#]===]
 
 file(INSTALL
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg_cmake_configure.cmake"
