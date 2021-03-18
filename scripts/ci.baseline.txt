@@ -137,7 +137,6 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
-collada-dom:x64-windows-static=fail
 collada-dom:x64-windows-static-md=fail
 constexpr-contracts:x64-linux=fail
 coolprop:arm-uwp=fail
