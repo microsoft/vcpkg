@@ -5,8 +5,8 @@ if(buildtrees_path_length GREATER 35 AND CMAKE_HOST_WIN32)
             "We recommend moving vcpkg to a short path such as 'C:\\vcpkg' or using the subst command."
         )
 endif()
-set(VCPKG_BUILD_TYPE release) #You probably want to set this to reduce build type and space requirements
-message(STATUS "${PORT} requires a lot of free disk space (>100GB), ram (>8 GB) and time (>4h per configuration) to be successfully build.\n\
+#set(VCPKG_BUILD_TYPE release) #You probably want to set this to reduce build type and space requirements
+message(STATUS "${PORT} requires a lot of free disk space (>100GB), ram (>8 GB) and time (>2h per configuration) to be successfully build.\n\
 -- As such ${PORT} is currently experimental.\n\
 -- If ${PORT} fails post build validation please open up an issue. \n\
 -- If it fails due to post validation the successfully installed files can be found in ${CURRENT_PACKAGES_DIR} \n\
