@@ -7,7 +7,7 @@ vcpkg_from_github(
     PATCHES
         vs-version-detection.patch
         use-uriparser.patch
-		use-vcpkg-minizip.patch
+        use-vcpkg-minizip.patch
 )
 
 vcpkg_configure_cmake(
@@ -25,6 +25,4 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/licenses/license_e.txt DESTINATION
-             ${CURRENT_PACKAGES_DIR}/share/${PORT}
-             RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/licenses/license_e.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
