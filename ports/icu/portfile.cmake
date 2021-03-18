@@ -165,18 +165,7 @@ file(GLOB TEST_LIBS
     ${CURRENT_PACKAGES_DIR}/debug/lib/*test*)
 file(REMOVE ${TEST_LIBS})
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    # copy icu dlls from lib to bin
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        file(GLOB RELEASE_DLLS ${CURRENT_PACKAGES_DIR}/lib/icu*${ICU_VERSION_MAJOR}.dll)
-        file(COPY ${RELEASE_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    endif()
-
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        file(GLOB DEBUG_DLLS ${CURRENT_PACKAGES_DIR}/debug/lib/icu*d${ICU_VERSION_MAJOR}.dll)
-        file(COPY ${DEBUG_DLLS} DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
-    endif()
-else()
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(VCPKG_TARGET_IS_WINDOWS)
         # rename static libraries to match import libs
         # see https://gitlab.kitware.com/cmake/cmake/issues/16617
@@ -208,12 +197,14 @@ else()
     endforeach()
 endif()
 
-# Install executables from ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/bin to /tools/icu/bin
-vcpkg_copy_tools(
-    TOOL_NAMES icupkg gennorm2 gencmn genccode gensprep
-    SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools/icu/sbin
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin
-)
+# Install executables from /tools/icu/sbin to /tools/icu/bin on unix
+if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    vcpkg_copy_tools(
+        TOOL_NAMES icupkg gennorm2 gencmn genccode gensprep
+        SEARCH_DIR ${CURRENT_PACKAGES_DIR}/tools/icu/sbin
+        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin
+    )
+endif()
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/tools/icu/sbin
@@ -222,6 +213,8 @@ file(REMOVE_RECURSE
 # To cross compile, we need some files at specific positions. So lets copy them
 file(GLOB CROSS_COMPILE_DEFS ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/config/icucross.*)
 file(INSTALL ${CROSS_COMPILE_DEFS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/config)
+
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
 
 # remove any remaining dlls in /lib
 file(GLOB DUMMY_DLLS ${CURRENT_PACKAGES_DIR}/lib/*.dll ${CURRENT_PACKAGES_DIR}/debug/lib/*.dll)
