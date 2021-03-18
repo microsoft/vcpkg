@@ -1,8 +1,8 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 string(LENGTH "${CURRENT_BUILDTREES_DIR}" buildtrees_path_length)
-if(buildtrees_path_length GREATER 15 AND CMAKE_HOST_WIN32)
+if(buildtrees_path_length GREATER 35 AND CMAKE_HOST_WIN32)
         message(FATAL_ERROR "${PORT}'s buildsystem uses very long paths and will fail on your system.\n"
-            "We recommend moving vcpkg to a short path such as 'C:\\src\\vcpkg' or using the subst command."
+            "We recommend moving vcpkg to a short path such as 'C:\\vcpkg' or using the subst command."
         )
 endif()
 set(VCPKG_BUILD_TYPE release) #You probably want to set this to reduce build type and space requirements
