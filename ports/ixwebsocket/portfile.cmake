@@ -27,7 +27,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ixwebsocket TARGET_PATH share/${port})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ixwebsocket)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
