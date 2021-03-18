@@ -19,9 +19,12 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/collada_dom-2.5)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/licenses/license_e.txt DESTINATION
-             ${CURRENT_PACKAGES_DIR}/share/collada-dom
+             ${CURRENT_PACKAGES_DIR}/share/${PORT}
              RENAME copyright)
