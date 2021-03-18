@@ -1,6 +1,7 @@
 {
   "name": "ttauri",
   "version": "0.3.0",
+  "maintainers": "@takev",
   "description": "A portable, low latency, retained-mode GUI library written in C++.",
   "homepage": "https://github.com/ttauri-project/ttauri",
   "license": "BSL-1.0",
