@@ -14,7 +14,7 @@ index 1efecf8..198f429 100755
  
  if(NOT WIN32)
    if(NOT ${CMAKE_SYSTEM_NAME} STREQUAL "OpenBSD")
-@@ -188,11 +196,16 @@ endif(NOT WIN32)
+@@ -188,11 +196,10 @@ endif(NOT WIN32)
  
  if(BUILD_ORM)
    # find postgres
@@ -27,12 +27,6 @@ index 1efecf8..198f429 100755
 +  if(PostgreSQL_FOUND)
 +    set(pg_FOUND true)
 +    target_link_libraries(${PROJECT_NAME} PRIVATE PostgreSQL::PostgreSQL)
-+    if(NOT WIN32)
-+      target_link_libraries(${PROJECT_NAME}
-+                            PRIVATE ${PostgreSQL_LIBRARY_DIRS}/libpgcommon.a)
-+      target_link_libraries(${PROJECT_NAME}
-+                            PRIVATE ${PostgreSQL_LIBRARY_DIRS}/libpgport.a)
-+    endif(NOT WIN32)
      set(DROGON_SOURCES ${DROGON_SOURCES}
                         orm_lib/src/postgresql_impl/PostgreSQLResultImpl.cc)
      if(LIBPQ_BATCH_MODE)
