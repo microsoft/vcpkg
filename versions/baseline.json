@@ -1290,7 +1290,7 @@
     },
     "collada-dom": {
       "baseline": "2.5.0-3",
-      "port-version": 0
+      "port-version": 1
     },
     "colmap": {
       "baseline": "3.6",
