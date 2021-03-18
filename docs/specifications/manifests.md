@@ -130,7 +130,7 @@ There will be two "modes" for vcpkg from this point forward: "classic", and "man
 The former will act exactly like the existing vcpkg workflow, so as to avoid breaking
 anyone. The latter will be the mode only when the user either:
 
-* Passes `--manifest-root-dir=<directory>` (initially, `x-manifest-root-dir`)
+* Passes `--manifest-root=<directory>` (initially, `x-manifest-root`)
 * Runs `vcpkg` in a directory that contains a file named `vcpkg.json`, or in a
   child directory of a directory containing `vcpkg.json`.
   * For this, initially vcpkg will warn that the behavior will change in the
