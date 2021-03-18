@@ -1597,8 +1597,8 @@
       "port-version": 1
     },
     "detours": {
-      "baseline": "4.0.1-2",
-      "port-version": 0
+      "baseline": "4.0.1",
+      "port-version": 2
     },
     "devicenameresolver": {
       "baseline": "2016-06-26-0850d88fa6-1",
