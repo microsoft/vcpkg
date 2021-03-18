@@ -4,16 +4,16 @@ if ("docking-experimental" IN_LIST FEATURES)
     vcpkg_from_github(
        OUT_SOURCE_PATH SOURCE_PATH
        REPO ocornut/imgui
-       REF 239d09804d17997e147f4bcfb451ead04c1d67ff
-       SHA512 7e93dd8c1a465b8405d32f08aa2be0c1a2bea7762384ba6a16848e10b10f5684f8969b672cec6e994a90fc6a6189519730dd7d15b82ae39b5221278eae23ba61
+       REF 256594575d95d56dda616c544c509740e74906b4
+       SHA512 276729df1c80015c8cffe52ff1f8fcf413c73fd8aa9a48c380e66e470573daf384b2d2ef9912ec62786b97b12810681915dabd09b1474164348ebde103b6e0e6
        HEAD_REF docking
        )
 else()
     vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.81
-    SHA512 d7a2b66dea77359f78068a595607d7668e09ddd0b91910f67fc6463cb920b91b0cc1855984bd4d41e6a880b69ca7cd5e3adc064dcf461c0629b9f8c845a4fc3e
+    REF v1.82
+    SHA512 210076c2b04c09e63a4924e1f874bfe240668f4d2656511c96dd5499efe04d795ad01d5af8e2aa2543849d3ca5ef1a6c6555a9232d4d92f95bf98c41e8505b58
     HEAD_REF master
     )
 endif()
@@ -26,6 +26,7 @@ if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES 
     allegro5-binding            IMGUI_BUILD_ALLEGRO5_BINDING
     dx9-binding                 IMGUI_BUILD_DX9_BINDING
     dx10-binding                IMGUI_BUILD_DX10_BINDING
