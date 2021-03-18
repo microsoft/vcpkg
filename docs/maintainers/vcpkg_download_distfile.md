@@ -1,6 +1,6 @@
 # vcpkg_download_distfile
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_download_distfile.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_download_distfile.md).
 
 Download and cache a file needed for this port.
 
