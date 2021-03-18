@@ -2541,8 +2541,8 @@
       "port-version": 0
     },
     "imgui": {
-      "baseline": "1.81",
-      "port-version": 2
+      "baseline": "1.82",
+      "port-version": 0
     },
     "imgui-sfml": {
       "baseline": "2.1-2",
@@ -2903,6 +2903,10 @@
     "libb2": {
       "baseline": "0.98.1",
       "port-version": 4
+    },
+    "libbacktrace": {
+      "baseline": "2021-03-14",
+      "port-version": 0
     },
     "libbf": {
       "baseline": "1.0.0-1",
@@ -5993,7 +5997,7 @@
       "port-version": 0
     },
     "tweeny": {
-      "baseline": "3.0",
+      "baseline": "3.2.0",
       "port-version": 0
     },
     "type-lite": {
