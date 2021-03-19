@@ -3720,6 +3720,10 @@
       "baseline": "2020.06",
       "port-version": 4
     },
+    "mailio": {
+      "baseline": "0.20.0",
+      "port-version": 0
+    },
     "mapbox-variant": {
       "baseline": "1.2.0",
       "port-version": 0
