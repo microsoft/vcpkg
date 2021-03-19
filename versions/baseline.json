@@ -3726,7 +3726,7 @@
     },
     "mailio": {
       "baseline": "0.20.0",
-      "port-version": 0
+      "port-version": 1
     },
     "mapbox-variant": {
       "baseline": "1.2.0",
