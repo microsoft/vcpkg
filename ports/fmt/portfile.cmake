@@ -6,16 +6,17 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES fix-warning4189.patch
 )
-vcpkg_configure_cmake(
+
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE # with MSBuild (on UWP), fmt writes into the source directory
     OPTIONS
         -DFMT_CMAKE_DIR=share/fmt
         -DFMT_TEST=OFF
         -DFMT_DOC=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 file(INSTALL ${SOURCE_PATH}/LICENSE.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -40,7 +41,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_TARGET_IS_WINDOWS)
