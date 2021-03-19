@@ -2898,7 +2898,7 @@
     },
     "libassuan": {
       "baseline": "2.5.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libb2": {
       "baseline": "0.98.1",
@@ -3026,7 +3026,7 @@
     },
     "libgcrypt": {
       "baseline": "1.8.7",
-      "port-version": 0
+      "port-version": 1
     },
     "libgd": {
       "baseline": "2.2.5-4",
@@ -5562,7 +5562,7 @@
     },
     "spatialite-tools": {
       "baseline": "5.0.0",
-      "port-version": 1
+      "port-version": 2
     },
     "spdk": {
       "baseline": "19.01.1",
