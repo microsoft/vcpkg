@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
         pcl_utils.patch
         pcl_config.patch
-        use_flann_targets.patch
         boost-1.70.patch
         fix-link-libpng.patch
         remove-broken-targets.patch
