@@ -3549,8 +3549,8 @@
       "port-version": 1
     },
     "libwebsockets": {
-      "baseline": "4.1.3",
-      "port-version": 1
+      "baseline": "4.1.6",
+      "port-version": 0
     },
     "libxdiff": {
       "baseline": "0.23",
