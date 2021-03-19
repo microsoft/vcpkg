@@ -1,5 +1,7 @@
 ## Buildsystem Integration
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/integration.md).**
+
 Vcpkg offers many ways to integrate into your build so you can do what's right for your project. There are two main categories of integration:
 
 - [`integrate` command](#integrate)

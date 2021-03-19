@@ -11,7 +11,7 @@ vcpkg 사용을 시작하는 방법은 [시작하기](#시작하기) 섹션을 �
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), #vcpkg 채널
 * Discord: [\#include \<C++\>](https://www.includecpp.org), #🌏vcpkg 채널
-* Docs: [Documentation](docs/index.md)
+* Docs: [Documentation](docs/README.md)
 
 [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
@@ -294,7 +294,7 @@ $ ./vcpkg integrate bash
 
 # 예제
 
-구체적인 연습은 [문서](docs/index.md)를 참고하세요,
+구체적인 연습은 [문서](docs/README.md)를 참고하세요,
 including [패키지 설치 및 사용](docs/examples/installing-and-using-packages.md),
 [zip 파일에서 새 패키지 추가](docs/examples/packaging-zipfiles.md),
 및 [GitHub 저장소에서 새 패키지 추가](docs/examples/packaging-github-repos.md).
