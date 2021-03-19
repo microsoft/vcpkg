@@ -1,0 +1,11 @@
+{
+  "name": "shaderc",
+  "version-date": "2019-06-26",
+  "port-version": 3,
+  "description": "A collection of tools, libraries and tests for shader compilation.",
+  "homepage": "https://github.com/google/shaderc",
+  "dependencies": [
+    "glslang",
+    "spirv-tools"
+  ]
+}

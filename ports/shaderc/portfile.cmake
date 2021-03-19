@@ -1,6 +1,3 @@
-#Note: glslang and spir tools doesn't export symbol and need to be build as static lib for cmake to work
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/shaderc
