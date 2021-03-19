@@ -8,8 +8,10 @@ vcpkg_from_github(
         fix-warning4189.patch
         fix-write-batch.patch
 )
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    DISABLE_PARALLEL_CONFIGURE # with MSBuild (on UWP), fmt writes into the source directory
     OPTIONS
         -DFMT_CMAKE_DIR=share/fmt
         -DFMT_TEST=OFF
