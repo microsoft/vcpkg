@@ -1904,6 +1904,10 @@
       "baseline": "2.0.1",
       "port-version": 0
     },
+    "fbgemm": {
+      "baseline": "2021-03-18",
+      "port-version": 0
+    },
     "fbthrift": {
       "baseline": "2020.10.19.00",
       "port-version": 0
