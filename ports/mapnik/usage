@@ -1,0 +1,4 @@
+The package mapnik provides CMake targets:
+
+    find_package(mapnik CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE mapnik::core mapnik::mapnik)
