@@ -336,6 +336,10 @@ if(NOT DEFINED CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO)
     endif()
 endif()
 
+set(CPY_CMAKE_GENERATOR_PLATFORM ${CMAKE_GENERATOR_PLATFORM})
+if("$ENV{VCPKG_DEFAULT_TRIPLET}" STREQUAL "arm64-osx")
+    set(CMAKE_GENERATOR_PLATFORM "arm64")
+endif()
 if(VCPKG_TARGET_TRIPLET)
     # This is required since a user might do: 'set(VCPKG_TARGET_TRIPLET somevalue)' [no CACHE] before the first project() call
     # Latter within the toolchain file we do: 'set(VCPKG_TARGET_TRIPLET somevalue CACHE STRING "")' which
@@ -433,6 +437,7 @@ else()
         endif()
     endif()
 endif()
+set(CMAKE_GENERATOR_PLATFORM ${CPY_CMAKE_GENERATOR_PLATFORM})
 
 if(CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsPhone")
     set(Z_VCPKG_TARGET_TRIPLET_PLAT uwp)
