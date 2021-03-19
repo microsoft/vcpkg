@@ -3798,7 +3798,7 @@
     },
     "metrohash": {
       "baseline": "1.1.3",
-      "port-version": 3
+      "port-version": 4
     },
     "mgnlibs": {
       "baseline": "2019-09-29",
