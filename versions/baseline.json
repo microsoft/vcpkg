@@ -2380,6 +2380,10 @@
       "baseline": "11.0.1",
       "port-version": 0
     },
+    "happly": {
+      "baseline": "2021-03-19",
+      "port-version": 0
+    },
     "harfbuzz": {
       "baseline": "2.7.4",
       "port-version": 1
