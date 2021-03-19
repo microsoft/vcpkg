@@ -30,19 +30,19 @@
 # Add new items alphabetically
 
 # script ports
-vcpkg-cmake:arm64-windows=fail
-vcpkg-cmake:arm-uwp=fail
-vcpkg-cmake:x64-uwp=fail
-vcpkg-cmake:x64-windows-static=fail
-vcpkg-cmake:x64-windows-static-md=fail
-vcpkg-cmake:x86-windows=fail
+#vcpkg-cmake:arm64-windows=fail
+#vcpkg-cmake:arm-uwp=fail
+#vcpkg-cmake:x64-uwp=fail
+#vcpkg-cmake:x64-windows-static=fail
+#vcpkg-cmake:x64-windows-static-md=fail
+#vcpkg-cmake:x86-windows=fail
 
-vcpkg-cmake-config:arm64-windows=fail
-vcpkg-cmake-config:arm-uwp=fail
-vcpkg-cmake-config:x64-uwp=fail
-vcpkg-cmake-config:x64-windows-static=fail
-vcpkg-cmake-config:x64-windows-static-md=fail
-vcpkg-cmake-config:x86-windows=fail
+#vcpkg-cmake-config:arm64-windows=fail
+#vcpkg-cmake-config:arm-uwp=fail
+#vcpkg-cmake-config:x64-uwp=fail
+#vcpkg-cmake-config:x64-windows-static=fail
+#vcpkg-cmake-config:x64-windows-static-md=fail
+#vcpkg-cmake-config:x86-windows=fail
 
 # other ports
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
@@ -137,8 +137,6 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
-collada-dom:x64-windows-static=fail
-collada-dom:x64-windows-static-md=fail
 constexpr-contracts:x64-linux=fail
 coolprop:arm-uwp=fail
 coolprop:x64-linux=fail
@@ -544,6 +542,13 @@ leptonica:x64-uwp=fail
 leptonica:arm-uwp=fail
 leveldb:arm-uwp=fail
 leveldb:x64-uwp=fail
+libbacktrace:arm64-windows=fail
+libbacktrace:arm-uwp=fail
+libbacktrace:x64-uwp=fail
+libbacktrace:x64-windows=fail
+libbacktrace:x64-windows-static=fail
+libbacktrace:x64-windows-static-md=fail
+libbacktrace:x86-windows=fail
 libaiff:x64-linux=fail
 libarchive:arm-uwp=fail
 libbf:arm64-windows=fail
@@ -600,6 +605,7 @@ libfreenect2:x64-linux=fail
 libfreenect2:x64-osx=fail
 libgit2:arm-uwp=fail
 libgit2:x64-uwp=fail
+libgnutls:x64-osx=fail
 libgo:arm-uwp=fail
 libgo:x64-uwp=fail
 libgo:arm64-windows=fail
@@ -904,10 +910,6 @@ meschach:x64-osx=fail
 meschach:x64-uwp=fail
 metis:arm-uwp=fail
 metis:x64-uwp=fail
-metrohash:arm-uwp=fail
-metrohash:x64-uwp=fail
-metrohash:x86-windows=fail
-metrohash:arm64-windows=fail
 mhook:arm64-windows=fail
 mhook:arm-uwp=fail
 mhook:x64-linux=fail
