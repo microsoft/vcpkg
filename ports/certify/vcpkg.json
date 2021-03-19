@@ -1,0 +1,10 @@
+{
+  "name": "certify",
+  "version-date": "2021-03-19",
+  "description": "Platform-specific TLS keystore abstraction for use with Boost.ASIO and OpenSSL.",
+  "homepage": "https://github.com/djarek/certify",
+  "dependencies": [
+    "boost-asio",
+    "openssl"
+  ]
+}
