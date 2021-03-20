@@ -20,7 +20,7 @@ index b7dff11..d1ec2ff 100644
 +    find_package(JPEG REQUIRED)
 +    find_package(TIFF REQUIRED)
 +    find_package(zstd REQUIRED)
-+    find_package(gif  REQUIRED)
++    find_package(GIF REQUIRED)
 +
 +    list(APPEND OSG_DEPENDS_LIBRARY expat::expat PNG::PNG JPEG::JPEG TIFF::TIFF zstd::libzstd_static ${GIF_LIBRARIES} ${CFITSIO_LIBRARY})
 +    if (UNIX)
