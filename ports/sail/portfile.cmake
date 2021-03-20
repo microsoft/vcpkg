@@ -4,7 +4,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO smoked-herring/sail
     REF v0.9.0-pre12
-    SHA512 3b5d4e4bf95253f3ebbcbd15c2cac9752aef8269205db2250b6227408980ed8ae39fcbe72f2960202471af484af2226508fb1521be79d4d029c78d192f9739c1
+    SHA512 2082c9715b101fd15b698bc85dd3af2c47233325ddea2852fe3abcd0c456a8fd9e915fbec5c30e4c2c53bf159f843ecebf88f80f23fe0b5365a0b030f36ede5c
     HEAD_REF master
 )
 
