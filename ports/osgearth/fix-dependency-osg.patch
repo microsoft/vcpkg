@@ -2,7 +2,7 @@ diff --git a/CMakeModules/FindOSG.cmake b/CMakeModules/FindOSG.cmake
 index b7dff11..d1ec2ff 100644
 --- a/CMakeModules/FindOSG.cmake
 +++ b/CMakeModules/FindOSG.cmake
-@@ -121,5 +121,43 @@ IF( OSG_LIBRARY AND OSG_INCLUDE_DIR )
+@@ -121,5 +121,36 @@ IF( OSG_LIBRARY AND OSG_INCLUDE_DIR )
      SET( OSG_FOUND "YES" )
      SET( OSG_INCLUDE_DIRS ${OSG_INCLUDE_DIR} ${OSG_GEN_INCLUDE_DIR} )
      GET_FILENAME_COMPONENT( OSG_LIBRARIES_DIR ${OSG_LIBRARY} PATH )
@@ -15,35 +15,28 @@ index b7dff11..d1ec2ff 100644
 +    
 +    find_package(unofficial-brotli CONFIG REQUIRED)
 +    find_package(BZip2 REQUIRED)
-+    
++    find_package(expat CONFIG REQUIRED)
 +    find_package(libpng CONFIG REQUIRED)
 +    find_package(JPEG REQUIRED)
 +    find_package(TIFF REQUIRED)
++    find_package(zstd REQUIRED)
++    find_package(gif  REQUIRED)
 +
++    list(APPEND OSG_DEPENDS_LIBRARY expat::expat PNG::PNG JPEG::JPEG TIFF::TIFF zstd::libzstd_static ${GIF_LIBRARIES} ${CFITSIO_LIBRARY})
 +    if (UNIX)
-+        FIND_LIBRARY(UUID_LIBRARY_DEBUG uuid libuuid  NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
-+        FIND_LIBRARY(UUID_LIBRARY_RELEASE uuid libuuid  NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH REQUIRED)
-+        select_library_configurations(UUID)
-+
-+        FIND_LIBRARY(FONTCONFIG_LIBRARY_DEBUG fontconfig libfontconfig NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
-+        FIND_LIBRARY(FONTCONFIG_LIBRARY_RELEASE fontconfig libfontconfig NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH REQUIRED)
-+        select_library_configurations(FONTCONFIG)
-+
-+        set(FONTCONFIG_LIBRARY ${FONTCONFIG_LIBRARY} ${FREETYPE_LIBRARY} ${UUID_LIBRARY})
++        list(APPEND OSG_DEPENDS_LIBRARY ${OSG_DEPENDS_LIBRARY} -pthread)
++        # Due to Linux Linker dependency issues these need to included again
++        set(DEPEND_LIB_LIST fontconfig uuid gdal json-c expat zstd proj sqlite3 webp gif cfitsio)
++    else(UNIX)
++        set(DEPEND_LIB_LIST cfitsio)
 +    endif()
-+
-+    SET(OSG_DEPENDS_LIBRARY ${FONTCONFIG_LIBRARY} PNG::PNG JPEG::JPEG TIFF::TIFF ${GIF_LIBRARIES} ${CFITSIO_LIBRARY})
-+
-+    foreach (libname gdal proj json-c sqlite3 expat zstd webp gif cfitsio)
++    foreach (libname ${DEPEND_LIB_LIST})
 +        find_library(${libname}_LIBRARY_RELEASE NAMES ${libname}  NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH REQUIRED)
-+        find_library(${libname}_LIBRARY_DEBUG NAMES ${libname} ${libname}d NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
++        find_library(${libname}_LIBRARY_DEBUG NAMES ${libname} ${libname}d ${libname}_d NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
 +        select_library_configurations(${libname})
 +        list(APPEND OSG_DEPENDS_LIBRARY ${${libname}_LIBRARY})
 +    endforeach()
 +
-+    if (UNIX)
-+        SET(OSG_DEPENDS_LIBRARY ${OSG_DEPENDS_LIBRARY} -pthread)
-+    endif()
  ENDIF( OSG_LIBRARY AND OSG_INCLUDE_DIR )
  
 diff --git a/src/applications/osgearth_3pv/CMakeLists.txt b/src/applications/osgearth_3pv/CMakeLists.txt
