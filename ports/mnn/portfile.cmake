@@ -62,9 +62,11 @@ vcpkg_copy_pdbs()
 
 vcpkg_download_distfile(COPYRIGHT_PATH
     URLS "https://apache.org/licenses/LICENSE-2.0.txt" 
-    FILENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright
+    FILENAME copyright
     SHA512 98f6b79b778f7b0a15415bd750c3a8a097d650511cb4ec8115188e115c47053fe700f578895c097051c9bc3dfb6197c2b13a15de203273e1a3218884f86e90e8
 )
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(RENAME ${COPYRIGHT_PATH} ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     if("metal" IN_LIST FEATURES)
