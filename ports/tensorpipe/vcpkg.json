@@ -1,6 +1,6 @@
 {
   "name": "tensorpipe",
-  "version-date": "2021-03-02",
+  "version-date": "2021-03-20",
   "description": "A tensor-aware point-to-point communication primitive for machine learning",
   "homepage": "https://github.com/pytorch/tensorpipe",
   "supports": "!windows",
@@ -9,6 +9,9 @@
     "libuv"
   ],
   "features": {
+    "benchmark": {
+      "description": "Build benchmark executables"
+    },
     "cma": {
       "description": "Enable CMA channel"
     },
@@ -35,9 +38,6 @@
       "dependencies": [
         "gtest"
       ]
-    },
-    "benchamrk": {
-      "description": "Build benchmark executables"
     }
   }
 }

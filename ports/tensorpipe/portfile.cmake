@@ -8,8 +8,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/tensorpipe
-    REF f73bcd9dfaa02e8335a493dec7f6b1e3a96aa476
-    SHA512 42e144804f491e55a9135c56cc310def905ae1dd84f417237c5035e7ddc90455dd884be7942ca24c678239382d525a5b50c804e29e83919ff84c49c6061e2bea
+    REF ee18d15dd098fe74b51f3d554fca7fa8ec6b3ce6
+    SHA512 7ec69cf6291b7d8ec85008f76c98a1a20e268f6e2c1fa2792cc60e1c21babb9ac56b44fbc8b59e0fb1b396fa1127a15ad73a4f865a537eb3ae94ef371d36f25d
     PATCHES
         fix-cmakelists.patch
         ${FEATURE_PATCHES}
@@ -36,7 +36,6 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
