@@ -13,7 +13,7 @@
       "description": "Build benchmark executables"
     },
     "cma": {
-      "description": "Enable CMA channel"
+      "description": "Enable CMA channel (Linux only)"
     },
     "cuda": {
       "description": "Enable support for CUDA tensors, CUDA IPC channel",
@@ -22,7 +22,7 @@
       ]
     },
     "ibv": {
-      "description": "Enable InfiniBand transport"
+      "description": "Enable InfiniBand transport (Linux only)"
     },
     "pybind11": {
       "description": "Build Python bindings",
@@ -31,7 +31,7 @@
       ]
     },
     "shm": {
-      "description": "Enable shared memory transport"
+      "description": "Enable shared memory transport (Linux only)"
     },
     "test": {
       "description": "Build with Google.Test",

@@ -4,6 +4,15 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 if("test" IN_LIST FEATURES)
     list(APPEND FEATURE_PATCHES support-test.patch)
 endif()
+if(NOT VCPKG_TARGET_IS_LINUX)
+    if("cma" IN_LIST FEATURES)
+        message(FATAL_ERROR "'cma' feature is for Linux")
+    elseif("ibv" IN_LIST FEATURES)
+        message(FATAL_ERROR "'ibv' feature is for Linux")
+    elseif("shm" IN_LIST FEATURES)
+        message(FATAL_ERROR "'shm' feature is for Linux")
+    endif()
+endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -36,6 +45,7 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
