@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 993f15d..eea994f 100644
+index 993f15d..53f24ae 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -270,18 +270,24 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "^Linux")
@@ -55,19 +55,17 @@ index 993f15d..eea994f 100644
    ENDIF()
  ENDIF()
 diff --git a/source/backend/cuda/CMakeLists.txt b/source/backend/cuda/CMakeLists.txt
-index f9a24cc..583424d 100644
+index f9a24cc..8b1f96f 100644
 --- a/source/backend/cuda/CMakeLists.txt
 +++ b/source/backend/cuda/CMakeLists.txt
-@@ -16,9 +16,28 @@ endif()
+@@ -16,9 +16,26 @@ endif()
  file(GLOB_RECURSE MNN_CUDA_SRC ${CMAKE_CURRENT_LIST_DIR}/core/* ${CMAKE_CURRENT_SOURCE_DIR}/execution/*)
  message(STATUS "message ${CUDA_NVCC_FLAGS} !!!!!!!!!!!")
  
-+find_library(CUDNN_LIB NAMES cudnn PATHS ${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib)
-+if(NOT CUDNN_LIB)
-+    message(FATAL_ERROR "cudnn not found")
-+else()
-+    message(STATUS "using cudnn: ${CUDNN_LIB}")
-+endif()
++# see https://github.com/microsoft/vcpkg/blob/master/ports/cudnn/FindCUDNN.cmake
++find_package(CUDNN REQUIRED)
++message(STATUS "using cudnn: ${CUDNN_LIBRARIES}")
++
 +if(WIN32)
 +    find_library(CUBLAS_LIB NAMES cublas PATHS $ENV{CUDA_PATH}/lib/x64)
 +else()
@@ -83,14 +81,14 @@ index f9a24cc..583424d 100644
 -cuda_add_library(MNN_Cuda_Main SHARED ${MNN_CUDA_SRC} )
 -set(MNN_CUDA_LIBS MNN_Cuda_Main cudnn cublas PARENT_SCOPE)
 +cuda_add_library(MNN_Cuda_Main STATIC ${MNN_CUDA_SRC} )
-+target_link_libraries(MNN_Cuda_Main ${CUDNN_LIB} ${CUBLAS_LIB})
++target_link_libraries(MNN_Cuda_Main CuDNN::CuDNN ${CUBLAS_LIB})
 +
 +set(MNN_CUDA_LIBS MNN_Cuda_Main ${CUDNN_LIB} PARENT_SCOPE)
  add_library(MNN_CUDA OBJECT Register.cpp)
  
  include_directories(
 diff --git a/source/backend/tensorrt/CMakeLists.txt b/source/backend/tensorrt/CMakeLists.txt
-index aadabd6..ce8c0f0 100644
+index aadabd6..3a0d81e 100644
 --- a/source/backend/tensorrt/CMakeLists.txt
 +++ b/source/backend/tensorrt/CMakeLists.txt
 @@ -7,7 +7,7 @@ FIND_PACKAGE(CUDA REQUIRED)
@@ -103,7 +101,7 @@ index aadabd6..ce8c0f0 100644
  include_directories(${CMAKE_CURRENT_LIST_DIR}/execution/)
  include_directories(${CMAKE_CURRENT_LIST_DIR}/execution/plugin/)
 diff --git a/tools/converter/CMakeLists.txt b/tools/converter/CMakeLists.txt
-index 2d5133a..bc00026 100644
+index 2d5133a..d39977a 100644
 --- a/tools/converter/CMakeLists.txt
 +++ b/tools/converter/CMakeLists.txt
 @@ -38,11 +38,12 @@ IF(MNN_BUILD_CONVERTER)
@@ -131,7 +129,7 @@ index 2d5133a..bc00026 100644
 +  install(TARGETS MNNDump2Json MNNConvert RUNTIME DESTINATION bin)
  ENDIF()
 diff --git a/tools/cpp/CMakeLists.txt b/tools/cpp/CMakeLists.txt
-index def574c..84ee95e 100644
+index def574c..f4e48c6 100644
 --- a/tools/cpp/CMakeLists.txt
 +++ b/tools/cpp/CMakeLists.txt
 @@ -53,3 +53,5 @@ if (MSVC)
@@ -140,9 +138,8 @@ index def574c..84ee95e 100644
  endif()
 +
 +install(TARGETS ${MNN_CPP_TOOLS} RUNTIME DESTINATION bin)
-\ No newline at end of file
 diff --git a/tools/evaluation/CMakeLists.txt b/tools/evaluation/CMakeLists.txt
-index 8773372..3615b5c 100644
+index 8773372..e40b66d 100644
 --- a/tools/evaluation/CMakeLists.txt
 +++ b/tools/evaluation/CMakeLists.txt
 @@ -7,4 +7,5 @@ IF(MNN_EVALUATION)
@@ -151,9 +148,8 @@ index 8773372..3615b5c 100644
    endif()
 +  install(TARGETS classficationTopkEval.out RUNTIME DESTINATION bin)
  ENDIF()
-\ No newline at end of file
 diff --git a/tools/quantization/CMakeLists.txt b/tools/quantization/CMakeLists.txt
-index 1e84ee0..00aecd7 100644
+index 1e84ee0..86f3cbc 100644
 --- a/tools/quantization/CMakeLists.txt
 +++ b/tools/quantization/CMakeLists.txt
 @@ -1,3 +1,5 @@
@@ -163,7 +159,7 @@ index 1e84ee0..00aecd7 100644
 +
 +install(TARGETS quantized.out RUNTIME DESTINATION bin)
 diff --git a/tools/train/CMakeLists.txt b/tools/train/CMakeLists.txt
-index 48f355b..0bbb8ef 100644
+index 48f355b..026dc24 100644
 --- a/tools/train/CMakeLists.txt
 +++ b/tools/train/CMakeLists.txt
 @@ -27,6 +27,10 @@ if (MNN_BUILD_TRAIN_MINI)

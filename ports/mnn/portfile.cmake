@@ -1,4 +1,8 @@
 vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "ios" "android")
+if(VCPKG_TARGET_IS_WINDOWS)
+  vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alibaba/MNN
@@ -56,7 +60,11 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-file(DOWNLOAD "https://apache.org/licenses/LICENSE-2.0.txt" ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+vcpkg_download_distfile(COPYRIGHT_PATH
+    URLS "https://apache.org/licenses/LICENSE-2.0.txt" 
+    FILENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright
+    SHA512 98f6b79b778f7b0a15415bd750c3a8a097d650511cb4ec8115188e115c47053fe700f578895c097051c9bc3dfb6197c2b13a15de203273e1a3218884f86e90e8
+)
 
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     if("metal" IN_LIST FEATURES)
