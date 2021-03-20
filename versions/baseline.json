@@ -3689,7 +3689,7 @@
       "port-version": 1
     },
     "llvm": {
-      "baseline": "11.1.0",
+      "baseline": "12.0.0",
       "port-version": 0
     },
     "lmdb": {
