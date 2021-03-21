@@ -5,9 +5,9 @@ endif()
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://ftp.gnome.org/pub/GNOME/sources/gtkmm/3.22/gtkmm-3.22.2.tar.xz"
-    FILENAME "gtkmm-3.22.2.tar.xz"
-    SHA512 6e96b543e459481145ee0f56f31a7ad2466bd8ccdd2abf3205998aecede73d235149ca6e5ba6e8d20a4fd5345e310870d81ac2a716d4f78d1460ed685badbdc2
+    URLS "https://download.gnome.org/sources/gtkmm/4.0/gtkmm-4.0.0.tar.xz"
+    FILENAME "gtkmm-4.0.0.tar.xz"
+    SHA512 16893b6caa39f1b65a4140296d8d25c0d5e5f8a6ab808086783e7222bc1f5e8b94d17d48e4b718a12f0e0291010d445f4da9f88b7f494ec36adb22752d932743
 )
 
 vcpkg_extract_source_archive_ex(
