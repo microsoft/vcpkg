@@ -1,0 +1,9 @@
+{
+  "name": "implot",
+  "version": "0.9",
+  "homepage": "https://github.com/epezent/implot",
+  "description": "Advanced 2D Plotting for Dear ImGui",
+  "dependencies": [
+    "imgui"
+  ]
+}
