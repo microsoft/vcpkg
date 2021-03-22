@@ -236,9 +236,6 @@ if(DUMMY_DLLS)
     file(REMOVE ${DUMMY_DLLS})
 endif()
 
-# Generates warnings about missing pdbs for icudt.dll
-# This is expected because ICU database contains no executable code
-vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread m)
 
 # Handle copyright
