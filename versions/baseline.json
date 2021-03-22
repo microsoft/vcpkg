@@ -4302,7 +4302,7 @@
     },
     "opencascade": {
       "baseline": "7.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opencc": {
       "baseline": "2020-04-26",
