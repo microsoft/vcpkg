@@ -6076,6 +6076,10 @@
       "baseline": "0db9691",
       "port-version": 0
     },
+    "ut": {
+      "baseline": "1.1.8",
+      "port-version": 0
+    },
     "utf8h": {
       "baseline": "2020-06-14",
       "port-version": 0
