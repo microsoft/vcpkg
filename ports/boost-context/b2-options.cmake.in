@@ -5,3 +5,10 @@ if(@VCPKG_TARGET_IS_WINDOWS@)
         binary-format=pe
     )
 endif()
+
+if(@VCPKG_TARGET_IS_OSX@)
+    list(APPEND B2_OPTIONS
+        abi=sysv
+        binary-format=mach-o
+    )
+endif()
