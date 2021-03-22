@@ -5649,7 +5649,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.35.0",
+      "baseline": "3.35.2",
       "port-version": 0
     },
     "sqlitecpp": {
