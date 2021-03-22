@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(MESSAGE "${PORT} currently only supports unix platforms" ON_TARGET "Windows")
+
 set(VERSION_MAJOR 5)
 set(VERSION_MINOR 6)
 set(VERSION_PATCH 0)
