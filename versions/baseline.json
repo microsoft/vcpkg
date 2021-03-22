@@ -5785,7 +5785,7 @@
       "port-version": 1
     },
     "termcolor": {
-      "baseline": "1.0.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "tesseract": {
