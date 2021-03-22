@@ -1,0 +1,24 @@
+{
+  "name": "v8",
+  "version": "8.6.395.17",
+  "port-version": 1,
+  "homepage": "https://v8.dev",
+  "description": "Google Chrome's JavaScript engine",
+  "dependencies": [
+    "icu",
+    "zlib",
+    {
+      "name": "glib",
+      "platform": "linux"
+    },
+    {
+      "name": "pthread",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-gn",
+      "host": true
+    }
+  ],
+  "supports": "!(arm|uwp|osx)"
+}
