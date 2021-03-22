@@ -1242,10 +1242,17 @@ if (BUILD_SHARED_LIBS)
         )
     endif ()
 else ()
-    target_compile_definitions(${PROJECT_NAME}_config_public
-        INTERFACE
-            SODIUM_STATIC
-    )
+    if (MSVC)
+        target_compile_definitions(${PROJECT_NAME}
+            PUBLIC
+                SODIUM_STATIC
+        )
+    else ()
+        target_compile_definitions(${PROJECT_NAME}_config_public
+            INTERFACE
+                SODIUM_STATIC
+        )
+    endif( )
 endif ()
 
 if (BUILD_TESTING)
