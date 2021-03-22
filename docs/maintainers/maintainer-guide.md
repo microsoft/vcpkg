@@ -188,7 +188,7 @@ files into manifest files. Do not convert CONTROL files that have not been modif
 
 ### Follow common conventions for the `"version"` field
 
-See our [specification](../specifications/versioning.md#22-package-versions) for a full explanation of our conventions.
+See our [versioning documentation](../users/versioning.md#version-schemes) for a full explanation of our conventions.
 
 ### Update the `"port-version"` field in the manifest file of any modified ports
 
