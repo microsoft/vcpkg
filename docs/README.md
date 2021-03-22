@@ -35,7 +35,6 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Testing](https://github.com/microsoft/vcpkg-tool/tree/main/docs/testing.md)
 - [Benchmarking](https://github.com/microsoft/vcpkg-tool/tree/main/docs/benchmarking.md)
 - [Layout of the vcpkg source tree](https://github.com/microsoft/vcpkg-tool/tree/main/docs/layout.md)
-- [Maintainer Guidelines](maintainers/maintainer-guide.md)
 
 ### Community Resources (not directly affiliated with vcpkg)
 
