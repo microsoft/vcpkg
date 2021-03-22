@@ -2,7 +2,7 @@
 
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_common_definitions.md).
 
-This file defines the following variabls which are commonly needed or used in portfiles:
+This file defines the following variables which are commonly needed or used in portfiles:
 
 ```cmake
 VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD, OPENBSD. only defined if <target>
