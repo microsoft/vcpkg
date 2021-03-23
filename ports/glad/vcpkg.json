@@ -19,9 +19,6 @@
     }
   ],
   "features": {
-    "core-profile": {
-      "description": "Uses `core` profile instead of `compatibility`."
-    },
     "egl": {
       "description": "Use `egl` spec instead of `gl`."
     },
