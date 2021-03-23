@@ -1966,7 +1966,7 @@
     },
     "flatbuffers": {
       "baseline": "1.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "flint": {
       "baseline": "2.5.2-4",
@@ -3886,6 +3886,10 @@
     },
     "mmx": {
       "baseline": "2019-09-29",
+      "port-version": 0
+    },
+    "mnn": {
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "modp-base64": {
