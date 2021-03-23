@@ -9,14 +9,6 @@ vcpkg_from_github(
         fix-default-proto-file-path.patch
 )
 
-if(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x64" AND NOT VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
-    set(protobuf_BUILD_PROTOC_BINARIES OFF)
-elseif(CMAKE_HOST_WIN32 AND NOT VCPKG_TARGET_IS_MINGW AND NOT (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP))
-    set(protobuf_BUILD_PROTOC_BINARIES OFF)
-else()
-    set(protobuf_BUILD_PROTOC_BINARIES ON)
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
   set(VCPKG_BUILD_SHARED_LIBS ON)
 else()
@@ -47,7 +39,7 @@ vcpkg_configure_cmake(
         -Dprotobuf_MSVC_STATIC_RUNTIME=${VCPKG_BUILD_STATIC_CRT}
         -Dprotobuf_BUILD_TESTS=OFF
         -DCMAKE_INSTALL_CMAKEDIR:STRING=share/protobuf
-        -Dprotobuf_BUILD_PROTOC_BINARIES=${protobuf_BUILD_PROTOC_BINARIES}
+        -Dprotobuf_BUILD_PROTOC_BINARIES=ON
          ${FEATURE_OPTIONS}
 )
 
@@ -66,7 +58,7 @@ endfunction()
 
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(CMAKE_HOST_WIN32)
+if(VCPKG_HOST_IS_WINDOWS)
     set(EXECUTABLE_SUFFIX ".exe")
 else()
     set(EXECUTABLE_SUFFIX "")
@@ -88,12 +80,8 @@ endif()
 
 protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/share)
 
-if(CMAKE_HOST_WIN32)
-    if(protobuf_BUILD_PROTOC_BINARIES)
-        vcpkg_copy_tools(TOOL_NAMES protoc)
-    else()
-        file(COPY ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
-    endif()
+if(VCPKG_HOST_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES protoc)
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
