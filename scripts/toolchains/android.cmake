@@ -6,6 +6,8 @@ set(CMAKE_ANDROID_NDK_TOOLCHAIN_VERSION clang CACHE STRING "")
 
 if (VCPKG_TARGET_TRIPLET MATCHES "^arm64-android")
     set(ANDROID_ABI arm64-v8a CACHE STRING "")
+elseif(VCPKG_TARGET_TRIPLET MATCHES "^armv6-android")
+    set(ANDROID_ABI armeabi CACHE STRING "")	
 elseif(VCPKG_TARGET_TRIPLET MATCHES "^arm-android")
     set(ANDROID_ABI armeabi-v7a CACHE STRING "")
 elseif(VCPKG_TARGET_TRIPLET MATCHES "^x64-android")
