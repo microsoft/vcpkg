@@ -50,44 +50,6 @@ apr:arm64-windows=fail
 # Requires ATL for ARM64 to be installed in CI
 azure-storage-cpp:arm64-windows=fail
 
-# These depend on azure-core-cpp which had breaking changes and need to be rev'd to newer beta versions.
-azure-storage-common-cpp:arm64-windows=skip
-azure-storage-common-cpp:arm-uwp=skip
-azure-storage-common-cpp:x64-linux=skip
-azure-storage-common-cpp:x64-osx=skip
-azure-storage-common-cpp:x64-uwp=skip
-azure-storage-common-cpp:x64-windows=skip
-azure-storage-common-cpp:x64-windows-static=skip
-azure-storage-common-cpp:x64-windows-static-md=skip
-azure-storage-common-cpp:x86-windows=skip
-azure-storage-blobs-cpp:arm64-windows=skip
-azure-storage-blobs-cpp:arm-uwp=skip
-azure-storage-blobs-cpp:x64-linux=skip
-azure-storage-blobs-cpp:x64-osx=skip
-azure-storage-blobs-cpp:x64-uwp=skip
-azure-storage-blobs-cpp:x64-windows=skip
-azure-storage-blobs-cpp:x64-windows-static=skip
-azure-storage-blobs-cpp:x64-windows-static-md=skip
-azure-storage-blobs-cpp:x86-windows=skip
-azure-storage-files-shares-cpp:arm64-windows=skip
-azure-storage-files-shares-cpp:arm-uwp=skip
-azure-storage-files-shares-cpp:x64-linux=skip
-azure-storage-files-shares-cpp:x64-osx=skip
-azure-storage-files-shares-cpp:x64-uwp=skip
-azure-storage-files-shares-cpp:x64-windows=skip
-azure-storage-files-shares-cpp:x64-windows-static=skip
-azure-storage-files-shares-cpp:x64-windows-static-md=skip
-azure-storage-files-shares-cpp:x86-windows=skip
-azure-storage-files-datalake-cpp:arm64-windows=skip
-azure-storage-files-datalake-cpp:arm-uwp=skip
-azure-storage-files-datalake-cpp:x64-linux=skip
-azure-storage-files-datalake-cpp:x64-osx=skip
-azure-storage-files-datalake-cpp:x64-uwp=skip
-azure-storage-files-datalake-cpp:x64-windows=skip
-azure-storage-files-datalake-cpp:x64-windows-static=skip
-azure-storage-files-datalake-cpp:x64-windows-static-md=skip
-azure-storage-files-datalake-cpp:x86-windows=skip
-
 blend2d:arm64-windows=fail
 blend2d:arm-uwp=fail
 blend2d:x64-uwp=fail
