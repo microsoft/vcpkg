@@ -16,16 +16,6 @@ add_definitions(
     -D_CRT_SECURE_NO_WARNINGS=1
 )
 
-if(WITH_DEPENDENCIES)
-    add_definitions(
-        -DHAVE_SNDFILE=1
-        -DHAVE_WAVWRITE=1
-        -DHAVE_WAVREAD=1
-        -DHAVE_LIBAV=1
-        -DHAVE_SWRESAMPLE=1
-    )
-endif()
-
 set(CMAKE_DEBUG_POSTFIX d)
 
 option(BUILD_TOOLS "Build and install tools" ON)
