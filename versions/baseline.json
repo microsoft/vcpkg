@@ -6289,7 +6289,7 @@
       "port-version": 0
     },
     "workflow": {
-      "baseline": "0.9.3",
+      "baseline": "0.9.4",
       "port-version": 1
     },
     "wpilib": {
