@@ -9,7 +9,9 @@ vcpkg_from_github(
     PATCHES
         ignore_use_of_cmake_toolchain_file.patch
         no-werror.patch
-		fix-uwp-build.patch
+        fix-uwp-build.patch
+        fix-issue-6036.patch # this patch is already applied to the latest master branch. 
+                             # remove it in next version update
 )
 
 set(OPTIONS)
