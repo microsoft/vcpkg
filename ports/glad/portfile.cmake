@@ -6,7 +6,7 @@ vcpkg_from_github(
     REF 7ece538856bf124d798ab323c8e1e64ebb83cb50
     SHA512 f6a8ba7d0d09b89c23b6f76962d3e6eef1babc8e1a659e238d30e143eb33ccba424957e5a6d46d99a714bfa2967523b193586d0ff24e29ad8d86c92c9faf9c02
     HEAD_REF master
-    PATCHES encoding.patch
+    PATCHES encoding.patch find_python.patch
 )
 
 set(GLAD_PROFILE "compatibility")
