@@ -3090,7 +3090,7 @@
     },
     "libhv": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libhydrogen": {
       "baseline": "2019-08-11",
