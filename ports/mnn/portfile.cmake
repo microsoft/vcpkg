@@ -62,7 +62,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_download_distfile(COPYRIGHT_PATH
     URLS "https://apache.org/licenses/LICENSE-2.0.txt" 
-    FILENAME copyright
+    FILENAME 98f6b79b778f7b0a1541.txt
     SHA512 98f6b79b778f7b0a15415bd750c3a8a097d650511cb4ec8115188e115c47053fe700f578895c097051c9bc3dfb6197c2b13a15de203273e1a3218884f86e90e8
 )
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
