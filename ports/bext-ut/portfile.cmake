@@ -16,7 +16,7 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ut)
 
 vcpkg_download_distfile(LICENSE_FILE
     URLS https://www.boost.org/LICENSE_1_0.txt

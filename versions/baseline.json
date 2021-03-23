@@ -332,6 +332,10 @@
       "baseline": "4.8.30",
       "port-version": 5
     },
+    "bext-ut": {
+      "baseline": "1.1.8",
+      "port-version": 0
+    },
     "bfgroup-lyra": {
       "baseline": "1.5",
       "port-version": 1
@@ -6074,10 +6078,6 @@
     },
     "usrsctp": {
       "baseline": "0db9691",
-      "port-version": 0
-    },
-    "ut": {
-      "baseline": "1.1.8",
       "port-version": 0
     },
     "utf8h": {
