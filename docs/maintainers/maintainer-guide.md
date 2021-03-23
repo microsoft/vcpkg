@@ -69,6 +69,14 @@ Examples:
   * The Azure SDKs (of the form `azure-Xxx`) have a `public-preview` feature.
   * `imgui` has an `experimental-docking` feature which engages their preview docking branch which uses a merge commit attached to each of their public numbered releases.
 
+### Default features should enable behaviors, not APIs
+
+If a consumer is depending directly upon a library, they can list out any desired features easily (`library[feature1,feature2]`). However, if a consumer _does not know_ they are using a library, they cannot list out those features. If that hidden library is like `libarchive` where features are adding additional compression algorithms (and thus behaviors) to an existing generic interface, default features offer a way to ensure a reasonably functional transitive library is built even if the final consumer doesn't name it directly.
+
+If the feature adds additional APIs (or executables, or library binaries) and doesn't modify the behavior of existing APIs, it should be left off by default. This is because any consumer which might want to use those APIs can easily require it via their direct reference.
+
+If in doubt, do not mark a feature as default.
+
 ### Do not use features to control alternatives in published interfaces
 
 If a consumer of a port depends on only the core functionality of that port, with high probability they must not be broken by turning on the feature. This is even more important when the alternative is not directly controlled by the consumer, but by compiler settings like `/std:c++17` / `-std=c++17`.
