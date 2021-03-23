@@ -121,7 +121,7 @@
       "port-version": 0
     },
     "args": {
-      "baseline": "2020-09-14",
+      "baseline": "2021-03-14",
       "port-version": 0
     },
     "argtable2": {
@@ -2380,6 +2380,10 @@
       "baseline": "11.0.1",
       "port-version": 0
     },
+    "happly": {
+      "baseline": "2021-03-19",
+      "port-version": 0
+    },
     "harfbuzz": {
       "baseline": "2.7.4",
       "port-version": 1
@@ -2557,7 +2561,7 @@
       "port-version": 0
     },
     "implot": {
-      "baseline": "0.8",
+      "baseline": "0.9",
       "port-version": 0
     },
     "indicators": {
@@ -3566,7 +3570,7 @@
     },
     "libxml2": {
       "baseline": "2.9.10",
-      "port-version": 2
+      "port-version": 3
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -4302,7 +4306,7 @@
     },
     "opencascade": {
       "baseline": "7.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opencc": {
       "baseline": "2020-04-26",
@@ -4358,6 +4362,10 @@
     },
     "opengl-registry": {
       "baseline": "2020-03-25",
+      "port-version": 0
+    },
+    "openh264": {
+      "baseline": "2021-03-16",
       "port-version": 0
     },
     "openigtlink": {
@@ -5785,7 +5793,7 @@
       "port-version": 1
     },
     "termcolor": {
-      "baseline": "1.0.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "tesseract": {
