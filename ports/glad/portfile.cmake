@@ -14,6 +14,12 @@ message(STATUS "This version of glad uses the compatibility profile. To use the 
 message(STATUS "This recipe is at ${CMAKE_CURRENT_LIST_DIR}")
 message(STATUS "See the overlay ports documentation at https://github.com/microsoft/vcpkg/blob/master/docs/specifications/ports-overlay.md")
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        no-loader   GLAD_NO_LOADER
+        extensions  GLAD_ALL_EXTENSIONS
+)
+
 set(GLAD_SPEC "gl")
 
 if("egl" IN_LIST FEATURES)
@@ -26,18 +32,6 @@ endif()
 
 if("glx" IN_LIST FEATURES)
     set(GLAD_SPEC "${GLAD_SPEC},glx")
-endif()
-
-if("no-loader" IN_LIST FEATURES)
-    set(DISABLE_LOADER ON)
-else()
-    set(DISABLE_LOADER OFF)
-endif()
-
-if ("extensions" IN_LIST FEATURES)
-    set(WITH_EXTENSIONS ON)
-else()
-    set(WITH_EXTENSIONS OFF)
 endif()
 
 if("gl-api-latest" IN_LIST FEATURES)
@@ -124,15 +118,14 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DGLAD_NO_LOADER=${DISABLE_LOADER}
         -DGLAD_EXPORT=OFF
         -DGLAD_INSTALL=ON
         -DGLAD_REPRODUCIBLE=ON
         -DGLAD_SPEC=${GLAD_SPEC}
         -DGLAD_API=${GLAD_API}
         -DGLAD_PROFILE=${GLAD_PROFILE}
-        -DGLAD_ALL_EXTENSIONS=${WITH_EXTENSIONS}
         -DPYTHON_EXECUTABLE=${PYTHON3}
+        ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
         -DGLAD_GENERATOR="c-debug"
     OPTIONS_RELEASE
