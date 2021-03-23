@@ -6246,7 +6246,7 @@
     },
     "websocketpp": {
       "baseline": "0.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "wepoll": {
       "baseline": "1.5.8",
