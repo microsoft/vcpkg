@@ -305,8 +305,8 @@
       "port-version": 0
     },
     "bde": {
-      "baseline": "3.2.0.0",
-      "port-version": 2
+      "baseline": "3.61.0.0",
+      "port-version": 0
     },
     "bdwgc": {
       "baseline": "8.0.4-1",
