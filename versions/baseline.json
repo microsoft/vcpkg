@@ -6473,8 +6473,8 @@
       "port-version": 0
     },
     "zstd": {
-      "baseline": "1.4.5",
-      "port-version": 1
+      "baseline": "1.4.9",
+      "port-version": 0
     },
     "zstr": {
       "baseline": "1.0.4",
