@@ -3973,7 +3973,7 @@
       "port-version": 0
     },
     "mqtt-cpp": {
-      "baseline": "7.0.1-2",
+      "baseline": "9.0.0",
       "port-version": 0
     },
     "ms-angle": {
