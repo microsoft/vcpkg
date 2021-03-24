@@ -77,8 +77,8 @@
       "port-version": 0
     },
     "angle": {
-      "baseline": "2020-05-15-1",
-      "port-version": 0
+      "baseline": "2020-05-15",
+      "port-version": 2
     },
     "antlr4": {
       "baseline": "4.8",
@@ -121,7 +121,7 @@
       "port-version": 0
     },
     "args": {
-      "baseline": "2020-09-14",
+      "baseline": "2021-03-14",
       "port-version": 0
     },
     "argtable2": {
@@ -381,7 +381,7 @@
       "port-version": 1
     },
     "blend2d": {
-      "baseline": "beta_2021-01-02",
+      "baseline": "2021-03-17",
       "port-version": 0
     },
     "blitz": {
@@ -1289,8 +1289,8 @@
       "port-version": 0
     },
     "collada-dom": {
-      "baseline": "2.5.0-3",
-      "port-version": 0
+      "baseline": "2.5.0",
+      "port-version": 4
     },
     "colmap": {
       "baseline": "3.6",
@@ -1701,7 +1701,7 @@
       "port-version": 0
     },
     "drogon": {
-      "baseline": "1.3.0",
+      "baseline": "1.4.1",
       "port-version": 0
     },
     "dtl": {
@@ -1902,6 +1902,10 @@
     },
     "fastrtps": {
       "baseline": "2.0.1",
+      "port-version": 0
+    },
+    "fbgemm": {
+      "baseline": "2021-03-18",
       "port-version": 0
     },
     "fbthrift": {
@@ -2376,6 +2380,10 @@
       "baseline": "11.0.1",
       "port-version": 0
     },
+    "happly": {
+      "baseline": "2021-03-19",
+      "port-version": 0
+    },
     "harfbuzz": {
       "baseline": "2.7.4",
       "port-version": 1
@@ -2553,7 +2561,7 @@
       "port-version": 0
     },
     "implot": {
-      "baseline": "0.8",
+      "baseline": "0.9",
       "port-version": 0
     },
     "indicators": {
@@ -3082,7 +3090,7 @@
     },
     "libhv": {
       "baseline": "1.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libhydrogen": {
       "baseline": "2019-08-11",
@@ -3318,7 +3326,7 @@
     },
     "libpq": {
       "baseline": "12.2",
-      "port-version": 12
+      "port-version": 13
     },
     "libpqxx": {
       "baseline": "7.3.1",
@@ -3502,7 +3510,7 @@
     },
     "libusb": {
       "baseline": "1.0.24",
-      "port-version": 3
+      "port-version": 4
     },
     "libusb-win32": {
       "baseline": "1.2.6.0-6",
@@ -3549,8 +3557,8 @@
       "port-version": 1
     },
     "libwebsockets": {
-      "baseline": "4.1.3",
-      "port-version": 1
+      "baseline": "4.1.6",
+      "port-version": 0
     },
     "libxdiff": {
       "baseline": "0.23",
@@ -3562,7 +3570,7 @@
     },
     "libxml2": {
       "baseline": "2.9.10",
-      "port-version": 2
+      "port-version": 3
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -3720,6 +3728,10 @@
       "baseline": "2020.06",
       "port-version": 4
     },
+    "mailio": {
+      "baseline": "0.20.0",
+      "port-version": 1
+    },
     "mapbox-variant": {
       "baseline": "1.2.0",
       "port-version": 0
@@ -3794,7 +3806,7 @@
     },
     "metrohash": {
       "baseline": "1.1.3",
-      "port-version": 3
+      "port-version": 4
     },
     "mgnlibs": {
       "baseline": "2019-09-29",
@@ -3874,6 +3886,10 @@
     },
     "mmx": {
       "baseline": "2019-09-29",
+      "port-version": 0
+    },
+    "mnn": {
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "modp-base64": {
@@ -4294,7 +4310,7 @@
     },
     "opencascade": {
       "baseline": "7.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "opencc": {
       "baseline": "2020-04-26",
@@ -4350,6 +4366,10 @@
     },
     "opengl-registry": {
       "baseline": "2020-03-25",
+      "port-version": 0
+    },
+    "openh264": {
+      "baseline": "2021-03-16",
       "port-version": 0
     },
     "openigtlink": {
@@ -5633,7 +5653,7 @@
       "port-version": 0
     },
     "sqlite3": {
-      "baseline": "3.35.0",
+      "baseline": "3.35.2",
       "port-version": 0
     },
     "sqlitecpp": {
@@ -5777,7 +5797,7 @@
       "port-version": 1
     },
     "termcolor": {
-      "baseline": "1.0.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "tesseract": {
@@ -5990,6 +6010,10 @@
     },
     "tsl-sparse-map": {
       "baseline": "0.6.2",
+      "port-version": 0
+    },
+    "ttauri": {
+      "baseline": "0.3.0",
       "port-version": 0
     },
     "turbobase64": {
@@ -6222,7 +6246,7 @@
     },
     "websocketpp": {
       "baseline": "0.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "wepoll": {
       "baseline": "1.5.8",
@@ -6249,7 +6273,7 @@
       "port-version": 4
     },
     "winreg": {
-      "baseline": "3.1.0",
+      "baseline": "4.0.0",
       "port-version": 0
     },
     "winsock2": {
