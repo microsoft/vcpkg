@@ -6,7 +6,7 @@ if(NOT EMSCRIPTEN_ROOT)
     if(NOT DEFINED ENV{EMSDK})
         message(FATAL_ERROR "emcc compiler not found in PATH")
     endif()
-    set(EMSCRIPTEN_ROOT "ENV{EMSDK}//upstream/emscripten")
+    set(EMSCRIPTEN_ROOT "$ENV{EMSDK}/upstream/emscripten")
 endif()
 
 if(NOT EXISTS ${EMSCRIPTEN_ROOT}/cmake/Modules/Platform/Emscripten.cmake)
