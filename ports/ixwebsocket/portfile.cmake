@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO machinezone/IXWebSocket
-    REF v11.0.4
-    SHA512 fb24a628600cf28acdcaed5d2268f6a6e36baa1cc31f54287d91fb979fe375b20931fa9346153eaaf5a5d17fc6d87f06ca03ce12e401b83095c16919d35454ce
+    REF v11.2.2
+    SHA512 431db5761cecde2013e002d8420fded62aa7cd04fdb4bd9b146cb9024ca7cd3d83a85e004f6c09152657f65efd2906a4bf52b0c094ecf3974ca9a0a742e9ecf0
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
