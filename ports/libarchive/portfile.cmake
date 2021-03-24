@@ -7,10 +7,6 @@ vcpkg_from_github(
     SHA512 65adce56266a72ac25e3e36253ad66e4af4ba319a85d399362417a91e395adbc86caa39637a98c33af3a4147b03ca8836b647518b898346a5243f8cfc224ef32
     HEAD_REF master
     PATCHES
-        #fix-buildsystem.patch
-        #fix-dependencies.patch
-        #fix-cpu-set.patch
-        #disable-warnings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
