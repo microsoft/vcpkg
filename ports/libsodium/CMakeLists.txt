@@ -69,13 +69,13 @@ if (MSVC)
 
     # see libsodium.vcxproj for reference
     # - omitted "<ClInclude Include="src\libsodium\include\sodium\version.h" />" in favour of "${CMAKE_BINARY_DIR}/sodium/version.h"
-    file(GLOB_RECURSIVE sodium_headers
+    file(GLOB_RECURSE sodium_headers
         ${CMAKE_BINARY_DIR}/sodium/version.h
         ${PROJECT_SOURCE_DIR}/builds/msvc/resource.h
         ${PROJECT_SOURCE_DIR}/src/libsodium/*.h
     )
 
-    file(GLOB_RECURSIVE sodium_sources
+    file(GLOB_RECURSE sodium_sources
         ${PROJECT_SOURCE_DIR}/builds/msvc/resource.rc
         ${PROJECT_SOURCE_DIR}/src/libsodium/*.c
     )
