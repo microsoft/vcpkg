@@ -16,8 +16,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools HAVE_SNDFILE
     tools HAVE_WAVWRITE
     tools HAVE_WAVREAD
-    tools LIBAV
-    tools SWRESAMPLE
+    tools HAVE_LIBAV
+    tools HAVE_SWRESAMPLE
 )
 
 vcpkg_configure_cmake(
