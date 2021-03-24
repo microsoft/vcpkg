@@ -117,7 +117,7 @@
       "port-version": 0
     },
     "argparse": {
-      "baseline": "2.1",
+      "baseline": "2021-03-04",
       "port-version": 0
     },
     "args": {
