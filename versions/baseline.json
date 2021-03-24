@@ -3689,7 +3689,7 @@
       "port-version": 0
     },
     "lz4": {
-      "baseline": "1.9.2-2",
+      "baseline": "1.9.3",
       "port-version": 0
     },
     "lzfse": {
