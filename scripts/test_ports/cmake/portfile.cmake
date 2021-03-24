@@ -16,7 +16,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_TESTING=OFF
         #-DCMAKE_USE_SYSTEM_LIBRARIES=ON
-        -DCMAKE_USE_SYSTEM_LIBARCHIVE=ON
+        -DCMAKE_USE_SYSTEM_LIBARCHIVE=OFF # CMake is not compatible with libarchive 3.5.1
         -DCMAKE_USE_SYSTEM_CURL=ON
         -DCMAKE_USE_SYSTEM_EXPAT=OFF # CMake is not compatible with expat 2.2.9
         -DCMAKE_USE_SYSTEM_ZLIB=ON
