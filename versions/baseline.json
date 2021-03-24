@@ -153,7 +153,7 @@
       "port-version": 0
     },
     "asio": {
-      "baseline": "1.18.0",
+      "baseline": "1.18.1",
       "port-version": 0
     },
     "asiosdk": {
@@ -245,11 +245,11 @@
       "port-version": 0
     },
     "azure-core-cpp": {
-      "baseline": "1.0.0-beta.6",
+      "baseline": "1.0.0-beta.7",
       "port-version": 0
     },
     "azure-identity-cpp": {
-      "baseline": "1.0.0-beta.3",
+      "baseline": "1.0.0-beta.4",
       "port-version": 0
     },
     "azure-iot-sdk-c": {
@@ -265,11 +265,11 @@
       "port-version": 2
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.0.0-beta.8",
+      "baseline": "12.0.0-beta.9",
       "port-version": 0
     },
     "azure-storage-common-cpp": {
-      "baseline": "12.0.0-beta.8",
+      "baseline": "12.0.0-beta.9",
       "port-version": 0
     },
     "azure-storage-cpp": {
@@ -277,11 +277,11 @@
       "port-version": 0
     },
     "azure-storage-files-datalake-cpp": {
-      "baseline": "12.0.0-beta.8",
+      "baseline": "12.0.0-beta.9",
       "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
-      "baseline": "12.0.0-beta.8",
+      "baseline": "12.0.0-beta.9",
       "port-version": 0
     },
     "azure-uamqp-c": {
@@ -1966,7 +1966,7 @@
     },
     "flatbuffers": {
       "baseline": "1.12.0",
-      "port-version": 1
+      "port-version": 2
     },
     "flint": {
       "baseline": "2.5.2-4",
@@ -2568,6 +2568,10 @@
       "baseline": "2.0",
       "port-version": 0
     },
+    "influxdb-cxx": {
+      "baseline": "0.6.6",
+      "port-version": 0
+    },
     "infoware": {
       "baseline": "0.5.5",
       "port-version": 1
@@ -2693,7 +2697,7 @@
       "port-version": 2
     },
     "jsoncons": {
-      "baseline": "0.162.1",
+      "baseline": "0.163.0",
       "port-version": 0
     },
     "jsoncpp": {
@@ -4706,7 +4710,7 @@
     },
     "poco": {
       "baseline": "1.10.1",
-      "port-version": 3
+      "port-version": 4
     },
     "podofo": {
       "baseline": "0.9.6",
@@ -5602,7 +5606,7 @@
     },
     "spdlog": {
       "baseline": "1.8.0",
-      "port-version": 2
+      "port-version": 3
     },
     "spectra": {
       "baseline": "0.9.0",
@@ -6293,7 +6297,7 @@
       "port-version": 0
     },
     "workflow": {
-      "baseline": "0.9.3",
+      "baseline": "0.9.4",
       "port-version": 1
     },
     "wpilib": {
