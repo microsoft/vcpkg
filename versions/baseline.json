@@ -5282,7 +5282,7 @@
     },
     "ryu": {
       "baseline": "2.0",
-      "port-version": 3
+      "port-version": 4
     },
     "safeint": {
       "baseline": "3.24",
