@@ -2568,6 +2568,10 @@
       "baseline": "2.0",
       "port-version": 0
     },
+    "influxdb-cxx": {
+      "baseline": "0.6.6",
+      "port-version": 0
+    },
     "infoware": {
       "baseline": "0.5.5",
       "port-version": 1
