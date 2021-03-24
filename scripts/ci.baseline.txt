@@ -372,6 +372,7 @@ geos:x64-uwp=fail
 gsoap:x64-windows        = skip
 gsoap:x86-windows        = skip
 gsoap:x64-windows-static = skip
+gsoap:x64-windows-static-md = skip
 
 # Port geotrans source ftp://ftp.nga.mil server
 # extremely slow may take several hours to download
