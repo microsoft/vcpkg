@@ -4710,7 +4710,7 @@
     },
     "poco": {
       "baseline": "1.10.1",
-      "port-version": 3
+      "port-version": 4
     },
     "podofo": {
       "baseline": "0.9.6",
