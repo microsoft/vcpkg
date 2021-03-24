@@ -3,7 +3,7 @@ Version: 11.1.0
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
 Supports: !uwp
-Default-Features: enable-rtti, disable-assertions, disable-abi-breaking-checks, disable-clang-static-analyzer, default-targets, default-projects
+Default-Features: enable-rtti, disable-assertions, disable-abi-breaking-checks, disable-clang-static-analyzer, default-targets, tools, clang, lld
 
 Feature: tools
 Description: Build LLVM tools.
@@ -91,7 +91,7 @@ Description: Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_OFF.
 
 Feature: clang
 Description: Include C Language Family Front-end.
-Build-Depends: llvm[core,tools]
+Build-Depends: llvm[core,tools,compiler-rt]
 
 Feature: disable-clang-static-analyzer
 Description: Build without static analyzer.
