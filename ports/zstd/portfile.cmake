@@ -1,14 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/zstd
-    REF b706286adbba780006a47ef92df0ad7a785666b6 # v1.4.5
-    SHA512 1be43e8cc1dad9dd59036f86a7dd579b8fcbf16b3ebae62f38aa0397f45ab0eab2e97e924cede40428fa9125a2e5e567694bb04a0c9ec0c4275a79cd2ef8eb11
+    REF v1.4.9
+    SHA512 f529db9c094f9ae26428bf1fdfcc91c6d783d400980e0f0d802d2cf13c2be2931465ef568907e03841ff76a369a1447e7371f8799d8526edb9a513ba5c6db133
     HEAD_REF dev
-    PATCHES
-      0002-crosscompile-windows.patch
-      fix_assert.patch
-      install_pkgpc.patch
-      install_dll.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
