@@ -2,5 +2,6 @@
   "name": "bde",
   "version": "3.61.0.0",
   "description": "Basic Development Environment - a set of foundational C++ libraries used at Bloomberg.",
-  "homepage": "https://github.com/bloomberg"
+  "homepage": "https://github.com/bloomberg",
+  "supports": "!(arm | uwp)"
 }

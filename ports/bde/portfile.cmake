@@ -1,3 +1,5 @@
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+
 # Acquire Python 2 and add it to PATH
 vcpkg_find_acquire_program(PYTHON2)
 get_filename_component(PYTHON2_EXE_PATH ${PYTHON2} DIRECTORY)
