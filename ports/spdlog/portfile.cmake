@@ -13,9 +13,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SPDLOG_BUILD_SHARED)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DSPDLOG_FMT_EXTERNAL=ON
@@ -23,8 +22,8 @@ vcpkg_configure_cmake(
         -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/spdlog)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/spdlog)
 vcpkg_copy_pdbs()
 
 # use vcpkg-provided fmt library (see also option SPDLOG_FMT_EXTERNAL above)
