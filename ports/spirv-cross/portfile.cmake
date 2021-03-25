@@ -22,12 +22,14 @@ vcpkg_configure_cmake(
     OPTIONS
         -DSPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS=OFF
         -DSPIRV_CROSS_CLI=${BUILD_CLI}
+        -DSPIRV_CROSS_SKIP_INSTALL=OFF
+        -DSPIRV_CROSS_ENABLE_C_API=ON
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-foreach(COMPONENT core cpp glsl hlsl msl reflect util)
+foreach(COMPONENT core c cpp glsl hlsl msl reflect util)
     vcpkg_fixup_cmake_targets(CONFIG_PATH share/spirv_cross_${COMPONENT}/cmake TARGET_PATH share/spirv_cross_${COMPONENT})
 endforeach()
 
