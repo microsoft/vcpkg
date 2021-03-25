@@ -26,13 +26,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake/${PORT}")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
-elseif(EXISTS "${CURRENT_PACKAGES_DIR}/lib/${PORT}/cmake")
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/${PORT}/cmake)
-endif()
-
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/spdlog)
 vcpkg_copy_pdbs()
 
 # use vcpkg-provided fmt library (see also option SPDLOG_FMT_EXTERNAL above)
