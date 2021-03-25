@@ -104,7 +104,7 @@ export VULKAN_SDK=/usr/local
 ./vcpkg install vulkan
 ```
 
-NDK already contains [Vulkan](https://www.lunarg.com/vulkan-sdk/) headers and `libvulkan.so` binaries for each of its architecture.  
+NDK already contains [Vulkan](https://developer.android.com/ndk/guides/graphics/getting-started) headers and `libvulkan.so` binaries for each of its architecture.  
 To expose them to VcPkg, you can consider `export VULKAN_SDK=...` for each installation.  
 But by placing `set(ENV{VULKAN_SDK} ...)` in the triplet files, you can skip the tedious work.
 
@@ -118,7 +118,7 @@ set(ENV{VULKAN_SDK} $ENV{ANDROID_NDK_HOME}/sysroot/usr)
 ```
 
 Notice that **the location of the sysroot has changed since NDK 22**. (see https://github.com/android/ndk/issues/1407)  
-If you prefer using the latest version, check the [BuildSystemMaintainers.md of the NDK document](https://android.googlesource.com/platform/ndk/+/master/docs/BuildSystemMaintainers.md#sysroot) and then put appropriate path for your system.
+If you prefer using [the latest version](https://developer.android.com/studio/projects/install-ndk#default-ndk-per-agp), check the [BuildSystemMaintainers.md of the NDK document](https://android.googlesource.com/platform/ndk/+/master/docs/BuildSystemMaintainers.md#sysroot) and then put appropriate path for your system.
 
 For example, Mac OS users will use the path like this.
 
