@@ -6,7 +6,7 @@ vcpkg_from_github(
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/sdk/storage/azure-storage-common/
+    SOURCE_PATH ${SOURCE_PATH}/sdk/template/azure-template/
     PREFER_NINJA
     OPTIONS
         -DWARNINGS_AS_ERRORS=OFF

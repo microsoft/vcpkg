@@ -190,7 +190,7 @@
     },
     "aubio": {
       "baseline": "0.4.9",
-      "port-version": 3
+      "port-version": 4
     },
     "audiofile": {
       "baseline": "1.0.7",
@@ -249,7 +249,7 @@
       "port-version": 0
     },
     "azure-identity-cpp": {
-      "baseline": "1.0.0-beta.4",
+      "baseline": "1.0.0-beta.5",
       "port-version": 0
     },
     "azure-iot-sdk-c": {
@@ -265,11 +265,11 @@
       "port-version": 2
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.0.0-beta.9",
+      "baseline": "12.0.0-beta.10",
       "port-version": 0
     },
     "azure-storage-common-cpp": {
-      "baseline": "12.0.0-beta.9",
+      "baseline": "12.0.0-beta.10",
       "port-version": 0
     },
     "azure-storage-cpp": {
@@ -277,11 +277,15 @@
       "port-version": 0
     },
     "azure-storage-files-datalake-cpp": {
-      "baseline": "12.0.0-beta.9",
+      "baseline": "12.0.0-beta.10",
       "port-version": 0
     },
     "azure-storage-files-shares-cpp": {
-      "baseline": "12.0.0-beta.9",
+      "baseline": "12.0.0-beta.10",
+      "port-version": 0
+    },
+    "azure-template-cpp": {
+      "baseline": "1.0.0-beta.804268",
       "port-version": 0
     },
     "azure-uamqp-c": {
@@ -3058,7 +3062,7 @@
     },
     "libgnutls": {
       "baseline": "3.6.15",
-      "port-version": 0
+      "port-version": 1
     },
     "libgo": {
       "baseline": "3.1-1",
@@ -3078,6 +3082,10 @@
     },
     "libguarded": {
       "baseline": "2019-08-27-1",
+      "port-version": 0
+    },
+    "libgwenhywfar": {
+      "baseline": "5.6.0",
       "port-version": 0
     },
     "libharu": {
@@ -3234,6 +3242,10 @@
     },
     "libmspack": {
       "baseline": "0.10.1-3",
+      "port-version": 0
+    },
+    "libmt32emu": {
+      "baseline": "2.4.2",
       "port-version": 0
     },
     "libmupdf": {
