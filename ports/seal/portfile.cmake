@@ -16,6 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
     INVERTED_FEATURES
     no-throw-tran SEAL_THROW_ON_TRANSPARENT_CIPHERTEXT
+    cxx14 SEAL_USE_CXX17
 )
 
 vcpkg_configure_cmake(
