@@ -32,6 +32,8 @@ vcpkg_configure_cmake(
         -DSPIRV_WERROR=OFF
         -DSPIRV_SKIP_EXECUTABLES=${SKIP_EXECUTABLES} # option SPIRV_SKIP_TESTS follows this value
         -DENABLE_SPIRV_TOOLS_INSTALL=${TOOLS_INSTALL}
+        -DSPIRV_TOOLS_BUILD_STATIC=ON
+        -DBUILD_SHARED_LIBS=OFF
 )
 
 vcpkg_install_cmake()
@@ -43,6 +45,9 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/SPIRV-Tools-reduce TARGET_PATH share
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin") # only static linkage, i.e. no need to preserve .dll/.so files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/SPIRV-Tools-shared.dll")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/libSPIRV-Tools-shared.so")
+file(REMOVE "${CURRENT_PACKAGES_DIR}/debug/lib/libSPIRV-Tools-shared.so")
 if(TOOLS_INSTALL)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/tools/${PORT}")

@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KhronosGroup/SPIRV-Headers
-    REF 1.5.4.raytracing.fixed
-    SHA512 9d8c5ed58ebff603f0cffd1d6156ebafd3a0558e054937d8486bdc9267ad5de5dfd20d9a6f308bfbab77d391094bbc7119f1b05faf72bed41e6aa6fb35a04f5e
+    REF bcf55210f13a4fa3c3d0963b509ff1070e434c79
+    SHA512 d0553b95f28b77209862059cd0a8c15ca3340f33e13d9bb75340ced07a5aa07b8b9eaa1bdc42daa0dbf78679c3b1ef3d344c73b17518061249cdc67000568c37
     HEAD_REF master
 )
 
