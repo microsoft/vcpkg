@@ -117,7 +117,7 @@
       "port-version": 0
     },
     "argparse": {
-      "baseline": "2.1",
+      "baseline": "2021-03-04",
       "port-version": 0
     },
     "args": {
@@ -698,7 +698,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.75.0",
-      "port-version": 6
+      "port-version": 7
     },
     "boost-move": {
       "baseline": "1.75.0",
@@ -3977,7 +3977,7 @@
       "port-version": 0
     },
     "mqtt-cpp": {
-      "baseline": "7.0.1-2",
+      "baseline": "9.0.0",
       "port-version": 0
     },
     "ms-angle": {
