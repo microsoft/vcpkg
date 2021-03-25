@@ -2221,8 +2221,8 @@
       "port-version": 10
     },
     "glfw3": {
-      "baseline": "3.3.2",
-      "port-version": 1
+      "baseline": "3.3.3",
+      "port-version": 0
     },
     "gli": {
       "baseline": "dd17acf-1",
