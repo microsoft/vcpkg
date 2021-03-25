@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "The yasm-tool port is only intended to be built for Windows" ON_TARGET "Linux" "OSX")
+vcpkg_fail_port_install(MESSAGE "The yasm-tool port is only intended to be built for x86 Windows" ON_TARGET "Linux" "OSX" ON_ARCH "x64" "arm")
 
 set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 set(VCPKG_LIBRARY_LINKAGE static)
