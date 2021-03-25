@@ -1,7 +1,6 @@
 {
-    "name": "spirv-headers",
-    "version-string": "2021-03-25",
-    "port-version": 0,
-    "homepage": "https://github.com/KhronosGroup/SPIRV-Headers",
-    "description": "Machine-readable files for the SPIR-V Registry"
+  "name": "spirv-headers",
+  "version-string": "2021-03-25",
+  "description": "Machine-readable files for the SPIR-V Registry",
+  "homepage": "https://github.com/KhronosGroup/SPIRV-Headers"
 }
