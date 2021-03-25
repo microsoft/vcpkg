@@ -91,7 +91,6 @@ catch-classic:x64-windows-static-md=skip
 catch-classic:x86-windows        = skip
 ccd:arm-uwp=fail
 ccd:x64-uwp=fail
-celero:x64-windows-static-md=fail
 cello:arm-uwp=fail
 cello:x64-uwp=fail
 cfitsio:arm-uwp=fail
