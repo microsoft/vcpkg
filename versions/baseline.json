@@ -5626,7 +5626,7 @@
     },
     "spirv-cross": {
       "baseline": "2021-01-15",
-      "port-version": 1
+      "port-version": 0
     },
     "spirv-headers": {
       "baseline": "1.5.4.raytracing.fixed",
@@ -5634,7 +5634,7 @@
     },
     "spirv-tools": {
       "baseline": "2020.7",
-      "port-version": 2
+      "port-version": 0
     },
     "sprout": {
       "baseline": "2019-06-20",

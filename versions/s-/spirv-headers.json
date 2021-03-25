@@ -1,6 +1,11 @@
 {
   "versions": [
     {
+      "git-tree": "a7acc63bc0cf366d8cdd727488418f80f13a1240",
+      "version-string": "1.5.4.raytracing.fixed",
+      "port-version": 0
+    },
+    {
       "git-tree": "24a883021f92092b645b516dde1489ea0f8e2665",
       "version-string": "1.5.1",
       "port-version": 0
