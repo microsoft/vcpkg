@@ -38,16 +38,6 @@ vcpkg_copy_pdbs()
 # use vcpkg-provided fmt library (see also option SPDLOG_FMT_EXTERNAL above)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/bundled)
 
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/fmt.h
-    "#if !defined(SPDLOG_FMT_EXTERNAL)"
-    "#if 0 // !defined(SPDLOG_FMT_EXTERNAL)"
-)
-
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/ostr.h
-    "#if !defined(SPDLOG_FMT_EXTERNAL)"
-    "#if 0 // !defined(SPDLOG_FMT_EXTERNAL)"
-)
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/spdlog
                     ${CURRENT_PACKAGES_DIR}/debug/lib/spdlog
                     ${CURRENT_PACKAGES_DIR}/debug/include)
