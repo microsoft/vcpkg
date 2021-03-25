@@ -5629,7 +5629,7 @@
       "port-version": 0
     },
     "spirv-headers": {
-      "baseline": "1.5.4.raytracing.fixed",
+      "baseline": "2021-03-25",
       "port-version": 0
     },
     "spirv-tools": {
