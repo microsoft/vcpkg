@@ -30,9 +30,7 @@ vcpkg_copy_pdbs()
 # use vcpkg-provided fmt library (see also option SPDLOG_FMT_EXTERNAL above)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/bundled)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/spdlog
-                    ${CURRENT_PACKAGES_DIR}/debug/lib/spdlog
-                    ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
