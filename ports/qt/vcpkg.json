@@ -30,7 +30,7 @@
       "dependencies": [
         {
           "name": "qtwayland",
-          "platform": "!windows"
+          "platform": "linux"
         }
       ]
     }
