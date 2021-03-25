@@ -368,6 +368,12 @@ gasol:x64-uwp=fail
 geos:arm-uwp=fail
 geos:x64-uwp=fail
 
+# gsoap does not offer stable public source downloads
+gsoap:x64-windows        = skip
+gsoap:x86-windows        = skip
+gsoap:x64-windows-static = skip
+gsoap:x64-windows-static-md = skip
+
 # Port geotrans source ftp://ftp.nga.mil server
 # extremely slow may take several hours to download
 geotrans:x64-linux           = skip
