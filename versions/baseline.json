@@ -6277,7 +6277,7 @@
       "port-version": 4
     },
     "winreg": {
-      "baseline": "4.0.0",
+      "baseline": "4.1.0",
       "port-version": 0
     },
     "winsock2": {
