@@ -1,6 +1,6 @@
 {
   "name": "mapnik",
-  "version-string": "4.0.0",
+  "version-semver": "4.0.0",
   "description": "Mapnik is an open source toolkit for developing mapping applications.",
   "homepage": "https://github.com/mapnik/mapnik",
   "supports": "!(static & windows)",
