@@ -14,8 +14,17 @@ vcpkg_extract_source_archive_ex(
     REF ${GNUTLS_VERSION}
 )
 
+if(VCPKG_TARGET_IS_OSX)
+    set(LDFLAGS "-framework CoreFoundation")
+else()
+    set(LDFLAGS "")
+endif()
+
+if ("openssl" IN_LIST FEATURES)
+  set(OPENSSL_COMPATIBILITY "--enable-openssl-compatibility")
+endif()
+
 vcpkg_configure_make(
-    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --disable-doc
@@ -23,8 +32,11 @@ vcpkg_configure_make(
         --disable-tests
         --disable-maintainer-mode
         --disable-rpath
+        --disable-libdane
         --with-included-unistring
         --without-p11-kit
+        ${OPENSSL_COMPATIBILITY}
+        "LDFLAGS=${LDFLAGS}"
 )
 
 vcpkg_install_make()
