@@ -6,6 +6,12 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_download_distfile(LICENSE_FILE
+    URLS https://www.boost.org/LICENSE_1_0.txt
+    FILENAME d6078467835dba893231.txt
+    SHA512 d6078467835dba8932314c1c1e945569a64b065474d7aced27c9a7acc391d52e9f234138ed9f1aa9cd576f25f12f557e0b733c14891d42c16ecdc4a7bd4d60b8
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -18,14 +24,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ut TARGET_PATH share/ut)
 
-vcpkg_download_distfile(LICENSE_FILE
-    URLS https://www.boost.org/LICENSE_1_0.txt
-    FILENAME BOOST_LICENSE_${PORT}.txt
-    SHA512 d6078467835dba8932314c1c1e945569a64b065474d7aced27c9a7acc391d52e9f234138ed9f1aa9cd576f25f12f557e0b733c14891d42c16ecdc4a7bd4d60b8
-)
-# the copyright will be placed at /share/bext-ut, not /share/ut
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(RENAME ${LICENSE_FILE} ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+configure_file("${LICENSE_FILE}" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug
                     ${CURRENT_PACKAGES_DIR}/lib
