@@ -114,6 +114,7 @@ If you are using NDK 21.3.6528147 or earlier version, it will be like the follow
 # In android triplets... (e.g. arm64-android.cmake)
 set(VCPKG_CMAKE_SYSTEM_NAME Android)
 # ...
+# If your API level is 30, libvulkan.so is at $ENV{ANDROID_NDK_HOME}/platforms/android-30/arch-arm64/usr/lib
 set(ENV{VULKAN_SDK} $ENV{ANDROID_NDK_HOME}/sysroot/usr)
 ```
 
@@ -126,6 +127,7 @@ For example, Mac OS users will use the path like this.
 # In android triplets... (e.g. arm64-android.cmake)
 set(VCPKG_CMAKE_SYSTEM_NAME Android)
 # ...
+# If your API level is 30, libvulkan.so is at $ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/30
 set(ENV{VULKAN_SDK} $ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr)
 ```
 
