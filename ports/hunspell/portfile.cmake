@@ -21,7 +21,7 @@ if(NOT "tools" IN_LIST FEATURES) # Building the tools is not possible on windows
     string(REPLACE " parsers tools" "" _contents "${_contents}")
     file(WRITE "${SOURCE_PATH}/src/Makefile.am" "${_contents}")
 endif()
-vcpkg_add_to_path("${CURRENT_INSTALLED_DIR}/tools/gettext/bin")
+vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS 
