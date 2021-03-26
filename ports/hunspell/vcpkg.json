@@ -7,10 +7,10 @@
   "dependencies": [
     {
       "name": "gettext",
+      "host": true,
       "features": [
         "tools"
       ]
-      "host": true
     },
     "libiconv"
   ],
