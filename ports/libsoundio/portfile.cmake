@@ -14,23 +14,12 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_DYNAMIC_LIBS)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC_LIBS)
 
-if("alsa" IN_LIST FEATURES)
-    set(ENABLE_ALSA ON)
-else()
-    set(ENABLE_ALSA OFF)
-endif()
-
-if("jack" IN_LIST FEATURES)
-    set(ENABLE_JACK ON)
-else()
-    set(ENABLE_JACK OFF)
-endif()
-
-if("pulseaudio" IN_LIST FEATURES)
-    set(ENABLE_PULSEAUDIO ON)
-else()
-    set(ENABLE_PULSEAUDIO OFF)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        alsa ENABLE_ALSA
+        jack ENABLE_JACK
+        pulseaudio ENABLE_PULSEAUDIO
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -40,9 +29,7 @@ vcpkg_configure_cmake(
         -DBUILD_STATIC_LIBS=${BUILD_STATIC_LIBS}
         -DBUILD_EXAMPLE_PROGRAMS=OFF
         -DBUILD_TESTS=OFF
-        -DENABLE_JACK=${ENABLE_JACK}
-        -DENABLE_PULSEAUDIO=${ENABLE_PULSEAUDIO}
-        -DENABLE_ALSA=${ENABLE_ALSA}
+        ${FEATURE_OPTIONS}
         -DENABLE_COREAUDIO=${VCPKG_TARGET_IS_OSX}
         -DENABLE_WASAPI=${VCPKG_TARGET_IS_WINDOWS}
 )
