@@ -8,10 +8,6 @@
     "cfitsio",
     "curl",
     "expat",
-    {
-      "name": "freexl",
-      "platform": "!windows"
-    },
     "geos",
     "hdf5",
     {
