@@ -22,12 +22,18 @@ TARGET_TRIPLET                           the name of the current triplet to buil
 CURRENT_INSTALLED_DIR                    the absolute path to the installed files for the current triplet
 HOST_TRIPLET                             the name of the triplet corresponding to the host
 CURRENT_HOST_INSTALLED_DIR               the absolute path to the installed files for the host triplet
+VCPKG_CROSSCOMPILING                     ON if TARGET_TRIPLET != HOST_TRIPLET
 ```
 
 CMAKE_STATIC_LIBRARY_(PREFIX|SUFFIX), CMAKE_SHARED_LIBRARY_(PREFIX|SUFFIX) and CMAKE_IMPORT_LIBRARY_(PREFIX|SUFFIX) are defined for the target
 Furthermore the variables CMAKE_FIND_LIBRARY_(PREFIXES|SUFFIXES) are also defined for the target so that
 portfiles are able to use find_library calls to discover dependent libraries within the current triplet for ports.
 #]===]
+
+set(VCPKG_CROSSCOMPILING OFF)
+if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+    set(VCPKG_CROSSCOMPILING ON)
+endif()
 
 #Helper variable to identify the Target system. VCPKG_TARGET_IS_<targetname>
 if (NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "")
