@@ -1,15 +1,22 @@
 {
   "name": "boost-atomic",
   "version-string": "1.75.0",
+  "port-version": 1,
   "description": "Boost atomic module",
   "homepage": "https://github.com/boostorg/atomic",
   "dependencies": [
     "boost-align",
     "boost-assert",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     "boost-integer",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-predef",
     "boost-preprocessor",
     "boost-static-assert",
