@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(libxml2 C)
-
+include(GNUInstallDirs)
 set(WITH_TRIO 0 CACHE BOOL "Add trio support")
 set(WITH_THREADS 1 CACHE BOOL "Add multithread support")
 set(WITH_THREAD_ALLOC 0 CACHE BOOL "Add per-thread memory")
