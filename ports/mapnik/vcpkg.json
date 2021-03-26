@@ -145,7 +145,7 @@
       "description": "PROJ Functionalities",
       "dependencies": [
         {
-          "name": "proj",
+          "name": "proj4",
           "features": [
             "database"
           ]
