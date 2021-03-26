@@ -1,5 +1,5 @@
 diff --git a/CMakeModules/FindOSG.cmake b/CMakeModules/FindOSG.cmake
-index b7dff11..d1ec2ff 100644
+index b7dff11..6867b08 100644
 --- a/CMakeModules/FindOSG.cmake
 +++ b/CMakeModules/FindOSG.cmake
 @@ -121,5 +121,36 @@ IF( OSG_LIBRARY AND OSG_INCLUDE_DIR )
@@ -25,7 +25,7 @@ index b7dff11..d1ec2ff 100644
 +    if (UNIX)
 +        list(APPEND OSG_DEPENDS_LIBRARY ${OSG_DEPENDS_LIBRARY} -pthread)
 +        # Due to Linux Linker dependency issues these need to included again
-+        set(DEPEND_LIB_LIST fontconfig freetype uuid gdal json-c expat zstd proj sqlite3 webp gif cfitsio)
++        set(DEPEND_LIB_LIST fontconfig freetype uuid gdal freexl json-c expat zstd proj sqlite3 webp gif cfitsio)
 +    else(UNIX)
 +        set(DEPEND_LIB_LIST cfitsio)
 +    endif()

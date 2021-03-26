@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 001ebf1..cea90b7 100644
+index 001ebf1..8e49af2 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -128,24 +128,52 @@ ENDIF (OSGEARTH_USE_GLES)
+@@ -128,24 +128,45 @@ ENDIF (OSGEARTH_USE_GLES)
  
  # required
  find_package(OSG REQUIRED)
@@ -10,15 +10,8 @@ index 001ebf1..cea90b7 100644
 +find_package(CURL CONFIG REQUIRED)
 +set(CURL_LIBRARY CURL::libcurl)
 +
-+include(FindPackageHandleStandardArgs)
-+include(SelectLibraryConfigurations)
-+find_path(FREEXL_INCLUDES NAMES freexl.h HINTS ${CURRENT_INSTALLED_DIR})
-+find_library(FREEXL_LIBRARY_RELEASE NAMES freexl PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH REQUIRED)
-+find_library(FREEXL_LIBRARY_DEBUG NAMES freexl PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
-+select_library_configurations(FREEXL)
-+
  find_package(GDAL REQUIRED)
-+set(GDAL_LIBRARY ${GDAL_LIBRARIES} ${FREEXL_LIBRARY})
++set(GDAL_LIBRARY ${GDAL_LIBRARIES})
 +set(GDAL_FOUND 1)
  
  # optional
@@ -61,7 +54,7 @@ index 001ebf1..cea90b7 100644
  endif()
  
  if(OSGEARTH_BUILD_TRITON_NODEKIT)
-@@ -193,7 +221,9 @@ OPTION(OSGEARTH_INSTALL_SHADERS "Whether to deploy GLSL shaders when doing a Mak
+@@ -193,7 +214,9 @@ OPTION(OSGEARTH_INSTALL_SHADERS "Whether to deploy GLSL shaders when doing a Mak
  # TinyXML is an XML parsing library
  SET (WITH_EXTERNAL_TINYXML FALSE CACHE BOOL "Use bundled or system wide version of TinyXML")
  IF (WITH_EXTERNAL_TINYXML)
