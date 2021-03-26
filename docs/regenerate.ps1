@@ -119,7 +119,7 @@ function FinalDocFile
             $documentation += @("", "**This function has been deprecated $($Docs.DeprecationMessage)**")
         }
     }
-    $documentation += @("", "The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/$PathToFile).")
+    $documentation += @("", "The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/$PathToFile).")
 
     $documentation += $Docs.ActualDocumentation[1..$Docs.ActualDocumentation.Length]
 

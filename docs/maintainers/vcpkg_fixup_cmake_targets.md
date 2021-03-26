@@ -1,6 +1,6 @@
 # vcpkg_fixup_cmake_targets
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_fixup_cmake_targets.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_fixup_cmake_targets.md).
 
 **This function has been deprecated in favor of `vcpkg_cmake_config_fixup` from the vcpkg-cmake-config port.**
 

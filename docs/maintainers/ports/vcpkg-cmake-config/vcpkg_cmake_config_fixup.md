@@ -1,6 +1,6 @@
 # vcpkg_cmake_config_fixup
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md).
 
 Merge release and debug CMake targets and configs to support multiconfig generators.
 
