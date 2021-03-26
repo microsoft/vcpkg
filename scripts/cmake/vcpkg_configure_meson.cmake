@@ -286,7 +286,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     string(APPEND CROSS "cpu_family = '${BUILD_CPU_FAM}'\n")
     string(APPEND CROSS "cpu = '${BUILD_CPU}'\n")
 
-    if(NOT BUILD_CPU_FAM MATCHES "${HOST_CPU_FAM}" OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS)
+    if(NOT BUILD_CPU_FAM MATCHES "${HOST_CPU_FAM}" OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_UWP)
         set(_file "${CURRENT_BUILDTREES_DIR}/meson-cross-${TARGET_TRIPLET}.log")
         set(VCPKG_MESON_CROSS_FILE "${_file}" PARENT_SCOPE)
         file(WRITE "${_file}" "${CROSS}")
