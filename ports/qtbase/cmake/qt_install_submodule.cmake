@@ -100,8 +100,8 @@ function(qt_install_submodule)
             -DQT_NO_MAKE_EXAMPLES:BOOL=TRUE
             -DQT_NO_MAKE_TESTS:BOOL=TRUE
             ${PERL_OPTION}
-            -DINSTALL_BINDIR:STRING=bin/${QT6_DIRECTORY_PREFIX}
-            -DINSTALL_LIBEXECDIR:STRING=bin/${QT6_DIRECTORY_PREFIX}
+            -DINSTALL_BINDIR:STRING=bin
+            -DINSTALL_LIBEXECDIR:STRING=bin
             -DINSTALL_PLUGINSDIR:STRING=${qt_plugindir}
             -DINSTALL_QMLDIR:STRING=${qt_qmldir}
             ${_qis_CONFIGURE_OPTIONS}
