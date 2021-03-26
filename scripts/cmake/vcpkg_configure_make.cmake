@@ -437,10 +437,8 @@ function(vcpkg_configure_make)
             # --target: the machine that CC will produce binaries for
             # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
-            set(_csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-apple-darwin")
             if(NOT "${TARGET_ARCH}" STREQUAL "${BUILD_ARCH}") # we don't need to specify the additional flags if we build natively.
-
-                list(APPEND _csc_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
+                set(_csc_BUILD_TRIPLET "--host=${TARGET_ARCH}-apple-darwin") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
             debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
         endif()
