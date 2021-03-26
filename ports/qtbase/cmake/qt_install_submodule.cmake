@@ -1,10 +1,15 @@
 include("${CMAKE_CURRENT_LIST_DIR}/qt_install_copyright.cmake")
+
 if(QT_IS_LATEST AND PORT STREQUAL "qtbase")
     include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details-latest.cmake")
 else()
     include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details.cmake")
 endif()
 set(PORT_DEBUG ON)
+
+if(NOT DEFINED QT6_DIRECTORY_PREFIX)
+    set(QT6_DIRECTORY_PREFIX "qt6/")
+endif()
 
 macro(qt_stop_on_update)
     if(QT_UPDATE_VERSION)
@@ -77,6 +82,13 @@ function(qt_install_submodule)
         set(NINJA_OPTION PREFER_NINJA)
     endif()
 
+    if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+        list(APPEND _qis_CONFIGURE_OPTIONS -DQT_HOST_PATH=${CURRENT_HOST_INSTALLED_DIR})
+    endif()
+
+    set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
+    set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
+
     vcpkg_configure_cmake(
         SOURCE_PATH "${SOURCE_PATH}"
         ${NINJA_OPTION}
@@ -88,19 +100,24 @@ function(qt_install_submodule)
             -DQT_NO_MAKE_EXAMPLES:BOOL=TRUE
             -DQT_NO_MAKE_TESTS:BOOL=TRUE
             ${PERL_OPTION}
-            -DINSTALL_DESCRIPTIONSDIR:STRING=modules
-            -DINSTALL_LIBEXECDIR:STRING=bin
-            -DINSTALL_PLUGINSDIR:STRING=plugins
-            -DINSTALL_QMLDIR:STRING=qml
-            -DINSTALL_TRANSLATIONSDIR:STRING=translations
+            -DINSTALL_BINDIR:STRING=bin/${QT6_DIRECTORY_PREFIX}
+            -DINSTALL_LIBEXECDIR:STRING=bin/${QT6_DIRECTORY_PREFIX}
+            -DINSTALL_PLUGINSDIR:STRING=${qt_plugindir}
+            -DINSTALL_QMLDIR:STRING=${qt_qmldir}
             ${_qis_CONFIGURE_OPTIONS}
         OPTIONS_RELEASE
             ${_qis_CONFIGURE_OPTIONS_RELEASE}
+            -DINSTALL_INCLUDEDIR:STRING=include/${QT6_DIRECTORY_PREFIX}
+            -DINSTALL_DESCRIPTIONSDIR:STRING=share/qt6/modules
+            -DINSTALL_MKSPECSDIR:STRING=share/qt6/mkspecs
+            -DINSTALL_TRANSLATIONSDIR:STRING=translations/${QT6_DIRECTORY_PREFIX}
         OPTIONS_DEBUG
             -DINPUT_debug:BOOL=ON
-            -DINSTALL_DOCDIR:STRING=../doc
-            -DINSTALL_INCLUDEDIR:STRING=../include
-            -DINSTALL_TRANSLATIONSDIR:STRING=../translations
+            -DINSTALL_DOCDIR:STRING=../doc/${QT6_DIRECTORY_PREFIX}
+            -DINSTALL_INCLUDEDIR:STRING=../include/${QT6_DIRECTORY_PREFIX}
+            -DINSTALL_TRANSLATIONSDIR:STRING=../translations/${QT6_DIRECTORY_PREFIX}
+            -DINSTALL_DESCRIPTIONSDIR:STRING=../share/qt6/modules
+            -DINSTALL_MKSPECSDIR:STRING=../share/qt6/mkspecs
             ${_qis_CONFIGURE_OPTIONS_DEBUG}
     )
 
@@ -135,9 +152,9 @@ function(qt_install_submodule)
     file(GLOB_RECURSE DEBUG_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/**/*Targets-debug.cmake")
     message(STATUS "DEBUG_CMAKE_TARGETS:${DEBUG_CMAKE_TARGETS}")
     foreach(_debug_target IN LISTS DEBUG_CMAKE_TARGETS)
-        vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/plugins" "{_IMPORT_PREFIX}/debug/plugins")
-        vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/qml/" "{_IMPORT_PREFIX}/debug/qml/")
-        #vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/modules" "{_IMPORT_PREFIX}/debug/modules")
+        vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/${qt_plugindir}" "{_IMPORT_PREFIX}/debug/${qt_plugindir}")
+        vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/${qt_qmldir}" "{_IMPORT_PREFIX}/debug/${qt_qmldir}")
+        #vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/modules" "{_IMPORT_PREFIX}/debug/modules") # Modules seem to be the same
     endforeach()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -153,18 +170,19 @@ function(qt_install_submodule)
 
     ## Handle Tools
     foreach(_tool IN LISTS _qis_TOOL_NAMES)
-        if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/bin/${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+        if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/bin/${QT6_DIRECTORY_PREFIX}${_tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
             debug_message("Removed '${_tool}' from copy tools list since it was not found!")
             list(REMOVE_ITEM _qis_TOOL_NAMES ${_tool})
         endif()
     endforeach()
     if(_qis_TOOL_NAMES)
+        list(TRANSFORM _qis_TOOL_NAMES PREPEND "${QT6_DIRECTORY_PREFIX}")
         vcpkg_copy_tools(TOOL_NAMES ${_qis_TOOL_NAMES} AUTO_CLEAN)
-        if(EXISTS "${CURRENT_INSTALLED_DIR}/plugins")
-            file(COPY "${CURRENT_INSTALLED_DIR}/plugins" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        if(EXISTS "${CURRENT_INSTALLED_DIR}/${qt_plugindir}")
+            file(COPY "${CURRENT_INSTALLED_DIR}/${qt_plugindir}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         endif()
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/plugins")
-            file(COPY "${CURRENT_PACKAGES_DIR}/plugins" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/${qt_plugindir}")
+            file(COPY "${CURRENT_PACKAGES_DIR}/${qt_plugindir}" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         endif()
     endif()
 
@@ -181,7 +199,11 @@ function(qt_install_submodule)
             file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
         endif()
     endif()
-
+    set(_file "${CMAKE_CURRENT_LIST_DIR}/qt.conf.in")
+    set(REL_PATH)
+    configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/qt/qt_release.conf" @ONLY)
+    set(REL_PATH debug/)
+    configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/qt/qt_debug.conf" @ONLY)
     qt_install_copyright("${SOURCE_PATH}")
     set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()

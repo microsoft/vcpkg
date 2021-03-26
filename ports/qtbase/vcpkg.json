@@ -8,6 +8,11 @@
       "name": "libb2",
       "platform": "!windows"
     },
+    {
+      "name": "qtbase",
+      "host": true,
+      "default-features": false
+    },
     "zlib"
   ],
   "default-features": [
