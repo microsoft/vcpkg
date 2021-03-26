@@ -48,11 +48,12 @@ vcpkg_configure_cmake(
         -DCOPY_LIBRARIES_FOR_EXECUTABLES=OFF
         -DBUILD_SHARED_LIBS=ON
         -DBUILD_TEST=OFF
+        -DBUILD_BENCHMARK=OFF
         -DUSE_EXTERNAL_MAPBOX_GEOMETRY=ON
         -DUSE_EXTERNAL_MAPBOX_POLYLABEL=ON
         -DUSE_EXTERNAL_MAPBOX_PROTOZERO=ON
         -DUSE_EXTERNAL_MAPBOX_VARIANT=ON
-        -DINSTALL_CMAKE_DIR=share/mapnik/cmake
+        -DINSTALL_CMAKE_DIR=share/${PORT}/cmake
 )
 
 vcpkg_install_cmake()
@@ -98,7 +99,7 @@ if("utility-svg2png" IN_LIST FEATURES)
   vcpkg_copy_tools(TOOL_NAMES svg2png AUTO_CLEAN)
 endif()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/mapnik/cmake)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/${PORT}/cmake)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
