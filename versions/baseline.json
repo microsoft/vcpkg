@@ -3833,8 +3833,8 @@
       "port-version": 0
     },
     "microsoft-signalr": {
-      "baseline": "0.1.0-alpha1",
-      "port-version": 2
+      "baseline": "0.1.0-alpha2",
+      "port-version": 0
     },
     "mikktspace": {
       "baseline": "2020-10-06",
