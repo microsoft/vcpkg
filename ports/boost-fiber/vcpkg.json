@@ -1,13 +1,17 @@
 {
   "name": "boost-fiber",
   "version-string": "1.75.0",
+  "port-version": 1,
   "description": "Boost fiber module",
   "homepage": "https://github.com/boostorg/fiber",
   "supports": "!osx & !uwp & !arm & !emscripten",
   "dependencies": [
     "boost-algorithm",
     "boost-assert",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     {
       "name": "boost-context",
@@ -21,7 +25,10 @@
     },
     "boost-format",
     "boost-intrusive",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-predef",
     "boost-smart-ptr",
     "boost-vcpkg-helpers"
