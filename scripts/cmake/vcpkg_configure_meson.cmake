@@ -112,7 +112,7 @@ function(vcpkg_internal_meson_convert_list_to_python_array _out_var)
 endfunction()
 
 # Generates the required compiler properties for meson
-macro(vcpkg_internal_meson_generate_flags_properties_string _out_var _config)
+function(vcpkg_internal_meson_generate_flags_properties_string _out_var _config)
     if(VCPKG_TARGET_IS_WINDOWS)
         set(L_FLAG /LIBPATH:)
     else()
@@ -138,7 +138,8 @@ macro(vcpkg_internal_meson_generate_flags_properties_string _out_var _config)
     vcpkg_internal_meson_convert_list_to_python_array(LINKER_FLAGS_${_config} ${LINKER_FLAGS_${_config}})
     string(APPEND ${_out_var} "c_link_args = ${LINKER_FLAGS_${_config}}\n")
     string(APPEND ${_out_var} "cpp_link_args = ${LINKER_FLAGS_${_config}}\n")
-endmacro()
+    set(${_out_var} "${${_out_var}}" PARENT_SCOPE)
+endfunction()
 
 function(vcpkg_internal_meson_generate_native_file_config _config) #https://mesonbuild.com/Native-environments.html
     set(NATIVE_${_config} "[properties]\n") #https://mesonbuild.com/Builtin-options.html
