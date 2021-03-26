@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(libxml2 C)
-
+include(GNUInstallDirs)
 option(INSTALL_HEADERS "Install public header files" ON)
 
 set(CMAKE_SHARED_LIBRARY_PREFIX)
