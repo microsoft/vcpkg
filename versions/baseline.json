@@ -5378,7 +5378,7 @@
     },
     "seal": {
       "baseline": "3.6.2",
-      "port-version": 0
+      "port-version": 1
     },
     "secp256k1": {
       "baseline": "2017-19-10",
