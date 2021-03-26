@@ -14,12 +14,7 @@
       "name": "boost-locale",
       "features": [
         "icu"
-      ],
-      "platform": "windows"
-    },
-    {
-      "name": "boost-locale",
-      "platform": "!windows"
+      ]
     },
     "boost-msm",
     "boost-property-tree",
@@ -27,12 +22,7 @@
       "name": "boost-regex",
       "features": [
         "icu"
-      ],
-      "platform": "windows"
-    },
-    {
-      "name": "boost-regex",
-      "platform": "!windows"
+      ]
     },
     "boost-spirit",
     "boost-system",
