@@ -97,7 +97,7 @@ cd $VCPKG_ROOT
 
 ### Using Vulkan SDK
 
-VcPkg has a [`vulkan` package](https://github.com/microsoft/vcpkg/blob/master/ports/vulkan/portfile.cmake) which allows you to `find_package(Vulkan)`. To use it you have to provide `VULKAN_SDK` environment variable.
+Vcpkg has a [`vulkan` package](https://github.com/microsoft/vcpkg/blob/master/ports/vulkan/portfile.cmake) which allows you to `find_package(Vulkan)`. To use it you have to provide `VULKAN_SDK` environment variable.
 
 ```bash
 export VULKAN_SDK=/usr/local
