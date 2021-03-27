@@ -236,6 +236,7 @@ if(DUMMY_DLLS)
     file(REMOVE ${DUMMY_DLLS})
 endif()
 
+vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread m)
 
 # Handle copyright
