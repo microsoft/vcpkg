@@ -12,8 +12,15 @@ vcpkg_from_sourceforge(
 include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
 yasm_tool_helper(APPEND_TO_PATH)
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_WINDOWS)
+        set(MPG123_OPTIONS "-DCMAKE_C_FLAGS=\/DBUILD_MPG123_DLL")
+    endif()
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/ports/cmake
+    OPTIONS ${MPG123_OPTIONS}
 )
 
 vcpkg_install_cmake()
