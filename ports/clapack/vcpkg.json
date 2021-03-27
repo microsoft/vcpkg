@@ -1,10 +1,14 @@
 {
   "name": "clapack",
   "version-string": "3.2.1",
-  "port-version": 16,
+  "port-version": 17,
   "description": "CLAPACK (f2c'ed version of LAPACK)",
   "homepage": "https://www.netlib.org/clapack",
   "dependencies": [
-    "blas"
+    "blas",
+    {
+      "name": "clapack",
+      "host": true
+    }
   ]
 }

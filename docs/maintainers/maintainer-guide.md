@@ -188,7 +188,7 @@ files into manifest files. Do not convert CONTROL files that have not been modif
 
 ### Follow common conventions for the `"version"` field
 
-See our [manifest files document](manifest-files.md#version-fields) for a full explanation of our conventions.
+See our [versioning documentation](../users/versioning.md#version-schemes) for a full explanation of our conventions.
 
 ### Update the `"port-version"` field in the manifest file of any modified ports
 
@@ -229,7 +229,7 @@ If you're updating multiple ports at the same time, instead you can run:
 vcpkg x-add-version --all
 ```
 
-To update the files for all modified ports at once.  
+To update the files for all modified ports at once.
 
 _NOTE: These commands require you to have committed your changes to the ports before running them. The reason is that the Git SHA of the port directory is required in these version files. But don't worry, the `x-add-version` command will warn you if you have local changes that haven't been committed._
 
