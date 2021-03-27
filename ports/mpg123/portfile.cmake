@@ -7,15 +7,14 @@ vcpkg_from_sourceforge(
     REF ${MPG123_VERSION}
     FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
     SHA512 ${MPG123_HASH}
+    PATCHES 0001-fix-exports.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
 yasm_tool_helper(APPEND_TO_PATH)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_WINDOWS)
-        set(MPG123_OPTIONS "-DCMAKE_C_FLAGS=\/DBUILD_MPG123_DLL")
-    endif()
+if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_WINDOWS)
+    set(MPG123_OPTIONS "-DUSE_MODULES=OFF")
 endif()
 
 vcpkg_configure_cmake(
@@ -26,7 +25,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

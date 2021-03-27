@@ -1,0 +1,34 @@
+diff --git a/ports/cmake/src/libout123/CMakeLists.txt b/ports/cmake/src/libout123/CMakeLists.txt
+index 5671036..b6648c9 100644
+--- a/ports/cmake/src/libout123/CMakeLists.txt
++++ b/ports/cmake/src/libout123/CMakeLists.txt
+@@ -20,6 +20,12 @@ add_library(${TARGET}
+ 
+ set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME out123)
+ 
++if(BUILD_SHARED_LIBS)
++    target_compile_definitions(${TARGET}
++        PRIVATE $<$<BOOL:${WIN32}>:BUILD_MPG123_DLL>
++        INTERFACE $<$<BOOL:${WIN32}>:LINK_MPG123_DLL>)
++endif()
++
+ target_link_libraries(${TARGET} PRIVATE
+     $<TARGET_NAME_IF_EXISTS:defaultmodule>
+     $<$<BOOL:${HAVE_UNIX_DL}>:dl>
+diff --git a/ports/cmake/src/libsyn123/CMakeLists.txt b/ports/cmake/src/libsyn123/CMakeLists.txt
+index 89558f5..0a5e1f8 100644
+--- a/ports/cmake/src/libsyn123/CMakeLists.txt
++++ b/ports/cmake/src/libsyn123/CMakeLists.txt
+@@ -17,6 +17,12 @@ add_library(${TARGET}
+ 
+ set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME syn123)
+ 
++if(BUILD_SHARED_LIBS)
++    target_compile_definitions(${TARGET}
++        PRIVATE $<$<BOOL:${WIN32}>:BUILD_MPG123_DLL>
++        INTERFACE $<$<BOOL:${WIN32}>:LINK_MPG123_DLL>)
++endif()
++
+ target_include_directories(${TARGET} INTERFACE
+     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>"
+     "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
