@@ -1,6 +1,6 @@
 # vcpkg_install_msbuild
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_install_msbuild.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_msbuild.md).
 
 Build and install a msbuild-based project. This replaces `vcpkg_build_msbuild()`.
 

@@ -1,30 +1,25 @@
 # Selecting library features
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/selecting-library-features.md).**
+
 ## Installing a library
 
-We will look at [llvm](https://llvm.org/) as an example.
-LLVM is a compiler infrasture. It supports optimizing llvm-ir and generating machine code.
-You could install it using:
+We will look at [llvm](https://llvm.org/) as an example. You could install it using:
 
 ```powershell
-> .\vcpkg install llvm
+> vcpkg install llvm
 ```
-
-On Windows, this will install the 32-bit x86 LLVM, since that's the default triplet on Windows.
-If you are building for 64-bit Windows instead, you can use the following command to change the default triplet:
-
-```powershell
-> .\vcpkg install --triplet x64-windows llvm
+or via a manifest with
+```json
+{
+  "dependencies": ["llvm"]
+}
 ```
-
-We have more documentation on triplets [here](triplets.md).
-Currently we can't choose build type `debug` or `release` using command line switches.
 
 With llvm now installed, we can execute:
 
 ```powershell
-> # llc takes llvm IR and generates machine code
-> .\installed\x86-windows\bin\llc.exe --version # or x86-windows, or replace with the actual triplet
+> installed\x86-windows\bin\llc.exe --version
 ```
 
 we see:
@@ -45,7 +40,7 @@ The llvm port allows this via the "target-*" features.
 If we do:
 
 ```powershell
-.\vcpkg search llvm
+> vcpkg search llvm
 ```
 
 We can see:
@@ -64,17 +59,33 @@ llvm[target-arm]                      Build with ARM backend.
 We can install any of these targets by using the install-feature syntax:
 
 ```powershell
-> .\vcpkg install llvm[target-arm] # Installs LLVM with the ARM target
+> vcpkg install llvm[target-arm] # Installs LLVM with the ARM target
+```
+```json
+{
+  "dependencies": [{ "name": "llvm", "features": ["target-arm"] }]
+}
 ```
 
-## Opting out of default feature
+## Opting out of default features
+
 The llvm port includes a few default features that you as a user may not want: for example,
 the `clang` feature is default, which means that `vcpkg install llvm` will also build and install clang.
 If you are writing a compiler that uses LLVM as a backend,
 you're likely not interested in installing clang as well,
 and we can do that by disabling default features with the special `core` "feature":
 ```powershell
-> .\vcpkg install llvm[core,default-targets] # removing the default-feature with "core" also removes all of the default targets you get
+> vcpkg install llvm[core,target-arm] # removing the default-feature with "core" also removes all of the default targets you get
+```
+or in manifest files:
+```json
+{
+  "dependencies": [{
+    "name": "llvm",
+    "default-features": false,
+    "features": ["target-arm"]
+  }]
+}
 ```
 
 # Further reading

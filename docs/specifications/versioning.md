@@ -1,5 +1,9 @@
 # Versioning Specification 
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
+**Up-to-date documentation is available at [Versioning](../users/versioning.md).**
+
 ## Glossary
 Some of the terms used in this document have similar meaning when discussed by the community, and because of that, they can cause confusion and ambiguity. To solve this issue, we will assign specific meaning to these terms and try to keep a consistent usage through the document.
 
