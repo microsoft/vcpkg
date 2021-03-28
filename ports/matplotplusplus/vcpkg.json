@@ -3,8 +3,8 @@
   "version-date": "2021-03-07",
   "description": "A C++ graphics library for data visualization",
   "homepage": "https://alandefreitas.github.io/matplotplusplus/",
-  "supports": "!uwp",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     "cimg"
   ],
