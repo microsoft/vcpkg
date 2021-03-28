@@ -18,6 +18,7 @@
       "host": true
     }
   ],
+  "default-features": [ "loader" ],
   "features": {
     "egl": {
       "description": "Use `egl` spec instead of `gl`."
@@ -115,8 +116,8 @@
     "glx": {
       "description": "Use `glx` spec instead of `gl`."
     },
-    "no-loader": {
-      "description": "Disable generation of loader logic."
+    "loader": {
+      "description": "Generate loader logic."
     },
     "wgl": {
       "description": "Use `wgl` spec instead of `gl`."

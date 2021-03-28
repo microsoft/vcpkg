@@ -18,8 +18,9 @@ message(STATUS "See the overlay ports documentation at https://github.com/micros
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        no-loader   GLAD_NO_LOADER
         extensions  GLAD_ALL_EXTENSIONS
+    INVERTED_FEATURES
+        loader      GLAD_NO_LOADER
 )
 
 set(GLAD_SPEC "gl")
