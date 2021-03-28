@@ -37,7 +37,6 @@
     "sql-sqlite",
     "testlib",
     "widgets",
-    "xml",
     "zstd"
   ],
   "features": {
@@ -123,13 +122,6 @@
         {
           "name": "freetype",
           "default-features": false
-        },
-        {
-          "name": "qtbase",
-          "default-features": false,
-          "features": [
-            "gui"
-          ]
         }
       ]
     },
@@ -140,7 +132,16 @@
       ]
     },
     "gui": {
-      "description": "Qt Gui"
+      "description": "Qt Gui",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        }
+      ]
     },
     "harfbuzz": {
       "description": "Use harfbuzz",
@@ -298,9 +299,6 @@
     },
     "xlib": {
       "description": "XLib"
-    },
-    "xml": {
-      "description": "Qt XML"
     },
     "xrender": {
       "description": "XRender for native painting",
