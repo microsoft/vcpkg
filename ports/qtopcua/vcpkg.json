@@ -4,7 +4,10 @@
   "description": "Qt wrapper for existing OPC UA stacks",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase"
+    {
+      "name": "qtbase",
+      "default-features": false
+    }
   ],
   "default-features": [
     "default-features",

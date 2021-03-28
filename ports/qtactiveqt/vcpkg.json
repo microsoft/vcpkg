@@ -6,15 +6,13 @@
   "supports": "windows",
   "dependencies": [
     "qt6betablock",
-    "qtbase",
-    "qttools"
-  ],
-  "default-features": [
-    "default-features"
-  ],
-  "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
     }
-  }
+  ]
 }

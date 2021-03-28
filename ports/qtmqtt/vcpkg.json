@@ -4,7 +4,10 @@
   "description": "Qt Module to implement MQTT protocol version 3.1 and 3.1.1 http://mqtt.org/",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase"
+    {
+      "name": "qtbase",
+      "default-features": false
+    }
   ],
   "default-features": [
     "default-features"

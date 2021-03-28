@@ -4,7 +4,10 @@
   "description": "Qt CoAP client module",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase"
+    {
+      "name": "qtbase",
+      "default-features": false
+    }
   ],
   "default-features": [
     "default-features"

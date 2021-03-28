@@ -4,7 +4,10 @@
   "description": "Qt Quick Controls 2",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
     "qtdeclarative"
   ],
   "default-features": [

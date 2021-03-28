@@ -4,16 +4,19 @@
   "description": "Qt Tools",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase",
-    "qtdeclarative"
-  ],
-  "default-features": [
-    "default-features"
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network"
+      ]
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    }
   ],
   "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
-    },
     "qdoc": {
       "description": "Build QDoc.",
       "dependencies": [

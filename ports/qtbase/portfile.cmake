@@ -19,6 +19,10 @@ if(NOT VCPKG_USE_HEAD_VERSION)
                 )
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS AND NOT "doubleconversion" IN_LIST FEATURES)
+    message(FATAL_ERROR "${PORT} requires feature doubleconversion on windows!" )
+endif()
+
 # Features can be found via searching for qt_feature in all configure.cmake files in the source: 
 # The files also contain information about the Platform for which it is searched
 # Always use FEATURE_<feature> in vcpkg_configure_cmake
@@ -47,7 +51,7 @@ foreach(_input IN LISTS input_vars)
 endforeach()
 
 # General features:
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 FEATURES
     "appstore-compliant"  FEATURE_appstore-compliant
     "zstd"                FEATURE_zstd
@@ -58,14 +62,15 @@ FEATURES
     "network"             FEATURE_network
     "sql"                 FEATURE_sql
     "widgets"             FEATURE_widgets
-    "xml"                 FEATURE_xml
+    #"xml"                 FEATURE_xml  # Required to build moc
     "testlib"             FEATURE_testlib
 INVERTED_FEATURES
     "zstd"              CMAKE_DISABLE_FIND_PACKAGE_ZSTD
     "dbus"              CMAKE_DISABLE_FIND_PACKAGE_WrapDBus1
     )
 
-list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libudev:BOOL=ON)
+list(APPEND FEATURE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libudev:BOOL=ON)
+list(APPEND FEATURE_OPTIONS -DFEATURE_xml:BOOL=ON)
 
 # Corelib features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_CORE_OPTIONS
@@ -75,12 +80,13 @@ FEATURES
     "icu"                 FEATURE_icu
     "pcre2"               FEATURE_pcre2
 INVERTED_FEATURES
-    "doubleconversion"      CMAKE_DISABLE_FIND_PACKAGE_WrapDoubleConversion
+    #"doubleconversion"      CMAKE_DISABLE_FIND_PACKAGE_WrapDoubleConversion # Required
     "icu"                   CMAKE_DISABLE_FIND_PACKAGE_ICU
-    "pcre2"                 CMAKE_DISABLE_FIND_PACKAGE_WrapSystemPCRE2
+    #"pcre2"                 CMAKE_DISABLE_FIND_PACKAGE_WrapSystemPCRE2 # Bug in qt cannot be deactivated
     "glib"                 CMAKE_DISABLE_FIND_PACKAGE_GLIB2
     )
 
+#list(APPEND FEATURE_CORE_OPTIONS -DFEATURE_doubleconversion:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_LTTngUST:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_PPS:BOOL=ON)
 list(APPEND FEATURE_CORE_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Slog2:BOOL=ON)
@@ -115,7 +121,7 @@ list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON)
 # Gui features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     FEATURES
-    "freetype"            FEATURE_freetype
+    "freetype"            FEATURE_freetype # required on windows
     "harfbuzz"            FEATURE_harfbuzz
     "fontconfig"          FEATURE_fontconfig # NOT WINDOWS
     "jpeg"                FEATURE_jpeg
@@ -125,7 +131,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     "vulkan"              CMAKE_DISABLE_FIND_PACKAGE_Vulkan
     "egl"                 CMAKE_DISABLE_FIND_PACKAGE_EGL
     "fontconfig"          CMAKE_DISABLE_FIND_PACKAGE_Fontconfig
-    "freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype
+    #"freetype"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemFreetype # Bug in qt cannot be deactivated
     "harfbuzz"            CMAKE_DISABLE_FIND_PACKAGE_WrapSystemHarfbuzz
     "jpeg"                CMAKE_DISABLE_FIND_PACKAGE_JPEG
     "png"                 CMAKE_DISABLE_FIND_PACKAGE_PNG
@@ -233,6 +239,7 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
                      CONFIGURE_OPTIONS
                         #--trace-expand
+                        ${FEATURE_OPTIONS}
                         ${FEATURE_CORE_OPTIONS}
                         ${FEATURE_NET_OPTIONS}
                         ${FEATURE_GUI_OPTIONS}
@@ -297,23 +304,23 @@ foreach(_config debug release)
     if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin")
         continue()
     endif()
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${path_suffix}")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/${path_suffix}")
     foreach(script IN LISTS script_files)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}")
-            set(target_script "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${path_suffix}/${script}${script_suffix}")
+            set(target_script "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/${path_suffix}${script}${script_suffix}")
             file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${script}${script_suffix}" "${target_script}")
             file(READ "${target_script}" _contents)
             if(_config MATCHES "debug")
-                string(REPLACE "\\..\\share\\" "\\..\\..\\..\\share\\" _contents "${_contents}")
+                string(REPLACE "\\..\\share\\" "\\..\\..\\..\\..\\share\\" _contents "${_contents}")
             else()
-                string(REPLACE "\\..\\share\\" "\\..\\..\\share\\" _contents "${_contents}")
+                string(REPLACE "\\..\\share\\" "\\..\\..\\..\\share\\" _contents "${_contents}")
             endif()
             file(WRITE "${target_script}" "${_contents}")
         endif()
     endforeach()
     foreach(other IN LISTS other_files)
-        if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin${other}")
-            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin${other}" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/${path_suffix}/${other}")
+        if(EXISTS "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}")
+            file(RENAME "${CURRENT_PACKAGES_DIR}/${path_suffix}bin/${other}" "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/${path_suffix}${other}")
         endif()
     endforeach()
 endforeach()
@@ -332,5 +339,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/QtBuildInternals")
 if(NOT VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/macos")
 endif()
+
+set(_file "${CMAKE_CURRENT_LIST_DIR}/qt.conf.in")
+set(REL_PATH)
+configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/qt6/qt_release.conf" @ONLY)
+set(REL_PATH debug/)
+configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/qt6/qt_debug.conf" @ONLY)
 
 #TODO. create qt.conf for vcpkg_configure_qmake

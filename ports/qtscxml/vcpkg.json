@@ -5,16 +5,17 @@
   "homepage": "https://www.qt.io/",
   "dependencies": [
     "qt6betablock",
-    "qtbase",
-    "qtdeclarative",
-    "qttools"
-  ],
-  "default-features": [
-    "default-features"
-  ],
-  "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
     }
-  }
+  ]
 }

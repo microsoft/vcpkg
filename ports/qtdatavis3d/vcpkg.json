@@ -5,7 +5,10 @@
   "homepage": "https://www.qt.io/",
   "dependencies": [
     "qt6betablock",
-    "qtbase",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
     "qttools"
   ],
   "default-features": [

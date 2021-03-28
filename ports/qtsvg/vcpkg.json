@@ -4,6 +4,9 @@
   "description": "Qt SVG",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase"
+    {
+      "name": "qtbase",
+      "default-features": false
+    }
   ]
 }

@@ -36,12 +36,15 @@ Disables the correction of_IMPORT_PREFIX done by vcpkg due to moving the targets
 Currently the correction does not take into account how the files are moved and applies
 I rather simply correction which in some cases will yield the wrong results.
 
+### TOOLS_PATH
+Define the base path to tools. Default: `tools/<port>`
+
 ## Notes
 Transform all `/debug/<CONFIG_PATH>/*targets-debug.cmake` files and move them to `/<TARGET_PATH>`.
 Removes all `/debug/<CONFIG_PATH>/*targets.cmake` and `/debug/<CONFIG_PATH>/*config.cmake`.
 
-Transform all references matching `/bin/*.exe` to `/tools/<port>/*.exe` on Windows.
-Transform all references matching `/bin/*` to `/tools/<port>/*` on other platforms.
+Transform all references matching `/bin/*.exe` to `/${TOOLS_PATH}/*.exe` on Windows.
+Transform all references matching `/bin/*` to `/${TOOLS_PATH}/*`  on other platforms.
 
 Fix `${_IMPORT_PREFIX}` in auto generated targets to be one folder deeper.
 Replace `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs and targets.

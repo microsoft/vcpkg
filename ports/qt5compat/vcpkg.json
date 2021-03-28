@@ -4,7 +4,10 @@
   "description": "The module contains unsupported Qt 5 APIs",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase"
+    {
+      "name": "qtbase",
+      "default-features": false
+    }
   ],
   "default-features": [
     "big-codecs",

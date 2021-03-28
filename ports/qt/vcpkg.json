@@ -5,7 +5,10 @@
   "homepage": "https://www.qt.io/",
   "dependencies": [
     "qt5compat",
-    "qtbase",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
     "qtcoap",
     "qtdeclarative",
     "qtdoc",
