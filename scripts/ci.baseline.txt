@@ -887,6 +887,9 @@ mathgl:x64-osx=fail
 mathgl:x64-uwp=fail
 matio:x64-linux=fail
 matio:x64-osx=fail
+# matplotplusplus depends on CImg, which doesn't support UWP(std::system is unavailable).
+matplotplusplus:arm-uwp=fail
+matplotplusplus:x64-uwp=fail
 mdnsresponder:arm64-windows=fail
 mdnsresponder:arm-uwp=fail
 mdnsresponder:x64-linux=fail
