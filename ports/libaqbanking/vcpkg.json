@@ -1,0 +1,43 @@
+{
+  "name": "libaqbanking",
+  "version-string": "6.2.9",
+  "description": "A library for online banking and financial applications",
+  "homepage": "https://www.aquamaniac.de/rdm/",
+  "supports": "!windows",
+  "dependencies": [
+    "gmp",
+    {
+      "name": "libgwenhywfar",
+      "features": [
+        "cpp",
+        "libxml2",
+        "tools"
+      ]
+    },
+    "libxslt",
+    "xmlsec"
+  ],
+  "default-features": [
+    "hbci",
+    "ofxconnect",
+    "ebics",
+    "paypal"
+  ],
+  "features": {
+    "hbci": {
+      "description": "Provides support for the German 'Homebanking Computer Interface (HBCI)' online banking protocol"
+    },
+    "fints": {
+      "description": "Provides support for the FinTS online banking protocol, a successor of HBCI"
+    },
+    "ofxconnect": {
+      "description": "Provides support for OFX Direct Connect online banking protocol"
+    },
+    "ebics": {
+      "description": "Provides support for the EBICS, a German banking protocol, successor of the FTAM"
+    },
+    "paypal": {
+      "description": "Provides support for PayPal's native API"
+    }
+  }
+}
