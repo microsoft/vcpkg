@@ -83,6 +83,11 @@ else()
     file(COPY ${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 endif()
 
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake
+    "if(protobuf_MODULE_COMPATIBLE)"
+    "if(ON)"
+)
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/debug/bin)
