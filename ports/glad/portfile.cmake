@@ -25,15 +25,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 set(GLAD_SPEC "gl")
 
 if("egl" IN_LIST FEATURES)
-    set(GLAD_SPEC "${GLAD_SPEC},egl")
+    string(APPEND GLAD_SPEC ",egl")
 endif()
 
 if("wgl" IN_LIST FEATURES)
-    set(GLAD_SPEC "${GLAD_SPEC},wgl")
+    string(APPEND GLAD_SPEC ",wgl")
 endif()
 
 if("glx" IN_LIST FEATURES)
-    set(GLAD_SPEC "${GLAD_SPEC},glx")
+    string(APPEND GLAD_SPEC ",glx")
 endif()
 
 if("gl-api-latest" IN_LIST FEATURES)
