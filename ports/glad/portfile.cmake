@@ -12,7 +12,7 @@ vcpkg_from_github(
 if(NOT GLAD_PROFILE)
     set(GLAD_PROFILE "compatibility")
 endif()
-message(STATUS "This version of glad uses the compatibility profile. To use the core profile instead, create an overlay port of this with GLAD_PROFILE set to 'core'.")
+message(STATUS "This version of glad uses the compatibility profile. To use the core profile instead, create an overlay port of this with GLAD_PROFILE set to 'core' or set GLAD_PROFILE to 'core' in a custom triplet.")
 message(STATUS "This recipe is at ${CMAKE_CURRENT_LIST_DIR}")
 message(STATUS "See the overlay ports documentation at https://github.com/microsoft/vcpkg/blob/master/docs/specifications/ports-overlay.md")
 
