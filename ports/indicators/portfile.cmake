@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO p-ranav/indicators
-    REF af7c004832cb23de824fe4acf78bfa0dd9fe0758
-    SHA512 8ff80ddcde15163f311173679051febd69231a8eb3e56e0f83a513cc5384bca673ebc80692a42386b15159b95c9124aef79bd9da0ce273c70bce7c62c175aa51
+    REF b85eadb47c1d0f0edbb4da9c3b6384ec6486b24a # v2.0
+    SHA512 e9674440fa8643284a593b9e93345dc849301f42fe644b485e5dad1e12a20ef6687a2bf1eaeb2aec542d74544b7193c9b76b0166d7570781bc11604c71e8132a
     HEAD_REF master
 )
 
@@ -19,7 +19,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/indicators TARGET_PATH share/indicators)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/indicators)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug ${CURRENT_PACKAGES_DIR}/lib)
 

@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision 4a9ccf7e38e257feecce0c579a782741254eaeef)
++++ b/CMakeLists.txt	(date 1616381634500)
+@@ -188,6 +188,11 @@
+     set(PKG_CONFIG_REQUIRES fmt) # add dependency to pkg-config
+ endif ()
+ 
++if (ANDROID)
++    target_link_libraries(spdlog PUBLIC log)
++    target_link_libraries(spdlog_header_only INTERFACE log)
++endif ()
++
+ # ---------------------------------------------------------------------------------------
+ # Misc definitions according to tweak options
+ # ---------------------------------------------------------------------------------------

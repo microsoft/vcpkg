@@ -1,7 +1,7 @@
 Source: pangolin
 Version: 0.5
-Port-Version: 11
-Build-Depends: eigen3, glew, libpng, libjpeg-turbo, ffmpeg
+Port-Version: 12
+Build-Depends: eigen3, glew, libpng, libjpeg-turbo, ffmpeg[avformat]
 Homepage: https://github.com/stevenlovegrove/Pangolin
 Description: Lightweight GUI Library
 Supports: !uwp & !osx

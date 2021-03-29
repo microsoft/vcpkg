@@ -1,6 +1,7 @@
 {
   "name": "boost-thread",
   "version-string": "1.75.0",
+  "port-version": 1,
   "description": "Boost thread module",
   "homepage": "https://github.com/boostorg/thread",
   "dependencies": [
@@ -8,7 +9,10 @@
     "boost-assert",
     "boost-atomic",
     "boost-bind",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-chrono",
     "boost-concept-check",
     "boost-config",
@@ -24,7 +28,10 @@
     "boost-io",
     "boost-lexical-cast",
     "boost-math",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-move",
     "boost-optional",
     "boost-predef",

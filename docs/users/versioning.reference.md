@@ -1,5 +1,7 @@
 # Versioning reference
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/versioning.reference.md).**
+
 ## Contents
 
 * [Version schemes](#version-schemes)
@@ -114,7 +116,7 @@ Each port in vcpkg has a corresponding versions file, the location of a port's v
 
 ```
 ${VCPKG_ROOT}/versions/${first-letter-of-portname}-/${portname}.json
-````
+```
 
 For example, for `zlib` the corresponding versions file is:
 
