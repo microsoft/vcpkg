@@ -4,9 +4,6 @@ vcpkg_from_github(
     REF 100f30043f33277122e0991c83845a2617172ffd # v1.8.5
     SHA512 4ac4a2e32f940d1e9610eeca8644c936ba2cc94d24319b8f580485e6a7ea4091b5f79cb61336b49f25c679ae04ddc787f15733efdfc530ee336ca5258711d336
     HEAD_REF v1.x
-    PATCHES 
-        fix-featurebuild.patch 
-        fix-androidbuild.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
