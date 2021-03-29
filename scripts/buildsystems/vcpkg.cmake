@@ -629,6 +629,53 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
             ${Z_VCPKG_MANIFEST_INSTALL_ECHO_PARAMS}
         )
 
+        # {VERSION_,}GREATER_EQUAL introduced in 3.7
+        # string(JSON) introduced in 3.19
+        if(CMAKE_MAJOR_VERSION GREATER 3 OR (CMAKE_MAJOR_VERSION EQUAL 3 AND CMAKE_MINOR_VERSION GREATER 18))
+            file(GENERATE OUTPUT x-vcpkg-usage-info.cmake CONTENT [=[
+cmake_minimum_required(VERSION 3.19)
+
+execute_process(
+    COMMAND "${Z_VCPKG_EXECUTABLE}" list
+        --x-json
+        "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+    OUTPUT_VARIABLE list_results
+)
+string(JSON list_len LENGTH "${list_results}")
+if(list_len GREATER 0)
+    set(packages)
+    math(EXPR list_len "${list_len} - 1")
+    foreach(i RANGE "${list_len}")
+        string(JSON x MEMBER "${list_results}" "${i}")
+        list(APPEND packages "${x}")
+    endforeach()
+    execute_process(
+        COMMAND "${Z_VCPKG_EXECUTABLE}" x-package-info
+            --x-json
+            "--x-installed"
+            "--x-install-root=${_VCPKG_INSTALLED_DIR}"
+            ${packages}
+        OUTPUT_VARIABLE info_results
+    )
+    string(JSON info_results GET "${info_results}" results)
+    foreach(i RANGE "${list_len}")
+        string(JSON x MEMBER "${info_results}" "${i}")
+        string(JSON y GET "${info_results}" "${x}")
+        string(JSON usage ERROR_VARIABLE err GET "${y}" "usage")
+        if(err STREQUAL "NOTFOUND")
+            message("${usage}")
+        endif()
+    endforeach()
+endif()]=])
+
+            add_custom_target(x-vcpkg-usage
+                COMMAND ${CMAKE_COMMAND}
+                    "-DZ_VCPKG_EXECUTABLE=${Z_VCPKG_EXECUTABLE}"
+                    "-D_VCPKG_INSTALLED_DIR=${_VCPKG_INSTALLED_DIR}"
+                    -P "${CMAKE_CURRENT_BINARY_DIR}/x-vcpkg-usage-info.cmake"
+            )
+        endif()
+
         file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/vcpkg-manifest-install.log" Z_VCPKG_MANIFEST_INSTALL_LOGFILE)
         file(WRITE "${Z_VCPKG_MANIFEST_INSTALL_LOGFILE}" "${Z_VCPKG_MANIFEST_INSTALL_LOGTEXT}")
 
