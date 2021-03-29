@@ -4,7 +4,7 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cmake/cmake
     REF
-        63a65baf4c343c73b2142078ef0045d3711dea1d
+        b7b0fb430397bafae4a7bd80b41d474c91a3b7f3
     SHA512
         7874b26adb739649ea3a8c2d8701b44ea348d5d6387e0e2a3dd87494dfeae62084593f88f46d53a161ac24c46a7712489621213b61315593df4dc2ccc728084b
     HEAD_REF master
