@@ -8,5 +8,6 @@ index 58a092e..ed4a6d2 100644
  find_package(Matroska CONFIG REQUIRED)
 +add_definitions(-DMATROSKA_VERSION=2)
  find_package(libsoundio CONFIG REQUIRED)
- find_library(LibUSB libusb-1.0 REQUIRED)
+ find_package(libusb CONFIG REQUIRED)
+ find_package(libuvc CONFIG REQUIRED)
  find_package(libyuv CONFIG REQUIRED)
