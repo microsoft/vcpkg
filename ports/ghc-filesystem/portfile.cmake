@@ -1,0 +1,22 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO gulrak/filesystem
+    REF v1.5.4
+    SHA512 01fb69ce46259d25d152667943c20e013c90e005647ca1c9c64e0721882236079bac160c04b5edf310e1163bdf8cb6fc0343680de686a1329777027008c301bf
+)
+
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS
+        -DGHC_FILESYSTEM_BUILD_TESTING=OFF
+        -DGHC_FILESYSTEM_BUILD_EXAMPLES=OFF
+        -DGHC_FILESYSTEM_WITH_INSTALL=ON
+)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ghc_filesystem TARGET_PATH share/${PORT})
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug
+                    ${CURRENT_PACKAGES_DIR}/lib
+)
