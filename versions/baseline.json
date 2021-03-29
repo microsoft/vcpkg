@@ -2182,7 +2182,7 @@
     },
     "gettext": {
       "baseline": "0.21",
-      "port-version": 0
+      "port-version": 1
     },
     "gettimeofday": {
       "baseline": "2017-10-14-3",
@@ -2446,7 +2446,7 @@
     },
     "hunspell": {
       "baseline": "1.7.0",
-      "port-version": 2
+      "port-version": 4
     },
     "hwloc": {
       "baseline": "2.2.0",
@@ -4314,7 +4314,7 @@
     },
     "open62541": {
       "baseline": "1.1.2",
-      "port-version": 0
+      "port-version": 1
     },
     "openal-soft": {
       "baseline": "1.21.1",
@@ -4876,6 +4876,10 @@
       "baseline": "2.12.0",
       "port-version": 0
     },
+    "qt": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
     "qt-advanced-docking-system": {
       "baseline": "3.6.3",
       "port-version": 1
@@ -5052,8 +5056,104 @@
       "baseline": "5.15.2",
       "port-version": 0
     },
+    "qt5compat": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qt6betablock": {
+      "baseline": "6.1.0-beta1",
+      "port-version": 0
+    },
+    "qtactiveqt": {
+      "baseline": "6.1.0-beta1",
+      "port-version": 0
+    },
+    "qtbase": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtcharts": {
+      "baseline": "6.1.0-beta1",
+      "port-version": 0
+    },
+    "qtcoap": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtdatavis3d": {
+      "baseline": "6.1.0-beta1",
+      "port-version": 0
+    },
+    "qtdeclarative": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtdoc": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtimageformats": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
     "qtkeychain": {
       "baseline": "0.11.1",
+      "port-version": 0
+    },
+    "qtlottie": {
+      "baseline": "6.1.0-beta1",
+      "port-version": 0
+    },
+    "qtmqtt": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtnetworkauth": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtopcua": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtquick3d": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtquickcontrols2": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtquicktimeline": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtscxml": {
+      "baseline": "6.1.0-beta1",
+      "port-version": 0
+    },
+    "qtshadertools": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtsvg": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qttools": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qttranslations": {
+      "baseline": "6.0.2",
+      "port-version": 0
+    },
+    "qtvirtualkeyboard": {
+      "baseline": "6.1.0-beta1",
+      "port-version": 0
+    },
+    "qtwayland": {
+      "baseline": "6.0.2",
       "port-version": 0
     },
     "quadtree": {
