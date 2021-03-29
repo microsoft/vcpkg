@@ -21,10 +21,11 @@ vcpkg_from_github(
         00012-fix-use-cxx17.patch
 )
 
-if((NOT VCPKG_TARGET_IS_LINUX AND NOT VCPKG_TARGET_IS_OSX) AND (VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64"))
-    set(gRPC_BUILD_CODEGEN OFF)
-else()
+if(TARGET_TRIPLET STREQUAL HOST_TRIPLET)
     set(gRPC_BUILD_CODEGEN ON)
+else()
+    set(gRPC_BUILD_CODEGEN OFF)
+    vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 endif()
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" gRPC_MSVC_STATIC_RUNTIME)
@@ -62,13 +63,15 @@ vcpkg_configure_cmake(
         -DgRPC_INSTALL_BINDIR:STRING=bin
         -DgRPC_INSTALL_LIBDIR:STRING=lib
         -DgRPC_INSTALL_INCLUDEDIR:STRING=include
-        -DgRPC_INSTALL_CMAKEDIR:STRING=share/gRPC
+        -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
         -DgRPC_BUILD_CODEGEN=${gRPC_BUILD_CODEGEN}
+        -D_gRPC_PROTOBUF_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}
+        -DPROTOBUF_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/gRPC TARGET_PATH share/gRPC)
+vcpkg_fixup_cmake_targets()
 
 if (gRPC_BUILD_CODEGEN)
     vcpkg_copy_tools(
@@ -82,6 +85,8 @@ if (gRPC_BUILD_CODEGEN)
             grpc_cpp_plugin
             grpc_ruby_plugin
     )
+else()
+    configure_file(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets-vcpkg-tools.cmake ${CURRENT_PACKAGES_DIR}/share/grpc/gRPCTargets-vcpkg-tools.cmake @ONLY)
 endif()
 
 # Ignore the C# extension DLL in bin/

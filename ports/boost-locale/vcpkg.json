@@ -1,17 +1,24 @@
 {
   "name": "boost-locale",
   "version-string": "1.75.0",
+  "port-version": 1,
   "description": "Boost locale module",
   "homepage": "https://github.com/boostorg/locale",
   "supports": "!uwp",
   "dependencies": [
     "boost-assert",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     "boost-function",
     "boost-integer",
     "boost-iterator",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-smart-ptr",
     "boost-static-assert",
     "boost-system",
