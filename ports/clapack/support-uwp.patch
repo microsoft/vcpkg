@@ -41,9 +41,9 @@ index 094614a..e5b40ab 100644
          ARCHIVE DESTINATION lib
          INCLUDES DESTINATION include)
  
-+install(TARGETS arithchk
-+    RUNTIME DESTINATION tools
-+)
++if (NOT ARITHCHK_PATH)
++    install(TARGETS arithchk RUNTIME DESTINATION tools/clapack)
++endif()
 \ No newline at end of file
 diff --git a/F2CLIBS/libf2c/inquire.c b/F2CLIBS/libf2c/inquire.c
 index 5936a67..4846d41 100644
