@@ -9,8 +9,8 @@
       "port-version": 2
     },
     "abseil": {
-      "baseline": "2020-09-23",
-      "port-version": 3
+      "baseline": "2021-03-24",
+      "port-version": 0
     },
     "absent": {
       "baseline": "0.3.1",
