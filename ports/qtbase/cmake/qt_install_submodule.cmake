@@ -5,7 +5,7 @@ if(QT_IS_LATEST AND PORT STREQUAL "qtbase")
 else()
     include("${CMAKE_CURRENT_LIST_DIR}/qt_port_details.cmake")
 endif()
-set(PORT_DEBUG ON)
+#set(PORT_DEBUG ON)
 
 if(NOT DEFINED QT6_DIRECTORY_PREFIX)
     set(QT6_DIRECTORY_PREFIX "qt6/")
@@ -107,6 +107,7 @@ function(qt_install_submodule)
             ${_qis_CONFIGURE_OPTIONS}
         OPTIONS_RELEASE
             ${_qis_CONFIGURE_OPTIONS_RELEASE}
+            -DINSTALL_DOCDIR:STRING=doc/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_INCLUDEDIR:STRING=include/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_DESCRIPTIONSDIR:STRING=share/qt6/modules
             -DINSTALL_MKSPECSDIR:STRING=share/qt6/mkspecs
@@ -132,6 +133,7 @@ function(qt_install_submodule)
     ## Handle CMake files. 
     set(COMPONENTS)
     file(GLOB COMPONENTS_OR_FILES LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/share/Qt6*")
+    list(REMOVE_ITEM COMPONENTS_OR_FILES "${CURRENT_PACKAGES_DIR}/share/qt6")
     foreach(_glob IN LISTS COMPONENTS_OR_FILES)
         if(IS_DIRECTORY "${_glob}")
             string(REPLACE "${CURRENT_PACKAGES_DIR}/share/Qt6" "" _component "${_glob}")
@@ -154,12 +156,10 @@ function(qt_install_submodule)
     foreach(_debug_target IN LISTS DEBUG_CMAKE_TARGETS)
         vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/${qt_plugindir}" "{_IMPORT_PREFIX}/debug/${qt_plugindir}")
         vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/${qt_qmldir}" "{_IMPORT_PREFIX}/debug/${qt_qmldir}")
-        #vcpkg_replace_string("${_debug_target}" "{_IMPORT_PREFIX}/modules" "{_IMPORT_PREFIX}/debug/modules") # Modules seem to be the same
     endforeach()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         file(GLOB_RECURSE STATIC_CMAKE_TARGETS "${CURRENT_PACKAGES_DIR}/share/Qt6Qml/QmlPlugins/*.cmake")
-        message(STATUS "STATIC_CMAKE_TARGETS:${STATIC_CMAKE_TARGETS}")
         foreach(_plugin_target IN LISTS STATIC_CMAKE_TARGETS)
             # restore a single get_filename_component which was remove by vcpkg_fixup_pkgconfig
             vcpkg_replace_string("${_plugin_target}" 
@@ -184,23 +184,23 @@ function(qt_install_submodule)
             file(COPY "${CURRENT_PACKAGES_DIR}/${qt_plugindir}/" DESTINATION "${qt_tooldest}")
         endif()
     endif()
-    #file()
+
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/")
             file(COPY "${CURRENT_PACKAGES_DIR}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt6/bin")
         endif()
         file(GLOB_RECURSE _installed_dll_files RELATIVE "${CURRENT_INSTALLED_DIR}/tools/qt6/bin" "${CURRENT_INSTALLED_DIR}/tools/qt6/bin/*.dll")
-        message(STATUS "INSTALLED DLL: ${_installed_dll_files}")
         foreach(_dll_to_remove IN LISTS _installed_dll_files)
             file(GLOB_RECURSE _packaged_dll_file "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/${_dll_to_remove}")
-            file(REMOVE "${_packaged_dll_file}")
+            if(EXISTS "${_packaged_dll_file}")
+                file(REMOVE "${_packaged_dll_file}")
+            endif()
         endforeach()
         file(GLOB_RECURSE _folders LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/**/")
         file(GLOB_RECURSE _files "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/**/")
         if(_files)
             list(REMOVE_ITEM _folders ${_files})
         endif()
-        message(STATUS "FOLDERS: ${_folders}")
         foreach(_dir IN LISTS _folders)
             if(NOT "${_remaining_dll_files}" MATCHES "${_dir}")
                 file(REMOVE_RECURSE "${_dir}")
