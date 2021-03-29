@@ -7,7 +7,9 @@
     {
       "name": "qtbase",
       "default-features": false,
-      "features" : [ "testlib" ]
+      "features": [
+        "testlib"
+      ]
     }
   ]
 }

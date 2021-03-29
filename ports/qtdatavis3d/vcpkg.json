@@ -8,7 +8,9 @@
     {
       "name": "qtbase",
       "default-features": false,
-      "features": [ "gui" ]
+      "features": [
+        "gui"
+      ]
     },
     "qttools"
   ]
