@@ -1,6 +1,6 @@
 # vcpkg_install_meson
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_install_meson.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_meson.md).
 
 Builds a meson project previously configured with `vcpkg_configure_meson()`.
 

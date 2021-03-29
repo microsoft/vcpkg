@@ -1,5 +1,6 @@
 if(NOT TARGET_TRIPLET STREQUAL _HOST_TRIPLET)
-    message(FATAL_ERROR "vcpkg-cmake-config is a host-only port; please mark it as a host port in your dependencies.")
+    # make FATAL_ERROR in CI when issue #16773 fixed
+    message(WARNING "vcpkg-cmake-config is a host-only port; please mark it as a host port in your dependencies.")
 endif()
 
 file(INSTALL

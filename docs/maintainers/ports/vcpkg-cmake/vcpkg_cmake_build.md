@@ -1,6 +1,6 @@
 # vcpkg_cmake_build
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/ports/vcpkg-cmake/vcpkg_cmake_build.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/ports/vcpkg-cmake/vcpkg_cmake_build.md).
 
 Build a cmake project.
 

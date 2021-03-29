@@ -28,6 +28,11 @@ vcpkg_check_features(
         utils LLVM_BUILD_UTILS
         utils LLVM_INCLUDE_UTILS
         enable-rtti LLVM_ENABLE_RTTI
+        enable-ffi LLVM_ENABLE_FFI
+        enable-terminfo LLVM_ENABLE_TERMINFO
+        enable-threads LLVM_ENABLE_THREADS
+        enable-eh LLVM_ENABLE_EH
+        enable-bindings LLVM_ENABLE_BINDINGS
 )
 
 # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
