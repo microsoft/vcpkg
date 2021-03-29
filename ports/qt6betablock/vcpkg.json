@@ -4,6 +4,9 @@
   "description": "Port to block qt6 ports not in the current release",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase"
+    {
+        "name": "qtbase",
+        "default-features": false
+    }
   ]
 }

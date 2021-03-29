@@ -9,10 +9,7 @@
       "name": "qtbase",
       "default-features": false
     },
-    {
-      "name": "qtdeclarative",
-      "default-features": false
-    },
+    "qtdeclarative",
     {
       "name": "qttools",
       "default-features": false

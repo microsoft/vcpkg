@@ -4,7 +4,11 @@
   "description": "Qt Network Authenticators; QtOAuth in particular",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qtbase"
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features" : [ "network" ]
+    }
   ],
   "default-features": [
     "default-features"

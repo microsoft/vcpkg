@@ -11,10 +11,7 @@
         "network"
       ]
     },
-    {
-      "name": "qtdeclarative",
-      "default-features": false
-    }
+    "qtdeclarative"
   ],
   "features": {
     "qdoc": {
