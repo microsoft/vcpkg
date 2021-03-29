@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix_dependency.patch
         # Required for static build on windows 
         fix_foundation_link.patch
+        fix-feature-sqlite3.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre.h")
