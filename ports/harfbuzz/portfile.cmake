@@ -5,6 +5,11 @@ vcpkg_from_github(
     SHA512 d231a788ea4e52231d4c363c1eca76424cb82ed0952b5c24d0b082e88b3dddbda967e7fffe67fffdcb22c7ebfbf0ec923365eb4532be772f2e61fa7d29b51998
     HEAD_REF master
     PATCHES
+		# This patch is a workaround that is needed until the following issues are resolved upstream:
+		# - https://github.com/mesonbuild/meson/issues/8375
+		# - https://github.com/harfbuzz/harfbuzz/issues/2870
+		# Details: https://github.com/microsoft/vcpkg/issues/16262
+		0001-circumvent-samefile-error.patch
         0002-fix-uwp-build.patch
 )
 

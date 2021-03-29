@@ -1,0 +1,12 @@
+{
+  "name": "libsvm",
+  "version-string": "323",
+  "port-version": 2,
+  "description": "A library for Support Vector Machines.",
+  "homepage": "https://www.csie.ntu.edu.tw/~cjlin/libsvm/",
+  "features": {
+    "tools": {
+      "description": "build libsvm CLI tools."
+    }
+  }
+}

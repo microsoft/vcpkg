@@ -1,0 +1,13 @@
+{
+  "name": "libgnutls",
+  "version": "3.6.15",
+  "description": "A secure communications library implementing the SSL, TLS and DTLS protocols",
+  "homepage": "https://www.gnutls.org/",
+  "supports": "!windows",
+  "dependencies": [
+    "gmp",
+    "libidn2",
+    "libtasn1",
+    "nettle"
+  ]
+}
