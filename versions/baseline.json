@@ -3496,6 +3496,10 @@
       "baseline": "4.16.0",
       "port-version": 0
     },
+    "libtcod": {
+      "baseline": "1.16.6",
+      "port-version": 0
+    },
     "libtheora": {
       "baseline": "1.2.0alpha1-20170719",
       "port-version": 2
@@ -3670,6 +3674,10 @@
     },
     "lodepng": {
       "baseline": "2020-03-15",
+      "port-version": 1
+    },
+    "lodepng-c": {
+      "baseline": "2021-03-01",
       "port-version": 0
     },
     "log4cplus": {
