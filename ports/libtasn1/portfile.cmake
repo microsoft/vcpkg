@@ -8,25 +8,32 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE ${ARCHIVE} 
     REF ${VERSION}
+    PATCHES
+        msvc_fixes.patch
 )
 
-# restore the default ac_cv_prog_cc_g flags, otherwise it fails to compile
-set(VCPKG_C_FLAGS "-g -O2")
-set(VCPKG_CXX_FLAGS "-g -O2")
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
+    # $LIBS is an environment variable that vcpkg already pre-populated with some libraries. 
+    # We need to re-purpose it when passing LIBS option to make to avoid overriding the vcpkg's own list.  
+    set(EXTRA_LIBS "LIBS=\"$LIBS -lgettimeofday -lgetopt\"") 
+else()
+    # restore the default ac_cv_prog_cc_g flags, otherwise it fails to compile
+set(VCPKG_C_FLAGS "-g -O2") 
+    set(VCPKG_CXX_FLAGS "-g -O2")
+endif()
 
 set(ENV{GTKDOCIZE} true)
 vcpkg_configure_make(
-    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --disable-gtk-doc
+        "${EXTRA_LIBS}"
 )
 
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
-vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools ${CURRENT_PACKAGES_DIR}/debug/share)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
