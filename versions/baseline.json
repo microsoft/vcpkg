@@ -2552,7 +2552,7 @@
       "baseline": "9.0.0",
       "port-version": 0
     },
-	"iir1": {
+    "iir1": {
       "baseline": "1.8.0",
       "port-version": 0
     },
@@ -3035,6 +3035,10 @@
     "libffi": {
       "baseline": "3.3",
       "port-version": 7
+    },
+    "libfido2": {
+      "baseline": "1.6.0",
+      "port-version": 0
     },
     "libflac": {
       "baseline": "1.3.3",
