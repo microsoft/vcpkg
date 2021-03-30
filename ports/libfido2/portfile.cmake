@@ -26,12 +26,12 @@ vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-#vcpkg_fixup_cmake_targets()
-
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fido2.dll ${CURRENT_PACKAGES_DIR}/bin/fido2.dll)
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fido2.dll ${CURRENT_PACKAGES_DIR}/debug/bin/fido2.dll)
+if(LIBFIDO2_BUILD_SHARED)
+  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fido2.dll ${CURRENT_PACKAGES_DIR}/bin/fido2.dll)
+  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fido2.dll ${CURRENT_PACKAGES_DIR}/debug/bin/fido2.dll)
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
