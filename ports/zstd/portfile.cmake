@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 f529db9c094f9ae26428bf1fdfcc91c6d783d400980e0f0d802d2cf13c2be2931465ef568907e03841ff76a369a1447e7371f8799d8526edb9a513ba5c6db133
     HEAD_REF dev
     PATCHES
-        install_pkgpc.patch
+      install_pkgpc.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
