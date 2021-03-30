@@ -1,3 +1,6 @@
+get_filename_component(BOOST_BUILD_INSTALLED_DIR "${CMAKE_CURRENT_LIST_DIR}" DIRECTORY)
+get_filename_component(BOOST_BUILD_INSTALLED_DIR "${BOOST_BUILD_INSTALLED_DIR}" DIRECTORY)
+
 function(boost_modular_build)
     cmake_parse_arguments(_bm "" "SOURCE_PATH;BOOST_CMAKE_FRAGMENT" "" ${ARGN})
 
@@ -16,38 +19,7 @@ function(boost_modular_build)
         include(${_bm_BOOST_CMAKE_FRAGMENT})
     endif()
 
-    # Todo: this serves too similar a purpose as vcpkg_find_acquire_program()
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "aarch64")
-            set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../arm64-linux/tools/boost-build")
-        else()
-            set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x64-linux/tools/boost-build")
-        endif()
-    elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "armv7l")
-        set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../arm-linux/tools/boost-build")
-    elseif(CMAKE_HOST_WIN32 AND VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
-        get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
-    elseif(NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "s390x" AND CMAKE_HOST_WIN32)
-        get_filename_component(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/../x86-windows/tools/boost-build" ABSOLUTE)
-    else()
-        set(BOOST_BUILD_PATH "${CURRENT_INSTALLED_DIR}/tools/boost-build")
-    endif()
-
-    if(NOT EXISTS "${BOOST_BUILD_PATH}")
-        if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-            if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "aarch64")
-                message(FATAL_ERROR "The arm64 boost-build tools must be installed to build arm64 for Linux. Please run `vcpkg install boost-build:arm64-linux`.")
-            else()
-                message(FATAL_ERROR "The x64 boost-build tools must be installed to build arm64 for Linux. Please run `vcpkg install boost-build:x64-linux`.")
-            endif()
-        else()
-            if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux" AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "armv7l")
-                message(FATAL_ERROR "The arm boost-build tools must be installed to build arm64 for Linux. Please run `vcpkg install boost-build:arm-linux`.")
-            else()
-                message(FATAL_ERROR "The x86 boost-build tools must be installed to build for non-x86/x64 platforms. Please run `vcpkg install boost-build:x86-windows`.")
-            endif()
-        endif()
-    endif()
+    set(BOOST_BUILD_PATH "${BOOST_BUILD_INSTALLED_DIR}/tools/boost-build")
 
     if(EXISTS "${BOOST_BUILD_PATH}/b2.exe")
         set(B2_EXE "${BOOST_BUILD_PATH}/b2.exe")
@@ -61,7 +33,7 @@ function(boost_modular_build)
         list(APPEND B2_OPTIONS windows-api=store)
     endif()
 
-    set(_bm_DIR ${CURRENT_INSTALLED_DIR}/share/boost-build)
+    set(_bm_DIR ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build)
 
     if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(BOOST_LIB_PREFIX)
@@ -91,8 +63,6 @@ function(boost_modular_build)
 
     if(EXISTS "${_bm_SOURCE_PATH}/build/Jamfile.v2")
         file(READ ${_bm_SOURCE_PATH}/build/Jamfile.v2 _contents)
-        #string(REPLACE "import ../../predef/check/predef" "import predef/check/predef" _contents "${_contents}")
-        #string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
         string(REGEX REPLACE
             "\.\./\.\./([^/ ]+)/build//(boost_[^/ ]+)"
             "/boost/\\1//\\2"
@@ -103,13 +73,6 @@ function(boost_modular_build)
         file(WRITE ${_bm_SOURCE_PATH}/build/Jamfile.v2 "${_contents}")
     endif()
 
-    # if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-config/checks")
-    #     file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${_bm_SOURCE_PATH}/build/config")
-    # endif()
-    # if(EXISTS "${CURRENT_INSTALLED_DIR}/share/boost-predef/check")
-    #     file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-predef/check" DESTINATION "${_bm_SOURCE_PATH}/build/predef")
-    # endif()
-    
     function(unix_build BOOST_LIB_SUFFIX BUILD_TYPE BUILD_LIB_PATH)
         message(STATUS "Building ${BUILD_TYPE}...")
         set(BOOST_LIB_SUFFIX ${BOOST_LIB_SUFFIX})
@@ -122,7 +85,7 @@ function(boost_modular_build)
             list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
         endif()
         vcpkg_configure_cmake(
-            SOURCE_PATH ${CURRENT_INSTALLED_DIR}/share/boost-build
+            SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
             PREFER_NINJA
             OPTIONS
                 "-DPORT=${PORT}"
@@ -159,7 +122,7 @@ function(boost_modular_build)
             message(FATAL_ERROR "No libraries were produced. This indicates a failure while building the boost library.")
         endif()
 
-        file(INSTALL ${CURRENT_INSTALLED_DIR}/share/boost-build/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+        configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage COPYONLY)
         return()
     endif()
 
@@ -471,5 +434,5 @@ function(boost_modular_build)
     endif()
 
     vcpkg_copy_pdbs()
-    file(INSTALL ${CURRENT_INSTALLED_DIR}/share/boost-build/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    configure_file(${BOOST_BUILD_INSTALLED_DIR}/share/boost-build/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage COPYONLY)
 endfunction()

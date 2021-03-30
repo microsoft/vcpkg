@@ -95,6 +95,12 @@ if("cuda" IN_LIST FEATURES AND CMAKE_HOST_WIN32)
     vcpkg_add_to_path("$ENV{CUDA_PATH}/bin")
 endif()
 
+if("utf8" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS
+        -DKWSYS_ENCODING_DEFAULT_CODEPAGE=CP_UTF8
+    )
+endif()
+
 if("all" IN_LIST FEATURES)
     list(APPEND ADDITIONAL_OPTIONS
         -DVTK_USE_TK=OFF # TCL/TK currently not included in vcpkg
