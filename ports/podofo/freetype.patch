@@ -1,5 +1,5 @@
 diff --git a/cmake/modules/FindFREETYPE.cmake b/cmake/modules/FindFREETYPE.cmake
-index 00e688c..de6c8ea 100644
+index 41114798f..0911dc092 100644
 --- a/cmake/modules/FindFREETYPE.cmake
 +++ b/cmake/modules/FindFREETYPE.cmake
 @@ -15,9 +15,13 @@ SET(FREETYPE_FIND_QUIETLY 1)

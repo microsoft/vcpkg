@@ -1,8 +1,8 @@
 diff --git a/podofo_config.h.in b/podofo_config.h.in
-index 9a8e7c3..bebb084 100644
+index fea9ada..a813c7b 100644
 --- a/podofo_config.h.in
 +++ b/podofo_config.h.in
-@@ -60,3 +60,10 @@
+@@ -59,3 +59,10 @@
  #cmakedefine PODOFO_HAVE_OPENSSL_NO_RC4
  #cmakedefine PODOFO_HAVE_LIBIDN
  #cmakedefine PODOFO_HAVE_UNISTRING_LIB
@@ -13,4 +13,3 @@ index 9a8e7c3..bebb084 100644
 +#else
 +#cmakedefine HAVE_UNISTD_H
 +#endif
-\ No newline at end of file
