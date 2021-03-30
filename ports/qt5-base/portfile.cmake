@@ -10,9 +10,8 @@ function(x_vcpkg_get_port_features)
     execute_process(COMMAND "${VCPKG}" list
                                    WORKING_DIRECTORY "${VCPKG_ROOT_DIR}"
                                    OUTPUT_VARIABLE _all_installed_ports
-                                   ERROR_VARIABLE _all_installed_ports_err)
+                                   )
     string(REPLACE ";" "(\\\[[^:]+\\\])?|" _port_match_regex "${x_vcpkg_get_port_features_PORTS}")
-    set(_regex "(${_port_match_regex}(\\\[[^:]\\\])):${TARGET_TRIPLET}")
     string(REGEX MATCHALL "(${_port_match_regex}(\\\[[^:]+\\\])?):${TARGET_TRIPLET}" _port_matches "${_all_installed_ports}")
     string(REPLACE ":${TARGET_TRIPLET}" "" _port_matches "${_port_matches}")
     foreach(_port IN LISTS x_vcpkg_get_port_features_PORTS )
