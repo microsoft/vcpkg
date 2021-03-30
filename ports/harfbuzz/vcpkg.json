@@ -15,6 +15,9 @@
     }
   ],
   "features": {
+    "coretext": {
+      "description": "Enable CoreText shaper backend on macOS"
+    },
     "glib": {
       "description": "Glib Unicode callbacks support",
       "dependencies": [
@@ -36,9 +39,6 @@
       "dependencies": [
         "icu"
       ]
-    }
-    "coretext": {
-      "description": "Enable CoreText shaper backend on macOS",
     }
   }
 }

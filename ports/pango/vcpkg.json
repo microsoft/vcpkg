@@ -24,8 +24,8 @@
       "name": "harfbuzz",
       "features": [
         "coretext"
-      ]
-      "platform": osx
-    },
+      ],
+      "platform": "osx"
+    }
   ]
 }
