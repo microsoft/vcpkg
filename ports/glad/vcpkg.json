@@ -49,14 +49,16 @@
       "dependencies": [ { "name": "glad", "features": ["gl-api-14"], "default-features": false } ]
     },
     "gl-api-20": {
-      "description": "Imports extensions from OpenGL API specification version 2.0."
+      "description": "Imports extensions from OpenGL API specification version 2.0.",
+      "dependencies": [ { "name": "glad", "features": ["gl-api-15"], "default-features": false } ]
     },
     "gl-api-21": {
       "description": "Imports extensions from OpenGL API specification version 2.1.",
       "dependencies": [ { "name": "glad", "features": ["gl-api-20"], "default-features": false } ]
     },
     "gl-api-30": {
-      "description": "Imports extensions from OpenGL API specification version 3.0."
+      "description": "Imports extensions from OpenGL API specification version 3.0.",
+      "dependencies": [ { "name": "glad", "features": ["gl-api-21"], "default-features": false } ]
     },
     "gl-api-31": {
       "description": "Imports extensions from OpenGL API specification version 3.1.",
@@ -71,7 +73,8 @@
       "dependencies": [ { "name": "glad", "features": ["gl-api-32"], "default-features": false } ]
     },
     "gl-api-40": {
-      "description": "Imports extensions from OpenGL API specification version 4.0."
+      "description": "Imports extensions from OpenGL API specification version 4.0.",
+      "dependencies": [ { "name": "glad", "features": ["gl-api-33"], "default-features": false } ]
     },
     "gl-api-41": {
       "description": "Imports extensions from OpenGL API specification version 4.1.",
