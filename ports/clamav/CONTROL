@@ -1,0 +1,6 @@
+Source: clamav
+Version: 0.103.0
+Homepage: https://www.clamav.net
+Description: ClamAV is an open-source anti-virus toolkit.
+Build-Depends: openssl, json-c, libxml2, pcre2, pthreads, zlib, bzip2
+Supports: !uwp & !static
