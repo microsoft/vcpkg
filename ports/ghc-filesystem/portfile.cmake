@@ -15,7 +15,7 @@ vcpkg_configure_cmake(
         -DGHC_FILESYSTEM_WITH_INSTALL=ON
 )
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ghc_filesystem TARGET_PATH share/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ghc_filesystem)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug
