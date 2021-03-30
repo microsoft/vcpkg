@@ -2202,7 +2202,7 @@
     },
     "glad": {
       "baseline": "0.1.34",
-      "port-version": 2
+      "port-version": 0
     },
     "glbinding": {
       "baseline": "3.1.0",
