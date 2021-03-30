@@ -279,11 +279,10 @@
           }
         },
         "features": {
-          "description": "An object of features supported by the package",
+          "description": "A map of features supported by the package",
           "type": "object",
           "patternProperties": {
-            "^\\$": {},
-            "^[a-z-]+": {
+            "": {
               "$ref": "#/definitions/feature"
             }
           }

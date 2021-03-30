@@ -1,0 +1,6 @@
+{
+  "name": "lodepng-c",
+  "version-string": "2021-03-01",
+  "description": "PNG encoder and decoder in C",
+  "homepage": "https://github.com/lvandeve/lodepng"
+}
