@@ -19,6 +19,13 @@
       "name": "glib",
       "host": true
     },
-    "harfbuzz"
+    "harfbuzz",
+    {
+      "name": "harfbuzz",
+      "features": [
+        "coretext"
+      ]
+      "platform": osx
+    },
   ]
 }
