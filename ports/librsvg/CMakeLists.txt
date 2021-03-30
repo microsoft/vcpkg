@@ -11,12 +11,12 @@ find_package(LibXml2 REQUIRED)
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
 elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
 else()
-  find_library(PANGO_FT2_LIB pangoft2-1)
-  find_library(FONTCONFIG_LIB fontconfig)
+    pkg_check_modules(PANGO2 pangoft2 pangofc IMPORTED_TARGET)
+    set(PANGO_FT2_LIB PkgConfig::PANGO2)
 endif()
 
 # Add include directories
-include_directories(${CAIRO_INCLUDE_DIRS} ${GDK_PIXBUF_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS} ${PANGO_INCLUDE_DIRS})
+include_directories(${CAIRO_INCLUDE_DIRS} ${GDK_PIXBUF_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIRS} ${PANGO_INCLUDE_DIRS} ${PANGO2_INCLUDE_DIRS})
 
 set(LIBRSVG_SOURCES
     librsvg-features.c
@@ -107,7 +107,6 @@ target_link_libraries(rsvg-2.40 PRIVATE
     PkgConfig::PANGO
     PkgConfig::GDK_PIXBUF
     ${PANGO_FT2_LIB}
-    ${FONTCONFIG_LIB}
     unofficial::libcroco::croco-0.6
 )
 target_link_libraries(pixbufloader-svg PRIVATE
