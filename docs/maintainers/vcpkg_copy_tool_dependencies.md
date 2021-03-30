@@ -1,6 +1,6 @@
 # vcpkg_copy_tool_dependencies
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_copy_tool_dependencies.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_copy_tool_dependencies.md).
 
 Copy all DLL dependencies of built tools into the tool folder.
 
