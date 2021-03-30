@@ -72,7 +72,7 @@ function(find_platform_dependent_libraries)
   set(FFMPEG_PLATFORM_DEPENDENT_LIBS ${FFMPEG_PLATFORM_DEPENDENT_LIBS} PARENT_SCOPE)
 endfunction()
 
-set(FFMPEG_VERSION "4.3.1")
+set(FFMPEG_VERSION "4.3.2")
 
 find_dependency(Threads)
 if(UNIX)
