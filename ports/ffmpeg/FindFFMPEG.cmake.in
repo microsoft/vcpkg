@@ -93,14 +93,23 @@ function(find_platform_dependent_libraries)
   set(FFMPEG_PLATFORM_DEPENDENT_LIBS ${FFMPEG_PLATFORM_DEPENDENT_LIBS} PARENT_SCOPE)
 endfunction()
 
+# for finding system libraries that may not always be available
+function(find_platform_dependent_optional_libraries)
+  cmake_parse_arguments(_fpdo "" "" "NAMES" ${ARGN})
+  foreach(_name ${_fpdo_NAMES})
+    find_library(${_name}_LIBRARY ${_name})    
+    if(NOT ${_name}_LIBRARY MATCHES ${_name}_LIBRARY-NOTFOUND)
+        list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${${_name}_LIBRARY})
+    endif()
+  endforeach()
+  set(FFMPEG_PLATFORM_DEPENDENT_LIBS ${FFMPEG_PLATFORM_DEPENDENT_LIBS} PARENT_SCOPE)
+endfunction()
+
 set(FFMPEG_VERSION "4.3.1")
 
 find_dependency(Threads)
 if(UNIX)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -pthread)
-endif()
-if(UNIX AND NOT APPLE)
-  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -lX11)
 endif()
 
 if(@ENABLE_ASS@)
@@ -303,6 +312,7 @@ if(@ENABLE_X265@)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${X265_LIBRARIES})
   if(UNIX)
     list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS dl)
+    find_platform_dependent_optional_libraries(NAMES numa)
   endif()
 endif()
 
@@ -318,6 +328,11 @@ if(@ENABLE_ZLIB@)
 endif()
 
 #  Platform dependent libraries required by FFMPEG
+if(UNIX AND NOT APPLE)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS -lX11)
+  find_platform_dependent_optional_libraries(NAMES va-drm va vdpau)
+endif()
+
 if(WIN32)
   if(NOT CYGWIN)
     list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS wsock32 ws2_32 secur32 bcrypt strmiids Vfw32 Shlwapi mfplat mfuuid)
