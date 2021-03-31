@@ -1,29 +1,5 @@
 vcpkg_buildpath_length_warning(37)
 
-function(x_vcpkg_get_port_features)
-    cmake_parse_arguments(PARSE_ARGV 0 x_vcpkg_get_port_features "" "" "PORTS")
-    if(NOT x_vcpkg_get_port_features_PORTS)
-        message(FATAL_ERROR "x_vcpkg_get_port_features requires parameter PORTS!")
-    endif()
-    find_program(VCPKG NAMES vcpkg PATHS "${VCPKG_ROOT_DIR}")
-    message(STATUS "vcpkg: ${VCPKG}")
-    execute_process(COMMAND "${VCPKG}" list
-                                   WORKING_DIRECTORY "${VCPKG_ROOT_DIR}"
-                                   OUTPUT_VARIABLE _all_installed_ports
-                                   )
-    string(REPLACE ";" "(\\\[[^:]+\\\])?|" _port_match_regex "${x_vcpkg_get_port_features_PORTS}")
-    string(REGEX MATCHALL "(${_port_match_regex}(\\\[[^:]+\\\])?):${TARGET_TRIPLET}" _port_matches "${_all_installed_ports}")
-    string(REPLACE ":${TARGET_TRIPLET}" "" _port_matches "${_port_matches}")
-    foreach(_port IN LISTS x_vcpkg_get_port_features_PORTS )
-        set(_filter_list ${_port_matches})
-        list(FILTER _filter_list INCLUDE REGEX "${_port}")
-        string(REPLACE "${_port}[" "" _filter_list "${_filter_list}")
-        string(REPLACE "]" "" _filter_list "${_filter_list}")
-        string(REPLACE "${_port}" "core" _filter_list "${_filter_list}")
-        set(${_port}_FEATURES ${_filter_list} PARENT_SCOPE)
-    endforeach()
-endfunction()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     option(QT_OPENSSL_LINK "Link against OpenSSL at compile-time." ON)
 else()
@@ -247,7 +223,7 @@ set(FREETYPE_RELEASE_ALL "${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} $
 set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG} ${BROTLI_DEC_DEBUG} ${BROTLI_COMMON_DEBUG}")
 
 # If HarfBuzz is built with GLib enabled, it must be statically link
-x_vcpkg_get_port_features(PORTS harfbuzz)
+x_vcpkg_get_port_info(PORTS harfbuzz)
 if("glib" IN_LIST harfbuzz_FEATURES)
     set(GLIB_LIB_VERSION 2.0)
     find_library(GLIB_RELEASE NAMES glib-${GLIB_LIB_VERSION} PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
