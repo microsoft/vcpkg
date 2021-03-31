@@ -1,0 +1,20 @@
+{
+  "name": "glib",
+  "version-string": "2.52.3",
+  "port-version": 26,
+  "description": "Portable, general-purpose utility library.",
+  "homepage": "https://developer.gnome.org/glib/",
+  "supports": "!uwp",
+  "dependencies": [
+    "gettext",
+    "libffi",
+    "libiconv",
+    "pcre",
+    "zlib"
+  ],
+  "features": {
+    "selinux": {
+      "description": "Build with selinux support"
+    }
+  }
+}
