@@ -3709,7 +3709,7 @@
       "port-version": 0
     },
     "lua": {
-      "baseline": "5.4.2",
+      "baseline": "5.4.3",
       "port-version": 0
     },
     "luabridge": {
