@@ -17,7 +17,7 @@ target_include_directories(libodb-mysql
 
 )
 
-target_link_libraries(libodb-mysql PUBLIC odb::libodb ${MYSQL_LIB})
+target_link_libraries(libodb-mysql PRIVATE odb::libodb ${MYSQL_LIB})
 if(BUILD_SHARED_LIBS)
     target_compile_definitions(libodb-mysql PRIVATE
         -DLIBODB_MYSQL_DYNAMIC_LIB
@@ -27,7 +27,7 @@ else()
         -DLIBODB_MYSQL_STATIC_LIB
         -DLIBODB_MYSQL_HAVE_UNLOCK_NOTIFY)
 endif()
-install(TARGETS libodb-mysql EXPORT odb_mysqlTargets
+install(TARGETS libodb-mysql EXPORT odb_mysqlConfig
     COMPONENT mysql
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
@@ -43,12 +43,5 @@ install(DIRECTORY odb DESTINATION include/
         PATTERN "*.txx"
 )
 endif()
-install(EXPORT odb_mysqlTargets NAMESPACE odb:: COMPONENT mysql DESTINATION share/odb_mysql)
-export(TARGETS libodb-mysql NAMESPACE odb:: FILE odb_mysqlTargets.cmake)
-
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/odb_mysql-config.cmake"
-[[include(CMakeFindDependencyMacro)
-find_dependency(odb CONFIG COMPONENTS libodb)
-include("${CMAKE_CURRENT_LIST_DIR}/odb_mysqlTargets.cmake")
-]])
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/odb_mysql-config.cmake DESTINATION share/odb_mysql)
+install(EXPORT odb_mysqlConfig NAMESPACE odb:: COMPONENT mysql DESTINATION share/odb)
+export(TARGETS libodb-mysql NAMESPACE odb:: FILE odb_mysqlConfig.cmake)

@@ -36,8 +36,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/odb_mysql TARGET_PATH share/odb_mysql)
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/odb TARGET_PATH share/odb)
 
 vcpkg_copy_pdbs()
 
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
