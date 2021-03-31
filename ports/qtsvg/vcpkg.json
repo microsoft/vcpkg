@@ -1,6 +1,6 @@
 {
   "name": "qtsvg",
-  "version-string": "6.0.2",
+  "version-string": "6.0.3",
   "description": "Qt SVG",
   "homepage": "https://www.qt.io/",
   "dependencies": [
