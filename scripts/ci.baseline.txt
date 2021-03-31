@@ -404,7 +404,6 @@ glew:arm-uwp=fail
 glfw3:arm-uwp=fail
 glfw3:x64-uwp=fail
 glib:x64-uwp=fail
-glib:x64-windows-static=fail
 glib:x64-osx=fail
 gmmlib:arm64-windows=fail
 gmmlib:arm-uwp=fail
