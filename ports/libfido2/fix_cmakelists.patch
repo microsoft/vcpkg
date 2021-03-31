@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1eb8726..addf845 100644
+index 1eb8726..b308597 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -161,16 +161,19 @@ if(UNIX)
+@@ -161,16 +161,20 @@ if(UNIX)
  endif()
  
  if(MSVC)
@@ -20,6 +20,7 @@ index 1eb8726..addf845 100644
 +	
 +	find_package(LIBCBOR REQUIRED)
 +	find_package(OpenSSL REQUIRED)
++	find_package(ZLIB REQUIRED) 
 +	
 +	# Handling of different Packagenames in VCPKG
 +	set(CBOR_INCLUDE_DIRS ${LIBCBOR_INCLUDE_DIR})
@@ -32,3 +33,16 @@ index 1eb8726..addf845 100644
  	set(MSVC_DISABLED_WARNINGS_LIST
  		"C4200" # nonstandard extension used: zero-sized array in
  			# struct/union;
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 11b0bb5..d820ff3 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -120,7 +120,7 @@ if(BUILD_SHARED_LIBS)
+ 	install(TARGETS fido2_shared
+ 		ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+ 		LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+-		RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
++		RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+ endif()
+ 
+ install(FILES fido.h DESTINATION include)
