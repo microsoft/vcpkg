@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO ianichitei/bddisasm
-    REF 237e6ffb3e1e0b15639078efefb0f2b85ae04ee6
-    SHA512 0bc15d3efd4ee740342d194da659b5238ffcf744fe95203aba692b4fd05aa730f9fec362a6772c526914f23000ceafb85f8a8bada7b7a9dd24f83308f51a1fd4
+    REPO bitdefender/bddisasm
+    REF v1.32.1
+    SHA512 78062081ab38f208c29e1a8cd50daad9203c93ab68cb3e48250fc3b38b7bfdb6a878a995c353f63ac7a6144f305dbdc0f5d60d67558f0403a669197979143de1
     HEAD_REF master
 )
 
