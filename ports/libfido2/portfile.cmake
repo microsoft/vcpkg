@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 f40d394883d909e9e3ea3308b32f7ca31a882c709e11b3b143ed5734d16b0c244d4932effe06965d566776b03d152b1fc280e73cdfeeb81b65d8414042af19fe
     HEAD_REF master
     PATCHES
-      "find_packages.patch"
+        "fix_cmakelists.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LIBFIDO2_BUILD_STATIC)
@@ -14,6 +14,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" LIBFIDO2_BUILD_SHARED)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     OPTIONS
         -DBUILD_EXAMPLES=OFF
         -DBUILD_MANPAGES=OFF
@@ -22,18 +23,9 @@ vcpkg_configure_cmake(
         -DBUILD_TOOLS=OFF
  )
 
-vcpkg_build_cmake()
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
-if(LIBFIDO2_BUILD_SHARED)
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/lib/fido2.dll ${CURRENT_PACKAGES_DIR}/bin/fido2.dll)
-  file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-  file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/fido2.dll ${CURRENT_PACKAGES_DIR}/debug/bin/fido2.dll)
-endif()
-
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
