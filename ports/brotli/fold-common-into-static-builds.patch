@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4ff3401..62d891f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -171,8 +171,8 @@ endif()
+ 
+ set(BROTLI_STATIC_LIBS brotlicommon-static brotlidec-static brotlienc-static)
+ add_library(brotlicommon-static STATIC ${BROTLI_COMMON_C})
+-add_library(brotlidec-static STATIC ${BROTLI_DEC_C})
+-add_library(brotlienc-static STATIC ${BROTLI_ENC_C})
++add_library(brotlidec-static STATIC ${BROTLI_DEC_C} ${BROTLI_COMMON_C})
++add_library(brotlienc-static STATIC ${BROTLI_ENC_C} ${BROTLI_COMMON_C})
+ 
+ # Older CMake versions does not understand INCLUDE_DIRECTORIES property.
+ include_directories(${BROTLI_INCLUDE_DIRS})

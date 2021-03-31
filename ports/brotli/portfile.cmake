@@ -9,6 +9,7 @@ vcpkg_from_github(
         fix-arm-uwp.patch
         pkgconfig.patch
         fix-ios.patch
+        fold-common-into-static-builds.patch
 )
 
 vcpkg_configure_cmake(
