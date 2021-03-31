@@ -137,6 +137,7 @@ if(CMD MATCHES "^BUILD$")
     include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
 
     include("${SCRIPTS}/cmake/x_vcpkg_get_port_info.cmake")
+    include("${SCRIPTS}/cmake/x_vcpkg_get_pkgconfig_modules.cmake")
 
     include("${SCRIPTS}/cmake/z_vcpkg_apply_patches.cmake")
     include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")

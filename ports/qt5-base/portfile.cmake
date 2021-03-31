@@ -1,21 +1,10 @@
 vcpkg_buildpath_length_warning(37)
 
-include("${SCRIPTS}/cmake/x_vcpkg_get_pkgconfig_libs.cmake")
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    option(QT_OPENSSL_LINK "Link against OpenSSL at compile-time." ON)
+    set(QT_OPENSSL_LINK ON)
 else()
-    option(QT_OPENSSL_LINK "Link against OpenSSL at compile-time." OFF)
+    set(QT_OPENSSL_LINK OFF)
 endif()
-
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    option(QT_MYSQL_PLUGIN "Create MySQL plugin" OFF)
-else()
-    if ("mysqlplugin" IN_LIST FEATURES)
-        option(QT_MYSQL_PLUGIN "Create MySQL plugin" ON)
-    endif()
-endif()
-
 
 if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "qt5-base currently requires some packages from the system package manager, see https://doc.qt.io/qt-5/linux-requirements.html")
@@ -47,9 +36,17 @@ else()
     )
 endif()
 
-set(WITH_PGSQL OFF)
+set(WITH_PGSQL_PLUGIN OFF)
 if("postgresqlplugin" IN_LIST FEATURES)
-    set(WITH_PGSQL ON)
+    set(WITH_PGSQL_PLUGIN ON)
+endif()
+
+set(WITH_MYSQL_PLUGIN OFF)
+if ("mysqlplugin" IN_LIST FEATURES)
+    set(WITH_MYSQL_PLUGIN  ON)
+endif()
+if(WITH_MYSQL_PLUGIN AND NOT VCPKG_TARGET_IS_WINDOWS)
+    message(WARNING "${PORT} is currently not setup to support feature 'mysqlplugin' on platforms other than windows. Feel free to open up a PR to fix it!")
 endif()
 
 include(qt_port_functions)
@@ -123,7 +120,7 @@ list(APPEND CORE_OPTIONS
     -system-zlib
     -system-libjpeg
     -system-libpng
-    -system-freetype # static builds require to also link its dependent bzip!
+    -system-freetype
     -system-pcre
     -system-doubleconversion
     -system-sqlite
@@ -138,17 +135,17 @@ if(QT_OPENSSL_LINK)
     list(APPEND CORE_OPTIONS -openssl-linked)
 endif()
 
-if(WITH_PGSQL)
+if(WITH_PGSQL_PLUGIN)
     list(APPEND CORE_OPTIONS -sql-psql)
 else()
     list(APPEND CORE_OPTIONS -no-sql-psql)
 endif()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    if(QT_MYSQL_PLUGIN)
-        list(APPEND CORE_OPTIONS -sql-mysql)
-    endif()
+if(WITH_MYSQL_PLUGIN)
+    list(APPEND CORE_OPTIONS -sql-mysql)
+else()
+    list(APPEND CORE_OPTIONS -no-sql-mysql)
 endif()
+
 
 find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
@@ -225,13 +222,7 @@ set(FREETYPE_RELEASE_ALL "${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} $
 set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG} ${BROTLI_DEC_DEBUG} ${BROTLI_COMMON_DEBUG}")
 
 # If HarfBuzz is built with GLib enabled, it must be statically link
-x_vcpkg_get_pkgconfig_libs(MODULES harfbuzz)
-x_vcpkg_get_port_info(PORTS harfbuzz)
-if("glib" IN_LIST harfbuzz_FEATURES)
-    set(GLIB_LIB_VERSION 2.0)
-    find_library(GLIB_RELEASE NAMES glib-${GLIB_LIB_VERSION} PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-    find_library(GLIB_DEBUG NAMES glib-${GLIB_LIB_VERSION} PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
-endif()
+x_vcpkg_get_pkgconfig_modules(PREFIX harfbuzz MODULES harfbuzz LIBRARIES)
 
 set(RELEASE_OPTIONS
             "LIBJPEG_LIBS=${JPEG_RELEASE}"
@@ -269,23 +260,23 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     list(APPEND RELEASE_OPTIONS
             "SQLITE_LIBS=${SQLITE_RELEASE}"
-            "HARFBUZZ_LIBS=${HARFBUZZ_LIBRARIES_RELEASE}"
+            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
 
     list(APPEND DEBUG_OPTIONS
             "SQLITE_LIBS=${SQLITE_DEBUG}"
-            "HARFBUZZ_LIBS=${HARFBUZZ_LIBRARIES_DEBUG}"
+            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_DEBUG}"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib"
         )
-    if(WITH_PGSQL)
+    if(WITH_PGSQL_PLUGIN)
         list(APPEND RELEASE_OPTIONS "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib")
         list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} ws2_32.lib secur32.lib advapi32.lib shell32.lib crypt32.lib user32.lib gdi32.lib")
     endif()
-    if (QT_MYSQL_PLUGIN)
+    if (WITH_MYSQL_PLUGIN)
         list(APPEND RELEASE_OPTIONS "MYSQL_LIBS=${MYSQL_RELEASE}")
         list(APPEND DEBUG_OPTIONS "MYSQL_LIBS=${MYSQL_DEBUG}")
-    endif(QT_MYSQL_PLUGIN)
+    endif(WITH_MYSQL_PLUGIN)
 
 elseif(VCPKG_TARGET_IS_LINUX)
     list(APPEND CORE_OPTIONS -fontconfig -xcb-xlib -xcb -linuxfb)
@@ -294,17 +285,17 @@ elseif(VCPKG_TARGET_IS_LINUX)
     endif()
     list(APPEND RELEASE_OPTIONS
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
-            "HARFBUZZ_LIBS=${HARFBUZZ_LIBRARIES_RELEASE}"
+            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE}"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE} -luuid"
         )
     list(APPEND DEBUG_OPTIONS
             "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
-            "HARFBUZZ_LIBS=${HARFBUZZ_LIBRARIES_DEBUG}"
+            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_DEBUG}"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG} -luuid"
         )
-    if(WITH_PGSQL)
+    if(WITH_PGSQL_PLUGIN)
         list(APPEND RELEASE_OPTIONS "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_TYPES_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread")
         list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_TYPES_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread")
     endif()
@@ -334,18 +325,18 @@ elseif(VCPKG_TARGET_IS_OSX)
     #list(APPEND QT_PLATFORM_CONFIGURE_OPTIONS HOST_PLATFORM ${TARGET_MKSPEC})
     list(APPEND RELEASE_OPTIONS
             "SQLITE_LIBS=${SQLITE_RELEASE} -ldl -lpthread"
-            "HARFBUZZ_LIBS=${HARFBUZZ_RELEASE} ${FREETYPE_RELEASE_ALL} -framework ApplicationServices"
+            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_RELEASE} -framework ApplicationServices"
             "OPENSSL_LIBS=${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread"
             "FONTCONFIG_LIBS=${FONTCONFIG_RELEASE} ${FREETYPE_RELEASE} ${EXPAT_RELEASE} -liconv"
         )
     list(APPEND DEBUG_OPTIONS
             "SQLITE_LIBS=${SQLITE_DEBUG} -ldl -lpthread"
-            "HARFBUZZ_LIBS=${HARFBUZZ_DEBUG} ${FREETYPE_DEBUG_ALL} -framework ApplicationServices"
+            "HARFBUZZ_LIBS=${harfbuzz_LIBRARIES_DEBUG} -framework ApplicationServices"
             "OPENSSL_LIBS=${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread"
             "FONTCONFIG_LIBS=${FONTCONFIG_DEBUG} ${FREETYPE_DEBUG} ${EXPAT_DEBUG} -liconv"
         )
 
-    if(WITH_PGSQL)
+    if(WITH_PGSQL_PLUGIN)
         list(APPEND RELEASE_OPTIONS "PSQL_LIBS=${PSQL_RELEASE} ${PSQL_PORT_RELEASE} ${PSQL_TYPES_RELEASE} ${PSQL_COMMON_RELEASE} ${SSL_RELEASE} ${EAY_RELEASE} -ldl -lpthread")
         list(APPEND DEBUG_OPTIONS "PSQL_LIBS=${PSQL_DEBUG} ${PSQL_PORT_DEBUG} ${PSQL_TYPES_DEBUG} ${PSQL_COMMON_DEBUG} ${SSL_DEBUG} ${EAY_DEBUG} -ldl -lpthread")
     endif()
