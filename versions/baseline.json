@@ -2552,7 +2552,7 @@
       "baseline": "9.0.0",
       "port-version": 0
     },
-	"iir1": {
+    "iir1": {
       "baseline": "1.8.0",
       "port-version": 0
     },
@@ -3289,8 +3289,8 @@
       "port-version": 0
     },
     "libodb-mysql": {
-      "baseline": "2.4.0-7",
-      "port-version": 0
+      "baseline": "2.4.0",
+      "port-version": 8
     },
     "libodb-pgsql": {
       "baseline": "2.4.0-3",
