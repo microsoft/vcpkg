@@ -1,24 +1,26 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cc70c09..9857dd1 100644
+index 1eb8726..addf845 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -60,14 +60,20 @@ if(APPLE)
+@@ -161,16 +161,19 @@ if(UNIX)
  endif()
  
  if(MSVC)
 -	if((NOT CBOR_INCLUDE_DIRS) OR (NOT CBOR_LIBRARY_DIRS) OR
--	   (NOT CRYPTO_INCLUDE_DIRS) OR (NOT CRYPTO_LIBRARY_DIRS))
+-	   (NOT CRYPTO_INCLUDE_DIRS) OR (NOT CRYPTO_LIBRARY_DIRS) OR
+-	   (NOT ZLIB_INCLUDE_DIRS) OR (NOT ZLIB_LIBRARY_DIRS))
 -		message(FATAL_ERROR "please provide definitions for "
--		    "{CBOR,CRYPTO}_{INCLUDE,LIBRARY}_DIRS when building "
+-		   "{CBOR,CRYPTO,ZLIB}_{INCLUDE,LIBRARY}_DIRS when building "
 -		    "under msvc")
 -	endif()
 -	set(CBOR_LIBRARIES cbor)
+-	set(ZLIB_LIBRARIES zlib)
 -	set(CRYPTO_LIBRARIES crypto-46)
 +	include(FindPkgConfig)
-+
++	
 +	find_package(LIBCBOR REQUIRED)
 +	find_package(OpenSSL REQUIRED)
-+
++	
 +	# Handling of different Packagenames in VCPKG
 +	set(CBOR_INCLUDE_DIRS ${LIBCBOR_INCLUDE_DIR})
 +	set(CRYPTO_INCLUDE_DIRS ${OPENSSL_INCLUDE_DIRS})
@@ -27,7 +29,6 @@ index cc70c09..9857dd1 100644
 +	set(CBOR_LIBRARIES ${LIBCBOR_LIBRARIES})
 +	set(CRYPTO_LIBRARIES ${OPENSSL_LIBRARIES})
 +	add_definitions("-D_CRT_SECURE_NO_WARNINGS" "-D_CRT_NONSTDC_NO_DEPRECATE")
-+
  	set(MSVC_DISABLED_WARNINGS_LIST
  		"C4200" # nonstandard extension used: zero-sized array in
  			# struct/union;
