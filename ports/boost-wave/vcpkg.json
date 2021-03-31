@@ -1,12 +1,16 @@
 {
   "name": "boost-wave",
   "version-string": "1.75.0",
+  "port-version": 1,
   "description": "Boost wave module",
   "homepage": "https://github.com/boostorg/wave",
   "supports": "!uwp",
   "dependencies": [
     "boost-assert",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-concept-check",
     "boost-config",
     "boost-core",
@@ -19,7 +23,10 @@
     "boost-iterator",
     "boost-lexical-cast",
     "boost-math",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-mpl",
     "boost-multi-index",
     "boost-optional",

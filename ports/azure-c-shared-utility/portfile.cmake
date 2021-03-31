@@ -11,6 +11,7 @@ if("public-preview" IN_LIST FEATURES)
         HEAD_REF master
         PATCHES 
             fix-utilityFunctions-conditions-preview.patch
+            disable-error.patch
     )
 else()
     vcpkg_from_github(
@@ -21,6 +22,7 @@ else()
         HEAD_REF master
         PATCHES 
             fix-utilityFunctions-conditions.patch
+            disable-error.patch
     )
 endif()
 
