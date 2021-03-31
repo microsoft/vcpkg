@@ -35,4 +35,9 @@
 /* Require FontConfig */
 #cmakedefine01 CAIRO_HAS_FC_FONT
 
+// apple quartz support
+#cmakedefine01 CAIRO_HAS_QUARTZ_FONT
+#cmakedefine01 CAIRO_HAS_QUARTZ_IMAGE_SURFACE
+#cmakedefine01 CAIRO_HAS_QUARTZ_SURFACE
+
 #endif
