@@ -1,0 +1,108 @@
+diff --git a/include/libssh/server.h b/include/libssh/server.h
+index 41f89d5..aca6805 100644
+--- a/include/libssh/server.h
++++ b/include/libssh/server.h
+@@ -367,6 +367,44 @@ LIBSSH_API int ssh_channel_request_send_exit_signal(ssh_channel channel,
+
+ LIBSSH_API int ssh_send_keepalive(ssh_session session);
+
++/**
++     * @brief Accept an incoming ssh connection without initializing the session.
++     *
++     * @param  ssh_bind_o     The ssh server bind to accept a connection.
++     * @return client socket when a connection is established, or SSH_ERROR on failure.
++     */
++LIBSSH_API socket_t ssh_bind_accept_alone(ssh_bind ssh_bind_o);
++
++/**
++ * @brief Accept an incoming ssh connection on the given file descriptor
++ *        and initialize the session. Same as ssh_bind_accept_fd() with additional
++ *        freeing of memory associated with client socket should anything go wrong.
++ *
++ * @param  ssh_bind_o     The ssh server bind to accept a connection.
++ * @param  session        A preallocated ssh session
++ * @param  fd             A file descriptor of an already established TCP
++ *                          inbound connection
++ * @see ssh_new
++ * @see ssh_bind_accept
++ * @return SSH_OK when a connection is established
++ */
++LIBSSH_API int ssh_bind_session_init(socket_t clientSocket, ssh_bind sshbind, ssh_session session);
++
++/**
++ * @brief Kills a socket and frees associated memory.
++ *
++ * @param  ssh_bind_o     The ssh server bind to accept a connection.
++ * @param  session			A preallocated ssh session
++ * @see ssh_new
++ * @return SSH_OK when done, SSH_ERROR if not.
++ */
++LIBSSH_API int ssh_kill_socket(socket_t socket);
++
++/* deprecated functions */
++SSH_DEPRECATED LIBSSH_API int ssh_accept(ssh_session session);
++SSH_DEPRECATED LIBSSH_API int channel_write_stderr(ssh_channel channel,
++    const void* data, uint32_t len);
++
+ /* deprecated functions */
+ SSH_DEPRECATED LIBSSH_API int ssh_accept(ssh_session session);
+ SSH_DEPRECATED LIBSSH_API int channel_write_stderr(ssh_channel channel,
+diff --git a/src/bind.c b/src/bind.c
+index fa8df9e..50c96e1 100644
+--- a/src/bind.c
++++ b/src/bind.c
+@@ -580,6 +580,54 @@ int ssh_bind_accept(ssh_bind sshbind, ssh_session session) {
+   return rc;
+ }
+
++socket_t ssh_bind_accept_alone(ssh_bind sshbind) {
++
++    socket_t fd = SSH_INVALID_SOCKET;
++    int rc;
++    if (sshbind->bindfd == SSH_INVALID_SOCKET) {
++        ssh_set_error(sshbind, SSH_FATAL,
++            "Can't accept new clients on a not bound socket.");
++        return SSH_ERROR;
++    }
++
++    fd = accept(sshbind->bindfd, NULL, NULL);
++
++    if (fd == SSH_INVALID_SOCKET) {
++        ssh_set_error(sshbind, SSH_FATAL,
++            "Accepting a new connection: %s",
++            strerror(errno));
++
++        CLOSE_SOCKET(fd);
++        ssh_socket_free(fd);
++
++        return SSH_ERROR;
++    }
++    sshbind->bind_callbacks->incoming_connection(sshbind,
++        sshbind->bind_callbacks_userdata);
++    return fd;
++}
++
++int ssh_bind_session_init(socket_t clientSocket, ssh_bind sshbind, ssh_session session) {
++    int rc;
++    rc = ssh_bind_accept_fd(sshbind, session, clientSocket);
++
++    if (rc == SSH_ERROR) {
++        CLOSE_SOCKET(clientSocket);
++        ssh_socket_free(session->socket);
++    }
++    return rc;
++}
++
++int ssh_kill_socket(socket_t fd)
++{
++    if (socket == SSH_INVALID_SOCKET) {
++        return SSH_ERROR;
++    }
++
++    CLOSE_SOCKET(fd);//already freed
++    return SSH_OK;
++}
++
+
+ /**
+  * @}
