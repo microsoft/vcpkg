@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Yubico/libfido2
-    REF 1.6.0
-    SHA512 c473732a2f7ef54156097d315e44457d89056446ab3112a7c7a6fd99d5c2c8ae0ca2451ff9cd45be6c32de1ab335d6dfdb2b0c56b40cae9eb41391d18d83be4a
+    REF 1.7.0
+    SHA512 f40d394883d909e9e3ea3308b32f7ca31a882c709e11b3b143ed5734d16b0c244d4932effe06965d566776b03d152b1fc280e73cdfeeb81b65d8414042af19fe
     HEAD_REF master
     PATCHES
       "find_packages.patch"
