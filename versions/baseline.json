@@ -2314,7 +2314,7 @@
     },
     "graphene": {
       "baseline": "1.10.2",
-      "port-version": 0
+      "port-version": 1
     },
     "graphicsmagick": {
       "baseline": "1.3.36",
