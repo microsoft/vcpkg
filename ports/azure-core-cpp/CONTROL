@@ -1,5 +1,5 @@
 Source: azure-core-cpp
-Version: 1.0.0-beta.6
+Version: 1.0.0-beta.7
 Build-Depends: openssl (!windows&!uwp)
 Description: Microsoft Azure Core SDK for C++
   This library provides shared primitives, abstractions, and helpers for modern Azure SDK client libraries written in the C++.

@@ -356,9 +356,6 @@ fuzzylite:arm-uwp=fail
 fuzzylite:x64-linux=fail
 fuzzylite:x64-osx=fail
 fuzzylite:x64-uwp=fail
-g3log:arm64-windows=fail
-g3log:arm-uwp=fail
-g3log:x64-uwp=fail
 gainput:arm-uwp=fail
 gainput:x64-linux=fail
 gainput:x64-uwp=fail
@@ -367,6 +364,12 @@ gasol:arm-uwp=fail
 gasol:x64-uwp=fail
 geos:arm-uwp=fail
 geos:x64-uwp=fail
+
+# gsoap does not offer stable public source downloads
+gsoap:x64-windows        = skip
+gsoap:x86-windows        = skip
+gsoap:x64-windows-static = skip
+gsoap:x64-windows-static-md = skip
 
 # Port geotrans source ftp://ftp.nga.mil server
 # extremely slow may take several hours to download
@@ -605,7 +608,6 @@ libfreenect2:x64-linux=fail
 libfreenect2:x64-osx=fail
 libgit2:arm-uwp=fail
 libgit2:x64-uwp=fail
-libgnutls:x64-osx=fail
 libgo:arm-uwp=fail
 libgo:x64-uwp=fail
 libgo:arm64-windows=fail
@@ -850,6 +852,16 @@ llvm:arm64-windows=fail
 llvm:x64-uwp=fail
 lmdb:arm-uwp=fail
 lmdb:x64-uwp=fail
+# Conflict with loadpng-c
+lodepng:arm64-windows      = skip
+lodepng:arm-uwp            = skip
+lodepng:x64-linux          = skip
+lodepng:x64-osx            = skip
+lodepng:x64-uwp            = skip
+lodepng:x64-windows        = skip
+lodepng:x64-windows-static = skip
+lodepng:x64-windows-static-md=skip
+lodepng:x86-windows        = skip
 log4cplus:arm-uwp=fail
 log4cplus:x64-uwp=fail
 log4cxx:arm-uwp=fail
