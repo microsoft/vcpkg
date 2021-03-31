@@ -3037,7 +3037,7 @@
       "port-version": 7
     },
     "libfido2": {
-      "baseline": "1.6.0",
+      "baseline": "1.7.0",
       "port-version": 0
     },
     "libflac": {
