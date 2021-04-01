@@ -1502,16 +1502,6 @@ sockpp:arm-uwp=fail
 sockpp:x64-uwp=fail
 soem:x64-uwp=fail
 soem:arm-uwp=fail
-# soil upstream is gone; if we do not have another source before 2021-03-01 we will remove the port
-soil:arm-uwp=skip
-soil:x64-uwp=skip
-soil:arm64-windows=skip
-soil:x64-windows=skip
-soil:x86-windows=skip
-soil:x64-windows-static=skip
-soil:x64-windows-static-md=skip
-soil:x64-linux=skip
-soil:x64-osx=skip
 soil2:arm-uwp=fail
 soil2:x64-uwp=fail
 soqt:arm64-windows=fail
