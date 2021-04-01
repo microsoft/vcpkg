@@ -1210,6 +1210,7 @@ orocos-kdl:arm-uwp=fail
 orocos-kdl:x64-uwp=fail
 paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
+pangolin:x64-linux=fail
 pangomm:x64-osx=fail
 pangomm:arm64-windows=fail
 paraview:x64-linux=fail
