@@ -3776,6 +3776,22 @@
       "baseline": "0.20.0",
       "port-version": 1
     },
+    "mapbox-geojson-cpp": {
+      "baseline": "0.5.1",
+      "port-version": 0
+    },
+    "mapbox-geojson-vt-cpp": {
+      "baseline": "6.6.4",
+      "port-version": 0
+    },
+    "mapbox-geometry": {
+      "baseline": "2.0.3",
+      "port-version": 0
+    },
+    "mapbox-polylabel": {
+      "baseline": "1.0.4",
+      "port-version": 0
+    },
     "mapbox-variant": {
       "baseline": "1.2.0",
       "port-version": 0
