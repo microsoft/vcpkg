@@ -11,8 +11,7 @@ vcpkg_from_github(
     PATCHES
         deprecated_constants.patch # Change from upstream pangolin to address build failures from latest ffmpeg library
         fix-includepath-error.patch # include path has one more ../
-        fix-dependency-python.patch
-        add-definition.patch
+        fix-dependencies.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindGLEW.cmake)
@@ -27,6 +26,8 @@ vcpkg_configure_cmake(
         -DBUILD_EXTERN_GLEW=OFF
         -DBUILD_EXTERN_LIBPNG=OFF
         -DBUILD_EXTERN_LIBJPEG=OFF
+        -DBUILD_PANGOLIN_EIGEN=ON
+        -DBUILD_PANGOLIN_FFMPEG=ON
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT}
 )
 
