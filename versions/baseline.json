@@ -5388,6 +5388,10 @@
       "baseline": "4.4.6",
       "port-version": 0
     },
+    "sciplot": {
+      "baseline": "0.2.2",
+      "port-version": 0
+    },
     "sciter": {
       "baseline": "4.4.3.20",
       "port-version": 0
