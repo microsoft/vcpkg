@@ -3458,7 +3458,7 @@
     },
     "libspatialite": {
       "baseline": "5.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libspnav": {
       "baseline": "0.2.3",
