@@ -45,28 +45,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
                         ac_cv_header_pthread_h=no
                         )
 endif()
+set(ADDITIONAL_CONFIGURE_OPTIONS)
 if("tools" IN_LIST FEATURES)
-    vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH} # Port should probably be renamed to gettext-runtime instead of only gettext. Removing the subdir here builds all of gettext
-                         DETERMINE_BUILD_TRIPLET
-                         USE_WRAPPERS
-                         ADD_BIN_TO_PATH    # So configure can check for working iconv
-                         OPTIONS --enable-relocatable #symbol duplication with glib-init.c?
-                                 --enable-c++
-                                 --disable-java
-                                 ${OPTIONS}
-                        ADDITIONAL_MSYS_PACKAGES gzip
-                        )
+    set(ADDITIONAL_CONFIGURE_OPTIONS ADDITIONAL_MSYS_PACKAGES gzip)
 else()
-    vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/gettext-runtime # Port should probably be renamed to gettext-runtime instead of only gettext. Removing the subdir here builds all of gettext
-                         DETERMINE_BUILD_TRIPLET
-                         USE_WRAPPERS
-                         ADD_BIN_TO_PATH    # So configure can check for working iconv
-                         OPTIONS --enable-relocatable #symbol duplication with glib-init.c?
-                                 --enable-c++
-                                 --disable-java
-                                 ${OPTIONS}
-                        )
+    set(BUILD_SOURCE_PATH ${SOURCE_PATH}/gettext-runtime) # Could be its own port
 endif()
+vcpkg_configure_make(SOURCE_PATH ${BUILD_SOURCE_PATH}
+                     DETERMINE_BUILD_TRIPLET
+                     USE_WRAPPERS
+                     ADD_BIN_TO_PATH    # So configure can check for working iconv
+                     OPTIONS --enable-relocatable #symbol duplication with glib-init.c?
+                             --enable-c++
+                             --disable-java
+                             ${OPTIONS}
+                     ${ADDITIONAL_CONFIGURE_OPTIONS}
+                    )
 
 if(VCPKG_TARGET_IS_UWP)
     vcpkg_install_make(SUBPATH "/intl") # Could make a port intl or libintl or have features in Gettext
