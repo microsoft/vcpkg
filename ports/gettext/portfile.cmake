@@ -27,6 +27,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
+        rel_path.patch
         ${PATCHES}
 )
 vcpkg_find_acquire_program(BISON)
@@ -41,24 +42,41 @@ if(VCPKG_TARGET_IS_WINDOWS)
                         # Left here for future reference. 
                         gl_cv_func_printf_directive_n=no #segfaults otherwise with popup window
                         ac_cv_func_memset=yes #not detected in release builds 
+                        ac_cv_header_pthread_h=no
                         )
 endif()
-vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/gettext-runtime # Port should probably be renamed to gettext-runtime instead of only gettext. Removing the subdir here builds all of gettext
-                     DETERMINE_BUILD_TRIPLET
-                     USE_WRAPPERS
-                     ADD_BIN_TO_PATH    # So configure can check for working iconv
-                     OPTIONS --enable-relocatable #symbol duplication with glib-init.c?
-                             --enable-c++
-                             --disable-java
-                             ${OPTIONS}
-                    )
-                    
+if("tools" IN_LIST FEATURES)
+    vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH} # Port should probably be renamed to gettext-runtime instead of only gettext. Removing the subdir here builds all of gettext
+                         DETERMINE_BUILD_TRIPLET
+                         USE_WRAPPERS
+                         ADD_BIN_TO_PATH    # So configure can check for working iconv
+                         OPTIONS --enable-relocatable #symbol duplication with glib-init.c?
+                                 --enable-c++
+                                 --disable-java
+                                 ${OPTIONS}
+                        ADDITIONAL_MSYS_PACKAGES gzip
+                        )
+else()
+    vcpkg_configure_make(SOURCE_PATH ${SOURCE_PATH}/gettext-runtime # Port should probably be renamed to gettext-runtime instead of only gettext. Removing the subdir here builds all of gettext
+                         DETERMINE_BUILD_TRIPLET
+                         USE_WRAPPERS
+                         ADD_BIN_TO_PATH    # So configure can check for working iconv
+                         OPTIONS --enable-relocatable #symbol duplication with glib-init.c?
+                                 --enable-c++
+                                 --disable-java
+                                 ${OPTIONS}
+                        )
+endif()
+
 if(VCPKG_TARGET_IS_UWP)
     vcpkg_install_make(SUBPATH "/intl") # Could make a port intl or libintl or have features in Gettext
 else()
-    vcpkg_install_make(SUBPATH "/intl")
+    if("tools" IN_LIST FEATURES)
+        vcpkg_install_make()
+    else()
+        vcpkg_install_make(SUBPATH "/intl")
+    endif()
 endif()
-
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gettext)
