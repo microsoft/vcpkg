@@ -9,10 +9,10 @@ set(INSTALL_CMAKE_DIR share/soil)
 add_library(SOIL STATIC
     src/image_helper.c
     src/stb_image_aug.c
-    src/image_DXT.c
-    src/SOIL.c)
-
-target_include_directories(SOIL INTERFACE $<INSTALL_INTERFACE:include>)
+    src/image_dxt.c
+    src/soil.c)
+    
+target_include_directories(SOIL PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
 
 if(INSTALL_HEADERS)
     install(TARGETS SOIL
@@ -20,11 +20,11 @@ if(INSTALL_HEADERS)
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib)
 
-    install(FILES src/SOIL.h
-        DESTINATION include/SOIL/)
+    install(FILES include/SOIL/SOIL.h
+        DESTINATION include)
 
     # Prepare and install package files
-    set(SOIL_VERSION "2018.7.7")
+    set(SOIL_VERSION "0.1.0")
 
     export(TARGETS SOIL FILE "${PROJECT_BINARY_DIR}/SOILTargets.cmake")
 
