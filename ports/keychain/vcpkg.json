@@ -1,7 +1,6 @@
 {
   "name": "keychain",
   "version": "1.2.0",
-  "port-version": 1,
   "description": "Keychain is a thin cross-platform wrapper to access the operating system's credential storage",
   "homepage": "https://github.com/hrantzsch/keychain",
   "supports": "(x64 | arm64) & (linux | osx | windows | !uwp)"
