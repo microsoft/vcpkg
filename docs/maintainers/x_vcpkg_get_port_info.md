@@ -20,7 +20,7 @@ Information will be stored in:
 
 ## Examples
 
-* [qt5-base](https://github.com/microsoft/vcpkg/blob/master/ports/qt5-base/portfile.cmake)
+* [pcl](https://github.com/microsoft/vcpkg/blob/master/ports/pcl/portfile.cmake)
 
 ## Source
 [scripts/cmake/x\_vcpkg\_get\_port\_info.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/x_vcpkg_get_port_info.cmake)

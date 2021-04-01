@@ -19,7 +19,7 @@ Information will be stored in:
 
 ## Examples
 
-* [qt5-base](https://github.com/microsoft/vcpkg/blob/master/ports/qt5-base/portfile.cmake)
+* [pcl](https://github.com/microsoft/vcpkg/blob/master/ports/pcl/portfile.cmake)
 #]===]
 function(x_vcpkg_get_port_info)
     cmake_parse_arguments(PARSE_ARGV 0 x_vcpkg_get_port_info "" "" "PORTS")
