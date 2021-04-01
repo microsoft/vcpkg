@@ -9,7 +9,10 @@ Additionally corrects common issues with targets, such as absolute paths and inc
 
 ## Usage
 ```cmake
-vcpkg_fixup_cmake_targets([CONFIG_PATH <share/${PORT}>] [TARGET_PATH <share/${PORT}>] [DO_NOT_DELETE_PARENT_CONFIG_PATH])
+vcpkg_fixup_cmake_targets([CONFIG_PATH <share/${PORT}>] 
+                          [TARGET_PATH <share/${PORT}>] 
+                          [TOOLS_PATH <tools/${PORT}>]
+                          [DO_NOT_DELETE_PARENT_CONFIG_PATH])
 ```
 
 ## Parameters
@@ -36,7 +39,7 @@ Currently the correction does not take into account how the files are moved and 
 I rather simply correction which in some cases will yield the wrong results.
 
 ### TOOLS_PATH
-Define the base path to tools. Default: `tools/<port>`
+Define the base path to tools. Default: `tools/<PORT>`
 
 ## Notes
 Transform all `/debug/<CONFIG_PATH>/*targets-debug.cmake` files and move them to `/<TARGET_PATH>`.

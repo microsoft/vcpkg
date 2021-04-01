@@ -2018,7 +2018,7 @@
     },
     "fontconfig": {
       "baseline": "2.13.1",
-      "port-version": 3
+      "port-version": 4
     },
     "foonathan-memory": {
       "baseline": "2019-07-21-1",
@@ -3709,7 +3709,7 @@
       "port-version": 0
     },
     "lua": {
-      "baseline": "5.4.2",
+      "baseline": "5.4.3",
       "port-version": 0
     },
     "luabridge": {
@@ -5213,8 +5213,8 @@
       "port-version": 0
     },
     "quill": {
-      "baseline": "1.6.1",
-      "port-version": 1
+      "baseline": "1.6.2",
+      "port-version": 0
     },
     "quirc": {
       "baseline": "1.1",
@@ -5749,8 +5749,8 @@
       "port-version": 0
     },
     "spdlog": {
-      "baseline": "1.8.0",
-      "port-version": 3
+      "baseline": "1.8.5",
+      "port-version": 0
     },
     "spectra": {
       "baseline": "0.9.0",
@@ -6629,8 +6629,8 @@
       "port-version": 0
     },
     "zstd": {
-      "baseline": "1.4.5",
-      "port-version": 1
+      "baseline": "1.4.9",
+      "port-version": 0
     },
     "zstr": {
       "baseline": "1.0.4",
