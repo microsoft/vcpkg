@@ -34,7 +34,7 @@ Returns `"${PKGCONFIG}" --libs-only-l` in <prefix>_LIBRARIES_(DEBUG|RELEASE)
 Returns `"${PKGCONFIG}" --libs-only-L` in <prefix>_LIBRARIES_DIRS_(DEBUG|RELEASE)
 
 ### INCLUDE_DIRS
-Returns `"${PKGCONFIG}"  --cflags-only-I` in <prefix>_INCLUDE_DIRS
+Returns `"${PKGCONFIG}"  --cflags-only-I` in <prefix>_INCLUDE_DIRS_(DEBUG|RELEASE)
 
 ## Examples
 
