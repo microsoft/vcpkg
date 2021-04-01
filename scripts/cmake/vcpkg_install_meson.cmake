@@ -75,7 +75,7 @@ function(vcpkg_install_meson)
             string(REGEX REPLACE ".a$" ".lib" LIBNAMENEW "${LIBNAME}")
             string(REGEX REPLACE "^lib" "" LIBNAMENEW "${LIBNAMENEW}")
             file(RENAME "${_library}" "${LIBDIR}/${LIBNAMENEW}")
-            # For cmake fixes. 
+            # For cmake fixes.
             string(REGEX REPLACE ".a$" "" LIBRAWNAMEOLD "${LIBNAME}")
             string(REGEX REPLACE ".lib$" "" LIBRAWNAMENEW "${LIBNAMENEW}")
             list(APPEND RENAMED_LIBS ${LIBRAWNAMENEW})
@@ -102,5 +102,4 @@ function(vcpkg_install_meson)
             unset(ENV{MACOSX_DEPLOYMENT_TARGET})
         endif()
     endif()
-
 endfunction()
