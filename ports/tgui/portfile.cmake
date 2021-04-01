@@ -6,6 +6,12 @@ vcpkg_from_github(
     HEAD_REF 0.9
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        shared TGUI_SHARED_LIBS
+        tool TGUI_BUILD_GUI_BUILDER
+)
+
 set(TGUI_SHARE_PATH ${CURRENT_PACKAGES_DIR}/share/tgui)
 set(TGUI_TOOLS_PATH ${CURRENT_PACKAGES_DIR}/tools/tgui)
 
@@ -13,27 +19,20 @@ set(TGUI_TOOLS_PATH ${CURRENT_PACKAGES_DIR}/tools/tgui)
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindSFML.cmake")
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" TGUI_SHARED_LIBS)
 
-# gui-builder
-set(BUILD_GUI_BUILDER OFF)
-if("tool" IN_LIST FEATURES)
-    set(BUILD_GUI_BUILDER ON)
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
-        -DTGUI_BUILD_GUI_BUILDER=${BUILD_GUI_BUILDER}
+        ${FEATURE_OPTIONS}
         -DTGUI_MISC_INSTALL_PREFIX=${TGUI_SHARE_PATH}
-        -DTGUI_SHARED_LIBS=${TGUI_SHARED_LIBS}
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/TGUI)
 vcpkg_copy_pdbs()
 
-if(BUILD_GUI_BUILDER)
+if(TGUI_BUILD_GUI_BUILDER)
     set(EXECUTABLE_SUFFIX "")
     if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
         set(EXECUTABLE_SUFFIX ".exe")
