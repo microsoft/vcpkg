@@ -198,7 +198,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     endforeach()
 endif()
 
-# Install executables from /tools/icu/sbin to /tools/icu/bin on unix
+# Install executables from /tools/icu/sbin to /tools/icu/bin on unix (/bin because icu require this for cross compiling)
 if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_copy_tools(
         TOOL_NAMES icupkg gennorm2 gencmn genccode gensprep
