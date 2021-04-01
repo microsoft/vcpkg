@@ -1,6 +1,7 @@
 {
   "name": "boost-log",
   "version-string": "1.75.0",
+  "port-version": 1,
   "description": "Boost log module",
   "homepage": "https://github.com/boostorg/log",
   "supports": "!uwp & !emscripten",
@@ -14,7 +15,10 @@
     "boost-assert",
     "boost-atomic",
     "boost-bind",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-compatibility",
     "boost-config",
     "boost-container",
@@ -39,7 +43,10 @@
       "platform": "!uwp"
     },
     "boost-math",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-move",
     "boost-mpl",
     "boost-optional",
