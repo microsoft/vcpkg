@@ -33,7 +33,7 @@ Returns `"${PKGCONFIG}" --libs-only-l` in <prefix>_LIBRARIES_(DEBUG|RELEASE)
 Returns `"${PKGCONFIG}" --libs-only-L` in <prefix>_LIBRARIES_DIRS_(DEBUG|RELEASE)
 
 ### INCLUDE_DIRS
-Returns `"${PKGCONFIG}"  --cflags-only-I` in <prefix>_INCLUDE_DIRS
+Returns `"${PKGCONFIG}"  --cflags-only-I` in <prefix>_INCLUDE_DIRS_(DEBUG|RELEASE)
 
 ## Examples
 
@@ -84,10 +84,10 @@ function(x_vcpkg_get_pkgconfig_modules)
         if(x_vcpkg_get_pkgconfig_modules_INCLUDE_DIRS)
             execute_process(
                 COMMAND "${PKGCONFIG}" --cflags-only-I ${_modules}
-                OUTPUT_VARIABLE ${_prefix}_INCLUDE_DIRS
+                OUTPUT_VARIABLE ${_prefix}_INCLUDE_DIRS_RELEASE
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
-            list(APPEND var_suffixes INCLUDE_DIRS)
+            list(APPEND var_suffixes INCLUDE_DIRS_RELEASE)
         endif()
     endif()
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -116,13 +116,13 @@ function(x_vcpkg_get_pkgconfig_modules)
             )
             list(APPEND var_suffixes LIBRARIES_DIRS_DEBUG)
         endif()
-        if(x_vcpkg_get_pkgconfig_modules_INCLUDE_DIRS AND NOT ${_prefix}_INCLUDE_DIRS)
+        if(x_vcpkg_get_pkgconfig_modules_INCLUDE_DIRS)
             execute_process(
                 COMMAND "${PKGCONFIG}" --cflags-only-I ${_modules}
-                OUTPUT_VARIABLE ${_prefix}_INCLUDE_DIRS
+                OUTPUT_VARIABLE ${_prefix}_INCLUDE_DIRS_DEBUG
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
-            list(APPEND var_suffixes INCLUDE_DIRS)
+            list(APPEND var_suffixes INCLUDE_DIRS_DEBUG)
         endif()
     endif()
     set(ENV{PKG_CONFIG_PATH} "${backup_PKG_CONFIG_PATH}")
