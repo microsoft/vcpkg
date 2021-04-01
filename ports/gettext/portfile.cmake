@@ -46,10 +46,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
                         )
 endif()
 set(ADDITIONAL_CONFIGURE_OPTIONS)
+set(ADDITIONAL_INSTALL_OPTIONS)
 if("tools" IN_LIST FEATURES)
+    set(BUILD_SOURCE_PATH ${SOURCE_PATH})
     set(ADDITIONAL_CONFIGURE_OPTIONS ADDITIONAL_MSYS_PACKAGES gzip)
 else()
     set(BUILD_SOURCE_PATH ${SOURCE_PATH}/gettext-runtime) # Could be its own port
+    set(ADDITIONAL_INSTALL_OPTIONS SUBPATH "/intl")
 endif()
 vcpkg_configure_make(SOURCE_PATH ${BUILD_SOURCE_PATH}
                      DETERMINE_BUILD_TRIPLET
@@ -61,16 +64,7 @@ vcpkg_configure_make(SOURCE_PATH ${BUILD_SOURCE_PATH}
                              ${OPTIONS}
                      ${ADDITIONAL_CONFIGURE_OPTIONS}
                     )
-
-if(VCPKG_TARGET_IS_UWP)
-    vcpkg_install_make(SUBPATH "/intl") # Could make a port intl or libintl or have features in Gettext
-else()
-    if("tools" IN_LIST FEATURES)
-        vcpkg_install_make()
-    else()
-        vcpkg_install_make(SUBPATH "/intl")
-    endif()
-endif()
+vcpkg_install_make(${ADDITIONAL_INSTALL_OPTIONS})
 
 # Handle copyright
 file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gettext)
