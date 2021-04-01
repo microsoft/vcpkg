@@ -55,7 +55,6 @@
 - [vcpkg\_minimum\_required](vcpkg_minimum_required.md)
 - [vcpkg\_replace\_string](vcpkg_replace_string.md)
 - [x\_vcpkg\_get\_pkgconfig\_modules](x_vcpkg_get_pkgconfig_modules.md)
-- [x\_vcpkg\_get\_port\_info](x_vcpkg_get_port_info.md)
 
 ## Internal Functions
 
