@@ -12,8 +12,8 @@ vcpkg_from_github(
 if(VCPKG_TARGET_IS_LINUX)
     if (NOT EXISTS "/usr/include/libsecret-1/libsecret/secret.h")
         message(FATAL_ERROR "keychain requires libsecret-1-dev, please use your distribution's package manager to install it.\n"
-                            "Debian/Ubuntu: sudo apt-get install libsecret-1-dev"
-                            "Red Hat/CentOS/Fedora: sudo yum install libsecret-devel"
+                            "Debian/Ubuntu: sudo apt-get install libsecret-1-dev\n"
+                            "Red Hat/CentOS/Fedora: sudo yum install libsecret-devel\n"
                             "Arch Linux: sudo pacman -Sy libsecret\n")
     endif()
 endif()
