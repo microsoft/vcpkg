@@ -2186,7 +2186,7 @@
     },
     "gettext": {
       "baseline": "0.21",
-      "port-version": 0
+      "port-version": 1
     },
     "gettimeofday": {
       "baseline": "2017-10-14-3",
