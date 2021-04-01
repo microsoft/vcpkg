@@ -119,6 +119,7 @@ function(_vcpkg_cmake_to_autotools_arch in_arch out_var)
 endfunction()
 
 function(_vcpkg_cmake_to_autotools_system in_system out_var)
+    unset(${out_var} PARENT_SCOPE)
     if(in_system MATCHES "Linux")
         set(${out_var} "linux-gnu" PARENT_SCOPE)
     elseif(in_system MATCHES "Windows")
