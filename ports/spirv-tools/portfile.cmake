@@ -33,7 +33,6 @@ vcpkg_configure_cmake(
         -DSPIRV_SKIP_EXECUTABLES=${SKIP_EXECUTABLES} # option SPIRV_SKIP_TESTS follows this value
         -DENABLE_SPIRV_TOOLS_INSTALL=${TOOLS_INSTALL}
         -DSPIRV_TOOLS_BUILD_STATIC=ON
-        -DBUILD_SHARED_LIBS=OFF
 )
 
 vcpkg_install_cmake()
