@@ -1,0 +1,14 @@
+{
+  "name": "pthreadpool",
+  "version-date": "2020-02-21",
+  "description": "Portable (POSIX/Windows/Emscripten) thread pool for C/C++",
+  "homepage": "https://github.com/Maratyszcza/pthreadpool",
+  "supports": "!uwp",
+  "dependencies": [
+    "fxdiv",
+    {
+      "name": "pthreads",
+      "platform": "uwp"
+    }
+  ]
+}
