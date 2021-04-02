@@ -1,6 +1,7 @@
 set (PACKAGE_VERSION 1.41)
 
 if(VCPKG_TARGET_IS_WINDOWS)
+    message(WARNING "libgpg-error on Windows uses a fork managed by the ShiftMediaProject: https://shiftmediaproject.github.io/")
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ShiftMediaProject/libgpg-error
