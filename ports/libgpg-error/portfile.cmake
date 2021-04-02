@@ -4,7 +4,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ShiftMediaProject/libgpg-error
-        REF 8dbb46c75850c6a2a215b1964dcca59ff6e34af6 #v1.41
+        REF libgpg-error-${PACKAGE_VERSION}
         SHA512 87737bd8e042faa552734ac35033ddf1de2ca2314d8be68157408c41240228f2810909c656efa64b6b1c5de2b69b989fed306a33d25c84161cbc7aa2ce795955
         HEAD_REF master
     )
