@@ -1,0 +1,20 @@
+{
+  "name": "starlink-ast",
+  "version-string": "9.2.3",
+  "homepage": "https://starlink.eao.hawaii.edu/starlink/AST",
+  "description": "The AST library provides a comprehensive range of facilities for attaching world coordinate systems to astronomical data, for retrieving and interpreting that information and for generating graphical output based on it",
+  "dependencies": [],
+
+  "default-features": [],
+  "features": [
+    {
+      "name": "pthreads",
+      "description": "build with POSIX threads support",
+      "dependencies": ["pthreads"]
+    },{
+      "name": "yaml",
+      "description": "build with YAML support",
+      "dependencies": ["libyaml"]
+    }
+  ]
+}
