@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO DigitalInBlue/Celero
-    REF b9bbe63ebc464f799676cd4c696b376296178d63 #2.7.2
-    SHA512 00a93c433b99a2c918741350c3fbfad67e4fe239948497de33fea2f13c8666e4fe37caf9f0e92d3c04dcb8b5c5e12501b199de3e69bbcf4f321c57a7c086e228
+    REF 6208b63dcd4baeea6817d3e84f79fb04ad99c720 #2.8.2
+    SHA512 13a486dafba394cc3e072292008d00e8a3e1b12b4fe7c82cf2ce43b3d24629d08b5762494c19da0a12b186a70114cba101553ed1b4cea90d090514307b06dec8
     HEAD_REF master
 )
 
@@ -24,7 +24,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/celero/Export.h "ifdef CELERO_STATIC" "if 1")
 endif()
 
