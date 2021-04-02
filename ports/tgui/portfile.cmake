@@ -8,7 +8,6 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        shared TGUI_SHARED_LIBS
         tool TGUI_BUILD_GUI_BUILDER
 )
 
@@ -26,6 +25,7 @@ vcpkg_configure_cmake(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DTGUI_MISC_INSTALL_PREFIX=${TGUI_SHARE_PATH}
+        -DTGUI_SHARED_LIBS=${TGUI_SHARED_LIBS}
 )
 
 vcpkg_install_cmake()

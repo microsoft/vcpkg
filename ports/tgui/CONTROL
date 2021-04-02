@@ -5,6 +5,3 @@ Build-Depends: sfml
 
 Feature: tool
 Description: Build GUI builder
-
-Feature: shared
-Description: Build shared libs
