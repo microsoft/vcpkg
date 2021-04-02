@@ -18,8 +18,9 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    zlib WITH_EXTERNAL_ZLIB
-    iconv WITH_ICONV
+    FEATURES 
+        zlib WITH_EXTERNAL_ZLIB
+        iconv WITH_ICONV
 )
 
 if("openssl" IN_LIST FEATURES)
