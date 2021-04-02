@@ -91,6 +91,12 @@ if("opengl" IN_LIST FEATURES)
         )
 endif()
 
+if ("openvr" IN_LIST FEATURES)
+    list(APPEND ADDITIONAL_OPTIONS    
+        -DVTK_MODULE_ENABLE_VTK_RenderingOpenVR=YES
+    )
+endif()
+
 if("cuda" IN_LIST FEATURES AND CMAKE_HOST_WIN32)
     vcpkg_add_to_path("$ENV{CUDA_PATH}/bin")
 endif()
