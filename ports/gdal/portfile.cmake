@@ -185,7 +185,7 @@ else()
     endif()
     
     set(CONF_OPTS --enable-shared=${BUILD_DYNAMIC} --enable-static=${BUILD_STATIC})
-    list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR} --with-libjson-c=${CURRENT_INSTALLED_DIR})
+    list(APPEND CONF_OPTS --with-proj=${CURRENT_INSTALLED_DIR} --with-libjson-c=${CURRENT_INSTALLED_DIR} --without-freexl)
     list(APPEND CONF_OPTS --without-jasper)
     
     vcpkg_configure_make(
