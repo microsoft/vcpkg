@@ -11,3 +11,5 @@
 
 - #### If you have added/updated a port: Have you run `./vcpkg x-add-version --all` and committed the result?  
   <Yes / I am still working on this PR>
+
+**If you are still working on the PR, open it as a Draft: https://github.blog/2019-02-14-introducing-draft-pull-requests/**
