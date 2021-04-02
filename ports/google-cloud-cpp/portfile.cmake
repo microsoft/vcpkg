@@ -5,8 +5,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO googleapis/google-cloud-cpp
-    REF v1.25.0
-    SHA512 db1803b9de38028a171d3b295b85da5dd36f150c78f2ec523f24eb67998c27d06584aa26e572cab8508841cb469c980304501b87f4157a8020f85bc733f968b5
+    REF v1.26.0
+    SHA512 686b6390c9b64075d4644db4c9b19c3f01d53a2385dc85028e3277361e21fe834ddc1248c5ac6c63ff3c87d3a21de229ea77d3bec8480a0904ed0126e2e619f6
     HEAD_REF master
     PATCHES
         disable-benchmarks.patch

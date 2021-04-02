@@ -1573,7 +1573,7 @@
       "port-version": 2
     },
     "dav1d": {
-      "baseline": "0.8.1",
+      "baseline": "0.8.2",
       "port-version": 0
     },
     "dbg-macro": {
@@ -1829,7 +1829,7 @@
       "port-version": 0
     },
     "entt": {
-      "baseline": "3.6.0",
+      "baseline": "3.7.0",
       "port-version": 0
     },
     "epsilon": {
@@ -2289,8 +2289,8 @@
       "port-version": 4
     },
     "google-cloud-cpp": {
-      "baseline": "1.25.0",
-      "port-version": 3
+      "baseline": "1.26.0",
+      "port-version": 0
     },
     "google-cloud-cpp-common": {
       "baseline": "alias",
@@ -2353,7 +2353,7 @@
       "port-version": 0
     },
     "gsl-lite": {
-      "baseline": "0.37.0",
+      "baseline": "0.38.0",
       "port-version": 0
     },
     "gsoap": {
@@ -2926,7 +2926,7 @@
     },
     "libarchive": {
       "baseline": "3.4.3",
-      "port-version": 3
+      "port-version": 4
     },
     "libass": {
       "baseline": "0.15.0",
@@ -3217,8 +3217,8 @@
       "port-version": 2
     },
     "libmariadb": {
-      "baseline": "3.1.10",
-      "port-version": 5
+      "baseline": "3.1.12",
+      "port-version": 0
     },
     "libmaxminddb": {
       "baseline": "1.4.3",
@@ -3457,8 +3457,8 @@
       "port-version": 4
     },
     "libsoundio": {
-      "baseline": "2.0.0-3",
-      "port-version": 0
+      "baseline": "2.0.0",
+      "port-version": 4
     },
     "libspatialindex": {
       "baseline": "1.9.0",
@@ -4030,7 +4030,7 @@
     },
     "mpg123": {
       "baseline": "1.26.3",
-      "port-version": 0
+      "port-version": 1
     },
     "mpi": {
       "baseline": "1",
@@ -4897,8 +4897,8 @@
       "port-version": 0
     },
     "pthreads": {
-      "baseline": "3.0.0-6",
-      "port-version": 0
+      "baseline": "3.0.0",
+      "port-version": 7
     },
     "pugixml": {
       "baseline": "1.11.4",
@@ -6290,7 +6290,7 @@
     },
     "vtk": {
       "baseline": "9.0.1",
-      "port-version": 5
+      "port-version": 6
     },
     "vtk-dicom": {
       "baseline": "0.8.12-1",
