@@ -80,7 +80,7 @@ else()
     string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
     string(REPLACE ";$ENV{SystemRoot}\\System32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "${NEWPATH}")
     set(ENV{PATH} "${NEWPATH}")
-    #set(ENV{PATH} "${MSYS_ROOT}/usr/bin;$ENV{PATH}")
+    set(ENV{LD} "link.exe")
     set(BASH ${MSYS_ROOT}/usr/bin/bash.exe)    
 
     if(VCPKG_CRT_LINKAGE STREQUAL static)
