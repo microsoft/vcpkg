@@ -6,8 +6,8 @@
       "port-version": 4
     },
     {
-      "git-tree": "c506c866bbff8b975d5221c026621e9d2a3d08e3",
-      "version-string": "2.9.10",
+      "git-tree": "7aa5a9ea1742082d57eb67708f107ade65f94c12",
+      "version-semver": "2.9.10",
       "port-version": 3
     },
     {

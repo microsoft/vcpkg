@@ -4606,7 +4606,7 @@
     },
     "pangolin": {
       "baseline": "0.5",
-      "port-version": 13
+      "port-version": 14
     },
     "pangomm": {
       "baseline": "2.40.1",
