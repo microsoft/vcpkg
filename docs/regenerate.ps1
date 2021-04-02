@@ -26,6 +26,7 @@ class CMakeDocumentation {
 [String[]]$cmakeScriptsPorts = @(
     'vcpkg-cmake'
     'vcpkg-cmake-config'
+    'vcpkg-msbuild'
 )
 
 [CMakeDocumentation[]]$tableOfContents = @()
@@ -249,7 +250,18 @@ Get-ChildItem "$VcpkgRoot/scripts/cmake" -Filter '*.cmake' | ForEach-Object {
 $cmakeScriptsPorts | ForEach-Object {
     $portName = $_
 
-    Copy-Item "$VcpkgRoot/ports/$portName/README.md" "$PSScriptRoot/maintainers/ports/$portName.md"
+    [string[]]$readmeFile = Get-Content "$VcpkgRoot/ports/$portName/README.md"
+    $readmeFile += @(
+        ""
+        "## Source"
+        "[ports/$portName/README.md](https://github.com/Microsoft/vcpkg/blob/master/$relativePath)"
+        ""
+    )
+    New-Item -Path "$PSScriptRoot/maintainers/ports/$portName.md" `
+        -Force `
+        -ItemType 'File' `
+        -Value ($readmeFile -join "`n") `
+        | Out-Null
     New-Item -Path "$PSScriptRoot/maintainers/ports/$portName" -Force -ItemType 'Directory' | Out-Null
 
     $portTableOfContents[$portName] = @()

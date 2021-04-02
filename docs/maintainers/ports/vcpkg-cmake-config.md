@@ -8,3 +8,6 @@ a function which both:
 
 This function should almost always be used when a port has `*config.cmake` files,
 even when the buildsystem of the project is not CMake.
+
+## Source
+[ports/vcpkg-cmake-config/README.md](https://github.com/Microsoft/vcpkg/blob/master/)

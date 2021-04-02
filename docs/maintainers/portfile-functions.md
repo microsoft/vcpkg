@@ -16,7 +16,7 @@
 - [vcpkg\_check\_features](vcpkg_check_features.md)
 - [vcpkg\_check\_linkage](vcpkg_check_linkage.md)
 - [vcpkg\_clean\_executables\_in\_bin](vcpkg_clean_executables_in_bin.md)
-- [vcpkg\_clean\_msbuild](vcpkg_clean_msbuild.md)
+- [vcpkg\_clean\_msbuild](vcpkg_clean_msbuild.md) (deprecated)
 - [vcpkg\_common\_definitions](vcpkg_common_definitions.md)
 - [vcpkg\_configure\_cmake](vcpkg_configure_cmake.md)
 - [vcpkg\_configure\_gn](vcpkg_configure_gn.md)
@@ -49,7 +49,7 @@
 - [vcpkg\_install\_gn](vcpkg_install_gn.md)
 - [vcpkg\_install\_make](vcpkg_install_make.md)
 - [vcpkg\_install\_meson](vcpkg_install_meson.md)
-- [vcpkg\_install\_msbuild](vcpkg_install_msbuild.md)
+- [vcpkg\_install\_msbuild](vcpkg_install_msbuild.md) (deprecated)
 - [vcpkg\_install\_nmake](vcpkg_install_nmake.md)
 - [vcpkg\_install\_qmake](vcpkg_install_qmake.md)
 - [vcpkg\_minimum\_required](vcpkg_minimum_required.md)
@@ -73,3 +73,8 @@
 ### [vcpkg-cmake-config](ports/vcpkg-cmake-config.md)
 
 - [vcpkg\_cmake\_config\_fixup](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md)
+
+### [vcpkg-msbuild](ports/vcpkg-msbuild.md)
+
+- [vcpkg\_msbuild\_clean](ports/vcpkg-msbuild/vcpkg_msbuild_clean.md)
+- [vcpkg\_msbuild\_install](ports/vcpkg-msbuild/vcpkg_msbuild_install.md)

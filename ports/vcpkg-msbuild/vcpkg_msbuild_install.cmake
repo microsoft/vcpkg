@@ -38,27 +38,60 @@ while the `PROJECT_FILE` should be a relative path to the project or solution fi
 One thing which should be noted is that because MSBuild uses in-source builds,
 the source tree will be copied into a temporary location for the build.
 
-There are a few important
-# TODO: finish docs
+`vcpkg_msbuild_install()` will run a build, and then install all of the important bits.
+It will auto-detect `.lib` and `.dll` files after the build.
+However, this is not possible in general for headers:
+for "well-behaved" libraries, i.e., those which have a header structure like:
 
+```
+include/
+  libname/
+    *.h
+```
+
+passing `INCLUDES_DIRECTORY include` as an option will Just Work.
+However, for libraries where there are top-level headers
+(i.e., `include/libname.h`), `ALLOW_ROOT_INCLUDES` will make that work.
+For more complex installation requirements,
+pass `SKIP_CLEAN` and do manual header installation.
+The build directory shall be `"${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-<config>"`,
+where `<config>` is one of `rel` or `dbg` for release and debug respectively;
+and since msbuild does not support out-of-tree builds, the source will be there as well.
+
+If you do end up passing `SKIP_CLEAN`, _make sure to call_ [`vcpkg_msbuild_clean()`]
+after doing your manual installation steps.
+
+`vcpkg_msbuild_install()` defaults to using `Release` and `Debug` for their respective
+configurations.
+
+Additionally, it defaults to the following platforms per architecture:
+- `x86` - `Win32`
+- `x64` - `x64`
+- `arm` - `ARM`
+- `arm64` - `arm64`
+If your project uses different architecture names, you can pass the `PLATFORM` option.
+
+Finally, `vcpkg_msbuild_install()` defaults to building the `Rebuild` target.
+If this is not correct for your build system, you should pass the `TARGET` option.
+
+`vcpkg_msbuild_install()` defaults to parallel build;
+if your project does not support that,
+you should pass the `DISABLE_PARALLEL` option.
+
+[`vcpkg_msbuild_clean`()]: vcpkg_msbuild_clean.md
 #]===]
 if(Z_VCPKG_MSBUILD_INSTALL_GUARD)
     return()
 endif()
 set(Z_VCPKG_MSBUILD_INSTALL_GUARD ON CACHE INTERNAL "guard variable")
 
-# NOTES:
-# * Add Multi-ToolTask to msbuild https://github.com/microsoft/vcpkg/pull/15478/commits/9845ea575eec309c01a905e8bf4b9b7f81248158 line 127
-#   * breaks python
-
-# additional improvements (probably outside scope)
+# future improvements:
 # * we should provide a way for the triplet file to inject
 #   props & targets
 #   (in the same way that we allow triplets to inject toolchains)
 #   (cc directory.build.props/directory.build.targets)
 #   between the <Project></Project>, add <Import Project="path" />s
-# * if we have the ability to inject proper msbuild code (not just passing /p switches),
-#   we might be able to fix /MT vs /MD, static vs dynamic build
+# * we might be able to fix /MT vs /MD, static vs dynamic build
 function(z_vcpkg_msbuild_install_escape_msbuild var data)
     # replace xml special characters
     string(REPLACE "&" "&amp;" data "${data}")
@@ -217,7 +250,7 @@ function(vcpkg_msbuild_install)
             set(arg_PLATFORM x64)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
             set(arg_PLATFORM Win32)
-        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "ARM")
+        elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
             set(arg_PLATFORM ARM)
         elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
             set(arg_PLATFORM arm64)
@@ -265,6 +298,7 @@ function(vcpkg_msbuild_install)
             "/p:VcpkgApplocalDeps=false")
     endif()
 
+    set(parallel_options)
     if(NOT arg_DISABLE_PARALLEL)
         if(DEFINED ENV{CL})
             set(env_cl_backup "$ENV{CL}")
@@ -272,6 +306,12 @@ function(vcpkg_msbuild_install)
             set(env_cl_backup)
         endif()
         set(ENV{CL} "$ENV{CL} /MP${VCPKG_CONCURRENCY}")
+        set(parallel_options
+            /m
+            /p:UseMultiToolTask=true
+            /p:EnforceProcessCountAcrossBuilds=true
+            "/p:MultiProcMaxCount=${VCPKG_CONCURRENCY}"
+        )
     endif()
 
     get_filename_component(source_path_suffix "${arg_SOURCE_PATH}" NAME)
@@ -288,8 +328,13 @@ function(vcpkg_msbuild_install)
             CONFIGURATION "RELEASE"
         )
 
-        vcpkg_execute_required_process(
+        vcpkg_execute_build_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_FILE}"
+                "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
+                ${arg_OPTIONS}
+                ${arg_OPTIONS_RELEASE}
+                ${parallel_options}
+            NO_PARALLEL_COMMAND msbuild "${source_copy_path}/${arg_PROJECT_FILE}"
                 "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_RELEASE}
@@ -332,8 +377,13 @@ function(vcpkg_msbuild_install)
             CONFIGURATION "DEBUG"
         )
 
-        vcpkg_execute_required_process(
+        vcpkg_execute_build_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_FILE}"
+                "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
+                ${arg_OPTIONS}
+                ${arg_OPTIONS_DEBUG}
+                ${parallel_options}
+            NO_PARALLEL_COMMAND msbuild "${source_copy_path}/${arg_PROJECT_FILE}"
                 "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
                 ${arg_OPTIONS}
                 ${arg_OPTIONS_DEBUG}

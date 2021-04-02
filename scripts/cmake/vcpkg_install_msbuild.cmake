@@ -1,3 +1,4 @@
+# DEPRECATED: in favor of the vcpkg-msbuild port.
 #[===[.md:
 # vcpkg_install_msbuild
 
