@@ -35,12 +35,50 @@ else()
     set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --enable-static --disable-shared")
 endif()
 
+if(VCPKG_TARGET_IS_OSX)
+    string(COMPARE EQUAL "${TRIPLET_SYSTEM_ARCH}" "arm64" TARGET_IS_ARM)
+    string(COMPARE EQUAL "${CMAKE_HOST_SYSTEM_NAME}" "arm64" HOST_IS_ARM)
+    string(TOLOWER ${CMAKE_HOST_SYSTEM_NAME} host_system)
+    
+    # For cross-compile, we have to configure in a complicated manner
+    if(TARGET_IS_ARM AND NOT HOST_IS_ARM)
+        message(STATUS "Running temp build to cross-compile for ${TRIPLET_SYSTEM_ARCH}")
+
+        # Here, we have to generate `config/icucross.mk`. It requires full build of ICU target
+        file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/cross)
+        file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/cross)
+        vcpkg_execute_required_process(
+            COMMAND bash --noprofile --norc -c
+                "${SOURCE_PATH}/source/configure --prefix ${CURRENT_BUILDTREES_DIR}/cross"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/cross"
+            LOGNAME "cross-configure-${host_system}")
+        vcpkg_execute_build_process(
+            COMMAND bash --noprofile --norc -c "make -j ${VCPKG_CONCURRENCY}"
+            NO_PARALLEL_COMMAND bash --noprofile --norc -c "make"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/cross"
+            LOGNAME "cross-build-${host_system}")
+
+        # After the generation(build), forward compiler options via C/CXX flags.
+        # See https://clang.llvm.org/docs/CrossCompilation.html#target-triple and use of ENV{CFLAGS}, ENV{CXXFLAGS} below
+        set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} --target=arm64-apple-darwin-macho")
+        set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} --target=arm64-apple-darwin-macho")
+
+        # At last, ICU4C's `configure` requires 3 arguments explicitly
+        set(CONFIGURE_OPTIONS "--host=x86_64-apple-darwin --build=arm-apple-darwin --with-cross-build=${CURRENT_BUILDTREES_DIR}/cross ${CONFIGURE_OPTIONS}")
+    endif()
+endif()
+
 set(CONFIGURE_OPTIONS_RELEASE "--disable-debug --enable-release --prefix=${CURRENT_PACKAGES_DIR}")
 set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURRENT_PACKAGES_DIR}/debug")
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_OSX)
+        set(PLATFORM "MacOSX")
+    elseif(VCPKG_TARGET_IS_LINUX)
+        set(PLATFORM "Linux")
+    endif()
     set(BASH bash)
     set(VCPKG_C_FLAGS "${VCPKG_C_FLAGS} -fPIC")
     set(VCPKG_CXX_FLAGS "${VCPKG_CXX_FLAGS} -fPIC")
@@ -53,7 +91,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
         set(ENV{CXXFLAGS} "-O2 ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_RELEASE}")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
-                "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELEASE}"
+                "${SOURCE_PATH}/source/runConfigureICU ${PLATFORM} ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_RELEASE}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
             LOGNAME "configure-${RELEASE_TRIPLET}")
         message(STATUS "Configuring ${RELEASE_TRIPLET} done")
@@ -68,7 +106,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
         set(ENV{CXXFLAGS} "-O0 -g ${VCPKG_CXX_FLAGS} ${VCPKG_CXX_FLAGS_DEBUG}")
         vcpkg_execute_required_process(
             COMMAND ${BASH} --noprofile --norc -c
-                "${SOURCE_PATH}/source/runConfigureICU Linux ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
+                "${SOURCE_PATH}/source/runConfigureICU ${PLATFORM} ${CONFIGURE_OPTIONS} ${CONFIGURE_OPTIONS_DEBUG}"
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET}"
             LOGNAME "configure-${DEBUG_TRIPLET}")
         message(STATUS "Configuring ${DEBUG_TRIPLET} done")
