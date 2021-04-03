@@ -14,8 +14,6 @@ vcpkg_extract_source_archive_ex(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
-    # cpp COMPILE_AS_CPP
   INVERTED_FEATURES
     tools SKIP_INSTALL_TOOLS
 )
