@@ -6,7 +6,49 @@ Binary caching is vcpkg's method for reusing package builds between projects and
 
 If your CI provider offers a native "caching" function, we recommend using both methods for the most performant results.
 
-In-tool help is available via `vcpkg help binarycaching` and a [detailed configuration reference is provided below](#Configuration).
+In-tool help is available via `vcpkg help binarycaching`.
+
+Table of Contents
+ - [Configuration](#configuration)
+ - [CI Examples](#ci-examples)
+   - [GitHub Packages](#github-packages)
+   - [Azure DevOps Artifacts](#azure-devops-artifacts)
+   - [Azure Blob Storage](#azure-blob-storage-experimental)
+   - [Google Cloud Storage](#google-cloud-storage-experimental)
+ - [Nuget Provider Configuration](#nuget-provider-configuration)
+ - [Implementation Notes](#implementation-notes-internal-details-subject-to-change-without-notice)
+
+
+## Configuration
+
+Binary caching is configured via a combination of defaults, the environment variable `VCPKG_BINARY_SOURCES` (set to `<source>;<source>;...`), and the command line option `--binarysource=<source>`. Source options are evaluated in order of defaults, then environment, then command line. Binary caching can be completely disabled by passing `--binarysource=clear` as the last command line option.
+
+By default, zip-based archives will be cached at the first valid location of:
+
+**Windows**
+1. `%VCPKG_DEFAULT_BINARY_CACHE%`
+2. `%LOCALAPPDATA%\vcpkg\archives`
+3. `%APPDATA%\vcpkg\archives`
+
+**Non-Windows**
+1. `$VCPKG_DEFAULT_BINARY_CACHE`
+2. `$XDG_CACHE_HOME/vcpkg/archives`
+3. `$HOME/.cache/vcpkg/archives`
+
+### Valid source strings (`<source>`)
+
+| form                        | description
+|-----------------------------|---------------
+| `clear`                     | Removes all previous sources (including the default)
+| `default[,<rw>]`            | Adds the default file-based location
+| `files,<absolute path>[,<rw>]`       | Adds a custom file-based location
+| `nuget,<uri>[,<rw>]`        | Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI
+| `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
+| `x-azblob,<baseuri>,<sas>[,<rw>]`    | **Experimental: will change or be removed without warning**<br> Adds an Azure Blob Storage source. Uses Shared Access Signature validation. URL should include the container path.
+| `interactive`               | Enables interactive credential management for NuGet (for debugging; requires `--debug` on the command line)
+
+The `<rw>` optional parameter for certain sources controls whether they will be consulted for
+downloading binaries (`read`)(default), whether on-demand builds will be uploaded to that remote (`write`), or both (`readwrite`).
 
 ## CI Examples
 
@@ -146,38 +188,7 @@ Commas (`,`) are valid as part of a object prefix in GCS, just remember to escap
 shown in the previous example. Note that GCS does not have folders (some of the GCS tools simulate folders), it is not
 necessary to create or otherwise manipulate the prefix used by your vcpkg cache.
 
-## Configuration
-
-Binary caching is configured via a combination of defaults, the environment variable `VCPKG_BINARY_SOURCES` (set to `<source>;<source>;...`), and the command line option `--binarysource=<source>`. Source options are evaluated in order of defaults, then environment, then command line. Binary caching can be completely disabled by passing `--binarysource=clear` as the last command line option.
-
-By default, zip-based archives will be cached at the first valid location of:
-
-**Windows**
-1. `%VCPKG_DEFAULT_BINARY_CACHE%`
-2. `%LOCALAPPDATA%\vcpkg\archives`
-3. `%APPDATA%\vcpkg\archives`
-
-**Non-Windows**
-1. `$VCPKG_DEFAULT_BINARY_CACHE`
-2. `$XDG_CACHE_HOME/vcpkg/archives`
-3. `$HOME/.cache/vcpkg/archives`
-
-### Valid source strings (`<source>`)
-
-| form                        | description
-|-----------------------------|---------------
-| `clear`                     | Removes all previous sources (including the default)
-| `default[,<rw>]`            | Adds the default file-based location
-| `files,<path>[,<rw>]`       | Adds a custom file-based location
-| `nuget,<uri>[,<rw>]`        | Adds a NuGet-based source; equivalent to the `-Source` parameter of the NuGet CLI
-| `nugetconfig,<path>[,<rw>]` | Adds a NuGet-config-file-based source; equivalent to the `-Config` parameter of the NuGet CLI. This config should specify `defaultPushSource` for uploads.
-| `x-azblob,<baseuri>,<sas>[,<rw>]`    | **Experimental: will change or be removed without warning**<br> Adds an Azure Blob Storage source. Uses Shared Access Signature validation. URL should include the container path.
-| `interactive`               | Enables interactive credential management for NuGet (for debugging; requires `--debug` on the command line)
-
-The `<rw>` optional parameter for certain sources controls whether they will be consulted for
-downloading binaries (`read`), whether on-demand builds will be uploaded to that remote (`write`), or both (`readwrite`).
-
-### Nuget Provider Configuration
+## Nuget Provider Configuration
 
 #### Credentials
 
