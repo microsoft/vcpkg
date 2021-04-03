@@ -66,9 +66,17 @@ endif()
 
 if(VCPKG_TARGET_IS_ANDROID)
     set(ADDITIONAL_SCRIPTS -C "${CURRENT_PORT_DIR}/CurlAndroidCrossCompile.cmake")
-    set(EXTRA_ARGS -DOPENSSL_LIBRARY="${CURRENT_INSTALLED_DIR}/lib/libssl.so"
+
+    set(EXTRA_ARGS -DOPENSSL_INCLUDE="${CURRENT_INSTALLED_DIR}/include")
+
+    set(EXTRA_ARGS_DEBUG
+            -DOPENSSL_LIBRARY="${CURRENT_INSTALLED_DIR}/debug/lib/libssl.so"
+            -DCRYPT_LIBRARY="${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.so"
+            )
+
+    set(EXTRA_ARGS_RELEASE
+            -DOPENSSL_LIBRARY="${CURRENT_INSTALLED_DIR}/lib/libssl.so"
             -DCRYPT_LIBRARY="${CURRENT_INSTALLED_DIR}/lib/libcrypto.so"
-            -DOPENSSL_INCLUDE="${CURRENT_INSTALLED_DIR}/include"
             )
 endif()
 
@@ -86,6 +94,10 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DENABLE_DEBUG=ON
         -DCURL_CA_FALLBACK=ON
+    OPTIONS_DEBUG
+        ${EXTRA_ARGS_DEBUG}
+    OPTIONS_RELEASE
+        ${EXTRA_ARGS_RELEASE}
 )
 
 vcpkg_install_cmake()
