@@ -8,7 +8,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE} 
+    ARCHIVE ${ARCHIVE}
     REF ${VERSION}
     PATCHES
         msvc_fixes.patch
@@ -17,19 +17,31 @@ vcpkg_extract_source_archive_ex(
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
     # $LIBS is an environment variable that vcpkg already pre-populated with some libraries. 
     # We need to re-purpose it when passing LIBS option to make to avoid overriding the vcpkg's own list.  
-    set(EXTRA_LIBS "LIBS=\"$LIBS -lgettimeofday -lgetopt\"") 
+    set(EXTRA_OPTS "LIBS=\"$LIBS -lgettimeofday -lgetopt\"")
 else()
     # restore the default ac_cv_prog_cc_g flags, otherwise it fails to compile
-set(VCPKG_C_FLAGS "-g -O2") 
+    set(EXTRA_OPTS)
+    set(VCPKG_C_FLAGS "-g -O2") 
     set(VCPKG_CXX_FLAGS "-g -O2")
 endif()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    # These are hacks for MSVC since autoconf can't determine the absolute path correctly
+    foreach(H stdint limits string stddef)
+        find_file(H_PATH "${H}.h" PATHS $ENV{INCLUDE} NO_DEFAULT_PATH)
+        string(REPLACE "\\" "/" H_PATH "${H_PATH}")
+        list(APPEND EXTRA_OPTS "gl_cv_next_${H}_h='\"${H_PATH}\"'")
+    endforeach()
+endif()
+
 set(ENV{GTKDOCIZE} true)
+
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --disable-gtk-doc
-        "${EXTRA_LIBS}"
+        --disable-gcc-warnings
+        ${EXTRA_OPTS}
 )
 
 vcpkg_install_make()
