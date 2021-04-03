@@ -19,10 +19,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   INVERTED_FEATURES
     tools SKIP_INSTALL_TOOLS
 )
-if(VCPKG_TARGET_IS_IOS)
-    if("tools" IN_LIST FEATURES)
-        message(FATAL_ERROR "lua[tools] is not supported for iOS platform build")
-    endif()
+if(VCPKG_TARGET_IS_IOS AND "tools" IN_LIST FEATURES)
+    message(FATAL_ERROR "lua[tools] is not supported for iOS platform build")
 endif()
 
 set(ENABLE_LUA_CPP 0)
