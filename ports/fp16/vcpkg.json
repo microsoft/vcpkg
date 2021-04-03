@@ -1,7 +1,7 @@
 {
   "name": "fp16",
-  "version-string": "2021-02-21",
-  "description": "Conversion to/from half-precision floating point formats",
+  "version-date": "2021-02-21",
+  "description": "Header-only library for conversion to/from half-precision floating point formats",
   "homepage": "https://github.com/Maratyszcza/FP16",
   "dependencies": [
     "psimd"

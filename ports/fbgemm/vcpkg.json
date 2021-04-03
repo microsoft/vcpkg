@@ -1,0 +1,11 @@
+{
+  "name": "fbgemm",
+  "version-date": "2021-03-18",
+  "description": "FB (Facebook) + GEMM (General Matrix-Matrix Multiplication)",
+  "homepage": "https://code.fb.com/ml-applications/fbgemm/",
+  "supports": "!(x86 | uwp)",
+  "dependencies": [
+    "asmjit",
+    "cpuinfo"
+  ]
+}

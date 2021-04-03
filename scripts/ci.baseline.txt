@@ -27,8 +27,24 @@
 ##    x86-windows
 ##
 
-
 # Add new items alphabetically
+
+# script ports
+#vcpkg-cmake:arm64-windows=fail
+#vcpkg-cmake:arm-uwp=fail
+#vcpkg-cmake:x64-uwp=fail
+#vcpkg-cmake:x64-windows-static=fail
+#vcpkg-cmake:x64-windows-static-md=fail
+#vcpkg-cmake:x86-windows=fail
+
+#vcpkg-cmake-config:arm64-windows=fail
+#vcpkg-cmake-config:arm-uwp=fail
+#vcpkg-cmake-config:x64-uwp=fail
+#vcpkg-cmake-config:x64-windows-static=fail
+#vcpkg-cmake-config:x64-windows-static-md=fail
+#vcpkg-cmake-config:x86-windows=fail
+
+# other ports
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
 # Requires ATL for ARM64 to be installed in CI
@@ -121,8 +137,6 @@ cmcstl2:x86-windows        = skip
 coin:arm64-windows=fail
 coin:arm-uwp=fail
 coin:x64-uwp=fail
-collada-dom:x64-windows-static=fail
-collada-dom:x64-windows-static-md=fail
 constexpr-contracts:x64-linux=fail
 coolprop:arm-uwp=fail
 coolprop:x64-linux=fail
@@ -342,9 +356,6 @@ fuzzylite:arm-uwp=fail
 fuzzylite:x64-linux=fail
 fuzzylite:x64-osx=fail
 fuzzylite:x64-uwp=fail
-g3log:arm64-windows=fail
-g3log:arm-uwp=fail
-g3log:x64-uwp=fail
 gainput:arm-uwp=fail
 gainput:x64-linux=fail
 gainput:x64-uwp=fail
@@ -353,6 +364,12 @@ gasol:arm-uwp=fail
 gasol:x64-uwp=fail
 geos:arm-uwp=fail
 geos:x64-uwp=fail
+
+# gsoap does not offer stable public source downloads
+gsoap:x64-windows        = skip
+gsoap:x86-windows        = skip
+gsoap:x64-windows-static = skip
+gsoap:x64-windows-static-md = skip
 
 # Port geotrans source ftp://ftp.nga.mil server
 # extremely slow may take several hours to download
@@ -528,6 +545,13 @@ leptonica:x64-uwp=fail
 leptonica:arm-uwp=fail
 leveldb:arm-uwp=fail
 leveldb:x64-uwp=fail
+libbacktrace:arm64-windows=fail
+libbacktrace:arm-uwp=fail
+libbacktrace:x64-uwp=fail
+libbacktrace:x64-windows=fail
+libbacktrace:x64-windows-static=fail
+libbacktrace:x64-windows-static-md=fail
+libbacktrace:x86-windows=fail
 libaiff:x64-linux=fail
 libarchive:arm-uwp=fail
 libbf:arm64-windows=fail
@@ -619,8 +643,6 @@ liblo:x64-osx=fail
 liblo:x64-uwp=fail
 liblsl:arm64-windows=fail
 liblsl:arm-uwp=fail
-liblsl:x64-linux=fail
-liblsl:x64-osx=fail
 liblsl:x64-uwp=fail
 libmad:arm-uwp=fail
 libmad:x64-uwp=fail
@@ -661,6 +683,14 @@ libmpeg2:x64-osx=fail
 libmpeg2:x64-uwp=fail
 libmupdf:x64-osx=fail
 libmysql:x86-windows=fail
+#The official website of libnice https://nice.freedesktop.org cannot be accessed
+libnice:x86-windows=skip
+libnice:x64-windows=skip
+libnice:x64-windows-static=skip
+libnice:x64-uwp=skip
+libnice:arm64-windows=skip
+libnice:x64-linux=skip
+libnice:x64-osx=skip
 libopenmpt:x64-linux=fail
 libopenmpt:x64-osx=fail
 libopusenc:arm-uwp=fail
@@ -822,6 +852,16 @@ llvm:arm64-windows=fail
 llvm:x64-uwp=fail
 lmdb:arm-uwp=fail
 lmdb:x64-uwp=fail
+# Conflict with loadpng-c
+lodepng:arm64-windows      = skip
+lodepng:arm-uwp            = skip
+lodepng:x64-linux          = skip
+lodepng:x64-osx            = skip
+lodepng:x64-uwp            = skip
+lodepng:x64-windows        = skip
+lodepng:x64-windows-static = skip
+lodepng:x64-windows-static-md=skip
+lodepng:x86-windows        = skip
 log4cplus:arm-uwp=fail
 log4cplus:x64-uwp=fail
 log4cxx:arm-uwp=fail
@@ -882,10 +922,7 @@ meschach:x64-osx=fail
 meschach:x64-uwp=fail
 metis:arm-uwp=fail
 metis:x64-uwp=fail
-metrohash:arm-uwp=fail
-metrohash:x64-uwp=fail
-metrohash:x86-windows=fail
-metrohash:arm64-windows=fail
+mfl:x64-linux=skip
 mhook:arm64-windows=fail
 mhook:arm-uwp=fail
 mhook:x64-linux=fail
@@ -971,6 +1008,8 @@ mpir:x64-windows-static-md=skip
 mpir:arm64-windows=skip
 mpir:x64-osx=skip
 mpir:x64-linux=skip
+mpfr:x64-osx=fail
+mpfr:x64-linux=fail
 msix:x64-linux=fail
 msix:x64-osx=fail
 msix:x64-windows-static=fail
@@ -1232,6 +1271,7 @@ pmdk:x64-windows-static=fail
 pmdk:x86-windows=fail
 pngwriter:arm-uwp=fail
 pngwriter:x64-uwp=fail
+popsift:x64-windows-static-md=fail
 portable-snippets:arm-uwp=fail
 pqp:arm-uwp=fail
 pqp:x64-uwp=fail
@@ -1363,6 +1403,10 @@ rocksdb:x64-uwp=fail
 rpclib:arm64-windows=fail
 rpclib:arm-uwp=fail
 rpclib:x64-uwp=fail
+rsasynccpp:arm64-windows=fail
+rsasynccpp:arm-uwp=fail
+rsasynccpp:x64-linux=fail
+rsasynccpp:x64-osx=fail
 rsocket:x64-windows=fail
 rsocket:x64-windows-static=fail
 rsocket:x64-windows-static-md=fail
@@ -1511,6 +1555,11 @@ stormlib:arm-uwp=fail
 stormlib:x64-uwp=fail
 stxxl:arm-uwp=fail
 stxxl:x64-uwp=fail
+# upstream issue https://github.com/stxxl/stxxl/issues/99
+stxxl:x86-windows=skip
+stxxl:x64-windows=skip
+stxxl:x64-windows-static=skip
+stxxl:x64-windows-static-md=skip
 symengine:arm64-windows=fail
 symengine:arm-uwp=fail
 systemc:arm64-windows=fail
@@ -1745,6 +1794,7 @@ akali:x64-windows-static-md=fail
 chromium-base:x64-windows-static-md=fail
 clockutils:x64-windows-static-md=fail
 fastcgi:x64-windows-static-md=fail
+fontconfig:x64-windows-static-md=fail
 gmp:x64-windows-static-md=fail
 ijg-libjpeg:x64-windows-static-md=fail
 keystone:x64-windows-static-md=fail
@@ -1757,8 +1807,8 @@ mmloader:x64-windows-static-md=fail
 mpg123:x64-windows-static-md=fail
 netcdf-cxx4:x64-windows-static-md=fail
 open62541:x64-windows-static-md=fail
+openscap:x64-windows-static-md=fail
 portmidi:x64-windows-static-md=fail
-pthreads:x64-windows-static-md=fail
 quantlib:x64-windows-static-md=fail
 readosm:x64-windows-static-md=fail
 sentencepiece:x64-windows-static-md=fail
@@ -1768,6 +1818,6 @@ unicorn:x64-windows-static-md=fail
 v8:x64-windows-static-md=fail
 yato:x64-windows-static-md=fail
 zyre:x64-windows-static-md=fail
+usbmuxd:x64-windows-static-md=fail
 workflow:x64-uwp=fail
 workflow:arm-uwp=fail
-

@@ -1,5 +1,7 @@
 # Package Federation: Custom Registries
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
 As it is now, vcpkg has over 1400 ports in the default registry (the `/ports` directory).
 For the majority of users, this repository of packages is enough. However, many enterprises
 need to more closely control their dependencies for one reason or another, and this document

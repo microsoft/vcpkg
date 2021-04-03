@@ -11,11 +11,12 @@ vcpkg_from_github(
     PATCHES
         deprecated_constants.patch # Change from upstream pangolin to address build failures from latest ffmpeg library
         fix-includepath-error.patch # include path has one more ../
-        fix-dependeny-ffmpeg.patch
         fix-dependency-python.patch
+        add-definition.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindGLEW.cmake)
+file(REMOVE ${SOURCE_PATH}/CMakeModules/FindFFMPEG.cmake)
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" MSVC_USE_STATIC_CRT)
 
@@ -26,6 +27,18 @@ vcpkg_configure_cmake(
         -DBUILD_EXTERN_GLEW=OFF
         -DBUILD_EXTERN_LIBPNG=OFF
         -DBUILD_EXTERN_LIBJPEG=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_PythonLibs=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_TooN=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_DC1394=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibRealSense=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenNI=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenNI2=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_uvc=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_DepthSense=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_TeliCam=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Pleora=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_TIFF=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenEXR=OFF
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT}
 )
 
