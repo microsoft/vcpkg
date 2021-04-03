@@ -6,16 +6,16 @@ endif()
 set(PTHREADS4W_VERSION "3.0.0")
 
 if(VCPKG_TARGET_IS_UWP)
-  list(APPEND PATCHES fix-uwp-linkage.patch)
+  list(APPEND PATCH_FILES fix-uwp-linkage.patch)
   # Inject linker option using the `LINK` environment variable
   # https://docs.microsoft.com/en-us/cpp/build/reference/linker-options
   # https://docs.microsoft.com/en-us/cpp/build/reference/linking#link-environment-variables
   set(ENV{LINK} "/APPCONTAINER")
 endif()
 if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
-    set(PATCH_FILE use-md.patch)
+  list(APPEND PATCH_FILES use-md.patch)
 else()
-    set(PATCH_FILE use-mt.patch)
+  list(APPEND PATCH_FILES use-mt.patch)
 endif()
 
 vcpkg_from_sourceforge(
@@ -25,7 +25,7 @@ vcpkg_from_sourceforge(
     SHA512 49e541b66c26ddaf812edb07b61d0553e2a5816ab002edc53a38a897db8ada6d0a096c98a9af73a8f40c94283df53094f76b429b09ac49862465d8697ed20013
     PATCHES
         fix-arm-macro.patch
-        ${PATCH_FILE}
+        ${PATCH_FILES}
 )
 
 find_program(NMAKE nmake REQUIRED)
