@@ -254,6 +254,8 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/tools)
+    
+    set(VCPKG_POLICY_EMPTY_INCLUDE_FOLDER enabled)
 endif()
 
 # LLVM still generates a few DLLs in the static build:
