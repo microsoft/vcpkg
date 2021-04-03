@@ -8,6 +8,7 @@
     "cpuinfo",
     "fp16",
     "fxdiv",
+    "psimd",
     "pthreadpool"
   ]
 }
