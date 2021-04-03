@@ -1,7 +1,8 @@
 {
   "name": "pthreads",
-  "version-string": "3.0.0",
+  "version": "3.0.0",
   "port-version": 7,
-  "description": "An implementation of the POSIX threads API for Windows. See https://sourceforge.net/p/pthreads4w/wiki/Home/",
-  "homepage": "https://sourceware.org/pub/pthreads-win32/"
+  "description": "pthreads for windows",
+  "homepage": "https://sourceware.org/pub/pthreads-win32/",
+  "supports": "!(uwp | arm | arm64)"
 }

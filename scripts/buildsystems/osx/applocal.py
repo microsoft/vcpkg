@@ -259,6 +259,11 @@ def fix_dependency(binary, dep):
     else:
         return True
 
+    # if the source path doesn't exist it's probably not a dependency
+    # originating with vcpkg and we should leave it alone
+    if not os.path.exists(qtnamesrc):
+        return True
+
     dep_ok = True
     # check that rpath of 'dep' inside binary has been correctly set
     # (ie: relative to exepath using '@executable_path' syntax)
