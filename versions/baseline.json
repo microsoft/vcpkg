@@ -4932,6 +4932,10 @@
       "baseline": "8.0.2",
       "port-version": 0
     },
+    "qnnpack": {
+      "baseline": "2021-02-26",
+      "port-version": 0
+    },
     "qpid-proton": {
       "baseline": "0.32.0",
       "port-version": 0
