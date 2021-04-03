@@ -223,7 +223,7 @@ set(FREETYPE_RELEASE_ALL "${FREETYPE_RELEASE} ${BZ2_RELEASE} ${LIBPNG_RELEASE} $
 set(FREETYPE_DEBUG_ALL "${FREETYPE_DEBUG} ${BZ2_DEBUG} ${LIBPNG_DEBUG} ${ZLIB_DEBUG} ${BROTLI_DEC_DEBUG} ${BROTLI_COMMON_DEBUG}")
 
 # If HarfBuzz is built with GLib enabled, it must be statically link
-x_vcpkg_get_pkgconfig_modules(PREFIX harfbuzz MODULES harfbuzz LIBRARIES)
+x_vcpkg_pkgconfig_get_modules(PREFIX harfbuzz MODULES harfbuzz LIBRARIES)
 
 set(RELEASE_OPTIONS
             "LIBJPEG_LIBS=${JPEG_RELEASE}"

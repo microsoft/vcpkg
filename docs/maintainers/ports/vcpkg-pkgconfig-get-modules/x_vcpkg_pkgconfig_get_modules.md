@@ -1,13 +1,13 @@
-# x_vcpkg_get_pkgconfig_modules
+# x_vcpkg_pkgconfig_get_modules
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/x_vcpkg_get_pkgconfig_modules.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/ports/vcpkg-pkgconfig-get-modules/x_vcpkg_pkgconfig_get_modules.md).
 
 Experimental
 Retrieve required module information from pkgconfig modules
 
 ## Usage
 ```cmake
-x_vcpkg_get_pkgconfig_modules(
+x_vcpkg_pkgconfig_get_modules(
     PREFIX <prefix>
     MODULES <pkgconfig_modules>...
     [LIBS]
@@ -41,4 +41,4 @@ Returns `"${PKGCONFIG}"  --cflags-only-I` in <prefix>_INCLUDE_DIRS_(DEBUG|RELEAS
 * [qt5-base](https://github.com/microsoft/vcpkg/blob/master/ports/qt5-base/portfile.cmake)
 
 ## Source
-[scripts/cmake/x\_vcpkg\_get\_pkgconfig\_modules.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/x_vcpkg_get_pkgconfig_modules.cmake)
+[ports/vcpkg-pkgconfig-get-modules/x\_vcpkg\_pkgconfig\_get\_modules.cmake](https://github.com/Microsoft/vcpkg/blob/master/ports/vcpkg-pkgconfig-get-modules/x_vcpkg_pkgconfig_get_modules.cmake)

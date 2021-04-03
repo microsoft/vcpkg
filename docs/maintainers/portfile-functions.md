@@ -54,7 +54,6 @@
 - [vcpkg\_install\_qmake](vcpkg_install_qmake.md)
 - [vcpkg\_minimum\_required](vcpkg_minimum_required.md)
 - [vcpkg\_replace\_string](vcpkg_replace_string.md)
-- [x\_vcpkg\_get\_pkgconfig\_modules](x_vcpkg_get_pkgconfig_modules.md)
 
 ## Internal Functions
 
@@ -74,3 +73,7 @@
 ### [vcpkg-cmake-config](ports/vcpkg-cmake-config.md)
 
 - [vcpkg\_cmake\_config\_fixup](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md)
+
+### [vcpkg-pkgconfig-get-modules](ports/vcpkg-pkgconfig-get-modules.md)
+
+- [x\_vcpkg\_pkgconfig\_get\_modules](ports/vcpkg-pkgconfig-get-modules/x_vcpkg_pkgconfig_get_modules.md)

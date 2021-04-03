@@ -26,6 +26,10 @@
     "openssl",
     "pcre2",
     "sqlite3",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    },
     "zlib",
     "zstd"
   ],
