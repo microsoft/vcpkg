@@ -21,10 +21,8 @@ set(EXTRA_ARGS)
 if(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_IOS)
     set(rpath "@loader_path")
 elseif (VCPKG_TARGET_IS_ANDROID)
-    vcpkg_find_acquire_program(GIT)
-
     set(EXTRA_ARGS "-DTARGET_ARCH=ANDROID"
-            "-DGIT_EXECUTABLE=${GIT}"
+            "-DGIT_EXECUTABLE=--invalid-git-executable--"
             "-DGIT_FOUND=TRUE"
             "-DNDK_DIR=$ENV{ANDROID_NDK_HOME}"
             "-DANDROID_BUILD_ZLIB=FALSE"
