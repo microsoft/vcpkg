@@ -1,5 +1,7 @@
 vcpkg_buildpath_length_warning(37)
 
+include("${CURRENT_HOST_INSTALLED_DIR}/share/vcpkg/x_vcpkg_pkgconfig_get_modules.cmake")
+
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     set(QT_OPENSSL_LINK_DEFAULT ON)
 else()
