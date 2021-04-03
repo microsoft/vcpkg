@@ -29,6 +29,8 @@ foreach(_lang IN LISTS VCPKG_LANGUAGES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_STANDARD)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILE_FEATURES)
     list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_EXTENSION)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILER_ARG1)
+    list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_COMPILER_TARGET)
     # Probably never required since implicit. 
     #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
     #list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_${_lang}_IMPLICIT_INCLUDE_DIRECTORIES)
@@ -73,6 +75,38 @@ endif()
 
 
 project(get_cmake_vars LANGUAGES ${VCPKG_LANGUAGES})
+
+macro(_vcpkg_add_option_to_var var option_var value_var)
+    if(${option_var} AND ${value_var})
+        if(${option_var} MATCHES "=$")
+            set(_sep "")
+        else()
+            set(_sep " ")
+        endif()
+        string(APPEND ${var} " ${${option_var}}${_sep}${${value_var}}")
+    endif()
+endmacro()
+
+# Configure a Makefile project by CC='${CMAKE_C_COMPILER} ${CMAKE_C_COMPILER_ARG1}'.
+# Why export CMAKE_${lang}_COMPILER_ARG1?
+# Someone may use this variable to achieve multi-part compile commands like what the environment variable CC does.
+# See https://gitlab.kitware.com/cmake/cmake/-/issues/17346.
+# Another important reason is for GNU Build System Autoconf/Automake/Libtool.
+# Some flags are common to CFLAGS and LDFLAGS, there are two approaches as documented at
+# https://www.gnu.org/software/autoconf/manual/html_node/Preset-Output-Variables.html,
+# i.e. add the flags to CC or to both CFLAGS and LDFLAGS.
+# But Libtool will strip link flags when creating shared libraries,
+# https://www.gnu.org/software/libtool/manual/html_node/Stripped-link-flags.html.
+# For cross-compiling, the most important flag --target also gets stripped.
+# https://git.savannah.gnu.org/cgit/libtool.git/tree/build-aux/ltmain.in or 
+# ltmain.sh which is copied into source code root directory after autoreconf -i 
+# has a list of "Flags to be passed through".
+foreach(lang IN LISTS VCPKG_LANGUAGES)
+    if("CMAKE_${lang}_COMPILER_ARG1" IN_LIST VCPKG_VARS_TO_CHECK)
+        _vcpkg_add_option_to_var(CMAKE_${lang}_COMPILER_ARG1 CMAKE_${lang}_COMPILE_OPTIONS_TARGET CMAKE_${lang}_COMPILER_TARGET)
+    endif()
+endforeach()
+
 
 foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
   string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_${VAR} \"${${VAR}}\")\n")
