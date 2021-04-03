@@ -3,6 +3,7 @@
   "version-date": "2021-02-26",
   "description": "Quantized Neural Network PACKage - mobile-optimized implementation of quantized neural network operators",
   "homepage": "https://github.com/pytorch/QNNPACK",
+  "supports": "linux & osx",
   "dependencies": [
     "cpuinfo",
     "fp16",
