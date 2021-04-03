@@ -299,7 +299,9 @@ function(vcpkg_configure_make)
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
             set(_csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-mingw32")  # This is required since we are running in a msys
                                                                         # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
-            if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}") # we don't need to specify the additional flags if we build nativly. 
+            if(VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET)
+                string(APPEND _csc_BUILD_TRIPLET " --host=${VCPKG_DETECTED_CMAKE_C_COMPILER_TARGET}")
+            elseif(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}") # we don't need to specify the additional flags if we build nativly. 
                 string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
             if(VCPKG_TARGET_IS_UWP AND NOT _csc_BUILD_TRIPLET MATCHES "--host")
