@@ -136,6 +136,11 @@ macro(_vcpkg_adjust_flags flag_var)
                 string(APPEND ${flag_var} " -isysroot ${CMAKE_OSX_SYSROOT}")
             endif()
         endif()
+    elseif("${flag_var}" IN_LIST VCPKG_LANG_FLAGS)
+        string(REPLACE "FLAGS" "" _prefix ${flag_var}) # CMAKE_<LANG>_
+        _vcpkg_add_option_to_var(${flag_var} ${_prefix}COMPILE_OPTIONS_SYSROOT CMAKE_SYSROOT)
+        _vcpkg_add_option_to_var(${flag_var} ${_prefix}COMPILE_OPTIONS_TARGET ${_prefix}COMPILER_TARGET)
+        _vcpkg_add_option_to_var(${flag_var} ${_prefix}COMPILE_OPTIONS_EXTERNAL_TOOLCHAIN ${_prefix}COMPILER_EXTERNAL_TOOLCHAIN)
     endif()
 endmacro()
 
