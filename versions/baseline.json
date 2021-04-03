@@ -3265,7 +3265,7 @@
       "port-version": 0
     },
     "libmt32emu": {
-      "baseline": "2.4.2",
+      "baseline": "2.5.0",
       "port-version": 0
     },
     "libmupdf": {
