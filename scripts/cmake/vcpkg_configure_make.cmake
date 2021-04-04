@@ -108,8 +108,10 @@ endmacro()
 macro(_vcpkg_determine_autotools_host_cpu out_var)
     if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
         set(HOST_ARCH $ENV{PROCESSOR_ARCHITEW6432})
-    else()
+    elseif(DEFINED ENV{PROCESSOR_ARCHITECTURE})
         set(HOST_ARCH $ENV{PROCESSOR_ARCHITECTURE})
+    else()
+        set(HOST_ARCH "${VCPKG_DETECTED_CMAKE_HOST_SYSTEM_PROCESSOR}")
     endif()
     if(HOST_ARCH MATCHES "(amd|AMD)64")
         set(${out_var} x86_64)
@@ -286,10 +288,12 @@ function(vcpkg_configure_make)
     endif()
 
     # Pre-processing windows configure requirements
-    if (CMAKE_HOST_WIN32)
-        list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
-        vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES} ${_csc_ADDITIONAL_MSYS_PACKAGES})
-        if (_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET)
+    if (VCPKG_TARGET_IS_WINDOWS)
+        if(CMAKE_HOST_WIN32)
+            list(APPEND MSYS_REQUIRE_PACKAGES binutils libtool autoconf automake-wrapper automake1.16 m4)
+            vcpkg_acquire_msys(MSYS_ROOT PACKAGES ${MSYS_REQUIRE_PACKAGES} ${_csc_ADDITIONAL_MSYS_PACKAGES})
+        endif()
+        if (_csc_AUTOCONFIG AND NOT _csc_BUILD_TRIPLET OR _csc_DETERMINE_BUILD_TRIPLET OR VCPKG_CROSSCOMPILING AND NOT _csc_BUILD_TRIPLET)
             _vcpkg_determine_autotools_host_cpu(BUILD_ARCH) # VCPKG_HOST => machine you are building on => --build=
             _vcpkg_determine_autotools_target_cpu(TARGET_ARCH)
             # --build: the machine you are building on
@@ -297,9 +301,11 @@ function(vcpkg_configure_make)
             # --target: the machine that CC will produce binaries for
             # https://stackoverflow.com/questions/21990021/how-to-determine-host-value-for-configure-when-using-cross-compiler
             # Only for ports using autotools so we can assume that they follow the common conventions for build/target/host
-            set(_csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-mingw32")  # This is required since we are running in a msys
-                                                                        # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
-            if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}") # we don't need to specify the additional flags if we build nativly. 
+            if(CMAKE_HOST_WIN32)
+                set(_csc_BUILD_TRIPLET "--build=${BUILD_ARCH}-pc-mingw32")  # This is required since we are running in a msys
+                                                                            # shell which will be otherwise identified as ${BUILD_ARCH}-pc-msys
+            endif()
+            if(NOT TARGET_ARCH MATCHES "${BUILD_ARCH}" OR NOT CMAKE_HOST_WIN32) # we don't need to specify the additional flags if we build nativly, this does not hold when we are not on windows
                 string(APPEND _csc_BUILD_TRIPLET " --host=${TARGET_ARCH}-pc-mingw32") # (Host activates crosscompilation; The name given here is just the prefix of the host tools for the target)
             endif()
             if(VCPKG_TARGET_IS_UWP AND NOT _csc_BUILD_TRIPLET MATCHES "--host")
@@ -308,20 +314,22 @@ function(vcpkg_configure_make)
             endif()
             debug_message("Using make triplet: ${_csc_BUILD_TRIPLET}")
         endif()
-        set(APPEND_ENV)
-        if(_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
-            set(APPEND_ENV ";${MSYS_ROOT}/usr/share/automake-1.16")
-            string(APPEND APPEND_ENV ";${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
+        if(CMAKE_HOST_WIN32)
+            set(APPEND_ENV)
+            if(_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
+                set(APPEND_ENV ";${MSYS_ROOT}/usr/share/automake-1.16")
+                string(APPEND APPEND_ENV ";${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
+            endif()
+            # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
+            string(REPLACE ";$ENV{SystemRoot}\\System32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
+            string(REPLACE ";$ENV{SystemRoot}\\system32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
+            set(ENV{PATH} "${NEWPATH}")
+            set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
         endif()
-        # This inserts msys before system32 (which masks sort.exe and find.exe) but after MSVC (which avoids masking link.exe)
-        string(REPLACE ";$ENV{SystemRoot}\\System32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\System32;" NEWPATH "$ENV{PATH}")
-        string(REPLACE ";$ENV{SystemRoot}\\system32;" "${APPEND_ENV};${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "$ENV{PATH}")
-        set(ENV{PATH} "${NEWPATH}")
-        set(BASH "${MSYS_ROOT}/usr/bin/bash.exe")
 
         macro(_vcpkg_append_to_configure_environment inoutstring var defaultval)
-            # Allows to overwrite settings in custom triplets via the environment
-            if(DEFINED ENV{${var}})
+            # Allows to overwrite settings in custom triplets via the environment on windows
+            if(CMAKE_HOST_WIN32 AND DEFINED ENV{${var}})
                 string(APPEND ${inoutstring} " ${var}='$ENV{${var}}'")
             else()
                 string(APPEND ${inoutstring} " ${var}='${defaultval}'")
@@ -401,12 +409,6 @@ function(vcpkg_configure_make)
         # LINK This is the command used to actually link a C program.
         # CXXCOMPILE The command used to actually compile a C++ source file. The file name is appended to form the complete command line. 
         # CXXLINK  The command used to actually link a C++ program. 
-    
-        #Some PATH handling for dealing with spaces....some tools will still fail with that!
-        string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
-        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
-        set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
-        set(prefix_var "'\${prefix}'") # Windows needs extra quotes or else the variable gets expanded in the makefile!
 
         # Variables not correctly detected by configure. In release builds.
         list(APPEND _csc_OPTIONS gl_cv_double_slash_root=yes
@@ -420,6 +422,14 @@ function(vcpkg_configure_make)
             # Currently needed for arm because objdump yields: "unrecognised machine type (0x1c4) in Import Library Format archive"
             list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
+    endif()
+
+    if(CMAKE_HOST_WIN32)
+        #Some PATH handling for dealing with spaces....some tools will still fail with that!
+        string(REPLACE " " "\\\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
+        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PREFIX "${_VCPKG_PREFIX}")
+        set(_VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
+        set(prefix_var "'\${prefix}'") # Windows needs extra quotes or else the variable gets expanded in the makefile!
     else()
         string(REPLACE " " "\ " _VCPKG_PREFIX ${CURRENT_INSTALLED_DIR})
         string(REPLACE " " "\ " _VCPKG_INSTALLED ${CURRENT_INSTALLED_DIR})
@@ -486,6 +496,8 @@ function(vcpkg_configure_make)
     set(base_cmd)
     if(CMAKE_HOST_WIN32)
         set(base_cmd ${BASH} --noprofile --norc --debug)
+    endif()
+    if(VCPKG_TARGET_IS_WINDOWS)
         list(JOIN _csc_OPTIONS " " _csc_OPTIONS)
         list(JOIN _csc_OPTIONS_RELEASE " " _csc_OPTIONS_RELEASE)
         list(JOIN _csc_OPTIONS_DEBUG " " _csc_OPTIONS_DEBUG)
@@ -733,8 +745,13 @@ function(vcpkg_configure_make)
         unset(_link_path)
         unset(_lib_env_vars)
 
-        if (CMAKE_HOST_WIN32)
-            set(command ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
+        if(VCPKG_TARGET_IS_WINDOWS)
+            if (CMAKE_HOST_WIN32)
+                set(command ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
+            else()
+                find_program(BASH bash REQUIRED)
+                set(command "${BASH}" -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
+            endif()
         else()
             find_program(BASH bash REQUIRED)
             set(command "${BASH}" "./${RELATIVE_BUILD_PATH}/configure" ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}})
