@@ -19,7 +19,7 @@ set(GDAL_PATCHES 0001-Fix-debug-crt-flags.patch 0002-Fix-build.patch)
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND GDAL_PATCHES 0003-Fix-static-build.patch)
 endif()
-list(APPEND GDAL_PATCHES 0004-Fix-std-fabs.patch 0005-Fix-cfitsio.patch 0006-change-autotools-ver-269.patch)
+list(APPEND GDAL_PATCHES 0004-Fix-std-fabs.patch 0005-Fix-cfitsio.patch)
 
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
@@ -191,6 +191,7 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
+        AUTOUPDATE
         COPY_SOURCE
         OPTIONS ${CONF_OPTS}
         OPTIONS_DEBUG
