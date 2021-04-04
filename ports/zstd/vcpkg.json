@@ -1,0 +1,6 @@
+{
+  "name": "zstd",
+  "version": "1.4.9",
+  "description": "Zstandard - Fast real-time compression algorithm",
+  "homepage": "https://facebook.github.io/zstd/"
+}

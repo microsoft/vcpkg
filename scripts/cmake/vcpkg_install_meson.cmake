@@ -5,8 +5,12 @@ Builds a meson project previously configured with `vcpkg_configure_meson()`.
 
 ## Usage
 ```cmake
-vcpkg_install_meson()
+vcpkg_install_meson([ADD_BIN_TO_PATH])
 ```
+
+## Parameters:
+### ADD_BIN_TO_PATH
+Adds the appropriate Release and Debug `bin\` directories to the path during the build such that executables can run against the in-tree DLLs.
 
 ## Examples
 
@@ -17,6 +21,7 @@ vcpkg_install_meson()
 function(vcpkg_install_meson)
     vcpkg_find_acquire_program(NINJA)
     unset(ENV{DESTDIR}) # installation directory was already specified with '--prefix' option
+    cmake_parse_arguments(PARSE_ARGV 0 _im "ADD_BIN_TO_PATH" "" "")
 
     if(VCPKG_TARGET_IS_OSX)
         if(DEFINED ENV{SDKROOT})
@@ -30,23 +35,35 @@ function(vcpkg_install_meson)
         set(ENV{MACOSX_DEPLOYMENT_TARGET} "${VCPKG_DETECTED_CMAKE_OSX_DEPLOYMENT_TARGET}")
     endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        message(STATUS "Package ${TARGET_TRIPLET}-rel")
-        vcpkg_execute_required_process(
-            COMMAND ${NINJA} install -v
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-            LOGNAME package-${TARGET_TRIPLET}-rel
-        )
-    endif()
+    foreach(BUILDTYPE "debug" "release")
+        if(DEFINED VCPKG_BUILD_TYPE AND NOT VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
+            continue()
+        endif()
 
-    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        message(STATUS "Package ${TARGET_TRIPLET}-dbg")
+        if(BUILDTYPE STREQUAL "debug")
+            set(SHORT_BUILDTYPE "dbg")
+        else()
+            set(SHORT_BUILDTYPE "rel")
+        endif()
+
+        message(STATUS "Package ${TARGET_TRIPLET}-${SHORT_BUILDTYPE}")
+        if(_im_ADD_BIN_TO_PATH)
+            set(_BACKUP_ENV_PATH "$ENV{PATH}")
+            if(BUILDTYPE STREQUAL "debug")
+                vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
+            else()
+                vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
+            endif()
+        endif()
         vcpkg_execute_required_process(
             COMMAND ${NINJA} install -v
-            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-            LOGNAME package-${TARGET_TRIPLET}-dbg
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
+            LOGNAME package-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
         )
-    endif()
+        if(_im_ADD_BIN_TO_PATH)
+            set(ENV{PATH} "${_BACKUP_ENV_PATH}")
+        endif()
+    endforeach()
 
     set(RENAMED_LIBS)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
