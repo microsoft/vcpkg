@@ -1,4 +1,4 @@
-set (PACKAGE_VERSION 1.41)
+set (PACKAGE_VERSION 1.42)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "libgpg-error on Windows uses a fork managed by the ShiftMediaProject: https://shiftmediaproject.github.io/")
@@ -6,7 +6,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         OUT_SOURCE_PATH SOURCE_PATH
         REPO ShiftMediaProject/libgpg-error
         REF libgpg-error-${PACKAGE_VERSION}
-        SHA512 87737bd8e042faa552734ac35033ddf1de2ca2314d8be68157408c41240228f2810909c656efa64b6b1c5de2b69b989fed306a33d25c84161cbc7aa2ce795955
+        SHA512 2dbf41e28196f4b99d641a430e6e77566ae2d389bbe9d6f6e310d56a5ca90de9b9ae225a3eee979fe4606d36878d3db6f777162d697de717b4748151dd3525d0
         HEAD_REF master
         PATCHES 
             outdir.patch
@@ -64,7 +64,7 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         REPO gpg/libgpg-error
         REF libgpg-error-${PACKAGE_VERSION}
-        SHA512 9a0e32bac58df60bfd53cfb0911f4793913a96bc8373e5348a1ab8774ceda56b2447aba51385a91e9e2022332149c3f7c0c7c44d989920affbeb71cf6f40358a
+        SHA512 f5a1c1874ac1dee36ee01504f1ab0146506aa7af810879e192eac17a31ec81945fe850953ea1c57188590c023ce3ff195c7cab62af486b731fa1534546d66ba3
         HEAD_REF master
     PATCHES
         add_cflags_to_tools.patch
