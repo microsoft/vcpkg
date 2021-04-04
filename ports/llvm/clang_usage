@@ -1,0 +1,7 @@
+The package clang provides CMake targets:
+
+    find_package(Clang REQUIRED CONFIG)
+
+    include_directories(${CLANG_INCLUDE_DIRS})
+
+    target_link_libraries(main PRIVATE clangBasic clangLex clangParse clangAST)
