@@ -19,11 +19,11 @@
         "libsrtp"
       ]
     },
-    "ws": {
-      "description": "Web Socket support"
-    },
     "stdcall": {
       "description": "Use stdcall convention in callbacks"
+    },
+    "ws": {
+      "description": "Web Socket support"
     }
   }
 }
