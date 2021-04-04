@@ -29,11 +29,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(_gpg-errorproject "${SOURCE_PATH}/SMP/libgpg-error.vcxproj")
     endif()
 
-    file(READ "${_gpg-errorproject}" _contents)
-    string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already
-    file(WRITE "${_gpg-errorproject}" "${_contents}")
-
-
     vcpkg_install_msbuild(
         USE_VCPKG_INTEGRATION
         SOURCE_PATH ${SOURCE_PATH}
