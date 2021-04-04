@@ -8,6 +8,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
         REF libgpg-error-${PACKAGE_VERSION}
         SHA512 87737bd8e042faa552734ac35033ddf1de2ca2314d8be68157408c41240228f2810909c656efa64b6b1c5de2b69b989fed306a33d25c84161cbc7aa2ce795955
         HEAD_REF master
+        PATCHES 
+            outdir.patch
+            runtime.patch
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
@@ -41,7 +44,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 
     get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
-    file(RENAME "${CURRENT_BUILDTREES_DIR}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
+    file(RENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX}/msvc/include" "${CURRENT_PACKAGES_DIR}/include")
     
     set(exec_prefix "\${prefix}")
     set(libdir "\${prefix}/lib")
@@ -55,6 +58,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(GPG_ERROR_CONFIG_LIBS "-L\${libdir} -lgpg-errord")
     configure_file("${SOURCE_PATH}/src/gpg-error.pc.in" "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gpg-error.pc" @ONLY)
     vcpkg_fixup_pkgconfig()
+    vcpkg_copy_pdbs()
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
