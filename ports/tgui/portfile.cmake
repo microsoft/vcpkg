@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 6576c04e594ae0b76ff5e188d543a7558882ad6c # v0.8.8
     SHA512 52d044e90fde0eb6c46c3af3e11a6c8641cce301e863858701aaa909b945c76a1dade2f96a2176a223d92c51f84fe8a6dd883ec74873e8d2fcf09dac50869891
     HEAD_REF 0.8
+    PATCHES fix-usage.patch
 )
 
 set(TGUI_SHARE_PATH ${CURRENT_PACKAGES_DIR}/share/tgui)
@@ -53,8 +54,10 @@ if(BUILD_GUI_BUILDER)
     endif()
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/TGUI/nanosvg")
+
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc")
 
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
