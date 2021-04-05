@@ -1,4 +1,4 @@
-if(NOT TARGET_TRIPLET STREQUAL _HOST_TRIPLET)
+if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
     # make FATAL_ERROR in CI when issue #16773 fixed
     message(WARNING "vcpkg-pkgconfig-get-modules is a host-only port; please mark it as a host port in your dependencies.")
 endif()
