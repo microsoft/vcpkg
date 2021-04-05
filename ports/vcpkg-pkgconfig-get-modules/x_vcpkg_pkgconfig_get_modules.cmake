@@ -47,7 +47,6 @@ set(Z_VCPKG_PKGCONFIG_GET_MODULES_GUARD ON CACHE INTERNAL "guard variable")
 function(x_vcpkg_pkgconfig_get_modules)
     cmake_parse_arguments(PARSE_ARGV 0 "arg" "LIBS;LIBRARIES;LIBRARIES_DIR;INCLUDE_DIRS" "PREFIX" "MODULES")
     if(NOT DEFINED arg_PREFIX OR arg_PREFIX STREQUAL "")
-
         message(FATAL_ERROR "x_vcpkg_pkgconfig_get_modules requires parameter PREFIX!")
     endif()
     if(NOT DEFINED arg_MODULES OR arg_MODULES STREQUAL "")
