@@ -72,7 +72,7 @@ function(vcpkg_find_acquire_program VAR)
     set(BREW_PACKAGE_NAME "perl")
     set(APT_PACKAGE_NAME "perl")
     set(URL
-      "https://strawberry.perl.bot/download/${PERL_VERSION}/strawberry-perl-${PERL_VERSION}-32bit.zip"
+      "https://strawberryperl.com/download/${PERL_VERSION}/strawberry-perl-${PERL_VERSION}-32bit.zip"
       "http://strawberryperl.com/download/${PERL_VERSION}/strawberry-perl-${PERL_VERSION}-32bit.zip"
     )
     set(ARCHIVE "strawberry-perl-${PERL_VERSION}-32bit.zip")
