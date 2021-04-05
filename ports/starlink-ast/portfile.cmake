@@ -14,9 +14,24 @@ vcpkg_extract_source_archive_ex(
         "patch-avoid-gcc-specifics.patch"
 )
 
-set(CONFIGURE_OPTIONS "CFLAGS=-DCMINPACK_NO_DLL --disable-shared --without-fortran --without-pthreads --without-yaml star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no")
+set(CONFIGURE_OPTIONS "CFLAGS=-DCMINPACK_NO_DLL --disable-shared --without-fortran star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no")
+
+if ("yaml" IN_LIST FEATURES)
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-yaml")
+else()
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --without-yaml")
+endif()
+
+if ("pthreads" IN_LIST FEATURES)
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --with-pthreads")
+else()
+    set(CONFIGURE_OPTIONS "${CONFIGURE_OPTIONS} --without-pthreads")
+endif()
+
+
 set(CONFIGURE_OPTIONS_RELEASE "--disable-debug --enable-release --prefix=${CURRENT_PACKAGES_DIR}")
 set(CONFIGURE_OPTIONS_DEBUG  "--enable-debug --disable-release --prefix=${CURRENT_PACKAGES_DIR}/debug")
+
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
