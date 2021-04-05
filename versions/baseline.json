@@ -5724,6 +5724,10 @@
       "baseline": "0.6.4",
       "port-version": 0
     },
+    "starlink-ast": {
+      "baseline": "9.2.3",
+      "port-version": 0
+    },
     "status-code": {
       "baseline": "1.0.0-ab3cd821",
       "port-version": 0
