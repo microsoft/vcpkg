@@ -142,3 +142,9 @@ if(NOT GDK_SKIP_HEADERS)
         gdk-pixbuf/gdk-pixbuf-macros.h
         DESTINATION include/gdk-pixbuf)
 endif()
+
+set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/gdk-pixbuf-2.0.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/gdk-pixbuf-2.0.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/gdk-pixbuf-2.0.pc" DESTINATION lib/pkgconfig)

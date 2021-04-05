@@ -25,6 +25,11 @@ vcpkg_configure_cmake(
         -DGDK_SKIP_TOOLS=ON)
 
 vcpkg_install_cmake()
+
+vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gdk-pixbuf-2.0.pc "Version:" "Version: ${GDK_PIXBUF_VERSION}")
+file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gdk-pixbuf-2.0.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+vcpkg_fixup_pkgconfig()
+
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/gdk-pixbuf)
 
