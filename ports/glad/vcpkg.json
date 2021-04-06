@@ -340,13 +340,13 @@
       ]
     },
     "glx": {
-      "description": "Use `glx` spec instead of `gl`."
+      "description": "Use `glx` spec instead of `gl`. Only available with the X Window System."
     },
     "loader": {
       "description": "Generate loader logic."
     },
     "wgl": {
-      "description": "Use `wgl` spec instead of `gl`."
+      "description": "Use `wgl` spec instead of `gl`. Only available for Windows and UWP platforms."
     }
   }
 }
