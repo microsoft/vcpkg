@@ -176,6 +176,13 @@ if (VCPKG_TARGET_IS_WINDOWS)
   endif()
 
 else()
+    # See https://github.com/microsoft/vcpkg/issues/16990
+    vcpkg_execute_required_process(
+        COMMAND touch config.rpath
+        WORKING_DIRECTORY ${SOURCE_PATH}
+        LOGNAME touch-${TARGET_TRIPLET}
+    )
+    
     if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
         set(BUILD_DYNAMIC yes)
         set(BUILD_STATIC no)
@@ -191,7 +198,6 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
-        AUTOUPDATE
         COPY_SOURCE
         OPTIONS ${CONF_OPTS}
         OPTIONS_DEBUG
