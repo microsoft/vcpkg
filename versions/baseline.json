@@ -5869,8 +5869,8 @@
       "port-version": 0
     },
     "tgui": {
-      "baseline": "0.8.8",
-      "port-version": 1
+      "baseline": "0.9.1",
+      "port-version": 0
     },
     "theia": {
       "baseline": "0.8",
