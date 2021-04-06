@@ -63,7 +63,13 @@ foreach(FILE "${CURRENT_PACKAGES_DIR}/include/cairo.h" "${CURRENT_PACKAGES_DIR}/
     file(WRITE ${FILE} "${CAIRO_H}")
 endforeach()
 
+
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cairo.pc "Version:" "Version: ${CAIRO_VERSION}")
+file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/cairo.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()

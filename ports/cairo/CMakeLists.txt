@@ -318,3 +318,10 @@ endif()
 include(\${CMAKE_CURRENT_LIST_DIR}/unofficial-cairo-targets.cmake)
 ")
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-cairo-config.cmake DESTINATION share/unofficial-cairo)
+
+set(libdir ${CMAKE_INSTALL_PREFIX}/lib)
+set(includedir ${CMAKE_INSTALL_PREFIX}/include)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cairo.pc.in"  "${CMAKE_CURRENT_BINARY_DIR}/cairo.pc" @ONLY)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/cairo.pc" DESTINATION lib/pkgconfig)
+
