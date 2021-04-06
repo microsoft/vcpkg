@@ -27,6 +27,7 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_SYSTEM_LIBRHASH=OFF # not yet in VCPKG
         -DCMAKE_USE_SYSTEM_LIBUV=ON
         -DBUILD_QtDialog=ON # Just to test Qt with CMake
+        -DCMake_QT_MAJOR_VERSION:STRING=6
 )
 
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
