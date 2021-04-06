@@ -42,9 +42,14 @@ set(PATCHES
         patches/windows/MSBuildProject_fix_gendef_perl.patch
         patches/windows/msgfmt.patch
         patches/windows/python_lib.patch
-        patches/windows/fix-compile-flag-Zi.patch
-        patches/linux/configure.patch)
+        patches/windows/fix-compile-flag-Zi.patch)
 
+if(VCPKG_TARGET_IS_MINGW)
+    list(APPEND PATCHES patches/mingw/additional-zlib-names.patch)
+endif()
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND PATCHES patches/linux/configure.patch)
+endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     list(APPEND PATCHES patches/windows/MSBuildProject-static-lib.patch)
     list(APPEND PATCHES patches/windows/Mkvcbuild-static-lib.patch)
@@ -107,7 +112,7 @@ endif()
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 ## Do the build
-if(VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(GLOB SOURCE_FILES ${SOURCE_PATH}/*)
     foreach(_buildtype ${port_config_list})
         # Copy libpq sources.
@@ -274,13 +279,10 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         COPY_SOURCE
+        DETERMINE_BUILD_TRIPLET
         OPTIONS
             ${BUILD_OPTS}
-            --with-includes=${CURRENT_INSTALLED_DIR}/include
-        OPTIONS_RELEASE
-            --with-libraries=${CURRENT_INSTALLED_DIR}/lib
         OPTIONS_DEBUG
-            --with-libraries=${CURRENT_INSTALLED_DIR}/debug/lib
             --enable-debug
     )
 
@@ -300,7 +302,11 @@ else()
         vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
         file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug)
     endif()
-    set(USE_DL ON)
+    if(VCPKG_TARGET_IS_MINGW)
+        set(USE_DL OFF)
+    else()
+        set(USE_DL ON)
+    endif()
 endif()
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/postgresql/vcpkg-cmake-wrapper.cmake @ONLY)
