@@ -49,45 +49,6 @@
         }
       ]
     },
-    "default-projects": {
-      "description": "Build with platform-specific default projects.",
-      "dependencies": [
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "clang",
-            "clang-tools-extra",
-            "compiler-rt",
-            "lld",
-            "lldb"
-          ],
-          "platform": "windows"
-        },
-        {
-          "name": "llvm",
-          "default-features": false,
-          "features": [
-            "clang",
-            "clang-tools-extra",
-            "compiler-rt",
-            "flang",
-            "libclc",
-            "libcxx",
-            "libcxxabi",
-            "libunwind",
-            "lld",
-            "lldb",
-            "mlir",
-            "openmp",
-            "parallel-libs",
-            "polly",
-            "pstl"
-          ],
-          "platform": "!windows"
-        }
-      ]
-    },
     "default-targets": {
       "description": "Build with platform-specific default targets.",
       "dependencies": [
