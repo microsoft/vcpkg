@@ -17,3 +17,11 @@ find_package(expat CONFIG QUIET)
 if(wxWidgets_LIBRARIES AND NOT wxWidgets_LIBRARIES MATCHES "TIFF::TIFF;png;expat::expat;ZLIB::ZLIB")
     list(APPEND wxWidgets_LIBRARIES "TIFF::TIFF;png;expat::expat;ZLIB::ZLIB")
 endif()
+
+# Get extra cpp flags
+execute_process(
+    COMMAND @CURRENT_INSTALLED_DIR@/tools/wxwidgets/wx-config@VCPKG_TARGET_EXECUTABLE_SUFFIX@ --cxxflags
+    OUTPUT_VARIABLE OUTPUT_FLAGS
+)
+
+string(REGEX MATCHALL "(-D[^ ]+)" wxWidgets_FLAGS "${OUTPUT_FLAGS}")
