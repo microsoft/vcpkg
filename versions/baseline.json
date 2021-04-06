@@ -4962,7 +4962,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 3
+      "port-version": 4
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -6262,6 +6262,10 @@
     },
     "vcpkg-gfortran": {
       "baseline": "3",
+      "port-version": 0
+    },
+    "vcpkg-pkgconfig-get-modules": {
+      "baseline": "2021-04-02",
       "port-version": 0
     },
     "vectorclass": {
