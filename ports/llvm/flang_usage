@@ -1,10 +1,5 @@
 The package flang provides CMake targets:
 
     find_package(Flang CONFIG REQUIRED)
-
-    list(APPEND CMAKE_MODULE_PATH "${FLANG_CMAKE_DIR}")
-    include(AddFlang)
-
-    include_directories(${FLANG_INCLUDE_DIRS})
-
-    target_link_libraries(main PRIVATE flangFrontend flangFrontendTool)
+    target_include_directories(main PRIVATE ${FLANG_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE flangFrontend flangFrontendTool ...)

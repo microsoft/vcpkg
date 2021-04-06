@@ -1,10 +1,5 @@
 The package lld provides CMake targets:
 
     find_package(MLIR CONFIG REQUIRED)
-
-    list(APPEND CMAKE_MODULE_PATH "${MLIR_CMAKE_DIR}")
-    include(AddMLIR)
-
-    include_directories(${MLIR_INCLUDE_DIRS})
-
-    target_link_libraries(main PRIVATE MLIRIR MLIRParser MLIRPass MLIRSupport)
+    target_include_directories(main PRIVATE ${MLIR_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE MLIRIR MLIRParser MLIRPass MLIRSupport ...)
