@@ -73,7 +73,6 @@ function(vcpkg_find_acquire_program VAR)
     set(APT_PACKAGE_NAME "perl")
     set(URL
       "https://strawberryperl.com/download/${PERL_VERSION}/strawberry-perl-${PERL_VERSION}-32bit.zip"
-      "http://strawberryperl.com/download/${PERL_VERSION}/strawberry-perl-${PERL_VERSION}-32bit.zip"
     )
     set(ARCHIVE "strawberry-perl-${PERL_VERSION}-32bit.zip")
     set(HASH d353d3dc743ebdc6d1e9f6f2b7a6db3c387c1ce6c890bae8adc8ae5deae8404f4c5e3cf249d1e151e7256d4c5ee9cd317e6c41f3b6f244340de18a24b938e0c4)
