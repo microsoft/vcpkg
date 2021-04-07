@@ -3602,7 +3602,7 @@
     },
     "libwebsockets": {
       "baseline": "4.1.6",
-      "port-version": 0
+      "port-version": 1
     },
     "libxdiff": {
       "baseline": "0.23",
