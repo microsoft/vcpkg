@@ -1,0 +1,48 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 06d9eec..5606601 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -840,8 +840,8 @@ else()
+   set(DEF_INSTALL_CMAKE_DIR lib${LIB_SUFFIX}/cmake/libwebsockets)
+ endif()
+ 
+-if (DEFINED REL_INCLUDE_DIR)
+-    set(LWS__INCLUDE_DIRS "\${LWS_CMAKE_DIR}/${REL_INCLUDE_DIR}")
++if (1)
++    set(LWS__INCLUDE_DIRS "\${CMAKE_CURRENT_LIST_DIR}/../include")
+ endif() 
+ 
+ configure_file(${PROJECT_SOURCE_DIR}/cmake/libwebsockets-config.cmake.in
+@@ -853,10 +853,6 @@ configure_file(${PROJECT_SOURCE_DIR}/cmake/libwebsockets-config-version.cmake.in
+                 ${PROJECT_BINARY_DIR}/libwebsockets-config-version.cmake 
+                 @ONLY)
+ 
+-# Generate the config file for the build-tree.
+-set(LWS__INCLUDE_DIRS 
+-    "${PROJECT_SOURCE_DIR}/lib"
+-    "${PROJECT_BINARY_DIR}")
+ set(LIBWEBSOCKETS_INCLUDE_DIRS ${LWS__INCLUDE_DIRS} CACHE PATH "Libwebsockets include directories")
+ configure_file(${PROJECT_SOURCE_DIR}/cmake/libwebsockets-config.cmake.in
+                 ${PROJECT_BINARY_DIR}/libwebsockets-config.cmake 
+diff --git a/lib/CMakeLists.txt b/lib/CMakeLists.txt
+index 82b9170..eab2bf0 100644
+--- a/lib/CMakeLists.txt
++++ b/lib/CMakeLists.txt
+@@ -153,7 +153,7 @@ if (LWS_WITH_STATIC)
+ 	add_library(websockets STATIC ${SOURCES})# ${HDR_PUBLIC})
+ 	set_target_properties(websockets PROPERTIES LINKER_LANGUAGE C)
+ 	list(APPEND LWS_LIBRARIES websockets)
+-	target_include_directories(websockets PRIVATE ${LWS_LIB_BUILD_INC_PATHS})
++	target_include_directories(websockets PRIVATE $<BUILD_INTERFACE:${LWS_LIB_BUILD_INC_PATHS}> PUBLIC $<INSTALL_INTERFACE:include>)
+ 
+ 	if (WIN32)
+ 		# Windows uses the same .lib ending for static libraries and shared
+@@ -173,7 +173,7 @@ if (LWS_WITH_SHARED)
+ 	add_library(websockets_shared SHARED ${SOURCES} ${RESOURCES})# ${HDR_PUBLIC})
+ 	set_target_properties(websockets_shared PROPERTIES LINKER_LANGUAGE C)
+ 	list(APPEND LWS_LIBRARIES websockets_shared)
+-	target_include_directories(websockets_shared PRIVATE ${LWS_LIB_BUILD_INC_PATHS})
++	target_include_directories(websockets_shared PRIVATE $<BUILD_INTERFACE:${LWS_LIB_BUILD_INC_PATHS}> PUBLIC $<INSTALL_INTERFACE:include>)
+ 
+ 	# We want the shared lib to be named "libwebsockets"
+ 	# not "libwebsocket_shared".
