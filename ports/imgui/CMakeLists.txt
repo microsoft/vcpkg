@@ -24,8 +24,20 @@ target_sources(
 )
 
 if(IMGUI_BUILD_ALLEGRO5_BINDING)
-    find_path(ALLEGRO5_INCLUDE_DIRS allegro5/allegro.h)
-    target_include_directories(${PROJECT_NAME} PRIVATE ${ALLEGRO5_INCLUDE_DIRS})
+    include(FindPackageHandleStandardArgs)
+    include(SelectLibraryConfigurations)
+    
+    find_path(ALLEGRO_INCLUDE_DIRS allegro5/allegro.h)
+    find_library(ALLEGRO_LIBRARY_DEBUG NAMES allegro-debug allegro-debug-static liballegro-debug-static  PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
+    find_library(ALLEGRO_LIBRARY_RELEASE NAMES allegro allegro-static liballegro-static PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH REQUIRED)
+    find_library(ALLEGRO_PRIMITIVES_LIBRARY_DEBUG allegro_primitives-debug allegro_primitives-debug-static liballegro_primitives-debug-static PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH REQUIRED)
+    find_library(ALLEGRO_PRIMITIVES_LIBRARY_RELEASE allegro_primitives allegro_primitives-static liballegro_primitives-static PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH REQUIRED)
+
+    select_library_configurations(ALLEGRO)
+    select_library_configurations(ALLEGRO_PRIMITIVES)
+
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${ALLEGRO_LIBRARY} ${ALLEGRO_PRIMITIVES_LIBRARY})
+    target_include_directories(${PROJECT_NAME} PRIVATE ${ALLEGRO_INCLUDE_DIRS})
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_allegro5.cpp)
 endif()
 
