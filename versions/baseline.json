@@ -3614,7 +3614,7 @@
     },
     "libxml2": {
       "baseline": "2.9.10",
-      "port-version": 4
+      "port-version": 5
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -5890,7 +5890,7 @@
     },
     "tesseract": {
       "baseline": "4.1.1",
-      "port-version": 7
+      "port-version": 8
     },
     "tfhe": {
       "baseline": "1.0.1-1",
