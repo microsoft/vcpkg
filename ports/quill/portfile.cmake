@@ -1,12 +1,12 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO odygrd/quill
-    REF v1.6.1
-    SHA512 108a93108b0e8fa99a9d76ec4bcadd3ad477d871f274ad832fc0d15538c632a787b83b8a8134f750b613eb08a2742aebf3e79726ac430a7e1dd16c42a62f57f3
+    REF v1.6.2
+    SHA512 c1db04c96c70b6bced38ecc83b4bba9e60b02cf13ff48ab92132ceb828414fcf046cb2c41337a4ae321b0bad8598eb280a7edcc30e0720d7609898e15d514380
     HEAD_REF master
 )
 

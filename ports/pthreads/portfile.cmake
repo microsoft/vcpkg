@@ -7,11 +7,18 @@ vcpkg_fail_port_install(MESSAGE "${PORT} does not currently support UWP platform
 
 set(PTHREADS4W_VERSION "3.0.0")
 
+if (VCPKG_CRT_LINKAGE STREQUAL dynamic)
+    set(PATCH_FILE use-md.patch)
+else()
+    set(PATCH_FILE use-mt.patch)
+endif()
+
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pthreads4w
     FILENAME "pthreads4w-code-v${PTHREADS4W_VERSION}.zip"
     SHA512 49e541b66c26ddaf812edb07b61d0553e2a5816ab002edc53a38a897db8ada6d0a096c98a9af73a8f40c94283df53094f76b429b09ac49862465d8697ed20013
+    PATCHES ${PATCH_FILE}
 )
 
 find_program(NMAKE nmake REQUIRED)
