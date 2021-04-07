@@ -3,10 +3,24 @@
   "version": "0.9.1",
   "description": "TGUI is an easy to use, cross-platform, C++ GUI for SFML.",
   "homepage": "https://tgui.eu",
-  "dependencies": [
+  "default-features": [
+    "sdl2",
     "sfml"
   ],
   "features": {
+    "sdl2": {
+      "description": "build the SDL backend",
+      "dependencies": [
+        "sdl2",
+        "sdl2-ttf"
+      ]
+    },
+    "sfml": {
+      "description": "build the SFML backend",
+      "dependencies": [
+        "sfml"
+      ]
+    },
     "tool": {
       "description": "Build GUI builder"
     }

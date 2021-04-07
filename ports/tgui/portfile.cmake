@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF 588362edc42772458fc232c5375a370aa7c449e1 # v0.9.1
     SHA512 3101be4c3f70c8cf6ea7a880fb97608c5fabb33ca14d87882efaf0a270eac3e594dc4afd9011962b290361ad2579d11e11d5157eda5163c3a3d00e41e8774f23
     HEAD_REF 0.9
-    PATCHES fix-usage.patch
+    PATCHES
+        fix-usage.patch
+        fix-dependencies.patch
 )
 
 set(TGUI_SHARE_PATH ${CURRENT_PACKAGES_DIR}/share/tgui)
@@ -14,20 +16,23 @@ set(TGUI_TOOLS_PATH ${CURRENT_PACKAGES_DIR}/tools/tgui)
 file(REMOVE "${SOURCE_PATH}/cmake/Modules/FindSFML.cmake")
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" TGUI_SHARED_LIBS)
 
-# gui-builder
-set(BUILD_GUI_BUILDER OFF)
-if("tool" IN_LIST FEATURES)
-    set(BUILD_GUI_BUILDER ON)
-endif()
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    sdl2    TGUI_HAS_BACKEND_SDL
+    sfml    TGUI_HAS_BACKEND_SFML
+    tool    BUILD_GUI_BUILDER
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
-    OPTIONS
-        -DTGUI_BUILD_GUI_BUILDER=${BUILD_GUI_BUILDER}
+    OPTIONS ${FEATURE_OPTIONS}
         -DTGUI_MISC_INSTALL_PREFIX=${TGUI_SHARE_PATH}
         -DTGUI_SHARED_LIBS=${TGUI_SHARED_LIBS}
+        -DTGUI_BACKEND="Custom"
+        -DTGUI_BUILD_EXAMPLES=OFF
+        -DTGUI_BUILD_GUI_BUILDER=OFF
 )
 
 vcpkg_install_cmake()
