@@ -4,6 +4,11 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 # https://github.com/thestk/rtmidi/blob/4.0.0/CMakeLists.txt#L20
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        alsa RTMIDI_API_ALSA
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO thestk/rtmidi
@@ -18,7 +23,7 @@ vcpkg_configure_cmake(
   SOURCE_PATH ${SOURCE_PATH}
   PREFER_NINJA
   OPTIONS_DEBUG -DDISABLE_INSTALL_HEADERS=ON
-  OPTIONS -DRTMIDI_API_ALSA=OFF
+  ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()
