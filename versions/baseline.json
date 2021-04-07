@@ -5196,6 +5196,10 @@
       "baseline": "2020-08-25",
       "port-version": 0
     },
+    "rapidcsv": {
+      "baseline": "8.50",
+      "port-version": 0
+    },
     "rapidjson": {
       "baseline": "2020-09-14",
       "port-version": 0
