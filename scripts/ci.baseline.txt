@@ -297,7 +297,6 @@ farmhash:x64-windows-static=fail
 farmhash:x64-windows-static-md=fail
 farmhash:x86-windows=fail
 fastrtps:arm-uwp=fail
-fastrtps:x64-linux=fail
 fastrtps:x64-uwp=fail
 fastrtps:x64-windows-static=fail
 fastrtps:x64-windows-static-md=fail
