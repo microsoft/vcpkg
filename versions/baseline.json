@@ -2229,7 +2229,7 @@
       "port-version": 0
     },
     "glad": {
-      "baseline": "0.1.33-1",
+      "baseline": "0.1.34",
       "port-version": 0
     },
     "glbinding": {
