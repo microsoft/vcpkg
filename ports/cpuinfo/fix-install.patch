@@ -9,7 +9,7 @@ index e2d7d53..6d380e9 100644
 +# Configuration
 +set(config_install_dir "lib/cmake/${PROJECT_NAME}")
 +set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
-+set(project_config "${generated_dir}/${PROJECT_NAME}Config.cmake")
++set(project_config "${generated_dir}/unofficial-${PROJECT_NAME}Config.cmake")
 +set(targets_export_name "unofficial-${PROJECT_NAME}Targets")
 +set(namespace "${PROJECT_NAME}::")
 +
