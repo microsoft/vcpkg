@@ -32,7 +32,7 @@ vcpkg_configure_cmake(
         -DTGUI_SHARED_LIBS=${TGUI_SHARED_LIBS}
         -DTGUI_BACKEND="Custom"
         -DTGUI_BUILD_EXAMPLES=OFF
-        -DTGUI_BUILD_GUI_BUILDER=OFF
+        -DTGUI_BUILD_GUI_BUILDER=OFF # https://github.com/texus/TGUI/issues/157
 )
 
 vcpkg_install_cmake()
