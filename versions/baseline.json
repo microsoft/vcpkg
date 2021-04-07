@@ -3169,7 +3169,7 @@
       "port-version": 0
     },
     "libjuice": {
-      "baseline": "v0.7.1",
+      "baseline": "0.7.1",
       "port-version": 0
     },
     "libkeyfinder": {
