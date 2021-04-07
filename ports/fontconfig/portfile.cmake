@@ -15,6 +15,7 @@ vcpkg_from_gitlab(
             build.patch
             build2.patch
             disable-install-data.patch
+            macos_arm_fccache.patch
             ${PATCHES}
 )
 
@@ -86,7 +87,7 @@ endif()
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 
-## Build the fontconfig cache
+# Build the fontconfig cache
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(ENV{FONTCONFIG_PATH} "${CURRENT_PACKAGES_DIR}/etc/fonts")
     set(ENV{FONTCONFIG_FILE} "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")
