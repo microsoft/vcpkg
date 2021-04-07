@@ -3090,7 +3090,7 @@
     },
     "libgpg-error": {
       "baseline": "1.39",
-      "port-version": 0
+      "port-version": 1
     },
     "libgpod": {
       "baseline": "2019-08-29",
