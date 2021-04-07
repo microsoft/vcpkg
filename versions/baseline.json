@@ -6394,7 +6394,7 @@
     },
     "woff2": {
       "baseline": "1.0.2",
-      "port-version": 0
+      "port-version": 1
     },
     "wordnet": {
       "baseline": "3.0",
