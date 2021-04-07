@@ -4906,7 +4906,7 @@
     },
     "pthreads": {
       "baseline": "3.0.0",
-      "port-version": 7
+      "port-version": 8
     },
     "pugixml": {
       "baseline": "1.11.4",
