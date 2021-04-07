@@ -2038,7 +2038,7 @@
     },
     "freeglut": {
       "baseline": "3.2.1",
-      "port-version": 1
+      "port-version": 5
     },
     "freeimage": {
       "baseline": "3.18.0",
