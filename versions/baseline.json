@@ -2158,7 +2158,7 @@
     },
     "gdk-pixbuf": {
       "baseline": "2.36.9-5",
-      "port-version": 7
+      "port-version": 8
     },
     "genann": {
       "baseline": "2019-07-10",
