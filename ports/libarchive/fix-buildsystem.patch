@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b2634da..6a1dc1f 100644
+index 58b4c8d9..5f191675 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -148,10 +148,6 @@ IF (CMAKE_C_COMPILER_ID MATCHES "^XL$")
@@ -56,7 +56,7 @@ index b2634da..6a1dc1f 100644
  CHECK_FUNCTION_EXISTS_GLIBC(mkdir HAVE_MKDIR)
  CHECK_FUNCTION_EXISTS_GLIBC(mkfifo HAVE_MKFIFO)
  CHECK_FUNCTION_EXISTS_GLIBC(mknod HAVE_MKNOD)
-@@ -1388,11 +1373,11 @@ CHECK_FUNCTION_EXISTS_GLIBC(utime HAVE_UTIME)
+@@ -1389,11 +1374,11 @@ CHECK_FUNCTION_EXISTS_GLIBC(utime HAVE_UTIME)
  CHECK_FUNCTION_EXISTS_GLIBC(utimes HAVE_UTIMES)
  CHECK_FUNCTION_EXISTS_GLIBC(utimensat HAVE_UTIMENSAT)
  CHECK_FUNCTION_EXISTS_GLIBC(vfork HAVE_VFORK)
@@ -73,7 +73,7 @@ index b2634da..6a1dc1f 100644
  CHECK_FUNCTION_EXISTS_GLIBC(_ctime64_s HAVE__CTIME64_S)
  CHECK_FUNCTION_EXISTS_GLIBC(_fseeki64 HAVE__FSEEKI64)
  CHECK_FUNCTION_EXISTS_GLIBC(_get_timezone HAVE__GET_TIMEZONE)
-@@ -1405,10 +1390,10 @@ CHECK_FUNCTION_EXISTS(cygwin_conv_path HAVE_CYGWIN_CONV_PATH)
+@@ -1406,10 +1391,10 @@ CHECK_FUNCTION_EXISTS(cygwin_conv_path HAVE_CYGWIN_CONV_PATH)
  CHECK_FUNCTION_EXISTS(fseeko HAVE_FSEEKO)
  CHECK_FUNCTION_EXISTS(strerror_r HAVE_STRERROR_R)
  CHECK_FUNCTION_EXISTS(strftime HAVE_STRFTIME)
@@ -88,7 +88,7 @@ index b2634da..6a1dc1f 100644
  
  CMAKE_POP_CHECK_STATE()	# Restore the state of the variables
  
-@@ -1449,6 +1434,9 @@ CHECK_C_SOURCE_COMPILES(
+@@ -1450,6 +1435,9 @@ CHECK_C_SOURCE_COMPILES(
    "#include <sys/sysmacros.h>\nint main() { return major(256); }"
    MAJOR_IN_SYSMACROS)
  
@@ -98,7 +98,7 @@ index b2634da..6a1dc1f 100644
  IF(ENABLE_LZMA)
  CHECK_C_SOURCE_COMPILES(
    "#include <lzma.h>\n#if LZMA_VERSION < 50020000\n#error unsupported\n#endif\nint main(void){lzma_stream_encoder_mt(0, 0); return 0;}"
-@@ -1456,6 +1444,7 @@ CHECK_C_SOURCE_COMPILES(
+@@ -1457,6 +1445,7 @@ CHECK_C_SOURCE_COMPILES(
  ELSE()
    SET(HAVE_LZMA_STREAM_ENCODER_MT 0)
  ENDIF(ENABLE_LZMA)
@@ -106,13 +106,7 @@ index b2634da..6a1dc1f 100644
  
  IF(HAVE_STRERROR_R)
    SET(HAVE_DECL_STRERROR_R 1)
-@@ -2012,13 +2001,10 @@ CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/build/cmake/config.h.in
- INCLUDE_DIRECTORIES(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
- ADD_DEFINITIONS(-DHAVE_CONFIG_H)
- 
--# Handle generation of the libarchive.pc file for pkg-config
--INCLUDE(CreatePkgConfigFile)
--
+@@ -2019,7 +2008,7 @@ INCLUDE(CreatePkgConfigFile)
  #
  # Register installation of PDF documents.
  #
@@ -122,7 +116,7 @@ index b2634da..6a1dc1f 100644
    # On Windows platform, It's better that we install PDF documents
    # on one's computer.
 diff --git a/libarchive/CMakeLists.txt b/libarchive/CMakeLists.txt
-index 9389bbc..0793d96 100644
+index 9389bbc9..0793d96d 100644
 --- a/libarchive/CMakeLists.txt
 +++ b/libarchive/CMakeLists.txt
 @@ -236,28 +236,22 @@ ELSEIF(ARCHIVE_ACL_SUNOS)
