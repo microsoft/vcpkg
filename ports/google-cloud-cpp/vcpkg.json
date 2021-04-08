@@ -1,7 +1,6 @@
 {
   "name": "google-cloud-cpp",
-  "version": "1.25.0",
-  "port-version": 3,
+  "version": "1.26.0",
   "description": "C++ Client Libraries for Google Cloud Platform APIs.",
   "homepage": "https://github.com/googleapis/google-cloud-cpp",
   "license": "Apache-2.0",

@@ -1,7 +1,7 @@
 {
   "name": "qt5-base",
   "version-string": "5.15.2",
-  "port-version": 3,
+  "port-version": 4,
   "description": "Qt5 Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -26,6 +26,10 @@
     "openssl",
     "pcre2",
     "sqlite3",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    },
     "zlib",
     "zstd"
   ],

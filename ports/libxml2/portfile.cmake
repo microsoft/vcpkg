@@ -30,6 +30,12 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libxml-2.0.pc" "-lxml2" "-llibxml2")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libxml-2.0.pc" "-lxml2" "-llibxml2")
+endif ()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
