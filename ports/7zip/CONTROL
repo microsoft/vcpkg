@@ -1,4 +1,6 @@
 Source: 7zip
 Version: 19.00
-Port-Version: 1
+Port-Version: 2
+Homepage: https://www.7-zip.org
 Description: Library for archiving file with a high compression ratio.
+Supports: !(linux|osx|arm|uwp)

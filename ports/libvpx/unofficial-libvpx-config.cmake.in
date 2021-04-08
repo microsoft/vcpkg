@@ -15,7 +15,7 @@ if(NOT TARGET unofficial::libvpx::libvpx)
   list(APPEND _IMPORT_CHECK_FILES "${_IMPORT_PREFIX}/include/vpx/vpx_codec.h")
 
   # Add release configuration properties.
-  find_library(_LIBFILE_RELEASE NAMES vpx@LIBVPX_CRT_SUFFIX@ PATHS "${_IMPORT_PREFIX}/lib/" NO_DEFAULT_PATH)
+  find_library(_LIBFILE_RELEASE NAMES vpx vpx@LIBVPX_CRT_SUFFIX@ PATHS "${_IMPORT_PREFIX}/lib/" NO_DEFAULT_PATH)
   set_property(TARGET unofficial::libvpx::libvpx
     APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
   set_target_properties(unofficial::libvpx::libvpx PROPERTIES
@@ -25,7 +25,7 @@ if(NOT TARGET unofficial::libvpx::libvpx)
 
   # Add debug configuration properties.
   if(@LIBVPX_CONFIG_DEBUG@)
-    find_library(_LIBFILE_DEBUG NAMES vpx@LIBVPX_CRT_SUFFIX@d PATHS "${_IMPORT_PREFIX}/debug/lib/" NO_DEFAULT_PATH)
+    find_library(_LIBFILE_DEBUG NAMES vpx vpx@LIBVPX_CRT_SUFFIX@d PATHS "${_IMPORT_PREFIX}/debug/lib/" NO_DEFAULT_PATH)
     set_property(TARGET unofficial::libvpx::libvpx
       APPEND PROPERTY IMPORTED_CONFIGURATIONS DEBUG)
     set_target_properties(unofficial::libvpx::libvpx PROPERTIES

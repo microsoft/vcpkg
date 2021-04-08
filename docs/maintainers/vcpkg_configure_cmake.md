@@ -1,5 +1,9 @@
 # vcpkg_configure_cmake
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_cmake.md).
+
+**This function has been deprecated in favor of `vcpkg_cmake_configure` from the vcpkg-cmake port.**
+
 Configure CMake for Debug and Release builds of a project.
 
 ## Usage
@@ -29,6 +33,8 @@ This should be specified unless the port is known to not work under Ninja.
 Disables running the CMake configure step in parallel.
 This is needed for libraries which write back into their source directory during configure.
 
+This also disables CMAKE_DISABLE_SOURCE_CHANGES.
+
 ### NO_CHARSET_FLAG
 Disables passing `utf-8` as the default character set to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`.
 
@@ -49,6 +55,9 @@ Additional options passed to CMake during the Release configuration. These are i
 ### OPTIONS_DEBUG
 Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
 
+### LOGNAME
+Name of the log to write the output of the configure call to.
+
 ## Notes
 This command supplies many common arguments to CMake. To see the full list, examine the source.
 
@@ -60,4 +69,4 @@ This command supplies many common arguments to CMake. To see the full list, exam
 * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_configure_cmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_configure_cmake.cmake)
+[scripts/cmake/vcpkg\_configure\_cmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_configure_cmake.cmake)

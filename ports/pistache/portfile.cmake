@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(FATAL_ERROR "${PORT} currently only supports Linux platform.")
 endif()

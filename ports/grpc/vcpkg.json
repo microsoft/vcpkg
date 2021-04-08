@@ -1,0 +1,32 @@
+{
+  "name": "grpc",
+  "version-string": "1.33.1",
+  "port-version": 3,
+  "description": "An RPC library and framework",
+  "homepage": "https://github.com/grpc/grpc",
+  "dependencies": [
+    "abseil",
+    {
+      "name": "c-ares",
+      "platform": "!uwp"
+    },
+    {
+      "name": "grpc",
+      "host": true
+    },
+    "openssl",
+    "protobuf",
+    {
+      "name": "protobuf",
+      "host": true
+    },
+    "re2",
+    "upb",
+    "zlib"
+  ],
+  "features": {
+    "absl-sync": {
+      "description": "Use abseil synchronization module"
+    }
+  }
+}

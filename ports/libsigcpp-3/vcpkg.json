@@ -1,0 +1,6 @@
+{
+  "name": "libsigcpp-3",
+  "version-string": "3.0.3",
+  "description": "Typesafe callback framework for C++",
+  "homepage": "https://libsigcplusplus.github.io/libsigcplusplus/"
+}

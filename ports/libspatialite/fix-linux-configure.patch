@@ -1,135 +1,62 @@
-diff --git a/configure b/configure
-index aafdad5..fe46039 100644
---- a/configure
-+++ b/configure
-@@ -17448,6 +17448,7 @@ fi
- #   --enable-proj
- #
- # Check whether --enable-proj was given.
-+
- if test "${enable_proj+set}" = set; then :
-   enableval=$enable_proj;
- else
-@@ -17469,122 +17470,6 @@ fi
+diff --git a/configure.ac b/configure.ac
+index ead87caff..47abb90f0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -302,6 +302,7 @@ if test x"$enable_geos" != "xno"; then
+   #-----------------------------------------------------------------------
+   #   --with-geosconfig
+   #
++ if 0; then
+   AC_ARG_WITH([geosconfig],
+         [AS_HELP_STRING([--with-geosconfig=FILE], [specify an alternative geos-config file])],
+ 	[GEOSCONFIG="$withval"], [GEOSCONFIG=""])
+@@ -327,6 +328,7 @@ if test x"$enable_geos" != "xno"; then
+   # Extract the linker and include flags
+   GEOS_LDFLAGS=`$GEOSCONFIG --ldflags`
+   GEOS_CFLAGS=-I`$GEOSCONFIG --includes`
++ fi
+   AC_SUBST([GEOS_LDFLAGS])
+   AC_SUBST([GEOS_CFLAGS])	
+   # Ensure that we can parse geos_c.h
+@@ -335,11 +337,14 @@ if test x"$enable_geos" != "xno"; then
+   AC_CHECK_HEADERS([geos_c.h],, [AC_MSG_ERROR([could not find geos_c.h - you may need to specify the directory of a geos-config file using --with-geosconfig])])
+   CPPFLAGS="$CPPFLAGS_SAVE"	
+   # Ensure we can link against libgeos_c
++ if 0; then
+   LIBS_SAVE="$LIBS"
+   LIBS="$GEOS_LDFLAGS"
+   AC_SEARCH_LIBS(GEOSCoveredBy,geos_c,,AC_MSG_ERROR([could not find libgeos_c (or obsolete 'libgeos_c' < v.3.3.0 found) - you may need to specify the directory of a geos-config file using --with-geosconfig]))
+   LIBS="$LIBS_SAVE"
+   LIBS="$LIBS $GEOS_LDFLAGS -lgeos_c"
++ fi
++  LIBS="$LIBS $GEOS_LDFLAGS"
  
- done
+   #-----------------------------------------------------------------------
+   #   --enable-controlpoints
+@@ -358,7 +363,7 @@ if test x"$enable_geos" != "xno"; then
+ 	  [--enable-geosadvanced], [enables GEOS advanced features [default=yes]])],
+ 	  [], [enable_geosadvanced=yes])
+   if test x"$enable_geosadvanced" != "xno"; then
+-	  AC_SEARCH_LIBS(GEOSDelaunayTriangulation,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.4.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geosadvanced parameter.]))
++	  #AC_SEARCH_LIBS(GEOSDelaunayTriangulation,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.4.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geosadvanced parameter.]))
+ 	  AC_DEFINE(GEOS_ADVANCED)
+   fi
  
--  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pj_init_plus" >&5
--$as_echo_n "checking for library containing pj_init_plus... " >&6; }
--if ${ac_cv_search_pj_init_plus+:} false; then :
--  $as_echo_n "(cached) " >&6
--else
--  ac_func_search_save_LIBS=$LIBS
--cat confdefs.h - <<_ACEOF >conftest.$ac_ext
--/* end confdefs.h.  */
--
--/* Override any GCC internal prototype to avoid an error.
--   Use char because int might match the return type of a GCC
--   builtin and then its argument prototype would still apply.  */
--#ifdef __cplusplus
--extern "C"
--#endif
--char pj_init_plus ();
--int
--main ()
--{
--return pj_init_plus ();
--  ;
--  return 0;
--}
--_ACEOF
--for ac_lib in '' proj; do
--  if test -z "$ac_lib"; then
--    ac_res="none required"
--  else
--    ac_res=-l$ac_lib
--    LIBS="-l$ac_lib -lm $ac_func_search_save_LIBS"
--  fi
--  if ac_fn_c_try_link "$LINENO"; then :
--  ac_cv_search_pj_init_plus=$ac_res
--fi
--rm -f core conftest.err conftest.$ac_objext \
--    conftest$ac_exeext
--  if ${ac_cv_search_pj_init_plus+:} false; then :
--  break
--fi
--done
--if ${ac_cv_search_pj_init_plus+:} false; then :
--
--else
--  ac_cv_search_pj_init_plus=no
--fi
--rm conftest.$ac_ext
--LIBS=$ac_func_search_save_LIBS
--fi
--{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_pj_init_plus" >&5
--$as_echo "$ac_cv_search_pj_init_plus" >&6; }
--ac_res=$ac_cv_search_pj_init_plus
--if test "$ac_res" != no; then :
--  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
--
--else
--  as_fn_error $? "'libproj' is required but it doesn't seem to be installed on this system." "$LINENO" 5
--fi
--
--  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing pj_init_ctx" >&5
--$as_echo_n "checking for library containing pj_init_ctx... " >&6; }
--if ${ac_cv_search_pj_init_ctx+:} false; then :
--  $as_echo_n "(cached) " >&6
--else
--  ac_func_search_save_LIBS=$LIBS
--cat confdefs.h - <<_ACEOF >conftest.$ac_ext
--/* end confdefs.h.  */
--
--/* Override any GCC internal prototype to avoid an error.
--   Use char because int might match the return type of a GCC
--   builtin and then its argument prototype would still apply.  */
--#ifdef __cplusplus
--extern "C"
--#endif
--char pj_init_ctx ();
--int
--main ()
--{
--return pj_init_ctx ();
--  ;
--  return 0;
--}
--_ACEOF
--for ac_lib in '' proj; do
--  if test -z "$ac_lib"; then
--    ac_res="none required"
--  else
--    ac_res=-l$ac_lib
--    LIBS="-l$ac_lib -lm $ac_func_search_save_LIBS"
--  fi
--  if ac_fn_c_try_link "$LINENO"; then :
--  ac_cv_search_pj_init_ctx=$ac_res
--fi
--rm -f core conftest.err conftest.$ac_objext \
--    conftest$ac_exeext
--  if ${ac_cv_search_pj_init_ctx+:} false; then :
--  break
--fi
--done
--if ${ac_cv_search_pj_init_ctx+:} false; then :
--
--else
--  ac_cv_search_pj_init_ctx=no
--fi
--rm conftest.$ac_ext
--LIBS=$ac_func_search_save_LIBS
--fi
--{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_search_pj_init_ctx" >&5
--$as_echo "$ac_cv_search_pj_init_ctx" >&6; }
--ac_res=$ac_cv_search_pj_init_ctx
--if test "$ac_res" != no; then :
--  test "$ac_res" = "none required" || LIBS="$ac_res $LIBS"
--
--else
--  as_fn_error $? "'libproj' is required but the version on this system does not support the required features (Version 4.8.0 or later is needed)." "$LINENO" 5
--fi
--
- else
-   $as_echo "#define OMIT_PROJ 1" >>confdefs.h
+@@ -369,7 +374,7 @@ if test x"$enable_geos" != "xno"; then
+ 	  [--enable-geosreentrant], [enables GEOS reentrant (fully thread safe) [default=yes]])],
+ 	  [], [enable_geosreentrant=yes])
+   if test x"$enable_geosreentrant" != "xno"; then
+-	  AC_SEARCH_LIBS(GEOSContext_setErrorMessageHandler_r,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.5.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geosreentrant parameter.]))
++	  #AC_SEARCH_LIBS(GEOSContext_setErrorMessageHandler_r,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.5.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geosreentrant parameter.]))
+ 	  AC_DEFINE(GEOS_REENTRANT)
+   fi
+ 
+@@ -390,7 +395,7 @@ if test x"$enable_geos" != "xno"; then
+ 	  [--enable-geos370], [enables GEOS 3.7.0 features [default=yes]])],
+ 	  [], [enable_geos370=yes])
+   if test x"$enable_geos370" != "xno"; then
+-	  AC_SEARCH_LIBS(GEOSFrechetDistance_r,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.7.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geos370 parameter.]))
++	  #AC_SEARCH_LIBS(GEOSFrechetDistance_r,geos_c,,AC_MSG_ERROR(['libgeos_c' (>= v.3.7.0) is required but it doesn't seem to be installed on this system. You may need to try re-running configure with a --disable-geos370 parameter.]))
+ 	  AC_DEFINE(GEOS_370)
+   fi
  

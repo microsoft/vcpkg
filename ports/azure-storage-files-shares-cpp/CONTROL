@@ -1,0 +1,6 @@
+Source: azure-storage-files-shares-cpp
+Version: 12.0.0-beta.9
+Build-Depends: azure-storage-common-cpp
+Description: Microsoft Azure Storage Files Shares SDK for C++
+  This library provides Azure Storage Files Shares SDK.
+Homepage: https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/storage/azure-storage-files-shares

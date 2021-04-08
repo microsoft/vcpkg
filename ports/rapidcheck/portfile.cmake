@@ -3,10 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO emil-e/rapidcheck
-    REF cf9e0d8bd8c94e9dc00dc0ab302352bfaf1a3ac5
-    SHA512 6cef62edbda391c3527d63db350842f669841ad2c751a64773250cd40bb65f26c2c394b107ef5530c2d3bd15b7079148fa9778d68a7346225bbb15227b1553c5
+    REF 7bc7d302191a4f3d0bf005692677126136e02f60
+    SHA512 8631f1034a0a24293d61a91cbb8f8b69c70acde02d60377d0a68d045e4d57acb878aafbea76907574c0cc6cdac3a16d207d310b49d7c48ee7edbede3236ed15b
     HEAD_REF master
-    PATCHES fix-addiosfwd.patch
 )
 
 vcpkg_configure_cmake(

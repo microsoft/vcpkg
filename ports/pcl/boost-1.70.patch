@@ -6,7 +6,7 @@ index b301cf1..789b660 100644
  
  # Boost (required)
  include("${PCL_SOURCE_DIR}/cmake/pcl_find_boost.cmake")
-+if (NOT APPLE AND NOT WIN32)
++if (NOT APPLE AND NOT WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 +    add_definitions(-fext-numeric-literals)
 +endif()
  

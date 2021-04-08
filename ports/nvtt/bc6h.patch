@@ -1,14 +1,13 @@
 diff --git a/src/bc6h/CMakeLists.txt b/src/bc6h/CMakeLists.txt
-index 635e0f3a..f758df43 100644
---- a/src/bc6h/CMakeLists.txt	
+index fd75e74..b392d90 100644
+--- a/src/bc6h/CMakeLists.txt
 +++ b/src/bc6h/CMakeLists.txt
-@@ -20,3 +20,8 @@ IF(NOT WIN32)
-         SET_TARGET_PROPERTIES(bc6h PROPERTIES COMPILE_FLAGS -fPIC)
-     ENDIF(CMAKE_COMPILER_IS_GNUCXX)
- ENDIF(NOT WIN32)
+@@ -15,3 +15,8 @@ SET(BC6H_SRCS
+ 
+ ADD_LIBRARY(bc6h STATIC ${BC6H_SRCS})
+ TARGET_LINK_LIBRARIES(bc6h nvcore nvmath)
 +
 +INSTALL(TARGETS bc6h 
 +    RUNTIME DESTINATION bin
 +    LIBRARY DESTINATION lib
 +    ARCHIVE DESTINATION lib/static)
-\ No newline at end of file

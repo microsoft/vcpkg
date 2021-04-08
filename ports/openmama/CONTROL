@@ -1,6 +1,5 @@
 Source: openmama
-Version: 6.3.0
-Port-Version: 1
+Version: 6.3.1
 Build-Depends: libevent, apr, qpid-proton
 Supports: windows&(x64|x86)
 Homepage: https://github.com/OpenMAMA/OpenMAMA

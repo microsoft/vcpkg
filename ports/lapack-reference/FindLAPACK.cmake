@@ -86,6 +86,7 @@ This module defines the following variables:
     find_package(LAPACK)
 #]=======================================================================]
 
+enable_language(C)
 # Check the language being used
 if(NOT (CMAKE_C_COMPILER_LOADED OR CMAKE_CXX_COMPILER_LOADED OR CMAKE_Fortran_COMPILER_LOADED))
   if(LAPACK_FIND_REQUIRED)
@@ -109,18 +110,10 @@ set(CMAKE_REQUIRED_QUIET ${LAPACK_FIND_QUIETLY})
 set(LAPACK_FOUND FALSE)
 set(LAPACK95_FOUND FALSE)
 
+# store original values for CMAKE_FIND_LIBRARY_SUFFIXES
 set(_lapack_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES})
-if(BLA_STATIC)
-  if(WIN32)
-    set(CMAKE_FIND_LIBRARY_SUFFIXES .lib ${CMAKE_FIND_LIBRARY_SUFFIXES})
-  else()
-    set(CMAKE_FIND_LIBRARY_SUFFIXES .a ${CMAKE_FIND_LIBRARY_SUFFIXES})
-  endif()
-else()
-  if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    # for ubuntu's libblas3gf and liblapack3gf packages
-    set(CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES} .so.3gf)
-  endif()
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    list(APPEND CMAKE_FIND_LIBRARY_SUFFIXES .so.3gfs .so.3 .so.4 .so.5)
 endif()
 
 # TODO: move this stuff to a separate module
@@ -202,11 +195,8 @@ set(LAPACK_LINKER_FLAGS)
 set(LAPACK_LIBRARIES)
 set(LAPACK95_LIBRARIES)
 
-if(LAPACK_FIND_QUIETLY OR NOT LAPACK_FIND_REQUIRED)
-  find_package(BLAS)
-else()
-  find_package(BLAS REQUIRED)
-endif()
+include(CMakeFindDependencyMacro)
+find_dependency(BLAS)
 
 if(BLAS_FOUND)
   set(LAPACK_LINKER_FLAGS ${BLAS_LINKER_FLAGS})
@@ -482,7 +472,7 @@ if(BLAS_FOUND)
         LAPACK
         cheev
         ""
-        "lapack;-lm;-lgfortran"
+        "lapack;m;gfortran"
         ""
         ""
         ""
@@ -565,4 +555,5 @@ if(NOT TARGET LAPACK::LAPACK)
 endif()
 
 cmake_pop_check_state()
+# restore original values for CMAKE_FIND_LIBRARY_SUFFIXES
 set(CMAKE_FIND_LIBRARY_SUFFIXES ${_lapack_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})

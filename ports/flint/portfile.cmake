@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(FLINT_VERSION 2.5.2)
 set(FLINT_HASH "8606b369af505d5fcedd05d95fcd04afac2a916fc5291501c56785891cfdb2f9bc98700b2d05afd1d9482fb96df2a8c8bf1cd0e5696df46775df9fa743eb900b")
 

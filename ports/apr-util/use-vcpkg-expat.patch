@@ -26,9 +26,9 @@ index 9ae90b1..71a50b0 100644
  ENDIF()
  
 -IF(NOT EXPAT_FOUND)
-+find_path(XMLLIB_INCLUDE_DIR expat.h)
-+find_library(XMLLIB_LIBRARIES NAMES libexpat libexpatMD)
-+
++find_package(expat)
++set(XMLLIB_INCLUDE_DIR ${EXPAT_INCLUDE_DIRS})
++set(XMLLIB_LIBRARIES ${EXPAT_LIBRARIES})
 +IF(NOT XMLLIB_LIBRARIES)
    MESSAGE(FATAL_ERROR "Expat is required, and it wasn't found!")
  ENDIF()

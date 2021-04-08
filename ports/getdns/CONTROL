@@ -3,7 +3,7 @@ Version: 1.6.0
 Build-Depends: libidn2, openssl
 Description: GetDNS is a modern asynchronous DNS API
 Homepage: https://getdnsapi.net/
-Supports: !uwp
+Supports: !uwp&windows
 
 Feature: libevent
 Description: libevent event loop integration

@@ -11,8 +11,6 @@
 *.userosscache
 *.sln.docstates
 
-toolsrc/out*
-toolsrc/CMakeSettings.json
 # fuzzing
 sync_dir*
 
@@ -288,11 +286,6 @@ __pycache__/
 /installed*/
 /packages/
 /scripts/buildsystems/tmp/
-/toolsrc/build.rel/
-/toolsrc/windows-bootstrap/msbuild.x86.debug/
-/toolsrc/windows-bootstrap/msbuild.x86.release/
-/toolsrc/windows-bootstrap/msbuild.x64.debug/
-/toolsrc/windows-bootstrap/msbuild.x64.release/
 #ignore custom triplets
 /triplets/*
 #add vcpkg-designed triplets back in
@@ -314,7 +307,15 @@ __pycache__/
 ############################################################
 # vcpkg - End
 ############################################################
+vcpkg.disable-metrics
 archives
 .DS_Store
 prefab/
 *.swp
+
+###################
+# Codespaces
+###################
+pythonenv3.8/
+.venv/
+

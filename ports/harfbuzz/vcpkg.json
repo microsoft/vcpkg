@@ -1,0 +1,37 @@
+{
+  "name": "harfbuzz",
+  "version-string": "2.7.4",
+  "port-version": 1,
+  "description": "HarfBuzz OpenType text shaping engine",
+  "homepage": "https://github.com/harfbuzz/harfbuzz",
+  "dependencies": [
+    {
+      "name": "freetype",
+      "default-features": false
+    },
+    {
+      "name": "gettext",
+      "platform": "osx"
+    }
+  ],
+  "features": {
+    "glib": {
+      "description": "Glib Unicode callbacks support",
+      "dependencies": [
+        "glib"
+      ]
+    },
+    "graphite2": {
+      "description": "Graphite2 shaper support",
+      "dependencies": [
+        "graphite2"
+      ]
+    },
+    "icu": {
+      "description": "icu support for harfbuzz",
+      "dependencies": [
+        "icu"
+      ]
+    }
+  }
+}

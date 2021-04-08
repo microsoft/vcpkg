@@ -7,7 +7,7 @@ set(GMIME_LIB_SUFFIX 3.0)
 
 find_package(zlib REQUIRED)
 find_package(unofficial-glib CONFIG REQUIRED)
-find_package(unofficial-iconv REQUIRED)
+find_package(Iconv REQUIRED)
 
 find_library(IDN_LIBRARY NAMES libidn2)
 
@@ -45,7 +45,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE . ./util)
-target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::iconv::libiconv ZLIB::ZLIB ${IDN_LIBRARY})
+target_link_libraries(${PROJECT_NAME} PRIVATE Iconv::Iconv ZLIB::ZLIB ${IDN_LIBRARY})
 target_link_libraries(${PROJECT_NAME} PRIVATE unofficial::glib::gobject unofficial::glib::gio unofficial::glib::glib)
 target_link_libraries(${PROJECT_NAME} PRIVATE Ws2_32.lib)
 

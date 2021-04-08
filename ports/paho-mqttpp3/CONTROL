@@ -1,5 +1,6 @@
 Source: paho-mqttpp3
 Version: 1.1
+Port-Version: 1
 Homepage: https://github.com/eclipse/paho.mqtt.cpp
 Description: Paho project provides open-source C++ wrapper for Paho C library
 Build-Depends: paho-mqtt

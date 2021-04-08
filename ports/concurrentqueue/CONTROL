@@ -1,3 +1,0 @@
-Source: concurrentqueue
-Version: 1.0.1
-Description: A fast multi-producer, multi-consumer lock-free concurrent queue for C++11

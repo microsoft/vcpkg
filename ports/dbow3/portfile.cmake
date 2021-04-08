@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 #the port produces some empty dlls when building shared libraries, since some components do not export anything, breaking the internal build itself
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH

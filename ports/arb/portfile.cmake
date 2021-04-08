@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fredrik-johansson/arb
-    REF eeef7bdd349366be4d1691da05e49dcf9c01a394 # 2.17.0
-    SHA512 d4c53c0343bec32e0b6c0d3a41e92663b13f9648a08c28c56a3098dd77d71248718b414dbb70c116bd7e07648646bdb663c1b9560e41d971d5c12d2d0466e9a0
+    REF ae6009e3e19bd309a2433467d1b2ddb7001cd1eb # 2.18.1
+    SHA512 78e149f0d51ef8ab29afbad99fd24e3b59acfc509f626e89bdcd57d4a8478b84c3aa51e92f5e26f8a10a20c66d72d2eed50f0dfbfda4a5f5277988f9bac3fa48
     HEAD_REF master
 )
 

@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b2db532da..42c004380 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -112,6 +112,10 @@ SET ( RBDL_SOURCES
+ 	src/Kinematics.cc
+ 	)
+ 
++IF (MSVC)
++  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
++ENDIF (MSVC)
++
+ IF (MSVC AND NOT RBDL_BUILD_STATIC)	
+   MESSAGE (FATAL_ERROR, "Compiling RBDL as a DLL currently not supported. Please enable RBDL_BUILD_STATIC.")
+ ENDIF (MSVC AND NOT RBDL_BUILD_STATIC)	

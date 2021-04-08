@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hanickadot/compile-time-regular-expressions
-    REF 96de8f7a519b61abd4ef53ec37cd89565880aa50 # v2.7
-    SHA512 6b65faaccf751ca5c4b695513205c1aa60966f438e912dbacbcb60eeb517aab091a6787a1e9df562ef100ffc2b341640bab05ae76be7c4e60c7d92fd2b5fddd6
+    REF 4fea9f2745129b3542382646d032787713667448 # v2.10
+    SHA512 a6137c6c19e8b535b4794c45a988206df71fe4b91378b2bc48ab265c8e850c20b42e6556a2665fdd5e542d8d7d5109eb0421a1f47b035c6d60d0296c36bdfeb5
     HEAD_REF master
 )
 

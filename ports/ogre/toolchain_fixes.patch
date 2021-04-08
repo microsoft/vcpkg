@@ -23,7 +23,7 @@ diff --git a/CMake/InstallResources.cmake b/CMake/InstallResources.cmake
 index 06a055b..09d10bd 100644
 --- a/CMake/InstallResources.cmake
 +++ b/CMake/InstallResources.cmake
-@@ -201,10 +201,12 @@ endif ()
+@@ -204,10 +204,12 @@ endif ()
  # Create the CMake package files
  include(CMakePackageConfigHelpers)
  
@@ -241,7 +241,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 1602572..9fddbe7 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -269,7 +269,7 @@ elseif(EMSCRIPTEN)
+@@ -271,7 +271,7 @@ elseif(EMSCRIPTEN)
  elseif (APPLE AND NOT APPLE_IOS)
  
    set(XCODE_ATTRIBUTE_SDKROOT macosx)

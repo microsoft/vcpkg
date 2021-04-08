@@ -1,0 +1,19 @@
+Source: azure-core-cpp
+Version: 1.0.0-beta.7
+Build-Depends: openssl (!windows&!uwp)
+Description: Microsoft Azure Core SDK for C++
+  This library provides shared primitives, abstractions, and helpers for modern Azure SDK client libraries written in the C++.
+Homepage: https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/core/azure-core
+Default-Features: http
+
+Feature: http
+Build-Depends: azure-core-cpp[core, curl], azure-core-cpp[core, curl, winhttp] (windows&!uwp)
+Description: Build all HTTP transport implementations, depending on the platform
+
+Feature: curl
+Build-Depends: azure-core-cpp[core], curl
+Description: Build an HTTP transport implementation with LibCURL
+
+Feature: winhttp
+Build-Depends: azure-core-cpp[core]
+Description: Build an HTTP transport implementation with WinHTTP

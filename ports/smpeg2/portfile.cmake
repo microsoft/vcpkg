@@ -1,6 +1,4 @@
 
-include(vcpkg_common_functions)
-
 set(VERSION 2.0.0)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.libsdl.org/projects/smpeg/release/smpeg2-${VERSION}.tar.gz"

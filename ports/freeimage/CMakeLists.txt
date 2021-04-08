@@ -96,7 +96,8 @@ target_include_directories(FreeImage PRIVATE ${REAL_SOURCE_DIR}
                                              ${WEBP_INCLUDE_DIRS}
                                              ${JXR_INCLUDE_DIRS}
                                              ${LibRaw_INCLUDE_DIRS}
-                                             ${CMAKE_CURRENT_BINARY_DIR})
+                                             ${CMAKE_CURRENT_BINARY_DIR}
+                                    PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 
 target_link_libraries(FreeImage ${ZLIB_LIBRARIES}
@@ -126,24 +127,37 @@ endif()
 
 target_include_directories(FreeImagePlus PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus
                                                  ${CMAKE_CURRENT_BINARY_DIR}
-                                                 ${REAL_SOURCE_DIR})
+                                                 ${REAL_SOURCE_DIR}
+                                                 PUBLIC $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 target_link_libraries(FreeImagePlus PUBLIC FreeImage)
 
 list(APPEND PUBLIC_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/Wrapper/FreeImagePlus/FreeImagePlus.h)
 
-install(TARGETS FreeImage
+install(TARGETS FreeImage FreeImagePlus
+        EXPORT freeimage-targets
         COMPONENT runtime
-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 
-install(TARGETS FreeImagePlus
-        COMPONENT runtime-cpp
-        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT bin
-        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT shlib
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}" COMPONENT lib)
+install(EXPORT freeimage-targets NAMESPACE freeimage:: DESTINATION share/freeimage)
 
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/freeimage-config.cmake"
+"include(CMakeFindDependencyMacro)
+find_dependency(ZLIB)
+find_dependency(PNG)
+find_dependency(JPEG)
+find_dependency(TIFF)
+find_dependency(OpenJPEG)
+find_dependency(WebP)
+find_dependency(JXR)
+find_dependency(LibRaw)
+find_dependency(OpenEXR)
+include(\"\${CMAKE_CURRENT_LIST_DIR}/freeimage-targets.cmake\")
+")
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/freeimage-config.cmake DESTINATION share/freeimage)
 if(INSTALL_HEADERS)
     install(FILES ${PUBLIC_HEADERS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 endif()

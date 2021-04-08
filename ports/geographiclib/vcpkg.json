@@ -1,12 +1,11 @@
 {
   "name": "geographiclib",
-  "version-string": "1.50.1",
+  "version-string": "1.51",
   "description": "GeographicLib, a C++ library for performing geographic conversions",
   "homepage": "https://geographiclib.sourceforge.io",
-  "features": [
-    {
-      "name": "tools",
+  "features": {
+    "tools": {
       "description": "The GeographicLib tools"
     }
-  ]
+  }
 }

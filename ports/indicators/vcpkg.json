@@ -1,0 +1,6 @@
+{
+  "name": "indicators",
+  "version": "2.0",
+  "description": "Activity indicators for modern C++",
+  "homepage": "https://github.com/p-ranav/indicators"
+}

@@ -2,8 +2,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/fruit
-    REF v3.4.0
-    SHA512 d78c76432c77acc4cc6ccf3fd9627a3fb2a0aa55d1baf7346422e9f1c1e048237d136588b44cfa943b542b43adbbb62fcd524e4a1cb870e9ffe8b7cf4dadb35d
+    REF 29c9fd265cfa72ee72fb64257fe4b72198d87264 # v3.6.0
+    SHA512 1a8f5b126492dd81fe40bbedd0ead839fd25dac6ea569dd51879e288a4c5850c6618754547ac201d82875781ee0490261372df7a0d1cf50e90c3a9b9da9aaed4
     HEAD_REF master
 )
 

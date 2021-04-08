@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-1.0.0
-    SHA512 cfbe22a7987658cce15f83c3be50435567f2b8156fa50007ae103418b969c6075dbf2858c25787a40feb391e84075905dd045300beb7fcedf4344823f8c4be20
+    REF apache-arrow-3.0.0
+    SHA512 02645be0eaaaa69880ab911fc0b74665ebf52a35f9ad05210b23e7b42bcfbe3c3a4d44fa6c4c35af74764efbe528c2e0ebf0549ce5890c796be695ceb94e5606
     HEAD_REF master
     PATCHES
         all.patch
@@ -20,6 +20,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "filesystem"  ARROW_FILESYSTEM
 )
 
+file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/FindZSTD.cmake")
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cpp
     PREFER_NINJA
@@ -30,10 +32,13 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
         -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
-        -DARROW_BROTLI_USE_SHARED=${ARROW_BUILD_SHARED}
-        -DARROW_GFLAGS_USE_SHARED=${ARROW_BUILD_SHARED}
-        -DARROW_UTF8PROC_USE_SHARED=${ARROW_BUILD_SHARED}
-        -DARROW_ZSTD_USE_SHARED=${ARROW_BUILD_SHARED}
+        -DARROW_BROTLI_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
+        -DARROW_GFLAGS_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
+        -DARROW_LZ4_USE_SHARED=${ARROW_BUILD_SHARED}        # This can be wrong in custom triplets
+        -DARROW_SNAPPY_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
+        -DARROW_THRIFT_USE_SHARED=OFF                       # vcpkg doesn't build Thrift as a shared library for the moment (2020/01/22).
+        -DARROW_UTF8PROC_USE_SHARED=${ARROW_BUILD_SHARED}   # This can be wrong in custom triplets
+        -DARROW_ZSTD_USE_SHARED=${ARROW_BUILD_SHARED}       # This can be wrong in custom triplets
         -DARROW_JEMALLOC=OFF
         -DARROW_BUILD_UTILITIES=OFF
         -DARROW_WITH_BZ2=ON
@@ -44,6 +49,7 @@ vcpkg_configure_cmake(
         -DARROW_WITH_BROTLI=ON
         -DARROW_WITH_UTF8PROC=ON
         -DPARQUET_REQUIRE_ENCRYPTION=ON
+        -DBUILD_WARNING_LEVEL=PRODUCTION
 )
 
 vcpkg_install_cmake()

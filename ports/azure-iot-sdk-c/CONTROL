@@ -1,6 +1,5 @@
 Source: azure-iot-sdk-c
-Version: 2020-07-19
-Port-Version: 1
+Version: 2020-12-09
 Build-Depends: azure-uamqp-c, azure-umqtt-c, azure-c-shared-utility, parson, azure-uhttp-c, azure-macro-utils-c, umock-c
 Description: A C99 SDK for connecting devices to Microsoft Azure IoT services
 Homepage: https://github.com/Azure/azure-iot-sdk-c

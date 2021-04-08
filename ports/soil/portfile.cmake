@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.lonesock.net/files/soil.zip"
     FILENAME "soil-2008.07.07.zip"

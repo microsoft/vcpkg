@@ -3,10 +3,11 @@ function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PAC
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
+        DISABLE_PARALLEL_CONFIGURE
         OPTIONS -DBUILD_TESTING=OFF
     )
 
-    vcpkg_install_cmake()
+    vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
     # If necessary, move the CMake config files
     if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/cmake")
@@ -29,13 +30,13 @@ function(ignition_modular_build_library NAME MAJOR_VERSION SOURCE_PATH CMAKE_PAC
         file(COPY ${CMAKE_RELEASE_FILES} DESTINATION
                   "${CURRENT_PACKAGES_DIR}/share/${CMAKE_PACKAGE_NAME}/")
     endif()
-    
+
     # Remove unused files files
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake
                         ${CURRENT_PACKAGES_DIR}/debug/include
                         ${CURRENT_PACKAGES_DIR}/debug/lib/cmake
                         ${CURRENT_PACKAGES_DIR}/debug/share)
-    
+
     # Make pkg-config files relocatable
     if(NOT IML_DISABLE_PKGCONFIG_INSTALL)
         if(VCPKG_TARGET_IS_LINUX)
@@ -97,7 +98,7 @@ endfunction()
 ## ### CMAKE_PACKAGE_NAME
 ## The name of the CMake package for the port.
 ## If not specified, defaults to `ignition-${NAME}${MAJOR_VERSION}`.
-## 
+##
 ## ### DISABLE_PKGCONFIG_INSTALL
 ## If present, disable installation of .pc pkg-config configuration files.
 ##
@@ -112,16 +113,16 @@ function(ignition_modular_library)
     set(oneValueArgs NAME VERSION SHA512 REF HEAD_REF CMAKE_PACKAGE_NAME)
 	set(multiValueArgs PATCHES)
     cmake_parse_arguments(IML "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    
+
     string(REPLACE "." ";" IML_VERSION_LIST ${IML_VERSION})
     list(GET IML_VERSION_LIST 0 IML_MAJOR_VERSION)
 
-    # If the REF option is omitted, use the canonical one 
+    # If the REF option is omitted, use the canonical one
     if(NOT DEFINED IML_REF)
         set(IML_REF "ignition-${IML_NAME}${IML_MAJOR_VERSION}_${IML_VERSION}")
     endif()
-    
-    # If the HEAD_REF option is omitted, use the canonical one 
+
+    # If the HEAD_REF option is omitted, use the canonical one
     if(NOT DEFINED IML_HEAD_REF)
         set(IML_HEAD_REF "ign-${IML_NAME}${IML_MAJOR_VERSION}")
     endif()
@@ -141,7 +142,7 @@ function(ignition_modular_library)
         HEAD_REF ${IML_HEAD_REF}
         PATCHES ${IML_PATCHES}
     )
-    
+
     # Build library
     ignition_modular_build_library(${IML_NAME} ${IML_MAJOR_VERSION} ${SOURCE_PATH} ${IML_CMAKE_PACKAGE_NAME} ${DEFAULT_CMAKE_PACKAGE_NAME} ${IML_DISABLE_PKGCONFIG_INSTALL})
 endfunction()

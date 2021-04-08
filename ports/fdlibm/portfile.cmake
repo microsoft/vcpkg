@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://android.googlesource.com/platform/external/fdlibm

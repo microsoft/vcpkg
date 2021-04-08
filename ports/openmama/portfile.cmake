@@ -1,13 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_find_acquire_program(FLEX)
-vcpkg_find_acquire_program(SCONS)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenMAMA/OpenMAMA
-    REF abd490e1e1ffae4c643454102b57dc587a338737 # OpenMAMA-6.3.0-release
-    SHA512 fd53c9a01075be414b13636b6f3bfbeeb43512d950625826fe133ba108972d71b170a20ce01175ca3e9ed263fd11e108f3902c6d404d43dd812e6a4748c032e1
+    REF c4925ee103add1a51c1d27be45b46d97af347f36 # https://github.com/OpenMAMA/OpenMAMA/tree/OpenMAMA-6.3.1-release
+    SHA512 e2773d082dd28e073fe81223fc113b1a5db7cd0d95e150e9f3f02c8c9483b9219b5d10682a125dd792c3a7877e15b90fd908084a4c89af4ec8d8c0389c282de2
     HEAD_REF next
 )
 
@@ -26,12 +23,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 # Copy across license files and copyright
-file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/openmama)
-file(COPY ${SOURCE_PATH}/LICENSE.md
-          ${SOURCE_PATH}/LICENSE-3RD-PARTY.txt
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/openmama/)
-file(COPY ${SOURCE_PATH}/LICENSE.md
-     DESTINATION ${CURRENT_PACKAGES_DIR}/share/openmama/copyright)
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(COPY ${SOURCE_PATH}/LICENSE-3RD-PARTY.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/)
+file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 # Clean up LICENSE file - vcpkg doesn't expect it to be there
 file(REMOVE ${CURRENT_PACKAGES_DIR}/LICENSE.MD ${CURRENT_PACKAGES_DIR}/debug/LICENSE.MD)

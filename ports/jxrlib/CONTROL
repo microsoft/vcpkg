@@ -1,4 +1,5 @@
 Source: jxrlib
-Version: 2019.10.9-1
+Version: 2019.10.9
+Port-Version: 2
 Homepage: https://github.com/4creators/jxrlib
 Description: Open source implementation of the jpegxr image format standard.

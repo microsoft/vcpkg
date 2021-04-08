@@ -7,11 +7,14 @@ vcpkg_from_github(
     SHA512 a079ad47171224de4469e76bf0779b6ebc9c6dfb3604bd5dbf5e6e5f321d9e6255f689daa749855f8400023602f1773214013c006442e9b32dd4b8146c888c02
     HEAD_REF master
     PATCHES
-      0001-opencv4-compat.patch
-      0002-improve-features.patch
+        0001-opencv4-compat.patch
+        0002-improve-features.patch
+        0003-fix-dependency-bigint.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/FindModules/FindIconv.cmake)
+# Depends on port bigint
+file(REMOVE_RECURSE ${SOURCE_PATH}/core/src/bigint)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -22,7 +25,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS  ${FEATURE_OPTIONS}
+    OPTIONS ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

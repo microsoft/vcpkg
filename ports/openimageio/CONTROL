@@ -1,9 +1,8 @@
 Source: openimageio
-Version: 2.1.16.0
-Port-Version: 3
+Version: 2.2.10.0
 Homepage: https://github.com/OpenImageIO/oiio
 Description: A library for reading and writing images, and a bunch of related classes, utilities, and application
-Build-Depends: libjpeg-turbo, tiff, libpng, libheif, openexr, boost-thread, boost-smart-ptr, boost-foreach, boost-regex, boost-type-traits, boost-static-assert, boost-unordered, boost-config, boost-algorithm, boost-filesystem, boost-system, boost-thread, boost-asio, boost-random, robin-map, boost-stacktrace, fmt
+Build-Depends: boost-algorithm, boost-asio, boost-config, boost-filesystem, boost-foreach, boost-random, boost-regex, boost-smart-ptr, boost-stacktrace, boost-static-assert, boost-system, boost-thread, boost-type-traits, fmt, libheif, libjpeg-turbo, libpng, openexr, robin-map, tiff, zlib
 
 Feature: libraw
 Build-Depends: libraw

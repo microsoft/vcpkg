@@ -7,7 +7,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
-    PATCHES dll_exports.patch
+    PATCHES
+        dll_exports.patch
+        fix-dependency.patch
 )
 
 vcpkg_configure_cmake(

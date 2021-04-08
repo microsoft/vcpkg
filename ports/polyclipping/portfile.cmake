@@ -6,6 +6,8 @@ vcpkg_from_sourceforge(
     FILENAME "clipper_ver6.4.2.zip"
     NO_REMOVE_ONE_LEVEL
     SHA512 ffc88818c44a38aa278d5010db6cfd505796f39664919f1e48c7fa9267563f62135868993e88f7246dcd688241d1172878e4a008a390648acb99738452e3e5dd
+    PATCHES
+        fix_targets.patch
 )
 
 vcpkg_configure_cmake(
@@ -13,9 +15,13 @@ vcpkg_configure_cmake(
     PREFER_NINJA
 )
 
+
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/FindCLIPPER.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/clipper)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/clipper)
 
 file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

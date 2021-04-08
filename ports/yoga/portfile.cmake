@@ -1,12 +1,10 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/yoga
-    REF 1.16.0
-    SHA512 ad53c3008f9d934b53350927c68fb91391bf2e973f05a446e4819fe424a9334f6d9f06bc14c50d5c310c83d3ba8482a920d640c9bce21a8483d7195c798bbe34
+    REF 1.18.0
+    SHA512 dba75bff0fd3b72a3c17a6856253bd14d8af7fbb2832b432118c6ee509f9fe234874969a9cfb56690ec5a2649637a6bf090da5c5f5e8907c1e1e9c09f05977e2
     HEAD_REF master
     PATCHES add-project-declaration.patch
 )

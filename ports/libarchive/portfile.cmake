@@ -3,16 +3,14 @@ vcpkg_fail_port_install(ON_TARGET "UWP")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libarchive/libarchive
-    REF cce09646b566c61c2debff58a70da780b8457883
-    SHA512 3eef6844269ecb9c3b7c848013539529e6ef2d298b6ca6c3c939a2a2e39da98db36bd66eea8893224bc4318edc073639136fbca71b2b0bec65216562e8188749
+    REF fc6563f5130d8a7ee1fc27c0e55baef35119f26c   #v3.4.3
+    SHA512 54ca4f3cc3b38dcf6588b2369ce43109c4a57a04061348ab8bf046c5c13ace0c4f42c9f3961288542cb5fe12c05359d572b39fe7cec32a10151dbac78e8a3707
     HEAD_REF master
     PATCHES
         fix-buildsystem.patch
         fix-dependencies.patch
-        fix-lz4.patch
-        fix-zstd.patch
         fix-cpu-set.patch
-        disable-c4061.patch
+        disable-warnings.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -66,23 +64,18 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
 vcpkg_copy_pdbs()
 
-foreach(_feature IN LISTS FEATURE_OPTIONS)
-    string(REPLACE "-D" "" _feature "${_feature}")
-    string(REPLACE "=" ";" _feature "${_feature}")
-    string(REPLACE "ON" "1" _feature "${_feature}")
-    string(REPLACE "OFF" "0" _feature "${_feature}")
-    list(GET _feature 0 _feature_name)
-    list(GET _feature 1 _feature_status)
-    set(${_feature_name} ${_feature_status})
-endforeach()
-configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+
 foreach(HEADER ${CURRENT_PACKAGES_DIR}/include/archive.h ${CURRENT_PACKAGES_DIR}/include/archive_entry.h)
     file(READ ${HEADER} CONTENTS)
     string(REPLACE "(!defined LIBARCHIVE_STATIC)" "0" CONTENTS "${CONTENTS}")
     file(WRITE ${HEADER} "${CONTENTS}")
 endforeach()
 
+file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

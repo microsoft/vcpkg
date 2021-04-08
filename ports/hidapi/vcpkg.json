@@ -1,0 +1,7 @@
+{
+  "name": "hidapi",
+  "version-string": "0.10.1",
+  "description": "A Simple library for communicating with USB and Bluetooth HID devices on Linux, Mac and Windows.",
+  "homepage": "https://github.com/libusb/hidapi",
+  "supports": "windows & !(arm | arm64 | uwp)"
+}

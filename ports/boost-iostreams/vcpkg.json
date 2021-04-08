@@ -1,0 +1,39 @@
+{
+  "name": "boost-iostreams",
+  "version-string": "1.75.0",
+  "port-version": 1,
+  "description": "Boost iostreams module",
+  "homepage": "https://github.com/boostorg/iostreams",
+  "supports": "!uwp",
+  "dependencies": [
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    "boost-core",
+    "boost-detail",
+    "boost-function",
+    "boost-integer",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-mpl",
+    "boost-numeric-conversion",
+    "boost-preprocessor",
+    "boost-range",
+    "boost-regex",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers",
+    "bzip2",
+    "liblzma",
+    "zlib",
+    "zstd"
+  ]
+}

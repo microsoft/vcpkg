@@ -1,5 +1,5 @@
 diff --git a/src/core/lib/slice/slice.cc b/src/core/lib/slice/slice.cc
-index 0dacbfef3e..310bf1de1b 100644
+index 0dacbfef3e..0743a1b003 100644
 --- a/src/core/lib/slice/slice.cc
 +++ b/src/core/lib/slice/slice.cc
 @@ -234,6 +234,7 @@ grpc_slice grpc_slice_from_moved_buffer(grpc_core::UniquePtr<char> p,
@@ -20,15 +20,15 @@ index 0dacbfef3e..310bf1de1b 100644
      slice.refcount = nullptr;
      slice.data.inlined.length = str.size();
 diff --git a/src/core/lib/surface/server.cc b/src/core/lib/surface/server.cc
-index cab0cd56c4..2c88fd625b 100644
+index c94551545d..3fd9797316 100644
 --- a/src/core/lib/surface/server.cc
 +++ b/src/core/lib/surface/server.cc
-@@ -1301,7 +1301,7 @@ grpc_call_error queue_call_request(grpc_server* server, size_t cq_idx,
-               GRPC_ERROR_CREATE_FROM_STATIC_STRING("Server Shutdown"));
+@@ -878,7 +878,7 @@ grpc_call_error Server::QueueRequestedCall(size_t cq_idx, RequestedCall* rc) {
+              GRPC_ERROR_CREATE_FROM_STATIC_STRING("Server Shutdown"));
      return GRPC_CALL_OK;
    }
 -  RequestMatcherInterface* rm;
 +  RequestMatcherInterface* rm = nullptr;
    switch (rc->type) {
-     case RequestedCallType::BATCH_CALL:
-       rm = server->unregistered_request_matcher.get();
+     case RequestedCall::Type::BATCH_CALL:
+       rm = unregistered_request_matcher_.get();

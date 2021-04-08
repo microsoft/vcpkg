@@ -3,6 +3,7 @@ Version: 0.10
 Description: Core part of C++ 17 library for serialization to JSON, XML, YAML
 Homepage: https://bitbucket.org/Pavel_Kisliak/bitserializer
 Default-Features: cpprestjson-archive, rapidjson-archive, pugixml-archive
+Supports: !(arm|osx)
 
 Feature: cpprestjson-archive
 Build-Depends: cpprestsdk

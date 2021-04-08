@@ -1,7 +1,7 @@
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/boostorg/nowide/releases/download/v11.0.0/nowide_standalone_v11.0.0.tar.gz"
-    FILENAME "nowide_standalone_v11.0.0.tar.gz"
-    SHA512 315b56e2e6cfe26459e71bc664953b6e5b81351e409dd8f63d6848a49fd5d5834e39f1ed4de28ce0ed288332d71b63a5ddac9894531d42181f23eaf627d077ac
+    URLS "https://github.com/boostorg/nowide/releases/download/v11.1.1/nowide_standalone_v11.1.1.tar.gz"
+    FILENAME "nowide_standalone_v11.1.1.tar.gz"
+    SHA512 fbb7763a5fe9307ac378367555d905e31457ed8b789f6d3b08cc498d7529ecdf7de31fe78272ecaaa46fc0c6402c06ddbe7e6a6fe5b5b3d7b8c0435f12076923
 )
 
 vcpkg_extract_source_archive_ex(

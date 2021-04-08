@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1ce05e0fe..7671d7b1e 100644
+index bd7c4f8..9e09cf3 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -431,7 +431,6 @@ IF(NC_EXTRA_DEPS)
+@@ -430,7 +430,6 @@ IF(NC_EXTRA_DEPS)
      SET(EXTRA_DEPS ${EXTRA_DEPS} "${${_LIB}_DEP}")
    ENDFOREACH()
    MESSAGE("Extra deps: ${EXTRA_DEPS}")
@@ -10,7 +10,7 @@ index 1ce05e0fe..7671d7b1e 100644
    SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${EXTRA_DEPS})
  ENDIF()
  ###
-@@ -599,15 +599,6 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
+@@ -598,15 +597,6 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
      # we will use a static library.  This can be toggled
      # by explicitly modifying NC_FIND_SHARED_LIBS.
      ##
@@ -26,22 +26,20 @@ index 1ce05e0fe..7671d7b1e 100644
  
      #####
      # First, find the C and HL libraries.
-@@ -620,9 +620,9 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
+@@ -619,7 +609,7 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
        SET(SEARCH_PACKAGE_NAME ${HDF5_PACKAGE_NAME})
        FIND_PACKAGE(HDF5 NAMES ${SEARCH_PACKAGE_NAME} COMPONENTS C HL CONFIG REQUIRED ${NC_HDF5_LINK_TYPE})
      ELSE(MSVC)
 -      FIND_PACKAGE(HDF5 COMPONENTS C HL REQUIRED)
 +      FIND_PACKAGE(HDF5 COMPONENTS C HL CONFIG REQUIRED)
      ENDIF(MSVC)
--
-+    
+ 
      ##
-     # Next, check the HDF5 version. This will inform which
-     # HDF5 variables we need to munge.
-@@ -695,6 +695,19 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
+@@ -701,6 +691,19 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
+       SET(HDF5_C_LIBRARY hdf5)
      ENDIF()
    ENDIF(HDF5_C_LIBRARY AND HDF5_HL_LIBRARY AND HDF5_INCLUDE_DIR)
- 
++  
 +  if(TARGET hdf5::hdf5-shared)
 +    set(HDF5_C_LIBRARY hdf5::hdf5-shared)
 +    set(HDF5_C_LIBRARY_hdf5 hdf5::hdf5-shared)
@@ -54,11 +52,10 @@ index 1ce05e0fe..7671d7b1e 100644
 +    ADD_DEFINITIONS(-DH5_BUILT_AS_STATIC_LIB)
 +  endif()
 +  list(APPEND CMAKE_REQUIRED_LIBRARIES ${HDF5_C_LIBRARY})
-+
+ 
    FIND_PACKAGE(Threads)
  
-   # There is a missing case in the above code so default it
-@@ -721,16 +733,11 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
+@@ -728,17 +731,9 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
    CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5Pset_all_coll_metadata_ops "" HDF5_HAS_COLL_METADATA_OPS)
  
    #Check to see if H5Z_SZIP exists in HDF5_Libraries. If so, we must use szip.
@@ -67,18 +64,17 @@ index 1ce05e0fe..7671d7b1e 100644
    IF(USE_SZIP)
 -    FIND_LIBRARY(SZIP NAMES szip sz)
 -    IF(SZIP)
-+    #FIND_LIBRARY(SZIP NAMES szip sz)
-+    #IF(SZIP)
        SET(HAVE_H5Z_SZIP 1)
 -      SET(SZIP_LIBRARY ${SZIP})
 -      SET(CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} ${SZIP})
+-      MESSAGE(STATUS "HDF5 has szip.")
 -    ELSE()
 -      MESSAGE(FATAL_ERROR "HDF5 Requires SZIP, but cannot find libszip or libsz.")
 -    ENDIF()
    ENDIF()
  
    CHECK_LIBRARY_EXISTS(${HDF5_C_LIBRARY_hdf5} H5Pset_libver_bounds "" HAVE_H5PSET_LIBVER_BOUNDS)
-@@ -764,8 +776,7 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
+@@ -788,8 +783,7 @@ IF(USE_HDF5 OR ENABLE_NETCDF_4)
  ENDIF(USE_HDF5 OR ENABLE_NETCDF_4)
  
  # See if we have libcurl
@@ -88,7 +84,7 @@ index 1ce05e0fe..7671d7b1e 100644
  INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIRS})
  
  # Check to see if CURLOPT_USERNAME is defined.
-@@ -1890,7 +1902,6 @@ ENDIF()
+@@ -1893,7 +1887,6 @@ ENDIF()
  
  STRING(REPLACE ";" " " LINKFLAGS "${LINKFLAGS}")
  
@@ -97,7 +93,7 @@ index 1ce05e0fe..7671d7b1e 100644
  
  SET(LIBS ${NC_LIBS})
 diff --git a/liblib/CMakeLists.txt b/liblib/CMakeLists.txt
-index ea9b02949..ec7851f37 100644
+index ea9b029..8aeeab7 100644
 --- a/liblib/CMakeLists.txt
 +++ b/liblib/CMakeLists.txt
 @@ -58,7 +58,7 @@ ENDIF()
@@ -152,11 +148,11 @@ index ea9b02949..ec7851f37 100644
  
  TARGET_LINK_LIBRARIES(netcdf ${TLL_LIBS})
 diff --git a/netCDFConfig.cmake.in b/netCDFConfig.cmake.in
-index c89cf3e67..b81f35a1b 100644
+index 9d68eec..b8f6113 100644
 --- a/netCDFConfig.cmake.in
 +++ b/netCDFConfig.cmake.in
 @@ -12,6 +12,10 @@ set_and_check(netCDF_LIB_DIR "@PACKAGE_CMAKE_INSTALL_LIBDIR@")
- set(netCDF_LIBRARIES netcdf)
+ set(netCDF_LIBRARIES netCDF::netcdf)
  
  # include target information
 +include(CMakeFindDependencyMacro)

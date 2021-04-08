@@ -1,9 +1,9 @@
 Source: opencv2
 Version: 2.4.13.7
-Port-Version: 2
+Port-Version: 5
 Build-Depends: zlib
 Description: computer vision library, version 2
-Default-Features: eigen, jpeg, opengl, png, tiff
+Default-Features: eigen, jpeg, png, tiff
 
 Feature: cuda
 Build-Depends: cuda
@@ -44,10 +44,6 @@ Description: Qt GUI support for opencv
 Feature: tiff
 Build-Depends: tiff
 Description: TIFF support for opencv
-
-Feature: vtk
-Build-Depends: vtk
-Description: vtk support for opencv
 
 Feature: world
 Description: Compile to a single package support for opencv

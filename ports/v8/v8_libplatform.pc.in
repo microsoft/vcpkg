@@ -1,0 +1,10 @@
+prefix=@PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: v8
+Description: V8 JavaScript Engine - Platform library
+Version: @pkgver@
+Libs: -L${libdir} -lv8_libplatform
+Cflags: -I${includedir} @CFLAGS@

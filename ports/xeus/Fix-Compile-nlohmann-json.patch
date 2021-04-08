@@ -1,12 +1,12 @@
 diff --git a/src/xmessage.cpp b/src/xmessage.cpp
-index 0d6ad99..621d838 100644
+index 1ab9544..5a14ba0 100644
 --- a/src/xmessage.cpp
 +++ b/src/xmessage.cpp
-@@ -12,6 +12,7 @@
+@@ -13,6 +13,7 @@
  #include <sstream>
  #include <string>
  #include <utility>
 +#include <ciso646>
  
- #include "xeus/xguid.hpp"
- #include "xeus/xmessage.hpp"
+ #include "nlohmann/json.hpp"
+ 

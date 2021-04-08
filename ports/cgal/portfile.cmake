@@ -3,16 +3,14 @@ vcpkg_buildpath_length_warning(37)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGAL/cgal
-    REF releases/CGAL-5.0.3
-    SHA512 e163276264d8aeb3a546392f87d898bcbc59a4e2f10c23327f0c8e3d41f0d3d8200f872230da3f077d3a564acfa4b3fa4c6a101db0b3cd8d4a4028fffa8110df
+    REF v5.2
+    SHA512 09f46c531365697968a9d9521eb9f3b5af5da9971be7fa86db990199f046c5a16dec821ca8a8ce1a2619b3ec44634e7426e39e997e8df783aa13552bc3d86064
     HEAD_REF master
 )
 
-set(WITH_CGAL_Qt5  OFF)
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     qt WITH_CGAL_Qt5
-    )
-
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -45,16 +43,15 @@ endif()
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/lib/cgal/CGALConfig.cmake "include (\$\{CMAKE_CURRENT_LIST_DIR\}/../../share/cgal/CGALConfig.cmake)")
 
-
 file(INSTALL ${SOURCE_PATH}/Installation/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 file(
     COPY
         ${SOURCE_PATH}/Installation/LICENSE.BSL
-        ${SOURCE_PATH}/Installation/LICENSE.FREE_USE
+        ${SOURCE_PATH}/Installation/LICENSE.RFL
         ${SOURCE_PATH}/Installation/LICENSE.GPL
         ${SOURCE_PATH}/Installation/LICENSE.LGPL
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal
+    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/cgal)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

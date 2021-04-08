@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO FreeRDP/FreeRDP
-    REF 1923e63516c1182bd5e917aeac563431e8c5381a #2.1.1
-    SHA512 9745959e0960cd02ef4c890139eb5b69932bca19eab8311f21ba1eae6d5f2e1d6d05a36275053e5111805bd4206ab93ad4e0b8f1fb10e74360297c51cfefbc96
+    REF d2ba84a6885f57674098fe8e76c5f99d880e580d #2.2.0
+    SHA512 3f166213039358dc0cab09b8895e6cff8a7a9c7e7711ea5652604fc6070b1524aba9fec3b860f4deb1f54ea1f17709ab25ffb108116e2914800e892efb9fb9ae
     HEAD_REF master
     PATCHES
         DontInstallSystemRuntimeLibs.patch
         fix-linux-build.patch
         openssl_threads.patch
-        fix-include-install-path.patch
         fix-include-path.patch
         fix-libusb.patch
 )
@@ -16,10 +15,12 @@ vcpkg_from_github(
 if (NOT VCPKG_TARGET_IS_WINDOWS)
     message(WARNING "${PORT} currently requires the following libraries from the system package manager:\n    libxfixes-dev\n")
 endif()
-if (VCPKG_TARGET_IS_OSX)
+set(FREERDP_WITH_CLIENT)
+if (VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     set(FREERDP_WITH_CLIENT -DWITH_CLIENT=OFF)
 endif()
 
+set(FREERDP_CRT_LINKAGE)
 if(VCPKG_CRT_LINKAGE STREQUAL "static")
     set(FREERDP_CRT_LINKAGE -DMSVC_RUNTIME=static)
 endif()

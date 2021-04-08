@@ -1,12 +1,12 @@
-include(vcpkg_common_functions)
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jackaudio/jack2
-    REF v1.9.12
-    SHA512 f0271dfc8f8e2f2489ca52f431ad4fa420665816d6c67a01a76da1d4b5ae91f6dad8c4e3309ec5e0c159c9d312ed56021ab323d74bce828ace26f1b8d477ddfa
+    REF b54a09bf7ef760d81fdb8544ad10e45575394624 # v1.9.14
+    SHA512 a5f920ed1df71d9f5e3c4889ea2aa4d9ed9082d0b9070437a068e24a2caa5dffaa71b19352e9da056e9f23e930edab56816235ceb9293cc33d8870265f392c1d
     HEAD_REF master
 )
 
@@ -20,8 +20,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Remove duplicate headers
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-# Handle copyright
-file(INSTALL ${SOURCE_PATH}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/jack2 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/README.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

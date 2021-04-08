@@ -14,4 +14,4 @@ for more information.
 
 $ErrorActionPreference = 'Stop'
 Write-Host 'Running sysprep'
-& C:\Windows\system32\sysprep\sysprep.exe /oobe /generalize /shutdown
+& C:\Windows\system32\sysprep\sysprep.exe /oobe /generalize /mode:vm /shutdown

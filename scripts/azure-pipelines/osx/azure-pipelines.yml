@@ -5,8 +5,7 @@
 jobs:
 - job: x64_osx
   pool:
-    name: vcpkgAgentPool
-    demands: Agent.OS -equals Darwin
+    name: ${{ parameters.poolName }}
   workspace:
     clean: resources
   timeoutInMinutes: 1440 # 1 day
@@ -15,20 +14,13 @@ jobs:
     value: /Users/vagrant/Data
   - name: VCPKG_DOWNLOADS
     value: /Users/vagrant/Data/downloads
+  - group: azblob-test-sas-group
+  - name: BINARY_SOURCE_STUB
+    value: "x-azblob,$(azblob-root-url),$(azblob-test-sas)"
 
   steps:
   - bash: df -h
     displayName: 'Report on Disk Space'
-  - bash: |
-      brew list autoconf || brew install autoconf
-      brew list automake || brew install automake
-      brew list pkg-config || brew install pkg-config
-      brew list libtool || brew install libtool
-      brew list bison || brew install bison
-      brew list gfortran || brew cask install gfortran
-      brew list mono || brew install mono
-      brew list yasm || brew install yasm
-    displayName: 'Install brew dependencies'
   - bash: |
       sudo mkdir ${{ variables.VCPKG_DOWNLOADS }} || 0
       sudo chmod 777 ${{ variables.VCPKG_DOWNLOADS }} || 0
@@ -38,20 +30,13 @@ jobs:
     displayName: 'Build vcpkg'
     inputs:
       filePath: bootstrap-vcpkg.sh
-      arguments: '-buildTests'
-  - bash: toolsrc/build.rel/vcpkg-test
-    displayName: 'Run vcpkg tests'
-  - task: PowerShell@2
-    displayName: 'Run vcpkg end-to-end tests'
-    inputs:
-      filePath: 'scripts/azure-pipelines/end-to-end-tests.ps1'
-      arguments: '-Triplet x64-osx -WorkingRoot ${{ variables.WORKING_ROOT }}'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
       failOnStderr: true
       filePath: 'scripts/azure-pipelines/test-modified-ports.ps1'
-      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -ArchivesRoot ${{ variables.WORKING_ROOT }}/archives -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactsDirectory $(System.ArtifactsDirectory)'
+      arguments: '-Triplet x64-osx -BuildReason $(Build.Reason) -BinarySourceStub "$(BINARY_SOURCE_STUB)" -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
+      pwsh: true
   - bash: |
       df -h
     displayName: 'Report on Disk Space After Build'
@@ -59,9 +44,9 @@ jobs:
   - task: PublishBuildArtifacts@1
     displayName: 'Publish Artifact: failure logs for x64-osx'
     inputs:
-      PathtoPublish: '$(System.ArtifactsDirectory)/failure-logs'
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/failure-logs'
       ArtifactName: 'failure logs for x64-osx'
-    condition: failed()
+    condition: always()
   - bash: |
       python3 scripts/file_script.py /Users/vagrant/Data/installed/vcpkg/info/
     displayName: 'Build a file list for all packages'

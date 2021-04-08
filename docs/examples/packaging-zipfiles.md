@@ -13,21 +13,23 @@ Finally, if the server's name for the archive is not very descriptive (such as d
 
 *`zlib1211.zip` is a fine name, so no change needed.*
 
-All this information can then be passed into the `create` command, which will download the sources and bootstrap the packaging process inside `ports\<packagename>`.
+All this information can then be passed into the `create` command, which will download the sources and bootstrap the packaging process inside `ports/<packagename>`.
 
 ```no-highlight
 PS D:\src\vcpkg> .\vcpkg create zlib2 http://zlib.net/zlib-1.2.11.tar.gz zlib1211.tar.gz
 -- Generated portfile: D:/src/vcpkg/ports/zlib2/portfile.cmake
 ```
 
-### Create the CONTROL file
-In addition to the generated `ports\<package>\portfile.cmake`, we also need a `ports\<package>\CONTROL` file. This file is a simple set of fields describing the package's metadata.
+### Create the manifest file
+In addition to the generated `ports/<package>/portfile.cmake`, we also need a `ports/<package>/vcpkg.json` file. This file is a simple set of fields describing the package's metadata.
 
-*For zlib2, we'll create the file `ports\zlib2\CONTROL` with the following contents:*
-```no-highlight
-Source: zlib2
-Version: 1.2.11
-Description: A Massively Spiffy Yet Delicately Unobtrusive Compression Library
+*For zlib2, we'll create the file `ports/zlib2/vcpkg.json` with the following contents:*
+```json
+{
+  "name": "zlib2",
+  "version-string": "1.2.11",
+  "description": "A Massively Spiffy Yet Delicately Unobtrusive Compression Library"
+}
 ```
 
 ### Tweak the generated portfile
@@ -62,13 +64,12 @@ Found 3 error(s). Please correct the portfile:
 At this point, it is a matter of reading the error messages and log files while steadily improving the quality of the portfile. Zlib required providing a discrete copy of the LICENSE to copy into the package, suppressing the build and installation of executables and headers, and removing the static libraries after they were installed.
 
 ### Suggested example portfiles
-In the `ports\` directory are many libraries that can be used as examples, including many that are not based on CMake.
+In the `ports/` directory are many libraries that can be used as examples, including many that are not based on CMake.
 
 - Header only libraries
     - rapidjson
     - range-v3
 - MSBuild-based
-    - cppunit
     - mpg123
 - Non-CMake, custom buildsystem
     - openssl

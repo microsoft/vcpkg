@@ -1,28 +1,27 @@
-include(vcpkg_common_functions)
-
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://www.mega-nerd.com/SRC/libsamplerate-0.1.9.tar.gz"
-    FILENAME "libsamplerate-0.1.9.tar.gz"
-    SHA512 78596657963cbf06785e3e6e1190b093df71da52ca340e75bd8246a962cd79dd1c90fa5527c607cebcb296e2c1ee605015278b274e3b768f2f3fbeb0eadfb728
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO libsndfile/libsamplerate
+    REF 0.2.1
+    SHA512 ee661f0f1010f19af623edfa0b52960f9397a99583919a1cc758915e68478271f287ee24bf1ba62ad44413846dff9456d8f7500e9c01290df3a57e58873eaa8f
+    HEAD_REF master
 )
-
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)
-file(COPY ${SOURCE_PATH}/Win32/config.h DESTINATION ${SOURCE_PATH}/src)
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}/src
+    SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    OPTIONS
+        -DBUILD_TESTING=OFF
+        -DLIBSAMPLERATE_EXAMPLES=OFF
 )
 
 vcpkg_install_cmake()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/SampleRate TARGET_PATH share/SampleRate)
+vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libsamplerate RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 vcpkg_copy_pdbs()

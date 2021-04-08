@@ -1,0 +1,3 @@
+declare_args() {
+    icu_use_data_file = false
+}

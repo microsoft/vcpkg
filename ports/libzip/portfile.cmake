@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nih-at/libzip
-    REF dcd9a0bfe1ac2893d7f62bafb19f0a4d7b08c0f7 #v1.7.1
-    SHA512 33ad594398f79544636464d6ae0892553a212dc833b508820f81f10823c3a5c4016288d05953176fb8d52919414edd28f26da6037b93129a58826abdcb501d18
-    HEAD_REF master
+    REF 66e496489bdae81bfda8b0088172871d8fda0032 #v1.7.3
+    SHA512 ae0cda3e9decf5a71bf1e0907a2a21b2c0d83e6e576faf4d9401d6954707ae298c1c09febbc5339f457ace3577fdd405a790c819ef24778990ca6bf1e9516d54
+    HEAD_REF v1.7.3
     PATCHES fix-findpackage.patch
 )
 
@@ -33,6 +33,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/libzip)
+vcpkg_fixup_pkgconfig()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
  
 # Remove include directories from lib

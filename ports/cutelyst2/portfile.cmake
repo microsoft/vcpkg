@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cutelyst/cutelyst
-    REF e25026edf836621a1d82745ce625509d307f5dc1 # v2.9.0
-    SHA512 39afa6bb73217341e741a7dcf40b0d73ccabd018ba68df248e7092d80077c23be8bf31c244590a7fe8a37209c09395423eb945d21a1a11109ee7da60644802b3
+    REF 526aef6b4c1a48f8e91d59607763fade9157d01f # v2.12.0
+    SHA512 0960801ae8d772a93e3f2dcd221f919ff28000076cecd4d1a2ff7b6e62575805738292257e63a48e455f6fc0bc446c90214fc33679ea1deb17b0c31d6f125e2a
     HEAD_REF master
     PATCHES fix-static-build.patch
 )

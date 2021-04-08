@@ -1,11 +1,5 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 0)
-else()
-    set(CMAKE_DISABLE_FIND_PACKAGE_BLAS 1)
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO shogun-toolbox/shogun
@@ -16,6 +10,7 @@ vcpkg_from_github(
         cmake.patch
         cmake-config.in.patch
         fix-dirent.patch
+        fix-ASSERT-not-found.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -44,10 +39,9 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_ARPREC=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_Ctags=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_CCache=TRUE
-        -DCMAKE_DISABLE_FIND_PACKAGE_LAPACK=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_Doxygen=TRUE
         -DCMAKE_DISABLE_FIND_PACKAGE_CURL=TRUE
-        -DCMAKE_DISABLE_FIND_PACKAGE_BLAS=${CMAKE_DISABLE_FIND_PACKAGE_BLAS}
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=TRUE
         -DINSTALL_TARGETS=shogun-static
 )
 

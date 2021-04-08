@@ -1,5 +1,7 @@
 # vcpkg_from_github
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_from_github.md).
+
 Download and extract a project from GitHub. Enables support for `install --head`.
 
 ## Usage:
@@ -13,6 +15,7 @@ vcpkg_from_github(
     [PATCHES <patch1.patch> <patch2.patch>...]
     [GITHUB_HOST <https://github.com>]
     [AUTHORIZATION_TOKEN <${SECRET_FROM_FILE}>]
+    [FILE_DISAMBIGUATOR <N>]
 )
 ```
 
@@ -55,6 +58,9 @@ This field should contain the scheme, host, and port of the desired URL without 
 ### AUTHORIZATION_TOKEN
 A token to be passed via the Authorization HTTP header as "token ${AUTHORIZATION_TOKEN}".
 
+### FILE_DISAMBIGUATOR
+A token to uniquely identify the resulting filename if the SHA512 changes even though a git ref does not, to avoid stepping on the same file name.
+
 ## Notes:
 At least one of `REF` and `HEAD_REF` must be specified, however it is preferable for both to be present.
 
@@ -67,4 +73,4 @@ This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 * [beast](https://github.com/Microsoft/vcpkg/blob/master/ports/beast/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_from_github.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_github.cmake)
+[scripts/cmake/vcpkg\_from\_github.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_github.cmake)

@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         OsgMacroUtils.patch
+        fix-static-install.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)

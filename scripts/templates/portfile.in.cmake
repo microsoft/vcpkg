@@ -75,6 +75,3 @@ vcpkg_install_cmake()
 
 # # Handle copyright
 # file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/@PORT@ RENAME copyright)
-
-# # Post-build test for cmake libraries
-# vcpkg_test_cmake(PACKAGE_NAME @PORT@)

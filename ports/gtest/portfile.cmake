@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         0002-Fix-z7-override.patch
         fix-main-lib-path.patch
+        fix-build-failure-in-gcc-11.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)
@@ -75,5 +76,4 @@ endif()
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/googletest/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

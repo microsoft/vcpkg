@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 endif()
@@ -25,5 +23,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 
 file(INSTALL ${SOURCE_PATH}/License.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/libzen RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME ZenLib MODULE)

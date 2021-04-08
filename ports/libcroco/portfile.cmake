@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://download.gnome.org/sources/libcroco/0.6/libcroco-0.6.13.tar.xz"
     FILENAME "libcroco-0.6.13.tar.xz"
@@ -31,6 +29,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcroco RENAME copyright)
 
 vcpkg_copy_pdbs()
-
-# Post-build test for cmake libraries
-vcpkg_test_cmake(PACKAGE_NAME libcroco)

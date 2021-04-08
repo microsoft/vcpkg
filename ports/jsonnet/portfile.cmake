@@ -5,18 +5,20 @@ endif()
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO google/jsonnet
-  REF 552d8ec6f6b973a6357b83eb9bacd707366d28f0 # v0.14.0
-  SHA512 a4a9c6285155addbc5b7ef1a0c02b99b4d941bfc8e6536eaf029bff77c9c303a5c36f654ca8ab6b9757d2710c100c3e4a05f310269d82b0385ae55ea6ead14ef
+  REF 3f58aa551c917d6a7a2c6d042ee27f93d895ac0b # v0.16.0
+  SHA512 448f4ff433a43ec21c3b67ea508d624e03dac420878e453e908a465cd517c79ae657f107c92e28a4ae2d2527baaf9a3ae1c6ea4c7e7e4f5062d3fad4e76e668c
   HEAD_REF master
   PATCHES
     001-enable-msvc.patch
     002-fix-dependency-and-install.patch
     0003-use-upstream-nlohmann-json.patch
+    0004-incorporate-md5.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_execute_required_process(
-    COMMAND Powershell -Command "((Get-Content -AsByteStream \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' | Out-File -Encoding Ascii \"${SOURCE_PATH}/core/std.jsonnet.h\""
+  find_program(PWSH_PATH pwsh)
+  vcpkg_execute_required_process(
+    COMMAND "${PWSH_PATH}" -Command "((Get-Content -AsByteStream \"${SOURCE_PATH}/stdlib/std.jsonnet\") -join ',') + ',0' | Out-File -Encoding Ascii \"${SOURCE_PATH}/core/std.jsonnet.h\""
     WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME "std.jsonnet"
   )

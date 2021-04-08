@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 863dd7dad6010038568c169f20e3d3e87bd3b37a # 0.9.0
     SHA512 f6190c5c2c487a8170e5af1ddfd2e921c414274762dac6c8f9519d579d5eb5dd3683678e7b4f589b7ced8a42f648742755acb42e2122960d6ca7fc1a82b0723e
     HEAD_REF master
+    PATCHES
+        disable-highfive.patch
 )
 
 vcpkg_configure_cmake(
