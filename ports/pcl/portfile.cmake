@@ -29,15 +29,18 @@ if ("tools" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    openni2     WITH_OPENNI2
-    qt          WITH_QT
-    pcap        WITH_PCAP
-    cuda        WITH_CUDA
-    cuda        BUILD_CUDA
-    cuda        BUILD_GPU
-    tools       BUILD_tools
-    opengl      WITH_OPENGL
-    vtk         WITH_VTK
+    FEATURES
+        openni2     WITH_OPENNI2
+        qt          WITH_QT
+        pcap        WITH_PCAP
+        cuda        WITH_CUDA
+        cuda        BUILD_CUDA
+        cuda        BUILD_GPU
+        tools       BUILD_tools
+        opengl      WITH_OPENGL
+        vtk         WITH_VTK
+    INVERTED_FEATURES
+        disable-sse PCL_ENABLE_SSE
 )
 
 vcpkg_configure_cmake(
