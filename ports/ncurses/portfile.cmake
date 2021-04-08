@@ -2,6 +2,12 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mirror/ncurses
     REF v6.2
-    SHA512 89eea695388837b5a6c51b3e8aa984ec51afdeba7652448992f1a0c83acc7a537fc8f9fef7f8ae438aadc06d6810f09add4b129c46a61b1bc5d4c0e4bf5f767e
+    SHA512 45d55a99cc4090d7f6ec58dd0a8f1b2839a0949f8073d73ed13c98989542dfda0ecf8fb8652ff2a952a8b7fcbbebac8a2070adb84522fc0084d6404c5bd1d6ad
     HEAD_REF master
 )
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+)
+vcpkg_install_cmake()
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/ncurses RENAME copyright)
