@@ -332,12 +332,12 @@
       "baseline": "4.8.30",
       "port-version": 5
     },
-    "bext-ut": {
-      "baseline": "1.1.8",
-      "port-version": 0
-    },
     "bext-di": {
       "baseline": "1.2.0",
+      "port-version": 0
+    },
+    "bext-ut": {
+      "baseline": "1.1.8",
       "port-version": 0
     },
     "bfgroup-lyra": {
@@ -5702,7 +5702,7 @@
     },
     "spdlog": {
       "baseline": "1.8.5",
-      "port-version": 0
+      "port-version": 1
     },
     "spectra": {
       "baseline": "0.9.0",
