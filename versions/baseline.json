@@ -4978,7 +4978,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 4
+      "port-version": 5
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -5133,7 +5133,7 @@
       "port-version": 0
     },
     "qt5compat": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qt6betablock": {
@@ -5145,7 +5145,7 @@
       "port-version": 0
     },
     "qtbase": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtcharts": {
@@ -5153,7 +5153,7 @@
       "port-version": 0
     },
     "qtcoap": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtdatavis3d": {
@@ -5161,15 +5161,15 @@
       "port-version": 0
     },
     "qtdeclarative": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtdoc": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtimageformats": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtkeychain": {
@@ -5181,27 +5181,27 @@
       "port-version": 0
     },
     "qtmqtt": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtnetworkauth": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtopcua": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtquick3d": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtquickcontrols2": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtquicktimeline": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtscxml": {
@@ -5209,19 +5209,19 @@
       "port-version": 0
     },
     "qtshadertools": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtsvg": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qttools": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qttranslations": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "qtvirtualkeyboard": {
@@ -5229,7 +5229,7 @@
       "port-version": 0
     },
     "qtwayland": {
-      "baseline": "6.0.2",
+      "baseline": "6.0.3",
       "port-version": 0
     },
     "quadtree": {
