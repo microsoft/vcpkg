@@ -545,6 +545,11 @@ function(vcpkg_configure_make)
         list(TRANSFORM ALL_LIBS_LIST REPLACE "^(${_lprefix})" "")
     endif()
     list(JOIN ALL_LIBS_LIST " ${_lprefix}" ALL_LIBS_STRING)
+    if(VCPKG_TARGET_IS_MINGW AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        # libtool must be told explicitly that there is no dynamic linkage for uuid.
+        # The "-Wl,..." syntax is understood by libtool and gcc, but no by ld.
+        string(REPLACE " -luuid" " -Wl,-Bstatic,-luuid,-Bdynamic" ALL_LIBS_STRING "${ALL_LIBS_STRING}")
+    endif()
 
     if(ALL_LIBS_STRING)
         set(ALL_LIBS_STRING "${_lprefix}${ALL_LIBS_STRING}")
