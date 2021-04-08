@@ -5870,7 +5870,7 @@
     },
     "tbb": {
       "baseline": "2020_U3",
-      "port-version": 3
+      "port-version": 4
     },
     "tcl": {
       "baseline": "core-9-0-a1",
