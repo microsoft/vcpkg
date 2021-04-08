@@ -332,12 +332,12 @@
       "baseline": "4.8.30",
       "port-version": 5
     },
-    "bext-ut": {
-      "baseline": "1.1.8",
-      "port-version": 0
-    },
     "bext-di": {
       "baseline": "1.2.0",
+      "port-version": 0
+    },
+    "bext-ut": {
+      "baseline": "1.1.8",
       "port-version": 0
     },
     "bfgroup-lyra": {
@@ -6173,7 +6173,7 @@
       "port-version": 0
     },
     "upb": {
-      "baseline": "2020-08-19",
+      "baseline": "2020-12-19",
       "port-version": 0
     },
     "urdfdom": {
