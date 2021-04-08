@@ -30,7 +30,7 @@ Furthermore the variables CMAKE_FIND_LIBRARY_(PREFIXES|SUFFIXES) are also define
 portfiles are able to use find_library calls to discover dependent libraries within the current triplet for ports.
 #]===]
 
-string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" VCPKG_CROSSCOMPILING)
+string(COMPARE NOTEQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" VCPKG_CROSSCOMPILING)
 #Helper variable to identify the Target system. VCPKG_TARGET_IS_<targetname>
 if (NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "")
     set(VCPKG_TARGET_IS_WINDOWS ON)
