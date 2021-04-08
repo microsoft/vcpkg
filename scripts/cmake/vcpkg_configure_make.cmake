@@ -329,13 +329,20 @@ function(vcpkg_configure_make)
         endmacro()
 
         set(CONFIGURE_ENV "V=1")
-        # Remove full filepaths due to spaces (compiler needs to be on path)
+        # Remove full filepaths due to spaces and prepend filepaths to PATH (cross-compiling tools are unlikely on path by default)
         set(progs VCPKG_DETECTED_CMAKE_C_COMPILER VCPKG_DETECTED_CMAKE_CXX_COMPILER VCPKG_DETECTED_CMAKE_AR
                   VCPKG_DETECTED_CMAKE_LINKER VCPKG_DETECTED_CMAKE_RANLIB VCPKG_DETECTED_CMAKE_OBJDUMP
                   VCPKG_DETECTED_CMAKE_STRIP VCPKG_DETECTED_CMAKE_NM VCPKG_DETECTED_CMAKE_DLLTOOL VCPKG_DETECTED_CMAKE_RC_COMPILER)
         foreach(prog IN LISTS progs)
             if(${prog})
+                set(path "${${prog}}")
+                unset(prog_found CACHE)
                 get_filename_component(${prog} "${${prog}}" NAME)
+                find_program(prog_found ${${prog}} PATHS ENV PATH NO_DEFAULT_PATH)
+                if(NOT path STREQUAL prog_found)
+                    get_filename_component(path "${path}" DIRECTORY)
+                    vcpkg_add_to_path(PREPEND ${path})
+                endif()
             endif()
         endforeach()
         if (_csc_AUTOCONFIG OR _csc_USE_WRAPPERS) # without autotools we assume a custom configure script which correctly handles cl and lib. Otherwise the port needs to set CC|CXX|AR and probably CPP
