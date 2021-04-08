@@ -332,12 +332,12 @@
       "baseline": "4.8.30",
       "port-version": 5
     },
-    "bext-ut": {
-      "baseline": "1.1.8",
-      "port-version": 0
-    },
     "bext-di": {
       "baseline": "1.2.0",
+      "port-version": 0
+    },
+    "bext-ut": {
+      "baseline": "1.1.8",
       "port-version": 0
     },
     "bfgroup-lyra": {
@@ -3618,7 +3618,7 @@
     },
     "libxml2": {
       "baseline": "2.9.10",
-      "port-version": 4
+      "port-version": 5
     },
     "libxmlmm": {
       "baseline": "0.6.0",
