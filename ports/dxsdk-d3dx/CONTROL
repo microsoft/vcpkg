@@ -1,0 +1,5 @@
+Source: dxsdk-d3dx
+Version: 9.29.952.8
+Homepage: https://walbourn.github.io/legacy-d3dx-on-nuget/
+Description: Redistributable package for the legacy DirectX SDK's D3DX9, D3DX10, and/or D3DX11 utility libraries.
+Supports: windows & !arm & !uwp & !static
