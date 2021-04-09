@@ -1,7 +1,7 @@
 #[===[.md:
 # vcpkg_fixup_cmake_targets
 
-**This function has been deprecated in favor of `vcpkg_cmake_config_fixup` from the vcpkg-cmake-config port.**
+**This function has been deprecated in favor of [`vcpkg_cmake_config_fixup`](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md) from the vcpkg-cmake-config port.**
 
 Merge release and debug CMake targets and configs to support multiconfig generators.
 

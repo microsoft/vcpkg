@@ -1,7 +1,7 @@
 #[===[.md:
 # vcpkg_build_cmake
 
-**This function has been deprecated in favor of `vcpkg_cmake_build` from the vcpkg-cmake port.**
+**This function has been deprecated in favor of [`vcpkg_cmake_build`](ports/vcpkg-cmake/vcpkg_cmake_build.md) from the vcpkg-cmake port.**
 
 Build a cmake project.
 
