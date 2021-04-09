@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-usage.patch
         fix-dependencies.patch
+        fix-tool-build.patch # Remove this patch when the next update
 )
 
 set(TGUI_SHARE_PATH ${CURRENT_PACKAGES_DIR}/share/tgui)
@@ -20,7 +21,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     sdl2    TGUI_HAS_BACKEND_SDL
     sfml    TGUI_HAS_BACKEND_SFML
-    tool    BUILD_GUI_BUILDER
+    tool    TGUI_BUILD_GUI_BUILDER
 )
 
 vcpkg_configure_cmake(
@@ -32,25 +33,19 @@ vcpkg_configure_cmake(
         -DTGUI_SHARED_LIBS=${TGUI_SHARED_LIBS}
         -DTGUI_BACKEND="Custom"
         -DTGUI_BUILD_EXAMPLES=OFF
-        -DTGUI_BUILD_GUI_BUILDER=OFF # https://github.com/texus/TGUI/issues/157
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/TGUI)
 vcpkg_copy_pdbs()
 
-if(BUILD_GUI_BUILDER)
-    set(EXECUTABLE_SUFFIX "")
-    if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(EXECUTABLE_SUFFIX ".exe")
-    endif()
-
-    message(STATUS "Check for: ${TGUI_SHARE_PATH}/gui-builder/gui-builder${EXECUTABLE_SUFFIX}")
-    if(EXISTS "${TGUI_SHARE_PATH}/gui-builder/gui-builder${EXECUTABLE_SUFFIX}")
+if("tool" IN_LIST FEATURES)
+    message(STATUS "Check for: ${TGUI_SHARE_PATH}/gui-builder/gui-builder${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+    if(EXISTS "${TGUI_SHARE_PATH}/gui-builder/gui-builder${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
         file(MAKE_DIRECTORY "${TGUI_TOOLS_PATH}")
         file(RENAME
-            "${TGUI_SHARE_PATH}/gui-builder/gui-builder${EXECUTABLE_SUFFIX}"
-            "${TGUI_TOOLS_PATH}/gui-builder${EXECUTABLE_SUFFIX}")
+            "${TGUI_SHARE_PATH}/gui-builder/gui-builder${VCPKG_TARGET_EXECUTABLE_SUFFIX}"
+            "${TGUI_TOOLS_PATH}/gui-builder${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
         # Need to copy `resources` and `themes` directories
         file(COPY "${TGUI_SHARE_PATH}/gui-builder/resources" DESTINATION "${TGUI_TOOLS_PATH}")
         file(COPY "${TGUI_SHARE_PATH}/gui-builder/themes" DESTINATION "${TGUI_TOOLS_PATH}")
@@ -67,4 +62,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/TGUI/nanosvg" "${CURRENT_PA
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc")
 
 # Handle copyright
-file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/license.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
