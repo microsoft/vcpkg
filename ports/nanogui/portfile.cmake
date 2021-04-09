@@ -2,8 +2,8 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO wjakob/nanogui
-    REF e9ec8a1a9861cf578d9c6e85a6420080aa715c03 #Commits on Sep 23, 2019
+    REPO mitsuba-renderer/nanogui
+    REF 0146a88b2214cd5c5c29e6dfa8d3d3d0e9ab6d9d # Commits on Oct 16, 2020
     SHA512 36c93bf977862ced2df4030211e2b83625e60a11fc9fdb6c1f2996bb234758331d3f41a7fbafd25a5bca0239ed9bac9c93446a4a7fac4c5e6d7943af2be3e14a
     HEAD_REF master
     PATCHES
