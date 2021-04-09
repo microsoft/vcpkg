@@ -2725,7 +2725,7 @@
       "port-version": 2
     },
     "jsoncons": {
-      "baseline": "0.163.0",
+      "baseline": "0.163.1",
       "port-version": 0
     },
     "jsoncpp": {
