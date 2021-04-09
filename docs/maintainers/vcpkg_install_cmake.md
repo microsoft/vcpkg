@@ -2,7 +2,7 @@
 
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_cmake.md).
 
-**This function has been deprecated in favor of `vcpkg_cmake_install` from the vcpkg-cmake port.**
+**This function has been deprecated in favor of [`vcpkg_cmake_install`](ports/vcpkg-cmake/vcpkg_cmake_install.md) from the vcpkg-cmake port.**
 
 Build and install a cmake project.
 

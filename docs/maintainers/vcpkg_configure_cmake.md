@@ -2,7 +2,7 @@
 
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_cmake.md).
 
-**This function has been deprecated in favor of `vcpkg_cmake_configure` from the vcpkg-cmake port.**
+**This function has been deprecated in favor of [`vcpkg_cmake_configure`](ports/vcpkg-cmake/vcpkg_cmake_configure.md) from the vcpkg-cmake port.**
 
 Configure CMake for Debug and Release builds of a project.
 
