@@ -1,8 +1,8 @@
 # vcpkg_build_cmake
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_build_cmake.md).
-
 **This function has been deprecated in favor of [`vcpkg_cmake_build`](ports/vcpkg-cmake/vcpkg_cmake_build.md) from the vcpkg-cmake port.**
+
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_build_cmake.md).
 
 Build a cmake project.
 
