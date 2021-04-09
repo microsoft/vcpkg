@@ -7,14 +7,13 @@ vcpkg_from_github(
     PATCHES 0001_fix_unistd.patch
 )
 
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools BUILD_TOOLS
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    string(APPEND VCPKG_C_FLAGS " -DHUNSPELL_STATIC")
-    string(APPEND VCPKG_CXX_FLAGS " -DHUNSPELL_STATIC")
+    set(ENV{CFLAGS} "$ENV{CFLAGS} -DHUNSPELL_STATIC")
+    set(ENV{CXXFLAGS} "$ENV{CXXFLAGS} -DHUNSPELL_STATIC")
 endif()
 if(NOT "tools" IN_LIST FEATURES) # Building the tools is not possible on windows!
     file(READ "${SOURCE_PATH}/src/Makefile.am" _contents)
