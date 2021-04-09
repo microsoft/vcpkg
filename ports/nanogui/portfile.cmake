@@ -4,10 +4,10 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mitsuba-renderer/nanogui
     REF 0146a88b2214cd5c5c29e6dfa8d3d3d0e9ab6d9d # Commits on Oct 16, 2020
-    SHA512 36c93bf977862ced2df4030211e2b83625e60a11fc9fdb6c1f2996bb234758331d3f41a7fbafd25a5bca0239ed9bac9c93446a4a7fac4c5e6d7943af2be3e14a
+    SHA512 0b0d0d077079e1a7186ec2cc640dbd48aebcefa0e1e0caa476128c6396b33d236cb5e8aaada4e1c8868a5d4aaefd90178206dd1569abab63c84af26d3309e2a5
     HEAD_REF master
-    PATCHES
-        fix-cmakelists.patch
+#    PATCHES
+#        fix-cmakelists.patch
 )
 
 vcpkg_configure_cmake(
