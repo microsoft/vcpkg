@@ -2,7 +2,7 @@ vcpkg_download_distfile(
     SOURCE_PATH
     URLS "https://invisible-mirror.net/archives/ncurses/current/ncurses-6.2-20210403.tgz"
     FILENAME "ncurses-6.2-20210403.tgz"
-    SHA512 45d55a99cc4090d7f6ec58dd0a8f1b2839a0949f8073d73ed13c98989542dfda0ecf8fb8652ff2a952a8b7fcbbebac8a2070adb84522fc0084d6404c5bd1d6ad
+    SHA512 54d666a0f19dd8f59d1cf1d1dd0bc6c0950036508c296f18144c8d4a82352df338fe561793f2a27f13b4c9a4a6f837f02d90112495a1b3091ee48a522bfc0c65
 )
 
 vcpkg_configure_cmake(
