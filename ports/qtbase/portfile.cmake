@@ -12,6 +12,7 @@ set(${PORT}_PATCHES
         buildcmake.patch
         dont_force_cmakecache.patch
         fix_find_dep.patch
+        plugin_config.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION)
@@ -352,5 +353,3 @@ set(CURRENT_INSTALLED_DIR "${BACKUP_CURRENT_INSTALLED_DIR}")
 set(CURRENT_HOST_INSTALLED_DIR "${BACKUP_CURRENT_HOST_INSTALLED_DIR}")
 set(REL_PATH debug/)
 configure_file("${_file}" "${CURRENT_PACKAGES_DIR}/tools/qt6/qt_debug.conf" @ONLY)
-
-#TODO. create qt.conf for vcpkg_configure_qmake

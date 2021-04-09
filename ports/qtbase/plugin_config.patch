@@ -1,0 +1,15 @@
+diff --git a/cmake/QtPlugins.cmake.in b/cmake/QtPlugins.cmake.in
+index 4ba876f44..2c2ed1615 100644
+--- a/cmake/QtPlugins.cmake.in	
++++ b/cmake/QtPlugins.cmake.in
+@@ -1,6 +1,9 @@
+ include_guard(DIRECTORY)
+ 
+-@QT_MODULE_PLUGIN_INCLUDES@
++file(GLOB plugin_configs "${CMAKE_CURRENT_LIST_DIR}/Qt6Q*PluginConfig.cmake")
++foreach(_plugin_config IN LISTS plugin_configs)
++    include("${_plugin_config}")
++endforeach()
+ 
+ if(NOT @BUILD_SHARED_LIBS@)
+     set(_module_target "@INSTALL_CMAKE_NAMESPACE@::@QT_MODULE@")
