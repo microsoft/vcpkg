@@ -1357,7 +1357,7 @@
       "port-version": 0
     },
     "cpp-httplib": {
-      "baseline": "0.8.4",
+      "baseline": "0.8.6",
       "port-version": 0
     },
     "cpp-netlib": {
