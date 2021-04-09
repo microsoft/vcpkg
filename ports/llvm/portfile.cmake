@@ -18,11 +18,17 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     tools LLVM_BUILD_TOOLS
     tools LLVM_INCLUDE_TOOLS
     utils LLVM_BUILD_UTILS
     utils LLVM_INCLUDE_UTILS
     enable-rtti LLVM_ENABLE_RTTI
+    enable-ffi LLVM_ENABLE_FFI
+    enable-terminfo LLVM_ENABLE_TERMINFO
+    enable-threads LLVM_ENABLE_THREADS
+    enable-eh LLVM_ENABLE_EH
+    enable-bindings LLVM_ENABLE_BINDINGS
 )
 
 # LLVM generates CMake error due to Visual Studio version 16.4 is known to miscompile part of LLVM.
@@ -117,6 +123,10 @@ if("openmp" IN_LIST FEATURES)
 endif()
 if("polly" IN_LIST FEATURES)
     list(APPEND LLVM_ENABLE_PROJECTS "polly")
+endif()
+
+if("tools" IN_LIST FEATURES)
+    list(APPEND FEATURE_OPTIONS -DCLANG_RESOURCE_DIR=../../lib/clang/11.0.0)
 endif()
 
 set(known_llvm_targets
@@ -236,7 +246,9 @@ foreach(tool_file IN LISTS LLVM_TOOL_FILES)
     endif()
 endforeach()
 
-vcpkg_copy_tools(TOOL_NAMES ${LLVM_TOOLS} AUTO_CLEAN)
+if(LLVM_TOOLS)
+    vcpkg_copy_tools(TOOL_NAMES ${LLVM_TOOLS} AUTO_CLEAN)
+endif()
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

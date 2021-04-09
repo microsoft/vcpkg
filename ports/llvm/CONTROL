@@ -1,9 +1,10 @@
 Source: llvm
 Version: 11.0.0
+Port-Version: 2
 Homepage: https://llvm.org/
 Description: The LLVM Compiler Infrastructure
 Supports: !uwp
-Default-Features: tools, enable-rtti, disable-assertions, disable-abi-breaking-checks, clang, disable-clang-static-analyzer, lld, default-targets
+Default-Features: tools, enable-rtti, enable-threads, disable-assertions, disable-abi-breaking-checks, clang, disable-clang-static-analyzer, lld, default-targets, enable-terminfo, enable-bindings
 
 Feature: tools
 Description: Build LLVM tools.
@@ -70,14 +71,31 @@ Description: Build with X86 backend.
 Feature: target-xcore
 Description: Build with XCore backend.
 
+Feature: enable-eh
+Description: Build LLVM with exception handler.
+Build-Depends: llvm[core,enable-rtti]
+
 Feature: enable-rtti
 Description: Build LLVM with run-time type information.
+
+Feature: enable-ffi
+Description: Build LLVM with FFI.
+Build-Depends: libffi
+
+Feature: enable-bindings
+Description: Build bindings.
 
 Feature: enable-assertions
 Description: Build LLVM with assertions.
 
 Feature: disable-assertions
 Description: Build LLVM without assertions.
+
+Feature: enable-terminfo
+Description: Build LLVM with terminfo.
+
+Feature: enable-threads
+Description: Enable multi-threaded LTO.
 
 Feature: enable-abi-breaking-checks
 Description: Build LLVM with LLVM_ABI_BREAKING_CHECKS=FORCE_ON.

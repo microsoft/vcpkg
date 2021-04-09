@@ -1,6 +1,6 @@
 Source: mbedtls
 Version: 2.24.0
-Port-Version: 1
+Port-Version: 2
 Homepage: https://github.com/ARMmbed/mbedtls
 Description: An open source, portable, easy to use, readable and flexible SSL library
 Supports: !uwp

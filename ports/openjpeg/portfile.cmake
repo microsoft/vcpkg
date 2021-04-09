@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF v2.3.1
     SHA512 339fbc899bddf2393d214df71ed5d6070a3a76b933b1e75576c8a0ae9dfcc4adec40bdc544f599e4b8d0bc173e4e9e7352408497b5b3c9356985605830c26c03
     HEAD_REF master
-    PATCHES dll.location.patch
+    PATCHES 
+        dll.location.patch
+        fix-lrintf-to-opj_lrintf.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -37,8 +39,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
-if(VCPKG_TARGET_IS_WINDOWS)
-    # TODO: remove -lm from *.pc files
+if(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL MinGW))
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libopenjp2.pc" "-lm" "")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libopenjp2.pc" "-lm" "")
+else()
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libopenjp2.pc" "-lm" "-lm -pthread")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libopenjp2.pc" "-lm" "-lm -pthread")
 endif()
 vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 

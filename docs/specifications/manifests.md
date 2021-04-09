@@ -1,5 +1,9 @@
 # Manifests -- `vcpkg.json`
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
+**Up-to-date documentation is available at [Manifests](../users/manifests.md).**
+
 For many other language package managers, there exists a way of writing one's dependencies in a declarative
 manifest format; we want something similar for vcpkg. What follows is the specification of that feature;
 this should mean that vcpkg becomes far more user and enterprise-friendly, and is additionally an important
@@ -126,7 +130,7 @@ There will be two "modes" for vcpkg from this point forward: "classic", and "man
 The former will act exactly like the existing vcpkg workflow, so as to avoid breaking
 anyone. The latter will be the mode only when the user either:
 
-* Passes `--manifest-root-dir=<directory>` (initially, `x-manifest-root-dir`)
+* Passes `--manifest-root=<directory>` (initially, `x-manifest-root`)
 * Runs `vcpkg` in a directory that contains a file named `vcpkg.json`, or in a
   child directory of a directory containing `vcpkg.json`.
   * For this, initially vcpkg will warn that the behavior will change in the
@@ -236,7 +240,7 @@ And finally, to configure and build:
 
 ```sh
 $ cd example
-$ cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystem/vcpkg.cmake
+$ cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake
 ... configuring and installing...
 $ cmake --build build
 ```
