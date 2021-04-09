@@ -4,7 +4,9 @@ vcpkg_from_github(
     REF 334cc55d9fa7b42d7214a8533a246d637bc92899 #version 4.0.1 commit on 2020.10.19
     SHA512 b300b13f68347d78252812e09efffb1735072cf5019940da53366a5cdee997f4b8b03a584a87a95ba764b0a78640ad6eb4966b53f9156280cb452465607afbc7
     HEAD_REF master
-    PATCHES fix-dependency-libmysql.patch
+    PATCHES
+        fix-dependency-libmysql.patch
+        export-include-dirs.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)
@@ -26,7 +28,7 @@ foreach(_feature IN LISTS ALL_FEATURES)
     endif()
 
     if(_feature MATCHES "mysql")
-        set(MYSQL_OPT -DMYSQL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include/mysql")
+        set(MYSQL_OPT -DMYSQL_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include/mysql)
     endif()
 endforeach()
 
@@ -51,7 +53,14 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 # Correct the config file name
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCI.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCI-config.cmake)
+file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCI.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCIConfig.cmake)
+
+if ("mysql" IN_LIST FEATURES)
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCIConfig.cmake
+        "# Create imported target SOCI::soci_mysql"
+        "\ninclude(CMakeFindDependencyMacro)\nfind_dependency(libmysql)\n# Create imported target SOCI::soci_mysql"
+    )
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
