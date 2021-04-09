@@ -317,8 +317,8 @@
       "port-version": 0
     },
     "behaviortree-cpp": {
-      "baseline": "3.5.1",
-      "port-version": 2
+      "baseline": "3.5.6",
+      "port-version": 0
     },
     "benchmark": {
       "baseline": "1.5.2",
@@ -1222,7 +1222,7 @@
     },
     "clamav": {
       "baseline": "0.103.0",
-      "port-version": 0
+      "port-version": 1
     },
     "clapack": {
       "baseline": "3.2.1",
@@ -2466,7 +2466,7 @@
     },
     "hunspell": {
       "baseline": "1.7.0",
-      "port-version": 2
+      "port-version": 3
     },
     "hwloc": {
       "baseline": "2.2.0",
@@ -4601,8 +4601,8 @@
       "port-version": 0
     },
     "paho-mqttpp3": {
-      "baseline": "1.1",
-      "port-version": 1
+      "baseline": "1.2.0",
+      "port-version": 0
     },
     "palsigslot": {
       "baseline": "1.2.0",
@@ -5702,7 +5702,7 @@
     },
     "spdlog": {
       "baseline": "1.8.5",
-      "port-version": 0
+      "port-version": 1
     },
     "spectra": {
       "baseline": "0.9.0",
@@ -6085,7 +6085,7 @@
       "port-version": 0
     },
     "trantor": {
-      "baseline": "1.3.0",
+      "baseline": "1.4.0",
       "port-version": 0
     },
     "tre": {
