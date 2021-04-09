@@ -1,0 +1,20 @@
+Index: a/build/generator/gen_win_dependencies.py
+===================================================================
+--- a/build/generator/gen_win_dependencies.py	(revision 1879319)
++++ b/build/generator/gen_win_dependencies.py	(working copy)
+@@ -591,9 +591,12 @@ class GenDependenciesBase(gen_base.GeneratorBase):
+ 
+     # apr-Util 0.9-1.4 compiled expat to 'xml.lib', but apr-util 1.5 switched
+     # to the more common 'libexpat.lib'
+-    libname = 'libexpat.lib'
+-    if not os.path.exists(os.path.join(lib_dir, 'libexpat.lib')):
+-      libname = 'xml.lib'
++    if os.path.exists(os.path.join(lib_dir, 'libexpat.lib')):
++      libname = 'libexpat.lib'
++    elif os.path.exists(os.path.join(lib_dir, 'libexpatMD.lib')):
++      libname = 'libexpatMD.lib'
++    else:
++        libname = 'xml.lib'
+ 
+     version = (major, minor, patch)
+     xml_version = '%d.%d.%d' % version

@@ -1,0 +1,12 @@
+{
+  "name": "serf",
+  "version-string": "1.3.9",
+  "description": "The Apache Serf library is a high performance C-based HTTP client library built upon the Apache Portable Runtime (APR) library",
+  "homepage": "https://serf.apache.org",
+  "dependencies": [
+    "apr",
+    "apr-util",
+    "openssl",
+    "zlib"
+  ]
+}
