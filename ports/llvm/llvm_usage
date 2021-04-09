@@ -1,6 +1,6 @@
 The package llvm provides CMake targets:
 
-    find_package(LLVM REQUIRED CONFIG)
+    find_package(LLVM CONFIG REQUIRED)
 
     list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
     include(HandleLLVMOptions)
