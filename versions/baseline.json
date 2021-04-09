@@ -5702,7 +5702,7 @@
     },
     "spdlog": {
       "baseline": "1.8.5",
-      "port-version": 0
+      "port-version": 1
     },
     "spectra": {
       "baseline": "0.9.0",
