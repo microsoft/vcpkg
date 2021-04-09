@@ -1,0 +1,101 @@
+From d0071a4f871fa9c5406790cf17c5516b79ece1d7 Mon Sep 17 00:00:00 2001
+From: Joerg Bornemann <joerg.bornemann@qt.io>
+Date: Thu, 07 Jan 2021 16:55:51 +0100
+Subject: [PATCH] Fix loading of Qt6*Plugin.cmake files of per-repo builds
+
+When doing a per-repository build of Qt, as it is done for the installer
+packages, the build of qtbase has no knowledge of plugins that might be
+built and installed from other repositories. That means we must not
+write a fixed list of known plugins when exporting Qt modules of qtbase.
+
+In particular, qtsvg adds imageformat plugins that are supposed to be
+picked up by qtbase's QtGui module when linking a project against a
+statically linked Qt.
+${install-prefix}/lib/cmake/Qt6Gui/Qt6GuiPlugins.cmake missed the
+include statements for qtsvg's plugin config files and operated on a
+fixed list of plugins, all from qtbase.
+
+Apart from that, the Qt6::Gui target's property QT_PLUGINS did only
+contain the qtbase plugins.
+
+This patch fixes the situation in the following way:
+
+1. All Qt6*PluginConfig.cmake files in
+${install-prefix}/lib/cmake/Qt6Gui are detected and included.
+
+2. From those file names, the target names of the plugins are
+deduced. This is safe as the file name of those generated files is a
+direct result of the plugin's target name.
+
+3. The QT_PLUGINS property of the module is updated with the detected
+plugin target names.
+
+Fixes: QTBUG-89643
+Change-Id: Ifc3c39aa9948277ead5ebb209ec5eff64746308b
+Reviewed-by: Alexey Edelev <alexey.edelev@qt.io>
+Reviewed-by: Cristian Adam <cristian.adam@qt.io>
+---
+
+diff --git a/cmake/QtPlugins.cmake.in b/cmake/QtPlugins.cmake.in
+index d6d5c82..b5ecd6b 100644
+--- a/cmake/QtPlugins.cmake.in
++++ b/cmake/QtPlugins.cmake.in
+@@ -1,9 +1,20 @@
+ include_guard(DIRECTORY)
+-
+ @QT_MODULE_PLUGIN_INCLUDES@
+ 
+ if(NOT @BUILD_SHARED_LIBS@)
+     set(_module_target "@INSTALL_CMAKE_NAMESPACE@::@QT_MODULE@")
++    get_target_property(_qt_plugins ${_module_target} QT_PLUGINS)
++
++    # Include all PluginConfig.cmake files and update the QT_PLUGINS property of the module.
++    file(GLOB _qt_plugin_config_files "${CMAKE_CURRENT_LIST_DIR}/@INSTALL_CMAKE_NAMESPACE@*PluginConfig.cmake")
++    foreach(_config_file ${_qt_plugin_config_files})
++        string(REGEX REPLACE "^.*/@INSTALL_CMAKE_NAMESPACE@(.*Plugin)Config.cmake$" "\\1" _qt_plugin "${_config_file}")
++        include("${_config_file}")
++        list(APPEND _qt_plugins ${_qt_plugin})
++    endforeach()
++    list(REMOVE_DUPLICATES _qt_plugins)
++    set_property(TARGET ${_module_target} PROPERTY QT_PLUGINS ${_qt_plugins})
++
+     # Properties can't be set on aliased targets, so make sure to unalias the target. This is needed
+     # when Qt examples are built as part of the Qt build itself.
+     get_target_property(_aliased_target ${_module_target} ALIASED_TARGET)
+@@ -35,7 +46,7 @@
+     endif()
+ 
+     # The code in here uses the properties defined in qt_import_plugins (Qt6CoreMacros.cmake)
+-    foreach(target @qt_plugins@)
++    foreach(target ${_qt_plugins})
+         set(_plugin_target "@INSTALL_CMAKE_NAMESPACE@::${target}")
+         set(_plugin_target_versionless "Qt::${target}")
+         get_target_property(_classname "${_plugin_target}" QT_PLUGIN_CLASS_NAME)
+diff --git a/cmake/QtPostProcessHelpers.cmake b/cmake/QtPostProcessHelpers.cmake
+index 37213f1..9a36e2a 100644
+--- a/cmake/QtPostProcessHelpers.cmake
++++ b/cmake/QtPostProcessHelpers.cmake
+@@ -384,13 +384,6 @@
+         qt_path_join(config_install_dir ${QT_CONFIG_INSTALL_DIR} ${INSTALL_CMAKE_NAMESPACE}${QT_MODULE})
+         set(QT_MODULE_PLUGIN_INCLUDES "")
+ 
+-        get_target_property(qt_plugins "${QT_MODULE}" QT_PLUGINS)
+-        if(qt_plugins)
+-            foreach (pluginTarget ${qt_plugins})
+-                set(QT_MODULE_PLUGIN_INCLUDES "${QT_MODULE_PLUGIN_INCLUDES}include(\"\${CMAKE_CURRENT_LIST_DIR}/${INSTALL_CMAKE_NAMESPACE}${pluginTarget}Config.cmake\")\n")
+-            endforeach()
+-        endif()
+-
+         if(QT_MODULE STREQUAL "Qml")
+             set(QT_MODULE_PLUGIN_INCLUDES "${QT_MODULE_PLUGIN_INCLUDES}
+ file(GLOB __qt_qml_plugins_config_file_list \"\${CMAKE_CURRENT_LIST_DIR}/QmlPlugins/${INSTALL_CMAKE_NAMESPACE}*Config.cmake\")
+@@ -401,7 +394,8 @@
+ endif()")
+         endif()
+ 
+-        if(QT_MODULE_PLUGIN_INCLUDES)
++        get_target_property(qt_plugins "${QT_MODULE}" QT_PLUGINS)
++        if(qt_plugins OR QT_MODULE_PLUGIN_INCLUDES)
+             configure_file(
+                 "${QT_CMAKE_DIR}/QtPlugins.cmake.in"
+                 "${config_build_dir}/${INSTALL_CMAKE_NAMESPACE}${QT_MODULE}Plugins.cmake"

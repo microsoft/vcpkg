@@ -12,7 +12,7 @@ set(${PORT}_PATCHES
         buildcmake.patch
         dont_force_cmakecache.patch
         fix_find_dep.patch
-        plugin_config.patch
+        d0071a4.diff        #Plugin patch fixed in 6.1.0
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION)
