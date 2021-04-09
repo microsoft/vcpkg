@@ -1,5 +1,7 @@
 vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "linux" "osx")
 
+message(WARNING "Use of ${PORT} is not recommended for new projects. See https://aka.ms/dxsdk for more information.")
+
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 set(VCPKG_POLICY_ALLOW_OBSOLETE_MSVCRT enabled)
