@@ -52,6 +52,7 @@ set(${PORT}_PATCHES )#fix_static_build.patch)
         qhelpgenerator
         qtattributionsscanner
         qtdiag
+        qtdiag6
         qtpaths
         qtplugininfo
         qdbus

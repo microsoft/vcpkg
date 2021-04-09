@@ -1,10 +1,9 @@
-#set(QT_IS_LATEST ON)
+set(QT_IS_LATEST ON)
 
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
-        #2548438.diff
         jpeg.patch
         harfbuzz.patch
         config_install.patch 
@@ -12,10 +11,9 @@ set(${PORT}_PATCHES
         buildcmake.patch
         dont_force_cmakecache.patch
         fix_find_dep.patch
-        d0071a4.diff        #Plugin patch fixed in 6.1.0
         )
 
-if(NOT VCPKG_USE_HEAD_VERSION)
+if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
     list(APPEND ${PORT}_PATCHES
                 )
 endif()
@@ -230,6 +228,7 @@ set(TOOL_NAMES
         qdbusxml2cpp 
         qlalr 
         qmake 
+        qmake6 
         qvkgen 
         rcc 
         tracegen 
