@@ -9,6 +9,10 @@
     "fp16",
     "fxdiv",
     "psimd",
-    "pthreadpool"
+    "pthreadpool",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
   ]
 }
