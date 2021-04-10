@@ -14,7 +14,8 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" protobuf_BUILD_SHARED_
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" protobuf_MSVC_STATIC_RUNTIME)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    zlib protobuf_WITH_ZLIB
+    FEATURES
+        zlib protobuf_WITH_ZLIB
 )
 
 if(VCPKG_TARGET_IS_UWP)
@@ -82,6 +83,11 @@ if(protobuf_BUILD_PROTOC_BINARIES)
 else()
     file(COPY ${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT} DESTINATION ${CURRENT_PACKAGES_DIR}/tools)
 endif()
+
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/protobuf-config.cmake
+    "if(protobuf_MODULE_COMPATIBLE)"
+    "if(ON)"
+)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     protobuf_try_remove_recurse_wait(${CURRENT_PACKAGES_DIR}/bin)
