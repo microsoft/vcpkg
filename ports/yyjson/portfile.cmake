@@ -11,7 +11,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
 	OPTIONS
 	    -DYYJSON_BUILD_TESTS=OFF
-		-DYYJSON_BUILD_MISC=OFF
+	    -DYYJSON_BUILD_MISC=OFF
 )
 
 vcpkg_install_cmake()
