@@ -4246,7 +4246,7 @@
     },
     "nnpack": {
       "baseline": "2021-02-21",
-      "port-version": 0
+      "port-version": 1
     },
     "nonius": {
       "baseline": "2019-04-20-1",
