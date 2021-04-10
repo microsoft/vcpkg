@@ -16,7 +16,7 @@ vcpkg_cmake_configure(
         -DQNNPACK_BUILD_TESTS=OFF
         -DQNNPACK_BUILD_BENCHMARKS=OFF
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
