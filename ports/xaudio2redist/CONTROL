@@ -1,5 +1,0 @@
-Source: xaudio2redist
-Version: 1.2.6
-Homepage: https://aka.ms/XAudio2Redist
-Description: Redistributable version of XAudio 2.9 for Windows 7 SP1 or later
-Supports: windows & !arm & !uwp & !static
