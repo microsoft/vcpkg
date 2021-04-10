@@ -1,0 +1,16 @@
+Index: a/build/generator/templates/vcnet_vcxproj.ezt
+===================================================================
+--- a/build/generator/templates/vcnet_vcxproj.ezt	(revision 1888464)
++++ a/build/generator/templates/vcnet_vcxproj.ezt	(working copy)
+@@ -56,9 +56,11 @@
+ [end][end][for configs][for platforms]  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='[configs.name]|[platforms]'">
+     <ClCompile>
+ [is configs.name "Debug"]      <Optimization>Disabled</Optimization>
++      <RuntimeLibrary Condition="'$(VCPKG_UseStaticCrt)'=='true'">MultiThreadedDebug</RuntimeLibrary>
+ [else]      <Optimization>Full</Optimization>
+       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+       <IntrinsicFunctions>true</IntrinsicFunctions>
++      <RuntimeLibrary Condition="'$(VCPKG_UseStaticCrt)'=='true'">MultiThreaded</RuntimeLibrary>
+ [end]      <AdditionalIncludeDirectories>$(SolutionDir)[configs.name];[for configs.includes][configs.includes];[end]%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+       <StringPooling>true</StringPooling>
+       <PreprocessorDefinitions>[if-any instrument_apr_pools]APR_POOL_DEBUG=[instrument_apr_pools];[end][is platforms "x64"]WIN64;[end][for configs.defines][configs.defines];[end]%(PreprocessorDefinitions)</PreprocessorDefinitions>

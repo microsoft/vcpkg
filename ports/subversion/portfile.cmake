@@ -16,6 +16,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fix-libserf.patch
         fix-libexpat-static.patch
+        generator-static-crt.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -52,11 +53,17 @@ vcpkg_execute_build_process(
     WORKING_DIRECTORY ${SOURCE_PATH}
 )
 
+
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+  set(MSBUILD_CUSTOM_OPTIONS /p:VCPKG_UseStaticCrt=true)
+endif()
+
 vcpkg_build_msbuild(
+    USE_VCPKG_INTEGRATION
     PROJECT_PATH ${SOURCE_PATH}/subversion_vcnet.sln
     TARGET __ALL__
     PLATFORM ${MSBUILD_PLATFORM}
-    USE_VCPKG_INTEGRATION
+    OPTIONS ${MSBUILD_CUSTOM_OPTIONS}
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
