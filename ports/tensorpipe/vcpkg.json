@@ -3,7 +3,7 @@
   "version-date": "2021-04-10",
   "description": "A tensor-aware point-to-point communication primitive for machine learning",
   "homepage": "https://github.com/pytorch/tensorpipe",
-  "supports": "!windows",
+  "supports": "linux & osx",
   "dependencies": [
     "libnop",
     "libuv"
