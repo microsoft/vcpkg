@@ -9,6 +9,7 @@ vcpkg_from_github(
     SHA512 33be676e65719ae8510ec4e8254809033528802681870f8c91b083ce4006e5f630b80207a7e675464b406a785cb45bc74628996ea4817c02816b7b58ddf3a2bc
     PATCHES
         fix-cmakelists.patch
+        fix-uwp.patch
 )
 
 vcpkg_configure_cmake(
