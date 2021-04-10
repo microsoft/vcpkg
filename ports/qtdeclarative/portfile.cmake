@@ -1,8 +1,9 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-set(${PORT}_PATCHES)
-
+if(QT_IS_LATEST)
+    set(${PORT}_PATCHES fix_alignment.patch)
+endif()
 # General features:
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     # "appstore-compliant"  FEATURE_appstore-compliant

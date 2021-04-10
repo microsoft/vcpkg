@@ -1,0 +1,14 @@
+diff --git a/src/qml/jsruntime/qv4enginebase_p.h b/src/qml/jsruntime/qv4enginebase_p.h
+index 2c1b41aa2..b0d128d4c 100644
+--- a/src/qml/jsruntime/qv4enginebase_p.h
++++ b/src/qml/jsruntime/qv4enginebase_p.h
+@@ -88,8 +88,7 @@ struct Q_QML_EXPORT EngineBase {
+     MemoryManager *memoryManager = nullptr;
+ 
+     qint32 callDepth = 0;
+-    quint8 padding2[QT_POINTER_SIZE - sizeof(quint32)];
+-    Object *globalObject = nullptr;
++    alignas(QT_POINTER_SIZE) Object *globalObject = nullptr;
+     Value *jsStackLimit = nullptr;
+     Value *jsStackBase = nullptr;
+ 
