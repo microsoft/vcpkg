@@ -3,6 +3,7 @@
   "version-date": "2021-04-10",
   "description": "High-efficiency floating-point neural network inference operators for mobile, server, and Web",
   "homepage": "https://github.com/google/XNNPACK",
+  "supports": "!arm & !uwp",
   "dependencies": [
     "cpuinfo",
     "fp16",
