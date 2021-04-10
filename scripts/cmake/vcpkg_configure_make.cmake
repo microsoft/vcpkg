@@ -721,7 +721,7 @@ function(vcpkg_configure_make)
             set(_LINK_CONFIG_BACKUP "$ENV{_LINK_}")
             set(ENV{_LINK_} "${LINK_ENV_${_VAR_SUFFIX}}")
         endif()
-        set(ENV{PKG_CONFIG} "${PKGCONFIG} --define-variable=prefix=${_VCPKG_INSTALLED}${PATH_SUFFIX_${_buildtype}}")
+        set(ENV{PKG_CONFIG} "${PKGCONFIG}")
 
         set(_lib_env_vars LIB LIBPATH LIBRARY_PATH LD_LIBRARY_PATH)
         foreach(_lib_env_var IN LISTS _lib_env_vars)
