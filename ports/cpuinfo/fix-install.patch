@@ -11,7 +11,7 @@ index e2d7d53..6d380e9 100644
 +set(generated_dir "${CMAKE_CURRENT_BINARY_DIR}/generated")
 +set(project_config "${generated_dir}/unofficial-${PROJECT_NAME}Config.cmake")
 +set(targets_export_name "unofficial-${PROJECT_NAME}Targets")
-+set(namespace "${PROJECT_NAME}::")
++set(namespace "unofficial::${PROJECT_NAME}::")
 +
 +# Include module with fuction 'write_basic_package_version_file'
 +include(CMakePackageConfigHelpers)
