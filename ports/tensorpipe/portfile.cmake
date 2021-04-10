@@ -1,47 +1,37 @@
 vcpkg_fail_port_install(ON_TARGET "windows" "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if("test" IN_LIST FEATURES)
-    list(APPEND FEATURE_PATCHES support-test.patch)
-endif()
-if(NOT VCPKG_TARGET_IS_LINUX)
-    if("cma" IN_LIST FEATURES)
-        message(FATAL_ERROR "'cma' feature is for Linux")
-    elseif("ibv" IN_LIST FEATURES)
-        message(FATAL_ERROR "'ibv' feature is for Linux")
-    elseif("shm" IN_LIST FEATURES)
-        message(FATAL_ERROR "'shm' feature is for Linux")
-    endif()
-endif()
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/tensorpipe
-    REF ee18d15dd098fe74b51f3d554fca7fa8ec6b3ce6
-    SHA512 7ec69cf6291b7d8ec85008f76c98a1a20e268f6e2c1fa2792cc60e1c21babb9ac56b44fbc8b59e0fb1b396fa1127a15ad73a4f865a537eb3ae94ef371d36f25d
+    REF 2aa790fa027246a42abab8a976d4167c71bc09a4
+    SHA512 e55597c247267983690d7f1f67c0563ff1374e90d1594cfd733979e1b069d35247578d6dec9734c997a6f7ff58c9753228ec516d9bed0fb46a5c361756c42ac1
     PATCHES
         fix-cmakelists.patch
-        ${FEATURE_PATCHES}
+        support-test.patch
+        support-pybind11.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         cuda        TP_USE_CUDA
         cuda        TP_ENABLE_CUDA_IPC
-        shm         TP_ENABLE_SHM
-        ibv         TP_ENABLE_IBV
-        cma         TP_ENABLE_CMA
         pybind11    TP_BUILD_PYTHON
         test        TP_BUILD_TESTING
-        benchmark   TP_BUILD_BENCHMARK
 )
+
+if("pybind11" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    list(APPEND FEATURE_OPTIONS -DPYTHON_EXECUTABLE=${PYTHON3})
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DTP_BUILD_LIBUV=OFF
+        -DTP_ENABLE_SHM=${VCPKG_TARGET_IS_LINUX}
+        -DTP_BUILD_LIBUV=OFF # will use libuv package
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()

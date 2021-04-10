@@ -1,33 +1,34 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4873331..539f4bf 100644
+index 640054e..18de9ea 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -24,5 +24,5 @@ include(cmake/MiscCheck.cmake)
+@@ -23,6 +23,6 @@ include(MiscCheck)
+ 
  add_subdirectory(tensorpipe)
  
- install(EXPORT TensorpipeTargets
+-install(EXPORT TensorpipeTargets
 -        DESTINATION share/cmake/Tensorpipe
-+        DESTINATION share/${PROJECT_NAME}
-         FILE TensorpipeTargets.cmake)
+-        FILE TensorpipeTargets.cmake)
++install(EXPORT tensorpipeTargets
++        DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/${PROJECT_NAME} # share/tensorpipe
++        FILE tensorpipeTargets.cmake)
 diff --git a/tensorpipe/CMakeLists.txt b/tensorpipe/CMakeLists.txt
-index 975238f..9fa0e57 100644
+index d8624b4..dce5c6f 100644
 --- a/tensorpipe/CMakeLists.txt
 +++ b/tensorpipe/CMakeLists.txt
-@@ -158,9 +158,10 @@ set(TP_PUBLIC_HEADERS ${TP_PUBLIC_HEADERS}
+@@ -168,8 +168,9 @@ set(TP_PUBLIC_HEADERS ${TP_PUBLIC_HEADERS}
    transport/uv/error.h
    transport/uv/factory.h
    transport/uv/utility.h)
 -find_package(uv REQUIRED)
 -target_link_libraries(tensorpipe PRIVATE uv::uv)
--
-+# use VcPkg's `libuv`
++# `libuv` in vcpkg
 +find_package(unofficial-libuv CONFIG REQUIRED) 
-+target_link_libraries(tensorpipe PRIVATE unofficial::libuv::libuv ${CMAKE_DL_LIBS})
-+ 
++target_link_libraries(tensorpipe PUBLIC unofficial::libuv::libuv ${CMAKE_DL_LIBS})
+ 
  ### shm
  
- if(TP_ENABLE_SHM)
-@@ -221,11 +222,13 @@ configure_file(config.h.in config.h)
+@@ -233,11 +234,14 @@ configure_file(config.h.in config.h)
  
  ## Libnop
  
@@ -36,9 +37,10 @@ index 975238f..9fa0e57 100644
 -# is still unclear whether it should be a public or private header).
 -target_include_directories(tensorpipe PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/third_party/libnop/include>)
 -
++# `libnop` in vcpkg
 +find_path(LIBNOP_INCLUDE_DIRS "nop/serializer.h")
 +if(LIBNOP_INCLUDE_DIRS-NOTFOUND)
-+  message(FATAL_ERROR "Failed to find header of the 'libnop' package from VcPkg.")
++  message(FATAL_ERROR "Failed to find header of the 'libnop' package from vcpkg.")
 +else()
 +  message(STATUS "Using 'libnop': ${LIBNOP_INCLUDE_DIRS}")
 +endif()
@@ -46,37 +48,24 @@ index 975238f..9fa0e57 100644
  
  ## Python bindings
  
-@@ -250,10 +253,18 @@ endif()
+@@ -262,10 +266,17 @@ endif()
  
  ## Install
  
 +install(DIRECTORY channel common core transport util
-+        DESTINATION include/tensorpipe
++        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tensorpipe
 +        FILES_MATCHING PATTERN "*.h")
-+
 +install(FILES tensorpipe.h
-+        DESTINATION include/tensorpipe)
++        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/tensorpipe)
 +
  install(TARGETS tensorpipe
-         EXPORT TensorpipeTargets
+-        EXPORT TensorpipeTargets
 -        LIBRARY DESTINATION ${TP_INSTALL_LIBDIR}
 -        ARCHIVE DESTINATION ${TP_INSTALL_LIBDIR})
-+        RUNTIME DESTINATION bin
-+        LIBRARY DESTINATION lib
-+        ARCHIVE DESTINATION lib)
++        EXPORT tensorpipeTargets
++        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
++        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
  
  foreach(_header_file ${TP_PUBLIC_HEADERS})
    get_filename_component(_TP_HEADER_SUBDIR "${_header_file}" DIRECTORY)
-diff --git a/tensorpipe/benchmark/CMakeLists.txt b/tensorpipe/benchmark/CMakeLists.txt
-index d5a44de..05c2f6c 100644
---- a/tensorpipe/benchmark/CMakeLists.txt
-+++ b/tensorpipe/benchmark/CMakeLists.txt
-@@ -6,7 +6,7 @@
- 
- # TODO: Make those separate CMake projects.
- 
--add_executable(benchmark_transport benchmark_transport.cc options.cc transport_registry.cc)
-+add_executable(benchmark_transport benchmark_transport.cc options.cc transport_registry.cc channel_registry.cc)
- target_link_libraries(benchmark_transport PRIVATE tensorpipe)
- 
- add_executable(benchmark_pipe benchmark_pipe.cc options.cc transport_registry.cc channel_registry.cc)

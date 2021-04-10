@@ -1,6 +1,6 @@
 {
   "name": "tensorpipe",
-  "version-date": "2021-03-20",
+  "version-date": "2021-04-10",
   "description": "A tensor-aware point-to-point communication primitive for machine learning",
   "homepage": "https://github.com/pytorch/tensorpipe",
   "supports": "!windows",
@@ -9,29 +9,17 @@
     "libuv"
   ],
   "features": {
-    "benchmark": {
-      "description": "Build benchmark executables"
-    },
-    "cma": {
-      "description": "Enable CMA channel (Linux only)"
-    },
     "cuda": {
       "description": "Enable support for CUDA tensors, CUDA IPC channel",
       "dependencies": [
         "cuda"
       ]
     },
-    "ibv": {
-      "description": "Enable InfiniBand transport (Linux only)"
-    },
     "pybind11": {
       "description": "Build Python bindings",
       "dependencies": [
         "pybind11"
       ]
-    },
-    "shm": {
-      "description": "Enable shared memory transport (Linux only)"
     },
     "test": {
       "description": "Build with Google.Test",
