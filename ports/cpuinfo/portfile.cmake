@@ -36,7 +36,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/unofficial-${PORT} TARGET_PATH u
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(tools IN_LIST FEATURES)
+if("tools" IN_LIST FEATURES)
     vcpkg_copy_tools(
         TOOL_NAMES cache-info cpuid-dump cpu-info isa-info
         AUTO_CLEAN
