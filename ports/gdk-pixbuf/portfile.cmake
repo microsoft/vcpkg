@@ -2,6 +2,7 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 set(GDK_PIXBUF_VERSION 2.36)
 set(GDK_PIXBUF_PATCH 9)
+set(GDK_PIXBUF_API_VERSION 2)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnome.org/pub/GNOME/sources/gdk-pixbuf/${GDK_PIXBUF_VERSION}/gdk-pixbuf-${GDK_PIXBUF_VERSION}.${GDK_PIXBUF_PATCH}.tar.xz"
@@ -27,6 +28,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gdk-pixbuf-2.0.pc "Version:" "Version: ${GDK_PIXBUF_VERSION}")
+vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gdk-pixbuf-2.0.pc "-lgdk_pixbuf-" "-lgdk_pixbuf-${GDK_PIXBUF_API_VERSION}")
+vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gdk-pixbuf-2.0.pc "${includedir}/gdk-pixbuf-" "${includedir}/gdk-pixbuf-${GDK_PIXBUF_API_VERSION}")
 file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/gdk-pixbuf-2.0.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 vcpkg_fixup_pkgconfig()
 
