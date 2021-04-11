@@ -1,0 +1,31 @@
+{
+  "name": "qbittorrent",
+  "version-string": "5.0-test",
+  "description": "A BitTorrent client",
+  "homepage": "https://qbittorrent.org",
+  "documentation": "https://github.com/qbittorrent/qBittorrent/wiki",
+  "supports": "!uwp & !(windows & arm)",
+  "dependencies": [
+    "boost-circular-buffer",
+    "libtorrent",
+    "qtbase",
+    "qtsvg",
+    "qttools"
+  ],
+  "default-features": [
+    "gui",
+    "stacktrace",
+    "webui"
+  ],
+  "features": {
+    "gui": {
+      "description": "build with the gui"
+    },
+    "stacktrace": {
+      "description": "build support for generating stacktraces"
+    },
+    "webui": {
+      "description": "build with the webui enabled"
+    }
+  }
+}

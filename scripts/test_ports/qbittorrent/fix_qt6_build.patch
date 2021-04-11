@@ -1,0 +1,32 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 1990f5793..7baad1b88 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.16 FATAL_ERROR) # Policies <= CMP0097 default to NEW
++cmake_minimum_required(VERSION 3.20 FATAL_ERROR) # might as well use the most recent version
+ 
+ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
+ 
+@@ -14,7 +14,7 @@ set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+ set(minBoostVersion 1.65)
+ set(minQtVersion 6.0.2)
+ set(minOpenSSLVersion 1.1.1)
+-set(minLibtorrentVersion 1.2.13)
++set(minLibtorrentVersion 1.2.12) # use 1.2.12 just to make things easier because vcpkg does not have 1.2.13 yet and this does not affect anything related to Qt anyway
+ set(minZlibVersion 1.2.11)
+ 
+ # features (some are platform-specific)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 97fe87669..0440e845e 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -35,7 +35,7 @@ set_property(CACHE LibtorrentRasterbar_DIR PROPERTY TYPE PATH)
+ find_package(Boost ${minBoostVersion} REQUIRED)
+ find_package(OpenSSL ${minOpenSSLVersion} REQUIRED)
+ find_package(ZLIB ${minZlibVersion} REQUIRED)
+-find_package(Qt6 ${minQtVersion} REQUIRED COMPONENTS Core Network Xml LinguistTools)
++find_package(Qt6 ${minQtVersion} REQUIRED COMPONENTS Core LinguistTools Network Xml)
+ if (DBUS)
+     find_package(Qt6 ${minQtVersion} REQUIRED COMPONENTS DBus)
+     set_package_properties(Qt6DBus PROPERTIES
