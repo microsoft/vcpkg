@@ -181,7 +181,7 @@ endif()
 # gmodule
 add_library(gmodule gmodule/gmodule.c)
 target_compile_definitions(gmodule PRIVATE G_LOG_DOMAIN="GModule")
-target_link_libraries(gmodule PRIVATE glib ${Intl_LIBRARIES})
+target_link_libraries(gmodule PRIVATE glib ${CMAKE_DL_LIBS} ${Intl_LIBRARIES})
 target_include_directories(gmodule PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/gmodule>)
 target_include_directories(gmodule PRIVATE ${Intl_INCLUDE_DIRS} PUBLIC $<INSTALL_INTERFACE:include>)
 list(APPEND GLIB_TARGETS gmodule)

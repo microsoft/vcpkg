@@ -1,5 +1,7 @@
 ## Buildsystem Integration
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/integration.md).**
+
 Vcpkg offers many ways to integrate into your build so you can do what's right for your project. There are two main categories of integration:
 
 - [`integrate` command](#integrate)
@@ -30,6 +32,7 @@ Here are some examples, though this is not an exhaustive list:
 
 To get a full list for all your installed packages, run `vcpkg owns manual-link`.
 
+<a name="cmake"></a>
 #### CMake toolchain file (Recommended for Open Source CMake projects)
 ```no-highlight
 cmake ../my/project -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake

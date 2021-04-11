@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.3.1
-    SHA512 9d533f6db97e8eccb77d78d0b55112ce039580b570d2a98c4204199abe5a4b0f448c44b30048329f6c912579f8ff48385d5100f9e484709b9fd8f4b3935b5031
+    REF n4.3.2
+    SHA512 95e6fdc5980d2940cac33be9015e3acc2e1ce5247ef92211889fcf120add1e6ef01089ca2b8d59c13f91761757ebfe9819dc87a24f690edcafa7e0626f06f64e
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -17,6 +17,8 @@ vcpkg_from_github(
         0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
+        0014-avfilter-dependency-fix.patch
+        0015-Fix-xml2-detection.patch
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -180,15 +182,23 @@ if("avresample" IN_LIST FEATURES)
     set(ENABLE_AVRESAMPLE ON)
 endif()
 
+set(STATIC_LINKAGE OFF)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(STATIC_LINKAGE ON)
+endif()
+
+set(ENABLE_ASS OFF)
+if("ass" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libass")
+    set(ENABLE_ASS ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libass")
+endif()
+
 if("avisynthplus" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avisynth")
 else()
     set(OPTIONS "${OPTIONS} --disable-avisynth")
-endif()
-
-set(STATIC_LINKAGE OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-set(STATIC_LINKAGE ON)
 endif()
 
 set(ENABLE_BZIP2 OFF)
@@ -199,6 +209,14 @@ else()
     set(OPTIONS "${OPTIONS} --disable-bzlib")
 endif()
 
+set(ENABLE_DAV1D OFF)
+if("dav1d" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libdav1d")
+    set(ENABLE_DAV1D ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libdav1d")
+endif()
+
 set(ENABLE_ICONV OFF)
 if("iconv" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-iconv")
@@ -207,12 +225,44 @@ else()
     set(OPTIONS "${OPTIONS} --disable-iconv")
 endif()
 
+set(ENABLE_ILBC OFF)
+if("ilbc" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libilbc")
+    set(ENABLE_ILBC ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libilbc")
+endif()
+
 set(ENABLE_FDKAAC OFF)
 if("fdk-aac" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
     set(ENABLE_FDKAAC ${STATIC_LINKAGE})
 else()
     set(OPTIONS "${OPTIONS} --disable-libfdk-aac")
+endif()
+
+set(ENABLE_FONTCONFIG OFF)
+if("fontconfig" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfontconfig")
+    set(ENABLE_FONTCONFIG ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libfontconfig")
+endif()
+
+set(ENABLE_FREETYPE OFF)
+if("freetype" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfreetype")
+    set(ENABLE_FREETYPE ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libfreetype")
+endif()
+
+set(ENABLE_FRIBIDI OFF)
+if("fribidi" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfribidi")
+    set(ENABLE_FRIBIDI ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libfribidi")
 endif()
 
 set(ENABLE_LZMA OFF)
@@ -231,13 +281,21 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libmp3lame")
 endif()
 
+set(ENABLE_MODPLUG OFF)
+if("modplug" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libmodplug")
+    set(ENABLE_MODPLUG ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libmodplug")
+endif()
+
 set(ENABLE_NVCODEC OFF)
 if("nvcodec" IN_LIST FEATURES)
     #Note: the --enable-cuda option does not actually require the cuda sdk or toolset port dependency as ffmpeg uses runtime detection and dynamic loading
     set(ENABLE_NVCODEC ON)
-    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-nvdec --enable-cuvid")
+    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-nvdec --enable-cuvid --enable-ffnvcodec")
 else()
-    set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-nvdec  --disable-cuvid")
+    set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-nvdec  --disable-cuvid --disable-ffnvcodec")
 endif()
 
 set(ENABLE_OPENCL OFF)
@@ -246,6 +304,22 @@ if("opencl" IN_LIST FEATURES)
     set(ENABLE_OPENCL ${STATIC_LINKAGE})
 else()
     set(OPTIONS "${OPTIONS} --disable-opencl")
+endif()
+
+set(ENABLE_OPENGL OFF)
+if("opengl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-opengl")
+    set(ENABLE_OPENGL ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-opengl")
+endif()
+
+set(ENABLE_OPENJPEG OFF)
+if("openjpeg" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
+    set(ENABLE_OPENJPEG ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
 endif()
 
 set(ENABLE_OPENSSL OFF)
@@ -296,6 +370,30 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libspeex")
 endif()
 
+set(ENABLE_SSH OFF)
+if("ssh" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libssh")
+    set(ENABLE_SSH ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libssh")
+endif()
+
+set(ENABLE_TENSORFLOW OFF)
+if("tensorflow" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libtensorflow")
+    set(ENABLE_TENSORFLOW ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libtensorflow")
+endif()
+
+set(ENABLE_TESSERACT OFF)
+if("tesseract" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libtesseract")
+    set(ENABLE_TESSERACT ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libtesseract")
+endif()
+
 set(ENABLE_THEORA OFF)
 if("theora" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libtheora")
@@ -328,6 +426,14 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libwavpack")
 endif()
 
+set(ENABLE_WEBP OFF)
+if("webp" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libwebp")
+    set(ENABLE_WEBP ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libwebp")
+endif()
+
 set(ENABLE_X264 OFF)
 if("x264" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx264")
@@ -342,6 +448,14 @@ if("x265" IN_LIST FEATURES)
     set(ENABLE_X265 ${STATIC_LINKAGE})
 else()
     set(OPTIONS "${OPTIONS} --disable-libx265")
+endif()
+
+set(ENABLE_XML2 OFF)
+if("xml2" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libxml2")
+    set(ENABLE_XML2 ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libxml2")
 endif()
 
 set(ENABLE_ZLIB OFF)
