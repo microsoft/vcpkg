@@ -9,5 +9,5 @@ vcpkg_from_github(
 )
 
 file(GLOB HEADER_LIST "${SOURCE_PATH}/src/*.h")
-file(INSTALL ${HEADER_LIST} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${HEADER_LIST} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
