@@ -23,13 +23,13 @@ vcpkg_from_git(
     REF f770971eebec66067b4f498653f3e04a35030ef4
     PATCHES
         fix_qt6_build.patch
+        downgrade.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        --trace
         ${FEATURE_OPTIONS}
         -DVERBOSE_CONFIGURE=ON
         -DMSVC_RUNTIME_DYNAMIC=${_msvc_runtime_dynamic}

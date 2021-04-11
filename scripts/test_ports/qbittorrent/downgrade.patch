@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/4a35030ef4-a355f26948/CMakeLists.txt
+index 7baad1b88..1e3df8ad7 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,4 @@
+-cmake_minimum_required(VERSION 3.20 FATAL_ERROR) # might as well use the most recent version
++cmake_minimum_required(VERSION 3.19 FATAL_ERROR) # might as well use the most recent version
+ 
+ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/Modules)
+ 
+@@ -9,7 +9,7 @@ project(qBittorrent
+ )
+ 
+ # use CONFIG mode first in find_package
+-set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
++# set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+ # version requirements - older vesions may work, but you are on your own
+ set(minBoostVersion 1.65)
+ set(minQtVersion 6.0.2)
+
