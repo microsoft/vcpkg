@@ -20,13 +20,10 @@ file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT}
 file(COPY ${PACKAGE_PATH}/build/native/release/lib/${VCPKG_TARGET_ARCHITECTURE}/xaudio2_9redist.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
 file(COPY ${PACKAGE_PATH}/build/native/debug/lib/${VCPKG_TARGET_ARCHITECTURE}/xaudio2_9redist.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
 
-if(VCPKG_CRT_LINKAGE STREQUAL "static")
-    file(COPY ${PACKAGE_PATH}/build/native/release/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(COPY ${PACKAGE_PATH}/build/native/debug/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-else()
-    file(COPY ${PACKAGE_PATH}/build/native/release/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist_md.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
-    file(COPY ${PACKAGE_PATH}/build/native/debug/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist_md.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
-endif()
+file(COPY ${PACKAGE_PATH}/build/native/release/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
+file(COPY ${PACKAGE_PATH}/build/native/debug/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
+file(COPY ${PACKAGE_PATH}/build/native/release/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist_md.lib DESTINATION ${CURRENT_PACKAGES_DIR}/lib/)
+file(COPY ${PACKAGE_PATH}/build/native/debug/lib/${VCPKG_TARGET_ARCHITECTURE}/xapobaseredist_md.lib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/)
 
 file(COPY ${PACKAGE_PATH}/build/native/release/bin/${VCPKG_TARGET_ARCHITECTURE}/xaudio2_9redist.dll DESTINATION ${CURRENT_PACKAGES_DIR}/bin/)
 file(COPY ${PACKAGE_PATH}/build/native/debug/bin/${VCPKG_TARGET_ARCHITECTURE}/xaudio2_9redist.dll DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin/)
