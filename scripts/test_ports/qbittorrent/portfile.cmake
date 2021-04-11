@@ -38,6 +38,9 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_copy_tools(TOOL_NAMES qbittorrent AUTO_CLEAN)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 
 configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
