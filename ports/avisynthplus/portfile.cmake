@@ -1,12 +1,10 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_LIBRARY_LINKAGE "static" ON_TARGET "UWP")
-
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO AviSynth/AviSynthPlus
-    REF v3.6.1
-    SHA512 7104c334769aacf3b1c14491c2e0cdd6586d6ea68dae7d10e7955ac56c6277fe4ae189d30ebd161baeda80e65e80fc49d4b2aed476272dd1aa235e7c8f0209d9
+    REF v3.7.0
+    SHA512 0f2d5344c4472b810667b99d9e99a2ec8135923f4185dbd7e29ca65e696ce13500ea20ef09c995486573314149a671e1256a4dd0696c4ace8d3ec3716ffdcfc7
     HEAD_REF master
 )
 
@@ -18,6 +16,8 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(INSTALL ${SOURCE_PATH}/distrib/gpl.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
