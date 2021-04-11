@@ -264,6 +264,19 @@ function(vcpkg_configure_make)
 
     debug_message("REQUIRES_AUTOGEN:${REQUIRES_AUTOGEN}")
     debug_message("REQUIRES_AUTOCONFIG:${REQUIRES_AUTOCONFIG}")
+
+    if(CMAKE_HOST_WIN32 AND VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe") #only applies to windows (clang-)cl and lib
+        if(_csc_AUTOCONFIG)
+            set(_csc_USE_WRAPPERS TRUE)
+        else()
+            # Keep the setting from portfiles.
+            # Without autotools we assume a custom configure script which correctly handles cl and lib.
+            # Otherwise the port needs to set CC|CXX|AR and probably CPP.
+        endif()
+    else()
+        set(_csc_USE_WRAPPERS FALSE)
+    endif()
+
     # Backup environment variables
     # CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJCXX R UPC Y 
     set(_cm_FLAGS AS CCAS CC C CPP CXX FC FF GC LD LF LIBTOOL OBJC OBJXX R UPC Y RC)
@@ -317,7 +330,7 @@ function(vcpkg_configure_make)
         endif()
         if(CMAKE_HOST_WIN32)
             set(APPEND_ENV)
-            if(_csc_AUTOCONFIG OR _csc_USE_WRAPPERS)
+            if(_csc_USE_WRAPPERS)
                 set(APPEND_ENV ";${MSYS_ROOT}/usr/share/automake-1.16")
                 string(APPEND APPEND_ENV ";${SCRIPTS}/buildsystems/make_wrapper") # Other required wrappers are also located there
             endif()
@@ -354,7 +367,7 @@ function(vcpkg_configure_make)
                 endif()
             endif()
         endforeach()
-        if (_csc_AUTOCONFIG OR _csc_USE_WRAPPERS) # without autotools we assume a custom configure script which correctly handles cl and lib. Otherwise the port needs to set CC|CXX|AR and probably CPP
+        if (_csc_USE_WRAPPERS)
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CPP "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER} -E")
 
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV CC "compile ${VCPKG_DETECTED_CMAKE_C_COMPILER}")
