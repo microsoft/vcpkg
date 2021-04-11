@@ -3537,8 +3537,8 @@
       "port-version": 0
     },
     "libui": {
-      "baseline": "2018-11-03",
-      "port-version": 2
+      "baseline": "2021-01-02",
+      "port-version": 0
     },
     "libunibreak": {
       "baseline": "4.3-0",
