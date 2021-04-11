@@ -8,6 +8,16 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_download_distfile(GHC_ARCHIVE
+    URLS "https://github.com/gulrak/filesystem/archive/3f1c185ab414e764c694b8171d1c4d8c5c437517.zip"
+    FILENAME filesystem-3f1c185ab414e764c694b8171d1c4d8c5c437517.zip
+    SHA512 e3fe1e41b31f840ebc219fcd795e7be2973b80bb3843d6bb080786ad9e3e7f846a118673cb9e17d76bae66954e64e024a82622fb8cea7818d5d9357de661d3d1
+)
+
+file(REMOVE_RECURSE ${SOURCE_PATH}/filesystem)
+vcpkg_extract_source_archive(${GHC_ARCHIVE} ${SOURCE_PATH})
+file(RENAME ${SOURCE_PATH}/filesystem-3f1c185ab414e764c694b8171d1c4d8c5c437517 ${SOURCE_PATH}/filesystem)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
