@@ -1,0 +1,47 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6643a93..6b07e23 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -31,7 +31,7 @@ endif()
+ 
+ # Library
+ add_library(yyjson src/yyjson.h src/yyjson.c)
+-target_include_directories(yyjson PUBLIC src)
++target_include_directories(yyjson PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>)
+ 
+ 
+ # Compiler Flags
+@@ -75,19 +75,27 @@ endif()
+ 
+ if(BUILD_SHARED_LIBS)
+     if(WIN32)
+-        target_compile_definitions(yyjson PRIVATE YYJSON_EXPORTS)
++        target_compile_definitions(yyjson PUBLIC
++            $<BUILD_INTERFACE:YYJSON_EXPORTS>
++            $<INSTALL_INTERFACE:YYJSON_IMPORTS>)
+     endif()
+ endif()
+ 
+ 
+ # Install
+-set(YYJSON_INSTALL_LIB_DIR lib CACHE PATH "Installation directory for yyjson library")
+-set(YYJSON_INSTALL_INC_DIR include CACHE PATH "Installation directory for yyjson header")
++include(GNUInstallDirs)
+ 
+ install(TARGETS yyjson
+-        LIBRARY DESTINATION "${YYJSON_INSTALL_LIB_DIR}"
+-        ARCHIVE DESTINATION "${YYJSON_INSTALL_LIB_DIR}")
+-install(FILES src/yyjson.h DESTINATION "${YYJSON_INSTALL_INC_DIR}")
++        EXPORT yyjson-targets
++        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++        INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
++install(EXPORT yyjson-targets
++        FILE yyjson-config.cmake
++        NAMESPACE yyjson::
++        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/yyjson")
++install(FILES src/yyjson.h DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
+ 
+ 
+ # Testing
