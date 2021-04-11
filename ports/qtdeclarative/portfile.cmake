@@ -2,7 +2,9 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 if(QT_IS_LATEST)
-    set(${PORT}_PATCHES fix_alignment.patch)
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(${PORT}_PATCHES fix_alignment.patch)
+    endif()
 endif()
 # General features:
 # vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
