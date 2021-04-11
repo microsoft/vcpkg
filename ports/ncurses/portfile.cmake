@@ -5,6 +5,12 @@ vcpkg_download_distfile(
     SHA512 54d666a0f19dd8f59d1cf1d1dd0bc6c0950036508c296f18144c8d4a82352df338fe561793f2a27f13b4c9a4a6f837f02d90112495a1b3091ee48a522bfc0c65
 )
 
+vcpkg_extract_source_archive_ex(
+    SKIP_PATCH_CHECK
+    OUT_SOURCE_PATH <SOURCE_PATH>
+    ARCHIVE <${ARCHIVE}>
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
