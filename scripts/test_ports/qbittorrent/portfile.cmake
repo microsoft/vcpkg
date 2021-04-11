@@ -39,7 +39,7 @@ vcpkg_install_cmake()
 
 vcpkg_copy_tools(TOOL_NAMES qbittorrent AUTO_CLEAN)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug")
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
 
