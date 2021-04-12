@@ -12,7 +12,6 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         export-only-in-shared-build.patch
         0001_fix_osx_defined.patch
-        #build.patch
         build2.patch
         remove_test_perf.patch
 )

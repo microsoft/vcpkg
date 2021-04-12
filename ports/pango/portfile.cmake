@@ -15,13 +15,14 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -Dintrospection=disabled
-        -Dfontconfig=enabled
-        -Dsysprof=disabled
-        -Dlibtahi=disabled
-        -Dcairo=enabled
-        -Dxft=disabled
-        -Dfreetype=enabled
+        -Dintrospection=disabled # Build the GObject introspection data for Pango
+        -Dfontconfig=enabled # Build with FontConfig support.
+        -Dsysprof=disabled # include tracing support for sysprof
+        -Dlibtahi=disabled # Build with libthai support
+        -Dcairo=enabled # Build with cairo support
+        -Dxft=disabled # Build with xft support
+        -Dfreetype=enabled # Build with freetype support
+        -Dgtk_doc=false #Build API reference for Pango using GTK-Doc
     ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
     ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
@@ -44,40 +45,3 @@ set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/pango.pc")
 if(EXISTS "${_file}")
     vcpkg_replace_string("${_file}" [[-I"${includedir}/pango-1.0"]] [[-I"${includedir}/pango-1.0" -I"${includedir}/harfbuzz"]])
 endif()
-# option('gtk_doc',
-       # description: 'Build API reference for Pango using GTK-Doc',
-       # type: 'boolean',
-       # value: false)
-# option('introspection',
-       # description: 'Build the GObject introspection data for Pango',
-       # type: 'feature',
-       # value: 'auto',
-       # yield: true)
-# option('install-tests',
-       # description : 'Install tests',
-       # type: 'boolean',
-       # value: 'false')
-# option('fontconfig',
-       # description : 'Build with FontConfig support. Passing \'auto\' or \'disabled\' disables fontconfig where it is optional, i.e. on Windows and macOS. Passing \'disabled\' on platforms where fontconfig is required results in error.',
-       # type: 'feature',
-       # value: 'auto')
-# option('sysprof',
-       # type : 'feature',
-       # value : 'disabled',
-       # description : 'include tracing support for sysprof')
-# option('libthai',
-       # type : 'feature',
-       # value : 'auto',
-       # description : 'Build with libthai support')
-# option('cairo',
-       # type : 'feature',
-       # value : 'auto',
-       # description : 'Build with cairo support')
-# option('xft',
-       # type : 'feature',
-       # value : 'auto',
-       # description : 'Build with xft support')
-# option('freetype',
-       # type : 'feature',
-       # value : 'auto',
-       # description : 'Build with freetype support')

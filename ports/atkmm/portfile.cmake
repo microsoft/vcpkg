@@ -16,25 +16,11 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH} 
                       OPTIONS -Dbuild-documentation=false
-                              -Dmsvc14x-parallel-installable=false)
+                              -Dbuild-deprecated-api=true # Build deprecated API and include it in the library
+                              -Dmsvc14x-parallel-installable=false) # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
 vcpkg_install_meson()
-# endif()
 
 vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-
-# option('maintainer-mode', type: 'combo', choices: ['false', 'if-git-build', 'true'],
-  # value: 'if-git-build', description: 'Generate source code from .hg and .ccg files')
-# option('warnings', type: 'combo', choices: ['no', 'min', 'max', 'fatal'], value: 'min',
-  # description: 'Compiler warning level')
-# option('dist-warnings', type: 'combo', choices: ['no', 'min', 'max', 'fatal'], value: 'fatal',
-  # description: 'Compiler warning level when a tarball is created')
-# option('build-deprecated-api', type: 'boolean', value: true,
-  # description: 'Build deprecated API and include it in the library')
-# option('build-documentation', type: 'combo', choices: ['false', 'if-maintainer-mode', 'true'],
-  # value: 'if-maintainer-mode', description: 'Build and install the documentation')
-# option('msvc14x-parallel-installable', type: 'boolean', value: true,
-  # description: 'Use separate DLL and LIB filenames for Visual Studio 2017 and 2019')
