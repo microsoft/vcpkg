@@ -49,7 +49,7 @@ additional packages for software development, e.g. for x64:
 pacman -S git mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
 ```
 
-The active subsystem is select by running the MSYS2 MinGW app, or
+The active subsystem is selected by running the MSYS2 MinGW app, or
 changed in a running terminal by
 
 ```bash
@@ -89,7 +89,7 @@ non-Windows computers to cross-compile software to be run on Windows.
 Many Linux distributions offer such toolchains in optional packages
 with a special [suffix](https://repology.org/projects/?search=-mingw-w64)
 or [prefix](https://repology.org/projects/?search=mingw-w64-).
-As an example, for on Debian-based distributions, you would start with
+As an example, for Debian-based distributions, you would start with
 these installation commands for the x64 targets:
 
 ```
