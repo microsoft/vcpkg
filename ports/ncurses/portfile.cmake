@@ -1,14 +1,9 @@
-vcpkg_download_distfile(
+vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    URLS "https://invisible-mirror.net/archives/ncurses/current/ncurses-6.2-20210403.tgz"
-    FILENAME "ncurses-6.2-20210403.tgz"
-    SHA512 54d666a0f19dd8f59d1cf1d1dd0bc6c0950036508c296f18144c8d4a82352df338fe561793f2a27f13b4c9a4a6f837f02d90112495a1b3091ee48a522bfc0c65
-)
-
-vcpkg_extract_source_archive_ex(
-    SKIP_PATCH_CHECK
-    OUT_SOURCE_PATH <SOURCE_PATH>
-    ARCHIVE ${ARCHIVE}
+    REPO mirror/ncurses
+    REF  47d2fb4537d9ad5bb14f4810561a327930ca4280 # v6.2
+    SHA512 776558fdd911f0cc9e8d467bf8e00a1930d2e51bb8ccd5f36f95955fefecab65faf575a80fdaacfe83fd32808f8b9c2e0323b16823e0431300df7bc0c1dfde12
+    HEAD_REF master
 )
 
 vcpkg_configure_cmake(
