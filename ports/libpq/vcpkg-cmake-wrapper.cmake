@@ -16,7 +16,7 @@ if(PostgreSQL_FOUND AND @USE_DL@)
     endif()
 endif()
 if(PostgreSQL_FOUND AND TARGET PostgreSQL::PostgreSQL AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
-    foreach(LIB_ITEM pgport pgcommon)
+    foreach(LIB_ITEM libpgport libpgcommon pgport pgcommon)
         find_library(PostgreSQL_${LIB_ITEM}_LIBRARY_RELEASE
             NAMES ${LIB_ITEM}
             PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib" NO_DEFAULT_PATH
