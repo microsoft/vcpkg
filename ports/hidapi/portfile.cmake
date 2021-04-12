@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "linux" "osx" "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -51,4 +51,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/hidapi-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+else(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+    )
+    
+    vcpkg_install_make()
+    
+    vcpkg_copy_pdbs()
+    
+    vcpkg_fixup_pkgconfig()
+    
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    
+    file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 endif()
