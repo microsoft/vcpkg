@@ -1005,7 +1005,7 @@
       "port-version": 2
     },
     "botan": {
-      "baseline": "2.16.0",
+      "baseline": "2.17.3",
       "port-version": 0
     },
     "box2d": {
