@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "starlink-ast currently only supports Windows" ON_TARGET "Linux" "OSX")
+vcpkg_fail_port_install(ON_TARGET "Linux" "OSX")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/Starlink/ast/releases/download/v9.2.3/ast-9.2.3.tar.gz"
@@ -61,4 +61,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share")
 
 # # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/starlink-ast RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
