@@ -12,6 +12,11 @@ vcpkg_extract_source_archive_ex(
     REF ${VERSION}
 )
 
+set(STATICLIB OFF)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(STATICLIB ON)
+endif()
+
 # Capstone path should be adapted in Windows
 if(VCPKG_TARGET_IS_WINDOWS)  
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -52,10 +57,6 @@ configure_file("${CURRENT_BUILDTREES_DIR}/src/dev-v0.9-fd0ccd4864.clean/LICENSE.
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-	file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
-
 if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/triton.dll)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/triton.dll ${CURRENT_PACKAGES_DIR}/bin/triton.dll)
@@ -64,4 +65,3 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/triton.dll)
     file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/triton.dll ${CURRENT_PACKAGES_DIR}/debug/bin/triton.dll)
 endif()
-
