@@ -7,10 +7,10 @@ vcpkg_from_github(
     PATCHES
        force-x86-gentables.patch
 )
-
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -Denable-pkgconfig=0
+    OPTIONS -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
 )
 
 vcpkg_install_cmake()
