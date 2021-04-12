@@ -4,7 +4,7 @@
 
 ## MinGW community triplets
 
-vcpkg includes
+Vcpkg includes
 [community triplets for MinGW](https://github.com/microsoft/vcpkg/tree/master/triplets/community)
 for x64, x86, arm64 and arm. They don't depend on Visual Studio and
 can be used natively on Windows as well as for cross-compiling on
@@ -56,7 +56,7 @@ changed in a running terminal by
 source shell mingw64   # or mingw32
 ```
 
-The bootstrapping of vcpkg shall be done by running bootstrap_vcpkg.exe.
+The bootstrapping of vcpkg shall be done by running bootstrap-vcpkg.bat.
 This will download the official vcpkg.exe.
 
 ```bash
@@ -84,13 +84,25 @@ Now you can test your setup:
 
 ## Using MinGW to build Windows programs on other systems
 
-Many Linux distributions come with MinGW toolchains which allow to
-cross-compile software on Linux to be run on Windows. You can use
-such toolchains with vcpkg by setting the desired mingw triplet.
+You can use the vcpkg mingw community triplets with toolchains on
+non-Windows computers to cross-compile software to be run on Windows.
+Many Linux distributions offer such toolchains in optional packages
+with a special [suffix](https://repology.org/projects/?search=-mingw-w64)
+or [prefix](https://repology.org/projects/?search=mingw-w64-).
+As an example, for on Debian-based distributions, you would start with
+these installation commands for the x64 targets:
 
-Note that the pre-installed cmake might be too old for vcpkg.
+```
+sudo apt-get install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
+```
 
-For bootstrapping, clone the github repository and run the shell script:
+Note that the pre-installed cmake might be too old for vcpkg. Also the
+packaged versions of MinGW and GCC might be older releases which lack
+some useful features or bug fixes. An alternative independent toolchain
+is offered by [MXE](https://mxe.cc/).
+
+For vcpkg bootstrapping, clone the github repository and run the
+bootstrap-vcpkg.sh script:
 
 ```bash
 git clone https://github.com/microsoft/vcpkg.git
