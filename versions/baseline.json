@@ -4253,7 +4253,7 @@
       "port-version": 0
     },
     "nowide": {
-      "baseline": "11.1.1",
+      "baseline": "11.1.2",
       "port-version": 0
     },
     "nrf-ble-driver": {
