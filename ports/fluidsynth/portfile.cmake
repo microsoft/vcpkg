@@ -35,7 +35,6 @@ vcpkg_configure_cmake(
     OPTIONS 
         ${FEATURE_OPTIONS}
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
-        -Denable-dbus:BOOL=OFF
     OPTIONS_DEBUG
         -Denable-debug:BOOL=ON
 )
