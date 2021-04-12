@@ -675,6 +675,58 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
+# Handle version strings
+
+function(extract_regex_from_file)
+  cmake_parse_arguments(_erff "" "FILENAME;REGEX;OUTPUT_VARIABLE" "" ${ARGN})
+  file(STRINGS ${_erff_FILENAME} _LINE REGEX ${_erff_REGEX} LIMIT_COUNT 1)
+  if("${_LINE}" STREQUAL "")
+    message(FATAL_ERROR "could not find regular expression \"${_erff_REGEX}\" in file ${_erff_FILENAME}")
+  endif()
+  string(REGEX MATCH ${_erff_REGEX} _ ${_LINE})
+  if(NOT CMAKE_MATCH_COUNT EQUAL 1)
+    message(FATAL_ERROR "could not identify match group in regular expression \"${_erff_REGEX}\" when matching line \"${_LINE}\" from file ${_erff_FILENAME}")
+  endif()
+  set(${_erff_OUTPUT_VARIABLE} ${CMAKE_MATCH_1} PARENT_SCOPE)
+endfunction()
+
+function(extract_version_from_component)
+  cmake_parse_arguments(_evfc "" "COMPONENT" "" ${ARGN})
+  string(TOLOWER ${_evfc_COMPONENT} COMPONENT_LOWER)
+  string(TOUPPER ${_evfc_COMPONENT} COMPONENT_UPPER)
+  extract_regex_from_file(
+    FILENAME "${SOURCE_PATH}/${COMPONENT_LOWER}/version.h"
+    REGEX "#define ${COMPONENT_UPPER}_VERSION_MAJOR[ ]+([0-9]+)"
+    OUTPUT_VARIABLE _MAJOR
+  )
+  extract_regex_from_file(
+    FILENAME "${SOURCE_PATH}/${COMPONENT_LOWER}/version.h"
+    REGEX "#define ${COMPONENT_UPPER}_VERSION_MINOR[ ]+([0-9]+)"
+    OUTPUT_VARIABLE _MINOR
+  )
+  extract_regex_from_file(
+    FILENAME "${SOURCE_PATH}/${COMPONENT_LOWER}/version.h"
+    REGEX "#define ${COMPONENT_UPPER}_VERSION_MICRO[ ]+([0-9]+)"
+    OUTPUT_VARIABLE _MICRO
+  )
+  set(${COMPONENT_UPPER}_VERSION "${_MAJOR}.${_MINOR}.${_MICRO}" PARENT_SCOPE)
+endfunction()
+
+extract_regex_from_file(
+  FILENAME "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libavutil/ffversion.h"
+  REGEX "#define FFMPEG_VERSION[ ]+\"(.+)\""
+  OUTPUT_VARIABLE FFMPEG_VERSION
+)
+
+extract_version_from_component(COMPONENT libavutil)
+extract_version_from_component(COMPONENT libavcodec)
+extract_version_from_component(COMPONENT libavdevice)
+extract_version_from_component(COMPONENT libavfilter)
+extract_version_from_component(COMPONENT libavformat)
+extract_version_from_component(COMPONENT libavresample)
+extract_version_from_component(COMPONENT libswresample)
+extract_version_from_component(COMPONENT libswscale)
+
 # Handle copyright
 file(STRINGS ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-out.log LICENSE_STRING REGEX "License: .*" LIMIT_COUNT 1)
 if(LICENSE_STRING STREQUAL "License: LGPL version 2.1 or later")
