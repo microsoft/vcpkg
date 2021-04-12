@@ -8,7 +8,6 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DYYJSON_BUILD_TESTS=OFF
         -DYYJSON_BUILD_MISC=OFF
