@@ -9,17 +9,6 @@ vcpkg_from_github(
     PATCHES configure.ac.patch
 )
 
-#file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-# vcpkg_configure_cmake(
-    # SOURCE_PATH ${SOURCE_PATH}
-    # PREFER_NINJA
-	# OPTIONS ${FEATURE_OPTIONS}
-		# -DLIBGPOD_BLOB_DIR=${CURRENT_PACKAGES_DIR}/tools
-# )
-# vcpkg_install_cmake()
-
-#file(COPY "/usr/share/gtk-doc/data/gtk-doc.make" DESTINATION "${SOURCE_PATH}")
 vcpkg_execute_required_process(
     COMMAND intltoolize --force --copy --automake
     WORKING_DIRECTORY "${SOURCE_PATH}"

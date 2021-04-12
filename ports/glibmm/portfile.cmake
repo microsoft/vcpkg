@@ -10,24 +10,7 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES
-        #glibmm-api-variant.patch
-        #fix-define-glibmmconfig.patch
-        #fix-thread.h.patch
 )
-
-#file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-#vcpkg_configure_cmake(
-#    SOURCE_PATH ${SOURCE_PATH}
-#    PREFER_NINJA
-#    OPTIONS
-#        -DWARNINGS_HEADER=${CMAKE_CURRENT_LIST_DIR}/msvc_recommended_pragmas.h
-#    OPTIONS_DEBUG
-#        -DDISABLE_INSTALL_HEADERS=ON
-#)
-
-#vcpkg_install_cmake()
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}

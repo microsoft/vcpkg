@@ -59,12 +59,6 @@ vcpkg_configure_make(
         lt_cv_deplibs_check_method=pass_all
 )
 vcpkg_install_make()
-# vcpkg_install_make(SUBPATH /src)
-# if("gobject" IN_LIST FEATURES)
-    # This deletes the previous build
-    # vcpkg_install_make(SUBPATH /util/cairo-gobject)
-# endif()
-
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 

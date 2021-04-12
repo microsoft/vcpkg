@@ -18,9 +18,23 @@ get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
 vcpkg_add_to_path("${PKGCONFIG_DIR}") # Post install script runs pkg-config so it needs to be on PATH
 vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/glib/")
 
+set(x11 false)
+set(win32 false)
+set(osx false)
 if(VCPKG_TARGET_IS_LINUX)
     set(OPTIONS -Dwayland-backend=false) # CI missing at least wayland-protocols
+    set(x11 true)    
+    # Enable the wayland gdk backend (only when building on Unix except for macOS)
+elseif(VCPKG_TARGET_IS_WINDOWS)
+    set(win32 true)
+elseif(VCPKG_TARGET_IS_OSX)
+    set(osx true)
 endif()
+
+list(APPEND OPTIONS -Dx11-backend=${x11}) #Enable the X11 gdk backend (only when building on Unix)
+list(APPEND OPTIONS -Dbroadway-backend=false) #Enable the broadway (HTML5) gdk backend
+list(APPEND OPTIONS -Dwin32-backend=${win32}) #Enable the Windows gdk backend (only when building on Windows)
+list(APPEND OPTIONS -Dmacos-backend=${osx}) #Enable the macOS gdk backend (only when building on macOS)
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
@@ -33,8 +47,17 @@ vcpkg_configure_meson(
         -Dgtk_doc=false
         -Dman-pages=false
         -Dintrospection=disabled
-        -Dsassc=enabled
-        -Dmedia-ffmpeg=disabled
+        -Dsassc=enabled             # Rebuild themes using sassc
+        -Dmedia-ffmpeg=disabled     # Build the ffmpeg media backend
+        -Dmedia-gstreamer=disabled  # Build the gstreamer media backend
+        -Dprint-cups=disabled       # Build the cups print backend
+        -Dprint-cloudprint=disabled # Build the cloudprint print backend
+        -Dvulkan=disabled           # Enable support for the Vulkan graphics API
+        -Dxinerama=disabled         # Enable support for the X11 Xinerama extension
+        -Dcloudproviders=disabled   # Enable the cloudproviders support
+        -Dsysprof=disabled          # include tracing support for sysprof
+        -Dtracker=disabled          # Enable Tracker3 filechooser search
+        -Dcolord=disabled           # Build colord support for the CUPS printing backend
     ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
                                glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
@@ -107,91 +130,3 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-# GDK backends
-
-# option('x11-backend',
-       # type: 'boolean',
-       # value: true,
-       # description : 'Enable the X11 gdk backend (only when building on Unix)')
-
-# option('wayland-backend',
-       # type: 'boolean',
-       # value: true,
-       # description : 'Enable the wayland gdk backend (only when building on Unix except for macOS)')
-
-# option('broadway-backend',
-       # type: 'boolean',
-       # value: false,
-       # description : 'Enable the broadway (HTML5) gdk backend')
-
-# option('win32-backend',
-       # type: 'boolean',
-       # value: true,
-       # description : 'Enable the Windows gdk backend (only when building on Windows)')
-
-# option('macos-backend',
-       # type: 'boolean',
-       # value: true,
-       # description : 'Enable the macOS gdk backend (only when building on macOS)')
-
-# # Media backends
-
-# option('media-ffmpeg',
-       # type: 'feature',
-       # value: 'auto',
-       # description : 'Build the ffmpeg media backend')
-
-# option('media-gstreamer',
-       # type: 'feature',
-       # value: 'auto',
-       # description : 'Build the gstreamer media backend')
-
-# # Print backends
-
-# option('print-cups',
-       # type: 'feature',
-       # value: 'auto',
-       # description : 'Build the cups print backend')
-
-# option('print-cloudprint',
-       # type: 'feature',
-       # value: 'auto',
-       # description : 'Build the cloudprint print backend')
-
-# # Optional features
-
-# option('vulkan',
-       # type: 'feature',
-       # value: 'auto',
-       # description : 'Enable support for the Vulkan graphics API')
-
-# option('xinerama',
-       # type: 'feature',
-       # value: 'auto',
-       # description : 'Enable support for the X11 Xinerama extension')
-
-# option('cloudproviders',
-       # type: 'feature',
-       # value: 'disabled',
-       # description : 'Enable the cloudproviders support')
-
-# option('sysprof',
-       # type: 'feature',
-       # value: 'disabled',
-       # description : 'include tracing support for sysprof')
-
-# option('tracker',
-       # type: 'feature',
-       # value: 'disabled',
-       # description : 'Enable Tracker3 filechooser search')
-
-# option('colord',
-       # type: 'feature',
-       # value: 'disabled',
-       # description : 'Build colord support for the CUPS printing backend')
-
-# option('sassc',
-       # type: 'feature',
-       # value: 'auto',
-       # description: 'Rebuild themes using sassc')
- 

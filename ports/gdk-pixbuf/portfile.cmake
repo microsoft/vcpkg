@@ -13,22 +13,23 @@ vcpkg_extract_source_archive_ex(
     PATCHES fix_build.patch
 )
 if(VCPKG_TARGET_IS_WINDOWS)
-    #list(APPEND OPTIONS -Dnative_windows_loaders=true)
+    #list(APPEND OPTIONS -Dnative_windows_loaders=true) # Use Windows system components to handle BMP, EMF, GIF, ICO, JPEG, TIFF and WMF images, overriding jpeg and tiff.  To build this into gdk-pixbuf, pass in windows" with the other loaders to build in or use "all" with the builtin_loaders option
 endif()
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -Dman=false
-        -Dgtk_doc=false
+        -Dman=false                 # Whether to generate man pages (requires xlstproc)
+        -Dgtk_doc=false             # Whether to generate the API reference (requires GTK-Doc)
         -Ddocs=false
-        -Dpng=true
-        -Dtiff=true
-        -Djpeg=true
-        -Dintrospection=disabled
-        -Drelocatable=true
+        -Dpng=true                  # Enable PNG loader (requires libpng)
+        -Dtiff=true                 # Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used
+        -Djpeg=true                 # Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used
+        -Dintrospection=disabled    # Whether to generate the API introspection data (requires GObject-Introspection)
+        -Drelocatable=true          # Whether to enable application bundle relocation support
         -Dinstalled_tests=false
-        -Dgio_sniffing=false
-        -Dbuiltin_loaders=all # since it is unclear where loadable plugins should be located
+        -Dgio_sniffing=false        # Perform file type detection using GIO (Unused on MacOS and Windows)
+        -Dbuiltin_loaders=all       # since it is unclear where loadable plugins should be located; 
+                                    # Comma-separated list of loaders to build into gdk-pixbuf, or "none", or "all" to build all buildable loaders into gdk-pixbuf
     ADDITIONAL_NATIVE_BINARIES glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
                                glib-mkenums='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-mkenums'
     ADDITIONAL_CROSS_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
@@ -36,9 +37,7 @@ vcpkg_configure_meson(
         )
 vcpkg_install_meson(ADD_BIN_TO_PATH)
 
-
-
-# FIx paths in pc file. 
+# Fix paths in pc file. 
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdk-pixbuf-2.0.pc")
 if(EXISTS "${_file}")
     file(READ "${_file}" _contents)
@@ -69,53 +68,3 @@ file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gdk-p
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/gdk-pixbuf/COPYING ${CURRENT_PACKAGES_DIR}/share/gdk-pixbuf/copyright)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-# option('png',
-       # description: 'Enable PNG loader (requires libpng)',
-       # type: 'boolean',
-       # value: true)
-# option('tiff',
-       # description: 'Enable TIFF loader (requires libtiff), disabled on Windows if "native_windows_loaders" is used',
-       # type: 'boolean',
-       # value: true)
-# option('jpeg',
-       # description: 'Enable JPEG loader (requires libjpeg), disabled on Windows if "native_windows_loaders" is used',
-       # type: 'boolean',
-       # value: true)
-# option('builtin_loaders',
-       # description: 'Comma-separated list of loaders to build into gdk-pixbuf, or "none", or "all" to build all buildable loaders into gdk-pixbuf',
-       # type: 'string',
-       # value: 'none')
-# option('gtk_doc',
-       # description: 'Whether to generate the API reference (requires GTK-Doc)',
-       # type: 'boolean',
-       # value: false)
-# option('docs',
-       # description: 'Whether to generate the whole documentation (see: gtk_doc and man options) [Deprecated]',
-       # type: 'boolean',
-       # value: false)
-# option('introspection',
-       # description: 'Whether to generate the API introspection data (requires GObject-Introspection)',
-       # type: 'feature',
-       # value: 'auto',
-       # yield: true)
-# option('man',
-       # description: 'Whether to generate man pages (requires xlstproc)',
-       # type: 'boolean',
-       # value: true)
-# option('relocatable',
-       # description: 'Whether to enable application bundle relocation support',
-       # type: 'boolean',
-       # value: false)
-# option('native_windows_loaders',
-       # description: 'Use Windows system components to handle BMP, EMF, GIF, ICO, JPEG, TIFF and WMF images, overriding jpeg and tiff.  To build this into gdk-pixbuf, pass in windows" with the other loaders to build in or use "all" with the builtin_loaders option',
-       # type: 'boolean',
-       # value: false)
-# option('installed_tests',
-       # description: 'Install the test suite',
-       # type: 'boolean',
-       # value: true)
-# option('gio_sniffing',
-       # description: 'Perform file type detection using GIO (Unused on MacOS and Windows)',
-       # type: 'boolean',
-       # value: true)

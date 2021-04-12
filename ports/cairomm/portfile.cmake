@@ -19,7 +19,7 @@ vcpkg_configure_meson(
     PREFER_NINJA
     OPTIONS
         -Dbuild-examples=false
-        -Dmsvc14x-parallel-installable=false
+        -Dmsvc14x-parallel-installable=false    # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
 )
 
 vcpkg_install_meson()
@@ -40,24 +40,3 @@ if(VCPKG_LIBRARY_LINAKGE STREQUAL "static")
         vcpkg_replace_string("${_file}" "# define CAIROMM_DLL 1" "# undef CAIROMM_DLL\n# define CAIROMM_STATIC_LIB 1")
     endif()
 endif()
-
-# option('maintainer-mode', type: 'combo', choices: ['false', 'if-git-build', 'true'],
-  # value: 'if-git-build', description: 'Let mm-common-get copy some files to untracked/')
-# option('warnings', type: 'combo', choices: ['no', 'min', 'max', 'fatal'],
-  # value: 'min', description: 'Compiler warning level')
-# option('dist-warnings', type: 'combo', choices: ['no', 'min', 'max', 'fatal'],
-  # value: 'fatal', description: 'Compiler warning level when a tarball is created')
-# option('build-deprecated-api', type: 'boolean', value: true,
-  # description: 'Build deprecated API and include it in the library')
-# option('build-exceptions-api', type: 'boolean', value: true,
-  # description: 'Build exceptions API and include it in the library')
-# option('build-documentation', type: 'combo', choices: ['false', 'if-maintainer-mode', 'true'],
-  # value: 'if-maintainer-mode', description: 'Build and install the documentation')
-# option('build-examples', type: 'boolean', value: true,
-  # description: 'Build example programs')
-# option('build-tests', type: 'combo', choices: ['false', 'if-dependencies-found', 'true'],
-  # value: 'if-dependencies-found', description: 'Build test programs (requires Boost Test and Fontconfig or Windows)')
-# option('boost-shared', type: 'boolean',
-  # value: false, description: 'Use shared version of boost')
-# option('msvc14x-parallel-installable', type: 'boolean', value: true,
-  # description: 'Use separate DLL and LIB filenames for Visual Studio 2017 and 2019')

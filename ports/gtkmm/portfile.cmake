@@ -18,7 +18,7 @@ vcpkg_extract_source_archive_ex(
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -Dmsvc14x-parallel-installable=false
+        -Dmsvc14x-parallel-installable=false # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
         -Dbuild-tests=false
         -Dbuild-demos=false
     ADDITIONAL_NATIVE_BINARIES glib-compile-resources='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-compile-resources${VCPKG_HOST_EXECUTABLE_SUFFIX}'
@@ -31,21 +31,4 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gtkmm" RENAME copyright)
-
-
-# option('maintainer-mode', type: 'combo', choices: ['false', 'if-git-build', 'true'],
-  # value: 'if-git-build', description: 'Generate source code from .hg and .ccg files')
-# option('warnings', type: 'combo', choices: ['no', 'min', 'max', 'fatal'], value: 'min',
-  # description: 'Compiler warning level')
-# option('dist-warnings', type: 'combo', choices: ['no', 'min', 'max', 'fatal'], value: 'fatal',
-  # description: 'Compiler warning level when a tarball is created')
-# option('build-deprecated-api', type: 'boolean', value: true,
-  # description: 'Build deprecated API and include it in the library')
-# option('build-documentation', type: 'combo', choices: ['false', 'if-maintainer-mode', 'true'],
-  # value: 'if-maintainer-mode', description: 'Build and install the documentation')
-# option('build-demos', type: 'boolean', value: true, description: 'Build demo programs')
-# option('build-tests', type: 'boolean', value: true, description: 'Build test programs')
-# option('msvc14x-parallel-installable', type: 'boolean', value: true,
-  # description: 'Use separate DLL and LIB filenames for Visual Studio 2017 and 2019')

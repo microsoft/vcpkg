@@ -14,17 +14,17 @@ vcpkg_from_github(
 )
 
 if("icu" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -Dicu=enabled)
+    list(APPEND FEATURE_OPTIONS -Dicu=enabled) # Enable ICU library unicode functions
 else()
     list(APPEND FEATURE_OPTIONS -Dicu=disabled)
 endif()
 if("graphite2" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -Dgraphite=enabled)
+    list(APPEND FEATURE_OPTIONS -Dgraphite=enabled) #Enable Graphite2 complementary shaper
 else()
     list(APPEND FEATURE_OPTIONS -Dgraphite=disabled)
 endif()
 if("coretext" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -Dcoretext=enabled)
+    list(APPEND FEATURE_OPTIONS -Dcoretext=enabled) # Enable CoreText shaper backend on macOS
     if(NOT VCPKG_TARGET_IS_OSX)
         message(FATAL_ERROR "Feature 'coretext' os only available on OSX")
     endif()
@@ -32,27 +32,25 @@ else()
     list(APPEND FEATURE_OPTIONS -Dcoretext=disabled)
 endif()
 if("glib" IN_LIST FEATURES)
-    list(APPEND FEATURE_OPTIONS -Dglib=enabled)
-    list(APPEND FEATURE_OPTIONS -Dgobject=enabled)
+    list(APPEND FEATURE_OPTIONS -Dglib=enabled) # Enable GLib unicode functions
+    list(APPEND FEATURE_OPTIONS -Dgobject=enabled) #Enable GObject bindings
 else()
     list(APPEND FEATURE_OPTIONS -Dglib=disabled)
     list(APPEND FEATURE_OPTIONS -Dgobject=disabled)
 endif()
-list(APPEND FEATURE_OPTIONS -Dfreetype=enabled)
-#if(VCPKG_TARGET_IS_WINDOWS)
-#    list(APPEND FEATURE_OPTIONS -Dgdi=enabled) # This breaks qt5-base:x64-windows-static due to missing libraries being link against. 
-#elseif(VCPKG_TARGET_IS_OSX)
-#    list(APPEND FEATURE_OPTIONS -Dcoretext=enabled)
-#endif()
+list(APPEND FEATURE_OPTIONS -Dfreetype=enabled) #Enable freetype interop helpers
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND FEATURE_OPTIONS -Dgdi=enabled) # Enable GDI helpers and Uniscribe shaper backend (Windows only)
+endif()
 
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${FEATURE_OPTIONS}
-        -Dcairo=disabled
-        -Dfontconfig=disabled
-        -Dintrospection=disabled
-        -Ddocs=disabled
+        -Dcairo=disabled # Use Cairo graphics library
+        -Dfontconfig=disabled    # Use fontconfig
+        -Dintrospection=disabled # Generate gobject-introspection bindings (.gir/.typelib files)
+        -Ddocs=disabled          # Generate documentation with gtk-doc
         -Dtests=disabled
         -Dbenchmark=disabled
     ADDITIONAL_NATIVE_BINARIES  glib-genmarshal='${CURRENT_HOST_INSTALLED_DIR}/tools/glib/glib-genmarshal'
@@ -83,41 +81,3 @@ endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-# # HarfBuzz feature options
-# option('glib', type: 'feature', value: 'auto',
-  # description: 'Enable GLib unicode functions')
-# option('gobject', type: 'feature', value: 'auto',
-  # description: 'Enable GObject bindings')
-# option('cairo', type: 'feature', value: 'auto',
-  # description: 'Use Cairo graphics library')
-# option('fontconfig', type: 'feature', value: 'auto',
-  # description: 'Use fontconfig')
-# option('icu', type: 'feature', value: 'auto',
-  # description: 'Enable ICU library unicode functions')
-# option('graphite', type: 'feature', value: disabled,
-  # description: 'Enable Graphite2 complementary shaper')
-# option('freetype', type: 'feature', value: 'auto',
-  # description: 'Enable freetype interop helpers')
-# option('gdi', type: 'feature', value: disabled,
-  # description: 'Enable GDI helpers and Uniscribe shaper backend (Windows only)')
-# option('directwrite', type: 'feature', value: disabled,
-  # description: 'Enable DirectWrite shaper backend on Windows (experimental)')
-# option('coretext', type: 'feature', value: disabled,
-  # description: 'Enable CoreText shaper backend on macOS')
-
-# # Common feature options
-# option('tests', type: 'feature', value: enabled, yield: true,
-  # description: 'Enable or disable unit tests')
-# option('introspection', type: 'feature', value: 'auto', yield: true,
-  # description: 'Generate gobject-introspection bindings (.gir/.typelib files)')
-# option('docs', type: 'feature', value: 'auto', yield: true,
-  # description: 'Generate documentation with gtk-doc')
-
-# option('benchmark', type: 'feature', value: 'auto',
-  # description: 'Enable benchmark tests')
-# option('icu_builtin', type: 'boolean', value: false,
-  # description: 'Don\'t separate ICU support as harfbuzz-icu module')
-# option('experimental_api', type: 'boolean', value: false,
-  # description: 'Enable experimental APIs')
-# option('fuzzer_ldflags', type: 'string',
-  # description: 'Extra LDFLAGS used during linking of fuzzing binaries')
