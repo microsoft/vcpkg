@@ -2476,6 +2476,10 @@
       "baseline": "5.3.0",
       "port-version": 1
     },
+    "hypodermic": {
+      "baseline": "2.5.2",
+      "port-version": 0
+    },
     "hypre": {
       "baseline": "2.19.0",
       "port-version": 0
