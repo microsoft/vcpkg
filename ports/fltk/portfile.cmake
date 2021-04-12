@@ -1,11 +1,11 @@
+# FLTK has many improperly shared global variables that get duplicated into every DLL
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://fltk.org/pub/fltk/1.3.5/fltk-1.3.5-source.tar.gz"
     FILENAME "fltk-1.3.5.tar.gz"
     SHA512 db7ea7c5f3489195a48216037b9371a50f1119ae7692d66f71b6711e5ccf78814670581bae015e408dee15c4bba921728309372c1cffc90113cdc092e8540821
 )
-
-# FLTK has many improperly shared global variables that get duplicated into every DLL
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -15,6 +15,7 @@ vcpkg_extract_source_archive_ex(
         add-link-libraries.patch
         config-path.patch
         include.patch
+        fix-system-link.patch
 )
 
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
@@ -42,6 +43,8 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/fltk)
 
+vcpkg_copy_pdbs()
+
 if(VCPKG_TARGET_IS_OSX)
     vcpkg_copy_tools(TOOL_NAMES fluid.app fltk-config AUTO_CLEAN)
 elseif(VCPKG_TARGET_IS_WINDOWS)
@@ -50,8 +53,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
 else()
     vcpkg_copy_tools(TOOL_NAMES fluid fltk-config AUTO_CLEAN)
 endif()
-
-vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE
@@ -74,4 +75,4 @@ foreach(FILE Fl_Export.H fl_utf8.h)
     file(WRITE ${CURRENT_PACKAGES_DIR}/include/FL/${FILE} "${FLTK_HEADER}")
 endforeach()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
