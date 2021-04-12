@@ -20,7 +20,7 @@ vcpkg_check_features(
         opengl BUILD_EXPERIMENTAL_OPENGL_BACKEND
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -34,7 +34,7 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # The official documentation says:
 # find_package(Matplot++ ...)
@@ -43,7 +43,7 @@ file(RENAME
     ${CURRENT_PACKAGES_DIR}/lib/cmake/Matplot++/Matplot++-config.cmake
 )
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Matplot++ TARGET_PATH share/Matplot++)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Matplot++ TARGET_PATH share/Matplot++)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 

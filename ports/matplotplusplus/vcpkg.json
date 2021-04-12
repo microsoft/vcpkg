@@ -6,7 +6,15 @@
   "license": "MIT",
   "supports": "!uwp",
   "dependencies": [
-    "cimg"
+    "cimg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "opengl": {
