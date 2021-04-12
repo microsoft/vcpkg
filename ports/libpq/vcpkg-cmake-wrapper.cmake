@@ -42,7 +42,7 @@ if(PostgreSQL_FOUND AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
         
         if (PostgreSQL_${LIB_ITEM}_LIBRARY_RELEASE AND PostgreSQL_${LIB_ITEM}_LIBRARY_DEBUG)
             select_library_configurations(PostgreSQL_${LIB_ITEM})
-            set(PostgreSQL_LIBRARIES ${PostgreSQL_LIBRARIES} ${PostgreSQL_${LIB_ITEM}_LIBRARY})
+            list(APPEND PostgreSQL_LIBRARIES ${PostgreSQL_${LIB_ITEM}_LIBRARY})
         endif()
     endforeach()
 endif()
