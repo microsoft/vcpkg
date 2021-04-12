@@ -1058,7 +1058,7 @@
     },
     "c-ares": {
       "baseline": "1.17.1",
-      "port-version": 0
+      "port-version": 1
     },
     "c4core": {
       "baseline": "2020-04-12",
