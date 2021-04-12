@@ -6597,8 +6597,8 @@
       "port-version": 0
     },
     "zxing-cpp": {
-      "baseline": "3.3.3",
-      "port-version": 8
+      "baseline": "2020-12-2",
+      "port-version": 0
     },
     "zydis": {
       "baseline": "3.1.0-1",
