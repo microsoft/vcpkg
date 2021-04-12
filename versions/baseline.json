@@ -4176,6 +4176,10 @@
       "baseline": "2.4.6",
       "port-version": 0
     },
+    "ncurses": {
+      "baseline": "6.2",
+      "port-version": 0
+    },
     "neargye-semver": {
       "baseline": "0.2.2",
       "port-version": 0
