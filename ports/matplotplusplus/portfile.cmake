@@ -43,7 +43,7 @@ file(RENAME
     ${CURRENT_PACKAGES_DIR}/lib/cmake/Matplot++/Matplot++-config.cmake
 )
 
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/Matplot++ TARGET_PATH share/Matplot++)
+vcpkg_cmake_config_fixup(PACKAGE_NAME Matplot++ CONFIG_PATH lib/cmake/Matplot++)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
