@@ -4,7 +4,7 @@
   "description": "A C++ graphics library for data visualization",
   "homepage": "https://alandefreitas.github.io/matplotplusplus/",
   "license": "MIT",
-  "supports": "!uwp",
+  "supports": "!(arm | uwp)",
   "dependencies": [
     "cimg",
     {
