@@ -2842,7 +2842,7 @@
     },
     "knet": {
       "baseline": "1.0.2",
-      "port-version": 2
+      "port-version": 0
     },
     "krabsetw": {
       "baseline": "4.1.18",
