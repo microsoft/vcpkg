@@ -20,6 +20,7 @@ brew_formulas = [
   'bison',
   'gfortran',
   'gperf',
+  'gtk-doc',
   'libtool',
   'meson',
   'mono',
