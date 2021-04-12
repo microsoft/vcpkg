@@ -74,6 +74,8 @@ caf:arm64-windows=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
+# Requires VM update for gtk-doc
+cairo:x64-osx=fail
 c-ares:arm-uwp=fail
 c-ares:x64-uwp=fail
 cartographer:x64-osx=fail
