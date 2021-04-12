@@ -177,12 +177,12 @@
       "port-version": 0
     },
     "atk": {
-      "baseline": "2.36.0",
-      "port-version": 1
+      "baseline": "2.24.0-5",
+      "port-version": 2
     },
     "atkmm": {
-      "baseline": "2.36.0",
-      "port-version": 1
+      "baseline": "2.24.2",
+      "port-version": 5
     },
     "atlmfc": {
       "baseline": "0",
@@ -1074,11 +1074,11 @@
     },
     "cairo": {
       "baseline": "1.16.0",
-      "port-version": 10
+      "port-version": 9
     },
     "cairomm": {
-      "baseline": "1.16.0",
-      "port-version": 0
+      "baseline": "1.15.3",
+      "port-version": 5
     },
     "camport3": {
       "baseline": "1.5.3",
@@ -1093,8 +1093,8 @@
       "port-version": 1
     },
     "cartographer": {
-      "baseline": "1.0.0",
-      "port-version": 4
+      "baseline": "1.0.0-3",
+      "port-version": 0
     },
     "casclib": {
       "baseline": "1.50b-1",
@@ -1998,7 +1998,7 @@
     },
     "fluidsynth": {
       "baseline": "2.1.4",
-      "port-version": 1
+      "port-version": 0
     },
     "fmem": {
       "baseline": "c-libs-2ccee3d2fb",
@@ -2161,8 +2161,8 @@
       "port-version": 0
     },
     "gdk-pixbuf": {
-      "baseline": "2.42.2",
-      "port-version": 0
+      "baseline": "2.36.9-5",
+      "port-version": 7
     },
     "genann": {
       "baseline": "2019-07-10",
@@ -2249,12 +2249,12 @@
       "port-version": 0
     },
     "glib": {
-      "baseline": "2.66.4",
-      "port-version": 0
+      "baseline": "2.52.3",
+      "port-version": 26
     },
     "glibmm": {
-      "baseline": "2.68.0",
-      "port-version": 1
+      "baseline": "2.52.1",
+      "port-version": 14
     },
     "glm": {
       "baseline": "0.9.9.8",
@@ -2282,7 +2282,7 @@
     },
     "gmime": {
       "baseline": "3.2.6",
-      "port-version": 2
+      "port-version": 1
     },
     "gmmlib": {
       "baseline": "20.3.1",
@@ -2326,7 +2326,7 @@
     },
     "graphene": {
       "baseline": "1.10.2",
-      "port-version": 1
+      "port-version": 0
     },
     "graphicsmagick": {
       "baseline": "1.3.36",
@@ -2369,16 +2369,16 @@
       "port-version": 4
     },
     "gtk": {
-      "baseline": "4.0.1",
+      "baseline": "3.22.19-4",
       "port-version": 0
     },
     "gtkmm": {
-      "baseline": "4.0.0",
-      "port-version": 0
+      "baseline": "3.22.2",
+      "port-version": 5
     },
     "gts": {
-      "baseline": "0.7.6",
-      "port-version": 4
+      "baseline": "0.7.6-3",
+      "port-version": 0
     },
     "guetzli": {
       "baseline": "2020-09-14",
@@ -2410,7 +2410,7 @@
     },
     "harfbuzz": {
       "baseline": "2.7.4",
-      "port-version": 2
+      "port-version": 1
     },
     "hayai": {
       "baseline": "2019-08-10",
@@ -2506,7 +2506,7 @@
     },
     "ignition-cmake2": {
       "baseline": "2.5.0",
-      "port-version": 1
+      "port-version": 0
     },
     "ignition-common1": {
       "baseline": "1.1.1-1",
@@ -2630,7 +2630,7 @@
     },
     "io2d": {
       "baseline": "2020-09-14",
-      "port-version": 2
+      "port-version": 1
     },
     "irrlicht": {
       "baseline": "1.8.4-10",
@@ -2886,7 +2886,7 @@
     },
     "lcm": {
       "baseline": "1.4.0",
-      "port-version": 2
+      "port-version": 1
     },
     "lcms": {
       "baseline": "2.11",
@@ -2986,7 +2986,7 @@
     },
     "libcroco": {
       "baseline": "0.6.13",
-      "port-version": 3
+      "port-version": 2
     },
     "libcuckoo": {
       "baseline": "0.3",
@@ -3098,7 +3098,7 @@
     },
     "libgpod": {
       "baseline": "2019-08-29",
-      "port-version": 3
+      "port-version": 2
     },
     "libgta": {
       "baseline": "1.0.8-1",
@@ -3238,7 +3238,7 @@
     },
     "libmicrohttpd": {
       "baseline": "0.9.63",
-      "port-version": 5
+      "port-version": 4
     },
     "libmikmod": {
       "baseline": "3.3.11.1-8",
@@ -3282,7 +3282,7 @@
     },
     "libnice": {
       "baseline": "0.1.15",
-      "port-version": 7
+      "port-version": 6
     },
     "libnoise": {
       "baseline": "1.0.0",
@@ -3354,7 +3354,7 @@
     },
     "libplist": {
       "baseline": "1.3.6",
-      "port-version": 1
+      "port-version": 0
     },
     "libpmemobj-cpp": {
       "baseline": "1.12",
@@ -3417,8 +3417,8 @@
       "port-version": 3
     },
     "librsvg": {
-      "baseline": "2.40.20",
-      "port-version": 4
+      "baseline": "2.40.20-2",
+      "port-version": 0
     },
     "librsync": {
       "baseline": "2020-09-16",
@@ -3445,12 +3445,12 @@
       "port-version": 0
     },
     "libsigcpp": {
-      "baseline": "3.0.3",
-      "port-version": 0
+      "baseline": "2.10-3",
+      "port-version": 2
     },
     "libsigcpp-3": {
       "baseline": "3.0.3",
-      "port-version": 1
+      "port-version": 0
     },
     "libsndfile": {
       "baseline": "1.0.31",
@@ -3625,8 +3625,8 @@
       "port-version": 0
     },
     "libxmlpp": {
-      "baseline": "5.0",
-      "port-version": 1
+      "baseline": "2.40.1",
+      "port-version": 8
     },
     "libxmp-lite": {
       "baseline": "4.4.1-6",
@@ -4613,16 +4613,16 @@
       "port-version": 0
     },
     "pango": {
-      "baseline": "1.48.0",
-      "port-version": 0
+      "baseline": "1.40.11",
+      "port-version": 9
     },
     "pangolin": {
       "baseline": "0.5",
       "port-version": 14
     },
     "pangomm": {
-      "baseline": "2.48.0",
-      "port-version": 0
+      "baseline": "2.40.1",
+      "port-version": 4
     },
     "parallel-hashmap": {
       "baseline": "1.32",
@@ -4737,8 +4737,8 @@
       "port-version": 0
     },
     "pixman": {
-      "baseline": "0.40.0",
-      "port-version": 0
+      "baseline": "0.38.4",
+      "port-version": 2
     },
     "platform-folders": {
       "baseline": "4.0.0",
@@ -4822,7 +4822,7 @@
     },
     "poppler": {
       "baseline": "20.12.1",
-      "port-version": 5
+      "port-version": 4
     },
     "popsift": {
       "baseline": "0.9",
@@ -5910,7 +5910,7 @@
     },
     "tesseract": {
       "baseline": "4.1.1",
-      "port-version": 8
+      "port-version": 7
     },
     "tfhe": {
       "baseline": "1.0.1-1",
@@ -6246,7 +6246,7 @@
     },
     "v8": {
       "baseline": "8.6.395.17",
-      "port-version": 1
+      "port-version": 0
     },
     "valijson": {
       "baseline": "2018-11-17-1",
