@@ -4253,7 +4253,7 @@
       "port-version": 0
     },
     "nowide": {
-      "baseline": "11.1.1",
+      "baseline": "11.1.2",
       "port-version": 0
     },
     "nrf-ble-driver": {
@@ -4474,7 +4474,7 @@
     },
     "openmama": {
       "baseline": "6.3.1",
-      "port-version": 0
+      "port-version": 1
     },
     "openmesh": {
       "baseline": "8.1",
