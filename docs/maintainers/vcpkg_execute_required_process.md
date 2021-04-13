@@ -1,6 +1,6 @@
 # vcpkg_execute_required_process
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_execute_required_process.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_execute_required_process.md).
 
 Execute a process with logging and fail the build if the command fails.
 

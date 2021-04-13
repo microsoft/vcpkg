@@ -1,0 +1,23 @@
+{
+  "name": "cmake",
+  "version-string": "3.20.0",
+  "description": "CMake is an open-source, cross-platform family of tools designed to build, test and package software.",
+  "homepage": "https://cmake.org/",
+  "dependencies": [
+    "bzip2",
+    "curl",
+    "expat",
+    "jsoncpp",
+    "libarchive",
+    "liblzma",
+    "libuv",
+    "nghttp2",
+    "qt5-base",
+    {
+      "name": "qt5-winextras",
+      "platform": "windows"
+    },
+    "zlib",
+    "zstd"
+  ]
+}
