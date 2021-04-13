@@ -46,6 +46,7 @@ set(PATCHES
 
 if(VCPKG_TARGET_IS_MINGW)
     list(APPEND PATCHES patches/mingw/additional-zlib-names.patch)
+    list(APPEND PATCHES patches/mingw/link-with-crypt32.patch)
 endif()
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND PATCHES patches/linux/configure.patch)
