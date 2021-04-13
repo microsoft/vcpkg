@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO harfbuzz/harfbuzz
-    REF 7236c7e29cef1c2d76c7a284c5081ff4d3aa1127 # 2.7.4
-    SHA512 d231a788ea4e52231d4c363c1eca76424cb82ed0952b5c24d0b082e88b3dddbda967e7fffe67fffdcb22c7ebfbf0ec923365eb4532be772f2e61fa7d29b51998
+    REF 03538e872a0610a65fad692b33d3646f387cf578 # 2.8.0
+    SHA512 3d9d2804776ce01cf3fe1fe789c584f59cb9f4f57312fac50e195cb455936613d96f0c1920d0e09217c8fb5cbb4ba4f366cb1ff8ff0643a7f8a68f2a1c3d2a3d
     HEAD_REF master
     PATCHES
 		# This patch is a workaround that is needed until the following issues are resolved upstream:
