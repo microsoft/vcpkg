@@ -691,7 +691,7 @@ function(extract_regex_from_file)
 endfunction()
 
 function(extract_version_from_component)
-  cmake_parse_arguments(_evfc "" "COMPONENT" "" ${ARGN})
+  cmake_parse_arguments(_evfc "" "COMPONENT;OUTPUT_VARIABLE" "" ${ARGN})
   string(TOLOWER ${_evfc_COMPONENT} COMPONENT_LOWER)
   string(TOUPPER ${_evfc_COMPONENT} COMPONENT_UPPER)
   extract_regex_from_file(
@@ -709,7 +709,7 @@ function(extract_version_from_component)
     REGEX "#define ${COMPONENT_UPPER}_VERSION_MICRO[ ]+([0-9]+)"
     OUTPUT_VARIABLE _MICRO
   )
-  set(${COMPONENT_UPPER}_VERSION "${_MAJOR}.${_MINOR}.${_MICRO}" PARENT_SCOPE)
+  set(${_evfc_OUTPUT_VARIABLE} "${_MAJOR}.${_MINOR}.${_MICRO}" PARENT_SCOPE)
 endfunction()
 
 extract_regex_from_file(
@@ -718,14 +718,14 @@ extract_regex_from_file(
   OUTPUT_VARIABLE FFMPEG_VERSION
 )
 
-extract_version_from_component(COMPONENT libavutil)
-extract_version_from_component(COMPONENT libavcodec)
-extract_version_from_component(COMPONENT libavdevice)
-extract_version_from_component(COMPONENT libavfilter)
-extract_version_from_component(COMPONENT libavformat)
-extract_version_from_component(COMPONENT libavresample)
-extract_version_from_component(COMPONENT libswresample)
-extract_version_from_component(COMPONENT libswscale)
+extract_version_from_component(COMPONENT libavutil OUTPUT_VARIABLE LIBAVUTIL_VERSION)
+extract_version_from_component(COMPONENT libavcodec OUTPUT_VARIABLE LIBAVCODEC_VERSION)
+extract_version_from_component(COMPONENT libavdevice OUTPUT_VARIABLE LIBAVDEVICE_VERSION)
+extract_version_from_component(COMPONENT libavfilter OUTPUT_VARIABLE LIBAVFILTER_VERSION)
+extract_version_from_component(COMPONENT libavformat OUTPUT_VARIABLE LIBAVFORMAT_VERSION)
+extract_version_from_component(COMPONENT libavresample OUTPUT_VARIABLE LIBAVRESAMPLE_VERSION)
+extract_version_from_component(COMPONENT libswresample OUTPUT_VARIABLE LIBSWRESAMPLE_VERSION)
+extract_version_from_component(COMPONENT libswscale OUTPUT_VARIABLE LIBSWSCALE_VERSION)
 
 # Handle copyright
 file(STRINGS ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-out.log LICENSE_STRING REGEX "License: .*" LIMIT_COUNT 1)
