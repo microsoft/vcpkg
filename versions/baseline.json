@@ -2409,7 +2409,7 @@
       "port-version": 0
     },
     "harfbuzz": {
-      "baseline": "2.7.4",
+      "baseline": "2.8.0",
       "port-version": 1
     },
     "hayai": {
