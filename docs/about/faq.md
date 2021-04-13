@@ -30,6 +30,9 @@ We currently target Windows Desktop (x86 and x64) as well as the Universal Windo
 ## Does Vcpkg run on Linux/OSX?
 Yes! We continuously test on OSX and Ubuntu 16.04, however we know users have been successful with Arch, Fedora, and FreeBSD. If you have trouble with your favorite Linux distribution, let us know in an issue and we'd be happy to help!
 
+## How do I update vcpkg itself?
+You can execute `git pull` to get latest source, then runing bootstrap-vcpkg.bat(on Windows) or bootstrap-vcpkg.sh(on Unix) to update vcpkg.
+
 ## How do I use different versions of a library on one machine?
 Within a single instance of Vcpkg (e.g. one set of `installed\`, `packages\`, `ports\` and so forth), you can only have one version of a library installed (otherwise, the headers would conflict with each other!). For those with experience with system-wide package managers, packages in Vcpkg correspond to the `X-dev` or `X-devel` packages.
 
