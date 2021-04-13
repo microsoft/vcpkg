@@ -7,7 +7,7 @@
   "dependencies": [
     "libcbor",
     "openssl",
-    "zlib",
-    "vcpkg-cmake"
+    "vcpkg-cmake",
+    "zlib"
   ]
 }
