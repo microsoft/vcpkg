@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b515105..c69c96e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -108,7 +108,7 @@ add_library(Catch2::Catch2 ALIAS Catch2)
+ # see https://github.com/catchorg/Catch2/issues/1373
+ if (NOT_SUBPROJECT)
+     include(CMakePackageConfigHelpers)
+-    set(CATCH_CMAKE_CONFIG_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/Catch2")
++    set(CATCH_CMAKE_CONFIG_DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/catch2")
+ 
+     configure_package_config_file(
+         ${CMAKE_CURRENT_LIST_DIR}/CMake/Catch2Config.cmake.in
+@@ -199,7 +199,7 @@ if (NOT_SUBPROJECT)
+         "contrib/gdbinit"
+         "contrib/lldbinit"
+       DESTINATION
+-        ${CMAKE_INSTALL_DATAROOTDIR}/Catch2
++        ${CMAKE_INSTALL_DATAROOTDIR}/catch2
+     )
+     endif()
+ 
