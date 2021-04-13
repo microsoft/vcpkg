@@ -1805,7 +1805,7 @@
       "port-version": 0
     },
     "elfio": {
-      "baseline": "3.8",
+      "baseline": "3.9",
       "port-version": 0
     },
     "elfutils": {
