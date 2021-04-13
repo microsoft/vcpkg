@@ -1109,7 +1109,7 @@
       "port-version": 0
     },
     "catch2": {
-      "baseline": "2.13.1",
+      "baseline": "2.13.5",
       "port-version": 0
     },
     "cccapstone": {
