@@ -18,6 +18,7 @@ brew_formulas = [
   'autoconf',
   'automake',
   'bison',
+  'gettext',
   'gfortran',
   'gperf',
   'gtk-doc',
