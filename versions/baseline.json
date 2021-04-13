@@ -6453,7 +6453,7 @@
       "port-version": 3
     },
     "xalan-c": {
-      "baseline": "1.11-12",
+      "baseline": "1.12",
       "port-version": 0
     },
     "xbyak": {
