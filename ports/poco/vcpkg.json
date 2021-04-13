@@ -1,7 +1,7 @@
 {
   "name": "poco",
   "version-semver": "1.10.1",
-  "port-version": 4,
+  "port-version": 5,
   "description": "Modern, powerful open source C++ class libraries for building network and internet-based applications that run on desktop, server, mobile and embedded systems.",
   "homepage": "https://github.com/pocoproject/poco",
   "supports": "!uwp",
@@ -26,7 +26,10 @@
     "netssl": {
       "description": "NetSSL support for POCO",
       "dependencies": [
-        "openssl"
+        {
+          "name": "openssl",
+          "platform": "!windows"
+        }
       ]
     },
     "pdf": {

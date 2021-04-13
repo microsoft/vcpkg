@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 c8ca3fc9f1bec90a84214c8fed6073f5a0f6f6880c166a8737a24e0eee841ed5f0f3c94028b50b76535cb2e06f0362b19638e429b4cdc399487d6001b977bbbe
     HEAD_REF master
     PATCHES
-         add_cflags_to_tools.patch
+        add_cflags_to_tools.patch
 )
 
 vcpkg_configure_make(
