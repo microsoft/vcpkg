@@ -1,4 +1,8 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "linux" "osx")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
+
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    message(FATAL_ERROR "${PORT} only supports Windows.")
+endif()
 
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
