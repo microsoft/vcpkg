@@ -1,9 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cnr-isti-vclab/vcglib
-    REF v1.0.1
-    SHA512 55d1854054744abae2d41e7b5041df89253bae108df5fc1cfe777013de7192dce04bc474475cb11a1d0343ebcab1ea61b381d9d9c36c452528043e85e75bc211
-    PATCHES consume-vcpkg-eigen3.patch
+    REF 001a01b38688acbf81f0ec821e9bde3e6d4622ab #2020.09
+    SHA512 072dc05833ebf65a78ad0a580010ffa2e8bfc181c3ff6d782a0951c5f6c24d3254d18340ab9ae51c8fea5144248f2c6cd7c53c8bd41b55491fe6160ac4725696
     )
 
 configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/vcglib/copyright COPYONLY)

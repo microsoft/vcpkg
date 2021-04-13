@@ -1,0 +1,9 @@
+{
+  "name": "vcglib",
+  "version-string": "2020.09",
+  "description": "library for manipulation, processing, cleaning, simplifying triangle meshes.",
+  "homepage": "https://github.com/cnr-isti-vclab/vcglib",
+  "dependencies": [
+    "eigen3"
+  ]
+}
