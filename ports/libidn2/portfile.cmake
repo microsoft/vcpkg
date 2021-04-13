@@ -51,7 +51,7 @@ else()
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
-	COPY_SOURCE
+        COPY_SOURCE
         OPTIONS
             --with-libiconv-prefix=${CURRENT_INSTALLED_DIR}
     )
