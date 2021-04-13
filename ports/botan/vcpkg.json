@@ -1,6 +1,6 @@
 {
   "name": "botan",
-  "version-string": "2.17.3",
+  "version": "2.17.3",
   "description": "Botan is a C++ cryptography library released under the permissive Simplified BSD license.",
   "features": {
     "amalgamation": {
