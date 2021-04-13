@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 468f1a3..8e94458 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -142,6 +142,8 @@ if(HAVE_SINF)
+ endif(HAVE_SINF)
+ 
+ if (NOT WIN32)
++  set(UNIXLIBS "-lstdc++ -lm")
++endif (NOT WIN32)
+   set(prefix "${CMAKE_INSTALL_PREFIX}")
+   set(exec_prefix "${CMAKE_INSTALL_PREFIX}")
+   set(libdir "${CMAKE_INSTALL_PREFIX}/lib")
+@@ -152,4 +154,3 @@ if (NOT WIN32)
+   install(FILES "${PROJECT_BINARY_DIR}/libmodplug.pc"
+     DESTINATION lib/pkgconfig
+   )
+-endif (NOT WIN32)
+diff --git a/libmodplug.pc.in b/libmodplug.pc.in
+index bbf05f9..1699d76 100644
+--- a/libmodplug.pc.in
++++ b/libmodplug.pc.in
+@@ -8,5 +8,5 @@ Description: The ModPlug mod file playing library.
+ Version: @VERSION@
+ Requires: 
+ Libs: -L${libdir} -lmodplug 
+-Libs.private: -lstdc++ -lm
++Libs.private: @UNIXLIBS@
+ Cflags: -I${includedir}
+
