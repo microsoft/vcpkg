@@ -42,15 +42,16 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(VCPKG_MAKE_BUILD_TRIPLET --host=x86_64-w64-mingw32)
+        set(BUILD_TRIPLET --host=x86_64-w64-mingw32)
     else()
-        set(VCPKG_MAKE_BUILD_TRIPLET --host=i686-w64-mingw32)
+        set(BUILD_TRIPLET --host=i686-w64-mingw32)
     endif()
 endif()
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH source
+    BUILD_TRIPLET ${BUILD_TRIPLET}
     OPTIONS ${CONFIGURE_OPTIONS}
     OPTIONS_RELEASE ${CONFIGURE_OPTIONS_RELEASE}
     OPTIONS_DEBUG ${CONFIGURE_OPTIONS_DEBUG}
