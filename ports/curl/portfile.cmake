@@ -65,7 +65,7 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 
 if(VCPKG_TARGET_IS_ANDROID)
-    set(ADDITIONAL_SCRIPTS -C "${CURRENT_PORT_DIR}/CurlAndroidCrossCompile.cmake")
+    set(ADDITIONAL_SCRIPTS -C "${CMAKE_CURRENT_LIST_DIR}/CurlAndroidCrossCompile.cmake")
 
     set(EXTRA_ARGS -DOPENSSL_INCLUDE="${CURRENT_INSTALLED_DIR}/include")
 

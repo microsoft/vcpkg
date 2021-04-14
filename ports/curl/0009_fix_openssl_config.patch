@@ -1,17 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt	(revision e052859759b34d0e05ce0f17244873e5cd7b457b)
 +++ b/CMakeLists.txt	(date 1617452756163)
-@@ -383,14 +383,23 @@
+@@ -383,14 +383,21 @@
  endif()
  
  if(CMAKE_USE_OPENSSL)
 -  find_package(OpenSSL REQUIRED)
 +  if(ANDROID)
-+    message(WARNING "pkg-config not found, setting paths manually!" )
++    message(WARNING "Setting paths manually (instead of using pkg-config) since this is an android build" )
 +
 +    list(APPEND CURL_LIBS ${OPENSSL_LIBRARY} ${CRYPT_LIBRARY})
-+    message(STATUS ${CURL_LIBS})
-+    message(STATUS ${OPENSSL_INCLUDE})
 +    include_directories("${OPENSSL_INCLUDE}")
 +  else()
 +    find_package(OpenSSL REQUIRED)
