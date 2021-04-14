@@ -4,10 +4,10 @@ include(${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake)
 vcpkg_fail_port_install(ON_ARCH "arm")
 
 # NOTE: update the version and checksum for new GDAL release
-set(GDAL_VERSION_STR "3.2.1")
-set(GDAL_VERSION_PKG "321")
+set(GDAL_VERSION_STR "3.2.2")
+set(GDAL_VERSION_PKG "322")
 set(GDAL_VERSION_LIB "204")
-set(GDAL_PACKAGE_SUM "3c650f570f0561067fa404e5287e78ec1fb4158aa0f1d87226e92dc3adf706b0bac023fee788b816d4dc339bbce41c05ed4b14ab363cb9f98d7b43a3e8140490")
+set(GDAL_PACKAGE_SUM "ce319e06c78bd076228b3710c127cdbd37c7d6fb23966b47df7287eaffe86a05d4ddcc78494c8bfcaf4db98a71f2ed50a01fb3ca2fe1c10cf0d2e812683c8e53")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://download.osgeo.org/gdal/${GDAL_VERSION_STR}/gdal${GDAL_VERSION_PKG}.zip"
@@ -40,7 +40,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
   endif()
 
   list(APPEND NMAKE_OPTIONS
-      VERSION=${GDAL_VERSION_LIB}
+      # VERSION=${GDAL_VERSION_LIB}
       DATADIR=${NATIVE_DATA_DIR}
       HTMLDIR=${NATIVE_HTML_DIR}
       GEOS_DIR=${GEOS_INCLUDE_DIR}
