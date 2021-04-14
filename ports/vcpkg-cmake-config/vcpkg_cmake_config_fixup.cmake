@@ -230,15 +230,22 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
         foreach(targets_file IN LISTS targets_files)
             file(READ "${targets_file}" targets_content)
             
+            string(REGEX MATCHALL "INTERFACE_LINK_LIBRARIES[^\n]*" library_contents "${targets_content}")
             string(REGEX REPLACE
                 [[/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/[^/]+/System/Library/Frameworks/([_a-zA-Z]+)\.framework]]
                 [[-framework \1]]
-                targets_content
-                "${targets_content}"
+                fixed_contents
+                "${library_contents}"
             )
             string(REGEX REPLACE
                 [[/Library/Developer/CommandLineTools/SDKs/[^/]+/System/Library/Frameworks/([_a-zA-Z]+)\.framework]]
                 [[-framework \1]]
+                fixed_contents
+                "${fixed_contents}"
+            )
+            string(REGEX REPLACE
+               "${library_contents}"
+               "${fixed_contents}"
                 targets_content
                 "${targets_content}"
             )
@@ -258,4 +265,3 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     endif()
 endfunction()
-
