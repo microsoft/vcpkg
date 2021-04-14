@@ -700,7 +700,7 @@ function(extract_version_from_component out)
     )
     extract_regex_from_file(minor_version
         FILE "${SOURCE_PATH}/${component_lower}/version.h"
-        REGEX "#define ${COMPONENT_UPPER}_VERSION_MINOR[ ]+([0-9]+)"
+        REGEX "#define ${component_upper}_VERSION_MINOR[ ]+([0-9]+)"
     )
     extract_regex_from_file(micro_version
         FILE "${SOURCE_PATH}/${component_lower}/version.h"
