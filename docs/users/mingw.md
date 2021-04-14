@@ -46,14 +46,14 @@ After the basic installation if MSYS2, you will need to install a few
 additional packages for software development, e.g. for x64:
 
 ```bash
-pacman -S git mingw-w64-x86_64-cmake mingw-w64-x86_64-ninja
+pacman -S --needed git base-devel mingw-w64-x86_64-toolchain
 ```
 
 The active subsystem is selected by running the MSYS2 MinGW app, or
 changed in a running terminal by
 
 ```bash
-source shell mingw64   # or mingw32
+source shell mingw64   # for x64, or "mingw32" for x86
 ```
 
 The bootstrapping of vcpkg shall be done by running bootstrap-vcpkg.bat.
@@ -96,10 +96,9 @@ these installation commands for the x64 targets:
 sudo apt-get install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
 ```
 
-Note that the pre-installed cmake might be too old for vcpkg. Also the
-packaged versions of MinGW and GCC might be older releases which lack
-some useful features or bug fixes. An alternative independent toolchain
-is offered by [MXE](https://mxe.cc/).
+Note that the packaged versions of MinGW and GCC on Linux distributions
+might be older releases which lack some useful features or bug fixes.
+An alternative independent toolchain is offered by [MXE](https://mxe.cc/).
 
 For vcpkg bootstrapping, clone the github repository and run the
 bootstrap-vcpkg.sh script:
