@@ -124,9 +124,9 @@ set(cli_exe_name "botan")
 if(CMAKE_HOST_WIN32)
     set(cli_exe_name "botan-cli.exe")
 endif()
+
 file(RENAME ${CURRENT_PACKAGES_DIR}/bin/${cli_exe_name} ${CURRENT_PACKAGES_DIR}/tools/botan/${cli_exe_name})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/${cli_exe_name})
-
 file(RENAME ${CURRENT_PACKAGES_DIR}/include/botan-2/botan ${CURRENT_PACKAGES_DIR}/include/botan)
 
 file(REMOVE_RECURSE
@@ -146,3 +146,9 @@ vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/botan-${BOTAN_VERSION}/ ${CURRENT_PACKAGES_DIR}/share/${PORT}/)
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/botan/license.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
+
+# Install package configuration file
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/botanConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+
+# Handle copyright
+file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
