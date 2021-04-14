@@ -106,6 +106,7 @@ macro(_vcpkg_determine_host_mingw out_var)
 endmacro()
 
 macro(_vcpkg_determine_autotools_host_cpu out_var)
+    # TODO: the host system processor architecture can differ from the host triplet target architecture
     if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
         set(HOST_ARCH $ENV{PROCESSOR_ARCHITEW6432})
     elseif(DEFINED ENV{PROCESSOR_ARCHITECTURE})
