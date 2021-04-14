@@ -1,17 +1,14 @@
 vcpkg_fail_port_install(ON_TARGET "Linux" "OSX")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/Starlink/ast/releases/download/v9.2.3/ast-9.2.3.tar.gz"
-    FILENAME "ast-9.2.3.tar.gz"
-    SHA512 5cd19d153381a22f7a250189321b9914b52ec05e057b48aa735477e414c6b1b535135bfdd72049aaf1ed245b8b9ff2a8664b3fb1d374429d89bab786b491e74e
+    URLS "https://github.com/Starlink/ast/releases/download/v9.2.4/ast-9.2.4.tar.gz"
+    FILENAME "ast-9.2.4.tar.gz"
+    SHA512 84e6f243e6d9d77328b73b97355feb3990307fb9c8f9b2f30344d71e2f5e63a849cdce0090ff5b7cc16028e12d68516c885b13d76db841072c9d1d06a7742a9e
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    PATCHES
-        "patch-use-exeetc-envar.patch"
-        "patch-avoid-gcc-specifics.patch"
+    ARCHIVE ${ARCHIVE}    
 )
 
 set(CONFIGURE_OPTIONS "--disable-shared --without-fortran star_cv_cnf_trail_type=long star_cv_cnf_f2c_compatible=no")
@@ -50,10 +47,10 @@ vcpkg_configure_make(
     OPTIONS_DEBUG ${CONFIGURE_OPTIONS_DEBUG}
 )
 
-file(COPY ${SOURCE_PATH}/ast_par.source DESTINATION ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
-file(COPY ${SOURCE_PATH}/ast_par.source DESTINATION ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
-file(COPY ${SOURCE_PATH}/makeh DESTINATION ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
-file(COPY ${SOURCE_PATH}/makeh DESTINATION ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
+#file(COPY ${SOURCE_PATH}/ast_par.source DESTINATION ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
+#file(COPY ${SOURCE_PATH}/ast_par.source DESTINATION ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
+#file(COPY ${SOURCE_PATH}/makeh DESTINATION ${CURRENT_BUILDTREES_DIR}/${DEBUG_TRIPLET})
+#file(COPY ${SOURCE_PATH}/makeh DESTINATION ${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET})
 
 vcpkg_install_make()
 
