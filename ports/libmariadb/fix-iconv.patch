@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index cd716e3..7b694e9 100644
+index 203fca7..65cc350 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -346,7 +346,8 @@ ENDIF()
+@@ -342,7 +342,8 @@ ENDIF()
  
  IF(WITH_ICONV)
    IF(NOT WIN32)
@@ -12,10 +12,10 @@ index cd716e3..7b694e9 100644
    ENDIF()
  ENDIF()
  
-@@ -363,8 +364,8 @@ IF(WIN32)
+@@ -359,8 +360,8 @@ IF(WIN32)
    SET(SYSTEM_LIBS ws2_32 advapi32 kernel32 shlwapi crypt32 ${LIBZ})
  ELSE()
-   SET(SYSTEM_LIBS ${SYSTEM_LIBS} ${LIBPTHREAD} ${LIBDL} ${LIBM})
+   SET(SYSTEM_LIBS ${SYSTEM_LIBS} ${LIBPTHREAD} ${CMAKE_DL_LIBS} ${LIBM})
 -  IF(ICONV_EXTERNAL)
 -    SET(SYSTEM_LIBS ${SYSTEM_LIBS} ${ICONV_LIBRARIES})
 +  IF(WITH_ICONV)

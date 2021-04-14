@@ -28,6 +28,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Manifest files - vcpkg.json](maintainers/manifest-files.md)
 - [Control files](maintainers/control-files.md)
 - [Portfile functions](maintainers/portfile-functions.md)
+- [Common CMake definitions](maintainers/vcpkg_common_definitions.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
 
 ### [Vcpkg-Tool](https://github.com/microsoft/vcpkg-tool) Maintainer Help
@@ -47,6 +48,10 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Feature Packages](specifications/feature-packages.md)
 
 ### Blog posts
+
+- [Vcpkg Host Dependencies for Cross-Compilation](https://devblogs.microsoft.com/cppblog/vcpkg-host-dependencies/)
+- [Registries: Bring your own libraries to vcpkg](https://devblogs.microsoft.com/cppblog/registries-bring-your-own-libraries-to-vcpkg/)
+- [Vcpkg: Accelerate your team development environment with binary caching and manifests](https://devblogs.microsoft.com/cppblog/vcpkg-accelerate-your-team-development-environment-with-binary-caching-and-manifests/)
 - [Announcing a single C++ library manager for Linux, macOS and Windows: Vcpkg](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/)
 - [Vcpkg: Using multiple enlistments to handle multiple versions of a library](https://blogs.msdn.microsoft.com/vcblog/2017/10/23/vcpkg-using-multiple-enlistments/)
 - [Vcpkg: introducing the export command](https://blogs.msdn.microsoft.com/vcblog/2017/05/03/vcpkg-introducing-export-command/)
