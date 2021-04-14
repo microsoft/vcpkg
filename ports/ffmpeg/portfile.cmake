@@ -679,7 +679,7 @@ vcpkg_fixup_pkgconfig()
 
 function(extract_regex_from_file out)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "FILE;REGEX" "")
-    file(READ "${arg_FILENAME}" contents)
+    file(READ "${arg_FILE}" contents)
     if (contents MATCHES "${arg_REGEX}")
         if(NOT CMAKE_MATCH_COUNT EQUAL 1)
             message(FATAL_ERROR "Could not identify match group in regular expression \"${arg_REGEX}\"")
