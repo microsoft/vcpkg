@@ -12,10 +12,7 @@ APT_PACKAGES="at curl unzip tar libxt-dev gperf libxaw7-dev cifs-utils \
   libxcursor-dev yasm libnuma1 libnuma-dev python-six python3-six python-yaml \
   flex libbison-dev autoconf libudev-dev libncurses5-dev libtool libxrandr-dev \
   xutils-dev dh-autoreconf autoconf-archive libgles2-mesa-dev ruby-full \
-  pkg-config meson autopoint"
-
-# Required by libgpod
-APT_PACKAGES="$APT_PACKAGES gtk-doc-tools"
+  pkg-config meson"
 
 # Additionally required by qt5-base
 APT_PACKAGES="$APT_PACKAGES libxext-dev libxfixes-dev libxrender-dev \
