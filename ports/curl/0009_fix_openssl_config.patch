@@ -9,7 +9,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 +  if(ANDROID)
 +    message(WARNING "Setting paths manually (instead of using pkg-config) since this is an android build" )
 +
-+    list(APPEND CURL_LIBS ${OPENSSL_LIBRARY} ${CRYPT_LIBRARY})
++    set(OPENSSL_LIBRARIES ${OPENSSL_LIBRARY} ${CRYPT_LIBRARY})
 +    include_directories("${OPENSSL_INCLUDE}")
 +  else()
 +    find_package(OpenSSL REQUIRED)

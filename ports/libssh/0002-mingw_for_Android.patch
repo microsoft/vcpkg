@@ -1,8 +1,3 @@
-Index: src/CMakeLists.txt
-IDEA additional info:
-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
-<+>UTF-8
-===================================================================
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
 --- a/src/CMakeLists.txt	(revision 0cceefd49d4d397eb21bd36e314ac87739da51ff)
 +++ b/src/CMakeLists.txt	(date 1617870624653)
