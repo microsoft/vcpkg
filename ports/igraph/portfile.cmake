@@ -20,6 +20,20 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     graphml   IGRAPH_GRAPHML_SUPPORT
 )
 
+if (VCPKG_TARGET_IS_OSX)
+    set(ARITH_H ${CURRENT_PORT_DIR}/arith_osx.h)
+elseif (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+        set(ARITH_H ${CURRENT_PORT_DIR}/arith_win32.h)
+    elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        set(ARITH_H ${CURRENT_PORT_DIR}/arith_win64.h)
+    else()
+        set(ARITH_H "")
+    endif()
+else()
+    set(ARITH_H "")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -31,6 +45,7 @@ vcpkg_configure_cmake(
         -DIGRAPH_USE_INTERNAL_GLPK=ON
         -DIGRAPH_USE_INTERNAL_GMP=ON
         -DIGRAPH_USE_INTERNAL_LAPACK=ON
+        -DF2C_EXTERNAL_ARITH_HEADER=${ARITH_H}
         ${FEATURE_OPTIONS}
 )
 
