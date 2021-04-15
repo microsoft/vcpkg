@@ -47,6 +47,11 @@ file(WRITE ${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake "${TESS
 
 vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)
 
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tesseract.pc" "-ltesseract41" "-ltesseract41d")
+endif()
+vcpkg_fixup_pkgconfig()
+
 if("training-tools" IN_LIST FEATURES)
     list(APPEND TRAINING_TOOLS
         ambiguous_words classifier_tester combine_tessdata

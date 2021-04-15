@@ -187,7 +187,7 @@ function(vcpkg_build_make)
 
             if (_bc_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
-                        COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
+                        COMMAND ${MAKE_BASH} ${NO_PARALLEL_MAKE_CMD_LINE}
                         WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                         LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
