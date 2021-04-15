@@ -3702,7 +3702,7 @@
     },
     "lodepng-c": {
       "baseline": "2021-03-01",
-      "port-version": 0
+      "port-version": 1
     },
     "log4cplus": {
       "baseline": "2.0.5",
