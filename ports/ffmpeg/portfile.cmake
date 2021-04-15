@@ -46,7 +46,7 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(OPTIONS "--enable-asm --enable-x86asm --disable-doc --enable-debug --enable-runtime-cpudetect")
+set(OPTIONS "--enable-pic --enable-asm --enable-x86asm --disable-doc --enable-debug --enable-runtime-cpudetect")
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -575,7 +575,7 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/debug/lib/*.def)
-    
+
     if(NOT VCPKG_TARGET_IS_MINGW)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
             set(LIB_MACHINE_ARG /machine:ARM)
@@ -603,7 +603,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             )
         endforeach()
     endif()
-    
+
     file(GLOB EXP_FILES ${CURRENT_PACKAGES_DIR}/lib/*.exp ${CURRENT_PACKAGES_DIR}/debug/lib/*.exp)
     file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
     if(VCPKG_TARGET_IS_MINGW)
@@ -636,7 +636,7 @@ vcpkg_copy_pdbs()
 if (VCPKG_TARGET_IS_WINDOWS)
     # Translate cygpath to local path
     set(CYGPATH_CMD "${MSYS_ROOT}/usr/bin/cygpath.exe" -w)
-    
+
     foreach(PKGCONFIG_PATH "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
         file(GLOB PKGCONFIG_FILES "${PKGCONFIG_PATH}/*.pc")
         foreach(PKGCONFIG_FILE IN LISTS PKGCONFIG_FILES)
@@ -665,7 +665,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
             )
             string(REPLACE "\n" "" FIXED_INCLUDE_PATH "${FIXED_INCLUDE_PATH}")
             file(TO_CMAKE_PATH ${FIXED_INCLUDE_PATH} FIXED_INCLUDE_PATH)
-            
+
             vcpkg_replace_string("${PKGCONFIG_FILE}" "${prefix_cygpath}" "${FIXED_PREFIX_PATH}")
             vcpkg_replace_string("${PKGCONFIG_FILE}" "${libdir_cygpath}" "${FIXED_LIBDIR_PATH}")
             vcpkg_replace_string("${PKGCONFIG_FILE}" "${includedir_cygpath}" "${FIXED_INCLUDE_PATH}")
