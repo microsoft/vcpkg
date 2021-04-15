@@ -42,5 +42,4 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/igraph TARGET_PATH share/igraph)
 
-# # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/igraph RENAME copyright)
