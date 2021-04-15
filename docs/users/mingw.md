@@ -1,24 +1,23 @@
-# Vcpkg and MinGW
+# Vcpkg and Mingw-w64
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/mingw.md).**
 
-## MinGW community triplets
+## Mingw-w64 community triplets
 
 Vcpkg includes
-[community triplets for MinGW](https://github.com/microsoft/vcpkg/tree/master/triplets/community)
-for x64, x86, arm64 and arm. They don't depend on Visual Studio and
+[x64, x86, arm64 and arm community triplets](https://github.com/microsoft/vcpkg/tree/master/triplets/community)
+for [Mingw-w64](http://mingw-w64.org/). They don't depend on Visual Studio and
 can be used natively on Windows as well as for cross-compiling on
 other operating systems. There are two variants of each triplet,
-selecting between static and dynamic linking:
+selecting between static and dynamic linking. The actual tools
+(g++ etc.) are expected to be named with particular prefixes.
 
-- arm64-mingw-dynamic
-- arm64-mingw-static
-- arm-mingw-dynamic
-- arm-mingw-static
-- x64-mingw-dynamic
-- x64-mingw-static
-- x86-mingw-dynamic
-- x86-mingw-static
+| architecture | vcpkg community triplets                | tool name prefix     |
+|--------------|-----------------------------------------|----------------------|
+| x64          | x64-mingw-dynamic, x64-mingw-static     | x86_64-w64-mingw32-  |
+| x86          | x86-mingw-dynamic, x86-mingw-static     | i686-w64-mingw32-    |
+| arm64        | arm64-mingw-dynamic, arm64-mingw-static | aarch64-w64-mingw32- |
+| arm          | arm-mingw-dynamic, arm-mingw-static     | armv7-w64-mingw32-   |
 
 These triplets are not tested by continuous integration, so many ports
 do not build, and even existing ports may break on port updates.
@@ -28,10 +27,10 @@ Because of this, community involvement is paramount!
 - [Open issues](https://github.com/microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+mingw)
 - [Open pull requests](https://github.com/microsoft/vcpkg/pulls?q=is%3Apr+is%3Aopen+mingw)
 
-## Using MinGW natively on Windows
+## Using Mingw-w64 natively on Windows
 
 With [MSYS2](https://www.msys2.org/), it is possible to easily create
-a full environment for building ports with MinGW on a Windows PC.
+a full environment for building ports with Mingw-w64 on a Windows PC.
 
 Note that for building software for native windows environments, you
 must use a mingw subsystem of MSYS2, and install some packages 
@@ -66,7 +65,7 @@ cd vcpkg
 ```
 
 For building packages, you need to tell vcpkg that you want to use the
-MinGW triplet. This can be done in different ways. When Visual Studio
+mingw triplet. This can be done in different ways. When Visual Studio
 is not installed, you must also set the host triplet to mingw. This is
 needed to resolve host dependencies. For convenience, you can use
 environment variables to set both triplets:
@@ -82,21 +81,21 @@ Now you can test your setup:
 ./vcpkg install zlib
 ```
 
-## Using MinGW to build Windows programs on other systems
+## Using Mingw-w64 to build Windows programs on other systems
 
 You can use the vcpkg mingw community triplets with toolchains on
 non-Windows computers to cross-compile software to be run on Windows.
 Many Linux distributions offer such toolchains in optional packages
-with a special [suffix](https://repology.org/projects/?search=-mingw-w64)
+with a mingw-w64 [suffix](https://repology.org/projects/?search=-mingw-w64)
 or [prefix](https://repology.org/projects/?search=mingw-w64-).
 As an example, for Debian-based distributions, you would start with
-these installation commands for the x64 targets:
+this installation command for the x64 toolchain:
 
 ```
 sudo apt-get install gcc-mingw-w64-x86-64 g++-mingw-w64-x86-64
 ```
 
-Note that the packaged versions of MinGW and GCC on Linux distributions
+Note that the packaged versions of Mingw-w64 toolchains on Linux distributions
 might be older releases which lack some useful features or bug fixes.
 An alternative independent toolchain is offered by [MXE](https://mxe.cc/).
 
