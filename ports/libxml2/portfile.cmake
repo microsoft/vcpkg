@@ -10,15 +10,32 @@ vcpkg_from_github(
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
+if (VCPKG_TARGET_IS_UWP)
+    message(WARNING "Feature network couldn't be enabled on UWP, disable http and ftp automatically.")
+    set(ENABLE_NETWORK 0)
+else()
+    set(ENABLE_NETWORK 1)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
-    OPTIONS_DEBUG -DINSTALL_HEADERS=OFF
+    OPTIONS
+        -DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
+        -DWITH_HTTP=${ENABLE_NETWORK}
+        -DWITH_FTP=${ENABLE_NETWORK}
+    OPTIONS_DEBUG
+        -DINSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libxml-2.0.pc" "-lxml2" "-llibxml2")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libxml-2.0.pc" "-lxml2" "-llibxml2")
+endif ()
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()

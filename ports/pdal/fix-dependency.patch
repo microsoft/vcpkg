@@ -53,7 +53,7 @@ index a03ef14..9d073e6 100644
  endforeach(_dir)
  
 +include(CMakeFindDependencyMacro)
-+find_dependency(GeoTIFF)
++find_dependency(geotiff)
 +find_dependency(CURL)
 +find_dependency(Boost COMPONENTS system filesystem)
 +find_dependency(geos CONFIG)

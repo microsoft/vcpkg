@@ -1,8 +1,10 @@
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KjellKod/g3log
-    REF f1491791785101d4ae948f8ecee7e9cc3e6b0be8
-    SHA512 852ed7c9eb2345f02414be7fb7dfbd4be340dcbf8abc4e6ba6327d181cf10e33969279166151b4eeab78b290d3fecbf4a5094696c412f7b2ab815df415652bd8
+    REF 2fca06ff6da5c67465b591f4d45e8fd14d531142 #v1.3.4
+    SHA512 8dba89e5a08e44d585478470725e25e37486685d8fe4d3cb5e97c81013389c95d96bdde658244e425008169bc8a9fc2d34a065b83b110c62e73d3ccab9b2b9e1
     HEAD_REF master
 )
 
@@ -10,7 +12,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" G3_SHARED_LIB)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" G3_SHARED_RUNTIME)
 
 # https://github.com/KjellKod/g3log#prerequisites
-set(VERSION "1.3.2-80")
+set(VERSION "1.3.4")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -28,7 +30,7 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/g3logger TARGET_PATH share/g3logger)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/g3log)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

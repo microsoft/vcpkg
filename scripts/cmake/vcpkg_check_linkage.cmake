@@ -15,6 +15,8 @@ vcpkg_check_linkage(
 ### ONLY_STATIC_LIBRARY
 Indicates that this port can only be built with static library linkage.
 
+Note: If the user requested a dynamic build ONLY_STATIC_LIBRARY will result in a note being printed, not a fatal error.
+
 ### ONLY_DYNAMIC_LIBRARY
 Indicates that this port can only be built with dynamic/shared library linkage.
 

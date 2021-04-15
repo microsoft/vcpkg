@@ -1,37 +1,57 @@
 # Manifest Mode
 
-vcpkg has two modes of operation - classic mode and manifest mode.
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/manifests.md).**
 
-In classic mode, vcpkg produces an "installed" tree,
-whose contents are changed by explicit calls to `vcpkg install` or `vcpkg remove`.
-The installed tree is intended for consumption by any number of projects:
-for example, installing a bunch of libraries and then using those libraries from Visual Studio,
-without additional configuration.
-Because the installed tree is not associated with an individual project,
-it's similar to tools like `brew` or `apt`,
-except that the installed tree is vcpkg-installation-local,
-rather than global to a system or user.
+vcpkg has two modes of consuming dependencies - classic mode and manifest mode.
 
-In manifest mode, an installed tree is associated with a particular project rather than the vcpkg installation.
-The set of installed ports is controlled by editing the project's "manifest file",
-and the installed tree is placed in the project directory or build directory.
-This mode acts more similarly to language package managers like Cargo, or npm. 
-We recommend using this manifest mode whenever possible,
-because it allows one to encode a project's dependencies explicitly in a project file,
-rather than in the documentation, making your project much easier to consume.
+In classic mode, vcpkg produces an "installed" tree, whose contents are changed by explicit calls to `vcpkg install` or
+`vcpkg remove`. The installed tree is intended for consumption by any number of projects: for example, installing a
+bunch of libraries and then using those libraries from Visual Studio, without additional configuration. Because the
+installed tree is not associated with an individual project, it's similar to tools like `brew` or `apt`, except that the
+installed tree is vcpkg-installation-local, rather than global to a system or user.
 
-Manifest mode is in beta, but one can use it from the CMake integration,
-which will be stable when used via things like `find_package`.
-This is the recommended way to use manifest mode.
+In manifest mode, an installed tree is associated with a particular project rather than the vcpkg installation. The set
+of installed ports is controlled by editing the project's "manifest file", and the installed tree is placed in the
+project directory or build directory. This mode acts more similarly to language package managers like Cargo, or npm. We
+recommend using this manifest mode whenever possible, because it allows one to encode a project's dependencies
+explicitly in a project file, rather than in the documentation, making your project much easier to consume.
 
-In this document, we have basic information on [Writing a Manifest](#writing-a-manifest),
-the [vcpkg Command Line Interface](#command-line-interface),
-and a little more information on [CMake](#cmake-integration) integration.
+Manifest mode is in beta, but it can be used from the CMake or MSBuild integration, which will be stable when used via
+things like `find_package`. This is the recommended way to use manifest mode.
 
 Check out the [manifest cmake example](../examples/manifest-mode-cmake.md) for an example project using CMake and
 manifest mode.
 
-## Writing a Manifest
+## Table of Contents
+
+- [Simple Example Manifest](#simple-example-manifest)
+- [Manifest Syntax Reference](#manifest-syntax-reference)
+- [Command Line Interface](#command-line-interface)
+- [CMake Integration](#cmake-integration)
+- [MSBuild Integration](#msbuild-integration)
+
+See also [the original specification](../specifications/manifests.md) for more low-level details.
+
+## Simple Example Manifest
+
+```json
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "my-application",
+  "version": "0.15.2",
+  "dependencies": [
+    "boost-system",
+    {
+      "name": "cpprestsdk",
+      "default-features": false
+    },
+    "libxml2",
+    "yajl"
+  ]
+}
+```
+
+## Manifest Syntax Reference
 
 A manifest is a JSON-formatted file named `vcpkg.json` which lies at the root of your project.
 It contains all the information a person needs to know to get dependencies for your project,
@@ -95,13 +115,29 @@ if they were to use you). It's an array of strings and objects:
 * On the other hand, an object dependency (e.g., `"dependencies": [ { "name": "zlib" } ]`)
   allows you to add that extra information.
 
-An object dependency can have the following fields:
+#### Example:
 
-#### `"name"`
+```json
+"dependencies": [
+  {
+    "name": "arrow",
+    "default-features": false,
+    "features": [ "json" ]
+  },
+  "boost-asio",
+  "openssl",
+  {
+    "name": "picosha2",
+    "platform": "!windows"
+  }
+]
+```
+
+#### `"name"` Field
 
 The name of the dependency. This follows the same restrictions as the [`"name"`](#name) property for a project.
 
-#### `"features"` and `"default-features"`
+#### `"features"` and `"default-features"` Fields
 
 `"features"` is an array of feature names which tell you the set of features that the
 dependencies need to have at a minimum,
@@ -120,7 +156,7 @@ Then, you might just ask for:
 }
 ```
 
-#### `"platform"`
+#### `"platform"` Field
 
 The `"platform"` field defines the platforms where the dependency should be installed - for example,
 you might need to use sha256, and so you use platform primitives on Windows, but `picosha2` on non-Windows platforms.
@@ -145,7 +181,7 @@ The common identifiers are:
 
 although one can define their own.
 
-#### `"version>="`
+#### `"version>="` Field
 
 **Experimental behind the `versions` feature flag**
 
@@ -154,26 +190,6 @@ A minimum version constraint on the dependency.
 This field specifies the minimum version of the dependency using a '#' suffix to denote port-version if non-zero.
 
 See also [versioning](versioning.md#constraints) for more semantic details.
-
-#### Example:
-
-```json
-{
-  "dependencies": [
-    {
-      "name": "arrow",
-      "default-features": false,
-      "features": [ "json" ]
-    },
-    "boost-asio",
-    "openssl",
-    {
-      "name": "picosha2",
-      "platform": "!windows"
-    }
-  ]
-}
-```
 
 ### `"overrides"`
 
@@ -186,13 +202,11 @@ See also [versioning](versioning.md#overrides) for more semantic details.
 #### Example:
 
 ```json
-{
   "overrides": [
     {
       "name": "arrow", "version": "1.2.3", "port-version": 7
     }
   ]
-}
 ```
 
 ### `"supports"`
@@ -219,9 +233,10 @@ and that's the `"default-features"` field, which is an array of feature names.
 
 #### Example:
 
-```
+```json
 {
   "name": "libdb",
+  "version": "1.0.0",
   "description": [
     "An example database library.",
     "Optionally can build with CBOR, JSON, or CSV as backends."
@@ -248,57 +263,233 @@ and that's the `"default-features"` field, which is an array of feature names.
         "fast-cpp-csv-parser"
       ]
     },
-    "gui": {
-      "description": "The GUI libdb database viewer.",
-      "supports": "windows | osx"
-    }
     "json": {
       "description": "The JSON backend",
       "dependencies": [
         "jsoncons"
       ]
-    },
+    }
   }
 }
 ```
 
 ## Command Line Interface
 
-The command line interface around the new manifest mode is pretty simple.
-There's only one command that one really needs to worry about, `vcpkg install`,
-although `vcpkg search` is still useful.
-Since manifest mode is still in beta, you'll need to pass a feature flag: `manifests`.
-There are a few ways to pass this feature flag:
+**Experimental behind the `manifests` feature flag**
 
-* `--feature-flags` option: On any vcpkg command, you can pass `--feature-flags=manifests`
-* `VCPKG_FEATURE_FLAGS` environment variable: one can set the environment variable `VCPKG_FEATURE_FLAGS` to
-  `manifests`.
+When invoked from any subdirectory of the directory containing `vcpkg.json`, `vcpkg install` with no package arguments
+will install all manifest dependencies into `<directory containing vcpkg.json>/vcpkg_installed/`. Most of `vcpkg
+install`'s classic mode parameters function the same in manifest mode.
 
-### `vcpkg install`
+### `--x-install-root=<path>`
 
-Once one has written a manifest file,
-they can run `vcpkg install` in any subdirectory of the directory containing `vcpkg.json`.
-It will install all of the dependencies for the default triplet into
-`<directory containing vcpkg.json>/vcpkg_installed`.
-If you want to switch the triplet (for example, this is very common on windows, where the default triplet is x86-windows, not x64-windows),
-you can pass it with the `--triplet` option: `vcpkg install --triplet x64-windows` (or whatever).
-Then, vcpkg will install all the dependencies, and you're ready to go!
+**Experimental and may change or be removed at any time**
+
+Specifies an alternate install location than `<directory containing vcpkg.json>/vcpkg_installed/`.
+
+### `--triplet=<triplet>`
+
+Specify the triplet to be used for installation.
+
+Defaults to the same default triplet as in classic mode.
+
+### `--x-feature=<feature>`
+
+**Experimental and may change or be removed at any time**
+
+Specify an additional feature from the `vcpkg.json` to install dependencies from.
+
+### `--x-no-default-features`
+
+**Experimental and may change or be removed at any time**
+
+Disables automatic activation of all default features listed in the `vcpkg.json`.
+
+### `--x-manifest-root=<path>`
+
+**Experimental and may change or be removed at any time**
+
+Specifies the directory containing `vcpkg.json`.
+
+Defaults to searching upwards from the current working directory.
 
 ## CMake Integration
 
-The CMake integration acts exactly like the existing CMake integration.
-One passes the toolchain file, located at `[vcpkg root]/scripts/buildsystems/vcpkg.cmake`,
-to the CMake invocation via the `CMAKE_TOOLCHAIN_FILE` variable.
-Then, CMake will install all dependencies into the build directory, and you're good!
-It ends up that you only have to run CMake, and vcpkg is called only as part of the build process.
-Unlike bare vcpkg, the feature flag is not required,
-since the CMake integration won't break as long as you depending on the exact naming of vcpkg's installed directory.
+Our [CMake Integration](integration.md#cmake) will automatically detect a `vcpkg.json` manifest file in the same
+directory as the top-level `CMakeLists.txt` (`${CMAKE_SOURCE_DIR}/vcpkg.json`) and activate manifest mode. Vcpkg will be
+automatically bootstrapped if missing and invoked to install your dependencies into your local build directory
+(`${CMAKE_BINARY_DIR}/vcpkg_installed`).
 
-### Example:
+### Configuration
 
+All vcpkg-affecting variables must be defined before the first `project()` directive, such as via the command line or
+`set()` statements.
+
+#### `VCPKG_TARGET_TRIPLET`
+
+This variable controls which triplet dependencies will be installed for.
+
+If unset, vcpkg will automatically detect an appropriate default triplet given the current compiler settings.
+
+#### `VCPKG_HOST_TRIPLET`
+
+This variable controls which triplet host dependencies will be installed for.
+
+If unset, vcpkg will automatically detect an appropriate native triplet (x64-windows, x64-osx, x64-linux).
+
+See also [Host Dependencies](host-dependencies.md).
+
+#### `VCPKG_MANIFEST_MODE`
+
+This variable controls whether vcpkg operates in manifest mode or in classic mode. To disable manifest mode even with a
+`vcpkg.json`, set this to `OFF`.
+
+Defaults to `ON` when `VCPKG_MANIFEST_DIR` is non-empty or `${CMAKE_SOURCE_DIR}/vcpkg.json` exists.
+
+#### `VCPKG_MANIFEST_DIR`
+
+This variable can be defined to specify an alternate folder containing your `vcpkg.json` manifest.
+
+Defaults to `${CMAKE_SOURCE_DIR}` if `${CMAKE_SOURCE_DIR}/vcpkg.json` exists.
+
+#### `VCPKG_MANIFEST_INSTALL`
+
+This variable controls whether vcpkg will be automatically run to install your dependencies during your configure step.
+
+Defaults to `ON` if `VCPKG_MANIFEST_MODE` is `ON`.
+
+#### `VCPKG_BOOTSTRAP_OPTIONS`
+
+This variable can be set to additional command parameters to pass to `./bootstrap-vcpkg` (run in automatic restore mode
+if the vcpkg tool does not exist).
+
+#### `VCPKG_OVERLAY_TRIPLETS`
+
+This variable can be set to a list of paths to be passed on the command line as `--overlay-triplets=...`
+
+#### `VCPKG_OVERLAY_PORTS`
+
+This variable can be set to a list of paths to be passed on the command line as `--overlay-ports=...`
+
+#### `VCPKG_MANIFEST_FEATURES`
+
+This variable can be set to a list of features to treat as active when installing from your manifest.
+
+For example, Features can be used by projects to control building with additional dependencies to enable tests or
+samples:
+
+```json
+{
+  "name": "mylibrary",
+  "version": "1.0",
+  "dependencies": [ "curl" ],
+  "features": {
+    "samples": {
+      "description": "Build Samples",
+      "dependencies": [ "fltk" ]
+    },
+    "tests": {
+      "description": "Build Tests",
+      "dependencies": [ "gtest" ]
+    }
+  }
+}
 ```
-> cmake -B builddir -S . -DCMAKE_TOOLCHAIN_FILE=[vcpkg root]/scripts/buildsystems/vcpkg.cmake
-> cmake --build builddir
+```cmake
+# CMakeLists.txt
+
+option(BUILD_TESTING "Build tests" OFF)
+if(BUILD_TESTING)
+  list(APPEND VCPKG_MANIFEST_FEATURES "tests")
+endif()
+
+option(BUILD_SAMPLES "Build samples" OFF)
+if(BUILD_SAMPLES)
+  list(APPEND VCPKG_MANIFEST_FEATURES "samples")
+endif()
+
+project(myapp)
+
+# ...
 ```
 
-with a `vcpkg.json` in the same directory as `CMakeLists.txt` should Just Work!
+#### `VCPKG_MANIFEST_NO_DEFAULT_FEATURES`
+
+This variable controls whether to automatically activate all default features in addition to those listed in
+`VCPKG_MANIFEST_FEATURES`. If set to `ON`, default features will not be automatically activated.
+
+Defaults to `OFF`.
+
+#### `VCPKG_INSTALL_OPTIONS`
+
+This variable can be set to a list of additional command line parameters to pass to the vcpkg tool during automatic
+installation.
+
+#### `VCPKG_FEATURE_FLAGS`
+
+This variable can be set to a list of feature flags to pass to the vcpkg tool during automatic installation to opt-in to
+experimental behavior.
+
+See the `--feature-flags=` command line option for more information.
+
+## MSBuild Integration
+
+To use manifests with MSBuild, first you need to use an [existing integration method](integration.md#with-msbuild).
+Then, simply add a vcpkg.json above your project file (such as in the root of your source repository) and set the
+property `VcpkgEnableManifest` to `true`. You can set this property via the IDE in `Project Properties -> Vcpkg -> Use
+Vcpkg Manifest`.
+
+As part of your project's build, vcpkg automatically be run and install any listed dependencies to `vcpkg_installed/`
+adjacent to the `vcpkg.json` file; these files will then automatically be included in and linked to your MSBuild
+projects.
+
+Note: It is critical that all project files in a single build consuming the same `vcpkg.json` use the same triplet; if
+you need to use different triplets for different projects in your solution, they must consume from different
+`vcpkg.json` files.
+
+### MSBuild Properties
+
+These properties can be defined via the VS GUI under `Project Properties -> Vcpkg` or via a common `.props` file.
+
+#### `VcpkgEnabled` (Use Vcpkg)
+
+This can be set to "false" to explicitly disable vcpkg integration for the project
+
+#### `VcpkgTriplet` (Triplet)
+
+This can be set to a custom triplet to use for integration (such as x64-windows-static)
+
+#### `VcpkgHostTriplet` (Host Triplet)
+
+This can be set to a custom triplet to use for resolving host dependencies.
+
+If unset, this will default to the "native" triplet (x64-windows, x64-osx, x64-linux).
+
+See also [Host Dependencies](host-dependencies.md).
+
+#### `VcpkgAdditionalInstallOptions` (Additional Options)
+
+When using a manifest, this option specifies additional command line flags to pass to the underlying vcpkg tool
+invocation. This can be used to access features that have not yet been exposed through another option.
+
+#### `VcpkgConfiguration` (Vcpkg Configuration)
+
+If your configuration names are too complex for vcpkg to guess correctly, you can assign this property to `Release` or
+`Debug` to explicitly tell vcpkg what variant of libraries you want to consume.
+
+#### `VcpkgEnableManifest` (Use Vcpkg Manifest)
+
+This property must be set to true in order to consume from a local vcpkg.json file. If set to false, any local
+vcpkg.json files will be ignored. This will default to true in the future.
+
+#### `VcpkgManifestInstall` (Install Vcpkg Dependencies)
+
+*(Requires `Use Vcpkg Manifest` set to `true`)*
+
+This property can be set to "false" to disable automatic dependency restoration on project build. Dependencies can be
+manually restored via the vcpkg command line.
+
+#### `VcpkgInstalledDirectory` (Installed Directory)
+
+This property defines the location where headers and binaries are consumed from. In manifest mode, this directory is
+created and populated based on your manifest.

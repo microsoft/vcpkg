@@ -5,7 +5,7 @@ endif()
 
 set(PYTHON_VERSION_MAJOR  3)
 set(PYTHON_VERSION_MINOR  9)
-set(PYTHON_VERSION_PATCH  0)
+set(PYTHON_VERSION_PATCH  2)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(PATCHES
@@ -19,11 +19,20 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(PREPEND PATCHES 0001-static-library.patch)
 endif()
 
+# Python 3.9 removed support for Windows 7. This patch re-adds support for Windows 7 and is therefore
+# required to build this port on Windows 7 itself due to Python using itself in its own build system.
+if("deprecated-win7-support" IN_LIST FEATURES)
+    list(APPEND PATCHES 0007-restore-support-for-windows-7.patch)
+    message(WARNING "Windows 7 support is deprecated and may be removed at any time.")
+elseif(VCPKG_TARGET_IS_WINDOWS AND CMAKE_SYSTEM_VERSION EQUAL 6.1)
+    message(FATAL_ERROR "python3 requires the feature deprecated-win7-support when building on Windows 7.")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO python/cpython
     REF v${PYTHON_VERSION}
-    SHA512 39d304cae181674c4872c63768c0e5aeace2c92eb6d5ea550428d65c8571bc60922b3a3d484b51c46b466aadb7e27500559cafec13a489b48613bbb3fe6a5a5d
+    SHA512 f13c7e50d2c7c00e67b801b0bbb6ab6a8b6bd16c706b3bdd9d2186de3830f0043d0b95d7993d65a169adc9097738906c07727f0df49cd2fb2916bdf0456896b6
     HEAD_REF master
     PATCHES ${PATCHES}
 )
