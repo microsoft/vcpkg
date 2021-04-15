@@ -1,4 +1,8 @@
 
+# We use the release tarball from GitHub instead of the sources in the repo because:
+#  - igraph will not compile from the git sources unless there is an actual git repository to back it. This is because it detects the version from git tags. The release tarball has the version hard-coded.
+#  - The release tarball contains pre-generated parser sources, which eliminates the dependency on bison/flex.
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/igraph/igraph/releases/download/0.9.2/igraph-0.9.2.tar.gz"
     FILENAME "igraph-0.9.2.tar.gz"
@@ -8,13 +12,6 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    # (Optional) A friendly name to use instead of the filename of the archive (e.g.: a version number or tag).
-    # REF 1.0.0
-    # (Optional) Read the docs for how to generate patches at:
-    # https://github.com/Microsoft/vcpkg/blob/master/docs/examples/patching.md
-    # PATCHES
-    #   001_port_fixes.patch
-    #   002_more_port_fixes.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
