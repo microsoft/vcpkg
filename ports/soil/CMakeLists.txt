@@ -12,7 +12,7 @@ add_library(SOIL STATIC
     src/image_dxt.c
     src/soil.c)
     
-target_include_directories(SOIL PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> $<INSTALL_INTERFACE:include>)
+target_include_directories(SOIL PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> PUBLIC $<INSTALL_INTERFACE:include>)
 
 if(INSTALL_HEADERS)
     install(TARGETS SOIL
@@ -21,7 +21,7 @@ if(INSTALL_HEADERS)
         LIBRARY DESTINATION lib)
 
     install(FILES include/SOIL/SOIL.h
-        DESTINATION include)
+        DESTINATION include/SOIL)
 
     # Prepare and install package files
     set(SOIL_VERSION "0.1.0")

@@ -2,5 +2,6 @@
   "name": "soil",
   "version-semver": "0.1.0",
   "description": "SOIL is a tiny C library used primarily for uploading textures into OpenGL.",
-  "homepage": "https://github.com/littlstar/soil"
+  "homepage": "https://github.com/littlstar/soil",
+  "supports": "!uwp"
 }
