@@ -17,8 +17,6 @@ vcpkg_extract_source_archive_ex(
     #   002_more_port_fixes.patch
 )
 
-# # Check if one or more features are a part of a package installation.
-# # See /docs/maintainers/vcpkg_check_features.md for more details
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
   FEATURES
     graphml   IGRAPH_GRAPHML_SUPPORT
