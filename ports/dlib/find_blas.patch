@@ -1,8 +1,10 @@
+diff --git a/dlib/cmake_utils/find_blas.cmake b/dlib/cmake_utils/find_blas.cmake
+index 806b938..507f871 100644
 --- a/dlib/cmake_utils/find_blas.cmake
 +++ b/dlib/cmake_utils/find_blas.cmake
-@@ -414,7 +414,7 @@
+@@ -438,7 +438,7 @@ endif()
+ # If using lapack, determine whether to mangle functions
  if (lapack_found)
-    include(CheckFunctionExists)
     include(CheckFortranFunctionExists)
 -   set(CMAKE_REQUIRED_LIBRARIES ${lapack_libraries})
 +   set(CMAKE_REQUIRED_LIBRARIES ${lapack_libraries} ${blas_libraries})

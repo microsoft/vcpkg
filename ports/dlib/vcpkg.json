@@ -1,0 +1,32 @@
+{
+  "name": "dlib",
+  "version": "19.22",
+  "description": "Modern C++ toolkit containing machine learning algorithms and tools for creating complex software in C++",
+  "homepage": "https://github.com/davisking/dlib",
+  "supports": "!uwp",
+  "default-features": [
+    "fftw3",
+    "sqlite3"
+  ],
+  "features": {
+    "cuda": {
+      "description": "CUDA support for dlib",
+      "dependencies": [
+        "cuda",
+        "cudnn"
+      ]
+    },
+    "fftw3": {
+      "description": "fftw3 support for dlib",
+      "dependencies": [
+        "fftw3"
+      ]
+    },
+    "sqlite3": {
+      "description": "sqlite3 support for dlib",
+      "dependencies": [
+        "sqlite3"
+      ]
+    }
+  }
+}

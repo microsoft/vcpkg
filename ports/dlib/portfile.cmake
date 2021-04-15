@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO davisking/dlib
-    REF v19.21
-    SHA512 57133cdcbc5017d324a368ff36a628de55001f1ec0b3ac078b4ad49a63c8c9fb48674617c6a5838ca4e381a6b001fe4aa5a7b3353eb288c58062d2a8fc7b171e
+    REF 70ea028f12e10f4d992a0c4f0169749eae5bb185 #v19.22
+    SHA512 f7c5988d6a1b2384a54a3e1a330c50011d3325bb87b4edd9fa08a2f4daeffdcb276ea21bc1d4cfd766b4e4d0a9c13b235e4b6002aa97af5327b833f91b688fd0
     HEAD_REF master
     PATCHES
         fix-sqlite3-fftw-linkage.patch
@@ -22,9 +22,10 @@ string(REPLACE "PNG_LIBRARY" "PNG_LIBRARIES" DLIB_CMAKE "${DLIB_CMAKE}")
 file(WRITE "${SOURCE_PATH}/dlib/CMakeLists.txt" "${DLIB_CMAKE}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  "sqlite3"   DLIB_LINK_WITH_SQLITE3
-  "fftw3"     DLIB_USE_FFTW
-  "cuda"      DLIB_USE_CUDA
+    FEATURES
+        "sqlite3"   DLIB_LINK_WITH_SQLITE3
+        "fftw3"     DLIB_USE_FFTW
+        "cuda"      DLIB_USE_CUDA
 )
 
 vcpkg_configure_cmake(
