@@ -5573,7 +5573,7 @@
       "port-version": 0
     },
     "soil": {
-      "baseline": "2008.07.07-2",
+      "baseline": "0.1.0",
       "port-version": 0
     },
     "soil2": {
