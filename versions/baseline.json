@@ -1942,7 +1942,7 @@
     },
     "ffmpeg": {
       "baseline": "4.3.2",
-      "port-version": 3
+      "port-version": 4
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
