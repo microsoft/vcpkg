@@ -3645,8 +3645,8 @@
       "port-version": 0
     },
     "libyuv": {
-      "baseline": "fec9121",
-      "port-version": 3
+      "baseline": "2021-04-15",
+      "port-version": 0
     },
     "libzen": {
       "baseline": "0.4.38",
