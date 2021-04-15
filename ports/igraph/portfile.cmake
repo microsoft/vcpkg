@@ -37,12 +37,17 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DIGRAPH_ENABLE_LTO=AUTO
+        # ARPACK not yet available in vcpkg.
         -DIGRAPH_USE_INTERNAL_ARPACK=ON
+        # OpenBLAS provides BLAS/LAPACK but some tests fail with OpenBLAS on Windows.
+        # See https://github.com/igraph/igraph/issues/1491
         -DIGRAPH_USE_INTERNAL_BLAS=ON
-        -DIGRAPH_USE_INTERNAL_CXSPARSE=ON
-        -DIGRAPH_USE_INTERNAL_GLPK=ON
-        -DIGRAPH_USE_INTERNAL_GMP=ON
         -DIGRAPH_USE_INTERNAL_LAPACK=ON
+        -DIGRAPH_USE_INTERNAL_CXSPARSE=OFF
+        # GLPK is not yet available in vcpkg.
+        -DIGRAPH_USE_INTERNAL_GLPK=ON
+        # Currently, external GMP provides no performance of functionality benefits.
+        -DIGRAPH_USE_INTERNAL_GMP=ON
         -DF2C_EXTERNAL_ARITH_HEADER=${ARITH_H}
         ${FEATURE_OPTIONS}
 )
