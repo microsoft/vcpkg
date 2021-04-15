@@ -20,6 +20,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     graphml   IGRAPH_GRAPHML_SUPPORT
 )
 
+# Allow cross-compilation. See https://igraph.org/c/doc/igraph-Installation.html#idm207877354096
+set(ARITH_H "")
 if (VCPKG_TARGET_IS_OSX)
     set(ARITH_H ${CURRENT_PORT_DIR}/arith_osx.h)
 elseif (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
@@ -27,11 +29,7 @@ elseif (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         set(ARITH_H ${CURRENT_PORT_DIR}/arith_win32.h)
     elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
         set(ARITH_H ${CURRENT_PORT_DIR}/arith_win64.h)
-    else()
-        set(ARITH_H "")
     endif()
-else()
-    set(ARITH_H "")
 endif()
 
 vcpkg_configure_cmake(
