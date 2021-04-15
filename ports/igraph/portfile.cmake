@@ -34,8 +34,6 @@ vcpkg_configure_cmake(
         -DIGRAPH_USE_INTERNAL_GMP=ON
         -DIGRAPH_USE_INTERNAL_LAPACK=ON
         ${FEATURE_OPTIONS}
-    # OPTIONS_RELEASE -DOPTIMIZE=1
-    # OPTIONS_DEBUG -DDEBUGGABLE=1
 )
 
 vcpkg_install_cmake()
