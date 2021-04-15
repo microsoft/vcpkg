@@ -46,7 +46,17 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(OPTIONS "--enable-pic --enable-asm --enable-x86asm --disable-doc --enable-debug --enable-runtime-cpudetect")
+set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect")
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+  set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
+endif()
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  set(OPTIONS "${OPTIONS} --enable-asm --disable-x86asm")
+endif()
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+  set(OPTIONS "${OPTIONS} --enable-asm --enable-x86asm")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
