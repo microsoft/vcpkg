@@ -2410,7 +2410,7 @@
     },
     "harfbuzz": {
       "baseline": "2.8.0",
-      "port-version": 1
+      "port-version": 0
     },
     "hayai": {
       "baseline": "2019-08-10",
