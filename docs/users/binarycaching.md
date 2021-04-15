@@ -15,7 +15,7 @@ Table of Contents
    - [Azure DevOps Artifacts](#azure-devops-artifacts)
    - [Azure Blob Storage](#azure-blob-storage-experimental)
    - [Google Cloud Storage](#google-cloud-storage-experimental)
- - [Nuget Provider Configuration](#nuget-provider-configuration)
+ - [NuGet Provider Configuration](#nuget-provider-configuration)
  - [Implementation Notes](#implementation-notes-internal-details-subject-to-change-without-notice)
 
 
@@ -49,6 +49,8 @@ By default, zip-based archives will be cached at the first valid location of:
 
 The `<rw>` optional parameter for certain sources controls whether they will be consulted for
 downloading binaries (`read`)(default), whether on-demand builds will be uploaded to that remote (`write`), or both (`readwrite`).
+
+Additional configuration details for NuGet-based providers can be found below in [NuGet Provider Configuration](#nuget-provider-configuration).
 
 ## CI Examples
 
@@ -188,9 +190,9 @@ Commas (`,`) are valid as part of a object prefix in GCS, just remember to escap
 shown in the previous example. Note that GCS does not have folders (some of the GCS tools simulate folders), it is not
 necessary to create or otherwise manipulate the prefix used by your vcpkg cache.
 
-## Nuget Provider Configuration
+## NuGet Provider Configuration
 
-#### Credentials
+### Credentials
 
 Many NuGet servers require additional credentials to access. The most flexible way to supply credentials is via the `nugetconfig` provider with a custom `nuget.config` file. See https://docs.microsoft.com/en-us/nuget/consume-packages/consuming-packages-authenticated-feeds for more information on authenticating via `nuget.config`.
 
