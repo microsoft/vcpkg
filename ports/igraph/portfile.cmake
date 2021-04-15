@@ -40,8 +40,6 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-# # Moves all .cmake files from /debug/share/igraph/ to /share/igraph/
-# # See /docs/maintainers/vcpkg_fixup_cmake_targets.md for more details
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/igraph TARGET_PATH share/igraph)
 
 # # Handle copyright
