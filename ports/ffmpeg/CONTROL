@@ -4,7 +4,7 @@ Port-Version: 7
 Homepage: https://ffmpeg.org
 Description: a library to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created.
   FFmpeg is the leading multimedia framework, able to decode, encode, transcode, mux, demux, stream, filter and play pretty much anything that humans and machines have created. It supports the most obscure ancient formats up to the cutting edge. No matter if they were designed by some standards committee, the community or a corporation. It is also highly portable: FFmpeg compiles, runs, and passes our testing infrastructure FATE across Linux, Mac OS X, Microsoft Windows, the BSDs, Solaris, etc. under a wide variety of build environments, machine architectures, and configurations.
-Default-Features: avresample, avcodec, avformat, avdevice, avfilter, postproc, swresample, swscale
+Default-Features: avresample, decoder-all, encoder-all, avformat, avdevice, avfilter, postproc, swresample, swscale
 
 Feature: ffmpeg
 Build-Depends: ffmpeg[core,avcodec,avfilter,avformat]
@@ -79,7 +79,7 @@ Build-Depends: bzip2
 Description: Bzip2 support
 
 Feature: dav1d
-Build-Depends: dav1d
+Build-Depends: ffmpeg[core,decoder-libdav1d]
 Description: AV1 decoding via libdav1d
 
 Feature: iconv
@@ -87,11 +87,11 @@ Build-Depends: libiconv
 Description: Iconv support
 
 Feature: ilbc
-Build-Depends: libilbc
+Build-Depends: ffmpeg[core,decoder-libilbc,encoder-libilbc]
 Description: iLBC de/encoding via libilbc
 
 Feature: fdk-aac
-Build-Depends: fdk-aac, ffmpeg[core,nonfree]
+Build-Depends: ffmpeg[core,decoder-libfdk-aac,encoder-libfdk-aac]
 Description: AAC de/encoding via libfdk-aac
 
 Feature: fontconfig
@@ -115,12 +115,12 @@ Build-Depends: libmodplug
 Description: ModPlug via libmodplug
 
 Feature: mp3lame
-Build-Depends: mp3lame
+Build-Depends: ffmpeg[core,encoder-libmp3lame]
 Description: MP3 encoding via libmp3lame
 
 Feature: nvcodec
-Build-Depends: ffnvcodec
-Description: Nvidia video decoding/encoding acceleration
+Build-Depends: ffmpeg[core,decoder-cuvid,encoder-nvenc]
+Description: Nvidia video de/encoding acceleration
 
 Feature: opencl
 Build-Depends: opencl
@@ -131,11 +131,11 @@ Build-Depends: opengl, opengl-registry
 Description: OpenGL rendering
 
 Feature: openh264
-Build-Depends: openh264
+Build-Depends: ffmpeg[core,decoder-libopenh264,encoder-libopenh264]
 Description: H.264 de/encoding via openh264
 
 Feature: openjpeg
-Build-Depends: openjpeg
+Build-Depends: ffmpeg[core,decoder-libopenjpeg,encoder-libopenjpeg]
 Description: JPEG 2000 de/encoding via OpenJPEG
 
 Feature: openssl
@@ -143,7 +143,7 @@ Build-Depends: openssl, ffmpeg[core,nonfree]
 Description: Needed for https support if gnutls, libtls or mbedtls is not used
 
 Feature: opus
-Build-Depends: opus
+Build-Depends: ffmpeg[core,decoder-libopus,encoder-libopus]
 Description: Opus de/encoding via libopus
 
 Feature: sdl2
@@ -159,7 +159,7 @@ Build-Depends: soxr
 Description: Include libsoxr resampling
 
 Feature: speex
-Build-Depends: speex
+Build-Depends: ffmpeg[core,decoder-libspeex,encoder-libspeex]
 Description: Speex de/encoding via libspeex
 
 Feature: ssh
@@ -175,31 +175,31 @@ Build-Depends: tesseract
 Description: Tesseract, needed for ocr filter
 
 Feature: theora
-Build-Depends: libtheora
+Build-Depends: ffmpeg[core,encoder-libtheora]
 Description: Theora encoding via libtheora
 
 Feature: vorbis
-Build-Depends: libvorbis
-Description: Vorbis en/decoding via libvorbis, native implementation exists
+Build-Depends: ffmpeg[core,decoder-libvorbis,encoder-libvorbis]
+Description: Vorbis en/decoding via libvorbis
 
 Feature: vpx
-Build-Depends: libvpx
+Build-Depends: ffmpeg[core,decoder-libvpx,encoder-libvpx]
 Description: VP8 and VP9 de/encoding via libvpx
 
 Feature: wavpack
-Build-Depends: wavpack
+Build-Depends: ffmpeg[core,encoder-libwavpack]
 Description: Wavpack encoding via libwavpack
 
 Feature: webp
-Build-Depends: libwebp
+Build-Depends: ffmpeg[core,encoder-libwebp]
 Description: WebP encoding via libwebp
 
 Feature: x264
-Build-Depends: x264, ffmpeg[core,gpl]
+Build-Depends: ffmpeg[core,encoder-libx264]
 Description: H.264 encoding via x264
 
 Feature: x265
-Build-Depends: x265, ffmpeg[core,gpl]
+Build-Depends: ffmpeg[core,encoder-libx265]
 Description: HEVC encoding via x265
 
 Feature: xml2
@@ -209,3 +209,391 @@ Description: XML parsing using the C library libxml2, needed for dash demuxing s
 Feature: zlib
 Build-Depends: zlib
 Description: zlib support
+
+Feature: decoder-all
+Build-Depends: ffmpeg[core,decoder-all-audio,decoder-all-subtitle,decoder-all-video]
+Description: All native decoders
+
+Feature: decoder-all-audio
+Build-Depends: ffmpeg[core,decoder-aac,decoder-ac3,decoder-adpcm,decoder-eac3,decoder-flac,decoder-mp1,decoder-mp2,decoder-mp3,decoder-other-audio,decoder-pcm,decoder-vorbis,decoder-wavpack,decoder-wma]
+Description: All native audio decoders
+
+Feature: decoder-all-subtitle
+Build-Depends: ffmpeg[core,decoder-other-subtitle,decoder-subrip,decoder-text]
+Description: All native subtitle decoders
+
+Feature: decoder-all-video
+Build-Depends: ffmpeg[core,decoder-ffv1,decoder-flv,decoder-h261,decoder-h263,decoder-h264,decoder-hevc,decoder-huffyuv,decoder-lagarith,decoder-mpeg1,decoder-mpeg2,decoder-mpeg4,decoder-other-video,decoder-prores,decoder-rawvideo,decoder-theora,decoder-vp3,decoder-vp4,decoder-vp5,decoder-vp6,decoder-vp7,decoder-vp8,decoder-vp9,decoder-webp,decoder-wmv]
+Description: All native video decoders
+
+Feature: decoder-aac
+Build-Depends: ffmpeg[core,avcodec]
+Description: AAC (Advanced Audio Coding) decoder(s)
+
+Feature: decoder-ac3
+Build-Depends: ffmpeg[core,avcodec]
+Description: Dolby AC-3 decoder(s)
+
+Feature: decoder-adpcm
+Build-Depends: ffmpeg[core,avcodec]
+Description: ADPCM decoder(s)
+
+Feature: decoder-cuvid
+Build-Depends: ffmpeg[core,avcodec], ffnvcodec
+Description: Nvidia CUVID H.264/HEVC/MPEG/VP/... decoder(s) using ffnvcodec
+
+Feature: decoder-eac3
+Build-Depends: ffmpeg[core,avcodec]
+Description: Enhanced AC-3 decoder(s)
+
+Feature: decoder-ffv1
+Build-Depends: ffmpeg[core,avcodec]
+Description: FFmpeg video codec #1 decoder(s)
+
+Feature: decoder-flac
+Build-Depends: ffmpeg[core,avcodec]
+Description: FLAC (Free Lossless Audio Codec) decoder(s)
+
+Feature: decoder-flv
+Build-Depends: ffmpeg[core,avcodec]
+Description: flv decoder(s)
+
+Feature: decoder-h261
+Build-Depends: ffmpeg[core,avcodec]
+Description: H.261 decoder(s)
+
+Feature: decoder-h263
+Build-Depends: ffmpeg[core,avcodec]
+Description: H.263 decoder(s)
+
+Feature: decoder-h264
+Build-Depends: ffmpeg[core,avcodec]
+Description: H.264 decoder(s)
+
+Feature: decoder-hevc
+Build-Depends: ffmpeg[core,avcodec]
+Description: HEVC decoder(s)
+
+Feature: decoder-huffyuv
+Build-Depends: ffmpeg[core,avcodec]
+Description: HuffYUV decoder(s)
+
+Feature: decoder-lagarith
+Build-Depends: ffmpeg[core,avcodec]
+Description: Lagarith lossless decoder(s)
+
+Feature: decoder-libdav1d
+Build-Depends: ffmpeg[core,avcodec], dav1d
+Description: AV1 decoder(s) using dav1d
+
+Feature: decoder-libfdk-aac
+Build-Depends: ffmpeg[core,avcodec,nonfree], fdk-aac
+Description: Fraunhofer FDK AAC decoder(s) using fdk-aac
+
+Feature: decoder-libilbc
+Build-Depends: ffmpeg[core,avcodec], libilbc
+Description: iLBC decoder(s) using libilbc
+
+Feature: decoder-libopenjpeg
+Build-Depends: ffmpeg[core,avcodec], openjpeg
+Description: OpenJPEG JPEG 2000 decoder(s) using openjpeg
+
+Feature: decoder-libopus
+Build-Depends: ffmpeg[core,avcodec], libopus
+Description: Opus decoder(s) using libopus
+
+Feature: decoder-libspeex
+Build-Depends: ffmpeg[core,avcodec], speex
+Description: Speex decoder(s) using speex
+
+Feature: decoder-libvorbis
+Build-Depends: ffmpeg[core,avcodec], libvorbis
+Description: Vorbis decoder(s) using libvorbis
+
+Feature: decoder-libvpx
+Build-Depends: ffmpeg[core,avcodec], libvpx
+Description: VP8/VP9 decoder(s) using libvpx
+
+Feature: decoder-mp1
+Build-Depends: ffmpeg[core,avcodec]
+Description: MP1 decoder(s)
+
+Feature: decoder-mp2
+Build-Depends: ffmpeg[core,avcodec]
+Description: MP2 decoder(s)
+
+Feature: decoder-mp3
+Build-Depends: ffmpeg[core,avcodec]
+Description: MP3 decoder(s)
+
+Feature: decoder-mpeg1
+Build-Depends: ffmpeg[core,avcodec]
+Description: MPEG1 decoder(s)
+
+Feature: decoder-mpeg2
+Build-Depends: ffmpeg[core,avcodec]
+Description: MPEG2 decoder(s)
+
+Feature: decoder-mpeg4
+Build-Depends: ffmpeg[core,avcodec]
+Description: MPEG4 decoder(s)
+
+Feature: decoder-other-audio
+Build-Depends: ffmpeg[core,avcodec]
+Description: other audio decoder(s)
+
+Feature: decoder-other-subtitle
+Build-Depends: ffmpeg[core,avcodec]
+Description: other subtitle decoder(s)
+
+Feature: decoder-other-video
+Build-Depends: ffmpeg[core,avcodec]
+Description: other video decoder(s)
+
+Feature: decoder-pcm
+Build-Depends: ffmpeg[core,avcodec]
+Description: PCM decoder(s)
+
+Feature: decoder-prores
+Build-Depends: ffmpeg[core,avcodec]
+Description: Apple ProRes decoder(s)
+
+Feature: decoder-rawvideo
+Build-Depends: ffmpeg[core,avcodec]
+Description: raw video decoder(s)
+
+Feature: decoder-subrip
+Build-Depends: ffmpeg[core,avcodec]
+Description: SubRip subtitle decoder(s)
+
+Feature: decoder-text
+Build-Depends: ffmpeg[core,avcodec]
+Description: raw text subtitle decoder(s)
+
+Feature: decoder-theora
+Build-Depends: ffmpeg[core,avcodec]
+Description: Theora decoder(s)
+
+Feature: decoder-vorbis
+Build-Depends: ffmpeg[core,avcodec]
+Description: Vorbis decoder(s)
+
+Feature: decoder-vp3
+Build-Depends: ffmpeg[core,avcodec]
+Description: VP3 decoder(s)
+
+Feature: decoder-vp4
+Build-Depends: ffmpeg[core,avcodec]
+Description: VP4 decoder(s)
+
+Feature: decoder-vp5
+Build-Depends: ffmpeg[core,avcodec]
+Description: VP5 decoder(s)
+
+Feature: decoder-vp6
+Build-Depends: ffmpeg[core,avcodec]
+Description: VP6 decoder(s)
+
+Feature: decoder-vp7
+Build-Depends: ffmpeg[core,avcodec]
+Description: VP7 decoder(s)
+
+Feature: decoder-vp8
+Build-Depends: ffmpeg[core,avcodec]
+Description: VP8 decoder(s)
+
+Feature: decoder-vp9
+Build-Depends: ffmpeg[core,avcodec]
+Description: VP9 decoder(s)
+
+Feature: decoder-wavpack
+Build-Depends: ffmpeg[core,avcodec]
+Description: WavPack decoder(s)
+
+Feature: decoder-webp
+Build-Depends: ffmpeg[core,avcodec]
+Description: WebP decoder(s)
+
+Feature: decoder-wma
+Build-Depends: ffmpeg[core,avcodec]
+Description: Windows Media Audio decoder(s)
+
+Feature: decoder-wmv
+Build-Depends: ffmpeg[core,avcodec]
+Description: Windows Media Video decoder(s)
+
+Feature: encoder-all
+Build-Depends: ffmpeg[core,encoder-all-audio,encoder-all-subtitle,encoder-all-video]
+Description: All native encoders
+
+Feature: encoder-all-audio
+Build-Depends: ffmpeg[core,encoder-aac,encoder-ac3,encoder-adpcm,encoder-eac3,encoder-flac,encoder-mp2,encoder-other-audio,encoder-pcm,encoder-vorbis,encoder-wavpack,encoder-wma]
+Description: All native audio encoders
+
+Feature: encoder-all-subtitle
+Build-Depends: ffmpeg[core,encoder-other-subtitle,encoder-subrip,encoder-text]
+Description: All native subtitle encoders
+
+Feature: encoder-all-video
+Build-Depends: ffmpeg[core,encoder-ffv1,encoder-flv,encoder-h261,encoder-h263,encoder-huffyuv,encoder-mpeg1,encoder-mpeg2,encoder-mpeg4,encoder-other-video,encoder-prores,encoder-rawvideo,encoder-wmv]
+Description: All native video encoders
+
+Feature: encoder-aac
+Build-Depends: ffmpeg[core,avcodec]
+Description: AAC (Advanced Audio Coding) encoder(s)
+
+Feature: encoder-ac3
+Build-Depends: ffmpeg[core,avcodec]
+Description: Dolby AC-3 encoder(s)
+
+Feature: encoder-adpcm
+Build-Depends: ffmpeg[core,avcodec]
+Description: ADPCM encoder(s)
+
+Feature: encoder-eac3
+Build-Depends: ffmpeg[core,avcodec]
+Description: Enhanced AC-3 encoder(s)
+
+Feature: encoder-ffv1
+Build-Depends: ffmpeg[core,avcodec]
+Description: FFmpeg video codec #1 encoder(s)
+
+Feature: encoder-flac
+Build-Depends: ffmpeg[core,avcodec]
+Description: FLAC (Free Lossless Audio Codec) encoder(s)
+
+Feature: encoder-flv
+Build-Depends: ffmpeg[core,avcodec]
+Description: flv encoder(s)
+
+Feature: encoder-h261
+Build-Depends: ffmpeg[core,avcodec]
+Description: H.261 encoder(s)
+
+Feature: encoder-h263
+Build-Depends: ffmpeg[core,avcodec]
+Description: H.263 encoder(s)
+
+Feature: encoder-huffyuv
+Build-Depends: ffmpeg[core,avcodec]
+Description: HuffYUV encoder(s)
+
+Feature: encoder-libfdk-aac
+Build-Depends: ffmpeg[core,avcodec,nonfree], fdk-aac
+Description: Fraunhofer FDK AAC encoder(s) using fdk-aac
+
+Feature: encoder-libilbc
+Build-Depends: ffmpeg[core,avcodec], libilbc
+Description: iLBC encoder(s) using libilbc
+
+Feature: encoder-libmp3lame
+Build-Depends: ffmpeg[core,avcodec], mp3lame
+Description: MP3 encoder(s) using mp3lame
+
+Feature: encoder-libopenjpeg
+Build-Depends: ffmpeg[core,avcodec], openjpeg
+Description: OpenJPEG JPEG 2000 encoder(s) using openjpeg
+
+Feature: encoder-libopus
+Build-Depends: ffmpeg[core,avcodec], libopus
+Description: Opus encoder(s) using libopus
+
+Feature: encoder-libspeex
+Build-Depends: ffmpeg[core,avcodec], speex
+Description: Speex encoder(s) using speex
+
+Feature: encoder-libtheora
+Build-Depends: ffmpeg[core,avcodec], libtheora
+Description: Theora encoder(s) using libtheora
+
+Feature: encoder-libvorbis
+Build-Depends: ffmpeg[core,avcodec], libvorbis
+Description: Vorbis encoder(s) using libvorbis
+
+Feature: encoder-libvpx
+Build-Depends: ffmpeg[core,avcodec], libvpx
+Description: VP8/VP9 encoder(s) using libvpx
+
+Feature: encoder-libwavpack
+Build-Depends: ffmpeg[core,avcodec], libwavpack
+Description: WavPack encoder(s) using libwavpack
+
+Feature: encoder-libwebp
+Build-Depends: ffmpeg[core,avcodec], libwebp
+Description: WebP encoder(s) using libwebp
+
+Feature: encoder-libx264
+Build-Depends: ffmpeg[core,avcodec,gpl], libx264
+Description: H.264 encoder(s) using libx264
+
+Feature: encoder-libx265
+Build-Depends: ffmpeg[core,avcodec,gpl], libx265
+Description: H.265 encoder(s) using libx265
+
+Feature: encoder-mp2
+Build-Depends: ffmpeg[core,avcodec]
+Description: MP2 encoder(s)
+
+Feature: encoder-mpeg1
+Build-Depends: ffmpeg[core,avcodec]
+Description: MPEG1 encoder(s)
+
+Feature: encoder-mpeg2
+Build-Depends: ffmpeg[core,avcodec]
+Description: MPEG2 encoder(s)
+
+Feature: encoder-mpeg4
+Build-Depends: ffmpeg[core,avcodec]
+Description: MPEG4 encoder(s)
+
+Feature: encoder-nvenc
+Build-Depends: ffmpeg[core,avcodec], ffnvcodec
+Description: Nvidia NVENC H.264/HEVC encoder(s) using ffnvcodec
+
+Feature: encoder-other-audio
+Build-Depends: ffmpeg[core,avcodec]
+Description: other audio encoder(s)
+
+Feature: encoder-other-subtitle
+Build-Depends: ffmpeg[core,avcodec]
+Description: other subtitle encoder(s)
+
+Feature: encoder-other-video
+Build-Depends: ffmpeg[core,avcodec]
+Description: other video encoder(s)
+
+Feature: encoder-pcm
+Build-Depends: ffmpeg[core,avcodec]
+Description: PCM encoder(s)
+
+Feature: encoder-prores
+Build-Depends: ffmpeg[core,avcodec]
+Description: Apple ProRes encoder(s)
+
+Feature: encoder-rawvideo
+Build-Depends: ffmpeg[core,avcodec]
+Description: raw video encoder(s)
+
+Feature: encoder-subrip
+Build-Depends: ffmpeg[core,avcodec]
+Description: SubRip subtitle encoder(s)
+
+Feature: encoder-text
+Build-Depends: ffmpeg[core,avcodec]
+Description: raw text subtitle encoder(s)
+
+Feature: encoder-vorbis
+Build-Depends: ffmpeg[core,avcodec]
+Description: Vorbis encoder(s)
+
+Feature: encoder-wavpack
+Build-Depends: ffmpeg[core,avcodec]
+Description: WavPack encoder(s)
+
+Feature: encoder-wma
+Build-Depends: ffmpeg[core,avcodec]
+Description: Windows Media Audio encoder(s)
+
+Feature: encoder-wmv
+Build-Depends: ffmpeg[core,avcodec]
+Description: Windows Media Video encoder(s)
