@@ -243,7 +243,7 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
                 fixed_contents
                 "${fixed_contents}"
             )
-            if (fixed_contents)
+            if (fixed_contents AND NOT fixed_contents STREQUAL library_contents)
                 string(REGEX REPLACE
                    "${library_contents}"
                    "${fixed_contents}"
