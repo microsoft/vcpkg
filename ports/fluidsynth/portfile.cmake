@@ -8,9 +8,20 @@ vcpkg_from_github(
        force-x86-gentables.patch
 )
 
+set(feature_list dbus jack libinstpatch libsndfile midishare opensles oboe oss sdl2 pulseaudio readline lash alsa systemd coreaudio coremidi dart)
+set(FEATURE_OPTIONS)
+foreach(_feature IN LISTS feature_list)
+    list(APPEND FEATURE_OPTIONS -Denable-${_feature}:BOOL=OFF)
+endforeach()
+
+vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -Denable-pkgconfig=0
+    OPTIONS 
+        ${FEATURE_OPTIONS}
+        -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
+    OPTIONS_DEBUG
+        -Denable-debug:BOOL=ON
 )
 
 vcpkg_install_cmake()
