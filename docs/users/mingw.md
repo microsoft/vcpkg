@@ -41,7 +41,7 @@ must use a mingw subsystem of MSYS2, and install some packages
 | x64          | x64-mingw-dynamic, x64-mingw-static | mingw64   | mingw-w64-x86_64- |
 | x86          | x86-mingw-dynamic, x86-mingw-static | mingw32   | mingw-w64-i686-   |
 
-After the basic installation if MSYS2, you will need to install a few
+After the basic installation of MSYS2, you will need to install a few
 additional packages for software development, e.g. for x64:
 
 ```bash
