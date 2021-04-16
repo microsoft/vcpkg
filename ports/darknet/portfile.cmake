@@ -7,17 +7,17 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
+  FEATURES
     cuda ENABLE_CUDA
     cudnn ENABLE_CUDNN
 )
 
 #do not move following features to vcpkg_check_features because they break themselves: one off will turn off the others even if true
 set(ENABLE_OPENCV FALSE)
+set(ENABLE_OPENCV_WITH_CUDA FALSE)
 if ("opencv-base" IN_LIST FEATURES OR "opencv2-base" IN_LIST FEATURES OR "opencv3-base" IN_LIST FEATURES)
   set(ENABLE_OPENCV TRUE)
 endif()
-set(ENABLE_OPENCV FALSE)
 if ("opencv-cuda" IN_LIST FEATURES OR "opencv2-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
   set(ENABLE_OPENCV TRUE)
   set(ENABLE_OPENCV_WITH_CUDA TRUE)
