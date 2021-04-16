@@ -1,12 +1,13 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 00d578e327c22638ea12e73c4efb74c798c08de5
-  SHA512 ef2d46fab670759e9c22d0233b60192bfe47669e29d2ec1e020a77dfaf09894a93160c11de070bc39d86109dd2a37ca7172fbb081809b1ea2783207a6e385b2c
+  REF d7c37b5616038b9283a37e043cfeadd26b182da1
+  SHA512 6d237f2049111c62be9a9312478b6debbac9a92101aa1d3ff3eadcf1e9eecb056f1ee80b7f7899e8c9de1432015245019d07ddc089c76e732b02ba91aae8f7f0
   HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     cuda ENABLE_CUDA
     cudnn ENABLE_CUDNN
 )
@@ -49,7 +50,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet uselib)
 if ("opencv-cuda" IN_LIST FEATURES OR "opencv2-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
-vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES uselib_track)
+  vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES uselib_track)
+endif()
 
 file(COPY ${SOURCE_PATH}/cfg DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(COPY ${SOURCE_PATH}/data DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
