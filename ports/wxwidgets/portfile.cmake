@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO wxWidgets/wxWidgets
-    REF v3.1.4
-    SHA512 108e35220de10afbfc58762498ada9ece0b3166f56a6d11e11836d51bfbaed1de3033c32ed4109992da901fecddcf84ce8a1ba47303f728c159c638dac77d148
+    REF v3.1.5
+    SHA512 69111e8424148dd75255190f692e82edcc49eccf60d5e9d3ab35e114065f7183c54385583188b8156a59f6632a70f8ec69cc078174b860074904ba1a7b273ba5
     HEAD_REF master
     PATCHES
         disable-platform-lib-dir.patch
