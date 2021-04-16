@@ -243,12 +243,15 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
                 fixed_contents
                 "${fixed_contents}"
             )
-            string(REGEX REPLACE
-               "${library_contents}"
-               "${fixed_contents}"
-                targets_content
-                "${targets_content}"
-            )
+            if (fixed_contents)
+                string(REGEX REPLACE
+                   "${library_contents}"
+                   "${fixed_contents}"
+                    targets_content
+                    "${targets_content}"
+                )
+            endif()
+
             file(WRITE "${targets_file}" "${targets_content}")
         endforeach()
     endif()
