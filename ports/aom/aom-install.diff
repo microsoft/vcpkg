@@ -1,0 +1,72 @@
+diff -pruN aom-3.0.0.o/cmake/aomConfig.cmake.in aom-3.0.0/cmake/aomConfig.cmake.in
+--- aom-3.0.0.o/cmake/aomConfig.cmake.in	1970-01-01 03:00:00.000000000 +0300
++++ aom-3.0.0/cmake/aomConfig.cmake.in	2021-04-16 16:06:19.560725100 +0300
+@@ -0,0 +1,2 @@
++@PACKAGE_INIT@
++include(${CMAKE_CURRENT_LIST_DIR}/aomTargets.cmake)
+diff -pruN aom-3.0.0.o/CMakeLists.txt aom-3.0.0/CMakeLists.txt
+--- aom-3.0.0.o/CMakeLists.txt	2021-04-15 20:05:52.695181200 +0300
++++ aom-3.0.0/CMakeLists.txt	2021-04-16 16:08:54.160941600 +0300
+@@ -49,6 +49,9 @@ endif()
+ set(SO_VERSION 3)
+ set(SO_FILE_VERSION 3.0.0)
+ 
++include(GNUInstallDirs)
++include(CMakePackageConfigHelpers)
++
+ include("${AOM_ROOT}/build/cmake/aom_configure.cmake")
+ include("${AOM_ROOT}/aom_dsp/aom_dsp.cmake")
+ include("${AOM_ROOT}/aom_mem/aom_mem.cmake")
+@@ -273,6 +276,52 @@ if(BUILD_SHARED_LIBS)
+   endif()
+ endif()
+ 
++set(PUBLIC_HEADERS
++    aom/aom.h
++    aom/aom_codec.h
++    aom/aom_decoder.h
++    aom/aom_encoder.h
++    aom/aom_frame_buffer.h
++    aom/aom_image.h
++    aom/aom_integer.h
++    aom/aomcx.h
++    aom/aomdx.h
++)
++
++set_target_properties(aom PROPERTIES
++                          PUBLIC_HEADER "${PUBLIC_HEADERS}")
++
++
++target_include_directories(aom
++                            PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
++                                   $<INSTALL_INTERFACE:include>)
++
++install(TARGETS aom
++        EXPORT aomTargets
++        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++        LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
++        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
++        PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/aom")
++
++install(EXPORT aomTargets
++        FILE aomTargets.cmake
++        NAMESPACE AOM::
++        DESTINATION lib/cmake/aom)
++
++configure_package_config_file(cmake/aomConfig.cmake.in
++                              ${CMAKE_CURRENT_BINARY_DIR}/aomConfig.cmake
++                              INSTALL_DESTINATION lib/cmake/aom
++                              NO_SET_AND_CHECK_MACRO
++                              NO_CHECK_REQUIRED_COMPONENTS_MACRO)
++
++write_basic_package_version_file(${CMAKE_CURRENT_BINARY_DIR}/aomConfigVersion.cmake
++                                 VERSION ${SO_FILE_VERSION}
++                                 COMPATIBILITY SameMajorVersion)
++
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/aomConfig.cmake
++              ${CMAKE_CURRENT_BINARY_DIR}/aomConfigVersion.cmake
++        DESTINATION lib/cmake/aom)
++
+ if(NOT MSVC AND NOT APPLE)
+   target_link_libraries(aom ${AOM_LIB_LINK_TYPE} m)
+   if(BUILD_SHARED_LIBS)
