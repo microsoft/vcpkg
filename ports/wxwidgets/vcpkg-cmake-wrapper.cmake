@@ -19,7 +19,7 @@ if(wxWidgets_LIBRARIES AND NOT wxWidgets_LIBRARIES MATCHES "TIFF::TIFF;png;expat
 
     if (TARGET png)
         list(APPEND wxWidgets_LIBRARIES "png")
-    else()
+    elseif(TARGET png_static)
         list(APPEND wxWidgets_LIBRARIES "png_static")
     endif()
 endif()
