@@ -243,12 +243,14 @@ function(vcpkg_fixup_cmake_targets)
                 fixed_contents
                 "${fixed_contents}"
             )
-            string(REGEX REPLACE
-               "${library_contents}"
-               "${fixed_contents}"
-                targets_content
-                "${targets_content}"
-            )
+            if (fixed_contents)
+                string(REGEX REPLACE
+                "${library_contents}"
+                "${fixed_contents}"
+                    targets_content
+                    "${targets_content}"
+                )
+            endif()
             file(WRITE "${targets_file}" "${targets_content}")
         endforeach()
     endif()
