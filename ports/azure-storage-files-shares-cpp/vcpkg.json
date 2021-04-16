@@ -1,0 +1,12 @@
+{
+  "name": "azure-storage-files-shares-cpp",
+  "version-string": "12.0.0-beta.10",
+  "description": [
+    "Microsoft Azure Storage Files Shares SDK for C++",
+    "This library provides Azure Storage Files Shares SDK."
+  ],
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/storage/azure-storage-files-shares",
+  "dependencies": [
+    "azure-storage-common-cpp"
+  ]
+}
