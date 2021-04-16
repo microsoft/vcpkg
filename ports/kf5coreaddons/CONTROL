@@ -1,5 +1,0 @@
-Source: kf5coreaddons
-Version: 5.64.0
-Homepage: https://api.kde.org/frameworks/kcoreaddons/html/index.html
-Description: Addons to QtCore
-Build-Depends: ecm, qt5-base, qt5-tools
