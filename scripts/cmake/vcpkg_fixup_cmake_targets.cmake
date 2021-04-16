@@ -243,7 +243,7 @@ function(vcpkg_fixup_cmake_targets)
                 fixed_contents
                 "${fixed_contents}"
             )
-            if (fixed_contents)
+            if (fixed_contents AND NOT fixed_contents STREQUAL library_contents)
                 string(REGEX REPLACE
                 "${library_contents}"
                 "${fixed_contents}"
