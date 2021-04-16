@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8136e2e..fa7ce92 100644
+index 6142f91..cfdfa40 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -46,6 +46,9 @@ set(LIBJUICE_SOURCES
+@@ -53,6 +53,9 @@ set(LIBJUICE_SOURCES
  set(LIBJUICE_HEADERS
  	${CMAKE_CURRENT_SOURCE_DIR}/include/juice/juice.h
  )
@@ -12,7 +12,7 @@ index 8136e2e..fa7ce92 100644
  
  set(TESTS_SOURCES
      ${CMAKE_CURRENT_SOURCE_DIR}/test/main.c
-@@ -59,10 +62,10 @@ set(TESTS_SOURCES
+@@ -70,10 +73,10 @@ set(TESTS_SOURCES
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
  
@@ -25,7 +25,7 @@ index 8136e2e..fa7ce92 100644
  target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include/juice)
  target_include_directories(juice PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
  target_link_libraries(juice PUBLIC Threads::Threads)
-@@ -86,10 +89,14 @@ endif()
+@@ -97,10 +100,14 @@ endif()
  
  if (USE_NETTLE)
  	find_package(Nettle REQUIRED)
@@ -42,7 +42,7 @@ index 8136e2e..fa7ce92 100644
  else()
      target_compile_definitions(juice PRIVATE USE_NETTLE=0)
      target_compile_definitions(juice-static PRIVATE USE_NETTLE=0)
-@@ -109,8 +116,13 @@ endif()
+@@ -125,8 +132,13 @@ endif()
  add_library(LibJuice::LibJuice ALIAS juice)
  add_library(LibJuice::LibJuiceStatic ALIAS juice-static)
  
@@ -57,7 +57,7 @@ index 8136e2e..fa7ce92 100644
  
  if(NOT MSVC)
  	target_compile_options(juice PRIVATE -Wall -Wextra)
-@@ -145,3 +157,8 @@ if(NOT NO_TESTS)
+@@ -161,3 +173,8 @@ if(NOT NO_TESTS)
  	target_link_libraries(juice-tests juice)
  endif()
  
