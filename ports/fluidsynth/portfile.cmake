@@ -9,7 +9,7 @@ vcpkg_from_github(
 )
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES 
+    FEATURES
         "dbus" enable-dbus
         "jack" enable-jack
         "libinstpatch" enable-libinstpatch
@@ -21,18 +21,19 @@ vcpkg_check_features(
         "sdl2" enable-sdl2
         "pulseaudio" enable-pulseaudio
         "readline" enable-readline
-    #platform dependent: 
+    #platform dependent:
         "lash" enable-lash
         "alsa" enable-alsa
         "systemd" enable-systemd
         "coreaudio" enable-coreaudio
         "coremidi" enable-coremidi
         "dart" enable-dart
-    )
+)
+
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS 
+    OPTIONS
         ${FEATURE_OPTIONS}
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
     OPTIONS_DEBUG
