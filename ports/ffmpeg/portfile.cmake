@@ -46,7 +46,17 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(OPTIONS "--enable-asm --enable-x86asm --disable-doc --enable-debug --enable-runtime-cpudetect")
+set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect")
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+  set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
+endif()
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  set(OPTIONS "${OPTIONS} --enable-asm --disable-x86asm")
+endif()
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+  set(OPTIONS "${OPTIONS} --enable-asm --enable-x86asm")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -575,7 +585,7 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/debug/lib/*.def)
-    
+
     if(NOT VCPKG_TARGET_IS_MINGW)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
             set(LIB_MACHINE_ARG /machine:ARM)
@@ -603,7 +613,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             )
         endforeach()
     endif()
-    
+
     file(GLOB EXP_FILES ${CURRENT_PACKAGES_DIR}/lib/*.exp ${CURRENT_PACKAGES_DIR}/debug/lib/*.exp)
     file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
     if(VCPKG_TARGET_IS_MINGW)
@@ -636,7 +646,7 @@ vcpkg_copy_pdbs()
 if (VCPKG_TARGET_IS_WINDOWS)
     # Translate cygpath to local path
     set(CYGPATH_CMD "${MSYS_ROOT}/usr/bin/cygpath.exe" -w)
-    
+
     foreach(PKGCONFIG_PATH "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
         file(GLOB PKGCONFIG_FILES "${PKGCONFIG_PATH}/*.pc")
         foreach(PKGCONFIG_FILE IN LISTS PKGCONFIG_FILES)
@@ -665,7 +675,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
             )
             string(REPLACE "\n" "" FIXED_INCLUDE_PATH "${FIXED_INCLUDE_PATH}")
             file(TO_CMAKE_PATH ${FIXED_INCLUDE_PATH} FIXED_INCLUDE_PATH)
-            
+
             vcpkg_replace_string("${PKGCONFIG_FILE}" "${prefix_cygpath}" "${FIXED_PREFIX_PATH}")
             vcpkg_replace_string("${PKGCONFIG_FILE}" "${libdir_cygpath}" "${FIXED_LIBDIR_PATH}")
             vcpkg_replace_string("${PKGCONFIG_FILE}" "${includedir_cygpath}" "${FIXED_INCLUDE_PATH}")
@@ -674,6 +684,62 @@ if (VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_fixup_pkgconfig()
+
+# Handle version strings
+
+function(extract_regex_from_file out)
+    cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "FILE;REGEX" "")
+    file(READ "${arg_FILE}" contents)
+    if (contents MATCHES "${arg_REGEX}")
+        if(NOT CMAKE_MATCH_COUNT EQUAL 1)
+            message(FATAL_ERROR "Could not identify match group in regular expression \"${arg_REGEX}\"")
+        endif()
+    else()
+        message(FATAL_ERROR "Could not find line matching \"${arg_REGEX}\" in file \"${arg_FILE}\"")
+    endif()
+    set("${out}" "${CMAKE_MATCH_1}" PARENT_SCOPE)
+endfunction()
+
+function(extract_version_from_component out)
+    cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "COMPONENT" "")
+    string(TOLOWER "${arg_COMPONENT}" component_lower)
+    string(TOUPPER "${arg_COMPONENT}" component_upper)
+    extract_regex_from_file(major_version
+        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        REGEX "#define ${component_upper}_VERSION_MAJOR[ ]+([0-9]+)"
+    )
+    extract_regex_from_file(minor_version
+        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        REGEX "#define ${component_upper}_VERSION_MINOR[ ]+([0-9]+)"
+    )
+    extract_regex_from_file(micro_version
+        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        REGEX "#define ${component_upper}_VERSION_MICRO[ ]+([0-9]+)"
+    )
+    set("${out}" "${major_version}.${minor_version}.${micro_version}" PARENT_SCOPE)
+endfunction()
+
+extract_regex_from_file(FFMPEG_VERSION
+    FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libavutil/ffversion.h"
+    REGEX "#define FFMPEG_VERSION[ ]+\"(.+)\""
+)
+
+extract_version_from_component(LIBAVUTIL_VERSION
+    COMPONENT libavutil)
+extract_version_from_component(LIBAVCODEC_VERSION
+    COMPONENT libavcodec)
+extract_version_from_component(LIBAVDEVICE_VERSION
+    COMPONENT libavdevice)
+extract_version_from_component(LIBAVFILTER_VERSION
+    COMPONENT libavfilter)
+extract_version_from_component( LIBAVFORMAT_VERSION
+    COMPONENT libavformat)
+extract_version_from_component(LIBAVRESAMPLE_VERSION
+    COMPONENT libavresample)
+extract_version_from_component(LIBSWRESAMPLE_VERSION
+    COMPONENT libswresample)
+extract_version_from_component(LIBSWSCALE_VERSION
+    COMPONENT libswscale)
 
 # Handle copyright
 file(STRINGS ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-out.log LICENSE_STRING REGEX "License: .*" LIMIT_COUNT 1)
