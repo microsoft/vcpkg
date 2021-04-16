@@ -1942,7 +1942,7 @@
     },
     "ffmpeg": {
       "baseline": "4.3.2",
-      "port-version": 3
+      "port-version": 4
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
@@ -1998,7 +1998,7 @@
     },
     "fluidsynth": {
       "baseline": "2.1.4",
-      "port-version": 0
+      "port-version": 1
     },
     "fmem": {
       "baseline": "c-libs-2ccee3d2fb",
@@ -6454,6 +6454,10 @@
     },
     "xalan-c": {
       "baseline": "1.11-12",
+      "port-version": 0
+    },
+    "xaudio2redist": {
+      "baseline": "1.2.6",
       "port-version": 0
     },
     "xbyak": {
