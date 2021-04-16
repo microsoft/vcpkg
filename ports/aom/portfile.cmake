@@ -1,4 +1,4 @@
-#vcpkg_fail_port_install(ON_TARGET "UWP")
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "UWP")
 
 # NASM is required to build AOM
 vcpkg_find_acquire_program(NASM)
