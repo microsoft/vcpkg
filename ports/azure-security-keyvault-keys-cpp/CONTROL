@@ -1,6 +1,0 @@
-Source: azure-security-keyvault-keys-cpp
-Version: 4.0.0-beta.1
-Build-Depends: azure-security-keyvault-common-cpp
-Description: Microsoft Azure Key Vault Keys SDK for C++
-  This library provides Azure Key Vault Keys SDK.
-Homepage: https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/keyvault/azure-security-keyvault-keys
