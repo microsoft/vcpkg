@@ -9,8 +9,7 @@
   },
   "required": [
     "Applications",
-    "Brew",
-    "VBoxExtensions"
+    "Brew"
   ],
   "properties": {
     "Applications": {
@@ -21,9 +20,20 @@
           "Name": {
             "type": "string"
           },
-          "TestCommand": {
-            "type": "string"
+          "VersionCommand": {
+            "type": "array",
+						"items": {
+						  "type": "string"
+						},
+						"minItems": 1
           },
+					"VersionRegex": {
+						"type": "string",
+						"format": "regex"
+					},
+					"Version": {
+						"type": "string"
+					},
           "DmgUrl": {
             "type": "string",
             "format": "uri"
@@ -49,27 +59,6 @@
           "Kind": {
             "type": "string",
             "enum": [ "cask" ]
-          }
-        }
-      }
-    },
-    "VBoxExtensions": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "properties": {
-          "Name": {
-            "type": "string"
-          },
-          "FullName": {
-            "type": "string"
-          },
-          "Url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "Sha256": {
-            "$ref": "#/definitions/sha256"
           }
         }
       }

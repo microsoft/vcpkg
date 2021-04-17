@@ -8,10 +8,7 @@ Installs the set of prerequisites for the macOS CI hosts.
 .DESCRIPTION
 Install-Prerequisites.ps1 installs all of the necessary prerequisites
 to run the vcpkg macOS CI in a vagrant virtual machine,
-skipping all prerequisites that are already installed.
-
-.PARAMETER Force
-Don't skip the prerequisites that are already installed.
+skipping all prerequisites that are already installed and of the right version.
 
 .INPUTS
 None
@@ -20,10 +17,7 @@ None
 None
 #>
 [CmdletBinding()]
-Param(
-    [Parameter()]
-    [Switch]$Force
-)
+Param()
 
 Set-StrictMode -Version 2
 
@@ -37,13 +31,32 @@ Import-Module "$PSScriptRoot/Utilities.psm1"
 $Installables = Get-Content "$PSScriptRoot/configuration/installables.json" | ConvertFrom-Json
 
 $Installables.Applications | ForEach-Object {
-    if (-not (Get-CommandExists $_.TestCommand)) {
+    $VersionCommand = $_.VersionCommand
+    if (-not (Get-CommandExists $VersionCommand[0])) {
         Write-Host "$($_.Name) not installed; installing now"
-    } elseif ($Force) {
-        Write-Host "$($_.Name) found; attempting to upgrade or re-install"
     } else {
-        Write-Host "$($_.Name) already installed"
-        return
+        $InstalledVersion = (& $VersionCommand[0] $VersionCommand[1..$VersionCommand.Length]).Trim()
+        if ($InstalledVersion -match $_.VersionRegex) {
+            if ($Matches.Count -ne 2) {
+                Write-Error "$($_.Name) has a malformed version regex ($($_.VersionRegex)); it should have a single capture group
+    (it has $($Matches.Count - 1))"
+                throw
+            }
+            if ($Matches[1] -eq $_.Version) {
+                Write-Host "$($_.Name) already installed and at the correct version ($($Matches[1]))"
+                return
+            } else {
+                Write-Host "$($_.Name) already installed but with the incorrect version
+    installed version: '$($Matches[1])'
+    required version : '$($_.Version)'
+upgrading now."
+            }
+        } else {
+            Write-Warning "$($_.Name)'s version command ($($VersionCommand -join ' ')) returned a value we did not expect:
+    $InstalledVersion
+    expected a version matching the regex: $($_.VersionRegex)
+Installing anyways."
+        }
     }
 
     $pathToDmg = "~/Downloads/$($_.Name).dmg"
@@ -57,38 +70,13 @@ $Installables.Applications | ForEach-Object {
 $Installables.Brew | ForEach-Object {
     $installable = $_
     if ($null -eq (Get-Member -InputObject $installable -Name 'Kind')) {
-        brew install $installable.Name
+        brew reinstall $installable.Name
     } else {
         switch ($installable.Kind) {
-            'cask' { brew install --cask $installable.Name }
+            'cask' { brew reinstall --cask $installable.Name }
             default {
                 Write-Error "Invalid kind: $_. Expected either empty, or 'cask'."
             }
          }
      }
-}
-
-# Install plugins
-$installedExtensionPacks = Get-InstalledVirtualBoxExtensionPacks
-
-$Installables.VBoxExtensions | ForEach-Object {
-    $extension = $_
-    $installedExts = $installedExtensionPacks | Where-Object { $_.Pack -eq $extension.FullName -and $_.Usable -eq 'true' }
-
-    if ($null -eq $installedExts) {
-        Write-Host "VBox extension: $($extension.Name) not installed; installing now"
-    } elseif ($Force) {
-        Write-Host "VBox extension: $($extension.Name) found; attempting to upgrade or re-install"
-    } else {
-        Write-Host "VBox extension: $($extension.Name) already installed"
-        return
-    }
-
-    $pathToExt = "~/Downloads/$($extension.FullName -replace ' ','_').vbox-extpack"
-
-    Get-RemoteFile -OutFile $pathToExt -Uri $extension.Url -Sha256 $extension.Sha256 | Out-Null
-
-    Write-Host 'Attempting to install extension with sudo; you may need to enter your password'
-    sudo VBoxManage extpack install --replace $pathToExt
-    sudo VBoxManage extpack cleanup
 }

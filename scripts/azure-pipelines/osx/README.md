@@ -100,31 +100,69 @@ you can set up your own vagrant boxes that are the same as ours by doing the fol
 
 You'll need some prerequisites:
 
-- macinbox - installable via `sudo gem install macinbox`
 - vagrant - found at <https://www.vagrantup.com/>
-- VirtualBox - found at <https://www.virtualbox.org/>
-- A macOS installer application - you can get this from the App Store (although I believe only the latest is available)
-- An Xcode Command Line Tools installer - you can get this from Apple's developer website,
+	- The vagrant-scp plugin - just run `vagrant plugin install vagrant-scp`
+- Parallels - found at <https://parallels.com>
+- An Xcode installer - you can get this from Apple's developer website,
   although you'll need to sign in first: <https://developer.apple.com/downloads>
 
-First, you'll need to create a base box;
+First, you'll need to create a base VM;
 this is where you determine what version of macOS is installed.
+Just follow the Parallels process for creating a macOS VM.
 
-```
-> sudo macinbox \
-  --box-format virtualbox \
-  --name macos-ci-base \
-  --installer <path to macOS installer> \
-  --no-gui
+Once you've done this, you can run through the installation of macOS onto a new VM.
+We recommend having more than one CPU core (we use 6).
+You should set the username to `vagrant`.
+
+Once it's finished installing, make sure to turn on the SSH server.
+Open System Preferences, then go to Sharing > Remote Login,
+and turn it on.
+You'll then want to add the vagrant SSH keys to the VM's vagrant user.
+Open the terminal application and run the following:
+
+```sh
+$ # basic stuff
+$ sudo sh -c "date >/etc/vagrant_box_build_time"
+$ sudo sh -c 'printf "vagrant\tALL=(ALL)\tNOPASSWD:\tALL\n" >>/etc/sudoers.d/vagrant'
+$ sudo chmod 0440 /etc/sudoers.d/vagrant
+$ # then install vagrant keys
+$ mkdir -p ~/.ssh
+$ curl -fsSL 'https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub' >~/.ssh/authorized_keys
+$ chmod 0600 ~/.ssh/authorized_keys
 ```
 
-Once you've done that, create a Vagrantfile that looks like the following:
+Finally, you'll need to install the Parallel Tools.
+From your host, in the top bar,
+go to Actions > Install Parallels Tools...,
+and then follow the instructions.
+
+Now, let's package the VM into a base box.
+Turn it off, and follow [these instructions][base-box-instructions]
+to create a base box.
+The Vagrantfile inside the base box should contain the following:
 
 ```rb
 Vagrant.configure('2') do |config|
-  config.vm.box = 'macos-ci-base'
-  config.vm.boot_timeout = 600
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+	config.vm.box_check_update = false
+	config.vm.network :forwarded_port, guest: 22, host: 2222, id: 'ssh', disabled: true
+	config.vm.synced_folder '.', '/vagrant', disabled: true
+end
+```
+
+Once you've done that, you can add it to vagrant:
+
+```sh
+$ vagrant box add ./custom.box --name "macos-ci-base"
+```
+
+Then, to create the final box, we'll need to do the rest with vagrant.
+Create a `Vagrantfile` that looks like the following:
+
+```rb
+Vagrant.configure('2') do |config|
+	config.vm.box = 'macos-ci-base'
+	config.vm.boot_timeout = 600
+	config.vm.synced_folder ".", "/vagrant", disabled: true
 end
 ```
 
@@ -144,7 +182,6 @@ $ vagrant reload
 if that works, you can now package the box:
 
 ```sh
-$ vagrant ssh -c 'umount testmnt && rmdir testmnt'
 $ vagrant package
 ```
 
@@ -157,17 +194,21 @@ upload it to the fileshare, under `share/vcpkg-boxes`.
 Then, add the metadata about the box (the name and version) to the JSON file there.
 Once you've done that, add the software versions under [VM Software Versions](#vm-software-versions).
 
+[base-box-instructions]: https://parallels.github.io/vagrant-parallels/docs/boxes/base.html
+
 ### VM Software Versions
 
 * 2020-09-28:
   * macOS: 10.15.6
   * Xcode CLTs: 12
+* 2021-04-16:
+	* macOS: 11.2.3
+	* Xcode CLTs: 12.4
 
 ### (Internal) Accessing the macOS fileshare
 
 The fileshare is located on `vcpkgmm-01`, under the `fileshare` user, in the `share` directory.
 In order to get `sshfs` working on the physical machine,
-you'll need to do the same thing one needs to do for building the base box.
 You can run `Install-Prerequisites.ps1` to grab the right software, then either:
 
 ```sh
