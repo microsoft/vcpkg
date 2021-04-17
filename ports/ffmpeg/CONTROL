@@ -515,8 +515,8 @@ Build-Depends: ffmpeg[core,avcodec], libvpx
 Description: VP8/VP9 encoder(s) using libvpx
 
 Feature: encoder-libwavpack
-Build-Depends: ffmpeg[core,avcodec], libwavpack
-Description: WavPack encoder(s) using libwavpack
+Build-Depends: ffmpeg[core,avcodec], wavpack
+Description: WavPack encoder(s) using wavpack
 
 Feature: encoder-libwebp
 Build-Depends: ffmpeg[core,avcodec], libwebp

@@ -364,7 +364,7 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
         Feature(name="libwavpack",
                 match=startswith("libwavpack"),
                 description="WavPack",
-                depends="libwavpack",
+                depends="wavpack",
                 configure_enables=("libwavpack",),
                 static_linkage_variable="ENABLE_WAVPACK"),
         Feature(name="libwebp",
