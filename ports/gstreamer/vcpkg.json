@@ -3,35 +3,41 @@
   "version": "1.18.4",
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
+  "license": "LGPL-2.0",
   "supports": "(windows | osx) & (x64 | x86)",
   "dependencies": [
-    "brotli",
     {
       "name": "cairo",
       "features": [
         "freetype"
       ],
-      "platform": "osx"
+      "platform": "windows & osx"
     },
     {
-      "name": "cairo",
+      "name": "freetype",
       "features": [
-        "gobject"
-      ],
-      "platform": "windows"
+        "brotli",
+        "png",
+        "zlib"
+      ]
     },
     {
-      "name": "graphene",
+      "name": "gettext",
       "platform": "windows"
     },
     "jack2",
+    "libffi",
     "libflac",
+    "libiconv",
+    "openssl",
     "libjpeg-turbo",
     "libpng",
+    "zlib",
     "libraw",
     "libvpx",
     "libxml2",
     "mpg123",
+    "openh264",
     {
       "name": "opengl-registry",
       "platform": "windows & osx"

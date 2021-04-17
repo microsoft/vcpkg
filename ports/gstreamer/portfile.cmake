@@ -26,6 +26,25 @@ if(VCPKG_TARGET_IS_OSX)
 endif()
 
 #
+# todo: support port dependencies
+#   - glib: 2.62. The configuration step requires tools/glib/...
+#       - proxy-libintl
+#   - gst-plugins-base
+#       - graphene
+#       - libsoup
+#   - gst-plugins-bad
+#   - gst-plugins-ugly
+#   - gettext
+#
+
+if(APPLE)
+    # this is for gstreamer/libs/gst/helpers
+    set(LINKER_FLAGS_DEBUG "-Wl,-framework,Foundation") # quote with '?
+    set(LINKER_FLAGS_RELEASE "${LINKER_FLAGS_DEBUG}")
+    set(ENV{CPPFLAGS} "${LINKER_FLAGS_DEBUG}")
+endif()
+
+#
 # check scripts/cmake/vcpkg_configure_meson.cmake
 #   --wrap-mode=nodownload
 #
@@ -36,16 +55,85 @@ endif()
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        # plugin/tool
-        -Dgst-plugins-good:qt5=disabled
+        # glib
+        #   todo: remove this when glib port is updated
+        -Dglib:libmount=false
+        -Dglib:xattr=false
+        -Dglib:bsymbolic_functions=false
+        -Dglib:nls=disabled
+        -Dglib:installed_tests=disabled
+
+        # gstreamer
+        -Dgstreamer:check=disabled
+        -Dgstreamer:libunwind=disabled
+        -Dgstreamer:libdw=disabled
+        -Dgstreamer:dbghelp=disabled
+        -Dgstreamer:bash-completion=disabled
+        -Dgstreamer:coretracers=disabled
+        -Dgstreamer:examples=disabled
+        -Dgstreamer:tests=disabled
+        -Dgstreamer:benchmarks=disabled
         -Dgstreamer:tools=disabled
-        -Dgst-examples=disabled
+        -Dgstreamer:gtk_doc=disabled
+        -Dgstreamer:introspection=disabled
+        -Dgstreamer:nls=disabled
+        -Dgstreamer:gobject-cast-checks=disabled
+        -Dgstreamer:glib-asserts=disabled
+        -Dgstreamer:glib-checks=disabled
+        -Dgstreamer:extra-checks=disabled
+    
+        # gst-plugins-base
+        #   todo: gl_winsys=['win32','winrt','egl']
+        # -Dgst-plugins-base:gl=disabled
+        -Dgst-plugins-base:gl-graphene=disabled
+        # -Dgst-plugins-base:gl-jpeg=disabled
+        # -Dgst-plugins-base:gl-png=disabled
+        -Dgst-plugins-base:examples=disabled
+        -Dgst-plugins-base:tests=disabled
+        -Dgst-plugins-base:tools=disabled
+        -Dgst-plugins-base:introspection=disabled
+        -Dgst-plugins-base:nls=disabled
+        -Dgst-plugins-base:orc=disabled
+        -Dgst-plugins-base:gobject-cast-checks=disabled
+        -Dgst-plugins-base:glib-asserts=disabled
+        -Dgst-plugins-base:glib-checks=disabled
+    
+        # gst-plugins-good
+        -Dgst-plugins-good:qt5=disabled
+        -Dgst-plugins-good:soup=disabled
+        -Dgst-plugins-good:speex=auto
+        -Dgst-plugins-good:taglib=auto
+        -Dgst-plugins-good:vpx=auto
+        -Dgst-plugins-good:examples=disabled
+        -Dgst-plugins-good:tests=disabled
+        -Dgst-plugins-good:nls=disabled
+        -Dgst-plugins-good:orc=disabled
+        -Dgst-plugins-good:gobject-cast-checks=disabled
+        -Dgst-plugins-good:glib-asserts=disabled
+        -Dgst-plugins-good:glib-checks=disabled
+
+        # gst-plugins-bad
+        -Dbad=disabled
+        # -Dgst-plugins-bad:opencv=disabled
+        # -Dgst-plugins-bad:hls-crypto=openssl
+        # -Dgst-plugins-bad:examples=disabled
+        # -Dgst-plugins-bad:tests=disabled
+        # -Dgst-plugins-bad:introspection=disabled
+        # -Dgst-plugins-bad:nls=disabled
+        # -Dgst-plugins-bad:orc=disabled
+        # -Dgst-plugins-bad:gobject-cast-checks=disabled
+        # -Dgst-plugins-bad:glib-asserts=disabled
+        # -Dgst-plugins-bad:glib-checks=disabled
+
+        # gst-plugins-ugly
+        -Dugly=disabled
+        # -Dgst-plugins-ugly:examples=disabled
+        # -Dgst-plugins-ugly:tests=disabled
+
         # see ${SOURCE_PATH}/meson_options.txt
         -Dpython=disabled
         -Dlibav=disabled
-        -Dlibnice=disabled
-        -Dugly=disabled
-        -Dbad=disabled
+        -Dlibnice=disabled # port 'libnice'
         -Ddevtools=disabled
         -Dges=disabled
         -Drtsp_server=disabled
@@ -53,6 +141,7 @@ vcpkg_configure_meson(
         -Dvaapi=disabled
         -Dsharp=disabled
         -Drs=disabled
+        -Dgst-examples=disabled
         -Dtls=disabled
         # common options
         -Dtests=disabled
@@ -72,6 +161,7 @@ vcpkg_copy_tools(
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0
     AUTO_CLEAN
 )
+vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0)
 
 # Remove duplicated GL headers (we already have `opengl-registry`)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR
@@ -81,7 +171,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig
             ${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h
 )
 
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/debug/libexec
                     ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include
