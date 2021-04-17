@@ -264,6 +264,14 @@
       "baseline": "2020-06-17",
       "port-version": 2
     },
+    "azure-security-keyvault-common-cpp": {
+      "baseline": "4.0.0-beta.1",
+      "port-version": 0
+    },
+    "azure-security-keyvault-keys-cpp": {
+      "baseline": "4.0.0-beta.1",
+      "port-version": 0
+    },
     "azure-storage-blobs-cpp": {
       "baseline": "12.0.0-beta.10",
       "port-version": 0
