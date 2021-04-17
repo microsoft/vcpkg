@@ -299,8 +299,8 @@ Build-Depends: ffmpeg[core,avcodec], openjpeg
 Description: OpenJPEG JPEG 2000 decoder(s) using openjpeg
 
 Feature: decoder-libopus
-Build-Depends: ffmpeg[core,avcodec], libopus
-Description: Opus decoder(s) using libopus
+Build-Depends: ffmpeg[core,avcodec], opus
+Description: Opus decoder(s) using opus
 
 Feature: decoder-libspeex
 Build-Depends: ffmpeg[core,avcodec], speex
@@ -495,8 +495,8 @@ Build-Depends: ffmpeg[core,avcodec], openjpeg
 Description: OpenJPEG JPEG 2000 encoder(s) using openjpeg
 
 Feature: encoder-libopus
-Build-Depends: ffmpeg[core,avcodec], libopus
-Description: Opus encoder(s) using libopus
+Build-Depends: ffmpeg[core,avcodec], opus
+Description: Opus encoder(s) using opus
 
 Feature: encoder-libspeex
 Build-Depends: ffmpeg[core,avcodec], speex

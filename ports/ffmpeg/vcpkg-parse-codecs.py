@@ -322,7 +322,7 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
         Feature(name="libopus",
                 match=startswith("libopus"),
                 description="Opus",
-                depends="libopus",
+                depends="opus",
                 configure_enables=("libopus",),
                 static_linkage_variable="ENABLE_OPUS"),
         Feature(name="librav1e", match=startswith("librav1e"), description="AV1",
