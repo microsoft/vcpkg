@@ -344,7 +344,7 @@ function(vcpkg_configure_meson)
     vcpkg_add_to_path(PREPEND "${NINJA_PATH}") # Need to prepend so that meson picks up the correct ninja from vcpkg ....
     # list(APPEND _vcm_ADDITIONAL_NATIVE_BINARIES "ninja = '${NINJA}'") # This does not work due to meson issues ......
 
-    list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
+    list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja) # --wrap-mode nodownload
 
     if(NOT VCPKG_MESON_CROSS_FILE)
         vcpkg_internal_meson_generate_cross_file("_vcm_ADDITIONAL_CROSS_BINARIES")
