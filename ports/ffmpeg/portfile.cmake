@@ -119,11 +119,6 @@ function(feature_set out)
     set(${out} ${${out}} PARENT_SCOPE)
 endfunction()
 
-# if OPTIONS were a list...
-# feature_list_append(OPTIONS FEATURE nonfree VALUE "--enable-nonfree")
-# feature_list_append(OPTIONS FEATURE ffmpeg VALUE "--enable-ffmpeg" VALUE_ELSE "--disable-ffmpeg")
-# and so on
-
 if("nonfree" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-nonfree")
 endif()
@@ -255,11 +250,6 @@ if(NOT "encoder-all" IN_LIST FEATURES)
         set(OPTIONS "${OPTIONS} --enable-encoder=${OPTIONS_ENCODERS}")
     endif()
 endif()
-
-# if OPTIONS were a list...
-# feature_set        (ENABLE_ASS FEATURE ass VALUE ${STATIC_LINKAGE} VALUE_ELSE OFF)
-# feature_list_append(OPTIONS    FEATURE ass VALUE "--enable-libass" VALUE_ELSE "--disable-libass")
-# and so on
 
 set(ENABLE_ASS OFF)
 if("ass" IN_LIST FEATURES)

@@ -473,7 +473,7 @@ def generate_portfile_code(stream: TextIO, ffmpeg_path: Path):
     data = Data(ffmpeg_path)
 
     conf_all = sorted(set(itertools.chain.from_iterable(feature.configure_enables for feature in data.features)))
-    print(f'set(CONFIGURE_DISABLED {" ".join(conf_all)})', file=stream)
+    print(f'list(APPEND CONFIGURE_DISABLED {" ".join(conf_all)})', file=stream)
     for decode in (True, False):
         decenc = "decoder" if decode else "encoder"
         for feature in (data.features_decode if decode else data.features_encode):
