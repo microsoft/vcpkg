@@ -523,12 +523,12 @@ Build-Depends: ffmpeg[core,avcodec], libwebp
 Description: WebP encoder(s) using libwebp
 
 Feature: encoder-libx264
-Build-Depends: ffmpeg[core,avcodec,gpl], libx264
-Description: H.264 encoder(s) using libx264
+Build-Depends: ffmpeg[core,avcodec,gpl], x264
+Description: H.264 encoder(s) using x264
 
 Feature: encoder-libx265
-Build-Depends: ffmpeg[core,avcodec,gpl], libx265
-Description: H.265 encoder(s) using libx265
+Build-Depends: ffmpeg[core,avcodec,gpl], x265
+Description: H.265 encoder(s) using x265
 
 Feature: encoder-mp2
 Build-Depends: ffmpeg[core,avcodec]
