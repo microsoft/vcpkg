@@ -14,8 +14,8 @@ vcpkg_extract_source_archive_ex(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  INVERTED_FEATURES
-    tools SKIP_INSTALL_TOOLS
+  FEATURES
+    tools INSTALL_TOOLS
 )
 if(VCPKG_TARGET_IS_IOS AND "tools" IN_LIST FEATURES)
     message(FATAL_ERROR "lua[tools] is not supported for iOS platform build")
