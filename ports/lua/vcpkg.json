@@ -4,9 +4,6 @@
   "port-version": 1,
   "description": "A powerful, fast, lightweight, embeddable scripting language",
   "homepage": "https://www.lua.org",
-  "default-features": [
-    "tools"
-  ],
   "features": {
     "cpp": {
       "description": "Builds Lua for C++ linkage"
