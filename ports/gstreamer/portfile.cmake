@@ -1,10 +1,4 @@
-#
-# The following ports disables ...
-#   - arm: graphene
-#   - linux: ?
-#   - uwp: glib
-#
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "linux" "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "emscripten" "wasm32" "android" "ios")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,53 +8,40 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_find_acquire_program(PYTHON3)
 if(VCPKG_TARGET_IS_OSX)
-    # Darwin platform has an old version of `bison`, which can't be used for `gst-build`.
-    # brew install bison + PATH configuration
-    #
-    # todo: check the tool version and warn if too low
-    #
-    if(APPLE)
-        message(WARNING "The version of 'bison' is too old. Please check the https://stackoverflow.com/a/35161881 and upgrade it")
+    # In Darwin platform, there can be an old version of `bison`, 
+    # Which can't be used for `gst-build`. It requires 2.4+
+    vcpkg_find_acquire_program(BISON)
+    execute_process(
+        COMMAND ${BISON} --version
+        OUTPUT_VARIABLE BISON_OUTPUT
+    )
+    string(REGEX MATCH "([0-9]+)\\.([0-9]+)\\.([0-9]+)" BISON_VERSION "${BISON_OUTPUT}")
+    set(BISON_MAJOR ${CMAKE_MATCH_1})
+    set(BISON_MINOR ${CMAKE_MATCH_2})
+    message(STATUS "Using bison: ${BISON_MAJOR}.${BISON_MINOR}.${CMAKE_MATCH_3}")
+    if(NOT (BISON_MAJOR GREATER_EQUAL 2 AND BISON_MINOR GREATER_EQUAL 4))
+        message(WARNING "'bison' upgrade is required. Please check the https://stackoverflow.com/a/35161881")
     endif()
 endif()
 
 #
-# todo: check https://github.com/GStreamer/gst-plugins-good/blob/master/meson_options.txt
-#
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-#     FEATURES
-#         # ...
-# )
-
-# 
-# todo: check dependencies with vcpkg ports. 
-#       ex) Qt, OpenGL, codec, sound related libraries ...
-# todo: check build with existing ports
-#   - qt5
-#   - opengl-registry[windows]
-#   - gtk
-#   - cairo[gobject]
-#   - graphene, glib, libiconv
-#
-
-#
-# the following options break the configurations.
 # check scripts/cmake/vcpkg_configure_meson.cmake
 #   --wrap-mode=nodownload
 #
-# see https://github.com/GStreamer/gst-build
+# References
+#   https://github.com/GStreamer/gst-build
+#   https://github.com/GStreamer/gst-plugins-good/blob/master/meson_options.txt
+#
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        # -Dgl-headers=disabled
+        # plugin/tool
         -Dgst-plugins-good:qt5=disabled
         -Dgstreamer:tools=disabled
         -Dgst-examples=disabled
-        # check ${SOURCE_PATH}/meson_options.txt
-        # subproject options
-        -Dpython=disabled # ${PYTHON3}
+        # see ${SOURCE_PATH}/meson_options.txt
+        -Dpython=disabled
         -Dlibav=disabled
         -Dlibnice=disabled
         -Dugly=disabled
@@ -83,13 +64,32 @@ vcpkg_configure_meson(
         -Dgtk_doc=disabled
 )
 vcpkg_install_meson()
-# vcpkg_copy_pdbs()
+
+# todo: use vcpkg_copy_tool_dependencies for Windows
+file(RENAME ${CURRENT_PACKAGES_DIR}/libexec ${CURRENT_PACKAGES_DIR}/tools)
+vcpkg_copy_tools(
+    TOOL_NAMES gst-device-monitor-1.0 gst-discoverer-1.0 gst-play-1.0
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0
+    AUTO_CLEAN
+)
+
+# Remove duplicated GL headers (we already have `opengl-registry`)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR
+                    ${CURRENT_PACKAGES_DIR}/include/GL
+)
+file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig.h 
+            ${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h
+)
 
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/debug/libexec
-                    ${CURRENT_PACKAGES_DIR}/libexec)
+                    ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include
+                    ${CURRENT_PACKAGES_DIR}/libexec
+                    ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include
+)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
-                        ${CURRENT_PACKAGES_DIR}/bin)
+                        ${CURRENT_PACKAGES_DIR}/bin
+    )
 endif()

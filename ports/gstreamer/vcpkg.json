@@ -3,14 +3,26 @@
   "version": "1.18.4",
   "description": "GStreamer open-source multimedia framework core library",
   "homepage": "https://gstreamer.freedesktop.org/",
-  "supports": "!(arm | uwp | linux)",
+  "supports": "(windows | osx) & (x64 | x86)",
   "dependencies": [
     "brotli",
     {
       "name": "cairo",
       "features": [
         "freetype"
-      ]
+      ],
+      "platform": "osx"
+    },
+    {
+      "name": "cairo",
+      "features": [
+        "gobject"
+      ],
+      "platform": "windows"
+    },
+    {
+      "name": "graphene",
+      "platform": "windows"
     },
     "jack2",
     "libflac",
@@ -22,10 +34,14 @@
     "mpg123",
     {
       "name": "opengl-registry",
-      "platform": "windows"
+      "platform": "windows & osx"
     },
     "speex",
     "taglib",
-    "tool-meson"
+    "tool-meson",
+    {
+      "name": "yasm-tool-helper",
+      "platform": "windows"
+    }
   ]
 }
