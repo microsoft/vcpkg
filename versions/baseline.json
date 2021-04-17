@@ -92,6 +92,10 @@
       "baseline": "2020-01-13",
       "port-version": 2
     },
+    "aom": {
+      "baseline": "3.0.0",
+      "port-version": 0
+    },
     "apr": {
       "baseline": "1.7.0",
       "port-version": 3
