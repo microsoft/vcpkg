@@ -120,7 +120,7 @@ Description: MP3 encoding via libmp3lame
 
 Feature: nvcodec
 Build-Depends: ffmpeg[core,decoder-cuvid,encoder-nvenc]
-Description: Nvidia video de/encoding acceleration
+Description: Nvidia video de/encoding and hardware acceleration
 
 Feature: opencl
 Build-Depends: opencl

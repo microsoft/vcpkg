@@ -223,6 +223,10 @@ endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/portfile-registry.cmake")
 
+# activate nvdec hwaccel and cuda hwcontext via nvcodec feature
+list(APPEND CONFIGURE_DISABLED cuda nvdec)
+feature_list_append(CONFIGURE_ENABLED FEATURE nvcodec VALUE cuda nvdec)
+
 list(REMOVE_DUPLICATES CONFIGURE_ENABLED)
 if(CONFIGURE_ENABLED)
     list(REMOVE_ITEM CONFIGURE_DISABLED ${CONFIGURE_ENABLED})
