@@ -151,7 +151,7 @@ Build-Depends: sdl2
 Description: Sdl2 support
 
 Feature: snappy
-Build-Depends: snappy
+Build-Depends: ffmpeg[core,encoder-hap]
 Description: Snappy compression, needed for hap encoding
 
 Feature: soxr
@@ -223,7 +223,7 @@ Build-Depends: ffmpeg[core,decoder-other-subtitle,decoder-subrip,decoder-text]
 Description: All native subtitle decoders
 
 Feature: decoder-all-video
-Build-Depends: ffmpeg[core,decoder-ffv1,decoder-flv,decoder-h261,decoder-h263,decoder-h264,decoder-hevc,decoder-huffyuv,decoder-lagarith,decoder-mpeg1,decoder-mpeg2,decoder-mpeg4,decoder-other-video,decoder-prores,decoder-rawvideo,decoder-theora,decoder-vp3,decoder-vp4,decoder-vp5,decoder-vp6,decoder-vp7,decoder-vp8,decoder-vp9,decoder-webp,decoder-wmv]
+Build-Depends: ffmpeg[core,decoder-ffv1,decoder-flv,decoder-h261,decoder-h263,decoder-h264,decoder-hap,decoder-hevc,decoder-huffyuv,decoder-lagarith,decoder-mpeg1,decoder-mpeg2,decoder-mpeg4,decoder-other-video,decoder-prores,decoder-rawvideo,decoder-theora,decoder-vp3,decoder-vp4,decoder-vp5,decoder-vp6,decoder-vp7,decoder-vp8,decoder-vp9,decoder-webp,decoder-wmv]
 Description: All native video decoders
 
 Feature: decoder-aac
@@ -269,6 +269,10 @@ Description: H.263 decoder(s)
 Feature: decoder-h264
 Build-Depends: ffmpeg[core,avcodec]
 Description: H.264 decoder(s)
+
+Feature: decoder-hap
+Build-Depends: ffmpeg[core,avcodec]
+Description: Vidvox Hap decoder(s)
 
 Feature: decoder-hevc
 Build-Depends: ffmpeg[core,avcodec]
@@ -473,6 +477,10 @@ Description: H.261 encoder(s)
 Feature: encoder-h263
 Build-Depends: ffmpeg[core,avcodec]
 Description: H.263 encoder(s)
+
+Feature: encoder-hap
+Build-Depends: ffmpeg[core,avcodec], snappy
+Description: Vidvox Hap encoder(s) using snappy
 
 Feature: encoder-huffyuv
 Build-Depends: ffmpeg[core,avcodec]

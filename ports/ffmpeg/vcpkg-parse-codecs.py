@@ -2,6 +2,7 @@ import argparse
 import itertools
 import sys
 import dataclasses
+from operator import attrgetter
 from pathlib import Path
 import re
 from typing import TextIO, Iterable, Dict, Callable, Pattern, List, Union, Tuple, Set, NamedTuple
@@ -13,14 +14,14 @@ class Codec(NamedTuple):
 
 
 class Feature(NamedTuple):
-    name: str                                 #: Group name of the codec feature
-    description: str                          #: Descriptive name for codecs in this group
-    match: Callable[[Codec], bool]            #: Function to determine if codec is in group
-    supported: bool = True                    #: Whether feature is already supported in vcpkg
-    depends: str = ""                         #: Vcpkg dependency if any (Build-Depends)
+    name: str                              #: Group name of the codec feature
+    description: str                       #: Descriptive name for codecs in this group
+    match: Callable[[Codec], bool]         #: Function to determine if codec is in group
+    supported: bool = True                 #: Whether feature is already supported in vcpkg
+    depends: str = ""                      #: Vcpkg dependency if any (Build-Depends)
     options_enable: Tuple[str, ...] = ()   #: Configure flags needed for feature (without "")
-    static_linkage_variable: str = ""         #: Cmake variable to set on static linkage in vcpkg portfile.cmake script
-    license: str = ""                         #: The license if not lgpl ("gpl", "version3", "nonfree")
+    static_linkage_variable: str = ""      #: Cmake variable to set on static linkage in vcpkg portfile.cmake script
+    license: str = ""                      #: The license if not lgpl ("gpl", "version3", "nonfree")
 
 
 def get_codecs(ffmpeg_path: Path) -> Set[Codec]:
@@ -422,8 +423,22 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
         Feature(name="other-subtitle", match=has_media_type("subtitle"), description="other subtitle"),
     ]
 
+    # features to match only for encoders (in case encoder and decoder have different dependencies)
+    decoder_features_database: List[Feature] = [
+        Feature(name="hap", match=equals("hap"), description="Vidvox Hap"),
+    ]
+
+    # features to match only for decoders (in case encoder and decoder have different dependencies)
+    encoder_features_database: List[Feature] = [
+        Feature(name="hap", match=equals("hap"), description="Vidvox Hap",
+                depends="snappy",
+                options_enable=("libsnappy",),
+                static_linkage_variable="ENABLE_SNAPPY",
+                )
+    ]
+
     def get_feature(codec: Codec):
-        for feature in features_database:
+        for feature in (encoder_features_database if codec.encoder else decoder_features_database) + features_database:
             if feature.match(codec):
                 return feature
         raise RuntimeError("feature not found")
@@ -451,7 +466,7 @@ class Data:
         self.codecs: List[Codec] = sorted(codec for codec in codecs if features[codec].supported)
         self.codec_feature = dict((codec, features[codec]) for codec in self.codecs)
         self.codec_media_type = dict((codec, media_types[codec]) for codec in self.codecs)
-        self.features = sorted(set(features[codec] for codec in self.codecs))
+        self.features = sorted(set(features[codec] for codec in self.codecs), key=attrgetter("name"))
         self.features_decode = sorted(set(features[codec] for codec in self.codecs if not codec.encoder))
         self.features_encode = sorted(set(features[codec] for codec in self.codecs if codec.encoder))
         self.media_types = sorted(set(self.codec_media_type.values()))
