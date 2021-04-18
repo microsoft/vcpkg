@@ -13,11 +13,11 @@ set(MINIMUM_CUDNN_VERSION "7.6.5")
 
 # Try to find CUDNN if it exists; only download if it doesn't exist
 find_path(CUDNN_INCLUDE_DIR NAMES cudnn.h cudnn_v8.h cudnn_v7.h
-  HINTS ${CUDA_HOME} ${CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} /usr/include
+  HINTS $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} /usr/include
   PATH_SUFFIXES cuda/include include)
 message(STATUS "CUDNN_INCLUDE_DIR: ${CUDNN_INCLUDE_DIR}")
 find_library(CUDNN_LIBRARY NAMES cudnn cudnn8 cudnn7
-  HINTS ${CUDA_HOME} ${CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} /usr/lib/x86_64-linux-gnu/
+  HINTS $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} /usr/lib/x86_64-linux-gnu/
   PATH_SUFFIXES lib lib64 cuda/lib cuda/lib64 lib/x64)
 message(STATUS "CUDNN_LIBRARY: ${CUDNN_LIBRARY}")
 if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn.h")
