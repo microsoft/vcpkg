@@ -218,7 +218,7 @@
     },
     "aws-c-common": {
       "baseline": "0.4.56",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-event-stream": {
       "baseline": "0.1.6",
@@ -4514,7 +4514,7 @@
     },
     "openssl": {
       "baseline": "1.1.1j",
-      "port-version": 0
+      "port-version": 1
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
