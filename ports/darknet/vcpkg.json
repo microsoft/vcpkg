@@ -67,7 +67,6 @@
         {
           "name": "opencv2",
           "features": [
-            "contrib",
             "ffmpeg"
           ]
         }
@@ -79,7 +78,6 @@
         {
           "name": "opencv2",
           "features": [
-            "contrib",
             "cuda",
             "ffmpeg"
           ]

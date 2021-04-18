@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF d7c37b5616038b9283a37e043cfeadd26b182da1
-  SHA512 6d237f2049111c62be9a9312478b6debbac9a92101aa1d3ff3eadcf1e9eecb056f1ee80b7f7899e8c9de1432015245019d07ddc089c76e732b02ba91aae8f7f0
+  REF 91efb7c7f6c00a4616ed58735f7c670908d0a849
+  SHA512 7f6187f8ccc89295daf7b15288bae0bf53638970422ced80a4a755e2b4765cda36f532ebc5c32a28804a2ed0ac6375e9a8f7449a9002e1b373378635a54f2c96
   HEAD_REF master
 )
 
@@ -49,7 +49,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES darknet uselib)
-if ("opencv-cuda" IN_LIST FEATURES OR "opencv2-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
+if ("opencv-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
   vcpkg_copy_tools(AUTO_CLEAN TOOL_NAMES uselib_track)
 endif()
 
@@ -66,5 +66,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 file(INSTALL ${SOURCE_PATH}/scripts/download_weights.ps1 DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT}/scripts)
-message(STATUS "To download weight files, please go to ${CURRENT_PACKAGES_DIR}/tools/${PORT}/scripts and run ./download_weights.ps1")
+message(STATUS "To download weight files, please go to ${CURRENT_INSTALLED_DIR}/tools/${PORT}/scripts and run ./download_weights.ps1")
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
