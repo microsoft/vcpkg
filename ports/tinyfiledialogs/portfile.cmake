@@ -2,11 +2,11 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_sourceforge(
-    OUT_SOURCE_PATH SOURCE_PATH
-    REPO tinyfiledialogs
-    FILENAME "frozen_versions/tinyfiledialogs-3.6.3.zip"
-    SHA512 42c3bd34b0287cf2477f9ede049bea29a9306304e8fab7740065957d3737f4041899f26f29a0693e801cb0a7b63844509f86441262303ff0a4030a431ffac648
+vcpkg_download_distfile(
+    OUT_SOURCE_PATH tinyfiledialogs.zip
+    URLS "https://sourceforge.net/code-snapshots/git/t/ti/tinyfiledialogs/code.git/tinyfiledialogs-code-ab6f4f916aaa95d05247ffa66a30867e7f55e875.zip"
+    FILENAME "tinyfiledialogs.zip"
+    SHA512 0b4bd0f9388a5b11c75b8d4128ced8855281a2a27778035556de5a1812015da1
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
