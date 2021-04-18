@@ -234,7 +234,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.8.126",
-      "port-version": 7
+      "port-version": 8
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -4514,7 +4514,7 @@
     },
     "openssl": {
       "baseline": "1.1.1j",
-      "port-version": 0
+      "port-version": 1
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
