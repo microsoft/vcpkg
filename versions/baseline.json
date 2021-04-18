@@ -5537,7 +5537,7 @@
       "port-version": 2
     },
     "shaderwriter": {
-      "baseline": "1.0.0",
+      "baseline": "1.1.0",
       "port-version": 0
     },
     "shapelib": {
