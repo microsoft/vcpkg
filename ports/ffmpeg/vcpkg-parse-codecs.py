@@ -18,7 +18,7 @@ class Feature(NamedTuple):
     match: Callable[[Codec], bool]            #: Function to determine if codec is in group
     supported: bool = True                    #: Whether feature is already supported in vcpkg
     depends: str = ""                         #: Vcpkg dependency if any (Build-Depends)
-    configure_enables: Tuple[str, ...] = ()   #: Configure flags needed for feature (without "")
+    options_enable: Tuple[str, ...] = ()   #: Configure flags needed for feature (without "")
     static_linkage_variable: str = ""         #: Cmake variable to set on static linkage in vcpkg portfile.cmake script
     license: str = ""                         #: The license if not lgpl ("gpl", "version3", "nonfree")
 
@@ -133,7 +133,7 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
         Feature(name="audiotoolbox",
                 description="Apple AudioToolbox AAC/AC3/ALAC/iLBC/MP3/...",
                 match=endswith("_at"),
-                configure_enables=("audiotoolbox",),
+                options_enable=("audiotoolbox",),
                 supported=False,
                 ),
         Feature(name="crystalhd",
@@ -145,7 +145,7 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
                 description="Nvidia CUVID H.264/HEVC/MPEG/VP/...",
                 match=endswith("_cuvid"),
                 depends="ffnvcodec",
-                configure_enables=("ffnvcodec", "cuvid"),
+                options_enable=("ffnvcodec", "cuvid"),
                 static_linkage_variable="ENABLE_NVCODEC",
                 ),
         Feature(name="mediacodec",
@@ -157,26 +157,26 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
                 description="Nvidia NVENC H.264/HEVC",
                 match=any_([startswith("nvenc"), endswith("nvenc")]),
                 depends="ffnvcodec",
-                configure_enables=("ffnvcodec", "nvenc"),
+                options_enable=("ffnvcodec", "nvenc"),
                 static_linkage_variable="ENABLE_NVCODEC",
                 ),
         Feature(name="nvdec",
                 description="Nvidia NVENC H.264/HEVC",
                 match=any_([startswith("nvdec"), endswith("nvdec")]),
                 depends="ffnvcodec",
-                configure_enables=("ffnvcodec", "nvdec"),
+                options_enable=("ffnvcodec", "nvdec"),
                 static_linkage_variable="ENABLE_NVCODEC",
                 ),
         Feature(name="mediafoundation-audio",
                 description="Windows Media Foundation AAC/AC3/MP3",
                 match=all_([endswith("_mf"), has_media_type("audio")]),
-                configure_enables=("mediafoundation",),
+                options_enable=("mediafoundation",),
                 supported=False,
                 ),
         Feature(name="mediafoundation-video",
                 description="Windows Media Foundation H.264/HEVC",
                 match=all_([endswith("_mf"), has_media_type("video")]),
-                configure_enables=("mediafoundation",),
+                options_enable=("mediafoundation",),
                 supported=False,
                 ),
         Feature(name="mmal",
@@ -202,13 +202,13 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
         Feature(name="v4l2m2m",
                 description="V4L2 mem2mem H.264/HEVC/MPEG/VP/...",
                 match=endswith("_v4l2m2m"),
-                configure_enables=("v4l2-m2m",),
+                options_enable=("v4l2-m2m",),
                 supported=False,
                 ),
         Feature(name="vaapi",
                 description="Video Acceleration API H.264/HEVC/MPEG/VP/...",
                 match=endswith("_vaapi"),
-                configure_enables=("vaapi",),
+                options_enable=("vaapi",),
                 supported=False,
                 ),
         Feature(name="videotoolbox",
@@ -275,7 +275,7 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
                 match=startswith("libdav1d"),
                 description="AV1",
                 depends="dav1d",
-                configure_enables=("libdav1d",),
+                options_enable=("libdav1d",),
                 static_linkage_variable="ENABLE_DAV1D"),
         Feature(name="libdavs2",
                 match=startswith("libdavs2"),
@@ -285,7 +285,7 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
                 match=startswith("libfdk_aac"),
                 description="Fraunhofer FDK AAC",
                 depends="fdk-aac",
-                configure_enables=("libfdk-aac",),
+                options_enable=("libfdk-aac",),
                 static_linkage_variable="ENABLE_FDKAAC",
                 license="nonfree"),
         Feature(name="libgsm",
@@ -296,7 +296,7 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
                 match=startswith("libilbc"),
                 description="iLBC",
                 depends="libilbc",
-                configure_enables=("libilbc",),
+                options_enable=("libilbc",),
                 static_linkage_variable="ENABLE_ILBC"),
         Feature(name="libkvazaar",
                 match=startswith("libkvazaar"),
@@ -306,7 +306,7 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
                 match=startswith("libmp3lame"),
                 description="MP3",
                 depends="mp3lame",
-                configure_enables=("libmp3lame",),
+                options_enable=("libmp3lame",),
                 static_linkage_variable="ENABLE_LAME"),
         Feature(name="libopencore", match=startswith("libopencore"),
                 description="OpenCORE AMR-NB/WB (Adaptive Multi-Rate Narrow-Band/Wide-Band)",
@@ -317,13 +317,13 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
                 depends="openh264", supported=False),
         Feature(name="libopenjpeg", match=startswith("libopenjpeg"), description="OpenJPEG JPEG 2000",
                 depends="openjpeg",
-                configure_enables=("libopenjpeg",),
+                options_enable=("libopenjpeg",),
                 static_linkage_variable="ENABLE_OPENJPEG"),
         Feature(name="libopus",
                 match=startswith("libopus"),
                 description="Opus",
                 depends="opus",
-                configure_enables=("libopus",),
+                options_enable=("libopus",),
                 static_linkage_variable="ENABLE_OPUS"),
         Feature(name="librav1e", match=startswith("librav1e"), description="AV1",
                 supported=False),
@@ -333,7 +333,7 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
                 supported=False),
         Feature(name="libspeex", match=startswith("libspeex"), description="Speex",
                 depends="speex",
-                configure_enables=("libspeex",),
+                options_enable=("libspeex",),
                 static_linkage_variable="ENABLE_SPEEX"),
         Feature(name="libsvtav1", match=startswith("libsvtav1"), description="SVT-AV1",
                 supported=False),
@@ -341,7 +341,7 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
                 match=startswith("libtheora"),
                 description="Theora",
                 depends="libtheora",
-                configure_enables=("libtheora",),
+                options_enable=("libtheora",),
                 static_linkage_variable="ENABLE_THEORA"),
         Feature(name="libtwolame", match=startswith("libtwolame"), description="MP2",
                 depends="libtwolame", supported=False),
@@ -353,45 +353,45 @@ def get_features(codecs: Set[Codec], media_types: Dict[Codec, str]
                 match=startswith("libvorbis"),
                 description="Vorbis",
                 depends="libvorbis",
-                configure_enables=("libvorbis",),
+                options_enable=("libvorbis",),
                 static_linkage_variable="ENABLE_VORBIS"),
         Feature(name="libvpx",
                 match=startswith("libvpx_"),
                 description="VP8/VP9",
                 depends="libvpx",
-                configure_enables=("libvpx",),
+                options_enable=("libvpx",),
                 static_linkage_variable="ENABLE_VPX"),
         Feature(name="libwavpack",
                 match=startswith("libwavpack"),
                 description="WavPack",
                 depends="wavpack",
-                configure_enables=("libwavpack",),
+                options_enable=("libwavpack",),
                 static_linkage_variable="ENABLE_WAVPACK"),
         Feature(name="libwebp",
                 match=startswith("libwebp"),
                 description="WebP",
                 depends="libwebp",
-                configure_enables=("libwebp",),
+                options_enable=("libwebp",),
                 static_linkage_variable="ENABLE_WEBP"),
         Feature(name="libx262",
                 match=startswith("libx262"),
                 description="H.262",
                 depends="x262",
-                configure_enables=("libx262",),
+                options_enable=("libx262",),
                 license="gpl",
                 supported=False),
         Feature(name="libx264",
                 match=startswith("libx264"),
                 description="H.264",
                 depends="x264",
-                configure_enables=("libx264",),
+                options_enable=("libx264",),
                 static_linkage_variable="ENABLE_X264",
                 license="gpl"),
         Feature(name="libx265",
                 match=startswith("libx265"),
                 description="H.265",
                 depends="x265",
-                configure_enables=("libx265",),
+                options_enable=("libx265",),
                 static_linkage_variable="ENABLE_X265",
                 license="gpl"),
         Feature(name="libxavs",
@@ -472,15 +472,15 @@ def generate_portfile_code(stream: TextIO, ffmpeg_path: Path):
     print(file=stream)
     data = Data(ffmpeg_path)
 
-    conf_all = sorted(set(itertools.chain.from_iterable(feature.configure_enables for feature in data.features)))
-    print(f'list(APPEND CONFIGURE_DISABLED {" ".join(conf_all)})', file=stream)
+    conf_all = sorted(set(itertools.chain.from_iterable(feature.options_enable for feature in data.features)))
+    print(f'list(APPEND OPTIONS_DISABLE {" ".join(conf_all)})', file=stream)
     for decode in (True, False):
         decenc = "decoder" if decode else "encoder"
         for feature in (data.features_decode if decode else data.features_encode):
-            if feature.configure_enables:
+            if feature.options_enable:
                 print(
-                    f'feature_list_append(CONFIGURE_ENABLED FEATURE {decenc}-{feature.name:16}'
-                    f' VALUE {" ".join(feature.configure_enables)})',
+                    f'feature_list({decenc}-{feature.name:16}'
+                    f' APPEND OPTIONS_ENABLE {" ".join(feature.options_enable)})',
                     file=stream)
 
     static_linkage_variables = sorted(set(feature.static_linkage_variable for feature in data.features
@@ -492,8 +492,8 @@ def generate_portfile_code(stream: TextIO, ffmpeg_path: Path):
         decenc = "decoder" if decode else "encoder"
         for feature in (data.features_decode if decode else data.features_encode):
             if feature.static_linkage_variable:
-                print(f'feature_set({feature.static_linkage_variable:16}'
-                      f' FEATURE {decenc}-{feature.name:16} VALUE ${{STATIC_LINKAGE}})',
+                print(f'feature_set({decenc}-{feature.name:16}'
+                      f' {feature.static_linkage_variable:16} ${{STATIC_LINKAGE}})',
                       file=stream)
 
     for codec in data.codecs:
@@ -501,10 +501,8 @@ def generate_portfile_code(stream: TextIO, ffmpeg_path: Path):
         outvar = "ENCODERS" if codec.encoder else "DECODERS"
         decenc = "encoder" if codec.encoder else "decoder"
         print(
-            f'feature_list_append({outvar}'
-            f' FEATURE {decenc}-{feature.name:16}'
-            f' VALUE {codec.name:20}'
-            ')', file=stream)
+            f'feature_list({decenc}-{feature.name:16}'
+            f' APPEND {outvar} {codec.name:20})', file=stream)
 
 
 def generate_control_code(stream: TextIO, ffmpeg_path: Path):
