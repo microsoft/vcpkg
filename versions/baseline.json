@@ -1206,7 +1206,7 @@
     },
     "chromaprint": {
       "baseline": "1.5.0",
-      "port-version": 0
+      "port-version": 1
     },
     "chromium-base": {
       "baseline": "86.0.4199.1",
