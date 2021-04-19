@@ -22,26 +22,53 @@
       ]
     },
     "graphene",
-    "jack2",
-    "libflac",
-    "libjpeg-turbo",
-    "libpng",
-    "libraw",
-    "libvpx",
+    "libnice",
     "libxml2",
-    "mpg123",
     {
       "name": "opengl-registry",
       "platform": "windows & osx"
     },
-    "openh264",
     "openssl",
-    "speex",
-    "taglib",
     "tool-meson",
     {
       "name": "yasm-tool-helper",
       "platform": "windows"
     }
-  ]
+  ],
+  "default-features": [
+    "plugins-good",
+    "plugins-ugly"
+  ],
+  "features": {
+    "nls": {
+      "description": "Enable native language support (translations)"
+    },
+    "plugins-bad": {
+      "description": "'Bad' GStreamer plugins and helper libraries",
+      "dependencies": [
+        "openh264"
+      ]
+    },
+    "plugins-good": {
+      "description": "'Good' GStreamer plugins and helper libraries",
+      "dependencies": [
+        "bzip2",
+        "jack2",
+        "libflac",
+        "libjpeg-turbo",
+        "libpng",
+        "libraw",
+        "libvpx",
+        "mpg123",
+        "speex",
+        "taglib"
+      ]
+    },
+    "plugins-ugly": {
+      "description": "'Ugly' GStreamer plugins and helper libraries",
+      "dependencies": [
+        "openh264"
+      ]
+    }
+  }
 }
