@@ -3,5 +3,15 @@
   "version-semver": "3.0.0",
   "description": "AV1 codec library",
   "homepage": "https://aomedia.googlesource.com/aom",
-  "supports": "!uwp & !arm64"
+  "supports": "!uwp & !arm64",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
 }
