@@ -6,6 +6,10 @@
   - [Table of Contents](#table-of-contents)
   - [Basic Usage](#basic-usage)
   - [Setting up a new macOS machine](#setting-up-a-new-macos-machine)
+    - [Troubleshooting](#troubleshooting)
+  - [Creating a new Vagrant box](#creating-a-new-vagrant-box)
+    - [VM Software Versions](#vm-software-versions)
+    - [(Internal) Accessing the macOS fileshare](#internal-accessing-the-macos-fileshare)
 
 ## Basic Usage
 
@@ -70,7 +74,7 @@ for the physical machine; i.e., vcpkgmm-04 would use 04.
 $ ./Setup-VagrantMachines.ps1 \
   -MachineId XX \
   -DevopsPat '<get this from azure devops; it needs agent pool read and manage access>' \
-  -Date <this is the date of the pool; 2020-09-28 at time of writing>
+  -Date <this is the date of the pool; 2021-04-16 at time of writing>
 $ cd ~/vagrant/vcpkg-eg-mac
 $ vagrant up
 ```
@@ -89,6 +93,13 @@ $ sudo shutdown -r now
 
 and wait for the machine to start back up. Then, start again from where the error was emitted.
 
+### Troubleshooting
+
+The following are issues that we've run into:
+
+- (with a Parallels box) `vagrant up` doesn't work, and vagrant gives the error that the VM is `'stopped'`.
+  - Try logging into the GUI with the KVM, and retrying `vagrant up`.
+
 ## Creating a new Vagrant box
 
 Whenever we want to install updated versions of the command line tools,
@@ -101,7 +112,8 @@ you can set up your own vagrant boxes that are the same as ours by doing the fol
 You'll need some prerequisites:
 
 - vagrant - found at <https://www.vagrantup.com/>
-	- The vagrant-scp plugin - just run `vagrant plugin install vagrant-scp`
+  - The vagrant-scp plugin - just run `vagrant plugin install vagrant-scp`
+  - The vagrant-parallels plugin - `vagrant plugin install vagrant-parallels`
 - Parallels - found at <https://parallels.com>
 - An Xcode installer - you can get this from Apple's developer website,
   although you'll need to sign in first: <https://developer.apple.com/downloads>
@@ -143,9 +155,9 @@ The Vagrantfile inside the base box should contain the following:
 
 ```rb
 Vagrant.configure('2') do |config|
-	config.vm.box_check_update = false
-	config.vm.network :forwarded_port, guest: 22, host: 2222, id: 'ssh', disabled: true
-	config.vm.synced_folder '.', '/vagrant', disabled: true
+  config.vm.box_check_update = false
+  config.vm.network :forwarded_port, guest: 22, host: 2222, id: 'ssh', disabled: true
+  config.vm.synced_folder '.', '/vagrant', disabled: true
 end
 ```
 
@@ -160,9 +172,9 @@ Create a `Vagrantfile` that looks like the following:
 
 ```rb
 Vagrant.configure('2') do |config|
-	config.vm.box = 'macos-ci-base'
-	config.vm.boot_timeout = 600
-	config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.box = 'macos-ci-base'
+  config.vm.boot_timeout = 600
+  config.vm.synced_folder ".", "/vagrant", disabled: true
 end
 ```
 
@@ -202,8 +214,8 @@ Once you've done that, add the software versions under [VM Software Versions](#v
   * macOS: 10.15.6
   * Xcode CLTs: 12
 * 2021-04-16:
-	* macOS: 11.2.3
-	* Xcode CLTs: 12.4
+  * macOS: 11.2.3
+  * Xcode CLTs: 12.4
 
 ### (Internal) Accessing the macOS fileshare
 

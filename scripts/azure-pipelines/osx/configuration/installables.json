@@ -4,9 +4,9 @@
   "Applications": [
     {
       "Name": "vagrant",
-			"VersionCommand": [ "vagrant", "-v" ],
-			"VersionRegex": "Vagrant (.*)",
-			"Version": "2.2.15",
+      "VersionCommand": [ "vagrant", "-v" ],
+      "VersionRegex": "Vagrant (.*)",
+      "Version": "2.2.15",
       "DmgUrl": "https://releases.hashicorp.com/vagrant/2.2.15/vagrant_2.2.15_x86_64.dmg",
       "Sha256": "5C2B290C4FA2371E255C56B1E96DED3D0C838D54CB7F0E8E6CF154E9F206A20E",
       "InstallerPath": "vagrant.pkg"

@@ -9,7 +9,6 @@ server = {
   :hostname => configuration['machine_name'],
   :box => configuration['box_name'],
   :box_version => configuration['box_version'],
-  :disk_size => configuration['disk_size'],
   :ram => 12000,
   :cpu => 5
 }
@@ -30,50 +29,21 @@ brew_formulas = [
 brew_cask_formulas = [
   'powershell' ]
 
-azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/2.179.0/vsts-agent-osx-x64-2.179.0.tar.gz'
+azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/2.185.1/vsts-agent-osx-x64-2.185.1.tar.gz'
 devops_url = configuration['devops_url']
 agent_pool = configuration['agent_pool']
 pat = configuration['pat']
 
 Vagrant.configure('2') do |config|
-  # give them extra time to boot up
-  config.vm.boot_timeout = 600
-
   config.vm.box = server[:box]
   config.vm.box_version = server[:box_version]
   config.vm.hostname = server[:hostname]
   config.vm.synced_folder '.', '/vagrant', disabled: true
 
-  diskname = "#{server[:hostname]}-data.vmdk"
-
-  # I don't like this, but as far as I can tell, it's the only way
-  # to do this. When vagrant finishes the `disk` feature, switch
-  # over to that -- Nicole Mazzuca
-  if (not File.exists? diskname) then
-    system "VBoxManage createmedium --filename #{diskname} --size #{1024 * server[:disk_size]} --variant Fixed"
-  end
-
-  config.vm.provider 'virtualbox' do |vb|
-    vb.memory = server[:ram]
-    vb.cpus = server[:cpu]
-    vb.customize ['modifyvm', :id, '--ioapic', 'on']
-    vb.customize ['storageattach', :id,
-      '--storagectl', 'SATA Controller',
-      '--port', '1', '--device', '0', '--type', 'hdd',
-      '--medium', "#{diskname}"
-    ]
-  end
-
   config.vm.provision 'shell',
     run: 'once',
-    name: 'Format and mount the data filesystem',
-    inline: 'diskutil partitionDisk /dev/disk0 1 GPT jhfs+ data 0',
-    privileged: true
-
-  config.vm.provision 'shell',
-    run: 'once',
-    name: 'Link the data filesystem to the home directory',
-    inline: "ln -s /Volumes/data ~/Data",
+    name: 'Create the data directory',
+    inline: "mkdir ~/Data",
     privileged: false
 
   config.vm.provision 'shell',

@@ -22,18 +22,18 @@
           },
           "VersionCommand": {
             "type": "array",
-						"items": {
-						  "type": "string"
-						},
-						"minItems": 1
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
           },
-					"VersionRegex": {
-						"type": "string",
-						"format": "regex"
-					},
-					"Version": {
-						"type": "string"
-					},
+          "VersionRegex": {
+            "type": "string",
+            "format": "regex"
+          },
+          "Version": {
+            "type": "string"
+          },
           "DmgUrl": {
             "type": "string",
             "format": "uri"
