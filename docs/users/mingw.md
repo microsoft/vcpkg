@@ -81,6 +81,39 @@ Now you can test your setup:
 ./vcpkg install zlib
 ```
 
+### How to avoid mixing different installations
+
+[The MSYS2 project explicitly warns](https://www.msys2.org/wiki/MSYS2-introduction/#path)
+that "mixing in programs from other MSYS2 installations, Cygwin installations,
+compiler toolchains or even various other programs is not supported and will
+probably break things in unexpected ways." For example, the proper passing of
+command line arguments with quoting and escaping may fail.
+
+But Vcpkg ports implicitly create MSYS2 installations, e.g. for `pkg-config`
+and for various other build tools needed to deal with packages based on
+autoconf. In particular, when ports prepend the directory of tools to the
+`PATH` environment variable, this may change which tool with a particular
+name is actually invoked, and how arguments are passed between tools.
+
+To mitigate such issues when working with a full MSYS2 installation,
+try to keep the directory of the msys subsystem (`/usr/bin`) out of the
+`PATH` environment variable as found by vcpkg. In bash, you may modify
+the `PATH` just for the call of vcpkg:
+
+~~~
+PATH="${PATH/:\/usr\/bin:/:}" ./vcpkg install libpq
+~~~
+
+Alternatively, you may run vcpkg from a regular Command Prompt, after
+adding *only* the desired mingw directory (e.g. `C:\msys64\mingw64\bin`)
+to the `PATH`.
+
+When using vcpkg for CI with standard images on Azure Pipelines, Github Actions
+or similar, note that the default `PATH` might contain more directories
+which create a mix of MSYS2 programs from different installations. You may
+want to set the desired `PATH` manually, or remove directories which contain
+`sh.exe`, `bash.exe`, `msys-2.0.dll` or `cygwin1.dll`.
+
 ## Using Mingw-w64 to build Windows programs on other systems
 
 You can use the vcpkg mingw community triplets with toolchains on
