@@ -1985,8 +1985,8 @@
       "port-version": 0
     },
     "flashlight-cuda": {
-      "baseline": "20210111",
-      "port-version": 0
+      "baseline": "0.3",
+      "port-version": 2
     },
     "flatbuffers": {
       "baseline": "1.12.0",
