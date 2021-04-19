@@ -1,0 +1,59 @@
+From a27fbebe3e5df8df1a38061ce95b65bfc48bb415 Mon Sep 17 00:00:00 2001
+From: Han <huhan8807@gmail.com>
+Date: Sat, 9 Jan 2021 20:55:54 +0800
+Subject: [PATCH] Eigen v3.3.* branch does not contain the `transform`
+ function. And initilizer list is not well supported in Eigen v3.3.*.
+
+---
+ cpp/open3d/geometry/Line3D.cpp | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/cpp/open3d/geometry/Line3D.cpp b/cpp/open3d/geometry/Line3D.cpp
+index 28e2e6c610..4af474c839 100644
+--- a/cpp/open3d/geometry/Line3D.cpp
++++ b/cpp/open3d/geometry/Line3D.cpp
+@@ -1,5 +1,6 @@
+ #include "Line3D.h"
+ 
++#include <array>
+ #include <cmath>
+ 
+ namespace open3d {
+@@ -27,7 +28,8 @@ Line3D::Line3D(const Eigen::Vector3d& origin,
+ }
+ 
+ void Line3D::Transform(const Eigen::Transform<double, 3, Eigen::Affine>& t) {
+-    this->transform(t);
++    direction() = (t * direction()).normalized();
++    origin() = t * origin();
+ }
+ 
+ std::pair<double, double> Line3D::SlabAABBBase(
+@@ -87,12 +89,12 @@ utility::optional<double> Line3D::ExactAABB(
+                                  box.max_bound_ + Vector3d(tol, tol, tol)};
+ 
+     using plane_t = Eigen::Hyperplane<double, 3>;
+-    std::array<plane_t, 6> planes{{{{-1, 0, 0}, box.min_bound_},
+-                                   {{1, 0, 0}, box.max_bound_},
+-                                   {{0, -1, 0}, box.min_bound_},
+-                                   {{0, 1, 0}, box.max_bound_},
+-                                   {{0, 0, -1}, box.min_bound_},
+-                                   {{0, 0, 1}, box.max_bound_}}};
++    std::array<plane_t, 6> planes{plane_t{Vector3d{-1, 0, 0}, box.min_bound_},
++                                   plane_t{Vector3d{1, 0, 0}, box.max_bound_},
++                                   plane_t{Vector3d{0, -1, 0}, box.min_bound_},
++                                   plane_t{Vector3d{0, 1, 0}, box.max_bound_},
++                                   plane_t{Vector3d{0, 0, -1}, box.min_bound_},
++                                   plane_t{Vector3d{0, 0, 1}, box.max_bound_}};
+ 
+     // Get the intersections
+     std::vector<double> parameters;
+@@ -321,7 +323,7 @@ Segment3D::Segment3D(const std::pair<Eigen::Vector3d, Eigen::Vector3d>& pair)
+     : Segment3D(std::get<0>(pair), std::get<1>(pair)) {}
+ 
+ void Segment3D::Transform(const Eigen::Transform<double, 3, Eigen::Affine>& t) {
+-    this->transform(t);
++    this->Transform(t);
+     end_point_ = t * end_point_;
+ }
+ 
