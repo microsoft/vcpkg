@@ -276,8 +276,8 @@ else
 fi
 
 # Do the build
-vcpkgToolReleaseTag="2021-02-24-d67989bce1043b98092ac45996a8230a059a2d7e"
-vcpkgToolReleaseSha="0b0f2cd40aa92556c28e1dfa9f8356313a859fb6acb6c730821a06bd9d554ab1ea0622da4026ea66fb11b9ed4fda1316cc388067d51ff1f09af85d033fe4323d"
+vcpkgToolReleaseTag="312b7b72d84e957e4da19130c45090375903fd44"
+vcpkgToolReleaseSha="eb7ec94ecfb06964b6db7539e26a402613f31086cc0402c3c2fcd21fba36ffc25d6513442f2bf02337553b71226e186b162bf0b0319c8c23ffc3ee49278820f8"
 vcpkgToolReleaseTarball="$vcpkgToolReleaseTag.tar.gz"
 vcpkgToolUrl="https://github.com/microsoft/vcpkg-tool/archive/$vcpkgToolReleaseTarball"
 baseBuildDir="$vcpkgRootDir/buildtrees/_vcpkg"
@@ -294,8 +294,6 @@ else
 fi
 
 echo "Building vcpkg-tool..."
-
-return # Fail to build the tool, waiting for release containing https://github.com/microsoft/vcpkg-tool/pull/10
 
 rm -rf "$baseBuildDir"
 mkdir -p "$buildDir"
