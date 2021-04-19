@@ -1526,7 +1526,7 @@
     },
     "cudnn": {
       "baseline": "7.6.5",
-      "port-version": 0
+      "port-version": 1
     },
     "cunit": {
       "baseline": "2.1.3-6",
