@@ -43,9 +43,9 @@ $WindowsServerSku = '2019-Datacenter'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
-$TotalProgress = 12
+$TotalProgress = 18
 if ($Unstable) {
-  $TotalProgress -= 1 # skipping the archives share part
+  $TotalProgress -= 2 # skipping 2 archives share parts
 }
 
 $CurrentProgress = 1
@@ -245,29 +245,124 @@ New-AzVm `
 ####################################################################################################
 Write-Progress `
   -Activity $ProgressActivity `
-  -Status 'Running provisioning script provision-image.txt (as a .ps1) in VM' `
+  -Status 'Running provisioning script deploy-psexec.ps1 in VM' `
   -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
-$provisionParameters = @{AdminUserPassword = $AdminPW;}
-if (-Not $Unstable) {
-  $provisionParameters['StorageAccountName'] = $StorageAccountName
-  $provisionParameters['StorageAccountSasToken'] = $SasToken
+$DeployPsExecResult = Invoke-AzVMRunCommand `
+  -ResourceGroupName $ResourceGroupName `
+  -VMName $ProtoVMName `
+  -CommandId 'RunPowerShellScript' `
+  -ScriptPath "$PSScriptRoot\deploy-psexec.ps1"
+
+Write-Host "deploy-psexec.ps1 output: $($DeployPsExecResult.value.Message)"
+
+####################################################################################################
+function Invoke-ScriptWithPrefix {
+  param(
+    [string]$ScriptName,
+    [switch]$AddAdminPw
+  )
+
+  Write-Progress `
+    -Activity $ProgressActivity `
+    -Status "Running provisioning script $ScriptName in VM" `
+    -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+  $DropToAdminUserPrefix = Get-Content "$PSScriptRoot\drop-to-admin-user-prefix.ps1" -Encoding utf8NoBOM -Raw
+  $UtilityPrefixContent = Get-Content "$PSScriptRoot\utility-prefix.ps1" -Encoding utf8NoBOM -Raw
+
+  $tempScriptFilename = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName() + ".txt"
+  try {
+    $script = Get-Content "$PSScriptRoot\$ScriptName" -Encoding utf8NoBOM -Raw
+    if ($AddAdminPw) {
+      $script = $script.Replace('# REPLACE WITH DROP-TO-ADMIN-USER-PREFIX.ps1', $DropToAdminUserPrefix)
+    }
+
+    $script = $script.Replace('# REPLACE WITH UTILITY-PREFIX.ps1', $UtilityPrefixContent);
+    Set-Content -Path $tempScriptFilename -Value $script -Encoding utf8NoBOM
+
+    $parameter = $null
+    if ($AddAdminPw) {
+      $parameter = @{AdminUserPassword = $AdminPW;}
+    }
+
+    $InvokeResult = Invoke-AzVMRunCommand `
+      -ResourceGroupName $ResourceGroupName `
+      -VMName $ProtoVMName `
+      -CommandId 'RunPowerShellScript' `
+      -ScriptPath $tempScriptFilename `
+      -Parameter $parameter
+
+    Write-Host "$ScriptName output: $($InvokeResult.value.Message)"
+  } finally {
+    Remove-Item $tempScriptFilename -Force
+  }
 }
+
+Invoke-ScriptWithPrefix -ScriptName 'deploy-visual-studio.ps1' -AddAdminPw
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-windows-wdk.ps1' -AddAdminPw
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-mpi.ps1' -AddAdminPw
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-cuda.ps1' -AddAdminPw
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1' -AddAdminPw
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Running provisioning script deploy-settings.txt (as a .ps1) in VM' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
 
 $ProvisionImageResult = Invoke-AzVMRunCommand `
   -ResourceGroupName $ResourceGroupName `
   -VMName $ProtoVMName `
   -CommandId 'RunPowerShellScript' `
-  -ScriptPath "$PSScriptRoot\provision-image.txt" `
-  -Parameter $provisionParameters
+  -ScriptPath "$PSScriptRoot\deploy-settings.txt"
 
-Write-Host "provision-image.ps1 output: $($ProvisionImageResult.value.Message)"
+Write-Host "deploy-settings.txt output: $($ProvisionImageResult.value.Message)"
 
+if (-Not $Unstable) {
 ####################################################################################################
-Write-Progress `
-  -Activity $ProgressActivity `
-  -Status 'Restarting VM' `
-  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+  Write-Progress `
+    -Activity $ProgressActivity `
+    -Status 'Deploying SAS token into VM' `
+    -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+  $tempScriptFilename = [System.IO.Path]::GetTempPath() + [System.IO.Path]::GetRandomFileName() + ".txt"
+  try {
+    $script = "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' " `
+      + "-Name PROVISIONED_AZURE_STORAGE_NAME " `
+      + "-Value '$StorageAccountName'`r`n" `
+      + "Set-ItemProperty -Path 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Environment' " `
+      + "-Name PROVISIONED_AZURE_STORAGE_SAS_TOKEN " `
+      + "-Value '$SasToken'`r`n"
+
+    Write-Host "Script content is:"
+    Write-Host $script
+
+    Set-Content -Path $tempScriptFilename -Value $script -Encoding utf8NoBOM
+    $InvokeResult = Invoke-AzVMRunCommand `
+      -ResourceGroupName $ResourceGroupName `
+      -VMName $ProtoVMName `
+      -CommandId 'RunPowerShellScript' `
+      -ScriptPath $tempScriptFilename
+
+    Write-Host "Deploy SAS token output: $($InvokeResult.value.Message)"
+  } finally {
+    Remove-Item $tempScriptFilename -Force
+  }
+} # -Not $Unstable
 
 Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
 
