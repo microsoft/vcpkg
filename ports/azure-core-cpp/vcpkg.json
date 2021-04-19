@@ -1,0 +1,60 @@
+{
+  "name": "azure-core-cpp",
+  "version-string": "1.0.0-beta.8",
+  "description": [
+    "Microsoft Azure Core SDK for C++",
+    "This library provides shared primitives, abstractions, and helpers for modern Azure SDK client libraries written in the C++."
+  ],
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/core/azure-core",
+  "dependencies": [
+    {
+      "name": "openssl",
+      "platform": "!windows & !uwp"
+    }
+  ],
+  "default-features": [
+    "http"
+  ],
+  "features": {
+    "curl": {
+      "description": "Build an HTTP transport implementation with LibCURL",
+      "dependencies": [
+        {
+          "name": "azure-core-cpp",
+          "default-features": false
+        },
+        "curl"
+      ]
+    },
+    "http": {
+      "description": "Build all HTTP transport implementations, depending on the platform",
+      "dependencies": [
+        {
+          "name": "azure-core-cpp",
+          "default-features": false,
+          "features": [
+            "curl"
+          ]
+        },
+        {
+          "name": "azure-core-cpp",
+          "default-features": false,
+          "features": [
+            "curl",
+            "winhttp"
+          ],
+          "platform": "windows & !uwp"
+        }
+      ]
+    },
+    "winhttp": {
+      "description": "Build an HTTP transport implementation with WinHTTP",
+      "dependencies": [
+        {
+          "name": "azure-core-cpp",
+          "default-features": false
+        }
+      ]
+    }
+  }
+}
