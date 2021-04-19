@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookresearch/flashlight
-    REF 81c4d8d5ea57e9ceaa6db3b17f0861491fd31383
-    SHA512 988da269be81f7b4897d72e52683259f4223029b5012150958b9b21c7103fe49a2458ffa5623ed53c125a98f7294541af46cd68b17e9213269e5a2aecfaabb67
+    REF f416bb764628fce32c551a80c8939040735caed3 # 0.3 branch
+    SHA512 9db6fb595e437ac0a77e0d6f2c8b1f51bbe81e3343ea608a24514d7f16c1b7ac781efa712edbc203c91903c5fa1a7e475305d3ed7e09fa314081a73db7b4b617
     HEAD_REF master
 )
 
@@ -31,7 +31,8 @@ vcpkg_check_features(
     asr FL_BUILD_APP_ASR
     imgclass FL_BUILD_APP_IMGCLASS
     lm FL_BUILD_APP_LM
-)
+    objdet FL_BUILD_APP_OBJDET
+    )
 
 # Build and install
 vcpkg_configure_cmake(
@@ -49,7 +50,11 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 # Binaries/tools
 set(FLASHLIGHT_TOOLS "")
 if ("imgclass" IN_LIST FEATURES)
-  list(APPEND FLASHLIGHT_TOOLS fl_img_imagenet_resnet34)
+  list(APPEND FLASHLIGHT_TOOLS
+    fl_img_imagenet_resnet34
+    fl_img_imagenet_eval
+    fl_img_imagenet_vit
+  )
 endif()
 if ("asr" IN_LIST FEATURES)
   list(APPEND FLASHLIGHT_TOOLS
@@ -58,10 +63,15 @@ if ("asr" IN_LIST FEATURES)
     fl_asr_decode
     fl_asr_align
     fl_asr_voice_activity_detection_ctc
+    fl_asr_arch_benchmark
   )
 endif()
 if ("lm" IN_LIST FEATURES)
-  list(APPEND FLASHLIGHT_TOOLS fl_lm_train fl_lm_dictionary_builder)
+  list(APPEND FLASHLIGHT_TOOLS
+    fl_lm_dictionary_builder
+    fl_lm_train
+    fl_lm_test
+    )
 endif()
 list(LENGTH FLASHLIGHT_TOOLS NUM_TOOLS)
 if (NUM_TOOLS GREATER 0)
