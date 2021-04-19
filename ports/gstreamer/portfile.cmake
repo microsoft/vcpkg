@@ -27,22 +27,11 @@ endif()
 
 #
 # todo: support port dependencies
-#   - glib: 2.62. The configuration step requires tools/glib/...
-#       - proxy-libintl
 #   - gst-plugins-base
-#       - graphene
 #       - libsoup
 #   - gst-plugins-bad
 #   - gst-plugins-ugly
-#   - gettext
 #
-
-if(APPLE)
-    # this is for gstreamer/libs/gst/helpers
-    set(LINKER_FLAGS_DEBUG "-Wl,-framework,Foundation") # quote with '?
-    set(LINKER_FLAGS_RELEASE "${LINKER_FLAGS_DEBUG}")
-    set(ENV{CPPFLAGS} "${LINKER_FLAGS_DEBUG}")
-endif()
 
 #
 # check scripts/cmake/vcpkg_configure_meson.cmake
@@ -55,14 +44,6 @@ endif()
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        # glib
-        #   todo: remove this when glib port is updated
-        -Dglib:libmount=false
-        -Dglib:xattr=false
-        -Dglib:bsymbolic_functions=false
-        -Dglib:nls=disabled
-        -Dglib:installed_tests=disabled
-
         # gstreamer
         -Dgstreamer:check=disabled
         -Dgstreamer:libunwind=disabled
@@ -77,27 +58,15 @@ vcpkg_configure_meson(
         -Dgstreamer:gtk_doc=disabled
         -Dgstreamer:introspection=disabled
         -Dgstreamer:nls=disabled
-        -Dgstreamer:gobject-cast-checks=disabled
-        -Dgstreamer:glib-asserts=disabled
-        -Dgstreamer:glib-checks=disabled
-        -Dgstreamer:extra-checks=disabled
-    
+
         # gst-plugins-base
-        #   todo: gl_winsys=['win32','winrt','egl']
-        # -Dgst-plugins-base:gl=disabled
-        -Dgst-plugins-base:gl-graphene=disabled
-        # -Dgst-plugins-base:gl-jpeg=disabled
-        # -Dgst-plugins-base:gl-png=disabled
         -Dgst-plugins-base:examples=disabled
         -Dgst-plugins-base:tests=disabled
         -Dgst-plugins-base:tools=disabled
         -Dgst-plugins-base:introspection=disabled
         -Dgst-plugins-base:nls=disabled
         -Dgst-plugins-base:orc=disabled
-        -Dgst-plugins-base:gobject-cast-checks=disabled
-        -Dgst-plugins-base:glib-asserts=disabled
-        -Dgst-plugins-base:glib-checks=disabled
-    
+
         # gst-plugins-good
         -Dgst-plugins-good:qt5=disabled
         -Dgst-plugins-good:soup=disabled
@@ -108,9 +77,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:tests=disabled
         -Dgst-plugins-good:nls=disabled
         -Dgst-plugins-good:orc=disabled
-        -Dgst-plugins-good:gobject-cast-checks=disabled
-        -Dgst-plugins-good:glib-asserts=disabled
-        -Dgst-plugins-good:glib-checks=disabled
 
         # gst-plugins-bad
         -Dbad=disabled
@@ -121,9 +87,6 @@ vcpkg_configure_meson(
         # -Dgst-plugins-bad:introspection=disabled
         # -Dgst-plugins-bad:nls=disabled
         # -Dgst-plugins-bad:orc=disabled
-        # -Dgst-plugins-bad:gobject-cast-checks=disabled
-        # -Dgst-plugins-bad:glib-asserts=disabled
-        # -Dgst-plugins-bad:glib-checks=disabled
 
         # gst-plugins-ugly
         -Dugly=disabled
@@ -143,24 +106,36 @@ vcpkg_configure_meson(
         -Drs=disabled
         -Dgst-examples=disabled
         -Dtls=disabled
-        # common options
-        -Dtests=disabled
+        -Dtests=disabled    # common options
         -Dexamples=disabled
         -Dintrospection=disabled
         -Dnls=disabled
         -Dorc=disabled
         -Ddoc=disabled
         -Dgtk_doc=disabled
+    OPTIONS_RELEASE
+        # gstreamer
+        -Dgstreamer:gobject-cast-checks=disabled
+        -Dgstreamer:glib-asserts=disabled
+        -Dgstreamer:glib-checks=disabled
+        -Dgstreamer:extra-checks=disabled
+        # gst-plugins-base
+        -Dgst-plugins-base:gobject-cast-checks=disabled
+        -Dgst-plugins-base:glib-asserts=disabled
+        -Dgst-plugins-base:glib-checks=disabled
+        # gst-plugins-good
+        -Dgst-plugins-good:gobject-cast-checks=disabled
+        -Dgst-plugins-good:glib-asserts=disabled
+        -Dgst-plugins-good:glib-checks=disabled
+        # gst-plugins-bad
+        -Dgst-plugins-bad:gobject-cast-checks=disabled
+        -Dgst-plugins-bad:glib-asserts=disabled
+        -Dgst-plugins-bad:glib-checks=disabled
 )
 vcpkg_install_meson()
 
 # todo: use vcpkg_copy_tool_dependencies for Windows
 file(RENAME ${CURRENT_PACKAGES_DIR}/libexec ${CURRENT_PACKAGES_DIR}/tools)
-vcpkg_copy_tools(
-    TOOL_NAMES gst-device-monitor-1.0 gst-discoverer-1.0 gst-play-1.0
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0
-    AUTO_CLEAN
-)
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0)
 
 # Remove duplicated GL headers (we already have `opengl-registry`)

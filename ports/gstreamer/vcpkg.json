@@ -9,7 +9,7 @@
     {
       "name": "cairo",
       "features": [
-        "freetype"
+        "gobject"
       ],
       "platform": "windows & osx"
     },
@@ -21,27 +21,21 @@
         "zlib"
       ]
     },
-    {
-      "name": "gettext",
-      "platform": "windows"
-    },
+    "graphene",
     "jack2",
-    "libffi",
     "libflac",
-    "libiconv",
-    "openssl",
     "libjpeg-turbo",
     "libpng",
-    "zlib",
     "libraw",
     "libvpx",
     "libxml2",
     "mpg123",
-    "openh264",
     {
       "name": "opengl-registry",
       "platform": "windows & osx"
     },
+    "openh264",
+    "openssl",
     "speex",
     "taglib",
     "tool-meson",
