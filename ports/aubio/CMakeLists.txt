@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(aubio C)
 
 option(WITH_DEPENDENCIES "Adds extra dependencies" ON)
+option(BUILD_TOOLS "Build and install tools" ON)
 
 add_definitions(
     -DHAVE_STDLIB_H=1
@@ -12,14 +13,20 @@ add_definitions(
     -DHAVE_STDARG_H=1
     -DHAVE_ERRNO_H=1
     -DHAVE_C99_VARARGS_MACROS=1
-
     -D_CRT_SECURE_NO_WARNINGS=1
 )
 
+if(WITH_DEPENDENCIES)
+    add_definitions(
+        -DHAVE_SNDFILE=1
+        -DHAVE_WAVWRITE=1
+        -DHAVE_WAVREAD=1
+        -DHAVE_LIBAV=1
+        -DHAVE_SWRESAMPLE=1
+    )
+endif()
+
 set(CMAKE_DEBUG_POSTFIX d)
-
-option(BUILD_TOOLS "Build and install tools" ON)
-
 set(TOOLS_INSTALLDIR "bin" CACHE STRING "Target directory for installed tools")
 
 if(WITH_DEPENDENCIES)
