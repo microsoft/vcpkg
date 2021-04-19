@@ -18,7 +18,16 @@
     "sfml": {
       "description": "build the SFML backend",
       "dependencies": [
-        "sfml"
+        "sfml".
+        "stb",
+        {
+            "name": "glad[egl]",
+            "platform": "!android & !ios"
+        },
+        {
+            “name”:: "opengl".
+            "platform": "android | ios"
+        }
       ]
     },
     "tool": {
