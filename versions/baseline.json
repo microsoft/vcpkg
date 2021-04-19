@@ -1082,11 +1082,11 @@
     },
     "cairo": {
       "baseline": "1.16.0",
-      "port-version": 9
+      "port-version": 10
     },
     "cairomm": {
       "baseline": "1.15.3",
-      "port-version": 5
+      "port-version": 6
     },
     "camport3": {
       "baseline": "1.5.3",
