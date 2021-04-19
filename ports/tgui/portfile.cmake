@@ -1,13 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO texus/TGUI
-    REF 588362edc42772458fc232c5375a370aa7c449e1 # v0.9.1
-    SHA512 3101be4c3f70c8cf6ea7a880fb97608c5fabb33ca14d87882efaf0a270eac3e594dc4afd9011962b290361ad2579d11e11d5157eda5163c3a3d00e41e8774f23
+    REF 6515153c2466e6677ba933679b3dca6c283daf87
+    SHA512 109e64c114336979a4bd0d44765e4bc26cb4ecb6e4db92d7441230d148438b084d01cb56dd292f09a6fd28b0f7420044455ffb519147cc3aea71e322142cd9a0
     HEAD_REF 0.9
     PATCHES
         fix-usage.patch
         fix-dependencies.patch
-        fix-tool-build.patch # Remove this patch when the next update
 )
 
 set(TGUI_SHARE_PATH ${CURRENT_PACKAGES_DIR}/share/tgui)
@@ -55,9 +54,9 @@ if("tool" IN_LIST FEATURES)
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
-file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/TGUI/nanosvg" "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/glad"
-    "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/nanosvg" "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/stb"
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/nanosvg" "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/glad"
+     "${CURRENT_PACKAGES_DIR}/include/TGUI/extlibs/stb"
+) # All folders are empty
 
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/doc" "${CURRENT_PACKAGES_DIR}/share/${PORT}/doc")
 
