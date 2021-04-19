@@ -1,14 +1,23 @@
 {
   "name": "boost-json",
   "version-string": "1.75.0",
+  "port-version": 1,
   "description": "Boost json module",
   "homepage": "https://github.com/boostorg/json",
   "dependencies": [
     "boost-align",
     "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     "boost-container",
     "boost-exception",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-system",
     "boost-throw-exception",
     "boost-utility",

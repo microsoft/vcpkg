@@ -28,9 +28,10 @@ else
 $port_versions = @{
     #e.g.  "asio" = 1;
     "asio" = 1;
-    "python" = 2;
-    "context" = 2;
+    "python" = 3;
+    "context" = 3;
     "concept-check" = 2;
+    "regex" = 2;
 }
 
 $per_port_data = @{
@@ -405,7 +406,7 @@ foreach ($library in $libraries)
         $deps += @("boost-vcpkg-helpers")
 
         $needsBuild = $false
-        if ((Test-Path $unpacked/build/Jamfile.v2) -and $library -ne "metaparse" -and $library -ne "graph_parallel")
+        if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "(metaparse|graph_parallel|function_types)")
         {
             $deps += @(
                 @{ name="boost-build"; host=$True },
