@@ -17,12 +17,15 @@ vcpkg_extract_source_archive_ex(
 )
 
 #TODO the autoconf script has a lot of additional option which use auto detection and should be disabled!
-
-if("freetype" IN_LIST FEATURES)
+if("fontconfig" IN_LIST FEATURES)
     list(APPEND OPTIONS --enable-fc=yes)
-    list(APPEND OPTIONS --enable-ft=yes)
 else()
     list(APPEND OPTIONS --enable-fc=no)
+endif()
+
+if("freetype" IN_LIST FEATURES)
+    list(APPEND OPTIONS --enable-ft=yes)
+else()
     list(APPEND OPTIONS --enable-ft=no)
 endif()
 

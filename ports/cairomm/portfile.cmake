@@ -3,7 +3,7 @@ set(CAIROMM_HASH 51929620feeac45377da5d486ea7a091bbd10ad8376fb16525328947b9e6ee7
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.cairographics.org/releases/cairomm-${CAIROMM_VERSION}.tar.xz"
-    FILENAME "cairomm-${CAIROMM_VERSION}.tar.gz"
+    FILENAME "cairomm-${CAIROMM_VERSION}.tar.xz"
     SHA512 ${CAIROMM_HASH}
 )
 
@@ -18,6 +18,7 @@ vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+
         -Dbuild-examples=false
         -Dmsvc14x-parallel-installable=false    # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
 )
