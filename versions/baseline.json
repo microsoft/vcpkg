@@ -2493,7 +2493,7 @@
       "port-version": 0
     },
     "icu": {
-      "baseline": "67.1",
+      "baseline": "69.1",
       "port-version": 8
     },
     "ideviceinstaller": {
@@ -6257,7 +6257,7 @@
       "port-version": 1
     },
     "v8": {
-      "baseline": "8.6.395.17",
+      "baseline": "9.0.257.17",
       "port-version": 0
     },
     "valijson": {
