@@ -1,0 +1,78 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
+  "name": "cairomm",
+  "version-string": "1.15.3",
+  "port-version": 6,
+  "description": "A C++ wrapper for the cairo graphics library.",
+  "homepage": "https://cairographics.org",
+  "dependencies": [
+    "cairo",
+    "libsigcpp"
+  ],
+  "default-features": [
+    "fontconfig",
+    "freetype"
+  ],
+  "features": {
+    "fontconfig": {
+      "description": "build with fontconfig",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "fontconfig"
+          ]
+        }
+      ]
+    },
+    "freetype": {
+      "description": "use the freetype font backend",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "freetype"
+          ]
+        }
+      ]
+    },
+    "gobject": {
+      "description": "build gobject module",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "gobject"
+          ]
+        }
+      ]
+    },
+    "quartz": {
+      "description": "build with quartz support",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "quartz"
+          ]
+        }
+      ]
+    },
+    "x11": {
+      "description": "build with x11 support",
+      "dependencies": [
+        {
+          "name": "cairo",
+          "default-features": false,
+          "features": [
+            "x11"
+          ]
+        }
+      ]
+    }
+  }
+}

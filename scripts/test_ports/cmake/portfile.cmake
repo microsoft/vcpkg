@@ -4,9 +4,9 @@ vcpkg_from_gitlab(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO cmake/cmake
     REF
-        63a65baf4c343c73b2142078ef0045d3711dea1d
+        b7b0fb430397bafae4a7bd80b41d474c91a3b7f3
     SHA512
-        7874b26adb739649ea3a8c2d8701b44ea348d5d6387e0e2a3dd87494dfeae62084593f88f46d53a161ac24c46a7712489621213b61315593df4dc2ccc728084b
+        3b0de26910bceaf4bc6546255bada4c502cd0fd32f44bc28b067f347c09d028c175a3243551bbe4bb64bcf312df9ff827e8fdbcb0b34a12e1ce4a26ba0799ee2 
     HEAD_REF master
 )
 
@@ -18,7 +18,7 @@ vcpkg_configure_cmake(
         #-DCMAKE_USE_SYSTEM_LIBRARIES=ON
         -DCMAKE_USE_SYSTEM_LIBARCHIVE=ON
         -DCMAKE_USE_SYSTEM_CURL=ON
-        -DCMAKE_USE_SYSTEM_EXPAT=OFF # CMake is not compatible with expat 2.2.9
+        -DCMAKE_USE_SYSTEM_EXPAT=ON
         -DCMAKE_USE_SYSTEM_ZLIB=ON
         -DCMAKE_USE_SYSTEM_BZIP2=ON
         -DCMAKE_USE_SYSTEM_ZSTD=ON

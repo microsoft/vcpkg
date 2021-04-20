@@ -1,6 +1,6 @@
 # Manifest Mode: CMake Example
 
-We would like to add vcpkg manifest support to an existing cmake project!
+We would like to add [vcpkg manifest support](../users/manifests.md) to an existing cmake project!
 Let's create a simple project that prints the fibonacci sequence up to a certain number,
 using some common dependencies.
 

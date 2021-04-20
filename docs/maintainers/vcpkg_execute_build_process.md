@@ -1,5 +1,7 @@
 # vcpkg_execute_build_process
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_execute_build_process.md).
+
 Execute a required build process
 
 ## Usage
@@ -33,4 +35,4 @@ conflict when building multiple at once.
 * [icu](https://github.com/Microsoft/vcpkg/blob/master/ports/icu/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_execute_build_process.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_execute_build_process.cmake)
+[scripts/cmake/vcpkg\_execute\_build\_process.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_execute_build_process.cmake)

@@ -1,5 +1,7 @@
 # vcpkg_execute_required_process
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_execute_required_process.md).
+
 Execute a process with logging and fail the build if the command fails.
 
 ## Usage
@@ -15,7 +17,7 @@ vcpkg_execute_required_process(
 ```
 ## Parameters
 ### ALLOW_IN_DOWNLOAD_MODE
-Allows the command to execute in Download Mode.  
+Allows the command to execute in Download Mode.
 [See execute_process() override](../../scripts/cmake/execute_process.cmake).
 
 ### COMMAND
@@ -46,4 +48,4 @@ This should be a unique name for different triplets so that the logs don't confl
 * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_execute_required_process.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_execute_required_process.cmake)
+[scripts/cmake/vcpkg\_execute\_required\_process.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_execute_required_process.cmake)
