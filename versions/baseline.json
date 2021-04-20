@@ -1358,7 +1358,7 @@
     },
     "corrade": {
       "baseline": "2020.06",
-      "port-version": 0
+      "port-version": 1
     },
     "cpp-base64": {
       "baseline": "2019-06-19",
@@ -2216,6 +2216,10 @@
       "baseline": "2.2.2-1",
       "port-version": 0
     },
+    "ghc-filesystem": {
+      "baseline": "1.5.4",
+      "port-version": 0
+    },
     "gherkin-c": {
       "baseline": "2019-10-07-1",
       "port-version": 0
@@ -2493,7 +2497,7 @@
       "port-version": 0
     },
     "icu": {
-      "baseline": "67.1",
+      "baseline": "69.1",
       "port-version": 8
     },
     "ideviceinstaller": {
@@ -2942,7 +2946,7 @@
     },
     "libarchive": {
       "baseline": "3.4.3",
-      "port-version": 4
+      "port-version": 5
     },
     "libass": {
       "baseline": "0.15.0",
@@ -3382,7 +3386,7 @@
     },
     "libpq": {
       "baseline": "12.2",
-      "port-version": 13
+      "port-version": 14
     },
     "libpqxx": {
       "baseline": "7.3.1",
@@ -3842,6 +3846,10 @@
     },
     "matplotlib-cpp": {
       "baseline": "2020-08-27",
+      "port-version": 0
+    },
+    "matplotplusplus": {
+      "baseline": "2021-04-11",
       "port-version": 0
     },
     "matroska": {
@@ -5966,7 +5974,7 @@
     },
     "tiff": {
       "baseline": "4.1.0",
-      "port-version": 1
+      "port-version": 2
     },
     "tinkerforge": {
       "baseline": "2.1.25",
@@ -6257,7 +6265,7 @@
       "port-version": 1
     },
     "v8": {
-      "baseline": "8.6.395.17",
+      "baseline": "9.0.257.17",
       "port-version": 0
     },
     "valijson": {
