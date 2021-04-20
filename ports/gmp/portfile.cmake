@@ -98,8 +98,8 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE ${ARCHIVE}
         REF gmp-6.2.1
-	PATCHES
-		tools.patch
+        PATCHES
+            tools.patch
     )
 
     vcpkg_configure_make(
