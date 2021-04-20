@@ -69,7 +69,6 @@ This command supplies many common arguments to CMake. To see the full list, exam
 #]===]
 
 function(vcpkg_configure_cmake)
-    message(DEPRECATION "vcpkg_configure_cmake has been deprecated in favor of vcpkg_cmake_configure from the vcpkg-cmake port.")
     if(Z_VCPKG_CMAKE_CONFIGURE_GUARD)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-cmake; using both vcpkg-cmake and vcpkg_configure_cmake in the same port is unsupported.")
     endif()

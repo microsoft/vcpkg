@@ -1,5 +1,7 @@
 ## Environment and Configuration
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/config-environment.md).**
+
 ### Environment Variables
 
 #### VCPKG_DOWNLOADS
@@ -38,11 +40,15 @@ Example: `D:\2017`
 
 This environment variable can be set to a triplet name which will be used for unqualified triplet references in command lines.
 
+#### VCPKG_DEFAULT_HOST_TRIPLET
+
+This environment variable can be set to a triplet name which will be used for unqualified host port references in command lines and all host port references in dependency lists. See [the Tools documentation](tools.md) for more information.
+
 #### VCPKG_OVERLAY_PORTS
 
 This environment variable allows users to override ports with alternate versions according to the
-[ports overlay](../specifications/ports-overlay.md) specification. List paths to overlays using 
-the platform dependent PATH seperator (Windows `;` | others `:`) 
+[ports overlay](../specifications/ports-overlay.md) specification. List paths to overlays using
+the platform dependent PATH seperator (Windows `;` | others `:`)
 
 Example (Windows): `C:\custom-ports\boost;C:\custom-ports\sqlite3`
 
@@ -50,7 +56,7 @@ Example (Windows): `C:\custom-ports\boost;C:\custom-ports\sqlite3`
 
 This environment variable allows users to add directories to search for triplets.
 [Example: overlay triplets](../examples/overlay-triplets-linux-dynamic.md).
-List paths to overlays using the platform dependent PATH seperator (Windows `;`, others `:`) 
+List paths to overlays using the platform dependent PATH seperator (Windows `;`, others `:`)
 
 #### VCPKG_FORCE_SYSTEM_BINARIES
 

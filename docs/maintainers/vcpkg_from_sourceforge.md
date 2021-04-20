@@ -1,6 +1,6 @@
 # vcpkg_from_sourceforge
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_from_sourceforge.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_from_sourceforge.md).
 
 Download and extract a project from sourceforge.
 

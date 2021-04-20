@@ -1,0 +1,12 @@
+{
+  "name": "kf5archive",
+  "version": "5.75.0",
+  "description": "File compression",
+  "homepage": "https://api.kde.org/frameworks/karchive/html/index.html",
+  "dependencies": [
+    "bzip2",
+    "ecm",
+    "qt5-base",
+    "zlib"
+  ]
+}

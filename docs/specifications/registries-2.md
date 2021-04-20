@@ -1,5 +1,7 @@
 # Registries: Take 2 (including Git Registries)
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
 Originally, the design of registries was decided upon and written up in the [Registries RFC](registries.md).
 However, as we've gotten further into the design process of git registries and versioning,
 and discussed the interaction of versioning with registries,
