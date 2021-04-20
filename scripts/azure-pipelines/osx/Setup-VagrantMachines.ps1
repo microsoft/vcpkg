@@ -109,7 +109,7 @@ if (-not (Test-Path -Path '~/vagrant')) {
 New-Item -ItemType 'Directory' -Path '~/vagrant/vcpkg-eg-mac' | Out-Null
 
 Copy-Item `
-    -Path "$PSScriptRoot/configuration/Vagrantfile" `
+    -Path "$PSScriptRoot/configuration/Vagrantfile-vm.rb" `
     -Destination '~/vagrant/vcpkg-eg-mac/Vagrantfile'
 
 $configuration = @{

@@ -1,33 +1,12 @@
 require 'json'
 
-require "erb"
-include ERB::Util
-
-configuration = JSON.parse(File.read("#{__dir__}/vagrant-configuration.json"))
-
 server = {
   :hostname => configuration['machine_name'],
   :box => configuration['box_name'],
   :box_version => configuration['box_version'],
   :ram => 12000,
-  :cpu => 5
+  :cpu => 6
 }
-
-brew_formulas = [
-  'autoconf',
-  'automake',
-  'bison',
-  'gfortran',
-  'gperf',
-  'libtool',
-  'meson',
-  'mono',
-  'nasm',
-  'pkg-config',
-  'yasm' ]
-
-brew_cask_formulas = [
-  'powershell' ]
 
 azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/2.185.1/vsts-agent-osx-x64-2.185.1.tar.gz'
 devops_url = configuration['devops_url']
@@ -56,12 +35,6 @@ Vagrant.configure('2') do |config|
     run: 'once',
     name: 'Unpack azure agent',
     inline: 'mkdir myagent; cd myagent; tar xf ~/Downloads/azure-agent.tar.gz',
-    privileged: false
-
-  config.vm.provision 'shell',
-    run: 'once',
-    name: 'Install brew applications',
-    inline: "brew install #{brew_formulas.join(' ')} && brew install --cask #{brew_cask_formulas.join(' ')}",
     privileged: false
 
   config.vm.provision 'shell',

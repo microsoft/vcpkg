@@ -112,7 +112,6 @@ you can set up your own vagrant boxes that are the same as ours by doing the fol
 You'll need some prerequisites:
 
 - vagrant - found at <https://www.vagrantup.com/>
-  - The vagrant-scp plugin - just run `vagrant plugin install vagrant-scp`
   - The vagrant-parallels plugin - `vagrant plugin install vagrant-parallels`
 - Parallels - found at <https://parallels.com>
 - An Xcode installer - you can get this from Apple's developer website,
@@ -123,7 +122,6 @@ this is where you determine what version of macOS is installed.
 Just follow the Parallels process for creating a macOS VM.
 
 Once you've done this, you can run through the installation of macOS onto a new VM.
-We recommend having more than one CPU core (we use 6).
 You should set the username to `vagrant`.
 
 Once it's finished installing, make sure to turn on the SSH server.
@@ -134,9 +132,9 @@ Open the terminal application and run the following:
 
 ```sh
 $ # basic stuff
-$ sudo sh -c "date >/etc/vagrant_box_build_time"
-$ sudo sh -c 'printf "vagrant\tALL=(ALL)\tNOPASSWD:\tALL\n" >>/etc/sudoers.d/vagrant'
-$ sudo chmod 0440 /etc/sudoers.d/vagrant
+$ date | sudo tee '/etc/vagrant_box_build_time'
+$ printf 'vagrant\tALL=(ALL)\tNOPASSWD:\tALL\n' | sudo tee -a '/etc/sudoers.d/vagrant'
+$ sudo chmod 0440 '/etc/sudoers.d/vagrant'
 $ # then install vagrant keys
 $ mkdir -p ~/.ssh
 $ curl -fsSL 'https://raw.github.com/mitchellh/vagrant/master/keys/vagrant.pub' >~/.ssh/authorized_keys
@@ -149,61 +147,46 @@ go to Actions > Install Parallels Tools...,
 and then follow the instructions.
 
 Now, let's package the VM into a base box.
-Turn it off, and follow [these instructions][base-box-instructions]
-to create a base box.
-The Vagrantfile inside the base box should contain the following:
+(The following instructions are adapted from
+[these official instructions][base-box-instructions]).
 
-```rb
-Vagrant.configure('2') do |config|
-  config.vm.box_check_update = false
-  config.vm.network :forwarded_port, guest: 22, host: 2222, id: 'ssh', disabled: true
-  config.vm.synced_folder '.', '/vagrant', disabled: true
-end
-```
-
-Once you've done that, you can add it to vagrant:
+Run the following commands:
 
 ```sh
-$ vagrant box add ./custom.box --name "macos-ci-base"
+$ cd ~/Parallels
+$ echo '{ "provider": "parallels" }' >metadata.json
+$ tar zgvf <current date>.box ./metadata.json ./<name of VM>.pvm
 ```
 
-Then, to create the final box, we'll need to do the rest with vagrant.
-Create a `Vagrantfile` that looks like the following:
+This will create a box file which contains all the necessary data.
+You can delete the `metadata.json` file after.
 
-```rb
-Vagrant.configure('2') do |config|
-  config.vm.box = 'macos-ci-base'
-  config.vm.boot_timeout = 600
-  config.vm.synced_folder ".", "/vagrant", disabled: true
-end
+Once you've done that, you can upload it to the fileshare,
+under `share/boxes/vcpkg-ci-base`, add it to `share/boxes/vcpkg-ci-base.json`,
+and finally add it to vagrant:
+
+```sh
+$ vagrant box add ~/vagrant/share/boxes/vcpkg-ci-base.json
 ```
 
-then, run the following in that vagrant directory:
+Then, we'll create the final box,
+which contains all the necessary programs for doing CI work.
+Copy `configuration/Vagrantfile-box.rb` as `Vagrantfile`, and
+`configuration/vagrant-box-configuration.json`
+into a new directory; into that same directory,
+download the Xcode command line tools dmg, and name it `clt.dmg`.
+Then, run the following in that directory:
 
 ```sh
 $ vagrant up
-$ vagrant scp <path to Command Line Tools for Xcode installer> :clt.dmg
-$ vagrant ssh -c 'hdiutil attach clt.dmg -mountpoint /Volumes/setup-installer'
-$ vagrant ssh -c 'sudo installer -pkg "/Volumes/setup-installer/Command Line Tools.pkg" -target /'
-$ vagrant ssh -c 'hdiutil detach /Volumes/setup-installer'
-$ vagrant ssh -c 'rm clt.dmg'
-$ vagrant ssh -c '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"'
-$ vagrant reload
-```
-
-if that works, you can now package the box:
-
-```sh
 $ vagrant package
 ```
 
 This will create a `package.box`, which is the box file for the base VM.
-Then, you can `vagrant box add <package.box> --name <name for the box>`,
-and you'll have the base vcpkg box added for purposes of `Setup-VagrantMachines.ps1`!
-
-Once you've created the base box, if you're making it the new base box for the CI,
-upload it to the fileshare, under `share/vcpkg-boxes`.
-Then, add the metadata about the box (the name and version) to the JSON file there.
+Once you've created this box, if you're making it the new box for the CI,
+upload it to the fileshare, under `share/boxes/vcpkg-ci`.
+Then, add the metadata about the box (the name and version) to
+`share/boxes/vcpkg-ci.json`.
 Once you've done that, add the software versions under [VM Software Versions](#vm-software-versions).
 
 [base-box-instructions]: https://parallels.github.io/vagrant-parallels/docs/boxes/base.html
