@@ -2942,7 +2942,7 @@
     },
     "libarchive": {
       "baseline": "3.4.3",
-      "port-version": 4
+      "port-version": 5
     },
     "libass": {
       "baseline": "0.15.0",
