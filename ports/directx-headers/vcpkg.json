@@ -3,5 +3,5 @@
   "version-string": "1.4.9",
   "description": "Official DirectX 12 Headers",
   "homepage": "https://devblogs.microsoft.com/directx/",
-  "supports": "windows|linux"
+  "supports": "windows | linux"
 }
