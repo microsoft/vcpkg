@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 3.0.1
     SHA512 98c9bdcea79a88a2dd69cec6c49f8565edf78ab9cddbf0e85e08b049b300b187f176bf57d5a894bf777bec0a097e46ecc05f78dab9cd5726fd473ffd8718dce0
     HEAD_REF master
+    PATCHES Modify-header-file-path.patch
 )
 
 vcpkg_cmake_configure(
