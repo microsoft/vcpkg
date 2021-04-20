@@ -223,9 +223,9 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
 
     if (VCPKG_TARGET_IS_OSX)
         # see #16259 for details why this replacement is necessary.
-        file(GLOB_RECURSE targets_files "${release_share}/*[Tt]argets.cmake")
+        file(GLOB targets_files "${release_share}/*[Tt]argets.cmake")
         if (targets_files STREQUAL "")
-            file(GLOB_RECURSE targets_files "${release_share}/*[Cc]onfig.cmake")
+            file(GLOB targets_files "${release_share}/*[Cc]onfig.cmake")
         endif()
         foreach(targets_file IN LISTS targets_files)
             file(READ "${targets_file}" targets_content)
