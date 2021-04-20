@@ -1082,11 +1082,11 @@
     },
     "cairo": {
       "baseline": "1.16.0",
-      "port-version": 9
+      "port-version": 10
     },
     "cairomm": {
       "baseline": "1.15.3",
-      "port-version": 5
+      "port-version": 6
     },
     "camport3": {
       "baseline": "1.5.3",
@@ -1118,7 +1118,7 @@
     },
     "catch2": {
       "baseline": "2.13.1",
-      "port-version": 0
+      "port-version": 1
     },
     "cccapstone": {
       "baseline": "9b4128ee1153e78288a1b5433e2c06a0d47a4c4e-1",
@@ -1534,7 +1534,7 @@
     },
     "curl": {
       "baseline": "7.74.0",
-      "port-version": 3
+      "port-version": 4
     },
     "curlpp": {
       "baseline": "2018-06-15-3",
@@ -1950,7 +1950,7 @@
     },
     "ffmpeg": {
       "baseline": "4.3.2",
-      "port-version": 4
+      "port-version": 5
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
@@ -3502,7 +3502,7 @@
     },
     "libssh": {
       "baseline": "0.9.5",
-      "port-version": 2
+      "port-version": 3
     },
     "libssh2": {
       "baseline": "1.9.0",
@@ -3602,7 +3602,7 @@
     },
     "libvpx": {
       "baseline": "1.9.0",
-      "port-version": 7
+      "port-version": 8
     },
     "libwandio": {
       "baseline": "4.2.1",
@@ -3734,7 +3734,7 @@
     },
     "lua": {
       "baseline": "5.4.3",
-      "port-version": 0
+      "port-version": 1
     },
     "luabridge": {
       "baseline": "2.6",
@@ -3954,7 +3954,7 @@
     },
     "minizip": {
       "baseline": "1.2.11",
-      "port-version": 7
+      "port-version": 8
     },
     "minizip-ng": {
       "baseline": "3.0.1",
@@ -4990,7 +4990,7 @@
     },
     "qt5-base": {
       "baseline": "5.15.2",
-      "port-version": 5
+      "port-version": 6
     },
     "qt5-canvas3d": {
       "baseline": "0",
@@ -5737,16 +5737,16 @@
       "port-version": 0
     },
     "spirv-cross": {
-      "baseline": "2020-02-26",
-      "port-version": 1
+      "baseline": "2021-01-15",
+      "port-version": 0
     },
     "spirv-headers": {
-      "baseline": "1.5.1",
+      "baseline": "2021-03-25",
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "2020.1",
-      "port-version": 2
+      "baseline": "2020.7",
+      "port-version": 0
     },
     "sprout": {
       "baseline": "2019-06-20",
@@ -6446,7 +6446,7 @@
     },
     "wxwidgets": {
       "baseline": "3.1.4",
-      "port-version": 7
+      "port-version": 8
     },
     "x-plane": {
       "baseline": "3.0.3",
@@ -6590,7 +6590,7 @@
     },
     "zlib": {
       "baseline": "1.2.11",
-      "port-version": 9
+      "port-version": 10
     },
     "zookeeper": {
       "baseline": "3.5.5-1",
