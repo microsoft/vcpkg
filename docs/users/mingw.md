@@ -96,12 +96,12 @@ autoconf. In particular, when ports prepend the directory of tools to the
 name is actually invoked, and how arguments are passed between tools.
 
 To mitigate such issues when working with a full MSYS2 installation,
-try to keep the directory of the msys subsystem (`/usr/bin`) out of the
-`PATH` environment variable as found by vcpkg. In bash, you may modify
-the `PATH` just for the call of vcpkg:
+try to keep the directories of the msys subsystem (`/usr/bin`, `bin`)
+out of the `PATH` environment variable as found by vcpkg. In bash, you
+may modify the `PATH` just for a single call of vcpkg:
 
 ~~~
-PATH="${PATH/:\/usr\/bin:/:}" ./vcpkg install libpq
+PATH="${PATH/:\/usr\/bin:\/bin:/:}" ./vcpkg install libpq
 ~~~
 
 Alternatively, you may run vcpkg from a regular Command Prompt, after
