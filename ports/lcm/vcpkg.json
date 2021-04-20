@@ -1,6 +1,6 @@
 {
   "name": "lcm",
-  "version-string": "1.4.0",
+  "version": "1.4.0",
   "port-version": 2,
   "description": [
     "Lightweight Communications and Marshalling (LCM)",
