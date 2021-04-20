@@ -39,7 +39,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         PROJECT_SUBPATH "platform/vsnet/osipparser2.vcxproj"
         USE_VCPKG_INTEGRATION
     )
-elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TAREGT_IS_OSX)
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS ${OPTIONS}
