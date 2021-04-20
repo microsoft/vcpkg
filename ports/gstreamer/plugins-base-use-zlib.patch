@@ -1,0 +1,13 @@
+diff --git a/gst-libs/gst/tag/meson.build b/gst-libs/gst/tag/meson.build
+index 5ec3739..d2378c6 100644
+--- a/gst-libs/gst/tag/meson.build
++++ b/gst-libs/gst/tag/meson.build
+@@ -72,7 +72,7 @@ core_conf.set('HAVE_ISO_CODES', have_iso_codes)
+ # could drop optional zlib dep and use g_zlib_decompressor_new()
+ zlib_dep = dependency('zlib', required : false)
+ if not zlib_dep.found()
+-  zlib_dep = cc.find_library('z', required : false)
++  zlib_dep = cc.find_library('zlib', required : true)
+   if not zlib_dep.found() or not cc.has_header('zlib.h')
+     zlib_dep = subproject('zlib').get_variable('zlib_dep')
+   endif

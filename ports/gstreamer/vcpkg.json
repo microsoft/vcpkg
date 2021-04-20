@@ -67,7 +67,7 @@
     "plugins-ugly": {
       "description": "'Ugly' GStreamer plugins and helper libraries",
       "dependencies": [
-        "openh264"
+        "x264"
       ]
     }
   }

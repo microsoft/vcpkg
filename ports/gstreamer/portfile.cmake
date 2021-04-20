@@ -1,12 +1,68 @@
-vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "emscripten" "wasm32" "android" "ios")
+vcpkg_fail_port_install(MESSAGE "'${PORT}' currently only supports Windows/Darwin x86/x64 platforms" ON_ARCH "arm" ON_TARGET "uwp" "emscripten" "wasm32" "android" "ios")
 
 vcpkg_from_github(
-    OUT_SOURCE_PATH SOURCE_PATH
+    OUT_SOURCE_PATH GST_BUILD_SOURCE_PATH
     REPO gstreamer/gst-build
     REF 1.18.4
     SHA512 9b3927ba1a2ba1e384f2141c454978f582087795a70246709ed60875bc983a42eef54f3db7617941b8dacc20c434f81ef9931834861767d7a4dc09d42beeb900
     HEAD_REF master
 )
+vcpkg_from_github(
+    OUT_SOURCE_PATH GST_SOURCE_PATH
+    REPO gstreamer/gstreamer
+    REF 1.18.4
+    SHA512 684a7ce93143a0c3e0ce627ab2bf1451d49735b4bab273f308bc3b48d8312f7c13c0afa7e71f3a3a7274b90373215636dd8ff0076f143cbe26061de0c4efa102
+    HEAD_REF master
+)
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND PLUGIN_BASE_PATCHES plugins-base-use-zlib.patch)
+    list(APPEND PLUGIN_GOOD_PATCHES plugins-good-use-zlib.patch)
+endif()
+vcpkg_from_github(
+    OUT_SOURCE_PATH GST_PLUGIN_BASE_SOURCE_PATH
+    REPO gstreamer/gst-plugins-base
+    REF 1.18.4
+    SHA512 b89924e90f880195740421f2eec3f2a667b96f6ca92ccaf87da246e9c9fd13646bf6235376844c012414a79d38dfaea8f10d56ffec900fe0b9cb8f19e722f05e
+    HEAD_REF master
+    PATCHES ${PLUGIN_BASE_PATCHES}
+)
+vcpkg_from_github(
+    OUT_SOURCE_PATH GST_PLUGIN_GOOD_SOURCE_PATH
+    REPO gstreamer/gst-plugins-good
+    REF 1.18.4
+    SHA512 d97f4b76b6fc089b7675a9b10cabf4c704d71d663a23f34133a2671761d98e931aa87df7158f663cd9ebb6a8febd9ab1833aef7eb8be2ef2b54fad288bd0ae66
+    HEAD_REF master
+    PATCHES ${PLUGIN_GOOD_PATCHES}
+)
+vcpkg_from_github(
+    OUT_SOURCE_PATH GST_PLUGIN_BAD_SOURCE_PATH
+    REPO gstreamer/gst-plugins-bad
+    REF 1.18.4
+    SHA512 0bf5344fbef883dbe0908495c9a50cd3bf915c5d328cf2768532ff077a9aa4255747f417a310c16c3ea86fcb79ac6ba4bf37375ff84776985451ab47b9d9ac6e
+    HEAD_REF master
+)
+vcpkg_from_github(
+    OUT_SOURCE_PATH GST_PLUGIN_UGLY_SOURCE_PATH
+    REPO gstreamer/gst-plugins-ugly
+    REF 1.18.4
+    SHA512 01413155d21f654a90bcf7235b5605c244d3700632ae6c56cafbbabfb11192a09c2ab01c4662ab452eabb004b09c9ec2efa72024db8be5863054d25569034a03
+    HEAD_REF master
+)
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org
+    OUT_SOURCE_PATH GST_MESON_PORTS_SOURCE_PATH
+    REPO gstreamer/meson-ports/gl-headers
+    REF 5c8c7c0d3ca1f0b783272dac0b95e09414e49bc8 # master commit. Date 2021-04-21
+    SHA512 d001535e1c1b5bb515ac96c7d15b25ca51460a5af0c858df53b11c7bae87c4a494e4a1b1b9c3c41a5989001db083645dde2054b82acbbeab7f9939308b676f9c
+    HEAD_REF master
+)
+
+file(RENAME ${GST_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gstreamer)
+file(RENAME ${GST_PLUGIN_BASE_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-base)
+file(RENAME ${GST_PLUGIN_GOOD_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-good)
+file(RENAME ${GST_PLUGIN_BAD_SOURCE_PATH}  ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-bad)
+file(RENAME ${GST_PLUGIN_UGLY_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gst-plugins-ugly)
+file(RENAME ${GST_MESON_PORTS_SOURCE_PATH} ${GST_BUILD_SOURCE_PATH}/subprojects/gl-headers)
 
 if(VCPKG_TARGET_IS_OSX)
     # In Darwin platform, there can be an old version of `bison`, 
@@ -67,10 +123,10 @@ endif()
 #   https://github.com/GStreamer/gst-plugins-ugly/blob/1.18.4/meson_options.txt
 #
 vcpkg_configure_meson(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH ${GST_BUILD_SOURCE_PATH}
     OPTIONS
         # gstreamer
-        -Dgstreamer:default_library=${LIBRARY_LINKAGE} # static, shared
+        -Dgstreamer:default_library=${LIBRARY_LINKAGE}
         -Dgstreamer:check=disabled
         -Dgstreamer:libunwind=disabled
         -Dgstreamer:libdw=disabled
@@ -96,9 +152,10 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:default_library=${LIBRARY_LINKAGE}
         -Dgst-plugins-good:qt5=disabled
         -Dgst-plugins-good:soup=disabled
-        -Dgst-plugins-good:speex=auto
-        -Dgst-plugins-good:taglib=auto
-        -Dgst-plugins-good:vpx=auto
+        -Dgst-plugins-good:cairo=auto # cairo[gobject]
+        -Dgst-plugins-good:speex=auto # speex
+        -Dgst-plugins-good:taglib=auto # taglib
+        -Dgst-plugins-good:vpx=auto # libvpx
         -Dgst-plugins-good:examples=disabled
         -Dgst-plugins-good:tests=disabled
         -Dgst-plugins-good:nls=${NATIVE_LANG_SUPPORT}
@@ -119,9 +176,10 @@ vcpkg_configure_meson(
         -Dgst-plugins-ugly:tests=disabled
         -Dgst-plugins-ugly:nls=${NATIVE_LANG_SUPPORT}
         -Dgst-plugins-ugly:orc=disabled
-        # see ${SOURCE_PATH}/meson_options.txt
+        # see ${GST_BUILD_SOURCE_PATH}/meson_options.txt
         -Dpython=disabled
         -Dlibav=disabled
+        -Dlibnice=disabled # libnice
         -Ddevtools=disabled
         -Dges=disabled
         -Drtsp_server=disabled
@@ -139,8 +197,7 @@ vcpkg_configure_meson(
         -Ddoc=disabled
         -Dgtk_doc=disabled
     OPTIONS_DEBUG
-        -Dgstreamer:gst_debug=true # gst-plugins-good references the value
-        -Dgst-plugins-bad:gst_debug=true
+        -Dgstreamer:gst_debug=true # plugins will reference this value
     OPTIONS_RELEASE
         -Dgstreamer:gst_debug=false
         -Dgstreamer:gobject-cast-checks=disabled
@@ -153,7 +210,6 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:gobject-cast-checks=disabled
         -Dgst-plugins-good:glib-asserts=disabled
         -Dgst-plugins-good:glib-checks=disabled
-        -Dgst-plugins-bad:gst_debug=false
         -Dgst-plugins-bad:gobject-cast-checks=disabled
         -Dgst-plugins-bad:glib-asserts=disabled
         -Dgst-plugins-bad:glib-checks=disabled
@@ -161,8 +217,11 @@ vcpkg_configure_meson(
 vcpkg_install_meson()
 
 vcpkg_copy_tools(
-    TOOL_NAMES "gst-ptp-helper"
-    SEARCH_DIR ${CURRENT_PACKAGES_DIR}/libexec
+    TOOL_NAMES  gst-hotdoc-plugins-scanner
+                gst-plugin-scanner
+                gst-plugins-doc-cache-generator
+                gst-ptp-helper
+    SEARCH_DIR  ${CURRENT_PACKAGES_DIR}/libexec/gstreamer-1.0
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0
 )
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0)
@@ -175,7 +234,7 @@ file(RENAME ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include/gst/gl/gstglconfig
             ${CURRENT_PACKAGES_DIR}/include/gstreamer-1.0/gst/gl/gstglconfig.h
 )
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${GST_BUILD_SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/debug/libexec
                     ${CURRENT_PACKAGES_DIR}/debug/lib/gstreamer-1.0/include
