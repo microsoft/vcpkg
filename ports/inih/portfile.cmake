@@ -3,20 +3,17 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO benhoyt/inih
-    REF d7f465792c0c7686b50ed45c9a435394ae418d3e # r51
-    SHA512 f3b621225933d74e9b130957aab1d55a82f06fd836aace439f9192a393d82a446e9f2152bb617a73a1dc681a821fc31d217c41f38c8ef8eeef7ad64c3e274b5d
+    REF 0b9092e80acc8dc820103c6a0cb9c030e3ca1a32 # r53
+    SHA512 beaa6c58c852050733ebd22f46633abfc58723d24d92ac7b339798bc0a512c5e6183970ef13ba6b9e49ff033d1c8b12a93586ce1094b61d9cc24d78f71dff2f9
     HEAD_REF master
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
+vcpkg_configure_meson(
+    SOURCE_PATH "${SOURCE_PATH}"
 )
 
-vcpkg_install_cmake()
+vcpkg_install_meson()
+vcpkg_fixup_pkgconfig()
+vcpkg_copy_pdbs()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/inih RENAME copyright)
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(INSTALL "${SOURCE_PATH}/LICENSE.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
