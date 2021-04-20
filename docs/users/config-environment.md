@@ -93,8 +93,4 @@ This environment variable allows using NuGet's cache for every nuget-based binar
 
 > Note: This is an experimental feature and may change or be removed at any time
 
-This environment variable allows using a private mirror for all SHA512-tagged assets.
-
-It must be set to a value of the form `x-azurl,<baseuri>[,<sas>[,read|,write|,readwrite]]`, which will turn into HTTP
-URLs to GET and PUT like `<baseuri><sha512><sas>`. `baseuri` should be terminated with a `/` and `sas` (if defined)
-should be prefixed with a `?`.
+This environment variable allows using a private mirror for all SHA512-tagged assets. See [Asset Caching](assetcaching.md) for more details.
