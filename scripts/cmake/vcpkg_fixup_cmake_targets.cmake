@@ -223,9 +223,9 @@ function(vcpkg_fixup_cmake_targets)
 
     if (VCPKG_TARGET_IS_OSX)
         # see #16259 for details why this replacement is necessary.
-        file(GLOB_RECURSE targets_files "${RELEASE_SHARE}/*[Tt]argets.cmake")
+        file(GLOB targets_files "${RELEASE_SHARE}/*[Tt]argets.cmake")
         if (targets_files STREQUAL "")
-            file(GLOB_RECURSE targets_files "${release_share}/*[Cc]onfig.cmake")
+            file(GLOB targets_files "${release_share}/*[Cc]onfig.cmake")
         endif()
         foreach(targets_file IN LISTS targets_files)
             file(READ "${targets_file}" targets_content)
