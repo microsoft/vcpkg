@@ -5737,16 +5737,16 @@
       "port-version": 0
     },
     "spirv-cross": {
-      "baseline": "2020-02-26",
-      "port-version": 1
+      "baseline": "2021-01-15",
+      "port-version": 0
     },
     "spirv-headers": {
-      "baseline": "1.5.1",
+      "baseline": "2021-03-25",
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "2020.1",
-      "port-version": 2
+      "baseline": "2020.7",
+      "port-version": 0
     },
     "sprout": {
       "baseline": "2019-06-20",
