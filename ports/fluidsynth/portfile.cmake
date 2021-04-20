@@ -7,33 +7,17 @@ vcpkg_from_github(
     PATCHES
        force-x86-gentables.patch
 )
-vcpkg_check_features(
-    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        "dbus" enable-dbus
-        "jack" enable-jack
-        "libinstpatch" enable-libinstpatch
-        "libsndfile" enable-libsndfile
-        "midishare" enable-midishare
-        "opensles" enable-opensles
-        "oboe" enable-oboe
-        "oss" enable-oss
-        "sdl2" enable-sdl2
-        "pulseaudio" enable-pulseaudio
-        "readline" enable-readline
-    #platform dependent:
-        "lash" enable-lash
-        "alsa" enable-alsa
-        "systemd" enable-systemd
-        "coreaudio" enable-coreaudio
-        "coremidi" enable-coremidi
-        "dart" enable-dart
-)
+
+set(feature_list dbus jack libinstpatch libsndfile midishare opensles oboe oss sdl2 pulseaudio readline lash alsa systemd coreaudio coremidi dart)
+set(FEATURE_OPTIONS)
+foreach(_feature IN LISTS feature_list)
+    list(APPEND FEATURE_OPTIONS -Denable-${_feature}:BOOL=OFF)
+endforeach()
 
 vcpkg_find_acquire_program(PKGCONFIG)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS
+    OPTIONS 
         ${FEATURE_OPTIONS}
         -DPKG_CONFIG_EXECUTABLE=${PKGCONFIG}
     OPTIONS_DEBUG
