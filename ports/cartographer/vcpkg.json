@@ -1,6 +1,6 @@
 {
   "name": "cartographer",
-  "version-string": "1.0.0",
+  "version": "1.0.0",
   "port-version": 4,
   "description": "Google 2D & 3D SLAM package",
   "homepage": "https://github.com/googlecartographer/cartographer",

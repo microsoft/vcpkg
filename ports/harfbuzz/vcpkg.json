@@ -1,6 +1,6 @@
 {
   "name": "harfbuzz",
-  "version-string": "2.7.4",
+  "version": "2.7.4",
   "port-version": 2,
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",

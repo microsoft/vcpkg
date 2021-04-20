@@ -1,6 +1,6 @@
 {
   "name": "atk",
-  "version-string": "2.36.0",
+  "version": "2.36.0",
   "description": "GNOME Accessibility Toolkit",
   "homepage": "https://developer.gnome.org/atk/",
   "supports": "!(osx | arm)",
