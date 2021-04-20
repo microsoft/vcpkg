@@ -19,7 +19,7 @@ una vez instalado Vcpkg puede ejecutar `vcpkg help`, o
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), en el canal #vcpkg
 * Discord: [\#include \<C++\>](https://www.includecpp.org), en el canal #🌏vcpkg
-* Docs: [Documentación](docs/index.md)
+* Docs: [Documentación](docs/README.md)
 
 [![Estado de compilación](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
@@ -360,7 +360,7 @@ según la terminal que use, luego reinicie la consola.
 
 ## Ejemplos
 
-ver la [documentación](docs/index.md) para tutoriales específicos, incluyendo
+ver la [documentación](docs/README.md) para tutoriales específicos, incluyendo
 [instalando y usando un paquete](docs/examples/installing-and-using-packages.md),
 [agregando un nuevo paquete desde un archivo comprimido](docs/examples/packaging-zipfiles.md),
 [agregando un nuevo paquete desde un repositorio en GitHub](docs/examples/packaging-github-repos.md).

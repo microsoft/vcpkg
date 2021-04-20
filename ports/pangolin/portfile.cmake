@@ -13,6 +13,7 @@ vcpkg_from_github(
         fix-includepath-error.patch # include path has one more ../
         fix-dependency-python.patch
         add-definition.patch
+        fix-cmake-version.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMakeModules/FindGLEW.cmake)
@@ -27,6 +28,18 @@ vcpkg_configure_cmake(
         -DBUILD_EXTERN_GLEW=OFF
         -DBUILD_EXTERN_LIBPNG=OFF
         -DBUILD_EXTERN_LIBJPEG=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_PythonLibs=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_TooN=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_DC1394=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_LibRealSense=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenNI=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenNI2=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_uvc=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_DepthSense=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_TeliCam=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_Pleora=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_TIFF=ON
+        -DCMAKE_DISABLE_FIND_PACKAGE_OpenEXR=ON
         -DMSVC_USE_STATIC_CRT=${MSVC_USE_STATIC_CRT}
 )
 

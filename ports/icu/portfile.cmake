@@ -1,6 +1,6 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
 
-set(ICU_VERSION_MAJOR 67)
+set(ICU_VERSION_MAJOR 69)
 set(ICU_VERSION_MINOR 1)
 set(VERSION "${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}")
 set(VERSION2 "${ICU_VERSION_MAJOR}_${ICU_VERSION_MINOR}")
@@ -10,7 +10,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 4779f1ce1ca7976f6fad6768853ea8c540da54d11509e3b6cfd864a04b5f2db1c3d4b546387f91ad02fb90804525bc37d2543173f0d705d6ca11dc6f2b7640a8
+    SHA512 d4aeb781715144ea6e3c6b98df5bbe0490bfa3175221a1d667f3e6851b7bd4a638fa4a37d4a921ccb31f02b5d15a6dded9464d98051964a86f7b1cde0ff0aab7 
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -20,8 +20,6 @@ vcpkg_extract_source_archive_ex(
         ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix_parallel_build_on_windows.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-extra.patch
-        ${CMAKE_CURRENT_LIST_DIR}/mingw-remove-bsymbolic.patch
-        ${CMAKE_CURRENT_LIST_DIR}/mingw-remove-version-from-link-flags.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
