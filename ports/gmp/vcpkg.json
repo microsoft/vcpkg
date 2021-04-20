@@ -8,11 +8,18 @@
   "dependencies": [
     {
       "name": "vs-yasm",
-      "platform": "windows"
+      "platform": "windows",
+      "host": true
     },
     {
       "name": "yasm-tool-helper",
-      "platform": "windows"
+      "platform": "windows",
+      "host": true
+    },
+    {
+      "name": "yasm-tool",
+      "platform": "windows",
+      "host": true
     }
   ]
 }
