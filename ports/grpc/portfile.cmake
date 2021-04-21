@@ -14,7 +14,7 @@ vcpkg_from_github(
         00003-undef-base64-macro.patch
         00004-link-gdi32-on-windows.patch
         00005-fix-uwp-error.patch
-        # 00009-use-system-upb.patch
+        00009-use-system-upb.patch
         00010-add-feature-absl-sync.patch
         00011-fix-csharp_plugin.patch
         snprintf.patch
@@ -37,8 +37,10 @@ else()
     set(cares_CARES_PROVIDER "package")
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    absl-sync gRPC_ABSL_SYNC_ENABLE
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        absl-sync gRPC_ABSL_SYNC_ENABLE
 )
 
 vcpkg_configure_cmake(

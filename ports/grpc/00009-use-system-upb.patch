@@ -121,7 +121,7 @@ index f2a0e508c3..ecce7ba300 100644
  # See the License for the specific language governing permissions and
  # limitations under the License.
  
-+set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated")
++set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated" "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upbdefs-generated")
 +if (gRPC_UPB_PROVIDER STREQUAL "module")
 +
  set(UPB_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/upb)
