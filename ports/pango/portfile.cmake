@@ -8,7 +8,6 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${PANGO_VERSION}
-    #PATCHES 0001-fix-static-symbols-export.diff
 )
 
 vcpkg_configure_meson(

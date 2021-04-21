@@ -1,6 +1,6 @@
 {
   "name": "io2d",
-  "version-string": "2020-09-14",
+  "version-date": "2020-09-14",
   "port-version": 2,
   "description": "a lightweight, cross platform drawing library",
   "dependencies": [
