@@ -182,7 +182,7 @@ function(vcpkg_from_sourceforge)
     )
     
     # Try to use auto-select first
-    set(DOWNLOAD_URL ${URL}/download)
+    set(DOWNLOAD_URL ${URL}/download?use_mirror=autoselect)
     message(STATUS "Trying auto-select mirror...")
     vcpkg_download_distfile(ARCHIVE
         URLS "${DOWNLOAD_URL}"
@@ -199,7 +199,11 @@ function(vcpkg_from_sourceforge)
     
     if (NOT download_success EQUAL 1)
         foreach(SOURCEFORGE_MIRROR ${SOURCEFORGE_MIRRORS})
-            set(DOWNLOAD_URL ${URL}/download?use_mirror=${SOURCEFORGE_MIRROR})
+            if (DEFINED _vdus_REF)
+                set(DOWNLOAD_URL https://${SOURCEFORGE_MIRROR}.dl.sourceforge.net/project/${ORG_NAME}${REPO_NAME}/${_vdus_REF}/${_vdus_FILENAME})
+            else()
+                set(DOWNLOAD_URL https://${SOURCEFORGE_MIRROR}.dl.sourceforge.net/project/${ORG_NAME}${REPO_NAME}/${FILENAME})
+            endif()
             message(STATUS "Trying mirror ${SOURCEFORGE_MIRROR}...")
             vcpkg_download_distfile(ARCHIVE
                 URLS "${DOWNLOAD_URL}"
