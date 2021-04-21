@@ -574,6 +574,24 @@ function(vcpkg_configure_make)
         if(NOT AUTORECONF)
             message(FATAL_ERROR "${PORT} requires autoconf from the system package manager (example: \"sudo apt-get install autoconf\")")
         endif()
+
+        # Some maintainer tools usually don't really need to be run for vcpkg.
+        set(optional_tools AUTOPOINT GTKDOCIZE)
+        _vcpkg_backup_env_variables(${optional_tools})
+        foreach(var IN LISTS optional_tools)
+            if(DEFINED ENV{${var}})
+                continue()  # provided by toolchain or port
+            endif()
+            string(TOLOWER ${var} program_name)
+            find_program(${var} ${program_name} PATHS ${CURRENT_HOST_INSTALLED_DIR}/tools/${program_name}/bin NO_DEFAULT_PATH)
+            find_program(${var} ${program_name})
+            if(${${var}})
+                set(ENV{${var}} "${${var}}")
+            else()
+                set(ENV{${var}} "true")
+            endif()
+        endforeach()
+
         message(STATUS "Generating configure for ${TARGET_TRIPLET}")
         if (CMAKE_HOST_WIN32)
             vcpkg_execute_required_process(
@@ -589,6 +607,8 @@ function(vcpkg_configure_make)
             )
         endif()
         message(STATUS "Finished generating configure for ${TARGET_TRIPLET}")
+
+        _vcpkg_restore_env_variables(${optional_tools})
     endif()
     if(REQUIRES_AUTOGEN)
         message(STATUS "Generating configure for ${TARGET_TRIPLET} via autogen.sh")
