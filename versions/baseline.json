@@ -4194,7 +4194,7 @@
     },
     "nccl": {
       "baseline": "2.4.6",
-      "port-version": 0
+      "port-version": 1
     },
     "neargye-semver": {
       "baseline": "0.2.2",
