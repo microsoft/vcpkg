@@ -1534,7 +1534,7 @@
     },
     "curl": {
       "baseline": "7.74.0",
-      "port-version": 4
+      "port-version": 5
     },
     "curlpp": {
       "baseline": "2018-06-15-3",
