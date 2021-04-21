@@ -45,7 +45,7 @@ vcpkg_extract_source_archive_ex(
 vcpkg_configure_meson(
     SOURCE_PATH "${SOURCE_PATH}"
     OPTIONS ${OPTIONS}
-            -Dlibpng=enabled
+        -Dlibpng=enabled
 )
 vcpkg_install_meson()
 vcpkg_fixup_pkgconfig()
