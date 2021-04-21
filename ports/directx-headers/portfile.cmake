@@ -11,7 +11,7 @@ vcpkg_from_github(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DBUILD_TEST=OFF
+    OPTIONS -DDXHEADERS_BUILD_TEST=OFF
 )
 
 vcpkg_install_cmake()
