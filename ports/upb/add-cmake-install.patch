@@ -24,7 +24,7 @@ index d4cbcc9..a6b432f 100644
  add_library(wyhash INTERFACE)
  
 +install(
-+  DIRECTORY upb
++  DIRECTORY ../upb
 +  DESTINATION include
 +  FILES_MATCHING
 +  PATTERN "*.h"
@@ -35,7 +35,7 @@ index d4cbcc9..a6b432f 100644
 +target_include_directories(upb PUBLIC $<INSTALL_INTERFACE:include>)
 +install(TARGETS
 +  upb
-+  upb_cc_bindings
++  fastdecode
 +  upb_json
 +  upb_pb
 +  port
