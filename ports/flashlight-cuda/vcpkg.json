@@ -1,7 +1,6 @@
 {
   "name": "flashlight-cuda",
-  "version-string": "0.3",
-  "port-version": 2,
+  "version": "0.3",
   "description": "A C++ standalone library for machine learning. CUDA backend.",
   "homepage": "https://github.com/facebookresearch/flashlight",
   "supports": "!(windows | osx)",
