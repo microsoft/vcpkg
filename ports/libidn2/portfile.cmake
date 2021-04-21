@@ -54,6 +54,7 @@ else()
         COPY_SOURCE
         OPTIONS
             --with-libiconv-prefix=${CURRENT_INSTALLED_DIR}
+	    --disable-gtk-doc-html
     )
     
     vcpkg_install_make()
