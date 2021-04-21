@@ -1,0 +1,29 @@
+{
+  "name": "matplotplusplus",
+  "version-date": "2021-04-11",
+  "description": "A C++ graphics library for data visualization",
+  "homepage": "https://alandefreitas.github.io/matplotplusplus/",
+  "license": "MIT",
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    "cimg",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "opengl": {
+      "description": "OpenGL backend for Matplot++",
+      "dependencies": [
+        "glad",
+        "glfw3",
+        "opengl"
+      ]
+    }
+  }
+}
