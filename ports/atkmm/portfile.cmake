@@ -14,10 +14,12 @@ vcpkg_extract_source_archive_ex(
     PATCHES
 )
 
-vcpkg_configure_meson(SOURCE_PATH ${SOURCE_PATH} 
-                      OPTIONS -Dbuild-documentation=false
-                              -Dbuild-deprecated-api=true # Build deprecated API and include it in the library
-                              -Dmsvc14x-parallel-installable=false) # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
+vcpkg_configure_meson(
+    SOURCE_PATH ${SOURCE_PATH} 
+    OPTIONS 
+        -Dbuild-documentation=false
+        -Dbuild-deprecated-api=true # Build deprecated API and include it in the library
+        -Dmsvc14x-parallel-installable=false) # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
 vcpkg_install_meson()
 
 vcpkg_fixup_pkgconfig()

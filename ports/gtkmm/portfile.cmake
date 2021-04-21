@@ -11,8 +11,9 @@ vcpkg_download_distfile(ARCHIVE
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
-    PATCHES build.patch
-            gtkapi.patch    #upstream patch to fix dllimport issue
+    PATCHES 
+        build.patch
+        gtkapi.patch    #upstream patch to fix dllimport issue
 )
 
 vcpkg_configure_meson(
@@ -31,4 +32,4 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gtkmm" RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

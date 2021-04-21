@@ -16,9 +16,7 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
-
         -Dbuild-examples=false
         -Dmsvc14x-parallel-installable=false    # Use separate DLL and LIB filenames for Visual Studio 2017 and 2019
 )

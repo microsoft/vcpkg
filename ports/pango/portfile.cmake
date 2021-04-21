@@ -13,7 +13,6 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -Dintrospection=disabled # Build the GObject introspection data for Pango
         -Dfontconfig=enabled # Build with FontConfig support.

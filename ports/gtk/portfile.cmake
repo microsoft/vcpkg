@@ -112,8 +112,7 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_pkgconfig()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gtk)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gtk/COPYING ${CURRENT_PACKAGES_DIR}/share/gtk/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
 set(TOOL_NAMES gtk4-builder-tool 
                gtk4-encode-symbolic-svg 

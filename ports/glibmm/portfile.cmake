@@ -14,8 +14,9 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -Dbuild-examples=false
-            -Dmsvc14x-parallel-installable=false
+    OPTIONS 
+        -Dbuild-examples=false
+        -Dmsvc14x-parallel-installable=false
 )
 vcpkg_install_meson()
 vcpkg_copy_pdbs()
