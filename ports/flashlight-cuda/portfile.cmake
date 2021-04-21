@@ -6,9 +6,9 @@ endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO facebookresearch/flashlight
-    REF f416bb764628fce32c551a80c8939040735caed3 # 0.3 branch
-    SHA512 9db6fb595e437ac0a77e0d6f2c8b1f51bbe81e3343ea608a24514d7f16c1b7ac781efa712edbc203c91903c5fa1a7e475305d3ed7e09fa314081a73db7b4b617
+    REPO flashlight/flashlight
+    REF 76f7fa7f5a162c73d6bf8befdb8e197a4dc7515d # 0.3 branch tip
+    SHA512 87786f9443d27ac9b513cf582caea13dccfa344e55a4970c0c2c7df7530260ad38cc578690ebf2fa256e8ea943abea547e0e6d5ee0ba090b336c4f7af8d2f53f
     HEAD_REF master
 )
 
