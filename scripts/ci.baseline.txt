@@ -1209,7 +1209,6 @@ paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
 pangomm:x64-osx=fail
 pangomm:arm64-windows=fail
-parmetis:x64-linux=fail
 parmetis:x64-osx=fail
 pdal:x64-linux=fail
 pdal:x64-osx=fail
