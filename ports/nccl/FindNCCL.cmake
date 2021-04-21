@@ -68,7 +68,6 @@ if(NCCL_HEADER_CONTENTS)
   endif()
 endif()
 
-
 find_library(NCCL_LIBRARIES
   NAMES ${NCCL_LIBNAME}
   HINTS
