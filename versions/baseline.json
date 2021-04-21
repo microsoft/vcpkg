@@ -1493,7 +1493,7 @@
       "port-version": 0
     },
     "crashpad": {
-      "baseline": "2020-03-18",
+      "baseline": "2021-04-20",
       "port-version": 0
     },
     "crashrpt": {
