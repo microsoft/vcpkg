@@ -21,6 +21,7 @@ vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --disable-doc
+	--disable-gtk-doc-html
 )
 
 vcpkg_install_make()
