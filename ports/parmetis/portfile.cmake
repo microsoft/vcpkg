@@ -15,8 +15,8 @@ vcpkg_extract_source_archive_ex(
         fix-gklib-vs14-math.patch
         fix-root-cmakelist.patch
         fix-libparmetis-cmakelist.patch
-        fix-root-cmakelist-2.patch
         use_stdint.patch
+        fix-root-cmakelist-2.patch
 )
 
 vcpkg_configure_cmake(
