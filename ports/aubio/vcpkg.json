@@ -12,7 +12,16 @@
       "description": "Build tools and add extra dependencies",
       "dependencies": [
         "bzip2",
-        "ffmpeg",
+        {
+          "name": "ffmpeg",
+          "features": [
+            "avcodec",
+            "avdevice",
+            "avfilter",
+            "avformat",
+            "swresample"
+          ]
+        },
         "libflac",
         "liblzma",
         "libogg",
