@@ -63,7 +63,8 @@ sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
 sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
 sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
 sudo apt -y update
-sudo apt install -y --no-install-recommends cuda-compiler-11-3 cuda-libraries-dev-11-3 cuda-driver-dev-11-3 cuda-cudart-dev-11-3 libcublas-11-3 libcurand-dev-11-3 libcudnn8-dev
+sudo apt install -y --no-install-recommends cuda-compiler-11-3 cuda-libraries-dev-11-3 cuda-driver-dev-11-3 \
+  cuda-cudart-dev-11-3 libcublas-11-3 libcurand-dev-11-3 libcudnn8-dev libnccl2 libnccl-dev
 
 # Install PowerShell
 wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
