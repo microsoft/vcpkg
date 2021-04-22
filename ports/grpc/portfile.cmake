@@ -19,6 +19,7 @@ vcpkg_from_github(
         00011-fix-csharp_plugin.patch
         snprintf.patch
         00012-fix-use-cxx17.patch
+        00013-build-upbdefs.patch
 )
 
 if(TARGET_TRIPLET STREQUAL HOST_TRIPLET)
