@@ -1,6 +1,0 @@
-{
-  "name": "catch2",
-  "version-string": "2.13.5",
-  "description": "A modern, header-only test framework for unit testing.",
-  "homepage": "https://github.com/catchorg/Catch2"
-}
