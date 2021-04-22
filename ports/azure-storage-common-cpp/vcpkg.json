@@ -9,14 +9,6 @@
   "license": "MIT",
   "dependencies": [
     {
-      "name": "vcpkg-cmake",
-      "host": true
-    },
-    {
-      "name": "vcpkg-cmake-config",
-      "host": true
-    },
-    {
       "name": "azure-core-cpp",
       "default-features": false
     },
@@ -24,6 +16,14 @@
     {
       "name": "openssl",
       "platform": "!windows"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
     }
   ]
 }

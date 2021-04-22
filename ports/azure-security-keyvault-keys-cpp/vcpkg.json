@@ -9,16 +9,16 @@
   "license": "MIT",
   "dependencies": [
     {
+      "name": "azure-security-keyvault-common-cpp",
+      "default-features": false
+    },
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    {
-      "name": "azure-security-keyvault-common-cpp",
-      "default-features": false
     }
   ]
 }
