@@ -39,7 +39,7 @@ This command supplies many common arguments to Meson. To see the full list, exam
 function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https://mesonbuild.com/Native-environments.html
     set(NATIVE "[binaries]\n")
     #set(proglist AR RANLIB STRIP NM OBJDUMP DLLTOOL MT)
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         set(proglist MT)
     else()
         set(proglist AR RANLIB STRIP NM OBJDUMP DLLTOOL MT)
@@ -58,7 +58,7 @@ function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https:
             string(APPEND NATIVE "${proglower} = '${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}'\n")
         endif()
     endforeach()
-    if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_DETECTED_CMAKE_LINKER AND (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
         string(APPEND NATIVE "c_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
         string(APPEND NATIVE "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
     endif()
@@ -74,7 +74,7 @@ function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https:
         # about overriden flags. Until this is fixed in meson vcpkg should not pass this here. 
         # string(APPEND NATIVE "cpp_eh='none'\n") # To make sure meson is not adding eh flags by itself using msvc
     endif()
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         string(REGEX REPLACE "( |^)(-|/)" ";\\2" WIN_C_STANDARD_LIBRARIES "${VCPKG_DETECTED_CMAKE_C_STANDARD_LIBRARIES}")
         string(REGEX REPLACE "\\.lib " ".lib;" WIN_C_STANDARD_LIBRARIES "${WIN_C_STANDARD_LIBRARIES}")
         list(TRANSFORM WIN_C_STANDARD_LIBRARIES APPEND "'")
@@ -113,7 +113,7 @@ endfunction()
 
 # Generates the required compiler properties for meson
 function(vcpkg_internal_meson_generate_flags_properties_string _out_var _config)
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         set(L_FLAG /LIBPATH:)
     else()
         set(L_FLAG -L)
@@ -150,7 +150,7 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
     string(APPEND NATIVE_${_config} "[cmake]\n")
 
     if(NOT VCPKG_CHAINLOAD_TOOLCHAIN_FILE)
-        if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        if((VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP) AND NOT VCPKG_TARGET_IS_MINGW)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/windows.cmake")
         elseif(VCPKG_TARGET_IS_LINUX)
             set(VCPKG_CHAINLOAD_TOOLCHAIN_FILE "${SCRIPTS}/toolchains/linux.cmake")
@@ -174,7 +174,7 @@ function(vcpkg_internal_meson_generate_native_file_config _config) #https://meso
     string(APPEND NATIVE_${_config} "VCPKG_CRT_LINKAGE = '${VCPKG_CRT_LINKAGE}'\n")
 
     string(APPEND NATIVE_${_config} "[built-in options]\n")
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         if(VCPKG_CRT_LINKAGE STREQUAL "static")
             set(CRT mt)
         else()
@@ -234,7 +234,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
         message(FATAL_ERROR "Unsupported target architecture ${VCPKG_TARGET_ARCHITECTURE}!" )
     endif()
     set(CROSS "[binaries]\n")
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
         set(proglist MT)
     else()
         set(proglist AR RANLIB STRIP NM OBJDUMP DLLTOOL MT)
@@ -253,7 +253,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
             string(APPEND CROSS "${proglower} = '${VCPKG_DETECTED_CMAKE_${prog}_COMPILER}'\n")
         endif()
     endforeach()
-    if(VCPKG_DETECTED_CMAKE_LINKER AND VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_DETECTED_CMAKE_LINKER AND (VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
         string(APPEND CROSS "c_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
         string(APPEND CROSS "cpp_ld = '${VCPKG_DETECTED_CMAKE_LINKER}'\n")
     endif()
@@ -265,7 +265,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
 
     string(APPEND CROSS "[host_machine]\n")
     string(APPEND CROSS "endian = 'little'\n")
-    if(NOT VCPKG_CMAKE_SYSTEM_NAME)
+    if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_TARGET_IS_UWP)
         set(MESON_SYSTEM_NAME "windows")
     else()
         string(TOLOWER "${VCPKG_CMAKE_SYSTEM_NAME}" MESON_SYSTEM_NAME)
