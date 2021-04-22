@@ -7,8 +7,9 @@ vcpkg_from_github(
     SHA512 7632439f8cdc87d275a0524b87ea5cd19c3401c1b7bb7fcf673eef3e1ab36c0ec022d2dce050d07bc106af3166575882507a56ac829a4361329311484dc2c5c4
     HEAD_REF master
     PATCHES
-        CMakeLists.patch
-        fix-build-error.patch   
+        fix-dependency-libuv.patch
+        fix-build-error.patch
+        export-include-path.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" LWS_WITH_STATIC)

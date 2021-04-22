@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(libxml2 C)
-
+include(GNUInstallDirs)
 set(WITH_TRIO 0 CACHE BOOL "Add trio support")
 set(WITH_THREADS 1 CACHE BOOL "Add multithread support")
 set(WITH_THREAD_ALLOC 0 CACHE BOOL "Add per-thread memory")
@@ -170,6 +170,7 @@ set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix "\${prefix}")
 set(libdir ${prefix}/${CMAKE_INSTALL_LIBDIR})
 set(includedir ${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
+set(XML_INCLUDEDIR "-I\"\${includedir}\"")
 
 configure_file(libxml-2.0.pc.in libxml-2.0.pc @ONLY)
 install(FILES ${CMAKE_BINARY_DIR}/libxml-2.0.pc DESTINATION lib/pkgconfig)

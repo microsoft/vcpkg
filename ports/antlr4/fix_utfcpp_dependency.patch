@@ -1,0 +1,45 @@
+diff --git a/runtime/Cpp/runtime/CMakeLists.txt b/runtime/Cpp/runtime/CMakeLists.txt
+index a8503bb61..e7b01b7cb 100644
+--- a/runtime/CMakeLists.txt
++++ b/runtime/CMakeLists.txt
+@@ -1,17 +1,3 @@
+-
+-include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
+-
+-set(THIRDPARTY_DIR ${CMAKE_BINARY_DIR}/runtime/thirdparty)
+-set(UTFCPP_DIR ${THIRDPARTY_DIR}/utfcpp)
+-ExternalProject_Add(
+-  utfcpp
+-  GIT_REPOSITORY        "git://github.com/nemtrif/utfcpp"
+-  GIT_TAG               "v3.1.1"
+-  SOURCE_DIR            ${UTFCPP_DIR}
+-  UPDATE_DISCONNECTED   1
+-  CMAKE_ARGS            -DCMAKE_INSTALL_PREFIX=${UTFCPP_DIR}/install -Dgtest_force_shared_crt=ON
+-  TEST_AFTER_INSTALL    1
+-  STEP_TARGETS          build)
+ 
+ 
+ include_directories(
+@@ -23,8 +13,6 @@ include_directories(
+   ${PROJECT_SOURCE_DIR}/runtime/src/tree
+   ${PROJECT_SOURCE_DIR}/runtime/src/tree/pattern
+   ${PROJECT_SOURCE_DIR}/runtime/src/tree/xpath
+-  ${UTFCPP_DIR}/install/include/utf8cpp
+-  ${UTFCPP_DIR}/install/include/utf8cpp/utf8
+ )
+ 
+ 
+@@ -131,13 +119,6 @@ install(DIRECTORY "${PROJECT_SOURCE_DIR}/runtime/src/"
+         FILES_MATCHING PATTERN "*.h"
+         )
+ 
+-install(FILES "${UTFCPP_DIR}/source/utf8.h"
+-        DESTINATION "include/antlr4-runtime")
+-install(DIRECTORY "${UTFCPP_DIR}/source/utf8"
+-        DESTINATION "include/antlr4-runtime"
+-        COMPONENT dev
+-        FILES_MATCHING PATTERN "*.h"
+-        )
+ 
+ 
+ 
