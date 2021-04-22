@@ -16,21 +16,20 @@ else()
     set(URHO3D_LIB_TYPE "SHARED")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DURHO3D_LIB_TYPE=${URHO3D_LIB_TYPE}
         -DURHO3D_C++11=ON
         -DURHO3D_PCH=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/share/Urho3D/CMake/Modules)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/Urho3D/CMake/Modules)
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/Urho3D/CMake/Modules)
 endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/share/CMake/Modules)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/CMake/Modules)
+    vcpkg_cmake_config_fixup(CONFIG_PATH share/CMake/Modules)
 endif()
 vcpkg_copy_pdbs()
 
