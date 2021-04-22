@@ -1,5 +1,0 @@
-Source: urho3d
-Version: 2021-03-01
-Homepage: https://github.com/urho3d/Urho3D
-Description: Urho3D is a free lightweight, cross-platform 2D and 3D game engine implemented in C++ and released under the MIT license. Greatly inspired by OGRE and Horde3D.
-Supports: !(arm|uwp)
