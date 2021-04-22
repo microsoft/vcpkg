@@ -12,7 +12,7 @@ vcpkg_cmake_configure(
       -Dfrozen.benchmark=OFF
       -Dfrozen.coverage=OFF
       -Dfrozen.installation=ON
-      -Dfrozen.tests=ON
+      -Dfrozen.tests=OFF
 )
 vcpkg_cmake_install()
 
