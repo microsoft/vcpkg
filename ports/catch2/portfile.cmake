@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO catchorg/Catch2
-    REF fd9f5ac661f87335ecd70d39849c1d3a90f1c64d # v2.13.6
+    REF 5c88067bd339465513af4aec606bd2292f1b594a # v2.13.6
     SHA512 4fafd06006034cc02dddd22c381b5817549834dae0aff29ed598edd21a3c67f8ac61a77f51b06f3c59baa96a114ecb19c6df09126215bfc00bef94f8f77b810d
     HEAD_REF master
 )
