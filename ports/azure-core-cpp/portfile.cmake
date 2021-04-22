@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 fd882e37332fd5f35627b94c96cfae78178d9bc551cc9a27480f2ef08d496ea2379dc8d0e6a237e902ce063ae87ed6f9e8dc0b91e2e16bd8638e839f8d9e4c2a
 )
 
-vcpkg_check_features(
+vcpkg_check_features( 
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         curl BUILD_TRANSPORT_CURL
