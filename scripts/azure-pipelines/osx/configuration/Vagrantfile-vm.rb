@@ -1,5 +1,7 @@
 require 'json'
 
+configuration = JSON.parse(File.read("#{__dir__}/vagrant-configuration.json"))
+
 server = {
   :hostname => configuration['machine_name'],
   :box => configuration['box_name'],
@@ -18,6 +20,11 @@ Vagrant.configure('2') do |config|
   config.vm.box_version = server[:box_version]
   config.vm.hostname = server[:hostname]
   config.vm.synced_folder '.', '/vagrant', disabled: true
+
+  config.vm.provider 'parallels' do |prl|
+    prl.memory = server[:ram]
+    prl.cpus = server[:cpu]
+  end
 
   config.vm.provision 'shell',
     run: 'once',

@@ -1,6 +1,6 @@
 require 'json'
 
-configuration = JSON.parse(File.read("#{__dir__}/vagrant-vm-configuration.json"))
+configuration = JSON.parse(File.read("#{__dir__}/vagrant-box-configuration.json"))
 
 Vagrant.configure('2') do |config|
   config.vm.box = 'vcpkg/macos-ci-base'
