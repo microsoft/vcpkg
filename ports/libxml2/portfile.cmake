@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         RemoveIncludeFromWindowsRcFile.patch
         fix-version-define.patch
+        fix-pkgconfig.patch
 )
 
 # Official configure files

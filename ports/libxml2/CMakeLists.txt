@@ -497,6 +497,7 @@ set_target_properties(
 	PREFIX lib
 	VERSION ${PROJECT_VERSION}
 )
+set(xml_output_name libxml2)
 
 if(MSVC)
 	if(BUILD_SHARED_LIBS)
@@ -505,6 +506,7 @@ if(MSVC)
 			PROPERTIES
 			DEBUG_POSTFIX d
 		)
+        set(xml_output_name ${xml_output_name}d)
 	else()
 		set_target_properties(
 			LibXml2
@@ -514,6 +516,11 @@ if(MSVC)
 			RELEASE_POSTFIX s
 			RELWITHDEBINFO_POSTFIX s
 		)
+        if (CMAKE_BUILD_TYPE STREQUAL Debug)
+            set(xml_output_name ${xml_output_name}sd)
+        else()
+            set(xml_output_name ${xml_output_name}s)
+        endif()
 	endif()
 endif()
 
