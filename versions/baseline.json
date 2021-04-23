@@ -246,11 +246,11 @@
     },
     "azure-core-cpp": {
       "baseline": "1.0.0-beta.8",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-identity-cpp": {
       "baseline": "1.0.0-beta.5",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-iot-sdk-c": {
       "baseline": "2020-12-09",
@@ -266,19 +266,19 @@
     },
     "azure-security-keyvault-common-cpp": {
       "baseline": "4.0.0-beta.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-keys-cpp": {
       "baseline": "4.0.0-beta.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-blobs-cpp": {
       "baseline": "12.0.0-beta.10",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-common-cpp": {
       "baseline": "12.0.0-beta.10",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-cpp": {
       "baseline": "7.5.0",
@@ -286,11 +286,11 @@
     },
     "azure-storage-files-datalake-cpp": {
       "baseline": "12.0.0-beta.10",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-files-shares-cpp": {
       "baseline": "12.0.0-beta.10",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-uamqp-c": {
       "baseline": "2020-12-09",
