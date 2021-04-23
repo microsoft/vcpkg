@@ -4,14 +4,14 @@
   "description": "OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.",
   "homepage": "https://github.com/xianyi/OpenBLAS",
   "dependencies": [
-      {
-          "name": "pthread",
-          "platform": "!windows&!uwp"
-      }
+    {
+      "name": "pthread",
+      "platform": "!windows & !uwp"
+    }
   ],
   "features": {
-      "dynamic-arch": {
-          "description": "Support for multiple targets in a single library"
-      }
+    "dynamic-arch": {
+      "description": "Support for multiple targets in a single library"
+    }
   }
 }
