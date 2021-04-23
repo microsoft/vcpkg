@@ -452,6 +452,7 @@ endif()
 
 if(WIN32)
 	target_link_libraries(LibXml2 PRIVATE ws2_32)
+    target_compile_options(LibXml2 PRIVATE /wd4996)
 	set(WIN32_EXTRA_LIBADD "-lws2_32")
 endif()
 
