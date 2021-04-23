@@ -11,21 +11,32 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fix-makefiles.patch
         fix-linux-configure.patch
+        fix-dependency-libxml2.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
   if(VCPKG_CRT_LINKAGE STREQUAL dynamic)
       set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib")
       set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib")
-      set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib")
-      set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib")
+      if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+          set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib" )
+          set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2d.lib" )
+      else()
+          set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2s.lib" )
+          set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2sd.lib" )
+      endif()
       set(LIBRTTOPO_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/librttopo.lib")
       set(LIBRTTOPO_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/librttopo.lib")
   else()
       set(GEOS_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/geos_c.lib ${CURRENT_INSTALLED_DIR}/lib/geos.lib")
       set(GEOS_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/geos_cd.lib ${CURRENT_INSTALLED_DIR}/debug/lib/geosd.lib")
-      set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib")
-      set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib")
+      if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+          set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib" )
+          set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2d.lib ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib" )
+      else()
+          set(LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2s.lib ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib" )
+          set(LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2sd.lib  ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib" )
+      endif()
       set(LIBRTTOPO_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/librttopo.lib")
       set(LIBRTTOPO_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/librttopo.lib")
   endif()
@@ -65,6 +76,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
       SOURCE_PATH ${SOURCE_PATH}
       OPTIONS
           "CL_FLAGS=/DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
+          "LIBXML2_INC=${CURRENT_INSTALLED_DIR}/include/libxml2"
       OPTIONS_RELEASE
           ${OPTIONS_RELEASE}
       OPTIONS_DEBUG
