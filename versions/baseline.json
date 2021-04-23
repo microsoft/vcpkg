@@ -5509,7 +5509,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.4.8",
+      "baseline": "0.4.9",
       "port-version": 0
     },
     "septag-sx": {
