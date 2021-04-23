@@ -1,0 +1,7 @@
+To use the yara port with CMake:
+
+    find_package(jansson CONFIG REQUIRED)
+    target_link_libraries(<my_target> PRIVATE jansson::jansson)
+
+    find_library(YARA_LIBRARY libyara)
+    target_link_libraries(<my_target> PRIVATE ${YARA_LIBRARY})
