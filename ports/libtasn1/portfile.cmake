@@ -18,9 +18,12 @@ vcpkg_extract_source_archive_ex(
 set(VCPKG_C_FLAGS "-g -O2")
 set(VCPKG_CXX_FLAGS "-g -O2")
 
+set(ENV{GTKDOCIZE} true)
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        --disable-gtk-doc
 )
 
 vcpkg_install_make()
