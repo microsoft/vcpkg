@@ -21,12 +21,56 @@ foreach(lang C CXX)
   set(CMAKE_${lang}_COMPILER_TARGET "${CMAKE_SYSTEM_PROCESSOR}-windows-gnu" CACHE STRING "")
 endforeach()
 
-find_program(CMAKE_C_COMPILER "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-gcc")
-find_program(CMAKE_CXX_COMPILER "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-g++")
-find_program(CMAKE_RC_COMPILER "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-windres")
-if(NOT CMAKE_RC_COMPILER)
-    find_program(CMAKE_RC_COMPILER "windres")
+set(_MINGW_TARGET_TRIPLET ${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32)
+
+macro(_mingw_find_program variable prog_name)
+find_program(${variable} "${_MINGW_TARGET_TRIPLET}-${prog_name}")
+if(NOT ${variable})
+    find_program(${variable} "${prog_name}")
+    if(NOT ${prog_name}_UNPREFIXED)
+        set(${prog_name}_UNPREFIXED TRUE INTERNAL "")
+        message(WARNING
+            "${_MINGW_TARGET_TRIPLET}-${prog_name} not found, falling back to ${prog_name}.")
+    endif()
 endif()
+endmacro()
+
+_mingw_find_program(CMAKE_C_COMPILER "gcc")
+_mingw_find_program(CMAKE_CXX_COMPILER "g++")
+_mingw_find_program(CMAKE_RC_COMPILER "windres")
+if(NOT CMAKE_C_COMPILER)
+    message(FATAL_ERROR "Cannot find a compiler! Please check your PATH variable.")
+endif()
+
+macro(_mingw_check_target prog)
+get_filename_component(prog_name ${prog} NAME_WE)
+execute_process(COMMAND ${prog} -dumpmachine OUTPUT_VARIABLE _DUMPMACHINE)
+string(REPLACE "-" ";" _DUMPMACHINE ${_DUMPMACHINE})
+list(GET _DUMPMACHINE 0 _COMPILER_CPU)
+list(GET _DUMPMACHINE 1 _COMPILER_VENDOR)
+list(GET _DUMPMACHINE 2 _COMPILER_OS)
+if(NOT _COMPILER_OS MATCHES "(mingw32)|(windows)")
+    message(FATAL_ERROR "\
+Incorrect compiler OS. Expected mingw32 or windows, got ${_COMPILER_OS}
+Compiler path: ${prog}")
+endif()
+if(_COMPILER_VENDOR STREQUAL "pc") # Old MinGW toolchain
+    if(NOT ${prog_name}_OLD_MINGW)
+        set(${prog_name}_OLD_MINGW TRUE INTERNAL "")
+        message(WARNING "\
+Old MinGW toolchain detected. This is not guaranteed to work with vcpkg. Proceed with caution
+Compiler path: ${prog}")
+    endif()
+endif()
+if(NOT _COMPILER_CPU STREQUAL CMAKE_SYSTEM_PROCESSOR)
+    message(FATAL_ERROR "\
+Incorrect compiler CPU. Expected ${CMAKE_SYSTEM_PROCESSOR}, got ${_COMPILER_CPU}
+Compiler path: ${prog}")
+endif()
+endmacro()
+
+_mingw_check_target(${CMAKE_C_COMPILER})
+_mingw_check_target(${CMAKE_CXX_COMPILER})
 
 get_property( _CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE )
 if(NOT _CMAKE_IN_TRY_COMPILE)
