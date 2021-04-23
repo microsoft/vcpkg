@@ -11,6 +11,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${IDN2_VERSION}
+    PATCHES
+        disable-gtk-doc.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
