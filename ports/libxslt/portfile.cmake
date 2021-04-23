@@ -16,6 +16,7 @@ vcpkg_from_github(
         0001-Fix-makefile.patch
         0002-Fix-lzma.patch
         0003-Fix-configure.patch
+        0004-Fix-libxml2.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -41,7 +42,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
     endif()
     set(DEBUGMODE no)
     set(LIB_DIR ${CURRENT_INSTALLED_DIR}/lib)
-    set(INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include)
+    set(INCLUDE_DIR ${CURRENT_INSTALLED_DIR}/include/libxml2)
     set(INSTALL_DIR ${CURRENT_PACKAGES_DIR})
     file(TO_NATIVE_PATH "${LIB_DIR}" LIB_DIR)
     file(TO_NATIVE_PATH "${INCLUDE_DIR}" INCLUDE_DIR)
@@ -60,6 +61,14 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(TO_NATIVE_PATH "${INSTALL_DIR}" INSTALL_DIR)
     string(CONFIGURE "${CONFIGURE_COMMAND_TEMPLATE}" CONFIGURE_COMMAND_DBG)
     
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(LIBXML2_DBG_LIB libxml2d.lib)
+        set(LIBXML2_REL_LIB libxml2.lib)
+    else()
+        set(LIBXML2_DBG_LIB libxml2sd.lib)
+        set(LIBXML2_REL_LIB libxml2s.lib)
+    endif()
+    
     vcpkg_install_nmake(
         SOURCE_PATH ${SOURCE_PATH}
         PROJECT_SUBPATH win32
@@ -67,6 +76,10 @@ if (VCPKG_TARGET_IS_WINDOWS)
         PRERUN_SHELL_DEBUG cscript configure.js ${CONFIGURE_COMMAND_DBG}
         PRERUN_SHELL_RELEASE cscript configure.js ${CONFIGURE_COMMAND_REL}
         OPTIONS rebuild
+        OPTIONS_DEBUG
+            XML2_LIB_DBG=${LIBXML2_DBG_LIB}
+        OPTIONS_RELEASE
+            XML2_LIB_REL=${LIBXML2_REL_LIB}
     )
     
     vcpkg_copy_tools(TOOL_NAMES xsltproc AUTO_CLEAN)
@@ -104,7 +117,7 @@ else()
         OPTIONS
             --with-crypto
             --with-plugins
-            --with-libxml-include-prefix=${CURRENT_INSTALLED_DIR}/include
+            --with-libxml-include-prefix=${CURRENT_INSTALLED_DIR}/include/libxml2
             --with-python=${PYTHON2_DIR}
         OPTIONS_DEBUG
             --with-mem-debug

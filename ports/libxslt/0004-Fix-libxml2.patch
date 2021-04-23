@@ -1,0 +1,99 @@
+diff --git a/win32/Makefile.msvc b/win32/Makefile.msvc
+index f803a74..37fc3e6 100644
+--- a/win32/Makefile.msvc
++++ b/win32/Makefile.msvc
+@@ -63,8 +63,10 @@ LDFLAGS = $(LDFLAGS) /LIBPATH:$(BINDIR) /LIBPATH:$(LIBPREFIX)
+ LIBS = iconv.lib charset.lib ws2_32.lib
+ !if "$(DEBUG)" == "1"
+ LIBS = $(LIBS) zlibd.lib lzmad.lib
++XML2LIB = $(XML2_LIB_DBG)
+ !else
+ LIBS = $(LIBS) zlib.lib lzma.lib
++XML2LIB = $(XML2_LIB_REL)
+ !endif
+ 
+ # The archiver and its options.
+@@ -254,14 +256,14 @@ $(BINDIR)\$(XSLT_SO) : $(BINDIR) $(XSLT_OBJS) $(XSLT_INTDIR)\$(XSLT_DEF)
+ 	$(LD) $(LDFLAGS) /DLL \
+ 		/VERSION:$(LIBXSLT_MAJOR_VERSION).$(LIBXSLT_MINOR_VERSION) \
+ 		/IMPLIB:$(BINDIR)\$(XSLT_IMP) /OUT:$(BINDIR)\$(XSLT_SO) \
+-		$(XSLT_OBJS) $(LIBS) libxml2.lib
++		$(XSLT_OBJS) $(LIBS) $(XML2LIB)
+ 			@$(_VC_MANIFEST_EMBED_DLL)
+ 
+ #$(BINDIR)\$(XSLT_SO) : $(BINDIR) $(XSLT_OBJS) $(XSLT_INTDIR)\$(XSLT_DEF)
+ #	$(LD) $(LDFLAGS) /DLL /DEF:$(XSLT_INTDIR)\$(XSLT_DEF) \
+ #		/VERSION:$(LIBXSLT_MAJOR_VERSION).$(LIBXSLT_MINOR_VERSION) \
+ #		/IMPLIB:$(BINDIR)\$(XSLT_IMP) /OUT:$(BINDIR)\$(XSLT_SO) \
+-#		$(XSLT_OBJS) $(LIBS) libxml2.lib
++#		$(XSLT_OBJS) $(LIBS) $(XML2LIB)
+ 
+ # Creates the libxslt archive.
+ $(BINDIR)\$(XSLT_A) : $(BINDIR) $(XSLT_OBJS_A)
+@@ -300,14 +302,14 @@ $(BINDIR)\$(EXSLT_SO) : $(BINDIR) $(EXSLT_OBJS) $(EXSLT_INTDIR)\$(EXSLT_DEF) lib
+ 	$(LD) $(LDFLAGS) /DLL \
+ 		/VERSION:$(LIBEXSLT_MAJOR_VERSION).$(LIBEXSLT_MINOR_VERSION) \
+ 		/IMPLIB:$(BINDIR)\$(EXSLT_IMP) /OUT:$(BINDIR)\$(EXSLT_SO) \
+-		$(EXSLT_OBJS) $(XSLT_IMP) $(LIBS) libxml2.lib
++		$(EXSLT_OBJS) $(XSLT_IMP) $(LIBS) $(XML2LIB)
+ 			@$(_VC_MANIFEST_EMBED_DLL)
+ 
+ #$(BINDIR)\$(EXSLT_SO) : $(BINDIR) $(EXSLT_OBJS) $(EXSLT_INTDIR)\$(EXSLT_DEF) libxslt
+ #	$(LD) $(LDFLAGS) /DLL /DEF:$(EXSLT_INTDIR)\$(EXSLT_DEF) \
+ #		/VERSION:$(LIBEXSLT_MAJOR_VERSION).$(LIBEXSLT_MINOR_VERSION) \
+ #		/IMPLIB:$(BINDIR)\$(EXSLT_IMP) /OUT:$(BINDIR)\$(EXSLT_SO) \
+-#		$(EXSLT_OBJS) $(XSLT_IMP) $(LIBS) libxml2.lib
++#		$(EXSLT_OBJS) $(XSLT_IMP) $(LIBS) $(XML2LIB)
+ 
+ # Creates the libexslt archive.
+ $(BINDIR)\$(EXSLT_A) : $(BINDIR) $(EXSLT_OBJS_A) libxslta
+@@ -321,14 +323,14 @@ $(UTILS_INTDIR) :
+ # An implicit rule for xsltproc and friends.
+ APPLIBS = $(LIBS)
+ !if "$(STATIC)" == "1"
+-APPLIBS = $(LIBS) libxml2.lib
++APPLIBS = $(LIBS) $(XML2LIB)
+ {$(UTILS_SRCDIR)}.c{$(BINDIR)}.exe:
+ 	$(CC) /D "LIBXML_STATIC" /D "LIBXSLT_STATIC" /D "LIBEXSLT_STATIC" \
+ 		$(CFLAGS) /Fo$(UTILS_INTDIR)\ /c $< 
+ 	$(LD) $(LDFLAGS) /OUT:$@ $(XSLT_A) $(EXSLT_A) $(APPLIBS) $(UTILS_INTDIR)\$(<B).obj
+ 	@$(_VC_MANIFEST_EMBED_EXE)
+ !else
+-APPLIBS = $(LIBS) libxml2.lib
++APPLIBS = $(LIBS) $(XML2LIB)
+ {$(UTILS_SRCDIR)}.c{$(BINDIR)}.exe:
+ 	$(CC) $(CFLAGS) /Fo$(UTILS_INTDIR)\ /c $< 
+ 	$(LD) $(LDFLAGS) /OUT:$@ $(XSLT_IMP) $(EXSLT_IMP) $(APPLIBS) $(UTILS_INTDIR)\$(<B).obj
+diff --git a/win32/configure.js b/win32/configure.js
+index 11815e4..be28775 100644
+--- a/win32/configure.js
++++ b/win32/configure.js
+@@ -63,6 +63,8 @@ var buildLibPrefix = "";
+ var buildSoPrefix = "";
+ var buildInclude = ".";
+ var buildLib = ".";
++var withXml2LibRel = "";
++var withXml2LibDbg = "";
+ /* Local stuff */
+ var error = 0;
+ 
+@@ -205,6 +207,8 @@ function discoverVersion()
+ 	vf.WriteLine("INCPREFIX=" + buildIncPrefix);
+ 	vf.WriteLine("LIBPREFIX=" + buildLibPrefix);
+ 	vf.WriteLine("SOPREFIX=" + buildSoPrefix);
++	vf.WriteLine("XML2_LIB_DBG=" + withXml2LibDbg);
++	vf.WriteLine("XML2_LIB_REL=" + withXml2LibRel);
+ 	if (compiler == "msvc") {
+ 		vf.WriteLine("INCLUDE=$(INCLUDE);" + buildInclude);
+ 		vf.WriteLine("LIB=$(LIB);" + buildLib);
+@@ -379,6 +383,10 @@ for (i = 0; (i < WScript.Arguments.length) && (error == 0); i++) {
+ 			buildLib = arg.substring(opt.length + 1, arg.length);
+ 		else if (opt == "release")
+ 			useCvsVer = false;
++		else if (opt == "xml2_lib_dbg")
++			withXml2LibDbg = arg.substring(opt.length + 1, arg.length);
++		else if (opt == "xml2_lib_rel")
++			withXml2LibRel = arg.substring(opt.length + 1, arg.length);
+ 		else
+ 			error = 1;
+ 	} else if (i == 0) {
