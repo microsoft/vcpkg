@@ -15,7 +15,7 @@ $CudaFeatures = 'nvcc_11.3 cuobjdump_11.3 nvprune_11.3 cupti_11.3 memcheck_11.3 
  'visual_studio_integration_11.3 visual_profiler_11.3 visual_profiler_11.3 cublas_11.3 cublas_dev_11.3 ' + `
  'cudart_11.3 cufft_11.3 cufft_dev_11.3 curand_11.3 curand_dev_11.3 cusolver_11.3 cusolver_dev_11.3 ' + `
  'cusparse_11.3 cusparse_dev_11.3 npp_11.3 npp_dev_11.3 nvrtc_11.3 nvrtc_dev_11.3 nvml_dev_11.3 ' + `
- 'occupancy_calculator_11.3 '
+ 'occupancy_calculator_11.3 thrust_11.3 '
 
 $destination = "$env:ProgramFiles\NVIDIA GPU Computing Toolkit\CUDA\v11.3"
 
