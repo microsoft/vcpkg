@@ -1,0 +1,13 @@
+diff --git a/makefile.vc b/makefile.vc
+index 51c1e03..7e48111 100644
+--- a/makefile.vc
++++ b/makefile.vc
+@@ -92,7 +92,7 @@ LIBOBJ = src\gaiaaux\gg_sqlaux.obj src\gaiaaux\gg_utf8.obj \
+ 
+ SPATIALITE_DLL = spatialite$(VERSION).dll
+ 
+-CFLAGS = /nologo -I.\src\headers -I.\src\topology \
++CFLAGS = /nologo -I.\src\headers -I.\src\topology -I$(LIBXML2_INC)\
+ 	-I. $(OPTFLAGS)
+ 
+ default:	all
