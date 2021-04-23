@@ -76,15 +76,14 @@ else()
     list(APPEND OPTIONS "-DPX_OUTPUT_ARCH=x86")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # NVIDIA Gameworks release structure is generally something like <compiler>/<configuration>/[artifact]
 # It would be nice to patch this out, but that directory structure is hardcoded over many cmake files.
