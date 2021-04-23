@@ -1,13 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 8a9d1c6..0d5fb3f 100644
+index 8c66d85..f2d89cb 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -12,7 +12,7 @@ feature_summary(WHAT REQUIRED_PACKAGES_NOT_FOUND FATAL_ON_MISSING_REQUIRED_PACKA
- set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
- 
- set(REQUIRED_QT_VERSION 5.11.0)
--find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core)
-+find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core X11Extras)
- include(KDEInstallDirs)
+@@ -17,8 +17,9 @@ include(KDEInstallDirs)
  include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
  include(KDECMakeSettings)
+ 
+-if (NOT APPLE)
++if (UNIX AND NOT APPLE)
+     find_package(X11)
++    find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED COMPONENTS X11Extras)
+ endif()
+ 
+ set(HAVE_X11 ${X11_FOUND})
