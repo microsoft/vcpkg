@@ -1,11 +1,9 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF ecad770071eb776208a46977347e6d2410d4f50e
-  SHA512 1de0dc3f4842c68f5c12addf100996f7176ffb50dcd89a0b57446ba996d9199e31531f64c32eedbc2ea6a449459573811444dd35f1a50ece3880f58717c795ab
+  REF 00d578e327c22638ea12e73c4efb74c798c08de5
+  SHA512 ef2d46fab670759e9c22d0233b60192bfe47669e29d2ec1e020a77dfaf09894a93160c11de070bc39d86109dd2a37ca7172fbb081809b1ea2783207a6e385b2c
   HEAD_REF master
-  PATCHES
-    0001-rename-_castu32_f32-to-gemm_castu32_f32.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -30,7 +28,7 @@ if("weights" IN_LIST FEATURES)
   vcpkg_download_distfile(YOLOV4-TINY_WEIGHTS
     URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.weights"
     FILENAME "darknet-cache/yolov4-tiny.weights"
-    SHA512 7d4d9fe150f9fe3ea7d2310f1445fe983b31fbf06d301c70ecfe00e8559e6f1bf940198c2dd55db772238f23ea0092fb6553558e5414f3ee173b8b28e53c5b54
+    SHA512 804ca2ab8e3699d31c95bf773d22f901f186703487c7945f30dc2dbb808094793362cb6f5da5cd0b4b83f820c8565a3cba22fafa069ee6ca2a925677137d95f4
   )
   vcpkg_download_distfile(YOLOV4_WEIGHTS
     URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.weights"
@@ -73,7 +71,7 @@ if("weights-train" IN_LIST FEATURES)
   vcpkg_download_distfile(YOLOV4-TINY-CONV-29
     URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.conv.29"
     FILENAME "darknet-cache/yolov4-tiny.conv.29"
-    SHA512 d145deb80aea3d422752e784323d89919281ed7a37d15f939f5b680ff62e502072a30e074c34a09026669126d360c7d6817ea1afa53cfa53c56bd1e16333a602
+    SHA512 318e47f4bdf43b7f4eff8f3669bc9ba66cd7bd8ffb31df5bc1978682c85fec8e63a8349958022fd933cc676cbf5241953f2181bf4d1789f7cf9d371e012e3e49
   )
   vcpkg_download_distfile(YOLOV4-CONV-137
     URLS "https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v3_optimal/yolov4.conv.137"

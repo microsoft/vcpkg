@@ -187,7 +187,7 @@ function(vcpkg_build_make)
 
             if (_bc_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
-                        COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
+                        COMMAND ${MAKE_BASH} ${NO_PARALLEL_MAKE_CMD_LINE}
                         WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                         LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
@@ -234,8 +234,14 @@ function(vcpkg_build_make)
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALL_PREFIX "${CURRENT_INSTALLED_DIR}")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
         file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
-        file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}/" "${CURRENT_PACKAGES_DIR}")
+        file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}" "${CURRENT_PACKAGES_DIR}")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
+    endif()
+
+    # Remove libtool files since they contain absolute paths and are not necessary. 
+    file(GLOB_RECURSE LIBTOOL_FILES "${CURRENT_PACKAGES_DIR}/**/*.la")
+    if(LIBTOOL_FILES)
+        file(REMOVE ${LIBTOOL_FILES})
     endif()
 
     if (CMAKE_HOST_WIN32)

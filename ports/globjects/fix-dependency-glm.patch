@@ -1,0 +1,13 @@
+diff --git a/source/globjects/CMakeLists.txt b/source/globjects/CMakeLists.txt
+index 71e92d8..b8b4408 100644
+--- a/source/globjects/CMakeLists.txt
++++ b/source/globjects/CMakeLists.txt
+@@ -359,7 +359,7 @@ target_link_libraries(${target}
+ 
+     PUBLIC
+     ${DEFAULT_LIBRARIES}
+-    glm
++    glm::glm
+     glbinding::glbinding
+     glbinding::glbinding-aux
+ 

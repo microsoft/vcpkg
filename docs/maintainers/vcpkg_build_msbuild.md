@@ -1,5 +1,7 @@
 # vcpkg_build_msbuild
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_build_msbuild.md).
+
 Build a msbuild-based project. Deprecated in favor of `vcpkg_install_msbuild()`.
 
 ## Usage
@@ -61,4 +63,4 @@ Additional options passed to msbuild for Debug builds. These are in addition to 
 * [chakracore](https://github.com/Microsoft/vcpkg/blob/master/ports/chakracore/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_build_msbuild.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_build_msbuild.cmake)
+[scripts/cmake/vcpkg\_build\_msbuild.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_build_msbuild.cmake)

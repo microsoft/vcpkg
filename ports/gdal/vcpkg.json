@@ -1,0 +1,45 @@
+{
+  "name": "gdal",
+  "version-semver": "3.2.2",
+  "description": "The Geographic Data Abstraction Library for reading and writing geospatial raster and vector data",
+  "homepage": "https://gdal.org",
+  "supports": "!arm",
+  "dependencies": [
+    "cfitsio",
+    "curl",
+    "expat",
+    "geos",
+    "giflib",
+    "hdf5",
+    {
+      "name": "json-c",
+      "platform": "!windows"
+    },
+    "libgeotiff",
+    "liblzma",
+    "libpng",
+    "libpq",
+    "libwebp",
+    "libxml2",
+    "netcdf-c",
+    "openjpeg",
+    "proj4",
+    "sqlite3",
+    "zlib",
+    "zstd"
+  ],
+  "features": {
+    "libspatialite": {
+      "description": "Create or update SpatiaLite databases using libspatialite",
+      "dependencies": [
+        "libspatialite"
+      ]
+    },
+    "mysql-libmariadb": {
+      "description": "Add mysql support using libmariadb",
+      "dependencies": [
+        "libmariadb"
+      ]
+    }
+  }
+}

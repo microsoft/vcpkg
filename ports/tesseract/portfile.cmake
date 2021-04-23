@@ -42,15 +42,15 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 file(READ ${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake TESSERACT_CONFIG)
 string(REPLACE "find_package(Leptonica REQUIRED)"
                "find_package(Leptonica REQUIRED)
-find_package(OpenSSL REQUIRED)
-find_package(ZLIB REQUIRED)
-find_package(BZip2 REQUIRED)
-find_package(LibXml2 REQUIRED)
-find_package(zstd REQUIRED)
-find_package(LibLZMA REQUIRED)" TESSERACT_CONFIG "${TESSERACT_CONFIG}")
+find_package(LibArchive REQUIRED)" TESSERACT_CONFIG "${TESSERACT_CONFIG}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/tesseract/TesseractConfig.cmake "${TESSERACT_CONFIG}")
 
 vcpkg_copy_tools(TOOL_NAMES tesseract AUTO_CLEAN)
+
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/tesseract.pc" "-ltesseract41" "-ltesseract41d")
+endif()
+vcpkg_fixup_pkgconfig()
 
 if("training-tools" IN_LIST FEATURES)
     list(APPEND TRAINING_TOOLS
