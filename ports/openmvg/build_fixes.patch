@@ -462,7 +462,7 @@ index cd800b0..20e9c8e 100644
 -extern "C" {
 -#include "nonFree/sift/vl/sift.h"
 -}
-+#include <sift.h>
++#include <vlfeat/sift.h>
  
  namespace openMVG {
  namespace features {
