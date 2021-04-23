@@ -11,8 +11,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${IDN2_VERSION}
-    PATCHES
-        disable-gtk-doc.patch
+    #    PATCHES
+    #    disable-gtk-doc.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)
@@ -50,12 +50,14 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 else()
+    set(ENV{GTKDOCIZE} true)
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
         COPY_SOURCE
         OPTIONS
             --with-libiconv-prefix=${CURRENT_INSTALLED_DIR}
+            --disable-gtk-doc
     )
     
     vcpkg_install_make()
