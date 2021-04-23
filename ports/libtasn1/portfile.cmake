@@ -10,8 +10,6 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${VERSION}
-    PATCHES
-        disable-git-doc.patch
 )
 
 # restore the default ac_cv_prog_cc_g flags, otherwise it fails to compile
