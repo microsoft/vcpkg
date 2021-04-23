@@ -177,7 +177,7 @@ if(EMSCRIPTEN)
     add_custom_target(build_libs ALL
             COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
             COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
-            COMMAND "${MAKE}" make build_libs
+            COMMAND "${MAKE}" make -j ${VCPKG_CONCURRENCY} build_libs
             VERBATIM
             WORKING_DIRECTORY "${BUILDDIR}"
             DEPENDS "${BUILDDIR}/Makefile"
@@ -217,7 +217,7 @@ else()
     add_custom_target(build_libs ALL
             COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
             COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
-            COMMAND "${MAKE}" build_libs
+            COMMAND "${MAKE}" -j ${VCPKG_CONCURRENCY} build_libs
             VERBATIM
             WORKING_DIRECTORY "${BUILDDIR}"
             DEPENDS "${BUILDDIR}/Makefile"

@@ -1,7 +1,8 @@
 # CONTROL files
 
 **CONTROL files are retained for backwards compatibility with earlier versions of vcpkg;
-all new features are added only to [vcpkg.json](manifests.md), and we recommend using vcpkg.json for any newly authored port.**
+all new features are added only to [vcpkg.json manifest files](manifest-files.md), and we recommend using vcpkg.json for any newly authored port.
+Use `./vcpkg format-manifest ports/<portname>/CONTROL` to convert an existing CONTROL file to a vcpkg.json file.**
 
 The `CONTROL` file contains metadata about the port.  The syntax is based on [the Debian `control` format][debian] although we only support the subset of fields documented here.
 
