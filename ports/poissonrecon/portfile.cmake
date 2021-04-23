@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-external-libs.patch
-        intel-isl.patch
+        disable-gcc5-checks.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -18,7 +18,15 @@ vcpkg_configure_cmake(
         -DBUILD_TOOLS=OFF
 )
 
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/poissonrecon/PoissonRecon-config.cmake" [=[
+include(CMakeFindDependencyMacro)
+find_dependency(PNG)
+find_dependency(JPEG)
+include("${CMAKE_CURRENT_LIST_DIR}/PoissonReconTargets.cmake")
+]=])
+
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")
 
