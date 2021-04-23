@@ -73,9 +73,14 @@ macro(find_dependency_win)
   set(WEBP_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/webpd.lib" )
 
   # Setup libxml2 libraries + include path
-  set(XML2_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include" )
-  set(XML2_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib" )
-  set(XML2_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2.lib" )
+  set(XML2_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include/libxml2" )
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    set(XML2_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2.lib" )
+    set(XML2_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2d.lib" )
+  else()
+    set(XML2_LIBRARY_REL "${CURRENT_INSTALLED_DIR}/lib/libxml2s.lib" )
+    set(XML2_LIBRARY_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/libxml2sd.lib" )
+  endif()
 
   # Setup liblzma libraries + include path
   set(LZMA_INCLUDE_DIR "${CURRENT_INSTALLED_DIR}/include" )
