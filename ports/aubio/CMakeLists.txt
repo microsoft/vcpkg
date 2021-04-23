@@ -26,7 +26,6 @@ if(WITH_DEPENDENCIES)
     )
 endif()
 
-set(CMAKE_DEBUG_POSTFIX d)
 set(TOOLS_INSTALLDIR "bin" CACHE STRING "Target directory for installed tools")
 
 if(WITH_DEPENDENCIES)
