@@ -70,13 +70,52 @@ Installing anyways."
 $Installables.Brew | ForEach-Object {
     $installable = $_
     if ($null -eq (Get-Member -InputObject $installable -Name 'Kind')) {
-        brew reinstall $installable.Name
+        brew install $installable.Name
     } else {
         switch ($installable.Kind) {
-            'cask' { brew reinstall --cask $installable.Name }
+            'cask' { brew install --cask $installable.Name }
             default {
                 Write-Error "Invalid kind: $_. Expected either empty, or 'cask'."
             }
-         }
-     }
+        }
+    }
+}
+brew upgrade
+
+$installedVagrantPlugins = @{}
+vagrant plugin list --machine-readable | ForEach-Object {
+    $timestamp, $target, $type, $data = $_ -split ','
+    switch ($type) {
+        # these are not important
+        'ui' { }
+        'plugin-version-constraint' { }
+        'plugin-name' {
+            $installedVagrantPlugins[$data] = $Null
+        }
+        'plugin-version' {
+            $version = $data -replace '%!\(VAGRANT_COMMA\)',','
+            if ($version -notmatch '^(.*), global') {
+                Write-Error "Invalid version string for plugin ${target}: $version"
+                throw
+            }
+            $installedVagrantPlugins[$target] = $Matches[1]
+        }
+        default {
+            Write-Warning "Unknown plugin list member type $type for plugin $target"
+        }
+    }
+}
+$Installables.VagrantPlugins | ForEach-Object {
+    if (-not $installedVagrantPlugins.Contains($_.Name)) {
+        Write-Host "$($_.Name) not installed; installing now"
+    } elseif ($installedVagrantPlugins[$_.Name] -ne $_.Version) {
+        Write-Host "$($_.Name) already installed but with the incorrect version
+    installed version: '$($installedVagrantPlugins[$_.Name])'
+    required version:  '$($_.Version)'"
+    } else {
+        Write-Host "$($_.Name) already installed and at the correct version ($($_.Version))"
+        return
+    }
+
+    vagrant plugin install $_.Name --plugin-version $_.Version
 }

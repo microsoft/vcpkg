@@ -16,9 +16,12 @@
     {
       "Name": "osxfuse",
       "Kind": "cask"
-    },
+    }
+  ],
+  "VagrantPlugins": [
     {
-      "Name": "sshfs"
+      "Name": "vagrant-parallels",
+      "Version": "2.2.1"
     }
   ]
 }
