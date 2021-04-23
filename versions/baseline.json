@@ -3693,7 +3693,7 @@
       "port-version": 0
     },
     "llfio": {
-      "baseline": "2.0-a74411ed",
+      "baseline": "2.0-20210420",
       "port-version": 0
     },
     "llgl": {
@@ -4201,7 +4201,7 @@
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "0.0.0-24d92c71",
+      "baseline": "0.0.0-7cb75d4e",
       "port-version": 0
     },
     "netcdf-c": {
@@ -4605,7 +4605,7 @@
       "port-version": 1
     },
     "outcome": {
-      "baseline": "2.2.0-b9e664fb",
+      "baseline": "2.2.0-release",
       "port-version": 0
     },
     "p-ranav-csv": {
