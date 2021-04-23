@@ -9,10 +9,9 @@
     "liblzma",
     "zlib"
   ],
-  "features":
-  {
+  "features": {
     "tools": {
-        "description": "Build programs"
+      "description": "Build programs"
     }
   }
 }
