@@ -4,7 +4,7 @@ project(libxmlmm CXX)
 set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
 
-find_package(LibXml2 REQUIRED)
+find_package(libxml2 CONFIG REQUIRED)
 
 set(HEADERS_LIBXMLMM
 	libxmlmm/Attribute.h
@@ -38,8 +38,7 @@ set(SOURCES_LIBXMLMM
 )
 
 add_library(libxmlmm ${SOURCES_LIBXMLMM})
-include_directories(${LIBXML2_INCLUDE_DIR})
-target_link_libraries (libxmlmm ${LIBXML2_LIBRARIES})
+target_link_libraries (libxmlmm LibXml2::LibXml2)
 
 set_target_properties(libxmlmm PROPERTIES
     CXX_STANDARD 17
