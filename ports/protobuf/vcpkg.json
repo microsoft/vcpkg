@@ -1,0 +1,20 @@
+{
+  "name": "protobuf",
+  "version-semver": "3.15.8",
+  "description": "Protocol Buffers - Google's data interchange format",
+  "homepage": "https://github.com/protocolbuffers/protobuf",
+  "dependencies": [
+    {
+      "name": "protobuf",
+      "host": true
+    }
+  ],
+  "features": {
+    "zlib": {
+      "description": "ZLib based features like Gzip streams",
+      "dependencies": [
+        "zlib"
+      ]
+    }
+  }
+}

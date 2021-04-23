@@ -1,5 +1,5 @@
-set(TF_VERSION 2.3.1)
-set(TF_VERSION_SHORT 2.3)
+set(TF_VERSION 2.4.1)
+set(TF_VERSION_SHORT 2.4)
 
 vcpkg_find_acquire_program(BAZEL)
 get_filename_component(BAZEL_DIR "${BAZEL}" DIRECTORY)
@@ -110,26 +110,29 @@ else()
 endif()
 
 foreach(BUILD_TYPE dbg rel)
-	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks 
+	# prefer repeated source extraction here for each build type over extracting once above the loop and copying because users reported issues with copying symlinks
 	set(STATIC_ONLY_PATCHES)
+	set(WINDOWS_ONLY_PATCHES)
 	set(LINUX_ONLY_PATCHES)
 	if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-		set(STATIC_ONLY_PATCHES ../tensorflow-common/change-macros-for-static-lib.patch)  # there is no static build option - change macros via patch and link library manually at the end
+		set(STATIC_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/change-macros-for-static-lib.patch")  # there is no static build option - change macros via patch and link library manually at the end
+	endif()
+	if(VCPKG_TARGET_IS_WINDOWS)
+		set(WINDOWS_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-windows-build.patch")
 	endif()
 	if(VCPKG_TARGET_IS_LINUX)
-		set(LINUX_ONLY_PATCHES ../tensorflow-common/fix-linux-build.patch)
+		set(LINUX_ONLY_PATCHES "${CMAKE_CURRENT_LIST_DIR}/fix-linux-build.patch")
 	endif()
 	vcpkg_from_github(
 		OUT_SOURCE_PATH SOURCE_PATH
 		REPO tensorflow/tensorflow
 		REF "v${TF_VERSION}"
-		SHA512 e497ef4564f50abf9f918be4522cf702f4cf945cb1ebf83af1386ac4ddc7373b3ba70c7f803f8ca06faf2c6b5396e60b1e0e9b97bfbd667e733b08b6e6d70ef0
+		SHA512 be8273f464c1c1c392f3ab0190dbba36d56a0edcc7991c1a86f16604c859056d3188737d11c3b41ec7918e1cf46d13814c50c00be8f459dde9f0fb618740ee3c
 		HEAD_REF master
 		PATCHES
-			../tensorflow-common/fix-build-error.patch # Fix namespace error
-			../tensorflow-common/fix-dbg-build-errors.patch # Fix no return statement
-			../tensorflow-common/fix-more-build-errors.patch # Fix no return statement
+			"${CMAKE_CURRENT_LIST_DIR}/fix-build-error.patch" # Fix namespace error
 			${STATIC_ONLY_PATCHES}
+			${WINDOWS_ONLY_PATCHES}
 			${LINUX_ONLY_PATCHES}
 	)
 

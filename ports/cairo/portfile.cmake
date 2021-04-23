@@ -15,7 +15,23 @@ vcpkg_extract_source_archive_ex(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH}/src)
-file(COPY ${CURRENT_PORT_DIR}/cairo-features.h DESTINATION ${SOURCE_PATH}/src)
+
+if("freetype" IN_LIST FEATURES)
+    set(CAIRO_HAS_FT_FONT TRUE)
+endif()
+
+if("fontconfig" IN_LIST FEATURES)
+    set(CAIRO_HAS_FC_FONT TRUE)
+endif()
+
+if("quartz" IN_LIST FEATURES)
+    set(CAIRO_HAS_QUARTZ TRUE)
+    set(CAIRO_HAS_QUARTZ_FONT TRUE)
+    set(CAIRO_HAS_QUARTZ_IMAGE_SURFACE TRUE)
+    set(CAIRO_HAS_QUARTZ_SURFACE TRUE)
+endif()
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/cairo-features.h.in" "${SOURCE_PATH}/src/cairo-features.h")
 
 if ("x11" IN_LIST FEATURES)
     if (VCPKG_TARGET_IS_WINDOWS)
@@ -31,8 +47,12 @@ if("gobject" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    x11 WITH_X11
-    gobject WITH_GOBJECT
+    FEATURES
+        x11 WITH_X11
+        gobject WITH_GOBJECT
+        freetype WITH_FREETYPE
+        fontconfig WITH_FONTCONFIG
+        quartz WITH_QUARTZ
 )
 
 vcpkg_configure_cmake(

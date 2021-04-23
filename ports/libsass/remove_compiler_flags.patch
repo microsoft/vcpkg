@@ -1,0 +1,24 @@
+diff --git a/GNUmakefile.am b/GNUmakefile.am
+index 06a1d0c1e..6e7a15485 100644
+--- a/GNUmakefile.am
++++ b/GNUmakefile.am
+@@ -1,6 +1,6 @@
+ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4 -I script
+ 
+-AM_COPT = -Wall -O2
++AM_COPT =
+ AM_COVLDFLAGS =
+ 
+ if ENABLE_COVERAGE
+diff --git a/src/GNUmakefile.am b/src/GNUmakefile.am
+index 9b0e6a99b..00404a017 100644
+--- a/src/GNUmakefile.am
++++ b/src/GNUmakefile.am
+@@ -1,6 +1,6 @@
+ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4 -I script
+ 
+-AM_COPT = -Wall -O2
++AM_COPT =
+ AM_COVLDFLAGS =
+ 
+ if ENABLE_COVERAGE

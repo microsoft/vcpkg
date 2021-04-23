@@ -1,5 +1,7 @@
 # Binary Caching
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/binarycaching.md).**
+
 Binary caching is vcpkg's method for reusing package builds between projects and between machines. Think of it as a "package restore accelerator" that gives you the same results as though you built from source. Each build is packaged independently, so changing one library only requires rebuilding consuming libraries.
 
 If your CI provider offers a native "caching" function, we recommend using both methods for the most performant results.
@@ -83,6 +85,66 @@ If you are using custom agents with a non-Windows OS, you will need to install M
 More information about Azure DevOps Artifacts' NuGet support is available in the [Azure DevOps Artifacts Documentation][devops-nuget].
 
 [devops-nuget]: https://docs.microsoft.com/en-us/azure/devops/artifacts/get-started-nuget?view=azure-devops
+
+### Azure Blob Storage (experimental)
+
+> Note: This is an experimental feature and may change or be removed at any time
+
+Vcpkg supports interfacing with Azure Blob Storage via the `x-azblob` source type.
+
+```
+x-azblob,<baseuri>,<sas>[,<rw>]
+```
+
+First, you need to create an Azure Storage Account as well as a container ([Quick Start Documentation](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-quickstart-blobs-portal)].
+
+Next, you will need to create a Shared Access Signature, which can be done from the storage account under Settings -> Shared access signature. This SAS will need:
+- Allowed services: Blob
+- Allowed resource types: Object
+- Allowed permissions: Read, Create (if using `write` or `readwrite`)
+
+The blob endpoint plus the container must be passed as the `<baseuri>` and the generated SAS without the `?` prefix must be passed as the `<sas>`.
+
+Example:
+```
+x-azblob,https://<storagename>.blob.core.windows.net/<containername>,sv=2019-12-12&ss=b&srt=o&sp=rcx&se=2020-12-31T06:20:36Z&st=2020-12-30T22:20:36Z&spr=https&sig=abcd,readwrite
+```
+
+Vcpkg will attempt to avoid revealing the SAS during normal operations, however:
+1. It will be printed in full if `--debug` is passed
+2. It will be passed as a command line parameter to subprocesses, such as `curl.exe`
+
+### Google Cloud Storage (experimental)
+
+> Note: This is an experimental feature and may change or be removed at any time
+
+Vcpkg supports interfacing with Google Cloud Storage (GCS) via the `x-gcs` source type.
+
+```
+x-gcs,<prefix>[,<rw>]
+```
+
+First, you need to create an Google Cloud Platform Account as well as a storage bucket ([GCS Quick Start](https://cloud.google.com/storage/docs/quickstart-gsutil)].
+
+As part of this quickstart you would have configured the `gsutil` command-line tool to authenticate with Google Cloud.
+Vcpkg will use this command-line tool, make sure it is in your search path for executables.
+
+Example 1 (using a bucket without a common prefix for the objects):
+
+```
+x-gcs,gs://<bucket-name>/,readwrite
+```
+
+Example 2 (using a bucket and a prefix for the objects):
+
+```
+x-gcs,gs://<bucket-name>/my-vcpkg-cache/maybe/with/many/slashes/,readwrite
+x-gcs,gs://<bucket-name>/my-vcpkg-cache/maybe/with`,commas/too!/,readwrite
+```
+
+Commas (`,`) are valid as part of a object prefix in GCS, just remember to escape them in the vcpkg configuration, as
+shown in the previous example. Note that GCS does not have folders (some of the GCS tools simulate folders), it is not
+necessary to create or otherwise manipulate the prefix used by your vcpkg cache.
 
 ## Configuration
 
@@ -168,6 +230,10 @@ or
                 commit="${GITHUB_SHA}"/>
 ```
 if the appropriate environment variables are defined and non-empty. This is specifically used to associate packages in GitHub Packages with the _building_ project and not intended to associate with the original package sources.
+
+#### NuGet's cache
+
+NuGet's cache is not used by default. To use it for every nuget-based source, set the [environment variable](config-environment.md) `VCPKG_USE_NUGET_CACHE` to `true` (case-insensitive) or `1`.
 
 ## Implementation Notes (internal details subject to change without notice)
 

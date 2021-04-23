@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF boost-1.75.0
     SHA512 823e3af47881c98f864c70686a3a2f6c9b7d5e6bf0ae61f2983f6c2ba26a70aaa888b683a74ef504ec7f5f479609731e35fad3518f1731954e01e7d67636e5d4
     HEAD_REF master
+    PATCHES
+        fix-warning-c4834.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)

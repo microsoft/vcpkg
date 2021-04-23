@@ -34,9 +34,6 @@ configure_file("build/cmake/cairomm.rc.cmake" "cairomm.rc" @ONLY)
 #build
 set(cairomm_cc
     cairomm/context.cc
-    cairomm/context_surface_quartz.cc
-    cairomm/context_surface_win32.cc
-    cairomm/context_surface_xlib.cc
     cairomm/device.cc
     cairomm/exception.cc
     cairomm/fontface.cc
@@ -45,16 +42,11 @@ set(cairomm_cc
     cairomm/path.cc
     cairomm/pattern.cc
     cairomm/private.cc
-    cairomm/quartz_font.cc
-    cairomm/quartz_surface.cc
     cairomm/region.cc
     cairomm/scaledfont.cc
     cairomm/script.cc
     cairomm/script_surface.cc
-    cairomm/surface.cc
-    cairomm/win32_font.cc
-    cairomm/win32_surface.cc
-    cairomm/xlib_surface.cc)
+    cairomm/surface.cc)
 
 set(cairomm_public_h
     cairomm/cairomm.h
@@ -67,18 +59,13 @@ set(cairomm_public_h
     cairomm/matrix.h
     cairomm/path.h
     cairomm/pattern.h
-    cairomm/quartz_font.h
-    cairomm/quartz_surface.h
     cairomm/refptr.h
     cairomm/region.h
     cairomm/scaledfont.h
     cairomm/script.h
     cairomm/script_surface.h
     cairomm/surface.h
-    cairomm/types.h
-    cairomm/win32_font.h
-    cairomm/win32_surface.h
-    cairomm/xlib_surface.h)
+    cairomm/types.h)
 
 set(cairomm_private_h
     cairomm/context_private.h
@@ -86,6 +73,34 @@ set(cairomm_private_h
 
 set(cairomm_rc
     ${CMAKE_BINARY_DIR}/cairomm.rc)
+
+if(WITH_QUARTZ)
+    list(APPEND cairomm_cc
+        cairomm/context_surface_quartz.cc
+        cairomm/quartz_font.cc
+        cairomm/quartz_surface.cc)
+    list(APPEND cairomm_public_h
+        cairomm/xlib_surface.h)
+endif()
+
+if(WITH_X11)
+    list(APPEND cairomm_cc
+        cairomm/xlib_surface.cc
+        cairomm/context_surface_xlib.cc)
+    list(APPEND cairomm_public_h
+        cairomm/quartz_font.h
+        cairomm/quartz_surface.h)
+endif()
+
+if(WIN32)
+    list(APPEND cairomm_cc
+        cairomm/context_surface_win32.cc
+        cairomm/win32_font.cc
+        cairomm/win32_surface.cc)
+    list(APPEND cairomm_public_h
+        cairomm/win32_font.h
+        cairomm/win32_surface.h)
+endif()
 
 add_library(cairomm-1.0 ${cairomm_cc} ${cairomm_rc})
 target_link_libraries(cairomm-1.0 ${CAIRO_LIBRARY} ${SIGC++_LIBRARY} Freetype::Freetype)

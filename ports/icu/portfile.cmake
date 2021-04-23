@@ -1,6 +1,6 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
 
-set(ICU_VERSION_MAJOR 67)
+set(ICU_VERSION_MAJOR 69)
 set(ICU_VERSION_MINOR 1)
 set(VERSION "${ICU_VERSION_MAJOR}.${ICU_VERSION_MINOR}")
 set(VERSION2 "${ICU_VERSION_MAJOR}_${ICU_VERSION_MINOR}")
@@ -10,7 +10,7 @@ vcpkg_download_distfile(
     ARCHIVE
     URLS "https://github.com/unicode-org/icu/releases/download/release-${VERSION3}/icu4c-${VERSION2}-src.tgz"
     FILENAME "icu4c-${VERSION2}-src.tgz"
-    SHA512 4779f1ce1ca7976f6fad6768853ea8c540da54d11509e3b6cfd864a04b5f2db1c3d4b546387f91ad02fb90804525bc37d2543173f0d705d6ca11dc6f2b7640a8
+    SHA512 d4aeb781715144ea6e3c6b98df5bbe0490bfa3175221a1d667f3e6851b7bd4a638fa4a37d4a921ccb31f02b5d15a6dded9464d98051964a86f7b1cde0ff0aab7 
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -20,8 +20,6 @@ vcpkg_extract_source_archive_ex(
         ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix_parallel_build_on_windows.patch
         ${CMAKE_CURRENT_LIST_DIR}/fix-extra.patch
-        ${CMAKE_CURRENT_LIST_DIR}/mingw-remove-bsymbolic.patch
-        ${CMAKE_CURRENT_LIST_DIR}/mingw-remove-version-from-link-flags.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -168,6 +166,138 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
         NO_PARALLEL_COMMAND ${BASH} --noprofile --norc -c "make"
         WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}"
         LOGNAME "make-build-${RELEASE_TRIPLET}")
+
+    # remove this block if https://unicode-org.atlassian.net/browse/ICU-21458
+    # is resolved and use the configure script instead
+    if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+        if(DEFINED CMAKE_INSTALL_NAME_DIR)
+            set(ID_PREFIX "${CMAKE_INSTALL_NAME_DIR}")
+        else()
+            set(ID_PREFIX "@rpath")
+        endif()
+
+        # install_name_tool may be missing if cross-compiling
+        find_program(
+            INSTALL_NAME_TOOL
+            install_name_tool
+            HINTS /usr/bin /Library/Developer/CommandLineTools/usr/bin/
+            DOC "Absolute path of install_name_tool"
+            REQUIRED
+        )
+
+        message(STATUS "setting rpath prefix for macOS dynamic libraries")
+
+        # add ID_PREFIX to libicudata
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -id "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
+            "libicudata.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicui18n
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -id "${ID_PREFIX}/libicui18n.${ICU_VERSION_MAJOR}.dylib"
+            "libicui18n.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicui18n dependencies
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicui18n.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicui18n.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicuio
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -id "${ID_PREFIX}/libicuio.${ICU_VERSION_MAJOR}.dylib"
+            "libicuio.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicuio dependencies
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicuio.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicuio.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicui18n.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicui18n.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicuio.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicutu
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -id "${ID_PREFIX}/libicutu.${ICU_VERSION_MAJOR}.dylib"
+            "libicutu.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicutu dependencies
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicui18n.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicui18n.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicutu.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicuuc.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicutu.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicutu.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicuuc
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -id "${ID_PREFIX}/libicuuc.${ICU_VERSION_MAJOR}.dylib"
+            "libicuuc.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+
+        # add ID_PREFIX to libicuuc dependencies
+        vcpkg_execute_build_process(
+            COMMAND ${INSTALL_NAME_TOOL} -change "libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "${ID_PREFIX}/libicudata.${ICU_VERSION_MAJOR}.dylib"
+                                                "libicuuc.${VERSION}.dylib"
+            WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${RELEASE_TRIPLET}/lib"
+            LOGNAME "make-build-fix-rpath-${RELEASE_TRIPLET}"
+        )
+    endif()
 
     vcpkg_execute_build_process(
         COMMAND ${BASH} --noprofile --norc -c "make install"
