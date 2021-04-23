@@ -19,6 +19,15 @@ vcpkg_extract_source_archive_ex(
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/cmake DESTINATION ${SOURCE_PATH}/build)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        x11 WITH_X11
+        gobject WITH_GOBJECT
+        freetype WITH_FREETYPE
+        fontconfig WITH_FONTCONFIG
+        quartz WITH_QUARTZ
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

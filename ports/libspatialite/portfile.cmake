@@ -105,7 +105,6 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
       SOURCE_PATH ${SOURCE_PATH}
       AUTOCONFIG
       OPTIONS
-          "CFLAGS=-DACCEPT_USE_OF_DEPRECATED_PROJ_API_H"
           "LIBS=-lpthread -ldl -lm -l${STDLIB}"
           "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
           "--enable-rttopo"

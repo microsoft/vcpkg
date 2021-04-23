@@ -1,0 +1,12 @@
+{
+  "name": "azure-identity-cpp",
+  "version-string": "1.0.0-beta.5",
+  "description": [
+    "Microsoft Azure Identity SDK for C++",
+    "This library provides common authentication-related abstractions for Azure SDK."
+  ],
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/identity/azure-identity",
+  "dependencies": [
+    "azure-core-cpp"
+  ]
+}

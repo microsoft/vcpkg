@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 70e1043f..d8cb8b10 100644
+--- a/CMakeLists.txt	
++++ b/CMakeLists.txt
+@@ -328,7 +328,7 @@    foreach(EXPORT_SYMBOL ${WAVPACK_EXPORT_SYMBOLS})
+         list(APPEND FILE_CONTENTS "_${EXPORT_SYMBOL}\n")
+     endforeach()
+     file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/libwavpack.sym ${FILE_CONTENTS})
+-    target_link_libraries(wavpack PRIVATE "-Wl,-exported_symbols_list,'${CMAKE_CURRENT_BINARY_DIR}/libwavpack.sym'")
++    set_target_properties(wavpack PROPERTIES LINK_FLAGS "-Wl,-exported_symbols_list,'${CMAKE_CURRENT_BINARY_DIR}/libwavpack.sym'")
+ else()
+     set(CONFTTEST_CONTENTS "VERS_1 {\n    global: sym\;\n\n};\n\nVERS_2 {\n    global: sym;\n} VERS_1\;")
+     file(WRITE ${PROJECT_BINARY_DIR}/${CMAKE_FILES_DIRECTORY}/conftest.map "${CONFTTEST_CONTENTS}")
+@@ -340,7 +340,7 @@            list(APPEND FILE_CONTENTS "${EXPORT_SYMBOL}\;\n")
+         endforeach()
+         list(APPEND FILE_CONTENTS "local: *\; }\;")
+         file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/libwavpack.map ${FILE_CONTENTS})
+-        target_link_libraries(wavpack PRIVATE "-Wl,--version-script='${CMAKE_CURRENT_BINARY_DIR}/libwavpack.map';-Wl,-no-undefined")
++        set_target_properties(wavpack PROPERTIES LINK_FLAGS "-Wl,--version-script='${CMAKE_CURRENT_BINARY_DIR}/libwavpack.map';-Wl,-no-undefined")
+     endif()
+ endif()
+ 

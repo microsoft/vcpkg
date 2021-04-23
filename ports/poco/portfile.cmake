@@ -12,6 +12,7 @@ vcpkg_from_github(
         # Add the support of arm64-windows
         arm64_pcre.patch
         fix_dependency.patch
+        fix-feature-sqlite3.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/Foundation/src/pcre.h")

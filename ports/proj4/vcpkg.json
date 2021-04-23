@@ -1,6 +1,7 @@
 {
   "name": "proj4",
   "version-string": "7.2.1",
+  "port-version": 2,
   "description": "PROJ.4 library for cartographic projections",
   "homepage": "https://github.com/OSGeo/PROJ",
   "dependencies": [
@@ -19,10 +20,10 @@
       "dependencies": [
         {
           "name": "sqlite3",
+          "host": true,
           "features": [
             "tool"
-          ],
-          "platform": "!uwp & !arm"
+          ]
         }
       ]
     },

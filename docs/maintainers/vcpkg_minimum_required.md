@@ -1,6 +1,6 @@
 # vcpkg_minimum_required
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_minimum_required.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_minimum_required.md).
 
 Asserts that the version of the vcpkg program being used to build a port is later than the supplied date, inclusive.
 
