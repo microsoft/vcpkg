@@ -1,8 +1,0 @@
-Source: openblas
-Version: 0.3.13
-Homepage: https://github.com/xianyi/OpenBLAS
-Build-Depends: pthread (!windows&!uwp)
-Description: OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.
-
-Feature: dynamic-arch
-Description: Support for multiple targets in a single library 
