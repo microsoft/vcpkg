@@ -1981,7 +1981,7 @@
       "port-version": 1
     },
     "flashlight-cpu": {
-      "baseline": "20210111",
+      "baseline": "0.3",
       "port-version": 0
     },
     "flashlight-cuda": {
