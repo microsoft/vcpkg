@@ -6,8 +6,8 @@
       "port-version": 1
     },
     {
-      "git-tree": "caaf47ce1a16993d39ef91b5823d9c3c1865b762",
-      "version-semver": "12.0.0-beta.10",
+      "git-tree": "2601572d72191d63ad6c6f093f00857b71b9ef96",
+      "version-string": "12.0.0-beta.10",
       "port-version": 0
     },
     {
