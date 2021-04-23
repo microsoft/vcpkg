@@ -10,6 +10,8 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH 
     ARCHIVE ${ARCHIVE} 
     REF ${VERSION}
+    PATCHES
+        disable-git-doc.patch
 )
 
 # restore the default ac_cv_prog_cc_g flags, otherwise it fails to compile
@@ -19,9 +21,6 @@ set(VCPKG_CXX_FLAGS "-g -O2")
 vcpkg_configure_make(
     AUTOCONFIG 
     SOURCE_PATH ${SOURCE_PATH} 
-    OPTIONS 
-        --disable-doc 
-        --disable-gtk-doc-html
 )
 
 vcpkg_install_make()
