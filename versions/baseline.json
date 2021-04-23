@@ -1781,8 +1781,8 @@
       "port-version": 0
     },
     "ecos": {
-      "baseline": "2.0.7",
-      "port-version": 0
+      "baseline": "2.0.8",
+      "port-version": 1
     },
     "ecsutil": {
       "baseline": "1.0.7.15",
