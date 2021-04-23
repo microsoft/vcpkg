@@ -6,7 +6,6 @@ vcpkg_fail_port_install(ON_ARCH "arm")
 # NOTE: update the version and checksum for new GDAL release
 set(GDAL_VERSION_STR "3.2.2")
 set(GDAL_VERSION_PKG "322")
-set(GDAL_VERSION_LIB "204")
 set(GDAL_PACKAGE_SUM "ce319e06c78bd076228b3710c127cdbd37c7d6fb23966b47df7287eaffe86a05d4ddcc78494c8bfcaf4db98a71f2ed50a01fb3ca2fe1c10cf0d2e812683c8e53")
 
 vcpkg_download_distfile(ARCHIVE
@@ -40,7 +39,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
   endif()
 
   list(APPEND NMAKE_OPTIONS
-      # VERSION=${GDAL_VERSION_LIB}
       DATADIR=${NATIVE_DATA_DIR}
       HTMLDIR=${NATIVE_HTML_DIR}
       GEOS_DIR=${GEOS_INCLUDE_DIR}
