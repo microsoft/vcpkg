@@ -1,14 +1,14 @@
 set(VERSION 4.16.0)
 
 vcpkg_download_distfile(ARCHIVE
-  URLS "https://ftp.gnu.org/gnu/libtasn1/libtasn1-${VERSION}.tar.gz"
-  FILENAME "libtasn1-${VERSION}.tar.gz"
-  SHA512 b356249535d5d592f9b59de39d21e26dd0f3f00ea47c9cef292cdd878042ea41ecbb7c8d2f02ac5839f5210092fe92a25acd343260ddf644887b031b167c2e71
+    URLS "https://ftp.gnu.org/gnu/libtasn1/libtasn1-${VERSION}.tar.gz"
+    FILENAME "libtasn1-${VERSION}.tar.gz"
+    SHA512 b356249535d5d592f9b59de39d21e26dd0f3f00ea47c9cef292cdd878042ea41ecbb7c8d2f02ac5839f5210092fe92a25acd343260ddf644887b031b167c2e71
 )
 
 vcpkg_extract_source_archive_ex(
-    OUT_SOURCE_PATH SOURCE_PATH 
-    ARCHIVE ${ARCHIVE} 
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
     REF ${VERSION}
     PATCHES
         disable-git-doc.patch
@@ -19,8 +19,8 @@ set(VCPKG_C_FLAGS "-g -O2")
 set(VCPKG_CXX_FLAGS "-g -O2")
 
 vcpkg_configure_make(
-    AUTOCONFIG 
-    SOURCE_PATH ${SOURCE_PATH} 
+    AUTOCONFIG
+    SOURCE_PATH ${SOURCE_PATH}
 )
 
 vcpkg_install_make()
