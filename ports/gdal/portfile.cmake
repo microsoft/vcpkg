@@ -26,7 +26,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES ${GDAL_PATCHES}
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   set(NATIVE_DATA_DIR "${CURRENT_PACKAGES_DIR}/share/gdal")
   set(NATIVE_HTML_DIR "${CURRENT_PACKAGES_DIR}/share/gdal/html")
 
@@ -177,7 +177,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
 else()
     # See https://github.com/microsoft/vcpkg/issues/16990
     vcpkg_execute_required_process(
-        COMMAND touch config.rpath
+        COMMAND "${CMAKE_COMMAND}" -E touch config.rpath
         WORKING_DIRECTORY ${SOURCE_PATH}
         LOGNAME touch-${TARGET_TRIPLET}
     )
@@ -201,10 +201,10 @@ else()
         list(APPEND CONF_OPTS --with-spatialite=no)
     endif()
 
-    if(VCPKG_TARGET_IS_LINUX)
-        set(DEPENDLIBS "-lstdc++")
-    else()
+    if(VCPKG_TARGET_IS_OSX)
         set(DEPENDLIBS "-lc++ -liconv -llber -lldap -framework CoreFoundation -framework Security")
+    else()
+        set(DEPENDLIBS "-lstdc++")
     endif()
 
     list(APPEND OPTIONS_RELEASE
@@ -213,6 +213,11 @@ else()
     list(APPEND OPTIONS_DEBUG
         "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto -lgeos_cd -lgeosd -llzmad -lszip_debug"
     )
+
+    if(VCPKG_HOST_IS_WINDOWS)
+        string(REPLACE " " "\\ " OPTIONS_RELEASE "${OPTIONS_RELEASE}")
+        string(REPLACE " " "\\ " OPTIONS_DEBUG "${OPTIONS_DEBUG}")
+    endif()
 
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
