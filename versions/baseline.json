@@ -4657,8 +4657,8 @@
       "port-version": 3
     },
     "parmetis": {
-      "baseline": "4.0.3-4",
-      "port-version": 0
+      "baseline": "4.0.3",
+      "port-version": 4
     },
     "parquet": {
       "baseline": "0",
