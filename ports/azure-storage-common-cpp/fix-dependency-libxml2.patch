@@ -1,0 +1,36 @@
+diff --git a/sdk/storage/azure-storage-common/CMakeLists.txt b/sdk/storage/azure-storage-common/CMakeLists.txt
+index 285ae93..697de72 100644
+--- a/sdk/storage/azure-storage-common/CMakeLists.txt
++++ b/sdk/storage/azure-storage-common/CMakeLists.txt
+@@ -27,7 +27,7 @@ if(NOT AZ_ALL_LIBRARIES)
+ endif()
+ 
+ find_package(Threads REQUIRED)
+-find_package(LibXml2 REQUIRED)
++find_package(libxml2 CONFIG REQUIRED)
+ 
+ set(
+   AZURE_STORAGE_COMMON_HEADER
+@@ -79,8 +79,7 @@ target_include_directories(
+ )
+ 
+ target_link_libraries(azure-storage-common PUBLIC Azure::azure-core)
+-target_include_directories(azure-storage-common PRIVATE ${LIBXML2_INCLUDE_DIRS})
+-target_link_libraries(azure-storage-common PRIVATE ${LIBXML2_LIBRARIES})
++target_link_libraries(azure-storage-common PRIVATE LibXml2::LibXml2)
+ 
+ if(WIN32)
+     target_link_libraries(azure-storage-common PRIVATE bcrypt)
+diff --git a/sdk/storage/azure-storage-common/vcpkg/Config.cmake.in b/sdk/storage/azure-storage-common/vcpkg/Config.cmake.in
+index bfc3563..6e05f1a 100644
+--- a/sdk/storage/azure-storage-common/vcpkg/Config.cmake.in
++++ b/sdk/storage/azure-storage-common/vcpkg/Config.cmake.in
+@@ -4,7 +4,7 @@
+ @PACKAGE_INIT@
+ 
+ include(CMakeFindDependencyMacro)
+-find_dependency(LibXml2)
++find_dependency(libxml2 CONFIG)
+ find_dependency(Threads)
+ find_dependency(azure-core-cpp)
+ 
