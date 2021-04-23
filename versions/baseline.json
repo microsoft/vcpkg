@@ -6026,7 +6026,7 @@
     },
     "tinygltf": {
       "baseline": "2020-07-28",
-      "port-version": 0
+      "port-version": 1
     },
     "tinynpy": {
       "baseline": "1.0.0-3",
