@@ -4760,6 +4760,10 @@
       "baseline": "0.38.4",
       "port-version": 2
     },
+    "pkgconf": {
+      "baseline": "1.7.4",
+      "port-version": 0
+    },
     "platform-folders": {
       "baseline": "4.0.0",
       "port-version": 6
