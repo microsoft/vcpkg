@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF 054ff69350dfea1876f388e7cf05f19d5d76bc12 # v1.33.1
-    SHA512 d81c26e996f8a4386a432fc98ba0982c9a15e8cb470eb544f82dc81df5a8f79401343d209f3aa75598fbb8b99cc05dcd2a0e616967d5e0464bed4a4464d7fdc1
+    REF 3e53dbe8213137d2c731ecd4d88ebd2948941d75  # v1.36.4
+    SHA512 c207720a66dae97727e94f2587d6be8e4cb479997cc0815a15f5465ff94f6d0b410523e3fed2dd31385cc9d50ab52dfe39b6095257d6ce9a71184ada6ef0ff7e
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -19,6 +19,7 @@ vcpkg_from_github(
         00011-fix-csharp_plugin.patch
         snprintf.patch
         00012-fix-use-cxx17.patch
+        00013-build-upbdefs.patch
 )
 
 if(TARGET_TRIPLET STREQUAL HOST_TRIPLET)
@@ -37,8 +38,10 @@ else()
     set(cares_CARES_PROVIDER "package")
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    absl-sync gRPC_ABSL_SYNC_ENABLE
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        absl-sync gRPC_ABSL_SYNC_ENABLE
 )
 
 vcpkg_configure_cmake(
