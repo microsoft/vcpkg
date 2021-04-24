@@ -1,0 +1,39 @@
+From 0e0a9772878dd0097b226b9880fef857fd80e994 Mon Sep 17 00:00:00 2001
+From: Orgad Shaneh <orgad.shaneh@audiocodes.com>
+Date: Wed, 11 Nov 2020 11:41:38 +0200
+Subject: [PATCH] Make dll.h compatible with -fvisibility=hidden
+
+Originally from Qt Creator.
+---
+ include/yaml-cpp/dll.h | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/include/yaml-cpp/dll.h b/include/yaml-cpp/dll.h
+index a32c06b2..897f1533 100644
+--- a/include/yaml-cpp/dll.h
++++ b/include/yaml-cpp/dll.h
+@@ -18,13 +18,22 @@
+ 
+ #ifdef YAML_CPP_DLL      // Using or Building YAML-CPP DLL (definition defined
+                          // manually)
++
++#if defined(_WIN32) || defined(WIN32)
++#  define YAML_CPP_API_IMPORT __declspec(dllimport)
++#  define YAML_CPP_API_EXPORT __declspec(dllexport)
++#else
++#  define YAML_CPP_API_IMPORT __attribute__((visibility("default")))
++#  define YAML_CPP_API_EXPORT __attribute__((visibility("default")))
++#endif
++
+ #ifdef yaml_cpp_EXPORTS  // Building YAML-CPP DLL (definition created by CMake
+                          // or defined manually)
+ //	#pragma message( "Defining YAML_CPP_API for DLL export" )
+-#define YAML_CPP_API __declspec(dllexport)
++#define YAML_CPP_API YAML_CPP_API_EXPORT
+ #else  // yaml_cpp_EXPORTS
+ //	#pragma message( "Defining YAML_CPP_API for DLL import" )
+-#define YAML_CPP_API __declspec(dllimport)
++#define YAML_CPP_API YAML_CPP_API_IMPORT
+ #endif  // yaml_cpp_EXPORTS
+ #else   // YAML_CPP_DLL
+ #define YAML_CPP_API
