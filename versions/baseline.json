@@ -137,7 +137,7 @@
       "port-version": 0
     },
     "armadillo": {
-      "baseline": "10.2.0",
+      "baseline": "10.4.0",
       "port-version": 0
     },
     "arrayfire": {
@@ -246,11 +246,11 @@
     },
     "azure-core-cpp": {
       "baseline": "1.0.0-beta.8",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-identity-cpp": {
       "baseline": "1.0.0-beta.5",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-iot-sdk-c": {
       "baseline": "2020-12-09",
@@ -266,19 +266,19 @@
     },
     "azure-security-keyvault-common-cpp": {
       "baseline": "4.0.0-beta.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-security-keyvault-keys-cpp": {
       "baseline": "4.0.0-beta.1",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-blobs-cpp": {
       "baseline": "12.0.0-beta.10",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-common-cpp": {
       "baseline": "12.0.0-beta.10",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-cpp": {
       "baseline": "7.5.0",
@@ -286,11 +286,11 @@
     },
     "azure-storage-files-datalake-cpp": {
       "baseline": "12.0.0-beta.10",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-storage-files-shares-cpp": {
       "baseline": "12.0.0-beta.10",
-      "port-version": 0
+      "port-version": 1
     },
     "azure-uamqp-c": {
       "baseline": "2020-12-09",
@@ -1517,7 +1517,7 @@
       "port-version": 0
     },
     "cub": {
-      "baseline": "1.8.0-1",
+      "baseline": "1.12.0",
       "port-version": 0
     },
     "cuda": {
@@ -1633,7 +1633,7 @@
       "port-version": 0
     },
     "directx-headers": {
-      "baseline": "1.0.1",
+      "baseline": "1.4.9",
       "port-version": 0
     },
     "directxmath": {
@@ -1781,8 +1781,8 @@
       "port-version": 0
     },
     "ecos": {
-      "baseline": "2.0.7",
-      "port-version": 0
+      "baseline": "2.0.8",
+      "port-version": 1
     },
     "ecsutil": {
       "baseline": "1.0.7.15",
@@ -1981,7 +1981,7 @@
       "port-version": 1
     },
     "flashlight-cpu": {
-      "baseline": "20210111",
+      "baseline": "0.3",
       "port-version": 0
     },
     "flashlight-cuda": {
@@ -2357,8 +2357,8 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.33.1",
-      "port-version": 3
+      "baseline": "1.36.4",
+      "port-version": 0
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -2369,7 +2369,7 @@
       "port-version": 0
     },
     "gsl-lite": {
-      "baseline": "0.38.0",
+      "baseline": "0.38.1",
       "port-version": 0
     },
     "gsoap": {
@@ -2434,7 +2434,7 @@
     },
     "hdf5": {
       "baseline": "1.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "healpix": {
       "baseline": "1.12.10",
@@ -2741,7 +2741,7 @@
       "port-version": 2
     },
     "jsoncons": {
-      "baseline": "0.163.1",
+      "baseline": "0.163.3",
       "port-version": 0
     },
     "jsoncpp": {
@@ -3526,7 +3526,7 @@
     },
     "libtasn1": {
       "baseline": "4.16.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libtcod": {
       "baseline": "1.16.6",
@@ -3634,7 +3634,7 @@
     },
     "libxml2": {
       "baseline": "2.9.10",
-      "port-version": 5
+      "port-version": 6
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -3693,7 +3693,7 @@
       "port-version": 0
     },
     "llfio": {
-      "baseline": "2.0-a74411ed",
+      "baseline": "2.0-20210420",
       "port-version": 0
     },
     "llgl": {
@@ -3850,7 +3850,7 @@
     },
     "matplotplusplus": {
       "baseline": "2021-04-11",
-      "port-version": 0
+      "port-version": 1
     },
     "matroska": {
       "baseline": "1.6.2",
@@ -4201,7 +4201,7 @@
       "port-version": 0
     },
     "ned14-internal-quickcpplib": {
-      "baseline": "0.0.0-24d92c71",
+      "baseline": "0.0.0-7cb75d4e",
       "port-version": 0
     },
     "netcdf-c": {
@@ -4522,7 +4522,7 @@
     },
     "openssl": {
       "baseline": "1.1.1j",
-      "port-version": 1
+      "port-version": 2
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -4605,7 +4605,7 @@
       "port-version": 1
     },
     "outcome": {
-      "baseline": "2.2.0-b9e664fb",
+      "baseline": "2.2.0-release",
       "port-version": 0
     },
     "p-ranav-csv": {
@@ -4853,7 +4853,7 @@
       "port-version": 0
     },
     "portaudio": {
-      "baseline": "2020-02-20",
+      "baseline": "19.7",
       "port-version": 0
     },
     "portmidi": {
@@ -4934,7 +4934,7 @@
     },
     "pthreads": {
       "baseline": "3.0.0",
-      "port-version": 8
+      "port-version": 9
     },
     "pugixml": {
       "baseline": "1.11.4",
@@ -5509,7 +5509,7 @@
       "port-version": 0
     },
     "sentry-native": {
-      "baseline": "0.4.8",
+      "baseline": "0.4.9",
       "port-version": 0
     },
     "septag-sx": {
@@ -5746,7 +5746,7 @@
     },
     "spirv-cross": {
       "baseline": "2021-01-15",
-      "port-version": 0
+      "port-version": 1
     },
     "spirv-headers": {
       "baseline": "2021-03-25",
@@ -5889,7 +5889,7 @@
       "port-version": 0
     },
     "taskflow": {
-      "baseline": "3.0.0",
+      "baseline": "3.1.0",
       "port-version": 0
     },
     "tbb": {
@@ -6026,7 +6026,7 @@
     },
     "tinygltf": {
       "baseline": "2020-07-28",
-      "port-version": 0
+      "port-version": 1
     },
     "tinynpy": {
       "baseline": "1.0.0-3",
@@ -6197,7 +6197,7 @@
       "port-version": 0
     },
     "upb": {
-      "baseline": "2020-08-19",
+      "baseline": "2020-12-19",
       "port-version": 0
     },
     "urdfdom": {
