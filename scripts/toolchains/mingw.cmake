@@ -59,7 +59,7 @@ find_program(${variable} "${_MINGW_TARGET_TRIPLET}-${prog_name}")
 if(NOT ${variable})
     find_program(${variable} "${prog_name}")
     if(NOT ${prog_name}_UNPREFIXED)
-        set(${prog_name}_UNPREFIXED TRUE INTERNAL "")
+        set(${prog_name}_UNPREFIXED TRUE CACHE INTERNAL "")
         z_vcpkg_message(WARNING
             "${_MINGW_TARGET_TRIPLET}-${prog_name} not found, falling back to ${prog_name}.")
     endif()
@@ -87,7 +87,7 @@ Compiler path: ${prog}")
 endif()
 if(_COMPILER_VENDOR STREQUAL "pc") # Old MinGW toolchain
     if(NOT ${prog_name}_OLD_MINGW)
-        set(${prog_name}_OLD_MINGW TRUE INTERNAL "")
+        set(${prog_name}_OLD_MINGW TRUE CACHE INTERNAL "")
         z_vcpkg_message(WARNING "\
 Old MinGW toolchain detected. This is not guaranteed to work with vcpkg. Proceed with caution
 Compiler path: ${prog}")
