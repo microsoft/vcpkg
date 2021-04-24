@@ -1,7 +1,6 @@
 {
   "name": "grpc",
-  "version-string": "1.33.1",
-  "port-version": 3,
+  "version-semver": "1.36.4",
   "description": "An RPC library and framework",
   "homepage": "https://github.com/grpc/grpc",
   "dependencies": [

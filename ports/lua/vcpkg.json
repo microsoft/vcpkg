@@ -1,0 +1,15 @@
+{
+  "name": "lua",
+  "version-string": "5.4.3",
+  "port-version": 1,
+  "description": "A powerful, fast, lightweight, embeddable scripting language",
+  "homepage": "https://www.lua.org",
+  "features": {
+    "cpp": {
+      "description": "Builds Lua for C++ linkage"
+    },
+    "tools": {
+      "description": "Builds Lua compiler and interpreter"
+    }
+  }
+}
