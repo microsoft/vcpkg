@@ -87,7 +87,10 @@ else()
     file(TO_NATIVE_PATH ENV_PATH "${COMPILER_ROOT}:$ENV{PATH}")
 endif()
 set(ENV{ANDROID_DEV} "${CMAKE_SYSROOT}/usr")
-set(ENV{CC} "${CMAKE_C_COMPILER}")
+
+if(NOT IOS)
+    set(ENV{CC} "${CMAKE_C_COMPILER}")
+endif()
 
 message("ENV{ANDROID_DEV}=$ENV{ANDROID_DEV}")
 
@@ -146,7 +149,20 @@ else()
     set(PATH_VAR ":$ENV{PATH}")
 endif()
 
-if(EMSCRIPTEN)
+if(IOS)
+    add_custom_command(
+            OUTPUT "${BUILDDIR}/Makefile"
+            COMMAND "${PERL}" Configure
+            ${SHARED}
+            ${DISABLES}
+            ${PLATFORM}
+            "--prefix=${CMAKE_INSTALL_PREFIX}"
+            "--openssldir=/etc/ssl"
+            COMMAND "${CMAKE_COMMAND}" "-DDIR=${BUILDDIR}" -P "${CMAKE_CURRENT_LIST_DIR}/remove-deps.cmake"
+            VERBATIM
+            WORKING_DIRECTORY "${BUILDDIR}"
+    )
+elseif(EMSCRIPTEN)
     add_custom_command(
             OUTPUT "${BUILDDIR}/Makefile"
             COMMAND ${ENV_COMMAND} CC=${CMAKE_C_COMPILER}
@@ -173,16 +189,6 @@ if(EMSCRIPTEN)
             VERBATIM
             WORKING_DIRECTORY "${BUILDDIR}"
     )
-
-    add_custom_target(build_libs ALL
-            COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
-            COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
-            COMMAND "${MAKE}" make build_libs
-            VERBATIM
-            WORKING_DIRECTORY "${BUILDDIR}"
-            DEPENDS "${BUILDDIR}/Makefile"
-            BYPRODUCTS ${INSTALL_LIBS}
-            )
 else()
     add_custom_command(
         OUTPUT "${BUILDDIR}/Makefile"
@@ -213,16 +219,28 @@ else()
         VERBATIM
         WORKING_DIRECTORY "${BUILDDIR}"
     )
+endif()
 
+if(EMSCRIPTEN)
     add_custom_target(build_libs ALL
             COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
             COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
-            COMMAND "${MAKE}" build_libs
+            COMMAND "${MAKE}" make build_libs
             VERBATIM
             WORKING_DIRECTORY "${BUILDDIR}"
             DEPENDS "${BUILDDIR}/Makefile"
             BYPRODUCTS ${INSTALL_LIBS}
             )
+else()
+    add_custom_target(build_libs ALL
+        COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
+        COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
+        COMMAND "${MAKE}" build_libs
+        VERBATIM
+        WORKING_DIRECTORY "${BUILDDIR}"
+        DEPENDS "${BUILDDIR}/Makefile"
+        BYPRODUCTS ${INSTALL_LIBS}
+    )
 endif()
 
 if((CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "iOS") AND BUILD_SHARED_LIBS)
