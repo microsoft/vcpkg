@@ -147,6 +147,11 @@ else()
     list(APPEND CORE_OPTIONS -no-sql-mysql)
 endif()
 
+if ("vulkan" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS --vulkan=yes)
+else()
+    list(APPEND CORE_OPTIONS --vulkan=no)
+endif()
 
 find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)

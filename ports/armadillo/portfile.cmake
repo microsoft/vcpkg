@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arma
-    FILENAME "armadillo-10.2.0.tar.xz"
-    SHA512 c5d6f4bac0acba63fbd7681653d521249fd303ffbbc5b18df71500eb111514c1d09db600a580091d6a23c83748c109c30938bbcd80a3a0b2c25e2fdea932f2cd
+    FILENAME "armadillo-10.4.0.tar.xz"
+    SHA512 72cf8a493e86c51c4c875076d0a9dd7c21fbfbd639064fa7a96daf4a5df02b36c93440bbae471f30d368547c6856c91fef97ce8ed2ec0526b0060588b71cd28a
     PATCHES
         remove_custom_modules.patch
         fix-CMakePath.patch

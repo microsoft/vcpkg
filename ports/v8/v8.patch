@@ -1,42 +1,33 @@
-diff --git a/gni/v8.gni b/gni/v8.gni
-index 413b0d3810..8c17353120 100644
---- a/gni/v8.gni
-+++ b/gni/v8.gni
-@@ -2,7 +2,6 @@
- # Use of this source code is governed by a BSD-style license that can be
- # found in the LICENSE file.
+diff --git a/BUILD.gn b/BUILD.gn
+index a9ab6783fa..bc8455ce64 100644
+--- a/BUILD.gn
++++ b/BUILD.gn
+@@ -5202,6 +5202,7 @@ if (is_component_build) {
 
--import("//build/config/gclient_args.gni")
- import("//build/config/sanitizers/sanitizers.gni")
- import("//build/config/v8_target_cpu.gni")
- import("split_static_library.gni")
-@@ -67,7 +66,7 @@ declare_args() {
-   # Add fuzzilli fuzzer support.
-   v8_fuzzilli = false
+     public_deps = [
+       ":v8_base",
++      ":v8_initializers",
+       ":v8_snapshot",
+     ]
 
--  v8_enable_google_benchmark = checkout_google_benchmark
-+  v8_enable_google_benchmark = false
- }
-
- if (v8_use_external_startup_data == "") {
-diff --git a/include/v8-cppgc.h b/include/v8-cppgc.h
-index e202293bcf..317bac7f17 100644
---- a/include/v8-cppgc.h
-+++ b/include/v8-cppgc.h
-@@ -90,7 +90,7 @@ void JSMemberBase::Reset() {
-  * method.
-  */
- template <typename T>
--class V8_EXPORT JSMember : public internal::JSMemberBase {
-+class JSMember : public internal::JSMemberBase {
-   static_assert(std::is_base_of<v8::Value, T>::value,
-                 "JSMember only supports references to v8::Value");
-
+diff --git a/src/codegen/code-stub-assembler.h b/src/codegen/code-stub-assembler.h
+index 03af2cc5e2..bb19092c54 100644
+--- a/src/codegen/code-stub-assembler.h
++++ b/src/codegen/code-stub-assembler.h
+@@ -301,7 +301,7 @@ enum class PrimitiveType { kBoolean, kNumber, kString, kSymbol };
+ // it's possible to add JavaScript-specific useful CodeAssembler "macros"
+ // without modifying files in the compiler directory (and requiring a review
+ // from a compiler directory OWNER).
+-class V8_EXPORT_PRIVATE CodeStubAssembler
++class V8_EXPORT CodeStubAssembler
+     : public compiler::CodeAssembler,
+       public TorqueGeneratedExportedMacrosAssembler {
+  public:
 diff --git a/src/common/globals.h b/src/common/globals.h
-index dbc6b9af9b..7634fc1a08 100644
+index d9d502aa51..7495c898fc 100644
 --- a/src/common/globals.h
 +++ b/src/common/globals.h
-@@ -1356,7 +1356,7 @@ class BinaryOperationFeedback {
+@@ -1348,7 +1348,7 @@ class BinaryOperationFeedback {
  // This is distinct from BinaryOperationFeedback on purpose, because the
  // feedback that matters differs greatly as well as the way it is consumed.
  class CompareOperationFeedback {
@@ -45,7 +36,7 @@ index dbc6b9af9b..7634fc1a08 100644
      kSignedSmallFlag = 1 << 0,
      kOtherNumberFlag = 1 << 1,
      kBooleanFlag = 1 << 2,
-@@ -1370,7 +1370,7 @@ class CompareOperationFeedback {
+@@ -1362,7 +1362,7 @@ class CompareOperationFeedback {
    };
 
   public:
@@ -55,7 +46,7 @@ index dbc6b9af9b..7634fc1a08 100644
 
      kBoolean = kBooleanFlag,
 diff --git a/src/compiler/node-cache.h b/src/compiler/node-cache.h
-index 935e5778e3..d5dae22512 100644
+index 8e1d3d4eae..c55d8329de 100644
 --- a/src/compiler/node-cache.h
 +++ b/src/compiler/node-cache.h
 @@ -29,7 +29,7 @@ class Node;
@@ -81,7 +72,7 @@ index e135e30efc..0c055247bc 100644
      HeapObject next_obj = FromCurrentPage();
      if (!next_obj.is_null()) return next_obj;
 diff --git a/src/heap/paged-spaces.h b/src/heap/paged-spaces.h
-index 4af1b3013c..2489ad6a35 100644
+index 5168f0f053..ae5c22d1f3 100644
 --- a/src/heap/paged-spaces.h
 +++ b/src/heap/paged-spaces.h
 @@ -45,7 +45,7 @@ class V8_EXPORT_PRIVATE PagedSpaceObjectIterator : public ObjectIterator {
@@ -94,10 +85,10 @@ index 4af1b3013c..2489ad6a35 100644
   private:
    // Fast (inlined) path of next().
 diff --git a/src/objects/feedback-vector.cc b/src/objects/feedback-vector.cc
-index cf1712b0f0..73eb5c0ec7 100644
+index a77ea5d265..0cddb92a02 100644
 --- a/src/objects/feedback-vector.cc
 +++ b/src/objects/feedback-vector.cc
-@@ -115,9 +115,9 @@ Handle<FeedbackMetadata> FeedbackMetadata::New(LocalIsolate* isolate,
+@@ -114,9 +114,9 @@ Handle<FeedbackMetadata> FeedbackMetadata::New(LocalIsolate* isolate,
    return metadata;
  }
 
@@ -110,7 +101,7 @@ index cf1712b0f0..73eb5c0ec7 100644
 
  bool FeedbackMetadata::SpecDiffersFrom(
 diff --git a/src/objects/fixed-array-inl.h b/src/objects/fixed-array-inl.h
-index f6c52b8ed0..94f81d3e7d 100644
+index a91f89784f..5ecf7e3372 100644
 --- a/src/objects/fixed-array-inl.h
 +++ b/src/objects/fixed-array-inl.h
 @@ -88,7 +88,7 @@ bool FixedArray::is_the_hole(Isolate* isolate, int index) {
@@ -123,10 +114,10 @@ index f6c52b8ed0..94f81d3e7d 100644
    DCHECK_LT(static_cast<unsigned>(index), static_cast<unsigned>(length()));
    DCHECK(Object(value).IsSmi());
 diff --git a/src/objects/fixed-array.h b/src/objects/fixed-array.h
-index fea05b4001..90659c3867 100644
+index 53b4cbb22b..8dd24df399 100644
 --- a/src/objects/fixed-array.h
 +++ b/src/objects/fixed-array.h
-@@ -122,7 +122,7 @@ class FixedArray
+@@ -130,7 +130,7 @@ class FixedArray
    inline bool is_the_hole(Isolate* isolate, int index);
 
    // Setter that doesn't need write barrier.
@@ -135,21 +126,21 @@ index fea05b4001..90659c3867 100644
    // Setter with explicit barrier mode.
    inline void set(int index, Object value, WriteBarrierMode mode);
 
-diff --git a/src/objects/string.h b/src/objects/string.h
-index 0b7bd55aee..c7fa7f49d9 100644
---- a/src/objects/string.h
-+++ b/src/objects/string.h
-@@ -293,7 +293,7 @@ class String : public TorqueGeneratedString<String, Name> {
+diff --git a/src/runtime/runtime-wasm.cc b/src/runtime/runtime-wasm.cc
+index 9ba26c23ad..5857bf4c39 100644
+--- a/src/runtime/runtime-wasm.cc
++++ b/src/runtime/runtime-wasm.cc
+@@ -570,7 +570,7 @@ RUNTIME_FUNCTION(Runtime_WasmDebugBreak) {
+   DebugScope debug_scope(isolate->debug());
 
-   V8_EXPORT_PRIVATE bool HasOneBytePrefix(Vector<const char> str);
-   V8_EXPORT_PRIVATE bool IsOneByteEqualTo(Vector<const uint8_t> str);
--  V8_EXPORT_PRIVATE bool IsOneByteEqualTo(Vector<const char> str) {
-+  inline bool IsOneByteEqualTo(Vector<const char> str) {
-     return IsOneByteEqualTo(Vector<const uint8_t>::cast(str));
-   }
-   bool IsTwoByteEqualTo(Vector<const uc16> str);
+   // Check for instrumentation breakpoint.
+-  DCHECK_EQ(script->break_on_entry(), instance->break_on_entry());
++  DCHECK_EQ(script->break_on_entry(), static_cast<bool>(instance->break_on_entry()));
+   if (script->break_on_entry()) {
+     MaybeHandle<FixedArray> maybe_on_entry_breakpoints =
+         WasmScript::CheckBreakPoints(
 diff --git a/src/snapshot/snapshot-utils.cc b/src/snapshot/snapshot-utils.cc
-index 319b828446..64c974fcd8 100644
+index eb2372372c..7defadb4b1 100644
 --- a/src/snapshot/snapshot-utils.cc
 +++ b/src/snapshot/snapshot-utils.cc
 @@ -5,7 +5,7 @@
@@ -162,10 +153,10 @@ index 319b828446..64c974fcd8 100644
  namespace v8 {
  namespace internal {
 diff --git a/src/wasm/function-body-decoder-impl.h b/src/wasm/function-body-decoder-impl.h
-index cb54e46d64..e12336950a 100644
+index 6c9700b100..e3be3c31f5 100644
 --- a/src/wasm/function-body-decoder-impl.h
 +++ b/src/wasm/function-body-decoder-impl.h
-@@ -1748,7 +1748,7 @@ class WasmDecoder : public Decoder {
+@@ -2006,7 +2006,7 @@ class WasmDecoder : public Decoder {
    }
 
    // TODO(clemensb): This is only used by the interpreter; move there.
@@ -174,23 +165,11 @@ index cb54e46d64..e12336950a 100644
      WasmOpcode opcode = static_cast<WasmOpcode>(*pc);
      // Handle "simple" opcodes with a fixed signature first.
      const FunctionSig* sig = WasmOpcodes::Signature(opcode);
-diff --git a/src/wasm/wasm-module-builder.h b/src/wasm/wasm-module-builder.h
-index 309d4bbb9f..1390d422a1 100644
---- a/src/wasm/wasm-module-builder.h
-+++ b/src/wasm/wasm-module-builder.h
-@@ -361,6 +361,7 @@ class V8_EXPORT_PRIVATE WasmModuleBuilder : public ZoneObject {
-   // Indirect functions must be allocated before adding extra tables.
-   bool allocating_indirect_functions_allowed_ = true;
- #endif
-+  DISALLOW_COPY_AND_ASSIGN(WasmModuleBuilder);
- };
-
- inline FunctionSig* WasmFunctionBuilder::signature() {
 diff --git a/test/cctest/BUILD.gn b/test/cctest/BUILD.gn
-index 35a22344fb..01a77268cc 100644
+index e63fe5ed35..ec48403c42 100644
 --- a/test/cctest/BUILD.gn
 +++ b/test/cctest/BUILD.gn
-@@ -444,6 +444,10 @@ v8_source_set("cctest_sources") {
+@@ -480,6 +480,10 @@ v8_source_set("cctest_sources") {
      # C4309: 'static_cast': truncation of constant value
      cflags += [ "/wd4309" ]
 
@@ -202,13 +181,13 @@ index 35a22344fb..01a77268cc 100644
      cflags += [ "/bigobj" ]
 
 diff --git a/tools/debug_helper/BUILD.gn b/tools/debug_helper/BUILD.gn
-index 522a0e2270..bbe5809baa 100644
+index 54cd3b7a4c..9c6666871d 100644
 --- a/tools/debug_helper/BUILD.gn
 +++ b/tools/debug_helper/BUILD.gn
-@@ -92,10 +92,12 @@ v8_component("v8_debug_helper") {
-     "../..:run_torque",
-     "../..:v8_headers",
+@@ -99,10 +99,12 @@ v8_component("v8_debug_helper") {
      "../..:v8_libbase",
+     "../..:v8_shared_internal_headers",
+     "../..:v8_tracing",
 +    "../..:v8",
    ]
 
@@ -231,3 +210,45 @@ index 10d06a127f..d0deb7adca 100644
 
    include_dirs = [ "../.." ]
  }
+diff --git a/tools/v8windbg/base/dbgext.h b/tools/v8windbg/base/dbgext.h
+index 8b36a8f361..f8d9f0d64e 100644
+--- a/tools/v8windbg/base/dbgext.h
++++ b/tools/v8windbg/base/dbgext.h
+@@ -9,6 +9,7 @@
+ #error Unicode not defined
+ #endif
+
++#include <new>
+ #include <DbgEng.h>
+ #include <DbgModel.h>
+ #include <Windows.h>
+diff --git a/tools/v8windbg/src/v8-debug-helper-interop.h b/tools/v8windbg/src/v8-debug-helper-interop.h
+index f7d78c5dd3..1c70e54e7a 100644
+--- a/tools/v8windbg/src/v8-debug-helper-interop.h
++++ b/tools/v8windbg/src/v8-debug-helper-interop.h
+@@ -5,10 +5,11 @@
+ #ifndef V8_TOOLS_V8WINDBG_SRC_V8_DEBUG_HELPER_INTEROP_H_
+ #define V8_TOOLS_V8WINDBG_SRC_V8_DEBUG_HELPER_INTEROP_H_
+
+-#include <wrl/client.h>
+-
++#include <new>
++#include <DbgEng.h>
+ #include <DbgModel.h>
+
++#include <wrl/client.h>
+ #include <cstdint>
+ #include <map>
+ #include <string>
+diff --git a/tools/v8windbg/test/debug-callbacks.h b/tools/v8windbg/test/debug-callbacks.h
+index 8855d6ffbc..ed2b0f62e9 100644
+--- a/tools/v8windbg/test/debug-callbacks.h
++++ b/tools/v8windbg/test/debug-callbacks.h
+@@ -9,6 +9,7 @@
+ #error Unicode not defined
+ #endif
+
++#include <new>
+ #include <DbgEng.h>
+ #include <DbgModel.h>
+ #include <Windows.h>
