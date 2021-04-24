@@ -1,6 +1,6 @@
 Source: opencascade
-Version: 7.4.0
-Port-Version: 3
+Version: 7.5.0
+Port-Version: 1
 Build-Depends: freetype
 Description: Open CASCADE Technology (OCCT) is an open-source software development platform for 3D CAD, CAM, CAE.
 Supports: !(uwp|osx|linux|arm)

@@ -1,6 +1,7 @@
 {
   "name": "boost-concept-check",
   "version-string": "1.75.0",
+  "port-version": 2,
   "description": "Boost concept_check module",
   "homepage": "https://github.com/boostorg/concept_check",
   "dependencies": [

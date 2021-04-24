@@ -1,0 +1,26 @@
+{
+  "name": "minizip-ng",
+  "version": "3.0.1",
+  "port-version": 1,
+  "description": "minizip-ng is a zip manipulation library written in C that is supported on Windows, macOS, and Linux.",
+  "homepage": "https://github.com/zlib-ng/minizip-ng",
+  "supports": "!uwp",
+  "dependencies": [
+    "bzip2",
+    "liblzma",
+    {
+      "name": "openssl",
+      "platform": "linux"
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    "zlib",
+    "zstd"
+  ]
+}

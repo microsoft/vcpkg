@@ -1,7 +1,6 @@
 {
   "name": "grpc",
-  "version-string": "1.33.1",
-  "port-version": 2,
+  "version-semver": "1.36.4",
   "description": "An RPC library and framework",
   "homepage": "https://github.com/grpc/grpc",
   "dependencies": [
@@ -10,8 +9,16 @@
       "name": "c-ares",
       "platform": "!uwp"
     },
+    {
+      "name": "grpc",
+      "host": true
+    },
     "openssl",
     "protobuf",
+    {
+      "name": "protobuf",
+      "host": true
+    },
     "re2",
     "upb",
     "zlib"

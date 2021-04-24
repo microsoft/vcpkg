@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO machinezone/IXWebSocket
-    REF v11.0.4
-    SHA512 fb24a628600cf28acdcaed5d2268f6a6e36baa1cc31f54287d91fb979fe375b20931fa9346153eaaf5a5d17fc6d87f06ca03ce12e401b83095c16919d35454ce
+    REF v11.2.3
+    SHA512 6346ceb91b2d0c884848977fc0bb56702e0542dde70a46952d54c899d3838714d06cbd286371ebbcb63e303a8b6e518c68049aea56121ecf7a0cc726e8b29a5d
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -27,7 +27,7 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ixwebsocket TARGET_PATH share/${port})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/ixwebsocket)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

@@ -1,6 +1,5 @@
 Source: realsense2
-Version: 2.40.0
-Port-Version: 1
+Version: 2.42.0
 Homepage: https://github.com/IntelRealSense/librealsense
 Description: Intel® RealSense™ SDK 2.0 is a cross-platform library for Intel® RealSense™ depth cameras (D400 series and the SR300).
 Build-Depends: libusb(linux)

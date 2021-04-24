@@ -10,7 +10,7 @@ index a9f8908..5c98f3f 100644
      "${CMAKE_CURRENT_BINARY_DIR}/${package_name}ConfigVersion.cmake"
      DESTINATION lib/cmake/${package_name})
 diff --git a/cmake/PahoMqttCppConfig.cmake.in b/cmake/PahoMqttCppConfig.cmake.in
-index aff9472..275655c 100644
+index 164e123..9beac1c 100644
 --- a/cmake/PahoMqttCppConfig.cmake.in
 +++ b/cmake/PahoMqttCppConfig.cmake.in
 @@ -5,7 +5,7 @@ set(PAHO_WITH_SSL @PAHO_WITH_SSL@)
@@ -20,10 +20,10 @@ index aff9472..275655c 100644
 -find_dependency(PahoMqttC REQUIRED)
 +find_dependency(eclipse-paho-mqtt-c REQUIRED)
  list(REMOVE_AT CMAKE_MODULE_PATH -1)
+ find_dependency(Threads REQUIRED)
  
- include("${CMAKE_CURRENT_LIST_DIR}/@package_name@Targets.cmake")
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 4e9b7c4..93eaae9 100644
+index 3d43595..a25f74d 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -23,7 +23,7 @@
@@ -35,7 +35,7 @@ index 4e9b7c4..93eaae9 100644
  
  # --- The headers ---
  
-@@ -80,13 +80,21 @@ target_include_directories(paho-cpp-objs
+@@ -81,13 +81,21 @@ target_include_directories(paho-cpp-objs
  ## --- Build the shared library, if requested ---
  
  if(PAHO_BUILD_SHARED)
@@ -58,7 +58,7 @@ index 4e9b7c4..93eaae9 100644
  
      # It would be nice to exort the include paths from the obj lib, but we
      # get an export error. Perhaps in a future version?
-@@ -118,13 +126,22 @@ endif()
+@@ -119,13 +127,22 @@ endif()
  ## --- Build static version of the library, if requested ---
  
  if(PAHO_BUILD_STATIC)
