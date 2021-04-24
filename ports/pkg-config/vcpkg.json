@@ -1,0 +1,12 @@
+{
+  "name": "pkg-config",
+  "version-string": "0.29.2 ",
+  "description": "pkg-config is a script to make putting together all the build flags when compiling/linking a lot easier.",
+  "homepage": "https://gitlab.freedesktop.org/pkg-config/pkg-config",
+  "dependencies": [
+    {
+      "name": "glib",
+      "default-features": false
+    }
+  ]
+}
