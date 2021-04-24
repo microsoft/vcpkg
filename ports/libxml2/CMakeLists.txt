@@ -485,7 +485,11 @@ endif()
 
 if(LIBXML2_WITH_ZLIB)
 	target_link_libraries(LibXml2 PRIVATE ZLIB::ZLIB)
-	set(Z_LIBS "-lz")
+    if (CMAKE_BUILD_TYPE STREQUAL Debug)
+        set(Z_LIBS "-lzd")
+    else()
+        set(Z_LIBS "-lz")
+    endif()
 endif()
 
 set_target_properties(
@@ -497,7 +501,7 @@ set_target_properties(
 	PREFIX lib
 	VERSION ${PROJECT_VERSION}
 )
-set(xml_output_name libxml2)
+set(xml_output_name xml2)
 
 if(MSVC)
 	if(BUILD_SHARED_LIBS)
@@ -522,6 +526,10 @@ if(MSVC)
             set(xml_output_name ${xml_output_name}s)
         endif()
 	endif()
+endif()
+
+if (WIN32)
+    configure_file(rcVersion.h.in include/rcVersion.h @ONLY)
 endif()
 
 install(FILES ${LIBXML2_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libxml2/libxml COMPONENT development)
