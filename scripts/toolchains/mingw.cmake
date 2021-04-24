@@ -25,7 +25,7 @@ macro(z_vcpkg_message SEVERITY MESSAGE)
         string(APPEND Z_VCPKG_TOOLCHAIN_MESSAGES "${MESSAGE}\n")
     else()
         message(WARNING "${MESSAGE}")
-        string(APPEND Z_VCPKG_TOOLCHAIN_MESSAGES "Fatal error:\n${MESSAGE}\n")
+        string(APPEND Z_VCPKG_TOOLCHAIN_MESSAGES "-- Fatal error:\n${MESSAGE}\n")
         file(WRITE "${_VCPKG_TOOLCHAIN_MESSAGES_FILE}" "${Z_VCPKG_TOOLCHAIN_MESSAGES}")
         return()
     endif()
@@ -62,7 +62,7 @@ if(NOT ${variable})
         if(NOT ${prog_name}_UNPREFIXED)
             set(${prog_name}_UNPREFIXED TRUE CACHE INTERNAL "")
             z_vcpkg_message(WARNING
-                "${_MINGW_TARGET_TRIPLET}-${prog_name} not found, falling back to ${prog_name}.")
+                "-- ${_MINGW_TARGET_TRIPLET}-${prog_name} not found, falling back to ${prog_name}.")
         endif()
     endif()
 endif()
@@ -72,7 +72,7 @@ _mingw_find_program(CMAKE_C_COMPILER "gcc")
 _mingw_find_program(CMAKE_CXX_COMPILER "g++")
 _mingw_find_program(CMAKE_RC_COMPILER "windres")
 if(NOT CMAKE_C_COMPILER)
-    z_vcpkg_message(FATAL_ERROR "Cannot find a compiler! Please check your PATH variable.")
+    z_vcpkg_message(FATAL_ERROR "-- Cannot find a compiler! Please check your PATH variable.")
 endif()
 
 macro(_mingw_check_target prog)
@@ -83,22 +83,28 @@ list(GET _DUMPMACHINE 0 _COMPILER_CPU)
 list(GET _DUMPMACHINE 1 _COMPILER_VENDOR)
 list(GET _DUMPMACHINE 2 _COMPILER_OS)
 if(NOT _COMPILER_OS MATCHES "(mingw32)|(windows)")
-    z_vcpkg_message(FATAL_ERROR "\
-Incorrect compiler OS. Expected mingw32 or windows, got ${_COMPILER_OS}
-Compiler path: ${prog}")
+    z_vcpkg_message(FATAL_ERROR
+"\
+-- Incorrect compiler OS. Expected mingw32 or windows, got ${_COMPILER_OS}
+-- Compiler path: ${prog}\
+")
 endif()
 if(_COMPILER_VENDOR STREQUAL "pc") # Old MinGW toolchain
     if(NOT ${prog_name}_OLD_MINGW)
         set(${prog_name}_OLD_MINGW TRUE CACHE INTERNAL "")
-        z_vcpkg_message(WARNING "\
-Old MinGW toolchain detected. This is not guaranteed to work with vcpkg. Proceed with caution
-Compiler path: ${prog}")
+        z_vcpkg_message(WARNING
+"\
+-- Old MinGW toolchain detected. This is not guaranteed to work with vcpkg. Proceed with caution
+-- Compiler path: ${prog}\
+")
     endif()
 endif()
 if(NOT _COMPILER_CPU STREQUAL CMAKE_SYSTEM_PROCESSOR)
-    z_vcpkg_message(FATAL_ERROR "\
-Incorrect compiler CPU. Expected ${CMAKE_SYSTEM_PROCESSOR}, got ${_COMPILER_CPU}
-Compiler path: ${prog}")
+    z_vcpkg_message(FATAL_ERROR
+"\
+-- Incorrect compiler CPU. Expected ${CMAKE_SYSTEM_PROCESSOR}, got ${_COMPILER_CPU}
+-- Compiler path: ${prog}\
+")
 endif()
 endmacro()
 
