@@ -99,8 +99,8 @@ if(NOT @BUILD_SHARED_LIBS@)
   endif()
 
   if(@LIBXML2_WITH_LZMA@)
-    find_dependency(LibLZMA)
-    list(APPEND LIBXML2_LIBRARIES    LibLZMA::LibLZMA)
+    find_dependency(liblzma CONFIG)
+    list(APPEND LIBXML2_LIBRARIES    liblzma::liblzma)
   endif()
 
   if(@LIBXML2_WITH_ZLIB@)

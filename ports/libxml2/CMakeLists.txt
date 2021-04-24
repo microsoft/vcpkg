@@ -62,7 +62,7 @@ if(LIBXML2_WITH_ICU)
 endif()
 
 if(LIBXML2_WITH_LZMA)
-	find_package(LibLZMA REQUIRED)
+	find_package(liblzma CONFIG REQUIRED)
 endif()
 
 if(LIBXML2_WITH_PYTHON)
@@ -474,7 +474,7 @@ if(LIBXML2_WITH_ICU)
 endif()
 
 if(LIBXML2_WITH_LZMA)
-	target_link_libraries(LibXml2 PRIVATE LibLZMA::LibLZMA)
+	target_link_libraries(LibXml2 PRIVATE liblzma::liblzma)
 	set(LZMA_LIBS "-llzma")
 endif()
 
