@@ -475,7 +475,11 @@ endif()
 
 if(LIBXML2_WITH_LZMA)
 	target_link_libraries(LibXml2 PRIVATE liblzma::liblzma)
-	set(LZMA_LIBS "-llzma")
+    if (CMAKE_BUILD_TYPE STREQUAL Debug)
+        set(Z_LIBS "-llzmad")
+    else()
+        set(Z_LIBS "-llzma")
+    endif()
 endif()
 
 if(LIBXML2_WITH_THREADS)
