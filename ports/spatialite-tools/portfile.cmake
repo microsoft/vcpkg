@@ -126,7 +126,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
     SOURCE_PATH ${SOURCE_PATH}
     AUTOCONFIG
     OPTIONS
-        "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
+        "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include/libxml2\""
         "LIBS=${LIBS}"
         "--disable-minizip"
     OPTIONS_DEBUG
