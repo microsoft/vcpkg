@@ -514,7 +514,9 @@ if(MSVC)
 			PROPERTIES
 			DEBUG_POSTFIX d
 		)
-        set(xml_output_name ${xml_output_name}d)
+        if (CMAKE_BUILD_TYPE STREQUAL Debug)
+            set(xml_output_name ${xml_output_name}d)
+        endif()
 	else()
 		set_target_properties(
 			LibXml2
