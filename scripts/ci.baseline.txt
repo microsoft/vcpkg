@@ -341,6 +341,7 @@ forest:x64-windows-static-md=fail
 forest:x64-windows-static=fail
 forest:x64-windows=fail
 forest:x86-windows=fail
+forest:x64-osx=fail
 forge:x86-windows=fail
 freeglut:arm64-windows=fail
 freeglut:arm-uwp=fail
