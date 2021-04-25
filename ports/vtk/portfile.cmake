@@ -114,6 +114,7 @@ if("all" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     "cuda"         VTK_USE_CUDA
     "all"          VTK_BUILD_ALL_MODULES
 )
@@ -153,6 +154,7 @@ vcpkg_from_github(
         # Remove these 2 official patches in the next update
         ${QT_NO_KEYWORDS_PATCH}
         0002-Qt-enforce-QT_NO_KEYWORDS-builds-by-VTK-itself.patch
+        fix-dependency-libxml2.patch
 )
 
 # =============================================================================

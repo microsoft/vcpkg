@@ -1,0 +1,27 @@
+diff --git a/ThirdParty/libxml2/CMakeLists.txt b/ThirdParty/libxml2/CMakeLists.txt
+index 14dd436..ceb57e9 100644
+--- a/ThirdParty/libxml2/CMakeLists.txt
++++ b/ThirdParty/libxml2/CMakeLists.txt
+@@ -4,7 +4,7 @@ vtk_module_third_party(
+     VERSION       "2.9.10"
+     STANDARD_INCLUDE_DIRS
+   EXTERNAL
+-    PACKAGE LibXml2
++    PACKAGE libxml2
+     TARGETS LibXml2::LibXml2
+     STANDARD_INCLUDE_DIRS)
+ 
+diff --git a/ThirdParty/xdmf3/vtkxdmf3/core/CMakeLists.txt b/ThirdParty/xdmf3/vtkxdmf3/core/CMakeLists.txt
+index 0918766..0141aab 100644
+--- a/ThirdParty/xdmf3/vtkxdmf3/core/CMakeLists.txt
++++ b/ThirdParty/xdmf3/vtkxdmf3/core/CMakeLists.txt
+@@ -45,7 +45,8 @@ if(HDF5_FOUND)
+ endif()
+ 
+ 
+-find_package(LibXml2 REQUIRED)
++find_package(libxml2 CONFIG REQUIRED)
++set(LIBXML2_FOUND 1)
+ if(LIBXML2_FOUND)
+   include_directories(${LIBXML2_INCLUDE_DIR})
+ endif()
