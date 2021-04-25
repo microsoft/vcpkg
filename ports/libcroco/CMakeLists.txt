@@ -4,7 +4,7 @@ project(libcroco C)
 find_package(Iconv REQUIRED)
 find_package(Intl REQUIRED)
 find_package(unofficial-glib CONFIG REQUIRED)
-find_package(LibXml2 REQUIRED)
+find_package(libxml2 CONFIG REQUIRED)
 if(NOT WIN32)
     find_package(Threads REQUIRED)
 endif()
@@ -70,13 +70,13 @@ set(CMAKE_DEBUG_POSTFIX "d")
 
 add_library(croco-0.6 ${SOURCES})
 
-target_include_directories(croco-0.6 PRIVATE ${GLIB_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR})
+target_include_directories(croco-0.6 PRIVATE ${GLIB_INCLUDE_DIR})
 target_link_libraries(croco-0.6 PRIVATE 
     unofficial::glib::gio
     unofficial::glib::glib
     unofficial::glib::gmodule
     unofficial::glib::gobject
-    ${LIBXML2_LIBRARIES} ${Intl_LIBRARIES} Iconv::Iconv
+    LibXml2::LibXml2 ${Intl_LIBRARIES} Iconv::Iconv
 )
 
 install(TARGETS croco-0.6
@@ -130,7 +130,7 @@ include(CMakeFindDependencyMacro)
 find_dependency(Intl)
 find_dependency(Iconv)
 find_dependency(unofficial-glib CONFIG)
-find_dependency(LibXml2)
+find_dependency(libxml2 CONFIG)
 if(NOT WIN32)
     find_dependency(Threads)
 endif()
