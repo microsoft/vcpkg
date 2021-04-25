@@ -118,7 +118,7 @@ elseif (VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX) # Build in UNIX
       AUTOCONFIG
       OPTIONS
           "LIBS=-lpthread -ldl -lm -l${STDLIB}"
-          "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include\""
+          "LIBXML2_CFLAGS=-I\"${CURRENT_INSTALLED_DIR}/include/libxml2\""
           "--enable-rttopo"
           "--enable-gcp"
           "--enable-geocallbacks"
