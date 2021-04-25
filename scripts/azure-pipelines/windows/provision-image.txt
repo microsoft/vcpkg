@@ -137,9 +137,10 @@ $CudaFeatures = 'nvcc_10.1 cuobjdump_10.1 nvprune_10.1 cupti_10.1 gpu_library_ad
 
 $PwshUrl = 'https://github.com/PowerShell/PowerShell/releases/download/v7.1.0/PowerShell-7.1.0-win-x64.msi'
 
+# CI examples for installing Intel OneAPI can be found here: https://github.com/oneapi-src/oneapi-ci
 # Seems like only the HPC kit is really needed?
-#$oneAPIBaseUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/17453/w_BaseKit_p_2021.1.0.2664_offline.exe'
-$oneAPIHPCUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/17392/w_HPCKit_p_2021.1.0.2682_offline.exe'
+#$oneAPIBaseUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/17768/w_BaseKit_p_2021.2.0.2871_offline.exe'
+$oneAPIHPCUrl = 'https://registrationcenter-download.intel.com/akdlm/irc_nas/17762/w_HPCKit_p_2021.2.0.2901_offline.exe'
 
 # Possible oneAPI Base components:
 #intel.oneapi.win.vtune           2021.1.1-68           true      Intel® VTune(TM) Profiler
