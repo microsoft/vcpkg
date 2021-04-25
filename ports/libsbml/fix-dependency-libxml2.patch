@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ceb8f18..9acb1eb 100644
+index ceb8f18..932e216 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -464,7 +464,8 @@ endif(WITH_EXPAT)
@@ -21,16 +21,31 @@ index ceb8f18..9acb1eb 100644
      find_path(LIBXML_INCLUDE_DIR
          NAMES libxml/parser.h
          PATHS ${LIBSBML_DEPENDENCY_DIR}/include
-@@ -491,10 +492,9 @@ if(WITH_LIBXML)
+@@ -491,10 +492,10 @@ if(WITH_LIBXML)
    set(USE_LIBXML ON)
  
    set(LIBSBML_XML_LIBRARY "libxml2")
 -  set(LIBSBML_XML_LIBRARY_INCLUDE ${LIBXML_INCLUDE_DIR})
 -  set(LIBSBML_XML_LIBRARY_LIBS ${LIBXML_LIBRARY})
-+  set(LIBSBML_XML_LIBRARY_LIBS LibXml2::LibXml2)
++  set(LIBSBML_XML_LIBRARY_INCLUDE ${LIBXML2_INCLUDE_DIRS})
++  set(LIBSBML_XML_LIBRARY_LIBS ${LIBXML2_LIBRARIES})
  
 -  if(NOT EXISTS "${LIBXML_INCLUDE_DIR}/libxml/parser.h")
 +  if(0)
          message(FATAL_ERROR
  "The include directory specified for libxml appears to be invalid.
  It should contain the file libxml/parser.h, but it does not.")
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 11158db..1fad397 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -496,7 +496,8 @@ if (LIBSBML_SHARED_VERSION)
+                         VERSION ${LIBSBML_VERSION_MAJOR}.${LIBSBML_VERSION_MINOR}.${LIBSBML_VERSION_PATCH})
+ endif()
+ 
+-target_link_libraries(${LIBSBML_LIBRARY} ${LIBSBML_LIBS} ${EXTRA_LIBS})
++target_include_directories(${LIBSBML_LIBRARY} PRIVATE ${LIBXML2_INCLUDE_DIRS})
++target_link_libraries(${LIBSBML_LIBRARY} ${LIBSBML_LIBS} ${EXTRA_LIBS} ${LIBXML2_LIBRARIES})
+ 
+ INSTALL(TARGETS ${LIBSBML_LIBRARY} EXPORT ${LIBSBML_LIBRARY}-config
+         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

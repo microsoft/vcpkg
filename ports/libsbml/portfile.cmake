@@ -53,7 +53,7 @@ endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DWITH_EXPAT=${WITH_EXPAT}
         -DWITH_LIBXML=${WITH_LIBXML}
