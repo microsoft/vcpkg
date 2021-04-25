@@ -1,0 +1,19 @@
+diff --git a/cmake/libxml2.cmake b/cmake/libxml2.cmake
+index c2d8edf..86ef79d 100644
+--- a/cmake/libxml2.cmake
++++ b/cmake/libxml2.cmake
+@@ -6,10 +6,11 @@ endif()
+ # libxml2
+ #
+ 
+-find_package(LibXml2)
+-set_package_properties(LibXml2 PROPERTIES TYPE OPTIONAL)
++find_package(libxml2 CONFIG REQUIRED)
++set(LIBXML2_FOUND 1)
++set_package_properties(libxml2 PROPERTIES TYPE OPTIONAL)
+ mark_as_advanced(CLEAR LIBXML2_INCLUDE_DIR)
+-mark_as_advanced(CLEAR LIBXML2_LIBRARIES)
++mark_as_advanced(CLEAR LibXml2::LibXml2)
+ if (LIBXML2_FOUND)
+     set(PDAL_HAVE_LIBXML2 1)
+ endif()

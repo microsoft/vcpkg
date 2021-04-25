@@ -18,12 +18,13 @@ vcpkg_extract_source_archive_ex(
         fix-CPL_DLL.patch
         0004-fix-const-overloaded.patch
         geotiff.patch
+        fix-dependency-libxml2.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
 
 # Deploy custom CMake modules to enforce expected dependencies look-up
-foreach(_module IN ITEMS FindGDAL FindGEOS FindGeoTIFF FindCurl)  # Outdated; Supplied by CMake
+foreach(_module IN ITEMS FindGDAL FindGEOS FindGeoTIFF FindCurl FindICONV)  # Outdated; Supplied by CMake
     file(REMOVE "${SOURCE_PATH}/cmake/modules/${_module}.cmake")
 endforeach()
 foreach(_module IN ITEMS FindGEOS)  # Overwritten Modules.
