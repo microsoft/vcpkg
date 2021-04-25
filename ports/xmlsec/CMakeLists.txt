@@ -6,7 +6,7 @@ option(INSTALL_HEADERS_TOOLS "Install public header files and tools" ON)
 set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
 
-find_package(LibXml2 REQUIRED)
+find_package(libxml2 CONFIG REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(Iconv REQUIRED)
 
@@ -61,13 +61,13 @@ endif()
 add_library(libxmlsec ${SOURCESXMLSEC})
 add_library(libxmlsec-openssl ${SOURCESXMLSECOPENSSL})
 
-include_directories(${CMAKE_CURRENT_BINARY_DIR}/include include ${LIBXML2_INCLUDE_DIRS})
+include_directories(${CMAKE_CURRENT_BINARY_DIR}/include include)
 
 target_link_libraries(libxmlsec PRIVATE
-    ${LIBXML2_LIBRARIES} OpenSSL::SSL
+    LibXml2::LibXml2 OpenSSL::SSL
 )
 target_link_libraries(libxmlsec-openssl PRIVATE
-    ${LIBXML2_LIBRARIES} OpenSSL::SSL libxmlsec
+    LibXml2::LibXml2 OpenSSL::SSL libxmlsec
 )
 
 add_compile_definitions(inline=__inline)
@@ -139,7 +139,7 @@ if(INSTALL_HEADERS_TOOLS)
 	endif()
 
 	target_link_libraries(xmlsec PRIVATE
-		${LIBXML2_LIBRARIES} OpenSSL::SSL libxmlsec libxmlsec-openssl
+		LibXml2::LibXml2 OpenSSL::SSL libxmlsec libxmlsec-openssl
 	)
     if(NOT Iconv_IS_BUILT_IN)
         target_link_libraries(xmlsec PRIVATE Iconv::Iconv)
