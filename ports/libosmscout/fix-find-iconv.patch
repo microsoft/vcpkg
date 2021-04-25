@@ -1,0 +1,17 @@
+diff --git a/cmake/features.cmake b/cmake/features.cmake
+index 8b5563e..19d639d 100644
+--- a/cmake/features.cmake
++++ b/cmake/features.cmake
+@@ -152,7 +152,11 @@ if (${PROTOBUF_FOUND} AND NOT EXISTS ${PROTOBUF_PROTOC_EXECUTABLE})
+   set(PROTOBUF_FOUND FALSE)
+ endif()
+ find_package(ZLIB)
+-find_package(iconv)
++find_package(Iconv REQUIRED)
++set(ICONV_FOUND 1)
++set(ICONV_INCLUDE_DIRS ${Iconv_INCLUDE_DIRS})
++set(ICONV_LIBRARIES ${Iconv_LIBRARIES})
++
+ find_package(LibLZMA)
+ find_package(PNG QUIET)
+ find_package(Cairo QUIET)
