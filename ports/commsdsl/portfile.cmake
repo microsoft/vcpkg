@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF v3.6
     SHA512 80fab2e567191a468a079dd9964a651293d8e7996141a973e77d4bdfaa96bfc346156f50ce484be1dc2b3d9e661cccce0e712c70876f7b322bc459f81a328496
     HEAD_REF master
+    PATCHES fix-dependency-libxml2.patch
 )
 
 vcpkg_configure_cmake(

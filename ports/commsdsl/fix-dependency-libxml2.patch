@@ -1,0 +1,27 @@
+diff --git a/lib/src/CMakeLists.txt b/lib/src/CMakeLists.txt
+index eaacb7a..cba902c 100644
+--- a/lib/src/CMakeLists.txt
++++ b/lib/src/CMakeLists.txt
+@@ -6,10 +6,10 @@ while (TRUE)
+         break()
+     endif ()
+ 
+-    find_package(LibXml2 QUIET)
+-    if (LIBXML2_FOUND)
++    find_package(libxml2 CONFIG QUIET)
++    if (1)
+         # Find again just to display info
+-        find_package(LibXml2 REQUIRED) 
++        find_package(libxml2 CONFIG REQUIRED) 
+         break()
+     endif ()
+ 
+@@ -123,7 +123,7 @@ endif ()
+ set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${COMMSDSL_VERSION})
+ 
+ target_include_directories(${PROJECT_NAME} 
+-    PRIVATE ${LIBXML2_INCLUDE_DIR}
++    PRIVATE ${LIBXML2_INCLUDE_DIRS}
+     PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib/include>
+     INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+ )
