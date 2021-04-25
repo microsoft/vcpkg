@@ -9,6 +9,7 @@ vcpkg_from_github(
         use-uriparser.patch
         use-vcpkg-minizip.patch
         fix-shared-keyword.patch
+        fix-dependency-libxml2.patch
 )
 
 vcpkg_configure_cmake(

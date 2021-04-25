@@ -1,0 +1,17 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3f044d3..ff92070 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -207,9 +207,10 @@ if( NOT ZLIB_FOUND )
+   set(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dom/external-libs/zlib-1.2.5)
+ endif()
+ 
+-find_package(LibXml2)
++find_package(libxml2 CONFIG REQUIRED)
++set(LIBXML2_FOUND 1)
+ if( LIBXML2_FOUND )
+-  include_directories(${LIBXML2_INCLUDE_DIR})
++  include_directories(${LIBXML2_INCLUDE_DIRS})
+   add_definitions(${LIBXML2_DEFINITIONS} -DDOM_INCLUDE_LIBXML)
+   message(STATUS "libxml2 found")
+ else()
