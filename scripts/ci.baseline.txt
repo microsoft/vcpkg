@@ -332,6 +332,16 @@ fontconfig:arm64-windows=fail
 foonathan-memory:arm64-windows=fail
 foonathan-memory:arm-uwp=fail
 foonathan-memory:x64-uwp=fail
+# forest is removed by upstream, see https://github.com/microsoft/vcpkg/pull/16836
+forest:arm-uwp=fail
+forest:arm64-windows=fail
+forest:x64-linux=fail
+forest:x64-uwp=fail
+forest:x64-windows-static-md=fail
+forest:x64-windows-static=fail
+forest:x64-windows=fail
+forest:x86-windows=fail
+forest:x64-osx=fail
 forge:x86-windows=fail
 freeglut:arm64-windows=fail
 freeglut:arm-uwp=fail
