@@ -1,0 +1,31 @@
+{
+  "name": "boost-beast",
+  "version-string": "1.75.0",
+  "description": "Boost beast module",
+  "homepage": "https://github.com/boostorg/beast",
+  "supports": "!emscripten",
+  "dependencies": [
+    {
+      "name": "boost-asio",
+      "platform": "!emscripten"
+    },
+    "boost-assert",
+    "boost-bind",
+    "boost-config",
+    "boost-container",
+    "boost-core",
+    "boost-endian",
+    "boost-intrusive",
+    "boost-logic",
+    "boost-mp11",
+    "boost-optional",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-system",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers",
+    "boost-winapi"
+  ]
+}

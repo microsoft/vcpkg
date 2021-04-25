@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 98c0a1ad0..85690209c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -290,7 +290,7 @@ if(1)
+     install(TARGETS ${f} DESTINATION "${CMAKE_INSTALL_FULL_LIBEXECDIR}/lzo/examples")
+ endif()
+ 
+-if(PKG_CONFIG_FOUND)
++if(1)
+     configure_file(lzo2.pc.cmakein lzo2.pc @ONLY)
+     #if(EXISTS "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig")
+     install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lzo2.pc" DESTINATION "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig")

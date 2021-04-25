@@ -1,5 +1,5 @@
-set(MPG123_VERSION 1.26.3)
-set(MPG123_HASH 7574331afaecf3f867455df4b7012e90686ad6ac8c5b5e820244204ea7088bf2b02c3e75f53fe71c205f9eca81fef93f1d969c8d0d1ee9775dc05482290f7b2d)
+set(MPG123_VERSION 1.26.5)
+set(MPG123_HASH 0c2b3174c834e4bd459a3324b825d9bf9341a3486c0af815773b00cb007578cb718522ac4e983c7ad7e3bb5df9fdd342a03cb51345c41f68971145196ac04b7a)
 
 #architecture detection
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -36,6 +36,12 @@ vcpkg_from_sourceforge(
 include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
 yasm_tool_helper(APPEND_TO_PATH)
 
+macro(read_api_version)
+    file(READ "${SOURCE_PATH}/configure.ac" configure_ac)
+    string(REGEX MATCH "API_VERSION=([0-9]+)" result ${configure_ac})
+    set(API_VERSION ${CMAKE_MATCH_1})
+endmacro()
+
 if(VCPKG_TARGET_IS_UWP)
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
@@ -45,12 +51,19 @@ if(VCPKG_TARGET_IS_UWP)
         RELEASE_CONFIGURATION Release_uwp
         DEBUG_CONFIGURATION Debug_uwp
     )
+
     file(INSTALL
         ${SOURCE_PATH}/ports/MSVC++/mpg123.h
         ${SOURCE_PATH}/src/libmpg123/fmt123.h
-        ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
         DESTINATION ${CURRENT_PACKAGES_DIR}/include
     )
+
+    read_api_version()
+    configure_file(
+        ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
+        ${CURRENT_PACKAGES_DIR}/include/mpg123.h.in @ONLY
+    )
+
 elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_install_msbuild(
         SOURCE_PATH ${SOURCE_PATH}
@@ -59,12 +72,19 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         RELEASE_CONFIGURATION Release${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
         DEBUG_CONFIGURATION Debug${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
     )
+
     file(INSTALL
         ${SOURCE_PATH}/ports/MSVC++/mpg123.h
         ${SOURCE_PATH}/src/libmpg123/fmt123.h
-        ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
         DESTINATION ${CURRENT_PACKAGES_DIR}/include
     )
+
+    read_api_version()
+    configure_file(
+        ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
+        ${CURRENT_PACKAGES_DIR}/include/mpg123.h.in @ONLY
+    )
+
 elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     set(MPG123_OPTIONS
         --disable-dependency-tracking
@@ -95,6 +115,7 @@ elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
         OPTIONS ${MPG123_OPTIONS}
     )
     vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()

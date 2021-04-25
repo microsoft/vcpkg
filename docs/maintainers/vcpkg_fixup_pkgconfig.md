@@ -1,6 +1,8 @@
 # vcpkg_fixup_pkgconfig
 
-Fix common paths in *.pc files and make everything relativ to $(prefix)
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_fixup_pkgconfig.md).
+
+Fix common paths in *.pc files and make everything relative to $(prefix)
 
 ## Usage
 ```cmake
@@ -40,4 +42,4 @@ Still work in progress. If there are more cases which can be handled here feel f
 * [brotli](https://github.com/Microsoft/vcpkg/blob/master/ports/brotli/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_fixup_pkgconfig.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_fixup_pkgconfig.cmake)
+[scripts/cmake/vcpkg\_fixup\_pkgconfig.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_fixup_pkgconfig.cmake)

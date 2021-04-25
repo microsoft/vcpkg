@@ -128,6 +128,10 @@
             "$ref": "#/definitions/identifier"
           }
         },
+        "host": {
+          "type": "boolean",
+          "default": false
+        },
         "default-features": {
           "type": "boolean",
           "default": true
@@ -136,12 +140,9 @@
           "$ref": "#/definitions/platform-expression"
         },
         "version>=": {
-          "description": "Minimum required port version",
-          "$ref": "#/definitions/version-text"
-        },
-        "port-version": {
-          "description": "Minimum port revision (defaults to 0)",
-          "$ref": "#/definitions/port-version"
+          "description": "Minimum required version",
+          "type": "string",
+          "pattern": "^[^#]+(#\\d+)?$"
         }
       },
       "patternProperties": {
@@ -193,9 +194,6 @@
       "description": "A package feature that can be activated by consumers.",
       "type": "object",
       "properties": {
-        "name": {
-          "$ref": "#/definitions/identifier"
-        },
         "description": {
           "$ref": "#/definitions/description-field"
         },
@@ -211,7 +209,6 @@
         "^\\$": {}
       },
       "required": [
-        "name",
         "description"
       ],
       "additionalProperties": false
@@ -256,6 +253,10 @@
           "description": "An SPDX license expression at version 3.9.",
           "type": "string"
         },
+        "builtin-baseline": {
+          "description": "A vcpkg repository commit for version control.",
+          "type": "string"
+        },
         "dependencies": {
           "description": "Dependencies that are always required.",
           "type": "array",
@@ -278,10 +279,12 @@
           }
         },
         "features": {
-          "description": "An array of features supported by the package",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/feature"
+          "description": "A map of features supported by the package",
+          "type": "object",
+          "patternProperties": {
+            "": {
+              "$ref": "#/definitions/feature"
+            }
           }
         },
         "default-features": {

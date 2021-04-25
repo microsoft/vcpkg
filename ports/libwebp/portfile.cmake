@@ -61,6 +61,12 @@ vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/WebP/cmake TARGET_PATH share/WebP) # find_package is called with WebP not libwebp
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebp.pc" "-lwebp" "-lwebpd")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebpdecoder.pc" "-lwebpdecoder" "-lwebpdecoderd")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebpdemux.pc" "-lwebpdemux" "-lwebpdemuxd")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libwebpmux.pc" "-lwebpmux" "-lwebpmuxd")
+vcpkg_fixup_pkgconfig()
+
 
 set(BIN_NAMES get_disto gif2webp img2webp vwebp vwebp_sdl webpinfo webpmux webp_quality cwebp dwebp)
 file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/webp/")

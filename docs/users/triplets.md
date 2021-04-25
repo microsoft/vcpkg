@@ -1,12 +1,14 @@
 # Triplet files
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/triplets.md).**
+
 Triplet is a standard term used in cross compiling as a way to completely capture the target environment (cpu, os, compiler, runtime, etc) in a single convenient name.
 
 In Vcpkg, we use triplets to describe an imaginary "target configuration set" for every library. Within a triplet, libraries are generally built with the same configuration, but it is not a requirement. For example, you could have one triplet that builds `openssl` statically and `zlib` dynamically, one that builds them both statically, and one that builds them both dynamically (all for the same target OS and architecture). A single build will consume files from a single triplet.
 
-We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily add your own by creating a new file in the `triplets\` directory. The new triplet will immediately be available for use in commands, such as `vcpkg install boost:x86-windows-custom`.
+We currently provide many triplets by default (run `vcpkg help triplet`). However, you can easily customize or add your own by copying a built-in triplet from the `triplets\` directory into a project local location. Then, use overlay triplets (such as [`$VCPKG_OVERLAY_TRIPLETS`](config-environment.md#vcpkg_overlay_triplets), [CMake Manifest Mode](manifests.md#vcpkg_overlay_triplets), or [MSBuild Manifest Mode](manifests.md#vcpkgadditionalinstalloptions-additional-options)) to add that directory to vcpkg. See our [overlay triplets example](../examples/overlay-triplets-linux-dynamic.md) for a more detailed walkthrough.
 
-To change the triplet used by your project, such as to enable static linking, see our [Integration Document](integration.md#triplet-selection).
+To change the triplet used by your project away from the default, see our [Integration Document](integration.md#triplet-selection).
 
 ## Community triplets
 

@@ -1,0 +1,20 @@
+diff --git a/src/physfs_lzmasdk.h b/src/physfs_lzmasdk.h
+--- a/src/physfs_lzmasdk.h
++++ b/src/physfs_lzmasdk.h
+@@ -506,6 +506,7 @@ MY_CPU_LE_UNALIGN means that CPU is LITTLE ENDIAN and CPU supports unaligned mem
+ #endif
+ 
+ #if defined(MY_CPU_AMD64) \
++    || defined(_M_ARM64) \
+     || defined(_M_IA64) \
+     || defined(__AARCH64EL__) \
+     || defined(__AARCH64EB__)
+@@ -531,6 +532,8 @@ MY_CPU_LE_UNALIGN means that CPU is LITTLE ENDIAN and CPU supports unaligned mem
+ 
+ #if defined(_WIN32) && defined(_M_ARM)
+ #define MY_CPU_ARM_LE
++#elif defined(_WIN64) && defined(_M_ARM64)
++#define MY_CPU_ARM_LE
+ #endif
+ 
+ #if defined(_WIN32) && defined(_M_IA64)

@@ -48,6 +48,12 @@ foreach(flag IN LISTS FLAGS)
 endforeach()
 list(REMOVE_DUPLICATES VCPKG_DEFAULT_FLAGS_TO_CHECK)
 
+#Language-specific flags.
+foreach(_lang IN LISTS VCPKG_LANGUAGES)
+    list(APPEND VCPKG_LANG_FLAGS CMAKE_${_lang}_FLAGS)
+endforeach()
+list(REMOVE_DUPLICATES VCPKG_LANG_FLAGS)
+
 # TODO if ever necessary: Properties to check
 
 set(VCPKG_VAR_PREFIX "VCPKG_DETECTED" CACHE STRING "Variable prefix to use for detected flags")
@@ -73,7 +79,7 @@ foreach(VAR IN LISTS VCPKG_VARS_TO_CHECK)
 endforeach()
 
 foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
-    IF(WIN32)
+    if(CMAKE_HOST_WIN32)
         string(REPLACE "\\" "/" ENV_${_env} "$ENV{${_env}}")
         string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_ENV_${_env} \"${ENV_${_env}}\")\n")
     else()
@@ -81,17 +87,31 @@ foreach(_env IN LISTS VCPKG_ENV_VARS_TO_CHECK)
     endif()
 endforeach()
 
+macro(_vcpkg_adjust_flags flag_var)
+    if(MSVC) # Transform MSVC /flags to -flags due to bash scripts intepreting /flag as a path.
+        string(REGEX REPLACE "(^| )/" "\\1-" ${flag_var} "${${flag_var}}")
+    endif()
+    if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+        if("${flag_var}" IN_LIST VCPKG_LANG_FLAGS)
+            # macOS - append arch and isysroot if cross-compiling
+            if(NOT "${CMAKE_OSX_ARCHITECTURES}" STREQUAL "${CMAKE_HOST_SYSTEM_PROCESSOR}")
+
+                foreach(arch IN LISTS CMAKE_OSX_ARCHITECTURES)
+                    string(APPEND ${flag_var} " -arch ${arch}")
+                endforeach()
+                string(APPEND ${flag_var} " -isysroot ${CMAKE_OSX_SYSROOT}")
+            endif()
+        endif()
+    endif()
+endmacro()
+
 foreach(flag IN LISTS VCPKG_FLAGS_TO_CHECK)
     string(STRIP "${${flag}}" ${flag}) # Strip leading and trailing whitespaces
-    if(MSVC) # Transform MSVC /flags to -flags due to bash scripts intepreting /flag as a path. 
-        string(REGEX REPLACE "(^| )/" "\\1-" ${flag} "${${flag}}")
-    endif()
+    _vcpkg_adjust_flags(${flag})
     string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_RAW_${flag} \" ${${flag}}\")\n")
     foreach(config IN LISTS VCPKG_CONFIGS)
         string(STRIP "${${flag}_${config}}" ${flag}_${config})
-        if(MSVC)
-            string(REGEX REPLACE "(^| )/" "\\1-" ${flag}_${config} "${${flag}_${config}}")
-        endif()
+        _vcpkg_adjust_flags(${flag}_${config})
         string(APPEND OUTPUT_STRING "set(${VCPKG_VAR_PREFIX}_RAW_${flag}_${config} \"${CMAKE_${flag}_FLAGS_${config}}\")\n")
         set(COMBINED_${flag}_${config} "${${flag}} ${${flag}_${config}}")
         string(STRIP "${COMBINED_${flag}_${config}}" COMBINED_${flag}_${config})

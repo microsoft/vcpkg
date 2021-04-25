@@ -1,8 +1,14 @@
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/flashlight-cpu")
+  message(FATAL_ERROR "flashlight-cpu is installed; only one Flashlight "
+    "backend package can be installed at once. Uninstall and try again:"
+    "\n    vcpkg remove flashlight-cpu\n")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookresearch/flashlight
-    REF 0948e97dbff23d474500a5f55bcf59d3b3589cf4
-    SHA512 89c2efdebc6688a38f9fc3ebb8442c8fe2ad3d51c0e60c5dd8e7ca283715e07f48083543f09eed0db9929d86b765a898d9b3960a9b6f9844b20260f94cf71fdf
+    REF 81c4d8d5ea57e9ceaa6db3b17f0861491fd31383
+    SHA512 988da269be81f7b4897d72e52683259f4223029b5012150958b9b21c7103fe49a2458ffa5623ed53c125a98f7294541af46cd68b17e9213269e5a2aecfaabb67
     HEAD_REF master
 )
 
@@ -18,8 +24,8 @@ set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
 
 # Determine which components to build via specified feature
 vcpkg_check_features(
-  OUT_FEATURE_OPTIONS FL_FEATURE_OPTIONS
-  FEATURES
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     lib FL_BUILD_LIBRARIES
     fl FL_BUILD_CORE
     asr FL_BUILD_APP_ASR
@@ -31,7 +37,9 @@ vcpkg_check_features(
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FL_DEFAULT_VCPKG_CMAKE_FLAGS} ${FL_FEATURE_OPTIONS}
+    OPTIONS 
+        ${FL_DEFAULT_VCPKG_CMAKE_FLAGS} 
+        ${FEATURE_OPTIONS}
 )
 vcpkg_install_cmake()
 

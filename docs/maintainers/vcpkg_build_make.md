@@ -1,5 +1,7 @@
 # vcpkg_build_make
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_build_make.md).
+
 Build a linux makefile project.
 
 ## Usage:
@@ -49,4 +51,4 @@ You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function i
 * [libosip2](https://github.com/Microsoft/vcpkg/blob/master/ports/libosip2/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_build_make.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_build_make.cmake)
+[scripts/cmake/vcpkg\_build\_make.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_build_make.cmake)

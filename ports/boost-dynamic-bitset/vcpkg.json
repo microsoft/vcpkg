@@ -1,0 +1,10 @@
+{
+  "name": "boost-dynamic-bitset",
+  "version-string": "1.75.0",
+  "description": "Boost dynamic_bitset module",
+  "homepage": "https://github.com/boostorg/dynamic_bitset",
+  "dependencies": [
+    "boost-core",
+    "boost-vcpkg-helpers"
+  ]
+}

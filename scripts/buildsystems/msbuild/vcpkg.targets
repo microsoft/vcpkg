@@ -1,4 +1,4 @@
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="VcpkgConfigSubdir;VcpkgCurrentInstalledDir;VcpkgInstalledDir;VcpkgNormalizedConfiguration">
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" TreatAsLocalProperty="VcpkgConfigSubdir;_ZVcpkgCurrentInstalledDir;VcpkgNormalizedConfiguration">
 
   <!-- Import default properties if not done yet. This does not overwrite any previously defined properties. -->
   <Import Condition="'$(VcpkgPropsImported)' != 'true'" Project="vcpkg.props" />
@@ -18,18 +18,23 @@
     <VcpkgRoot Condition="'$(VcpkgRoot)' != '' and !$(VcpkgRoot.EndsWith('\'))">$(VcpkgRoot)\</VcpkgRoot>
     <VcpkgManifestRoot Condition="'$(VcpkgManifestRoot)' != '' and !$(VcpkgManifestRoot.EndsWith('\'))">$(VcpkgManifestRoot)\</VcpkgManifestRoot>
 
-    <VcpkgInstalledDir>$([System.IO.Path]::Combine($(VcpkgRoot), 'installed'))</VcpkgInstalledDir>
-    <VcpkgInstalledDir Condition="'$(VcpkgEnableManifest)' == 'true'">$([System.IO.Path]::Combine($(VcpkgManifestRoot), 'vcpkg_installed'))</VcpkgInstalledDir>
+    <VcpkgInstalledDir Condition="'$(VcpkgInstalledDir)' == '' and '$(VcpkgEnableManifest)' != 'true'">$([System.IO.Path]::Combine($(VcpkgRoot), 'installed'))</VcpkgInstalledDir>
+    <VcpkgInstalledDir Condition="'$(VcpkgInstalledDir)' == '' and '$(VcpkgEnableManifest)' == 'true'">$([System.IO.Path]::Combine($(VcpkgManifestRoot), 'vcpkg_installed'))</VcpkgInstalledDir>
     <VcpkgInstalledDir Condition="!$(VcpkgInstalledDir.EndsWith('\'))">$(VcpkgInstalledDir)\</VcpkgInstalledDir>
 
-    <VcpkgCurrentInstalledDir Condition="'$(VcpkgCurrentInstalledDir)' == ''">$([System.IO.Path]::Combine($(VcpkgInstalledDir), $(VcpkgTriplet)))</VcpkgCurrentInstalledDir>
-    <VcpkgCurrentInstalledDir Condition="!$(VcpkgCurrentInstalledDir.EndsWith('\'))">$(VcpkgCurrentInstalledDir)\</VcpkgCurrentInstalledDir>
+    <_ZVcpkgCurrentInstalledDir>$([System.IO.Path]::Combine($(VcpkgInstalledDir), $(VcpkgTriplet)))</_ZVcpkgCurrentInstalledDir>
+    <_ZVcpkgCurrentInstalledDir Condition="!$(_ZVcpkgCurrentInstalledDir.EndsWith('\'))">$(_ZVcpkgCurrentInstalledDir)\</_ZVcpkgCurrentInstalledDir>
 
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
     <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
 
     <VcpkgConfigSubdir Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">debug\</VcpkgConfigSubdir>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
+
+    <_ZVcpkgHostTripletParameter Condition="'$(VcpkgHostTriplet)' != ''">"--host-triplet=$(VcpkgHostTriplet)"</_ZVcpkgHostTripletParameter>
+    <_ZVcpkgExecutable>$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))</_ZVcpkgExecutable>
+
+    <ProjectStateLine>VcpkgTriplet=$(VcpkgTriplet):$(ProjectStateLine)</ProjectStateLine>
   </PropertyGroup>
 
   <!-- Import property page 'Vcpkg' -->
@@ -41,14 +46,14 @@
 
   <ItemDefinitionGroup Condition="'$(VcpkgEnabled)' == 'true'">
     <Link>
-      <AdditionalDependencies Condition="'$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(VcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)lib\*.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(VcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)lib;$(VcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)lib\manual-link</AdditionalLibraryDirectories>
+      <AdditionalDependencies Condition="'$(VcpkgAutoLink)' != 'false'">%(AdditionalDependencies);$(_ZVcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)lib\*.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);$(_ZVcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)lib;$(_ZVcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)lib\manual-link</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgCurrentInstalledDir)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(_ZVcpkgCurrentInstalledDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(VcpkgCurrentInstalledDir)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);$(_ZVcpkgCurrentInstalledDir)include</AdditionalIncludeDirectories>
     </ResourceCompile>
   </ItemDefinitionGroup>
 
@@ -60,7 +65,7 @@
   </Target>
 
   <Target Name="VcpkgTripletSelection" BeforeTargets="ClCompile">
-    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(VcpkgCurrentInstalledDir)&quot;"
+    <Message Text="Using triplet &quot;$(VcpkgTriplet)&quot; from &quot;$(_ZVcpkgCurrentInstalledDir)&quot;"
              Importance="Normal" Condition="'$(VcpkgEnabled)' == 'true'"/>
     <Message Text="Not using Vcpkg because VcpkgEnabled is &quot;$(VcpkgEnabled)&quot;"
              Importance="Normal" Condition="'$(VcpkgEnabled)' != 'true'"/>
@@ -68,18 +73,52 @@
              Importance="High" Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgNormalizedConfiguration)' == ''"/>
   </Target>
 
+  <PropertyGroup Condition="'$(VcpkgEnabled)' == 'true'">
+    <_ZVcpkgManifestFileLocation>$(VcpkgManifestRoot)vcpkg.json </_ZVcpkgManifestFileLocation>
+    <_ZVcpkgConfigurationFileLocation>$(VcpkgManifestRoot)vcpkg-configuration.json</_ZVcpkgConfigurationFileLocation>
+
+    <_ZVcpkgTLogFileLocation>$(TLogLocation)VcpkgInstallManifest$(VcpkgTriplet).$(VcpkgHostTriplet).read.1u.tlog</_ZVcpkgTLogFileLocation>
+    <_ZVcpkgMSBuildStampFile>$(VcpkgInstalledDir).msbuildstamp-$(VcpkgTriplet).$(VcpkgHostTriplet).stamp</_ZVcpkgMSBuildStampFile>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(VcpkgEnabled)' == 'true'">
+    <_ZVcpkgInstallManifestDependenciesInputs Include="$(_ZVcpkgManifestFileLocation)"/>
+    <_ZVcpkgInstallManifestDependenciesInputs Include="$(_ZVcpkgConfigurationFileLocation)" Condition="Exists('$(_ZVcpkgConfigurationFileLocation)')"/>
+
+    <_ZVcpkgInstallManifestDependenciesOutputs Include="$(_ZVcpkgTLogFileLocation)"/>
+    <_ZVcpkgInstallManifestDependenciesOutputs Include="$(_ZVcpkgMSBuildStampFile)"/>
+  </ItemGroup>
+
   <Target Name="VcpkgInstallManifestDependencies" BeforeTargets="ClCompile"
-          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'">
-    <Message Text="Installing vcpkg dependencies" Importance="High" />
-    <Exec Command="%22$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))%22 install --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22"
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgEnableManifest)' == 'true' and '$(VcpkgManifestInstall)' == 'true'"
+          Inputs="@(_ZVcpkgInstallManifestDependenciesInputs)"
+          Outputs="@(_ZVcpkgInstallManifestDependenciesOutputs)">
+    <Message Text="Installing vcpkg dependencies to $(VcpkgInstalledDir)" Importance="High" />
+    <MakeDir Directories="$(TLogLocation)" />
+    <ItemGroup>
+      <_ZVcpkgItemToDelete Include="$(TLogLocation)VcpkgInstallManifest*.read.1u.tlog" />
+      <_ZVcpkgItemToDelete Include="$(VcpkgInstalledDir).msbuildstamp-*" />
+    </ItemGroup>
+    <Delete Files="@(_ZVcpkgItemToDelete)" />
+    <Message Text="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
+          Importance="High" />
+    <Exec Command="%22$(_ZVcpkgExecutable)%22 install $(_ZVcpkgHostTripletParameter) --x-wait-for-lock --triplet %22$(VcpkgTriplet)%22 --vcpkg-root %22$(VcpkgRoot)\%22 %22--x-manifest-root=$(VcpkgManifestRoot)\%22 %22--x-install-root=$(VcpkgInstalledDir)\%22 $(VcpkgAdditionalInstallOptions)"
           StandardOutputImportance="High" />
+    <WriteLinesToFile File="$(_ZVcpkgTLogFileLocation)"
+                      Lines="@(_VcpkgInstallManifestDependenciesInputs -> '^%(Identity)')"
+                      Encoding="Unicode"
+                      Overwrite="true"/>
+    <Touch Files="$(_ZVcpkgMSBuildStampFile)" AlwaysCreate="true" />
+
+    <CreateProperty Value="false">
+      <Output TaskParameter="ValueSetByTask" PropertyName="Link_MinimalRebuildFromTracking" />
+    </CreateProperty>
   </Target>
 
   <Target Name="AppLocalFromInstalled" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyLocalFilesOutputGroup;RegisterOutput"
-          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgApplocalDeps)' == 'true'">
+          Condition="'$(VcpkgEnabled)' == 'true' and '$(VcpkgApplocalDeps)' == 'true' and '$(LinkSkippedExecution)' != 'true'">
     <Message Text="[vcpkg] Starting VcpkgApplocalDeps" Importance="low" />
     <PropertyGroup>
-      <_VcpkgAppLocalPowerShellCommonArguments>-ExecutionPolicy Bypass -noprofile -File "$(MSBuildThisFileDirectory)applocal.ps1" "$(TargetPath)" "$(VcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)bin" "$(TLogLocation)$(ProjectName).write.1u.tlog" "$(IntDir)vcpkg.applocal.log"</_VcpkgAppLocalPowerShellCommonArguments>
+      <_VcpkgAppLocalPowerShellCommonArguments>-ExecutionPolicy Bypass -noprofile -File "$(MSBuildThisFileDirectory)applocal.ps1" "$(TargetPath)" "$(_ZVcpkgCurrentInstalledDir)$(VcpkgConfigSubdir)bin" "$(TLogLocation)$(ProjectName).write.1u.tlog" "$(IntDir)vcpkg.applocal.log"</_VcpkgAppLocalPowerShellCommonArguments>
     </PropertyGroup>
     <!-- Search %PATH% for pwsh.exe if it is available. -->
     <Exec

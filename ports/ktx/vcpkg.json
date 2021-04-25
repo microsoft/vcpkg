@@ -1,7 +1,7 @@
 {
   "name": "ktx",
   "version-string": "4.0.0-beta5",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A small library of functions for writing and reading KTX files, and instantiating OpenGL®, OpenGL ES™️ and Vulkan® textures from them",
   "homepage": "https://github.com/KhronosGroup/KTX-Software",
   "supports": "!(uwp | x86)",
