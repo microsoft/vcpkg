@@ -36,7 +36,7 @@ index ceb8f18..932e216 100644
  "The include directory specified for libxml appears to be invalid.
  It should contain the file libxml/parser.h, but it does not.")
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 11158db..1fad397 100644
+index 11158db..c61cb2b 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
 @@ -496,7 +496,8 @@ if (LIBSBML_SHARED_VERSION)
@@ -49,3 +49,13 @@ index 11158db..1fad397 100644
  
  INSTALL(TARGETS ${LIBSBML_LIBRARY} EXPORT ${LIBSBML_LIBRARY}-config
          RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+@@ -533,7 +534,8 @@ if (WIN32 AND NOT CYGWIN)
+     set_target_properties(${LIBSBML_LIBRARY}-static PROPERTIES COMPILE_DEFINITIONS "LIBLAX_STATIC=1;LIBSBML_STATIC=1")
+ endif(WIN32 AND NOT CYGWIN)
+ 
+-target_link_libraries(${LIBSBML_LIBRARY}-static ${LIBSBML_LIBS} ${EXTRA_LIBS})
++target_include_directories(${LIBSBML_LIBRARY}-static PRIVATE ${LIBXML2_INCLUDE_DIRS})
++target_link_libraries(${LIBSBML_LIBRARY}-static ${LIBSBML_LIBS} ${EXTRA_LIBS} ${LIBXML2_LIBRARIES})
+ 
+ INSTALL(TARGETS ${LIBSBML_LIBRARY}-static
+         EXPORT  ${LIBSBML_LIBRARY}-static-config
