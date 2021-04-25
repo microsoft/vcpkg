@@ -509,7 +509,7 @@ InstallWindowsWDK -Url $WindowsWDKUrl
 InstallMpi -Url $MpiUrl
 InstallCuda -Url $CudaUrl -Features $CudaFeatures
 InstallMSI -Url $PwshUrl -Name 'PowerShell Core'
-InstallInteloneAPI -Url $oneAPIHPCUrl -Features $oneAPIHPCComponents
+InstallInteloneAPI -Url $oneAPIHPCUrl -Components $oneAPIHPCComponents
 if ([string]::IsNullOrWhiteSpace($StorageAccountName)) {
   Write-Host 'No storage account name configured.'
 } else {
