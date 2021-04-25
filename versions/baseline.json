@@ -413,7 +413,7 @@
       "port-version": 0
     },
     "boolinq": {
-      "baseline": "2019-07-22",
+      "baseline": "3.0.1",
       "port-version": 0
     },
     "boost": {
