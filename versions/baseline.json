@@ -6198,7 +6198,7 @@
     },
     "upb": {
       "baseline": "2020-12-19",
-      "port-version": 0
+      "port-version": 1
     },
     "urdfdom": {
       "baseline": "1.0.4",
