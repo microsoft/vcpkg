@@ -35,8 +35,9 @@ if (VCPKG_TARGET_IS_WINDOWS)
       set(SPATIALITE_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/spatialite.lib ${CURRENT_INSTALLED_DIR}/debug/lib/freexl.lib ${CURRENT_INSTALLED_DIR}/debug/lib/librttopo.lib")
       set(ICONV_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/iconv.lib ${CURRENT_INSTALLED_DIR}/lib/charset.lib")
       set(ICONV_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/iconv.lib ${CURRENT_INSTALLED_DIR}/debug/lib/charset.lib")
-      list(APPEND LIBXML2_LIBS_REL "${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib" )
-      list(APPEND LIBXML2_LIBS_DBG "${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib" )
+      # Can't use list append because it may contains semicolon
+      set(LIBXML2_LIBS_REL "${LIBXML2_LIBS_REL} ${CURRENT_INSTALLED_DIR}/lib/lzma.lib ws2_32.lib" )
+      set(LIBXML2_LIBS_DBG "${LIBXML2_LIBS_DBG} ${CURRENT_INSTALLED_DIR}/debug/lib/lzmad.lib ws2_32.lib" )
   endif()
 
   if(VCPKG_TARGET_IS_UWP)
