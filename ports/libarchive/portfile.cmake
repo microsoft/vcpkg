@@ -14,6 +14,7 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     bzip2   ENABLE_BZip2
     libxml2 ENABLE_LIBXML2
     lz4     ENABLE_LZ4
