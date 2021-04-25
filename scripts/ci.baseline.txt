@@ -1824,3 +1824,9 @@ workflow:arm-uwp=fail
 wangle:x64-windows=fail
 wangle:x64-windows-static=fail
 wangle:x64-windows-static-md=fail
+
+# VS2019 version 16.9.4's project system changes where PDBs are placed in a way that breaks the
+# upstream build script of this port.
+# See https://developercommunity.visualstudio.com/t/Toolset-169-regression-vcxproj-producin/1356639
+dimcli:x64-windows-static-md=fail
+dimcli:x64-windows-static=fail
