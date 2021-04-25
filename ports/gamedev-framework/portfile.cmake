@@ -1,3 +1,7 @@
+if (VCPKG_HOST_IS_LINUX)
+    message(WARNING "gamedev-framework requires gcc version 8.3 or later.")
+endif()
+
 vcpkg_fail_port_install(
     ON_ARCH "arm"
 )
