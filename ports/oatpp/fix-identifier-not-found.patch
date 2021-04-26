@@ -1,0 +1,13 @@
+diff --git a/src/oatpp/core/base/Environment.cpp b/src/oatpp/core/base/Environment.cpp
+index b870835..a596172 100644
+--- a/src/oatpp/core/base/Environment.cpp
++++ b/src/oatpp/core/base/Environment.cpp
+@@ -96,7 +96,7 @@ void DefaultLogger::log(v_uint32 priority, const std::string& tag, const std::st
+     default:
+       std::cout << " " << priority << " |";
+   }
+-
++struct tm* localtime_r(time_t *_clock, struct tm *_result);
+   if (m_config.timeFormat) {
+ 	time_t seconds = std::chrono::duration_cast<std::chrono::seconds>(time).count();
+     struct tm now;
