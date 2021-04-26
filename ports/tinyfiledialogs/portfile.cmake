@@ -3,7 +3,7 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_git(
-    OUT_SOURCE_PATH "${SOURCE_PATH}"
+    OUT_SOURCE_PATH SOURCE_PATH
     URL "https://git.code.sf.net/p/tinyfiledialogs/code"
     REF "ab6f4f916aaa95d05247ffa66a30867e7f55e875"
 )
