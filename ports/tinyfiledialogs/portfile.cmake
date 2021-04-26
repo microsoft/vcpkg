@@ -8,7 +8,6 @@ vcpkg_from_git(
     REF "ab6f4f916aaa95d05247ffa66a30867e7f55e875"
 )
 
-file(COPY "${${SOURCE_PATH}}/tinyfiledialogs.h" "${${SOURCE_PATH}}/tinyfiledialogs.c" DESTINATION "${SOURCE_PATH}")
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
 
 vcpkg_configure_cmake(
