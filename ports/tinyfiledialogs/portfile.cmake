@@ -18,7 +18,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets()
-file(INSTALL "${SOURCE_PATH}/tinyfiledialogs.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 file(READ "${CURRENT_PACKAGES_DIR}/include/tinyfiledialogs/tinyfiledialogs.h" _contents)
 string(SUBSTRING "${_contents}" 0 1024 _contents)
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${_contents}")
