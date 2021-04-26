@@ -139,6 +139,9 @@ if(CMD MATCHES "^BUILD$")
     include("${SCRIPTS}/cmake/z_vcpkg_apply_patches.cmake")
     include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
 
+    include("${SCRIPTS}/vcpkg_get_tags.cmake")
+    z_vcpkg_select_build_type()
+
     include("${CURRENT_PORT_DIR}/portfile.cmake")
     if(DEFINED PORT)
         include("${SCRIPTS}/build_info.cmake")

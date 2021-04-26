@@ -88,3 +88,14 @@ This environment variable changes the metadata of produced NuGet packages. See [
 #### VCPKG_USE_NUGET_CACHE
 
 This environment variable allows using NuGet's cache for every nuget-based binary source. See [Binary Caching](binarycaching.md#NuGets-cache) for more details.
+
+#### VCPKG_BUILD_TYPE
+
+This environment variable allows to select a single build type configuration.
+This allows to reduce build times and disk storage requirements locally or in
+continuous integration setups.
+The environment variable overrides settings in triplet files.
+Note that some ports do not support single build type configurations.
+
+At the moment, the only supported value is: `release`.
+
