@@ -3329,7 +3329,7 @@
       "port-version": 0
     },
     "libqcow": {
-      "baseline": "20200928",
+      "baseline": "20210419",
       "port-version": 0
     },
     "libqglviewer": {
