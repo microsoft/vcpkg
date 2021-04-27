@@ -7,7 +7,8 @@ assignees: ''
 
 ---
 
-**Host Environment**
+*Host Environment**
+
 - OS: [e.g. Windows/Linux etc...]
 - Compiler: revision
 
@@ -15,7 +16,7 @@ assignees: ''
 Steps to reproduce the behavior:
 `./vcpkg install xxxx`
 
-**Failure logs** 
+**Failure logs**
 -Cut and past the appropriate build messages from the console output.
 -Please attach any additional failure logs mentioned in the console output.
 
