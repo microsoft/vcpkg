@@ -1493,7 +1493,7 @@
       "port-version": 0
     },
     "cryptopp": {
-      "baseline": "8.2.0-2",
+      "baseline": "8.5.0",
       "port-version": 0
     },
     "cspice": {
