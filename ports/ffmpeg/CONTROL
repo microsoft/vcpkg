@@ -55,7 +55,7 @@ Feature: version3
 Description: Upgrade (L)GPL to version 3
 
 Feature: all
-Build-Depends: ffmpeg[bzip2,iconv,freetype,lzma,mp3lame,openjpeg,opus,snappy,soxr,speex,theora,vorbis,vpx,webp,zlib], ffmpeg[ass] (!(uwp | arm)), ffmpeg[dav1d] (!(uwp | arm | x86 | osx)), ffmpeg[fontconfig] (!(windows & static) & !(uwp | arm)), ffmpeg[fribidi] (!(uwp | arm)), ffmpeg[ilbc] (!(arm & uwp)), ffmpeg[modplug] (!(windows & static) & !uwp), ffmpeg[nvcodec] ((windows | linux) & !uwp & !arm), ffmpeg[opencl] (!uwp), ffmpeg[ssh] (!(uwp | arm) & !static), ffmpeg[opengl] (!uwp & !(windows & arm) & !osx), ffmpeg[sdl2] (!osx), ffmpeg[tensorflow] (!(x86 | arm | uwp) & !static), ffmpeg[tesseract] (!uwp & !(windows & arm) & !static), ffmpeg[wavpack] (!arm), ffmpeg[xml2] (!static)
+Build-Depends: ffmpeg[bzip2,iconv,freetype,lzma,mp3lame,openh264,openjpeg,opus,snappy,soxr,speex,theora,vorbis,vpx,webp,zlib], ffmpeg[ass] (!(uwp | arm)), ffmpeg[dav1d] (!(uwp | arm | x86 | osx)), ffmpeg[fontconfig] (!(windows & static) & !(uwp | arm)), ffmpeg[fribidi] (!(uwp | arm)), ffmpeg[ilbc] (!(arm & uwp)), ffmpeg[modplug] (!(windows & static) & !uwp), ffmpeg[nvcodec] ((windows | linux) & !uwp & !arm), ffmpeg[opencl] (!uwp), ffmpeg[ssh] (!(uwp | arm) & !static), ffmpeg[opengl] (!uwp & !(windows & arm) & !osx), ffmpeg[sdl2] (!osx), ffmpeg[tensorflow] (!(x86 | arm | uwp) & !static), ffmpeg[tesseract] (!uwp & !(windows & arm) & !static), ffmpeg[wavpack] (!arm), ffmpeg[xml2] (!static)
 Description: Build with all allowed dependencies selected that are compatible with the lgpl license
 
 Feature: all-gpl
@@ -129,6 +129,10 @@ Description: OpenCL processing
 Feature: opengl
 Build-Depends: opengl, opengl-registry
 Description: OpenGL rendering
+
+Feature: openh264
+Build-Depends: openh264
+Description: H.264 de/encoding via openh264
 
 Feature: openjpeg
 Build-Depends: openjpeg
