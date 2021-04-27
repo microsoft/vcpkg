@@ -1,3 +1,15 @@
+if(VCPKG_NO_COMPILER_TRACKING)
+    string(SHA1 hash "nocompilertracking")
+    message("#COMPILER_HASH#${hash}")
+    message("#COMPILER_C_HASH#${hash}")
+    message("#COMPILER_C_VERSION#nocompilertracking")
+    message("#COMPILER_C_ID#nocompilertracking")
+    message("#COMPILER_CXX_HASH#${hash}")
+    message("#COMPILER_CXX_VERSION#nocompilertracking")
+    message("#COMPILER_CXX_ID#nocompilertracking")
+    return()
+endif()
+
 set(LOGS
     ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-out.log
     ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-out.log
