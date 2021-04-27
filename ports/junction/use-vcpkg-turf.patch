@@ -1,0 +1,49 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 93cf495..40c465a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -29,17 +29,14 @@ set(JUNCTION_ALL_DLLS "")
+ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules")
+ 
+ # Add turf targets and import its macros since we use them below
+-get_filename_component(outerPath "${CMAKE_CURRENT_LIST_DIR}/.." ABSOLUTE)
+-set(TURF_ROOT "${outerPath}/turf" CACHE STRING "Path to Turf")
+-include("${TURF_ROOT}/cmake/Macros.cmake")
++find_package(turf CONFIG REQUIRED)
++
++include("cmake/Macros.cmake")
+ if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+     # If this is the root project, apply build settings here so that
+     # they're applied to all targets
+     ApplyTurfBuildSettings()
+ endif()
+-add_subdirectory(${TURF_ROOT} turf)
+-list(APPEND JUNCTION_ALL_INCLUDE_DIRS ${TURF_INCLUDE_DIRS})
+-list(APPEND JUNCTION_ALL_LIBRARIES ${TURF_ALL_LIBRARIES})
+ 
+ # Optional: Locate Folly and append it to the list of include dirs/libraries.
+ if(JUNCTION_WITH_FOLLY)
+@@ -118,9 +115,17 @@ add_library(junction ${JUNCTION_FILES})
+ # Set include dirs for this library (done last, so it's not inherited by subprojects like Tervel, NBDS).
+ include_directories(${JUNCTION_ALL_INCLUDE_DIRS})
+ 
++target_link_libraries(junction PUBLIC turf::turf)
+ # Make installable.
+ if(JUNCTION_MAKE_INSTALLABLE)
+-    install(TARGETS junction DESTINATION lib)
++    install(
++        TARGETS junction
++        EXPORT junctionTargets
++        RUNTIME DESTINATION bin
++        LIBRARY DESTINATION lib
++        ARCHIVE DESTINATION lib
++        INCLUDES DESTINATION include
++    )
+     install(DIRECTORY junction/ DESTINATION include/junction FILES_MATCHING PATTERN "*.h")
+     file(GLOB configHeaders "${CMAKE_CURRENT_BINARY_DIR}/include/*.h")
+     install(FILES ${configHeaders} DESTINATION include)
+@@ -133,4 +138,3 @@ if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+     set(JUNCTION_ALL_LIBRARIES "${JUNCTION_ALL_LIBRARIES}" PARENT_SCOPE)
+     set(JUNCTION_ALL_DLLS "${JUNCTION_ALL_DLLS}" PARENT_SCOPE)
+ endif()
+-
