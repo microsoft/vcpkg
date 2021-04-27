@@ -2752,6 +2752,10 @@
       "baseline": "0.16.0",
       "port-version": 2
     },
+    "junction": {
+      "baseline": "2018-02-18",
+      "port-version": 0
+    },
     "jwt-cpp": {
       "baseline": "0.5.0",
       "port-version": 0
@@ -6146,6 +6150,10 @@
     },
     "turbobase64": {
       "baseline": "2020-01-12",
+      "port-version": 0
+    },
+    "turf": {
+      "baseline": "2017-01-13",
       "port-version": 0
     },
     "tweeny": {
