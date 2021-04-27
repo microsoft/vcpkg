@@ -1,0 +1,122 @@
+diff --git a/Makefile.am b/Makefile.am
+index 03fa35236..94a7a263a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -16,11 +16,11 @@ EXTRA_DIST += \
+ 
+ ACLOCAL_AMFLAGS = -I build ${ACLOCAL_FLAGS}
+ 
+-DIST_SUBDIRS = src doc util boilerplate test perf
+-SUBDIRS = src doc util
++DIST_SUBDIRS = src util boilerplate
++SUBDIRS = src util
+ # libpng is required for our test programs
+ if CAIRO_HAS_PNG_FUNCTIONS
+-SUBDIRS += boilerplate test perf
++SUBDIRS += boilerplate
+ endif
+ 
+ configure: cairo-version.h
+@@ -28,12 +28,11 @@ configure: cairo-version.h
+ doc:
+ 	cd doc && $(MAKE) $(AM_MAKEFLAGS) $@
+ test retest recheck: all
+-	cd test && $(MAKE) $(AM_MAKEFLAGS) $@
++	echo "do nothing"
+ perf: all
+ 	cd perf && $(MAKE) $(AM_MAKEFLAGS) $@
+ check-valgrind: all
+-	cd test && $(MAKE) $(AM_MAKEFLAGS) check-valgrind
+-	cd perf && $(MAKE) $(AM_MAKEFLAGS) check-valgrind
++	echo "do nothing"
+ .PHONY: doc test retest recheck perf check-valgrind
+ 
+ 
+diff --git a/boilerplate/Makefile.am b/boilerplate/Makefile.am
+index 29ad015ac..9234014ed 100644
+--- a/boilerplate/Makefile.am
++++ b/boilerplate/Makefile.am
+@@ -69,7 +69,7 @@ test: check
+ 
+ if CROSS_COMPILING
+ else
+-TESTS += check-link$(EXEEXT)
++#TESTS += check-link$(EXEEXT)
+ endif
+ 
+ check_PROGRAMS += check-link
+diff --git a/perf/cairo-analyse-trace.c b/perf/cairo-analyse-trace.c
+index 994148660..5d2dceaec 100644
+--- a/perf/cairo-analyse-trace.c
++++ b/perf/cairo-analyse-trace.c
+@@ -53,7 +53,7 @@
+ #include <sys/stat.h>
+ 
+ #ifdef _MSC_VER
+-#include "dirent-win32.h"
++#include "dirent.h"
+ 
+ static char *
+ basename_no_ext (char *path)
+diff --git a/perf/cairo-perf-trace.c b/perf/cairo-perf-trace.c
+index 02e0e29f9..36daf3fd6 100644
+--- a/perf/cairo-perf-trace.c
++++ b/perf/cairo-perf-trace.c
+@@ -54,7 +54,7 @@
+ #include <sys/stat.h>
+ 
+ #ifdef _MSC_VER
+-#include "dirent-win32.h"
++#include "dirent.h"
+ 
+ static char *
+ basename_no_ext (char *path)
+diff --git a/src/Makefile.am b/src/Makefile.am
+index fe339a3cf..df6de0136 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -100,8 +100,8 @@ else
+ TESTS += check-link$(EXEEXT)
+ endif
+ 
+-EXTRA_DIST += $(TESTS_SH) check-has-hidden-symbols.c check-doc-syntax.awk
+-check_PROGRAMS += check-link
++# EXTRA_DIST += $(TESTS_SH) check-has-hidden-symbols.c check-doc-syntax.awk
++# check_PROGRAMS += check-link
+ check_link_LDADD = libcairo.la
+ 
+ check: headers-standalone
+diff --git a/src/cairo-compiler-private.h b/src/cairo-compiler-private.h
+index d982c101d..ad9b26ba0 100644
+--- a/src/cairo-compiler-private.h
++++ b/src/cairo-compiler-private.h
+@@ -201,10 +201,10 @@
+ #define hypot _hypot
+ #define pclose _pclose
+ #define popen _popen
+-#define snprintf _snprintf
++//#define snprintf _snprintf
+ #define strdup _strdup
+ #define unlink _unlink
+-#define vsnprintf _vsnprintf
++//#define vsnprintf _vsnprintf
+ #endif
+ 
+ #ifdef _MSC_VER
+diff --git a/test/Makefile.am b/test/Makefile.am
+index e3c42ea88..099ca8b22 100644
+--- a/test/Makefile.am
++++ b/test/Makefile.am
+@@ -351,9 +351,9 @@ FAILED_TESTS = `grep -l '\<FAIL\>' $(test_sources:.c=.log) 2>/dev/null | tr '\n'
+ recheck = check CAIRO_TESTS="$(FAILED_TESTS)"
+ 
+ # Re-checks all failed tests, i.e. tests with a log file that has a failure
+-recheck:
+-	@echo Re-checking failed tests
+-	@$(MAKE) $(AM_MAKEFLAGS) $(recheck)
++# recheck:
++# 	@echo Re-checking failed tests
++# 	@$(MAKE) $(AM_MAKEFLAGS) $(recheck)
+ 
+ # Checks tests.
+ # Target doesn't fail if tests fail.

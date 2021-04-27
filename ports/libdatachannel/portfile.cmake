@@ -1,11 +1,12 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO paullouisageneau/libdatachannel
-    REF v0.12.0
-    SHA512 878d0461255620c21597a6b7132ac0c9d1bcba19e32809cdd007039041eacc1f30a73b1c11c43b8b57a82ca1efeae2090822e6c5e13bd98f5afa086ec147e6e7
+    REF 655175d21e58281031c940a94042d5d1fd46efb3 # v 0.12.2
+    SHA512 e1e228bf720ef57130fbb9cc33310cebbdbd16c001455cd56e8746b6ee41bac56da5e5a90235e0a826b52711dc3c95b9d9f56d9e406999f9fd384aee2892578d
     HEAD_REF master
     PATCHES
         fix-for-vcpkg.patch
+        CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING.patch # submitted upstream as https://github.com/paullouisageneau/libdatachannel/pull/413
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
