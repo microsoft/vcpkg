@@ -1,25 +1,25 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e15d25097f..ae77375eae 100644
+index 7822c4f713..4cb75e6eea 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1919,6 +1919,8 @@ target_link_libraries(grpc
-   absl::status
+@@ -2047,6 +2047,8 @@ target_link_libraries(grpc
+   absl::bind_front
    absl::inlined_vector
    absl::flat_hash_set
 +  absl::time
 +  absl::synchronization
+   absl::flat_hash_map
  )
  if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
-   target_link_libraries(grpc "-framework CoreFoundation")
-@@ -2468,6 +2470,8 @@ target_link_libraries(grpc_unsecure
-   absl::strings
+@@ -2596,6 +2598,8 @@ target_link_libraries(grpc_unsecure
+   absl::statusor
    absl::status
    absl::inlined_vector
 +  absl::time
 +  absl::synchronization
+   absl::flat_hash_map
  )
  if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
-   target_link_libraries(grpc_unsecure "-framework CoreFoundation")
 diff --git a/cmake/abseil-cpp.cmake b/cmake/abseil-cpp.cmake
 index 078d495417..b6f50bd14c 100644
 --- a/cmake/abseil-cpp.cmake
