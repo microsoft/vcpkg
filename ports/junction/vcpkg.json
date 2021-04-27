@@ -1,9 +1,9 @@
 {
   "name": "junction",
-  "supports":"!uwp & !arm",
   "version-string": "2018-02-18",
   "description": "Concurrent data structures in C++",
   "homepage": "https://github.com/preshing/junction",
+  "supports": "!uwp & !arm",
   "dependencies": [
     "turf"
   ]
