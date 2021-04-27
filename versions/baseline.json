@@ -6453,8 +6453,8 @@
       "port-version": 1
     },
     "wxwidgets": {
-      "baseline": "3.1.4",
-      "port-version": 8
+      "baseline": "3.1.5",
+      "port-version": 0
     },
     "x-plane": {
       "baseline": "3.0.3",
