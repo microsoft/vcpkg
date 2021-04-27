@@ -12,7 +12,7 @@ index b39c55d..3abf53b 100644
 +    int main () {
 +        return round(0);
 +    }''',
-+    name : 'round Support')
++    name : 'round Support', dependencies: mathlib_dep)
    gdk_pixbuf_conf.set('HAVE_ROUND', 1)
  endif
  
@@ -22,7 +22,7 @@ index b39c55d..3abf53b 100644
 +    int main () {
 +        return lrint(0);
 +    }''',
-+    name : 'lrint Support')
++    name : 'lrint Support', dependencies: mathlib_dep)
    gdk_pixbuf_conf.set('HAVE_LRINT', 1)
  endif
  
