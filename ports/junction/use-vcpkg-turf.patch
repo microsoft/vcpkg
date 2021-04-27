@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 93cf495..40c465a 100644
+index 93cf495..de52b8d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -29,17 +29,14 @@ set(JUNCTION_ALL_DLLS "")
@@ -42,8 +42,24 @@ index 93cf495..40c465a 100644
      install(DIRECTORY junction/ DESTINATION include/junction FILES_MATCHING PATTERN "*.h")
      file(GLOB configHeaders "${CMAKE_CURRENT_BINARY_DIR}/include/*.h")
      install(FILES ${configHeaders} DESTINATION include)
-@@ -133,4 +138,3 @@ if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-     set(JUNCTION_ALL_LIBRARIES "${JUNCTION_ALL_LIBRARIES}" PARENT_SCOPE)
+@@ -134,3 +139,20 @@ if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
      set(JUNCTION_ALL_DLLS "${JUNCTION_ALL_DLLS}" PARENT_SCOPE)
  endif()
--
+ 
++
++install(EXPORT junctionTargets
++        FILE junctionTargets.cmake
++        NAMESPACE junction::
++        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/junction
++)
++
++include(CMakePackageConfigHelpers)
++
++configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
++    "${CMAKE_CURRENT_BINARY_DIR}/junctionConfig.cmake"
++    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/junction
++)
++install(FILES
++    "${CMAKE_CURRENT_BINARY_DIR}/junctionConfig.cmake"
++    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/junction
++)
