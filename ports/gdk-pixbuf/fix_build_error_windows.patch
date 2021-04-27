@@ -1,41 +1,28 @@
-diff --git a/gdk-pixbuf/fallback-c89.c b/gdk-pixbuf/fallback-c89.c
-index f2078ff..8def6a6 100644
---- a/gdk-pixbuf/fallback-c89.c
-+++ b/gdk-pixbuf/fallback-c89.c
-@@ -34,7 +34,7 @@ round (double x)
- /* Workaround for lrint() for non-GCC/non-C99 compilers */
- #ifndef HAVE_LRINT
- static inline long
--lrint (double x)
-+opj_lrint (double x)
- {
-   if (ceil (x + 0.5) == floor (x + 0.5))
-     {
-diff --git a/gdk-pixbuf/pixops/pixops.c b/gdk-pixbuf/pixops/pixops.c
-index 623dbd0..c435f67 100644
---- a/gdk-pixbuf/pixops/pixops.c
-+++ b/gdk-pixbuf/pixops/pixops.c
-@@ -1769,8 +1769,8 @@ prescale (const guchar     **src_bufp,
-   /* Scale the whole source image into a top-left-aligned temporary pixbuf.
-    * render_[xy][01] are done in the final scaling, not here, as they are
-    * measured in the coordinate system of the scaled image. */
--  tmp_width = lrint (src_width * prescale_x);
--  tmp_height = lrint (src_height * prescale_y);
-+  tmp_width = opj_lrint (src_width * prescale_x);
-+  tmp_height = opj_lrint (src_height * prescale_y);
- 
-   /* We are below the gdk_ interface, so create the temp image manually.
-    * Code copied from gdk_pixbuf_new() */
 diff --git a/meson.build b/meson.build
-index b39c55d..bb67d3f 100644
+index b39c55d..3abf53b 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -89,7 +89,7 @@ if cc.has_function('round', dependencies: mathlib_dep)
+@@ -85,11 +85,21 @@ endforeach
+ mathlib_dep = cc.find_library('m', required: false)
+ 
+ # XXX: Remove the checks for round() and lrint() once GDK-Pixbuf is declared C99
+-if cc.has_function('round', dependencies: mathlib_dep)
++if cc.compiles('''
++    #include <math.h>
++    int main () {
++        return round(0);
++    }''',
++    name : 'round Support')
    gdk_pixbuf_conf.set('HAVE_ROUND', 1)
  endif
  
 -if cc.has_function('lrint', dependencies: mathlib_dep)
-+if cc.has_function('opj_lrint', dependencies: mathlib_dep)
++if cc.compiles('''
++    #include <math.h>
++    int main () {
++        return lrint(0);
++    }''',
++    name : 'lrint Support')
    gdk_pixbuf_conf.set('HAVE_LRINT', 1)
  endif
  
