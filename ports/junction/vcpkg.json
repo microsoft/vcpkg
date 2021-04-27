@@ -1,0 +1,9 @@
+{
+  "name": "junction",
+  "version-string": "0.2.11",
+  "description": "Concurrent data structures in C++",
+  "homepage": "https://github.com/preshing/junction",
+  "dependencies":[
+    "turf"
+  ]
+}

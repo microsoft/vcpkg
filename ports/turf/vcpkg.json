@@ -1,0 +1,6 @@
+{
+  "name": "turf",
+  "version-string": "0.2.11",
+  "description": "Configurable C++ platform adapter",
+  "homepage": "https://github.com/preshing/turf"
+}
