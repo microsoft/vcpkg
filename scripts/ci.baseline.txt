@@ -355,7 +355,9 @@ fuzzylite:x64-uwp=fail
 gainput:arm-uwp=fail
 gainput:x64-linux=fail
 gainput:x64-uwp=fail
-gamedev-framework:x64-linux=skip
+
+# Requires a more recent gcc than we have in the test lab
+gamedev-framework:x64-linux=fail
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
