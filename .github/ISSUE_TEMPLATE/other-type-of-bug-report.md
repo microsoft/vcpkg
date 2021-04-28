@@ -11,7 +11,7 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-*Environment**
+**Environment**
 
 - OS: [e.g. Windows/Linux etc...]
 - Compiler: revision
