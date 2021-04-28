@@ -7,5 +7,10 @@
     "eigen3",
     "fplus",
     "nlohmann-json"
-  ]
+  ],
+  "features": {
+    "double": {
+      "description": "Use double precision"
+    }
+  }
 }

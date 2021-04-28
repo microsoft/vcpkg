@@ -6,6 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        double FDEEP_USE_DOUBLE
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -13,8 +17,8 @@ vcpkg_configure_cmake(
     OPTIONS
     -DFDEEP_BUILD_UNITTEST=OFF
     -DFDEEP_USE_TOOLCHAIN=ON
+    ${FEATURE_OPTIONS}
 )
-# feature FDEEP_USE_DOUBLE
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/frugally-deep TARGET_PATH share/${PORT})
