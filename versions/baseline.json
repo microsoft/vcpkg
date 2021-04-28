@@ -2096,6 +2096,10 @@
       "baseline": "1.0.0",
       "port-version": 0
     },
+    "frugally-deep": {
+      "baseline": "0.15.2-p0",
+      "port-version": 0
+    },
     "fruit": {
       "baseline": "3.6.0",
       "port-version": 0
