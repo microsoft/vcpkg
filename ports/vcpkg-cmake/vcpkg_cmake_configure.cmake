@@ -30,7 +30,7 @@ that build type.
 
 Use the `OPTIONS` argument to set the configure settings for both release and debug,
 and use `OPTIONS_RELEASE` and `OPTIONS_DEBUG` to set the configure settings for
-release only and debug only repsectively.
+release only and debug only respectively.
 
 By default, when possible, `vcpkg_cmake_configure` uses [ninja-build]
 as its build system. If the `WINDOWS_USE_MSBUILD` argument is passed, then
