@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-*Host Environment**
+**Host Environment**
 
 - OS: [e.g. Windows/Linux etc...]
 - Compiler: revision
