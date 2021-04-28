@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dc84407..c12d1bb 100644
+index dc84407..91bba3b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -54,7 +54,10 @@ SimpleCompileCheck(TURF_HAS_MOVE "Checking for std::move"
+@@ -54,7 +54,11 @@ SimpleCompileCheck(TURF_HAS_MOVE "Checking for std::move"
       void foo(int& a, int& b) { a = std::move(b); }")
  
  # Initialize variables used to collect include dirs/libraries.
@@ -11,10 +11,11 @@ index dc84407..c12d1bb 100644
 +    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>" 
 +    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>"
 +    "$<INSTALL_INTERFACE:include>")
++
  set(TURF_ALL_INCLUDE_DIRS ${TURF_INCLUDE_DIRS})
  set(TURF_ALL_LIBRARIES turf)
  set(TURF_ALL_LIBRARY_DIRS "")
-@@ -97,7 +100,7 @@ endif()
+@@ -97,7 +101,7 @@ endif()
  add_library(turf ${TURF_FILES})
  
  # Set include dirs for this library (done last).
@@ -23,12 +24,10 @@ index dc84407..c12d1bb 100644
  
  # Make installable.
  if(TURF_MAKE_INSTALLABLE)
-@@ -118,3 +121,30 @@ if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+@@ -118,3 +122,34 @@ if(NOT CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
      set(TURF_ALL_LIBRARIES "${TURF_ALL_LIBRARIES}" PARENT_SCOPE)
      set(TURF_ALL_LIBRARY_DIRS "${TURF_ALL_LIBRARY_DIRS}" PARENT_SCOPE)
  endif()
-+
-+
 +install(
 +    TARGETS turf
 +    EXPORT turfTargets
@@ -45,8 +44,14 @@ index dc84407..c12d1bb 100644
 +)
 +
 +include(CMakePackageConfigHelpers)
-+
-+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
++file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/Config.cmake.in
++[[
++@PACKAGE_INIT@
++include("${CMAKE_CURRENT_LIST_DIR}/turfTargets.cmake")
++check_required_components(turf)
++]]
++)
++configure_package_config_file(${CMAKE_CURRENT_BINARY_DIR}/Config.cmake.in
 +    "${CMAKE_CURRENT_BINARY_DIR}/turfConfig.cmake"
 +    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/turf
 +)
