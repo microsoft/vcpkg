@@ -6549,7 +6549,7 @@
       "port-version": 0
     },
     "yara": {
-      "baseline": "4.0.2",
+      "baseline": "4.1.0",
       "port-version": 0
     },
     "yas": {
