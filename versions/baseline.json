@@ -2053,7 +2053,7 @@
       "port-version": 0
     },
     "fplus": {
-      "baseline": "0.2.13-p0",
+      "baseline": "0.2.14-p0",
       "port-version": 0
     },
     "freeglut": {
@@ -2094,6 +2094,10 @@
     },
     "frozen": {
       "baseline": "1.0.0",
+      "port-version": 0
+    },
+    "frugally-deep": {
+      "baseline": "0.15.2-p0",
       "port-version": 0
     },
     "fruit": {
