@@ -1,5 +1,0 @@
-Source: directx-headers
-Version: 1.0.1
-Homepage: https://devblogs.microsoft.com/directx/
-Description: Official DirectX headers
-Supports: windows|linux
