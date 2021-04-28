@@ -5,8 +5,6 @@ vcpkg_from_github(
     SHA512 017723a2268be789fe98978eed02fd294968cc8050dde376dee026f56f2b99df42db935049ae5e72c4519a920e263b40af1a6a40d9942e66608145b3131a71a2
     PATCHES
         fix-tiff-linkage.patch
-        fix-text2image.patch
-        fix-training-tools.patch
 )
 
 # The built-in cmake FindICU is better

@@ -1,0 +1,7 @@
+{
+  "name": "upb",
+  "version-date": "2020-12-19",
+  "port-version": 1,
+  "description": "μpb (often written 'upb') is a small protobuf implementation written in C.",
+  "homepage": "https://github.com/protocolbuffers/upb/"
+}

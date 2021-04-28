@@ -48,12 +48,14 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 else()
+    set(ENV{GTKDOCIZE} true)
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         AUTOCONFIG
         COPY_SOURCE
         OPTIONS
             --with-libiconv-prefix=${CURRENT_INSTALLED_DIR}
+            --disable-gtk-doc
     )
     
     vcpkg_install_make()
