@@ -2357,7 +2357,7 @@
       "port-version": 0
     },
     "grpc": {
-      "baseline": "1.36.4",
+      "baseline": "1.37.0",
       "port-version": 0
     },
     "grppi": {
