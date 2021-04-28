@@ -7,24 +7,25 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive_ex(
-   OUT_SOURCE_PATH SOURCE_PATH
-   ARCHIVE ${ARCHIVE} 
-   REF ${VERSION}
+    OUT_SOURCE_PATH SOURCE_PATH
+    ARCHIVE ${ARCHIVE}
+    REF ${VERSION}
 )
 
 # restore the default ac_cv_prog_cc_g flags, otherwise it fails to compile
-set(VCPKG_C_FLAGS "-g -O2") 
+set(VCPKG_C_FLAGS "-g -O2")
 set(VCPKG_CXX_FLAGS "-g -O2")
 
+set(ENV{GTKDOCIZE} true)
 vcpkg_configure_make(
     AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        --disable-doc
+        --disable-gtk-doc
 )
 
 vcpkg_install_make()
-vcpkg_fixup_pkgconfig() 
+vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
