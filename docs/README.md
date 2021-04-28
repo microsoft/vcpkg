@@ -21,6 +21,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Binary Caching](users/binarycaching.md)
 - [Versioning](users/versioning.md)
 - [Usage with Android](users/android.md)
+- [Usage with Mingw-w64](users/mingw.md)
 - [Host Dependencies](users/host-dependencies.md)
 
 ### Maintainer Help

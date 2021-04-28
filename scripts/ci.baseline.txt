@@ -62,8 +62,6 @@ blosc:x64-uwp=fail
 bond:arm-uwp=fail
 bond:x64-osx=fail
 bond:x64-uwp=fail
-botan:arm64-windows=fail
-botan:arm-uwp=fail
 botan:x64-uwp=fail
 breakpad:arm64-windows=fail
 bullet3:arm64-windows=fail
@@ -366,6 +364,9 @@ fuzzylite:x64-uwp=fail
 gainput:arm-uwp=fail
 gainput:x64-linux=fail
 gainput:x64-uwp=fail
+
+# Requires a more recent gcc than we have in the test lab
+gamedev-framework:x64-linux=fail
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
