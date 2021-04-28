@@ -78,7 +78,6 @@ Manifest property | Versioning scheme
 `version-date`    | For dates in the format YYYY-MM-DD
 `version-string`  | For arbitrary strings
 
-
 See https://github.com/microsoft/vcpkg/blob/master/docs/specifications/versioning.md#22-package-versions for more details.
 
 Additionally, `"port-version"` is used to differentiate between port changes that don't change the underlying library version.
