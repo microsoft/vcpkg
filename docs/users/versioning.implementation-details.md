@@ -67,7 +67,7 @@ Version constraints come in the following flavors:
 * **Declared constraints**: Constraints declared explicitly in the top-level manifest using `version>=`.
 * **Baseline constraints**: Constraints added implicitly by the `builtin-baseline`.
 * **Transitive constraints**: Constraints added indirectly by dependencies of your dependencies.
-* **Overriden constraints**: Constraints overriden in the top-level manifest using `overrides` declarations.
+* **Overridden constraints**: Constraints overridden in the top-level manifest using `overrides` declarations.
 
 To compute an installation plan, vcpkg follows roughly these steps:
 

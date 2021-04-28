@@ -42,7 +42,7 @@ project(myapp)
 
 ## Using versions with manifests
 
-With the `versions` feature flag enabled you can start addding version constraints to your dependencies.
+With the `versions` feature flag enabled you can start adding version constraints to your dependencies.
 
 Let's start with creating a simple CMake project that depends on `fmt` and `zlib`.
 
