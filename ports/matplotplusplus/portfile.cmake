@@ -12,6 +12,7 @@ vcpkg_from_github(
     REF 36d8dc6c3b94b7a71c4f129763f2c6ad8fc0b54a
     SHA512 ac8902e953a2a9f6bd62e14e2eb0bd42e407bae6c0b2921ad16ce547e4921ba2c8d8a9cc68e75831676dce3cd89cdf8294862710e838510b68e20f8a6cdf806f
     HEAD_REF master
+    PATCHES install-3rd-libraries.patch # Remove this patch when nodesoup is added in vcpkg
 )
 
 vcpkg_check_features(

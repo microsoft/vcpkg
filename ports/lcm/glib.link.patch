@@ -1,0 +1,30 @@
+diff --git a/cmake/FindGLib2.cmake b/cmake/FindGLib2.cmake
+index 2f1a8be45..db823b953 100644
+--- a/cmake/FindGLib2.cmake
++++ b/cmake/FindGLib2.cmake
+@@ -14,7 +14,7 @@ function(_glib2_find_include VAR HEADER)
+ 
+   find_path(GLIB2_${VAR}_INCLUDE_DIR ${HEADER}
+     PATHS ${_paths}
+-    PATH_SUFFIXES glib-2.0 glib-2.0/include
++    PATH_SUFFIXES glib-2.0 glib-2.0/include lib/glib-2.0/include
+   )
+   mark_as_advanced(GLIB2_${VAR}_INCLUDE_DIR)
+ endfunction()
+@@ -108,6 +108,16 @@ foreach(_glib2_component ${GLib2_FIND_COMPONENTS})
+ 
+ endforeach()
+ 
++find_library(PCRE_LIBRARY pcre)
++set_property(TARGET GLib2::glib APPEND PROPERTY
++    INTERFACE_LINK_LIBRARIES ${PCRE_LIBRARY}
++)
++set(THREADS_PREFER_PTHREAD_FLAG ON)
++find_package(Threads)
++set_property(TARGET GLib2::glib APPEND PROPERTY
++    INTERFACE_LINK_LIBRARIES Threads::Threads
++)
++
+ list(APPEND GLib2_FIND_COMPONENTS glib)
+ set(GLib2_FIND_REQUIRED_glib TRUE)
+ 
