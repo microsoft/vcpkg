@@ -1,0 +1,15 @@
+{
+  "name": "atk",
+  "version": "2.36.0",
+  "description": "GNOME Accessibility Toolkit",
+  "homepage": "https://developer.gnome.org/atk/",
+  "supports": "!(osx | arm)",
+  "dependencies": [
+    "gettext",
+    "glib",
+    {
+      "name": "glib",
+      "host": true
+    }
+  ]
+}
