@@ -2,6 +2,15 @@
 
 **The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/mingw.md).**
 
+*MinGW is community-supported and not tested as part of vcpkg repository's CI process.*
+
+## Table of Contents
+
+ - [Mingw-w64 community triplets](#Mingw-w64-community-triplets)
+ - [Using Mingw-w64 natively on Windows](#Using-Mingw-w64-natively-on-Windows)
+   - [How to avoid mixing different installations](#How-to-avoid-mixing-different-installations)
+ - [Using Mingw-w64 to build Windows programs on other systems](#Using-Mingw-w64-to-build-Windows-programs-on-other-systems)
+
 ## Mingw-w64 community triplets
 
 Vcpkg includes
@@ -100,9 +109,9 @@ try to keep the directories of the msys subsystem (`/usr/bin`, `bin`)
 out of the `PATH` environment variable as found by vcpkg. In bash, you
 may modify the `PATH` just for a single call of vcpkg:
 
-~~~
+```bash
 PATH="${PATH/:\/usr\/bin:\/bin:/:}" ./vcpkg install libpq
-~~~
+```
 
 Alternatively, you may run vcpkg from a regular Command Prompt, after
 adding *only* the desired mingw directory (e.g. `C:\msys64\mingw64\bin`)
@@ -133,7 +142,7 @@ might be older releases which lack some useful features or bug fixes.
 An alternative independent toolchain is offered by [MXE](https://mxe.cc/).
 
 For vcpkg bootstrapping, clone the github repository and run the
-bootstrap-vcpkg.sh script:
+`bootstrap-vcpkg.sh` script:
 
 ```bash
 git clone https://github.com/microsoft/vcpkg.git
