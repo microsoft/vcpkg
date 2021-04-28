@@ -1,28 +1,17 @@
 diff --git a/meson.build b/meson.build
-index b39c55d..3abf53b 100644
+index b39c55d5d..e1c5018a6 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -85,11 +85,21 @@ endforeach
- mathlib_dep = cc.find_library('m', required: false)
- 
- # XXX: Remove the checks for round() and lrint() once GDK-Pixbuf is declared C99
--if cc.has_function('round', dependencies: mathlib_dep)
-+if cc.compiles('''
-+    #include <math.h>
-+    int main () {
-+        return round(0);
-+    }''',
-+    name : 'round Support', dependencies: mathlib_dep)
+@@ -89,7 +89,11 @@ if cc.has_function('round', dependencies: mathlib_dep)
    gdk_pixbuf_conf.set('HAVE_ROUND', 1)
  endif
  
 -if cc.has_function('lrint', dependencies: mathlib_dep)
-+if cc.compiles('''
-+    #include <math.h>
-+    int main () {
-+        return lrint(0);
-+    }''',
-+    name : 'lrint Support', dependencies: mathlib_dep)
++function_check_args =''
++if cc.get_id() == 'msvc'
++  function_check_args ='-Oi-'
++endif
++if cc.has_function('lrint', dependencies: mathlib_dep, args: function_check_args)
    gdk_pixbuf_conf.set('HAVE_LRINT', 1)
  endif
  
