@@ -227,8 +227,8 @@ endmacro()
 function(vcpkg_configure_make)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _csc
-        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET"
-        "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET"
+        "AUTOCONFIG;SKIP_CONFIGURE;COPY_SOURCE;DISABLE_VERBOSE_FLAGS;NO_ADDITIONAL_PATHS;ADD_BIN_TO_PATH;USE_WRAPPERS;DETERMINE_BUILD_TRIPLET;DISABLE_STATIC_SHARED"
+        "SOURCE_PATH;PROJECT_SUBPATH;PRERUN_SHELL;BUILD_TRIPLET;CONFIG_FILE"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;CONFIGURE_ENVIRONMENT_VARIABLES;CONFIG_DEPENDENT_ENVIRONMENT;ADDITIONAL_MSYS_PACKAGES"
     )
     vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
@@ -243,13 +243,18 @@ function(vcpkg_configure_make)
 
     set(REQUIRES_AUTOGEN FALSE) # use autogen.sh
     set(REQUIRES_AUTOCONFIG FALSE) # use autotools and configure.ac
-    if(EXISTS "${SRC_DIR}/configure" AND "${SRC_DIR}/configure.ac") # remove configure; rerun autoconf
+
+    if(NOT _csc_CONFIG_FILE)
+        set(_csc_CONFIG_FILE "configure")
+    endif()
+
+    if(EXISTS "${SRC_DIR}/${_csc_CONFIG_FILE}" AND "${SRC_DIR}/configure.ac") # remove configure; rerun autoconf
         if(NOT VCPKG_MAINTAINER_SKIP_AUTOCONFIG) # If fixing bugs skipping autoconfig saves a lot of time
             set(REQUIRES_AUTOCONFIG TRUE)
-            file(REMOVE "${SRC_DIR}/configure") # remove possible autodated configure scripts
+            file(REMOVE "${SRC_DIR}/${_csc_CONFIG_FILE}") # remove possible autodated configure scripts
             set(_csc_AUTOCONFIG ON)
         endif()
-    elseif(EXISTS "${SRC_DIR}/configure" AND NOT _csc_SKIP_CONFIGURE) # run normally; no autoconf or autgen required
+    elseif(EXISTS "${SRC_DIR}/${_csc_CONFIG_FILE}" AND NOT _csc_SKIP_CONFIGURE) # run normally; no autoconf or autgen required
     elseif(EXISTS "${SRC_DIR}/configure.ac") # Run autoconfig
         set(REQUIRES_AUTOCONFIG TRUE)
         set(_csc_AUTOCONFIG ON)
@@ -478,14 +483,16 @@ function(vcpkg_configure_make)
                             "--datarootdir=${prefix_var}/share/${PORT}")
     endif()
     # Setup common options
-    if(NOT DISABLE_VERBOSE_FLAGS)
+    if(NOT _csc_DISABLE_VERBOSE_FLAGS)
         list(APPEND _csc_OPTIONS --disable-silent-rules --verbose)
     endif()
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        list(APPEND _csc_OPTIONS --enable-shared --disable-static)
-    else()
-        list(APPEND _csc_OPTIONS --disable-shared --enable-static)
+    if(NOT _csc_DISABLE_STATIC_SHARED)
+        if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+            list(APPEND _csc_OPTIONS --enable-shared --disable-static)
+        else()
+            list(APPEND _csc_OPTIONS --disable-shared --enable-static)
+        endif()
     endif()
 
     file(RELATIVE_PATH RELATIVE_BUILD_PATH "${CURRENT_BUILDTREES_DIR}" "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
@@ -741,10 +748,10 @@ function(vcpkg_configure_make)
         unset(_lib_env_vars)
 
         if (CMAKE_HOST_WIN32)
-            set(command ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/configure ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
+            set(command ${base_cmd} -c "${CONFIGURE_ENV} ./${RELATIVE_BUILD_PATH}/${_csc_CONFIG_FILE} ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}}")
         else()
             find_program(BASH bash REQUIRED)
-            set(command "${BASH}" "./${RELATIVE_BUILD_PATH}/configure" ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}})
+            set(command "${BASH}" "./${RELATIVE_BUILD_PATH}/${_csc_CONFIG_FILE}" ${_csc_BUILD_TRIPLET} ${_csc_OPTIONS} ${_csc_OPTIONS_${_buildtype}})
         endif()
         if(_csc_ADD_BIN_TO_PATH)
             set(PATH_BACKUP $ENV{PATH})
