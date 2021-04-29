@@ -13,7 +13,7 @@ vcpkg_configure_make(
     [DETERMINE_BUILD_TRIPLET]
     [DISABLE_STATIC_SHARED]
     [BUILD_TRIPLET "--host=x64 --build=i686-unknown-pc"]
-    [CONFIG_FILE]
+    [CONFIGURE_FILE]
     [NO_ADDITIONAL_PATHS]
     [CONFIG_DEPENDENT_ENVIRONMENT <SOME_VAR>...]
     [CONFIGURE_ENVIRONMENT_VARIABLES <SOME_ENVVAR>...]
@@ -46,7 +46,7 @@ Use autotools ar-lib and compile wrappers (only applies to windows cl and lib)
 ### BUILD_TRIPLET
 Used to pass custom --build/--target/--host to configure. Can be globally overwritten by VCPKG_MAKE_BUILD_TRIPLET
 
-### CONFIG_FILE
+### CONFIGURE_FILE
 Used to pass custom configure file name. This is the file name and not the complete path.
 
 ### DETERMINE_BUILD_TRIPLET
