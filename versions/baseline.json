@@ -5453,7 +5453,7 @@
       "port-version": 0
     },
     "scnlib": {
-      "baseline": "0.3",
+      "baseline": "0.4",
       "port-version": 0
     },
     "scylla-wrapper": {
