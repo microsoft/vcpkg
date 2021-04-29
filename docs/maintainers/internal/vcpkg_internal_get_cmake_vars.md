@@ -1,6 +1,6 @@
 # vcpkg_internal_get_cmake_vars
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/).
 
 **Only for internal use in vcpkg helpers. Behavior and arguments will change without notice.**
 Runs a cmake configure with a dummy project to extract certain cmake variables

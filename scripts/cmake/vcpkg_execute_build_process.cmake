@@ -9,7 +9,7 @@ vcpkg_execute_build_process(
     COMMAND <cmd> [<args>...]
     [NO_PARALLEL_COMMAND <cmd> [<args>...]]
     WORKING_DIRECTORY </path/to/dir>
-    LOGNAME <log_name>)
+    LOGNAME <log_name>
 )
 ```
 ## Parameters
@@ -132,6 +132,8 @@ function(vcpkg_execute_build_process)
                     break()
                 endif()
             endwhile()
+        elseif(out_contents MATCHES "fatal error: ld terminated with signal 9 [Killed]")
+            message(WARNING "ld was terminated with signal 9 [killed], please ensure your system has sufficient hard disk space and memory.")
         endif()
 
         if(error_code)
