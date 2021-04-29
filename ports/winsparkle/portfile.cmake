@@ -39,4 +39,4 @@ file(INSTALL ${SOURCE_PATH}/include/winsparkle.h DESTINATION ${CURRENT_PACKAGES_
 file(INSTALL ${SOURCE_PATH}/include/winsparkle-version.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/winsparkle-version.h)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/winsparkle RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
