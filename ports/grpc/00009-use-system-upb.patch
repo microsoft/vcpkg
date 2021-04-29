@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ec1714687e..e15d25097f 100644
+index c87e35a..24b619f 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -84,6 +84,9 @@ set_property(CACHE gRPC_SSL_PROVIDER PROPERTY STRINGS "module" "package")
@@ -12,87 +12,32 @@ index ec1714687e..e15d25097f 100644
  set(gRPC_PROTOBUF_PACKAGE_TYPE "" CACHE STRING "Algorithm for searching protobuf package")
  set_property(CACHE gRPC_PROTOBUF_PACKAGE_TYPE PROPERTY STRINGS "CONFIG" "MODULE")
  
-@@ -1911,7 +1914,6 @@ target_link_libraries(grpc
-   ${_gRPC_ALLTARGETS_LIBRARIES}
+@@ -2079,7 +2082,6 @@ target_link_libraries(grpc
    gpr
+   ${_gRPC_SSL_LIBRARIES}
    address_sorting
 -  upb
-   absl::optional
-   absl::strings
-   absl::status
-@@ -1993,7 +1995,6 @@ target_link_libraries(grpc_csharp_ext
-   grpc
+ )
+ if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
+   target_link_libraries(grpc "-framework CoreFoundation")
+@@ -2624,7 +2626,6 @@ target_link_libraries(grpc_unsecure
+   absl::statusor
    gpr
    address_sorting
 -  upb
  )
- 
- 
-@@ -2463,7 +2464,6 @@ target_link_libraries(grpc_unsecure
-   ${_gRPC_ALLTARGETS_LIBRARIES}
-   gpr
-   address_sorting
--  upb
-   absl::optional
-   absl::strings
-   absl::status
-@@ -2661,7 +2661,6 @@ target_link_libraries(grpc++
-   grpc
-   gpr
-   address_sorting
--  upb
- )
- 
- foreach(_hdr
-@@ -2907,7 +2906,6 @@ target_link_libraries(grpc++_alts
-   grpc
-   gpr
-   address_sorting
--  upb
- )
- 
- foreach(_hdr
-@@ -2976,7 +2974,6 @@ target_link_libraries(grpc++_error_details
-   grpc
-   gpr
-   address_sorting
--  upb
- )
- 
- foreach(_hdr
-@@ -3049,7 +3046,6 @@ target_link_libraries(grpc++_reflection
-   grpc
-   gpr
-   address_sorting
--  upb
- )
- 
- foreach(_hdr
-@@ -3330,7 +3326,6 @@ target_link_libraries(grpc++_unsecure
-   grpc_unsecure
-   gpr
-   address_sorting
--  upb
- )
- 
- foreach(_hdr
-@@ -3648,7 +3643,6 @@ target_link_libraries(grpcpp_channelz
-   grpc
-   gpr
-   address_sorting
--  upb
- )
- 
- foreach(_hdr
-@@ -3675,6 +3669,7 @@ endif()
- 
+ if(_gRPC_PLATFORM_IOS OR _gRPC_PLATFORM_MAC)
+   target_link_libraries(grpc_unsecure "-framework CoreFoundation")
+@@ -3805,7 +3806,7 @@ if(gRPC_INSTALL)
  endif()
  
+ endif()
+-
 +if (gRPC_UPB_PROVIDER STREQUAL "module")
  add_library(upb
+   third_party/upb/upb/decode_fast.c
    third_party/upb/upb/decode.c
-   third_party/upb/upb/encode.c
-@@ -3726,7 +3721,7 @@ if(gRPC_INSTALL)
+@@ -3863,7 +3864,7 @@ if(gRPC_INSTALL)
    )
  endif()
  
@@ -102,7 +47,7 @@ index ec1714687e..e15d25097f 100644
  add_executable(check_epollexclusive
    test/build/check_epollexclusive.c
 diff --git a/cmake/gRPCConfig.cmake.in b/cmake/gRPCConfig.cmake.in
-index 3623f4aa5e..df6ced560e 100644
+index 3623f4a..df6ced5 100644
 --- a/cmake/gRPCConfig.cmake.in
 +++ b/cmake/gRPCConfig.cmake.in
 @@ -8,6 +8,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/modules)
@@ -114,14 +59,14 @@ index 3623f4aa5e..df6ced560e 100644
  # Targets
  include(${CMAKE_CURRENT_LIST_DIR}/gRPCTargets.cmake)
 diff --git a/cmake/upb.cmake b/cmake/upb.cmake
-index f2a0e508c3..ecce7ba300 100644
+index f2a0e50..c1c65f5 100644
 --- a/cmake/upb.cmake
 +++ b/cmake/upb.cmake
-@@ -12,9 +12,20 @@
+@@ -12,9 +12,21 @@
  # See the License for the specific language governing permissions and
  # limitations under the License.
  
-+set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated")
++set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated" "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upbdefs-generated")
 +if (gRPC_UPB_PROVIDER STREQUAL "module")
 +
  set(UPB_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/upb)
@@ -130,6 +75,7 @@ index f2a0e508c3..ecce7ba300 100644
  set(_gRPC_UPB_GRPC_GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upb-generated" "${CMAKE_CURRENT_SOURCE_DIR}/src/core/ext/upbdefs-generated")
  
  set(_gRPC_UPB_LIBRARIES upb)
++
 +
 +elseif(gRPC_UPB_PROVIDER STREQUAL "package")
 +    find_package(upb CONFIG REQUIRED)

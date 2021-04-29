@@ -1,7 +1,7 @@
 {
   "name": "poppler",
-  "version-string": "20.12.1",
-  "port-version": 3,
+  "version": "20.12.1",
+  "port-version": 5,
   "description": "a PDF rendering library",
   "homepage": "https://poppler.freedesktop.org/",
   "dependencies": [
@@ -19,6 +19,7 @@
     "openjpeg"
   ],
   "default-features": [
+    "splash",
     "zlib"
   ],
   "features": {
@@ -26,6 +27,13 @@
       "description": "curl for poppler",
       "dependencies": [
         "curl"
+      ]
+    },
+    "splash": {
+      "description": "Build the Splash graphics backend",
+      "dependencies": [
+        "boost-container",
+        "boost-move"
       ]
     },
     "zlib": {

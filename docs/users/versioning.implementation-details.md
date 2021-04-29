@@ -1,5 +1,7 @@
 # Versioning: Implementation details
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/versioning.implementation-details.md).**
+
 ## Contents
 
 * [Minimum versioning](#minimum-versioning)
