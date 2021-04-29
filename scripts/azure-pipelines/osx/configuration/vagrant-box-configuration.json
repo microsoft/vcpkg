@@ -1,0 +1,21 @@
+{
+  "$schema": "./vagrant-vm-configuration.schema.json",
+  "brew": [
+    "autoconf",
+    "automake",
+    "bison",
+    "gettext",
+    "gfortran",
+    "gperf",
+    "gtk-doc",
+    "libtool",
+    "meson",
+    "mono",
+    "nasm",
+    "pkg-config",
+    "yasm"
+  ],
+  "brew-cask": [
+    "powershell"
+  ]
+}
