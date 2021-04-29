@@ -14,10 +14,17 @@
     }
   ],
   "features": {
+    "coretext": {
+      "description": "Enable CoreText shaper backend on macOS"
+    },
     "glib": {
       "description": "Glib Unicode callbacks support",
       "dependencies": [
-        "glib"
+        "glib",
+        {
+          "name": "glib",
+          "host": true
+        }
       ]
     },
     "graphite2": {
