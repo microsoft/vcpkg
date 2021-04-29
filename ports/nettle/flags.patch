@@ -1,0 +1,13 @@
+diff --git a/Makefile.in b/Makefile.in
+index e5ccfc7..922aa0c 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -309,7 +309,7 @@ $(LIBHOGWEED_FORLINK): $(hogweed_OBJS) $(LIBNETTLE_FORLINK)
+ 
+ # For building the various *data.c programs. -lm needed for shadata.
+ %$(EXEEXT_FOR_BUILD): %.c
+-	$(CC_FOR_BUILD) $< -lm -o $@
++	$(CC_FOR_BUILD) $< $(CFLAGS) -lm -o $@
+ 
+ # Explicit dependency.
+ eccdata$(EXEEXT_FOR_BUILD): mini-gmp.c mini-gmp.h
