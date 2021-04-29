@@ -12,13 +12,13 @@ z_vcpkg_message(<FATAL_ERROR|...> <message>...)
 This macro is used instead of cmake `message(...)` because we want
 to pass the messages to the calling process during `detect_compiler`.
 
-To activate logging to a file, set `_VCPKG_TOOLCHAIN_MESSAGES_FILE` to the
+To activate logging to a file, set `Z_VCPKG_TOOLCHAIN_MESSAGES_FILE` to the
 desired file path. In the log file, fatal errors are preceded by a line
 containing "Fatal error:".
 #]===]
 set(Z_VCPKG_TOOLCHAIN_MESSAGES )
 macro(z_vcpkg_message SEVERITY MESSAGE)
-    if(NOT _VCPKG_TOOLCHAIN_MESSAGES_FILE)
+    if(NOT Z_VCPKG_TOOLCHAIN_MESSAGES_FILE)
         message(${SEVERITY} "${MESSAGE}")
     elseif(NOT "${SEVERITY}" MATCHES "ERROR")
         message(${SEVERITY} "${MESSAGE}")
@@ -26,7 +26,7 @@ macro(z_vcpkg_message SEVERITY MESSAGE)
     else()
         message(WARNING "${MESSAGE}")
         string(APPEND Z_VCPKG_TOOLCHAIN_MESSAGES "-- Fatal error:\n${MESSAGE}\n")
-        file(WRITE "${_VCPKG_TOOLCHAIN_MESSAGES_FILE}" "${Z_VCPKG_TOOLCHAIN_MESSAGES}")
+        file(WRITE "${Z_VCPKG_TOOLCHAIN_MESSAGES_FILE}" "${Z_VCPKG_TOOLCHAIN_MESSAGES}")
         return()
     endif()
 endmacro()
