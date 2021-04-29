@@ -14,7 +14,7 @@ else()
     set(YAML_BUILD_SHARED_LIBS OFF)
 endif()
 
-if (NOT(WIN32) AND ${YAML_BUILD_SHARED_LIBS})
+if (NOT WIN32 AND YAML_BUILD_SHARED_LIBS)
     vcpkg_apply_patches(
        SOURCE_PATH ${SOURCE_PATH}
        PATCHES jbeder_yaml-cpp_958.patch)
