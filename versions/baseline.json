@@ -5829,7 +5829,7 @@
       "port-version": 0
     },
     "stlab": {
-      "baseline": "1.5.2-1",
+      "baseline": "1.6.2",
       "port-version": 0
     },
     "stormlib": {
