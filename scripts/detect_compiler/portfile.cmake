@@ -1,11 +1,11 @@
 set(TOOLCHAIN_MESSAGES_FILE "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-messages.log")
 set(LOGS
     "${TOOLCHAIN_MESSAGES_FILE}"
-    ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-out.log
-    ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-out.log
-    ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-dbg-out.log
-    ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-err.log
-    ${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-dbg-err.log
+    "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-out.log"
+    "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-out.log"
+    "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-dbg-out.log"
+    "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-rel-err.log"
+    "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-dbg-err.log"
 )
 
 foreach(LOG IN LISTS LOGS)
