@@ -1834,3 +1834,6 @@ wangle:x64-windows-static-md=fail
 # See https://developercommunity.visualstudio.com/t/Toolset-169-regression-vcxproj-producin/1356639
 dimcli:x64-windows-static-md=fail
 dimcli:x64-windows-static=fail
+
+# cppgraphqlgen triggers an ICE on Apple Clang that comes with MacOS 11.
+cppgraphqlgen:x64-osx=fail
