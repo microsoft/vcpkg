@@ -7,7 +7,7 @@ server = {
   :box => configuration['box_name'],
   :box_version => configuration['box_version'],
   :ram => 12000,
-  :cpu => 6
+  :cpu => 11
 }
 
 azure_agent_url = 'https://vstsagentpackage.azureedge.net/agent/2.185.1/vsts-agent-osx-x64-2.185.1.tar.gz'
