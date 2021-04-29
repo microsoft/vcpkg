@@ -1,0 +1,22 @@
+{
+  "name": "cartographer",
+  "version": "1.0.0",
+  "port-version": 4,
+  "description": "Google 2D & 3D SLAM package",
+  "homepage": "https://github.com/googlecartographer/cartographer",
+  "dependencies": [
+    "boost-iostreams",
+    "cairo",
+    {
+      "name": "ceres",
+      "features": [
+        "suitesparse"
+      ]
+    },
+    "gflags",
+    "glog",
+    "gtest",
+    "lua",
+    "protobuf"
+  ]
+}
