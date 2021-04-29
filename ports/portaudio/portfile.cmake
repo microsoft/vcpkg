@@ -2,7 +2,8 @@ vcpkg_fail_port_install(ON_TARGET "uwp")
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/PortAudio/portaudio.git
-    REF 0ac93f8634d113cf90aa5801c204e1e8adbc14e8
+    REF 147dd722548358763a8b649b3e4b41dfffbcfbb6
+    TAG v19.7.0
     PATCHES
         fix-library-can-not-be-found.patch
 )

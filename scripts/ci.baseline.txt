@@ -62,8 +62,6 @@ blosc:x64-uwp=fail
 bond:arm-uwp=fail
 bond:x64-osx=fail
 bond:x64-uwp=fail
-botan:arm64-windows=fail
-botan:arm-uwp=fail
 botan:x64-uwp=fail
 breakpad:arm64-windows=fail
 bullet3:arm64-windows=fail
@@ -74,7 +72,8 @@ caf:arm64-windows=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
-cairomm:x64-linux=fail
+# Requires VM update for gtk-doc
+cairo:x64-osx=fail
 c-ares:arm-uwp=fail
 c-ares:x64-uwp=fail
 cartographer:x64-osx=fail
@@ -332,6 +331,16 @@ fontconfig:arm64-windows=fail
 foonathan-memory:arm64-windows=fail
 foonathan-memory:arm-uwp=fail
 foonathan-memory:x64-uwp=fail
+# forest is removed by upstream, see https://github.com/microsoft/vcpkg/pull/16836
+forest:arm-uwp=fail
+forest:arm64-windows=fail
+forest:x64-linux=fail
+forest:x64-uwp=fail
+forest:x64-windows-static-md=fail
+forest:x64-windows-static=fail
+forest:x64-windows=fail
+forest:x86-windows=fail
+forest:x64-osx=fail
 forge:x86-windows=fail
 freeglut:arm64-windows=fail
 freeglut:arm-uwp=fail
@@ -355,6 +364,9 @@ fuzzylite:x64-uwp=fail
 gainput:arm-uwp=fail
 gainput:x64-linux=fail
 gainput:x64-uwp=fail
+
+# Requires a more recent gcc than we have in the test lab
+gamedev-framework:x64-linux=fail
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
@@ -401,7 +413,6 @@ glfw3:arm-uwp=fail
 glfw3:x64-uwp=fail
 glib:x64-uwp=fail
 glib:x64-windows-static=fail
-glib:x64-osx=fail
 gmmlib:arm64-windows=fail
 gmmlib:arm-uwp=fail
 gmmlib:x64-osx=fail
@@ -427,8 +438,8 @@ graphqlparser:arm-uwp=fail
 graphqlparser:x64-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
-# https://github.com/microsoft/vcpkg/pull/11048
-gtk:x64-linux=fail
+gtkmm:x64-linux=fail
+gts:x64-osx=fail
 guetzli:x64-osx=fail
 h3:arm64-windows=fail
 h3:arm-uwp=fail
@@ -537,6 +548,7 @@ lastools:arm-uwp=fail
 lastools:x64-uwp=fail
 laszip:arm-uwp=fail
 laszip:x64-uwp=fail
+lcm:x64-osx=fail
 leptonica:x64-uwp=fail
 leptonica:arm-uwp=fail
 leveldb:arm-uwp=fail
@@ -567,6 +579,9 @@ libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 libcrafter:x86-windows=fail
 libcrafter:x64-windows=fail
+# Missing system libraries on linux to run/prepare autoconf
+libgpod:x64-linux=fail
+libgpod:x64-osx=fail
 libcrafter:x64-windows-static-md=fail
 cpuid:arm-uwp=fail
 cpuid:x64-uwp=fail
@@ -1166,6 +1181,7 @@ openmpi:x86-windows=fail
 openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
 openscap:x64-linux=fail
+openscap:x64-osx=fail
 openssl-unix:arm64-windows=fail
 openssl-unix:arm-uwp=fail
 openssl-unix:x64-uwp=fail
@@ -1207,10 +1223,7 @@ orocos-kdl:arm-uwp=fail
 orocos-kdl:x64-uwp=fail
 paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
-pangomm:x64-osx=fail
 pangomm:arm64-windows=fail
-parmetis:x64-linux=fail
-parmetis:x64-osx=fail
 pdal:x64-linux=fail
 pdal:x64-osx=fail
 pdal-c:x64-windows-static=fail
@@ -1247,6 +1260,7 @@ pixel:x64-windows=fail
 pixel:x64-windows-static=fail
 pixel:x64-windows-static-md=fail
 pixel:x86-windows=fail
+pixman:arm-uwp=fail
 platform-folders:arm-uwp=fail
 platform-folders:x64-uwp=fail
 plib:arm-uwp=fail
@@ -1774,7 +1788,6 @@ clapack:x64-uwp=skip
 lapack-reference:arm64-windows=skip
 lapack-reference:arm-uwp=skip
 
-
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
 activemq-cpp:x64-windows-static-md=fail
@@ -1809,3 +1822,15 @@ zyre:x64-windows-static-md=fail
 usbmuxd:x64-windows-static-md=fail
 workflow:x64-uwp=fail
 workflow:arm-uwp=fail
+
+# wangle triggers an internal compiler error
+# https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1269468
+wangle:x64-windows=fail
+wangle:x64-windows-static=fail
+wangle:x64-windows-static-md=fail
+
+# VS2019 version 16.9.4's project system changes where PDBs are placed in a way that breaks the
+# upstream build script of this port.
+# See https://developercommunity.visualstudio.com/t/Toolset-169-regression-vcxproj-producin/1356639
+dimcli:x64-windows-static-md=fail
+dimcli:x64-windows-static=fail
