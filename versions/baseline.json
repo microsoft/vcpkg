@@ -1565,7 +1565,7 @@
       "port-version": 0
     },
     "darknet": {
-      "baseline": "2021-01-21",
+      "baseline": "2021-04-16",
       "port-version": 0
     },
     "darts-clone": {
@@ -4462,7 +4462,7 @@
     },
     "opencv4": {
       "baseline": "4.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "opendnp3": {
       "baseline": "3.1.0",
@@ -5593,7 +5593,7 @@
       "port-version": 0
     },
     "simdjson": {
-      "baseline": "0.8.2",
+      "baseline": "0.9.2",
       "port-version": 0
     },
     "simple-fft": {
