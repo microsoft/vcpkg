@@ -17,10 +17,11 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Integration with build systems](users/integration.md)
 - [Triplet files](users/triplets.md)
 - [Configuration and Environment](users/config-environment.md)
-- [Manifests](users/manifests.md)
+- [Manifest Mode](users/manifests.md)
 - [Binary Caching](users/binarycaching.md)
 - [Versioning](users/versioning.md)
 - [Usage with Android](users/android.md)
+- [Usage with Mingw-w64](users/mingw.md)
 - [Host Dependencies](users/host-dependencies.md)
 
 ### Maintainer Help
