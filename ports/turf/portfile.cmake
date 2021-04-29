@@ -21,5 +21,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
+# install Macros.cmake junction is using this file as well. (same upstream maintainer)
+file(INSTALL ${SOURCE_PATH}/cmake/Macros.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
