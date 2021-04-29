@@ -32,10 +32,11 @@ $Installables = Get-Content "$PSScriptRoot/configuration/installables.json" | Co
 
 $Installables.Applications | ForEach-Object {
     $VersionCommand = $_.VersionCommand
-    if (-not (Get-CommandExists $VersionCommand[0])) {
+    $InstalledVersion = (& $VersionCommand[0] $VersionCommand[1..$VersionCommand.Length])
+    if (-not $?) {
         Write-Host "$($_.Name) not installed; installing now"
     } else {
-        $InstalledVersion = (& $VersionCommand[0] $VersionCommand[1..$VersionCommand.Length]).Trim()
+        $InstalledVersion = $InstalledVersion -join "`n"
         if ($InstalledVersion -match $_.VersionRegex) {
             if ($Matches.Count -ne 2) {
                 Write-Error "$($_.Name) has a malformed version regex ($($_.VersionRegex)); it should have a single capture group
@@ -59,12 +60,22 @@ Installing anyways."
         }
     }
 
-    $pathToDmg = "~/Downloads/$($_.Name).dmg"
-    Get-RemoteFile -OutFile $pathToDmg -Uri $_.DmgUrl -Sha256 $_.Sha256
+    if ($null -ne (Get-Member -InputObject $_ -Name 'DmgUrl')) {
+        $pathToDmg = "~/Downloads/$($_.Name).dmg"
+        Get-RemoteFile -OutFile $pathToDmg -Uri $_.DmgUrl -Sha256 $_.Sha256
 
-    hdiutil attach $pathToDmg -mountpoint /Volumes/setup-installer
-    sudo installer -pkg "/Volumes/setup-installer/$($_.InstallerPath)" -target /
-    hdiutil detach /Volumes/setup-installer
+        hdiutil attach $pathToDmg -mountpoint /Volumes/setup-installer
+        sudo installer -pkg "/Volumes/setup-installer/$($_.InstallerPath)" -target /
+        hdiutil detach /Volumes/setup-installer
+    } elseif ($null -ne (Get-Member -InputObject $_ -Name 'PkgUrl')) {
+        $pathToPkg = "~/Downloads/$($_.Name).pkg"
+        Get-RemoteFile -OutFile $pathToPkg -Uri $_.PkgUrl -Sha256 $_.Sha256
+
+        sudo installer -pkg $pathToPkg -target /
+    } else {
+        Write-Error "$($_.Name) does not have an installer in the configuration file."
+        throw
+    }
 }
 
 $Installables.Brew | ForEach-Object {
