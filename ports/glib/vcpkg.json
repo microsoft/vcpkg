@@ -1,0 +1,21 @@
+{
+  "name": "glib",
+  "version": "2.66.4",
+  "description": "Portable, general-purpose utility library.",
+  "homepage": "https://developer.gnome.org/glib/",
+  "supports": "!uwp & !(windows & static)",
+  "dependencies": [
+    "dirent",
+    "gettext",
+    "libffi",
+    "libiconv",
+    "pcre",
+    "tool-meson",
+    "zlib"
+  ],
+  "features": {
+    "selinux": {
+      "description": "Build with selinux support."
+    }
+  }
+}
