@@ -1,12 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO openscenegraph/osgQt
-    REF Qt4
-    SHA512 426a4ba88f680978d24817248b99c68cafa4517144e6e3d2480612870c4a224bb955539cacb438274d4ee1c93c36d94f8437d142070b2ecde2b81517bf357e71
+    REF 2cb70673a4e83a618290e7ee66d52402a94ec3f6
+    SHA512 29aeb5b31e70d5b12e69de7970b36ab7d1541c984873384a46c6468394e8562688c46ef39179820990817c94f283c7836c2c6ff207eefe385086d850ba3f8306
     HEAD_REF master
     PATCHES
         OsgMacroUtils.patch
         fix-static-install.patch
+        CMakeLists.patch
 )
 
 if(VCPKG_TARGET_IS_OSX)

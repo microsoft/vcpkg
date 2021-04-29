@@ -1,0 +1,7 @@
+{
+  "name": "xaudio2redist",
+  "version-string": "1.2.6",
+  "description": "Redistributable version of XAudio 2.9 for Windows 7 SP1 or later",
+  "homepage": "https://aka.ms/XAudio2Redist",
+  "supports": "windows & !arm & !uwp & !static"
+}

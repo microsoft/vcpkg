@@ -11,10 +11,9 @@ if (VCPKG_TARGET_IS_LINUX)
     message(WARNING "qt5-base currently requires some packages from the system package manager, see https://doc.qt.io/qt-5/linux-requirements.html")
     message(WARNING 
 [[
-qt5-base for qt5-x11extras requires the following libraries from the system package manager:
-    libxkbcommon-x11-dev
-
-These can be installed on Ubuntu systems via apt-get install libxkbcommon-x11-dev.
+qt5-base for qt5-x11extras requires several libraries from the system package manager. Please refer to
+  https://github.com/microsoft/vcpkg/blob/master/scripts/azure-pipelines/linux/provision-image.sh
+  for a complete list of them.
 ]]
     )
 endif()
@@ -147,6 +146,11 @@ else()
     list(APPEND CORE_OPTIONS -no-sql-mysql)
 endif()
 
+if ("vulkan" IN_LIST FEATURES)
+    list(APPEND CORE_OPTIONS --vulkan=yes)
+else()
+    list(APPEND CORE_OPTIONS --vulkan=no)
+endif()
 
 find_library(ZLIB_RELEASE NAMES z zlib PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
 find_library(ZLIB_DEBUG NAMES z zlib zd zlibd PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
