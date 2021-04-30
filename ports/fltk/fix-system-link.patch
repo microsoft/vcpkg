@@ -1,5 +1,5 @@
 diff --git a/CMake/fl_add_library.cmake b/CMake/fl_add_library.cmake
-index 6fa2fc5..eb87a5a 100644
+index 6fa2fc5..e5ba493 100644
 --- a/CMake/fl_add_library.cmake
 +++ b/CMake/fl_add_library.cmake
 @@ -38,6 +38,11 @@ macro (FL_ADD_LIBRARY LIBNAME LIBTYPE LIBFILES)
