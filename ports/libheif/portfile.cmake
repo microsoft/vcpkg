@@ -12,7 +12,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DWITH_EXAMPLES=OFF
-        --trace-expand
 )
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libheif/)
