@@ -145,48 +145,6 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
 
     # To add new entries, use https://packages.msys2.org/package/$PACKAGE?repo=msys
     msys_package(
-      URL "https://repo.msys2.org/msys/x86_64/guile-2.2.7-1-x86_64.pkg.tar.xz"
-      SHA512 273bbc52fbb189fe7687ee0bd393a0c702d6bdd9c5b69027ed729cc5ae7132b35d7e623cf6c2b5b4c020acc0a5540a58a5508d031d2b74c0cf07d0b48bc24113
-      DEPS info libguile
-    )
-    msys_package(
-      URL "https://repo.msys2.org/msys/x86_64/libguile-devel-2.2.7-1-x86_64.pkg.tar.xz"
-      SHA512 01bce974cf98d52782ab2db86ca9c4885bcbe9e32c3b6573b1c4185e48e71bd72a3f02e21dea084832825e255dfc14b2599df63343f3f2b64e694c58aaaa56df
-      DEPS libguile
-    )
-    msys_package(
-      URL "https://repo.msys2.org/msys/x86_64/libguile-2.2.7-1-x86_64.pkg.tar.xz"
-      SHA512 b87838f8b98e9e70faf9e8f01c69d78797b75d431abff411ed5d66280e9eec4c3cb7deaf9825cdcb2e8dfa9b8c68ebfc282cc8db08634f3ecbc65be7675547f8
-      DEPS ncurses gmp libffi libltdl libunistring libgc
-    )
-    msys_package(
-      URL "https://repo.msys2.org/msys/x86_64/info-6.7-3-x86_64.pkg.tar.zst"
-      SHA512 222f52091d60e09caef1716adc6d205d872b17a4d417e19964cebd9c28475f065fb51e25ac34e728cbf206da41058b31dcc90d8d12e3fcc70db3af031df0c4a2
-      DEPS gzip libcrypt libintl ncurses
-    )
-    msys_package(
-      URL "https://repo.msys2.org/msys/x86_64/libunistring-0.9.10-1-x86_64.pkg.tar.xz"
-      SHA512 ef45eb3698cfde4daf7732fe8523db7bccdb56ec450e25ca38b0afa14a858cd5f0108b86ddbf59f5d39b099f7b9c8a983d48d13b94f485d21822c96f010fec11
-      DEPS libiconv msys2-runtime
-    )
-    msys_package(
-      URL "https://repo.msys2.org/msys/x86_64/libgc-8.0.4-1-x86_64.pkg.tar.zst"
-      SHA512 75200df9602eddb3a38ebba00f46d1c40352dac9f4cdf773759bd21ce6bd1f076dfe9d056e28af556268743c223fd6e67b5c63819aca6463bb0be3a38cc432fe
-      DEPS gcc-libs
-    )
-    msys_package(
-      URL "https://repo.msys2.org/msys/x86_64/libffi-3.3-1-x86_64.pkg.tar.xz"
-      SHA512 b7b4c4392d05b069fff60d596825c23bd3a062247cdc5982eed930fe134453741be992c23fa8380a687b2b61e961a14f8833a337e654a8965206aa3db966bbb3
-    )
-    msys_package(
-      URL "https://repo.msys2.org/msys/x86_64/libltdl-2.4.6-9-x86_64.pkg.tar.xz"
-      SHA512 dcc8e917b87dd004457ebdb6874f4d58abf107107573997e885fb4d3ea7ca1d614558bd22c3e7d22bfd1013f7da0a4547c03ba8a4da265684445ba4cd7663145
-    )
-    msys_package(
-      URL "https://repo.msys2.org/msys/x86_64/libatomic_ops-7.6.10-1-any.pkg.tar.xz"
-      SHA512 a2b8fa809a2b175abb87b405db5600573b18d104e6cbafa19988705965cd9702aff713379ec352c7bb4da1a6c106d52e7a0406217ee0107b22e8fd6d3bd5d007
-    )
-    msys_package(
         URL "https://repo.msys2.org/msys/x86_64/unzip-6.0-2-x86_64.pkg.tar.xz"
         SHA512 b8a1e0ce6deff26939cb46267f80ada0a623b7d782e80873cea3d388b4dc3a1053b14d7565b31f70bc904bf66f66ab58ccc1cd6bfa677065de1f279dd331afb9
         DEPS libbz2
@@ -303,8 +261,8 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
         URL "https://repo.msys2.org/msys/x86_64/gmp-6.2.0-1-x86_64.pkg.tar.xz"
         SHA512 1389a443e775bb255d905665dd577bef7ed71d51a8c24d118097f8119c08c4dfe67505e88ddd1e9a3764dd1d50ed8b84fa34abefa797d257e90586f0cbf54de8
     )
-    msys_package(
-        URL "https://repo.msys2.org/msys/x86_64/xz-5.2.5-1-x86_64.pkg.tar.xz" # this seems to require immediate updating on version bumps.
+    msys_package( 
+        URL "https://repo.msys2.org/msys/x86_64/xz-5.2.5-1-x86_64.pkg.tar.xz" # this seems to require immediate updating on version bumps. 
         SHA512 99d092c3398277e47586cead103b41e023e9432911fb7bdeafb967b826f6a57d32e58afc94c8230dad5b5ec2aef4f10d61362a6d9e410a6645cf23f076736bba
         DEPS liblzma libiconv gettext
     )
