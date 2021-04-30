@@ -89,6 +89,18 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_cpp-1.12.0.pc")
         "-lhdf5_cpp"
         "-lhdf5_cpp_${debug_suffix}"
     )
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_cpp-1.12.0.pc"
+        "Requires.private: hdf5"
+        ""
+    )
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5_cpp-1.12.0.pc")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5_cpp-1.12.0.pc"
+        "Requires.private: hdf5"
+        ""
+    )
 endif()
 if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl_cpp-1.12.0.pc")
     vcpkg_replace_string(
@@ -97,8 +109,30 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5_hl_cpp-1.12.0.pc")
         "-lhdf5_hl_cpp_${debug_suffix}"
     )
 endif()
+set(PKG_FILES hdf5 hdf5_hl hdf5_cpp hdf5_hl_cpp)
+foreach(PC_FILE IN LISTS PKG_FILES)
+    set(SUBPATHS "/debug/lib/pkgconfig" "/lib/pkgconfig")
+    foreach(SUBPATH IN LISTS SUBPATHS)
+        if(EXISTS "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}-1.12.0.pc")
+            file(RENAME "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}-1.12.0.pc" "${CURRENT_PACKAGES_DIR}${SUBPATH}/${PC_FILE}.pc")
+        endif()
+    endforeach()
+endforeach()
 vcpkg_fixup_pkgconfig()
-
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5.pc")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5.pc"
+        "-loptimized -l\"\${prefix}/lib/zlib.lib\" -ldebug -l\"\${prefix}/debug/lib/zlibd.lib\""
+        "-lzlib"
+    )
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5.pc")
+    vcpkg_replace_string(
+        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5.pc"
+        "-loptimized -l\"\${prefix}/lib/zlib.lib\" -ldebug -l\"\${prefix}/lib/zlibd.lib\""
+        "-lzlibd"
+    )
+endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
