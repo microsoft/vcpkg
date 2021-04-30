@@ -14,7 +14,6 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCMAKE_DEBUG_POSTFIX=d
         -DSIDX_BUILD_TESTS:BOOL=OFF
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED_LIBS}
 )
 
 vcpkg_install_cmake()
