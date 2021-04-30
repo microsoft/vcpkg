@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  windows-pool: 'PrWin-2020-12-17'
-  linux-pool: 'PrLin-2020-12-16'
-  osx-pool: 'PrOsx-2020-09-28'
+  windows-pool: 'PrWin-2021-04-23'
+  linux-pool: 'PrLin-2021-04-25'
+  osx-pool: 'PrOsx-2021-04-16'
 
 stages:
 - stage: FormatChecks
