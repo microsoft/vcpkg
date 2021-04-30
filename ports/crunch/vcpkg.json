@@ -1,0 +1,6 @@
+{
+  "name": "crunch",
+  "version-string": "1.04",
+  "description": "Advanced DXTc texture compression and transcoding library",
+  "homepage": "https://github.com/BinomialLLC/crunch"
+}
