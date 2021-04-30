@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
         0001_fix_osx_defined.patch
         build2.patch
         remove_test_perf.patch
+        win_dll_def.patch
 )
 
 #TODO the autoconf script has a lot of additional option which use auto detection and should be disabled!
