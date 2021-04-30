@@ -1,6 +1,6 @@
 {
   "name": "gamenetworkingsockets",
-  "version-string": "2020-09-02",
+  "version-date": "2021-04-26",
   "description": "GameNetworkingSockets is a basic transport layer for games.",
   "homepage": "https://github.com/ValveSoftware/GameNetworkingSockets",
   "license": "BSD-3-Clause",

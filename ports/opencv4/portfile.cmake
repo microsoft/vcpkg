@@ -375,7 +375,7 @@ vcpkg_configure_cmake(
         -DBUILD_opencv_dnn=${BUILD_opencv_dnn}
         ###### The following modules are disabled for UWP
         -DBUILD_opencv_quality=${BUILD_opencv_quality}
-        -DBUILD_opencv_gapi=${DBUILD_opencv_gapi}
+        -DBUILD_opencv_gapi=${BUILD_opencv_gapi}
         ###### The following module is disabled because it's broken #https://github.com/opencv/opencv_contrib/issues/2307
         -DBUILD_opencv_rgbd=OFF
         ###### Additional build flags

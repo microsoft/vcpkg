@@ -26,3 +26,9 @@ Build-Depends: zlib
 
 Feature: fortran
 Description: Build with fortran
+Build-Depends: 
+
+Feature: threadsafe
+Description: thread safety for HDF5
+Build-Depends: pthreads
+
