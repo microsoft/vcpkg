@@ -32,8 +32,9 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 # remove duplicated include files
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+endif()
 vcpkg_copy_tools(TOOL_NAMES x265 AUTO_CLEAN)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX)
@@ -42,24 +43,36 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND (NOT VCPKG_TARGET_IS_MINGW))
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
-        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
+        endif()
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+            vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc" "-lx265" "-lx265-static")
+        endif()
     endif()
 endif()
 
 # maybe create vcpkg_regex_replace_string?
 
-file(READ ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc _contents)
-string(REGEX REPLACE "-l(std)?c\\+\\+" "" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc "${_contents}")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(READ ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc _contents)
+    string(REGEX REPLACE "-l(std)?c\\+\\+" "" _contents "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x265.pc "${_contents}")
+endif()
 
-file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc _contents)
-string(REGEX REPLACE "-l(std)?c\\+\\+" "" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc "${_contents}")
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(READ ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc _contents)
+    string(REGEX REPLACE "-l(std)?c\\+\\+" "" _contents "${_contents}")
+    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x265.pc "${_contents}")
+endif()
 
 if(VCPKG_TARGET_IS_MINGW AND ENABLE_SHARED)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libx265.a)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libx265.a)
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/libx265.a)
+    endif()
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+        file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/libx265.a)
+    endif()
 endif()
 
 if(UNIX)
