@@ -9,7 +9,7 @@ index 6fa2fc5..eb87a5a 100644
 +  
 +    if (APPLE)
 +        find_library(Cocoa Cocoa)
-+        target_link_libraries(${TARGET_NAME} PUBLIC $<$<PLATFORM_ID:Darwin>:${Cocoa}>)
++        target_link_libraries(${TARGET_NAME} $<$<PLATFORM_ID:Darwin>:${Cocoa}>)
 +    endif()
  
    # target properties for all libraries

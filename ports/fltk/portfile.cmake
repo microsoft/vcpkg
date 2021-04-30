@@ -16,6 +16,10 @@ vcpkg_from_github(
         fix-system-link.patch
 )
 
+# Remove these 2 lines when the next update
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/fltk_version.dat DESTINATION ${SOURCE_PATH})
+file(REMOVE ${SOURCE_PATH}/VERSION)
+
 if (VCPKG_TARGET_ARCHITECTURE MATCHES "arm" OR VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
     set(OPTION_USE_GL "-DOPTION_USE_GL=OFF")
 else()
