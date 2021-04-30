@@ -3,8 +3,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commschamp/comms_champion
-    REF v3.1.3
-    SHA512 80aa3e0e53f3de21b8dcb4f02765f59ff58fc8c1b9e21beb09de26a3dd07fc4d6a3bc9fe78fb1c6cc633caabb1dd088f220d077b4a3a0d534cb1d243959c5a08
+    REF v3.2
+    SHA512 4ca0c1e074715126edae0bd8fda62bb2cbe2151887f755a1874e21d15e050e0c7248bb50ba2e9a5da52611f48fab8e3dd7d5cc402cad134684c1ebb85aa5348a
     HEAD_REF master
 )
 

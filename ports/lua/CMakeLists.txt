@@ -79,7 +79,7 @@ INSTALL ( TARGETS lua
     ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
 )
 
-IF (NOT DEFINED SKIP_INSTALL_TOOLS)
+IF (INSTALL_TOOLS)
     ADD_EXECUTABLE ( luac src/luac.c ${SRC_LIBLUA} ) # compiler uses non-exported APIs, so must include sources directly.
     ADD_EXECUTABLE ( luai src/lua.c )  # interpreter
     TARGET_LINK_LIBRARIES ( luai lua )
