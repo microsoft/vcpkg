@@ -1997,8 +1997,8 @@
       "port-version": 0
     },
     "fltk": {
-      "baseline": "1.3.5",
-      "port-version": 4
+      "baseline": "1.3.6",
+      "port-version": 0
     },
     "fluidlite": {
       "baseline": "2020-08-27",
