@@ -1,7 +1,6 @@
 {
   "name": "winlamb",
-  "version-string": "2020-10-15",
-  "port-version": 0,
+  "version-date": "2020-10-15",
   "description": "A lightweight modern C++11 library for Win32 API, using lambdas to handle Windows messages.",
   "homepage": "https://github.com/rodrigocfd/winlamb",
   "license": "MIT"
