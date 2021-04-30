@@ -8,7 +8,7 @@ vcpkg_from_github(
     REF 303c484ec828ed0d8bfe743500e70314d026c3bd
     SHA512 faf210a3f9543028ed882c8348b243dd7ae6638e7b3ef43bec1326b717f23370f57c13d0ddb5e1ae94411088a2e33031a137b68ae9f64c18f8f33f601a0da54d
     HEAD_REF master
-    PATCHES
+    PATCHES 
         "uwp-cflags.patch"
 )
 
@@ -46,8 +46,8 @@ vcpkg_configure_make(
         --disable-ffms
         --disable-gpac
         --disable-lsmash
-    OPTIONS_DEBUG
         --enable-debug
+
 )
 
 vcpkg_install_make()
