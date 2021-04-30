@@ -1,0 +1,21 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index eb3ff66..f7f569c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -14,6 +14,8 @@ message(STATUS "The CXX standard is c++${REDIS_PLUS_PLUS_CXX_STANDARD}")
+ 
+ if (NOT WIN32)
+     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++${REDIS_PLUS_PLUS_CXX_STANDARD} -Wall -W -Werror")
++else()	
++	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")    
+ endif()
+ 
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+@@ -77,6 +79,7 @@ if (REDIS_PLUS_PLUS_BUILD_SHARED)
+         target_compile_definitions(${SHARED_LIB} PRIVATE NOMINMAX)
+         set_target_properties(${SHARED_LIB} PROPERTIES CXX_STANDARD ${REDIS_PLUS_PLUS_CXX_STANDARD} CXX_EXTENSIONS OFF)
+         set_target_properties(${SHARED_LIB} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
++        target_link_libraries(${SHARED_LIB} Ws2_32.lib)
+     endif()
+ 
+     target_link_libraries(${SHARED_LIB} ${HIREDIS_LIB})

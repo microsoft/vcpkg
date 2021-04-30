@@ -5,7 +5,7 @@ vcpkg_from_github(
     SHA512 038641a91a2d62f8b07b548fb16f03e87a014fc3a53e59d95e9d31d707e800de4922838bc1bc181d642bb6ac23eae877e0a8724548d9d8f113ebc8d744384abf
     HEAD_REF master
     PATCHES
-        fix-ws2-linking-windows.patch
+        fix-ws2-link-__cplusplus-switch-windows.patch
         fix-conversion.patch
 )
 
