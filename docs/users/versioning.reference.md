@@ -9,7 +9,7 @@
 * [Version constraints](#version-constraints)
 
 ## Version schemes
-Ports in vcpkg should attempt to follow the versioning conventions used by the package’s authors. For that reason, when declaring a package’s version the appropriate scheme should be used.
+Ports in vcpkg should attempt to follow the versioning conventions used by the package's authors. For that reason, when declaring a package's version the appropriate scheme should be used.
 
 Each versioning scheme defines its own rules on what is a valid version string and more importantly the rules for how to sort versions using the same scheme.
 
@@ -172,7 +172,7 @@ Accepts a Git commit ID. Vcpkg will try to find a baseline file in the given com
 When resolving version constraints for a package, vcpkg will look for a baseline version:
 * First by looking at the baseline file in the given commit ID.
 * If the given commit ID does not contain a baseline file, vcpkg will fallback to use the local baseline file instead.
-* If there’s no local baseline file, vcpkg will use the version currently available in the ports directory.
+* If there's no local baseline file, vcpkg will use the version currently available in the ports directory.
 
 _NOTE: If a baseline file is found, but it does not contain an entry for the package, the vcpkg invocation will fail._
 
@@ -186,7 +186,7 @@ Example:
 }
 ```
 
-Baselines can be used without any other version constraints to obtain behavior close to using “classic” mode. 
+Baselines can be used without any other version constraints to obtain behavior close to using "classic" mode.
 
 ### `version>=`
 Expresses a minimum version requirement, `version>=` declarations put a lower boundary on the versions that can be used to satisfy a dependency.

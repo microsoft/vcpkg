@@ -10,7 +10,7 @@ vcpkg_execute_build_process(
     COMMAND <cmd> [<args>...]
     [NO_PARALLEL_COMMAND <cmd> [<args>...]]
     WORKING_DIRECTORY </path/to/dir>
-    LOGNAME <log_name>)
+    LOGNAME <log_name>
 )
 ```
 ## Parameters
