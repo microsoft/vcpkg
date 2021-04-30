@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "type": "object",
+  "required": [
+    "brew",
+    "brew-cask"
+  ],
+  "properties": {
+    "brew": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "brew-cask": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

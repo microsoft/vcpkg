@@ -7,7 +7,7 @@ index a6b432f..003615e 100644
  endif()
  
 +if (MSVC)
-+  add_compile_options(/wd4146 -D_CRT_SECURE_NO_WARNINGS)
++  add_compile_options(/wd4146 /wd4703 -D_CRT_SECURE_NO_WARNINGS)
 +endif()
 +
  enable_testing()
