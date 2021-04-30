@@ -29,6 +29,9 @@ find_path(NCCL_INCLUDE_DIRS
   $ENV{CUDNN_ROOT_DIR}
   $ENV{CUDA_TOOLKIT_ROOT_DIR}
   $ENV{NCCL}
+  /usr/include
+  PATH_SUFFIXES
+  include
 )
 
 if (USE_STATIC_NCCL)
@@ -77,6 +80,10 @@ find_library(NCCL_LIBRARIES
   $ENV{CUDNN_ROOT_DIR}
   $ENV{CUDA_TOOLKIT_ROOT_DIR}
   $ENV{NCCL}
+  /usr/lib/x86_64-linux-gnu/
+  PATH_SUFFIXES
+  lib
+  lib64
 )
 
 include(FindPackageHandleStandardArgs)
