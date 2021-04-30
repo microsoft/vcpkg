@@ -298,6 +298,10 @@ Feature: decoder-libilbc
 Build-Depends: ffmpeg[core,avcodec], libilbc
 Description: iLBC decoder(s) using libilbc
 
+Feature: decoder-libopenh264
+Build-Depends: ffmpeg[core,avcodec], openh264
+Description: H.264 decoder(s) using openh264
+
 Feature: decoder-libopenjpeg
 Build-Depends: ffmpeg[core,avcodec], openjpeg
 Description: OpenJPEG JPEG 2000 decoder(s) using openjpeg
@@ -497,6 +501,10 @@ Description: iLBC encoder(s) using libilbc
 Feature: encoder-libmp3lame
 Build-Depends: ffmpeg[core,avcodec], mp3lame
 Description: MP3 encoder(s) using mp3lame
+
+Feature: encoder-libopenh264
+Build-Depends: ffmpeg[core,avcodec], openh264
+Description: H.264 encoder(s) using openh264
 
 Feature: encoder-libopenjpeg
 Build-Depends: ffmpeg[core,avcodec], openjpeg
