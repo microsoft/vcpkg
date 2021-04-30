@@ -209,6 +209,11 @@ if(@ENABLE_OPENGL@)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${OPENGL_LIBRARIES})
 endif()
 
+if(@ENABLE_OPENH264@)
+  select_library_configurations_from_names(BASENAME openh264 NAMES openh264)
+  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${openh264_LIBRARIES})
+endif()
+
 if(@ENABLE_OPENJPEG@)
   find_dependency(OpenJPEG)
   select_library_configurations_from_targets(BASENAME openjpeg TARGETS openjp2)
