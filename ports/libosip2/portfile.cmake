@@ -17,39 +17,35 @@ vcpkg_extract_source_archive_ex(
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)   
-    if (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-        set(BUILD_ARCH "Win32")
-    elseif(TRIPLET_SYSTEM_ARCH MATCHES "x64")
-        set(BUILD_ARCH "x64")
-    elseif(TRIPLET_SYSTEM_ARCH MATCHES "arm")
-        message(FATAL_ERROR " ARM is currently not supported.")
-    endif()    
+    
+    vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
+    
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
         PROJECT_SUBPATH "platform/vsnet/osip2.vcxproj"
-        PLATFORM ${BUILD_ARCH}
         INCLUDES_SUBPATH include
         USE_VCPKG_INTEGRATION
-        ALLOW_ROOT_INCLUDES
         REMOVE_ROOT_INCLUDES      
-    )    
+    )
+    
     vcpkg_install_msbuild(
         SOURCE_PATH "${SOURCE_PATH}"
-        PLATFORM ${BUILD_ARCH}
         PROJECT_SUBPATH "platform/vsnet/osipparser2.vcxproj"
         USE_VCPKG_INTEGRATION
     )
-elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TAREGT_IS_OSX)
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS ${OPTIONS}
     )
-    
+
     vcpkg_install_make()
     vcpkg_fixup_pkgconfig()
     
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
 endif()
 
 # Handle copyright
