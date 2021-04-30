@@ -16,8 +16,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES ${PATCHES}
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)   
-    
+if(VCPKG_TARGET_IS_WINDOWS)     
     vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
     
     vcpkg_install_msbuild(
@@ -34,7 +33,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         USE_VCPKG_INTEGRATION
     )
 
-elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TAREGT_IS_OSX)
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
     vcpkg_configure_make(
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS ${OPTIONS}
