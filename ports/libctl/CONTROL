@@ -1,4 +1,0 @@
-Source: libctl
-Version: 4.5.0
-Description: libctl is a Guile-based library for supporting flexible control files in scientific simulations.
-Supports: !windows

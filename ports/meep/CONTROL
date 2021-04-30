@@ -1,5 +1,0 @@
-Source: meep
-Version: 1.15.0
-Description: free finite-difference time-domain (FDTD) software for electromagnetic simulations
-Build-Depends: vcpkg-gfortran (windows), openblas, lapack, libctl, hdf5, fftw3
-Supports: !windows
