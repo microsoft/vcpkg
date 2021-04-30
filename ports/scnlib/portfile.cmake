@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO eliaskosunen/scnlib
-    REF v0.3
-    SHA512 91ab0ff5d7d2e4a4924bfa00cafc49c3b0d88b87f4adbdce786be0f51913e3c61c6948c27da6af1e020646e610540dc63323fbf7b59f9210266f1ba79bf95adc
+    REF v0.4
+    SHA512 a7059e70326e7d5af463b4ae09308644f8035092776f44001c1a4abf78421f55084e2fc30c6a9778eda62014354dba7c31b3f2f2d333bad04a2ec48b1f812ca0
     HEAD_REF master
 )
 

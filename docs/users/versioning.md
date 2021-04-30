@@ -86,4 +86,4 @@ See also the [manifest documentation](manifests.md) for more syntax information.
 
 ## Original Specification
 
-See also the [original specification](https://github.com/vicroms/vcpkg/blob/versioning-spec/docs/specifications/versioning.md)
+See also the [original specification](https://github.com/microsoft/vcpkg/blob/master/docs/specifications/versioning.md)
