@@ -8,25 +8,25 @@
         <archiveName>python-3.9.2-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.19.2</version>
-        <exeRelativePath>cmake-3.19.2-win32-x86\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-win32-x86.zip</url>
-        <sha512>1ed3706d8dd5c5244ceb4c22443f006fcb9ffa76cb6d9ebdbbb8f11a50deb3f92a9a4080ff3fd125f79c0143f553ea0c02a6a2d27521438705c2fea4dd97d239</sha512>
-        <archiveName>cmake-3.19.2-win32-x86.zip</archiveName>
+        <version>3.20.1</version>
+        <exeRelativePath>cmake-3.20.1-windows-i386\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.20.1/cmake-3.20.1-windows-i386.zip</url>
+        <sha512>bc0be4e32bbffe102b2cb970591118bf2132d6afd6c97469cf46a4f772627fa81a8a57e4069dc32a93c0ffcce176e562d9d008e6780f053876e5d5eb97051554</sha512>
+        <archiveName>cmake-3.20.1-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.19.2</version>
-        <exeRelativePath>cmake-3.19.2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-macos-universal.tar.gz</url>
-        <sha512>031196439a26d6ff2a1f42830ca26b5159752dc2c2c889a4e304327c858157b68088905b10727090918c3605fe7fe429aa19d46e68ed30c17d4d89b3d209aae8</sha512>
-        <archiveName>cmake-3.19.2-macos-universal.tar.gz</archiveName>
+        <version>3.20.1</version>
+        <exeRelativePath>cmake-3.20.1-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.20.1/cmake-3.20.1-macos-universal.tar.gz</url>
+        <sha512>fd17d09a0639833a2aa5f30045cfcbbb30e0cfa5092d2f22f0bc502ea361a458d26be96437fbfb6b5e68b73954050c0256653af7e2e20bb253a878e206992135</sha512>
+        <archiveName>cmake-3.20.1-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.19.2</version>
-        <exeRelativePath>cmake-3.19.2-Linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-Linux-x86_64.tar.gz</url>
-        <sha512>67ea7ee428e6c93039646d6d0cbe84c0be337a2b878487635fee71ec2c8992a9078a660e6b793ef11ce13530def44a16b716af96e10a97675d014a26caa0aed4</sha512>
-        <archiveName>cmake-3.19.2-Linux-x86_64.tar.gz</archiveName>
+        <version>3.20.1</version>
+        <exeRelativePath>cmake-3.20.1-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.20.1/cmake-3.20.1-Linux-x86_64.tar.gz</url>
+        <sha512>e14b6cbc03abfbae074c36e34f90eea94af02e727e75ed597f748203e2ce7483ffe693bd173cb02a1de7ac55254a891da5505c43b92528adc918eff9e8b024e6</sha512>
+        <archiveName>cmake-3.20.1-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.12.4</version>
@@ -134,10 +134,10 @@
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.1.0</version>
+        <version>7.1.3</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.1.0/PowerShell-7.1.0-win-x86.zip</url>
-        <sha512>ea6ed619c784af65b09a5e98cdfc0d41333ba7373b7409e488ec70aaf1e0c4e5568e846d2b1748d72c3e3a9c1a4827f0ba29e9f6e93e79b4f49312ca40af6d2a</sha512>
-        <archiveName>PowerShell-7.1.0-win-x86.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.1.3/PowerShell-7.1.3-win-x86.zip</url>
+        <sha512>8c2ce510b5c641aad2da6adefc92d47e09bc842d47db3b5d15e14859555a74fe13ad52eaeabf1b2954ca9af737e628b567731c8a3db9bbf0e4aad05279bc1fd8</sha512>
+        <archiveName>PowerShell-7.1.3-win-x86.zip</archiveName>
     </tool>
 </tools>

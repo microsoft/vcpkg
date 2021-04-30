@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/xalan-c
-    REF 177da75646a80fae2c22a315c0d987a5eadba143
-    SHA512 e0f095b7031394c39c8e0fdca1f820c4222466f8c6e9df7bc40a21f9ca0e9291b7b6cdfb0a2d67db275ae97d7a7cdd447637102639e74716f0fb23a946b30ebe
+    REF 4055bb0c58e3053b04fcd0c68fdcda8f84411213 #1.12
+    SHA512 0d591f5a07dbc69050c7b696189c46a32e6dd7a80a302fd38dcc82f9454688729e361c4d5c3b0aacfc3acc7df78c0981ba54eb3ce82b1ca6566a30aa19648280
     PATCHES
         fix-win-deprecated-err.patch
         fix-missing-dll-error.patch
