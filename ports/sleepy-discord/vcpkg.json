@@ -1,32 +1,32 @@
 {
-    "name": "sleepy-discord",
-    "version-string": "2021_04_30",
-    "description": "C++ library for the Discord chat client",
-    "homepage": "https://yourwaifu.dev/sleepy-discord/",
-    "features": {
-        "websocketpp": {
-            "description": "Use Websocketpp for handling WebSockets",
-            "dependencies": [
-                "websocketpp",
-                "boost-random"
-            ]
-        },
-        "cpr": {
-            "description": "Use CPR library for handling HTTPS",
-            "dependencies": [
-                "cpr"
-            ]
-        },
-        "voice": {
-            "description": "Voice Chat support",
-            "dependencies": [
-                "opus",
-                "libsodium"
-            ]
-        }
-    },
-    "default-features": [
-        "websocketpp",
+  "name": "sleepy-discord",
+  "version-string": "2021_04_30",
+  "description": "C++ library for the Discord chat client",
+  "homepage": "https://yourwaifu.dev/sleepy-discord/",
+  "default-features": [
+    "cpr",
+    "websocketpp"
+  ],
+  "features": {
+    "cpr": {
+      "description": "Use CPR library for handling HTTPS",
+      "dependencies": [
         "cpr"
-    ]
+      ]
+    },
+    "voice": {
+      "description": "Voice Chat support",
+      "dependencies": [
+        "libsodium",
+        "opus"
+      ]
+    },
+    "websocketpp": {
+      "description": "Use Websocketpp for handling WebSockets",
+      "dependencies": [
+        "boost-random",
+        "websocketpp"
+      ]
+    }
+  }
 }
