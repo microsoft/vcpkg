@@ -5628,6 +5628,10 @@
       "baseline": "1.13.0",
       "port-version": 0
     },
+    "sleepy-discord": {
+      "baseline": "2021_04_30",
+      "port-version": 0
+    },
     "slikenet": {
       "baseline": "2019-10-22-2",
       "port-version": 0
