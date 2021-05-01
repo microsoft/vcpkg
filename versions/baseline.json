@@ -2904,6 +2904,10 @@
       "baseline": "3.8.0",
       "port-version": 4
     },
+    "lapacke": {
+      "baseline": "3.8.0",
+      "port-version": 0
+    },
     "lastools": {
       "baseline": "2020-05-09",
       "port-version": 0
