@@ -1,12 +1,20 @@
 {
   "name": "tensorpipe",
-  "version-date": "2021-04-10",
+  "version-date": "2021-04-26",
   "description": "A tensor-aware point-to-point communication primitive for machine learning",
   "homepage": "https://github.com/pytorch/tensorpipe",
   "supports": "linux & osx",
   "dependencies": [
     "libnop",
-    "libuv"
+    "libuv",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ],
   "features": {
     "cuda": {

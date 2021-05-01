@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pytorch/tensorpipe
-    REF 2aa790fa027246a42abab8a976d4167c71bc09a4
-    SHA512 e55597c247267983690d7f1f67c0563ff1374e90d1594cfd733979e1b069d35247578d6dec9734c997a6f7ff58c9753228ec516d9bed0fb46a5c361756c42ac1
+    REF c5a21994bc766659f7f85edb75478e13f429f46c
+    SHA512 05a3989286610edea2f0fcfb9197c563e947f0386f2b52110dd060053d68b62477fcd4778a45a3030b9a53b6ceccead91e4dd96c9f0153023e97414459fbd8dd
     PATCHES
         fix-cmakelists.patch
         support-test.patch
@@ -25,17 +25,21 @@ if("pybind11" IN_LIST FEATURES)
     list(APPEND FEATURE_OPTIONS -DPYTHON_EXECUTABLE=${PYTHON3})
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DTP_ENABLE_SHM=${VCPKG_TARGET_IS_LINUX}
+        -DTP_ENABLE_IBV=OFF
+        -DTP_ENABLE_CMA=OFF
         -DTP_BUILD_LIBUV=OFF # will use libuv package
+        -DTP_ENABLE_CUDA_GDR=OFF
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
+                    ${CURRENT_PACKAGES_DIR}/debug/share
+)
