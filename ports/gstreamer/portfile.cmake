@@ -111,6 +111,11 @@ else()
     set(LIBRARY_LINKAGE "static")
 endif()
 
+# gst-build's meson configuration needs git. Make the tool visible.
+vcpkg_find_acquire_program(GIT)
+get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
+vcpkg_add_to_path("${GIT_DIR}")
+
 #
 # check scripts/cmake/vcpkg_configure_meson.cmake
 #   --wrap-mode=nodownload
