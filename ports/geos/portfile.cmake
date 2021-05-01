@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     REF ${GEOS_VERSION}
     PATCHES
         dont-build-docs.patch
@@ -24,7 +24,7 @@ else()
 endif()
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         -DCMAKE_DEBUG_POSTFIX=d
@@ -34,19 +34,28 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GEOS)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/geos-config")
+    file(READ "${CURRENT_PACKAGES_DIR}/bin/geos-config" GEOS_CONFIG)
+    string(REGEX REPLACE "(\nprefix=)[^\n]*" [[\1$(CDPATH= cd -- "$(dirname -- "$0")"/../.. && pwd -P)]] GEOS_CONFIG "${GEOS_CONFIG}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/bin/geos-config" "${GEOS_CONFIG}")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/geos-config ${CURRENT_PACKAGES_DIR}/share/${PORT}/geos-config)
+endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/geos-config)
+    file(READ "${CURRENT_PACKAGES_DIR}/debug/bin/geos-config" GEOS_CONFIG)
+    string(REGEX REPLACE "(\nprefix=)[^\n]*" [[\1$(CDPATH= cd -- "$(dirname -- "$0")"/../.. && pwd -P)]] GEOS_CONFIG "${GEOS_CONFIG}")
+    string(REGEX REPLACE "(-lgeos(_c)?d?)( |\n)" "\\1d\\3" GEOS_CONFIG "${GEOS_CONFIG}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/debug/bin/geos-config" "${GEOS_CONFIG}")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/geos-config ${CURRENT_PACKAGES_DIR}/share/${PORT}/geos-config-debug)
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/geos-config)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/geos)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/geos-config ${CURRENT_PACKAGES_DIR}/share/geos/geos-config)
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/geos-config)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/geos/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/geos/copyright" COPYONLY)
 
 vcpkg_copy_pdbs()
