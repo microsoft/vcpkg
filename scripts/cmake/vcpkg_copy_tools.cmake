@@ -10,7 +10,6 @@ vcpkg_copy_tools(
     [SEARCH_DIR <${CURRENT_PACKAGES_DIR}/bin>]
     [DESTINATION <${CURRENT_PACKAGES_DIR}/tools/${PORT}>]
     [AUTO_CLEAN]
-    [DESTINATION <${CURRENT_PACKAGES_DIR}/tools/${PORT}>]
 )
 ```
 ## Parameters
