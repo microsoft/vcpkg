@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF asio-1-18-1
     SHA512 c84e6fca448ed419a976756840f3f4543291a5a7d4f62d4de7c06945b2cd9ececca6633049ad5e36367d60f67a4f2735be017445514ae9fa9497d4af2a4d48f8
     HEAD_REF master
+    PATCHES
+        inline_dummy_return.patch
 )
 
 # Always use "ASIO_STANDALONE" to avoid boost dependency
