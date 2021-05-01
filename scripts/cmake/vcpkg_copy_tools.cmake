@@ -25,9 +25,6 @@ Destination to copy the tools to. This will be set to `${CURRENT_PACKAGES_DIR}/t
 ### AUTO_CLEAN
 Auto clean executables in `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.
 
-### DESTINATION
-The destination folder. This will be set to `${CURRENT_PACKAGES_DIR}/tools/${PORT}` if ommited.
-
 ## Examples
 
 * [cpuinfo](https://github.com/microsoft/vcpkg/blob/master/ports/cpuinfo/portfile.cmake)
