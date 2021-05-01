@@ -129,9 +129,9 @@ function(vcpkg_internal_meson_generate_flags_properties_string _out_var _config)
     vcpkg_internal_meson_convert_list_to_python_array(MESON_CXXFLAGS_${_config} ${MESON_CXXFLAGS_${_config}})
     string(APPEND ${_out_var} "cpp_args = ${MESON_CXXFLAGS_${_config}}\n")
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        list(APPEND LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${_config}}")
+        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_SHARED_LINKER_FLAGS_${_config}}")
     else()
-        list(APPEND LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${_config}}")
+        set(LINKER_FLAGS_${_config} "${VCPKG_DETECTED_CMAKE_STATIC_LINKER_FLAGS_${_config}}")
     endif()
     vcpkg_internal_meson_convert_compiler_flags_to_list(LINKER_FLAGS_${_config} "${LINKER_FLAGS_${_config}}")
     list(APPEND LINKER_FLAGS_${_config} "${LIBPATH_${_config}}")
@@ -328,10 +328,6 @@ function(vcpkg_configure_meson)
     debug_message("Including cmake vars from: ${_VCPKG_CMAKE_VARS_FILE}")
     include("${_VCPKG_CMAKE_VARS_FILE}")
 
-    vcpkg_find_acquire_program(GIT)
-    get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
-    vcpkg_add_to_path("${GIT_DIR}")
-    
     vcpkg_find_acquire_program(PYTHON3)
     get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
     vcpkg_add_to_path("${PYTHON3_DIR}")
@@ -348,7 +344,7 @@ function(vcpkg_configure_meson)
     vcpkg_add_to_path(PREPEND "${NINJA_PATH}") # Need to prepend so that meson picks up the correct ninja from vcpkg ....
     # list(APPEND _vcm_ADDITIONAL_NATIVE_BINARIES "ninja = '${NINJA}'") # This does not work due to meson issues ......
 
-    list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja --wrap-mode nodownload)
+    list(APPEND _vcm_OPTIONS --buildtype plain --backend ninja) # --wrap-mode nodownload
 
     if(NOT VCPKG_MESON_CROSS_FILE)
         vcpkg_internal_meson_generate_cross_file("_vcm_ADDITIONAL_CROSS_BINARIES")
