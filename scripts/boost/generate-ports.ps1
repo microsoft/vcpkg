@@ -298,7 +298,6 @@ foreach ($library in $libraries)
     {
         $hash = $hash[1]
     }
-    echo $hash
      
     $unpacked = "$scriptsDir/libs/$library-boost-$version"
     if (!(Test-Path $unpacked))
@@ -421,7 +420,7 @@ foreach ($library in $libraries)
             )
             $needsBuild = $true
         }
- 
+
         if ($library -eq "python")
         {
             $deps += @("python3")
