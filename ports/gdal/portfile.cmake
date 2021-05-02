@@ -195,15 +195,15 @@ else()
         --with-geos=yes
         --with-gif=yes
         --with-hdf5=yes
-        --with-libjson-c=${CURRENT_INSTALLED_DIR}
-        --with-geotiff=yes
+        --with-libjson-c=yes
+        "--with-geotiff=${CURRENT_INSTALLED_DIR}"
         --with-jpeg=yes
         --with-liblzma=yes
         --with-png=yes
         --with-pg=yes
         --with-webp=yes
         --with-xml2=yes
-        --with-netcdf=yes
+        --with-netcdf=no  # TODO, depends on #18120
         --with-openjpeg=yes
         --with-proj=yes
         --with-sqlite3=yes
@@ -296,22 +296,16 @@ else()
         )
     endif()
 
+    # proj needs a C++ runtime library
     if(VCPKG_TARGET_IS_OSX)
-        set(DEPENDLIBS "-lc++ -liconv -llber -lldap -framework CoreFoundation -framework Security")
+        list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lc++")
     else()
-        set(DEPENDLIBS "-lstdc++")
+        list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lstdc++")
     endif()
 
-    list(APPEND OPTIONS_RELEASE
-        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto  -lgeos_c -lgeos -llzma -lszip"
-    )
-    list(APPEND OPTIONS_DEBUG
-        "LIBS=-pthread ${DEPENDLIBS} -lssl -lcrypto -lgeos_cd -lgeosd -llzmad -lszip_debug"
-    )
-
-    if(VCPKG_HOST_IS_WINDOWS)
-        string(REPLACE " " "\\ " OPTIONS_RELEASE "${OPTIONS_RELEASE}")
-        string(REPLACE " " "\\ " OPTIONS_DEBUG "${OPTIONS_DEBUG}")
+    # curl has systen dependencies, #17790
+    if(VCPKG_TARGET_IS_OSX)
+        list(APPEND CONF_OPTS "LIBS=-llber -lldap -framework CoreFoundation -framework Security")
     endif()
 
     vcpkg_configure_make(
@@ -320,12 +314,15 @@ else()
         COPY_SOURCE
         OPTIONS
             ${CONF_OPTS}
-            "GEOS_VERSION=3.9.0"
         OPTIONS_RELEASE
             ${OPTIONS_RELEASE}
+            DEBUG_DIR=
+            DEBUG_POSTFIX=
         OPTIONS_DEBUG
             --enable-debug
             ${OPTIONS_DEBUG}
+            DEBUG_DIR=/debug
+            DEBUG_POSTFIX=d
     )
 
     vcpkg_install_make(MAKEFILE GNUmakefile)
