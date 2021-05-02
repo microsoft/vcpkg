@@ -1,8 +1,16 @@
 diff --git a/configure b/configure
-index 3b96cde..a5789f7 100755
+index 3b96cde..8233294 100755
 --- a/configure
 +++ b/configure
-@@ -25,9 +25,9 @@ for opt do
+@@ -18,16 +18,16 @@ for opt do
+   ;;
+   --mandir=*) mandir="$optarg"
+   ;;
+-  --datadir=*) datadir="$optarg"
++  --datarootdir=*) datadir="$optarg"
+   ;;
+   --cc=*) cc="$optarg"
+   ;;
    --cxx=*) cxx="$optarg"
    ;;
    *)

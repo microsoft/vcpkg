@@ -36,3 +36,4 @@ else()
                 ${CURRENT_PACKAGES_DIR}/lib/liburing.so.2.0.0
     )
 endif()
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
