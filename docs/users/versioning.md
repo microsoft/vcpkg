@@ -1,11 +1,13 @@
 # Versioning
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/versioning.md).**
+
 **This feature is experimental and requires `--feature-flags=versions`**
 
 Versioning allows you to deterministically control the precise revisions of dependencies used by
 your project from within your manifest file.
 
-See our guide to [getting started with versioning](versioning.getting-started.md).
+See our guide to [getting started with versioning](../examples/versioning.getting-started.md).
 
 ## Version schemes
 
@@ -84,4 +86,4 @@ See also the [manifest documentation](manifests.md) for more syntax information.
 
 ## Original Specification
 
-See also the [original specification](https://github.com/vicroms/vcpkg/blob/versioning-spec/docs/specifications/versioning.md)
+See also the [original specification](https://github.com/microsoft/vcpkg/blob/master/docs/specifications/versioning.md)

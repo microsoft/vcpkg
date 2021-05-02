@@ -1,16 +1,23 @@
 {
   "name": "boost-nowide",
   "version-string": "1.75.0",
+  "port-version": 1,
   "description": "Boost nowide module",
   "homepage": "https://github.com/boostorg/nowide",
   "dependencies": [
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-config",
     {
       "name": "boost-filesystem",
       "platform": "!uwp"
     },
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-vcpkg-helpers"
   ]
 }

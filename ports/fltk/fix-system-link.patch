@@ -1,0 +1,18 @@
+diff --git a/CMake/macros.cmake b/CMake/macros.cmake
+index 0c2586f..eb77510 100644
+--- a/CMake/macros.cmake
++++ b/CMake/macros.cmake
+@@ -37,6 +37,13 @@ macro(FL_ADD_LIBRARY LIBNAME LIBTYPE LIBFILES)
+     add_library(${LIBRARY_NAME} ${LIBTYPE} ${LIBFILES})
+ 
+     target_include_directories(${LIBRARY_NAME} PUBLIC $<INSTALL_INTERFACE:include>)
++    
++    if (APPLE)
++        find_library(Cocoa Cocoa)
++        target_link_libraries(${LIBRARY_NAME} PUBLIC $<$<PLATFORM_ID:Darwin>:${Cocoa}>)
++    elseif (WIN32)
++        target_link_libraries(${LIBRARY_NAME} PUBLIC gdi32 gdiplus user32 advapi32 ole32 shell32 comdlg32)
++    endif()
+ 
+     set_target_properties(${LIBRARY_NAME}
+         PROPERTIES

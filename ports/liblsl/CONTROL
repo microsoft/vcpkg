@@ -1,3 +1,6 @@
 Source: liblsl
-Version: 1.13.1
+Version: 1.14.0
+Homepage: https://github.com/sccn/liblsl
 Description: C++ lsl library for multi-modal time-synched data transmission over the local network
+Supports: !(static & staticcrt)
+Build-Depends: pugixml

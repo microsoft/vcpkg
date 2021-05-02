@@ -1,0 +1,43 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2c50b8d..c5bdf35 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -354,10 +354,7 @@ if(WITH_QHULL)
+   if(NOT PCL_SHARED_LIBS OR ((WIN32 AND NOT MINGW) AND NOT PCL_BUILD_WITH_QHULL_DYNAMIC_LINKING_WIN32))
+     set(QHULL_USE_STATIC ON)
+   endif()
+-  find_package(Qhull)
+-  if(QHULL_FOUND)
+-    include_directories(SYSTEM ${QHULL_INCLUDE_DIRS})
+-  endif()
++  find_package(Qhull CONFIG REQUIRED)
+ endif()
+ 
+ # Cuda
+diff --git a/surface/CMakeLists.txt b/surface/CMakeLists.txt
+index e5e4231..2fb8a46 100644
+--- a/surface/CMakeLists.txt
++++ b/surface/CMakeLists.txt
+@@ -12,7 +12,7 @@ if(NOT build)
+   return()
+ endif()
+ 
+-if(QHULL_FOUND)
++if(Qhull_FOUND)
+   set(HULL_INCLUDES
+     "include/pcl/${SUBSYS_NAME}/concave_hull.h"
+     "include/pcl/${SUBSYS_NAME}/convex_hull.h"
+@@ -159,7 +159,12 @@ include_directories(SYSTEM
+ link_directories(${VTK_LIBRARY_DIRS})
+ PCL_ADD_LIBRARY(${LIB_NAME} COMPONENT ${SUBSYS_NAME} SOURCES ${srcs} ${incs} ${impl_incs} ${VTK_SMOOTHING_INCLUDES} ${POISSON_INCLUDES} ${OPENNURBS_INCLUDES} ${ON_NURBS_INCLUDES})
+ target_link_libraries("${LIB_NAME}" pcl_common pcl_search pcl_kdtree pcl_octree ${VTK_LIBRARIES} ${ON_NURBS_LIBRARIES})
+-if(QHULL_FOUND)
++if(Qhull_FOUND)
++  if(QHULL_USE_STATIC)
++    set(QHULL_LIBRARIES Qhull::qhullcpp Qhull::qhullstatic Qhull::qhullstatic_r)
++  else()
++    set(QHULL_LIBRARIES Qhull::qhull_r Qhull::qhullcpp)
++  endif()
+   target_link_libraries("${LIB_NAME}" ${QHULL_LIBRARIES})
+ endif()
+ PCL_MAKE_PKGCONFIG(${LIB_NAME} COMPONENT ${SUBSYS_NAME} DESC ${SUBSYS_DESC} PCL_DEPS ${SUBSYS_DEPS})
