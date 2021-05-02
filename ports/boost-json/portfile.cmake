@@ -8,10 +8,23 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+file(READ "${SOURCE_PATH}/build/Jamfile" _contents)
+string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
+string(REPLACE "\n      <library>/boost//container/<warnings-as-errors>off" "" _contents "${_contents}")
+file(WRITE "${SOURCE_PATH}/build/Jamfile" "${_contents}")
+
+file(READ "${SOURCE_PATH}/Jamfile" _contents)
+string(REPLACE "import ../config/checks/config" "import build/config/checks/config" _contents "${_contents}")
+file(WRITE "${SOURCE_PATH}/Jamfile" "${_contents}")
+
+file(COPY "${CURRENT_INSTALLED_DIR}/share/boost-config/checks" DESTINATION "${SOURCE_PATH}/build/config")
 if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
     message(FATAL_ERROR "boost-json requires a newer version of vcpkg in order to build.")
 endif()
 include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
-boost_modular_build(SOURCE_PATH ${SOURCE_PATH})
+boost_modular_build(
+    SOURCE_PATH ${SOURCE_PATH}
+    BOOST_CMAKE_FRAGMENT "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake"
+)
 include(${CURRENT_INSTALLED_DIR}/share/boost-vcpkg-helpers/boost-modular-headers.cmake)
 boost_modular_headers(SOURCE_PATH ${SOURCE_PATH})
