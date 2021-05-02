@@ -14,9 +14,11 @@ vcpkg_from_github(
         fix-check-sse.patch
         realsense2.patch
         add-gcc-version-check.patch
+        fix-find-qhull.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
+file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindQhull.cmake)
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
@@ -29,15 +31,16 @@ if ("tools" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    openni2     WITH_OPENNI2
-    qt          WITH_QT
-    pcap        WITH_PCAP
-    cuda        WITH_CUDA
-    cuda        BUILD_CUDA
-    cuda        BUILD_GPU
-    tools       BUILD_tools
-    opengl      WITH_OPENGL
-    vtk         WITH_VTK
+    FEATURES
+        openni2 WITH_OPENNI2
+        qt      WITH_QT
+        pcap    WITH_PCAP
+        cuda    WITH_CUDA
+        cuda    BUILD_CUDA
+        cuda    BUILD_GPU
+        tools   BUILD_tools
+        opengl  WITH_OPENGL
+        vtk     WITH_VTK
 )
 
 vcpkg_configure_cmake(

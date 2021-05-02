@@ -138,7 +138,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsSt
         _WINSOCK_DEPRECATED_NO_WARNINGS
     )
     target_sources(libxml2 PRIVATE win32/libxml2.rc)
-    set_source_files_properties(win32/libxml2.rc PROPERTIES COMPILE_FLAGS "-DLIBXML_MAJOR_VERSION=${LIBXML_MAJOR_VERSION} -DLIBXML_MINOR_VERSION=${LIBXML_MINOR_VERSION} -DLIBXML_MICRO_VERSION=${LIBXML_MICRO_VERSION} -DLIBXML_DOTTED_VERSION=\\\"${VERSION}\\\"")
+    configure_file(rcVersion.h.in include/rcVersion.h @ONLY)
 endif()
 
 target_compile_definitions(libxml2 PRIVATE
