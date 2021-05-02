@@ -62,8 +62,6 @@ blosc:x64-uwp=fail
 bond:arm-uwp=fail
 bond:x64-osx=fail
 bond:x64-uwp=fail
-botan:arm64-windows=fail
-botan:arm-uwp=fail
 botan:x64-uwp=fail
 breakpad:arm64-windows=fail
 bullet3:arm64-windows=fail
@@ -366,6 +364,9 @@ fuzzylite:x64-uwp=fail
 gainput:arm-uwp=fail
 gainput:x64-linux=fail
 gainput:x64-uwp=fail
+
+# Requires a more recent gcc than we have in the test lab
+gamedev-framework:x64-linux=fail
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
@@ -1223,8 +1224,6 @@ orocos-kdl:x64-uwp=fail
 paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
 pangomm:arm64-windows=fail
-parmetis:x64-linux=fail
-parmetis:x64-osx=fail
 pdal:x64-linux=fail
 pdal:x64-osx=fail
 pdal-c:x64-windows-static=fail
@@ -1835,3 +1834,6 @@ wangle:x64-windows-static-md=fail
 # See https://developercommunity.visualstudio.com/t/Toolset-169-regression-vcxproj-producin/1356639
 dimcli:x64-windows-static-md=fail
 dimcli:x64-windows-static=fail
+
+# cppgraphqlgen triggers an ICE on Apple Clang that comes with MacOS 11.
+cppgraphqlgen:x64-osx=fail

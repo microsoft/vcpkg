@@ -1,0 +1,13 @@
+{
+  "name": "botan",
+  "version": "2.16.0",
+  "port-version": 1,
+  "description": "A cryptography library written in C++11",
+  "homepage": "https://botan.randombit.net",
+  "supports": "!(windows & arm)",
+  "features": {
+    "amalgamation": {
+      "description": "Do an amalgamation build of the library"
+    }
+  }
+}
