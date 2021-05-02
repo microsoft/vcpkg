@@ -1,0 +1,17 @@
+diff --git a/configure b/configure
+index 3b96cde..a5789f7 100755
+--- a/configure
++++ b/configure
+@@ -25,9 +25,9 @@ for opt do
+   --cxx=*) cxx="$optarg"
+   ;;
+   *)
+-    echo "ERROR: unknown option $opt"
+-    echo "Try '$0 --help' for more information"
+-    exit 1
++    echo "WARNING: unknown option $opt"
++    # echo "Try '$0 --help' for more information"
++    # exit 1
+   ;;
+   esac
+ done

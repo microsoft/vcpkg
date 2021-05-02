@@ -3588,6 +3588,10 @@
       "baseline": "4.3-0",
       "port-version": 0
     },
+    "liburing": {
+      "baseline": "2.0",
+      "port-version": 0
+    },
     "libusb": {
       "baseline": "1.0.24",
       "port-version": 4
