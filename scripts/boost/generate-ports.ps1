@@ -292,7 +292,14 @@ foreach ($library in $libraries)
         "Downloading boost/$library..."
         & $curl -L "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" --output "$scriptsDir/downloads/$library-boost-$version.tar.gz"
     }
-    $hash = & $vcpkg hash $archive
+    $hash = & $vcpkg --x-wait-for-lock hash $archive
+    # remove prefix "Waiting to take filesystem lock on <path>/.vcpkg-root... "
+    if($hash.GetType().Name -eq 'Object[]')
+    {
+        $hash = $hash[1]
+    }
+    echo $hash
+     
     $unpacked = "$scriptsDir/libs/$library-boost-$version"
     if (!(Test-Path $unpacked))
     {
@@ -414,7 +421,7 @@ foreach ($library in $libraries)
             )
             $needsBuild = $true
         }
-
+ 
         if ($library -eq "python")
         {
             $deps += @("python3")
