@@ -4,13 +4,14 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     "websocketpp"    USE_BOOST_ASIO
     "cpr"            USE_CPR
     "voice"          ENABLE_VOICE
+    "compression"    USE_ZLIB
 )
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yourWaifu/sleepy-discord
-    REF 2cc4f007e6282b6a8fb6d83a400332976606e3e7
-    SHA512 6c0d353bb42f4f347e07ca0eca2741def4a79a2af702cf6c45833c7a4ef08ef21597ffb79d622de0747e90a1db24e75962575a6a72701909f9923258371ec78a
+    REF adc4551d835d0b73c631207278d0a2a9038a79a4
+    SHA512 d0869f690fde66e2d28cb8de4ede964650c2fbd1fbcc8d3db08671e28ae7b814df79c108abdcc2f4aab4146f4f4a37c17b75f22487ccc9d5607c0c665db94c34
     HEAD_REF develop
 )
 

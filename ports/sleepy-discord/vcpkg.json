@@ -8,6 +8,12 @@
     "websocketpp"
   ],
   "features": {
+    "compression": {
+      "description": "Allow compression for Websockets connection",
+      "dependencies": [
+        "zlib"
+      ]
+    },
     "cpr": {
       "description": "Use CPR library for handling HTTPS",
       "dependencies": [
