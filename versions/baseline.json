@@ -6129,7 +6129,7 @@
       "port-version": 1
     },
     "tool-meson": {
-      "baseline": "0.57.2",
+      "baseline": "0.56.02",
       "port-version": 0
     },
     "torch-th": {
