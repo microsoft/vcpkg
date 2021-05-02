@@ -190,10 +190,17 @@ else()
         set(BUILD_STATIC yes)
     endif()
 
-    set(CONF_OPTS --enable-shared=${BUILD_DYNAMIC} --enable-static=${BUILD_STATIC})
-    list(APPEND CONF_OPTS --with-proj=yes --with-libjson-c=${CURRENT_INSTALLED_DIR})
-    list(APPEND CONF_OPTS --with-libtiff=yes --with-geotiff=yes)
-    list(APPEND CONF_OPTS --with-pg=yes --with-liblzma=yes)
+    set(CONF_OPTS
+        --enable-shared=${BUILD_DYNAMIC}
+        --enable-static=${BUILD_STATIC}
+        # parameters in the same order as the dependencies in vcpkg.json
+        --with-libjson-c=${CURRENT_INSTALLED_DIR}
+        --with-geotiff=yes
+        --with-liblzma=yes
+        --with-pg=yes
+        --with-proj=yes
+        --with-libtiff=yes
+    )
 
     if ("libspatialite" IN_LIST FEATURES)
         list(APPEND CONF_OPTS --with-spatialite=yes)

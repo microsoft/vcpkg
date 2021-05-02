@@ -25,6 +25,7 @@
     "openjpeg",
     "proj4",
     "sqlite3",
+    "tiff",
     "zlib",
     "zstd"
   ],
