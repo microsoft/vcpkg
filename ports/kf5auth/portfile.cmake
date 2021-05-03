@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kauth
-    REF v5.75.0
-    SHA512 b7bb7c93d68c798a2778a3b774fb8690eba1a3fd4bb86002ae086a1742be895b3e66a0a9d53d4fa55b6ae52803eb37d1a203abd2844f79a3680196a0ec42220b
+    REF v5.81.0
+    SHA512 bad803867dadc9ff89531e80793bbe6018afb83309f91890f38b40908cea3c886f33f67ddf64e6f42c34df952ab33369d968eda774cece66012a9d66b3fd88a8
     HEAD_REF master
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
+    OPTIONS
         -DBUILD_HTML_DOCS=OFF
         -DBUILD_MAN_DOCS=OFF
         -DBUILD_QTHELP_DOCS=OFF
@@ -23,8 +23,8 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Auth)
 
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
