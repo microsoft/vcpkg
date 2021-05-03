@@ -1,6 +1,6 @@
 {
   "name": "openblas",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "description": "OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.",
   "homepage": "https://github.com/xianyi/OpenBLAS",
   "dependencies": [
