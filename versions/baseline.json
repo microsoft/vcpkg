@@ -5781,7 +5781,7 @@
       "port-version": 0
     },
     "spirv-tools": {
-      "baseline": "2020.7",
+      "baseline": "2021.1",
       "port-version": 0
     },
     "sprout": {
