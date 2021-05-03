@@ -4958,7 +4958,7 @@
     },
     "pthreadpool": {
       "baseline": "2020-04-10",
-      "port-version": 0
+      "port-version": 1
     },
     "pthreads": {
       "baseline": "3.0.0",
