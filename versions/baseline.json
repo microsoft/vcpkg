@@ -442,7 +442,7 @@
     },
     "boost-asio": {
       "baseline": "1.75.0",
-      "port-version": 1
+      "port-version": 2
     },
     "boost-assert": {
       "baseline": "1.75.0",
@@ -494,7 +494,7 @@
     },
     "boost-concept-check": {
       "baseline": "1.75.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-config": {
       "baseline": "1.75.0",
