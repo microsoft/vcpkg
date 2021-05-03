@@ -2230,7 +2230,7 @@
     },
     "ghc-filesystem": {
       "baseline": "1.5.4",
-      "port-version": 0
+      "port-version": 1
     },
     "gherkin-c": {
       "baseline": "2019-10-07-1",
@@ -3154,7 +3154,7 @@
     },
     "libheif": {
       "baseline": "1.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libhsplasma": {
       "baseline": "2020.08.30",
@@ -4958,7 +4958,7 @@
     },
     "pthreadpool": {
       "baseline": "2020-04-10",
-      "port-version": 0
+      "port-version": 1
     },
     "pthreads": {
       "baseline": "3.0.0",
