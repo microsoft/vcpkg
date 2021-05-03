@@ -1,7 +1,8 @@
 # CONTROL files
 
 **CONTROL files are retained for backwards compatibility with earlier versions of vcpkg;
-all new features are added only to [vcpkg.json](manifests.md), and we recommend using vcpkg.json for any newly authored port.**
+all new features are added only to [vcpkg.json manifest files](manifest-files.md), and we recommend using vcpkg.json for any newly authored port.
+Use `./vcpkg format-manifest ports/<portname>/CONTROL` to convert an existing CONTROL file to a vcpkg.json file.**
 
 The `CONTROL` file contains metadata about the port.  The syntax is based on [the Debian `control` format][debian] although we only support the subset of fields documented here.
 
@@ -88,7 +89,7 @@ Description: C++ header-only JSON library
 Description: Mosquitto is an open source message broker that implements the MQ Telemetry Transport protocol versions 3.1 and 3.1.1.
   MQTT provides a lightweight method of carrying out messaging using a publish/subscribe model. This makes it suitable for "machine
   to machine" messaging such as with low power sensors or mobile devices such as phones, embedded computers or microcontrollers like the Arduino.
-````
+```
 
 #### Homepage
 The URL of the homepage for the library where a user is able to find additional documentation or the original source code.
