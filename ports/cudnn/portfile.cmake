@@ -70,3 +70,6 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
 else()
   message(FATAL_ERROR "Please install CUDNN using your system package manager (the same way you installed CUDA). For example: apt install libcudnn8-dev.")
 endif()
+
+file(INSTALL "${CURRENT_PORT_DIR}/FindCUDNN.cmake" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+file(INSTALL "${CURRENT_PORT_DIR}/usage" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
