@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         cmake-install.patch
         install-config-typo.patch
+        0001-don-t-use-MP4.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
