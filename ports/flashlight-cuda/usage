@@ -1,0 +1,11 @@
+The package flashlight-cuda provides CMake targets:
+
+    find_package(flashlight CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE
+      flashlight::fl-libraries             # if the lib feature was installed
+      flashlight::flashlight               # if the fl feature was instaled
+      flashlight::flashlight-app-asr       # if the asr feature was installed
+      flashlight::flashlight-app-lm        # if the lm feature was installed
+      flashlight::flashlight-app-objdet    # if the objdet feature was installed
+      flashlight::flashlight-app-imgclass  # if the imgclass feature was installed
+    )

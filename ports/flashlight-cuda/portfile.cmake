@@ -7,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO flashlight/flashlight
-    REF 76f7fa7f5a162c73d6bf8befdb8e197a4dc7515d # 0.3 branch tip
-    SHA512 87786f9443d27ac9b513cf582caea13dccfa344e55a4970c0c2c7df7530260ad38cc578690ebf2fa256e8ea943abea547e0e6d5ee0ba090b336c4f7af8d2f53f
+    REF 626914e79073c5547513de649af706f7e2b796ad # 0.3 branch tip
+    SHA512 a22057cfa4cfe7acd95cbc5445a30870cce3cdde89066d1d75f40be0d73b069a49e89b226fe5337488cfe5618dd25958679c0636a3e4008312f01606328becfa
     HEAD_REF master
 )
 
@@ -80,3 +80,4 @@ endif()
 
 # Copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
