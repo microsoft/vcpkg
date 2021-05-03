@@ -1,8 +1,5 @@
 set(CAIRO_VERSION 1.17.4)
 
-if(NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES win_dll_def.patch)
-endif()
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
@@ -10,12 +7,7 @@ vcpkg_from_gitlab(
     REF 156cd3eaaebfd8635517c2baf61fcf3627ff7ec2 #v1.17.4
     SHA512 2c516ad3ffe56cf646b2435d6ef3cf25e8c05aeb13d95dd18a7d0510d134d9990cba1b376063352ff99483cfc4e5d2af849afd2f9538f9136f22d44d34be362c
     HEAD_REF master
-    PATCHES #export-only-in-shared-build.patch
-            #0001_fix_osx_defined.patch
-            #build2.patch
-            #remove_test_perf.patch
-            #${PATCHES}
-) 
+)
 
 if("fontconfig" IN_LIST FEATURES)
     list(APPEND OPTIONS -Dfontconfig=enabled)
@@ -64,21 +56,6 @@ vcpkg_configure_meson(
             -Dsymbol-lookup=disabled
             -Dgtk2-utils=disabled
 )
-#More options
-# Cairo surface backends
-# option('cogl', type : 'feature', value : 'disabled')
-# option('directfb', type : 'feature', value : 'disabled')
-# option('gl-backend', type : 'combo', value : 'disabled',
-       # # FIXME: https://github.com/mesonbuild/meson/issues/4566
-       # choices : ['auto', 'gl', 'glesv2', 'glesv3', 'disabled'])
-# option('glesv2', type : 'feature', value : 'disabled')
-# option('glesv3', type : 'feature', value : 'disabled')
-# option('drm', type : 'feature', value : 'disabled')
-# option('openvg', type : 'feature', value : 'disabled')
-# option('quartz', type : 'feature', value : 'auto')
-# option('qt', type : 'feature', value : 'disabled')
-# option('tee', type : 'feature', value : 'disabled')
-
 vcpkg_install_meson()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
@@ -96,23 +73,15 @@ file(WRITE ${_file} "${CAIRO_H}")
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
-
-#if(VCPKG_TARGET_IS_WINDOWS)
-#    set(ZLINK "-lzlibd")
-#else()
-#    set(ZLINK "-lz")
-#endif()
-#set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cairo-script.pc")
-#if(EXISTS "${_file}")
-#    vcpkg_replace_string("${_file}" "Libs: ${ZLINK}" "Requires.private: lzo2 zlib\nLibs: -L\${libdir} -lcairo-script-interpreter")
-#    file(INSTALL "${_file}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/" RENAME cairo-script-interpreter.pc) #normally the *.pc file is named like the library
-#endif()
-#if(VCPKG_TARGET_IS_WINDOWS)
-#    set(ZLINK "-lzlib")
-#endif()
-#set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cairo-script.pc")
-#if(EXISTS "${_file}")
-#    vcpkg_replace_string("${_file}" "Libs: ${ZLINK}" "Requires.private: lzo2 zlib\nLibs: -L\${libdir} -lcairo-script-interpreter")
-#    file(INSTALL "${_file}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/" RENAME cairo-script-interpreter.pc) #normally the *.pc file is named like the library
-#endif()
 vcpkg_fixup_pkgconfig()
+
+#TODO: Fix script 
+#set(TOOLS)
+#if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cairo-trace${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+#    list(APPEND TOOLS cairo-trace) # sh script which needs to be fixed due to absolute paths in it. 
+#endif()
+#vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
