@@ -5,10 +5,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Maratyszcza/pthreadpool
-    REF b4589998be9a0f794236cf46f1b5b232b2b15ca3 # there is a too much gap from the last release...
-    SHA512 8459e489a41c38f4dbe6c4401ebe624c7dc4685181b0852c2284f0e413a192ae9fd1ffd9b43fd97b7fd95dbda4970bc71d8c1eba8e33afa9efea74440f00803d
+    REF 052e441b70091656199e2283fb1c16a7db6f0f85 # there is a too much gap from the last release...
+    SHA512 33be676e65719ae8510ec4e8254809033528802681870f8c91b083ce4006e5f630b80207a7e675464b406a785cb45bc74628996ea4817c02816b7b58ddf3a2bc
     PATCHES
         fix-cmakelists.patch
+        fix-uwp.patch
 )
 
 vcpkg_configure_cmake(
@@ -20,6 +21,7 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-${PORT} TARGET_PATH share/unofficial-${PORT})
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
