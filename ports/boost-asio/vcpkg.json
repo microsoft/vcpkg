@@ -1,7 +1,7 @@
 {
   "name": "boost-asio",
   "version-string": "1.75.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Boost asio module",
   "homepage": "https://github.com/boostorg/asio",
   "supports": "!emscripten",
