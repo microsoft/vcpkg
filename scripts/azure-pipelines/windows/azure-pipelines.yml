@@ -33,14 +33,6 @@ jobs:
       arguments: '-Triplet ${{ parameters.triplet }} -BuildReason $(Build.Reason) -UseEnvironmentSasToken -WorkingRoot ${{ variables.WORKING_ROOT }} -ArtifactStagingDirectory $(Build.ArtifactStagingDirectory)'
       pwsh: true
   - task: PowerShell@2
-    displayName: 'Validate version files'
-    condition: eq('${{ parameters.triplet }}', 'x86-windows')
-    inputs:
-      targetType: inline
-      script: |
-        ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose
-      pwsh: true
-  - task: PowerShell@2
     displayName: 'Report on Disk Space After Build'
     condition: always()
     inputs:

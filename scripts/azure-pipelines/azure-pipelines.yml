@@ -8,7 +8,7 @@ variables:
 
 stages:
 - stage: FormatChecks
-  displayName: 'Formatting and Documentation Checks'
+  displayName: 'Version Database, Formatting, and Documentation Checks'
   pool: $(windows-pool)
   jobs:
   - job:
@@ -35,6 +35,13 @@ stages:
       inputs:
         filePath: scripts/azure-pipelines/Create-PRDiff.ps1
         arguments: '-DiffFile $(DiffFile)'
+        pwsh: true
+    - task: PowerShell@2
+      displayName: 'Validate version files'
+      inputs:
+        targetType: inline
+        script: |
+          ./vcpkg.exe --feature-flags=versions x-ci-verify-versions --verbose
         pwsh: true
     - task: PublishBuildArtifacts@1
       condition: failed()
