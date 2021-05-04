@@ -22,10 +22,7 @@ vcpkg_from_github(
         00013-build-upbdefs.patch
 )
 
-if(TARGET_TRIPLET STREQUAL HOST_TRIPLET)
-    set(gRPC_BUILD_CODEGEN ON)
-else()
-    set(gRPC_BUILD_CODEGEN OFF)
+if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 endif()
 
@@ -42,6 +39,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         absl-sync gRPC_ABSL_SYNC_ENABLE
+        codegen gRPC_BUILD_CODEGEN
 )
 
 vcpkg_configure_cmake(
@@ -67,7 +65,6 @@ vcpkg_configure_cmake(
         -DgRPC_INSTALL_LIBDIR:STRING=lib
         -DgRPC_INSTALL_INCLUDEDIR:STRING=include
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
-        -DgRPC_BUILD_CODEGEN=${gRPC_BUILD_CODEGEN}
         -D_gRPC_PROTOBUF_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}
         -DPROTOBUF_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}
 )

@@ -154,7 +154,7 @@
     },
     "asio": {
       "baseline": "1.18.1",
-      "port-version": 0
+      "port-version": 1
     },
     "asiosdk": {
       "baseline": "2.3.3-1",
@@ -469,8 +469,8 @@
       "port-version": 0
     },
     "boost-build": {
-      "baseline": "1.75.0.beta1",
-      "port-version": 1
+      "baseline": "1.75.0",
+      "port-version": 0
     },
     "boost-callable-traits": {
       "baseline": "1.75.0",
@@ -510,7 +510,7 @@
     },
     "boost-context": {
       "baseline": "1.75.0",
-      "port-version": 3
+      "port-version": 4
     },
     "boost-contract": {
       "baseline": "1.75.0",
@@ -714,7 +714,7 @@
     },
     "boost-modular-build-helper": {
       "baseline": "1.75.0",
-      "port-version": 8
+      "port-version": 9
     },
     "boost-move": {
       "baseline": "1.75.0",
@@ -1082,7 +1082,7 @@
     },
     "cairo": {
       "baseline": "1.16.0",
-      "port-version": 11
+      "port-version": 12
     },
     "cairomm": {
       "baseline": "1.16.0",
@@ -2060,6 +2060,10 @@
       "baseline": "0.2.14-p0",
       "port-version": 0
     },
+    "freealut": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "freeglut": {
       "baseline": "3.2.1",
       "port-version": 5
@@ -2226,7 +2230,7 @@
     },
     "ghc-filesystem": {
       "baseline": "1.5.4",
-      "port-version": 0
+      "port-version": 1
     },
     "gherkin-c": {
       "baseline": "2019-10-07-1",
@@ -2366,7 +2370,7 @@
     },
     "grpc": {
       "baseline": "1.37.0",
-      "port-version": 0
+      "port-version": 1
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -2462,7 +2466,7 @@
     },
     "hidapi": {
       "baseline": "0.10.1",
-      "port-version": 1
+      "port-version": 2
     },
     "highfive": {
       "baseline": "2.2.2",
@@ -2506,7 +2510,7 @@
     },
     "icu": {
       "baseline": "69.1",
-      "port-version": 8
+      "port-version": 9
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23-1",
@@ -2966,7 +2970,7 @@
     },
     "libassuan": {
       "baseline": "2.5.3",
-      "port-version": 0
+      "port-version": 1
     },
     "libb2": {
       "baseline": "0.98.1",
@@ -3150,7 +3154,7 @@
     },
     "libheif": {
       "baseline": "1.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libhsplasma": {
       "baseline": "2020.08.30",
@@ -3561,7 +3565,7 @@
       "port-version": 0
     },
     "libtorrent": {
-      "baseline": "1.2.12",
+      "baseline": "1.2.13-b799640",
       "port-version": 0
     },
     "libu2f-server": {
@@ -3577,8 +3581,8 @@
       "port-version": 0
     },
     "libui": {
-      "baseline": "2018-11-03-1",
-      "port-version": 0
+      "baseline": "2018-11-03",
+      "port-version": 2
     },
     "libunibreak": {
       "baseline": "4.3-0",
@@ -4537,8 +4541,8 @@
       "port-version": 0
     },
     "openssl": {
-      "baseline": "1.1.1j",
-      "port-version": 2
+      "baseline": "1.1.1k",
+      "port-version": 0
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -4954,7 +4958,7 @@
     },
     "pthreadpool": {
       "baseline": "2020-04-10",
-      "port-version": 0
+      "port-version": 1
     },
     "pthreads": {
       "baseline": "3.0.0",
@@ -6494,7 +6498,7 @@
     },
     "x265": {
       "baseline": "3.4",
-      "port-version": 3
+      "port-version": 4
     },
     "xalan-c": {
       "baseline": "1.12",
