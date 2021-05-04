@@ -1,10 +1,9 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commschamp/commsdsl
-    REF v3.6
-    SHA512 80fab2e567191a468a079dd9964a651293d8e7996141a973e77d4bdfaa96bfc346156f50ce484be1dc2b3d9e661cccce0e712c70876f7b322bc459f81a328496
+    REF v3.6.2
+    SHA512 532da398b23773703bb9ade2a5fb58584d99f631b0f28c834caa4377fcc4388a748405f998b77076a732316848bb6bde9be147fd0048485be8cc6fc6cc380352
     HEAD_REF master
 )
 

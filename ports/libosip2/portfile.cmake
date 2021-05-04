@@ -1,28 +1,51 @@
-set(LIBOSIP2_VER "5.1.0")
+set(LIBOSIP2_VER "5.2.0")
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/gnu/osip/libosip2-${LIBOSIP2_VER}.tar.gz" "https://www.mirrorservice.org/sites/ftp.gnu.org/gnu/osip/libosip2-${LIBOSIP2_VER}.tar.gz"
     FILENAME "libosip2-${LIBOSIP2_VER}.tar.gz"
-    SHA512 391c9a0ea399f789d7061b0216d327eecba5bbf0429659f4f167604b9e703e1678ba6f58079aa4f84b3636a937064ecfb92e985368164fcb679e95654e43d65b
+    SHA512 cc714ab5669c466ee8f0de78cf74a8b7633f3089bf104c9c1474326840db3d791270159456f9deb877af2df346b04493e8f796b2bb7d2be134f6c08b25a29f83
 )
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND PATCHES fix-path-in-project.patch)
+endif()
 
 vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     OUT_SOURCE_PATH SOURCE_PATH
+    PATCHES ${PATCHES}
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(OPTIONS --enable-mt=no)
+if(VCPKG_TARGET_IS_WINDOWS)     
+    vcpkg_fail_port_install(ON_ARCH "arm" "arm64")
+    
+    vcpkg_install_msbuild(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH "platform/vsnet/osip2.vcxproj"
+        INCLUDES_SUBPATH include
+        USE_VCPKG_INTEGRATION
+        REMOVE_ROOT_INCLUDES      
+    )
+    
+    vcpkg_install_msbuild(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH "platform/vsnet/osipparser2.vcxproj"
+        USE_VCPKG_INTEGRATION
+    )
+
+elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        OPTIONS ${OPTIONS}
+    )
+
+    vcpkg_install_make()
+    vcpkg_fixup_pkgconfig()
+    
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+
 endif()
-vcpkg_configure_make(
-    SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS ${OPTIONS}
-)
-
-vcpkg_install_make()
-vcpkg_fixup_pkgconfig()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
