@@ -11,7 +11,7 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES fix-msvc-project.patch
 )
@@ -30,8 +30,8 @@ if (VCPKG_TARGET_IS_WINDOWS)
         DEBUG_CONFIGURATION "Debug-${CFG_SUFFIX}"
     )
     
-    file(GLOB MICROHTTPD_HEADERS ${SOURCE_PATH}/src/include/microhttpd*.h)
-    file(COPY ${MICROHTTPD_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+    file(GLOB MICROHTTPD_HEADERS "${SOURCE_PATH}/src/include/microhttpd*.h")
+    file(COPY ${MICROHTTPD_HEADERS} DESTINATION "${CURRENT_PACKAGES_DIR}/include")
 else()
     if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(ENV{LIBS} "$ENV{LIBS} -framework Foundation -framework AppKit") # TODO: Get this from the extracted cmake vars somehow
@@ -42,7 +42,7 @@ else()
 
     vcpkg_install_make()
     
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
