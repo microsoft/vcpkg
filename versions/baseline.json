@@ -154,7 +154,7 @@
     },
     "asio": {
       "baseline": "1.18.1",
-      "port-version": 0
+      "port-version": 1
     },
     "asiosdk": {
       "baseline": "2.3.3-1",
@@ -1081,8 +1081,8 @@
       "port-version": 0
     },
     "cairo": {
-      "baseline": "1.17.4",
-      "port-version": 0
+      "baseline": "1.16.0",
+      "port-version": 12
     },
     "cairomm": {
       "baseline": "1.16.0",
@@ -1954,7 +1954,7 @@
     },
     "ffmpeg": {
       "baseline": "4.3.2",
-      "port-version": 7
+      "port-version": 8
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
@@ -2230,7 +2230,7 @@
     },
     "ghc-filesystem": {
       "baseline": "1.5.4",
-      "port-version": 0
+      "port-version": 1
     },
     "gherkin-c": {
       "baseline": "2019-10-07-1",
@@ -2370,7 +2370,7 @@
     },
     "grpc": {
       "baseline": "1.37.0",
-      "port-version": 0
+      "port-version": 1
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -2466,7 +2466,7 @@
     },
     "hidapi": {
       "baseline": "0.10.1",
-      "port-version": 1
+      "port-version": 2
     },
     "highfive": {
       "baseline": "2.2.2",
@@ -2510,7 +2510,7 @@
     },
     "icu": {
       "baseline": "69.1",
-      "port-version": 8
+      "port-version": 9
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23-1",
@@ -3154,7 +3154,7 @@
     },
     "libheif": {
       "baseline": "1.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "libhsplasma": {
       "baseline": "2020.08.30",
@@ -4958,7 +4958,7 @@
     },
     "pthreadpool": {
       "baseline": "2020-04-10",
-      "port-version": 0
+      "port-version": 1
     },
     "pthreads": {
       "baseline": "3.0.0",
