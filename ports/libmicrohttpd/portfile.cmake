@@ -38,6 +38,11 @@ else()
     endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            --disable-doc
+            --disable-examples
+            --disable-curl
+            --disable-https
     )
 
     vcpkg_install_make()
