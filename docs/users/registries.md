@@ -52,7 +52,7 @@ The `"kind"` field must be a string:
 #### Registry Objects: `"baseline"`
 
 The `"baseline"` field must be a string. For git registries and for the 
-built-in registry, it should be a commit ID or a tag name.
+built-in registry, it should be a 40-character commit ID.
 For filesystem registries, it can be any string that the registry defines.
 
 #### Registry Objects: `"repository"`
