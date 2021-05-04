@@ -25,7 +25,6 @@ else()
     set(SKIP_EXECUTABLES OFF)
 endif()
 
-string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static SPIRV_TOOLS_BUILD_STATIC)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -35,7 +34,7 @@ vcpkg_configure_cmake(
         -DSPIRV_WERROR=OFF
         -DSPIRV_SKIP_EXECUTABLES=${SKIP_EXECUTABLES} # option SPIRV_SKIP_TESTS follows this value
         -DENABLE_SPIRV_TOOLS_INSTALL=${TOOLS_INSTALL}
-        -DSPIRV_TOOLS_BUILD_STATIC=${SPIRV_TOOLS_BUILD_STATIC}
+        -DSPIRV_TOOLS_BUILD_STATIC=ON
 )
 
 vcpkg_install_cmake()
