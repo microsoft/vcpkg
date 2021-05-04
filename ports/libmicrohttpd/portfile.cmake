@@ -16,7 +16,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES fix-msvc-project.patch
 )
 
-if (VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(CFG_SUFFIX "dll")
     else()
