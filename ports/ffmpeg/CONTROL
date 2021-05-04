@@ -155,7 +155,7 @@ Build-Depends: ffmpeg[core,encoder-hap]
 Description: Snappy compression, needed for hap encoding
 
 Feature: soxr
-Build-Depends: soxr
+Build-Depends: soxr, ffmpeg[core,swresample]
 Description: Include libsoxr resampling
 
 Feature: speex
