@@ -6,7 +6,7 @@ If you want to contribute but don't have a particular library in mind then take 
 of [new port requests](https://github.com/Microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+label%3Acategory%3Anew-port).
 
 ## Can Vcpkg create pre-built binary packages? What is the binary format used by Vcpkg?
-Yes! See [the `export` command](../users/integration.md#export).
+Yes! See [the `export` command](../users/integration.md#export-command).
 
 ## How do I update libraries?
 The `vcpkg update` command lists all packages which are out-of-sync with your current portfiles. To update a package, follow the instructions in the command.
