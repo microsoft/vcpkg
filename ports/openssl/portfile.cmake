@@ -23,3 +23,14 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/ssl/certs")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/ssl/private")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/ssl/certs")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/ssl/private")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
