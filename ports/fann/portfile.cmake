@@ -7,7 +7,9 @@ vcpkg_from_github(
     REF 2.2.0
     SHA512 b307539a39d93078a489710ac77aa8c6e324f3cf5ef80299ce257d10c043913764abef83aceac5278a5bd243b1ee245b4e8331a9e13c774aa63c9cb604f86bdd
     HEAD_REF master
-    PATCHES fix-installation.patch
+    PATCHES
+        fix-installation.patch
+        fix-uwp-build.patch
 )
 
 set(INSTALL_BASE_DIR_DBG ${CURRENT_PACKAGES_DIR}/debug)
