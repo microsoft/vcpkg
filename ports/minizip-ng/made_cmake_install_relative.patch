@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9ef8023..524ba60 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -686,7 +686,7 @@ endif()
+ set(MINIZIP_PC ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc)
+ configure_file(minizip.pc.cmakein ${MINIZIP_PC} @ONLY)
+ 
+-set(INSTALL_CMAKE_DIR "${CMAKE_INSTALL_FULL_LIBDIR}/cmake/${PROJECT_NAME}"
++set(INSTALL_CMAKE_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}"
+     CACHE PATH "Installation directory for cmake files.")
+ set(INSTALL_PKGCONFIG_DIR "${CMAKE_INSTALL_FULL_LIBDIR}/pkgconfig"
+     CACHE PATH "Installation directory for pkgconfig (.pc) files")
