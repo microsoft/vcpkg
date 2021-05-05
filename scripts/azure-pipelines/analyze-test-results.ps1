@@ -100,6 +100,10 @@ function build_test_results {
 
     $allTestResults = @{ }
     foreach ( $test in $xmlCollection.test) {
+        if (!$test.name.endswith(":$triplet"))
+        {
+            continue
+        }
         $name = ($test.name -replace ":.*$")
 
         # Reconstruct the original BuildResult enumeration (defined in Build.h)
