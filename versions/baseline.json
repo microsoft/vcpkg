@@ -1897,8 +1897,8 @@
       "port-version": 0
     },
     "fann": {
-      "baseline": "2.2.0-1",
-      "port-version": 0
+      "baseline": "2.2.0",
+      "port-version": 2
     },
     "farmhash": {
       "baseline": "1.1",
