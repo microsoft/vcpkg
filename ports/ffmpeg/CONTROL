@@ -55,7 +55,7 @@ Feature: version3
 Description: Upgrade (L)GPL to version 3
 
 Feature: all
-Build-Depends: ffmpeg[ffmpeg,ffplay,ffprobe,ass,bzip2,iconv,dav1d,fontconfig,freetype,fribidi,ilbc,lzma,modplug,mp3lame,nvcodec,opencl,openglopenh264,openh264,openjpeg,opus,sdl2,snappy,soxr,speex,ssh,tensorflow,tesseract,theora,vorbis,vpx,wavpack,webp,xml2,zlib]
+Build-Depends: ffmpeg[ffmpeg,ffplay,ffprobe,ass,bzip2,iconv,dav1d,fontconfig,freetype,fribidi,ilbc,lzma,modplug,mp3lame,nvcodec,opencl,opengl,openh264,openjpeg,opus,sdl2,snappy,soxr,speex,ssh,tensorflow,tesseract,theora,vorbis,vpx,wavpack,webp,xml2,zlib]
 Description: Build with all allowed dependencies selected that are compatible with the lgpl license
 
 Feature: all-gpl
