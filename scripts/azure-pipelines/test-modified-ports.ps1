@@ -124,6 +124,12 @@ else {
     $executableExtension = '.exe'
 }
 
+if ($Triplet -match 'windows$') {
+    $HostTriplet = 'x64-windows'
+} else {
+    $HostTriplet = $Triplet
+}
+
 $xmlResults = Join-Path $ArtifactStagingDirectory 'xml-results'
 mkdir $xmlResults
 $xmlFile = Join-Path $xmlResults "$Triplet.xml"
@@ -135,6 +141,10 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -Triplet $Triplet `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
     -SkipFailures:$skipFailures
+$hostSkipList = . "$PSScriptRoot/generate-skip-list.ps1" `
+    -Triplet $HostTriplet `
+    -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
+    -SkipFailures:$skipFailures
 
 # WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
 # Install them so the CI succeeds:
@@ -142,7 +152,7 @@ if ($Triplet -in @('x64-uwp', 'arm64-windows', 'arm-uwp', 'x64-windows', 'x64-wi
     .\vcpkg.exe install yasm-tool:x86-windows @commonArgs
 }
 
-& "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --failure-logs=$failureLogs @commonArgs
+& "./vcpkg$executableExtension" ci $Triplet --x-xunit=$xmlFile --exclude=$skipList --host-exclude=$hostSkipList --failure-logs=$failureLogs @commonArgs
 & "$PSScriptRoot/analyze-test-results.ps1" -logDir $xmlResults `
     -triplet $Triplet `
     -baselineFile .\scripts\ci.baseline.txt
