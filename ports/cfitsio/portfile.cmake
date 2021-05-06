@@ -43,11 +43,7 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DUSE_PTHREADS=${WITH_PTHREADS}
         "-DPKG_CONFIG_REQUIRES=${PKG_CONFIG_REQUIRES}"
-    OPTIONS_RELEASE
         -DPKG_CONFIG_LIBS=-lcfitsio
-    OPTIONS_DEBUG
-        -DCMAKE_DEBUG_POSTFIX=d
-        -DPKG_CONFIG_LIBS=-lcfitsiod
 )
 
 vcpkg_install_cmake()
