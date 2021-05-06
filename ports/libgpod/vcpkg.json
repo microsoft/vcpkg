@@ -1,0 +1,12 @@
+{
+  "name": "libgpod",
+  "version-date": "2019-08-29",
+  "port-version": 3,
+  "description": "libgpod is a library meant to abstract access to an iPod content.",
+  "homepage": "https://github.com/fadingred/libgpod",
+  "dependencies": [
+    "glib",
+    "libplist",
+    "sqlite3"
+  ]
+}

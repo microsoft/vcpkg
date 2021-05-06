@@ -9,7 +9,11 @@ vcpkg_from_gitlab(
         3b0de26910bceaf4bc6546255bada4c502cd0fd32f44bc28b067f347c09d028c175a3243551bbe4bb64bcf312df9ff827e8fdbcb0b34a12e1ce4a26ba0799ee2 
     HEAD_REF master
 )
-  
+
+if(NOT VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_UWP)
+    set(BUILD_CURSES_DIALOG ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -26,6 +30,7 @@ vcpkg_configure_cmake(
         -DCMAKE_USE_SYSTEM_JSONCPP=ON
         -DCMAKE_USE_SYSTEM_LIBRHASH=OFF # not yet in VCPKG
         -DCMAKE_USE_SYSTEM_LIBUV=ON
+        -DBUILD_CursesDialog=${BUILD_CURSES_DIALOG}
         -DBUILD_QtDialog=ON # Just to test Qt with CMake
         -DCMake_QT_MAJOR_VERSION:STRING=6
 )
@@ -37,6 +42,9 @@ if(NOT VCPKG_TARGET_IS_OSX)
     set(_tools cmake cmake-gui ctest cpack)
     if(VCPKG_TARGET_IS_WINDOWS)
         list(APPEND _tools cmcldeps)
+    endif()
+    if(BUILD_CURSES_DIALOG)
+        list(APPEND _tools ccmake)
     endif()
     vcpkg_copy_tools(TOOL_NAMES ${_tools} AUTO_CLEAN)
 else()
