@@ -20,6 +20,7 @@ use, please read [this documentation](../maintainers/registries.md).
     - [Configuration: `"registries"`](#configuration-registries)
     - [Example Configuration File](#example-configuration-file)
   - [Package Name Resolution](#package-name-resolution)
+    - [Versioning Support](#versioning-support)
 
 ## `vcpkg-configuration.json`
 
@@ -125,3 +126,10 @@ The name resolution algorithm is as follows:
 - If there is a default registry defined, use that registry; otherwise
 - If the default registry is set to `null`, error out; otherwise
 - use the built-in registry.
+
+### Versioning Support
+
+Versioning with custom registries works exactly as it does in the built-in
+registry. You can read more about that in the [versioning documentation].
+
+[versioning documentation]: versioning.md
