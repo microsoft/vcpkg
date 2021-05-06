@@ -14,8 +14,10 @@ vcpkg_extract_source_archive_ex(
         0004-pkg-config.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    curl        UseCurl
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        curl        UseCurl
 )
 
 set(PKG_CONFIG_REQUIRES zlib)
@@ -37,7 +39,8 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DUSE_PTHREADS=${WITH_PTHREADS}
         "-DPKG_CONFIG_REQUIRES=${PKG_CONFIG_REQUIRES}"
     OPTIONS_RELEASE
