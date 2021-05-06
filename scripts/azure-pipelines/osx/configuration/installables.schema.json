@@ -10,7 +10,7 @@
   "required": [
     "Applications",
     "Brew",
-    "VBoxExtensions"
+    "VagrantPlugins"
   ],
   "properties": {
     "Applications": {
@@ -21,7 +21,18 @@
           "Name": {
             "type": "string"
           },
-          "TestCommand": {
+          "VersionCommand": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "VersionRegex": {
+            "type": "string",
+            "format": "regex"
+          },
+          "Version": {
             "type": "string"
           },
           "DmgUrl": {
@@ -53,23 +64,17 @@
         }
       }
     },
-    "VBoxExtensions": {
+    "VagrantPlugins": {
       "type": "array",
       "items": {
         "type": "object",
+        "required": [ "Name", "Version" ],
         "properties": {
           "Name": {
             "type": "string"
           },
-          "FullName": {
+          "Version": {
             "type": "string"
-          },
-          "Url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "Sha256": {
-            "$ref": "#/definitions/sha256"
           }
         }
       }

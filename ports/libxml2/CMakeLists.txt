@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(libxml2 C)
-
+include(GNUInstallDirs)
 set(WITH_TRIO 0 CACHE BOOL "Add trio support")
 set(WITH_THREADS 1 CACHE BOOL "Add multithread support")
 set(WITH_THREAD_ALLOC 0 CACHE BOOL "Add per-thread memory")
@@ -138,7 +138,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsSt
         _WINSOCK_DEPRECATED_NO_WARNINGS
     )
     target_sources(libxml2 PRIVATE win32/libxml2.rc)
-    set_source_files_properties(win32/libxml2.rc PROPERTIES COMPILE_FLAGS "-DLIBXML_MAJOR_VERSION=${LIBXML_MAJOR_VERSION} -DLIBXML_MINOR_VERSION=${LIBXML_MINOR_VERSION} -DLIBXML_MICRO_VERSION=${LIBXML_MICRO_VERSION} -DLIBXML_DOTTED_VERSION=\\\"${VERSION}\\\"")
+    configure_file(rcVersion.h.in include/rcVersion.h @ONLY)
 endif()
 
 target_compile_definitions(libxml2 PRIVATE
@@ -170,6 +170,7 @@ set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix "\${prefix}")
 set(libdir ${prefix}/${CMAKE_INSTALL_LIBDIR})
 set(includedir ${prefix}/${CMAKE_INSTALL_INCLUDEDIR})
+set(XML_INCLUDEDIR "-I\"\${includedir}\"")
 
 configure_file(libxml-2.0.pc.in libxml-2.0.pc @ONLY)
 install(FILES ${CMAKE_BINARY_DIR}/libxml-2.0.pc DESTINATION lib/pkgconfig)

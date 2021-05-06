@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF v1.8.5
     SHA512 77cc9df0c40bbdbfe1f3e5818dccf121918bfceac28f2608f39e5bf944968b7e8e24a6fc29f01bc58a9bae41b8892d49cfb59c196935ec9868884320b50f130c
     HEAD_REF v1.x
+    PATCHES fix-mingw-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -36,6 +37,11 @@ vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/fmt.h
 )
 
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/ostr.h
+    "#if !defined(SPDLOG_FMT_EXTERNAL)"
+    "#if 0 // !defined(SPDLOG_FMT_EXTERNAL)"
+)
+
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/spdlog/fmt/chrono.h
     "#if !defined(SPDLOG_FMT_EXTERNAL)"
     "#if 0 // !defined(SPDLOG_FMT_EXTERNAL)"
 )

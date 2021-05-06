@@ -69,9 +69,18 @@ numbers, and hyphens, and it must not begin nor end with a hyphen.
 
 ### Version fields
 
-The library version. There is currently only one kind of version, a `"version-string"` -
-however, more version kinds will be added later. Additionally,
-`"port-version"` is used to differentiate between port changes that don't change the underlying library version.
+Currently there are different fields for special versioning. Namely:
+
+Manifest property | Versioning scheme
+------------------|------------------------------------
+`version`         | For dot-separated numeric versions
+`version-semver`  | For SemVer compliant versions
+`version-date`    | For dates in the format YYYY-MM-DD
+`version-string`  | For arbitrary strings
+
+See https://github.com/microsoft/vcpkg/blob/master/docs/specifications/versioning.md#22-package-versions for more details.
+
+Additionally, `"port-version"` is used to differentiate between port changes that don't change the underlying library version.
 
 #### `"version-string"`
 
