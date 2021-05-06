@@ -16,8 +16,9 @@ subject to change without notice and should be considered highly unstable.
 
 Non-exhaustive list of off-by-default features:
 
-- `binarycaching`
 - `manifest`
+- `versions`
+- `registries`
 
 #### EDITOR
 
@@ -32,7 +33,7 @@ repo versions and executable versions can cause issues.
 #### VCPKG_VISUAL_STUDIO_PATH
 
 This environment variable can be set to the full path to a Visual Studio instance on the machine. This Visual Studio instance
-will be used if the triplet does not override it via the [`VCPKG_VISUAL_STUDIO_PATH` triplet setting](triplets.md#VCPKG_VISUAL_STUDIO_PATH).
+will be used if the triplet does not override it via the [`VCPKG_VISUAL_STUDIO_PATH`](triplets.md#VCPKG_VISUAL_STUDIO_PATH) triplet setting.
 
 Example: `D:\2017`
 
@@ -42,7 +43,7 @@ This environment variable can be set to a triplet name which will be used for un
 
 #### VCPKG_DEFAULT_HOST_TRIPLET
 
-This environment variable can be set to a triplet name which will be used for unqualified host port references in command lines and all host port references in dependency lists. See [the Tools documentation](tools.md) for more information.
+This environment variable can be set to a triplet name which will be used for unqualified host port references in command lines and all host port references in dependency lists. See [the host-dependencies documentation](host-dependencies.md) for more information.
 
 #### VCPKG_OVERLAY_PORTS
 

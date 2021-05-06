@@ -14,6 +14,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DCMAKE_DISABLE_FIND_PACKAGE_I18n=ON
+        -DWITH_KF5=OFF
 )
 
 vcpkg_install_cmake()

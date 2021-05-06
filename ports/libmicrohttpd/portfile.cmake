@@ -33,6 +33,9 @@ if (VCPKG_TARGET_IS_WINDOWS)
     file(GLOB MICROHTTPD_HEADERS ${SOURCE_PATH}/src/include/microhttpd*.h)
     file(COPY ${MICROHTTPD_HEADERS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 else()
+    if(VCPKG_TARGET_IS_OSX AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        set(ENV{LIBS} "$ENV{LIBS} -framework Foundation -framework AppKit") # TODO: Get this from the extracted cmake vars somehow
+    endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
     )
