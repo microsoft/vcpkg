@@ -187,23 +187,113 @@ else()
     )
     
     set(CONF_OPTS
+        --with-hide-internal-symbols=yes
         # parameters in the same order as the dependencies in vcpkg.json
+        --with-cfitsio=yes
+        --with-curl=yes
+        --with-expat=yes
+        --with-geos=yes
+        --with-gif=yes
+        --with-hdf5=yes
         --with-libjson-c=${CURRENT_INSTALLED_DIR}
         --with-geotiff=yes
+        --with-jpeg=yes
         --with-liblzma=yes
+        --with-png=yes
         --with-pg=yes
+        --with-webp=yes
+        --with-xml2=yes
+        --with-netcdf=yes
+        --with-openjpeg=yes
         --with-proj=yes
+        --with-sqlite3=yes
         --with-libtiff=yes
+        --with-libz=yes
+        --with-zstd=yes
+        # bindings
+        --with-perl=no
+        --with-python=no
+        --with-java=no
     )
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND CONF_OPTS --without-libtool --without-ld-shared)
     endif()
 
+    if("system-libraries" IN_LIST FEATURES)
+        set(DISABLE_SYSTEM_LIBRARIES OFF)
+    else()
+        set(DISABLE_SYSTEM_LIBRARIES ON)
+    endif()
+
     if ("libspatialite" IN_LIST FEATURES)
         list(APPEND CONF_OPTS --with-spatialite=yes)
-    else()
+    elseif(DISABLE_SYSTEM_LIBRARIES)
         list(APPEND CONF_OPTS --with-spatialite=no)
+    endif()
+
+    if ("mysql-libmariadb" IN_LIST FEATURES)
+        list(APPEND CONF_OPTS --with-mysql=yes)
+    elseif(DISABLE_SYSTEM_LIBRARIES)
+        list(APPEND CONF_OPTS --with-mysql=no)
+    endif()
+
+    if(DISABLE_SYSTEM_LIBRARIES)
+        list(APPEND CONF_OPTS
+            # Too much: --disable-all-optional-drivers
+            # alphabetical order
+            --with-armadillo=no
+            --with-charls=no
+            --with-crypto=no
+            --with-cryptopp=no
+            --with-dds=no
+            --with-dods-root=no
+            --with-ecw=no
+            --with-epsilon=no
+            --with-exr=no
+            --with-fgdb=no
+            --with-fme=no
+            --with-freexl=no
+            --with-grass=no
+            --with-gta=no
+            --with-hdf4=no
+            --with-hdfs=no
+            --with-heif=no
+            --with-idb=no
+            --with-ingres=no
+            --with-jasper=no
+            --with-jp2lura=no
+            --with-kakadu=no
+            --with-kea=no
+            --with-libdeflate=no
+            --with-libgrass=no
+            --with-libkml=no
+            --with-mdb=no
+            --with-mrsid=no
+            --with-mrsid_lidar=no
+            --with-msg=no
+            --with-mongocxx=no
+            --with-mongocxxv3=no
+            --with-oci=no
+            --with-odbc=no
+            --with-ogdi=no
+            --with-opencl=no
+            --with-pcidsk=no
+            --with-pcraster=no
+            --with-pcre=no
+            --with-pdfium=no
+            --with-podofo=no
+            --with-poppler=no
+            --with-qhull=no
+            --with-rasdaman=no
+            --with-rasterlite2=no
+            --with-rdb=no
+            --with-sfcgal=no
+            --with-sosi=no
+            --with-teigha=no
+            --with-tiledb=no
+            --with-xerces=no
+        )
     endif()
 
     if(VCPKG_TARGET_IS_OSX)

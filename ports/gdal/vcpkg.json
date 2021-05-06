@@ -16,6 +16,7 @@
       "platform": "!windows"
     },
     "libgeotiff",
+    "libjpeg-turbo",
     "liblzma",
     "libpng",
     "libpq",
@@ -41,6 +42,10 @@
       "dependencies": [
         "libmariadb"
       ]
+    },
+    "system-libraries": {
+      "description": "Include drivers which need additional libraries",
+      "$supports": "!windows"
     }
   }
 }
