@@ -4210,7 +4210,7 @@
     },
     "nccl": {
       "baseline": "2.4.6",
-      "port-version": 0
+      "port-version": 1
     },
     "ncurses": {
       "baseline": "6.2",
