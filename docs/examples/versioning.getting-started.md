@@ -176,27 +176,19 @@ If you want to upgrade your dependencies, you can bump the minimum version const
 
 #### **`builtin-baseline`**
 
+```json
+{ "builtin-baseline": "b60f003ccf5fe8613d029f49f835c8929a66eb61" }
 ```
-"builtin-baseline": "b60f003ccf5fe8613d029f49f835c8929a66eb61"
-```
 
-This field declares the versioning baseline for all ports. Setting a baseline is required to enable versioning, otherwise you will get the current versions on the ports directory. You can run 'git rev-parse HEAD' to get the current commit of vcpkg and set it as the builtin-baseline. But what is a baseline? What does it do? Why is the value a SHA?
-
-From the [versioning documentation](../users/versioning.md):
-
-> The baseline references a commit within the vcpkg repository that
-establishes a minimum version on every dependency in the graph. If
-no other constraints are specified (directly or transitively),
-then the version from the baseline of the top level manifest will
-be used.
+This field declares the versioning baseline for all ports. Setting a baseline is required to enable versioning, otherwise you will get the current versions on the ports directory. You can run 'git rev-parse HEAD' to get the current commit of vcpkg and set it as the builtin-baseline. See the [`builtin-baseline` documentation](../users/versioning.md#builtin-baseline) for more information.
 
 In our example, you can notice that we do not declare a version constraint for `zlib`; instead, the version is taken from the baseline. Internally, vcpkg will look in commit `b60f003ccf5fe8613d029f49f835c8929a66eb61` to find out what version of `zlib` was the latest at that point in time (in our case it was `1.2.11#9`).
 
 During version resolution, baseline versions are treated as minimum version constraints. If you declare an explicit constraint that is lower than a baseline version, the explicit constraint will be upgraded to the baseline version. 
 
 For example, if we modified our dependencies like this:
-```
-"dependencies": [
+```json
+{ "dependencies": [
     {
         "name": "fmt",
         "version>=": "7.1.3"
@@ -205,7 +197,7 @@ For example, if we modified our dependencies like this:
         "name": "zlib",
         "version>=": "1.2.11#7"
     }
-]
+] }
 ```
 
 _NOTE: The value `1.2.11#7` represents version `1.2.11`, port version `7`._
@@ -224,7 +216,7 @@ The mechanism vcpkg provides for that scenario is `overrides`. When an override 
 
 Let's modify our example once more, this time to force vcpkg to use version `6.0.0` of `fmt`.
 
-```
+```json
 {
     "name": "versions-test",
     "version": "1.0.0",
@@ -289,5 +281,4 @@ See also:
 
 * [Versioning docs](../users/versioning.md)
 * [Original specification](../specifications/versioning.md)
-* [Versioning reference](../users/versioning.reference.md)
 * [Versioning implementation details](../users/versioning.implementation-details.md)

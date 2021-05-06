@@ -89,7 +89,7 @@ Description: C++ header-only JSON library
 Description: Mosquitto is an open source message broker that implements the MQ Telemetry Transport protocol versions 3.1 and 3.1.1.
   MQTT provides a lightweight method of carrying out messaging using a publish/subscribe model. This makes it suitable for "machine
   to machine" messaging such as with low power sensors or mobile devices such as phones, embedded computers or microcontrollers like the Arduino.
-````
+```
 
 #### Homepage
 The URL of the homepage for the library where a user is able to find additional documentation or the original source code.

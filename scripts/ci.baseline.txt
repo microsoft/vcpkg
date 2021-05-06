@@ -62,8 +62,6 @@ blosc:x64-uwp=fail
 bond:arm-uwp=fail
 bond:x64-osx=fail
 bond:x64-uwp=fail
-botan:arm64-windows=fail
-botan:arm-uwp=fail
 botan:x64-uwp=fail
 breakpad:arm64-windows=fail
 bullet3:arm64-windows=fail
@@ -74,7 +72,8 @@ caf:arm64-windows=fail
 caf:x64-uwp=fail
 caffe2:x86-windows=fail
 caffe2:arm64-windows=fail
-cairomm:x64-linux=fail
+# Requires VM update for gtk-doc
+cairo:x64-osx=fail
 c-ares:arm-uwp=fail
 c-ares:x64-uwp=fail
 cartographer:x64-osx=fail
@@ -178,8 +177,6 @@ cudnn:arm-uwp=fail
 cudnn:x64-uwp=fail
 cudnn:x64-windows-static=fail
 cudnn:x86-windows=fail
-darknet:arm64-windows=fail
-darknet:arm-uwp=fail
 # Since pipeline cannot automatically install dbghelp dependency, skip this detection
 dbghelp:arm-uwp=skip
 dbghelp:arm64-windows=skip
@@ -365,6 +362,9 @@ fuzzylite:x64-uwp=fail
 gainput:arm-uwp=fail
 gainput:x64-linux=fail
 gainput:x64-uwp=fail
+
+# Requires a more recent gcc than we have in the test lab
+gamedev-framework:x64-linux=fail
 gasol:arm64-windows=fail
 gasol:arm-uwp=fail
 gasol:x64-uwp=fail
@@ -411,7 +411,6 @@ glfw3:arm-uwp=fail
 glfw3:x64-uwp=fail
 glib:x64-uwp=fail
 glib:x64-windows-static=fail
-glib:x64-osx=fail
 gmmlib:arm64-windows=fail
 gmmlib:arm-uwp=fail
 gmmlib:x64-osx=fail
@@ -437,8 +436,8 @@ graphqlparser:arm-uwp=fail
 graphqlparser:x64-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
-# https://github.com/microsoft/vcpkg/pull/11048
-gtk:x64-linux=fail
+gtkmm:x64-linux=fail
+gts:x64-osx=fail
 guetzli:x64-osx=fail
 h3:arm64-windows=fail
 h3:arm-uwp=fail
@@ -455,18 +454,11 @@ healpix:x64-uwp=fail
 healpix:arm64-windows=fail
 healpix:arm-uwp=fail
 healpix:x64-osx=fail
-hidapi:arm64-windows=fail
-hidapi:arm-uwp=fail
-hidapi:x64-linux=fail
-hidapi:x64-osx=fail
-hidapi:x64-uwp=fail
 hiredis:arm-uwp=fail
 hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
 hpx:x64-linux=fail
 libhsplasma:x64-windows-static=fail
-icu:arm-uwp=fail
-icu:x64-uwp=fail
 ideviceinstaller:x64-windows-static-md=fail
 idevicerestore:x64-linux=fail
 idevicerestore:x64-osx=fail
@@ -547,6 +539,7 @@ lastools:arm-uwp=fail
 lastools:x64-uwp=fail
 laszip:arm-uwp=fail
 laszip:x64-uwp=fail
+lcm:x64-osx=fail
 leptonica:x64-uwp=fail
 leptonica:arm-uwp=fail
 leveldb:arm-uwp=fail
@@ -577,6 +570,9 @@ libcopp:arm64-windows=fail
 libcopp:arm-uwp=fail
 libcrafter:x86-windows=fail
 libcrafter:x64-windows=fail
+# Missing system libraries on linux to run/prepare autoconf
+libgpod:x64-linux=fail
+libgpod:x64-osx=fail
 libcrafter:x64-windows-static-md=fail
 cpuid:arm-uwp=fail
 cpuid:x64-uwp=fail
@@ -689,6 +685,7 @@ libmpeg2:x64-osx=fail
 libmpeg2:x64-uwp=fail
 libmupdf:x64-osx=fail
 libmysql:x86-windows=fail
+libmysql:arm64-windows=fail
 #The official website of libnice https://nice.freedesktop.org cannot be accessed
 libnice:x86-windows=skip
 libnice:x64-windows=skip
@@ -703,13 +700,7 @@ libopusenc:arm-uwp=fail
 libopusenc:x64-linux=fail
 libopusenc:x64-osx=fail
 libopusenc:x64-uwp=fail
-libosip2:arm64-windows=fail
-libosip2:arm-uwp=fail
-libosip2:x64-uwp=fail
-libosip2:x64-windows=fail
-libosip2:x64-windows-static=fail
 libosip2:x64-windows-static-md=fail
-libosip2:x86-windows=fail
 libpcap:arm64-windows=fail
 libpcap:arm-uwp=fail
 libpcap:x64-osx=fail
@@ -1176,6 +1167,7 @@ openmpi:x86-windows=fail
 openni2:x64-uwp=fail
 openni2:x64-windows-static=fail
 openscap:x64-linux=fail
+openscap:x64-osx=fail
 openssl-unix:arm64-windows=fail
 openssl-unix:arm-uwp=fail
 openssl-unix:x64-uwp=fail
@@ -1217,10 +1209,7 @@ orocos-kdl:arm-uwp=fail
 orocos-kdl:x64-uwp=fail
 paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
-pangomm:x64-osx=fail
 pangomm:arm64-windows=fail
-parmetis:x64-linux=fail
-parmetis:x64-osx=fail
 pdal:x64-linux=fail
 pdal:x64-osx=fail
 pdal-c:x64-windows-static=fail
@@ -1257,6 +1246,7 @@ pixel:x64-windows=fail
 pixel:x64-windows-static=fail
 pixel:x64-windows-static-md=fail
 pixel:x86-windows=fail
+pixman:arm-uwp=fail
 platform-folders:arm-uwp=fail
 platform-folders:x64-uwp=fail
 plib:arm-uwp=fail
@@ -1302,6 +1292,7 @@ qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
 qt5-activeqt:x64-linux=fail
 qt5-activeqt:x64-osx=fail
+qt5-base:arm64-windows=fail
 # Skip deprecated Qt module
 # (remnove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
@@ -1505,16 +1496,6 @@ sockpp:arm-uwp=fail
 sockpp:x64-uwp=fail
 soem:x64-uwp=fail
 soem:arm-uwp=fail
-# soil upstream is gone; if we do not have another source before 2021-03-01 we will remove the port
-soil:arm-uwp=skip
-soil:x64-uwp=skip
-soil:arm64-windows=skip
-soil:x64-windows=skip
-soil:x86-windows=skip
-soil:x64-windows-static=skip
-soil:x64-windows-static-md=skip
-soil:x64-linux=skip
-soil:x64-osx=skip
 soil2:arm-uwp=fail
 soil2:x64-uwp=fail
 soqt:arm64-windows=fail
@@ -1784,7 +1765,6 @@ clapack:x64-uwp=skip
 lapack-reference:arm64-windows=skip
 lapack-reference:arm-uwp=skip
 
-
 # failures for x64-windows-static-md
 ace:x64-windows-static-md=fail
 activemq-cpp:x64-windows-static-md=fail
@@ -1819,3 +1799,18 @@ zyre:x64-windows-static-md=fail
 usbmuxd:x64-windows-static-md=fail
 workflow:x64-uwp=fail
 workflow:arm-uwp=fail
+
+# wangle triggers an internal compiler error
+# https://devdiv.visualstudio.com/DefaultCollection/DevDiv/_workitems/edit/1269468
+wangle:x64-windows=fail
+wangle:x64-windows-static=fail
+wangle:x64-windows-static-md=fail
+
+# VS2019 version 16.9.4's project system changes where PDBs are placed in a way that breaks the
+# upstream build script of this port.
+# See https://developercommunity.visualstudio.com/t/Toolset-169-regression-vcxproj-producin/1356639
+dimcli:x64-windows-static-md=fail
+dimcli:x64-windows-static=fail
+
+# cppgraphqlgen triggers an ICE on Apple Clang that comes with MacOS 11.
+cppgraphqlgen:x64-osx=fail
