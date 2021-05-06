@@ -3238,7 +3238,7 @@
     },
     "liblsl": {
       "baseline": "1.14.0",
-      "port-version": 0
+      "port-version": 1
     },
     "liblzma": {
       "baseline": "5.2.5",
