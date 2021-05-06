@@ -46,6 +46,7 @@ vcpkg_configure_cmake(
     OPTIONS_RELEASE
         -DPKG_CONFIG_LIBS=-lcfitsio
     OPTIONS_DEBUG
+        -DCMAKE_DEBUG_POSTFIX=d
         -DPKG_CONFIG_LIBS=-lcfitsiod
 )
 
