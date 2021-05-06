@@ -1,11 +1,10 @@
 {
   "name": "qtactiveqt",
-  "version-string": "6.1.0-beta3",
+  "version-string": "6.1.0",
   "description": "ActiveQt",
   "homepage": "https://www.qt.io/",
   "supports": "windows",
   "dependencies": [
-    "qt6betablock",
     {
       "name": "qtbase",
       "default-features": false

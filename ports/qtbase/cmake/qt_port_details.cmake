@@ -1,4 +1,4 @@
-set(QT_VERSION 6.0.3)
+set(QT_VERSION 6.1.0)
 set(QT_GIT_TAG v${QT_VERSION})
 #set(QT_UPDATE_VERSION TRUE)
 
@@ -23,29 +23,43 @@ set(QT_PORTS qtbase
              qtmqtt
              qtnetworkauth
              qtquickcontrols2
+             qtactiveqt
+             qtdatavis3d
+             #qtdeviceutils
+             qtlottie
+             qtscxml
+             qtvirtualkeyboard
+             qtcharts
     )
 
 foreach(_port IN LISTS QT_PORTS)
     set(${_port}_TAG ${QT_GIT_TAG})
 endforeach()
 
-set(qtbase_REF             73af0d1cd12e54d383f8f6d8b1217167a71c012a)
-set(qttools_REF            dbae6fc95197bc4981a3c61a90b8a1d0f70577e1)
-set(qtdeclarative_REF      8600b07d5bb72b77f06e8d852f814c4e45419f30)
-set(qtsvg_REF              f29dd880b26b8e7a11c5d5f73d30c12e609cf4b0)
-set(qt5compat_REF          c3b2ac5384a28b3b2c9e122168f6b4fef5d7fa93)
-set(qtshadertools_REF      252e7c18510f079153d1c38f3f762fd4cf996796)
-set(qtquicktimeline_REF    e9b8c3f563a26b94bf51ff3a08f925faf6c51944)
-set(qtquick3d_REF          e005843ef54458fbb8c3cf955338f93080f457ee)
-set(qttranslations_REF     a067a1d5b8ccea3032caa3b1174f56d283309874)
-set(qtwayland_REF          196b5a24b9672bca4521a7c8527d349b5c7ff1d3)
-set(qtdoc_REF              cf52cc2539209045b3b81f2dc79f89f6266b5409)
-set(qtimageformats_REF     fb1b7dfd031fee96766303952465aacf126cef4f)
-set(qtmqtt_REF             9768532f83a36bb231f92b15d028acb4b7cc0143)
-set(qtquickcontrols2_REF   a683588678639324d199985cda9c04373a179e8b)
-set(qtnetworkauth_REF      38338f64dbd7e7603423a1d92eb97cf3827cc161)
-set(qtcoap_REF             01ebd10abc24bce0c3b91990308b8fa880bf6103)
-set(qtopcua_REF            6d2ba99c818df24cb042590a276e981445f500e1)
+set(qtbase_REF             80a246a982e1c332f074f35a365d453c932ccd4e)
+set(qttools_REF            59ba188f13fa01e8590899ecbda47d2680929856)
+set(qtdeclarative_REF      cb6675c5d314c05fb16fe2b9c555cc6a2c488bed)
+set(qtsvg_REF              5bf7d6f7b91a2cb79910cb42afcffddff1ed838b)
+set(qt5compat_REF          752f10fa6f84b8b2b738e46efacbce32125efbb6)
+set(qtshadertools_REF      bcf88361f7a96f02f6c8f77a7fdf8abefae21df4)
+set(qtquicktimeline_REF    d13e054604a24cd88edb92d3e85529f8c8ea631f)
+set(qtquick3d_REF          b3fd7feee9a6350580203935dea7b221de67e4b2)
+set(qttranslations_REF     e69b51751a9ec8c5d45661b83981297c432d0d57)
+set(qtwayland_REF          e22789176e48314be1cbea5d12366eb77a220425)
+set(qtdoc_REF              a8448c0b87376598a64333266f5acccd05e7a1e9)
+set(qtimageformats_REF     2a6985b6e73be2b9f371938ca826430be13f55fd)
+set(qtmqtt_REF             40502be35ca30025b45570574d4ee0f0b6bada2d)
+set(qtquickcontrols2_REF   104555a8682d4095841feb9b02c9fd223c707b8e)
+set(qtnetworkauth_REF      0e055a0ace5705d7a162236bf375b057e9ca124e)
+set(qtcoap_REF             f09ed2ed8078dee75b5e7682b5832b2cee80c3b0)
+set(qtopcua_REF            592ef6d24e8ebee0a35b0e46653f3e5b4f4f2d13)
+set(qtactiveqt_REF         64e781f88e6758826be73751fe547b7e03c82edd)
+set(qtdatavis3d_REF        6c79c3c0cd01ec29ce410e557aef293295349a22)
+#set(qtdeviceutils_REF      0) #missing tag
+set(qtlottie_REF           a8c5919df0c6fb9904920d20c4bb0ea18bcaba94)
+set(qtscxml_REF            fb5dedff2f1ddbeeba680c4cf297525c0fd85652)
+set(qtvirtualkeyboard_REF  66a0ecd2db90097fe961437e539182ee5ef17b33)
+set(qtcharts_REF           0e713697ab2454b1c870cb750510b280f8059b0e)
 
 if(QT_UPDATE_VERSION)
     message(STATUS "Running Qt in automatic version port update mode!")

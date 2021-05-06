@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version-string": "6.0.2",
+  "version-string": "6.1.0",
   "description": "Qt",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -9,20 +9,25 @@
       "name": "qtbase",
       "default-features": false
     },
+    "qtcharts",
     "qtcoap",
+    "qtdatavis3d",
     "qtdeclarative",
     "qtdoc",
     "qtimageformats",
+    "qtlottie",
     "qtmqtt",
     "qtnetworkauth",
     "qtopcua",
     "qtquick3d",
     "qtquickcontrols2",
     "qtquicktimeline",
+    "qtscxml",
     "qtshadertools",
     "qtsvg",
     "qttools",
-    "qttranslations"
+    "qttranslations",
+    "qtvirtualkeyboard"
   ],
   "default-features": [
     "default-features"
@@ -31,6 +36,10 @@
     "default-features": {
       "description": "Platform-dependent default features",
       "dependencies": [
+        {
+          "name": "qtactiveqt",
+          "platform": "windows"
+        },
         {
           "name": "qtwayland",
           "platform": "linux"
