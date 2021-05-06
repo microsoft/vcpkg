@@ -5,7 +5,6 @@
 There are two parts to using registries; this documents the creation side of
 the relationship. In order to learn more about using registries that others
 have created, please read [this documentation](../users/registries.md).
-
 ## Table of Contents
 
 - [Creating Registries](#creating-registries)
@@ -44,6 +43,10 @@ The basic structure of a registry is:
   these in the registry.
 
 ### Git Registries
+
+As you're following along with this documentation, it may be helpful to have
+a working example to refer to. We've written one and put it here:
+<https://github.com/northwindtraders/vcpkg-registry>.
 
 All git registries must have a `versions/baseline.json` file. This file
 contains the set of "latest versions" at a certain commit. It is laid out as
@@ -189,6 +192,10 @@ and amend your current commit:
 then share away!
 
 ### Filesystem Registries
+
+As you're following along with this documentation, it may be helpful to have
+a working example to refer to. We've written one and put it here:
+<https://github.com/vcpkg/example-filesystem-registry>.
 
 All filesystem registries must have a `versions/baseline.json` file. This file
 contains the set of "latest versions" for a certain version of the registry.
