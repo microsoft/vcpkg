@@ -16,6 +16,7 @@ vcpkg_from_github(
         0007-fix-compiler-rt-install-path.patch
         0008-fix-libcxx-install.patch
         0009-fix-tools-install-path.patch
+        0010-fix-libffi.patch
 )
 
 vcpkg_check_features(
