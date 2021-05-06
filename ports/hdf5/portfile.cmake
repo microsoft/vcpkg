@@ -30,6 +30,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
      szip         HDF5_ENABLE_SZIP_ENCODING
      zlib         HDF5_ENABLE_Z_LIB_SUPPORT
      fortran      HDF5_BUILD_FORTRAN
+     threadsafe   HDF5_ENABLE_THREADSAFE 
 )
 
 file(REMOVE ${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake)#Outdated; does not find debug szip

@@ -106,7 +106,7 @@ if(BUILD_SHARED_LIBS)
     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "iOS")
         set(LIB_EXT dylib)
         set(LIB_EXTS ${SHLIB_VERSION}.${LIB_EXT})
-    elseif(MINGW)
+    elseif(VCPKG_TARGET_IS_MINGW)
         string(REPLACE "." "_" SHLIB_VERSION "${SHLIB_VERSION}")
         set(BIN_EXT dll)
         set(LIB_EXT dll.a)
@@ -178,7 +178,7 @@ add_custom_command(
 add_custom_target(build_libs ALL
     COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
     COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
-    COMMAND "${MAKE}" build_libs
+    COMMAND "${MAKE}" -j ${VCPKG_CONCURRENCY} build_libs
     VERBATIM
     WORKING_DIRECTORY "${BUILDDIR}"
     DEPENDS "${BUILDDIR}/Makefile"
