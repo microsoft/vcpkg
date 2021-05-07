@@ -4933,7 +4933,7 @@
       "port-version": 0
     },
     "protopuf": {
-      "baseline": "1.0.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "protozero": {
