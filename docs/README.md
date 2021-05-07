@@ -23,6 +23,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Usage with Android](users/android.md)
 - [Usage with Mingw-w64](users/mingw.md)
 - [Host Dependencies](users/host-dependencies.md)
+- [Using Registries](users/registries.md)
 
 ### Maintainer Help
 
@@ -31,6 +32,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Portfile functions](maintainers/portfile-functions.md)
 - [Common CMake definitions](maintainers/vcpkg_common_definitions.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
+- [Creating Registries](maintainers/registries.md)
 
 ### [Vcpkg-Tool](https://github.com/microsoft/vcpkg-tool) Maintainer Help
 
