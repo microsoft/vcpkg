@@ -25,7 +25,6 @@ else()
     set(SKIP_EXECUTABLES OFF)
 endif()
 
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
