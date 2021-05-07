@@ -1,4 +1,3 @@
-set(PANGO_VERSION 1.48.4)
 vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
@@ -7,7 +6,6 @@ vcpkg_from_gitlab(
     SHA512 d7de3bc3108826de9f0b34ca888e0c1eb97c1d0723b2dd68cfb1030fb78d1367e3ac4df88e4a5dea66b08854ef85ecf562d149a58f070351768d6ac144da8520
     HEAD_REF master # branch name
 ) 
-
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
