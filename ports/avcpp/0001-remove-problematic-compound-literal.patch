@@ -1,0 +1,25 @@
+From 8790ff3520bf2648ff2b5b436686878ec8d37ff3 Mon Sep 17 00:00:00 2001
+From: Charles Barto <barto.charlie@gmail.com>
+Date: Thu, 6 May 2021 17:47:23 -0700
+Subject: [PATCH] remove problematic compound literal
+
+---
+ src/avutils.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/avutils.h b/src/avutils.h
+index 29c4ae0..3bfaf82 100644
+--- a/src/avutils.h
++++ b/src/avutils.h
+@@ -42,7 +42,7 @@ namespace av {
+ // Basic FFmpeg constants
+ constexpr auto NoPts = static_cast<int64_t>(AV_NOPTS_VALUE);
+ constexpr auto TimeBase = static_cast<int>(AV_TIME_BASE);
+-constexpr auto TimeBaseQ = static_cast<AVRational>(AV_TIME_BASE_Q);
++constexpr auto TimeBaseQ = AVRational{1, AV_TIME_BASE};
+ 
+ 
+ template<typename R, typename T>
+-- 
+2.27.0.windows.1
+
