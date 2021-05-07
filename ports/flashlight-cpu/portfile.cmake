@@ -1,6 +1,6 @@
-if (EXISTS "${CURRENT_INSTALLED_DIR}/share/flashlight-cuda")
-  message(FATAL_ERROR "flashlight-cuda is installed; only one Flashlight "
-    "backend package can be installed at once. Uninstall and try again:"
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/flashlight")
+  message(FATAL_ERROR "Only one of flashlight-cpu and flashlight-cuda"
+    "can be installed at once. Uninstall and try again:"
     "\n    vcpkg remove flashlight-cuda\n")
 endif()
 
@@ -12,6 +12,7 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+################################### Build ###################################
 # Default flags
 set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
   -DFL_BUILD_TESTS=OFF
@@ -42,6 +43,8 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/flashlight-cpu TARGET_PATH share/flashlight)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
@@ -79,4 +82,3 @@ endif()
 
 # Copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
