@@ -2389,7 +2389,7 @@
       "port-version": 0
     },
     "gtest": {
-      "baseline": "2021-04-29",
+      "baseline": "2021-05-07",
       "port-version": 0
     },
     "gtk": {
