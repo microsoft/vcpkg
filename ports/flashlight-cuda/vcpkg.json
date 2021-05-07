@@ -27,7 +27,6 @@
       "dependencies": [
         {
           "name": "arrayfire",
-          "default-features": false,
           "features": [
             "cuda"
           ]
