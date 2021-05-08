@@ -5010,7 +5010,7 @@
     },
     "qscintilla": {
       "baseline": "2.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qt-advanced-docking-system": {
       "baseline": "3.6.3",
