@@ -8,7 +8,7 @@ vcpkg_from_github(
     HEAD_REF build_fixes
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
 )
