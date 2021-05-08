@@ -13,7 +13,7 @@ vcpkg_cmake_configure(
     PREFER_NINJA
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # Install tools and plugins
 file(GLOB TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
