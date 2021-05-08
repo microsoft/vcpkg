@@ -158,6 +158,13 @@ function(vcpkg_fixup_pkgconfig)
             # Once this transformation is complete, users of vcpkg should never need to pass
             # --static.
             if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+                if(_contents MATCHES "\nLibs.private: *([^\n]*[^ \n])")
+                    # If the software already merges Libs.private into Libs (e.g. curl), avoid duplication.
+                    set(_libs_private "${CMAKE_MATCH_1}")
+                    string(REGEX REPLACE "\nLibs: *([^\n]*[^ \n])" "\nLibs: @VCPKG_FIXUP_LIBS@" _contents "${_contents}")
+                    string(REPLACE " ${_libs_private} " " " _libs " ${CMAKE_MATCH_1} ")
+                    string(REPLACE "@VCPKG_FIXUP_LIBS@" "${_libs}" _contents "${_contents}")
+                endif()
                 # Libs comes before Libs.private
                 string(REGEX REPLACE "(^|\n)(Libs: [^\n]*)(.*)\nLibs.private:( [^\n]*)" "\\1\\2\\4\\3" _contents "${_contents}")
                 # Libs.private comes before Libs
