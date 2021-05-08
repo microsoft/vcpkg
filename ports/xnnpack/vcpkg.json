@@ -8,6 +8,14 @@
     "cpuinfo",
     "fp16",
     "fxdiv",
-    "pthreadpool"
+    "pthreadpool",
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
+    {
+      "name": "vcpkg-config",
+      "host": true
+    }
   ]
 }

@@ -12,7 +12,7 @@ vcpkg_from_github(
         use-packages.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -23,9 +23,9 @@ vcpkg_configure_cmake(
         -DXNNPACK_BUILD_TESTS=OFF
         -DXNNPACK_BUILD_BENCHMARKS=OFF
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
