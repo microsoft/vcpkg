@@ -25,8 +25,8 @@
     <_ZVcpkgCurrentInstalledDir>$([System.IO.Path]::Combine($(VcpkgInstalledDir), $(VcpkgTriplet)))</_ZVcpkgCurrentInstalledDir>
     <_ZVcpkgCurrentInstalledDir Condition="!$(_ZVcpkgCurrentInstalledDir.EndsWith('\'))">$(_ZVcpkgCurrentInstalledDir)\</_ZVcpkgCurrentInstalledDir>
 
-    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Debug'))">Debug</VcpkgNormalizedConfiguration>
-    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.StartsWith('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
+    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.Contains('Debug'))">Debug</VcpkgNormalizedConfiguration>
+    <VcpkgNormalizedConfiguration Condition="$(VcpkgConfiguration.Contains('Release')) or '$(VcpkgConfiguration)' == 'RelWithDebInfo' or '$(VcpkgConfiguration)' == 'MinSizeRel'">Release</VcpkgNormalizedConfiguration>
 
     <VcpkgConfigSubdir Condition="'$(VcpkgNormalizedConfiguration)' == 'Debug'">debug\</VcpkgConfigSubdir>
     <VcpkgApplocalDeps Condition="'$(VcpkgApplocalDeps)' == ''">true</VcpkgApplocalDeps>
