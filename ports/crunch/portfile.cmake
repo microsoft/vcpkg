@@ -14,20 +14,11 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-# Install tools and plugins
-file(GLOB TOOLS "${CURRENT_PACKAGES_DIR}/bin/*.exe")
-if(TOOLS)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-    file(COPY ${TOOLS} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
-endif()
+vcpkg_copy_tools(TOOL_NAMES crunch AUTO_CLEAN)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/debug/include)
 
 vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/license.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
