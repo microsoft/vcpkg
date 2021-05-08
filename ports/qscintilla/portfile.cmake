@@ -30,19 +30,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
         RELEASE_TARGETS release
         DEBUG_TARGETS debug
     )
-    
-    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-        vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/Qsci/qsciglobal.h
-            "#if defined(QSCINTILLA_DLL)"
-            "#if 1"
-        )
-    endif()
 else()
     vcpkg_install_qmake()
 endif()
 
 file(GLOB HEADER_FILES ${SOURCE_PATH}/src/Qsci/*)
 file(COPY ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/Qsci)
+
+if (VCPKG_TARGET_IS_WINDOWS AND (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic))
+    vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/Qsci/qsciglobal.h
+        "#if defined(QSCINTILLA_DLL)"
+        "#if 1"
+    )
+endif()
 
 vcpkg_copy_pdbs()
 
