@@ -16,8 +16,9 @@ subject to change without notice and should be considered highly unstable.
 
 Non-exhaustive list of off-by-default features:
 
-- `binarycaching`
 - `manifest`
+- `versions`
+- `registries`
 
 #### EDITOR
 
