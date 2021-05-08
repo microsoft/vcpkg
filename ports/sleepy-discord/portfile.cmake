@@ -1,10 +1,10 @@
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
-    "websocketpp"    USE_WEBSOCKETPP
-    "websocketpp"    USE_BOOST_ASIO
-    "cpr"            USE_CPR
-    "voice"          ENABLE_VOICE
-    "compression"    USE_ZLIB
+    FEATURES
+        "websocketpp"    USE_WEBSOCKETPP
+        "websocketpp"    USE_BOOST_ASIO
+        "cpr"            USE_CPR
+        "voice"          ENABLE_VOICE
+        "compression"    USE_ZLIB
 )
 
 vcpkg_from_github(
@@ -17,8 +17,11 @@ vcpkg_from_github(
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    OPTIONS -DSLEEPY_VCPKG=ON -DAUTO_DOWNLOAD_LIBRARY=OFF ${FEATURE_OPTIONS}
     PREFER_NINJA
+    OPTIONS 
+        -DSLEEPY_VCPKG=ON 
+        -DAUTO_DOWNLOAD_LIBRARY=OFF 
+        ${FEATURE_OPTIONS}
 )
 vcpkg_install_cmake()
 
