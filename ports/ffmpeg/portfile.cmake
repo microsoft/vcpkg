@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.3.2
-    SHA512 95e6fdc5980d2940cac33be9015e3acc2e1ce5247ef92211889fcf120add1e6ef01089ca2b8d59c13f91761757ebfe9819dc87a24f690edcafa7e0626f06f64e
+    REF n4.4
+    SHA512 ae7426ca476df9fa9dba52cab06c38e484f835653fb2da57e7c06f5589d887c0854ee17df93a2f57191d498c1264cb1c69312cf0a8214b476800382e2d260c4b
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -10,7 +10,6 @@ vcpkg_from_github(
         0004-fix-debug-build.patch
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
-        0008-Fix-wavpack-detection.patch
         0009-Fix-fdk-detection.patch
         0010-Fix-x264-detection.patch
         0011-Fix-x265-detection.patch
@@ -434,14 +433,6 @@ if("vpx" IN_LIST FEATURES)
     set(ENABLE_VPX ${STATIC_LINKAGE})
 else()
     set(OPTIONS "${OPTIONS} --disable-libvpx")
-endif()
-
-set(ENABLE_WAVPACK OFF)
-if("wavpack" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libwavpack")
-    set(ENABLE_WAVPACK ${STATIC_LINKAGE})
-else()
-    set(OPTIONS "${OPTIONS} --disable-libwavpack")
 endif()
 
 set(ENABLE_WEBP OFF)
