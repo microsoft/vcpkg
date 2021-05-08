@@ -1493,7 +1493,7 @@
       "port-version": 0
     },
     "crunch": {
-      "baseline": "1.04",
+      "baseline": "104",
       "port-version": 0
     },
     "cryptopp": {
