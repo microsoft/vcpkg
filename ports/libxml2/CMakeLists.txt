@@ -166,6 +166,13 @@ install(TARGETS libxml2
 )
 
 # pkgconfig
+if(NOT Iconv_IS_BUILT_IN)
+    set(ICONV_LIBS "-liconv")
+endif()
+if(UNIX)
+    set(M_LIBS "-lm")
+    set(THREAD_LIBS "-pthread")
+endif()
 set(prefix ${CMAKE_INSTALL_PREFIX})
 set(exec_prefix "\${prefix}")
 set(libdir ${prefix}/${CMAKE_INSTALL_LIBDIR})

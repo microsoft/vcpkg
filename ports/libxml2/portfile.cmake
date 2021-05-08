@@ -15,6 +15,12 @@ else()
     set(ENABLE_NETWORK 1)
 endif()
 
+x_vcpkg_pkgconfig_get_modules(
+    PREFIX PKGFCONFIG
+    MODULES liblzma zlib
+    LIBS
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -22,7 +28,10 @@ vcpkg_configure_cmake(
         -DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
         -DWITH_HTTP=${ENABLE_NETWORK}
         -DWITH_FTP=${ENABLE_NETWORK}
+    OPTIONS_RELEASE
+        "-DLIBS=${PKGFCONFIG_LIBS_RELEASE}"
     OPTIONS_DEBUG
+        "-DLIBS=${PKGFCONFIG_LIBS_DEBUG}"
         -DINSTALL_HEADERS=OFF
 )
 
