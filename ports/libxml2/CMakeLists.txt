@@ -138,7 +138,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows" OR CMAKE_SYSTEM_NAME STREQUAL "WindowsSt
         _WINSOCK_DEPRECATED_NO_WARNINGS
     )
     target_sources(libxml2 PRIVATE win32/libxml2.rc)
-    configure_file(rcVersion.h.in include/rcVersion.h @ONLY)
+    configure_file("${PORT_DIR}/rcVersion.h.in" include/rcVersion.h @ONLY)
 endif()
 
 target_compile_definitions(libxml2 PRIVATE

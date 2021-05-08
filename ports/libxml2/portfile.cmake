@@ -7,7 +7,6 @@ vcpkg_from_github(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/rcVersion.h.in DESTINATION ${SOURCE_PATH})
 
 if (VCPKG_TARGET_IS_UWP)
     message(WARNING "Feature network couldn't be enabled on UWP, disable http and ftp automatically.")
