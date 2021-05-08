@@ -8,7 +8,6 @@ vcpkg_from_github(
         static.patch
 )
 
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
