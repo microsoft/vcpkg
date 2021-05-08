@@ -4,7 +4,7 @@
   "description": "Advanced DXTc texture compression and transcoding library",
   "homepage": "https://github.com/rouault/crunch",
   "dependencies": [
-   {
+    {
       "name": "vcpkg-cmake",
       "host": true
     }
