@@ -22,6 +22,7 @@
         {
           "name": "ffmpeg",
           "features": [
+            "avresample",
             "bzip2",
             "freetype",
             "iconv",
