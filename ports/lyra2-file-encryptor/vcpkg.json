@@ -1,0 +1,5 @@
+{
+  "name": "lyra2-file-encryptor",
+  "version-string": "1.2.0",
+  "description": "Lyra2-File-Encryptor is a file and content encryptor with AES-cfb that uses Lyra2 as hashing algorithm."
+}
