@@ -8,7 +8,7 @@ diff --git a/cmake/AwsCFlags.cmake b/cmake/AwsCFlags.cmake
 -        check_c_compiler_flag(-moutline-atomics HAS_MOUTLINE_ATOMICS)
 -        if (HAS_MOUTLINE_ATOMICS)
 -            list(APPEND AWS_C_FLAGS -moutline-atomics)
-+        if(NOT EMSCRIPTEN)
++        if(NOT EMSCRIPTEN AND NOT ANDROID)
 +            check_c_compiler_flag(-moutline-atomics HAS_MOUTLINE_ATOMICS)
 +            if (HAS_MOUTLINE_ATOMICS)
 +                list(APPEND AWS_C_FLAGS -moutline-atomics)
