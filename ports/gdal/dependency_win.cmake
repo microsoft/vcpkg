@@ -234,4 +234,14 @@ macro(find_dependency_win)
     endif()
     set(HAVE_SPATIALITE "-DHAVE_SPATIALITE")
   endif()
+
+  # Setup hdf5 libraries
+  # Not supported on WIN32 platforms with static linking
+  if("hdf5" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/hdf5.lib")
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" HDF5_DIR)
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/hdf5_D.lib" HDF5_LIBRARY_DBG)
+      file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/hdf5.lib"  HDF5_LIBRARY_REL)
+    endif()
+  endif()
 endmacro()

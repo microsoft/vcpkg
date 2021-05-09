@@ -10,7 +10,6 @@
     "expat",
     "geos",
     "giflib",
-    "hdf5",
     {
       "name": "json-c",
       "platform": "!windows"
@@ -29,6 +28,12 @@
     "zstd"
   ],
   "features": {
+    "hdf5": {
+      "description": "Add HDF5 files support",
+      "dependencies": [
+        "hdf5"
+      ]
+    },
     "libspatialite": {
       "description": "Create or update SpatiaLite databases using libspatialite",
       "dependencies": [
