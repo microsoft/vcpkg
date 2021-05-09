@@ -9,11 +9,13 @@ vcpkg_from_github(
     PATCHES
         ignore_use_of_cmake_toolchain_file.patch
         no-werror.patch
-		fix-uwp-build.patch
+        fix-uwp-build.patch
+        fix-issue-6036.patch # this patch is already applied to the latest master branch. 
+                             # remove it in next version update
 )
 
 set(OPTIONS)
-if(VCPKG_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_IOS)
     list(APPEND OPTIONS -DFLATBUFFERS_BUILD_FLATC=OFF -DFLATBUFFERS_BUILD_FLATHASH=OFF)
 endif()
 
@@ -38,7 +40,7 @@ if(flatc_path)
         ${flatc_path}
         ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/${flatc_executable}
     )
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

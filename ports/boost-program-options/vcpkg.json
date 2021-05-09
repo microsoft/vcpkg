@@ -1,0 +1,33 @@
+{
+  "name": "boost-program-options",
+  "version-string": "1.75.0",
+  "port-version": 1,
+  "description": "Boost program_options module",
+  "homepage": "https://github.com/boostorg/program_options",
+  "dependencies": [
+    "boost-any",
+    "boost-bind",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-compatibility",
+    "boost-config",
+    "boost-core",
+    "boost-detail",
+    "boost-function",
+    "boost-iterator",
+    "boost-lexical-cast",
+    "boost-math",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-tokenizer",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

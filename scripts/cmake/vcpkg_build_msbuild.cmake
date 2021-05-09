@@ -99,6 +99,7 @@ function(vcpkg_build_msbuild)
         /p:UseIntelMKL=No
         /p:WindowsTargetPlatformVersion=${_csc_TARGET_PLATFORM_VERSION}
         /p:VcpkgManifestInstall=false
+        /p:VcpkgManifestEnabled=false
         /m
     )
 
@@ -113,8 +114,10 @@ function(vcpkg_build_msbuild)
             APPEND _csc_OPTIONS
             /p:ForceImportBeforeCppTargets=${SCRIPTS}/buildsystems/msbuild/vcpkg.targets
             "/p:VcpkgTriplet=${TARGET_TRIPLET}"
-            "/p:VcpkgCurrentInstalledDir=${CURRENT_INSTALLED_DIR}"
+            "/p:VcpkgInstalledDir=${_VCPKG_INSTALLED_DIR}"
         )
+    else()
+        list(APPEND _csc_OPTIONS "/p:VcpkgEnabled=false")
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")

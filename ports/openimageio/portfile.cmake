@@ -1,16 +1,20 @@
+if("field3d" IN_LIST FEATURES)
+    vcpkg_fail_port_install(
+        ON_TARGET WINDOWS UWP
+        MESSAGE "The field3d feature is not supported on Windows"
+    )
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO OpenImageIO/oiio
-    REF e028a5264bd229e128b37a4362f7eb9c73ea82cc #2.1.16.0
-    SHA512 be5741e139c3c1d2fe62d6706833e9b158b6b00e1a57d141626f28cd3653f63e587b76de676b6b45d1a2330a0e71ebb2f1d00c108b68509cc418b6026424cfda
+    REF 5167b11277fffcd9fe18fe4dc35b3eb2669d8c44 # 2.2.10
+    SHA512 d5812cf93bbaf8a384e8ee9f443db95a92320b4c35959a528dff40eac405355d1dec924a975bef7f367d3a2179ded0a15b4be9737d37521719739958bb7f3123
     HEAD_REF master
     PATCHES
+        fix-config-cmake.patch
         fix-dependency.patch
         fix_static_build.patch
-        fix-tools-path.patch
-        fix-config-cmake.patch
-        fix-dependfmt.patch
-        fix-libheif.patch # Remove this patch on the next update
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -58,8 +62,10 @@ vcpkg_configure_cmake(
         -DUSE_QT=OFF
         -DUSE_PTEX=OFF
         -DLINKSTATIC=${LINKSTATIC}
-        -DBUILD_MISSING_PYBIND11=OFF
+        -DBUILD_MISSING_FMT=OFF
+        -DBUILD_MISSING_ROBINMAP=OFF
         -DBUILD_MISSING_DEPS=OFF
+        -DSTOP_ON_WARNING=OFF
         -DVERBOSE=ON
 )
 
@@ -69,8 +75,11 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/OpenImageIO TARGET_PATH share/OpenImageIO)
 
-if ("tools" IN_LIST FEATURES)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/openimageio)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES iconvert idiff igrep iinfo maketx oiiotool
+        AUTO_CLEAN
+    )
 endif()
 
 # Clean

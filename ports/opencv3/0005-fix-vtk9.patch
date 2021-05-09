@@ -1,5 +1,5 @@
 diff --git a/cmake/OpenCVDetectVTK.cmake b/cmake/OpenCVDetectVTK.cmake
-index 1495688..4c83504 100644
+index 1495688..e5c6049 100644
 --- a/cmake/OpenCVDetectVTK.cmake
 +++ b/cmake/OpenCVDetectVTK.cmake
 @@ -1,12 +1,30 @@

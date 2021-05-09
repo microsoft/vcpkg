@@ -25,7 +25,11 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "iOS")
     # disable that makes linkage error (e.g. require stderr usage)
     list(APPEND DISABLES no-stdio no-ui no-asm)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(PLATFORM darwin64-x86_64-cc)
+    if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
+        set(PLATFORM darwin64-arm64-cc)
+    else()
+        set(PLATFORM darwin64-x86_64-cc)
+    endif()
 elseif(CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
     set(PLATFORM BSD-generic64)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
@@ -174,7 +178,7 @@ add_custom_command(
 add_custom_target(build_libs ALL
     COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
     COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
-    COMMAND "${MAKE}" build_libs
+    COMMAND "${MAKE}" -j ${VCPKG_CONCURRENCY} build_libs
     VERBATIM
     WORKING_DIRECTORY "${BUILDDIR}"
     DEPENDS "${BUILDDIR}/Makefile"
@@ -213,4 +217,3 @@ install(
     FILES ${INSTALL_PKG_CONFIGS}
     DESTINATION lib/pkgconfig
 )
-

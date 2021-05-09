@@ -1,0 +1,4 @@
+Source: vcpkg-acquire-msys-test
+Version: 0
+Description: Test port to exercise vcpkg_acquire_msys
+Supports: x86 & windows

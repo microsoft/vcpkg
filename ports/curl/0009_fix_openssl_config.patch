@@ -1,12 +1,27 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5a13333..5a7ece0 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -361,6 +361,7 @@ if(CMAKE_USE_SECTRANSP)
-   list(APPEND CURL_LIBS "${COREFOUNDATION_FRAMEWORK}" "${SECURITY_FRAMEWORK}")
+--- a/CMakeLists.txt	(revision e052859759b34d0e05ce0f17244873e5cd7b457b)
++++ b/CMakeLists.txt	(date 1617452756163)
+@@ -383,14 +383,21 @@
  endif()
  
-+set(USE_OPENSSL OFF)
  if(CMAKE_USE_OPENSSL)
-   find_package(OpenSSL REQUIRED)
+-  find_package(OpenSSL REQUIRED)
++  if(ANDROID)
++    message(WARNING "Setting paths manually (instead of using pkg-config) since this is an android build" )
++
++    set(OPENSSL_LIBRARIES ${OPENSSL_LIBRARY} ${CRYPT_LIBRARY})
++    include_directories("${OPENSSL_INCLUDE}")
++  else()
++    find_package(OpenSSL REQUIRED)
++  endif()
    set(SSL_ENABLED ON)
+   set(USE_OPENSSL ON)
+ 
+   # Depend on OpenSSL via imported targets if supported by the running
+   # version of CMake.  This allows our dependents to get our dependencies
+   # transitively.
+-  if(NOT CMAKE_VERSION VERSION_LESS 3.4)
++  if(NOT CMAKE_VERSION VERSION_LESS 3.4 AND NOT ANDROID)
+     list(APPEND CURL_LIBS OpenSSL::SSL OpenSSL::Crypto)
+   else()
+     list(APPEND CURL_LIBS ${OPENSSL_LIBRARIES})

@@ -1,5 +1,9 @@
 # vcpkg_configure_cmake
 
+**This function has been deprecated in favor of [`vcpkg_cmake_configure`](ports/vcpkg-cmake/vcpkg_cmake_configure.md) from the vcpkg-cmake port.**
+
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_configure_cmake.md).
+
 Configure CMake for Debug and Release builds of a project.
 
 ## Usage
@@ -65,4 +69,4 @@ This command supplies many common arguments to CMake. To see the full list, exam
 * [opencv](https://github.com/Microsoft/vcpkg/blob/master/ports/opencv/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_configure_cmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_configure_cmake.cmake)
+[scripts/cmake/vcpkg\_configure\_cmake.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_configure_cmake.cmake)
