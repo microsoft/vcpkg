@@ -23,5 +23,5 @@ file(READ "${CURRENT_PACKAGES_DIR}/include/tinyfiledialogs/tinyfiledialogs.h" _c
 if (NOT _contents MATCHES [[- License -(([^*]|\*[^/])*)\*/]])
 	message(FATAL_ERROR "Failed to parse license from tinyfiledialogs.h")
 endif()
-file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${_contents}")
+file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${CMAKE_MATCH_1}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
