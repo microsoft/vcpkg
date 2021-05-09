@@ -1,7 +1,7 @@
 {
   "name": "marble",
   "version-string": "19.08.2",
-  "port-version": 1,
+  "port-version": 2,
   "description": "Marble KDE library",
   "homepage": "https://marble.kde.org",
   "supports": "windows & x64 & !static",

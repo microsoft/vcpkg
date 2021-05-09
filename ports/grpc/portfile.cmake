@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO grpc/grpc
-    REF 3e53dbe8213137d2c731ecd4d88ebd2948941d75  # v1.36.4
-    SHA512 c207720a66dae97727e94f2587d6be8e4cb479997cc0815a15f5465ff94f6d0b410523e3fed2dd31385cc9d50ab52dfe39b6095257d6ce9a71184ada6ef0ff7e
+    REF 44c40ac23023b7b3dd82744372c06817cc203898  # v1.37.0
+    SHA512 dacd85b3a94cb759a086239aa2661f1b93728a1554ebc0f10c42aeb49c0d6309963832324773c3a153c3d2fcf807cb55b0e197b128e0a4e199c9e19a3976abd6
     HEAD_REF master
     PATCHES
         00001-fix-uwp.patch
@@ -22,10 +22,7 @@ vcpkg_from_github(
         00013-build-upbdefs.patch
 )
 
-if(TARGET_TRIPLET STREQUAL HOST_TRIPLET)
-    set(gRPC_BUILD_CODEGEN ON)
-else()
-    set(gRPC_BUILD_CODEGEN OFF)
+if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
     vcpkg_add_to_path(PREPEND "${CURRENT_HOST_INSTALLED_DIR}/tools/grpc")
 endif()
 
@@ -42,6 +39,7 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         absl-sync gRPC_ABSL_SYNC_ENABLE
+        codegen gRPC_BUILD_CODEGEN
 )
 
 vcpkg_configure_cmake(
@@ -67,7 +65,6 @@ vcpkg_configure_cmake(
         -DgRPC_INSTALL_LIBDIR:STRING=lib
         -DgRPC_INSTALL_INCLUDEDIR:STRING=include
         -DgRPC_INSTALL_CMAKEDIR:STRING=share/grpc
-        -DgRPC_BUILD_CODEGEN=${gRPC_BUILD_CODEGEN}
         -D_gRPC_PROTOBUF_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}
         -DPROTOBUF_PROTOC_EXECUTABLE=${CURRENT_HOST_INSTALLED_DIR}/tools/protobuf/protoc${VCPKG_HOST_EXECUTABLE_SUFFIX}
 )

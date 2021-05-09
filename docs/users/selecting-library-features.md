@@ -89,4 +89,4 @@ or in manifest files:
 ```
 
 # Further reading
-- The [Feature Packages](specifications/feature-packages.md) specification was the initial design for features.
+- The [Feature Packages](../specifications/feature-packages.md) specification was the initial design for features.
