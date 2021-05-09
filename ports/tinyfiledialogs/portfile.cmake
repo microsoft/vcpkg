@@ -19,6 +19,9 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets()
 file(READ "${CURRENT_PACKAGES_DIR}/include/tinyfiledialogs/tinyfiledialogs.h" _contents)
-string(SUBSTRING "${_contents}" 0 1024 _contents)
+# reads between the line "- License -" and a closing "*/"
+if (NOT _contents MATCHES [[- License -(([^*]|\*[^/])*)\*/]])
+	message(FATAL_ERROR "Failed to parse license from tinyfiledialogs.h")
+endif()
 file(WRITE "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" "${_contents}")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
