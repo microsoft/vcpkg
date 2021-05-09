@@ -1,4 +1,4 @@
-# DEPRECATED: in favor of the `PATCHES` argument to `vcpkg_from_github()` et al.
+# DEPRECATED: in favor of the `PATCHES` argument to [`vcpkg_from_github()`](vcpkg_from_github.md) et al.
 
 #[===[.md
 # vcpkg_apply_patches
