@@ -1,0 +1,1 @@
+"%0\..\windeployqt.exe" --qmake "%0\..\qmake.debug.bat" %*

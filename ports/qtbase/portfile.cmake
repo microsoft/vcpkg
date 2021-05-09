@@ -364,3 +364,5 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
     file(COPY ${DLLS_TO_COPY} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt6/bin")
 endif()
+
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/qmake.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt6/bin")
