@@ -1,18 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libtcod/libtcod
-    REF 1.16.6
-    SHA512  88777acd89d5ab2541d8b5d2f6db966059b76501b591d6e1d782d0d39b0adbcb38be25c49716b6e581b4b0488bf2dbfc5b07452b80495365861cee97e5279bfd
+    REF 2311b47028f0879c1d3fc44e11d8352052b8d8b0
+    SHA512  7b3ab6daf6847d2d0993a1aa73d6d4b9b56684ac5f44cdf7d4ae551600c5354c72afdfa40abd837dda66b3bb1e4c0d50c8c9a7bf5a7e4915cbdc703211c7c917
     HEAD_REF develop
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DCMAKE_INSTALL_INCLUDEDIR=${CURRENT_PACKAGES_DIR}/include
-        -DCMAKE_INSTALL_CONFIGDIR=share/libtcod
         -DLIBTCOD_SDL2=find_package
         -DLIBTCOD_ZLIB=find_package
         -DLIBTCOD_GLAD=find_package
@@ -21,14 +19,10 @@ vcpkg_configure_cmake(
         -DLIBTCOD_STB=vcpkg
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
-file(
-    INSTALL "${SOURCE_PATH}/LICENSE.txt"
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
-    RENAME copyright
-)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

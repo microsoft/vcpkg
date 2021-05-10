@@ -56,7 +56,7 @@ index 6f19a16..3c758d2 100644
  endif()
  
 -if(NOT TARGET cpuinfo)
-+find_package(cpuinfo CONFIG REQUIRED) # target 'cpuinfo::cpuinfo'
++find_package(unofficial-cpuinfo CONFIG REQUIRED) # target 'unofficial::cpuinfo::cpuinfo'
 +if(FALSE)
    #Download cpuinfo from github if CPUINFO_SOURCE_DIR is not specified.
    if(NOT DEFINED CPUINFO_SOURCE_DIR)
@@ -68,7 +68,7 @@ index 6f19a16..3c758d2 100644
 -      PRIVATE "${ASMJIT_SRC_DIR}/src"
 -      PRIVATE "${CPUINFO_SOURCE_DIR}/include")
 +)
-+target_link_libraries(fbgemm_generic PUBLIC asmjit::asmjit cpuinfo::cpuinfo)
++target_link_libraries(fbgemm_generic PUBLIC asmjit::asmjit unofficial::cpuinfo::cpuinfo)
  
  target_include_directories(fbgemm_avx2 BEFORE
        PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}>
@@ -76,7 +76,7 @@ index 6f19a16..3c758d2 100644
 -      PRIVATE "${ASMJIT_SRC_DIR}/src"
 -      PRIVATE "${CPUINFO_SOURCE_DIR}/include")
 +)
-+target_link_libraries(fbgemm_avx2 PUBLIC asmjit::asmjit cpuinfo::cpuinfo)
++target_link_libraries(fbgemm_avx2 PUBLIC asmjit::asmjit unofficial::cpuinfo::cpuinfo)
  
  target_include_directories(fbgemm_avx512 BEFORE
        PUBLIC $<BUILD_INTERFACE:${FBGEMM_SOURCE_DIR}>
@@ -95,7 +95,7 @@ index 6f19a16..3c758d2 100644
 -    $<TARGET_OBJECTS:fbgemm_avx2>
 -    $<TARGET_OBJECTS:fbgemm_avx512>)
 +)
-+target_link_libraries(fbgemm_avx512 PUBLIC asmjit::asmjit cpuinfo::cpuinfo)
++target_link_libraries(fbgemm_avx512 PUBLIC asmjit::asmjit unofficial::cpuinfo::cpuinfo)
 +
 +add_library(fbgemm
 +  $<TARGET_OBJECTS:fbgemm_generic>
@@ -131,7 +131,7 @@ index 6f19a16..3c758d2 100644
 -target_link_libraries(fbgemm $<BUILD_INTERFACE:asmjit>
 -  $<BUILD_INTERFACE:cpuinfo>)
 -add_dependencies(fbgemm asmjit cpuinfo)
-+target_link_libraries(fbgemm PUBLIC asmjit::asmjit cpuinfo::cpuinfo)
++target_link_libraries(fbgemm PUBLIC asmjit::asmjit unofficial::cpuinfo::cpuinfo)
  
  install(TARGETS fbgemm EXPORT fbgemmLibraryConfig
    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
