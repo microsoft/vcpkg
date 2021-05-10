@@ -133,7 +133,7 @@ function(vcpkg_install_msbuild)
         set(arg_TARGET Rebuild)
     endif()
 
-    list(APPEND _csc_OPTIONS
+    list(APPEND arg_OPTIONS
         "/t:${arg_TARGET}"
         "/p:Platform=${arg_PLATFORM}"
         "/p:PlatformToolset=${arg_PLATFORM_TOOLSET}"
@@ -169,8 +169,8 @@ function(vcpkg_install_msbuild)
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_RELEASE_CONFIGURATION}"
-                "${arg_OPTIONS}"
-                "${arg_OPTIONS_RELEASE}"
+                ${arg_OPTIONS}
+                ${arg_OPTIONS_RELEASE}
             WORKING_DIRECTORY "${source_copy_path}"
             LOGNAME "build-${TARGET_TRIPLET}-rel"
         )
@@ -198,8 +198,8 @@ function(vcpkg_install_msbuild)
         vcpkg_execute_required_process(
             COMMAND msbuild "${source_copy_path}/${arg_PROJECT_SUBPATH}"
                 "/p:Configuration=${arg_DEBUG_CONFIGURATION}"
-                "${arg_OPTIONS}"
-                "${arg_OPTIONS_DEBUG}"
+                ${arg_OPTIONS}
+                ${arg_OPTIONS_DEBUG}
             WORKING_DIRECTORY "${source_copy_path}"
             LOGNAME "build-${TARGET_TRIPLET}-dbg"
         )
