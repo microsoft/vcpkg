@@ -1,6 +1,6 @@
 {
   "name": "cfgfile",
-  "version-string": "0.2.8.2.1",
+  "version": "0.2.8.2.1",
   "description": "Library for reading and writing configuration files.",
   "homepage": "https://github.com/igormironchik/cfgfile"
 }

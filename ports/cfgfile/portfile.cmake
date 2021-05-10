@@ -19,7 +19,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/cfgfile)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake TARGET_PATH share/${PORT})
 
 vcpkg_copy_tools(TOOL_NAMES cfgfile.generator)
 
