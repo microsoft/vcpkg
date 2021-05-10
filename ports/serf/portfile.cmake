@@ -1,6 +1,4 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
+vcpkg_fail_port_install(ON_TARGET "UWP")
 
 set(VERSION 1.3.9)
 set(SCONS_VERSION 4.1.0)
@@ -41,19 +39,55 @@ else()
   set(SCONS_ARCH "")
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-  set(APR_MODE "")
-else()
-  set(APR_MODE "APR_STATIC=yes")
+set(EXTRA_MODE "")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  set(EXTRA_MODE ${EXTRA_MODE} APR_STATIC=yes)
+endif()
+
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+  set(EXTRA_MODE ${EXTRA_MODE} STATIC_CRT=yes)
+endif()
+
+SET(SERF_APR_DIR ${CURRENT_INSTALLED_DIR})
+SET(SERF_APU_DIR ${CURRENT_INSTALLED_DIR})
+
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+  # Use apr-1-config and apu-1-config
+  SET(SERF_APR_DIR ${CURRENT_INSTALLED_DIR}/tools/apr)
+  SET(SERF_APU_DIR ${CURRENT_INSTALLED_DIR}/tools/apr-util)
 endif()
 
 vcpkg_execute_build_process(
-    COMMAND ${PYTHON3} ${SCONS_PATH}/scons.py PREFIX=${CURRENT_PACKAGES_DIR} LIBDIR=${CURRENT_PACKAGES_DIR}/lib OPENSSL=${CURRENT_INSTALLED_DIR} ZLIB=${CURRENT_INSTALLED_DIR} APR=${CURRENT_INSTALLED_DIR} APU=${CURRENT_INSTALLED_DIR} SOURCE_LAYOUT=no ${APR_MODE} ${SCONS_ARCH} install-lib install-inc
+    COMMAND ${PYTHON3}
+        ${SCONS_PATH}/scons.py
+            PREFIX=${CURRENT_PACKAGES_DIR}
+            LIBDIR=${CURRENT_PACKAGES_DIR}/lib
+            OPENSSL=${CURRENT_INSTALLED_DIR}
+            ZLIB=${CURRENT_INSTALLED_DIR}
+            APR=${SERF_APR_DIR}
+            APU=${SERF_APU_DIR}
+            SOURCE_LAYOUT=no
+            ${EXTRA_MODE}
+            ${SCONS_ARCH}
+            DEBUG=no
+            install-lib install-inc
     WORKING_DIRECTORY ${SOURCE_PATH}
 )
 
 vcpkg_execute_build_process(
-    COMMAND ${PYTHON3} ${SCONS_PATH}/scons.py PREFIX=${CURRENT_PACKAGES_DIR}/debug LIBDIR=${CURRENT_PACKAGES_DIR}/debug/lib OPENSSL=${CURRENT_INSTALLED_DIR} ZLIB=${CURRENT_INSTALLED_DIR} APR=${CURRENT_INSTALLED_DIR} APU=${CURRENT_INSTALLED_DIR} SOURCE_LAYOUT=no ${APR_MODE} ${SCONS_ARCH} DEBUG=yes install-lib install-inc
+    COMMAND ${PYTHON3}
+        ${SCONS_PATH}/scons.py
+            PREFIX=${CURRENT_PACKAGES_DIR}/debug
+            LIBDIR=${CURRENT_PACKAGES_DIR}/debug/lib
+            OPENSSL=${CURRENT_INSTALLED_DIR}
+            ZLIB=${CURRENT_INSTALLED_DIR}
+            APR=${SERF_APR_DIR}
+            APU=${SERF_APU_DIR}
+            SOURCE_LAYOUT=no
+            ${EXTRA_MODE}
+            ${SCONS_ARCH}
+            DEBUG=yes
+            install-lib install-inc
     WORKING_DIRECTORY ${SOURCE_PATH}
 )
 

@@ -2,7 +2,17 @@ Index: SConstruct
 ===================================================================
 --- SConstruct	(revision 1879319)
 +++ SConstruct	(working copy)
-@@ -127,7 +127,7 @@ if sys.platform == 'win32':
+@@ -108,6 +108,9 @@ opts.AddVariables(
+   BoolVariable('APR_STATIC',
+                "Enable using a static compiled APR",
+                False),
++  BoolVariable('STATIC_CRT',
++               "Enable using the static CRT on Windows",
++               False),
+   RawListVariable('CC', "Command name or path of the C compiler", None),
+   RawListVariable('CFLAGS', "Extra flags for the C compiler (space-separated)",
+                   None),
+@@ -127,7 +130,7 @@ if sys.platform == 'win32':
      # Note that Scons 1.3 only supports this on Windows and only when
      # constructing Environment(). Later changes to TARGET_ARCH are ignored
      EnumVariable('TARGET_ARCH',
@@ -11,7 +21,7 @@ Index: SConstruct
                   'x86',
                   allowed_values=('x86', 'x86_64', 'ia64'),
                   map={'X86'  : 'x86',
-@@ -138,11 +138,19 @@ if sys.platform == 'win32':
+@@ -138,11 +141,19 @@ if sys.platform == 'win32':
                       }),
  
      EnumVariable('MSVC_VERSION',
@@ -35,7 +45,7 @@ Index: SConstruct
  
      # We always documented that we handle an install layout, but in fact we
      # hardcoded source layouts. Allow disabling this behavior.
-@@ -166,7 +174,7 @@ env.Append(BUILDERS = {
+@@ -166,7 +177,7 @@ env.Append(BUILDERS = {
  match = re.search('SERF_MAJOR_VERSION ([0-9]+).*'
                    'SERF_MINOR_VERSION ([0-9]+).*'
                    'SERF_PATCH_VERSION ([0-9]+)',
@@ -44,7 +54,7 @@ Index: SConstruct
                    re.DOTALL)
  MAJOR, MINOR, PATCH = [int(x) for x in match.groups()]
  env.Append(MAJOR=str(MAJOR))
-@@ -183,7 +191,7 @@ CALLOUT_OKAY = not (env.GetOption('clean') or env.
+@@ -183,7 +194,7 @@ CALLOUT_OKAY = not (env.GetOption('clean') or env.
  
  unknown = opts.UnknownVariables()
  if unknown:
@@ -53,7 +63,29 @@ Index: SConstruct
  
  apr = str(env['APR'])
  apu = str(env['APU'])
-@@ -309,7 +317,7 @@ if sys.platform == 'win32':
+@@ -198,6 +209,7 @@ if gssapi and os.path.isdir(gssapi):
+ 
+ debug = env.get('DEBUG', None)
+ aprstatic = env.get('APR_STATIC', None)
++static_crt = env.get('STATIC_CRT', None)
+ 
+ Help(opts.GenerateHelpText(env))
+ opts.Save(SAVED_CONFIG, env)
+@@ -273,11 +285,11 @@ else:
+   # Choose runtime and optimization
+   if debug:
+     # Disable optimizations for debugging, use debug DLL runtime
+-    env.Append(CCFLAGS=['/Od', '/MDd'])
++    env.Append(CCFLAGS=['/Od', '/MTd' if static_crt else '/MDd'])
+     env.Append(CPPDEFINES=['DEBUG', '_DEBUG'])
+   else:
+     # Optimize for speed, use DLL runtime
+-    env.Append(CCFLAGS=['/O2', '/MD'])
++    env.Append(CCFLAGS=['/O2', '/MT' if static_crt else '/MD'])
+     env.Append(CPPDEFINES=['NDEBUG'])
+     env.Append(LINKFLAGS=['/RELEASE'])
+ 
+@@ -309,7 +321,7 @@ if sys.platform == 'win32':
    if aprstatic:
      apr_libs='apr-1.lib'
      apu_libs='aprutil-1.lib'
@@ -62,7 +94,7 @@ Index: SConstruct
    else:
      apr_libs='libapr-1.lib'
      apu_libs='libaprutil-1.lib'
-@@ -335,7 +343,6 @@ if sys.platform == 'win32':
+@@ -335,7 +347,6 @@ if sys.platform == 'win32':
                 LIBPATH=['$ZLIB'])
  
    # openssl
@@ -70,7 +102,7 @@ Index: SConstruct
    if not env.get('SOURCE_LAYOUT', None):
      env.Append(CPPPATH=['$OPENSSL/include/openssl'],
                 LIBPATH=['$OPENSSL/lib'])
-@@ -345,6 +352,14 @@ if sys.platform == 'win32':
+@@ -345,6 +356,14 @@ if sys.platform == 'win32':
    else:
      env.Append(CPPPATH=['$OPENSSL/inc32'],
                 LIBPATH=['$OPENSSL/out32dll'])
