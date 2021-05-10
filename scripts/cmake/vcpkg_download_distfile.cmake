@@ -195,6 +195,8 @@ function(vcpkg_download_distfile VAR)
                 "    \n"
                 "    2. You are using Fiddler. Currently a bug (https://github.com/microsoft/vcpkg/issues/17752)\n"
                 "       will set HTTPS_PROXY to `https://fiddler_address:port` which lead to problem 1 above.\n"
+                "       Workaround is open Windows 10 Settings App, and search for Proxy Configuration page,\n"
+                "       Change `http=address:port;https=address:port` to `address`, and fill the port number.\n"
                 "    \n"
                 "    3. You proxy remote server is out of service.\n"
                 "    \n"
