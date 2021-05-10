@@ -4333,44 +4333,44 @@
       "port-version": 0
     },
     "oatpp-consul": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "oatpp-curl": {
-      "baseline": "1.2.0",
-      "port-version": 2
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "oatpp-libressl": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "oatpp-mbedtls": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "oatpp-mongo": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "oatpp-postgresql": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "oatpp-sqlite": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "oatpp-swagger": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "oatpp-websocket": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "oatpp-zlib": {
-      "baseline": "1.2.0",
-      "port-version": 1
+      "baseline": "1.2.5",
+      "port-version": 0
     },
     "observer-ptr-lite": {
       "baseline": "0.4.0",
