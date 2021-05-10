@@ -5993,8 +5993,8 @@
       "port-version": 0
     },
     "thor": {
-      "baseline": "2.0-3",
-      "port-version": 0
+      "baseline": "2.0",
+      "port-version": 4
     },
     "threadpool": {
       "baseline": "0.2.5",
