@@ -31,22 +31,9 @@ function(qt_install_submodule)
     vcpkg_add_to_path(${PYTHON3_PATH})
 
     if(QT_UPDATE_VERSION)
-        # set(ADDITIONAL_FROM_GITHUB_OPTIONS 
-                    # OUT_DOWNLOADED_FILE_NAME DOWNLOADED_FILE_NAME
-                    # NO_EXTRACT)
         set(UPDATE_PORT_GIT_OPTIONS
                 X_OUT_REF NEW_REF)
     endif()
-
-    # vcpkg_from_github(
-        # OUT_SOURCE_PATH SOURCE_PATH
-        # ${ADDITIONAL_FROM_GITHUB_OPTIONS}
-        # REPO qt/${PORT}
-        # REF ${${PORT}_REF}
-        # SHA512 ${${PORT}_HASH}
-        # HEAD_REF dev
-        # PATCHES ${_qis_PATCHES}
-    # )
 
     vcpkg_from_git(
         OUT_SOURCE_PATH SOURCE_PATH
@@ -59,21 +46,18 @@ function(qt_install_submodule)
 
     if(QT_UPDATE_VERSION)
         set(VCPKG_POLICY_EMPTY_PACKAGE enabled CACHE INTERNAL "")
-        #set(DOWNLOAD_FILE_PATH "${DOWNLOADS}/${DOWNLOADED_FILE_NAME}")
-        #file(SHA512 ${DOWNLOAD_FILE_PATH} FILE_HASH)
-        #message(STATUS "${PORT} new hash is ${FILE_HASH}")
         file(APPEND "${VCPKG_ROOT_DIR}/ports/qtbase/cmake/qt_new_refs.cmake" "set(${PORT}_REF ${NEW_REF})\n")
         return()
     endif()
 
     if(VCPKG_TARGET_IS_WINDOWS)
         if(NOT ${PORT} MATCHES "qtbase")
-            list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH="${CURRENT_INSTALLED_DIR}/tools/qt6/bin/syncqt.pl")
+            list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH="${CURRENT_HOST_INSTALLED_DIR}/tools/qt6/bin/syncqt.pl")
         endif()
         set(PERL_OPTION -DHOST_PERL:PATH="${PERL}")
     else()
         if(NOT ${PORT} MATCHES "qtbase")
-            list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH=${CURRENT_INSTALLED_DIR}/tools/qt6/bin/syncqt.pl)
+            list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/qt6/bin/syncqt.pl)
         endif()
         set(PERL_OPTION -DHOST_PERL:PATH=${PERL})
     endif()
@@ -82,8 +66,13 @@ function(qt_install_submodule)
         set(NINJA_OPTION PREFER_NINJA)
     endif()
 
-    if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+    if(VCPKG_CROSSCOMPILING)
         list(APPEND _qis_CONFIGURE_OPTIONS -DQT_HOST_PATH=${CURRENT_HOST_INSTALLED_DIR})
+        list(APPEND _qis_CONFIGURE_OPTIONS -DQT_HOST_PATH_CMAKE_DIR:PATH=${CURRENT_HOST_INSTALLED_DIR}/share)
+        list(APPEND _qis_CONFIGURE_OPTIONS -DQT_BUILD_TOOLS_BY_DEFAULT=OFF)
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64 AND VCPKG_TARGET_IS_WINDOWS) # Remove if PR #16111 is merged
+            list(APPEND _qis_CONFIGURE_OPTIONS -DCMAKE_CROSSCOMPILING=ON -DCMAKE_SYSTEM_PROCESSOR:STRING=ARM64 -DCMAKE_SYSTEM_NAME:STRING=Windows)
+        endif()
     endif()
 
     set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
