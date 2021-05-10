@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO amazon-biobank/lyra2-file-encryptor
-    REF b0ce886ed506eeaa37cd54be1578d784b1a37d0c
-    SHA512 55e6b73c3f45dc678cbdfd212b12c53c36b20bc29fab21cf143aa5248feb672c54fe3a6597e01266227ef46bd47a35e8b2c844623d078ff7c5c89116dfb8760c    
+    REF e5cf962633f6a0a7acd3f3adf4fcbf10f014e6bf
+    SHA512 e750d5530cd5c14f2dc61f5abf8ee1e34884c12d5f39e0cbad623aa72a842efaa9b2fd0728ed64ee4bc6f2b0299dcea9e6ea23f59cb1826e1577cdf5158e8009    
     HEAD_REF V_1_2
 )
 
@@ -13,7 +13,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH cmake/Lyra2FileEncryptor)
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake/lyra2-file-encryptor)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
