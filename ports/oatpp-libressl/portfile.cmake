@@ -7,7 +7,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-libressl
     REF ${OATPP_VERSION}
-    SHA512 e6d208edddff5373c07887b76fc808733bd363c340e740047ae90317874b73a5ef71e5cbbb0f9b1b48632c7a78709858a5ff0de81bc39207961e3642c0104010
+    SHA512 64b596576b7c976cd8ebd68ba16a38e7b9c65794d9dcea82d3537d2433f11645a25eb567aea6d16ddc51f8ff5f90e83f29e24555c3ae87f80883ec2f53366d99
     HEAD_REF master
     PATCHES "libress-submodule-downgrade-required-libressl-version.patch"
 )
