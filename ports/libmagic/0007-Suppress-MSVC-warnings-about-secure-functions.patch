@@ -1,0 +1,27 @@
+From 8095a541a50780c738ffad62389a959966fcea83 Mon Sep 17 00:00:00 2001
+From: Long Nguyen <nguyen.long.908132@gmail.com>
+Date: Sun, 9 May 2021 08:23:05 +0700
+Subject: [PATCH 07/12] Suppress MSVC warnings about secure functions
+
+---
+ src/file.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/file.h b/src/file.h
+index 679d00c..429b6da 100644
+--- a/src/file.h
++++ b/src/file.h
+@@ -33,6 +33,10 @@
+ #ifndef __file_h__
+ #define __file_h__
+ 
++#ifdef _MSC_VER
++#define _CRT_SECURE_NO_WARNINGS
++#endif
++
+ #ifdef HAVE_CONFIG_H
+ #include <config.h>
+ #endif
+-- 
+2.29.2.windows.2
+
