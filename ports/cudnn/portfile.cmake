@@ -66,7 +66,55 @@ if (CUDNN_INCLUDE_DIR AND CUDNN_LIBRARY AND _CUDNN_VERSION VERSION_GREATER_EQUAL
   message(STATUS "Found CUDNN ${_CUDNN_VERSION} located on system: (include ${CUDNN_INCLUDE_DIR} lib: ${CUDNN_LIBRARY})")
   set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 elseif(VCPKG_TARGET_IS_WINDOWS)
-  message(FATAL_ERROR "Please download CUDNN from official sources (such as https://developer.nvidia.com/rdp/cudnn-download ) and extract the zip into your CUDA_TOOLKIT_ROOT (${CUDA_TOOLKIT_ROOT}). (For example: tar.exe -xvf cudnn-11.2-windows-x64-v8.1.1.33.zip --strip 1 --directory \"${CUDA_TOOLKIT_ROOT}\"")
+  set(CUDNN_VERSION "8.1.0.77")
+  set(CUDNN_FULL_VERSION "${CUDNN_VERSION}-cuda11.2_0")
+  set(CUDNN_REVISION_HASH "h3e0f4f4_0")
+  message(STATUS "CUDNN not found on system - downloading version ${CUDNN_VERSION}...")
+  set(CUDNN_DOWNLOAD_LINK "https://anaconda.org/conda-forge/cudnn/${CUDNN_VERSION}/download/win-64/cudnn-${CUDNN_VERSION}-${CUDNN_REVISION_HASH}.tar.bz2")
+  set(SHA512_CUDNN "820fcd1986eba673f2821f16c20c4ae97f444488d3e03ba11b307e59678b0e141ed39235f0396433b3c63e2d901902a8096175fe91391be24104e9eb5dcb9cb1")
+  set(CUDNN_OS "windows")
+
+
+  vcpkg_download_distfile(ARCHIVE
+      URLS ${CUDNN_DOWNLOAD_LINK}
+      FILENAME "cudnn-${CUDNN_VERSION}-${CUDNN_REVISION_HASH}-${CUDNN_OS}.tar.bz2"
+      SHA512 ${SHA512_CUDNN}
+  )
+
+  vcpkg_extract_source_archive_ex(
+      OUT_SOURCE_PATH SOURCE_PATH
+      ARCHIVE ${ARCHIVE}
+      NO_REMOVE_ONE_LEVEL
+  )
+
+
+    file(INSTALL "${SOURCE_PATH}/Library/include/" DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.h")
+    file(INSTALL "${SOURCE_PATH}/Library/lib/" DESTINATION ${CURRENT_PACKAGES_DIR}/lib FILES_MATCHING PATTERN "*.lib")
+    file(INSTALL "${SOURCE_PATH}/Library/bin/" DESTINATION ${CURRENT_PACKAGES_DIR}/bin FILES_MATCHING PATTERN "*.dll")
+
+
 else()
-  message(FATAL_ERROR "Please install CUDNN using your system package manager (the same way you installed CUDA). For example: apt install libcudnn8-dev.")
+  set(CUDNN_VERSION "8.1.0.77")
+  set(CUDNN_FULL_VERSION "${CUDNN_VERSION}-cuda11.2_0")
+  set(CUDNN_REVISION_HASH "h90431f1_0")
+  message(STATUS "CUDNN not found on system - downloading version ${CUDNN_VERSION}...")
+  set(CUDNN_DOWNLOAD_LINK "https://anaconda.org/conda-forge/cudnn/${CUDNN_VERSION}/download/linux-64/cudnn-${CUDNN_VERSION}-${CUDNN_REVISION_HASH}.tar.bz2")
+  set(SHA512_CUDNN "7ff00fc0b4800593b408bdd628f26294c0144e93acef0ff7c4b9e3b518845195bcc34cb41d23c43cba76b38949b454004beac2538311734d0c66ac665ad8a95a")
+  set(CUDNN_OS "linux")
+
+  vcpkg_download_distfile(ARCHIVE
+  URLS ${CUDNN_DOWNLOAD_LINK}
+  FILENAME "cudnn-${CUDNN_VERSION}-${CUDNN_REVISION_HASH}-${CUDNN_OS}.tar.bz2"
+  SHA512 ${SHA512_CUDNN}
+  )
+
+  vcpkg_extract_source_archive_ex(
+  OUT_SOURCE_PATH SOURCE_PATH
+  ARCHIVE ${ARCHIVE}
+  NO_REMOVE_ONE_LEVEL
+  )
+  file(INSTALL "${SOURCE_PATH}/include/" DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.h")
+  file(INSTALL "${SOURCE_PATH}/lib/" DESTINATION ${CURRENT_PACKAGES_DIR}/lib FOLLOW_SYMLINK_CHAIN FILES_MATCHING PATTERN "*.so")
 endif()
+
+  file(INSTALL "${SOURCE_PATH}/info/LICENSE.txt" DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
