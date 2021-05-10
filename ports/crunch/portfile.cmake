@@ -6,6 +6,9 @@ vcpkg_from_github(
     REF 079b071dfc24d309fb22fa41ccd94a0a156cdb52
     SHA512   486f1a3d25c777d93027579ded5f6838d3d056c020a9e4536cc669d78f999794ebab1fb311be575cc816e9918a9e8d4f4e7c80fea30329667401780ad7f96775
     HEAD_REF build_fixes
+    PATCHES
+        osx.patch
+        uwp.patch
 )
 
 vcpkg_cmake_configure(
