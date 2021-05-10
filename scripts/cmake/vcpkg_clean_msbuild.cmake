@@ -15,7 +15,7 @@ vcpkg_clean_msbuild()
 
 function(vcpkg_clean_msbuild)
     file(REMOVE_RECURSE
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-        ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
+        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
     )
 endfunction()
