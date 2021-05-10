@@ -1,6 +1,6 @@
 # vcpkg_extract_source_archive_ex
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_extract_source_archive_ex.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_extract_source_archive_ex.md).
 
 Extract an archive into the source directory. Replaces [`vcpkg_extract_source_archive`](vcpkg_extract_source_archive.md).
 

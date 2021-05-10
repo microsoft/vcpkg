@@ -1,6 +1,8 @@
 # Manifest Mode
 
-vcpkg has two modes of operation - classic mode and manifest mode.
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/manifests.md).**
+
+vcpkg has two modes of consuming dependencies - classic mode and manifest mode.
 
 In classic mode, vcpkg produces an "installed" tree, whose contents are changed by explicit calls to `vcpkg install` or
 `vcpkg remove`. The installed tree is intended for consumption by any number of projects: for example, installing a
@@ -86,7 +88,7 @@ You shouldn't need to worry about this at all.
 
 **Experimental behind the `versions` feature flag**
 
-See [versioning.md](versioning.md#version%20schemes) for additional version types.
+See [versioning](versioning.md#version-schemes) for additional version types.
 
 ### `"description"`
 
@@ -187,7 +189,7 @@ A minimum version constraint on the dependency.
 
 This field specifies the minimum version of the dependency using a '#' suffix to denote port-version if non-zero.
 
-See also [versioning](versioning.md#constraints) for more semantic details.
+See also [versioning](versioning.md#version-1) for more semantic details.
 
 ### `"overrides"`
 
@@ -323,6 +325,20 @@ automatically bootstrapped if missing and invoked to install your dependencies i
 All vcpkg-affecting variables must be defined before the first `project()` directive, such as via the command line or
 `set()` statements.
 
+#### `VCPKG_TARGET_TRIPLET`
+
+This variable controls which triplet dependencies will be installed for.
+
+If unset, vcpkg will automatically detect an appropriate default triplet given the current compiler settings.
+
+#### `VCPKG_HOST_TRIPLET`
+
+This variable controls which triplet host dependencies will be installed for.
+
+If unset, vcpkg will automatically detect an appropriate native triplet (x64-windows, x64-osx, x64-linux).
+
+See also [Host Dependencies](host-dependencies.md).
+
 #### `VCPKG_MANIFEST_MODE`
 
 This variable controls whether vcpkg operates in manifest mode or in classic mode. To disable manifest mode even with a
@@ -442,6 +458,14 @@ This can be set to "false" to explicitly disable vcpkg integration for the proje
 #### `VcpkgTriplet` (Triplet)
 
 This can be set to a custom triplet to use for integration (such as x64-windows-static)
+
+#### `VcpkgHostTriplet` (Host Triplet)
+
+This can be set to a custom triplet to use for resolving host dependencies.
+
+If unset, this will default to the "native" triplet (x64-windows, x64-osx, x64-linux).
+
+See also [Host Dependencies](host-dependencies.md).
 
 #### `VcpkgAdditionalInstallOptions` (Additional Options)
 

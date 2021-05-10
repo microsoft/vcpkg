@@ -1,14 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.3.1
-    SHA512 9d533f6db97e8eccb77d78d0b55112ce039580b570d2a98c4204199abe5a4b0f448c44b30048329f6c912579f8ff48385d5100f9e484709b9fd8f4b3935b5031
+    REF n4.3.2
+    SHA512 95e6fdc5980d2940cac33be9015e3acc2e1ce5247ef92211889fcf120add1e6ef01089ca2b8d59c13f91761757ebfe9819dc87a24f690edcafa7e0626f06f64e
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
         0003-fix-windowsinclude.patch
         0004-fix-debug-build.patch
-        0005-fix-libvpx-linking.patch
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
         0008-Fix-wavpack-detection.patch
@@ -17,7 +16,9 @@ vcpkg_from_github(
         0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
-        0014-avfilter-dependency-fix.patch
+        0014-avfilter-dependency-fix.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
+        0015-Fix-xml2-detection.patch
+        0016-configure-dnn-needs-avformat.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -45,7 +46,17 @@ else()
     set(LIB_PATH_VAR "LIBRARY_PATH")
 endif()
 
-set(OPTIONS "--enable-asm --enable-x86asm --disable-doc --enable-debug --enable-runtime-cpudetect")
+set(OPTIONS "--enable-pic --disable-doc --enable-debug --enable-runtime-cpudetect")
+
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
+  set(OPTIONS "${OPTIONS} --disable-asm --disable-x86asm")
+endif()
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+  set(OPTIONS "${OPTIONS} --enable-asm --disable-x86asm")
+endif()
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+  set(OPTIONS "${OPTIONS} --enable-asm --enable-x86asm")
+endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
@@ -181,15 +192,23 @@ if("avresample" IN_LIST FEATURES)
     set(ENABLE_AVRESAMPLE ON)
 endif()
 
+set(STATIC_LINKAGE OFF)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(STATIC_LINKAGE ON)
+endif()
+
+set(ENABLE_ASS OFF)
+if("ass" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libass")
+    set(ENABLE_ASS ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libass")
+endif()
+
 if("avisynthplus" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avisynth")
 else()
     set(OPTIONS "${OPTIONS} --disable-avisynth")
-endif()
-
-set(STATIC_LINKAGE OFF)
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-set(STATIC_LINKAGE ON)
 endif()
 
 set(ENABLE_BZIP2 OFF)
@@ -200,6 +219,14 @@ else()
     set(OPTIONS "${OPTIONS} --disable-bzlib")
 endif()
 
+set(ENABLE_DAV1D OFF)
+if("dav1d" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libdav1d")
+    set(ENABLE_DAV1D ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libdav1d")
+endif()
+
 set(ENABLE_ICONV OFF)
 if("iconv" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-iconv")
@@ -208,12 +235,44 @@ else()
     set(OPTIONS "${OPTIONS} --disable-iconv")
 endif()
 
+set(ENABLE_ILBC OFF)
+if("ilbc" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libilbc")
+    set(ENABLE_ILBC ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libilbc")
+endif()
+
 set(ENABLE_FDKAAC OFF)
 if("fdk-aac" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
     set(ENABLE_FDKAAC ${STATIC_LINKAGE})
 else()
     set(OPTIONS "${OPTIONS} --disable-libfdk-aac")
+endif()
+
+set(ENABLE_FONTCONFIG OFF)
+if("fontconfig" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfontconfig")
+    set(ENABLE_FONTCONFIG ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libfontconfig")
+endif()
+
+set(ENABLE_FREETYPE OFF)
+if("freetype" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfreetype")
+    set(ENABLE_FREETYPE ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libfreetype")
+endif()
+
+set(ENABLE_FRIBIDI OFF)
+if("fribidi" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libfribidi")
+    set(ENABLE_FRIBIDI ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libfribidi")
 endif()
 
 set(ENABLE_LZMA OFF)
@@ -232,13 +291,21 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libmp3lame")
 endif()
 
+set(ENABLE_MODPLUG OFF)
+if("modplug" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libmodplug")
+    set(ENABLE_MODPLUG ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libmodplug")
+endif()
+
 set(ENABLE_NVCODEC OFF)
 if("nvcodec" IN_LIST FEATURES)
     #Note: the --enable-cuda option does not actually require the cuda sdk or toolset port dependency as ffmpeg uses runtime detection and dynamic loading
     set(ENABLE_NVCODEC ON)
-    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-nvdec --enable-cuvid")
+    set(OPTIONS "${OPTIONS} --enable-cuda --enable-nvenc --enable-nvdec --enable-cuvid --enable-ffnvcodec")
 else()
-    set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-nvdec  --disable-cuvid")
+    set(OPTIONS "${OPTIONS} --disable-cuda --disable-nvenc --disable-nvdec  --disable-cuvid --disable-ffnvcodec")
 endif()
 
 set(ENABLE_OPENCL OFF)
@@ -247,6 +314,30 @@ if("opencl" IN_LIST FEATURES)
     set(ENABLE_OPENCL ${STATIC_LINKAGE})
 else()
     set(OPTIONS "${OPTIONS} --disable-opencl")
+endif()
+
+set(ENABLE_OPENGL OFF)
+if("opengl" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-opengl")
+    set(ENABLE_OPENGL ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-opengl")
+endif()
+
+set(ENABLE_OPENH264 OFF)
+if("openh264" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopenh264")
+    set(ENABLE_OPENH264 ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopenh264")
+endif()
+
+set(ENABLE_OPENJPEG OFF)
+if("openjpeg" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopenjpeg")
+    set(ENABLE_OPENJPEG ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopenjpeg")
 endif()
 
 set(ENABLE_OPENSSL OFF)
@@ -297,6 +388,30 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libspeex")
 endif()
 
+set(ENABLE_SSH OFF)
+if("ssh" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libssh")
+    set(ENABLE_SSH ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libssh")
+endif()
+
+set(ENABLE_TENSORFLOW OFF)
+if("tensorflow" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libtensorflow")
+    set(ENABLE_TENSORFLOW ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libtensorflow")
+endif()
+
+set(ENABLE_TESSERACT OFF)
+if("tesseract" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libtesseract")
+    set(ENABLE_TESSERACT ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libtesseract")
+endif()
+
 set(ENABLE_THEORA OFF)
 if("theora" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libtheora")
@@ -329,6 +444,14 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libwavpack")
 endif()
 
+set(ENABLE_WEBP OFF)
+if("webp" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libwebp")
+    set(ENABLE_WEBP ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libwebp")
+endif()
+
 set(ENABLE_X264 OFF)
 if("x264" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libx264")
@@ -343,6 +466,14 @@ if("x265" IN_LIST FEATURES)
     set(ENABLE_X265 ${STATIC_LINKAGE})
 else()
     set(OPTIONS "${OPTIONS} --disable-libx265")
+endif()
+
+set(ENABLE_XML2 OFF)
+if("xml2" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libxml2")
+    set(ENABLE_XML2 ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libxml2")
 endif()
 
 set(ENABLE_ZLIB OFF)
@@ -462,7 +593,7 @@ endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
     file(GLOB DEF_FILES ${CURRENT_PACKAGES_DIR}/lib/*.def ${CURRENT_PACKAGES_DIR}/debug/lib/*.def)
-    
+
     if(NOT VCPKG_TARGET_IS_MINGW)
         if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
             set(LIB_MACHINE_ARG /machine:ARM)
@@ -490,7 +621,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
             )
         endforeach()
     endif()
-    
+
     file(GLOB EXP_FILES ${CURRENT_PACKAGES_DIR}/lib/*.exp ${CURRENT_PACKAGES_DIR}/debug/lib/*.exp)
     file(GLOB LIB_FILES ${CURRENT_PACKAGES_DIR}/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/bin/*${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
     if(VCPKG_TARGET_IS_MINGW)
@@ -523,7 +654,7 @@ vcpkg_copy_pdbs()
 if (VCPKG_TARGET_IS_WINDOWS)
     # Translate cygpath to local path
     set(CYGPATH_CMD "${MSYS_ROOT}/usr/bin/cygpath.exe" -w)
-    
+
     foreach(PKGCONFIG_PATH "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
         file(GLOB PKGCONFIG_FILES "${PKGCONFIG_PATH}/*.pc")
         foreach(PKGCONFIG_FILE IN LISTS PKGCONFIG_FILES)
@@ -552,7 +683,7 @@ if (VCPKG_TARGET_IS_WINDOWS)
             )
             string(REPLACE "\n" "" FIXED_INCLUDE_PATH "${FIXED_INCLUDE_PATH}")
             file(TO_CMAKE_PATH ${FIXED_INCLUDE_PATH} FIXED_INCLUDE_PATH)
-            
+
             vcpkg_replace_string("${PKGCONFIG_FILE}" "${prefix_cygpath}" "${FIXED_PREFIX_PATH}")
             vcpkg_replace_string("${PKGCONFIG_FILE}" "${libdir_cygpath}" "${FIXED_LIBDIR_PATH}")
             vcpkg_replace_string("${PKGCONFIG_FILE}" "${includedir_cygpath}" "${FIXED_INCLUDE_PATH}")
@@ -561,6 +692,62 @@ if (VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_fixup_pkgconfig()
+
+# Handle version strings
+
+function(extract_regex_from_file out)
+    cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "FILE;REGEX" "")
+    file(READ "${arg_FILE}" contents)
+    if (contents MATCHES "${arg_REGEX}")
+        if(NOT CMAKE_MATCH_COUNT EQUAL 1)
+            message(FATAL_ERROR "Could not identify match group in regular expression \"${arg_REGEX}\"")
+        endif()
+    else()
+        message(FATAL_ERROR "Could not find line matching \"${arg_REGEX}\" in file \"${arg_FILE}\"")
+    endif()
+    set("${out}" "${CMAKE_MATCH_1}" PARENT_SCOPE)
+endfunction()
+
+function(extract_version_from_component out)
+    cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "COMPONENT" "")
+    string(TOLOWER "${arg_COMPONENT}" component_lower)
+    string(TOUPPER "${arg_COMPONENT}" component_upper)
+    extract_regex_from_file(major_version
+        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        REGEX "#define ${component_upper}_VERSION_MAJOR[ ]+([0-9]+)"
+    )
+    extract_regex_from_file(minor_version
+        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        REGEX "#define ${component_upper}_VERSION_MINOR[ ]+([0-9]+)"
+    )
+    extract_regex_from_file(micro_version
+        FILE "${SOURCE_PATH}/${component_lower}/version.h"
+        REGEX "#define ${component_upper}_VERSION_MICRO[ ]+([0-9]+)"
+    )
+    set("${out}" "${major_version}.${minor_version}.${micro_version}" PARENT_SCOPE)
+endfunction()
+
+extract_regex_from_file(FFMPEG_VERSION
+    FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libavutil/ffversion.h"
+    REGEX "#define FFMPEG_VERSION[ ]+\"(.+)\""
+)
+
+extract_version_from_component(LIBAVUTIL_VERSION
+    COMPONENT libavutil)
+extract_version_from_component(LIBAVCODEC_VERSION
+    COMPONENT libavcodec)
+extract_version_from_component(LIBAVDEVICE_VERSION
+    COMPONENT libavdevice)
+extract_version_from_component(LIBAVFILTER_VERSION
+    COMPONENT libavfilter)
+extract_version_from_component( LIBAVFORMAT_VERSION
+    COMPONENT libavformat)
+extract_version_from_component(LIBAVRESAMPLE_VERSION
+    COMPONENT libavresample)
+extract_version_from_component(LIBSWRESAMPLE_VERSION
+    COMPONENT libswresample)
+extract_version_from_component(LIBSWSCALE_VERSION
+    COMPONENT libswscale)
 
 # Handle copyright
 file(STRINGS ${CURRENT_BUILDTREES_DIR}/build-${TARGET_TRIPLET}-rel-out.log LICENSE_STRING REGEX "License: .*" LIMIT_COUNT 1)

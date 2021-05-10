@@ -64,7 +64,7 @@ foreach(_feature IN LISTS ALL_SUPPORTED_FEATURES)
     endif()
 endforeach()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS ${_COMPONENTS})
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS FEATURES ${_COMPONENTS})
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

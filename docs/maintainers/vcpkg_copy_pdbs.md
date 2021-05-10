@@ -1,6 +1,6 @@
 # vcpkg_copy_pdbs
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_copy_pdbs.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_copy_pdbs.md).
 
 Automatically locate pdbs in the build tree and copy them adjacent to all DLLs.
 

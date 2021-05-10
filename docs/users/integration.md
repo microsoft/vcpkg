@@ -1,5 +1,7 @@
 ## Buildsystem Integration
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/integration.md).**
+
 Vcpkg offers many ways to integrate into your build so you can do what's right for your project. There are two main categories of integration:
 
 - [`integrate` command](#integrate)
@@ -7,7 +9,7 @@ Vcpkg offers many ways to integrate into your build so you can do what's right f
 
 Each integration style has heuristics to deduce the correct [triplet][]. This can be overridden using [a common method](#triplet-selection) based on your buildsystem.
 
-<a name="integrate"></a>
+<a name="integrate-command"></a>
 ### Integrate Command
 
 These link your project(s) to a specific copy of Vcpkg on your machine so any updates or new package installations will be instantly available for the next build of your project.
@@ -94,7 +96,7 @@ See your build system specific documentation for how to use prebuilt binaries.
 
 Generally, to run any produced executables you will also need to either copy the needed DLL files to the same folder as your executable or *prepend* the correct `bin\` directory to your path.
 
-<a name="export"></a>
+<a name="export-command"></a>
 ### Export Command
 This command creates a shrinkwrapped archive containing a specific set of libraries (and their dependencies) that can be quickly and reliably shared with build servers or other users in your organization.
 

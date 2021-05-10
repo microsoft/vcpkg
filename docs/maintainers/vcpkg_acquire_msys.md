@@ -1,6 +1,6 @@
 # vcpkg_acquire_msys
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_acquire_msys.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_acquire_msys.md).
 
 Download and prepare an MSYS2 instance.
 

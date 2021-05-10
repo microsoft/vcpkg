@@ -1,6 +1,6 @@
 # z_vcpkg_prettify_command_line
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/).
 
 **Only for internal use in vcpkg helpers. Behavior and arguments will change without notice.**
 Turn a command line into a formatted string.

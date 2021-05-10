@@ -20,12 +20,15 @@ class CMakeDocumentation {
     [String[]]$ActualDocumentation
     [Bool]$IsDeprecated
     [String]$DeprecationMessage
+    [String]$DeprecatedByName
+    [String]$DeprecatedByPath
     [Bool]$HasError
 }
 
 [String[]]$cmakeScriptsPorts = @(
     'vcpkg-cmake'
     'vcpkg-cmake-config'
+    'vcpkg-pkgconfig-get-modules'
 )
 
 [CMakeDocumentation[]]$tableOfContents = @()
@@ -110,16 +113,26 @@ function FinalDocFile
     $documentation += $Docs.ActualDocumentation[0] # name line
     if ($Docs.IsDeprecated)
     {
-        if ($null -eq $Docs.DeprecationMessage)
+        if ($null -eq $Docs.DeprecationMessage -or $Docs.DeprecationMessage -match '^ *$')
         {
-            $documentation += @("", "**This function has been deprecated**")
+            if(![string]::IsNullOrEmpty($Docs.DeprecatedByName))
+            {
+                $message = " in favor of [``$($Docs.DeprecatedByName)``]($($Docs.DeprecatedByPath)$($Docs.DeprecatedByName).md)"
+                $Docs.DeprecatedByPath -match '^ports/([a-z\-]+)/$' | Out-Null
+                $port = $matches[1]
+                if(![string]::IsNullOrEmpty($port))
+                {
+                    $message += " from the $port port."
+                }
+            }
+            $documentation += @("", "**This function has been deprecated$message**")
         }
         else
         {
             $documentation += @("", "**This function has been deprecated $($Docs.DeprecationMessage)**")
         }
     }
-    $documentation += @("", "The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/$PathToFile).")
+    $documentation += @("", "The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/$PathToFile).")
 
     $documentation += $Docs.ActualDocumentation[1..$Docs.ActualDocumentation.Length]
 
@@ -152,10 +165,12 @@ function ParseCmakeDocComment
     {
         $Docs.IsDeprecated = $True
     }
-    elseif($contents[0] -match '^# DEPRECATED: (.*)$')
+    elseif($contents[0] -match '^# DEPRECATED( BY (([^/]+/)+)(.+))?((: *)(.*))?$')
     {
         $Docs.IsDeprecated = $True
-        $Docs.DeprecationMessage = $matches[1]
+        $Docs.DeprecatedByPath = $matches[2]
+        $Docs.DeprecatedByName = $matches[4]
+        $Docs.DeprecationMessage = $matches[7]
     }
 
     [String]$startCommentRegex = '#\[(=*)\['
@@ -291,29 +306,32 @@ $portfileFunctionsContent = @(
     '',
     '# Portfile helper functions')
 
+function GetDeprecationMessage
+{
+    Param(
+        [CMakeDocumentation]$Doc
+    )
+    if ($Doc.IsDeprecated)
+    {
+        $message = " (deprecated"
+        if(![string]::IsNullOrEmpty($Doc.DeprecatedByName))
+        {
+            $message += ", use [$($($Doc.DeprecatedByName) -replace '_','\_')]($($Doc.DeprecatedByPath)$($Doc.DeprecatedByName).md)"
+        }
+        $message += ")"
+    }
+    $message
+}
+
 $DocsName = @{ expression = { Split-Path -LeafBase $_.Filename } }
 $tableOfContents | Sort-Object -Property $DocsName -Culture '' | ForEach-Object {
     $name = Split-Path -LeafBase $_.Filename
-    if ($_.IsDeprecated)
-    {
-        $portfileFunctionsContent += "- [$($name -replace '_','\_')]($name.md) (deprecated)"
-    }
-    else
-    {
-        $portfileFunctionsContent += "- [$($name -replace '_','\_')]($name.md)"
-    }
+    $portfileFunctionsContent += "- [$($name -replace '_','\_')]($name.md)" + $(GetDeprecationMessage $_)
 }
 $portfileFunctionsContent += @("", "## Internal Functions", "")
 $internalTableOfContents | Sort-Object -Property $DocsName -Culture '' | ForEach-Object {
     $name = Split-Path -LeafBase $_.Filename
-    if ($_.IsDeprecated)
-    {
-        $portfileFunctionsContent += "- [$($name -replace '_','\_')](internal/$name.md) (deprecated)"
-    }
-    else
-    {
-        $portfileFunctionsContent += "- [$($name -replace '_','\_')](internal/$name.md)"
-    }
+    $portfileFunctionsContent += "- [$($name -replace '_','\_')](internal/$name.md)" + $(GetDeprecationMessage $_)
 }
 
 $portfileFunctionsContent += @("", "## Scripts from Ports")
@@ -323,14 +341,7 @@ $portTableOfContents.GetEnumerator() | ForEach-Object {
     $portfileFunctionsContent += @("", "### [$portName](ports/$portName.md)", "")
     $cmakeDocs | ForEach-Object {
         $name = Split-Path -LeafBase $_.Filename
-        if ($_.IsDeprecated)
-        {
-            $portfileFunctionsContent += "- [$($name -replace '_','\_')](ports/$portName/$name.md) (deprecated)"
-        }
-        else
-        {
-            $portfileFunctionsContent += "- [$($name -replace '_','\_')](ports/$portName/$name.md)"
-        }
+        $portfileFunctionsContent += "- [$($name -replace '_','\_')](ports/$portName/$name.md)" + $(GetDeprecationMessage $_)
     }
 }
 

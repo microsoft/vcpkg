@@ -1,6 +1,6 @@
 # vcpkg_cmake_install
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/ports/vcpkg-cmake/vcpkg_cmake_install.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/ports/vcpkg-cmake/vcpkg_cmake_install.md).
 
 Build and install a cmake project.
 

@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         0001-remove-ifndef-NOUNCRYPT.patch
         0002-add-declaration-for-mkdir.patch
+        0003-no-io64.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -24,9 +25,9 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DDISABLE_INSTALL_TOOLS=${VCPKG_TARGET_IS_IOS}
     OPTIONS_DEBUG
         -DDISABLE_INSTALL_HEADERS=ON
-        -DDISABLE_INSTALL_TOOLS=ON
 )
 
 vcpkg_install_cmake()

@@ -1,6 +1,6 @@
 # vcpkg_copy_tools
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_copy_tools.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_copy_tools.md).
 
 Copy tools and all their DLL dependencies into the `tools` folder.
 
@@ -9,6 +9,7 @@ Copy tools and all their DLL dependencies into the `tools` folder.
 vcpkg_copy_tools(
     TOOL_NAMES <tool1>...
     [SEARCH_DIR <${CURRENT_PACKAGES_DIR}/bin>]
+    [DESTINATION <${CURRENT_PACKAGES_DIR}/tools/${PORT}>]
     [AUTO_CLEAN]
 )
 ```
@@ -17,7 +18,10 @@ vcpkg_copy_tools(
 A list of tool filenames without extension.
 
 ### SEARCH_DIR
-The path to the directory containing the tools. This will be set to `${CURRENT_PACKAGES_DIR}/bin` if ommited.
+The path to the directory containing the tools. This will be set to `${CURRENT_PACKAGES_DIR}/bin` if omitted.
+
+### DESTINATION
+Destination to copy the tools to. This will be set to `${CURRENT_PACKAGES_DIR}/tools/${PORT}` if omitted.
 
 ### AUTO_CLEAN
 Auto clean executables in `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.

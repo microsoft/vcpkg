@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.9)
 project(libass C CXX)
 
-set(LIBASS_VERSION 0.15.0)
+set(LIBASS_VERSION 0.15.1)
 
 configure_file (${CMAKE_CURRENT_SOURCE_DIR}/config.h.in config.h)
 

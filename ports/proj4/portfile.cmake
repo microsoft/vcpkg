@@ -38,25 +38,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 if ("database" IN_LIST FEATURES)
-    if (VCPKG_TARGET_IS_WINDOWS)
-        set(BIN_SUFFIX .exe)
-        if (EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/sqlite3.exe)
-            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows/tools)
-        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows-static/tools/sqlite3.exe)
-            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows-static/tools)
-        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows/tools/sqlite3.exe AND (NOT CMAKE_HOST_SYSTEM_PROCESSOR OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64"))
-            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows/tools)
-        elseif (EXISTS ${CURRENT_INSTALLED_DIR}/../x64-windows-static/tools/sqlite3.exe AND (NOT CMAKE_HOST_SYSTEM_PROCESSOR OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64"))
-            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/../x64-windows-static/tools)
-        elseif (NOT TRIPLET_SYSTEM_ARCH STREQUAL "arm" AND EXISTS ${CURRENT_INSTALLED_DIR}/tools/sqlite3.exe)
-            set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/tools)
-        else()
-            message(FATAL_ERROR "Proj4 database need to install sqlite3[tool]:x86-windows first.")
-        endif()
-    else()
-        set(BIN_SUFFIX)
-        set(SQLITE3_BIN_PATH ${CURRENT_INSTALLED_DIR}/tools)
-    endif()
+    set(EXE_SQLITE3 ${CURRENT_HOST_INSTALLED_DIR}/tools/sqlite3${VCPKG_HOST_EXECUTABLE_SUFFIX})
 endif()
 
 vcpkg_configure_cmake(
@@ -67,7 +49,7 @@ vcpkg_configure_cmake(
     -DPROJ_INCLUDE_SUBDIR=include
     -DPROJ_DATA_SUBDIR=share/${PORT}
     -DBUILD_TESTING=OFF
-    -DEXE_SQLITE3=${SQLITE3_BIN_PATH}/sqlite3${BIN_SUFFIX}
+    -DEXE_SQLITE3=${EXE_SQLITE3}
 )
 
 vcpkg_install_cmake()
@@ -80,3 +62,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_copy_pdbs()

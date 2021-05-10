@@ -1,6 +1,6 @@
 # vcpkg_buildpath_length_warning
 
-The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/maintainers/vcpkg_buildpath_length_warning.md).
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_buildpath_length_warning.md).
 
 Warns the user if their vcpkg installation path might be too long for the package they're installing.
 

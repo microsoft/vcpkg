@@ -1,7 +1,7 @@
 #[===[.md:
 # vcpkg_common_definitions
 
-This file defines the following variabls which are commonly needed or used in portfiles:
+This file defines the following variables which are commonly needed or used in portfiles:
 
 ```cmake
 VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD, OPENBSD. only defined if <target>
@@ -18,6 +18,11 @@ VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX       import library suffix for target (same 
 VCPKG_FIND_LIBRARY_PREFIXES              target dependent prefixes used for find_library calls in portfiles
 VCPKG_FIND_LIBRARY_SUFFIXES              target dependent suffixes used for find_library calls in portfiles
 VCPKG_SYSTEM_LIBRARIES                   list of libraries are provide by the toolchain and are not managed by vcpkg
+TARGET_TRIPLET                           the name of the current triplet to build for
+CURRENT_INSTALLED_DIR                    the absolute path to the installed files for the current triplet
+HOST_TRIPLET                             the name of the triplet corresponding to the host
+CURRENT_HOST_INSTALLED_DIR               the absolute path to the installed files for the host triplet
+VCPKG_CROSSCOMPILING                     Whether vcpkg is cross-compiling: in other words, whether TARGET_TRIPLET and HOST_TRIPLET are different
 ```
 
 CMAKE_STATIC_LIBRARY_(PREFIX|SUFFIX), CMAKE_SHARED_LIBRARY_(PREFIX|SUFFIX) and CMAKE_IMPORT_LIBRARY_(PREFIX|SUFFIX) are defined for the target
@@ -25,6 +30,7 @@ Furthermore the variables CMAKE_FIND_LIBRARY_(PREFIXES|SUFFIXES) are also define
 portfiles are able to use find_library calls to discover dependent libraries within the current triplet for ports.
 #]===]
 
+string(COMPARE NOTEQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" VCPKG_CROSSCOMPILING)
 #Helper variable to identify the Target system. VCPKG_TARGET_IS_<targetname>
 if (NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "")
     set(VCPKG_TARGET_IS_WINDOWS ON)

@@ -124,7 +124,7 @@ vcpkg (2020.11.01)
     - [(#13488)](https://github.com/microsoft/vcpkg/pull/13488) [vcpkg manifest] Add documentation! (by @strega-nil)
 - [Packaging Github Repos Example: libogg](docs/examples/packaging-github-repos.md)
     - [(#13488)](https://github.com/microsoft/vcpkg/pull/13488) [vcpkg manifest] Add documentation! (by @strega-nil)
-- [Quick Start](docs/index.md)
+- [Quick Start](docs/README.md)
     - [(#13488)](https://github.com/microsoft/vcpkg/pull/13488) [vcpkg manifest] Add documentation! (by @strega-nil)
 - [Manifest files - `vcpkg.json`](docs/maintainers/manifest-files.md)***[NEW]***
     - [(#13488)](https://github.com/microsoft/vcpkg/pull/13488) [vcpkg manifest] Add documentation! (by @strega-nil)
@@ -6983,7 +6983,7 @@ vcpkg (2019.08.31)
       - [(#7950)](https://github.com/microsoft/vcpkg/pull/7950) [vcpkg install] Enable Download Mode ⏬
 
 #### The following documentation has been updated:
-- [Index](docs/index.md)
+- [Index](docs/README.md)
     - [(#7506)](https://github.com/microsoft/vcpkg/pull/7506) Update tests, and add documentation!
     - [(#7821)](https://github.com/microsoft/vcpkg/pull/7821) [vcpkg docs] More tool maintainer docs! 🐱‍👤
 - [Tool maintainers: Testing](docs/tool-maintainers/testing.md) ***[NEW]***
@@ -8432,7 +8432,7 @@ vcpkg (2019.6.30)
 - [CONTROL files](docs/maintainers/control-files.md#Homepage)
     - [(#6844)](https://github.com/Microsoft/vcpkg/pull/6844) [vcpkg] Add optional 'Homepage' field to CONTROL
     - [(#6871)](https://github.com/Microsoft/vcpkg/pull/6871) [docs] Add maintainer guidelines
-- [index](docs/index.md)
+- [index](docs/README.md)
     - [(#6871)](https://github.com/Microsoft/vcpkg/pull/6871) [docs] Add maintainer guidelines
 - [Portfile helper functions](docs/maintainers/portfile-functions.md)
     - [(#7039)](https://github.com/Microsoft/vcpkg/pull/7039) [docs]Update cmake docs
