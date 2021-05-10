@@ -328,7 +328,6 @@ endforeach()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(GLOB_RECURSE _bin_files "${CURRENT_PACKAGES_DIR}/bin/*")
-
     if(NOT _bin_files) # Only clean if empty otherwise let vcpkg throw and error. 
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/" "${CURRENT_PACKAGES_DIR}/debug/bin/")
     endif()
@@ -373,3 +372,9 @@ string(REPLACE [[set(QT6_HOST_INFO_BINDIR "bin")]] [[set(QT6_HOST_INFO_BINDIR "t
 #string(REPLACE [[set(QT6_HOST_INFO_ARCHDATADIR ".")]] [[set(QT6_HOST_INFO_ARCHDATADIR "share/qt6")]] _contents "${_contents}")
 #string(REPLACE [[set(QT6_HOST_INFO_DATADIR ".")]] [[set(QT6_HOST_INFO_DATADIR "share/qt6")]] _contents "${_contents}")
 file(WRITE "${hostinfofile}" "${_contents}")
+set(coretools "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreTools.cmake")
+if(EXISTS "${coretools}")
+    file(READ "${coretools}" _contents)
+    string(REPLACE [[ "${_IMPORT_PREFIX}/tools/qt6/bin/qmake.exe"]] [["${_IMPORT_PREFIX}/tools/qt6/bin/qmake.debug.bat"]] _contents "${_contents}")
+    file(WRITE "${coretools}" "${_contents}")
+endif()
