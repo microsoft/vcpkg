@@ -17,10 +17,11 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS_DEBUG
-    -DDISABLE_INSTALL_HEADERS=ON
-    -DDISABLE_INSTALL_TOOLS=ON
-    -DDDISABLE_INSTALL_EXAMPLES=ON
+        -DDISABLE_INSTALL_HEADERS=ON
+        -DDISABLE_INSTALL_TOOLS=ON
+        -DDDISABLE_INSTALL_EXAMPLES=ON
 )
 
 vcpkg_install_cmake()
@@ -29,4 +30,4 @@ vcpkg_copy_pdbs()
 # Moves all .cmake files from /debug/share/lodepng/ to /share/lodepng/
 vcpkg_fixup_cmake_targets()
 
-file(INSTALL ${SOURCE_PATH}/lodepng.h DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/lodepng.h" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

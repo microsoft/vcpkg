@@ -1,0 +1,20 @@
+{
+  "name": "forge",
+  "version-semver": "1.0.5",
+  "port-version": 1,
+  "description": "Helps with high performance visualizations involving OpenGL-CUDA/OpenCL interop.",
+  "homepage": "https://github.com/arrayfire/forge",
+  "supports": "x64",
+  "dependencies": [
+    "boost-functional",
+    {
+      "name": "fontconfig",
+      "platform": "!windows"
+    },
+    "freeimage",
+    "freetype",
+    "glbinding",
+    "glfw3",
+    "glm"
+  ]
+}

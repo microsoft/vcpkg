@@ -2,7 +2,7 @@
 
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_fixup_pkgconfig.md).
 
-Fix common paths in *.pc files and make everything relativ to $(prefix)
+Fix common paths in *.pc files and make everything relative to $(prefix)
 
 ## Usage
 ```cmake

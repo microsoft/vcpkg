@@ -88,6 +88,11 @@ if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
             "/p:ForceImportBeforeCppTargets=${SOURCE_PATH}/PCbuild/python_vcpkg.props"
         )
     endif()
+    string(REPLACE "\\" "" WindowsSDKVersion "$ENV{WindowsSDKVersion}")
+    list(APPEND OPTIONS
+        "/p:WindowsTargetPlatformVersion=${WindowsSDKVersion}"
+        "/p:DefaultWindowsSDKVersion=${WindowsSDKVersion}"
+    )
     if(VCPKG_TARGET_IS_UWP)
         list(APPEND OPTIONS "/p:IncludeUwp=true")
     else()
