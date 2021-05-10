@@ -1,38 +1,24 @@
-set(CAIRO_VERSION 1.16.0)
+set(CAIRO_VERSION 1.17.4)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://www.cairographics.org/releases/cairo-${CAIRO_VERSION}.tar.xz"
-    FILENAME "cairo-${CAIRO_VERSION}.tar.xz"
-    SHA512 9eb27c4cf01c0b8b56f2e15e651f6d4e52c99d0005875546405b64f1132aed12fbf84727273f493d84056a13105e065009d89e94a8bfaf2be2649e232b82377f
-)
-
-if(NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_IS_WINDOWS)
-    set(PATCHES win_dll_def.patch)
-endif()
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${CAIRO_VERSION}
-    PATCHES
-        export-only-in-shared-build.patch
-        0001_fix_osx_defined.patch
-        build2.patch
-        remove_test_perf.patch
-        ${PATCHES}
+    REPO cairo/cairo
+    REF 156cd3eaaebfd8635517c2baf61fcf3627ff7ec2 #v1.17.4
+    SHA512 2c516ad3ffe56cf646b2435d6ef3cf25e8c05aeb13d95dd18a7d0510d134d9990cba1b376063352ff99483cfc4e5d2af849afd2f9538f9136f22d44d34be362c
+    HEAD_REF master
 )
 
-#TODO the autoconf script has a lot of additional option which use auto detection and should be disabled!
 if("fontconfig" IN_LIST FEATURES)
-    list(APPEND OPTIONS --enable-fc=yes)
+    list(APPEND OPTIONS -Dfontconfig=enabled)
 else()
-    list(APPEND OPTIONS --enable-fc=no)
+    list(APPEND OPTIONS -Dfontconfig=disabled)
 endif()
 
 if("freetype" IN_LIST FEATURES)
-    list(APPEND OPTIONS --enable-ft=yes)
+    list(APPEND OPTIONS -Dfreetype=enabled)
 else()
-    list(APPEND OPTIONS --enable-ft=no)
+    list(APPEND OPTIONS -Dfreetype=disabled)
 endif()
 
 if ("x11" IN_LIST FEATURES)
@@ -40,34 +26,37 @@ if ("x11" IN_LIST FEATURES)
         message(FATAL_ERROR "Feature x11 only support UNIX.")
     endif()
     message(WARNING "You will need to install Xorg dependencies to use feature x11:\napt install libx11-dev libxft-dev\n")
-    list(APPEND OPTIONS --with-x --enable-xlib=yes)
+    list(APPEND OPTIONS -Dxlib=enabled)
 else()
-    list(APPEND OPTIONS --enable-xlib=no)
+    list(APPEND OPTIONS -Dxlib=disabled)
 endif()
+list(APPEND OPTIONS -Dxcb=disabled)
+list(APPEND OPTIONS -Dxlib-xcb=disabled)
 
 if("gobject" IN_LIST FEATURES)
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         message(FATAL_ERROR "Feature gobject currently only supports dynamic build.")
     endif()
-    list(APPEND OPTIONS --enable-gobject=yes)
+    list(APPEND OPTIONS -Dglib=enabled)
 else()
-    list(APPEND OPTIONS --enable-gobject=no)
+    list(APPEND OPTIONS -Dglib=disabled)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     set(ENV{CPP} "cl_cpp_wrapper")
 endif()
 
-vcpkg_configure_make(
+vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
-    AUTOCONFIG
     OPTIONS ${OPTIONS}
-        ax_cv_c_float_words_bigendian=no
-        ac_cv_lib_z_compress=yes
-        ac_cv_lib_lzo2_lzo2a_decompress=yes
-        lt_cv_deplibs_check_method=pass_all
+            -Dtests=disabled
+            -Dzlib=enabled
+            -Dpng=enabled
+            -Dspectre=auto
+            -Dsymbol-lookup=disabled
+            -Dgtk2-utils=disabled
 )
-vcpkg_install_make()
+vcpkg_install_meson()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
@@ -80,28 +69,19 @@ else()
 endif()
 file(WRITE ${_file} "${CAIRO_H}")
 
-
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 vcpkg_copy_pdbs()
-
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(ZLINK "-lzlibd")
-else()
-    set(ZLINK "-lz")
-endif()
-set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/cairo-script.pc")
-if(EXISTS "${_file}")
-    vcpkg_replace_string("${_file}" "Libs: ${ZLINK}" "Requires.private: lzo2 zlib\nLibs: -L\${libdir} -lcairo-script-interpreter")
-    file(INSTALL "${_file}" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/" RENAME cairo-script-interpreter.pc) #normally the *.pc file is named like the library
-endif()
-if(VCPKG_TARGET_IS_WINDOWS)
-    set(ZLINK "-lzlib")
-endif()
-set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/cairo-script.pc")
-if(EXISTS "${_file}")
-    vcpkg_replace_string("${_file}" "Libs: ${ZLINK}" "Requires.private: lzo2 zlib\nLibs: -L\${libdir} -lcairo-script-interpreter")
-    file(INSTALL "${_file}" DESTINATION "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/" RENAME cairo-script-interpreter.pc) #normally the *.pc file is named like the library
-endif()
 vcpkg_fixup_pkgconfig()
+
+#TODO: Fix script 
+#set(TOOLS)
+#if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cairo-trace${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
+#    list(APPEND TOOLS cairo-trace) # sh script which needs to be fixed due to absolute paths in it. 
+#endif()
+#vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
