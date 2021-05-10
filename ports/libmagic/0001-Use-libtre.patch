@@ -18,7 +18,7 @@ index 02eac8f..b05c334 100644
  fi
  if test "$MINGW" = 1; then
 -  AC_CHECK_LIB(gnurx,regexec,,AC_MSG_ERROR([libgnurx is required to build file(1) with MinGW]))
-+  AC_CHECK_LIB(tre,tre_regexec,,AC_MSG_ERROR([libtre is required to build file(1) with MinGW]))
++  AC_SEARCH_LIBS(tre_regexec,tre,,AC_MSG_ERROR([libtre is required to build file(1) with MinGW]))
  fi
  
  dnl See if we are cross-compiling
