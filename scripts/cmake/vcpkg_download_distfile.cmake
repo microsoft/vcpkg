@@ -198,7 +198,7 @@ function(vcpkg_download_distfile VAR)
                 "       Workaround is open Windows 10 Settings App, and search for Proxy Configuration page,\n"
                 "       Change `http=address:port;https=address:port` to `address`, and fill the port number.\n"
                 "    \n"
-                "    3. You proxy remote server is out of service.\n"
+                "    3. You proxy's remote server is out of service.\n"
                 "    \n"
                 "    In future vcpkg releases, if you are using Windows, you no longer need to set\n"
                 "    HTTP(S)_PROXY environment variables. Vcpkg will simply apply Windows IE Proxy\n"
