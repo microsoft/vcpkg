@@ -82,7 +82,7 @@ if(VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6ToolsToolsTargets-debug.cmake")
+set(configfile "${CURRENT_PACKAGES_DIR}/share/Qt6ToolsTools/Qt6ToolsToolsTargets-debug.cmake")
 if(EXISTS "${configfile}" AND EXISTS "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/windeployqt.exe")
     file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/windeployqt.debug.bat" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt6/bin")
     file(READ "${configfile}" _contents)
