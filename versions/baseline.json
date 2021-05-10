@@ -3780,7 +3780,7 @@
       "baseline": "1.18.0",
       "port-version": 0
     },
-    "lyra2fileencryptor": {
+    "lyra2-file-encryptor": {
       "baseline": "1.2.0",
       "port-version": 0
     },
