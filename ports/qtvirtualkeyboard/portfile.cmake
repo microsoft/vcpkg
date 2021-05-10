@@ -1,9 +1,7 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-if(QT_IS_LATEST)
-    set(${PORT}_PATCHES hunspell_include_path_fix.patch)
-endif()
+set(${PORT}_PATCHES hunspell_include_path_fix.patch)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     INVERTED_FEATURES
