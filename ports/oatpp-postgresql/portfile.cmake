@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF ${OATPP_VERSION}
     SHA512 43381422224f0254a823fdc702d1a007c405930157e6ea361f51e5232df4b04073181de175f61ab4986f3468d21f9ac25a0820d14efcecb0afb0096bdd674dcb
     HEAD_REF master
+    PATCHES
+        fix-windows-build.patch # see https://github.com/oatpp/oatpp-postgresql/pull/8
 )
 
 set(VCPKG_C_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")
