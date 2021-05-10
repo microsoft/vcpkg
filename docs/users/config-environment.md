@@ -16,8 +16,9 @@ subject to change without notice and should be considered highly unstable.
 
 Non-exhaustive list of off-by-default features:
 
-- `binarycaching`
 - `manifest`
+- `versions`
+- `registries`
 
 #### EDITOR
 
@@ -48,7 +49,7 @@ This environment variable can be set to a triplet name which will be used for un
 
 This environment variable allows users to override ports with alternate versions according to the
 [ports overlay](../specifications/ports-overlay.md) specification. List paths to overlays using
-the platform dependent PATH seperator (Windows `;` | others `:`)
+the platform dependent PATH separator (Windows `;` | others `:`)
 
 Example (Windows): `C:\custom-ports\boost;C:\custom-ports\sqlite3`
 
@@ -56,7 +57,7 @@ Example (Windows): `C:\custom-ports\boost;C:\custom-ports\sqlite3`
 
 This environment variable allows users to add directories to search for triplets.
 [Example: overlay triplets](../examples/overlay-triplets-linux-dynamic.md).
-List paths to overlays using the platform dependent PATH seperator (Windows `;`, others `:`)
+List paths to overlays using the platform dependent PATH separator (Windows `;`, others `:`)
 
 #### VCPKG_FORCE_SYSTEM_BINARIES
 
