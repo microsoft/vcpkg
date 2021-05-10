@@ -10,6 +10,11 @@
       "features": [
         "testlib"
       ]
+    },
+    {
+      "name": "qtdeclarative",
+      "host": true,
+      "default-features": false
     }
   ]
 }
