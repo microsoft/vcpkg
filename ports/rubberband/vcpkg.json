@@ -1,0 +1,9 @@
+{
+  "name": "rubberband",
+  "version": "1.9.1",
+  "description": "High quality software library for audio time-stretching and pitch-shifting.",
+  "homepage": "https://www.breakfastquay.com/rubberband/",
+  "dependencies": [
+    "kissfft"
+  ]
+}
