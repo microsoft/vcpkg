@@ -1,11 +1,11 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.2.5")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-postgresql
-    REF 349d610084375c46be95d50ce10b787ae6c2baf4 # 1.2.0
+    REF ${OATPP_VERSION}
     SHA512 2faa688077020bbe64807be85d8d61e5aa84163a044d42df0a3b1701cf82048ff0322acb72d4e757a38403e14cba6a7a766daa965862e04756e483d9b750a365
     HEAD_REF master
 )

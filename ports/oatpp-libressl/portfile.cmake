@@ -1,4 +1,4 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.2.5")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
@@ -6,7 +6,7 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-libressl
-    REF cd2e9a515131e5e7dc043c591e952e12cd63db2c # 1.2.0
+    REF ${OATPP_VERSION}
     SHA512 e6d208edddff5373c07887b76fc808733bd363c340e740047ae90317874b73a5ef71e5cbbb0f9b1b48632c7a78709858a5ff0de81bc39207961e3642c0104010
     HEAD_REF master
     PATCHES "libress-submodule-downgrade-required-libressl-version.patch"
