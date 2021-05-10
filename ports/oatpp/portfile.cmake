@@ -8,6 +8,8 @@ vcpkg_from_github(
     REF ${OATPP_VERSION}
     SHA512 8c7c939860c02ade86234e46f907051b088c07d6975cf90190c9263bb7fd8081a7aaccd3e08bfe8a962c07ae39ff771cf17099a48812ecc69df20272a856d0ed
     HEAD_REF master
+    PATCHES
+        fix-windows-build.patch # see https://github.com/oatpp/oatpp/pull/428
 )
 
 vcpkg_configure_cmake(
