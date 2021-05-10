@@ -194,7 +194,7 @@ function(vcpkg_download_distfile VAR)
                 "       HTTP_PROXY and HTTPS_PROXY instead.\n"
                 "    \n"
                 "    2. You are using Fiddler. Currently a bug (https://github.com/microsoft/vcpkg/issues/17752)\n"
-                "    will set HTTPS_PROXY to `https://fiddler_address:port` which lead to problem 1 above.\n"
+                "       will set HTTPS_PROXY to `https://fiddler_address:port` which lead to problem 1 above.\n"
                 "    \n"
                 "    3. You proxy remote server is out of service.\n"
                 "    \n"
