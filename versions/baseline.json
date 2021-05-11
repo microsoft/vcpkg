@@ -1733,8 +1733,8 @@
       "port-version": 0
     },
     "duilib": {
-      "baseline": "2019-4-28-2",
-      "port-version": 0
+      "baseline": "2019-4-28",
+      "port-version": 4
     },
     "duktape": {
       "baseline": "2.5.0",
