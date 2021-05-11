@@ -183,8 +183,7 @@ function(vcpkg_download_distfile VAR)
             if (NOT download_success)
                 message(FATAL_ERROR
                 "    \n"
-                "    Failed to download file.\n" 
-                "    \n"
+                "    Failed to download file.\n"  
                 "    If you use a proxy, please check your proxy setting. Possible causes are:\n"
                 "    \n"
                 "    1. You are actually using an HTTP proxy, but setting HTTPS_PROXY variable\n"
