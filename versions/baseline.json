@@ -10,7 +10,7 @@
     },
     "abseil": {
       "baseline": "2021-03-24",
-      "port-version": 0
+      "port-version": 1
     },
     "absent": {
       "baseline": "0.3.1",
@@ -54,7 +54,7 @@
     },
     "allegro5": {
       "baseline": "5.2.6.0",
-      "port-version": 0
+      "port-version": 1
     },
     "ampl-asl": {
       "baseline": "2020-11-11",
@@ -1041,7 +1041,7 @@
       "port-version": 0
     },
     "brynet": {
-      "baseline": "1.10.0",
+      "baseline": "1.11.0",
       "port-version": 0
     },
     "bullet3": {
@@ -1561,7 +1561,7 @@
       "port-version": 0
     },
     "d3dx12": {
-      "baseline": "may2020",
+      "baseline": "may2021",
       "port-version": 0
     },
     "darknet": {
@@ -2389,8 +2389,8 @@
       "port-version": 0
     },
     "gtest": {
-      "baseline": "1.10.0",
-      "port-version": 4
+      "baseline": "2021-05-07",
+      "port-version": 0
     },
     "gtk": {
       "baseline": "4.3.0",
@@ -4933,7 +4933,7 @@
       "port-version": 0
     },
     "protopuf": {
-      "baseline": "1.0.1",
+      "baseline": "2.0.0",
       "port-version": 0
     },
     "protozero": {
