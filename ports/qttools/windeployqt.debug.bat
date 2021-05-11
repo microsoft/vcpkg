@@ -1,3 +1,4 @@
+@echo off
 setlocal
 set mypath=%~dp0
 set mypath=%mypath:~0,-1%
