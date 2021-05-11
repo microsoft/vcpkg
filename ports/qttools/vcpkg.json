@@ -11,7 +11,12 @@
         "network"
       ]
     },
-    "qtdeclarative"
+    "qtdeclarative",
+    {
+      "name": "qttools",
+      "host": true,
+      "default-features": false
+    }
   ],
   "features": {
     "qdoc": {

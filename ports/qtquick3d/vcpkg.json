@@ -9,6 +9,11 @@
       "default-features": false
     },
     "qtdeclarative",
+    {
+      "name": "qtquick3d",
+      "host": true,
+      "default-features": false
+    },
     "qtshadertools"
   ],
   "default-features": [
