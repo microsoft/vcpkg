@@ -2049,8 +2049,8 @@
       "port-version": 0
     },
     "forge": {
-      "baseline": "1.0.5",
-      "port-version": 1
+      "baseline": "1.0.7",
+      "port-version": 0
     },
     "fp16": {
       "baseline": "2021-02-21",
