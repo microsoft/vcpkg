@@ -10,6 +10,11 @@
     },
     "qtdeclarative",
     {
+      "name": "qtscxml",
+      "host": true,
+      "default-features": false
+    },
+    {
       "name": "qttools",
       "default-features": false
     }
