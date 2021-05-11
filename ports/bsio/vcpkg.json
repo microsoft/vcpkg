@@ -1,6 +1,6 @@
 {
   "name": "bsio",
-  "version-string": "1.0.0",
+  "version": "1.0.0",
   "description": "networking library, ans support HTTP/WebSocket, based on asio.",
   "homepage": "https://github.com/IronsDu/bsio",
   "dependencies": [
