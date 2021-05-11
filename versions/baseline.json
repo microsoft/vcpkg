@@ -4981,7 +4981,7 @@
       "port-version": 0
     },
     "python2": {
-      "baseline": "2.7.15-2",
+      "baseline": "2.7.18",
       "port-version": 0
     },
     "python3": {
