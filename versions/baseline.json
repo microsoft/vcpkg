@@ -558,7 +558,7 @@
     },
     "boost-dynamic-bitset": {
       "baseline": "1.75.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-endian": {
       "baseline": "1.75.0",
