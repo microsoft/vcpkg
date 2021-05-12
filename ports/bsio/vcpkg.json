@@ -6,8 +6,8 @@
   "dependencies": [
     "asio",
     {
-   		"name": "vcpkg-cmake",
-      	"host": true
+      "name": "vcpkg-cmake",
+      "host": true
     }
   ]
 }
