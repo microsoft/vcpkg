@@ -2,7 +2,7 @@
   "name": "bsio",
   "version": "1.0.0",
   "description": "networking library, ans support HTTP/WebSocket, based on asio.",
-  "homepage": "https://github.com/IronsDu/bsio",
+  "homepage": "https://github.com/ArkNX/bsio",
   "dependencies": [
     "asio",
     {
