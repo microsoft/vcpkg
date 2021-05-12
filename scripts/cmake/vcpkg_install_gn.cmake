@@ -41,7 +41,7 @@ function(z_vcpkg_install_gn_get_target_type out_var)
 endfunction()
 
 function(z_vcpkg_install_gn_get_desc out_var)
-    cmake_parse_arguments(PARSE_ARGV 1 "" "SOURCE_PATH;BUILD_DIR;TARGET;WHAT_TO_DISPLAY" "")
+    cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "SOURCE_PATH;BUILD_DIR;TARGET;WHAT_TO_DISPLAY" "")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Internal error: get_desc was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
