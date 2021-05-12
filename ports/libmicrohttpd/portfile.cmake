@@ -38,6 +38,8 @@ else()
     endif()
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
+        OPTIONS
+            --with-gnutls=no
     )
 
     vcpkg_install_make()
