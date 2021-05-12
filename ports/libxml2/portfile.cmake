@@ -15,12 +15,6 @@ else()
     set(ENABLE_NETWORK 1)
 endif()
 
-x_vcpkg_pkgconfig_get_modules(
-    PREFIX PKGFCONFIG
-    MODULES liblzma zlib
-    LIBS
-)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -28,10 +22,7 @@ vcpkg_configure_cmake(
         -DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
         -DWITH_HTTP=${ENABLE_NETWORK}
         -DWITH_FTP=${ENABLE_NETWORK}
-    OPTIONS_RELEASE
-        "-DLIBS=${PKGFCONFIG_LIBS_RELEASE}"
     OPTIONS_DEBUG
-        "-DLIBS=${PKGFCONFIG_LIBS_DEBUG}"
         -DINSTALL_HEADERS=OFF
 )
 
@@ -43,6 +34,10 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libxml-2.0.pc" "-lxml2" "-llibxml2")
 endif ()
+if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libxml-2.0.pc" "\nRequires:\n" "\nRequires.private: liblzma zlib\n")
+endif()
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libxml-2.0.pc" "\nRequires:\n" "\nRequires.private: liblzma zlib\n")
 vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()

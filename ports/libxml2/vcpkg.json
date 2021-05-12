@@ -7,7 +7,6 @@
   "dependencies": [
     "libiconv",
     "liblzma",
-    "vcpkg-pkgconfig-get-modules",
     "zlib"
   ]
 }
