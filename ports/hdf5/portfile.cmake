@@ -45,8 +45,6 @@ if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
                     -DONLY_SHARED_LIBS=ON)
 endif()
 
-find_library(SZIP_RELEASE NAMES libsz libszip szip sz PATHS "${CURRENT_INSTALLED_DIR}/lib" NO_DEFAULT_PATH)
-find_library(SZIP_DEBUG NAMES libsz libszip szip sz libsz_D libszip_D szip_D sz_D szip_debug PATHS "${CURRENT_INSTALLED_DIR}/debug/lib" NO_DEFAULT_PATH)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
