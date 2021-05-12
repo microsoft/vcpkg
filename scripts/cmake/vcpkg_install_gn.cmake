@@ -58,7 +58,7 @@ function(z_vcpkg_install_gn_get_desc out_var)
 endfunction()
 
 function(z_vcpkg_install_gn_install)
-    cmake_parse_arguments(PARSE_ARGV 0 "" "SOURCE_PATH;BUILD_DIR;INSTALL_DIR" "TARGETS")
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH;BUILD_DIR;INSTALL_DIR" "TARGETS")
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Internal error: install was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
