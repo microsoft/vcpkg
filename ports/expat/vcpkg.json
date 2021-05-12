@@ -1,0 +1,6 @@
+{
+  "name": "expat",
+  "version": "2.3.0",
+  "description": "XML parser library written in C",
+  "homepage": "https://github.com/libexpat/libexpat"
+}
