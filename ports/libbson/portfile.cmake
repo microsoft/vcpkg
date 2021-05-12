@@ -10,7 +10,11 @@ vcpkg_from_github(
         fix-uwp.patch
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(ENABLE_STATIC ON)
+else()
+    set(ENABLE_STATIC OFF)
+endif()
 
 file(READ ${CMAKE_CURRENT_LIST_DIR}/CONTROL _contents)
 string(REGEX MATCH "\nVersion:[ ]*[^ \n]+" _contents "${_contents}")

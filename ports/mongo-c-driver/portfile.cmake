@@ -67,54 +67,19 @@ vcpkg_copy_pdbs()
 
 set(PORT_POSTFIX "1.0")
 
-#if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-#    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libmongoc-static-${PORT_POSTFIX} TARGET_PATH share/libmongoc-${PORT_POSTFIX})
-#else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mongoc-${PORT_POSTFIX} TARGET_PATH share/mongoc-${PORT_POSTFIX})
-#endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mongoc-${PORT_POSTFIX} TARGET_PATH share/mongoc-${PORT_POSTFIX})
 
-# This rename is needed because the official examples expect to use #include <mongoc.h>
-# See Microsoft/vcpkg#904
-#file(RENAME
-#    ${CURRENT_PACKAGES_DIR}/include/libmongoc-${PORT_POSTFIX}
-#    ${CURRENT_PACKAGES_DIR}/temp)
-#file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)
-#file(RENAME ${CURRENT_PACKAGES_DIR}/temp ${CURRENT_PACKAGES_DIR}/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    #if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_TARGET_IS_UWP)
-    #    file(RENAME
-    #        ${CURRENT_PACKAGES_DIR}/lib/libmongoc-static-1.0.a
-    #        ${CURRENT_PACKAGES_DIR}/lib/libmongoc-1.0.a)
-    #    file(RENAME
-    #        ${CURRENT_PACKAGES_DIR}/debug/lib/libmongoc-static-1.0.a
-    #        ${CURRENT_PACKAGES_DIR}/debug/lib/libmongoc-1.0.a)
-    #else()
-    #    file(RENAME
-    #        ${CURRENT_PACKAGES_DIR}/lib/mongoc-static-1.0.lib
-    #        ${CURRENT_PACKAGES_DIR}/lib/mongoc-1.0.lib)
-    #    file(RENAME
-    #        ${CURRENT_PACKAGES_DIR}/debug/lib/mongoc-static-1.0.lib
-    #        ${CURRENT_PACKAGES_DIR}/debug/lib/mongoc-1.0.lib)
-    #endif()
-
     # drop the __declspec(dllimport) when building static
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/mongoc/mongoc-macros.h
         "define MONGOC_API __declspec(dllimport)" "define MONGOC_API")
 
-     #file(RENAME ${CURRENT_PACKAGES_DIR}/share/libmongoc-${PORT_POSTFIX}/libmongoc-static-${PORT_POSTFIX}-config.cmake
-     #   ${CURRENT_PACKAGES_DIR}/share/libmongoc-${PORT_POSTFIX}/libmongoc-${PORT_POSTFIX}-config.cmake)
-     #file(RENAME ${CURRENT_PACKAGES_DIR}/share/libmongoc-${PORT_POSTFIX}/libmongoc-static-${PORT_POSTFIX}-config-version.cmake
-     #   ${CURRENT_PACKAGES_DIR}/share/libmongoc-${PORT_POSTFIX}/libmongoc-${PORT_POSTFIX}-config-version.cmake)
-
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
-
-# Create cmake files for _both_ find_package(mongo-c-driver) and find_package(libmongoc-static-1.0)/find_package(libmongoc-1.0)
-#file(READ ${CURRENT_PACKAGES_DIR}/share/libmongoc-${PORT_POSTFIX}/libmongoc-${PORT_POSTFIX}-config.cmake LIBMONGOC_CONFIG_CMAKE)
 
 # Patch: Set _IMPORT_PREFIX and replace PACKAGE_PREFIX_DIR
 string(REPLACE
