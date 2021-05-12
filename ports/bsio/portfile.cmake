@@ -8,5 +8,13 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_cmake_configure(
+	SOURCE_PATH ${SOURCE_PATH}
+	OPTIONS
+        -Dbsio_BUILD_EXAMPLES=OFF
+)
+vcpkg_cmake_install()
+
 file(INSTALL ${SOURCE_PATH}/include/bsio DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")

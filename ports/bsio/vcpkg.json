@@ -4,6 +4,10 @@
   "description": "networking library, ans support HTTP/WebSocket, based on asio.",
   "homepage": "https://github.com/IronsDu/bsio",
   "dependencies": [
-    "asio"
+    "asio",
+    {
+   		"name": "vcpkg-cmake",
+      	"host": true
+    }
   ]
 }
