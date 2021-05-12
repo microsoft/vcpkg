@@ -109,12 +109,6 @@ function(qt_install_submodule)
             -DINSTALL_MKSPECSDIR:STRING=../share/qt6/mkspecs
             ${_qis_CONFIGURE_OPTIONS_DEBUG}
     )
-
-    #Check QtQmakeHelpers.cmake for changes in:
-    #qt_add_string_to_qconfig_cpp("${INSTALL_BINDIR}") # TODO: Host-specific
-    #qt_add_string_to_qconfig_cpp("${INSTALL_LIBDIR}") # TODO: Host-specific
-    #qt_add_string_to_qconfig_cpp("${INSTALL_DATADIR}") # TODO: Host-specific
-
     vcpkg_install_cmake(ADD_BIN_TO_PATH)
     vcpkg_copy_pdbs()
 

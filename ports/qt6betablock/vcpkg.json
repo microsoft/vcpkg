@@ -1,7 +1,7 @@
 {
   "name": "qt6betablock",
-  "version-string": "6.1.0-beta3",
-  "description": "Port to block qt6 ports not in the current release",
+  "version-string": "6.2.0-beta",
+  "description": "Port to block qt6 ports not in the current release to be build in CI",
   "homepage": "https://www.qt.io/",
   "dependencies": [
     {

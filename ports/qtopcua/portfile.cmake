@@ -29,14 +29,3 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_DEBUG
                     )
                     
-
-
-#INPUT_open62541
-#open62541
-#uacpp
-#ns0idnames
-#ns0idgenerator
-#gds -> RequiresWrapOpenSSL
-#open62541-security -> Openssl and open62541
-
-# open62541 is a port 

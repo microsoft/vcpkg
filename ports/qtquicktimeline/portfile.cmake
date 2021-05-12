@@ -3,12 +3,7 @@ include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES)
 
-# General features:
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    # "appstore-compliant"  FEATURE_appstore-compliant
-    # )
-
- set(TOOL_NAMES)
+set(TOOL_NAMES)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}

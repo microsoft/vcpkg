@@ -16,7 +16,7 @@ INVERTED_FEATURES
 
 #For iconv feature to work the following must be true:
 #CONDITION NOT FEATURE_icu AND FEATURE_textcodec AND NOT WIN32 AND NOT QNX AND NOT ANDROID AND NOT APPLE AND WrapIconv_FOUND
-# TODO check if qtbase was built with ICU and fail if iconv is given here. 
+#TODO: check if qtbase was built with ICU and fail if iconv is given here.
 
 set(TOOL_NAMES)
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}

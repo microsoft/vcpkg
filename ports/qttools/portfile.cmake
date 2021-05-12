@@ -32,9 +32,11 @@ set(${PORT}_PATCHES )#fix_static_build.patch)
   # Windows deployment tool ................ yes
 
 # General features:
-# vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    # "appstore-compliant"  FEATURE_appstore-compliant
-    # )
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    INVERTED_FEATURES
+    "qdoc"  -DCMAKE_DISABLE_FIND_PACKAGE_Clang
+    "qdoc"  -DCMAKE_DISABLE_FIND_PACKAGE_WrapLibClang
+    )
 
  set(TOOL_NAMES 
         assistant
@@ -67,7 +69,8 @@ endif()
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}
-                     CONFIGURE_OPTIONS 
+                     CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
+                                       -DCMAKE_DISABLE_FIND_PACKAGE_Qt6AxContainer=ON
                      CONFIGURE_OPTIONS_RELEASE
                      CONFIGURE_OPTIONS_DEBUG
                     )

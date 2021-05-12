@@ -111,12 +111,6 @@ endif()
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libproxy:BOOL=ON)
 list(APPEND FEATURE_NET_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GSSAPI:BOOL=ON)
 
-#INPUT_securetransport #Apple
-#INPUT_schannel #Windows
-#AUTODETECTED features
-#FEATURE_getifaddrs
-#ipv6ifname
-
 # Gui features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_GUI_OPTIONS
     FEATURES
@@ -163,9 +157,6 @@ list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Libinput:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Mtdev:BOOL=ON)
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GLESv2:BOOL=ON) # only used if INPUT_opengl is correctly set
 list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Tslib:BOOL=ON)
-if(VCPKG_TARGET_IS_LINUX)
-    #list(APPEND FEATURE_GUI_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_Wayland:BOOL=ON) Does not seem necessary
-endif()
 # sql-drivers features:
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
@@ -174,7 +165,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_SQLDRIVERS_OPTIONS
     INVERTED_FEATURES
     "sql-psql"            CMAKE_DISABLE_FIND_PACKAGE_PostgreSQL
     "sql-sqlite"          CMAKE_DISABLE_FIND_PACKAGE_SQLite3
-    
     # "sql-db2"             FEATURE_sql-db2
     # "sql-ibase"           FEATURE_sql-ibase
     # "sql-mysql"           FEATURE_sql-mysql
@@ -198,26 +188,6 @@ list(APPEND FEATURE_PRINTSUPPORT_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_CUPS:BOOL=
     # There are a lot of additional features here to deactivate parts of widgets. 
     # )
 list(APPEND FEATURE_WIDGETS_OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_GTK3:BOOL=ON)
-
-# QT_
-# FEATURE_cups
-# FEATURE_dbus_linked
-# FEATURE_ egl egl_x11 eglfs eglfs _brcm _egldevice _gbm _mali _openwfd _rcar _viv _viv_wl _vsp2 _x11
-# FEATURE_etw
-# FEATURE_evdev
-# FEATURE_eventfd
-# FEATURE_glibc
-# FEATURE_gssapi
-# FEATURE_ltcg
-# FEATURE_opengl _dynamic _desktop 
-# FEATURE_opengles2 3 31 32
-# FEATURE_openssl _linked _runtime
-# FEATURE_optimize_full _size
-# FEATURE_pkg_config
-# FEATURE_reduce_exports
-# FEATURE_reduce_relocations
-# FEATURE_win32_system_libs?
-
 
 set(TOOL_NAMES 
         androiddeployqt 
@@ -369,9 +339,8 @@ set(hostinfofile "${CURRENT_PACKAGES_DIR}/share/Qt6HostInfo/Qt6HostInfoConfig.cm
 file(READ "${hostinfofile}" _contents)
 string(REPLACE [[set(QT6_HOST_INFO_LIBEXECDIR "bin")]] [[set(QT6_HOST_INFO_LIBEXECDIR "tools/qt6/bin")]] _contents "${_contents}")
 string(REPLACE [[set(QT6_HOST_INFO_BINDIR "bin")]] [[set(QT6_HOST_INFO_BINDIR "tools/qt6/bin")]] _contents "${_contents}")
-#string(REPLACE [[set(QT6_HOST_INFO_ARCHDATADIR ".")]] [[set(QT6_HOST_INFO_ARCHDATADIR "share/qt6")]] _contents "${_contents}")
-#string(REPLACE [[set(QT6_HOST_INFO_DATADIR ".")]] [[set(QT6_HOST_INFO_DATADIR "share/qt6")]] _contents "${_contents}")
 file(WRITE "${hostinfofile}" "${_contents}")
+
 set(coretools "${CURRENT_PACKAGES_DIR}/share/Qt6CoreTools/Qt6CoreTools.cmake")
 if(EXISTS "${coretools}")
     file(READ "${coretools}" _contents)
