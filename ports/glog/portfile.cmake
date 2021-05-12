@@ -4,8 +4,6 @@ vcpkg_from_github(
     REF v0.5.0
     SHA512 445e4338f3d81cd0b065f2da9c6ce343c243263ca144cea424ef97531a4e9e09c06ffd6942ac01c5213a8003c75cfbbede3c4028d12f0134f23ff29314769c1a
     HEAD_REF master
-    PATCHES
-       glog_disable_debug_postfix.patch
 )
 
 vcpkg_configure_cmake(
