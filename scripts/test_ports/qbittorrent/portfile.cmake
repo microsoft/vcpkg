@@ -20,10 +20,11 @@ vcpkg_check_features(
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/glassez/qBittorrent.git
-    REF f770971eebec66067b4f498653f3e04a35030ef4
+    REF 85d9c858dbf98e7ed8cad04ab16eb1cf784de13d
+    HEAD_REF qt6
     PATCHES
         fix_qt6_build.patch
-        downgrade.patch
+        no_config.patch
 )
 
 vcpkg_configure_cmake(
@@ -41,6 +42,6 @@ vcpkg_copy_tools(TOOL_NAMES qbittorrent AUTO_CLEAN)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug")
 endif()
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 
-configure_file(${SOURCE_PATH}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
