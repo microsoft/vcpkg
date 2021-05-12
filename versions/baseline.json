@@ -5197,7 +5197,7 @@
       "port-version": 0
     },
     "quantlib": {
-      "baseline": "2019-09-02",
+      "baseline": "1.22",
       "port-version": 0
     },
     "quaternions": {
