@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 119855a..6269362 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -172,13 +172,17 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
+@@ -233,13 +233,17 @@ elseif(CMAKE_COMPILER_IS_GNUCXX)
        "${CMAKE_CXX_FLAGS} -std=c++0x")
    endif(CYGWIN)
    set(CMAKE_CXX_FLAGS
