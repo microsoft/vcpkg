@@ -27,4 +27,3 @@ qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      CONFIGURE_OPTIONS_DEBUG -DFEATURE_vkb_record_trace_input=ON
                                              -DFEATURE_vkb_sensitive_debug=ON
                     )
-                    
