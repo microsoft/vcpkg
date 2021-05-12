@@ -1,6 +1,8 @@
 The package libbson is compatible with built-in CMake targets:
-
-    find_package(libbson-1.0 CONFIG REQUIRED)
-    target_include_directories(main PRIVATE ${BSON_INCLUDE_DIRS})
-    target_link_libraries(main PRIVATE ${BSON_LIBRARIES})
-    target_compile_definitions(main PRIVATE ${BSON_DEFINITIONS})
+    For dynamic build
+    find_package(bson-1.0 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE mongo::bson_shared)
+    
+    For static build
+    find_package(bson-1.0 CONFIG REQUIRED)
+    target_link_libraries(main PRIVATE mongo::bson_static)

@@ -1,61 +1,88 @@
-diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
-index 797aaec..91d97dc 100644
---- a/src/libmongoc/CMakeLists.txt
-+++ b/src/libmongoc/CMakeLists.txt
-@@ -694,6 +694,7 @@ if (WIN32)
-    set (LIBRARIES ${LIBRARIES} ws2_32)
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 91fd663..d6b646a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -179,14 +179,17 @@ if (ENABLE_BSON STREQUAL SYSTEM)
+    SET (ENABLE_TESTS OFF)
+ 
+    set (USING_SYSTEM_BSON TRUE)
++   if(NOT MONGOC_ENABLE_STATIC_BUILD)
+    if (NOT TARGET mongo::bson_shared)
+            message (FATAL_ERROR "System libbson built without shared library target")
+    endif ()
+    set (BSON_LIBRARIES mongo::bson_shared)
++   else()
+    if (NOT TARGET mongo::bson_static)
+            message (FATAL_ERROR "System libbson built without static library target")
+    endif ()
+    set (BSON_STATIC_LIBRARIES mongo::bson_static)
++   endif()
  endif ()
  
-+if (NOT MONGOC_ENABLE_STATIC)
+ unset (dist_generated CACHE)
+diff --git a/src/libmongoc/CMakeLists.txt b/src/libmongoc/CMakeLists.txt
+index af5a398..abec45f 100644
+--- a/src/libmongoc/CMakeLists.txt
++++ b/src/libmongoc/CMakeLists.txt
+@@ -725,6 +725,7 @@ if (MONGOC_ENABLE_MONGODB_AWS_AUTH)
+    endif()
+ endif ()
+ 
++if(NOT MONGOC_ENABLE_STATIC_BUILD)
  add_library (mongoc_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
  set_target_properties (mongoc_shared PROPERTIES CMAKE_CXX_VISIBILITY_PRESET hidden)
  target_link_libraries (mongoc_shared PRIVATE ${LIBRARIES} PUBLIC ${BSON_LIBRARIES})
-@@ -706,7 +707,7 @@ target_compile_definitions (mongoc_shared PRIVATE MONGOC_COMPILATION)
+@@ -744,6 +745,7 @@ target_compile_definitions (mongoc_shared PRIVATE MONGOC_COMPILATION ${KMS_MSG_D
+ 
  set_target_properties (mongoc_shared PROPERTIES VERSION 0.0.0 SOVERSION 0)
  set_target_properties (mongoc_shared PROPERTIES OUTPUT_NAME "${MONGOC_OUTPUT_BASENAME}-${MONGOC_API_VERSION}")
++endif()
  
--if (MONGOC_ENABLE_STATIC)
-+else ()
+ if (MONGOC_ENABLE_STATIC_BUILD)
     add_library (mongoc_static STATIC ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
-    target_link_libraries (mongoc_static ${STATIC_LIBRARIES} ${BSON_LIBRARIES})
-    target_include_directories (mongoc_static BEFORE PUBLIC ${MONGOC_INTERNAL_INCLUDE_DIRS})
-@@ -733,8 +734,13 @@ if (ENABLE_APPLE_FRAMEWORK)
+@@ -778,8 +780,11 @@ if (ENABLE_APPLE_FRAMEWORK)
  endif ()
  
  add_executable (mongoc-stat ${PROJECT_SOURCE_DIR}/../../src/tools/mongoc-stat.c)
-+if (NOT MONGOC_ENABLE_STATIC)
- target_include_directories (mongoc-stat PRIVATE ${BSON_INCLUDE_DIRS})
++if(NOT MONGOC_ENABLE_STATIC_BUILD)
  target_link_libraries (mongoc-stat mongoc_shared ${LIBRARIES})
+-
 +else()
-+target_include_directories (mongoc-stat PRIVATE ${BSON_INCLUDE_DIRS})
 +target_link_libraries (mongoc-stat mongoc_static ${LIBRARIES})
 +endif()
- 
  # mongoc-stat works if shared memory performance counters are enabled.
  if (ENABLE_SHM_COUNTERS STREQUAL "ON")
-@@ -980,7 +986,7 @@ file (COPY ${PROJECT_SOURCE_DIR}/tests/x509gen DESTINATION ${PROJECT_BINARY_DIR}
+    install (PROGRAMS ${PROJECT_BINARY_DIR}/mongoc-stat
+@@ -1040,13 +1045,13 @@ file (COPY ${PROJECT_SOURCE_DIR}/tests/x509gen DESTINATION ${PROJECT_BINARY_DIR}
  file (COPY ${PROJECT_SOURCE_DIR}/tests/release_files DESTINATION ${PROJECT_BINARY_DIR}/tests)
  
- if (MONGOC_ENABLE_STATIC)
+ if (MONGOC_ENABLE_STATIC_INSTALL)
 -   set (TARGETS_TO_INSTALL mongoc_shared mongoc_static)
 +   set (TARGETS_TO_INSTALL mongoc_static)
  else ()
     set (TARGETS_TO_INSTALL mongoc_shared)
  endif ()
-@@ -1000,6 +1006,7 @@ install (
+ 
+ set (MONGOC_HEADER_INSTALL_DIR
+-   "${CMAKE_INSTALL_INCLUDEDIR}/libmongoc-${MONGOC_API_VERSION}"
++   "${CMAKE_INSTALL_INCLUDEDIR}"
  )
  
- if (MSVC)
-+   if (NOT MONGOC_ENABLE_STATIC)
-    add_custom_command (
-       TARGET mongoc_shared
-       POST_BUILD
-@@ -1011,7 +1018,7 @@ if (MSVC)
-       FILES $<TARGET_LINKER_FILE_DIR:mongoc_shared>/lib$<TARGET_LINKER_FILE_NAME:mongoc_shared>
-       DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
--   if (TARGET mongoc_static)
-+   else ()
-       add_custom_command (
-          TARGET mongoc_static
-          POST_BUILD
+ install (
+@@ -1101,6 +1106,7 @@ foreach (
+    endif ()
+ endforeach ()
+ 
++if (NOT MONGOC_ENABLE_STATIC_INSTALL)
+ configure_file (
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/libmongoc-1.0.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/src/libmongoc-1.0.pc
+@@ -1109,6 +1115,8 @@ install (
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/src/libmongoc-1.0.pc
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+ )
++endif()
++
+ if (MONGOC_ENABLE_STATIC_INSTALL)
+    configure_file (
+       ${CMAKE_CURRENT_SOURCE_DIR}/src/libmongoc-static-1.0.pc.in

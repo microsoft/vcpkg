@@ -1,0 +1,51 @@
+diff --git a/src/libbson/CMakeLists.txt b/src/libbson/CMakeLists.txt
+index bb8259b..72310bd 100644
+--- a/src/libbson/CMakeLists.txt
++++ b/src/libbson/CMakeLists.txt
+@@ -230,6 +230,7 @@ set (HEADERS_FORWARDING
+    ${PROJECT_SOURCE_DIR}/src/bson/forwarding/bson.h
+ )
+ 
++if(NOT MONGOC_ENABLE_STATIC_BUILD)
+ add_library (bson_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+ set (CMAKE_CXX_VISIBILITY_PRESET hidden)
+ target_compile_definitions (bson_shared PRIVATE BSON_COMPILATION JSONSL_PARSE_NAN)
+@@ -279,7 +280,7 @@ if (WIN32)
+    # must be handled specially since we can't resolve them
+    set (BSON_SYSTEM_LIBRARIES ${BSON_SYSTEM_LIBRARIES} ws2_32)
+ endif ()
+-
++endif()
+ if (MONGOC_ENABLE_STATIC_BUILD)
+    add_library (bson_static STATIC ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
+    target_compile_definitions (bson_static
+@@ -333,11 +334,11 @@ if (ENABLE_EXAMPLES)
+ endif () # ENABLE_EXAMPLES
+ 
+ set (BSON_HEADER_INSTALL_DIR
+-   "${CMAKE_INSTALL_INCLUDEDIR}/libbson-${BSON_API_VERSION}"
++   "${CMAKE_INSTALL_INCLUDEDIR}"
+ )
+ 
+ if (MONGOC_ENABLE_STATIC_INSTALL)
+-   set (TARGETS_TO_INSTALL bson_shared bson_static)
++   set (TARGETS_TO_INSTALL bson_static)
+ else ()
+    set (TARGETS_TO_INSTALL bson_shared)
+ endif ()
+@@ -383,6 +384,7 @@ endforeach ()
+ set (VERSION "${BSON_VERSION}")
+ set (prefix "${CMAKE_INSTALL_PREFIX}")
+ set (libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
++if(NOT MONGOC_ENABLE_STATIC_BUILD)
+ configure_file (
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/libbson-1.0.pc.in
+    ${CMAKE_CURRENT_BINARY_DIR}/src/libbson-1.0.pc
+@@ -394,6 +396,7 @@ install (
+    DESTINATION
+       ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+ )
++endif()
+ 
+ if (MONGOC_ENABLE_STATIC_INSTALL)
+    configure_file (
