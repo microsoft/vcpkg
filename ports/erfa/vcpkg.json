@@ -1,5 +1,6 @@
 {
   "name": "erfa",
-  "version-string": "1.7.2",
-  "description": "Essential Routines for Fundamental Astronomy."
+  "version": "1.7.2",
+  "description": "Essential Routines for Fundamental Astronomy.",
+  "homepage": "https://github.com/liberfa/erfa"
 }

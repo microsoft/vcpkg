@@ -1,4 +1,3 @@
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO liberfa/erfa
@@ -15,5 +14,5 @@ vcpkg_configure_make(
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
-configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/erfa/copyright" COPYONLY)
+configure_file("${SOURCE_PATH}/LICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/erfaConfig.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
