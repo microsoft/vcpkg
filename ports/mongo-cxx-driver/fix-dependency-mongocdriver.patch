@@ -1,19 +1,23 @@
 diff --git a/src/mongocxx/CMakeLists.txt b/src/mongocxx/CMakeLists.txt
-index 64ff936..e4d4e14 100644
+index 64ff936..5fe906f 100644
 --- a/src/mongocxx/CMakeLists.txt
 +++ b/src/mongocxx/CMakeLists.txt
-@@ -39,10 +39,10 @@ if (BUILD_SHARED_LIBS)
-     set(libmongoc_include_directories ${MONGOC_INCLUDE_DIRS})
-     set(libmongoc_definitions ${MONGOC_DEFINITIONS})
+@@ -34,15 +34,11 @@ set(LIBMONGOC_REQUIRED_VERSION 1.13.0)
+ set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
+ 
+ if (BUILD_SHARED_LIBS)
+-    find_package(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
+-    set(libmongoc_libraries ${MONGOC_LIBRARIES})
+-    set(libmongoc_include_directories ${MONGOC_INCLUDE_DIRS})
+-    set(libmongoc_definitions ${MONGOC_DEFINITIONS})
++    find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} CONFIG REQUIRED)
++    set(libmongoc_libraries mongo::mongoc_shared)
  else()
--    find_package(libmongoc-static-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
+     find_package(libmongoc-static-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
 -    set(libmongoc_libraries ${MONGOC_STATIC_LIBRARIES})
 -    set(libmongoc_include_directories ${MONGOC_STATIC_INCLUDE_DIRS})
 -    set(libmongoc_definitions ${MONGOC_STATIC_DEFINITIONS})
-+    find_package(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
-+    set(libmongoc_libraries ${MONGOC_LIBRARIES})
-+    set(libmongoc_include_directories ${MONGOC_INCLUDE_DIRS})
-+    set(libmongoc_definitions ${MONGOC_DEFINITIONS})
++    set(libmongoc_libraries mongo::mongoc_static)
  endif()
  
  add_subdirectory(config)
