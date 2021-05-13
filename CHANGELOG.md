@@ -1,3 +1,267 @@
+vcpkg (2021.05.01 - 2021.05.12)
+
+---
+#### Total port count: 1669
+#### Total port count per triplet (tested):
+|triplet|ports available|
+|---|---|
+|**x64-windows**|1531|
+|**x64-linux**|1441|
+|**x64-osx**|1348|
+|x86-windows|1521|
+|x64-windows-static-md|1468|
+|x64-windows-static|1455|
+|arm64-windows|1139|
+|x64-uwp|856|
+|arm-uwp|811|
+
+<details>
+<summary><b>The following documentation has been updated:</b></summary>
+
+- [registries.md](docs/maintainers/registries.md) ***[NEW]***
+    - [(#17672)](https://github.com/microsoft/vcpkg/pull/17672) [docs registries] Add reference documentation (by @strega-nil)
+- [registries.md](docs/users/registries.md) ***[NEW]***
+    - [(#17672)](https://github.com/microsoft/vcpkg/pull/17672) [docs registries] Add reference documentation (by @strega-nil)
+- [privacy.md](docs/about/privacy.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [modify-baseline-to-pin-old-boost.md](docs/examples/modify-baseline-to-pin-old-boost.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [vcpkg_android.cmake](docs/examples/vcpkg_android_example_cmake_script/cmake/vcpkg_android.cmake)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [versioning.getting-started.md](docs/examples/versioning.getting-started.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+    - [(#17580)](https://github.com/microsoft/vcpkg/pull/17580) [docs] Consolidate versioning documentation (by @ras0219-msft)
+- [control-files.md](docs/maintainers/control-files.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [maintainer-guide.md](docs/maintainers/maintainer-guide.md)
+    - [(#17580)](https://github.com/microsoft/vcpkg/pull/17580) [docs] Consolidate versioning documentation (by @ras0219-msft)
+- [manifest-files.md](docs/maintainers/manifest-files.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [portfile-functions.md](docs/maintainers/portfile-functions.md)
+    - [(#17179)](https://github.com/microsoft/vcpkg/pull/17179) [docs] link to new functions in deprecated warnings (by @autoantwort)
+- [vcpkg_cmake_configure.md](docs/maintainers/ports/vcpkg-cmake/vcpkg_cmake_configure.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [vcpkg_apply_patches.md](docs/maintainers/vcpkg_apply_patches.md)
+    - [(#17179)](https://github.com/microsoft/vcpkg/pull/17179) [docs] link to new functions in deprecated warnings (by @autoantwort)
+- [vcpkg_build_cmake.md](docs/maintainers/vcpkg_build_cmake.md)
+    - [(#17179)](https://github.com/microsoft/vcpkg/pull/17179) [docs] link to new functions in deprecated warnings (by @autoantwort)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [vcpkg_build_make.md](docs/maintainers/vcpkg_build_make.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [vcpkg_build_nmake.md](docs/maintainers/vcpkg_build_nmake.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [vcpkg_configure_cmake.md](docs/maintainers/vcpkg_configure_cmake.md)
+    - [(#17179)](https://github.com/microsoft/vcpkg/pull/17179) [docs] link to new functions in deprecated warnings (by @autoantwort)
+- [vcpkg_copy_tools.md](docs/maintainers/vcpkg_copy_tools.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [vcpkg_fixup_cmake_targets.md](docs/maintainers/vcpkg_fixup_cmake_targets.md)
+    - [(#17179)](https://github.com/microsoft/vcpkg/pull/17179) [docs] link to new functions in deprecated warnings (by @autoantwort)
+- [vcpkg_install_cmake.md](docs/maintainers/vcpkg_install_cmake.md)
+    - [(#17179)](https://github.com/microsoft/vcpkg/pull/17179) [docs] link to new functions in deprecated warnings (by @autoantwort)
+- [README.md](docs/README.md)
+    - [(#17672)](https://github.com/microsoft/vcpkg/pull/17672) [docs registries] Add reference documentation (by @strega-nil)
+- [regenerate.ps1](docs/regenerate.ps1)
+    - [(#17179)](https://github.com/microsoft/vcpkg/pull/17179) [docs] link to new functions in deprecated warnings (by @autoantwort)
+- [prefab.md](docs/specifications/prefab.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [registries.md](docs/specifications/registries.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [registries-2.md](docs/specifications/registries-2.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [versioning.md](docs/specifications/versioning.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [android.md](docs/users/android.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [config-environment.md](docs/users/config-environment.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+    - [(#17580)](https://github.com/microsoft/vcpkg/pull/17580) [docs] Consolidate versioning documentation (by @ras0219-msft)
+- [manifests.md](docs/users/manifests.md)
+    - [(#17580)](https://github.com/microsoft/vcpkg/pull/17580) [docs] Consolidate versioning documentation (by @ras0219-msft)
+- [versioning.implementation-details.md](docs/users/versioning.implementation-details.md)
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [versioning.md](docs/users/versioning.md)
+    - [(#17580)](https://github.com/microsoft/vcpkg/pull/17580) [docs] Consolidate versioning documentation (by @ras0219-msft)
+- [versioning.reference.md](docs/users/versioning.reference.md)
+    - [(#17580)](https://github.com/microsoft/vcpkg/pull/17580) [docs] Consolidate versioning documentation (by @ras0219-msft)
+
+<details>
+<summary><b>The following changes have been made to vcpkg:</b></summary>
+
+- [(#16577)](https://github.com/microsoft/vcpkg/pull/16577) [icu] add host depedency  (by @autoantwort)
+- [(#16847)](https://github.com/microsoft/vcpkg/pull/16847) Compile for android including armv6. (by @talregev)
+- [(#16965)](https://github.com/microsoft/vcpkg/pull/16965) [libfido2] New port (by @xgcssch)
+- [(#17019)](https://github.com/microsoft/vcpkg/pull/17019) [fontconfig] Add cflags in tools build command (by @xandox)
+- [(#17032)](https://github.com/microsoft/vcpkg/pull/17032) [libtcod] Update to 1.16.7 (by @HexDecimal)
+- [(#17063)](https://github.com/microsoft/vcpkg/pull/17063) [cpuinfo,fbgemm,nnpack] update to latest source version and rename targets (by @luncliff)
+- [(#17065)](https://github.com/microsoft/vcpkg/pull/17065) [qnnpack] create a new port (by @luncliff)
+- [(#17099)](https://github.com/microsoft/vcpkg/pull/17099) [Forge] update version to 1.0.7 (by @9prady9)
+- [(#17179)](https://github.com/microsoft/vcpkg/pull/17179) [docs] link to new functions in deprecated warnings (by @autoantwort)
+- [(#17204)](https://github.com/microsoft/vcpkg/pull/17204) [ffmpeg] avdevice CoreAudio dependency fix for osx (by @mcmtroffaes)
+- [(#17266)](https://github.com/microsoft/vcpkg/pull/17266) [libarchive] disable libb2 until properly handled (by @cenit)
+- [(#17299)](https://github.com/microsoft/vcpkg/pull/17299) [ffmpeg] soxr dependency fix (by @mcmtroffaes)
+- [(#17424)](https://github.com/microsoft/vcpkg/pull/17424) [grpc] Create codegen feature (by @ras0219)
+- [(#17431)](https://github.com/microsoft/vcpkg/pull/17431) [nccl] Remove NCCL auto-download due to licensing issues (by @jacobkahn)
+- [(#17456)](https://github.com/microsoft/vcpkg/pull/17456) [Openssl] Fix mingw build (by @dg0yt)
+- [(#17533)](https://github.com/microsoft/vcpkg/pull/17533) [cryptopp] Update to 8.5.0 (by @orudge)
+- [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- [(#17580)](https://github.com/microsoft/vcpkg/pull/17580) [docs] Consolidate versioning documentation (by @ras0219-msft)
+- [(#17589)](https://github.com/microsoft/vcpkg/pull/17589) [ghc-filesystem] Fix port/package name discrepancy (by @AndyBrown91)
+- [(#17593)](https://github.com/microsoft/vcpkg/pull/17593) [vcpkg baseline][libheif] fix CI errors if gdk-pixbuf can be found (by @Neumann-A)
+- [(#17596)](https://github.com/microsoft/vcpkg/pull/17596) [cairo] Windows: Fix cairo dll definition (by @Neumann-A)
+- [(#17597)](https://github.com/microsoft/vcpkg/pull/17597) [infoware] Bump version to 0.6.0 (by @nabijaczleweli)
+- [(#17598)](https://github.com/microsoft/vcpkg/pull/17598) [hdf5] fix pc files (by @Neumann-A)
+- [(#17610)](https://github.com/microsoft/vcpkg/pull/17610) [hidapi] fix mac build (by @autoantwort)
+- [(#17611)](https://github.com/microsoft/vcpkg/pull/17611) [asio] Add inline dummy return patch (by @pratikpc)
+- [(#17620)](https://github.com/microsoft/vcpkg/pull/17620) [cairo] update to 1.17.4 (by @Neumann-A)
+- [(#17624)](https://github.com/microsoft/vcpkg/pull/17624) [libass] Update to 0.15.1 (by @Masaiki)
+- [(#17625)](https://github.com/microsoft/vcpkg/pull/17625) [ffmpeg] fix optional X11 platform dependencies (by @mcmtroffaes)
+- [(#17629)](https://github.com/microsoft/vcpkg/pull/17629) [msmpi] Update the download hash (by @JackBoosY)
+- [(#17631)](https://github.com/microsoft/vcpkg/pull/17631) [tool-meson] update to 0.58 (by @Neumann-A)
+- [(#17633)](https://github.com/microsoft/vcpkg/pull/17633) Add g++-11 support (by @xieyubo)
+- [(#17634)](https://github.com/microsoft/vcpkg/pull/17634) [pthreadpool] remove unused dependency (by @luncliff)
+- [(#17637)](https://github.com/microsoft/vcpkg/pull/17637) [libffi] Update patch to fix apply patch failure (by @JackBoosY)
+- [(#17641)](https://github.com/microsoft/vcpkg/pull/17641) [DCMTK] Update to 3.6.6 (by @BigSeb)
+- [(#17648)](https://github.com/microsoft/vcpkg/pull/17648) [seal]Updated to version 3.6.4 (by @WeiDaiWD)
+- [(#17659)](https://github.com/microsoft/vcpkg/pull/17659) [ffmpeg] fix dnn dependency (by @mcmtroffaes)
+- [(#17661)](https://github.com/microsoft/vcpkg/pull/17661) [google-cloud-cpp] update to latest (v1.27.0) version (by @coryan)
+- [(#17666)](https://github.com/microsoft/vcpkg/pull/17666) [qt5-base] fix install / packages dir being on different drives (by @Neumann-A)
+- [(#17669)](https://github.com/microsoft/vcpkg/pull/17669) [gtkmm] Update to 4.0.1 (by @Neumann-A)
+- [(#17670)](https://github.com/microsoft/vcpkg/pull/17670) [gtk] update to 4.3.0 (by @Neumann-A)
+- [(#17672)](https://github.com/microsoft/vcpkg/pull/17672) [docs registries] Add reference documentation (by @strega-nil)
+- [(#17675)](https://github.com/microsoft/vcpkg/pull/17675) [Hedley] Update to v15 (by @pratikpc)
+- [(#17682)](https://github.com/microsoft/vcpkg/pull/17682) [fann] Support UNIX, re-fix installation (by @JackBoosY)
+- [(#17683)](https://github.com/microsoft/vcpkg/pull/17683) [igraph] update to 0.9.3 (by @szhorvat)
+- [(#17689)](https://github.com/microsoft/vcpkg/pull/17689) [vcpkg] Update vcpkg tool version 2021-05-05 (by @ras0219-msft)
+- [(#17706)](https://github.com/microsoft/vcpkg/pull/17706) [vcpkg] Update cmake to 3.20.2 (by @Neumann-A)
+- [(#17709)](https://github.com/microsoft/vcpkg/pull/17709) [gtest] Update to the latest commit (by @JonLiu1993)
+- [(#17710)](https://github.com/microsoft/vcpkg/pull/17710) [libheif] Install pdbs (by @JackBoosY)
+- [(#17711)](https://github.com/microsoft/vcpkg/pull/17711) [protopuf] Update to 2.0.0 (by @PragmaTwice)
+- [(#17714)](https://github.com/microsoft/vcpkg/pull/17714) [vcpkg baseline][asiosdk] Update hash (by @NancyLi1013)
+- [(#17733)](https://github.com/microsoft/vcpkg/pull/17733) [brynet] upgrade version 1.11.0 (by @IronsDu)
+- [(#17736)](https://github.com/microsoft/vcpkg/pull/17736) [draco] Fix build error in gcc 11 (by @NancyLi1013)
+- [(#17749)](https://github.com/microsoft/vcpkg/pull/17749) [d3dx12] update port (by @walbourn)
+- [(#17771)](https://github.com/microsoft/vcpkg/pull/17771) [fastlz] update to the latest commit (by @JonLiu1993)
+- [(#17774)](https://github.com/microsoft/vcpkg/pull/17774) [abseil] vcpkg_fixup_pkgconfig (by @Neumann-A)
+- [(#17775)](https://github.com/microsoft/vcpkg/pull/17775) [allgero5] vcpkg_fixup_pkgconfig (by @Neumann-A)
+- [(#17797)](https://github.com/microsoft/vcpkg/pull/17797) [vcpkg baseline][chartdir] Update version to 7.0.0 (by @Cheney-W)
+- [(#17862)](https://github.com/microsoft/vcpkg/pull/17862) [sobjectizer] Update to 5.7.2.4 (by @eao197)
+
+</details>
+
+<details>
+<summary><b>The following 50 ports have been updated:</b></summary>
+
+- google-cloud-cpp `#0` -> `#0`
+    - [(#17661)](https://github.com/microsoft/vcpkg/pull/17661) [google-cloud-cpp] update to latest (v1.27.0) version (by @coryan)
+- fbgemm `#0` -> `#0`
+    - [(#17063)](https://github.com/microsoft/vcpkg/pull/17063) [cpuinfo,fbgemm,nnpack] update to latest source version and rename targets (by @luncliff)
+- icu `69.1#8` -> `69.1#0`
+    - [(#16577)](https://github.com/microsoft/vcpkg/pull/16577) [icu] add host depedency  (by @autoantwort)
+- ghc-filesystem `#0` -> `#0`
+    - [(#17589)](https://github.com/microsoft/vcpkg/pull/17589) [ghc-filesystem] Fix port/package name discrepancy (by @AndyBrown91)
+- vcpkg-cmake `#0` -> `#0`
+    - [(#17560)](https://github.com/microsoft/vcpkg/pull/17560) [doc] Fix spelling errors (by @dg0yt)
+- grpc `#0` -> `#0`
+    - [(#17424)](https://github.com/microsoft/vcpkg/pull/17424) [grpc] Create codegen feature (by @ras0219)
+- sobjectizer `#0` -> `#0`
+    - [(#17862)](https://github.com/microsoft/vcpkg/pull/17862) [sobjectizer] Update to 5.7.2.4 (by @eao197)
+- openssl `1.1.1k#0` -> `1.1.1k#0`
+    - [(#17456)](https://github.com/microsoft/vcpkg/pull/17456) [Openssl] Fix mingw build (by @dg0yt)
+- cryptopp `8.2.0-2#0` -> `8.5.0#0`
+    - [(#17533)](https://github.com/microsoft/vcpkg/pull/17533) [cryptopp] Update to 8.5.0 (by @orudge)
+- pthreadpool `#0` -> `#0`
+    - [(#17634)](https://github.com/microsoft/vcpkg/pull/17634) [pthreadpool] remove unused dependency (by @luncliff)
+- dcmtk `3.6.5+_20191213#0` -> `3.6.6#0`
+    - [(#17641)](https://github.com/microsoft/vcpkg/pull/17641) [DCMTK] Update to 3.6.6 (by @BigSeb)
+- cairo `#0` -> `#0`
+    - [(#17596)](https://github.com/microsoft/vcpkg/pull/17596) [cairo] Windows: Fix cairo dll definition (by @Neumann-A)
+    - [(#17620)](https://github.com/microsoft/vcpkg/pull/17620) [cairo] update to 1.17.4 (by @Neumann-A)
+- libfido2 `#0` -> `#0`
+    - [(#16965)](https://github.com/microsoft/vcpkg/pull/16965) [libfido2] New port (by @xgcssch)
+- allegro5 `5.2.6.0#0` -> `5.2.6.0#0`
+    - [(#17775)](https://github.com/microsoft/vcpkg/pull/17775) [allgero5] vcpkg_fixup_pkgconfig (by @Neumann-A)
+- draco `1.3.6#0` -> `1.3.6#0`
+    - [(#17736)](https://github.com/microsoft/vcpkg/pull/17736) [draco] Fix build error in gcc 11 (by @NancyLi1013)
+- protopuf `1.0.1#0` -> `1.0.1#0`
+    - [(#17711)](https://github.com/microsoft/vcpkg/pull/17711) [protopuf] Update to 2.0.0 (by @PragmaTwice)
+- cpuinfo `2019-07-28-1#0` -> `2019-07-28-1#0`
+    - [(#17063)](https://github.com/microsoft/vcpkg/pull/17063) [cpuinfo,fbgemm,nnpack] update to latest source version and rename targets (by @luncliff)
+- igraph `#0` -> `#0`
+    - [(#17683)](https://github.com/microsoft/vcpkg/pull/17683) [igraph] update to 0.9.3 (by @szhorvat)
+- tool-meson `0.56.02#0` -> `0.56.02#0`
+    - [(#17631)](https://github.com/microsoft/vcpkg/pull/17631) [tool-meson] update to 0.58 (by @Neumann-A)
+- libtcod `1.16.6#0` -> `1.16.6#0`
+    - [(#17032)](https://github.com/microsoft/vcpkg/pull/17032) [libtcod] Update to 1.16.7 (by @HexDecimal)
+- chartdir `6.3.1#2` -> `6.3.1#0`
+    - [(#17797)](https://github.com/microsoft/vcpkg/pull/17797) [vcpkg baseline][chartdir] Update version to 7.0.0 (by @Cheney-W)
+- fontconfig `2.13.1#6` -> `2.13.1#7`
+    - [(#17019)](https://github.com/microsoft/vcpkg/pull/17019) [fontconfig] Add cflags in tools build command (by @xandox)
+- hidapi `#0` -> `#0`
+    - [(#17610)](https://github.com/microsoft/vcpkg/pull/17610) [hidapi] fix mac build (by @autoantwort)
+- asio `#0` -> `#0`
+    - [(#17611)](https://github.com/microsoft/vcpkg/pull/17611) [asio] Add inline dummy return patch (by @pratikpc)
+- seal `3.6.2#0` -> `3.6.4#0`
+    - [(#17648)](https://github.com/microsoft/vcpkg/pull/17648) [seal]Updated to version 3.6.4 (by @WeiDaiWD)
+- libass `0.15.0#0` -> `0.15.0#0`
+    - [(#17624)](https://github.com/microsoft/vcpkg/pull/17624) [libass] Update to 0.15.1 (by @Masaiki)
+- forge `#0` -> `#0`
+    - [(#17099)](https://github.com/microsoft/vcpkg/pull/17099) [Forge] update version to 1.0.7 (by @9prady9)
+- qt5-base `#0` -> `#0`
+    - [(#17666)](https://github.com/microsoft/vcpkg/pull/17666) [qt5-base] fix install / packages dir being on different drives (by @Neumann-A)
+- d3dx12 `may2020#0` -> `may2021#0`
+    - [(#17749)](https://github.com/microsoft/vcpkg/pull/17749) [d3dx12] update port (by @walbourn)
+- qnnpack `#0` -> `#0`
+    - [(#17065)](https://github.com/microsoft/vcpkg/pull/17065) [qnnpack] create a new port (by @luncliff)
+- asiosdk `2.3.3-1#0` -> `2.3.3-1#0`
+    - [(#17714)](https://github.com/microsoft/vcpkg/pull/17714) [vcpkg baseline][asiosdk] Update hash (by @NancyLi1013)
+- liblsl `1.14.0#0` -> `1.14.0#1`
+    - [(#17689)](https://github.com/microsoft/vcpkg/pull/17689) [vcpkg] Update vcpkg tool version 2021-05-05 (by @ras0219-msft)
+- libheif `1.10.0#0` -> `1.10.0#0`
+    - [(#17593)](https://github.com/microsoft/vcpkg/pull/17593) [vcpkg baseline][libheif] fix CI errors if gdk-pixbuf can be found (by @Neumann-A)
+    - [(#17710)](https://github.com/microsoft/vcpkg/pull/17710) [libheif] Install pdbs (by @JackBoosY)
+- hedley `14#0` -> `14#0`
+    - [(#17675)](https://github.com/microsoft/vcpkg/pull/17675) [Hedley] Update to v15 (by @pratikpc)
+- infoware `0.5.5#0` -> `0.6.0#0`
+    - [(#17597)](https://github.com/microsoft/vcpkg/pull/17597) [infoware] Bump version to 0.6.0 (by @nabijaczleweli)
+- fann `2.2.0-1#0` -> `2.2.0-1#0`
+    - [(#17682)](https://github.com/microsoft/vcpkg/pull/17682) [fann] Support UNIX, re-fix installation (by @JackBoosY)
+- libffi `#0` -> `#0`
+    - [(#17637)](https://github.com/microsoft/vcpkg/pull/17637) [libffi] Update patch to fix apply patch failure (by @JackBoosY)
+- abseil `#0` -> `#0`
+    - [(#17774)](https://github.com/microsoft/vcpkg/pull/17774) [abseil] vcpkg_fixup_pkgconfig (by @Neumann-A)
+- brynet `1.10.0#0` -> `1.11.0#0`
+    - [(#17733)](https://github.com/microsoft/vcpkg/pull/17733) [brynet] upgrade version 1.11.0 (by @IronsDu)
+- libarchive `#0` -> `#0`
+    - [(#17266)](https://github.com/microsoft/vcpkg/pull/17266) [libarchive] disable libb2 until properly handled (by @cenit)
+- gtk `#0` -> `#0`
+    - [(#17670)](https://github.com/microsoft/vcpkg/pull/17670) [gtk] update to 4.3.0 (by @Neumann-A)
+- protobuf `#0` -> `#0`
+    - [(#17689)](https://github.com/microsoft/vcpkg/pull/17689) [vcpkg] Update vcpkg tool version 2021-05-05 (by @ras0219-msft)
+- nnpack `#0` -> `#0`
+    - [(#17063)](https://github.com/microsoft/vcpkg/pull/17063) [cpuinfo,fbgemm,nnpack] update to latest source version and rename targets (by @luncliff)
+- gtkmm `#0` -> `#0`
+    - [(#17669)](https://github.com/microsoft/vcpkg/pull/17669) [gtkmm] Update to 4.0.1 (by @Neumann-A)
+- msmpi `10.1#0` -> `10.1#0`
+    - [(#17629)](https://github.com/microsoft/vcpkg/pull/17629) [msmpi] Update the download hash (by @JackBoosY)
+- fastlz `1.0-3#0` -> `1.0-3#0`
+    - [(#17771)](https://github.com/microsoft/vcpkg/pull/17771) [fastlz] update to the latest commit (by @JonLiu1993)
+- nccl `2.4.6#0` -> `2.4.6#0`
+    - [(#17431)](https://github.com/microsoft/vcpkg/pull/17431) [nccl] Remove NCCL auto-download due to licensing issues (by @jacobkahn)
+- gtest `1.10.0#4` -> `1.10.0#0`
+    - [(#17709)](https://github.com/microsoft/vcpkg/pull/17709) [gtest] Update to the latest commit (by @JonLiu1993)
+- hdf5 `1.12.0#1` -> `1.12.0#0`
+    - [(#17598)](https://github.com/microsoft/vcpkg/pull/17598) [hdf5] fix pc files (by @Neumann-A)
+- ffmpeg `4.3.2#7` -> `4.3.2#11`
+    - [(#17204)](https://github.com/microsoft/vcpkg/pull/17204) [ffmpeg] avdevice CoreAudio dependency fix for osx (by @mcmtroffaes)
+    - [(#17299)](https://github.com/microsoft/vcpkg/pull/17299) [ffmpeg] soxr dependency fix (by @mcmtroffaes)
+    - [(#17625)](https://github.com/microsoft/vcpkg/pull/17625) [ffmpeg] fix optional X11 platform dependencies (by @mcmtroffaes)
+    - [(#17659)](https://github.com/microsoft/vcpkg/pull/17659) [ffmpeg] fix dnn dependency (by @mcmtroffaes)
+
+</details>
+
+-- vcpkg team vcpkg@microsoft.com Thu, 13 May 00:00:00 -0700
+
+
 vcpkg (2020.11.03 - 2021.04.30)
 ---
 #### Total port count: 1667
