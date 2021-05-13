@@ -14,7 +14,10 @@ vcpkg_configure_cmake(
         -DWITH_EXAMPLES=OFF
 )
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libheif/)
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
