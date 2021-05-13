@@ -42,10 +42,10 @@
             "disable-assertions",
             "disable-clang-static-analyzer",
             "enable-bindings",
+            "enable-libxml2",
             "enable-terminfo",
             "enable-threads",
-            "enable-zlib",
-            "enable-libxml2"
+            "enable-zlib"
           ]
         }
       ]
