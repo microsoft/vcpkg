@@ -43,6 +43,7 @@ else()
             --disable-examples
             --disable-curl
             --disable-https
+            --with-gnutls=no
     )
 
     vcpkg_install_make()
