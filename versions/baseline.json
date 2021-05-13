@@ -5901,8 +5901,8 @@
       "port-version": 0
     },
     "szip": {
-      "baseline": "2.1.1-6",
-      "port-version": 0
+      "baseline": "2.1.1",
+      "port-version": 7
     },
     "tabulate": {
       "baseline": "2019-01-06",
