@@ -13,6 +13,10 @@
       "platform": "windows"
     },
     {
+      "name": "libmagic",
+      "host": true
+    },
+    {
       "name": "tre",
       "platform": "windows | mingw"
     }
