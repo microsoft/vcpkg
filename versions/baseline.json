@@ -2973,8 +2973,8 @@
       "port-version": 1
     },
     "libb2": {
-      "baseline": "0.98.1",
-      "port-version": 4
+      "baseline": "2021-05-13",
+      "port-version": 0
     },
     "libbacktrace": {
       "baseline": "2021-03-14",
