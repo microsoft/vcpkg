@@ -1,3 +1,4 @@
+# see https://github.com/boostorg/json/issues/556 fore more details
 file(READ "${SOURCE_PATH}/build/Jamfile" _contents)
 string(REPLACE "import ../../config/checks/config" "import config/checks/config" _contents "${_contents}")
 string(REPLACE "\n      <library>/boost//container/<warnings-as-errors>off" "" _contents "${_contents}")

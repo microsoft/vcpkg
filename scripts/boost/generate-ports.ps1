@@ -27,11 +27,12 @@ else
 # Clear this array when moving to a new boost version
 $port_versions = @{
     #e.g.  "asio" = 1;
-    "asio" = 2;
+    "asio" = 1;
     "python" = 3;
     "context" = 3;
-    "concept-check" = 3;
+    "concept-check" = 2;
     "regex" = 2;
+    "json" = 1;
 }
 
 $per_port_data = @{
