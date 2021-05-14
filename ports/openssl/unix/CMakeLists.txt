@@ -146,6 +146,13 @@ else()
     set(PATH_VAR ":$ENV{PATH}")
 endif()
 
+add_custom_command(
+        OUTPUT "${BUILDDIR}/Makefile"
+        COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
+        VERBATIM
+        WORKING_DIRECTORY "${BUILDDIR}"
+)
+
 if(IOS)
     add_custom_command(
             OUTPUT "${BUILDDIR}/Makefile"
@@ -155,9 +162,8 @@ if(IOS)
             ${PLATFORM}
             "--prefix=${CMAKE_INSTALL_PREFIX}"
             "--openssldir=/etc/ssl"
-            COMMAND "${CMAKE_COMMAND}" "-DDIR=${BUILDDIR}" -P "${CMAKE_CURRENT_LIST_DIR}/remove-deps.cmake"
             VERBATIM
-            WORKING_DIRECTORY "${BUILDDIR}"
+            APPEND
     )
 else()
     add_custom_command(
@@ -168,7 +174,6 @@ else()
         COMMAND ${ENV_COMMAND} RANLIB=${CMAKE_RANLIB}
         COMMAND ${ENV_COMMAND} MAKE=${MAKE}
         COMMAND ${ENV_COMMAND} MAKEDEPPROG=${CMAKE_C_COMPILER}
-        COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
         COMMAND "${PERL}" Configure
             ${SHARED}
             enable-static-engine
@@ -185,11 +190,16 @@ else()
             "--prefix=${CMAKE_INSTALL_PREFIX}"
             "--openssldir=/etc/ssl"
             ${CFLAGS}
-        COMMAND "${CMAKE_COMMAND}" "-DDIR=${BUILDDIR}" -P "${CMAKE_CURRENT_LIST_DIR}/remove-deps.cmake"
         VERBATIM
-        WORKING_DIRECTORY "${BUILDDIR}"
+        APPEND
     )
 endif()
+add_custom_command(
+        OUTPUT "${BUILDDIR}/Makefile"
+        COMMAND "${CMAKE_COMMAND}" "-DDIR=${BUILDDIR}" -P "${CMAKE_CURRENT_LIST_DIR}/remove-deps.cmake"
+        VERBATIM
+        APPEND
+)
 
 add_custom_target(build_libs ALL
     COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
