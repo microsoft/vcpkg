@@ -3613,7 +3613,7 @@
       "port-version": 0
     },
     "libuv": {
-      "baseline": "1.39.0",
+      "baseline": "1.41.0",
       "port-version": 0
     },
     "libuvc": {
