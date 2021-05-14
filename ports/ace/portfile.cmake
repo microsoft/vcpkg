@@ -104,7 +104,7 @@ elseif(VCPKG_TARGET_IS_LINUX)
 elseif(VCPKG_TARGET_IS_OSX)
   set(SOLUTION_TYPE gnuace)
   file(WRITE ${ACE_SOURCE_PATH}/config.h "#include \"ace/config-macosx.h\"")
-  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "c++11=1\ninclude $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
+  file(WRITE ${ACE_ROOT}/include/makeinclude/platform_macros.GNU "include $(ACE_ROOT)/include/makeinclude/platform_macosx.GNU")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
