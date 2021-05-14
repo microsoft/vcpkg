@@ -15,7 +15,7 @@ string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)
 string(COMPARE EQUAL ${VCPKG_CRT_LINKAGE} static EMBREE_STATIC_RUNTIME)
 
 if (NOT VCPKG_TARGET_IS_OSX)
-    if ("avx512" IN_LIST FEATURE)
+    if ("avx512" IN_LIST FEATURES)
         message(FATAL_ERROR "Microsoft Visual C++ Compiler does not support feature avx512 officially.")
     endif()
 
