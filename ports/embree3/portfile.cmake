@@ -20,6 +20,7 @@ if (NOT VCPKG_TARGET_IS_OSX)
     endif()
 
     vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+        FEATURES
         avx     EMBREE_ISA_AVX
         avx2    EMBREE_ISA_AVX2
         avx512  EMBREE_ISA_AVX512
