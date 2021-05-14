@@ -1,7 +1,9 @@
 #[===[.md:
 # vcpkg_install_gn
 
-Installs a GN project
+Installs a GN project.
+
+In order to build a GN project without installing, use [`vcpkg_build_ninja()`].
 
 ## Usage:
 ```cmake
@@ -19,6 +21,8 @@ The path to the source directory
 Only install the specified targets.
 
 Note: includes must be handled separately
+
+[`vcpkg_build_ninja()`]: vcpkg_build_ninja.md
 #]===]
 
 function(z_vcpkg_install_gn_get_target_type out_var)
@@ -47,7 +51,7 @@ function(z_vcpkg_install_gn_get_desc out_var)
     endif()
 
     execute_process(
-        COMMAND ${GN} desc "${arg_BUILD_DIR}" "${arg_TARGET}" "${arg_WHAT_TO_DISPLAY}"
+        COMMAND "${GN}" desc "${arg_BUILD_DIR}" "${arg_TARGET}" "${arg_WHAT_TO_DISPLAY}"
         WORKING_DIRECTORY "${arg_SOURCE_PATH}"
         OUTPUT_VARIABLE output
         OUTPUT_STRIP_TRAILING_WHITESPACE
