@@ -153,19 +153,7 @@ add_custom_command(
         WORKING_DIRECTORY "${BUILDDIR}"
 )
 
-if(IOS)
-    add_custom_command(
-            OUTPUT "${BUILDDIR}/Makefile"
-            COMMAND "${PERL}" Configure
-            ${SHARED}
-            ${DISABLES}
-            ${PLATFORM}
-            "--prefix=${CMAKE_INSTALL_PREFIX}"
-            "--openssldir=/etc/ssl"
-            VERBATIM
-            APPEND
-    )
-else()
+if(NOT IOS)
     add_custom_command(
         OUTPUT "${BUILDDIR}/Makefile"
         COMMAND ${ENV_COMMAND} CC=${CMAKE_C_COMPILER}
@@ -174,8 +162,11 @@ else()
         COMMAND ${ENV_COMMAND} RANLIB=${CMAKE_RANLIB}
         COMMAND ${ENV_COMMAND} MAKE=${MAKE}
         COMMAND ${ENV_COMMAND} MAKEDEPPROG=${CMAKE_C_COMPILER}
-        COMMAND "${PERL}" Configure
-            ${SHARED}
+        VERBATIM
+        APPEND
+    )
+
+    list(APPEND DISABLES
             enable-static-engine
             no-zlib
             no-ssl2
@@ -184,18 +175,18 @@ else()
             no-cast
             no-seed
             no-md2
-            no-tests
-            ${DISABLES}
-            ${PLATFORM}
-            "--prefix=${CMAKE_INSTALL_PREFIX}"
-            "--openssldir=/etc/ssl"
-            ${CFLAGS}
-        VERBATIM
-        APPEND
-    )
+            no-tests)
 endif()
+
 add_custom_command(
         OUTPUT "${BUILDDIR}/Makefile"
+        COMMAND "${PERL}" Configure
+        ${SHARED}
+        ${DISABLES}
+        ${PLATFORM}
+        "--prefix=${CMAKE_INSTALL_PREFIX}"
+        "--openssldir=/etc/ssl"
+        ${CFLAGS}
         COMMAND "${CMAKE_COMMAND}" "-DDIR=${BUILDDIR}" -P "${CMAKE_CURRENT_LIST_DIR}/remove-deps.cmake"
         VERBATIM
         APPEND
