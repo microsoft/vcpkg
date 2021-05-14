@@ -40,7 +40,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
 else()
     set(YASM_BUILD_BINARY OFF)
-    set(VCPKG_POLICY_EMPTY_PACKAGE ON)
+    set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake.in"
