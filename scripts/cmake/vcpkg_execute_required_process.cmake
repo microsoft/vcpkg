@@ -16,7 +16,7 @@ vcpkg_execute_required_process(
 ```
 ## Parameters
 ### ALLOW_IN_DOWNLOAD_MODE
-Allows the command to execute in Download Mode.  
+Allows the command to execute in Download Mode.
 [See execute_process() override](../../scripts/cmake/execute_process.cmake).
 
 ### COMMAND
@@ -47,9 +47,6 @@ This should be a unique name for different triplets so that the logs don't confl
 * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
 #]===]
 
-include(vcpkg_prettify_command)
-include(vcpkg_execute_in_download_mode)
-
 function(vcpkg_execute_required_process)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 vcpkg_execute_required_process "ALLOW_IN_DOWNLOAD_MODE" "WORKING_DIRECTORY;LOGNAME;TIMEOUT;OUTPUT_VARIABLE;ERROR_VARIABLE" "COMMAND")
@@ -73,7 +70,7 @@ function(vcpkg_execute_required_process)
     endif()
 
     if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT vcpkg_execute_required_process_ALLOW_IN_DOWNLOAD_MODE)
-        message(FATAL_ERROR 
+        message(FATAL_ERROR
 [[
 This command cannot be executed in Download Mode.
 Halting portfile execution.
@@ -104,7 +101,7 @@ Halting portfile execution.
             file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
             list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
         endforeach()
-        vcpkg_prettify_command(vcpkg_execute_required_process_COMMAND vcpkg_execute_required_process_COMMAND_PRETTY)
+        z_vcpkg_prettify_command_line(vcpkg_execute_required_process_COMMAND_PRETTY ${vcpkg_execute_required_process_COMMAND})
         message(FATAL_ERROR
             "  Command failed: ${vcpkg_execute_required_process_COMMAND_PRETTY}\n"
             "  Working Directory: ${vcpkg_execute_required_process_WORKING_DIRECTORY}\n"

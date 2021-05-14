@@ -1,6 +1,0 @@
-{
-  "name": "vcpkg-uses-test-cmake",
-  "version-string": "1.0.0",
-  "description": "A test port that uses the deprecated function vcpkg_test_cmake.",
-  "homepage": ""
-}

@@ -1,5 +1,7 @@
 # vcpkg_download_distfile
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_download_distfile.md).
+
 Download and cache a file needed for this port.
 
 This helper should always be used instead of CMake's built-in `file(DOWNLOAD)` command.
@@ -51,4 +53,4 @@ The helper [`vcpkg_from_github`](vcpkg_from_github.md) should be used for downlo
 * [freetype](https://github.com/Microsoft/vcpkg/blob/master/ports/freetype/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_download_distfile.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_download_distfile.cmake)
+[scripts/cmake/vcpkg\_download\_distfile.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_download_distfile.cmake)

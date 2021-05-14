@@ -1,3 +1,7 @@
+if (VCPKG_HOST_IS_LINUX)
+    message(WARNING "gamedev-framework requires gcc version 8.3 or later.")
+endif()
+
 vcpkg_fail_port_install(
     ON_ARCH "arm"
 )
@@ -6,8 +10,8 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GamedevFramework/gf
     HEAD_REF master
-    REF v0.18.1
-    SHA512 7d027bc9c56ad60e242f44c40e79039a0b95fb01b805cba529089a9a7e4e3ca79986d05f6906653065b96cc39d9d9e79aeafb72524453508468a30d6cf7609cf
+    REF v0.20.0
+    SHA512 57b0e87f8713268d7bd4e68fb65f57715af6617582e3ce342a10a66f2ebfeeacdd11e1df0abbd13a2d1d9e6222def94bcf7b522ef5411043668e4c6f0fea1dd7
 )
 
 vcpkg_configure_cmake(

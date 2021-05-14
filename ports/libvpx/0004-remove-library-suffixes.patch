@@ -1,0 +1,13 @@
+diff --git a/build/make/gen_msvs_vcxproj.sh b/build/make/gen_msvs_vcxproj.sh
+index bb1c31d..9a0827e 100644
+--- a/build/make/gen_msvs_vcxproj.sh
++++ b/build/make/gen_msvs_vcxproj.sh
+@@ -377,7 +377,7 @@ generate_vcxproj() {
+               else
+                 config_suffix=""
+               fi
+-              tag_content TargetName "${name}${lib_sfx}${config_suffix}"
++              tag_content TargetName "${name}"
+             fi
+             close_tag PropertyGroup
+         done

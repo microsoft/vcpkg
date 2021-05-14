@@ -38,7 +38,7 @@ The underlying buildsystem will be instructed to not parallelize
 Additional subdir to invoke make in. Useful if only parts of a port should be built. 
 
 ## Notes:
-This command should be preceeded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
+This command should be preceded by a call to [`vcpkg_configure_make()`](vcpkg_configure_make.md).
 You can use the alias [`vcpkg_install_make()`](vcpkg_install_make.md) function if your makefile supports the
 "install" target
 
@@ -97,8 +97,7 @@ function(vcpkg_build_make)
         set(NO_PARALLEL_MAKE_OPTS ${_bc_MAKE_OPTIONS} -j 1 --trace -f ${_bc_MAKEFILE} ${_bc_BUILD_TARGET})
 
         string(REPLACE " " "\\\ " _VCPKG_PACKAGE_PREFIX ${CURRENT_PACKAGES_DIR})
-        # Don't know why '/cygdrive' is suddenly a requirement here. (at least for x264)
-        string(REGEX REPLACE "([a-zA-Z]):/" "/cygdrive/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
+        string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_PACKAGE_PREFIX "${_VCPKG_PACKAGE_PREFIX}")
         set(INSTALL_OPTS -j ${VCPKG_CONCURRENCY} --trace -f ${_bc_MAKEFILE} ${_bc_INSTALL_TARGET} DESTDIR=${_VCPKG_PACKAGE_PREFIX})
         #TODO: optimize for install-data (release) and install-exec (release/debug)
     else()
@@ -187,7 +186,7 @@ function(vcpkg_build_make)
 
             if (_bc_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
-                        COMMAND ${MAKE_BASH} ${MAKE_CMD_LINE}
+                        COMMAND ${MAKE_BASH} ${NO_PARALLEL_MAKE_CMD_LINE}
                         WORKING_DIRECTORY "${WORKING_DIRECTORY}"
                         LOGNAME "${_bc_LOGFILE_ROOT}-${TARGET_TRIPLET}${SHORT_BUILDTYPE}"
                 )
@@ -234,7 +233,7 @@ function(vcpkg_build_make)
         string(REGEX REPLACE "([a-zA-Z]):/" "/\\1/" _VCPKG_INSTALL_PREFIX "${CURRENT_INSTALLED_DIR}")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
         file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}_tmp")
-        file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}/" "${CURRENT_PACKAGES_DIR}")
+        file(RENAME "${CURRENT_PACKAGES_DIR}_tmp${_VCPKG_INSTALL_PREFIX}" "${CURRENT_PACKAGES_DIR}")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}_tmp")
     endif()
 

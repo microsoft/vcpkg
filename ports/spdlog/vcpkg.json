@@ -1,0 +1,26 @@
+{
+  "name": "spdlog",
+  "version-semver": "1.8.5",
+  "port-version": 2,
+  "description": "Very fast, header only, C++ logging library",
+  "homepage": "https://github.com/gabime/spdlog",
+  "dependencies": [
+    "fmt",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ],
+  "features": {
+    "benchmark": {
+      "description": "Use google benchmark",
+      "dependencies": [
+        "benchmark"
+      ]
+    }
+  }
+}

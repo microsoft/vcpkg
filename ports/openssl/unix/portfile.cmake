@@ -26,6 +26,7 @@ vcpkg_configure_cmake(
         -DSOURCE_PATH=${MASTER_COPY_SOURCE_PATH}
         -DPERL=${PERL}
         -DMAKE=${MAKE}
+        -DVCPKG_CONCURRENCY=${VCPKG_CONCURRENCY}
     OPTIONS_RELEASE
         -DINSTALL_HEADERS=ON
 )

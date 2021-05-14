@@ -5,11 +5,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO erincatto/Box2D
-    REF 4d7757feedc9dd36f64393ae08acfd3b9600ac17  #v2.4.0
-    SHA512 197f701016c91fda944328e7d867f0a5baa152cce53fa35826986923456af593595bad884008944e041d9ac2e1d769a54eaad4142e19b42a3bb2a2010d814cc9
+    REF 9ebbbcd960ad424e03e5de6e66a40764c16f51bc  #v2.4.1
+    SHA512 d9fa387ce893ed1fb73f80006491202f2624ef6d0fb37daf92fbd1a7f9071c84da45e4b418b333566435bbbdfd3d5f68a42dfca02416e9a3a2b4db039f1c6151
     HEAD_REF master
-    PATCHES
-        export-targets.patch
 )
 
 vcpkg_configure_cmake(
@@ -23,7 +21,7 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-box2d TARGET_PATH share/unofficial-box2d)
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/box2d)
 
 vcpkg_copy_pdbs()
 
