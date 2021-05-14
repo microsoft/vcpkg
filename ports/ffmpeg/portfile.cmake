@@ -16,8 +16,9 @@ vcpkg_from_github(
         0011-Fix-x265-detection.patch
         0012-Fix-ssl-110-detection.patch
         0013-define-WINVER.patch
-        0014-avfilter-dependency-fix.patch
+        0014-avfilter-dependency-fix.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
+        0016-configure-dnn-needs-avformat.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -321,6 +322,14 @@ if("opengl" IN_LIST FEATURES)
     set(ENABLE_OPENGL ${STATIC_LINKAGE})
 else()
     set(OPTIONS "${OPTIONS} --disable-opengl")
+endif()
+
+set(ENABLE_OPENH264 OFF)
+if("openh264" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libopenh264")
+    set(ENABLE_OPENH264 ${STATIC_LINKAGE})
+else()
+    set(OPTIONS "${OPTIONS} --disable-libopenh264")
 endif()
 
 set(ENABLE_OPENJPEG OFF)
