@@ -9,7 +9,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF szip-2.1.1
     PATCHES
-        fix-szip-config-to-set-szip-found.patch # This patch is required for linux on osx; It does not matter for windows
+        fix-linkage-config.patch
         mingw-lib-names.patch
 )
 
