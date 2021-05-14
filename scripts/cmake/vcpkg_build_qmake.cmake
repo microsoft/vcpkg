@@ -1,17 +1,29 @@
-#.rst:
-# .. command:: vcpkg_build_qmake
-#
-#  Build a qmake-based project, previously configured using vcpkg_configure_qmake.
-#
-#  ::
-#  vcpkg_build_qmake()
-#
+#[===[.md:
+# vcpkg_build_qmake
+
+Build a qmake-based project, previously configured using vcpkg_configure_qmake.
+
+```cmake
+vcpkg_build_qmake()
+```
+#]===]
+
 function(vcpkg_build_qmake)
-    cmake_parse_arguments(_csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS" ${ARGN})
+    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
+    cmake_parse_arguments(PARSE_ARGV 0 _csc "SKIP_MAKEFILES" "BUILD_LOGNAME" "TARGETS;RELEASE_TARGETS;DEBUG_TARGETS")
 
     if(CMAKE_HOST_WIN32)
-        vcpkg_find_acquire_program(JOM)
-        set(INVOKE "${JOM}")
+        if (VCPKG_QMAKE_USE_NMAKE)
+            find_program(NMAKE nmake)
+            set(INVOKE "${NMAKE}")
+            get_filename_component(NMAKE_EXE_PATH ${NMAKE} DIRECTORY)
+            set(PATH_GLOBAL "$ENV{PATH}")
+            set(ENV{PATH} "$ENV{PATH};${NMAKE_EXE_PATH}")
+            set(ENV{CL} "$ENV{CL} /MP${VCPKG_CONCURRENCY}")
+        else()
+            vcpkg_find_acquire_program(JOM)
+            set(INVOKE "${JOM}")
+        endif()
     else()
         find_program(MAKE make)
         set(INVOKE "${MAKE}")
@@ -57,15 +69,38 @@ function(vcpkg_build_qmake)
     unset(_buildname)
 
     foreach(_buildname ${BUILDTYPES})
-        set(_BUILD_PREFIX "${_path_suffix_${_buildname}}")
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/bin")
-        vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}${_BUILD_PREFIX}/lib")
+        set(_installed_prefix_ "${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}")
+        set(_installed_libpath_ "${_installed_prefix_}/lib/${VCPKG_HOST_PATH_SEPARATOR}${_installed_prefix_}/lib/manual-link/")
+
+        vcpkg_add_to_path(PREPEND "${_installed_prefix_}/bin")
+        vcpkg_add_to_path(PREPEND "${_installed_prefix_}/lib")
+
+        # We set LD_LIBRARY_PATH ENV variable to allow executing Qt tools (rcc,...) even with dynamic linking
+        if(CMAKE_HOST_UNIX)
+            if(DEFINED ENV{LD_LIBRARY_PATH})
+                set(_ld_library_path_defined_ TRUE)
+                set(_ld_library_path_backup_ $ENV{LD_LIBRARY_PATH})
+                set(ENV{LD_LIBRARY_PATH} "${_installed_libpath_}${VCPKG_HOST_PATH_SEPARATOR}${_ld_library_path_backup_}")
+            else()
+                set(_ld_library_path_defined_ FALSE)
+                set(ENV{LD_LIBRARY_PATH} "${_installed_libpath_}")
+            endif()
+        endif()
+        
         list(APPEND _csc_${_buildname}_TARGETS ${_csc_TARGETS})
         if(NOT _csc_SKIP_MAKEFILES)
             run_jom(qmake_all makefiles ${_short_name_${_buildname}})
         endif()
         run_jom("${_csc_${_buildname}_TARGETS}" ${_csc_BUILD_LOGNAME} ${_short_name_${_buildname}})
-        unset(_BUILD_PREFIX)
+
+        # Restore backup
+        if(CMAKE_HOST_UNIX)
+            if(_ld_library_path_defined_)
+                set(ENV{LD_LIBRARY_PATH} "${_ld_library_path_backup_}")                
+            else()
+                unset(ENV{LD_LIBRARY_PATH})
+            endif()
+        endif()
     endforeach()
 
     # Restore the original value of ENV{PATH}

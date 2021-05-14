@@ -1,6 +1,6 @@
 set(X264_VERSION 157)
 
-vcpkg_fail_port_install(ON_TARGET "OSX") 
+vcpkg_fail_port_install(ON_ARCH "arm")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -12,18 +12,27 @@ vcpkg_from_github(
         "uwp-cflags.patch"
 )
 
+vcpkg_find_acquire_program(NASM)
+get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+vcpkg_add_to_path(${NASM_EXE_PATH})
+
 if(VCPKG_TARGET_IS_WINDOWS)
     _vcpkg_determine_autotools_host_cpu(BUILD_ARCH)
     _vcpkg_determine_autotools_target_cpu(HOST_ARCH)
     list(APPEND OPTIONS --build=${BUILD_ARCH}-pc-mingw32)
     list(APPEND OPTIONS --host=${HOST_ARCH}-pc-mingw32)
+    set(ENV{AS} "${NASM}")
 endif()
 
 if(VCPKG_TARGET_IS_UWP)
     list(APPEND OPTIONS --extra-cflags=-DWINAPI_FAMILY=WINAPI_FAMILY_APP --extra-cflags=-D_WIN32_WINNT=0x0A00)
     list(APPEND OPTIONS --extra-ldflags=-APPCONTAINER --extra-ldflags=WindowsApp.lib)
+    list(APPEND OPTIONS --disable-asm)
 endif()
 
+if(VCPKG_TARGET_IS_LINUX)
+    list(APPEND OPTIONS --enable-pic)
+endif()
 
 vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
@@ -37,20 +46,33 @@ vcpkg_configure_make(
         --disable-ffms
         --disable-gpac
         --disable-lsmash
-        --disable-asm
         --enable-debug
 
 )
 
 vcpkg_install_make()
-vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
+
+if(NOT VCPKG_TARGET_IS_UWP)
+    vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/lib/x264.lib)
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/debug/lib/x264.lib)
-else()
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(pcfile "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/x264.pc")
+    if(EXISTS "${pcfile}")
+        vcpkg_replace_string("${pcfile}" "-lx264" "-llibx264")
+    endif()
+    set(pcfile "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/x264.pc")
+    if(EXISTS "${pcfile}")
+        vcpkg_replace_string("${pcfile}" "-lx264" "-llibx264")
+    endif()
+endif()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/lib/libx264.lib)
+    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.lib)
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     # force U_STATIC_IMPLEMENTATION macro
     file(READ ${CURRENT_PACKAGES_DIR}/include/x264.h HEADER_CONTENTS)
     string(REPLACE "defined(U_STATIC_IMPLEMENTATION)" "1" HEADER_CONTENTS "${HEADER_CONTENTS}")
@@ -62,7 +84,7 @@ else()
     )
 endif()
 
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES -lpthread -lm -ldl)
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 

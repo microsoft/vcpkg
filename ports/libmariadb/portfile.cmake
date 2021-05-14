@@ -1,26 +1,34 @@
-
 if (EXISTS "${CURRENT_INSTALLED_DIR}/share/libmysql")
     message(FATAL_ERROR "FATAL ERROR: libmysql and libmariadb are incompatible.")
 endif()
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO MariaDB/mariadb-connector-c
-    REF 8e9c3116105d9a998a60991b7f4ba910d454d4b1 # v3.1.7
-    SHA512 b663effe7794d997c0589a9a20dab6b7359414612e60e3cb43e3fd0ddeae0391bcbc2d816cba4a7438602566ad6781cbf8e18b0062f1d37a2b2bd521af16033c
-    HEAD_REF master
+    REPO mariadb-corporation/mariadb-connector-c
+    REF 7d304d26c787a3f0430624db977b615aba56e4bb # v3.1.12
+    SHA512 16e74b2cbe401492ef294e2442a00ef1739089152a88d9263ca4d17b65260554b330630e9405813fd9089fa445d676e3b6aa91ac94128ad6b0a299e8b7edc1b3
+    HEAD_REF 3.1
     PATCHES
-            md.patch
-            disable-test-build.patch
-			fix-InstallPath.patch
+        arm64.patch
+        md.patch
+        disable-test-build.patch
+        fix-InstallPath.patch
+        fix-iconv.patch
+        export-cmake-targets.patch
+        fix-build-error-with-cmake3.20.patch #This can be removed in next release, which has been merged to upstream.
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    zlib WITH_EXTERNAL_ZLIB
-    openssl WITH_SSL
+    FEATURES 
+        zlib WITH_EXTERNAL_ZLIB
+        iconv WITH_ICONV
 )
+
+if("openssl" IN_LIST FEATURES)
+	set(WITH_SSL OPENSSL)
+else()
+	set(WITH_SSL OFF)
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
@@ -29,9 +37,12 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DWITH_UNITTEST=OFF
         -DWITH_CURL=OFF
+        -DWITH_SSL=${WITH_SSL}
 )
 
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-libmariadb TARGET_PATH share/unofficial-libmariadb)
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # remove debug header
@@ -65,5 +76,4 @@ file(RENAME
     ${CURRENT_PACKAGES_DIR}/include/mysql)
 
 # copy license file
-file(COPY ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmariadb)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libmariadb/COPYING.LIB ${CURRENT_PACKAGES_DIR}/share/libmariadb/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,73 +1,69 @@
+vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+
+# Halide distributes some loadable modules that belong in lib on all platforms.
+# CMake defaults module DLLs into the lib folder, which is incompatible with
+# vcpkg’s current policy. This sidesteps that issue, a bit bluntly.
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    REF f43293be3725bb959941e38c1b1fa9ae925f7389
-    SHA512 f223185e208acf6c5b73353a6b5be815db5f2598f568596e800c35ea40b0babe4630da44229e14a5607e9d5e78298d07e7b36a9cbc7b71bf3e665bc12caff68e
-    HEAD_REF master
-    PATCHES
-        fix-install-path.patch
+    REF 85c1b91c47ce15aab0d9502d955e48615f3bcee0  # v11.0.1
+    SHA512 3bfdf9fc82d56d099cf74b6683c0017724c1c4ae791e824f5ef3b4d4c1dcb52dd5adddb740ccf6b073b71fcbb748238f42040071ddb64c155f8fdc2709b8121d
+    HEAD_REF release/11.x
 )
 
-set(TARGET_X86 OFF)
-set(TARGET_ARM OFF)
-set(TARGET_AARCH64 OFF)
-if (VCPKG_TARGET_ARCHITECTURE STREQUAL x86 OR VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-    # llvm x86 components are required for llvm x64
-    set(TARGET_X86 ON)
-elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-    set(TARGET_X86 OFF)
-    if (TARGET_TRIPLET STREQUAL arm64)
-        set(TARGET_AARCH64 ON)
-    else()
-        set(TARGET_ARM ON)
-    endif()
-endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(HALIDE_SHARED_LIBRARY ON)
-else()
-    set(HALIDE_SHARED_LIBRARY OFF)
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    app WITH_APPS
-    test WITH_TESTS
-    tutorials WITH_TUTORIALS
-    docs WITH_DOCS
-    utils WITH_UTILS
-    nativeclient TARGET_NATIVE_CLIENT
-    hexagon TARGET_HEXAGON
-    metal TARGET_METAL
-    mips TARGET_MIPS
-    powerpc TARGET_POWERPC
-    ptx TARGET_PTX
-    opencl TARGET_OPENCL
-    opengl TARGET_OPENGL
-    opengl TARGET_OPENGLCOMPUTE
-    rtti HALIDE_ENABLE_RTTI
+    target-aarch64 TARGET_AARCH64
+    target-amdgpu TARGET_AMDGPU
+    target-arm TARGET_ARM
+    target-d3d12compute TARGET_D3D12COMPUTE
+    target-hexagon TARGET_HEXAGON
+    target-metal TARGET_METAL
+    target-mips TARGET_MIPS
+    target-nvptx TARGET_NVPTX
+    target-opencl TARGET_OPENCL
+    target-opengl TARGET_OPENGL
+    target-powerpc TARGET_POWERPC
+    target-riscv TARGET_RISCV
+    target-x86 TARGET_X86
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
-        -DTRIPLET_SYSTEM_ARCH=${TRIPLET_SYSTEM_ARCH}
-        -DHALIDE_SHARED_LIBRARY=${HALIDE_SHARED_LIBRARY}
-        -DTARGET_X86=${TARGET_X86}
-        -DTARGET_ARM=${TARGET_ARM}
-        -DTARGET_AARCH64=${TARGET_AARCH64}
-        #-DTARGET_AMDGPU
-        -DWARNINGS_AS_ERRORS=OFF
+        -DWITH_DOCS=NO
+        -DWITH_PYTHON_BINDINGS=NO
+        -DWITH_TESTS=NO
+        -DWITH_TUTORIALS=NO
+        -DWITH_UTILS=NO
+        -DCMAKE_INSTALL_LIBDIR=bin
+        -DCMAKE_INSTALL_DATADIR=share/${PORT}
+        -DHALIDE_INSTALL_CMAKEDIR=share/${PORT}
 )
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/halide)
+vcpkg_copy_tools(
+    TOOL_NAMES
+        featurization_to_sample
+        get_host_target
+        retrain_cost_model
+        weightsdir_to_weightsfile
+    AUTO_CLEAN
+)
 
 vcpkg_copy_pdbs()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/halide_config.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/halide-config.cmake)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/halide_config.make ${CURRENT_PACKAGES_DIR}/share/${PORT}/halide-config.make)
+vcpkg_fixup_cmake_targets()
 
-file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/tutorial)
+
+file(GLOB readmes "${CURRENT_PACKAGES_DIR}/share/${PORT}/*.md")
+file(REMOVE ${readmes})
+
+configure_file(${SOURCE_PATH}/LICENSE.txt ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
+configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage COPYONLY)

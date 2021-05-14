@@ -30,7 +30,6 @@ vcpkg_from_github(
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/FindCUDA.cmake DESTINATION ${SOURCE_PATH}/cmake/)  #contains fixes for CUDA 11 compat, remove when CMake has support for it
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "cuda"     WITH_CUDA
@@ -46,21 +45,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
  "world"    BUILD_opencv_world
 )
 
-set(WITH_VTK OFF)
-if("vtk" IN_LIST FEATURES)
-  set(WITH_VTK ON)
-endif()
-
 set(WITH_MSMF ON)
 if(NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
   set(WITH_MSMF OFF)
-endif()
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-  if (WITH_VTK)
-    message(WARNING "VTK is currently unsupported in this build configuration, turning it off")
-    set(WITH_VTK OFF)
-  endif()
 endif()
 
 if("ffmpeg" IN_LIST FEATURES)

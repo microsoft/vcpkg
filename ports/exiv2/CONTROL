@@ -1,6 +1,6 @@
 Source: exiv2
 Version: 0.27.3
-Port-Version: 2
+Port-Version: 4
 Build-Depends: zlib, libiconv, gettext
 Description: Image metadata library and tools
 Homepage: https://www.exiv2.org

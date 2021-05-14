@@ -1,6 +1,8 @@
 {
   "name": "irrxml",
-  "version-string": "1.2",
-  "description": "XML library from IRRLICHT Enging",
-  "homepage": "http://irrlicht.sourceforge.net"
+  "version-string": "0",
+  "description": "Alias port for irrlicht",
+  "dependencies": [
+    "irrlicht"
+  ]
 }

@@ -1,0 +1,33 @@
+{
+  "name": "boost-type-erasure",
+  "version-string": "1.75.0",
+  "port-version": 1,
+  "description": "Boost type_erasure module",
+  "homepage": "https://github.com/boostorg/type_erasure",
+  "dependencies": [
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-config",
+    "boost-detail",
+    "boost-fusion",
+    "boost-iterator",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-mp11",
+    "boost-mpl",
+    "boost-preprocessor",
+    "boost-smart-ptr",
+    "boost-thread",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-typeof",
+    "boost-utility",
+    "boost-vcpkg-helpers",
+    "boost-vmd"
+  ]
+}

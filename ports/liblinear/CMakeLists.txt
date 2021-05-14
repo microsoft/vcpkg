@@ -12,7 +12,7 @@ add_library(blas OBJECT
 
 add_library(liblinear
     linear.cpp
-    tron.cpp
+    newton.cpp
     $<TARGET_OBJECTS:blas>
 )
 target_include_directories(liblinear PRIVATE .)
@@ -42,6 +42,6 @@ endif()
 
 if(NOT DISABLE_INSTALL_HEADERS)
     install(
-        FILES linear.h tron.h
+        FILES linear.h newton.h
         DESTINATION include/liblinear)
 endif()

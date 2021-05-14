@@ -1,7 +1,8 @@
 Source: mimalloc
-Version: 1.6.1-1
+Version: 1.6.4
 Description: Compact general purpose allocator with excellent performance
 Homepage: https://github.com/microsoft/mimalloc
+Supports: !(arm|uwp)
 
 Feature: asm
 Description: Generate assembly files

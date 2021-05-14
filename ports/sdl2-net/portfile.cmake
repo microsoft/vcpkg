@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://www.libsdl.org/projects/SDL_net/release/SDL2_net-2.0.1.tar.gz"
     FILENAME "SDL2_net-2.0.1.tar.gz"

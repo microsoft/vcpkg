@@ -1,5 +1,5 @@
 Source: wt
-Version: 4.4.0
+Version: 4.5.0
 Homepage: https://github.com/emweb/wt
 Description: Wt is a C++ library for developing web applications
 Build-Depends: zlib, libpng, pango (!windows), harfbuzz (!windows), libharu, glew, boost-algorithm, boost-array, boost-asio, boost-bind, boost-config, boost-container-hash, boost-filesystem, boost-fusion, boost-interprocess, boost-lexical-cast, boost-logic, boost-math, boost-multi-index, boost-optional, boost-phoenix, boost-pool, boost-program-options, boost-range, boost-serialization, boost-smart-ptr, boost-spirit, boost-system, boost-thread, boost-tokenizer, boost-tuple, boost-ublas, boost-variant

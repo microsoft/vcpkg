@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 46892ee..803ff46 100644
+index bd7c4f8..e4e92c6 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1742,7 +1742,9 @@ FILE(COPY ${netCDF_SOURCE_DIR}/include/netcdf_meta.h
+@@ -2050,7 +2050,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/ncdap_test/pingurl.c ${CMAKE_CURRENT_
  # Create CMake package configuration files. With these, other packages using
  # cmake should be able to find netcdf using find_package and find_library.
  # The EXPORT call is paired with one in liblib.

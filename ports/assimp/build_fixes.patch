@@ -1,16 +1,24 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index dcafb64..4b131cc 100644
+index dcafb64..761040d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -130,6 +130,17 @@ OPTION ( IGNORE_GIT_HASH
+@@ -51,7 +51,7 @@ IF(HUNTER_ENABLED)
+   add_definitions(-DASSIMP_USE_HUNTER)
+ ENDIF(HUNTER_ENABLED)
+ 
+-PROJECT( Assimp VERSION 5.0.0 )
++PROJECT( Assimp VERSION 5.0.1 )
+ 
+ # All supported options ###############################################
+ 
+@@ -130,6 +130,16 @@ OPTION ( IGNORE_GIT_HASH
     OFF
  )
  
 +find_package(Stb REQUIRED)
 +include_directories(${Stb_INCLUDE_DIR})
-+find_package(irrXML CONFIG REQUIRED)
-+find_path(UTF8_INCLUDE_DIRS "utf8.h")
-+include_directories(${UTF8_INCLUDE_DIRS})
++find_package(utf8cpp CONFIG REQUIRED)
++link_libraries(utf8cpp)
 +find_package(RapidJSON CONFIG REQUIRED)
 +include_directories(${RAPIDJSON_INCLUDE_DIRS})
 +find_path(UNZIP_INCLUDE_DIRS "minizip/unzip.h")
@@ -20,7 +28,7 @@ index dcafb64..4b131cc 100644
  IF (IOS AND NOT HUNTER_ENABLED)
    IF (NOT CMAKE_BUILD_TYPE)
      SET(CMAKE_BUILD_TYPE "Release")
-@@ -230,10 +241,8 @@ SET(LIBASSIMP-DEV_COMPONENT "libassimp${ASSIMP_VERSION_MAJOR}.${ASSIMP_VERSION_M
+@@ -230,10 +240,8 @@ SET(LIBASSIMP-DEV_COMPONENT "libassimp${ASSIMP_VERSION_MAJOR}.${ASSIMP_VERSION_M
  SET(CPACK_COMPONENTS_ALL assimp-bin ${LIBASSIMP_COMPONENT} ${LIBASSIMP-DEV_COMPONENT} assimp-dev)
  SET(ASSIMP_LIBRARY_SUFFIX "" CACHE STRING "Suffix to append to library names")
  
@@ -31,16 +39,15 @@ index dcafb64..4b131cc 100644
  
  # Grouped compiler settings
  IF ((CMAKE_C_COMPILER_ID MATCHES "GNU") AND NOT CMAKE_COMPILER_IS_MINGW)
-@@ -253,7 +262,7 @@ ELSEIF(MSVC)
+@@ -253,7 +261,6 @@ ELSEIF(MSVC)
    IF(MSVC12)
      ADD_COMPILE_OPTIONS(/wd4351)
    ENDIF()
 -  SET(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG /MDd /Ob2 /DEBUG:FULL /Zi")
-+#  SET(CMAKE_CXX_FLAGS_DEBUG "/D_DEBUG /MDd /Ob2 /DEBUG:FULL /Zi")
  ELSEIF ( "${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" )
    IF(NOT HUNTER_ENABLED)
      SET(CMAKE_CXX_FLAGS "-fPIC -std=c++11 ${CMAKE_CXX_FLAGS}")
-@@ -352,35 +361,17 @@ IF (NOT TARGET uninstall)
+@@ -352,35 +359,21 @@ IF (NOT TARGET uninstall)
    ADD_CUSTOM_TARGET(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
  ENDIF()
  
@@ -50,18 +57,21 @@ index dcafb64..4b131cc 100644
    set(INCLUDE_INSTALL_DIR "include")
  
 -  set(GENERATED_DIR "${CMAKE_CURRENT_BINARY_DIR}/generated")
--
++  string(TOLOWER ${PROJECT_NAME} PROJECT_NAME_LOWERCASE)
++  set(NAMESPACE "${PROJECT_NAME_LOWERCASE}::")
+ 
 -  # Configuration
 -  set(VERSION_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
 -  set(PROJECT_CONFIG "${GENERATED_DIR}/${PROJECT_NAME}Config.cmake")
 -  set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Targets")
 -  set(NAMESPACE "${PROJECT_NAME}::")
-+  set(TARGETS_EXPORT_NAME "${PROJECT_NAME}Config")
-+  set(NAMESPACE "assimp::")
++  set(TARGETS_EXPORT_NAME "${PROJECT_NAME_LOWERCASE}Config")
++  set(VERSION_CONFIG "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME_LOWERCASE}ConfigVersion.cmake")
++  set(NAMESPACE "${PROJECT_NAME_LOWERCASE}::")
  
-   # Include module with fuction 'write_basic_package_version_file'
+-  # Include module with fuction 'write_basic_package_version_file'
    include(CMakePackageConfigHelpers)
- 
+-
 -  # Note: PROJECT_VERSION is used as a VERSION
 -  write_basic_package_version_file("${VERSION_CONFIG}" COMPATIBILITY SameMajorVersion)
 -
@@ -73,14 +83,15 @@ index dcafb64..4b131cc 100644
 -      "${PROJECT_CONFIG}"
 -      INSTALL_DESTINATION "${CONFIG_INSTALL_DIR}"
 -  )
--
++  write_basic_package_version_file("${VERSION_CONFIG}" VERSION ${${PROJECT_NAME}_VERSION} COMPATIBILITY SameMajorVersion)
+ 
    install(
 -      FILES "${PROJECT_CONFIG}" "${VERSION_CONFIG}"
 +      FILES ${VERSION_CONFIG}
        DESTINATION "${CONFIG_INSTALL_DIR}"
    )
  
-@@ -389,30 +380,6 @@ IF(HUNTER_ENABLED)
+@@ -389,30 +382,6 @@ IF(HUNTER_ENABLED)
        NAMESPACE "${NAMESPACE}"
        DESTINATION "${CONFIG_INSTALL_DIR}"
    )
@@ -111,12 +122,12 @@ index dcafb64..4b131cc 100644
  
  FIND_PACKAGE( DirectX )
  
-@@ -422,63 +389,19 @@ ENDIF( BUILD_DOCS )
+@@ -422,63 +391,19 @@ ENDIF( BUILD_DOCS )
  
  # Look for system installed irrXML
  IF ( SYSTEM_IRRXML )
 -  FIND_PACKAGE( IrrXML REQUIRED )
-+  FIND_PACKAGE( irrXML REQUIRED )
++  FIND_PACKAGE( irrlicht CONFIG REQUIRED )
  ENDIF( SYSTEM_IRRXML )
  
  # Search for external dependencies, and build them from source if not found
@@ -179,7 +190,7 @@ index dcafb64..4b131cc 100644
  
  IF ( ASSIMP_NO_EXPORT )
    ADD_DEFINITIONS( -DASSIMP_BUILD_NO_EXPORT)
-@@ -633,7 +556,7 @@ IF(CMAKE_CPACK_COMMAND AND UNIX AND ASSIMP_OPT_BUILD_PACKAGES)
+@@ -633,7 +558,7 @@ IF(CMAKE_CPACK_COMMAND AND UNIX AND ASSIMP_OPT_BUILD_PACKAGES)
    INCLUDE(DebSourcePPA)
  ENDIF()
  
@@ -188,7 +199,7 @@ index dcafb64..4b131cc 100644
    if (CMAKE_SIZEOF_VOID_P EQUAL 8)
      SET(BIN_DIR "${PROJECT_SOURCE_DIR}/bin64/")
      SET(LIB_DIR "${PROJECT_SOURCE_DIR}/lib64/")
-@@ -677,4 +600,4 @@ if(WIN32)
+@@ -677,4 +602,4 @@ if(WIN32)
        ADD_CUSTOM_COMMAND(TARGET UpdateAssimpLibsDebugSymbolsAndDLLs COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/code/assimp-${ASSIMP_MSVC_VERSION}-mtd.pdb		${LIB_DIR}assimp-${ASSIMP_MSVC_VERSION}-mtd.pdb VERBATIM)
      ENDIF()
    ENDIF(MSVC12 OR MSVC14 OR MSVC15 )
@@ -243,7 +254,7 @@ index 518e56c..ec4a653 100644
  
  namespace Assimp
 diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
-index 55538d9..4f9b479 100644
+index 55538d9..f5553e5 100644
 --- a/code/CMakeLists.txt
 +++ b/code/CMakeLists.txt
 @@ -862,89 +862,24 @@ SET( Extra_SRCS
@@ -393,7 +404,7 @@ index 55538d9..4f9b479 100644
  
  if(ASSIMP_ANDROID_JNIIOSYSTEM)
    set(ASSIMP_ANDROID_JNIIOSYSTEM_PATH port/AndroidJNI)
-@@ -1208,21 +1121,12 @@ ENDIF(APPLE)
+@@ -1208,21 +1120,12 @@ ENDIF(APPLE)
  
  # Build against external unzip, or add ../contrib/unzip so
  # assimp can #include "unzip.h"
@@ -415,7 +426,7 @@ index 55538d9..4f9b479 100644
    INSTALL( TARGETS assimp
      EXPORT "${TARGETS_EXPORT_NAME}"
      LIBRARY DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
-@@ -1231,14 +1135,6 @@ IF(HUNTER_ENABLED)
+@@ -1231,14 +1134,6 @@ IF(HUNTER_ENABLED)
      FRAMEWORK DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
      COMPONENT ${LIBASSIMP_COMPONENT}
      INCLUDES DESTINATION "include")
@@ -600,19 +611,6 @@ index 7cdac6c..2728425 100644
  #endif //clipper_hpp
 -
 -
-diff --git a/contrib/zip/src/miniz.h b/contrib/zip/src/miniz.h
-index 2c27a94..8390dfd 100644
---- a/contrib/zip/src/miniz.h
-+++ b/contrib/zip/src/miniz.h
-@@ -5944,7 +5944,7 @@ mz_bool mz_zip_writer_add_file(mz_zip_archive *pZip, const char *pArchive_name,
-                                const char *pSrc_filename, const void *pComment,
-                                mz_uint16 comment_size, mz_uint level_and_flags,
-                                mz_uint32 ext_attributes) {
--  mz_uint uncomp_crc32 = MZ_CRC32_INIT, level, num_alignment_padding_bytes;
-+  mz_uint uncomp_crc32 = MZ_CRC32_INIT, level=0, num_alignment_padding_bytes;
-   mz_uint16 method = 0, dos_time = 0, dos_date = 0;
-   time_t file_modified_time;
-   mz_uint64 local_dir_header_ofs, cur_archive_file_ofs, uncomp_size = 0,
 diff --git a/samples/SimpleTexturedOpenGL/SimpleTexturedOpenGL/src/model_loading.cpp b/samples/SimpleTexturedOpenGL/SimpleTexturedOpenGL/src/model_loading.cpp
 index 8d25aaa..e4bc306 100644
 --- a/samples/SimpleTexturedOpenGL/SimpleTexturedOpenGL/src/model_loading.cpp

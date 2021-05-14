@@ -1,14 +1,10 @@
-include(vcpkg_common_functions)
-
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    message(FATAL_ERROR "This port does not currently support architecture: ${VCPKG_TARGET_ARCHITECTURE}")
-endif()
+vcpkg_fail_port_install(ON_ARCH "arm")
 
 set(KINECTSDK10_VERSION "v1.8")
 vcpkg_download_distfile(KINECTSDK10_INSTALLER
     URLS "https://download.microsoft.com/download/E/1/D/E1DEC243-0389-4A23-87BF-F47DE869FC1A/KinectSDK-${KINECTSDK10_VERSION}-Setup.exe"
     FILENAME "KinectSDK-${KINECTSDK10_VERSION}-Setup.exe"
-    SHA512 ee8a0f70c86aad80fe214108e315e4550a90ed39f278ce00a7137532174ee5bf3bdeb1d0b499fc5ffdb5e176adecfd68963ee3731e1d2f00d69d32d1b8a3c555
+    SHA512 d7e886d639b4310addc7c1350311f81289ffbcd653237882da7bf3d4074281ed35d217cb8be101579cac880c574dd89c62cd6a87772d60905c446d0be5fd1932
 )
 
 vcpkg_find_acquire_program(DARK)
@@ -67,5 +63,4 @@ file(
 )
 
 # Handle copyright
-file(COPY "${KINECTSDK10_DIR}/SDKEula.rtf" DESTINATION ${CURRENT_PACKAGES_DIR}/share/kinectsdk1)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/kinectsdk1/SDKEula.rtf ${CURRENT_PACKAGES_DIR}/share/kinectsdk1/copyright)
+file(INSTALL ${KINECTSDK10_DIR}/SDKEula.rtf DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

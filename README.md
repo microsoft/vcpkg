@@ -1,6 +1,9 @@
 # Vcpkg: Overview
 
 [中文总览](README_zh_CN.md)
+[Español](README_es.md)
+[한국어](README_ko_KR.md)
+[Français](README_fr.md)
 
 Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS.
 This tool and ecosystem are constantly evolving, and we always appreciate contributions!
@@ -14,7 +17,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
 * Discord: [\#include \<C++\>](https://www.includecpp.org), the #🌏vcpkg channel
-* Docs: [Documentation](docs/index.md)
+* Docs: [Documentation](docs/README.md)
 
 [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
@@ -33,7 +36,6 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
     - [Vcpkg with Visual Studio CMake Projects](#vcpkg-with-visual-studio-cmake-projects)
     - [Vcpkg with CLion](#vcpkg-with-clion)
     - [Vcpkg as a Submodule](#vcpkg-as-a-submodule)
-  - [Quick Start: Manifests](#quick-start-manifests)
 - [Tab-Completion/Auto-Completion](#tab-completionauto-completion)
 - [Examples](#examples)
 - [Contributing](#contributing)
@@ -56,7 +58,7 @@ After you've gotten vcpkg installed and working,
 you may wish to add [tab completion](#tab-completionauto-completion) to your shell.
 
 Finally, if you're interested in the future of vcpkg,
-check out the [manifest](#quick-start-manifest) guide!
+check out the [manifest][getting-started:manifest-spec] guide!
 This is an experimental feature and will likely have bugs,
 so try it out and [open all the issues][contributing:submit-issue]!
 
@@ -82,6 +84,18 @@ To install the libraries for your project, run:
 
 ```cmd
 > .\vcpkg\vcpkg install [packages to install]
+```
+
+Note: This will install x86 libraries by default. To install x64, run:
+
+```cmd
+> .\vcpkg\vcpkg install package:x64-windows
+```
+
+Or
+
+```cmd
+> .\vcpkg\vcpkg install [packages to install] --triplet=x64-windows
 ```
 
 You can also search for the libraries you need with the `search` subcommand:
@@ -283,6 +297,7 @@ but it will make the configure-build step slightly easier.
 [getting-started:macos-brew]: #installing-gcc-on-macos
 [getting-started:macos-gcc]: #installing-gcc-on-macos
 [getting-started:visual-studio]: https://visualstudio.microsoft.com/
+[getting-started:manifest-spec]: docs/specifications/manifests.md
 
 # Tab-Completion/Auto-Completion
 
@@ -304,7 +319,7 @@ depending on the shell you use, then restart your console.
 
 # Examples
 
-See the [documentation](docs/index.md) for specific walkthroughs,
+See the [documentation](docs/README.md) for specific walkthroughs,
 including [installing and using a package](docs/examples/installing-and-using-packages.md),
 [adding a new package from a zipfile](docs/examples/packaging-zipfiles.md),
 and [adding a new package from a GitHub repo](docs/examples/packaging-github-repos.md).

@@ -1,5 +1,6 @@
 Source: mongo-cxx-driver
 Version: 3.4.0-5
+Port-Version: 1
 Build-Depends: libbson, mongo-c-driver, boost-smart-ptr, boost-optional, boost-utility
 Homepage: https://github.com/mongodb/mongo-cxx-driver
 Description: MongoDB C++ Driver.

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
   set(BUILD_SHARED_LIBS ON)
 else()
@@ -31,5 +29,3 @@ vcpkg_install_cmake()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libcerf RENAME copyright)
-
-vcpkg_test_cmake(PACKAGE_NAME libcerf)

@@ -3,6 +3,11 @@ set(LIBPNG_VER 1.6.37)
 # Download the apng patch
 set(LIBPNG_APNG_OPTION )
 if ("apng" IN_LIST FEATURES)
+    # Get (g)awk installed
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES gawk)
+    set(AWK_EXE_PATH "${MSYS_ROOT}/usr/bin")
+    vcpkg_add_to_path("${AWK_EXE_PATH}")
+    
     set(LIBPNG_APG_PATCH_NAME libpng-${LIBPNG_VER}-apng.patch)
     set(LIBPNG_APG_PATCH_PATH ${CURRENT_BUILDTREES_DIR}/src/${LIBPNG_APG_PATCH_NAME})
     if (NOT EXISTS ${LIBPNG_APG_PATCH_PATH})
@@ -37,6 +42,8 @@ vcpkg_from_github(
         pkgconfig.patch
         pkgconfig.2.patch
         ${APNG_EXTRA_PATCH}
+        fix-export-targets.patch
+        macos-arch-fix.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)

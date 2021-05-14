@@ -20,6 +20,8 @@ file(READ ${CMAKE_CURRENT_LIST_DIR}/CONTROL _contents)
 string(REGEX MATCH "\nVersion:[ ]*[^ \n]+" _contents "${_contents}")
 string(REGEX REPLACE ".+Version:[ ]*([\\.0-9]+).*" "\\1" BUILD_VERSION "${_contents}")
 
+file(WRITE "${BUILD_VERSION}" ${SOURCE_PATH}/VERSION_CURRENT)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -31,6 +33,7 @@ vcpkg_configure_cmake(
         -DENABLE_EXAMPLES=OFF
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DBUILD_VERSION=${BUILD_VERSION}
+        -DCMAKE_DISABLE_FIND_PACKAGE_PythonInterp=ON
 )
 
 vcpkg_install_cmake()
@@ -44,6 +47,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
 else()
     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libbson-${PORT_POSTFIX} TARGET_PATH share/bson-${PORT_POSTFIX})
 endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver)
 

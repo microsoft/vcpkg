@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lieff/minimp3
-    REF 977514a6dfc4960d819a103f43b358e58ac6c28f #committed on Jul 24
-    SHA512 9120cbd84a737e93d0c8d6d53a1b9b7af1fb4387b7b0756abbf9e0f41164a26a731e1e75ff6d02052c785357cdf8465ee92f04b6e9704f830086c3cf6808d2b8
+    REF 95864e8e0d3b34402a49ae9af6c66f7e98c13c35 #committed on Nov 27
+    SHA512 6e5364a83e882b54fd1eb5ba35ec7c7179b5b5c0ceb2c658615a2306ae0c28252ca8591ec6b515483c6ff0ed608db7eb73fba3d201a20ad4a85ce7b3a091a695
     HEAD_REF master
 )
 

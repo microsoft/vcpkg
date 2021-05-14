@@ -1,68 +1,77 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+
+vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/DirectXTK
-    REF aug2020
-    SHA512 8f79104f7cebab20a739144471337c24fe5078d6d21760d76ec897569609a0a1f25fe2b16782e0561308470cb73a8901c1dd18f7b2741e30c0aa0cee09a30621
+    REF apr2021
+    SHA512 d64b5a6c39e9ecc4609a1db4c3121880b4e40431ec2e785aefff8e11615444485b0ffa68169cff6a5dda52f38bb2ce22161644e5fa4b757b9a84e682a458f846
     HEAD_REF master
 )
 
-IF (TRIPLET_SYSTEM_ARCH MATCHES "x86")
-    SET(BUILD_ARCH "Win32")
-ELSE()
-    SET(BUILD_ARCH ${TRIPLET_SYSTEM_ARCH})
-ENDIF()
-
-if (VCPKG_PLATFORM_TOOLSET STREQUAL "v140")
-    set(VS_VERSION "2015")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v141")
-    set(VS_VERSION "2017")
-elseif (VCPKG_PLATFORM_TOOLSET STREQUAL "v142")
-    set(VS_VERSION "2019")
-else()
-    message(FATAL_ERROR "Unsupported platform toolset.")
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        xaudio2-9 BUILD_XAUDIO_WIN10
+        xaudio2-8 BUILD_XAUDIO_WIN8
+)
 
 if(VCPKG_TARGET_IS_UWP)
-    set(SLN_NAME "Windows10_${VS_VERSION}")
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
-    if(TRIPLET_SYSTEM_ARCH STREQUAL "arm64")
-        set(SLN_NAME "Desktop_${VS_VERSION}_Win10")
-    else()
-        set(SLN_NAME "Desktop_${VS_VERSION}")
-    endif()
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/DirectXTK_${SLN_NAME}.sln
-    PLATFORM ${TRIPLET_SYSTEM_ARCH}
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-file(INSTALL
-    ${SOURCE_PATH}/Inc/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include/DirectXTK
-)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-file(INSTALL
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK.lib
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Release/DirectXTK.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
+if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+  vcpkg_download_distfile(
+    MAKESPRITEFONT_EXE
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/apr2021/MakeSpriteFont.exe"
+    FILENAME "makespritefont-apr2021.exe"
+    SHA512 f958dc0a88ff931182914ebb4b935d4ed71297d59a61fb70dbf7769d22350abc712acfdbbfbba658781600c83ac7e390eac0663ade747f749194addd209c5bfa
+  )
 
-file(INSTALL
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK.lib
-    ${SOURCE_PATH}/Bin/${SLN_NAME}/${BUILD_ARCH}/Debug/DirectXTK.pdb
-    DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+  vcpkg_download_distfile(
+    XWBTOOL_EXE
+    URLS "https://github.com/Microsoft/DirectXTK/releases/download/apr2021/XWBTool.exe"
+    FILENAME "xwbtool-apr2021.exe"
+    SHA512 8918fe7f5c996a54c6a5032115c9b82c6fe9b61688da3cde11c0282061c17a829639b219b8ff5ac623986507338c927eb926f2c42ba3c98563dfe7e162e22305
+  )
 
-if(NOT VCPKG_TARGET_IS_UWP)
-    set(DXTK_TOOL_PATH ${CURRENT_PACKAGES_DIR}/tools/directxtk)
-    file(MAKE_DIRECTORY ${DXTK_TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/MakeSpriteFont/bin/Release/MakeSpriteFont.exe
-        DESTINATION ${DXTK_TOOL_PATH})
-    file(INSTALL
-        ${SOURCE_PATH}/XWBTool/Bin/Desktop_${VS_VERSION}/${BUILD_ARCH}/Release/XWBTool.exe
-        DESTINATION ${DXTK_TOOL_PATH})
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/directxtk/")
+
+  file(INSTALL
+    ${MAKESPRITEFONT_EXE}
+    ${XWBTOOL_EXE}
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/directxtk/)
+
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont-apr2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk/makespritefont.exe)
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool-apr2021.exe ${CURRENT_PACKAGES_DIR}/tools/directxtk/xwbtool.exe)
+
+elseif(NOT VCPKG_TARGET_IS_UWP)
+
+  vcpkg_copy_tools(
+        TOOL_NAMES XWBTool
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
+
+  vcpkg_install_msbuild(
+      SOURCE_PATH ${SOURCE_PATH}
+      PROJECT_SUBPATH MakeSpriteFont/MakeSpriteFont.csproj
+      PLATFORM AnyCPU
+  )
+
 endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

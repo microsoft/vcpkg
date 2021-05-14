@@ -5,25 +5,20 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("python" IN_LIST FEATURES)
         message(FATAL_ERROR "The python feature is currently broken on Windows")
     endif()
-
-    if("iconv" IN_LIST FEATURES)
-        set(ICONV_PATCH "fix_find_iconv.patch")
-    else()
-        # prevent picking up libiconv if it happens to already be installed
-        set(ICONV_PATCH "no_use_iconv.patch")
-    endif()
-
     if(VCPKG_CRT_LINKAGE STREQUAL "static")
         set(_static_runtime ON)
     endif()
 endif()
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    deprfun     deprecated-functions
-    examples    build_examples
-    python      python-bindings
-    test        build_tests
-    tools       build_tools
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        deprfun     deprecated-functions
+        examples    build_examples
+        iconv       iconv
+        python      python-bindings
+        test        build_tests
+        tools       build_tools
 )
 
 # Note: the python feature currently requires `python3-dev` and `python3-setuptools` installed on the system
@@ -39,18 +34,14 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arvidn/libtorrent
-    REF libtorrent-1.2.10
-    SHA512 e6de939fb6527783695e0b6623ddbe27f85842a36c0899b93ea0284cb3c6f3d14b8c39e29316adb3bf9acac7804f38385cc06854a32df28e7f4f6839af9f382d
+    REF b7996402966a44b87200b973b2c756900b648ed2 # 1.2.13 + a few additional commits
+    SHA512 37b1f1eaa7ba18c44612d500776065e9376493d0cf4f05f620d264a2368287bfb093ce2258d3bb72667e9748593e309e200cc8c1a09799c8ecc287b3ed1baee7
     HEAD_REF RC_1_2
-    PATCHES
-        add-datetime-to-boost-libs.patch
-        fix_python_cmake.patch
-        ${ICONV_PATCH}
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
+    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -Dboost-python-module-name=${_boost-python-module-name}

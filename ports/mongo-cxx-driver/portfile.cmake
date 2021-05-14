@@ -16,6 +16,7 @@ vcpkg_from_github(
         fix-dependency-libbson.patch
         fix-dependency-mongocdriver.patch
         github-654.patch
+        fix-android.patch
 )
 
 if ("mnmlstc" IN_LIST FEATURES)

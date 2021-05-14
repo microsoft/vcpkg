@@ -1,6 +1,4 @@
 #header-only library
-include(vcpkg_common_functions)
-
 set(USE_UPSTREAM OFF)
 if("upstream" IN_LIST FEATURES)
     set(USE_UPSTREAM ON)
@@ -9,8 +7,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO crossbario/autobahn-cpp
-    REF v18.4.1
-    SHA512 a3325e06731698a2c5d8c233581f275a9b653e98b74e7382f83fc62111dec9d66bbd5803cc71e8b5125ecee6d380d3cf1c6e83926e06912888201c2aa4ab7a15
+    REF 84972fc81181bde635329bf0474e3874cc5c9091 # v20.8.1
+    SHA512 fcd094907826e035188d19efc80f3caa6c90d7d7bd2c5b6796aea9de3a02052bd049329cbe5cb242bba535e70c127842c66d34956e715b4f6f37ffc54c39c483
     HEAD_REF master
 )
 

@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 252de6e..bcef3ae 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -885,10 +885,19 @@ ENDIF(PCRE_BUILD_TESTS)
+ # Installation
+ SET(CMAKE_INSTALL_ALWAYS 1)
+ 
+-INSTALL(TARGETS ${targets}
++foreach(target ${targets})
++    INSTALL(TARGETS ${target}
++        EXPORT pcre-targets
+         RUNTIME DESTINATION bin
+         LIBRARY DESTINATION lib
+         ARCHIVE DESTINATION lib)
++    target_include_directories(${target} PUBLIC $<INSTALL_INTERFACE:include>)
++endforeach()
++
++INSTALL(EXPORT pcre-targets
++    NAMESPACE unofficial::pcre::
++    FILE unofficial-pcre-targets.cmake
++    DESTINATION "share/unofficial-pcre")
+ 
+ INSTALL(FILES ${PCRE_HEADERS} ${PCREPOSIX_HEADERS} DESTINATION include)
+ 

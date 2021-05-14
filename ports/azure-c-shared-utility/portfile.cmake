@@ -11,16 +11,18 @@ if("public-preview" IN_LIST FEATURES)
         HEAD_REF master
         PATCHES 
             fix-utilityFunctions-conditions-preview.patch
+            disable-error.patch
     )
 else()
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO Azure/azure-c-shared-utility
-        REF 65c27eb4ab9a8bbe36b4d7c5a0e9ad305becb8b4
-        SHA512 48c65111b12e895f9c2087964d7291e6d1629242194fed9b33ead8ca438f16c803786cd55761eabdd12d47c9920542cff0e510bf16f16cac1d60049ba205df0e
+        REF 6f7bbcd23b39481dc0cf93185555d2513beea1ea
+        SHA512 d1b77b155497e02f802e3f02d89ecbc4cb3d4507bc61f1feca8e6baad627e05e0f744dd5b4d0148a47021eb2308d9053d0fedbf95e40cff001250bca392fd5af
         HEAD_REF master
         PATCHES 
             fix-utilityFunctions-conditions.patch
+            disable-error.patch
     )
 endif()
 

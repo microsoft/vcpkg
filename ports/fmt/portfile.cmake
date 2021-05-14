@@ -1,21 +1,23 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fmtlib/fmt
-    REF cd4af11efc9c622896a3e4cb599fa28668ca3d05#version 7.0.3
-    SHA512 24b42288be97849533dc82282fc08833d74642ad2afeb511e65c6389d88c709cf25345dec5b550c18af3705f4c0847fa0d4066308b51cd41ccfdda1a2c3babd0
+    REF 7bdf0628b1276379886c7f6dda2cef2b3b374f0b # v7.1.3
+    SHA512 52ea8f9d2c0cb52ec3a740e38fcdfd6a0318566e3b599bd2e8d557168642d005c0a59bc213cff2641a88fed3bb771d15f46c39035ccd64809569af982aba47aa
     HEAD_REF master
-    PATCHES fix-warning4189.patch
+    PATCHES
+        fix-warning4189.patch
+        fix-write-batch.patch
 )
-vcpkg_configure_cmake(
+
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DFMT_CMAKE_DIR=share/fmt
         -DFMT_TEST=OFF
         -DFMT_DOC=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 file(INSTALL ${SOURCE_PATH}/LICENSE.rst DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -40,7 +42,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 vcpkg_fixup_pkgconfig()
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -59,4 +61,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
+# Handle post-build CMake instructions
 vcpkg_copy_pdbs()
+file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

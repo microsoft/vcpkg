@@ -1,6 +1,4 @@
 
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "https://sites.google.com/site/yuta256/sais-2.4.1.zip"
     FILENAME "sais-2.4.1.zip"

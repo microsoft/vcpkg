@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 5f7d0d886..d65cfeb2b 100644
+index 8833246..f68ab02 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -7,6 +7,7 @@ endif()
+@@ -28,6 +28,7 @@ set(MBEDTLS_DIR ${CMAKE_CURRENT_SOURCE_DIR})
  
  option(USE_PKCS11_HELPER_LIBRARY "Build mbed TLS with the pkcs11-helper library." OFF)
  option(ENABLE_ZLIB_SUPPORT "Build mbed TLS with zlib library." OFF)
@@ -10,15 +10,16 @@ index 5f7d0d886..d65cfeb2b 100644
  
  option(ENABLE_PROGRAMS "Build mbed TLS programs." ON)
  
-@@ -174,6 +175,7 @@ else()
+@@ -231,6 +232,8 @@ else()
+     set(LIB_INSTALL_DIR lib)
  endif()
  
- include_directories(include/)
 +include_directories(${CMAKE_CURRENT_BINARY_DIR}/include/)
- 
++
  if(ENABLE_ZLIB_SUPPORT)
      find_package(ZLIB)
-@@ -183,6 +185,17 @@ if(ENABLE_ZLIB_SUPPORT)
+ 
+@@ -239,6 +242,17 @@ if(ENABLE_ZLIB_SUPPORT)
      endif(ZLIB_FOUND)
  endif(ENABLE_ZLIB_SUPPORT)
  
@@ -33,14 +34,14 @@ index 5f7d0d886..d65cfeb2b 100644
 +    set(LINK_WITH_PTHREAD ON)
 +endif()
 +
- add_subdirectory(library)
  add_subdirectory(include)
  
+ add_subdirectory(3rdparty)
 diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
-index c2f2bd4e6..e110cd50c 100644
+index 62c0f62..7923202 100644
 --- a/include/CMakeLists.txt
 +++ b/include/CMakeLists.txt
-@@ -1,9 +1,13 @@
+@@ -1,10 +1,14 @@
  option(INSTALL_MBEDTLS_HEADERS "Install mbed TLS headers." ON)
  
 +configure_file(mbedtls/config_threading.h.in mbedtls/config_threading.h)
@@ -48,18 +49,20 @@ index c2f2bd4e6..e110cd50c 100644
  if(INSTALL_MBEDTLS_HEADERS)
  
      file(GLOB headers "mbedtls/*.h")
- 
+     file(GLOB psa_headers "psa/*.h")
+-
++    
 +    set(headers ${headers} ${CMAKE_CURRENT_BINARY_DIR}/mbedtls/config_threading.h)
-+
++    
      install(FILES ${headers}
          DESTINATION include/mbedtls
          PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ)
 diff --git a/include/mbedtls/config.h b/include/mbedtls/config.h
-index 5df962ef6..f205bf599 100644
+index 1e6e052..51c20da 100644
 --- a/include/mbedtls/config.h
 +++ b/include/mbedtls/config.h
-@@ -26,6 +26,8 @@
-  *  This file is part of mbed TLS (https://tls.mbed.org)
+@@ -24,6 +24,8 @@
+  *  limitations under the License.
   */
  
 +#include "mbedtls/config_threading.h"
@@ -69,7 +72,7 @@ index 5df962ef6..f205bf599 100644
  
 diff --git a/include/mbedtls/config_threading.h.in b/include/mbedtls/config_threading.h.in
 new file mode 100644
-index 000000000..f6286ed9c
+index 0000000..9d5d42e
 --- /dev/null
 +++ b/include/mbedtls/config_threading.h.in
 @@ -0,0 +1,6 @@
@@ -79,11 +82,12 @@ index 000000000..f6286ed9c
 +#define MBEDTLS_THREADING_C
 +#define MBEDTLS_THREADING_PTHREAD
 +#endif
+\ No newline at end of file
 diff --git a/library/CMakeLists.txt b/library/CMakeLists.txt
-index 9330cff9b..54a815ee7 100644
+index 33e2cfc..4b99331 100644
 --- a/library/CMakeLists.txt
 +++ b/library/CMakeLists.txt
-@@ -128,7 +128,11 @@ if(ENABLE_ZLIB_SUPPORT)
+@@ -137,7 +137,11 @@ if(ENABLE_ZLIB_SUPPORT)
  endif(ENABLE_ZLIB_SUPPORT)
  
  if(LINK_WITH_PTHREAD)
@@ -95,4 +99,4 @@ index 9330cff9b..54a815ee7 100644
 +    endif()
  endif()
  
- if (NOT USE_STATIC_MBEDTLS_LIBRARY AND NOT USE_SHARED_MBEDTLS_LIBRARY)
+ if(LINK_WITH_TRUSTED_STORAGE)

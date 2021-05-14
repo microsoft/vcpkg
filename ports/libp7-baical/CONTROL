@@ -1,5 +1,4 @@
 Source: libp7-baical
-Version: 4.4-4
-Homepage: https://baical.net/
-Description: P7 is a library for high-speed sending telemetry & trace data from application
-Supports: !(arm|uwp)
+Version: replaced
+Build-Depends: libp7client
+Description: An old name for the port libp7client; please install libp7client instead.

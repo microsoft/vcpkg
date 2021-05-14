@@ -1,0 +1,10 @@
+{
+  "name": "oatpp-swagger",
+  "version-string": "1.2.0",
+  "port-version": 1,
+  "description": "Oat++ OpenApi (Swagger) UI submodule.",
+  "homepage": "https://github.com/oatpp/oatpp-swagger",
+  "dependencies": [
+    "oatpp"
+  ]
+}

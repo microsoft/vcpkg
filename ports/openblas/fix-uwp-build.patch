@@ -1,0 +1,35 @@
+diff --git a/common_stackalloc.h b/common_stackalloc.h
+index d3d5466..cd157fc 100644
+--- a/common_stackalloc.h
++++ b/common_stackalloc.h
+@@ -36,7 +36,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #define STACK_ALLOC_PROTECT_CHECK
+ #endif
+ 
+-#if defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0
++#if defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0 && !(defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP))
+ 
+ /*
+  * Allocate a buffer on the stack if the size is smaller than MAX_STACK_ALLOC.
+@@ -63,7 +63,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ #endif
+ 
+ 
+-#if defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0
++#if defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0 && !(defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP))
+ #define STACK_FREE(BUFFER)    \
+   STACK_ALLOC_PROTECT_CHECK   \
+   if(!stack_alloc_size)       \
+diff --git a/interface/zgemv.c b/interface/zgemv.c
+index 3e98dba..ee597f7 100644
+--- a/interface/zgemv.c
++++ b/interface/zgemv.c
+@@ -244,7 +244,7 @@ void CNAME(enum CBLAS_ORDER order,
+   buffer_size = (buffer_size + 3) & ~3;
+   STACK_ALLOC(buffer_size, FLOAT, buffer);
+ 
+-#if defined(ARCH_X86_64) && defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0
++#if defined(ARCH_X86_64) && defined(MAX_STACK_ALLOC) && MAX_STACK_ALLOC > 0 && !(defined(WINAPI_FAMILY) && (WINAPI_FAMILY == WINAPI_FAMILY_APP))
+   // cgemv_t.S return NaN if there are NaN or Inf in the buffer (see bug #746)
+   if(trans && stack_alloc_size)
+     memset(buffer, 0, MIN(BUFFER_SIZE, sizeof(FLOAT) * buffer_size));

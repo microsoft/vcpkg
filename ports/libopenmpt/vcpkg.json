@@ -1,0 +1,16 @@
+{
+  "name": "libopenmpt",
+  "version-string": "2017-01-28-cf2390140",
+  "port-version": 1,
+  "description": "a library to render tracker music",
+  "homepage": "https://github.com/OpenMPT/openmpt",
+  "supports": "!uwp",
+  "dependencies": [
+    "libflac",
+    "libogg",
+    "libvorbis",
+    "mpg123",
+    "portaudio",
+    "zlib"
+  ]
+}

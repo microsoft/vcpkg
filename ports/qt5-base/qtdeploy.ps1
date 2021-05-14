@@ -44,6 +44,11 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
         deployPlugins "styles"
     } elseif ($targetBinaryName -match "Qt5Networkd?.dll") {
         deployPlugins "bearer"
+        if (Test-Path "$binDir\libcrypto-1_1-x64.dll")
+        {
+            deployBinary "$targetBinaryDir" "$binDir" "libcrypto-1_1-x64.dll"
+            deployBinary "$targetBinaryDir" "$binDir" "libssl-1_1-x64.dll"
+        }
         if (Test-Path "$binDir\libcrypto-1_1.dll")
         {
             deployBinary "$targetBinaryDir" "$binDir" "libcrypto-1_1.dll"
@@ -69,7 +74,7 @@ function deployPluginsIfQt([string]$targetBinaryDir, [string]$QtPluginsDir, [str
             }
         }
     } elseif ($targetBinaryName -match "Qt5Quickd?.dll") {
-        foreach ($a in @("Qt5QuickControls2", "Qt5QuickControls2d", "Qt5QuickShapes", "Qt5QuickShapesd", "Qt5QuickTemplates2", "Qt5QuickTemplates2d"))
+        foreach ($a in @("Qt5QuickControls2", "Qt5QuickControls2d", "Qt5QuickShapes", "Qt5QuickShapesd", "Qt5QuickTemplates2", "Qt5QuickTemplates2d", "Qt5QmlWorkerScript", "Qt5QmlWorkerScriptd", "Qt5QuickParticles", "Qt5QuickParticlesd", "Qt5QuickWidgets", "Qt5QuickWidgetsd"))
         {
             if (Test-Path "$binDir\$a.dll")
             {

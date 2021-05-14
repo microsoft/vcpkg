@@ -3,26 +3,38 @@
 
   "Applications": [
     {
-      "Name": "VirtualBox",
-      "TestCommand": "VBoxManage",
-      "DmgUrl": "https://download.virtualbox.org/virtualbox/6.1.10/VirtualBox-6.1.10-138449-OSX.dmg",
-      "Sha256": "EF0CA4924922514B6AD71469998821F2CF7C596B4B8B59736C3699759E0F1DF8",
-      "InstallerPath": "VirtualBox.pkg"
+      "Name": "vagrant",
+      "VersionCommand": [ "vagrant", "-v" ],
+      "VersionRegex": "Vagrant (.*)",
+      "Version": "2.2.15",
+      "DmgUrl": "https://releases.hashicorp.com/vagrant/2.2.15/vagrant_2.2.15_x86_64.dmg",
+      "Sha256": "5C2B290C4FA2371E255C56B1E96DED3D0C838D54CB7F0E8E6CF154E9F206A20E",
+      "InstallerPath": "vagrant.pkg"
     },
     {
-      "Name": "vagrant",
-      "TestCommand": "vagrant",
-      "DmgUrl": "https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.dmg",
-      "Sha256": "529CDE2A78E6DF38EC906B65C70B36A087E2601EAB42E25856E35B20CCB027C0",
-      "InstallerPath": "vagrant.pkg"
+      "Name": "osxfuse",
+      "VersionCommand": [ "cat", "/Library/Filesystems/macfuse.fs/Contents/version.plist" ],
+      "VersionRegex": "<key>CFBundleVersion</key>[\\n\\t ]*<string>([0-9.]+)</string>",
+      "Version": "4.1.0",
+      "DmgUrl": "https://github.com/osxfuse/osxfuse/releases/download/macfuse-4.1.0/macfuse-4.1.0.dmg",
+      "Sha256": "3CB6A49406FD036C50EF1B4AD717A377F4DCF182811BDE172D69F1C289791085",
+      "InstallerPath": "Install macFUSE.pkg"
+    },
+    {
+      "Name": "sshfs",
+      "VersionCommand": [ "sshfs", "--version" ],
+      "VersionRegex": "SSHFS version [0-9.]* \\(OSXFUSE SSHFS (.*)\\)",
+      "Version": "2.5.0",
+      "PkgUrl": "https://github.com/osxfuse/sshfs/releases/download/osxfuse-sshfs-2.5.0/sshfs-2.5.0.pkg",
+      "Sha256": "F8F4F71814273EA42DBE6CD92199F7CFF418571FFD1B10C0608878D3472D2162"
     }
   ],
-  "VBoxExtensions": [
+  "Brew": [
+  ],
+  "VagrantPlugins": [
     {
-      "Name": "Extension Pack",
-      "FullName": "Oracle VM VirtualBox Extension Pack",
-      "Url": "https://download.virtualbox.org/virtualbox/6.1.10/Oracle_VM_VirtualBox_Extension_Pack-6.1.10.vbox-extpack",
-      "Sha256": "03067F27F4DA07C5D0FDAFC56D27E3EA23A60682B333B2A1010FB74EF9A40C28"
+      "Name": "vagrant-parallels",
+      "Version": "2.2.1"
     }
   ]
 }

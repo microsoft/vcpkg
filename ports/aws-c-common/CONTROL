@@ -1,4 +1,5 @@
 Source: aws-c-common
-Version: 0.4.15
+Version: 0.4.56
 Homepage: https://github.com/awslabs/aws-c-common
 Description: AWS common library for C
+Supports: !(arm|uwp)

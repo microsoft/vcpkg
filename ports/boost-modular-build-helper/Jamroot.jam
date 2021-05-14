@@ -1,5 +1,5 @@
-constant BOOST_VERSION : 1.73.0 ;
-constant BOOST_VERSION_ABI_TAG : 1_73 ;
+constant BOOST_VERSION : 1.75.0 ;
+constant BOOST_VERSION_ABI_TAG : 1_75 ;
 constant BOOST_JAMROOT_MODULE : $(__name__) ;
 
 import boostcpp ;
@@ -29,7 +29,7 @@ rule tag ( name : type ? : property-set )
 
 rule python-tag ( name : type ? : property-set )
 {
-    return [ tag $(name) : $(type) : $(property-set) ] ;
+    return [ boostcpp.python-tag $(name) : $(type) : $(property-set) ] ;
 }
 
 if "@PORT@" != "boost-system"

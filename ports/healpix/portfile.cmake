@@ -7,6 +7,7 @@ vcpkg_from_sourceforge(
     REF Healpix_${HEALPIX_VER}
     FILENAME "Healpix_${HEALPIX_PACK_NAME}.tar.gz"
     SHA512 29fe680d757bd94651bf029654257cb67286643aad510df4c2f0b06245174411376ec1beca64feebfac14a6fc0194525170635842916d79dcaddeddd9ac6f6c7
+    PATCHES fix-dependency.patch
 )
 
 vcpkg_configure_make(

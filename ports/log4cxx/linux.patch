@@ -1,0 +1,17 @@
+diff --git a/src/cmake/FindAPR.cmake b/src/cmake/FindAPR.cmake
+index a204ece..4d2b48d 100644
+--- a/src/cmake/FindAPR.cmake
++++ b/src/cmake/FindAPR.cmake
+@@ -45,7 +45,11 @@ if(EXISTS ${APR_CONFIG_EXECUTABLE})
+ else()
+     find_path(APR_INCLUDE_DIR apr.h PATH_SUFFIXES apr-1)
+     if (APR_STATIC OR NOT BUILD_SHARED_LIBS)
+-      set(APR_SYSTEM_LIBS  ws2_32  mswsock  rpcrt4)
++      if(WIN32)
++        set(APR_SYSTEM_LIBS  ws2_32  mswsock  rpcrt4)
++      else()
++        set(APR_SYSTEM_LIBS  pthread)
++      endif()
+       set(APR_COMPILE_DEFINITIONS APR_DECLARE_STATIC)
+       find_library(APR_LIBRARIES NAMES apr-1)
+     else()

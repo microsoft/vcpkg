@@ -1,0 +1,19 @@
+diff --git a/libgeotiff/CMakeLists.txt b/libgeotiff/CMakeLists.txt
+index 80fe121..5c1430d 100644
+--- a/libgeotiff/CMakeLists.txt
++++ b/libgeotiff/CMakeLists.txt
+@@ -80,8 +80,12 @@ SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/lib)
+ 
+ IF(WIN32)
+     IF(MSVC)
+-        ADD_DEFINITIONS(-DBUILD_AS_DLL=1)
+-        ADD_DEFINITIONS(/DW4)
++        IF(BUILD_SHARED_LIBS)
++		    ADD_DEFINITIONS(-DBUILD_AS_DLL=1)
++        ELSE()
++		    ADD_DEFINITIONS(-DBUILD_AS_DLL=0)
++		ENDIF()
++		ADD_DEFINITIONS(/DW4)
+         if (NOT (MSVC_VERSION VERSION_LESS 1400))
+             ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE)
+             ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)

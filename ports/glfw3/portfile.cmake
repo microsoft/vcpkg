@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO glfw/glfw
-    REF 3.3.2
-    SHA512 f5af749d33b5b900ccf07988ad0bf51bd766a18e4cf2bc2a76020c88e98a2528ff1b965224184fe0d290cfe34b1af1e6f633600660d81194fe354078e2f35c56
+    REF 3.3.3
+    SHA512 6d743d89d159bff6c4f7fa3fc5bc407fd728bdc432d76acc4897fd392580be272f8a9d1d7c375c4323e82bf2fd28310e5daab097fef33e8f43b69ce104f9bd31
     HEAD_REF master
 )
 
@@ -29,6 +29,8 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/glfw3)
+
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 

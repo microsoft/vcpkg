@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 set(CATCH_VERSION v1.12.2)
 
 vcpkg_download_distfile(HEADER

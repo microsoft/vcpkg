@@ -12,7 +12,7 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/)， #vcpkg 频道
 * Discord: [\#include \<C++\>](https://www.includecpp.org)， #🌏vcpkg 频道
-* 文档: [Documentation](docs/index.md)
+* 文档: [Documentation](docs/README.md)
 
 [![当前生成状态](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
@@ -31,7 +31,6 @@ Vcpkg 可帮助您在 Windows、 Linux 和 MacOS 上管理 C 和 C++ 库。
     - [Visual Studio CMake 工程中使用 vcpkg](#visual-studio-cmake-工程中使用-vcpkg)
     - [CLion 中使用 vcpkg](#clion-中使用-vcpkg)
     - [将 vcpkg 作为一个子模块](#将-vcpkg-作为一个子模块)
-  - [快速开始: 清单](#快速开始-清单)
 - [Tab补全/自动补全](#tab补全自动补全)
   - [示例](#示例)
   - [贡献者](#贡献者)
@@ -53,7 +52,7 @@ vcpkg团队和贡献者可以看到它的地方，
 安装并运行vcpkg后，
 您可能希望将 [TAB补全](#tab补全自动补全) 添加到您的Shell中。
 
-最后，如果您对vcpkg的未来感兴趣，请查看 [清单](#快速开始-清单)！
+最后，如果您对vcpkg的未来感兴趣，请查看 [清单][getting-started:manifest-spec]！
 这是一项实验性功能，可能会出现错误。
 因此，请尝试一下并[打开所有问题][contributing:submit-issue]!
 
@@ -257,42 +256,6 @@ set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/
 
 使用此种方式可无需设置 `CMAKE_TOOLCHAIN_FILE` 即可使用vcpkg，且更容易完成配置工作。
 
-## 快速开始: 清单
-
-如果您期待vcpkg在未来会更好，我们真的很感激😄。
-但是，首先要警告：vcpkg中的清单支持仍处于beta中！
-通常，vcpkg可以正常工作，但您很可能会在使用时遇到至少一个或两个错误。
-另外，我们可能会在稳定之前更改vcpkg的各个功能，请提前知悉。
-如果您遇到任何错误，请[提交一个issue][contributing:submit-issue]！
-
-首先，在 [Windows](#快速开始-windows) 或 [Unix](#快速开始-unix) 正常安装vcpkg。
-您可能希望将vcpkg安装在常用的位置，由于安装的目录位于本地，并且可以从同一vcpkg目录中同时运行多个vcpkg命令。
-
-然后，您必须通过将 `manifests` 添加到以逗号分隔的 `--feature-flags` 选项中来打开 `manifests` vcpkg功能标记，
-或将其添加到以逗号分隔的 `VCPKG_FEATURE_FLAGS` 环境变量中。
-
-您也可能希望添加vcpkg路径至环境变量 `PATH` 中。
-这时，我们要做的就是创建清单。
-创建一个名为 `vcpkg.json` 的文件，然后添加以下内容：
-
-```json
-{
-  "name": "<name of your project>",
-  "version-string": "<version of your project>",
-  "dependencies": [
-    "abseil",
-    "boost"
-  ]
-}
-```
-
-您所安装的库将生成在 `vcpkg_installed` 文件夹中，并与您的 `vcpkg.json` 所在的文件夹相同。
-如果您可以使用常规的 CMake toolchain 或 Visual Studio / MSBuild 集成，
-它将自动安装依赖项，您需要将MSBuild的 `VcpkgManifestEnabled` 设置为 `On`。
-如果您希望不使用 CMake 或 MSBuild 来安装依赖项，您可以使用命令 `vcpkg install --feature-flags = manifests` 。
-
-请查阅 [清单][getting-started:manifest-spec] 获取更多信息。
-
 [getting-started:using-a-package]: docs/examples/installing-and-using-packages.md
 [getting-started:integration]: docs/users/integration.md
 [getting-started:git]: https://git-scm.com/downloads
@@ -323,7 +286,7 @@ $ ./vcpkg integrate bash
 
 ## 示例
 
-请查看 [文档](docs/index.md) 获取具体示例，
+请查看 [文档](docs/README.md) 获取具体示例，
 其包含 [安装并使用包](docs/examples/installing-and-using-packages.md)，
 [使用压缩文件添加包](docs/examples/packaging-zipfiles.md)
 和 [从GitHub源中添加一个包](docs/examples/packaging-github-repos.md)。

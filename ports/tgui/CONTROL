@@ -1,5 +1,5 @@
 Source: tgui
-Version: 0.8.7
+Version: 0.8.8
 Description: TGUI is an easy to use, cross-platform, C++ GUI for SFML.
 Build-Depends: sfml
 

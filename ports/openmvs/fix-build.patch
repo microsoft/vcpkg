@@ -1,15 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 7966ed5..f34b5b4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -63,7 +63,7 @@ INCLUDE_DIRECTORIES("${OpenMVS_SOURCE_DIR}")
+@@ -63,9 +63,10 @@ INCLUDE_DIRECTORIES("${OpenMVS_SOURCE_DIR}")
  SET(OpenMVS_EXTRA_LIBS "")
  if(OpenMVS_USE_OPENMP)
  	SET(OpenMP_LIBS "")
 -	FIND_PACKAGE(OpenMP)
+-	if(OPENMP_FOUND)
+-		SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 +	FIND_PACKAGE(OpenMP REQUIRED)
- 	if(OPENMP_FOUND)
- 		SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
++	if(OpenMP_FOUND)
++	  link_libraries(OpenMP::OpenMP_CXX)
++	  link_libraries(OpenMP::OpenMP_C)
  		ADD_DEFINITIONS(-D_USE_OPENMP)
-@@ -83,7 +83,7 @@ if(OpenMVS_USE_OPENGL)
+ 		SET(_USE_OPENMP TRUE)
+ 		#cmake only check for separate OpenMP library on AppleClang 7+
+@@ -83,7 +84,7 @@ if(OpenMVS_USE_OPENGL)
  	if(POLICY CMP0072)
  		cmake_policy(SET CMP0072 NEW)
  	endif()
@@ -18,7 +25,7 @@
  	if(OPENGL_FOUND)
  		INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
  		ADD_DEFINITIONS(${OpenGL_DEFINITIONS} -D_USE_OPENGL)
-@@ -94,7 +94,7 @@ if(OpenMVS_USE_OPENGL)
+@@ -94,7 +95,7 @@ if(OpenMVS_USE_OPENGL)
  endif()
  
  if(OpenMVS_USE_CUDA)
@@ -27,7 +34,7 @@
  	if(CUDA_FOUND)
  		INCLUDE_DIRECTORIES(${CUDA_INCLUDE_DIRS})
  		ADD_DEFINITIONS(-D_USE_CUDA)
-@@ -108,7 +108,7 @@ else()
+@@ -108,7 +109,7 @@ else()
  endif()
  
  if(OpenMVS_USE_BREAKPAD)
@@ -36,7 +43,7 @@
  	if(BREAKPAD_FOUND)
  		INCLUDE_DIRECTORIES(${BREAKPAD_INCLUDE_DIRS})
  		ADD_DEFINITIONS(${BREAKPAD_DEFINITIONS} -D_USE_BREAKPAD)
-@@ -119,7 +119,7 @@ if(OpenMVS_USE_BREAKPAD)
+@@ -119,7 +120,7 @@ if(OpenMVS_USE_BREAKPAD)
  	endif()
  endif()
  
@@ -45,7 +52,7 @@
  if(Boost_FOUND)
  	INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
  	ADD_DEFINITIONS(${Boost_DEFINITIONS} -D_USE_BOOST)
-@@ -127,14 +127,14 @@ if(Boost_FOUND)
+@@ -127,14 +128,14 @@ if(Boost_FOUND)
  	SET(_USE_BOOST TRUE)
  endif()
  
@@ -65,7 +72,7 @@
  if(OpenCV_FOUND)
  	INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
  	ADD_DEFINITIONS(${OpenCV_DEFINITIONS})
-@@ -170,7 +170,9 @@ ADD_DEFINITIONS(${OpenMVS_DEFINITIONS})
+@@ -170,7 +171,9 @@ ADD_DEFINITIONS(${OpenMVS_DEFINITIONS})
  
  # Add modules
  ADD_SUBDIRECTORY(libs)
@@ -75,7 +82,7 @@
  ADD_SUBDIRECTORY(docs)
  
  if(OpenMVS_USE_CERES)
-@@ -188,7 +190,7 @@ export(TARGETS Common IO Math MVS FILE "${PROJECT_BINARY_DIR}/OpenMVSTargets.cma
+@@ -188,7 +191,7 @@ export(TARGETS Common IO Math MVS FILE "${PROJECT_BINARY_DIR}/OpenMVSTargets.cma
  # Export the package for use from the build-tree
  # (this registers the build-tree with a global CMake-registry)
  export(PACKAGE OpenMVS)
@@ -84,7 +91,7 @@
  # Create the OpenMVSConfig.cmake and OpenMVSConfigVersion files
  file(RELATIVE_PATH REL_INCLUDE_DIR "${INSTALL_CMAKE_DIR}" "${INSTALL_INCLUDE_DIR}")
  # ... for the build tree
-@@ -199,7 +201,7 @@ set(CONF_INCLUDE_DIRS "${INSTALL_CMAKE_DIR}/${REL_INCLUDE_DIR}")
+@@ -199,7 +202,7 @@ set(CONF_INCLUDE_DIRS "${INSTALL_CMAKE_DIR}/${REL_INCLUDE_DIR}")
  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/build/OpenMVSConfig.cmake.in" "${PROJECT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/OpenMVSConfig.cmake" @ONLY)
  # ... for both
  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/build/OpenMVSConfigVersion.cmake.in" "${PROJECT_BINARY_DIR}/OpenMVSConfigVersion.cmake" @ONLY)
@@ -130,6 +137,8 @@ index f4914bf..23d03e6 100644
              ["Incremental reconstruction",   # 3
               os.path.join(OPENMVG_BIN, "openMVG_main_IncrementalSfM"),
               ["-i", "%matches_dir%/sfm_data.json", "-m", "%matches_dir%", "-o", "%reconstruction_dir%"]],
+diff --git a/apps/Viewer/CMakeLists.txt b/apps/Viewer/CMakeLists.txt
+index c519040..934cd50 100644
 --- a/apps/Viewer/CMakeLists.txt
 +++ b/apps/Viewer/CMakeLists.txt
 @@ -16,18 +16,6 @@ else()
@@ -159,6 +168,8 @@ index f4914bf..23d03e6 100644
  
  # List sources files
  FILE(GLOB PCH_C "Common.cpp")
+diff --git a/build/OpenMVSConfig.cmake.in b/build/OpenMVSConfig.cmake.in
+index 96b8fe2..fa6d4a6 100644
 --- a/build/OpenMVSConfig.cmake.in
 +++ b/build/OpenMVSConfig.cmake.in
 @@ -3,16 +3,71 @@
@@ -236,6 +247,8 @@ index f4914bf..23d03e6 100644
  # These are IMPORTED targets created by OpenMVSTargets.cmake
  set(OpenMVS_LIBRARIES MVS)
  set(OpenMVS_BINARIES InterfaceVisualSFM DensifyPointCloud ReconstructMesh RefineMesh TextureMesh)
+diff --git a/build/Utils.cmake b/build/Utils.cmake
+index f41c9d8..31cd292 100644
 --- a/build/Utils.cmake
 +++ b/build/Utils.cmake
 @@ -160,7 +160,7 @@ macro(GetOperatingSystemArchitectureBitness)
@@ -318,6 +331,8 @@ index f4914bf..23d03e6 100644
  	# Make relative paths absolute (needed later on)
  	foreach(p LIB BIN INCLUDE CMAKE)
  		set(var INSTALL_${p}_DIR)
+diff --git a/libs/Common/CMakeLists.txt b/libs/Common/CMakeLists.txt
+index 2e6c1a4..6e1fa95 100644
 --- a/libs/Common/CMakeLists.txt
 +++ b/libs/Common/CMakeLists.txt
 @@ -18,6 +18,7 @@ set_target_pch(Common Common.h)
@@ -328,6 +343,43 @@ index f4914bf..23d03e6 100644
  
  # Install
  SET_TARGET_PROPERTIES(Common PROPERTIES
+diff --git a/libs/Common/Strings.h b/libs/Common/MVSStrings.h
+similarity index 100%
+rename from libs/Common/Strings.h
+rename to libs/Common/MVSStrings.h
+diff --git a/libs/Common/Types.h b/libs/Common/Types.h
+index bcac65c..9abeefb 100644
+--- a/libs/Common/Types.h
++++ b/libs/Common/Types.h
+@@ -378,7 +378,7 @@ typedef TAliasCast<double,int32_t> CastD2I;
+ 
+ // I N C L U D E S /////////////////////////////////////////////////
+ 
+-#include "Strings.h"
++#include "MVSStrings.h"
+ #include "AutoPtr.h"
+ #include "List.h"
+ #include "Thread.h"
+@@ -2558,7 +2558,7 @@ public:
+ 
+ 	/// creates an SO3 as a rotation that takes Vector a into the direction of Vector b
+ 	/// with the rotation axis along a ^ b. If |a ^ b| == 0, it creates the identity rotation.
+-	/// An assertion will fail if Vector a and Vector b are in exactly opposite directions. 
++	/// An assertion will fail if Vector a and Vector b are in exactly opposite directions.
+ 	/// @param a source Vector
+ 	/// @param b target Vector
+ 	SO3(const Vec3& a, const Vec3& b) {
+@@ -2604,7 +2604,7 @@ public:
+ 		mat.row(2) -= mat.row(1) * d12;
+ 		mat.row(2).normalize();
+ 		// check for positive determinant <=> right handed coordinate system of row vectors
+-		ASSERT(mat.row(0).cross(mat.row(1)).dot(mat.row(2)) > 0); 
++		ASSERT(mat.row(0).cross(mat.row(1)).dot(mat.row(2)) > 0);
+ 	}
+ 
+ 	/// Exponentiate a vector in the Lie algebra to generate a new SO3.
+diff --git a/libs/IO/CMakeLists.txt b/libs/IO/CMakeLists.txt
+index a354376..4fd478c 100644
 --- a/libs/IO/CMakeLists.txt
 +++ b/libs/IO/CMakeLists.txt
 @@ -43,7 +43,8 @@ cxx_library_with_type_no_pch(IO "Libs" "STATIC" "${cxx_default}"
@@ -340,6 +392,8 @@ index f4914bf..23d03e6 100644
  
  # Install
  SET_TARGET_PROPERTIES(IO PROPERTIES
+diff --git a/libs/MVS/CMakeLists.txt b/libs/MVS/CMakeLists.txt
+index 14be620..867cfd5 100644
 --- a/libs/MVS/CMakeLists.txt
 +++ b/libs/MVS/CMakeLists.txt
 @@ -1,12 +1,12 @@
@@ -381,6 +435,8 @@ index f4914bf..23d03e6 100644
  
  # Install
  SET_TARGET_PROPERTIES(MVS PROPERTIES
+diff --git a/libs/Math/CMakeLists.txt b/libs/Math/CMakeLists.txt
+index d592bd0..f1fe4c6 100644
 --- a/libs/Math/CMakeLists.txt
 +++ b/libs/Math/CMakeLists.txt
 @@ -35,6 +35,7 @@ set_target_pch(Math Common.h)

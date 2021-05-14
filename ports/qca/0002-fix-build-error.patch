@@ -1,57 +1,58 @@
-diff --git a/plugins/qca-gnupg/CMakeLists.txt b/plugins/qca-gnupg/CMakeLists.txt
-index 1ed8e21..20890dd 100644
---- a/plugins/qca-gnupg/CMakeLists.txt
-+++ b/plugins/qca-gnupg/CMakeLists.txt
-@@ -68,6 +68,4 @@ if(NOT DEVELOPER_MODE)
-           LIBRARY DESTINATION "${QCA_CRYPTO_INSTALL_DIR}"
-           ARCHIVE DESTINATION "${QCA_CRYPTO_INSTALL_DIR}"
-           RUNTIME DESTINATION "${QCA_CRYPTO_INSTALL_DIR}")
--
--  install_pdb(qca-gnupg ${QCA_CRYPTO_INSTALL_DIR})
- endif()
-diff --git a/plugins/qca-logger/CMakeLists.txt b/plugins/qca-logger/CMakeLists.txt
-index ba6926e..45e1986 100644
---- a/plugins/qca-logger/CMakeLists.txt
-+++ b/plugins/qca-logger/CMakeLists.txt
-@@ -20,6 +20,4 @@ if(NOT DEVELOPER_MODE)
-           LIBRARY DESTINATION "${QCA_CRYPTO_INSTALL_DIR}"
-           ARCHIVE DESTINATION "${QCA_CRYPTO_INSTALL_DIR}"
-           RUNTIME DESTINATION "${QCA_CRYPTO_INSTALL_DIR}")
--
--  install_pdb(qca-logger ${QCA_CRYPTO_INSTALL_DIR})
- endif()
-diff --git a/plugins/qca-ossl/CMakeLists.txt b/plugins/qca-ossl/CMakeLists.txt
-index af3d756..c8480a3 100644
---- a/plugins/qca-ossl/CMakeLists.txt
-+++ b/plugins/qca-ossl/CMakeLists.txt
-@@ -65,8 +65,6 @@ if(OPENSSL_FOUND)
-             LIBRARY DESTINATION "${QCA_CRYPTO_INSTALL_DIR}"
-             ARCHIVE DESTINATION "${QCA_CRYPTO_INSTALL_DIR}"
-             RUNTIME DESTINATION "${QCA_CRYPTO_INSTALL_DIR}")
--
--    install_pdb(qca-ossl ${QCA_CRYPTO_INSTALL_DIR})
-   endif()
+diff --git "a/cmake/modules/QcaMacro.cmake" "b/cmake/modules/QcaMacro.cmake"
+index 5d86e4725..62568626b 100644
+--- "a/cmake/modules/QcaMacro.cmake"
++++ "b/cmake/modules/QcaMacro.cmake"
+@@ -61,15 +61,6 @@ macro(add_qca_test TARGET DESCRIPTION)
+ endmacro(add_qca_test)
  
-   else(OPENSSL_FOUND)
-diff --git a/plugins/qca-softstore/CMakeLists.txt b/plugins/qca-softstore/CMakeLists.txt
-index d7af072..3c64870 100644
---- a/plugins/qca-softstore/CMakeLists.txt
-+++ b/plugins/qca-softstore/CMakeLists.txt
-@@ -20,6 +20,4 @@ if(NOT DEVELOPER_MODE)
-           LIBRARY DESTINATION "${QCA_CRYPTO_INSTALL_DIR}"
-           ARCHIVE DESTINATION "${QCA_CRYPTO_INSTALL_DIR}"
-           RUNTIME DESTINATION "${QCA_CRYPTO_INSTALL_DIR}")
+ macro(install_pdb TARGET INSTALL_PATH)
+-  if(MSVC)
+-    get_target_property(LOCATION ${TARGET} LOCATION_DEBUG)
+-    string(REGEX REPLACE "\\.[^.]*$" ".pdb" LOCATION "${LOCATION}")
+-    install(FILES ${LOCATION} DESTINATION ${INSTALL_PATH} CONFIGURATIONS Debug)
 -
--  install_pdb(qca-softstore ${QCA_CRYPTO_INSTALL_DIR})
- endif()
-diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index 2e81974..907049c 100644
---- a/src/CMakeLists.txt
-+++ b/src/CMakeLists.txt
-@@ -184,6 +184,5 @@ if(NOT DEVELOPER_MODE)
-           FRAMEWORK DESTINATION "${QCA_LIBRARY_INSTALL_DIR}"
-           PUBLIC_HEADER DESTINATION "${QCA_FULL_INCLUDE_INSTALL_DIR}" INCLUDES DESTINATION "${QCA_FULL_INCLUDE_INSTALL_DIR}"
-   )
--  install_pdb(${QCA_LIB_NAME} ${QCA_BINARY_INSTALL_DIR})
- endif()
+-    get_target_property(LOCATION ${TARGET} LOCATION_RELWITHDEBINFO)
+-    string(REGEX REPLACE "\\.[^.]*$" ".pdb" LOCATION "${LOCATION}")
+-    install(FILES ${LOCATION} DESTINATION ${INSTALL_PATH} CONFIGURATIONS RelWithDebInfo)
+-  endif()
+ endmacro(install_pdb)
  
+ macro(normalize_path PATH)
+diff --git "a/plugins/qca-ossl/qca-ossl.cpp" "b/plugins/qca-ossl/qca-ossl.cpp"
+index ee872d721..fa3e2c414 100644
+--- "a/plugins/qca-ossl/qca-ossl.cpp"
++++ "b/plugins/qca-ossl/qca-ossl.cpp"
+@@ -6910,6 +6910,7 @@ public:
+ 		else if ( type == QLatin1String("aes256-ccm") )
+ 			return new opensslCipherContext( EVP_aes_256_ccm(), 0, this, type);
+ #endif
++#ifndef OPENSSL_NO_BF
+ 		else if ( type == QLatin1String("blowfish-ecb") )
+ 			return new opensslCipherContext( EVP_bf_ecb(), 0, this, type);
+ 		else if ( type == QLatin1String("blowfish-cfb") )
+@@ -6920,6 +6921,8 @@ public:
+ 			return new opensslCipherContext( EVP_bf_cbc(), 0, this, type);
+ 		else if ( type == QLatin1String("blowfish-cbc-pkcs7") )
+ 			return new opensslCipherContext( EVP_bf_cbc(), 1, this, type);
++#endif
++#ifndef OPENSSL_NO_DES
+ 		else if ( type == QLatin1String("tripledes-ecb") )
+ 			return new opensslCipherContext( EVP_des_ede3(), 0, this, type);
+ 		else if ( type == QLatin1String("tripledes-cbc") )
+@@ -6936,6 +6939,8 @@ public:
+ 			return new opensslCipherContext( EVP_des_cfb(), 0, this, type);
+ 		else if ( type == QLatin1String("des-ofb") )
+ 			return new opensslCipherContext( EVP_des_ofb(), 0, this, type);
++#endif
++#ifndef OPENSSL_NO_CAST
+ 		else if ( type == QLatin1String("cast5-ecb") )
+ 			return new opensslCipherContext( EVP_cast5_ecb(), 0, this, type);
+ 		else if ( type == QLatin1String("cast5-cbc") )
+@@ -6946,6 +6951,7 @@ public:
+ 			return new opensslCipherContext( EVP_cast5_cfb(), 0, this, type);
+ 		else if ( type == QLatin1String("cast5-ofb") )
+ 			return new opensslCipherContext( EVP_cast5_ofb(), 0, this, type);
++#endif
+ 		else if ( type == QLatin1String("pkey") )
+ 			return new MyPKeyContext( this );
+ 		else if ( type == QLatin1String("dlgroup") )

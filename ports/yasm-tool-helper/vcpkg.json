@@ -1,0 +1,12 @@
+{
+  "name": "yasm-tool-helper",
+  "version-string": "2020-10-12",
+  "description": "This port provides helper functions for ports needing to consume YASM",
+  "homepage": "https://github.com/Microsoft/vcpkg",
+  "dependencies": [
+    {
+      "name": "yasm-tool",
+      "platform": "x86 & windows"
+    }
+  ]
+}

@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 set(ADDITIONAL_OPTIONS -DSHARED=OFF)
 
@@ -18,6 +16,7 @@ vcpkg_extract_source_archive_ex(
         fix-root-cmakelist.patch
         fix-libparmetis-cmakelist.patch
         use_stdint.patch
+        fix-root-cmakelist-2.patch
 )
 
 vcpkg_configure_cmake(

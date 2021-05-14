@@ -1,0 +1,27 @@
+{
+  "name": "boost-uuid",
+  "version-string": "1.75.0",
+  "description": "Boost uuid module",
+  "homepage": "https://github.com/boostorg/uuid",
+  "dependencies": [
+    "boost-assert",
+    "boost-compatibility",
+    "boost-config",
+    "boost-container-hash",
+    "boost-conversion",
+    "boost-core",
+    "boost-integer",
+    "boost-io",
+    "boost-move",
+    "boost-numeric-conversion",
+    "boost-predef",
+    "boost-random",
+    "boost-serialization",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-tti",
+    "boost-type-traits",
+    "boost-vcpkg-helpers",
+    "boost-winapi"
+  ]
+}

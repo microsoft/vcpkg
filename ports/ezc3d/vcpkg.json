@@ -1,0 +1,6 @@
+{
+  "name": "ezc3d",
+  "version-string": "1.3.7",
+  "description": "C3D reader/writer",
+  "homepage": "https://github.com/pyomeca/ezc3d"
+}

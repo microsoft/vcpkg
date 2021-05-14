@@ -1,0 +1,124 @@
+From e30a560527d17ae81685dd11d3268bc982af2048 Mon Sep 17 00:00:00 2001
+From: Adam Johnson <AdamJohnso@gmail.com>
+Date: Tue, 16 Feb 2021 18:03:07 -0500
+Subject: [PATCH 7/7] restore support for windows 7
+
+this backports the windows 7 compatible fix for bpo-39401 from gh-18234,
+originally authored by Steve Dower, and removes explicit dependencies on
+pathcch.
+---
+ PC/getpathp.c              | 55 +++++++++++++++++++++++++++++++++++---
+ PC/pyconfig.h              |  4 +--
+ PCbuild/pythoncore.vcxproj |  2 +-
+ 3 files changed, 54 insertions(+), 7 deletions(-)
+
+diff --git a/PC/getpathp.c b/PC/getpathp.c
+index 53da3a6d05..3d58bbfe70 100644
+--- a/PC/getpathp.c
++++ b/PC/getpathp.c
+@@ -250,14 +250,43 @@ ismodule(wchar_t *filename, int update_filename)
+    stuff as fits will be appended.
+ */
+ 
++
++static int _PathCchCombineEx_Initialized = 0;
++typedef HRESULT(__stdcall *PPathCchCombineEx) (PWSTR pszPathOut, size_t cchPathOut,
++                                               PCWSTR pszPathIn, PCWSTR pszMore,
++                                               unsigned long dwFlags);
++static PPathCchCombineEx _PathCchCombineEx;
++
+ static void
+ join(wchar_t *buffer, const wchar_t *stuff)
+ {
+-    if (FAILED(PathCchCombineEx(buffer, MAXPATHLEN+1, buffer, stuff, 0))) {
+-        Py_FatalError("buffer overflow in getpathp.c's join()");
++    if (_PathCchCombineEx_Initialized == 0) {
++        HMODULE pathapi = LoadLibraryExW(L"api-ms-win-core-path-l1-1-0.dll", NULL,
++                                         LOAD_LIBRARY_SEARCH_SYSTEM32);
++        if (pathapi) {
++            _PathCchCombineEx = (PPathCchCombineEx)GetProcAddress(pathapi, "PathCchCombineEx");
++        }
++        else {
++            _PathCchCombineEx = NULL;
++        }
++        _PathCchCombineEx_Initialized = 1;
++    }
++    if (_PathCchCombineEx) {
++        if (FAILED(_PathCchCombineEx(buffer, MAXPATHLEN+1, buffer, stuff, 0))) {
++            Py_FatalError("buffer overflow in getpathp.c's join()");
++        }
++    } else {
++        if (!PathCombineW(buffer, buffer, stuff)) {
++            Py_FatalError("buffer overflow in getpathp.c's join()");
++        }
+     }
+ }
+ 
++static int _PathCchCanonicalizeEx_Initialized = 0;
++typedef HRESULT(__stdcall *PPathCchCanonicalizeEx) (PWSTR pszPathOut, size_t cchPathOut,
++    PCWSTR pszPathIn, unsigned long dwFlags);
++static PPathCchCanonicalizeEx _PathCchCanonicalizeEx;
++
+ /* Call PathCchCanonicalizeEx(path): remove navigation elements such as "."
+    and ".." to produce a direct, well-formed path. */
+ static PyStatus
+@@ -267,8 +296,26 @@ canonicalize(wchar_t *buffer, const wchar_t *path)
+         return _PyStatus_NO_MEMORY();
+     }
+ 
+-    if (FAILED(PathCchCanonicalizeEx(buffer, MAXPATHLEN + 1, path, 0))) {
+-        return INIT_ERR_BUFFER_OVERFLOW();
++    if (_PathCchCanonicalizeEx_Initialized == 0) {
++        HMODULE pathapi = LoadLibraryExW(L"api-ms-win-core-path-l1-1-0.dll", NULL,
++                                         LOAD_LIBRARY_SEARCH_SYSTEM32);
++        if (pathapi) {
++            _PathCchCanonicalizeEx = (PPathCchCanonicalizeEx)GetProcAddress(pathapi, "PathCchCanonicalizeEx");
++        }
++        else {
++            _PathCchCanonicalizeEx = NULL;
++        }
++        _PathCchCanonicalizeEx_Initialized = 1;
++    }
++    if (_PathCchCanonicalizeEx) {
++        if (FAILED(_PathCchCanonicalizeEx(buffer, MAXPATHLEN + 1, path, 0))) {
++            return INIT_ERR_BUFFER_OVERFLOW();
++        }
++    }
++    else {
++        if (!PathCanonicalizeW(buffer, path)) {
++            return INIT_ERR_BUFFER_OVERFLOW();
++        }
+     }
+     return _PyStatus_OK();
+ }
+diff --git a/PC/pyconfig.h b/PC/pyconfig.h
+index 34269f0b75..812f6d9353 100644
+--- a/PC/pyconfig.h
++++ b/PC/pyconfig.h
+@@ -136,8 +136,8 @@ WIN32 is still required for the locale module.
+ 
+ /* set the version macros for the windows headers */
+ /* Python 3.9+ requires Windows 8 or greater */
+-#define Py_WINVER 0x0602 /* _WIN32_WINNT_WIN8 */
+-#define Py_NTDDI NTDDI_WIN8
++#define Py_WINVER 0x0601 /* _WIN32_WINNT_WIN7 */
++#define Py_NTDDI NTDDI_WIN7
+ 
+ /* We only set these values when building Python - we don't want to force
+    these values on extensions, as that will affect the prototypes and
+diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
+index d8e8d2d086..df2892b0de 100644
+--- a/PCbuild/pythoncore.vcxproj
++++ b/PCbuild/pythoncore.vcxproj
+@@ -106,7 +106,7 @@
+       <PreprocessorDefinitions Condition="$(IncludeExternals)">_Py_HAVE_ZLIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+     </ClCompile>
+     <Link>
+-      <AdditionalDependencies>version.lib;shlwapi.lib;ws2_32.lib;pathcch.lib;%(AdditionalDependencies)</AdditionalDependencies>
++      <AdditionalDependencies>version.lib;shlwapi.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+     </Link>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+-- 
+2.28.0.windows.1
+

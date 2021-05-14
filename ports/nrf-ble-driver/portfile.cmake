@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
     message(
 "${PORT} currently requires the following libraries from the system package manager:

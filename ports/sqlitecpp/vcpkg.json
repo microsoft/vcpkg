@@ -1,0 +1,27 @@
+{
+  "name": "sqlitecpp",
+  "version-string": "3.1.1",
+  "port-version": 1,
+  "description": "SQLiteC++ (SQLiteCpp) is a smart and easy to use C++ SQLite3 wrapper.",
+  "homepage": "https://github.com/SRombauts/SQLiteCpp",
+  "default-features": [
+    "sqlite"
+  ],
+  "features": {
+    "sqlcipher": {
+      "description": "Use the sqlcipher port",
+      "dependencies": [
+        {
+          "name": "sqlcipher",
+          "default-features": false
+        }
+      ]
+    },
+    "sqlite": {
+      "description": "Use the (unofficial) sqlite3 port of vcpkg",
+      "dependencies": [
+        "sqlite3"
+      ]
+    }
+  }
+}

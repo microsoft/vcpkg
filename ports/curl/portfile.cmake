@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO curl/curl
-    REF 9d954e49bce3706a9a2efb119ecd05767f0f2a9e #curl-7_72_0
-    SHA512 c6af3d772571d4c12ac797c0f5a29db4081ebb964693f2c1d93527f103afb29744f4ed2dde6832f63b28afc402166be2f1336dc868a46eb9a6a296c95d61ab71
+    REF e052859759b34d0e05ce0f17244873e5cd7b457b #curl-7_74_0
+    SHA512 3dbbab00dda4f0e7d012fab358d2dd1362ff0c0f59c81f638fb547acba6f74a61c306906892447af3b18e8b0ebb93ebb8e0ac77e92247864bfa3a9c4ce7ea1d0
     HEAD_REF master
     PATCHES
         0002_fix_uwp.patch
@@ -10,17 +10,19 @@ vcpkg_from_github(
         0005_remove_imp_suffix.patch
         0006_fix_tool_depends.patch
         0007_disable_tool_export_curl_target.patch
-        0009_fix_openssl_config.patch
         0010_fix_othertests_cmake.patch
         0011_fix_static_build.patch
+        0012-fix-dependency-idn2.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
 
 # schannel will enable sspi, but sspi do not support uwp
-if(("schannel" IN_LIST FEATURES OR "sspi" IN_LIST FEATURES OR "tool" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP))
-    message(FATAL_ERROR "schannel,sspi,tool are not supported on non-Windows and uwp platforms")
-endif()
+foreach(feature "schannel" "sspi" "tool")
+    if(feature IN_LIST FEATURES AND VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature ${feature} is not supported on UWP.")
+    endif()
+endforeach()
 
 if("sectransp" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_OSX)
     message(FATAL_ERROR "sectransp is not supported on non-Apple platforms")
@@ -39,7 +41,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     brotli      CURL_BROTLI
     schannel    CMAKE_USE_SCHANNEL
     sectransp   CMAKE_USE_SECTRANSP
-    
+    idn2        CMAKE_USE_IDN2
+
     INVERTED_FEATURES
     non-http HTTP_ONLY
 )
@@ -65,6 +68,8 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         ${UWP_OPTIONS}
+        ${ADDITIONAL_SCRIPTS}
+        ${EXTRA_ARGS}
         ${SECTRANSP_OPTIONS}
         -DBUILD_TESTING=OFF
         -DENABLE_MANUAL=OFF
@@ -86,15 +91,22 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CURL)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-else()
-    file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/curl-config DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
-    #Fix install path
-    file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config CURL_CONFIG)
-    string(REPLACE "${CURRENT_PACKAGES_DIR}" "${CURRENT_INSTALLED_DIR}" CURL_CONFIG "${CURL_CONFIG}")
-    file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config "${CURL_CONFIG}")
+#Fix install path
+file(READ ${CURRENT_PACKAGES_DIR}/bin/curl-config CURL_CONFIG)
+string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" CURL_CONFIG "${CURL_CONFIG}")
+string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" CURL_CONFIG "${CURL_CONFIG}")
+string(REPLACE "\nprefix=\${prefix}" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../.. && pwd -P)]=] CURL_CONFIG "${CURL_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/bin/curl-config "${CURL_CONFIG}")
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
+
+file(GLOB FILES ${CURRENT_PACKAGES_DIR}/bin/*)
+if(NOT FILES)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+endif()
+file(GLOB FILES ${CURRENT_PACKAGES_DIR}/debug/bin/*)
+if(NOT FILES)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -108,6 +120,30 @@ else()
         "#if 0"
     )
 endif()
+
+
+# Fix the pkgconfig file for debug
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    file(READ ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc _contents)
+    string(REPLACE " -lcurl" " -lcurl-d" _contents "${_contents}")
+    string(REPLACE " -loptimized " " " _contents "${_contents}")
+    string(REPLACE " -ldebug " " " _contents "${_contents}")
+    string(REPLACE " ${CURRENT_INSTALLED_DIR}/lib/pthreadVC3.lib" "" _contents "${_contents}")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc "${_contents}")
+endif()
+
+# Fix the pkgconfig file for release
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+    file(READ ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc _contents)
+    string(REPLACE " -loptimized " " " _contents "${_contents}")
+    string(REPLACE " -ldebug " " " _contents "${_contents}")
+    string(REPLACE " ${CURRENT_INSTALLED_DIR}/debug/lib/pthreadVC3d.lib" "" _contents "${_contents}")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+    file(WRITE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libcurl.pc "${_contents}")
+endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

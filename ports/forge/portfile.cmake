@@ -5,29 +5,24 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO arrayfire/forge
-    REF 650bf611de102a2cc0c32dba7646f8128f0300c8
-    SHA512 2093464db0f3a7f0178f65bed37986a4df1117f1d7ad65157d525584490cdf234475f01ed1a2003a9e54bdc3b9e2e450808044a264c2284d67b8c2a353400027
+    REF v1.0.7
+    SHA512 d341d5c6bdccf7d2f085162d1d8209b0b28d73b8a9f3173546b26f06bf8e422b3fdf1cfbaa7d122ea75cee5cf5f6bb6dbd2bffc10d8e0c336b5b8695c39f7b54
     HEAD_REF master
-	PATCHES fix-static_build.patch
+    PATCHES cmake_config.patch
 )
+file(REMOVE ${SOURCE_PATH}/CMakeModules/FindOpenGL.cmake)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DFG_BUILD_DOCS=OFF
         -DFG_BUILD_EXAMPLES=OFF
         -DFG_INSTALL_BIN_DIR=bin
-        -DFG_WITH_FREEIMAGE=OFF
+        -DFG_INSTALL_CMAKE_DIR=share/Forge
 )
 
 vcpkg_install_cmake()
-
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
-else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH share/Forge/cmake)
-endif()
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/Forge TARGET_PATH share/Forge)
 
 file(GLOB DLLS ${CURRENT_PACKAGES_DIR}/bin/* ${CURRENT_PACKAGES_DIR}/debug/bin/*)
 list(FILTER DLLS EXCLUDE REGEX "forge\\.dll\$")
