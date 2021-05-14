@@ -12,10 +12,28 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    list(APPEND OPTIONS "/p:ConfigurationType=StaticLibrary")
+else()
+    list(APPEND OPTIONS "/p:ConfigurationType=DynamicLibrary")
+endif()
+
+set(_file "${SOURCE_PATH}/getopt.vcxproj")
+file(READ "${_file}" _contents)
+if(VCPKG_CRT_LINKAGE STREQUAL static)
+    string(REPLACE "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" _contents "${_contents}")
+    string(REPLACE "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>" _contents "${_contents}")
+else()
+    string(REPLACE "<RuntimeLibrary>MultiThreaded</RuntimeLibrary>" "<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>" _contents "${_contents}")
+    string(REPLACE "<RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>"  "<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>" _contents "${_contents}")
+endif()
+file(WRITE "${_file}" "${_contents}")
+
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH getopt.vcxproj
     LICENSE_SUBPATH LICENSE
+    OPTIONS ${OPTIONS}
 )
 
 # Copy header
