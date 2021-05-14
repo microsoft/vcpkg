@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix-InstallPath.patch
         fix-iconv.patch
         export-cmake-targets.patch
+        fix-build-error-with-cmake3.20.patch #This can be removed in next release, which has been merged to upstream.
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

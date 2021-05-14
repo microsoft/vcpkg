@@ -14,11 +14,22 @@ vcpkg_from_github(
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+if (TBB_DISABLE_EXCEPTIONS)
+    message(STATUS "Building TBB with exception-handling constructs disabled because TBB_DISABLE_EXCEPTIONS is set to ON.")
+else()
+    message(STATUS "TBB uses exception-handling constructs by default (if supported by the compiler). This use can be disabled with 'SET(TBB_DISABLE_EXCEPTIONS ON)' in your custom triplet.")
+endif()
 
 if (NOT VCPKG_TARGET_IS_WINDOWS)
+    if (TBB_DISABLE_EXCEPTIONS)
+        set(DISABLE_EXCEPTIONS ON)
+    else()
+        set(DISABLE_EXCEPTIONS OFF)
+    endif()
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
         PREFER_NINJA
+        OPTIONS -DDISABLE_EXCEPTIONS=${DISABLE_EXCEPTIONS}
     )
 
     vcpkg_install_cmake()
@@ -52,19 +63,21 @@ else()
             configure_file(${CONFIGURE_FILE_NAME} ${CONFIGURE_BAK_FILE_NAME} COPYONLY)
         endif()
         configure_file(${CONFIGURE_BAK_FILE_NAME} ${CONFIGURE_FILE_NAME} COPYONLY)
+        file(READ ${CONFIGURE_FILE_NAME} SLN_CONFIGURE)
         if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-            file(READ ${CONFIGURE_FILE_NAME} SLN_CONFIGURE)
             string(REPLACE "<ConfigurationType>DynamicLibrary<\/ConfigurationType>"
                         "<ConfigurationType>StaticLibrary<\/ConfigurationType>" SLN_CONFIGURE "${SLN_CONFIGURE}")
             string(REPLACE "\/D_CRT_SECURE_NO_DEPRECATE"
                         "\/D_CRT_SECURE_NO_DEPRECATE \/DIN_CILK_STATIC" SLN_CONFIGURE "${SLN_CONFIGURE}")
-            file(WRITE ${CONFIGURE_FILE_NAME} "${SLN_CONFIGURE}")
         else()
-            file(READ ${CONFIGURE_FILE_NAME} SLN_CONFIGURE)
             string(REPLACE "\/D_CRT_SECURE_NO_DEPRECATE"
                         "\/D_CRT_SECURE_NO_DEPRECATE \/DIN_CILK_RUNTIME" SLN_CONFIGURE "${SLN_CONFIGURE}")
-            file(WRITE ${CONFIGURE_FILE_NAME} "${SLN_CONFIGURE}")
         endif()
+        if (TBB_DISABLE_EXCEPTIONS)
+            string(REPLACE "<PreprocessorDefinitions>%(PreprocessorDefinitions)<\/PreprocessorDefinitions>"
+                        "<PreprocessorDefinitions>TBB_USE_EXCEPTIONS=0;%(PreprocessorDefinitions)<\/PreprocessorDefinitions>" SLN_CONFIGURE "${SLN_CONFIGURE}")
+        endif()
+        file(WRITE ${CONFIGURE_FILE_NAME} "${SLN_CONFIGURE}")
     endmacro()
 
     CONFIGURE_PROJ_FILE(${SOURCE_PATH}/build/vs2013/tbb.vcxproj)

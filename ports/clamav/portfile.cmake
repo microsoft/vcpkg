@@ -11,6 +11,7 @@ vcpkg_from_github(
       "build.patch"
       "cmakefiles.patch"
       "curl.patch"
+      "mspack.patch"
 )
 
 vcpkg_configure_cmake(
@@ -21,6 +22,7 @@ vcpkg_configure_cmake(
       -DENABLE_DOCS=OFF
       -DENABLE_SHARED_LIB=ON
       -DENABLE_STATIC_LIB=OFF
+      -DENABLE_EXTERNAL_MSPACK=ON
 )
 
 vcpkg_install_cmake()

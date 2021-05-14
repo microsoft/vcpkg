@@ -3,6 +3,8 @@ vcpkg_from_github(
     REPO acoustid/chromaprint
     REF v1.5.0
     SHA512 333114949928abdf5d4b11aba1db6ec487eebe526324c68d903b3fa80a3af87a28d942af765a2f873e63a1bf222b658b6438cd10cde4446f61b26ea91f537469
+    PATCHES
+        fix_lrintf_detection.patch # submitted upstream as https://github.com/acoustid/chromaprint/pull/85
 )
 
 vcpkg_configure_cmake(
