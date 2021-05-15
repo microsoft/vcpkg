@@ -43,7 +43,7 @@ index a437717ba..0a11039d1 100644
  	VERSION ${PROJECT_VERSION}
  )
 -
-+set(XML_LIB_NAME xml)
++set(XML_LIB_NAME xml2)
  if(MSVC)
 -	if(BUILD_SHARED_LIBS)
 -		set_target_properties(
@@ -61,7 +61,7 @@ index a437717ba..0a11039d1 100644
 -			RELWITHDEBINFO_POSTFIX s
 -		)
 -	endif()
-+    set(XML_LIB_NAME libxml)
++    set(XML_LIB_NAME libxml2)
  endif()
  
  install(FILES ${LIBXML2_HDRS} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/libxml2/libxml COMPONENT development)
