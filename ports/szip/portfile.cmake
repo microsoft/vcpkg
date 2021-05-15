@@ -25,6 +25,12 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()
 
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/szip_adpt.h"
+        "\n#ifdef SZ_BUILT_AS_DYNAMIC_LIB"
+        "\n#ifndef SZ_BUILT_AS_DYNAMIC_LIB\n#define SZ_BUILT_AS_DYNAMIC_LIB 1\n#endif\n#ifdef SZ_BUILT_AS_DYNAMIC_LIB")
+endif()
+
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/szip/data/COPYING ${CURRENT_PACKAGES_DIR}/share/szip/copyright)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
