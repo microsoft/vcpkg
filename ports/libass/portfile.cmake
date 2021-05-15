@@ -1,10 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libass/libass
-    REF d149636f502f5774ae1a8fb4c554b122674393b2   #v 0.15.0
-    SHA512 d8b3b23e3cfa42b6f65a59a389a54a18a8470f015ca828e2a08afd9633510ebf58c74e630b086cd611629f79e68f23be47dd2f798e223330216e6b1f487afd7a
+    REF 0.15.1
+    SHA512 eadda1dcdeb15be8cecbb14ad922eb3f366a780d82376d257c799424a0296b4d7539e86f12234e8c1480bdea423d9dbb78644b18970f65b8f5af5d0ef49c5fc9
     HEAD_REF master
-    PATCHES ConstantValues.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.in DESTINATION ${SOURCE_PATH})
@@ -22,6 +21,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

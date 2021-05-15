@@ -1,0 +1,7 @@
+{
+  "name": "effects11",
+  "version-string": "11.26",
+  "description": "Effects for Direct3D 11 (FX11) is a management runtime for authoring HLSL shaders, render state, and runtime variables together.",
+  "homepage": "https://github.com/microsoft/FX11",
+  "supports": "windows"
+}

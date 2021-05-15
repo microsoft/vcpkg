@@ -1,7 +1,7 @@
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
-set(ACE_VERSION 6.5.12)
+set(ACE_VERSION 7.0.1)
 string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
 
 if("tao" IN_LIST FEATURES)
@@ -10,14 +10,14 @@ if("tao" IN_LIST FEATURES)
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.zip"
           FILENAME ACE-TAO-${ACE_VERSION}.zip
-          SHA512 6b6ad7c98fed19b03449cc93148dc66abbaab5c6cdc893f9fdc9b74e899dba1e2e969e791326a7869ad06f8ffbf9cbbee66a75170bee6ac386e6795eb4f713e3
+          SHA512 0f7fb37d85026d75db454176ca0b4820c4e972953c4c5218843b0adc94f2fd0f63a94403028f7bc32e443e70957befb18d256bbd72a0e275f505b5221725c245
       )
     else()
       # VCPKG_TARGET_IS_LINUX
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
           FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
-          SHA512 6cb3b87ee5e421b77dc8479c9572c8bd1d110bee504a346094d122f7acdfba29708b6fdb44e4d611620214ecb74d375444988f34a0e807c5853755d32b3c2e7d
+          SHA512 881343a7f23552d699c22654e62cb926433938bc5afae8d785be2ca0409528b5cc701aecbc97ce16ae42b14a94e73060a347e2c8ee8b44d9e59837b0c0339709
       )
     endif()
 else()
@@ -26,14 +26,14 @@ else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.zip"
         FILENAME ACE-src-${ACE_VERSION}.zip
-        SHA512 f2b8bc68531af673fb15f72d15fc9cdb1f9c44d21aa6aef473b06461b4a7d8c882368e8a93e5da6a8f7d856b88f3f1199a2bc4185ccb67b269e68f1346bc6b3a
+        SHA512 36ef4f189c777f54f0381a31c1e635155f32576e56ed9a4b6b663d37c3f45057e5a75a0009cf5c73f040c19f5bda364984102d818c3a301d14c2d11917d938a9
     )
   else(VCPKG_TARGET_IS_WINDOWS)
     # VCPKG_TARGET_IS_LINUX
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
         FILENAME ACE-src-${ACE_VERSION}.tar.gz
-        SHA512 8dcdf5ff69908840ab527533c500dde2902f59c62aaddcec21f8767afe59d0277e57f03ab359755977e99e9b1f2e158636024b806e25a6874be2ac31e31f72e8
+        SHA512 52277899796d1c0c0f70afc48b5557c467ee48003261e5dac775bb02a2191959e54cd5b33f111a9dbcffdc4f473999dda557e52ef409668e30a2e75e2287e243
     )
   endif()
 endif()
@@ -147,7 +147,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
            DESTINATION ${CURRENT_PACKAGES_DIR}/include/${RELATIVE_PATH})
     endforeach()
   endfunction()
-  
+
   get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
   set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
 
@@ -272,7 +272,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)
     endif()
   endif()
-  
+
   vcpkg_clean_msbuild()
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)

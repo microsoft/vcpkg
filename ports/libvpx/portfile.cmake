@@ -11,6 +11,8 @@ vcpkg_from_github(
     PATCHES
         0001-vcxproj-nasm.patch
         0002-Fix-nasm-debug-format-flag.patch
+        0003-add-uwp-and-v142-support.patch
+        0004-remove-library-suffixes.patch
 )
 
 vcpkg_find_acquire_program(PERL)
@@ -41,21 +43,33 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(LIBVPX_CRT_SUFFIX md)
     endif()
 
+    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore AND VCPKG_PLATFORM_TOOLSET STREQUAL v142)
+        set(LIBVPX_TARGET_OS "uwp")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x86 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
+        set(LIBVPX_TARGET_OS "win32")
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64 OR VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
+        set(LIBVPX_TARGET_OS "win64")
+    endif()
+
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
-        set(LIBVPX_TARGET_ARCH "x86-win32")
+        set(LIBVPX_TARGET_ARCH "x86-${LIBVPX_TARGET_OS}")
         set(LIBVPX_ARCH_DIR "Win32")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)
-        set(LIBVPX_TARGET_ARCH "x86_64-win64")
+        set(LIBVPX_TARGET_ARCH "x86_64-${LIBVPX_TARGET_OS}")
         set(LIBVPX_ARCH_DIR "x64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm64)
-        set(LIBVPX_TARGET_ARCH "arm64-win64")
+        set(LIBVPX_TARGET_ARCH "arm64-${LIBVPX_TARGET_OS}")
         set(LIBVPX_ARCH_DIR "ARM64")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL arm)
-        set(LIBVPX_TARGET_ARCH "armv7-win32")
+        set(LIBVPX_TARGET_ARCH "armv7-${LIBVPX_TARGET_OS}")
         set(LIBVPX_ARCH_DIR "ARM")
     endif()
 
-    set(LIBVPX_TARGET_VS "vs15")
+    if(VCPKG_PLATFORM_TOOLSET STREQUAL v142)
+        set(LIBVPX_TARGET_VS "vs16")
+    else()
+        set(LIBVPX_TARGET_VS "vs15")
+    endif()
 
     message(STATUS "Generating makefile")
     file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET})
@@ -85,23 +99,22 @@ if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
 
     # note: pdb file names are hardcoded in the lib file, cannot rename
+    set(LIBVPX_OUTPUT_PREFIX "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}")
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-        if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpxmd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+        if (EXISTS "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.pdb")
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
         else()
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpxmt.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Release/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/lib")
         endif()
     endif()
 
     if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-        if(VCPKG_CRT_LINKAGE STREQUAL "dynamic")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpxmdd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+        if (EXISTS "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.pdb")
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
         else()
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpxmtd.lib" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
-            file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}/${LIBVPX_ARCH_DIR}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
+            file(INSTALL "${LIBVPX_OUTPUT_PREFIX}/Debug/vpx/vpx.pdb" DESTINATION "${CURRENT_PACKAGES_DIR}/debug/lib")
         endif()
     endif()
 
@@ -126,13 +139,13 @@ else()
 
     set(OPTIONS_DEBUG "--enable-debug-libs --enable-debug --prefix=${CURRENT_PACKAGES_DIR}/debug")
     set(OPTIONS_RELEASE "--prefix=${CURRENT_PACKAGES_DIR}")
-	
+
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         set(OPTIONS "${OPTIONS} --disable-static --enable-shared")
     else()
         set(OPTIONS "${OPTIONS} --enable-static --disable-shared")
     endif()
-    
+
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL x86)
         set(LIBVPX_TARGET_ARCH "x86")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL x64)

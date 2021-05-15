@@ -1,5 +1,7 @@
 # vcpkg_install_gn
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_install_gn.md).
+
 Installs a GN project
 
 ## Usage:
@@ -20,4 +22,4 @@ Only install the specified targets.
 Note: includes must be handled separately
 
 ## Source
-[scripts/cmake/vcpkg_install_gn.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_gn.cmake)
+[scripts/cmake/vcpkg\_install\_gn.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_gn.cmake)

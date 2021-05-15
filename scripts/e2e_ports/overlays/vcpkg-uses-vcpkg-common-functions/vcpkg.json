@@ -1,6 +1,0 @@
-{
-  "name": "vcpkg-uses-vcpkg-common-functions",
-  "version-string": "1.0.0",
-  "description": "A test port that uses the deprecated file vcpkg_common_functions.",
-  "homepage": ""
-}
