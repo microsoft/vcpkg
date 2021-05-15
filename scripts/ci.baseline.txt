@@ -847,9 +847,6 @@ llgl:x64-uwp=fail
 llvm:arm64-windows=fail
 llvm:arm-uwp=fail
 llvm:x64-uwp=fail
-# Remove after https://github.com/microsoft/vcpkg/pull/15390
-llvm:x64-windows-static=fail
-llvm:x64-windows-static-md=fail
 lmdb:arm-uwp=fail
 lmdb:x64-uwp=fail
 # Conflict with loadpng-c
