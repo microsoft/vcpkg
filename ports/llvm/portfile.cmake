@@ -54,7 +54,7 @@ foreach(external_library IN LISTS llvm_external_libraries)
         list(APPEND FEATURE_OPTIONS
             -D${define_name}=FORCE_ON
         )
-    elseif()
+    else()
         list(APPEND FEATURE_OPTIONS
             -D${define_name}=OFF
         )
