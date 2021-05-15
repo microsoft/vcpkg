@@ -65,9 +65,7 @@ vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
-endif()
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 
 vcpkg_copy_tools(TOOL_NAMES xmllint xmlcatalog AUTO_CLEAN)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
