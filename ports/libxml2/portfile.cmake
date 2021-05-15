@@ -24,7 +24,7 @@ vcpkg_configure_cmake(
         #-DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
         -DLIBXML2_WITH_HTTP=${ENABLE_NETWORK}
         -DLIBXML2_WITH_FTP=${ENABLE_NETWORK}
-        -DLIBXML2_WITH_HTML=ON
+        -DLIBXML2_WITH_HTML=OFF # DOCS
         -DLIBXML2_WITH_C14N=ON # Add the Canonicalization support
         -DLIBXML2_WITH_CATALOG=ON
         -DLIBXML2_WITH_DEBUG=ON 
@@ -32,7 +32,7 @@ vcpkg_configure_cmake(
         -DLIBXML2_WITH_ICONV=ON
         -DLIBXML2_WITH_ISO8859X=ON 
         -DLIBXML2_WITH_ZLIB=ON
-        -DLIBXML2_WITH_ICU=ON
+        -DLIBXML2_WITH_ICU=OFF # Culprint of linkage issues? Solving this is probably another PR
         -DLIBXML2_WITH_LZMA=ON
         -DLIBXML2_WITH_LEGACY=ON
         -DLIBXML2_WITH_MEM_DEBUG=OFF
