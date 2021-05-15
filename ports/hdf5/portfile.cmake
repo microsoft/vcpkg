@@ -9,8 +9,8 @@ vcpkg_from_github(
     SHA512 d84df1ea72dc6fa038440a370e1b1ff523364474e7f214b967edc26d3191b2ef4fe1d9273c4a086a5945f1ad1ab6aa8dbcda495898e7967b2b73fd93dd5071e0
     HEAD_REF develop
     PATCHES
-       hdf5_config.patch
-       szip.patch
+        hdf5_config.patch
+        szip.patch
 )
 
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
@@ -22,15 +22,15 @@ if ("fortran" IN_LIST FEATURE)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-   FEATURES # <- Keyword FEATURES is required because INVERTED_FEATURES are being used
-     parallel     HDF5_ENABLE_PARALLEL
-     tools        HDF5_BUILD_TOOLS
-     cpp          HDF5_BUILD_CPP_LIB
-     szip         HDF5_ENABLE_SZIP_SUPPORT
-     szip         HDF5_ENABLE_SZIP_ENCODING
-     zlib         HDF5_ENABLE_Z_LIB_SUPPORT
-     fortran      HDF5_BUILD_FORTRAN
-     threadsafe   HDF5_ENABLE_THREADSAFE
+    FEATURES
+        parallel     HDF5_ENABLE_PARALLEL
+        tools        HDF5_BUILD_TOOLS
+        cpp          HDF5_BUILD_CPP_LIB
+        szip         HDF5_ENABLE_SZIP_SUPPORT
+        szip         HDF5_ENABLE_SZIP_ENCODING
+        zlib         HDF5_ENABLE_Z_LIB_SUPPORT
+        fortran      HDF5_BUILD_FORTRAN
+        threadsafe   HDF5_ENABLE_THREADSAFE
 )
 
 file(REMOVE "${SOURCE_PATH}/config/cmake_ext_mod/FindSZIP.cmake")#Outdated; does not find debug szip
@@ -47,7 +47,7 @@ endif()
 
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
@@ -153,7 +153,7 @@ if(FEATURES MATCHES "tools")
             endif()
             if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}")
                 file(INSTALL "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}"
-                             DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+                     DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
                 file(REMOVE "${CURRENT_PACKAGES_DIR}/bin/${tool}${suffix}")
             endif()
         endforeach()
