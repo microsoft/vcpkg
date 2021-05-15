@@ -6,15 +6,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alicevision/cctag
-        #    REF fe24ce67624c16e1cc5620e4427abd55f8478e63
-    REF v1.0.0-rc2
-#    REF 91cde361895afb37ea821415e0f5e2b450bd9c45
-#    SHA512 c635b4d38ce95be14ba20bc12043c7ab56631166a62db8389774193edfce3a43aecc2033e8b7c3f2232953f81394d322bd9e7a6fcdb7979a77374b8fc725c8d0
-    SHA512 ffec5e0aab8ef1059914b427f9d0c873a7d278b713641130500a6aa450cde5c2c09e76aa6967c7adf04a183c9ca5bca983d9794e3f827e241b27038a26deed88
-#    SHA512 682ee1a3c3b5445478d4381671d847db1ad3f69664135f35785d083e9703c8d991d1d94b6a9fd1d3e43214f9d31bffaca1fc38a814b86083c3b409cfc58aecdb
+    REF v1.0.0-rc3
+    SHA512 e67078aa2452f6fcda7f4adea44c51a27dadd6de262653af63b7468c48374479e65124b3321ba525700279f356c73929e4aceaf55250182403389e79f730279a
     HEAD_REF develop
-#    HEAD_REF cmake/win/fixesVcpkg
-#    HEAD_REF dev/c++14
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -53,11 +47,8 @@ endif()
 
  # move the bin directory to tools
 if ("apps" IN_LIST FEATURES)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin" ${CURRENT_PACKAGES_DIR}/tools/cctag)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-#    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin" ${CURRENT_PACKAGES_DIR}/tools/cctag/debug)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/cctag)
+    set(CCTAG_TOOLS detection regression simulation)
+    vcpkg_copy_tools(TOOL_NAMES ${CCTAG_TOOLS} AUTO_CLEAN)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/cctag RENAME copyright)
