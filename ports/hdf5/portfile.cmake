@@ -12,6 +12,7 @@ vcpkg_from_github(
         hdf5_config.patch
         szip.patch
         mingw-import-libs.patch
+        pkgconfig-requires.patch
 )
 
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
@@ -118,20 +119,6 @@ foreach(PC_FILE IN LISTS PKG_FILES)
     endforeach()
 endforeach()
 vcpkg_fixup_pkgconfig()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5.pc")
-    vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/hdf5.pc"
-        "-loptimized -l\"\${prefix}/lib/zlib.lib\" -ldebug -l\"\${prefix}/debug/lib/zlibd.lib\""
-        "-lzlib"
-    )
-endif()
-if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5.pc")
-    vcpkg_replace_string(
-        "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/hdf5.pc"
-        "-loptimized -l\"\${prefix}/lib/zlib.lib\" -ldebug -l\"\${prefix}/lib/zlibd.lib\""
-        "-lzlibd"
-    )
-endif()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
