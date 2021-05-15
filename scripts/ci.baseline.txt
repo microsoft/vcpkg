@@ -910,6 +910,7 @@ memorymodule:x64-osx=fail
 memorymodule:x64-uwp=fail
 # See issue https://github.com/pal1000/mesa-dist-win/issues/34
 mesa:x64-windows=fail
+mesa:x64-windows-static=fail
 mesa:x86-windows=fail
 mesa:x66-windows-static=fail
 # Due to static crt.
