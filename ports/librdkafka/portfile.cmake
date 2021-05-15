@@ -9,6 +9,7 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RDKAFKA_BUILD_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     lz4     ENABLE_LZ4_EXT
     ssl     WITH_SSL
     zlib    WITH_ZLIB
