@@ -1,0 +1,8 @@
+{
+  "name": "quictls",
+  "version-date": "2021-05-03",
+  "description": "TLS/SSL and crypto library with QUIC APIs",
+  "homepage": "https://github.com/quictls/openssl",
+  "license": "Apache-2.0",
+  "supports": "windows"
+}

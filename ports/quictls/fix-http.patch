@@ -1,0 +1,12 @@
+diff --git a/crypto/http/http_lib.c b/crypto/http/http_lib.c
+index f0fc770..a73ecf6 100644
+--- a/crypto/http/http_lib.c
++++ b/crypto/http/http_lib.c
+@@ -12,6 +12,7 @@
+ #include <openssl/bio.h> /* for BIO_snprintf() */
+ #include <openssl/err.h>
+ #include <string.h>
++#include <stdio.h>
+ #include "internal/cryptlib.h" /* for ossl_assert() */
+ 
+ #include "http_local.h"
