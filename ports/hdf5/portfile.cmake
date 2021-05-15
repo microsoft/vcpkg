@@ -48,7 +48,7 @@ if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
@@ -61,10 +61,10 @@ vcpkg_configure_cmake(
         -DHDF_PACKAGE_NAMESPACE:STRING=hdf5::
 )
 
-vcpkg_install_cmake()
-
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
+
 set(debug_suffix debug)
 if(VCPKG_TARGET_IS_WINDOWS)
     set(debug_suffix D)
