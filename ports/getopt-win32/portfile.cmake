@@ -2,8 +2,6 @@ if(VCPKG_CMAKE_SYSTEM_NAME)
     message(FATAL_ERROR "getopt-win32 only supports building on Windows Desktop")
 endif()
 
-vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY ONLY_DYNAMIC_CRT)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libimobiledevice-win32/getopt
