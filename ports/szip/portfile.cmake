@@ -7,7 +7,7 @@ vcpkg_download_distfile(ARCHIVE
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     REF szip-${SZIP_VERSION}
     PATCHES
         fix-linkage-config.patch
@@ -15,7 +15,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         -DSZIP_INSTALL_DATA_DIR=share/szip/data
@@ -57,7 +57,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib")
 endif()
 vcpkg_fixup_pkgconfig()
 
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/szip/data/COPYING ${CURRENT_PACKAGES_DIR}/share/szip/copyright)
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/szip/data/COPYING" "${CURRENT_PACKAGES_DIR}/share/szip/copyright")
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
