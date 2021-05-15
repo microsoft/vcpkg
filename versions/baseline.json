@@ -2425,7 +2425,7 @@
       "port-version": 0
     },
     "halide": {
-      "baseline": "11.0.1",
+      "baseline": "12.0.0",
       "port-version": 0
     },
     "happly": {
@@ -3897,8 +3897,8 @@
       "port-version": 0
     },
     "mesa": {
-      "baseline": "20.2.2",
-      "port-version": 1
+      "baseline": "21.1.0",
+      "port-version": 0
     },
     "meschach": {
       "baseline": "1.2b-3",
