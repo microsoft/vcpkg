@@ -27,6 +27,8 @@ else()
 endif()
 file(WRITE "${_file}" "${_contents}")
 
+
+
 vcpkg_install_msbuild(
     SOURCE_PATH ${SOURCE_PATH}
     PROJECT_SUBPATH getopt.vcxproj
@@ -35,6 +37,12 @@ vcpkg_install_msbuild(
 )
 
 # Copy header
-file(COPY ${SOURCE_PATH}/getopt.h DESTINATION ${CURRENT_PACKAGES_DIR}/include/)
+file(COPY "${SOURCE_PATH}/getopt.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/")
+set(_file "${CURRENT_PACKAGES_DIR}/include/getopt.h")
+file(READ "${_file}" _contents)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    string(REPLACE "	#define __GETOPT_H_" "	#define __GETOPT_H_\n	#define STATIC_GETOPT" _contents "${_contents}")
+endif()
+file(WRITE "${_file}" "${_contents}")
 
 set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
