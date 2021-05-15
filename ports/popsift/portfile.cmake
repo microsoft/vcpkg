@@ -30,13 +30,10 @@ vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
- # move the bin direcory to tools
+ # copy the apps in tools directory
  if ("apps" IN_LIST FEATURES)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/tools)
-    file(RENAME "${CURRENT_PACKAGES_DIR}/bin" ${CURRENT_PACKAGES_DIR}/tools/popsift)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-#    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin" ${CURRENT_PACKAGES_DIR}/tools/popsift/debug)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/popsift)
+     set(POPSIFT_TOOLS popsift-demo)
+     vcpkg_copy_tools(TOOL_NAMES ${POPSIFT_TOOLS} AUTO_CLEAN)
  endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/popsift RENAME copyright)
