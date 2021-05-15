@@ -24,15 +24,15 @@ vcpkg_configure_cmake(
         #-DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
         -DLIBXML2_WITH_HTTP=${ENABLE_NETWORK}
         -DLIBXML2_WITH_FTP=${ENABLE_NETWORK}
-        -DLIBXML2_WITH_HTML=OFF # DOCS
-        -DLIBXML2_WITH_C14N=ON # Add the Canonicalization support
+        -DLIBXML2_WITH_HTML=ON
+        -DLIBXML2_WITH_C14N=ON
         -DLIBXML2_WITH_CATALOG=ON
         -DLIBXML2_WITH_DEBUG=ON 
         -DLIBXML2_WITH_DOCB=ON
         -DLIBXML2_WITH_ICONV=ON
         -DLIBXML2_WITH_ISO8859X=ON 
         -DLIBXML2_WITH_ZLIB=ON
-        -DLIBXML2_WITH_ICU=OFF # Culprint of linkage issues? Solving this is probably another PR
+        -DLIBXML2_WITH_ICU=OFF # Culprit of linkage issues? Solving this is probably another PR
         -DLIBXML2_WITH_LZMA=ON
         -DLIBXML2_WITH_LEGACY=ON
         -DLIBXML2_WITH_MEM_DEBUG=OFF
@@ -73,6 +73,8 @@ vcpkg_copy_tools(TOOL_NAMES xmllint xmlcatalog AUTO_CLEAN)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
+
+file(COPY "${CURRENT_PACKAGES_DIR}/include/libxml2/" DESTINATION "${CURRENT_PACKAGES_DIR}/include") # TODO: Fix usage in all dependent ports hardcoding the wrong include path. 
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/Copyright" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
