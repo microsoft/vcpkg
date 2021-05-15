@@ -11,6 +11,7 @@ vcpkg_from_github(
     PATCHES
         hdf5_config.patch
         szip.patch
+        mingw-import-libs.patch
 )
 
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)
