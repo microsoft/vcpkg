@@ -14,7 +14,7 @@ vcpkg_extract_source_archive_ex(
         mingw-lib-names.patch
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
@@ -22,9 +22,9 @@ vcpkg_configure_cmake(
         -DSZIP_INSTALL_CMAKE_DIR=share/szip
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 vcpkg_copy_pdbs()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/szip_adpt.h"
