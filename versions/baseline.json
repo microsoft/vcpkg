@@ -3553,8 +3553,8 @@
       "port-version": 1
     },
     "libtcod": {
-      "baseline": "1.16.7",
-      "port-version": 2
+      "baseline": "1.18.0",
+      "port-version": 0
     },
     "libtheora": {
       "baseline": "1.2.0alpha1-20170719",
