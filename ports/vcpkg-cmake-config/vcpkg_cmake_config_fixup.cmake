@@ -229,7 +229,7 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
         endif()
         foreach(targets_file IN LISTS targets_files)
             file(READ "${targets_file}" targets_content)
-            string(REGEX MATCHALL "INTERFACE_LINK_LIBRARIES[^\n]*" library_contents "${targets_content}")
+            string(REGEX MATCHALL "INTERFACE_LINK_LIBRARIES[^\n]*\n" library_contents "${targets_content}")
             foreach(line IN LISTS library_contents)
                 set(fixed_line "${line}")
                 string(REGEX MATCHALL [[/[^ ;"]+/[^ ;"/]+\.framework]] frameworks "${line}")
