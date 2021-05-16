@@ -7,7 +7,7 @@ diff -urw cfitsio-3-7822097674.clean/cfitsio.pc.cmake cfitsio-3-7822097674/cfits
  URL: https://heasarc.gsfc.nasa.gov/fitsio/
 -Version: @CFITSIO_MAJOR@.@CFITSIO_MINOR@
 +Version: @CFITSIO_VERSION@
-+Requires: @PKG_CONFIG_REQUIRES@
++Requires.private: @PKG_CONFIG_REQUIRES_PRIVATE@
  Libs: -L${libdir} @PKG_CONFIG_LIBS@
  Libs.private: -lm
  Cflags: -I${includedir}

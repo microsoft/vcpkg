@@ -20,10 +20,10 @@ vcpkg_check_features(
         curl        UseCurl
 )
 
-set(PKG_CONFIG_REQUIRES zlib)
+set(PKG_CONFIG_REQUIRES_PRIVATE zlib)
 if ("curl" IN_LIST FEATURES)
     set(FIND_CURL_DEPENDENCY "find_dependency(CURL CONFIG)")
-    string(APPEND PKG_CONFIG_REQUIRES " libcurl")
+    string(APPEND PKG_CONFIG_REQUIRES_PRIVATE " libcurl")
 endif()
 
 if ("pthreads" IN_LIST FEATURES)
@@ -42,7 +42,7 @@ vcpkg_configure_cmake(
     OPTIONS
         ${FEATURE_OPTIONS}
         -DUSE_PTHREADS=${WITH_PTHREADS}
-        "-DPKG_CONFIG_REQUIRES=${PKG_CONFIG_REQUIRES}"
+        "-DPKG_CONFIG_REQUIRES_PRIVATE=${PKG_CONFIG_REQUIRES_PRIVATE}"
         -DPKG_CONFIG_LIBS=-lcfitsio
 )
 
