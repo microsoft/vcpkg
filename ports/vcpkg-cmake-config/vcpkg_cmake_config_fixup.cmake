@@ -229,29 +229,26 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
         endif()
         foreach(targets_file IN LISTS targets_files)
             file(READ "${targets_file}" targets_content)
-            
             string(REGEX MATCHALL "INTERFACE_LINK_LIBRARIES[^\n]*" library_contents "${targets_content}")
-            string(REGEX REPLACE
-                [[/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/[^/]+/System/Library/Frameworks/([_a-zA-Z]+)\.framework]]
-                [[-framework \1]]
-                fixed_contents
-                "${library_contents}"
-            )
-            string(REGEX REPLACE
-                [[/Library/Developer/CommandLineTools/SDKs/[^/]+/System/Library/Frameworks/([_a-zA-Z]+)\.framework]]
-                [[-framework \1]]
-                fixed_contents
-                "${fixed_contents}"
-            )
-            if (fixed_contents AND NOT fixed_contents STREQUAL library_contents)
-                string(REGEX REPLACE
-                   "${library_contents}"
-                   "${fixed_contents}"
-                    targets_content
-                    "${targets_content}"
-                )
-            endif()
-
+            foreach(line IN LISTS library_contents)
+                set(fixed_line "${line}")
+                string(REGEX MATCHALL [[/[^ ]+/[^ ;/]+\.framework]] frameworks "${line}")
+                foreach(framework IN LISTS frameworks)
+                    if(NOT DEFINED VCKPG_DETECTED_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
+                        set(framework_info_file "${CURRENT_BUILDTREES_DIR}/framework-info-${TARGET_TRIPLET_FILE}.cmake")
+                        vcpkg_internal_get_cmake_vars(OUTPUT_FILE "${framework_info_file}")
+                        include("${framework_info_file}")
+                    endif()
+                    string(REGEX MATCH [[^([^ ]+)/([^;/]+)\.framework$]] "${framework}")
+                    set(path "${CMAKE_MATCH_1}")
+                    set(name "${CMAKE_MATCH_2}")
+                    list(find VCKPG_DETECTED_CXX_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES "${path}" index)
+                    if(NOT index EQUAL -1)
+                        string(REPLACE "${framework}" "-framework ${name}" fixed_line "${fixed_line}")
+                    endif()
+                endforeach()
+                string(REPLACE "${line}" "${fixed_line}" targets_content "${targets_content}")
+            endforeach()
             file(WRITE "${targets_file}" "${targets_content}")
         endforeach()
     endif()
