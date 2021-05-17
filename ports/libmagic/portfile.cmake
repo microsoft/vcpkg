@@ -14,6 +14,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
         "0012-Convert-MSYS2-paths-to-Windows-paths.patch"
         "0013-Check-for-backslash-in-argv-0-on-Windows.patch"
         "0014-Define-POSIX-macros-if-missing.patch"
+        "0015-MSYS2-Remove-ioctl-call.patch"
     )
 endif()
 
