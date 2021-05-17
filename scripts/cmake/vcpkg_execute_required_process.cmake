@@ -1,52 +1,51 @@
-## # vcpkg_execute_required_process
-##
-## Execute a process with logging and fail the build if the command fails.
-##
-## ## Usage
-## ```cmake
-## vcpkg_execute_required_process(
-##     COMMAND <${PERL}> [<arguments>...]
-##     WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg>
-##     LOGNAME <build-${TARGET_TRIPLET}-dbg>
-##     [TIMEOUT <seconds>]
-##     [OUTPUT_VARIABLE <var>]
-##     [ERROR_VARIABLE <var>]
-## )
-## ```
-## ## Parameters
-## ### ALLOW_IN_DOWNLOAD_MODE
-## Allows the command to execute in Download Mode.  
-## [See execute_process() override](../../scripts/cmake/execute_process.cmake).
-##
-## ### COMMAND
-## The command to be executed, along with its arguments.
-##
-## ### WORKING_DIRECTORY
-## The directory to execute the command in.
-##
-## ### LOGNAME
-## The prefix to use for the log files.
-##
-## ### TIMEOUT
-## Optional timeout after which to terminate the command.
-##
-## ### OUTPUT_VARIABLE
-## Optional variable to receive stdout of the command.
-##
-## ### ERROR_VARIABLE
-## Optional variable to receive stderr of the command.
-##
-## This should be a unique name for different triplets so that the logs don't conflict when building multiple at once.
-##
-## ## Examples
-##
-## * [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
-## * [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
-## * [boost](https://github.com/Microsoft/vcpkg/blob/master/ports/boost/portfile.cmake)
-## * [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+#[===[.md:
+# vcpkg_execute_required_process
 
-include(vcpkg_prettify_command)
-include(vcpkg_execute_in_download_mode)
+Execute a process with logging and fail the build if the command fails.
+
+## Usage
+```cmake
+vcpkg_execute_required_process(
+    COMMAND <${PERL}> [<arguments>...]
+    WORKING_DIRECTORY <${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg>
+    LOGNAME <build-${TARGET_TRIPLET}-dbg>
+    [TIMEOUT <seconds>]
+    [OUTPUT_VARIABLE <var>]
+    [ERROR_VARIABLE <var>]
+)
+```
+## Parameters
+### ALLOW_IN_DOWNLOAD_MODE
+Allows the command to execute in Download Mode.
+[See execute_process() override](../../scripts/cmake/execute_process.cmake).
+
+### COMMAND
+The command to be executed, along with its arguments.
+
+### WORKING_DIRECTORY
+The directory to execute the command in.
+
+### LOGNAME
+The prefix to use for the log files.
+
+### TIMEOUT
+Optional timeout after which to terminate the command.
+
+### OUTPUT_VARIABLE
+Optional variable to receive stdout of the command.
+
+### ERROR_VARIABLE
+Optional variable to receive stderr of the command.
+
+This should be a unique name for different triplets so that the logs don't conflict when building multiple at once.
+
+## Examples
+
+* [ffmpeg](https://github.com/Microsoft/vcpkg/blob/master/ports/ffmpeg/portfile.cmake)
+* [openssl](https://github.com/Microsoft/vcpkg/blob/master/ports/openssl/portfile.cmake)
+* [boost](https://github.com/Microsoft/vcpkg/blob/master/ports/boost/portfile.cmake)
+* [qt5](https://github.com/Microsoft/vcpkg/blob/master/ports/qt5/portfile.cmake)
+#]===]
 
 function(vcpkg_execute_required_process)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
@@ -71,7 +70,7 @@ function(vcpkg_execute_required_process)
     endif()
 
     if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT vcpkg_execute_required_process_ALLOW_IN_DOWNLOAD_MODE)
-        message(FATAL_ERROR 
+        message(FATAL_ERROR
 [[
 This command cannot be executed in Download Mode.
 Halting portfile execution.
@@ -102,7 +101,7 @@ Halting portfile execution.
             file(TO_NATIVE_PATH "${LOG}" NATIVE_LOG)
             list(APPEND STRINGIFIED_LOGS "    ${NATIVE_LOG}\n")
         endforeach()
-        vcpkg_prettify_command(vcpkg_execute_required_process_COMMAND vcpkg_execute_required_process_COMMAND_PRETTY)
+        z_vcpkg_prettify_command_line(vcpkg_execute_required_process_COMMAND_PRETTY ${vcpkg_execute_required_process_COMMAND})
         message(FATAL_ERROR
             "  Command failed: ${vcpkg_execute_required_process_COMMAND_PRETTY}\n"
             "  Working Directory: ${vcpkg_execute_required_process_WORKING_DIRECTORY}\n"

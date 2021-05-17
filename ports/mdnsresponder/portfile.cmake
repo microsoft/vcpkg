@@ -49,6 +49,11 @@ function(FIX_VCXPROJ VCXPROJ_PATH)
       "<ConfigurationType>StaticLibrary</ConfigurationType>"
       ORIG "${ORIG}")
   endif()
+  
+  string(REPLACE
+    "<DebugInformationFormat>ProgramDatabase</DebugInformationFormat>"
+    "<DebugInformationFormat>OldStyle</DebugInformationFormat>"
+    ORIG "${ORIG}")
   file(WRITE ${VCXPROJ_PATH} "${ORIG}")
 endfunction()
 

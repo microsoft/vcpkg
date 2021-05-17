@@ -7,9 +7,7 @@ vcpkg_from_github(
     SHA512 f8e5a708f6cbda913a0492a843e1502b8d3cc615a6abda50e850be944e1484ec9087b787c54cc25d513172a7d5ab789be41a761c97df94266df4d1bcf14db17c
     HEAD_REF master
     PATCHES
-        fix-linux-build.patch
-        Fix-FindCairo.patch
-        fix-expat.patch
+        cmake.dep.patch
 )
 
 if (VCPKG_TARGET_IS_OSX)

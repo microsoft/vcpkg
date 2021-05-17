@@ -1,5 +1,5 @@
 function(vcpkg_find_cuda)
-    cmake_parse_arguments(PARSE_ARGV 0 vfc "" "OUT_CUDA_TOOLKIT_ROOT" "")
+    cmake_parse_arguments(PARSE_ARGV 0 vfc "" "OUT_CUDA_TOOLKIT_ROOT;OUT_CUDA_VERSION" "")
 
     if(NOT vfc_OUT_CUDA_TOOLKIT_ROOT)
         message(FATAL_ERROR "vcpkg_find_cuda() requres an OUT_CUDA_TOOLKIT_ROOT argument")
@@ -7,12 +7,11 @@ function(vcpkg_find_cuda)
 
     set(CUDA_REQUIRED_VERSION "10.1.0")
 
-    set(CUDA_PATHS 
+    set(CUDA_PATHS
             ENV CUDA_PATH
+            ENV CUDA_HOME
             ENV CUDA_BIN_PATH
-            ENV CUDA_PATH_V11_0
-            ENV CUDA_PATH_V10_2
-            ENV CUDA_PATH_V10_1)
+            ENV CUDA_TOOLKIT_ROOT_DIR)
 
     if (VCPKG_TARGET_IS_WINDOWS)
         find_program(NVCC
@@ -29,7 +28,7 @@ function(vcpkg_find_cuda)
         else()
             set(platform_base "/Developer/NVIDIA/CUDA-")
         endif()
-        
+
         file(GLOB possible_paths "${platform_base}*")
         set(FOUND_PATH )
         foreach (p ${possible_paths})
@@ -42,7 +41,7 @@ function(vcpkg_find_cuda)
                 endif()
             endif()
         endforeach()
-        
+
         find_program(NVCC
             NAMES nvcc
             PATHS
@@ -76,16 +75,19 @@ function(vcpkg_find_cuda)
     # Cuda compilation tools, release 8.0, V8.0.44
     string(REGEX MATCH "V([0-9]+)\\.([0-9]+)\\.([0-9]+)" CUDA_VERSION ${NVCC_OUTPUT})
     message(STATUS "Found CUDA ${CUDA_VERSION}")
-    set(CUDA_VERSION_MAJOR ${CMAKE_MATCH_1})
-    set(CUDA_VERSION_MINOR ${CMAKE_MATCH_2})
-    set(CUDA_VERSION_PATCH ${CMAKE_MATCH_3})
+    set(CUDA_VERSION_MAJOR "${CMAKE_MATCH_1}")
+    set(CUDA_VERSION_MINOR "${CMAKE_MATCH_2}")
+    set(CUDA_VERSION_MAJOR_MINOR "${CMAKE_MATCH_1}.${CMAKE_MATCH_2}")
 
-    if ("${CUDA_VERSION_MAJOR}.${CUDA_VERSION_MINOR}." VERSION_LESS ${CUDA_REQUIRED_VERSION})
-        message(FATAL_ERROR "CUDA ${CUDA_VERSION} found, but v${CUDA_REQUIRED_VERSION} is required. Please download and install a more recent version of CUDA from:"
+    if (CUDA_VERSION_MAJOR_MINOR VERSION_LESS CUDA_REQUIRED_VERSION)
+      message(FATAL_ERROR "CUDA v${CUDA_VERSION_MAJOR_MINOR} found, but v${CUDA_REQUIRED_VERSION} is required. Please download and install a more recent version of CUDA from:"
                             "\n    https://developer.nvidia.com/cuda-downloads\n")
     endif()
 
     get_filename_component(CUDA_TOOLKIT_ROOT "${NVCC}" DIRECTORY)
     get_filename_component(CUDA_TOOLKIT_ROOT "${CUDA_TOOLKIT_ROOT}" DIRECTORY)
     set(${vfc_OUT_CUDA_TOOLKIT_ROOT} "${CUDA_TOOLKIT_ROOT}" PARENT_SCOPE)
+    if(DEFINED vfc_OUT_CUDA_VERSION)
+        set(${vfc_OUT_CUDA_VERSION} "${CUDA_VERSION_MAJOR_MINOR}" PARENT_SCOPE)
+    endif()
 endfunction()

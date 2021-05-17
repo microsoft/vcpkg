@@ -1,12 +1,10 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_gitlab(
-    GITLAB_URL https://gitlab.com
+vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
-    REPO conradsnicta/armadillo-code
-    REF 24b4762cbfbd3ad14c99a4854acd3560559a3195    #v 10.1.0
-    SHA512 224a875d21168f80e00604185ef72cb559a86a350a037c9cd1660a6f4dcc68f2ebf6dbc073f234a3cb03d35d959adb44ec49af88b11e3aaca9e0017c9c3fcee6
-    HEAD_REF 10.1.x
+    REPO arma
+    FILENAME "armadillo-10.4.0.tar.xz"
+    SHA512 72cf8a493e86c51c4c875076d0a9dd7c21fbfbd639064fa7a96daf4a5df02b36c93440bbae471f30d368547c6856c91fef97ce8ed2ec0526b0060588b71cd28a
     PATCHES
         remove_custom_modules.patch
         fix-CMakePath.patch

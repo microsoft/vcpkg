@@ -1,0 +1,13 @@
+{
+  "name": "boost-interval",
+  "version-string": "1.75.0",
+  "description": "Boost interval module",
+  "homepage": "https://github.com/boostorg/interval",
+  "dependencies": [
+    "boost-compatibility",
+    "boost-config",
+    "boost-detail",
+    "boost-logic",
+    "boost-vcpkg-helpers"
+  ]
+}

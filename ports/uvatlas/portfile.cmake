@@ -1,61 +1,59 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY ONLY_DYNAMIC_CRT)
+vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_fail_port_install(ON_TARGET "OSX" "Linux")
+vcpkg_fail_port_install(ON_TARGET "OSX")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF 60e2f2d5175f3a9fa6987516c4b44a4f0de3e1fa # aug2020
-    SHA512 6ff99148d8d26345d3e935840d43536558a8174346492d794a4583f50b89a0648bfba3c5a9a433d803fcfd6092716b2f482ff5d1bad896fc4933971dc8107d6d
+    REF apr2021
+    SHA512 cbbcb5ca38d5ad27b1f355dba7d71cd605ab6a7588c1886d47f6426e932cdc62376f8fc85033010c2e742336aba632fd4f70b726340ab4ff4eb0343ddecac7db
     HEAD_REF master
 )
 
-if(VCPKG_PLATFORM_TOOLSET MATCHES "v142")
-    set(SOLUTION_TYPE 2019)
-    set(OCILIB_ARCH_X86 x86)
-    set(OCILIB_ARCH_X64 x64)
-else()
-    set(SOLUTION_TYPE 2017)
-    set(OCILIB_ARCH_X86 x86)
-    set(OCILIB_ARCH_X64 x64)
+if (VCPKG_HOST_IS_LINUX)
+    message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-    set(PLATFORM ${OCILIB_ARCH_X86})
-	SET(BUILD_ARCH "Win32")
-elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-    set(PLATFORM ${OCILIB_ARCH_X64})
-	SET(BUILD_ARCH ${OCILIB_ARCH_X64})
+if(VCPKG_TARGET_IS_UWP)
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
 else()
-    set(PLATFORM ${TRIPLET_SYSTEM_ARCH})
+  set(EXTRA_OPTIONS -DBUILD_TOOLS=ON)
 endif()
 
-vcpkg_build_msbuild(
-    PROJECT_PATH ${SOURCE_PATH}/UVAtlas_Windows10_${SOLUTION_TYPE}.sln
-	PLATFORM ${PLATFORM}
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+    PREFER_NINJA
+    OPTIONS ${FEATURE_OPTIONS} ${EXTRA_OPTIONS}
 )
 
-file(INSTALL
-	${SOURCE_PATH}/UVAtlas/inc/
-    DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL
-	${SOURCE_PATH}/UVAtlas/Bin/Windows10_${SOLUTION_TYPE}/${BUILD_ARCH}/Release/UVAtlas.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/lib)
-file(INSTALL
-	${SOURCE_PATH}/UVAtlas/Bin/Windows10_${SOLUTION_TYPE}/${BUILD_ARCH}/Debug/UVAtlas.lib
-	DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-vcpkg_download_distfile(uvatlastool
-    URLS "https://github.com/Microsoft/UVAtlas/releases/download/sept2016/uvatlastool.exe"
-    FILENAME "uvatlastool.exe"
-    SHA512 2583ba8179d0a58fb85d871368b17571e36242436b5a5dbaf6f99ec2f2ee09f4e11e8f922b29563da3cb3b5bacdb771036c84d5b94f405c7988bfe5f2881c3df
-)
+if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+  vcpkg_download_distfile(
+    UVATLASTOOL_EXE
+    URLS "https://github.com/Microsoft/UVAtlas/releases/download/apr2021/uvatlastool.exe"
+    FILENAME "uvatlastool-apr2021.exe"
+    SHA512 a54d8de9a94dbfb29e3e200b60ce177a56c3c3b2907f7903564168af9da9969efc2abdc7c8107f323cc808fc04648751a51cd4c6cafaeb72174967fdd300e489
+  )
 
-file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
+  file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/uvatlas/")
 
-file(INSTALL
-	${DOWNLOADS}/uvatlastool.exe
-	DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
+  file(INSTALL
+    ${UVATLASTOOL_EXE}
+    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/uvatlas/)
 
-	# Handle copyright
+  file(RENAME ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool-apr2021.exe ${CURRENT_PACKAGES_DIR}/tools/uvatlas/uvatlastool.exe)
+
+elseif((VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_UWP))
+
+  vcpkg_copy_tools(
+        TOOL_NAMES uvatlastool
+        SEARCH_DIR ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/bin/CMake
+    )
+
+endif()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -6,6 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+if(VCPKG_TARGET_IS_MINGW)
+    vcpkg_replace_string(${SOURCE_PATH}/win32/ogg.def "LIBRARY ogg" "LIBRARY libogg")
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA

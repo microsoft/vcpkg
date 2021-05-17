@@ -1,6 +1,6 @@
 set(X264_VERSION 157)
 
-vcpkg_fail_port_install(ON_TARGET "OSX") 
+vcpkg_fail_port_install(ON_ARCH "arm")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -14,7 +14,7 @@ vcpkg_from_github(
 
 vcpkg_find_acquire_program(NASM)
 get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
+vcpkg_add_to_path(${NASM_EXE_PATH})
 
 if(VCPKG_TARGET_IS_WINDOWS)
     _vcpkg_determine_autotools_host_cpu(BUILD_ARCH)
@@ -51,7 +51,10 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
+
+if(NOT VCPKG_TARGET_IS_UWP)
+    vcpkg_copy_tools(TOOL_NAMES x264 AUTO_CLEAN)
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
@@ -66,7 +69,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endif()
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(RENAME ${CURRENT_PACKAGES_DIR}/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/lib/libx264.lib)
     file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.dll.lib ${CURRENT_PACKAGES_DIR}/debug/lib/libx264.lib)
 elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -81,7 +84,7 @@ elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
 endif()
 
-vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES -lpthread -lm -ldl)
+vcpkg_fixup_pkgconfig()
 
 vcpkg_copy_pdbs()
 

@@ -1,0 +1,9 @@
+{
+  "name": "type-safe",
+  "version-string": "0.2.1",
+  "description": "Zero overhead abstractions that use the C++ type system to prevent bugs.",
+  "homepage": "https://github.com/foonathan/type_safe",
+  "dependencies": [
+    "debug-assert"
+  ]
+}

@@ -6,10 +6,15 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    draft ENABLE_DRAFTS
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DCPPZMQ_BUILD_TESTS=OFF
+    OPTIONS ${FEATURE_OPTIONS}
+        -DCPPZMQ_BUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()

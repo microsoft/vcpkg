@@ -1,0 +1,25 @@
+{
+  "name": "boost-bimap",
+  "version-string": "1.75.0",
+  "description": "Boost bimap module",
+  "homepage": "https://github.com/boostorg/bimap",
+  "dependencies": [
+    "boost-concept-check",
+    "boost-config",
+    "boost-container-hash",
+    "boost-core",
+    "boost-functional",
+    "boost-iterator",
+    "boost-lambda",
+    "boost-mpl",
+    "boost-multi-index",
+    "boost-preprocessor",
+    "boost-property-map",
+    "boost-serialization",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

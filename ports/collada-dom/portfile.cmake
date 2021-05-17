@@ -7,7 +7,8 @@ vcpkg_from_github(
     PATCHES
         vs-version-detection.patch
         use-uriparser.patch
-		use-vcpkg-minizip.patch
+        use-vcpkg-minizip.patch
+        fix-shared-keyword.patch
 )
 
 vcpkg_configure_cmake(
@@ -22,6 +23,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/collada_dom-2.5)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/licenses/license_e.txt DESTINATION
-             ${CURRENT_PACKAGES_DIR}/share/collada-dom
-             RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/licenses/license_e.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

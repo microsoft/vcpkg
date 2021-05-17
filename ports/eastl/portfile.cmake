@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO electronicarts/EASTL
-    REF 1cf6182218bec79ece0b91e762f507e8c027807c # 3.16.07
-    SHA512 a0d140a6ff202eb9360a7cbb4ae59881458b628a7bc5ffb19864aba585fd0b02c7f7a2692df2e1c52aa58bc3c3471f27b365fa7770b7d84c038d24884db10b9b
+    REF 41bd2e4466e33b979d2afc37f9b98dacf1eab50b #v 3.17.03
+    SHA512 3011a0a08701b683e22cc624167b4f65fce8b16d0f7a03675f6a1d5b02313c5b763bcc6c8091f65728ed60ceee8d585cbdb1968a35fb24954f4f66afabb23865
     HEAD_REF master
     PATCHES 
     fix_cmake_install.patch

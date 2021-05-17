@@ -1,13 +1,13 @@
 Source: dlib
 Version: 19.21
 Port-Version: 4
-Build-Depends: libjpeg-turbo, libpng, openblas, lapack
+Build-Depends: libjpeg-turbo, libpng, blas, lapack
 Homepage: https://github.com/davisking/dlib
 Description: Modern C++ toolkit containing machine learning algorithms and tools for creating complex software in C++
 Default-Features: fftw3, sqlite3
 
 Feature: cuda
-Build-Depends: cuda
+Build-Depends: cuda, cudnn
 Description: CUDA support for dlib
 
 Feature: fftw3

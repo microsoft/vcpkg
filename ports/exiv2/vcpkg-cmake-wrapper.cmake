@@ -1,11 +1,12 @@
 _find_package(${ARGS})
 
 if("@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
-    find_package(unofficial-iconv CONFIG REQUIRED)
-    find_package(unofficial-gettext CONFIG REQUIRED)
+    find_package(Iconv REQUIRED)
+    find_package(Intl REQUIRED)
     if(TARGET exiv2lib)
         set_property(TARGET exiv2lib APPEND PROPERTY INTERFACE_LINK_LIBRARIES 
-            unofficial::iconv::libiconv 
-            unofficial::gettext::libintl)
+            Iconv::Iconv 
+            )
+        target_link_libraries(exiv2lib INTERFACE ${Intl_LIBRARIES})
     endif()
 endif()

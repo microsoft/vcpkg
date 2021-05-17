@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jupp0r/prometheus-cpp
-    REF 62897f9e794e9f16471e8a53f367268109e7fa6e # v0.10.0
-    SHA512 b065a1caaa29c5e7d31b89f4dc0f0a6309a58322a2c95ad784d47c9717dfb525c4f27df38ef7562e3a1be605898b30caf7702a801928f9b09c30b64f9a2becc8
+    REF 84388828ae80556f57e11249dbd0063043991fb4 # v0.12.3
+    SHA512 3d8c42b7fa15b5ccc5684a590cadb09cc9adf76a66f3fa0f8b791d9ee1f1442687c554215a21ff932b62d7aac8a6e5dd6e581d2de4faae3aa9ab02e73a60533f
     HEAD_REF master
 )
 
@@ -26,6 +26,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DUSE_THIRDPARTY_LIBRARIES=OFF # use vcpkg packages
+        -DGENERATE_PKGCONFIG=OFF
         ${FEATURE_OPTIONS}
 )
 
@@ -38,4 +39,4 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/prometheus-cpp)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/prometheus-cpp/copyright COPYONLY)
+configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
