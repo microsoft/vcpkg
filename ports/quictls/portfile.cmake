@@ -5,11 +5,9 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO quictls/openssl
-    REF 77248f1c1c8ea8dc57d624050b78eab0b3a10a04 # 2021-05-03
-    SHA512 881639f0bfd83858ce5d28aaf013dc34105cbc9c2fcc040c873c41ca45a0ea3dcb9dfd8e81821b21e92d4b9577f86d11ac010bb1f3746713892969c62d46fda6
-    HEAD_REF openssl-3.0.0-alpha15+quic
-    PATCHES
-        fix-http.patch
+    REF a6e9d76db343605dae9b59d71d2811b195ae7434 # 2021-05-17
+    SHA512 23510a11203b96476c194a1987c7d4e758375adef0f6dfe319cd8ec4b8dd9b12ea64c4099cf3ba35722b992dad75afb1cfc5126489a5fa59f5ee4d46bdfbeaf6
+    HEAD_REF OpenSSL_1_1_1k+quic
 )
 
 # Option: shared/static
@@ -20,8 +18,6 @@ endif()
 
 # Option: feature / algorithms
 list(APPEND CONFIGURE_OPTIONS
-    # from existing 'openssl' port
-    enable-static-engine enable-capieng
     # from 'microsoft/msquic'
     enable-tls1_3 no-makedepend no-dgram no-ssl3 no-psk no-srp
     no-zlib no-egd no-idea no-rc5 no-rc4 no-afalgeng
@@ -32,7 +28,7 @@ list(APPEND CONFIGURE_OPTIONS
     no-weak-ssl-ciphers no-tests
 )
 if(VCPKG_TARGET_IS_WINDOWS)
-    # jom will build in parallel mode, so we need /FS
+    # jom will build in parallel mode, we need /FS for PDB access
     list(APPEND CONFIGURE_OPTIONS -utf-8 -FS)
 
 elseif(VCPKG_TARGET_IS_IOS)
@@ -188,6 +184,6 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
                     ${CURRENT_PACKAGES_DIR}/ossl-modules
 )
 
-file(INSTALL     ${SOURCE_PATH}/LICENSE.txt
+file(INSTALL     ${SOURCE_PATH}/LICENSE
      DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright
 )
