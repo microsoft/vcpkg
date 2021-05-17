@@ -210,7 +210,6 @@ function(boost_modular_build)
         --debug-generators
         --disable-icu
         --ignore-site-config
-        --hash
         -q
         "-sZLIB_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
         "-sBZIP2_INCLUDE=${CURRENT_INSTALLED_DIR}/include"
