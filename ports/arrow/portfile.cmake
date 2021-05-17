@@ -1,64 +1,93 @@
-vcpkg_fail_port_install(ON_ARCH "x86" "arm" "arm64")
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO apache/arrow
-    REF apache-arrow-3.0.0
-    SHA512 02645be0eaaaa69880ab911fc0b74665ebf52a35f9ad05210b23e7b42bcfbe3c3a4d44fa6c4c35af74764efbe528c2e0ebf0549ce5890c796be695ceb94e5606
+    REF apache-arrow-4.0.0
+    SHA512 4697a32004d02a519b8a8e899ed3cd981ae3485e6d34071436051080d6c84e25ad0bc568b3e52effe0a9204756da3d6e560a2037df06d2730dccd19c6b4c8027
     HEAD_REF master
-    PATCHES
-        all.patch
+#    PATCHES
+#        all.patch
 )
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        csv         ARROW_CSV
+        dataset     ARROW_DATASET
+        filesystem  ARROW_FILESYSTEM
+        flight      ARROW_FLIGHT
+        json        ARROW_JSON
+        orc         ARROW_ORC
+        parquet     ARROW_PARQUET
+        parquet     PARQUET_REQUIRE_ENCRYPTION
+        s3          ARROW_S3
+)
+
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
+    set(MALLOC_OPTIONS -DARROW_JEMALLOC=OFF)
+elseif("jemalloc" IN_LIST FEATURES)
+    set(MALLOC_OPTIONS -DARROW_JEMALLOC=ON)
+else()
+    set(MALLOC_OPTIONS -DARROW_JEMALLOC=OFF)
+endif()
+
+if(VCPKG_TARGET_IS_WINDOWS AND ("mimalloc" IN_LIST FEATURES))
+    set(MALLOC_OPTIONS ${MALLOC_OPTIONS} -DARROW_MIMALLOC=ON)
+else()
+    set(MALLOC_OPTIONS ${MALLOC_OPTIONS} -DARROW_MIMALLOC=OFF)
+endif()
+
+set(LIB_DIR_OPTIONS
+    -DBOOST_ROOT="${CURRENT_INSTALLED_DIR}"
+    -DBOOST_INCLUDEDIR="${CURRENT_INSTALLED_DIR}/include/boost"
+    -DBOOST_LIBRARYDIR="${CURRENT_INSTALLED_DIR}/lib"
+    -DOPENSSL_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include"
+    -DOPENSSL_LIBRARIES="${CURRENT_INSTALLED_DIR}/lib"
+    -DOPENSSL_ROOT_DIR="${CURRENT_INSTALLED_DIR}"
+    -DThrift_ROOT="${CURRENT_INSTALLED_DIR}/lib"
+    -DZSTD_INCLUDE_DIR="${CURRENT_INSTALLED_DIR}/include"
+    -DZSTD_ROOT="${CURRENT_INSTALLED_DIR}"
+)
+if(VCPKG_HOST_IS_WINDOWS)
+    set(LIB_DIR_OPTIONS
+        ${LIB_DIR_OPTIONS}
+        -DLZ4_MSVC_LIB_PREFIX=""
+        -DLZ4_MSVC_STATIC_LIB_SUFFIX=""
+        -DZSTD_MSVC_LIB_PREFIX=""
+    )
+endif()
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_BUILD_SHARED)
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "static" ARROW_BUILD_STATIC)
-
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "csv"         ARROW_CSV
-    "json"        ARROW_JSON
-    "parquet"     ARROW_PARQUET
-    "filesystem"  ARROW_FILESYSTEM
-)
-
-file(REMOVE "${SOURCE_PATH}/cpp/cmake_modules/FindZSTD.cmake")
+string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} "dynamic" ARROW_DEPENDENCY_USE_SHARED)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/cpp
     PREFER_NINJA
     OPTIONS
-        -DARROW_DEPENDENCY_SOURCE=SYSTEM
-        -Duriparser_SOURCE=SYSTEM
-        -DARROW_BUILD_TESTS=OFF
         ${FEATURE_OPTIONS}
-        -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
+        ${MALLOC_OPTIONS}
+        ${LIB_DIR_OPTIONS}
         -DARROW_BUILD_SHARED=${ARROW_BUILD_SHARED}
-        -DARROW_BROTLI_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
-        -DARROW_GFLAGS_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
-        -DARROW_LZ4_USE_SHARED=${ARROW_BUILD_SHARED}        # This can be wrong in custom triplets
-        -DARROW_SNAPPY_USE_SHARED=${ARROW_BUILD_SHARED}     # This can be wrong in custom triplets
-        -DARROW_THRIFT_USE_SHARED=OFF                       # vcpkg doesn't build Thrift as a shared library for the moment (2020/01/22).
-        -DARROW_UTF8PROC_USE_SHARED=${ARROW_BUILD_SHARED}   # This can be wrong in custom triplets
-        -DARROW_ZSTD_USE_SHARED=${ARROW_BUILD_SHARED}       # This can be wrong in custom triplets
-        -DARROW_JEMALLOC=OFF
-        -DARROW_BUILD_UTILITIES=OFF
+        -DARROW_BUILD_STATIC=${ARROW_BUILD_STATIC}
+        -DARROW_BUILD_TESTS=OFF
+        -DARROW_DEPENDENCY_SOURCE=SYSTEM
+        -DARROW_DEPENDENCY_USE_SHARED=${ARROW_DEPENDENCY_USE_SHARED}
+        -DARROW_THRIFT_USE_SHARED=OFF 
+        -DBUILD_WARNING_LEVEL=PRODUCTION
+        -DARROW_WITH_BROTLI=ON                 
         -DARROW_WITH_BZ2=ON
-        -DARROW_WITH_ZLIB=ON
-        -DARROW_WITH_ZSTD=ON
         -DARROW_WITH_LZ4=ON
         -DARROW_WITH_SNAPPY=ON
-        -DARROW_WITH_BROTLI=ON
-        -DARROW_WITH_UTF8PROC=ON
-        -DPARQUET_REQUIRE_ENCRYPTION=ON
-        -DBUILD_WARNING_LEVEL=PRODUCTION
+        -DARROW_WITH_ZLIB=ON
+        -DARROW_WITH_ZSTD=ON
 )
 
 vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib)
-    message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
-endif()
+#if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib)
+#    message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
+#endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/arrow)
 
