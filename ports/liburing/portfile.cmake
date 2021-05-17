@@ -22,6 +22,8 @@ vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE 
      DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL ${CURRENT_PORT_DIR}/usage 
+     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/liburing.a
