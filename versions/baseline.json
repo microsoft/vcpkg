@@ -26,7 +26,7 @@
     },
     "ade": {
       "baseline": "0.1.1f",
-      "port-version": 0
+      "port-version": 1
     },
     "aixlog": {
       "baseline": "1.4.0",
@@ -186,6 +186,10 @@
     },
     "atlmfc": {
       "baseline": "0",
+      "port-version": 0
+    },
+    "atomic-queue": {
+      "baseline": "2021-05-03",
       "port-version": 0
     },
     "aubio": {
@@ -2258,7 +2262,7 @@
     },
     "glad": {
       "baseline": "0.1.34",
-      "port-version": 0
+      "port-version": 1
     },
     "glbinding": {
       "baseline": "3.1.0",
@@ -3989,8 +3993,8 @@
       "port-version": 8
     },
     "minizip-ng": {
-      "baseline": "3.0.1",
-      "port-version": 1
+      "baseline": "3.0.2",
+      "port-version": 0
     },
     "mio": {
       "baseline": "2019-02-10",
@@ -4865,7 +4869,7 @@
       "port-version": 6
     },
     "polyhook2": {
-      "baseline": "2021-01-08",
+      "baseline": "2021-05-09",
       "port-version": 0
     },
     "polymorphic-value": {
@@ -5014,7 +5018,7 @@
     },
     "qscintilla": {
       "baseline": "2.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qt-advanced-docking-system": {
       "baseline": "3.6.3",
@@ -5409,7 +5413,7 @@
       "port-version": 1
     },
     "rtaudio": {
-      "baseline": "2021-01-25",
+      "baseline": "2021-04-30",
       "port-version": 0
     },
     "rtlsdr": {
