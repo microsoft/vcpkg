@@ -167,6 +167,112 @@ macro(z_vcpkg_function_arguments OUT_VAR)
 endmacro()
 
 #[===[.md:
+# z_vcpkg_*_parent_scope_export
+If you need to re-export variables to a parent scope from a call,
+you can put these around the call to re-export those variables that have changed locally
+to parent scope.
+
+## Usage:
+```cmake
+z_vcpkg_start_parent_scope_export(
+    [PREFIX <PREFIX>]
+)
+z_vcpkg_complete_parent_scope_export(
+    [PREFIX <PREFIX>]
+    [IGNORE_REGEX <REGEX>]
+)
+```
+
+## Parameters
+### PREFIX
+The prefix to use to store the old variable values; defaults to `Z_VCPKG_PARENT_SCOPE_EXPORT`.
+The value of each variable `<VAR>` will be stored in `${PREFIX}_<VAR>` by `start`,
+and then every variable which is different from `${PREFIX}_VAR` will be re-exported by `complete`.
+
+### IGNORE_REGEX
+Variables with names matching this regex will not be exported even if their value has changed.
+
+## Example:
+```cmake
+z_vcpkg_start_parent_scope_export()
+_find_package(blah)
+z_vcpkg_complete_parent_scope_export()
+```
+#]===]
+# Notes: these do not use `cmake_parse_arguments` in order to support older versions of cmake,
+# pre-3.7 and PARSE_ARGV
+macro(z_vcpkg_start_parent_scope_export)
+    if("${ARGC}" EQUAL "0")
+        set(z_vcpkg_parent_scope_export_PREFIX "Z_VCPKG_PARENT_SCOPE_EXPORT")
+    elseif("${ARGC}" EQUAL "2" AND "${ARGV0}" STREQUAL "PREFIX")
+        set(z_vcpkg_parent_scope_export_PREFIX "${ARGV1}")
+    else()
+        message(FATAL_ERROR "Invalid parameters to z_vcpkg_start_parent_scope_export: (${ARGV})")
+    endif()
+    get_property(z_vcpkg_parent_scope_export_VARIABLE_LIST
+        DIRECTORY PROPERTY "VARIABLES")
+    foreach(z_vcpkg_parent_scope_export_VARIABLE IN LISTS z_vcpkg_parent_scope_export_VARIABLE_LIST)
+        set("${z_vcpkg_parent_scope_export_PREFIX}_${z_vcpkg_parent_scope_export_VARIABLE}" "${${z_vcpkg_parent_scope_export_VARIABLE}}")
+    endforeach()
+endmacro()
+
+macro(z_vcpkg_complete_parent_scope_export)
+    set(z_vcpkg_parent_scope_export_PREFIX_FILLED OFF)
+    if("${ARGC}" EQUAL "0")
+        # do nothing, replace with default values
+    elseif("${ARGC}" EQUAL "2")
+        if("${ARGV0}" STREQUAL "PREFIX")
+            set(z_vcpkg_parent_scope_export_PREFIX_FILLED ON)
+            set(z_vcpkg_parent_scope_export_PREFIX "${ARGV1}")
+        elseif("${ARGV0}" STREQUAL "IGNORE_REGEX")
+            set(z_vcpkg_parent_scope_export_IGNORE_REGEX "${ARGV1}")
+        else()
+            message(FATAL_ERROR "Invalid arguments to z_vcpkg_complete_parent_scope_export: (${ARGV})")
+        endif()
+    elseif("${ARGC}" EQUAL "4")
+        if("${ARGV0}" STREQUAL "PREFIX" AND "${ARGV2}" STREQUAL "IGNORE_REGEX")
+            set(z_vcpkg_parent_scope_export_PREFIX_FILLED ON)
+            set(z_vcpkg_parent_scope_export_PREFIX "${ARGV1}")
+            set(z_vcpkg_parent_scope_export_IGNORE_REGEX "${ARGV3}")
+        elseif("${ARGV0}" STREQUAL "IGNORE_REGEX" AND "${ARGV2}" STREQUAL "PREFIX")
+            set(z_vcpkg_parent_scope_export_IGNORE_REGEX "${ARGV1}")
+            set(z_vcpkg_parent_scope_export_PREFIX_FILLED ON)
+            set(z_vcpkg_parent_scope_export_PREFIX "${ARGV3}")
+        else()
+            message(FATAL_ERROR "Invalid arguments to z_vcpkg_start_parent_scope_export: (${ARGV})")
+        endif()
+    else()
+        message(FATAL_ERROR "Invalid arguments to z_vcpkg_complete_parent_scope_export: (${ARGV})")
+    endif()
+
+    if(NOT z_vcpkg_parent_scope_export_PREFIX)
+        set(z_vcpkg_parent_scope_export_PREFIX "Z_VCPKG_PARENT_SCOPE_EXPORT")
+    endif()
+
+    get_property(z_vcpkg_parent_scope_export_VARIABLE_LIST
+        DIRECTORY PROPERTY "VARIABLES")
+    foreach(z_vcpkg_parent_scope_export_VARIABLE IN LISTS z_vcpkg_parent_scope_export_VARIABLE_LIST)
+        if("${z_vcpkg_parent_scope_export_VARIABLE}" MATCHES "^${z_vcpkg_parent_scope_export_PREFIX}_")
+            # skip the backup variables
+            continue()
+        endif()
+        if("${z_vcpkg_parent_scope_export_VARIABLE}" MATCHES "^${z_vcpkg_parent_scope_export_PREFIX}_")
+            # skip the backup variables
+            continue()
+        endif()
+
+        if(DEFINED "${z_vcpkg_parent_scope_export_IGNORE_REGEX}" AND "${z_vcpkg_parent_scope_export_VARIABLE}" MATCHES "${z_vcpkg_parent_scope_export_IGNORE_REGEX}")
+            # skip those variables which should be ignored
+            continue()
+        endif()
+
+        if(NOT "${${z_vcpkg_parent_scope_export_PREFIX}_${z_vcpkg_parent_scope_export_VARIABLE}}" STREQUAL "${${z_vcpkg_parent_scope_export_VARIABLE}}")
+            set("${z_vcpkg_parent_scope_export_VARIABLE}" "${${z_vcpkg_parent_scope_export_VARIABLE}}" PARENT_SCOPE)
+        endif()
+    endforeach()
+endmacro()
+
+#[===[.md:
 # z_vcpkg_set_powershell_path
 
 Gets either the path to powershell or powershell core,
@@ -313,7 +419,7 @@ else()
             set(Z_VCPKG_TARGET_TRIPLET_ARCH ppc64le)
         elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "armv7l")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH arm)
-        elseif(CMAKE_HOST_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64)$")
+        elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "aarch64")
             set(Z_VCPKG_TARGET_TRIPLET_ARCH arm64)
         else()
             if(Z_VCPKG_CMAKE_IN_TRY_COMPILE)
@@ -687,49 +793,48 @@ endif()
 if(NOT DEFINED VCPKG_OVERRIDE_FIND_PACKAGE_NAME)
     set(VCPKG_OVERRIDE_FIND_PACKAGE_NAME find_package)
 endif()
-function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_fp_package_name)
-    # these variables, as well as any variables matching `z_vcpkg_fp_*`,
-    # are not reexported to parent scope
-    set(z_vcpkg_fp_ignored_variables
-        "^(ARGS|z_vcpkg_fp_.*|CMAKE_FIND_ROOT_PATH|Boost_USE_STATIC_LIBS|Boost_USE_MULTITHREADED|Boost_USE_STATIC_RUNTIME|Boost_NO_BOOST_CMAKE|Boost_COMPILER)$")
-
+function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}")
     # Workaround to set the ROOT_PATH until upstream CMake stops overriding
     # the ROOT_PATH at apple OS initialization phase.
     # See https://gitlab.kitware.com/cmake/cmake/merge_requests/3273
-    # Fixed in CMake 3.15
     if(CMAKE_SYSTEM_NAME STREQUAL iOS)
+        # this is not a mutating operation,
+        # this just creates a new variable named CMAKE_FIND_ROOT_PATH with value
+        # "${CMAKE_FIND_ROOT_PATH};${VCPKG_CMAKE_FIND_ROOT_PATH}"
+        # therefore, we don't have to worry about restoring its old value
         list(APPEND CMAKE_FIND_ROOT_PATH "${VCPKG_CMAKE_FIND_ROOT_PATH}")
     endif()
-    z_vcpkg_function_arguments(z_vcpkg_fp_ARGS 1)
-    string(TOLOWER "${z_vcpkg_fp_package_name}" z_vcpkg_fp_lowercase_package_name)
+    z_vcpkg_function_arguments(ARGS)
+    set(PACKAGE_NAME "${ARGV0}")
+    string(TOLOWER "${PACKAGE_NAME}" LOWERCASE_PACKAGE_NAME)
 
-    set(z_vcpkg_fp_vcpkg_cmake_wrapper_path "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${z_vcpkg_fp_lowercase_package_name}/vcpkg-cmake-wrapper.cmake")
+    set(VCPKG_CMAKE_WRAPPER_PATH "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${LOWERCASE_PACKAGE_NAME}/vcpkg-cmake-wrapper.cmake")
 
-    if(EXISTS "${z_vcpkg_fp_vcpkg_cmake_wrapper_path}")
-        set(ARGS "${z_vcpkg_fp_package_name};${z_vcpkg_fp_ARGS}")
-        include("${z_vcpkg_fp_vcpkg_cmake_wrapper_path}")
-    elseif(z_vcpkg_fp_package_name STREQUAL "Boost" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/boost")
+    z_vcpkg_start_parent_scope_export()
+    if(EXISTS "${VCPKG_CMAKE_WRAPPER_PATH}")
+        include("${VCPKG_CMAKE_WRAPPER_PATH}")
+    elseif("${PACKAGE_NAME}" STREQUAL "Boost" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/boost")
         # Checking for the boost headers disables this wrapper unless the user has installed at least one boost library
         set(Boost_USE_STATIC_LIBS OFF)
         set(Boost_USE_MULTITHREADED ON)
         unset(Boost_USE_STATIC_RUNTIME)
         set(Boost_NO_BOOST_CMAKE ON)
         unset(Boost_USE_STATIC_RUNTIME CACHE)
-        if(CMAKE_VS_PLATFORM_TOOLSET STREQUAL "v120")
+        if("${CMAKE_VS_PLATFORM_TOOLSET}" STREQUAL "v120")
             set(Boost_COMPILER "-vc120")
         else()
             set(Boost_COMPILER "-vc140")
         endif()
-        _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS})
-    elseif(z_vcpkg_fp_package_name STREQUAL "ICU" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/unicode/utf.h")
-        list(FIND z_vcpkg_fp_ARGS "COMPONENTS" z_vcpkg_fp_COMPONENTS_IDX)
-        if(NOT z_vcpkg_fp_COMPONENTS_IDX EQUAL -1)
-            _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS} COMPONENTS data)
+        _find_package(${ARGS})
+    elseif("${PACKAGE_NAME}" STREQUAL "ICU" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/unicode/utf.h")
+        list(FIND ARGS "COMPONENTS" COMPONENTS_IDX)
+        if(NOT COMPONENTS_IDX EQUAL -1)
+            _find_package(${ARGS} COMPONENTS data)
         else()
-            _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS})
+            _find_package(${ARGS})
         endif()
-    elseif(z_vcpkg_fp_package_name STREQUAL "GSL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/gsl")
-        _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS})
+    elseif("${PACKAGE_NAME}" STREQUAL "GSL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/gsl")
+        _find_package(${ARGS})
         if(GSL_FOUND AND TARGET GSL::gsl)
             set_property( TARGET GSL::gslcblas APPEND PROPERTY IMPORTED_CONFIGURATIONS Release )
             set_property( TARGET GSL::gsl APPEND PROPERTY IMPORTED_CONFIGURATIONS Release )
@@ -740,8 +845,8 @@ function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_fp_package_name)
                 set_target_properties( GSL::gslcblas PROPERTIES IMPORTED_LOCATION_DEBUG "${GSL_CBLAS_LIBRARY_DEBUG}" )
             endif()
         endif()
-    elseif("${z_vcpkg_fp_package_name}" STREQUAL "CURL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/curl")
-        _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS})
+    elseif("${PACKAGE_NAME}" STREQUAL "CURL" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include/curl")
+        _find_package(${ARGS})
         if(CURL_FOUND)
             if(EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/nghttp2.lib")
                 list(APPEND CURL_LIBRARIES
@@ -749,30 +854,14 @@ function("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_fp_package_name)
                     "optimized" "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib/nghttp2.lib")
             endif()
         endif()
-    elseif("${z_vcpkg_fp_lowercase_package_name}" STREQUAL "grpc" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/grpc")
-        _find_package(gRPC ${z_vcpkg_fp_ARGS})
+    elseif("${LOWERCASE_PACKAGE_NAME}" STREQUAL "grpc" AND EXISTS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/grpc")
+        list(REMOVE_AT ARGS 0)
+        _find_package(gRPC ${ARGS})
     else()
-        _find_package("${z_vcpkg_fp_package_name}" ${z_vcpkg_fp_ARGS})
+        _find_package(${ARGS})
     endif()
 
-    get_property(z_vcpkg_fp_variable_list
-        DIRECTORY PROPERTY "VARIABLES")
-    # this backfills to CMake 3.1, and past CMake 3.9 you'll get a trace that is about halved.
-    if(CMAKE_MAJOR_VERSION LESS "3.9")
-        foreach(z_vcpkg_fp_variable IN LISTS z_vcpkg_fp_variable_list)
-            # IN_LIST added in CMake 3.3
-            # list(FILTER) added in CMake 3.9
-            if(z_vcpkg_fp_variable MATCHES "${z_vcpkg_fp_ignored_variables}")
-                continue()
-            endif()
-            set("${z_vcpkg_fp_variable}" "${${z_vcpkg_fp_variable}}" PARENT_SCOPE)
-        endforeach()
-    else()
-        list(FILTER z_vcpkg_fp_variable_list EXCLUDE "${z_vcpkg_fp_ignored_variables}")
-        foreach(z_vcpkg_fp_variable IN LISTS z_vcpkg_fp_variable_list)
-            set("${z_vcpkg_fp_variable}" "${${z_vcpkg_fp_variable}}" PARENT_SCOPE)
-        endforeach()
-    endif()
+    z_vcpkg_complete_parent_scope_export(IGNORE_REGEX "(^Z_VCPKG_)|(^ARGS$)|(^COMPONENTS_IDX$)")
 endfunction()
 
 set(VCPKG_TOOLCHAIN ON)
