@@ -32,8 +32,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 
  # copy the apps in tools directory
  if ("apps" IN_LIST FEATURES)
-     set(POPSIFT_TOOLS popsift-demo)
-     vcpkg_copy_tools(TOOL_NAMES ${POPSIFT_TOOLS} AUTO_CLEAN)
+     vcpkg_copy_tools(TOOL_NAMES popsift-demo AUTO_CLEAN)
  endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYING.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/popsift RENAME copyright)
