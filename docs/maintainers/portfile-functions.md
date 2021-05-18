@@ -6,7 +6,6 @@
 - [vcpkg\_add\_to\_path](vcpkg_add_to_path.md)
 - [vcpkg\_apply\_patches](vcpkg_apply_patches.md) (deprecated)
 - [vcpkg\_build\_cmake](vcpkg_build_cmake.md) (deprecated, use [vcpkg\_cmake\_build](ports/vcpkg-cmake/vcpkg_cmake_build.md))
-- [vcpkg\_build\_gn](vcpkg_build_gn.md)
 - [vcpkg\_build\_make](vcpkg_build_make.md)
 - [vcpkg\_build\_msbuild](vcpkg_build_msbuild.md)
 - [vcpkg\_build\_ninja](vcpkg_build_ninja.md)
