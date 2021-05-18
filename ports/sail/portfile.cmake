@@ -44,11 +44,17 @@ endif()
 
 # Move C++ configs
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT}c++)
-
 file(GLOB SAIL_CPP_CONFIGS "${CURRENT_PACKAGES_DIR}/share/${PORT}/SailC++*")
 foreach(SAIL_CPP_CONFIG IN LISTS SAIL_CPP_CONFIGS)
     get_filename_component(SAIL_CPP_CONFIG_NAME "${SAIL_CPP_CONFIG}" NAME)
     file(RENAME ${SAIL_CPP_CONFIG} ${CURRENT_PACKAGES_DIR}/share/${PORT}c++/${SAIL_CPP_CONFIG_NAME})
+endforeach()
+
+file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT}manip)
+file(GLOB SAIL_MANIP_CONFIGS "${CURRENT_PACKAGES_DIR}/share/${PORT}/SailManip*")
+foreach(SAIL_MANIP_CONFIG IN LISTS SAIL_MANIP_CONFIGS)
+    get_filename_component(SAIL_MANIP_CONFIG_NAME "${SAIL_MANIP_CONFIG}" NAME)
+    file(RENAME ${SAIL_MANIP_CONFIG} ${CURRENT_PACKAGES_DIR}/share/${PORT}manip/${SAIL_MANIP_CONFIG_NAME})
 endforeach()
 
 # Handle copyright
