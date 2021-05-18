@@ -1,21 +1,33 @@
+From 7e67f364601cd53873298b1e91645daff2302ea6 Mon Sep 17 00:00:00 2001
+From: Matthias Kuhn <matthias@opengis.ch>
+Date: Fri, 21 May 2021 08:47:21 +0200
+Subject: [PATCH] Fix building static
+
+---
+ src/CMakeLists.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
 diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
-index e6b733bd..8f227ab0 100644
+index 90f4501..8b6f19e 100644
 --- a/src/CMakeLists.txt
 +++ b/src/CMakeLists.txt
-@@ -194,9 +194,13 @@ if (NOT WITH_STATIC_LASZIP)
- endif()
- endif()
+@@ -188,9 +188,14 @@ set(SIDX_SOURCES
+ #endif()
  
--add_library(${SIDX_LIB_NAME} SHARED ${SIDX_SOURCES})
--
--add_library(${SIDX_C_LIB_NAME} SHARED ${SIDX_CAPI_CPP})
+ 
+-add_library(${SIDX_LIB_NAME} ${SIDX_SOURCES})
 +if(BUILD_SHARED_LIBS)
-+	add_library(${SIDX_LIB_NAME} SHARED ${SIDX_SOURCES})
-+	add_library(${SIDX_C_LIB_NAME} SHARED ${SIDX_CAPI_CPP})
++  add_library(${SIDX_LIB_NAME} SHARED ${SIDX_SOURCES})
++  add_library(${SIDX_C_LIB_NAME} SHARED ${SIDX_CAPI_CPP})
 +else(BUILD_SHARED_LIBS)
-+	add_library(${SIDX_LIB_NAME} STATIC ${SIDX_SOURCES})
-+	add_library(${SIDX_C_LIB_NAME} STATIC ${SIDX_CAPI_CPP})
++  add_library(${SIDX_LIB_NAME} STATIC ${SIDX_SOURCES})
++  add_library(${SIDX_C_LIB_NAME} STATIC ${SIDX_CAPI_CPP})
 +endif(BUILD_SHARED_LIBS)
+ 
+-add_library(${SIDX_C_LIB_NAME} ${SIDX_CAPI_CPP})
  
  target_link_libraries(${SIDX_C_LIB_NAME}
    ${SIDX_LIB_NAME}
+-- 
+2.31.1
+
