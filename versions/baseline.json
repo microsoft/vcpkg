@@ -5413,7 +5413,7 @@
       "port-version": 1
     },
     "rtaudio": {
-      "baseline": "2021-01-25",
+      "baseline": "2021-04-30",
       "port-version": 0
     },
     "rtlsdr": {
