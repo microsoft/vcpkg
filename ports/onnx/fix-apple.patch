@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d63e12c..cd37eb4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -658,10 +658,6 @@ if (NOT ANDROID AND NOT IOS)
+       target_compile_definitions(onnxifi_wrapper PRIVATE "ONNXIFI_PUBLIC=__attribute__((__dllexport__))")
+     endif()
+   endif()
+-  if(APPLE)
+-    # By default CMake would use .so suffix on Mac
+-    set_target_properties(onnxifi_wrapper PROPERTIES SUFFIX ".dylib")
+-  endif()
+ endif()
+ 
+ # ---[ ONNXIFI dummy backend

@@ -1,0 +1,17 @@
+{
+  "name": "onnx",
+  "version": "1.9.0",
+  "description": "Open standard for machine learning interoperability",
+  "homepage": "https://onnx.ai",
+  "dependencies": [
+    "protobuf",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
