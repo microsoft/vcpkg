@@ -3449,7 +3449,7 @@
       "port-version": 0
     },
     "librdkafka": {
-      "baseline": "1.5.0",
+      "baseline": "1.7.0",
       "port-version": 0
     },
     "libressl": {
