@@ -292,12 +292,6 @@ if(@ENABLE_VPX@)
   list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${libvpx_LIBRARIES})
 endif()
 
-if(@ENABLE_WAVPACK@)
-  find_dependency(wavpack)
-  select_library_configurations_from_targets(BASENAME wavpack TARGETS WavPack::wavpack)
-  list(APPEND FFMPEG_PLATFORM_DEPENDENT_LIBS ${wavpack_LIBRARIES})
-endif()
-
 if(@ENABLE_WEBP@)
   find_dependency(WebP)
   select_library_configurations_from_targets(BASENAME webp TARGETS WebP::webp WebP::webpdemux WebP::libwebpmux WebP::webpdecoder)
