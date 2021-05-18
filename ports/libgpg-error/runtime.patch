@@ -42,7 +42,7 @@ index fc70bd8..d515523 100644
        <ProgramDataBaseFileName>$(OutDir)\lib\x86\$(TargetName).pdb</ProgramDataBaseFileName>
        <MinimalRebuild>false</MinimalRebuild>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Lib>
        <OutputFile>$(OutDir)\lib\x86\$(TargetName)$(TargetExt)</OutputFile>
@@ -50,7 +50,7 @@ index fc70bd8..d515523 100644
        <ProgramDataBaseFileName>$(OutDir)\lib\x64\$(TargetName).pdb</ProgramDataBaseFileName>
        <MinimalRebuild>false</MinimalRebuild>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Lib>
        <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
@@ -58,7 +58,7 @@ index fc70bd8..d515523 100644
        <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
        <MinimalRebuild>false</MinimalRebuild>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Link>
        <OutputFile>$(OutDir)\bin\x86\$(TargetName)$(TargetExt)</OutputFile>
@@ -66,7 +66,7 @@ index fc70bd8..d515523 100644
        <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
        <MinimalRebuild>false</MinimalRebuild>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Link>
        <OutputFile>$(OutDir)\bin\x64\$(TargetName)$(TargetExt)</OutputFile>
@@ -74,7 +74,7 @@ index fc70bd8..d515523 100644
        <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
        <ProgramDataBaseFileName>$(OutDir)\lib\x86\$(TargetName).pdb</ProgramDataBaseFileName>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Lib>
        <OutputFile>$(OutDir)\lib\x86\$(TargetName)$(TargetExt)</OutputFile>
@@ -82,7 +82,7 @@ index fc70bd8..d515523 100644
        <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
        <ProgramDataBaseFileName>$(OutDir)\lib\x64\$(TargetName).pdb</ProgramDataBaseFileName>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Lib>
        <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
@@ -90,7 +90,7 @@ index fc70bd8..d515523 100644
        <AdditionalIncludeDirectories>$(OutDir)\include;$(ProjectDir)\..\..\prebuilt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
        <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Link>
        <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -98,7 +98,7 @@ index fc70bd8..d515523 100644
        <AdditionalIncludeDirectories>$(OutDir)\include;$(ProjectDir)\..\..\prebuilt\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
        <ProgramDataBaseFileName>$(IntDir)$(TargetName).pdb</ProgramDataBaseFileName>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Link>
        <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -182,7 +182,7 @@ index cb5f090..f7d8e23 100644
        <PrecompiledHeader>NotUsing</PrecompiledHeader>
        <CompileAsWinRT>false</CompileAsWinRT>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Lib>
        <OutputFile>$(OutDir)\lib\x86\$(TargetName)$(TargetExt)</OutputFile>
@@ -190,7 +190,7 @@ index cb5f090..f7d8e23 100644
        <PrecompiledHeader>NotUsing</PrecompiledHeader>
        <CompileAsWinRT>false</CompileAsWinRT>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Lib>
        <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
@@ -198,7 +198,7 @@ index cb5f090..f7d8e23 100644
        <PrecompiledHeader>NotUsing</PrecompiledHeader>
        <CompileAsWinRT>false</CompileAsWinRT>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Link>
        <OutputFile>$(OutDir)\bin\x86\$(TargetName)$(TargetExt)</OutputFile>
@@ -206,7 +206,7 @@ index cb5f090..f7d8e23 100644
        <PrecompiledHeader>NotUsing</PrecompiledHeader>
        <CompileAsWinRT>false</CompileAsWinRT>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Link>
        <OutputFile>$(OutDir)\bin\x64\$(TargetName)$(TargetExt)</OutputFile>
@@ -214,7 +214,7 @@ index cb5f090..f7d8e23 100644
        <PrecompiledHeader>NotUsing</PrecompiledHeader>
        <CompileAsWinRT>false</CompileAsWinRT>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Lib>
        <OutputFile>$(OutDir)\lib\x86\$(TargetName)$(TargetExt)</OutputFile>
@@ -222,7 +222,7 @@ index cb5f090..f7d8e23 100644
        <PrecompiledHeader>NotUsing</PrecompiledHeader>
        <CompileAsWinRT>false</CompileAsWinRT>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Lib>
        <OutputFile>$(OutDir)\lib\x64\$(TargetName)$(TargetExt)</OutputFile>
@@ -230,7 +230,7 @@ index cb5f090..f7d8e23 100644
        <PrecompiledHeader>NotUsing</PrecompiledHeader>
        <CompileAsWinRT>false</CompileAsWinRT>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Link>
        <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -238,7 +238,7 @@ index cb5f090..f7d8e23 100644
        <PrecompiledHeader>NotUsing</PrecompiledHeader>
        <CompileAsWinRT>false</CompileAsWinRT>
        <TreatSpecificWarningsAsErrors>4113;%(TreatSpecificWarningsAsErrors)</TreatSpecificWarningsAsErrors>
-+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
++      <RuntimeLibrary>$(RuntimeLibrary)</RuntimeLibrary>
      </ClCompile>
      <Link>
        <EnableCOMDATFolding>true</EnableCOMDATFolding>

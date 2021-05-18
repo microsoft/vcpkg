@@ -32,6 +32,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         set(_gpg-errorproject "${SOURCE_PATH}/SMP/libgpg-error.vcxproj")
     endif()
 
+    if(VCPKG_CRT_LINKAGE STREQUAL "static")
+        set(RuntimeLibraryExt "")
+    else()
+        set(RuntimeLibraryExt "DLL")
+    endif()
+
     vcpkg_install_msbuild(
         USE_VCPKG_INTEGRATION
         SOURCE_PATH ${SOURCE_PATH}
@@ -41,6 +47,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         RELEASE_CONFIGURATION ${CONFIGURATION_RELEASE}
         DEBUG_CONFIGURATION ${CONFIGURATION_DEBUG}
         SKIP_CLEAN
+        OPTIONS_DEBUG "/p:RuntimeLibrary=MultiThreadedDebug${RuntimeLibraryExt}"
+        OPTIONS_RELEASE "/p:RuntimeLibrary=MultiThreaded${RuntimeLibraryExt}"
     )
 
     get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
