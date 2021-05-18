@@ -10,7 +10,6 @@ vcpkg_from_github(
         0005_remove_imp_suffix.patch
         0006_fix_tool_depends.patch
         0007_disable_tool_export_curl_target.patch
-        0009_fix_openssl_config.patch
         0010_fix_othertests_cmake.patch
         0011_fix_static_build.patch
         0012-fix-dependency-idn2.patch
@@ -64,22 +63,6 @@ if(VCPKG_TARGET_IS_UWP)
     )
 endif()
 
-if(VCPKG_TARGET_IS_ANDROID)
-    set(ADDITIONAL_SCRIPTS -C "${CMAKE_CURRENT_LIST_DIR}/CurlAndroidCrossCompile.cmake")
-
-    set(EXTRA_ARGS -DOPENSSL_INCLUDE="${CURRENT_INSTALLED_DIR}/include")
-
-    set(EXTRA_ARGS_DEBUG
-            -DOPENSSL_LIBRARY="${CURRENT_INSTALLED_DIR}/debug/lib/libssl.so"
-            -DCRYPT_LIBRARY="${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.so"
-            )
-
-    set(EXTRA_ARGS_RELEASE
-            -DOPENSSL_LIBRARY="${CURRENT_INSTALLED_DIR}/lib/libssl.so"
-            -DCRYPT_LIBRARY="${CURRENT_INSTALLED_DIR}/lib/libcrypto.so"
-            )
-endif()
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -94,10 +77,6 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_Perl=ON
         -DENABLE_DEBUG=ON
         -DCURL_CA_FALLBACK=ON
-    OPTIONS_DEBUG
-        ${EXTRA_ARGS_DEBUG}
-    OPTIONS_RELEASE
-        ${EXTRA_ARGS_RELEASE}
 )
 
 vcpkg_install_cmake()
@@ -112,15 +91,22 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/CURL)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
-file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/curl-config DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-file(REMOVE ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
 #Fix install path
-file(READ ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config CURL_CONFIG)
-string(REPLACE "${CURRENT_PACKAGES_DIR}" "${CURRENT_INSTALLED_DIR}" CURL_CONFIG "${CURL_CONFIG}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config "${CURL_CONFIG}")
+file(READ ${CURRENT_PACKAGES_DIR}/bin/curl-config CURL_CONFIG)
+string(REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" CURL_CONFIG "${CURL_CONFIG}")
+string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" CURL_CONFIG "${CURL_CONFIG}")
+string(REPLACE "\nprefix=\${prefix}" [=[prefix=$(CDPATH= cd -- "$(dirname -- "$0")"/../.. && pwd -P)]=] CURL_CONFIG "${CURL_CONFIG}")
+file(WRITE ${CURRENT_PACKAGES_DIR}/bin/curl-config "${CURL_CONFIG}")
+file(RENAME ${CURRENT_PACKAGES_DIR}/bin/curl-config ${CURRENT_PACKAGES_DIR}/share/${PORT}/curl-config)
+file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/curl-config)
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+file(GLOB FILES ${CURRENT_PACKAGES_DIR}/bin/*)
+if(NOT FILES)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin)
+endif()
+file(GLOB FILES ${CURRENT_PACKAGES_DIR}/debug/bin/*)
+if(NOT FILES)
+    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -135,81 +121,29 @@ else()
     )
 endif()
 
+
 # Fix the pkgconfig file for debug
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "-lcurl" "-lcurl-d")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/zlib.lib" "-lzlibd")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libssl.lib" "-lssl")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.lib" "-lcrypto")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/mbedtls.lib" "-lmbedtls")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/mbedx509.lib" "-lmbedx509")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/mbedcrypto.lib" "-lmbedcrypto")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/nghttp2.lib" "-lnghttp2")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libssh2.lib" "-lssh2")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/cares.lib" "-lcares")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/brotlicommon.lib" "-lbrotlicommon")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/brotlidec.lib" "-lbrotlidec")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/pthreadVC3d.lib" "-lpthreadVC3d")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc " ${CURRENT_INSTALLED_DIR}/lib/pthreadVC3.lib" "")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc " -loptimized" "")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc " -ldebug" "")
-
-    elseif(VCPKG_TARGET_IS_LINUX)
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "-lcurl" "-lcurl-d")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libssl.a" "-lssl")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libcrypto.a" "-lcrypto")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libmbedtls.a" "-lmbedtls")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libmbedx509.a" "-lmbedx509")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libmbedcrypto.a" "-lmbedcrypto")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libnghttp2.a" "-lnghttp2")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libssh2.a" "-lssh2")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libcares.a" "-lcares")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc "${CURRENT_INSTALLED_DIR}/debug/lib/libz.a" "-lz")
-    endif()
-    file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+    file(READ ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc _contents)
+    string(REPLACE " -lcurl" " -lcurl-d" _contents "${_contents}")
+    string(REPLACE " -loptimized " " " _contents "${_contents}")
+    string(REPLACE " -ldebug " " " _contents "${_contents}")
+    string(REPLACE " ${CURRENT_INSTALLED_DIR}/lib/pthreadVC3.lib" "" _contents "${_contents}")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
+    file(WRITE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc "${_contents}")
 endif()
 
 # Fix the pkgconfig file for release
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    if(VCPKG_TARGET_IS_WINDOWS)
-        #vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "-lcurl" "-lcurl")		
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/zlib.lib" "-lzlib")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libssl.lib" "-lssl")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libcrypto.lib" "-lcrypto")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/mbedtls.lib" "-lmbedtls")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/mbedx509.lib" "-lmbedx509")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/mbedcrypto.lib" "-lmbedcrypto")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/nghttp2.lib" "-lnghttp2")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libssh2.lib" "-lssh2")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/cares.lib" "-lcares")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/brotlicommon.lib" "-lbrotlicommon")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/brotlidec.lib" "-lbrotlidec")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/pthreadVC3.lib" "-lpthreadVC3")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc " ${CURRENT_INSTALLED_DIR}/debug/lib/pthreadVC3d.lib" "")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc " -loptimized" "")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc " -ldebug" "")
-    elseif(VCPKG_TARGET_IS_LINUX)
-        #vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "-lcurl" "-lcurl")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libssl.a" "-lssl")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libcrypto.a" "-lcrypto")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libmbedtls.a" "-lmbedtls")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libmbedx509.a" "-lmbedx509")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libmbedcrypto.a" "-lmbedcrypto")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libnghttp2.a" "-lnghttp2")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libssh2.a" "-lssh2")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libcares.a" "-lcares")
-        vcpkg_replace_string(${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc "${CURRENT_INSTALLED_DIR}/lib/libz.a" "-lz")
-    endif()
-	file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc DESTINATION ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+    file(READ ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc _contents)
+    string(REPLACE " -loptimized " " " _contents "${_contents}")
+    string(REPLACE " -ldebug " " " _contents "${_contents}")
+    string(REPLACE " ${CURRENT_INSTALLED_DIR}/debug/lib/pthreadVC3d.lib" "" _contents "${_contents}")
+    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
+    file(WRITE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libcurl.pc "${_contents}")
 endif()
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_fixup_pkgconfig()
-elseif(VCPKG_TARGET_IS_LINUX)
-    vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES pthread dl c)
-elseif(VCPKG_TARGET_IS_ANDROID)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-endif()
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

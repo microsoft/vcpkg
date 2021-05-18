@@ -7,6 +7,7 @@ vcpkg_from_gitlab(
     REF 156cd3eaaebfd8635517c2baf61fcf3627ff7ec2 #v1.17.4
     SHA512 2c516ad3ffe56cf646b2435d6ef3cf25e8c05aeb13d95dd18a7d0510d134d9990cba1b376063352ff99483cfc4e5d2af849afd2f9538f9136f22d44d34be362c
     HEAD_REF master
+    PATCHES 0001-meson-fix-macOS-build-and-add-macOS-ci.patch
 )
 
 if("fontconfig" IN_LIST FEATURES)
@@ -49,12 +50,12 @@ endif()
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS ${OPTIONS}
-            -Dtests=disabled
-            -Dzlib=enabled
-            -Dpng=enabled
-            -Dspectre=auto
-            -Dsymbol-lookup=disabled
-            -Dgtk2-utils=disabled
+        -Dtests=disabled
+        -Dzlib=enabled
+        -Dpng=enabled
+        -Dspectre=auto
+        -Dsymbol-lookup=disabled
+        -Dgtk2-utils=disabled
 )
 vcpkg_install_meson()
 
@@ -75,10 +76,10 @@ file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
-#TODO: Fix script 
+#TODO: Fix script
 #set(TOOLS)
 #if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/cairo-trace${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
-#    list(APPEND TOOLS cairo-trace) # sh script which needs to be fixed due to absolute paths in it. 
+#    list(APPEND TOOLS cairo-trace) # sh script which needs to be fixed due to absolute paths in it.
 #endif()
 #vcpkg_copy_tools(TOOL_NAMES ${TOOLS} AUTO_CLEAN)
 
