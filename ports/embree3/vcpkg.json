@@ -1,0 +1,10 @@
+{
+  "name": "embree3",
+  "version-semver": "3.11.0",
+  "port-version": 4,
+  "description": "High Performance Ray Tracing Kernels.",
+  "homepage": "https://github.com/embree/embree",
+  "dependencies": [
+    "tbb"
+  ]
+}
