@@ -1,17 +1,18 @@
-if (EXISTS "${CURRENT_INSTALLED_DIR}/share/flashlight-cuda")
-  message(FATAL_ERROR "flashlight-cuda is installed; only one Flashlight "
-    "backend package can be installed at once. Uninstall and try again:"
+if (EXISTS "${CURRENT_INSTALLED_DIR}/share/flashlight")
+  message(FATAL_ERROR "Only one of flashlight-cpu and flashlight-cuda"
+    "can be installed at once. Uninstall and try again:"
     "\n    vcpkg remove flashlight-cuda\n")
 endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO flashlight/flashlight
-    REF 76f7fa7f5a162c73d6bf8befdb8e197a4dc7515d # 0.3 branch tip
-    SHA512 87786f9443d27ac9b513cf582caea13dccfa344e55a4970c0c2c7df7530260ad38cc578690ebf2fa256e8ea943abea547e0e6d5ee0ba090b336c4f7af8d2f53f
+    REF 626914e79073c5547513de649af706f7e2b796ad # 0.3 branch tip
+    SHA512 a22057cfa4cfe7acd95cbc5445a30870cce3cdde89066d1d75f40be0d73b069a49e89b226fe5337488cfe5618dd25958679c0636a3e4008312f01606328becfa
     HEAD_REF master
 )
 
+################################### Build ###################################
 # Default flags
 set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
   -DFL_BUILD_TESTS=OFF
@@ -42,6 +43,8 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
 )
 vcpkg_install_cmake()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/flashlight-cpu TARGET_PATH share/flashlight)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

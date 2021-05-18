@@ -1,0 +1,26 @@
+diff --git a/trantor/net/EventLoop.cc b/trantor/net/EventLoop.cc
+index b4523ad..8009db4 100644
+--- a/trantor/net/EventLoop.cc
++++ b/trantor/net/EventLoop.cc
+@@ -26,7 +26,7 @@
+ #include <assert.h>
+ #ifdef _WIN32
+ #include <io.h>
+-using ssize_t = std::intptr_t;
++using ssize_t = long long;
+ #else
+ #include <poll.h>
+ #endif
+diff --git a/trantor/utils/MsgBuffer.h b/trantor/utils/MsgBuffer.h
+index bdd5c23..33c8633 100644
+--- a/trantor/utils/MsgBuffer.h
++++ b/trantor/utils/MsgBuffer.h
+@@ -22,7 +22,7 @@
+ #include <assert.h>
+ #include <string.h>
+ #ifdef _WIN32
+-using ssize_t = std::intptr_t;
++using ssize_t = long long;
+ #endif
+ 
+ namespace trantor
