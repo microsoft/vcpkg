@@ -1,0 +1,15 @@
+diff --git a/build/cmake/lib/stc/CMakeLists.txt b/build/cmake/lib/stc/CMakeLists.txt
+index bd6acd8..b5b5780 100644
+--- a/build/cmake/lib/stc/CMakeLists.txt
++++ b/build/cmake/lib/stc/CMakeLists.txt
+@@ -179,7 +179,9 @@ if(wxBUILD_PRECOMP)
+     if ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+         set(wxSCINTILLA_PREC_HEADER "${wxSOURCE_DIR}/src/stc/scintilla/include/Scintilla.h")
+     endif()
+-    wx_target_enable_precomp(wxscintilla ${wxSCINTILLA_PREC_HEADER})
++    if (wxSCINTILLA_PREC_HEADER)
++        wx_target_enable_precomp(wxscintilla ${wxSCINTILLA_PREC_HEADER})
++    endif()
+ endif()
+ 
+ wx_add_library(wxstc ${STC_FILES})
