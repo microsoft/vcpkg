@@ -17,7 +17,7 @@
       "port-version": 0
     },
     "ace": {
-      "baseline": "7.0.1",
+      "baseline": "7.0.2",
       "port-version": 0
     },
     "activemq-cpp": {
@@ -206,6 +206,10 @@
     },
     "autobahn": {
       "baseline": "20.8.1",
+      "port-version": 0
+    },
+    "avcpp": {
+      "baseline": "2021-05-06",
       "port-version": 0
     },
     "avisynthplus": {
@@ -3662,7 +3666,7 @@
     },
     "libxml2": {
       "baseline": "2.9.10",
-      "port-version": 6
+      "port-version": 7
     },
     "libxmlmm": {
       "baseline": "0.6.0",
@@ -6485,7 +6489,7 @@
       "port-version": 0
     },
     "workflow": {
-      "baseline": "0.9.4",
+      "baseline": "0.9.5",
       "port-version": 1
     },
     "wpilib": {
