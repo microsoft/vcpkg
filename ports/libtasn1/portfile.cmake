@@ -29,21 +29,12 @@ else()
     set(VCPKG_CXX_FLAGS "-g -O2")
 endif()
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    # These are hacks for MSVC since autoconf can't determine the absolute path correctly
-    foreach(H stdint limits string stddef sys_types)
-        find_file(H_PATH "${H}.h" PATHS $ENV{INCLUDE} NO_DEFAULT_PATH)
-        string(REPLACE "\\" "/" H_PATH "${H_PATH}")
-        list(APPEND EXTRA_OPTS "gl_cv_next_${H}_h='\"${H_PATH}\"'")
-    endforeach()
-endif()
-
 set(ENV{GTKDOCIZE} true)
-
 vcpkg_configure_make(
-    USE_WRAPPERS
+    AUTOCONFIG
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        --disable-doc
         --disable-gtk-doc
         --disable-gcc-warnings
         ${EXTRA_OPTS}
