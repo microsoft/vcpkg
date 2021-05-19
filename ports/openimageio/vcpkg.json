@@ -88,7 +88,11 @@
       ]
     },
     "tools": {
-      "description": "Build openimageio tools"
+      "description": "Build openimageio tools",
+      "dependencies": [
+        "opengl",
+        "qt5-base"
+      ]
     },
     "webp": {
       "description": "Enable libwebp support for openimageio",
