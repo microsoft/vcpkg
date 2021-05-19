@@ -2430,7 +2430,7 @@
     },
     "halide": {
       "baseline": "11.0.1",
-      "port-version": 0
+      "port-version": 1
     },
     "happly": {
       "baseline": "2021-03-19",
