@@ -7,8 +7,11 @@
   "supports": "uwp",
   "dependencies": [
     "armadillo",
+    "boost-math",
+    "boost-program-options",
+    "boost-random",
     "boost-serialization",
-    "boost-test",
+    "boost-serialization",
     "ensmallen",
     "stb"
   ],

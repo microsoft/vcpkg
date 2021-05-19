@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         cmakelists.patch
         fix-configure-error.patch
+        fix-test-dependency.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindACML.cmake)
