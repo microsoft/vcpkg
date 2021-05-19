@@ -691,6 +691,7 @@ endif()
 # this is fine for `find_package`, since there are no usecases for `;` in arguments,
 # so perfect forwarding is not important
 macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
+    set(z_vcpkg_find_package_package_name "${z_vcpkg_find_package_package_name}")
     set(z_vcpkg_find_package_ARGN "${ARGN}")
     set(z_vcpkg_find_package_backup_vars)
 
