@@ -1,4 +1,4 @@
-# vcpkg.cmake requires changes in this file to see a different binary hash
+# rebuild: 1
 cmake_minimum_required(VERSION 3.5)
 
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Location to stored scripts")
