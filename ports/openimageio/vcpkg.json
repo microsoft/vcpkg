@@ -29,7 +29,7 @@
   ],
   "features": {
     "ffmpeg": {
-      "description": "ffmpeg support for openmvg",
+      "description": "Enable ffmpeg support for openimageio",
       "dependencies": [
         {
           "name": "ffmpeg",
@@ -61,6 +61,12 @@
       "description": "Enable RAW image files support",
       "dependencies": [
         "libraw"
+      ]
+    },
+    "opencolorio": {
+      "description": "Enable opencolorio support for openimageio",
+      "dependencies": [
+        "opencolorio"
       ]
     },
     "opencv": {
