@@ -2,8 +2,6 @@ if (VCPKG_TARGET_ARCHITECTURE MATCHES "x86")
     set(WIN32_INCLUDE_STDDEF_PATCH "x86-windows-include-stddef.patch")
 endif()
 
-
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ismrmrd/ismrmrd
@@ -42,7 +40,6 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/ismrmrd.dll)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/ismrmrd.dll)
 endif()
 
-
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/FindFFTW3.cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/FindFFTW3.cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/ismrmrd/FindFFTW3.cmake)
@@ -66,7 +63,6 @@ file(REMOVE_RECURSE ${ISMRMRD_CMAKE_DIRS})
 if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL WindowsStore)
     set(EXECUTABLE_SUFFIX ".exe")
 endif()
-
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/)
