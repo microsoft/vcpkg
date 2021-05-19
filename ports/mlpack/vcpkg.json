@@ -13,7 +13,6 @@
     "boost-random",
     "boost-serialization",
     "boost-serialization",
-    "boost-test",
     "ensmallen",
     "stb"
   ],
