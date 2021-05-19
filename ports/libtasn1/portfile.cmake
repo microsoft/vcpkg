@@ -1,5 +1,9 @@
 set(VERSION 4.16.0)
 
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(PATCHES msvc_fixes.patch)
+endif()
+
 vcpkg_download_distfile(ARCHIVE
     URLS "https://ftp.gnu.org/gnu/libtasn1/libtasn1-${VERSION}.tar.gz"
     FILENAME "libtasn1-${VERSION}.tar.gz"
@@ -11,7 +15,7 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     REF ${VERSION}
     PATCHES
-        msvc_fixes.patch
+        ${PATCHES}
 )
 
 if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_MINGW)
