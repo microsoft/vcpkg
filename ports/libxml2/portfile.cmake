@@ -16,10 +16,15 @@ else()
     set(ENABLE_NETWORK 1)
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    "tools"         LIBXML2_WITH_PROGRAMS
+)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DLIBXML2_WITH_TESTS=OFF
         #-DPORT_DIR=${CMAKE_CURRENT_LIST_DIR}
         -DLIBXML2_WITH_HTTP=${ENABLE_NETWORK}
@@ -39,7 +44,6 @@ vcpkg_configure_cmake(
         -DLIBXML2_WITH_MODULES=ON
         -DLIBXML2_WITH_OUTPUT=ON
         -DLIBXML2_WITH_PATTERN=ON
-        -DLIBXML2_WITH_PROGRAMS=ON
         -DLIBXML2_WITH_PUSH=ON
         -DLIBXML2_WITH_PYTHON=OFF
         -DLIBXML2_WITH_READER=ON
@@ -67,11 +71,12 @@ vcpkg_copy_pdbs()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
-vcpkg_copy_tools(TOOL_NAMES xmllint xmlcatalog AUTO_CLEAN)
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(TOOL_NAMES xmllint xmlcatalog AUTO_CLEAN)
+endif()
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(_file "${CURRENT_PACKAGES_DIR}/include/libxml2/libxml/xmlexports.h")
     file(READ "${_file}" _contents)
