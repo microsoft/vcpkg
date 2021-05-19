@@ -41,6 +41,7 @@ endif()
 set(ENV{GTKDOCIZE} true)
 
 vcpkg_configure_make(
+    USE_WRAPPERS
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         --disable-gtk-doc
