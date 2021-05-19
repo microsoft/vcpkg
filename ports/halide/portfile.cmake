@@ -43,7 +43,7 @@ vcpkg_configure_cmake(
         -DHALIDE_INSTALL_CMAKEDIR=share/${PORT}
 )
 
-vcpkg_install_cmake()
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_tools(
     TOOL_NAMES
