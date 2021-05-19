@@ -194,7 +194,7 @@ for example the dependency object `{ "name": "zlib" }` is equivalent to just wri
 If the port is dependent on optional features of another library,
 those can be specified using the `"features"` field of the dependency object.
 If the port does not require any features from the dependency,
-this should be specifed with the `"default-features"` fields set to `false`.
+this should be specified with the `"default-features"` fields set to `false`.
 
 Dependencies can also be filtered based on the target triplet to support differing requirements.
 These filters use the same syntax as the `"supports"` field below,

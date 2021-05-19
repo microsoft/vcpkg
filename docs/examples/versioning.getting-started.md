@@ -4,45 +4,9 @@
 
 Vcpkg lets you take control of which version of packages to install in your projects using manifests. 
 
-## Enabling versions
-
-To start using [versioning](../users/versioning.md), first you need to enable the `versions` feature flag in any of the following manners:
-
-* Setting the `VCPKG_FEATURE_FLAGS` environment variable
-
-```PowerShell
-# Example for PowerShell
-$env:VCPKG_FEATURE_FLAGS="versions"
-```
-```bash
-# Example for bash
-export VCPKG_FEATURE_FLAGS=versions
-```
-```cmd
-REM Example for cmd
-SET VCPKG_FEATURE_FLAGS=versions
-```
-
-* Passing the feature flags in the vcpkg command line
-```bash
-./vcpkg install --feature-flags=versions
-```
-
-* Setting `VCPKG_FEATURE_FLAGS` before your `project()` CMake directive
-```cmake
-set(VCPKG_FEATURE_FLAGS versions)
-project(myapp)
-```
-* Setting `VcpkgAdditionalInstallOptions` (Project Properties -> Vcpkg -> Additional Options) in your MSBuild project
-```xml
-<PropertyGroup>
-  <VcpkgAdditionalInstallOptions>--feature-flags=versions</VcpkgAdditionalInstallOptions>
-</PropertyGroup>
-```
-
 ## Using versions with manifests
 
-With the `versions` feature flag enabled you can start addding version constraints to your dependencies.
+With the `versions` feature flag enabled you can start adding version constraints to your dependencies.
 
 Let's start with creating a simple CMake project that depends on `fmt` and `zlib`.
 
