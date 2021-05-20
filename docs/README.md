@@ -44,6 +44,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 - [vcpkg.info](https://vcpkg.info/) - Package index + search
 - [vcpkgx](https://vcpkgx.com/) - Package index + search
+- [vcpkg index](https://vcpkg.dev/) - Package index + search
 
 ### Specifications
 
