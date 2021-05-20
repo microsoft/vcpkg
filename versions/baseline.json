@@ -281,8 +281,8 @@
       "port-version": 0
     },
     "azure-storage-blobs-cpp": {
-      "baseline": "12.0.0-beta.10",
-      "port-version": 1
+      "baseline": "12.0.0-beta.11",
+      "port-version": 0
     },
     "azure-storage-common-cpp": {
       "baseline": "12.0.0-beta.11",
