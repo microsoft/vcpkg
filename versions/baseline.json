@@ -3557,8 +3557,8 @@
       "port-version": 2
     },
     "libtasn1": {
-      "baseline": "4.16.0",
-      "port-version": 1
+      "baseline": "4.17.0",
+      "port-version": 0
     },
     "libtcod": {
       "baseline": "1.18.0",
