@@ -17,7 +17,7 @@
       "port-version": 0
     },
     "ace": {
-      "baseline": "7.0.1",
+      "baseline": "7.0.2",
       "port-version": 0
     },
     "activemq-cpp": {
@@ -26,7 +26,7 @@
     },
     "ade": {
       "baseline": "0.1.1f",
-      "port-version": 0
+      "port-version": 1
     },
     "aixlog": {
       "baseline": "1.4.0",
@@ -188,6 +188,10 @@
       "baseline": "0",
       "port-version": 0
     },
+    "atomic-queue": {
+      "baseline": "2021-05-03",
+      "port-version": 0
+    },
     "aubio": {
       "baseline": "0.4.9",
       "port-version": 4
@@ -202,6 +206,10 @@
     },
     "autobahn": {
       "baseline": "20.8.1",
+      "port-version": 0
+    },
+    "avcpp": {
+      "baseline": "2021-05-06",
       "port-version": 0
     },
     "avisynthplus": {
@@ -2258,7 +2266,7 @@
     },
     "glad": {
       "baseline": "0.1.34",
-      "port-version": 0
+      "port-version": 1
     },
     "glbinding": {
       "baseline": "3.1.0",
@@ -3989,8 +3997,8 @@
       "port-version": 8
     },
     "minizip-ng": {
-      "baseline": "3.0.1",
-      "port-version": 1
+      "baseline": "3.0.2",
+      "port-version": 0
     },
     "mio": {
       "baseline": "2019-02-10",
@@ -4865,7 +4873,7 @@
       "port-version": 6
     },
     "polyhook2": {
-      "baseline": "2021-01-08",
+      "baseline": "2021-05-09",
       "port-version": 0
     },
     "polymorphic-value": {
@@ -5014,7 +5022,7 @@
     },
     "qscintilla": {
       "baseline": "2.12.0",
-      "port-version": 0
+      "port-version": 1
     },
     "qt-advanced-docking-system": {
       "baseline": "3.6.3",
@@ -5409,7 +5417,7 @@
       "port-version": 1
     },
     "rtaudio": {
-      "baseline": "2021-01-25",
+      "baseline": "2021-04-30",
       "port-version": 0
     },
     "rtlsdr": {
@@ -6481,7 +6489,7 @@
       "port-version": 0
     },
     "workflow": {
-      "baseline": "0.9.4",
+      "baseline": "0.9.5",
       "port-version": 1
     },
     "wpilib": {
