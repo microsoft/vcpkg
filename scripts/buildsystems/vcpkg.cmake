@@ -30,6 +30,83 @@ function(z_vcpkg_add_fatal_error ERROR)
     endif()
 endfunction()
 
+#[===[.md:
+# z_vcpkg_find_library
+find_library for usage in vcpkg_cmake_wrappers.
+Will set 
+${OUTPUT_VAR}_LIBRARIES 
+${OUTPUT_VAR}_LIBRARY_DEBUG
+${OUTPUT_VAR}_LIBRARY_RELEASE
+and adjust IMPORTED_LOCATION_<CONFIG> if a target is given.
+
+```cmake
+z_vcpkg_find_library(<${OUTPUT_VAR}> 
+                     NAMES <"names">
+                     [DEBUG_NAMES <"names">]
+                     [TARGET <Some::Target>]
+                     [PREFIXES <"prefixes">]
+                     [SUFFIXES <"suffixes">]
+                     [DEBUG_SUFFIXES <"debug_suffixes">]
+)
+```
+
+## Parameters
+### NAMES
+Library search names
+
+### DEBUG_NAMES
+Library search names for the debug configuration
+
+### TARGET
+Target to set the property IMPORTED_LOCATION_<CONFIG>
+
+### PREFIXES/SUFFIXES
+Prefixes/suffixes to add to NAMES. (PREFIXES default "lib")
+
+### DEBUG_SUFFIXES
+Suffixes to add to NAMES for the debug configuration (default: "d")
+
+#]===]
+# this is defined above everything else so that it can be used.
+function(z_vcpkg_find_library basename)
+    cmake_parse_arguments(PARSE_ARGV 1 "arg" ""
+                          "TARGET" "NAMES;DEBUG_NAMES;PREFIXES;SUFFIXES;DEBUG_SUFFIXES")
+    if(NOT arg_PREFIXES)
+        set(arg_PREFIXES "lib")
+    endif()
+    if(NOT arg_DEBUG_SUFFIXES)
+        set(arg_DEBUG_SUFFIXES "d")
+    endif()
+    set(z_names_release ${arg_NAMES})
+    foreach(z_prefix IN LISTS arg_PREFIXES)
+        list(TRANSFORM arg_NAMES PREPEND "${z_prefix}" OUTPUT_VARIABLE z_prepended)
+        list(APPEND z_names_release "${z_prepended}")
+    endforeach()
+    foreach(z_suffix IN LISTS arg_SUFFIXES)
+        list(TRANSFORM arg_NAMES APPEND "${z_suffix}" OUTPUT_VARIABLE z_suffixed)
+        list(APPEND z_names_release "${z_suffixed}")
+    endforeach()
+    set(z_names_debug "${z_names_release}")
+    foreach(z_suffix IN LISTS arg_DEBUG_SUFFIXES)
+        list(TRANSFORM arg_NAMES APPEND "${z_suffix}" OUTPUT_VARIABLE z_debug_suffixed)
+        list(APPEND z_names_debug "${z_debug_suffixed}")
+    endforeach()
+    include(SelectLibraryConfigurations)
+    find_library(${basename}_LIBRARY_DEBUG NAMES ${arg_DEBUG_NAMES} ${z_names_debug} ${z_names_release} NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug" NO_DEFAULT_PATH)
+    find_library(${basename}_LIBRARY_RELEASE NAMES ${z_names_release} NAMES_PER_DIR PATH_SUFFIXES lib PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}" NO_DEFAULT_PATH)
+    select_library_configurations(${basename}_LIBRARY)
+    if(TARGET ${arg_TARGET})
+        if(${basename}_LIBRARY_DEBUG)
+            set_target_properties(${arg_TARGET} PROPERTIES IMPORTED_LOCATION_DEBUG "${${basename}_LIBRARY_DEBUG}")
+        endif()
+        if(${basename}_LIBRARY_RELEASE)
+            set_target_properties(${arg_TARGET} PROPERTIES IMPORTED_LOCATION_RELEASE "${${basename}_LIBRARY_RELEASE}")
+        endif()
+    endif()
+    set(${basename}_LIBRARIES ${${basename}_LIBRARIES} PARENT_SCOPE)
+    set(${basename}_LIBRARY ${${basename}_LIBRARY} PARENT_SCOPE)
+endfunction()
+
 set(Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION "3.1")
 if(CMAKE_VERSION VERSION_LESS Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION)
     message(FATAL_ERROR "vcpkg.cmake requires at least CMake ${Z_VCPKG_CMAKE_REQUIRED_MINIMUM_VERSION}.")
