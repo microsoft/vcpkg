@@ -672,8 +672,13 @@ foreach(config_variable ${config_variables})
     endif()
 endforeach()
 
+# must remove duplicates from the front to respect link order so reverse first
+list(REVERSE FFMPEG_DEPENDENCIES_RELEASE)
+list(REVERSE FFMPEG_DEPENDENCIES_DEBUG)
 list(REMOVE_DUPLICATES FFMPEG_DEPENDENCIES_RELEASE)
 list(REMOVE_DUPLICATES FFMPEG_DEPENDENCIES_DEBUG)
+list(REVERSE FFMPEG_DEPENDENCIES_RELEASE)
+list(REVERSE FFMPEG_DEPENDENCIES_DEBUG)
 
 # Handle version strings
 
