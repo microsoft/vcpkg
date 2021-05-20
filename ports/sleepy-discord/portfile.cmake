@@ -10,8 +10,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yourWaifu/sleepy-discord
-    REF dd9d186ec78fd092292f00f0f42008191b4d3f59
-    SHA512 c8d3e3d390525b8bc88d7c195d8bf3c2c7fd806234f7e56ef231f760b1d8731cc2747c0bc43bda23a99c98682da489ca0ec2750c47cd82bffb5fa3a4a2866777
+    REF c63f6779246450e29f8e16fe19405a17d68623fc
+    SHA512 f4c1192c2574d083d1d179435552588705d4a7c0b561ebfdb793c663cc0266c6736adf7a4f3d390fd8ff449b5f6c4c0040212eab717db718565ce18bd9346e71
     HEAD_REF develop
 )
 
@@ -25,4 +25,7 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 
+vcpkg_copy_pdbs()
+
+file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/sleepy_discord/sleepy-discord-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
