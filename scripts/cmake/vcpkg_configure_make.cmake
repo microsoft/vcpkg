@@ -388,8 +388,14 @@ function(vcpkg_configure_make)
         else()
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV RANLIB ":")
         endif()
-        if(VCPKG_DETECTED_CMAKE_OBJDUMP) #Objdump is required to make shared libraries. Otherwise define lt_cv_deplibs_check_method=pass_all
+        if(VCPKG_DETECTED_CMAKE_OBJDUMP AND NOT VCPKG_TARGET_IS_MINGW) #Objdump is required to make shared libraries. Otherwise define lt_cv_deplibs_check_method=pass_all
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV OBJDUMP "${VCPKG_DETECTED_CMAKE_OBJDUMP}") # Trick to ignore the RANLIB call
+        elseif(VCPKG_TARGET_IS_MINGW)
+            # ensure the objdump from the vcpkg-acquired msys is used, or mingw / msys "clang" environments may fail
+            find_program(MSYSROOT_OBJDUMP "objdump" HINTS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH)
+            if (MSYSROOT_OBJDUMP)
+                _vcpkg_append_to_configure_environment(CONFIGURE_ENV OBJDUMP "${MSYSROOT_OBJDUMP}")
+            endif()
         endif()
         if(VCPKG_DETECTED_CMAKE_STRIP) # If required set the ENV variable STRIP in the portfile correctly
             _vcpkg_append_to_configure_environment(CONFIGURE_ENV STRIP "${VCPKG_DETECTED_CMAKE_STRIP}") 
@@ -398,7 +404,15 @@ function(vcpkg_configure_make)
             list(APPEND _csc_OPTIONS ac_cv_prog_ac_ct_STRIP=:)
         endif()
         if(VCPKG_DETECTED_CMAKE_NM) # If required set the ENV variable NM in the portfile correctly
-            _vcpkg_append_to_configure_environment(CONFIGURE_ENV NM "${VCPKG_DETECTED_CMAKE_NM}") 
+            if (NOT VCPKG_TARGET_IS_MINGW)
+                _vcpkg_append_to_configure_environment(CONFIGURE_ENV NM "${VCPKG_DETECTED_CMAKE_NM}")
+            else()
+                # ensure the nm from the vcpkg-acquired msys is used
+                find_program(MSYSROOT_NM "nm" HINTS "${MSYS_ROOT}/usr/bin" NO_DEFAULT_PATH NO_CMAKE_ENVIRONMENT_PATH NO_SYSTEM_ENVIRONMENT_PATH)
+                if (MSYSROOT_NM)
+                    _vcpkg_append_to_configure_environment(CONFIGURE_ENV NM "${MSYSROOT_NM}")
+                endif()
+            endif()
         else()
             # Would be better to have a true nm here! Some symbols (mainly exported variables) get not properly imported with dumpbin as nm 
             # and require __declspec(dllimport) for some reason (same problem CMake has with WINDOWS_EXPORT_ALL_SYMBOLS)
