@@ -575,6 +575,9 @@ function(vcpkg_configure_make)
         # Note: Env LIBPATH;LIB are on the search path for libtool by default on windows. 
         # It even does unix/dos-short/unix transformation with the path to get rid of spaces. 
     endif()
+    if (VCPKG_TARGET_IS_MINGW)
+        list(REMOVE_ITEM ALL_LIBS_LIST "-luuid")
+    endif()
     set(_lprefix)
     if(_VCPKG_TRANSFORM_LIBS)
         set(_lprefix "-l")
