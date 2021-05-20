@@ -7,6 +7,7 @@ vcpkg_from_git(
     SHA512 64e692a0bfa7f73585ea7b7b8b1d4c9a7f9be59565bfd4de32ca8cd9db121f87e7ad51f5c80269fbd99545af34dcf1894374ed8a6d6c1ac5f8601c026572ac18
     PATCHES
         0001-export-pkgconfig-file.patch
+        0002-mingw_for_Android.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS

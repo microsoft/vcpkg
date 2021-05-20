@@ -1,13 +1,15 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.2.5")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-postgresql
-    REF 349d610084375c46be95d50ce10b787ae6c2baf4 # 1.2.0
-    SHA512 2faa688077020bbe64807be85d8d61e5aa84163a044d42df0a3b1701cf82048ff0322acb72d4e757a38403e14cba6a7a766daa965862e04756e483d9b750a365
+    REF ${OATPP_VERSION}
+    SHA512 43381422224f0254a823fdc702d1a007c405930157e6ea361f51e5232df4b04073181de175f61ab4986f3468d21f9ac25a0820d14efcecb0afb0096bdd674dcb
     HEAD_REF master
+    PATCHES
+        fix-windows-build.patch # see https://github.com/oatpp/oatpp-postgresql/pull/8
 )
 
 set(VCPKG_C_FLAGS "${VCPKG_CXX_FLAGS} -D_CRT_SECURE_NO_WARNINGS")

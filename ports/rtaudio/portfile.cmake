@@ -6,6 +6,7 @@ vcpkg_from_github(
     REF 34a3752e0c8249dc1780d196cd24e745425f0c77
     SHA512 00fea107f409f6dc43154aaf69aeffa1a3385031778b5f7d1ae1cc8337ed4ab92a7917cc9eade848dedd746016b6eff6234088619cb8d6a9a3f26a63efde493e
     HEAD_REF master
+    PATCHES remove-unused-variable.patch
 )
 
 if(VCPKG_CRT_LINKAGE STREQUAL static)
@@ -14,10 +15,15 @@ else()
     set(RTAUDIO_STATIC_MSVCRT OFF)
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        asio  RTAUDIO_API_ASIO
+)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DRTAUDIO_STATIC_MSVCRT=${RTAUDIO_STATIC_MSVCRT}
+    OPTIONS -DRTAUDIO_STATIC_MSVCRT=${RTAUDIO_STATIC_MSVCRT} ${FEATURE_OPTIONS}
 )
 
 vcpkg_install_cmake()

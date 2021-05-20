@@ -2,6 +2,8 @@
   "name": "botan",
   "version": "2.17.3",
   "description": "Botan is a C++ cryptography library released under the permissive Simplified BSD license.",
+  "homepage": "https://botan.randombit.net",
+  "supports": "!(windows & arm)",
   "features": {
     "amalgamation": {
       "description": "Do an amalgamation build of the library"

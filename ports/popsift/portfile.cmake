@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF develop
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/vcpkg_find_cuda/vcpkg_find_cuda.cmake)
+include(${CURRENT_INSTALLED_DIR}/share/cuda/vcpkg_find_cuda.cmake)
 vcpkg_find_cuda(OUT_CUDA_TOOLKIT_ROOT CUDA_TOOLKIT_ROOT)
 
 message(STATUS "CUDA_TOOLKIT_ROOT ${CUDA_TOOLKIT_ROOT}")
