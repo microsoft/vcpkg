@@ -1,6 +1,12 @@
 Source: x265
 Version: 3.4
-Port-Version: 4
+Port-Version: 5
 Homepage: https://github.com/videolan/x265
 Description: x265 is a H.265 / HEVC video encoder application library, designed to encode video or images into an H.265 / HEVC encoded bitstream.
 Supports: !(uwp | arm)
+
+Feature: bit10
+Description: 10-bit support
+
+Feature: bit12
+Description: 12-bit support

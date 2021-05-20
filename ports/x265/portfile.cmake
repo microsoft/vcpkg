@@ -1,3 +1,6 @@
+vcpkg_internal_get_cmake_vars(OUTPUT_FILE _VCPKG_CMAKE_VARS_FILE)
+include("${_VCPKG_CMAKE_VARS_FILE}")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO videolan/x265
@@ -18,17 +21,189 @@ endif ()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
 
-vcpkg_configure_cmake(
+set(HAS_10_BIT OFF)
+if("bit10" IN_LIST FEATURES)
+    set(HAS_10_BIT ON)
+endif()
+
+set(HAS_12_BIT OFF)
+if("bit12" IN_LIST FEATURES)
+    set(HAS_12_BIT ON)
+endif()
+set(FEATURE_OPT_DBG "")
+set(FEATURE_OPT_REL "")
+set(EXTRA_LIB_DBG "")
+set(EXTRA_LIB_REL "")
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(x265_lib_name "x265-static.lib")
+    set(x265_lib_name_main "x265-static-main.lib")
+elseif(VCPKG_TARGET_IS_LINUX)
+    set(x265_lib_name "libx265.a")
+    set(x265_lib_name_main "libx265-main.a")
+endif()
+
+## Usage
+#  build_x265(
+#      BIT <bit>
+#      [FEATURE_OPT_VAR <feature_opt_var_name>]
+#      [EXTRA_LIB_VAR <extra_lib_var_name>]
+#      [FEATURE_OPT_DBG <feature_options_debug...>]
+#      [FEATURE_OPT_REL <feature_options_release...>]
+#      [EXTRA_LIB_DBG <extra_lib_debug...>]
+#      [EXTRA_LIB_REL <extra_lib_release...>]
+#  )
+macro(build_x265)
+    cmake_parse_arguments(build_x265 "" "BIT;FEATURE_OPT_VAR;EXTRA_LIB_VAR" "FEATURE_OPT_DBG;FEATURE_OPT_REL;EXTRA_LIB_DBG;EXTRA_LIB_REL" ${ARGN})
+
+    set(BUILDING_CORE_FEATURE NO)
+    if (${build_x265_BIT} EQUAL 8)
+        set(BUILDING_CORE_FEATURE YES)
+    endif()
+    
+    set(OPT "")
+    set(OPT_REL "")
+    set(OPT_DBG "")
+    list(APPEND OPT "-DENABLE_LIBNUMA=NO")
+    if (${BUILDING_CORE_FEATURE})
+        string(REPLACE ";" "\;" EXTRA_LIB_DBG "${build_x265_EXTRA_LIB_DBG}")
+        string(REPLACE ";" "\;" EXTRA_LIB_REL "${build_x265_EXTRA_LIB_REL}")
+        if (VCPKG_TARGET_IS_LINUX)
+            set(EXTRA_LIB_DBG "${EXTRA_LIB_DBG}\;dl")
+            set(EXTRA_LIB_REL "${EXTRA_LIB_DBG}\;dl")
+        endif()
+        list(APPEND OPT_DBG "-DENABLE_CLI=NO")
+        if (build_x265_EXTRA_LIB_DBG)
+            list(APPEND OPT_DBG "-DEXTRA_LIB=${EXTRA_LIB_DBG}")
+        endif()
+        if (build_x265_FEATURE_OPT_DBG)
+            list(APPEND OPT_DBG "${build_x265_FEATURE_OPT_DBG}")
+        endif()
+        if (build_x265_EXTRA_LIB_REL)
+            list(APPEND OPT_REL "-DEXTRA_LIB=${EXTRA_LIB_REL}")
+        endif()
+        if (build_x265_FEATURE_OPT_REL)
+            list(APPEND OPT_REL "${build_x265_FEATURE_OPT_REL}")
+        endif()
+        list(APPEND OPT "-DENABLE_ASSEMBLY=${ENABLE_ASSEMBLY}")
+        list(APPEND OPT "-DENABLE_SHARED=${ENABLE_SHARED}")
+        
+    else ()
+        list(APPEND OPT "-DEXPORT_C_API=NO")
+        list(APPEND OPT "-DENABLE_ASSEMBLY=${ENABLE_ASSEMBLY}")
+        list(APPEND OPT "-DENABLE_SHARED=NO")
+        list(APPEND OPT "-DENABLE_CLI=NO")
+        list(APPEND OPT "-DHIGH_BIT_DEPTH=YES")   
+
+        if (${build_x265_BIT} EQUAL "12")
+            list(APPEND OPT "-DMAIN12=ON")
+        endif()
+    endif()
+    
+    vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/source
     PREFER_NINJA
     OPTIONS
-        -DENABLE_ASSEMBLY=${ENABLE_ASSEMBLY}
-        -DENABLE_SHARED=${ENABLE_SHARED}
+        ${OPT}
+    OPTIONS_RELEASE
+        ${OPT_REL}
     OPTIONS_DEBUG
-        -DENABLE_CLI=OFF
+        ${OPT_DBG}
+    )
+    vcpkg_build_cmake()
+    
+    set(x265_lib "x265-${build_x265_BIT}")
+    
+    if (NOT BUILDING_CORE_FEATURE)
+        foreach(BUILDTYPE "debug" "release")
+            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
+                if(BUILDTYPE STREQUAL "debug")
+                    set(SHORT_BUILDTYPE "dbg")
+                else()
+                    set(SHORT_BUILDTYPE "rel")
+                endif()
+                string(TOUPPER ${SHORT_BUILDTYPE} SHORT_BUILDTYPE_VAR)
+                set(FEATURE_OPT_BUILDTYPE_VAR ${build_x265_FEATURE_OPT_VAR}_${SHORT_BUILDTYPE_VAR})
+                set(EXTRA_LIB_BUILDTYPE_VAR ${build_x265_EXTRA_LIB_VAR}_${SHORT_BUILDTYPE_VAR})
+
+                file(COPY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}/${x265_lib_name} 
+                    DESTINATION ${CURRENT_BUILDTREES_DIR}/tmp-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}/${x265_lib})
+                list(APPEND ${FEATURE_OPT_BUILDTYPE_VAR} "-DLINKED_${build_x265_BIT}BIT=ON")
+                file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE})
+                list(APPEND ${EXTRA_LIB_BUILDTYPE_VAR} "${CURRENT_BUILDTREES_DIR}/tmp-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}/${x265_lib}/${x265_lib_name}")
+            endif()
+        endforeach()
+    elseif(NOT ENABLE_SHARED)
+        foreach(BUILDTYPE "debug" "release")
+            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
+                if(BUILDTYPE STREQUAL "debug")
+                    set(SHORT_BUILDTYPE "dbg")
+                else()
+                    set(SHORT_BUILDTYPE "rel")
+                endif()
+                string(TOUPPER ${SHORT_BUILDTYPE} SHORT_BUILDTYPE_VAR)
+                if (HAS_10_BIT OR HAS_12_BIT)
+                    set(EXTRA_LIB_VAR "build_x265_EXTRA_LIB_${SHORT_BUILDTYPE_VAR}")
+                    file(RENAME ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}/${x265_lib_name} ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}/${x265_lib_name_main})
+                    set(LIB_FILES "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}/${x265_lib_name_main}")
+                    list(APPEND LIB_FILES ${${EXTRA_LIB_VAR}})
+                    
+                    if(VCPKG_TARGET_IS_WINDOWS)
+                        execute_process(COMMAND ${VCPKG_DETECTED_CMAKE_AR} /ignore:4006 /ignore:4221 /OUT:${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}/${x265_lib_name} ${LIB_FILES}  RESULT_VARIABLE AR_EXIT_CODE OUTPUT_VARIABLE AR_STDOUT ERROR_VARIABLE AR_STDERR)
+                    elseif(VCPKG_TARGET_IS_LINUX)
+                        string(REPLACE ";" "\nADDLIB " LIB_FILES "${LIB_FILES}")
+                        execute_process(COMMAND "sh" "-c" "${VCPKG_DETECTED_CMAKE_AR} -M <<EOF
+CREATE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}/${x265_lib_name}
+ADDLIB ${LIB_FILES}
+SAVE
+END
+EOF" RESULT_VARIABLE AR_EXIT_CODE OUTPUT_VARIABLE AR_STDOUT ERROR_VARIABLE AR_STDERR)
+                    endif()
+                    if(NOT (AR_EXIT_CODE EQUAL 0))
+                        message(FATAL_ERROR "ar exit code: ${AR_EXIT_CODE} out: ${AR_STDOUT} err: ${AR_STDRR}")
+                    endif()
+                endif()
+            endif()
+        endforeach()
+    endif()
+endmacro()
+
+if(HAS_10_BIT)
+    build_x265(BIT 10 FEATURE_OPT_VAR FEATURE_OPT EXTRA_LIB_VAR EXTRA_LIB)
+endif()
+
+if(HAS_12_BIT)
+    build_x265(BIT 12 FEATURE_OPT_VAR FEATURE_OPT EXTRA_LIB_VAR EXTRA_LIB)
+endif()
+
+build_x265(
+    BIT 8 
+    FEATURE_OPT_DBG ${FEATURE_OPT_DBG}
+    FEATURE_OPT_REL ${FEATURE_OPT_REL}
+    EXTRA_LIB_DBG ${EXTRA_LIB_DBG}
+    EXTRA_LIB_REL ${EXTRA_LIB_REL}
 )
 
-vcpkg_install_cmake()
+foreach(BUILDTYPE "debug" "release")
+    if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
+        if(BUILDTYPE STREQUAL "debug")
+            set(SHORT_BUILDTYPE "dbg")
+            set(CONFIG "Debug")
+        else()
+            set(SHORT_BUILDTYPE "rel")
+            set(CONFIG "Release")
+        endif()
+
+    message(STATUS "Installing ${TARGET_TRIPLET}-${SHORT_BUILDTYPE}")
+
+        vcpkg_execute_build_process(
+            COMMAND ${CMAKE_COMMAND} --install . --config ${CONFIG}
+            WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
+            LOGNAME "install-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
+        )
+
+    endif()
+endforeach()
+
 vcpkg_copy_pdbs()
 
 # remove duplicated include files
