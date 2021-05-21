@@ -1,5 +1,12 @@
 {
   "name": "bddisasm",
   "version-string": "1.31.8",
-  "description": "bddisasm is a fast, lightweight, x86/x64 instruction decoder and emulator."
+  "port-version": 0,
+  "description": "bddisasm is a fast, lightweight, x86/x64 instruction decoder and emulator.",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/bitdefender/bddisasm",
+  "documentation": "https://bddisasm.readthedocs.io/en/latest/",
+  "maintainers": [
+    "Cristi Anichitei <ianichitei@bitdefender.com>"
+  ]
 }
