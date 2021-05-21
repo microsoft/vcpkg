@@ -21,6 +21,8 @@ vcpkg_cmake_configure(
         -DSPDLOG_FMT_EXTERNAL=ON
         -DSPDLOG_INSTALL=ON
         -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
+        -DSPDLOG_WCHAR_SUPPORT=${VCPKG_TARGET_IS_WINDOWS}
+        -DSPDLOG_WCHAR_FILENAMES=OFF
 )
 
 vcpkg_cmake_install()
