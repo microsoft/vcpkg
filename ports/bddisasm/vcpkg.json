@@ -1,0 +1,5 @@
+{
+  "name": "bddisasm",
+  "version-string": "1.31.8",
+  "description": "bddisasm is a fast, lightweight, x86/x64 instruction decoder and emulator."
+}
