@@ -966,7 +966,7 @@
     },
     "boost-uninstall": {
       "baseline": "1.75.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-units": {
       "baseline": "1.75.0",
@@ -1546,7 +1546,7 @@
     },
     "curl": {
       "baseline": "7.74.0",
-      "port-version": 5
+      "port-version": 6
     },
     "curlpp": {
       "baseline": "2018-06-15-3",
@@ -2382,7 +2382,7 @@
     },
     "grpc": {
       "baseline": "1.37.0",
-      "port-version": 1
+      "port-version": 2
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -2390,7 +2390,7 @@
     },
     "gsl": {
       "baseline": "2.6",
-      "port-version": 0
+      "port-version": 1
     },
     "gsl-lite": {
       "baseline": "0.38.1",
@@ -2522,7 +2522,7 @@
     },
     "icu": {
       "baseline": "69.1",
-      "port-version": 9
+      "port-version": 10
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23-1",
