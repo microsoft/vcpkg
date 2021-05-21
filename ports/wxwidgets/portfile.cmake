@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         disable-platform-lib-dir.patch
+        fix-build.patch
 )
 
 set(OPTIONS)

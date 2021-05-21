@@ -9,6 +9,7 @@ vcpkg_from_github(
     PATCHES
         fix-path.patch
         fix-static-usage.patch
+        cmake_policy.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} static EMBREE_STATIC_LIB)
