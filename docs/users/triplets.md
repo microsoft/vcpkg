@@ -189,3 +189,6 @@ We recommend using a systematic naming scheme when creating new triplets. The An
 
 ## Android triplets
 See [android.md](android.md)
+
+## Mingw-w64 triplets
+See [mingw.md](mingw.md)

@@ -1,0 +1,13 @@
+diff --git a/frmts/fits/fitsdataset.cpp b/frmts/fits/fitsdataset.cpp
+index c3f4a4e1f..eb29a92b1 100644
+--- a/frmts/fits/fitsdataset.cpp
++++ b/frmts/fits/fitsdataset.cpp
+@@ -38,7 +38,7 @@
+ #include "ogrsf_frmts.h"
+ 
+ #include <string.h>
+-#include <fitsio.h>
++#include <cfitsio/fitsio.h>
+ 
+ #include <algorithm>
+ #include <string>

@@ -11,6 +11,10 @@
     "libarchive",
     "liblzma",
     "libuv",
+    {
+      "name": "ncurses",
+      "platform": "!(windows | uwp)"
+    },
     "nghttp2",
     "qt5-base",
     {
