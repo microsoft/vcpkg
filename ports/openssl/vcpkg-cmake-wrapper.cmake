@@ -1,5 +1,7 @@
 set(OPENSSL_ROOT_DIR_BAK ${OPENSSL_ROOT_DIR})
-set(OPENSSL_ROOT_DIR ${CURRENT_INSTALLED_DIR})
+get_filename_component(OPENSSL_ROOT_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+get_filename_component(OPENSSL_ROOT_DIR "${OPENSSL_ROOT_DIR}" PATH)
+get_filename_component(OPENSSL_ROOT_DIR "${OPENSSL_ROOT_DIR}" PATH)
 
 _find_package(${ARGS})
 
