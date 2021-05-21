@@ -103,11 +103,12 @@ function(configure_qt)
                 -datadir ${CURRENT_INSTALLED_DIR}${_path_suffix}/share/qt5${_path_suffix_${_buildname}}
                 -plugindir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/plugins
                 -qmldir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/qml
-                -headerdir ${CURRENT_INSTALLED_DIR}/include
+                -headerdir ${CURRENT_INSTALLED_DIR}/include/qt5
                 -libexecdir ${CURRENT_INSTALLED_DIR}/tools/qt5${_path_suffix_${_buildname}}
                 -bindir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/bin
                 -libdir ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib
                 -I ${CURRENT_INSTALLED_DIR}/include
+                -I ${CURRENT_INSTALLED_DIR}/include/qt5
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib 
                 -L ${CURRENT_INSTALLED_DIR}${_path_suffix_${_buildname}}/lib/manual-link
                 -platform ${_csc_TARGET_PLATFORM}

@@ -1,11 +1,11 @@
 Source: libssh
 Version: 0.9.5
-Port-Version: 1
+Port-Version: 3
 Homepage: https://www.libssh.org/
 Build-Depends: libssh[core,mbedtls] (android)
 Description: libssh is a multiplatform C library implementing the SSHv2 protocol on client and server side
 Default-Features: crypto
-Supports: !uwp
+Supports: !(uwp | arm)
 
 Feature: crypto
 Build-Depends: libssh[mbedtls]

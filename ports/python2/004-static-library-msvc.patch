@@ -1,3 +1,5 @@
+diff --git a/PCbuild/pythoncore.vcxproj b/PCbuild/pythoncore.vcxproj
+index 92b32da..8dac984 100644
 --- a/PCbuild/pythoncore.vcxproj
 +++ b/PCbuild/pythoncore.vcxproj
 @@ -41,7 +41,7 @@
@@ -13,8 +15,8 @@
      <ClCompile>
        <AdditionalOptions>/Zm200  %(AdditionalOptions)</AdditionalOptions>
        <AdditionalIncludeDirectories>$(PySourcePath)Python;$(PySourcePath)Modules\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
--      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_ENABLE_SHARED;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
-+      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_NO_ENABLE_SHARED;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+-      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_ENABLE_SHARED;_CRT_SECURE_NO_WARNINGS;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
++      <PreprocessorDefinitions>_USRDLL;Py_BUILD_CORE;Py_NO_ENABLE_SHARED;_CRT_SECURE_NO_WARNINGS;MS_DLL_ID="$(SysWinVer)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
      </ClCompile>
      <Link>
        <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -35,4 +37,3 @@
    </ItemDefinitionGroup>
    <ItemGroup>
      <ClInclude Include="..\Include\abstract.h" />
--- 

@@ -6,7 +6,7 @@ If you want to contribute but don't have a particular library in mind then take 
 of [new port requests](https://github.com/Microsoft/vcpkg/issues?q=is%3Aissue+is%3Aopen+label%3Acategory%3Anew-port).
 
 ## Can Vcpkg create pre-built binary packages? What is the binary format used by Vcpkg?
-Yes! See [the `export` command](../users/integration.md#export).
+Yes! See [the `export` command](../users/integration.md#export-command).
 
 ## How do I update libraries?
 The `vcpkg update` command lists all packages which are out-of-sync with your current portfiles. To update a package, follow the instructions in the command.
@@ -29,6 +29,9 @@ We currently target Windows Desktop (x86 and x64) as well as the Universal Windo
 
 ## Does Vcpkg run on Linux/OSX?
 Yes! We continuously test on OSX and Ubuntu 16.04, however we know users have been successful with Arch, Fedora, and FreeBSD. If you have trouble with your favorite Linux distribution, let us know in an issue and we'd be happy to help!
+
+## How do I update vcpkg?
+Execute `git pull` to get the latest sources, then run `bootstrap-vcpkg.bat` (Windows) or `./bootstrap-vcpkg.sh` (Unix) to update vcpkg.
 
 ## How do I use different versions of a library on one machine?
 Within a single instance of Vcpkg (e.g. one set of `installed\`, `packages\`, `ports\` and so forth), you can only have one version of a library installed (otherwise, the headers would conflict with each other!). For those with experience with system-wide package managers, packages in Vcpkg correspond to the `X-dev` or `X-devel` packages.

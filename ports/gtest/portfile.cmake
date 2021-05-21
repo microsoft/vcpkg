@@ -5,13 +5,11 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF release-1.10.0
-    SHA512 bd52abe938c3722adc2347afad52ea3a17ecc76730d8d16b065e165bc7477d762bce0997a427131866a89f1001e3f3315198204ffa5d643a9355f1f4d0d7b1a9
+    REF f5e592d8ee5ffb1d9af5be7f715ce3576b8bf9c4 #commite on 2021-04-29
+    SHA512 8168cc2b2c2f18ae7411db8a74369c98bb2d19b5be94a5a5f96a1d4e8e22b70c219c1cdfaef934b674d9c078dd97d0481c62e382aab432e3b89aa79ea5051673
     HEAD_REF master
     PATCHES
-        0002-Fix-z7-override.patch
         fix-main-lib-path.patch
-        fix-build-failure-in-gcc-11.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "dynamic" GTEST_FORCE_SHARED_CRT)

@@ -1,7 +1,7 @@
 {
   "name": "aws-sdk-cpp",
   "version": "1.8.126",
-  "port-version": 7,
+  "port-version": 8,
   "description": "AWS SDK for C++",
   "homepage": "https://github.com/aws/aws-sdk-cpp",
   "dependencies": [
