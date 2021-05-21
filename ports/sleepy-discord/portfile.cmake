@@ -10,9 +10,21 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yourWaifu/sleepy-discord
-    REF c63f6779246450e29f8e16fe19405a17d68623fc
-    SHA512 f4c1192c2574d083d1d179435552588705d4a7c0b561ebfdb793c663cc0266c6736adf7a4f3d390fd8ff449b5f6c4c0040212eab717db718565ce18bd9346e71
+    REF 52059a39ff0b435724e5c67ef364dcada655a07a
+    SHA512 025c91e178136b5a4fd19f2015a540fe2b725f384abf04621429422578117c002cf5f4eea311102c0fe62e09ff937035888124e2ffc4369b71b9f3265fa3aeab
     HEAD_REF develop
+)
+
+# Handle version data here to prevent issues from doing this twice in parallel
+set(SLEEPY_DISCORD_VERSION_HASH 52059a39ff0b435724e5c67ef364dcada655a07a)
+set(SLEEPY_DISCORD_VERSION_BUILD 890)
+set(SLEEPY_DISCORD_VERSION_BRANCH "develop")
+set(SLEEPY_DISCORD_VERSION_IS_MASTER 0)
+set(SLEEPY_DISCORD_VERSION_DESCRIPTION_CONCAT " ")
+set(SLEEPY_DISCORD_VERSION_DESCRIPTION "52059a39")
+configure_file(
+    "${SOURCE_PATH}/include/sleepy_discord/version.h.in"
+    "${SOURCE_PATH}/include/sleepy_discord/version.h"
 )
 
 vcpkg_configure_cmake(
