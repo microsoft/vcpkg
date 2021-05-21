@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcrash
-    REF v5.75.0
-    SHA512 f6784d2db20bd90194a1ae8134e344a899f8c28d934783fbc104d2719e8340955278059ea5a237eeda550b4c4484e45c6d4b7c09425b0d1bb0b0025d8e214596
+    REF v5.81.0
+    SHA512 29ab36a46f4dbbe104c2c8d1ce0d4f2f43399c7fb3cbc34210d52e51c8b6ef6261890ebc36d9010c2aea9b90867a07732a4736176fa008c85a009ebd6582dd32
     HEAD_REF master
-    PATCHES
-        add_x11extras.patch
 )
 
 vcpkg_configure_cmake(
