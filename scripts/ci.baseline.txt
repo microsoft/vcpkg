@@ -385,7 +385,6 @@ getopt-win32:arm-uwp=fail
 getopt-win32:x64-linux=fail
 getopt-win32:x64-osx=fail
 getopt-win32:x64-uwp=fail
-getopt-win32:x64-windows-static=fail
 gflags:arm-uwp=fail
 gflags:x64-uwp=fail
 
