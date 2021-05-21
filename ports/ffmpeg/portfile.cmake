@@ -634,6 +634,8 @@ function(append_dependencies_from_config_mak out)
     list(TRANSFORM contents REPLACE "^-l" "")
     list(TRANSFORM contents REPLACE "^-Wl,-framework," "")
     list(FILTER contents EXCLUDE REGEX "^-Wl,.+")
+    list(FILTER contents EXCLUDE REGEX "^gcc$")    # XXX causes issues in azure CI?
+    list(FILTER contents EXCLUDE REGEX "^gcc_s$")  # XXX causes issues in azure CI?
     if(contents)
         list(APPEND "${out}" "${contents}")
         set("${out}" "${${out}}" PARENT_SCOPE)
