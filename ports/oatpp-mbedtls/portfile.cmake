@@ -1,12 +1,12 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.2.5")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-mbedtls
-    REF b415a88d652cbb1f1cbbd9093345c961cbac4ec1 # 1.2.0
-    SHA512 08864932b20bc9c569eed052137d0eacafb2acd975d0ebacaa7430ae23a6e9ef7c4afb45d88178531a1f0af1a1d488087e9bc26a866f9a656c695d55b0c85ad3
+    REF ${OATPP_VERSION}
+    SHA512 ffc7ef3614a4b3ef44c61af3db8c5b5a75ecc657b2f9f5ade4f9e78260427ca113be700065b6fcdc3e6f553648601fe4d8c68a54e10234949e004f40def0d343
     HEAD_REF master
     PATCHES find-mbedtls.patch
 )
