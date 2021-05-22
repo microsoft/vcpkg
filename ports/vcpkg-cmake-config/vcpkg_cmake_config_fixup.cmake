@@ -223,13 +223,13 @@ get_filename_component(_IMPORT_PREFIX "${_IMPORT_PREFIX}" PATH)]]
 
     # Remove /debug/<target_path>/ if it's empty.
     file(GLOB_RECURSE remaining_files "${debug_share}/*")
-    if(NOT remaining_files STREQUAL "")
+    if(remaining_files STREQUAL "")
         file(REMOVE_RECURSE "${debug_share}")
     endif()
 
     # Remove /debug/share/ if it's empty.
     file(GLOB_RECURSE remaining_files "${CURRENT_PACKAGES_DIR}/debug/share/*")
-    if(NOT remaining_files STREQUAL "")
+    if(remaining_files STREQUAL "")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
     endif()
 endfunction()
