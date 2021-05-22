@@ -29,6 +29,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DCMAKE_DEBUG_POSTFIX=d
         -DBUILD_TESTING=OFF
+        -DBUILD_BENCHMARKS=OFF
         ${_CMAKE_EXTRA_OPTIONS}
 )
 vcpkg_install_cmake()
