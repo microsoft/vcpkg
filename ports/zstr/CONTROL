@@ -1,3 +1,0 @@
-Source: zstr
-Version: 1.0.4
-Description: This C++ header-only library enables the use of C++ standard iostreams to access ZLib-compressed streams.
