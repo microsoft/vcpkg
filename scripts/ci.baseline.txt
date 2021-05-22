@@ -47,6 +47,9 @@
 # other ports
 # Cross compiling CI machine cannot run gen_test_char to generate apr_escape_test_char.h
 apr:arm64-windows=fail
+arrow:arm64-windows=fail
+arrow:arm-uwp=fail
+arrow:x86-windows=fail
 # Requires ATL for ARM64 to be installed in CI
 azure-storage-cpp:arm64-windows=fail
 
