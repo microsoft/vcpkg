@@ -4,8 +4,8 @@ vcpkg_from_github(
     REF apache-arrow-4.0.0
     SHA512 4697a32004d02a519b8a8e899ed3cd981ae3485e6d34071436051080d6c84e25ad0bc568b3e52effe0a9204756da3d6e560a2037df06d2730dccd19c6b4c8027
     HEAD_REF master
-#    PATCHES
-#        all.patch
+    PATCHES
+        all.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -90,9 +90,9 @@ vcpkg_install_cmake()
 
 vcpkg_copy_pdbs()
 
-#if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib)
-#    message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
-#endif()
+if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/arrow_static.lib)
+    message(FATAL_ERROR "Installed lib file should be named 'arrow.lib' via patching the upstream build.")
+endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/arrow)
 
