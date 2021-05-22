@@ -6,6 +6,7 @@ vcpkg_from_git(
     TAG v19.7.0
     PATCHES
         fix-library-can-not-be-found.patch
+        add-namespace.patch
 )
 
 string(COMPARE EQUAL ${VCPKG_LIBRARY_LINKAGE} dynamic PA_BUILD_SHARED)
