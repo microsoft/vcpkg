@@ -12,6 +12,8 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         dont-build-docs.patch
         dont-build-astyle.patch
+        pc-file-libs-private.patch
+        make-geos-config-relocatable.patch
 )
 
 # NOTE: GEOS provides CMake as optional build configuration, it might not be actively
@@ -34,21 +36,24 @@ vcpkg_configure_cmake(
 )
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GEOS)
+vcpkg_fixup_pkgconfig()
 
-if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/geos-config")
-    file(READ "${CURRENT_PACKAGES_DIR}/bin/geos-config" GEOS_CONFIG)
-    string(REGEX REPLACE "(\nprefix=)[^\n]*" [[\1$(CDPATH= cd -- "$(dirname -- "$0")"/../.. && pwd -P)]] GEOS_CONFIG "${GEOS_CONFIG}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/bin/geos-config" "${GEOS_CONFIG}")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    file(RENAME ${CURRENT_PACKAGES_DIR}/bin/geos-config ${CURRENT_PACKAGES_DIR}/share/${PORT}/geos-config)
+function(geos_add_debug_postfix config_file)
+    file(READ "${config_file}" contents)
+    string(REGEX REPLACE "(-lgeos(_c)?)d?([^-_d])" "\\1d\\3" fixed_contents "${contents}")
+    file(WRITE "${config_file}" "${fixed_contents}")
+endfunction()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/geos.pc")
+    geos_add_debug_postfix("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/geos.pc")
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/bin/geos-config)
-    file(READ "${CURRENT_PACKAGES_DIR}/debug/bin/geos-config" GEOS_CONFIG)
-    string(REGEX REPLACE "(\nprefix=)[^\n]*" [[\1$(CDPATH= cd -- "$(dirname -- "$0")"/../.. && pwd -P)]] GEOS_CONFIG "${GEOS_CONFIG}")
-    string(REGEX REPLACE "(-lgeos(_c)?)d?( |\n)" "\\1d\\3" GEOS_CONFIG "${GEOS_CONFIG}")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/debug/bin/geos-config" "${GEOS_CONFIG}")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/bin/geos-config ${CURRENT_PACKAGES_DIR}/share/${PORT}/geos-config-debug)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/geos-config")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/bin/geos-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/geos-config")
+endif()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/geos-config")
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
+    file(RENAME "${CURRENT_PACKAGES_DIR}/debug/bin/geos-config" "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/geos-config")
+    geos_add_debug_postfix("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin/geos-config")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
