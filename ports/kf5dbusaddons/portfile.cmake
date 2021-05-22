@@ -1,15 +1,15 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kdbusaddons
-    REF v5.75.0
-    SHA512 00aa9e821ffc14021bf6f933fc7ad2cd234d86e81cbcc8be8b9b6b5167ede5d7f240e63e361a4a824e4e94b903aaad47386b1185d3482251fadf5bcfda4dcf3f
+    REF v5.81.0
+    SHA512 fce5b646199ee895f2c8ed17382cb4b7f0265a87558ba3b7bb094cbfa92327b8fb910e4af95f1d3793c1908151eefd59783b31fe43c0743ea872632bb78d98f0
     HEAD_REF master
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
+    OPTIONS
         -DBUILD_HTML_DOCS=OFF
         -DBUILD_MAN_DOCS=OFF
         -DBUILD_QTHELP_DOCS=OFF
@@ -21,7 +21,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5DBusAddons)
 
 vcpkg_copy_pdbs()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 elseif(VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin/kquitapp5.exe" "${CURRENT_PACKAGES_DIR}/debug/bin/kquitapp5.exe")

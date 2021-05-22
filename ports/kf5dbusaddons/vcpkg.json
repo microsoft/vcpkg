@@ -1,6 +1,6 @@
 {
   "name": "kf5dbusaddons",
-  "version-string": "5.75.0",
+  "version-string": "5.81.0",
   "description": "Convenience classes for D-Bus",
   "homepage": "https://api.kde.org/frameworks/kdbusaddons/html/index.html",
   "dependencies": [
