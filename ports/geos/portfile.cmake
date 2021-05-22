@@ -66,3 +66,4 @@ endif()
 configure_file("${SOURCE_PATH}/COPYING" "${CURRENT_PACKAGES_DIR}/share/geos/copyright" COPYONLY)
 
 vcpkg_copy_pdbs()
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
