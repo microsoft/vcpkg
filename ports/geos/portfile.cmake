@@ -25,7 +25,7 @@ else()
     set(_CMAKE_EXTRA_OPTIONS "")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
@@ -34,8 +34,8 @@ vcpkg_configure_cmake(
         -DBUILD_BENCHMARKS=OFF
         ${_CMAKE_EXTRA_OPTIONS}
 )
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/GEOS)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/GEOS)
 vcpkg_fixup_pkgconfig()
 
 function(geos_add_debug_postfix config_file)
@@ -57,6 +57,7 @@ if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/bin/geos-config")
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share") # vcpkg-cmake-config quirk, cf. GH-18063
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR NOT VCPKG_TARGET_IS_WINDOWS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
