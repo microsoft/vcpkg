@@ -136,9 +136,9 @@ function(vcpkg_cmake_config_fixup)
         "${debug_share}/*[Cc]onfigVersion.cmake"
         "${debug_share}/*[Cc]onfig-version.cmake"
     )
-    if(NOT unused_files STREQUAL "")
-        file(REMOVE "${unused_files}")
-    endif()
+    foreach(unused_file IN LISTS unused_files)
+        file(REMOVE "${unused_file}")
+    endforeach()
 
     file(GLOB_RECURSE release_targets
         "${release_share}/*-release.cmake"
