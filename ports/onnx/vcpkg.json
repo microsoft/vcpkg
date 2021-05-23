@@ -3,6 +3,7 @@
   "version": "1.9.0",
   "description": "Open standard for machine learning interoperability",
   "homepage": "https://onnx.ai",
+  "supports": "!uwp",
   "dependencies": [
     "protobuf",
     {
