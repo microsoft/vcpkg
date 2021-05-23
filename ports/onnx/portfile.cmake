@@ -7,16 +7,24 @@ vcpkg_from_github(
     SHA512 a3eecc74ce4f22524603fb86367d21c87a143ba27eef93ef4bd2e2868c2cadeb724b84df58a429286e7824adebdeba7fa059095b7ab29df8dcea8777bd7f4101
     PATCHES
         fix-apple.patch
-        # fix-install.patch
+        fix-pybind11.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        pybind11 BUILD_ONNX_PYTHON
+)
+if(NOT VCPKG_TARGET_IS_LINUX AND "pybind11" IN_LIST FEATURES)
+    message(FATAL_ERROR "Feature 'pybind11' is for Linux platform")
+endif()
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
+        ${FEATURE_OPTIONS}
         -DPYTHON_EXECUTABLE=${PYTHON3}
-        -DBUILD_ONNX_PYTHON=ON
         -DONNX_GEN_PB_TYPE_STUBS=ON
         -DONNX_USE_LITE_PROTO=OFF
         -DONNX_BUILD_TESTS=OFF
