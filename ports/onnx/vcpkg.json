@@ -16,7 +16,7 @@
   ],
   "features": {
     "pybind11": {
-      "description": "Build Python binaries (Linux only)"
+      "description": "Build Python binaries"
     }
   }
 }

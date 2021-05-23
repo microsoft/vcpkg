@@ -1,0 +1,38 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 628dcaa..6758666 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -635,7 +635,7 @@ endif()
+ 
+ if (NOT ANDROID AND NOT IOS)
+   # ---[ ONNXIFI wrapper
+-  add_library(onnxifi_wrapper MODULE onnx/onnxifi_wrapper.c)
++  add_library(onnxifi_wrapper onnx/onnxifi_wrapper.c)
+   if(MSVC)
+     add_msvc_runtime_flag(onnxifi_wrapper)
+   endif()
+@@ -658,10 +658,6 @@ if (NOT ANDROID AND NOT IOS)
+       target_compile_definitions(onnxifi_wrapper PRIVATE "ONNXIFI_PUBLIC=__attribute__((__dllexport__))")
+     endif()
+   endif()
+-  if(APPLE)
+-    # By default CMake would use .so suffix on Mac
+-    set_target_properties(onnxifi_wrapper PROPERTIES SUFFIX ".dylib")
+-  endif()
+ endif()
+ 
+ # ---[ ONNXIFI dummy backend
+@@ -712,8 +708,11 @@ install(FILES
+ install(EXPORT ONNXTargets DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/ONNX")
+ install(TARGETS
+   onnx onnx_proto
+-  onnxifi onnxifi_dummy onnxifi_loader
+-  EXPORT ONNXTargets DESTINATION ${CMAKE_INSTALL_LIBDIR})
++  onnxifi onnxifi_loader # onnxifi_dummy
++  EXPORT ONNXTargets
++  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
++  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
++  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
+ 
+ if(NOT ANDROID AND NOT IOS)
+   install(TARGETS onnxifi_wrapper

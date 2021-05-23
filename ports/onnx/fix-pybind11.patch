@@ -1,25 +1,19 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1ff0fd3..d04a390 100644
+index 6758666..e4f4185 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -110,9 +110,9 @@ endif()
+@@ -110,9 +110,7 @@ endif()
  
  # find_package Python has replaced PythonInterp and PythonLibs since cmake 3.12
  # Use the following command in the future; now this is only compatible with the latest pybind11
 -# find_package(Python ${PY_VERSION} COMPONENTS Interpreter Development REQUIRED)
 -find_package(PythonInterp ${PY_VERSION} REQUIRED)
 -find_package(PythonLibs ${PY_VERSION})
-+find_package(Python ${PY_VERSION} COMPONENTS Interpreter Development REQUIRED)
-+# find_package(PythonInterp ${PY_VERSION} REQUIRED)
-+# find_package(PythonLibs ${PY_VERSION})
++find_package(Python ${PY_VERSION} COMPONENTS Interpreter REQUIRED)
  
  if(CMAKE_SYSTEM_NAME STREQUAL "AIX")
    set(CMAKE_NO_SYSTEM_FROM_IMPORTED 1)
-
-index d04a390..e1bfceb 100644
---- a/CMakeLists.txt
-+++ b/CMakeLists.txt
-@@ -441,10 +441,10 @@ if(BUILD_ONNX_PYTHON)
+@@ -441,10 +439,10 @@ if(BUILD_ONNX_PYTHON)
                               $<BUILD_INTERFACE:${ONNX_ROOT}>
                               $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
                               $<INSTALL_INTERFACE:include>
@@ -28,16 +22,7 @@ index d04a390..e1bfceb 100644
  
    # pybind11 is a header only lib
 -  find_package(pybind11 2.2)
-+  find_package(pybind11 2.2 REQUIRED)
++  find_package(pybind11 2.2 CONFIG REQUIRED)
    if(pybind11_FOUND)
      target_include_directories(onnx_cpp2py_export PUBLIC
        ${pybind11_INCLUDE_DIRS})
-@@ -635,7 +635,7 @@ endif()
- 
- if (NOT ANDROID AND NOT IOS)
-   # ---[ ONNXIFI wrapper
--  add_library(onnxifi_wrapper MODULE onnx/onnxifi_wrapper.c)
-+  add_library(onnxifi_wrapper onnx/onnxifi_wrapper.c)
-   if(MSVC)
-     add_msvc_runtime_flag(onnxifi_wrapper)
-   endif()
