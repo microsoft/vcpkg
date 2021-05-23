@@ -1334,6 +1334,13 @@ qt5-x11extras:x86-windows=fail
 qt5-x11extras:x64-windows=fail
 qt5-x11extras:x64-windows-static=fail
 qt5-x11extras:x64-windows-static-md=fail
+# Conflicts with openssl
+quictls:arm64-windows=skip
+quictls:x64-linux=skip
+quictls:x64-osx=skip
+quictls:x64-windows-static=skip
+quictls:x64-windows=skip
+quictls:x86-windows=skip
 quickfix:arm-uwp=fail
 quickfix:arm64-windows=fail
 quickfix:x64-uwp=fail
