@@ -35,6 +35,7 @@ vcpkg_configure_make(
         --disable-libdane
         --with-included-unistring
         --without-p11-kit
+        --without-tpm
         ${OPENSSL_COMPATIBILITY}
         "LDFLAGS=${LDFLAGS}"
 )
