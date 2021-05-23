@@ -34,6 +34,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${FEATURE_OPTIONS}
+        -DPython_EXECUTABLE=${PYTHON3}
         -DPYTHON_EXECUTABLE=${PYTHON3}
         -DONNX_GEN_PB_TYPE_STUBS=ON
         -DONNX_USE_LITE_PROTO=OFF
@@ -64,9 +65,23 @@ file(INSTALL ${CODEGEN_DIR}/onnx-data.proto
              ${CODEGEN_DIR}/onnx-operators-ml.proto3
      DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnx
 )
+if("pybind11" IN_LIST FEATURES)
+    file(INSTALL ${CODEGEN_DIR}/onnx_data_pb.py
+                 ${CODEGEN_DIR}/onnx_data_pb2.py
+                 ${CODEGEN_DIR}/onnx_ml_pb2.py
+                 ${CODEGEN_DIR}/onnx_operators_ml_pb2.py
+                 ${CODEGEN_DIR}/onnx_operators_pb.py
+                 ${CODEGEN_DIR}/onnx_pb.py
+         DESTINATION ${CURRENT_PACKAGES_DIR}/include/onnx
+    )
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
                     ${CURRENT_PACKAGES_DIR}/debug/share
+                    ${CURRENT_PACKAGES_DIR}/include/onnx/onnx_ml
+                    ${CURRENT_PACKAGES_DIR}/include/onnx/onnx_data
+                    ${CURRENT_PACKAGES_DIR}/include/onnx/onnx_operators_ml
+                    ${CURRENT_PACKAGES_DIR}/include/onnx/onnx_cpp2py_export
                     # the others are empty
                     ${CURRENT_PACKAGES_DIR}/include/onnx/backend
                     ${CURRENT_PACKAGES_DIR}/include/onnx/tools
@@ -87,11 +102,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include
                     ${CURRENT_PACKAGES_DIR}/include/onnx/defs/rnn
                     ${CURRENT_PACKAGES_DIR}/include/onnx/defs/nn
 )
-if(NOT "pybind11" IN_LIST FEATURES)
-    # these are for python scripts
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/onnx/onnx_ml
-                        ${CURRENT_PACKAGES_DIR}/include/onnx/onnx_data
-                        ${CURRENT_PACKAGES_DIR}/include/onnx/onnx_operators_ml
-                        ${CURRENT_PACKAGES_DIR}/include/onnx/onnx_cpp2py_export
-    )
-endif()
