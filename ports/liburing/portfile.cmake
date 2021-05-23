@@ -35,5 +35,5 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/liburing.a
                 ${CURRENT_PACKAGES_DIR}/lib/liburing.a
     )
-else()
+endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
