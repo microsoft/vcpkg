@@ -103,6 +103,8 @@ set(_csc_PROJECT_PATH ffmpeg)
 
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
 
+set(FFMPEG_PKGCONFIG_MODULES libavutil)
+
 if("nonfree" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-nonfree")
 endif()
@@ -136,6 +138,7 @@ endif()
 if("avcodec" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avcodec")
     set(ENABLE_AVCODEC ON)
+    list(APPEND FFMPEG_PKGCONFIG_MODULES libavcodec)
 else()
     set(OPTIONS "${OPTIONS} --disable-avcodec")
     set(ENABLE_AVCODEC OFF)
@@ -144,6 +147,7 @@ endif()
 if("avdevice" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avdevice")
     set(ENABLE_AVDEVICE ON)
+    list(APPEND FFMPEG_PKGCONFIG_MODULES libavdevice)
 else()
     set(OPTIONS "${OPTIONS} --disable-avdevice")
     set(ENABLE_AVDEVICE OFF)
@@ -152,6 +156,7 @@ endif()
 if("avformat" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avformat")
     set(ENABLE_AVFORMAT ON)
+    list(APPEND FFMPEG_PKGCONFIG_MODULES libavformat)
 else()
     set(OPTIONS "${OPTIONS} --disable-avformat")
     set(ENABLE_AVFORMAT OFF)
@@ -160,6 +165,7 @@ endif()
 if("avfilter" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avfilter")
     set(ENABLE_AVFILTER ON)
+    list(APPEND FFMPEG_PKGCONFIG_MODULES libavfilter)
 else()
     set(OPTIONS "${OPTIONS} --disable-avfilter")
     set(ENABLE_AVFILTER OFF)
@@ -168,6 +174,7 @@ endif()
 if("postproc" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-postproc")
     set(ENABLE_POSTPROC ON)
+    list(APPEND FFMPEG_PKGCONFIG_MODULES libpostproc)
 else()
     set(OPTIONS "${OPTIONS} --disable-postproc")
     set(ENABLE_POSTPROC OFF)
@@ -176,6 +183,7 @@ endif()
 if("swresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-swresample")
     set(ENABLE_SWRESAMPLE ON)
+    list(APPEND FFMPEG_PKGCONFIG_MODULES libswresample)
 else()
     set(OPTIONS "${OPTIONS} --disable-swresample")
     set(ENABLE_SWRESAMPLE OFF)
@@ -184,6 +192,7 @@ endif()
 if("swscale" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-swscale")
     set(ENABLE_SWSCALE ON)
+    list(APPEND FFMPEG_PKGCONFIG_MODULES libswscale)
 else()
     set(OPTIONS "${OPTIONS} --disable-swscale")
     set(ENABLE_SWSCALE OFF)
@@ -193,6 +202,7 @@ set(ENABLE_AVRESAMPLE OFF)
 if("avresample" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-avresample")
     set(ENABLE_AVRESAMPLE ON)
+    list(APPEND FFMPEG_PKGCONFIG_MODULES libavresample)
 endif()
 
 set(STATIC_LINKAGE OFF)
@@ -579,41 +589,46 @@ endif()
 vcpkg_copy_pdbs()
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    # Translate cygpath to local path
-    set(CYGPATH_CMD "${MSYS_ROOT}/usr/bin/cygpath.exe" -w)
-
-    foreach(PKGCONFIG_PATH "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig" "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-        file(GLOB PKGCONFIG_FILES "${PKGCONFIG_PATH}/*.pc")
-        foreach(PKGCONFIG_FILE IN LISTS PKGCONFIG_FILES)
+    foreach(_debug "" "/debug")
+        foreach(PKGCONFIG_MODULE IN LISTS FFMPEG_PKGCONFIG_MODULES)
+            set(PKGCONFIG_FILE "${CURRENT_PACKAGES_DIR}${_debug}/lib/pkgconfig/${PKGCONFIG_MODULE}.pc")
+            # remove redundant cygwin style -libpath entries
+            execute_process(
+                COMMAND "${MSYS_ROOT}/usr/bin/cygpath.exe" -u "${CURRENT_INSTALLED_DIR}"
+                OUTPUT_VARIABLE CYG_INSTALLED_DIR
+                OUTPUT_STRIP_TRAILING_WHITESPACE
+            )
+            vcpkg_replace_string("${PKGCONFIG_FILE}" "-libpath:${CYG_INSTALLED_DIR}${_debug}/lib/pkgconfig/../../lib " "")
+            # transform libdir, includedir, and prefix paths from cygwin style to windows style
             file(READ "${PKGCONFIG_FILE}" PKGCONFIG_CONTENT)
             foreach(PATH_NAME prefix libdir includedir)
-                string(REGEX MATCH "${PATH_NAME}=[^\n]*\n" PATH_VALUE "${PKGCONFIG_CONTENT}")
+                string(REGEX MATCH "${PATH_NAME}=[^\n]*" PATH_VALUE "${PKGCONFIG_CONTENT}")
                 string(REPLACE "${PATH_NAME}=" "" PATH_VALUE "${PATH_VALUE}")
-                string(REPLACE "\n" "" PATH_VALUE "${PATH_VALUE}")
-                set("${PATH_NAME}_cygpath" "${PATH_VALUE}")
+                if(NOT PATH_VALUE)
+                    message(FATAL_ERROR "failed to find pkgconfig variable ${PATH_NAME}")
+                endif()
+                execute_process(
+                    COMMAND "${MSYS_ROOT}/usr/bin/cygpath.exe" -w "${PATH_VALUE}"
+                    OUTPUT_VARIABLE FIXED_PATH
+                    OUTPUT_STRIP_TRAILING_WHITESPACE
+                )
+                file(TO_CMAKE_PATH "${FIXED_PATH}" FIXED_PATH)
+                vcpkg_replace_string("${PKGCONFIG_FILE}" "${PATH_NAME}=${PATH_VALUE}" "${PATH_NAME}=${FIXED_PATH}")
             endforeach()
-            execute_process(
-                COMMAND ${CYGPATH_CMD} "${prefix_cygpath}"
-                OUTPUT_VARIABLE FIXED_PREFIX_PATH
-            )
-            string(REPLACE "\n" "" FIXED_PREFIX_PATH "${FIXED_PREFIX_PATH}")
-            file(TO_CMAKE_PATH "${FIXED_PREFIX_PATH}" FIXED_PREFIX_PATH)
-            execute_process(
-                COMMAND ${CYGPATH_CMD} "${libdir_cygpath}"
-                OUTPUT_VARIABLE FIXED_LIBDIR_PATH
-            )
-            string(REPLACE "\n" "" FIXED_LIBDIR_PATH ${FIXED_LIBDIR_PATH})
-            file(TO_CMAKE_PATH ${FIXED_LIBDIR_PATH} FIXED_LIBDIR_PATH)
-            execute_process(
-                COMMAND ${CYGPATH_CMD} "${includedir_cygpath}"
-                OUTPUT_VARIABLE FIXED_INCLUDE_PATH
-            )
-            string(REPLACE "\n" "" FIXED_INCLUDE_PATH "${FIXED_INCLUDE_PATH}")
-            file(TO_CMAKE_PATH ${FIXED_INCLUDE_PATH} FIXED_INCLUDE_PATH)
-
-            vcpkg_replace_string("${PKGCONFIG_FILE}" "${prefix_cygpath}" "${FIXED_PREFIX_PATH}")
-            vcpkg_replace_string("${PKGCONFIG_FILE}" "${libdir_cygpath}" "${FIXED_LIBDIR_PATH}")
-            vcpkg_replace_string("${PKGCONFIG_FILE}" "${includedir_cygpath}" "${FIXED_INCLUDE_PATH}")
+            # list libraries with -l flag (so pkgconf knows they are libraries and not just linker flags)
+            foreach(LIBS_ENTRY Libs Libs.private)
+                string(REGEX MATCH "${LIBS_ENTRY}: [^\n]*" LIBS_VALUE "${PKGCONFIG_CONTENT}")
+                if(NOT LIBS_VALUE)
+                    message(FATAL_ERROR "failed to find pkgconfig entry ${LIBS_ENTRY}")
+                endif()
+                string(REPLACE "${LIBS_ENTRY}: " "" LIBS_VALUE "${LIBS_VALUE}")
+                if(LIBS_VALUE)
+                    set(LIBS_VALUE_OLD "${LIBS_VALUE}")
+                    string(REGEX REPLACE "([^ ]+)[.]lib" "-l\\1" LIBS_VALUE "${LIBS_VALUE}")
+                    set(LIBS_VALUE_NEW "${LIBS_VALUE}")
+                    vcpkg_replace_string("${PKGCONFIG_FILE}" "${LIBS_ENTRY}: ${LIBS_VALUE_OLD}" "${LIBS_ENTRY}: ${LIBS_VALUE_NEW}")
+                endif()
+            endforeach()
         endforeach()
     endforeach()
 endif()
@@ -622,55 +637,38 @@ vcpkg_fixup_pkgconfig()
 
 # Handle dependencies
 
-function(append_dependencies_from_config_mak out)
-    cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "FILE;CONFIG_VARIABLE" "")
-    file(STRINGS "${arg_FILE}" contents REGEX "^${arg_CONFIG_VARIABLE}=.*" LIMIT_COUNT 1)
-    string(REGEX REPLACE "^${arg_CONFIG_VARIABLE}=" "" contents "${contents}")
-    string(REGEX REPLACE "[ ]+" ";" contents "${contents}")
+x_vcpkg_pkgconfig_get_modules(PREFIX FFMPEG_PKGCONFIG MODULES ${FFMPEG_PKGCONFIG_MODULES} LIBS)
+message("FFMPEG_PKGCONFIG_LIBS_RELEASE ${FFMPEG_PKGCONFIG_LIBS_RELEASE}")
+message("FFMPEG_PKGCONFIG_LIBS_DEBUG   ${FFMPEG_PKGCONFIG_LIBS_DEBUG}")
+
+function(append_dependencies_from_libs out)
+    cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "LIBS" "")
+    string(REGEX REPLACE "[ ]+" ";" contents "${arg_LIBS}")
     list(FILTER contents EXCLUDE REGEX "^-framework$")
     list(FILTER contents EXCLUDE REGEX "^-L.+")
     list(FILTER contents EXCLUDE REGEX "^-libpath:.+")
-    list(TRANSFORM contents REPLACE ".lib$" "")
+    list(TRANSFORM contents REPLACE "^-Wl,-framework," "-l")
+    list(FILTER contents INCLUDE REGEX "^-l.+")
     list(TRANSFORM contents REPLACE "^-l" "")
-    list(TRANSFORM contents REPLACE "^-Wl,-framework," "")
-    list(FILTER contents EXCLUDE REGEX "^-Wl,.+")
+    list(FILTER contents EXCLUDE REGEX "^avresample$")
+    list(FILTER contents EXCLUDE REGEX "^avutil$")
+    list(FILTER contents EXCLUDE REGEX "^avcodec$")
+    list(FILTER contents EXCLUDE REGEX "^avdevice$")
+    list(FILTER contents EXCLUDE REGEX "^avformat$")
+    list(FILTER contents EXCLUDE REGEX "^postproc$")
+    list(FILTER contents EXCLUDE REGEX "^swresample$")
+    list(FILTER contents EXCLUDE REGEX "^swscale$")
+    if(VCPKG_TARGET_IS_WINDOWS)
+        list(TRANSFORM contents TOLOWER)
+    endif()
     if(contents)
         list(APPEND "${out}" "${contents}")
         set("${out}" "${${out}}" PARENT_SCOPE)
     endif()
 endfunction()
 
-macro(feature_list feature)
-    if(${feature} IN_LIST FEATURES)
-        list(${ARGN})
-    endif()
-endmacro()
-
-# note: library order matters on linux, so dependent libraries first
-feature_list("avresample" APPEND config_variables "EXTRALIBS-avresample")
-feature_list("swscale"    APPEND config_variables "EXTRALIBS-swscale")
-feature_list("swresample" APPEND config_variables "EXTRALIBS-swresample")
-feature_list("postproc"   APPEND config_variables "EXTRALIBS-postproc")
-feature_list("avdevice"   APPEND config_variables "EXTRALIBS-avdevice")
-feature_list("avformat"   APPEND config_variables "EXTRALIBS-avformat")
-feature_list("avfilter"   APPEND config_variables "EXTRALIBS-avfilter")
-feature_list("avcodec"    APPEND config_variables "EXTRALIBS-avcodec")
-list(APPEND config_variables "EXTRALIBS-avutil;EXTRALIBS")
-
-foreach(config_variable ${config_variables})
-    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
-        append_dependencies_from_config_mak(FFMPEG_DEPENDENCIES_RELEASE
-            FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/ffbuild/config.mak"
-            CONFIG_VARIABLE "${config_variable}"
-        )
-    endif()
-    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
-        append_dependencies_from_config_mak(FFMPEG_DEPENDENCIES_DEBUG
-            FILE "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/ffbuild/config.mak"
-            CONFIG_VARIABLE "${config_variable}"
-        )
-    endif()
-endforeach()
+append_dependencies_from_libs(FFMPEG_DEPENDENCIES_RELEASE LIBS "${FFMPEG_PKGCONFIG_LIBS_RELEASE}")
+append_dependencies_from_libs(FFMPEG_DEPENDENCIES_DEBUG   LIBS "${FFMPEG_PKGCONFIG_LIBS_DEBUG}")
 
 # must remove duplicates from the front to respect link order so reverse first
 list(REVERSE FFMPEG_DEPENDENCIES_RELEASE)
@@ -679,6 +677,9 @@ list(REMOVE_DUPLICATES FFMPEG_DEPENDENCIES_RELEASE)
 list(REMOVE_DUPLICATES FFMPEG_DEPENDENCIES_DEBUG)
 list(REVERSE FFMPEG_DEPENDENCIES_RELEASE)
 list(REVERSE FFMPEG_DEPENDENCIES_DEBUG)
+
+message("FFMPEG_DEPENDENCIES_RELEASE ${FFMPEG_DEPENDENCIES_RELEASE}")
+message("FFMPEG_DEPENDENCIES_DEBUG   ${FFMPEG_DEPENDENCIES_DEBUG}")
 
 # Handle version strings
 

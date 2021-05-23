@@ -16,6 +16,12 @@
     "swresample",
     "swscale"
   ],
+  "dependencies": [
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    }
+  ],
   "features": {
     "all": {
       "description": "Build with all allowed dependencies selected that are compatible with the lgpl license",
