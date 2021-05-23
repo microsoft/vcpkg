@@ -17,6 +17,12 @@ vcpkg_configure_make(
     COPY_SOURCE
     NO_DEBUG
 )
+# note: {SOURCE_PATH}/src/Makefile makes liburing.so from liburing.a.
+#   For static, disable .so using the environment variable ENABLE_SHARED.
+#   For dynamic, remove intermediate file liburing.a when install is finished.
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(ENV{ENABLE_SHARED} "0")
+endif()
 vcpkg_install_make()
 vcpkg_fixup_pkgconfig()
 
@@ -25,17 +31,9 @@ file(INSTALL ${SOURCE_PATH}/LICENSE
 file(INSTALL ${CURRENT_PORT_DIR}/usage 
      DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/liburing.a
                 ${CURRENT_PACKAGES_DIR}/lib/liburing.a
     )
 else()
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/lib/liburing.so
-                ${CURRENT_PACKAGES_DIR}/debug/lib/liburing.so.2
-                ${CURRENT_PACKAGES_DIR}/debug/lib/liburing.so.2.0.0
-                ${CURRENT_PACKAGES_DIR}/lib/liburing.so
-                ${CURRENT_PACKAGES_DIR}/lib/liburing.so.2
-                ${CURRENT_PACKAGES_DIR}/lib/liburing.so.2.0.0
-    )
-endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/man)
