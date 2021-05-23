@@ -3,6 +3,7 @@
   "version": "3.5.1",
   "description": "SIMD Library for Evaluating Elementary Functions, vectorized libm and DFT",
   "homepage": "https://sleef.org/",
+  "supports": "!(x86 | arm | uwp)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

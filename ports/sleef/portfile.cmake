@@ -1,3 +1,8 @@
+# x86: Reports ICE(Internal Compiler Error) for x86-windows/release.
+#      see ${SOURCE_PATH}/src/libm/sleefsimddp.c
+# uwp: codegen fails
+vcpkg_fail_port_install(ON_ARCH "arm" "x86" ON_TARGET "uwp")
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO shibatch/sleef
@@ -6,12 +11,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        -DBUILD_SHARED_LIBS=${BUILD_SHARED}
         -DBUILD_LIBM=ON
         -DBUILD_DFT=ON
         -DBUILD_QUAD=ON
