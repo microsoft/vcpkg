@@ -6362,7 +6362,7 @@
     },
     "vcpkg-pkgconfig-get-modules": {
       "baseline": "2021-04-02",
-      "port-version": 0
+      "port-version": 1
     },
     "vectorclass": {
       "baseline": "2.00.01",
