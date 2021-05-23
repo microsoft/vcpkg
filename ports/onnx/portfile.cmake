@@ -31,7 +31,7 @@ vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DPYTHON_EXECUTABLE=${PYTHON3}
+        -DPython_EXECUTABLE=${PYTHON3}
         -DONNX_GEN_PB_TYPE_STUBS=ON
         -DONNX_USE_LITE_PROTO=OFF
         -DONNX_BUILD_TESTS=OFF
