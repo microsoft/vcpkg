@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "'${PORT}' is for Linux" ON_TARGET "windows" "uwp" "osx" "ios" "android")
+vcpkg_fail_port_install(ON_TARGET "windows" "uwp" "osx" "ios" "android")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
