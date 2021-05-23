@@ -638,8 +638,6 @@ vcpkg_fixup_pkgconfig()
 # Handle dependencies
 
 x_vcpkg_pkgconfig_get_modules(PREFIX FFMPEG_PKGCONFIG MODULES ${FFMPEG_PKGCONFIG_MODULES} LIBS)
-message("FFMPEG_PKGCONFIG_LIBS_RELEASE ${FFMPEG_PKGCONFIG_LIBS_RELEASE}")
-message("FFMPEG_PKGCONFIG_LIBS_DEBUG   ${FFMPEG_PKGCONFIG_LIBS_DEBUG}")
 
 function(append_dependencies_from_libs out)
     cmake_parse_arguments(PARSE_ARGV 1 "arg" "" "LIBS" "")
@@ -678,8 +676,8 @@ list(REMOVE_DUPLICATES FFMPEG_DEPENDENCIES_DEBUG)
 list(REVERSE FFMPEG_DEPENDENCIES_RELEASE)
 list(REVERSE FFMPEG_DEPENDENCIES_DEBUG)
 
-message("FFMPEG_DEPENDENCIES_RELEASE ${FFMPEG_DEPENDENCIES_RELEASE}")
-message("FFMPEG_DEPENDENCIES_DEBUG   ${FFMPEG_DEPENDENCIES_DEBUG}")
+message("Dependencies (release): ${FFMPEG_DEPENDENCIES_RELEASE}")
+message("Dependencies (debug):   ${FFMPEG_DEPENDENCIES_DEBUG}")
 
 # Handle version strings
 
