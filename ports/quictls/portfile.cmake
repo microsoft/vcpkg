@@ -16,9 +16,8 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPENSSL_SHARED shared)
 endif()
 
-# Option: feature / algorithms
+# Option: feature / algorithms from https://github.com/microsoft/msquic
 list(APPEND CONFIGURE_OPTIONS
-    # from 'microsoft/msquic'
     enable-tls1_3 no-makedepend no-dgram no-ssl3 no-psk no-srp
     no-zlib no-egd no-idea no-rc5 no-rc4 no-afalgeng
     no-comp no-cms no-ct no-srp no-srtp no-ts no-gost no-dso no-ec2m

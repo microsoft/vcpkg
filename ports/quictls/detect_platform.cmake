@@ -1,8 +1,9 @@
 #
 # References
 #   - ${VCPKG_ROOT}/scripts/cmake/vcpkg_common_definitions.cmake
-#   - ${SOURCE_PATH}/Configuration/README-design.md
-#   - ${SOURCE_PATH}/Configuration/10-main.conf
+#   - https://github.com/quictls/openssl/tree/openssl-3.0.0-alpha16+quic
+#       - ${SOURCE_PATH}/Configuration/README-design.md
+#       - ${SOURCE_PATH}/Configuration/10-main.conf
 #
 if(VCPKG_TARGET_IS_ANDROID)
     # ${SOURCE_PATH}/Configuration/15-android.conf
