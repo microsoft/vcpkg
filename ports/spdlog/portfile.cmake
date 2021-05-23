@@ -9,8 +9,17 @@ vcpkg_from_github(
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-	benchmark SPDLOG_BUILD_BENCH
+        benchmark       SPDLOG_BUILD_BENCH
+        wchar           SPDLOG_WCHAR_SUPPORT
+        wchar-filenames SPDLOG_WCHAR_FILENAMES
 )
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    if("wchar" IN_LIST FEATURES)
+        message(FATAL_ERROR "Feature 'wchar' is for Windows.")
+    elseif("wchar-filenames" IN_LIST FEATURES)
+        message(FATAL_ERROR "Feature 'wchar-filenames' is for Windows.")
+    endif()
+endif()
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SPDLOG_BUILD_SHARED)
 
@@ -21,8 +30,6 @@ vcpkg_cmake_configure(
         -DSPDLOG_FMT_EXTERNAL=ON
         -DSPDLOG_INSTALL=ON
         -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
-        -DSPDLOG_WCHAR_SUPPORT=${VCPKG_TARGET_IS_WINDOWS}
-        -DSPDLOG_WCHAR_FILENAMES=OFF
 )
 
 vcpkg_cmake_install()
