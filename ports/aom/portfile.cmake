@@ -17,6 +17,7 @@ vcpkg_from_git(
     TAG v3.1.0
     PATCHES
         aom-rename-static.diff
+        # Can be dropped when https://bugs.chromium.org/p/aomedia/issues/detail?id=3029 is merged into the upstream
         aom-install.diff
 )
 
