@@ -6686,7 +6686,7 @@
     },
     "zstr": {
       "baseline": "1.0.4",
-      "port-version": 0
+      "port-version": 1
     },
     "zxing-cpp": {
       "baseline": "2020-12-2",
