@@ -24,9 +24,7 @@
     "csv",
     "dataset",
     "filesystem",
-    "jemalloc",
     "json",
-    "mimalloc",
     "parquet"
   ],
   "features": {
