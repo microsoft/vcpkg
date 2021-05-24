@@ -9,7 +9,7 @@ We explicitly ONLY collect information from invocations of the tool itself; we d
 
 ## How to opt out
 
-The vcpkg telemetry feature is enabled by default. In order to opt-out of data collection, you can re-run the boostrap script with the following flag, for Windows and Linux/OSX, respectively:
+The vcpkg telemetry feature is enabled by default. In order to opt-out of data collection, you can re-run the bootstrap script with the following flag, for Windows and Linux/OSX, respectively:
 
 ```PS> .\bootstrap-vcpkg.bat -disableMetrics```
 

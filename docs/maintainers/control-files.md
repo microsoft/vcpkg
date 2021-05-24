@@ -89,7 +89,7 @@ Description: C++ header-only JSON library
 Description: Mosquitto is an open source message broker that implements the MQ Telemetry Transport protocol versions 3.1 and 3.1.1.
   MQTT provides a lightweight method of carrying out messaging using a publish/subscribe model. This makes it suitable for "machine
   to machine" messaging such as with low power sensors or mobile devices such as phones, embedded computers or microcontrollers like the Arduino.
-````
+```
 
 #### Homepage
 The URL of the homepage for the library where a user is able to find additional documentation or the original source code.
@@ -106,7 +106,7 @@ Vcpkg does not distinguish between build-only dependencies and runtime dependenc
 
 *For example: websocketpp is a header only library, and thus does not require any dependencies at install time. However, downstream users need boost and openssl to make use of the library. Therefore, websocketpp lists boost and openssl as dependencies*
 
-If the port is dependent on optional features of another library those can be specified using the `portname[featurelist]` syntax. If the port does not require any features from the dependency, this should be specifed as `portname[core]`.
+If the port is dependent on optional features of another library those can be specified using the `portname[featurelist]` syntax. If the port does not require any features from the dependency, this should be specified as `portname[core]`.
 
 Dependencies can be filtered based on the target triplet to support differing requirements. These filters use the same syntax as the Supports field below and are surrounded in parentheses following the portname and feature list.
 
