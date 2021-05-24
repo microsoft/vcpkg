@@ -3134,7 +3134,7 @@
     },
     "libgnutls": {
       "baseline": "3.6.15",
-      "port-version": 1
+      "port-version": 2
     },
     "libgo": {
       "baseline": "3.1-1",
