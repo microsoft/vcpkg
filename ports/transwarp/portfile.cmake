@@ -12,5 +12,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
