@@ -19,7 +19,6 @@ set(FL_DEFAULT_VCPKG_CMAKE_FLAGS
   -DFL_BUILD_EXAMPLES=OFF
   -DFL_BACKEND=CPU # this port is CPU-backend only
   -DFL_BUILD_STANDALONE=OFF
-  -DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT} # for CMake configs/targets
 )
 
 # Determine which components to build via specified feature
@@ -41,6 +40,10 @@ vcpkg_configure_cmake(
     OPTIONS 
         ${FL_DEFAULT_VCPKG_CMAKE_FLAGS} 
         ${FEATURE_OPTIONS}
+    OPTIONS_DEBUG
+        -DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/debug/share/${PORT}
+    OPTIONS_RELEASE
+        -DFL_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT}
 )
 vcpkg_install_cmake()
 
