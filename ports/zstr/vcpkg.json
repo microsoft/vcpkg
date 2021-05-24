@@ -4,5 +4,7 @@
   "port-version": 1,
   "description": "This C++ header-only library enables the use of C++ standard iostreams to access ZLib-compressed streams.",
   "homepage": "https://github.com/mateidavid/zstr",
-  "dependencies": [ "zlib" ]
+  "dependencies": [
+    "zlib"
+  ]
 }
