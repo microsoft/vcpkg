@@ -6,7 +6,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         no-install-deps.patch
-        config-pkg-location.patch
         use_targets.patch
         fix-dependency-libmath.patch
         fix-linkage-error.patch
@@ -23,10 +22,9 @@ else()
     set(NC_USE_STATIC_CRT OFF)
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
-    PREFER_NINJA
     OPTIONS
         -DBUILD_UTILITIES=OFF
         -DBUILD_TESTING=OFF
@@ -37,11 +35,10 @@ vcpkg_configure_cmake(
         -DENABLE_DAP_REMOTE_TESTS=OFF
         -DDISABLE_INSTALL_DEPENDENCIES=ON
         -DNC_USE_STATIC_CRT=${NC_USE_STATIC_CRT}
-        -DConfigPackageLocation=share/netcdf
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/netcdf TARGET_PATH share/netcdf)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "netcdf" CONFIG_PATH "lib/cmake/netCDF")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
