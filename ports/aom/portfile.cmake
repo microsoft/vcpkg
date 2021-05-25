@@ -23,7 +23,6 @@ vcpkg_from_git(
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DENABLE_DOCS=OFF
         -DENABLE_EXAMPLES=OFF
