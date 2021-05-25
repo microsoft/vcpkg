@@ -1,0 +1,28 @@
+{
+  "name": "gloo",
+  "version-string": "20201203",
+  "description": "Collective communications library with various primitives for multi-machine training.",
+  "homepage": "https://github.com/facebookincubator/gloo",
+  "supports": "x64 & linux",
+  "features": {
+    "cuda": {
+      "description": "for CUDA aware algorithms",
+      "dependencies": [
+        "cuda",
+        "nccl"
+      ]
+    },
+    "mpi": {
+      "description": "for coordinating machine rendezvous through MPI",
+      "dependencies": [
+        "openmpi"
+      ]
+    },
+    "redis": {
+      "description": "for coordinating machine rendezvous through Redis",
+      "dependencies": [
+        "hiredis"
+      ]
+    }
+  }
+}

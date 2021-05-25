@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 24be873..3b916d7 100644
+index 4c7e6901..a433b7da 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -136,7 +136,7 @@ find_package(Drawstuff QUIET)
@@ -21,9 +21,9 @@ index 24be873..3b916d7 100644
  
  # ROS installs fcl in /usr. In /usr/include/fcl/config.h it says octomap was
  # enabled. Octomap is installed in /opt/ros/${ROS_DISTRO}/include (most
-@@ -199,7 +198,7 @@ set(OMPLAPP_LIBRARIES
-     ${Boost_FILESYSTEM_LIBRARY}
-     ${Boost_SYSTEM_LIBRARY}
+@@ -195,7 +194,7 @@ set(OMPLAPP_MODULE_LIBRARIES
+     ${FCL_LIBRARIES})
+ set(OMPLAPP_LIBRARIES
      ${OPENGL_LIBRARIES}
 -    ${ASSIMP_LIBRARIES}
 +    assimp::assimp

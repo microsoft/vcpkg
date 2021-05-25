@@ -1,0 +1,62 @@
+{
+  "name": "ixwebsocket",
+  "version-semver": "11.2.6",
+  "description": "Lightweight WebSocket Client and Server + HTTP Client and Server",
+  "homepage": "https://github.com/machinezone/IXWebSocket",
+  "dependencies": [
+    "zlib"
+  ],
+  "default-features": [
+    "ssl"
+  ],
+  "features": {
+    "mbedtls": {
+      "description": "SSL support (mbedTLS)",
+      "dependencies": [
+        "mbedtls"
+      ]
+    },
+    "openssl": {
+      "description": "SSL support (OpenSSL)",
+      "dependencies": [
+        "openssl"
+      ]
+    },
+    "sectransp": {
+      "description": "SSL support (sectransp)"
+    },
+    "ssl": {
+      "description": "Default SSL backend",
+      "dependencies": [
+        {
+          "name": "ixwebsocket",
+          "features": [
+            "sectransp"
+          ],
+          "platform": "osx"
+        },
+        {
+          "name": "ixwebsocket",
+          "features": [
+            "mbedtls"
+          ],
+          "platform": "windows"
+        },
+        {
+          "name": "ixwebsocket",
+          "features": [
+            "mbedtls"
+          ],
+          "platform": "windows & uwp"
+        },
+        {
+          "name": "ixwebsocket",
+          "features": [
+            "openssl"
+          ],
+          "platform": "!uwp & !windows & !osx"
+        }
+      ]
+    }
+  }
+}

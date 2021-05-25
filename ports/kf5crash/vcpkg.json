@@ -1,0 +1,16 @@
+{
+  "name": "kf5crash",
+  "version": "5.81.0",
+  "description": "KCrash provides support for intercepting and handling application crashes.",
+  "homepage": "https://api.kde.org/frameworks/kcrash/html/index.html",
+  "supports": "linux",
+  "dependencies": [
+    "ecm",
+    "kf5coreaddons",
+    "kf5windowsystem",
+    {
+      "name": "qt5-x11extras",
+      "platform": "linux"
+    }
+  ]
+}

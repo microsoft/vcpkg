@@ -1,0 +1,11 @@
+{
+  "name": "boost-multi-array",
+  "version-string": "1.75.0",
+  "description": "Boost multi_array module",
+  "homepage": "https://github.com/boostorg/multi_array",
+  "dependencies": [
+    "boost-compatibility",
+    "boost-config",
+    "boost-vcpkg-helpers"
+  ]
+}

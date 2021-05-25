@@ -1,11 +1,11 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
 
-set(VERSION 4.8)
+set(VERSION 4.9.1)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.antlr.org/download/antlr4-cpp-runtime-${VERSION}-source.zip"
     FILENAME "antlr4-cpp-runtime-${VERSION}-source.zip"
-    SHA512 df76a724e8acf29018ad122d909e1d43e7c8842e1c0df8022a3e8c840cb2b99de49cc148f75fef519b65ece9bd27b92cf0067c9099b664c127e80559c6492322
+    SHA512 fe33005f73f8d408fcea8ebab62c0def119bbe0c075f04a66404d0df258126eb6caf0a8bbac34d5c4c9e79d4aa8896f32698a560d4be7d71a32dcc3457245cee
 )
 
 # license not exist in antlr folder.
@@ -20,9 +20,11 @@ vcpkg_extract_source_archive_ex(
     ARCHIVE ${ARCHIVE}
     NO_REMOVE_ONE_LEVEL
     REF ${VERSION}
-    PATCHES fixed_build.patch
-            uuid_discovery_fix.patch
-            export_guid.patch
+    PATCHES 
+        fixed_build.patch
+        uuid_discovery_fix.patch
+        export_guid.patch
+        fix_utfcpp_dependency.patch
 )
 
 vcpkg_configure_cmake(
@@ -78,12 +80,6 @@ else()
     endif()
 endif()
 
-file(GLOB HDRS LIST_DIRECTORIES true ${CURRENT_PACKAGES_DIR}/include/antlr4-runtime/*)
-file(COPY ${HDRS} DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/antlr4-runtime)
-
 vcpkg_copy_pdbs()
 
 file(INSTALL ${LICENSE} DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
-message(STATUS "Installing done")

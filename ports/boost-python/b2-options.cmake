@@ -21,3 +21,8 @@ string(REPLACE ";" "," BUILD_PYTHON_VERSIONS "${BUILD_PYTHON_VERSIONS}")
 list(APPEND B2_OPTIONS
     python=${BUILD_PYTHON_VERSIONS}
 )
+if(VCPKG_CXX_FLAGS_DEBUG MATCHES "BOOST_DEBUG_PYTHON")
+    list(APPEND B2_OPTIONS_DBG
+        python-debugging=on
+    )
+endif()

@@ -1,6 +1,8 @@
 # Vcpkg and Android
 
-Android is not officialy supported, and there are no official android triplets at the moment.
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/android.md).**
+
+Android is not officially supported, and there are no official android triplets at the moment.
 
 However, some packages can compile to Android, and the situation is improving: see the list of [PR related to Android](https://github.com/Microsoft/vcpkg/pulls?q=+android+).
 
@@ -93,6 +95,98 @@ cd $VCPKG_ROOT
 ./vcpkg install jsoncpp:x64-android
 ````
 
+### Using Vulkan SDK
+
+Vcpkg has a [`vulkan` package](https://github.com/microsoft/vcpkg/blob/master/ports/vulkan/portfile.cmake) which allows you to `find_package(Vulkan)`. To use it you have to provide `VULKAN_SDK` environment variable.
+
+```bash
+export VULKAN_SDK=/usr/local
+./vcpkg install vulkan
+```
+
+NDK already contains [Vulkan](https://developer.android.com/ndk/guides/graphics/getting-started) headers and `libvulkan.so` binaries for each of its architecture.  
+To expose them to VcPkg, you can consider `export VULKAN_SDK=...` for each installation.  
+But by placing `set(ENV{VULKAN_SDK} ...)` in the triplet files, you can skip the tedious work.
+
+If you are using NDK 21.3.6528147 or earlier version, it will be like the following.
+
+```cmake
+# In android triplets... (e.g. arm64-android.cmake)
+set(VCPKG_CMAKE_SYSTEM_NAME Android)
+# ...
+# If your API level is 30, libvulkan.so is at $ENV{ANDROID_NDK_HOME}/platforms/android-30/arch-arm64/usr/lib
+set(ENV{VULKAN_SDK} $ENV{ANDROID_NDK_HOME}/sysroot/usr)
+```
+
+Notice that **the location of the sysroot has changed since NDK 22**. (see https://github.com/android/ndk/issues/1407)  
+If you prefer using [the latest version](https://developer.android.com/studio/projects/install-ndk#default-ndk-per-agp), check the [BuildSystemMaintainers.md of the NDK document](https://android.googlesource.com/platform/ndk/+/master/docs/BuildSystemMaintainers.md#sysroot) and then put appropriate path for your system.
+
+For example, Mac OS users will use the path like this.
+
+```cmake
+# In android triplets... (e.g. arm64-android.cmake)
+set(VCPKG_CMAKE_SYSTEM_NAME Android)
+# ...
+# If your API level is 30, libvulkan.so is at $ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/aarch64-linux-android/30
+set(ENV{VULKAN_SDK} $ENV{ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr)
+```
+
+By doing this for all android triplets, you can install `vulkan` and the packages that require it. (e.g. `vulkan-hpp`)
+
+<details>
+  <summary markdown="span">`vcpkg install vulkan-hpp:arm64-android`</summary>
+
+```console
+user@host$ ./vcpkg install vulkan-hpp:arm64-android
+Computing installation plan...
+The following packages will be built and installed:
+  * vulkan[core]:arm64-android -> 1.1.82.1-1
+    vulkan-hpp[core]:arm64-android -> 2019-05-11-1
+Additional packages (*) will be modified to complete this operation.
+Detecting compiler hash for triplet arm64-android...
+...
+Starting package 1/2: vulkan:arm64-android
+Building package vulkan[core]:arm64-android...
+-- Using community triplet arm64-android. This triplet configuration is not guaranteed to succeed.
+-- [COMMUNITY] Loading triplet configuration from: /.../vcpkg/triplets/community/arm64-android.cmake
+-- Querying VULKAN_SDK Environment variable
+-- Searching /.../Library/Android/sdk/ndk/22.1.7171670/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/include/vulkan/ for vulkan.h
+-- Found vulkan.h
+-- Performing post-build validation
+-- Performing post-build validation done
+...
+Building package vulkan[core]:arm64-android... done
+Installing package vulkan[core]:arm64-android...
+Installing package vulkan[core]:arm64-android... done
+Elapsed time for package vulkan:arm64-android: 35.9 ms
+Starting package 2/2: vulkan-hpp:arm64-android
+Building package vulkan-hpp[core]:arm64-android...
+-- Using community triplet arm64-android. This triplet configuration is not guaranteed to succeed.
+-- [COMMUNITY] Loading triplet configuration from: /.../vcpkg/triplets/community/arm64-android.cmake
+-- Using cached /.../vcpkg/downloads/KhronosGroup-Vulkan-Hpp-5ce8ae7fd0d9c0543d02f33cfa8a66e6a43e2150.tar.gz
+-- Cleaning sources at /.../vcpkg/buildtrees/vulkan-hpp/src/e6a43e2150-4f344cd911.clean. Use --editable to skip cleaning for the packages you specify.
+-- Extracting source /.../vcpkg/downloads/KhronosGroup-Vulkan-Hpp-5ce8ae7fd0d9c0543d02f33cfa8a66e6a43e2150.tar.gz
+-- Using source at /.../vcpkg/buildtrees/vulkan-hpp/src/e6a43e2150-4f344cd911.clean
+-- Performing post-build validation
+-- Performing post-build validation done
+...
+Building package vulkan-hpp[core]:arm64-android... done
+Installing package vulkan-hpp[core]:arm64-android...
+Installing package vulkan-hpp[core]:arm64-android... done
+Elapsed time for package vulkan-hpp:arm64-android: 144.5 ms
+
+Total elapsed time: 1.013 s
+
+The package vulkan-hpp:arm64-android is header only and can be used from CMake via:
+
+    find_path(VULKAN_HPP_INCLUDE_DIRS "vulkan/vulkan.hpp")
+    target_include_directories(main PRIVATE ${VULKAN_HPP_INCLUDE_DIRS})
+
+```
+
+</details>
+
+
 ## Consume libraries using vpckg, cmake and the android toolchain
 
 1. Combine vcpkg and Android toolchains
@@ -114,7 +208,7 @@ cmake \
   ...
 ````
 
-2. Specifiy the android abi and vcpkg triplet
+2. Specify the android abi and vcpkg triplet
 
 When compiling for android, you need to select a matching "android abi" / "vcpkg triplet" pair.
 

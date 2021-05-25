@@ -57,11 +57,6 @@ jobs:
       arguments: '-DropRoot "D:\msvc-drops\$(DropBuildNumber)" -BuildType ret'
       pwsh: true
   - task: PowerShell@2
-    displayName: 'Initialize Environment'
-    inputs:
-      filePath: 'scripts/azure-pipelines/windows/initialize-environment.ps1'
-      pwsh: true
-  - task: PowerShell@2
     displayName: 'Report on Disk Space'
     condition: always()
     inputs:
@@ -88,3 +83,18 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)\failure-logs'
       ArtifactName: 'failure logs for ${{ parameters.triplet }}'
     condition: always()
+  - task: PowerShell@2
+    displayName: 'Build a file list for all packages'
+    condition: always()
+    inputs:
+      targetType: inline
+      script: |
+        ./vcpkg.exe fetch python3
+        & $(.\vcpkg fetch python3) .\scripts\file_script.py D:\installed\vcpkg\info\
+      pwsh: true
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: file lists for ${{ parameters.triplet }}'
+    condition: always()
+    inputs:
+      PathtoPublish: scripts/list_files
+      ArtifactName: 'file lists for ${{ parameters.triplet }}'

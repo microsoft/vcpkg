@@ -3,15 +3,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO boostorg/locale
-    REF boost-1.74.0
-    SHA512 32bd61ee7e9565bf4b67615d02e38981c2e5fa4156a8c35697b9aec04990ed2e88663b63578f4a28bad3c52ef544cbeb5ec2667b31f2a1645313442cd5552f91
+    REF boost-1.75.0
+    SHA512 13bc48ef4ae0805abd5eecde90406486a00c350187343ae2cc7da9b7e94d15be952312c1c07c4faf4d62e13401c6e450c3c3d06649af01a690fc7200a20744ed
     HEAD_REF master
     PATCHES
         0001-Fix-boost-ICU-support.patch
         allow-force-finding-iconv.patch
 )
 
-include(${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
+if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)
+    message(FATAL_ERROR "boost-locale requires a newer version of vcpkg in order to build.")
+endif()
+include(${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)
 configure_file(
     "${CMAKE_CURRENT_LIST_DIR}/b2-options.cmake.in"
     "${CURRENT_BUILDTREES_DIR}/vcpkg-b2-options.cmake"
