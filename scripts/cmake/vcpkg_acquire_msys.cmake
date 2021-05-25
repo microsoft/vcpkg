@@ -531,6 +531,12 @@ function(vcpkg_acquire_msys PATH_TO_ROOT_OUT)
         endforeach()
         file(RENAME ${PATH_TO_ROOT}.tmp ${PATH_TO_ROOT})
     endif()
-    message(STATUS "Using msys root at ${DOWNLOADS}/tools/msys2/${TOTAL_HASH}")
+    # Due to skipping the regular MSYS2 installer,
+    # some config files need to be established explicitly.
+    if(NOT EXISTS "${PATH_TO_ROOT}/etc/fstab")
+        # This fstab entry removes the cygdrive prefix from paths.
+        file(WRITE "${PATH_TO_ROOT}/etc/fstab" "none  /  cygdrive  binary,posix=0,noacl,user  0  0")
+    endif()
+    message(STATUS "Using msys root at ${PATH_TO_ROOT}")
     set(${PATH_TO_ROOT_OUT} ${PATH_TO_ROOT} PARENT_SCOPE)
 endfunction()
