@@ -15,9 +15,6 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
-    },
-    "boost-system",
-    "boost-asio",
-    "boost-beast"
+    }
   ]
 }
