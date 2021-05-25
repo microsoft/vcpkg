@@ -9,6 +9,7 @@ vcpkg_from_github(
         use_targets.patch
         fix-dependency-libmath.patch
         fix-linkage-error.patch
+        fix-pkgconfig.patch
 )
 
 #Remove outdated find modules
@@ -39,6 +40,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "netcdf" CONFIG_PATH "lib/cmake/netCDF")
+vcpkg_fixup_pkgconfig()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
