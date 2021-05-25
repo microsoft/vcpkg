@@ -23,7 +23,6 @@
   ],
   "default-features": [
     "csv",
-    "dataset",
     "filesystem",
     "json",
     "parquet"
