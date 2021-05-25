@@ -8,23 +8,23 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    DISABLE_PARALLEL_CONFIGURE
-    PREFER_NINJA
-    OPTIONS -DBDD_INCLUDE_TOOL=OFF
+    OPTIONS
+        -DBDD_INCLUDE_TOOL=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 file(INSTALL
-    ${CURRENT_PORT_DIR}/LICENSE
+    ${SOURCE_PATH}/LICENSE
     DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
     RENAME copyright
 )
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/bddisasm TARGET_PATH share/bddisasm)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/bddisasm)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
