@@ -9,7 +9,7 @@ endif()
 
 set(PYTHON_VERSION_MAJOR  2)
 set(PYTHON_VERSION_MINOR  7)
-set(PYTHON_VERSION_PATCH  15)
+set(PYTHON_VERSION_PATCH  18)
 set(PYTHON_VERSION        ${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH})
 
 set(_PYTHON_PATCHES "")
@@ -27,7 +27,7 @@ endif()
 vcpkg_download_distfile(ARCHIVE
     URLS https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tar.xz
     FILENAME Python-${PYTHON_VERSION}.tar.xz
-    SHA512 27ea43eb45fc68f3d2469d5f07636e10801dee11635a430ec8ec922ed790bb426b072da94df885e4dfa1ea8b7a24f2f56dd92f9b0f51e162330f161216bd6de6
+    SHA512 a7bb62b51f48ff0b6df0b18f5b0312a523e3110f49c3237936bfe56ed0e26838c0274ff5401bda6fc21bf24337477ccac49e8026c5d651e4b4cafb5eb5086f6c
 )
 
 vcpkg_extract_source_archive_ex(

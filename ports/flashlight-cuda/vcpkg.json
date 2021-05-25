@@ -1,6 +1,7 @@
 {
   "name": "flashlight-cuda",
-  "version-string": "20210111",
+  "version": "0.3",
+  "port-version": 1,
   "description": "A C++ standalone library for machine learning. CUDA backend.",
   "homepage": "https://github.com/facebookresearch/flashlight",
   "supports": "!(windows | osx)",
@@ -27,7 +28,6 @@
       "dependencies": [
         {
           "name": "arrayfire",
-          "default-features": false,
           "features": [
             "cuda"
           ]
@@ -57,6 +57,7 @@
       "description": "flashlight libraries",
       "dependencies": [
         "cub",
+        "cuda",
         "fftw3",
         "intel-mkl",
         "kenlm"
@@ -69,6 +70,20 @@
           "name": "flashlight-cuda",
           "features": [
             "fl",
+            "lib"
+          ]
+        },
+        "gflags"
+      ]
+    },
+    "objdet": {
+      "description": "flashlight object detection app",
+      "dependencies": [
+        {
+          "name": "flashlight-cuda",
+          "features": [
+            "fl",
+            "imgclass",
             "lib"
           ]
         },
