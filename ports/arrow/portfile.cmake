@@ -66,9 +66,7 @@ vcpkg_configure_cmake(
         -DARROW_WITH_SNAPPY=ON
         -DARROW_WITH_ZLIB=ON
         -DARROW_WITH_ZSTD=ON
-        -DZSTD_INCLUDE_DIR=${CURRENT_INSTALLED_DIR}/include
         -DZSTD_MSVC_LIB_PREFIX=
-        -DZSTD_ROOT=${CURRENT_INSTALLED_DIR}
 )
 
 vcpkg_install_cmake()
