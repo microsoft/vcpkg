@@ -33,13 +33,16 @@ diff -urN a/CMakeFilters.cmake b/CMakeFilters.cmake
 diff -urN a/src/CMakeLists.txt b/src/CMakeLists.txt
 --- a/src/CMakeLists.txt	2020-03-03 00:03:12.000000000 +0100
 +++ b/src/CMakeLists.txt	2021-05-15 12:41:34.762354040 +0200
-@@ -1259,6 +1259,12 @@
+@@ -1259,6 +1259,15 @@
  
  set (_PKG_CONFIG_REQUIRES)
  set (_PKG_CONFIG_REQUIRES_PRIVATE)
++set(_PKG_CONFIG_LIBS_PRIVATE " ${_PKG_CONFIG_LIBS_PRIVATE} ")
 +foreach(_module IN ITEMS ompi-c szip zlib)
 +    if(${_module}_PC_LIBS_PRIVATE)
-+        string(REPLACE " -l${${_module}_PC_LIBS_PRIVATE}" "" _PKG_CONFIG_LIBS_PRIVATE "${_PKG_CONFIG_LIBS_PRIVATE}")
++        foreach(_lib IN LISTS ${_module}_PC_LIBS_PRIVATE)
++            string(REPLACE " -l${_lib} " " " _PKG_CONFIG_LIBS_PRIVATE "${_PKG_CONFIG_LIBS_PRIVATE}")
++        endforeach()
 +        string(APPEND _PKG_CONFIG_REQUIRES_PRIVATE " ${_module}")
 +    endif()
 +endforeach()
