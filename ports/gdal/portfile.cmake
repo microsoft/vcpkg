@@ -32,17 +32,6 @@ if (VCPKG_TARGET_IS_WINDOWS)
   set(NATIVE_HTML_DIR "${CURRENT_PACKAGES_DIR}/share/gdal/html")
 
   find_dependency_win()
-
-  if("hdf5" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-      list(APPEND NMAKE_OPTIONS HDF5_PLUGIN=NO)
-      list(APPEND NMAKE_OPTIONS HDF5_H5_IS_DLL=YES)
-      list(APPEND NMAKE_OPTIONS HDF5_DIR=${HDF5_DIR})
-      list(APPEND NMAKE_OPTIONS_REL HDF5_LIB=${HDF5_LIBRARY_REL})
-      list(APPEND NMAKE_OPTIONS_DBG HDF5_LIB=${HDF5_LIBRARY_DBG})
-  endif()
-  if("hdf5" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-      message(FATAL_ERROR "Not supported on WIN32 platforms with static linking.")
-  endif()
   
   if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
       list(APPEND NMAKE_OPTIONS MYSQL_INC_DIR=${MYSQL_INCLUDE_DIR})

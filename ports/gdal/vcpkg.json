@@ -11,6 +11,7 @@
     "expat",
     "geos",
     "giflib",
+    "hdf5",
     {
       "name": "json-c",
       "platform": "!windows"
@@ -21,6 +22,7 @@
     "libpq",
     "libwebp",
     "libxml2",
+    "netcdf-c",
     "openjpeg",
     "proj4",
     "sqlite3",
@@ -28,13 +30,6 @@
     "zstd"
   ],
   "features": {
-    "hdf5": {
-      "description": "Add HDF5 and nc files support",
-      "dependencies": [
-        "hdf5",
-        "netcdf-c"
-      ]
-    },
     "libspatialite": {
       "description": "Create or update SpatiaLite databases using libspatialite",
       "dependencies": [

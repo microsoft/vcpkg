@@ -166,7 +166,7 @@ macro(find_dependency_win)
   endif()
 
   # Setup netcdf libraries
-  if("hdf5" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
       if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/netcdf.lib")
           file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" NETCDF_INCLUDE)
           file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/netcdf.lib" NETCDF_LIBRARY_REL)
@@ -237,11 +237,16 @@ macro(find_dependency_win)
 
   # Setup hdf5 libraries
   # Not supported on WIN32 platforms with static linking
-  if("hdf5" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/hdf5.lib")
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}" HDF5_DIR)
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/debug/lib/hdf5_D.lib" HDF5_LIBRARY_DBG)
       file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/hdf5.lib"  HDF5_LIBRARY_REL)
+      list(APPEND NMAKE_OPTIONS HDF5_PLUGIN=NO)
+      list(APPEND NMAKE_OPTIONS HDF5_H5_IS_DLL=YES)
+      list(APPEND NMAKE_OPTIONS HDF5_DIR=${HDF5_DIR})
+      list(APPEND NMAKE_OPTIONS_REL HDF5_LIB=${HDF5_LIBRARY_REL})
+      list(APPEND NMAKE_OPTIONS_DBG HDF5_LIB=${HDF5_LIBRARY_DBG})
     endif()
   endif()
 endmacro()
