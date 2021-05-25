@@ -385,7 +385,6 @@ getopt-win32:arm-uwp=fail
 getopt-win32:x64-linux=fail
 getopt-win32:x64-osx=fail
 getopt-win32:x64-uwp=fail
-getopt-win32:x64-windows-static=fail
 gflags:arm-uwp=fail
 gflags:x64-uwp=fail
 
@@ -946,6 +945,8 @@ microsoft-signalr:x64-windows=skip
 microsoft-signalr:x64-windows-static=skip
 microsoft-signalr:x64-windows-static-md=skip
 microsoft-signalr:x86-windows=skip
+# https://github.com/mlpack/mlpack/pull/2945
+mlpack:x64-uwp=fail
 mman:x64-linux=fail
 mman:x64-osx=fail
 mmloader:arm64-windows=fail

@@ -1,12 +1,12 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.2.5")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-consul
-    REF c54ad810f245681dc25ba5e0ec48f19e7c85e1bd # 1.2.0
-    SHA512 5cf886b52af915bda0728ae9721adb155b5147c5b428ff02f5cbe932038d43e75fe5a221b16e3103ecffaed5fcdf39bf0e13157f79d8d4f2d7c74532b70566a2
+    REF ${OATPP_VERSION}
+    SHA512 6d73b869e5fea966451d15cbdc389f7c6c367a8e10124aadaa33121f0ef78bbf5b702a094b2ca6ad8583257ab7cb4187a7a0571b119c96d5d5e20b2d5cb4beae
     HEAD_REF master
 )
 
