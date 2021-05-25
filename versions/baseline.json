@@ -6558,7 +6558,7 @@
     },
     "xmlsec": {
       "baseline": "1.2.31",
-      "port-version": 0
+      "port-version": 1
     },
     "xmsh": {
       "baseline": "0.5.2-1",
