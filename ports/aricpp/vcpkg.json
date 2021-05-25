@@ -5,6 +5,9 @@
   "description": "Asterisk ARI interface bindings for modern C++",
   "homepage": "https://github.com/daniele77/aricpp",
   "dependencies": [
+    "boost-asio",
+    "boost-beast",
+    "boost-system",
     {
       "name": "vcpkg-cmake",
       "host": true
