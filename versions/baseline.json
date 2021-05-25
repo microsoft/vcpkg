@@ -162,7 +162,7 @@
     },
     "asiosdk": {
       "baseline": "2.3.3",
-      "port-version": 2
+      "port-version": 3
     },
     "asmjit": {
       "baseline": "2020-09-14",
@@ -1525,8 +1525,8 @@
       "port-version": 0
     },
     "ctp": {
-      "baseline": "6.3.15_20190220_se",
-      "port-version": 1
+      "baseline": "6.6.1_P1_20210406_se",
+      "port-version": 0
     },
     "ctre": {
       "baseline": "2.10",
@@ -1542,7 +1542,7 @@
     },
     "cudnn": {
       "baseline": "7.6.5",
-      "port-version": 3
+      "port-version": 4
     },
     "cunit": {
       "baseline": "2.1.3-6",
@@ -1550,7 +1550,7 @@
     },
     "curl": {
       "baseline": "7.74.0",
-      "port-version": 5
+      "port-version": 6
     },
     "curlpp": {
       "baseline": "2018-06-15-3",
@@ -1602,7 +1602,7 @@
     },
     "dav1d": {
       "baseline": "0.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "dbg-macro": {
       "baseline": "2019-07-11",
@@ -2790,7 +2790,7 @@
     },
     "jxrlib": {
       "baseline": "2019.10.9",
-      "port-version": 2
+      "port-version": 3
     },
     "kangaru": {
       "baseline": "4.2.4",
@@ -3138,7 +3138,7 @@
     },
     "libgnutls": {
       "baseline": "3.6.15",
-      "port-version": 1
+      "port-version": 2
     },
     "libgo": {
       "baseline": "3.1-1",
@@ -3510,7 +3510,7 @@
     },
     "libsodium": {
       "baseline": "1.0.18",
-      "port-version": 4
+      "port-version": 5
     },
     "libsoundio": {
       "baseline": "2.0.0",
@@ -4518,7 +4518,7 @@
     },
     "openh264": {
       "baseline": "2021-03-16",
-      "port-version": 1
+      "port-version": 2
     },
     "openigtlink": {
       "baseline": "3.0",
@@ -6357,8 +6357,8 @@
       "port-version": 2
     },
     "vcpkg-cmake-config": {
-      "baseline": "2021-02-26",
-      "port-version": 1
+      "baseline": "2021-05-22",
+      "port-version": 0
     },
     "vcpkg-gfortran": {
       "baseline": "3",
