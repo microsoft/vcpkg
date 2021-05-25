@@ -19,6 +19,11 @@ get_filename_component(GIT_DIR "${GIT}" DIRECTORY)
 vcpkg_add_to_path(PREPEND ${GIT_DIR})
 
 if(CMAKE_HOST_WIN32)
+	string(FIND "$ENV{USERNAME}" " " POS)
+	if(NOT POS EQUAL -1)
+		message(FATAL_ERROR "Your Windows username '$ENV{USERNAME}' contains spaces. This is not supported by the bazel build tool. Aborting.")
+	endif()
+
 	vcpkg_acquire_msys(MSYS_ROOT PACKAGES bash unzip patch diffutils libintl gzip coreutils mingw-w64-x86_64-python-numpy)
 	vcpkg_add_to_path(${MSYS_ROOT}/usr/bin)
 	vcpkg_add_to_path(${MSYS_ROOT}/mingw64/bin)
