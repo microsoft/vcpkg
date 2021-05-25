@@ -468,19 +468,16 @@ if(NOT Z_VCPKG_ROOT_DIR)
     z_vcpkg_add_fatal_error("Could not find .vcpkg-root")
 endif()
 
-# NOTE: _VCPKG_INSTALLED_DIR cannot be removed without tool changes.
-if(NOT DEFINED VCPKG_INSTALLED_DIR)
-    if(DEFINED _VCPKG_INSTALLED_DIR)
-        set(VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}")
-    elseif(VCPKG_MANIFEST_MODE)
-        set(VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
+if(NOT DEFINED _VCPKG_INSTALLED_DIR)
+    if(VCPKG_MANIFEST_MODE)
+        set(_VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
     else()
-        set(VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
+        set(_VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
     endif()
-endif()
-set(VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
+set(_VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}"
     CACHE PATH
     "The directory which contains the installed libraries for each triplet" FORCE)
+endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths.
     list(APPEND CMAKE_PREFIX_PATH
@@ -549,15 +546,6 @@ set(CMAKE_SYSTEM_IGNORE_PATH
     "C:/OpenSSL-Win64/lib/VC/static"
 )
 
-list(APPEND CMAKE_PROGRAM_PATH "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools")
-file(GLOB Z_VCPKG_TOOLS_DIRS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/*")
-foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
-    if(IS_DIRECTORY "${Z_VCPKG_TOOLS_DIR}")
-        list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
-    endif()
-endforeach()
-
-
 # CMAKE_EXECUTABLE_SUFFIX is not yet defined
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     set(Z_VCPKG_EXECUTABLE "${Z_VCPKG_ROOT_DIR}/vcpkg.exe")
@@ -590,6 +578,11 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
         message(STATUS "Running vcpkg install")
 
         set(Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS)
+
+        if(DEFINED VCPKG_HOST_TRIPLET AND NOT VCPKG_HOST_TRIPLET STREQUAL "")
+            list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--host-triplet=${VCPKG_HOST_TRIPLET}")
+        endif()
+
         if(VCPKG_OVERLAY_PORTS)
             foreach(Z_VCPKG_OVERLAY_PORT IN LISTS VCPKG_OVERLAY_PORTS)
                 list(APPEND Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS "--overlay-ports=${Z_VCPKG_OVERLAY_PORT}")
@@ -657,6 +650,14 @@ if(VCPKG_MANIFEST_MODE AND VCPKG_MANIFEST_INSTALL AND NOT Z_VCPKG_CMAKE_IN_TRY_C
         endif()
     endif()
 endif()
+
+list(APPEND CMAKE_PROGRAM_PATH "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools")
+file(GLOB Z_VCPKG_TOOLS_DIRS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/tools/*")
+foreach(Z_VCPKG_TOOLS_DIR IN LISTS Z_VCPKG_TOOLS_DIRS)
+    if(IS_DIRECTORY "${Z_VCPKG_TOOLS_DIR}")
+        list(APPEND CMAKE_PROGRAM_PATH "${Z_VCPKG_TOOLS_DIR}")
+    endif()
+endforeach()
 
 function(add_executable)
     z_vcpkg_function_arguments(ARGS)

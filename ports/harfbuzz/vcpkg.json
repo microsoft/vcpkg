@@ -1,6 +1,6 @@
 {
   "name": "harfbuzz",
-  "version-string": "2.7.4",
+  "version": "2.8.1",
   "description": "HarfBuzz OpenType text shaping engine",
   "homepage": "https://github.com/harfbuzz/harfbuzz",
   "dependencies": [
@@ -14,10 +14,17 @@
     }
   ],
   "features": {
+    "coretext": {
+      "description": "Enable CoreText shaper backend on macOS"
+    },
     "glib": {
       "description": "Glib Unicode callbacks support",
       "dependencies": [
-        "glib"
+        "glib",
+        {
+          "name": "glib",
+          "host": true
+        }
       ]
     },
     "graphite2": {

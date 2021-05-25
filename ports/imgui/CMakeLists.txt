@@ -23,13 +23,6 @@ target_sources(
         ${CMAKE_CURRENT_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
 )
 
-
-if(IMGUI_USE_WCHAR32)
-    FILE(READ ${CMAKE_CURRENT_SOURCE_DIR}/imconfig.h IMCONFIG)
-    STRING(REGEX REPLACE "//#define IMGUI_USE_WCHAR32" "#define IMGUI_USE_WCHAR32" IMCONFIG "${IMCONFIG}")
-    FILE(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/imconfig.h "${IMCONFIG}")
-endif()
-
 if(IMGUI_BUILD_ALLEGRO5_BINDING)
     find_path(ALLEGRO5_INCLUDE_DIRS allegro5/allegro.h)
     target_include_directories(${PROJECT_NAME} PRIVATE ${ALLEGRO5_INCLUDE_DIRS})
@@ -120,6 +113,11 @@ if(IMGUI_FREETYPE)
     find_package(freetype CONFIG REQUIRED)
     target_link_libraries(${PROJECT_NAME} PUBLIC freetype)
     target_sources(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/misc/freetype/imgui_freetype.cpp)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_ENABLE_FREETYPE)
+endif()
+
+if(IMGUI_USE_WCHAR32)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC IMGUI_USE_WCHAR32)
 endif()
 
 list(REMOVE_DUPLICATES BINDINGS_SOURCES)

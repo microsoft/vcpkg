@@ -1,7 +1,7 @@
 {
   "name": "qt5-base",
-  "version-string": "5.15.2",
-  "port-version": 1,
+  "version-semver": "5.15.2",
+  "port-version": 8,
   "description": "Qt5 Application Framework Base Module. Includes Core, GUI, Widgets, Networking, SQL, Concurrent and other essential qt components.",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -23,10 +23,13 @@
     },
     "libjpeg-turbo",
     "libpng",
-    "libpq",
     "openssl",
     "pcre2",
     "sqlite3",
+    {
+      "name": "vcpkg-pkgconfig-get-modules",
+      "host": true
+    },
     "zlib",
     "zstd"
   ],
@@ -38,6 +41,18 @@
       "description": "Build the sql plugin for connecting to mysql databases",
       "dependencies": [
         "libmysql"
+      ]
+    },
+    "postgresqlplugin": {
+      "description": "Build the sql plugin for connecting to postgresql databases",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "vulkan": {
+      "description": "Enable Vulkan support in QtGui",
+      "dependencies": [
+        "vulkan"
       ]
     }
   }

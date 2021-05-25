@@ -1,5 +1,7 @@
 # Versioning: Implementation details
 
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/versioning.implementation-details.md).**
+
 ## Contents
 
 * [Minimum versioning](#minimum-versioning)
@@ -65,7 +67,7 @@ Version constraints come in the following flavors:
 * **Declared constraints**: Constraints declared explicitly in the top-level manifest using `version>=`.
 * **Baseline constraints**: Constraints added implicitly by the `builtin-baseline`.
 * **Transitive constraints**: Constraints added indirectly by dependencies of your dependencies.
-* **Overriden constraints**: Constraints overriden in the top-level manifest using `overrides` declarations.
+* **Overridden constraints**: Constraints overridden in the top-level manifest using `overrides` declarations.
 
 To compute an installation plan, vcpkg follows roughly these steps:
 
@@ -81,7 +83,7 @@ To compute an installation plan, vcpkg follows roughly these steps:
         * If there is a previous version selected:
             * If the versioning scheme of the new constraint does not match that of the previously selected version:
                 * Add a version conflict.
-            * If the constraint’s version is not comparable to the previously selected version. For example, comparing “version-string: apple” to “version-string: orange”:
+            * If the constraint's version is not comparable to the previously selected version. For example, comparing "version-string: apple" to "version-string: orange":
                 * Add a version conflict.
             * If the constraints version is higher than the previously selected version:
                 * Select the highest version.
@@ -100,7 +102,7 @@ With the introduction of versioning constraints, it is now possible that a packa
 
 To solve this problem, a new set of metadata files was introduced. These files are located in the `versions/` directory at the root level of the vcpkg repository.
 
-The `versions/` directory, will contain JSON files for each one of the ports available in the registry. Each file will list all the versions available for a package and contain a Git tree-ish object that vcpkg can check out to obtain that version’s portfiles.
+The `versions/` directory, will contain JSON files for each one of the ports available in the registry. Each file will list all the versions available for a package and contain a Git tree-ish object that vcpkg can check out to obtain that version's portfiles.
 
 Example: `zlib.json`
 
@@ -127,6 +129,6 @@ Example: `zlib.json`
 }
 ```
 
-For each port, its corresponding versions file should be located in `versions/{first letter of port name}-/{port name}.json`. For example, zlib’s version file will be located in `versions/z-/zlib.json`. Aside from port version files, the current baseline file is located in `versions/baseline.json`.
+For each port, its corresponding versions file should be located in `versions/{first letter of port name}-/{port name}.json`. For example, zlib's version file will be located in `versions/z-/zlib.json`. Aside from port version files, the current baseline file is located in `versions/baseline.json`.
 
 

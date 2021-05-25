@@ -20,11 +20,11 @@ vcpkg_extract_source_archive_ex(
       support-uwp.patch
 )
 
-if (VCPKG_TARGET_IS_UWP)
-    if (NOT EXISTS ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/arithchk.exe)
-        message(FATAL_ERROR "Please install ${PORT}:x86-windows first.")
-    endif()
-    set(ARITHCHK_PATH ${CURRENT_INSTALLED_DIR}/../x86-windows/tools/arithchk.exe)
+if(NOT TARGET_TRIPLET STREQUAL HOST_TRIPLET)
+  set(ARITHCHK_PATH ${CURRENT_HOST_INSTALLED_DIR}/tools/clapack/arithchk${VCPKG_HOST_EXECUTABLE_SUFFIX})
+  if(NOT EXISTS "${ARITHCHK_PATH}")
+    message(FATAL_ERROR "Expected ${ARITHCHK_PATH} to exist.")
+  endif()
 endif()
 
 vcpkg_configure_cmake(

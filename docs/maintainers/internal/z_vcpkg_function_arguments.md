@@ -1,5 +1,7 @@
 # z_vcpkg_function_arguments
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/).
+
 **Only for internal use in vcpkg helpers. Behavior and arguments will change without notice.**
 Get a list of the arguments which were passed in.
 Unlike `ARGV`, which is simply the arguments joined with `;`,
@@ -24,4 +26,4 @@ endfunction()
 ```
 
 ## Source
-[scripts/cmake/z_vcpkg_function_arguments.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/z_vcpkg_function_arguments.cmake)
+[scripts/cmake/z\_vcpkg\_function\_arguments.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/z_vcpkg_function_arguments.cmake)

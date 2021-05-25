@@ -1,5 +1,7 @@
 # vcpkg_add_to_path
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_add_to_path.md).
+
 Add a directory or directories to the PATH environment variable
 
 ```cmake
@@ -22,4 +24,4 @@ If no paths are passed, then nothing will be done.
 * [z3](https://github.com/Microsoft/vcpkg/blob/master/ports/z3/portfile.cmake#L13)
 
 ## Source
-[scripts/cmake/vcpkg_add_to_path.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_add_to_path.cmake)
+[scripts/cmake/vcpkg\_add\_to\_path.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_add_to_path.cmake)

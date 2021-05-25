@@ -1,5 +1,7 @@
 # Scripts Tree Extraction
 
+**Note: this is the feature as it was initially specified and does not necessarily reflect the current behavior.**
+
 ## Background
 
 We extracted vcpkg-tool as part of a future wherein Registries are the primary mechanism for interacting with the ports tree, which would allow the vcpkg tool and associated artifacts to be deployed and figure the rest out on their own. Unfortunately, we have concurrently edited things in the so called "scripts" tree which lives in support of ports but really probably belongs in the vcpkg-tool repo.

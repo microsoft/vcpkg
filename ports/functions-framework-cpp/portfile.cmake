@@ -4,8 +4,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GoogleCloudPlatform/functions-framework-cpp
-    REF v0.3.0
-    SHA512 28594c275b7ac85ccbdcd9a1ab8e3a7c26932006f0da6ede4aab29f303305536b111cbcf99e9f8558f71f56876bc3e3b790f0627bd708ec9b09999f27ef37f3b
+    REF v0.5.0
+    SHA512 cc7ba39a86a035625e09e653f1c60ee5125a449a2822c26b3e30d6ed3d84bfce93a8e627069b1c50e0dddcaf0277d82681627d653d42a3e967d191b2d979e2e8
     HEAD_REF main
 )
 

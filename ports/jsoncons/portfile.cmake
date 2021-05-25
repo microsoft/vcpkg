@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO danielaparker/jsoncons
-    REF ec6ff7a71f4a526c39f8ea4e4298f5a2ab3dead7 # v0.162.0
-    SHA512 02236badc9b1e3e64dcdeea11ecbc5faa0bfe664e51b97619ad9ceb77124b7f1c496fddb4c002fcdd86d73b3f1587ca01e5fefa39830d74af3d82119c1adbbef
+    REF 06d10fbca36b049fc7592cce0e80e91c0db4bce9 # v0.163.3
+    SHA512 195ff127a7ce30de794c56646986c85513fda611e69c0e4031492d670de2b4c0cf3f7928a7e1452f9fb959ec7692c98dffda68a529f84daa46a994e8c22c2883
     HEAD_REF master
 )
 
@@ -10,7 +10,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_TESTS=OFF
+        -DJSONCONS_BUILD_TESTS=OFF
 )
 
 vcpkg_install_cmake()

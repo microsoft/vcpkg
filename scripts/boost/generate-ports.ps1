@@ -28,7 +28,9 @@ else
 $port_versions = @{
     #e.g.  "asio" = 1;
     "asio" = 1;
-    "python" = 1;
+    "python" = 2;
+    "context" = 2;
+    "concept-check" = 2;
 }
 
 $per_port_data = @{
@@ -112,6 +114,11 @@ function Generate()
     {
         $controlLines["port-version"] = $port_versions[$PortName]
     }
+    elseif ($NeedsBuild)
+    {
+        # This can be removed on next update; this is used to track the host dependencies change
+        $controlLines["port-version"] = 1
+    }
 
     if ($per_port_data[$PortName])
     {
@@ -170,7 +177,10 @@ function Generate()
     if ($NeedsBuild)
     {
         $portfileLines += @(
-            "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
+            "if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)"
+            "    message(FATAL_ERROR `"boost-$PortName requires a newer version of vcpkg in order to build.`")"
+            "endif()"
+            "include(`${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
         )
         # b2-options.cmake contains port-specific build options
         if (Test-Path "$portsDir/boost-$PortName/b2-options.cmake")
@@ -397,7 +407,10 @@ foreach ($library in $libraries)
         $needsBuild = $false
         if ((Test-Path $unpacked/build/Jamfile.v2) -and $library -ne "metaparse" -and $library -ne "graph_parallel")
         {
-            $deps += @("boost-build", "boost-modular-build-helper")
+            $deps += @(
+                @{ name="boost-build"; host=$True },
+                @{ name="boost-modular-build-helper"; host=$True }
+            )
             $needsBuild = $true
         }
 

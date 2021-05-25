@@ -3,15 +3,12 @@ vcpkg_fail_port_install(ON_TARGET MINGW)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NVIDIAGameWorks/PhysX
-    REF ae80dede0546d652040ae6260a810e53e20a06fa
-    SHA512 f3a690039cf39fe2db9a728b82af0d39eaa02340a853bdad4b5152d63532367eb24fc7033a614882168049b80d803b6225fc60ed2900a9d0deab847f220540be
+    REF 93c6dd21b545605185f2febc8eeacebe49a99479
+    SHA512 c9f50255ca9e0f1ebdb9926992315a62b77e2eea3addd4e65217283490714e71e24f2f687717dd8eb155078a1a6b25c9fadc123ce8bc4c5615f7ac66cd6b11aa
     HEAD_REF master
     PATCHES
-        internalMBP_symbols.patch
-        msvc_142_bug_workaround.patch
-        vs16_3_typeinfo_header_fix.patch
-        fix_discarded_qualifiers.patch
         fix-compiler-flag.patch
+        remove-werror.patch
 )
 
 if(NOT DEFINED RELEASE_CONFIGURATION)
@@ -79,15 +76,14 @@ else()
     list(APPEND OPTIONS "-DPX_OUTPUT_ARCH=x86")
 endif()
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}/physx/compiler/public"
-    PREFER_NINJA
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS ${OPTIONS}
     OPTIONS_DEBUG ${OPTIONS_DEBUG}
     OPTIONS_RELEASE ${OPTIONS_RELEASE}
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # NVIDIA Gameworks release structure is generally something like <compiler>/<configuration>/[artifact]
 # It would be nice to patch this out, but that directory structure is hardcoded over many cmake files.

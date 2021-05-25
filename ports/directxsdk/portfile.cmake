@@ -3,9 +3,9 @@ vcpkg_fail_port_install(ON_TARGET "LINUX" "OSX" "UWP" "ANDROID" ON_ARCH "arm")
 message(WARNING "Build ${PORT} is deprecated, untested in CI, and requires the use of the DirectSetup legacy REDIST solution. See https://aka.ms/dxsdk for more information.")
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://archive.org/download/dxsdk_2010/DXSDK_Jun10.exe"
-    FILENAME "DXSDK_Jun10.exe"
-    SHA512 4869ac947a35cd0d6949fbda17547256ea806fef36f48474dda63651f751583e9902641087250b6e8ccabaab85e51effccd9235dc6cdf64e21ec2b298227fe19
+    URLS "https://download.microsoft.com/download/A/E/7/AE743F1F-632B-4809-87A9-AA1BB3458E31/DXSDK_Jun10.exe"
+    FILENAME "DXSDK_Jun10_SHA256.exe"
+    SHA512 24e1e9bda319b780124b865f4640822cfc44e4d18fbdcc8456d48fe54081652ce4ddb63d3bd8596351057cbae50fc824b8297e99f0f7c97547153162562ba73f
 )
 
 vcpkg_extract_source_archive_ex(
