@@ -21,7 +21,6 @@
     "libpq",
     "libwebp",
     "libxml2",
-    "netcdf-c",
     "openjpeg",
     "proj4",
     "sqlite3",
@@ -30,9 +29,10 @@
   ],
   "features": {
     "hdf5": {
-      "description": "Add HDF5 files support",
+      "description": "Add HDF5 and nc files support",
       "dependencies": [
-        "hdf5"
+        "hdf5",
+        "netcdf-c"
       ]
     },
     "libspatialite": {

@@ -166,7 +166,7 @@ macro(find_dependency_win)
   endif()
 
   # Setup netcdf libraries
-  if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+  if("hdf5" IN_LIST FEATURES AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
       if(EXISTS "${CURRENT_INSTALLED_DIR}/lib/netcdf.lib")
           file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/include" NETCDF_INCLUDE)
           file(TO_NATIVE_PATH "${CURRENT_INSTALLED_DIR}/lib/netcdf.lib" NETCDF_LIBRARY_REL)
