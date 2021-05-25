@@ -431,6 +431,9 @@ graphqlparser:arm-uwp=fail
 graphqlparser:x64-uwp=fail
 gsl:arm-uwp=fail
 gsl:x64-uwp=fail
+# To get cairo in static builds in CI; Remove if glib can be built statically on Windows
+gtk:x64-windows-static=skip
+gtk:x64-windows-static-md=skip
 gtkmm:x64-linux=fail
 gts:x64-osx=fail
 guetzli:x64-osx=fail
@@ -1206,6 +1209,9 @@ orocos-kdl:arm-uwp=fail
 orocos-kdl:x64-uwp=fail
 paho-mqtt:arm-uwp=fail
 paho-mqtt:x64-uwp=fail
+# To get cairo in static builds in CI; Remove if glib can be built statically on Windows
+pango:x64-windows-static=skip
+pango:x64-windows-static-md=skip
 pangomm:arm64-windows=fail
 pdal:x64-linux=fail
 pdal:x64-osx=fail
