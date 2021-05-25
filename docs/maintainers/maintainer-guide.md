@@ -241,7 +241,7 @@ To update the files for all modified ports at once.
 
 _NOTE: These commands require you to have committed your changes to the ports before running them. The reason is that the Git SHA of the port directory is required in these version files. But don't worry, the `x-add-version` command will warn you if you have local changes that haven't been committed._
 
-See our [versioning specification](https://github.com/vicroms/vcpkg/blob/versioning-spec/docs/specifications/versioning.md) and [registries specification](https://github.com/strega-nil/vcpkg/blob/git-registries/docs/specifications/registries-2.md) to learn how vcpkg interacts with these files.
+See our [versioning specification](../specifications/versioning.md) and [registries specification](../specifications/registries-2.md) to learn how vcpkg interacts with these files.
 
 ## Patching
 

@@ -45,10 +45,7 @@ while (!($vcpkgRootDir -eq "") -and !(Test-Path "$vcpkgRootDir\.vcpkg-root"))
 
 Write-Verbose "Examining $vcpkgRootDir for .vcpkg-root - Found"
 
-return # Fail to build the tool, waiting for release containing https://github.com/microsoft/vcpkg-tool/pull/10
-
-& "$scriptsDir/tls12-download.exe" github.com "/microsoft/vcpkg-tool/releases/download/2021-02-24-d67989bce1043b98092ac45996a8230a059a2d7e/vcpkg.exe" "$vcpkgRootDir/vcpkg.exe"
-Write-Host ""
+& "$scriptsDir/tls12-download.exe" github.com "/microsoft/vcpkg-tool/releases/download/2021-05-05-9f849c4c43e50d1b16186ae76681c27b0c1be9d9/vcpkg.exe" "$vcpkgRootDir\vcpkg.exe"
 
 if ($LASTEXITCODE -ne 0)
 {

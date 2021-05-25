@@ -1,5 +1,0 @@
-Source: asiosdk
-Version: 2.3.3-1
-Homepage: https://www.steinberg.net/en/company/developers.html
-Description: ASIO is a low latency audio API from Steinberg.
-Supports: windows&!(arm|uwp)

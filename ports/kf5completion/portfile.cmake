@@ -1,12 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcompletion
-    REF v5.75.0
-    SHA512 f4ff54b518f51b399392ee8f4be27bcc15a45be993b6a76305a16c84d6a85629017b8c4c27f19ff2c37699eeb3a455b9b6e5c7551716a55f0f7ecce2f2a2240b
+    REF v5.81.0
+    SHA512 eedb843ffc29bd35ef758d47ea7650d4485c33552916e09ca6d0e62b35f96bf29c0e903bd318e6703b8a14d045e9e36ee60ac6d505340cf7bfefaa8f1e8f7b05
     HEAD_REF master
-    # reported issue, just a manual workaround until the issue is fixed upstream
-    PATCHES 
-        "add-qdbus-to-required-libraries.patch"
 )
 
 vcpkg_configure_cmake(
