@@ -1,5 +1,7 @@
 # vcpkg_test_cmake_config
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_test_cmake_config.md).
+
 Automatically test the correctness of the configuration file exported by cmake
 
 ## Usage
@@ -27,4 +29,4 @@ Still work in progress. If there are more cases which can be handled here feel f
 * [ptex](https://github.com/Microsoft/vcpkg/blob/master/ports/ptex/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_test_cmake_config.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_test_cmake_config.cmake)
+[scripts/cmake/vcpkg\_test\_cmake\_config.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_test_cmake_config.cmake)
