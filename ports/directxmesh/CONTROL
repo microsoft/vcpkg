@@ -1,8 +1,9 @@
 Source: directxmesh
-Version: nov2020
-Homepage: https://walbourn.github.io/directxmesh
+Version: apr2021
+Homepage: https://github.com/microsoft/DirectXMesh
 Description: DirectXMesh geometry processing library
-Build-Depends: directxmesh[core,dx12](arm64|uwp)
+Build-Depends: directxmath, directx-headers
+Supports: windows|linux
 
 Feature: dx12
 Description: Build with DirectX12 support for Windows 10

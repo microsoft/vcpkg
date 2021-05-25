@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 65839ac58..54f2ce8ec 100644
---- a/CMakeLists.txt	
+index 61b174e..2314c79 100644
+--- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -517,7 +517,6 @@ endif ()
+@@ -509,7 +509,6 @@ endif ()
  
  if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
    # Generate the pkg-config file
@@ -10,11 +10,11 @@ index 65839ac58..54f2ce8ec 100644
      file(READ "${PROJECT_SOURCE_DIR}/builds/unix/freetype2.in" FREETYPE2_PC_IN)
  
      string(REPLACE ";" ", " PKG_CONFIG_REQUIRED_PRIVATE "${PKG_CONFIG_REQUIRED_PRIVATE}")
-@@ -551,7 +550,6 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+@@ -543,7 +542,6 @@ if (NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
        FILES ${PROJECT_BINARY_DIR}/freetype2.pc
        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
        COMPONENT pkgconfig)
 -  endif ()
  
-   install(
-     TARGETS freetype
+   include(CMakePackageConfigHelpers)
+   write_basic_package_version_file(

@@ -161,7 +161,7 @@ function(vcpkg_download_distfile VAR)
             endif()
         else()
             foreach(url IN LISTS vcpkg_download_distfile_URLS)
-                message(STATUS "Downloading ${url}...")
+                message(STATUS "Downloading ${url} -> ${vcpkg_download_distfile_FILENAME}...")
                 if(vcpkg_download_distfile_HEADERS)
                     foreach(header ${vcpkg_download_distfile_HEADERS})
                         list(APPEND request_headers HTTPHEADER ${header})
@@ -183,9 +183,27 @@ function(vcpkg_download_distfile VAR)
             if (NOT download_success)
                 message(FATAL_ERROR
                 "    \n"
-                "    Failed to download file.\n"
-                "    If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment\n"
-                "    variables to \"https://user:password@your-proxy-ip-address:port/\".\n"
+                "    Failed to download file.\n"  
+                "    If you use a proxy, please check your proxy setting. Possible causes are:\n"
+                "    \n"
+                "    1. You are actually using an HTTP proxy, but setting HTTPS_PROXY variable\n"
+                "       to `https://address:port`. This is not correct, because `https://` prefix\n"
+                "       claims the proxy is an HTTPS proxy, while your proxy (v2ray, shadowsocksr\n"
+                "       , etc..) is an HTTP proxy. Try setting `http://address:port` to both\n"
+                "       HTTP_PROXY and HTTPS_PROXY instead.\n"
+                "    \n"
+                "    2. You are using Fiddler. Currently a bug (https://github.com/microsoft/vcpkg/issues/17752)\n"
+                "       will set HTTPS_PROXY to `https://fiddler_address:port` which lead to problem 1 above.\n"
+                "       Workaround is open Windows 10 Settings App, and search for Proxy Configuration page,\n"
+                "       Change `http=address:port;https=address:port` to `address`, and fill the port number.\n"
+                "    \n"
+                "    3. You proxy's remote server is out of service.\n"
+                "    \n"
+                "    In future vcpkg releases, if you are using Windows, you no longer need to set\n"
+                "    HTTP(S)_PROXY environment variables. Vcpkg will simply apply Windows IE Proxy\n"
+                "    Settings set by your proxy software. See (https://github.com/microsoft/vcpkg-tool/pull/49)\n"
+                "    and (https://github.com/microsoft/vcpkg-tool/pull/77)\n"
+                "    \n"
                 "    Otherwise, please submit an issue at https://github.com/Microsoft/vcpkg/issues\n")
             else()
                 test_hash("${download_file_path_part}" "downloaded file" "The file may have been corrupted in transit. This can be caused by proxies. If you use a proxy, please set the HTTPS_PROXY and HTTP_PROXY environment variables to \"https://user:password@your-proxy-ip-address:port/\".\n")

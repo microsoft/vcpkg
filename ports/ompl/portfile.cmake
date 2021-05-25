@@ -1,21 +1,21 @@
 vcpkg_buildpath_length_warning(37)
 
-set(OMPL_VERSION 1.5.0)
+set(OMPL_VERSION 1.5.1)
 
 set(FEATURE_PATCHES)
 
 if("app" IN_LIST FEATURES)
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/ompl/omplapp/releases/download/1.5.0/omplapp-1.5.0-Source.tar.gz"
+        URLS "https://github.com/ompl/omplapp/releases/download/1.5.1/omplapp-1.5.1-Source.tar.gz"
         FILENAME "omplapp-${OMPL_VERSION}.tar.gz"
-        SHA512 ad221b67146915cb63be6731ca2fa7d827d85b7fd175d87ee64c799311dfe4878935881b1ae6447357fdd178f70c9aa01b178e857261a8d8769affa1e58ed72b
+        SHA512 83b1b09d6be776f7e15a748402f0c2f072459921de61a92731daf5171bd1f91a829fbeb6e10a489b92fba0297f6272e7bb6b8f07830c387bb29ccdbc7b3731f3
     )
     list(APPEND FEATURE_PATCHES fix_dependency.patch)
 else()
     vcpkg_download_distfile(ARCHIVE
-        URLS "https://github.com/ompl/ompl/archive/1.5.0.tar.gz"
+        URLS "https://github.com/ompl/ompl/archive/1.5.1.tar.gz"
         FILENAME "ompl-${OMPL_VERSION}.tar.gz"
-        SHA512 a300682fa0af40768c93e44b819c677b6121812e4f968ad89b5ae4044f3171a7febca63fa5645f2ad0f99ec3dfb3b02fe8c7443c4e389bf19a4a4bc9c7a5d013
+        SHA512 2f28d29f32f3bb03e67b29ce251e4786364847a25e3c4cf66d7663ed38dca4da71d4e03cf9ce647710d9524a3907c76c09795e77f041cb8822f695d28f5ca570
     )
 endif()
 

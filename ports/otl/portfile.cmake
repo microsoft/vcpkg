@@ -2,8 +2,8 @@ set(OTL_VERSION 40455)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "http://otl.sourceforge.net/otlv4_${OTL_VERSION}.zip"
-    FILENAME "otlv4_${OTL_VERSION}.zip"
-    SHA512 2d5c52af3eafdd93bf7c651de218607b8985acc1fce279d48d9bf58ecf8a012332c8d0b9a33223a6449f343134211e2d7c5412b71efb36ba484bda754e1afc45
+    FILENAME "otlv4_${OTL_VERSION}-1.zip"
+    SHA512 d1f777dea53f4451616ef628680d070db1fe53683571bd509f58dba9c1e64fe6caa8a81d2f47876c2128af701ba19dc2e9c5612a57232efca3ad084843f272b6
 )
 
 vcpkg_extract_source_archive_ex(

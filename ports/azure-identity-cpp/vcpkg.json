@@ -1,0 +1,24 @@
+{
+  "name": "azure-identity-cpp",
+  "version-semver": "1.0.0-beta.6",
+  "description": [
+    "Microsoft Azure Identity SDK for C++",
+    "This library provides common authentication-related abstractions for Azure SDK."
+  ],
+  "homepage": "https://github.com/Azure/azure-sdk-for-cpp/tree/master/sdk/identity/azure-identity",
+  "license": "MIT",
+  "dependencies": [
+    {
+      "name": "azure-core-cpp",
+      "default-features": false
+    },
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}

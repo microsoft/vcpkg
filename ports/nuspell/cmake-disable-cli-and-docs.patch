@@ -1,16 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 835ebfb..82fa335 100644
+index a98ed58..3756bae 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -8,7 +8,6 @@ include(GNUInstallDirs)
- include(CMakePackageConfigHelpers)
- 
- find_package(ICU REQUIRED COMPONENTS uc data)
--find_package(Boost 1.48.0 REQUIRED COMPONENTS locale)
- 
- get_directory_property(subproject PARENT_DIRECTORY)
- 
-@@ -20,8 +19,6 @@ if (subproject)
+@@ -19,8 +19,6 @@ if (subproject)
      return()
  endif()
  
@@ -20,7 +12,7 @@ index 835ebfb..82fa335 100644
      set(Catch2_FOUND Catch2-NOTFOUND PARENT_SCOPE)
      set(catch_cmake_lists ${PROJECT_SOURCE_DIR}/external/Catch2/CMakeLists.txt)
 diff --git a/src/nuspell/CMakeLists.txt b/src/nuspell/CMakeLists.txt
-index a8d215f..78553c5 100644
+index 9535686..78553c5 100644
 --- a/src/nuspell/CMakeLists.txt
 +++ b/src/nuspell/CMakeLists.txt
 @@ -27,22 +27,6 @@ target_include_directories(nuspell
@@ -33,7 +25,7 @@ index a8d215f..78553c5 100644
 -    RUNTIME_OUTPUT_NAME nuspell)
 -target_compile_definitions(nuspell-bin PRIVATE
 -    PROJECT_VERSION=\"${PROJECT_VERSION}\")
--target_link_libraries(nuspell-bin nuspell Boost::locale)
+-target_link_libraries(nuspell-bin nuspell)
 -if (BUILD_SHARED_LIBS AND WIN32)
 -    # This should be PRE_LINK (or PRE_BUILD), so Vcpkg's POST_BUILD
 -    # step (see VCPKG_APPLOCAL_DEPS) that copies dll can pick up nuspell.dll

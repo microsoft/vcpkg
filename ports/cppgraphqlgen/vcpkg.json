@@ -1,0 +1,11 @@
+{
+  "name": "cppgraphqlgen",
+  "version-semver": "3.5.0",
+  "description": "C++ GraphQL schema service generator",
+  "homepage": "https://github.com/microsoft/cppgraphqlgen",
+  "dependencies": [
+    "boost-program-options",
+    "pegtl",
+    "rapidjson"
+  ]
+}

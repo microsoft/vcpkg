@@ -1,7 +1,9 @@
 {
   "name": "flashlight-cuda",
-  "version-string": "20201201",
+  "version": "0.3",
+  "port-version": 1,
   "description": "A C++ standalone library for machine learning. CUDA backend.",
+  "homepage": "https://github.com/facebookresearch/flashlight",
   "supports": "!(windows | osx)",
   "default-features": [
     "fl"
@@ -12,9 +14,9 @@
       "dependencies": [
         {
           "name": "flashlight-cuda",
-          "default-features": false,
           "features": [
-            "fl"
+            "fl",
+            "lib"
           ]
         },
         "gflags",
@@ -26,7 +28,6 @@
       "dependencies": [
         {
           "name": "arrayfire",
-          "default-features": false,
           "features": [
             "cuda"
           ]
@@ -34,13 +35,6 @@
         "cereal",
         "cuda",
         "cudnn",
-        {
-          "name": "flashlight-cuda",
-          "default-features": false,
-          "features": [
-            "lib"
-          ]
-        },
         "nccl",
         "openmpi",
         "stb"
@@ -51,9 +45,9 @@
       "dependencies": [
         {
           "name": "flashlight-cuda",
-          "default-features": false,
           "features": [
-            "fl"
+            "fl",
+            "lib"
           ]
         },
         "gflags"
@@ -63,9 +57,37 @@
       "description": "flashlight libraries",
       "dependencies": [
         "cub",
+        "cuda",
         "fftw3",
         "intel-mkl",
         "kenlm"
+      ]
+    },
+    "lm": {
+      "description": "flashlight lm app",
+      "dependencies": [
+        {
+          "name": "flashlight-cuda",
+          "features": [
+            "fl",
+            "lib"
+          ]
+        },
+        "gflags"
+      ]
+    },
+    "objdet": {
+      "description": "flashlight object detection app",
+      "dependencies": [
+        {
+          "name": "flashlight-cuda",
+          "features": [
+            "fl",
+            "imgclass",
+            "lib"
+          ]
+        },
+        "gflags"
       ]
     }
   }

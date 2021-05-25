@@ -1,9 +1,8 @@
 #[===[.md:
 # vcpkg_common_definitions
 
-File contains helpful variabls for portfiles which are commonly needed or used.
+This file defines the following variables which are commonly needed or used in portfiles:
 
-## The following variables are available:
 ```cmake
 VCPKG_TARGET_IS_<target>                 with <target> being one of the following: WINDOWS, UWP, LINUX, OSX, ANDROID, FREEBSD, OPENBSD. only defined if <target>
 VCPKG_HOST_IS_<target>                   with <host> being one of the following: WINDOWS, LINUX, OSX, FREEBSD, OPENBSD. only defined if <host>
@@ -19,6 +18,11 @@ VCPKG_TARGET_IMPORT_LIBRARY_SUFFIX       import library suffix for target (same 
 VCPKG_FIND_LIBRARY_PREFIXES              target dependent prefixes used for find_library calls in portfiles
 VCPKG_FIND_LIBRARY_SUFFIXES              target dependent suffixes used for find_library calls in portfiles
 VCPKG_SYSTEM_LIBRARIES                   list of libraries are provide by the toolchain and are not managed by vcpkg
+TARGET_TRIPLET                           the name of the current triplet to build for
+CURRENT_INSTALLED_DIR                    the absolute path to the installed files for the current triplet
+HOST_TRIPLET                             the name of the triplet corresponding to the host
+CURRENT_HOST_INSTALLED_DIR               the absolute path to the installed files for the host triplet
+VCPKG_CROSSCOMPILING                     Whether vcpkg is cross-compiling: in other words, whether TARGET_TRIPLET and HOST_TRIPLET are different
 ```
 
 CMAKE_STATIC_LIBRARY_(PREFIX|SUFFIX), CMAKE_SHARED_LIBRARY_(PREFIX|SUFFIX) and CMAKE_IMPORT_LIBRARY_(PREFIX|SUFFIX) are defined for the target
@@ -26,40 +30,41 @@ Furthermore the variables CMAKE_FIND_LIBRARY_(PREFIXES|SUFFIXES) are also define
 portfiles are able to use find_library calls to discover dependent libraries within the current triplet for ports.
 #]===]
 
+string(COMPARE NOTEQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" VCPKG_CROSSCOMPILING)
 #Helper variable to identify the Target system. VCPKG_TARGET_IS_<targetname>
-if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    set(VCPKG_TARGET_IS_WINDOWS 1)
-    if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-        set(VCPKG_TARGET_IS_UWP 1)
-    endif()
+if (NOT DEFINED VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "")
+    set(VCPKG_TARGET_IS_WINDOWS ON)
+elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+    set(VCPKG_TARGET_IS_WINDOWS ON)
+    set(VCPKG_TARGET_IS_UWP ON)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
-    set(VCPKG_TARGET_IS_OSX 1)
+    set(VCPKG_TARGET_IS_OSX ON)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS")
-    set(VCPKG_TARGET_IS_IOS 1)
+    set(VCPKG_TARGET_IS_IOS ON)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    set(VCPKG_TARGET_IS_LINUX 1)
+    set(VCPKG_TARGET_IS_LINUX ON)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android")
-    set(VCPKG_TARGET_IS_ANDROID 1)
+    set(VCPKG_TARGET_IS_ANDROID ON)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "FreeBSD")
-    set(VCPKG_TARGET_IS_FREEBSD 1)
+    set(VCPKG_TARGET_IS_FREEBSD ON)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "OpenBSD")
-    set(VCPKG_TARGET_IS_OPENBSD 1)
+    set(VCPKG_TARGET_IS_OPENBSD ON)
 elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "MinGW")
-    set(VCPKG_TARGET_IS_WINDOWS 1)
-    set(VCPKG_TARGET_IS_MINGW 1)
+    set(VCPKG_TARGET_IS_WINDOWS ON)
+    set(VCPKG_TARGET_IS_MINGW ON)
 endif()
 
 #Helper variables to identify the host system name
 if (CMAKE_HOST_WIN32)
-    set(VCPKG_HOST_IS_WINDOWS 1)
+    set(VCPKG_HOST_IS_WINDOWS ON)
 elseif (CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
-    set(VCPKG_HOST_IS_OSX 1)
+    set(VCPKG_HOST_IS_OSX ON)
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Linux")
-    set(VCPKG_HOST_IS_LINUX 1)
+    set(VCPKG_HOST_IS_LINUX ON)
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "FreeBSD")
-    set(VCPKG_HOST_IS_FREEBSD 1)
+    set(VCPKG_HOST_IS_FREEBSD ON)
 elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "OpenBSD")
-    set(VCPKG_HOST_IS_OPENBSD 1)
+    set(VCPKG_HOST_IS_OPENBSD ON)
 endif()
 
 #Helper variable to identify the host path separator.
@@ -152,12 +157,12 @@ endif()
 
 # Platforms with libstdc++
 if(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_FREEBSD OR VCPKG_TARGET_IS_OPENBSD OR VCPKG_TARGET_IS_MINGW)
-    list(APPEND VCPKG_SYSTEM_LIBRARIES [=[stdc\+\+]=])
+    list(APPEND VCPKG_SYSTEM_LIBRARIES [[stdc\+\+]])
 endif()
 
 # Platforms with libc++
 if(VCPKG_TARGET_IS_OSX)
-    list(APPEND VCPKG_SYSTEM_LIBRARIES [=[c\+\+]=])
+    list(APPEND VCPKG_SYSTEM_LIBRARIES [[c\+\+]])
 endif()
 
 # Platforms with librt
@@ -199,5 +204,5 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND VCPKG_SYSTEM_LIBRARIES wsock32)
     list(APPEND VCPKG_SYSTEM_LIBRARIES Ws2_32)
     list(APPEND VCPKG_SYSTEM_LIBRARIES wldap32)
-    list(APPEND VCPKG_SYSTEM_LIBRARIES crypt32)	
+    list(APPEND VCPKG_SYSTEM_LIBRARIES crypt32)
 endif()

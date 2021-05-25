@@ -17,6 +17,7 @@ vcpkg_extract_source_archive_ex(
         libpq.patch
         fix-CPL_DLL.patch
         0004-fix-const-overloaded.patch
+        geotiff.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/pdal/gitsha.cpp")
@@ -32,13 +33,7 @@ foreach(_module IN ITEMS FindGEOS)  # Overwritten Modules.
     )
 endforeach()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-  set(VCPKG_BUILD_SHARED_LIBS ON)
-  set(VCPKG_BUILD_STATIC_LIBS OFF)
-else()
-  set(VCPKG_BUILD_SHARED_LIBS OFF)
-  set(VCPKG_BUILD_STATIC_LIBS ON)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" VCPKG_BUILD_STATIC_LIBS)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
