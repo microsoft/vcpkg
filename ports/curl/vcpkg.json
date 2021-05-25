@@ -110,7 +110,7 @@
           "features": [
             "winssl"
           ],
-          "platform": "windows & !uwp"
+          "platform": "(windows & !uwp) | mingw"
         },
         {
           "name": "curl",
@@ -118,7 +118,7 @@
           "features": [
             "openssl"
           ],
-          "platform": "(uwp | !windows) & !osx"
+          "platform": "(uwp | !windows) & !osx & !mingw"
         }
       ]
     },
