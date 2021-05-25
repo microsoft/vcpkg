@@ -210,7 +210,7 @@
     },
     "avcpp": {
       "baseline": "2021-05-06",
-      "port-version": 0
+      "port-version": 1
     },
     "avisynthplus": {
       "baseline": "3.7.0",
