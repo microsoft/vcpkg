@@ -72,12 +72,12 @@ Additional options passed to configure during the Release configuration. These a
 Additional options passed to configure during the Debug configuration. These are in addition to `OPTIONS`.
 
 ### CONFIG_DEPENDENT_ENVIRONMENT
-List of additional configuration dependent environment variables to set.
+List of additional configuration dependent environment variables to set. 
 Pass SOMEVAR to set the environment and have SOMEVAR_(DEBUG|RELEASE) set in the portfile to the appropriate values
-General environment variables can be set from within the portfile itself.
+General environment variables can be set from within the portfile itself. 
 
 ### CONFIGURE_ENVIRONMENT_VARIABLES
-List of additional environment variables to pass via the configure call.
+List of additional environment variables to pass via the configure call. 
 
 ## Notes
 This command supplies many common arguments to configure. To see the full list, examine the source.
