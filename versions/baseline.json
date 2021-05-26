@@ -5630,7 +5630,7 @@
     },
     "simdjson": {
       "baseline": "0.9.2",
-      "port-version": 0
+      "port-version": 1
     },
     "simple-fft": {
       "baseline": "2020-06-14",
