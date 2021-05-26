@@ -158,7 +158,7 @@
     },
     "asiosdk": {
       "baseline": "2.3.3",
-      "port-version": 2
+      "port-version": 3
     },
     "asmjit": {
       "baseline": "2020-09-14",
@@ -226,7 +226,7 @@
     },
     "aws-c-common": {
       "baseline": "0.4.56",
-      "port-version": 0
+      "port-version": 1
     },
     "aws-c-event-stream": {
       "baseline": "0.1.6",
@@ -1521,8 +1521,8 @@
       "port-version": 0
     },
     "ctp": {
-      "baseline": "6.3.15_20190220_se",
-      "port-version": 1
+      "baseline": "6.6.1_P1_20210406_se",
+      "port-version": 0
     },
     "ctre": {
       "baseline": "2.10",
@@ -1538,7 +1538,7 @@
     },
     "cudnn": {
       "baseline": "7.6.5",
-      "port-version": 3
+      "port-version": 4
     },
     "cunit": {
       "baseline": "2.1.3-6",
@@ -1546,7 +1546,7 @@
     },
     "curl": {
       "baseline": "7.74.0",
-      "port-version": 5
+      "port-version": 6
     },
     "curlpp": {
       "baseline": "2018-06-15-3",
@@ -1598,7 +1598,7 @@
     },
     "dav1d": {
       "baseline": "0.8.2",
-      "port-version": 0
+      "port-version": 1
     },
     "dbg-macro": {
       "baseline": "2019-07-11",
@@ -2210,7 +2210,7 @@
     },
     "geos": {
       "baseline": "3.9.1",
-      "port-version": 0
+      "port-version": 1
     },
     "geotrans": {
       "baseline": "3.8",
@@ -2786,7 +2786,7 @@
     },
     "jxrlib": {
       "baseline": "2019.10.9",
-      "port-version": 2
+      "port-version": 3
     },
     "kangaru": {
       "baseline": "4.2.4",
@@ -3134,7 +3134,7 @@
     },
     "libgnutls": {
       "baseline": "3.6.15",
-      "port-version": 1
+      "port-version": 2
     },
     "libgo": {
       "baseline": "3.1-1",
@@ -3506,7 +3506,7 @@
     },
     "libsodium": {
       "baseline": "1.0.18",
-      "port-version": 4
+      "port-version": 5
     },
     "libsoundio": {
       "baseline": "2.0.0",
@@ -3557,7 +3557,7 @@
       "port-version": 2
     },
     "libtasn1": {
-      "baseline": "4.16.0",
+      "baseline": "4.17.0",
       "port-version": 1
     },
     "libtcod": {
@@ -4514,7 +4514,7 @@
     },
     "openh264": {
       "baseline": "2021-03-16",
-      "port-version": 1
+      "port-version": 2
     },
     "openigtlink": {
       "baseline": "3.0",
@@ -6160,6 +6160,10 @@
       "baseline": "2019-04-19-2",
       "port-version": 0
     },
+    "transwarp": {
+      "baseline": "2.2.2",
+      "port-version": 0
+    },
     "trantor": {
       "baseline": "1.4.1",
       "port-version": 0
@@ -6353,8 +6357,8 @@
       "port-version": 2
     },
     "vcpkg-cmake-config": {
-      "baseline": "2021-02-26",
-      "port-version": 1
+      "baseline": "2021-05-22",
+      "port-version": 0
     },
     "vcpkg-gfortran": {
       "baseline": "3",
@@ -6558,7 +6562,7 @@
     },
     "xmlsec": {
       "baseline": "1.2.31",
-      "port-version": 0
+      "port-version": 1
     },
     "xmsh": {
       "baseline": "0.5.2-1",
@@ -6638,6 +6642,10 @@
     },
     "yoga": {
       "baseline": "1.18.0-1",
+      "port-version": 0
+    },
+    "yomm2": {
+      "baseline": "1.1.2",
       "port-version": 0
     },
     "yyjson": {

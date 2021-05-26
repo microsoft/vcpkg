@@ -40,6 +40,9 @@ elseif(MINGW)
     else()
         set(PLATFORM mingw)
     endif()
+elseif(EMSCRIPTEN)
+    set(MAKE $ENV{EMSDK}/upstream/emscripten/emmake)
+    set(ENV{MAKE} $ENV{EMSDK}/upstream/emscripten/emmake)
 else()
     message(FATAL_ERROR "Unknown platform")
 endif()
@@ -166,40 +169,83 @@ if(NOT IOS)
         APPEND
     )
 
-    list(APPEND DISABLES
-            enable-static-engine
-            no-zlib
-            no-ssl2
-            no-idea
-            no-bf
-            no-cast
-            no-seed
-            no-md2
-            no-tests)
+    if(EMSCRIPTEN)
+        list(APPEND DISABLES
+                enable-static-engine
+                no-zlib
+                no-ssl2
+                no-idea
+                no-bf
+                no-cast
+                no-seed
+                no-md2
+                no-tests)
+    else()
+        list(APPEND DISABLES
+                threads
+                no-engine
+                no-dso
+                no-asm
+                no-shared
+                no-sse2
+                no-srtp
+                )
+    endif()
+endif()
+
+if(EMSCRIPTEN)
+    add_custom_command(
+            OUTPUT "${BUILDDIR}/Makefile"
+            COMMAND "$ENV{EMSDK}/upstream/emscripten/emconfigure" ./config
+            ${SHARED}
+            ${DISABLES}
+            "--prefix=${CMAKE_INSTALL_PREFIX}"
+            "--openssldir=/etc/ssl"
+            "--cross-compile-prefix=\"/\""
+            VERBATIM
+            APPEND
+    )
+
+    add_custom_target(build_libs ALL
+            COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
+            COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
+            COMMAND "${MAKE}" make build_libs
+            COMMAND "${MAKE}" make -j ${VCPKG_CONCURRENCY} build_libs
+            VERBATIM
+            WORKING_DIRECTORY "${BUILDDIR}"
+            DEPENDS "${BUILDDIR}/Makefile"
+            BYPRODUCTS ${INSTALL_LIBS}
+            )
+else()
+    add_custom_command(
+            OUTPUT "${BUILDDIR}/Makefile"
+            COMMAND "${PERL}" Configure
+            ${SHARED}
+            ${DISABLES}
+            ${PLATFORM}
+            "--prefix=${CMAKE_INSTALL_PREFIX}"
+            "--openssldir=/etc/ssl"
+            ${CFLAGS}
+            VERBATIM
+            APPEND
+    )
+
+    add_custom_target(build_libs ALL
+            COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
+            COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
+            COMMAND "${MAKE}" -j ${VCPKG_CONCURRENCY} build_libs
+            VERBATIM
+            WORKING_DIRECTORY "${BUILDDIR}"
+            DEPENDS "${BUILDDIR}/Makefile"
+            BYPRODUCTS ${INSTALL_LIBS}
+            )
 endif()
 
 add_custom_command(
         OUTPUT "${BUILDDIR}/Makefile"
-        COMMAND "${PERL}" Configure
-        ${SHARED}
-        ${DISABLES}
-        ${PLATFORM}
-        "--prefix=${CMAKE_INSTALL_PREFIX}"
-        "--openssldir=/etc/ssl"
-        ${CFLAGS}
         COMMAND "${CMAKE_COMMAND}" "-DDIR=${BUILDDIR}" -P "${CMAKE_CURRENT_LIST_DIR}/remove-deps.cmake"
         VERBATIM
         APPEND
-)
-
-add_custom_target(build_libs ALL
-    COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
-    COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
-    COMMAND "${MAKE}" -j ${VCPKG_CONCURRENCY} build_libs
-    VERBATIM
-    WORKING_DIRECTORY "${BUILDDIR}"
-    DEPENDS "${BUILDDIR}/Makefile"
-    BYPRODUCTS ${INSTALL_LIBS}
 )
 
 if((CMAKE_SYSTEM_NAME STREQUAL "Darwin" OR CMAKE_SYSTEM_NAME STREQUAL "iOS") AND BUILD_SHARED_LIBS)
