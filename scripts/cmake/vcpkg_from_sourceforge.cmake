@@ -126,7 +126,8 @@ function(vcpkg_from_sourceforge)
 
     string(SUBSTRING "${_vdus_SHA512}" 0 10 SANITIZED_REF)
 
-    set(SOURCEFORGE_MIRRORS
+    set(Z_VCPKG_SOURCEFORGE_MIRRORS ${SOURCEFORGE_MIRRORS})
+    list(APPEND Z_VCPKG_SOURCEFORGE_MIRRORS
         cfhcable        # United States
         pilotfiber      # New York, NY
         gigenet         # Chicago, IL
@@ -150,7 +151,7 @@ function(vcpkg_from_sourceforge)
     )
 
     set(URLS "${URL}/download")
-    foreach(SOURCEFORGE_MIRROR IN LISTS SOURCEFORGE_MIRRORS)
+    foreach(SOURCEFORGE_MIRROR IN LISTS Z_VCPKG_SOURCEFORGE_MIRRORS)
         list(APPEND URLS "${URL}/download?use_mirror=${SOURCEFORGE_MIRROR}")
     endforeach()
 
