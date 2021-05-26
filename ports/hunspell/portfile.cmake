@@ -6,7 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         0001_fix_unistd.patch
-        fix-static-build.patch
+        0002-disable-test.patch
+        0003-fix-win-build.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -16,23 +17,37 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     file(REMOVE "${SOURCE_PATH}/README") #README is a symlink
-    if(NOT "tools" IN_LIST FEATURES)
-        vcpkg_install_msbuild(
-            SOURCE_PATH "${SOURCE_PATH}"
-            PROJECT_SUBPATH "msvc/libhunspell.vcxproj"
-            INCLUDES_SUBPATH src/hunspell
-            USE_VCPKG_INTEGRATION
-            ALLOW_ROOT_INCLUDES      
-        )
+    
+    #architecture detection
+    if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        set(HUNSPELL_ARCH Win32)
+    elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
+        set(HUNSPELL_ARCH x64)
     else()
-        vcpkg_install_msbuild(
-        SOURCE_PATH "${SOURCE_PATH}"
-        PROJECT_SUBPATH "msvc/hunspell.vcxproj"
-        INCLUDES_SUBPATH src/hunspell
-        USE_VCPKG_INTEGRATION
-        ALLOW_ROOT_INCLUDES      
-    )
+        message(FATAL_ERROR "unsupported architecture")
     endif()
+    
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+        set(HUNSPELL_CONFIGURATION _dll)
+    else()
+        set(HUNSPELL_CONFIGURATION )
+    endif()
+    
+    if("tools" IN_LIST FEATURES)
+        set(HSP_TARGET hunspell)
+    else()
+        set(HSP_TARGET libhunspell)
+    endif()
+    
+    vcpkg_install_msbuild(
+        SOURCE_PATH "${SOURCE_PATH}"
+        PROJECT_SUBPATH "msvc/Hunspell.sln"
+        INCLUDES_SUBPATH src/hunspell
+        PLATFORM ${HUNSPELL_ARCH}
+        RELEASE_CONFIGURATION Release${HUNSPELL_CONFIGURATION}
+        DEBUG_CONFIGURATION Debug${HUNSPELL_CONFIGURATION}
+        ALLOW_ROOT_INCLUDES
+    )
 else()
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         set(ENV{CFLAGS} "$ENV{CFLAGS} -DHUNSPELL_STATIC")
