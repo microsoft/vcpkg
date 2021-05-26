@@ -171,6 +171,16 @@ if(NOT IOS)
 
     if(EMSCRIPTEN)
         list(APPEND DISABLES
+                threads
+                no-engine
+                no-dso
+                no-asm
+                no-shared
+                no-sse2
+                no-srtp
+                )
+    else()
+        list(APPEND DISABLES
                 enable-static-engine
                 no-zlib
                 no-ssl2
@@ -180,16 +190,6 @@ if(NOT IOS)
                 no-seed
                 no-md2
                 no-tests)
-    else()
-        list(APPEND DISABLES
-                threads
-                no-engine
-                no-dso
-                no-asm
-                no-shared
-                no-sse2
-                no-srtp
-                )
     endif()
 endif()
 
