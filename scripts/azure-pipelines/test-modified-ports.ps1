@@ -136,12 +136,6 @@ $skipList = . "$PSScriptRoot/generate-skip-list.ps1" `
     -BaselineFile "$PSScriptRoot/../ci.baseline.txt" `
     -SkipFailures:$skipFailures
 
-# WORKAROUND: the x86-windows flavors of these are needed for all cross-compilation, but they are not auto-installed.
-# Install them so the CI succeeds:
-if ($Triplet -in @('x64-uwp', 'arm64-windows', 'arm-uwp', 'x64-windows', 'x64-windows-static', 'x64-windows-static-md')) {
-    .\vcpkg.exe install yasm-tool:x86-windows @commonArgs
-}
-
 if ($Triplet -in @('x64-windows', 'x64-osx', 'x64-linux'))
 {
     # WORKAROUND: These triplets are native-targetting which triggers an issue in how vcpkg handles the skip list.
