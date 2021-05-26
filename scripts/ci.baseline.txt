@@ -867,6 +867,7 @@ luajit:x64-windows        = skip
 luajit:x64-windows-static = skip
 luajit:x64-windows-static-md=skip
 luajit:x86-windows        = skip
+luasec:x64-windows-static=fail
 luasocket:x64-linux=fail
 luasocket:x64-osx=fail
 lzfse:arm-uwp=fail
