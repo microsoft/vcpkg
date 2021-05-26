@@ -210,7 +210,6 @@ if(EMSCRIPTEN)
             COMMAND ${ENV_COMMAND} "PATH=${MSYS_BIN_DIR}${PATH_VAR}"
             COMMAND "${CMAKE_COMMAND}" -E touch "${BUILDDIR}/krb5.h"
             COMMAND "${MAKE}" make build_libs
-            COMMAND "${MAKE}" make -j ${VCPKG_CONCURRENCY} build_libs
             VERBATIM
             WORKING_DIRECTORY "${BUILDDIR}"
             DEPENDS "${BUILDDIR}/Makefile"
