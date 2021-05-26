@@ -1,0 +1,13 @@
+diff --git a/cmake/FindLIBZIP.cmake b/cmake/FindLIBZIP.cmake
+index c51c09a..a32bb13 100644
+--- a/cmake/FindLIBZIP.cmake
++++ b/cmake/FindLIBZIP.cmake
+@@ -50,7 +50,7 @@ if (LIBZIP_FOUND)
+             set_property(TARGET libzip::zip APPEND PROPERTY INTERFACE_LINK_LIBRARIES Nettle::Nettle)
+         endif()
+         if(_have_extra_libs MATCHES "-llzma")
+-            find_package(LibLZMA::LibLZMA REQUIRED)
++            find_package(LibLZMA REQUIRED)
+             set_property(TARGET libzip::zip APPEND PROPERTY INTERFACE_LINK_LIBRARIES LibLZMA::LibLZMA)
+         endif()
+         if(_have_extra_libs MATCHES "-lz")

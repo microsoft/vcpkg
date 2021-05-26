@@ -1,13 +1,24 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
+if ("docking-experimental" IN_LIST FEATURES)
+    vcpkg_from_github(
+       OUT_SOURCE_PATH SOURCE_PATH
+       REPO ocornut/imgui
+       REF 256594575d95d56dda616c544c509740e74906b4
+       SHA512 276729df1c80015c8cffe52ff1f8fcf413c73fd8aa9a48c380e66e470573daf384b2d2ef9912ec62786b97b12810681915dabd09b1474164348ebde103b6e0e6
+       HEAD_REF docking
+       )
+else()
+    vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.79
-    SHA512 35ed7af89123e09989ef81085f19ed15f97f4798e2b35834fd8b4ae918889b51132d85901f867ab2f379711a734bc7b2edd309d74f3f7527eaaaebfd766d3737
+    REF v1.82
+    SHA512 210076c2b04c09e63a4924e1f874bfe240668f4d2656511c96dd5499efe04d795ad01d5af8e2aa2543849d3ca5ef1a6c6555a9232d4d92f95bf98c41e8505b58
     HEAD_REF master
-)
+    )
+endif()
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/imgui-config.cmake.in DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_OSX))
@@ -15,6 +26,7 @@ if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES 
     allegro5-binding            IMGUI_BUILD_ALLEGRO5_BINDING
     dx9-binding                 IMGUI_BUILD_DX9_BINDING
     dx10-binding                IMGUI_BUILD_DX10_BINDING
@@ -60,6 +72,13 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+if ("freetype" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE" "#define IMGUI_ENABLE_FREETYPE")
+endif()
+if ("wchar32" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_USE_WCHAR32" "#define IMGUI_USE_WCHAR32")
+endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()

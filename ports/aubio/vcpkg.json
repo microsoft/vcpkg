@@ -1,0 +1,24 @@
+{
+  "name": "aubio",
+  "version-string": "0.4.9",
+  "port-version": 4,
+  "description": "Aubio is a tool designed for the extraction of annotations from audio signals. Its features include segmenting a sound file before each of its attacks, performing pitch detection, tapping the beat and producing midi streams from live audio.",
+  "homepage": "https://github.com/aubio/aubio",
+  "default-features": [
+    "tools"
+  ],
+  "features": {
+    "tools": {
+      "description": "Build tools and add extra dependencies",
+      "dependencies": [
+        "bzip2",
+        "ffmpeg",
+        "libflac",
+        "liblzma",
+        "libogg",
+        "libsndfile",
+        "libvorbis"
+      ]
+    }
+  }
+}

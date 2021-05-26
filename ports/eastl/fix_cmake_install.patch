@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index b8171cd..44120cc 100644
+index e8700dc..6d3e2f1 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -4,12 +4,17 @@
@@ -20,7 +20,7 @@ index b8171cd..44120cc 100644
  #-------------------------------------------------------------------------------------------
  # Compiler Flags
  #-------------------------------------------------------------------------------------------
-@@ -41,10 +46,46 @@ add_definitions(-DEASTL_OPENSOURCE=1)
+@@ -41,7 +46,10 @@ add_definitions(-DEASTL_OPENSOURCE=1)
  #-------------------------------------------------------------------------------------------
  # Include dirs
  #-------------------------------------------------------------------------------------------
@@ -32,7 +32,10 @@ index b8171cd..44120cc 100644
  
  #-------------------------------------------------------------------------------------------
  # Dependencies
- #-------------------------------------------------------------------------------------------
+@@ -50,5 +58,39 @@ if (NOT TARGET EABase)
+     add_subdirectory(test/packages/EABase)
+ endif()
+ 
 -target_link_libraries(EASTL EABase)
 +target_link_libraries(EASTL PUBLIC EABase)
 +
@@ -62,10 +65,11 @@ index b8171cd..44120cc 100644
 +
 +install(TARGETS EASTL LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}")
 +install(DIRECTORY "include/" DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
- 
++ 
 +install(
 +    FILES
 +        "${CMAKE_CURRENT_BINARY_DIR}/EASTLConfig.cmake"
 +        "${CMAKE_CURRENT_BINARY_DIR}/EASTLConfigVersion.cmake"
 +    DESTINATION ${EASTL_CMAKE_CONFIG_DESTINATION}
 +)
+ 

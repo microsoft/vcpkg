@@ -1,0 +1,9 @@
+diff --color -Naur src_old/include/libmp3lame.sym src/include/libmp3lame.sym
+--- src_old/include/libmp3lame.sym	2017-09-07 02:33:35.000000000 +0700
++++ src/include/libmp3lame.sym	2020-11-12 17:45:59.946448300 +0700
+@@ -1,5 +1,4 @@
+ lame_init
+-lame_init_old
+ lame_set_num_samples
+ lame_get_num_samples
+ lame_set_in_samplerate

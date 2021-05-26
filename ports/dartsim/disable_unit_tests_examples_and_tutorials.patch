@@ -1,0 +1,20 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e32147d..5c85186 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -279,6 +279,7 @@ add_subdirectory(dart)
+ 
+ set(DART_IN_SOURCE_BUILD TRUE)
+ 
++if (0)
+ if(TARGET dart AND NOT DART_BUILD_DARTPY)
+ 
+   # Add a "tests" target to build unit tests.
+@@ -330,6 +331,7 @@ if(TARGET dart AND NOT DART_BUILD_DARTPY)
+   endif(DART_VERBOSE)
+ 
+ endif()
++endif()
+ 
+ if (DART_BUILD_DARTPY)
+   add_subdirectory(python)

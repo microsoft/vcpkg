@@ -8,6 +8,7 @@ vcpkg_from_github(
     REF 8e243456965c9be5212cb96519da69cd54550e3d # v1.13
     SHA512 6f9daf404975697c6b7a56cc71006aaf14442acf545e483d8a7b845f255d5e5d6e08194fe3350a667e0b737b6924c9d39b025b587af27e7f12cd7b64f314eb70
     HEAD_REF master
+    PATCHES "add-option-to-disable-debug-tools.patch"
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -19,6 +20,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DCIVETWEB_BUILD_TESTING=OFF
+        -DCIVETWEB_ENABLE_DEBUG_TOOLS=OFF
         -DCIVETWEB_ENABLE_ASAN=OFF
         -DCIVETWEB_ENABLE_CXX=ON
         -DCIVETWEB_ENABLE_IPV6=ON

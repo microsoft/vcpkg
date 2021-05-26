@@ -1,0 +1,15 @@
+{
+  "name": "sfml",
+  "version": "2.5.1",
+  "port-version": 10,
+  "description": "Simple and fast multimedia library",
+  "homepage": "https://github.com/sfml/sfml",
+  "dependencies": [
+    "freetype",
+    "libflac",
+    "libogg",
+    "libvorbis",
+    "openal-soft",
+    "stb"
+  ]
+}

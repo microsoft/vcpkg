@@ -17,7 +17,7 @@ you can run `vcpkg help`, or `vcpkg help [command]` for command-specific help.
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
 * Discord: [\#include \<C++\>](https://www.includecpp.org), the #🌏vcpkg channel
-* Docs: [Documentation](docs/index.md)
+* Docs: [Documentation](docs/README.md)
 
 [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
@@ -84,6 +84,18 @@ To install the libraries for your project, run:
 
 ```cmd
 > .\vcpkg\vcpkg install [packages to install]
+```
+
+Note: This will install x86 libraries by default. To install x64, run:
+
+```cmd
+> .\vcpkg\vcpkg install package:x64-windows
+```
+
+Or
+
+```cmd
+> .\vcpkg\vcpkg install [packages to install] --triplet=x64-windows
 ```
 
 You can also search for the libraries you need with the `search` subcommand:
@@ -307,7 +319,7 @@ depending on the shell you use, then restart your console.
 
 # Examples
 
-See the [documentation](docs/index.md) for specific walkthroughs,
+See the [documentation](docs/README.md) for specific walkthroughs,
 including [installing and using a package](docs/examples/installing-and-using-packages.md),
 [adding a new package from a zipfile](docs/examples/packaging-zipfiles.md),
 and [adding a new package from a GitHub repo](docs/examples/packaging-github-repos.md).

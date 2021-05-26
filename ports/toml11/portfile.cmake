@@ -6,8 +6,23 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-file(INSTALL ${SOURCE_PATH}/toml.hpp DESTINATION ${CURRENT_PACKAGES_DIR}/include)
-file(INSTALL ${SOURCE_PATH}/toml DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.hpp")
-
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}
+        PREFER_NINJA # Disable this option if project cannot be built with Ninja
+        OPTIONS
+            -Dtoml11_BUILD_TEST=OFF
+)
+vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/toml11 TARGET_PATH share/toml11)
+
+vcpkg_replace_string(
+        ${CURRENT_PACKAGES_DIR}/share/toml11/toml11Config.cmake
+        "\${PACKAGE_PREFIX_DIR}/lib/cmake/toml11/toml11Targets.cmake"
+        "\${PACKAGE_PREFIX_DIR}/share/toml11/toml11Targets.cmake"
+)
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)

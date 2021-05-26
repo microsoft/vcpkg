@@ -1,0 +1,21 @@
+{
+  "name": "boost-heap",
+  "version-string": "1.75.0",
+  "description": "Boost heap module",
+  "homepage": "https://github.com/boostorg/heap",
+  "dependencies": [
+    "boost-array",
+    "boost-assert",
+    "boost-bind",
+    "boost-concept-check",
+    "boost-core",
+    "boost-integer",
+    "boost-intrusive",
+    "boost-iterator",
+    "boost-parameter",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

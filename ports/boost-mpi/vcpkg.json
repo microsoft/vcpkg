@@ -1,0 +1,42 @@
+{
+  "name": "boost-mpi",
+  "version-string": "1.75.0",
+  "port-version": 1,
+  "description": "Boost mpi module",
+  "homepage": "https://github.com/boostorg/mpi",
+  "dependencies": [
+    "boost-assert",
+    {
+      "name": "boost-build",
+      "host": true
+    },
+    "boost-compatibility",
+    "boost-config",
+    "boost-core",
+    "boost-foreach",
+    "boost-function",
+    "boost-graph",
+    "boost-integer",
+    "boost-iterator",
+    "boost-lexical-cast",
+    "boost-math",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
+    "boost-mpl",
+    "boost-optional",
+    {
+      "name": "boost-python",
+      "platform": "!uwp & !(arm & windows) & !emscripten"
+    },
+    "boost-serialization",
+    "boost-smart-ptr",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers",
+    "mpi"
+  ]
+}

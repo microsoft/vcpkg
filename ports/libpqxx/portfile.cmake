@@ -1,9 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jtv/libpqxx
-    REF 5015f8aa620ed8103840549b57fb46a5524f41ce # 7.2.0
-    SHA512 54f8886dd5189785c13f6d5c6a7f9d417474a2250d00bd0eff346d3e307ca6cc0fca11136c924b5c231833b0d6ec7e6680114682022e2b065921a4fe8eecdef5
+    REF 9e55cea0116febb5c536ed18ede9a7b2c647e631 # 7.3.1
+    SHA512 22da46c1c4ef798e7aa2db4f5094f8d4c3a965d755ae72a1cfae6282264c0d974317849f8db0bf34ff6aebd1ede5e5086cf74bff8bc3c6a21b3149a94d30c04f
     HEAD_REF master
+    PATCHES
+        fix-build-with-vs2017.patch #https://github.com/jtv/libpqxx/pull/406
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/config-public-compiler.h.in DESTINATION ${SOURCE_PATH})

@@ -3,15 +3,19 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO microsoft/SEAL
-    REF 3eea4353d4768c79899a67ca4d36bfc3005d5412
-    SHA512 ee3d8926f4a26c8f67a9e79fe5da9883195d2e9f9fffa47bb9c3526150d1e0c179968af7222ca280574921feb3c45200da1ca4dc0b012b82aa57dbdef26dcc0a
-    HEAD_REF master
+    REF 0b058d99b7f18a00e5ebb2b80caee593804b0500
+    SHA512 eed4e4360e32c8506a8f84b9bcfd2c8debf0013ee181f37fb34c6b94e62bbde1993ee400a3f589fe2378b598dd4fdb2e8532b706691a9348e464cd1a202ef23c
+    HEAD_REF main
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     ms-gsl SEAL_USE_MSGSL
     zlib SEAL_USE_ZLIB
     zstd SEAL_USE_ZSTD
+
+    INVERTED_FEATURES
+    no-throw-tran SEAL_THROW_ON_TRANSPARENT_CIPHERTEXT
 )
 
 vcpkg_configure_cmake(

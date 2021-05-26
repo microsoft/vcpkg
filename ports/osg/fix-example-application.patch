@@ -8,7 +8,7 @@ index df859d0..123313a 100644
      SET(TARGET_EXTERNAL_LIBRARIES ${TARGET_EXTERNAL_LIBRARIES} ws2_32)
 +    
 +    find_package(EXPAT REQUIRED)
-+    find_package(Iconv CONFIG REQUIRED)
++    find_package(Iconv REQUIRED)
 +    
 +    list(APPEND TARGET_EXTERNAL_LIBRARIES EXPAT::EXPAT Iconv::Iconv)
  ELSE()
@@ -24,7 +24,7 @@ index 071ab26..bf8d85f 100644
  
 +IF (WIN32)
 +    find_package(EXPAT REQUIRED)
-+    find_package(Iconv CONFIG REQUIRED)
++    find_package(Iconv REQUIRED)
 +    
 +    list(APPEND TARGET_EXTERNAL_LIBRARIES EXPAT::EXPAT Iconv::Iconv)
 +ENDIF()

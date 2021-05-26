@@ -1,4 +1,0 @@
-Source: tensorflow-cc
-Version: 2.3.1
-Description: Library for computation using data flow graphs for scalable machine learning
-Supports: !(x86|arm|uwp)

@@ -16,6 +16,20 @@ vcpkg_from_github(
   HEAD_REF master
   )
 
+# Get forge. We only need headers and aren't actually linking.
+# We don't want to use the vcpkg dependency since it is broken in many
+# environments - see https://github.com/microsoft/vcpkg/issues/14864. This
+# can be relaxed when the issue is fixed. Forge and its dependencies
+# are still runtime dependencies, so the user can use the graphics
+# library by installing forge and freeimage.
+vcpkg_from_github(
+    OUT_SOURCE_PATH FORGE_PATH
+    REPO arrayfire/forge
+    REF 1a0f0cb6371a8c8053ab5eb7cbe3039c95132389 # v1.0.5
+    SHA512 8f8607421880a0f0013380eb5efb3a4f05331cd415d68c9cd84dd57eb727da1df6223fc6d65b106675d6aa09c3388359fab64443c31fadadf7641161be6b3b89
+    HEAD_REF master
+)
+
 ################################### Build ###################################
 
 # Default flags
@@ -26,6 +40,8 @@ set(AF_DEFAULT_VCPKG_CMAKE_FLAGS
   -DUSE_CPU_MKL=ON
   -DUSE_OPENCL_MKL=ON
   -DAF_CPU_THREAD_PATH=${CPU_THREADS_PATH} # for building the arrayfire cpu threads lib
+  -DAF_FORGE_PATH=${FORGE_PATH} # forge headers for building the graphics lib
+  -DAF_BUILD_FORGE=OFF
   -DAF_INSTALL_CMAKE_DIR=${CURRENT_PACKAGES_DIR}/share/${PORT} # for CMake configs/targets
   )
 

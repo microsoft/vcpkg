@@ -1,0 +1,17 @@
+{
+  "name": "boost-parameter-python",
+  "version-string": "1.75.0",
+  "description": "Boost parameter_python module",
+  "homepage": "https://github.com/boostorg/parameter_python",
+  "supports": "!emscripten",
+  "dependencies": [
+    "boost-mpl",
+    "boost-parameter",
+    "boost-preprocessor",
+    {
+      "name": "boost-python",
+      "platform": "!uwp & !(arm & windows) & !emscripten"
+    },
+    "boost-vcpkg-helpers"
+  ]
+}

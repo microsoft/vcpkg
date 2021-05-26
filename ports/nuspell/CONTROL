@@ -1,5 +1,5 @@
 Source: nuspell
-Version: 4.0.1
+Version: 4.2.0
 Description: Nuspell is a fast and safe spelling checker software program.
   It is designed for languages with rich morphology and complex word compounding.
   Nuspell is written in modern C++ and it supports Hunspell dictionaries.

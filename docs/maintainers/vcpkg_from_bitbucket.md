@@ -1,5 +1,7 @@
 # vcpkg_from_bitbucket
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_from_bitbucket.md).
+
 Download and extract a project from Bitbucket.
 Enables support for installing HEAD `vcpkg.exe install --head <port>`.
 
@@ -56,4 +58,4 @@ This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 * [blaze](https://github.com/Microsoft/vcpkg/blob/master/ports/blaze/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_from_bitbucket.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_bitbucket.cmake)
+[scripts/cmake/vcpkg\_from\_bitbucket.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_bitbucket.cmake)
