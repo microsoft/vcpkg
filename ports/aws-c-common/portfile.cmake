@@ -6,10 +6,10 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         disable-error-4068.patch # This patch fixes dependency port compilation failure
-        disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
-        fix-cmake-target-path.patch # Shared libraries and static libraries are not built at the same time
-        disable_outline_atomics.patch # Disables -moutline-atomics flag which is not supported for wasm32 and Android
 		disable_warnings_as_errors.patch # Ref https://github.com/awslabs/aws-c-common/pull/798
+		disable-internal-crt-option.patch # Disable internal crt option because vcpkg contains crt processing flow
+		fix-cmake-target-path.patch # Shared libraries and static libraries are not built at the same time
+		disable_outline_atomics.patch # Disables -moutline-atomics flag which is not supported for wasm32 and Android
 )
 
 vcpkg_configure_cmake(
