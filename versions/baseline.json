@@ -2838,7 +2838,7 @@
     },
     "kf5holidays": {
       "baseline": "5.75.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5i18n": {
       "baseline": "5.75.0",
