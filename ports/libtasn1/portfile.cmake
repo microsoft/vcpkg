@@ -29,6 +29,12 @@ else()
     set(VCPKG_CXX_FLAGS "-g -O2")
 endif()
 
+# The upstream doesn't add this macro to the configure
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+    set(VCPKG_C_FLAGS ${VCPKG_C_FLAGS} -DASN1_STATIC)
+    set(VCPKG_CXX_FLAGS ${VCPKG_CXX_FLAGS} -DASN1_STATIC)
+endif()
+
 set(ENV{GTKDOCIZE} true)
 vcpkg_configure_make(
     AUTOCONFIG
