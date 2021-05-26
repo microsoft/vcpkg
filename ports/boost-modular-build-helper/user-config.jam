@@ -8,7 +8,7 @@ if "@VCPKG_PLATFORM_TOOLSET@" != "external"
         @TOOLSET_OPTIONS@
         ;
 }
-else if "@VCPKG_TARGET_ARCHITECTURE@" = "arm64"
+else if "@VCPKG_TARGET_ARCHITECTURE@" = "arm64" && "@VCPKG_CMAKE_SYSTEM_NAME@" = "iOS"
 {
     using gcc : 12.0.0 : @CMAKE_CXX_COMPILER@
         :
