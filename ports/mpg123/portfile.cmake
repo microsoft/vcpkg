@@ -1,5 +1,5 @@
-set(MPG123_VERSION 1.26.5)
-set(MPG123_HASH 0c2b3174c834e4bd459a3324b825d9bf9341a3486c0af815773b00cb007578cb718522ac4e983c7ad7e3bb5df9fdd342a03cb51345c41f68971145196ac04b7a)
+set(MPG123_VERSION 1.27.0)
+set(MPG123_HASH f1323a814de65c0d8f62d9b23f706b2b33bbf36ac8ffb5b5fecd798520de125b8a1078299c9270bac766cdb49abcd15d5dd315edd15be2a9ececd0e8be061b7f)
 
 #architecture detection
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
@@ -29,8 +29,6 @@ vcpkg_from_sourceforge(
     REF ${MPG123_VERSION}
     FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
     SHA512 ${MPG123_HASH}
-    PATCHES
-        0001-fix-x86-build.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
@@ -65,25 +63,16 @@ if(VCPKG_TARGET_IS_UWP)
     )
 
 elseif(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH ports/MSVC++/2015/win32/libmpg123/libmpg123.vcxproj
-        OPTIONS /p:UseEnv=True
-        RELEASE_CONFIGURATION Release${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
-        DEBUG_CONFIGURATION Debug${MPG123_CONFIGURATION}${MPG123_CONFIGURATION_SUFFIX}
+    vcpkg_configure_cmake(
+        SOURCE_PATH ${SOURCE_PATH}/ports/cmake
+        OPTIONS -DUSE_MODULES=OFF
     )
+    vcpkg_install_cmake()
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+    vcpkg_fixup_pkgconfig()
 
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/mpg123.h
-        ${SOURCE_PATH}/src/libmpg123/fmt123.h
-        DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    )
-
-    read_api_version()
-    configure_file(
-        ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
-        ${CURRENT_PACKAGES_DIR}/include/mpg123.h.in @ONLY
-    )
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 elseif(VCPKG_TARGET_IS_OSX OR VCPKG_TARGET_IS_LINUX)
     set(MPG123_OPTIONS
