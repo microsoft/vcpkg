@@ -1994,7 +1994,7 @@
     },
     "flann": {
       "baseline": "2019-04-07",
-      "port-version": 1
+      "port-version": 2
     },
     "flashlight-cpu": {
       "baseline": "0.3",
@@ -4542,7 +4542,7 @@
     },
     "openmvg": {
       "baseline": "1.6",
-      "port-version": 1
+      "port-version": 2
     },
     "openmvs": {
       "baseline": "1.1",
@@ -4714,7 +4714,7 @@
     },
     "pcl": {
       "baseline": "1.11.1",
-      "port-version": 3
+      "port-version": 4
     },
     "pcre": {
       "baseline": "8.44",
