@@ -25,6 +25,7 @@ vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/ilmbase TARGET_PATH share/ilmbase)
 vcpkg_fixup_cmake_targets()
+vcpkg_fixup_pkgconfig()
 
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrenvmap${VCPKG_HOST_EXECUTABLE_SUFFIX})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/debug/bin/exrheader${VCPKG_HOST_EXECUTABLE_SUFFIX})
