@@ -99,6 +99,13 @@ if("opengl" IN_LIST FEATURES)
     endif()
 endif()
 
+if("openh264" IN_LIST FEATURES)
+    if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
+        message(FATAL_ERROR "Feature 'openh264' does not support 'uwp'")
+        list(REMOVE_ITEM FEATURES "openh264")
+    endif()
+endif()
+
 if("sdl2" IN_LIST FEATURES)
     if (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         message(FATAL_ERROR "Feature 'sdl2' does not support 'osx'")
