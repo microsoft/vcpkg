@@ -33,8 +33,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 if(VCPKG_TARGET_IS_OSX)
     if("dynamic-arch" IN_LIST FEATURES)
-        set(VCPKG_LIBRARY_LINKAGE dynamic)
-        message(STATUS "using dynamic VCPKG_LIBRARY_LINKAGE for osx target with dynamic-arch feature") 
+        vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
+        message(STATUS "Openblas with \"dynamic-arch\" option for OSX supports only dynamic linkage. It's not a bag of openblas but bug of combination cmake+ninja+osx. See: https://gitlab.kitware.com/cmake/cmake/-/issues/16731") 
     endif()
 endif()
 
