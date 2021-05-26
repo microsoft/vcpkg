@@ -30,7 +30,8 @@ else()
 endif()
 
 # The upstream doesn't add this macro to the configure
-if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL static)
+if (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+
     set(EXTRA_OPTS "${EXTRA_OPTS} CFLAGS=\"$CFLAGS -DASN1_STATIC\"")
 endif()
 
