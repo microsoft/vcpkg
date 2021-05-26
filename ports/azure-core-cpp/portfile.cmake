@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Azure/azure-sdk-for-cpp
-    REF azure-core_1.0.0-beta.6
-    SHA512 91283c1520f594992a8ea939e1caccdf6574af992a722dcc76d08d3088161f0feb0991c88126c8294b4d1bf7e76ec6f96aa3c0065cdbd5fcc0f94af523f2f7db
+    REF azure-core_1.0.0-beta.9
+    SHA512 7d1bc802ed3b1ee3724ba258d8759fa04d614666eec1f5ec28abf665ee2c5af34148bb4682a9d8c8be2b9beec0ba886fc850c8333d3229ff6209d9116901fd84
 )
 
 vcpkg_check_features(
@@ -12,7 +12,7 @@ vcpkg_check_features(
         winhttp BUILD_TRANSPORT_WINHTTP
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}/sdk/core/azure-core/
     PREFER_NINJA
     OPTIONS
@@ -20,9 +20,8 @@ vcpkg_configure_cmake(
         -DWARNINGS_AS_ERRORS=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 vcpkg_copy_pdbs()
-

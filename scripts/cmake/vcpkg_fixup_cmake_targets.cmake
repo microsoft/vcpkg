@@ -1,7 +1,6 @@
+# DEPRECATED BY ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup
 #[===[.md:
 # vcpkg_fixup_cmake_targets
-
-**This function has been deprecated in favor of `vcpkg_cmake_config_fixup` from the vcpkg-cmake-config port.**
 
 Merge release and debug CMake targets and configs to support multiconfig generators.
 
@@ -9,7 +8,10 @@ Additionally corrects common issues with targets, such as absolute paths and inc
 
 ## Usage
 ```cmake
-vcpkg_fixup_cmake_targets([CONFIG_PATH <share/${PORT}>] [TARGET_PATH <share/${PORT}>] [DO_NOT_DELETE_PARENT_CONFIG_PATH])
+vcpkg_fixup_cmake_targets([CONFIG_PATH <share/${PORT}>] 
+                          [TARGET_PATH <share/${PORT}>] 
+                          [TOOLS_PATH <tools/${PORT}>]
+                          [DO_NOT_DELETE_PARENT_CONFIG_PATH])
 ```
 
 ## Parameters
@@ -35,12 +37,15 @@ Disables the correction of_IMPORT_PREFIX done by vcpkg due to moving the targets
 Currently the correction does not take into account how the files are moved and applies
 I rather simply correction which in some cases will yield the wrong results.
 
+### TOOLS_PATH
+Define the base path to tools. Default: `tools/<PORT>`
+
 ## Notes
 Transform all `/debug/<CONFIG_PATH>/*targets-debug.cmake` files and move them to `/<TARGET_PATH>`.
 Removes all `/debug/<CONFIG_PATH>/*targets.cmake` and `/debug/<CONFIG_PATH>/*config.cmake`.
 
-Transform all references matching `/bin/*.exe` to `/tools/<port>/*.exe` on Windows.
-Transform all references matching `/bin/*` to `/tools/<port>/*` on other platforms.
+Transform all references matching `/bin/*.exe` to `/${TOOLS_PATH}/*.exe` on Windows.
+Transform all references matching `/bin/*` to `/${TOOLS_PATH}/*`  on other platforms.
 
 Fix `${_IMPORT_PREFIX}` in auto generated targets to be one folder deeper.
 Replace `${CURRENT_INSTALLED_DIR}` with `${_IMPORT_PREFIX}` in configs and targets.
@@ -57,7 +62,7 @@ function(vcpkg_fixup_cmake_targets)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-cmake-config; using both vcpkg-cmake-config and vcpkg_fixup_cmake_targets in the same port is unsupported.")
     endif()
 
-    cmake_parse_arguments(PARSE_ARGV 0 arg "DO_NOT_DELETE_PARENT_CONFIG_PATH" "CONFIG_PATH;TARGET_PATH;NO_PREFIX_CORRECTION" "")
+    cmake_parse_arguments(PARSE_ARGV 0 arg "DO_NOT_DELETE_PARENT_CONFIG_PATH" "CONFIG_PATH;TARGET_PATH;NO_PREFIX_CORRECTION;TOOLS_PATH" "")
 
     if(arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "vcpkg_fixup_cmake_targets was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
@@ -65,6 +70,10 @@ function(vcpkg_fixup_cmake_targets)
 
     if(NOT arg_TARGET_PATH)
         set(arg_TARGET_PATH share/${PORT})
+    endif()
+    
+    if(NOT arg_TOOLS_PATH)
+        set(arg_TOOLS_PATH tools/${PORT})
     endif()
 
     string(REPLACE "." "\\." EXECUTABLE_SUFFIX "${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
@@ -148,7 +157,7 @@ function(vcpkg_fixup_cmake_targets)
     foreach(RELEASE_TARGET IN LISTS RELEASE_TARGETS)
         file(READ ${RELEASE_TARGET} _contents)
         string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" _contents "${_contents}")
-        string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
+        string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \"]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/${arg_TOOLS_PATH}/\\1" _contents "${_contents}")
         file(WRITE ${RELEASE_TARGET} "${_contents}")
     endforeach()
 
@@ -161,7 +170,7 @@ function(vcpkg_fixup_cmake_targets)
 
             file(READ ${DEBUG_TARGET} _contents)
             string(REPLACE "${CURRENT_INSTALLED_DIR}" "\${_IMPORT_PREFIX}" _contents "${_contents}")
-            string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/tools/${PORT}/\\1" _contents "${_contents}")
+            string(REGEX REPLACE "\\\${_IMPORT_PREFIX}/bin/([^ \";]+${EXECUTABLE_SUFFIX})" "\${_IMPORT_PREFIX}/${arg_TOOLS_PATH}/\\1" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/lib" "\${_IMPORT_PREFIX}/debug/lib" _contents "${_contents}")
             string(REPLACE "\${_IMPORT_PREFIX}/bin" "\${_IMPORT_PREFIX}/debug/bin" _contents "${_contents}")
             file(WRITE ${RELEASE_SHARE}/${DEBUG_TARGET_REL} "${_contents}")

@@ -15,6 +15,7 @@ vcpkg_from_gitlab(
             build.patch
             build2.patch
             disable-install-data.patch
+            macos_arm_fccache.patch
             ${PATCHES}
 )
 
@@ -45,6 +46,13 @@ vcpkg_configure_make(
 
 vcpkg_install_make(ADD_BIN_TO_PATH)
 vcpkg_copy_pdbs()
+#Fix missing libintl static dependency
+if(NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_IS_WINDOWS)
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+        vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/fontconfig.pc" "-liconv" "-liconv -lintl")
+    endif()
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/lib/pkgconfig/fontconfig.pc" "-liconv" "-liconv -lintl")
+endif()
 vcpkg_fixup_pkgconfig()
 
 # Fix paths in debug pc file.
@@ -86,7 +94,7 @@ endif()
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 
-## Build the fontconfig cache
+# Build the fontconfig cache
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     set(ENV{FONTCONFIG_PATH} "${CURRENT_PACKAGES_DIR}/etc/fonts")
     set(ENV{FONTCONFIG_FILE} "${CURRENT_PACKAGES_DIR}/etc/fonts/fonts.conf")

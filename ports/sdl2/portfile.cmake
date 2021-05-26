@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
         0001-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
         0002-sdl2-skip-ibus-on-linux.patch
         0003-sdl2-fix-uwp-build.patch
+        0004-sdl2-macos-thread-detection-fix.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -19,6 +20,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SDL_SHARED)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     vulkan  VIDEO_VULKAN
 )
 

@@ -1,5 +1,5 @@
 Source: seal
-Version: 3.6.2
+Version: 3.6.4
 Homepage: https://github.com/microsoft/SEAL
 Description: Microsoft SEAL is an easy-to-use and powerful homomorphic encryption library.
 Supports: !windows | (windows & static)
