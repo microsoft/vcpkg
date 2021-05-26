@@ -40,29 +40,8 @@ macro(read_api_version)
     set(API_VERSION ${CMAKE_MATCH_1})
 endmacro()
 
-if(VCPKG_TARGET_IS_UWP)
-    vcpkg_install_msbuild(
-        SOURCE_PATH ${SOURCE_PATH}
-        PROJECT_SUBPATH ports/MSVC++/2015/uwp/libmpg123/libmpg123.vcxproj
-        OPTIONS /p:UseEnv=True
-        PLATFORM ${MPG123_ARCH}
-        RELEASE_CONFIGURATION Release_uwp
-        DEBUG_CONFIGURATION Debug_uwp
-    )
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
 
-    file(INSTALL
-        ${SOURCE_PATH}/ports/MSVC++/mpg123.h
-        ${SOURCE_PATH}/src/libmpg123/fmt123.h
-        DESTINATION ${CURRENT_PACKAGES_DIR}/include
-    )
-
-    read_api_version()
-    configure_file(
-        ${SOURCE_PATH}/src/libmpg123/mpg123.h.in
-        ${CURRENT_PACKAGES_DIR}/include/mpg123.h.in @ONLY
-    )
-
-elseif(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}/ports/cmake
         OPTIONS -DUSE_MODULES=OFF
