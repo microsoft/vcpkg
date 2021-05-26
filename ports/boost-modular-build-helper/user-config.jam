@@ -19,7 +19,7 @@ else if "@VCPKG_TARGET_ARCHITECTURE@" = "arm64"
         @LDFLAGS@
         # MINGW here causes b2 to not run cygpath
         <flavor>mingw
-        <compileflags>"-std=c++14 -stdlib=libc++ -DNDEBUG -arch arm64 -fembed-bitcode -Wno-unused-local-typedef -Wno-nullability-completeness -mmacosx-version-min=10.12 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk"
+        <compileflags>"-std=c++14 -stdlib=libc++ -DNDEBUG -arch arm64 -fembed-bitcode -Wno-unused-local-typedef -Wno-nullability-completeness -mmacosx-version-min=10.12 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
         ;        
 }
 
