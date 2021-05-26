@@ -8,9 +8,24 @@ if "@VCPKG_PLATFORM_TOOLSET@" != "external"
         @TOOLSET_OPTIONS@
         ;
 }
+else if "@VCPKG_TARGET_ARCHITECTURE@" = "arm64"
+{
+    using gcc : 12.0.0 : @CMAKE_CXX_COMPILER@
+        :
+        <ranlib>@CMAKE_RANLIB@
+        <archiver>@CMAKE_AR@
+        @CXXFLAGS@
+        @CFLAGS@
+        @LDFLAGS@
+        # MINGW here causes b2 to not run cygpath
+        <flavor>mingw
+        <compileflags>"-std=c++14 -stdlib=libc++ -DNDEBUG -arch arm64 -fembed-bitcode -Wno-unused-local-typedef -Wno-nullability-completeness -mmacosx-version-min=10.12 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.1.sdk"
+        ;        
+}
+
 else
 {
-    using gcc : 5.4.1 : @CMAKE_CXX_COMPILER@
+    using gcc : 12.0.0 : @CMAKE_CXX_COMPILER@
         :
         <ranlib>@CMAKE_RANLIB@
         <archiver>@CMAKE_AR@
