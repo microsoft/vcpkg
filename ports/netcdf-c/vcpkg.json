@@ -12,8 +12,29 @@
     {
       "name": "vcpkg-cmake-config",
       "host": true
+    }
+  ],
+  "default-features": [
+    "dap",
+    "netcdf-4"
+  ],
+  "features": {
+    "dap": {
+      "description": "Build with DAP remote access client support",
+      "dependencies": [
+        "curl"
+      ]
     },
-    "curl",
-    "hdf5"
-  ]
+    "netcdf-4": {
+      "description": "Build with netCDF-4/HDF5 support",
+      "dependencies": [
+        {
+          "name": "hdf5",
+          "features": [
+            "zlib"
+          ]
+        }
+      ]
+    }
+  }
 }

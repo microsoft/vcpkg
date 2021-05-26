@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-dependency-libmath.patch
         fix-linkage-error.patch
         fix-pkgconfig.patch
+        fix-dependency-zlib.patch
 )
 
 #Remove outdated find modules
@@ -23,6 +24,16 @@ else()
     set(NC_USE_STATIC_CRT OFF)
 endif()
 
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        dap       ENABLE_DAP
+        netcdf-4  ENABLE_NETCDF_4
+        netcdf-4  USE_HDF5
+    INVERTED_FEATURES
+        dap       CMAKE_DISABLE_FIND_PACKAGE_CURL
+        netcdf-4  CMAKE_DISABLE_FIND_PACKAGE_HDF5
+)
+
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
@@ -32,10 +43,10 @@ vcpkg_cmake_configure(
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTS=OFF
         -DENABLE_FILTER_TESTING=OFF
-        -DUSE_HDF5=ON
         -DENABLE_DAP_REMOTE_TESTS=OFF
         -DDISABLE_INSTALL_DEPENDENCIES=ON
         -DNC_USE_STATIC_CRT=${NC_USE_STATIC_CRT}
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()
