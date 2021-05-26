@@ -18,7 +18,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-    	-DPA_USE_DS=ON
+        -DPA_USE_DS=ON
         -DPA_USE_WASAPI=ON
         -DPA_USE_WDMKS=ON
         -DPA_USE_WMME=ON
