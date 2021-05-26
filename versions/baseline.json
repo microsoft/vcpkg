@@ -2821,7 +2821,7 @@
       "port-version": 0
     },
     "kf5codecs": {
-      "baseline": "5.75.0",
+      "baseline": "5.81.0",
       "port-version": 0
     },
     "kf5completion": {
