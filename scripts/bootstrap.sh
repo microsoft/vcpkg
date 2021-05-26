@@ -296,7 +296,6 @@ else
 fi
 
 echo "Building vcpkg-tool..."
-
 rm -rf "$baseBuildDir"
 mkdir -p "$buildDir"
 vcpkgExtractArchive "$tarballPath" "$srcBaseDir"
