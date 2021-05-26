@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/kcodecs
-    REF v5.75.0
-    SHA512 804ded9e80e1f44f769a72b934849adde4fdfad5c75abd9f3e276bd7e096ac6be5f5013ef5b1a45ea94405551e30bccc2975ee4ad6decbc806078715674f87bf
+    REF v5.81.0
+    SHA512 65db534f32b81b8b10840233981e8a790a8fe17ddb9e64304f2ea8b817b4125ae737574a7235aa20b8b3766bd4c59bb8fb49dafa19a8a89160ab1e06d7d333b5
     HEAD_REF master
 )
 
@@ -13,7 +13,7 @@ vcpkg_add_to_path(${GPERF_EXE_PATH})
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS 
+    OPTIONS
         -DBUILD_HTML_DOCS=OFF
         -DBUILD_MAN_DOCS=OFF
         -DBUILD_QTHELP_DOCS=OFF
@@ -27,7 +27,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Codecs)
 vcpkg_copy_pdbs()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")	
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")	
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)

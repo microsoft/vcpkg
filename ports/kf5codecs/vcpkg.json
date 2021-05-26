@@ -1,6 +1,6 @@
 {
   "name": "kf5codecs",
-  "version-string": "5.75.0",
+  "version": "5.81.0",
   "description": "String encoding library",
   "homepage": "https://api.kde.org/frameworks/kcodecs/html/index.html",
   "dependencies": [
