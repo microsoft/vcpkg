@@ -10,9 +10,9 @@ vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_EXE_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_EXE_PATH})
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DBUILD_HTML_DOCS=OFF
         -DBUILD_MAN_DOCS=OFF
@@ -20,9 +20,8 @@ vcpkg_configure_cmake(
         -DBUILD_TESTING=OFF
 )
 
-vcpkg_install_cmake()
-
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Codecs)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Codecs CONFIG_PATH lib/cmake/KF5Codecs)
 
 vcpkg_copy_pdbs()
 
@@ -30,10 +29,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
+
 file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
