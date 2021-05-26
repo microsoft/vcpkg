@@ -113,7 +113,7 @@ endfunction()
 
 # Generates the required compiler properties for meson
 function(vcpkg_internal_meson_generate_flags_properties_string _out_var _config)
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(L_FLAG /LIBPATH:)
     else()
         set(L_FLAG -L)

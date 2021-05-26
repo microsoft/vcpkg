@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES 
         0001-uwp-fix.patch
+        pkgconfig_fixes.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -20,6 +21,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 

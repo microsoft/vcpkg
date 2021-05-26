@@ -514,11 +514,18 @@ function(vcpkg_configure_make)
     endif()
     
     # Setup include environment (since these are buildtype independent restoring them is unnecessary)
+    macro(prepend_include_path var)
+        if("${${var}_BACKUP}" STREQUAL "")
+            set(ENV{${var}} "${_VCPKG_INSTALLED}/include")
+        else()
+            set(ENV{${var}} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${${var}_BACKUP}")
+        endif()
+    endmacro()
     # Used by CL 
-    set(ENV{INCLUDE} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${INCLUDE_BACKUP}")
+    prepend_include_path(INCLUDE)
     # Used by GCC
-    set(ENV{C_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${C_INCLUDE_PATH_BACKUP}")
-    set(ENV{CPLUS_INCLUDE_PATH} "${_VCPKG_INSTALLED}/include${VCPKG_HOST_PATH_SEPARATOR}${CPLUS_INCLUDE_PATH_BACKUP}")
+    prepend_include_path(C_INCLUDE_PATH)
+    prepend_include_path(CPLUS_INCLUDE_PATH)
 
     # Flags should be set in the toolchain instead (Setting this up correctly requires a function named vcpkg_determined_cmake_compiler_flags which can also be used to setup CC and CXX etc.)
     if(VCPKG_TARGET_IS_WINDOWS)
