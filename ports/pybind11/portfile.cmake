@@ -6,6 +6,19 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+set(EXTRA_OPTIONS )
+if ("python2" IN_LIST FEATURES AND "python3" IN_LIST FEATURES)
+    message(FATAL_ERROR "Only one function can be selected for ${PORT}.")
+elseif ("python2" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON2)
+    set(EXTRA_OPTIONS -DPython2_EXECUTABLE=${PYTHON2})
+elseif ("python3" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON3)
+    set(EXTRA_OPTIONS -DPython3_EXECUTABLE=${PYTHON3})
+else()
+    message(FATAL_ERROR "${PORT} must select a function.")
+endif()
+
 vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_configure_cmake(
@@ -14,7 +27,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DPYBIND11_TEST=OFF
         -DPYBIND11_FINDPYTHON=ON
-        -DPython3_EXECUTABLE=${PYTHON3}
+       ${EXTRA_OPTIONS}
     OPTIONS_RELEASE
         -DPYTHON_IS_DEBUG=OFF
     OPTIONS_DEBUG
