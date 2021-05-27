@@ -36,14 +36,6 @@
           "features": [
             "opengl"
           ]
-        },
-        {
-          "name": "mesa",
-          "default-features": false,
-          "features": [
-            "llvm"
-          ],
-          "platform": "x64"
         }
       ]
     },
