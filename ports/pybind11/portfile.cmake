@@ -4,6 +4,7 @@ vcpkg_from_github(
     REF 8de7772cc72daca8e947b79b83fea46214931604 # v2.6.2
     SHA512 9bb688209791bd5f294fa316ab9a8007f559673a733b796e76e223fe8653d048d3f01eb045b78aa1843f7eacf97f6e2ee090ac68fed2b43856eb0c4813583204
     HEAD_REF master
+    PATCHES add-feature-options.patch
 )
 
 set(EXTRA_OPTIONS )
@@ -19,12 +20,19 @@ else()
     message(FATAL_ERROR "${PORT} must select a function.")
 endif()
 
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+    python2 WITH_PYTHON2
+    python3 WITH_PYTHON3
+)
+
 vcpkg_find_acquire_program(PYTHON3)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
+    OPTIONS ${FEATURE_OPTIONS}
         -DPYBIND11_TEST=OFF
         -DPYBIND11_FINDPYTHON=ON
        ${EXTRA_OPTIONS}

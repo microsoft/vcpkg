@@ -1,0 +1,36 @@
+diff --git a/tools/pybind11NewTools.cmake b/tools/pybind11NewTools.cmake
+index 18da8be..b3f9719 100644
+--- a/tools/pybind11NewTools.cmake
++++ b/tools/pybind11NewTools.cmake
+@@ -32,15 +32,26 @@ if(NOT Python_FOUND
+     set(Python_ROOT_DIR "$ENV{pythonLocation}")
+   endif()
+ 
+-  find_package(Python REQUIRED COMPONENTS Interpreter Development ${_pybind11_quiet})
++  if (WITH_PYTHON2)
++    find_package(Python2 REQUIRED COMPONENTS Interpreter Development ${_pybind11_quiet})
++    set(PY_LIB_TARGET Python2::Python)
++    set(PY_INTEP_TARGET Python2::Interpreter)
++    set(PY_MODULE_TARGET Python2::Module)
++  endif()
++  if (WITH_PYTHON3)
++    find_package(Python3 REQUIRED COMPONENTS Interpreter Development ${_pybind11_quiet})
++    set(PY_LIB_TARGET Python3::Python)
++    set(PY_INTEP_TARGET Python3::Interpreter)
++    set(PY_MODULE_TARGET Python3::Module)
++  endif()
+ 
+   # If we are in submodule mode, export the Python targets to global targets.
+   # If this behavior is not desired, FindPython _before_ pybind11.
+   if(NOT is_config)
+-    set_property(TARGET Python::Python PROPERTY IMPORTED_GLOBAL TRUE)
+-    set_property(TARGET Python::Interpreter PROPERTY IMPORTED_GLOBAL TRUE)
+-    if(TARGET Python::Module)
+-      set_property(TARGET Python::Module PROPERTY IMPORTED_GLOBAL TRUE)
++    set_property(TARGET ${PY_LIB_TARGET} PROPERTY IMPORTED_GLOBAL TRUE)
++    set_property(TARGET ${PY_INTEP_TARGET} PROPERTY IMPORTED_GLOBAL TRUE)
++    if(TARGET ${PY_MODULE_TARGET})
++      set_property(TARGET ${PY_MODULE_TARGET} PROPERTY IMPORTED_GLOBAL TRUE)
+     endif()
+   endif()
+ endif()
