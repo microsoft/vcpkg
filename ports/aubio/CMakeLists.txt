@@ -12,7 +12,6 @@ add_definitions(
     -DHAVE_STDARG_H=1
     -DHAVE_ERRNO_H=1
     -DHAVE_C99_VARARGS_MACROS=1
-
     -D_CRT_SECURE_NO_WARNINGS=1
 )
 
@@ -46,6 +45,13 @@ if(WITH_DEPENDENCIES)
         ${FFMPEG_LIBRARIES}
         BZip2::BZip2
         ${LIBLZMA_LIBRARIES}
+    )
+    add_definitions(
+        -DHAVE_SNDFILE=1
+        -DHAVE_WAVWRITE=1
+        -DHAVE_WAVREAD=1
+        -DHAVE_LIBAV=1
+        -DHAVE_SWRESAMPLE=1
     )
 endif()
 
