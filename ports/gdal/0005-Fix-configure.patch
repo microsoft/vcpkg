@@ -1,0 +1,222 @@
+diff --git a/configure.ac b/configure.ac
+index bd85e0616..c45b0f74a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1275,10 +1275,10 @@ AC_MSG_CHECKING([for libtiff])
+ if test "x${with_libtiff}" = "xyes" -o "x${with_libtiff}" = "x" ; then
+ 
+   dnl Only automatically pick up the external libtiff if it is >= 4.0.
+-  AC_CHECK_LIB(tiff,TIFFScanlineSize64,TIFF_SETTING=external HAVE_BIGTIFF=yes,TIFF_SETTING=internal HAVE_BIGTIFF=yes,)
++  AC_SEARCH_LIBS(TIFFScanlineSize64,[tiffd tiff],TIFF_SETTING=external HAVE_BIGTIFF=yes,TIFF_SETTING=internal HAVE_BIGTIFF=yes,-ljpeg)
+ 
+   if test "$TIFF_SETTING" = "external" ; then
+-    LIBS="-ltiff $LIBS"
++    LIBS="-ljpeg $LIBS"
+     AC_MSG_RESULT([using pre-installed libtiff.])
+   else
+     AC_MSG_RESULT([using internal TIFF code.])
+@@ -1338,18 +1338,12 @@ if test "`basename xx/$with_curl`" = "curl-config" ; then
+ elif test "$with_curl" = "no" ; then
+   LIBCURL_CONFIG=no
+ else
+-  AC_PATH_PROG(LIBCURL_CONFIG, curl-config, no)
++  LIBCURL_CONFIG=yes
+ fi
+ 
+ if test "$LIBCURL_CONFIG" != "no" ; then
+ 
+-  CURL_VERNUM=`$LIBCURL_CONFIG --vernum`
+-  CURL_VER=`$LIBCURL_CONFIG --version | awk '{print $2}'`
+-
+-  AC_MSG_RESULT([        found libcurl version $CURL_VER])
+-
+-  AC_CHECK_LIB(curl,curl_global_init,CURL_SETTING=yes,CURL_SETTING=no,`$LIBCURL_CONFIG --libs`)
+-
++  AC_SEARCH_LIBS(curl_global_init,[curl-d curl],CURL_SETTING=yes,CURL_SETTING=no,)
+ fi
+ 
+ AC_SUBST(CURL_SETTING,$CURL_SETTING)
+@@ -1512,12 +1506,12 @@ elif test "$with_spatialite" = "yes"; then
+     AC_CHECK_HEADERS(sqlite3.h)
+     if test "$ac_cv_header_sqlite3_h" = "yes"; then
+         AC_MSG_CHECKING([for spatialite.h in /usr/include or /usr/local/include])
+-        if test -f "/usr/include/spatialite.h" -o -f "/usr/local/include/spatialite.h"; then
++        if test -f "$prefix/../include/spatialite.h" -o -f "$prefix/include/spatialite.h" -o -f "/usr/include/spatialite.h" -o -f "/usr/local/include/spatialite.h"; then
+             AC_MSG_RESULT(found)
+-            AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,-lsqlite3)
++            AC_CHECK_LIB(spatialite,spatialite_init,SPATIALITE_INIT_FOUND=yes,SPATIALITE_INIT_FOUND=no,-lsqlite3 -lrttopo -lfreexl)
+             if test "$SPATIALITE_INIT_FOUND" = "yes"; then
+                 HAVE_SPATIALITE=yes
+-                SPATIALITE_LIBS="-lspatialite -lsqlite3"
++                SPATIALITE_LIBS="-lspatialite -lsqlite3 -lrttopo -lfreexl"
+                 LIBS="$LIBS $SPATIALITE_LIBS"
+                 HAVE_SQLITE3=yes
+             fi
+@@ -1570,11 +1564,15 @@ dnl ---------------------------------------------------------------------------
+ AC_ARG_WITH(liblzma,[  --with-liblzma[=ARG]       Include liblzma support (ARG=yes/no)],,)
+ 
+ if test "$with_liblzma" = "yes" ; then
+-  AC_CHECK_LIB(lzma,lzma_code,LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
++  SAVED_LIBS="$LIBS"
++  LIBS=""
++  AC_SEARCH_LIBS(lzma_code,[lzmad lzma],LIBLZMA_SETTING=yes,LIBLZMA_SETTING=no,)
+   AC_CHECK_HEADERS(lzma.h)
++  LZMA_LIBS="$LIBS"
++  LIBS="$SAVED_LIBS"
+ 
+   if test "$LIBLZMA_SETTING" = "yes" -a "$ac_cv_header_lzma_h" = "yes" ; then
+-    LIBS="-llzma $LIBS"
++    LIBS="$LZMA_LIBS $LIBS"
+   else
+     LIBLZMA_SETTING=no
+   fi
+@@ -1592,11 +1590,9 @@ dnl ---------------------------------------------------------------------------
+ AC_ARG_WITH(zstd,[  --with-zstd[=ARG]       Include zstd support (ARG=yes/no/installation_prefix)],,)
+ 
+ if test "$with_zstd" = "" -o "$with_zstd" = "yes" ; then
+-  AC_CHECK_LIB(zstd,ZSTD_decompressStream,ZSTD_SETTING=yes,ZSTD_SETTING=no,)
++  AC_SEARCH_LIBS(ZSTD_decompressStream,[zstdd zstd],ZSTD_SETTING=yes,ZSTD_SETTING=no,)
+ 
+-  if test "$ZSTD_SETTING" = "yes" ; then
+-    LIBS="-lzstd $LIBS"
+-  else
++  if test "$ZSTD_SETTING" != "yes" ; then
+     if test "$with_zstd" = "yes" ; then
+       AC_MSG_ERROR([libzstd not found])
+     else
+@@ -1820,8 +1816,6 @@ fi
+ 
+ if test "$CURL_SETTING" = "yes" ; then
+ 
+-  CURL_INC=`$LIBCURL_CONFIG --cflags`
+-  CURL_LIB=`$LIBCURL_CONFIG --libs`
+ m4_foreach_w([frmt],CURL_FORMATS,[
+   driver_enabled=m4_join([_],[$INTERNAL_FORMAT],frmt,[ENABLED])
+   if test "x$driver_enabled" = "xyes"; then
+@@ -1888,7 +1882,7 @@ else
+   PKG_CHECK_MODULES([PQ],[libpq > 9.1], [HAVE_PG=yes], [HAVE_PG=no])
+ 
+   if test "${HAVE_PG}" = "yes" ; then
+-    PG_LIB="${PQ_LIBS}"
++    PG_LIB="${PQ_LIBS} -lpgcommon -lpgport"
+     PG_INC="${PQ_CFLAGS}"
+     SAVED_LIBS="${LIBS}"
+     LIBS="${PG_LIB}"
+@@ -4287,13 +4281,13 @@ if test "x$with_xml2" = "xyes" -o "x$with_xml2" = "x" ; then
+   if test "${HAVE_LIBXML2}" = "yes"; then
+     SAVED_LIBS="${LIBS}"
+     LIBS="${LIBXML2_LIBS}"
+-    AC_CHECK_LIB(xml2,xmlParseDoc,HAVE_LIBXML2=yes,HAVE_LIBXML2=no)
++    AC_CHECK_LIB(xml2,xmlParseDoc,HAVE_LIBXML2=yes,HAVE_LIBXML2=no,-lz -lm $LZMA_LIBS)
+     LIBS="${SAVED_LIBS}"
+   fi
+ 
+   if test "${HAVE_LIBXML2}" = "yes"; then
+     LIBXML2_INC="${LIBXML2_CFLAGS}"
+-    LIBXML2_LIB="${LIBXML2_LIBS}"
++    LIBXML2_LIB="${LIBXML2_LIBS} -lz -lm $LZMA_LIBS"
+   else
+     if test "x$with_xml2" = "xyes"; then
+       AC_MSG_ERROR([--with-xml2 was requested, but libxml2 is not available])
+@@ -4817,8 +4811,7 @@ if test "$with_libjson_c" = "external" -o "$with_libjson_c" = "" -o "$with_libjs
+ elif test "$with_libjson_c" = "internal" ; then
+   LIBJSONC_SETTING=internal
+ elif test "$with_libjson_c" != "no"; then
+-  LIBS="-L$with_libjson_c/lib $LIBS"
+-  AC_CHECK_LIB(json-c,json_object_set_serializer,LIBJSONC_SETTING=external,LIBJSONC_SETTING=internal,-L$with_libjson_c/lib)
++  AC_CHECK_LIB(json-c,json_object_set_serializer,LIBJSONC_SETTING=external,LIBJSONC_SETTING=internal,)
+ else
+   AC_MSG_ERROR([libjson-c (internal or external) is required])
+ fi
+
+diff --git a/m4/ax_lib_sqlite3.m4 b/m4/ax_lib_sqlite3.m4
+index e53a4a967..440e2c5ed 100644
+--- a/m4/ax_lib_sqlite3.m4
++++ b/m4/ax_lib_sqlite3.m4
+@@ -76,23 +76,22 @@ AC_DEFUN([AX_LIB_SQLITE3],
+ 
+             unset ac_cv_lib_sqlite3_sqlite3_open
+             saved_LIBS="$LIBS"
+-            LIBS=""
+             AC_CHECK_LIB(sqlite3,sqlite3_open,LIB_SQLITE3_FOUND=yes,LIB_SQLITE3_FOUND=no,-L$ac_sqlite3_path/lib)
+             LIBS="$saved_LIBS"
+             if test "$LIB_SQLITE3_FOUND" = "yes"; then
+                 ac_sqlite3_ldflags="-L$ac_sqlite3_path/lib"
+             fi
+ 
++            ac_sqlite3_include_path="$ac_sqlite3_path/include"
+             ac_sqlite3_cppflags="-I$ac_sqlite3_path/include"
+         else
+-            for ac_sqlite3_path_tmp in /usr /usr/local /opt ; do
+-                if test -f "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header" \
+-                    && test -r "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header"; then
++            for ac_sqlite3_path_tmp in $prefix /usr /usr/local /opt; do
++                if (test -f "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header" \
++                    && test -r "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header") || (test -f "$ac_sqlite3_path_tmp/../include/$ac_sqlite3_header" && test -r "$ac_sqlite3_path_tmp/../include/$ac_sqlite3_header"); then
+                     ac_sqlite3_path=$ac_sqlite3_path_tmp
+ 
+                     unset ac_cv_lib_sqlite3_sqlite3_open
+                     saved_LIBS="$LIBS"
+-                    LIBS=""
+                     AC_CHECK_LIB(sqlite3,sqlite3_open,LIB_SQLITE3_FOUND=yes,LIB_SQLITE3_FOUND=no,)
+                     LIBS="$saved_LIBS"
+                     if test "$LIB_SQLITE3_FOUND" = "yes"; then
+@@ -100,7 +99,6 @@ AC_DEFUN([AX_LIB_SQLITE3],
+                     else
+                         unset ac_cv_lib_sqlite3_sqlite3_open
+                         saved_LIBS="$LIBS"
+-                        LIBS=""
+                         AC_CHECK_LIB(sqlite3,sqlite3_open,LIB_SQLITE3_FOUND=yes,LIB_SQLITE3_FOUND=no,-L$ac_sqlite3_path_tmp/lib)
+                         LIBS="$saved_LIBS"
+                         if test "$LIB_SQLITE3_FOUND" = "yes"; then
+@@ -108,7 +106,12 @@ AC_DEFUN([AX_LIB_SQLITE3],
+                         fi
+                     fi
+ 
+-                    ac_sqlite3_cppflags="-I$ac_sqlite3_path_tmp/include"
++                    if test -f "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header" && test -r "$ac_sqlite3_path_tmp/include/$ac_sqlite3_header"; then
++                        ac_sqlite3_include_path="$ac_sqlite3_path_tmp/include"
++                    else
++                        ac_sqlite3_include_path="$ac_sqlite3_path_tmp/../include"
++                    fi
++                    ac_sqlite3_cppflags="-I$ac_sqlite3_include_path"
+                     break;
+                 fi
+             done
+@@ -122,7 +125,6 @@ AC_DEFUN([AX_LIB_SQLITE3],
+     AC_MSG_CHECKING([for SQLite3 library >= $sqlite3_version_req])
+ 
+     if test "x$WANT_SQLITE3" = "xyes"; then
+-
+         ac_sqlite3_ldflags="$ac_sqlite3_ldflags -lsqlite3"
+ 
+         saved_CPPFLAGS="$CPPFLAGS"
+@@ -161,7 +163,7 @@ AC_DEFUN([AX_LIB_SQLITE3],
+             SQLITE3_CFLAGS="$ac_sqlite3_cppflags"
+             SQLITE3_LDFLAGS="$ac_sqlite3_ldflags"
+ 
+-            ac_sqlite3_header_path="$ac_sqlite3_path/include/$ac_sqlite3_header"
++            ac_sqlite3_header_path="$ac_sqlite3_include_path/$ac_sqlite3_header"
+ 
+             dnl Retrieve SQLite release version
+             if test "x$ac_sqlite3_header_path" != "x"; then
+@@ -184,5 +186,6 @@ AC_DEFUN([AX_LIB_SQLITE3],
+     else
+         AC_MSG_RESULT([disabled])
+     fi
++    unset ac_sqlite3_include_path
+ ])
+ 
+
+diff --git a/m4/geos.m4 b/m4/geos.m4
+index a410673b4..c16e1f33a 100644
+--- a/m4/geos.m4
++++ b/m4/geos.m4
+@@ -60,6 +60,7 @@ AC_DEFUN([GEOS_INIT],[
+ 
+     AC_PATH_PROG(GEOS_CONFIG, geos-config, no)
+     ac_geos_config_auto=yes
++    HAVE_GEOS="yes"
+ 
+   else
+ 

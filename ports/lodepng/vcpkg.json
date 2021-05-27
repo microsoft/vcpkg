@@ -1,0 +1,7 @@
+{
+  "name": "lodepng",
+  "version-string": "2020-03-15",
+  "port-version": 1,
+  "description": "PNG encoder and decoder in C++",
+  "homepage": "https://github.com/lvandeve/lodepng"
+}

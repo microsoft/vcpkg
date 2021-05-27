@@ -1,12 +1,21 @@
+vcpkg_download_distfile(
+    PATCH_e2584eed1c84c18f16e42188c30d2c3d8e3e8853
+    URLS "https://github.com/GNOME/libxslt/commit/e2584eed1c84c18f16e42188c30d2c3d8e3e8853.patch"
+    FILENAME e2584eed1c84c18f16e42188c30d2c3d8e3e8853.patch
+    SHA512 d08a06616d732993f2131826ca06fafc2e9f561cb1edb17eaf2adaf78e276bb03cba92a773143eb939da04781f5b5e0a09b351d8e4622a941de3cb3d11da731c
+)
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GNOME/libxslt
-    REF  v1.1.33
-    SHA512 2c20b2af3c19952b25b10dca0d95fe227602f7f815db352b04dd061c52c458d745f92c597ce08ac9207ba0fbe0169ea2fb78263d8590743717553f84463fe1d9
+    REF  v1.1.34
+    SHA512 fc57affb236e5f7602ee53c8090a854c6b950d1e6526ae3488bca41d8d421ec70433d88eb227c71c2a61213bc364517bdad907125e36486da1754fe9e460601f
     HEAD_REF master
     PATCHES
+        "${PATCH_e2584eed1c84c18f16e42188c30d2c3d8e3e8853}"
         0001-Fix-makefile.patch
         0002-Fix-lzma.patch
+        0003-Fix-configure.patch
 )
 
 if (VCPKG_TARGET_IS_WINDOWS)

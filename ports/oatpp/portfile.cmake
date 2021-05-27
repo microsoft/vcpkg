@@ -1,13 +1,15 @@
-set(OATPP_VERSION "1.2.0")
+set(OATPP_VERSION "1.2.5")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp
-    REF 8f1c11ae534e1f03646de8efcc9b2505fb1881cc  # 1.2.0
-    SHA512 4661aefe89be8153b08be0eb95ce688d5af3abd80e8f92fe3b2f1ac9dc76228383b05f7b33314de5f25d433013d6d287650ed156b69244b0d9ba8b604df8aaa3
+    REF ${OATPP_VERSION}
+    SHA512 8c7c939860c02ade86234e46f907051b088c07d6975cf90190c9263bb7fd8081a7aaccd3e08bfe8a962c07ae39ff771cf17099a48812ecc69df20272a856d0ed
     HEAD_REF master
+    PATCHES
+        fix-windows-build.patch # see https://github.com/oatpp/oatpp/pull/428
 )
 
 vcpkg_configure_cmake(

@@ -1,6 +1,7 @@
 {
   "name": "boost-graph",
   "version-string": "1.75.0",
+  "port-version": 1,
   "description": "Boost graph module",
   "homepage": "https://github.com/boostorg/graph",
   "dependencies": [
@@ -10,7 +11,10 @@
     "boost-assert",
     "boost-bimap",
     "boost-bind",
-    "boost-build",
+    {
+      "name": "boost-build",
+      "host": true
+    },
     "boost-compatibility",
     "boost-concept-check",
     "boost-config",
@@ -24,7 +28,10 @@
     "boost-iterator",
     "boost-lexical-cast",
     "boost-math",
-    "boost-modular-build-helper",
+    {
+      "name": "boost-modular-build-helper",
+      "host": true
+    },
     "boost-move",
     "boost-mpl",
     "boost-multi-index",
