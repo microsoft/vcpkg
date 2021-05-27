@@ -1,7 +1,7 @@
 {
   "name": "openimageio",
   "version": "2.2.10.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "A library for reading and writing images, and a bunch of related classes, utilities, and application.",
   "homepage": "https://github.com/OpenImageIO/oiio",
   "dependencies": [
@@ -81,10 +81,28 @@
         "openjpeg"
       ]
     },
-    "pybind11": {
+    "pybind11-2": {
       "description": "Enable Python bindings support for openimageio",
       "dependencies": [
-        "pybind11"
+        {
+            "name": "pybind11",
+            "default-features": false,
+            "features": [
+                "python2"
+            ]
+        }
+      ]
+    },
+    "pybind11-3": {
+      "description": "Enable Python bindings support for openimageio",
+      "dependencies": [
+        {
+            "name": "pybind11",
+            "default-features": false,
+            "features": [
+                "python3"
+            ]
+        }
       ]
     },
     "tools": {

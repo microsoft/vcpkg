@@ -44,13 +44,20 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         opencv      USE_OPENCV
         openjpeg    USE_OPENJPEG
         webp        USE_WEBP
-        pybind11    USE_PYTHON
+        pybind11-2  USE_PYTHON
+        pybind11-3  USE_PYTHON
         tools       OIIO_BUILD_TOOLS
 )
 
-vcpkg_find_acquire_program(PYTHON3)
-get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
-vcpkg_add_to_path("${PYTHON3_DIR}")
+if ("pybind11-2" IN_LIST FEATURES)
+    vcpkg_find_acquire_program(PYTHON2)
+    get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
+    vcpkg_add_to_path("${PYTHON2_DIR}")
+else ()
+    vcpkg_find_acquire_program(PYTHON3)
+    get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
+    vcpkg_add_to_path("${PYTHON3_DIR}")
+endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
