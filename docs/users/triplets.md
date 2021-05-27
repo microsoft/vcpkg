@@ -89,6 +89,13 @@ This option also has forms for configuration-specific flags:
 - `VCPKG_LINKER_FLAGS_DEBUG`
 - `VCPKG_LINKER_FLAGS_RELEASE`
 
+### VCPKG_CMAKE_CONFIGURE_OPTIONS
+Set additional CMake configure options that are appended to the configure command (in [`vcpkg_cmake_configure`](../maintainers/ports/vcpkg-cmake/vcpkg_cmake_configure.md)).
+
+This field is optional.
+
+Also available as build-type specific `VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG` and `VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE` variables.
+
 ### VCPKG_MAKE_CONFIGURE_OPTIONS
 Set additional automake / autoconf configure options that are appended to the configure command (in [`vcpkg_configure_make`](../maintainers/vcpkg_configure_make.md)).
 
