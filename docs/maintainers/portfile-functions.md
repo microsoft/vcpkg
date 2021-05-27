@@ -53,7 +53,6 @@
 - [vcpkg\_install\_qmake](vcpkg_install_qmake.md)
 - [vcpkg\_minimum\_required](vcpkg_minimum_required.md)
 - [vcpkg\_replace\_string](vcpkg_replace_string.md)
-- [vcpkg\_test\_cmake\_config](vcpkg_test_cmake_config.md)
 
 ## Internal Functions
 
