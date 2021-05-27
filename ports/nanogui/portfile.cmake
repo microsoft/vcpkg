@@ -6,7 +6,8 @@ vcpkg_from_github(
     REF 0146a88b2214cd5c5c29e6dfa8d3d3d0e9ab6d9d # Commits on Oct 16, 2020
     SHA512 0b0d0d077079e1a7186ec2cc640dbd48aebcefa0e1e0caa476128c6396b33d236cb5e8aaada4e1c8868a5d4aaefd90178206dd1569abab63c84af26d3309e2a5
     HEAD_REF master
-#    PATCHES
+    PATCHES
+         fix-package-seeking.diff
 #        fix-cmakelists.patch
 )
 

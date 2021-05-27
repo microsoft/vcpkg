@@ -1,0 +1,124 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f5936d2..5133d7a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,12 +7,6 @@ project(nanogui
+     CXX C
+ )
+ 
+-if (NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw/src")
+-  message(FATAL_ERROR "The NanoGUI dependency repositories (GLFW, etc.) are missing! "
+-    "You probably did not clone the project with --recursive. It is possible to recover "
+-    "by calling \"git submodule update --init --recursive\"")
+-endif()
+-
+ if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+   message(STATUS "Setting build type to 'Release' as none was specified.")
+   set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+@@ -186,7 +180,7 @@ if (NANOGUI_BUILD_GLFW)
+     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations")
+   endif()
+ 
+-  add_subdirectory(ext/glfw)
++  find_package(glfw3 CONFIG REQUIRED)
+ 
+   # Two targets have now been defined: `glfw_objects`, which will be merged into
+   # NanoGUI at the end, and `glfw`.  The `glfw` target is the library itself
+@@ -203,15 +197,7 @@ if (NANOGUI_BUILD_GLFW)
+ endif()
+ 
+ if (NANOGUI_BUILD_GLAD)
+-  # Build and include GLAD on Windows
+-  list(APPEND NANOGUI_EXTRA
+-    ext/glad/src/glad.c
+-    ext/glad/include/glad/glad.h
+-    ext/glad/include/KHR/khrplatform.h)
+-  if (MSVC)
+-    set_source_files_properties(ext/glad/src/glad.c
+-      PROPERTIES COMPILE_FLAGS /wd4055)
+-  endif()
++  find_package(glad CONFIG REQUIRED)
+ endif()
+ 
+ if (${CMAKE_SYSTEM_NAME} MATCHES "BSD")
+@@ -328,14 +314,11 @@ if (APPLE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+ endif()
+ 
+ if (NANOGUI_BUILD_GLFW)
+-  list(APPEND NANOGUI_EXTRA $<TARGET_OBJECTS:glfw_objects>)
++  target_link_libraries(nanogui PRIVATE glfw)
+ endif()
+ 
+ # Compile main NanoGUI library
+ add_library(nanogui ${NANOGUI_LIBRARY_TYPE} 
+-  # Merge NanoVG into the NanoGUI library
+-  ext/nanovg/src/nanovg.c
+-  ext/nanovg/src/stb_image.h
+ 
+   # Merge GLAD into the NanoGUI library (only if needed)
+   ${NANOGUI_EXTRA}
+@@ -377,6 +360,7 @@ add_library(nanogui ${NANOGUI_LIBRARY_TYPE}
+   include/nanogui/opengl.h
+   include/nanogui/nanogui.h
+ )
++target_link_libraries(nanogui PRIVATE nanovg::nanovg)
+ 
+ target_compile_definitions(nanogui
+   PUBLIC
+@@ -418,18 +402,12 @@ if (NANOGUI_BUILD_SHARED)
+   endif()
+ endif()
+ 
+-target_include_directories(nanogui PUBLIC
+-  "${CMAKE_CURRENT_SOURCE_DIR}/ext/nanovg/src")
++
++find_package(nanovg CONFIG REQUIRED)
+ 
+ if (NANOGUI_BUILD_GLAD)
+   target_compile_definitions(nanogui PUBLIC -DNANOGUI_GLAD)
+-  target_include_directories(nanogui
+-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ext/glad/include")
+-endif()
+-
+-if (NANOGUI_BUILD_GLFW)
+-  target_include_directories(nanogui
+-    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/ext/glfw/include")
++  target_link_libraries(nanogui PRIVATE glad::glad)
+ endif()
+ 
+ if (NANOGUI_BUILD_SHARED)
+@@ -454,12 +432,6 @@ if (NANOGUI_INSTALL)
+           FILES_MATCHING PATTERN "*.h")
+ endif()
+ 
+-# Quench warnings while compiling NanoVG
+-if (CMAKE_COMPILER_IS_GNUCC)
+-  set_source_files_properties(ext/nanovg/src/nanovg.c PROPERTIES COMPILE_FLAGS -Wno-unused-result)
+-elseif(MSVC)
+-  set_source_files_properties(ext/nanovg/src/nanovg.c PROPERTIES COMPILE_FLAGS "/wd4005 /wd4456 /wd4457")
+-endif()
+ 
+ # Build example application if desired
+ if (NANOGUI_BUILD_EXAMPLES)
+@@ -481,10 +453,12 @@ endif()
+ 
+ if (NANOGUI_BUILD_PYTHON)
+   message(STATUS "NanoGUI: building the Python plugin.")
++  find_package(pybind11 CONFIG REQUIRED)
+   if (NOT TARGET pybind11::module)
+     find_package(Python COMPONENTS Interpreter Development REQUIRED)
+ 
+     # Allow overriding the pybind11 library used to compile NanoGUI
++    # TODO: Override this dir
+     set(NANOGUI_PYBIND11_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ext/pybind11"
+       CACHE STRING "Path containing the 'pybind11' library used to compile nanogui.")
+ 
+@@ -518,6 +492,8 @@ if (NANOGUI_BUILD_PYTHON AND NANOGUI_MASTER_PROJECT)
+     list(APPEND MKDOC_CXX_FLAGS -D${value})
+   endforeach()
+ 
++  # target_link_libraries(… mylib pybind11::lto pybind11::embed pybind11::module)
++  # TODO: Infer replacement for /ext locations
+   add_custom_target(docstrings USES_TERMINAL COMMAND
+     ${Python_EXECUTABLE} -m pybind11_mkdoc -std=c++17 -stdlib=libc++
+     ${MKDOC_CXXFLAGS}
