@@ -2230,7 +2230,7 @@
     },
     "gettext": {
       "baseline": "0.21",
-      "port-version": 2
+      "port-version": 3
     },
     "gettimeofday": {
       "baseline": "2017-10-14-3",
