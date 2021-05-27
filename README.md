@@ -86,6 +86,18 @@ To install the libraries for your project, run:
 > .\vcpkg\vcpkg install [packages to install]
 ```
 
+Note: This will install x86 libraries by default. To install x64, run:
+
+```cmd
+> .\vcpkg\vcpkg install package:x64-windows
+```
+
+Or
+
+```cmd
+> .\vcpkg\vcpkg install [packages to install] --triplet=x64-windows
+```
+
 You can also search for the libraries you need with the `search` subcommand:
 
 ```cmd

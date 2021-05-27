@@ -8,8 +8,8 @@ vcpkg_from_github(
 )
 
 # Put the licence file where vcpkg expects it
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/tinygltf/LICENSE)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/tinygltf/LICENSE ${CURRENT_PACKAGES_DIR}/share/tinygltf/copyright)
+# Copy the tinygltf header files and fix the path to json
+vcpkg_replace_string(${SOURCE_PATH}/tiny_gltf.h "#include \"json.hpp\"" "#include <nlohmann/json.hpp>")
+file(INSTALL ${SOURCE_PATH}/tiny_gltf.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
 
-# Copy the tinygltf header files
-file(COPY ${SOURCE_PATH}/tiny_gltf.h DESTINATION ${CURRENT_PACKAGES_DIR}/include)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

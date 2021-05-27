@@ -1,6 +1,6 @@
 {
   "name": "libtcod",
-  "version-string": "1.16.6",
+  "version-semver": "1.18.0",
   "maintainers": "Kyle Benesch <4b796c65+github@gmail.com>",
   "description": "Common algorithms and tools for roguelikes.",
   "homepage": "https://github.com/libtcod/libtcod",
@@ -11,6 +11,14 @@
     "sdl2",
     "stb",
     "utf8proc",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    },
     "zlib"
   ]
 }

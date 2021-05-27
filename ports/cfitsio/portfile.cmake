@@ -11,14 +11,19 @@ vcpkg_extract_source_archive_ex(
         0001-fix-dependencies.patch
         0002-export-cmake-targets.patch
         0003-add-Wno-error-implicit-funciton-declaration-to-cmake.patch
+        0004-pkg-config.patch
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    curl        UseCurl
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        curl        UseCurl
 )
 
+set(PKG_CONFIG_REQUIRES_PRIVATE zlib)
 if ("curl" IN_LIST FEATURES)
     set(FIND_CURL_DEPENDENCY "find_dependency(CURL CONFIG)")
+    string(APPEND PKG_CONFIG_REQUIRES_PRIVATE " libcurl")
 endif()
 
 if ("pthreads" IN_LIST FEATURES)
@@ -34,8 +39,11 @@ endif()
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS
+        ${FEATURE_OPTIONS}
         -DUSE_PTHREADS=${WITH_PTHREADS}
+        "-DPKG_CONFIG_REQUIRES_PRIVATE=${PKG_CONFIG_REQUIRES_PRIVATE}"
+        -DPKG_CONFIG_LIBS=-lcfitsio
 )
 
 vcpkg_install_cmake()

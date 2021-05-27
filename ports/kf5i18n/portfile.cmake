@@ -1,8 +1,13 @@
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+   list(APPEND PATCHES "prevent-cmake-failing-with-variable-notfound.patch")
+endif()
+
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/ki18n
-    REF v5.64.0
-    SHA512 13b5d701003edea704ffc86a886d86b27ff2198d4cde4ee732b9241cf04dba0fba403f1f78b45facd7c2d3b543f8f0a098369035270a61b347331eb495fae1d3
+    REF v5.81.0
+    SHA512 8e14c429671a51b9b231f2a965f2368b019592a29a04a9e192da25a8a963042fe7478323508c097f73e2c328fd4742f8808fe68ea439e00e6667414d7f75be3e
+    PATCHES ${PATCHES}
 )
 
 if(CMAKE_HOST_WIN32)
@@ -26,6 +31,8 @@ if(CMAKE_HOST_WIN32)
     vcpkg_add_to_path(${GETTEXT_PATH})
 endif()
 
+vcpkg_find_acquire_program(PYTHON3)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -35,11 +42,16 @@ vcpkg_configure_cmake(
         -DBUILD_QTHELP_DOCS=OFF
         -DBUILD_TESTING=OFF
         -DKDE_INSTALL_PLUGINDIR=plugins
+        -DPYTHON_EXECUTABLE=${PYTHON3}
 )
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5I18n)
 vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
@@ -47,4 +59,5 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
-file(INSTALL ${SOURCE_PATH}/COPYING.LIB DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)

@@ -7,29 +7,36 @@ vcpkg_from_github(
     PATCHES 0001_fix_unistd.patch
 )
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/config.h.in DESTINATION ${SOURCE_PATH})
-
-if ("tools" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
-    message(FATAL_ERROR "Feature tools is only supported on Windows platforms.")
-endif()
-
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     tools BUILD_TOOLS
 )
 
-vcpkg_configure_cmake(
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    set(ENV{CFLAGS} "$ENV{CFLAGS} -DHUNSPELL_STATIC")
+    set(ENV{CXXFLAGS} "$ENV{CXXFLAGS} -DHUNSPELL_STATIC")
+endif()
+if(NOT "tools" IN_LIST FEATURES) # Building the tools is not possible on windows!
+    file(READ "${SOURCE_PATH}/src/Makefile.am" _contents)
+    string(REPLACE " parsers tools" "" _contents "${_contents}")
+    file(WRITE "${SOURCE_PATH}/src/Makefile.am" "${_contents}")
+endif()
+vcpkg_add_to_path("${CURRENT_HOST_INSTALLED_DIR}/tools/gettext/bin")
+vcpkg_configure_make(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
-    OPTIONS ${FEATURE_OPTIONS}
+    OPTIONS 
+    AUTOCONFIG
+    ADDITIONAL_MSYS_PACKAGES gzip
 )
-
-vcpkg_install_cmake()
+#install-pkgconfDATA:
+vcpkg_build_make(BUILD_TARGET dist LOGFILE_ROOT build-dist)
+vcpkg_install_make()
 vcpkg_copy_pdbs()
+vcpkg_fixup_pkgconfig()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 
 file(INSTALL ${SOURCE_PATH}/COPYING.LESSER DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright-lgpl)
 file(INSTALL ${SOURCE_PATH}/COPYING.MPL DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright-mpl)

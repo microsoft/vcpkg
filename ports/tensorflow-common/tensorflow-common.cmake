@@ -45,7 +45,7 @@ set(ENV{PYTHON_LIB_PATH} "${PYTHON_LIB_PATH}")
 vcpkg_execute_required_process(COMMAND ${PYTHON3} -c "import numpy" WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR} LOGNAME prerequesits-numpy-${TARGET_TRIPLET})
 
 # tensorflow has long file names, which will not work on windows
-set(ENV{TEST_TMPDIR} ${BUILDTREES_DIR}/.bzl)
+set(ENV{TEST_TMPDIR} "${CURRENT_BUILDTREES_DIR}/.bzl")
 
 set(ENV{USE_DEFAULT_PYTHON_LIB_PATH} 1)
 set(ENV{TF_NEED_KAFKA} 0)
@@ -439,4 +439,4 @@ else()
 	endif()
 endif()
 
-message(STATUS "You may want to delete ${CURRENT_BUILDTREES_DIR} and ${BUILDTREES_DIR}/.bzl to free diskspace.")
+message(STATUS "You may want to delete ${CURRENT_BUILDTREES_DIR} to free diskspace.")

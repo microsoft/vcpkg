@@ -1,0 +1,12 @@
+{
+  "name": "kf5completion",
+  "version": "5.81.0",
+  "description": "Text completion helpers and widgets",
+  "homepage": "https://api.kde.org/frameworks/kcompletion/html/index.html",
+  "dependencies": [
+    "ecm",
+    "kf5config",
+    "kf5widgetsaddons",
+    "qt5-tools"
+  ]
+}
