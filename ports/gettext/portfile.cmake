@@ -87,3 +87,5 @@ endforeach()
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/intl)
+# Always provide this wrapper. Consumers still need to depend on gettext[tools]:host for the actual tools.
+configure_file("${CMAKE_CURRENT_LIST_DIR}/gettext-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/gettext/vcpkg-cmake-wrapper.cmake" @ONLY)
