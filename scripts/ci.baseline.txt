@@ -903,10 +903,6 @@ memorymodule:arm-uwp=fail
 memorymodule:x64-linux=fail
 memorymodule:x64-osx=fail
 memorymodule:x64-uwp=fail
-# See issue https://github.com/pal1000/mesa-dist-win/issues/34
-mesa:x64-windows=fail
-mesa:x64-windows-static-md=fail
-mesa:x86-windows=fail
 # Due to static crt.
 mesa:x64-windows-static=fail
 # Missing dependent libraries.
