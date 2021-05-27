@@ -1545,7 +1545,7 @@
       "port-version": 0
     },
     "curl": {
-      "baseline": "7.75.0",
+      "baseline": "7.77.0",
       "port-version": 0
     },
     "curlpp": {
