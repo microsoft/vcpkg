@@ -9,5 +9,6 @@ index 1d71e14..62b7b33 100644
 -if(WIN32)
 +if(WIN32 AND 0)
    if(BUILD_SHARED_LIBS)
-     # Add "_imp" as a suffix before the extension to avoid conflicting with the statically linked "libcurl.lib"
-     set_target_properties(${LIB_NAME} PROPERTIES IMPORT_SUFFIX "_imp.lib")
+     if(MSVC)
+       # Add "_imp" as a suffix before the extension to avoid conflicting with
+       # the statically linked "libcurl.lib"
