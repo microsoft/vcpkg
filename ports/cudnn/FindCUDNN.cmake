@@ -29,14 +29,14 @@ find_path(CUDNN_INCLUDE_DIR NAMES cudnn.h cudnn_v8.h cudnn_v7.h
   PATH_SUFFIXES cuda/include include)
 find_library(CUDNN_LIBRARY NAMES cudnn cudnn8 cudnn7
   HINTS $ENV{CUDA_PATH} $ENV{CUDA_TOOLKIT_ROOT_DIR} $ENV{cudnn} $ENV{CUDNN} $ENV{CUDNN_ROOT_DIR} /usr/lib/x86_64-linux-gnu/
-  PATH_SUFFIXES lib lib64 cuda/lib cuda/lib64 lib/x64)
+  PATH_SUFFIXES lib lib64 cuda/lib cuda/lib64 lib/x64 cuda/lib/x64)
 if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn.h")
   file(READ ${CUDNN_INCLUDE_DIR}/cudnn.h CUDNN_HEADER_CONTENTS)
 elseif(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn_v8.h")
   file(READ ${CUDNN_INCLUDE_DIR}/cudnn_v8.h CUDNN_HEADER_CONTENTS)
 elseif(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn_v7.h")
   file(READ ${CUDNN_INCLUDE_DIR}/cudnn_v7.h CUDNN_HEADER_CONTENTS)
-endif
+endif()
 if(EXISTS "${CUDNN_INCLUDE_DIR}/cudnn_version.h")
   file(READ "${CUDNN_INCLUDE_DIR}/cudnn_version.h" CUDNN_VERSION_H_CONTENTS)
   string(APPEND CUDNN_HEADER_CONTENTS "${CUDNN_VERSION_H_CONTENTS}")

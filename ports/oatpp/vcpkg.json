@@ -1,7 +1,6 @@
 {
   "name": "oatpp",
-  "version-string": "1.2.0",
-  "port-version": 1,
+  "version": "1.2.5",
   "description": "Modern web framework.",
   "homepage": "https://github.com/oatpp/oatpp"
 }

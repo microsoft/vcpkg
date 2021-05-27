@@ -1,7 +1,6 @@
 {
   "name": "azure-core-cpp",
-  "version-semver": "1.0.0-beta.8",
-  "port-version": 1,
+  "version-semver": "1.0.0-beta.9",
   "description": [
     "Microsoft Azure Core SDK for C++",
     "This library provides shared primitives, abstractions, and helpers for modern Azure SDK client libraries written in the C++."
@@ -27,7 +26,7 @@
   ],
   "features": {
     "curl": {
-      "description": "LibCURL HTTP transport implementation",
+      "description": "Libcurl HTTP transport implementation",
       "dependencies": [
         {
           "name": "azure-core-cpp",

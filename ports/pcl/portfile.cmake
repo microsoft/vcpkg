@@ -7,7 +7,6 @@ vcpkg_from_github(
     PATCHES
         pcl_utils.patch
         pcl_config.patch
-        use_flann_targets.patch
         boost-1.70.patch
         fix-link-libpng.patch
         remove-broken-targets.patch
@@ -17,9 +16,7 @@ vcpkg_from_github(
         fix-find-qhull.patch
 )
 
-file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindFLANN.cmake)
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindQhull.cmake)
-
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" PCL_SHARED_LIBS)
 
 if ("cuda" IN_LIST FEATURES AND VCPKG_TARGET_ARCHITECTURE STREQUAL x86)

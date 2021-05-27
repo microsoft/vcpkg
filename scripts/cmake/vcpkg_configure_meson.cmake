@@ -71,7 +71,7 @@ function(vcpkg_internal_meson_generate_native_file _additional_binaries) #https:
     if(VCPKG_DETECTED_CMAKE_C_COMPILER MATCHES "cl.exe")
         # This is currently wrongly documented in the meson docs or buggy. The docs say: 'none' = no flags
         # In reality however 'none' tries to deactivate eh and meson passes the flags for it resulting in a lot of warnings
-        # about overriden flags. Until this is fixed in meson vcpkg should not pass this here. 
+        # about overriden flags. Until this is fixed in meson vcpkg should not pass this here.
         # string(APPEND NATIVE "cpp_eh='none'\n") # To make sure meson is not adding eh flags by itself using msvc
     endif()
     if(VCPKG_TARGET_IS_WINDOWS)
@@ -113,7 +113,7 @@ endfunction()
 
 # Generates the required compiler properties for meson
 function(vcpkg_internal_meson_generate_flags_properties_string _out_var _config)
-    if(VCPKG_TARGET_IS_WINDOWS)
+    if(VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
         set(L_FLAG /LIBPATH:)
     else()
         set(L_FLAG -L)
@@ -199,8 +199,8 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
             set(BUILD_ARCH $ENV{PROCESSOR_ARCHITECTURE})
         endif()
         if(BUILD_ARCH MATCHES "(amd|AMD)64")
-            set(BUILD_CPU_FAM x86_x64)
-            set(BUILD_CPU x86_x64)
+            set(BUILD_CPU_FAM x86_64)
+            set(BUILD_CPU x86_64)
         elseif(BUILD_ARCH MATCHES "(x|X)86")
             set(BUILD_CPU_FAM x86)
             set(BUILD_CPU i686)
@@ -211,16 +211,41 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
             set(BUILD_CPU_FAM arm)
             set(BUILD_CPU armv7hl)
         else()
-            message(FATAL_ERROR "Unsupported host architecture ${BUILD_ARCH}!" )
+            message(FATAL_ERROR "Unsupported host architecture ${BUILD_ARCH}!")
         endif()
-    else() # TODO: add correct detection for OSX and Linux. Currently only x64 triplets are available in official vcpkg. 
-        set(BUILD_CPU_FAM x86_x64)
-        set(BUILD_CPU x86_x64)
+    elseif(CMAKE_HOST_UNIX)
+        # at this stage, CMAKE_HOST_SYSTEM_PROCESSOR is not defined
+        execute_process(
+            COMMAND uname -m
+            OUTPUT_VARIABLE MACHINE
+            COMMAND_ERROR_IS_FATAL ANY)
+
+        if(MACHINE MATCHES "arm64")
+            set(BUILD_CPU_FAM aarch64)
+            set(BUILD_CPU armv8)
+        elseif(MACHINE MATCHES "x86_64|amd64")
+            set(BUILD_CPU_FAM x86_64)
+            set(BUILD_CPU x86_64)
+        elseif(MACHINE MATCHES "x86|i686")
+            set(BUILD_CPU_FAM x86)
+            set(BUILD_CPU i686)
+        elseif(MACHINE MATCHES "i386")
+            set(BUILD_CPU_FAM x86)
+            set(BUILD_CPU i386)
+        else()
+            unset(BUILD_CPU_FAM)
+            unset(BUILD_CPU)
+
+            # https://github.com/mesonbuild/meson/blob/master/docs/markdown/Reference-tables.md#cpu-families
+            message(FATAL_ERROR "Unhandled machine: ${MACHINE}")
+        endif()
+    else()
+        message(FATAL_ERROR "Failed to detect the host architecture!")
     endif()
 
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "(amd|AMD|x|X)64")
-        set(HOST_CPU_FAM x86_x64)
-        set(HOST_CPU x86_x64)
+        set(HOST_CPU_FAM x86_64)
+        set(HOST_CPU x86_64)
     elseif(VCPKG_TARGET_ARCHITECTURE MATCHES "(x|X)86")
         set(HOST_CPU_FAM x86)
         set(HOST_CPU i686)
@@ -273,7 +298,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     string(APPEND CROSS "system = '${MESON_SYSTEM_NAME}'\n")
     string(APPEND CROSS "cpu_family = '${HOST_CPU_FAM}'\n")
     string(APPEND CROSS "cpu = '${HOST_CPU}'\n")
-    
+
     string(APPEND CROSS "[build_machine]\n")
     string(APPEND CROSS "endian = 'little'\n")
     if(WIN32)
@@ -283,8 +308,13 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
     else()
         string(APPEND CROSS "system = 'linux'\n")
     endif()
-    string(APPEND CROSS "cpu_family = '${BUILD_CPU_FAM}'\n")
-    string(APPEND CROSS "cpu = '${BUILD_CPU}'\n")
+
+    if(DEFINED BUILD_CPU_FAM)
+        string(APPEND CROSS "cpu_family = '${BUILD_CPU_FAM}'\n")
+    endif()
+    if(DEFINED BUILD_CPU)
+        string(APPEND CROSS "cpu = '${BUILD_CPU}'\n")
+    endif()
 
     if(NOT BUILD_CPU_FAM MATCHES "${HOST_CPU_FAM}" OR VCPKG_TARGET_IS_ANDROID OR VCPKG_TARGET_IS_IOS OR VCPKG_TARGET_IS_UWP)
         set(_file "${CURRENT_BUILDTREES_DIR}/meson-cross-${TARGET_TRIPLET}.log")
@@ -333,7 +363,7 @@ function(vcpkg_configure_meson)
     vcpkg_add_to_path("${PYTHON3_DIR}")
     list(APPEND _vcm_ADDITIONAL_NATIVE_BINARIES "python = '${PYTHON3}'")
     list(APPEND _vcm_ADDITIONAL_CROSS_BINARIES "python = '${PYTHON3}'")
-    
+
     vcpkg_find_acquire_program(MESON)
 
     get_filename_component(CMAKE_PATH ${CMAKE_COMMAND} DIRECTORY)
@@ -386,7 +416,7 @@ function(vcpkg_configure_meson)
     else()
         list(APPEND _vcm_OPTIONS --default-library static)
     endif()
-    
+
     list(APPEND _vcm_OPTIONS --libdir lib) # else meson install into an architecture describing folder
     list(APPEND _vcm_OPTIONS_DEBUG -Ddebug=true --prefix ${CURRENT_PACKAGES_DIR}/debug --includedir ../include)
     list(APPEND _vcm_OPTIONS_RELEASE -Ddebug=false --prefix  ${CURRENT_PACKAGES_DIR})
