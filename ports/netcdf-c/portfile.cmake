@@ -29,6 +29,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         dap       ENABLE_DAP
         netcdf-4  ENABLE_NETCDF_4
         netcdf-4  USE_HDF5
+        tools     BUILD_UTILITIES
     INVERTED_FEATURES
         dap       CMAKE_DISABLE_FIND_PACKAGE_CURL
         netcdf-4  CMAKE_DISABLE_FIND_PACKAGE_HDF5
@@ -38,7 +39,6 @@ vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
     OPTIONS
-        -DBUILD_UTILITIES=OFF
         -DBUILD_TESTING=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTS=OFF
@@ -53,10 +53,14 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(PACKAGE_NAME "netcdf" CONFIG_PATH "lib/cmake/netCDF")
 vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/nc-config" "${CURRENT_PACKAGES_DIR}/bin/nc-config") # invalid
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES  nccopy ncdump ncgen ncgen3
+        AUTO_CLEAN
+    )
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
-else()
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/nc-config" "${CURRENT_PACKAGES_DIR}/bin/nc-config") # invalid
 endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

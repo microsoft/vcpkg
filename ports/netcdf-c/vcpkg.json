@@ -35,6 +35,9 @@
           ]
         }
       ]
+    },
+    "tools": {
+      "description": "Build utilities"
     }
   }
 }
