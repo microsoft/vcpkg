@@ -1,7 +1,7 @@
 {
   "name": "curl",
   "version": "7.74.0",
-  "port-version": 5,
+  "port-version": 6,
   "description": "A library for transferring data with URLs",
   "homepage": "https://github.com/curl/curl",
   "dependencies": [
@@ -110,7 +110,7 @@
           "features": [
             "winssl"
           ],
-          "platform": "windows & !uwp"
+          "platform": "(windows & !uwp) | mingw"
         },
         {
           "name": "curl",
@@ -118,7 +118,7 @@
           "features": [
             "openssl"
           ],
-          "platform": "(uwp | !windows) & !osx"
+          "platform": "(uwp | !windows) & !osx & !mingw"
         }
       ]
     },

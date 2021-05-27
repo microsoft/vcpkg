@@ -282,7 +282,7 @@ version:
     {
       "version": "2.6.2",
       "port-version": 0,
-      "git-tree": "$/ports/kitten/2.6.2_0"
+      "path": "$/ports/kitten/2.6.2_0"
     }
   ]
 }
@@ -305,12 +305,12 @@ your `versions/k-/kitten.json`:
     {
       "version": "2.6.3",
       "port-version": 0,
-      "git-tree": "$/ports/kitten/2.6.3_0"
+      "path": "$/ports/kitten/2.6.3_0"
     },
     {
       "version": "2.6.2",
       "port-version": 0,
-      "git-tree": "$/ports/kitten/2.6.2_0"
+      "path": "$/ports/kitten/2.6.2_0"
     }
   ]
 }
