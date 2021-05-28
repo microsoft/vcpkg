@@ -108,7 +108,7 @@ index 1c7d22a2..585f5d41 100644
      set(ALL_HEADERS
          ${GLSLANG_HEADERS}
 diff --git a/StandAlone/CMakeLists.txt b/StandAlone/CMakeLists.txt
-index bff9ab61..0ab8540f 100644
+index 751d1cd71..0f5cf0dc0 100644
 --- a/StandAlone/CMakeLists.txt
 +++ b/StandAlone/CMakeLists.txt
 @@ -98,7 +98,7 @@ if(ENABLE_GLSLANG_INSTALL)
@@ -118,5 +118,5 @@ index bff9ab61..0ab8540f 100644
 -    if(BUILD_SHARED_LIBS)
 +    if(BUILD_SHARED_LIBS OR TRUE)
          install(TARGETS glslang-default-resource-limits EXPORT glslang-default-resource-limitsTargets
-                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
-         install(EXPORT glslang-default-resource-limitsTargets DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake)
+                 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
