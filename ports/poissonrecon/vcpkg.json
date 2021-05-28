@@ -1,0 +1,11 @@
+{
+  "name": "poissonrecon",
+  "version-string": "2019-09-15",
+  "description": "Adaptive Multigrid Solvers",
+  "homepage": "https://github.com/mkazhdan/PoissonRecon",
+  "dependencies": [
+    "libjpeg-turbo",
+    "libpng",
+    "zlib"
+  ]
+}

@@ -56,6 +56,24 @@ index fde3a75..9f694b9 100644
  ENDMACRO()
  
  MACRO (MYSQL_USE_BUNDLED_ICU)
+diff --git a/cmake/libutils.cmake b/cmake/libutils.cmake
+index 3fa58da..88b53e7 100644
+--- a/cmake/libutils.cmake
++++ b/cmake/libutils.cmake
+@@ -350,12 +350,7 @@ MACRO(MERGE_CONVENIENCE_LIBRARIES)
+   # On Windows, ssleay32.lib/libeay32.lib or libssl.lib/libcrypto.lib
+   # must be merged into mysqlclient.lib
+   IF(WIN32 AND ${TARGET} STREQUAL "mysqlclient")
+-    SET(LINKER_EXTRA_FLAGS "")
+-    FOREACH(LIB ${SSL_LIBRARIES})
+-      STRING_APPEND(LINKER_EXTRA_FLAGS " ${LIB}")
+-    ENDFOREACH()
+-    SET_TARGET_PROPERTIES(${TARGET}
+-      PROPERTIES STATIC_LIBRARY_FLAGS "${LINKER_EXTRA_FLAGS}")
++    TARGET_LINK_LIBRARIES(${TARGET} PRIVATE ${SSL_LIBRARIES})
+   ENDIF()
+ 
+   IF(OSLIBS)
 diff --git a/cmake/lz4.cmake b/cmake/lz4.cmake
 index 9aad130..68cbaba 100644
 --- a/cmake/lz4.cmake
@@ -70,7 +88,7 @@ index 9aad130..68cbaba 100644
      SET(SYSTEM_LZ4_FOUND 1)
      INCLUDE_DIRECTORIES(SYSTEM ${PATH_TO_LZ4})
 diff --git a/cmake/ssl.cmake b/cmake/ssl.cmake
-index 52feade..4a0237a 100644
+index 52feade..1e71bd7 100644
 --- a/cmake/ssl.cmake
 +++ b/cmake/ssl.cmake
 @@ -93,7 +93,20 @@ ENDMACRO()
@@ -78,12 +96,12 @@ index 52feade..4a0237a 100644
  # WITH_SSL=[yes|system|<path/to/custom/installation>]
  MACRO (MYSQL_CHECK_SSL)
 +  find_package(OpenSSL REQUIRED)
-+  set(OPENSSL_LIBRARY ${OPENSSL_SSL_LIBRARY} CACHE STRING "")
-+  set(CRYPTO_LIBRARY ${OPENSSL_CRYPTO_LIBRARY} CACHE STRING "")
++  set(OPENSSL_LIBRARY OpenSSL::SSL CACHE STRING "")
++  set(CRYPTO_LIBRARY OpenSSL::Crypto CACHE STRING "")
 +  FIND_PROGRAM(OPENSSL_EXECUTABLE openssl
 +        DOC "path to the openssl executable")
 +  SET(SSL_DEFINES "-DHAVE_OPENSSL")
-+  set(SSL_LIBRARIES ${OPENSSL_LIBRARIES})
++  set(SSL_LIBRARIES OpenSSL::SSL OpenSSL::Crypto)
 +  if(NOT WIN32)
 +    find_package(Threads REQUIRED)
 +    list(APPEND SSL_LIBRARIES Threads::Threads)

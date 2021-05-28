@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO pmem/libpmemobj-cpp
-    REF 02c30bf553c36c683a4f826dac78f0dc5e8e7a2c #v1.11
-    SHA512 981e642c1cf3075454130c068fc6a7b0db35cde18581968b6ee17765db0e255e5d057feb68217b0b4a9b58e56c4578aa82b97cfa22112115382139bad5d8bce4
+    REF b570268bec37735df1d4591605c0c7b2077c7bed #v1.12
+    SHA512 0914c35c708b5fec81ac2632cfbae52412c2ff2255940b54e72acc03875fdebf03f83194a6f91f1ac1d9c3531c7d1537fa0b9bc1a9da53acc50339a3b7df7b62
     HEAD_REF master
     PATCHES
         fixlibpmemobj-cpp.patch

@@ -3,78 +3,70 @@
 
 Automatically locate pdbs in the build tree and copy them adjacent to all DLLs.
 
-## Usage
 ```cmake
-vcpkg_copy_pdbs([BUILD_PATHS <${CURRENT_PACKAGES_DIR}/bin/*.dll> ...])
+vcpkg_copy_pdbs(
+    [BUILD_PATHS <glob>...])
 ```
+
+The `<glob>`s are patterns which will be passed to `file(GLOB_RECURSE)`,
+for locating DLLs. It defaults to using:
+
+- `${CURRENT_PACKAGES_DIR}/bin/*.dll`
+- `${CURRENT_PACKAGES_DIR}/debug/bin/*.dll`
+
+since that is generally where DLLs are located.
 
 ## Notes
 This command should always be called by portfiles after they have finished rearranging the binary output.
-
-## Parameters
-### BUILD_PATHS
-Path patterns passed to `file(GLOB_RECURSE)` for locating dlls.
-
-Defaults to `${CURRENT_PACKAGES_DIR}/bin/*.dll` and `${CURRENT_PACKAGES_DIR}/debug/bin/*.dll`.
 
 ## Examples
 
 * [zlib](https://github.com/Microsoft/vcpkg/blob/master/ports/zlib/portfile.cmake)
 * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
 #]===]
-
 function(vcpkg_copy_pdbs)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _vcp "" "" "BUILD_PATHS")
-    
-    if(NOT _vcp_BUILD_PATHS)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "" "BUILD_PATHS")
+
+    if(NOT DEFINED arg_BUILD_PATHS)
         set(
-            _vcp_BUILD_PATHS
-            ${CURRENT_PACKAGES_DIR}/bin/*.dll
-            ${CURRENT_PACKAGES_DIR}/debug/bin/*.dll
+            arg_BUILD_PATHS
+            "${CURRENT_PACKAGES_DIR}/bin/*.dll"
+            "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll"
         )
     endif()
 
-    function(merge_filelist OUTVAR INVAR)
-        set(MSG "")
-        foreach(VAR ${${INVAR}})
-            set(MSG "${MSG}    ${VAR}\n")
-        endforeach()
-        set(${OUTVAR} ${MSG} PARENT_SCOPE)
-    endfunction()
+    set(dlls_without_matching_pdbs)
 
-    if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic AND NOT VCPKG_TARGET_IS_MINGW)
-        file(GLOB_RECURSE DLLS ${_vcp_BUILD_PATHS})
+    if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
+        file(GLOB_RECURSE dlls ${arg_BUILD_PATHS})
 
-        set(DLLS_WITHOUT_MATCHING_PDBS)
-
-        set(PREVIOUS_VSLANG $ENV{VSLANG})
+        set(vslang_backup "$ENV{VSLANG}")
         set(ENV{VSLANG} 1033)
 
-        foreach(DLL ${DLLS})
-            execute_process(COMMAND dumpbin /PDBPATH ${DLL}
+        foreach(dll IN LISTS dlls)
+            execute_process(COMMAND dumpbin /PDBPATH ${dll}
                             COMMAND findstr PDB
-                OUTPUT_VARIABLE PDB_LINE
+                OUTPUT_VARIABLE pdb_line
                 ERROR_QUIET
                 RESULT_VARIABLE error_code
             )
 
-            if(NOT error_code AND PDB_LINE MATCHES "PDB file found at")
-                string(REGEX MATCH '.*' PDB_PATH ${PDB_LINE}) # Extract the path which is in single quotes
-                string(REPLACE ' "" PDB_PATH ${PDB_PATH}) # Remove single quotes
-                get_filename_component(DLL_DIR ${DLL} DIRECTORY)
-                file(COPY ${PDB_PATH} DESTINATION ${DLL_DIR})
+            if(NOT error_code AND pdb_line MATCHES "PDB file found at")
+                string(REGEX MATCH [['.*']] pdb_path "${pdb_line}") # Extract the path which is in single quotes
+                string(REPLACE "'" "" pdb_path "${pdb_path}") # Remove single quotes
+                get_filename_component(dll_dir "${dll}" DIRECTORY)
+                file(COPY "${pdb_path}" DESTINATION "${dll_dir}")
             else()
-                list(APPEND DLLS_WITHOUT_MATCHING_PDBS ${DLL})
+                list(APPEND dlls_without_matching_pdbs "${dll}")
             endif()
         endforeach()
 
-        set(ENV{VSLANG} ${PREVIOUS_VSLANG})
+        set(ENV{VSLANG} "${vslang_backup}")
 
-        list(LENGTH DLLS_WITHOUT_MATCHING_PDBS UNMATCHED_DLLS_LENGTH)
-        if(UNMATCHED_DLLS_LENGTH GREATER 0)
-            merge_filelist(MSG DLLS_WITHOUT_MATCHING_PDBS)
-            message(STATUS "Warning: Could not find a matching pdb file for:\n${MSG}")
+        list(LENGTH dlls_without_matching_pdbs unmatched_dlls_length)
+        if(unmatched_dlls_length GREATER 0)
+            list(JOIN dlls_without_matching_pdbs "\n    " message)
+            message(WARNING "Could not find a matching pdb file for:${message}\n")
         endif()
     endif()
 

@@ -1,5 +1,7 @@
 # vcpkg_from_git
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_from_git.md).
+
 Download and extract a project from git
 
 ## Usage:
@@ -44,4 +46,4 @@ This parameter is used for automatic REF updates for certain ports in the centra
 * [fdlibm](https://github.com/Microsoft/vcpkg/blob/master/ports/fdlibm/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_from_git.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_git.cmake)
+[scripts/cmake/vcpkg\_from\_git.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_git.cmake)

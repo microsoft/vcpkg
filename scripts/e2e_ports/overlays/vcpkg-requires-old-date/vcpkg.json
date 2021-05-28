@@ -1,6 +1,0 @@
-{
-  "name": "vcpkg-requires-old-date",
-  "version-string": "1.0.0",
-  "description": "A test port that requires a vcpkg version from before vcpkg_minimum_required's introduction.",
-  "homepage": ""
-}
