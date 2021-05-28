@@ -123,9 +123,12 @@ function(vcpkg_download_distfile VAR)
 
         # Tries to download the file.
         list(GET vcpkg_download_distfile_URLS 0 SAMPLE_URL)
-        if(_VCPKG_DOWNLOAD_TOOL STREQUAL "ARIA2" AND NOT SAMPLE_URL MATCHES "aria2")
+        if(DEFINED ENV{VCPKG_DOWNLOAD_TOOL})
+          set(_VCPKG_DOWNLOAD_TOOL $ENV{VCPKG_DOWNLOAD_TOOL})
+        endif()
+        if(_VCPKG_DOWNLOAD_TOOL MATCHES "[Aa][Rr][Ii][Aa]" AND NOT SAMPLE_URL MATCHES "aria2")
             vcpkg_find_acquire_program("ARIA2")
-            message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME}...")
+            message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME} using aria2...")
             if(vcpkg_download_distfile_HEADERS)
                 foreach(header ${vcpkg_download_distfile_HEADERS})
                     list(APPEND request_headers "--header=${header}")
@@ -183,7 +186,7 @@ function(vcpkg_download_distfile VAR)
             if (NOT download_success)
                 message(FATAL_ERROR
                 "    \n"
-                "    Failed to download file.\n"  
+                "    Failed to download file.\n"
                 "    If you use a proxy, please check your proxy setting. Possible causes are:\n"
                 "    \n"
                 "    1. You are actually using an HTTP proxy, but setting HTTPS_PROXY variable\n"
