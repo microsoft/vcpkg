@@ -80,10 +80,11 @@ find_package(@TARGET_FOLDER@ CONFIG REQUIRED)
 
 add_executable(cmake_test cmake_test.cpp)
 
-target_link_libraries(cmake_test PRIVATE ${CURRENT_TARGET})
+target_link_libraries(cmake_test PRIVATE @CURRENT_TARGET@)
 ]]
     )
     
+    set(CURRENT_TARGET ${CURRENT_TARGET})
     file(WRITE ${TEST_DIR}/CMakeLists.txt.in ${CMAKE_LISTS_CONTENT})
     configure_file(${TEST_DIR}/CMakeLists.txt.in ${TEST_DIR}/CMakeLists.txt @ONLY)
     
@@ -103,6 +104,8 @@ macro(build_with_toolchain)
         set(CONFIG_CMD ${CMAKE_COMMAND} -G Ninja
             -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
             -DCMAKE_PREFIX_PATH=${CURRENT_PACKAGES_DIR}/share/${TARGET_FOLDER}
+            -DCMAKE_SOURCE_DIR=${TEST_DIR}
+            -DCMAKE_BINARY_DIR=${TEST_DIR}
             -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT_DIR}/scripts/buildsystems/vcpkg.cmake
             -DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}
         )
