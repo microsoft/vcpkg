@@ -1,0 +1,59 @@
+diff --git a/src/cmake/pythonutils.cmake b/src/cmake/pythonutils.cmake
+index 9a93f9e..d6376d9 100644
+--- a/src/cmake/pythonutils.cmake
++++ b/src/cmake/pythonutils.cmake
+@@ -27,6 +27,30 @@ macro (find_python)
+             list (APPEND _req EXACT)
+         endif ()
+     endif ()
++    if (WITH_PYTHON2)
++    checked_find_package (Python2 ${PYTHON2_VERSION}
++                          ${_req}
++                          COMPONENTS Interpreter Development
++                          PRINT Python2_VERSION Python2_EXECUTABLE
++                                Python2_LIBRARIES
++                                Python2_Development_FOUND
++                                Python2_Interpreter_FOUND )
++
++    # The version that was found may not be the default or user
++    # defined one.
++    set (PYTHON_VERSION_FOUND ${Python2_VERSION_MAJOR}.${Python2_VERSION_MINOR})
++
++    # Give hints to subsequent pybind11 searching to ensure that it finds
++    # exactly the same version that we found.
++    set (PythonInterp_FIND_VERSION PYTHON_VERSION_FOUND)
++    set (PythonInterp_FIND_VERSION_MAJOR ${Python2_VERSION_MAJOR})
++    
++    set(Python_VERSION ${PYTHON2_VERSION})
++    set(Python_LIBRARIES ${Python2_LIBRARIES})
++    set(Python_EXECUTABLE ${Python2_EXECUTABLE})
++    set(Python_Development_FOUND ${Python2_Development_FOUND})
++    set(Python_Interpreter_FOUND ${Python2_Interpreter_FOUND})
++    else()
+     checked_find_package (Python ${PYTHON_VERSION}
+                           ${_req}
+                           COMPONENTS Interpreter Development
+@@ -43,6 +67,7 @@ macro (find_python)
+     # exactly the same version that we found.
+     set (PythonInterp_FIND_VERSION PYTHON_VERSION_FOUND)
+     set (PythonInterp_FIND_VERSION_MAJOR ${Python_VERSION_MAJOR})
++    endif()
+ 
+     if (NOT DEFINED PYTHON_SITE_DIR)
+         set (PYTHON_SITE_DIR "${CMAKE_INSTALL_LIBDIR}/python${PYTHON_VERSION_FOUND}/site-packages")
+@@ -73,9 +98,15 @@ macro (setup_python_module)
+     add_library (${target_name} MODULE ${lib_SOURCES})
+ 
+     # Declare the libraries it should link against
++    if (WITH_PYTHON2)
++    target_link_libraries (${target_name} PRIVATE
++                           Python2::Python pybind11::pybind11
++                           ${lib_LIBS} ${SANITIZE_LIBRARIES})
++    else()
+     target_link_libraries (${target_name} PRIVATE
+                            Python::Python pybind11::pybind11
+                            ${lib_LIBS} ${SANITIZE_LIBRARIES})
++    endif()
+     if (APPLE)
+         set_target_properties (${target_name} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+     endif ()

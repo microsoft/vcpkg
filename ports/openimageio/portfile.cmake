@@ -15,6 +15,7 @@ vcpkg_from_github(
         fix-config-cmake.patch
         fix-dependency.patch
         fix_static_build.patch
+        fix-use-pybind11-2.patch
 )
 
 file(REMOVE_RECURSE "${SOURCE_PATH}/ext")
@@ -44,8 +45,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         opencv      USE_OPENCV
         openjpeg    USE_OPENJPEG
         webp        USE_WEBP
-        pybind11-2  USE_PYTHON
-        pybind11-3  USE_PYTHON
         tools       OIIO_BUILD_TOOLS
 )
 
@@ -53,10 +52,18 @@ if ("pybind11-2" IN_LIST FEATURES)
     vcpkg_find_acquire_program(PYTHON2)
     get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY)
     vcpkg_add_to_path("${PYTHON2_DIR}")
+    set(EXTRA_OPTS -DWITH_PYTHON2=ON -DPython2_EXECUTABLE=${PYTHON2})
 else ()
     vcpkg_find_acquire_program(PYTHON3)
     get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
     vcpkg_add_to_path("${PYTHON3_DIR}")
+    set(EXTRA_OPTS -DPython3_EXECUTABLE=${PYTHON3_DIR})
+endif()
+
+if ("pybind11-2" IN_LIST FEATURES OR "pybind11-3" IN_LIST FEATURES)
+    list(APPEND EXTRA_OPTS -DUSE_PYTHON=ON)
+else()
+    list(APPEND EXTRA_OPTS -DUSE_PYTHON=OFF)
 endif()
 
 vcpkg_configure_cmake(
@@ -75,6 +82,7 @@ vcpkg_configure_cmake(
         -DBUILD_MISSING_DEPS=OFF
         -DSTOP_ON_WARNING=OFF
         -DVERBOSE=ON
+        ${EXTRA_OPTS}
 )
 
 vcpkg_install_cmake()
