@@ -1,9 +1,8 @@
 {
   "name": "tiff",
-  "version-string": "4.1.0",
-  "port-version": 2,
+  "version-string": "4.3.0",
   "description": "A library that supports the manipulation of TIFF image files",
-  "homepage": "https://download.osgeo.org/libtiff",
+  "homepage": "https://libtiff.gitlab.io/libtiff/",
   "dependencies": [
     "libjpeg-turbo",
     "liblzma",
