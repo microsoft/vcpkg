@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
     REF ${LIBTIFF_VERSION}
     PATCHES
         cmakelists.patch
+        fix-pkgconfig.patch
 )
 
 set(EXTRA_OPTIONS "")
@@ -47,7 +48,6 @@ vcpkg_configure_cmake(
         -DBUILD_CONTRIB=OFF
         -DBUILD_TESTS=OFF
         -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
-        -DVERSION=${LIBTIFF_VERSION} # Needed for pc file
         -Dlibdeflate=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
@@ -57,22 +57,13 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libtiff-4.pc")
 if(EXISTS "${_file}")
     vcpkg_replace_string("${_file}" "-ltiff" "-ltiffd")
 endif()
-
-# Fix dependencies:
-set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libtiff-4.pc")
-if(EXISTS "${_file}")
-    vcpkg_replace_string("${_file}" "Version: ${LIBTIFF_VERSION}" "Version: ${LIBTIFF_VERSION}\nRequires.private: liblzma libjpeg")
-endif() 
-set(_file "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libtiff-4.pc")
-if(EXISTS "${_file}")
-    vcpkg_replace_string("${_file}" "Version: ${LIBTIFF_VERSION}" "Version: ${LIBTIFF_VERSION}\nRequires.private: liblzma libjpeg")
-endif()
-
 vcpkg_fixup_pkgconfig()
+
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include
     ${CURRENT_PACKAGES_DIR}/debug/share
