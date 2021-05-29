@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         disable_x86_intrinsics_on_arm.patch
+        tiff-deprecated-typedefs.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS "opencv" SELENE_USE_OPENCV)
