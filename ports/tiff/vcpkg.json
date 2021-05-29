@@ -1,0 +1,23 @@
+{
+  "name": "tiff",
+  "version-string": "4.1.0",
+  "port-version": 2,
+  "description": "A library that supports the manipulation of TIFF image files",
+  "homepage": "https://download.osgeo.org/libtiff",
+  "dependencies": [
+    "libjpeg-turbo",
+    "liblzma",
+    "zlib"
+  ],
+  "features": {
+    "tool": {
+      "description": "Build tools"
+    },
+    "zstd": {
+      "description": "Support zstd compression in TIFF image files",
+      "dependencies": [
+        "zstd"
+      ]
+    }
+  }
+}
