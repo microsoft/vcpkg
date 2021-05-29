@@ -61,6 +61,7 @@ vcpkg_configure_cmake(
         -DENABLE_XATTR=OFF
         -DENABLE_ACL=OFF
         -DENABLE_ICONV=OFF
+        -DENABLE_LIBB2=OFF
         -DENABLE_TEST=OFF
         -DENABLE_WERROR=OFF
 )
