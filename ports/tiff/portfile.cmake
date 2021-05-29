@@ -19,14 +19,21 @@ if(VCPKG_TARGET_IS_UWP)
     list(APPEND EXTRA_OPTIONS "-DUSE_WIN32_FILEIO=OFF")  # On UWP we use the unix I/O api.
 endif()
 
-if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-    list(APPEND EXTRA_OPTIONS "-Dcxx=OFF")
+if("cxx" IN_LIST FEATURES)
+    vcpkg_fail_port_install(
+        MESSAGE "Feature 'cxx' is not supported on ${VCPKG_TARGET_ARCHITECTURE}."
+        ON_ARCH arm arm64
+    )
 endif()
-
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        tool    BUILD_TOOLS
+        cxx     cxx
+        jpeg    jpeg
+        lzma    lzma
+        tools   BUILD_TOOLS
+        webp    webp
+        zip     zlib
         zstd    zstd
 )
 
@@ -41,9 +48,10 @@ vcpkg_configure_cmake(
         -DBUILD_TESTS=OFF
         -DCMAKE_DEBUG_POSTFIX=d # tiff sets "d" for MSVC only.
         -DVERSION=${LIBTIFF_VERSION} # Needed for pc file
+        -Dlibdeflate=OFF
         -Djbig=OFF # This is disabled by default due to GPL/Proprietary licensing.
         -Djpeg12=OFF
-        -Dwebp=OFF
+        -Dlerc=OFF
         -DCMAKE_DISABLE_FIND_PACKAGE_OpenGL=ON
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
 )
@@ -75,7 +83,7 @@ file(REMOVE_RECURSE
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-if ("tool" IN_LIST FEATURES)
+if ("tools" IN_LIST FEATURES)
     set(_tools
         fax2ps
         fax2tiff

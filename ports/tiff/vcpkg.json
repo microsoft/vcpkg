@@ -3,17 +3,44 @@
   "version-string": "4.3.0",
   "description": "A library that supports the manipulation of TIFF image files",
   "homepage": "https://libtiff.gitlab.io/libtiff/",
-  "dependencies": [
-    "libjpeg-turbo",
-    "liblzma",
-    "zlib"
+  "default-features": [
+    "jpeg",
+    "lzma",
+    "zip"
   ],
   "features": {
-    "tool": {
+    "cxx": {
+      "description": "Build C++ libtiffxx library"
+    },
+    "jpeg": {
+      "description": "Support JPEG compression in TIFF image files",
+      "dependencies": [
+        "libjpeg-turbo"
+      ]
+    },
+    "lzma": {
+      "description": "Support LZMA compression in TIFF image files",
+      "dependencies": [
+        "liblzma"
+      ]
+    },
+    "tools": {
       "description": "Build tools"
     },
+    "webp": {
+      "description": "Support WEBP compression in TIFF image files",
+      "dependencies": [
+        "libwebp"
+      ]
+    },
+    "zip": {
+      "description": "Support ZIP/deflate compression in TIFF image files",
+      "dependencies": [
+        "zlib"
+      ]
+    },
     "zstd": {
-      "description": "Support zstd compression in TIFF image files",
+      "description": "Support ZSTD compression in TIFF image files",
       "dependencies": [
         "zstd"
       ]
