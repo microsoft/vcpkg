@@ -38,9 +38,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         zstd    zstd
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         ${EXTRA_OPTIONS}
@@ -56,7 +55,7 @@ vcpkg_configure_cmake(
         -DCMAKE_DISABLE_FIND_PACKAGE_GLUT=ON
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libtiff-4.pc")
 if(EXISTS "${_file}")
