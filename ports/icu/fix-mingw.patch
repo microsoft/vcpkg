@@ -1,0 +1,293 @@
+From ee2701e1b65276e4592454201653e8db2a1919a5 Mon Sep 17 00:00:00 2001
+From: LiteratimBi <literatim.bi.art@gmail.com>
+Date: Thu, 27 May 2021 08:17:13 +0000
+Subject: [PATCH] ICU-21628 MinGW/Windows incorrect build
+
+See #1733
+---
+ source/config/mh-mingw           | 64 ++++++++++++++++++++------
+ source/config/mh-mingw64         | 64 ++++++++++++++++++++------
+ source/data/Makefile.in          |  4 +-
+ source/tools/pkgdata/pkgdata.cpp |  9 ++--
+ source/tools/pkgdata/pkgtypes.h  | 15 ++++--
+ 5 files changed, 116 insertions(+), 40 deletions(-)
+
+diff --git a/source/config/mh-mingw b/source/config/mh-mingw
+index 30f6e5be81a..81c9a8c6baf 100644
+--- a/source/config/mh-mingw
++++ b/source/config/mh-mingw
+@@ -60,8 +60,8 @@ LINK.c=       $(CXX) $(CXXFLAGS) $(LDFLAGS)
+ LD_SOOPTIONS=
+ 
+ ## Commands to make a shared library
+-SHLIB.c=	$(CC) $(CFLAGS) $(LDFLAGS) -shared $(LD_SOOPTIONS) -Wl,--enable-auto-import -Wl,--out-implib=$(dir $@)lib$(notdir $(@:$(SO_TARGET_VERSION_MAJOR).$(SO)=))$(IMPORT_LIB_EXT)#M#
+-SHLIB.cc=	$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(LD_SOOPTIONS) -Wl,--enable-auto-import -Wl,--out-implib=$(dir $@)lib$(notdir $(@:$(SO_TARGET_VERSION_MAJOR).$(SO)=))$(IMPORT_LIB_EXT)#M#
++SHLIB.c=	$(CC) $(CFLAGS) $(LDFLAGS) -shared $(LD_SOOPTIONS) -Wl,--enable-auto-import -Wl,--out-implib=$(dir $@)$(notdir $(@:$(SO_TARGET_VERSION_MAJOR).$(SO)=))$(IMPORT_LIB_EXT)#M#
++SHLIB.cc=	$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(LD_SOOPTIONS) -Wl,--enable-auto-import -Wl,--out-implib=$(dir $@)$(notdir $(@:$(SO_TARGET_VERSION_MAJOR).$(SO)=))$(IMPORT_LIB_EXT)#M#
+ 
+ ## Compiler switch to embed a runtime search path
+ LD_RPATH=	
+@@ -81,34 +81,68 @@ else
+ SO_TARGET_VERSION_SUFFIX = 
+ endif
+ 
++LIBPREFIX=lib
++
+ # Static library prefix and file extension
+-LIBSICU = $(LIBPREFIX)$(STATIC_PREFIX)$(ICUPREFIX)
++LIBSICU = $(LIBPREFIX)$(ICUPREFIX)
+ A = a
+ 
+ ## An import library is needed for z/OS and MSVC
+ IMPORT_LIB_EXT = .dll.a
+ 
+-LIBPREFIX=lib
+-
+ # Change the stubnames so that poorly working FAT disks and installation programs can work.
+ # This is also for backwards compatibility.
+ DATA_STUBNAME = dt
++COMMON_STUBNAME = uc
+ I18N_STUBNAME = in
+-LIBICU = $(STATIC_PREFIX_WHEN_USED)$(ICUPREFIX)
++LAYOUTEX_STUBNAME = lx
++IO_STUBNAME = io
++TOOLUTIL_STUBNAME = tu
++CTESTFW_STUBNAME = test
++LIBICU = $(LIBPREFIX)$(ICUPREFIX)
++
++## Version suffix for icu-config definitions
++ICULIBSUFFIX_VERSION = $(LIB_VERSION_MAJOR)
++
++## Overrides icudefs.mk data stub #M#
++PKGDATA_LIBSTATICNAME = -L $(LIBICU)$(DATA_STUBNAME)$(ICULIBSUFFIX) #M#
++ifeq ($(PKGDATA_MODE),dll)
++PKGDATA_LIBNAME = -L $(LIBICU)$(DATA_STUBNAME)$(ICULIBSUFFIX) #M#
++endif
+ 
+ #SH### copied from Makefile.inc
+ #SH## for icu-config to test with
+ #SH#ICULIBS_COMMON_LIB_NAME="${LIBICU}${COMMON_STUBNAME}${ICULIBSUFFIX}${ICULIBSUFFIX_VERSION}.${SO}"
+ #SH#ICULIBS_COMMON_LIB_NAME_A="${LIBICU}${COMMON_STUBNAME}${ICULIBSUFFIX}.${A}"
+ 
+-#SH#ICULIBS_DATA="-l$(ICUPREFIX)$(DATA_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_DT="-l$(ICUPREFIX)$(DATA_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_I18N="-l$(ICUPREFIX)$(I18N_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_LX="-l$(STATIC_PREFIX_WHEN_USED)$(ICUPREFIX)$(LAYOUTEX_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_IO="-l$(ICUPREFIX)$(IO_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_UC="-l$(ICUPREFIX)$(COMMON_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_CTESTFW="-l$(STATIC_PREFIX_WHEN_USED)$(ICUPREFIX)$(CTESTFW_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_TOOLUTIL="-l$(ICUPREFIX)tu$(ICULIBSUFFIX)"
++## Overrides Makefile.inc linker flags
++ICULIBS_COMMON = -l$(ICUPREFIX)$(COMMON_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_DATA   = -l$(ICUPREFIX)$(DATA_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_I18N   = -l$(ICUPREFIX)$(I18N_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_TOOLUTIL = -l$(ICUPREFIX)$(TOOLUTIL_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_CTESTFW = -l$(ICUPREFIX)$(CTESTFW_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_ICUIO = -l$(ICUPREFIX)$(IO_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_OBSOLETE = -l$(ICUPREFIX)obsolete$(ICULIBSUFFIX)
++ICULIBS_LAYOUTEX = -l$(ICUPREFIX)$(LAYOUTEX_STUBNAME)$(ICULIBSUFFIX)
++
++## Overrides icudefs.mk linker flags
++ICULIBS_DT=-l$(ICUPREFIX)$(DATA_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_I18N=-l$(ICUPREFIX)$(I18N_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_LX=-l$(ICUPREFIX)$(LAYOUTEX_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_IO=-l$(ICUPREFIX)$(IO_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_UC=-l$(ICUPREFIX)$(COMMON_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_CTESTFW=-l$(ICUPREFIX)$(CTESTFW_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_TOOLUTIL=-l$(ICUPREFIX)$(TOOLUTIL_STUBNAME)$(ICULIBSUFFIX)
++
++## Overrides icudefs.mk linker flags
++LIBICUDT	= $(LLIBDIR) $(LSTUBDIR) $(ICULIBS_DT)
++LIBICUUC	= $(LLIBDIR) $(ICULIBS_UC) $(LSTUBDIR) $(ICULIBS_DT)
++LIBICUI18N	= $(LLIBDIR) $(ICULIBS_I18N)
++LIBICULE	= $(ICULEHB_CFLAGS) $(LLIBDIR) $(ICULIBS_LE)
++LIBICULX	= $(LLIBDIR) $(ICULIBS_LX)
++LIBCTESTFW	= $(LCTESTFW) $(ICULIBS_CTESTFW)
++LIBICUTOOLUTIL	= $(LLIBDIR) $(ICULIBS_TOOLUTIL)
++LIBICUIO	= $(LLIBDIR) $(ICULIBS_IO)
+ #SH#
+ #SH## ICULIBS is the set of libraries your application should link
+ #SH## with usually. Many applications will want to add ${ICULIBS_I18N} as well. 
+@@ -168,7 +202,7 @@ endif
+ FINAL_SO_TARGET=$(basename $(SO_TARGET))$(SO_TARGET_VERSION_MAJOR).$(SO)
+ MIDDLE_SO_TARGET=$(FINAL_SO_TARGET)
+ 
+-FINAL_IMPORT_LIB = $(dir $(SO_TARGET))lib$(notdir $(basename $(SO_TARGET)))$(IMPORT_LIB_EXT)#M#
++FINAL_IMPORT_LIB = $(dir $(SO_TARGET))$(notdir $(basename $(SO_TARGET)))$(IMPORT_LIB_EXT)#M#
+ IMPORT_LIB = $(FINAL_IMPORT_LIB)#M#
+ MIDDLE_IMPORT_LIB = $(FINAL_IMPORT_LIB)#M#
+ 
+diff --git a/source/config/mh-mingw64 b/source/config/mh-mingw64
+index fb64c562604..7956cd093e0 100644
+--- a/source/config/mh-mingw64
++++ b/source/config/mh-mingw64
+@@ -60,8 +60,8 @@ LINK.c=       $(CXX) $(CXXFLAGS) $(LDFLAGS)
+ LD_SOOPTIONS=
+ 
+ ## Commands to make a shared library
+-SHLIB.c=	$(CC) $(CFLAGS) $(LDFLAGS) -shared $(LD_SOOPTIONS) -Wl,--enable-auto-import -Wl,--out-implib=$(dir $@)lib$(notdir $(@:$(SO_TARGET_VERSION_MAJOR).$(SO)=))$(IMPORT_LIB_EXT)#M#
+-SHLIB.cc=	$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(LD_SOOPTIONS) -Wl,--enable-auto-import -Wl,--out-implib=$(dir $@)lib$(notdir $(@:$(SO_TARGET_VERSION_MAJOR).$(SO)=))$(IMPORT_LIB_EXT)#M#
++SHLIB.c=	$(CC) $(CFLAGS) $(LDFLAGS) -shared $(LD_SOOPTIONS) -Wl,--enable-auto-import -Wl,--out-implib=$(dir $@)$(notdir $(@:$(SO_TARGET_VERSION_MAJOR).$(SO)=))$(IMPORT_LIB_EXT)#M#
++SHLIB.cc=	$(CXX) $(CXXFLAGS) $(LDFLAGS) -shared $(LD_SOOPTIONS) -Wl,--enable-auto-import -Wl,--out-implib=$(dir $@)$(notdir $(@:$(SO_TARGET_VERSION_MAJOR).$(SO)=))$(IMPORT_LIB_EXT)#M#
+ 
+ ## Compiler switch to embed a runtime search path
+ LD_RPATH=	
+@@ -81,34 +81,68 @@ else
+ SO_TARGET_VERSION_SUFFIX = 
+ endif
+ 
++LIBPREFIX=lib
++
+ # Static library prefix and file extension
+-LIBSICU = lib$(LIBPREFIX)$(STATIC_PREFIX)$(ICUPREFIX)
++LIBSICU = $(LIBPREFIX)$(ICUPREFIX)
+ A = a
+ 
+ ## An import library is needed for z/OS and MSVC
+ IMPORT_LIB_EXT = .dll.a
+ 
+-LIBPREFIX=
+-
+ # Change the stubnames so that poorly working FAT disks and installation programs can work.
+ # This is also for backwards compatibility.
+ DATA_STUBNAME = dt
++COMMON_STUBNAME = uc
+ I18N_STUBNAME = in
+-LIBICU = $(STATIC_PREFIX_WHEN_USED)$(ICUPREFIX)
++LAYOUTEX_STUBNAME = lx
++IO_STUBNAME = io
++TOOLUTIL_STUBNAME = tu
++CTESTFW_STUBNAME = test
++LIBICU = $(LIBPREFIX)$(ICUPREFIX)
++
++## Version suffix for icu-config definitions
++ICULIBSUFFIX_VERSION = $(LIB_VERSION_MAJOR)
++
++## Overrides icudefs.mk data stub #M#
++PKGDATA_LIBSTATICNAME = -L $(LIBICU)$(DATA_STUBNAME)$(ICULIBSUFFIX) #M#
++ifeq ($(PKGDATA_MODE),dll)
++PKGDATA_LIBNAME = -L $(LIBICU)$(DATA_STUBNAME)$(ICULIBSUFFIX) #M#
++endif
+ 
+ #SH### copied from Makefile.inc
+ #SH## for icu-config to test with
+ #SH#ICULIBS_COMMON_LIB_NAME="${LIBICU}${COMMON_STUBNAME}${ICULIBSUFFIX}${ICULIBSUFFIX_VERSION}.${SO}"
+ #SH#ICULIBS_COMMON_LIB_NAME_A="${LIBICU}${COMMON_STUBNAME}${ICULIBSUFFIX}.${A}"
+ 
+-#SH#ICULIBS_DATA="-l$(ICUPREFIX)$(DATA_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_DT="-l$(ICUPREFIX)$(DATA_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_I18N="-l$(ICUPREFIX)$(I18N_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_LX="-l$(STATIC_PREFIX_WHEN_USED)$(ICUPREFIX)$(LAYOUTEX_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_IO="-l$(ICUPREFIX)$(IO_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_UC="-l$(ICUPREFIX)$(COMMON_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_CTESTFW="-l$(STATIC_PREFIX_WHEN_USED)$(ICUPREFIX)$(CTESTFW_STUBNAME)$(ICULIBSUFFIX)"
+-ICULIBS_TOOLUTIL="-l$(ICUPREFIX)tu$(ICULIBSUFFIX)"
++## Overrides Makefile.inc linker flags
++ICULIBS_COMMON = -l$(ICUPREFIX)$(COMMON_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_DATA   = -l$(ICUPREFIX)$(DATA_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_I18N   = -l$(ICUPREFIX)$(I18N_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_TOOLUTIL = -l$(ICUPREFIX)$(TOOLUTIL_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_CTESTFW = -l$(ICUPREFIX)$(CTESTFW_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_ICUIO = -l$(ICUPREFIX)$(IO_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_OBSOLETE = -l$(ICUPREFIX)obsolete$(ICULIBSUFFIX)
++ICULIBS_LAYOUTEX = -l$(ICUPREFIX)$(LAYOUTEX_STUBNAME)$(ICULIBSUFFIX)
++
++## Overrides icudefs.mk linker flags
++ICULIBS_DT=-l$(ICUPREFIX)$(DATA_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_I18N=-l$(ICUPREFIX)$(I18N_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_LX=-l$(ICUPREFIX)$(LAYOUTEX_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_IO=-l$(ICUPREFIX)$(IO_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_UC=-l$(ICUPREFIX)$(COMMON_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_CTESTFW=-l$(ICUPREFIX)$(CTESTFW_STUBNAME)$(ICULIBSUFFIX)
++ICULIBS_TOOLUTIL=-l$(ICUPREFIX)$(TOOLUTIL_STUBNAME)$(ICULIBSUFFIX)
++
++## Overrides icudefs.mk linker flags
++LIBICUDT	= $(LLIBDIR) $(LSTUBDIR) $(ICULIBS_DT)
++LIBICUUC	= $(LLIBDIR) $(ICULIBS_UC) $(LSTUBDIR) $(ICULIBS_DT)
++LIBICUI18N	= $(LLIBDIR) $(ICULIBS_I18N)
++LIBICULE	= $(ICULEHB_CFLAGS) $(LLIBDIR) $(ICULIBS_LE)
++LIBICULX	= $(LLIBDIR) $(ICULIBS_LX)
++LIBCTESTFW	= $(LCTESTFW) $(ICULIBS_CTESTFW)
++LIBICUTOOLUTIL	= $(LLIBDIR) $(ICULIBS_TOOLUTIL)
++LIBICUIO	= $(LLIBDIR) $(ICULIBS_IO)
+ #SH#
+ #SH## ICULIBS is the set of libraries your application should link
+ #SH## with usually. Many applications will want to add ${ICULIBS_I18N} as well. 
+@@ -168,7 +202,7 @@ endif
+ FINAL_SO_TARGET=$(basename $(SO_TARGET))$(SO_TARGET_VERSION_MAJOR).$(SO)
+ MIDDLE_SO_TARGET=$(FINAL_SO_TARGET)
+ 
+-FINAL_IMPORT_LIB = $(dir $(SO_TARGET))lib$(notdir $(basename $(SO_TARGET)))$(IMPORT_LIB_EXT)#M#
++FINAL_IMPORT_LIB = $(dir $(SO_TARGET))$(notdir $(basename $(SO_TARGET)))$(IMPORT_LIB_EXT)#M#
+ IMPORT_LIB = $(FINAL_IMPORT_LIB)#M#
+ MIDDLE_IMPORT_LIB = $(FINAL_IMPORT_LIB)#M#
+ 
+diff --git a/source/data/Makefile.in b/source/data/Makefile.in
+index f020bc82a88..2c8da1f3a3a 100644
+--- a/source/data/Makefile.in
++++ b/source/data/Makefile.in
+@@ -196,9 +196,9 @@ ifeq ($(PKGDATA_MODE),files)
+ endif
+ ifneq ($(ENABLE_STATIC),)
+ ifeq ($(PKGDATA_MODE),dll)
+-# For MinGW, do we want the DLL to go in the bin location?
++# For MinGW, do we want the static datastub to go in the lib location?
+ ifeq ($(MINGW_MOVEDLLSTOBINDIR),YES)
+-	$(PKGDATA_INVOKE) $(PKGDATA) -m static -e $(ICUDATA_ENTRY_POINT) -T $(OUTTMPDIR) -s $(BUILDDIR) -p $(ICUDATA_NAME) $(PKGDATA_LIBSTATICNAME) $(PKGDATA_LIST) -I $(DESTDIR)$(bindir)
++	$(PKGDATA_INVOKE) $(PKGDATA) -m static -e $(ICUDATA_ENTRY_POINT) -T $(OUTTMPDIR) -s $(BUILDDIR) -p $(ICUDATA_NAME) $(PKGDATA_LIBSTATICNAME) $(PKGDATA_LIST) -I $(DESTDIR)$(libdir)
+ else
+ 	$(PKGDATA_INVOKE) $(PKGDATA) -m static -e $(ICUDATA_ENTRY_POINT) -T $(OUTTMPDIR) -s $(BUILDDIR) -p $(ICUDATA_NAME) $(PKGDATA_LIBSTATICNAME) $(PKGDATA_LIST) -I $(ICUPKGDATA_INSTALL_LIBDIR)
+ endif
+diff --git a/source/tools/pkgdata/pkgdata.cpp b/source/tools/pkgdata/pkgdata.cpp
+index 5ab682e4df8..56d048b325c 100644
+--- a/source/tools/pkgdata/pkgdata.cpp
++++ b/source/tools/pkgdata/pkgdata.cpp
+@@ -928,9 +928,8 @@ static void createFileNames(UPKGOptions *o, const char mode, const char *version
+         if (IN_DLL_MODE(mode)) {
+             sprintf(libFileNames[LIB_FILE], "%s", libName);
+         } else {
+-            sprintf(libFileNames[LIB_FILE], "%s%s%s",
+-                    (strstr(libName, "icudt") ? "lib" : ""),
+-                    pkgDataFlags[LIBPREFIX],
++            sprintf(libFileNames[LIB_FILE], "%s%s",
++                    (strstr(libName, "libicudt") ? "" : pkgDataFlags[LIBPREFIX]),
+                     libName);
+         }
+ #else
+@@ -945,7 +944,9 @@ static void createFileNames(UPKGOptions *o, const char mode, const char *version
+ 
+ #if U_PLATFORM == U_PF_MINGW
+         // Name the import library lib*.dll.a
+-        sprintf(libFileNames[LIB_FILE_MINGW], "lib%s.dll.a", libName);
++        sprintf(libFileNames[LIB_FILE_MINGW], "%s%s.dll.a",
++		        (strstr(libName, "libicudt") ? "" : pkgDataFlags[LIBPREFIX]),
++		        libName);
+ #elif U_PLATFORM == U_PF_CYGWIN
+         sprintf(libFileNames[LIB_FILE_CYGWIN], "cyg%s%s%s",
+                 libName,
+diff --git a/source/tools/pkgdata/pkgtypes.h b/source/tools/pkgdata/pkgtypes.h
+index 8ae1ec45a2b..4b940f3d9eb 100644
+--- a/source/tools/pkgdata/pkgtypes.h
++++ b/source/tools/pkgdata/pkgtypes.h
+@@ -140,10 +140,17 @@ char * convertToNativePathSeparators(char *path);
+ # ifndef UDATA_SO_SUFFIX
+ #  define UDATA_SO_SUFFIX ".dll"
+ # endif
+-# define LIB_PREFIX ""
+-# define LIB_STATIC_PREFIX ""
+-# define OBJ_SUFFIX ".obj"
+-# define UDATA_LIB_SUFFIX ".lib"
++# if U_PLATFORM == U_PF_MINGW
++#  define LIB_PREFIX "lib"
++#  define LIB_STATIC_PREFIX "lib"
++#  define OBJ_SUFFIX ".o"
++#  define UDATA_LIB_SUFFIX ".a"
++# else
++#  define LIB_PREFIX ""
++#  define LIB_STATIC_PREFIX ""
++#  define OBJ_SUFFIX ".obj"
++#  define UDATA_LIB_SUFFIX ".lib"
++# endif
+ 
+ #elif U_PLATFORM == U_PF_CYGWIN
+ # define LIB_PREFIX "cyg"

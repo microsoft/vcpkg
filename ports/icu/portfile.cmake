@@ -16,10 +16,11 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     PATCHES
-        ${CMAKE_CURRENT_LIST_DIR}/disable-escapestr-tool.patch
-        ${CMAKE_CURRENT_LIST_DIR}/remove-MD-from-configure.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix_parallel_build_on_windows.patch
-        ${CMAKE_CURRENT_LIST_DIR}/fix-extra.patch
+        disable-escapestr-tool.patch
+        remove-MD-from-configure.patch
+        fix_parallel_build_on_windows.patch
+        fix-extra.patch
+        fix-mingw.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)
@@ -33,12 +34,15 @@ list(APPEND CONFIGURE_OPTIONS_DEBUG  --enable-debug --disable-release)
 set(RELEASE_TRIPLET ${TARGET_TRIPLET}-rel)
 set(DEBUG_TRIPLET ${TARGET_TRIPLET}-dbg)
 
-if(NOT "${TARGET_TRIPLET}" STREQUAL "${HOST_TRIPLET}")
+if(VCPKG_CROSSCOMPILING)
     # cross compiling
     set(TOOL_PATH "${CURRENT_HOST_INSTALLED_DIR}/tools/${PORT}")
     # convert to unix path
     string(REGEX REPLACE "^([a-zA-Z]):/" "/\\1/" _VCPKG_TOOL_PATH "${TOOL_PATH}")
-    list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_TOOL_PATH}")
+    # for mingw on windows we must not set --with-cross-build, see https://github.com/unicode-org/icu/pull/1733#discussion_r641305290
+    if(NOT (VCPKG_TARGET_IS_MINGW AND CMAKE_HOST_WIN32))
+        list(APPEND CONFIGURE_OPTIONS "--with-cross-build=${_VCPKG_TOOL_PATH}")
+    endif()
 endif()
 
 vcpkg_configure_make(
@@ -150,15 +154,17 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     if(VCPKG_TARGET_IS_WINDOWS)
         # rename static libraries to match import libs
         # see https://gitlab.kitware.com/cmake/cmake/issues/16617
-        foreach(MODULE dt in io tu uc)
-            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-                file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sicu${MODULE}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/lib/icu${MODULE}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-            endif()
+        if(NOT VCPKG_TARGET_IS_MINGW)
+            foreach(MODULE dt in io tu uc)
+                if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
+                    file(RENAME ${CURRENT_PACKAGES_DIR}/lib/sicu${MODULE}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/lib/icu${MODULE}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+                endif()
 
-            if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-                file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sicu${MODULE}d${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/lib/icu${MODULE}d${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
-            endif()
-        endforeach()
+                if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+                    file(RENAME ${CURRENT_PACKAGES_DIR}/debug/lib/sicu${MODULE}d${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX} ${CURRENT_PACKAGES_DIR}/debug/lib/icu${MODULE}d${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX})
+                endif()
+            endforeach()
+        endif()
 
         file(GLOB_RECURSE pkg_files LIST_DIRECTORIES false ${CURRENT_PACKAGES_DIR}/*.pc)
         message(STATUS "${pkg_files}")
