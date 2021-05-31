@@ -678,7 +678,7 @@
     },
     "boost-json": {
       "baseline": "1.75.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-lambda": {
       "baseline": "1.75.0",
@@ -838,7 +838,7 @@
     },
     "boost-python": {
       "baseline": "1.75.0",
-      "port-version": 2
+      "port-version": 3
     },
     "boost-qvm": {
       "baseline": "1.75.0",
@@ -966,7 +966,7 @@
     },
     "boost-uninstall": {
       "baseline": "1.75.0",
-      "port-version": 0
+      "port-version": 1
     },
     "boost-units": {
       "baseline": "1.75.0",
@@ -1546,7 +1546,7 @@
     },
     "curl": {
       "baseline": "7.74.0",
-      "port-version": 6
+      "port-version": 7
     },
     "curlpp": {
       "baseline": "2018-06-15-3",
@@ -2382,7 +2382,7 @@
     },
     "grpc": {
       "baseline": "1.37.0",
-      "port-version": 1
+      "port-version": 2
     },
     "grppi": {
       "baseline": "0.4.0",
@@ -2390,7 +2390,7 @@
     },
     "gsl": {
       "baseline": "2.6",
-      "port-version": 0
+      "port-version": 1
     },
     "gsl-lite": {
       "baseline": "0.38.1",
@@ -2522,7 +2522,7 @@
     },
     "icu": {
       "baseline": "69.1",
-      "port-version": 9
+      "port-version": 10
     },
     "ideviceinstaller": {
       "baseline": "1.1.2.23-1",
@@ -2817,6 +2817,10 @@
       "port-version": 0
     },
     "kf5auth": {
+      "baseline": "5.81.0",
+      "port-version": 0
+    },
+    "kf5codecs": {
       "baseline": "5.81.0",
       "port-version": 0
     },
@@ -3273,8 +3277,8 @@
       "port-version": 0
     },
     "libmagic": {
-      "baseline": "5.37",
-      "port-version": 2
+      "baseline": "5.40",
+      "port-version": 0
     },
     "libmariadb": {
       "baseline": "3.1.12",
@@ -5834,7 +5838,7 @@
     },
     "sqlite3": {
       "baseline": "3.35.4",
-      "port-version": 0
+      "port-version": 1
     },
     "sqlitecpp": {
       "baseline": "3.1.1",
@@ -6177,8 +6181,8 @@
       "port-version": 0
     },
     "tre": {
-      "baseline": "0.8.0-1",
-      "port-version": 0
+      "baseline": "0.8.0",
+      "port-version": 2
     },
     "treehopper": {
       "baseline": "1.11.3-4",
