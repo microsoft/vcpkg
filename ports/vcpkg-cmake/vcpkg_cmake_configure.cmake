@@ -102,7 +102,7 @@ function(vcpkg_cmake_configure)
         message(FATAL_ERROR "SOURCE_PATH must be set")
     endif()
     if(NOT DEFINED arg_LOGFILE_BASE)
-        set(arg_LOGFILE_BASE "config")
+        set(arg_LOGFILE_BASE "config-${TARGET_TRIPLET}")
     endif()
 
     if(CMAKE_HOST_WIN32)
@@ -351,8 +351,10 @@ function(vcpkg_cmake_configure)
         vcpkg_execute_required_process(
             COMMAND ninja -v
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
-            LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}"
+            LOGNAME "${arg_LOGFILE_BASE}"
         )
+        list(APPEND CONFIG_LOGS ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-out.log
+                    ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-err.log)
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
@@ -366,8 +368,10 @@ function(vcpkg_cmake_configure)
                     "-DCMAKE_BUILD_TYPE=Debug"
                     "-DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug"
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
-                LOGNAME "${arg_LOGFILE_BASE}-${TARGET_TRIPLET}-dbg"
+                LOGNAME "${arg_LOGFILE_BASE}-dbg"
             )
+            list(APPEND CONFIG_LOGS ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-out.log
+                        ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-err.log)
         endif()
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -384,8 +388,32 @@ function(vcpkg_cmake_configure)
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                 LOGNAME "${arg_LOGFILE_BASE}-rel"
             )
+            list(APPEND CONFIG_LOGS ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-out.log
+                        ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-err.log)
         endif()
     endif()
+    
+    # Check unused variables
+    list(APPEND KNOWN_UNUSED_VARS CMAKE_INSTALL_BINDIR CMAKE_INSTALL_LIBDIR _VCPKG_ROOT_DIR BUILD_SHARED_LIBS VCPKG_TARGET_ARCHITECTURE)
+    foreach(config_log ${CONFIG_LOGS})
+        if (EXISTS ${config_log})
+            file(READ "${config_log}" CFG_LOG)
+            if (CFG_LOG)
+                debug_message("READING ${config_log}...")
+                string(REGEX MATCH "Manually-specified variables were not used by the project:\n([^\[]+)-- Build files have been written to" UNUSED_VARS ${CFG_LOG})
+                string(REPLACE "Manually-specified variables were not used by the project:\n\n" "" UNUSED_VARS ${UNUSED_VARS})
+                string(REPLACE "-- Build files have been written to" "" UNUSED_VARS ${UNUSED_VARS})
+                debug_message("Found unused variables:\n${UNUSED_VARS}")
+                foreach(known_macro ${KNOWN_UNUSED_VARS})
+                    string(REPLACE "    ${known_macro}\n" "" UNUSED_VARS ${UNUSED_VARS})
+                endforeach()
+                string(REPLACE "\n" "" UNUSED_VARS ${UNUSED_VARS})
+                if (UNUSED_VARS)
+                    message(FATAL_ERROR "The following variables are not used in portfile.cmake, please check and remove them:\n${UNUSED_VARS}")
+                endif()
+            endif()
+        endif()
+    endforeach()
 
     set(Z_VCPKG_CMAKE_GENERATOR "${generator}" CACHE INTERNAL "The generator which was used to configure CMake.")
 endfunction()

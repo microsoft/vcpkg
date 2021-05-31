@@ -325,6 +325,8 @@ function(vcpkg_configure_cmake)
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure
             LOGNAME ${arg_LOGNAME}
         )
+        
+        list(APPEND CONFIG_LOGS ${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-out.log ${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-err.log)
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
@@ -334,6 +336,7 @@ function(vcpkg_configure_cmake)
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
                 LOGNAME ${arg_LOGNAME}-dbg
             )
+            list(APPEND CONFIG_LOGS ${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-dbg-out.log ${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-dbg-err.log)
         endif()
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -344,8 +347,31 @@ function(vcpkg_configure_cmake)
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
                 LOGNAME ${arg_LOGNAME}-rel
             )
+            list(APPEND CONFIG_LOGS ${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-rel-out.log ${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-rel-err.log)
         endif()
     endif()
+    
+    # Check unused variables
+    list(APPEND KNOWN_UNUSED_VARS CMAKE_INSTALL_BINDIR CMAKE_INSTALL_LIBDIR _VCPKG_ROOT_DIR BUILD_SHARED_LIBS VCPKG_TARGET_ARCHITECTURE)
+    foreach(config_log ${CONFIG_LOGS})
+        if (EXISTS ${config_log})
+            file(READ "${config_log}" CFG_LOG)
+            if (CFG_LOG)
+                debug_message("READING ${config_log}...")
+                string(REGEX MATCH "Manually-specified variables were not used by the project:\n([^\[]+)-- Build files have been written to" UNUSED_VARS ${CFG_LOG})
+                string(REPLACE "Manually-specified variables were not used by the project:\n\n" "" UNUSED_VARS ${UNUSED_VARS})
+                string(REPLACE "-- Build files have been written to" "" UNUSED_VARS ${UNUSED_VARS})
+                debug_message("Found unused variables:\n${UNUSED_VARS}")
+                foreach(known_macro ${KNOWN_UNUSED_VARS})
+                    string(REPLACE "    ${known_macro}\n" "" UNUSED_VARS ${UNUSED_VARS})
+                endforeach()
+                string(REPLACE "\n" "" UNUSED_VARS ${UNUSED_VARS})
+                if (UNUSED_VARS)
+                    message(FATAL_ERROR "The following variables are not used in portfile.cmake, please check and remove them:\n${UNUSED_VARS}")
+                endif()
+            endif()
+        endif()
+    endforeach()
 
     set(Z_VCPKG_CMAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
 endfunction()
