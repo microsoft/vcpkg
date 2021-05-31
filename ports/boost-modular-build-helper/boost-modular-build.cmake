@@ -99,7 +99,7 @@ function(boost_modular_build)
         vcpkg_install_cmake()
     endfunction()
 
-    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+    if(VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore" AND NOT (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" AND (VCPKG_CMAKE_SYSTEM_NAME STREQUAL "iOS" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")))
         set(build_flag 0)
         if(NOT DEFINED VCPKG_BUILD_TYPE)
             set(build_flag 1)

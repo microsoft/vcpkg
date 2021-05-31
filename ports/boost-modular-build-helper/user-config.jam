@@ -19,10 +19,23 @@ else if "@VCPKG_TARGET_ARCHITECTURE@" = "arm64" && "@VCPKG_CMAKE_SYSTEM_NAME@" =
         @LDFLAGS@
         # MINGW here causes b2 to not run cygpath
         <flavor>mingw
-        <compileflags>"-std=c++14 -stdlib=libc++ -DNDEBUG -arch arm64 -fembed-bitcode -Wno-unused-local-typedef -Wno-nullability-completeness -mmacosx-version-min=10.12 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
+        <compileflags>"-std=c++14 -stdlib=libc++ -DNDEBUG -arch arm64 -fembed-bitcode -Wno-unused-local-typedef -Wno-nullability-completeness -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk"
         ;        
 }
-
+else if "@VCPKG_TARGET_ARCHITECTURE@" = "arm64" && "@VCPKG_CMAKE_SYSTEM_NAME@" = "Darwin"
+{
+    using gcc : 12.0.0 : @CMAKE_CXX_COMPILER@
+        :
+        <ranlib>@CMAKE_RANLIB@
+        <archiver>@CMAKE_AR@
+        @CXXFLAGS@
+        @CFLAGS@
+        @LDFLAGS@
+        # MINGW here causes b2 to not run cygpath
+        <flavor>mingw
+        <compileflags>"-std=c++14 -stdlib=libc++ -DNDEBUG -arch arm64 -fembed-bitcode -Wno-unused-local-typedef -Wno-nullability-completeness -mmacosx-version-min=10.12 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
+        ; 
+}
 else
 {
     using gcc : 12.0.0 : @CMAKE_CXX_COMPILER@
