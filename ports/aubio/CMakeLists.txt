@@ -29,7 +29,7 @@ endif()
 set(TOOLS_INSTALLDIR "bin" CACHE STRING "Target directory for installed tools")
 
 if(WITH_DEPENDENCIES)
-    find_package(FFMPEG COMPONENTS avcodec avutil avdevice avfilter avformat swresample REQUIRED)
+    find_package(FFMPEG COMPONENTS avcodec avutil avformat swresample REQUIRED)
     find_package(BZip2 REQUIRED)
     find_package(LibLZMA REQUIRED)
     find_package(SndFile REQUIRED)

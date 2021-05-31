@@ -17,8 +17,6 @@
           "default-features": false,
           "features": [
             "avcodec",
-            "avdevice",
-            "avfilter",
             "avformat",
             "swresample"
           ]
