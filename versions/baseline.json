@@ -2309,7 +2309,7 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "11.1.0",
+      "baseline": "11.4.0",
       "port-version": 0
     },
     "glui": {
