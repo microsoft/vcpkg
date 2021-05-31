@@ -4630,7 +4630,7 @@
     },
     "orocos-kdl": {
       "baseline": "1.4",
-      "port-version": 3
+      "port-version": 4
     },
     "osg": {
       "baseline": "3.6.5",
