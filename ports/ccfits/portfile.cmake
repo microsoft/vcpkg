@@ -39,7 +39,7 @@ foreach(HEADER IN LISTS HEADERS)
     file(WRITE "${HEADER}" "${_contents}")
 endforeach()
 
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/CCfits/ccfits.h
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/CCfits/CCfits.h
     "#include \"longnam.h\"" "#include \"cfitsio/longnam.h\""
 )
 
