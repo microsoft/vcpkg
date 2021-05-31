@@ -1,7 +1,7 @@
 {
   "name": "clamav",
   "version-semver": "0.103.0",
-  "port-version": 1,
+  "port-version": 2,
   "description": "ClamAV is an open-source anti-virus toolkit.",
   "homepage": "https://www.clamav.net",
   "supports": "!uwp & !static",

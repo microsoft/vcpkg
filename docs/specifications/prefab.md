@@ -50,7 +50,7 @@ Note:
 ./vcpkg export --triplet x64-android jsoncpp --prefab --prefab-maven --prefab-debug
 ```
 
-You will see an ouput like this:
+You will see an output like this:
 ```
 The following packages are already built and will be exported:
     jsoncpp:arm64-android
@@ -102,7 +102,7 @@ In gradle.properties
     android.enableParallelJsonGen=false
     android.prefabVersion=${prefab.version}
 
-Successfuly exported jsoncpp. Checkout .../vcpkg/prefab 
+Successfully exported jsoncpp. Checkout .../vcpkg/prefab 
 
 ```
 
