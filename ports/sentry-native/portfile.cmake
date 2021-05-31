@@ -15,6 +15,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fix-warningC5105.patch
         fix-config-cmake.patch
+        fix-libcurl.patch
 )
 
 if (NOT DEFINED SENTRY_BACKEND)
@@ -46,7 +47,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry)
 
-if (WIN32 AND SENTRY_BACKEND STREQUAL "crashpad")
+if (SENTRY_BACKEND STREQUAL "crashpad")
     vcpkg_copy_tools(
         TOOL_NAMES crashpad_handler
         AUTO_CLEAN
