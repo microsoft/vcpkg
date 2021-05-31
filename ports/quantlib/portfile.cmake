@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lballabio/QuantLib
-    REF f09141b5cce9134c0bcdbaf36e81359e6ba30705
-    SHA512 d4b19d33594a7072a0d90b7eac3d74fb27c526269713a9223b84c0451b1e06a58f0c98350305d68a55086d1971260ff249049112aaadea59397ec195a3291490
+    REF QuantLib-v1.22
+    SHA512 279c2e9273dd0fbc03d19ac19814e8a3b5544545cc1441982232f89bd313fe76b6e252dbcae8a3d146ecc4f1d1e64632ac412096b89da882ba879a66776fdb91
     HEAD_REF master
     PATCHES
         disable-examples-tests.patch
@@ -27,6 +27,7 @@ vcpkg_configure_cmake(
     OPTIONS
         -DUSE_BOOST_DYNAMIC_LIBRARIES=${USE_BOOST_DYNAMIC_LIBRARIES}
         -DMSVC_RUNTIME=${QL_MSVC_RUNTIME}
+        -DCMAKE_CXX_STANDARD=11
 )
 
 vcpkg_install_cmake()
