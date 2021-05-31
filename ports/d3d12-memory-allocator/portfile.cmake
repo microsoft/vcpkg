@@ -8,6 +8,7 @@ vcpkg_from_github(
 )
 
 file(COPY "${SOURCE_PATH}/src/D3D12MemAlloc.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+file(COPY "${SOURCE_PATH}/src/D3D12MemAlloc.cpp" DESTINATION "${CURRENT_PACKAGES_DIR}/src")
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/unofficial-d3d12-memory-allocator-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-d3d12-memory-allocator)
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
