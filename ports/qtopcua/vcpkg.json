@@ -1,0 +1,52 @@
+{
+  "name": "qtopcua",
+  "version-semver": "6.1.0",
+  "description": "Qt wrapper for existing OPC UA stacks",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network"
+      ]
+    },
+    "qtdeclarative"
+  ],
+  "default-features": [
+    "default-features",
+    "gds",
+    "ns0idnames",
+    "open62541"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    },
+    "gds": {
+      "description": "Support for global discovery server"
+    },
+    "ns0idgenerator": {
+      "description": "Namespace 0 NodeIds generator from the NodeIds.csv file."
+    },
+    "ns0idnames": {
+      "description": "Support for namespace 0 NodeId names"
+    },
+    "open62541": {
+      "description": "Open62541 with plugin to connect to servers with signing and encryption",
+      "dependencies": [
+        {
+          "name": "open62541",
+          "default-features": false,
+          "features": [
+            "amalgamation",
+            "openssl"
+          ]
+        }
+      ]
+    },
+    "uacpp": {
+      "description": "Unified Automation C++ SDK"
+    }
+  }
+}
