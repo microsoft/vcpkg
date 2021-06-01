@@ -6,7 +6,7 @@ index ab2760c..d1e1e6c 100644
              )
  
      target_compile_options(selene_img_io_tiff PRIVATE ${SELENE_COMPILER_OPTIONS} ${SELENE_IMG_COMPILER_OPTIONS})
-+    if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
++    if(MSVC)
 +        target_compile_options(selene_img_io_tiff PRIVATE /wd4996)
 +    endif()
  
