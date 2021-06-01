@@ -4965,7 +4965,7 @@
       "port-version": 0
     },
     "proxygen": {
-      "baseline": "2020.10.19.00",
+      "baseline": "2021.05.31.00",
       "port-version": 0
     },
     "proxywrapper": {
