@@ -1,8 +1,8 @@
 #
 # References
 #   - ${VCPKG_ROOT}/scripts/cmake/vcpkg_common_definitions.cmake
-#   - https://github.com/quictls/openssl/tree/openssl-3.0.0-alpha16+quic
-#       - ${SOURCE_PATH}/Configuration/README-design.md
+#   - https://github.com/quictls/openssl/tree/OpenSSL_1_1_1k+quic
+#       - ${SOURCE_PATH}/Configuration/README.design
 #       - ${SOURCE_PATH}/Configuration/10-main.conf
 #
 if(VCPKG_TARGET_IS_ANDROID)
@@ -57,15 +57,15 @@ elseif(VCPKG_TARGET_IS_MINGW)
     endif()
 
 elseif(VCPKG_TARGET_IS_UWP)
-    # ${SOURCE_PATH}/Configuration/50-win-onecore.conf
+    # ${SOURCE_PATH}/Configuration/50-win-onecore.conf of 'openssl-3.0.0-alpha16+quic' branch
     if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
-        set(PLATFORM VC-WIN32-UWP)
+        set(PLATFORM "VC-WIN32-UWP")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
-        set(PLATFORM VC-WIN64A-UWP)
+        set(PLATFORM "VC-WIN64A-UWP")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm")
-        set(PLATFORM VC-WIN32-ARM-UWP)
+        set(PLATFORM "VC-WIN32-ARM-UWP")
     elseif(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
-        set(PLATFORM VC-WIN64-ARM-UWP)
+        set(PLATFORM "VC-WIN64-ARM-UWP")
     else()
         message(FATAL_ERROR "Unknown UWP target architecture: ${VCPKG_TARGET_ARCHITECTURE}")
     endif()
