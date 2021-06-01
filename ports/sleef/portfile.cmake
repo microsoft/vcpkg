@@ -1,7 +1,7 @@
 # x86: Reports ICE(Internal Compiler Error) for x86-windows/release.
 #      see ${SOURCE_PATH}/src/libm/sleefsimddp.c
 # uwp: codegen fails
-vcpkg_fail_port_install(ON_ARCH "arm" "x86" ON_TARGET "uwp")
+vcpkg_fail_port_install(ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
