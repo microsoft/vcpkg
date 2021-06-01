@@ -50,7 +50,7 @@ $WindowsServerSku = '2019-Datacenter'
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
-$TotalProgress = 19
+$TotalProgress = 20
 $CurrentProgress = 1
 
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
@@ -361,6 +361,20 @@ Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
 ####################################################################################################
 Invoke-ScriptWithPrefix -ScriptName 'deploy-pwsh.ps1' -AddAdminPw
 Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
+Write-Progress `
+  -Activity $ProgressActivity `
+  -Status 'Running provisioning script deploy-tlssettings.ps1 in VM' `
+  -PercentComplete (100 / $TotalProgress * $CurrentProgress++)
+
+$ProvisionImageResult = Invoke-AzVMRunCommand `
+  -ResourceGroupName $ResourceGroupName `
+  -VMName $ProtoVMName `
+  -CommandId 'RunPowerShellScript' `
+  -ScriptPath "$PSScriptRoot\deploy-tlssettings.ps1"
+
+Write-Host "deploy-tlssettings.ps1 output: $($ProvisionImageResult.value.Message)"
 
 ####################################################################################################
 Write-Progress `
