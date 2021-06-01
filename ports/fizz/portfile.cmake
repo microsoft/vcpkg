@@ -3,11 +3,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebookincubator/fizz
-    REF 1c40fde31b5eff8a05f928497429bffe7425b4fd # v2020.10.19.00
-    SHA512 9e0de756855941c377f2a52d9b751e6ae066c8d8ae4e7a06211b2537a039e533cbc782cbce947cb703d7bd4c5cb5fb4420e71eeafdcb5f1264d788ca3eb0b76d
+    REF v2021.05.31.00
+    SHA512 529fa0e32cb0aecf59fb90f1d8c9bf284c6749169713c365ca06bbf54ed12a8978042af05094214c42945d372e2457bb2bfc2acc543f6538b296a25eb66d7186
     HEAD_REF master
-    PATCHES
-        find-zlib.patch
 )
 
 # Prefer installed config files
@@ -31,6 +29,7 @@ vcpkg_copy_pdbs()
 
 file(READ ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake _contents)
 string(REPLACE "lib/cmake/fizz" "share/fizz" _contents "${_contents}")
+string(REPLACE "find_dependency(Sodium)" "" _contents "${_contents}")
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake
 "include(CMakeFindDependencyMacro)
 find_dependency(folly CONFIG)

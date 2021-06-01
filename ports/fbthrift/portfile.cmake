@@ -6,8 +6,8 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
-    REF e184b41448dab2f462094fa005ed05269cfba3e3 # v2020.10.19.00
-    SHA512 df03e1779fd3f1868ed7be21292bcd91ae65bcca591b0265a40391dde7e3b3b81d83fe7eb4ec8dd5c440be471375b8e2c8c24befefaca3ae0cab9ce10bfd362c
+    REF v2021.05.31.00
+    SHA512 4aa55220b014d2ba2d7f7daf81dffa1276e8f43e5a25c2767819580fad42a39df04656f41e0ebe0302651833e3e994cabb9ded98ea32627ffd90fb91c9c1cc58
     HEAD_REF master
 )
 
@@ -41,7 +41,8 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs
     ${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/test
     ${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/test
-    ${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/test
+    ${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/benchmark
+    ${CURRENT_PACKAGES_DIR}/include/thrift/lib/thrift/annotation
 )
 
 vcpkg_copy_tools(TOOL_NAMES thrift1 AUTO_CLEAN)
