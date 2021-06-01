@@ -15,7 +15,7 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  FEATURES
+    FEATURES
     graphml   IGRAPH_GRAPHML_SUPPORT
     openmp    IGRAPH_OPENMP_SUPPORT
 )
