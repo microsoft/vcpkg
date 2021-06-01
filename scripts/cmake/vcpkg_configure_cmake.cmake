@@ -15,6 +15,7 @@ vcpkg_configure_cmake(
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+    [OPTIONS_CHECK_SKIP <WITH_TOOLS>...]
 )
 ```
 
@@ -53,6 +54,9 @@ Additional options passed to CMake during the Release configuration. These are i
 ### OPTIONS_DEBUG
 Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
 
+### OPTIONS_CHECK_SKIP
+Ignore checked unused cmake options, support cmake regular expression
+
 ### LOGNAME
 Name of the log to write the output of the configure call to.
 
@@ -75,7 +79,7 @@ function(vcpkg_configure_cmake)
     cmake_parse_arguments(PARSE_ARGV 0 arg
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG"
         "SOURCE_PATH;GENERATOR;LOGNAME"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;OPTIONS_CHECK_SKIP"
     )
 
     if(NOT VCPKG_PLATFORM_TOOLSET)
@@ -352,7 +356,7 @@ function(vcpkg_configure_cmake)
     endif()
     
     # Check unused variables
-    list(APPEND KNOWN_UNUSED_VARS CMAKE_*. _VCPKG_*. BUILD_SHARED_LIBS VCPKG_*. Z_VCPKG_*.)
+    list(APPEND KNOWN_UNUSED_VARS CMAKE_*. _VCPKG_*. BUILD_SHARED_LIBS VCPKG_*. Z_VCPKG_*. ${arg_OPTIONS_CHECK_SKIP})
     foreach(config_log ${CONFIG_LOGS})
         if (NOT EXISTS ${config_log})
             continue()

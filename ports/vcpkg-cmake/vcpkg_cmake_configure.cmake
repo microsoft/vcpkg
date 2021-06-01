@@ -17,6 +17,8 @@ vcpkg_cmake_configure(
         <configure-setting>...]
     [OPTIONS_DEBUG
         <configure-setting>...]
+    [OPTIONS_CHECK_SKIP
+        <WITH_TOOLS>...]
 )
 ```
 
@@ -55,6 +57,10 @@ By default, this function adds flags to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`
 which set the default character set to utf-8 for MSVC.
 If the library sets its own code page, pass the `NO_CHARSET_FLAG` option.
 
+Check all unused cmake options after the configuration is complete.
+Use `OPTIONS_CHECK_SKIP `to skip unused cmake options defined for the platform.
+This option supports cmake regular expression.
+
 `LOGFILE_BASE` is used to set the base of the logfile names;
 by default, this is `config`, and thus the logfiles end up being something like
 `config-x86-windows-dbg.log`. You can set it to anything you like;
@@ -88,7 +94,7 @@ function(vcpkg_cmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG"
         "SOURCE_PATH;GENERATOR;LOGFILE_BASE"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;OPTIONS_CHECK_SKIP"
     )
 
     if(DEFINED CACHE{Z_VCPKG_CMAKE_GENERATOR})
@@ -394,7 +400,7 @@ function(vcpkg_cmake_configure)
     endif()
     
     # Check unused variables
-    list(APPEND KNOWN_UNUSED_VARS CMAKE_*. _VCPKG_*. BUILD_SHARED_LIBS VCPKG_*. Z_VCPKG_*.)
+    list(APPEND KNOWN_UNUSED_VARS CMAKE_*. _VCPKG_*. BUILD_SHARED_LIBS VCPKG_*. Z_VCPKG_*. ${arg_OPTIONS_CHECK_SKIP})
     foreach(config_log ${CONFIG_LOGS})
         if (NOT EXISTS ${config_log})
             continue()
