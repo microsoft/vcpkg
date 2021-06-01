@@ -17,6 +17,7 @@ vcpkg_configure_cmake(
     [OPTIONS <-DUSE_THIS_IN_ALL_BUILDS=1>...]
     [OPTIONS_RELEASE <-DOPTIMIZE=1>...]
     [OPTIONS_DEBUG <-DDEBUGGABLE=1>...]
+    [OPTIONS_CHECK_SKIP <WITH_TOOLS>...]
 )
 ```
 
@@ -54,6 +55,9 @@ Additional options passed to CMake during the Release configuration. These are i
 
 ### OPTIONS_DEBUG
 Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
+
+### OPTIONS_CHECK_SKIP
+Ignore checked unused cmake options, support cmake regular expression
 
 ### LOGNAME
 Name of the log to write the output of the configure call to.
