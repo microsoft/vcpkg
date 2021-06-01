@@ -39,7 +39,6 @@ endif()
 
 # Option: platform/architecture
 include(${CMAKE_CURRENT_LIST_DIR}/detect_platform.cmake)
-message(STATUS "Targeting: ${PLATFORM}")
 
 # Clean & copy source files for working directories
 file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
@@ -145,7 +144,7 @@ else()
         WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
         LOGNAME install-${TARGET_TRIPLET}-rel
     )
-    if(VCPKG_TARGET_IS_ANDROID) 
+    if(VCPKG_TARGET_IS_ANDROID AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         # install_dev copies symbolic link. overwrite them with the actual shared objects
         file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcrypto.so
                      ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libssl.so
