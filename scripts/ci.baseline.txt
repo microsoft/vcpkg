@@ -114,6 +114,8 @@ chartdir:x64-windows-static=fail
 chartdir:x86-windows=fail
 chartdir:x64-windows=fail
 chartdir:x64-windows-static-md=fail
+chartdir:x64-linux=fail
+chartdir:x64-osx=fail
 chmlib:arm-uwp=fail
 chmlib:x64-uwp=fail
 # Chromium Base requires a recent version of Clang to be installed.
