@@ -128,7 +128,43 @@ function(vcpkg_download_distfile VAR)
 
         # Tries to download the file.
         list(GET vcpkg_download_distfile_URLS 0 SAMPLE_URL)
-        if(vcpkg_download_distfile_SKIP_SHA512)
+        if(_VCPKG_DOWNLOAD_TOOL STREQUAL "ARIA2" AND NOT SAMPLE_URL MATCHES "aria2")
+            vcpkg_find_acquire_program("ARIA2")
+            message(STATUS "Downloading ${vcpkg_download_distfile_FILENAME}...")
+            if(vcpkg_download_distfile_HEADERS)
+                foreach(header IN LISTS vcpkg_download_distfile_HEADERS)
+                    list(APPEND request_headers "--header=${header}")
+                endforeach()
+            endif()
+            vcpkg_execute_in_download_mode(
+                COMMAND ${ARIA2} ${vcpkg_download_distfile_URLS}
+                -o temp/${vcpkg_download_distfile_FILENAME}
+                -l download-${vcpkg_download_distfile_FILENAME}-detailed.log
+                ${request_headers}
+                OUTPUT_FILE download-${vcpkg_download_distfile_FILENAME}-out.log
+                ERROR_FILE download-${vcpkg_download_distfile_FILENAME}-err.log
+                RESULT_VARIABLE error_code
+                WORKING_DIRECTORY ${DOWNLOADS}
+            )
+            if (NOT "${error_code}" STREQUAL "0")
+                message(STATUS
+                    "Downloading ${vcpkg_download_distfile_FILENAME}... Failed.\n"
+                    "    Exit Code: ${error_code}\n"
+                    "    See logs for more information:\n"
+                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-out.log\n"
+                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-err.log\n"
+                    "        ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-detailed.log\n"
+                )
+                set(download_success 0)
+            else()
+                file(REMOVE
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-out.log
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-err.log
+                    ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-detailed.log
+                )
+                set(download_success 1)
+            endif()
+        elseif(vcpkg_download_distfile_SKIP_SHA512)
             set(download_success 0)
             set(request_headers)
             if(vcpkg_download_distfile_HEADERS)
@@ -152,10 +188,10 @@ function(vcpkg_download_distfile VAR)
                 endif()
             endforeach(url)
         else()
-            set(URLS)
+            set(urls)
             foreach(url IN LISTS vcpkg_download_distfile_URLS)
-                list(APPEND URLS "--url=${url}")
-            endforeach(url)
+                list(APPEND urls "--url=${url}")
+            endforeach()
             if(NOT vcpkg_download_distfile_QUIET)
                 message(STATUS "Downloading ${vcpkg_download_distfile_URLS} -> ${vcpkg_download_distfile_FILENAME}...")
             endif()
@@ -166,13 +202,13 @@ function(vcpkg_download_distfile VAR)
                 endforeach()
             endif()
             vcpkg_execute_in_download_mode(
-                COMMAND "$ENV{VCPKG_COMMAND}" x-download "${downloaded_file_path}" "${vcpkg_download_distfile_SHA512}" ${URLS} ${request_headers} --debug
+                COMMAND "$ENV{VCPKG_COMMAND}" x-download "${downloaded_file_path}" "${vcpkg_download_distfile_SHA512}" ${urls} ${request_headers} --debug
                 OUTPUT_VARIABLE output
                 ERROR_VARIABLE output
-                RESULT_VARIABLE FAILURE
-                WORKING_DIRECTORY ${DOWNLOADS}
+                RESULT_VARIABLE failure
+                WORKING_DIRECTORY "${DOWNLOADS}"
             )
-            if(FAILURE)
+            if(failure)
                 message("${output}")
                 set(download_success 0)
             else()
