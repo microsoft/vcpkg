@@ -1280,36 +1280,38 @@ python2:arm-uwp=fail
 python2:x64-linux=fail
 python2:x64-osx=fail
 python2:x64-uwp=fail
+# Not yet ready for these platforms. 
+qbittorrent:x64-osx=fail
+qbittorrent:x64-linux=fail
 qhull:x64-uwp=fail
 qhull:arm-uwp=fail
 qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
-qt5-activeqt:x64-linux=fail
-qt5-activeqt:x64-osx=fail
+# Skip ports not available in Qt 6.1.0 (for Qt 6.2)
+qt6betablock:x86-windows=skip
+qt6betablock:x64-windows=skip
+qt6betablock:x64-windows-static=skip
+qt6betablock:x64-windows-static-md=skip
+qt6betablock:x64-linux=skip
+qt6betablock:x64-osx=skip
 qt5-base:arm64-windows=fail
 # Skip deprecated Qt module
-# (remnove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
+# (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
 qt5-canvas3d:x64-osx=skip
 qt5-canvas3d:x64-windows=skip
 qt5-canvas3d:x64-windows-static=skip
 qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
-qt5-macextras:x64-linux=fail
-qt5-macextras:x64-windows=fail
-qt5-macextras:x64-windows-static=fail
-qt5-macextras:x64-windows-static-md=fail
-qt5-macextras:x86-windows=fail
 # Missing system libraries
 qt5-wayland:x64-osx=fail
+qtwayland:x64-osx=fail
 # Missing libraries
 qt5-wayland:x86-windows=fail
 qt5-wayland:x64-windows=fail
 qt5-wayland:x64-windows-static=fail
 qt5-wayland:x64-windows-static-md=fail
-qt5-winextras:x64-linux=fail
-qt5-winextras:x64-osx=fail
 # Missing prerequisites for CI success
 qt5-webengine:x64-linux=fail
 qt5-webengine:x64-osx=fail

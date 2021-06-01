@@ -92,6 +92,10 @@
       "baseline": "2020-01-13",
       "port-version": 2
     },
+    "aom": {
+      "baseline": "3.1.0",
+      "port-version": 0
+    },
     "apr": {
       "baseline": "1.7.0",
       "port-version": 3
@@ -1461,7 +1465,7 @@
       "port-version": 0
     },
     "cpu-features": {
-      "baseline": "0.4.1",
+      "baseline": "0.6.0",
       "port-version": 0
     },
     "cpuid": {
@@ -1842,7 +1846,7 @@
     },
     "embree3": {
       "baseline": "3.12.2",
-      "port-version": 1
+      "port-version": 2
     },
     "enet": {
       "baseline": "1.3.16",
@@ -5036,6 +5040,10 @@
       "baseline": "2.12.0",
       "port-version": 1
     },
+    "qt": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
     "qt-advanced-docking-system": {
       "baseline": "3.6.3",
       "port-version": 1
@@ -5212,8 +5220,104 @@
       "baseline": "5.15.2",
       "port-version": 0
     },
+    "qt5compat": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qt6betablock": {
+      "baseline": "6.2.0-beta",
+      "port-version": 0
+    },
+    "qtactiveqt": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtbase": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtcharts": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtcoap": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtdatavis3d": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtdeclarative": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtdoc": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtimageformats": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
     "qtkeychain": {
       "baseline": "0.11.1",
+      "port-version": 0
+    },
+    "qtlottie": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtmqtt": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtnetworkauth": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtopcua": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtquick3d": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtquickcontrols2": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtquicktimeline": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtscxml": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtshadertools": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtsvg": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qttools": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qttranslations": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtvirtualkeyboard": {
+      "baseline": "6.1.0",
+      "port-version": 0
+    },
+    "qtwayland": {
+      "baseline": "6.1.0",
       "port-version": 0
     },
     "quadtree": {
@@ -5982,7 +6086,7 @@
     },
     "tensorflow-common": {
       "baseline": "2.4.1",
-      "port-version": 1
+      "port-version": 2
     },
     "tensorpipe": {
       "baseline": "2021-04-26",
@@ -6665,7 +6769,7 @@
       "port-version": 0
     },
     "z3": {
-      "baseline": "4.8.9",
+      "baseline": "4.8.10",
       "port-version": 0
     },
     "z85": {
