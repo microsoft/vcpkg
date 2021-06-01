@@ -16,11 +16,7 @@
       "platform": "!(windows | uwp)"
     },
     "nghttp2",
-    "qt5-base",
-    {
-      "name": "qt5-winextras",
-      "platform": "windows"
-    },
+    "qtbase",
     "zlib",
     "zstd"
   ]
