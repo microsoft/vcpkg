@@ -1845,7 +1845,7 @@
       "port-version": 1
     },
     "enet": {
-      "baseline": "1.3.16",
+      "baseline": "1.3.17",
       "port-version": 0
     },
     "ensmallen": {
