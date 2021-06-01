@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(unofficial-d3d12-memory-allocator)
+project(d3d12-memory-allocator)
 
 add_library(${PROJECT_NAME} STATIC 
     "src/D3D12MemAlloc.h"
@@ -14,4 +14,8 @@ install(
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     PUBLIC_HEADER DESTINATION include/
+)
+install(
+    EXPORT ${PROJECT_NAME}-config DESTINATION cmake/
+    NAMESPACE "unofficial::"
 )
