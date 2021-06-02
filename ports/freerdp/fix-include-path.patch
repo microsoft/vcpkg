@@ -1,8 +1,9 @@
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 97ba2f9..64a2f33 100644
+index 062a93fc0..15bf52826 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -107,7 +107,7 @@ else()
+@@ -111,7 +111,7 @@ else()
  endif()
  message("FREERDP_VERSION=${FREERDP_VERSION_FULL}")
  
@@ -12,7 +13,7 @@ index 97ba2f9..64a2f33 100644
  # Compatibility options
  if(DEFINED STATIC_CHANNELS)
 diff --git a/include/CMakeLists.txt b/include/CMakeLists.txt
-index a020dc5..0bc1157 100644
+index a020dc534..0bc1157fe 100644
 --- a/include/CMakeLists.txt
 +++ b/include/CMakeLists.txt
 @@ -19,7 +19,7 @@
@@ -25,7 +26,7 @@ index a020dc5..0bc1157 100644
  file(GLOB FREERDP_HEADERS "freerdp/*.h")
  install(FILES ${FREERDP_HEADERS} DESTINATION ${FREERDP_INSTALL_INCLUDE_DIR} COMPONENT headers)
 diff --git a/winpr/CMakeLists.txt b/winpr/CMakeLists.txt
-index a94090a..08b6b88 100644
+index 19a442fbd..bc79628fa 100644
 --- a/winpr/CMakeLists.txt
 +++ b/winpr/CMakeLists.txt
 @@ -215,7 +215,7 @@ if(${CMAKE_VERSION} VERSION_GREATER "2.8.10")
@@ -38,7 +39,7 @@ index a94090a..08b6b88 100644
  	configure_package_config_file(WinPRConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/WinPRConfig.cmake
  		INSTALL_DESTINATION ${WINPR_CMAKE_INSTALL_DIR}
 diff --git a/winpr/include/CMakeLists.txt b/winpr/include/CMakeLists.txt
-index 452383d..3faab0c 100644
+index 452383d0d..3faab0c07 100644
 --- a/winpr/include/CMakeLists.txt
 +++ b/winpr/include/CMakeLists.txt
 @@ -17,7 +17,7 @@
