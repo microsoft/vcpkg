@@ -1,5 +1,5 @@
 diff --git a/winpr/tools/makecert-cli/CMakeLists.txt b/winpr/tools/makecert-cli/CMakeLists.txt
-index 48fda5b..4e15a22 100644
+index 48fda5b5e..4e15a228e 100644
 --- a/winpr/tools/makecert-cli/CMakeLists.txt
 +++ b/winpr/tools/makecert-cli/CMakeLists.txt
 @@ -42,7 +42,7 @@ add_executable(${MODULE_NAME} ${${MODULE_PREFIX}_SRCS})
