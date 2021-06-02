@@ -20,6 +20,7 @@
       "description": "Enables Boost support",
       "dependencies": [
         "boost-multi-array",
+        "boost-serialization",
         "boost-ublas"
       ]
     },
