@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         remove-register.patch
+        fix-duplicated-target.patch
 )
 
 vcpkg_find_acquire_program(PYTHON3)

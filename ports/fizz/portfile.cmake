@@ -27,14 +27,7 @@ vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/fizz)
 vcpkg_copy_pdbs()
 
-file(READ ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake _contents)
-string(REPLACE "lib/cmake/fizz" "share/fizz" _contents "${_contents}")
-string(REPLACE "find_dependency(Sodium)" "" _contents "${_contents}")
-file(WRITE ${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake
-"include(CMakeFindDependencyMacro)
-find_dependency(folly CONFIG)
-find_dependency(ZLIB)
-${_contents}")
+vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/share/fizz/fizz-config.cmake" "lib/cmake/fizz" "share/fizz")
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include

@@ -9,6 +9,8 @@ vcpkg_from_github(
     REF v2021.05.31.00
     SHA512 4aa55220b014d2ba2d7f7daf81dffa1276e8f43e5a25c2767819580fad42a39df04656f41e0ebe0302651833e3e994cabb9ded98ea32627ffd90fb91c9c1cc58
     HEAD_REF master
+    PATCHES
+        fix-sodium-target.patch
 )
 
 vcpkg_configure_cmake(
