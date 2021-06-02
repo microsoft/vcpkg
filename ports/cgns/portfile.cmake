@@ -2,19 +2,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO CGNS/CGNS
-    REF 3420e23febf0eb38c1b05af3c157d614d8476557 # v3.4.0
-    SHA512 3fec1c32f1514cd9bc327f12f3f9db6a229df05f514193bd9e913d06b8ae6465664410a3c77a30b0c29f3e999e5efcb1ebed3a8b80e14be92035940c10b1d6d7
+    REF 86b686bce292eef7782cfb56b6acdb5123c96f49 # v4.2.0
+    SHA512 88df741acc1b650724bcbeb82ab0f7e593bf01e0a30c04b14b9915f4ea4331725cc24b87715dd08d93d5a3708660ca7f7874bc0a9c5505b76471802cf033e35d
     HEAD_REF develop
     PATCHES
         hdf5.patch
         linux_lfs.patch
-        zlib_szip_mpi.patch
-        defines.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
    FEATURES
-     mpi     HDF5_NEEDS_MPI
      fortran CGNS_ENABLE_FORTRAN
      tests   CGNS_ENABLE_TESTS
      hdf5    CGNS_ENABLE_HDF5
@@ -45,7 +42,7 @@ vcpkg_install_cmake()
 file(INSTALL ${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(REMOVE ${CURRENT_PACKAGES_DIR}/include/cgnsBuild.defs ${CURRENT_PACKAGES_DIR}/include/cgnsconfig.h)
 
-file(INSTALL ${CURRENT_PORT_DIR}/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include) # we patched the config and the include is all that is needed
+file(INSTALL ${CURRENT_PORT_DIR}/cgnsconfig.h DESTINATION ${CURRENT_PACKAGES_DIR}/include) # the include is all that is needed
 
 set(TOOLS cgnscheck cgnscompress cgnsconvert cgnsdiff cgnslist cgnsnames)
 
