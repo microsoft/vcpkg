@@ -5569,7 +5569,7 @@
       "port-version": 5
     },
     "safeint": {
-      "baseline": "3.24",
+      "baseline": "3.0.26",
       "port-version": 0
     },
     "sail": {
