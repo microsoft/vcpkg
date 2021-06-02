@@ -1,0 +1,13 @@
+{
+  "name": "yomm2",
+  "version-string": "1.1.2",
+  "description": "YOMM2 is an implementation of open multi-methods.",
+  "homepage": "https://github.com/jll63/yomm2",
+  "dependencies": [
+    "boost-dynamic-bitset",
+    "boost-integer",
+    "boost-move",
+    "boost-preprocessor",
+    "boost-type-traits"
+  ]
+}

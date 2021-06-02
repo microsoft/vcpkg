@@ -1,13 +1,14 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
-    REF v1.5.1
-    SHA512 fe9c6b11c176ee5ae76ab96f1f2fcfef1b1868f23eac2bd17d39e11293cbf990e50c88d9da9412b85ca780226906ba5ced0032f0a354291c6f056a49d41f6f8a
+    REF v1.6.0
+    SHA512 3e3012bbee0a12cfabf79581bc0f57592065bc9618ed18c17ef77afee55750c8a8b8626053863208928b173cd0629f271a14a07e602f8ea93976c43b3ba5c9db
     HEAD_REF master
     PATCHES
         vcpkg.patch
         resolv.patch
         drogon_config.patch
+        ssize_t.patch
 )
 
 vcpkg_check_features(
