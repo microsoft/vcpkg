@@ -185,7 +185,6 @@ if(NOT IOS)
                 no-zlib
                 no-ssl2
                 no-idea
-                no-bf
                 no-cast
                 no-seed
                 no-md2
