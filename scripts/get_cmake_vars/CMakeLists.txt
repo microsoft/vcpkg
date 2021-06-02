@@ -13,6 +13,8 @@ list(APPEND VCPKG_DEFAULT_VARS_TO_CHECK CMAKE_CROSSCOMPILING
                                         CMAKE_INCLUDE_FLAG_CXX
                                         CMAKE_INCLUDE_FLAG_C_SEP
                                         CMAKE_INCLUDE_FLAG_CXX_SEP
+                                        CMAKE_INCLUDE_SYSTEM_FLAG_C
+                                        CMAKE_INCLUDE_SYSTEM_FLAG_CXX
 )
 
 if(CMAKE_SYSTEM_NAME MATCHES "Darwin")
