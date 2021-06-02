@@ -1,0 +1,22 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index d773025..b3993bd 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -564,7 +564,7 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+         LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+     )
+ 
+-    if (BUILD_SHARED_LIBS)
++    #if (BUILD_SHARED_LIBS)
+         install(EXPORT ${PROJECT_NAME}-config
+                 DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+ 
+@@ -574,7 +574,7 @@ if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+                                          COMPATIBILITY SameMajorVersion)
+         install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake
+                 DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME})
+-    endif()
++    #endif()
+ 
+     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libavif.pc
+             DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)

@@ -10,6 +10,7 @@ vcpkg_from_github(
     PATCHES
         disable-source-utf8.patch
         fix-assigning-size_t.patch
+        always-install-configs.patch
 )
 
 vcpkg_cmake_configure(
@@ -24,7 +25,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # Move cmake configs
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/avif)
 
 # Fix pkg-config files
 vcpkg_fixup_pkgconfig()
