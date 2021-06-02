@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-pkgconfig.patch
+        fix-flags.patch
 )
 
 vcpkg_configure_make(
