@@ -57,6 +57,7 @@ if("paraview" IN_LIST FEATURES)
         -DVTK_MODULE_ENABLE_VTK_RenderingLICOpenGL2=YES
         -DVTK_MODULE_ENABLE_VTK_RenderingAnnotation=YES
         -DVTK_MODULE_ENABLE_VTK_DomainsChemistryOpenGL2=YES
+        -DVTK_MODULE_ENABLE_VTK_FiltersParallelDIY2=YES
     )
     if("python" IN_LIST FEATURES)
         list(APPEND ADDITIONAL_OPTIONS
@@ -123,41 +124,40 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 # Clone & patch
 
 # This patch is huge, we prefer to download it on demand
-vcpkg_download_distfile(QT_NO_KEYWORDS_PATCH
-  URLS "https://github.com/Kitware/VTK/commit/64265c5fd1a8e26a6a81241284dea6b3272f6db6.diff"
-  FILENAME 64265c5fd1a8e26a6a81241284dea6b3272f6db6.diff
-  SHA512 08991f07b30b893b14e906017b77fb700a8298a3a8906086a0c4b67688c1c0431b3d6bf890df70bd3ebf963cbb9c035b5dbcb9d7593e8c716c3a594ccb9a0fc7
-)
+# vcpkg_download_distfile(QT_NO_KEYWORDS_PATCH
+#   URLS "https://github.com/Kitware/VTK/commit/64265c5fd1a8e26a6a81241284dea6b3272f6db6.diff"
+#   FILENAME 64265c5fd1a8e26a6a81241284dea6b3272f6db6.diff
+#   SHA512 08991f07b30b893b14e906017b77fb700a8298a3a8906086a0c4b67688c1c0431b3d6bf890df70bd3ebf963cbb9c035b5dbcb9d7593e8c716c3a594ccb9a0fc7
+#)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Kitware/VTK
-    REF 96e6fa9b3ff245e4d51d49f23d40e9ad8774e85e # v9.0.1
-    SHA512 0efb1845053b6143e5ee7fa081b8be98f6825262c59051e88b2be02497e23362055067b2f811eff82e93eb194e5a9afd2a12e3878a252eb4011a5dab95127a6f
+    REF 2959413ff190bc6e3ff40f5b6c1342edd2e5233f # v9.0.1 used by ParaView 5.9.1
+    SHA512 16229c107ed904e8fa6850c3814b8bdcdf9700ef44f6ff5b3a77e7d793ce19954fc2c7b1219a0162cf588def6e990883cd3f808c316a4db6e65bd6cd1769dd3f
     HEAD_REF master
     PATCHES
-        6811.patch
         FindLZMA.patch    # Will be fixed in 9.1?
         FindLZ4.patch
         Findproj.patch
-        vtkm.patch # To include an external VTKm build (v.1.5 required)
+        vtkm.patch # To include an external VTKm build
         pegtl.patch
         pythonwrapper.patch # Required by ParaView to Wrap required classes
         NoUndefDebug.patch # Required to link against correct Python library depending on build type.
         python_debug.patch
         fix-using-hdf5.patch
-        module-name-mangling.patch
+        # CHECK: module-name-mangling.patch
         # Last patch TODO: Patch out internal loguru
         FindExpat.patch # The find_library calls are taken care of by vcpkg-cmake-wrapper.cmake of expat
-        fix-freetype.patch # Should be fixed next version, !7367 + !7434
+        #fix-freetype.patch # Should be fixed next version, !7367 + !7434
         # Remove these 2 official patches in the next update
-        ${QT_NO_KEYWORDS_PATCH}
-        0002-Qt-enforce-QT_NO_KEYWORDS-builds-by-VTK-itself.patch
+        # ${QT_NO_KEYWORDS_PATCH}
+        #0002-Qt-enforce-QT_NO_KEYWORDS-builds-by-VTK-itself.patch
 )
 
 # =============================================================================
 #Overwrite outdated modules if they have not been patched:
-file(COPY "${CURRENT_PORT_DIR}/FindPostgreSQL.cmake" DESTINATION "${SOURCE_PATH}/CMake") # will be backported from CMake in VTK in a future release
+#file(COPY "${CURRENT_PORT_DIR}/FindPostgreSQL.cmake" DESTINATION "${SOURCE_PATH}/CMake") # will be backported from CMake in VTK in a future release
 file(COPY "${CURRENT_PORT_DIR}/FindHDF5.cmake" DESTINATION "${SOURCE_PATH}/CMake/patches/99") # due to usage of targets in netcdf-c
 # =============================================================================
 
@@ -301,7 +301,7 @@ vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/vtk")
 ## Files Modules needed by ParaView
 if("paraview" IN_LIST FEATURES)
     set(VTK_CMAKE_NEEDED vtkCompilerChecks vtkCompilerPlatformFlags vtkCompilerExtraFlags vtkInitializeBuildType
-                         vtkSupportMacros vtkDirectories vtkVersion FindPythonModules vtkModuleDebugging vtkExternalData)
+                         vtkSupportMacros vtkVersion FindPythonModules vtkModuleDebugging vtkExternalData)
     foreach(module ${VTK_CMAKE_NEEDED})
         file(INSTALL "${SOURCE_PATH}/CMake/${module}.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
     endforeach()
@@ -309,16 +309,21 @@ if("paraview" IN_LIST FEATURES)
     ## Check List on UPDATE !!
     file(INSTALL "${SOURCE_PATH}/CMake/vtkRequireLargeFilesSupport.cxx" DESTINATION "${CURRENT_PACKAGES_DIR}/share/vtk")
 
-    file(INSTALL "${SOURCE_PATH}/GUISupport/Qt/QVTKOpenGLWidget.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # Legacy header
+    #file(INSTALL "${SOURCE_PATH}/GUISupport/Qt/QVTKOpenGLWidget.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # Legacy header
 
-    file(INSTALL "${SOURCE_PATH}/Common/Core/vtkRange.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
-    file(INSTALL "${SOURCE_PATH}/Common/Core/vtkRangeIterableTraits.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
-    file(INSTALL "${SOURCE_PATH}/Common/DataModel/vtkCompositeDataSetNodeReference.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
+    #file(INSTALL "${SOURCE_PATH}/Common/Core/vtkRange.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
+    #file(INSTALL "${SOURCE_PATH}/Common/Core/vtkRangeIterableTraits.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
+    #file(INSTALL "${SOURCE_PATH}/Common/DataModel/vtkCompositeDataSetNodeReference.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
     #ParaView requires some internal headers
-    file(INSTALL "${SOURCE_PATH}/Rendering/Annotation/vtkScalarBarActorInternal.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-    file(INSTALL "${SOURCE_PATH}/Filters/Statistics/vtkStatisticsAlgorithmPrivate.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
-    file(INSTALL "${SOURCE_PATH}/Rendering/OpenGL2/vtkCompositePolyDataMapper2Internal.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    #file(INSTALL "${SOURCE_PATH}/Rendering/Annotation/vtkScalarBarActorInternal.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    #file(INSTALL "${SOURCE_PATH}/Filters/Statistics/vtkStatisticsAlgorithmPrivate.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    #file(INSTALL "${SOURCE_PATH}/Rendering/OpenGL2/vtkCompositePolyDataMapper2Internal.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    file(INSTALL "${SOURCE_PATH}/Rendering/Volume/vtkBlockSortHelper.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}") # this should get installed by VTK
+    file(INSTALL "${SOURCE_PATH}/Filters/ParallelDIY2/vtkDIYKdTreeUtilities.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    file(INSTALL "${SOURCE_PATH}/Parallel/DIY/vtkDIYUtilities.txx" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+    #//CHECK
     file(INSTALL "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/Rendering/OpenGL2/vtkTextureObjectVS.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include/vtk-${VTK_SHORT_VERSION}")
+
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
