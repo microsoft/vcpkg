@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         disable-source-utf8.patch
+        fix-assigning-size_t.patch
 )
 
 vcpkg_cmake_configure(
