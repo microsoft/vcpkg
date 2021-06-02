@@ -25,7 +25,7 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 # Move cmake configs
-vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/avif)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/${PORT})
 
 # Fix pkg-config files
 vcpkg_fixup_pkgconfig()
