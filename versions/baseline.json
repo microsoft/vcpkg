@@ -140,6 +140,10 @@
       "baseline": "0.3.1",
       "port-version": 0
     },
+    "aricpp": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "armadillo": {
       "baseline": "10.4.0",
       "port-version": 0
