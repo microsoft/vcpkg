@@ -23,7 +23,7 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DPython_COMPILER=${PYTHON3}
+        -DPython_EXECUTABLE=${PYTHON3}
         -Dnanopb_BUILD_RUNTIME=ON
         -DBUILD_STATIC_LIBS=${nanopb_BUILD_STATIC_LIBS}
         -Dnanopb_MSVC_STATIC_RUNTIME=${nanopb_STATIC_LINKING}
