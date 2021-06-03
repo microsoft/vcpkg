@@ -8,7 +8,6 @@ Automatically test the correctness of the configuration file exported by cmake
 vcpkg_test_cmake_config(
     [TARGET_NAME <PORT_NAME>]
     [TARGET_VARS <TARGETS>...]
-    [SKIP_CHECK]
 )
 ```
 
@@ -21,7 +20,9 @@ The default value is the prefix of -config.cmake/Config.cmake/Targets.cmake/-tar
 Specify targets in the configuration file, the value may contain namespace
 
 ## Notes
-Still work in progress. If there are more cases which can be handled here feel free to add them
+This function allows to use `vcpkg_test.cmake` / `vcpkg_test.c` / `vcpkg_test.cpp`
+that exists in PORT_DIR to test the generated cmake file.
+Still work in progress. If there are more cases which can be handled here feel free to add them.
 
 ## Examples
 
@@ -71,32 +72,47 @@ macro(write_sample_code CURRENT_TARGET)
     file(REMOVE_RECURSE ${TEST_DIR})
     file(MAKE_DIRECTORY ${TEST_DIR})
     
-    set(CMAKE_LISTS_CONTENT
+    # c/cxx test file
+    if (EXISTS ${CURRENT_PORT_DIR}/vcpkg_test.c)
+        set(TEST_SOURCE cmake_test.c)
+        configure_file(${CURRENT_PORT_DIR}/vcpkg_test.c ${TEST_DIR}/cmake_test.c COPYONLY)
+    elseif (EXISTS ${CURRENT_PORT_DIR}/vcpkg_test.cpp)
+        set(TEST_SOURCE cmake_test.cpp)
+        configure_file(${CURRENT_PORT_DIR}/vcpkg_test.c ${TEST_DIR}/cmake_test.cpp COPYONLY)
+    else()
+        set(SRC_CONTENT
+[[
+#include <stdio.h>
+int main(void)
+{return 0\;}
+]]
+        )
+
+        file(WRITE ${TEST_DIR}/cmake_test.cpp ${SRC_CONTENT})
+        set(TEST_SOURCE cmake_test.cpp)
+    endif()
+    
+    # CMakeLists.txt
+    if (EXISTS ${CURRENT_PORT_DIR}/vcpkg_test.cmake)
+        configure_file(${CURRENT_PORT_DIR}/vcpkg_test.cmake ${TEST_DIR}/CMakeLists.txt COPYONLY)
+    else()
+        set(CMAKE_LISTS_CONTENT
 [[
 cmake_minimum_required (VERSION 3.19)
 project (cmake_test)
 
 find_package(@TARGET_FOLDER@ CONFIG REQUIRED)
 
-add_executable(cmake_test cmake_test.cpp)
+add_executable(cmake_test @TEST_SOURCE@)
 
 target_link_libraries(cmake_test PRIVATE @CURRENT_TARGET@)
 ]]
     )
     
-    set(CURRENT_TARGET ${CURRENT_TARGET})
-    file(WRITE ${TEST_DIR}/CMakeLists.txt.in ${CMAKE_LISTS_CONTENT})
-    configure_file(${TEST_DIR}/CMakeLists.txt.in ${TEST_DIR}/CMakeLists.txt @ONLY)
-    
-    set(SRC_CONTENT
-[[
-#include <stdio.h>
-int main(void)
-{return 0\;}
-]]
-    )
-    
-    file(WRITE ${TEST_DIR}/cmake_test.cpp ${SRC_CONTENT})
+        set(CURRENT_TARGET ${CURRENT_TARGET})
+        file(WRITE ${TEST_DIR}/CMakeLists.txt.in ${CMAKE_LISTS_CONTENT})
+        configure_file(${TEST_DIR}/CMakeLists.txt.in ${TEST_DIR}/CMakeLists.txt @ONLY)
+    endif()
 endmacro()
 
 macro(build_with_toolchain)
