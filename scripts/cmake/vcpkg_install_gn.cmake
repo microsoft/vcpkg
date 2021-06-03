@@ -81,7 +81,7 @@ function(z_vcpkg_install_gn_install)
             TARGET "//${target}"
         )
 
-        foreach(output IN LISTS OUTPUTS)
+        foreach(output IN LISTS outputs)
             if(output MATCHES "^//")
                 # relative path (e.g. //out/Release/target.lib)
                 string(REGEX REPLACE "^//" "${arg_SOURCE_PATH}/" output "${output}")

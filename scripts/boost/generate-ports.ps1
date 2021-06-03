@@ -28,9 +28,11 @@ else
 $port_versions = @{
     #e.g.  "asio" = 1;
     "asio" = 1;
-    "python" = 2;
-    "context" = 2;
+    "python" = 3;
+    "context" = 3;
     "concept-check" = 2;
+    "regex" = 2;
+    "json" = 1;
 }
 
 $per_port_data = @{
@@ -291,7 +293,13 @@ foreach ($library in $libraries)
         "Downloading boost/$library..."
         & $curl -L "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" --output "$scriptsDir/downloads/$library-boost-$version.tar.gz"
     }
-    $hash = & $vcpkg hash $archive
+    $hash = & $vcpkg --x-wait-for-lock hash $archive
+    # remove prefix "Waiting to take filesystem lock on <path>/.vcpkg-root... "
+    if($hash -is [Object[]])
+    {
+        $hash = $hash[1]
+    }
+     
     $unpacked = "$scriptsDir/libs/$library-boost-$version"
     if (!(Test-Path $unpacked))
     {
@@ -405,7 +413,7 @@ foreach ($library in $libraries)
         $deps += @("boost-vcpkg-helpers")
 
         $needsBuild = $false
-        if ((Test-Path $unpacked/build/Jamfile.v2) -and $library -ne "metaparse" -and $library -ne "graph_parallel")
+        if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "(metaparse|graph_parallel|function_types)")
         {
             $deps += @(
                 @{ name="boost-build"; host=$True },
