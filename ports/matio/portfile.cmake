@@ -16,6 +16,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     extended-sparse MATIO_EXTENDED_SPARSE
     mat73           MATIO_MAT73
     pic             MATIO_PIC
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
