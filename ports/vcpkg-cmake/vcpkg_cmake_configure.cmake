@@ -17,8 +17,8 @@ vcpkg_cmake_configure(
         <configure-setting>...]
     [OPTIONS_DEBUG
         <configure-setting>...]
-    [MAYBE_UNUSED_OPTIONS
-        <option-name-regex>...]
+    [MAYBE_UNUSED_VARIABLES
+        <variable-name>...]
 )
 ```
 
@@ -59,10 +59,8 @@ If the library sets its own code page, pass the `NO_CHARSET_FLAG` option.
 
 This function makes certain that all options passed in are used by the
 underlying CMake build system. If there are options that might be unused,
-perhaps on certain platforms, use `MAYBE_UNUSED_OPTIONS`. Each argument
-to `MAYBE_UNUSED_OPTIONS` is treated as a regular expression to match the
-full name of a variable: in other words, `FOO` will not match `FOOBAR`,
-but `FOO.*` will.
+perhaps on certain platforms, pass those variable names to
+`MAYBE_UNUSED_VARIABLES`.
 
 `LOGFILE_BASE` is used to set the base of the logfile names;
 by default, this is `config`, and thus the logfiles end up being something like
@@ -97,7 +95,7 @@ function(vcpkg_cmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG"
         "SOURCE_PATH;GENERATOR;LOGFILE_BASE"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;MAYBE_UNUSED_OPTIONS"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;MAYBE_UNUSED_VARIABLES"
     )
 
     if(DEFINED CACHE{Z_VCPKG_CMAKE_GENERATOR})
@@ -121,6 +119,7 @@ function(vcpkg_cmake_configure)
         endif()
     endforeach()
     list(REMOVE_DUPLICATES manually_specified_variables)
+    list(REMOVE_ITEM manually_specified_variables ${arg_MAYBE_UNUSED_VARIABLES})
     debug_message("manually specified variables: ${manually_specified_variables}")
 
     if(CMAKE_HOST_WIN32)
@@ -414,10 +413,6 @@ function(vcpkg_cmake_configure)
         endif()
     endif()
     
-    list(JOIN arg_MAYBE_UNUSED_OPTIONS ")|(" maybe_unused_variables_regex)
-    set(maybe_unused_variables_regex "^((${maybe_unused_variables_regex}))$")
-    debug_message("maybe_unused_variables_regex: ${maybe_unused_variables_regex}")
-
     set(all_unused_variables)
     foreach(config_log IN LISTS config_logs)
         if(NOT EXISTS "${config_log}")
@@ -432,7 +427,7 @@ function(vcpkg_cmake_configure)
         string(REPLACE "\n    " ";" unused_variables "${unused_variables}")
         debug_message("unused variables: ${unused_variables}")
         foreach(unused_variable IN LISTS unused_variables)
-            if(unused_variable IN_LIST manually_specified_variables AND NOT unused_variable MATCHES "${maybe_unused_variables_regex}")
+            if(unused_variable IN_LIST manually_specified_variables)
                 debug_message("manually specified unused variable: ${unused_variable}")
                 list(APPEND all_unused_variables "${unused_variable}")
             else()
@@ -447,7 +442,7 @@ function(vcpkg_cmake_configure)
         message(WARNING "The following variables are not used in CMakeLists.txt:
     ${all_unused_variables}
 Please recheck them and remove the unnecessary options from the `vcpkg_cmake_configure` call.
-If these options should still be passed for whatever reason, please use the `MAYBE_UNUSED_OPTIONS` argument.")
+If these options should still be passed for whatever reason, please use the `MAYBE_UNUSED_VARIABLES` argument.")
     endif()
 
     set(Z_VCPKG_CMAKE_GENERATOR "${generator}" CACHE INTERNAL "The generator which was used to configure CMake.")
