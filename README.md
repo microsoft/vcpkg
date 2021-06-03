@@ -324,7 +324,7 @@ including [installing and using a package](docs/examples/installing-and-using-pa
 [adding a new package from a zipfile](docs/examples/packaging-zipfiles.md),
 and [adding a new package from a GitHub repo](docs/examples/packaging-github-repos.md).
 
-Our docs are now also available online at our website https://vcpkg.io/en/index.html. We really appreciate any and all feedback! You can submit an issue in https://github.com/vcpkg/vcpkg.github.io/issues.
+Our docs are now also available online at our website https://vcpkg.io/. We really appreciate any and all feedback! You can submit an issue in https://github.com/vcpkg/vcpkg.github.io/issues.
 
 See a 4 minute [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw).
 
