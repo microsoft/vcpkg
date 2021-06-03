@@ -1,7 +1,16 @@
 diff --git a/BUILD.gn b/BUILD.gn
-index 7b7cd51..2961688 100644
+index 7b7cd5164..96d9ff1bf 100644
 --- a/BUILD.gn
 +++ b/BUILD.gn
+@@ -47,7 +47,7 @@ if (is_mac) {
+ # regression during the migration of Chromium away from the feature.
+ # See docs/no_sources_assignment_filter.md for more information.
+ # TODO(crbug.com/1018739): remove this when migration is done.
+-set_sources_assignment_filter([])
++# set_sources_assignment_filter([])
+ 
+ declare_args() {
+   # Indicates if the Location object contains the source code information
 @@ -155,6 +155,7 @@ if (is_android) {
  # test code (test support and anything in the test directory) which should use
  # source_set as is recommended for GN targets).
@@ -49,7 +58,7 @@ index 7b7cd51..2961688 100644
      "i18n/base_i18n_export.h",
      "i18n/base_i18n_switches.cc",
 diff --git a/gtest_prod_util.h b/gtest_prod_util.h
-index 2ca267e..0a0b6df 100644
+index 2ca267e27..0a0b6dfde 100644
 --- a/gtest_prod_util.h
 +++ b/gtest_prod_util.h
 @@ -5,7 +5,8 @@
@@ -63,7 +72,7 @@ index 2ca267e..0a0b6df 100644
  // This is a wrapper for gtest's FRIEND_TEST macro that friends
  // test with all possible prefixes. This is very helpful when changing the test
 diff --git a/hash/md5.h b/hash/md5.h
-index 8a49f08..24acdab 100644
+index 8a49f08dc..24acdaba5 100644
 --- a/hash/md5.h
 +++ b/hash/md5.h
 @@ -11,7 +11,7 @@
@@ -76,7 +85,7 @@ index 8a49f08..24acdab 100644
  #else
  #include "base/hash/md5_boringssl.h"
 diff --git a/hash/md5_nacl.cc b/hash/md5_nacl.cc
-index 827bbbd..4b22c59 100644
+index 827bbbdbb..4b22c59d9 100644
 --- a/hash/md5_nacl.cc
 +++ b/hash/md5_nacl.cc
 @@ -22,6 +22,7 @@
@@ -88,7 +97,7 @@ index 827bbbd..4b22c59 100644
  #include "base/hash/md5.h"
  
 diff --git a/profiler/stack_copier_signal.cc b/profiler/stack_copier_signal.cc
-index 5a7d8b9..f959f2f 100644
+index 5a7d8b978..f959f2f78 100644
 --- a/profiler/stack_copier_signal.cc
 +++ b/profiler/stack_copier_signal.cc
 @@ -6,6 +6,7 @@
@@ -99,3 +108,29 @@ index 5a7d8b9..f959f2f 100644
  #include <sys/ucontext.h>
  #include <syscall.h>
  
+diff --git a/test/BUILD.gn b/test/BUILD.gn
+index 8c71202e8..a0b8df9ca 100644
+--- a/test/BUILD.gn
++++ b/test/BUILD.gn
+@@ -11,7 +11,7 @@ import("//build_overrides/build.gni")
+ # regression during the migration of Chromium away from the feature.
+ # See docs/no_sources_assignment_filter.md for more information.
+ # TODO(crbug.com/1018739): remove this when migration is done.
+-set_sources_assignment_filter([])
++# set_sources_assignment_filter([])
+ 
+ if (is_android) {
+   import("//build/config/android/rules.gni")
+diff --git a/util/memory_pressure/BUILD.gn b/util/memory_pressure/BUILD.gn
+index 1765d89de..42a68f819 100644
+--- a/util/memory_pressure/BUILD.gn
++++ b/util/memory_pressure/BUILD.gn
+@@ -6,7 +6,7 @@
+ # regression during the migration of Chromium away from the feature.
+ # See docs/no_sources_assignment_filter.md for more information.
+ # TODO(crbug.com/1018739): remove this when migration is done.
+-set_sources_assignment_filter([])
++# set_sources_assignment_filter([])
+ 
+ source_set("memory_pressure") {
+   sources = [

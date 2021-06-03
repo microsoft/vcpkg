@@ -1,7 +1,16 @@
 diff --git a/config/BUILDCONFIG.gn b/config/BUILDCONFIG.gn
-index 4cc6bfc..9ea83a9 100644
+index 4cc6bfc45..cbc51742b 100644
 --- a/config/BUILDCONFIG.gn
 +++ b/config/BUILDCONFIG.gn
+@@ -398,7 +398,7 @@ if (!is_chromeos) {
+ # (FreeBSD, etc.) toolkits, (X11, GTK, etc.), or features. For these cases,
+ # write a conditional in the target to remove the file(s) from the list when
+ # your platform/toolkit/feature doesn't apply.
+-set_sources_assignment_filter(sources_assignment_filter)
++# set_sources_assignment_filter(sources_assignment_filter)
+ 
+ # =============================================================================
+ # TARGET DEFAULTS
 @@ -657,6 +657,7 @@ template("component") {
      # See http://crbug.com/594610
      forward_variables_from(invoker, [ "visibility" ])
@@ -10,8 +19,119 @@ index 4cc6bfc..9ea83a9 100644
    }
  }
  
+diff --git a/config/android/copy_ex.gni b/config/android/copy_ex.gni
+index 0ea9e7066..8534ff94f 100644
+--- a/config/android/copy_ex.gni
++++ b/config/android/copy_ex.gni
+@@ -22,7 +22,7 @@
+ import("//build/config/python.gni")
+ 
+ template("copy_ex") {
+-  set_sources_assignment_filter([])
++  # set_sources_assignment_filter([])
+   action_with_pydeps(target_name) {
+     forward_variables_from(invoker,
+                            [
+diff --git a/config/android/internal_rules.gni b/config/android/internal_rules.gni
+index 63bda5606..ccdb0f027 100644
+--- a/config/android/internal_rules.gni
++++ b/config/android/internal_rules.gni
+@@ -1074,7 +1074,7 @@ if (enable_java_templates) {
+   }
+ 
+   template("proguard") {
+-    set_sources_assignment_filter([])
++    # set_sources_assignment_filter([])
+     forward_variables_from(invoker,
+                            [
+                              "data",
+@@ -2079,7 +2079,7 @@ if (enable_java_templates) {
+   #
+   template("prepare_resources") {
+     action_with_pydeps(target_name) {
+-      set_sources_assignment_filter([])
++      # set_sources_assignment_filter([])
+       forward_variables_from(invoker,
+                              [
+                                "deps",
+@@ -2280,7 +2280,7 @@ if (enable_java_templates) {
+   #   proguard_file_main_dex: (optional)
+   #
+   template("compile_resources") {
+-    set_sources_assignment_filter([])
++    # set_sources_assignment_filter([])
+     forward_variables_from(invoker,
+                            [
+                              "testonly",
+@@ -3336,7 +3336,7 @@ if (enable_java_templates) {
+     # TODO(crbug.com/1042017): Remove.
+     not_needed(invoker, [ "no_build_hooks" ])
+ 
+-    set_sources_assignment_filter([])
++    # set_sources_assignment_filter([])
+     forward_variables_from(invoker, [ "testonly" ])
+     _is_prebuilt = defined(invoker.jar_path)
+     _is_annotation_processor = invoker.type == "java_annotation_processor"
+diff --git a/config/android/rules.gni b/config/android/rules.gni
+index 3e5658da0..0fc040f45 100644
+--- a/config/android/rules.gni
++++ b/config/android/rules.gni
+@@ -126,7 +126,7 @@ if (enable_java_templates) {
+ 
+   # JNI target implementation. See generate_jni or generate_jar_jni for usage.
+   template("generate_jni_impl") {
+-    set_sources_assignment_filter([])
++    # set_sources_assignment_filter([])
+ 
+     _jni_output_dir = "${target_gen_dir}/${target_name}"
+     if (defined(invoker.jni_generator_include)) {
+@@ -427,7 +427,7 @@ if (enable_java_templates) {
+   #     include_path = "android/java/templates"
+   #   }
+   template("java_cpp_template") {
+-    set_sources_assignment_filter([])
++    # set_sources_assignment_filter([])
+     forward_variables_from(invoker, [ "testonly" ])
+ 
+     _include_path = "//"
+@@ -512,7 +512,7 @@ if (enable_java_templates) {
+   #     ]
+   #   }
+   template("java_cpp_enum") {
+-    set_sources_assignment_filter([])
++    # set_sources_assignment_filter([])
+     action_with_pydeps(target_name) {
+       forward_variables_from(invoker,
+                              [
+@@ -582,7 +582,7 @@ if (enable_java_templates) {
+   #   A FooSwitches.java file, defining a class named FooSwitches in the package
+   #   my.java.package.
+   template("java_cpp_strings") {
+-    set_sources_assignment_filter([])
++    # set_sources_assignment_filter([])
+     action_with_pydeps(target_name) {
+       forward_variables_from(invoker,
+                              [
+@@ -3963,7 +3963,7 @@ if (enable_java_templates) {
+   #   }
+   template("android_aidl") {
+     action_with_pydeps(target_name) {
+-      set_sources_assignment_filter([])
++      # set_sources_assignment_filter([])
+       forward_variables_from(invoker, [ "testonly" ])
+ 
+       script = "//build/android/gyp/aidl.py"
+@@ -4044,7 +4044,7 @@ if (enable_java_templates) {
+   #    sources = [ "$proto_path/foo.proto" ]
+   #  }
+   template("proto_java_library") {
+-    set_sources_assignment_filter([])
++    # set_sources_assignment_filter([])
+     forward_variables_from(invoker, [ "testonly" ])
+     _generate_nano =
+         defined(invoker.generate_nano) && invoker.generate_nano == true
 diff --git a/config/clang/BUILD.gn b/config/clang/BUILD.gn
-index 960726e..87886dc 100644
+index 960726e1e..87886dcf6 100644
 --- a/config/clang/BUILD.gn
 +++ b/config/clang/BUILD.gn
 @@ -38,5 +38,7 @@ config("extra_warnings") {
@@ -22,8 +142,21 @@ index 960726e..87886dc 100644
 +    "-Wno-unknown-pragmas"
    ]
  }
+diff --git a/config/jumbo.gni b/config/jumbo.gni
+index 0c84b283b..e791d62fc 100644
+--- a/config/jumbo.gni
++++ b/config/jumbo.gni
+@@ -204,7 +204,7 @@ template("internal_jumbo_target") {
+       deps += [ ":" + merge_action_name ]
+       variables_to_not_forward += [ "sources" ]
+       assert(jumbo_files != [])
+-      set_sources_assignment_filter([])  # Prefiltered.
++      # set_sources_assignment_filter([])  # Prefiltered.
+       sources = invoker_sources - sources_in_jumbo_files + jumbo_files
+ 
+       # Change include_dirs to make sure that the jumbo file can find its
 diff --git a/config/mac/sdk_info.py b/config/mac/sdk_info.py
-index 1ad11d3..99b21f9 100644
+index 1ad11d3b1..99b21f982 100644
 --- a/config/mac/sdk_info.py
 +++ b/config/mac/sdk_info.py
 @@ -61,10 +61,15 @@ def FillXcodeVersion(settings, developer_dir):
@@ -47,7 +180,7 @@ index 1ad11d3..99b21f9 100644
  
  def FillMachineOSBuild(settings):
 diff --git a/mac/find_sdk.py b/mac/find_sdk.py
-index 58362bf..a6069b6 100755
+index 58362bfa2..a6069b690 100755
 --- a/mac/find_sdk.py
 +++ b/mac/find_sdk.py
 @@ -68,6 +68,8 @@ def main():
@@ -72,7 +205,7 @@ index 58362bf..a6069b6 100755
    return best_sdk
  
 diff --git a/toolchain/mac/BUILD.gn b/toolchain/mac/BUILD.gn
-index 8fdada0..8d5e6b7 100644
+index 8fdada0f0..8d5e6b723 100644
 --- a/toolchain/mac/BUILD.gn
 +++ b/toolchain/mac/BUILD.gn
 @@ -184,9 +184,9 @@ template("mac_toolchain") {
@@ -89,7 +222,7 @@ index 8fdada0..8d5e6b7 100644
        dsym_output_dir =
            "{{root_out_dir}}/{{target_output_name}}{{output_extension}}.dSYM"
 diff --git a/toolchain/win/BUILD.gn b/toolchain/win/BUILD.gn
-index be08930..04fb374 100644
+index be0893059..04fb374f0 100644
 --- a/toolchain/win/BUILD.gn
 +++ b/toolchain/win/BUILD.gn
 @@ -98,7 +98,7 @@ template("msvc_toolchain") {

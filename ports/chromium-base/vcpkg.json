@@ -1,0 +1,8 @@
+{
+  "name": "chromium-base",
+  "version-string": "86.0.4199.1",
+  "port-version": 2,
+  "description": "Chromium is an open-source browser project that aims to build a safer, faster, and more stable way for all users to experience the web.",
+  "homepage": "https://chromium.googlesource.com/chromium/src",
+  "supports": "x64 & (osx | windows | linux) & !uwp"
+}
