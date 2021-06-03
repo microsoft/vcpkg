@@ -145,5 +145,10 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
+vcpkg_test_cmake_config(
+    HEADERS     curl/curl.h
+    FUNCTIONS   curl_global_init
+)
+
 file(INSTALL ${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
