@@ -58,7 +58,7 @@ which set the default character set to utf-8 for MSVC.
 If the library sets its own code page, pass the `NO_CHARSET_FLAG` option.
 
 Check all unused cmake options after the configuration is complete.
-Use `OPTIONS_CHECK_SKIP `to skip unused cmake options defined for the platform.
+Use `OPTIONS_CHECK_SKIP` to skip unused cmake options defined for the platform.
 This option supports cmake regular expression.
 
 `LOGFILE_BASE` is used to set the base of the logfile names;
@@ -433,7 +433,8 @@ function(vcpkg_cmake_configure)
             foreach (UNUSED_VAR ${UNUSED_VARS})
                 string(APPEND WARNING_MSG "    ${UNUSED_VAR}\n")
             endforeach()
-            string(APPEND WARNING_MSG "Please recheck them and remove the unnecessary variables in portfile.cmake")
+            string(APPEND WARNING_MSG "Please recheck them and remove the unnecessary variables in `portfile.cmake`.")
+            string(APPEND WARNING_MSG "If that's expected, please add `OPTIONS_CHECK_SKIP <VARIABLES>` to vcpkg_cmake_configure.")
             message(WARNING ${WARNING_MSG})
         endif()
     endforeach()
