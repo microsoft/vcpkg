@@ -47,7 +47,7 @@ mark_as_advanced(VCPKG_VERBOSE)
 option(VCPKG_APPLOCAL_DEPS "Automatically copy dependencies into the output directory for executables." ON)
 option(X_VCPKG_APPLOCAL_DEPS_SERIALIZED "(experimental) Add USES_TERMINAL to VCPKG_APPLOCAL_DEPS to force serialization." OFF)
 option(X_VCPKG_APPLOCAL_DEPS_INSTALL "(experimental) Automatically copy dependencies into the install target directory for executables." OFF)
-option(VCPKG_PREFER_VCPKG_LIBS "Prepends the vcpkg paths to CMAKE_PREFIX_PATH, CMAKE_LIBRARY_PATH and CMAKE_FIND_ROOT_PATH so that vcpkg libraries/packages are found before toolchain/system libraries/packages." OFF)
+option(VCPKG_PREFER_SYSTEM_LIBS "Prepends the vcpkg paths to CMAKE_PREFIX_PATH, CMAKE_LIBRARY_PATH and CMAKE_FIND_ROOT_PATH so that vcpkg libraries/packages are found before toolchain/system libraries/packages." OFF)
 
 # Manifest options and settings
 if(NOT DEFINED VCPKG_MANIFEST_DIR)
@@ -480,10 +480,10 @@ set(_VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}"
     "The directory which contains the installed libraries for each triplet" FORCE)
 endif()
 
-if(VCPKG_PREFER_VCPKG_LIBS)
-    set(Z_VCPKG_PATH_LIST_OP PREPEND)
-else()
+if(VCPKG_PREFER_SYSTEM_LIBS)
     set(Z_VCPKG_PATH_LIST_OP APPEND)
+else()
+    set(Z_VCPKG_PATH_LIST_OP PREPEND)
 endif()
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths.
