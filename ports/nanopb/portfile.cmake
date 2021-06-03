@@ -17,10 +17,13 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         generator nanopb_BUILD_GENERATOR
 )
 
+vcpkg_find_acquire_program(PYTHON3)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
+        -DPython_COMPILER=${PYTHON3}
         -Dnanopb_BUILD_RUNTIME=ON
         -DBUILD_STATIC_LIBS=${nanopb_BUILD_STATIC_LIBS}
         -Dnanopb_MSVC_STATIC_RUNTIME=${nanopb_STATIC_LINKING}
