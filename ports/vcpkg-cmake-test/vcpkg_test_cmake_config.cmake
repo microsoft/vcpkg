@@ -8,6 +8,8 @@ Automatically test the correctness of the configuration file exported by cmake
 vcpkg_test_cmake_config(
     [TARGET_NAME <PORT_NAME>]
     [TARGET_VARS <TARGETS>...]
+    [HEADERS <headername.h>...]
+    [FUNCTIONS <function1> ...]
 )
 ```
 
@@ -18,6 +20,12 @@ The default value is the prefix of -config.cmake/Config.cmake/Targets.cmake/-tar
 
 ### TARGET_VARS
 Specify targets in the configuration file, the value may contain namespace
+
+### HEADERS
+Specify the installed header file names (including the relative path)
+
+### FUNCTIONS
+Specify the exported function names, do not support namespace currently
 
 ## Notes
 This function allows to use `vcpkg_test.cmake` / `vcpkg_test.c` / `vcpkg_test.cpp`
@@ -46,7 +54,7 @@ macro(get_cmake_targets)
             continue()
         endif()
         list(APPEND TARGET_NAMES ${TARGET_NAME})
-        message(STATUS "TARGET_NAME: ${TARGET_NAME}")
+        debug_message("TARGET_NAME: ${TARGET_NAME}")
     endforeach()
     unset(TARGET_NAME)
     list(REMOVE_DUPLICATES TARGET_NAMES)
@@ -83,12 +91,15 @@ macro(write_sample_code CURRENT_TARGET)
         set(SRC_CONTENT
 [[
 #include <stdio.h>
+@EXTERN_HEADER_CHECKS@
+@EXTERN_SYMBOL_CHECKS_BASE@
 int main(void)
-{return 0\;}
+{@EXTERN_SYMBOL_CHECK_SYMBOL@}
 ]]
         )
 
-        file(WRITE ${TEST_DIR}/cmake_test.cpp ${SRC_CONTENT})
+        file(WRITE ${TEST_DIR}/cmake_test.cpp.in ${SRC_CONTENT})
+        configure_file(${TEST_DIR}/cmake_test.cpp.in ${TEST_DIR}/cmake_test.cpp @ONLY)
         set(TEST_SOURCE cmake_test.cpp)
     endif()
     
@@ -165,7 +176,7 @@ function(vcpkg_test_cmake_config)
         return()
     endif()
     
-    cmake_parse_arguments(PARSE_ARGV 0 _tcc "" "TARGET_NAME" "TARGET_VARS")
+    cmake_parse_arguments(PARSE_ARGV 0 _tcc "" "TARGET_NAME" "TARGET_VARS;HEADERS;FUNCTIONS")
     # First, we should get the cmake targets automanticlly
     if ((_tcc_TARGET_NAME AND NOT TARGET_VARS) OR (NOT TARGET_NAME AND TARGET_VARS))
         message(FATAL_ERROR "TARGET_NAME and TARGET_VARS must be declared at same time!")
@@ -184,11 +195,30 @@ function(vcpkg_test_cmake_config)
         return()
     endif()
     
+    
+    set(EXTERN_HEADER_CHECKS )
+    set(EXTERN_SYMBOL_CHECKS_BASE )
+    set(EXTERN_SYMBOL_CHECK_SYMBOL )
+    if (_tcc_HEADERS)
+        foreach(header ${_tcc_HEADERS})
+            string(APPEND EXTERN_HEADER_CHECKS ${EXTERN_HEADER_CHECKS} "#include <${header}>\n")
+        endforeach()
+    endif()
+    
+    if (_tcc_FUNCTIONS)
+        set(EXTERN_SYMBOL_CHECKS_BASE "typedef int (*symbol_func)(void);\n\n")
+        foreach(symbol ${_tcc_FUNCTIONS})
+            set(EXTERN_SYMBOL_CHECK_SYMBOL "symbol_func func = (symbol_func)&${symbol};\nreturn func();\n")
+        endforeach()
+    endif()
+    
     foreach(TARGET_NAME ${TARGET_NAMES})
         # Write a sample CMakeLists.txt and source file
         write_sample_code(${TARGET_NAME})
-        
         # Build
         build_with_toolchain()
     endforeach()
+    unset(EXTERN_SYMBOL_CHECK_SYMBOL)
+    unset(EXTERN_SYMBOL_CHECKS_BASE)
+    unset(EXTERN_HEADER_CHECKS)
 endfunction()
