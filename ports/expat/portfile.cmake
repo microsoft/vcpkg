@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF a28238bdeebc087071777001245df1876a11f5ee #v2.4.1
     SHA512 2c22f2dfab50644637a7777229849c91630ae8c50683df6ad6409d473690ce01b59ce9f98e66b0aeac8c650507f04edbb5d9738130c88b87bbc1adb7831c22a9
     HEAD_REF master
+    PATCHES
+        pkgconfig.patch 
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
