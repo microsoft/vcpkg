@@ -17,8 +17,8 @@ vcpkg_cmake_configure(
         <configure-setting>...]
     [OPTIONS_DEBUG
         <configure-setting>...]
-    [OPTIONS_CHECK_SKIP
-        <WITH_TOOLS>...]
+    [MAYBE_UNUSED_OPTIONS
+        <option-name-regex>...]
 )
 ```
 
@@ -57,9 +57,12 @@ By default, this function adds flags to `CMAKE_C_FLAGS` and `CMAKE_CXX_FLAGS`
 which set the default character set to utf-8 for MSVC.
 If the library sets its own code page, pass the `NO_CHARSET_FLAG` option.
 
-Check all unused cmake options after the configuration is complete.
-Use `OPTIONS_CHECK_SKIP` to skip unused cmake options defined for the platform.
-This option supports cmake regular expression.
+This function makes certain that all options passed in are used by the
+underlying CMake build system. If there are options that might be unused,
+perhaps on certain platforms, use `MAYBE_UNUSED_OPTIONS`. Each argument
+to `MAYBE_UNUSED_OPTIONS` is treated as a regular expression to match the
+full name of a variable: in other words, `FOO` will not match `FOOBAR`,
+but `FOO.*` will.
 
 `LOGFILE_BASE` is used to set the base of the logfile names;
 by default, this is `config`, and thus the logfiles end up being something like
@@ -94,7 +97,7 @@ function(vcpkg_cmake_configure)
     cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;WINDOWS_USE_MSBUILD;NO_CHARSET_FLAG"
         "SOURCE_PATH;GENERATOR;LOGFILE_BASE"
-        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;OPTIONS_CHECK_SKIP"
+        "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE;MAYBE_UNUSED_OPTIONS"
     )
 
     if(DEFINED CACHE{Z_VCPKG_CMAKE_GENERATOR})
@@ -110,6 +113,15 @@ function(vcpkg_cmake_configure)
     if(NOT DEFINED arg_LOGFILE_BASE)
         set(arg_LOGFILE_BASE "config-${TARGET_TRIPLET}")
     endif()
+
+    set(manually_specified_variables)
+    foreach(option IN LISTS arg_OPTIONS arg_OPTIONS_RELEASE arg_OPTIONS_DEBUG)
+        if(option MATCHES "^-D([^:=]*)[:=]")
+            list(APPEND manually_specified_variables "${CMAKE_MATCH_1}")
+        endif()
+    endforeach()
+    list(REMOVE_DUPLICATES manually_specified_variables)
+    debug_message("manually specified variables: ${manually_specified_variables}")
 
     if(CMAKE_HOST_WIN32)
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
@@ -359,8 +371,9 @@ function(vcpkg_cmake_configure)
             WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure"
             LOGNAME "${arg_LOGFILE_BASE}"
         )
-        list(APPEND CONFIG_LOGS ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-out.log
-                    ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-err.log)
+        list(APPEND config_logs
+            "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-out.log"
+            "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-err.log")
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
             message(STATUS "Configuring ${TARGET_TRIPLET}-dbg")
@@ -376,8 +389,9 @@ function(vcpkg_cmake_configure)
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg"
                 LOGNAME "${arg_LOGFILE_BASE}-dbg"
             )
-            list(APPEND CONFIG_LOGS ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-out.log
-                        ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-err.log)
+            list(APPEND config_logs
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-out.log"
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-dbg-err.log")
         endif()
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
@@ -394,50 +408,47 @@ function(vcpkg_cmake_configure)
                 WORKING_DIRECTORY "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel"
                 LOGNAME "${arg_LOGFILE_BASE}-rel"
             )
-            list(APPEND CONFIG_LOGS ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-out.log
-                        ${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-err.log)
+            list(APPEND config_logs
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-out.log"
+                "${CURRENT_BUILDTREES_DIR}/${arg_LOGFILE_BASE}-rel-err.log")
         endif()
     endif()
     
-    # Check unused variables
-    list(APPEND KNOWN_UNUSED_VARS CMAKE_*. _VCPKG_*. BUILD_SHARED_LIBS VCPKG_*. Z_VCPKG_*. ${arg_OPTIONS_CHECK_SKIP})
-    foreach(config_log ${CONFIG_LOGS})
-        if (NOT EXISTS ${config_log})
+    list(JOIN arg_MAYBE_UNUSED_OPTIONS ")|(" maybe_unused_variables_regex)
+    set(maybe_unused_variables_regex "^((${maybe_unused_variables_regex}))$")
+    debug_message("maybe_unused_variables_regex: ${maybe_unused_variables_regex}")
+
+    set(all_unused_variables)
+    foreach(config_log IN LISTS config_logs)
+        if(NOT EXISTS "${config_log}")
             continue()
         endif()
-        file(READ "${config_log}" CFG_LOG)
-        if (NOT CFG_LOG)
+        file(READ "${config_log}" log_contents)
+        debug_message("Reading configure log ${config_log}...")
+        if(NOT log_contents MATCHES "Manually-specified variables were not used by the project:\n\n((    [^\n]*\n)*)")
             continue()
         endif()
-        debug_message("READING ${config_log}...")
-        string(REGEX MATCH "Manually-specified variables were not used by the project:\n([^\[]+)-- Build files have been written to" UNUSED_VARS ${CFG_LOG})
-        if (NOT UNUSED_VARS)
-            continue()
-        endif()
-        string(REPLACE "Manually-specified variables were not used by the project:\n\n" "" UNUSED_VARS ${UNUSED_VARS})
-        string(REPLACE "-- Build files have been written to" "" UNUSED_VARS ${UNUSED_VARS})
-        string(REGEX MATCHALL "[^\ |\n]+" UNUSED_VARS ${UNUSED_VARS})
-        foreach(known_macro ${KNOWN_UNUSED_VARS})
-            foreach(UNUSED_VAR ${UNUSED_VARS})
-                debug_message("REGEX: ${UNUSED_VAR} in ${known_macro}")
-                string(REGEX MATCH "${known_macro}" FOUND_VAR ${UNUSED_VAR})
-                debug_message("RESULT: ${FOUND_VAR}")
-                if (FOUND_VAR)
-                    debug_message("REMOVE ${UNUSED_VAR}")
-                    list(REMOVE_ITEM UNUSED_VARS ${UNUSED_VAR})
-                endif()
-            endforeach()
+        string(STRIP "${CMAKE_MATCH_1}" unused_variables) # remove leading `    ` and trailing `\n`
+        string(REPLACE "\n    " ";" unused_variables "${unused_variables}")
+        debug_message("unused variables: ${unused_variables}")
+        foreach(unused_variable IN LISTS unused_variables)
+            if(unused_variable IN_LIST manually_specified_variables AND NOT unused_variable MATCHES "${maybe_unused_variables_regex}")
+                debug_message("manually specified unused variable: ${unused_variable}")
+                list(APPEND all_unused_variables "${unused_variable}")
+            else()
+                debug_message("unused variable (not manually specified): ${unused_variable}")
+            endif()
         endforeach()
-        if (UNUSED_VARS)
-            set(WARNING_MSG "The following variables are not used in CMakeLists.txt:\n")
-            foreach (UNUSED_VAR ${UNUSED_VARS})
-                string(APPEND WARNING_MSG "    ${UNUSED_VAR}\n")
-            endforeach()
-            string(APPEND WARNING_MSG "Please recheck them and remove the unnecessary variables in `portfile.cmake`.")
-            string(APPEND WARNING_MSG "If that's expected, please add `OPTIONS_CHECK_SKIP <VARIABLES>` to vcpkg_cmake_configure.")
-            message(WARNING ${WARNING_MSG})
-        endif()
     endforeach()
+
+    if(DEFINED all_unused_variables)
+        list(REMOVE_DUPLICATES all_unused_variables)
+        list(JOIN all_unused_variables "\n    " all_unused_variables)
+        message(WARNING "The following variables are not used in CMakeLists.txt:
+    ${all_unused_variables}
+Please recheck them and remove the unnecessary options from the `vcpkg_cmake_configure` call.
+If these options should still be passed for whatever reason, please use the `MAYBE_UNUSED_OPTIONS` argument.")
+    endif()
 
     set(Z_VCPKG_CMAKE_GENERATOR "${generator}" CACHE INTERNAL "The generator which was used to configure CMake.")
 endfunction()
