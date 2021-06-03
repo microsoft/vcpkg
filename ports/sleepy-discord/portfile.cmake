@@ -27,15 +27,14 @@ configure_file(
     "${SOURCE_PATH}/include/sleepy_discord/version.h"
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS 
         -DSLEEPY_VCPKG=ON 
         -DAUTO_DOWNLOAD_LIBRARY=OFF 
         ${FEATURE_OPTIONS}
 )
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 

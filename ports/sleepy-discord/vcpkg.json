@@ -3,6 +3,12 @@
   "version-date": "2021-05-02",
   "description": "C++ library for the Discord chat client",
   "homepage": "https://yourwaifu.dev/sleepy-discord/",
+  "dependencies": [
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    }
+  ],
   "default-features": [
     "cpr",
     "websocketpp"
