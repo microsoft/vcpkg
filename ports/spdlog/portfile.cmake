@@ -12,11 +12,17 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         benchmark       SPDLOG_BUILD_BENCH
         wchar           SPDLOG_WCHAR_SUPPORT
 )
-if(NOT VCPKG_TARGET_IS_WINDOWS)
+
+if(VCPKG_TARGET_IS_WINDOWS)
+    # configured in triplet file
+    if(NOT DEFINED SPDLOG_WCHAR_FILENAMES)
+        set(SPDLOG_WCHAR_FILENAMES OFF)
+    endif()
+else()
     if("wchar" IN_LIST FEATURES)
         message(FATAL_ERROR "Feature 'wchar' is for Windows.")
-    elseif(SPDLOG_WCHAR_FILENAMES)
-        message(FATAL_ERROR "Feature 'wchar-filenames' is for Windows.")
+    elseif(SPDLOG_WCHAR_FILENAMES) 
+        message(FATAL_ERROR "Build option 'SPDLOG_WCHAR_FILENAMES' is for Windows.")
     endif()
 endif()
 
@@ -29,6 +35,7 @@ vcpkg_cmake_configure(
         -DSPDLOG_FMT_EXTERNAL=ON
         -DSPDLOG_INSTALL=ON
         -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
+        -DSPDLOG_WCHAR_FILENAMES=${SPDLOG_WCHAR_FILENAMES}
 )
 
 vcpkg_cmake_install()
