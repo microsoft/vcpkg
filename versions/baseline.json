@@ -1962,7 +1962,7 @@
     },
     "fbthrift": {
       "baseline": "2020.10.19.00",
-      "port-version": 0
+      "port-version": 1
     },
     "fcl": {
       "baseline": "0.6.1",
