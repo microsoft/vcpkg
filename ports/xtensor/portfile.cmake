@@ -6,14 +6,12 @@ vcpkg_from_github(
     REF f3c11b2d810159e7063daddeaa0764f4006e5a73 # 0.23.10
     SHA512 85d94a3e346a13f8d802260e7b182a34f83ed7adddb5c082f10fdaac995ba5b895ea20daf33ac99d3f44e9eb95fdc4ec051eb006259258c4c2ae762c5f08399f
     HEAD_REF master
-    PATCHES
-        fix-version-request.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    xsimd XTENSOR_USE_XSIMD
-    tbb XTENSOR_USE_TBB
+        xsimd XTENSOR_USE_XSIMD
+        tbb XTENSOR_USE_TBB
 )
 
 vcpkg_configure_cmake(

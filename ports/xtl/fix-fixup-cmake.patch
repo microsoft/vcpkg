@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cbc6651..ba77abf 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -122,7 +122,7 @@ install(FILES ${XTL_HEADERS}
+         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/xtl)
+ endif()
+ 
+-set(XTL_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_DATAROOTDIR}/cmake/${PROJECT_NAME}" CACHE
++set(XTL_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}" CACHE
+     STRING "install path for xtlConfig.cmake")
+ 
+ configure_package_config_file(${PROJECT_NAME}Config.cmake.in
