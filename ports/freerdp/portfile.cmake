@@ -90,7 +90,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeRDP-Client2_temp/FreeRDP-Cli
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/FreeRDP2_temp/FreeRDP2 TARGET_PATH share/FreeRDP)
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/WinPR2_temp/WinPR2 TARGET_PATH share/WinPR)
 
-vcpkg_fixup_pkgconfig()
+vcpkg_fixup_pkgconfig(SKIP_CHECK)
 
 vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/WinPR/WinPRTargets-debug.cmake
     "debug/lib/winpr2${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX}"
