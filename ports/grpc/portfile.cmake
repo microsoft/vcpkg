@@ -72,6 +72,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_fixup_cmake_targets()
+vcpkg_fixup_pkgconfig()
 
 if (gRPC_BUILD_CODEGEN)
     vcpkg_copy_tools(
