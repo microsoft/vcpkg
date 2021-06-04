@@ -106,10 +106,16 @@ charls:x64-windows=skip
 charls:x64-windows-static=skip
 charls:x64-windows-static-md=skip
 charls:x86-windows=skip
+# chartdir does not offer stable download URLs
 chartdir:arm64-windows=fail
 chartdir:arm-uwp=fail
 chartdir:x64-uwp=fail
 chartdir:x64-windows-static=fail
+chartdir:x86-windows=fail
+chartdir:x64-windows=fail
+chartdir:x64-windows-static-md=fail
+chartdir:x64-linux=fail
+chartdir:x64-osx=fail
 chmlib:arm-uwp=fail
 chmlib:x64-uwp=fail
 # Chromium Base requires a recent version of Clang to be installed.
@@ -1625,6 +1631,8 @@ v8:arm64-windows=fail
 v8:arm-uwp=fail
 v8:x64-osx=fail
 v8:x64-uwp=fail
+# The domain hosting vamp-sdk uses a newer root cert than is available in our linux CI
+vamp-sdk:x64-linux=fail
 vectorclass:arm64-windows=fail
 vectorclass:arm-uwp=fail
 vlpp:x64-osx=fail
