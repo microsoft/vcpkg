@@ -1,0 +1,36 @@
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO KDE/kauth
+    REF v5.81.0
+    SHA512 bad803867dadc9ff89531e80793bbe6018afb83309f91890f38b40908cea3c886f33f67ddf64e6f42c34df952ab33369d968eda774cece66012a9d66b3fd88a8
+    HEAD_REF master
+)
+
+vcpkg_cmake_configure(
+    DISABLE_PARALLEL_CONFIGURE
+    SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        -DBUILD_HTML_DOCS=OFF
+        -DBUILD_MAN_DOCS=OFF
+        -DBUILD_QTHELP_DOCS=OFF
+        -DBUILD_TESTING=OFF
+        -DKDE_INSTALL_PLUGINDIR=plugins
+        -DKDE_INSTALL_DATAROOTDIR=data
+)
+
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME KF5Auth CONFIG_PATH lib/cmake/KF5Auth)
+
+vcpkg_copy_pdbs()
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
+endif()
+
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin/data)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/etc)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/etc)
+file(INSTALL ${SOURCE_PATH}/LICENSES/ DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
