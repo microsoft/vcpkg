@@ -3,17 +3,17 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO kpu/kenlm
-    REF 1f054617eca14eae921e987b4b4eeb2b1d91de6b
-    SHA512 c18f9c22fbbb1f54ebe9c3b771fb2d7c09d502141d1b3645cff9db44cc51b3c976311ff0db79b60f410622579d043f185c56a4c7386e1b0ba8708e433238968b
+    REF bdf3c71a34a874de11ab02f23ebe0a0b877c27ef
+    SHA512 3782cf4b08b5686ea320fa248012c780faa0417fa5b23f2645bc8c92f7741ec8b8c7f81cd3f58676b1d1ea5817d1b56eaffa608ea993e3d213b63fcba44e2afb
     HEAD_REF master
     PATCHES 
         fix-boost.patch
-        fix-const-overloaded.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindEigen3.cmake)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     interpolate ENABLE_INTERPOLATE
 )
 
@@ -44,6 +44,7 @@ vcpkg_copy_tools(TOOL_NAMES ${KENLM_TOOLS} AUTO_CLEAN)
 vcpkg_copy_pdbs()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Copyright and License
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
