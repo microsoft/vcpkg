@@ -13,10 +13,5 @@
       "name": "vcpkg-cmake-config",
       "host": true
     }
-  ],
-  "features": {
-    "zlib-compat": {
-      "description": "Compile with zlib compatible API"
-    }
-  }
+  ]
 }

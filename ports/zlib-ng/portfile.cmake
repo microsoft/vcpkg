@@ -6,15 +6,9 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    FEATURES
-        zlib-compat ZLIB_COMPAT # "-ng" suffix will be removed
-)
-
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS
-        ${FEATURE_OPTIONS}
         -DZLIB_FULL_VERSION=2.0.3
         -DZLIB_ENABLE_TESTS=OFF
         -DWITH_NEW_STRATEGIES=ON
