@@ -47,6 +47,14 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/bson-${PORT_POSTFIX} TARGET_PATH
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver)
 
+# This rename is needed because the official examples expect to use #include <bson.h>
+# See Microsoft/vcpkg#904
+file(RENAME
+    ${CURRENT_PACKAGES_DIR}/include/libbson-${PORT_POSTFIX}
+    ${CURRENT_PACKAGES_DIR}/temp)
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include)
+file(RENAME ${CURRENT_PACKAGES_DIR}/temp ${CURRENT_PACKAGES_DIR}/include)
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
@@ -57,7 +65,10 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 endif()
 
-file(COPY ${SOURCE_PATH}/THIRD_PARTY_NOTICES DESTINATION ${CURRENT_PACKAGES_DIR}/share/libbson)
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/bson-1.0/bson-targets.cmake
+    "include/libbson-1.0" "include/")
+
+file(COPY ${SOURCE_PATH}/THIRD_PARTY_NOTICES DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${CURRENT_PORT_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})

@@ -1,5 +1,5 @@
 diff --git a/src/mongocxx/CMakeLists.txt b/src/mongocxx/CMakeLists.txt
-index 64ff936..5fe906f 100644
+index 64ff936..6588a53 100644
 --- a/src/mongocxx/CMakeLists.txt
 +++ b/src/mongocxx/CMakeLists.txt
 @@ -34,15 +34,11 @@ set(LIBMONGOC_REQUIRED_VERSION 1.13.0)
@@ -13,10 +13,11 @@ index 64ff936..5fe906f 100644
 +    find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} CONFIG REQUIRED)
 +    set(libmongoc_libraries mongo::mongoc_shared)
  else()
-     find_package(libmongoc-static-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
+-    find_package(libmongoc-static-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
 -    set(libmongoc_libraries ${MONGOC_STATIC_LIBRARIES})
 -    set(libmongoc_include_directories ${MONGOC_STATIC_INCLUDE_DIRS})
 -    set(libmongoc_definitions ${MONGOC_STATIC_DEFINITIONS})
++    find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} CONFIG REQUIRED)
 +    set(libmongoc_libraries mongo::mongoc_static)
  endif()
  
