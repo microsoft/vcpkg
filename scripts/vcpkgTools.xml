@@ -62,10 +62,10 @@
     </tool>
     <tool name="gsutil" os="windows">
         <version>4.59</version>
-        <exeRelativePath>gsutil/gsutil</exeRelativePath>
-        <url>https://storage.googleapis.com/pub/gsutil_4.59.zip</url>
-        <sha512>a9c7cae0a454c9418b62e7af16136e562f1944a551d6a0257459a0ceff0ef16e17caa9249d6d977b69fbab575e122274255781ba32da34b205912e1fa7fee9f6</sha512>
-        <archiveName>gsutil_4.59.zip</archiveName>
+        <exeRelativePath>google-cloud-sdk\bin\gsutil.cmd</exeRelativePath>
+        <url>https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-343.0.0-windows-x86_64-bundled-python.zip</url>
+        <sha512>349db6743e70c1940b3d0c8ffdf629608437b6fa4e5896143c610e9ce97b28b8a32cf35ee3c669eeec2158788d7ff2fe618ea6bc411f9ca8de6311eee0d36569</sha512>
+        <archiveName>google-cloud-sdk-343.0.0-windows-x86_64-bundled-python.zip</archiveName>
     </tool>
     <tool name="gsutil" os="osx">
         <version>4.59</version>
