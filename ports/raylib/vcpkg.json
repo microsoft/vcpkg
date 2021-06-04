@@ -1,6 +1,6 @@
 {
   "name": "raylib",
-  "version": "3.7",
+  "version-semver": "3.7.0",
   "description": "A simple and easy-to-use library to enjoy videogames programming",
   "homepage": "https://github.com/raysan5/raylib",
   "supports": "!(arm | uwp)",
