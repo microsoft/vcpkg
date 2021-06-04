@@ -9,6 +9,7 @@ vcpkg_from_github(
     REF e184b41448dab2f462094fa005ed05269cfba3e3 # v2020.10.19.00
     SHA512 df03e1779fd3f1868ed7be21292bcd91ae65bcca591b0265a40391dde7e3b3b81d83fe7eb4ec8dd5c440be471375b8e2c8c24befefaca3ae0cab9ce10bfd362c
     HEAD_REF master
+    PATCHES fix-config.cmake.patch
 )
 
 vcpkg_configure_cmake(

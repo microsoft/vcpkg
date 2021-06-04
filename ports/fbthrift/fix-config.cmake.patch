@@ -1,0 +1,28 @@
+diff --git a/thrift/cmake/FBThriftConfig.cmake.in b/thrift/cmake/FBThriftConfig.cmake.in
+index 69b29b9..145df48 100644
+--- a/thrift/cmake/FBThriftConfig.cmake.in
++++ b/thrift/cmake/FBThriftConfig.cmake.in
+@@ -15,17 +15,20 @@
+ 
+ include(CMakeFindDependencyMacro)
+ 
++find_dependency(folly)
++find_dependency(fmt)
++
+ # Save the PACKAGE_PREFIX_DIR in a separate variable.  find_dependency() calls
+ # below can replace PACKAGE_PREFIX_DIR with the prefix of the dependency that
+ # was searched for.
+ set(FBTHRIFT_PREFIX_DIR "${PACKAGE_PREFIX_DIR}")
+ 
+-set_and_check(FBTHRIFT_CMAKE_DIR "@PACKAGE_CMAKE_INSTALL_DIR@")
++set_and_check(FBTHRIFT_CMAKE_DIR "${PACKAGE_PREFIX_DIR}/share/fbthrift")
+ set_and_check(FBTHRIFT_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+ if (WIN32)
+-  set_and_check(FBTHRIFT_COMPILER "@PACKAGE_BIN_INSTALL_DIR@/thrift1.exe")
++  set_and_check(FBTHRIFT_COMPILER "${PACKAGE_PREFIX_DIR}/tools/fbthrift/thrift1.exe")
+ else()
+-  set_and_check(FBTHRIFT_COMPILER "@PACKAGE_BIN_INSTALL_DIR@/thrift1")
++  set_and_check(FBTHRIFT_COMPILER "${PACKAGE_PREFIX_DIR}/tools/fbthrift/thrift1")
+ endif()
+ 
+ if (NOT TARGET FBThrift::thriftcpp2)
