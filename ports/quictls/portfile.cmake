@@ -1,19 +1,19 @@
 if(EXISTS ${CURRENT_INSTALLED_DIR}/include/openssl/ssl.h)
     message(FATAL_ERROR "Can't build '${PORT}' if another SSL library is installed. Please remove existing one and try install '${PORT}' again if you need it.")
 endif()
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-endif()
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO quictls/openssl
-    REF a6e9d76db343605dae9b59d71d2811b195ae7434 # 2021-05-17
+    REF a6e9d76db343605dae9b59d71d2811b195ae7434
     SHA512 23510a11203b96476c194a1987c7d4e758375adef0f6dfe319cd8ec4b8dd9b12ea64c4099cf3ba35722b992dad75afb1cfc5126489a5fa59f5ee4d46bdfbeaf6
     HEAD_REF OpenSSL_1_1_1k+quic
 )
 
 # Option: shared/static
+if(VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
+endif()
 set(OPENSSL_SHARED no-shared)
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(OPENSSL_SHARED shared)
