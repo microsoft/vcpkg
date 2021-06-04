@@ -11,7 +11,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         benchmark       SPDLOG_BUILD_BENCH
         wchar           SPDLOG_WCHAR_SUPPORT
-        wchar-filenames SPDLOG_WCHAR_FILENAMES
 )
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     if("wchar" IN_LIST FEATURES)
