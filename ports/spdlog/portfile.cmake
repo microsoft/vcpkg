@@ -15,7 +15,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 if(NOT VCPKG_TARGET_IS_WINDOWS)
     if("wchar" IN_LIST FEATURES)
         message(FATAL_ERROR "Feature 'wchar' is for Windows.")
-    elseif("wchar-filenames" IN_LIST FEATURES)
+    elseif(SPDLOG_WCHAR_FILENAMES)
         message(FATAL_ERROR "Feature 'wchar-filenames' is for Windows.")
     endif()
 endif()
