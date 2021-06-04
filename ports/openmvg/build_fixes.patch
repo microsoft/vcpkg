@@ -507,7 +507,7 @@ index 5fcd972..b21ea7b 100644
  
  set(THREADS_PREFER_PTHREAD_FLAG ON)
  find_package(Threads REQUIRED)
-+find_package(flann REQUIRED)
++find_package(flann CONFIG REQUIRED)
  
  set_source_files_properties(${matching_files_cpp} PROPERTIES LANGUAGE CXX)
  add_library(openMVG_matching
@@ -520,7 +520,7 @@ index 5fcd972..b21ea7b 100644
  target_link_libraries(openMVG_matching
    PUBLIC
 -    ${FLANN_LIBRARIES}
-+    flann::flann
++    $<IF:$<TARGET_EXISTS:flann::flann_s>,flann::flann_s,flann::flann>
  )
  endif()
  set_target_properties(openMVG_matching PROPERTIES SOVERSION ${OPENMVG_VERSION_MAJOR} VERSION "${OPENMVG_VERSION_MAJOR}.${OPENMVG_VERSION_MINOR}")

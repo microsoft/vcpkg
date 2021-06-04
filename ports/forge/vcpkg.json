@@ -1,8 +1,7 @@
 {
   "name": "forge",
-  "version-semver": "1.0.5",
-  "port-version": 1,
-  "description": "Helps with high performance visualizations involving OpenGL-CUDA/OpenCL interop.",
+  "version-semver": "1.0.7",
+  "description": "An OpenGL interop library that can be used with ArrayFire or any other application using CUDA or OpenCL compute backend.",
   "homepage": "https://github.com/arrayfire/forge",
   "supports": "x64",
   "dependencies": [
@@ -13,7 +12,7 @@
     },
     "freeimage",
     "freetype",
-    "glbinding",
+    "glad",
     "glfw3",
     "glm"
   ]

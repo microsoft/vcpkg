@@ -1,14 +1,11 @@
-set(PANGO_VERSION 1.48.0)
-vcpkg_download_distfile(ARCHIVE
-    URLS "http://ftp.gnome.org/pub/GNOME/sources/pango/1.48/pango-${PANGO_VERSION}.tar.xz"
-    FILENAME "pango-${PANGO_VERSION}.tar.xz"
-    SHA512 4819575a583134083819c1548d86bba71af97fd927f7cac05e3903b6d1c84de0ab1b593eea1e17b974f194e2d81123aa46e3af942eef258ad1bd14c72322342e)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
-    REF ${PANGO_VERSION}
-)
+    REPO GNOME/pango
+    REF  386639c3b118cc973f714eb485877f480391f31f #v1.48.4
+    SHA512 d7de3bc3108826de9f0b34ca888e0c1eb97c1d0723b2dd68cfb1030fb78d1367e3ac4df88e4a5dea66b08854ef85ecf562d149a58f070351768d6ac144da8520
+    HEAD_REF master # branch name
+) 
 
 vcpkg_configure_meson(
     SOURCE_PATH ${SOURCE_PATH}
