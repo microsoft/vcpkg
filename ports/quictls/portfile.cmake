@@ -26,6 +26,9 @@ list(APPEND CONFIGURE_OPTIONS
     no-siphash no-whirlpool no-aria no-bf no-blake2 no-sm2 no-sm3 no-sm4 no-camellia no-cast no-md4 no-mdc2 no-ocb no-rc2 no-rmd160 no-scrypt
     no-weak-ssl-ciphers no-tests
 )
+if(VCPKG_TARGET_IS_UWP)
+    list(APPEND CONFIGURE_OPTIONS no-async)
+endif()
 if(VCPKG_TARGET_IS_WINDOWS)
     # jom will build in parallel mode, we need /FS for PDB access
     list(APPEND CONFIGURE_OPTIONS -utf-8 -FS)
@@ -92,7 +95,6 @@ elseif(VCPKG_TARGET_IS_ANDROID)
         message(FATAL_ERROR "Unknown NDK host platform")
     endif()
     get_filename_component(NDK_TOOL_PATH $ENV{ANDROID_NDK_ROOT}/toolchains/llvm/prebuilt/${NDK_HOST_TAG}/bin ABSOLUTE)
-    message(STATUS "Using NDK: ${NDK_TOOL_PATH}")
     vcpkg_add_to_path(PREPEND ${NDK_TOOL_PATH})
 
 endif()
