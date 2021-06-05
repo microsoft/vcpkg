@@ -202,7 +202,13 @@ function(vcpkg_download_distfile VAR)
                 endforeach()
             endif()
             vcpkg_execute_in_download_mode(
-                COMMAND "$ENV{VCPKG_COMMAND}" x-download "${downloaded_file_path}" "${vcpkg_download_distfile_SHA512}" ${urls} ${request_headers} --debug
+                COMMAND "$ENV{VCPKG_COMMAND}" x-download
+                    "${downloaded_file_path}"
+                    "${vcpkg_download_distfile_SHA512}"
+                    ${urls}
+                    ${request_headers}
+                    --debug
+                    --feature-flags=-manifests # there's a bug in vcpkg x-download when it finds a manifest-root
                 OUTPUT_VARIABLE output
                 ERROR_VARIABLE output
                 RESULT_VARIABLE failure
