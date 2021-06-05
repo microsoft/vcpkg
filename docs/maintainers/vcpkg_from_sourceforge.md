@@ -4,6 +4,10 @@ The latest version of this document lives in the [vcpkg repo](https://github.com
 
 Download and extract a project from sourceforge.
 
+This function automatically checks a set of sourceforge mirrors;
+additionally, mirrors can be injected through the `VCPKG_SOURCEFORGE_EXTRA_MIRRORS`
+variable, which should be a semicolon-separated list.
+
 ## Usage:
 ```cmake
 vcpkg_from_sourceforge(
