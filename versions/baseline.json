@@ -4586,7 +4586,7 @@
     },
     "openssl": {
       "baseline": "1.1.1k",
-      "port-version": 3
+      "port-version": 4
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
