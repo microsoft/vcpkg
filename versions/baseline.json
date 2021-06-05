@@ -5162,7 +5162,7 @@
     },
     "qt5-mqtt": {
       "baseline": "5.15.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-multimedia": {
       "baseline": "5.15.2",
