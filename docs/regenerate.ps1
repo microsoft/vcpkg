@@ -212,7 +212,7 @@ function ParseCmakeDocComment
         $Docs.HasError = $True
     }
 
-    if ($contents.Length -ne 0)
+    if ($null -eq $contents -or $contents.Length -ne 0)
     {
         $Docs.ActualDocumentation = $contents
     }
@@ -311,6 +311,7 @@ function GetDeprecationMessage
     Param(
         [CMakeDocumentation]$Doc
     )
+    $message = ''
     if ($Doc.IsDeprecated)
     {
         $message = " (deprecated"
