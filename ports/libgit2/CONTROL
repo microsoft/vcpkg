@@ -3,7 +3,7 @@ Version: 1.1.0
 Homepage: https://github.com/libgit2/libgit2
 Build-Depends: zlib, http-parser
 Description: Git linkable library
-Default-Features: pcre, ssl
+Default-Features: ssl
 Supports: !uwp
 
 Feature: pcre

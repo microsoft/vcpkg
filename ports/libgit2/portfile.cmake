@@ -11,11 +11,11 @@ vcpkg_from_github(
 
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_CRT)
 
-set(REGEX_BACKEND OFF)
+set(REGEX_BACKEND builtin)
 set(USE_HTTPS OFF)
 
 function(set_regex_backend VALUE)
-    if(REGEX_BACKEND)
+    if(NOT REGEX_BACKEND STREQUAL "builtin")
         message(FATAL_ERROR "Only one regex backend (pcre,pcre2) is allowed")
     endif()
     set(REGEX_BACKEND ${VALUE} PARENT_SCOPE)
@@ -52,10 +52,6 @@ foreach(GIT2_FEATURE ${FEATURES})
         set_tls_backend("mbedTLS")
     endif()
 endforeach()
-
-if(NOT REGEX_BACKEND)
-    message(FATAL_ERROR "Must choose pcre or pcre2 regex backend")
-endif()
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS GIT2_FEATURES
