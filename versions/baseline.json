@@ -6658,7 +6658,7 @@
     },
     "x265": {
       "baseline": "3.4",
-      "port-version": 4
+      "port-version": 5
     },
     "xalan-c": {
       "baseline": "1.12",
