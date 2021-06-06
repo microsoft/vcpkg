@@ -1,8 +1,11 @@
+if(VCPKG_TARGET_IS_WINDOWS)
+    set(PATCHES 0017-Patch-for-ticket-9019-CUDA-Compile-Broken-Using-MSVC.patch)  # https://trac.ffmpeg.org/ticket/9019
+endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ffmpeg/ffmpeg
-    REF n4.3.2
-    SHA512 95e6fdc5980d2940cac33be9015e3acc2e1ce5247ef92211889fcf120add1e6ef01089ca2b8d59c13f91761757ebfe9819dc87a24f690edcafa7e0626f06f64e
+    REF n4.4
+    SHA512 ae7426ca476df9fa9dba52cab06c38e484f835653fb2da57e7c06f5589d887c0854ee17df93a2f57191d498c1264cb1c69312cf0a8214b476800382e2d260c4b
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
@@ -10,7 +13,6 @@ vcpkg_from_github(
         0004-fix-debug-build.patch
         0006-fix-StaticFeatures.patch
         0007-fix-lib-naming.patch
-        0008-Fix-wavpack-detection.patch
         0009-Fix-fdk-detection.patch
         0010-Fix-x264-detection.patch
         0011-Fix-x265-detection.patch
@@ -19,6 +21,7 @@ vcpkg_from_github(
         0014-avfilter-dependency-fix.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
         0016-configure-dnn-needs-avformat.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
+        ${PATCHES}
 )
 
 if (SOURCE_PATH MATCHES " ")
@@ -26,7 +29,7 @@ if (SOURCE_PATH MATCHES " ")
 endif()
 
 
-if(${VCPKG_TARGET_ARCHITECTURE} STREQUAL x86)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     # ffmpeg nasm build gives link error on x86, so fall back to yasm
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
@@ -436,14 +439,6 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libvpx")
 endif()
 
-set(ENABLE_WAVPACK OFF)
-if("wavpack" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libwavpack")
-    set(ENABLE_WAVPACK ${STATIC_LINKAGE})
-else()
-    set(OPTIONS "${OPTIONS} --disable-libwavpack")
-endif()
-
 set(ENABLE_WEBP OFF)
 if("webp" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libwebp")
@@ -498,6 +493,8 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
             get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
             set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${GAS_ITEM_PATH}")
         endforeach(GAS_PATH)
+    elseif(VCPKG_TARGET_IS_OSX) # VCPKG_TARGET_ARCHITECTURE = arm64
+        set(OPTIONS_CROSS " --enable-cross-compile --target-os=darwin --arch=arm64 --extra-ldflags=-arch --extra-ldflags=arm64 --extra-cflags=-arch --extra-cflags=arm64 --extra-cxxflags=-arch --extra-cxxflags=arm64")
     endif()
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
