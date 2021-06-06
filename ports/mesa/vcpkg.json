@@ -1,6 +1,6 @@
 {
   "name": "mesa",
-  "version": "21.1.0",
+  "version": "21.1.2",
   "description": "Mesa - The 3D Graphics Library",
   "homepage": "https://www.mesa3d.org/",
   "supports": "!(windows & arm)",
@@ -36,6 +36,14 @@
           "features": [
             "opengl"
           ]
+        },
+        {
+          "name": "mesa",
+          "default-features": false,
+          "features": [
+            "llvm"
+          ],
+          "platform": "x64"
         }
       ]
     },

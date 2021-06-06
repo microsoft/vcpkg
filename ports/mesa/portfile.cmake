@@ -16,10 +16,10 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mesa/mesa
-    REF mesa-21.1.0 
-    SHA512 9ef2954c701cbedcf4ff8d776910886e3c8505b20f4ce4bcbd83d29ba9aa400c473e49816616139232493e9e2f6f7b962bce36e9d5891067cc2d8ebf2e8e8750
-    HEAD_REF master # branch name
-    PATCHES ${PATCHES} #patch name
+    REF mesa-21.1.2 
+    SHA512 746ef292dd93ddd23ab34e18e87196db63302defd99357f31ac24876003c75b32cfa8ed38d0292271cd9142a056f6a6549ffcd0f086d0c69c4ff83ac7195188c
+    HEAD_REF master
+    PATCHES ${PATCHES}
 ) 
 vcpkg_find_acquire_program(PYTHON3)
 get_filename_component(PYTHON3_DIR "${PYTHON3}" DIRECTORY)
@@ -160,6 +160,7 @@ list(APPEND MESA_OPTIONS -Dshared-glapi=enabled)  #shared GLAPI required when bu
 
 if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND MESA_OPTIONS -Dplatforms=['windows'])
+    list(APPEND MESA_OPTIONS -Dmicrosoft-clc=disabled)
 endif()
 
 vcpkg_configure_meson(
