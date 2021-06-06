@@ -11,16 +11,6 @@ vcpkg_from_github(
         disable-install-pdb.patch
 )
 
-set(ENABLE_ASSEMBLY OFF)
-if (VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_find_acquire_program(NASM)
-    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
-    set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
-    set(ENABLE_ASSEMBLY ON)
-endif ()
-
-string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
-
 set(HAS_10_BIT OFF)
 if("bit10" IN_LIST FEATURES)
     set(HAS_10_BIT ON)
@@ -30,17 +20,29 @@ set(HAS_12_BIT OFF)
 if("bit12" IN_LIST FEATURES)
     set(HAS_12_BIT ON)
 endif()
+
+set(ENABLE_ASSEMBLY OFF)
+if (VCPKG_TARGET_IS_WINDOWS AND (NOT HAS_12_BIT AND NOT HAS_10_BIT))
+    vcpkg_find_acquire_program(NASM)
+    get_filename_component(NASM_EXE_PATH ${NASM} DIRECTORY)
+    set(ENV{PATH} "$ENV{PATH};${NASM_EXE_PATH}")
+    set(ENABLE_ASSEMBLY ON)
+endif ()
+
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" ENABLE_SHARED)
+
 set(FEATURE_OPT_DBG "")
 set(FEATURE_OPT_REL "")
 set(EXTRA_LIB_DBG "")
 set(EXTRA_LIB_REL "")
+
+set(ADDITIONAL_NAME "")
 if(VCPKG_TARGET_IS_WINDOWS)
-    set(x265_lib_name "x265-static.lib")
-    set(x265_lib_name_main "x265-static-main.lib")
-elseif(VCPKG_TARGET_IS_LINUX)
-    set(x265_lib_name "libx265.a")
-    set(x265_lib_name_main "libx265-main.a")
+    set(ADDITIONAL_NAME "-static")
 endif()
+
+set(x265_lib_name "${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}x265${ADDITIONAL_NAME}${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
+set(x265_lib_name_main "${VCPKG_TARGET_STATIC_LIBRARY_PREFIX}x265${ADDITIONAL_NAME}-main${VCPKG_TARGET_STATIC_LIBRARY_SUFFIX}")
 
 ## Usage
 #  build_x265(
