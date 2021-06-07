@@ -1,4 +1,4 @@
-if(VCPKG_TARGET_IS_LINUX)
+if(VCPKG_TARGET_IS_LINUX AND NOT "tools" IN_LIST FEATURES)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     if (NOT EXISTS "/usr/include/libintl.h")
         message(FATAL_ERROR "Please use command \"sudo apt-get install gettext\" to install gettext on linux.")
