@@ -33,7 +33,7 @@ We hope that they will make both forwards and backwards compatibility easier.
   except in helpful messages to the user.
   - (i.e., `message(FATAL_ERROR "blah was passed extra arguments: ${ARGN}")`)
 - We always use functions, not macros or top level code.
-  - Exception: `vcpkg.cmake`'s `find_package`
+  - Exception: `vcpkg.cmake`'s `find_package`.
 - Scripts in the scripts tree should not be expected to need changes
   as part of normal operation.
   - Example: `vcpkg_acquire_msys` has hard-coded packages and versions.
@@ -61,6 +61,8 @@ We hope that they will make both forwards and backwards compatibility easier.
 - `foreach(RANGE)`'s arguments _must always be_ natural numbers,
   and `<start>` _must always be_ less than or equal to `<stop>`.
   - This must be checked if necessary.
+- All port-based scripts must use `include_guard(GLOBAL)`
+  to avoid being included multiple times.
 
 ### Naming Variables
 
