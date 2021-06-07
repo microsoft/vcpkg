@@ -27,7 +27,7 @@ vcpkg_add_to_path("${SED_EXE_PATH}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-        thread          USE_THREAD
+        threads         USE_THREAD
         simplethread    USE_SIMPLE_THREADED_LEVEL3
 )
 
