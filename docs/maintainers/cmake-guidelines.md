@@ -64,6 +64,23 @@ We hope that they will make both forwards and backwards compatibility easier.
 - All port-based scripts must use `include_guard(GLOBAL)`
   to avoid being included multiple times.
 
+### CMake Versions to Require
+
+- All CMake scripts, except for `vcpkg.cmake`,
+  may assume the version of CMake that is present in the
+  `cmake_minimum_required` of `ports.cmake`.
+- `vcpkg.cmake` must assume a version of CMake back to 3.1 in general
+  - Specific functions and options may assume a greater CMake version;
+    if they do, make sure to comment that function or option
+    with the required CMake version.
+
+
+### Changing Existing Functions
+
+- Never remove arguments in non-internal functions;
+  if they should no longer do anything, just take them as normal and warn on use.
+- Never add a new mandatory argument.
+
 ### Naming Variables
 
 - `cmake_parse_arguments`: set prefix to `"arg"`
