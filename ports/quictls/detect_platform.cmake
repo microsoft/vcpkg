@@ -1,10 +1,3 @@
-#
-# References
-#   - ${VCPKG_ROOT}/scripts/cmake/vcpkg_common_definitions.cmake
-#   - https://github.com/quictls/openssl/tree/OpenSSL_1_1_1k+quic
-#       - ${SOURCE_PATH}/Configuration/README.design
-#       - ${SOURCE_PATH}/Configuration/10-main.conf
-#
 if(VCPKG_TARGET_IS_ANDROID)
     # ${SOURCE_PATH}/Configuration/15-android.conf
     if(VCPKG_TARGET_ARCHITECTURE MATCHES "arm64")
