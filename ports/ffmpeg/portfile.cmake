@@ -29,7 +29,7 @@ if (SOURCE_PATH MATCHES " ")
 endif()
 
 
-if(${VCPKG_TARGET_ARCHITECTURE} STREQUAL x86)
+if(VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
     # ffmpeg nasm build gives link error on x86, so fall back to yasm
     vcpkg_find_acquire_program(YASM)
     get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)
@@ -493,6 +493,8 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
             get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
             set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${GAS_ITEM_PATH}")
         endforeach(GAS_PATH)
+    elseif(VCPKG_TARGET_IS_OSX) # VCPKG_TARGET_ARCHITECTURE = arm64
+        set(OPTIONS_CROSS " --enable-cross-compile --target-os=darwin --arch=arm64 --extra-ldflags=-arch --extra-ldflags=arm64 --extra-cflags=-arch --extra-cflags=arm64 --extra-cxxflags=-arch --extra-cxxflags=arm64")
     endif()
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")

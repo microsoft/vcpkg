@@ -140,6 +140,10 @@
       "baseline": "0.3.1",
       "port-version": 0
     },
+    "aricpp": {
+      "baseline": "1.1.1",
+      "port-version": 0
+    },
     "armadillo": {
       "baseline": "10.4.0",
       "port-version": 0
@@ -257,11 +261,11 @@
       "port-version": 1
     },
     "azure-core-cpp": {
-      "baseline": "1.0.0-beta.9",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "azure-identity-cpp": {
-      "baseline": "1.0.0-beta.6",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "azure-iot-sdk-c": {
@@ -322,6 +326,10 @@
     },
     "bcg729": {
       "baseline": "1.1.1",
+      "port-version": 0
+    },
+    "bddisasm": {
+      "baseline": "1.32.1",
       "port-version": 0
     },
     "bde": {
@@ -1030,7 +1038,7 @@
     },
     "box2d": {
       "baseline": "2.4.1",
-      "port-version": 0
+      "port-version": 1
     },
     "breakpad": {
       "baseline": "2020-09-14",
@@ -1333,15 +1341,15 @@
       "port-version": 1
     },
     "comms": {
-      "baseline": "3.2.0",
+      "baseline": "3.3.0",
       "port-version": 0
     },
     "comms-ublox": {
-      "baseline": "0.20.0",
-      "port-version": 1
+      "baseline": "0.20.1",
+      "port-version": 0
     },
     "commsdsl": {
-      "baseline": "3.6.2",
+      "baseline": "3.6.3",
       "port-version": 0
     },
     "concurrentqueue": {
@@ -1421,7 +1429,7 @@
       "port-version": 0
     },
     "cppgraphqlgen": {
-      "baseline": "3.5.0",
+      "baseline": "3.6.0",
       "port-version": 0
     },
     "cppitertools": {
@@ -1849,7 +1857,7 @@
       "port-version": 2
     },
     "enet": {
-      "baseline": "1.3.16",
+      "baseline": "1.3.17",
       "port-version": 0
     },
     "ensmallen": {
@@ -1970,7 +1978,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4",
-      "port-version": 1
+      "port-version": 2
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
@@ -2333,7 +2341,7 @@
       "port-version": 6
     },
     "google-cloud-cpp": {
-      "baseline": "1.27.0",
+      "baseline": "1.28.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -2609,7 +2617,7 @@
       "port-version": 0
     },
     "igraph": {
-      "baseline": "0.9.3",
+      "baseline": "0.9.4",
       "port-version": 0
     },
     "iir1": {
@@ -3000,6 +3008,10 @@
       "baseline": "2.5.3",
       "port-version": 1
     },
+    "libavif": {
+      "baseline": "0.9.1",
+      "port-version": 0
+    },
     "libb2": {
       "baseline": "0.98.1",
       "port-version": 5
@@ -3157,8 +3169,8 @@
       "port-version": 0
     },
     "libgpg-error": {
-      "baseline": "1.39",
-      "port-version": 1
+      "baseline": "1.42",
+      "port-version": 0
     },
     "libgpod": {
       "baseline": "2019-08-29",
@@ -4574,7 +4586,7 @@
     },
     "openssl": {
       "baseline": "1.1.1k",
-      "port-version": 2
+      "port-version": 3
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -5434,7 +5446,7 @@
     },
     "realsense2": {
       "baseline": "2.42.0",
-      "port-version": 0
+      "port-version": 1
     },
     "recast": {
       "baseline": "1.5.1-3",
@@ -5569,7 +5581,7 @@
       "port-version": 5
     },
     "safeint": {
-      "baseline": "3.24",
+      "baseline": "3.0.26",
       "port-version": 0
     },
     "sail": {
@@ -5674,7 +5686,7 @@
     },
     "sentry-native": {
       "baseline": "0.4.9",
-      "port-version": 0
+      "port-version": 1
     },
     "septag-sx": {
       "baseline": "2019-05-07-2",
@@ -6014,7 +6026,7 @@
     },
     "sundials": {
       "baseline": "5.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "superlu": {
       "baseline": "2020-01-07",
@@ -6265,8 +6277,8 @@
       "port-version": 1
     },
     "tomlplusplus": {
-      "baseline": "2.3.0",
-      "port-version": 1
+      "baseline": "2.4.0",
+      "port-version": 0
     },
     "tool-meson": {
       "baseline": "0.58.0",
@@ -6677,8 +6689,8 @@
       "port-version": 1
     },
     "xmlsec": {
-      "baseline": "1.2.31",
-      "port-version": 1
+      "baseline": "1.2.32",
+      "port-version": 0
     },
     "xmsh": {
       "baseline": "0.5.2-1",
