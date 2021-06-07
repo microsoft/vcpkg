@@ -1,11 +1,11 @@
 #[===[.md:
-# vcpkg_test_cmake_config
+# vcpkg_cmake_config_test
 
 Automatically test the correctness of the configuration file exported by cmake
 
 ## Usage
 ```cmake
-vcpkg_test_cmake_config(
+vcpkg_cmake_config_test(
     [TARGET_NAME <PORT_NAME>]
     [TARGET_VARS <TARGETS>...]
     [HEADERS <headername.h>...]
@@ -170,7 +170,7 @@ macro(build_with_toolchain)
     endforeach()
 endmacro()
 
-function(vcpkg_test_cmake_config)
+function(vcpkg_cmake_config_test)
     if (NOT _VCPKG_EDITABLE)
         # Skip cmake test
         return()

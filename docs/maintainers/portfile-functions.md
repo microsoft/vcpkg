@@ -72,6 +72,7 @@
 ### [vcpkg-cmake-config](ports/vcpkg-cmake-config.md)
 
 - [vcpkg\_cmake\_config\_fixup](ports/vcpkg-cmake-config/vcpkg_cmake_config_fixup.md)
+- [vcpkg\_cmake\_config\_test](ports/vcpkg-cmake-config/vcpkg_cmake_config_test.md)
 
 ### [vcpkg-pkgconfig-get-modules](ports/vcpkg-pkgconfig-get-modules.md)
 
