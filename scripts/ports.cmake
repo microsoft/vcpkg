@@ -1,5 +1,5 @@
 # rebuild: 1
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.20)
 
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Location to stored scripts")
 include("${SCRIPTS}/cmake/z_vcpkg_function_arguments.cmake")
