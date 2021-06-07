@@ -1406,7 +1406,6 @@ rttr:x64-uwp=fail
 rxspencer:x64-uwp=fail
 rxspencer:arm-uwp=fail
 ryml:arm-uwp=fail
-ryml:arm64-windows=fail
 ryml:x64-osx=fail
 ryu:arm-uwp=fail
 ryu:x64-uwp=fail

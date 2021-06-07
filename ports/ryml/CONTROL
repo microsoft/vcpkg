@@ -1,6 +1,6 @@
 Source: ryml
-Version: 2020-04-12
+Version: 2021-02-15
 Homepage: https://github.com/biojppm/rapidyaml 
 Description: Rapid YAML library
 Build-Depends: c4core[core]
-Supports: !(arm|arm64|osx)
+Supports: !(osx)
