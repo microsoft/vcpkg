@@ -9,16 +9,7 @@
   ],
   "features": {
     "tools": {
-      "description": "Build gettext tools",
-      "dependencies": [
-        {
-          "name": "gettext",
-          "host": true,
-          "features": [
-            "tools"
-          ]
-        }
-      ]
+      "description": "Build gettext tools"
     }
   }
 }
