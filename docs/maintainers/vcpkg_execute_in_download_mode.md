@@ -1,5 +1,7 @@
 # vcpkg_execute_in_download_mode
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_execute_in_download_mode.md).
+
 Execute a process even in download mode.
 
 ## Usage
@@ -31,4 +33,4 @@ See [`execute_process()`] for a detailed description of the parameters.
 [`execute_process()`]: https://cmake.org/cmake/help/latest/command/execute_process.html
 
 ## Source
-[scripts/cmake/vcpkg_execute_in_download_mode.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_execute_in_download_mode.cmake)
+[scripts/cmake/vcpkg\_execute\_in\_download\_mode.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_execute_in_download_mode.cmake)

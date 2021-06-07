@@ -1,11 +1,12 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "linux" "osx" "uwp")
+vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "uwp")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO libusb/hidapi
-    REF fc677b81951d8facc99bab6b4f0060b5d89e2e15 # use commit from master for windows/hidapi.vcxproj
-    SHA512 8a779c1d4fe83e264046f3193a5cefe2d9765dcde30628767838180b3dec2bdd25c9c1ec9a96b3a7edaf00df7662b4d658f2b57bda67cebc7d7cb4e737cb1f88
+    REF hidapi-0.10.1
+    SHA512 0479706c631775483378070ff7170542725678eabc202a5bd07436c951fd766e01743417999ac3fb2b5436c865f6ace2cfced1f210fa3a3e88c19ceb3bbe0534
     HEAD_REF master
+    PATCHES remove-duplicate-AC_CONFIG_MACRO_DIR.patch
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)
@@ -51,4 +52,19 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 
     file(COPY ${CMAKE_CURRENT_LIST_DIR}/hidapi-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+else(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
+    vcpkg_configure_make(
+        SOURCE_PATH ${SOURCE_PATH}
+        AUTOCONFIG
+    )
+    
+    vcpkg_install_make()
+    
+    vcpkg_copy_pdbs()
+    
+    vcpkg_fixup_pkgconfig()
+    
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
+    
+    file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 endif()

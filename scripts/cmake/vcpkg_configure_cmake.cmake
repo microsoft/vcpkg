@@ -1,3 +1,4 @@
+# DEPRECATED BY ports/vcpkg-cmake/vcpkg_cmake_configure
 #[===[.md:
 # vcpkg_configure_cmake
 
@@ -67,8 +68,11 @@ This command supplies many common arguments to CMake. To see the full list, exam
 #]===]
 
 function(vcpkg_configure_cmake)
-    # parse parameters such that semicolons in arguments to OPTIONS don't get erased
-    cmake_parse_arguments(PARSE_ARGV 0 _csc
+    if(Z_VCPKG_CMAKE_CONFIGURE_GUARD)
+        message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-cmake; using both vcpkg-cmake and vcpkg_configure_cmake in the same port is unsupported.")
+    endif()
+
+    cmake_parse_arguments(PARSE_ARGV 0 arg
         "PREFER_NINJA;DISABLE_PARALLEL_CONFIGURE;NO_CHARSET_FLAG"
         "SOURCE_PATH;GENERATOR;LOGNAME"
         "OPTIONS;OPTIONS_DEBUG;OPTIONS_RELEASE"
@@ -79,15 +83,15 @@ function(vcpkg_configure_cmake)
             "however, vcpkg.exe must be rebuilt by re-running bootstrap-vcpkg.bat\n")
     endif()
 
-    if(NOT _csc_LOGNAME)
-        set(_csc_LOGNAME config-${TARGET_TRIPLET})
+    if(NOT arg_LOGNAME)
+        set(arg_LOGNAME config-${TARGET_TRIPLET})
     endif()
 
     if(CMAKE_HOST_WIN32)
         if(DEFINED ENV{PROCESSOR_ARCHITEW6432})
-            set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITEW6432})
+            set(arg_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITEW6432})
         else()
-            set(_csc_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
+            set(arg_HOST_ARCHITECTURE $ENV{PROCESSOR_ARCHITECTURE})
         endif()
     endif()
 
@@ -98,7 +102,7 @@ function(vcpkg_configure_cmake)
         set(_TARGETTING_UWP 1)
     endif()
 
-    if(_csc_HOST_ARCHITECTURE STREQUAL "x86")
+    if(arg_HOST_ARCHITECTURE STREQUAL "x86")
         # Prebuilt ninja binaries are only provided for x64 hosts
         set(NINJA_CAN_BE_USED OFF)
         set(NINJA_HOST OFF)
@@ -107,9 +111,9 @@ function(vcpkg_configure_cmake)
         set(NINJA_CAN_BE_USED OFF)
     endif()
 
-    if(_csc_GENERATOR)
-        set(GENERATOR ${_csc_GENERATOR})
-    elseif(_csc_PREFER_NINJA AND NINJA_CAN_BE_USED)
+    if(arg_GENERATOR)
+        set(GENERATOR ${arg_GENERATOR})
+    elseif(arg_PREFER_NINJA AND NINJA_CAN_BE_USED)
         set(GENERATOR "Ninja")
     elseif(VCPKG_CHAINLOAD_TOOLCHAIN_FILE OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT _TARGETTING_UWP))
         set(GENERATOR "Ninja")
@@ -164,13 +168,13 @@ function(vcpkg_configure_cmake)
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
         vcpkg_add_to_path("${NINJA_PATH}")
-        list(APPEND _csc_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
+        list(APPEND arg_OPTIONS "-DCMAKE_MAKE_PROGRAM=${NINJA}")
     endif()
 
     file(REMOVE_RECURSE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_NAME)
-        list(APPEND _csc_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
+        list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_NAME=${VCPKG_CMAKE_SYSTEM_NAME}")
         if(_TARGETTING_UWP AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
             set(VCPKG_CMAKE_SYSTEM_VERSION 10.0)
         elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Android" AND NOT DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
@@ -179,13 +183,13 @@ function(vcpkg_configure_cmake)
     endif()
 
     if(DEFINED VCPKG_CMAKE_SYSTEM_VERSION)
-        list(APPEND _csc_OPTIONS "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
+        list(APPEND arg_OPTIONS "-DCMAKE_SYSTEM_VERSION=${VCPKG_CMAKE_SYSTEM_VERSION}")
     endif()
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-        list(APPEND _csc_OPTIONS -DBUILD_SHARED_LIBS=ON)
+        list(APPEND arg_OPTIONS -DBUILD_SHARED_LIBS=ON)
     elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-        list(APPEND _csc_OPTIONS -DBUILD_SHARED_LIBS=OFF)
+        list(APPEND arg_OPTIONS -DBUILD_SHARED_LIBS=OFF)
     else()
         message(FATAL_ERROR
             "Invalid setting for VCPKG_LIBRARY_LINKAGE: \"${VCPKG_LIBRARY_LINKAGE}\". "
@@ -203,7 +207,7 @@ function(vcpkg_configure_cmake)
     check_both_vars_are_set(VCPKG_CXX_FLAGS VCPKG_C_FLAGS)
 
     set(VCPKG_SET_CHARSET_FLAG ON)
-    if(_csc_NO_CHARSET_FLAG)
+    if(arg_NO_CHARSET_FLAG)
         set(VCPKG_SET_CHARSET_FLAG OFF)
     endif()
 
@@ -228,7 +232,7 @@ function(vcpkg_configure_cmake)
     endif()
 
 
-    list(APPEND _csc_OPTIONS
+    list(APPEND arg_OPTIONS
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
         "-DVCPKG_SET_CHARSET_FLAG=${VCPKG_SET_CHARSET_FLAG}"
@@ -260,7 +264,7 @@ function(vcpkg_configure_cmake)
     )
 
     if(DEFINED ARCH)
-        list(APPEND _csc_OPTIONS
+        list(APPEND arg_OPTIONS
             "-A${ARCH}"
         )
     endif()
@@ -268,23 +272,23 @@ function(vcpkg_configure_cmake)
     # Sets configuration variables for macOS builds
     foreach(config_var  INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT OSX_ARCHITECTURES)
         if(DEFINED VCPKG_${config_var})
-            list(APPEND _csc_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
+            list(APPEND arg_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
         endif()
     endforeach()
 
     set(rel_command
-        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_RELEASE}"
+        ${CMAKE_COMMAND} ${arg_SOURCE_PATH} "${arg_OPTIONS}" "${arg_OPTIONS_RELEASE}"
         -G ${GENERATOR}
         -DCMAKE_BUILD_TYPE=Release
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR})
     set(dbg_command
-        ${CMAKE_COMMAND} ${_csc_SOURCE_PATH} "${_csc_OPTIONS}" "${_csc_OPTIONS_DEBUG}"
+        ${CMAKE_COMMAND} ${arg_SOURCE_PATH} "${arg_OPTIONS}" "${arg_OPTIONS_DEBUG}"
         -G ${GENERATOR}
         -DCMAKE_BUILD_TYPE=Debug
         -DCMAKE_INSTALL_PREFIX=${CURRENT_PACKAGES_DIR}/debug)
 
-    if(NINJA_HOST AND CMAKE_HOST_WIN32 AND NOT _csc_DISABLE_PARALLEL_CONFIGURE)
-        list(APPEND _csc_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
+    if(NINJA_HOST AND CMAKE_HOST_WIN32 AND NOT arg_DISABLE_PARALLEL_CONFIGURE)
+        list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")
 
         vcpkg_find_acquire_program(NINJA)
         get_filename_component(NINJA_PATH ${NINJA} DIRECTORY)
@@ -319,7 +323,7 @@ function(vcpkg_configure_cmake)
         vcpkg_execute_required_process(
             COMMAND ninja -v
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure
-            LOGNAME ${_csc_LOGNAME}
+            LOGNAME ${arg_LOGNAME}
         )
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
@@ -328,7 +332,7 @@ function(vcpkg_configure_cmake)
             vcpkg_execute_required_process(
                 COMMAND ${dbg_command}
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg
-                LOGNAME ${_csc_LOGNAME}-dbg
+                LOGNAME ${arg_LOGNAME}-dbg
             )
         endif()
 
@@ -338,10 +342,10 @@ function(vcpkg_configure_cmake)
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
                 WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel
-                LOGNAME ${_csc_LOGNAME}-rel
+                LOGNAME ${arg_LOGNAME}-rel
             )
         endif()
     endif()
 
-    set(_VCPKG_CMAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
+    set(Z_VCPKG_CMAKE_GENERATOR "${GENERATOR}" PARENT_SCOPE)
 endfunction()

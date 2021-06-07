@@ -1,8 +1,7 @@
 {
   "$reason": "Note that independent usage and testing may work, but it seems to fail in CI environments for potential cross-compilation, and is thusly noted here to note break how vcpkg builds things!",
   "name": "infoware",
-  "version-string": "0.5.5",
-  "port-version": 1,
+  "version-string": "0.6.0",
   "description": "C++ Library for pulling system and hardware information, without hitting the command line.",
   "homepage": "https://github.com/ThePhD/infoware",
   "supports": "!(arm | uwp)",

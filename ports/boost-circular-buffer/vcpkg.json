@@ -1,0 +1,18 @@
+{
+  "name": "boost-circular-buffer",
+  "version-string": "1.75.0",
+  "description": "Boost circular_buffer module",
+  "homepage": "https://github.com/boostorg/circular_buffer",
+  "dependencies": [
+    "boost-assert",
+    "boost-compatibility",
+    "boost-concept-check",
+    "boost-config",
+    "boost-core",
+    "boost-move",
+    "boost-static-assert",
+    "boost-throw-exception",
+    "boost-type-traits",
+    "boost-vcpkg-helpers"
+  ]
+}

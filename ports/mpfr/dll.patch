@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index fdee5978d..0791b2528 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -593,7 +593,7 @@ case $host in
+    AC_MSG_CHECKING(for DLL/static GMP)
+    if test "$enable_shared" = yes; then
+      MPFR_LDFLAGS="$MPFR_LDFLAGS -no-undefined"
+-     LIBMPFR_LDFLAGS="$LIBMPFR_LDFLAGS -Wl,--output-def,.libs/libmpfr-6.dll.def"
++     LIBMPFR_LDFLAGS="$LIBMPFR_LDFLAGS -W1,--no-undefined"
+      AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+ #include "gmp.h"
+ #if !__GMP_LIBGMP_DLL

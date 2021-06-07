@@ -1,4 +1,0 @@
-Source: concurrentqueue
-Version: 1.0.2
-Homepage: https://github.com/cameron314/concurrentqueue
-Description: A fast multi-producer, multi-consumer lock-free concurrent queue for C++11

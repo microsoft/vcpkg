@@ -12,6 +12,7 @@ vcpkg_extract_source_archive_ex(
         0001-sdl2-Enable-creation-of-pkg-cfg-file-on-windows.patch
         0002-sdl2-skip-ibus-on-linux.patch
         0003-sdl2-fix-uwp-build.patch
+        0004-sdl2-macos-thread-detection-fix.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" SDL_STATIC)
@@ -19,6 +20,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SDL_SHARED)
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" FORCE_STATIC_VCRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     vulkan  VIDEO_VULKAN
 )
 
@@ -71,9 +73,7 @@ if(NOT VCPKG_CMAKE_SYSTEM_NAME)
 
     file(GLOB SHARE_FILES ${CURRENT_PACKAGES_DIR}/share/sdl2/*.cmake)
     foreach(SHARE_FILE ${SHARE_FILES})
-        file(READ "${SHARE_FILE}" _contents)
-        string(REPLACE "lib/SDL2main" "lib/manual-link/SDL2main" _contents "${_contents}")
-        file(WRITE "${SHARE_FILE}" "${_contents}")
+        vcpkg_replace_string("${SHARE_FILE}" "lib/SDL2main" "lib/manual-link/SDL2main")
     endforeach()
 endif()
 
@@ -89,10 +89,8 @@ string(REGEX REPLACE ${DYLIB_COMPATIBILITY_VERSION_REGEX} "\\1" DYLIB_COMPATIBIL
 string(REGEX REPLACE ${DYLIB_CURRENT_VERSION_REGEX} "\\1" DYLIB_CURRENT_VERSION "${DYLIB_CURRENT_VERSION}")
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-	vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2" "-lSDL2d")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2main" "-lSDL2maind")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/sdl2.pc" "-lSDL2 " "-lSDL2d ")
 endif()
 
-vcpkg_fixup_pkgconfig(
-    IGNORE_FLAGS "-Wl,-rpath,${CURRENT_PACKAGES_DIR}/lib/pkgconfig/../../lib" "-Wl,-rpath,${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/../../lib" "-Wl,--enable-new-dtags" "-Wl,--no-undefined" "-Wl,-undefined,error" "-Wl,-compatibility_version,${DYLIB_COMPATIBILITY_VERSION}" "-Wl,-current_version,${DYLIB_CURRENT_VERSION}" "-Wl,-weak_framework,Metal" "-Wl,-weak_framework,QuartzCore"
-    SYSTEM_LIBRARIES dbus-1
-)
+vcpkg_fixup_pkgconfig()

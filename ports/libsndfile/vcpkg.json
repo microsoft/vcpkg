@@ -1,7 +1,6 @@
 {
   "name": "libsndfile",
-  "version-string": "1.0.30",
-  "port-version": 1,
+  "version-string": "1.0.31",
   "description": "Library to read, write and manipulate many soundfile types. Authored by Eric de Castro Lopo",
   "homepage": "https://github.com/erikd/libsndfile",
   "license": "LGPL-2.1",

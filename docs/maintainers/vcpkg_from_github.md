@@ -1,5 +1,7 @@
 # vcpkg_from_github
 
+The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_from_github.md).
+
 Download and extract a project from GitHub. Enables support for `install --head`.
 
 ## Usage:
@@ -68,7 +70,7 @@ This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 
 * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
 * [ms-gsl](https://github.com/Microsoft/vcpkg/blob/master/ports/ms-gsl/portfile.cmake)
-* [beast](https://github.com/Microsoft/vcpkg/blob/master/ports/beast/portfile.cmake)
+* [boost-beast](https://github.com/Microsoft/vcpkg/blob/master/ports/boost-beast/portfile.cmake)
 
 ## Source
-[scripts/cmake/vcpkg_from_github.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_github.cmake)
+[scripts/cmake/vcpkg\_from\_github.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_from_github.cmake)

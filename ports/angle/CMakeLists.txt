@@ -391,6 +391,8 @@ add_library(libEGL
     "src/libEGL/libEGL.cpp"
     "src/libEGL/libEGL.rc"
     "src/libEGL/resource.h"
+    "src/libEGL/egl_loader_autogen.cpp"
+    "src/libEGL/egl_loader_autogen.h"
 )
 target_link_libraries(libEGL PRIVATE angle::common angle::libANGLE libGLESv2)
 target_include_directories(libEGL PUBLIC "$<INSTALL_INTERFACE:include>" "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>")
@@ -469,7 +471,9 @@ if(NOT DISABLE_INSTALL_HEADERS)
         PATTERN "*.h"
         PATTERN "*.inc"
         PATTERN "GLSLANG" EXCLUDE
-        PATTERN "EGL" EXCLUDE
+        PATTERN "egl.h" EXCLUDE
+        PATTERN "eglext.h" EXCLUDE
+        PATTERN "eglplatform.h" EXCLUDE
         PATTERN "KHR" EXCLUDE
         PATTERN "export.h" EXCLUDE
     )

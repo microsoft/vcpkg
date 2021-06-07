@@ -1,7 +1,8 @@
 # CONTROL files
 
-CONTROL files are retained for backwards compatibility with earlier versions of vcpkg;
-all new features are added only to vcpkg.json, and we recommend using vcpkg.json for any newly authored port.
+**CONTROL files are retained for backwards compatibility with earlier versions of vcpkg;
+all new features are added only to [vcpkg.json manifest files](manifest-files.md), and we recommend using vcpkg.json for any newly authored port.
+Use `./vcpkg format-manifest ports/<portname>/CONTROL` to convert an existing CONTROL file to a vcpkg.json file.**
 
 The `CONTROL` file contains metadata about the port.  The syntax is based on [the Debian `control` format][debian] although we only support the subset of fields documented here.
 
@@ -88,7 +89,7 @@ Description: C++ header-only JSON library
 Description: Mosquitto is an open source message broker that implements the MQ Telemetry Transport protocol versions 3.1 and 3.1.1.
   MQTT provides a lightweight method of carrying out messaging using a publish/subscribe model. This makes it suitable for "machine
   to machine" messaging such as with low power sensors or mobile devices such as phones, embedded computers or microcontrollers like the Arduino.
-````
+```
 
 #### Homepage
 The URL of the homepage for the library where a user is able to find additional documentation or the original source code.
@@ -105,7 +106,7 @@ Vcpkg does not distinguish between build-only dependencies and runtime dependenc
 
 *For example: websocketpp is a header only library, and thus does not require any dependencies at install time. However, downstream users need boost and openssl to make use of the library. Therefore, websocketpp lists boost and openssl as dependencies*
 
-If the port is dependent on optional features of another library those can be specified using the `portname[featurelist]` syntax. If the port does not require any features from the dependency, this should be specifed as `portname[core]`.
+If the port is dependent on optional features of another library those can be specified using the `portname[featurelist]` syntax. If the port does not require any features from the dependency, this should be specified as `portname[core]`.
 
 Dependencies can be filtered based on the target triplet to support differing requirements. These filters use the same syntax as the Supports field below and are surrounded in parentheses following the portname and feature list.
 
@@ -137,6 +138,7 @@ The grammar for the supports expression uses standard operators:
 - `(expr)` - grouping/precedence
 
 The predefined expressions are computed from standard triplet settings:
+- `native` - `TARGET_TRIPLET` == `HOST_TRIPLET`
 - `x64` - `VCPKG_TARGET_ARCHITECTURE` == `"x64"`
 - `x86` - `VCPKG_TARGET_ARCHITECTURE` == `"x86"`
 - `arm` - `VCPKG_TARGET_ARCHITECTURE` == `"arm"` or `VCPKG_TARGET_ARCHITECTURE` == `"arm64"`

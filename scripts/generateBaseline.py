@@ -8,7 +8,25 @@ from pathlib import Path
 
 SCRIPT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 PORTS_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../ports')
-VERSIONS_DB_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../port_versions')
+VERSIONS_DB_DIRECTORY = os.path.join(SCRIPT_DIRECTORY, '../versions')
+
+
+def get_version_tag(version):
+    if 'version' in version:
+        return version['version']
+    elif 'version-date' in version:
+        return version['version-date']
+    elif 'version-semver' in version:
+        return version['version-semver']
+    elif 'version-string' in version:
+        return version['version-string']
+    sys.exit(1)
+
+
+def get_version_port_version(version):
+    if 'port-version' in version:
+        return version['port-version']
+    return 0
 
 
 def generate_baseline():
@@ -35,18 +53,11 @@ def generate_baseline():
             try:
                 versions_object = json.load(db_file)
                 if versions_object['versions']:
-                    last_version = versions_object['versions'][0] 
-                    version_obj = {}
-                    if 'version' in last_version:
-                        version_obj['version'] = last_version['version']
-                    elif 'version-date' in last_version:
-                        version_obj['version-date'] = last_version['version-date']
-                    elif 'version-semver' in last_version:
-                        version_obj['version-semver'] - last_version['version-semver']
-                    else:
-                        version_obj['version-string'] = last_version['version-string']
-                    version_obj['port-version'] = last_version['port-version']
-                    baseline_entries[port_name] = version_obj
+                    last_version = versions_object['versions'][0]
+                    baseline_entries[port_name] = {
+                        'baseline': get_version_tag(last_version),
+                        'port-version': get_version_port_version(last_version)
+                    }
             except json.JSONDecodeError as e:
                 print(f'Error: Decoding {port_file_path}\n{e}\n')
     baseline_object = {}
