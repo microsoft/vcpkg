@@ -1,5 +1,5 @@
+include(vcpkg_execute_in_download_mode)
 include(vcpkg_execute_required_process)
-
 function(vcpkg_load_environment_from_batch)
     cmake_parse_arguments(_lefb "" "BATCH_FILE_PATH" "ARGUMENTS" ${ARGN})
 
