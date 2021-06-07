@@ -19,7 +19,7 @@
         }
       ]
     },
-    "thread": {
+    "threads": {
       "description": "Use a threading backend",
       "dependencies": [
         {
