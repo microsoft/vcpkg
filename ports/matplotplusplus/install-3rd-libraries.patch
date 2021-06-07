@@ -1,13 +1,15 @@
 diff --git a/source/3rd_party/CMakeLists.txt b/source/3rd_party/CMakeLists.txt
-index 52f20eb..ab58bbd 100644
+index bef0c08..e7521a7 100644
 --- a/source/3rd_party/CMakeLists.txt
 +++ b/source/3rd_party/CMakeLists.txt
-@@ -41,6 +41,8 @@ endif()
+@@ -41,7 +41,9 @@ endif()
  if(MASTER_PROJECT AND NOT BUILD_SHARED_LIBS)
    install(TARGETS nodesoup
        EXPORT Matplot++Targets
+-      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/Matplot++)
 +      RUNTIME DESTINATION bin
 +      LIBRARY DESTINATION lib
-       ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/Matplot++)
++      ARCHIVE DESTINATION lib)
  endif()
+ 
  
