@@ -2480,6 +2480,10 @@
       "baseline": "15",
       "port-version": 0
     },
+    "hexl": {
+      "baseline": "1.1.0",
+      "port-version": 0
+    },
     "hffix": {
       "baseline": "1.0.0",
       "port-version": 0
