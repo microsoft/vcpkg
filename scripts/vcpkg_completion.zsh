@@ -1,4 +1,3 @@
-#/usr/bin/env bash
 
 _vcpkg_completions()
 {
