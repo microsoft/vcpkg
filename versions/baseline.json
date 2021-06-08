@@ -250,7 +250,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.8.126",
-      "port-version": 9
+      "port-version": 10
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -4586,7 +4586,7 @@
     },
     "openssl": {
       "baseline": "1.1.1k",
-      "port-version": 3
+      "port-version": 4
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -6126,7 +6126,7 @@
     },
     "tgui": {
       "baseline": "2021-04-19",
-      "port-version": 0
+      "port-version": 1
     },
     "theia": {
       "baseline": "0.8",
@@ -6482,7 +6482,7 @@
     },
     "vcpkg-cmake": {
       "baseline": "2021-02-28",
-      "port-version": 2
+      "port-version": 3
     },
     "vcpkg-cmake-config": {
       "baseline": "2021-05-22",
