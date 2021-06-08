@@ -14,6 +14,7 @@ vcpkg_extract_source_archive_ex(
         "cmake_dont_build_more_than_needed.patch"
         "0001-Prevent-invalid-inclusions-when-HAVE_-is-set-to-0.patch"
         "add_debug_postfix_on_mingw.patch"
+        "0002-android-build-mingw.patch"
 )
 
 # This is generated during the cmake build

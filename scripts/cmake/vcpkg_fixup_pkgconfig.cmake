@@ -1,7 +1,11 @@
 #[===[.md:
 # vcpkg_fixup_pkgconfig
 
-Fix common paths in *.pc files and make everything relativ to $(prefix)
+Fix common paths in *.pc files and make everything relative to $(prefix).
+Additionally, on static triplets, private entries are merged with their non-private counterparts,
+allowing pkg-config to be called without the ``--static`` flag.
+Note that vcpkg is designed to never have to call pkg-config with the ``--static`` flag,
+since a consumer cannot know if a dependent library has been built statically or not.
 
 ## Usage
 ```cmake
@@ -159,17 +163,17 @@ function(vcpkg_fixup_pkgconfig)
             # --static.
             if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
                 # Libs comes before Libs.private
-                string(REGEX REPLACE "(^|\n)(Libs: [^\n]*)(.*)\nLibs.private:( [^\n]*)" "\\1\\2\\4\\3" _contents "${_contents}")
+                string(REGEX REPLACE "(^|\n)(Libs: *[^\n]*)(.*)\nLibs.private:( *[^\n]*)" "\\1\\2\\4\\3" _contents "${_contents}")
                 # Libs.private comes before Libs
-                string(REGEX REPLACE "(^|\n)Libs.private:( [^\n]*)(.*\nLibs: [^\n]*)" "\\3\\2" _contents "${_contents}")
+                string(REGEX REPLACE "(^|\n)Libs.private:( *[^\n]*)(.*\nLibs: *[^\n]*)" "\\3\\2" _contents "${_contents}")
                 # Only Libs.private
-                string(REGEX REPLACE "(^|\n)Libs.private: " "\\1Libs: " _contents "${_contents}")
+                string(REGEX REPLACE "(^|\n)Libs.private: *" "\\1Libs: " _contents "${_contents}")
                 # Requires comes before Requires.private
-                string(REGEX REPLACE "(^|\n)(Requires: [^\n]*)(.*)\nRequires.private:( [^\n]*)" "\\1\\2\\4\\3" _contents "${_contents}")
+                string(REGEX REPLACE "(^|\n)(Requires: *[^\n]*)(.*)\nRequires.private:( *[^\n]*)" "\\1\\2\\4\\3" _contents "${_contents}")
                 # Requires.private comes before Requires
-                string(REGEX REPLACE "(^|\n)Requires.private:( [^\n]*)(.*\nRequires: [^\n]*)" "\\3\\2" _contents "${_contents}")
+                string(REGEX REPLACE "(^|\n)Requires.private:( *[^\n]*)(.*\nRequires: *[^\n]*)" "\\3\\2" _contents "${_contents}")
                 # Only Requires.private
-                string(REGEX REPLACE "(^|\n)Requires.private: " "\\1Requires: " _contents "${_contents}")
+                string(REGEX REPLACE "(^|\n)Requires.private: *" "\\1Requires: " _contents "${_contents}")
             endif()
             file(WRITE "${_file}" "prefix=\${pcfiledir}/${RELATIVE_PC_PATH}\n${_contents}")
             unset(PKG_LIB_SEARCH_PATH)
