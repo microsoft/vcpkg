@@ -6482,7 +6482,7 @@
     },
     "vcpkg-cmake": {
       "baseline": "2021-02-28",
-      "port-version": 2
+      "port-version": 3
     },
     "vcpkg-cmake-config": {
       "baseline": "2021-05-22",

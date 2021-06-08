@@ -512,6 +512,17 @@ function(vcpkg_configure_make)
         list(APPEND _csc_OPTIONS --disable-shared --enable-static)
     endif()
 
+    # Can be set in the triplet to append options for configure
+    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS)
+        list(APPEND _csc_OPTIONS ${VCPKG_MAKE_CONFIGURE_OPTIONS})
+    endif()
+    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE)
+        list(APPEND _csc_OPTIONS_RELEASE ${VCPKG_MAKE_CONFIGURE_OPTIONS_RELEASE})
+    endif()
+    if(DEFINED VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG)
+        list(APPEND _csc_OPTIONS_DEBUG ${VCPKG_MAKE_CONFIGURE_OPTIONS_DEBUG})
+    endif()
+
     file(RELATIVE_PATH RELATIVE_BUILD_PATH "${CURRENT_BUILDTREES_DIR}" "${_csc_SOURCE_PATH}/${_csc_PROJECT_SUBPATH}")
 
     set(base_cmd)
