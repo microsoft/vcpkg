@@ -1,0 +1,13 @@
+diff --git a/wx-config.in b/wx-config.in
+index 441f88c..4657796 100644
+--- a/wx-config.in
++++ b/wx-config.in
+@@ -402,7 +402,7 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
+ 
+ 
+ # Determine the base directories we require.
+-prefix=${input_option_prefix-${this_prefix:-@prefix@}}
++prefix=${input_option_prefix-${this_prefix:-../..}}
+ exec_prefix=${input_option_exec_prefix-${input_option_prefix-${this_exec_prefix:-@exec_prefix@}}}
+ wxconfdir="@libdir@/wx/config"
+ 
