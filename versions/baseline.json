@@ -1285,7 +1285,7 @@
       "port-version": 0
     },
     "clickhouse-cpp": {
-      "baseline": "2019-05-22",
+      "baseline": "1.2.2",
       "port-version": 0
     },
     "clipp": {
