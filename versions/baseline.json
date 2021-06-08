@@ -96,6 +96,10 @@
       "baseline": "3.1.0",
       "port-version": 0
     },
+    "approval-tests-cpp": {
+      "baseline": "10.9.1",
+      "port-version": 0
+    },
     "apr": {
       "baseline": "1.7.0",
       "port-version": 3
