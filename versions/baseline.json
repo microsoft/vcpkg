@@ -250,7 +250,7 @@
     },
     "aws-sdk-cpp": {
       "baseline": "1.8.126",
-      "port-version": 9
+      "port-version": 10
     },
     "azmq": {
       "baseline": "2020-03-03",
@@ -261,11 +261,11 @@
       "port-version": 1
     },
     "azure-core-cpp": {
-      "baseline": "1.0.0-beta.9",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "azure-identity-cpp": {
-      "baseline": "1.0.0-beta.6",
+      "baseline": "1.0.0",
       "port-version": 0
     },
     "azure-iot-sdk-c": {
@@ -2341,7 +2341,7 @@
       "port-version": 6
     },
     "google-cloud-cpp": {
-      "baseline": "1.27.0",
+      "baseline": "1.28.0",
       "port-version": 0
     },
     "google-cloud-cpp-common": {
@@ -4586,7 +4586,7 @@
     },
     "openssl": {
       "baseline": "1.1.1k",
-      "port-version": 3
+      "port-version": 4
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
@@ -6126,7 +6126,7 @@
     },
     "tgui": {
       "baseline": "2021-04-19",
-      "port-version": 0
+      "port-version": 1
     },
     "theia": {
       "baseline": "0.8",
