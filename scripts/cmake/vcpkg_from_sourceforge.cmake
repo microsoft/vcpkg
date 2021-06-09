@@ -3,9 +3,9 @@
 
 Download and extract a project from sourceforge.
 
-This function automatically checks a set of sourceforge mirrors;
-additionally, mirrors can be injected through the `VCPKG_SOURCEFORGE_EXTRA_MIRRORS`
-variable, which should be a semicolon-separated list.
+This function automatically checks a set of sourceforge mirrors.
+Additional mirrors can be injected through the `VCPKG_SOURCEFORGE_EXTRA_MIRRORS`
+list variable in the triplet.
 
 ## Usage:
 ```cmake
@@ -57,9 +57,6 @@ A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
 
-### DISABLE_SSL
-Disable ssl when downloading source.
-
 ### NO_REMOVE_ONE_LEVEL
 Specifies that the default removal of the top level folder should not occur.
 
@@ -88,12 +85,10 @@ function(vcpkg_from_sourceforge)
 
 
     if(arg_DISABLE_SSL)
-        set(url_protocol "http:")
-    else()
-        set(url_protocol "https:")
+        message(WARNING "DISABLE_SSL has been deprecated and has no effect")
     endif()
     
-    set(sourceforge_host "${url_protocol}//sourceforge.net/projects")
+    set(sourceforge_host "https://sourceforge.net/projects")
 
     if(arg_REPO MATCHES "^([^/]*)$") # just one element
         set(org_name "${CMAKE_MATCH_1}")

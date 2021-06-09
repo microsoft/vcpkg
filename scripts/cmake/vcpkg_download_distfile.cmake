@@ -39,8 +39,9 @@ Skip SHA512 hash check for file.
 This switch is only valid when building with the `--head` command line flag.
 
 ### ALWAYS_REDOWNLOAD
-This should be used when in `--head` mode, in order to tell this command to redownload when possible;
-in other words, avoid caching. This has no effect in `--no-downloads` mode.
+Avoid caching; this is a REST call or otherwise unstable.
+
+Requires `SKIP_SHA512`.
 
 ### HEADERS
 A list of headers to append to the download request. This can be used for authentication during a download.
@@ -74,6 +75,9 @@ function(vcpkg_download_distfile VAR)
     endif()
     if(vcpkg_download_distfile_SILENT_EXIT)
         message(WARNING "SILENT_EXIT has been deprecated as an argument to vcpkg_download_distfile -- remove the argument to resolve this warning")
+    endif()
+    if(vcpkg_download_distfile_ALWAYS_REDOWNLOAD AND NOT vcpkg_download_distfile_SKIP_SHA512)
+        message(FATAL_ERROR "ALWAYS_REDOWNLOAD option requires SKIP_SHA512 as well")
     endif()
     if(_VCPKG_INTERNAL_NO_HASH_CHECK)
         set(vcpkg_download_distfile_SKIP_SHA512 1)
