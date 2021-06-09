@@ -1,13 +1,3 @@
-From ceae675dccd593f119f3010d46e133de74fc01bc Mon Sep 17 00:00:00 2001
-From: Liam Keegan <liam@keegan.ch>
-Date: Mon, 31 May 2021 21:31:02 +0200
-Subject: [PATCH] use list initialization for int parameter since type depends
- on boost version
-
----
- symengine/mp_boost.cpp | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/symengine/mp_boost.cpp b/symengine/mp_boost.cpp
 index db20930c4..f3997707e 100644
 --- a/symengine/mp_boost.cpp
