@@ -2493,8 +2493,8 @@
       "port-version": 2
     },
     "highfive": {
-      "baseline": "2.2.2",
-      "port-version": 1
+      "baseline": "2.3",
+      "port-version": 0
     },
     "hiredis": {
       "baseline": "1.0.0",
