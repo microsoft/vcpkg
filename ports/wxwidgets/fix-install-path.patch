@@ -1,0 +1,13 @@
+diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
+index 902b7c5..e99555e 100644
+--- a/build/cmake/functions.cmake
++++ b/build/cmake/functions.cmake
+@@ -374,7 +374,7 @@ macro(wx_add_library name)
+         wx_install(TARGETS ${name}
+             LIBRARY DESTINATION "lib${wxPLATFORM_LIB_DIR}"
+             ARCHIVE DESTINATION "lib${wxPLATFORM_LIB_DIR}"
+-            RUNTIME DESTINATION "lib${wxPLATFORM_LIB_DIR}"
++            RUNTIME DESTINATION "bin${wxPLATFORM_LIB_DIR}"
+             BUNDLE DESTINATION Applications/wxWidgets
+             )
+     endif()

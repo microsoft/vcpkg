@@ -1,0 +1,112 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4063020..1e3ede8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -78,3 +78,30 @@ include(build/cmake/main.cmake)
+ if(wxBUILD_SAMPLES AND wxUSE_GUI)
+     set_directory_properties(PROPERTIES VS_STARTUP_PROJECT minimal)
+ endif()
++
++file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-wxwidgets-config.cmake.in"
++[[include(CMakeFindDependencyMacro)
++if (@wxUSE_ZLIB@ STREQUAL "sys")
++    find_dependency(ZLIB)
++endif()
++if (@wxUSE_EXPAT@ STREQUAL "sys")
++    find_dependency(EXPAT)
++endif()
++if (@wxUSE_LIBJPEG@ STREQUAL "sys")
++    find_dependency(JPEG)
++endif()
++if (@wxUSE_LIBPNG@ STREQUAL "sys")
++    find_dependency(PNG)
++endif()
++if (@wxUSE_LIBTIFF@ STREQUAL "sys")
++    find_dependency(TIFF)
++endif()
++
++list(APPEND TARGET_FILES wxbase wxcore wxgl wxxml wxhtml wxxrc wxstc wxwebview wxnet wxpropgrid wxqa wxribbon wxrichtext wxmedia wxadv wxaui)
++foreach (TARGET_FILE ${TARGET_FILES})
++    include("${CMAKE_CURRENT_LIST_DIR}/unofficial-${TARGET_FILE}Targets.cmake")
++endforeach()
++
++]])
++configure_file(${CMAKE_CURRENT_BINARY_DIR}/unofficial-wxwidgets-config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/unofficial-wxwidgets-config.cmake @ONLY)
++install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-wxwidgets-config.cmake DESTINATION share/unofficial-wxwidgets)
+\ No newline at end of file
+diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
+index e99555e..2925fec 100644
+--- a/build/cmake/functions.cmake
++++ b/build/cmake/functions.cmake
+@@ -257,13 +257,13 @@ function(wx_set_target_properties target_name is_base)
+     target_include_directories(${target_name}
+         BEFORE
+         PUBLIC
+-            ${wxSETUP_HEADER_PATH}
+-            ${wxSOURCE_DIR}/include
++            $<BUILD_INTERFACE:${wxSETUP_HEADER_PATH};${wxSOURCE_DIR}/include>
++            $<INSTALL_INTERFACE:include>
+         )
+ 
+     if(wxTOOLKIT_INCLUDE_DIRS)
+         target_include_directories(${target_name}
+-            PUBLIC ${wxTOOLKIT_INCLUDE_DIRS})
++            PUBLIC $<BUILD_INTERFACE:${wxTOOLKIT_INCLUDE_DIRS}>)
+     endif()
+ 
+     if (WIN32)
+@@ -371,12 +371,14 @@ macro(wx_add_library name)
+         set_target_properties(${name} PROPERTIES PROJECT_LABEL ${name_short})
+ 
+         # Setup install
+-        wx_install(TARGETS ${name}
++        wx_install(TARGETS ${name} EXPORT unofficial-${name}Targets
+             LIBRARY DESTINATION "lib${wxPLATFORM_LIB_DIR}"
+             ARCHIVE DESTINATION "lib${wxPLATFORM_LIB_DIR}"
+             RUNTIME DESTINATION "bin${wxPLATFORM_LIB_DIR}"
+             BUNDLE DESTINATION Applications/wxWidgets
+             )
++            
++        install(EXPORT unofficial-${name}Targets NAMESPACE wx:: DESTINATION share/unofficial-wxwidgets)
+     endif()
+ endmacro()
+ 
+@@ -453,7 +455,13 @@ macro(wx_lib_include_directories name)
+         if (_LIB_INCLUDE_DIRS_PRIVATE)
+             set(INCLUDE_POS BEFORE)
+         endif()
+-        target_include_directories(${name};${INCLUDE_POS};${ARGN})
++        if (_LIB_INCLUDE_DIRS_PUBLIC)
++        target_include_directories(${name};${INCLUDE_POS};PUBLIC;$<BUILD_INTERFACE:${_LIB_INCLUDE_DIRS_PUBLIC}>)
++        endif()
++        if (_LIB_INCLUDE_DIRS_PRIVATE)
++        target_include_directories(${name};${INCLUDE_POS};PRIVATE;${_LIB_INCLUDE_DIRS_PRIVATE})
++        endif()
++        target_include_directories(${name};PUBLIC;$<INSTALL_INTERFACE:include>)
+     endif()
+ endmacro()
+ 
+@@ -514,7 +522,8 @@ function(wx_set_builtin_target_properties target_name)
+     target_include_directories(${target_name}
+         BEFORE
+         PUBLIC
+-            ${wxSETUP_HEADER_PATH}
++            $<BUILD_INTERFACE:${wxSETUP_HEADER_PATH}>
++            $<INSTALL_INTERFACE:include>
+         )
+ 
+     set_target_properties(${target_name} PROPERTIES FOLDER "Third Party Libraries")
+@@ -789,10 +798,10 @@ function(wx_add name group)
+     endif()
+ 
+     if(group STREQUAL Samples)
+-        target_include_directories(${target_name} PRIVATE ${wxSOURCE_DIR}/samples)
++        target_include_directories(${target_name} PRIVATE $<BUILD_INTERFACE:${wxSOURCE_DIR}/samples>)
+     elseif(group STREQUAL Tests)
+-        target_include_directories(${target_name} PRIVATE ${wxSOURCE_DIR}/tests)
+-        target_include_directories(${target_name} PRIVATE ${wxSOURCE_DIR}/3rdparty/catch/include)
++        target_include_directories(${target_name} PRIVATE $<BUILD_INTERFACE:${wxSOURCE_DIR}/tests>)
++        target_include_directories(${target_name} PRIVATE $<BUILD_INTERFACE:${wxSOURCE_DIR}/3rdparty/catch/include>)
+     endif()
+ 
+     if(APP_DATA)

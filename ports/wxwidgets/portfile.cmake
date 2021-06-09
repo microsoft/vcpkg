@@ -10,6 +10,8 @@ vcpkg_from_github(
         disable-platform-lib-dir.patch
         fix-build.patch
         fix-wx-config-path.patch
+        fix-install-path.patch
+        export-targets.patch
 )
 
 set(OPTIONS)
@@ -41,22 +43,9 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")
-if(DLLS)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/bin)
-    foreach(DLL ${DLLS})
-        get_filename_component(N "${DLL}" NAME)
-        file(RENAME ${DLL} ${CURRENT_PACKAGES_DIR}/bin/${N})
-    endforeach()
-endif()
-file(GLOB DLLS "${CURRENT_PACKAGES_DIR}/debug/lib/*.dll")
-if(DLLS)
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/debug/bin)
-    foreach(DLL ${DLLS})
-        get_filename_component(N "${DLL}" NAME)
-        file(RENAME ${DLL} ${CURRENT_PACKAGES_DIR}/debug/bin/${N})
-    endforeach()
-endif()
+vcpkg_copy_pdbs()
+
+vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-wxwidgets TARGET_PATH share/unofficial-wxwidgets)
 
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
@@ -64,17 +53,14 @@ else()
     vcpkg_copy_tools(TOOL_NAMES wxrc wx-config wxrc-3.1 AUTO_CLEAN)
 endif()
 
-# do the copy pdbs now after the dlls got moved to the expected /bin folder above
-vcpkg_copy_pdbs()
-
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/msvc)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(GLOB_RECURSE INCLUDES ${CURRENT_PACKAGES_DIR}/include/*.h)
-if(EXISTS ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
-    list(APPEND INCLUDES ${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/msvc")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(GLOB_RECURSE INCLUDES "${CURRENT_PACKAGES_DIR}/include/*.h")
+if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h")
+    list(APPEND INCLUDES "${CURRENT_PACKAGES_DIR}/lib/mswu/wx/setup.h")
 endif()
-if(EXISTS ${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h)
-    list(APPEND INCLUDES ${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h)
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h")
+    list(APPEND INCLUDES "${CURRENT_PACKAGES_DIR}/debug/lib/mswud/wx/setup.h")
 endif()
 foreach(INC IN LISTS INCLUDES)
     file(READ "${INC}" _contents)
@@ -88,9 +74,9 @@ foreach(INC IN LISTS INCLUDES)
     file(WRITE "${INC}" "${_contents}")
 endforeach()
 
-if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
-    file(GLOB_RECURSE WX_SETUP_H_FILES_DBG ${CURRENT_PACKAGES_DIR}/debug/lib/*.h)
-    file(GLOB_RECURSE WX_SETUP_H_FILES_REL ${CURRENT_PACKAGES_DIR}/lib/*.h)
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/wx/setup.h")
+    file(GLOB_RECURSE WX_SETUP_H_FILES_DBG "${CURRENT_PACKAGES_DIR}/debug/lib/*.h")
+    file(GLOB_RECURSE WX_SETUP_H_FILES_REL "${CURRENT_PACKAGES_DIR}/lib/*.h")
     
     string(REPLACE "${CURRENT_PACKAGES_DIR}/debug/lib/" "" WX_SETUP_H_FILES_DBG "${WX_SETUP_H_FILES_DBG}")
     string(REPLACE "/setup.h" "" WX_SETUP_H_DBG_RELATIVE "${WX_SETUP_H_FILES_DBG}")
@@ -98,8 +84,9 @@ if(NOT EXISTS ${CURRENT_PACKAGES_DIR}/include/wx/setup.h)
     string(REPLACE "${CURRENT_PACKAGES_DIR}/lib/" "" WX_SETUP_H_FILES_REL "${WX_SETUP_H_FILES_REL}")
     string(REPLACE "/setup.h" "" WX_SETUP_H_REL_RELATIVE "${WX_SETUP_H_FILES_REL}")
     
-    configure_file(${CMAKE_CURRENT_LIST_DIR}/setup.h.in ${CURRENT_PACKAGES_DIR}/include/wx/setup.h @ONLY)
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/setup.h.in" "${CURRENT_PACKAGES_DIR}/include/wx/setup.h" @ONLY)
 endif()
-configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in ${CURRENT_PACKAGES_DIR}/share/wxwidgets/vcpkg-cmake-wrapper.cmake @ONLY)
-configure_file(${CMAKE_CURRENT_LIST_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/wxwidgets/usage COPYONLY)
-file(INSTALL ${SOURCE_PATH}/docs/licence.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in"
+   " ${CURRENT_PACKAGES_DIR}/share/unofficial-wxwidgets/vcpkg-cmake-wrapper.cmake" @ONLY)
+file(INSTALL "${SOURCE_PATH}/docs/licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
