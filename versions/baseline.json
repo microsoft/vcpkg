@@ -4058,11 +4058,11 @@
     },
     "mongo-c-driver": {
       "baseline": "1.16.1",
-      "port-version": 3
+      "port-version": 4
     },
     "mongo-cxx-driver": {
       "baseline": "3.4.0-5",
-      "port-version": 1
+      "port-version": 2
     },
     "mongoose": {
       "baseline": "7.1",
