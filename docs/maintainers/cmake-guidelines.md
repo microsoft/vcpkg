@@ -15,7 +15,7 @@ We hope that they will make both forwards and backwards compatibility easier.
 
 ## The Guidelines
 
-- We always use `cmake_parse_arguments` rather than function parameters,
+- We always use `cmake_parse_arguments()` rather than function parameters,
   or referring to `${ARG<N>}`.
   - This doesn't need to be followed for "script-local helper functions"
   - Exception: exclusively positional parameters, like out variables.
@@ -34,10 +34,10 @@ We hope that they will make both forwards and backwards compatibility easier.
   - (i.e., `message(FATAL_ERROR "blah was passed extra arguments: ${ARGN}")`)
 - We always use functions, not macros or top level code.
   - Exception: `vcpkg.cmake`'s `find_package`.
-- Scripts in the scripts tree should not be expected to need changes
+- Scripts in the scripts tree should not be expected to need observable changes
   as part of normal operation.
-  - Example: `vcpkg_acquire_msys` has hard-coded packages and versions.
-    We believe that this is unacceptable.
+  - Example violation: `vcpkg_acquire_msys()` has hard-coded packages and versions that need updating over time due to the MSYS project dropping old packages.
+  - Example exception: `vcpkg_from_sourceforge()` has a list of mirrors which needs maintenance but does not have an observable behavior impact on the callers.
 - All variable expansions are in quotes `""`,
   except those which are intended to be passed as multiple arguments.
   - Example:
@@ -53,7 +53,8 @@ We hope that they will make both forwards and backwards compatibility easier.
 - There are no "pointer" parameters
   (where a user passes a variable name rather than the contents)
   except for out parameters.
-- Undefined names are not referenced.
+- Variables are not assumed to be empty. If the variable is intended to be used locally, it must be explicitly initialized to empty with `set(FOO "")`.
+- All variables expected to be inherited from the parent scope across an API boundary (i.e. not a file-local function) should be documented. Note that all variables mentioned in triplets.md are considered documented.
 - Out parameters are only set in `PARENT_SCOPE`.
 - `CACHE` variables are not used.
   - Exception: internal global variables to avoid duplicating work.
@@ -64,7 +65,7 @@ We hope that they will make both forwards and backwards compatibility easier.
 - All port-based scripts must use `include_guard(GLOBAL)`
   to avoid being included multiple times.
 - `set(VAR )` should not be used. Use `unset(VAR)` to unset a variable,
-  and `set(VAR "")` to set it to an empty string.
+  and `set(VAR "")` to set it to the empty value. _Note: this works for use as a list and as a string_
 
 ### CMake Versions to Require
 
@@ -89,10 +90,11 @@ We hope that they will make both forwards and backwards compatibility easier.
 ### Naming Variables
 
 - `cmake_parse_arguments`: set prefix to `"arg"`
-- local variables are named `snake_case`
-- Internal global variable names are named `Z_VCPKG_`.
-- External experimental global variable names are named `X_VCPKG_`.
-- Internal functions are named `z_vcpkg_*`
+- Local variables are named with `snake_case`
+- Internal global variable names are prefixed with `Z_VCPKG_`.
+- External experimental global variable names are prefixed with `X_VCPKG_`.
+
+- Internal functions are prefixed with `z_vcpkg_`
   - Functions which are internal to a single function (i.e., helper functions)
     are named `[z_]<func>_<name>`, where `<func>` is the name of the function they are
     a helper to, and `<name>` is what the helper function does.
