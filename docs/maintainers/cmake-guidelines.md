@@ -63,6 +63,7 @@ We hope that they will make both forwards and backwards compatibility easier.
   - This must be checked if necessary.
 - All port-based scripts must use `include_guard(GLOBAL)`
   to avoid being included multiple times.
+- `set(VAR )` should not be used. Use `set(VAR)` to unset a variable.
 
 ### CMake Versions to Require
 
