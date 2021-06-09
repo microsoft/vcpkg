@@ -5686,7 +5686,7 @@
     },
     "selene": {
       "baseline": "0.3.1",
-      "port-version": 3
+      "port-version": 4
     },
     "sentencepiece": {
       "baseline": "v0.1.82",
@@ -6161,8 +6161,8 @@
       "port-version": 0
     },
     "tiff": {
-      "baseline": "4.1.0",
-      "port-version": 2
+      "baseline": "4.3.0",
+      "port-version": 0
     },
     "tinkerforge": {
       "baseline": "2.1.25",
