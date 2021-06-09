@@ -60,6 +60,27 @@
         <url></url>
         <sha512></sha512>
     </tool>
+    <tool name="gsutil" os="windows">
+        <version>4.59</version>
+        <exeRelativePath>google-cloud-sdk\bin\gsutil.cmd</exeRelativePath>
+        <url>https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-343.0.0-windows-x86_64-bundled-python.zip</url>
+        <sha512>349db6743e70c1940b3d0c8ffdf629608437b6fa4e5896143c610e9ce97b28b8a32cf35ee3c669eeec2158788d7ff2fe618ea6bc411f9ca8de6311eee0d36569</sha512>
+        <archiveName>google-cloud-sdk-343.0.0-windows-x86_64-bundled-python.zip</archiveName>
+    </tool>
+    <tool name="gsutil" os="osx">
+        <version>4.59</version>
+        <exeRelativePath>gsutil/gsutil</exeRelativePath>
+        <url>https://storage.googleapis.com/pub/gsutil_4.59.tar.gz</url>
+        <sha512>c86b957a2630f3a80869e3105c0baa7bf1297b84698e756fed28b28adf36345cf1dd28d4216ec395de6bfee5b118dd70040ff964a2938f22d8af15a5c3485c48</sha512>
+        <archiveName>gsutil_4.59.tar.gz</archiveName>
+    </tool>
+    <tool name="gsutil" os="linux">
+        <version>4.59</version>
+        <exeRelativePath>gsutil/gsutil</exeRelativePath>
+        <url>https://storage.googleapis.com/pub/gsutil_4.59.tar.gz</url>
+        <sha512>c86b957a2630f3a80869e3105c0baa7bf1297b84698e756fed28b28adf36345cf1dd28d4216ec395de6bfee5b118dd70040ff964a2938f22d8af15a5c3485c48</sha512>
+        <archiveName>gsutil_4.59.tar.gz</archiveName>
+    </tool>
     <tool name="vswhere" os="windows">
         <version>2.4.1</version>
         <exeRelativePath>vswhere.exe</exeRelativePath>
