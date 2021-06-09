@@ -6,6 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         disable-examples-tests.patch
+        fix-mac-build.patch # fixed in next release
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" USE_BOOST_DYNAMIC_LIBRARIES)
@@ -14,20 +15,12 @@ set(QL_MSVC_RUNTIME ${VCPKG_LIBRARY_LINKAGE})
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-# TODO: Fix it in the upstream
-vcpkg_replace_string(
-    "${SOURCE_PATH}/ql/userconfig.hpp"
-    "//#    define QL_USE_STD_UNIQUE_PTR"
-    "#    define QL_USE_STD_UNIQUE_PTR"
-)
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
         -DUSE_BOOST_DYNAMIC_LIBRARIES=${USE_BOOST_DYNAMIC_LIBRARIES}
         -DMSVC_RUNTIME=${QL_MSVC_RUNTIME}
-        -DCMAKE_CXX_STANDARD=11
 )
 
 vcpkg_install_cmake()
