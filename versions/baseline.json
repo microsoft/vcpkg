@@ -281,7 +281,7 @@
       "port-version": 2
     },
     "azure-security-keyvault-common-cpp": {
-      "baseline": "4.0.0-beta.2",
+      "baseline": "4.0.0-beta.3",
       "port-version": 0
     },
     "azure-security-keyvault-keys-cpp": {
