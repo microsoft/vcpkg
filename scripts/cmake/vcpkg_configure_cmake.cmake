@@ -1,7 +1,6 @@
+# DEPRECATED BY ports/vcpkg-cmake/vcpkg_cmake_configure
 #[===[.md:
 # vcpkg_configure_cmake
-
-**This function has been deprecated in favor of `vcpkg_cmake_configure` from the vcpkg-cmake port.**
 
 Configure CMake for Debug and Release builds of a project.
 

@@ -1,7 +1,7 @@
 {
   "name": "wxwidgets",
-  "version-semver": "3.1.4",
-  "port-version": 6,
+  "version-semver": "3.1.5",
+  "port-version": 2,
   "description": "a widget toolkit and tools library for creating graphical user interfaces (GUIs) for cross-platform applications.",
   "homepage": "https://github.com/wxWidgets/wxWidgets",
   "supports": "!uwp",

@@ -1,0 +1,7 @@
+{
+  "name": "libvpx",
+  "version-semver": "1.9.0",
+  "port-version": 9,
+  "description": "The reference software implementation for the video coding formats VP8 and VP9.",
+  "homepage": "https://github.com/webmproject/libvpx"
+}

@@ -30,7 +30,7 @@ that build type.
 
 Use the `OPTIONS` argument to set the configure settings for both release and debug,
 and use `OPTIONS_RELEASE` and `OPTIONS_DEBUG` to set the configure settings for
-release only and debug only repsectively.
+release only and debug only respectively.
 
 By default, when possible, `vcpkg_cmake_configure` uses [ninja-build]
 as its build system. If the `WINDOWS_USE_MSBUILD` argument is passed, then
@@ -292,6 +292,17 @@ function(vcpkg_cmake_configure)
             list(APPEND arg_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
         endif()
     endforeach()
+
+    # Allow overrides / additional configuration variables from triplets
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS)
+        list(APPEND arg_OPTIONS "${VCPKG_CMAKE_CONFIGURE_OPTIONS}")
+    endif()
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE)
+        list(APPEND arg_OPTIONS_RELEASE "${VCPKG_CMAKE_CONFIGURE_OPTIONS_RELEASE}")
+    endif()
+    if(DEFINED VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG)
+        list(APPEND arg_OPTIONS_DEBUG "${VCPKG_CMAKE_CONFIGURE_OPTIONS_DEBUG}")
+    endif()
 
     if(ninja_host AND CMAKE_HOST_WIN32 AND NOT arg_DISABLE_PARALLEL_CONFIGURE)
         list(APPEND arg_OPTIONS "-DCMAKE_DISABLE_SOURCE_CHANGES=ON")

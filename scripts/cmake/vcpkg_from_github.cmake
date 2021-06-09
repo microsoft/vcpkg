@@ -69,7 +69,7 @@ This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 
 * [cpprestsdk](https://github.com/Microsoft/vcpkg/blob/master/ports/cpprestsdk/portfile.cmake)
 * [ms-gsl](https://github.com/Microsoft/vcpkg/blob/master/ports/ms-gsl/portfile.cmake)
-* [beast](https://github.com/Microsoft/vcpkg/blob/master/ports/beast/portfile.cmake)
+* [boost-beast](https://github.com/Microsoft/vcpkg/blob/master/ports/boost-beast/portfile.cmake)
 #]===]
 
 function(vcpkg_from_github)

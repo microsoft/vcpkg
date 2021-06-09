@@ -9,7 +9,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Installing and Using Packages Example: sqlite](examples/installing-and-using-packages.md)
 - [Packaging Zipfiles Example: zlib](examples/packaging-zipfiles.md)
 - [Packaging GitHub Repositories Example: libogg](examples/packaging-github-repos.md)
-- [Patching Example: Patching libpng to work for x86-uwp](examples/patching.md)
+- [Patching Example: Patching libpng to work for x64-uwp](examples/patching.md)
 - [Getting Started with Versioning](examples/versioning.getting-started.md)
 
 ### User Help
@@ -17,18 +17,22 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Integration with build systems](users/integration.md)
 - [Triplet files](users/triplets.md)
 - [Configuration and Environment](users/config-environment.md)
-- [Manifests](users/manifests.md)
+- [Manifest Mode](users/manifests.md)
 - [Binary Caching](users/binarycaching.md)
 - [Versioning](users/versioning.md)
 - [Usage with Android](users/android.md)
+- [Usage with Mingw-w64](users/mingw.md)
 - [Host Dependencies](users/host-dependencies.md)
+- [Using Registries](users/registries.md)
 
 ### Maintainer Help
 
 - [Manifest files - vcpkg.json](maintainers/manifest-files.md)
 - [Control files](maintainers/control-files.md)
 - [Portfile functions](maintainers/portfile-functions.md)
+- [Common CMake definitions](maintainers/vcpkg_common_definitions.md)
 - [Maintainer Guidelines](maintainers/maintainer-guide.md)
+- [Creating Registries](maintainers/registries.md)
 
 ### [Vcpkg-Tool](https://github.com/microsoft/vcpkg-tool) Maintainer Help
 
@@ -40,6 +44,7 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 
 - [vcpkg.info](https://vcpkg.info/) - Package index + search
 - [vcpkgx](https://vcpkgx.com/) - Package index + search
+- [vcpkg index](https://vcpkg.dev/) - Package index + search
 
 ### Specifications
 
@@ -47,6 +52,11 @@ Vcpkg helps you manage C and C++ libraries on Windows, Linux and MacOS. This too
 - [Feature Packages](specifications/feature-packages.md)
 
 ### Blog posts
+
+- [Vcpkg Host Dependencies for Cross-Compilation](https://devblogs.microsoft.com/cppblog/vcpkg-host-dependencies/)
+- [Registries: Bring your own libraries to vcpkg](https://devblogs.microsoft.com/cppblog/registries-bring-your-own-libraries-to-vcpkg/)
+- [Vcpkg: Accelerate your team development environment with binary caching and manifests](https://devblogs.microsoft.com/cppblog/vcpkg-accelerate-your-team-development-environment-with-binary-caching-and-manifests/)
+- [Vcpkg: 2019.06 Update (overlay ports, overlay triplets, `vcpkg_check_features`)](https://devblogs.microsoft.com/cppblog/vcpkg-2019-06-update/)
 - [Announcing a single C++ library manager for Linux, macOS and Windows: Vcpkg](https://blogs.msdn.microsoft.com/vcblog/2018/04/24/announcing-a-single-c-library-manager-for-linux-macos-and-windows-vcpkg/)
 - [Vcpkg: Using multiple enlistments to handle multiple versions of a library](https://blogs.msdn.microsoft.com/vcblog/2017/10/23/vcpkg-using-multiple-enlistments/)
 - [Vcpkg: introducing the export command](https://blogs.msdn.microsoft.com/vcblog/2017/05/03/vcpkg-introducing-export-command/)
