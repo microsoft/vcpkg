@@ -1,0 +1,9 @@
+{
+  "name": "libyuv",
+  "version-date": "2021-04-15",
+  "description": "libyuv is an open source project that includes YUV scaling and conversion functionality",
+  "homepage": "https://chromium.googlesource.com/libyuv/libyuv",
+  "dependencies": [
+    "libjpeg-turbo"
+  ]
+}

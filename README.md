@@ -86,6 +86,18 @@ To install the libraries for your project, run:
 > .\vcpkg\vcpkg install [packages to install]
 ```
 
+Note: This will install x86 libraries by default. To install x64, run:
+
+```cmd
+> .\vcpkg\vcpkg install [package name]:x64-windows
+```
+
+Or
+
+```cmd
+> .\vcpkg\vcpkg install [packages to install] --triplet=x64-windows
+```
+
 You can also search for the libraries you need with the `search` subcommand:
 
 ```cmd
@@ -312,7 +324,7 @@ including [installing and using a package](docs/examples/installing-and-using-pa
 [adding a new package from a zipfile](docs/examples/packaging-zipfiles.md),
 and [adding a new package from a GitHub repo](docs/examples/packaging-github-repos.md).
 
-Our docs are now also available online at ReadTheDocs: <https://vcpkg.readthedocs.io/>!
+Our docs are now also available online at our website https://vcpkg.io/. We really appreciate any and all feedback! You can submit an issue in https://github.com/vcpkg/vcpkg.github.io/issues.
 
 See a 4 minute [video demo](https://www.youtube.com/watch?v=y41WFKbQFTw).
 

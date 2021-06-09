@@ -1,6 +1,7 @@
 Source: directxtk12
-Version: jan2021b
-Homepage: https://walbourn.github.io/directx-tool-kit-for-directx-12
+Version: apr2021
+Homepage: https://github.com/microsoft/DirectXTK12
 Description: A collection of helper classes for writing DirectX 12 code in C++.
+Build-Depends: directxmath
 Supports: windows
 
