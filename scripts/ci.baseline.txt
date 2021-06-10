@@ -106,10 +106,16 @@ charls:x64-windows=skip
 charls:x64-windows-static=skip
 charls:x64-windows-static-md=skip
 charls:x86-windows=skip
+# chartdir does not offer stable download URLs
 chartdir:arm64-windows=fail
 chartdir:arm-uwp=fail
 chartdir:x64-uwp=fail
 chartdir:x64-windows-static=fail
+chartdir:x86-windows=fail
+chartdir:x64-windows=fail
+chartdir:x64-windows-static-md=fail
+chartdir:x64-linux=fail
+chartdir:x64-osx=fail
 chmlib:arm-uwp=fail
 chmlib:x64-uwp=fail
 # Chromium Base requires a recent version of Clang to be installed.
@@ -325,16 +331,6 @@ fontconfig:arm64-windows=fail
 foonathan-memory:arm64-windows=fail
 foonathan-memory:arm-uwp=fail
 foonathan-memory:x64-uwp=fail
-# forest is removed by upstream, see https://github.com/microsoft/vcpkg/pull/16836
-forest:arm-uwp=fail
-forest:arm64-windows=fail
-forest:x64-linux=fail
-forest:x64-uwp=fail
-forest:x64-windows-static-md=fail
-forest:x64-windows-static=fail
-forest:x64-windows=fail
-forest:x86-windows=fail
-forest:x64-osx=fail
 forge:x86-windows=fail
 freeglut:arm64-windows=fail
 freeglut:arm-uwp=fail
@@ -453,6 +449,7 @@ hiredis:arm-uwp=fail
 hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
 hpx:x64-linux=fail
+hunspell:x64-windows-static-md=fail
 libhsplasma:x64-windows-static=fail
 ideviceinstaller:x64-windows-static-md=fail
 idevicerestore:x64-linux=fail
@@ -643,8 +640,6 @@ liblsl:arm-uwp=fail
 liblsl:x64-uwp=fail
 libmad:arm-uwp=fail
 libmad:x64-uwp=fail
-libmagic:x86-windows=fail
-libmagic:x64-windows=fail
 libmagic:x64-windows-static=fail
 libmagic:x64-windows-static-md=fail
 libmagic:x64-uwp=fail
@@ -869,6 +864,7 @@ luajit:x64-windows        = skip
 luajit:x64-windows-static = skip
 luajit:x64-windows-static-md=skip
 luajit:x86-windows        = skip
+luasec:x64-windows-static=fail
 luasocket:x64-linux=fail
 luasocket:x64-osx=fail
 lzfse:arm-uwp=fail
@@ -1282,36 +1278,38 @@ python2:arm-uwp=fail
 python2:x64-linux=fail
 python2:x64-osx=fail
 python2:x64-uwp=fail
+# Not yet ready for these platforms. 
+qbittorrent:x64-osx=fail
+qbittorrent:x64-linux=fail
 qhull:x64-uwp=fail
 qhull:arm-uwp=fail
 qpid-proton:arm-uwp=fail
 qpid-proton:x64-uwp=fail
 qpid-proton:x64-windows-static=fail
-qt5-activeqt:x64-linux=fail
-qt5-activeqt:x64-osx=fail
+# Skip ports not available in Qt 6.1.0 (for Qt 6.2)
+qt6betablock:x86-windows=skip
+qt6betablock:x64-windows=skip
+qt6betablock:x64-windows-static=skip
+qt6betablock:x64-windows-static-md=skip
+qt6betablock:x64-linux=skip
+qt6betablock:x64-osx=skip
 qt5-base:arm64-windows=fail
 # Skip deprecated Qt module
-# (remnove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
+# (remove after 1 year or longer due to vcpkg upgrade not handling removed ports correctly)
 qt5-canvas3d:x64-linux=skip
 qt5-canvas3d:x64-osx=skip
 qt5-canvas3d:x64-windows=skip
 qt5-canvas3d:x64-windows-static=skip
 qt5-canvas3d:x64-windows-static-md=skip
 qt5-canvas3d:x86-windows=skip
-qt5-macextras:x64-linux=fail
-qt5-macextras:x64-windows=fail
-qt5-macextras:x64-windows-static=fail
-qt5-macextras:x64-windows-static-md=fail
-qt5-macextras:x86-windows=fail
 # Missing system libraries
 qt5-wayland:x64-osx=fail
+qtwayland:x64-osx=fail
 # Missing libraries
 qt5-wayland:x86-windows=fail
 qt5-wayland:x64-windows=fail
 qt5-wayland:x64-windows-static=fail
 qt5-wayland:x64-windows-static-md=fail
-qt5-winextras:x64-linux=fail
-qt5-winextras:x64-osx=fail
 # Missing prerequisites for CI success
 qt5-webengine:x64-linux=fail
 qt5-webengine:x64-osx=fail
@@ -1635,6 +1633,8 @@ v8:arm64-windows=fail
 v8:arm-uwp=fail
 v8:x64-osx=fail
 v8:x64-uwp=fail
+# The domain hosting vamp-sdk uses a newer root cert than is available in our linux CI
+vamp-sdk:x64-linux=fail
 vectorclass:arm64-windows=fail
 vectorclass:arm-uwp=fail
 vlpp:x64-osx=fail

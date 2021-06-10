@@ -14,6 +14,9 @@ jobs:
     value: /mnt/vcpkg-ci
   - name: VCPKG_DOWNLOADS
     value: /mnt/vcpkg-ci/downloads
+  - group: azblob-test-sas-group
+  - name: X_VCPKG_ASSET_SOURCES
+    value: "x-azurl,$(azblob-root-url),$(azblob-test-sas),readwrite"
 
   steps:
   - bash: df -h
