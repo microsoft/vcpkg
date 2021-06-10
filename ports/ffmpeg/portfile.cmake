@@ -591,16 +591,20 @@ endif()
 vcpkg_copy_pdbs()
 
 if (VCPKG_TARGET_IS_WINDOWS)
-    foreach(_debug "" "/debug")
+    set(_dirs "/")
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
+        list(APPEND _dirs "/debug/")
+    endif()
+    foreach(_debug IN LISTS _dirs)
         foreach(PKGCONFIG_MODULE IN LISTS FFMPEG_PKGCONFIG_MODULES)
-            set(PKGCONFIG_FILE "${CURRENT_PACKAGES_DIR}${_debug}/lib/pkgconfig/${PKGCONFIG_MODULE}.pc")
+            set(PKGCONFIG_FILE "${CURRENT_PACKAGES_DIR}${_debug}lib/pkgconfig/${PKGCONFIG_MODULE}.pc")
             # remove redundant cygwin style -libpath entries
             execute_process(
                 COMMAND "${MSYS_ROOT}/usr/bin/cygpath.exe" -u "${CURRENT_INSTALLED_DIR}"
                 OUTPUT_VARIABLE CYG_INSTALLED_DIR
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
-            vcpkg_replace_string("${PKGCONFIG_FILE}" "-libpath:${CYG_INSTALLED_DIR}${_debug}/lib/pkgconfig/../../lib " "")
+            vcpkg_replace_string("${PKGCONFIG_FILE}" "-libpath:${CYG_INSTALLED_DIR}${_debug}lib/pkgconfig/../../lib " "")
             # transform libdir, includedir, and prefix paths from cygwin style to windows style
             file(READ "${PKGCONFIG_FILE}" PKGCONFIG_CONTENT)
             foreach(PATH_NAME prefix libdir includedir)
