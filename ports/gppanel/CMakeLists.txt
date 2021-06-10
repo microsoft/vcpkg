@@ -3,7 +3,6 @@ project(gpPanel CXX)
 
 set(wxWidgets_EXCLUDE_COMMON_LIBRARIES TRUE)
 find_package(wxWidgets REQUIRED COMPONENTS core base)
-include(${wxWidgets_USE_FILE})
 
 file(GLOB_RECURSE SOURCES "gpPanel/*.cpp")
 file(GLOB HEADERS RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/include" "include/*.h")
