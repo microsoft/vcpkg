@@ -13,11 +13,6 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
     tools WITH_DEPENDENCIES
-    tools HAVE_SNDFILE
-    tools HAVE_WAVWRITE
-    tools HAVE_WAVREAD
-    tools HAVE_LIBAV
-    tools HAVE_SWRESAMPLE
 )
 
 vcpkg_configure_cmake(
