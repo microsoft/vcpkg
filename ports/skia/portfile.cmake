@@ -170,7 +170,8 @@ if(CMAKE_HOST_WIN32)
 endif()
 
 z_vcpkg_install_gn_create_extract_public_config_targets(
-    "${SOURCE_PATH}" "extract_skia//:skia")
+    SOURCE_PATH "${SOURCE_PATH}"
+    TARGETS "extract_skia//:skia")
 
 vcpkg_configure_gn(
     SOURCE_PATH "${SOURCE_PATH}"

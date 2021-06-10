@@ -30,22 +30,23 @@ Note: includes must be handled separately
 # Each target pair is the new name, suffixed by the target name (always starts with //)
 #   e.g. newName//full/target:label (new name = newName, target = //full/target:label)
 #   the new target then becomes //extract_public_config:newName
-function(z_vcpkg_install_gn_create_extract_public_config_targets SOURCE_PATH)
-    file(READ "${SOURCE_PATH}/BUILD.gn" root_build_gn_contents)
+function(z_vcpkg_install_gn_create_extract_public_config_targets)
+    cmake_parse_arguments(PARSE_ARGV 0 "arg" "" "SOURCE_PATH" "TARGETS")
+
+    file(READ "${arg_SOURCE_PATH}/BUILD.gn" root_build_gn_contents)
     if(NOT root_build_gn_contents MATCHES "extract_public_config")
-        file(APPEND "${SOURCE_PATH}/BUILD.gn" 
+        file(APPEND "${arg_SOURCE_PATH}/BUILD.gn" 
             "\ngroup(\"extract_public_config\"){deps=[\"//extract_public_config\"]}")
     endif()
 
-    set(targets ${ARGN})
     # create a shared_library entrance for each target pair
-    list(TRANSFORM targets REPLACE "^([^/]+)(.+)$"
+    list(TRANSFORM arg_TARGETS REPLACE "^([^/]+)(.+)$"
         "shared_library(\"\\1\"){deps=[\"\\2\"]}")
     # //extract_public_config above is the same as //extract_public_config:extract_public_config
-    list(APPEND targets "group(\"extract_public_config\"){}")
-    string(JOIN "\n" extract_public_config_contents ${targets})
-    file(MAKE_DIRECTORY "${SOURCE_PATH}/extract_public_config")
-    file(WRITE "${SOURCE_PATH}/extract_public_config/BUILD.gn" 
+    list(APPEND arg_TARGETS "group(\"extract_public_config\"){}")
+    list(JOIN arg_TARGETS "\n" extract_public_config_contents)
+    file(MAKE_DIRECTORY "${arg_SOURCE_PATH}/extract_public_config")
+    file(WRITE "${arg_SOURCE_PATH}/extract_public_config/BUILD.gn" 
         "${extract_public_config_contents}")
 endfunction()
 
