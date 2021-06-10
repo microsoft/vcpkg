@@ -309,7 +309,7 @@ if(NOT VCPKG_TARGET_IS_OSX)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/macos")
 endif()
 if(NOT VCPKG_TARGET_IS_IOS)
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/qt6/ios")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/share/Qt6/ios")
 endif() 
 
 set(_file "${CMAKE_CURRENT_LIST_DIR}/qt.conf.in")
