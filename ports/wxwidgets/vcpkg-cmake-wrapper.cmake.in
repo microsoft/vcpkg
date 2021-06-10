@@ -1,7 +1,7 @@
-_find_package(${ARGS})
+_find_package(unofficial-wxwidgets CONFIG REQUIRED)
 
 set(wxWidgets_FOUND 1)
-file(GLOB WX_TARGETS ${CMAKE_CURRENT_LIST_DIR}/unofficial*Targets.cmake)
+file(GLOB WX_TARGETS ${CMAKE_CURRENT_LIST_DIR}/../unofficial-wxwidgets/unofficial*Targets.cmake)
 foreach(WX_TARGET ${WX_TARGETS})
     get_filename_component(TARGET_FILE ${WX_TARGET} NAME)
     string(REGEX REPLACE "unofficial-(.+)Targets.cmake" "wx::\\1" TARGET_NAME ${TARGET_FILE})
