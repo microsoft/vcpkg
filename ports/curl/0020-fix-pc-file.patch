@@ -5,7 +5,7 @@ diff -urw a/CMakeLists.txt b/CMakeLists.txt
        message(WARNING "Bad lib in library list: ${_libname}")
        continue()
      endif()
-+  elseif(CMAKE_VERSION VERSION_GREATER "3.8.99" AND _lib MATCHES "^(.*)/([^/]*)[.]framework$")
++  elseif(_lib MATCHES "^(.*)/([^/]*)[.]framework$")
 +    if(CMAKE_MATCH_1 IN_LIST CMAKE_C_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
 +      set(_lib "-framework ${CMAKE_MATCH_2}")
 +    else()
