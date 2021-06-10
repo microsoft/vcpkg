@@ -1280,8 +1280,6 @@ protobuf-c:arm64-windows=fail
 protobuf-c:arm-uwp=fail
 python2:arm64-windows=fail
 python2:arm-uwp=fail
-python2:x64-linux=fail
-python2:x64-osx=fail
 python2:x64-uwp=fail
 # Not yet ready for these platforms. 
 qbittorrent:x64-osx=fail
