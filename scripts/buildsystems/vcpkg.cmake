@@ -625,14 +625,18 @@ endfunction()
 # Arguments:
 #   TARGETS - a list of installed targets to have dependencies copied for
 #   DESTINATION - the runtime directory for those targets (usually `bin`)
+#   COMPONENT - the component this install command belongs to (optional)
 #
 # Note that this function requires CMake 3.14 for policy CMP0087
 function(x_vcpkg_install_local_dependencies)
     if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
-        cmake_parse_arguments(PARSE_ARGV 0 __VCPKG_APPINSTALL "" "DESTINATION" "TARGETS")
+        cmake_parse_arguments(PARSE_ARGV 0 __VCPKG_APPINSTALL "" "DESTINATION;COMPONENT" "TARGETS")
         z_vcpkg_set_powershell_path()
         if(NOT IS_ABSOLUTE "${__VCPKG_APPINSTALL_DESTINATION}")
             set(__VCPKG_APPINSTALL_DESTINATION "\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}")
+        endif()
+        if(__VCPKG_APPINSTALL_COMPONENT)
+            set(__VCPKG_APPINSTALL_COMPONENT COMPONENT ${__VCPKG_APPINSTALL_COMPONENT})
         endif()
         foreach(TARGET IN LISTS __VCPKG_APPINSTALL_TARGETS)
             get_target_property(TARGETTYPE "${TARGET}" TYPE)
@@ -645,7 +649,9 @@ function(x_vcpkg_install_local_dependencies)
                     execute_process(COMMAND \"${Z_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
                         -targetBinary \"${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
                         -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                        -OutVariable out)")
+                        -OutVariable out)"
+                    ${__VCPKG_APPINSTALL_COMPONENT}
+                    )
             endif()
         endforeach()
     endif()
@@ -683,9 +689,16 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
                 if(LAST_COMMAND STREQUAL "DESTINATION" AND (MODIFIER STREQUAL "" OR MODIFIER STREQUAL "RUNTIME"))
                     set(DESTINATION "${ARG}")
                 endif()
+                if(LAST_COMMAND STREQUAL "COMPONENT")
+                    set(COMPONENT "${ARG}")
+                endif()
             endforeach()
 
-            x_vcpkg_install_local_dependencies(TARGETS "${PARSED_TARGETS}" DESTINATION "${DESTINATION}")
+            # COMPONENT is optional only set it when it's been set by the install rule
+            if(COMPONENT)
+                set(COMPONENT "COMPONENT" ${COMPONENT})
+            endif()
+            x_vcpkg_install_local_dependencies(TARGETS "${PARSED_TARGETS}" DESTINATION "${DESTINATION}" ${COMPONENT})
         endif()
     endfunction()
 endif()
