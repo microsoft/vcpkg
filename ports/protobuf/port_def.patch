@@ -1,0 +1,14 @@
+diff --git a/src/google/protobuf/port_def.inc b/src/google/protobuf/port_def.inc
+index f7b64a080..3493d9082 100644
+--- a/src/google/protobuf/port_def.inc
++++ b/src/google/protobuf/port_def.inc
+@@ -564,7 +564,8 @@
+ 
+ // Our use of constinit does not yet work with GCC:
+ // https://github.com/protocolbuffers/protobuf/issues/8310
+-#if defined(__cpp_constinit) && !defined(__GNUC__)
++// Does not work yet with Visual Studio 2019 Update 16.10
++#if defined(__cpp_constinit) && !defined(__GNUC__) && !defined(_MSC_VER)
+ #define PROTOBUF_CONSTINIT constinit
+ #elif defined(__has_cpp_attribute)
+ #if __has_cpp_attribute(clang::require_constant_initialization)
