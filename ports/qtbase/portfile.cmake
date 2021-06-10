@@ -12,6 +12,7 @@ set(${PORT}_PATCHES
         dont_force_cmakecache.patch
         fix_find_dep.patch
         20b3eb0.diff # Upstream fix to build with clang-cl; didn't make 6.1.1 so I backported the patch. 
+        fix_flag_removal.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
