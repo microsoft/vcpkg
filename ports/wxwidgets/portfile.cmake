@@ -88,5 +88,5 @@ if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/wx/setup.h")
 endif()
 
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in"
-   " ${CURRENT_PACKAGES_DIR}/share/unofficial-wxwidgets/vcpkg-cmake-wrapper.cmake" @ONLY)
+   "${CURRENT_PACKAGES_DIR}/share/unofficial-wxwidgets/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(INSTALL "${SOURCE_PATH}/docs/licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
