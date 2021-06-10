@@ -6721,7 +6721,7 @@
       "port-version": 0
     },
     "xtensor": {
-      "baseline": "0.21.9",
+      "baseline": "0.23.10",
       "port-version": 0
     },
     "xtensor-blas": {
@@ -6737,7 +6737,7 @@
       "port-version": 1
     },
     "xtl": {
-      "baseline": "0.6.21",
+      "baseline": "0.7.2",
       "port-version": 0
     },
     "xxhash": {
