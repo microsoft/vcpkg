@@ -40,8 +40,9 @@ Skip SHA512 hash check for file.
 This switch is only valid when building with the `--head` command line flag.
 
 ### ALWAYS_REDOWNLOAD
-This should be used when in `--head` mode, in order to tell this command to redownload when possible;
-in other words, avoid caching. This has no effect in `--no-downloads` mode.
+Avoid caching; this is a REST call or otherwise unstable.
+
+Requires `SKIP_SHA512`.
 
 ### HEADERS
 A list of headers to append to the download request. This can be used for authentication during a download.
