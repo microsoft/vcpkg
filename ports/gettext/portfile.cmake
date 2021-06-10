@@ -6,9 +6,9 @@ if(VCPKG_TARGET_IS_LINUX AND NOT "tools" IN_LIST FEATURES)
         )
     endif()
     return()
-else()
-    set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 endif()
+
+set(VCPKG_POLICY_ALLOW_RESTRICTED_HEADERS enabled)
 
 #Based on https://github.com/winlibs/gettext
 
@@ -24,7 +24,7 @@ if(VCPKG_TARGET_IS_UWP)
 endif()
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     REF ${GETTEXT_VERSION}
     PATCHES
         0002-Fix-uwp-build.patch
@@ -34,48 +34,51 @@ vcpkg_extract_source_archive_ex(
         ${PATCHES}
 )
 vcpkg_find_acquire_program(BISON)
-get_filename_component(BISON_PATH ${BISON} DIRECTORY)
-vcpkg_add_to_path(${BISON_PATH})
+get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
+vcpkg_add_to_path("${BISON_PATH}")
 
+set(OPTIONS "")
 if(VCPKG_TARGET_IS_WINDOWS)
     # This is required. For some reason these do not get correctly identified for release builds. 
-    list(APPEND OPTIONS ac_cv_func_wcslen=yes
-                        ac_cv_func_memmove=yes
-                        #The following are required for a full gettext built.
-                        # Left here for future reference. 
-                        gl_cv_func_printf_directive_n=no #segfaults otherwise with popup window
-                        ac_cv_func_memset=yes #not detected in release builds 
-                        ac_cv_header_pthread_h=no
-                        ac_cv_header_dirent_h=no
-                        )
+    list(APPEND OPTIONS
+        ac_cv_func_wcslen=yes
+        ac_cv_func_memmove=yes
+        #The following are required for a full gettext built.
+        # Left here for future reference. 
+        gl_cv_func_printf_directive_n=no #segfaults otherwise with popup window
+        ac_cv_func_memset=yes #not detected in release builds 
+        ac_cv_header_pthread_h=no
+        ac_cv_header_dirent_h=no
+    )
 endif()
 set(ADDITIONAL_CONFIGURE_OPTIONS)
 set(ADDITIONAL_INSTALL_OPTIONS)
 if("tools" IN_LIST FEATURES)
-    set(BUILD_SOURCE_PATH ${SOURCE_PATH})
+    set(BUILD_SOURCE_PATH "${SOURCE_PATH}")
     set(ADDITIONAL_CONFIGURE_OPTIONS ADDITIONAL_MSYS_PACKAGES gzip)
 else()
-    set(BUILD_SOURCE_PATH ${SOURCE_PATH}/gettext-runtime) # Could be its own port
+    set(BUILD_SOURCE_PATH "${SOURCE_PATH}/gettext-runtime") # Could be its own port
     set(ADDITIONAL_INSTALL_OPTIONS SUBPATH "/intl")
 endif()
-vcpkg_configure_make(SOURCE_PATH ${BUILD_SOURCE_PATH}
-                     DETERMINE_BUILD_TRIPLET
-                     USE_WRAPPERS
-                     ADD_BIN_TO_PATH    # So configure can check for working iconv
-                     OPTIONS --enable-relocatable #symbol duplication with glib-init.c?
-                             --enable-c++
-                             --disable-java
-                             ${OPTIONS}
-                     ${ADDITIONAL_CONFIGURE_OPTIONS}
-                    )
+vcpkg_configure_make(SOURCE_PATH "${BUILD_SOURCE_PATH}"
+    DETERMINE_BUILD_TRIPLET
+    USE_WRAPPERS
+    ADD_BIN_TO_PATH    # So configure can check for working iconv
+    OPTIONS
+        --enable-relocatable #symbol duplication with glib-init.c?
+        --enable-c++
+        --disable-java
+        ${OPTIONS}
+    ${ADDITIONAL_CONFIGURE_OPTIONS}
+)
 vcpkg_install_make(${ADDITIONAL_INSTALL_OPTIONS})
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/gettext)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/gettext/COPYING ${CURRENT_PACKAGES_DIR}/share/gettext/copyright)
+file(COPY "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
+file(RENAME "${CURRENT_PACKAGES_DIR}/share/gettext/COPYING" "${CURRENT_PACKAGES_DIR}/share/gettext/copyright")
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin)
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
@@ -89,7 +92,7 @@ endforeach()
 
 vcpkg_copy_pdbs()
 
-file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/intl)
+file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/intl")
 if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
     file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
 endif()
