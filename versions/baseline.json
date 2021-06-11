@@ -1669,7 +1669,7 @@
       "port-version": 0
     },
     "directxmesh": {
-      "baseline": "apr2021",
+      "baseline": "jun2021",
       "port-version": 0
     },
     "directxsdk": {
@@ -1677,15 +1677,15 @@
       "port-version": 2
     },
     "directxtex": {
-      "baseline": "apr2021",
+      "baseline": "jun2021",
       "port-version": 0
     },
     "directxtk": {
-      "baseline": "apr2021",
+      "baseline": "jun2021",
       "port-version": 0
     },
     "directxtk12": {
-      "baseline": "apr2021",
+      "baseline": "jun2021",
       "port-version": 0
     },
     "dirent": {
@@ -6449,7 +6449,7 @@
       "port-version": 0
     },
     "uvatlas": {
-      "baseline": "apr2021",
+      "baseline": "jun2021",
       "port-version": 0
     },
     "uvw": {
