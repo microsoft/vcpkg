@@ -485,7 +485,7 @@ set(ENV_LIB_PATH "$ENV{${LIB_PATH_VAR}}")
 message(STATUS "Building Options: ${OPTIONS}")
 
 # Release build
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     message(STATUS "Building Release Options: ${OPTIONS_RELEASE}")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
     set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_RELEASE}")
@@ -508,7 +508,7 @@ if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL release)
 endif()
 
 # Debug build
-if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
+if (NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     message(STATUS "Building Debug Options: ${OPTIONS_DEBUG}")
     set(ENV{${LIB_PATH_VAR}} "${CURRENT_INSTALLED_DIR}/debug/lib${VCPKG_HOST_PATH_SEPARATOR}${ENV_LIB_PATH}")
     set(ENV{CFLAGS} "${VCPKG_C_FLAGS} ${VCPKG_C_FLAGS_DEBUG}")
@@ -592,7 +592,7 @@ vcpkg_copy_pdbs()
 
 if (VCPKG_TARGET_IS_WINDOWS)
     set(_dirs "/")
-    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL debug)
+    if(NOT VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
         list(APPEND _dirs "/debug/")
     endif()
     foreach(_debug IN LISTS _dirs)
