@@ -2173,7 +2173,7 @@
       "port-version": 0
     },
     "gamenetworkingsockets": {
-      "baseline": "2021-04-26",
+      "baseline": "1.3.0",
       "port-version": 0
     },
     "gamma": {
