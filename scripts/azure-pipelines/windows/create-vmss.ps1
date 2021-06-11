@@ -43,14 +43,15 @@ if ($Unstable) {
 }
 
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D16a_v4'
+$VMSize = 'Standard_D32s_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
 $WindowsServerSku = '2019-Datacenter'
+$InstalledDiskSizeInGB = 1024
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
-$TotalProgress = 20
+$TotalProgress = 21
 $CurrentProgress = 1
 
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
@@ -271,6 +272,16 @@ $VM = Set-AzVMSourceImage `
   -Skus $WindowsServerSku `
   -Version latest
 
+$InstallDiskName = $ProtoVMName + "InstallDisk"
+$VM = Add-AzVMDataDisk `
+  -Vm $VM `
+  -Name $InstallDiskName `
+  -Lun 0 `
+  -Caching ReadWrite `
+  -CreateOption Empty `
+  -DiskSizeInGB $InstalledDiskSizeInGB `
+  -StorageAccountType 'StandardSSD_LRS'
+
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
 New-AzVm `
   -ResourceGroupName $ResourceGroupName `
@@ -425,6 +436,10 @@ try {
 Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
 
 ####################################################################################################
+Invoke-ScriptWithPrefix -ScriptName 'deploy-install-disk.ps1'
+Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+
+####################################################################################################
 Write-Progress `
   -Activity $ProgressActivity `
   -Status 'Running provisioning script sysprep.ps1 in VM' `
@@ -475,6 +490,7 @@ Write-Progress `
 
 Remove-AzVM -Id $VM.ID -Force
 Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $PrototypeOSDiskName -Force
+Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $InstallDiskName -Force
 
 ####################################################################################################
 Write-Progress `

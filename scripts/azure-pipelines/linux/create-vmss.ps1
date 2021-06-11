@@ -20,7 +20,7 @@ This script assumes you have installed the OpenSSH Client optional Windows compo
 
 $Location = 'westus2'
 $Prefix = 'PrLin-' + (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D16a_v4'
+$VMSize = 'Standard_D32s_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
 $ErrorActionPreference = 'Stop'
@@ -338,13 +338,22 @@ $Vmss = Set-AzVmssOsProfile `
   -AdminUsername AdminUser `
   -AdminPassword $AdminPW `
   -LinuxConfigurationDisablePasswordAuthentication $true `
-  -PublicKey @($VmssPublicKey)
+  -PublicKey @($VmssPublicKey) `
+  -CustomData ([Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("#!/bin/bash`n/etc/provision-disks.sh`n")))
 
 $Vmss = Set-AzVmssStorageProfile `
   -VirtualMachineScaleSet $Vmss `
   -OsDiskCreateOption 'FromImage' `
   -OsDiskCaching ReadWrite `
   -ImageReferenceId $Image.Id
+
+$Vmss = Add-AzVmssDataDisk `
+  -VirtualMachineScaleSet $Vmss `
+  -Lun 0 `
+  -Caching 'ReadWrite' `
+  -CreateOption Empty `
+  -DiskSizeGB 1024 `
+  -StorageAccountType 'StandardSSD_LRS'
 
 New-AzVmss `
   -ResourceGroupName $ResourceGroupName `
