@@ -44,8 +44,8 @@
       ]
     },
     "system-libraries": {
-      "description": "Include drivers which need additional libraries",
-      "$supports": "!windows"
+      "$supports": "!windows",
+      "description": "Include drivers which need additional libraries"
     }
   }
 }
