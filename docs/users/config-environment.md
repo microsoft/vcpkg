@@ -17,8 +17,6 @@ subject to change without notice and should be considered highly unstable.
 Non-exhaustive list of off-by-default features:
 
 - `manifest`
-- `versions`
-- `registries`
 
 #### EDITOR
 
@@ -89,3 +87,9 @@ This environment variable changes the metadata of produced NuGet packages. See [
 #### VCPKG_USE_NUGET_CACHE
 
 This environment variable allows using NuGet's cache for every nuget-based binary source. See [Binary Caching](binarycaching.md#NuGets-cache) for more details.
+
+#### X_VCPKG_ASSET_SOURCES
+
+> Note: This is an experimental feature and may change or be removed at any time
+
+This environment variable allows using a private mirror for all SHA512-tagged assets. See [Asset Caching](assetcaching.md) for more details.

@@ -1,0 +1,13 @@
+diff --git a/orm_lib/inc/drogon/orm/Mapper.h b/orm_lib/inc/drogon/orm/Mapper.h
+index d248625..8911f7f 100644
+--- a/orm_lib/inc/drogon/orm/Mapper.h
++++ b/orm_lib/inc/drogon/orm/Mapper.h
+@@ -21,7 +21,7 @@
+ #include <vector>
+ 
+ #ifdef _WIN32
+-using ssize_t = std::intptr_t;
++using ssize_t = long long;
+ #endif
+ 
+ namespace drogon

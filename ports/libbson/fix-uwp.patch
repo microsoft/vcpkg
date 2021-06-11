@@ -1,18 +1,20 @@
 diff --git a/src/libbson/CMakeLists.txt b/src/libbson/CMakeLists.txt
-index d708dc3..a63edf2 100644
+index fea309a..6887ab9 100644
 --- a/src/libbson/CMakeLists.txt
 +++ b/src/libbson/CMakeLists.txt
-@@ -230,6 +230,8 @@ set (HEADERS_FORWARDING
+@@ -230,6 +230,10 @@ set (HEADERS_FORWARDING
     ${PROJECT_SOURCE_DIR}/src/bson/forwarding/bson.h
  )
  
-+add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++if (MSVC)
++    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
++endif()
 +
  if(NOT MONGOC_ENABLE_STATIC_BUILD)
  add_library (bson_shared SHARED ${SOURCES} ${HEADERS} ${HEADERS_FORWARDING})
  set (CMAKE_CXX_VISIBILITY_PRESET hidden)
 diff --git a/src/libmongoc/src/mongoc/mongoc-gridfs-file.c b/src/libmongoc/src/mongoc/mongoc-gridfs-file.c
-index 0690b86..98721df 100644
+index 0690b86..a94ace2 100644
 --- a/src/libmongoc/src/mongoc/mongoc-gridfs-file.c
 +++ b/src/libmongoc/src/mongoc/mongoc-gridfs-file.c
 @@ -765,7 +765,7 @@ _mongoc_gridfs_file_refresh_page (mongoc_gridfs_file_t *file)
@@ -20,7 +22,7 @@ index 0690b86..98721df 100644
     bson_t child;
     bson_t opts;
 -   const bson_t *chunk;
-+   const bson_t *chunk = NULL;
++   const bson_t *chunk =NULL;
     const char *key;
     bson_iter_t iter;
     int64_t existing_chunks;
