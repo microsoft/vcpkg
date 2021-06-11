@@ -7,7 +7,7 @@ vcpkg_from_github(
     SHA512 7835b7613529798b5edaefc99c907bbc7144133a1fac62a2c9af09c8c7a09b2ea1864544c4c0385969ad3dc64806b8d258abbcd39add2004ed8428741286ff20
     HEAD_REF master
     PATCHES
-        #001-cpr-config.patch
+        001-cpr-config.patch
 )
 
 vcpkg_configure_cmake(
