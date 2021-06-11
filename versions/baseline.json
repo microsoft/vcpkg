@@ -1605,7 +1605,7 @@
       "port-version": 1
     },
     "dataframe": {
-      "baseline": "1.12.0",
+      "baseline": "1.17.0",
       "port-version": 0
     },
     "date": {
