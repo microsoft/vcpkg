@@ -3064,6 +3064,10 @@
       "baseline": "0.6.13",
       "port-version": 3
     },
+    "libctl": {
+      "baseline": "4.5.0",
+      "port-version": 0
+    },
     "libcuckoo": {
       "baseline": "0.3",
       "port-version": 0
@@ -3943,6 +3947,10 @@
     "mecab": {
       "baseline": "2019-09-25",
       "port-version": 1
+    },
+    "meep": {
+      "baseline": "1.15.0",
+      "port-version": 0
     },
     "memorymodule": {
       "baseline": "2019-12-31",
