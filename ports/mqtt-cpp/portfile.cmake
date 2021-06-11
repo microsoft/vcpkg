@@ -6,6 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
+
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
@@ -27,8 +29,21 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/mqtt_cpp_iface)
+vcpkg_fixup_cmake_targets(
+	CONFIG_PATH share/mqtt_cpp_iface 
+	TARGET_PATH share/mqtt_cpp_iface
+)
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/mqtt_cpp_iface-config.in.cmake
+    ${CURRENT_PACKAGES_DIR}/share/mqtt_cpp_iface/mqtt_cpp_iface-config.cmake
+    @ONLY
+)
+
+file(GLOB_RECURSE HEADER_FILES ${SOURCE_PATH}/include/*.hpp)
+file(INSTALL ${HEADER_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/include/${PORT})
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib)
+
 file(INSTALL ${SOURCE_PATH}/LICENSE_1_0.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
