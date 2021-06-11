@@ -1,5 +1,3 @@
-#set(PORT_DEBUG TRUE)
-
 message(STATUS "${PORT} currently requires the following library from the system package manager:
     guile-2.2-dev
 This can be installed on Ubuntu systems via sudo apt install guile-2.2-dev")
@@ -16,10 +14,6 @@ include(vcpkg_find_fortran)
 vcpkg_find_fortran(FORTRAN_CMAKE)
 
 if(CMAKE_HOST_WIN32)
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES autoconf)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES guile libguile-devel)
-    vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
     #set(ENV{CC} "gcc")
     #set(ENV{CXX} "g++")
     set(ENV{FC} "gfortran")
@@ -28,6 +22,8 @@ if(CMAKE_HOST_WIN32)
     #set(ENV{CFLAGS} "-mabi=ms ${MACHINE_FLAG} ${VCPKG_C_FLAGS}")
     #set(ENV{CXXFLAGS} "-mabi=ms ${MACHINE_FLAG} ${VCPKG_CXX_FLAGS}")
     set(ENV{FFLAGS} "-mabi=ms ${MACHINE_FLAG} ${VCPKG_Fortran_FLAGS}")
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES autoconf make guile libguile-devel)
+    vcpkg_add_to_path(PREPEND "${MSYS_ROOT}/usr/bin")
 endif()
 
 vcpkg_configure_make(

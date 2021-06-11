@@ -1,5 +1,3 @@
-#set(PORT_DEBUG TRUE)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO NanoComp/meep
@@ -12,9 +10,6 @@ include(vcpkg_find_fortran)
 vcpkg_find_fortran(FORTRAN_CMAKE)
 
 if(CMAKE_HOST_WIN32)
-	vcpkg_acquire_msys(MSYS_ROOT PACKAGES autoconf)
-    vcpkg_acquire_msys(MSYS_ROOT PACKAGES make)
-    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
     #set(ENV{CC} "gcc")
     #set(ENV{CXX} "g++")
     set(ENV{FC} "gfortran")
@@ -23,6 +18,8 @@ if(CMAKE_HOST_WIN32)
     #set(ENV{CFLAGS} "-mabi=ms ${MACHINE_FLAG} ${VCPKG_C_FLAGS}")
     #set(ENV{CXXFLAGS} "-mabi=ms ${MACHINE_FLAG} ${VCPKG_CXX_FLAGS}")
     set(ENV{FFLAGS} "-mabi=ms ${MACHINE_FLAG} ${VCPKG_Fortran_FLAGS}")
+    vcpkg_acquire_msys(MSYS_ROOT PACKAGES autoconf make)
+    vcpkg_add_to_path("${MSYS_ROOT}/usr/bin")
 endif()
 
 vcpkg_configure_make(
@@ -37,8 +34,6 @@ vcpkg_configure_make(
 )
 
 vcpkg_install_make()
-
-#vcpkg_fixup_pkgconfig(SYSTEM_LIBRARIES m)
 
 # remove debug include folder
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include/)
