@@ -202,7 +202,7 @@
     },
     "aubio": {
       "baseline": "0.4.9",
-      "port-version": 4
+      "port-version": 5
     },
     "audiofile": {
       "baseline": "1.0.7",
@@ -3669,8 +3669,8 @@
       "port-version": 1
     },
     "libvpx": {
-      "baseline": "1.9.0",
-      "port-version": 9
+      "baseline": "1.10.0",
+      "port-version": 0
     },
     "libwandio": {
       "baseline": "4.2.1",
@@ -3910,7 +3910,7 @@
     },
     "matio": {
       "baseline": "1.5.19",
-      "port-version": 0
+      "port-version": 1
     },
     "matplotlib-cpp": {
       "baseline": "2020-08-27",
@@ -4486,7 +4486,7 @@
     },
     "openblas": {
       "baseline": "0.3.10",
-      "port-version": 0
+      "port-version": 1
     },
     "opencascade": {
       "baseline": "7.5.0",
@@ -4974,7 +4974,7 @@
     },
     "protobuf": {
       "baseline": "3.15.8",
-      "port-version": 1
+      "port-version": 2
     },
     "protobuf-c": {
       "baseline": "1.3.2-2",
@@ -5030,7 +5030,7 @@
     },
     "python2": {
       "baseline": "2.7.18",
-      "port-version": 0
+      "port-version": 1
     },
     "python3": {
       "baseline": "3.9.5",
@@ -6373,8 +6373,8 @@
       "port-version": 0
     },
     "unittest-cpp": {
-      "baseline": "2.0.0-1",
-      "port-version": 0
+      "baseline": "2.0.0",
+      "port-version": 2
     },
     "unixodbc": {
       "baseline": "2.3.7",
@@ -6721,7 +6721,7 @@
       "port-version": 0
     },
     "xtensor": {
-      "baseline": "0.21.9",
+      "baseline": "0.23.10",
       "port-version": 0
     },
     "xtensor-blas": {
@@ -6737,7 +6737,7 @@
       "port-version": 1
     },
     "xtl": {
-      "baseline": "0.6.21",
+      "baseline": "0.7.2",
       "port-version": 0
     },
     "xxhash": {
@@ -6750,7 +6750,7 @@
     },
     "yaml-cpp": {
       "baseline": "0.6.3",
-      "port-version": 0
+      "port-version": 1
     },
     "yara": {
       "baseline": "4.1.0",
@@ -6811,6 +6811,10 @@
     "zlib": {
       "baseline": "1.2.11",
       "port-version": 10
+    },
+    "zlib-ng": {
+      "baseline": "2.0.3",
+      "port-version": 0
     },
     "zookeeper": {
       "baseline": "3.5.5-1",
