@@ -1680,7 +1680,6 @@ wintoast:x64-uwp=fail
 wpilib:arm64-windows=fail
 wpilib:x64-osx=fail
 wxchartdir:x64-osx=fail
-wxwidgets:x64-linux=fail
 x265:arm64-windows=fail
 x265:arm-uwp=fail
 x265:x64-uwp=fail
