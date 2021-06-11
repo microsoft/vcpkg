@@ -5465,8 +5465,8 @@
       "port-version": 0
     },
     "redis-plus-plus": {
-      "baseline": "1.2.1",
-      "port-version": 1
+      "baseline": "1.2.3",
+      "port-version": 0
     },
     "refl-cpp": {
       "baseline": "0.12.0",
