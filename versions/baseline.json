@@ -2866,7 +2866,7 @@
     },
     "kf5holidays": {
       "baseline": "5.81.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5i18n": {
       "baseline": "5.81.0",
@@ -4594,7 +4594,7 @@
     },
     "openssl": {
       "baseline": "1.1.1k",
-      "port-version": 4
+      "port-version": 5
     },
     "openssl-unix": {
       "baseline": "1.1.1h",
