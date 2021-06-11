@@ -50,7 +50,7 @@ if(${nanopb_BUILD_GENERATOR})
     endif()
 endif()
 
-if(${nanopb_BUILD_STATIC_LIBS})
+if(nanopb_BUILD_STATIC_LIBS)
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
 endif()
 # Handle copyright
