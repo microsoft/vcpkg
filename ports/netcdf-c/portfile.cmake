@@ -11,6 +11,7 @@ vcpkg_from_github(
         fix-linkage-error.patch
         fix-pkgconfig.patch
         fix-dependency-zlib.patch
+        fix-manpage-msys.patch
 )
 
 #Remove outdated find modules
