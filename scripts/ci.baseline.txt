@@ -1106,8 +1106,6 @@ ois:x64-uwp=fail
 # /usr/bin/ld: cannot find -lode
 ompl:x64-osx=fail
 ompl:x64-linux=fail
-open62541:arm-uwp=fail
-open62541:x64-uwp=fail
 openal-soft:arm-uwp=fail
 openal-soft:x64-uwp=fail
 openblas:arm64-windows=fail
