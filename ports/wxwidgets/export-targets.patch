@@ -35,7 +35,7 @@ index 4063020..5667342 100644
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-wxwidgets-config.cmake DESTINATION share/unofficial-wxwidgets)
 \ No newline at end of file
 diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
-index e99555e..716561d 100644
+index e99555e..8814ffa 100644
 --- a/build/cmake/functions.cmake
 +++ b/build/cmake/functions.cmake
 @@ -257,13 +257,14 @@ function(wx_set_target_properties target_name is_base)
@@ -72,13 +72,15 @@ index e99555e..716561d 100644
      endif()
  endmacro()
  
-@@ -453,7 +456,13 @@ macro(wx_lib_include_directories name)
+@@ -453,7 +456,15 @@ macro(wx_lib_include_directories name)
          if (_LIB_INCLUDE_DIRS_PRIVATE)
              set(INCLUDE_POS BEFORE)
          endif()
 -        target_include_directories(${name};${INCLUDE_POS};${ARGN})
 +        if (_LIB_INCLUDE_DIRS_PUBLIC)
-+        target_include_directories(${name};${INCLUDE_POS};PUBLIC;"$<BUILD_INTERFACE:${_LIB_INCLUDE_DIRS_PUBLIC}>")
++            foreach (PUBLIC_DIR ${_LIB_INCLUDE_DIRS_PUBLIC})
++                target_include_directories(${name};${INCLUDE_POS};PUBLIC;$<BUILD_INTERFACE:${PUBLIC_DIR}>)
++            endforeach()
 +        endif()
 +        if (_LIB_INCLUDE_DIRS_PRIVATE)
 +            target_include_directories(${name};${INCLUDE_POS};PRIVATE;${_LIB_INCLUDE_DIRS_PRIVATE})
@@ -87,7 +89,7 @@ index e99555e..716561d 100644
      endif()
  endmacro()
  
-@@ -514,7 +523,8 @@ function(wx_set_builtin_target_properties target_name)
+@@ -514,7 +525,8 @@ function(wx_set_builtin_target_properties target_name)
      target_include_directories(${target_name}
          BEFORE
          PUBLIC
@@ -97,7 +99,7 @@ index e99555e..716561d 100644
          )
  
      set_target_properties(${target_name} PROPERTIES FOLDER "Third Party Libraries")
-@@ -789,10 +799,10 @@ function(wx_add name group)
+@@ -789,10 +801,10 @@ function(wx_add name group)
      endif()
  
      if(group STREQUAL Samples)
