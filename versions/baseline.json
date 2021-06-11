@@ -1889,7 +1889,7 @@
       "port-version": 4
     },
     "expat": {
-      "baseline": "2020-08-18",
+      "baseline": "2.4.1",
       "port-version": 0
     },
     "expected-lite": {
