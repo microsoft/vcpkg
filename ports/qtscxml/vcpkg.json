@@ -1,0 +1,22 @@
+{
+  "name": "qtscxml",
+  "version-semver": "6.1.0",
+  "description": "SCXML (state machine notation) compiler and related tools",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    "qtdeclarative",
+    {
+      "name": "qtscxml",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
+    }
+  ]
+}

@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES
         fix-static-build.patch
         fix-default-proto-file-path.patch
+        port_def.patch
 )
 
 string(COMPARE EQUAL "${TARGET_TRIPLET}" "${HOST_TRIPLET}" protobuf_BUILD_PROTOC_BINARIES)

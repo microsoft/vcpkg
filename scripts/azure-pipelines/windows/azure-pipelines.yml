@@ -14,6 +14,9 @@ jobs:
     value: D:\
   - name: VCPKG_DOWNLOADS
     value: D:\downloads
+  - group: azblob-test-sas-group
+  - name: X_VCPKG_ASSET_SOURCES
+    value: "x-azurl,$(azblob-root-url),$(azblob-test-sas),readwrite"
 
   steps:
   - task: PowerShell@2
@@ -25,6 +28,12 @@ jobs:
   # Note: D: is the Azure machines' temporary disk.
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
+  - script: |
+      dir ${{ variables.VCPKG_DOWNLOADS }} 2>&1 || (call )
+      dir ${{ variables.VCPKG_DOWNLOADS }}\tools 2>&1 || (call )
+      dir ${{ variables.VCPKG_DOWNLOADS }}\tools\msys2 2>&1 || (call )
+      rmdir /S /Q ${{ variables.VCPKG_DOWNLOADS }}\tools\msys2 2>&1 || (call )
+    displayName: 'Clean msys2 downloads'
   - task: PowerShell@2
     displayName: '*** Test Modified Ports and Prepare Test Logs ***'
     inputs:
