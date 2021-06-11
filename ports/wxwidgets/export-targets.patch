@@ -35,7 +35,7 @@ index 4063020..5667342 100644
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-wxwidgets-config.cmake DESTINATION share/unofficial-wxwidgets)
 \ No newline at end of file
 diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
-index e99555e..779d6ac 100644
+index e99555e..716561d 100644
 --- a/build/cmake/functions.cmake
 +++ b/build/cmake/functions.cmake
 @@ -257,13 +257,14 @@ function(wx_set_target_properties target_name is_base)
@@ -44,15 +44,15 @@ index e99555e..779d6ac 100644
          PUBLIC
 -            ${wxSETUP_HEADER_PATH}
 -            ${wxSOURCE_DIR}/include
-+            $<BUILD_INTERFACE:${wxSETUP_HEADER_PATH}>
-+            $<BUILD_INTERFACE:${wxSOURCE_DIR}/include>
++            "$<BUILD_INTERFACE:${wxSETUP_HEADER_PATH}>"
++            "$<BUILD_INTERFACE:${wxSOURCE_DIR}/include>"
 +            $<INSTALL_INTERFACE:include>
          )
  
      if(wxTOOLKIT_INCLUDE_DIRS)
          target_include_directories(${target_name}
 -            PUBLIC ${wxTOOLKIT_INCLUDE_DIRS})
-+            PUBLIC $<BUILD_INTERFACE:${wxTOOLKIT_INCLUDE_DIRS}>)
++            PUBLIC "$<BUILD_INTERFACE:${wxTOOLKIT_INCLUDE_DIRS}>")
      endif()
  
      if (WIN32)
@@ -72,15 +72,13 @@ index e99555e..779d6ac 100644
      endif()
  endmacro()
  
-@@ -453,7 +456,15 @@ macro(wx_lib_include_directories name)
+@@ -453,7 +456,13 @@ macro(wx_lib_include_directories name)
          if (_LIB_INCLUDE_DIRS_PRIVATE)
              set(INCLUDE_POS BEFORE)
          endif()
 -        target_include_directories(${name};${INCLUDE_POS};${ARGN})
 +        if (_LIB_INCLUDE_DIRS_PUBLIC)
-+        foreach (PUBLIC_DIR ${_LIB_INCLUDE_DIRS_PUBLIC})
-+            target_include_directories(${name};${INCLUDE_POS};PUBLIC;$<BUILD_INTERFACE:${PUBLIC_DIR}>)
-+        endforeach()
++        target_include_directories(${name};${INCLUDE_POS};PUBLIC;"$<BUILD_INTERFACE:${_LIB_INCLUDE_DIRS_PUBLIC}>")
 +        endif()
 +        if (_LIB_INCLUDE_DIRS_PRIVATE)
 +            target_include_directories(${name};${INCLUDE_POS};PRIVATE;${_LIB_INCLUDE_DIRS_PRIVATE})
@@ -89,41 +87,44 @@ index e99555e..779d6ac 100644
      endif()
  endmacro()
  
-@@ -514,7 +525,8 @@ function(wx_set_builtin_target_properties target_name)
+@@ -514,7 +523,8 @@ function(wx_set_builtin_target_properties target_name)
      target_include_directories(${target_name}
          BEFORE
          PUBLIC
 -            ${wxSETUP_HEADER_PATH}
-+            $<BUILD_INTERFACE:${wxSETUP_HEADER_PATH}>
++            "$<BUILD_INTERFACE:${wxSETUP_HEADER_PATH}>"
 +            $<INSTALL_INTERFACE:include>
          )
  
      set_target_properties(${target_name} PROPERTIES FOLDER "Third Party Libraries")
-@@ -789,10 +801,10 @@ function(wx_add name group)
+@@ -789,10 +799,10 @@ function(wx_add name group)
      endif()
  
      if(group STREQUAL Samples)
 -        target_include_directories(${target_name} PRIVATE ${wxSOURCE_DIR}/samples)
-+        target_include_directories(${target_name} PRIVATE $<BUILD_INTERFACE:${wxSOURCE_DIR}/samples>)
++        target_include_directories(${target_name} PRIVATE "$<BUILD_INTERFACE:${wxSOURCE_DIR}/samples>")
      elseif(group STREQUAL Tests)
 -        target_include_directories(${target_name} PRIVATE ${wxSOURCE_DIR}/tests)
 -        target_include_directories(${target_name} PRIVATE ${wxSOURCE_DIR}/3rdparty/catch/include)
-+        target_include_directories(${target_name} PRIVATE $<BUILD_INTERFACE:${wxSOURCE_DIR}/tests>)
-+        target_include_directories(${target_name} PRIVATE $<BUILD_INTERFACE:${wxSOURCE_DIR}/3rdparty/catch/include>)
++        target_include_directories(${target_name} PRIVATE "$<BUILD_INTERFACE:${wxSOURCE_DIR}/tests>")
++        target_include_directories(${target_name} PRIVATE "$<BUILD_INTERFACE:${wxSOURCE_DIR}/3rdparty/catch/include>")
      endif()
  
      if(APP_DATA)
 diff --git a/build/cmake/lib/CMakeLists.txt b/build/cmake/lib/CMakeLists.txt
-index 5c574c7..0da2702 100644
+index 5c574c7..5497605 100644
 --- a/build/cmake/lib/CMakeLists.txt
 +++ b/build/cmake/lib/CMakeLists.txt
-@@ -89,8 +89,10 @@ if(wxBUILD_MONOLITHIC)
-             set(INCLUDE_POS)
+@@ -86,11 +86,11 @@ if(wxBUILD_MONOLITHIC)
+             target_link_libraries(wxmono ${vis} ${wxMONO_LIBS_${vis}})
+         endif()
+         if(wxMONO_INCLUDE_DIRS_${vis})
+-            set(INCLUDE_POS)
              if (vis STREQUAL PRIVATE)
-                 set(INCLUDE_POS BEFORE)
-+                target_include_directories(wxmono ${INCLUDE_POS} ${vis} ${wxMONO_INCLUDE_DIRS_${vis}})
+-                set(INCLUDE_POS BEFORE)
++                target_include_directories(wxmono BEFORE ${vis} ${wxMONO_INCLUDE_DIRS_${vis}})
 +            else()
-+                target_include_directories(wxmono ${INCLUDE_POS} ${vis} $<BUILD_INTERFACE:${wxMONO_INCLUDE_DIRS_${vis}}>)
++                target_include_directories(wxmono ${vis} "$<BUILD_INTERFACE:${wxMONO_INCLUDE_DIRS_${vis}}>")
              endif()
 -            target_include_directories(wxmono ${INCLUDE_POS} ${vis} ${wxMONO_INCLUDE_DIRS_${vis}})
          endif()
@@ -169,7 +170,7 @@ index bd6acd8..177b6bc 100644
  wx_lib_include_directories(wxstc PRIVATE
      ${wxSOURCE_DIR}/src/stc/scintilla/include
 diff --git a/build/cmake/lib/webview/CMakeLists.txt b/build/cmake/lib/webview/CMakeLists.txt
-index cc3298f..dc825a6 100644
+index cc3298f..1d47e56 100644
 --- a/build/cmake/lib/webview/CMakeLists.txt
 +++ b/build/cmake/lib/webview/CMakeLists.txt
 @@ -132,8 +132,8 @@ if(WXGTK AND wxUSE_WEBVIEW_WEBKIT2)
@@ -178,8 +179,8 @@ index cc3298f..dc825a6 100644
      target_include_directories(wxwebkit2_ext PUBLIC
 -        ${LIBSOUP_INCLUDE_DIRS}
 -        ${WEBKIT2_INCLUDE_DIR}
-+        $<BUILD_INTERFACE:${LIBSOUP_INCLUDE_DIRS}>
-+        $<BUILD_INTERFACE:${WEBKIT2_INCLUDE_DIR}>
++        "$<BUILD_INTERFACE:${LIBSOUP_INCLUDE_DIRS}>"
++        "$<BUILD_INTERFACE:${WEBKIT2_INCLUDE_DIR}>"
          )
      target_link_libraries(wxwebkit2_ext PUBLIC
          ${LIBSOUP_LIBRARIES}
