@@ -1,8 +1,8 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL git@github.com:playgithub/BasicTools
-    REF 44b8877bd0ad87287873a3f62729b5f6e05947e1
-    TAG v1.0.3
+    REF 2e86869e0259329fc6c333aa41eb388fcd5b36e8
+    TAG v1.0.10
 )
 
 vcpkg_configure_cmake(
