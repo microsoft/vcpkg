@@ -5,6 +5,7 @@
   "description": "Cross-platform C library for reading values from and writing values to .xlsx files",
   "homepage": "https://github.com/brechtsanders/xlsxio",
   "dependencies": [
+    "expat",
     "minizip"
   ],
   "features": {
