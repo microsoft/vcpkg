@@ -1,0 +1,23 @@
+{
+  "name": "xlsxio",
+  "version-string": "commit-e3acace39e5fb153f5ce3500a4952c2bf93175bd",
+  "port-version": 1,
+  "description": "Cross-platform C library for reading values from and writing values to .xlsx files",
+  "homepage": "https://github.com/brechtsanders/xlsxio",
+  "dependencies": [
+    "minizip"
+  ],
+  "default-features": [
+  ],
+  "features": {
+    "libzip": {
+      "description": "use libzip instead of minizip",
+      "dependencies": [
+        "libzip"
+      ]
+    },
+    "wide": {
+      "description": "also build utf-16 library"
+    }
+  }
+}

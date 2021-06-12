@@ -1,0 +1,32 @@
+From 83eb9f6ed9cb37b2ba25f87d07453a6a3dc35820 Mon Sep 17 00:00:00 2001
+From: abc <a@b.com>
+Date: Sat, 12 Jun 2021 12:16:45 +0800
+Subject: [PATCH] fix-build-type
+
+---
+ CMakeLists.txt | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 3630123..a7fb924 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -15,8 +15,13 @@ UNSET(DUMMYVAR)
+ UNSET(VERFILE)
+ 
+ # parameters
+-OPTION(BUILD_STATIC "Build static libraries" ON)
+-OPTION(BUILD_SHARED "Build shared libraries" ON)
++IF(BUILD_SHARED_LIBS)
++  OPTION(BUILD_STATIC "Build static libraries" OFF)
++  OPTION(BUILD_SHARED "Build shared libraries" ON)
++ELSE()
++  OPTION(BUILD_STATIC "Build static libraries" ON)
++  OPTION(BUILD_SHARED "Build shared libraries" OFF)
++ENDIF()
+ OPTION(BUILD_PC_FILES "Build pkg-config .pc" ON)
+ OPTION(BUILD_TOOLS "Build tools" ON)
+ OPTION(BUILD_EXAMPLES "Build examples" ON)
+-- 
+2.32.0.windows.1
+
