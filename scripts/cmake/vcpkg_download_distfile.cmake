@@ -80,6 +80,13 @@ function(vcpkg_download_distfile VAR)
             message(FATAL_ERROR "vcpkg_download_distfile must not be passed both SHA512 and SKIP_SHA512.")
         endif()
     endif()
+    if(vcpkg_download_distfile_SHA512 STREQUAL "0")
+        string(REPEAT "0" 128 vcpkg_download_distfile_SHA512)
+    endif()
+    string(LENGTH "${vcpkg_download_distfile_SHA512}" vcpkg_download_distfile_SHA512_length)
+    if(NOT vcpkg_download_distfile_SHA512_length EQUAL "128")
+        message(FATAL_ERROR "Invalid SHA512: ${vcpkg_download_distfile_SHA512}. If you do not know the file's SHA512, set this to \"0\".")
+    endif()
 
     set(downloaded_file_path ${DOWNLOADS}/${vcpkg_download_distfile_FILENAME})
     set(download_file_path_part "${DOWNLOADS}/temp/${vcpkg_download_distfile_FILENAME}")
@@ -144,7 +151,7 @@ function(vcpkg_download_distfile VAR)
                 OUTPUT_FILE download-${vcpkg_download_distfile_FILENAME}-out.log
                 ERROR_FILE download-${vcpkg_download_distfile_FILENAME}-err.log
                 RESULT_VARIABLE error_code
-                WORKING_DIRECTORY ${DOWNLOADS}
+                WORKING_DIRECTORY "${DOWNLOADS}"
             )
             if (NOT "${error_code}" STREQUAL "0")
                 message(STATUS
@@ -157,14 +164,19 @@ function(vcpkg_download_distfile VAR)
                 )
                 set(download_success 0)
             else()
+                test_hash("${DOWNLOADS}/temp/${vcpkg_download_distfile_FILENAME}" "downloaded file" "The file may have been corrupted in transit.")
                 file(REMOVE
                     ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-out.log
                     ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-err.log
                     ${DOWNLOADS}/download-${vcpkg_download_distfile_FILENAME}-detailed.log
                 )
+                get_filename_component(downloaded_file_dir "${downloaded_file_path}" DIRECTORY)
+                file(MAKE_DIRECTORY "${downloaded_file_dir}")
+                file(RENAME "${DOWNLOADS}/temp/${vcpkg_download_distfile_FILENAME}" "${downloaded_file_path}")
                 set(download_success 1)
             endif()
-        elseif(vcpkg_download_distfile_SKIP_SHA512)
+        elseif(vcpkg_download_distfile_SKIP_SHA512 OR vcpkg_download_distfile_HEADERS)
+            # This is a workaround until the vcpkg tool supports downloading files without SHA512 and with headers
             set(download_success 0)
             set(request_headers)
             if(vcpkg_download_distfile_HEADERS)
