@@ -18,6 +18,11 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 vcpkg_copy_tools(TOOL_NAMES pkgconf AUTO_CLEAN)
+if("pkg-config-compat" IN_LIST FEATURES)
+    configure_file("${CURRENT_PACKAGES_DIR}/tools/${PORT}/pkgconf${VCPKG_TARGET_EXECUTABLE_SUFFIX}" 
+                   "${CURRENT_PACKAGES_DIR}/tools/${PORT}/pkg-config${VCPKG_TARGET_EXECUTABLE_SUFFIX}" COPYONLY)
+endif()
+
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
