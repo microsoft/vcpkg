@@ -4838,7 +4838,7 @@
     },
     "pkgconf": {
       "baseline": "1.7.4",
-      "port-version": 0
+      "port-version": 1
     },
     "platform-folders": {
       "baseline": "4.0.0",
