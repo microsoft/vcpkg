@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF 4.0
     SHA512 b1c8dc48ce3c1ef8e53c7e8d0aa830eec5b968bb3ff7cd778067627de649b45c1a72adfcd168d0ca36018455b6b2a740324cec63304ec4e66dd859ef9d64f674
     HEAD_REF master
+	PATCHES 
+       fix-uwp.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
