@@ -20,7 +20,7 @@ This script assumes you have installed the OpenSSH Client optional Windows compo
 
 $Location = 'westus2'
 $Prefix = 'PrLin-' + (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D32s_v4'
+$VMSize = 'Standard_D32_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
 $ErrorActionPreference = 'Stop'
@@ -161,7 +161,8 @@ New-AzStorageAccount `
   -Location $Location `
   -Name $StorageAccountName `
   -SkuName 'Standard_LRS' `
-  -Kind StorageV2
+  -Kind StorageV2 `
+  -MinimumTlsVersion TLS1_2
 
 $StorageAccountKeys = Get-AzStorageAccountKey `
   -ResourceGroupName $ResourceGroupName `

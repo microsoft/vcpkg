@@ -43,7 +43,7 @@ if ($Unstable) {
 }
 
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D32s_v4'
+$VMSize = 'Standard_D32_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
 $WindowsServerSku = '2019-Datacenter'
@@ -177,7 +177,8 @@ New-AzStorageAccount `
   -Location $Location `
   -Name $StorageAccountName `
   -SkuName 'Standard_LRS' `
-  -Kind StorageV2
+  -Kind StorageV2 `
+  -MinimumTlsVersion TLS1_2
 
 $StorageAccountKeys = Get-AzStorageAccountKey `
   -ResourceGroupName $ResourceGroupName `
