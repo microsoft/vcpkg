@@ -7,8 +7,6 @@
   "dependencies": [
     "minizip"
   ],
-  "default-features": [
-  ],
   "features": {
     "libzip": {
       "description": "use libzip instead of minizip",
