@@ -1666,7 +1666,7 @@
     },
     "directxmath": {
       "baseline": "jan2021",
-      "port-version": 0
+      "port-version": 1
     },
     "directxmesh": {
       "baseline": "jun2021",
