@@ -6696,6 +6696,10 @@
       "baseline": "1.5.0",
       "port-version": 1
     },
+    "xlsxio": {
+      "baseline": "commit-e3acace39e5fb153f5ce3500a4952c2bf93175bd",
+      "port-version": 1
+    },
     "xmlsec": {
       "baseline": "1.2.32",
       "port-version": 0
