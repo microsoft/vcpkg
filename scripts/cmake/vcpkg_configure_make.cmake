@@ -443,6 +443,10 @@ function(vcpkg_configure_make)
             # Currently needed for arm because objdump yields: "unrecognised machine type (0x1c4) in Import Library Format archive"
             list(APPEND _csc_OPTIONS lt_cv_deplibs_check_method=pass_all)
         endif()
+    else() # NOT VCPKG_TARGET_IS_WINDOWS
+        if(NOT _csc_OPTIONS MATCHES "as_ln_s")
+            list(APPEND _csc_OPTIONS "as_ln_s=ln -sr") # Make symlinks relative!
+        endif()
     endif()
 
     if(CMAKE_HOST_WIN32)
