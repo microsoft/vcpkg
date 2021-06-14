@@ -6,15 +6,23 @@
   "homepage": "https://github.com/brechtsanders/xlsxio",
   "dependencies": [
     "expat",
-    "minizip",
-    "zlib"
+    {
+      "name": "minizip",
+      "features": [
+        "bzip2"
+      ]
+    }
   ],
   "features": {
     "libzip": {
       "description": "use libzip instead of minizip",
       "dependencies": [
-        "libzip",
-        "zlib"
+        {
+          "name": "libzip",
+          "features": [
+            "bzip2"
+          ]
+        }
       ]
     },
     "wide": {
