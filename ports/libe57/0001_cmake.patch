@@ -1,0 +1,34 @@
+diff -Naur a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2012-04-04 19:09:11.000000000 +0800
++++ b/CMakeLists.txt	2020-02-01 13:37:30.887116500 +0800
+@@ -81,17 +80,17 @@
+ endif(NOT Boost_FOUND)
+ 
+ set(Xerces_USE_STATIC_LIBS On)
+-find_package(Xerces QUIET)
+-if (NOT Xerces_FOUND)
++find_package(XercesC QUIET)
++if (NOT XercesC_FOUND)
+     set(XERCES_ROOT CACHE PATH "Location of the xerces library")
+     message(FATAL_ERROR
+ "Unable to find xerces library.
+ Please set the the XERCES_ROOT to point to the root of the xerces directory."
+ )
+-endif (NOT Xerces_FOUND)
++endif (NOT XercesC_FOUND)
+ 
+-set(XML_LIBRARIES ${Xerces_LIBRARY})
+-set(XML_INCLUDE_DIRS ${Xerces_INCLUDE_DIR})
++set(XML_LIBRARIES ${XercesC_LIBRARY})
++set(XML_INCLUDE_DIRS ${XercesC_INCLUDE_DIR})
+ 
+ if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+     add_definitions(-DLINUX)
+@@ -193,6 +192,7 @@
+     time_conversion
+     ${XML_LIBRARIES}
+     ${CMAKE_THREAD_LIBS_INIT}
++    bcrypt
+ )
+ add_executable( e57fields
+     src/tools/e57fields.cpp

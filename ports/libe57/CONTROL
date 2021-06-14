@@ -1,0 +1,5 @@
+Source: libe57
+Version: 1.1.312
+Homepage: http://www.libe57.org
+Description: The libE57 software is an open source implementation of the ASTM E2807 Standard Specification for 3D Imaging Data Exchange (known as the E57 format hereafter) in the C++ language.
+Build-Depends: boost-system, boost-filesystem, boost-thread, boost-program-options, boost-crc, xerces-c, boost-variant, boost-format, boost-uuid
