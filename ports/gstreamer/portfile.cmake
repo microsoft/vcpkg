@@ -1,4 +1,4 @@
-vcpkg_fail_port_install(MESSAGE "'${PORT}' currently only supports Windows/Darwin x86/x64 platforms" ON_ARCH "arm" ON_TARGET "uwp" "emscripten" "wasm32" "android" "ios")
+vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp" "emscripten" "wasm32" "android" "ios")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH GST_BUILD_SOURCE_PATH
@@ -219,6 +219,13 @@ vcpkg_configure_meson(
         -Dgst-plugins-bad:glib-asserts=disabled
         -Dgst-plugins-bad:glib-checks=disabled
 )
+if(VCPKG_TARGET_IS_WINDOWS)
+    # note: can't find where z.lib comes from. replace it to appropriate library name manually
+    get_filename_component(BUILD_NINJA_DBG ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/build.ninja ABSOLUTE)
+    vcpkg_replace_string(${BUILD_NINJA_DBG} "z.lib" "zlibd.lib")
+    get_filename_component(BUILD_NINJA_REL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja ABSOLUTE)
+    vcpkg_replace_string(${BUILD_NINJA_REL} "z.lib" "zlib.lib")
+endif()
 vcpkg_install_meson()
 
 vcpkg_copy_tools(
@@ -228,6 +235,7 @@ vcpkg_copy_tools(
                 gst-ptp-helper
     SEARCH_DIR  ${CURRENT_PACKAGES_DIR}/libexec/gstreamer-1.0
     DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0
+    AUTO_CLEAN
 )
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0)
 
