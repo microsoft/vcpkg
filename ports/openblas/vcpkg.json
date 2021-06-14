@@ -14,7 +14,7 @@
         {
           "name": "openblas",
           "features": [
-            "thread"
+            "threads"
           ]
         }
       ]
