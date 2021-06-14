@@ -3,7 +3,6 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_fail_port_install(ON_TARGET "linux" "osx" "uwp" "ios" "android" "freebsd")
 
-set(PRESENTMON_VERSION 1.6.0)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO GameTechDev/PresentMon
@@ -16,7 +15,7 @@ file(COPY ${CURRENT_PORT_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    tools BUILD_TOOLS
+        tools BUILD_TOOLS
 )
 
 vcpkg_configure_cmake(

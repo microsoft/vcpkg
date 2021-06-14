@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.11)
 project(presentmon)
 
-set(PRESENTMON_VERSION 1.7.0)
-
 option(INSTALL_HEADERS "Install presentmon headers" ON)
 option(BUILD_TOOLS "Build tool PresentMon" OFF)
 
