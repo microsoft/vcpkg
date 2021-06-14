@@ -24,7 +24,7 @@ get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
 
 if(NOT VCPKG_TARGET_IS_WINDOWS)
-    list(APPEND OPTIONS "LN_S='ln -sr'")
+    list(APPEND OPTIONS "as_ln_s=ln -sr")
 endif()
 
 vcpkg_configure_make(
