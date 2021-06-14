@@ -88,22 +88,22 @@
         <sha512>f477842d0cebefcd6bf9c6d536ab8ea20ec5b0aa967ee963ab6a101aeff9df8742ca600d35f39e2e7158d76d8231f1ed2bef6104dce84d2bf8d6b07d17d706a1</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>5.5.1</version>
+        <version>5.9.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
-        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.9.1/nuget.exe</url>
+        <sha512>d7acca2b1271bfd3d6f7c7088bceee7a5a5e860d38c05a159f59b1f4bf935e963fde183a769db944df8f6dd44177bb91942578c86eef204cffa119d3d68e97fc</sha512>
     </tool>
     <tool name="nuget" os="linux">
-        <version>5.5.1</version>
+        <version>5.9.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
-        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.9.1/nuget.exe</url>
+        <sha512>d7acca2b1271bfd3d6f7c7088bceee7a5a5e860d38c05a159f59b1f4bf935e963fde183a769db944df8f6dd44177bb91942578c86eef204cffa119d3d68e97fc</sha512>
     </tool>
     <tool name="nuget" os="osx">
-        <version>5.5.1</version>
+        <version>5.9.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
-        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.9.1/nuget.exe</url>
+        <sha512>d7acca2b1271bfd3d6f7c7088bceee7a5a5e860d38c05a159f59b1f4bf935e963fde183a769db944df8f6dd44177bb91942578c86eef204cffa119d3d68e97fc</sha512>
     </tool>
     <tool name="installerbase" os="windows">
         <version>3.1.81</version>
