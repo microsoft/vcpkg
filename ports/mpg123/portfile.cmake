@@ -7,7 +7,9 @@ vcpkg_from_sourceforge(
     REF ${MPG123_VERSION}
     FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
     SHA512 ${MPG123_HASH}
-    PATCHES 0001-fix-checkcpuarch-path.patch
+    PATCHES
+        0001-fix-checkcpuarch-path.patch
+        0002-fix-libmpg123-uwp-build.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
