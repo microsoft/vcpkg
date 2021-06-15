@@ -6793,7 +6793,7 @@
       "port-version": 0
     },
     "yyjson": {
-      "baseline": "2021-04-12",
+      "baseline": "0.3.0",
       "port-version": 0
     },
     "z3": {
