@@ -1,15 +1,14 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-set(LIBVPX_VERSION 1.9.0)
+set(LIBVPX_VERSION 1.10.0)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO webmproject/libvpx
     REF v${LIBVPX_VERSION}
-    SHA512 8d544552b35000ea5712aec220b78bb5f7dc210704b2f609365214cb95a4f5a0e343b362723d829cb4a9ac203b10d5443700ba84b28fd6b2fefbabb40663e298
+    SHA512 f88c588145b5164e98531b75215e119056cd806a9dbe6599bb9dab35c0af0ecd4b3daabee7d795e412a58aeb543d5c7dc0107457c4bd8f4d434e966e8e22a32d
     HEAD_REF master
     PATCHES
-        0001-vcxproj-nasm.patch
         0002-Fix-nasm-debug-format-flag.patch
         0003-add-uwp-and-v142-support.patch
         0004-remove-library-suffixes.patch
@@ -165,7 +164,11 @@ else()
 	elseif(VCPKG_TARGET_IS_LINUX)
         set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-linux-gcc")
     elseif(VCPKG_TARGET_IS_OSX)
-        set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
+        if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+            set(LIBVPX_TARGET "arm64-darwin20-gcc")
+        else()
+            set(LIBVPX_TARGET "${LIBVPX_TARGET_ARCH}-darwin17-gcc") # enable latest CPU instructions for best performance and less CPU usage on MacOS
+        endif()
     else()
         set(LIBVPX_TARGET "generic-gnu") # use default target
     endif()
