@@ -220,6 +220,11 @@ else()
     set(SHELL /bin/sh)
 endif()
 
+if(VCPKG_TARGET_IS_OSX AND VCPKG_OSX_DEPLOYMENT_TARGET)
+    set(OPTIONS "--extra-cflags=-mmacosx-version-min=${VCPKG_OSX_DEPLOYMENT_TARGET} ${OPTIONS}")
+    set(OPTIONS "--extra-ldflags=-mmacosx-version-min=${VCPKG_OSX_DEPLOYMENT_TARGET} ${OPTIONS}")
+endif()
+
 set(ENV{${INCLUDE_VAR}} "${CURRENT_INSTALLED_DIR}/include${VCPKG_HOST_PATH_SEPARATOR}$ENV{${INCLUDE_VAR}}")
 
 set(_csc_PROJECT_PATH ffmpeg)
