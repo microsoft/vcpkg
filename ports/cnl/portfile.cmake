@@ -2,7 +2,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO johnmcfarlane/cnl
-    REF 2dde6e62e608a4adc3c5504f067575efa4910568
+    REF 2dde6e62e608a4adc3c5504f067575efa4910568 #v1.1.7
     SHA512 33a81ea726802c71a684bcd002b5119cde4db471ebc9ba02cd15c7487ab468eeca09fb8dcaed953e3f3cded2cd813a903f808d97527b0ec7f393647b64a22572
 )
 
