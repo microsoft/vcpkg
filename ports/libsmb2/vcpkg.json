@@ -1,0 +1,10 @@
+{
+  "name": "libsmb2",
+  "version-string": "2021-4-29",
+  "port-version": 0,
+  "description": "SMB2/3 Userspace Client",
+  "homepage": "https://github.com/sahlberg/libsmb2",
+  "dependencies": [
+    "openssl", "vcpkg-cmake-config"
+  ]
+}
