@@ -220,7 +220,7 @@ function(vcpkg_internal_meson_generate_cross_file _additional_binaries) #https:/
             OUTPUT_VARIABLE MACHINE
             COMMAND_ERROR_IS_FATAL ANY)
         
-        # show real machine architecture to visual understand, do we now in native Apple Silicon Terminal or inside the Rosetta
+        # Show real machine architecture to visually understand whether we are in a native Apple Silicon terminal or running under Rosetta emulation
         debug_message("Machine: ${MACHINE}")
 
         if(MACHINE MATCHES "arm64")
