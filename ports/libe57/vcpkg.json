@@ -3,7 +3,6 @@
   "version-semver": "1.1.312",
   "description": "An open source implementation of the ASTM E2807 Standard Specification for 3D Imaging Data Exchange in the C++ language.",
   "homepage": "http://www.libe57.org/",
-  "supports": "!uwp",
   "dependencies": [
     "boost-crc",
     "boost-filesystem",
@@ -13,6 +12,10 @@
     "boost-thread",
     "boost-uuid",
     "boost-variant",
+    {
+      "name": "icu",
+      "platform": "linux"
+    },
     "xerces-c"
   ]
 }
