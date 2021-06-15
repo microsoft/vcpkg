@@ -1573,7 +1573,7 @@
       "port-version": 0
     },
     "d3d12-memory-allocator": {
-      "baseline": "1.0.0",
+      "baseline": "2021-05-05",
       "port-version": 0
     },
     "d3dx12": {
