@@ -3,12 +3,12 @@ vcpkg_fail_port_install(ON_TARGET "Windows")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/proxygen
-    REF v2021.05.31.00
-    SHA512 45d5a7b3920a02d3b27fbbfb1c1b7dbad3cec13fd7dabab2947b2c446493e96701bdf2aefb17c7e00965d3cad3b4aaaa42074788b554f4036f0edebc4b0fed5d
+    REF v2021.06.14.00
+    SHA512 f5ab54514575f86897438f40a481796c34031101775b61a01581338c91686159995e4f822909e42eed4c006b2c6a6351887d469cc9df1df80711dba10cc15a19
     HEAD_REF master
     PATCHES
         remove-register.patch
-        fix-duplicated-target.patch
+        fix-duplicated-target.patch # fixed in master
 )
 
 vcpkg_find_acquire_program(PYTHON3)
