@@ -5,7 +5,6 @@
   "homepage": "https://www.exiv2.org",
   "supports": "!uwp",
   "dependencies": [
-    "gettext",
     "libiconv"
   ],
   "features": {
@@ -26,6 +25,12 @@
       "description": "Build with XMP metadata support",
       "dependencies": [
         "expat"
+      ]
+    },
+    "nls": {
+      "description": "Build native language support",
+      "dependencies": [
+        "gettext"
       ]
     }
   }
