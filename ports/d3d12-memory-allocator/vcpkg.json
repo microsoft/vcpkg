@@ -1,6 +1,6 @@
 {
   "name": "d3d12-memory-allocator",
-  "version": "1.0.0",
+  "version-date": "2021-05-05",
   "description": "Easy to integrate D3d12 memory allocation library from GPUOpen",
   "homepage": "https://gpuopen.com/gaming-product/d3d12-memory-allocator/",
   "license": "MIT",
