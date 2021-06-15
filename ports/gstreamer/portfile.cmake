@@ -225,19 +225,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string(${BUILD_NINJA_DBG} "z.lib" "zlibd.lib")
     get_filename_component(BUILD_NINJA_REL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/build.ninja ABSOLUTE)
     vcpkg_replace_string(${BUILD_NINJA_REL} "z.lib" "zlib.lib")
+    vcpkg_replace_string(${BUILD_NINJA_REL} "\"-Wno-unused\"" "") # todo: may need a patch for `gst_debug=false`
 endif()
 vcpkg_install_meson()
 
-vcpkg_copy_tools(
-    TOOL_NAMES  gst-hotdoc-plugins-scanner
-                gst-plugin-scanner
-                gst-plugins-doc-cache-generator
-                gst-ptp-helper
-    SEARCH_DIR  ${CURRENT_PACKAGES_DIR}/libexec/gstreamer-1.0
-    DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0
-    AUTO_CLEAN
-)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0)
+if(VCPKG_TARGET_IS_OSX)
+    vcpkg_copy_tools(
+        TOOL_NAMES  gst-hotdoc-plugins-scanner
+                    gst-plugin-scanner
+                    gst-plugins-doc-cache-generator
+                    gst-ptp-helper
+        SEARCH_DIR  ${CURRENT_PACKAGES_DIR}/libexec/gstreamer-1.0
+        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0
+        AUTO_CLEAN
+    )
+    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0)
+endif()
 
 # Remove duplicated GL headers (we already have `opengl-registry`)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR
@@ -254,7 +257,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/libexec
                     ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include
 )
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
                         ${CURRENT_PACKAGES_DIR}/bin
     )
