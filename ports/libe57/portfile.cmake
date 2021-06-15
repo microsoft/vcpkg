@@ -1,4 +1,3 @@
-include(vcpkg_common_functions)
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/E57RefImpl_src-1.1.312)
 vcpkg_download_distfile(ARCHIVE
     URLS "https://downloads.sourceforge.net/project/e57-3d-imgfmt/E57Refimpl-src/E57RefImpl_src-1.1.312.zip"
