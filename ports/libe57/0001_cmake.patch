@@ -1,7 +1,16 @@
 diff -Naur a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt	2012-04-04 19:09:11.000000000 +0800
-+++ b/CMakeLists.txt	2020-02-01 13:37:30.887116500 +0800
-@@ -81,17 +80,17 @@
+--- a/CMakeLists.txt	2012-04-04 13:09:12.000000000 +0800
++++ b/CMakeLists.txt	2021-06-16 01:14:35.669163100 +0800
+@@ -31,6 +31,8 @@
+ set(CMAKE_USER_MAKE_RULES_OVERRIDE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/c_flag_overrides.cmake)
+ set(CMAKE_USER_MAKE_RULES_OVERRIDE_CXX ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cxx_flag_overrides.cmake)
+ 
++set(CMAKE_POSITION_INDEPENDENT_CODE ON)
++
+ # Set a private module find path
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
+ 
+@@ -81,17 +83,17 @@
  endif(NOT Boost_FOUND)
  
  set(Xerces_USE_STATIC_LIBS On)
@@ -24,11 +33,22 @@ diff -Naur a/CMakeLists.txt b/CMakeLists.txt
  
  if (${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
      add_definitions(-DLINUX)
-@@ -193,6 +192,7 @@
+@@ -187,12 +189,18 @@
+ add_executable( las2e57
+     src/tools/las2e57.cpp
+ )
++
++if (MSVC)
++    set(LAS2E57_EXTRA_LINK bcrypt)
++endif(MSVC)
++
+ target_link_libraries( las2e57
+     E57RefImpl
+     LASReader
      time_conversion
      ${XML_LIBRARIES}
      ${CMAKE_THREAD_LIBS_INIT}
-+    bcrypt
++    ${LAS2E57_EXTRA_LINK}
  )
  add_executable( e57fields
      src/tools/e57fields.cpp
