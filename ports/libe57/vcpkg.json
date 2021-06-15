@@ -5,14 +5,14 @@
   "homepage": "http://www.libe57.org/",
   "supports": "!uwp",
   "dependencies": [
-    "boost-system",
-    "boost-filesystem",
-    "boost-thread",
-    "boost-program-options",
     "boost-crc",
-    "boost-variant",
+    "boost-filesystem",
     "boost-format",
+    "boost-program-options",
+    "boost-system",
+    "boost-thread",
     "boost-uuid",
+    "boost-variant",
     "xerces-c"
   ]
 }
