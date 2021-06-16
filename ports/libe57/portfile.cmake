@@ -10,6 +10,8 @@ vcpkg_extract_source_archive_ex(
   ARCHIVE ${ARCHIVE}
   PATCHES 
     "0001_cmake.patch"
+    "0002_replace_tr1_with_cpp11.patch"
+    "0003_fix_osx_support.patch"
 )
 
 vcpkg_configure_cmake(

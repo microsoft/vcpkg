@@ -1,0 +1,53 @@
+diff -Naur a/src/refimpl/E57FoundationImpl.cpp b/src/refimpl/E57FoundationImpl.cpp
+--- a/src/refimpl/E57FoundationImpl.cpp	2012-04-12 21:44:42.000000000 +0800
++++ b/src/refimpl/E57FoundationImpl.cpp	2021-06-16 23:13:28.656574600 +0800
+@@ -57,6 +57,11 @@
+ # include <fcntl.h>
+ # define O_BINARY (0)
+ # define _unlink unlink
++#elif defined( __APPLE__ )
++# include <sys/types.h>
++# include <unistd.h>
++# define O_BINARY (0)
++# define _unlink unlink
+ #else
+ #  error "no supported OS platform defined"
+ #endif
+@@ -4764,6 +4769,8 @@
+ #  endif
+ #elif defined(LINUX)
+     int64_t result = ::lseek64(fd_, offset, whence);
++#elif defined( __APPLE__ )
++    int64_t result = ::lseek(fd_, offset, whence);
+ #else
+ #  error "no supported OS platform defined"
+ #endif
+diff -Naur a/src/refimpl/E57Simple.cpp b/src/refimpl/E57Simple.cpp
+--- a/src/refimpl/E57Simple.cpp	2011-05-14 05:40:11.000000000 +0800
++++ b/src/refimpl/E57Simple.cpp	2021-06-16 23:14:48.228582600 +0800
+@@ -799,6 +799,9 @@
+ #  define __LARGE64_FILES
+ #  include <sys/types.h>
+ #  include <unistd.h>
++#elif defined( __APPLE__ )
++#  include <sys/types.h>
++#  include <unistd.h>
+ #else
+ #  error "no supported OS platform defined"
+ #endif
+diff -Naur a/src/refimpl/E57SimpleImpl.cpp b/src/refimpl/E57SimpleImpl.cpp
+--- a/src/refimpl/E57SimpleImpl.cpp	2012-04-12 23:15:46.000000000 +0800
++++ b/src/refimpl/E57SimpleImpl.cpp	2021-06-16 23:16:10.941588400 +0800
+@@ -74,6 +74,12 @@
+ #  include <boost/uuid/uuid.hpp>
+ #  include <boost/uuid/uuid_generators.hpp>
+ #  include <boost/uuid/uuid_io.hpp>
++#elif defined(__APPLE__)
++#  include <sys/types.h>
++#  include <unistd.h>
++#  include <boost/uuid/uuid.hpp>
++#  include <boost/uuid/uuid_generators.hpp>
++#  include <boost/uuid/uuid_io.hpp>
+ #else
+ #  error "no supported OS platform defined"
+ #endif
