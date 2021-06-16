@@ -1,0 +1,24 @@
+{
+  "name": "xtensor",
+  "version": "0.23.10",
+  "description": "C++ tensors with broadcasting and lazy computing",
+  "homepage": "https://github.com/xtensor-stack/xtensor",
+  "dependencies": [
+    "nlohmann-json",
+    "xtl"
+  ],
+  "features": {
+    "tbb": {
+      "description": "xtensor with tbb support",
+      "dependencies": [
+        "tbb"
+      ]
+    },
+    "xsimd": {
+      "description": "xtensor with xsimd support",
+      "dependencies": [
+        "xsimd"
+      ]
+    }
+  }
+}
