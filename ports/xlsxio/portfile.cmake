@@ -5,9 +5,10 @@ vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
                   HEAD_REF master)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-                     FEATURES
-                        libzip WITH_LIBZIP
-                        wide WITH_WIDE)
+    FEATURES
+        libzip WITH_LIBZIP
+        wide WITH_WIDE
+)
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)    
     set(BUILD_STATIC ON)
