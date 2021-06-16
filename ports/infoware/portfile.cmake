@@ -3,8 +3,8 @@ vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ThePhD/infoware
-    REF v0.6.0
-    SHA512 38be9e375508c7fdee4be3540d80c95bf14dbef68c7880d3dc98de3128b43680c18ceb09fb0da33b6d31064d8cdbf0672671d6b4be4f0a4208a0b99d0224bd2e
+    REF 50cb0982aceb32c8eb57aa6bc5011aced2c379df
+    SHA512 fe8182998a9e9dbed3dc3985a1161da11b340562628a71da8840aa4d4c56382ddc3ddef3d094e5d9c7c06481a2076dcff7fdb561bd169dd9d1849da4b4c6a064
     HEAD_REF master
 )
 
