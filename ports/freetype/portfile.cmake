@@ -6,6 +6,8 @@ vcpkg_from_sourceforge(
     REF ${FT_VERSION}
     FILENAME freetype-${FT_VERSION}.tar.xz
     SHA512 827cda734aa6b537a8bcb247549b72bc1e082a5b32ab8d3cccb7cc26d5f6ee087c19ce34544fa388a1eb4ecaf97600dbabc3e10e950f2ba692617fee7081518f
+    ADDITIONAL_URLS
+        "https://download.savannah.gnu.org/releases/freetype/freetype-${FT_VERSION}.tar.xz"
     PATCHES
         0001-Fix-install-command.patch
         0003-Fix-UWP.patch
