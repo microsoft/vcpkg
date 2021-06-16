@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF 2406e20f3640c6bf8fac56860105744b6bafd2f9
     SHA512 c2c25be6a7dacc16afdc8aae68b4b78eea22608e470a21f9aa096eed42866afc733828b126ff694b46b0c860b1d51e06fd830bcd4ea833733a497ac18e8885bf
     HEAD_REF master
+    PATCHES
+        fix-git-version.patch
 )
 
 vcpkg_cmake_configure(
