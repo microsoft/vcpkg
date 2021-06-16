@@ -134,6 +134,7 @@ if(CMD MATCHES "^BUILD$")
     include("${SCRIPTS}/cmake/vcpkg_test_cmake.cmake")
 
     include("${SCRIPTS}/cmake/z_vcpkg_apply_patches.cmake")
+    include("${SCRIPTS}/cmake/z_vcpkg_forward_output_variable.cmake")
     include("${SCRIPTS}/cmake/z_vcpkg_prettify_command_line.cmake")
 
     include("${CURRENT_PORT_DIR}/portfile.cmake")
