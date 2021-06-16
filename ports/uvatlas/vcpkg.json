@@ -1,0 +1,21 @@
+{
+  "name": "uvatlas",
+  "version-string": "jun2021",
+  "description": "UVAtlas isochart texture atlas",
+  "homepage": "http://go.microsoft.com/fwlink/?LinkID=512686",
+  "documentation": "https://github.com/Microsoft/UVAtlas/wiki",
+  "license": "MIT",
+  "supports": "windows | linux",
+  "dependencies": [
+    "directx-headers",
+    "directxmath",
+    {
+      "name": "directxmesh",
+      "platform": "!(uwp | linux)"
+    },
+    {
+      "name": "directxtex",
+      "platform": "!(uwp | linux)"
+    }
+  ]
+}
