@@ -4,6 +4,7 @@
   "description": "C++ Functional Terminal User Interface",
   "homepage": "https://github.com/ArthurSonzogni/FTXUI",
   "license": "MIT",
+  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
