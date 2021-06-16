@@ -1,8 +1,10 @@
-vcpkg_from_github(OUT_SOURCE_PATH SOURCE_PATH
-                  REPO brechtsanders/xlsxio
-                  REF e3acace39e5fb153f5ce3500a4952c2bf93175bd
-                  SHA512 8148b89c43cf45653c583d51fb8050714d3cd0a76ab9a05d46604f3671a06487e4fc58d3f6f9f2a9f9b57a9f9fe1863ef07017c74197f151390576c5aac360ea
-                  HEAD_REF master)
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH
+    REPO brechtsanders/xlsxio
+    REF e3acace39e5fb153f5ce3500a4952c2bf93175bd
+    SHA512 8148b89c43cf45653c583d51fb8050714d3cd0a76ab9a05d46604f3671a06487e4fc58d3f6f9f2a9f9b57a9f9fe1863ef07017c74197f151390576c5aac360ea
+    HEAD_REF master
+)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
