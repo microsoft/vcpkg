@@ -10,19 +10,19 @@ vcpkg_from_github(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    x11 INFOWARE_USE_X11
-    d3d INFOWARE_USE_D3D
-    opencl INFOWARE_USE_OPENCL
-    opengl INFOWARE_USE_OPENGL
+    FEATURES
+        x11 INFOWARE_USE_X11
+        d3d INFOWARE_USE_D3D
+        opencl INFOWARE_USE_OPENCL
+        opengl INFOWARE_USE_OPENGL
 )
 
 # git must be injected, because vcpkg isolates the build
 # from the environment entirely to have reproducible builds
 vcpkg_find_acquire_program(GIT)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
         -DINFOWARE_EXAMPLES=OFF
@@ -31,8 +31,8 @@ vcpkg_configure_cmake(
         -DGIT_FOUND=true
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
