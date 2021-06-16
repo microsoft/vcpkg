@@ -50,6 +50,12 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-wxwidgets TARGET_PATH sha
 if(VCPKG_TARGET_IS_WINDOWS)
     vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
 else()
+    # Change the symbolic link to copy
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/tool/wx-config)
+    configure_file(${CURRENT_PACKAGES_DIR}/lib/wx/config/gtk3-unicode-static-3.1
+        ${CURRENT_PACKAGES_DIR}/tool/wx-config COPYONLY
+    )
+    
     vcpkg_copy_tools(TOOL_NAMES wxrc wx-config wxrc-3.1 AUTO_CLEAN)
 endif()
 
