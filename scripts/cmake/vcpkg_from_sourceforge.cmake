@@ -11,6 +11,7 @@ vcpkg_from_sourceforge(
     [REF <2.1-3>]
     SHA512 <547b417109332...>
     FILENAME <CUnit-2.1-3.tar.bz2>
+    [ADDITIONAL_URLS <url1>...]
     [DISABLE_SSL]
     [NO_REMOVE_ONE_LEVEL]
     [PATCHES <patch1.patch> <patch2.patch>...]
@@ -59,6 +60,9 @@ Disable ssl when downloading source.
 ### NO_REMOVE_ONE_LEVEL
 Specifies that the default removal of the top level folder should not occur.
 
+### ADDITIONAL_URLS
+Additional (non-SourceForge) mirror URLs.
+
 ## Examples:
 
 * [cunit](https://github.com/Microsoft/vcpkg/blob/master/ports/cunit/portfile.cmake)
@@ -69,7 +73,7 @@ Specifies that the default removal of the top level folder should not occur.
 function(vcpkg_from_sourceforge)
     set(booleanValueArgs DISABLE_SSL NO_REMOVE_ONE_LEVEL)
     set(oneValueArgs OUT_SOURCE_PATH REPO REF SHA512 FILENAME WORKING_DIRECTORY)
-    set(multipleValuesArgs PATCHES)
+    set(multipleValuesArgs ADDITIONAL_URLS PATCHES)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _vdus "${booleanValueArgs}" "${oneValueArgs}" "${multipleValuesArgs}")
 
@@ -154,6 +158,9 @@ function(vcpkg_from_sourceforge)
     foreach(SOURCEFORGE_MIRROR IN LISTS Z_VCPKG_SOURCEFORGE_MIRRORS)
         list(APPEND URLS "${URL}/download?use_mirror=${SOURCEFORGE_MIRROR}")
     endforeach()
+    if(DEFINED _vdus_ADDITIONAL_URLS)
+        list(APPEND URLS "${_vdus_ADDITIONAL_URLS}")
+    endif()
 
     vcpkg_download_distfile(ARCHIVE
         URLS ${URLS}
