@@ -1,8 +1,9 @@
 {
   "name": "libsmb2",
-  "version-string": "2021-4-29",
+  "version-date": "2021-04-29",
   "description": "SMB2/3 Userspace Client",
   "homepage": "https://github.com/sahlberg/libsmb2",
+  "supports": "!osx",
   "dependencies": [
     "openssl",
     "vcpkg-cmake-config"

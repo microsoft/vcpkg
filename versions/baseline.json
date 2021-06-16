@@ -3537,7 +3537,7 @@
       "port-version": 1
     }, 
 	"libsmb2": {
-      "baseline": "2021-4-29",
+      "baseline": "2021-04-29",
       "port-version": 0
     },
     "libsndfile": {
