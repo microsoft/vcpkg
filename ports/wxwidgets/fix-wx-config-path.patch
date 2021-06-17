@@ -12,3 +12,23 @@ index 441f88c..1ea1a40 100644
  exec_prefix=${input_option_exec_prefix-${input_option_prefix-${this_exec_prefix:-@exec_prefix@}}}
  wxconfdir="@libdir@/wx/config"
  
+diff --git a/build/cmake/install.cmake b/build/cmake/install.cmake
+index 968dff8..4699f63 100644
+--- a/build/cmake/install.cmake
++++ b/build/cmake/install.cmake
+@@ -44,10 +44,12 @@ else()
+         )
+ 
+     install(DIRECTORY DESTINATION "bin")
++    install(FILES ${CMAKE_INSTALL_PREFIX}/lib/wx/config/${wxBUILD_FILE_ID}
++            DESTINATION ${CMAKE_INSTALL_PREFIX}/bin RENAME wx-config
++    )
+     install(CODE "execute_process( \
+-        COMMAND ${CMAKE_COMMAND} -E create_symlink \
+-        ${CMAKE_INSTALL_PREFIX}/lib/wx/config/${wxBUILD_FILE_ID} \
+-        ${CMAKE_INSTALL_PREFIX}/bin/wx-config \
++        COMMAND sh -c \"chmod u+x \
++        ${CMAKE_INSTALL_PREFIX}/bin/wx-config\" \
+         )"
+     )
+ endif()
