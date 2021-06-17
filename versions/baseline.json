@@ -2018,7 +2018,7 @@
     },
     "flashlight-cuda": {
       "baseline": "0.3",
-      "port-version": 1
+      "port-version": 2
     },
     "flatbuffers": {
       "baseline": "1.12.0",
