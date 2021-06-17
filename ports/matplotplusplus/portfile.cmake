@@ -49,12 +49,12 @@ vcpkg_cmake_install()
 vcpkg_copy_pdbs()
 
 file(RENAME
-    ${CURRENT_PACKAGES_DIR}/lib/cmake/Matplot++/matplot++-config.cmake
-    ${CURRENT_PACKAGES_DIR}/lib/cmake/Matplot++/Matplot++-config.cmake
+    "${CURRENT_PACKAGES_DIR}/lib/cmake/Matplot++/matplot++-config.cmake"
+    "${CURRENT_PACKAGES_DIR}/lib/cmake/Matplot++/Matplot++-config.cmake"
 )
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME Matplot++ CONFIG_PATH lib/cmake/Matplot++)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
