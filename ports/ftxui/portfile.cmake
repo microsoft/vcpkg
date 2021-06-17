@@ -5,11 +5,9 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ArthurSonzogni/FTXUI
-    REF 2406e20f3640c6bf8fac56860105744b6bafd2f9
-    SHA512 c2c25be6a7dacc16afdc8aae68b4b78eea22608e470a21f9aa096eed42866afc733828b126ff694b46b0c860b1d51e06fd830bcd4ea833733a497ac18e8885bf
+    REF 3d5e4eb6ca11a0827bff68a04f4bf68ca9820e20
+    SHA512 670b0e5d95f7e6132ca7115005efdb1dee645146af82566af3e48bfff64d82dbc058c2f524b8b9d1d92182e4835ff6024067f0eab8dd6204514efa0207b3d33c
     HEAD_REF master
-    PATCHES
-        fix-git-version.patch
 )
 
 vcpkg_cmake_configure(
