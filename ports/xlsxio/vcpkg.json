@@ -1,7 +1,7 @@
 {
   "name": "xlsxio",
-  "version-string": "commit-e3acace39e5fb153f5ce3500a4952c2bf93175bd",
-  "port-version": 1,
+  "version-string": "2021-03-24+0100",
+  "port-version": 0,
   "description": "Cross-platform C library for reading values from and writing values to .xlsx files",
   "homepage": "https://github.com/brechtsanders/xlsxio",
   "dependencies": [
