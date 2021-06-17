@@ -35,10 +35,10 @@ index 4063020..5667342 100644
 +install(FILES ${CMAKE_CURRENT_BINARY_DIR}/unofficial-wxwidgets-config.cmake DESTINATION share/unofficial-wxwidgets)
 \ No newline at end of file
 diff --git a/build/cmake/functions.cmake b/build/cmake/functions.cmake
-index e99555e..cebd3c0 100644
+index e99555e..468426e 100644
 --- a/build/cmake/functions.cmake
 +++ b/build/cmake/functions.cmake
-@@ -257,13 +257,15 @@ function(wx_set_target_properties target_name is_base)
+@@ -257,13 +257,20 @@ function(wx_set_target_properties target_name is_base)
      target_include_directories(${target_name}
          BEFORE
          PUBLIC
@@ -47,9 +47,14 @@ index e99555e..cebd3c0 100644
 +            "$<BUILD_INTERFACE:${wxSETUP_HEADER_PATH}>"
 +            "$<BUILD_INTERFACE:${wxSOURCE_DIR}/include>"
 +            $<INSTALL_INTERFACE:include>
-+            $<INSTALL_INTERFACE:include/wx-${wxMAJOR_VERSION}.${wxMINOR_VERSION}>
          )
  
++    if (NOT MSVC)
++        target_include_directories(${target_name}
++            PUBLIC $<INSTALL_INTERFACE:include/wx-${wxMAJOR_VERSION}.${wxMINOR_VERSION}>
++        )
++    endif()
++
      if(wxTOOLKIT_INCLUDE_DIRS)
          target_include_directories(${target_name}
 -            PUBLIC ${wxTOOLKIT_INCLUDE_DIRS})
@@ -57,7 +62,7 @@ index e99555e..cebd3c0 100644
      endif()
  
      if (WIN32)
-@@ -371,12 +373,14 @@ macro(wx_add_library name)
+@@ -371,12 +378,14 @@ macro(wx_add_library name)
          set_target_properties(${name} PROPERTIES PROJECT_LABEL ${name_short})
  
          # Setup install
@@ -73,7 +78,7 @@ index e99555e..cebd3c0 100644
      endif()
  endmacro()
  
-@@ -453,7 +457,16 @@ macro(wx_lib_include_directories name)
+@@ -453,7 +462,18 @@ macro(wx_lib_include_directories name)
          if (_LIB_INCLUDE_DIRS_PRIVATE)
              set(INCLUDE_POS BEFORE)
          endif()
@@ -87,22 +92,29 @@ index e99555e..cebd3c0 100644
 +            target_include_directories(${name};${INCLUDE_POS};PRIVATE;${_LIB_INCLUDE_DIRS_PRIVATE})
 +        endif()
 +        target_include_directories(${name};PUBLIC;$<INSTALL_INTERFACE:include>)
-+        target_include_directories(${name};PUBLIC;$<INSTALL_INTERFACE:include/wx-${wxMAJOR_VERSION}.${wxMINOR_VERSION}>)
++        if (NOT MSVC)
++            target_include_directories(${name};PUBLIC;$<INSTALL_INTERFACE:include/wx-${wxMAJOR_VERSION}.${wxMINOR_VERSION}>)
++        endif()
      endif()
  endmacro()
  
-@@ -514,7 +527,9 @@ function(wx_set_builtin_target_properties target_name)
+@@ -514,8 +534,14 @@ function(wx_set_builtin_target_properties target_name)
      target_include_directories(${target_name}
          BEFORE
          PUBLIC
 -            ${wxSETUP_HEADER_PATH}
 +            "$<BUILD_INTERFACE:${wxSETUP_HEADER_PATH}>"
 +            $<INSTALL_INTERFACE:include>
-+            $<INSTALL_INTERFACE:include/wx-${wxMAJOR_VERSION}.${wxMINOR_VERSION}>
          )
++    if (NOT MSVC)
++        target_include_directories(${target_name}
++            PUBLIC $<INSTALL_INTERFACE:include/wx-${wxMAJOR_VERSION}.${wxMINOR_VERSION}>
++        )
++    endif()
  
      set_target_properties(${target_name} PROPERTIES FOLDER "Third Party Libraries")
-@@ -789,10 +804,10 @@ function(wx_add name group)
+ 
+@@ -789,10 +815,10 @@ function(wx_add name group)
      endif()
  
      if(group STREQUAL Samples)
