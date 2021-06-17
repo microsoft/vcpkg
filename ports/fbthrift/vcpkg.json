@@ -17,7 +17,6 @@
     "gflags",
     "glog",
     "openssl",
-    "rsocket",
     "wangle",
     "zlib",
     "zstd"
