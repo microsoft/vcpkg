@@ -13,6 +13,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         ms-gsl SEAL_USE_MSGSL
         zlib SEAL_USE_ZLIB
         zstd SEAL_USE_ZSTD
+        hexl SEAL_USE_INTEL_HEXL
     INVERTED_FEATURES
         no-throw-tran SEAL_THROW_ON_TRANSPARENT_CIPHERTEXT
 )
