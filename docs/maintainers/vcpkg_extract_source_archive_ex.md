@@ -2,7 +2,10 @@
 
 The latest version of this document lives in the [vcpkg repo](https://github.com/Microsoft/vcpkg/blob/master/docs/maintainers/vcpkg_extract_source_archive_ex.md).
 
-Extract an archive into the source directory. Replaces [`vcpkg_extract_source_archive`](vcpkg_extract_source_archive.md).
+Extract an archive into the source directory.
+Originally replaced `vcpkg_extract_source_archive`,
+but new ports should instead use the second overload of
+`vcpkg_extract_source_archive`.
 
 ## Usage
 ```cmake

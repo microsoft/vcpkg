@@ -226,7 +226,7 @@
     },
     "avisynthplus": {
       "baseline": "3.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "avro-c": {
       "baseline": "1.9.2-1",
@@ -434,7 +434,7 @@
     },
     "bond": {
       "baseline": "9.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "boolinq": {
       "baseline": "3.0.1",
@@ -4349,8 +4349,8 @@
       "port-version": 0
     },
     "nmap": {
-      "baseline": "7.70-4",
-      "port-version": 0
+      "baseline": "7.70",
+      "port-version": 5
     },
     "nmslib": {
       "baseline": "2.0.6",
@@ -4554,7 +4554,7 @@
     },
     "opencv3": {
       "baseline": "3.4.14",
-      "port-version": 0
+      "port-version": 1
     },
     "opencv4": {
       "baseline": "4.5.2",
@@ -5065,8 +5065,8 @@
       "port-version": 2
     },
     "qcustomplot": {
-      "baseline": "2.0.1-4",
-      "port-version": 0
+      "baseline": "2.0.1",
+      "port-version": 5
     },
     "qhull": {
       "baseline": "8.0.2",
