@@ -1,6 +1,6 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-if(vcpkg_TARGET_IS_UWP)
+if(VCPKG_TARGET_IS_UWP)
     set(UWP_PATCH fix-uwp.patch)
 endif()
 
