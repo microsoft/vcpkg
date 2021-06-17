@@ -1,7 +1,10 @@
 #[===[.md:
 # vcpkg_extract_source_archive_ex
 
-Extract an archive into the source directory. Replaces [`vcpkg_extract_source_archive`](vcpkg_extract_source_archive.md).
+Extract an archive into the source directory.
+Originally replaced `vcpkg_extract_source_archive`,
+but new ports should instead use the second overload of
+`vcpkg_extract_source_archive`.
 
 ## Usage
 ```cmake
@@ -54,104 +57,55 @@ Specifies that the default removal of the top level folder should not occur.
 * [cairo](https://github.com/Microsoft/vcpkg/blob/master/ports/cairo/portfile.cmake)
 #]===]
 
-include(vcpkg_extract_source_archive)
-
 function(vcpkg_extract_source_archive_ex)
-    # parse parameters such that semicolons in options arguments to COMMAND don't get erased
-    cmake_parse_arguments(
-        PARSE_ARGV 0
-        _vesae
+    cmake_parse_arguments(PARSE_ARGV 0 "arg"
         "NO_REMOVE_ONE_LEVEL;SKIP_PATCH_CHECK"
         "OUT_SOURCE_PATH;ARCHIVE;REF;WORKING_DIRECTORY"
         "PATCHES"
     )
 
-    if(NOT _vesae_ARCHIVE)
-        message(FATAL_ERROR "Must specify ARCHIVE parameter to vcpkg_extract_source_archive_ex()")
+    if(NOT DEFINED arg_ARCHIVE)
+        message(FATAL_ERROR "ARCHIVE must be specified")
+    endif()
+    if(NOT DEFINED arg_OUT_SOURCE_PATH)
+        message(FATAL_ERROR "OUT_SOURCE_PATH must be specified")
     endif()
 
-    if(NOT DEFINED _vesae_OUT_SOURCE_PATH)
-        message(FATAL_ERROR "Must specify OUT_SOURCE_PATH parameter to vcpkg_extract_source_archive_ex()")
-    endif()
-
-    if(NOT DEFINED _vesae_WORKING_DIRECTORY)
-        set(_vesae_WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/src)
-    endif()
-
-    if(NOT DEFINED _vesae_REF)
-        get_filename_component(_vesae_REF ${_vesae_ARCHIVE} NAME_WE)
-    endif()
-
-    string(REPLACE "/" "-" SANITIZED_REF "${_vesae_REF}")
-
-    # Take the last 10 chars of the REF
-    set(REF_MAX_LENGTH 10)
-    string(LENGTH ${SANITIZED_REF} REF_LENGTH)
-    math(EXPR FROM_REF ${REF_LENGTH}-${REF_MAX_LENGTH})
-    if(FROM_REF LESS 0)
-        set(FROM_REF 0)
-    endif()
-    string(SUBSTRING ${SANITIZED_REF} ${FROM_REF} ${REF_LENGTH} SHORTENED_SANITIZED_REF)
-
-    # Hash the archive hash along with the patches. Take the first 10 chars of the hash
-    file(SHA512 ${_vesae_ARCHIVE} PATCHSET_HASH)
-    foreach(PATCH IN LISTS _vesae_PATCHES)
-        get_filename_component(ABSOLUTE_PATCH "${PATCH}" ABSOLUTE BASE_DIR "${CURRENT_PORT_DIR}")
-        file(SHA512 ${ABSOLUTE_PATCH} CURRENT_HASH)
-        string(APPEND PATCHSET_HASH ${CURRENT_HASH})
-    endforeach()
-
-    string(SHA512 PATCHSET_HASH ${PATCHSET_HASH})
-    string(SUBSTRING ${PATCHSET_HASH} 0 10 PATCHSET_HASH)
-    set(SOURCE_PATH "${_vesae_WORKING_DIRECTORY}/${SHORTENED_SANITIZED_REF}-${PATCHSET_HASH}")
-    if (NOT _VCPKG_EDITABLE)
-        string(APPEND SOURCE_PATH ".clean")
-        if(EXISTS ${SOURCE_PATH})
-            message(STATUS "Cleaning sources at ${SOURCE_PATH}. Use --editable to skip cleaning for the packages you specify.")
-            file(REMOVE_RECURSE ${SOURCE_PATH})
+    set(base_directory_param "")
+    if(DEFINED arg_WORKING_DIRECTORY)
+        cmake_path(IS_PREFIX CURRENT_BUILDTREES_DIR "${arg_WORKING_DIRECTORY}" NORMALIZE is_prefix)
+        if(NOT is_prefix)
+            message(FATAL_ERROR "WORKING_DIRECTORY must be located under CURRENT_BUILDTREES_DIR:
+    WORKING_DIRECTORY     : ${arg_WORKING_DIRECTORY}
+    CURRENT_BUILDTREES_DIR: ${CURRENT_BUILDTRESS_DIR}")
         endif()
+        cmake_path(RELATIVE_PATH arg_WORKING_DIRECTORY BASE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+        set(base_directory_param BASE_DIRECTORY "${arg_WORKING_DIRECTORY}")
     endif()
 
-    if(NOT EXISTS ${SOURCE_PATH})
-        set(TEMP_DIR "${_vesae_WORKING_DIRECTORY}/${SHORTENED_SANITIZED_REF}-${PATCHSET_HASH}.tmp")
-        file(REMOVE_RECURSE ${TEMP_DIR})
-        vcpkg_extract_source_archive("${_vesae_ARCHIVE}" "${TEMP_DIR}")
-
-        if(_vesae_NO_REMOVE_ONE_LEVEL)
-            set(TEMP_SOURCE_PATH ${TEMP_DIR})
-        else()
-            file(GLOB _ARCHIVE_FILES "${TEMP_DIR}/*")
-            list(LENGTH _ARCHIVE_FILES _NUM_ARCHIVE_FILES)
-            set(TEMP_SOURCE_PATH)
-            foreach(dir IN LISTS _ARCHIVE_FILES)
-                if (IS_DIRECTORY ${dir})
-                    set(TEMP_SOURCE_PATH "${dir}")
-                    break()
-                endif()
-            endforeach()
-
-            if(NOT _NUM_ARCHIVE_FILES EQUAL 2 OR NOT TEMP_SOURCE_PATH)
-                message(FATAL_ERROR "Could not unwrap top level directory from archive. Pass NO_REMOVE_ONE_LEVEL to disable this.")
-            endif()
-        endif()
-
-        if (_vesae_SKIP_PATCH_CHECK)
-            set (QUIET QUIET)
-        else()
-            set (QUIET)
-        endif()
-
-        z_vcpkg_apply_patches(
-            ${QUIET}
-            SOURCE_PATH ${TEMP_SOURCE_PATH}
-            PATCHES ${_vesae_PATCHES}
-        )
-
-        file(RENAME ${TEMP_SOURCE_PATH} ${SOURCE_PATH})
-        file(REMOVE_RECURSE ${TEMP_DIR})
+    set(source_base_param "")
+    if(DEFINED arg_REF)
+        string(REPLACE "/" "-" sanitized_ref "${arg_REF}")
+        set(source_base_param SOURCE_BASE "${sanitized_ref}")
     endif()
 
-    set(${_vesae_OUT_SOURCE_PATH} "${SOURCE_PATH}" PARENT_SCOPE)
-    message(STATUS "Using source at ${SOURCE_PATH}")
-    return()
+    set(no_remove_one_level_param "")
+    if(NO_REMOVE_ONE_LEVEL)
+        set(no_remove_one_level_param NO_REMOVE_ONE_LEVEL)
+    endif()
+    set(skip_patch_check_param "")
+    if(SKIP_PATCH_CHECK)
+        set(skip_patch_check_param Z_SKIP_PATCH_CHECK)
+    endif()
+
+    vcpkg_extract_source_archive(source_path
+        ARCHIVE "${arg_ARCHIVE}"
+        PATCHES ${PATCHES}
+        ${base_directory_param}
+        ${source_base_param}
+        ${no_remove_one_level_param}
+        ${skip_patch_check_param}
+    )
+
+    set(${arg_OUT_SOURCE_PATH} "${source_path}" PARENT_SCOPE)
 endfunction()
