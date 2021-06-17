@@ -1,8 +1,8 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4063020..5667342 100644
+index 4063020..7eff0de 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -78,3 +78,30 @@ include(build/cmake/main.cmake)
+@@ -78,3 +78,50 @@ include(build/cmake/main.cmake)
  if(wxBUILD_SAMPLES AND wxUSE_GUI)
      set_directory_properties(PROPERTIES VS_STARTUP_PROJECT minimal)
  endif()
@@ -25,7 +25,27 @@ index 4063020..5667342 100644
 +    find_dependency(TIFF)
 +endif()
 +
-+list(APPEND TARGET_FILES wxregex wxscintilla wxbase wxcore wxgl wxxml wxhtml wxxrc wxstc wxwebview wxnet wxpropgrid wxqa wxribbon wxrichtext wxmedia wxadv wxaui)
++list(APPEND TARGET_FILES wxregex wxscintilla wxbase wxcore)
++if (@wxUSE_OPENGL@)
++    list(APPEND TARGET_FILES wxgl)
++endif()
++if (@wxUSE_XML@)
++    list(APPEND TARGET_FILES wxxml)
++endif()
++list(APPEND TARGET_FILES wxhtml wxxrc wxstc wxwebview)
++if (@wxUSE_SOCKETS@)
++    list(APPEND TARGET_FILES wxnet)
++endif()
++list(APPEND TARGET_FILES wxpropgrid)
++if (@wxUSE_DEBUGREPORT@)
++    list(APPEND TARGET_FILES wxqa)
++endif()
++list(APPEND TARGET_FILES wxribbon wxrichtext)
++if (@wxUSE_MEDIACTRL@)
++    list(APPEND TARGET_FILES wxmedia)
++endif()
++list(APPEND TARGET_FILES wxadv wxaui)
++
 +foreach (TARGET_FILE ${TARGET_FILES})
 +    include("${CMAKE_CURRENT_LIST_DIR}/unofficial-${TARGET_FILE}Targets.cmake")
 +endforeach()
@@ -166,14 +186,13 @@ index b28fc2c..a78c2da 100644
 +    install(EXPORT unofficial-wxregexTargets NAMESPACE wx:: DESTINATION share/unofficial-wxwidgets)
  endif()
 diff --git a/build/cmake/lib/stc/CMakeLists.txt b/build/cmake/lib/stc/CMakeLists.txt
-index bd6acd8..177b6bc 100644
+index bd6acd8..c8c5ff5 100644
 --- a/build/cmake/lib/stc/CMakeLists.txt
 +++ b/build/cmake/lib/stc/CMakeLists.txt
-@@ -182,6 +182,16 @@ if(wxBUILD_PRECOMP)
+@@ -182,6 +182,15 @@ if(wxBUILD_PRECOMP)
      wx_target_enable_precomp(wxscintilla ${wxSCINTILLA_PREC_HEADER})
  endif()
  
-+
 +install(TARGETS wxscintilla EXPORT unofficial-wxscintillaTargets
 +    LIBRARY DESTINATION "lib${wxPLATFORM_LIB_DIR}"
 +    ARCHIVE DESTINATION "lib${wxPLATFORM_LIB_DIR}"

@@ -1,17 +1,3 @@
-diff --git a/wx-config.in b/wx-config.in
-index 441f88c..1ea1a40 100644
---- a/wx-config.in
-+++ b/wx-config.in
-@@ -402,7 +402,8 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
- 
- 
- # Determine the base directories we require.
--prefix=${input_option_prefix-${this_prefix:-@prefix@}}
-+base_folder=$(dirname $(readlink -f "$0"))
-+prefix=${input_option_prefix-${this_prefix:-${base_folder}/../../..}}
- exec_prefix=${input_option_exec_prefix-${input_option_prefix-${this_exec_prefix:-@exec_prefix@}}}
- wxconfdir="@libdir@/wx/config"
- 
 diff --git a/build/cmake/install.cmake b/build/cmake/install.cmake
 index 968dff8..4699f63 100644
 --- a/build/cmake/install.cmake
@@ -32,3 +18,17 @@ index 968dff8..4699f63 100644
          )"
      )
  endif()
+diff --git a/wx-config.in b/wx-config.in
+index 441f88c..1ea1a40 100644
+--- a/wx-config.in
++++ b/wx-config.in
+@@ -402,7 +402,8 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
+ 
+ 
+ # Determine the base directories we require.
+-prefix=${input_option_prefix-${this_prefix:-@prefix@}}
++base_folder=$(dirname $(readlink -f "$0"))
++prefix=${input_option_prefix-${this_prefix:-${base_folder}/../../..}}
+ exec_prefix=${input_option_exec_prefix-${input_option_prefix-${this_exec_prefix:-@exec_prefix@}}}
+ wxconfdir="@libdir@/wx/config"
+ 
