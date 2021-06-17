@@ -6,7 +6,8 @@ vcpkg_from_github(
     HEAD_REF master
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         libzip WITH_LIBZIP
         wide WITH_WIDE
