@@ -11,6 +11,7 @@ vcpkg_from_sourceforge(
         0001-fix-checkcpuarch-path.patch
         0002-fix-libmpg123-uwp-build.patch
         0003-fix-libout123-uwp-build.patch
+        0004-fix-libsyn123-uwp-build.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
