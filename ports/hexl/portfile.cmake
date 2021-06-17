@@ -7,7 +7,9 @@ vcpkg_from_github(
     REF 2dc1db6824be3fc89d13740efd0270ec9afec77e
     SHA512 aaa80dc53a21586d763a2b84b40d60062020470988422601bc5e9c2b31c6263847a97ea8f956d002a95e2d5e843cafa96fabdfd8b8ee892c7a7b9747133adebb
     HEAD_REF main
-    PATCHES disable_downloading_cpu_features.patch
+    PATCHES
+        disable_downloading_cpu_features.patch
+        find_dependency_cpu_features.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

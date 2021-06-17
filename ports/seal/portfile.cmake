@@ -33,7 +33,11 @@ vcpkg_cmake_install()
 
 vcpkg_cmake_config_fixup(PACKAGE_NAME "SEAL" CONFIG_PATH "lib/cmake/")
 
-vcpkg_fixup_pkgconfig()
+if("hexl" IN_LIST FEATURES)
+    vcpkg_fixup_pkgconfig(SKIP_CHECK)
+else()
+    vcpkg_fixup_pkgconfig()
+endif()
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
