@@ -61,14 +61,20 @@ jobs:
         wavpack
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.vcpkg_triplet }}
       VCPKG_OVERLAY_PORTS: overlay/ports
+      DEPS_BASE_NAME: mixxx-deps
       MIXXX_VERSION: 2.3
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    steps:
+    steps:    
     - name: Check out git repository
       uses: LebedevRI/checkout@issue197
       with:
         path: ${{ matrix.vcpkg_path }}
+
+    - name: Set outputs
+      id: vars
+      run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      working-directory: ${{ matrix.vcpkg_path }}
 
     - name: Bootstrap vcpkg
       run: ${{ matrix.vcpkg_bootstrap }}
@@ -106,7 +112,7 @@ jobs:
         path: ${{ matrix.vcpkg_path  }}/buildtrees/**/*.log
 
     - name: Create buildenv archive
-      run: ./vcpkg export ${{ env.VCPKG_PACKAGES }} --zip --output=mixxx-dependencies-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
+      run: ./vcpkg export ${{ env.VCPKG_PACKAGES }} --zip --output=${{ env.DEPS_BASE_NAME }}-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ steps.vars.outputs.sha_short }}
       working-directory: ${{ matrix.vcpkg_path }}
 
     - name: "[Windows] Install additional tools"
@@ -120,7 +126,7 @@ jobs:
 
     - name: "Upload build to downloads.mixxx.org"
       if: github.event_name == 'push' && env.SSH_PASSWORD != null
-      run: bash .github/deploy.sh mixxx-dependencies-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}.zip
+      run: bash .github/deploy.sh ${{ env.DEPS_BASE_NAME }}-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ steps.vars.outputs.sha_short }}.zip
       working-directory: ${{ matrix.vcpkg_path }}
       env:
         DESTDIR: public_html/downloads/dependencies
@@ -134,8 +140,8 @@ jobs:
     - name: Upload GitHub Actions artifacts
       uses: actions/upload-artifact@v2
       with:
-        name: mixxx-dependencies-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}
-        path: ${{ matrix.vcpkg_path }}/mixxx-dependencies-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ github.sha }}.zip
+        name: ${{ env.DEPS_BASE_NAME }}-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ steps.vars.outputs.sha_short }}
+        path: ${{ matrix.vcpkg_path }}/${{ env.DEPS_BASE_NAME }}-${{ env.MIXXX_VERSION }}-${{ matrix.vcpkg_triplet }}-${{ steps.vars.outputs.sha_short }}.zip
 
     # Workaround for https://github.com/actions/cache/issues/531
     - name: Use system tar & zstd from Chocolatey for caching
