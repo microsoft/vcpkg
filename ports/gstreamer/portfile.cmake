@@ -249,4 +249,9 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
                         ${CURRENT_PACKAGES_DIR}/bin
     )
+    set(PREFIX ${CMAKE_SHARED_LIBRARY_PREFIX})
+    set(SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
+    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}
+                ${CURRENT_PACKAGES_DIR}/debug/lib/${PREFIX}gstreamer-full-1.0${SUFFIX}
+    )
 endif()
