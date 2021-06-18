@@ -79,12 +79,12 @@ if(VCPKG_TARGET_IS_OSX)
     if(NOT (BISON_MAJOR GREATER_EQUAL 2 AND BISON_MINOR GREATER_EQUAL 4))
         message(WARNING "'bison' upgrade is required. Please check the https://stackoverflow.com/a/35161881")
     endif()
-elseif(VCPKG_TARGET_IS_WINDOWS)
-    # make tools like 'glib-mkenums' visible
-    get_filename_component(GLIB_TOOL_DIR ${CURRENT_INSTALLED_DIR}/tools/glib ABSOLUTE)
-    message(STATUS "Using glib tools: ${GLIB_TOOL_DIR}")
-    vcpkg_add_to_path(PREPEND ${GLIB_TOOL_DIR})
 endif()
+
+# make tools like 'glib-mkenums' visible
+get_filename_component(GLIB_TOOL_DIR ${CURRENT_INSTALLED_DIR}/tools/glib ABSOLUTE)
+message(STATUS "Using glib tools: ${GLIB_TOOL_DIR}")
+vcpkg_add_to_path(PREPEND ${GLIB_TOOL_DIR})
 
 if("plugins-bad" IN_LIST FEATURES)
     # requires 'libdrm', 'dssim', 'libmicrodns'
@@ -201,6 +201,7 @@ vcpkg_configure_meson(
         -Dorc=disabled
         -Ddoc=disabled
         -Dgtk_doc=disabled
+        -Ddevtools=disabled
     OPTIONS_DEBUG
         -Dgstreamer:gst_debug=true # plugins will reference this value
     OPTIONS_RELEASE
@@ -229,19 +230,6 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 vcpkg_install_meson()
 
-if(VCPKG_TARGET_IS_OSX)
-    vcpkg_copy_tools(
-        TOOL_NAMES  gst-hotdoc-plugins-scanner
-                    gst-plugin-scanner
-                    gst-plugins-doc-cache-generator
-                    gst-ptp-helper
-        SEARCH_DIR  ${CURRENT_PACKAGES_DIR}/libexec/gstreamer-1.0
-        DESTINATION ${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0
-        AUTO_CLEAN
-    )
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/gstreamer-1.0)
-endif()
-
 # Remove duplicated GL headers (we already have `opengl-registry`)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/include/KHR
                     ${CURRENT_PACKAGES_DIR}/include/GL
@@ -257,7 +245,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share
                     ${CURRENT_PACKAGES_DIR}/libexec
                     ${CURRENT_PACKAGES_DIR}/lib/gstreamer-1.0/include
 )
-if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin
                         ${CURRENT_PACKAGES_DIR}/bin
     )
