@@ -6701,8 +6701,8 @@
       "port-version": 1
     },
     "xlsxio": {
-      "baseline": "commit-e3acace39e5fb153f5ce3500a4952c2bf93175bd",
-      "port-version": 1
+      "baseline": "2021-03-24+0100",
+      "port-version": 0
     },
     "xmlsec": {
       "baseline": "1.2.32",
