@@ -25,7 +25,6 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
-vcpkg_fixup_pkgconfig()
 
 # Copy fluidsynth.exe to tools dir
 vcpkg_copy_tools(TOOL_NAMES fluidsynth AUTO_CLEAN)
