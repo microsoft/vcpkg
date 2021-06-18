@@ -21,6 +21,10 @@
         "zlib"
       ]
     },
+    {
+      "name": "glib",
+      "host": true
+    },
     "graphene",
     "libnice",
     "libxml2",
