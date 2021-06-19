@@ -88,6 +88,6 @@ endforeach()
 vcpkg_copy_pdbs()
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/intl)
-if("tools" IN_LIST FEATURES)
-    configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake.in" "${CURRENT_PACKAGES_DIR}/share/gettext/vcpkg-port-config.cmake" @ONLY)
+if("tools" IN_LIST FEATURES AND NOT VCPKG_CROSSCOMPILING)
+    file(COPY "${CMAKE_CURRENT_LIST_DIR}/vcpkg-port-config.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
 endif()
