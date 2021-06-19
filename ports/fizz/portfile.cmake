@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF v2021.06.14.00
     SHA512 ff55f933d55031128b5355707fd025649ad90d261d91ec5f9d793433a77e63d3c2527a7f0111d6a3151667ab29f4117f96a505bcb80c1a4a99bd60346f05f4de
     HEAD_REF master
+    PATCHES
+        fix-zlib.patch
 )
 
 # Prefer installed config files

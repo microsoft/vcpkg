@@ -11,6 +11,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-sodium-target.patch # fixed in master
+        fix-zlib.patch # fixed in master
 )
 
 vcpkg_configure_cmake(
