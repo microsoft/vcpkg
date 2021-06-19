@@ -1,11 +1,16 @@
 {
   "name": "rmlui",
-  "version": "4.0",
+  "version": "4.1",
   "maintainers": "Michael R. P. Ragazzon <mikke89@users.noreply.github.com>",
   "description": "RmlUi is the C++ user interface library based on the HTML and CSS standards, designed as a complete solution for any project's interface needs.",
   "homepage": "https://github.com/mikke89/RmlUi",
   "documentation": "https://mikke89.github.io/RmlUiDoc/",
   "license": "MIT",
+  "dependencies": [
+    "robin-hood-hashing",
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ],
   "default-features": [
     "freetype"
   ],
@@ -13,7 +18,10 @@
     "freetype": {
       "description": "Include font engine based on FreeType",
       "dependencies": [
-        "freetype"
+        {
+          "name": "freetype",
+          "default-features": false
+        }
       ]
     },
     "lua": {
