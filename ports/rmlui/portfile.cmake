@@ -44,7 +44,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup(
-	CONFIG_PATH  lib/${PORT}/cmake
+	CONFIG_PATH  lib/RmlUi/cmake
 )
 vcpkg_copy_pdbs()
 
