@@ -1,7 +1,9 @@
 if(VCPKG_TARGET_IS_LINUX AND NOT "tools" IN_LIST FEATURES)
     set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
     if (NOT EXISTS "/usr/include/libintl.h")
-        message(FATAL_ERROR "Please use command \"sudo apt-get install libc-dev\" to install development files.")
+        message(FATAL_ERROR "When targeting Linux, `libintl.h` is expected to come from the C Runtime Library (glibc). "
+                            "Please use \"sudo apt-get install libc-dev\" or the equivalent to install development files."
+        )
     endif()
     return()
 else()
