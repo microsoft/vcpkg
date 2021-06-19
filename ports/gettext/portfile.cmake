@@ -43,24 +43,39 @@ if(VCPKG_TARGET_IS_WINDOWS)
     list(APPEND OPTIONS
         ac_cv_func_wcslen=yes
         ac_cv_func_memmove=yes
-        #The following are required for a full gettext built.
-        # Left here for future reference. 
+        #The following are required for a full gettext built (libintl and tools).
         gl_cv_func_printf_directive_n=no #segfaults otherwise with popup window
         ac_cv_func_memset=yes #not detected in release builds 
         ac_cv_header_pthread_h=no
         ac_cv_header_dirent_h=no
     )
 endif()
-set(ADDITIONAL_CONFIGURE_OPTIONS)
-set(ADDITIONAL_INSTALL_OPTIONS)
-if("tools" IN_LIST FEATURES)
-    set(BUILD_SOURCE_PATH "${SOURCE_PATH}")
-    set(ADDITIONAL_CONFIGURE_OPTIONS ADDITIONAL_MSYS_PACKAGES gzip)
-else()
-    set(BUILD_SOURCE_PATH "${SOURCE_PATH}/gettext-runtime") # Could be its own port
-    set(ADDITIONAL_INSTALL_OPTIONS SUBPATH "/intl")
-endif()
-vcpkg_configure_make(SOURCE_PATH "${BUILD_SOURCE_PATH}"
+
+function(build_libintl_and_tools)
+    cmake_parse_arguments(arg "" "BUILD_TYPE" "" ${ARGN})
+    if(DEFINED arg_BUILD_TYPE)
+        set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
+    endif()
+    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}"
+        DETERMINE_BUILD_TRIPLET
+        USE_WRAPPERS
+        ADD_BIN_TO_PATH    # So configure can check for working iconv
+        ADDITIONAL_MSYS_PACKAGES gzip
+        OPTIONS
+            --enable-relocatable #symbol duplication with glib-init.c?
+            --enable-c++
+            --disable-java
+            ${OPTIONS}
+    )
+    vcpkg_install_make()
+endfunction()
+
+function(build_libintl_only)
+    cmake_parse_arguments(arg "" "BUILD_TYPE" "" ${ARGN})
+    if(DEFINED arg_BUILD_TYPE)
+        set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
+    endif()
+    vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime"
     DETERMINE_BUILD_TRIPLET
     USE_WRAPPERS
     ADD_BIN_TO_PATH    # So configure can check for working iconv
@@ -69,16 +84,33 @@ vcpkg_configure_make(SOURCE_PATH "${BUILD_SOURCE_PATH}"
         --enable-c++
         --disable-java
         ${OPTIONS}
-    ${ADDITIONAL_CONFIGURE_OPTIONS}
-)
-vcpkg_install_make(${ADDITIONAL_INSTALL_OPTIONS})
+    )
+    vcpkg_install_make(SUBPATH "/intl")
+endfunction()
+
+if("tools" IN_LIST FEATURES)
+    # Always build tools in release configuration only
+    build_libintl_and_tools(BUILD_TYPE "release")
+    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+    if(VCPKG_TARGET_IS_LINUX)
+        set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/lib")
+    elseif(NOT DEFINED VCPKG_BUILD_TPYE OR VCPKG_BUILD_TPYE STREQUAL "debug")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}.release")
+        file(RENAME "${CURRENT_PACKAGES_DIR}" "${CURRENT_PACKAGES_DIR}.release")
+        build_libintl_only(BUILD_TYPE "debug")
+        file(RENAME "${CURRENT_PACKAGES_DIR}/debug" "${CURRENT_PACKAGES_DIR}.release/debug")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}")
+        file(RENAME "${CURRENT_PACKAGES_DIR}.release" "${CURRENT_PACKAGES_DIR}")
+    endif()
+else()
+    build_libintl_only()
+endif()
 
 # Handle copyright
 file(COPY "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/gettext")
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/gettext/COPYING" "${CURRENT_PACKAGES_DIR}/share/gettext/copyright")
-
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug/bin")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
