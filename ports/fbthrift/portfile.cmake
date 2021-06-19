@@ -19,6 +19,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBISON_EXECUTABLE=${BISON}
+        -DFLEX_EXECUTABLE=${FLEX}
 )
 
 vcpkg_install_cmake()
