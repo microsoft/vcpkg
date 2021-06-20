@@ -1,9 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO nih-at/libzip
-    REF 66e496489bdae81bfda8b0088172871d8fda0032 #v1.7.3
-    SHA512 ae0cda3e9decf5a71bf1e0907a2a21b2c0d83e6e576faf4d9401d6954707ae298c1c09febbc5339f457ace3577fdd405a790c819ef24778990ca6bf1e9516d54
-    HEAD_REF v1.7.3
+    REF 26ba5523db09213f532821875542dba7afa04b65 #v1.8.0
+    SHA512 caa4610e10a45260d8f06e4e728b231f0fcfacd90d3091a096b273997b7505857a78a8013d0571c3b25543d894eb049d1e7f5385e910066e464b3d208390570f
+    HEAD_REF master
     PATCHES 
         fix-findpackage.patch
         fix-dependency.patch
@@ -11,11 +11,12 @@ vcpkg_from_github(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    bzip2 ENABLE_BZIP2
-    liblzma ENABLE_LZMA
-    openssl ENABLE_OPENSSL
-    wincrypto ENABLE_WINDOWS_CRYPTO
-    commoncrypto ENABLE_COMMONCRYPTO
+    FEATURES
+    bzip2 ENABLE_BZIP2   
+    liblzma ENABLE_LZMA    
+    openssl ENABLE_OPENSSL   
+    wincrypto ENABLE_WINDOWS_CRYPTO    
+    commoncrypto ENABLE_COMMONCRYPTO   
     mbedtls ENABLE_MBEDTLS
 )
 
