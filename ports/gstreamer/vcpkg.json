@@ -44,9 +44,6 @@
     "plugins-ugly"
   ],
   "features": {
-    "nls": {
-      "description": "Enable native language support (translations)"
-    },
     "plugins-bad": {
       "description": "'Bad' GStreamer plugins and helper libraries",
       "dependencies": [

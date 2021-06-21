@@ -99,12 +99,6 @@ else()
     set(PLUGIN_UGLY_SUPPORT disabled)
 endif()
 
-if("nls" IN_LIST FEATURES)
-    set(NATIVE_LANG_SUPPORT enabled)
-else()
-    set(NATIVE_LANG_SUPPORT disabled)
-endif()
-
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(LIBRARY_LINKAGE "shared")
 else()
@@ -144,14 +138,14 @@ vcpkg_configure_meson(
         -Dgstreamer:tools=disabled
         -Dgstreamer:gtk_doc=disabled
         -Dgstreamer:introspection=disabled
-        -Dgstreamer:nls=${NATIVE_LANG_SUPPORT}
+        -Dgstreamer:nls=disabled
         # gst-plugins-base
         -Dgst-plugins-base:default_library=${LIBRARY_LINKAGE}
         -Dgst-plugins-base:examples=disabled
         -Dgst-plugins-base:tests=disabled
         -Dgst-plugins-base:tools=disabled
         -Dgst-plugins-base:introspection=disabled
-        -Dgst-plugins-base:nls=${NATIVE_LANG_SUPPORT}
+        -Dgst-plugins-base:nls=disabled
         -Dgst-plugins-base:orc=disabled
         # gst-plugins-good
         -Dgst-plugins-good:default_library=${LIBRARY_LINKAGE}
@@ -163,7 +157,7 @@ vcpkg_configure_meson(
         -Dgst-plugins-good:vpx=auto # libvpx
         -Dgst-plugins-good:examples=disabled
         -Dgst-plugins-good:tests=disabled
-        -Dgst-plugins-good:nls=${NATIVE_LANG_SUPPORT}
+        -Dgst-plugins-good:nls=disabled
         -Dgst-plugins-good:orc=disabled
         # gst-plugins-bad
         -Dbad=${PLUGIN_BAD_SUPPORT}
@@ -179,7 +173,7 @@ vcpkg_configure_meson(
         -Dugly=${PLUGIN_UGLY_SUPPORT}
         -Dgst-plugins-ugly:default_library=${LIBRARY_LINKAGE}
         -Dgst-plugins-ugly:tests=disabled
-        -Dgst-plugins-ugly:nls=${NATIVE_LANG_SUPPORT}
+        -Dgst-plugins-ugly:nls=disabled
         -Dgst-plugins-ugly:orc=disabled
         # see ${GST_BUILD_SOURCE_PATH}/meson_options.txt
         -Dpython=disabled
@@ -197,7 +191,7 @@ vcpkg_configure_meson(
         -Dtests=disabled    # common options
         -Dexamples=disabled
         -Dintrospection=disabled
-        -Dnls=${NATIVE_LANG_SUPPORT}
+        -Dnls=disabled
         -Dorc=disabled
         -Ddoc=disabled
         -Dgtk_doc=disabled
