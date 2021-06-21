@@ -2417,7 +2417,7 @@
       "port-version": 0
     },
     "gtest": {
-      "baseline": "2021-05-07",
+      "baseline": "1.11.0",
       "port-version": 0
     },
     "gtk": {
