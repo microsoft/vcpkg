@@ -5918,7 +5918,7 @@
     },
     "spectra": {
       "baseline": "0.9.0",
-      "port-version": 0
+      "port-version": 1
     },
     "speex": {
       "baseline": "1.2.0",
@@ -6449,7 +6449,7 @@
       "port-version": 0
     },
     "uvatlas": {
-      "baseline": "jun2021",
+      "baseline": "jun2021b",
       "port-version": 0
     },
     "uvw": {
