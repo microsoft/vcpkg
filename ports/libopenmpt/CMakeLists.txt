@@ -11,9 +11,9 @@ endif()
 
 find_package(ZLIB REQUIRED)
 
-find_package(MPG123)
-find_package(Vorbis)
-find_package(FLAC)
+find_package(MPG123 REQUIRED)
+find_package(Vorbis REQUIRED)
+find_package(FLAC REQUIRED)
 
 find_package(portaudio REQUIRED)
 
