@@ -37,15 +37,25 @@ vcpkg_find_acquire_program(BISON)
 get_filename_component(BISON_PATH "${BISON}" DIRECTORY)
 vcpkg_add_to_path("${BISON_PATH}")
 
-set(OPTIONS "")
+set(OPTIONS
+    --enable-relocatable #symbol duplication with glib-init.c?
+    --enable-c++
+    --disable-acl
+    --disable-csharp
+    --disable-curses
+    --disable-java
+    --disable-openmp
+)
 if(VCPKG_TARGET_IS_WINDOWS)
-    # This is required. For some reason these do not get correctly identified for release builds. 
     list(APPEND OPTIONS
+        # Avoid unnecessary test.
+        --with-included-glib
+        # This is required. For some reason these do not get correctly identified for release builds.
         ac_cv_func_wcslen=yes
         ac_cv_func_memmove=yes
-        #The following are required for a full gettext built (libintl and tools).
-        gl_cv_func_printf_directive_n=no #segfaults otherwise with popup window
-        ac_cv_func_memset=yes #not detected in release builds 
+        # The following are required for a full gettext built (libintl and tools).
+        gl_cv_func_printf_directive_n=no  # segfaults otherwise with popup window
+        ac_cv_func_memset=yes             # not detected in release builds
         ac_cv_header_pthread_h=no
         ac_cv_header_dirent_h=no
     )
@@ -62,9 +72,6 @@ function(build_libintl_and_tools)
         ADD_BIN_TO_PATH    # So configure can check for working iconv
         ADDITIONAL_MSYS_PACKAGES gzip
         OPTIONS
-            --enable-relocatable #symbol duplication with glib-init.c?
-            --enable-c++
-            --disable-java
             ${OPTIONS}
     )
     vcpkg_install_make()
@@ -76,14 +83,11 @@ function(build_libintl_only)
         set(VCPKG_BUILD_TYPE "${arg_BUILD_TYPE}")
     endif()
     vcpkg_configure_make(SOURCE_PATH "${SOURCE_PATH}/gettext-runtime"
-    DETERMINE_BUILD_TRIPLET
-    USE_WRAPPERS
-    ADD_BIN_TO_PATH    # So configure can check for working iconv
-    OPTIONS
-        --enable-relocatable #symbol duplication with glib-init.c?
-        --enable-c++
-        --disable-java
-        ${OPTIONS}
+        DETERMINE_BUILD_TRIPLET
+        USE_WRAPPERS
+        ADD_BIN_TO_PATH    # So configure can check for working iconv
+        OPTIONS
+            ${OPTIONS}
     )
     vcpkg_install_make(SUBPATH "/intl")
 endfunction()
@@ -119,14 +123,6 @@ file(COPY "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/ge
 file(RENAME "${CURRENT_PACKAGES_DIR}/share/gettext/COPYING" "${CURRENT_PACKAGES_DIR}/share/gettext/copyright")
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
-
-set(GNU_DLL_PATHS lib/ debug/lib/)
-set(GNU_DLL_NAME GNU.Gettext.dll) #C# dll?
-foreach(DLL_PATH IN LISTS GNU_DLL_PATHS)
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/${DLL_PATH}${GNU_DLL_NAME}")
-       file(REMOVE "${CURRENT_PACKAGES_DIR}/${DLL_PATH}${GNU_DLL_NAME}")
-    endif()
-endforeach()
 
 vcpkg_copy_pdbs()
 
