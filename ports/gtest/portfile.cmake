@@ -5,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/googletest
-    REF f5e592d8ee5ffb1d9af5be7f715ce3576b8bf9c4 #commite on 2021-04-29
-    SHA512 8168cc2b2c2f18ae7411db8a74369c98bb2d19b5be94a5a5f96a1d4e8e22b70c219c1cdfaef934b674d9c078dd97d0481c62e382aab432e3b89aa79ea5051673
+    REF release-1.11.0
+    SHA512 6fcc7827e4c4d95e3ae643dd65e6c4fc0e3d04e1778b84f6e06e390410fe3d18026c131d828d949d2f20dde6327d30ecee24dcd3ef919e21c91e010d149f3a28
     HEAD_REF master
     PATCHES
         fix-main-lib-path.patch
