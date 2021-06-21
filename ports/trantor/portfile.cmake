@@ -18,6 +18,8 @@ vcpkg_install_cmake()
 # Fix CMake files
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/Trantor)
 
+vcpkg_fixup_pkgconfig()
+
 # # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
