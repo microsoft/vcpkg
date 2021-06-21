@@ -102,6 +102,19 @@ if("tools" IN_LIST FEATURES)
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}")
     build_libintl_and_tools(BUILD_TYPE "release")
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+    file(GLOB tool_libs
+        LIST_DIRECTORIES false
+        "${CURRENT_PACKAGES_DIR}/bin/*"
+        "${CURRENT_PACKAGES_DIR}/lib/*"
+    )
+    list(FILTER tool_libs EXCLUDE REGEX "intl[^/]*$")
+    file(REMOVE ${tool_libs})
+    file(GLOB tool_includes
+        LIST_DIRECTORIES true
+        "${CURRENT_PACKAGES_DIR}/include/*"
+    )
+    list(FILTER tool_includes EXCLUDE REGEX "intl[^/]*$")
+    file(REMOVE_RECURSE ${tool_includes})
     if(VCPKG_TARGET_IS_LINUX)
         set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include")
