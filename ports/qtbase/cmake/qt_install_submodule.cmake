@@ -8,7 +8,7 @@ endif()
 #set(PORT_DEBUG ON)
 
 if(NOT DEFINED QT6_DIRECTORY_PREFIX)
-    set(QT6_DIRECTORY_PREFIX "qt6/")
+    set(QT6_DIRECTORY_PREFIX "Qt6/")
 endif()
 
 macro(qt_stop_on_update)
@@ -52,12 +52,12 @@ function(qt_install_submodule)
 
     if(VCPKG_TARGET_IS_WINDOWS)
         if(NOT ${PORT} MATCHES "qtbase")
-            list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH="${CURRENT_HOST_INSTALLED_DIR}/tools/qt6/bin/syncqt.pl")
+            list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH="${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/syncqt.pl")
         endif()
         set(PERL_OPTION -DHOST_PERL:PATH="${PERL}")
     else()
         if(NOT ${PORT} MATCHES "qtbase")
-            list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/qt6/bin/syncqt.pl)
+            list(APPEND _qis_CONFIGURE_OPTIONS -DQT_SYNCQT:PATH=${CURRENT_HOST_INSTALLED_DIR}/tools/Qt6/bin/syncqt.pl)
         endif()
         set(PERL_OPTION -DHOST_PERL:PATH=${PERL})
     endif()
@@ -97,16 +97,16 @@ function(qt_install_submodule)
             ${_qis_CONFIGURE_OPTIONS_RELEASE}
             -DINSTALL_DOCDIR:STRING=doc/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_INCLUDEDIR:STRING=include/${QT6_DIRECTORY_PREFIX}
-            -DINSTALL_DESCRIPTIONSDIR:STRING=share/qt6/modules
-            -DINSTALL_MKSPECSDIR:STRING=share/qt6/mkspecs
+            -DINSTALL_DESCRIPTIONSDIR:STRING=share/Qt6/modules
+            -DINSTALL_MKSPECSDIR:STRING=share/Qt6/mkspecs
             -DINSTALL_TRANSLATIONSDIR:STRING=translations/${QT6_DIRECTORY_PREFIX}
         OPTIONS_DEBUG
             -DINPUT_debug:BOOL=ON
             -DINSTALL_DOCDIR:STRING=../doc/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_INCLUDEDIR:STRING=../include/${QT6_DIRECTORY_PREFIX}
             -DINSTALL_TRANSLATIONSDIR:STRING=../translations/${QT6_DIRECTORY_PREFIX}
-            -DINSTALL_DESCRIPTIONSDIR:STRING=../share/qt6/modules
-            -DINSTALL_MKSPECSDIR:STRING=../share/qt6/mkspecs
+            -DINSTALL_DESCRIPTIONSDIR:STRING=../share/Qt6/modules
+            -DINSTALL_MKSPECSDIR:STRING=../share/Qt6/mkspecs
             ${_qis_CONFIGURE_OPTIONS_DEBUG}
     )
     vcpkg_install_cmake(ADD_BIN_TO_PATH)
@@ -115,7 +115,7 @@ function(qt_install_submodule)
     ## Handle CMake files. 
     set(COMPONENTS)
     file(GLOB COMPONENTS_OR_FILES LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/share/Qt6*")
-    list(REMOVE_ITEM COMPONENTS_OR_FILES "${CURRENT_PACKAGES_DIR}/share/qt6")
+    list(REMOVE_ITEM COMPONENTS_OR_FILES "${CURRENT_PACKAGES_DIR}/share/Qt6")
     foreach(_glob IN LISTS COMPONENTS_OR_FILES)
         if(IS_DIRECTORY "${_glob}")
             string(REPLACE "${CURRENT_PACKAGES_DIR}/share/Qt6" "" _component "${_glob}")
@@ -126,7 +126,7 @@ function(qt_install_submodule)
 
     foreach(_comp IN LISTS COMPONENTS)
         if(EXISTS "${CURRENT_PACKAGES_DIR}/share/Qt6${_comp}")
-            vcpkg_fixup_cmake_targets(CONFIG_PATH share/Qt6${_comp} TARGET_PATH share/Qt6${_comp} TOOLS_PATH "tools/qt6/bin")
+            vcpkg_fixup_cmake_targets(CONFIG_PATH share/Qt6${_comp} TARGET_PATH share/Qt6${_comp} TOOLS_PATH "tools/Qt6/bin")
             # Would rather put it into share/cmake as before but the import_prefix correction in vcpkg_fixup_cmake_targets is working against that. 
         else()
             message(STATUS "WARNING: Qt component ${_comp} not found/built!")
@@ -150,7 +150,7 @@ function(qt_install_submodule)
         endforeach()
     endif()
 
-    set(qt_tooldest "${CURRENT_PACKAGES_DIR}/tools/qt6/bin")
+    set(qt_tooldest "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
     set(qt_searchdir "${CURRENT_PACKAGES_DIR}/bin")
     ## Handle Tools
     foreach(_tool IN LISTS _qis_TOOL_NAMES)
@@ -169,17 +169,17 @@ function(qt_install_submodule)
 
     if(VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
         if(EXISTS "${CURRENT_PACKAGES_DIR}/bin/")
-            file(COPY "${CURRENT_PACKAGES_DIR}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/qt6/bin")
+            file(COPY "${CURRENT_PACKAGES_DIR}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin")
         endif()
-        file(GLOB_RECURSE _installed_dll_files RELATIVE "${CURRENT_INSTALLED_DIR}/tools/qt6/bin" "${CURRENT_INSTALLED_DIR}/tools/qt6/bin/*.dll")
+        file(GLOB_RECURSE _installed_dll_files RELATIVE "${CURRENT_INSTALLED_DIR}/tools/Qt6/bin" "${CURRENT_INSTALLED_DIR}/tools/Qt6/bin/*.dll")
         foreach(_dll_to_remove IN LISTS _installed_dll_files)
-            file(GLOB_RECURSE _packaged_dll_file "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/${_dll_to_remove}")
+            file(GLOB_RECURSE _packaged_dll_file "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/${_dll_to_remove}")
             if(EXISTS "${_packaged_dll_file}")
                 file(REMOVE "${_packaged_dll_file}")
             endif()
         endforeach()
-        file(GLOB_RECURSE _folders LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/**/")
-        file(GLOB_RECURSE _files "${CURRENT_PACKAGES_DIR}/tools/qt6/bin/**/")
+        file(GLOB_RECURSE _folders LIST_DIRECTORIES true "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/**/")
+        file(GLOB_RECURSE _files "${CURRENT_PACKAGES_DIR}/tools/Qt6/bin/**/")
         if(_files)
             list(REMOVE_ITEM _folders ${_files})
         endif()
