@@ -15,7 +15,7 @@ find_package(MPG123)
 find_package(Vorbis)
 find_package(FLAC)
 
-find_package(portaudio)
+find_package(portaudio REQUIRED)
 
 set(
   lib_headers
