@@ -74,7 +74,8 @@ function(build_libintl_and_tools)
         OPTIONS
             ${OPTIONS}
     )
-    vcpkg_install_make()
+    configure_file("${CMAKE_CURRENT_LIST_DIR}/Makefile" "${CURRENT_BUILDTREES_DIR}/Makefile-${TARGET_TRIPLET}" COPYONLY)
+    vcpkg_install_make(MAKEFILE "../Makefile-${TARGET_TRIPLET}")
 endfunction()
 
 function(build_libintl_only)
@@ -93,9 +94,12 @@ function(build_libintl_only)
 endfunction()
 
 if("tools" IN_LIST FEATURES)
+    # Minimization of gettext tools build time by:
+    # - building tools only for release configuration
+    # - custom top-level Makefile
+    # - configuration cache
     list(APPEND OPTIONS "--cache-file=../config.cache-${TARGET_TRIPLET}")
     file(REMOVE_RECURSE "${CURRENT_BUILDTREES_DIR}/config.cache-${TARGET_TRIPLET}")
-    # Always build tools in release configuration only
     build_libintl_and_tools(BUILD_TYPE "release")
     vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     if(VCPKG_TARGET_IS_LINUX)
