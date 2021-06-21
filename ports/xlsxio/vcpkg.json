@@ -23,9 +23,6 @@
           ]
         }
       ]
-    },
-    "wide": {
-      "description": "also build utf-16 library"
     }
   }
 }

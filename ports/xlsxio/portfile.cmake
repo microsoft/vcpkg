@@ -13,7 +13,6 @@ vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         libzip WITH_LIBZIP
-        wide WITH_WIDE
 )
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)    
@@ -31,6 +30,7 @@ vcpkg_configure_cmake(
         ${FEATURE_OPTIONS}
         -DBUILD_SHARED=${BUILD_SHARED}
         -DBUILD_STATIC=${BUILD_STATIC}
+        -DWITH_WIDE=OFF
         -DBUILD_DOCUMENTATION=OFF
         -DBUILD_EXAMPLES=OFF
         -DBUILD_PC_FILES=OFF
