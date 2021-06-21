@@ -10,6 +10,7 @@ vcpkg_from_github(
         fix-redefinition-function.patch
         fix-pkg-config.patch
         fix-uwp-build.patch
+        fix-marco-conflict.patch
 )
 
 find_program(GIT NAMES git git.cmd)
