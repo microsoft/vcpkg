@@ -6,13 +6,13 @@ if (EXISTS "${CURRENT_INSTALLED_DIR}/share/opencv4")
   message(FATAL_ERROR "OpenCV 4 is installed, please uninstall and try again:\n    vcpkg remove opencv4")
 endif()
 
-set(OPENCV_VERSION "3.4.13")
+set(OPENCV_VERSION "3.4.14")
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO opencv/opencv
     REF ${OPENCV_VERSION}
-    SHA512 ec87b10534b9187c5ac2eea498c05c73bceab08afaed93b5a117ed34d1eeeb0ffc45901642bebf8f55126fd49ec78d731fc61debe6b40d8642f1323b5dbbeacf
+    SHA512 b8373ead40549e3d487227947c6bd00f6eba368e48bb9356d41cb0f3bfabfb0b10b6e64712febc11ab1e5a1901b1db8b83b63ba492f4e3816c15fa7ddaaf7e69
     HEAD_REF master
     PATCHES
       0001-disable-downloading.patch
@@ -39,6 +39,7 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindCUDNN.cmake")
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_WITH_STATIC_CRT)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+ FEATURES
  "contrib"  WITH_CONTRIB
  "cuda"     WITH_CUBLAS
  "cuda"     WITH_CUDA
@@ -114,7 +115,7 @@ if("contrib" IN_LIST FEATURES)
       OUT_SOURCE_PATH CONTRIB_SOURCE_PATH
       REPO opencv/opencv_contrib
       REF ${OPENCV_VERSION}
-      SHA512 49f0aed8e07a443f354859a16c8de5ceae26560f141721ae4beb0d5fcc5b24b755ee313519e159b1a5b6ba125dcca8584f2a515e0ac96a8c9c36bb11ac6b3375
+      SHA512 30f4f25e40908a9d823304197c475dc0f1ae2b24ec5b1ce0484b39959b88897d1291b5b0e12530db24af96d664e90137582e4b03e4dca7fde1319044bdec9b77
       HEAD_REF master
       PATCHES
         0007-fix-hdf5.patch
