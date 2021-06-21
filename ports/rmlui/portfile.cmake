@@ -13,23 +13,6 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 		freetype        NO_FONT_INTERFACE_DEFAULT
 )
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-	vcpkg_replace_string(${SOURCE_PATH}/Include/RmlUi/Core/Header.h
-		"#if !defined RMLUI_STATIC_LIB"
-		"#if 0"
-	)
-	vcpkg_replace_string(${SOURCE_PATH}/Include/RmlUi/Debugger/Header.h
-		"#if !defined RMLUI_STATIC_LIB"
-		"#if 0"
-	)
-	if ("lua" IN_LIST FEATURES)
-		vcpkg_replace_string(${SOURCE_PATH}/Include/RmlUi/Lua/Header.h
-			"#if !defined RMLUI_STATIC_LIB"
-			"#if 0"
-		)
-	endif()
-endif()
-
 # Replace built-in thirdparty header
 file(COPY
 	${CURRENT_INSTALLED_DIR}/include/robin_hood.h
@@ -53,5 +36,22 @@ file(REMOVE_RECURSE
 	${CURRENT_PACKAGES_DIR}/debug/lib/RmlUi
 	${CURRENT_PACKAGES_DIR}/lib/RmlUi
 )
+
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+	vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/RmlUi/Core/Header.h
+		"#if !defined RMLUI_STATIC_LIB"
+		"#if 0"
+	)
+	vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/RmlUi/Debugger/Header.h
+		"#if !defined RMLUI_STATIC_LIB"
+		"#if 0"
+	)
+	if ("lua" IN_LIST FEATURES)
+		vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/RmlUi/Lua/Header.h
+			"#if !defined RMLUI_STATIC_LIB"
+			"#if 0"
+		)
+	endif()
+endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
