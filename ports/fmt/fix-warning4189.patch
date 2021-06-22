@@ -1,5 +1,5 @@
 diff --git a/include/fmt/format.h b/include/fmt/format.h
-index 4e96539..0f1d179 100644
+index 03ae1c9..7dd79a7 100644
 --- a/include/fmt/format.h
 +++ b/include/fmt/format.h
 @@ -33,6 +33,7 @@
@@ -7,6 +7,6 @@ index 4e96539..0f1d179 100644
  #define FMT_FORMAT_H_
  
 +#pragma warning(disable:4189)
- #include <algorithm>
- #include <cerrno>
- #include <cmath>
+ #include <cmath>         // std::signbit
+ #include <cstdint>       // uint32_t
+ #include <limits>        // std::numeric_limits
