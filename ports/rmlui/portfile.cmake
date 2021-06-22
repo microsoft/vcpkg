@@ -4,6 +4,8 @@ vcpkg_from_github(
 	REF 4.1
 	SHA512 f79bd30104c42469142e4c79a81f120c61f5bd3ae918df9847fa42d05fcda372d3adb5f6884c81c8517a440a81235e70ffcdde8d98751a14d2e4265fc2051a01
 	HEAD_REF master
+	PATCHES
+		add-robin-hood.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -13,10 +15,15 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 		freetype        NO_FONT_INTERFACE_DEFAULT
 )
 
-# Replace built-in thirdparty header
-file(COPY
-	${CURRENT_INSTALLED_DIR}/include/robin_hood.h
-	DESTINATION ${SOURCE_PATH}/Include/RmlUi/Core/Containers
+# Replace built-in header with vcpkg version (from robin-hood-hashing port)
+file(REMOVE ${SOURCE_PATH}/Include/RmlUi/Core/Containers/robin_hood.h)
+vcpkg_replace_string( ${SOURCE_PATH}/Include/RmlUi/Config/Config.h
+	"#include \"../Core/Containers/robin_hood.h\""
+	"#include <robin_hood.h>"
+)
+vcpkg_replace_string( ${SOURCE_PATH}/CMake/FileList.cmake
+	"\${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Containers/robin_hood.h"
+	""
 )
 
 vcpkg_cmake_configure(

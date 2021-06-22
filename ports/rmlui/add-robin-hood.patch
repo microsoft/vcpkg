@@ -1,0 +1,13 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 62432f1..d9287c9 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -387,6 +387,8 @@ if( ENABLE_SVG_PLUGIN )
+ 	message("-- Can SVG plugin be enabled - yes - lunasvg library found")
+ endif()
+ 
++find_path(ROBIN_HOOD_INCLUDE_DIR robin_hood.h)
++include_directories(${ROBIN_HOOD_INCLUDE_DIR})
+ 
+ if(NOT BUILD_FRAMEWORK)
+ #===================================
