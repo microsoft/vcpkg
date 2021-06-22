@@ -1,6 +1,6 @@
 {
   "name": "xlsxio",
-  "version-string": "2021-03-24+0100",
+  "version-date": "2021-03-24",
   "description": "Cross-platform C library for reading values from and writing values to .xlsx files",
   "homepage": "https://github.com/brechtsanders/xlsxio",
   "dependencies": [
