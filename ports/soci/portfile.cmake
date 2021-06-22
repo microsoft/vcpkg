@@ -6,7 +6,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         fix-dependency-libmysql.patch
-        #export-include-dirs.patch
+        export-include-dirs.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SOCI_DYNAMIC)
@@ -52,8 +52,6 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
-# Correct the config file name
-#file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCI.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCIConfig.cmake)
 
 if ("mysql" IN_LIST FEATURES)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/${PORT}/SOCIConfig.cmake
