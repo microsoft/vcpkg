@@ -751,7 +751,6 @@ libressl:x64-windows-static = skip
 libressl:x64-windows-static-md=skip
 libressl:x86-windows        = skip
 libsamplerate:x64-osx=fail
-libsmb2:x64-osx=fail
 libsoundio:arm64-windows=fail
 libsoundio:arm-uwp=fail
 libsoundio:x64-uwp=fail
