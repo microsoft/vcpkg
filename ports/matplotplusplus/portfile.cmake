@@ -50,10 +50,10 @@ vcpkg_copy_pdbs()
 
 file(RENAME
     "${CURRENT_PACKAGES_DIR}/lib/cmake/Matplot++/matplot++-config.cmake"
-    "${CURRENT_PACKAGES_DIR}/lib/cmake/Matplot++/Matplot++-config.cmake"
+    "${CURRENT_PACKAGES_DIR}/lib/cmake/Matplot++/Matplot++Config.cmake"
 )
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME Matplot++ CONFIG_PATH lib/cmake/Matplot++)
+vcpkg_cmake_config_fixup(PACKAGE_NAME matplot++ CONFIG_PATH lib/cmake/Matplot++)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
