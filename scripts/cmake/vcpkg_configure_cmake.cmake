@@ -403,7 +403,7 @@ function(vcpkg_configure_cmake)
         list(JOIN all_unused_variables "\n    " all_unused_variables)
         message(WARNING "The following variables are not used in CMakeLists.txt:
     ${all_unused_variables}
-Please recheck them and remove the unnecessary options from the `vcpkg_cmake_configure` call.
+Please recheck them and remove the unnecessary options from the `vcpkg_configure_cmake` call.
 If these options should still be passed for whatever reason, please use the `MAYBE_UNUSED_VARIABLES` argument.")
     endif()
 
