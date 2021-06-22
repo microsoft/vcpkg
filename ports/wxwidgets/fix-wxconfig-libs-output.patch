@@ -1,12 +1,16 @@
 diff --git a/build/cmake/config.cmake b/build/cmake/config.cmake
-index 91d11ac..9d64755 100644
+index 91d11ac..56b103b 100644
 --- a/build/cmake/config.cmake
 +++ b/build/cmake/config.cmake
-@@ -42,6 +42,7 @@ macro(wx_get_dependencies var lib)
+@@ -42,6 +42,11 @@ macro(wx_get_dependencies var lib)
                  set(dep_name "-l${dep_name}")
              else()
                  get_filename_component(dep_name ${dep} NAME)
-+                set(dep_name "-l${dep_name}")
++                string(REGEX MATCH "^-.*$" ADDED_PREFIX ${dep_name})
++                if (NOT ADDED_PREFIX)
++                    set(dep_name "-l${dep_name}")
++                endif()
++
              endif()
              wx_string_append(${var} "${dep_name} ")
          endforeach()
