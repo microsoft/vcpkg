@@ -37,7 +37,7 @@ _find_package(${ARGS})
 set(OPENSSL_ROOT_DIR ${OPENSSL_ROOT_DIR_BAK})
 
 if(OPENSSL_FOUND AND "@VCPKG_LIBRARY_LINKAGE@" STREQUAL "static")
-    if(WIN32)
+    if(CMAKE_HOST_WIN32)
         list(APPEND OPENSSL_LIBRARIES Crypt32.lib ws2_32.lib)
         if(TARGET OpenSSL::Crypto)
             set_property(TARGET OpenSSL::Crypto APPEND PROPERTY INTERFACE_LINK_LIBRARIES "Crypt32.lib;ws2_32.lib")
