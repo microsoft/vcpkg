@@ -6,6 +6,9 @@
   "supports": "!osx",
   "dependencies": [
     "openssl",
-    "vcpkg-cmake-config"
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
