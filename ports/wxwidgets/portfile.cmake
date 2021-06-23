@@ -87,6 +87,14 @@ if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/wx/setup.h")
     configure_file("${CMAKE_CURRENT_LIST_DIR}/setup.h.in" "${CURRENT_PACKAGES_DIR}/include/wx/setup.h" @ONLY)
 endif()
 
+# Fix the abs path in wx-config
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    file(READ "${CURRENT_PACKAGES_DIR}/tools/wxwidgets/wx-config" _contents)
+    string(REGEX REPLACE "${CURRENT_PACKAGES_DIR}" "\${prefix}" _contents "${_contents}")
+    string(REGEX REPLACE "${CURRENT_INSTALLED_DIR}" "\${prefix}" _contents "${_contents}")
+    file(WRITE "${CURRENT_PACKAGES_DIR}/tools/wxwidgets/wx-config" "${_contents}")
+endif()
+
 configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake.in"
    "${CURRENT_PACKAGES_DIR}/share/wxwidgets/vcpkg-cmake-wrapper.cmake" @ONLY)
 file(INSTALL "${SOURCE_PATH}/docs/licence.txt" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
