@@ -362,16 +362,22 @@ if(NOT Z_VCPKG_ROOT_DIR)
     z_vcpkg_add_fatal_error("Could not find .vcpkg-root")
 endif()
 
-if(NOT DEFINED _VCPKG_INSTALLED_DIR)
-    if(VCPKG_MANIFEST_MODE)
-        set(_VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
-    else()
-        set(_VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
-    endif()
-set(_VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}"
+if(DEFINED VCPKG_INSTALLED_DIR)
+    # do nothing
+elseif(DEFINED _VCPKG_INSTALLED_DIR)
+    set(VCPKG_INSTALLED_DIR "${_VCPKG_INSTALLED_DIR}")
+elseif(VCPKG_MANIFEST_MODE)
+    set(VCPKG_INSTALLED_DIR "${CMAKE_BINARY_DIR}/vcpkg_installed")
+else()
+    set(VCPKG_INSTALLED_DIR "${Z_VCPKG_ROOT_DIR}/installed")
+endif()
+
+set(VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
     CACHE PATH
     "The directory which contains the installed libraries for each triplet" FORCE)
-endif()
+set(_VCPKG_INSTALLED_DIR "${VCPKG_INSTALLED_DIR}"
+    CACHE PATH
+    "The directory which contains the installed libraries for each triplet" FORCE)
 
 if(CMAKE_BUILD_TYPE MATCHES "^[Dd][Ee][Bb][Uu][Gg]$" OR NOT DEFINED CMAKE_BUILD_TYPE) #Debug build: Put Debug paths before Release paths.
     list(APPEND CMAKE_PREFIX_PATH
@@ -412,33 +418,6 @@ if(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE STREQUAL "ONLY" OR
 endif()
 
 set(VCPKG_CMAKE_FIND_ROOT_PATH "${CMAKE_FIND_ROOT_PATH}")
-
-file(TO_CMAKE_PATH "$ENV{PROGRAMFILES}" Z_VCPKG_PROGRAMFILES)
-set(Z_VCPKG_PROGRAMFILESX86_NAME "PROGRAMFILES(x86)")
-file(TO_CMAKE_PATH "$ENV{${Z_VCPKG_PROGRAMFILESX86_NAME}}" Z_VCPKG_PROGRAMFILESX86)
-set(CMAKE_SYSTEM_IGNORE_PATH
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win32"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win64"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win32/lib/VC"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win64/lib/VC"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win32/lib/VC/static"
-    "${Z_VCPKG_PROGRAMFILES}/OpenSSL-Win64/lib/VC/static"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win32"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win64"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win32/lib/VC"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win64/lib/VC"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win32/lib/VC/static"
-    "${Z_VCPKG_PROGRAMFILESX86}/OpenSSL-Win64/lib/VC/static"
-    "C:/OpenSSL/"
-    "C:/OpenSSL-Win32/"
-    "C:/OpenSSL-Win64/"
-    "C:/OpenSSL-Win32/lib/VC"
-    "C:/OpenSSL-Win64/lib/VC"
-    "C:/OpenSSL-Win32/lib/VC/static"
-    "C:/OpenSSL-Win64/lib/VC/static"
-)
 
 # CMAKE_EXECUTABLE_SUFFIX is not yet defined
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
@@ -619,14 +598,18 @@ endfunction()
 # Arguments:
 #   TARGETS - a list of installed targets to have dependencies copied for
 #   DESTINATION - the runtime directory for those targets (usually `bin`)
+#   COMPONENT - the component this install command belongs to (optional)
 #
 # Note that this function requires CMake 3.14 for policy CMP0087
 function(x_vcpkg_install_local_dependencies)
     if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "windows|uwp")
-        cmake_parse_arguments(PARSE_ARGV 0 __VCPKG_APPINSTALL "" "DESTINATION" "TARGETS")
+        cmake_parse_arguments(PARSE_ARGV 0 __VCPKG_APPINSTALL "" "DESTINATION;COMPONENT" "TARGETS")
         z_vcpkg_set_powershell_path()
         if(NOT IS_ABSOLUTE "${__VCPKG_APPINSTALL_DESTINATION}")
             set(__VCPKG_APPINSTALL_DESTINATION "\${CMAKE_INSTALL_PREFIX}/${__VCPKG_APPINSTALL_DESTINATION}")
+        endif()
+        if(__VCPKG_APPINSTALL_COMPONENT)
+            set(__VCPKG_APPINSTALL_COMPONENT COMPONENT ${__VCPKG_APPINSTALL_COMPONENT})
         endif()
         foreach(TARGET IN LISTS __VCPKG_APPINSTALL_TARGETS)
             get_target_property(TARGETTYPE "${TARGET}" TYPE)
@@ -639,7 +622,9 @@ function(x_vcpkg_install_local_dependencies)
                     execute_process(COMMAND \"${Z_VCPKG_POWERSHELL_PATH}\" -noprofile -executionpolicy Bypass -file \"${Z_VCPKG_TOOLCHAIN_DIR}/msbuild/applocal.ps1\"
                         -targetBinary \"${__VCPKG_APPINSTALL_DESTINATION}/$<TARGET_FILE_NAME:${TARGET}>\"
                         -installedDir \"${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}$<$<CONFIG:Debug>:/debug>/bin\"
-                        -OutVariable out)")
+                        -OutVariable out)"
+                    ${__VCPKG_APPINSTALL_COMPONENT}
+                    )
             endif()
         endforeach()
     endif()
@@ -677,9 +662,16 @@ if(X_VCPKG_APPLOCAL_DEPS_INSTALL)
                 if(LAST_COMMAND STREQUAL "DESTINATION" AND (MODIFIER STREQUAL "" OR MODIFIER STREQUAL "RUNTIME"))
                     set(DESTINATION "${ARG}")
                 endif()
+                if(LAST_COMMAND STREQUAL "COMPONENT")
+                    set(COMPONENT "${ARG}")
+                endif()
             endforeach()
 
-            x_vcpkg_install_local_dependencies(TARGETS "${PARSED_TARGETS}" DESTINATION "${DESTINATION}")
+            # COMPONENT is optional only set it when it's been set by the install rule
+            if(COMPONENT)
+                set(COMPONENT "COMPONENT" ${COMPONENT})
+            endif()
+            x_vcpkg_install_local_dependencies(TARGETS "${PARSED_TARGETS}" DESTINATION "${DESTINATION}" ${COMPONENT})
         endif()
     endfunction()
 endif()

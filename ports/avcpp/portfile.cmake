@@ -9,6 +9,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         0001-remove-problematic-compound-literal.patch
+        0002-av_init_packet_deprecation.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" AVCPP_ENABLE_STATIC)
