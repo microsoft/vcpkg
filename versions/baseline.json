@@ -4241,7 +4241,7 @@
       "port-version": 0
     },
     "nanopb": {
-      "baseline": "2019-02-12-2",
+      "baseline": "0.4.5",
       "port-version": 0
     },
     "nanoprintf": {
