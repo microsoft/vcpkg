@@ -7,8 +7,15 @@ with internal semicolons (in other words, escaped semicolons).
 Use `vcpkg_list()` instead of `list()` whenever possible.
 
 ```cmake
+vcpkg_list(SET <out-var> [<element>...])
 vcpkg_list(<COMMAND> <out-var> <list-value> [<other-arguments>...])
 ```
+
+In addition to all of the commands from `list()`, `vcpkg_list` adds
+a `vcpkg_list(SET)` command.
+This command takes its arguments, escapes them, and then concatenates
+them into a list; this should be used instead of `set()` for setting any
+list variable.
 
 Unlike CMake's `list()` function, since this is written in CMake,
 we can't make `<list>` an in-out parameter. Therefore, for this
@@ -29,6 +36,15 @@ See the [CMake documentation for `list()`](https://cmake.org/cmake/help/latest/c
 for more information.
 
 ## Examples
+
+### Creating a list
+
+```cmake
+vcpkg_list(SET foo_param)
+if(DEFINED arg_FOO)
+    vcpkg_list(SET foo_param FOO "${arg_FOO}")
+endif()
+```
 
 ### Appending to a list
 

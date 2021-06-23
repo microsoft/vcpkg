@@ -6,8 +6,15 @@ with internal semicolons (in other words, escaped semicolons).
 Use `vcpkg_list()` instead of `list()` whenever possible.
 
 ```cmake
+vcpkg_list(SET <out-var> [<element>...])
 vcpkg_list(<COMMAND> <out-var> <list-value> [<other-arguments>...])
 ```
+
+In addition to all of the commands from `list()`, `vcpkg_list` adds
+a `vcpkg_list(SET)` command.
+This command takes its arguments, escapes them, and then concatenates
+them into a list; this should be used instead of `set()` for setting any
+list variable.
 
 Unlike CMake's `list()` function, since this is written in CMake,
 we can't make `<list>` an in-out parameter. Therefore, for this
@@ -29,6 +36,15 @@ for more information.
 
 ## Examples
 
+### Creating a list
+
+```cmake
+vcpkg_list(SET foo_param)
+if(DEFINED arg_FOO)
+    vcpkg_list(SET foo_param FOO "${arg_FOO}")
+endif()
+```
+
 ### Appending to a list
 
 ```cmake
@@ -48,9 +64,18 @@ endif()
 ```
 #]===]
 
-function(vcpkg_list operation out_var lst)
+function(vcpkg_list operation out_var)
+    if(operation STREQUAL "SET")
+        z_vcpkg_function_arguments(args 2)
+        set("${out_var}" "${args}" PARENT_SCOPE)
+        return()
+    endif()
+
     # Normal reading functions
     if(operation STREQUAL "LENGTH")
+        if(NOT ARGC EQUAL "3")
+            message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires three arguments.")
+        endif()
         list(LENGTH lst out)
         set("${out_var}" "${out}" PARENT_SCOPE)
         return()
@@ -73,6 +98,11 @@ function(vcpkg_list operation out_var lst)
         set("${out_var}" "${out}" PARENT_SCOPE)
         return()
     endif()
+
+    if(ARGC LESS "3")
+        message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires at least two arguments.")
+    endif()
+    set(lst "${ARGV2}")
 
     # modification
     z_vcpkg_function_arguments(args 3)
