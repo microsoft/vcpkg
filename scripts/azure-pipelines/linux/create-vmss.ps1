@@ -20,7 +20,7 @@ This script assumes you have installed the OpenSSH Client optional Windows compo
 
 $Location = 'westus2'
 $Prefix = 'PrLin-' + (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D16a_v4'
+$VMSize = 'Standard_D32_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
 $ErrorActionPreference = 'Stop'
@@ -161,7 +161,8 @@ New-AzStorageAccount `
   -Location $Location `
   -Name $StorageAccountName `
   -SkuName 'Standard_LRS' `
-  -Kind StorageV2
+  -Kind StorageV2 `
+  -MinimumTlsVersion TLS1_2
 
 $StorageAccountKeys = Get-AzStorageAccountKey `
   -ResourceGroupName $ResourceGroupName `
@@ -338,13 +339,22 @@ $Vmss = Set-AzVmssOsProfile `
   -AdminUsername AdminUser `
   -AdminPassword $AdminPW `
   -LinuxConfigurationDisablePasswordAuthentication $true `
-  -PublicKey @($VmssPublicKey)
+  -PublicKey @($VmssPublicKey) `
+  -CustomData ([Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes("#!/bin/bash`n/etc/provision-disks.sh`n")))
 
 $Vmss = Set-AzVmssStorageProfile `
   -VirtualMachineScaleSet $Vmss `
   -OsDiskCreateOption 'FromImage' `
   -OsDiskCaching ReadWrite `
   -ImageReferenceId $Image.Id
+
+$Vmss = Add-AzVmssDataDisk `
+  -VirtualMachineScaleSet $Vmss `
+  -Lun 0 `
+  -Caching 'ReadWrite' `
+  -CreateOption Empty `
+  -DiskSizeGB 1024 `
+  -StorageAccountType 'StandardSSD_LRS'
 
 New-AzVmss `
   -ResourceGroupName $ResourceGroupName `

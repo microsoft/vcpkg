@@ -1279,7 +1279,7 @@ protobuf-c:arm-uwp=fail
 python2:arm64-windows=fail
 python2:arm-uwp=fail
 python2:x64-uwp=fail
-# Not yet ready for these platforms. 
+# Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
 qbittorrent:x64-linux=fail
 qhull:x64-uwp=fail
@@ -1810,3 +1810,10 @@ dimcli:x64-windows-static=fail
 
 # cppgraphqlgen triggers an ICE on Apple Clang that comes with MacOS 11.
 cppgraphqlgen:x64-osx=fail
+
+# Visual Studio 2019 version 16.10's XAML compiler seems to be crashing processing this port
+simage:x64-uwp=fail
+simage:arm-uwp=fail
+
+# Changes in Python have broken tensorflow on our osx hardware
+tensorflow-cc:x64-osx=fail
