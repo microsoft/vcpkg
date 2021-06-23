@@ -95,6 +95,15 @@ catch-classic:x64-windows-static-md=skip
 catch-classic:x86-windows        = skip
 ccd:arm-uwp=fail
 ccd:x64-uwp=fail
+# Not tested / not implemented yet.
+cef-build:arm64-windows=skip
+cef-build:arm-uwp=skip
+cef-build:x64-linux=skip
+cef-build:x64-osx=skip
+cef-build:x64-uwp=skip
+cef-build:x64-windows-static=skip
+cef-build:x64-windows-static-md=skip
+cef-build:x86-windows=skip
 cello:arm-uwp=fail
 cello:x64-uwp=fail
 cfitsio:arm-uwp=fail
