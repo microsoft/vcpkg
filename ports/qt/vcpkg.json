@@ -27,7 +27,18 @@
     "qtsvg",
     "qttools",
     "qttranslations",
-    "qtvirtualkeyboard"
+    "qtvirtualkeyboard",
+    "qtconnectivity",
+    "qtlocation",
+    "qtmultimedia",
+    "qtremoteobjects",
+    "qtsensors",
+    "qtserialbus",
+    "qtserialport",
+    "qtwebchannel",
+    "qtwebengine",
+    "qtwebsockets",
+    "qtwebview"
   ],
   "default-features": [
     "default-features"

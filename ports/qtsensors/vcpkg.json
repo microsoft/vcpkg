@@ -1,15 +1,24 @@
 {
-  "name": "qtcoap",
-  "version-semver": "6.1.2",
-  "description": "Qt CoAP client module",
+  "name": "qtsensors",
+  "version-semver": "6.2.0-beta1",
+  "description": "Qt Sensors",
   "homepage": "https://www.qt.io/",
   "dependencies": [
+    "qt6betablock",
     {
       "name": "qtbase",
       "default-features": false
     },
     {
       "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false
+    },
+    {
+      "name": "qtsvg",
       "default-features": false
     }
   ],

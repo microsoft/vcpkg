@@ -1,15 +1,18 @@
 {
-  "name": "qtdoc",
-  "version-semver": "6.1.2",
-  "description": "Qt Documentation",
+  "name": "qtremoteobjects",
+  "version-semver": "6.2.0-beta1",
+  "description": "Qt distributed object system",
   "homepage": "https://www.qt.io/",
   "dependencies": [
+    "qt6betablock",
     {
       "name": "qtbase",
       "default-features": false
     },
-    "qtdeclarative",
-    "qtquickcontrols2"
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    }
   ],
   "default-features": [
     "default-features"

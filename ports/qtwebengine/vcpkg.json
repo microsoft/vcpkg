@@ -1,0 +1,43 @@
+{
+  "name": "qtwebengine",
+  "version-semver": "6.2.0-beta1",
+  "description": "Qt WebEngine",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    "protobuf",
+    "qt6betablock",
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtlocation",
+      "default-features": false
+    },
+    {
+      "name": "qtquickcontrols2",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
+    },
+    {
+      "name": "qtwebchannel",
+      "default-features": false
+    },
+    "snappy"
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    }
+  }
+}

@@ -1,17 +1,18 @@
-set(QT_IS_LATEST OFF)
+set(QT_IS_LATEST ON)
 
 ## All above goes into the qt_port_hashes in the future
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
-        jpeg.patch
         harfbuzz.patch
         config_install.patch 
         allow_outside_prefix.patch 
-        buildcmake.patch
         dont_force_cmakecache.patch
-        fix_find_dep.patch
-        20b3eb0.diff # Upstream fix to build with clang-cl; didn't make 6.1.1 so I backported the patch. 
+        fix_cmake_build.patch
+        #promotion.patch
+        #promotion.patch
+        #buildcmake.patch # <-probably required
+        #fix_find_dep.patch # <-MAybe required
         clang-cl_source_location.patch
         )
 
@@ -205,6 +206,7 @@ set(TOOL_NAMES
         rcc 
         tracegen 
         uic
+        qtpaths
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}

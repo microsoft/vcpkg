@@ -67,14 +67,50 @@ elseif(VCPKG_TARGET_IS_OSX)
     list(APPEND TOOL_NAMES macdeployqt)
 endif()
 
-qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
-                     TOOL_NAMES ${TOOL_NAMES}
-                     CONFIGURE_OPTIONS ${FEATURE_OPTIONS}
-                                       -DCMAKE_DISABLE_FIND_PACKAGE_Qt6AxContainer=ON
-                     CONFIGURE_OPTIONS_RELEASE
-                     CONFIGURE_OPTIONS_DEBUG
-                    )
-                    
+### Download third_party modules
+vcpkg_from_git(
+    OUT_SOURCE_PATH SOURCE_PATH_QLITEHTML
+    URL git://code.qt.io/playground/qlitehtml.git
+    REF 908670c5b68d3bcf4712019a028079b8b2042dd4
+)
+# port 'litehtml' is not in vcpkg!
+vcpkg_from_github(
+    OUT_SOURCE_PATH SOURCE_PATH_LITEHTML
+    REPO litehtml/litehtml
+    REF db7f59d5886fd50f84d48720c79dc2e6152efa83
+    SHA512 6beed53f8b779359eb2d08495547f9b4e3d02b70d68e035e6c188f009a283e630b3961caa472ce045799a9ef82e1cd6b3c63d8534e6e8127441944f4837a0352
+    HEAD_REF master
+)
+
+##### qt_install_submodule
+set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
+set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
+
+qt_download_submodule(PATCHES ${${PORT}_PATCHES})
+if(QT_UPDATE_VERSION)
+    return()
+endif()
+file(COPY "${SOURCE_PATH_QLITEHTML}/" DESTINATION "${SOURCE_PATH}/src/assistant/qlitehtml")
+file(COPY "${SOURCE_PATH_LITEHTML}/" DESTINATION "${SOURCE_PATH}/src/assistant/qlitehtml/src/3rdparty/litehtml")
+
+
+if(_qis_DISABLE_NINJA)
+    set(_opt DISABLE_NINJA)
+endif()
+qt_cmake_configure(${_opt} 
+                   OPTIONS ${FEATURE_OPTIONS}
+                           -DCMAKE_DISABLE_FIND_PACKAGE_Qt6AxContainer=ON
+                   OPTIONS_DEBUG ${_qis_CONFIGURE_OPTIONS_DEBUG}
+                   OPTIONS_RELEASE ${_qis_CONFIGURE_OPTIONS_RELEASE})
+
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
+
+qt_fixup_and_cleanup(TOOL_NAMES ${TOOL_NAMES})
+
+qt_install_copyright("${SOURCE_PATH}")
+
+##### qt_install_submodule
+
 if(VCPKG_TARGET_IS_OSX)
     set(OSX_APP_FOLDERS Designer.app Linguist.app pixeltool.app qdbusviewer.app)
     foreach(_appfolder IN LISTS OSX_APP_FOLDERS)

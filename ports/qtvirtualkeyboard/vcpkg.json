@@ -5,6 +5,7 @@
   "homepage": "https://www.qt.io/",
   "dependencies": [
     "qtdeclarative",
+    "qtquickcontrols2",
     "qtsvg",
     "qttools"
   ],

@@ -1,15 +1,24 @@
 {
-  "name": "qtcoap",
-  "version-semver": "6.1.2",
-  "description": "Qt CoAP client module",
+  "name": "qtmultimedia",
+  "version-semver": "6.2.0-beta1",
+  "description": "Qt Multimedia",
   "homepage": "https://www.qt.io/",
   "dependencies": [
+    "qt6betablock",
     {
       "name": "qtbase",
       "default-features": false
     },
     {
       "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtquickcontrols2",
+      "default-features": false
+    },
+    {
+      "name": "qtshadertools",
       "default-features": false
     }
   ],
