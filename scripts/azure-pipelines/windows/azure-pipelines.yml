@@ -25,7 +25,7 @@ jobs:
     inputs:
       filePath: 'scripts/azure-pipelines/windows/disk-space.ps1'
       pwsh: true
-  # Note: D: is the Azure machines' temporary disk.
+  # Note: E: is the Azure machines' temporary disk.
   - script: .\bootstrap-vcpkg.bat
     displayName: 'Bootstrap vcpkg'
   - script: |
