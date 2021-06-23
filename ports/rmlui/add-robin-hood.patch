@@ -11,3 +11,28 @@ index 62432f1..d9287c9 100644
  
  if(NOT BUILD_FRAMEWORK)
  #===================================
+diff --git a/cmake/FileList.cmake b/cmake/FileList.cmake
+index 9c3042c..c3820df 100644
+--- a/cmake/FileList.cmake
++++ b/cmake/FileList.cmake
+@@ -133,7 +133,6 @@ set(Core_PUB_HDR_FILES
+     ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/ComputedValues.h
+     ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Containers/chobo/flat_map.hpp
+     ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Containers/chobo/flat_set.hpp
+-    ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Containers/robin_hood.h
+     ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Context.h
+     ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/ContextInstancer.h
+     ${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/ConvolutionFilter.h
+diff --git a/include/RmlUi/Config/Config.h b/include/RmlUi/Config/Config.h
+index dc42753..5249e1d 100644
+--- a/include/RmlUi/Config/Config.h
++++ b/include/RmlUi/Config/Config.h
+@@ -57,7 +57,7 @@
+ #else
+ #include "../Core/Containers/chobo/flat_map.hpp"
+ #include "../Core/Containers/chobo/flat_set.hpp"
+-#include "../Core/Containers/robin_hood.h"
++#include <robin_hood.h>
+ #endif	// RMLUI_NO_THIRDPARTY_CONTAINERS
+ 
+ namespace Rml {

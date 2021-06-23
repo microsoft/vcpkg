@@ -15,16 +15,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 		freetype        NO_FONT_INTERFACE_DEFAULT
 )
 
-# Replace built-in header with vcpkg version (from robin-hood-hashing port)
+# Remove built-in header, instead we use vcpkg version (from robin-hood-hashing port)
 file(REMOVE ${SOURCE_PATH}/Include/RmlUi/Core/Containers/robin_hood.h)
-vcpkg_replace_string( ${SOURCE_PATH}/Include/RmlUi/Config/Config.h
-	"#include \"../Core/Containers/robin_hood.h\""
-	"#include <robin_hood.h>"
-)
-vcpkg_replace_string( ${SOURCE_PATH}/CMake/FileList.cmake
-	"\${PROJECT_SOURCE_DIR}/Include/RmlUi/Core/Containers/robin_hood.h"
-	""
-)
 
 vcpkg_cmake_configure(
 	SOURCE_PATH ${SOURCE_PATH}
