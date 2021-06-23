@@ -100,7 +100,7 @@ function(vcpkg_extract_source_archive_ex)
 
     vcpkg_extract_source_archive(source_path
         ARCHIVE "${arg_ARCHIVE}"
-        PATCHES ${PATCHES}
+        PATCHES ${arg_PATCHES}
         ${base_directory_param}
         ${source_base_param}
         ${no_remove_one_level_param}
