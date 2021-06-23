@@ -1,0 +1,7 @@
+{
+	"name": "cef-build",
+	"version": "81.3.8",
+	"description": "Chromium Embedded Framework (CEF) Automated Builds",
+	"homepage": "https://cef-builds.spotifycdn.com/index.html",
+	"supports": "windows & x64 & !static"
+}

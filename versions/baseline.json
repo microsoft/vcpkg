@@ -1164,6 +1164,10 @@
       "baseline": "2.3-2",
       "port-version": 0
     },
+    "cef-build": {
+      "baseline": "81.3.8",
+      "port-version": 0
+    },
     "celero": {
       "baseline": "2.8.2",
       "port-version": 0
