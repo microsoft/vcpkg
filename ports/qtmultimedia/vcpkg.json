@@ -1,0 +1,33 @@
+{
+  "name": "qtmultimedia",
+  "version-semver": "6.1.1",
+  "description": "Qt Multimedia",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtshadertools",
+      "default-features": false
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    {
+      "name": "qtquickcontrols2",
+      "default-features": false
+    },
+    "qt6betablock"
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    }
+  }
+}

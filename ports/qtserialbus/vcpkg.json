@@ -1,0 +1,25 @@
+{
+  "name": "qtserialbus",
+  "version-semver": "6.1.1",
+  "description": "Support for CAN and potentially other serial buses.",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtserialport",
+      "default-features": false
+    },
+    "qt6betablock"
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    }
+  }
+}

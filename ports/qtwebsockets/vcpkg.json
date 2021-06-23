@@ -1,0 +1,25 @@
+{
+  "name": "qtwebsockets",
+  "version-semver": "6.1.1",
+  "description": "Qt WebSockets",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qtdeclarative",
+      "default-features": false
+    },
+    "qt6betablock"
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    }
+  }
+}
