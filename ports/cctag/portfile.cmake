@@ -1,13 +1,8 @@
-# TODO
-# 1. change:
-#   - HEAD_REF to master
-#   - REF and SHA512 to the release version (remember to push to master the develop with release)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO alicevision/cctag
-    REF v1.0.0-rc4
-    SHA512 e1fa31fda91b5c605c10081e6a8b2c7928e652221143201d9ed22f0ce26863e88ded09e43b3a12c2d174f81d49ca173b0b8bf450f394aa7498e0b583d76e44f2
+    REF v1.0.0
+    SHA512 49028356215dd703727b2eedd6aa72d81af84e5ca36f8dc7e9caf85a85c7f500b3eeaaa7369314a40049a72593d70049b709b453c30ff352d98ab0dea3afef76
     HEAD_REF develop
 )
 
