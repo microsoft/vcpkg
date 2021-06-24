@@ -1033,8 +1033,8 @@
       "port-version": 0
     },
     "boringssl": {
-      "baseline": "2020-04-07",
-      "port-version": 2
+      "baseline": "2021-06-23",
+      "port-version": 0
     },
     "botan": {
       "baseline": "2.16.0",
