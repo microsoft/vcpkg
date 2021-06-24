@@ -5,7 +5,7 @@
   "homepage": "https://github.com/skypjack/entt",
   "features": {
     "experimental": {
-      "description":"Use experimental features right away"
+      "description": "Use experimental features right away"
     }
   }
 }
