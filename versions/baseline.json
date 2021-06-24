@@ -2037,8 +2037,8 @@
       "port-version": 0
     },
     "fluidsynth": {
-      "baseline": "2.1.4",
-      "port-version": 1
+      "baseline": "2.2.1",
+      "port-version": 0
     },
     "fmem": {
       "baseline": "c-libs-2ccee3d2fb",
