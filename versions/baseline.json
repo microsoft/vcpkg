@@ -2846,7 +2846,7 @@
     },
     "kf5completion": {
       "baseline": "5.81.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5config": {
       "baseline": "5.81.0",
@@ -2854,11 +2854,11 @@
     },
     "kf5coreaddons": {
       "baseline": "5.81.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5crash": {
       "baseline": "5.81.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5dbusaddons": {
       "baseline": "5.81.0",
@@ -2874,19 +2874,19 @@
     },
     "kf5i18n": {
       "baseline": "5.81.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5itemmodels": {
       "baseline": "5.81.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5itemviews": {
       "baseline": "5.81.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5plotting": {
       "baseline": "5.81.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5syntaxhighlighting": {
       "baseline": "5.81.0",
@@ -2894,7 +2894,7 @@
     },
     "kf5widgetsaddons": {
       "baseline": "5.81.0",
-      "port-version": 0
+      "port-version": 1
     },
     "kf5windowsystem": {
       "baseline": "5.81.0",
@@ -3502,7 +3502,7 @@
     },
     "librsvg": {
       "baseline": "2.40.20",
-      "port-version": 3
+      "port-version": 4
     },
     "librsync": {
       "baseline": "2020-09-16",
