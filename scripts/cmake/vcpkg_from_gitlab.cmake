@@ -13,6 +13,7 @@ vcpkg_from_gitlab(
     [SHA512 <45d0d7f8cc350...>]
     [HEAD_REF <master>]
     [PATCHES <patch1.patch> <patch2.patch>...]
+    [ACCESS_TOKEN <8Xx93kL7s1PTsMk8xsxD>]
     [FILE_DISAMBIGUATOR <N>]
 )
 ```
@@ -53,6 +54,9 @@ A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
 
+### ACCESS_TOKEN
+The GitLab API access token to use when downloading the archive. The access token must have at least the `read_repository` scope. This is only needed for private repositories.
+
 ### FILE_DISAMBIGUATOR
 A token to uniquely identify the resulting filename if the SHA512 changes even though a git ref does not, to avoid stepping on the same file name.
 
@@ -70,7 +74,7 @@ This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_from_gitlab)
-    set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF FILE_DISAMBIGUATOR)
+    set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF ACCESS_TOKEN FILE_DISAMBIGUATOR)
     set(multipleValuesArgs PATCHES)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _vdud "" "${oneValueArgs}" "${multipleValuesArgs}")
@@ -98,6 +102,12 @@ function(vcpkg_from_gitlab)
     if(VCPKG_USE_HEAD_VERSION AND NOT DEFINED _vdud_HEAD_REF)
         message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
         set(VCPKG_USE_HEAD_VERSION OFF)
+    endif()
+
+    if(DEFINED _vdud_ACCESS_TOKEN)
+        set(HEADERS "HEADERS" "Authorization: Bearer ${_vdud_ACCESS_TOKEN}")
+    else()
+        set(HEADERS)
     endif()
 
     string(REPLACE "/" ";" GITLAB_REPO_LINK ${_vdud_REPO})
@@ -134,6 +144,7 @@ function(vcpkg_from_gitlab)
             URLS "${GITLAB_LINK}/-/archive/${_vdud_REF}/${REPO_NAME}-${_vdud_REF}.tar.gz"
             SHA512 "${_vdud_SHA512}"
             FILENAME "${downloaded_file_name}"
+            ${HEADERS}
         )
 
         vcpkg_extract_source_archive_ex(
@@ -174,6 +185,7 @@ function(vcpkg_from_gitlab)
             URLS ${URL}
             FILENAME ${downloaded_file_name}
             SKIP_SHA512
+            ${HEADERS}
         )
     endif()
 
