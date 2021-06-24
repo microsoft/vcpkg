@@ -106,6 +106,13 @@
         {
           "name": "ffmpeg",
           "features": [
+            "opengl"
+          ],
+          "platform": "!uwp & !(windows & arm)"
+        },
+        {
+          "name": "ffmpeg",
+          "features": [
             "dav1d"
           ],
           "platform": "!(uwp | arm | x86 | osx)"
@@ -123,13 +130,6 @@
             "tensorflow"
           ],
           "platform": "!(x86 | arm | uwp) & !static"
-        },
-        {
-          "name": "ffmpeg",
-          "features": [
-            "opengl"
-          ],
-          "platform": "!uwp & !(windows & arm)"
         },
         {
           "name": "ffmpeg",
