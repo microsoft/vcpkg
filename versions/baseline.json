@@ -3535,6 +3535,10 @@
     "libsigcpp-3": {
       "baseline": "3.0.3",
       "port-version": 1
+    }, 
+	"libsmb2": {
+      "baseline": "2021-04-29",
+      "port-version": 0
     },
     "libsndfile": {
       "baseline": "1.0.31",
