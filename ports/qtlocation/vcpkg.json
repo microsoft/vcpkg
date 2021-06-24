@@ -1,9 +1,10 @@
 {
   "name": "qtlocation",
-  "version-semver": "6.1.1",
+  "version-semver": "6.2.0-alpha1",
   "description": "Qt Location",
   "homepage": "https://www.qt.io/",
   "dependencies": [
+    "qt6betablock",
     {
       "name": "qtbase",
       "default-features": false
@@ -15,8 +16,7 @@
     {
       "name": "qtserialbus",
       "default-features": false
-    },
-    "qt6betablock"
+    }
   ],
   "default-features": [
     "default-features"

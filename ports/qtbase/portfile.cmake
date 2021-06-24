@@ -4,16 +4,17 @@ set(QT_IS_LATEST ON)
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
-        jpeg.patch
+        #jpeg.patch
         harfbuzz.patch
         config_install.patch 
         allow_outside_prefix.patch 
-        buildcmake.patch
+        #buildcmake.patch # <-probably required
         dont_force_cmakecache.patch
-        fix_find_dep.patch
-        20b3eb0.diff # Upstream fix to build with clang-cl; didn't make 6.1.1 so I backported the patch. 
-        dc5e7b6.diff 
-        clang-cl_source_location.patch
+        # fix_find_dep.patch # <-MAybe required
+         
+        #20b3eb0.diff # Upstream fix to build with clang-cl; didn't make 6.1.1 so I backported the patch. 
+        #dc5e7b6.diff 
+        # clang-cl_source_location.patch <- check if integrated
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)

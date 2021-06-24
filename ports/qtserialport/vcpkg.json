@@ -1,14 +1,14 @@
 {
   "name": "qtserialport",
-  "version-semver": "6.1.1",
+  "version-semver": "6.2.0-alpha1",
   "description": "Qt Serial Port support",
   "homepage": "https://www.qt.io/",
   "dependencies": [
+    "qt6betablock",
     {
       "name": "qtbase",
       "default-features": false
-    },
-    "qt6betablock"
+    }
   ],
   "default-features": [
     "default-features"
