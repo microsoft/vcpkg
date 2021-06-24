@@ -1,0 +1,6 @@
+{
+  "name": "fdk-aac",
+  "version-semver": "2.0.2",
+  "description": "A standalone library of the Fraunhofer FDK AAC code",
+  "homepage": "https://github.com/mstorsjo/fdk-aac"
+}

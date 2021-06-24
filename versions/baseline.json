@@ -1973,8 +1973,8 @@
       "port-version": 0
     },
     "fdk-aac": {
-      "baseline": "2018-07-08",
-      "port-version": 3
+      "baseline": "2.0.2",
+      "port-version": 0
     },
     "fdlibm": {
       "baseline": "5.3-4",
