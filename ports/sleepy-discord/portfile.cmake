@@ -10,18 +10,18 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO yourWaifu/sleepy-discord
-    REF 52059a39ff0b435724e5c67ef364dcada655a07a
-    SHA512 025c91e178136b5a4fd19f2015a540fe2b725f384abf04621429422578117c002cf5f4eea311102c0fe62e09ff937035888124e2ffc4369b71b9f3265fa3aeab
+    REF 1d818e1084b85e56b8ab99852f79b974d615c66d
+    SHA512 b137ba378c00d476d1bb725c9d52801b5e0114f96743f842b7b8332ed2050185dd49a58efff233c91217abb1e31b8a35d37f8a45f6497d96953bbb38c77ea202
     HEAD_REF develop
 )
 
 # Handle version data here to prevent issues from doing this twice in parallel
-set(SLEEPY_DISCORD_VERSION_HASH 52059a39ff0b435724e5c67ef364dcada655a07a)
-set(SLEEPY_DISCORD_VERSION_BUILD 890)
+set(SLEEPY_DISCORD_VERSION_HASH 1d818e1084b85e56b8ab99852f79b974d615c66d)
+set(SLEEPY_DISCORD_VERSION_BUILD 905)
 set(SLEEPY_DISCORD_VERSION_BRANCH "develop")
 set(SLEEPY_DISCORD_VERSION_IS_MASTER 0)
 set(SLEEPY_DISCORD_VERSION_DESCRIPTION_CONCAT " ")
-set(SLEEPY_DISCORD_VERSION_DESCRIPTION "52059a39")
+set(SLEEPY_DISCORD_VERSION_DESCRIPTION "1d818e1")
 configure_file(
     "${SOURCE_PATH}/include/sleepy_discord/version.h.in"
     "${SOURCE_PATH}/include/sleepy_discord/version.h"
@@ -38,5 +38,6 @@ vcpkg_cmake_install()
 
 vcpkg_copy_pdbs()
 
-file(INSTALL ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/sleepy_discord/sleepy-discord-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
+vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sleepy-discord)
+
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
