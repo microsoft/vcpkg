@@ -90,11 +90,11 @@ function(vcpkg_extract_source_archive_ex)
     endif()
 
     set(no_remove_one_level_param "")
-    if(NO_REMOVE_ONE_LEVEL)
+    if(arg_NO_REMOVE_ONE_LEVEL)
         set(no_remove_one_level_param NO_REMOVE_ONE_LEVEL)
     endif()
     set(skip_patch_check_param "")
-    if(SKIP_PATCH_CHECK)
+    if(arg_SKIP_PATCH_CHECK)
         set(skip_patch_check_param Z_SKIP_PATCH_CHECK)
     endif()
 
