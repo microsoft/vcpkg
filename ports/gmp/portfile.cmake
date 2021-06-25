@@ -114,7 +114,6 @@ else()
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
     file(INSTALL ${CURRENT_PORT_DIR}/gmp-config.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-    configure_file(${CURRENT_PORT_DIR}/usage ${CURRENT_PACKAGES_DIR}/share/${PORT}/usage @ONLY)
 
     # # Handle copyright
     file(INSTALL "${SOURCE_PATH}/COPYINGv3" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
