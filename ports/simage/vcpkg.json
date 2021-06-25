@@ -1,0 +1,15 @@
+{
+  "name": "simage",
+  "version-semver": "1.8.1",
+  "description": "Image file format library abstraction layer",
+  "homepage": "https://github.com/coin3d/simage",
+  "dependencies": [
+    "giflib",
+    "libjpeg-turbo",
+    "libpng",
+    "libsndfile",
+    "tiff",
+    "libvorbis",
+    "zlib"
+  ]
+}
