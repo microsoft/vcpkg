@@ -172,7 +172,6 @@ else()
     )
     vcpkg_install_make(ADD_BIN_TO_PATH INSTALL_TARGET altinstall)
 
-    file(COPY "${CURRENT_PACKAGES_DIR}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     file(COPY "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin/" DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
 
     # Makefiles, c files, __pycache__, and other junk.
