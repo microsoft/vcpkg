@@ -50,6 +50,11 @@ apr:arm64-windows=fail
 # Requires ATL for ARM64 to be installed in CI
 azure-storage-cpp:arm64-windows=fail
 
+aubio:x64-uwp=fail
+aubio:arm-uwp=fail
+aubio:x86-windows=fail
+aubio:x64-windows=fail
+aubio:arm64-windows=fail
 blend2d:arm64-windows=fail
 blend2d:arm-uwp=fail
 blend2d:x64-uwp=fail
@@ -449,6 +454,7 @@ hiredis:arm-uwp=fail
 hiredis:x64-uwp=fail
 hpx:x64-windows-static=fail
 hpx:x64-linux=fail
+hunspell:x64-windows-static-md=fail
 libhsplasma:x64-windows-static=fail
 ideviceinstaller:x64-windows-static-md=fail
 idevicerestore:x64-linux=fail
@@ -863,6 +869,7 @@ luajit:x64-windows        = skip
 luajit:x64-windows-static = skip
 luajit:x64-windows-static-md=skip
 luajit:x86-windows        = skip
+luasec:x64-windows-static=fail
 luasocket:x64-linux=fail
 luasocket:x64-osx=fail
 lzfse:arm-uwp=fail
@@ -1099,8 +1106,6 @@ ois:x64-uwp=fail
 # /usr/bin/ld: cannot find -lode
 ompl:x64-osx=fail
 ompl:x64-linux=fail
-open62541:arm-uwp=fail
-open62541:x64-uwp=fail
 openal-soft:arm-uwp=fail
 openal-soft:x64-uwp=fail
 openblas:arm64-windows=fail
@@ -1273,10 +1278,8 @@ protobuf-c:arm64-windows=fail
 protobuf-c:arm-uwp=fail
 python2:arm64-windows=fail
 python2:arm-uwp=fail
-python2:x64-linux=fail
-python2:x64-osx=fail
 python2:x64-uwp=fail
-# Not yet ready for these platforms. 
+# Not yet ready for these platforms.
 qbittorrent:x64-osx=fail
 qbittorrent:x64-linux=fail
 qhull:x64-uwp=fail
@@ -1807,3 +1810,10 @@ dimcli:x64-windows-static=fail
 
 # cppgraphqlgen triggers an ICE on Apple Clang that comes with MacOS 11.
 cppgraphqlgen:x64-osx=fail
+
+# Visual Studio 2019 version 16.10's XAML compiler seems to be crashing processing this port
+simage:x64-uwp=fail
+simage:arm-uwp=fail
+
+# Changes in Python have broken tensorflow on our osx hardware
+tensorflow-cc:x64-osx=fail
