@@ -1,0 +1,19 @@
+{
+  "name": "libavif",
+  "version-semver": "0.9.1",
+  "description": "Library for encoding and decoding AVIF files",
+  "homepage": "https://github.com/AOMediaCodec/libavif",
+  "supports": "!uwp & !arm",
+  "dependencies": [
+    "aom",
+    "libyuv",
+    {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
+  ]
+}
