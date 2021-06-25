@@ -12,6 +12,7 @@ vcpkg_from_github(
         fix-wx-config-path.patch
         fix-install-path.patch
         export-targets.patch
+        fix-file-generate.patch
 )
 
 set(OPTIONS)

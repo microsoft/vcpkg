@@ -1,0 +1,13 @@
+diff --git a/build/cmake/modules/cotire.cmake b/build/cmake/modules/cotire.cmake
+index bb69643..99b0cb6 100644
+--- a/build/cmake/modules/cotire.cmake
++++ b/build/cmake/modules/cotire.cmake
+@@ -2371,7 +2371,7 @@ function (cotire_generate_target_script _language _configurations _target _targe
+ 		# use file(GENERATE ...) to expand generator expressions in the target script at CMake generate-time
+ 		set (_configNameOrNoneGeneratorExpression "$<$<CONFIG:>:None>$<$<NOT:$<CONFIG:>>:$<CONFIGURATION>>")
+ 		set (_targetCotireConfigScript "${CMAKE_CURRENT_BINARY_DIR}/${_target}_${_language}_${_configNameOrNoneGeneratorExpression}_${_moduleName}")
+-		file (GENERATE OUTPUT "${_targetCotireConfigScript}" INPUT "${_targetCotireScript}")
++		file (GENERATE OUTPUT "${_targetCotireConfigScript}" INPUT "${_targetCotireScript}" TARGET "${_target}")
+ 	else()
+ 		set (_targetCotireConfigScript "${_targetCotireScript}")
+ 	endif()
