@@ -12,7 +12,7 @@ vcpkg_from_github(
         fix-wx-config-path.patch
         fix-install-path.patch
         export-targets.patch
-        fix-file-generate.patch
+        fix-file-generate.patch # https://github.com/wxWidgets/wxWidgets/pull/2404
 )
 
 set(OPTIONS)
