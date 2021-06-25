@@ -2325,7 +2325,7 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "11.4.0",
+      "baseline": "11.5.0",
       "port-version": 0
     },
     "glui": {
@@ -3539,8 +3539,8 @@
     "libsigcpp-3": {
       "baseline": "3.0.3",
       "port-version": 1
-    }, 
-	"libsmb2": {
+    },
+    "libsmb2": {
       "baseline": "2021-04-29",
       "port-version": 0
     },
