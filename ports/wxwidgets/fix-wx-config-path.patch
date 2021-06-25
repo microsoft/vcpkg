@@ -19,7 +19,7 @@ index 968dff8..4699f63 100644
      )
  endif()
 diff --git a/wx-config.in b/wx-config.in
-index 441f88c..1ea1a40 100644
+index 441f88c..f5b4b8d 100644
 --- a/wx-config.in
 +++ b/wx-config.in
 @@ -402,7 +402,8 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
@@ -32,3 +32,12 @@ index 441f88c..1ea1a40 100644
  exec_prefix=${input_option_exec_prefix-${input_option_prefix-${this_exec_prefix:-@exec_prefix@}}}
  wxconfdir="@libdir@/wx/config"
  
+@@ -1293,7 +1294,7 @@ else
+     _include_cppflags="-I${includedir}"
+ fi
+ 
+-_cppflags=`echo "-I${libdir}/wx/include/@TOOLCHAIN_FULLNAME@" $_include_cppflags "@WXCONFIG_CPPFLAGS@" $_gui_cppflags`
++_cppflags=`echo "-I${prefix}/include/@TOOLCHAIN_FULLNAME@" $_include_cppflags "@WXCONFIG_CPPFLAGS@" $_gui_cppflags`
+ 
+ # now without further ado, we can answer these too.
+ [ -z "$output_option_cppflags" ] || echo $_cppflags
