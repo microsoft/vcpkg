@@ -62,7 +62,7 @@ jobs:
       VCPKG_DEFAULT_TRIPLET: ${{ matrix.vcpkg_triplet }}
       VCPKG_OVERLAY_PORTS: overlay/ports
       DEPS_BASE_NAME: mixxx-deps
-      MIXXX_VERSION: 2.3
+      MIXXX_VERSION: 2.4
     name: ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:    
