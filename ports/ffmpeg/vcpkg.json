@@ -195,15 +195,9 @@
           "features": [
             "all-gpl",
             "nonfree",
-            "openssl"
-          ]
-        },
-        {
-          "name": "ffmpeg",
-          "features": [
+            "openssl",
             "fdk-aac"
-          ],
-          "platform": "!arm & !uwp"
+          ]
         }
       ]
     },
