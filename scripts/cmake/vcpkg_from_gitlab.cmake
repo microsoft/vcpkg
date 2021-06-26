@@ -39,8 +39,8 @@ For repositories without official releases, this can be set to the full commit i
 If `REF` is specified, `SHA512` must also be specified.
 
 ### SHA512
-The SHA512 hash that should match the archive (${GITLAB_URL}/${REPO}/-/archive/${REF}/${REPO_NAME}-${REF}.tar.gz).
-The REPO_NAME variable is parsed from the value of REPO.
+The SHA512 hash that should match the archive (${GITLAB_URL}/api/v4/projects/${REPO_ID}/repository/archive.tar.gz?sha=${REF}).
+The REPO_ID variable is the URL-escaped value of REPO ([see GitLab docs](https://docs.gitlab.com/ee/api/README.html#namespaced-path-encoding)).
 
 This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
 
@@ -116,16 +116,17 @@ function(vcpkg_from_gitlab)
     if(${len} EQUAL "2")
 		list(GET GITLAB_REPO_LINK 0 ORG_NAME)
 		list(GET GITLAB_REPO_LINK 1 REPO_NAME)
-		set(GITLAB_LINK ${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME})
 	endif()
 	
 	if(${len} EQUAL "3")
 		list(GET GITLAB_REPO_LINK 0 ORG_NAME)
 		list(GET GITLAB_REPO_LINK 1 GROUP_NAME)
 		list(GET GITLAB_REPO_LINK 2 REPO_NAME)
-		set(GITLAB_LINK ${_vdud_GITLAB_URL}/${ORG_NAME}/${GROUP_NAME}/${REPO_NAME})
 	endif()
     
+    string(REPLACE "/" "%2F" GITLAB_REPO_ID ${_vdud_REPO})
+    set(URL "${_vdud_GITLAB_URL}/api/v4/projects/${GITLAB_REPO_ID}/repository/archive.tar.gz")
+
     # Handle --no-head scenarios
     if(NOT VCPKG_USE_HEAD_VERSION)
         if(NOT _vdud_REF)
@@ -141,7 +142,7 @@ function(vcpkg_from_gitlab)
         set(downloaded_file_name "${downloaded_file_name}.tar.gz")
 
         vcpkg_download_distfile(ARCHIVE
-            URLS "${GITLAB_LINK}/-/archive/${_vdud_REF}/${REPO_NAME}-${_vdud_REF}.tar.gz"
+            URLS "${URL}?sha=${_vdud_REF}"
             SHA512 "${_vdud_SHA512}"
             FILENAME "${downloaded_file_name}"
             ${HEADERS}
@@ -159,7 +160,6 @@ function(vcpkg_from_gitlab)
     endif()
 
     # The following is for --head scenarios
-    set(URL "${GITLAB_LINK}/-/archive/${_vdud_HEAD_REF}/${_vdud_HEAD_REF}.tar.gz")
     string(REPLACE "/" "-" SANITIZED_HEAD_REF "${_vdud_HEAD_REF}")
     set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_HEAD_REF}.tar.gz")
     set(downloaded_file_path "${DOWNLOADS}/${downloaded_file_name}")
@@ -182,8 +182,8 @@ function(vcpkg_from_gitlab)
         endif()
 
         vcpkg_download_distfile(ARCHIVE
-            URLS ${URL}
-            FILENAME ${downloaded_file_name}
+            URLS "${URL}?sha=${_vdud_HEAD_REF}"
+            FILENAME "${downloaded_file_name}"
             SKIP_SHA512
             ${HEADERS}
         )
