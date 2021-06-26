@@ -1,0 +1,10 @@
+{
+  "name": "stb",
+  "version-string": "2021-06-20",
+  "description": "public domain header-only libraries",
+  "homepage": "https://github.com/nothings/stb",
+  "dependencies": [
+    "vcpkg-cmake",
+    "vcpkg-cmake-config"
+  ]
+}
