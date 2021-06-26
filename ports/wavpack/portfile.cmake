@@ -8,6 +8,7 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         OpenSSL.patch
+        fix-symbol-exports.patch
 )
 
 vcpkg_configure_cmake(

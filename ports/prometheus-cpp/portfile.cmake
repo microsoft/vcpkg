@@ -3,8 +3,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO jupp0r/prometheus-cpp
-    REF 38130aee330377d6289a076628dbe450d59ef3e9 # v0.12.1
-    SHA512 9daf12f482ba947e28ce0411cb75234865542e2c850d1173de98f2929c3eb8d02c7f38630d060829273ef57da0eee9ce3f3cb21b05abe1da7e64307253d57bba
+    REF 84388828ae80556f57e11249dbd0063043991fb4 # v0.12.3
+    SHA512 3d8c42b7fa15b5ccc5684a590cadb09cc9adf76a66f3fa0f8b791d9ee1f1442687c554215a21ff932b62d7aac8a6e5dd6e581d2de4faae3aa9ab02e73a60533f
     HEAD_REF master
 )
 
@@ -26,6 +26,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DUSE_THIRDPARTY_LIBRARIES=OFF # use vcpkg packages
+        -DGENERATE_PKGCONFIG=OFF
         ${FEATURE_OPTIONS}
 )
 

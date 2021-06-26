@@ -4,8 +4,11 @@ vcpkg_from_github(
     REF 7bdf0628b1276379886c7f6dda2cef2b3b374f0b # v7.1.3
     SHA512 52ea8f9d2c0cb52ec3a740e38fcdfd6a0318566e3b599bd2e8d557168642d005c0a59bc213cff2641a88fed3bb771d15f46c39035ccd64809569af982aba47aa
     HEAD_REF master
-    PATCHES fix-warning4189.patch
+    PATCHES
+        fix-warning4189.patch
+        fix-write-batch.patch
 )
+
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     OPTIONS

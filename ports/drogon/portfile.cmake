@@ -1,16 +1,19 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO an-tao/drogon
-    REF v1.3.0
-    SHA512 cddda4b90d28c15319b9cd1dea561c429b804508fc40678b9906fb70153cb36d7a4fc1c13fee01ec1f49d747a722856ceee364aba4118d922afabc3629ba2115
+    REF v1.6.0
+    SHA512 3e3012bbee0a12cfabf79581bc0f57592065bc9618ed18c17ef77afee55750c8a8b8626053863208928b173cd0629f271a14a07e602f8ea93976c43b3ba5c9db
     HEAD_REF master
     PATCHES
         vcpkg.patch
         resolv.patch
+        drogon_config.patch
+        ssize_t.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     ctl BUILD_CTL
 )
 
@@ -19,6 +22,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBUILD_EXAMPLES=OFF
+        -DCMAKE_DISABLE_FIND_PACKAGE_Boost=ON
         ${FEATURE_OPTIONS}
 )
 
@@ -32,6 +36,7 @@ if("ctl" IN_LIST FEATURES)
     vcpkg_copy_tools(TOOL_NAMES drogon_ctl
                      AUTO_CLEAN)
 endif()
+
 # # Remove includes in debug
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
@@ -43,4 +48,3 @@ file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${
 
 # Copy pdb files
 vcpkg_copy_pdbs()
-

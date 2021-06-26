@@ -28,7 +28,11 @@ else
 $port_versions = @{
     #e.g.  "asio" = 1;
     "asio" = 1;
-    "python" = 1;
+    "python" = 3;
+    "context" = 3;
+    "concept-check" = 2;
+    "regex" = 2;
+    "json" = 1;
 }
 
 $per_port_data = @{
@@ -112,6 +116,11 @@ function Generate()
     {
         $controlLines["port-version"] = $port_versions[$PortName]
     }
+    elseif ($NeedsBuild)
+    {
+        # This can be removed on next update; this is used to track the host dependencies change
+        $controlLines["port-version"] = 1
+    }
 
     if ($per_port_data[$PortName])
     {
@@ -170,7 +179,10 @@ function Generate()
     if ($NeedsBuild)
     {
         $portfileLines += @(
-            "include(`${CURRENT_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
+            "if(NOT DEFINED CURRENT_HOST_INSTALLED_DIR)"
+            "    message(FATAL_ERROR `"boost-$PortName requires a newer version of vcpkg in order to build.`")"
+            "endif()"
+            "include(`${CURRENT_HOST_INSTALLED_DIR}/share/boost-build/boost-modular-build.cmake)"
         )
         # b2-options.cmake contains port-specific build options
         if (Test-Path "$portsDir/boost-$PortName/b2-options.cmake")
@@ -281,7 +293,13 @@ foreach ($library in $libraries)
         "Downloading boost/$library..."
         & $curl -L "https://github.com/boostorg/$library/archive/boost-$version.tar.gz" --output "$scriptsDir/downloads/$library-boost-$version.tar.gz"
     }
-    $hash = & $vcpkg hash $archive
+    $hash = & $vcpkg --x-wait-for-lock hash $archive
+    # remove prefix "Waiting to take filesystem lock on <path>/.vcpkg-root... "
+    if($hash -is [Object[]])
+    {
+        $hash = $hash[1]
+    }
+     
     $unpacked = "$scriptsDir/libs/$library-boost-$version"
     if (!(Test-Path $unpacked))
     {
@@ -395,9 +413,12 @@ foreach ($library in $libraries)
         $deps += @("boost-vcpkg-helpers")
 
         $needsBuild = $false
-        if ((Test-Path $unpacked/build/Jamfile.v2) -and $library -ne "metaparse" -and $library -ne "graph_parallel")
+        if (((Test-Path $unpacked/build/Jamfile.v2) -or (Test-Path $unpacked/build/Jamfile)) -and $library -notmatch "(metaparse|graph_parallel|function_types)")
         {
-            $deps += @("boost-build", "boost-modular-build-helper")
+            $deps += @(
+                @{ name="boost-build"; host=$True },
+                @{ name="boost-modular-build-helper"; host=$True }
+            )
             $needsBuild = $true
         }
 

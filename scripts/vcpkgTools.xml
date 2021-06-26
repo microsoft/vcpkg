@@ -1,32 +1,32 @@
 <?xml version="1.0"?>
 <tools version="2">
     <tool name="python3" os="windows">
-        <version>3.9.2</version>
+        <version>3.9.5</version>
         <exeRelativePath>python.exe</exeRelativePath>
-        <url>https://www.python.org/ftp/python/3.9.2/python-3.9.2-embed-win32.zip</url>
-        <sha512>d792c6179887120ec3e945764b95ae8187032e1779f327feb90ded40ebd39cb78d000056df947f28c9e4257b60dd95ee43a3f77f47a1d8878cbe37ebc20f87a3</sha512>
-        <archiveName>python-3.9.2-embed-win32.zip</archiveName>
+        <url>https://www.python.org/ftp/python/3.9.5/python-3.9.5-embed-win32.zip</url>
+        <sha512>f0ff0760684f4d91bfe1270438e5dda691ae38a7558500d32b9a763ac9498d3ccac6e843cee5220c5e3dc841863ae3e1af256fa25354f2665cc34dc35fe4c2c7</sha512>
+        <archiveName>python-3.9.5-embed-win32.zip</archiveName>
     </tool>
     <tool name="cmake" os="windows">
-        <version>3.19.2</version>
-        <exeRelativePath>cmake-3.19.2-win32-x86\bin\cmake.exe</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-win32-x86.zip</url>
-        <sha512>1ed3706d8dd5c5244ceb4c22443f006fcb9ffa76cb6d9ebdbbb8f11a50deb3f92a9a4080ff3fd125f79c0143f553ea0c02a6a2d27521438705c2fea4dd97d239</sha512>
-        <archiveName>cmake-3.19.2-win32-x86.zip</archiveName>
+        <version>3.20.2</version>
+        <exeRelativePath>cmake-3.20.2-windows-i386\bin\cmake.exe</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-windows-i386.zip</url>
+        <sha512>5fb46e737eedf71ea70f1b9f392d3e39ec12c0a9d1e630d4ddda4622bb28d92b9d965a11b1a3af5ffeed4d193a06312df9dae5ca567513e98f8ed770ea3be0c4</sha512>
+        <archiveName>cmake-3.20.2-windows-i386.zip</archiveName>
     </tool>
     <tool name="cmake" os="osx">
-        <version>3.19.2</version>
-        <exeRelativePath>cmake-3.19.2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-macos-universal.tar.gz</url>
-        <sha512>031196439a26d6ff2a1f42830ca26b5159752dc2c2c889a4e304327c858157b68088905b10727090918c3605fe7fe429aa19d46e68ed30c17d4d89b3d209aae8</sha512>
-        <archiveName>cmake-3.19.2-macos-universal.tar.gz</archiveName>
+        <version>3.20.2</version>
+        <exeRelativePath>cmake-3.20.2-macos-universal/CMake.app/Contents/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-macos-universal.tar.gz</url>
+        <sha512>50b96c9d8c35a8f5d9573f3c741b43c041cfa7ad939fcd60ce56c98a373cc87fa410c61cad6cfb0f86f03c8d3d527297b2b3eed7043aaf19de260dec49c57cf3</sha512>
+        <archiveName>cmake-3.20.2-macos-universal.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="linux">
-        <version>3.19.2</version>
-        <exeRelativePath>cmake-3.19.2-Linux-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/Kitware/CMake/releases/download/v3.19.2/cmake-3.19.2-Linux-x86_64.tar.gz</url>
-        <sha512>67ea7ee428e6c93039646d6d0cbe84c0be337a2b878487635fee71ec2c8992a9078a660e6b793ef11ce13530def44a16b716af96e10a97675d014a26caa0aed4</sha512>
-        <archiveName>cmake-3.19.2-Linux-x86_64.tar.gz</archiveName>
+        <version>3.20.2</version>
+        <exeRelativePath>cmake-3.20.2-linux-x86_64/bin/cmake</exeRelativePath>
+        <url>https://github.com/Kitware/CMake/releases/download/v3.20.2/cmake-3.20.2-Linux-x86_64.tar.gz</url>
+        <sha512>1e81c37d3b144cfb81478140e7921f314134845d2f0e0f941109ef57d510e7bd37dda6cc292ec00782472e7f1671349b857be9aac1c3f974423c8d1875a46302</sha512>
+        <archiveName>cmake-3.20.2-linux-x86_64.tar.gz</archiveName>
     </tool>
     <tool name="cmake" os="freebsd">
         <version>3.12.4</version>
@@ -60,6 +60,27 @@
         <url></url>
         <sha512></sha512>
     </tool>
+    <tool name="gsutil" os="windows">
+        <version>4.59</version>
+        <exeRelativePath>google-cloud-sdk\bin\gsutil.cmd</exeRelativePath>
+        <url>https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-343.0.0-windows-x86_64-bundled-python.zip</url>
+        <sha512>349db6743e70c1940b3d0c8ffdf629608437b6fa4e5896143c610e9ce97b28b8a32cf35ee3c669eeec2158788d7ff2fe618ea6bc411f9ca8de6311eee0d36569</sha512>
+        <archiveName>google-cloud-sdk-343.0.0-windows-x86_64-bundled-python.zip</archiveName>
+    </tool>
+    <tool name="gsutil" os="osx">
+        <version>4.59</version>
+        <exeRelativePath>gsutil/gsutil</exeRelativePath>
+        <url>https://storage.googleapis.com/pub/gsutil_4.59.tar.gz</url>
+        <sha512>c86b957a2630f3a80869e3105c0baa7bf1297b84698e756fed28b28adf36345cf1dd28d4216ec395de6bfee5b118dd70040ff964a2938f22d8af15a5c3485c48</sha512>
+        <archiveName>gsutil_4.59.tar.gz</archiveName>
+    </tool>
+    <tool name="gsutil" os="linux">
+        <version>4.59</version>
+        <exeRelativePath>gsutil/gsutil</exeRelativePath>
+        <url>https://storage.googleapis.com/pub/gsutil_4.59.tar.gz</url>
+        <sha512>c86b957a2630f3a80869e3105c0baa7bf1297b84698e756fed28b28adf36345cf1dd28d4216ec395de6bfee5b118dd70040ff964a2938f22d8af15a5c3485c48</sha512>
+        <archiveName>gsutil_4.59.tar.gz</archiveName>
+    </tool>
     <tool name="vswhere" os="windows">
         <version>2.4.1</version>
         <exeRelativePath>vswhere.exe</exeRelativePath>
@@ -67,22 +88,22 @@
         <sha512>f477842d0cebefcd6bf9c6d536ab8ea20ec5b0aa967ee963ab6a101aeff9df8742ca600d35f39e2e7158d76d8231f1ed2bef6104dce84d2bf8d6b07d17d706a1</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>5.5.1</version>
+        <version>5.9.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
-        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.9.1/nuget.exe</url>
+        <sha512>d7acca2b1271bfd3d6f7c7088bceee7a5a5e860d38c05a159f59b1f4bf935e963fde183a769db944df8f6dd44177bb91942578c86eef204cffa119d3d68e97fc</sha512>
     </tool>
     <tool name="nuget" os="linux">
-        <version>5.5.1</version>
+        <version>5.9.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
-        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.9.1/nuget.exe</url>
+        <sha512>d7acca2b1271bfd3d6f7c7088bceee7a5a5e860d38c05a159f59b1f4bf935e963fde183a769db944df8f6dd44177bb91942578c86eef204cffa119d3d68e97fc</sha512>
     </tool>
     <tool name="nuget" os="osx">
-        <version>5.5.1</version>
+        <version>5.9.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
-        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.9.1/nuget.exe</url>
+        <sha512>d7acca2b1271bfd3d6f7c7088bceee7a5a5e860d38c05a159f59b1f4bf935e963fde183a769db944df8f6dd44177bb91942578c86eef204cffa119d3d68e97fc</sha512>
     </tool>
     <tool name="installerbase" os="windows">
         <version>3.1.81</version>
@@ -106,25 +127,25 @@
         <archiveName>aria2-1.33.1-win-32bit-build1.zip</archiveName>
     </tool>
     <tool name="ninja" os="windows">
-        <version>1.10.1</version>
+        <version>1.10.2</version>
         <exeRelativePath>ninja.exe</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip</url>
-        <sha512>0120054f0fea6eea4035866201f69fba1c039f681f680cfcbbefcaee97419815d092a6e2f3823ea6c3928ad296395f36029e337127ee977270000b35df5f9c40</sha512>
-        <archiveName>ninja-win-1.10.1.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-win.zip</url>
+        <sha512>6004140d92e86afbb17b49c49037ccd0786ce238f340f7d0e62b4b0c29ed0d6ad0bab11feda2094ae849c387d70d63504393714ed0a1f4d3a1f155af7a4f1ba3</sha512>
+        <archiveName>ninja-win-1.10.2.zip</archiveName>
     </tool>
     <tool name="ninja" os="linux">
-        <version>1.10.1</version>
+        <version>1.10.2</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-linux.zip</url>
-        <sha512>9820c76fde6fac398743766e7ea0fe8a7d6e4191a77512a2d2f51c2ddcc947fcd91ac08522742281a285418c114e760b0158a968305f8dc854bb9693883b7f1e</sha512>
-        <archiveName>ninja-linux-1.10.1.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-linux.zip</url>
+        <sha512>93e802e9c17fb59636cddde4bad1ddaadad624f4ecfee00d5c78790330a4e9d433180e795718cda27da57215ce643c3929cf72c85337ee019d868c56f2deeef3</sha512>
+        <archiveName>ninja-linux-1.10.2.zip</archiveName>
     </tool>
     <tool name="ninja" os="osx">
-        <version>1.10.1</version>
+        <version>1.10.2</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-mac.zip</url>
-        <sha512>99f5ccca2461a4d340f4528a8eef6d81180757da78313f1f9412ed13a7bbaf6df537a342536fd053db00524bcb734d205af5f6fde419a1eb2e6f77ee8b7860fe</sha512>
-        <archiveName>ninja-mac-1.10.1.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-mac.zip</url>
+        <sha512>bcd12f6a3337591306d1b99a7a25a6933779ba68db79f17c1d3087d7b6308d245daac08df99087ff6be8dc7dd0dcdbb3a50839a144745fa719502b3a7a07260b</sha512>
+        <archiveName>ninja-mac-1.10.2.zip</archiveName>
     </tool>
     <tool name="ninja" os="freebsd">
         <version>1.8.2</version>
@@ -134,10 +155,10 @@
         <archiveName>ninja-freebsd-1.8.2.zip</archiveName>
     </tool>
     <tool name="powershell-core" os="windows">
-        <version>7.1.0</version>
+        <version>7.1.3</version>
         <exeRelativePath>pwsh.exe</exeRelativePath>
-        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.1.0/PowerShell-7.1.0-win-x86.zip</url>
-        <sha512>ea6ed619c784af65b09a5e98cdfc0d41333ba7373b7409e488ec70aaf1e0c4e5568e846d2b1748d72c3e3a9c1a4827f0ba29e9f6e93e79b4f49312ca40af6d2a</sha512>
-        <archiveName>PowerShell-7.1.0-win-x86.zip</archiveName>
+        <url>https://github.com/PowerShell/PowerShell/releases/download/v7.1.3/PowerShell-7.1.3-win-x86.zip</url>
+        <sha512>8c2ce510b5c641aad2da6adefc92d47e09bc842d47db3b5d15e14859555a74fe13ad52eaeabf1b2954ca9af737e628b567731c8a3db9bbf0e4aad05279bc1fd8</sha512>
+        <archiveName>PowerShell-7.1.3-win-x86.zip</archiveName>
     </tool>
 </tools>

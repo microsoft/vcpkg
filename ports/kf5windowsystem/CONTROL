@@ -1,5 +1,0 @@
-Source: kf5windowsystem
-Version: 5.64.0
-Homepage: https://api.kde.org/frameworks/kwindowsystem/html/
-Description: Access to the windowing system
-Build-Depends: ecm, qt5-winextras (windows), qt5-tools

@@ -1,0 +1,26 @@
+{
+  "name": "usockets",
+  "version": "0.7.1",
+  "description": "Miniscule cross-platform eventing, networking & crypto for async applications",
+  "homepage": "https://github.com/uNetworking/uSockets",
+  "dependencies": [
+    "libuv"
+  ],
+  "features": {
+    "event": {
+      "description": "Build usockets with epoll support"
+    },
+    "network": {
+      "description": "Build usockets with winsock support",
+      "dependencies": [
+        "winsock2"
+      ]
+    },
+    "ssl": {
+      "description": "Build usockets with openssl support",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

@@ -14,7 +14,7 @@ Pour une description des commandes disponibles, quand vous avez installé vcpkg,
 * Github: [https://github.com/microsoft/vcpkg](https://github.com/microsoft/vcpkg)
 * Slack: [https://cppalliance.org/slack/](https://cppalliance.org/slack/), the #vcpkg channel
 * Discord: [\#include \<C++\>](https://www.includecpp.org), le canal #🌏vcpkg
-* Docs: [Documentation](docs/index.md)
+* Docs: [Documentation](docs/README.md)
 
 [![Build Status](https://dev.azure.com/vcpkg/public/_apis/build/status/microsoft.vcpkg.ci?branchName=master)](https://dev.azure.com/vcpkg/public/_build/latest?definitionId=29&branchName=master)
 
@@ -274,7 +274,7 @@ selon le shell que vous utilisez, puis redémarrez la console.
 
 # Exemples
 
-Lisez la [documentation](doc/index.md) pour des instructions plus spécifiques ainsi que [l'installation et l'utilisation des paquets](docs/examples/installing-and-using-packages.md),
+Lisez la [documentation](doc/README.md) pour des instructions plus spécifiques ainsi que [l'installation et l'utilisation des paquets](docs/examples/installing-and-using-packages.md),
 [ajouter un nouveau paquet depuis un fichier zip](docs/examples/packaging-zipfiles.md),
 et [ajouter un nouveau paquet depuis un dépôt GitHub](docs/examples/packaging-github-repos.md).
 

@@ -1,6 +1,8 @@
 # Manifest Mode
 
-vcpkg has two modes of operation - classic mode and manifest mode.
+**The latest version of this documentation is available on [GitHub](https://github.com/Microsoft/vcpkg/tree/master/docs/users/manifests.md).**
+
+vcpkg has two modes of consuming dependencies - classic mode and manifest mode.
 
 In classic mode, vcpkg produces an "installed" tree, whose contents are changed by explicit calls to `vcpkg install` or
 `vcpkg remove`. The installed tree is intended for consumption by any number of projects: for example, installing a
@@ -86,7 +88,7 @@ You shouldn't need to worry about this at all.
 
 **Experimental behind the `versions` feature flag**
 
-See [versioning.md](versioning.md#version%20schemes) for additional version types.
+See [versioning](versioning.md#version-schemes) for additional version types.
 
 ### `"description"`
 
@@ -187,7 +189,7 @@ A minimum version constraint on the dependency.
 
 This field specifies the minimum version of the dependency using a '#' suffix to denote port-version if non-zero.
 
-See also [versioning](versioning.md#constraints) for more semantic details.
+See also [versioning](versioning.md#version-1) for more semantic details.
 
 ### `"overrides"`
 

@@ -5,14 +5,15 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO bulletphysics/bullet3
-    REF 2.89
-    SHA512 3c4ba6a3b3623ef44dd4a23e0bc2e90dec1f2b7af463edcb886e110feac1dfb4a91945f0ed640052cac228318539e275976d37238102fb10a0f78aef065a730b
+    REF 3.17
+    SHA512 a5105bf5f1dd365a64a350755c7d2c97942f74897a18dcdb3651e6732fd55cc1030a096f5808cf50575281f05e3ac09aa50a48d271a47b94cd61f5167a72b7cc
     HEAD_REF master
     PATCHES cmake-fix.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    multithreading       BULLET2_MULTITHREADING
+    FEATURES
+        multithreading       BULLET2_MULTITHREADING
 )
 
 vcpkg_configure_cmake(
