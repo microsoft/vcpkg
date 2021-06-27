@@ -51,7 +51,7 @@ apr:arm64-windows=fail
 azure-storage-cpp:arm64-windows=fail
 
 aubio:arm-uwp=fail
-aubio:arm64-windows=fail
+aubio:x64-uwp=fail
 blend2d:arm64-windows=fail
 blend2d:arm-uwp=fail
 blend2d:x64-uwp=fail
