@@ -147,6 +147,9 @@ function(vcpkg_extract_source_archive)
             BASE_DIRECTORY "${CURRENT_PORT_DIR}"
             OUTPUT_VARIABLE absolute_patch
         )
+        if(NOT EXISTS "${absolute_patch}")
+            message(FATAL_ERROR "Could not find patch: '${patch}'")
+        endif()
         file(SHA512 "${absolute_patch}" current_hash)
         string(APPEND patchset_hash "${current_hash}")
     endforeach()
