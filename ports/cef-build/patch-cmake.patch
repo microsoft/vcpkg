@@ -1,0 +1,101 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 120db2b..649640d 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -199,15 +199,87 @@ add_subdirectory(${CEF_LIBCEF_DLL_WRAPPER_PATH} libcef_dll_wrapper)
+ # Include application targets.
+ # Comes from the <target>/CMakeLists.txt file in the current directory.
+ # TODO: Change these lines to match your project target when you copy this file.
+-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+-  add_subdirectory(tests/cefsimple)
+-  add_subdirectory(tests/gtest)
+-  add_subdirectory(tests/ceftests)
+-endif()
+-
+-if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/cefclient")
+-  add_subdirectory(tests/cefclient)
+-endif()
++
++# PATCH: COMMENTED OUT
++
++# if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")
++#   add_subdirectory(tests/cefsimple)
++#   add_subdirectory(tests/gtest)
++#   add_subdirectory(tests/ceftests)
++# endif()
++#
++# if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/cefclient")
++#   add_subdirectory(tests/cefclient)
++# endif()
++
++# INSTALL
++INSTALL(
++  TARGETS libcef_dll_wrapper
++  # CONFIGURATIONS Debug
++  # DESTINATION debug/lib
++)
++
++# TODO: Try without fileglob (just use install pattern)?
++file(GLOB libs_deb Debug/*.lib)
++file(GLOB libs_rel Release/*.lib)
++list(FILTER libs_deb EXCLUDE REGEX .*cef_sandbox.lib)  # Doesn't work on Windows
++list(FILTER libs_rel EXCLUDE REGEX .*cef_sandbox.lib)  # Doesn't work on Windows
++INSTALL(
++  FILES ${libs_deb}
++  CONFIGURATIONS Debug
++  TYPE LIB
++)
++INSTALL(
++  FILES ${libs_rel}
++  CONFIGURATIONS Release
++  TYPE LIB
++)
++
++# pdb
++# TODO: For release
++INSTALL(
++  FILES
++    ${CMAKE_CURRENT_BINARY_DIR}/libcef_dll_wrapper/Debug/libcef_dll_wrapper.pdb
++  CONFIGURATIONS Debug
++  TYPE LIB
++)
++
++file(GLOB bins_deb Debug/*.dll Debug/*.bin)
++file(GLOB bins_rel Release/*.dll Release/*.bin)
++INSTALL(
++  FILES ${bins_deb}
++  CONFIGURATIONS Debug
++  TYPE BIN
++)
++INSTALL(
++  FILES ${bins_rel}
++  CONFIGURATIONS Release
++  TYPE BIN
++)
++
++file(GLOB bins_deb Debug/swiftshader/*.dll)
++file(GLOB bins_rel Debug/swiftshader/*.dll)
++INSTALL(
++  FILES ${bins_deb}
++  CONFIGURATIONS Debug
++  DESTINATION bin/swiftshader
++)
++INSTALL(
++  FILES ${bins_rel}
++  CONFIGURATIONS Release
++  DESTINATION bin/swiftshader
++)
++
++INSTALL(
++  DIRECTORY include
++  DESTINATION .
++)
++
++# Fix for CEF imports
++INSTALL(
++  DIRECTORY include
++  DESTINATION include
++)
+ 
+ # Display configuration settings.
+ PRINT_CEF_CONFIG()
