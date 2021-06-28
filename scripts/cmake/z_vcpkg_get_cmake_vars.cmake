@@ -13,9 +13,6 @@ z_vcpkg_get_cmake_vars(<out-var>)
 a path to a generated CMake file, with the detected `CMAKE_*` variables
 re-exported as `VCPKG_DETECTED_*`.
 
-
-
-
 ## Notes
 Avoid usage in portfiles. 
 
