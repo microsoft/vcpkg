@@ -66,11 +66,11 @@ function(vcpkg_from_git)
         message(FATAL_ERROR "At least one of REF or HEAD_REF must be specified.")
     endif()
 
-    set(working_directory)
+    set(working_directory_param "")
     set(ref_to_use "${arg_REF}")
     if(VCPKG_USE_HEAD_VERSION)
         if(DEFINED arg_HEAD_REF)
-            set(working_directory "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
+            set(working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
             set(ref_to_use "${arg_HEAD_REF}")
         else()
             message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
@@ -107,7 +107,7 @@ function(vcpkg_from_git)
             OUTPUT_VARIABLE rev_parse_head
             ERROR_VARIABLE rev_parse_head
             RESULT_VARIABLE error_code
-            WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
+            WORKING_DIRECTORY "${DOWNLOADS}/git-tmp"
         )
         if(error_code)
             message(FATAL_ERROR "unable to determine FETCH_HEAD after fetching git repository")
@@ -138,7 +138,7 @@ function(vcpkg_from_git)
         REF "${sanitized_ref}"
         PATCHES ${arg_PATCHES}
         NO_REMOVE_ONE_LEVEL
-        ${working_directory}
+        ${working_directory_param}
     )
 
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)

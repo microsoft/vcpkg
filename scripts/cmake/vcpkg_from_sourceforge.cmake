@@ -92,7 +92,7 @@ function(vcpkg_from_sourceforge)
 
     if(arg_REPO MATCHES "^([^/]*)$") # just one element
         set(org_name "${CMAKE_MATCH_1}")
-        set(repo_name)
+        set(repo_name "")
     elseif(arg_REPO MATCHES "^([^/]*)/([^/]*)$") # two elements
         set(org_name "${CMAKE_MATCH_1}")
         set(repo_name "${CMAKE_MATCH_2}")
@@ -155,20 +155,20 @@ function(vcpkg_from_sourceforge)
         FILENAME "${arg_FILENAME}"
     )
 
-    set(no_remove_one_level)
-    set(working_directory)
+    set(no_remove_one_level_param "")
+    set(working_directory_param "")
     if(arg_NO_REMOVE_ONE_LEVEL)
-        set(no_remove_one_level "NO_REMOVE_ONE_LEVEL")
+        set(no_remove_one_level_param "NO_REMOVE_ONE_LEVEL")
     endif()
     if(DEFINED arg_WORKING_DIRECTORY)
-        set(working_directory "WORKING_DIRECTORY" "${arg_WORKING_DIRECTORY}")
+        set(working_directory_param "WORKING_DIRECTORY" "${arg_WORKING_DIRECTORY}")
     endif()
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${ARCHIVE}"
         REF "${sanitized_ref}"
-        ${no_remove_one_level}
-        ${working_directory}
+        ${no_remove_one_level_param}
+        ${working_directory_param}
         PATCHES ${arg_PATCHES}
     )
 

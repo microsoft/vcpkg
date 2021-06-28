@@ -97,10 +97,9 @@ function(vcpkg_from_gitlab)
         message(FATAL_ERROR "The GitHub repository must be specified.")
     endif()
 
+    set(headers_param "")
     if(DEFINED arg_AUTHORIZATION_TOKEN)
-        set(headers "HEADERS" "Authorization: token ${arg_AUTHORIZATION_TOKEN}")
-    else()
-        set(headers)
+        set(headers_param "HEADERS" "Authorization: token ${arg_AUTHORIZATION_TOKEN}")
     endif()
 
     if(NOT DEFINED arg_REF AND NOT DEFINED arg_HEAD_REF)
@@ -122,15 +121,15 @@ function(vcpkg_from_gitlab)
     - an organization name, group name, and repository name separated by slashes.")
     endif()
 
-    set(redownload)
-    set(working_directory)
-    set(sha512 "SHA512" "${arg_SHA512}")
+    set(redownload_param "")
+    set(working_directory_param "")
+    set(sha512_param "SHA512" "${arg_SHA512}")
     set(ref_to_use "${arg_REF}")
     if(VCPKG_USE_HEAD_VERSION)
         if(DEFINED arg_HEAD_REF)
-            set(redownload "ALWAYS_REDOWNLOAD")
-            set(sha512 "SKIP_SHA512")
-            set(working_directory "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
+            set(redownload_param "ALWAYS_REDOWNLOAD")
+            set(sha512_param "SKIP_SHA512")
+            set(working_directory_param "WORKING_DIRECTORY" "${CURRENT_BUILDTREES_DIR}/src/head")
             set(ref_to_use "${arg_HEAD_REF}")
         else()
             message(STATUS "Package does not specify HEAD_REF. Falling back to non-HEAD version.")
@@ -175,15 +174,16 @@ ${git_output}
     vcpkg_download_distfile(archive
         URLS "${gitlab_link}/-/archive/${ref_to_use}/${repo_name}-${ref_to_use}.tar.gz"
         FILENAME "${downloaded_file_name}"
-        ${sha512}
-        ${redownload}
+        ${headers_param}
+        ${sha512_param}
+        ${redownload_param}
     )
     vcpkg_extract_source_archive_ex(
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE "${archive}"
         REF "${sanitized_ref}"
         PATCHES ${arg_PATCHES}
-        ${working_directory}
+        ${working_directory_param}
     )
     set("${arg_OUT_SOURCE_PATH}" "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
