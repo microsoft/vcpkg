@@ -8,8 +8,8 @@
     "libjpeg-turbo",
     "libpng",
     "libsndfile",
-    "tiff",
     "libvorbis",
+    "tiff",
     "zlib"
   ]
 }
