@@ -14,6 +14,8 @@ vcpkg_cmake_configure(
     DISABLE_PARALLEL_CONFIGURE
     OPTIONS 
         -DMZ_PROJECT_SUFFIX:STRING=-ng
+	-DMZ_EXPORTS=1
+	-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON
 )
 
 vcpkg_cmake_install()
