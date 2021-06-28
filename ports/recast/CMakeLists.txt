@@ -44,9 +44,12 @@ add_library(recast ${SRC})
 
 install(
   TARGETS recast
+  EXPORT unofficial-recast-config
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
 )
+
+install(EXPORT unofficial-recast-config DESTINATION share/unofficial-recast)
 
 if(NOT DISABLE_INSTALL_HEADERS)
   install(DIRECTORY DebugUtils/Include/ DESTINATION include/recast/DebugUtils)
