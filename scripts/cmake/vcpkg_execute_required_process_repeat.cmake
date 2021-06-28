@@ -6,10 +6,11 @@ Execute a process until the command succeeds, or until the COUNT is reached.
 ## Usage
 ```cmake
 vcpkg_execute_required_process_repeat(
-    COUNT <num>
     COMMAND <cmd> [<arguments>]
+    COUNT <num>
     WORKING_DIRECTORY <directory>
     LOGNAME <name>
+    [ALLOW_IN_DOWNLOAD_MODE]
 )
 ```
 #]===]
@@ -30,8 +31,9 @@ function(vcpkg_execute_required_process_repeat)
         endif()
     endforeach()
 
-    if(COUNT LESS "1")
-        message(FATAL_ERROR "COUNT must be greater than or equal to 1.")
+    # also checks for COUNT being an integer
+    if(NOT arg_COUNT GREATER_EQUAL "1")
+        message(FATAL_ERROR "COUNT (${arg_COUNT}) must be greater than or equal to 1.")
     endif()
 
     if (DEFINED VCPKG_DOWNLOAD_MODE AND NOT arg_ALLOW_IN_DOWNLOAD_MODE)
@@ -42,7 +44,6 @@ Halting portfile execution.
 ]])
     endif()
 
-    set(success OFF)
     set(all_logs "")
     foreach(loop_count RANGE 1 ${arg_COUNT})
         set(out_log "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-out-${loop_count}.log")
@@ -57,8 +58,7 @@ Halting portfile execution.
             WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}"
         )
         if(error_code EQUAL "0")
-            set(success TRUE)
-            break()
+            return()
         endif()
     endforeach()
 

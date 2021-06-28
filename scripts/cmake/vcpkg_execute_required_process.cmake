@@ -132,7 +132,7 @@ Halting portfile execution.
 
     # pass output parameters back to caller's scope
     if(output_and_error_same)
-        z_vcpkg_forward_output_variable(arg_OUTPUT_VARIABLE out_err_var PARENT_SCOPE)
+        z_vcpkg_forward_output_variable(arg_OUTPUT_VARIABLE out_err_var)
         # arg_ERROR_VARIABLE = arg_OUTPUT_VARIABLE, so no need to set it again
     else()
         z_vcpkg_forward_output_variable(arg_OUTPUT_VARIABLE out_var)

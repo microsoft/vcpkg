@@ -21,6 +21,9 @@ endif()
 #]===]
 
 macro(z_vcpkg_forward_output_variable output_var var_to_forward)
+    if(NOT "${ARGC}" EQUAL "2")
+        message(FATAL_ERROR "z_vcpkg_forward_output_variable was passed extra arguments: ${ARGN}")
+    endif()
     if(DEFINED "${output_var}")
         if(DEFINED "${var_to_forward}")
             set("${${output_var}}" "${${var_to_forward}}" PARENT_SCOPE)
