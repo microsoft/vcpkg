@@ -117,7 +117,9 @@ function(vcpkg_from_git)
             set(VCPKG_HEAD_VERSION "${rev_parse_head}" PARENT_SCOPE)
         elseif(NOT rev_parse_head STREQUAL arg_REF)
             message(FATAL_ERROR "REF (${arg_REF}) does not match FETCH_HEAD (${rev_parse_head})
-    This means that the argument passed to REF is not a full commit ID.")
+    [Expected : ( ${arg_REF} )])
+    [  Actual : ( ${rev_parse_head} )]"
+            )
         endif()
 
         file(MAKE_DIRECTORY "${DOWNLOADS}/temp")
