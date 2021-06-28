@@ -212,7 +212,7 @@ function ParseCmakeDocComment
         $Docs.HasError = $True
     }
 
-    if ($null -eq $contents -or $contents.Length -ne 0)
+    if ([String]::IsNullOrEmpty($contents))
     {
         $Docs.ActualDocumentation = $contents
     }
