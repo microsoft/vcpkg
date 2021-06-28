@@ -88,8 +88,8 @@ Additional options passed to msbuild for Debug builds. These are in addition to 
 
 ## Examples
 
-* [libirecovery](https://github.com/microsoft/vcpkg/blob/master/ports/libirecovery/portfile.cmake)
-* [libfabric](https://github.com/microsoft/vcpkg/blob/master/ports/libfabric/portfile.cmake)
+* [libirecovery](https://github.com/Microsoft/vcpkg/blob/master/ports/libirecovery/portfile.cmake)
+* [libfabric](https://github.com/Microsoft/vcpkg/blob/master/ports/libfabric/portfile.cmake)
 
 ## Source
 [scripts/cmake/vcpkg\_install\_msbuild.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_install_msbuild.cmake)
