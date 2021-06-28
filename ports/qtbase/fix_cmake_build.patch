@@ -1,0 +1,50 @@
+diff --git a/cmake/QtAutoDetect.cmake b/cmake/QtAutoDetect.cmake
+index 35c165979..b7344d488 100644
+--- a/cmake/QtAutoDetect.cmake
++++ b/cmake/QtAutoDetect.cmake
+@@ -90,7 +90,7 @@ function(qt_auto_detect_read_toolchain_file prefix)
+         OUTPUT_VARIABLE output
+         ERROR_VARIABLE ignore)
+     if(NOT exit_code EQUAL 0)
+-        message(FATAL_ERROR "Executing CMake script ${script_path} failed with code ${exit_code}.")
++        message(FATAL_ERROR "Executing CMake script ${script_path} failed with code ${exit_code}. ${ignore}")
+     endif()
+     string(REGEX REPLACE "^.*---QtLoadFilePrintVars---\n" "" output "${output}")
+     string(REPLACE ";" "\;" output "${output}")
+@@ -456,7 +456,7 @@ qt_auto_detect_cmake_config()
+ qt_auto_detect_darwin()
+ qt_auto_detect_macos_universal()
+ qt_auto_detect_ios()
+-qt_auto_detect_android()
++#qt_auto_detect_android()
+ qt_auto_detect_vpckg()
+ qt_auto_detect_pch()
+ qt_auto_detect_wasm()
+diff --git a/cmake/QtBuild.cmake b/cmake/QtBuild.cmake
+index d27eeb2f6..4b0b485ac 100644
+--- a/cmake/QtBuild.cmake
++++ b/cmake/QtBuild.cmake
+@@ -412,7 +412,7 @@ set(QT_KNOWN_MODULES_WITH_TOOLS "" CACHE INTERNAL "Known Qt modules with tools"
+ 
+ # Reset syncqt cache variable, to make sure it gets recomputed on reconfiguration, otherwise
+ # it might not get installed.
+-unset(QT_SYNCQT CACHE)
++# unset(QT_SYNCQT CACHE)
+ 
+ # For adjusting variables when running tests, we need to know what
+ # the correct variable is for separating entries in PATH-alike
+diff --git a/cmake/QtBuildInternalsExtra.cmake.in b/cmake/QtBuildInternalsExtra.cmake.in
+index ffc9d90f8..0b3a7d59e 100644
+--- a/cmake/QtBuildInternalsExtra.cmake.in
++++ b/cmake/QtBuildInternalsExtra.cmake.in
+@@ -51,8 +51,8 @@ endif()
+ set(QT_WILL_INSTALL @QT_WILL_INSTALL@ CACHE BOOL
+     "Boolean indicating if doing a Qt prefix build (vs non-prefix build)." FORCE)
+ 
+-set(QT_SOURCE_TREE "@QT_SOURCE_TREE@" CACHE PATH
+-"A path to the source tree of the previously configured QtBase project." FORCE)
++# set(QT_SOURCE_TREE "@QT_SOURCE_TREE@" CACHE PATH
++# "A path to the source tree of the previously configured QtBase project." FORCE)
+ 
+ # Propagate decision of building tests and examples to other repositories.
+ set(QT_BUILD_TESTS @QT_BUILD_TESTS@ CACHE BOOL "Build the testing tree.")

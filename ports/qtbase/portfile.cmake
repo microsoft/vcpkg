@@ -8,13 +8,12 @@ set(${PORT}_PATCHES
         harfbuzz.patch
         config_install.patch 
         allow_outside_prefix.patch 
-        #buildcmake.patch # <-probably required
         dont_force_cmakecache.patch
+        fix_cmake_build.patch
+        #buildcmake.patch # <-probably required
         # fix_find_dep.patch # <-MAybe required
-         
-        #20b3eb0.diff # Upstream fix to build with clang-cl; didn't make 6.1.1 so I backported the patch. 
         #dc5e7b6.diff 
-        clang-cl_source_location.patch <- check if integrated
+        clang-cl_source_location.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)

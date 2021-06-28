@@ -1,10 +1,6 @@
 set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
-if(QT_IS_LATEST)
-    set(${PORT}_PATCHES fix_alignment.patch)
-endif()
-
  set(TOOL_NAMES 
         qml
         qmlcachegen
@@ -19,6 +15,7 @@ endif()
         qmltestrunner
         qmltime
         qmltyperegistrar
+        qmldom
     )
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
