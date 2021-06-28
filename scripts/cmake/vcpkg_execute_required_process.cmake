@@ -57,11 +57,16 @@ function(vcpkg_execute_required_process)
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
-    foreach(required_arg IN ITEMS WORKING_DIRECTORY LOGNAME COMMAND)
+    foreach(required_arg IN ITEMS WORKING_DIRECTORY COMMAND)
         if(NOT DEFINED arg_${required_arg})
             message(FATAL_ERROR "${required_arg} must be specified.")
         endif()
     endforeach()
+
+    if(NOT DEFINED arg_LOGNAME)
+        message(WARNING "LOGNAME should be specified.")
+        set(arg_LOGNAME "required")
+    endif()
 
     if (VCPKG_DOWNLOAD_MODE AND NOT arg_ALLOW_IN_DOWNLOAD_MODE)
         message(FATAL_ERROR
