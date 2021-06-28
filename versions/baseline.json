@@ -3539,8 +3539,8 @@
     "libsigcpp-3": {
       "baseline": "3.0.3",
       "port-version": 1
-    }, 
-	"libsmb2": {
+    },
+    "libsmb2": {
       "baseline": "2021-04-29",
       "port-version": 0
     },
@@ -5502,7 +5502,7 @@
     },
     "restc-cpp": {
       "baseline": "0.10.0",
-      "port-version": 0
+      "port-version": 1
     },
     "restclient-cpp": {
       "baseline": "0.5.2",
