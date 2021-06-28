@@ -602,6 +602,12 @@ endfunction()
 #
 # Note that this function requires CMake 3.14 for policy CMP0087
 function(x_vcpkg_install_local_dependencies)
+    if(CMAKE_VERSION VERSION_LESS "3.14")
+        message(FATAL_ERROR "x_vcpkg_install_local_dependencies and X_VCPKG_APPLOCAL_DEPS_INSTALL require at least CMake 3.14
+(current version: ${CMAKE_VERSION})"
+        )
+    endif()
+
     cmake_parse_arguments(PARSE_ARGV 0 arg
         ""
         "DESTINATION;COMPONENT"
@@ -616,11 +622,6 @@ function(x_vcpkg_install_local_dependencies)
 
     if(Z_VCPKG_TARGET_TRIPLET_PLAT MATCHES "^(windows|uwp)$")
         # Install CODE|SCRIPT allow the use of generator expressions
-        if(CMAKE_VERSION VERSION_LESS "3.14")
-            message(FATAL_ERROR "x_vcpkg_install_local_dependencies and X_VCPKG_APPLOCAL_DEPS_INSTALL require at least CMake 3.14
-    (current version: ${CMAKE_VERSION})"
-            )
-        endif()
         cmake_policy(SET CMP0087 NEW)
 
         z_vcpkg_set_powershell_path()
