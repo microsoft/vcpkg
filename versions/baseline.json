@@ -2290,7 +2290,7 @@
     },
     "glew": {
       "baseline": "2.1.0",
-      "port-version": 10
+      "port-version": 11
     },
     "glfw3": {
       "baseline": "3.3.4",
@@ -3539,8 +3539,8 @@
     "libsigcpp-3": {
       "baseline": "3.0.3",
       "port-version": 1
-    }, 
-	"libsmb2": {
+    },
+    "libsmb2": {
       "baseline": "2021-04-29",
       "port-version": 0
     },
