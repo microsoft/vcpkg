@@ -2773,7 +2773,7 @@
       "port-version": 1
     },
     "json-dto": {
-      "baseline": "0.2.12",
+      "baseline": "0.2.13",
       "port-version": 0
     },
     "json-schema-validator": {
@@ -3539,8 +3539,8 @@
     "libsigcpp-3": {
       "baseline": "3.0.3",
       "port-version": 1
-    }, 
-	"libsmb2": {
+    },
+    "libsmb2": {
       "baseline": "2021-04-29",
       "port-version": 0
     },
