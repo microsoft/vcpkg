@@ -5,14 +5,20 @@ vcpkg_fail_port_install(ON_TARGET "OSX")
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Microsoft/UVAtlas
-    REF jun2021
-    SHA512 f0ecba24c63214876f69eec2de7e5dd15e63aee20641e0989211f7dcab7182c7f6cb73960dbbc1504cd0fab18af8b024c8ee3bde087694d4acd3d1254b90f608
+    REF jun2021b
+    SHA512 d08bacacba324ddf60b003c5cbd5ad715bdbc1cf352a0dc9de58c40fd8f4bcbb562b8285ff1a443453399167a96e5b1af51d32ffc5e1e8f65391ef124c0706d4
     HEAD_REF master
 )
 
 if (VCPKG_HOST_IS_LINUX)
     message(WARNING "Build ${PORT} requires GCC version 9 or later")
 endif()
+
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        eigen ENABLE_USE_EIGEN
+)
 
 if(VCPKG_TARGET_IS_UWP)
   set(EXTRA_OPTIONS -DBUILD_TOOLS=OFF)
@@ -29,7 +35,7 @@ vcpkg_configure_cmake(
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH cmake)
 
-if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64))
+if((VCPKG_HOST_IS_WINDOWS) AND (VCPKG_TARGET_ARCHITECTURE MATCHES x64) AND (NOT ("eigen" IN_LIST FEATURES)))
   vcpkg_download_distfile(
     UVATLASTOOL_EXE
     URLS "https://github.com/Microsoft/UVAtlas/releases/download/jun2021/uvatlastool.exe"
