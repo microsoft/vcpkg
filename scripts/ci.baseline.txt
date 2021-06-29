@@ -1467,6 +1467,7 @@ skia:arm-uwp=fail
 skia:x64-linux=fail
 skia:x64-uwp=fail
 skia:x86-windows=fail
+sleef:x86-windows=fail
 slikenet:arm-uwp=fail
 slikenet:x64-uwp=fail
 smpeg2:arm-uwp=fail
