@@ -9,12 +9,17 @@ vcpkg_from_github(
         resolv.patch
         drogon_config.patch
         ssize_t.patch
+        static-brotli.patch
 )
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    ctl BUILD_CTL
+        ctl      BUILD_CTL
+        mysql    BUILD_MYSQL
+        orm      BUILD_ORM
+        postgres BUILD_POSTGRESQL
+        sqlite3  BUILD_SQLITE
 )
 
 vcpkg_configure_cmake(

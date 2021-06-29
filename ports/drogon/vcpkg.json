@@ -1,0 +1,67 @@
+{
+  "name": "drogon",
+  "version": "1.6.0",
+  "port-version": 2,
+  "description": "A C++14/17 based HTTP web application framework running on Linux/macOS/Unix/Windows",
+  "homepage": "https://github.com/an-tao/drogon",
+  "license": "MIT",
+  "dependencies": [
+    "brotli",
+    "jsoncpp",
+    "trantor",
+    "zlib",
+    {
+      "name": "libuuid",
+      "platform": "!windows"
+    }
+  ],
+  "features": {
+    "all": {
+      "description": "Build with all options",
+      "dependencies": [
+        {
+          "name": "drogon",
+          "features": [
+            "ctl",
+            "mysql",
+            "orm",
+            "postgres",
+            "sqlite3"
+          ]
+        }
+      ]
+    },
+    "ctl": {
+      "description": "Build drogon_ctl tool."
+    },
+    "orm": {
+      "description": "Build with Object-relational mapping support."
+    },
+    "mysql": {
+      "description": "Support reading and writing from/to MySQL databases.",
+      "dependencies": [
+        {
+          "name": "libmariadb",
+          "platform": "!osx"
+        },
+        {
+          "name": "libmariadb",
+          "features": [ "iconv" ],
+          "platform": "osx"
+        }
+      ]
+    },
+    "postgres": {
+      "description": "Support reading and writing from/to Postgres databases.",
+      "dependencies": [
+        "libpq"
+      ]
+    },
+    "sqlite3": {
+      "description": "Support reading and writing from/to Sqlite databases.",
+      "dependencies": [
+        "sqlite3"
+      ]
+    }
+  }
+}
