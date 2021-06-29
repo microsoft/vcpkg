@@ -4,12 +4,27 @@
   "description": "Image file format library abstraction layer",
   "homepage": "https://github.com/coin3d/simage",
   "dependencies": [
-    "giflib",
-    "libjpeg-turbo",
-    "libpng",
+    {
+      "name": "giflib",
+      "platform": "!osx & !windows"
+    },
+    {
+      "name": "libjpeg-turbo",
+      "platform": "!osx & !windows"
+    },
+    {
+      "name": "libpng",
+      "platform": "!osx & !windows"
+    },
     "libsndfile",
     "libvorbis",
-    "tiff",
-    "zlib"
+    {
+      "name": "tiff",
+      "platform": "!osx & !windows"
+    },
+    {
+      "name": "zlib",
+      "platform": "!osx & !windows"
+    }
   ]
 }
