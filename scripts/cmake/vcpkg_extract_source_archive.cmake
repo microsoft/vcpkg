@@ -92,7 +92,8 @@ endfunction()
 
 function(vcpkg_extract_source_archive)
     if(ARGC LESS_EQUAL "2")
-        message(WARNING "Deprecated form of vcpkg_extract_source_archive used. Please use the newer form.")
+        z_vcpkg_deprecation_message( "Deprecated form of vcpkg_extract_source_archive used:
+    Please use the `vcpkg_extract_source_archive(<out-var> ARCHIVE <archive>)` form.")
         if(ARGC EQUAL "0")
             message(FATAL_ERROR "vcpkg_extract_source_archive requires at least one argument.")
         endif()
