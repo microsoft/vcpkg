@@ -12,17 +12,18 @@ vcpkg_from_sourceforge(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    hdf5    enable-hdf5
-    fltk    enable-fltk
-    gif     enable-gif
-    png     enable-png
-    zlib    enable-zlib
-    jpeg    enable-jpeg
-    gsl     enable-gsl
-    opengl  enable-opengl
-    glut    enable-glut
-    wx      enable-wx
-    qt5     enable-qt5
+    FEATURES
+        hdf5    enable-hdf5
+        fltk    enable-fltk
+        gif     enable-gif
+        png     enable-png
+        zlib    enable-zlib
+        jpeg    enable-jpeg
+        gsl     enable-gsl
+        opengl  enable-opengl
+        glut    enable-glut
+        wx      enable-wx
+        qt5     enable-qt5
 )
 
 vcpkg_configure_cmake(

@@ -14,7 +14,8 @@ vcpkg_download_distfile(ARCHIVE
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS 
-    tests BUILD_TESTING
+    FEATURES
+        tests BUILD_TESTING
 )
 
 vcpkg_extract_source_archive_ex(

@@ -10,11 +10,12 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    all     BUILD_ALL
-    cfp     BUILD_CFP
-    test    BUILD_TESTING
-    example BUILD_EXAMPLES
-    utility BUILD_UTILITIES
+    FEATURES
+        all     BUILD_ALL
+        cfp     BUILD_CFP
+        test    BUILD_TESTING
+        example BUILD_EXAMPLES
+        utility BUILD_UTILITIES
 )
 
 vcpkg_configure_cmake(

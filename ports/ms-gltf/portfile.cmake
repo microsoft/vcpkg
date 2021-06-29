@@ -16,6 +16,7 @@ vcpkg_from_github(
 
 # note: Test/Sample executables won't be installed
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
         test    ENABLE_UNIT_TESTS
         samples ENABLE_SAMPLES
 )

@@ -1,0 +1,15 @@
+{
+  "name": "libpmemobj-cpp",
+  "version": "1.12",
+  "port-version": 1,
+  "description": "C++ bindings for libpmemobj (https://github.com/pmem/pmdk).",
+  "homepage": "https://github.com/pmem/libpmemobj-cpp",
+  "features": {
+    "benchmark": {
+      "description": "build benchmarks",
+      "dependencies": [
+        "pmdk"
+      ]
+    }
+  }
+}

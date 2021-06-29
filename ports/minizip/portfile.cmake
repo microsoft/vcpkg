@@ -14,7 +14,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    bzip2 ENABLE_BZIP2
+    FEATURES
+        bzip2 ENABLE_BZIP2
 )
 
 configure_file(${CMAKE_CURRENT_LIST_DIR}/minizipConfig.cmake.in  ${SOURCE_PATH}/cmake/minizipConfig.cmake.in COPYONLY)

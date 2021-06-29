@@ -21,13 +21,14 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    bindings-csharp WITH_DOTNET
-    bindings-python WITH_PYTHON2
-    bindings-python WITH_PYTHON3
-    bindings-perl   WITH_PERL
-    bindings-vala   WITH_VALA
-    tools           BUILD_TOOLS
-    tests           BUILD_TESTING
+    FEATURES
+        bindings-csharp WITH_DOTNET
+        bindings-python WITH_PYTHON2
+        bindings-python WITH_PYTHON3
+        bindings-perl   WITH_PERL
+        bindings-vala   WITH_VALA
+        tools           BUILD_TOOLS
+        tests           BUILD_TESTING
 )
 
 vcpkg_configure_cmake(

@@ -12,12 +12,13 @@ if(VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "cifti"         USE_CIFTI_CODE
-    "fsl"           USE_FSL_CODE
-    "nifti2"        USE_NIFTI2_CODE
-    "nifticdf"      USE_NIFTICDF_CODE
-    "tools"         NIFTI_BUILD_APPLICATIONS
-    "tests"         BUILD_TESTING
+    FEATURES
+        "cifti"         USE_CIFTI_CODE
+        "fsl"           USE_FSL_CODE
+        "nifti2"        USE_NIFTI2_CODE
+        "nifticdf"      USE_NIFTICDF_CODE
+        "tools"         NIFTI_BUILD_APPLICATIONS
+        "tests"         BUILD_TESTING
 )
 set(TOOL_NAMES)
 if("tools" IN_LIST FEATURES)

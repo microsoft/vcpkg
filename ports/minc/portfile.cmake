@@ -11,7 +11,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "minc1"          LIBMINC_MINC1_SUPPORT
+    FEATURES
+        "minc1"          LIBMINC_MINC1_SUPPORT
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)

@@ -28,13 +28,14 @@ endif()
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    dynamic-load SDL_DYNAMIC_LOAD
-    mpg123 SDL_MIXER_ENABLE_MP3
-    libflac SDL_MIXER_ENABLE_FLAC
-    libmodplug SDL_MIXER_ENABLE_MOD
-    libvorbis SDL_MIXER_ENABLE_OGGVORBIS
-    opusfile SDL_MIXER_ENABLE_OPUS
-    nativemidi SDL_MIXER_ENABLE_NATIVEMIDI
+    FEATURES
+        dynamic-load SDL_DYNAMIC_LOAD
+        mpg123 SDL_MIXER_ENABLE_MP3
+        libflac SDL_MIXER_ENABLE_FLAC
+        libmodplug SDL_MIXER_ENABLE_MOD
+        libvorbis SDL_MIXER_ENABLE_OGGVORBIS
+        opusfile SDL_MIXER_ENABLE_OPUS
+        nativemidi SDL_MIXER_ENABLE_NATIVEMIDI
 )
 
 vcpkg_configure_cmake(

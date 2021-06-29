@@ -26,7 +26,8 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "tools" LIBRESSL_APPS
+    FEATURES
+        "tools" LIBRESSL_APPS
 )
 
 vcpkg_configure_cmake(

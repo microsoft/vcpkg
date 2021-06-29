@@ -9,7 +9,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    xcomplex ENABLE_XTL_COMPLEX
+    FEATURES
+        xcomplex ENABLE_XTL_COMPLEX
 )
 
 vcpkg_configure_cmake(

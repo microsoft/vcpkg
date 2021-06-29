@@ -22,6 +22,7 @@ file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindOpenBLAS.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/FindArmadillo.cmake)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     tools     BUILD_CLI_EXECUTABLES
 )
 

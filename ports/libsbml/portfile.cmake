@@ -14,18 +14,19 @@ string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" STATIC_RUNTIME)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" STATIC_LIBRARY)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    comp        ENABLE_COMP
-    fbc         ENABLE_FBC
-    groups      ENABLE_GROUPS
-    layout      ENABLE_LAYOUT
-    multi       ENABLE_MULTI
-    qual        ENABLE_QUAL
-    render      ENABLE_RENDER
-    render      ENABLE_LAYOUT
-    bzip2       WITH_BZIP2
-    zlib        WITH_ZLIB
-    test        WITH_CHECK
-    namespace   WITH_CPP_NAMESPACE
+    FEATURES
+        comp        ENABLE_COMP
+        fbc         ENABLE_FBC
+        groups      ENABLE_GROUPS
+        layout      ENABLE_LAYOUT
+        multi       ENABLE_MULTI
+        qual        ENABLE_QUAL
+        render      ENABLE_RENDER
+        render      ENABLE_LAYOUT
+        bzip2       WITH_BZIP2
+        zlib        WITH_ZLIB
+        test        WITH_CHECK
+        namespace   WITH_CPP_NAMESPACE
 )
 
 # Handle conflict features

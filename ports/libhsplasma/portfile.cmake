@@ -9,7 +9,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    net ENABLE_NET
+    FEATURES
+        net ENABLE_NET
 )
 
 vcpkg_configure_cmake(

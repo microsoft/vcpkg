@@ -33,8 +33,9 @@ endif()
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" ENABLE_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools KTX_FEATURE_TOOLS
-    vulkan KTX_FEATURE_VULKAN
+    FEATURES
+        tools KTX_FEATURE_TOOLS
+        vulkan KTX_FEATURE_VULKAN
 )
 
 vcpkg_configure_cmake(

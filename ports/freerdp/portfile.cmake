@@ -31,7 +31,8 @@ file(WRITE "${SOURCE_PATH}/.source_version" "${SOURCE_VERSION}-vcpkg")
 file(REMOVE ${SOURCE_PATH}/cmake/FindOpenSSL.cmake) # Remove outdated Module
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    urbdrc CHANNEL_URBDRC
+    FEATURES
+        urbdrc CHANNEL_URBDRC
 )
 
 vcpkg_configure_cmake(

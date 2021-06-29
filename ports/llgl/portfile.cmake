@@ -14,8 +14,9 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    opengl     LLGL_BUILD_RENDERER_OPENGL
-    direct3d11 LLGL_BUILD_RENDERER_DIRECT3D11 
+    FEATURES
+        opengl     LLGL_BUILD_RENDERER_OPENGL
+        direct3d11 LLGL_BUILD_RENDERER_DIRECT3D11 
 )
 
 vcpkg_configure_cmake(

@@ -1,0 +1,22 @@
+{
+  "name": "libhsplasma",
+  "version-string": "2020.08.30",
+  "port-version": 1,
+  "description": "Cross-platform Plasma data and network library",
+  "homepage": "https://github.com/H-uru/libhsplasma",
+  "supports": "!(arm | uwp)",
+  "dependencies": [
+    "libjpeg-turbo",
+    "libpng",
+    "string-theory",
+    "zlib"
+  ],
+  "features": {
+    "net": {
+      "description": "Network functionality",
+      "dependencies": [
+        "openssl"
+      ]
+    }
+  }
+}

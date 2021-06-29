@@ -179,7 +179,7 @@ function(vcpkg_check_features)
     set(feature_variables)
 
     if(NOT DEFINED arg_FEATURES AND NOT DEFINED arg_INVERTED_FEATURES)
-        message(DEPRECATION
+        z_vcpkg_deprecation_message(
 "calling `vcpkg_check_features` without the `FEATURES` keyword has been deprecated.
     Please add the `FEATURES` keyword to the call.")
         set(arg_FEATURES "${arg_UNPARSED_ARGUMENTS}")

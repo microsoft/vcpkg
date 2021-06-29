@@ -7,7 +7,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    xxhsum XXHASH_BUILD_XXHSUM
+    FEATURES
+        xxhsum XXHASH_BUILD_XXHSUM
 )
 
 vcpkg_configure_cmake(

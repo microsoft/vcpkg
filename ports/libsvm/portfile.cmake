@@ -10,7 +10,8 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools SVM_BUILD_TOOLS
+    FEATURES
+        tools SVM_BUILD_TOOLS
 )
 
 vcpkg_configure_cmake(

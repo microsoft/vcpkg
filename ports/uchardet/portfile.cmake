@@ -6,7 +6,8 @@ vcpkg_from_git(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tool BUILD_BINARY
+    FEATURES
+        tool BUILD_BINARY
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)

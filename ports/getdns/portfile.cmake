@@ -24,8 +24,9 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    libevent BUILD_LIBEVENT2
-    libuv BUILD_LIBUV
+    FEATURES
+        libevent BUILD_LIBEVENT2
+        libuv BUILD_LIBUV
 )
 
 vcpkg_configure_cmake(

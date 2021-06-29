@@ -1,0 +1,45 @@
+{
+  "name": "czmq",
+  "version-date": "2019-06-10",
+  "port-version": 5,
+  "description": "High-level C binding for ZeroMQ",
+  "homepage": "https://github.com/zeromq/czmq",
+  "dependencies": [
+    "zeromq"
+  ],
+  "features": {
+    "curl": {
+      "description": "Build with libcurl",
+      "dependencies": [
+        "curl"
+      ]
+    },
+    "draft": {
+      "description": "Build and install draft APIs"
+    },
+    "httpd": {
+      "description": "Build with HTTP server support (libmicrohttpd)",
+      "dependencies": [
+        "libmicrohttpd"
+      ]
+    },
+    "lz4": {
+      "description": "Build with lz4",
+      "dependencies": [
+        "lz4"
+      ]
+    },
+    "tool": {
+      "description": "Build and install czmq tools (zmakecert)"
+    },
+    "uuid": {
+      "description": "Build with libuuid",
+      "dependencies": [
+        {
+          "name": "libuuid",
+          "platform": "!windows & !uwp & !osx"
+        }
+      ]
+    }
+  }
+}

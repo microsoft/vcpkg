@@ -114,8 +114,9 @@ if("all" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "cuda"         VTK_USE_CUDA
-    "all"          VTK_BUILD_ALL_MODULES
+    FEATURES
+        "cuda"         VTK_USE_CUDA
+        "all"          VTK_BUILD_ALL_MODULES
 )
 
 

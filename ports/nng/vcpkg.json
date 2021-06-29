@@ -1,6 +1,7 @@
 {
   "name": "nng",
-  "version-string": "1.4.0",
+  "version": "1.4.0",
+  "port-version": 1,
   "description": "nanomsg-next-gen, lightweight messaging library",
   "homepage": "https://nng.nanomsg.org",
   "license": "MIT",

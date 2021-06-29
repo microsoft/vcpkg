@@ -1,12 +1,13 @@
 set(VERSION 5.8)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
-    "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
-    "mpi"          PARAVIEW_USE_MPI             #untested
-    "vtkm"         PARAVIEW_USE_VTKM
-    "python"       PARAVIEW_USE_PYTHON
-    "tools"        PARAVIEW_BUILD_TOOLS
+    FEATURES
+        "cuda"         PARAVIEW_USE_CUDA            #untested; probably only affects internal VTK build so it does nothing here 
+        "all_modules"  PARAVIEW_BUILD_ALL_MODULES   #untested
+        "mpi"          PARAVIEW_USE_MPI             #untested
+        "vtkm"         PARAVIEW_USE_VTKM
+        "python"       PARAVIEW_USE_PYTHON
+        "tools"        PARAVIEW_BUILD_TOOLS
 )
 
 vcpkg_from_github(

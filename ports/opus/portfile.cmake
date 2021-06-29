@@ -11,7 +11,8 @@ vcpkg_from_github(
   master)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  avx AVX_SUPPORTED
+  FEATURES
+    avx AVX_SUPPORTED
 )
 
 if(VCPKG_TARGET_IS_MINGW)

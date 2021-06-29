@@ -13,11 +13,12 @@ vcpkg_from_github(
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIBS)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    dbo        ENABLE_LIBWTDBO
-    postgresql ENABLE_POSTGRES
-    sqlite3    ENABLE_SQLITE
-    sqlserver  ENABLE_MSSQLSERVER
-    openssl    ENABLE_SSL
+    FEATURES
+        dbo        ENABLE_LIBWTDBO
+        postgresql ENABLE_POSTGRES
+        sqlite3    ENABLE_SQLITE
+        sqlserver  ENABLE_MSSQLSERVER
+        openssl    ENABLE_SSL
 )
 
 if(VCPKG_TARGET_IS_WINDOWS)

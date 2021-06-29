@@ -18,8 +18,9 @@ string(REPLACE "(WIN32)"
 file(WRITE ${SOURCE_PATH}/examples/CMakeLists.txt "${EXAMPLECMAKE}")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    opengl     ENABLE_OPENGL
-    opencl     ENABLE_OPENCL
+    FEATURES
+        opengl     ENABLE_OPENGL
+        opencl     ENABLE_OPENCL
 )
 
 vcpkg_configure_cmake(

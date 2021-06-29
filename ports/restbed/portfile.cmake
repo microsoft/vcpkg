@@ -1,7 +1,8 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    openssl     BUILD_SSL 
+    FEATURES
+        openssl     BUILD_SSL 
 )
 
 vcpkg_from_github(

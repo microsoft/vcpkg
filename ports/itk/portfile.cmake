@@ -20,16 +20,17 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "vtk"          Module_ITKVtkGlue
-    "cuda"         Module_ITKCudaCommon # Requires RTK?
-    #"cuda"         CUDA_HAVE_GPU   # Automatically set by FindCUDA?
-    "cufftw"       ITK_USE_CUFFTW
-    "opencl"       ITK_USE_GPU
-    "tbb"          Module_ITKTBB
-    "rtk"          Module_RTK
-    "tools"        RTK_BUILD_APPLICATIONS
-    # There are a lot of more (remote) modules and options in ITK
-    # feel free to add those as a feature
+    FEATURES
+        "vtk"          Module_ITKVtkGlue
+        "cuda"         Module_ITKCudaCommon # Requires RTK?
+        #"cuda"         CUDA_HAVE_GPU   # Automatically set by FindCUDA?
+        "cufftw"       ITK_USE_CUFFTW
+        "opencl"       ITK_USE_GPU
+        "tbb"          Module_ITKTBB
+        "rtk"          Module_RTK
+        "tools"        RTK_BUILD_APPLICATIONS
+        # There are a lot of more (remote) modules and options in ITK
+        # feel free to add those as a feature
 )
 
 if("cufftw" IN_LIST FEATURES)

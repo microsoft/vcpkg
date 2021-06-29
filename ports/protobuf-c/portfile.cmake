@@ -12,8 +12,9 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools WITH_TOOLS
-    test WITH_TEST
+    FEATURES
+        tools WITH_TOOLS
+        test WITH_TEST
 )
 
 vcpkg_configure_cmake(

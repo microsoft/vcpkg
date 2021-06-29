@@ -11,7 +11,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-     backtrace    STX_ENABLE_BACKTRACE
+    FEATURES
+        backtrace    STX_ENABLE_BACKTRACE
 )
 
 vcpkg_configure_cmake(

@@ -14,7 +14,8 @@ vcpkg_from_github(
 file(REMOVE ${SOURCE_PATH}/cmake/modules/FindEigen3.cmake)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    interpolate ENABLE_INTERPOLATE
+    FEATURES
+        interpolate ENABLE_INTERPOLATE
 )
 
 if ("interpolate" IN_LIST FEATURES AND VCPKG_TARGET_IS_WINDOWS)

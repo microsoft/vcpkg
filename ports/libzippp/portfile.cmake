@@ -9,7 +9,8 @@ vcpkg_from_github(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    encryption LIBZIPPP_ENABLE_ENCRYPTION
+    FEATURES
+        encryption LIBZIPPP_ENABLE_ENCRYPTION
 )
 
 vcpkg_configure_cmake(

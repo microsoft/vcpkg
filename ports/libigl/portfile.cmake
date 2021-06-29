@@ -14,13 +14,14 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    embree LIBIGL_WITH_EMBREE
-    opengl LIBIGL_WITH_OPENGL
-    glfw LIBIGL_WITH_OPENGL_GLFW
-    imgui LIBIGL_WITH_OPENGL_GLFW_IMGUI
-    #png LIBIGL_WITH_PNG # Disable this feature due to issue https://github.com/libigl/libigl/issues/1199
-    xml LIBIGL_WITH_XML
-    #python LIBIGL_WITH_PYTHON # Python binding are in the process of being redone.
+    FEATURES
+        embree LIBIGL_WITH_EMBREE
+        opengl LIBIGL_WITH_OPENGL
+        glfw LIBIGL_WITH_OPENGL_GLFW
+        imgui LIBIGL_WITH_OPENGL_GLFW_IMGUI
+        #png LIBIGL_WITH_PNG # Disable this feature due to issue https://github.com/libigl/libigl/issues/1199
+        xml LIBIGL_WITH_XML
+        #python LIBIGL_WITH_PYTHON # Python binding are in the process of being redone.
 )
 
 vcpkg_configure_cmake(

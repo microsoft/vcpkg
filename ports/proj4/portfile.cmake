@@ -22,14 +22,15 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-  database BUILD_PROJ_DATABASE
-  tools BUILD_CCT
-  tools BUILD_CS2CS
-  tools BUILD_GEOD
-  tools BUILD_GIE
-  tools BUILD_PROJ
-  tools BUILD_PROJINFO
-  ${EXTRA_FEATURES}
+  FEATURES
+    database BUILD_PROJ_DATABASE
+    tools BUILD_CCT
+    tools BUILD_CS2CS
+    tools BUILD_GEOD
+    tools BUILD_GIE
+    tools BUILD_PROJ
+    tools BUILD_PROJINFO
+    ${EXTRA_FEATURES}
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

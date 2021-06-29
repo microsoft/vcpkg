@@ -13,7 +13,8 @@ file(REMOVE ${SOURCE_PATH}/cmake/FindICU.cmake)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    training-tools  BUILD_TRAINING_TOOLS
+    FEATURES
+        training-tools  BUILD_TRAINING_TOOLS
 )
 
 if("cpu-independed" IN_LIST FEATURES)

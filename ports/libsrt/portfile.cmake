@@ -18,7 +18,8 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tool ENABLE_APPS
+    FEATURES
+        tool ENABLE_APPS
 )
 
 vcpkg_configure_cmake(

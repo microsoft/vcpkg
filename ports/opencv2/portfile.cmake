@@ -32,17 +32,18 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindCUDA.cmake")
 file(REMOVE_RECURSE "${SOURCE_PATH}/cmake/FindCUDA")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
- "cuda"     WITH_CUDA
- "eigen"    WITH_EIGEN
- "ffmpeg"   WITH_FFMPEG
- "jasper"   WITH_JASPER
- "jpeg"     WITH_JPEG
- "openexr"  WITH_OPENEXR
- "opengl"   WITH_OPENGL
- "png"      WITH_PNG
- "qt"       WITH_QT
- "tiff"     WITH_TIFF
- "world"    BUILD_opencv_world
+  FEATURES
+    "cuda"     WITH_CUDA
+    "eigen"    WITH_EIGEN
+    "ffmpeg"   WITH_FFMPEG
+    "jasper"   WITH_JASPER
+    "jpeg"     WITH_JPEG
+    "openexr"  WITH_OPENEXR
+    "opengl"   WITH_OPENGL
+    "png"      WITH_PNG
+    "qt"       WITH_QT
+    "tiff"     WITH_TIFF
+    "world"    BUILD_opencv_world
 )
 
 set(WITH_MSMF ON)

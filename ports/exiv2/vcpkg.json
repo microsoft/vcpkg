@@ -1,0 +1,27 @@
+{
+  "name": "exiv2",
+  "version": "0.27.3",
+  "port-version": 5,
+  "description": "Image metadata library and tools",
+  "homepage": "https://www.exiv2.org",
+  "supports": "!uwp",
+  "dependencies": [
+    "gettext",
+    "libiconv",
+    "zlib"
+  ],
+  "features": {
+    "unicode": {
+      "description": "Compile with unicode support on windows"
+    },
+    "video": {
+      "description": "Build video support into library"
+    },
+    "xmp": {
+      "description": "Build with XMP metadata support",
+      "dependencies": [
+        "expat"
+      ]
+    }
+  }
+}

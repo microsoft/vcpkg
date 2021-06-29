@@ -12,7 +12,8 @@ vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    unicode UNICODE
+    FEATURES
+        unicode UNICODE
 )
 
 vcpkg_configure_cmake(

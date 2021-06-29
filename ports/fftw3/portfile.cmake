@@ -16,13 +16,14 @@ vcpkg_extract_source_archive_ex(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    openmp ENABLE_OPENMP
-    threads ENABLE_THREADS
-    threads WITH_COMBINED_THREADS
-    avx2 ENABLE_AVX2
-    avx ENABLE_AVX
-    sse2 ENABLE_SSE2
-    sse ENABLE_SSE
+    FEATURES
+        openmp ENABLE_OPENMP
+        threads ENABLE_THREADS
+        threads WITH_COMBINED_THREADS
+        avx2 ENABLE_AVX2
+        avx ENABLE_AVX
+        sse2 ENABLE_SSE2
+        sse ENABLE_SSE
 )
 
 set(ENABLE_FLOAT_CMAKE fftw3f)

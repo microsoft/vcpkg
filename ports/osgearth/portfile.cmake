@@ -30,7 +30,8 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" BUILD_SHARED)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools OSGEARTH_BUILD_TOOLS
+    FEATURES
+        tools OSGEARTH_BUILD_TOOLS
 )
 
 vcpkg_configure_cmake(

@@ -18,11 +18,12 @@ else()
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "jpwl"          BUILD_JPWL
-    "mj2"           BUILD_MJ2
-    "jpip"          BUILD_JPIP
-    "jp3d"          BUILD_JP3D
-    )
+    FEATURES
+        "jpwl"          BUILD_JPWL
+        "mj2"           BUILD_MJ2
+        "jpip"          BUILD_JPIP
+        "jp3d"          BUILD_JP3D
+)
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}

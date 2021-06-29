@@ -30,13 +30,14 @@ endif()
 # Configure features
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    d3d9     OGRE_BUILD_RENDERSYSTEM_D3D9
-    java     OGRE_BUILD_COMPONENT_JAVA
-    python   OGRE_BUILD_COMPONENT_PYTHON
-    csharp   OGRE_BUILD_COMPONENT_CSHARP        
-    overlay  OGRE_BUILD_COMPONENT_OVERLAY
-    zziplib  OGRE_CONFIG_ENABLE_ZIP
-    strict   OGRE_RESOURCEMANAGER_STRICT
+    FEATURES
+        d3d9     OGRE_BUILD_RENDERSYSTEM_D3D9
+        java     OGRE_BUILD_COMPONENT_JAVA
+        python   OGRE_BUILD_COMPONENT_PYTHON
+        csharp   OGRE_BUILD_COMPONENT_CSHARP        
+        overlay  OGRE_BUILD_COMPONENT_OVERLAY
+        zziplib  OGRE_CONFIG_ENABLE_ZIP
+        strict   OGRE_RESOURCEMANAGER_STRICT
 )
 
 # OGRE_RESOURCEMANAGER_STRICT need to be 0 for OFF and 1 for ON, because it is used 'as is' in sources

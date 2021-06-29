@@ -7,7 +7,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    test   BUILD_WITH_TEST
+    FEATURES
+        test   BUILD_WITH_TEST
 )
 
 vcpkg_configure_cmake(

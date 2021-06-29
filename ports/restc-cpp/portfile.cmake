@@ -11,9 +11,10 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    openssl       RESTC_CPP_WITH_TLS
-    zlib          RESTC_CPP_WITH_ZLIB
-    threaded-ctx  RESTC_CPP_THREADED_CTX
+    FEATURES
+        openssl       RESTC_CPP_WITH_TLS
+        zlib          RESTC_CPP_WITH_ZLIB
+        threaded-ctx  RESTC_CPP_THREADED_CTX
 )
 
 vcpkg_configure_cmake(

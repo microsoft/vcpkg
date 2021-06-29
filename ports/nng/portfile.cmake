@@ -8,8 +8,9 @@ vcpkg_from_github(
 
 vcpkg_check_features(
     OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    mbedtls NNG_ENABLE_TLS
-    tools NNG_ENABLE_NNGCAT
+    FEATURES
+        mbedtls NNG_ENABLE_TLS
+        tools NNG_ENABLE_NNGCAT
 )
 
 vcpkg_configure_cmake(

@@ -11,9 +11,10 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    asm         MI_SEE_ASM
-    secure      MI_SECURE
-    override    MI_OVERRIDE
+    FEATURES
+        asm         MI_SEE_ASM
+        secure      MI_SECURE
+        override    MI_OVERRIDE
 )
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" MI_BUILD_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" MI_BUILD_SHARED)

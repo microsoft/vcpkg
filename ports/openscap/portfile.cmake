@@ -13,10 +13,11 @@ if ("python" IN_LIST FEATURES)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    docs ENABLE_DOCS
-    tests ENABLE_TESTS
-    util ENABLE_OSCAP_UTIL
-    python ENABLE_PYTHON3
+    FEATURES
+        docs ENABLE_DOCS
+        tests ENABLE_TESTS
+        util ENABLE_OSCAP_UTIL
+        python ENABLE_PYTHON3
 )
 
 vcpkg_configure_cmake(

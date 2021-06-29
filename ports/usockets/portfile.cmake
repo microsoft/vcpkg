@@ -17,9 +17,10 @@ if ("network" IN_LIST FEATURES AND NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    ssl CMAKE_USE_OPENSSL
-    event CMAKE_USE_EVENT
-    network CMAKE_USE_NETWORK
+    FEATURES
+        ssl CMAKE_USE_OPENSSL
+        event CMAKE_USE_EVENT
+        network CMAKE_USE_NETWORK
 )
 
 vcpkg_configure_cmake(

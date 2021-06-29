@@ -9,7 +9,8 @@ vcpkg_from_github(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-	benchmark BUILD_BENCHMARKS
+    FEATURES
+        benchmark BUILD_BENCHMARKS
 )
 
 vcpkg_find_acquire_program(PERL)
