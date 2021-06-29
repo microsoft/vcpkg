@@ -1,14 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(recast)
 
-include_directories(
-  DebugUtils/Include
-  Detour/Include
-  DetourCrowd/Include
-  DetourTileCache/Include
-  Recast/Include
-)
-
 set(SRC
   DebugUtils/Source/DebugDraw.cpp
   DebugUtils/Source/DetourDebugDraw.cpp
@@ -41,6 +33,16 @@ set(SRC
 )
 
 add_library(recast ${SRC})
+
+target_include_directories(
+  recast PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DebugUtils/Include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Detour/Include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DetourCrowd/Include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DetourTileCache/Include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Recast/Include>
+  $<INSTALL_INTERFACE:include>
+)
 
 install(
   TARGETS recast
