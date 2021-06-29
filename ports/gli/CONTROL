@@ -1,5 +1,5 @@
 Source: gli
-Version: 779b99a-1
+Version: 779b99a
 Build-Depends: glm
 Description: OpenGL Image (GLI)
 Homepage: https://gli.g-truc.net
