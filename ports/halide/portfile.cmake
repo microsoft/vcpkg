@@ -8,25 +8,27 @@ set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
-    REF 85c1b91c47ce15aab0d9502d955e48615f3bcee0  # v11.0.1
-    SHA512 3bfdf9fc82d56d099cf74b6683c0017724c1c4ae791e824f5ef3b4d4c1dcb52dd5adddb740ccf6b073b71fcbb748238f42040071ddb64c155f8fdc2709b8121d
-    HEAD_REF release/11.x
+    REF 5dabcaa9effca1067f907f6c8ea212f3d2b1d99a  # v12.0.1
+    SHA512 5ab44703850885561337e23d8b538a5adfe1611e24e8daa4a1313756b4f9dfeb54e89bf8400d46a3340c00234402681b4f44ba3ed5322027fd6cb5dfbd525acd
+    HEAD_REF release/12.x
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    target-aarch64 TARGET_AARCH64
-    target-amdgpu TARGET_AMDGPU
-    target-arm TARGET_ARM
-    target-d3d12compute TARGET_D3D12COMPUTE
-    target-hexagon TARGET_HEXAGON
-    target-metal TARGET_METAL
-    target-mips TARGET_MIPS
-    target-nvptx TARGET_NVPTX
-    target-opencl TARGET_OPENCL
-    target-opengl TARGET_OPENGL
-    target-powerpc TARGET_POWERPC
-    target-riscv TARGET_RISCV
-    target-x86 TARGET_X86
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        target-aarch64 TARGET_AARCH64
+        target-amdgpu TARGET_AMDGPU
+        target-arm TARGET_ARM
+        target-d3d12compute TARGET_D3D12COMPUTE
+        target-hexagon TARGET_HEXAGON
+        target-metal TARGET_METAL
+        target-mips TARGET_MIPS
+        target-nvptx TARGET_NVPTX
+        target-opencl TARGET_OPENCL
+        target-opengl TARGET_OPENGL
+        target-powerpc TARGET_POWERPC
+        target-riscv TARGET_RISCV
+        target-x86 TARGET_X86
 )
 
 vcpkg_configure_cmake(
@@ -43,7 +45,7 @@ vcpkg_configure_cmake(
         -DHALIDE_INSTALL_CMAKEDIR=share/${PORT}
 )
 
-vcpkg_install_cmake()
+vcpkg_install_cmake(ADD_BIN_TO_PATH)
 
 vcpkg_copy_tools(
     TOOL_NAMES
