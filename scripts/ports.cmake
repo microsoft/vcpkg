@@ -26,7 +26,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH "${SCRIPTS}/cmake")
 include("${SCRIPTS}/cmake/vcpkg_minimum_required.cmake")
-vcpkg_minimum_required(VERSION 2021-01-13)
+vcpkg_minimum_required(VERSION 2021-05-05)
 
 file(TO_CMAKE_PATH "${BUILDTREES_DIR}" BUILDTREES_DIR)
 file(TO_CMAKE_PATH "${PACKAGES_DIR}" PACKAGES_DIR)
