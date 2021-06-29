@@ -22,13 +22,13 @@ move_binary() {
 
     # run lipo over the command to check whether it really
     # is a binary that we need to merge architectures
-    /usr/bin/lipo $SOURCE/$BINARY -info &> /dev/null || return 0
+    lipo $SOURCE/$BINARY -info &> /dev/null || return 0
 
     # get the directory name the file is in
-    DIRNAME=$(/usr/bin/dirname $BINARY)
+    DIRNAME=$(dirname $BINARY)
 
     # ensure the directory to move the binary to exists
-    /bin/mkdir -p $TARGET/$DIRNAME
+    mkdir -p $TARGET/$DIRNAME
 
     # now finally move the binary
     mv $SOURCE/$BINARY $TARGET/$BINARY
@@ -56,11 +56,11 @@ merge_binaries() {
     shift
 
     pushd $SOURCE/$1
-    BINARIES=$(/usr/bin/find . -type f)
+    BINARIES=$(find . -type f)
     popd
 
     for BINARY in $BINARIES; do
-        COMMAND="/usr/bin/lipo -create -output $TARGET/$BINARY"
+        COMMAND="lipo -create -output $TARGET/$BINARY"
 
         for ARCH in $@; do
             COMMAND="$COMMAND -arch $ARCH $SOURCE/$ARCH/$BINARY"
@@ -90,7 +90,6 @@ ARCHS=(@ARCHITECTURES@)
 build_ffmpeg() {
     echo "=== CONFIGURING ==="
 
-    echo sh "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" @CONFIGURE_OPTIONS@ $@
     sh "$PATH_TO_SRC_DIR/configure" "--prefix=$PATH_TO_PACKAGE_DIR" @CONFIGURE_OPTIONS@ $@
 
     echo "=== BUILDING ==="
