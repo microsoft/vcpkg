@@ -42,6 +42,11 @@ target_include_directories(
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/DetourTileCache/Include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Recast/Include>
   $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:include/Detour/Include>
+  $<INSTALL_INTERFACE:include/DetourCrowd/Include>
+  $<INSTALL_INTERFACE:include/DetourTileCache/Include>
+  $<INSTALL_INTERFACE:include/Recast/Include>
+  $<INSTALL_INTERFACE:include/DebugUtils/Include>
 )
 
 install(
