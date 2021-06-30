@@ -96,18 +96,6 @@ if(APPLE)
 
     target_compile_options(Irrlicht PRIVATE "-ObjC++")
 
-    # PATCH:
-
-    # source/Irrlicht/MacOSX/CIrrDeviceMacOSX.mm:499:23: error: cannot initialize a parameter of type 'id<NSApplicationDelegate> _Nullable' with an rvalue of type 'id<NSFileManagerDelegate>'
-    #[NSApp setDelegate:(id<NSFileManagerDelegate>)[[[AppDelegate alloc] initWithDevice:this] autorelease]];
-    # source/Irrlicht/MacOSX/CIrrDeviceMacOSX.mm:
-    # L499:
-    # -[NSApp setDelegate:(id<NSFileManagerDelegate>)[[[AppDelegate alloc] initWithDevice:this] autorelease]];
-    # +[NSApp setDelegate:(id<NSApplicationDelegate>)[[[AppDelegate alloc] initWithDevice:this] autorelease]];
-    # L498:
-    # -[NSApplication sharedApplication];
-    # +[[NSApplication sharedApplication] activateIgnoringOtherApps];
-
     set(ADDITIONAL_LIRARIES
         "-framework OpenGL"
         "-framework IOKit"
