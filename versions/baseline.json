@@ -3539,8 +3539,8 @@
     "libsigcpp-3": {
       "baseline": "3.0.3",
       "port-version": 1
-    }, 
-	"libsmb2": {
+    },
+    "libsmb2": {
       "baseline": "2021-04-29",
       "port-version": 0
     },
@@ -3661,7 +3661,7 @@
       "port-version": 0
     },
     "libuuid": {
-      "baseline": "1.0.3-7",
+      "baseline": "1.0.3-8",
       "port-version": 0
     },
     "libuv": {
