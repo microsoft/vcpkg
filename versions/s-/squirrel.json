@@ -5,10 +5,5 @@
       "version-date": "2021-06-29",
       "port-version": 0
     },
-    {
-      "git-tree": "4598617e82fd2fc173cc4de31617284083bb3d69",
-      "version-string": "3.1.0",
-      "port-version": 0
-    }
   ]
 }
