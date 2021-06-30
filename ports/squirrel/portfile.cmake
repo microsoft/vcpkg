@@ -15,7 +15,7 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/squirrel)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if((VCPKG_LIBRARY_LINKAGE STREQUAL "static") OR (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
+if((VCPKG_LIBRARY_LINKAGE STREQUAL "static") OR (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT WIN32))
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
 endif()
