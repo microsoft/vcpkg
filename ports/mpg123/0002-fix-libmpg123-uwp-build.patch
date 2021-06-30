@@ -1,0 +1,21 @@
+diff --git a/ports/cmake/src/CMakeLists.txt b/ports/cmake/src/CMakeLists.txt
+index b843152..b8ff89b 100644
+--- a/ports/cmake/src/CMakeLists.txt
++++ b/ports/cmake/src/CMakeLists.txt
+@@ -39,8 +39,6 @@ check_include_file("termios.h" HAVE_TERMIOS)
+ check_include_file("unistd.h" HAVE_UNISTD_H)
+ check_include_file("windows.h" HAVE_WINDOWS_H)
+ 
+-check_symbol_exists(strerror "string.h" HAVE_STRERROR)
+-
+ function(check_m)
+     set(CMAKE_REQUIRED_LIBRARIES m)
+     check_function_exists(sin HAVE_M)
+@@ -59,6 +57,7 @@ check_function_exists(shmget HAVE_SHMGET)
+ check_function_exists(shmat HAVE_SHMAT)
+ check_function_exists(shmdt HAVE_SHMDT)
+ check_function_exists(shmctl HAVE_SHMCTL)
++check_function_exists(strerror HAVE_STRERROR)
+ 
+ search_libs(gethostbyname GETHOSTBYNAME_LIB nsl socket network)
+ search_libs(socket SOCKET_LIB socket)
