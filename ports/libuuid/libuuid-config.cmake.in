@@ -1,0 +1,6 @@
+@PACKAGE_INIT@
+
+if(NOT TARGET UUID::UUID)
+    include(CMakeFindDependencyMacro)
+    include("${CMAKE_CURRENT_LIST_DIR}/libuuid-targets.cmake")
+endif()

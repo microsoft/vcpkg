@@ -29,7 +29,35 @@ endif()
 
 install(
     TARGETS uuid
+    EXPORT uuid_targets
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
+)
+
+include(CMakePackageConfigHelpers)
+set(PACKAGE_CONFIG_FILE "${CMAKE_CURRENT_BINARY_DIR}/libuuid-config.cmake")
+set(INSTALL_CONFIG_DIR  "${CMAKE_INSTALL_LIBDIR}/cmake/libuuid")
+
+configure_package_config_file(libuuid-config.cmake.in
+    "${PACKAGE_CONFIG_FILE}"
+    INSTALL_DESTINATION "${INSTALL_CONFIG_DIR}"
+)
+
+export(EXPORT uuid_targets
+    NAMESPACE UUID::
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/libuuid-targets.cmake"
+)
+
+install(EXPORT uuid_targets
+    NAMESPACE UUID::
+    FILE libuuid-targets.cmake
+    DESTINATION "${INSTALL_CONFIG_DIR}"
+)
+
+install(
+    FILES
+        "${PACKAGE_CONFIG_FILE}"
+    DESTINATION
+        "${INSTALL_CONFIG_DIR}"
 )
