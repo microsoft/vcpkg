@@ -48,11 +48,19 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-wxwidgets TARGET_PATH share/unofficial-wxwidgets)
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_copy_tools(TOOL_NAMES wxrc AUTO_CLEAN)
-else()
-    vcpkg_copy_tools(TOOL_NAMES wxrc wx-config wxrc-3.1 AUTO_CLEAN)
+set(tools wxrc)
+if(NOT VCPKG_TARGET_IS_WINDOWS)
+    list(APPEND tools wx-config wxrc-3.1)
 endif()
+if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
+    # Copy debug tools
+    vcpkg_copy_tools(
+        TOOL_NAMES ${tools}
+        SEARCH_DIR "${CURRENT_PACKAGES_DIR}/debug/bin"
+        DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug"
+    )
+endif()
+vcpkg_copy_tools(TOOL_NAMES ${tools} AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/include/msvc")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")

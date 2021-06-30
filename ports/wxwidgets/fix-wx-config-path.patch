@@ -19,25 +19,20 @@ index 968dff8..4699f63 100644
      )
  endif()
 diff --git a/wx-config.in b/wx-config.in
-index 441f88c..b3a0531 100644
+index 441f88c..db19770 100644
 --- a/wx-config.in
 +++ b/wx-config.in
-@@ -402,7 +402,8 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
+@@ -402,7 +402,12 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
  
  
  # Determine the base directories we require.
 -prefix=${input_option_prefix-${this_prefix:-@prefix@}}
 +base_folder=$(dirname $(readlink -f "$0"))
-+prefix=${input_option_prefix-${this_prefix:-${base_folder}/../..}}
++if [ "@CMAKE_BUILD_TYPE@" == "Debug"]; then
++    prefix=${input_option_prefix-${this_prefix:-${base_folder}/../../../}}
++else
++    prefix=${input_option_prefix-${this_prefix:-${base_folder}/../..}}
++fi
  exec_prefix=${input_option_exec_prefix-${input_option_prefix-${this_exec_prefix:-@exec_prefix@}}}
  wxconfdir="@libdir@/wx/config"
  
-@@ -1293,7 +1294,7 @@ else
-     _include_cppflags="-I${includedir}"
- fi
- 
--_cppflags=`echo "-I${libdir}/wx/include/@TOOLCHAIN_FULLNAME@" $_include_cppflags "@WXCONFIG_CPPFLAGS@" $_gui_cppflags`
-+_cppflags=`echo "-I${prefix}/lib/wx/include/@TOOLCHAIN_FULLNAME@" $_include_cppflags "@WXCONFIG_CPPFLAGS@" $_gui_cppflags`
- 
- # now without further ado, we can answer these too.
- [ -z "$output_option_cppflags" ] || echo $_cppflags
