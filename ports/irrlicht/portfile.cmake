@@ -21,17 +21,16 @@ vcpkg_check_features(
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" SHARED_LIB)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
         -DIRR_SHARED_LIB=${SHARED_LIB}
         ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
 
 if("tools" IN_LIST FEATURES)
     vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/irrlicht/)
