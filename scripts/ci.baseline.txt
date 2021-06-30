@@ -826,8 +826,8 @@ live555:x64-windows-static-md=fail
 live555:x86-windows=fail
 llgl:arm-uwp=fail
 llgl:x64-uwp=fail
-llvm:arm-uwp=fail
 llvm:arm64-windows=fail
+llvm:arm-uwp=fail
 llvm:x64-uwp=fail
 lmdb:arm-uwp=fail
 lmdb:x64-uwp=fail
@@ -894,6 +894,7 @@ memorymodule:x64-osx=fail
 memorymodule:x64-uwp=fail
 # Due to static crt.
 mesa:x64-windows-static=fail
+mesa:x64-windows-static-md=fail
 # Missing dependent libraries.
 mesa:x64-linux=fail
 mesa:x64-osx=fail
@@ -1467,6 +1468,7 @@ skia:arm-uwp=fail
 skia:x64-linux=fail
 skia:x64-uwp=fail
 skia:x86-windows=fail
+sleef:x86-windows=fail
 slikenet:arm-uwp=fail
 slikenet:x64-uwp=fail
 smpeg2:arm-uwp=fail
