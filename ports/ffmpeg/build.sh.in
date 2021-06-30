@@ -41,7 +41,7 @@ move_binaries() {
     [ ! -d $SOURCE ] && return 0
     pushd $SOURCE
 
-    for BINARY in $(/usr/bin/find . -type f); do
+    for BINARY in $(find . -type f); do
         move_binary $SOURCE $TARGET $BINARY
     done
 
@@ -82,7 +82,8 @@ PATH_TO_PACKAGE_DIR=$(cygpath "@INST_PREFIX@")
 
 JOBS=@VCPKG_CONCURRENCY@
 
-ARCHS=(@ARCHITECTURES@)
+OSX_ARCHS="@OSX_ARCHS@"
+OSX_ARCH_COUNT=0@OSX_ARCH_COUNT@
 
 # Default to hardware concurrency if unset.
 : ${JOBS:=$(nproc)}
@@ -103,8 +104,8 @@ build_ffmpeg() {
 
 cd "$PATH_TO_BUILD_DIR"
 
-if [ ${#ARCHS[@]} -gt 1 ]; then
-    for ARCH in ${ARCHS[*]}; do
+if [ $OSX_ARCH_COUNT -gt 1 ]; then
+    for ARCH in $OSX_ARCHS; do
         echo "=== CLEANING FOR $ARCH ==="
 
         make clean && make distclean
@@ -119,7 +120,7 @@ if [ ${#ARCHS[@]} -gt 1 ]; then
 
     echo "=== MERGING ARCHITECTURES ==="
 
-    merge_binaries $PATH_TO_PACKAGE_DIR $PATH_TO_BUILD_DIR/stage ${ARCHS[*]}
+    merge_binaries $PATH_TO_PACKAGE_DIR $PATH_TO_BUILD_DIR/stage $OSX_ARCHS
 else
     build_ffmpeg
 fi

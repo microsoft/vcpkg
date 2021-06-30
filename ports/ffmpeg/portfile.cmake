@@ -563,6 +563,9 @@ if (VCPKG_TARGET_IS_OSX)
     set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
     set(OPTIONS "${OPTIONS} --extra-cflags=\"-isysroot ${VCPKG_OSX_SYSROOT}\"")
     set(OPTIONS "${OPTIONS} --extra-ldflags=\"-isysroot ${VCPKG_OSX_SYSROOT}\"")
+
+    list(JOIN VCPKG_OSX_ARCHITECTURES " " OSX_ARCHS)
+    LIST(LENGTH VCPKG_OSX_ARCHITECTURES OSX_ARCH_COUNT)
 endif()
 
 set(OPTIONS_CROSS "")
