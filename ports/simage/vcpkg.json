@@ -3,6 +3,7 @@
   "version-semver": "1.8.1",
   "description": "Image file format library abstraction layer",
   "homepage": "https://github.com/coin3d/simage",
+  "supports": "!uwp",
   "default-features": [
     "all"
   ],
