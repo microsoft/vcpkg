@@ -2297,7 +2297,7 @@
       "port-version": 0
     },
     "gli": {
-      "baseline": "dd17acf-1",
+      "baseline": "779b99a",
       "port-version": 0
     },
     "glib": {
@@ -3539,8 +3539,8 @@
     "libsigcpp-3": {
       "baseline": "3.0.3",
       "port-version": 1
-    }, 
-	"libsmb2": {
+    },
+    "libsmb2": {
       "baseline": "2021-04-29",
       "port-version": 0
     },
