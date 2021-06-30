@@ -2253,7 +2253,7 @@
       "port-version": 0
     },
     "gflags": {
-      "baseline": "2.2.2-1",
+      "baseline": "2.2.2-2",
       "port-version": 0
     },
     "ghc-filesystem": {
@@ -2317,7 +2317,7 @@
       "port-version": 4
     },
     "glog": {
-      "baseline": "0.4.0-3",
+      "baseline": "0.4.0-4",
       "port-version": 0
     },
     "gloo": {
@@ -3539,8 +3539,8 @@
     "libsigcpp-3": {
       "baseline": "3.0.3",
       "port-version": 1
-    }, 
-	"libsmb2": {
+    },
+    "libsmb2": {
       "baseline": "2021-04-29",
       "port-version": 0
     },
