@@ -112,7 +112,7 @@ function(vcpkg_cmake_configure)
         set(arg_LOGFILE_BASE "config-${TARGET_TRIPLET}")
     endif()
 
-    set(manually_specified_variables)
+    set(manually_specified_variables "")
     foreach(option IN LISTS arg_OPTIONS arg_OPTIONS_RELEASE arg_OPTIONS_DEBUG)
         if(option MATCHES "^-D([^:=]*)[:=]")
             list(APPEND manually_specified_variables "${CMAKE_MATCH_1}")

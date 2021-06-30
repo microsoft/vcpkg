@@ -54,8 +54,8 @@ Additional options passed to CMake during the Release configuration. These are i
 ### OPTIONS_DEBUG
 Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
 
-### MAYBE_UNUSED_OPTIONS
-Ignore checked unused cmake options, support cmake regular expression
+### MAYBE_UNUSED_VARIABLES
+Any CMake variables which are explicitly passed in, but which may not be used on all platforms.
 
 ### LOGNAME
 Name of the log to write the output of the configure call to.
@@ -91,7 +91,7 @@ function(vcpkg_configure_cmake)
         set(arg_LOGNAME config-${TARGET_TRIPLET})
     endif()
 
-    set(manually_specified_variables)
+    set(manually_specified_variables "")
     if(NOT arg_Z_VCPKG_IGNORE_UNUSED_VARIABLES)
         foreach(option IN LISTS arg_OPTIONS arg_OPTIONS_RELEASE arg_OPTIONS_DEBUG)
             if(option MATCHES "^-D([^:=]*)[:=]")
