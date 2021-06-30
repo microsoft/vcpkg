@@ -203,7 +203,7 @@ else()
         --with-pg=yes
         --with-webp=yes
         --with-xml2=yes
-        --with-netcdf=no  # TODO, depends on #18120
+        --with-netcdf=yes
         --with-openjpeg=yes
         --with-proj=yes
         --with-sqlite3=yes
