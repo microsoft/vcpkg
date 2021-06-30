@@ -15,9 +15,20 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/squirrel)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-if((VCPKG_LIBRARY_LINKAGE STREQUAL "static") OR (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic" AND NOT WIN32))
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
-    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+if((VCPKG_LIBRARY_LINKAGE STREQUAL "static") OR (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
+    # on Windows DLLs are put under the bin/ directory
+    if(WIN32)
+        file(REMOVE_RECURSE
+            "${CURRENT_PACKAGES_DIR}/debug/bin/sq.exe"
+            "${CURRENT_PACKAGES_DIR}/debug/bin/sq_static.exe")
+
+        file(REMOVE_RECURSE
+            "${CURRENT_PACKAGES_DIR}/bin/sq.exe"
+            "${CURRENT_PACKAGES_DIR}/bin/sq_static.exe")
+    else()
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin")
+        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin")
+    endif()
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
