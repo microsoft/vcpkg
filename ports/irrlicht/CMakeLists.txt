@@ -2,7 +2,7 @@
 # Irrlicht 3D engine
 #
 cmake_minimum_required(VERSION 3.16)
-project(Irrlicht LANGUAGES C CXX OBJCXX)
+project(Irrlicht LANGUAGES C CXX)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
