@@ -27,6 +27,39 @@ Otherwise, the `vcpkg_list()` function is the same as the built-in
 See the [CMake documentation for `list()`](https://cmake.org/cmake/help/latest/command/list.html)
 for more information.
 
+## Notes: Some Weirdnesses
+
+The most major weirdness is due to `""` pulling double-duty as "list of zero elements",
+and "list of one element, which is empty". `vcpkg_list` always uses the former understanding.
+This can cause weird behavior, for example:
+
+```cmake
+set(lst "")
+vcpkg_list(APPEND lst "" "")
+# lst = ";"
+```
+
+This is because you're appending two elements to the empty list.
+One very weird behavior that comes out of this would be:
+
+```cmake
+set(lst "")
+vcpkg_list(APPEND lst "")
+# lst = ""
+```
+
+since `""` is the empty list, we append the empty element and end up with a list
+of one element, which is empty. This does not happen for non-empty lists;
+for example:
+
+```cmake
+set(lst "a")
+vcpkg_list(APPEND lst "")
+# lst = "a;"
+```
+
+only the empty list has this odd behavior.
+
 ## Examples
 
 ### Creating a list
@@ -99,13 +132,13 @@ function(vcpkg_list)
         return()
     endif()
     if(operation MATCHES "^(GET|JOIN|FIND)$")
-        # vcpkg_list(<operation> <list-var> <out-var> <arg>)
-        #            A0          A1         A2        A3
+        # vcpkg_list(<operation> <list-var> <arg> <out-var>)
+        #            A0          A1         A2    A3
         if(NOT ARGC EQUAL "4")
             message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires three arguments.")
         endif()
-        list("${operation}" list "${ARGV3}" out)
-        set("${ARGV2}" "${out}" PARENT_SCOPE)
+        list("${operation}" list "${ARGV2}" out)
+        set("${ARGV3}" "${out}" PARENT_SCOPE)
         return()
     endif()
     if(operation STREQUAL "SUBLIST")
@@ -120,25 +153,83 @@ function(vcpkg_list)
         return()
     endif()
 
-    # modification
-    z_vcpkg_function_arguments(args 3)
+    # modification functions
 
-    # APPEND and PREPEND don't need this fixup
-    if(NOT operation MATCHES "^(APPEND|PREPEND)$")
-        # all the other operations _do_ need it
+    if(operation MATCHES "^(APPEND|PREPEND)$")
+        # vcpkg_list(<operation> <list> [<element>...])
+        #            A0          A1      A2...
+
+        # if ARGC <= 2, then we don't have to do anything
+        if(ARGC GREATER 2)
+            z_vcpkg_function_arguments(args 2)
+            if(list STREQUAL "")
+                set("${list_var}" "${args}" PARENT_SCOPE)
+            elseif(operation STREQUAL "APPEND")
+                set("${list_var}" "${list};${args}" PARENT_SCOPE)
+            else()
+                set("${list_var}" "${args};${list}" PARENT_SCOPE)
+            endif()
+        endif()
+        return()
+    endif()
+    if(operation STREQUAL "INSERT")
+        # vcpkg_list(INSERT <list> <index> [<element>...])
+        #            A0     A1     A2       A3...
+
+        # list(LENGTH) is one of the few subcommands that's fine
+        if(ARGC GREATER 3)
+            list(LENGTH list length)
+            if(ARGV2 LESS "0")
+                math(EXPR ARGV2 "${length} + ${ARGV2}")
+            endif()
+            if(ARGV2 LESS "0" OR ARGV2 GREATER length)
+                message(FATAL_ERROR "list index: ${ARGV2} out of range (-${length}, ${length})")
+            endif()
+
+            z_vcpkg_function_arguments(args 3)
+            if(list STREQUAL "")
+                set("${list_var}" "${args}" PARENT_SCOPE)
+            elseif(ARGV2 EQUAL "0")
+                set("${list_var}" "${args};${list}" PARENT_SCOPE)
+            elseif(ARGV2 EQUAL length)
+                set("${list_var}" "${list};${args}" PARENT_SCOPE)
+            else()
+                vcpkg_list(SUBLIST list 0 "${ARGV2}" list_start)
+                vcpkg_list(SUBLIST list "${ARGV2}" -1 list_end)
+                set("${list_var}" "${list_start};${args};${list_end}" PARENT_SCOPE)
+            endif()
+        elseif(ARGC LESS 3)
+            message(FATAL_ERROR "vcpkg_list sub-command INSERT requires at least two arguments.")
+        endif()
+        return()
+    endif()
+
+    if(operation MATCHES "^(POP_BACK|POP_FRONT|REVERSE|REMOVE_DUPLICATES)$")
+        # vcpkg_list(<operation> <list>)
+        #            A0          A1
+        if(NOT ARGC EQUAL 2)
+            message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires one argument.")
+        endif()
         z_vcpkg_list_escape_once_more(list)
-    endif()
-    # inserters and remove_item require the arguments to be fixed up as well
-    if(operation MATCHES "^(APPEND|PREPEND|INSERT|REMOVE_ITEM)$")
-        z_vcpkg_list_escape_once_more(args)
-    elseif(operation MATCHES "^(POP_BACK|POP_FRONT)$" AND NOT ARGC EQUAL 2)
-        # getting a value from PUSH_BACK/POP_BACK is unsupported
-        message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires one argument.")
-    elseif(operation MATCHES "^(FILTER|TRANSFORM)$")
-        # regexes are hard
-        message(FATAL_ERROR "vcpkg_list sub-command ${operation} is currently unsupported.")
+        list("${operation}" list)
+        set("${list_var}" "${list}" PARENT_SCOPE)
+        return()
     endif()
 
-    list("${operation}" list ${args})
-    set("${list_var}" "${list}" PARENT_SCOPE)
+    if(operation MATCHES "^(REMOVE_AT|REMOVE_ITEM)$")
+        # vcpkg_list(<operation> <list> <index-or-item>)
+        #            A0          A1     A2
+        if(NOT ARGC EQUAL 3)
+            message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires two arguments.")
+        endif()
+
+        z_vcpkg_list_escape_once_more(list)
+        string(REPLACE [[;]] [[\;]] ARGV2 "${ARGV2}")
+
+        list("${operation}" list "${ARGV2}")
+        set("${list_var}" "${list}" PARENT_SCOPE)
+        return()
+    endif()
+
+    message(FATAL_ERROR "vcpkg_list sub-command ${operation} is not yet implemented.")
 endfunction()

@@ -8,7 +8,7 @@ Use `vcpkg_list()` instead of `list()` whenever possible.
 
 ```cmake
 vcpkg_list(SET <out-var> [<element>...])
-vcpkg_list(<COMMAND> <out-var> <list-value> [<other-arguments>...])
+vcpkg_list(<COMMAND> <list-var> [<other-arguments>...])
 ```
 
 In addition to all of the commands from `list()`, `vcpkg_list` adds
@@ -16,13 +16,6 @@ a `vcpkg_list(SET)` command.
 This command takes its arguments, escapes them, and then concatenates
 them into a list; this should be used instead of `set()` for setting any
 list variable.
-
-Unlike CMake's `list()` function, since this is written in CMake,
-we can't make `<list>` an in-out parameter. Therefore, for this
-function, the in parameter is split from the out parameter,
-and the in parameter is a list value, not a list variable name.
-This also means that for sub-commands like `GET`, the out-parameter
-is placed _before_ the list, not at the end of the argument list.
 
 Otherwise, the `vcpkg_list()` function is the same as the built-in
 `list()` function, with the following restrictions:
@@ -34,6 +27,39 @@ Otherwise, the `vcpkg_list()` function is the same as the built-in
 
 See the [CMake documentation for `list()`](https://cmake.org/cmake/help/latest/command/list.html)
 for more information.
+
+## Notes: Some Weirdnesses
+
+The most major weirdness is due to `""` pulling double-duty as "list of zero elements",
+and "list of one element, which is empty". `vcpkg_list` always uses the former understanding.
+This can cause weird behavior, for example:
+
+```cmake
+set(lst "")
+vcpkg_list(APPEND lst "" "")
+# lst = ";"
+```
+
+This is because you're appending two elements to the empty list.
+One very weird behavior that comes out of this would be:
+
+```cmake
+set(lst "")
+vcpkg_list(APPEND lst "")
+# lst = ""
+```
+
+since `""` is the empty list, we append the empty element and end up with a list
+of one element, which is empty. This does not happen for non-empty lists;
+for example:
+
+```cmake
+set(lst "a")
+vcpkg_list(APPEND lst "")
+# lst = "a;"
+```
+
+only the empty list has this odd behavior.
 
 ## Examples
 
@@ -51,7 +77,7 @@ endif()
 ```cmake
 set(OPTIONS -DFOO=BAR)
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_list(APPEND OPTIONS "${OPTIONS}" -DOS=WINDOWS)
+    vcpkg_list(APPEND OPTIONS "-DOS=WINDOWS;FOO")
 endif()
 ```
 
@@ -59,8 +85,8 @@ endif()
 
 ```cmake
 if(NOT list STREQUAL "")
-    vcpkg_list(GET end "${list}" -1)
-    vcpkg_list(POP_BACK list "${list}")
+    vcpkg_list(GET list end -1)
+    vcpkg_list(POP_BACK list)
 endif()
 ```
 

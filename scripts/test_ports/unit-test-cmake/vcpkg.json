@@ -1,0 +1,14 @@
+{
+  "name": "unit-test-cmake",
+  "version-string": "0",
+  "description": "Ensures that the CMake scripts are unit tested.",
+  "supports": "x64",
+  "default-features": [
+    "vcpkg-list"
+  ],
+  "features": {
+    "vcpkg-list": {
+      "description": "Test the vcpkg_list script"
+    }
+  }
+}
