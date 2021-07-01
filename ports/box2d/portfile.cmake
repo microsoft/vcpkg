@@ -14,8 +14,8 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        -DBUILD_TESTS=OFF
-        -DBUILD_SAMPLES=OFF
+        -DBOX2D_BUILD_UNIT_TESTS=OFF
+        -DBOX2D_BUILD_TESTBED=OFF
 )
 vcpkg_install_cmake()
 

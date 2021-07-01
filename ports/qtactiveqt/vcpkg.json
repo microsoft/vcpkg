@@ -1,0 +1,22 @@
+{
+  "name": "qtactiveqt",
+  "version-semver": "6.1.1",
+  "description": "ActiveQt",
+  "homepage": "https://www.qt.io/",
+  "supports": "windows",
+  "dependencies": [
+    {
+      "name": "qtactiveqt",
+      "host": true,
+      "default-features": false
+    },
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    {
+      "name": "qttools",
+      "default-features": false
+    }
+  ]
+}

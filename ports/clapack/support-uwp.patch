@@ -6,7 +6,7 @@ index db58b4e..0fb61a0 100644
  # _zrotg_ seems to be missing in the wrap header
    add_definitions(-DNO_BLAS_WRAP)
  endif()
-+if (ARITHCHK_PATH)
++if (MSVC)
 +  add_definitions(-D_CRT_SECURE_NO_WARNINGS -D_CRT_NONSTDC_NO_DEPRECATE)
 +endif()
  include_directories(${CLAPACK_SOURCE_DIR}/INCLUDE)
@@ -21,11 +21,11 @@ index 094614a..e5b40ab 100644
  set_target_properties(arithchk PROPERTIES COMPILE_DEFINITIONS 
    "NO_FPINIT;NO_LONG_LONG")
 +  
-+if (ARITHCHK_PATH)
-+ADD_CUSTOM_COMMAND(
-+   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/arith.h
-+   COMMAND ${ARITHCHK_PATH} > ${CMAKE_CURRENT_BINARY_DIR}/arith.h
-+   )
++if (ARITH_PATH)
++configure_file(
++   "${ARITH_PATH}"
++   "${CMAKE_CURRENT_BINARY_DIR}/arith.h"
++   COPYONLY)
 +else()
  ADD_CUSTOM_COMMAND(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/arith.h
@@ -37,14 +37,6 @@ index 094614a..e5b40ab 100644
  
  set(OFILES  ${MISC} ${POW} ${CX} ${DCX} ${REAL} ${DBL} ${INT} 
    ${HALF} ${CMP} ${EFL} ${CHAR} ${I77} ${TIME})
-@@ -69,3 +76,6 @@ install(TARGETS f2c EXPORT clapack-targets
-         ARCHIVE DESTINATION lib
-         INCLUDES DESTINATION include)
- 
-+if (NOT ARITHCHK_PATH)
-+    install(TARGETS arithchk RUNTIME DESTINATION tools/clapack)
-+endif()
-\ No newline at end of file
 diff --git a/F2CLIBS/libf2c/inquire.c b/F2CLIBS/libf2c/inquire.c
 index 5936a67..4846d41 100644
 --- a/F2CLIBS/libf2c/inquire.c
