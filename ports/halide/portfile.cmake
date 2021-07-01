@@ -1,10 +1,5 @@
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
-# Halide distributes some loadable modules that belong in lib on all platforms.
-# CMake defaults module DLLs into the lib folder, which is incompatible with
-# vcpkg’s current policy. This sidesteps that issue, a bit bluntly.
-set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO halide/Halide
@@ -25,15 +20,13 @@ vcpkg_check_features(
         target-mips TARGET_MIPS
         target-nvptx TARGET_NVPTX
         target-opencl TARGET_OPENCL
-        target-opengl TARGET_OPENGL
         target-powerpc TARGET_POWERPC
         target-riscv TARGET_RISCV
         target-x86 TARGET_X86
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS ${FEATURE_OPTIONS}
         -DWITH_DOCS=NO
         -DWITH_PYTHON_BINDINGS=NO
@@ -42,10 +35,14 @@ vcpkg_configure_cmake(
         -DWITH_UTILS=NO
         -DCMAKE_INSTALL_LIBDIR=bin
         -DCMAKE_INSTALL_DATADIR=share/${PORT}
-        -DHALIDE_INSTALL_CMAKEDIR=share/${PORT}
+        -DHalide_INSTALL_CMAKEDIR=share/${PORT}
+        -DHalide_INSTALL_HELPERSDIR=share/HalideHelpers
+        -DHalide_INSTALL_PLUGINDIR=bin
 )
 
-vcpkg_install_cmake(ADD_BIN_TO_PATH)
+# ADD_BIN_TO_PATH needed to compile autoschedulers, 
+# which use Halide.dll (and deps) during the build.
+vcpkg_cmake_install(ADD_BIN_TO_PATH)
 
 vcpkg_copy_tools(
     TOOL_NAMES
@@ -56,9 +53,16 @@ vcpkg_copy_tools(
     AUTO_CLEAN
 )
 
-vcpkg_copy_pdbs()
+# Release mode MODULE targets in CMake don't get PDBs.
+# Exclude those to avoid warning with default globs.
+vcpkg_copy_pdbs(
+    BUILD_PATHS
+        "${CURRENT_PACKAGES_DIR}/bin/Halide.dll" 
+        "${CURRENT_PACKAGES_DIR}/debug/bin/*.dll"
+)
 
-vcpkg_fixup_cmake_targets()
+vcpkg_cmake_config_fixup()
+vcpkg_cmake_config_fixup(PACKAGE_NAME HalideHelpers)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
