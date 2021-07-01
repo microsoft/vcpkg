@@ -1,0 +1,11 @@
+{
+  "name": "socket-io-client",
+  "version": "3.0.0",
+  "description": "C++11 implementation of Socket.IO client",
+  "homepage": "https://github.com/socketio/socket.io-client-cpp",
+  "dependencies": [
+    "asio",
+    "rapidjson",
+    "websocketpp"
+  ]
+}
