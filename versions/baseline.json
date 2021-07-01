@@ -3501,8 +3501,8 @@
       "port-version": 0
     },
     "libressl": {
-      "baseline": "2.9.1",
-      "port-version": 3
+      "baseline": "3.3.3",
+      "port-version": 0
     },
     "librsvg": {
       "baseline": "2.40.20",
