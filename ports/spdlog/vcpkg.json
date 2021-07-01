@@ -25,9 +25,6 @@
     },
     "wchar": {
       "description": "Build with wchar_t (Windows only)"
-    },
-    "wchar-filenames": {
-      "description": "Use std::wstring instead of std::string for file names (Windows only)"
     }
   }
 }
