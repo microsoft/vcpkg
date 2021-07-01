@@ -1,0 +1,16 @@
+diff -urw a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2021-05-10 20:46:52.204346972 +0200
++++ b/CMakeLists.txt	2021-05-11 19:39:00.065235266 +0200
+@@ -1482,6 +1482,12 @@
+       message(WARNING "Bad lib in library list: ${_libname}")
+       continue()
+     endif()
++  elseif(_lib MATCHES "^(.*)/([^/]*)[.]framework$")
++    if(CMAKE_MATCH_1 IN_LIST CMAKE_C_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
++      set(_lib "-framework ${CMAKE_MATCH_2}")
++    else()
++      set(_lib "-framework ${_lib}")
++    endif()
+   endif()
+   if(_lib MATCHES ".*/.*" OR _lib MATCHES "^-")
+     set(LIBCURL_LIBS          "${LIBCURL_LIBS} ${_lib}")
