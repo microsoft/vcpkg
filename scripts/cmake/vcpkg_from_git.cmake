@@ -94,6 +94,7 @@ function(vcpkg_from_git)
         endif()
         message(STATUS "Fetching ${arg_URL} ${ref_to_use}...")
         find_program(GIT NAMES git git.cmd)
+        file(MAKE_DIRECTORY "${DOWNLOADS}")
         # Note: git init is safe to run multiple times
         vcpkg_execute_required_process(
             ALLOW_IN_DOWNLOAD_MODE
