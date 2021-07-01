@@ -19,7 +19,7 @@ index 968dff8..4699f63 100644
      )
  endif()
 diff --git a/wx-config.in b/wx-config.in
-index 441f88c..730d4d1 100644
+index 441f88c..ca68a80 100644
 --- a/wx-config.in
 +++ b/wx-config.in
 @@ -402,7 +402,12 @@ is_cross()  { [ "x@cross_compiling@" = "xyes" ]; }
@@ -28,7 +28,7 @@ index 441f88c..730d4d1 100644
  # Determine the base directories we require.
 -prefix=${input_option_prefix-${this_prefix:-@prefix@}}
 +base_folder=$(dirname $(readlink -f "$0"))
-+if [ "@CMAKE_BUILD_TYPE@" = "Debug"]; then
++if [ "@CMAKE_BUILD_TYPE@" = "Debug" ]; then
 +    prefix=${input_option_prefix-${this_prefix:-${base_folder}/../../..}}
 +else
 +    prefix=${input_option_prefix-${this_prefix:-${base_folder}/../..}}
