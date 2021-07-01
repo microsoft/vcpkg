@@ -11,4 +11,4 @@ The package halide provides CMake targets:
     target_link_libraries(main PRIVATE filter)
 
 For more information see:
-    https://github.com/halide/Halide/blob/v11.0.1/README_cmake.md
+    https://github.com/halide/Halide/blob/v12.0.1/README_cmake.md
