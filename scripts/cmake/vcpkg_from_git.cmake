@@ -82,6 +82,7 @@ function(vcpkg_from_git)
     message(STATUS "Fetching ${_vdud_URL}...")
     find_program(GIT NAMES git git.cmd)
     # Note: git init is safe to run multiple times
+    file(MAKE_DIRECTORY ${DOWNLOADS})
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
       COMMAND ${GIT} init git-tmp
