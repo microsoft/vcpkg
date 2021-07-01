@@ -5,9 +5,9 @@ vcpkg_from_github(
     REF 00c59aa4a1f72e49e55b211f28650c66c542739e # 1.17.6
     SHA512 9191c64def45ff268cb5d2ce08782265fb8e0567237c8d3311b91e996bd938d629578a7b50e8db29c4b3aa5bc96f93361f6d918e9cfd4861e5f5c5554cf4616d
     HEAD_REF master
-#    PATCHES
-#        fix-uwp.patch
-#        fix-static-cmake.patch
+    PATCHES
+        fix-uwp.patch
+        fix-static-cmake.patch
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
