@@ -13,12 +13,11 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         wchar           SPDLOG_WCHAR_SUPPORT
 )
 
-if(VCPKG_TARGET_IS_WINDOWS)
-    # configured in triplet file
-    if(NOT DEFINED SPDLOG_WCHAR_FILENAMES)
-        set(SPDLOG_WCHAR_FILENAMES OFF)
-    endif()
-else()
+# configured in triplet file
+if(NOT DEFINED SPDLOG_WCHAR_FILENAMES)
+    set(SPDLOG_WCHAR_FILENAMES OFF)
+endif()
+if(NOT VCPKG_TARGET_IS_WINDOWS)
     if("wchar" IN_LIST FEATURES)
         message(FATAL_ERROR "Feature 'wchar' is for Windows.")
     elseif(SPDLOG_WCHAR_FILENAMES) 
