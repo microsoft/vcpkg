@@ -2253,8 +2253,8 @@
       "port-version": 0
     },
     "gflags": {
-      "baseline": "2.2.2-2",
-      "port-version": 0
+      "baseline": "2.2.2",
+      "port-version": 2
     },
     "ghc-filesystem": {
       "baseline": "1.5.4",
@@ -2317,8 +2317,8 @@
       "port-version": 4
     },
     "glog": {
-      "baseline": "0.4.0-4",
-      "port-version": 0
+      "baseline": "0.4.0",
+      "port-version": 4
     },
     "gloo": {
       "baseline": "20201203",
