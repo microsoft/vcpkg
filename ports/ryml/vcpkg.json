@@ -1,0 +1,13 @@
+{
+  "name": "ryml",
+  "version-date": "2021-05-27",
+  "description": "Rapid YAML library",
+  "homepage": "https://github.com/biojppm/rapidyaml",
+  "supports": "!(arm | arm64 | osx)",
+  "dependencies": [
+    {
+      "name": "c4core",
+      "default-features": false
+    }
+  ]
+}
