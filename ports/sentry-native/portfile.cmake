@@ -3,9 +3,9 @@ if(NOT VCPKG_TARGET_IS_OSX)
 endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.9/sentry-native.zip"
-    FILENAME "sentry-native-0.4.9.zip"
-    SHA512 152e3c6cfc7a72421f088f0e9853f016b62e2c22c580edb6255355648d293a31507974bc5c12ef3c0cd721d07797b9948f53ecafa1482d3264504cafac1fe8a3
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.10/sentry-native.zip"
+    FILENAME "sentry-native-0.4.10.zip"
+    SHA512 fd7aa8de707b19dfc3704e3f1d73bb35aa65cf26e95df0baf2061ce756232b76b26d406ffc11b53e57d949f5f14899265095d8d4d3f8ff4777cdeceeca5b6f94
 )
 
 vcpkg_extract_source_archive_ex(
