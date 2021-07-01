@@ -1325,7 +1325,7 @@
       "port-version": 0
     },
     "cnl": {
-      "baseline": "2019-06-23",
+      "baseline": "1.1.7",
       "port-version": 0
     },
     "coin": {
