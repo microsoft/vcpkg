@@ -5086,7 +5086,7 @@
     },
     "qt5-3d": {
       "baseline": "5.15.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-activeqt": {
       "baseline": "5.15.2",
