@@ -37,18 +37,21 @@ macro(z_vcpkg_function_arguments OUT_VAR)
         message(FATAL_ERROR "z_vcpkg_function_arguments: invalid arguments (${ARGV})")
     endif()
 
-    set("${OUT_VAR}")
+    set("${OUT_VAR}" "")
 
     # this allows us to get the value of the enclosing function's ARGC
     set(z_vcpkg_function_arguments_ARGC_NAME "ARGC")
     set(z_vcpkg_function_arguments_ARGC "${${z_vcpkg_function_arguments_ARGC_NAME}}")
 
     math(EXPR z_vcpkg_function_arguments_LAST_ARG "${z_vcpkg_function_arguments_ARGC} - 1")
-    if(z_vcpkg_function_arguments_LAST_ARG GREATER_EQUAL z_vcpkg_function_arguments_FIRST_ARG)
+    # GREATER_EQUAL added in CMake 3.7
+    if(z_vcpkg_function_arguments_FIRST_ARG LESS z_vcpkg_function_arguments_LAST_ARG)
         foreach(z_vcpkg_function_arguments_N RANGE "${z_vcpkg_function_arguments_FIRST_ARG}" "${z_vcpkg_function_arguments_LAST_ARG}")
             string(REPLACE ";" "\\;" z_vcpkg_function_arguments_ESCAPED_ARG "${ARGV${z_vcpkg_function_arguments_N}}")
+            # adds an extra ";" on the front
             set("${OUT_VAR}" "${${OUT_VAR}};${z_vcpkg_function_arguments_ESCAPED_ARG}")
         endforeach()
+        # and then removes that extra semicolon
         string(SUBSTRING "${${OUT_VAR}}" 1 -1 "${OUT_VAR}")
     endif()
 endmacro()
