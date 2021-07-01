@@ -1,10 +1,14 @@
-vcpkg_from_git(
+set(BZIP2_VERSION 1.0.8)
+vcpkg_download_distfile(ARCHIVE
+    URLS "https://sourceware.org/pub/bzip2/bzip2-${BZIP2_VERSION}.tar.gz"
+    FILENAME "bzip2-${BZIP2_VERSION}.tar.gz"
+    SHA512 083f5e675d73f3233c7930ebe20425a533feedeaaa9d8cc86831312a6581cefbe6ed0d08d2fa89be81082f2a5abdabca8b3c080bf97218a1bd59dc118a30b9f3
+)
+
+vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
-    URL https://sourceware.org/git/bzip2.git
-    REF 75a94bea3918e612b879d6a11ca64b8689526147 # REFERENCE BZIP2 VERSION 1.0.8
-    SHA512 4611105f9090477b5f6f6dbd303a282099df71644e04d8a998ef81de487f6c8cac4c0ec1283ad737f6767c51f1e3b4e24e2ee021c6dd085925617d9ed145b2ba
-    PATCHES
-        fix-import-export-macros.patch
+    ARCHIVE ${ARCHIVE}
+    PATCHES fix-import-export-macros.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")
