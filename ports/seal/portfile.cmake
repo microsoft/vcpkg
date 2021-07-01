@@ -31,7 +31,7 @@ vcpkg_cmake_configure(
 
 vcpkg_cmake_install()
 
-vcpkg_cmake_config_fixup(PACKAGE_NAME "SEAL" CONFIG_PATH "lib/cmake/")
+vcpkg_cmake_config_fixup(PACKAGE_NAME "SEAL" CONFIG_PATH "lib/cmake/SEAL-3.6")
 
 if("hexl" IN_LIST FEATURES)
     vcpkg_fixup_pkgconfig(SKIP_CHECK)
