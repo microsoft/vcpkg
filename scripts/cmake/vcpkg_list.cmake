@@ -7,7 +7,7 @@ Use `vcpkg_list()` instead of `list()` whenever possible.
 
 ```cmake
 vcpkg_list(SET <out-var> [<element>...])
-vcpkg_list(<COMMAND> <out-var> <list-value> [<other-arguments>...])
+vcpkg_list(<COMMAND> <list-var> [<other-arguments>...])
 ```
 
 In addition to all of the commands from `list()`, `vcpkg_list` adds
@@ -15,13 +15,6 @@ a `vcpkg_list(SET)` command.
 This command takes its arguments, escapes them, and then concatenates
 them into a list; this should be used instead of `set()` for setting any
 list variable.
-
-Unlike CMake's `list()` function, since this is written in CMake,
-we can't make `<list>` an in-out parameter. Therefore, for this
-function, the in parameter is split from the out parameter,
-and the in parameter is a list value, not a list variable name.
-This also means that for sub-commands like `GET`, the out-parameter
-is placed _before_ the list, not at the end of the argument list.
 
 Otherwise, the `vcpkg_list()` function is the same as the built-in
 `list()` function, with the following restrictions:
@@ -50,7 +43,7 @@ endif()
 ```cmake
 set(OPTIONS -DFOO=BAR)
 if(VCPKG_TARGET_IS_WINDOWS)
-    vcpkg_list(APPEND OPTIONS "${OPTIONS}" -DOS=WINDOWS)
+    vcpkg_list(APPEND OPTIONS "-DOS=WINDOWS;FOO")
 endif()
 ```
 
@@ -58,71 +51,94 @@ endif()
 
 ```cmake
 if(NOT list STREQUAL "")
-    vcpkg_list(GET end "${list}" -1)
-    vcpkg_list(POP_BACK list "${list}")
+    vcpkg_list(GET list end -1)
+    vcpkg_list(POP_BACK list)
 endif()
 ```
 #]===]
 
-function(vcpkg_list operation out_var)
+macro(z_vcpkg_list_escape_once_more lst)
+    string(REPLACE [[\;]] [[\\;]] "${lst}" "${${lst}}")
+endmacro()
+
+function(vcpkg_list)
+    # NOTE: as this function replaces an existing CMake command,
+    # it does not use cmake_parse_arguments
+
+    # vcpkg_list(<operation> <list_var> ...)
+    #            A0          A1
+
+    if(ARGC LESS "2")
+        message(FATAL_ERROR "vcpkg_list requires at least two arguments.")
+    endif()
+
+    if(ARGV1 MATCHES "^ARGV([0-9]*)$|^ARG[CN]$|^CMAKE_CURRENT_FUNCTION")
+        message(FATAL_ERROR "vcpkg_list does not support the list_var being ${ARGV1}.
+    Please use a different variable name.")
+    endif()
+
+    set(list "${${ARGV1}}")
+    set(operation "${ARGV0}")
+    set(list_var "${ARGV1}")
+
     if(operation STREQUAL "SET")
         z_vcpkg_function_arguments(args 2)
-        set("${out_var}" "${args}" PARENT_SCOPE)
+        set("${list_var}" "${args}" PARENT_SCOPE)
         return()
     endif()
 
     # Normal reading functions
     if(operation STREQUAL "LENGTH")
+        # vcpkg_list(LENGTH <list-var> <out-var>)
+        #            A0     A1         A2
         if(NOT ARGC EQUAL "3")
-            message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires three arguments.")
+            message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires two arguments.")
         endif()
-        list(LENGTH lst out)
-        set("${out_var}" "${out}" PARENT_SCOPE)
+        list(LENGTH list out)
+        set("${ARGV2}" "${out}" PARENT_SCOPE)
         return()
     endif()
     if(operation MATCHES "^(GET|JOIN|FIND)$")
+        # vcpkg_list(<operation> <list-var> <out-var> <arg>)
+        #            A0          A1         A2        A3
         if(NOT ARGC EQUAL "4")
             message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires three arguments.")
         endif()
-        list("${operation}" lst "${ARGV3}" out)
-        set("${out_var}" "${out}" PARENT_SCOPE)
+        list("${operation}" list "${ARGV3}" out)
+        set("${ARGV2}" "${out}" PARENT_SCOPE)
         return()
     endif()
     if(operation STREQUAL "SUBLIST")
+        # vcpkg_list(SUBLIST <list-var> <begin> <length> <out-var>)
+        #            A0      A1         A2      A3       A4
         if(NOT ARGC EQUAL "5")
             message(FATAL_ERROR "vcpkg_list sub-command SUBLIST requires four arguments.")
         endif()
-        # sublist removes a `\`, so add an additional backslash
-        string(REPLACE [[\;]] [[\\;]] lst "${lst}")
-        list(SUBLIST lst "${ARGV3}" "${ARGV4}" out)
-        set("${out_var}" "${out}" PARENT_SCOPE)
+        z_vcpkg_list_escape_once_more(list)
+        list(SUBLIST list "${ARGV2}" "${ARGV3}" out)
+        set("${ARGV4}" "${out}" PARENT_SCOPE)
         return()
     endif()
-
-    if(ARGC LESS "3")
-        message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires at least two arguments.")
-    endif()
-    set(lst "${ARGV2}")
 
     # modification
     z_vcpkg_function_arguments(args 3)
 
     # APPEND and PREPEND don't need this fixup
     if(NOT operation MATCHES "^(APPEND|PREPEND)$")
-        # all the other operations _do_ need it (see comment in SUBLIST)
-        string(REPLACE [[\;]] [[\\;]] lst "${lst}")
+        # all the other operations _do_ need it
+        z_vcpkg_list_escape_once_more(list)
     endif()
     # inserters and remove_item require the arguments to be fixed up as well
     if(operation MATCHES "^(APPEND|PREPEND|INSERT|REMOVE_ITEM)$")
-        string(REPLACE [[\;]] [[\\;]] args "${args}")
-    elseif(operation MATCHES "^(POP_BACK|POP_FRONT)$" AND NOT ARGC EQUAL 3)
+        z_vcpkg_list_escape_once_more(args)
+    elseif(operation MATCHES "^(POP_BACK|POP_FRONT)$" AND NOT ARGC EQUAL 2)
         # getting a value from PUSH_BACK/POP_BACK is unsupported
-        message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires two arguments.")
+        message(FATAL_ERROR "vcpkg_list sub-command ${operation} requires one argument.")
     elseif(operation MATCHES "^(FILTER|TRANSFORM)$")
         # regexes are hard
         message(FATAL_ERROR "vcpkg_list sub-command ${operation} is currently unsupported.")
     endif()
 
-    list("${operation}" lst ${args})
-    set("${out_var}" "${lst}" PARENT_SCOPE)
+    list("${operation}" list ${args})
+    set("${list_var}" "${list}" PARENT_SCOPE)
 endfunction()
