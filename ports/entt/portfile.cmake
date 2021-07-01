@@ -1,5 +1,4 @@
 if ("experimental" IN_LIST FEATURES)
-    set(VCPKG_USE_HEAD_VERSION ON)
     vcpkg_from_github(
         OUT_SOURCE_PATH SOURCE_PATH
         REPO skypjack/entt
