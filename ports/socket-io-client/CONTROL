@@ -1,4 +1,0 @@
-Source: socket-io-client
-Version: 1.6.1-1
-Description: C++11 implementation of Socket.IO client
-Build-Depends: boost, rapidjson, websocketpp
