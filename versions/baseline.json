@@ -2773,7 +2773,7 @@
       "port-version": 1
     },
     "json-dto": {
-      "baseline": "0.2.12",
+      "baseline": "0.2.13",
       "port-version": 0
     },
     "json-schema-validator": {
