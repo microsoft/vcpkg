@@ -36,22 +36,22 @@ install(
 )
 
 include(CMakePackageConfigHelpers)
-set(PACKAGE_CONFIG_FILE "${CMAKE_CURRENT_BINARY_DIR}/libuuid-config.cmake")
-set(INSTALL_CONFIG_DIR  "${CMAKE_INSTALL_LIBDIR}/cmake/libuuid")
+set(PACKAGE_CONFIG_FILE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libuuid-config.cmake")
+set(INSTALL_CONFIG_DIR  "${CMAKE_INSTALL_LIBDIR}/cmake/unofficial-libuuid")
 
-configure_package_config_file(libuuid-config.cmake.in
+configure_package_config_file(unofficial-libuuid-config.cmake.in
     "${PACKAGE_CONFIG_FILE}"
     INSTALL_DESTINATION "${INSTALL_CONFIG_DIR}"
 )
 
 export(EXPORT uuid_targets
-    NAMESPACE UUID::
-    FILE "${CMAKE_CURRENT_BINARY_DIR}/libuuid-targets.cmake"
+    NAMESPACE unofficial::UUID::
+    FILE "${CMAKE_CURRENT_BINARY_DIR}/unofficial-libuuid-targets.cmake"
 )
 
 install(EXPORT uuid_targets
-    NAMESPACE UUID::
-    FILE libuuid-targets.cmake
+    NAMESPACE unofficial::UUID::
+    FILE unofficial-libuuid-targets.cmake
     DESTINATION "${INSTALL_CONFIG_DIR}"
 )
 
