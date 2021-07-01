@@ -99,7 +99,7 @@ if(APPLE)
 
     # if specific architectures are set, configure them,
     # if not set, this will still default to current arch
-    foreach(ARCH ${CMAKE_OSX_ARCHITECTURES})
+    foreach(ARCH IN LISTS CMAKE_OSX_ARCHITECTURES)
         set(CXXFLAGS "-arch ${ARCH} ${CXXFLAGS}")
         set(CFLAGS "-arch ${ARCH} ${CFLAGS}")
         set(LDFLAGS "-arch ${ARCH} ${LDFLAGS}")

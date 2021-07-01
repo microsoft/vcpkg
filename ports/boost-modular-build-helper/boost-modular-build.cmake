@@ -84,18 +84,6 @@ function(boost_modular_build)
         if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
             list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
         endif()
-        if(VCPKG_TARGET_IS_OSX)
-            if(VCPKG_OSX_DEPLOYMENT_TARGET)
-                list(APPEND configure_options "-DCMAKE_OSX_DEPLOYMENT_TARGET=${VCPKG_OSX_DEPLOYMENT_TARGET}")
-            endif()
-            if(VCPKG_OSX_SYSROOT)
-                list(APPEND configure_options "-DCMAKE_OSX_SYSROOT=${VCPKG_OSX_SYSROOT}")
-            endif()
-            if(VCPKG_OSX_ARCHITECTURES)
-                # note: VCPKG_OSX_ARCHITECTURES is a list and must be enclosed in quotes
-                list(APPEND configure_options "-DCMAKE_OSX_ARCHITECTURES=\"${VCPKG_OSX_ARCHITECTURES}\"")
-            endif()
-        endif()
 
         vcpkg_configure_cmake(
             SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
