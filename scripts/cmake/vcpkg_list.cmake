@@ -19,7 +19,7 @@ list variable.
 Otherwise, the `vcpkg_list()` function is the same as the built-in
 `list()` function, with the following restrictions:
 
-- `GET` supports only one index
+- `GET`, `REMOVE_ITEM`, and `REMOVE_AT` support only one index/value
 - `POP_BACK` and `POP_FRONT` do not support getting the value into
   another out variable. Use C++ style `GET` then `POP_(BACK|FRONT)`.
 - `FILTER` and `TRANSFORM` are unsupported.
@@ -176,8 +176,8 @@ function(vcpkg_list)
         # vcpkg_list(INSERT <list> <index> [<element>...])
         #            A0     A1     A2       A3...
 
-        # list(LENGTH) is one of the few subcommands that's fine
         if(ARGC GREATER 3)
+            # list(LENGTH) is one of the few subcommands that's fine
             list(LENGTH list length)
             if(ARGV2 LESS "0")
                 math(EXPR ARGV2 "${length} + ${ARGV2}")
