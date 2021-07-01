@@ -56,8 +56,8 @@ Additional options passed to CMake during the Release configuration. These are i
 ### OPTIONS_DEBUG
 Additional options passed to CMake during the Debug configuration. These are in addition to `OPTIONS`.
 
-### MAYBE_UNUSED_OPTIONS
-Ignore checked unused cmake options, support cmake regular expression
+### MAYBE_UNUSED_VARIABLES
+Any CMake variables which are explicitly passed in, but which may not be used on all platforms.
 
 ### LOGNAME
 Name of the log to write the output of the configure call to.
