@@ -67,12 +67,12 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     # drop the __declspec(dllimport) when building static
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/bson/bson-macros.h
         "define BSON_API __declspec(dllimport)" "define BSON_API")
-        
+
     file(RENAME
-	    "${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-static-${PORT_POSTFIX}-config.cmake"
+        "${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-static-${PORT_POSTFIX}-config.cmake"
         "${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-${PORT_POSTFIX}-config.cmake")
     file(RENAME
-	    "${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-static-${PORT_POSTFIX}-config-version.cmake"
+        "${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-static-${PORT_POSTFIX}-config-version.cmake"
         "${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-${PORT_POSTFIX}-config-version.cmake")
 
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
