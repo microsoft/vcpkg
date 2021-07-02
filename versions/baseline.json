@@ -1918,7 +1918,7 @@
     },
     "faiss": {
       "baseline": "1.6.4",
-      "port-version": 0
+      "port-version": 1
     },
     "fakeit": {
       "baseline": "2.0.7",
