@@ -9,13 +9,12 @@ if(VCPKG_TARGET_IS_WINDOWS)
         REF 0018c44e8dfcc3b64b43e0aea4b3f419f0b65fd0 #v6.2.1-2
         SHA512 2405e2536ca9fe0b890f44f54c936ac0e4b5a9ebe6a19e1c48a9c21b7211d2a1b45865852e3c65a98a6735216a4e27bea75c0fd6e52efeed4baecd95da9895a5
         HEAD_REF master
-        PATCHES 
+        PATCHES
             vs.build.patch
             runtime.patch
-            adddef.patch 
+            adddef.patch
     )
 
-    include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
     yasm_tool_helper(OUT_VAR YASM)
     file(TO_NATIVE_PATH "${YASM}" YASM)
 
@@ -42,12 +41,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     set(_file "${_porjectfile}")
     file(READ "${_file}" _contents)
     string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.props" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
+                     "<Import Project=\"${CURRENT_HOST_INSTALLED_DIR}/share/vs-yasm/yasm.props\" />"
                     _contents "${_contents}")
     string(REPLACE  [[<Import Project="$(VCTargetsPath)\BuildCustomizations\yasm.targets" />]]
-                     "<Import Project=\"${CURRENT_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
+                     "<Import Project=\"${CURRENT_HOST_INSTALLED_DIR}/share/vs-yasm/yasm.targets\" />"
                     _contents "${_contents}")
-    string(REGEX REPLACE "${VCPKG_ROOT_DIR}/installed/[^/]+/share" "${CURRENT_INSTALLED_DIR}/share" _contents "${_contents}") # Above already replaced by another triplet
     file(WRITE "${_file}" "${_contents}")
 
     vcpkg_install_msbuild(
@@ -98,6 +96,8 @@ else()
         OUT_SOURCE_PATH SOURCE_PATH
         ARCHIVE ${ARCHIVE}
         REF gmp-6.2.1
+        PATCHES
+            tools.patch
     )
 
     vcpkg_configure_make(

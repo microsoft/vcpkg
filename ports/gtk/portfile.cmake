@@ -1,18 +1,16 @@
 
-set(GTK_VERSION 4.0.1)
+set(GTK_VERSION 4.3.0)
 
-vcpkg_download_distfile(ARCHIVE
-    URLS "https://download.gnome.org/sources/gtk/4.0/gtk-4.0.1.tar.xz"
-    FILENAME "gtk-${GTK_VERSION}.tar.xz"
-    SHA512 cab50b5bcf1a6bfdd5245c908e813330b9173531c49fdd63f9b5618f5329ddf2560f0a3548f61bba55dea6d816e57681d4e59941cfc50cf430544d3ebcd90aad
-)
-
-vcpkg_extract_source_archive_ex(
+vcpkg_from_gitlab(
+    GITLAB_URL https://gitlab.gnome.org/
     OUT_SOURCE_PATH SOURCE_PATH
-    ARCHIVE ${ARCHIVE}
+    REPO GNOME/gtk
+    REF  40ebed3a03aef096addc0af09fec4ec529d882a0 #v4.3.0
+    SHA512 6f68e1e2f18a4bf0299f0563ccf091cbee3a1dc1db0819565216d50f98f3f3ad4904eef746357d9bc2fdac8a5e29c5cbed5d4df5dd0f89bb941f7438ae3cd096
+    HEAD_REF master # branch name
     PATCHES build.patch
-            #link_fix_static.patch
-)
+) 
+
 vcpkg_find_acquire_program(PKGCONFIG)
 get_filename_component(PKGCONFIG_DIR "${PKGCONFIG}" DIRECTORY )
 vcpkg_add_to_path("${PKGCONFIG_DIR}") # Post install script runs pkg-config so it needs to be on PATH
@@ -121,7 +119,6 @@ set(TOOL_NAMES gtk4-builder-tool
 if(VCPKG_TARGET_IS_LINUX)
     list(APPEND TOOL_NAMES gtk4-launch)
 endif()
-
 vcpkg_copy_tools(TOOL_NAMES ${TOOL_NAMES} AUTO_CLEAN)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")

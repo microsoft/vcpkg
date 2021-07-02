@@ -1,9 +1,11 @@
-vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
+if(NOT VCPKG_TARGET_IS_OSX)
+    vcpkg_fail_port_install(ON_ARCH "arm" "arm64" ON_TARGET "UWP")
+endif()
 
 vcpkg_download_distfile(ARCHIVE
-    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.9/sentry-native.zip"
-    FILENAME "sentry-native-0.4.9.zip"
-    SHA512 152e3c6cfc7a72421f088f0e9853f016b62e2c22c580edb6255355648d293a31507974bc5c12ef3c0cd721d07797b9948f53ecafa1482d3264504cafac1fe8a3
+    URLS "https://github.com/getsentry/sentry-native/releases/download/0.4.10/sentry-native.zip"
+    FILENAME "sentry-native-0.4.10.zip"
+    SHA512 fd7aa8de707b19dfc3704e3f1d73bb35aa65cf26e95df0baf2061ce756232b76b26d406ffc11b53e57d949f5f14899265095d8d4d3f8ff4777cdeceeca5b6f94
 )
 
 vcpkg_extract_source_archive_ex(
@@ -13,6 +15,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         fix-warningC5105.patch
         fix-config-cmake.patch
+        fix-libcurl.patch
 )
 
 if (NOT DEFINED SENTRY_BACKEND)
@@ -44,7 +47,7 @@ file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sentry TARGET_PATH share/sentry)
 
-if (WIN32 AND SENTRY_BACKEND STREQUAL "crashpad")
+if (SENTRY_BACKEND STREQUAL "crashpad")
     vcpkg_copy_tools(
         TOOL_NAMES crashpad_handler
         AUTO_CLEAN

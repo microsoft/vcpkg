@@ -132,7 +132,6 @@ else ()
         INTERFACE
             -flax-vector-conversions
             -fvisibility=hidden
-            -fPIC
             -fwrapv
             -Wall
             -Wextra
@@ -162,10 +161,30 @@ else ()
             -Wswitch-enum
             #-Wvariable-decl
             -Wwrite-strings
-            -Wl,-z,relro
-            -Wl,-z,now
-            -Wl,-z,noexecstack
     )
+
+    if (NOT MINGW)
+        target_compile_options(${PROJECT_NAME}_config_private
+            INTERFACE
+                -fPIC
+                -Wl,-z,relro
+                -Wl,-z,now
+                -Wl,-z,noexecstack
+        )
+    endif()
+
+    if (MINGW)
+        target_compile_options(${PROJECT_NAME}_config_private
+            INTERFACE
+                -fno-asynchronous-unwind-tables
+        )
+        target_link_options(${PROJECT_NAME}_config_private
+            INTERFACE
+                -Wl,--dynamicbase
+                -Wl,--high-entropy-va
+                -Wl,--nxcompat
+        )
+    endif()
 
     if (CMAKE_C_COMPILER_ID STREQUAL "Clang" OR
         CMAKE_C_COMPILER_ID STREQUAL "AppleClang")
@@ -187,11 +206,11 @@ else ()
         target_compile_options(${PROJECT_NAME}_config_public INTERFACE -pthread)
     endif ()
 
-    if (ENABLE_SSP)
+    if (ENABLE_SSP AND NOT MINGW)
         target_compile_options(${PROJECT_NAME}_config_private INTERFACE -fstack-protector-all)
     endif ()
 
-    if (ENABLE_PIE)
+    if (ENABLE_PIE AND NOT MINGW)
         target_compile_options(${PROJECT_NAME}_config_private INTERFACE -fPIE)
     endif ()
 
