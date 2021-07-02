@@ -15,10 +15,17 @@ We hope that they will make both forwards and backwards compatibility easier.
 
 ## The Guidelines
 
-- We always use `cmake_parse_arguments()` rather than function parameters,
-  or referring to `${ARG<N>}`.
-  - This doesn't need to be followed for "script-local helper functions"
-  - Exception: exclusively positional parameters, like out variables.
+- Except for out-parameters, we always use `cmake_parse_arguments()`
+  rather than function parameters or referring to `${ARG<N>}`.
+  - Out-parameters should be the first parameter to a function. Example:
+  ```cmake
+  function(format out_var)
+    cmake_parse_arguments(PARSE_ARGV 1 "arg" ...)
+    # ... set(buffer "output")
+    set("${out_var}" "${buffer}" PARENT_SCOPE)
+  endfunction()
+  ```
+  - This doesn't necessarily need to be followed for "script-local helper functions"
     - In this case, positional parameters should be put in the function
       declaration (rather than using `${ARG<N>}`),
       and should be named according to local rules (i.e. `snake_case`).
@@ -33,6 +40,8 @@ We hope that they will make both forwards and backwards compatibility easier.
   except in helpful messages to the user.
   - (i.e., `message(FATAL_ERROR "blah was passed extra arguments: ${ARGN}")`)
 - We always use functions, not macros or top level code.
+  - Exception: "script-local helper macros". It is sometimes helpful to define a small macro.
+    This should be done sparingly, and functions should be preferred.
   - Exception: `vcpkg.cmake`'s `find_package`.
 - Scripts in the scripts tree should not be expected to need observable changes
   as part of normal operation.
@@ -42,7 +51,7 @@ We hope that they will make both forwards and backwards compatibility easier.
   except those which are intended to be passed as multiple arguments.
   - Example:
   ```cmake
-  set(working_directory)
+  set(working_directory "")
   if(DEFINED arg_WORKING_DIRECTORY)
     set(working_directory "WORKING_DIRECTORY" "${arg_WORKING_DIRECTORY}")
   endif()
@@ -50,22 +59,24 @@ We hope that they will make both forwards and backwards compatibility easier.
   # else calls do_the_thing(WORKING_DIRECTORY "${arg_WORKING_DIRECTORY}")
   do_the_thing(${working_directory})
   ```
-- There are no "pointer" parameters
-  (where a user passes a variable name rather than the contents)
-  except for out parameters.
-- Variables are not assumed to be empty. If the variable is intended to be used locally, it must be explicitly initialized to empty with `set(FOO "")`.
+- There are no "pointer" or "in-out" parameters
+  (where a user passes a variable name rather than the contents),
+  except for simple out-parameters.
+- Variables are not assumed to be empty.
+  If the variable is intended to be used locally,
+  it must be explicitly initialized to empty with `set(foo "")`.
 - All variables expected to be inherited from the parent scope across an API boundary (i.e. not a file-local function) should be documented. Note that all variables mentioned in triplets.md are considered documented.
-- Out parameters are only set in `PARENT_SCOPE`.
-- `CACHE` variables are not used.
-  - Exception: internal global variables to avoid duplicating work.
+- Out parameters are only set in `PARENT_SCOPE`, and are never read.
+- `CACHE` variables are used only for global variables which are shared among functions,
+  and for internal state to avoid duplicating work.
 - `include()`s are only allowed in `ports.cmake` or `vcpkg-port-config.cmake`.
 - `foreach(RANGE)`'s arguments _must always be_ natural numbers,
   and `<start>` _must always be_ less than or equal to `<stop>`.
-  - This must be checked if necessary.
+  - This must be checked.
 - All port-based scripts must use `include_guard(GLOBAL)`
   to avoid being included multiple times.
-- `set(VAR )` should not be used. Use `unset(VAR)` to unset a variable,
-  and `set(VAR "")` to set it to the empty value. _Note: this works for use as a list and as a string_
+- `set(var)` should not be used. Use `unset(var)` to unset a variable,
+  and `set(var "")` to set it to the empty value. _Note: this works for use as a list and as a string_
 
 ### CMake Versions to Require
 
