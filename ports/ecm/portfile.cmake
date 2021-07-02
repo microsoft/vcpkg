@@ -1,11 +1,9 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO KDE/extra-cmake-modules
-    REF v5.75.0
-    SHA512 486845a91967c89dec42f9120757c7b883006713d0957e9bd21dfacb2911225fe45680590ef3dc5e0d45a9dbc81cf99e1514fb4922b1a027bcba3864da883076
+    REF v5.81.0
+    SHA512 562e99f3368ec5c834dbcbfb055c06da3e3302ac8e03d5d71be9f2fc682bbb02836c009c41777a7f90e4d6d3a4b13412aea29fdba985588b7d59e2dc59c9beb2
     HEAD_REF master
-    PATCHES
-        "do-not-override-custom-clang-format-files.patch"
 )
 
 vcpkg_configure_cmake(
