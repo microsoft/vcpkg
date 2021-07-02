@@ -20,7 +20,7 @@ vcpkg_extract_source_archive(<out-var>
     [NO_REMOVE_ONE_LEVEL]
     [PATCHES <patch>...]
     [SOURCE_BASE <base>]
-    [BASE_DIRECTORY <relative-path>]
+    [BASE_DIRECTORY <relative-path> | WORKING_DIRECTORY <absolute-path>]
 )
 ```
 
@@ -67,6 +67,8 @@ to allow for a user to modify the sources.
 and `source-base` defaults to the stem of `<archive>`.
 You can change these via the `BASE_DIRECTORY` and `SOURCE_BASE` arguments
 respectively.
+If you need to extract to a location that is not based in `CURRENT_BUILDTREES_DIR`,
+you can use the `WORKING_DIRECTORY` argument to do the same.
 
 ## Examples
 
@@ -116,21 +118,7 @@ function(vcpkg_extract_source_archive)
         "PATCHES"
     )
 
-    if(DEFINED arg_WORKING_DIRECTORY)
-        if(NOT arg_Z_ALLOW_OLD_PARAMETER_NAMES)
-            message(FATAL_ERROR "Unexpected argument WORKING_DIRECTORY")
-        elseif(DEFINED arg_BASE_DIRECTORY)
-            message(FATAL_ERROR "Cannot specify both BASE_DIRECTORY and WORKING_DIRECTORY")
-        else()
-            cmake_path(IS_PREFIX CURRENT_BUILDTREES_DIR "${arg_WORKING_DIRECTORY}" NORMALIZE is_prefix)
-            if(NOT is_prefix)
-                message(FATAL_ERROR "WORKING_DIRECTORY must be located under CURRENT_BUILDTREES_DIR:
-        WORKING_DIRECTORY     : ${arg_WORKING_DIRECTORY}
-        CURRENT_BUILDTREES_DIR: ${CURRENT_BUILDTRESS_DIR}")
-            endif()
-            cmake_path(RELATIVE_PATH arg_BASE_DIRECTORY BASE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
-        endif()
-    elseif(DEFINED arg_REF)
+    if(DEFINED arg_REF)
         if(NOT arg_Z_ALLOW_OLD_PARAMETER_NAMES)
             message(FATAL_ERROR "Unexpected argument REF")
         elseif(DEFINED arg_SOURCE_BASE)
@@ -147,11 +135,23 @@ function(vcpkg_extract_source_archive)
         message(FATAL_ERROR "ARCHIVE must be specified")
     endif()
 
-    if(NOT DEFINED arg_BASE_DIRECTORY)
-        set(arg_BASE_DIRECTORY "src")
-    elseif(IS_ABSOLUTE arg_BASE_DIRECTORY)
-        message(FATAL_ERROR "BASE_DIRECTORY (${arg_BASE_DIRECTORY}) must be a relative path")
+    if(DEFINED arg_WORKING_DIRECTORY)
+        if(DEFINED arg_BASE_DIRECTORY)
+            message(FATAL_ERROR "Cannot specify both BASE_DIRECTORY and WORKING_DIRECTORY")
+        elseif(NOT IS_ABSOLUTE "${arg_WORKING_DIRECTORY}")
+            message(FATAL_ERROR "WORKING_DIRECTORY (${arg_WORKING_DIRECTORY}) must be an absolute path")
+        endif()
+        set(working_directory "${arg_WORKING_DIRECTORY}")
+    else()
+        if(NOT DEFINED arg_BASE_DIRECTORY)
+            set(arg_BASE_DIRECTORY "src")
+        elseif(IS_ABSOLUTE arg_BASE_DIRECTORY)
+            message(FATAL_ERROR "BASE_DIRECTORY (${arg_BASE_DIRECTORY}) must be a relative path")
+        endif()
+        cmake_path(APPEND CURRENT_BUILDTREES_DIR "${arg_BASE_DIRECTORY}"
+            OUTPUT_VARIABLE working_directory)
     endif()
+
     if(NOT DEFINED arg_SOURCE_BASE)
         cmake_path(GET arg_ARCHIVE STEM arg_SOURCE_BASE)
     elseif(arg_SOURCE_BASE MATCHES [[\\|/]])
@@ -182,8 +182,7 @@ function(vcpkg_extract_source_archive)
 
     string(SHA512 patchset_hash "${patchset_hash}")
     string(SUBSTRING "${patchset_hash}" 0 10 patchset_hash)
-    cmake_path(APPEND CURRENT_BUILDTREES_DIR 
-        "${arg_BASE_DIRECTORY}" "${arg_SOURCE_BASE}-${patchset_hash}"
+    cmake_path(APPEND working_directory "${arg_SOURCE_BASE}-${patchset_hash}"
         OUTPUT_VARIABLE source_path
     )
 
