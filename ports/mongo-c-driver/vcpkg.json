@@ -27,6 +27,12 @@
       "dependencies": [
         "snappy"
       ]
+    },
+    "zstd": {
+      "description": "Enables zstd compressor support",
+      "dependencies": [
+        "zstd"
+      ]
     }
   }
 }

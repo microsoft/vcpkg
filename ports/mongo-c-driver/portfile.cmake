@@ -9,12 +9,14 @@ vcpkg_from_github(
         fix-dependency-libbson.patch
         disable-static-when-dynamic-build.patch
         fix-arm-build.patch
+        fix-dependencies.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
         "snappy" ENABLE_SNAPPY
         "icu"    ENABLE_ICU
+        "zstd"   ENABLE_ZSTD
 )
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
@@ -46,6 +48,7 @@ file(WRITE "${BUILD_VERSION}" ${SOURCE_PATH}/VERSION_CURRENT)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DBSON_ROOT_DIR=${CURRENT_INSTALLED_DIR}
         -DENABLE_MONGOC=ON
