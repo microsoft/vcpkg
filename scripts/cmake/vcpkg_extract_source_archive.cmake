@@ -111,10 +111,35 @@ function(vcpkg_extract_source_archive)
 
     set(out_source_path "${ARGV0}")
     cmake_parse_arguments(PARSE_ARGV 1 "arg"
-        "NO_REMOVE_ONE_LEVEL;Z_SKIP_PATCH_CHECK"
-        "ARCHIVE;SOURCE_BASE;BASE_DIRECTORY"
+        "NO_REMOVE_ONE_LEVEL;SKIP_PATCH_CHECK;Z_ALLOW_OLD_PARAMETER_NAMES"
+        "ARCHIVE;SOURCE_BASE;BASE_DIRECTORY;WORKING_DIRECTORY;REF"
         "PATCHES"
     )
+
+    if(DEFINED arg_WORKING_DIRECTORY)
+        if(NOT arg_Z_ALLOW_OLD_PARAMETER_NAMES)
+            message(FATAL_ERROR "Unexpected argument WORKING_DIRECTORY")
+        elseif(DEFINED arg_BASE_DIRECTORY)
+            message(FATAL_ERROR "Cannot specify both BASE_DIRECTORY and WORKING_DIRECTORY")
+        else()
+            cmake_path(IS_PREFIX CURRENT_BUILDTREES_DIR "${arg_WORKING_DIRECTORY}" NORMALIZE is_prefix)
+            if(NOT is_prefix)
+                message(FATAL_ERROR "WORKING_DIRECTORY must be located under CURRENT_BUILDTREES_DIR:
+        WORKING_DIRECTORY     : ${arg_WORKING_DIRECTORY}
+        CURRENT_BUILDTREES_DIR: ${CURRENT_BUILDTRESS_DIR}")
+            endif()
+            cmake_path(RELATIVE_PATH arg_BASE_DIRECTORY BASE_DIRECTORY "${CURRENT_BUILDTREES_DIR}")
+        endif()
+    elseif(DEFINED arg_REF)
+        if(NOT arg_Z_ALLOW_OLD_PARAMETER_NAMES)
+            message(FATAL_ERROR "Unexpected argument REF")
+        elseif(DEFINED arg_SOURCE_BASE)
+            message(FATAL_ERROR "Cannot specify both REF and SOURCE_BASE")
+        else()
+            string(REPLACE "/" "-" arg_SOURCE_BASE "${arg_REF}")
+        endif()
+    endif()
+
     if(DEFINED arg_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
@@ -125,12 +150,12 @@ function(vcpkg_extract_source_archive)
     if(NOT DEFINED arg_BASE_DIRECTORY)
         set(arg_BASE_DIRECTORY "src")
     elseif(IS_ABSOLUTE arg_BASE_DIRECTORY)
-        message(FATAL_ERROR "BASE_DIRECTORY (${arg_BASE_DIRECTORY}) must be a relative path.")
+        message(FATAL_ERROR "BASE_DIRECTORY (${arg_BASE_DIRECTORY}) must be a relative path")
     endif()
     if(NOT DEFINED arg_SOURCE_BASE)
         cmake_path(GET arg_ARCHIVE STEM arg_SOURCE_BASE)
     elseif(arg_SOURCE_BASE MATCHES [[\\|/]])
-        message(FATAL_ERROR "SOURCE_BASE (${arg_SOURCE_BASE}) must not contain slashes.")
+        message(FATAL_ERROR "SOURCE_BASE (${arg_SOURCE_BASE}) must not contain slashes")
     endif()
 
     # Take the last 10 chars of the base
