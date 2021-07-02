@@ -2,8 +2,8 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mathisloge/mapnik
-    REF 7f2511632faa81c7d93373fa5a858c066fd193f8
-    SHA512 511483da16d890d5b807372011f0daf2db205c94dfddfb937c3531f7344694d42c9c237cf34170a89f436e39ca4e9f4e4f7981ee42ba541801289d5417421384
+    REF 7231d06a4642030bcb90c19b6989d75195e17a02
+    SHA512 af5014c23db0b5350a0b67210a124e81ce3a75731a0219579a622b2c053e9a1ef8a868358bfbe2c2f46edc24232bcba96b97d39998540bd35eabffe60c2f9af6
     HEAD_REF master
     PATCHES
       "use-proj4.patch"
@@ -50,7 +50,6 @@ vcpkg_configure_cmake(
         -DCOPY_LIBRARIES_FOR_EXECUTABLES=OFF
         -DCOPY_FONTS_AND_PLUGINS_FOR_EXECUTABLES=OFF
         -DINSTALL_DEPENDENCIES=OFF
-        -FONTS_INSTALL_DIR=bin/mapnik/fonts
         -DBUILD_SHARED_LIBS=ON
         -DBUILD_TEST=OFF
         -DBUILD_BENCHMARK=OFF
@@ -59,6 +58,7 @@ vcpkg_configure_cmake(
         -DUSE_EXTERNAL_MAPBOX_PROTOZERO=ON
         -DUSE_EXTERNAL_MAPBOX_VARIANT=ON
         -DINSTALL_CMAKE_DIR=share/${PORT}/cmake
+        -DFONTS_INSTALL_DIR=share/${PORT}/fonts
 )
 
 vcpkg_install_cmake()
