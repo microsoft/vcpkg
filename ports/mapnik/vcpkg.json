@@ -10,6 +10,7 @@
     "boost-filesystem",
     "boost-geometry",
     "boost-gil",
+    "boost-interprocess",
     {
       "name": "boost-locale",
       "features": [
