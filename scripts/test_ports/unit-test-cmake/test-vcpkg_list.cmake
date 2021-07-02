@@ -61,6 +61,9 @@ unit_test_check_variable_equal(
 )
 
 # vcpkg_list(GET <list> <element-index> <out-var>)
+set(lst [[]])
+unit_test_ensure_fatal_error([[vcpkg_list(GET lst 0 out)]])
+
 set(lst [[a]])
 unit_test_check_variable_equal(
     [[vcpkg_list(GET lst 0 out)]]
@@ -70,6 +73,8 @@ unit_test_check_variable_equal(
     [[vcpkg_list(GET lst -1 out)]]
     out [[a]]
 )
+unit_test_ensure_fatal_error([[vcpkg_list(GET lst 2 out)]])
+unit_test_ensure_fatal_error([[vcpkg_list(GET lst -2 out)]])
 
 set(lst [[;b]])
 unit_test_check_variable_equal(
@@ -152,6 +157,11 @@ unit_test_check_variable_equal(
     [[vcpkg_list(SUBLIST lst 0 0 out)]]
     out [[]]
 )
+unit_test_check_variable_equal(
+    [[vcpkg_list(SUBLIST lst 0 1 out)]]
+    out [[]]
+)
+unit_test_ensure_fatal_error([[vcpkg_list(SUBLIST lst 1 0 out)]])
 
 set(lst [[a]])
 unit_test_check_variable_equal(
@@ -162,6 +172,8 @@ unit_test_check_variable_equal(
     [[vcpkg_list(SUBLIST lst 0 1 out)]]
     out [[a]]
 )
+unit_test_ensure_fatal_error([[vcpkg_list(SUBLIST lst 2 0 out)]])
+unit_test_ensure_fatal_error([[vcpkg_list(SUBLIST lst 2 1 out)]])
 
 set(lst [[;;]])
 unit_test_check_variable_equal(
@@ -380,6 +392,8 @@ unit_test_check_variable_equal(
     [[vcpkg_list(INSERT lst 0 "a")]]
     lst "a"
 )
+unit_test_ensure_fatal_error([[vcpkg_list(INSERT lst 1 "")]])
+unit_test_ensure_fatal_error([[vcpkg_list(INSERT lst -1 "")]])
 
 set(lst ";")
 unit_test_check_variable_equal(
@@ -410,6 +424,12 @@ unit_test_check_variable_equal(
     [[vcpkg_list(INSERT lst -1 "b;c" d)]]
     lst [[;b\;c;d;]]
 )
+unit_test_check_variable_equal(
+    [[vcpkg_list(INSERT lst -2 "b;c" d)]]
+    lst [[b\;c;d;;]]
+)
+unit_test_ensure_fatal_error([[vcpkg_list(INSERT lst 3 "")]])
+unit_test_ensure_fatal_error([[vcpkg_list(INSERT lst -3 "")]])
 
 set(lst "a;b")
 unit_test_check_variable_equal(
@@ -434,6 +454,12 @@ unit_test_check_variable_equal(
 )
 
 # vcpkg_list(POP_BACK <list>)
+set(lst "")
+unit_test_check_variable_equal(
+    [[vcpkg_list(POP_BACK lst)]]
+    lst ""
+)
+
 set(lst ";")
 unit_test_check_variable_equal(
     [[vcpkg_list(POP_BACK lst)]]
@@ -465,6 +491,12 @@ unit_test_check_variable_equal(
 )
 
 # vcpkg_list(POP_FRONT <list>)
+set(lst "")
+unit_test_check_variable_equal(
+    [[vcpkg_list(POP_BACK lst)]]
+    lst ""
+)
+
 set(lst ";")
 unit_test_check_variable_equal(
     [[vcpkg_list(POP_FRONT lst)]]
@@ -545,6 +577,11 @@ unit_test_check_variable_equal(
 )
 
 # vcpkg_list(REVERSE <list>)
+set(lst "")
+unit_test_check_variable_equal(
+    [[vcpkg_list(REVERSE lst)]]
+    lst ""
+)
 set(lst ";")
 unit_test_check_variable_equal(
     [[vcpkg_list(REVERSE lst)]]
@@ -573,6 +610,12 @@ unit_test_check_variable_equal(
 )
 
 # vcpkg_list(REMOVE_ITEM <list> <value>)
+set(lst "")
+unit_test_check_variable_equal(
+    [[vcpkg_list(REMOVE_ITEM lst "a")]]
+    lst ""
+)
+
 set(lst ";")
 unit_test_check_variable_equal(
     [[vcpkg_list(REMOVE_ITEM lst "")]]
@@ -638,6 +681,9 @@ unit_test_check_variable_equal(
 )
 
 # vcpkg_list(REMOVE_AT <list> <index>)
+set(lst "")
+unit_test_ensure_fatal_error([[vcpkg_list(REMOVE_AT lst 0)]])
+
 set(lst ";")
 unit_test_check_variable_equal(
     [[vcpkg_list(REMOVE_AT lst 0)]]
@@ -651,6 +697,12 @@ unit_test_check_variable_equal(
     [[vcpkg_list(REMOVE_AT lst -1)]]
     lst ""
 )
+unit_test_check_variable_equal(
+    [[vcpkg_list(REMOVE_AT lst -2)]]
+    lst ""
+)
+unit_test_ensure_fatal_error([[vcpkg_list(REMOVE_AT lst 2)]])
+unit_test_ensure_fatal_error([[vcpkg_list(REMOVE_AT lst -3)]])
 
 set(lst "a;b")
 unit_test_check_variable_equal(

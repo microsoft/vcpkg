@@ -45,7 +45,7 @@ macro(z_vcpkg_function_arguments OUT_VAR)
 
     math(EXPR z_vcpkg_function_arguments_LAST_ARG "${z_vcpkg_function_arguments_ARGC} - 1")
     # GREATER_EQUAL added in CMake 3.7
-    if(z_vcpkg_function_arguments_FIRST_ARG LESS z_vcpkg_function_arguments_LAST_ARG)
+    if(NOT z_vcpkg_function_arguments_LAST_ARG LESS z_vcpkg_function_arguments_FIRST_ARG)
         foreach(z_vcpkg_function_arguments_N RANGE "${z_vcpkg_function_arguments_FIRST_ARG}" "${z_vcpkg_function_arguments_LAST_ARG}")
             string(REPLACE ";" "\\;" z_vcpkg_function_arguments_ESCAPED_ARG "${ARGV${z_vcpkg_function_arguments_N}}")
             # adds an extra ";" on the front
