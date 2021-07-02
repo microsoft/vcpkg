@@ -59,8 +59,11 @@ endfunction()
 
 set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
 
-if("vcpkg-list" IN_LIST FEATURES)
+if("list" IN_LIST FEATURES)
     include("${CMAKE_CURRENT_LIST_DIR}/test-vcpkg_list.cmake")
+endif()
+if("function-arguments" IN_LIST FEATURES)
+    include("${CMAKE_CURRENT_LIST_DIR}/test-z_vcpkg_function_arguments.cmake")
 endif()
 
 if(Z_VCPKG_UNIT_TEST_HAS_ERROR)

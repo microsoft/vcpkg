@@ -32,6 +32,12 @@ macro(z_vcpkg_function_arguments OUT_VAR)
         set(z_vcpkg_function_arguments_FIRST_ARG 0)
     elseif("${ARGC}" EQUAL 2)
         set(z_vcpkg_function_arguments_FIRST_ARG "${ARGV1}")
+
+        if(NOT z_vcpkg_function_arguments_FIRST_ARG GREATER_EQUAL "0" AND NOT z_vcpkg_function_arguments_FIRST_ARG LESS "0")
+            message(FATAL_ERROR "z_vcpkg_function_arguments: index (${z_vcpkg_function_arguments_FIRST_ARG}) is not a number")
+        elseif(z_vcpkg_function_arguments_FIRST_ARG LESS "0" OR z_vcpkg_function_arguments_FIRST_ARG GREATER ARGC)
+            message(FATAL_ERROR "z_vcpkg_function_arguments: index (${z_vcpkg_function_arguments_FIRST_ARG}) out of range")
+        endif()
     else()
         # vcpkg bug
         message(FATAL_ERROR "z_vcpkg_function_arguments: invalid arguments (${ARGV})")
