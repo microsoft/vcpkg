@@ -1,30 +1,30 @@
 # vcpkg_list(SET <list> <elements>...)
 unit_test_check_variable_equal(
     [[vcpkg_list(SET lst)]]
-    lst [[]]
+    lst ""
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(SET lst "")]]
-    lst [[]]
+    lst ""
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(SET lst "" "")]]
-    lst [[;]]
+    lst ";"
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(SET lst a)]]
-    lst [[a]]
+    lst "a"
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(SET lst a b)]]
-    lst [[a;b]]
+    lst "a;b"
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(SET lst "a;b")]]
     lst [[a\;b]]
 )
 unit_test_check_variable_equal(
-    [[vcpkg_list(SET lst "a;b" "c" "d\;e")]]
+    [=[vcpkg_list(SET lst "a;b" "c" [[d\;e]])]=]
     lst [[a\;b;c;d\\;e]]
 )
 
@@ -61,55 +61,55 @@ unit_test_check_variable_equal(
 )
 
 # vcpkg_list(GET <list> <element-index> <out-var>)
-set(lst [[]])
+set(lst "")
 unit_test_ensure_fatal_error([[vcpkg_list(GET lst 0 out)]])
 
-set(lst [[a]])
+set(lst "a")
 unit_test_check_variable_equal(
     [[vcpkg_list(GET lst 0 out)]]
-    out [[a]]
+    out "a"
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(GET lst -1 out)]]
-    out [[a]]
+    out "a"
 )
 unit_test_ensure_fatal_error([[vcpkg_list(GET lst 2 out)]])
 unit_test_ensure_fatal_error([[vcpkg_list(GET lst -2 out)]])
 
-set(lst [[;b]])
+set(lst ";b")
 unit_test_check_variable_equal(
     [[vcpkg_list(GET lst 0 out)]]
-    out [[]]
+    out ""
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(GET lst -1 out)]]
-    out [[b]]
+    out "b"
 )
 
-set(lst [[a;b]])
+set(lst "a;b")
 unit_test_check_variable_equal(
     [[vcpkg_list(GET lst 0 out)]]
-    out [[a]]
+    out "a"
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(GET lst -1 out)]]
-    out [[b]]
+    out "b"
 )
 
 set(lst [[a\;b;c]])
 unit_test_check_variable_equal(
     [[vcpkg_list(GET lst 0 out)]]
-    out [[a;b]]
+    out "a;b"
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(GET lst -1 out)]]
-    out [[c]]
+    out "c"
 )
 
 set(lst [[a;b\;c;d\\;e]])
 unit_test_check_variable_equal(
     [[vcpkg_list(GET lst 1 out)]]
-    out [[b;c]]
+    out "b;c"
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(GET lst -1 out)]]
@@ -117,22 +117,22 @@ unit_test_check_variable_equal(
 )
 
 # vcpkg_list(JOIN <list> <glue> <out-var>)
-set(lst [[]])
+set(lst "")
 unit_test_check_variable_equal(
     [[vcpkg_list(JOIN lst "-" out)]]
-    out [[]]
+    out ""
 )
 
-set(lst [[a]])
+set(lst "a")
 unit_test_check_variable_equal(
     [[vcpkg_list(JOIN lst "-" out)]]
-    out [[a]]
+    out "a"
 )
 
-set(lst [[;]])
+set(lst ";")
 unit_test_check_variable_equal(
     [[vcpkg_list(JOIN lst "-" out)]]
-    out [[-]]
+    out "-"
 )
 
 set(lst [[a;b]])
@@ -152,51 +152,51 @@ unit_test_check_variable_equal(
 )
 
 # vcpkg_list(SUBLIST <list> <begin> <length> <out-var>)
-set(lst [[]])
+set(lst "")
 unit_test_check_variable_equal(
     [[vcpkg_list(SUBLIST lst 0 0 out)]]
-    out [[]]
+    out ""
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(SUBLIST lst 0 1 out)]]
-    out [[]]
+    out ""
 )
 unit_test_ensure_fatal_error([[vcpkg_list(SUBLIST lst 1 0 out)]])
 
-set(lst [[a]])
+set(lst "a")
 unit_test_check_variable_equal(
     [[vcpkg_list(SUBLIST lst 0 0 out)]]
-    out [[]]
+    out ""
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(SUBLIST lst 0 1 out)]]
-    out [[a]]
+    out "a"
 )
 unit_test_ensure_fatal_error([[vcpkg_list(SUBLIST lst 2 0 out)]])
 unit_test_ensure_fatal_error([[vcpkg_list(SUBLIST lst 2 1 out)]])
 
-set(lst [[;;]])
+set(lst ";;")
 unit_test_check_variable_equal(
     [[vcpkg_list(SUBLIST lst 0 0 out)]]
-    out [[]]
+    out ""
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(SUBLIST lst 0 1 out)]]
-    out [[]]
+    out ""
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(SUBLIST lst 0 2 out)]]
-    out [[;]]
+    out ";"
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(SUBLIST lst 0 3 out)]]
-    out [[;;]]
+    out ";;"
 )
 
-set(lst [[a;b;c;d]])
+set(lst "a;b;c;d")
 unit_test_check_variable_equal(
     [[vcpkg_list(SUBLIST lst 1 2 out)]]
-    out [[b;c]]
+    out "b;c"
 )
 
 set(lst [[a\;b;c\;d;e]])
@@ -212,21 +212,21 @@ unit_test_check_variable_equal(
 )
 
 # vcpkg_list(FIND <list> <value> <out-var>)
-set(lst [[]])
+set(lst "")
 unit_test_check_variable_equal(
-    [[vcpkg_list(FIND lst a out)]]
+    [[vcpkg_list(FIND lst "a" out)]]
     out -1
 )
 
-set(lst [[b]])
+set(lst "b")
 unit_test_check_variable_equal(
-    [[vcpkg_list(FIND lst a out)]]
+    [[vcpkg_list(FIND lst "a" out)]]
     out -1
 )
 
-set(lst [[a;b]])
+set(lst "a;b")
 unit_test_check_variable_equal(
-    [[vcpkg_list(FIND lst a out)]]
+    [[vcpkg_list(FIND lst "a" out)]]
     out 0
 )
 unit_test_check_variable_equal(
@@ -234,7 +234,7 @@ unit_test_check_variable_equal(
     out 1
 )
 
-set(lst [[;b]])
+set(lst ";b")
 unit_test_check_variable_equal(
     [[vcpkg_list(FIND lst "" out)]]
     out 0
@@ -260,7 +260,7 @@ unit_test_check_variable_equal(
 
 set(lst [[a\\;b;c]])
 unit_test_check_variable_equal(
-    [[vcpkg_list(FIND lst "a\\;b" out)]]
+    [=[vcpkg_list(FIND lst [[a\;b]] out)]=]
     out 0
 )
 
@@ -268,7 +268,7 @@ unit_test_check_variable_equal(
 set(lst "")
 unit_test_check_variable_equal(
     [[vcpkg_list(APPEND lst)]]
-    lst ""
+    lst [[]]
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(APPEND lst "")]]
