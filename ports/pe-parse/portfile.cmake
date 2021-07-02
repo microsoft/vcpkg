@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO trailofbits/pe-parse
-    REF v1.2.0
-    SHA512 916ec515585ba1e83e2c6ae29667fd25bd4cac90c39e587ae6847dc9d503186e8853bd80f4e2a99177a3214f5c51eceff85fa610cadbc2bc1d3a79251e8ce942
+    REF ff4f8449bf9a04710507b75e6dcef6f156f2ec4c   #v1.3.0
+    SHA512 4687e0ffdb84537fa9a2a78a4584d0f8e7cd39ea797d7bbdff2aa40e80e1f87f4230fba0e30c662062a98db6d70f08c524f0203aa86d00bc02088d432b7eacc5
     HEAD_REF master
 )
 
