@@ -38,20 +38,23 @@ vcpkg_configure_cmake(
         -DWITH_UNITTEST=OFF
         -DWITH_CURL=OFF
         -DWITH_SSL=${WITH_SSL}
+        -DINSTALL_PLUGINDIR=plugin/${PORT}
 )
 
 vcpkg_install_cmake()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH share/unofficial-libmariadb TARGET_PATH share/unofficial-libmariadb)
 
+vcpkg_fixup_pkgconfig()
+
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     # remove debug header
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 endif()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-endif()
+#if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
+#    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+#endif()
 
 if(VCPKG_BUILD_TYPE STREQUAL "debug")
     # move headers
