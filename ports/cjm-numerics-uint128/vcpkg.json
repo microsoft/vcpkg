@@ -2,9 +2,8 @@
   "name": "cjm-numerics-uint128",
   "version-string": "1.0.0.0",
   "description": [
-      "a header-only library for C++ 20 that provides an unsigned 128-bit integer.",
-      "This library provides constexpr support for most operations but uses std::is_constant_evaluated to ensure that a more efficient operation, if available, is used during runtime execution.  This uint128 type can serve as the basic building block for future fixed-but-extended-precision integral and rational types."
+    "a header-only library for C++ 20 that provides an unsigned 128-bit integer.",
+    "This library provides constexpr support for most operations but uses std::is_constant_evaluated to ensure that a more efficient operation, if available, is used during runtime execution.  This uint128 type can serve as the basic building block for future fixed-but-extended-precision integral and rational types."
   ],
   "homepage": "https://github.com/cpsusie/cjm-numerics"
-
 }
