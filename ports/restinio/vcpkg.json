@@ -1,0 +1,12 @@
+{
+  "name": "restinio",
+  "version-string": "0.6.13",
+  "description": "A header-only C++14 library that gives you an embedded HTTP/Websocket server targeted primarily for asynchronous processing of HTTP-requests.",
+  "homepage": "https://github.com/Stiffstream/restinio",
+  "license": "BSD-3-Clause",
+  "dependencies": [
+    "asio",
+    "fmt",
+    "http-parser"
+  ]
+}

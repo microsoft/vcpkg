@@ -1,0 +1,7 @@
+{
+  "name": "lv2",
+  "version-string": "1.18.0",
+  "description": "LV2 is a plugin standard for audio systems. It defines a minimal yet extensible C API for plugin code and a format for plugin \"bundles\".",
+  "homepage": "https://lv2plug.in",
+  "license": "ISC"
+}

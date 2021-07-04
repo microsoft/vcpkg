@@ -8,7 +8,7 @@ index d6c4388..75b96c3 100644
              -lx264)               echo libx264.lib ;;
 +            -lx265)               echo libx265.lib ;;
 +            -lmp3lame)            echo libmp3lame.lib ;;
-+            -liconv)              echo libiconv.lib ;;
++            -liconv)              echo iconv.lib ;;
 +            -lm)                  ;;
              -lstdc++)             ;;
              -l*)                  echo ${flag#-l}.lib ;;

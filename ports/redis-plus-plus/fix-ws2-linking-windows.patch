@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 452cc0f..90932ce 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -148,6 +148,7 @@ if(REDIS_PLUS_PLUS_BUILD_SHARED)
+         target_compile_definitions(${SHARED_LIB} PRIVATE NOMINMAX)
+         set_target_properties(${SHARED_LIB} PROPERTIES CXX_STANDARD ${REDIS_PLUS_PLUS_CXX_STANDARD})
+         set_target_properties(${SHARED_LIB} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
++        target_link_libraries(${SHARED_LIB} PUBLIC Ws2_32.lib)
+     else()
+         target_compile_options(${SHARED_LIB} PRIVATE "-Wall" "-W" "-Werror")
+     endif()

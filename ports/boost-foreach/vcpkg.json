@@ -1,0 +1,17 @@
+{
+  "name": "boost-foreach",
+  "version-string": "1.75.0",
+  "description": "Boost foreach module",
+  "homepage": "https://github.com/boostorg/foreach",
+  "dependencies": [
+    "boost-config",
+    "boost-core",
+    "boost-detail",
+    "boost-iterator",
+    "boost-mpl",
+    "boost-range",
+    "boost-type-traits",
+    "boost-utility",
+    "boost-vcpkg-helpers"
+  ]
+}

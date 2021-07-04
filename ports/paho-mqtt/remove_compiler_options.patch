@@ -1,9 +1,9 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index be8d2e8..418e2f2 100644
+index 531c39c..3df385a 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -37,7 +37,7 @@ STRING(TIMESTAMP BUILD_TIMESTAMP UTC)
- MESSAGE(STATUS "Timestamp is ${BUILD_TIMESTAMP}")
+@@ -41,7 +41,7 @@ IF (PAHO_HIGH_PERFORMANCE)
+ ENDIF()
  
  IF(WIN32)
 -  ADD_DEFINITIONS(-D_CRT_SECURE_NO_DEPRECATE -DWIN32_LEAN_AND_MEAN -MD)

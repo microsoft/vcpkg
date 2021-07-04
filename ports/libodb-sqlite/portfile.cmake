@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_download_distfile(ARCHIVE
     URLS "http://www.codesynthesis.com/download/odb/2.4/libodb-sqlite-2.4.0.tar.gz"
     FILENAME "libodb-sqlite-2.4.0.tar.gz"

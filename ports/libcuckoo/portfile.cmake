@@ -1,12 +1,10 @@
 # Header-only library
 
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO efficient/libcuckoo
-    REF f3138045810b2c2e9b59dbede296b4a5194af4f9
-    SHA512 b1682b7175b2a7fd22c34cbaf9770f2f1bfb3f0d1be046338a8a489c302f0434ca1cbf2ffe5845e09aba132b0be6a1d6472b66b4518bb172b82af93a9d27cd21
+    REF 8785773896d74f72b6224e59d37f5f8c3c1e022a
+    SHA512 e47f8fd132ee2acf347ee375759f96235cd090fdb825792f994ff5eb4d8fed55b8e8bea8d293ec96c1a5f1b46d19c6648eaf2482e482b7b9c0d6dc734bc2121d
     HEAD_REF master
 )
 
@@ -29,6 +27,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-#vcpkg_test_cmake(PACKAGE_NAME ${PORT})

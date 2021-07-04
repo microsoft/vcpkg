@@ -26,7 +26,7 @@ install(TARGETS gpPanel EXPORT gpPanel-config
 
 install(EXPORT gpPanel-config DESTINATION share/cmake/gpPanel)
 
-foreach (HEADER ${HEADERS} )
+foreach(HEADER ${HEADERS})
     get_filename_component(HEADER_DIR ${HEADER} DIRECTORY)
     install(FILES include/${HEADER} DESTINATION include/gpPanel/${HEADER_DIR})
 endforeach()

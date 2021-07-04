@@ -1,0 +1,29 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f23dd5a..fd9e8ed 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -315,11 +315,12 @@ ENDIF(CMAKE_COMPILER_IS_GNUCXX)
+ FIND_PACKAGE(ZLIB REQUIRED)
+ MESSAGE("Found zlib headers in ${ZLIB_INCLUDE_DIR}, library at ${ZLIB_LIBRARIES}")
+ 
+-FIND_PACKAGE(LIBCRYPTO)
++FIND_PACKAGE(OpenSSL)
+ 
+-IF(LIBCRYPTO_FOUND)
++IF(OpenSSL_FOUND)
+ 	SET(PODOFO_HAVE_OPENSSL TRUE)
+-	INCLUDE_DIRECTORIES(${LIBCRYPTO_INCLUDE_DIR})
++    LIST(APPEND OPENSSL_LIBRARIES OpenSSL::SSL OpenSSL::Crypto)
++    ADD_DEFINITIONS(-DPODOFO_HAVE_OPENSSL_1_1)
+ 	MESSAGE("Found OpenSSL's libCrypto headers in ${LIBCRYPTO_INCLUDE_DIR}, library at ${LIBCRYPTO_LIBRARIES}")
+ ELSE(LIBCRYPTO_FOUND)
+ 	MESSAGE("OpenSSL's libCrypto not found. Encryption support will be disabled")
+@@ -396,8 +397,6 @@ ENDIF(CppUnit_FOUND)
+ 
+ ENDIF(NOT PODOFO_BUILD_LIB_ONLY)
+ 
+-FIND_PACKAGE(OpenSSL)
+-
+ FIND_PACKAGE(FREETYPE REQUIRED)
+ MESSAGE("Found freetype library at ${FREETYPE_LIBRARIES}, headers ${FREETYPE_INCLUDE_DIR}")
+ 

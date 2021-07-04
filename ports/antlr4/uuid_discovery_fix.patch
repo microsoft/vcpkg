@@ -1,10 +1,9 @@
-diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f4940c0..978b6ea 100644
+diff -urN a/CMakeLists.txt b/CMakeLists.txt
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -38,8 +38,10 @@ if(CMAKE_VERSION VERSION_EQUAL "3.3.0" OR
+@@ -40,8 +40,10 @@
  endif()
- 
+
  if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 -  find_package(PkgConfig REQUIRED)
 -  pkg_check_modules(UUID REQUIRED uuid)
@@ -15,39 +14,15 @@ index f4940c0..978b6ea 100644
  endif()
  if(APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation)
-@@ -115,7 +117,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang" AND CMAKE_SYSTEM_NAME MATCHES
-         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
-     endif()
- elseif ( MSVC_VERSION GREATER 1800 OR MSVC_VERSION EQUAL 1800 )
--  # Visual Studio 2012+ supports c++11 features 
-+  # Visual Studio 2012+ supports c++11 features
- else ()
-     message(FATAL_ERROR "Your C++ compiler does not support C++11.")
- endif ()
-@@ -129,10 +131,10 @@ endif(WITH_DEMO)
- if( EXISTS LICENSE.txt)
- install(FILES LICENSE.txt
-         DESTINATION "share/doc/libantlr4")
--elseif(EXISTS ../../LICENSE.txt) 
-+elseif(EXISTS ../../LICENSE.txt)
- install(FILES ../../LICENSE.txt
-     DESTINATION "share/doc/libantlr4")
- endif()
- 
--install(FILES README.md VERSION 
-+install(FILES README.md VERSION
-     DESTINATION "share/doc/libantlr4")
-diff --git a/runtime/src/support/guid.cpp b/runtime/src/support/guid.cpp
-index b6105d7..5baadb0 100644
+diff -urN a/runtime/src/support/guid.cpp b/runtime/src/support/guid.cpp
 --- a/runtime/src/support/guid.cpp
 +++ b/runtime/src/support/guid.cpp
-@@ -21,7 +21,7 @@
-  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+@@ -22,6 +22,7 @@
   THE SOFTWARE.
   */
--
+
 +#include "antlr4-common.h"
  #include "guid.h"
- 
+
  #ifdef GUID_LIBUUID
  

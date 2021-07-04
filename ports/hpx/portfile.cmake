@@ -4,11 +4,9 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
-    REF 1.4.1
-    SHA512 f110d5e5c10ec396f6e762568c9ecd5b767cb6efe91168b5caa8fe1e07bb5870cd13b3392fa4e008a2cc0e044b02084a35b0866e943d9b9c7435599c131f1582
+    REF 1.6.0
+    SHA512 cd717db3812fc26117d72c8afa654972b16f7059d8e6965484edd938788f3369fcd5ca791eee80e803703d6f3c39b3a3cd0525ab9f58ff1312e1b49f06ce67bc
     HEAD_REF stable
-    PATCHES
-        boost-1.73.patch
 )
 
 vcpkg_configure_cmake(
@@ -44,9 +42,14 @@ foreach(CMAKE_FILE IN LISTS CMAKE_FILES)
 endforeach()
 
 vcpkg_replace_string(
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/HPXConfig.cmake"
+    "set(HPX_BUILD_TYPE \"Release\")"
+    "set(HPX_BUILD_TYPE \"\${CMAKE_BUILD_TYPE}\")")
+
+vcpkg_replace_string(
     "${CURRENT_PACKAGES_DIR}/share/${PORT}/HPXMacros.cmake"
-    "set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH} \"\${CMAKE_CURRENT_LIST_DIR}\")"
-    "list(APPEND CMAKE_MODULE_PATH \"\${CMAKE_CURRENT_LIST_DIR}\")")
+    "set(CMAKE_MODULE_PATH \${CMAKE_MODULE_PATH}"
+    "list(APPEND CMAKE_MODULE_PATH")
 
 file(INSTALL
     ${SOURCE_PATH}/LICENSE_1_0.txt

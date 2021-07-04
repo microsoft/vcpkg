@@ -1,5 +1,5 @@
 {
-  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "$schema": "https://json-schema.org/draft-07/schema",
   "type": "object",
   "definitions": {
     "sha256": {
@@ -9,7 +9,8 @@
   },
   "required": [
     "Applications",
-    "VBoxExtensions"
+    "Brew",
+    "VagrantPlugins"
   ],
   "properties": {
     "Applications": {
@@ -20,7 +21,18 @@
           "Name": {
             "type": "string"
           },
-          "TestCommand": {
+          "VersionCommand": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "VersionRegex": {
+            "type": "string",
+            "format": "regex"
+          },
+          "Version": {
             "type": "string"
           },
           "DmgUrl": {
@@ -36,23 +48,33 @@
         }
       }
     },
-    "VBoxExtensions": {
+    "Brew": {
       "type": "array",
       "items": {
         "type": "object",
+        "required": [ "Name" ],
         "properties": {
           "Name": {
             "type": "string"
           },
-          "FullName": {
+          "Kind": {
+            "type": "string",
+            "enum": [ "cask" ]
+          }
+        }
+      }
+    },
+    "VagrantPlugins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [ "Name", "Version" ],
+        "properties": {
+          "Name": {
             "type": "string"
           },
-          "Url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "Sha256": {
-            "$ref": "#/definitions/sha256"
+          "Version": {
+            "type": "string"
           }
         }
       }

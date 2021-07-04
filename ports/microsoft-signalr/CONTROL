@@ -1,5 +1,6 @@
 Source: microsoft-signalr
-Version: 0.1.0-alpha1-1
+Version: 0.1.0-alpha2
+Port-Version: 0
 Description: C++ Client for ASP.NET Core SignalR.
 Default-Features: default-features
 Homepage: https://github.com/aspnet/SignalR-Client-Cpp

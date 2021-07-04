@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO vmt/udis86
@@ -13,8 +11,8 @@ file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 vcpkg_find_acquire_program(PYTHON2)
 
 vcpkg_execute_required_process(
-    COMMAND ${PYTHON2} ${SOURCE_PATH}/scripts/ud_itab.py  ${SOURCE_PATH}/docs/x86/optable.xml ${SOURCE_PATH}/libudis86/
-    WORKING_DIRECTORY SOURCE_PATH
+    COMMAND "${PYTHON2}" "${SOURCE_PATH}/scripts/ud_itab.py" "${SOURCE_PATH}/docs/x86/optable.xml" "${SOURCE_PATH}/libudis86/"
+    WORKING_DIRECTORY "${SOURCE_PATH}"
     LOGNAME python-${TARGET_TRIPLET}-generate-sources
 )
 
@@ -22,12 +20,12 @@ vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS_DEBUG
-    -DDISABLE_INSTALL_HEADERS=ON
-    -DDISABLE_INSTALL_TOOLS=ON
+        -DDISABLE_INSTALL_HEADERS=ON
+        -DDISABLE_INSTALL_TOOLS=ON
 )
 
 vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/libudis86)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libudis86 RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

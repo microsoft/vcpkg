@@ -28,7 +28,6 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 vcpkg_copy_pdbs()
-vcpkg_test_cmake(PACKAGE_NAME unofficial-${PORT})
 
 file(INSTALL ${SOURCE_PATH}/doc/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake DESTINATION ${CURRENT_PACKAGES_DIR}/share/unofficial-${PORT})

@@ -16,8 +16,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO raysan5/raylib
-    REF 7ef114d1da2c34a70bba5442497103441647d8f3 # 3.0.0
-    SHA512 e15df6f0f95d9580d6211459815f174496b1385c9797a682d372a03b1175c9eb38e51b3b27077346d5e1a2d6ee2d5c636e03e8fd3ca9a73a7fa2a67afd255bd2
+    REF b6c8d343dca2ef19c23c50975328a028124cf3cb # 3.7.0
+    SHA512 565854b00452ae4ae17129f6ced83d842b06ee51a2b254cf02c881c36f9133e5cd605c07585428a7ec4c4e556d8edea908f1c09cd2ef826c30be35c9e5c2d009
     HEAD_REF master
 )
 
@@ -30,6 +30,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         use-audio USE_AUDIO
 )
 
+if(VCPKG_TARGET_IS_MINGW)
+    set(DEBUG_ENABLE_SANITIZERS OFF)
+else()
+    set(DEBUG_ENABLE_SANITIZERS ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -41,8 +47,8 @@ vcpkg_configure_cmake(
         -DUSE_EXTERNAL_GLFW=OFF # externl glfw3 causes build errors on Windows
         ${FEATURE_OPTIONS}
     OPTIONS_DEBUG
-        -DENABLE_ASAN=ON
-        -DENABLE_UBSAN=ON
+        -DENABLE_ASAN=${DEBUG_ENABLE_SANITIZERS}
+        -DENABLE_UBSAN=${DEBUG_ENABLE_SANITIZERS}
         -DENABLE_MSAN=OFF
     OPTIONS_RELEASE
         -DENABLE_ASAN=OFF
@@ -55,6 +61,12 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/${PORT})
+
+configure_file(
+    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
+    ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake
+    @ONLY
+)
 
 file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/debug/include

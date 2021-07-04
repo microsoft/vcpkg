@@ -9,7 +9,7 @@ We explicitly ONLY collect information from invocations of the tool itself; we d
 
 ## How to opt out
 
-The vcpkg telemetry feature is enabled by default. In order to opt-out of data collection, you can re-run the boostrap script with the following flag, for Windows and Linux/OSX, respectively:
+The vcpkg telemetry feature is enabled by default. In order to opt-out of data collection, you can re-run the bootstrap script with the following flag, for Windows and Linux/OSX, respectively:
 
 ```PS> .\bootstrap-vcpkg.bat -disableMetrics```
 
@@ -41,7 +41,7 @@ We collect various telemetry events such as the command line used, the time of i
 
 You can see the telemetry events any command by appending `--printmetrics` after the vcpkg command line.
 
-In the source code (included in `toolsrc\`), you can search for calls to the functions `track_property()`, `track_feature()`, `track_metric()`, and `track_buildtime()`
+In the source code (included at https://github.com/microsoft/vcpkg-tool/ ), you can search for calls to the functions `track_property()`, `track_feature()`, `track_metric()`, and `track_buildtime()`
 to see every specific data point we collect.
 
 ## Avoid inadvertent disclosure information

@@ -1,0 +1,19 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 2d61aff..80ac50a 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -237,10 +237,10 @@ list(REMOVE_ITEM  APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/Tests/CoolProp-Te
+ list(REMOVE_ITEM  APP_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/CoolPropLib.cpp")
+ 
+ set (APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}")
+-list (APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/externals/Eigen")
+-list (APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/externals/msgpack-c/include")
+-list (APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/externals/fmtlib/include")
+-list (APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/externals/fmtlib") # should be deprecated
++find_package(Eigen3 CONFIG REQUIRED)
++find_package(msgpack CONFIG REQUIRED)
++find_package(fmt CONFIG REQUIRED)
++link_libraries(Eigen3::Eigen msgpackc msgpackc-cxx fmt::fmt)
+ list (APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/include")
+ list (APPEND APP_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/src")
+ 

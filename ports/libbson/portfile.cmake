@@ -20,6 +20,8 @@ file(READ ${CMAKE_CURRENT_LIST_DIR}/CONTROL _contents)
 string(REGEX MATCH "\nVersion:[ ]*[^ \n]+" _contents "${_contents}")
 string(REGEX REPLACE ".+Version:[ ]*([\\.0-9]+).*" "\\1" BUILD_VERSION "${_contents}")
 
+file(WRITE "${BUILD_VERSION}" ${SOURCE_PATH}/VERSION_CURRENT)
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -31,6 +33,7 @@ vcpkg_configure_cmake(
         -DENABLE_EXAMPLES=OFF
         -DENABLE_STATIC=${ENABLE_STATIC}
         -DBUILD_VERSION=${BUILD_VERSION}
+        -DCMAKE_DISABLE_FIND_PACKAGE_PythonInterp=ON
 )
 
 vcpkg_install_cmake()
@@ -40,10 +43,11 @@ vcpkg_copy_pdbs()
 set(PORT_POSTFIX "1.0")
 
 if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libbson-static-${PORT_POSTFIX} TARGET_PATH share/bson-${PORT_POSTFIX})
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libbson-static-${PORT_POSTFIX} TARGET_PATH share/libbson-${PORT_POSTFIX})
 else()
-    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libbson-${PORT_POSTFIX} TARGET_PATH share/bson-${PORT_POSTFIX})
+    vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libbson-${PORT_POSTFIX} TARGET_PATH share/libbson-${PORT_POSTFIX})
 endif()
+
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/share/mongo-c-driver)
 
@@ -62,20 +66,20 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/bson/bson-macros.h
         "define BSON_API __declspec(dllimport)" "define BSON_API")
         
-     file(RENAME ${CURRENT_PACKAGES_DIR}/share/bson-${PORT_POSTFIX}/libbson-static-${PORT_POSTFIX}-config.cmake
-        ${CURRENT_PACKAGES_DIR}/share/bson-${PORT_POSTFIX}/bson-${PORT_POSTFIX}-config.cmake)
-     file(RENAME ${CURRENT_PACKAGES_DIR}/share/bson-${PORT_POSTFIX}/libbson-static-${PORT_POSTFIX}-config-version.cmake
-        ${CURRENT_PACKAGES_DIR}/share/bson-${PORT_POSTFIX}/bson-${PORT_POSTFIX}-config-version.cmake)
+     file(RENAME ${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-static-${PORT_POSTFIX}-config.cmake
+        ${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-${PORT_POSTFIX}-config.cmake)
+     file(RENAME ${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-static-${PORT_POSTFIX}-config-version.cmake
+        ${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-${PORT_POSTFIX}-config-version.cmake)
 
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
 else()
-     file(RENAME ${CURRENT_PACKAGES_DIR}/share/bson-${PORT_POSTFIX}/libbson-${PORT_POSTFIX}-config.cmake
-        ${CURRENT_PACKAGES_DIR}/share/bson-${PORT_POSTFIX}/bson-${PORT_POSTFIX}-config.cmake)
-     file(RENAME ${CURRENT_PACKAGES_DIR}/share/bson-${PORT_POSTFIX}/libbson-${PORT_POSTFIX}-config-version.cmake
-        ${CURRENT_PACKAGES_DIR}/share/bson-${PORT_POSTFIX}/bson-${PORT_POSTFIX}-config-version.cmake)
+     file(RENAME ${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-${PORT_POSTFIX}-config.cmake
+        ${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-${PORT_POSTFIX}-config.cmake)
+     file(RENAME ${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-${PORT_POSTFIX}-config-version.cmake
+        ${CURRENT_PACKAGES_DIR}/share/libbson-${PORT_POSTFIX}/libbson-${PORT_POSTFIX}-config-version.cmake)
 endif()
 
-vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/bson-1.0/bson-1.0-config.cmake
+vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/share/libbson-1.0/libbson-1.0-config.cmake
     "include/libbson-1.0" "include/")
 
 file(COPY ${SOURCE_PATH}/THIRD_PARTY_NOTICES DESTINATION ${CURRENT_PACKAGES_DIR}/share/libbson)

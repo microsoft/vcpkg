@@ -1,19 +1,18 @@
 vcpkg_fail_port_install(ON_TARGET "uwp")
 
-set(LIB_VERSION 20191221)
+set(LIB_VERSION 20200926)
 set(LIB_FILENAME libvmdk-alpha-${LIB_VERSION}.tar.gz)
 
 vcpkg_download_distfile(ARCHIVE
     URLS "https://github.com/libyal/libvmdk/releases/download/${LIB_VERSION}/${LIB_FILENAME}"
     FILENAME "${LIB_FILENAME}"
-    SHA512 fd14760034ada2b01599f6c812b1a94592067bc224495aaae736d81d08629b1904935f43516513ba726d2d04589aa816c17b72a6f9ae035ee0030dba93dce865
+    SHA512 e70c42580dc58ad0a6459fe461504a8ef128f8d5df9d500f84f316e627232606f22eb4906fc1debc3e75e71daa6a07951af80822695de13d5e466adda4cfd5e0
 )
 
 vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${LIB_VERSION}
-    PATCHES no_fs_and_fadvise_on_macos.patch
 )
 
 file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}")

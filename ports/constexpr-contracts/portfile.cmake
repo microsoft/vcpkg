@@ -5,7 +5,7 @@ vcpkg_from_github(
     REPO cjdb/constexpr-contracts
     REF 58154e9010cb80aad4e95ef6f1835ebd7db3780a # commit 2020-05-25
     SHA512 b634267a4044cd712c8e52f65cd305f437864cab591f2b22104581f70b305ba52889dd46724e6047386463a010ee78fdd951411ea3691b5725d52d13f7adda76
-    HEAD_REF master
+    HEAD_REF main
 )
 
 vcpkg_configure_cmake(

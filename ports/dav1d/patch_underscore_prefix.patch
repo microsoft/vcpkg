@@ -1,0 +1,13 @@
+diff --git a/meson.build b/meson.build
+index 07b2586..02acd91 100644
+--- a/meson.build
++++ b/meson.build
+@@ -370,7 +370,7 @@ endif
+ 
+ cdata.set10('ARCH_PPC64LE', host_machine.cpu() == 'ppc64le')
+ 
+-if cc.symbols_have_underscore_prefix()
++if cc.symbols_have_underscore_prefix() or (host_machine.cpu_family() == 'x86' and host_machine.system() == 'windows')
+     cdata.set10('PREFIX', true)
+     cdata_asm.set10('PREFIX', true)
+ endif

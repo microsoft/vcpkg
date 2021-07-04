@@ -1,7 +1,7 @@
 # Using zip archive under Linux would cause sh/perl to report "No such file or directory" or "bad interpreter"
 # when invoking `prj_install.pl`.
 # So far this issue haven't yet be triggered under WSL 1 distributions. Not sure the root cause of it.
-set(ACE_VERSION 6.5.11)
+set(ACE_VERSION 7.0.2)
 string(REPLACE "." "_" ACE_VERSION_DIRECTORY ${ACE_VERSION})
 
 if("tao" IN_LIST FEATURES)
@@ -10,14 +10,14 @@ if("tao" IN_LIST FEATURES)
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.zip"
           FILENAME ACE-TAO-${ACE_VERSION}.zip
-          SHA512 82c4aa9718814f72f6ecc45da064d8d30f104d9b4785f357525c4c4a8ceb709e5885ddb1c4729df0cab9f69282c8f58cce3a23573a74e1dbdc677a6a54c1c894
+          SHA512 dd10db547e76716d8021e9f0faf9467cc86a9990eb03c60988979eb4a54c3b617a500c6afc53ea16a4b63ada903eaaf98df7456c8fd96b6adadfe459eaea86b9
       )
     else()
       # VCPKG_TARGET_IS_LINUX
       vcpkg_download_distfile(ARCHIVE
           URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE%2BTAO-src-${ACE_VERSION}.tar.gz"
           FILENAME ACE-TAO-${ACE_VERSION}.tar.gz
-          SHA512 82d69ed23b049948b104677afb93fcaad4468335268b101e5b7d73aa15b380d120253415b42cadf6ba45bbf2ed3771d51f7b56c56eb93ff9e33a044f118f9191
+          SHA512 43d7e37ef26169f4ad1a9a6a7f5e0aabd03019f44386dad54cda0f2d61ca52cb34e5da3e62a4b9d06a30caec43732a2043b07f9de59f796b8d552b36c40fcff9
       )
     endif()
 else()
@@ -26,14 +26,14 @@ else()
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.zip"
         FILENAME ACE-src-${ACE_VERSION}.zip
-        SHA512 36f286240ac81c9de0c4a21a54e9e61a4efd0ae9e8381732dadfba496768b697dec9fb448e0d252293bfd686e114c644c7602ddbdbe74c5d73eb6423d00d0ae5
+        SHA512 4cde539074587c26c317581dbeaa0d057bf0d641db27dee84bb262af4859744158d91dc072b70c351e7be59c70345ea138511cbb3297ff090f7b9c71f5166610
     )
   else(VCPKG_TARGET_IS_WINDOWS)
     # VCPKG_TARGET_IS_LINUX
     vcpkg_download_distfile(ARCHIVE
         URLS "https://github.com/DOCGroup/ACE_TAO/releases/download/ACE%2BTAO-${ACE_VERSION_DIRECTORY}/ACE-src-${ACE_VERSION}.tar.gz"
         FILENAME ACE-src-${ACE_VERSION}.tar.gz
-        SHA512 e47e1ef2e8d517aed3c647a1e7dd9ac8b54ed187f9d6adf1e535bb7c4da6e8e808d72850ae18f2e42842ea9487ef774f7af90d1fbede17e0858e2b5846650580
+        SHA512 8b2b1988a7cdda4a0ff5064def3cd750bf4fbcad074efbb41eedfa2f5e970874568610de2f8495679f1eeb2f7403be91e10392ca9aa6016d1cf8c051e595d6cb
     )
   endif()
 endif()
@@ -126,6 +126,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     LICENSE_SUBPATH COPYING
     PLATFORM ${MSBUILD_PLATFORM}
     USE_VCPKG_INTEGRATION
+    SKIP_CLEAN
   )
 
   # ACE itself does not define an install target, so it is not clear which
@@ -147,6 +148,9 @@ if(VCPKG_TARGET_IS_WINDOWS)
     endforeach()
   endfunction()
 
+  get_filename_component(SOURCE_PATH_SUFFIX "${SOURCE_PATH}" NAME)
+  set(SOURCE_COPY_PATH ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/${SOURCE_PATH_SUFFIX})
+
   # Install headers in subdirectory
   set(ACE_INCLUDE_FOLDERS
       "ace"
@@ -160,22 +164,22 @@ if(VCPKG_TARGET_IS_WINDOWS)
       "ace/os_include/net"
       "ace/os_include/netinet"
       "ace/os_include/sys")
-  install_includes(${ACE_ROOT} "${ACE_INCLUDE_FOLDERS}")
+  install_includes(${SOURCE_COPY_PATH} "${ACE_INCLUDE_FOLDERS}")
 
   if("ssl" IN_LIST FEATURES)
-    install_includes(${ACE_ROOT} "ace/SSL")
+    install_includes(${SOURCE_COPY_PATH} "ace/SSL")
   endif()
 
   if("tao" IN_LIST FEATURES)
     set(ACEXML_INCLUDE_FOLDERS "ACEXML/apps/svcconf" "ACEXML/common"
                                "ACEXML/parser/parser")
-    install_includes(${ACE_ROOT} "${ACEXML_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH} "${ACEXML_INCLUDE_FOLDERS}")
 
     set(ACE_PROTOCOLS_INCLUDE_FOLDERS "ace/HTBP" "ace/INet" "ace/RMCast"
                                       "ace/TMCast")
-    install_includes(${ACE_ROOT}/protocols "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/protocols "${ACE_PROTOCOLS_INCLUDE_FOLDERS}")
 
-    install_includes(${ACE_ROOT} "Kokyu")
+    install_includes(${SOURCE_COPY_PATH} "Kokyu")
 
     set(TAO_ORBSVCS_INCLUDE_FOLDERS
         "orbsvcs"
@@ -209,11 +213,11 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("ssl" IN_LIST FEATURES)
       list(APPEND TAO_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/SSLIOP")
     endif()
-    install_includes(${TAO_ROOT}/orbsvcs "${TAO_ORBSVCS_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/TAO/orbsvcs "${TAO_ORBSVCS_INCLUDE_FOLDERS}")
 
     set(TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS "orbsvcs/FT_ReplicationManager"
                                          "orbsvcs/Notify_Service")
-    install_includes(${TAO_ROOT} "${TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/TAO "${TAO_ROOT_ORBSVCS_INCLUDE_FOLDERS}")
 
     set(TAO_INCLUDE_FOLDERS
         "tao"
@@ -255,7 +259,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
     if("zlib" IN_LIST FEATURES)
       list(APPEND TAO_INCLUDE_FOLDERS "tao/Compression/zlib")
     endif()
-    install_includes(${TAO_ROOT} "${TAO_INCLUDE_FOLDERS}")
+    install_includes(${SOURCE_COPY_PATH}/TAO "${TAO_INCLUDE_FOLDERS}")
   endif()
 
   # Remove dlls without any export
@@ -268,6 +272,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
         ${CURRENT_PACKAGES_DIR}/debug/bin/ACEXML_XML_Svc_Conf_Parserd_dll.pdb)
     endif()
   endif()
+
+  vcpkg_clean_msbuild()
 elseif(VCPKG_TARGET_IS_LINUX OR VCPKG_TARGET_IS_OSX)
   FIND_PROGRAM(MAKE make)
   IF (NOT MAKE)

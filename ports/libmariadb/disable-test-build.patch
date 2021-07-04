@@ -1,34 +1,18 @@
 diff --git a/unittest/libmariadb/CMakeLists.txt b/unittest/libmariadb/CMakeLists.txt
-index 9cea916..a39ba94 100644
+index e3ba18b..48c4f1d 100644
 --- a/unittest/libmariadb/CMakeLists.txt
 +++ b/unittest/libmariadb/CMakeLists.txt
-@@ -58,16 +58,16 @@ ENDIF()
+@@ -48,6 +48,7 @@ ENDIF()
  
  ADD_LIBRARY(ma_getopt ma_getopt.c)
  
--FOREACH(API_TEST ${API_TESTS})
--  IF (NOT TARGET ${API_TEST})
--    ADD_EXECUTABLE(${API_TEST} ${API_TEST}.c)
--  ENDIF()
--  TARGET_LINK_LIBRARIES(${API_TEST} cctap ma_getopt mariadbclient)
--  ADD_TEST(${API_TEST} ${EXECUTABLE_OUTPUT_PATH}/${API_TEST})
--  SET_TESTS_PROPERTIES(${API_TEST} PROPERTIES TIMEOUT 180)
--ENDFOREACH(API_TEST)
--
--FOREACH(API_TEST ${MANUAL_TESTS})
--  ADD_EXECUTABLE(${API_TEST} ${API_TEST}.c)
--  TARGET_LINK_LIBRARIES(${API_TEST} cctap ma_getopt mariadbclient)
--ENDFOREACH()
-+#FOREACH(API_TEST ${API_TESTS})
-+#  IF (NOT TARGET ${API_TEST})
-+#    ADD_EXECUTABLE(${API_TEST} ${API_TEST}.c)
-+#  ENDIF()
-+#  TARGET_LINK_LIBRARIES(${API_TEST} cctap ma_getopt mariadbclient)
-+#  ADD_TEST(${API_TEST} ${EXECUTABLE_OUTPUT_PATH}/${API_TEST})
-+#  SET_TESTS_PROPERTIES(${API_TEST} PROPERTIES TIMEOUT 180)
-+#ENDFOREACH(API_TEST)
-+#
-+#FOREACH(API_TEST ${MANUAL_TESTS})
-+#  ADD_EXECUTABLE(${API_TEST} ${API_TEST}.c)
-+#  TARGET_LINK_LIBRARIES(${API_TEST} cctap ma_getopt mariadbclient)
-+#ENDFOREACH()
++if(0)
+ FOREACH(API_TEST ${API_TESTS})
+   IF (NOT TARGET ${API_TEST})
+     ADD_EXECUTABLE(${API_TEST} ${API_TEST}.c)
+@@ -65,3 +66,4 @@ FOREACH(API_TEST ${MANUAL_TESTS})
+   ADD_EXECUTABLE(${API_TEST} ${API_TEST}.c)
+   TARGET_LINK_LIBRARIES(${API_TEST} cctap ma_getopt mariadbclient)
+ ENDFOREACH()
++endif()
+\ No newline at end of file

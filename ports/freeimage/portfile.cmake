@@ -17,6 +17,7 @@ vcpkg_from_sourceforge(
         use-freeimage-config-include.patch
         fix-function-overload.patch
         use-typedef-as-already-declared.patch
+        use-functions-to-override-libtiff-warning-error-handlers.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -38,15 +39,13 @@ file(REMOVE_RECURSE ${SOURCE_PATH}/Source/OpenEXR)
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS
-      -DVCPKG_ROOT_DIR=${VCPKG_ROOT_DIR}
-      -DTARGET_TRIPLET=${TARGET_TRIPLET}
     OPTIONS_DEBUG
       -DINSTALL_HEADERS=OFF
 )
 
 vcpkg_install_cmake()
+vcpkg_fixup_cmake_targets()
 
 vcpkg_copy_pdbs()
-file(INSTALL ${SOURCE_PATH}/license-fi.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
+file(INSTALL ${SOURCE_PATH}/license-fi.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

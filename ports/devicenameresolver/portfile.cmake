@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 
 vcpkg_from_bitbucket(

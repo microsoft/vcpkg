@@ -1,3 +1,3 @@
 Source: tsl-hopscotch-map
-Version: 2.2.1-1
+Version: 2.3.0
 Description: C++ implementation of a fast hash map and hash set using hopscotch hashing 

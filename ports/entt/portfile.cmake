@@ -1,8 +1,8 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO skypjack/entt
-    REF v3.4.0
-    SHA512 0094d2bff106754a3d8500152ea3206d2e0e0a8043ab54794faf6b5caa02dd2f0675011dafdd6e33de105c464204034b2a7d9380fe77a4d8b67f07f05e7f0152
+    REF 5d15a3d69f433a0e3fce266caaeb87c77c10453c #v3.7.1
+    SHA512 dbfb141dd706e1552a81e01005a28e916b369f29c0adfff337799f8375a9676e60f620b7981633829d6d175297088ace58e3c16cc802ab9d71681efebb1caba6
     HEAD_REF master
 )
 
@@ -11,7 +11,7 @@ vcpkg_configure_cmake(
     DISABLE_PARALLEL_CONFIGURE
     PREFER_NINJA
     OPTIONS
-        -DBUILD_TESTING=OFF
+        -DENTT_BUILD_TESTING=OFF
 )
 
 vcpkg_install_cmake()

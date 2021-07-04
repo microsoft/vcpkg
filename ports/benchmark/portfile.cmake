@@ -1,16 +1,13 @@
-if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-    message(FATAL_ERROR "${PORT} does not currently support UWP")
-endif()
-
-include(vcpkg_common_functions)
+#https://github.com/google/benchmark/issues/661
+vcpkg_fail_port_install(ON_TARGET "uwp") 
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO google/benchmark
-    REF v1.5.0
-    SHA512 a0df9aa3d03f676e302c76d83b436de36eea0a8517ab50a8f5a11c74ccc68a1f5128fa02474901002d8e6b5a4d290ef0272a798ff4670eab3e2d78dc86bb6cd3
+    REF e991355c02b93fe17713efe04cbc2e278e00fdbd # v1.5.5
+    SHA512 aa4455fa0f8546ec5762f14065e0be6667b5874e6991ca6dd21dc7b29e38c7c74cfddb2c99c7a1ed2f7636aa7bdec8fc0fc1523967b179f5642c2dc2e968089c
     HEAD_REF master
 )
 
@@ -19,7 +16,6 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBENCHMARK_ENABLE_TESTING=OFF
-        -DCMAKE_DEBUG_POSTFIX=d
 )
 
 vcpkg_install_cmake()
@@ -28,9 +24,10 @@ vcpkg_copy_pdbs()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/benchmark)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+vcpkg_fixup_pkgconfig()
+
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
 # Handle copyright
-file(COPY ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/benchmark)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/benchmark/LICENSE ${CURRENT_PACKAGES_DIR}/share/benchmark/copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

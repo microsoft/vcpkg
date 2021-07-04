@@ -6,6 +6,8 @@ vcpkg_from_github(
     REF e3a4e41d61544d8e2eba73f00da99b6818ec472b
     SHA512 26c6b547aa30d89895efcc835dddc3b58ab57f0e450a4ae82655a990a816dd57c70e43267a10da75b1c2bd160189942e443c8e27367d6648417d1c9c134e7694
     HEAD_REF master
+    PATCHES
+        fix-openxr-sdk-jsoncpp.patch
 )
 
 vcpkg_from_github(
@@ -14,6 +16,8 @@ vcpkg_from_github(
     REF 6dee6e228f47857adf5d7673eb90c64f04d33c60
     SHA512 0c522eef95b4d8bdc8e4f1ca852cd9798ff2bca9ef8511446d9cdf80bc314b0da454ab5c203658bbe43d3e7ff3d757b9427c3f75829b2a022a25041d1a2d2b12
     HEAD_REF master
+    PATCHES
+        fix-openxr-sdk-jsoncpp.patch
 )
 
 vcpkg_from_github(
@@ -47,6 +51,7 @@ vcpkg_configure_cmake(
         -DBUILD_CONFORMANCE_TESTS=OFF
         -DDYNAMIC_LOADER=${DYNAMIC_LOADER}
         -DPYTHON_EXECUTABLE=${PYTHON3}
+        -DBUILD_WITH_SYSTEM_JSONCPP=ON
 )
 
 vcpkg_install_cmake()
@@ -74,6 +79,5 @@ endif()
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
-
 vcpkg_copy_pdbs()
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

@@ -1,0 +1,5 @@
+The package caf provides CMake targets:
+
+    find_package(CAF REQUIRED COMPONENTS core io)
+    target_include_directories(main PRIVATE ${CAF_INCLUDE_DIRS})
+    target_link_libraries(main PRIVATE ${CAF_LIBRARIES})

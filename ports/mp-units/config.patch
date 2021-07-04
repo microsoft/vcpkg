@@ -1,0 +1,9 @@
+diff --git a/cmake/common/simple-config.cmake.in b/cmake/common/simple-config.cmake.in
+index f40ebfa88..d521e0ba8 100644
+--- a/cmake/common/simple-config.cmake.in
++++ b/cmake/common/simple-config.cmake.in
+@@ -1 +1,4 @@
++include(CMakeFindDependencyMacro)
++find_dependency(fmt CONFIG)
++find_dependency(Microsoft.GSL CONFIG)
+ include("${CMAKE_CURRENT_LIST_DIR}/@PROJECT_NAME@-targets.cmake")

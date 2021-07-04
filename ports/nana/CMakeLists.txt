@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10.2 FATAL_ERROR)
-project(nana VERSION 1.7.2 LANGUAGES CXX)
+project(nana VERSION 1.7.4 LANGUAGES CXX)
 
 option(NANA_ENABLE_PNG "Enable PNG support" OFF)
 option(NANA_ENABLE_JPEG "Enable JPEG support" OFF)
@@ -47,8 +47,8 @@ if(UNIX)
   target_include_directories(nana PUBLIC ${X11_INCLUDE_DIR})
   target_link_libraries(nana PUBLIC ${X11_LIBRARIES} ${X11_Xft_LIB})
 
-  find_library(FONTCONFIG_LIB NAMES fontconfig)
-  target_link_libraries(nana PUBLIC ${FONTCONFIG_LIB})
+  find_package(Fontconfig REQUIRED)
+  target_link_libraries(nana PUBLIC Fontconfig::Fontconfig)
 endif()
 
 if(NANA_ENABLE_PNG)

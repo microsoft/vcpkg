@@ -1,3 +1,4 @@
 Source: libyaml
-Version: 0.2.2-3
+Version: 0.2.5
+Homepage: https://github.com/yaml/libyaml
 Description: A C library for parsing and emitting YAML.

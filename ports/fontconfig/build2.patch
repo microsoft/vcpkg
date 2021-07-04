@@ -1,0 +1,35 @@
+diff --git a/Tools.mk b/Tools.mk
+index f0fa0ec50..24e5afd16 100644
+--- a/Tools.mk
++++ b/Tools.mk
+@@ -43,7 +43,7 @@ AM_CPPFLAGS = \
+ 	   $(WARN_CFLAGS)
+ 
+ $(TOOL): $(TSRC) $(ALIAS_FILES)
+-	$(AM_V_GEN) $(CC_FOR_BUILD) -o $(TOOL) $< $(AM_CPPFLAGS)
++	$(AM_V_GEN) $(CC_FOR_BUILD) -o $(TOOL) $< $(AM_CPPFLAGS) $(LIBINTL) $(CFLAGS)
+ 
+ $(TARG): $(TMPL) $(TSRC) $(DEPS)
+ 	$(AM_V_GEN) $(MAKE) $(TOOL) && \
+diff --git a/fc-case/fc-case.c b/fc-case/fc-case.c
+index 236bff5f0..6fb21c855 100644
+--- a/fc-case/fc-case.c
++++ b/fc-case/fc-case.c
+@@ -345,7 +345,7 @@ main (int argc, char **argv)
+ 	    break;
+ 	fputs (line, stdout);
+     }
+-    
++    fflush (stdout);
+     /*
+      * Dump these tables
+      */
+@@ -354,7 +354,7 @@ main (int argc, char **argv)
+     /*
+      * And flush out the rest of the input file
+      */
+-
++    fflush (stdout);
+     while (fgets (line, sizeof (line), stdin))
+ 	fputs (line, stdout);
+     

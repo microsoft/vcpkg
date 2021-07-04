@@ -1,19 +1,21 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO IntelRealSense/librealsense
-    REF 025fccf76803ee6a6e60de9f18ac6193b7ff8597 #v2.34.0
-    SHA512 c502fba6b3dbb34b0ac0094deef9ffce330faf435bbc7612148fd8ba3d5b380f7990604a67236e7da815c8e6988ae58c17fa597571a2462f75c8f5000007cc0a
+    REF bc0910f8ba3c33307ff247a29dd2b9e9ef1b269d #v2.42.0
+    SHA512 b2a2d24df4bdf4853df626942b1931bbe011a4e3faaa4e3c4bcb3f76506ae8edb955a458219fdc300018e640e2ffe4cd34f459786b909cf9aab71a767d691178
     HEAD_REF master
     PATCHES
         fix_openni2.patch
         fix-dependency-glfw3.patch
+        fix_config_osx.patch
 )
 
 file(COPY ${SOURCE_PATH}/src/win7/drivers/IntelRealSense_D400_series_win7.inf DESTINATION ${SOURCE_PATH})
 string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" BUILD_CRT_LINKAGE)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tm2   BUILD_WITH_TM2
+    FEATURES
+        tm2   BUILD_WITH_TM2
 )
 
 set(BUILD_TOOLS OFF)
@@ -26,6 +28,11 @@ if(("openni2" IN_LIST FEATURES) AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
   set(BUILD_OPENNI2_BINDINGS ON)
 endif()
 
+set(PLATFORM_OPTIONS)
+if (VCPKG_TARGET_IS_ANDROID)
+    list(APPEND PLATFORM_OPTIONS -DFORCE_RSUSB_BACKEND=ON)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
@@ -36,6 +43,7 @@ vcpkg_configure_cmake(
         -DBUILD_WITH_STATIC_CRT=${BUILD_CRT_LINKAGE}
         -DBUILD_OPENNI2_BINDINGS=${BUILD_OPENNI2_BINDINGS}
         -DOPENNI2_DIR=${CURRENT_INSTALLED_DIR}/include/openni2
+        ${PLATFORM_OPTIONS}
     OPTIONS_RELEASE
         -DBUILD_EXAMPLES=${BUILD_TOOLS}
         -DBUILD_GRAPHICAL_EXAMPLES=${BUILD_TOOLS}

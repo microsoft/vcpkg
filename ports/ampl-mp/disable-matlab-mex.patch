@@ -1,11 +1,13 @@
---- a/src/asl/CMakeLists.txt	2019-02-08 16:42:50.793071700 -0600
-+++ b/src/asl/CMakeLists.txt	2019-02-08 16:44:04.960894500 -0600
-@@ -266,7 +266,7 @@ endif ()
+diff --git a/src/asl/CMakeLists.txt b/src/asl/CMakeLists.txt
+index b7d7ecf..c31a032 100644
+--- a/src/asl/CMakeLists.txt
++++ b/src/asl/CMakeLists.txt
+@@ -59,7 +59,7 @@ endif ()
  
- target_link_libraries(asl ${CMAKE_DL_LIBS})
+ target_link_libraries(aslmp ${CMAKE_DL_LIBS})
  
 -find_package(MATLAB)
 +set(MATLAB_FOUND)
- if (MATLAB_FOUND)
+ if (MATLAB_FOUND AND MATLAB_BUILD)
    set(matlab_asl asl)
    if (MSVC)

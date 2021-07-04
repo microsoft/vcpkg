@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO mdadams/jasper
-    REF version-2.0.16
-    SHA512 b3bca227f833567c9061c4a29c0599784ed6a131b5cceddfd1696542d19add821eda445ce6d83782b454b266723b24d0f028cbc644a25c0e3a75304e615b34ee
+    REF d10a710f31da3d079a984d35ff6cc82a853d25d7 # version-2.0.20
+    SHA512 b581268d9a36ef4756aa0ec74ab4a96624e8cb6d03753e6f21148b6d2f62c081d434b319466f29c2cca34c547543ad5d41f68b838f3e131bbf01bab960d0f51c
     HEAD_REF master
 )
 

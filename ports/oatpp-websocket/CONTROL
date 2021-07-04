@@ -1,4 +1,0 @@
-Source: oatpp-websocket
-Version: 1.0.0
-Description: Oat++ websocket module
-Build-Depends: oatpp

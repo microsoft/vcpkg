@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "matroska does not currently support UWP")
 endif()
@@ -7,8 +5,8 @@ endif()
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO Matroska-Org/libmatroska
-    REF release-1.5.2
-    SHA512  5e819d611455efb1dd49ea26b6b124899b1f6ba07b4af93b2f3437ffe7c2c0089a922ef894a7c8612faddadeea75142d0604ee54e6c5822439dc8c65008e119b
+    REF 684560a3ce962a7abe89be93cc8ffa483f7f853f # release-1.6.2
+    SHA512 d9b0e392cc99d9eec99ef90431589778976508c5ccbd8bbb166f390653c27b4cc84de189f7cd3bf5b039ecb38a96b0e341cc39195099ec415cc48d40e0b78c01
     HEAD_REF master
 )
 

@@ -1,11 +1,11 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO lsh123/xmlsec
-    REF xmlsec-1_2_30
-    SHA512 e631e7b132b39bb53f2713fe34880f8b4e81fd759fd206e8872c066236a8a64713842ba5e0ba9ad2f345f9f6d1da304acbeb61411b52cfa79d2934fc9e260ce9
+    REF xmlsec-1_2_32
+    SHA512 45e2efc6bdf6ec09db6ff01b521c3fbcf44aa9804d5692bea5296e80d7fc2f05fac322868f82840a7b67e0abd4233222098aa94a29ec9a6a7d049180cf131c57
     HEAD_REF master
     PATCHES 
-        0001-uwp-fix.patch
+        pkgconfig_fixes.patch
 )
 
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
@@ -20,6 +20,7 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets()
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${SOURCE_PATH}/Copyright DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 

@@ -1,0 +1,4 @@
+Source: blas
+Version: 1
+Description: Metapackage for packages which provide BLAS
+Build-Depends: openblas

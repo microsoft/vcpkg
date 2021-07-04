@@ -13,14 +13,13 @@
     "boost-random",
     "boost-type-traits"
   ],
-  "features": [
-    {
-      "name": "python",
+  "features": {
+    "python": {
       "description": "Interacting with python with pybind11 interface",
       "dependencies": [
         "boost-python",
         "pybind11"
       ]
     }
-  ]
+  }
 }

@@ -1,30 +1,24 @@
-set(OATPP_VERSION "1.0.0")
+set(OATPP_VERSION "1.2.5")
 
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO oatpp/oatpp-curl
-    REF 03a3f336be70c71d0547489aa0ed50206f46dcf8 # 1.0.0
-    SHA512 799cbddeb6e9d90eb43911845dd33ee272c4e86c86a07bb710ceb8c0e1722cda15412fdca10c4228a77f38e3b9e3d5d5248c8cd4366cbb9c369db4a830e29496
+    REF ${OATPP_VERSION}
+    SHA512 db2b4ab07dbf1140e44c131a1919c6ac29e9cea3df8dde8951028d6096ed5a66a248d3ddeeaabc32cac0fde38fd5905e706daaa7c9fbf6bcb49ccb9ba1cfb50e
     HEAD_REF master
-    PATCHES "curl-submodule-no-pkg-config-in-vcpkg.patch"
+    PATCHES "fix-find-curl.patch"
 )
-
-if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "ON")
-else()
-    set(OATPP_BUILD_SHARED_LIBRARIES_OPTION "OFF")
-endif()
 
 vcpkg_configure_cmake(
     SOURCE_PATH "${SOURCE_PATH}"
     PREFER_NINJA
     OPTIONS
         "-DOATPP_BUILD_TESTS:BOOL=OFF"
-        "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"
-        "-DBUILD_SHARED_LIBS:BOOL=${OATPP_BUILD_SHARED_LIBRARIES_OPTION}"
+        "-DCMAKE_CXX_FLAGS=-D_CRT_SECURE_NO_WARNINGS"   
 )
+
 vcpkg_install_cmake()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/oatpp-curl-${OATPP_VERSION})
 vcpkg_copy_pdbs()

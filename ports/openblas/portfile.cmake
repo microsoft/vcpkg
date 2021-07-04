@@ -1,15 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO xianyi/OpenBLAS
-    REF v0.3.9
-    SHA512 e34da25b3aaf959ec12826ac68c81e739e453d44f2dba28b15e57d7a827edc4d5f42988e9b6d98ac07999940be7b5876246cb3a980e590ae87f77f4c2f12f40a
+    REF 63b03efc2af332c88b86d4fd8079d00f4b439adf # v0.3.10
+    SHA512 269852348e042fe32d0d400d5e6f4cf758024389d3966a9b1bc217061d4a03b3a7003a399212130ec4e783f1e1e5b423eb531e6e0948485b5d5ac9fdc58982cb
     HEAD_REF develop
     PATCHES
         uwp.patch
         fix-space-path.patch
         fix-redefinition-function.patch
-        github_2481.patch
         fix-pkg-config.patch
+        fix-uwp-build.patch
+        fix-marco-conflict.patch
 )
 
 find_program(GIT NAMES git git.cmd)
@@ -24,6 +25,12 @@ get_filename_component(PERL_EXE_PATH ${PERL} DIRECTORY)
 set(PATH_BACKUP "$ENV{PATH}")
 vcpkg_add_to_path("${PERL_EXE_PATH}")
 vcpkg_add_to_path("${SED_EXE_PATH}")
+
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        threads         USE_THREAD
+        simplethread    USE_SIMPLE_THREADED_LEVEL3
+)
 
 set(COMMON_OPTIONS -DBUILD_WITHOUT_LAPACK=ON)
 
@@ -40,7 +47,7 @@ if(VCPKG_TARGET_IS_UWP)
 
     vcpkg_configure_cmake(
         SOURCE_PATH ${SOURCE_PATH}
-        OPTIONS
+        OPTIONS ${FEATURE_OPTIONS}
             ${COMMON_OPTIONS}
             -DTARGET=NEHALEM
     )
@@ -69,7 +76,8 @@ elseif(VCPKG_TARGET_IS_WINDOWS)
         PREFER_NINJA
         SOURCE_PATH ${SOURCE_PATH}
         OPTIONS
-            ${COMMON_OPTIONS})
+            ${COMMON_OPTIONS}
+    )
 else()
     list(APPEND VCPKG_C_FLAGS "-DNEEDBUNDERSCORE") # Required to get common BLASFUNC to append extra _
     list(APPEND VCPKG_CXX_FLAGS "-DNEEDBUNDERSCORE")

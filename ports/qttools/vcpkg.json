@@ -1,0 +1,29 @@
+{
+  "name": "qttools",
+  "version-semver": "6.1.1",
+  "description": "Qt Tools",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "network"
+      ]
+    },
+    "qtdeclarative",
+    {
+      "name": "qttools",
+      "host": true,
+      "default-features": false
+    }
+  ],
+  "features": {
+    "qdoc": {
+      "description": "Build QDoc.",
+      "dependencies": [
+        "llvm"
+      ]
+    }
+  }
+}

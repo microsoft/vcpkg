@@ -1,8 +1,28 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 1a2b7ba..7c939d6 100644
+index 1a2b7bad7..7ff8bbf32 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -169,14 +169,6 @@ if (ENABLE_BSON STREQUAL SYSTEM)
+@@ -151,16 +151,15 @@ if (ENABLE_BSON STREQUAL SYSTEM)
+    # The input variable BSON_ROOT_DIR is respected for backwards compatibility,
+    # but you should use the standard CMAKE_PREFIX_PATH instead.
+    message (STATUS "Searching for libbson CMake packages")
+-   find_package (bson-1.0
+-      "${MONGOC_MAJOR_VERSION}.${MONGOC_MINOR_VERSION}.${MONGOC_MICRO_VERSION}"
++   find_package (libbson-1.0 CONFIG
+       HINTS
+       ${BSON_ROOT_DIR})
+ 
+-   if (NOT bson-1.0_FOUND)
++   if (NOT libbson-1.0_FOUND)
+       message (FATAL_ERROR "System libbson not found")
+    endif ()
+ 
+-   message ("--   libbson found version \"${bson-1.0_VERSION}\"")
++   message ("--   libbson found version \"${libbson-1.0_VERSION}\"")
+    message ("--   disabling test-libmongoc since using system libbson")
+    SET (ENABLE_TESTS OFF)
+ 
+@@ -169,14 +168,6 @@ if (ENABLE_BSON STREQUAL SYSTEM)
     endif ()
  
     set (USING_SYSTEM_BSON TRUE)
@@ -50,19 +70,6 @@ index 0f9e50c..797aaec 100644
  target_link_libraries (mongoc-stat mongoc_shared ${LIBRARIES})
  
  # mongoc-stat works if shared memory performance counters are enabled.
-diff --git a/src/libmongoc/build/cmake/libmongoc-1.0-config.cmake.in b/src/libmongoc/build/cmake/libmongoc-1.0-config.cmake.in
-index feeca02..62aa21a 100644
---- a/src/libmongoc/build/cmake/libmongoc-1.0-config.cmake.in
-+++ b/src/libmongoc/build/cmake/libmongoc-1.0-config.cmake.in
-@@ -19,7 +19,7 @@ set (MONGOC_MINOR_VERSION @MONGOC_MINOR_VERSION@)
- set (MONGOC_MICRO_VERSION @MONGOC_MICRO_VERSION@)
- set (MONGOC_VERSION @MONGOC_VERSION@)
- 
--find_package (libbson-1.0 "@MONGOC_MAJOR_VERSION@.@MONGOC_MINOR_VERSION@" REQUIRED)
-+find_package (bson-1.0 "@MONGOC_MAJOR_VERSION@.@MONGOC_MINOR_VERSION@" REQUIRED)
- 
- @PACKAGE_INIT@
- 
 diff --git a/src/libmongoc/build/cmake/libmongoc-static-1.0-config.cmake.in b/src/libmongoc/build/cmake/libmongoc-static-1.0-config.cmake.in
 index 6f05b0c..113804e 100644
 --- a/src/libmongoc/build/cmake/libmongoc-static-1.0-config.cmake.in
@@ -72,7 +79,7 @@ index 6f05b0c..113804e 100644
  set (MONGOC_STATIC_VERSION @MONGOC_VERSION@)
  
 -find_package (libbson-static-1.0 "@MONGOC_MAJOR_VERSION@.@MONGOC_MINOR_VERSION@" REQUIRED)
-+find_package (bson-1.0 "@MONGOC_MAJOR_VERSION@.@MONGOC_MINOR_VERSION@" REQUIRED)
++find_package (libbson-1.0 "@MONGOC_MAJOR_VERSION@.@MONGOC_MINOR_VERSION@" REQUIRED)
  
  @PACKAGE_INIT@
  

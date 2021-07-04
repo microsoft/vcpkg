@@ -1,5 +1,3 @@
-include(vcpkg_common_functions)
-
 if (TARGET_TRIPLET MATCHES "^x86")
     message(WARNING "The CRoaring authors recommend users of this lib against using a 32-bit build.")
 endif ()
@@ -33,6 +31,3 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
 configure_file(${SOURCE_PATH}/LICENSE ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright COPYONLY)
-
-# CMake integration test
-vcpkg_test_cmake(PACKAGE_NAME ${PORT})

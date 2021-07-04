@@ -1,0 +1,48 @@
+ CMakeLists.txt | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 09722a9..7bf9952 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -277,18 +277,18 @@ install(
+     EXPORT
+         telnetpp-config
+     ARCHIVE DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        lib
+     RUNTIME DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        bin
+     LIBRARY DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        lib
+ )
+ 
+ install(
+     DIRECTORY
+         include/
+     DESTINATION
+-        include/telnetpp-${TELNETPP_VERSION}
++        include
+ )
+ 
+ export(
+@@ -302,7 +302,7 @@ install(
+     EXPORT
+         telnetpp-config
+     DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        share/telnetpp
+ )
+ 
+ include(CMakePackageConfigHelpers)
+@@ -317,7 +317,7 @@ install(
+     FILES
+         "${CMAKE_CURRENT_BINARY_DIR}/telnetpp-config-version.cmake"
+     DESTINATION
+-        lib/telnetpp-${TELNETPP_VERSION}
++        share/telnetpp
+ )
+ 
+ if (TELNETPP_WITH_TESTS)

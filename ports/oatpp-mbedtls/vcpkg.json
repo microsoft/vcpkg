@@ -1,0 +1,10 @@
+{
+  "name": "oatpp-mbedtls",
+  "version": "1.2.5",
+  "description": "Oat++ Mbed TLS submodule providing secure server and client connection providers.",
+  "homepage": "https://github.com/oatpp/oatpp-mbedtls",
+  "dependencies": [
+    "mbedtls",
+    "oatpp"
+  ]
+}

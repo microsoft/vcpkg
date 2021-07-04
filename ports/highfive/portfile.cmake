@@ -1,31 +1,44 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO BlueBrain/HighFive
-    REF b9b25da543145166b01bcca01c3cbedfcbd06307 # v2.1.1
-    SHA512 f1de563bf811c285447fdf8e88e4861f1ac0e10bf830cedec587b7a85dcfb2fc9b038dd1f71cbbbf4774c517b5097f3c4afad5048b6a3dfd21f8f0e23ab67ec1
+    REF v2.3
+    SHA512 5bf8bc6d3a57be39a4fd15f28f8c839706e2c8d6e2270f45ea39c28a2ac1e3c7f31ed2f48390a45a868c714c85f03f960a0bc8fad945c80b41f495e6f4aca36a
     HEAD_REF master
+    PATCHES fix-dependency-hdf5.patch
 )
 
-if(${VCPKG_LIBRARY_LINKAGE} MATCHES "static")
-    set(HDF5_USE_STATIC_LIBRARIES ON)
-endif()
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        boost   HIGHFIVE_USE_BOOST
+        tests   HIGHFIVE_UNIT_TESTS
+        xtensor HIGHFIVE_USE_XTENSOR
+)
 
-vcpkg_configure_cmake(
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" HDF5_USE_STATIC_LIBRARIES)
+
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
-        -DHIGHFIVE_UNIT_TESTS=OFF
+        ${FEATURE_OPTIONS}
         -DHIGHFIVE_EXAMPLES=OFF
-        -DUSE_BOOST=OFF
-        -DHIGH_FIVE_DOCUMENTATION=OFF
+        -DHIGHFIVE_BUILD_DOCS=OFF
         -DHDF5_USE_STATIC_LIBRARIES=${HDF5_USE_STATIC_LIBRARIES}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/HighFive/CMake)
+if("tests" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES 
+            tests_high_five_base
+            tests_high_five_easy
+            tests_high_five_multi_dims
+        SEARCH_DIR "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/tests/unit" # Tools are not installed so release version tools are manually copied
+    )
+endif()
+
+vcpkg_cmake_config_fixup(CONFIG_PATH share/HighFive/CMake)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug)
 if(NOT (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Darwin")
@@ -33,4 +46,4 @@ if(NOT (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "Windows
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/highfive RENAME copyright)
+file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)

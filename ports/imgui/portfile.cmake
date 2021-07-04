@@ -1,13 +1,24 @@
 vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
 
-vcpkg_from_github(
+if ("docking-experimental" IN_LIST FEATURES)
+    vcpkg_from_github(
+       OUT_SOURCE_PATH SOURCE_PATH
+       REPO ocornut/imgui
+       REF 1b435ae3e07ca813eb3ef40aaabe7053f5570fae
+       SHA512 bbdbcb4e8544810a51f1d8824a248ddbe19eed4978db7a059bd9c85bb997b1f98ad3997626fd2e9ea67d0e50f1ba1e11338858ebb2cc41c116bd6fd208aac684
+       HEAD_REF docking
+       )
+else()
+    vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ocornut/imgui
-    REF v1.78
-    SHA512 2410df5b39d5ca14ea7181ef4f3b501ad8879e10895ed540f079f213dcc528b50e57cc16fce6f50a67e8a7be00b03c5833cabfd5db4ba210cafce6d95da389c6
+    REF v1.83
+    SHA512 2150e7101f384b1c749b2e89876b2085a7ff43435f04e88602d0e5e00db7a41c1ace5176bdb0963326845d1c8303b5092a7ca1c9c8e70c522ba96f899ed5bb9c
     HEAD_REF master
-)
+    )
+endif()
 
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/imgui-config.cmake.in DESTINATION ${SOURCE_PATH})
 file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
 if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT VCPKG_TARGET_IS_OSX))
@@ -15,6 +26,7 @@ if(("metal-binding" IN_LIST FEATURES OR "osx-binding" IN_LIST FEATURES) AND (NOT
 endif()
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES 
     allegro5-binding            IMGUI_BUILD_ALLEGRO5_BINDING
     dx9-binding                 IMGUI_BUILD_DX9_BINDING
     dx10-binding                IMGUI_BUILD_DX10_BINDING
@@ -34,6 +46,7 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     vulkan-binding              IMGUI_BUILD_VULKAN_BINDING
     win32-binding               IMGUI_BUILD_WIN32_BINDING
     freetype                    IMGUI_FREETYPE
+    wchar32                     IMGUI_USE_WCHAR32
 )
 
 if ("libigl-imgui" IN_LIST FEATURES)
@@ -59,6 +72,13 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+
+if ("freetype" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_ENABLE_FREETYPE" "#define IMGUI_ENABLE_FREETYPE")
+endif()
+if ("wchar32" IN_LIST FEATURES)
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/imconfig.h" "//#define IMGUI_USE_WCHAR32" "#define IMGUI_USE_WCHAR32")
+endif()
 
 vcpkg_copy_pdbs()
 vcpkg_fixup_cmake_targets()

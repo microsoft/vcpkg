@@ -1,5 +1,0 @@
-Source: osgearth
-Version: 3.0
-Homepage: https://github.com/gwaldron/osgearth
-Description:  osgEarth - Dynamic map generation toolkit for OpenSceneGraph Copyright 2015 Pelican Mapping.
-Build-Depends: osg[plugins]

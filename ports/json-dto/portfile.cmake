@@ -1,10 +1,8 @@
-include(vcpkg_common_functions)
-
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO stiffstream/json_dto
-    REF aded62c151bdeb07e416cfb404a1edfc1324f29f # v.0.2.9.2
-    SHA512 a298a4220160cb70f50e0dc96900743f12ad0290f401d5ab03fc97fa16260261af6b496b4de4b4f098394c02b4aadead442acf7f9edfee3faf91e56890688768
+    REF 7fce92cd3bdacdcd0b41ed26d2cc981e3f70956e # v.0.2.13
+    SHA512 f678545cc60828ab76d6e8532ac9dbf8e4e68d873d0a98f17d62934dd0b3a3e255b38adf838b65a12e0d954edc7866eb6393f6783709f6f7fac29167886e7bf3
 )
 
 vcpkg_configure_cmake(
@@ -25,3 +23,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib ${CURRENT_PACKAGES_DIR}/debug)
 
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+
