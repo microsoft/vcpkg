@@ -35,6 +35,8 @@
     <_ZVcpkgExecutable>$([System.IO.Path]::Combine($(VcpkgRoot), 'vcpkg.exe'))</_ZVcpkgExecutable>
 
     <ProjectStateLine>VcpkgTriplet=$(VcpkgTriplet):$(ProjectStateLine)</ProjectStateLine>
+
+    <ExternalIncludePath>%(ExternalIncludePath);$(_ZVcpkgCurrentInstalledDir)include</ExternalIncludePath>
   </PropertyGroup>
 
   <!-- Import property page 'Vcpkg' -->
