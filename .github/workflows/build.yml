@@ -48,12 +48,12 @@ jobs:
         portmidi
         protobuf
         pthreads
-        qt5-base
-        qt5-declarative
-        qt5-script
-        qt5-svg
-        qt5-translations
-        qt5-winextras
+        qt-base
+        qt-declarative
+        qt-script
+        qt-svg
+        qt-translations
+        qt-winextras
         qtkeychain
         rubberband
         soundtouch
