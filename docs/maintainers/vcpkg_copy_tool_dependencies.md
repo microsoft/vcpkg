@@ -6,10 +6,16 @@ Copy all DLL dependencies of built tools into the tool folder.
 
 ## Usage
 ```cmake
-vcpkg_copy_tool_dependencies(<${CURRENT_PACKAGES_DIR}/tools/${PORT}>)
+vcpkg_copy_tool_dependencies(
+    TOOL_DIR <${CURRENT_PACKAGES_DIR}/tools/${PORT}>
+    [DYNAMIC_DEPENS <dep1>...]
+)
 ```
-## Parameters
+## TOOL_DIR
 The path to the directory containing the tools.
+
+### DYNAMIC_DEPENS
+A list of tool’s dynamic dependency library names.
 
 ## Notes
 This command should always be called by portfiles after they have finished rearranging the binary output, if they have any tools.
