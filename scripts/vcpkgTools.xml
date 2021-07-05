@@ -88,22 +88,22 @@
         <sha512>f477842d0cebefcd6bf9c6d536ab8ea20ec5b0aa967ee963ab6a101aeff9df8742ca600d35f39e2e7158d76d8231f1ed2bef6104dce84d2bf8d6b07d17d706a1</sha512>
     </tool>
     <tool name="nuget" os="windows">
-        <version>5.5.1</version>
+        <version>5.9.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
-        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.9.1/nuget.exe</url>
+        <sha512>d7acca2b1271bfd3d6f7c7088bceee7a5a5e860d38c05a159f59b1f4bf935e963fde183a769db944df8f6dd44177bb91942578c86eef204cffa119d3d68e97fc</sha512>
     </tool>
     <tool name="nuget" os="linux">
-        <version>5.5.1</version>
+        <version>5.9.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
-        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.9.1/nuget.exe</url>
+        <sha512>d7acca2b1271bfd3d6f7c7088bceee7a5a5e860d38c05a159f59b1f4bf935e963fde183a769db944df8f6dd44177bb91942578c86eef204cffa119d3d68e97fc</sha512>
     </tool>
     <tool name="nuget" os="osx">
-        <version>5.5.1</version>
+        <version>5.9.1</version>
         <exeRelativePath>nuget.exe</exeRelativePath>
-        <url>https://dist.nuget.org/win-x86-commandline/v5.5.1/nuget.exe</url>
-        <sha512>22ea847d8017cd977664d0b13c889cfb13c89143212899a511be217345a4e243d4d8d4099700114a11d26a087e83eb1a3e2b03bdb5e0db48f10403184cd26619</sha512>
+        <url>https://dist.nuget.org/win-x86-commandline/v5.9.1/nuget.exe</url>
+        <sha512>d7acca2b1271bfd3d6f7c7088bceee7a5a5e860d38c05a159f59b1f4bf935e963fde183a769db944df8f6dd44177bb91942578c86eef204cffa119d3d68e97fc</sha512>
     </tool>
     <tool name="installerbase" os="windows">
         <version>3.1.81</version>
@@ -127,25 +127,25 @@
         <archiveName>aria2-1.33.1-win-32bit-build1.zip</archiveName>
     </tool>
     <tool name="ninja" os="windows">
-        <version>1.10.1</version>
+        <version>1.10.2</version>
         <exeRelativePath>ninja.exe</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-win.zip</url>
-        <sha512>0120054f0fea6eea4035866201f69fba1c039f681f680cfcbbefcaee97419815d092a6e2f3823ea6c3928ad296395f36029e337127ee977270000b35df5f9c40</sha512>
-        <archiveName>ninja-win-1.10.1.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-win.zip</url>
+        <sha512>6004140d92e86afbb17b49c49037ccd0786ce238f340f7d0e62b4b0c29ed0d6ad0bab11feda2094ae849c387d70d63504393714ed0a1f4d3a1f155af7a4f1ba3</sha512>
+        <archiveName>ninja-win-1.10.2.zip</archiveName>
     </tool>
     <tool name="ninja" os="linux">
-        <version>1.10.1</version>
+        <version>1.10.2</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-linux.zip</url>
-        <sha512>9820c76fde6fac398743766e7ea0fe8a7d6e4191a77512a2d2f51c2ddcc947fcd91ac08522742281a285418c114e760b0158a968305f8dc854bb9693883b7f1e</sha512>
-        <archiveName>ninja-linux-1.10.1.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-linux.zip</url>
+        <sha512>93e802e9c17fb59636cddde4bad1ddaadad624f4ecfee00d5c78790330a4e9d433180e795718cda27da57215ce643c3929cf72c85337ee019d868c56f2deeef3</sha512>
+        <archiveName>ninja-linux-1.10.2.zip</archiveName>
     </tool>
     <tool name="ninja" os="osx">
-        <version>1.10.1</version>
+        <version>1.10.2</version>
         <exeRelativePath>ninja</exeRelativePath>
-        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.1/ninja-mac.zip</url>
-        <sha512>99f5ccca2461a4d340f4528a8eef6d81180757da78313f1f9412ed13a7bbaf6df537a342536fd053db00524bcb734d205af5f6fde419a1eb2e6f77ee8b7860fe</sha512>
-        <archiveName>ninja-mac-1.10.1.zip</archiveName>
+        <url>https://github.com/ninja-build/ninja/releases/download/v1.10.2/ninja-mac.zip</url>
+        <sha512>bcd12f6a3337591306d1b99a7a25a6933779ba68db79f17c1d3087d7b6308d245daac08df99087ff6be8dc7dd0dcdbb3a50839a144745fa719502b3a7a07260b</sha512>
+        <archiveName>ninja-mac-1.10.2.zip</archiveName>
     </tool>
     <tool name="ninja" os="freebsd">
         <version>1.8.2</version>
