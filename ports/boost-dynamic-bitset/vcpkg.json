@@ -4,12 +4,15 @@
   "description": "Boost dynamic_bitset module",
   "homepage": "https://github.com/boostorg/dynamic_bitset",
   "dependencies": [
+    "boost-assert",
     "boost-config",
     "boost-core",
     "boost-detail",
     "boost-functional",
     "boost-integer",
     "boost-move",
+    "boost-static-assert",
+    "boost-throw-exception",
     "boost-vcpkg-helpers"
   ]
 }

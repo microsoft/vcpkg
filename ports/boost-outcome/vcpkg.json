@@ -5,6 +5,7 @@
   "homepage": "https://github.com/boostorg/outcome",
   "dependencies": [
     "boost-config",
+    "boost-exception",
     "boost-system",
     "boost-throw-exception",
     "boost-vcpkg-helpers"
