@@ -1541,6 +1541,8 @@ teemo:arm64-windows=fail
 teemo:x64-osx=fail
 telnetpp:arm-uwp=fail
 telnetpp:x64-uwp=fail
+# https://github.com/microsoft/vcpkg/issues/18809
+tensorflow:x64-osx=skip
 tfhe:x86-windows=fail
 tfhe:x64-windows=fail
 tfhe:x64-windows-static=fail
