@@ -310,17 +310,14 @@ foreach ($library in $libraries)
         if ($IsWindows)
         {
             $groups = $(
-                findstr /si /C:"include <boost/" include/*
-                findstr /si /C:"include <boost/" src/*
-                findstr /si /C:"include \`"boost/" include/*
-                findstr /si /C:"include \`"boost/" src/*
+                findstr /rsi /C:"include [<\`"]boost/" include/*
+                findstr /rsi /C:"include [<\`"]boost/" src/*
             ) | % { $_ -replace "^[^:]*:","" }
         }
         else
         {
             $groups = $(
-                grep -irhs "include <boost/" include src
-                grep -irhs "include \`"boost/" include src
+                grep -irhs "include [<\`"]boost/" include src
             )
         }
 
@@ -329,7 +326,7 @@ foreach ($library in $libraries)
                 -replace "boost/numeric/conversion/","boost/numeric_conversion/" `
                 -replace "boost/functional/hash.hpp","boost/container_hash/hash.hpp" `
                 -replace "boost/detail/([^/]+)/","boost/`$1/" `
-                -replace " *# *include *(<|`")boost/([a-zA-Z0-9\._]*)(/|>).*", "`$2" `
+                -replace " *# *include *[<`"]boost/([a-zA-Z0-9\._]*)[/>`"].*", "`$1" `
                 -replace "/|\.hp?p?| ","" } | group | % name | % {
             # mappings
             Write-Verbose "${library}: $_"
