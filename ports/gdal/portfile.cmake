@@ -1,6 +1,3 @@
-include(${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake)
-#include(${CMAKE_CURRENT_LIST_DIR}/dependency_unix.cmake)
-
 vcpkg_fail_port_install(ON_ARCH "arm")
 
 # NOTE: update the version and checksum for new GDAL release
@@ -25,7 +22,7 @@ if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 
 vcpkg_extract_source_archive_ex(
-    ARCHIVE ${ARCHIVE}
+    ARCHIVE "${ARCHIVE}"
     OUT_SOURCE_PATH SOURCE_PATH
     PATCHES ${GDAL_PATCHES}
 )
@@ -34,34 +31,39 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   set(NATIVE_DATA_DIR "${CURRENT_PACKAGES_DIR}/share/gdal")
   set(NATIVE_HTML_DIR "${CURRENT_PACKAGES_DIR}/share/gdal/html")
 
+  include("${CMAKE_CURRENT_LIST_DIR}/dependency_win.cmake")
   find_dependency_win()
 
+  set(NMAKE_OPTIONS "")
+  set(NMAKE_OPTIONS_REL "")
+  set(NMAKE_OPTIONS_DBG "")
+
   if("mysql-libmysql" IN_LIST FEATURES OR "mysql-libmariadb" IN_LIST FEATURES)
-      list(APPEND NMAKE_OPTIONS MYSQL_INC_DIR=${MYSQL_INCLUDE_DIR})
-      list(APPEND NMAKE_OPTIONS_REL MYSQL_LIB=${MYSQL_LIBRARY_REL})
-      list(APPEND NMAKE_OPTIONS_DBG MYSQL_LIB=${MYSQL_LIBRARY_DBG})
+      list(APPEND NMAKE_OPTIONS "MYSQL_INC_DIR=${MYSQL_INCLUDE_DIR}")
+      list(APPEND NMAKE_OPTIONS_REL "MYSQL_LIB=${MYSQL_LIBRARY_REL}")
+      list(APPEND NMAKE_OPTIONS_DBG "MYSQL_LIB=${MYSQL_LIBRARY_DBG}")
   endif()
 
   list(APPEND NMAKE_OPTIONS
-      DATADIR=${NATIVE_DATA_DIR}
-      HTMLDIR=${NATIVE_HTML_DIR}
-      GEOS_DIR=${GEOS_INCLUDE_DIR}
+      "DATADIR=${NATIVE_DATA_DIR}"
+      "HTMLDIR=${NATIVE_HTML_DIR}"
+      "GEOS_DIR=${GEOS_INCLUDE_DIR}"
       "GEOS_CFLAGS=-I${GEOS_INCLUDE_DIR} -DHAVE_GEOS"
-      PROJ_INCLUDE=-I${PROJ_INCLUDE_DIR}
-      EXPAT_DIR=${EXPAT_INCLUDE_DIR}
-      EXPAT_INCLUDE=-I${EXPAT_INCLUDE_DIR}
-      CURL_INC=-I${CURL_INCLUDE_DIR}
+      "PROJ_INCLUDE=-I${PROJ_INCLUDE_DIR}"
+      "EXPAT_DIR=${EXPAT_INCLUDE_DIR}"
+      "EXPAT_INCLUDE=-I${EXPAT_INCLUDE_DIR}"
+      "CURL_INC=-I${CURL_INCLUDE_DIR}"
       "SQLITE_INC=-I${SQLITE_INCLUDE_DIR} ${HAVE_SPATIALITE}"
-      PG_INC_DIR=${PGSQL_INCLUDE_DIR}
+      "PG_INC_DIR=${PGSQL_INCLUDE_DIR}"
       OPENJPEG_ENABLED=YES
-      OPENJPEG_CFLAGS=-I${OPENJPEG_INCLUDE_DIR}
+      "OPENJPEG_CFLAGS=-I${OPENJPEG_INCLUDE_DIR}"
       OPENJPEG_VERSION=20100
       WEBP_ENABLED=YES
-      WEBP_CFLAGS=-I${WEBP_INCLUDE_DIR}
-      LIBXML2_INC=-I${XML2_INCLUDE_DIR}
+      "WEBP_CFLAGS=-I${WEBP_INCLUDE_DIR}"
+      "LIBXML2_INC=-I${XML2_INCLUDE_DIR}"
       PNG_EXTERNAL_LIB=1
-      PNGDIR=${PNG_INCLUDE_DIR}
-      ZLIB_INC=-I${ZLIB_INCLUDE_DIR}
+      "PNGDIR=${PNG_INCLUDE_DIR}"
+      "ZLIB_INC=-I${ZLIB_INCLUDE_DIR}"
       ZLIB_EXTERNAL_LIB=1
       ACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1
       MSVC_VER=1900
@@ -71,7 +73,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
       list(APPEND NMAKE_OPTIONS WIN64=YES)
   endif()
 
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
       list(APPEND NMAKE_OPTIONS CURL_CFLAGS=-DCURL_STATICLIB)
       list(APPEND NMAKE_OPTIONS DLLBUILD=0)
       list(APPEND NMAKE_OPTIONS "PROJ_FLAGS=-DPROJ_STATIC -DPROJ_VERSION=5")
@@ -81,7 +83,7 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
       list(APPEND NMAKE_OPTIONS DLLBUILD=1)
   endif()
 
-  if (VCPKG_CRT_LINKAGE STREQUAL static)
+  if (VCPKG_CRT_LINKAGE STREQUAL "static")
       set(LINKAGE_FLAGS "/MT")
   else()
       set(LINKAGE_FLAGS "/MD")
@@ -89,42 +91,42 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
 
   list(APPEND NMAKE_OPTIONS_REL
       ${NMAKE_OPTIONS}
-      GDAL_HOME=${CURRENT_PACKAGES_DIR}
-      CXX_CRT_FLAGS=${LINKAGE_FLAGS}
-      PROJ_LIBRARY=${PROJ_LIBRARY_REL}
-      PNG_LIB=${PNG_LIBRARY_REL}
+      "GDAL_HOME=${CURRENT_PACKAGES_DIR}"
+      "CXX_CRT_FLAGS=${LINKAGE_FLAGS}"
+      "PROJ_LIBRARY=${PROJ_LIBRARY_REL}"
+      "PNG_LIB=${PNG_LIBRARY_REL}"
       "GEOS_LIB=${GEOS_LIBRARY_REL}"
-      EXPAT_LIB=${EXPAT_LIBRARY_REL}
+      "EXPAT_LIB=${EXPAT_LIBRARY_REL}"
       "CURL_LIB=${CURL_LIBRARY_REL} wsock32.lib wldap32.lib winmm.lib"
       "SQLITE_LIB=${SQLITE_LIBRARY_REL} ${SPATIALITE_LIBRARY_REL}"
-      OPENJPEG_LIB=${OPENJPEG_LIBRARY_REL}
-      WEBP_LIBS=${WEBP_LIBRARY_REL}
+      "OPENJPEG_LIB=${OPENJPEG_LIBRARY_REL}"
+      "WEBP_LIBS=${WEBP_LIBRARY_REL}"
       "LIBXML2_LIB=${XML2_LIBRARY_REL} ${ICONV_LIBRARY_REL} ${LZMA_LIBRARY_REL}"
-      ZLIB_LIB=${ZLIB_LIBRARY_REL}
+      "ZLIB_LIB=${ZLIB_LIBRARY_REL}"
       "PG_LIB=${PGSQL_LIBRARY_REL} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_REL}"
   )
 
   list(APPEND NMAKE_OPTIONS_DBG
       ${NMAKE_OPTIONS}
-      GDAL_HOME=${CURRENT_PACKAGES_DIR}/debug
-      CXX_CRT_FLAGS="${LINKAGE_FLAGS}d"
-      PROJ_LIBRARY=${PROJ_LIBRARY_DBG}
-      PNG_LIB=${PNG_LIBRARY_DBG}
+      "GDAL_HOME=${CURRENT_PACKAGES_DIR}/debug"
+      "CXX_CRT_FLAGS=${LINKAGE_FLAGS}d"
+      "PROJ_LIBRARY=${PROJ_LIBRARY_DBG}"
+      "PNG_LIB=${PNG_LIBRARY_DBG}"
       "GEOS_LIB=${GEOS_LIBRARY_DBG}"
-      EXPAT_LIB=${EXPAT_LIBRARY_DBG}
+      "EXPAT_LIB=${EXPAT_LIBRARY_DBG}"
       "CURL_LIB=${CURL_LIBRARY_DBG} wsock32.lib wldap32.lib winmm.lib"
       "SQLITE_LIB=${SQLITE_LIBRARY_DBG} ${SPATIALITE_LIBRARY_DBG}"
-      OPENJPEG_LIB=${OPENJPEG_LIBRARY_DBG}
-      WEBP_LIBS=${WEBP_LIBRARY_DBG}
+      "OPENJPEG_LIB=${OPENJPEG_LIBRARY_DBG}"
+      "WEBP_LIBS=${WEBP_LIBRARY_DBG}"
       "LIBXML2_LIB=${XML2_LIBRARY_DBG} ${ICONV_LIBRARY_DBG} ${LZMA_LIBRARY_DBG}"
-      ZLIB_LIB=${ZLIB_LIBRARY_DBG}
+      "ZLIB_LIB=${ZLIB_LIBRARY_DBG}"
       "PG_LIB=${PGSQL_LIBRARY_DBG} Secur32.lib Shell32.lib Advapi32.lib Crypt32.lib Gdi32.lib ${OPENSSL_LIBRARY_DBG}"
       DEBUG=1
   )
 
   # Begin build process
   vcpkg_install_nmake(
-    SOURCE_PATH ${SOURCE_PATH}
+    SOURCE_PATH "${SOURCE_PATH}"
     TARGET devinstall
     OPTIONS_RELEASE
         "${NMAKE_OPTIONS_REL}"
@@ -133,11 +135,11 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
   )
 
   if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/gdal/html)
+    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/share/gdal/html")
   endif()
 
-  if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
-    list(APPEND GDAL_EXES
+  if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
+    set(GDAL_EXES
         gdal_contour
         gdal_create
         gdal_grid
@@ -168,21 +170,21 @@ if (VCPKG_TARGET_IS_WINDOWS AND NOT VCPKG_TARGET_IS_MINGW)
     )
     vcpkg_copy_tools(TOOL_NAMES ${GDAL_EXES} AUTO_CLEAN)
   else()
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
   endif()
-  file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/share/gdal/html)
+  file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/share/gdal/html")
 
   vcpkg_copy_pdbs()
   
   if(NOT VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE ${CURRENT_PACKAGES_DIR}/lib/gdal204.pdb)
+    file(REMOVE "${CURRENT_PACKAGES_DIR}/lib/gdal204.pdb")
   endif()
 
 else()
     # See https://github.com/microsoft/vcpkg/issues/16990
     vcpkg_execute_required_process(
         COMMAND "${CMAKE_COMMAND}" -E touch config.rpath
-        WORKING_DIRECTORY ${SOURCE_PATH}
+        WORKING_DIRECTORY "${SOURCE_PATH}"
         LOGNAME touch-${TARGET_TRIPLET}
     )
     
@@ -309,18 +311,16 @@ else()
     endif()
 
     vcpkg_configure_make(
-        SOURCE_PATH ${SOURCE_PATH}
+        SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
         COPY_SOURCE
         OPTIONS
             ${CONF_OPTS}
         OPTIONS_RELEASE
-            ${OPTIONS_RELEASE}
             DEBUG_DIR=
             DEBUG_POSTFIX=
         OPTIONS_DEBUG
             --enable-debug
-            ${OPTIONS_DEBUG}
             DEBUG_DIR=/debug
             DEBUG_POSTFIX=d
     )
@@ -328,14 +328,14 @@ else()
     vcpkg_install_make(MAKEFILE GNUmakefile)
     
     file(REMOVE_RECURSE
-         ${CURRENT_PACKAGES_DIR}/lib/gdalplugins
-         ${CURRENT_PACKAGES_DIR}/debug/lib/gdalplugins
-         ${CURRENT_PACKAGES_DIR}/debug/share
+         "${CURRENT_PACKAGES_DIR}/lib/gdalplugins"
+         "${CURRENT_PACKAGES_DIR}/debug/lib/gdalplugins"
+         "${CURRENT_PACKAGES_DIR}/debug/share"
     )
 endif()
 
-file(INSTALL ${CMAKE_CURRENT_LIST_DIR}/usage DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT})
-configure_file(${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake ${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake @ONLY)
+file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
+configure_file("${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake" "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-cmake-wrapper.cmake" @ONLY)
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE.TXT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE.TXT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
