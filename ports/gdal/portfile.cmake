@@ -305,11 +305,6 @@ else()
         list(APPEND CONF_OPTS "--with-proj-extra-lib-for-test=-lstdc++")
     endif()
 
-    # curl has systen dependencies, #17790
-    if(VCPKG_TARGET_IS_OSX)
-        list(APPEND CONF_OPTS "LIBS=-llber -lldap -framework CoreFoundation -framework Security")
-    endif()
-
     vcpkg_configure_make(
         SOURCE_PATH "${SOURCE_PATH}"
         AUTOCONFIG
