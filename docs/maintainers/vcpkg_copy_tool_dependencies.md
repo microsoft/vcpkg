@@ -15,7 +15,7 @@ vcpkg_copy_tool_dependencies(
 The path to the directory containing the tools.
 
 ### DYNAMIC_DEPENS
-A list of tool’s dynamic dependency library names.
+A list of tool's dynamic dependency library names.
 
 ## Notes
 This command should always be called by portfiles after they have finished rearranging the binary output, if they have any tools.
