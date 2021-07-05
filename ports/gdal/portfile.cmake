@@ -190,33 +190,40 @@ else()
     
     set(CONF_OPTS
         --with-hide-internal-symbols=yes
-        # parameters in the same order as the dependencies in vcpkg.json
-        --with-cfitsio=yes
-        --with-curl=yes
-        --with-expat=yes
-        --with-geos=yes
-        --with-gif=yes
-        --with-hdf5=yes
-        --with-libjson-c=yes
-        "--with-geotiff=${CURRENT_INSTALLED_DIR}"
-        --with-jpeg=yes
-        --with-liblzma=yes
-        --with-png=yes
-        --with-pg=yes
-        --with-webp=yes
-        --with-xml2=yes
-        --with-netcdf=yes
-        --with-openjpeg=yes
-        --with-proj=yes
-        --with-sqlite3=yes
-        --with-libtiff=yes
-        --with-libz=yes
-        --with-zstd=yes
-        # bindings
         --with-perl=no
         --with-python=no
         --with-java=no
     )
+    set(CONF_CHECKS "")
+    function(add_config option check)
+        list(APPEND CONF_OPTS "${option}")
+        set(CONF_OPTS "${CONF_OPTS}" PARENT_SCOPE)
+        list(APPEND CONF_CHECKS "${check}")
+        set(CONF_CHECKS "${CONF_CHECKS}" PARENT_SCOPE)
+    endfunction()
+    # parameters in the same order as the dependencies in vcpkg.json
+    add_config("--with-cfitsio=yes"  "CFITSIO support:           external")
+    add_config("--with-curl=yes"     "cURL support .wms/wcs/....:yes")
+    add_config("--with-expat=yes"    "Expat support:             yes")
+    add_config("--with-geos=yes"     "GEOS support:              yes")
+    add_config("--with-gif=yes"      "LIBGIF support:            external")
+    add_config("--with-hdf5=yes"     "HDF5 support:              yes")
+    add_config("--with-libjson=yes"  "checking for JSONC... yes")
+    add_config("--with-geotiff=${CURRENT_INSTALLED_DIR}"
+                                     "LIBGEOTIFF support:        external")
+    add_config("--with-jpeg=yes"     "LIBJPEG support:           external")
+    add_config("--with-liblzma=yes"  "LIBLZMA support:           yes")
+    add_config("--with-png=yes"      "LIBPNG support:            external")
+    add_config("--with-pg=yes"       "PostgreSQL support:        yes")
+    add_config("--with-webp=yes"     "WebP support:              yes")
+    add_config("--with-xml2=yes"     "libxml2 support:           yes")
+    add_config("--with-netcdf=yes"   "NetCDF support:            yes")
+    add_config("--with-openjpeg=yes" "OpenJPEG support:          yes")
+    add_config("--with-proj=yes"     "PROJ >= 6:                 yes")
+    add_config("--with-sqlite3=yes"  "SQLite support:            yes")
+    add_config("--with-libtiff=yes"  "LIBTIFF support:           external")
+    add_config("--with-libz=yes"     "LIBZ support:              external")
+    add_config("--with-zstd=yes"     "ZSTD support:              yes")
 
     if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
         list(APPEND CONF_OPTS --without-libtool --without-ld-shared)
@@ -229,15 +236,15 @@ else()
     endif()
 
     if ("libspatialite" IN_LIST FEATURES)
-        list(APPEND CONF_OPTS --with-spatialite=yes)
+        add_config("--with-spatialite=yes"  "SpatiaLite support:        yes")
     elseif(DISABLE_SYSTEM_LIBRARIES)
-        list(APPEND CONF_OPTS --with-spatialite=no)
+        add_config("--with-spatialite=no"   "SpatiaLite support:        no")
     endif()
 
     if ("mysql-libmariadb" IN_LIST FEATURES)
-        list(APPEND CONF_OPTS --with-mysql=yes)
+        add_config("--with-mysql=yes"  "MySQL support:             yes")
     elseif(DISABLE_SYSTEM_LIBRARIES)
-        list(APPEND CONF_OPTS --with-mysql=no)
+        add_config("--with-mysql=no"   "MySQL support:             no")
     endif()
 
     if(DISABLE_SYSTEM_LIBRARIES)
@@ -319,6 +326,27 @@ else()
             DEBUG_DIR=/debug
             DEBUG_POSTFIX=d
     )
+
+    # Verify configuration results (tightly coupled to vcpkg_configure_make)
+    function(check_config logfile)
+        set(failed_checks "")
+        file(READ "${logfile}" log)
+        foreach(check IN LISTS CONF_CHECKS)
+            if(NOT log MATCHES "${check}")
+                string(APPEND failed_checks "\n   ${check}")
+            endif()
+        endforeach()
+        if(failed_checks)
+            get_filename_component(file "${logfile}" NAME_WE)
+            message(FATAL_ERROR "${file}: Configuration failed for ${failed_checks}")
+        endif()
+    endfunction()
+    foreach(suffix IN ITEMS rel dbg)
+        set(log "${CURRENT_BUILDTREES_DIR}/config-${TARGET_TRIPLET}-${suffix}-out.log")
+        if(EXISTS "${log}")
+            check_config("${log}")
+        endif()
+    endforeach()
 
     vcpkg_install_make(MAKEFILE GNUmakefile)
     
