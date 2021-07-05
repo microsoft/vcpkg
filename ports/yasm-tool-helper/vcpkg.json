@@ -1,11 +1,12 @@
 {
   "name": "yasm-tool-helper",
   "version-string": "2020-03-11",
-  "description": "Backfill that depends on yasm-tool:host",
+  "port-version": 1,
+  "description": "Backfill that depends on yasm:host",
   "homepage": "https://github.com/Microsoft/vcpkg",
   "dependencies": [
     {
-      "name": "yasm-tool",
+      "name": "yasm",
       "host": true
     }
   ]
