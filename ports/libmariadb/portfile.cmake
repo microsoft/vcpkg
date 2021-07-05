@@ -25,9 +25,9 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 )
 
 if("openssl" IN_LIST FEATURES)
-	set(WITH_SSL OPENSSL)
+    set(WITH_SSL OPENSSL)
 else()
-	set(WITH_SSL OFF)
+    set(WITH_SSL OFF)
 endif()
 
 vcpkg_configure_cmake(
@@ -35,10 +35,10 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         ${FEATURE_OPTIONS}
-        -DWITH_UNITTEST=OFF
+        -DINSTALL_PLUGINDIR=plugin/${PORT}
+        -DWITH_UNIT_TESTS=OFF
         -DWITH_CURL=OFF
         -DWITH_SSL=${WITH_SSL}
-        -DINSTALL_PLUGINDIR=plugin/${PORT}
 )
 
 vcpkg_install_cmake()
@@ -52,15 +52,15 @@ if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 endif()
 
-#if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
-#    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
-#endif()
-
 if(VCPKG_BUILD_TYPE STREQUAL "debug")
     # move headers
     file(RENAME
         ${CURRENT_PACKAGES_DIR}/debug/include
         ${CURRENT_PACKAGES_DIR}/include)
+endif()
+
+if (NOT VCPKG_TARGET_IS_WINDOWS)
+    vcpkg_copy_tools(TOOL_NAMES mariadb_config AUTO_CLEAN)
 endif()
 
 # remove plugin folder
