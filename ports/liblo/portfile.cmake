@@ -19,7 +19,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/liblo)
 
 file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/oscsend.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/liblo)
 file(INSTALL ${CURRENT_PACKAGES_DIR}/bin/oscdump.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/liblo)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/liblo)
+vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/liblo)
 
 # Remove unnecessary files
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

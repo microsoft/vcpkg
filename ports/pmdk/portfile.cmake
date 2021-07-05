@@ -51,7 +51,7 @@ file(INSTALL ${LIB_RELEASE_FILES} DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
 # Install tools (release only)
 file(INSTALL ${RELEASE_ARTIFACTS_PATH}/libs/pmempool.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/pmdk)
+vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/pmdk)
 
 vcpkg_copy_pdbs()
 

@@ -81,7 +81,7 @@ foreach(tool ${BIN_NAMES})
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/webp/${tool}${VCPKG_TARGET_EXECUTABLE_SUFFIX}")
   endif()
 endforeach()
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/webp")
+vcpkg_copy_tool_dependencies(TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/webp")
 
 #No tools
 file(GLOB_RECURSE RESULT "${CURRENT_PACKAGES_DIR}/tools/")

@@ -72,7 +72,7 @@ else()
     vcpkg_install_make()
     
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/tools/${PORT}/debug")
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+    vcpkg_copy_tool_dependencies(TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
     vcpkg_fixup_pkgconfig()
 endif()
 vcpkg_copy_pdbs()

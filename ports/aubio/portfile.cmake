@@ -38,5 +38,5 @@ file(COPY
     ${CURRENT_PACKAGES_DIR}/share/${PORT})
 
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies(TOOL_DIR  ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(RENAME ${CURRENT_PACKAGES_DIR}/share/${PORT}/COPYING ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)

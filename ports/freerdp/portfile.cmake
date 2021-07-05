@@ -55,7 +55,7 @@ if(TOOLS_RELEASE)
     file(REMOVE ${TOOLS_RELEASE} ${TOOLS_DEBUG})
 endif()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     file(GLOB_RECURSE FREERDP_DLLS "${CURRENT_PACKAGES_DIR}/lib/*.dll")

@@ -37,7 +37,7 @@ endif()
 
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/KF5Config)
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 file(APPEND ${CURRENT_PACKAGES_DIR}/tools/${PORT}/qt.conf "Data = ../../data")
 vcpkg_copy_pdbs()
 

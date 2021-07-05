@@ -69,7 +69,7 @@ if (EXISTS ${CURRENT_PACKAGES_DIR}/bin/udav${EXECUTABLE_SUFFIX})
 	file(RENAME ${CURRENT_PACKAGES_DIR}/bin/udav${EXECUTABLE_SUFFIX} ${CURRENT_PACKAGES_DIR}/tools/mathgl/udav${EXECUTABLE_SUFFIX})
 endif()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/mathgl)
+vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/mathgl)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
   file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)

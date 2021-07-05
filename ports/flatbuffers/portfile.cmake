@@ -40,7 +40,7 @@ if(flatc_path)
         ${flatc_path}
         ${CURRENT_PACKAGES_DIR}/tools/flatbuffers/${flatc_executable}
     )
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
+    vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/flatbuffers)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

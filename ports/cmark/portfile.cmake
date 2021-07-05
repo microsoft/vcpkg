@@ -32,7 +32,7 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
 
 if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/cmark.exe)
     file(COPY ${CURRENT_PACKAGES_DIR}/bin/cmark.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/cmark/)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/cmark)
+    vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/cmark)
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT EXISTS ${CURRENT_PACKAGES_DIR}/bin/cmark)
