@@ -1,6 +1,6 @@
 Source: exiv2
-Version: 0.27.3
-Port-Version: 4
+Version: 0.27.4
+Port-Version: 1
 Build-Depends: zlib, libiconv, gettext
 Description: Image metadata library and tools
 Homepage: https://www.exiv2.org
@@ -15,3 +15,6 @@ Build-Depends: expat
 
 Feature: video
 Description: Build video support into library
+
+Feature: bmff
+Description: Build BMFF support into library
