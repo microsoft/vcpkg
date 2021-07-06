@@ -3,18 +3,17 @@ cmake_minimum_required(VERSION 3.4)
 project(giflib C)
 
 set(GIFLIB_HEADERS
-    lib/gif_lib.h
+    gif_lib.h
 )
 
 set(GIFLIB_SOURCES
-    lib/dgif_lib.c
-    lib/egif_lib.c
-    lib/gif_err.c
-    lib/gif_font.c
-    lib/gif_hash.c
-    lib/gifalloc.c
-    lib/openbsd-reallocarray.c
-    lib/quantize.c
+    dgif_lib.c
+    egif_lib.c
+    gifalloc.c
+    gif_err.c
+    gif_font.c
+    gif_hash.c
+    openbsd-reallocarray.c
 )
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
