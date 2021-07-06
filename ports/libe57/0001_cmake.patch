@@ -52,3 +52,37 @@ diff -Naur a/CMakeLists.txt b/CMakeLists.txt
  )
  add_executable( e57fields
      src/tools/e57fields.cpp
+@@ -270,15 +270,32 @@
+ install(
+     FILES
+         include/E57Foundation.h
++        include/E57Simple.h
++        include/LASReader.h
+     DESTINATION include/e57
+ )
++install(
++    FILES
++        include/time_conversion/time_conversion.h
++        include/time_conversion/basictypes.h
++        include/time_conversion/constants.h
++        include/time_conversion/gnss_error.h
++    DESTINATION include/e57/time_conversion
++)
+ 
+ install(
+     FILES
+         CHANGES.TXT
+         README.TXT
+         src/refimpl/E57RefImplConfig.cmake
+-    DESTINATION .
++    DESTINATION share/e57refimpl
++)
++
++install(
++    FILES
++        README.TXT
++    RENAME copyright
++    DESTINATION share/libe57
+ )
+ 
+ #include (InstallRequiredSystemLibraries)
