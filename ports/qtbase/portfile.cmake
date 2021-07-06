@@ -12,7 +12,6 @@ set(${PORT}_PATCHES
         dont_force_cmakecache.patch
         fix_find_dep.patch
         20b3eb0.diff # Upstream fix to build with clang-cl; didn't make 6.1.1 so I backported the patch. 
-        dc5e7b6.diff 
         clang-cl_source_location.patch
         )
 

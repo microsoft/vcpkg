@@ -1,6 +1,6 @@
 {
   "name": "qtscxml",
-  "version-semver": "6.1.1",
+  "version-semver": "6.1.2",
   "description": "SCXML (state machine notation) compiler and related tools",
   "homepage": "https://www.qt.io/",
   "dependencies": [

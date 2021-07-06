@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version-semver": "6.1.1",
+  "version-semver": "6.1.2",
   "description": "Qt",
   "homepage": "https://www.qt.io/",
   "dependencies": [
