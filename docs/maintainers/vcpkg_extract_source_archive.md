@@ -21,7 +21,7 @@ vcpkg_extract_source_archive(<out-var>
     [NO_REMOVE_ONE_LEVEL]
     [PATCHES <patch>...]
     [SOURCE_BASE <base>]
-    [BASE_DIRECTORY <relative-path>]
+    [BASE_DIRECTORY <relative-path> | WORKING_DIRECTORY <absolute-path>]
 )
 ```
 
@@ -68,6 +68,8 @@ to allow for a user to modify the sources.
 and `source-base` defaults to the stem of `<archive>`.
 You can change these via the `BASE_DIRECTORY` and `SOURCE_BASE` arguments
 respectively.
+If you need to extract to a location that is not based in `CURRENT_BUILDTREES_DIR`,
+you can use the `WORKING_DIRECTORY` argument to do the same.
 
 ## Examples
 

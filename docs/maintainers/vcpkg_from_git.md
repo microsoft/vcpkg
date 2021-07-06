@@ -27,6 +27,11 @@ The url of the git repository.
 ### REF
 The git sha of the commit to download.
 
+### HEAD_REF
+The git branch to use when the package is requested to be built from the latest sources.
+
+Example: `main`, `develop`, `HEAD`
+
 ### PATCHES
 A list of patches to be applied to the extracted sources.
 
