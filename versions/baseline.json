@@ -2144,6 +2144,10 @@
       "baseline": "2.4.0-2",
       "port-version": 0
     },
+    "ftxui": {
+      "baseline": "2021-06-17",
+      "port-version": 0
+    },
     "function2": {
       "baseline": "4.2.0",
       "port-version": 0
