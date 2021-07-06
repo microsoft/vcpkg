@@ -6,11 +6,25 @@ vcpkg_from_github(
     REF v7.5.0
     SHA512 83eabcaf2114c8af1cabbc96b6ef2b57c934a06f68e7a870adf336feaa19edd57aedaf8507d5c40500e46d4e77f5059f9286e319fe7cadeb9ffc8fa018fb030c
     HEAD_REF master
+    PATCHES
+        add-cmake-targets.patch
+)
+
+# Remove some CMake modules to make sure find_package picks-up the vcpkg dependencies
+set(SOURCE_MODULES_PATH "${SOURCE_PATH}/Microsoft.WindowsAzure.Storage/cmake/Modules")
+file(REMOVE
+    "${SOURCE_MODULES_PATH}/Find*.cmake"
+)
+
+file(COPY
+    "${CMAKE_CURRENT_LIST_DIR}/unofficial-azure-storage-cppConfig.cmake.in"
+    DESTINATION "${SOURCE_PATH}/Microsoft.WindowsAzure.Storage"
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}/Microsoft.WindowsAzure.Storage
     PREFER_NINJA
+    DISABLE_PARALLEL_CONFIGURE
     OPTIONS
         -DCMAKE_FIND_FRAMEWORK=LAST
         -DBUILD_TESTS=OFF
@@ -22,12 +36,11 @@ vcpkg_configure_cmake(
 )
 
 vcpkg_install_cmake()
+vcpkg_copy_pdbs()
+vcpkg_fixup_cmake_targets(CONFIG_PATH "lib/cmake/${PORT}" TARGET_PATH "share/unofficial-${PORT}")
 
 file(INSTALL
-    ${SOURCE_PATH}/LICENSE.txt
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+    "${SOURCE_PATH}/LICENSE.txt"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE
-    ${CURRENT_PACKAGES_DIR}/debug/include)
-
-vcpkg_copy_pdbs()
-
+    "${CURRENT_PACKAGES_DIR}/debug/include")

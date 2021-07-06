@@ -1,0 +1,149 @@
+diff --git a/Microsoft.WindowsAzure.Storage/CMakeLists.txt b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
+index ac9e65d..be41bb6 100644
+--- a/Microsoft.WindowsAzure.Storage/CMakeLists.txt
++++ b/Microsoft.WindowsAzure.Storage/CMakeLists.txt
+@@ -17,10 +17,18 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_LIST_DIR}/cmake/Modu
+ option(BUILD_TESTS "Build test codes" OFF)
+ option(BUILD_SAMPLES "Build sample codes" OFF)
+ 
++list(APPEND VCPKG_COMPILE_DEFINITIONS _TURN_OFF_PLATFORM_STRING)
++set(AZURESTORAGE_LIBRARY azurestorage)
++list(APPEND AZURESTORAGE_LIBRARIES ${AZURESTORAGE_LIBRARY})
++
++find_package(cpprestsdk CONFIG REQUIRED)
++list(APPEND AZURESTORAGE_LIBRARIES "cpprestsdk::cpprest")
++
+ # Platform (not compiler) specific settings
+ if(UNIX)
+   find_package(Boost REQUIRED COMPONENTS log log_setup random system thread locale regex filesystem chrono date_time)
+   find_package(Threads REQUIRED)
++  list(APPEND AZURESTORAGE_LIBRARIES "Boost::boost" "Boost::log" "Boost::log_setup" "Boost::random" "Boost::system" "Boost::thread" "Boost::locale" "Boost::regex" "Boost::filesystem" "Boost::chrono" "Boost::date_time" "Threads::Threads")
+   if(APPLE AND NOT OPENSSL_ROOT_DIR)
+     # Prefer a homebrew version of OpenSSL over the one in /usr/lib
+     file(GLOB OPENSSL_ROOT_DIR /usr/local/Cellar/openssl/*)
+@@ -46,10 +54,9 @@ if(UNIX)
+   find_package(OpenSSL 1.0.0 REQUIRED)
+ 
+ 
+-  find_package(UUID REQUIRED)
+-  find_package(Casablanca REQUIRED)
+-  find_package(LibXML2 REQUIRED)
+-
++  find_package(libuuid CONFIG REQUIRED)
++  find_package(LibXml2 REQUIRED)
++  list(APPEND AZURESTORAGE_LIBRARIES "OpenSSL::SSL" "UUID::uuid" "LibXml2::LibXml2")
+   if(BUILD_TESTS)
+     find_package(UnitTest++ REQUIRED)
+   endif()
+@@ -57,8 +64,7 @@ if(UNIX)
+ 
+ elseif(WIN32)
+   message("-- Setting WIN32 options")
+-  find_package(Casablanca REQUIRED)
+-  add_definitions(-DUNICODE -D_UNICODE -D_WIN32)
++  list(APPEND VCPKG_COMPILE_DEFINITIONS UNICODE _UNICODE _WIN32)
+ else()
+   message("-- Unsupported Build Platform.")
+ endif()
+@@ -68,11 +74,8 @@ if(WIN32 OR UNIX)
+   option(WASTORE_INSTALL_HEADERS "Install header files." ON)
+ 
+   file(GLOB WAS_HEADERS includes/was/*.h)
+-  install(FILES ${WAS_HEADERS} DESTINATION include/was)
+   file(GLOB WASCORE_HEADERS includes/wascore/*.h)
+-  install(FILES ${WASCORE_HEADERS} DESTINATION include/wascore)
+   file(GLOB WASCORE_DATA includes/wascore/*.dat)
+-  install(FILES ${WASCORE_DATA} DESTINATION include/wascore)
+ endif()
+ 
+ # Compiler (not platform) specific settings
+@@ -90,9 +93,8 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+   set(STRICT_CXX_FLAGS ${WARNINGS} "-Werror -pedantic")
+ 
+   if (BUILD_SHARED_LIBS)
+-    add_definitions(-DBOOST_LOG_DYN_LINK)
++    list(APPEND VCPKG_COMPILE_DEFINITIONS BOOST_LOG_DYN_LINK)
+   endif()
+-  add_definitions(-D_TURN_OFF_PLATFORM_STRING)
+ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+   message("-- Setting clang options")
+ 
+@@ -106,17 +108,16 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+ 
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-strict-aliasing")
+   if (BUILD_SHARED_LIBS)
+-    add_definitions(-DBOOST_LOG_DYN_LINK)
++    list(APPEND VCPKG_COMPILE_DEFINITIONS BOOST_LOG_DYN_LINK)
+   endif()
+-  add_definitions(-D_TURN_OFF_PLATFORM_STRING)
+ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+   message("-- Setting MSVC options")
+   add_compile_options(/bigobj)
+   add_compile_options(/MP)
+   if(BUILD_SHARED_LIBS)
+-    add_definitions(-DWASTORAGE_DLL -D_USRDLL)
++    list(APPEND VCPKG_COMPILE_DEFINITIONS WASTORAGE_DLL _USRDLL)
+   else()
+-    add_definitions(-D_NO_WASTORAGE_API)
++    list(APPEND VCPKG_COMPILE_DEFINITIONS _NO_WASTORAGE_API)
+   endif()
+ 
+   if(ENABLE_MT)
+@@ -142,11 +143,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
+ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/Binaries)
+ 
+ set(AZURESTORAGE_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/includes)
+-set(AZURESTORAGE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/includes ${CASABLANCA_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIRS} ${UUID_INCLUDE_DIRS} ${LibXML2_INCLUDE_DIR})
+-
+-
+-set(AZURESTORAGE_LIBRARY azurestorage)
+-set(AZURESTORAGE_LIBRARIES ${AZURESTORAGE_LIBRARY} ${CASABLANCA_LIBRARY} ${Boost_LIBRARIES} ${Boost_FRAMEWORK} ${OPENSSL_LIBRARIES} ${UUID_LIBRARIES} ${LibXML2_LIBRARY} ${CMAKE_THREAD_LIBS_INIT})
++set(AZURESTORAGE_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/includes)
+ 
+ # Set version numbers centralized
+ set (AZURESTORAGE_VERSION_MAJOR 7)
+@@ -175,3 +172,18 @@ if(BUILD_SAMPLES)
+   add_subdirectory(samples)
+ endif()
+ 
++include(CMakePackageConfigHelpers)
++set(PACKAGE_CONFIG_FILE ${CMAKE_BINARY_DIR}/unofficial-azure-storage-cppConfig.cmake)
++set(INSTALL_CONFIG_DIR ${CMAKE_INSTALL_LIBDIR}/cmake/azure-storage-cpp)
++configure_package_config_file(
++    unofficial-azure-storage-cppConfig.cmake.in ${PACKAGE_CONFIG_FILE}
++    INSTALL_DESTINATION ${INSTALL_CONFIG_DIR})
++
++install(
++    EXPORT azure-storage-cpp
++    NAMESPACE unofficial::
++    FILE unofficial-azure-storage-cppTargets.cmake
++    DESTINATION ${INSTALL_CONFIG_DIR})
++install(
++    FILES ${PACKAGE_CONFIG_FILE}
++    DESTINATION ${INSTALL_CONFIG_DIR})
+diff --git a/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt b/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
+index d775d23..52ede87 100644
+--- a/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
++++ b/Microsoft.WindowsAzure.Storage/src/CMakeLists.txt
+@@ -100,12 +100,18 @@ elseif(WIN32)
+   set_target_properties(${AZURESTORAGE_LIBRARY} PROPERTIES OUTPUT_NAME "wastorage")
+ endif()
+ 
+-install(FILES ${WAS_HEADERS} DESTINATION include/was)
+-install(FILES ${WASCORE_HEADERS} DESTINATION include/wascore)
+-install(FILES ${WASCORE_DATA} DESTINATION include/wascore)
++include(GNUInstallDirs)
++target_include_directories(${AZURESTORAGE_LIBRARY} INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
++target_include_directories(${AZURESTORAGE_LIBRARY} PRIVATE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../includes>)
++target_compile_definitions(${AZURESTORAGE_LIBRARY} PUBLIC "${VCPKG_COMPILE_DEFINITIONS}")
++
++install(FILES ${WAS_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/was")
++install(FILES ${WASCORE_HEADERS} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/wascore")
++install(FILES ${WASCORE_DATA} DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/wascore")
+ 
+ install(
+   TARGETS ${AZURESTORAGE_LIBRARY}
++  EXPORT azure-storage-cpp
+   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

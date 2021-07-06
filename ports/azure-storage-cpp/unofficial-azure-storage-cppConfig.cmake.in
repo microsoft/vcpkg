@@ -1,0 +1,24 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+if ("@Boost_FOUND@")
+	find_dependency(Boost REQUIRED COMPONENTS log log_setup random system thread locale regex filesystem chrono date_time)
+endif()
+if ("@Threads_FOUND@")
+	find_dependency(Threads REQUIRED)
+endif()
+if ("@OpenSSL_FOUND@")
+	find_dependency(OpenSSL REQUIRED)
+endif()
+if ("@libuuid_FOUND@")
+	find_dependency(libuuid CONFIG REQUIRED)
+endif()
+if ("@cpprestsdk_FOUND@")
+	find_dependency(cpprestsdk CONFIG REQUIRED)
+endif()
+if ("@LibXml2_FOUND@")
+	find_dependency(LibXml2 REQUIRED)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/unofficial-azure-storage-cppTargets.cmake")
