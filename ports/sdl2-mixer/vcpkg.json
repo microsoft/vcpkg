@@ -1,7 +1,7 @@
 {
   "name": "sdl2-mixer",
   "version": "2.0.4",
-  "port-version": 11,
+  "port-version": 12,
   "description": "Multi-channel audio mixer library for SDL.",
   "homepage": "https://www.libsdl.org/projects/SDL_mixer",
   "dependencies": [
@@ -13,6 +13,12 @@
   "features": {
     "dynamic-load": {
       "description": "Load plugins with dynamic call."
+    },
+    "fluidsynth": {
+      "description": "Support for FluidSynth MIDI/SF2 audio format.",
+      "dependencies": [
+        "fluidsynth"
+      ]
     },
     "libflac": {
       "description": "Support for FLAC audio format.",

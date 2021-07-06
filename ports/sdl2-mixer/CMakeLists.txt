@@ -74,6 +74,18 @@ if(SDL_MIXER_ENABLE_OPUS)
     endif()
 endif()
 
+# Fluidsynth support
+if(SDL_MIXER_ENABLE_FLUIDSYNTH)
+    find_path(FLUIDSYNTH_INCLUDE_DIR fluidsynth.h)
+    find_library(FLUIDSYNTH_LIBRARY fluidsynth)
+    list(APPEND SDL_MIXER_INCLUDES ${FLUIDSYNTH_INCLUDE_DIR})
+    list(APPEND SDL_MIXER_DEFINES MUSIC_MID_FLUIDSYNTH)
+    if (SDL_DYNAMIC_LOAD)
+        get_filename_component(FLUIDSYNTH_LIBRARY_NAME "${FLUIDSYNTH_LIBRARY}" NAME_WE)
+        list(APPEND SDL_MIXER_LOAD_DEFINES -DFLUIDSYNTH_DYNAMIC="${FLUIDSYNTH_LIBRARY_NAME}${LIBRARY_SUFFIX}")
+    endif()
+endif()
+
 add_library(SDL2_mixer
     effect_position.c
     effect_stereoreverse.c
