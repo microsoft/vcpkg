@@ -62,22 +62,20 @@ Halting portfile execution.
         endif()
     endforeach()
 
-    if(NOT success)
-        set(stringified_logs "")
-        foreach(log IN LISTS all_logs)
-            file(SIZE "${log}" log_size)
-            if(NOT log_size EQUAL "0")
-                file(TO_NATIVE_PATH "${log}" native_log)
-                string(APPEND stringified_logs "    ${native_log}\n")
-            endif()
-        endforeach()
+    set(stringified_logs "")
+    foreach(log IN LISTS all_logs)
+        file(SIZE "${log}" log_size)
+        if(NOT log_size EQUAL "0")
+            file(TO_NATIVE_PATH "${log}" native_log)
+            string(APPEND stringified_logs "    ${native_log}\n")
+        endif()
+    endforeach()
 
-        z_vcpkg_prettify_command_line(pretty_command ${arg_COMMAND})
-        message(FATAL_ERROR
-            "  Command failed: ${pretty_command}\n"
-            "  Working Directory: ${arg_WORKING_DIRECTORY}\n"
-            "  See logs for more information:\n"
-            "${stringifed_logs}"
-        )
-    endif()
+    z_vcpkg_prettify_command_line(pretty_command ${arg_COMMAND})
+    message(FATAL_ERROR
+        "  Command failed: ${pretty_command}\n"
+        "  Working Directory: ${arg_WORKING_DIRECTORY}\n"
+        "  See logs for more information:\n"
+        "${stringifed_logs}"
+    )
 endfunction()
