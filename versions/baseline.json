@@ -2701,8 +2701,8 @@
       "port-version": 2
     },
     "irrlicht": {
-      "baseline": "1.8.4-10",
-      "port-version": 0
+      "baseline": "1.8.4",
+      "port-version": 11
     },
     "irrxml": {
       "baseline": "0",
@@ -5090,7 +5090,7 @@
     },
     "qt5-3d": {
       "baseline": "5.15.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-activeqt": {
       "baseline": "5.15.2",
