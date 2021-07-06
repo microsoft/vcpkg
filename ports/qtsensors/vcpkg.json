@@ -12,6 +12,14 @@
     {
       "name": "qtdeclarative",
       "default-features": false
+    },
+    {
+      "name": "qtmultimedia",
+      "default-features": false
+    },
+    {
+      "name": "qtsvg",
+      "default-features": false
     }
   ],
   "default-features": [
