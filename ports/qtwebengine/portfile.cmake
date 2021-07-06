@@ -237,7 +237,7 @@ vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH_WEBENGINE
     URL git://code.qt.io/qt/qtwebengine-chromium.git
-    REF 9b19802a8715bb4cb9fc5a7547235322dbded3da
+    REF ab55fde35eccd342c0a35913377d9b49b738a423
 )
 
 set(BASH "")
@@ -248,13 +248,15 @@ if(WIN32)
     string(REPLACE ";$ENV{SystemRoot}\\system32;" ";${MSYS_ROOT}/usr/bin;$ENV{SystemRoot}\\system32;" NEWPATH "${NEWPATH}")
     set(ENV{PATH} "${NEWPATH}")
 endif()
-message(STATUS "PATH:$ENV{PATH}")
 
 ##### qt_install_submodule
 set(qt_plugindir ${QT6_DIRECTORY_PREFIX}plugins)
 set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 
 qt_download_submodule(PATCHES ${${PORT}_PATCHES})
+if(QT_UPDATE_VERSION)
+    return()
+endif()
 if(NOT EXISTS "${SOURCE_PATH}/src/3rdparty/chromium")
     file(RENAME "${SOURCE_PATH_WEBENGINE}/chromium" "${SOURCE_PATH}/src/3rdparty/chromium")
 endif()

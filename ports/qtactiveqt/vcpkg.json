@@ -1,6 +1,6 @@
 {
   "name": "qtactiveqt",
-  "version-semver": "6.2.0-alpha1",
+  "version-semver": "6.2.0-beta1",
   "description": "ActiveQt",
   "homepage": "https://www.qt.io/",
   "supports": "windows",

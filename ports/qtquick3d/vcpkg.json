@@ -1,6 +1,6 @@
 {
   "name": "qtquick3d",
-  "version-semver": "6.2.0-alpha1",
+  "version-semver": "6.2.0-beta1",
   "description": "A new module and API for defining 3D content in Qt Quick.",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -14,9 +14,8 @@
       "host": true,
       "default-features": false
     },
-    "qtshadertools",
-    "qtquicktimeline"
-    
+    "qtquicktimeline",
+    "qtshadertools"
   ],
   "default-features": [
     "default-features"

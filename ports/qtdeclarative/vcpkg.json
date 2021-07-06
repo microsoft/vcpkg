@@ -1,6 +1,6 @@
 {
   "name": "qtdeclarative",
-  "version-semver": "6.2.0-alpha1",
+  "version-semver": "6.2.0-beta1",
   "description": "Qt Declarative (Quick 2)",
   "homepage": "https://www.qt.io/",
   "dependencies": [

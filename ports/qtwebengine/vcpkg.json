@@ -1,12 +1,11 @@
 {
   "name": "qtwebengine",
-  "version-semver": "6.2.0-alpha1",
+  "version-semver": "6.2.0-beta1",
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qt6betablock",
     "protobuf",
-    "snappy",
+    "qt6betablock",
     {
       "name": "qtbase",
       "default-features": false
@@ -30,7 +29,8 @@
     {
       "name": "qtwebchannel",
       "default-features": false
-    }
+    },
+    "snappy"
   ],
   "default-features": [
     "default-features"

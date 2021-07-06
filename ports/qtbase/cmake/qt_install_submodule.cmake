@@ -40,7 +40,6 @@ function(qt_download_submodule)
     if(QT_UPDATE_VERSION)
         set(VCPKG_POLICY_EMPTY_PACKAGE enabled CACHE INTERNAL "")
         file(APPEND "${VCPKG_ROOT_DIR}/ports/qtbase/cmake/qt_new_refs.cmake" "set(${PORT}_REF ${NEW_REF})\n")
-        return()
     endif()
     set(SOURCE_PATH "${SOURCE_PATH}" PARENT_SCOPE)
 endfunction()
@@ -83,8 +82,6 @@ function(qt_cmake_configure)
             list(APPEND _qarg_OPTIONS -DCMAKE_CROSSCOMPILING=ON -DCMAKE_SYSTEM_PROCESSOR:STRING=ARM64 -DCMAKE_SYSTEM_NAME:STRING=Windows)
         endif()
     endif()
-
-
 
     vcpkg_configure_cmake(
         SOURCE_PATH "${SOURCE_PATH}"
@@ -228,6 +225,9 @@ function(qt_install_submodule)
     set(qt_qmldir ${QT6_DIRECTORY_PREFIX}qml)
 
     qt_download_submodule(PATCHES ${_qis_PATCHES})
+    if(QT_UPDATE_VERSION)
+        return()
+    endif()
 
     if(_qis_DISABLE_NINJA)
         set(_opt DISABLE_NINJA)
