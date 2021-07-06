@@ -6,8 +6,8 @@ endif()
 
 vcpkg_fail_port_install(ON_ARCH "arm" ON_TARGET "uwp")
 
-set(LIBRESSL_VERSION 2.9.1)
-set(LIBRESSL_HASH 7051911e566bb093c48a70da72c9981b870e3bf49a167ba6c934eece873084cc41221fbe3cd0c8baba268d0484070df7164e4b937854e716337540a87c214354)
+set(LIBRESSL_VERSION 3.3.3)
+set(LIBRESSL_HASH 2d0b5f4cfe37d573bc64d5967abb77f536dbe581fbad9637d925332bcdfd185fe6810335b2af80a89f92d7e6edaa8ea3ba2492c60a117e47ea1b2d6aacf01f0f)
 
 vcpkg_download_distfile(
     LIBRESSL_SOURCE_ARCHIVE
@@ -26,7 +26,8 @@ vcpkg_extract_source_archive_ex(
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    "tools" LIBRESSL_APPS
+    FEATURES
+        "tools" LIBRESSL_APPS
 )
 
 vcpkg_configure_cmake(
@@ -59,6 +60,7 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
 endif()
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/etc/ssl/certs"
+    "${CURRENT_PACKAGES_DIR}/debug/etc/ssl/certs"
     "${CURRENT_PACKAGES_DIR}/share/man"
     "${CURRENT_PACKAGES_DIR}/debug/include"
     "${CURRENT_PACKAGES_DIR}/debug/share"
@@ -68,7 +70,7 @@ vcpkg_copy_pdbs()
 
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
-if((VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP) AND (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic"))
+if(VCPKG_TARGET_IS_WINDOWS OR VCPKG_TARGET_IS_UWP)
     file(GLOB_RECURSE LIBS "${CURRENT_PACKAGES_DIR}/*.lib")
     foreach(LIB ${LIBS})
         string(REGEX REPLACE "(.+)-[0-9]+\\.lib" "\\1.lib" LINK "${LIB}")
