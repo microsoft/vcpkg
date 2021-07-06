@@ -487,7 +487,6 @@ intelrdfpmathlib:x64-linux=fail
 intelrdfpmathlib:x64-uwp=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
-irrlicht:x64-osx=fail
 irrlicht:x64-uwp=fail
 isal:arm64-windows=fail
 isal:arm-uwp=fail
