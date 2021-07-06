@@ -28,7 +28,7 @@ index 51680fd1..691f52c2 100644
  
    find_package(LAPACK REQUIRED)
 -  target_link_libraries(faiss PRIVATE ${LAPACK_LIBRARIES})
-+  target_link_libraries(faiss PRIVATE lapack)
++  target_link_libraries(faiss PRIVATE LAPACK::LAPACK)
  endif()
  
  install(TARGETS faiss
