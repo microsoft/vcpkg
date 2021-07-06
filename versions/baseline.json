@@ -3908,6 +3908,10 @@
       "baseline": "1.2.0",
       "port-version": 0
     },
+    "mapbox-wagyu": {
+      "baseline": "0.5.0",
+      "port-version": 0
+    },
     "marble": {
       "baseline": "19.08.2",
       "port-version": 2
