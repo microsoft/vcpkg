@@ -41,13 +41,13 @@ diff --git a/fc-cache/fc-cache.c b/fc-cache/fc-cache.c
 index 87e302083..8b5012110 100644
 --- a/fc-cache/fc-cache.c
 +++ b/fc-cache/fc-cache.c
-@@ -34,11 +34,20 @@
+@@ -34,16 +34,23 @@
  #include <fontconfig/fontconfig.h>
  #include <stdio.h>
  #include <stdlib.h>
-+#ifdef HAVE_UNISTD_H
+ #ifdef HAVE_UNISTD_H
  #include <unistd.h>
-+#endif
+ #endif
 +#ifdef _MSC_VER
 +#include <io.h>
 +#endif
@@ -59,20 +59,23 @@ index 87e302083..8b5012110 100644
 +#if HAVE_FCNTL_H
  #include <fcntl.h>
 +#endif
+ #ifdef HAVE_DIRENT_H
  #include <dirent.h>
+ #endif
  #include <string.h>
  #include <locale.h>
+ 
 diff --git a/fc-cat/fc-cat.c b/fc-cat/fc-cat.c
 index 69611bcc3..e7b0efbaa 100644
 --- a/fc-cat/fc-cat.c
 +++ b/fc-cat/fc-cat.c
-@@ -36,9 +36,16 @@
+@@ -36,11 +36,16 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
-+#ifdef HAVE_UNISTD_H
+ #ifdef HAVE_UNISTD_H
  #include <unistd.h>
-+#endif
+ #endif
 +#ifdef _MSC_VER
 +#include <io.h>
 +#endif
@@ -87,13 +90,13 @@ diff --git a/fc-conflist/fc-conflist.c b/fc-conflist/fc-conflist.c
 index 5c40a0f09..affaca09e 100644
 --- a/fc-conflist/fc-conflist.c
 +++ b/fc-conflist/fc-conflist.c
-@@ -35,7 +35,12 @@
+@@ -35,9 +35,12 @@
  
  #include <fontconfig/fontconfig.h>
  #include <stdio.h>
-+#ifdef HAVE_UNISTD_H
+ #ifdef HAVE_UNISTD_H
  #include <unistd.h>
-+#endif
+ #endif
 +#ifdef _MSC_VER
 +#include <io.h>
 +#endif
@@ -104,13 +107,10 @@ diff --git a/fc-list/fc-list.c b/fc-list/fc-list.c
 index 2039acd36..0e56b1c32 100644
 --- a/fc-list/fc-list.c
 +++ b/fc-list/fc-list.c
-@@ -24,7 +24,12 @@
+@@ -24,6 +24,9 @@
  
  #include <fontconfig/fontconfig.h>
  #include <stdio.h>
-+#ifdef HAVE_UNISTD_H
- #include <unistd.h>
-+#endif
 +#ifdef _MSC_VER
 +#include <io.h>
 +#endif
@@ -121,13 +121,10 @@ diff --git a/fc-match/fc-match.c b/fc-match/fc-match.c
 index dee61479d..da8d820aa 100644
 --- a/fc-match/fc-match.c
 +++ b/fc-match/fc-match.c
-@@ -33,7 +33,12 @@
+@@ -33,6 +33,9 @@
  
  #include <fontconfig/fontconfig.h>
  #include <stdio.h>
-+#ifdef HAVE_UNISTD_H
- #include <unistd.h>
-+#endif
 +#ifdef _MSC_VER
 +#include <io.h>
 +#endif
@@ -138,13 +135,10 @@ diff --git a/fc-pattern/fc-pattern.c b/fc-pattern/fc-pattern.c
 index 7989b816f..15b43e098 100644
 --- a/fc-pattern/fc-pattern.c
 +++ b/fc-pattern/fc-pattern.c
-@@ -33,7 +33,12 @@
+@@ -33,6 +33,9 @@
  
  #include <fontconfig/fontconfig.h>
  #include <stdio.h>
-+#ifdef HAVE_UNISTD_H
- #include <unistd.h>
-+#endif
 +#ifdef _MSC_VER
 +#include <io.h>
 +#endif
@@ -155,13 +149,10 @@ diff --git a/fc-query/fc-query.c b/fc-query/fc-query.c
 index fbffb8415..58c251fe3 100644
 --- a/fc-query/fc-query.c
 +++ b/fc-query/fc-query.c
-@@ -36,7 +36,12 @@
+@@ -36,6 +36,9 @@
  #include <fontconfig/fontconfig.h>
  #include <fontconfig/fcfreetype.h>
  #include <stdio.h>
-+#ifdef HAVE_UNISTD_H
- #include <unistd.h>
-+#endif
 +#ifdef _MSC_VER
 +#include <io.h>
 +#endif
@@ -172,13 +163,10 @@ diff --git a/fc-scan/fc-scan.c b/fc-scan/fc-scan.c
 index 9302ac559..3a0ccf188 100644
 --- a/fc-scan/fc-scan.c
 +++ b/fc-scan/fc-scan.c
-@@ -36,7 +36,12 @@
+@@ -36,6 +36,9 @@
  #include <fontconfig/fontconfig.h>
  #include <fontconfig/fcfreetype.h>
  #include <stdio.h>
-+#ifdef HAVE_UNISTD_H
- #include <unistd.h>
-+#endif
 +#ifdef _MSC_VER
 +#include <io.h>
 +#endif
@@ -189,66 +177,32 @@ diff --git a/fc-validate/fc-validate.c b/fc-validate/fc-validate.c
 index 2ceee2024..8f702f190 100644
 --- a/fc-validate/fc-validate.c
 +++ b/fc-validate/fc-validate.c
-@@ -36,7 +36,12 @@
+@@ -36,6 +36,9 @@
  #include <fontconfig/fontconfig.h>
  #include <fontconfig/fcfreetype.h>
  #include <stdio.h>
-+#ifdef HAVE_UNISTD_H
- #include <unistd.h>
-+#endif
 +#ifdef _MSC_VER
 +#include <io.h>
 +#endif
  #include <stdlib.h>
  #include <string.h>
  #include <locale.h>
-diff --git a/src/fcatomic.c b/src/fcatomic.c
-index d12d32408..da7234934 100644
---- a/src/fcatomic.c
-+++ b/src/fcatomic.c
-@@ -50,7 +50,9 @@
- #include "fcint.h"
- #include <sys/types.h>
- #include <sys/stat.h>
-+#ifdef HAVE_UNISTD_H
- #include <unistd.h>
-+#endif
- #include <stdlib.h>
- #include <time.h>
- 
-diff --git a/src/fccache.c b/src/fccache.c
-index 2b604014e..50fb742c6 100644
---- a/src/fccache.c
-+++ b/src/fccache.c
-@@ -30,7 +30,9 @@
- #include <limits.h>
- #include <sys/types.h>
- #include <sys/stat.h>
-+#ifndef _MSC_VER
- #include <sys/time.h>
-+#endif
- #include <assert.h>
- #if defined(HAVE_MMAP) || defined(__CYGWIN__)
- #  include <unistd.h>
 diff --git a/src/fcint.h b/src/fcint.h
 index de78cd8c9..4fb269ffa 100644
 --- a/src/fcint.h
 +++ b/src/fcint.h
-@@ -40,7 +40,18 @@
+@@ -40,9 +40,15 @@
  #include <limits.h>
  #include <float.h>
  #include <math.h>
-+#ifdef HAVE_UNISTD_H
+ #ifdef HAVE_UNISTD_H
  #include <unistd.h>
-+#endif
+ #endif
 +#ifdef _MSC_VER
 +#include <direct.h>
 +#include <io.h>
 +#include <BaseTsd.h>
 +#define ssize_t SSIZE_T
-+#define F_OK 0
-+#define W_OK 2
-+typedef int mode_t;
 +#endif
  #include <stddef.h>
  #include <sys/types.h>
@@ -257,22 +211,21 @@ diff --git a/test/test-migration.c b/test/test-migration.c
 index b7d96dcce..7eac59dcc 100644
 --- a/test/test-migration.c
 +++ b/test/test-migration.c
-@@ -28,13 +28,16 @@
+@@ -28,14 +28,16 @@
  #include <stdio.h>
  #include <stdlib.h>
  #include <string.h>
-+#ifdef HAVE_UNISTD_H
- #include <unistd.h>
-+#endif
 +#ifdef _MSC_VER
 +#include <io.h>
 +#endif
  #include <sys/types.h>
  #include <dirent.h>
+ #ifdef HAVE_UNISTD_H
+ #include <unistd.h>
+ #endif
  #ifndef HAVE_STRUCT_DIRENT_D_TYPE
 -#include <sys/types.h>
  #include <sys/stat.h>
--#include <unistd.h>
  #endif
  #include <fontconfig/fontconfig.h>
  

@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index 7c1a697..93ccf1b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -499,7 +499,7 @@ FC_DEFAULT_FONTS=""
+ if test x${default_fonts+set} = xset; then
+ 	fc_IFS=$IFS
+ 	IFS=","
+-	for p in "$default_fonts"; do
++	for p in $default_fonts; do
+ 		FC_DEFAULT_FONTS="$FC_DEFAULT_FONTS\t<dir>$p</dir>\n"
+ 	done
+ 	IFS=$fc_IFS

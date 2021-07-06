@@ -1,4 +1,4 @@
-set(FONTCONFIG_VERSION 2.13.1)
+set(FONTCONFIG_VERSION 2.13.94)
 
 if(NOT VCPKG_TARGET_IS_MINGW AND VCPKG_TARGET_IS_WINDOWS)
     set(PATCHES fix_def_dll_name.patch)
@@ -8,19 +8,22 @@ vcpkg_from_gitlab(
     GITLAB_URL https://gitlab.freedesktop.org
     OUT_SOURCE_PATH SOURCE_PATH
     REPO fontconfig/fontconfig
-    REF 844d8709a1f3ecab45015b24b72dd775c13b2421 #v2.13.1
-    SHA512 fed0cf46f5dca9cb1e03475d7a8d7efdab06c7180fe0c922fb30cadfa91e1efe1f6a6e36d2fdb742a479cb09c05b0aefb5da5658bf2e01a32b7ac88ee8ff0b58
+    REF e291fda7d42e5d64379555097a066d9c2c4efce3 #v2.13.1
+    SHA512 d531bf9bc0dcae418c1f5936bb2847e94ed03f3097d16eb10cbff52d02999d2052b05e3491205739174f238bcb387f63820f5ff4cf996e232f413a511aede990
     HEAD_REF master # branch name
     PATCHES remove_tests.patch
             build.patch
-            build2.patch
             disable-install-data.patch
-            macos_arm_fccache.patch
+            extra-escaping.patch
             ${PATCHES}
 )
 
 vcpkg_find_acquire_program(GPERF)
 get_filename_component(GPERF_PATH ${GPERF} DIRECTORY)
+vcpkg_add_to_path(${GPERF_PATH})
+
+vcpkg_find_acquire_program(PYTHON3)
+get_filename_component(PYTHON3_EXE_PATH ${PYTHON3} DIRECTORY)
 vcpkg_add_to_path(${GPERF_PATH})
 
 vcpkg_configure_make(
@@ -104,7 +107,7 @@ if(NOT VCPKG_TARGET_IS_WINDOWS)
 endif()
 
 if(VCPKG_TARGET_IS_WINDOWS)
-    # Unnecessary make rule creating the fontconfig cache dir on windows. 
+    # Unnecessary make rule creating the fontconfig cache dir on windows.
     file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}LOCAL_APPDATA_FONTCONFIG_CACHE")
 endif()
 
