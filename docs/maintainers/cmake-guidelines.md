@@ -17,6 +17,12 @@ We hope that they will make both forwards and backwards compatibility easier.
 
 - Except for out-parameters, we always use `cmake_parse_arguments()`
   rather than function parameters or referring to `${ARG<N>}`.
+  - This doesn't necessarily need to be followed for "script-local helper functions"
+    - In this case, positional parameters should be put in the function
+      declaration (rather than using `${ARG<N>}`),
+      and should be named according to local rules (i.e. `snake_case`).
+    - Exception: positional parameters that are optional should be
+      given a name via `set(argument_name "${ARG<N>}")`, after checking `ARGC`.
   - Out-parameters should be the first parameter to a function. Example:
   ```cmake
   function(format out_var)
@@ -25,12 +31,6 @@ We hope that they will make both forwards and backwards compatibility easier.
     set("${out_var}" "${buffer}" PARENT_SCOPE)
   endfunction()
   ```
-  - This doesn't necessarily need to be followed for "script-local helper functions"
-    - In this case, positional parameters should be put in the function
-      declaration (rather than using `${ARG<N>}`),
-      and should be named according to local rules (i.e. `snake_case`).
-    - Exception: positional parameters that are optional should be
-      given a name via `set(argument_name "${ARG<N>}")`, after checking `ARGC`.
 - There are no unparsed or unused arguments.
   Always check for `ARGN` or `arg_UNPARSED_ARGUMENTS`.
   `FATAL_ERROR` when possible, `WARNING` if necessary for backwards compatibility.
@@ -66,13 +66,26 @@ We hope that they will make both forwards and backwards compatibility easier.
   If the variable is intended to be used locally,
   it must be explicitly initialized to empty with `set(foo "")`.
 - All variables expected to be inherited from the parent scope across an API boundary (i.e. not a file-local function) should be documented. Note that all variables mentioned in triplets.md are considered documented.
-- Out parameters are only set in `PARENT_SCOPE`, and are never read.
-- `CACHE` variables are used only for global variables which are shared among functions,
-  and for internal state to avoid duplicating work.
+- Out parameters are only set in `PARENT_SCOPE` and are never read.
+  See also the helper `z_vcpkg_forward_output_variable()` to forward out parameters through a function scope.
+- `CACHE` variables are used only for global variables which are shared internally among strongly coupled
+  functions and for internal state within a single function to avoid duplicating work.
+  These should be used extremely sparingly and should use the `Z_VCPKG_` prefix to avoid
+  colliding with any local variables that would be defined by any other code.
+  - Examples:
+    - `vcpkg_cmake_configure`'s `Z_VCPKG_CMAKE_GENERATOR`
+    - `z_vcpkg_get_cmake_vars`'s `Z_VCPKG_GET_CMAKE_VARS_FILE`
 - `include()`s are only allowed in `ports.cmake` or `vcpkg-port-config.cmake`.
 - `foreach(RANGE)`'s arguments _must always be_ natural numbers,
   and `<start>` _must always be_ less than or equal to `<stop>`.
-  - This must be checked.
+  - This must be checked by something like:
+  ```cmake
+  if(start LESS_EQUAL end)
+    foreach(RANGE start end)
+      ...
+    endforeach()
+  endif()
+  ```
 - All port-based scripts must use `include_guard(GLOBAL)`
   to avoid being included multiple times.
 - `set(var)` should not be used. Use `unset(var)` to unset a variable,
