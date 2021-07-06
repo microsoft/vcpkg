@@ -10,7 +10,7 @@ if "@VCPKG_PLATFORM_TOOLSET@" != "external"
 }
 else
 {
-    using gcc : 5.4.1 : @CMAKE_CXX_COMPILER@
+    using @B2_TOOLSET@ : : @CMAKE_CXX_COMPILER@
         :
         <ranlib>@CMAKE_RANLIB@
         <archiver>@CMAKE_AR@
