@@ -1,0 +1,30 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index e4c6556..4bc92ab 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -37,6 +37,7 @@ endif()
+ message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
+ 
+ message(STATUS "VERSION = ${VERSION}, BUILD = ${BUILD}")
++set(CMAKE_DEBUG_POSTFIX d)
+ 
+ # Detect CPU type and whether we're building 64-bit or 32-bit code
+ math(EXPR BITS "${CMAKE_SIZEOF_VOID_P} * 8")
+@@ -601,7 +602,7 @@ endif()
+ if(ENABLE_STATIC)
+   add_library(jpeg-static STATIC ${JPEG_SOURCES} $<TARGET_OBJECTS:simd>
+     ${SIMD_OBJS})
+-  if(NOT MSVC)
++  if(1)
+     set_target_properties(jpeg-static PROPERTIES OUTPUT_NAME jpeg)
+   endif()
+ endif()
+@@ -661,7 +662,7 @@ if(WITH_TURBOJPEG)
+       rdppm.c wrbmp.c wrppm.c)
+     set_property(TARGET turbojpeg-static PROPERTY COMPILE_FLAGS
+       "-DBMP_SUPPORTED -DPPM_SUPPORTED")
+-    if(NOT MSVC)
++    if(1)
+       set_target_properties(turbojpeg-static PROPERTIES OUTPUT_NAME turbojpeg)
+     endif()
+ 

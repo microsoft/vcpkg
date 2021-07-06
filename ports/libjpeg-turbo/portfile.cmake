@@ -12,6 +12,7 @@ vcpkg_from_github(
         add-options-for-exes-docs-headers.patch
         #workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
+		fix-output-names.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
@@ -53,24 +54,6 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
-# Rename libraries for static builds
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/jpeg.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/lib/turbojpeg.lib")
-    endif()
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpegd.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg-static.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpegd.lib")
-        file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/bin" "${CURRENT_PACKAGES_DIR}/debug/bin")
-    endif()
-else(VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
-    if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/jpeg.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/jpegd.lib")
-        file(RENAME "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpeg.lib" "${CURRENT_PACKAGES_DIR}/debug/lib/turbojpegd.lib")
-    endif()
-endif()
-
 set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libjpeg.pc")
 if(EXISTS "${_file}" AND VCPKG_TARGET_IS_WINDOWS)
     vcpkg_replace_string("${_file}" "-ljpeg" "-ljpegd")
@@ -78,19 +61,6 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libjpeg-turbo TARGET_PATH share/${PORT})
-
-# Fix library names
-file(GLOB CONFIG_FILES "${CURRENT_PACKAGES_DIR}/share/${PORT}/libjpeg-turboTargets-*.cmake")
-foreach(f ${CONFIG_FILES})
-    file(READ ${f} _contents)
-    string(REPLACE "/debug/lib/jpeg-static.lib" "/debug/lib/jpegd.lib" _contents "${_contents}")
-    string(REPLACE "/debug/lib/jpeg.lib" "/debug/lib/jpegd.lib" _contents "${_contents}")
-    string(REPLACE "/lib/jpeg-static.lib" "/lib/jpeg.lib" _contents "${_contents}")
-    string(REPLACE "/debug/lib/turbojpeg-static.lib" "/debug/lib/turbojpegd.lib" _contents "${_contents}")
-    string(REPLACE "/debug/lib/turbojpeg.lib" "/debug/lib/turbojpegd.lib" _contents "${_contents}")
-    string(REPLACE "/lib/turbojpeg-static.lib" "/lib/turbojpeg.lib" _contents "${_contents}")
-    file(WRITE ${f} "${_contents}")
-endforeach()
 
 file(REMOVE_RECURSE
     "${CURRENT_PACKAGES_DIR}/debug/share"
