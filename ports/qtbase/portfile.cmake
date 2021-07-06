@@ -4,15 +4,14 @@ set(QT_IS_LATEST ON)
 include("${CMAKE_CURRENT_LIST_DIR}/cmake/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES 
-        #jpeg.patch
         harfbuzz.patch
         config_install.patch 
         allow_outside_prefix.patch 
         dont_force_cmakecache.patch
         fix_cmake_build.patch
+        promotion.patch
         #buildcmake.patch # <-probably required
-        # fix_find_dep.patch # <-MAybe required
-        #dc5e7b6.diff 
+        #fix_find_dep.patch # <-MAybe required
         clang-cl_source_location.patch
         )
 

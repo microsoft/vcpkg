@@ -1,0 +1,13 @@
+diff --git a/cmake/QtPublicTargetHelpers.cmake b/cmake/QtPublicTargetHelpers.cmake
+index 3a0d3dda7..4ea7b504f 100644
+--- a/cmake/QtPublicTargetHelpers.cmake
++++ b/cmake/QtPublicTargetHelpers.cmake
+@@ -209,7 +209,7 @@ endfunction()
+ 
+ function(__qt_internal_promote_target_to_global target)
+     get_property(is_global TARGET ${target} PROPERTY IMPORTED_GLOBAL)
+-    if(NOT is_global)
++    if(NOT is_global AND NOT ${target} STREQUAL Threads::Threads)
+         message(DEBUG "Promoting target to global: '${target}'")
+         set_property(TARGET ${target} PROPERTY IMPORTED_GLOBAL TRUE)
+     endif()

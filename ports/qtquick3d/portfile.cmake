@@ -17,7 +17,7 @@ else()
     list(APPEND FEATURE_OPTIONS -DINPUT_quick3d_assimp=no)
 endif()
 
-set(TOOL_NAMES balsam meshdebug shadergen)
+set(TOOL_NAMES balsam balsamui meshdebug shadergen instancer)
 
 qt_install_submodule(PATCHES    ${${PORT}_PATCHES}
                      TOOL_NAMES ${TOOL_NAMES}

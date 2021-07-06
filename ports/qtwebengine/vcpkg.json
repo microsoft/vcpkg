@@ -5,6 +5,8 @@
   "homepage": "https://www.qt.io/",
   "dependencies": [
     "qt6betablock",
+    "protobuf",
+    "snappy",
     {
       "name": "qtbase",
       "default-features": false
