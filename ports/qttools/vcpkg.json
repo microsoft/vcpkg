@@ -1,6 +1,6 @@
 {
   "name": "qttools",
-  "version-semver": "6.1.1",
+  "version-semver": "6.1.2",
   "description": "Qt Tools",
   "homepage": "https://www.qt.io/",
   "dependencies": [
