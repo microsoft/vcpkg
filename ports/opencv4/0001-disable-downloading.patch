@@ -1,5 +1,5 @@
 diff --git a/cmake/OpenCVDownload.cmake b/cmake/OpenCVDownload.cmake
-index 63cf6d3..01e84a5 100644
+index a427a41..6d1f1ef 100644
 --- a/cmake/OpenCVDownload.cmake
 +++ b/cmake/OpenCVDownload.cmake
 @@ -157,6 +157,9 @@ function(ocv_download)
