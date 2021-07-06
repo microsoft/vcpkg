@@ -12,7 +12,7 @@ vcpkg_from_github(
         add-options-for-exes-docs-headers.patch
         #workaround for vcpkg bug see #5697 on github for more information
         workaround_cmake_system_processor.patch
-		fix-output-names.patch
+        fix-output-names.patch
 )
 
 if(VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (VCPKG_CMAKE_SYSTEM_NAME AND NOT VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore"))
