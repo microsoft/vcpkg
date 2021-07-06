@@ -1,6 +1,6 @@
 {
   "name": "qtdoc",
-  "version-semver": "6.2.0-beta1",
+  "version-semver": "6.1.2",
   "description": "Qt Documentation",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -8,8 +8,7 @@
       "name": "qtbase",
       "default-features": false
     },
-    "qtdeclarative",
-    "qtquickcontrols2"
+    "qtdeclarative"
   ],
   "default-features": [
     "default-features"

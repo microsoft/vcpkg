@@ -21,6 +21,7 @@ vcpkg_cmake_configure(
         -DSPDLOG_FMT_EXTERNAL=ON
         -DSPDLOG_INSTALL=ON
         -DSPDLOG_BUILD_SHARED=${SPDLOG_BUILD_SHARED}
+        -DSPDLOG_BUILD_EXAMPLE=OFF
 )
 
 vcpkg_cmake_install()

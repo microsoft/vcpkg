@@ -1,6 +1,6 @@
 {
   "name": "qt",
-  "version-semver": "6.2.0-beta1",
+  "version-semver": "6.1.2",
   "description": "Qt",
   "homepage": "https://www.qt.io/",
   "dependencies": [
@@ -11,34 +11,23 @@
     },
     "qtcharts",
     "qtcoap",
-    "qtconnectivity",
     "qtdatavis3d",
     "qtdeclarative",
     "qtdoc",
     "qtimageformats",
-    "qtlocation",
     "qtlottie",
     "qtmqtt",
-    "qtmultimedia",
     "qtnetworkauth",
     "qtopcua",
     "qtquick3d",
     "qtquickcontrols2",
     "qtquicktimeline",
-    "qtremoteobjects",
     "qtscxml",
-    "qtsensors",
-    "qtserialbus",
-    "qtserialport",
     "qtshadertools",
     "qtsvg",
     "qttools",
     "qttranslations",
-    "qtvirtualkeyboard",
-    "qtwebchannel",
-    "qtwebengine",
-    "qtwebsockets",
-    "qtwebview"
+    "qtvirtualkeyboard"
   ],
   "default-features": [
     "default-features"
