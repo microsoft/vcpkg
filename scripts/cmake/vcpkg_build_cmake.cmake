@@ -44,73 +44,88 @@ function(vcpkg_build_cmake)
         message(FATAL_ERROR "The ${PORT} port already depends on vcpkg-cmake; using both vcpkg-cmake and vcpkg_build_cmake in the same port is unsupported.")
     endif()
 
-    if(NOT arg_LOGFILE_ROOT)
+    if(NOT DEFINED arg_LOGFILE_ROOT)
         set(arg_LOGFILE_ROOT "build")
     endif()
 
-    set(PARALLEL_ARG)
-    set(NO_PARALLEL_ARG)
+    vcpkg_list(SET build_args)
+    vcpkg_list(SET parallel_param)
+    vcpkg_list(SET no_parallel_param)
 
-    if(Z_VCPKG_CMAKE_GENERATOR MATCHES "Ninja")
-        set(BUILD_ARGS "-v") # verbose output
-        set(PARALLEL_ARG "-j${VCPKG_CONCURRENCY}")
-        set(NO_PARALLEL_ARG "-j1")
+    if(NOT DEFINED Z_VCPKG_CMAKE_GENERATOR)
+        message(FATAL_ERROR "Calling vcpkg_build_cmake before vcpkg_configure_cmake; this is unsupported")
+    elseif(Z_VCPKG_CMAKE_GENERATOR MATCHES "Ninja")
+        vcpkg_list(SET build_args "-v") # verbose output
+        vcpkg_list(SET parallel_args "-j${VCPKG_CONCURRENCY}")
+        vcpkg_list(SET no_parallel_args "-j1")
     elseif(Z_VCPKG_CMAKE_GENERATOR MATCHES "Visual Studio")
-        set(BUILD_ARGS
+        vcpkg_list(SET build_args
             "/p:VCPkgLocalAppDataDisabled=true"
             "/p:UseIntelMKL=No"
         )
-        set(PARALLEL_ARG "/m")
+        vcpkg_list(SET parallel_args "/m")
     elseif(Z_VCPKG_CMAKE_GENERATOR MATCHES "NMake")
         # No options are currently added for nmake builds
     else()
         message(FATAL_ERROR "Unrecognized GENERATOR setting from vcpkg_configure_cmake(). Valid generators are: Ninja, Visual Studio, and NMake Makefiles")
     endif()
 
-    if(arg_TARGET)
-        set(TARGET_PARAM "--target" ${arg_TARGET})
+    if(DEFINED arg_TARGET)
+        vcpkg_list(SET target_args "--target" "${arg_TARGET}")
     else()
-        set(TARGET_PARAM)
+        vcpkg_list(SET target_args)
     endif()
 
-    foreach(BUILDTYPE "debug" "release")
-        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL BUILDTYPE)
-            if(BUILDTYPE STREQUAL "debug")
-                set(SHORT_BUILDTYPE "dbg")
-                set(CONFIG "Debug")
+    foreach(buildtype IN ITEMS debug release)
+        if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL buildtype)
+            if(buildtype STREQUAL "debug")
+                set(short_buildtype "dbg")
+                set(config "Debug")
             else()
-                set(SHORT_BUILDTYPE "rel")
-                set(CONFIG "Release")
+                set(short_buildtype "rel")
+                set(config "Release")
             endif()
 
-            message(STATUS "Building ${TARGET_TRIPLET}-${SHORT_BUILDTYPE}")
+            message(STATUS "Building ${TARGET_TRIPLET}-${short_buildtype}")
 
             if(arg_ADD_BIN_TO_PATH)
-                set(_BACKUP_ENV_PATH "$ENV{PATH}")
-                if(BUILDTYPE STREQUAL "debug")
+                set(env_path_backup "$ENV{PATH}")
+                if(buildtype STREQUAL "debug")
                     vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/debug/bin")
                 else()
                     vcpkg_add_to_path(PREPEND "${CURRENT_INSTALLED_DIR}/bin")
                 endif()
             endif()
 
+            vcpkg_list(SET common_args
+                --build .
+                --config "${config}"
+                ${target_args}
+                --
+                ${build_args}
+            )
+
             if (arg_DISABLE_PARALLEL)
                 vcpkg_execute_build_process(
-                    COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
-                    LOGNAME "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
+                    COMMAND "${CMAKE_COMMAND}" ${common_args} ${no_parallel_args}
+                    WORKING_DIRECTORY
+                        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_buildtype}"
+                    LOGNAME
+                        "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}-${short_buildtype}"
                 )
             else()
                 vcpkg_execute_build_process(
-                    COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${PARALLEL_ARG}
-                    NO_PARALLEL_COMMAND ${CMAKE_COMMAND} --build . --config ${CONFIG} ${TARGET_PARAM} -- ${BUILD_ARGS} ${NO_PARALLEL_ARG}
-                    WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${SHORT_BUILDTYPE}
-                    LOGNAME "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}-${SHORT_BUILDTYPE}"
+                    COMMAND "${CMAKE_COMMAND}" ${common_args} ${parallel_args}
+                    NO_PARALLEL_COMMAND "${CMAKE_COMMAND}" ${common_args} ${no_parallel_args}
+                    WORKING_DIRECTORY
+                        "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-${short_buildtype}"
+                    LOGNAME
+                        "${arg_LOGFILE_ROOT}-${TARGET_TRIPLET}-${short_buildtype}"
                 )
             endif()
 
             if(arg_ADD_BIN_TO_PATH)
-                set(ENV{PATH} "${_BACKUP_ENV_PATH}")
+                set(ENV{PATH} "${env_path_backup}")
             endif()
         endif()
     endforeach()
