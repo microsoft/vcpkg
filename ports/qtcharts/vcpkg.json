@@ -1,6 +1,6 @@
 {
   "name": "qtcharts",
-  "version-semver": "6.1.1",
+  "version-semver": "6.1.2",
   "description": "QtCharts module",
   "homepage": "https://www.qt.io/",
   "dependencies": [
