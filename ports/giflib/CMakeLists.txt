@@ -19,6 +19,13 @@ set(GIFLIB_SOURCES
 )
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+
+include(CheckSymbolExists)
+check_symbol_exists(reallocarray "stdlib.h" HAVE_REALLOCARRAY)
+if(HAVE_REALLOCARRAY)
+	add_definitions(-DHAVE_REALLOCARRAY)
+endif()
+
 add_library(gif ${GIFLIB_SOURCES})
 if(BUILD_SHARED_LIBS AND WIN32)
     target_sources(gif PRIVATE "${GIFLIB_EXPORTS}")
