@@ -110,7 +110,7 @@ function(vcpkg_from_gitlab)
         set(org_name "${CMAKE_MATCH_1}")
         set(repo_name "${CMAKE_MATCH_2}")
         set(gitlab_link "${arg_GITLAB_URL}/${org_name}/${repo_name}")
-    elseif(arg_REPO MATCHES [[^([^/]*)/([^/]*)/([^/]*)]]) # 3 elements
+    elseif(arg_REPO MATCHES [[^([^/]*)/([^/]*)/([^/]*)$]]) # 3 elements
         set(org_name "${CMAKE_MATCH_1}")
         set(group_name "${CMAKE_MATCH_2}")
         set(repo_name "${CMAKE_MATCH_3}")
