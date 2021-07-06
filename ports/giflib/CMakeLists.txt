@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.4)
 
 project(giflib C)
 
+set(GIFLIB_EXPORTS "NOTFOUND" CACHE FILEPATH "The path of the DEF file listing the DLL exports.")
+
 set(GIFLIB_HEADERS
     gif_lib.h
 )
@@ -18,6 +20,11 @@ set(GIFLIB_SOURCES
 
 add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 add_library(gif ${GIFLIB_SOURCES})
+if(BUILD_SHARED_LIBS AND WIN32)
+    target_sources(gif PRIVATE "${GIFLIB_EXPORTS}")
+else()
+    set(UNUSED "${GIFLIB_EXPORTS}")
+endif()
 
 if (NOT GIFLIB_SKIP_HEADERS)
     install(FILES ${GIFLIB_HEADERS} DESTINATION include)

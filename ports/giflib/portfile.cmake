@@ -1,5 +1,3 @@
-vcpkg_check_linkage(ONLY_STATIC_LIBRARY)
-
 set(GIFLIB_VERSION 5.2.1)
 
 set(EXTRA_PATCHES "")
@@ -21,6 +19,8 @@ file(COPY "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt" DESTINATION "${SOURCE_PATH}
 
 vcpkg_cmake_configure(
     SOURCE_PATH "${SOURCE_PATH}"
+    OPTIONS
+        "-DGIFLIB_EXPORTS=${CMAKE_CURRENT_LIST_DIR}/exports.def"
     OPTIONS_DEBUG
         -DGIFLIB_SKIP_HEADERS=ON
 )
