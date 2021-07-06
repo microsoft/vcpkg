@@ -48,6 +48,7 @@ function(z_vcpkg_get_cmake_vars out_file)
             OPTIONS_RELEASE "-DVCPKG_OUTPUT_FILE:PATH=${CURRENT_BUILDTREES_DIR}/cmake-vars-${TARGET_TRIPLET}-rel.cmake.log"
             PREFER_NINJA
             LOGNAME get-cmake-vars-${TARGET_TRIPLET}
+            Z_GET_CMAKE_VARS_USAGE # ignore vcpkg_cmake_configure, be quiet, don't set variables...
         )
 
         set(include_string "")
