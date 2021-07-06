@@ -130,6 +130,10 @@ Next, you will need to create a feed for your project; see the [Azure DevOps Art
 variables:
 - name: VCPKG_BINARY_SOURCES
   value: 'clear;nuget,<FEED_URL>,readwrite'
+  
+steps:
+# Remember to add this task to allow vcpkg to upload archives via NuGet
+- task: NuGetAuthenticate@0
 ```
 
 If you are using custom agents with a non-Windows OS, you will need to install Mono to run `nuget.exe` (`apt install mono-complete`, `brew install mono`, etc).
