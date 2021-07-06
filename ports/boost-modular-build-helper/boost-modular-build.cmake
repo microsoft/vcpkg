@@ -84,6 +84,7 @@ function(boost_modular_build)
         if(DEFINED _bm_BOOST_CMAKE_FRAGMENT)
             list(APPEND configure_option "-DBOOST_CMAKE_FRAGMENT=${_bm_BOOST_CMAKE_FRAGMENT}")
         endif()
+
         vcpkg_configure_cmake(
             SOURCE_PATH ${BOOST_BUILD_INSTALLED_DIR}/share/boost-build
             PREFER_NINJA

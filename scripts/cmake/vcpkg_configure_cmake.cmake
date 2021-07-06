@@ -231,7 +231,7 @@ function(vcpkg_configure_cmake)
         endif()
     endif()
 
-
+    list(JOIN VCPKG_TARGET_ARCHITECTURE "\;" target_architecure_string)
     list(APPEND arg_OPTIONS
         "-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=${VCPKG_CHAINLOAD_TOOLCHAIN_FILE}"
         "-DVCPKG_TARGET_TRIPLET=${TARGET_TRIPLET}"
@@ -255,7 +255,7 @@ function(vcpkg_configure_cmake)
         "-DVCPKG_LINKER_FLAGS=${VCPKG_LINKER_FLAGS}"
         "-DVCPKG_LINKER_FLAGS_RELEASE=${VCPKG_LINKER_FLAGS_RELEASE}"
         "-DVCPKG_LINKER_FLAGS_DEBUG=${VCPKG_LINKER_FLAGS_DEBUG}"
-        "-DVCPKG_TARGET_ARCHITECTURE=${VCPKG_TARGET_ARCHITECTURE}"
+        "-DVCPKG_TARGET_ARCHITECTURE=${target_architecure_string}"
         "-DCMAKE_INSTALL_LIBDIR:STRING=lib"
         "-DCMAKE_INSTALL_BINDIR:STRING=bin"
         "-D_VCPKG_ROOT_DIR=${VCPKG_ROOT_DIR}"
@@ -272,7 +272,8 @@ function(vcpkg_configure_cmake)
     # Sets configuration variables for macOS builds
     foreach(config_var  INSTALL_NAME_DIR OSX_DEPLOYMENT_TARGET OSX_SYSROOT OSX_ARCHITECTURES)
         if(DEFINED VCPKG_${config_var})
-            list(APPEND arg_OPTIONS "-DCMAKE_${config_var}=${VCPKG_${config_var}}")
+            list(JOIN VCPKG_${config_var} "\;" config_var_value)
+            list(APPEND arg_OPTIONS "-DCMAKE_${config_var}=${config_var_value}")
         endif()
     endforeach()
 

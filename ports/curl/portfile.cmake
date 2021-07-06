@@ -13,6 +13,7 @@ vcpkg_from_github(
         0010_fix_othertests_cmake.patch
         0011_fix_static_build.patch
         0012-fix-dependency-idn2.patch
+        0020-fix-pc-file.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CURL_STATICLIB)
