@@ -1,13 +1,13 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO eclipse/paho.mqtt.c
-  REF 317fb008e1541838d1c29076d2bc5c3e4b6c4f53 # v1.3.8
-  SHA512 065d850dbcd20144e7f5534d0cac30170c7f90b1cdca90f4eaaa6b7d69056d9e1bfe951ef34aa7e1a2d3bbc193e95a1526d4dee40ea2f243f3120620b577aacb
+  REF 3b7ae6348bc917d42c04efa962e4868c09bbde9f # v1.3.9
+  SHA512 73c10b7da7aa228100511db280ae56484cb8c42b8f0cfafb2fa3f6e230b4bb1d6b3611aa9219736a0baa9d7de0baf802dd70dbf308077f1a745bd61a67a797c7
   HEAD_REF master
   PATCHES
-         remove_compiler_options.patch
-         fix-install-path.patch
-         fix-unresolvedsymbol-arm.patch
+    remove_compiler_options.patch
+    fix-install-path.patch
+    fix-unresolvedsymbol-arm.patch
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PAHO_BUILD_STATIC)
