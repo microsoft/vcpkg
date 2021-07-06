@@ -46,6 +46,12 @@
       "dependencies": [
         "opusfile"
       ]
+    },
+    "fluidsynth": {
+      "description": "Support for FluidSynth MIDI/SF2 audio format.",
+      "dependencies": [
+        "fluidsynth"
+      ]
     }
   }
 }
