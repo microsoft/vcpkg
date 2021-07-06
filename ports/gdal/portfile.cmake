@@ -209,8 +209,7 @@ else()
     add_config("--with-gif=yes"      "LIBGIF support:            external")
     add_config("--with-hdf5=yes"     "HDF5 support:              yes")
     add_config("--with-libjson=yes"  "checking for JSONC... yes")
-    add_config("--with-geotiff=${CURRENT_INSTALLED_DIR}"
-                                     "LIBGEOTIFF support:        external")
+    add_config("--with-geotiff=yes"  "LIBGEOTIFF support:        external")
     add_config("--with-jpeg=yes"     "LIBJPEG support:           external")
     add_config("--with-liblzma=yes"  "LIBLZMA support:           yes")
     add_config("--with-png=yes"      "LIBPNG support:            external")
@@ -318,13 +317,8 @@ else()
         COPY_SOURCE
         OPTIONS
             ${CONF_OPTS}
-        OPTIONS_RELEASE
-            DEBUG_DIR=
-            DEBUG_POSTFIX=
         OPTIONS_DEBUG
             --enable-debug
-            DEBUG_DIR=/debug
-            DEBUG_POSTFIX=d
     )
 
     # Verify configuration results (tightly coupled to vcpkg_configure_make)
