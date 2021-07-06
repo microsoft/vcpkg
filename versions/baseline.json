@@ -1326,7 +1326,7 @@
     },
     "cnl": {
       "baseline": "1.1.7",
-      "port-version": 0
+      "port-version": 1
     },
     "coin": {
       "baseline": "4.0.0",
