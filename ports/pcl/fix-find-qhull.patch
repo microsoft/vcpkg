@@ -1,5 +1,6 @@
-From 83e4ec968a18b161036068fa081823246d818c75 Mon Sep 17 00:00:00 2001
-Date: Wed, 7 Jul 2021 11:58:16 -0400
+From 7e3117fb47f58c7b1fb83e3a062a630b787a43bc Mon Sep 17 00:00:00 2001
+From: raahilsha-z <raahil.sha@zimaging.io>
+Date: Wed, 7 Jul 2021 16:11:12 -0400
 Subject: [PATCH] fix find qhull
 
 ---
@@ -8,7 +9,7 @@ Subject: [PATCH] fix find qhull
  2 files changed, 8 insertions(+), 6 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index bdae8ea06..2831b984d 100644
+index a1d9bb58f..7cf86f74b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -359,10 +359,7 @@ if(WITH_QHULL)
