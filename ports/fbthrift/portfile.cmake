@@ -6,9 +6,12 @@ vcpkg_find_acquire_program(BISON)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO facebook/fbthrift
-    REF e184b41448dab2f462094fa005ed05269cfba3e3 # v2020.10.19.00
-    SHA512 df03e1779fd3f1868ed7be21292bcd91ae65bcca591b0265a40391dde7e3b3b81d83fe7eb4ec8dd5c440be471375b8e2c8c24befefaca3ae0cab9ce10bfd362c
+    REF v2021.06.14.00
+    SHA512 e59465adcd57722626e5a4407529b164472cde3942bd100b3d6e92c5057f88f1a8544b7181a01e05ed3077ffd2b3811b687aa6741d08aedef6b79aea02305798
     HEAD_REF master
+    PATCHES
+        fix-sodium-target.patch # fixed in master
+        fix-zlib.patch # fixed in master
 )
 
 vcpkg_configure_cmake(
@@ -16,6 +19,7 @@ vcpkg_configure_cmake(
     PREFER_NINJA
     OPTIONS
         -DBISON_EXECUTABLE=${BISON}
+        -DFLEX_EXECUTABLE=${FLEX}
 )
 
 vcpkg_install_cmake()
@@ -41,7 +45,8 @@ file(REMOVE_RECURSE
     ${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/reflection/docs
     ${CURRENT_PACKAGES_DIR}/include/thrift/lib/cpp2/util/test
     ${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/test
-    ${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/test
+    ${CURRENT_PACKAGES_DIR}/include/thrift/lib/py3/benchmark
+    ${CURRENT_PACKAGES_DIR}/include/thrift/lib/thrift/annotation
 )
 
 vcpkg_copy_tools(TOOL_NAMES thrift1 AUTO_CLEAN)

@@ -20,8 +20,8 @@ if("ass" IN_LIST FEATURES)
 endif()
 
 if("avisynthplus" IN_LIST FEATURES)
-    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (NOT VCPKG_TARGET_IS_WINDOWS))
-        message(FATAL_ERROR "Feature 'avisynthplus' does not support '!windows | arm | uwp'")
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (NOT VCPKG_TARGET_IS_WINDOWS) OR (VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
+        message(FATAL_ERROR "Feature 'avisynthplus' does not support '!windows | arm | uwp | static'")
     endif()
 endif()
 
