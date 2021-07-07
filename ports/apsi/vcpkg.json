@@ -36,7 +36,8 @@
           "features": [
             "hexl",
             "no-throw-tran"
-          ]
+          ],
+          "platform": "x64"
         }
       ]
     },
