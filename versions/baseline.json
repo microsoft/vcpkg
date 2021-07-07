@@ -5016,10 +5016,6 @@
       "baseline": "2020.10.19.00",
       "port-version": 0
     },
-    "proxywrapper": {
-      "baseline": "1.0.0",
-      "port-version": 0
-    },
     "psimd": {
       "baseline": "2021-02-21",
       "port-version": 0
