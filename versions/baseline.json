@@ -5816,6 +5816,10 @@
       "baseline": "3.5.1",
       "port-version": 0
     },
+    "sleepy-discord": {
+      "baseline": "2021-07-07",
+      "port-version": 0
+    },
     "slikenet": {
       "baseline": "2019-10-22-2",
       "port-version": 0
