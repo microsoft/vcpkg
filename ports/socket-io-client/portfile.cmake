@@ -11,8 +11,6 @@ vcpkg_from_github(
         fix-error-C3321.patch
 )
 
-file(REMOVE "${SOURCE_PATH}/cmake/modules/Findzstd.cmake")
-
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
