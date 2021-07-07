@@ -185,7 +185,7 @@ function(vcpkg_install_msbuild)
         endif()
         if(NOT exes STREQUAL "")
             file(COPY ${exes} DESTINATION "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
-            vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+            vcpkg_copy_tool_dependencies(TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
         endif()
     endif()
 
