@@ -377,9 +377,9 @@ ver la [documentación](docs/README.md) para tutoriales específicos, incluyendo
 [agregando un nuevo paquete desde un archivo comprimido](docs/examples/packaging-zipfiles.md),
 [agregando un nuevo paquete desde un repositorio en GitHub](docs/examples/packaging-github-repos.md).
 
-Nuestra documentación tambien esta disponible en nuestro sitio web [vcpkg.io](https://vcpkg.io/).
-puede crear un incidente en el siguiente [enlace](https://github.com/vcpkg/vcpkg.github.io/issues),
-apreciamos cualquier retroalimentacion!
+Nuestra documentación también esta disponible en nuestro sitio web [vcpkg.io](https://vcpkg.io/).
+Si necesita ayuda puede [crear un incidente](https://github.com/vcpkg/vcpkg.github.io/issues).
+¡Apreciamos cualquier retroalimentación!
 
 Ver un [video de demostración](https://www.youtube.com/watch?v=y41WFKbQFTw) de 4 minutos.
 
