@@ -117,7 +117,7 @@
     "jpeg": {
       "description": "add jpeg support",
       "dependencies": [
-        "libjpeg-turbo"
+        "openjpeg"
       ]
     },
     "libxml2": {
