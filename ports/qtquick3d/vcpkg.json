@@ -14,9 +14,8 @@
       "host": true,
       "default-features": false
     },
-    "qtshadertools",
-    "qtquicktimeline"
-    
+    "qtquicktimeline",
+    "qtshadertools"
   ],
   "default-features": [
     "default-features"
