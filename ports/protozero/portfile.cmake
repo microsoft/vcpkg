@@ -14,7 +14,8 @@ vcpkg_configure_cmake(
     OPTIONS
         -DBUILD_TESTING=OFF
 )
-
 vcpkg_install_cmake()
+vcpkg_fixup_pkgconfig()
+
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug")
 file(INSTALL ${SOURCE_PATH}/LICENSE.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
