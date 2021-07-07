@@ -1,3 +1,7 @@
+if(VCPKG_TARGET_IS_LINUX)
+    message(WARNING "${PORT} requires the following libraries from the system package manager:\n    libxmu-dev\n    libxi-dev\n    libgl-dev\n\nThese can be installed on Ubuntu systems via apt-get install libxmu-dev libxi-dev libgl-dev.")
+endif()
+
 # Don't change to vcpkg_from_github! The sources in the git repository (archives) are missing some files that are distributed inside releases.
 # More info: https://github.com/nigels-com/glew/issues/31 and https://github.com/nigels-com/glew/issues/13
 vcpkg_download_distfile(ARCHIVE
