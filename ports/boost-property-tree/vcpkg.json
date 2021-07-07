@@ -1,13 +1,12 @@
 {
   "name": "boost-property-tree",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost property_tree module",
   "homepage": "https://github.com/boostorg/property_tree",
   "dependencies": [
     "boost-any",
     "boost-assert",
     "boost-bind",
-    "boost-compatibility",
     "boost-config",
     "boost-core",
     "boost-format",

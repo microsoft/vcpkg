@@ -1,7 +1,6 @@
 {
   "name": "boost-program-options",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.76.0",
   "description": "Boost program_options module",
   "homepage": "https://github.com/boostorg/program_options",
   "dependencies": [
@@ -11,7 +10,6 @@
       "name": "boost-build",
       "host": true
     },
-    "boost-compatibility",
     "boost-config",
     "boost-core",
     "boost-detail",

@@ -1,7 +1,6 @@
 {
   "name": "boost-test",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.76.0",
   "description": "Boost test module",
   "homepage": "https://github.com/boostorg/test",
   "supports": "!uwp",
@@ -13,13 +12,11 @@
       "name": "boost-build",
       "host": true
     },
-    "boost-compatibility",
     "boost-config",
     "boost-core",
     "boost-detail",
     "boost-exception",
     "boost-function",
-    "boost-integer",
     "boost-io",
     "boost-iterator",
     {

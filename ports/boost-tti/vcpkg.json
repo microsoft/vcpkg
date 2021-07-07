@@ -1,6 +1,6 @@
 {
   "name": "boost-tti",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost tti module",
   "homepage": "https://github.com/boostorg/tti",
   "dependencies": [

@@ -1,26 +1,20 @@
 {
   "name": "boost-multiprecision",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost multiprecision module",
   "homepage": "https://github.com/boostorg/multiprecision",
   "dependencies": [
     "boost-array",
     "boost-assert",
-    "boost-atomic",
     "boost-config",
     "boost-container-hash",
     "boost-core",
     "boost-functional",
     "boost-integer",
     "boost-lexical-cast",
-    "boost-mpl",
     "boost-predef",
     "boost-rational",
-    "boost-smart-ptr",
-    "boost-static-assert",
     "boost-throw-exception",
-    "boost-type-traits",
-    "boost-utility",
     "boost-vcpkg-helpers"
   ]
 }

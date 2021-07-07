@@ -1,7 +1,6 @@
 {
   "name": "boost-locale",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.76.0",
   "description": "Boost locale module",
   "homepage": "https://github.com/boostorg/locale",
   "supports": "!uwp",
@@ -13,7 +12,6 @@
     },
     "boost-config",
     "boost-function",
-    "boost-integer",
     "boost-iterator",
     {
       "name": "boost-modular-build-helper",

@@ -1,6 +1,6 @@
 {
   "name": "boost-any",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost any module",
   "homepage": "https://github.com/boostorg/any",
   "dependencies": [

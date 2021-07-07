@@ -1,0 +1,15 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 62ab08a115..2b383c1dd5 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -2,6 +2,10 @@ cmake_minimum_required()
+ 
+ project(QuantLib)
+ 
++if(APPLE AND NOT CMAKE_CXX_STANDARD)
++    set(CMAKE_CXX_STANDARD 11)
++endif()
++
+ include(CTest)
+ include(${CMAKE_CURRENT_LIST_DIR}/cmake/quantlib.cmake)
+ 

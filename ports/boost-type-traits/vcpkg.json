@@ -1,6 +1,6 @@
 {
   "name": "boost-type-traits",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost type_traits module",
   "homepage": "https://github.com/boostorg/type_traits",
   "dependencies": [

@@ -1,6 +1,6 @@
 {
   "name": "boost-parameter-python",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost parameter_python module",
   "homepage": "https://github.com/boostorg/parameter_python",
   "supports": "!emscripten",

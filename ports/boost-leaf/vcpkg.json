@@ -1,6 +1,6 @@
 {
   "name": "boost-leaf",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost leaf module",
   "homepage": "https://github.com/boostorg/leaf",
   "dependencies": [

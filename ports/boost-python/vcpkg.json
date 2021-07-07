@@ -1,7 +1,6 @@
 {
   "name": "boost-python",
-  "version-string": "1.75.0",
-  "port-version": 3,
+  "version": "1.76.0",
   "description": "Boost python module",
   "homepage": "https://github.com/boostorg/python",
   "supports": "!uwp & !(arm & windows) & !emscripten",
@@ -11,7 +10,6 @@
       "name": "boost-build",
       "host": true
     },
-    "boost-compatibility",
     "boost-config",
     "boost-conversion",
     "boost-core",

@@ -1,6 +1,6 @@
 {
   "name": "boost-dll",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost dll module",
   "homepage": "https://github.com/boostorg/dll",
   "dependencies": [
@@ -12,7 +12,6 @@
       "platform": "!uwp"
     },
     "boost-function",
-    "boost-integer",
     "boost-move",
     "boost-predef",
     "boost-smart-ptr",

@@ -1,0 +1,19 @@
+{
+  "name": "wangle",
+  "version-string": "2021.06.14.00",
+  "description": "Wangle is a framework providing a set of common client/server abstractions for building services in a consistent, modular, and composable way.",
+  "homepage": "https://github.com/facebook/wangle",
+  "dependencies": [
+    "boost-context",
+    "boost-filesystem",
+    "boost-regex",
+    "boost-system",
+    "boost-thread",
+    "double-conversion",
+    "fizz",
+    "folly",
+    "glog",
+    "libevent",
+    "openssl"
+  ]
+}

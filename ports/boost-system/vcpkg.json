@@ -1,7 +1,6 @@
 {
   "name": "boost-system",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.76.0",
   "description": "Boost system module",
   "homepage": "https://github.com/boostorg/system",
   "dependencies": [
@@ -10,7 +9,6 @@
       "host": true
     },
     "boost-config",
-    "boost-integer",
     {
       "name": "boost-modular-build-helper",
       "host": true

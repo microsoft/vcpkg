@@ -1,6 +1,6 @@
 {
   "name": "boost-mpl",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost mpl module",
   "homepage": "https://github.com/boostorg/mpl",
   "dependencies": [

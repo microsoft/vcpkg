@@ -1,7 +1,6 @@
 {
   "name": "boost-mpi",
-  "version-string": "1.75.0",
-  "port-version": 1,
+  "version": "1.76.0",
   "description": "Boost mpi module",
   "homepage": "https://github.com/boostorg/mpi",
   "dependencies": [
@@ -10,7 +9,6 @@
       "name": "boost-build",
       "host": true
     },
-    "boost-compatibility",
     "boost-config",
     "boost-core",
     "boost-foreach",
