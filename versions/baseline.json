@@ -5850,7 +5850,7 @@
     },
     "socket-io-client": {
       "baseline": "3.0.0",
-      "port-version": 0
+      "port-version": 1
     },
     "sockpp": {
       "baseline": "0.7",
