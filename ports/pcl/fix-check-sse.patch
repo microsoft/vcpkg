@@ -1,5 +1,13 @@
+From 2acbb01f07a3e2dbfe5c7e62ae44c1023a48ba88 Mon Sep 17 00:00:00 2001
+Date: Wed, 7 Jul 2021 11:56:15 -0400
+Subject: [PATCH] fix check sse
+
+---
+ CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index e580b1a..572ea06 100644
+index 50124a298..bdae8ea06 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -86,7 +86,7 @@ endif()
@@ -11,3 +19,6 @@ index e580b1a..572ea06 100644
    PCL_CHECK_FOR_SSE()
  endif()
  
+-- 
+2.32.0.windows.1
+

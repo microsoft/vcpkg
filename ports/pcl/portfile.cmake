@@ -1,19 +1,18 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO PointCloudLibrary/pcl
-    REF d98313133b014553ab1b1b5b112f9aade837d55c # pcl-1.11.1
-    SHA512 4d60f34d4fbf0a4b4caf9cc4391af471ebd260b3bbac106d45e5ff38448894ea4dc82d5320c2e395c537a4414eb13c6a6a0eb6c13e4e1cc1d831d4bf24067966
+    REF 8196d4d2534e8d5ffe62d4a4ea54d488618a661a # pcl-1.12.0-99
+    SHA512 8c0b49a084c623a8c180b0b254b27a38876d2d774b31d5c4c40c8dd2efa154b26f45515b6dfdd3fda6ba717d3049dfa446c56236a499cc3da3bad900ac171bc9
     HEAD_REF master
     PATCHES
-        pcl_utils.patch
-        pcl_config.patch
-        boost-1.70.patch
-        fix-link-libpng.patch
-        remove-broken-targets.patch
-        fix-check-sse.patch
-        realsense2.patch
         add-gcc-version-check.patch
+        boost-1.70.patch
+        fix-check-sse.patch
         fix-find-qhull.patch
+        fix-link-libpng.patch
+        pcl_config.patch
+        pcl_utils.patch
+        remove-broken-targets.patch
 )
 
 file(REMOVE ${SOURCE_PATH}/cmake/Modules/FindQhull.cmake)
