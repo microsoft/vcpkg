@@ -14,7 +14,14 @@
       "host": true
     }
   ],
+  "default-features": [
+    "exceptions",
+    "threads"
+  ],
   "features": {
+    "exceptions": {
+      "description": "Enable exception-throwing interface"
+    },
     "no-deprecated": {
       "description": "Disable deprecated APIs"
     },
