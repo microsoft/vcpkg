@@ -145,7 +145,7 @@ function(vcpkg_extract_source_archive)
     else()
         if(NOT DEFINED arg_BASE_DIRECTORY)
             set(arg_BASE_DIRECTORY "src")
-        elseif(IS_ABSOLUTE arg_BASE_DIRECTORY)
+        elseif(IS_ABSOLUTE "${arg_BASE_DIRECTORY}")
             message(FATAL_ERROR "BASE_DIRECTORY (${arg_BASE_DIRECTORY}) must be a relative path")
         endif()
         cmake_path(APPEND CURRENT_BUILDTREES_DIR "${arg_BASE_DIRECTORY}"
