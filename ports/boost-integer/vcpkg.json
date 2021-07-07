@@ -1,11 +1,10 @@
 {
   "name": "boost-integer",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost integer module",
   "homepage": "https://github.com/boostorg/integer",
   "dependencies": [
     "boost-assert",
-    "boost-compatibility",
     "boost-config",
     "boost-core",
     "boost-detail",

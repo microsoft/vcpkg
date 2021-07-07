@@ -1,6 +1,6 @@
 {
   "name": "boost-bimap",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost bimap module",
   "homepage": "https://github.com/boostorg/bimap",
   "dependencies": [

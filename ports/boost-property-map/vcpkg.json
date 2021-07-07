@@ -1,6 +1,6 @@
 {
   "name": "boost-property-map",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost property_map module",
   "homepage": "https://github.com/boostorg/property_map",
   "dependencies": [
@@ -11,7 +11,6 @@
     "boost-config",
     "boost-core",
     "boost-function",
-    "boost-integer",
     "boost-iterator",
     "boost-lexical-cast",
     "boost-math",

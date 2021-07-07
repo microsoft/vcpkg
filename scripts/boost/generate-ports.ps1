@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     $libraries = @(),
-    $version = "1.75.0",
+    $version = "1.76.0",
     $portsDir = $null
 )
 
@@ -27,12 +27,6 @@ else
 # Clear this array when moving to a new boost version
 $port_versions = @{
     #e.g.  "asio" = 1;
-    "asio" = 1;
-    "python" = 3;
-    "context" = 3;
-    "concept-check" = 2;
-    "regex" = 2;
-    "json" = 1;
 }
 
 $per_port_data = @{
@@ -84,9 +78,9 @@ function TransformReference()
         [string]$library
     )
 
-    if ($per_port_data[$library].supports)
+    if ($per_port_data.Contains($library) -and $per_port_data[$library].Contains('supports'))
     {
-        @{name="boost-$library"; platform=$per_port_data[$library].supports}
+        @{name="boost-$library"; platform=$per_port_data[$library]['supports']}
     }
     else
     {
@@ -107,22 +101,17 @@ function Generate()
     New-Item -ItemType "Directory" "$portsDir/boost-$PortName" -erroraction SilentlyContinue | out-null
     $controlLines = @{
         name="boost-$PortName"; `
-        "version-string"=$version; `
+        "version"=$version; `
         dependencies=$Depends; `
         homepage="https://github.com/boostorg/$Name"; `
         description="Boost $Name module" `
     }
-    if ($port_versions[$PortName])
+    if ($port_versions.Contains($PortName))
     {
         $controlLines["port-version"] = $port_versions[$PortName]
     }
-    elseif ($NeedsBuild)
-    {
-        # This can be removed on next update; this is used to track the host dependencies change
-        $controlLines["port-version"] = 1
-    }
 
-    if ($per_port_data[$PortName])
+    if ($per_port_data.Contains($PortName))
     {
         $controlLines += $per_port_data[$PortName]
     }
@@ -150,8 +139,8 @@ function Generate()
         "    SHA512 $Hash"
         "    HEAD_REF master"
     )
-    $patches = Get-ChildItem $portsDir/boost-$PortName/*.patch
-    if ($patches.Count -eq 0)
+    [Array]$patches = Get-Item -Path "$portsDir/boost-$PortName/*.patch"
+    if ($null -eq $patches -or $patches.Count -eq 0)
     {
     }
     elseif ($patches.Count -eq 1)
@@ -227,7 +216,10 @@ function Generate()
     }
 
     $portfileLines += @("")
-    $($portfileLines -join "`r`n") | out-file -enc ascii "$portsDir/boost-$PortName/portfile.cmake" -NoNewline
+    Set-Content -LiteralPath "$portsDir/boost-$PortName/portfile.cmake" `
+        -Value "$($portfileLines -join "`r`n")" `
+        -Encoding UTF8 `
+        -NoNewline
 }
 
 if (!(Test-Path "$scriptsDir/boost"))
@@ -318,27 +310,19 @@ foreach ($library in $libraries)
     pushd $unpacked
     try
     {
-        if ($IsWindows)
-        {
-            $groups = $(
-                findstr /si /C:"include <boost/" include/*
-                findstr /si /C:"include <boost/" src/*
-            ) | % { $_ -replace "^[^:]*:","" }
-        }
-        else
-        {
-            $groups = $(
-                grep -irhs "include <boost/" include src
-            )
-        }
+        $groups = Get-ChildItem -Recurse -Path include,src -File `
+            | ? { $_ -is [System.IO.FileInfo] } `
+            | % { Get-Content -LiteralPath $_ } `
+            | ? { $_ -match 'include [<"]boost/' }
 
-        $groups = $groups |
-        % { $_ `
+        $groups = $groups | % {
+            $_ `
                 -replace "boost/numeric/conversion/","boost/numeric_conversion/" `
                 -replace "boost/functional/hash.hpp","boost/container_hash/hash.hpp" `
                 -replace "boost/detail/([^/]+)/","boost/`$1/" `
-                -replace " *# *include *<boost/([a-zA-Z0-9\._]*)(/|>).*", "`$1" `
-                -replace "/|\.hp?p?| ","" } | group | % name | % {
+                -replace " *# *include *[<`"]boost/([a-zA-Z0-9\._]*)[/>`"].*", "`$1" `
+                -replace "/|\.hp?p?| ","" 
+        } | group | % name | % {
             # mappings
             Write-Verbose "${library}: $_"
             if ($_ -match "aligned_storage") { "type_traits" }
@@ -346,9 +330,9 @@ foreach ($library in $libraries)
             elseif ($_ -eq "type") { "core" }
             elseif ($_ -match "concept|concept_archetype") { "concept_check" }
             elseif ($_ -match "unordered_") { "unordered" }
-            elseif ($_ -match "cstdint|integer_fwd|integer_traits") { "integer" }
+            elseif ($_ -match "integer_fwd|integer_traits") { "integer" }
             elseif ($_ -match "call_traits|operators|current_function|cstdlib|next_prior|compressed_pair") { "utility" }
-            elseif ($_ -match "^version|^workaround") { "config" }
+            elseif ($_ -match "^version|^workaround|^config|cstdint|cxx11_char_types|limits") { "config" }
             elseif ($_ -match "enable_shared_from_this|shared_ptr|make_shared|make_unique|intrusive_ptr|scoped_ptr|pointer_cast|pointer_to_other|weak_ptr|shared_array|scoped_array") { "smart_ptr" }
             elseif ($_ -match "iterator_adaptors|generator_iterator|pointee") { "iterator" }
             elseif ($_ -eq "regex_fwd") { "regex" }
@@ -358,7 +342,6 @@ foreach ($library in $libraries)
             elseif ($_ -eq "circular_buffer_fwd") { "circular_buffer" }
             elseif ($_ -eq "archive") { "serialization" }
             elseif ($_ -match "none|none_t") { "optional" }
-            elseif ($_ -eq "limits") { "compatibility" }
             elseif ($_ -match "cstdfloat|math_fwd") { "math" }
             elseif ($_ -eq "cast") { "conversion"; "numeric_conversion" } # DEPRECATED header file, includes <boost/polymorphic_cast.hpp> and <boost/numeric/conversion/cast.hpp>
             elseif ($_ -match "polymorphic_cast|implicit_cast") { "conversion" }
@@ -373,7 +356,9 @@ foreach ($library in $libraries)
             elseif ($_ -eq "numeric" -and $library -notmatch "numeric_conversion|interval|odeint|ublas") { "numeric_conversion"; "interval"; "odeint"; "ublas" }
             elseif ($_ -eq "io_fwd") { "io" }
             else { $_ }
-        } | group | % name | ? { $_ -ne $library }
+        } | group | % name | ? {
+            $_ -ne $library
+        }
 
         #"`nFor ${library}:"
         "      [known] " + $($groups | ? { $libraries_found -contains $_ })
@@ -467,23 +452,26 @@ if ($libraries_in_boost_port.length -gt 1) {
     $boostDependsList = $libraries_in_boost_port | ? { $_ -notmatch "boost-mpi" }
 
     @{
-        name="boost";
-        "version-string"=$version;
-        "port-version"= $port_versions.boost ? $port_versions.boost : 0;
-        homepage="https://boost.org";
-        description="Peer-reviewed portable C++ source libraries";
-        dependencies=$boostDependsList;
-        features=@(
+        name = "boost";
+        "version" = $version;
+        "port-version" = $port_versions.Contains('boost') ? $port_versions['boost'] : 0;
+        homepage = "https://boost.org";
+        description = "Peer-reviewed portable C++ source libraries";
+        dependencies = $boostDependsList;
+        features = @(
             @{
-                name="mpi";
-                description="Build with MPI support";
-                dependencies=@("boost-mpi");
+                name = "mpi";
+                description = "Build with MPI support";
+                dependencies = @("boost-mpi");
             }
         );
-    } | ConvertTo-Json -Depth 10 -Compress | out-file -enc ascii $portsDir/boost/vcpkg.json
+    } `
+    | ConvertTo-Json -Depth 10 -Compress `
+    | Out-File -Encoding UTF8 -FilePath "$portsDir/boost/vcpkg.json"
     & $vcpkg format-manifest "$portsDir/boost/vcpkg.json"
 
-    "set(VCPKG_POLICY_EMPTY_PACKAGE enabled)`n" | out-file -enc ascii $portsDir/boost/portfile.cmake
+    Set-Content -LiteralPath "$portsDir/boost/portfile.cmake" `
+        -Value "set(VCPKG_POLICY_EMPTY_PACKAGE enabled)`n" `
+        -Encoding UTF8 `
+        -NoNewline
 }
-
-return

@@ -1,5 +1,0 @@
-Source: quantlib
-Version: 2019-09-02
-Description: The QuantLib C++ library
-Homepage: https://www.quantlib.org/
-Build-Depends: boost-accumulators, boost-algorithm, boost-any, boost-array, boost-assert, boost-assign, boost-atomic, boost-bind, boost-config, boost-core, boost-date-time, boost-dynamic-bitset, boost-format, boost-function, boost-functional, boost-iterator, boost-lexical-cast, boost-math, boost-multi-array, boost-multiprecision, boost-optional, boost-preprocessor, boost-random, boost-serialization, boost-signals2, boost-smart-ptr, boost-thread, boost-tuple, boost-type-traits, boost-ublas, boost-unordered, boost-utility
