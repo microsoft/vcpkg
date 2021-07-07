@@ -4901,7 +4901,7 @@
       "port-version": 0
     },
     "pmdk": {
-      "baseline": "1.9",
+      "baseline": "1.11.0",
       "port-version": 0
     },
     "pngpp": {
