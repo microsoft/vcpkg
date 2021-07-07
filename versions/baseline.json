@@ -5573,7 +5573,7 @@
       "port-version": 0
     },
     "rtabmap": {
-      "baseline": "0.20.3",
+      "baseline": "0.20.13",
       "port-version": 1
     },
     "rtaudio": {
