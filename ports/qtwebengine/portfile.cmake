@@ -213,7 +213,14 @@ vcpkg_find_acquire_program(NODEJS)
 
 get_filename_component(GPERF_DIR "${GPERF}" DIRECTORY )
 vcpkg_add_to_path(PREPEND "${GPERF_DIR}")
-
+get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
+get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
+get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${BISON_DIR}")
+get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY )
+vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
 
 if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
     if(NOT EXISTS "${FLEX_DIR}/flex${VCPKG_HOST_EXECUTABLE_SUFFIX}")
@@ -223,15 +230,6 @@ if(WIN32) # WIN32 HOST probably has win_flex and win_bison!
         file(CREATE_LINK "${BISON}" "${BISON_DIR}/bison${VCPKG_HOST_EXECUTABLE_SUFFIX}")
     endif()
 endif()
-
-get_filename_component(NODEJS_DIR "${NODEJS}" DIRECTORY )
-vcpkg_add_to_path(PREPEND "${NODEJS_DIR}")
-get_filename_component(FLEX_DIR "${FLEX}" DIRECTORY )
-vcpkg_add_to_path(PREPEND "${FLEX_DIR}")
-get_filename_component(BISON_DIR "${BISON}" DIRECTORY )
-vcpkg_add_to_path(PREPEND "${BISON_DIR}")
-get_filename_component(PYTHON2_DIR "${PYTHON2}" DIRECTORY )
-vcpkg_add_to_path(PREPEND "${PYTHON2_DIR}")
 
 ### Download third_party modules
 vcpkg_from_git(
