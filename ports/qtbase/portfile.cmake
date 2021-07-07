@@ -14,6 +14,7 @@ set(${PORT}_PATCHES
         #buildcmake.patch # <-probably required
         #fix_find_dep.patch # <-MAybe required
         clang-cl_source_location.patch
+        workaround_gcc_7_5_bug.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
