@@ -1,6 +1,6 @@
 {
   "name": "qtnetworkauth",
-  "version-semver": "6.1.1",
+  "version-semver": "6.1.2",
   "description": "Qt Network Authenticators; QtOAuth in particular",
   "homepage": "https://www.qt.io/",
   "dependencies": [
