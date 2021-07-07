@@ -12,6 +12,11 @@
     {
       "name": "qtdeclarative",
       "default-features": false
+    },
+    {
+      "name": "qtremoteobjects",
+      "host": true,
+      "default-features": false
     }
   ],
   "default-features": [
