@@ -1,0 +1,38 @@
+From fa0e11f36bb0e322250e1e488ced9f2bf166874f Mon Sep 17 00:00:00 2001
+From: Long Nguyen <nguyen.long.908132@gmail.com>
+Date: Fri, 14 May 2021 18:11:39 +0700
+Subject: [PATCH 14/14] Define POSIX macros if missing
+
+---
+ src/file.h | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/src/file.h b/src/file.h
+index ccfe0da..98cd37b 100644
+--- a/src/file.h
++++ b/src/file.h
+@@ -100,6 +100,21 @@
+ #include <stdarg.h>
+ #include <dirent.h>
+ 
++#if !defined(S_IFBLK)
++#define S_IFBLK 0
++#define	S_ISBLK(mode)  (((mode) & S_IFMT) == S_IFBLK)
++#endif
++
++#if !defined(S_IFLNK)
++#define S_IFLNK 0
++#define	S_ISLNK(mode)  (((mode) & S_IFMT) == S_IFLNK)
++#endif
++
++#if !defined(S_IFSOCK)
++#define S_IFSOCK 0
++#define	S_ISSOCK(mode)  (((mode) & S_IFMT) == S_IFSOCK)
++#endif
++
+ #define ENABLE_CONDITIONALS
+ 
+ #ifndef MAGIC
+-- 
+2.29.2.windows.2
+

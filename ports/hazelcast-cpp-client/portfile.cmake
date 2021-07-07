@@ -1,14 +1,16 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO hazelcast/hazelcast-cpp-client
-    REF v4.0.1
-    SHA512 9d6e2fe890d5dc08b2ccc2e74c736c7ce014a03f5f020ccfc21f5accbfe39285898283e01e491cab1259badf983094b97b618230cb999480372aaf018d874457
+    REF v4.1.1
+    SHA512 2f6d578c43dfc8c03f83a5b7c98fe67b7dc450cbc542031e625ec3bc91b9ec2e430e3ced670608a651fcf77775d2d4a333ca82689cae793e8b13a8e0438bbfb9
     HEAD_REF master
 )
 
-vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    openssl WITH_OPENSSL
-    example BUILD_EXAMPLES
+vcpkg_check_features(
+    OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        openssl WITH_OPENSSL
+        example BUILD_EXAMPLES
 )
 
 vcpkg_configure_cmake(

@@ -1,0 +1,35 @@
+{
+  "name": "qtvirtualkeyboard",
+  "version-semver": "6.1.1",
+  "description": "SCXML (state machine notation) compiler and related tools",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    "qtdeclarative",
+    "qtsvg",
+    "qttools"
+  ],
+  "default-features": [
+    "default-features",
+    "hunspell"
+  ],
+  "features": {
+    "default-features": {
+      "description": "Platform-dependent default features"
+    },
+    "hunspell": {
+      "description": "Use hunspell",
+      "dependencies": [
+        "hunspell"
+      ]
+    },
+    "t9write": {
+      "description": "T9Write handwriting (commercial SDK requires port overlay)",
+      "dependencies": [
+        "t9write"
+      ]
+    },
+    "xcb": {
+      "description": "XCB integration"
+    }
+  }
+}

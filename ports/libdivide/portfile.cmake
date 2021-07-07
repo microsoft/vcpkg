@@ -1,12 +1,13 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO ridiculousfish/libdivide
-    REF v3.0
-    SHA512 fae17a4125c3b17aeb37283d7bba9fea2e4d3b208861d6ed81a6cdcf5dbf3286cf676cedba99c73a16115cf8bf9dcbd2cf6a48ca52fb85d4b0b24024e53d055e
+    REF v4.0.0
+    SHA512 662b8f479c3f822563d4f1c85c77c204f47e992391cd5ca3376d6e19e4d2132c28ad59b8e3179edd706fceeabf0d1bc7be5e713eeb669523952155a2d7770326
     HEAD_REF master
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     test BUILD_TESTS
 )
 

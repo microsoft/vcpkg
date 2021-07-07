@@ -1,0 +1,33 @@
+{
+  "name": "qtquick3d",
+  "version-semver": "6.1.1",
+  "description": "A new module and API for defining 3D content in Qt Quick.",
+  "homepage": "https://www.qt.io/",
+  "dependencies": [
+    {
+      "name": "qtbase",
+      "default-features": false
+    },
+    "qtdeclarative",
+    {
+      "name": "qtquick3d",
+      "host": true,
+      "default-features": false
+    },
+    "qtshadertools"
+  ],
+  "default-features": [
+    "default-features"
+  ],
+  "features": {
+    "assimp": {
+      "description": "assimp",
+      "dependencies": [
+        "assimp"
+      ]
+    },
+    "default-features": {
+      "description": "Platform-dependent default features"
+    }
+  }
+}
