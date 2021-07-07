@@ -1,0 +1,35 @@
+diff --git a/gl3w_gen.py b/gl3w_gen.py
+index 6ef8f38..113b59f 100644
+--- a/gl3w_gen.py
++++ b/gl3w_gen.py
+@@ -38,6 +38,12 @@ try:
+     import urllib.request as urllib2
+ except ImportError:
+     import urllib2
++    
++import ssl
++
++ctx = ssl.create_default_context()
++ctx.check_hostname = False
++ctx.verify_mode = ssl.CERT_NONE
+ 
+ # UNLICENSE copyright header
+ UNLICENSE = r'''/*
+@@ -103,7 +109,7 @@ if not os.path.exists(os.path.join(args.root, 'src')):
+ # Download glcorearb.h
+ if not os.path.exists(os.path.join(args.root, 'include/GL/glcorearb.h')):
+     print('Downloading glcorearb.h to {0}...'.format(os.path.join(args.root, 'include/GL/glcorearb.h')))
+-    web = urllib2.urlopen('https://www.khronos.org/registry/OpenGL/api/GL/glcorearb.h')
++    web = urllib2.urlopen('https://www.khronos.org/registry/OpenGL/api/GL/glcorearb.h', context=ctx)
+     with open(os.path.join(args.root, 'include/GL/glcorearb.h'), 'wb') as f:
+         f.writelines(web.readlines())
+ else:
+@@ -112,7 +118,7 @@ else:
+ # Download khrplatform.h
+ if not os.path.exists(os.path.join(args.root, 'include/KHR/khrplatform.h')):
+     print('Downloading khrplatform.h to {0}...'.format(os.path.join(args.root, 'include/KHR/khrplatform.h')))
+-    web = urllib2.urlopen('https://www.khronos.org/registry/EGL/api/KHR/khrplatform.h')
++    web = urllib2.urlopen('https://www.khronos.org/registry/EGL/api/KHR/khrplatform.h', context=ctx)
+     with open(os.path.join(args.root, 'include/KHR/khrplatform.h'), 'wb') as f:
+         f.writelines(web.readlines())
+ else:
