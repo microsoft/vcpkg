@@ -2305,7 +2305,7 @@
       "port-version": 0
     },
     "gli": {
-      "baseline": "dd17acf-1",
+      "baseline": "2021-07-06",
       "port-version": 0
     },
     "glib": {
