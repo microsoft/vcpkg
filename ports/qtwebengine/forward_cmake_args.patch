@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 6941336d4..1385d975b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,4 +1,13 @@
+@@ -1,4 +1,14 @@
  cmake_minimum_required(VERSION 3.19)
 +if(NOT DEFINED CMAKE_CMD_LINE_VARS)	
 +  get_directory_property(CMAKE_CMD_LINE_VARS CACHE_VARIABLES)
@@ -31,6 +31,7 @@ index 6941336d4..1385d975b 100644
  list(TRANSFORM featureList PREPEND "-D")
  list(APPEND libsCmakeArgs
 +        "${FORWARDING_VARS}"
++        "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
          "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
          "-DWEBENGINE_ROOT_BUILD_PATH=${CMAKE_CURRENT_BINARY_DIR}"
          "-DWEBENGINE_ROOT_SOURCE_DIR=${WEBENGINE_ROOT_SOURCE_DIR}"
