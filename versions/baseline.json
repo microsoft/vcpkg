@@ -221,8 +221,8 @@
       "port-version": 0
     },
     "avcpp": {
-      "baseline": "2021-05-06",
-      "port-version": 1
+      "baseline": "2021-06-14",
+      "port-version": 0
     },
     "avisynthplus": {
       "baseline": "3.7.0",
