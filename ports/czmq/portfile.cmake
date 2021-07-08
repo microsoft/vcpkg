@@ -56,8 +56,8 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/share/cmake/${PORT})
 endif()
 
 file(COPY
-    ${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake
-    DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT}
+    "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
+    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
 )
 
 if ("tool" IN_LIST FEATURES)
@@ -66,7 +66,7 @@ endif()
 
 vcpkg_clean_executables_in_bin(FILE_NAMES zmakecert)
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include" "${CURRENT_PACKAGES_DIR}/debug/share")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     vcpkg_replace_string(${CURRENT_PACKAGES_DIR}/include/czmq_library.h
@@ -76,4 +76,4 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
 endif()
 
 # Handle copyright
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
