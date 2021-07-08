@@ -132,7 +132,7 @@
           "features": [
             "modplug"
           ],
-          "platform": "!(windows & static) & !uwp"
+          "platform": "!uwp"
         },
         {
           "name": "ffmpeg",
