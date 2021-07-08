@@ -10,7 +10,8 @@
       "features": [
         "network"
       ]
-    }
+    },
+    "qtwebsockets"
   ],
   "default-features": [
     "default-features"

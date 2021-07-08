@@ -37,6 +37,7 @@ The current list of programs includes:
 * SCONS
 * SWIG
 * YASM
+* NODEJS
 
 Note that msys2 has a dedicated helper function: [`vcpkg_acquire_msys`](vcpkg_acquire_msys.md).
 
@@ -76,6 +77,18 @@ function(vcpkg_find_acquire_program VAR)
     )
     set(ARCHIVE "strawberry-perl-${PERL_VERSION}-32bit.zip")
     set(HASH d353d3dc743ebdc6d1e9f6f2b7a6db3c387c1ce6c890bae8adc8ae5deae8404f4c5e3cf249d1e151e7256d4c5ee9cd317e6c41f3b6f244340de18a24b938e0c4)
+  elseif(VAR MATCHES "NODEJS")
+    set(PROGNAME node)
+    set(PROG_VERSION 14.17.3)
+    set(SUBDIR "node-v${PROG_VERSION}-win-x86")
+    set(PATHS "${DOWNLOADS}/tools/node/${SUBDIR}/${SUBDIR}")
+    set(BREW_PACKAGE_NAME "node")
+    set(APT_PACKAGE_NAME "node")
+    set(URL
+      "https://nodejs.org/dist/v14.17.3/node-v${PROG_VERSION}-win-x86.zip"
+    )
+    set(ARCHIVE "node-v${PROG_VERSION}-win-x86.zip")
+    set(HASH 0f786b639249da4dc26f626137098a64ef41b41545b94677db92ea6f9e5a8515b6262bb09ef06a9ed7875ab1aa6d459e47bfb4380e413a74f89e13c6c4bd1ad3)
   elseif(VAR MATCHES "NASM")
     set(PROGNAME nasm)
     set(NASM_VERSION 2.15.05)

@@ -1,0 +1,37 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 6941336d4..1385d975b 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,4 +1,13 @@
+ cmake_minimum_required(VERSION 3.19)
++if(NOT DEFINED CMAKE_CMD_LINE_VARS)	
++  get_directory_property(CMAKE_CMD_LINE_VARS CACHE_VARIABLES)
++endif()
++list(FILTER CMAKE_CMD_LINE_VARS EXCLUDE REGEX "(CMAKE_HOME_DIRECTORY|CMAKE_BUILD_TYPE|CMAKE_EXTRA_GENERATOR|CMAKE_GENERATOR_INSTANCE|CMAKE_GENERATOR_PLATFORM|CMAKE_GENERATOR_TOOLSET)")
++
++set(FORWARDING_VARS "")
++foreach(_var IN LISTS CMAKE_CMD_LINE_VARS)
++    list(APPEND FORWARDING_VARS "-D${_var}=${${_var}}")
++endforeach()
+ 
+ include(.cmake.conf)
+ include(ExternalProject)
+@@ -97,8 +106,7 @@ if(NOT Gn_FOUND)
+         CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release
+                    -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+                    -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+-                   -DCMAKE_INSTALL_PREFIX:PATH=<INSTALL_DIR>
+-                   -DCMAKE_PREFIX_PATH:PATH=<INSTALL_DIR>
++                   ${FORWARDING_VARS}
+                    -DWEBENGINE_ROOT_BUILD_DIR=${CMAKE_CURRENT_BINARY_DIR}
+ )
+ endif()
+@@ -120,6 +128,8 @@ endif()
+ 
+ list(TRANSFORM featureList PREPEND "-D")
+ list(APPEND libsCmakeArgs
++        "${FORWARDING_VARS}"
++        "-DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}"
+         "-DCMAKE_TOOLCHAIN_FILE=${CMAKE_TOOLCHAIN_FILE}"
+         "-DWEBENGINE_ROOT_BUILD_PATH=${CMAKE_CURRENT_BINARY_DIR}"
+         "-DWEBENGINE_ROOT_SOURCE_DIR=${WEBENGINE_ROOT_SOURCE_DIR}"

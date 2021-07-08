@@ -10,6 +10,11 @@
       "default-features": false
     },
     {
+      "name": "qtserialbus",
+      "host": true,
+      "default-features": false
+    },
+    {
       "name": "qtserialport",
       "default-features": false
     }

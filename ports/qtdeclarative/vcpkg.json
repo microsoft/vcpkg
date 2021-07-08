@@ -15,6 +15,10 @@
       "name": "qtdeclarative",
       "host": true,
       "default-features": false
+    },
+    {
+      "name": "qtshadertools",
+      "default-features": false
     }
   ]
 }
