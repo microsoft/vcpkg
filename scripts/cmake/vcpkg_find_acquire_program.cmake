@@ -81,7 +81,7 @@ function(vcpkg_find_acquire_program VAR)
     set(PROGNAME node)
     set(PROG_VERSION 14.17.3)
     set(SUBDIR "node-v${PROG_VERSION}-win-x86")
-    set(PATHS "${DOWNLOADS}/tools/node/${SUBDIR}")
+    set(PATHS "${DOWNLOADS}/tools/node/${SUBDIR}/${SUBDIR}")
     set(BREW_PACKAGE_NAME "node")
     set(APT_PACKAGE_NAME "node")
     set(URL
