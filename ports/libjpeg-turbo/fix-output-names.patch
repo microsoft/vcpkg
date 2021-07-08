@@ -29,7 +29,7 @@ index e4c6556..4bc92ab 100644
      endif()
  
 diff --git a/cmakescripts/BuildPackages.cmake b/cmakescripts/BuildPackages.cmake
-index 3d35886..10614ec 100644
+index 3d35886..01844d9 100644
 --- a/cmakescripts/BuildPackages.cmake
 +++ b/cmakescripts/BuildPackages.cmake
 @@ -169,9 +169,11 @@ configure_file(release/maketarball.in pkgscripts/maketarball)
@@ -37,12 +37,12 @@ index 3d35886..10614ec 100644
    SOURCES pkgscripts/maketarball)
  
 -configure_file(release/libjpeg.pc.in pkgscripts/libjpeg.pc @ONLY)
-+configure_file(release/libjpeg.pc.in pkgscripts/libjpeg.pc.in @ONLY)
-+file(GENERATE OUTPUT pkgscripts/libjpeg.pc INPUT pkgscripts/libjpeg.pc.in)
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/release/libjpeg.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libjpeg.pc.in" @ONLY)
++file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libjpeg.pc" INPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libjpeg.pc.in")
  
 -configure_file(release/libturbojpeg.pc.in pkgscripts/libturbojpeg.pc @ONLY)
-+configure_file(release/libturbojpeg.pc.in pkgscripts/libturbojpeg.pc.in @ONLY)
-+file(GENERATE OUTPUT pkgscripts/libturbojpeg.pc INPUT pkgscripts/libturbojpeg.pc.in)
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/release/libturbojpeg.pc.in" "${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libturbojpeg.pc.in" @ONLY)
++file(GENERATE OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libturbojpeg.pc" INPUT "${CMAKE_CURRENT_BINARY_DIR}/pkgscripts/libturbojpeg.pc.in")
  
  include(CMakePackageConfigHelpers)
  write_basic_package_version_file(
