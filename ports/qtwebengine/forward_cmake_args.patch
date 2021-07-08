@@ -2,7 +2,7 @@ diff --git a/CMakeLists.txt b/CMakeLists.txt
 index 6941336d4..1385d975b 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -1,4 +1,14 @@
+@@ -1,4 +1,13 @@
  cmake_minimum_required(VERSION 3.19)
 +if(NOT DEFINED CMAKE_CMD_LINE_VARS)	
 +  get_directory_property(CMAKE_CMD_LINE_VARS CACHE_VARIABLES)
@@ -26,7 +26,7 @@ index 6941336d4..1385d975b 100644
                     -DWEBENGINE_ROOT_BUILD_DIR=${CMAKE_CURRENT_BINARY_DIR}
  )
  endif()
-@@ -120,6 +128,7 @@ endif()
+@@ -120,6 +128,8 @@ endif()
  
  list(TRANSFORM featureList PREPEND "-D")
  list(APPEND libsCmakeArgs
