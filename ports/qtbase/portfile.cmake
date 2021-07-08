@@ -9,12 +9,11 @@ set(${PORT}_PATCHES
         allow_outside_prefix.patch 
         dont_force_cmakecache.patch
         fix_cmake_build.patch
-        #promotion.patch
-        #promotion.patch
         #buildcmake.patch # <-probably required
         #fix_find_dep.patch # <-MAybe required
         clang-cl_source_location.patch
         workaround_gcc_7_5_bug.patch
+        fix_gcc_7_5_constexpr.patch
         )
 
 if(NOT VCPKG_USE_HEAD_VERSION AND NOT QT_IS_LATEST)
