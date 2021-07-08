@@ -91,6 +91,7 @@ catch-classic:x64-windows-static-md=skip
 catch-classic:x86-windows        = skip
 ccd:arm-uwp=fail
 ccd:x64-uwp=fail
+cctag:x64-windows-static-md=fail
 cello:arm-uwp=fail
 cello:x64-uwp=fail
 cfitsio:arm-uwp=fail
@@ -487,7 +488,6 @@ intelrdfpmathlib:x64-linux=fail
 intelrdfpmathlib:x64-uwp=fail
 irrlicht:arm64-windows=fail
 irrlicht:arm-uwp=fail
-irrlicht:x64-osx=fail
 irrlicht:x64-uwp=fail
 isal:arm64-windows=fail
 isal:arm-uwp=fail
@@ -1030,9 +1030,6 @@ nativefiledialog:arm-uwp=fail
 nativefiledialog:x64-uwp=fail
 nethost:x64-uwp=fail
 nethost:arm-uwp=fail
-nettle:x64-windows-static=skip
-nettle:x64-windows-static-md=skip
-nettle:x64-windows=skip
 ngspice:x64-windows-static=fail
 nng:arm-uwp=fail
 nng:x64-uwp=fail
@@ -1795,10 +1792,6 @@ dimcli:x64-windows-static=fail
 
 # cppgraphqlgen triggers an ICE on Apple Clang that comes with MacOS 11.
 cppgraphqlgen:x64-osx=fail
-
-# Visual Studio 2019 version 16.10's XAML compiler seems to be crashing processing this port
-simage:x64-uwp=fail
-simage:arm-uwp=fail
 
 # Changes in Python have broken tensorflow on our osx hardware
 tensorflow-cc:x64-osx=fail
