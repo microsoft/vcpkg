@@ -4490,7 +4490,7 @@
     },
     "ompl": {
       "baseline": "1.5.1",
-      "port-version": 0
+      "port-version": 1
     },
     "onednn": {
       "baseline": "2.0",

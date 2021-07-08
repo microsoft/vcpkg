@@ -23,7 +23,9 @@ vcpkg_extract_source_archive_ex(
     OUT_SOURCE_PATH SOURCE_PATH
     ARCHIVE ${ARCHIVE}
     REF ${OMPL_VERSION}
-    PATCHES ${FEATURE_PATCHES}
+    PATCHES
+        0001_import_prefix.patch
+        ${FEATURE_PATCHES}
 )
 
 # Based on selected features different files get downloaded, so use the following command instead of patch.
