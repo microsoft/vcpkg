@@ -1,6 +1,5 @@
-From dda9c7811e9d7900cafbddd0d4350d5e45dd912c Mon Sep 17 00:00:00 2001
-From: raahilsha-z <raahil.sha@zimaging.io>
-Date: Wed, 7 Jul 2021 15:57:00 -0400
+From 71beb009bf6aa715bac13cd1b7847af117108719 Mon Sep 17 00:00:00 2001
+Date: Wed, 7 Jul 2021 12:01:19 -0400
 Subject: [PATCH] fix link libpng
 
 ---

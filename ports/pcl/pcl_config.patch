@@ -1,7 +1,6 @@
-From 2f4952e1767ad5b0349a03ee56d676d226102381 Mon Sep 17 00:00:00 2001
-From: raahilsha-z <raahil.sha@zimaging.io>
-Date: Wed, 7 Jul 2021 15:59:12 -0400
-Subject: [PATCH] pcl_config
+From aecd59c130151c95cdbf1c4151128dc685766be3 Mon Sep 17 00:00:00 2001
+Date: Wed, 7 Jul 2021 12:03:29 -0400
+Subject: [PATCH] pcl config
 
 ---
  PCLConfig.cmake.in | 12 +++---------
