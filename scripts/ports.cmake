@@ -1,3 +1,4 @@
+# rebuild: 1
 cmake_minimum_required(VERSION 3.5)
 
 set(SCRIPTS "${CMAKE_CURRENT_LIST_DIR}" CACHE PATH "Location to stored scripts")
@@ -60,9 +61,6 @@ if(CMD MATCHES "^BUILD$")
     unset(PACKAGES_DIR)
     unset(BUILDTREES_DIR)
 
-    # NOTE: this was originally done by emptying out ${CURRENT_PACKAGES_DIR}
-    # using file(GLOB). This fails with files containing either `;` or `[`:
-    # as a best effort to support these files, this now just deletes the entire directory.
     if(EXISTS "${CURRENT_PACKAGES_DIR}")
         file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}")
         if(EXISTS "${CURRENT_PACKAGES_DIR}")
