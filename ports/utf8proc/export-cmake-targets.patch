@@ -1,0 +1,27 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ea6b80e..5e5e829 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -22,7 +22,7 @@ add_library (utf8proc
+ )
+ 
+ # expose header path, for when this is part of a larger cmake project
+-target_include_directories(utf8proc PUBLIC .)
++target_include_directories(utf8proc PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}> $<INSTALL_INTERFACE:include>)
+ 
+ if (BUILD_SHARED_LIBS)
+   # Building shared library
+@@ -51,10 +51,13 @@ set_target_properties (utf8proc PROPERTIES
+ 
+ if (UTF8PROC_INSTALL)
+   install(TARGETS utf8proc
++    EXPORT unofficial-utf8proc-config
+     RUNTIME DESTINATION bin
+     LIBRARY DESTINATION lib
+     ARCHIVE DESTINATION lib)
+ 
++  install(EXPORT unofficial-utf8proc-config DESTINATION share/unofficial-utf8proc)
++
+   install(
+     FILES
+       "${PROJECT_SOURCE_DIR}/utf8proc.h"
