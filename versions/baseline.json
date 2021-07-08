@@ -5013,7 +5013,7 @@
       "port-version": 0
     },
     "protozero": {
-      "baseline": "1.6.8",
+      "baseline": "1.7.0",
       "port-version": 0
     },
     "proxygen": {
