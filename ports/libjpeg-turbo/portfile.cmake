@@ -54,6 +54,16 @@ vcpkg_configure_cmake(
 
 vcpkg_install_cmake()
 
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libjpeg.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" "-ljpeg" "-ljpegd")
+endif()
+
+set(_file "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libturbojpeg.pc")
+if(EXISTS "${_file}")
+    vcpkg_replace_string("${_file}" "-lturbojpeg" "-lturbojpegd")
+endif() 
+
 vcpkg_fixup_pkgconfig()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libjpeg-turbo TARGET_PATH share/${PORT})
 
