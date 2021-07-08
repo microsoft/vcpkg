@@ -1986,7 +1986,7 @@
     },
     "ffmpeg": {
       "baseline": "4.4",
-      "port-version": 7
+      "port-version": 8
     },
     "ffnvcodec": {
       "baseline": "10.0.26.0",
@@ -3354,7 +3354,7 @@
     },
     "libmodplug": {
       "baseline": "0.8.9.0",
-      "port-version": 7
+      "port-version": 8
     },
     "libmorton": {
       "baseline": "0.2",
