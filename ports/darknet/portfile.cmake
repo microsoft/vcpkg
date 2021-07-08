@@ -1,8 +1,8 @@
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO AlexeyAB/darknet
-  REF 91efb7c7f6c00a4616ed58735f7c670908d0a849
-  SHA512 7f6187f8ccc89295daf7b15288bae0bf53638970422ced80a4a755e2b4765cda36f532ebc5c32a28804a2ed0ac6375e9a8f7449a9002e1b373378635a54f2c96
+  REF 5853e51d604712918bd2fb23bab0ec82d19a88f9
+  SHA512 d61e94209d66db3b71ad14d83c83a4d562879119b67881e9eacc60efb16e44496b291000c8c545055db5ae0e542cfb149fdbed2058584962fa52b604353ddccd
   HEAD_REF master
 )
 
@@ -14,13 +14,8 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
 
 #do not move following features to vcpkg_check_features because they break themselves: one off will turn off the others even if true
 set(ENABLE_OPENCV FALSE)
-set(ENABLE_OPENCV_WITH_CUDA FALSE)
-if ("opencv-base" IN_LIST FEATURES OR "opencv2-base" IN_LIST FEATURES OR "opencv3-base" IN_LIST FEATURES)
+if ("opencv-base" IN_LIST FEATURES OR "opencv2-base" IN_LIST FEATURES OR "opencv3-base" IN_LIST FEATURES OR "opencv-cuda" IN_LIST FEATURES OR "opencv2-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
   set(ENABLE_OPENCV TRUE)
-endif()
-if ("opencv-cuda" IN_LIST FEATURES OR "opencv2-cuda" IN_LIST FEATURES OR "opencv3-cuda" IN_LIST FEATURES)
-  set(ENABLE_OPENCV TRUE)
-  set(ENABLE_OPENCV_WITH_CUDA TRUE)
 endif()
 
 if ("cuda" IN_LIST FEATURES)
@@ -44,7 +39,6 @@ vcpkg_configure_cmake(
     -DINSTALL_BIN_DIR:STRING=bin
     -DINSTALL_LIB_DIR:STRING=lib
     -DENABLE_OPENCV:BOOL=${ENABLE_OPENCV}
-    -DENABLE_OPENCV_WITH_CUDA:BOOL=${ENABLE_OPENCV_WITH_CUDA}
 )
 
 vcpkg_install_cmake()
