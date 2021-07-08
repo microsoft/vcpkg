@@ -6465,7 +6465,7 @@
       "port-version": 0
     },
     "utf8proc": {
-      "baseline": "2.5.0",
+      "baseline": "2.6.1",
       "port-version": 0
     },
     "utfcpp": {
