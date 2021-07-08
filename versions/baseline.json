@@ -4773,7 +4773,7 @@
       "port-version": 0
     },
     "pcl": {
-      "baseline": "1.12.0",
+      "baseline": "1.12.0.99",
       "port-version": 1
     },
     "pcre": {
