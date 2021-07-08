@@ -17,8 +17,10 @@ set(GDAL_PATCHES
     0004-Fix-cfitsio.patch
     0005-Fix-configure.patch
 )
-if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     list(APPEND GDAL_PATCHES 0003-Fix-static-build.patch)
+else()
+    list(APPEND GDAL_PATCHES 0006-Fix-mingw-dllexport.patch)
 endif()
 
 vcpkg_extract_source_archive_ex(
