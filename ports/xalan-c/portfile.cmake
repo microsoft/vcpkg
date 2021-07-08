@@ -11,10 +11,15 @@ vcpkg_from_github(
         fix-linux-no-bin.patch
 )
 
+set(DISABLE_ICU ON)
+if("icu" IN_LIST FEATURES)
+    set(DISABLE_ICU OFF)
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
-    OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_ICU=ON
+    OPTIONS -DCMAKE_DISABLE_FIND_PACKAGE_ICU=${DISABLE_ICU}
 )
 
 vcpkg_install_cmake()
