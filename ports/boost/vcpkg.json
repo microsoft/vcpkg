@@ -1,6 +1,6 @@
 {
   "name": "boost",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Peer-reviewed portable C++ source libraries",
   "homepage": "https://boost.org",
   "dependencies": [
