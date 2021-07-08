@@ -13,7 +13,7 @@ vcpkg_from_github(ARCHIVE
         ${STATIC_PATCH}
         002-detect_sinf.patch
         003-use-static-cast-for-ctype.patch
-        004-export-pkgconfig.patch
+        004-export-pkgconfig.patch  # https://github.com/Konstanty/libmodplug/pull/59
 )
 
 vcpkg_configure_cmake(SOURCE_PATH ${SOURCE_PATH} PREFER_NINJA)
