@@ -1,4 +1,4 @@
-if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
+	if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
     set(RBDL_STATIC ON)
 else()
     set(RBDL_STATIC OFF)
@@ -7,7 +7,7 @@ endif()
 find_program(GIT git)
 
 set(GIT_URL "https://github.com/orb-hd/rbdl-orb.git")
-set(GIT_REV "f92b82b3c438c105555a1e50f3b880e716f1f90d")
+set(GIT_REV "f75797ae4d0e138b9f64e13cfbf6706146b8bc0b")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${PORT})
 set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
