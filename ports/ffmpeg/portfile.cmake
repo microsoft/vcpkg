@@ -150,7 +150,7 @@ vcpkg_from_github(
         0014-avfilter-dependency-fix.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
         0016-configure-dnn-needs-avformat.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
-        0018-configure-enable-windres-on-win32-win64-if-available.patch
+        0018-configure-enable-windres-on-win32-win64-if-available.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-July/282131.html
         ${PATCHES}
 )
 
