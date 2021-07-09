@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 #
 variables:
-  windows-pool: 'PrWin-2021-06-11'
+  windows-pool: 'PrWin-2021-07-09'
   linux-pool: 'PrLin-2021-06-11'
   osx-pool: 'PrOsx-2021-04-16'
 
