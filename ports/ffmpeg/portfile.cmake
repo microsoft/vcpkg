@@ -150,6 +150,7 @@ vcpkg_from_github(
         0014-avfilter-dependency-fix.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-February/275819.html
         0015-Fix-xml2-detection.patch
         0016-configure-dnn-needs-avformat.patch  # http://ffmpeg.org/pipermail/ffmpeg-devel/2021-May/279926.html
+        0018-configure-enable-windres-on-win32-win64-if-available.patch
         ${PATCHES}
 )
 
@@ -209,7 +210,8 @@ if(VCPKG_TARGET_IS_WINDOWS)
                 1389a443e775bb255d905665dd577bef7ed71d51a8c24d118097f8119c08c4dfe67505e88ddd1e9a3764dd1d50ed8b84fa34abefa797d257e90586f0cbf54de8
         )
     else()
-        vcpkg_acquire_msys(MSYS_ROOT)
+        vcpkg_acquire_msys(MSYS_ROOT
+            PACKAGES binutils)
     endif()
 
     set(SHELL ${MSYS_ROOT}/usr/bin/bash.exe)

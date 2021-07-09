@@ -1,0 +1,24 @@
+From 972f4367910206d82668dec1e47602328d050b69 Mon Sep 17 00:00:00 2001
+From: "Matthias C. M. Troffaes" <matthias.troffaes@gmail.com>
+Date: Fri, 9 Jul 2021 19:49:47 +0100
+Subject: [PATCH] configure: enable windres on win32/win64 if available
+
+---
+ configure | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configure b/configure
+index b124411609..0fea0bf595 100755
+--- a/configure
++++ b/configure
+@@ -5544,6 +5544,7 @@ case $target_os in
+         enabled x86_64 && objformat="win64" || objformat="win32"
+         ranlib=:
+         enable dos_paths
++        enabled shared && ! enabled small && test_cmd $windres --version && enable gnu_windres
+         ;;
+     cygwin*)
+         target_os=cygwin
+-- 
+2.25.1
+
