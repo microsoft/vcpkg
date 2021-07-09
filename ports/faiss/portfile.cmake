@@ -15,6 +15,12 @@ vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
         gpu FAISS_ENABLE_GPU
 )
 
+if ("${FAISS_ENABLE_GPU}")
+    if (NOT VCPKG_CMAKE_SYSTEM_NAME AND NOT ENV{CUDACXX})
+        set(ENV{CUDACXX} "$ENV{CUDA_PATH}/bin/nvcc.exe")
+    endif()
+endif()
+
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
