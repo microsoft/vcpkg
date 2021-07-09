@@ -31,5 +31,7 @@ vcpkg_copy_tools(TOOL_NAMES vsyasm yasm ytasm DEPENDENCIES ${EXTRA_OPTION} AUTO_
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
+configure_file("${CURRENT_PORT_DIR}/vcpkg-port-config.cmake.in"
+    "${CURRENT_PACKAGES_DIR}/share/${PORT}/vcpkg-port-config.cmake" @ONLY)
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
