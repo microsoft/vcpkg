@@ -1,0 +1,32 @@
+{
+  "name": "openblas",
+  "version": "0.3.10",
+  "port-version": 2,
+  "description": "OpenBLAS is an optimized BLAS library based on GotoBLAS2 1.13 BSD version.",
+  "homepage": "https://github.com/xianyi/OpenBLAS",
+  "default-features": [
+    "threads"
+  ],
+  "features": {
+    "simplethread": {
+      "description": "Use simple thread",
+      "dependencies": [
+        {
+          "name": "openblas",
+          "features": [
+            "threads"
+          ]
+        }
+      ]
+    },
+    "threads": {
+      "description": "Use a threading backend",
+      "dependencies": [
+        {
+          "name": "pthread",
+          "platform": "!windows & !uwp"
+        }
+      ]
+    }
+  }
+}

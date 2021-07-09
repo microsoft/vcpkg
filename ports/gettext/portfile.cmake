@@ -28,6 +28,7 @@ vcpkg_extract_source_archive_ex(
         0002-Fix-uwp-build.patch
         0003-Fix-win-unicode-paths.patch
         rel_path.patch
+        android.patch
         ${PATCHES}
 )
 vcpkg_find_acquire_program(BISON)
@@ -43,6 +44,7 @@ if(VCPKG_TARGET_IS_WINDOWS)
                         gl_cv_func_printf_directive_n=no #segfaults otherwise with popup window
                         ac_cv_func_memset=yes #not detected in release builds 
                         ac_cv_header_pthread_h=no
+                        ac_cv_header_dirent_h=no
                         )
 endif()
 set(ADDITIONAL_CONFIGURE_OPTIONS)
