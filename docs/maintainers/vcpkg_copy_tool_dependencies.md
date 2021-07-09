@@ -7,7 +7,7 @@ Copy all DLL dependencies of built tools into the tool folder.
 ## Usage
 ```cmake
 vcpkg_copy_tool_dependencies(
-    TOOL_DIR <${CURRENT_PACKAGES_DIR}/tools/${PORT}>
+    [TOOL_DIR <${CURRENT_PACKAGES_DIR}/tools/${PORT}>]
     [DEPENDENCIES <dep1>...]
 )
 ```
