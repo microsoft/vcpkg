@@ -351,6 +351,14 @@ else()
          "${CURRENT_PACKAGES_DIR}/debug/lib/gdalplugins"
          "${CURRENT_PACKAGES_DIR}/debug/share"
     )
+
+    vcpkg_fixup_pkgconfig()
+    set(pc_file_debug "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/gdal.pc")
+    if(EXISTS "${pc_file_debug}")
+        vcpkg_replace_string("${pc_file_debug}" "${prefix}/../../include" "${prefix}/../include")
+        vcpkg_replace_string("${pc_file_debug}" "${exec_prefix}/include" "${prefix}/../include")
+    endif()
+
 endif()
 
 file(INSTALL "${CMAKE_CURRENT_LIST_DIR}/usage" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
