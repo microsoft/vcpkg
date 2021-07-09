@@ -40,7 +40,7 @@ APT_PACKAGES="$APT_PACKAGES python3-pip"
 APT_PACKAGES="$APT_PACKAGES libasound2-dev"
 
 # Additionally required/installed by Azure DevOps Scale Set Agents
-APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu60"
+APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
 
 sudo apt -y install $APT_PACKAGES
 
@@ -58,16 +58,16 @@ cd ~
 curl -sSL https://get.haskellstack.org/ | sudo sh
 
 # Install CUDA
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-ubuntu1804.pin
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-ubuntu2004.pin
 sudo mv cuda-ubuntu1804.pin /etc/apt/preferences.d/cuda-repository-pin-600
-sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/7fa2af80.pub
-sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/ /"
+sudo apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/7fa2af80.pub
+sudo add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/ /"
 sudo apt -y update
 sudo apt install -y --no-install-recommends cuda-compiler-11-3 cuda-libraries-dev-11-3 cuda-driver-dev-11-3 \
   cuda-cudart-dev-11-3 libcublas-11-3 libcurand-dev-11-3 libcudnn8-dev libnccl2 libnccl-dev
 
 # Install PowerShell
-wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb
+wget -q https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb
 sudo dpkg -i packages-microsoft-prod.deb
 sudo apt update
 sudo add-apt-repository universe
