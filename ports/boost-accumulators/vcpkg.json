@@ -1,6 +1,6 @@
 {
   "name": "boost-accumulators",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost accumulators module",
   "homepage": "https://github.com/boostorg/accumulators",
   "dependencies": [

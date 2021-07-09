@@ -1,0 +1,24 @@
+{
+  "name": "fbthrift",
+  "version-string": "2021.06.14.00",
+  "description": "Facebook's branch of Apache Thrift, including a new C++ server.",
+  "homepage": "https://github.com/facebook/fbthrift",
+  "supports": "x64",
+  "dependencies": [
+    "boost-context",
+    "boost-filesystem",
+    "boost-program-options",
+    "boost-regex",
+    "boost-system",
+    "boost-thread",
+    "fizz",
+    "fmt",
+    "folly",
+    "gflags",
+    "glog",
+    "openssl",
+    "wangle",
+    "zlib",
+    "zstd"
+  ]
+}
