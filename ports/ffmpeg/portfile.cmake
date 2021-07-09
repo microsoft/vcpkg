@@ -837,8 +837,8 @@ list(REMOVE_DUPLICATES FFMPEG_DEPENDENCIES_DEBUG)
 list(REVERSE FFMPEG_DEPENDENCIES_RELEASE)
 list(REVERSE FFMPEG_DEPENDENCIES_DEBUG)
 
-message("Dependencies (release): ${FFMPEG_DEPENDENCIES_RELEASE}")
-message("Dependencies (debug):   ${FFMPEG_DEPENDENCIES_DEBUG}")
+message(STATUS "Dependencies (release): ${FFMPEG_DEPENDENCIES_RELEASE}")
+message(STATUS "Dependencies (debug):   ${FFMPEG_DEPENDENCIES_DEBUG}")
 
 # Handle version strings
 
