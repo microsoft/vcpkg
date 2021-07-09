@@ -37,5 +37,4 @@ endif()
 
 vcpkg_fixup_pkgconfig()
 
-file(COPY ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/libmodplug)
-file(RENAME ${CURRENT_PACKAGES_DIR}/share/libmodplug/COPYING ${CURRENT_PACKAGES_DIR}/share/libmodplug/copyright)
+file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
