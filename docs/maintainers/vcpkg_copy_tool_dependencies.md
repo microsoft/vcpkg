@@ -12,7 +12,7 @@ vcpkg_copy_tool_dependencies(
 )
 ```
 ## TOOL_DIR
-The path to the directory containing the tools.
+The path to the directory containing the tools. This will be set to `${CURRENT_PACKAGES_DIR}/tools/${PORT}` if omitted.
 
 ## DEPENDENCIES
 A list of dynamic libraries a tool is likely to load at runtime, such as plugins,

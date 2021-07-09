@@ -6,12 +6,12 @@ Copy all DLL dependencies of built tools into the tool folder.
 ## Usage
 ```cmake
 vcpkg_copy_tool_dependencies(
-    TOOL_DIR <${CURRENT_PACKAGES_DIR}/tools/${PORT}>
+    [TOOL_DIR <${CURRENT_PACKAGES_DIR}/tools/${PORT}>]
     [DEPENDENCIES <dep1>...]
 )
 ```
 ## TOOL_DIR
-The path to the directory containing the tools.
+The path to the directory containing the tools. This will be set to `${CURRENT_PACKAGES_DIR}/tools/${PORT}` if omitted.
 
 ## DEPENDENCIES
 A list of dynamic libraries a tool is likely to load at runtime, such as plugins,
@@ -28,8 +28,13 @@ This command should always be called by portfiles after they have finished rearr
 * [fltk](https://github.com/Microsoft/vcpkg/blob/master/ports/fltk/portfile.cmake)
 #]===]
 
-function(vcpkg_copy_tool_dependencies TOOL_DIR)
+function(vcpkg_copy_tool_dependencies)
     cmake_parse_arguments(PARSE_ARGV 0 arg "" "TOOL_DIR" "DEPENDENCIES")
+    
+    if (NOT DEFINED arg_TOOL_DIR)
+        set(arg_TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}")
+    endif()
+
     if (VCPKG_TARGET_IS_WINDOWS)
         find_program(PWSH_EXE pwsh)
         if (NOT PWSH_EXE)
