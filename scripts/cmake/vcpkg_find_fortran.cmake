@@ -53,11 +53,11 @@ function(vcpkg_find_fortran additional_cmake_args_out)
                         120c943ce173719e48400fa18299f3458bc9db4cf18bb5a4dda8a91cc3f816510b337a92f7388077c65b50bbbeae9078793891ceaad631d780b10fde19ad3649
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-headers-git-8.0.0.5966.f5da805f-1-any.pkg.tar.zst"
                         dbb9f8258da306a3441f9882faa472c3665a67b2ea68657f3e8a1402dcfacf9787a886a3daf0eefe4946f04557bc166eb15b21c1093ad85c909002daadba1923
-                        "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libiconv-1.16-1-any.pkg.tar.xz"
+                        "https://repo.msys2.org/mingw/i686/mingw-w64-i686-libiconv-1.16-2-any.pkg.tar.zst"
                         ba236e1efc990cb91d459f938be6ca6fc2211be95e888d73f8de301bce55d586f9d2b6be55dacb975ec1afa7952b510906284eff70210238919e341dffbdbeb8
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-windows-default-manifest-6.4-3-any.pkg.tar.xz"
                         5b99abc55eaa74cf85ca64a9c91542554cb5c1098bc71effba9bd36242694cfd348503fcd3507fb9ba97486108c092c925e2f38cd744493386b3dc9ab28bc526
-                        "https://repo.msys2.org/mingw/i686/mingw-w64-i686-zlib-1.2.11-7-any.pkg.tar.xz"
+                        "https://repo.msys2.org/mingw/i686/mingw-w64-i686-zlib-1.2.11-8-any.pkg.tar.zst"
                         459850a8c42b1d497268736629ef713beee70cd0d3161d02c7a9fad08aca4560f4e17ba02d5cabda8a19d7c614f7e0ef5a6ec13afd91dd3004057139a5469c8f
                         "https://repo.msys2.org/mingw/i686/mingw-w64-i686-zstd-1.4.5-1-any.pkg.tar.zst"
                         68f431073717b59549ab0fd26be8df8afcb43f3dd85be2ffcbc7d1a629999eed924656a7fc3f50937b2e6605a5067542d016181106b7bc3408b89b268ced5d23
@@ -91,12 +91,12 @@ function(vcpkg_find_fortran additional_cmake_args_out)
                         0142e4a44c59d17380a4fc7b101a2152486781621d5f9f930045b8f9c4bb2c93ea88211e7d8f8f233e0ae09595c6c8bc948ae80b9673f231e715b0d04c8a1e54
                         "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-headers-git-8.0.0.5966.f5da805f-1-any.pkg.tar.zst"
                         b547091a45ea7df8182b627edc9a7c91a23f01c0d4e02634a590c02f24311741cad92ceb67b7e4432ffbe4266f135a5289eb3560cc90ffa5c57612c8537a1588
-                        "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-libiconv-1.16-1-any.pkg.tar.xz"
-                        c8e2fda532c753e0b1004596bf737c3669355f32af9b45d96c23fcef14994ba21ddf4f75138bdecc94cbf8a8c449eff530d24b74a0da47793e24ce92d154f411
+                        "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-libiconv-1.16-2-any.pkg.tar.zst"
+                        542ed5d898a57a79d3523458f8f3409669b411f87d0852bb566d66f75c96422433f70628314338993461bcb19d4bfac4dadd9d21390cb4d95ef0445669288658
                         "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-windows-default-manifest-6.4-3-any.pkg.tar.xz"
                         77d02121416e42ff32a702e21266ce9031b4d8fc9ecdb5dc049d92570b658b3099b65d167ca156367d17a76e53e172ca52d468e440c2cdfd14701da210ffea37
-                        "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-zlib-1.2.11-7-any.pkg.tar.xz"
-                        bbd4a549efc2a5f4b1e9f1be00331e8726d80401a9c6117afa9d5dd92f4ac42a06cf2ce491a988e5c6ed7a6e536f8f1746081f4944bc6d473ccd16390fea27fe
+                        "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-zlib-1.2.11-8-any.pkg.tar.zst"
+                        f40dde3216185e945baf51c29bbf8d1947220593901f982c711a663bb5a303efe434a4f6cf0c885817812fdc81183bcc1a240b96c29abb24a4c83202fd15016e
                         "https://repo.msys2.org/mingw/x86_64/mingw-w64-x86_64-zstd-1.4.5-1-any.pkg.tar.zst"
                         dc2c7289fb206966829c98f6bf4389b423784415532ca3d627a22ae9d756a4fe2faf9844994b3093d814d129d20b2b79897e702aa9569978f58431ea66b55feb
                 )
