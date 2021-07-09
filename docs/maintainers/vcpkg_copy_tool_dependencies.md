@@ -8,14 +8,17 @@ Copy all DLL dependencies of built tools into the tool folder.
 ```cmake
 vcpkg_copy_tool_dependencies(
     TOOL_DIR <${CURRENT_PACKAGES_DIR}/tools/${PORT}>
-    [DYNAMIC_DEPENS <dep1>...]
+    [DEPENDENCIES <dep1>...]
 )
 ```
 ## TOOL_DIR
 The path to the directory containing the tools.
 
-### DYNAMIC_DEPENS
-A list of tool's dynamic dependency library names.
+### DEPENDENCIES
+A list of dynamic libraries a tool is likely to load at runtime, such as plugins,
+or other Run-Time Dynamic Linking mechanisms like LoadLibrary or dlopen.
+These libraries will be copied into the same directory as the tool
+even if they are not statically determined as dependencies from inspection of their import tables.
 
 ## Notes
 This command should always be called by portfiles after they have finished rearranging the binary output, if they have any tools.

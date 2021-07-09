@@ -10,7 +10,7 @@ vcpkg_copy_tools(
     TOOL_NAMES <tool1>...
     [SEARCH_DIR <${CURRENT_PACKAGES_DIR}/bin>]
     [DESTINATION <${CURRENT_PACKAGES_DIR}/tools/${PORT}>]
-    [DYNAMIC_DEPENS <dep1>...]
+    [DEPENDENCIES <dep1>...]
     [AUTO_CLEAN]
 )
 ```
@@ -24,8 +24,11 @@ The path to the directory containing the tools. This will be set to `${CURRENT_P
 ### DESTINATION
 Destination to copy the tools to. This will be set to `${CURRENT_PACKAGES_DIR}/tools/${PORT}` if omitted.
 
-### DYNAMIC_DEPENS
-A list of tool's dynamic dependency library names.
+### DEPENDENCIES
+A list of dynamic libraries a tool is likely to load at runtime, such as plugins,
+or other Run-Time Dynamic Linking mechanisms like LoadLibrary or dlopen.
+These libraries will be copied into the same directory as the tool
+even if they are not statically determined as dependencies from inspection of their import tables.
 
 ### AUTO_CLEAN
 Auto clean executables in `${CURRENT_PACKAGES_DIR}/bin` and `${CURRENT_PACKAGES_DIR}/debug/bin`.

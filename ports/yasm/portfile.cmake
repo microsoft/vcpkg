@@ -27,7 +27,7 @@ vcpkg_copy_pdbs()
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "dynamic")
     set(EXTRA_OPTION yasmstd${VCPKG_TARGET_SHARED_LIBRARY_SUFFIX})
 endif()
-vcpkg_copy_tools(TOOL_NAMES vsyasm yasm ytasm DYNAMIC_DEPENS ${EXTRA_OPTION} AUTO_CLEAN)
+vcpkg_copy_tools(TOOL_NAMES vsyasm yasm ytasm DEPENDENCIES ${EXTRA_OPTION} AUTO_CLEAN)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
