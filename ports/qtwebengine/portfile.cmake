@@ -2,7 +2,7 @@ set(SCRIPT_PATH "${CURRENT_INSTALLED_DIR}/share/qtbase")
 include("${SCRIPT_PATH}/qt_install_submodule.cmake")
 
 set(${PORT}_PATCHES forward_cmake_args.patch)
-set(TOOL_NAMES gn QtWebEngineProcess qtwebengine_convert_dict)
+set(TOOL_NAMES gn QtWebEngineProcess qwebengine_convert_dict)
 #QT_FEATURE_webengine_system_opus AND QT_FEATURE_webengine_system_libwebp
 #QT_FEATURE_system_zlib
 #webengine-system-libpng
