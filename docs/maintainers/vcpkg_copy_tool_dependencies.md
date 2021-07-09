@@ -14,7 +14,7 @@ vcpkg_copy_tool_dependencies(
 ## TOOL_DIR
 The path to the directory containing the tools.
 
-### DEPENDENCIES
+## DEPENDENCIES
 A list of dynamic libraries a tool is likely to load at runtime, such as plugins,
 or other Run-Time Dynamic Linking mechanisms like LoadLibrary or dlopen.
 These libraries will be copied into the same directory as the tool
