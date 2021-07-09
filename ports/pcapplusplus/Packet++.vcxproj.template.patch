@@ -1,0 +1,33 @@
+diff --git a/mk/vs/Packet++.vcxproj.template b/mk/vs/Packet++.vcxproj.template
+index ec8ee00..ef3f595 100644
+--- a/mk/vs/Packet++.vcxproj.template
++++ b/mk/vs/Packet++.vcxproj.template
+@@ -74,20 +74,20 @@
+   </ImportGroup>
+   <PropertyGroup Label="UserMacros" />
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+-    <OutDir>$(PcapPlusPlusHome)\Packet++\Lib</OutDir>
+-    <IntDir>$(PcapPlusPlusHome)\Packet++\Obj</IntDir>
++    <OutDir>Packet++\Lib</OutDir>
++    <IntDir>Packet++\Obj</IntDir>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+-    <OutDir>$(PcapPlusPlusHome)\Packet++\Lib</OutDir>
+-    <IntDir>$(PcapPlusPlusHome)\Packet++\Obj</IntDir>
++    <OutDir>Packet++\Lib</OutDir>
++    <IntDir>Packet++\Obj</IntDir>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+-    <OutDir>$(PcapPlusPlusHome)\Packet++\Lib</OutDir>
+-    <IntDir>$(PcapPlusPlusHome)\Packet++\Obj</IntDir>
++    <OutDir>Packet++\Lib</OutDir>
++    <IntDir>Packet++\Obj</IntDir>
+   </PropertyGroup>
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+-    <OutDir>$(PcapPlusPlusHome)\Packet++\Lib</OutDir>
+-    <IntDir>$(PcapPlusPlusHome)\Packet++\Obj</IntDir>
++    <OutDir>Packet++\Lib</OutDir>
++    <IntDir>Packet++\Obj</IntDir>
+   </PropertyGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+     <ClCompile>
