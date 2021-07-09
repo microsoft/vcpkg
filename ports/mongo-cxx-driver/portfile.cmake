@@ -14,6 +14,7 @@ vcpkg_from_github(
         disable-c2338-mongo-cxx-driver.patch
         disable_test_and_example.patch
         github-654.patch
+        fix-dependencies.patch
 )
 
 if ("mnmlstc" IN_LIST FEATURES)
