@@ -1,0 +1,4 @@
+Source: rexo
+Version: 2021-06-21
+Description: Rexo is a neat single-file cross-platform unit testing framework for C/C++.
+Homepage: https://github.com/christophercrouzet/rexo
