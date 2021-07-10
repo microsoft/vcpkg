@@ -118,6 +118,13 @@
     "qttranslations",
     "qtvirtualkeyboard",
     {
+      "name": "qtwebchannel",
+      "default-features": false,
+      "features": [
+        "qml"
+      ]
+    },
+    {
       "name": "qtwebengine",
       "default-features": false,
       "features": [
@@ -140,13 +147,6 @@
       "features": [
         "qml",
         "webengine"
-      ]
-    },
-    {
-      "name": "qtwebchannel",
-      "default-features": false,
-      "features": [
-        "qml"
       ]
     }
   ],
