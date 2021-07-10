@@ -58,23 +58,34 @@ if(VCPKG_TARGET_IS_WINDOWS)
     )
 else()
     if(VCPKG_TARGET_IS_LINUX)
-        set(CONFIG_CMD "configure-linux.sh --default")
+        set(CONFIG_CMD "./configure-linux.sh")
     elseif(VCPKG_TARGET_IS_OSX)
-        set(CONFIG_CMD "configure-mac_os_x.sh")
+        set(CONFIG_CMD "./configure-mac_os_x.sh")
     else()
         message(FATAL_ERROR "Unsupported platform")
     endif()
 
     vcpkg_execute_required_process(
-        COMMAND ${CONFIG_CMD}
+	COMMAND ${SOURCE_PATH}/${CONFIG_CMD} --libpcap-include-dir ${CURRENT_INSTALLED_DIR}/include
         WORKING_DIRECTORY ${SOURCE_PATH}
     )
 
-    vcpkg_build_make(BUILD_TARGET libs)
+    vcpkg_execute_build_process(
+	COMMAND make libs
+	WORKING_DIRECTORY ${SOURCE_PATH}
+    )
+
+    # Lib
+    file(GLOB LIB_FILES "${SOURCE_PATH}/Dist/*.a")
+    file(
+	INSTALL ${LIB_FILES}
+	DESTINATION ${CURRENT_PACKAGES_DIR}/lib
+    )
 
     # Include
+    file(GLOB HEADER_FILES "${SOURCE_PATH}/Dist/header/*.h")
     file(
-        INSTALL ${SOURCE_PATH}/Dist/header/*.h
+	INSTALL ${HEADER_FILES}
         DESTINATION ${CURRENT_PACKAGES_DIR}/include
     )
 
@@ -82,60 +93,3 @@ else()
     file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcapplusplus RENAME copyright)
 endif()
 
-# file(GLOB LIB_DEBUG_FILES "${SOURCE_PATH}/Dist/header/Win32/Debug/*")
-# file(GLOB LIB_RELEASE_FILES "${SOURCE_PATH}/Dist/header/Win32/Release/*.lib")
-# file(
-#     COPY ${LIB_DEBUG_FILES}
-#     DESTINATION ${CURRENT_PACKAGES_DIR}/debug/lib
-# )
-# file(
-#     COPY ${LIB_RELEASE_FILES}
-#     DESTINATION ${CURRENT_PACKAGES_DIR}/lib
-# )
-# vcpkg_install_msbuild(
-#     SOURCE_PATH "${SOURCE_PATH}"
-#     PROJECT_SUBPATH "mk/${VS_VERSION}/Packet++.vcxproj"
-#     PLATFORM ${TRIPLET_SYSTEM_ARCH}
-#     USE_VCPKG_INTEGRATION
-# )
-# vcpkg_install_msbuild(
-#     SOURCE_PATH "${SOURCE_PATH}"
-#     PROJECT_SUBPATH "mk/${VS_VERSION}/Pcap++.vcxproj"
-#     PLATFORM ${TRIPLET_SYSTEM_ARCH}
-#     USE_VCPKG_INTEGRATION
-# )
-
-# # Include
-# file(
-#     INSTALL ${SOURCE_PATH}/Dist/header/*.h
-#     DESTINATION ${CURRENT_PACKAGES_DIR}/include/pcapplusplus
-# )
-
-# # Copyright
-# file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/pcapplusplus RENAME copyright)
-
-# if(NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
-#   set(ENABLE_PCAP TRUE)
-# endif()
-
-# vcpkg_configure_cmake(
-#     SOURCE_PATH ${SOURCE_PATH}
-#     PREFER_NINJA
-#     OPTIONS
-#         -DLIBTINS_BUILD_SHARED=${LIBTINS_BUILD_SHARED}
-#         -DLIBTINS_ENABLE_PCAP=${ENABLE_PCAP}
-#         -DLIBTINS_ENABLE_CXX11=1
-# )
-
-# vcpkg_install_cmake()
-
-# if (NOT VCPKG_CMAKE_SYSTEM_NAME OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "windows" OR VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore") #Windows
-#     vcpkg_fixup_cmake_targets(CONFIG_PATH CMake)
-# else() #Linux/Unix/Darwin
-#     vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/libtins)
-# endif()
-
-# file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-
-# # Handle copyright
-# file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/libtins RENAME copyright)
