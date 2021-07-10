@@ -7,19 +7,12 @@
     "qt6betablock",
     {
       "name": "qtbase",
-      "default-features": false
-    },
-    {
-      "name": "qtdeclarative",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "dbus",
+        "gui",
+        "network"
+      ]
     }
-  ],
-  "default-features": [
-    "default-features"
-  ],
-  "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
-    }
-  }
+  ]
 }

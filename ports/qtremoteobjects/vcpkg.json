@@ -7,7 +7,10 @@
     "qt6betablock",
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "network"
+      ]
     },
     {
       "name": "qtdeclarative",
@@ -19,12 +22,22 @@
       "default-features": false
     }
   ],
-  "default-features": [
-    "default-features"
-  ],
   "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
     }
   }
 }

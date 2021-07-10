@@ -6,12 +6,8 @@
   "dependencies": [
     {
       "name": "qtbase",
-      "default-features": false,
-      "features": [
-        "network"
-      ]
+      "default-features": false
     },
-    "qtdeclarative",
     {
       "name": "qttools",
       "host": true,
@@ -23,6 +19,22 @@
       "description": "Build QDoc.",
       "dependencies": [
         "llvm"
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
       ]
     }
   }

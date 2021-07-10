@@ -7,17 +7,21 @@
   "dependencies": [
     {
       "name": "qtbase",
-      "default-features": false
-    },
-    "qtdeclarative",
-    "qtopcua"
-  ],
-  "default-features": [
-    "default-features"
+      "default-features": false,
+      "features": [
+        "gui"
+      ]
+    }
   ],
   "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
     }
   }
 }

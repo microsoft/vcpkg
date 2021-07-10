@@ -7,16 +7,13 @@
     {
       "name": "qtbase",
       "default-features": false
-    },
-    {
-      "name": "qtdeclarative",
-      "default-features": false
     }
   ],
   "default-features": [
     "big-codecs",
     "codecs",
     "default-features",
+    "qml",
     "textcodec"
   ],
   "features": {
@@ -57,6 +54,22 @@
           "features": [
             "textcodec"
           ]
+        }
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "gui"
+          ]
+        },
+        {
+          "name": "qtdeclarative",
+          "default-features": false
         }
       ]
     },

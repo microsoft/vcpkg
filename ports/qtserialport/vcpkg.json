@@ -9,13 +9,5 @@
       "name": "qtbase",
       "default-features": false
     }
-  ],
-  "default-features": [
-    "default-features"
-  ],
-  "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
-    }
-  }
+  ]
 }

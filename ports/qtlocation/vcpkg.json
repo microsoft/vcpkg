@@ -10,20 +10,36 @@
       "default-features": false
     },
     {
-      "name": "qtdeclarative",
-      "default-features": false
-    },
-    {
-      "name": "qtserialbus",
-      "default-features": false
+      "name": "qtbase",
+      "default-features": false,
+      "features": [
+        "dbus"
+      ],
+      "platform": "linux"
     }
   ],
-  "default-features": [
-    "default-features"
-  ],
   "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
+    "nmea": {
+      "description": "Build with nmea",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "network"
+          ]
+        },
+        "qtserialport"
+      ]
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
     }
   }
 }

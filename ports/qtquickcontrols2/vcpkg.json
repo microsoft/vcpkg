@@ -6,16 +6,12 @@
   "dependencies": [
     {
       "name": "qtbase",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "gui",
+        "widgets"
+      ]
     },
     "qtdeclarative"
-  ],
-  "default-features": [
-    "default-features"
-  ],
-  "features": {
-    "default-features": {
-      "description": "Platform-dependent default features"
-    }
-  }
+  ]
 }
