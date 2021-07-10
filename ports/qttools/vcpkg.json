@@ -15,6 +15,12 @@
     }
   ],
   "features": {
+    "assistant": {
+      "description": "Build Qt Assistant"
+    },
+    "designer": {
+      "description": "Build Qt Designer"
+    },
     "qdoc": {
       "description": "Build QDoc.",
       "dependencies": [
