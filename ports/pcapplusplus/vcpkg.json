@@ -6,16 +6,16 @@
   "supports": "windows | linux | osx",
   "dependencies": [
     {
-      "name": "winpcap",
-      "platform": "windows"
+      "name": "libpcap",
+      "platform": "!windows"
     },
     {
       "name": "pthreads",
       "platform": "windows"
     },
     {
-      "name": "libpcap",
-      "platform": "!windows"
+      "name": "winpcap",
+      "platform": "windows"
     }
   ]
 }
