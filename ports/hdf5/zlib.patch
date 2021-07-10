@@ -1,0 +1,27 @@
+diff --git a/CMakeFilters.cmake b/CMakeFilters.cmake
+index 1ae05eb..3e5824f 100644
+--- a/CMakeFilters.cmake
++++ b/CMakeFilters.cmake
+@@ -53,6 +53,7 @@ if (HDF5_ENABLE_Z_LIB_SUPPORT)
+       if (NOT ZLIB_FOUND)
+         find_package (ZLIB) # Legacy find
+         if (ZLIB_FOUND)
++          set (ZLIB_LIBRARIES ZLIB::ZLIB)
+           set (LINK_COMP_LIBS ${LINK_COMP_LIBS} ${ZLIB_LIBRARIES})
+           set (LINK_COMP_SHARED_LIBS ${LINK_COMP_SHARED_LIBS} ${ZLIB_LIBRARIES})
+           set (zlib_PC_LIBS_PRIVATE "${ZLIB_LIBRARIES}")
+diff --git a/config/cmake/hdf5-config.cmake.in b/config/cmake/hdf5-config.cmake.in
+index a8cbacb..9f1a5cf 100644
+--- a/config/cmake/hdf5-config.cmake.in
++++ b/config/cmake/hdf5-config.cmake.in
+@@ -56,6 +56,10 @@ set (${HDF5_PACKAGE_NAME}_PARALLEL_FILTERED_WRITES "@PARALLEL_FILTERED_WRITES@")
+ #-----------------------------------------------------------------------------
+ include(CMakeFindDependencyMacro)
+ 
++if (${HDF5_PACKAGE_NAME}_ENABLE_Z_LIB_SUPPORT)
++  find_dependency(ZLIB)
++endif()
++
+ if (${HDF5_PACKAGE_NAME}_ENABLE_PARALLEL)
+   find_dependency(MPI)
+   set (${HDF5_PACKAGE_NAME}_MPI_C_INCLUDE_PATH "@MPI_C_INCLUDE_DIRS@")

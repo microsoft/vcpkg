@@ -14,6 +14,7 @@ vcpkg_from_github(
         mingw-import-libs.patch
         pkgconfig-requires.patch
         pkgconfig-link-order.patch
+        zlib.patch
 )
 
 if ("parallel" IN_LIST FEATURES AND "cpp" IN_LIST FEATURES)

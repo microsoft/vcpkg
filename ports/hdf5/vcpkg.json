@@ -1,7 +1,7 @@
 {
   "name": "hdf5",
   "version": "1.12.0",
-  "port-version": 4,
+  "port-version": 5,
   "description": "HDF5 is a data model, library, and file format for storing and managing data",
   "homepage": "https://www.hdfgroup.org/downloads/hdf5/",
   "supports": "!uwp",
