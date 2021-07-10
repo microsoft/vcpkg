@@ -1620,6 +1620,18 @@
       "baseline": "0.8.2",
       "port-version": 1
     },
+    "daw-header-libraries": {
+      "baseline": "2021-06-28",
+      "port-version": 0
+    },
+    "daw-json-link": {
+      "baseline": "2021-05-16",
+      "port-version": 0
+    },
+    "daw-utf-range": {
+      "baseline": "2021-06-15",
+      "port-version": 0
+    },
     "dbg-macro": {
       "baseline": "2019-07-11",
       "port-version": 0

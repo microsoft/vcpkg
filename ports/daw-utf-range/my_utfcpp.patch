@@ -1,0 +1,119 @@
+diff --git a/include/daw/utf_range/daw_utf_range.h b/include/daw/utf_range/daw_utf_range.h
+index 36fe70d..c794934 100644
+--- a/include/daw/utf_range/daw_utf_range.h
++++ b/include/daw/utf_range/daw_utf_range.h
+@@ -10,7 +10,7 @@
+ 
+ #include <iostream>
+ #include <string>
+-#include <utf8/unchecked.h>
++#include <daw/utf8/unchecked.h>
+ 
+ #include <daw/cpp_17.h>
+ #include <daw/daw_algorithm.h>
+@@ -21,7 +21,7 @@
+ namespace daw {
+ 	namespace range {
+ 		using char_iterator = char const *;
+-		using utf_iterator = utf8::unchecked::iterator<char_iterator>;
++		using utf_iterator = daw::utf8::unchecked::iterator<char_iterator>;
+ 		using utf_val_type = utf_iterator::value_type;
+ 
+ 		constexpr size_t hash_sequence( char_iterator first,
+@@ -95,7 +95,7 @@ namespace daw {
+ 
+ 			constexpr void advance( size_t const n ) noexcept {
+ 				assert( n <= m_size );
+-				utf8::unchecked::advance( m_begin, n );
++				daw::utf8::unchecked::advance( m_begin, n );
+ 				m_size -= n;
+ 			}
+ 
+@@ -317,7 +317,7 @@ namespace daw {
+ 
+ 	inline std::string from_u32string( std::u32string const &other ) {
+ 		std::string result;
+-		utf8::unchecked::utf32to8( other.begin( ), other.end( ),
++		daw::utf8::unchecked::utf32to8( other.begin( ), other.end( ),
+ 		                           std::back_inserter( result ) );
+ 		return result;
+ 	}
+diff --git a/include/daw/utf_range/daw_utf_string.h b/include/daw/utf_range/daw_utf_string.h
+index 1cce2da..780a472 100644
+--- a/include/daw/utf_range/daw_utf_string.h
++++ b/include/daw/utf_range/daw_utf_string.h
+@@ -10,7 +10,7 @@
+ 
+ #include <iostream>
+ #include <string>
+-#include <utf8/unchecked.h>
++#include <daw/utf8/unchecked.h>
+ 
+ #include <daw/cpp_17.h>
+ #include <daw/daw_algorithm.h>
+@@ -174,7 +174,7 @@ namespace daw {
+ 			std::copy( cbegin( ), cend( ), std::back_inserter( result ) );
+ 			std::sort( result.begin( ), result.end( ) );
+ 			m_values.clear( );
+-			utf8::unchecked::utf32to8( result.cbegin( ), result.cend( ),
++			daw::utf8::unchecked::utf32to8( result.cbegin( ), result.cend( ),
+ 			                           std::back_inserter( m_values ) );
+ 			m_range = daw::range::create_char_range( m_values );
+ 		}
+diff --git a/include/utf8/checked.h b/include/utf8/checked.h
+index c74171e..4d6f211 100644
+--- a/include/utf8/checked.h
++++ b/include/utf8/checked.h
+@@ -33,7 +33,7 @@ DEALINGS IN THE SOFTWARE.
+ #include <ciso646>
+ #include <stdexcept>
+ 
+-namespace utf8 {
++namespace daw::utf8 {
+ 	// Exceptions that may be thrown from the library functions.
+ 	class invalid_code_point {
+ 		uint32_t cp;
+@@ -379,4 +379,4 @@ namespace utf8 {
+ 	}; // class iterator
+ 	template<typename octet_iterator>
+ 	iterator( octet_iterator ) -> iterator<octet_iterator>;
+-} // namespace utf8
++} // namespace daw::utf8
+diff --git a/include/utf8/core.h b/include/utf8/core.h
+index bd9e461..78d7acc 100644
+--- a/include/utf8/core.h
++++ b/include/utf8/core.h
+@@ -29,7 +29,7 @@ DEALINGS IN THE SOFTWARE.
+ #include <cinttypes>
+ #include <iterator>
+ 
+-namespace utf8 {
++namespace daw::utf8 {
+ 	// The typedefs for 8-bit, 16-bit and 32-bit unsigned integers
+ 	// You may need to change them to match your system.
+ 	// These typedefs have the same names as ones from cstdint, or boost/cstdint
+@@ -333,4 +333,4 @@ namespace utf8 {
+ 		         ( utf8::internal::mask8( *it++ ) ) == bom[1] &&
+ 		         ( utf8::internal::mask8( *it ) ) == bom[2] );
+ 	}
+-} // namespace utf8
++} // namespace daw::utf8
+diff --git a/include/utf8/unchecked.h b/include/utf8/unchecked.h
+index 7f00df9..b48397a 100644
+--- a/include/utf8/unchecked.h
++++ b/include/utf8/unchecked.h
+@@ -29,7 +29,7 @@ DEALINGS IN THE SOFTWARE.
+ #include "core.h"
+ #include <daw/cpp_17.h>
+ 
+-namespace utf8 {
++namespace daw::utf8 {
+ 	namespace unchecked {
+ 		template<typename octet_iterator>
+ 		constexpr octet_iterator append( uint32_t cp,
+@@ -276,4 +276,4 @@ namespace utf8 {
+ 			return it -= n;
+ 		}
+ 	} // namespace unchecked
+-} // namespace utf8
++} // namespace daw::utf8

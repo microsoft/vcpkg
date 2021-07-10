@@ -1,0 +1,6 @@
+{
+  "name": "daw-header-libraries",
+  "version-date": "2021-06-28",
+  "description": "Set of header-only algorithms used in daw-utf8-range and daw-json-link.",
+  "homepage": "https://github.com/beached/header_libraries"
+}
