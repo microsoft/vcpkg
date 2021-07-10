@@ -3,34 +3,94 @@
   "version-semver": "6.2.0-beta1",
   "description": "Qt WebEngine",
   "homepage": "https://www.qt.io/",
+  "supports": "native",
   "dependencies": [
-    "protobuf",
+    {
+      "name": "ffmpeg",
+      "platform": "!windows"
+    },
+    {
+      "name": "fontconfig",
+      "platform": "!windows"
+    },
+    {
+      "name": "freetype",
+      "platform": "!windows"
+    },
+    {
+      "name": "glib",
+      "platform": "!windows"
+    },
+    {
+      "name": "harfbuzz",
+      "platform": "!windows"
+    },
+    {
+      "name": "icu",
+      "platform": "!windows"
+    },
+    {
+      "name": "libevent",
+      "platform": "!windows"
+    },
+    {
+      "name": "libjpeg-turbo",
+      "platform": "!windows"
+    },
+    {
+      "name": "libpng",
+      "platform": "!windows"
+    },
+    {
+      "name": "libvpx",
+      "platform": "!windows"
+    },
+    {
+      "name": "libwebp",
+      "platform": "!windows"
+    },
+    {
+      "name": "libxml2",
+      "platform": "!windows"
+    },
+    {
+      "name": "minizip",
+      "platform": "!windows"
+    },
+    {
+      "name": "opus",
+      "platform": "!windows"
+    },
+    {
+      "name": "protobuf",
+      "platform": "!windows"
+    },
     "qt6betablock",
     {
       "name": "qtbase",
-      "default-features": false
-    },
-    {
-      "name": "qtdeclarative",
-      "default-features": false
-    },
-    {
-      "name": "qtlocation",
-      "default-features": false
-    },
-    {
-      "name": "qtquickcontrols2",
-      "default-features": false
+      "default-features": false,
+      "features": [
+        "gui",
+        "network",
+        "widgets"
+      ]
     },
     {
       "name": "qttools",
       "default-features": false
     },
     {
-      "name": "qtwebchannel",
-      "default-features": false
+      "name": "re2",
+      "platform": "!windows"
     },
-    "snappy"
+    {
+      "name": "snappy",
+      "platform": "!windows"
+    },
+    {
+      "name": "zlib",
+      "platform": "!windows"
+    }
   ],
   "default-features": [
     "default-features"
@@ -38,6 +98,39 @@
   "features": {
     "default-features": {
       "description": "Platform-dependent default features"
+    },
+    "geolocation": {
+      "description": "Build with Geolocation",
+      "dependencies": [
+        {
+          "name": "qtlocation",
+          "default-features": false
+        }
+      ]
+    },
+    "proprietary-codecs": {
+      "description": "Enables the use of proprietary codecs such as h.264/h.265 and MP3."
+    },
+    "qml": {
+      "description": "Build QML imports",
+      "dependencies": [
+        {
+          "name": "qtdeclarative",
+          "default-features": false
+        }
+      ]
+    },
+    "spellchecker": {
+      "description": "Provides a spellchecker"
+    },
+    "webchannel": {
+      "description": "Provides QtWebChannel integration",
+      "dependencies": [
+        {
+          "name": "qtwebchannel",
+          "default-features": false
+        }
+      ]
     }
   }
 }
