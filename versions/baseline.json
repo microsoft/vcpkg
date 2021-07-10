@@ -5524,6 +5524,10 @@
       "baseline": "0.6.13",
       "port-version": 0
     },
+    "rexo": {
+      "baseline": "2021-06-21",
+      "port-version": 0
+    },
     "rhash": {
       "baseline": "1.4.0",
       "port-version": 0
