@@ -4,7 +4,7 @@
   "description": "Cross-platform, C implementation of the IETF QUIC protocol",
   "homepage": "https://github.com/microsoft/msquic",
   "license": "MIT",
-  "supports": "!static",
+  "supports": "!(windows & static)",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
