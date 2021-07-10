@@ -65,7 +65,6 @@
       "name": "protobuf",
       "platform": "!windows"
     },
-    "qt6betablock",
     {
       "name": "qtbase",
       "default-features": false,

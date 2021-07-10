@@ -4,7 +4,6 @@
   "description": "Qt WebSockets",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qt6betablock",
     {
       "name": "qtbase",
       "default-features": false,

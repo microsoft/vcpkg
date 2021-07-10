@@ -4,7 +4,6 @@
   "description": "Qt Multimedia",
   "homepage": "https://www.qt.io/",
   "dependencies": [
-    "qt6betablock",
     {
       "name": "qtbase",
       "default-features": false,
@@ -18,6 +17,12 @@
     "widgets"
   ],
   "features": {
+    "gstreamer": {
+      "description": "Build with gstreamer",
+      "dependencies": [
+        "gstreamer"
+      ]
+    },
     "qml": {
       "description": "Build QML imports",
       "dependencies": [
