@@ -6850,7 +6850,7 @@
     },
     "zlib": {
       "baseline": "1.2.11",
-      "port-version": 10
+      "port-version": 11
     },
     "zlib-ng": {
       "baseline": "2.0.3",
