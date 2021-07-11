@@ -1794,4 +1794,5 @@ dimcli:x64-windows-static=fail
 cppgraphqlgen:x64-osx=fail
 
 # Changes in Python have broken tensorflow on our osx hardware
+tensorflow:x64-osx=fail
 tensorflow-cc:x64-osx=fail
