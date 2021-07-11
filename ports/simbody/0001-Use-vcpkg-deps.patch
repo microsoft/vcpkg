@@ -1,0 +1,32 @@
+﻿diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 02514a82..67874065 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -529,13 +529,13 @@ endif()
+ # Intel MKL: mkl_intel_c_dll;mkl_sequential_dll;mkl_core_dll
+ set(BUILD_USING_OTHER_LAPACK "" CACHE STRING
+  "If you have your own Lapack and Blas, put libraries here, separated by semicolons (full paths or paths that are on the (DY)LD_LIBRARY_PATH (UNIX) or PATH (Windows)). See LAPACK_BEING_USED to see what's actually being used.")
+-if(WIN32)
++if(WIN32 AND FALSE)
+     set(LAPACK_PLATFORM_DEFAULT lapack;blas)
+ else()
+     find_package(BLAS)
+     find_package(LAPACK)
+     if(BLAS_FOUND AND LAPACK_FOUND)
+-        set(LAPACK_PLATFORM_DEFAULT ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
++        set(BUILD_USING_OTHER_LAPACK ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES})
+     else()
+         message(WARNING "Could not find blas/lapack")
+     endif()
+diff --git a/Platform/CMakeLists.txt b/Platform/CMakeLists.txt
+index 5dfc381d..0c6ebc81 100644
+--- a/Platform/CMakeLists.txt
++++ b/Platform/CMakeLists.txt
+@@ -205,7 +205,6 @@ set(PLATFORM_INCLUDE_DIRECTORIES "${PLATFORM_INCLUDE_DIRECTORIES}"
+     PARENT_SCOPE)
+ 
+ # This needs an outer loop if you add more include directories.
+-file(GLOB INCL_FILES "${PLATFORM_INCLUDE_DIRECTORIES}/*.h")
+ foreach(INCLF ${INCL_FILES})
+     get_filename_component(INCLF_ROOT ${INCLF} NAME)
+     install(FILES ${INCLF}
