@@ -25,11 +25,11 @@
   ],
   "features": {
     "assimp": {
+      "$comment": "feature assimp requires a newer version of assimp than available within vcpkg. Install assimp with e.g. --head or use an overlay",
       "description": "assimp",
       "dependencies": [
         "assimp"
-      ],
-      "$comment": "feature assimp requires a newer version of assimp than available within vcpkg. Install assimp with e.g. --head or use an overlay"
+      ]
     },
     "default-features": {
       "description": "Platform-dependent default features"
