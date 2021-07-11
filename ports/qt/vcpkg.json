@@ -74,10 +74,7 @@
     },
     {
       "name": "qtquick3d",
-      "default-features": false,
-      "features": [
-        "assimp"
-      ]
+      "default-features": false
     },
     "qtquickcontrols2",
     "qtquicktimeline",

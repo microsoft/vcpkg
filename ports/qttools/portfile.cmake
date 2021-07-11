@@ -33,6 +33,7 @@ set(${PORT}_PATCHES )#fix_static_build.patch)
 
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
     "assistant" FEATURE_assistent
     "designer" FEATURE_designer
     INVERTED_FEATURES
