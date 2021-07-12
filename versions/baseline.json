@@ -5889,8 +5889,8 @@
       "port-version": 0
     },
     "sophus": {
-      "baseline": "1.0.0-6",
-      "port-version": 0
+      "baseline": "1.0.0",
+      "port-version": 7
     },
     "soqt": {
       "baseline": "1.6.0",
