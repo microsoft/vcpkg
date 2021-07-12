@@ -1888,6 +1888,10 @@
       "baseline": "ca7cb332011ec37",
       "port-version": 0
     },
+    "etcd-cpp-apiv3": {
+      "baseline": "0.2.1",
+      "port-version": 0
+    },
     "evpp": {
       "baseline": "0.7.0",
       "port-version": 4
