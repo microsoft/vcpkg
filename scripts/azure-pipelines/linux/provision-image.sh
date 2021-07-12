@@ -39,6 +39,9 @@ APT_PACKAGES="$APT_PACKAGES python3-pip"
 # Additionally required by rtaudio
 APT_PACKAGES="$APT_PACKAGES libasound2-dev"
 
+# Additionally required by qtwebengine
+APT_PACKAGES="$APT_PACKAGES nodejs"
+
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu60"
 
