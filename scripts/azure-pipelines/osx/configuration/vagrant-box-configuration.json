@@ -12,6 +12,7 @@
     "meson",
     "mono",
     "nasm",
+    "node",
     "pkg-config",
     "yasm"
   ],
