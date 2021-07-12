@@ -257,7 +257,7 @@ diff --git a/code/CMakeLists.txt b/code/CMakeLists.txt
 index 55538d9..f5553e5 100644
 --- a/code/CMakeLists.txt
 +++ b/code/CMakeLists.txt
-@@ -862,89 +862,24 @@ SET( Extra_SRCS
+@@ -862,89 +862,23 @@ SET( Extra_SRCS
  SOURCE_GROUP( Extra FILES ${Extra_SRCS})
  
  # irrXML
@@ -279,7 +279,7 @@ index 55538d9..f5553e5 100644
  # polyclipping
 -IF(HUNTER_ENABLED)
 -  hunter_add_package(polyclipping)
-   find_package(polyclipping CONFIG REQUIRED)
+-  find_package(polyclipping CONFIG REQUIRED)
 -ELSE(HUNTER_ENABLED)
    SET( Clipper_SRCS
      ../contrib/clipper/clipper.hpp
@@ -348,7 +348,7 @@ index 55538d9..f5553e5 100644
  
  # openddlparser
  IF(HUNTER_ENABLED)
-@@ -1021,13 +956,7 @@ ELSE ()
+@@ -1021,13 +955,7 @@ ELSE ()
  ENDIF ()
  
  # RapidJSON
@@ -362,7 +362,7 @@ index 55538d9..f5553e5 100644
  
  # VC2010 fixes
  if(MSVC10)
-@@ -1044,15 +973,6 @@ if ( MSVC )
+@@ -1044,15 +972,6 @@ if ( MSVC )
    ADD_DEFINITIONS( -D_CRT_SECURE_NO_WARNINGS )
  endif ( MSVC )
  
@@ -378,14 +378,14 @@ index 55538d9..f5553e5 100644
  MESSAGE(STATUS "Enabled importer formats:${ASSIMP_IMPORTERS_ENABLED}")
  MESSAGE(STATUS "Disabled importer formats:${ASSIMP_IMPORTERS_DISABLED}")
  
-@@ -1111,22 +1031,14 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
+@@ -1111,22 +1030,13 @@ TARGET_INCLUDE_DIRECTORIES ( assimp PUBLIC
    $<INSTALL_INTERFACE:include>
  )
  
 -IF(HUNTER_ENABLED)
    TARGET_LINK_LIBRARIES(assimp
 -      PUBLIC
-       polyclipping::polyclipping
+-      polyclipping::polyclipping
        irrXML::irrXML
 -      openddlparser::openddl_parser
 -      poly2tri::poly2tri
@@ -404,7 +404,7 @@ index 55538d9..f5553e5 100644
  
  if(ASSIMP_ANDROID_JNIIOSYSTEM)
    set(ASSIMP_ANDROID_JNIIOSYSTEM_PATH port/AndroidJNI)
-@@ -1208,21 +1120,12 @@ ENDIF(APPLE)
+@@ -1208,21 +1118,12 @@ ENDIF(APPLE)
  
  # Build against external unzip, or add ../contrib/unzip so
  # assimp can #include "unzip.h"
@@ -426,7 +426,7 @@ index 55538d9..f5553e5 100644
    INSTALL( TARGETS assimp
      EXPORT "${TARGETS_EXPORT_NAME}"
      LIBRARY DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
-@@ -1231,14 +1134,6 @@ IF(HUNTER_ENABLED)
+@@ -1231,14 +1132,6 @@ IF(HUNTER_ENABLED)
      FRAMEWORK DESTINATION ${ASSIMP_LIB_INSTALL_DIR}
      COMPONENT ${LIBASSIMP_COMPONENT}
      INCLUDES DESTINATION "include")
