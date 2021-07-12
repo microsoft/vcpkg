@@ -4286,7 +4286,7 @@
     },
     "nativefiledialog": {
       "baseline": "2019-08-28",
-      "port-version": 0
+      "port-version": 2
     },
     "nccl": {
       "baseline": "2.4.6",
