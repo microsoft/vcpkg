@@ -54,6 +54,18 @@
         }
       ]
     },
+    "cudnn": {
+      "description": "cuDNN support for opencv",
+      "dependencies": [
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "cudnn"
+          ]
+        }
+      ]
+    },
     "dnn": {
       "description": "Enable dnn module",
       "dependencies": [

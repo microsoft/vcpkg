@@ -38,12 +38,24 @@
       "description": "CUDA support for opencv",
       "dependencies": [
         "cuda",
-        "cudnn",
         {
           "name": "opencv4",
           "default-features": false,
           "features": [
             "contrib"
+          ]
+        }
+      ]
+    },
+    "cudnn": {
+      "description": "cuDNN support for opencv",
+      "dependencies": [
+        "cudnn",
+        {
+          "name": "opencv4",
+          "default-features": false,
+          "features": [
+            "cuda"
           ]
         }
       ]
