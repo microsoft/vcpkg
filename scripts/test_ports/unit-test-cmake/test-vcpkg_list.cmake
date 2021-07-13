@@ -319,6 +319,28 @@ unit_test_check_variable_equal(
     lst [[a;b\;c;d]]
 )
 
+set(lst "a;b")
+unit_test_check_variable_equal(
+    [[vcpkg_list(APPEND lst)]]
+    lst "a;b"
+)
+unit_test_check_variable_equal(
+    [[vcpkg_list(APPEND lst "")]]
+    lst "a;b;"
+)
+unit_test_check_variable_equal(
+    [[vcpkg_list(APPEND lst c)]]
+    lst "a;b;c"
+)
+unit_test_check_variable_equal(
+    [[vcpkg_list(APPEND lst "c;d" e)]]
+    lst [[a;b;c\;d;e]]
+)
+unit_test_check_variable_equal(
+    [=[vcpkg_list(APPEND lst [[c\;d]])]=]
+    lst [[a;b;c\\;d]]
+)
+
 # vcpkg_list(PREPEND <list> [<element>...])
 set(lst "")
 unit_test_check_variable_equal(
@@ -372,6 +394,28 @@ unit_test_check_variable_equal(
 unit_test_check_variable_equal(
     [[vcpkg_list(PREPEND lst "b;c" d)]]
     lst [[b\;c;d;a]]
+)
+
+set(lst "a;b")
+unit_test_check_variable_equal(
+    [[vcpkg_list(PREPEND lst)]]
+    lst "a;b"
+)
+unit_test_check_variable_equal(
+    [[vcpkg_list(PREPEND lst "")]]
+    lst ";a;b"
+)
+unit_test_check_variable_equal(
+    [[vcpkg_list(PREPEND lst c)]]
+    lst "c;a;b"
+)
+unit_test_check_variable_equal(
+    [[vcpkg_list(PREPEND lst "c;d" e)]]
+    lst [[c\;d;e;a;b]]
+)
+unit_test_check_variable_equal(
+    [=[vcpkg_list(PREPEND lst [[c\;d]])]=]
+    lst [[c\\;d;a;b]]
 )
 
 # list(INSERT <list> <index> [<element>...])
@@ -449,7 +493,11 @@ unit_test_check_variable_equal(
     lst "c;a;b"
 )
 unit_test_check_variable_equal(
-    [[vcpkg_list(INSERT lst 1 "c\\;d" e)]]
+    [[vcpkg_list(INSERT lst 1 "c;d")]]
+    lst [[a;c\;d;b]]
+)
+unit_test_check_variable_equal(
+    [=[vcpkg_list(INSERT lst 1 [[c\;d]] e)]=]
     lst [[a;c\\;d;e;b]]
 )
 
@@ -742,12 +790,24 @@ unit_test_check_variable_equal(
     lst [[e;a\;b]] 
 )
 
-set(lst [[c;a\\;b;c]])
+set(lst [[c;a\\;b;c\;d;e]])
 unit_test_check_variable_equal(
     [[vcpkg_list(REMOVE_AT lst 0)]]
-    lst [[a\\;b;c]]
+    lst [[a\\;b;c\;d;e]]
 )
 unit_test_check_variable_equal(
     [[vcpkg_list(REMOVE_AT lst 1)]]
-    lst [[c;c]]
+    lst [[c;c\;d;e]]
+)
+unit_test_check_variable_equal(
+    [[vcpkg_list(REMOVE_AT lst 2)]]
+    lst [[c;a\\;b;e]]
+)
+unit_test_check_variable_equal(
+    [[vcpkg_list(REMOVE_AT lst 3)]]
+    lst [[c;a\\;b;c\;d]]
+)
+unit_test_check_variable_equal(
+    [[vcpkg_list(REMOVE_AT lst -1)]]
+    lst [[c;a\\;b;c\;d]]
 )

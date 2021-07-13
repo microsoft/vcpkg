@@ -15,7 +15,9 @@ macro(message level msg)
         set_fatal_error("${msg}")
         return()
     else()
-        _message("${level}" "${msg}")
+        _message("${level}" "${msg}") # note: this results in incorrect printing, but that's fine
+        # message(STATUS "\${asdf}") will result in
+        # message(STATUS "${asdf}"), since that's how macro arguments work.
     endif()
 endmacro()
 
