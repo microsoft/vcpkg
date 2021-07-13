@@ -1,0 +1,7 @@
+{
+  "name": "pmdk",
+  "version": "1.11.0",
+  "description": "Persistent Memory Development Kit",
+  "homepage": "https://github.com/pmem/pmdk",
+  "supports": "!(arm | x86)"
+}
