@@ -88,9 +88,17 @@ function(vcpkg_from_git)
       WORKING_DIRECTORY ${DOWNLOADS}
       LOGNAME git-init-${TARGET_TRIPLET}
     )
+    vcpkg_execute_in_download_mode(
+      COMMAND ${GIT} config remote.origin.url ${_vdud_URL}
+      RESULT_VARIABLE error_code
+      WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
+    )
+    if(error_code)
+        message(FATAL_ERROR "Unable to update origin URL")
+    endif()
     vcpkg_execute_required_process(
       ALLOW_IN_DOWNLOAD_MODE
-      COMMAND ${GIT} fetch ${_vdud_URL} ${_vdud_TAG} --depth 1 -n
+      COMMAND ${GIT} fetch origin ${_vdud_TAG} --depth 1 -n
       WORKING_DIRECTORY ${DOWNLOADS}/git-tmp
       LOGNAME git-fetch-${TARGET_TRIPLET}
     )
