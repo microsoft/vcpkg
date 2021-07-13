@@ -49,7 +49,7 @@ if("tools" IN_LIST FEATURES)
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/openssl")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/openssl${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl${EXECUTABLE_SUFFIX}")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/ocspcheck${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/openssl/ocspcheck${EXECUTABLE_SUFFIX}")
-    vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/openssl")
+    vcpkg_copy_tool_dependencies(TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/openssl")
 endif()
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")

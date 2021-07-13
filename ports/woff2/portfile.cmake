@@ -29,6 +29,6 @@ file(REMOVE_RECURSE
   ${CURRENT_PACKAGES_DIR}/debug/include
 )
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/woff2)
+vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/woff2)
 # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/woff2 RENAME copyright)

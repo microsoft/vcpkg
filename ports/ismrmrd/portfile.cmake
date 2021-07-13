@@ -71,4 +71,4 @@ endif()
 
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/ismrmrd)
+vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/ismrmrd)

@@ -45,7 +45,7 @@ endif()
 if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/qrencode${EXECUTABLE_SUFFIX})
     file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/qrencode")
     file(RENAME "${CURRENT_PACKAGES_DIR}/bin/qrencode${EXECUTABLE_SUFFIX}" "${CURRENT_PACKAGES_DIR}/tools/qrencode/qrencode${EXECUTABLE_SUFFIX}")
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/qrencode)
+    vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/qrencode)
 endif()
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

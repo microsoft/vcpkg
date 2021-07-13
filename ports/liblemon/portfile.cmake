@@ -33,7 +33,7 @@ vcpkg_fixup_cmake_targets(CONFIG_PATH share/lemon/cmake TARGET_PATH share/lemon)
 
 file(GLOB EXE ${CURRENT_PACKAGES_DIR}/bin/*.exe)
 file(COPY ${EXE} DESTINATION ${CURRENT_PACKAGES_DIR}/tools/liblemon/)
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/liblemon)
+vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/liblemon)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

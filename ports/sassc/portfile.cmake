@@ -26,7 +26,7 @@ vcpkg_install_make(MAKEFILE GNUmakefile)
 vcpkg_fixup_pkgconfig()
 vcpkg_copy_pdbs()
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
+vcpkg_copy_tool_dependencies(TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/${PORT}/bin")
 # Handle copyright
 file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug")

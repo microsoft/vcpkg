@@ -11,11 +11,7 @@ function(yasm_tool_helper)
         message(FATAL_ERROR "Unexpected arguments to yasm_tool_helper: ${arg_UNPARSED_ARGUMENTS}")
     endif()
 
-    if(@YASM_BUILD_BINARY@)
-        set(YASM "${Z_YASM_TOOL_HELPER_LIST_DIR}/../../tools/yasm-tool/yasm.exe")
-    else()
-        vcpkg_find_acquire_program(YASM)
-    endif()
+    find_program(YASM yasm PATHS "${Z_YASM_TOOL_HELPER_LIST_DIR}/../../tools/yasm")
 
     if(arg_APPEND_TO_PATH)
         get_filename_component(YASM_EXE_PATH ${YASM} DIRECTORY)

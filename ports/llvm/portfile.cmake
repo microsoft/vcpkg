@@ -288,7 +288,7 @@ if("pstl" IN_LIST FEATURES)
     file(INSTALL ${SOURCE_PATH}/pstl/LICENSE.txt DESTINATION ${CURRENT_PACKAGES_DIR}/share/ParallelSTL RENAME copyright)
 endif()
 
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/${PORT})
+vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 
 if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)

@@ -72,7 +72,7 @@ if(BUILD_TOOLS)
         file(REMOVE ${EXEFILES_RELEASE})
     endif()
 
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/realsense2)
+    vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/realsense2)
 
     file(GLOB BINS ${CURRENT_PACKAGES_DIR}/bin/*)
     if(NOT BINS)

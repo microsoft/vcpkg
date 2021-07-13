@@ -36,7 +36,7 @@ vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
 if("tools" IN_LIST FEATURES)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/irrlicht/)
+    vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/irrlicht/)
 endif()
 
 file(WRITE ${CURRENT_PACKAGES_DIR}/share/irrlicht/irrlicht-config.cmake "include(\${CMAKE_CURRENT_LIST_DIR}/irrlicht-targets.cmake)")

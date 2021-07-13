@@ -39,7 +39,7 @@ vcpkg_fixup_cmake_targets (CONFIG_PATH share/geographiclib)
 vcpkg_copy_pdbs ()
 
 if (tools IN_LIST FEATURES)
-  vcpkg_copy_tool_dependencies (${CURRENT_PACKAGES_DIR}/tools/${PORT})
+  vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/${PORT})
 endif ()
 
 file (REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)

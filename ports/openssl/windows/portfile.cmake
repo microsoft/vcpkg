@@ -151,7 +151,7 @@ file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/tools/openssl/")
 file(RENAME "${CURRENT_PACKAGES_DIR}/bin/openssl.exe" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.exe")
 file(RENAME "${CURRENT_PACKAGES_DIR}/openssl.cnf" "${CURRENT_PACKAGES_DIR}/tools/openssl/openssl.cnf")
 
-vcpkg_copy_tool_dependencies("${CURRENT_PACKAGES_DIR}/tools/openssl")
+vcpkg_copy_tool_dependencies(TOOL_DIR "${CURRENT_PACKAGES_DIR}/tools/openssl")
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL static)
     # They should be empty, only the exes deleted above were in these directories

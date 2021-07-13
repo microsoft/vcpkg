@@ -49,7 +49,7 @@ if("cpp" IN_LIST FEATURES) # lua[cpp] will create lua-c++, which uses C++ name m
 endif()
 
 vcpkg_copy_pdbs()
-vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/lua)
+vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/lua)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
     if(VCPKG_TARGET_IS_WINDOWS)

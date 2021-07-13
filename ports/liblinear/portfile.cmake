@@ -22,7 +22,7 @@ vcpkg_install_cmake()
 vcpkg_copy_pdbs()
 
 if(NOT DISABLE_INSTALL_TOOLS)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/liblinear)
+    vcpkg_copy_tool_dependencies(TOOL_DIR ${CURRENT_PACKAGES_DIR}/tools/liblinear)
 endif()
 
 file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
