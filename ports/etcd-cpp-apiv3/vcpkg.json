@@ -12,7 +12,7 @@
     "grpc",
     "openssl",
     "protobuf",
-     {
+    {
       "name": "vcpkg-cmake",
       "host": true
     },
