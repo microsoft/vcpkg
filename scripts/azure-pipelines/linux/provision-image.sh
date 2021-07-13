@@ -45,6 +45,9 @@ APT_PACKAGES="$APT_PACKAGES nodejs"
 # Additionally required by qtwayland
 APT_PACKAGES="$APT_PACKAGES libwayland-dev"
 
+# Additionally required by all GN projects
+APT_PACKAGES="$APT_PACKAGES python2 python-is-python3"
+
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
 
