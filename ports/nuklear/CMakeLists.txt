@@ -24,7 +24,8 @@ install(FILES "${CMAKE_CURRENT_LIST_DIR}/nuklear.h" DESTINATION "include/nuklear
 install(EXPORT unofficial-nuklear FILE unofficial-nuklear-config.cmake DESTINATION share/unofficial-nuklear)
 
 if (INSTALL_EXAMPLE)
-    install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/example" DESTINATION share/example)
+    install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/example" DESTINATION share/nuklear)
+
 endif()
 
 if (INSTALL_DEMO)
