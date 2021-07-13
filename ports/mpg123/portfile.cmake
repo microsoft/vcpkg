@@ -1,14 +1,5 @@
-set(MPG123_VERSION 1.28.0)
-set(MPG123_HASH 4e333ee4f3bbebcfff280cf286265e969a8da93b9043d03c0189e22cd40918b07bf12181bd06141d4479c78bc0d0ed472e0d3bb61b2fdb96fe9f7cd48f9a6b77)
-
-set(PATCHES "")
-if(VCPKG_TARGET_IS_UWP)
-    set(PATCHES
-        0002-fix-libmpg123-uwp-build.patch
-        0003-fix-libout123-uwp-build.patch
-        0004-fix-libsyn123-uwp-build.patch
-    )
-endif()
+set(MPG123_VERSION 1.28.1)
+set(MPG123_HASH af1fb96878a7b57f62f06445e9b888cbecc569a91fe118459c71415f62287f9d9de9b0d0663522cb181e1a21692d64d0a810d8aebfa6e085eb76926d7a2186f9)
 
 vcpkg_from_sourceforge(
     OUT_SOURCE_PATH SOURCE_PATH
@@ -16,9 +7,6 @@ vcpkg_from_sourceforge(
     REF ${MPG123_VERSION}
     FILENAME "mpg123-${MPG123_VERSION}.tar.bz2"
     SHA512 ${MPG123_HASH}
-    PATCHES
-        0001-fix-checkcpuarch-path.patch
-        ${PATCHES}
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/yasm-tool-helper/yasm-tool-helper.cmake)
