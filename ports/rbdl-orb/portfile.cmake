@@ -3,7 +3,7 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RBDL_STATIC)
 find_program(GIT git)
 
 set(GIT_URL "https://github.com/orb-hd/rbdl-orb.git")
-set(GIT_REV "f75797ae4d0e138b9f64e13cfbf6706146b8bc0b")
+set(GIT_REV "b56291e4ccd8e84b54252aceac7a48aa017cc0a1")
 
 set(SOURCE_PATH ${CURRENT_BUILDTREES_DIR}/src/${PORT})
 set(VCPKG_POLICY_DLLS_WITHOUT_EXPORTS enabled)
