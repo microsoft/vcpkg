@@ -14,8 +14,9 @@ vcpkg_from_github(
   REF  0f3310d766c658b72d54560833012c8fe63ce9d7
   SHA512 6cd8e300cc47b5a5370efb5a4cd843a1621e2832b790daedc1e260ba5bbcaaabdbcddce239f93c3900258093d483d332110ba7e9f0b4b6cda64ce51b6cf2365d
 )
-if(NOT EXISTS "${SOURCE_PATH}/addons/urdfreader/thirdparty")
-    file(RENAME "${PARSER_SOURCE_PATH}" "${SOURCE_PATH}/addons/urdfreader/thirdparty")
+if(NOT EXISTS "${SOURCE_PATH}/addons/urdfreader/thirdparty/urdfparser/CMakeLists.txt")
+    file(REMOVE_RECURSE "${SOURCE_PATH}/addons/urdfreader/thirdparty/urdfparser")
+    file(RENAME "${PARSER_SOURCE_PATH}" "${SOURCE_PATH}/addons/urdfreader/thirdparty/urdfparser")
 endif()		
 
 vcpkg_cmake_configure(
