@@ -1,6 +1,0 @@
-Source: rbdl-orb
-Version: 3.0.0
-Port-Version: 0
-Homepage: https://github.com/orb-hd/rbdl-orb
-Description: Rigid Body Dynamics Library - ORB
-Build-Depends: eigen3, boost, lua

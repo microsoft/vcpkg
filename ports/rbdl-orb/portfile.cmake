@@ -1,8 +1,4 @@
-	if (VCPKG_LIBRARY_LINKAGE STREQUAL static)
-    set(RBDL_STATIC ON)
-else()
-    set(RBDL_STATIC OFF)
-endif()
+string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" RBDL_STATIC)	
 
 find_program(GIT git)
 
@@ -35,7 +31,7 @@ vcpkg_execute_required_process(
   LOGNAME checkout
 )
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA # Disable this option if project cannot be built with Ninja
     OPTIONS
@@ -46,7 +42,7 @@ vcpkg_configure_cmake(
 	-DRBDL_BUILD_EXECUTABLES=OFF
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
 # # Handle copyright
 file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
