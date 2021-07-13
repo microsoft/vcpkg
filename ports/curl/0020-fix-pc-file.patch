@@ -1,7 +1,17 @@
-diff -urw a/CMakeLists.txt b/CMakeLists.txt
---- a/CMakeLists.txt	2021-05-10 20:46:52.204346972 +0200
-+++ b/CMakeLists.txt	2021-05-11 19:39:00.065235266 +0200
-@@ -1482,6 +1482,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f9a2d73..905873e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1459,7 +1459,7 @@ set(includedir              "\${prefix}/include")
+ set(LDFLAGS                 "${CMAKE_SHARED_LINKER_FLAGS}")
+ set(LIBCURL_LIBS            "")
+ set(libdir                  "${CMAKE_INSTALL_PREFIX}/lib")
+-foreach(_lib ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} ${CURL_LIBS})
++foreach(_lib ${CURL_LIBS})
+   if(TARGET "${_lib}")
+     set(_libname "${_lib}")
+     get_target_property(_libtype "${_libname}" TYPE)
+@@ -1475,6 +1475,12 @@ foreach(_lib ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} ${CURL_LIBS})
        message(WARNING "Bad lib in library list: ${_libname}")
        continue()
      endif()
