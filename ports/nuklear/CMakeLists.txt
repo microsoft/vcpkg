@@ -18,7 +18,8 @@ install(
     ARCHIVE DESTINATION lib
 )
 
-install(FILES "${CMAKE_CURRENT_LIST_DIR}/src/nuklear.h" DESTINATION "include/nuklear")
+install(FILES "${CMAKE_CURRENT_LIST_DIR}/nuklear.h" DESTINATION "include/nuklear")
+
 
 install(EXPORT unofficial-nuklear FILE unofficial-nuklear-config.cmake DESTINATION share/unofficial-nuklear)
 
