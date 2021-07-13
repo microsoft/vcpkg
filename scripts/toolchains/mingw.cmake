@@ -1,5 +1,36 @@
 if(NOT _VCPKG_MINGW_TOOLCHAIN)
 set(_VCPKG_MINGW_TOOLCHAIN 1)
+
+#[===[.md:
+# z_vcpkg_message
+Log messages to cmake or a file
+
+```cmake
+z_vcpkg_message(<FATAL_ERROR|...> <message>...)
+```
+
+This macro is used instead of cmake `message(...)` because we want
+to pass the messages to the calling process during `detect_compiler`.
+
+To activate logging to a file, set `Z_VCPKG_TOOLCHAIN_MESSAGES_FILE` to the
+desired file path. In the log file, fatal errors are preceded by a line
+containing "Fatal error:".
+#]===]
+set(Z_VCPKG_TOOLCHAIN_MESSAGES )
+macro(z_vcpkg_message SEVERITY MESSAGE)
+    if(NOT Z_VCPKG_TOOLCHAIN_MESSAGES_FILE)
+        message(${SEVERITY} "${MESSAGE}")
+    elseif(NOT "${SEVERITY}" MATCHES "ERROR")
+        message(${SEVERITY} "${MESSAGE}")
+        string(APPEND Z_VCPKG_TOOLCHAIN_MESSAGES "${MESSAGE}\n")
+    else()
+        message(WARNING "${MESSAGE}")
+        string(APPEND Z_VCPKG_TOOLCHAIN_MESSAGES "-- Fatal error:\n${MESSAGE}\n")
+        file(WRITE "${Z_VCPKG_TOOLCHAIN_MESSAGES_FILE}" "${Z_VCPKG_TOOLCHAIN_MESSAGES}")
+        return()
+    endif()
+endmacro()
+
 if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
     set(CMAKE_CROSSCOMPILING OFF CACHE BOOL "")
 endif()
@@ -21,12 +52,64 @@ foreach(lang C CXX)
   set(CMAKE_${lang}_COMPILER_TARGET "${CMAKE_SYSTEM_PROCESSOR}-windows-gnu" CACHE STRING "")
 endforeach()
 
-find_program(CMAKE_C_COMPILER "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-gcc")
-find_program(CMAKE_CXX_COMPILER "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-g++")
-find_program(CMAKE_RC_COMPILER "${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32-windres")
-if(NOT CMAKE_RC_COMPILER)
-    find_program(CMAKE_RC_COMPILER "windres")
+set(_MINGW_TARGET_TRIPLET ${CMAKE_SYSTEM_PROCESSOR}-w64-mingw32)
+
+macro(_mingw_find_program variable prog_name)
+find_program(${variable} "${_MINGW_TARGET_TRIPLET}-${prog_name}")
+if(NOT ${variable})
+    if(NOT CMAKE_CROSSCOMPILING)
+        find_program(${variable} "${prog_name}")
+        if(NOT ${prog_name}_UNPREFIXED)
+            set(${prog_name}_UNPREFIXED TRUE CACHE INTERNAL "")
+            z_vcpkg_message(WARNING
+                "-- ${_MINGW_TARGET_TRIPLET}-${prog_name} not found, falling back to ${prog_name}.")
+        endif()
+    endif()
 endif()
+endmacro()
+
+_mingw_find_program(CMAKE_C_COMPILER "gcc")
+_mingw_find_program(CMAKE_CXX_COMPILER "g++")
+_mingw_find_program(CMAKE_RC_COMPILER "windres")
+if(NOT CMAKE_C_COMPILER)
+    z_vcpkg_message(FATAL_ERROR "-- Cannot find a compiler! Please check your PATH variable.")
+endif()
+
+macro(_mingw_check_target prog)
+get_filename_component(prog_name ${prog} NAME_WE)
+execute_process(COMMAND ${prog} -dumpmachine OUTPUT_VARIABLE _DUMPMACHINE)
+string(REPLACE "-" ";" _DUMPMACHINE ${_DUMPMACHINE})
+list(GET _DUMPMACHINE 0 _COMPILER_CPU)
+list(GET _DUMPMACHINE 1 _COMPILER_VENDOR)
+list(GET _DUMPMACHINE 2 _COMPILER_OS)
+if(NOT _COMPILER_OS MATCHES "(mingw32)|(windows)")
+    z_vcpkg_message(FATAL_ERROR
+"\
+-- Incorrect compiler OS. Expected mingw32 or windows, got ${_COMPILER_OS}
+-- Compiler path: ${prog}\
+")
+endif()
+if(_COMPILER_VENDOR STREQUAL "pc") # Old MinGW toolchain
+    if(NOT ${prog_name}_OLD_MINGW)
+        set(${prog_name}_OLD_MINGW TRUE CACHE INTERNAL "")
+        z_vcpkg_message(WARNING
+"\
+-- Old MinGW toolchain detected. This is not guaranteed to work with vcpkg. Proceed with caution
+-- Compiler path: ${prog}\
+")
+    endif()
+endif()
+if(NOT _COMPILER_CPU STREQUAL CMAKE_SYSTEM_PROCESSOR)
+    z_vcpkg_message(FATAL_ERROR
+"\
+-- Incorrect compiler CPU. Expected ${CMAKE_SYSTEM_PROCESSOR}, got ${_COMPILER_CPU}
+-- Compiler path: ${prog}\
+")
+endif()
+endmacro()
+
+_mingw_check_target(${CMAKE_C_COMPILER})
+_mingw_check_target(${CMAKE_CXX_COMPILER})
 
 get_property( _CMAKE_IN_TRY_COMPILE GLOBAL PROPERTY IN_TRY_COMPILE )
 if(NOT _CMAKE_IN_TRY_COMPILE)
