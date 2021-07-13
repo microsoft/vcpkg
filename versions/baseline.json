@@ -1869,7 +1869,7 @@
       "port-version": 0
     },
     "ensmallen": {
-      "baseline": "2.14.2",
+      "baseline": "2.17.0",
       "port-version": 0
     },
     "entityx": {
