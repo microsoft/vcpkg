@@ -31,7 +31,7 @@ function(z_vcpkg_clean_executables_in_bin_remove_directory_if_empty directory)
     endif()
 
     file(GLOB items "${directory}/*")
-    if(items STREQUAL "")
+    if("${items}" STREQUAL "")
         file(REMOVE_RECURSE "${directory}")
     endif()
 endfunction()
