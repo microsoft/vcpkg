@@ -1290,11 +1290,6 @@ qt5-canvas3d:x86-windows=skip
 # Missing system libraries
 qt5-wayland:x64-osx=fail
 qtwayland:x64-osx=fail
-# Missing libraries
-qt5-wayland:x86-windows=fail
-qt5-wayland:x64-windows=fail
-qt5-wayland:x64-windows-static=fail
-qt5-wayland:x64-windows-static-md=fail
 # Missing prerequisites for CI success
 qt5-webengine:x64-linux=fail
 qt5-webengine:x64-osx=fail

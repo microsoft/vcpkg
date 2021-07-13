@@ -5230,7 +5230,7 @@
     },
     "qt5-wayland": {
       "baseline": "5.15.2",
-      "port-version": 0
+      "port-version": 2
     },
     "qt5-webchannel": {
       "baseline": "5.15.2",
@@ -5362,7 +5362,7 @@
     },
     "qtwayland": {
       "baseline": "6.1.2",
-      "port-version": 0
+      "port-version": 2
     },
     "quadtree": {
       "baseline": "2020-04-13",

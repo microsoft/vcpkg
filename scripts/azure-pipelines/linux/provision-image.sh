@@ -42,6 +42,9 @@ APT_PACKAGES="$APT_PACKAGES libasound2-dev"
 # Additionally required by qtwebengine
 APT_PACKAGES="$APT_PACKAGES nodejs"
 
+# Additionally required by qtwayland
+APT_PACKAGES="$APT_PACKAGES libwayland-dev"
+
 # Additionally required/installed by Azure DevOps Scale Set Agents
 APT_PACKAGES="$APT_PACKAGES liblttng-ust0 libkrb5-3 zlib1g libicu66"
 
