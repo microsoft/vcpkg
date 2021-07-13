@@ -9,7 +9,7 @@ Runs a cmake configure with a dummy project to extract certain cmake variables
 z_vcpkg_get_cmake_vars(<out-var>)
 ```
 
-`z_vcpkg_get_cmake_vars(cmake_vars_file)` sets `CMAKE_VARS_FILE` to
+`z_vcpkg_get_cmake_vars(cmake_vars_file)` sets `<out-var>` to
 a path to a generated CMake file, with the detected `CMAKE_*` variables
 re-exported as `VCPKG_DETECTED_*`.
 

@@ -92,7 +92,12 @@ function(vcpkg_configure_cmake)
     endif()
 
     set(manually_specified_variables "")
-    if(NOT arg_Z_GET_CMAKE_VARS_USAGE)
+
+    if(arg_Z_GET_CMAKE_VARS_USAGE)
+        set(configuring_message "Getting CMake variables for ${TARGET_TRIPLET}")
+    else()
+        set(configuring_message "Configuring ${TARGET_TRIPLET}")
+
         foreach(option IN LISTS arg_OPTIONS arg_OPTIONS_RELEASE arg_OPTIONS_DEBUG)
             if(option MATCHES "^-D([^:=]*)[:=]")
                 list(APPEND manually_specified_variables "${CMAKE_MATCH_1}")
@@ -336,11 +341,7 @@ function(vcpkg_configure_cmake)
         file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure)
         file(WRITE ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure/build.ninja "${_contents}")
 
-        if(arg_Z_GET_CMAKE_VARS_USAGE)
-            message(STATUS "Getting CMake variables for ${TARGET_TRIPLET}")
-        else()
-            message(STATUS "Configuring ${TARGET_TRIPLET}")
-        endif()
+        message(STATUS "${configuring_message}")
         vcpkg_execute_required_process(
             COMMAND ninja -v
             WORKING_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/vcpkg-parallel-configure
@@ -352,11 +353,7 @@ function(vcpkg_configure_cmake)
             "${CURRENT_BUILDTREES_DIR}/${arg_LOGNAME}-err.log")
     else()
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-            if(arg_Z_GET_CMAKE_VARS_USAGE)
-                message(STATUS "Getting CMake variables for ${TARGET_TRIPLET}")
-            else()
-                message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-            endif()
+            message(STATUS "${configuring_message}-dbg")
             file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg)
             vcpkg_execute_required_process(
                 COMMAND ${dbg_command}
@@ -369,11 +366,7 @@ function(vcpkg_configure_cmake)
         endif()
 
         if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-            if(arg_Z_GET_CMAKE_VARS_USAGE)
-                message(STATUS "Getting CMake variables for ${TARGET_TRIPLET}-rel")
-            else()
-                message(STATUS "Configuring ${TARGET_TRIPLET}-rel")
-            endif()
+            message(STATUS "${configuring_message}-rel")
             file(MAKE_DIRECTORY ${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel)
             vcpkg_execute_required_process(
                 COMMAND ${rel_command}
