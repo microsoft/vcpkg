@@ -27,5 +27,6 @@ if (INSTALL_EXAMPLE)
 endif()
 
 if (INSTALL_DEMO)
-    install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/demo" DESTINATION share/demo)
+    install(DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/demo" DESTINATION share/nuklear)
+
 endif()
