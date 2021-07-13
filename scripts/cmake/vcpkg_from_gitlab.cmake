@@ -13,6 +13,7 @@ vcpkg_from_gitlab(
     [SHA512 <45d0d7f8cc350...>]
     [HEAD_REF <master>]
     [PATCHES <patch1.patch> <patch2.patch>...]
+    [ACCESS_TOKEN <8Xx93kL7s1PTsMk8xsxD>]
     [FILE_DISAMBIGUATOR <N>]
 )
 ```
@@ -38,8 +39,8 @@ For repositories without official releases, this can be set to the full commit i
 If `REF` is specified, `SHA512` must also be specified.
 
 ### SHA512
-The SHA512 hash that should match the archive (${GITLAB_URL}/${REPO}/-/archive/${REF}/${REPO_NAME}-${REF}.tar.gz).
-The REPO_NAME variable is parsed from the value of REPO.
+The SHA512 hash that should match the archive (${GITLAB_URL}/api/v4/projects/${REPO_ID}/repository/archive.tar.gz?sha=${REF}).
+The REPO_ID variable is the URL-escaped value of REPO ([see GitLab docs](https://docs.gitlab.com/ee/api/README.html#namespaced-path-encoding)).
 
 This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
 
@@ -52,6 +53,9 @@ For most projects, this should be `master`. The chosen branch should be one that
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
+
+### ACCESS_TOKEN
+The GitLab API access token to use when downloading the archive. The access token must have at least the `read_repository` scope. This is only needed for private repositories.
 
 ### FILE_DISAMBIGUATOR
 A token to uniquely identify the resulting filename if the SHA512 changes even though a git ref does not, to avoid stepping on the same file name.
@@ -70,7 +74,7 @@ This exports the `VCPKG_HEAD_VERSION` variable during head builds.
 include(vcpkg_execute_in_download_mode)
 
 function(vcpkg_from_gitlab)
-    set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF FILE_DISAMBIGUATOR)
+    set(oneValueArgs OUT_SOURCE_PATH GITLAB_URL USER REPO REF SHA512 HEAD_REF ACCESS_TOKEN FILE_DISAMBIGUATOR)
     set(multipleValuesArgs PATCHES)
     # parse parameters such that semicolons in options arguments to COMMAND don't get erased
     cmake_parse_arguments(PARSE_ARGV 0 _vdud "" "${oneValueArgs}" "${multipleValuesArgs}")
@@ -100,22 +104,29 @@ function(vcpkg_from_gitlab)
         set(VCPKG_USE_HEAD_VERSION OFF)
     endif()
 
+    if(DEFINED _vdud_ACCESS_TOKEN)
+        set(HEADERS "HEADERS" "Authorization: Bearer ${_vdud_ACCESS_TOKEN}")
+    else()
+        set(HEADERS)
+    endif()
+
     string(REPLACE "/" ";" GITLAB_REPO_LINK ${_vdud_REPO})
     
     list(LENGTH GITLAB_REPO_LINK len)
     if(${len} EQUAL "2")
 		list(GET GITLAB_REPO_LINK 0 ORG_NAME)
 		list(GET GITLAB_REPO_LINK 1 REPO_NAME)
-		set(GITLAB_LINK ${_vdud_GITLAB_URL}/${ORG_NAME}/${REPO_NAME})
 	endif()
 	
 	if(${len} EQUAL "3")
 		list(GET GITLAB_REPO_LINK 0 ORG_NAME)
 		list(GET GITLAB_REPO_LINK 1 GROUP_NAME)
 		list(GET GITLAB_REPO_LINK 2 REPO_NAME)
-		set(GITLAB_LINK ${_vdud_GITLAB_URL}/${ORG_NAME}/${GROUP_NAME}/${REPO_NAME})
 	endif()
     
+    string(REPLACE "/" "%2F" GITLAB_REPO_ID ${_vdud_REPO})
+    set(URL "${_vdud_GITLAB_URL}/api/v4/projects/${GITLAB_REPO_ID}/repository/archive.tar.gz")
+
     # Handle --no-head scenarios
     if(NOT VCPKG_USE_HEAD_VERSION)
         if(NOT _vdud_REF)
@@ -131,9 +142,10 @@ function(vcpkg_from_gitlab)
         set(downloaded_file_name "${downloaded_file_name}.tar.gz")
 
         vcpkg_download_distfile(ARCHIVE
-            URLS "${GITLAB_LINK}/-/archive/${_vdud_REF}/${REPO_NAME}-${_vdud_REF}.tar.gz"
+            URLS "${URL}?sha=${_vdud_REF}"
             SHA512 "${_vdud_SHA512}"
             FILENAME "${downloaded_file_name}"
+            ${HEADERS}
         )
 
         vcpkg_extract_source_archive_ex(
@@ -148,7 +160,6 @@ function(vcpkg_from_gitlab)
     endif()
 
     # The following is for --head scenarios
-    set(URL "${GITLAB_LINK}/-/archive/${_vdud_HEAD_REF}/${_vdud_HEAD_REF}.tar.gz")
     string(REPLACE "/" "-" SANITIZED_HEAD_REF "${_vdud_HEAD_REF}")
     set(downloaded_file_name "${ORG_NAME}-${REPO_NAME}-${SANITIZED_HEAD_REF}.tar.gz")
     set(downloaded_file_path "${DOWNLOADS}/${downloaded_file_name}")
@@ -171,9 +182,10 @@ function(vcpkg_from_gitlab)
         endif()
 
         vcpkg_download_distfile(ARCHIVE
-            URLS ${URL}
-            FILENAME ${downloaded_file_name}
+            URLS "${URL}?sha=${_vdud_HEAD_REF}"
+            FILENAME "${downloaded_file_name}"
             SKIP_SHA512
+            ${HEADERS}
         )
     endif()
 

@@ -14,6 +14,7 @@ vcpkg_from_gitlab(
     [SHA512 <45d0d7f8cc350...>]
     [HEAD_REF <master>]
     [PATCHES <patch1.patch> <patch2.patch>...]
+    [ACCESS_TOKEN <8Xx93kL7s1PTsMk8xsxD>]
     [FILE_DISAMBIGUATOR <N>]
 )
 ```
@@ -39,8 +40,8 @@ For repositories without official releases, this can be set to the full commit i
 If `REF` is specified, `SHA512` must also be specified.
 
 ### SHA512
-The SHA512 hash that should match the archive (${GITLAB_URL}/${REPO}/-/archive/${REF}/${REPO_NAME}-${REF}.tar.gz).
-The REPO_NAME variable is parsed from the value of REPO.
+The SHA512 hash that should match the archive (${GITLAB_URL}/api/v4/projects/${REPO_ID}/repository/archive.tar.gz?sha=${REF}).
+The REPO_ID variable is the URL-escaped value of REPO ([see GitLab docs](https://docs.gitlab.com/ee/api/README.html#namespaced-path-encoding)).
 
 This is most easily determined by first setting it to `1`, then trying to build the port. The error message will contain the full hash, which can be copied back into the portfile.
 
@@ -53,6 +54,9 @@ For most projects, this should be `master`. The chosen branch should be one that
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
+
+### ACCESS_TOKEN
+The GitLab API access token to use when downloading the archive. The access token must have at least the `read_repository` scope. This is only needed for private repositories.
 
 ### FILE_DISAMBIGUATOR
 A token to uniquely identify the resulting filename if the SHA512 changes even though a git ref does not, to avoid stepping on the same file name.
