@@ -32,7 +32,7 @@ function(vcpkg_build_ninja)
         message(WARNING "${CMAKE_CURRENT_FUNCTION} was passed extra arguments: ${arg_UNPARSED_ARGUMENTS}")
     endif()
     if(NOT DEFINED arg_TARGETS)
-        message(FATAL_ERROR "TARGETS must be specified")
+        set(arg_TARGETS "")
     endif()
 
     vcpkg_find_acquire_program(NINJA)
