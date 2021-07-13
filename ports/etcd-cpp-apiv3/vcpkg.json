@@ -11,6 +11,14 @@
     "cpprestsdk",
     "grpc",
     "openssl",
-    "protobuf"
+    "protobuf",
+     {
+      "name": "vcpkg-cmake",
+      "host": true
+    },
+    {
+      "name": "vcpkg-cmake-config",
+      "host": true
+    }
   ]
 }
