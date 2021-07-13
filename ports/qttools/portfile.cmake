@@ -34,12 +34,13 @@ set(${PORT}_PATCHES )#fix_static_build.patch)
 # General features:
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
-    "assistant" FEATURE_assistent
+    "assistant" FEATURE_assistant
     "designer" FEATURE_designer
     INVERTED_FEATURES
     "qdoc"   CMAKE_DISABLE_FIND_PACKAGE_Clang
     "qdoc"   CMAKE_DISABLE_FIND_PACKAGE_WrapLibClang
     "qml"    CMAKE_DISABLE_FIND_PACKAGE_Qt6Quick
+    "qml"    CMAKE_DISABLE_FIND_PACKAGE_Qt6QuickWidgets
     )
 
  set(TOOL_NAMES 
