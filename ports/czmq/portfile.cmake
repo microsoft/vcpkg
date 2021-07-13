@@ -55,6 +55,8 @@ if(EXISTS ${CURRENT_PACKAGES_DIR}/share/cmake/${PORT})
     vcpkg_cmake_config_fixup(CONFIG_PATH share/cmake/${PORT})
 endif()
 
+vcpkg_fixup_pkgconfig()
+
 file(COPY
     "${CMAKE_CURRENT_LIST_DIR}/vcpkg-cmake-wrapper.cmake"
     DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}"
