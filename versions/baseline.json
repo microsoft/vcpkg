@@ -5866,7 +5866,7 @@
     },
     "soem": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 2
     },
     "soil": {
       "baseline": "2021-04-22",
