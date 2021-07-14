@@ -3,17 +3,15 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO commonmark/cmark
-    REF 0.29.0
-    SHA512 06eb110cfd90c9e980c022b7588e28864d15a4da5d07d61ad4b27c6de47367492b9e58e9434e62b07517aa6dc484f17af13916808be3188f38c37d20cbf33112
+    REF 8800e66010214384e75f933830ca5585e1ae3060    #0.30.0
+    SHA512 9055eb13212034fe1a819ae697a74fa927a5094dc38da9548758b7a2b07834f6b85b71718f5c96cef9676b244243b0c0b5173f672f8d823df1bdff318bfd0ebf
     HEAD_REF master
-    PATCHES
-        "${CMAKE_CURRENT_LIST_DIR}/rename-shared-lib.patch"
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" CMARK_STATIC)
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CMARK_SHARED)
 
-vcpkg_configure_cmake(
+vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
@@ -22,9 +20,11 @@ vcpkg_configure_cmake(
         -DCMARK_STATIC=${CMARK_STATIC}
 )
 
-vcpkg_install_cmake()
+vcpkg_cmake_install()
 
-vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake)
+vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cmark)
+
+vcpkg_fixup_pkgconfig()
 
 file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/cmark RENAME copyright)
 
