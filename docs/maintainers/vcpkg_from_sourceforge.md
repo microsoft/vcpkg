@@ -4,6 +4,10 @@ The latest version of this document lives in the [vcpkg repo](https://github.com
 
 Download and extract a project from sourceforge.
 
+This function automatically checks a set of sourceforge mirrors.
+Additional mirrors can be injected through the `VCPKG_SOURCEFORGE_EXTRA_MIRRORS`
+list variable in the triplet.
+
 ## Usage:
 ```cmake
 vcpkg_from_sourceforge(
@@ -53,9 +57,6 @@ Note that the archive will still be extracted into a subfolder underneath that d
 A list of patches to be applied to the extracted sources.
 
 Relative paths are based on the port directory.
-
-### DISABLE_SSL
-Disable ssl when downloading source.
 
 ### NO_REMOVE_ONE_LEVEL
 Specifies that the default removal of the top level folder should not occur.
