@@ -7,6 +7,7 @@ vcpkg_from_github(
     PATCHES 
         disable_tests_enable_static_build.patch
         version.patch
+        fix-usage-in-static-build.patch
 )
 
 vcpkg_configure_cmake(
@@ -18,4 +19,4 @@ vcpkg_fixup_pkgconfig()
 vcpkg_fixup_cmake_targets(CONFIG_PATH lib/cmake/sigc++-3 TARGET_PATH share/sigc++-3)
 
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
