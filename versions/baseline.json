@@ -2397,8 +2397,8 @@
       "port-version": 0
     },
     "graphqlparser": {
-      "baseline": "0.7.0-1",
-      "port-version": 0
+      "baseline": "0.7.0",
+      "port-version": 2
     },
     "greatest": {
       "baseline": "1.4.2",
@@ -4193,8 +4193,8 @@
       "port-version": 0
     },
     "msgpack11": {
-      "baseline": "0.0.10-1",
-      "port-version": 0
+      "baseline": "0.0.10",
+      "port-version": 2
     },
     "msinttypes": {
       "baseline": "2018-02-25",
@@ -4638,7 +4638,7 @@
     },
     "opensubdiv": {
       "baseline": "3.4.3",
-      "port-version": 1
+      "port-version": 2
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -5230,7 +5230,7 @@
     },
     "qt5-wayland": {
       "baseline": "5.15.2",
-      "port-version": 0
+      "port-version": 2
     },
     "qt5-webchannel": {
       "baseline": "5.15.2",
@@ -5362,7 +5362,7 @@
     },
     "qtwayland": {
       "baseline": "6.1.2",
-      "port-version": 0
+      "port-version": 2
     },
     "quadtree": {
       "baseline": "2020-04-13",
@@ -5866,7 +5866,7 @@
     },
     "soem": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 2
     },
     "soil": {
       "baseline": "2021-04-22",
@@ -5889,8 +5889,8 @@
       "port-version": 0
     },
     "sophus": {
-      "baseline": "1.0.0-6",
-      "port-version": 0
+      "baseline": "1.0.0",
+      "port-version": 7
     },
     "soqt": {
       "baseline": "1.6.0",
@@ -6157,8 +6157,8 @@
       "port-version": 8
     },
     "tfhe": {
-      "baseline": "1.0.1-1",
-      "port-version": 0
+      "baseline": "1.0.1",
+      "port-version": 2
     },
     "tgbot-cpp": {
       "baseline": "1.2.1",
