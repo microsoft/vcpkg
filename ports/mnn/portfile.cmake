@@ -11,7 +11,6 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         use-package-and-install.patch
-        use-flatbuffers-200.patch
 )
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
@@ -40,6 +39,27 @@ if("cuda" IN_LIST FEATURES)
     unset(NINJA_OPTION)
 endif()
 
+set(FLATC_EXEC ${CURRENT_HOST_INSTALLED_DIR}/tools/flatbuffers/flatc${VCPKG_HOST_EXECUTABLE_SUFFIX})
+if (NOT EXISTS "${FLATC_EXEC}")
+    message(FATAL_ERROR "Expected ${FLATC_EXEC} to exist.")
+endif()
+
+# regenerate some code files by schemes and flatbuffers
+vcpkg_execute_build_process(
+    COMMAND ${FLATC_EXEC} "-c" "-b" "--gen-object-api" "--reflect-names"
+        "../default/BasicOptimizer.fbs"
+        "../default/CaffeOp.fbs"
+        "../default/GpuLibrary.fbs"
+        "../default/MNN.fbs"
+        "../default/Tensor.fbs"
+        "../default/TensorflowOp.fbs"
+        "../default/TFQuantizeOp.fbs"
+        "../default/Type.fbs"
+        "../default/UserDefine.fbs"
+    WORKING_DIRECTORY ${SOURCE_PATH}/schema/current/
+    LOGNAME flatc-${TARGET_TRIPLET}
+  )
+
 if(VCPKG_TARGET_IS_WINDOWS)
     string(COMPARE EQUAL "${VCPKG_CRT_LINKAGE}" "static" USE_RUNTIME_MT)
     list(APPEND PLATFORM_OPTIONS -DMNN_WIN_RUNTIME_MT=${USE_RUNTIME_MT})
@@ -66,6 +86,7 @@ vcpkg_download_distfile(COPYRIGHT_PATH
     FILENAME 98f6b79b778f7b0a1541.txt
     SHA512 98f6b79b778f7b0a15415bd750c3a8a097d650511cb4ec8115188e115c47053fe700f578895c097051c9bc3dfb6197c2b13a15de203273e1a3218884f86e90e8
 )
+
 file(MAKE_DIRECTORY ${CURRENT_PACKAGES_DIR}/share/${PORT})
 file(RENAME ${COPYRIGHT_PATH} ${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright)
 
