@@ -27,6 +27,7 @@
             "mysql",
             "orm",
             "postgres",
+            "redis",
             "sqlite3"
           ]
         }
@@ -42,6 +43,10 @@
       "description": "Support reading and writing from/to MySQL databases.",
       "dependencies": [
         {
+          "name": "drogon",
+          "features": [ "orm" ]
+        },
+        {
           "name": "libmariadb",
           "platform": "!osx"
         },
@@ -55,12 +60,30 @@
     "postgres": {
       "description": "Support reading and writing from/to Postgres databases.",
       "dependencies": [
+        {
+          "name": "drogon",
+          "features": [ "orm" ]
+        },
         "libpq"
+      ]
+    },
+    "redis": {
+      "description": "Support reading and writing from/to Redis databases.",
+      "dependencies": [
+        {
+          "name": "drogon",
+          "features": [ "orm" ]
+        },
+        "redis"
       ]
     },
     "sqlite3": {
       "description": "Support reading and writing from/to Sqlite databases.",
       "dependencies": [
+        {
+          "name": "drogon",
+          "features": [ "orm" ]
+        },
         "sqlite3"
       ]
     }

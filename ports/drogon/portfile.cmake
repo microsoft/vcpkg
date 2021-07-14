@@ -18,6 +18,8 @@ vcpkg_check_features(
         mysql    BUILD_MYSQL
         orm      BUILD_ORM
         postgres BUILD_POSTGRESQL
+        postgres LIBPQ_BATCH_MODE
+        redis    BUILD_REDIS
         sqlite3  BUILD_SQLITE
 )
 
