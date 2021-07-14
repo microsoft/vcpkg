@@ -72,7 +72,7 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
 
     file(INSTALL ${SCITER_BIN}/inspector.app DESTINATION ${SCITER_TOOLS})
     file(INSTALL ${SCITER_BIN}/sciter.app DESTINATION ${SCITER_TOOLS})
-    file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${SCITER_TOOLS})
+    file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${SCITER_TOOLS})
 
     # not sure whether there is a better way to do this, because
     # `file(INSTALL sciter.app FILE_PERMISSIONS EXECUTE)`
@@ -80,8 +80,8 @@ elseif(VCPKG_CMAKE_SYSTEM_NAME STREQUAL Darwin)
     execute_process(COMMAND sh -c "chmod +x sciter.app/Contents/MacOS/sciter" WORKING_DIRECTORY ${SCITER_TOOLS})
     execute_process(COMMAND sh -c "chmod +x inspector.app/Contents/MacOS/inspector" WORKING_DIRECTORY ${SCITER_TOOLS})
 
-    file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
-    file(INSTALL ${SCITER_BIN}/sciter-osx-64.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
+    file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/bin)
+    file(INSTALL ${SCITER_BIN}/libsciter.dylib DESTINATION ${CURRENT_PACKAGES_DIR}/debug/bin)
 
 else()
     set(SCITER_BIN ${SOURCE_PATH}/bin.win/${SCITER_ARCH})
