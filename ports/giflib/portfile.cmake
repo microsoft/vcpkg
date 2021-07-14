@@ -12,6 +12,7 @@ vcpkg_from_sourceforge(
     SHA512 4550e53c21cb1191a4581e363fc9d0610da53f7898ca8320f0d3ef6711e76bdda2609c2df15dc94c45e28bff8de441f1227ec2da7ea827cb3c0405af4faa4736
     PATCHES
         msvc-guard-unistd-h.patch
+        disable-GifDrawBoxedText8x8-win32.patch # MSVC doesn't have strtok_r
         ${EXTRA_PATCHES}
 )
 
