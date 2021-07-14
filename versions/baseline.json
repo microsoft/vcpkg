@@ -333,7 +333,7 @@
       "port-version": 0
     },
     "bddisasm": {
-      "baseline": "1.32.1",
+      "baseline": "1.33.0",
       "port-version": 0
     },
     "bde": {
@@ -1869,7 +1869,7 @@
       "port-version": 0
     },
     "ensmallen": {
-      "baseline": "2.14.2",
+      "baseline": "2.17.0",
       "port-version": 0
     },
     "entityx": {
@@ -2665,7 +2665,7 @@
       "port-version": 0
     },
     "implot": {
-      "baseline": "0.9",
+      "baseline": "0.11",
       "port-version": 0
     },
     "indicators": {
@@ -4905,7 +4905,7 @@
       "port-version": 0
     },
     "pmdk": {
-      "baseline": "1.9",
+      "baseline": "1.11.0",
       "port-version": 0
     },
     "pngpp": {
@@ -5057,8 +5057,8 @@
       "port-version": 1
     },
     "python3": {
-      "baseline": "3.9.5",
-      "port-version": 1
+      "baseline": "3.9.6",
+      "port-version": 0
     },
     "qca": {
       "baseline": "2.3.1",
@@ -6369,7 +6369,7 @@
       "port-version": 0
     },
     "ttauri": {
-      "baseline": "0.3.0",
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "turbobase64": {
