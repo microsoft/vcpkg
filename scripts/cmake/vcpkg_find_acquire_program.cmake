@@ -522,6 +522,10 @@ function(vcpkg_find_acquire_program VAR)
   if(DEFINED SUBDIR)
     list(APPEND PATHS ${PROG_PATH_SUBDIR})
   endif()
+  if("${PROG_PATH_SUBDIR}" MATCHES [[^(.*)[/\\]$]])
+    # remove trailing slash, which may turn into a trailing `\` which CMake _does not like_
+    set(PROG_PATH_SUBDIR "${CMAKE_MATCH_1}")
+  endif()
 
   do_find()
   if(NOT ${VAR})
