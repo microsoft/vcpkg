@@ -135,9 +135,9 @@ if("contrib" IN_LIST FEATURES)
           FILENAME "opencv_3rdparty-${COMMIT}.zip"
           SHA512 ${HASH}
       )
-      vcpkg_extract_source_archive(${OCV_DOWNLOAD})
+      vcpkg_extract_source_archive(extracted_ocv ARCHIVE "${OCV_DOWNLOAD}")
       file(MAKE_DIRECTORY "${DOWNLOADS}/opencv-cache/${ID}")
-      file(GLOB XFEATURES2D_I ${CURRENT_BUILDTREES_DIR}/src/opencv_3rdparty-${COMMIT}/*)
+      file(GLOB XFEATURES2D_I "${extracted_ocv}/*")
       foreach(FILE ${XFEATURES2D_I})
         file(COPY ${FILE} DESTINATION "${DOWNLOADS}/opencv-cache/${ID}")
         get_filename_component(XFEATURES2D_I_NAME "${FILE}" NAME)
