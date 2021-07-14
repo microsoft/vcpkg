@@ -17,11 +17,11 @@
     "stb"
   ],
   "features": {
-    "tools": {
-      "description": "Build command-line executables."
-    },
     "openmp": {
       "description": "use OpenMP for parallelization."
+    },
+    "tools": {
+      "description": "Build command-line executables."
     }
   }
 }
