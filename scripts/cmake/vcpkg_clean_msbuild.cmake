@@ -10,7 +10,7 @@ vcpkg_clean_msbuild()
 
 ## Examples
 
-* [xalan-c](https://github.com/Microsoft/vcpkg/blob/master/ports/xalan-c/portfile.cmake)
+* [python3](https://github.com/Microsoft/vcpkg/blob/master/ports/python3/portfile.cmake)
 #]===]
 
 function(vcpkg_clean_msbuild)

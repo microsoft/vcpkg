@@ -11,7 +11,7 @@ vcpkg_clean_msbuild()
 
 ## Examples
 
-* [xalan-c](https://github.com/Microsoft/vcpkg/blob/master/ports/xalan-c/portfile.cmake)
+* [python3](https://github.com/Microsoft/vcpkg/blob/master/ports/python3/portfile.cmake)
 
 ## Source
 [scripts/cmake/vcpkg\_clean\_msbuild.cmake](https://github.com/Microsoft/vcpkg/blob/master/scripts/cmake/vcpkg_clean_msbuild.cmake)

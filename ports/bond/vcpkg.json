@@ -1,0 +1,22 @@
+{
+  "name": "bond",
+  "version-string": "9.0.3",
+  "port-version": 1,
+  "description": "Bond is a cross-platform framework for working with schematized data. It supports cross-language de/serialization and powerful generic mechanisms for efficiently manipulating data. Bond is broadly used at Microsoft in high scale services.",
+  "homepage": "https://github.com/Microsoft/bond",
+  "dependencies": [
+    "boost-assign",
+    "boost-config",
+    "boost-locale",
+    "boost-utility",
+    "rapidjson"
+  ],
+  "features": {
+    "bond-over-grpc": {
+      "description": "Bond-over-gRPC provides code generation from Bond IDL service definitions to send Bond objects via gRPC.",
+      "dependencies": [
+        "grpc"
+      ]
+    }
+  }
+}

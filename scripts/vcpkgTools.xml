@@ -28,13 +28,6 @@
         <sha512>1e81c37d3b144cfb81478140e7921f314134845d2f0e0f941109ef57d510e7bd37dda6cc292ec00782472e7f1671349b857be9aac1c3f974423c8d1875a46302</sha512>
         <archiveName>cmake-3.20.2-linux-x86_64.tar.gz</archiveName>
     </tool>
-    <tool name="cmake" os="freebsd">
-        <version>3.12.4</version>
-        <exeRelativePath>cmake-3.12.4-FreeBSD-x86_64/bin/cmake</exeRelativePath>
-        <url>https://github.com/ivysnow/CMake/releases/download/v3.12.4/cmake-3.12.4-FreeBSD-x86_64.tar.gz</url>
-        <sha512>b5aeb2de36f3c29757c9404e33756da88580ddfa07f29079c7f275ae0d6d018fdfe3f55d54d1403f38e359865cf93436e084c6b1ea91f26c88bc01dde3793479</sha512>
-        <archiveName>cmake-3.12.4-FreeBSD-x86_64.tar.gz</archiveName>
-    </tool>
     <tool name="git" os="windows">
         <version>2.26.2-1</version>
         <exeRelativePath>mingw32\bin\git.exe</exeRelativePath>

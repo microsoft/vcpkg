@@ -16,7 +16,9 @@ vcpkg_download_distfile(ARCHIVE
     FILENAME "QCustomPlot-sharedlib-${QCP_VERSION}.tar.gz"
     SHA512 ce90540fca7226eac37746327e1939a9c7af38fc2595f385ed04d6d1f49560da08fb5fae15d1b9d22b6ba578583f70de8f89ef26796770d41bf599c1b15c535d
 )
-vcpkg_extract_source_archive(${ARCHIVE} ${SOURCE_PATH})
+vcpkg_extract_source_archive(SharedLib_SOURCE_PATH ARCHIVE "${ARCHIVE}")
+file(RENAME "${SharedLib_SOURCE_PATH}" "${SOURCE_PATH}/qcustomplot-sharedlib")
+
 
 vcpkg_configure_qmake(SOURCE_PATH
     ${SOURCE_PATH}/qcustomplot-sharedlib/sharedlib-compilation/sharedlib-compilation.pro
