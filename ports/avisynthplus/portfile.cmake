@@ -15,8 +15,8 @@ vcpkg_download_distfile(GHC_ARCHIVE
 )
 
 file(REMOVE_RECURSE ${SOURCE_PATH}/filesystem)
-vcpkg_extract_source_archive(${GHC_ARCHIVE} ${SOURCE_PATH})
-file(RENAME ${SOURCE_PATH}/filesystem-3f1c185ab414e764c694b8171d1c4d8c5c437517 ${SOURCE_PATH}/filesystem)
+vcpkg_extract_source_archive(extracted_archive ARCHIVE "${GHC_ARCHIVE}")
+file(RENAME "${extracted_archive}" "${SOURCE_PATH}/filesystem")
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
