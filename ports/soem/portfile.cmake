@@ -8,8 +8,9 @@ vcpkg_from_github(
     REF abbf0d42e38d6cfbaa4c1e9e8e07ace651c386fd #v1.4.0
     SHA512 2967775c6746bb63becea5eb12f136c184bbf874e1e5e8753374bfc212ec9cefbf1159350e79627b978af3562d261b61c50f38936a425c4d9c70598a1d136817
     HEAD_REF master
-    PATCHES 
+    PATCHES
         winpcap.patch
+        disable-werror.patch
 )
 
 vcpkg_configure_cmake(

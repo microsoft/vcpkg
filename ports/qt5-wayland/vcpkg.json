@@ -1,0 +1,13 @@
+{
+  "name": "qt5-wayland",
+  "version-string": "5.15.2",
+  "port-version": 2,
+  "description": "Qt5 wayland Module;",
+  "supports": "linux",
+  "dependencies": [
+    {
+      "name": "qt5-base",
+      "default-features": false
+    }
+  ]
+}
