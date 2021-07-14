@@ -13,6 +13,6 @@ vcpkg_configure_cmake(
         -DREXO_BUILD_TESTS=OFF
 )
 
-file(COPY "${SOURCE_PATH}/include/rexo.h" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+vcpkg_cmake_install()
 
 configure_file("${SOURCE_PATH}/UNLICENSE" "${CURRENT_PACKAGES_DIR}/share/${PORT}/copyright" COPYONLY)
