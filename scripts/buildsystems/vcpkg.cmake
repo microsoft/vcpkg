@@ -739,7 +739,16 @@ macro("${VCPKG_OVERRIDE_FIND_PACKAGE_NAME}" z_vcpkg_find_package_package_name)
     set(z_vcpkg_find_package_vcpkg_cmake_wrapper_path
         "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/share/${z_vcpkg_find_package_lowercase_package_name}/vcpkg-cmake-wrapper.cmake")
 
-    if(EXISTS "${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
+    if(CMAKE_DISABLE_FIND_PACKAGE_${z_vcpkg_find_package_package_name})
+        list(FIND z_vcpkg_find_package_ARGN "REQUIRED" z_vcpkg_required_idx)
+        if(z_vcpkg_required_idx STREQUAL "-1")
+            # Do nothing in the case of find_package disabled and not REQUIRED
+            # CMake 3.20 does not set ${z_vcpkg_find_package_package_name}_FOUND in this case
+        else()
+            # If REQUIRED, let CMake handle the error reporting
+            _find_package("${z_vcpkg_find_package_package_name}" ${z_vcpkg_find_package_ARGN})
+        endif()
+    elseif(EXISTS "${z_vcpkg_find_package_vcpkg_cmake_wrapper_path}")
         list(APPEND z_vcpkg_find_package_backup_vars "ARGS")
         if(DEFINED ARGS)
             set(z_vcpkg_find_package_backup_ARGS "${ARGS}")
