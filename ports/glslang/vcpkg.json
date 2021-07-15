@@ -1,7 +1,6 @@
 {
   "name": "glslang",
-  "version-string": "2019-03-05",
-  "port-version": 3,
+  "version": "11.5.0",
   "description": "Khronos reference front-end for GLSL and ESSL, and sample SPIR-V generator",
   "homepage": "https://github.com/KhronosGroup/glslang"
 }
