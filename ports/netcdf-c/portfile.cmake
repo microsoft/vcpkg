@@ -6,10 +6,12 @@ vcpkg_from_github(
     HEAD_REF master
     PATCHES
         no-install-deps.patch
-        config-pkg-location.patch
         use_targets.patch
         fix-dependency-libmath.patch
         fix-linkage-error.patch
+        fix-pkgconfig.patch
+        fix-dependency-zlib.patch
+        fix-manpage-msys.patch
 )
 
 #Remove outdated find modules
@@ -23,31 +25,46 @@ else()
     set(NC_USE_STATIC_CRT OFF)
 endif()
 
-vcpkg_configure_cmake(
-    SOURCE_PATH ${SOURCE_PATH}
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        dap       ENABLE_DAP
+        netcdf-4  ENABLE_NETCDF_4
+        netcdf-4  USE_HDF5
+        tools     BUILD_UTILITIES
+    INVERTED_FEATURES
+        dap       CMAKE_DISABLE_FIND_PACKAGE_CURL
+        netcdf-4  CMAKE_DISABLE_FIND_PACKAGE_HDF5
+)
+
+vcpkg_cmake_configure(
+    SOURCE_PATH "${SOURCE_PATH}"
     DISABLE_PARALLEL_CONFIGURE # netcdf-c configures in the source!
-    PREFER_NINJA
     OPTIONS
-        -DBUILD_UTILITIES=OFF
         -DBUILD_TESTING=OFF
         -DENABLE_EXAMPLES=OFF
         -DENABLE_TESTS=OFF
         -DENABLE_FILTER_TESTING=OFF
-        -DUSE_HDF5=ON
         -DENABLE_DAP_REMOTE_TESTS=OFF
         -DDISABLE_INSTALL_DEPENDENCIES=ON
         -DNC_USE_STATIC_CRT=${NC_USE_STATIC_CRT}
-        -DConfigPackageLocation=share/netcdf
+        ${FEATURE_OPTIONS}
 )
 
-vcpkg_install_cmake()
-vcpkg_fixup_cmake_targets(CONFIG_PATH share/netcdf TARGET_PATH share/netcdf)
+vcpkg_cmake_install()
+vcpkg_cmake_config_fixup(PACKAGE_NAME "netcdf" CONFIG_PATH "lib/cmake/netCDF")
+vcpkg_fixup_pkgconfig()
 
-if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
-    file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/bin ${CURRENT_PACKAGES_DIR}/bin)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin/nc-config" "${CURRENT_PACKAGES_DIR}/bin/nc-config") # invalid
+if("tools" IN_LIST FEATURES)
+    vcpkg_copy_tools(
+        TOOL_NAMES  nccopy ncdump ncgen ncgen3
+        AUTO_CLEAN
+    )
+elseif(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+    file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/bin" "${CURRENT_PACKAGES_DIR}/bin")
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
+file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/share")
 
-file(INSTALL ${SOURCE_PATH}/COPYRIGHT DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYRIGHT" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
