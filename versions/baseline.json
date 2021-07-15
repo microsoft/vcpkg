@@ -226,7 +226,7 @@
     },
     "avisynthplus": {
       "baseline": "3.7.0",
-      "port-version": 0
+      "port-version": 1
     },
     "avro-c": {
       "baseline": "1.9.2-1",
@@ -333,7 +333,7 @@
       "port-version": 0
     },
     "bddisasm": {
-      "baseline": "1.32.1",
+      "baseline": "1.33.0",
       "port-version": 0
     },
     "bde": {
@@ -434,7 +434,7 @@
     },
     "bond": {
       "baseline": "9.0.3",
-      "port-version": 0
+      "port-version": 1
     },
     "boolinq": {
       "baseline": "3.0.1",
@@ -1869,7 +1869,7 @@
       "port-version": 0
     },
     "ensmallen": {
-      "baseline": "2.14.2",
+      "baseline": "2.17.0",
       "port-version": 0
     },
     "entityx": {
@@ -2333,8 +2333,8 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "2019-03-05",
-      "port-version": 3
+      "baseline": "11.5.0",
+      "port-version": 0
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -2397,8 +2397,8 @@
       "port-version": 0
     },
     "graphqlparser": {
-      "baseline": "0.7.0-1",
-      "port-version": 0
+      "baseline": "0.7.0",
+      "port-version": 2
     },
     "greatest": {
       "baseline": "1.4.2",
@@ -2665,7 +2665,7 @@
       "port-version": 0
     },
     "implot": {
-      "baseline": "0.9",
+      "baseline": "0.11",
       "port-version": 0
     },
     "indicators": {
@@ -4193,8 +4193,8 @@
       "port-version": 0
     },
     "msgpack11": {
-      "baseline": "0.0.10-1",
-      "port-version": 0
+      "baseline": "0.0.10",
+      "port-version": 2
     },
     "msinttypes": {
       "baseline": "2018-02-25",
@@ -4349,8 +4349,8 @@
       "port-version": 0
     },
     "nmap": {
-      "baseline": "7.70-4",
-      "port-version": 0
+      "baseline": "7.70",
+      "port-version": 5
     },
     "nmslib": {
       "baseline": "2.0.6",
@@ -4554,7 +4554,7 @@
     },
     "opencv3": {
       "baseline": "3.4.14",
-      "port-version": 0
+      "port-version": 1
     },
     "opencv4": {
       "baseline": "4.5.2",
@@ -4638,7 +4638,7 @@
     },
     "opensubdiv": {
       "baseline": "3.4.3",
-      "port-version": 1
+      "port-version": 2
     },
     "opentracing": {
       "baseline": "1.6.0",
@@ -4905,7 +4905,7 @@
       "port-version": 0
     },
     "pmdk": {
-      "baseline": "1.9",
+      "baseline": "1.11.0",
       "port-version": 0
     },
     "pngpp": {
@@ -5057,16 +5057,16 @@
       "port-version": 1
     },
     "python3": {
-      "baseline": "3.9.5",
-      "port-version": 1
+      "baseline": "3.9.6",
+      "port-version": 0
     },
     "qca": {
       "baseline": "2.3.1",
       "port-version": 2
     },
     "qcustomplot": {
-      "baseline": "2.0.1-4",
-      "port-version": 0
+      "baseline": "2.0.1",
+      "port-version": 5
     },
     "qhull": {
       "baseline": "8.0.2",
@@ -5162,7 +5162,7 @@
     },
     "qt5-mqtt": {
       "baseline": "5.15.2",
-      "port-version": 0
+      "port-version": 1
     },
     "qt5-multimedia": {
       "baseline": "5.15.2",
@@ -5230,7 +5230,7 @@
     },
     "qt5-wayland": {
       "baseline": "5.15.2",
-      "port-version": 0
+      "port-version": 2
     },
     "qt5-webchannel": {
       "baseline": "5.15.2",
@@ -5362,7 +5362,7 @@
     },
     "qtwayland": {
       "baseline": "6.1.2",
-      "port-version": 0
+      "port-version": 2
     },
     "quadtree": {
       "baseline": "2020-04-13",
@@ -5645,7 +5645,7 @@
       "port-version": 0
     },
     "sciter": {
-      "baseline": "4.4.3.20",
+      "baseline": "4.4.8.3",
       "port-version": 0
     },
     "scnlib": {
@@ -5753,8 +5753,8 @@
       "port-version": 0
     },
     "shaderc": {
-      "baseline": "2019-06-26",
-      "port-version": 2
+      "baseline": "2021.1",
+      "port-version": 0
     },
     "shaderwriter": {
       "baseline": "1.1.0",
@@ -5866,7 +5866,7 @@
     },
     "soem": {
       "baseline": "1.4.0",
-      "port-version": 0
+      "port-version": 2
     },
     "soil": {
       "baseline": "2021-04-22",
@@ -5889,8 +5889,8 @@
       "port-version": 0
     },
     "sophus": {
-      "baseline": "1.0.0-6",
-      "port-version": 0
+      "baseline": "1.0.0",
+      "port-version": 7
     },
     "soqt": {
       "baseline": "1.6.0",
@@ -6157,8 +6157,8 @@
       "port-version": 8
     },
     "tfhe": {
-      "baseline": "1.0.1-1",
-      "port-version": 0
+      "baseline": "1.0.1",
+      "port-version": 2
     },
     "tgbot-cpp": {
       "baseline": "1.2.1",
@@ -6369,7 +6369,7 @@
       "port-version": 0
     },
     "ttauri": {
-      "baseline": "0.3.0",
+      "baseline": "0.4.0",
       "port-version": 0
     },
     "turbobase64": {
@@ -6530,7 +6530,7 @@
     },
     "vcpkg-cmake-config": {
       "baseline": "2021-05-22",
-      "port-version": 0
+      "port-version": 1
     },
     "vcpkg-gfortran": {
       "baseline": "3",

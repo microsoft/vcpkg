@@ -52,6 +52,8 @@ azure-storage-cpp:arm64-windows=fail
 
 aubio:arm-uwp=fail
 aubio:x64-uwp=fail
+# broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18937
+bde:x64-linux=fail
 blend2d:arm64-windows=fail
 blend2d:arm-uwp=fail
 blend2d:x64-uwp=fail
@@ -1066,6 +1068,8 @@ ogdf:x64-windows        = skip
 ogdf:x64-windows-static = skip
 ogdf:x64-windows-static-md=skip
 ogdf:x86-windows        = skip
+# broken when `python` is python3, https://github.com/microsoft/vcpkg/issues/18936
+ogdf:x64-linux=fail
 ogre:x64-osx=fail
 # Conflicts with ogre
 ogre-next:arm64-windows      = skip
@@ -1290,11 +1294,6 @@ qt5-canvas3d:x86-windows=skip
 # Missing system libraries
 qt5-wayland:x64-osx=fail
 qtwayland:x64-osx=fail
-# Missing libraries
-qt5-wayland:x86-windows=fail
-qt5-wayland:x64-windows=fail
-qt5-wayland:x64-windows-static=fail
-qt5-wayland:x64-windows-static-md=fail
 # Missing prerequisites for CI success
 qt5-webengine:x64-linux=fail
 qt5-webengine:x64-osx=fail
@@ -1475,8 +1474,6 @@ soci:arm-uwp=fail
 soci:x64-uwp=fail
 sockpp:arm-uwp=fail
 sockpp:x64-uwp=fail
-soem:x64-uwp=fail
-soem:arm-uwp=fail
 soil2:arm-uwp=fail
 soil2:x64-uwp=fail
 soqt:arm64-windows=fail
@@ -1541,13 +1538,6 @@ teemo:arm64-windows=fail
 teemo:x64-osx=fail
 telnetpp:arm-uwp=fail
 telnetpp:x64-uwp=fail
-tfhe:x86-windows=fail
-tfhe:x64-windows=fail
-tfhe:x64-windows-static=fail
-tfhe:x64-windows-static-md=fail
-tfhe:x64-uwp=fail
-tfhe:arm64-windows=fail
-tfhe:arm-uwp=fail
 theia:arm64-windows      = skip
 theia:arm-uwp            = skip
 theia:x64-uwp            = skip
@@ -1794,4 +1784,5 @@ dimcli:x64-windows-static=fail
 cppgraphqlgen:x64-osx=fail
 
 # Changes in Python have broken tensorflow on our osx hardware
+tensorflow:x64-osx=fail
 tensorflow-cc:x64-osx=fail
