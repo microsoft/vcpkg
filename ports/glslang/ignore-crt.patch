@@ -1,0 +1,9 @@
+diff --git a/ChooseMSVCCRT.cmake b/ChooseMSVCCRT.cmake
+index b1561263..b6c8c3a6 100644
+--- a/ChooseMSVCCRT.cmake
++++ b/ChooseMSVCCRT.cmake
+@@ -135,4 +135,3 @@ set(MSVC_CRT
+   MT
+   MTd)
+ 
+-choose_msvc_crt(MSVC_CRT)
