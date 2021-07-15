@@ -4406,7 +4406,7 @@
     },
     "nvtt": {
       "baseline": "2.1.2",
-      "port-version": 1
+      "port-version": 2
     },
     "oatpp": {
       "baseline": "1.2.5",
@@ -4954,7 +4954,7 @@
     },
     "popsift": {
       "baseline": "0.9",
-      "port-version": 2
+      "port-version": 3
     },
     "portable-snippets": {
       "baseline": "2019-09-20",
