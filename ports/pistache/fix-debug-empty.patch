@@ -1,0 +1,36 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 9aeed1e..7316732 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -48,12 +48,12 @@ if (BUILD_SHARED_LIBS)
+     add_library(pistache_shared SHARED $<TARGET_OBJECTS:pistache>)
+     target_link_libraries(pistache_shared PRIVATE Threads::Threads ${CMAKE_REQUIRED_LIBRARIES})
+     target_include_directories(pistache_shared INTERFACE ${PISTACHE_INCLUDE})
+-endif ()
++else ()
+ 
+ add_library(pistache_static STATIC $<TARGET_OBJECTS:pistache>)
+ target_link_libraries(pistache_static PRIVATE Threads::Threads ${CMAKE_REQUIRED_LIBRARIES})
+ target_include_directories(pistache_static INTERFACE ${PISTACHE_INCLUDE})
+-
++endif()
+ if (PISTACHE_USE_SSL)
+     target_compile_definitions(pistache PUBLIC PISTACHE_USE_SSL)
+     target_compile_definitions(pistache_static PUBLIC PISTACHE_USE_SSL)
+@@ -72,8 +72,15 @@ if (BUILD_SHARED_LIBS)
+         OUTPUT_NAME ${Pistache_OUTPUT_NAME}-${VERSION}
+         SOVERSION ${SONAME_VERSION_MAJOR}.${SONAME_VERSION_MINOR}
+     )
+-endif ()
++else ()
+ 
+ set_target_properties(pistache_static PROPERTIES
+     OUTPUT_NAME ${Pistache_OUTPUT_NAME}
+ )
++endif()
++install(
++  TARGETS pistache
++  RUNTIME DESTINATION bin
++  LIBRARY DESTINATION lib
++  ARCHIVE DESTINATION lib
++)
