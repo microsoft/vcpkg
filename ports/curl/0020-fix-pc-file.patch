@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f9a2d73..905873e 100644
+index f9a2d73..6ca43f9 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1459,7 +1459,7 @@ set(includedir              "\${prefix}/include")
@@ -11,16 +11,17 @@ index f9a2d73..905873e 100644
    if(TARGET "${_lib}")
      set(_libname "${_lib}")
      get_target_property(_libtype "${_libname}" TYPE)
-@@ -1475,6 +1475,12 @@ foreach(_lib ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} ${CURL_LIBS})
-       message(WARNING "Bad lib in library list: ${_libname}")
+@@ -1476,6 +1476,13 @@ foreach(_lib ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} ${CURL_LIBS})
        continue()
      endif()
-+  elseif(_lib MATCHES "^(.*)/([^/]*)[.]framework$")
+   endif()
++  if(_lib MATCHES "^(.*)/([^/]*)[.]framework$")
 +    if(CMAKE_MATCH_1 IN_LIST CMAKE_C_IMPLICIT_LINK_FRAMEWORK_DIRECTORIES)
 +      set(_lib "-framework ${CMAKE_MATCH_2}")
 +    else()
 +      set(_lib "-framework ${_lib}")
 +    endif()
-   endif()
++  endif()
    if(_lib MATCHES ".*/.*" OR _lib MATCHES "^-")
      set(LIBCURL_LIBS          "${LIBCURL_LIBS} ${_lib}")
+   else()
