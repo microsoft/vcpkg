@@ -4,17 +4,17 @@ vcpkg_check_linkage(ONLY_DYNAMIC_LIBRARY)
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO STEllAR-GROUP/hpx
-    REF 1.6.0
-    SHA512 cd717db3812fc26117d72c8afa654972b16f7059d8e6965484edd938788f3369fcd5ca791eee80e803703d6f3c39b3a3cd0525ab9f58ff1312e1b49f06ce67bc
+    REF 1.7.0
+    SHA512 052b3278710d8047c8e0e0979a668aa5161c495fcd12b089dd5039c64bd414b4ec0b96dfcd414d68e0db5b31c360dffb84374413c53794f37ce77d9cabc89518
     HEAD_REF stable
+    PATCHES
+        hpx-1.7.0-format-from-string.patch
 )
 
 vcpkg_configure_cmake(
     SOURCE_PATH ${SOURCE_PATH}
     PREFER_NINJA
     OPTIONS
-        "-DBOOST_ROOT=${CURRENT_INSTALLED_DIR}/share/boost"
-        "-DHWLOC_ROOT=${CURRENT_INSTALLED_DIR}/share/hwloc"
         -DHPX_WITH_VCPKG=ON
         -DHPX_WITH_TESTS=OFF
         -DHPX_WITH_EXAMPLES=OFF
@@ -79,13 +79,11 @@ if(DLLS)
     file(REMOVE ${DLLS})
 endif()
 
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/bazel)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/lib/pkgconfig)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
-file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/bazel)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/cmake)
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig)
 
