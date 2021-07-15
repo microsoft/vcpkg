@@ -23,8 +23,9 @@ file(REMOVE ${SOURCE_PATH}/CMake/ARMA_FindOpenBLAS.cmake)
 file(REMOVE ${SOURCE_PATH}/CMake/FindArmadillo.cmake)
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
-    tools   BUILD_CLI_EXECUTABLES
-    openmp  USE_OPENMP
+    FEATURES
+        tools   BUILD_CLI_EXECUTABLES
+        openmp  USE_OPENMP
 )
 
 vcpkg_configure_cmake(
