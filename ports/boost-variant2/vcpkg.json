@@ -1,12 +1,11 @@
 {
   "name": "boost-variant2",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost variant2 module",
   "homepage": "https://github.com/boostorg/variant2",
   "dependencies": [
     "boost-config",
     "boost-detail",
-    "boost-integer",
     "boost-mp11",
     "boost-vcpkg-helpers"
   ]
