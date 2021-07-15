@@ -45,7 +45,7 @@ index 219b90a..b280f85 100644
    find_package(IlmBase REQUIRED)
    find_package(OpenEXR REQUIRED)
 +  find_package(IlmBase CONFIG REQUIRED)
-+  find_package(OpenEXR CONFIG REQUIRED)  
++  find_package(OpenEXR CONFIG REQUIRED)
  endif()
  
  if(UNIX)
