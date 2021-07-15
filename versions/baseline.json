@@ -3417,8 +3417,8 @@
       "port-version": 0
     },
     "libopenmpt": {
-      "baseline": "2017-01-28-cf2390140",
-      "port-version": 2
+      "baseline": "0.5.10",
+      "port-version": 0
     },
     "libopusenc": {
       "baseline": "0.2.1",
