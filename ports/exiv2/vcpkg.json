@@ -8,6 +8,12 @@
     "libiconv"
   ],
   "features": {
+    "nls": {
+      "description": "Build native language support",
+      "dependencies": [
+        "gettext"
+      ]
+    },
     "png": {
       "description": "Build with png support (requires libz)",
       "dependencies": [
@@ -25,12 +31,6 @@
       "description": "Build with XMP metadata support",
       "dependencies": [
         "expat"
-      ]
-    },
-    "nls": {
-      "description": "Build native language support",
-      "dependencies": [
-        "gettext"
       ]
     }
   }
