@@ -225,8 +225,8 @@ $VM = Add-AzVMNetworkInterface -VM $VM -Id $Nic.Id
 $VM = Set-AzVMSourceImage `
   -VM $VM `
   -PublisherName 'Canonical' `
-  -Offer 'UbuntuServer' `
-  -Skus '18.04-LTS' `
+  -Offer '0001-com-ubuntu-server-focal' `
+  -Skus '20_04-lts' `
   -Version latest
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
