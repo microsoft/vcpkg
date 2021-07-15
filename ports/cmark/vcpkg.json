@@ -3,7 +3,6 @@
   "version-semver": "0.30.0",
   "description": "CommonMark parsing and rendering library",
   "homepage": "https://github.com/commonmark/cmark",
-  "supports": "!uwp",
   "dependencies": [
     {
       "name": "vcpkg-cmake",

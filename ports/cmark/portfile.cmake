@@ -13,7 +13,6 @@ string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "dynamic" CMARK_SHARED)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
-    PREFER_NINJA
     OPTIONS
         -DCMARK_TESTS=OFF
         -DCMARK_SHARED=${CMARK_SHARED}
@@ -26,14 +25,11 @@ vcpkg_cmake_config_fixup(CONFIG_PATH lib/cmake/cmark)
 
 vcpkg_fixup_pkgconfig()
 
-file(INSTALL ${SOURCE_PATH}/COPYING DESTINATION ${CURRENT_PACKAGES_DIR}/share/cmark RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
 
 file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR}/debug/share)
 
-if(EXISTS ${CURRENT_PACKAGES_DIR}/bin/cmark.exe)
-    file(COPY ${CURRENT_PACKAGES_DIR}/bin/cmark.exe DESTINATION ${CURRENT_PACKAGES_DIR}/tools/cmark/)
-    vcpkg_copy_tool_dependencies(${CURRENT_PACKAGES_DIR}/tools/cmark)
-endif()
+vcpkg_copy_tools(TOOL_NAMES cmark AUTO_CLEAN)
 
 if(VCPKG_LIBRARY_LINKAGE STREQUAL "static" AND NOT EXISTS ${CURRENT_PACKAGES_DIR}/bin/cmark)
     file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/bin ${CURRENT_PACKAGES_DIR}/debug/bin)
