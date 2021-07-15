@@ -8,6 +8,7 @@ vcpkg_from_gitlab(
     SHA512 2c516ad3ffe56cf646b2435d6ef3cf25e8c05aeb13d95dd18a7d0510d134d9990cba1b376063352ff99483cfc4e5d2af849afd2f9538f9136f22d44d34be362c
     HEAD_REF master
     PATCHES 0001-meson-fix-macOS-build-and-add-macOS-ci.patch
+            cairo_static_fix.patch
 )
 
 if("fontconfig" IN_LIST FEATURES)
