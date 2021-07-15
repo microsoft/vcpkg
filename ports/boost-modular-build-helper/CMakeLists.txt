@@ -46,13 +46,17 @@ else()
 endif()
 
 if(APPLE)
-    list(APPEND B2_OPTIONS target-os=darwin toolset=clang)
+    set(B2_TOOLSET clang)
+    list(APPEND B2_OPTIONS target-os=darwin)
 elseif(WIN32)
-    list(APPEND B2_OPTIONS target-os=windows toolset=gcc)
+    set(B2_TOOLSET gcc)
+    list(APPEND B2_OPTIONS target-os=windows)
 elseif(ANDROID)
-    list(APPEND B2_OPTIONS target-os=android toolset=gcc)
+    set(B2_TOOLSET gcc)
+    list(APPEND B2_OPTIONS target-os=android)
 else()
-    list(APPEND B2_OPTIONS target-os=linux toolset=gcc)
+    set(B2_TOOLSET gcc)
+    list(APPEND B2_OPTIONS target-os=linux)
 endif()
 
 if(WIN32)
@@ -78,6 +82,28 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
     else()
         set(LDFLAGS "${CMAKE_STATIC_LINKER_FLAGS} ${CMAKE_STATIC_LINKER_FLAGS_DEBUG}")
     endif()
+endif()
+
+if(APPLE)
+    if(CMAKE_OSX_DEPLOYMENT_TARGET)
+        set(CXXFLAGS "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} ${CXXFLAGS}")
+        set(CFLAGS "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} ${CFLAGS}")
+        set(LDFLAGS "-mmacosx-version-min=${CMAKE_OSX_DEPLOYMENT_TARGET} ${LDFLAGS}")
+    endif()
+
+    if(CMAKE_OSX_SYSROOT)
+        set(CXXFLAGS "-isysroot ${CMAKE_OSX_SYSROOT} ${CXXFLAGS}")
+        set(CFLAGS "-isysroot ${CMAKE_OSX_SYSROOT} ${CFLAGS}")
+        set(LDFLAGS "-isysroot ${CMAKE_OSX_SYSROOT} ${LDFLAGS}")
+    endif()
+
+    # if specific architectures are set, configure them,
+    # if not set, this will still default to current arch
+    foreach(ARCH IN LISTS CMAKE_OSX_ARCHITECTURES)
+        set(CXXFLAGS "-arch ${ARCH} ${CXXFLAGS}")
+        set(CFLAGS "-arch ${ARCH} ${CFLAGS}")
+        set(LDFLAGS "-arch ${ARCH} ${LDFLAGS}")
+    endforeach()
 endif()
 
 string(STRIP "${CXXFLAGS}" CXXFLAGS)
@@ -122,7 +148,7 @@ foreach(INCDIR ${CMAKE_CXX_STANDARD_INCLUDE_DIRECTORIES})
 endforeach()
 
 if(APPLE)
-  set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE <compileflags>-std=c++11 <compileflags>-stdlib=libc++")
+  set(CXXFLAGS "${CXXFLAGS} <compileflags>-D_DARWIN_C_SOURCE <cxxflags>-std=c++11 <cxxflags>-stdlib=libc++")
   set(LDFLAGS "${LDFLAGS} <linkflags>-stdlib=libc++")
 endif()
 
@@ -157,6 +183,7 @@ endif()
 
 add_custom_target(boost ALL
     COMMAND "${B2_EXE}"
+        toolset=${B2_TOOLSET}
         --user-config=${CMAKE_CURRENT_BINARY_DIR}/user-config.jam
         --stagedir=${CMAKE_CURRENT_BINARY_DIR}/stage
         --build-dir=${CMAKE_CURRENT_BINARY_DIR}

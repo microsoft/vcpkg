@@ -1,6 +1,6 @@
 {
   "name": "boost-flyweight",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost flyweight module",
   "homepage": "https://github.com/boostorg/flyweight",
   "dependencies": [
