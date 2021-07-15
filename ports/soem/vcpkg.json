@@ -1,0 +1,14 @@
+{
+  "name": "soem",
+  "version-string": "1.4.0",
+  "port-version": 2,
+  "description": "Simple Open Source EtherCAT Master",
+  "homepage": "https://github.com/OpenEtherCATsociety/SOEM",
+  "supports": "!uwp",
+  "dependencies": [
+    {
+      "name": "winpcap",
+      "platform": "windows"
+    }
+  ]
+}
