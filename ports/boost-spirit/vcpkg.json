@@ -1,12 +1,11 @@
 {
   "name": "boost-spirit",
-  "version-string": "1.75.0",
+  "version": "1.76.0",
   "description": "Boost spirit module",
   "homepage": "https://github.com/boostorg/spirit",
   "dependencies": [
     "boost-array",
     "boost-assert",
-    "boost-compatibility",
     "boost-config",
     "boost-core",
     "boost-detail",
@@ -18,7 +17,6 @@
     "boost-integer",
     "boost-io",
     "boost-iterator",
-    "boost-math",
     "boost-move",
     "boost-mpl",
     "boost-optional",

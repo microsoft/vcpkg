@@ -1,3 +1,132 @@
+#Check for unsupported features
+
+if("ffmpeg" IN_LIST FEATURES)
+    vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'ffmpeg' does not support 'uwp'")
+endif()
+
+if("ffplay" IN_LIST FEATURES)
+    vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'ffplay' does not support 'uwp'")
+endif()
+
+if("ffprobe" IN_LIST FEATURES)
+    vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'ffprobe' does not support 'uwp'")
+endif()
+
+
+if("ass" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'ass' does not support 'uwp | arm'")
+    endif()
+endif()
+
+if("avisynthplus" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR (NOT VCPKG_TARGET_IS_WINDOWS) OR (VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
+        message(FATAL_ERROR "Feature 'avisynthplus' does not support '!windows | arm | uwp | static'")
+    endif()
+endif()
+
+if("dav1d" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86" OR VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_OSX)
+        message(FATAL_ERROR "Feature 'dav1d' does not support 'uwp | arm | x86 | osx'")
+    endif()
+endif()
+
+if("fdk-aac" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'fdk-aac' does not support 'uwp | arm'")
+    endif()
+endif()
+
+if("fontconfig" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
+        message(FATAL_ERROR "Feature 'fontconfig' does not support 'uwp | arm | (windows & static)'")
+    endif()
+endif()
+
+if("fribidi" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'fribidi' does not support 'uwp | arm'")
+    endif()
+endif()
+
+if("ilbc" IN_LIST FEATURES)
+    if ((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'ilbc' does not support 'uwp & arm'")
+    endif()
+endif()
+
+if("modplug" IN_LIST FEATURES)
+    if (VCPKG_TARGET_IS_UWP OR (VCPKG_TARGET_IS_WINDOWS AND VCPKG_LIBRARY_LINKAGE STREQUAL "static"))
+        message(FATAL_ERROR "Feature 'modplug' does not support 'uwp | (windows & static)'")
+    endif()
+endif()
+
+if("nvcodec" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR ((NOT VCPKG_TARGET_IS_WINDOWS) AND (NOT VCPKG_TARGET_IS_LINUX)))
+        message(FATAL_ERROR "Feature 'nvcodec' does not support '!(windows | linux) | uwp | arm'")
+    endif()
+endif()
+
+if("opencl" IN_LIST FEATURES)
+    vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'opencl' does not support 'uwp'")
+endif()
+
+if("opengl" IN_LIST FEATURES)
+    if (((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND VCPKG_TARGET_IS_WINDOWS) OR VCPKG_TARGET_IS_UWP OR VCPKG_TARGET_IS_OSX)
+        message(FATAL_ERROR "Feature 'opengl' does not support 'uwp | (windows & arm) | osx'")
+    endif()
+endif()
+
+if("openh264" IN_LIST FEATURES)
+    vcpkg_fail_port_install(ON_TARGET "UWP" MESSAGE "Feature 'openh264' does not support 'uwp'")
+endif()
+
+if("sdl2" IN_LIST FEATURES)
+    vcpkg_fail_port_install(ON_TARGET "OSX" MESSAGE "Feature 'sdl2' does not support 'osx'")
+endif()
+
+if("ssh" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message(FATAL_ERROR "Feature 'ssh' does not support 'uwp | arm | static'")
+    endif()
+endif()
+
+if("tensorflow" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP OR VCPKG_LIBRARY_LINKAGE STREQUAL "static" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
+        message(FATAL_ERROR "Feature 'tensorflow' does not support 'x86 | arm | uwp | static'")
+    endif()
+endif()
+
+if("tesseract" IN_LIST FEATURES)
+    if (((VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64") AND VCPKG_TARGET_IS_WINDOWS) OR VCPKG_TARGET_IS_UWP OR VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message(FATAL_ERROR "Feature 'tesseract' does not support 'uwp | (windows & arm) | static'")
+    endif()
+endif()
+
+if("wavpack" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        message(FATAL_ERROR "Feature 'wavpack' does not support 'arm'")
+    endif()
+endif()
+
+if("x264" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64")
+        message(FATAL_ERROR "Feature 'x264' does not support 'arm'")
+    endif()
+endif()
+
+if("x265" IN_LIST FEATURES)
+    if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQUAL "arm64" OR VCPKG_TARGET_IS_UWP)
+        message(FATAL_ERROR "Feature 'x265' does not support 'uwp | arm'")
+    endif()
+endif()
+
+if("xml2" IN_LIST FEATURES)
+    if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
+        message(FATAL_ERROR "Feature 'xml2' does not support 'static'")
+    endif()
+endif()
+
 if(VCPKG_TARGET_IS_WINDOWS)
     set(PATCHES 0017-Patch-for-ticket-9019-CUDA-Compile-Broken-Using-MSVC.patch)  # https://trac.ffmpeg.org/ticket/9019
 endif()
@@ -234,18 +363,6 @@ else()
     set(OPTIONS "${OPTIONS} --disable-libdav1d")
 endif()
 
-if("iconv" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-iconv")
-else()
-    set(OPTIONS "${OPTIONS} --disable-iconv")
-endif()
-
-if("ilbc" IN_LIST FEATURES)
-    set(OPTIONS "${OPTIONS} --enable-libilbc")
-else()
-    set(OPTIONS "${OPTIONS} --disable-libilbc")
-endif()
-
 if("fdk-aac" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfdk-aac")
 else()
@@ -268,6 +385,18 @@ if("fribidi" IN_LIST FEATURES)
     set(OPTIONS "${OPTIONS} --enable-libfribidi")
 else()
     set(OPTIONS "${OPTIONS} --disable-libfribidi")
+endif()
+
+if("iconv" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-iconv")
+else()
+    set(OPTIONS "${OPTIONS} --disable-iconv")
+endif()
+
+if("ilbc" IN_LIST FEATURES)
+    set(OPTIONS "${OPTIONS} --enable-libilbc")
+else()
+    set(OPTIONS "${OPTIONS} --disable-libilbc")
 endif()
 
 if("lzma" IN_LIST FEATURES)
@@ -421,8 +550,22 @@ else()
     set(OPTIONS "${OPTIONS} --disable-zlib")
 endif()
 
+set(CMAKE_VARS_FILE "${CURRENT_BUILDTREES_DIR}/vars.cmake")
+vcpkg_internal_get_cmake_vars(OUTPUT_FILE CMAKE_VARS_FILE)
+include("${CMAKE_VARS_FILE}")
+
 if (VCPKG_TARGET_IS_OSX)
+    # if the sysroot isn't set in the triplet we fall back to whatever CMake detected for us
+    if ("${VCPKG_OSX_SYSROOT}" STREQUAL "")
+        set(VCPKG_OSX_SYSROOT ${VCPKG_DETECTED_CMAKE_OSX_SYSROOT})
+    endif()
+
     set(OPTIONS "${OPTIONS} --disable-vdpau") # disable vdpau in OSX
+    set(OPTIONS "${OPTIONS} --extra-cflags=\"-isysroot ${VCPKG_OSX_SYSROOT}\"")
+    set(OPTIONS "${OPTIONS} --extra-ldflags=\"-isysroot ${VCPKG_OSX_SYSROOT}\"")
+
+    list(JOIN VCPKG_OSX_ARCHITECTURES " " OSX_ARCHS)
+    LIST(LENGTH VCPKG_OSX_ARCHITECTURES OSX_ARCH_COUNT)
 endif()
 
 set(OPTIONS_CROSS "")
@@ -435,8 +578,17 @@ if (VCPKG_TARGET_ARCHITECTURE STREQUAL "arm" OR VCPKG_TARGET_ARCHITECTURE STREQU
             get_filename_component(GAS_ITEM_PATH ${GAS_PATH} DIRECTORY)
             set(ENV{PATH} "$ENV{PATH}${VCPKG_HOST_PATH_SEPARATOR}${GAS_ITEM_PATH}")
         endforeach(GAS_PATH)
-    elseif(VCPKG_TARGET_IS_OSX) # VCPKG_TARGET_ARCHITECTURE = arm64
-        set(OPTIONS_CROSS " --enable-cross-compile --target-os=darwin --arch=arm64 --extra-ldflags=-arch --extra-ldflags=arm64 --extra-cflags=-arch --extra-cflags=arm64 --extra-cxxflags=-arch --extra-cxxflags=arm64")
+    elseif(VCPKG_TARGET_IS_OSX AND NOT VCPKG_TARGET_ARCHITECTURE STREQUAL "${VCPKG_DETECTED_CMAKE_SYSTEM_PROCESSOR}") # VCPKG_TARGET_ARCHITECTURE = arm64
+        # get the number of architectures requested
+        list(LENGTH VCPKG_OSX_ARCHITECTURES ARCHITECTURE_COUNT)
+
+        # ideally we should check the CMAKE_HOST_SYSTEM_PROCESSOR, but that seems to be
+        # broken when inside a vcpkg port, so we only set it when doing a simple build
+        # for a single platform. multi-platform builds use a different script
+        if (ARCHITECTURE_COUNT LESS 2)
+            message(STATUS "Building on host: ${CMAKE_SYSTEM_PROCESSOR}")
+            set(OPTIONS_CROSS " --enable-cross-compile --target-os=darwin --arch=arm64 --extra-ldflags=-arch --extra-ldflags=arm64 --extra-cflags=-arch --extra-cflags=arm64 --extra-cxxflags=-arch --extra-cxxflags=arm64")
+        endif()
     endif()
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x64")
 elseif (VCPKG_TARGET_ARCHITECTURE STREQUAL "x86")
