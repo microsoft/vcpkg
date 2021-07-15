@@ -1589,7 +1589,7 @@
       "port-version": 0
     },
     "czmq": {
-      "baseline": "2019-06-10-4",
+      "baseline": "4.2.1",
       "port-version": 0
     },
     "d3dx12": {
