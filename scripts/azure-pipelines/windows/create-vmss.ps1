@@ -15,13 +15,6 @@ This script assumes you have installed Azure tools into PowerShell by following 
 at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-3.6.1
 or are running from Azure Cloud Shell.
 
-.PARAMETER Unstable
-If this parameter is set, the machine is configured for use in the "unstable" pool used for testing
-the compiler rather than for testing vcpkg. Differences:
-* The machine prefix is changed to VcpkgUnstable instead of PrWin.
-* No storage account or "archives" share is provisioned.
-* The firewall is not opened to allow communication with Azure Storage.
-
 .PARAMETER CudnnPath
 The path to a CUDNN zip file downloaded from NVidia official sources
 (e.g. https://developer.nvidia.com/compute/machine-learning/cudnn/secure/8.1.1.33/11.2_20210301/cudnn-11.2-windows-x64-v8.1.1.33.zip
@@ -30,28 +23,28 @@ downloaded in a browser with an NVidia account logged in.)
 
 [CmdLetBinding()]
 Param(
-  [switch]$Unstable = $false,
   [parameter(Mandatory=$true)]
   [string]$CudnnPath
 )
 
 $Location = 'westus2'
-if ($Unstable) {
-  $Prefix = 'VcpkgUnstable-'
-} else {
-  $Prefix = 'PrWin-'
-}
+$Prefix = 'PrWin-'
 
 $Prefix += (Get-Date -Format 'yyyy-MM-dd')
-$VMSize = 'Standard_D32_v4'
+$VMSize = 'Standard_D32ds_v4'
 $ProtoVMName = 'PROTOTYPE'
 $LiveVMPrefix = 'BUILD'
 $WindowsServerSku = '2019-Datacenter'
+$MakeInstalledDisk = $false
 $InstalledDiskSizeInGB = 1024
 $ErrorActionPreference = 'Stop'
 
 $ProgressActivity = 'Creating Scale Set'
-$TotalProgress = 21
+$TotalProgress = 20
+if ($MakeInstalledDisk) {
+  $TotalProgress++
+}
+
 $CurrentProgress = 1
 
 Import-Module "$PSScriptRoot/../create-vmss-helpers.psm1" -DisableNameChecking
@@ -274,14 +267,16 @@ $VM = Set-AzVMSourceImage `
   -Version latest
 
 $InstallDiskName = $ProtoVMName + "InstallDisk"
-$VM = Add-AzVMDataDisk `
-  -Vm $VM `
-  -Name $InstallDiskName `
-  -Lun 0 `
-  -Caching ReadWrite `
-  -CreateOption Empty `
-  -DiskSizeInGB $InstalledDiskSizeInGB `
-  -StorageAccountType 'StandardSSD_LRS'
+if ($MakeInstalledDisk) {
+  $VM = Add-AzVMDataDisk `
+    -Vm $VM `
+    -Name $InstallDiskName `
+    -Lun 0 `
+    -Caching ReadWrite `
+    -CreateOption Empty `
+    -DiskSizeInGB $InstalledDiskSizeInGB `
+    -StorageAccountType 'StandardSSD_LRS'
+}
 
 $VM = Set-AzVMBootDiagnostic -VM $VM -Disable
 New-AzVm `
@@ -437,8 +432,10 @@ try {
 Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
 
 ####################################################################################################
-Invoke-ScriptWithPrefix -ScriptName 'deploy-install-disk.ps1'
-Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+if ($MakeInstalledDisk) {
+  Invoke-ScriptWithPrefix -ScriptName 'deploy-install-disk.ps1'
+  Restart-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
+}
 
 ####################################################################################################
 Write-Progress `
@@ -481,7 +478,8 @@ Set-AzVM `
 $VM = Get-AzVM -ResourceGroupName $ResourceGroupName -Name $ProtoVMName
 $PrototypeOSDiskName = $VM.StorageProfile.OsDisk.Name
 $ImageConfig = New-AzImageConfig -Location $Location -SourceVirtualMachineId $VM.ID
-$Image = New-AzImage -Image $ImageConfig -ImageName $ProtoVMName -ResourceGroupName $ResourceGroupName
+$ImageName = "$Prefix-BaseImage"
+$Image = New-AzImage -Image $ImageConfig -ImageName $ImageName -ResourceGroupName $ResourceGroupName
 
 ####################################################################################################
 Write-Progress `
@@ -491,7 +489,9 @@ Write-Progress `
 
 Remove-AzVM -Id $VM.ID -Force
 Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $PrototypeOSDiskName -Force
-Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $InstallDiskName -Force
+if ($MakeInstalledDisk) {
+  Remove-AzDisk -ResourceGroupName $ResourceGroupName -DiskName $InstallDiskName -Force
+}
 
 ####################################################################################################
 Write-Progress `
@@ -526,12 +526,13 @@ $Vmss = Set-AzVmssOsProfile `
   -AdminUsername 'AdminUser' `
   -AdminPassword $AdminPW `
   -WindowsConfigurationProvisionVMAgent $true `
-  -WindowsConfigurationEnableAutomaticUpdate $true
+  -WindowsConfigurationEnableAutomaticUpdate $false
 
 $Vmss = Set-AzVmssStorageProfile `
   -VirtualMachineScaleSet $Vmss `
   -OsDiskCreateOption 'FromImage' `
-  -OsDiskCaching ReadWrite `
+  -OsDiskCaching ReadOnly `
+  -DiffDiskSetting Local `
   -ImageReferenceId $Image.Id
 
 New-AzVmss `
