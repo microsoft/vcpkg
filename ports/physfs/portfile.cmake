@@ -14,7 +14,7 @@ vcpkg_extract_source_archive_ex(
     PATCHES
         "001-fix-lzmasdk-arm64-windows.patch"
         "002-fix-posix-eintr.patch"
-        "003-fix-posix-cloexec.patch"
+        "003-fix-posix-cloexec.patch" # Remove this patch in the next update
 )
 
 string(COMPARE EQUAL "${VCPKG_LIBRARY_LINKAGE}" "static" PHYSFS_STATIC)
