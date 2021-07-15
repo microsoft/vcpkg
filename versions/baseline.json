@@ -2333,8 +2333,8 @@
       "port-version": 0
     },
     "glslang": {
-      "baseline": "2019-03-05",
-      "port-version": 3
+      "baseline": "11.5.0",
+      "port-version": 0
     },
     "glui": {
       "baseline": "2019-11-30",
@@ -5753,8 +5753,8 @@
       "port-version": 0
     },
     "shaderc": {
-      "baseline": "2019-06-26",
-      "port-version": 2
+      "baseline": "2021.1",
+      "port-version": 0
     },
     "shaderwriter": {
       "baseline": "1.1.0",
