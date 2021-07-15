@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index f9a2d73..6ca43f9 100644
+index f9a2d73..62e0b4d 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1459,7 +1459,7 @@ set(includedir              "\${prefix}/include")
@@ -11,7 +11,20 @@ index f9a2d73..6ca43f9 100644
    if(TARGET "${_lib}")
      set(_libname "${_lib}")
      get_target_property(_libtype "${_libname}" TYPE)
-@@ -1476,6 +1476,13 @@ foreach(_lib ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} ${CURL_LIBS})
+@@ -1470,12 +1470,26 @@ foreach(_lib ${CMAKE_C_IMPLICIT_LINK_LIBRARIES} ${CURL_LIBS})
+       # this information in the .pc file.
+       continue()
+     endif()
++    set(_lib NOTFOUND)
++    if(DEFINED CMAKE_BUILD_TYPE)
++      string(TOUPPER "${CMAKE_BUILD_TYPE}" config)
++      get_target_property(_lib "${_libname}" IMPORTED_LOCATION_${config})
++    endif()
++    if(NOT _lib)
+     get_target_property(_lib "${_libname}" LOCATION)
++    endif()
+     if(NOT _lib)
+       message(WARNING "Bad lib in library list: ${_libname}")
        continue()
      endif()
    endif()

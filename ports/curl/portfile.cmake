@@ -113,28 +113,10 @@ if(VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     )
 endif()
 
-# Fix the pkgconfig file for debug
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "debug")
-    file(READ "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-dbg/libcurl.pc" _contents)
-    string(REPLACE " -lcurl" " -lcurl-d" _contents "${_contents}")
-    string(REPLACE " -loptimized " " " _contents "${_contents}")
-    string(REPLACE " -ldebug " " " _contents "${_contents}")
-    string(REPLACE " ${CURRENT_INSTALLED_DIR}/lib/pthreadVC3.lib" "" _contents "${_contents}")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc" "${_contents}")
-endif()
-
-# Fix the pkgconfig file for release
-if(NOT DEFINED VCPKG_BUILD_TYPE OR VCPKG_BUILD_TYPE STREQUAL "release")
-    file(READ "${CURRENT_BUILDTREES_DIR}/${TARGET_TRIPLET}-rel/libcurl.pc" _contents)
-    string(REPLACE " -loptimized " " " _contents "${_contents}")
-    string(REPLACE " -ldebug " " " _contents "${_contents}")
-    string(REPLACE " ${CURRENT_INSTALLED_DIR}/debug/lib/pthreadVC3d.lib" "" _contents "${_contents}")
-    file(MAKE_DIRECTORY "${CURRENT_PACKAGES_DIR}/lib/pkgconfig")
-    file(WRITE "${CURRENT_PACKAGES_DIR}/lib/pkgconfig/libcurl.pc" "${_contents}")
-endif()
-
 vcpkg_fixup_pkgconfig()
+if(EXISTS "${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc")
+    vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/debug/lib/pkgconfig/libcurl.pc" " -lcurl" " -lcurl-d")
+endif()
 
 file(INSTALL "${CURRENT_PORT_DIR}/vcpkg-cmake-wrapper.cmake" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}")
 file(INSTALL "${SOURCE_PATH}/COPYING" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)
