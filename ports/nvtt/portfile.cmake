@@ -16,6 +16,7 @@ vcpkg_from_github(
         fix-build-error.patch
         add-compile-options-for-osx.patch
         skip-building-libsquish.patch
+        Override-check-of-_MSC_VER.patch
 )
 
 vcpkg_configure_cmake(
@@ -39,4 +40,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/share)
 
 # Handle copyright
 file(REMOVE ${CURRENT_PACKAGES_DIR}/share/doc/nvtt/LICENSE)
-file(INSTALL ${SOURCE_PATH}/LICENSE DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/LICENSE" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

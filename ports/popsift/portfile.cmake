@@ -4,6 +4,8 @@ vcpkg_from_github(
     REF v0.9
     SHA512 56789520872203eea86e07e8210e00c0b67d85486af16df9d620b1aff10f8d9ef5d910cf1dda6c68af7ca2ed11658ab5414ac79117b543f91a7d8d6a96a17ce0
     HEAD_REF develop
+    PATCHES
+        Fix-cuda-unsupport-_MSC_VER-1930.patch
 )
 
 include(${CURRENT_INSTALLED_DIR}/share/cuda/vcpkg_find_cuda.cmake)
@@ -36,4 +38,4 @@ file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include ${CURRENT_PACKAGES_DIR
      vcpkg_copy_tools(TOOL_NAMES popsift-demo AUTO_CLEAN)
  endif()
 
-file(INSTALL ${SOURCE_PATH}/COPYING.md DESTINATION ${CURRENT_PACKAGES_DIR}/share/${PORT} RENAME copyright)
+file(INSTALL "${SOURCE_PATH}/COPYING.md" DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" RENAME copyright)

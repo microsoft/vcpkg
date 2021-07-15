@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 9735bc2..33e2f8f 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -137,7 +137,7 @@ if(MSVC)
+   if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+       set(PopSift_MVSC_LINKER "${PopSift_MVSC_LINKER}d")
+   endif()
+-  list(APPEND CUDA_NVCC_FLAGS   -Xcompiler ${PopSift_MVSC_LINKER})
++  list(APPEND CUDA_NVCC_FLAGS "-Xcompiler;${PopSift_MVSC_LINKER};-allow-unsupported-compiler")
+ endif()
+ 
+ # default stream per-thread implies that each host thread has one non-synchronizing 0-stream
+diff --git a/src/popsift/s_filtergrid.cu b/src/popsift/s_filtergrid.cu
+index 078eb11..1e542b2 100644
+--- a/src/popsift/s_filtergrid.cu
++++ b/src/popsift/s_filtergrid.cu
+@@ -26,6 +26,7 @@
+ #include <thrust/sort.h>
+ #include <thrust/transform.h>
+ #include <thrust/transform_scan.h>
++#include <thrust/host_vector.h>
+ 
+ namespace popsift
+ {
